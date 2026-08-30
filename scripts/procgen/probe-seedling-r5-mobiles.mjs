@@ -50,7 +50,7 @@ takeBoxLockOrExit({ name: 'probe-seedling-r5-mobiles.mjs', kind: 'browser' });
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const PAGE_URL = 'http://localhost:8000/frontend/modules/flashPanel/wasm/'
-    + `${process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4c'}/game.html`;
+    + `${process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d'}/game.html`;
 
 const { loadTape } = await import(join(REPO,
     'frontend/modules/seedlingDemo/fixtures/index.js'));

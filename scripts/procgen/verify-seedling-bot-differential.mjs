@@ -37,7 +37,12 @@
  * ── Prereqs ───────────────────────────────────────────────────────────
  *   - dev server on :8000 at the REPO ROOT (`python -m http.server 8000`)
  *   - the wasm artifact at
- *     frontend/modules/flashPanel/wasm/seedling_bot_ap_p4c/ — no longer
+ *     frontend/modules/flashPanel/wasm/seedling_bot_ap_p4d/ — the DEFAULT
+ *     since EDITOR INTEGRATION slice P2 (⚖ user, 2026-08-30); p4c is still
+ *     one `SEEDLING_PAGE=` away, and the 149-tape byte-inert sweep
+ *     (plan §17.4.6: 3,607 rows, 0 FAIL on p4d, `--win`) is what says the
+ *     oracle recordings below — made on the p4b/p4c lineages — still hold.
+ *     ⛓ No longer
  *     uncommitted: since `0aa7878e8` that directory is the submodule
  *     PeerInfinity/seedling-wasm, so a `--recurse-submodules` checkout has it.
  *     ⛓ AND THE DEFAULT MOVED OFF `seedling_bot_ap` at the wasm-hygiene
@@ -179,7 +184,7 @@ takeBoxLockOrExit({ name: 'verify-seedling-bot-differential.mjs', kind: 'windows
 // sweep against both, and swapping directories on disk to do that is how a
 // baseline gets lost. The artifact identity rides in the checkpoint
 // fingerprint below, so a resumed run can never reuse another build's verdict.
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4c';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 // ⚠ THE DIRECTORY IS NOT THE PAYLOAD NAME, IN EITHER DIRECTION.
 // `deploy_wasm_avm2.sh` names the payload after the BUILD, not the folder, so

@@ -63,9 +63,15 @@ takeBoxLockOrExit({ name: 'verify-seedling-atlas-play.mjs', kind: 'browser' });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
-const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', 'seedling_bot_ap_p4c');
+/**
+ * ⛔ THE BUILD THE `seedling_atlas` PRESET WIRES, not a default of this
+ * script — see `verify-seedling-wasm-bridge.mjs`'s note. Slice P1 moved that
+ * preset to `seedling_bot_ap_p4d` and left these four lines on p4c, so the
+ * iframe wait below could not resolve; moved with the presets at slice P2.
+ */
+const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', 'seedling_bot_ap_p4d');
 if (!existsSync(join(ARTIFACT, 'game.html'))
-    || !existsSync(join(ARTIFACT, 'seedling_bot_ap_p4c.wasm'))) {
+    || !existsSync(join(ARTIFACT, 'seedling_bot_ap_p4d.wasm'))) {
     console.log(`SKIP: seedling wasm artifact not staged at ${ARTIFACT}`
         + ' — see frontend/modules/flashPanel/README.md for the copy command');
     process.exit(0);
@@ -124,7 +130,7 @@ async function waitFor(desc, fn, timeoutMs = 60000) {
 }
 
 function gameFrame() {
-    const f = page.frames().find((fr) => fr.url().includes('seedling_bot_ap_p4c/game.html'));
+    const f = page.frames().find((fr) => fr.url().includes('seedling_bot_ap_p4d/game.html'));
     if (!f) throw new Error('seedling wasm iframe not found');
     return f;
 }
@@ -198,7 +204,7 @@ try {
         return true;
     }));
     await waitFor('wasm iframe mounted', async () =>
-        page.frames().some((fr) => fr.url().includes('seedling_bot_ap_p4c/game.html')));
+        page.frames().some((fr) => fr.url().includes('seedling_bot_ap_p4d/game.html')));
     await waitFor('start button enabled', () => gameFrame().evaluate(() => {
         const b = document.getElementById('btn-start');
         return !!b && !b.disabled;

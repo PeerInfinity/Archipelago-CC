@@ -64,8 +64,13 @@
  * this row automatically: it drives Windows Chrome through `py.exe`, which a
  * Linux CI runner does not have.
  *
- * ⇒ the default is `seedling_bot_ap_p4c`, on which every arm passes, and
- * `seedling_bot_ap_phase3` is retired from the submodule. The CONTROL is what
+ * ⇒ the default became `seedling_bot_ap_p4c`, on which every arm passes, and
+ * `seedling_bot_ap_phase3` retired from the submodule. ⛓ **AND IT IS
+ * `seedling_bot_ap_p4d` SINCE EDITOR INTEGRATION SLICE P2** (⚖ user,
+ * 2026-08-30) — p4d is p4c plus `Pickups/APItem.as` and the two report seams,
+ * and the 149-tape byte-inert sweep (plan §17.4.6: 3,607 rows, 0 FAIL on p4d,
+ * `--win`) is the measurement that says the transport reads the same on it.
+ * The table above is the 2026-08-19 reading and is NOT restated for p4d. The CONTROL is what
  * still makes this a claim rather than a description, and it still refuses:
  * an older build fails twelve arms including the positive control.
  *
@@ -105,7 +110,7 @@ takeBoxLockOrExit({ name: 'probe-seedling-level-set-transport.mjs', kind: 'windo
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4c';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d';
 const SEEDLING = process.env.SEEDLING_SRC || join(process.env.HOME, 'CC', 'seedling');
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
