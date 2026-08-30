@@ -1309,6 +1309,7 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "ceiling",
                 "doors",
+                "in-place",
                 "jobs",
                 "json",
                 "known-ceiling",
@@ -1328,6 +1329,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "doors"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "in-place"
                 },
                 {
                     "how": [
