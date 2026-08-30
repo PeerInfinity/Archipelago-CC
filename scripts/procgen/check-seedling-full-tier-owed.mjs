@@ -95,7 +95,9 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { describeFullTierEstimate, rosterLabels, tickSumOf } from './fullTierEstimate.js';
-import { FILE, compositeParts, readStandingValues } from './standingValues.js';
+import {
+    FILE, compositeParts, compositeValue, compositeWhy, readStandingValues,
+} from './standingValues.js';
 import { ROSTER_CATEGORIES, assertTiersComplete } from
     '../../frontend/modules/seedlingDemo/fixtures/tiers.js';
 import { fixtureNames } from '../../frontend/modules/seedlingDemo/fixtures/index.js';
@@ -174,9 +176,59 @@ const row = standing.rows[ROSTER_KEY];
  * ⛓ Each category is judged against ITS OWN head, so a category driven at the
  * head clears its own debt while the others keep theirs.
  */
-const parts = compositeParts(row, ROSTER_CATEGORIES);
 const roster = rosterLabels({ tapesDir: TAPES });
 const { categories: CATEGORIES } = assertTiersComplete(fixtureNames());
+/** ⛓ Every category the row carries a part for, plus every one it does not. */
+const PART_KEYS = Object.keys(row.categories ?? {});
+const parts = compositeParts(row, [...new Set([...ROSTER_CATEGORIES, ...PART_KEYS])]);
+
+/**
+ * ⛓⛓ R9 slice CAT — TWO CHECKS ON THE ROW ITSELF, BEFORE ANY VERDICT, and
+ * they live HERE rather than in `standing-values --check` for a measured
+ * reason: this gate is headless and takes no box lock, and `--check` takes
+ * one. With the box held by another session — the state this slice was
+ * written in — a guard that only ran there could not be run at all.
+ */
+if (parts.length) {
+    /**
+     * ⛔ A DERIVED CATEGORY WITH NO PART IS A NAMED FAILURE. Add a fourth
+     * category to `fixtures/tiers.js` and the row silently stops covering it:
+     * its tapes are in no part, so no part's head is ever compared against
+     * them and nothing is ever owed for them. That is the one failure a
+     * category scheme must not be able to have, and it is invisible in every
+     * other readout.
+     */
+    const missing = ROSTER_CATEGORIES.filter((c) => !PART_KEYS.includes(c));
+    const extra = PART_KEYS.filter((c) => !ROSTER_CATEGORIES.includes(c));
+    check(missing.length === 0 && extra.length === 0,
+        '⛓ the row carries one part per DERIVED category — no category is unjudged',
+        missing.length || extra.length
+            ? `⛔ ${[missing.length ? `NO PART for ${missing.join(', ')} — its tapes are in no `
+                + 'part, so nothing is ever owed for them' : null,
+            extra.length ? `a part for ${extra.join(', ')}, which is not a derived category`
+                : null].filter(Boolean).join(' · ')}`
+            : `${PART_KEYS.join(', ')}`);
+    /**
+     * ⛔ AND THE ROW'S `value`/`why` ARE THE DERIVATION OF ITS PARTS — ⚖ 17
+     * with teeth. The parts are the measurement; those two fields are a
+     * rendering. Without this a hand edit would sit in the file looking
+     * authoritative until somebody happened to re-quote a category — which is
+     * exactly what the old prose `why` invited, and why this gate has always
+     * had to announce that it refuses to read it.
+     */
+    const derivedValue = compositeValue(row, ROSTER_CATEGORIES);
+    const derivedWhy = compositeWhy(row, ROSTER_CATEGORIES);
+    check(row.value === derivedValue && row.why === derivedWhy,
+        '⛓ the row\'s `value` and `why` are DERIVED from its parts, not typed (⚖ 17)',
+        row.value === derivedValue && row.why === derivedWhy
+            ? `${parts.length} part(s), rendered from the parts on every quote`
+            : `⛔ THE FILE HAS BEEN EDITED BY HAND. ${row.value !== derivedValue
+                ? `value: ${JSON.stringify(row.value)} vs derived ${JSON.stringify(derivedValue)}`
+                : ''}${row.why !== derivedWhy ? `${row.value !== derivedValue ? ' · ' : ''}`
+                + `why: ${JSON.stringify(String(row.why).slice(0, 70))}… vs derived `
+                + `${JSON.stringify(String(derivedWhy).slice(0, 70))}…` : ''}. Re-quote the `
+                + 'part with `record-standing-value.mjs --category=`');
+}
 
 /**
  * ⛔ A ROW WITHOUT PARTS IS STILL ANSWERED — as ONE category called `full`,
