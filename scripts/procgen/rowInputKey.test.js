@@ -45,6 +45,9 @@ function stubCtx({ files = {}, edges = {}, fixtures = [], submodules = [], gitli
         read: (rel) => files[rel] ?? '',
         hash: (rel) => `h(${files[rel] ?? 'ABSENT'})`,
         gitlink: (path) => gitlinks[path] ?? 'ABSENT',
+        filesDirectlyUnder: (dir) => [...tracked].filter((p) =>
+            p.startsWith(`${dir}/`) && !p.slice(dir.length + 1).includes('/')
+            && /\.(?:json|md|txt)$/.test(p)),
         forwardFrom: (seeds) => {
             const out = new Set();
             const queue = [...seeds].filter((s) => tracked.has(s));
@@ -396,5 +399,55 @@ describe('nondeterminismFinding — mitigation 2', () => {
     it('does NOT fire on a row nothing was banked for', () => {
         expect(nondeterminismFinding({ unmoved: true, prev: undefined,
             result: { value: '265/0' }, at: 'bbb' })).toBeNull();
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * THE DOCS INPUT — found by the NEGATIVE control, which is what one is for
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('markdown and directory inputs — an instrument READS, everything else CITES', () => {
+    const world = {
+        files: {
+            'scripts/procgen/check-y.mjs': "import './ref.mjs';\nimport '../../frontend/m/g.js';\n",
+            'scripts/procgen/ref.mjs': "const DOC = 'docs/dev/one.md';\n"
+                + "const DIR = 'docs/dev';\n",
+            'frontend/m/g.js': "const cite = 'docs/dev/two.md';\n",
+        },
+        edges: { 'scripts/procgen/check-y.mjs': ['scripts/procgen/ref.mjs', 'frontend/m/g.js'] },
+        fixtures: [],
+    };
+    const tracked = ['docs/dev/one.md', 'docs/dev/two.md', 'docs/dev/deep/three.md'];
+    const ctxOf = () => {
+        const c = stubCtx({ ...world });
+        for (const t of tracked) c.tracked.add(t);
+        return c;
+    };
+    const dataOf = () => inputPopulations({ entry: 'scripts/procgen/check-y.mjs',
+        ctx: ctxOf() }).data;
+
+    /** ⛔⛔ THE STALE GREEN THE NEGATIVE CONTROL FOUND: a doc an instrument
+     *  OPENS is an input, and a key blind to it quotes the row forever. */
+    it('takes a `.md` an INSTRUMENT names', () => {
+        expect(dataOf()).toContain('docs/dev/one.md');
+    });
+
+    /** ⛔ …and the directory an instrument names, one level, since that is
+     *  what `readdirSync` returns. */
+    it('takes the files DIRECTLY under a directory an instrument names, not below', () => {
+        expect(dataOf()).toContain('docs/dev/two.md');
+        expect(dataOf()).not.toContain('docs/dev/deep/three.md');
+    });
+
+    /** ⛔⛔ AND THE OTHER DIRECTION, which is the economy: measured, counting a
+     *  frontend module's CITATION pulled all 30 `*.md` into 27 rows and would
+     *  have re-run 1709 s of wasm playback on a docs-only commit. */
+    it('does NOT take a `.md` named only by a FRONTEND module', () => {
+        const only = { ...world,
+            files: { ...world.files, 'scripts/procgen/ref.mjs': 'export const a = 1;\n' } };
+        const c = stubCtx(only);
+        for (const t of tracked) c.tracked.add(t);
+        expect(inputPopulations({ entry: 'scripts/procgen/check-y.mjs', ctx: c }).data)
+            .not.toContain('docs/dev/two.md');
     });
 });

@@ -221,6 +221,41 @@ export function expandDeclared(patterns, tracked, { file = '(gate)', population 
 const PATH_LITERAL_RE =
     /['"`]([A-Za-z0-9_./-]+\.(?:json|jsonl|ndjson|txt|csv|wasm|swf|ogmo|oel))['"`]/g;
 
+/**
+ * ⛓⛓ **MARKDOWN IS AN INPUT OF AN INSTRUMENT AND A CITATION OF EVERYTHING
+ * ELSE.** `reference/campaignChain.mjs` holds `CAMPAIGN_DOC =
+ * 'docs/json/developer/procgen/seedling-bot.md'` and the generator's `--check`
+ * compares GENERATED REGIONS inside it — a real input of
+ * `gate: procgen-reference`. `procgenDocs/glossary.js` holds the same shape of
+ * literal as a CITATION, and measured, counting it pulled all 30 `*.md` into
+ * TWENTY-SEVEN rows: a docs-only commit would have re-run 1709 s of wasm
+ * playback that cannot read a word of it. So `.md` counts only where a file
+ * can actually open one — inside the instrument directory.
+ */
+const MD_LITERAL_RE = /['"`]([A-Za-z0-9_./-]+\.md)['"`]/g;
+
+/**
+ * ⛓⛓⛓ **A LITERAL THAT NAMES A DIRECTORY, BECAUSE A GATE CAN ENUMERATE ONE.**
+ *
+ * ⛔⛔ THE NEGATIVE CONTROL FOUND THIS, WHICH IS WHAT A NEGATIVE CONTROL IS
+ * FOR. Mutant N1 appended a line to `docs/json/developer/procgen/
+ * architecture.md` and moved 0 of 34 keys — the answer the economy WANTS, and
+ * it was WRONG: `reference/docsIndex.mjs` reads every `*.md` in that directory
+ * (`DOC_DIR = 'docs/json/developer/procgen'`, `readdirSync`), and
+ * `check-procgen-reference.mjs` runs the generator's `--check`. So that
+ * markdown file IS an input of a gate row, and the row would have been quoted
+ * forever across every edit to it. A stale green, found by the mutant that was
+ * supposed to prove there wasn't one.
+ *
+ * ⇒ a string literal that NAMES A TRACKED DIRECTORY contributes the data files
+ * DIRECTLY UNDER it. ⛓ One level, not recursive, because `readdirSync` is one
+ * level and because a recursive rule on a literal like `'frontend/modules'`
+ * would swallow the tree. ⛓ Data extensions only: a `.js` under a named
+ * directory is population 1's business and arrives there or not on its own
+ * merits.
+ */
+const DIR_LITERAL_RE = /['"`]([A-Za-z0-9_-]+(?:\/[A-Za-z0-9_.-]+)+)['"`]/g;
+
 /** ⛓ Every string literal in a source, content only. */
 const STRING_LITERAL_RE = /(['"`])((?:\\.|(?!\1)[^\\])*?)\1/g;
 
@@ -478,8 +513,25 @@ export function keyContext({ repo = REPO, graph } = {}) {
         return out;
     };
 
+    /**
+     * ⛓ The DATA files directly under a tracked directory — the answer to a
+     * `readdirSync(SOME_DIR)` a gate performs at run time. Indexed once,
+     * because the alternative is a scan of the tracked set per literal per
+     * file.
+     */
+    const DATA_EXT = /\.(?:json|jsonl|ndjson|md|txt|csv|wasm|swf|ogmo|oel)$/;
+    const byDir = new Map();
+    for (const p of tracked) {
+        if (!DATA_EXT.test(p)) continue;
+        const dir = p.split('/').slice(0, -1).join('/');
+        if (!dir) continue;
+        if (!byDir.has(dir)) byDir.set(dir, []);
+        byDir.get(dir).push(p);
+    }
+    const filesDirectlyUnder = (dir) => byDir.get(dir) ?? [];
+
     return { repo, graph: g, tracked, stems, stemRe, submodules, read, hash, gitlink,
-        forwardFrom };
+        forwardFrom, filesDirectlyUnder };
 }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -533,6 +585,31 @@ export function inputPopulations({ entry, declared = null, ctx }) {
                 if (!code.has(p)) data.add(p);
             }
             lit = PATH_LITERAL_RE.exec(text);
+        }
+        /**
+         * ⛔ …AND ONLY AN INSTRUMENT ENUMERATES A DIRECTORY. Measured: applied
+         * to the whole closure, one frontend module naming the docs directory
+         * pulled all 30 `*.md` into TWENTY-SEVEN rows, so a docs-only commit
+         * re-ran 1709 s of wasm playback that cannot read a word of it — the
+         * economy destroyed by a rule meant to fix a stale green. A
+         * `readdirSync` at run time happens in `scripts/procgen/`; a frontend
+         * module is SERVED, not run, and its mention of a doc path is a
+         * citation.
+         */
+        if (rel.startsWith(`${SCRIPT_DIR}/`)) {
+            const bare = stripComments(text);
+            MD_LITERAL_RE.lastIndex = 0;
+            let md = MD_LITERAL_RE.exec(bare);
+            while (md !== null) {
+                for (const p of resolveLiteral(md[1], rel, ctx.tracked)) data.add(p);
+                md = MD_LITERAL_RE.exec(bare);
+            }
+            DIR_LITERAL_RE.lastIndex = 0;
+            let dl = DIR_LITERAL_RE.exec(bare);
+            while (dl !== null) {
+                for (const p of ctx.filesDirectlyUnder(dl[1])) if (!code.has(p)) data.add(p);
+                dl = DIR_LITERAL_RE.exec(bare);
+            }
         }
         for (const t of spawnTargetsIn(text, { tracked: ctx.tracked, fromFile: rel })) {
             spawnTargets.add(t);
