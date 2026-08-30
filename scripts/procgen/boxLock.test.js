@@ -503,7 +503,12 @@ describe('the CI face', () => {
             .toEqual(['check-procgen-help.mjs', 'check-seedling-producer-boundaries.mjs']);
         expect(Object.fromEntries(declaring.map((g) => [g.file, g.ciFace]))).toEqual({
             'check-seedling-producer-boundaries.mjs': { prefix: 'structure', argv: ['--structure'] },
-            'check-procgen-help.mjs': { prefix: 'gate-help-ci', argv: ['--doors=ci'] },
+            /** ⛓ R9 SG1 W2 (⚖ 71 (b)): the default run drives a THROWAWAY
+             *  WORKTREE, and CI declares `--in-place` — its checkout is
+             *  already a throwaway, and a linked worktree there would pay a
+             *  network re-clone of six submodules per push, or hand back a
+             *  false green if the init failed. */
+            'check-procgen-help.mjs': { prefix: 'gate-help-ci', argv: ['--doors=ci', '--in-place'] },
         });
         /* ⛓ …and no two gates share a prefix, which is what keeps the keys apart. */
         expect(new Set(declaring.map((g) => g.ciFace.prefix)).size).toBe(declaring.length);

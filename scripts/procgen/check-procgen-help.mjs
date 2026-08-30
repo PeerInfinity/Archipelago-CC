@@ -96,7 +96,47 @@
  *     just to load playwright. Proving `--help` inert is the property with no
  *     list and no exceptions, so it always gets the full deadline.
  *
+ * ── ⛔⛔⛔ AND IT DRIVES A THROWAWAY WORKTREE, NOT YOUR TREE ──────────
+ *
+ * R9 slice SG1 W2, ⚖ ruling 71 (b). **MEASURED on main `511b271af`, primary
+ * tree porcelain-0 before:** a `--doors=all` run left `seedlingDamageSites.js`
+ * and `region_library_files.json` dirtied with regeneration drift, five
+ * untracked worldgen/rules droppings, and a stale `.git/index.lock` from a
+ * SIGKILLed child git op which then errored the gate's OWN porcelain observer
+ * twice. Every one of those is declared in the baseline's `wrote:` lists — the
+ * gate finds effectful import doors THE ONLY WAY IT CAN, by letting them
+ * happen — so the damage is not a defect in the gate, it is the gate working.
+ * What was wrong was the tree it happened in.
+ *
+ * ⇒ by default the children run with `cwd` a `git worktree add --detach` tree
+ * at HEAD, submodules init'd, and BOTH disk observers are scoped to it. It is
+ * removed on exit and on signal, and the droppings — including any killed
+ * child's git locks, which live under that worktree's own private
+ * `.git/worktrees/<name>/` — die with it.
+ *
+ * ⛔ WHICH MEANS THE MEASUREMENT IS OF **HEAD**, NOT OF YOUR WORKING TREE. An
+ * instrument you have edited but not committed is not in the population. The
+ * header says which tree and which sha it drove, and NAMES the uncommitted
+ * `scripts/procgen/` paths a dirty primary tree is hiding from the run.
+ * `--in-place` is the escape hatch and preserves the old behaviour exactly.
+ *
+ * ⛓ THE SUBMODULES ARE NOT OPTIONAL AND THE INIT IS ASSERTED, not trusted.
+ * A cold worktree has none, and several instruments guard on
+ * `existsSync(<artifact>/game.html)`: without the submodule they print SKIP
+ * and exit 0, i.e. they read as INERT FOR THE WRONG REASON — a false green on
+ * the exact property this gate measures, silently shrinking the effectful set.
+ * So `submodule status` is read back and an uninitialised line is a REFUSAL.
+ *
+ * ⛓ AND CI STAYS `--in-place`, DECIDED FROM WHAT CI'S CLONE SUPPORTS.
+ * `unittests_frontend.yml` checks out `submodules: recursive` at the default
+ * depth-1. A worktree there does NOT inherit those checkouts, so it would pay
+ * a network re-clone of five submodules on every push — for no containment,
+ * since the CI checkout is already a throwaway that dies with the runner — and
+ * an init that failed would hand back the false green above. The `@ci-face`
+ * declares `--in-place` for that reason.
+ *
  * Run: node scripts/procgen/check-procgen-help.mjs
+ *      node scripts/procgen/check-procgen-help.mjs --in-place
  *      node scripts/procgen/check-procgen-help.mjs --doors=ci
  *      node scripts/procgen/check-procgen-help.mjs --only=solve-seedling-r9-campaign.mjs
  *      node scripts/procgen/check-procgen-help.mjs --json
@@ -109,11 +149,14 @@
  * `⚠ undocumented` until the rule characters came off. The gate that publishes
  * what an instrument accepts should be able to read itself.
  *
- * @ci-face gate-help-ci: --doors=ci
+ * @ci-face gate-help-ci: --doors=ci --in-place
  */
 
 import { execFileSync, spawn } from 'node:child_process';
-import { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import {
+    existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, symlinkSync,
+    writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -129,6 +172,8 @@ const arg = (name, fallback) => (argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(name.length + 3);
 const JSON_OUT = argv.includes('--json');
 const WRITE_BASELINE = argv.includes('--write-baseline');
+/** ⛓ ⚖ 71 (b)'s escape hatch — drive THIS tree, the pre-SG1 behaviour exactly. */
+const IN_PLACE = argv.includes('--in-place');
 const ONLY = arg('only', '');
 
 /** ⛓ The KILL DEADLINE, set far above where a slow-but-inert import lands
@@ -225,20 +270,170 @@ const KNOWN = new Set(Object.keys(BASELINE.importDoorEffectful ?? {}));
 const INHERITED = new Map(Object.entries(BASELINE.importDoorEffectful ?? {})
     .map(([f, e]) => [f, new Set(e.inheritedOutput ?? [])]));
 
-const DIR = join(REPO, 'scripts/procgen');
+const git = (cwd, args) => execFileSync('git', args,
+    { cwd, encoding: 'utf8', maxBuffer: 1 << 26 }).trim();
+
+/**
+ * ⛓⛓⛓ **THE TREE THE CHILDREN ARE DRIVEN IN** (⚖ 71 (b)).
+ *
+ * ⛔ THE BASELINE FILE IS DELIBERATELY NOT IN IT. `BASELINE_FILE` is resolved
+ * from THIS file's own location, so the run reads — and `--write-baseline`
+ * writes — the PRIMARY tree's baseline, whichever tree the children ran in.
+ * A baseline written into a throwaway would be a measurement that deleted
+ * itself.
+ */
+const HEAD = git(REPO, ['rev-parse', 'HEAD']);
+let TREE = REPO;
+let WORKTREE = null;
+let SUBMODULES = 0;
+
+/** ⛓ Removed on exit AND on signal — a killed run must not leave a worktree
+ *  (nor the primary repo's registration of one) behind. Idempotent. */
+let treeRemoved = false;
+function removeWorktree() {
+    if (!WORKTREE || treeRemoved) return;
+    treeRemoved = true;
+    try { git(REPO, ['worktree', 'remove', '--force', WORKTREE]); } catch {
+        try { rmSync(WORKTREE, { recursive: true, force: true }); } catch { /* gone */ }
+    }
+    try { git(REPO, ['worktree', 'prune']); } catch { /* nothing to prune */ }
+}
+process.on('exit', removeWorktree);
+for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
+    process.on(sig, () => { removeWorktree(); process.exit(130); });
+}
+
+if (!IN_PLACE) {
+    /* ⛓ `mkdtemp` reserves the NAME; `git worktree add` wants the path absent. */
+    WORKTREE = mkdtempSync(join(tmpdir(), 'procgen-help-tree-'));
+    rmSync(WORKTREE, { recursive: true, force: true });
+    try {
+        git(REPO, ['worktree', 'add', '-q', '--detach', WORKTREE, HEAD]);
+    } catch (e) {
+        console.log(`⛔ check-procgen-help: could not create a throwaway worktree at `
+            + `${WORKTREE} — ${String(e.message ?? e).split('\n')[0]}\n`
+            + '   ⛓ run with `--in-place` to drive THIS tree instead (⚠ the children really '
+            + 'write: at the measured heads that means two tracked files dirtied and five '
+            + 'untracked droppings).');
+        process.exit(1);
+    }
+    /**
+     * ⛔⛔ AND THE INIT IS ASSERTED, NOT TRUSTED. A cold worktree has NO
+     * submodules, and several instruments guard on an artifact that lives in
+     * one: without it they print SKIP and exit 0, i.e. they read as INERT FOR
+     * THE WRONG REASON — a false green on the exact property this gate
+     * measures. `submodule status` marks an uninitialised path with a leading
+     * `-`, and that is a REFUSAL. ⛓ The set is DERIVED from the repo, never
+     * named here: a submodule added tomorrow is covered without an edit.
+     */
+    try {
+        git(WORKTREE, ['submodule', 'update', '--init', '-q']);
+    } catch (e) {
+        console.log(`⛔ check-procgen-help: \`submodule update --init\` failed in the `
+            + `throwaway worktree — ${String(e.message ?? e).split('\n')[0]}`);
+        process.exit(1);
+    }
+    const subs = git(WORKTREE, ['submodule', 'status']).split('\n').filter(Boolean);
+    const uninit = subs.filter((l) => l.startsWith('-'));
+    if (uninit.length) {
+        console.log(`⛔ check-procgen-help: ${uninit.length} of ${subs.length} submodule(s) are `
+            + 'UNINITIALISED in the throwaway worktree — an instrument guarded on an artifact '
+            + 'inside one would print SKIP and exit 0, reading as INERT for the wrong reason:\n'
+            + uninit.map((l) => `   ⛔ ${l.trim()}`).join('\n'));
+        process.exit(1);
+    }
+    /**
+     * ⛓⛓⛓ **AND `node_modules` IS LINKED IN — MEASURED, BY GETTING IT WRONG.**
+     * A fresh worktree has none (it is gitignored), and node resolves an
+     * import by walking UP from the importing FILE, so every instrument that
+     * imports `@playwright/test` died with MODULE_NOT_FOUND. The first
+     * worktree run filed `check-procgen-demos.mjs` as `HELP SIDE EFFECT —
+     * exit 1` **in 91 ms**: a whole class of rows turned red for the harness,
+     * not for the property. A change that moves the verdict set is not a
+     * containment fix, it is a different gate.
+     *
+     * ⛔ IT IS A SYMLINK TO THE PRIMARY TREE'S, and that is a deliberate hole
+     * in the containment with a reason: `node_modules` is a BUILD ARTIFACT,
+     * not repository content — it is not in the porcelain, and the mtime sweep
+     * has excluded it since the gate was written, so it was never part of what
+     * "the tree moved" means here. `npm ci` into a throwaway would cost
+     * minutes per run to isolate a population nothing observes.
+     *
+     * ⛓ AND ONLY THIS ONE. The other gitignored trees (`NewDocs/`, the nested
+     * `node_modules` under `frontend/libs/` and `iframe_games/`) are NOT
+     * linked: an instrument that needs gitignored CONTENT at import time is
+     * doing work at import, which is the finding this gate exists to make.
+     */
+    const modules = join(REPO, 'node_modules');
+    if (existsSync(modules)) symlinkSync(modules, join(WORKTREE, 'node_modules'), 'dir');
+
+    TREE = WORKTREE;
+    SUBMODULES = subs.length;
+}
+
+const DIR = join(TREE, 'scripts/procgen');
 const instruments = readdirSync(DIR).filter((f) => f.endsWith('.mjs')).sort()
     .filter((f) => !ONLY || f === ONLY);
+/**
+ * ⛔ AN `--only=` THAT SELECTS NOTHING IS A REFUSAL BY NAME, never a stack
+ * trace. Found while building W2: `--only=argvHelp.js` (a `.js`, so not an
+ * instrument) ran the whole tree setup and then died in the summary line with
+ * `Cannot read properties of undefined (reading 'file')` — a typo reported as
+ * a crash, which is the failure `boxLock`'s own docblock names one directory
+ * over: a refusal is a printed sentence and an exit code.
+ */
+if (ONLY && !instruments.length) {
+    console.log(`check-procgen-help: --only=${ONLY} matched NO instrument in `
+        + `${TREE === REPO ? 'this tree' : `the worktree at ${HEAD.slice(0, 9)}`}'s `
+        + 'scripts/procgen/ — the population is its `*.mjs` files, named exactly '
+        + '(e.g. `--only=solve-seedling-r9-campaign.mjs`).');
+    process.exit(1);
+}
 
-const porcelain = () => execFileSync('git', ['status', '--porcelain'],
-    { cwd: REPO, encoding: 'utf8', maxBuffer: 1 << 26 });
+/**
+ * ⛔⛔ **AN OBSERVER THAT CANNOT READ THE TREE REFUSES BY NAME.** Measured by
+ * another session: a SIGKILLed child's git op left an `index.lock`, every
+ * subsequent `git status` died with *"Another git process seems to be
+ * running"*, and the gate produced **nine minutes of one repeated fatal and no
+ * verdict at all** — an exit code that is not a verdict. A bounded retry
+ * covers a lock that is about to go away on its own; past that the run STOPS
+ * and says what it could not do.
+ */
+const PORCELAIN_TRIES = 3;
+/** ⛓ One reader, two subjects: the batch observers ask about TREE, the header
+ *  asks about the PRIMARY tree (what a worktree run cannot see). */
+const porcelainOf = (cwd) => execFileSync('git', ['status', '--porcelain'],
+    { cwd, encoding: 'utf8', maxBuffer: 1 << 26 });
+function porcelain() {
+    let last = null;
+    for (let i = 0; i < PORCELAIN_TRIES; i += 1) {
+        try {
+            return porcelainOf(TREE);
+        } catch (e) {
+            last = e;
+            /* ⛓ a coarse wait: a lock held by a dying child clears in ms. */
+            if (i + 1 < PORCELAIN_TRIES) { try { execFileSync('sleep', ['2']); } catch { /**/ } }
+        }
+    }
+    console.log(`\n⛔ check-procgen-help: THE PORCELAIN OBSERVER COULD NOT READ ${TREE} after `
+        + `${PORCELAIN_TRIES} tries — ${String(last?.stderr ?? last?.message ?? last)
+            .split('\n').filter(Boolean)[0]}\n`
+        + '   ⛓ This is a REFUSAL, not a verdict: the run stops here rather than reporting '
+        + 'rows judged by an observer that was not working.\n'
+        + '   ⛓ A stale `index.lock` under the tree\'s gitdir is the usual cause — a child '
+        + 'this gate SIGKILLed at its ceiling mid-git-op.');
+    process.exit(1);
+    /* c8 ignore next */
+    return '';
+}
 
 /** ⛓ …and the gitignored writes the porcelain cannot see. */
 const newerThan = (marker) => {
     try {
-        return execFileSync('find', [REPO, '-newer', marker, '-type', 'f',
+        return execFileSync('find', [TREE, '-newer', marker, '-type', 'f',
             '-not', '-path', '*/.git/*', '-not', '-path', '*/node_modules/*'],
         { encoding: 'utf8', maxBuffer: 1 << 26 }).split('\n').filter(Boolean)
-            .map((p) => p.slice(REPO.length + 1))
+            .map((p) => p.slice(TREE.length + 1))
             .filter((p) => !p.startsWith('scripts/procgen/'));
     } catch { return []; }
 };
@@ -256,7 +451,7 @@ function spawnChild(args, cache, ceiling) {
     return new Promise((resolve) => {
         const t0 = Date.now();
         const child = spawn(process.execPath, args, {
-            cwd: REPO,
+            cwd: TREE,
             detached: true,
             env: { ...process.env, XDG_CACHE_HOME: cache, NO_COLOR: '1' },
             stdio: ['ignore', 'pipe', 'pipe'],
@@ -407,7 +602,7 @@ function repairPorcelain(before, after, touched) {
         if (wasPaths.has(path) || !mine.has(path)) { left.push(path); continue; }
         if (line.startsWith('??')) { left.push(`${path} (untracked — NOT deleted)`); continue; }
         try {
-            execFileSync('git', ['checkout', '--', path], { cwd: REPO, encoding: 'utf8' });
+            execFileSync('git', ['checkout', '--', path], { cwd: TREE, encoding: 'utf8' });
             restored.push(path);
         } catch { left.push(`${path} (restore FAILED)`); }
     }
@@ -477,6 +672,48 @@ async function runBatch(tasks) {
     const serial = [];
     for (const t of tasks) serial.push(...await runBatch([t]));   /* eslint-disable-line */
     return serial;
+}
+
+/**
+ * ⛓⛓⛓ **THE RUN ANNOUNCES WHICH TREE IT DROVE** (⚖ 71 (b); trap 820 — a guard
+ * cannot see which build it drives, so make the artifact announce it). Two
+ * runs of this gate at one head now legitimately measure two different
+ * populations — HEAD's, and this working tree's — and a log that did not say
+ * which would be unattributable a week later.
+ *
+ * ⛔ AND A DIRTY PRIMARY TREE IS NAMED, NOT SUMMARISED. What a worktree run
+ * cannot see is precisely the UNCOMMITTED instruments, so the warning lists the
+ * `scripts/procgen/` paths that are dirty or untracked and points at the flag
+ * that would measure them. "The tree is dirty" would leave the reader to work
+ * out whether it mattered.
+ *
+ * ⛓ Held back under `--json`, whose stdout is a document a consumer parses.
+ */
+const treeLine = WORKTREE
+    ? `## tree: THROWAWAY WORKTREE ${WORKTREE} at HEAD ${HEAD.slice(0, 9)} — the children run `
+      + `there, both disk observers are scoped to it, ${SUBMODULES} submodule(s) initialised, `
+      + 'and it is removed on exit and on signal (a killed child\'s git locks live under its '
+      + 'own private gitdir and die with it).'
+    : `## tree: IN PLACE (--in-place) ${REPO} at HEAD ${HEAD.slice(0, 9)} — ⚠ the children `
+      + 'REALLY WRITE here; at the measured heads that is two tracked files dirtied and five '
+      + 'untracked droppings, all declared in the baseline\'s `wrote:` lists.';
+if (!JSON_OUT) {
+    console.log(treeLine);
+    if (WORKTREE) {
+        const dirty = porcelainOf(REPO).split('\n').filter((l) => l.trim());
+        const mine = dirty.map((l) => l.slice(3).split(' -> ').pop())
+            .filter((f) => f.startsWith('scripts/procgen/'));
+        if (dirty.length) {
+            console.log(`## ⚠ the PRIMARY tree has ${dirty.length} uncommitted change(s) — this `
+                + 'run measures HEAD, NOT your working tree.');
+            console.log(mine.length
+                ? `##   ⛔ uncommitted under scripts/procgen/ and therefore NOT in this run's `
+                  + `population: ${mine.join(', ')} — use \`--in-place\` to measure them.`
+                : '##   ⛓ none of them is under `scripts/procgen/`, so the population is the '
+                  + 'same either way.');
+        }
+    }
+    console.log('');
 }
 
 /**
@@ -554,7 +791,7 @@ const importFixed = DOORS === 'all'
 const bad = [...new Set([...helpBad, ...importFresh, ...importFixed])];
 
 if (WRITE_BASELINE) {
-    const head = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: REPO, encoding: 'utf8' }).trim();
+    const head = HEAD;
     /**
      * ⛓ EACH ENTRY CARRIES THE DOOR IT FAILS AND, WHERE THERE IS ONE, THE
      * PATHS IT WROTE — so a later slice can retire an entry BY NAME and know
@@ -618,6 +855,10 @@ console.log(`## ${rows.length} instrument(s), \`--doors=${DOORS}\`, ${JOBS} at a
     + `import-door baseline. Slowest: ${slowest.file} `
     + `(${Math.max(slowest.help.ms, slowest.import.ms)} ms; kill deadlines ${CEILING_MS} ms, `
     + `${KNOWN_CEILING_MS} ms for a baselined IMPORT door).`);
+/** ⛔ …and the VERDICT says which tree it is about. An exit code without a
+ *  summary is not a verdict, and a summary that does not name its subject is
+ *  a number somebody will read against the wrong tree. */
+console.log(treeLine);
 console.log('## ⛓ The ceiling is a PROXY — the assertions that decide a row are the porcelain, '
     + 'the mtime sweep, the child\'s own cache, its exit code, its stderr, and for the help '
     + 'door that stdout IS the derived help text.');
