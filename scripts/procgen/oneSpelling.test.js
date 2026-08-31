@@ -77,6 +77,21 @@ describe('R9 P3 (E): one transcription of `Point.length`, and one spelling in it
      */
     it('⛓⛓ the excluded population is enumerated, not implied', () => {
         const outside = outsideTheBound({ repo: REPO });
+        /**
+         * ⛓ ONE SCAN, REUSED. `transcriptionSubject` walks every model file
+         * TWICE (definitions, then imports), reading and `stripInert`-ing each
+         * — so calling it inside the loop below made the row quadratic in the
+         * excluded population and cost 26.7 s of a 39.8 s file. The answer
+         * cannot move between iterations: it is a pure function of the tree,
+         * and the loop does not touch the tree. MEASURED on a quiet box, this
+         * file alone: **39.8 s -> 15.9 s wall**, and THIS ROW **26.7 s ->
+         * 3.5 s** — with `outsideTheBound`'s 16 rows and the subject's 3 files
+         * byte-identical before and after. ⚠ The file is not `cheap` yet and
+         * the hoist cannot make it so: the four other rows each pay their own
+         * full `modelFiles` scan inside `secondSpellings`/`outsideTheBound`,
+         * which is a change to the PRODUCTION functions, not to this test.
+         */
+        const subject = transcriptionSubject({ repo: REPO });
         expect(outside.length).toBeGreaterThan(0);
         const byFile = new Map(outside.map((r) => [r.file, r.sites]));
         // the planner's distances never reach a tape — the largest exclusion
@@ -85,7 +100,7 @@ describe('R9 P3 (E): one transcription of `Point.length`, and one spelling in it
         // …and a zero-test, where every monotone length gives the same boolean
         expect(byFile.get('frontend/modules/seedlingDemo/playerPhysicsV2.js')).toBe(1);
         for (const r of outside) {
-            expect(transcriptionSubject({ repo: REPO })).not.toContain(r.file);
+            expect(subject).not.toContain(r.file);
         }
     });
 });
