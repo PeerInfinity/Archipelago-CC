@@ -5933,7 +5933,7 @@ NEXT: `map-walk` and `mechanic` have no separately banked value — their parts 
 
 **⇒ CAT CLOSED (2026-08-30, `main` @`44c112087`; 8 commit(s); as-built kickoff §56; ⚖ 17 ANSWERED, ⚖ 22 ANSWERED, ⚖ 40 ANSWERED, ⚖ 69 (c) DISCHARGED, ⚖ 70 DISCHARGED).**
 
-## 5i. The EDITOR INTEGRATION arc — LIVE (arc opened 2026-08-26, post-dates this doc; entry written 2026-08-28 at main `2b0c1bc7c`)
+## 5i. The EDITOR INTEGRATION arc — ⛓ CLOSED 2026-08-31 (opened 2026-08-26; the CLOSE paragraph is at this entry's end; entry first written 2026-08-28 at main `2b0c1bc7c`)
 
 **Status: ⛓ W-front + ALL FOUR B slices + M0 recon + H7/H8 MERGED 2026-08-28
 (main `52e3348a4`, suite 401/12287 @a3fe66f4a); ONLY M1 (the AS3 seams + the
@@ -6076,6 +6076,47 @@ ONLY in generated files/regions (regenerate, never hand-pick); assert
 `rebase-merge` absent + commit count before any ff; ff from the primary tree;
 a push of `main` spawns a new CI run so `--only=suite` answers KEEP (read the
 VERB); browser gates take the BOX LOCK.
+
+**⛓⛓⛓ ARC CLOSED 2026-08-31 (session 3, `editor-integration-planning-3`, Fable)
+— main `9fe3bc4a4`, suite 413/12528 quoted from CI at eb7593655;
+`PeerInfinity/seedling-wasm` main `e645f2e54`.** The header of this entry is
+superseded: the arc is DONE. What landed after the 2026-08-28 refresh, in
+merge order: **M1/M1b** (the randomizer PLAYABLE — `APItem`, the check + door
+seams, `seedling_bot_ap_p4d` blessed with the 150-tape byte-inert sweep on
+`--win`; as-built §17.3–§17.4) · **P1** (the randomizer WIRED IN PRODUCTION,
+DETECTED FROM DATA — no opt-in flag: eligibility over the preset's
+`flash_panel.wasm`, the build's `capabilities` in the wasm manifest, the
+goal-ledger join (playthrough by name 41/41, stage-1 by AP id 40/41, atlas
+ineligible by its own data), and the source documents; computed-specifier
+lazy import (+265 B where a literal dynamic import costs MORE than a static
+one); overlay → deliver → reset-to-the-set's-start → bind; the "found X for
+Player Y" readout — whose publisher had NEVER been registered since M1, the
+first of two defects only production wiring could expose, the second being
+the reset parking the player inside `tree@0,0`; merged as a MERGE COMMIT by
+⚖; §17.5) · **P2** (p4d THE DEFAULT everywhere — a DEFAULT MOVE, not a
+retirement: p4b stays as the no-`arm` control, p4c as the no-`apitem`
+control, both now gated by capability-keyed pins rows (f)/(g) rather than
+prose; P3 folded — the roster arms on `--win` with the channel-asymmetric
+`runArmsLocal` gap found and fixed; the two verifiers red-since-P1 behind a
+`continue-on-error` caller revived; §17.6) · **P4** (the residue slice: the
+manifest's `capabilities` gains `arm` measured from the wasm payloads by
+`strings`; the ⚖ MANIFEST-PROSE EXEMPTION ruled, written OUTSIDE the gate it
+excuses, and exercised — the owed gate discharged by re-quote at the merged
+head, no drive; the LOCAL fallback driven 81/0; `oneSpelling`'s row 26.7 →
+3.5 s; §17.7). ⚖ 70 (f) for P1's gitlink was DISCHARGED ON A MEASUREMENT
+first: one full-tier drive at the merged head, ALL CHECKS PASSED, composite
+3633/0/46, category parts campaign 616/0/3 · map-walk 449/0/0 · mechanic
+2194/0/0. Standing rows at close: maze-lab 231 · hosting 66 · -arm 226 ·
+-edit 71 · pins ALL PASS (f)+(g) · procgen-help 265/0 · full-tier-owed 5/0 ·
+reference 21/0. Traps 980–986, 999–1003, 1010–1014, 1021.
+DEFERRED BY NAME (the next planning session's queue): the `main()` refactor
+of `verify-seedling-ap-placement.mjs` (a top-level-await script; baseline
+entry carries the debt); Ruffle parity; the producing-side `flash_panel`
+emission (the seed-1 block is HAND-ADDED and PROVISIONAL by ⚖ — a regen
+drops it); the pin gate's spelling widening (three p4d references it cannot
+see, worst `regionAtlasCompiler.js:169` — the only CODE source of the
+presets' wiring); the `oneSpelling` production-side memo. The queue's next
+major item is the PLATFORMER SUBSTRATE (`project_platformer_substrate_arc`).
 
 ## 5j. The WORLDGEN WRITERS REVIEW — DONE 2026-08-30 (arc opened and closed in one Fable session, every step user-approved; plan file `NewDocs/plans/worldgen-writers-review.md`, gitignored)
 
