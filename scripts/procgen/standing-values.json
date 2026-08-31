@@ -1092,13 +1092,12 @@
     },
     "suite: vitest (unfiltered)": {
       "value": "413/12528",
-      "command": "node scripts/procgen/ci-vitest-summary.mjs --json",
-      "kind": "ci-suite",
-      "exit": 0,
-      "ms": 4292,
+      "command": null,
+      "kind": "identity",
       "cheap": false,
-      "measuredAt": "34c74aecc0784108cc21e52ba732d5f3689afd4d",
-      "total": "success"
+      "quoted": true,
+      "why": "CI run 33349279612 at eb7593655 (P4: manifest capabilities + exemption + LOCAL drive + oneSpelling hoist): 12520 passed | 8 skipped | 0 failed; 0 files/0 tests added — predicted from the diff, matched exactly",
+      "measuredAt": "eb759365555ea5c2bff9e9bd0ae5bbfb74735c7b"
     },
     "roster: --win --tier=full": {
       "value": "150 tapes 3259/0/3",
