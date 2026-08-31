@@ -86,7 +86,7 @@ Headless equivalents of everything the pages do live in `scripts/procgen/`. The 
 
 **265 instruments** live in `scripts/procgen/`, by prefix: `probe-` 60 (22 browser) · `verify-` 50 (31 browser) · `plan-` 36 (1 browser) · `check-` 33 (22 browser) · `census-` 12 · `solve-` 7 · `dump-` 6 · `make-` 6 · `sweep-` 6 · `recon-` 5 · `region-` 5 · `generate-` 4 · no prefix 4 · `ci-` 3 · `extract-` 3 · `attribute-` 2 · `audit-` 2 · `export-` 2 (1 browser) · `record-` 2 · `batch-` 1 · `build-` 1 · `derive-` 1 · `find-` 1 · `harvest-` 1 · `lint-` 1 · `measure-` 1 · `mine-` 1 · `prove-` 1 · `reach-` 1 · `rerecord-` 1 · `run-` 1 · `seedling-` 1 · `show-` 1 · `stamp-` 1 · `standing-` 1 · `survey-` 1.
 
-77 of them drive a real browser; 171 accept at least one `--flag` OF THEIR OWN; 87 are cited by one of these documents; and 0 open with no comment at all.
+77 of them drive a real browser; 171 accept at least one `--flag` OF THEIR OWN; 88 are cited by one of these documents; and 0 open with no comment at all.
 
 Each also accepts what a module it IMPORTS parses: `--help` (263, in `argvHelp.js`) · `--wait-for-box` (97, in `boxLock.js`) · `--only` (1, in `rehearsalTree.js`) · `--record` (1, in `rehearsalTree.js`) · `--walk-report` (1, in `rehearsalTree.js`). Those are listed per row with the parse site named, so the table says what a file ACCEPTS without losing where the parse lives.
 

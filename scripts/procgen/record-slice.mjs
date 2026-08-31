@@ -188,7 +188,15 @@ const FIELD_RE = {
     date: /\b(\d{4}-\d{2}-\d{2})\b/,
     section: /(?:as-built(?: kickoff)?|kickoff)\s*(?:§|\*\*§)(\d+)/i,
     head: /`main`\s*=?\s*@?\*{0,2}`([0-9a-f]{7,40})`/,
-    traps: /traps?\s*\*{0,2}(\d{3})(?:\s*[–-]\s*(\d{3}))?/i,
+    /**
+     * ⛔ THREE **OR FOUR** DIGITS. The ladder crossed 999 during R9 and this
+     * pattern did not: against a bullet reading `traps 1016–1018` a `\d{3}`
+     * matched the PREFIX `101` and the calibration reported a disagreement
+     * with the hand line that the hand line did not have — the tool
+     * mis-reading its own subject and blaming the human. Measured on SG2's
+     * close; every slice from trap 1000 onward had the same wrong reading.
+     */
+    traps: /traps?\s*\*{0,2}(\d{3,4})(?:\s*[–-]\s*(\d{3,4}))?/i,
 };
 
 function calibrate(parsed, lines, memory) {

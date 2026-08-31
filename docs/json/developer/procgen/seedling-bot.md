@@ -13780,6 +13780,67 @@ in prose says what it says and why, rather than being quietly corrected.
 written out, and it has been kept current rather than frozen since — it is now
 sixteen rows, and it carries a line saying that is what it is.
 
+### R9 slice SG2: A STANDING GATE ROW LEARNS WHICH BYTES IT IS AN ANSWER ABOUT
+
+**`standing-values --write` no longer re-runs a gate row whose inputs did not
+move.** The ⚖ 69 (d) census found four rows costing 2305 s — 68 % of a
+56.8-minute battery — and a `--write` paid all four every time, whether or not
+anything they measure had changed. Each keyed row now carries an `inputKey`
+over four DERIVED input populations (`scripts/procgen/rowInputKey.js`); an
+unchanged key CARRIES THE BANKED VALUE FORWARD saying so, keeping its own
+`measuredAt` and adding `quotedAtKey`. This is the ⚖ 70 pattern — *re-drive
+what the reach names, quote the rest, saying so* — moved from tape categories
+to gate rows.
+
+| population | what it holds | derived by |
+|---|---|---|
+| CODE | the forward import closure from the row's entry file, driven pages included | `reachClosure.buildGraph`; `addPageDriveEdges` + `HTML_SRC_RE` put a `watch.html` a gate merely NAMES, and that page's own scripts, into the closure |
+| DATA | fixtures, tapes, baselines, and the markdown an instrument opens | `dataReach`'s delimited-token law run FORWARD, plus resolved path literals; `.md` and directory enumerations count only inside `scripts/procgen/` |
+| SPAWN | shell-out targets AND their closures | a literal USED as a path (`join`/`resolve`/`execFile*`/`spawn*`/`import`), or a literal that IS a command line beginning `node` |
+| BUILD | the submodule gitlinks — the bytes no import can reach | containment OR a path INTO the submodule spelled in the CODE population |
+
+**Read the populations, don't trust them.** Every key computation PRINTS its
+populations (counts + a digest each), because the one failure this mechanism
+can have is a key that MISSES an input — a stale green that rides forever with
+nothing on disk to disagree. Two more mitigations exist for that:
+`--redrive-unchanged` re-runs at an unchanged key on purpose and a moved
+verdict becomes a NAMED nondeterminism finding that exits non-zero rather than
+a silent re-bank; `--rekey` and `--force-row=<key>` re-measure on request.
+`--keys` prints every row's key and populations and takes NO BOX.
+
+**⛔ `cheap` and the key are not coupled.** `cheap` governs `--check` — a cheap
+row re-runs on every check regardless of its key, because a check is how a
+slice notices its own tree moved under it. The key governs `--write`.
+
+**Where the savings are, measured.** A docs-only or scripts-only commit moves
+**2 of 34** keyed rows and quotes `procgen-demos` + `seedling-wasm-element` +
+`seedling-wasm-ship` — 1709 s. A commit touching a tape or a frontend module
+moves 29 of 34 and pays in full, and should: those gates genuinely drive that
+data. The economy is on the doc, plan and scripts commits.
+
+**Only one gate declares anything.** `check-procgen-help.mjs`'s import closure
+is six files and its SUBJECT is all 265 instruments, enumerated at run time —
+the one thing derivation cannot see. It says so in its own docblock, read the
+way `@ci-face` already is:
+
+```
+ * @key-inputs code: scripts/procgen/*.mjs
+ * @key-inputs data: scripts/procgen/check-procgen-help.baseline.json
+```
+
+**⚖ 71 (c), banked at the same close** — the four rows re-measured at
+`34c74aecc` against their `32b818be4` bank: `procgen-demos` 310.4 s → **95.1 s**
+(SG1's dedup, now paid for), `procgen-help` 264/1 596.3 s → **265/0 434.1 s**
+(the throwaway-worktree regime, and P2's baseline entry clearing the red),
+`seedling-wasm-element` 940.8 → 938.4 s and `seedling-wasm-ship` 458.2 →
+450.3 s (both INTRINSIC playback — the census's claim about them confirmed
+rather than improved). **2305.7 s → 1917.9 s, −17 %.**
+
+⚠ A key is reproducible from a COMMIT: every population derives from
+`git ls-files`, so an untracked file is invisible, and a tree whose submodules
+are not checked out computes a different key — which makes the row RE-RUN,
+never quote.
+
 ### R9 slice CAT: THE ROSTER GETS THREE DERIVED CATEGORIES — 143 minutes of owed GPU become 11
 
 **The full `--win` tier is 143 minutes, and until this slice every tape move
