@@ -43,6 +43,52 @@
  * SHA, and the invisible movers are PRINTED as excluded rather than dropped in
  * silence (a bound must name what it bounds).
  *
+ * ── ⚖⚖ THE MANIFEST-PROSE EXEMPTION — THE ONE CARVE-OUT ON (i) ───────
+ *
+ * ⚖ RULED BY THE USER, 2026-08-30 (EDITOR INTEGRATION slice P4), and written
+ * HERE because this is the gate that prices the tier — a rule that lives only
+ * in a plan is a rule the person reading a red row does not have:
+ *
+ *   **A gitlink bump whose submodule diff touches ONLY `builds.json` AND whose
+ *   per-build payload md5s are byte-identical owes the pins gate plus the
+ *   bounded reach, NOT the full-tier drive — the md5 identity is QUOTED in the
+ *   outer commit as the licence.**
+ *
+ * The reasoning is (i)'s own: the population exists because *a different game
+ * was built*. `builds.json` is the manifest ABOUT the builds — `namedBy`
+ * prose, a `capabilities` declaration, a `$comment`. No byte the game runs is
+ * in it, and no byte the game runs moved. ⇒ every tape's verdict is still
+ * about the artifact it was measured on, and 143 minutes of GPU would
+ * re-measure a thing that did not move.
+ *
+ * ⛔ THE BOUNDARY IS THE PREMISE, AND IT IS ALL THREE CLAUSES. Miss one and
+ * the exemption does not apply:
+ *
+ *   ONLY `builds.json`   a build directory, an `.gitignore` whitelist line or
+ *                        any other file in the same submodule commit ⇒ NOT
+ *                        exempt. The single-file diff is what makes "no
+ *                        payload moved" checkable at a glance.
+ *   md5s BYTE-IDENTICAL  compared per build against the PARENT commit's
+ *                        manifest, not merely re-derived from the files on
+ *                        disk — a manifest may be edited to agree with a
+ *                        payload that moved, which is the one way clause 1
+ *                        alone could be satisfied by a real rebuild.
+ *   QUOTED IN THE COMMIT the outer commit carries the identity and the pins
+ *                        run. An exemption nobody can audit from the history
+ *                        is an exemption that will be claimed for the next
+ *                        bump too.
+ *
+ * ⚠ AND THIS GATE STILL REDS — deliberately, and it is not a defect. (i) is a
+ * BYTE compare and stays one: teaching this file to parse a submodule diff
+ * would put the carve-out in the same place as the check it excuses, and the
+ * whole design above is that a bound is stated where a human reads it. What
+ * the exemption licenses is the DISCHARGE — re-quoting each part's
+ * `measuredAt` at the merged head with `record-standing-value.mjs` instead of
+ * driving — and the commit's quoted identity is the evidence for that call.
+ * ⛓ Same direction of error as the paragraph below: a spurious "re-measure"
+ * costs a human ten seconds of reading; a missed one costs a standing value
+ * that is quietly wrong for a campaign.
+ *
  * ── ⚠ IT IS DELIBERATELY OVER-INCLUSIVE ON (i), (ii) AND (iv) ────────
  *
  * Those three are BYTE compares, because a projection is only defined for a

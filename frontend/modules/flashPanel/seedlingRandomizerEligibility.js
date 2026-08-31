@@ -47,6 +47,11 @@
  * own `scannable()` learned when the self-test carried a second copy of the
  * normaliser and a mutant left it green.
  *
+ * ⚠ THE VOCABULARY IS BROADER THAN THIS PREDICATE. `arm` is in it and is read
+ * by nothing here: it exists so that its ABSENCE on exactly one build can be
+ * gated (pins row (g)), the way `apitem`'s absence on exactly one build is.
+ * See `ARM_CAPABILITY` below.
+ *
  * ⛔ AND THIS FILE NAMES NO BUILD. The build name is DERIVED from the
  * preset's own `flash_panel.wasm`; a literal here would both hardcode the
  * default and register as a pin in the four-way law the pin gate enforces.
@@ -57,11 +62,39 @@
 export const AP_ITEM_CAPABILITY = 'apitem';
 
 /**
+ * The build arms in `Bot.update` on the first frame where `FP.world` IS the
+ * world `botStart` constructed (R9 slice 12g′, ⚖ ruling 58's (F)), rather than
+ * setting `armed = true; tick = 0` beside the swap it merely REQUESTED. Its
+ * `botStatus` therefore carries an `arm: {pending, armed_at}` block, and the
+ * pre-swap frame is not counted dead.
+ *
+ * ⛔⛔ THIS ONE HAS NO CONSUMER IN THIS FILE, AND THAT IS THE POINT — IT IS
+ * DECLARED SO THAT AN ABSENCE CAN BE GATED. The two live consumers are
+ * dead-frame corrections that read the RUNTIME field, not the manifest:
+ * `check-seedling-wasm-ship.mjs`'s CLAIM 6 (`armsAfterSwap ? 0 :
+ * BOOT_PRESWAP_FRAMES`) and `seedlingDemo/r5Acceptance.js`'s
+ * `preSwapCorrection`. Each is proved only by an arm on a build that LACKS the
+ * capability — with no such build the false branch is unreachable and the
+ * correction silently degrades to "always subtract one", which is the exact
+ * inversion `preSwapCorrection`'s docblock records its own mutant going GREEN
+ * on. ⇒ `check-seedling-wasm-pins.mjs` row (g) gates it, the same way row (f)
+ * gates `apitem`'s control.
+ *
+ * ⛓ SO THE VOCABULARY IS BROADER THAN THIS PREDICATE'S OWN USE, deliberately.
+ * `WASM_BUILD_CAPABILITIES` is the list a MANIFEST ENTRY may draw on; only
+ * `AP_ITEM_CAPABILITY` is read by the eligibility checks below. Splitting the
+ * two lists would put a second copy of the vocabulary somewhere, which is the
+ * one thing the manifest's own `$comment` forbids.
+ */
+export const ARM_CAPABILITY = 'arm';
+
+/**
  * ⛓ THE DECLARED VOCABULARY. A manifest entry may only name capabilities from
  * this list — otherwise `"apitm"` would silently mean "this build does not
  * have it" and the feature would vanish with no error anywhere.
  */
-export const WASM_BUILD_CAPABILITIES = Object.freeze([AP_ITEM_CAPABILITY]);
+export const WASM_BUILD_CAPABILITIES = Object.freeze(
+    [AP_ITEM_CAPABILITY, ARM_CAPABILITY]);
 
 /** The ids the four checks report themselves by, in the ruled order. */
 export const ELIGIBILITY_CHECK_IDS = Object.freeze(

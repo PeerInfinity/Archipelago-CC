@@ -15770,6 +15770,26 @@ provably cannot move the measurement. The verdict is now a diff whose CHANGED
 LINES touch the accounting, with the wider set still printed beside it, because
 one narrowing errs toward under-inclusion where the other errs toward over.
 
+⚖⚖ **AND (i) HAS EXACTLY ONE CARVE-OUT — THE MANIFEST-PROSE EXEMPTION**
+(ruled by the user, 2026-08-30). The build population reds on a gitlink move
+because *a different game was built*. But the wasm submodule also carries
+`builds.json`, the manifest ABOUT the builds — `namedBy` prose, a
+`capabilities` declaration, a `$comment` — and no byte the game runs is in it.
+So: **a gitlink bump whose submodule diff touches ONLY `builds.json` AND whose
+per-build payload md5s are byte-identical owes the pins gate plus the bounded
+reach, NOT the full-tier drive — the md5 identity is QUOTED in the outer commit
+as the licence.** ⛔ The boundary is the premise and it is all three clauses:
+touch a build directory, a whitelist line or any second file and it does not
+apply; the md5s are compared against the PARENT commit's manifest rather than
+re-derived from disk, because a manifest can be edited to agree with a payload
+that moved; and the commit carries the identity, because an exemption nobody
+can audit from the history will be claimed for the next bump too. ⚠ The gate
+itself still reds, deliberately: (i) stays a byte compare, since teaching it to
+parse a submodule diff would put the carve-out in the same file as the check it
+excuses. What the exemption licenses is the DISCHARGE — re-quoting each part's
+`measuredAt` at the merged head instead of driving — and the rule is written in
+the gate's own docblock, where the person reading the red row is standing.
+
 **ONE BOX, ONE HOLDER, AND THE TREE FROZEN WITH IT.** Twelve hand-relayed "box
 busy" / "box free" messages in a single day is a protocol whose enforcement is a
 human retyping two words. A lock file outside every worktree and every

@@ -22,6 +22,13 @@
  * here rather than restated. See the row's own note for why absence and a
  * typo are the same silent failure.
  *
+ * ⛓⛓ AND TWO ROWS ARE KEYED ON A CAPABILITY'S *ABSENCE* — (f) for `apitem`
+ * and (g) for `arm`. Both exist because the four-way law above answers *does
+ * SOMEBODY name this build*, never *does the RIGHT somebody*. A control build
+ * is pinned in order to be the negative half of a pair, and it stops being one
+ * silently: every view stays in agreement, every row goes green, and the pair
+ * has quietly become two copies of the same arm.
+ *
  * They are four views because each can rot on its own: a whitelist line
  * with no directory adds nothing, a directory with no whitelist line is
  * invisible, a manifest entry with neither is a lie, and a reference to
@@ -100,7 +107,7 @@ import { argvHelp } from './argvHelp.js';
  * gates tests itself; this file already learned that with `scannable()`,
  * whose duplicate inside `--self-test` left a mutant green.
  */
-import { AP_ITEM_CAPABILITY, WASM_BUILD_CAPABILITIES }
+import { AP_ITEM_CAPABILITY, ARM_CAPABILITY, WASM_BUILD_CAPABILITIES }
     from '../../frontend/modules/flashPanel/seedlingRandomizerEligibility.js';
 
 argvHelp(import.meta.url);
@@ -456,6 +463,122 @@ const CONTROL_SPELLING = /process\.env\.SEEDLING_PAGE\s*\|\|\s*'(seedling_[a-z0-
         console.log(`  ${CONTROL_FILE}`);
         console.log(`  drives ${named}, capabilities=[${capsOf(named).join(', ')}] `
             + `— no ${AP_ITEM_CAPABILITY}, so the ABSENT/PRESENT pair is still a pair`);
+    }
+}
+
+/**
+ * ── (g) ⚖ THE `arm` CONTROL — A BUILD THAT LACKS `arm` MUST STAY PINNED ──
+ *   (EDITOR INTEGRATION slice P4, closing the residue §17.6.8 names)
+ *
+ * ⛔ THIS IS ROW (f)'s SHAPE WITHOUT ROW (f)'s DATUM, AND THE DIFFERENCE IS
+ * WHY IT IS SHAPED DIFFERENTLY. `apitem` has a CONTROL FILE whose
+ * `SEEDLING_PAGE` default names the build the control arm drives, so (f) can
+ * read a default out of SOURCE and ask what the MANIFEST says about it. `arm`
+ * has no such file: its two consumers are dead-frame corrections that read the
+ * RUNTIME field off whatever build they happen to be driving —
+ *
+ *   `check-seedling-wasm-ship.mjs`  CLAIM 6, `wins[0]?.arm != null`
+ *   `seedlingDemo/r5Acceptance.js`  `preSwapCorrection`,
+ *                                   `walk?.status?.arm != null`
+ *
+ * — which is deliberate and is the RIGHT design (keying on a build NAME breaks
+ * at the next rebuild; ⛓ R9 12g′ learned that one file over, where a driver's
+ * `--arm-bound` asserted in prose that it could not fire on p4c and then
+ * refused it four times out of four, because the code had no way to see which
+ * build it was driving). But it means the thing that can rot is not a
+ * spelling — it is the EXISTENCE of a build to drive.
+ *
+ * ⛔⛔ AND THE ROT IS SILENT AND FAVOURS GREEN. Both corrections are ternaries
+ * on that read. Take the last `arm`-less build away and the FALSE branch is
+ * unreachable: `armsAfterSwap ? 0 : BOOT_PRESWAP_FRAMES` is `0` forever,
+ * `preSwapCorrection` is `BOOT_PRESWAP_FRAMES` forever, and both degrade to
+ * "always subtract one" — which is EXACTLY the inversion `preSwapCorrection`'s
+ * own docblock records its mutant going GREEN on, *because "always subtract
+ * one" is accidentally correct on p4c*. Nothing reds. The whitelist admits the
+ * directory it always did; the four views agree; a correction that used to be
+ * proved is now merely assumed.
+ *
+ * ⇒ TWO CHECKS, and they read two independent sources so this is not a fixed
+ * point (trap 769):
+ *
+ *   (g1) THE SITES STILL KEY ON THE FIELD. Read off the tracked blobs. A
+ *        rewrite onto a build name, or a deletion, reds here — the regression
+ *        this family keeps producing.
+ *   (g2) THE MANIFEST STILL DECLARES A BUILD WITHOUT `arm`, and at least one
+ *        such build is REFERENCED, i.e. actually available to drive. ⛓ View
+ *        (a) cannot answer this: retiring the last `arm`-less build entirely —
+ *        manifest, whitelist and directory together — leaves all four views in
+ *        perfect agreement.
+ *
+ * ⚠ (g2) DOES NOT PIN A NAME. p4b satisfies it today; whoever retires p4b
+ * satisfies it by leaving some other build without `arm`, and the row says so.
+ */
+const ARM_CORRECTIONS = [
+    ['scripts/procgen/check-seedling-wasm-ship.mjs',
+        /\?\.arm\s*!=\s*null/, 'CLAIM 6\'s `armsAfterSwap`'],
+    ['frontend/modules/seedlingDemo/r5Acceptance.js',
+        /\?\.arm\s*!=\s*null/, '`preSwapCorrection`'],
+];
+/**
+ * ⛔ COMMENTS ARE STRIPPED BEFORE (g1) MATCHES, AND THAT IS THE DIFFERENCE
+ * BETWEEN A REFERENCE AND A MENTION. Both files DOCUMENT the read at length —
+ * `r5Acceptance.js` writes ``(`arm != null`)`` in the very docblock that
+ * explains the direction — so a scan over raw text would go on passing after
+ * the code under it was rewritten onto a build name, kept green by the prose
+ * describing what the code used to do. MEASURED: with the read moved into a
+ * docblock and the function keyed on a name, the raw-text form is GREEN and
+ * this form REDS.
+ *
+ * ⚠ Deliberately conservative — block comments, and lines whose first non-space
+ * is `//` or `*`. Nothing that could eat a `//` inside a string or a regex
+ * literal, because a false STRIP here would red a correct file.
+ */
+function codeOnly(text) {
+    return text.replace(/\/\*[\s\S]*?\*\//g, '')
+        .split('\n').filter((l) => !/^\s*(?:\/\/|\*)/.test(l)).join('\n');
+}
+{
+    console.log(`\n# the ${ARM_CAPABILITY} control`);
+    // (g1) the two correction sites still read the CAPABILITY, not a name.
+    for (const [rel, re, what] of ARM_CORRECTIONS) {
+        if (!trackedFiles.includes(rel)) {
+            fail(`${rel} is not tracked — it carries one of the two ${ARM_CAPABILITY} `
+                + 'corrections, whose negative arm is the whole reason a build declaring '
+                + `no ${ARM_CAPABILITY} stays pinned`);
+            continue;
+        }
+        let text = null;
+        try { text = codeOnly(readFileSync(join(REPO, rel), 'utf8')); } catch { /* below */ }
+        if (text === null || !re.test(text)) {
+            fail(`${rel}: ${what} no longer reads the runtime \`${ARM_CAPABILITY}\` field `
+                + `(${re}) — a correction keyed on a build NAME breaks at the next `
+                + 'rebuild, and one that reads nothing is not a correction at all');
+        } else {
+            console.log(`  ${rel}\n    ${what} keys on the runtime `
+                + `\`${ARM_CAPABILITY}\` field`);
+        }
+    }
+    // (g2) …and the manifest still offers a build for that arm to be driven on.
+    const without = manifest.builds
+        .filter((b) => Array.isArray(b.capabilities)
+            && !b.capabilities.includes(ARM_CAPABILITY))
+        .map((b) => b.name);
+    const drivable = without.filter((n) => REFERENCED.has(n));
+    if (without.length === 0) {
+        fail(`NO manifest build declares an absence of ${ARM_CAPABILITY} — the two `
+            + 'corrections above are ternaries on that read, so their FALSE branch is now '
+            + 'unreachable and both silently degrade to "always subtract one". That is the '
+            + 'inversion `preSwapCorrection`\'s own mutant went GREEN on. Keep one build '
+            + `without ${ARM_CAPABILITY}, or retire both corrections`);
+    } else if (drivable.length === 0) {
+        fail(`${without.join(', ')} declare${without.length === 1 ? 's' : ''} no `
+            + `${ARM_CAPABILITY} but no tracked file of this repo names `
+            + `${without.length === 1 ? 'it' : 'any of them'} — the negative arm exists in `
+            + 'the manifest and cannot be driven');
+    } else {
+        console.log(`  ${drivable.join(', ')} declare${drivable.length === 1 ? 's' : ''} no `
+            + `${ARM_CAPABILITY}, and ${drivable.length === 1 ? 'is' : 'are'} referenced `
+            + '— so both corrections still have a negative arm to be proved on');
     }
 }
 
