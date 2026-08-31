@@ -1101,30 +1101,31 @@
       "total": "success"
     },
     "roster: --win --tier=full": {
-      "value": "150 tapes: campaign 26 791/0/69 @fc87a177f + map-walk 21 + mechanic 103 @36b71996d, not separately banked",
+      "value": "150 tapes 3259/0/3",
       "command": null,
       "kind": "identity",
       "cheap": false,
       "quoted": true,
-      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 26 tape(s) 791/0/69 MEASURED @fc87a177f · map-walk 21 tape(s) @36b71996d, not separately banked · mechanic 103 tape(s) @36b71996d, not separately banked. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all. ⛓ Carried by: the `--full-roster` tier at 36b71996d, whose composite total ⚖ 69 (a) banked as 150 tapes 3641/0/120 (its 120-tape complement 2774/0/15).",
-      "measuredAt": "36b71996d",
+      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 26 tape(s) 616/0/3 MEASURED @15e70e7bb182ba26a43f6c97c50c90e07b9495ff · map-walk 21 tape(s) 449/0/0 MEASURED @15e70e7bb182ba26a43f6c97c50c90e07b9495ff · mechanic 103 tape(s) 2194/0/0 MEASURED @15e70e7bb182ba26a43f6c97c50c90e07b9495ff. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all. ⛓ Carried by: the --tier=full drive at 15e70e7bb (2026-08-30, --win, BUILD banner: seedling_bot_ap_p4d the DEFAULT) — ALL CHECKS PASSED, composite 3633/0/46; per-tape rows only, chain/roster rows live in the composite.",
+      "measuredAt": "15e70e7bb182ba26a43f6c97c50c90e07b9495ff",
       "categories": {
         "campaign": {
           "tapes": 26,
-          "value": "791/0/69",
-          "measuredAt": "fc87a177f"
+          "value": "616/0/3",
+          "measuredAt": "15e70e7bb182ba26a43f6c97c50c90e07b9495ff",
+          "coveredBy": "the --tier=full drive at 15e70e7bb (2026-08-30, --win, BUILD banner: seedling_bot_ap_p4d the DEFAULT) — ALL CHECKS PASSED, composite 3633/0/46; per-tape rows only, chain/roster rows live in the composite"
         },
         "map-walk": {
           "tapes": 21,
-          "value": null,
-          "measuredAt": "36b71996d",
-          "coveredBy": "the `--full-roster` tier at 36b71996d, whose composite total ⚖ 69 (a) banked as 150 tapes 3641/0/120 (its 120-tape complement 2774/0/15)"
+          "value": "449/0/0",
+          "measuredAt": "15e70e7bb182ba26a43f6c97c50c90e07b9495ff",
+          "coveredBy": "the --tier=full drive at 15e70e7bb (2026-08-30, --win, BUILD banner: seedling_bot_ap_p4d the DEFAULT) — ALL CHECKS PASSED, composite 3633/0/46; per-tape rows only, chain/roster rows live in the composite"
         },
         "mechanic": {
           "tapes": 103,
-          "value": null,
-          "measuredAt": "36b71996d",
-          "coveredBy": "the `--full-roster` tier at 36b71996d, whose composite total ⚖ 69 (a) banked as 150 tapes 3641/0/120 (its 120-tape complement 2774/0/15)"
+          "value": "2194/0/0",
+          "measuredAt": "15e70e7bb182ba26a43f6c97c50c90e07b9495ff",
+          "coveredBy": "the --tier=full drive at 15e70e7bb (2026-08-30, --win, BUILD banner: seedling_bot_ap_p4d the DEFAULT) — ALL CHECKS PASSED, composite 3633/0/46; per-tape rows only, chain/roster rows live in the composite"
         }
       }
     },
