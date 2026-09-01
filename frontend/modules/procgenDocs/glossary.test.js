@@ -150,13 +150,24 @@ describe('the glossary as data', () => {
      * generator for. Folding them would make "a chamber" ambiguous in exactly
      * the table this glossary exists to disambiguate.
      */
-    it('holds 159 entries — 149 + arc-5 slices 1/3/4/5\'s two + one + two + two, '
-        + '6b\'s `density-block`, R9 slice 1\'s `element-subset` and R9 slice 2\'s '
-        + '`window`, and every one is filed',
+    /**
+     * ⛓⛓ **159 → 164 — THE EDITOR CATALOGUE SLICE SPENDS FIVE**, and the
+     * licence is the demo catalogue's own rule: *every slug an entry names must
+     * exist here or the page renders a dead literal*. The five editor entries
+     * (`edit-arm`, `edit-room-flags`, `edit-base-refused`, `edit-vanilla-set`,
+     * `edit-handover`) needed vocabulary EDITOR v3 shipped and this file had
+     * never been given — `edit-arm`, `base`, `edit-op`, `level-set`,
+     * `room-flag`. ⛔ `base` and `edit-op` are `procgenCore/editCore.js`'s and
+     * are true of the MAZE editor too; they are filed ONCE with a detail that
+     * says so, rather than twice per substrate.
+     */
+    it('holds 164 entries — 149 + arc-5 slices 1/3/4/5\'s two + one + two + two, '
+        + '6b\'s `density-block`, R9 slice 1\'s `element-subset`, R9 slice 2\'s '
+        + '`window` and the editor catalogue\'s five, and every one is filed',
     () => {
-        expect(TERMS).toHaveLength(159);
+        expect(TERMS).toHaveLength(164);
         expect(TERMS.length).toBeGreaterThanOrEqual(80);
-        expect(TERMS.length).toBeLessThanOrEqual(159);
+        expect(TERMS.length).toBeLessThanOrEqual(164);
         expect(TERMS.filter((e) => !AREA_IDS.includes(e.area))).toHaveLength(0);
     });
 

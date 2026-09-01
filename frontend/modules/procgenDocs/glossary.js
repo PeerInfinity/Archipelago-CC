@@ -2323,17 +2323,20 @@ export const TERMS = Object.freeze([
     t({
         id: 'arm',
         term: 'an arm',
-        aliases: ['`?source=`', 'GENERATE', 'REPLAY', 'MANUAL'],
+        aliases: ['`?source=`', 'GENERATE', 'REPLAY', 'MANUAL', 'EDIT'],
         area: 'seedling',
-        plain: 'Which of the watch page\'s four jobs you are doing: replaying a recording, '
-            + 'letting the bot play, playing yourself, or generating a level.',
-        detail: 'Selected by `?source=` — `replay` · `solve` · `manual` · `generate` — and a '
-            + 'bare `?gen=` also selects GENERATE. ⛓ SOLVE and MANUAL share **ONE boot panel '
-            + 'and one staging block**: two boxes cannot share a block, and the whole point of '
-            + 'the switch arc was that the level you are looking at follows you between modes. '
-            + 'The GENERATE arm can hand its level to the other two in memory and in place.',
+        plain: 'Which of the watch page\'s five jobs you are doing: replaying a recording, '
+            + 'letting the bot play, playing yourself, generating a level, or editing one by '
+            + 'hand.',
+        detail: 'Selected by `?source=` — `replay` · `solve` · `manual` · `generate` · '
+            + '[`edit`](#edit-arm) — and a bare `?gen=` also selects GENERATE. ⛓ SOLVE and '
+            + 'MANUAL share **ONE boot panel and one staging block**: two boxes cannot share a '
+            + 'block, and the whole point of the switch arc was that the level you are looking '
+            + 'at follows you between modes. The GENERATE arm can hand its level to the other '
+            + 'two in memory and in place, and to [EDIT](#edit-arm) the same way — *"open in '
+            + 'editor"*, which is the one thing a URL cannot carry.',
         where: [{ label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE }],
-        seeAlso: ['lab-page', 'boot-items', 'tape', 'url-parameter'],
+        seeAlso: ['lab-page', 'boot-items', 'tape', 'url-parameter', 'edit-arm'],
     }),
     t({
         id: 'generation-ladder',
@@ -2350,6 +2353,120 @@ export const TERMS = Object.freeze([
             + 'the phase ladder hands over to this one at the last pass-1 row.',
         where: [{ label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE }],
         seeAlso: ['phase-ladder', 'keep-or-revert', 'obstacle-target', 'url-parameter'],
+    }),
+    /* ══════════ THE EDITOR — `?source=edit` AND WHAT IT HOLDS ═══════
+     * ⛓ EDITOR v3 (queue doc §5h) shipped an arm this glossary had no
+     * vocabulary for: the words below are the ones a reader meets in the
+     * catalogue's five editor entries and on the page's own identity line.
+     * ⛔ `base` and `edit-op` are `procgenCore`'s and are true of the MAZE
+     * editor too — the detail says so rather than filing them twice. */
+    t({
+        id: 'edit-arm',
+        term: 'the EDIT arm',
+        aliases: ['`?source=edit`', 'the fifth source'],
+        area: 'seedling',
+        plain: 'The job of the watch page where you edit one room by hand, with no generator '
+            + 'behind it.',
+        detail: 'The FIFTH `?source=` value (EDITOR v3 slice C1) and the one that edits **a '
+            + 'room with no ladder**: every other arm is looking at something a run produced, '
+            + 'and this one opens a [base](#base) — a committed atlas room (`?source=edit&'
+            + 'level=N`), a pasted payload, a raw OEL room, a room of a loaded '
+            + '[level set](#level-set), or a record the GENERATE arm handed over in memory. '
+            + '⛔ **It has no [oracle](#oracle)**: a room with no ladder has no palette and no '
+            + 'pin union to solve it under, so SOLVE refuses BY NAME and ▶ load in wasm is the '
+            + 'certifier here. ⚠ The edit panel itself is SHARED with GENERATE (`genEdit*`); '
+            + 'only the `edit*` half — the identity line, the LOAD box, the OEL download and '
+            + 'the set editor — is this arm\'s alone.',
+        where: [
+            { label: 'seedlingDemo/watchViewer.js — `runEditor`', code: 'frontend/modules/seedlingDemo/watchViewer.js' },
+            { label: 'the reference page — every URL parameter, GENERATED', code: REFERENCE },
+        ],
+        seeAlso: ['arm', 'base', 'edit-op', 'level-set', 'oracle', 'payload', 'url-parameter'],
+    }),
+    t({
+        id: 'base',
+        term: 'a base',
+        aliases: ['the base tag', '`base`'],
+        area: 'seedling',
+        plain: 'The document an editing session is edits OF — named on screen, so you can '
+            + 'always say what you are changing.',
+        detail: 'A **tag**, not a copy: `{kind, …}` naming the document plus the content hash '
+            + 'that pins it, resolved back to bytes by the substrate\'s adapter. Five kinds on '
+            + 'the Seedling page — `atlas` · `oel` · `payload` · `set-room` · `generate`. '
+            + '⛔ `generate` is the one that REFUSES to resolve by name: reproducing it would '
+            + 'mean re-running the ladder, so the arm that already ran it hands the RECORD over '
+            + 'in memory instead (*"open in editor"*). ⛓ Together with the op list, the base is '
+            + 'the whole of what a [payload](#payload) carries — which is why ⚖ ruling 9 can '
+            + 'say the URL carries no edits: the payload is the reproduction.',
+        where: [
+            { label: 'procgenCore/editCore.js — `resolveBase` / `foldEdits`', code: 'frontend/modules/procgenCore/editCore.js' },
+            { label: 'seedlingDemo/watchEdit.js — the Seedling adapter', code: 'frontend/modules/seedlingDemo/watchEdit.js' },
+        ],
+        seeAlso: ['edit-arm', 'edit-op', 'payload', 'round-trip', 'byte-identity'],
+    }),
+    t({
+        id: 'edit-op',
+        term: 'an edit op',
+        aliases: ['the op log', 'UNDO'],
+        area: 'seedling',
+        plain: 'One recorded change to a room — the list of them, replayed over the original, '
+            + 'IS the edited room.',
+        detail: 'An editing session keeps the [base](#base) and an ORDERED LIST of ops; the '
+            + 'room on screen is `foldEdits(base, ops)` and never a mutated copy, so UNDO is a '
+            + 'POP rather than an inverse and every op carries the adapter\'s own sentence '
+            + 'about what it did. ⛔ **A no-op is not an edit** — painting a cell the colour it '
+            + 'already is records nothing, so the op count is a count of CHANGES. ⛓ The core is '
+            + '`procgenCore/editCore.js` and it is shared: the [maze lab](#maze-lab)\'s EDIT '
+            + 'arm and the region/APWorld editors run on the same session type.',
+        where: [
+            { label: 'procgenCore/editCore.js', code: 'frontend/modules/procgenCore/editCore.js' },
+            { label: 'procgenCore/editorView.js — the canvas gestures', code: 'frontend/modules/procgenCore/editorView.js' },
+        ],
+        seeAlso: ['base', 'edit-arm', 'paintable', 'maze-lab', 'payload'],
+    }),
+    t({
+        id: 'level-set',
+        term: 'a level set',
+        aliases: ['the SET editor', 'the overlay'],
+        area: 'seedling',
+        plain: 'A whole game\'s worth of rooms in one document, plus a second document saying '
+            + 'what is findable in them.',
+        detail: 'Schema v1, `{set_id, rooms: [...]}`, with the ids carrying a content hash. '
+            + 'The SET editor edits it AS a document — connect and disconnect exits on the '
+            + 'room strip, the manifest form, access rules, marked locations — and the REPORT '
+            + 'validates it, compiles the region atlas and says which edges are still FREE. '
+            + '⛔ A room\'s `source` decides whether this page can OPEN it: an `embed` is a path '
+            + 'into a SWF\'s `[Embed]` table, so the committed VANILLA 116 cannot be opened '
+            + 'here — the *LOAD the VANILLA 116* button derives the same rooms as an '
+            + '`xml`-sourced set (its own `set_id`, `derived_from` naming the committed one) '
+            + 'and every one of those opens. ⚠ The **overlay** is the THIRD document and it is '
+            + 'where every location and every authored rule lives; a set loaded without one '
+            + 'reports zero locations rather than none needed.',
+        where: [
+            { label: 'seedlingDemo/seedlingSetAdapter.js', code: 'frontend/modules/seedlingDemo/seedlingSetAdapter.js' },
+            { label: 'frontend/schema/seedling-level-set.schema.json', code: 'frontend/schema/seedling-level-set.schema.json' },
+        ],
+        seeAlso: ['edit-arm', 'base', 'rules-json', 'region', 'entrance'],
+    }),
+    t({
+        id: 'room-flag',
+        term: 'a room flag',
+        aliases: ['`lightalpha`', '`snow`', '`daynight`'],
+        area: 'seedling',
+        plain: 'A property of a whole room rather than of anything in it — its weather, its '
+            + 'lighting, whether it is on a day/night cycle.',
+        detail: 'Presence flags and attribute flags, each one an [op](#edit-op) in the '
+            + 'identity, edited through a form and undone like any other edit. ⛔ **The form '
+            + 'states its own REACH, MEASURED on the room in front of you**: the JS model '
+            + 'builds the SAME world with and without six of the seven (`blur`, `blur2`, '
+            + '`daynight`, `droplet`, `lightalpha`, `snow`), so changing one changes nothing it '
+            + 'can certify and the wasm is the only certifier of those — while `control` DOES '
+            + 'reach it, because its data is in the built world. ⚠ A warning in a header is not '
+            + 'a check; this one is computed per room by `flagModelReach`.',
+        where: [
+            { label: 'seedlingDemo/watchEdit.js — `ROOM_FLAG_TAGS` / `flagModelReach`', code: 'frontend/modules/seedlingDemo/watchEdit.js' },
+        ],
+        seeAlso: ['edit-arm', 'edit-op', 'certification', 'seedling-differential'],
     }),
 
     /* ══════════ THE MAZE AND ITS LAB ════════════════════════════════ */
