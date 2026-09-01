@@ -17,7 +17,9 @@ import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { REPO, SCRIPT_DIR, gateRoster, isGateFile, variantsIn } from './gateRoster.js';
+import {
+    REPO, SCRIPT_DIR, ciShallowIn, gateRoster, isGateFile, variantsIn,
+} from './gateRoster.js';
 
 /**
  * ⛔ THE ROSTER IS BUILT INSIDE EACH ROW, NOT AT COLLECT TIME. `gateRoster`
@@ -93,5 +95,62 @@ describe('⛔ a malformed declaration REFUSES BY NAME — it is never skipped', 
         const text = '/**\n * @standing-variant own server: localhost\n */\n';
         expect(() => variantsIn(text, { file: 'check-scratch.mjs' }))
             .toThrow(/check-scratch\.mjs.*"localhost".*not a flag/s);
+    });
+});
+
+/**
+ * ⛓⛓⛓ S4 (⚖ 72; trap 1058) — **`@ci-shallow`: THE GATE SAYS CI'S CHECKOUT
+ * CANNOT ASK ITS QUESTION.**
+ *
+ * ⛔ THE ROWS THAT MATTER ARE THE REFUSALS. An exclusion that can be armed by
+ * a malformed or empty line is an exclusion nobody can audit — and the whole
+ * reason this declaration exists is that the previous exclusion (`cheap`, a
+ * 60 s timing band) was one nobody could read the REASON out of.
+ */
+describe('@ci-shallow — declared, never detected', () => {
+    it('reads the reason off the line, as free text', () => {
+        const text = '/**\n * @ci-shallow every verdict is a diff against a baseline commit\n */\n';
+        expect(ciShallowIn(text)).toEqual({
+            reason: 'every verdict is a diff against a baseline commit',
+        });
+    });
+
+    it('a gate that declares none answers null', () => {
+        expect(ciShallowIn('/**\n * an ordinary docblock\n */\n')).toBe(null);
+    });
+
+    /** ⛔ The same narrowness `variantsIn` has, and for the same reason: this
+     *  file's OWN docblock spells the tag out for a reader. */
+    it('a prose mention of the tag is not a declaration', () => {
+        const prose = '/**\n'
+            + ' * the spelling is  @ci-shallow <why a depth-1 checkout cannot answer this>,\n'
+            + ' * on a docblock line that STARTS with the tag.\n'
+            + ' */\n';
+        expect(ciShallowIn(prose)).toBe(null);
+    });
+
+    it('⛔ a line with NO reason on it is refused BY NAME', () => {
+        expect(() => ciShallowIn('/**\n * @ci-shallow\n */\n', { file: 'check-scratch.mjs' }))
+            .toThrow(/check-scratch\.mjs.*malformed @ci-shallow/s);
+    });
+
+    it('⛔ two declarations are refused — one exclusion cannot have two reasons', () => {
+        const text = '/**\n * @ci-shallow reason one\n * @ci-shallow reason two\n */\n';
+        expect(() => ciShallowIn(text, { file: 'check-scratch.mjs' }))
+            .toThrow(/check-scratch\.mjs declares 2 @ci-shallow lines/);
+    });
+
+    /**
+     * ⛓ …AND THE LIVE ROSTER CARRIES THE DECLARATIONS, with a non-vacuity
+     * assertion first (trap 824). ⛔ WHICH gates declare it is asserted in
+     * `ciGatePlan.test.js`, where the consequence lives — here it is only
+     * that the parser reaches the tree at all.
+     */
+    it('the roster reads at least one declaration off a real gate', () => {
+        const roster = gateRoster({ repo: REPO });
+        expect(roster.length).toBeGreaterThan(10);
+        const declaring = roster.filter((g) => g.ciShallow);
+        expect(declaring.length).toBeGreaterThan(0);
+        for (const g of declaring) expect(g.ciShallow.reason.length).toBeGreaterThan(20);
     });
 });

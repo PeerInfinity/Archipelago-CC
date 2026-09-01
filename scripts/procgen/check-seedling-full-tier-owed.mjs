@@ -144,6 +144,17 @@
  * line would be exactly the stale green that file's docblock exists to refuse.
  *
  * @key-inputs data: scripts/procgen/standing-values.json
+ *
+ * ⛔⛔ **AND CI CANNOT ASK THIS GATE'S QUESTION AT ALL** (S4, ⚖ 72; trap
+ * 1058). Every verdict here is a diff against a BASELINE COMMIT, and
+ * `actions/checkout` clones at depth 1 — the resolve below already refuses by
+ * name when the baseline is not in the clone, and the reading CI publishes is
+ * `2/0/1` against a banked `5/0` at every head, forever. The declaration on
+ * the next line is what keeps this row out of the CI-sourced set: before S4
+ * the only thing excluding it was `cheap` (1.7 s), a MEASURED TIMING band
+ * that says nothing about whether the answer is true.
+ *
+ * @ci-shallow every verdict is a diff against a baseline commit, and a depth-1 checkout carries none of them
  */
 
 import { execFileSync } from 'node:child_process';

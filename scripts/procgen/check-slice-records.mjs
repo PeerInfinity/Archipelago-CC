@@ -59,6 +59,25 @@
  * ⛔ THIS GATE TAKES NO BOX. It reads files and runs `git log`; it drives no
  * browser and no GPU.
  *
+ * ⛔⛔ **BUT `git log` IS EXACTLY WHAT A DEPTH-1 CHECKOUT DOES NOT HAVE**
+ * (S4, ⚖ 72; trap 1058, measured at S3). The convention's BEGINNING is
+ * derived from history — the commit date of the earliest heading that has a
+ * block — and in a shallow clone the earliest commit this gate can see IS
+ * HEAD. So every heading is "at or after" it, 24 rows fail, and CI publishes
+ * `42/24` against a banked `73/0/37` at every head, naming a SHA that is
+ * simply the head under test. ⛔ Green on the box at the same tree, which is
+ * what makes it dangerous: the number is not a regression, it is an answer to
+ * a different question.
+ *
+ * ⚠ THE DECLARATION IS NOT THE REPAIR, and S4b (2) owes the repair: a gate
+ * that cannot ask its question must SAY SO — `check-seedling-full-tier-owed`
+ * refuses by name in the same clone and is the model. What the declaration
+ * does is keep this row out of the CI-sourced set for a reason that names
+ * the cause, where before S4 the only thing excluding it was `cheap` (30.8 s,
+ * and it grows with every recorded slice — a band it can cross).
+ *
+ * @ci-shallow the convention's start commit is derived from `git log`, and a depth-1 checkout's earliest commit is HEAD itself
+ *
  * Run:
  *   node scripts/procgen/check-slice-records.mjs
  *   node scripts/procgen/check-slice-records.mjs --local

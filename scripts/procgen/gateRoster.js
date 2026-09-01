@@ -147,6 +147,44 @@ const VARIANT_BODY_RE = /^[ \t]+([^:]+?)[ \t]*:[ \t]*(\S.*?)[ \t]*$/;
 const CI_FACE_LINE_RE = /^[ \t]*\*[ \t]*@ci-face\b(.*)$/gm;
 
 /**
+ * ⛓⛓⛓ S4 (⚖ 72) — **A GATE WHOSE QUESTION CI'S CHECKOUT CANNOT ASK SAYS SO
+ * ITSELF.**
+ *
+ *     * @ci-shallow <why a depth-1 checkout cannot answer this gate>
+ *
+ * ⛔⛔ THE DEFECT IT NAMES, MEASURED AT S3 AND CALLED TRAP 1058. `actions/
+ * checkout` clones at DEPTH 1, so a gate whose subject is the repository's
+ * HISTORY is asked its question against a tree that carries one commit.
+ * `check-seedling-full-tier-owed` reads `2/0/1` there and REFUSES BY NAME in
+ * its own printed line; `check-slice-records` reads `42/24` and does not —
+ * it derives "where the `**⇒ ` convention starts" from `git log`, and in a
+ * shallow clone the earliest commit it can see IS HEAD. Both disagree with
+ * the bank in CI at EVERY head and always will.
+ *
+ * ⛔⛔ AND THIS IS WHY THE DECLARATION EXISTS RATHER THAN A TIMING BAND. Until
+ * S4 the ONLY thing keeping those two rows out of the CI-sourced set was
+ * `¬cheap` — both are under the 60 s ± 10 % hysteresis band today. `cheap` is
+ * a MEASURED field about how long a row takes; a row that crossed the band
+ * (`slice-records` is 30.8 s and grows with every recorded slice) would have
+ * become CI-sourced silently and started banking the shallow clone's answer
+ * as this tree's truth. ⇒ a row that must never be CI-sourced is excluded by
+ * a clause that names the REASON, and the reason is a fact only the gate
+ * knows — the same argument `@ci-face` is declared and not detected by
+ * (trap 566: a mention-detector filed the wrong gate).
+ *
+ * ⛓ THE FREE TEXT IS THE REASON, not a key prefix and not argv: unlike a CI
+ * face, a shallow gate publishes NO second claim under a second key. Its CI
+ * line is evidence for whoever is repairing the gate (S4b (2) owes
+ * `slice-records` a refusal-by-name), never a value.
+ *
+ * ⛓ AND IT IS ONE LINE TO DELETE. If a later slice gives CI the history the
+ * gate needs (`fetch-depth: 0`, priced against every job's clone time), the
+ * declaration is what that slice removes — in the gate that knows, not in a
+ * rule three files away.
+ */
+const CI_SHALLOW_LINE_RE = /^[ \t]*\*[ \t]*@ci-shallow\b(.*)$/gm;
+
+/**
  * The variants a gate's docblock declares, refusing a malformed line BY NAME —
  * ⛔ never skipping it. A declaration nobody parsed is a standing row that
  * silently does not exist, which is the failure this whole mechanism is for.
@@ -200,6 +238,30 @@ export function ciFaceIn(text, { file = '(text)' } = {}) {
             + 'with, or `(none)`');
     }
     return { prefix, argv };
+}
+
+/**
+ * The shallow-clone refusal a gate declares, or `null`. ⛔ A line with no
+ * reason on it is refused BY NAME: the reason is the whole content of the
+ * declaration (it is what `ci-summary` prints when it refuses the key and
+ * what a reader of `--gates` is owed), so an empty one would arm a silent
+ * exclusion — the shape this declaration exists to replace.
+ */
+export function ciShallowIn(text, { file = '(text)' } = {}) {
+    const hits = [...text.matchAll(CI_SHALLOW_LINE_RE)];
+    if (!hits.length) return null;
+    if (hits.length > 1) {
+        throw new Error(`gateRoster: ${file} declares ${hits.length} @ci-shallow lines — a gate `
+            + 'is answerable in a depth-1 checkout or it is not, and two reasons for one '
+            + 'exclusion is two rules');
+    }
+    const reason = hits[0][1].trim();
+    if (!reason) {
+        throw new Error(`gateRoster: ${file} has a malformed @ci-shallow line — expected `
+            + '`@ci-shallow <why a depth-1 checkout cannot answer this gate>`, got '
+            + `${JSON.stringify(hits[0][0].trim())}`);
+    }
+    return { reason };
 }
 
 /**
@@ -291,6 +353,8 @@ export function gateRoster({ repo = REPO } = {}) {
             variants: variantsIn(text, { file }),
             /** ⛓ …and the CI face it declares, or `null` (R9 P3b (g)). */
             ciFace: ciFaceIn(text, { file }),
+            /** ⛓ …and the depth-1 refusal it declares, or `null` (S4, ⚖ 72). */
+            ciShallow: ciShallowIn(text, { file }),
             /** ⛓ …and by which sibling, when it is not by itself. */
             browserVia: D.browserVia(file),
         };
