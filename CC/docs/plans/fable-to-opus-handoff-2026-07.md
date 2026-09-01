@@ -6292,7 +6292,7 @@ the eventual fix is on the producing side. No new `.gitignore` lines; the transi
 the preserved list + restore IS the solution. Open: `docs/json/developer/diffs/file-lists/*.md`
 still say 61 (regenerated at release).
 
-## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01, ⚖ 72 RULED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; S1 OPEN)
+## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01, ⚖ 72 RULED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; S1 SHIPPED 2026-09-01 `ad5aef2b0`, S2 NEXT)
 
 **The question (user):** *"At some point I'll want to check why the battery takes so long. Can it
 be moved to CI? Can parts of it run in parallel?"* All numbers re-derived at `dde883de9`, none
@@ -6355,6 +6355,68 @@ the CI-answerable set, ciFace clause untouched → **S5** (optional) `procgen-he
 lock is right; STARVED), `windows-latest` probe (WSL driver path, software rendering, ≤11 min
 upside vs a 17-push CI-iteration precedent), CI-writes-the-bank. Projected steady state after
 S1–S4: box worst case ~68 → ~11 min (Windows rows), wasm re-drives absorbed by CI in parallel.
+
+**⇒ S1 SHIPPED 2026-09-01 (`ad5aef2b0`) — THE BANK IS OUT OF ITS OWN KEY POPULATIONS; 31 → 2 rows
+MOVED, MEASURED BOTH SIDES OF THE FIX.**
+
+⛓ **The number in the plan was 30 of 33 and it is 31 of 34.** Re-measured here rather than
+inherited (the launching session had confirmed 31 MOVED / 3 unmoved but not the population
+figure): at `2f46ba941`, `--keys --json` run clean and again with one byte appended to the bank,
+every row's `inputKey` diffed — **31 of the 34 keyed rows** carried
+`scripts/procgen/standing-values.json` in their `data` population. The three that did not are
+`seedling-producer-boundaries`, `seedling-rerecord-rehearsal`, `seedling-wasm-pins` — exactly the
+three that read `unmoved` against the bank, which is the same fact from the other side. (65 rows
+total, 31 unkeyable ⇒ 34 keyed, not 33.)
+
+⛓ **HOW it got in, measured, not assumed.** Of the 31, only **2** have any file in their code
+closure that spells the path (`standingValues.js`'s own `FILE`; `sliceRecords.js`'s
+`STANDING_VALUES`) — and those two are precisely the rows whose SUBJECT is the bank. The other
+**29** arrive purely through SG2's named-directory-one-level rule off `gateRoster.js`'s
+`'scripts/procgen'` literal. So the plan's "a grep exonerates the wrong suspect" is right for 29
+rows and inverted for 2, and the 2 are the declarers.
+
+**Built:** `rowInputKey.DERIVED_DATA_EXCLUDED` = `standingValues.FILE`, applied through one
+`addData()` guard to all four derived data rules (stem, path literal, `.md` literal, directory
+literal). ⛔ It is an exclusion of ONE IMPORTED CONSTANT, not a hand list (⚖ 17) — the exempt file
+is named by the module that writes it, so it cannot drift from what `--write` emits. ⛔ It is NOT
+applied to the DECLARED set: `check-seedling-full-tier-owed` and `check-slice-records` each carry
+`@key-inputs data: scripts/procgen/standing-values.json` in their docblocks with the reason, and
+that declaration is what makes the exclusion safe instead of a stale green.
+
+**The mutant pair, run BEFORE the fix as well so both baselines are this session's own:**
+
+| mutant | pre-fix | post-fix |
+|---|---|---|
+| touch `standing-values.json` | **31 of 34 MOVED** | **2 MOVED** — `seedling-full-tier-owed`, `slice-records`, and nothing else |
+| touch `frontend/modules/flashPanel/games/seedling.json` (a real data member of a wasm row) | 29 MOVED | **29 MOVED — the same 29 by name** (`diff` of the two lists is empty) |
+
+The second row is the trap-1018 negative control and it is the half that matters: an exclusion
+that had accidentally emptied the whole `data` population would have passed the first row
+perfectly. `rowInputKey.test.js` carries both halves as stubs (+7 rows, 52 in the file), and it is
+RED FIRST — against the pre-fix module exactly 2 of the 52 fail and the other 50, the controls
+included, pass. `npx vitest run scripts/procgen` 27 files / 494 tests green (⚖ 52: bounded).
+`check-seedling-full-tier-owed` ALL PASS; `check-slice-records` 73 VERIFIED / 0 / 37.
+
+⚠⚠ **S1 ITSELF MOVES EVERY AFFECTED KEY ONCE, SO THE FIRST `--write` AFTER IT PAYS FULL FREIGHT
+(~68 min) — AND THAT IS THE FIX WORKING, NOT FAILING.** The `data` digests move because the
+POPULATION moved; there is no way to change what a key covers without moving the key. A reader who
+finds a full-freight write in the log right after a slice whose whole point was to stop them would
+otherwise read it as a failed fix. **That is the last such payment a docs-or-bank commit ever
+causes.**
+
+⛔ **THE RE-BANK WAS DELIBERATELY NOT SPENT IN THIS SLICE, AND THE REASON IS AN ARGUMENT, NOT
+THRIFT: S2 WOULD MAKE IT OWED A SECOND TIME.** S2 keys the 28 identity/producer rows, which are
+born with nothing banked and therefore all run on the first write after it — full freight again.
+One write taken after **S2** discharges S1's key births and S2's in the same 68 minutes; a write
+taken now buys two. ⇒ **the standing recommendation is: land S2, then take ONE `--write`.** The
+box was free and nothing was queued behind this session, so this is a scheduling judgement rather
+than a constraint. `--keys` is box-free and is what proves S1; a `--write` proves nothing S1
+claims.
+
+⛓ Until that write is taken, `--keys` will read ~31 MOVED against the bank — the banked keys were
+computed under the OLD population and are not comparable to the new ones. That is expected and is
+not evidence against the fix; the evidence is the two-mutant table above, which is a diff of keys
+taken under the SAME rule.
 
 ## 6. Everything else (unchanged queues)
 
