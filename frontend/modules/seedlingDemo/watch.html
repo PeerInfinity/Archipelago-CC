@@ -317,8 +317,22 @@
   #wasmStages { font-family: ui-monospace, monospace; }
   #detail { font-size: 11px; color: #8a8a98; white-space: pre-wrap; margin-top: 2px; }
   main { display: flex; gap: 12px; padding: 12px; align-items: flex-start; }
-  #stage { flex: 1 1 auto; min-width: 0; }
+  /* ⛓⛓ `position: relative` IS LOAD-BEARING. `editorView` appends its selection
+     overlay to `canvas.parentNode` — this element — as `position: absolute;
+     left: 0; top: 0`, so #stage is what anchors it over the room. ⛔ Without it
+     the overlay has NO positioned ancestor, resolves against the INITIAL
+     CONTAINING BLOCK, and lands at the page's top-left corner: measured on
+     `?source=edit`, the room canvas at (12, 1301) and its overlay at (0, 0),
+     an opaque 320×320 square over the header. `lab.html` — the other page that
+     mounts the same view — has carried this rule and this warning since it was
+     written; this page never picked it up. */
+  #stage { flex: 1 1 auto; min-width: 0; position: relative; }
   canvas { display: block; image-rendering: pixelated; background: #101014; }
+  /* ⛔ AND THE OVERLAY IS TRANSPARENT, which the rule above does not give it:
+     the blanket `canvas` background is OPAQUE, so an overlay anchored correctly
+     would still hide the room it draws on. Anchoring alone moves the black
+     square from the header onto the picture. */
+  .editorViewOverlay { position: absolute; pointer-events: none; background: transparent; }
   iframe { display: none; width: 100%; height: 560px; border: 1px solid #24242c; }
   #panel { flex: 0 0 320px; }
   .r { display: flex; justify-content: space-between; gap: 8px; padding: 2px 6px; border-bottom: 1px solid #1a1a20; }

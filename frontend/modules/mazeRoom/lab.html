@@ -222,7 +222,15 @@
      positioned against. ⛔ Without `relative` the overlay would be placed
      against the viewport and the rectangle would be drawn somewhere else. */
   #stage { flex: 1 1 auto; min-width: 0; position: relative; }
-  .editorViewOverlay { position: absolute; pointer-events: none; }
+  /* ⛔⛔ AND IT MUST BE TRANSPARENT, which `position: relative` above does NOT
+     give it: the blanket `canvas` rule below paints EVERY canvas opaque
+     `#101014`, the overlay included, and an overlay sized to the canvas it
+     covers then HIDES THE ROOM. Measured on `?source=edit` before this line:
+     the base canvas held 48,400 non-transparent pixels — a full grid with its
+     entrance and exit — and the stage was a flat black square. The overlay is
+     anchored right and the picture was gone anyway; anchoring and painting are
+     two separate mistakes and this page had the second one. */
+  .editorViewOverlay { position: absolute; pointer-events: none; background: transparent; }
   #panel { flex: 0 0 340px; }
   canvas { display: block; image-rendering: pixelated; background: #101014; }
   canvas.editing { cursor: crosshair; outline: 2px dashed #ffd75f; outline-offset: -2px; }
