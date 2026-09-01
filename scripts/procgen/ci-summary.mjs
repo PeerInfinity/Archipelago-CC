@@ -169,8 +169,21 @@ if (ALL_GATES) {
         console.log(`\n${rows.filter((r) => r.verdict === 'same').length} same, `
             + `${moved.length} MOVED, `
             + `${rows.filter((r) => r.verdict === 'not-banked').length} not-banked, `
-            + `${missing.length} MISSING — ⚖ 72 (b) wants three consecutive runs with `
-            + '0 MOVED and 0 MISSING.');
+            + `${missing.length} MISSING.`);
+        /**
+         * ⛔⛔ ⚖ 72 (b) IS A PER-ROW BAR, AND READING IT PER-RUN WOULD BLOCK
+         * EVERY ROW ON THE WORST ONE. The ruling reads *"three consecutive CI
+         * runs whose verdict sets equal the banked values before A ROW flips"*.
+         * Measured at S3: two headless rows are MOVED in CI at EVERY head and
+         * always will be — `seedling-full-tier-owed` refuses by name in a
+         * depth-1 clone, and `slice-records` reads the shallow clone's own HEAD
+         * as the convention's start. A run-level reading would hold the other
+         * 25 rows hostage to those two forever. So this exit code is the
+         * RUN-level answer (useful as "did anything move at all"), and the
+         * per-row column above is the one S4 consumes.
+         */
+        console.log('⚖ 72 (b): the bar is PER ROW — three consecutive runs in which THAT row '
+            + 'reads `same`. This exit code is the run-level answer, not the bar.');
     }
     process.exit(moved.length || missing.length ? 1 : 0);
 }
