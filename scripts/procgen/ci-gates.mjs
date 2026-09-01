@@ -218,9 +218,25 @@ for (const arm of selected) {
          * 0/1` and nothing else, and the reason — a depth-1 clone with no
          * baseline commit — was nowhere in the log.
          */
-        for (const line of out.split('\n')
-            .filter((l) => l.startsWith('FAIL:') || l.startsWith('SKIP:')).slice(0, 8)) {
-            console.log(`      ${line}`);
+        const evidence = out.split('\n')
+            .filter((l) => l.startsWith('FAIL:') || l.startsWith('SKIP:'));
+        for (const line of evidence.slice(0, 8)) console.log(`      ${line}`);
+        /**
+         * ⛔⛔ …AND THE SAME LESSON IN ITS SECOND COSTUME, learned by S3's
+         * FIRST CI run: `gate: seedling-wasm-element | 0/0 | exit=1 | (no
+         * total)` in 0.4 s and **nothing else in the log**. The gate died
+         * before it could print a verdict, so a filter that only knows
+         * `FAIL:`/`SKIP:` had no evidence to echo and turned a diagnosable
+         * crash into a red nobody could act on — which is exactly what the
+         * paragraph above was written to prevent, one shape over. ⛓ The tail
+         * is printed only when there is no verdict evidence at all, so a
+         * normally-failing gate's log does not double in size.
+         */
+        if (!evidence.length) {
+            const tail = out.split('\n').filter((l) => l.trim()).slice(-14);
+            console.log(`      (no FAIL:/SKIP: line at all — the last ${tail.length} line(s) `
+                + 'of what it actually printed:)');
+            for (const line of tail) console.log(`      | ${line}`);
         }
     }
 }
