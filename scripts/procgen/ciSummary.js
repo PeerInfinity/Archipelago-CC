@@ -25,6 +25,19 @@ const ghApi = (endpoint) => execFileSync('gh', ['api', endpoint],
 
 export const strip = (s) => s.replace(/\x1b\[[0-9;]*m/g, '');
 
+/**
+ * ⛓⛓ ONE RUN, BY ID — because a SHA can carry MORE THAN ONE RUN and
+ * `findRun` can only hand back the newest. Measured at S3: a `workflow_
+ * dispatch` re-run of the same head sits beside the push's run, and ⚖ 72 (b)
+ * asks for THREE CONSECUTIVE RUNS — a bar whose readings cannot address a
+ * particular run is a bar taken by eye.
+ */
+export function runById(id) {
+    const r = JSON.parse(ghApi(`repos/${CI_REPO}/actions/runs/${id}`));
+    return { databaseId: r.id, headSha: r.head_sha, status: r.status,
+        conclusion: r.conclusion, createdAt: r.created_at };
+}
+
 export function findRun(sha) {
     const rows = JSON.parse(gh('run', 'list', `--workflow=${WORKFLOW}`, '--limit', '50',
         '--json', 'databaseId,headSha,status,conclusion,createdAt'));

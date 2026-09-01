@@ -2548,6 +2548,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "arg"
+                    ],
+                    "name": "run"
+                },
+                {
+                    "how": [
                         "flag"
                     ],
                     "name": "wait"

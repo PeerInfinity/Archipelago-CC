@@ -6,6 +6,7 @@
  *   node scripts/procgen/ci-summary.mjs [<sha>] [--wait] [--json]
  *   node scripts/procgen/ci-summary.mjs [<sha>] --gate='<standing key>' [--json]
  *   node scripts/procgen/ci-summary.mjs [<sha>] --gates [--json]
+ *   node scripts/procgen/ci-summary.mjs --run=<run id> --gates
  *
  * Without `--gate=` this is exactly what `ci-vitest-summary.mjs` has always
  * been — and that file is now a SHIM onto this one, so the `suite:` standing
@@ -64,7 +65,7 @@ import { execFileSync } from 'node:child_process';
 
 import { ciGateArms, ciRunnable } from './ciGatePlan.js';
 import { REPO, gateRoster } from './gateRoster.js';
-import { findRun, gateLogs, jobLog, parseGateLines, parseSummaries } from './ciSummary.js';
+import { findRun, gateLogs, jobLog, parseGateLines, parseSummaries, runById } from './ciSummary.js';
 import { readStandingValues } from './standingValues.js';
 
 
@@ -79,7 +80,7 @@ const wait = flag('wait');
 const json = flag('json');
 const GATE = arg('gate');
 const ALL_GATES = flag('gates');
-const sha = args.find((a) => !a.startsWith('--'))
+let sha = args.find((a) => !a.startsWith('--'))
     || execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
 
 /* ── ⛔ the refusal, DERIVED from the roster, before any network call ── */
@@ -112,7 +113,12 @@ if (GATE) {
 
 /* ── the run ─────────────────────────────────────────────────────────── */
 
-let run = findRun(sha);
+/** ⛓ `--run=<id>` names ONE run; without it the SHA's newest is taken. */
+const RUN_ID = arg('run');
+let run = RUN_ID ? runById(RUN_ID) : findRun(sha);
+/** ⛔ …and the REPORTED sha becomes that run's head, never the local HEAD a
+ *  reader happened to be sitting on when they asked about a run id. */
+if (run && RUN_ID) sha = run.headSha;
 if (!run) {
     console.error(`no ${GATE ? 'procgen-gate' : 'JavaScript Unit Tests'} run for ${sha} `
         + '(not pushed, or the path filter did not trigger it)');
