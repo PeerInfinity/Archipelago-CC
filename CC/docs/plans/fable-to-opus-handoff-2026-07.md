@@ -6292,7 +6292,7 @@ the eventual fix is on the producing side. No new `.gitignore` lines; the transi
 the preserved list + restore IS the solution. Open: `docs/json/developer/diffs/file-lists/*.md`
 still say 61 (regenerated at release).
 
-## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; awaiting ⚖ 72)
+## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01, ⚖ 72 RULED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; S1 OPEN)
 
 **The question (user):** *"At some point I'll want to check why the battery takes so long. Can it
 be moved to CI? Can parts of it run in parallel?"* All numbers re-derived at `dde883de9`, none
@@ -6312,7 +6312,7 @@ UNKEYED by a "cost seconds" premise that is false by ~16 min (they sum to ~18 mi
 `--write`). Also stale, three places: "four of thirty-one are headless" (workflow, `ci-gates.mjs`,
 `standingValues.js`) — the roster is 33 with **6** headless, and the code already runs all 6.
 
-**⚖ 72 (REQUESTED):** when CI runs a gate, does CI write the bank, or does the bank quote CI?
+**⚖ 72 (RULED — see the RULING block below; the request as put is kept verbatim):** when CI runs a gate, does CI write the bank, or does the bank quote CI?
 Plan recommends **the bank quotes CI** (⚖ 52's pattern; `ciSourced()` is armed and selects zero
 rows today; the KEEP branch already handles unpushed heads) — CI-writes loses on the key cascade,
 runner races, `ms`/`cheap` banding poisoned by environment, and bot commits to main. Sub-items:
@@ -6321,6 +6321,25 @@ verdict sets before a row flips; (c) S1's population change (the bank leaves der
 populations; `full-tier-owed` + `slice-records` declare it back via `@key-inputs`) gets the
 user's nod. ⛔ P4b (D) stands: a `@ci-face` gate is never CI-sourced — `procgen-help`'s 417 s
 leaves the box only by teaching CI the FULL claim first (S5), never by loosening the refusal.
+
+**⚖ 72 RULED (user, 2026-09-01): THE BANK QUOTES CI.** All three sub-items ruled as the plan
+proposed — **(a)** the Windows rows stay box-measured; **(b)** the stability bar is THREE
+consecutive CI runs whose verdict sets equal the banked values before a row flips to CI-sourced
+(SG1's own bar); **(c)** S1's population change is approved — the bank leaves the derived `data`
+populations and the two gates whose SUBJECT is the bank declare it back via `@key-inputs`.
+
+⛓ THE DECIDING ARGUMENT WAS OBJECTION (3), NOT THE KEY CASCADE. The cascade is real but S1 shrinks
+it and it is a cost, not a corruption; `ms`-under-CI is the one that damages a FIELD. `cheap` is a
+60 s ± 10 % hysteresis band, so under CI-writes it would be re-banded by WHICH RUNNER ANSWERED
+rather than by anything in the tree — trap 735's field-flapping shape, arriving through the door
+that ruling closed. A field whose whole job is to say *"this row is cheap to re-run"* must not be a
+function of the environment that ran it.
+
+⚠ AND THE COST OF (B) IS ACCEPTED WITH IT, NAMED HERE SO NOBODY REDISCOVERS IT AS A DEFECT: a
+CI-sourced row is only as fresh as the last PUSHED head, so local work sits on a quoted value until
+a push. `suite: vitest (unfiltered)` has behaved exactly this way since ⚖ 52 (its bank entry today
+reads `quoted: true`, `measuredAt: eb7593655`, with the reason attached), and that is the precedent
+the ruling extends rather than a new hazard.
 
 **Ladder (cheapest-first; trap-1047 checked — the cheap `ciSourced` widening consumes S3's CI
 lines, so consumption is ordered after production + the stability bar):** **S1** bank out of its
