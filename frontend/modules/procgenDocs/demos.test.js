@@ -78,7 +78,7 @@ describe('every non-prose entry is loadable by the row', () => {
      * base REFUSED by name (the catalogue's first `cli` declaring a non-zero
      * exit), the VANILLA 116 as an openable level SET, and *"open in editor"* —
      * plus one on `lab.html` for the same `editCore` toolkit on the maze.
-     * ⛔ THREE of the six are `press` rows, because ⚖ ruling 9 makes them so:
+     * ⛔ TWO of the six are `press` rows, because ⚖ ruling 9 makes them so:
      * a URL can carry the STARTING document and never an edit, so an entry
      * whose subject is what the EDITOR DOES has to click something.
      */
@@ -112,7 +112,7 @@ describe('every non-prose entry is loadable by the row', () => {
          * ⛓⛓ AND SO IS A `press` — the row hands it to `document.querySelector`
          * and CLICKS what comes back, so a prose label there would read as a
          * missing control rather than as a malformed entry. ⚠ It is deliberately
-         * NOT pinned to `^[#.]`: three editor entries gate the press on the
+         * NOT pinned to `^[#.]`: two editor entries gate the press on the
          * page's own disabled state (`body:has(#genEditSolve:not(:disabled)) …`)
          * because *present and not disabled* is not *takeable* for a control the
          * ARM WIRES AT MOUNT — measured 0/3 bare against 3/3 gated, see the
