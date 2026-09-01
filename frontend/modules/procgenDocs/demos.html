@@ -33,37 +33,130 @@
 <meta charset="utf-8">
 <title>Procgen demonstrations — a catalogue</title>
 <style>
-  :root { color-scheme: dark; }
-  body {
-    margin: 0; background: #0b0b0e; color: #d8d8e0;
-    font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* ⛓⛓ **TWO FAMILIES, AND WHICH ONE A THING GETS IS A DECISION, NOT A
+     DEFAULT.** The whole page was 13px monospace — including `demonstrates`,
+     `howToRun` and `whatIsHappening`, which are multi-paragraph ARGUMENT text
+     several hundred words long. A code face was doing a reading job. Monospace
+     is kept for everything that is a STRING A READER MAY HAVE TO TYPE OR
+     COMPARE CHARACTER BY CHARACTER — code spans, commands, URLs, claims, the
+     entry numbers — and prose gets a prose face. ⛔ This page now differs from
+     its three siblings (`docs.html`, `glossary.html`, `reference.html`), which
+     are still all-monospace; that is a KNOWN divergence, not an oversight. */
+  :root {
+    color-scheme: dark;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --rail: 250px;
   }
+  body { margin: 0; background: #0b0b0e; color: #d8d8e0; font: 14px/1.6 var(--sans); }
+  code, pre, kbd { font-family: var(--mono); }
   header { padding: 10px 14px; border-bottom: 1px solid #24242c; }
-  h1 { font-size: 14px; margin: 0 0 3px; font-weight: 600; }
+  /* ⛔ The header's own notes ran the FULL viewport width (measured: 1372px of
+     a 1400px window) while the entries were capped at 96ch — the two halves of
+     the page disagreed about line length, and the widest text on it was also
+     the lowest-contrast. One measure for both. */
+  header > * { max-width: 104ch; }
+  h1 { font-size: 15px; margin: 0 0 3px; font-weight: 600; }
   h1 span { color: #7fe0ff; font-weight: 400; }
-  #count { font-size: 11px; color: #8a8a98; }
-  #where { font-size: 11px; color: #6a6a78; margin-top: 2px; }
-  main { padding: 10px 14px 40px; max-width: 96ch; }
+  #count { font-size: 12px; color: #9a9aa8; }
+  #where { font-size: 12px; color: #7a7a88; margin-top: 2px; }
+  #also { font-size: 12px; color: #7a7a88; margin-top: 2px; }
   a { color: #7fe0ff; }
   code { color: #ffd75f; }
+  /* ⛓ Commands and URLs WRAP rather than clipping. Measured before this rule:
+     17 of the 46 `<pre>` blocks on the page overflowed their box, so a CLI line
+     ended mid-flag with the rest reachable only by horizontal scrolling. */
   pre { background: #101014; border: 1px solid #1e1e26; padding: 6px 8px;
-    overflow-x: auto; margin: 6px 0; }
+    overflow-x: auto; margin: 6px 0; white-space: pre-wrap; overflow-wrap: anywhere; }
   pre code { color: #d8d8e0; }
   p { margin: 6px 0; }
-  .note { color: #8a8a98; font-size: 11px; }
+  .note { color: #8a8a98; font-size: 12px; }
+  .k { color: #7fd88f; font-family: var(--mono); font-size: 12px; }
+
+  /* ══ THE SHELL — a sticky INDEX beside the column ═══════════════════
+     ⛓ The content column is ~90ch on any screen; on a 1400px window that left
+     roughly 600px of nothing. The index costs none of the column's width and
+     is on screen at every scroll position, which a table of contents printed
+     at the top would not be — with 23 entries over 23 screens, a top-of-page
+     index is itself one more screen to scroll past. */
+  #shell { display: flex; align-items: flex-start; }
+  #index { flex: 0 0 var(--rail); position: sticky; top: 0; max-height: 100vh;
+    overflow-y: auto; padding: 10px 8px 30px 14px; border-right: 1px solid #1e1e26;
+    font-size: 12px; }
+  #index h2 { font-size: 10px; margin: 0 0 6px; color: #8a8a98; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .08em; }
+  #index .ixctl { display: flex; gap: 4px; margin: 0 0 8px; flex-wrap: wrap; }
+  #index button { background: #1e1e26; color: #d8d8e0; border: 1px solid #34343e;
+    padding: 2px 7px; font: inherit; cursor: pointer; }
+  #index button:hover { background: #262630; }
+  #index .ixsec { display: block; padding: 3px 6px; color: #8a8a98; }
+  a.ix { display: flex; gap: 6px; align-items: baseline; padding: 3px 6px;
+    color: #c8c8d4; text-decoration: none; border-left: 2px solid transparent; }
+  a.ix:hover { background: #16161c; color: #fff; }
+  a.ix b { font-family: var(--mono); font-size: 11px; color: #6a6a78;
+    font-weight: 400; flex: 0 0 2.2em; text-align: right; }
+  a.ix .t { flex: 1 1 auto; }
+  a.ix .tag { font-size: 10px; color: #6d5a2a; text-transform: uppercase;
+    letter-spacing: .06em; }
+  /* ⛓ WHERE YOU ARE — set by the scroll handler, which is the only writer. */
+  a.ix.here { border-left-color: #7fe0ff; color: #7fe0ff; background: #14141a; }
+  main { flex: 1 1 auto; min-width: 0; padding: 10px 18px 40px; max-width: 92ch; }
+  @media (max-width: 900px) {
+    /* ⛔ The rail is the FIRST thing on a narrow screen, not a 250px column
+       squeezing the prose to nothing. */
+    #shell { display: block; }
+    #index { position: static; max-height: none; border-right: 0;
+      border-bottom: 1px solid #1e1e26; }
+  }
+
   details.sec { margin: 8px 0; border-left: 2px solid #2a2a36; padding-left: 8px; }
   details.sec > summary { font-weight: 600; color: #c8c8d4; cursor: pointer; }
-  details.entry { margin: 10px 0; border: 1px solid #1e1e26; background: #0e0e12;
+  details.entry { margin: 8px 0; border: 1px solid #1e1e26; background: #0e0e12;
     padding: 6px 10px; }
   details.entry > summary { cursor: pointer; color: #ffd75f; font-weight: 600; }
-  details.entry > summary b { color: #8a8a98; font-weight: 400; margin-right: 6px; }
+  details.entry > summary b { color: #8a8a98; font-weight: 400; margin-right: 6px;
+    font-family: var(--mono); }
   details.entry.prose > summary { color: #8a8a98; }
+  details.entry[open] { border-color: #2a2a36; }
+  /* ⛓⛓ **THE TEASER IS WHAT MAKES A CLOSED LIST STILL A CATALOGUE.** Entries
+     are closed on load — 23 of them open is a 22,883px page, measured — and a
+     list of 23 bare titles would be an index, not a catalogue. The teaser is
+     the first sentence of the entry's own `demonstrates` field, so it is the
+     DATA speaking and there is no second summary to keep in step. */
+  details.entry > summary .teaser { display: block; margin: 2px 0 0 1.6em;
+    color: #8a8a98; font-weight: 400; font-size: 13px; }
+  details.entry[open] > summary .teaser { display: none; }
   .body { padding: 4px 0 6px 14px; }
   .lbl { color: #8a8a98; text-transform: uppercase; letter-spacing: .06em;
     font-size: 10px; display: block; margin: 8px 0 1px; }
-  .open { display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline; }
-  .open .k { color: #7fd88f; }
-  .open a { word-break: break-all; }
+
+  /* ══ THE LINKS ══════════════════════════════════════════════════════
+     ⛓⛓ **THE URL IS NO LONGER THE LINK'S TEXT.** Every entry printed both of
+     its URLs in full — 48 of them, median 177 characters, longest 261, under
+     `word-break: break-all` so they chopped mid-token. Measured: 3,582px, or
+     15.7% OF THE WHOLE PAGE, was printed URL text.
+     ⛔ THE URLS ARE NOT GONE, they are one disclosure away: this page's own
+     prose says pasting one back into the bar is a FIXED POINT, which is a
+     claim about a string a reader must be able to SEE and copy. `.rawurl`
+     below is where they live now, and the anchors keep their `href` — which
+     is what `check-procgen-demos.mjs` reads (it asserts the href, never the
+     link text). */
+  .open { display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline;
+    margin: 3px 0; }
+  a.go { color: #7fe0ff; text-decoration: none; border: 1px solid #2a3a44;
+    background: #121a1e; padding: 2px 9px; border-radius: 2px; }
+  a.go:hover { background: #17242a; border-color: #3f5f6d; }
+  a.go.alt { color: #9aa8b0; border-color: #26262e; background: #101014; }
+  button.copy { background: #1e1e26; color: #8a8a98; border: 1px solid #2a2a35;
+    padding: 2px 9px; font: inherit; cursor: pointer; border-radius: 2px; }
+  button.copy:hover { color: #d8d8e0; }
+  button.copy.done { color: #7fd88f; border-color: #2f5a3a; }
+  details.rawurl { margin: 2px 0 0; }
+  details.rawurl > summary { color: #6a6a78; font-size: 12px; cursor: pointer; }
+  details.rawurl code { display: block; font-size: 12px; color: #8a8a98;
+    overflow-wrap: anywhere; margin: 3px 0; }
+  details.rawurl code b { color: #c8c8d4; font-weight: 400; }
+
   .drive { color: #d8d8e0; }
   .drive b { color: #7fe0ff; font-weight: 600; }
   .claim { color: #a8e6c4; }
@@ -72,7 +165,7 @@
   .terms a { color: #9fff9f; }
   .dead { color: #ff9f5f; }
   footer { padding: 10px 14px; border-top: 1px solid #24242c; color: #6a6a78;
-    font-size: 11px; }
+    font-size: 12px; }
 </style>
 </head>
 <body>
@@ -83,12 +176,34 @@
   <div id="also" class="note"></div>
 </header>
 
+<!--
+  ⛓⛓ THE SHELL. `#index` is a NAV and holds no `details.entry`: the row's
+  readout counts `details.entry` off the DOM and asserts the module's ids IN
+  ORDER, so anything that wore that class here would be counted as a
+  twenty-fourth entry. The rail's links are plain `<a href="#id">`.
+-->
+<div id="shell">
+<nav id="index" aria-label="the catalogue">
+  <h2>the catalogue</h2>
+  <div class="ixctl">
+    <button id="expandAll" type="button">expand all</button>
+    <button id="collapseAll" type="button">collapse all</button>
+  </div>
+  <a class="ix" href="#how-to-run"><b>?</b><span class="t">How to run any of these</span></a>
+  <a class="ix" href="#how-to-read"><b>?</b><span class="t">How to read an entry</span></a>
+  <h2 style="margin-top:10px">entries</h2>
+  <div id="ixlist"></div>
+</nav>
+
 <main>
-  <details class="sec" open>
+  <!-- ⛓ IDs so the rail can link here, and CLOSED by default: between them
+       these two sections were ~1,000px of preamble standing in front of the
+       first entry. They are reference, read once. -->
+  <details class="sec" id="how-to-run">
     <summary>How to run any of these</summary>
-    <p>Every entry carries two links. <span class="k">HERE</span> is the entry
-      on the host this page is being served from — a dev server rooted at the
-      repo, or the deployed site. <span class="k">PAGES</span> is always the
+    <p>Every entry carries two links. <b>open it here</b> is the entry on the
+      host this page is being served from — a dev server rooted at the
+      repo, or the deployed site. <b>on Pages</b> is always the
       same run on
       <a href="https://peerinfinity.github.io/Archipelago-CC/">GitHub Pages</a>,
       deployed from <code>main</code> by
@@ -106,7 +221,10 @@
       <code>mazeLab.writeLabParams</code>), so pasting one back into the bar is
       a fixed point — the page reloads exactly the run the link names. ⛔ None
       of them was typed by hand, and neither link is: both are computed from
-      the entry by the two helpers in <code>demos.js</code>.</p>
+      the entry by the two helpers in <code>demos.js</code>. Because that is a
+      claim about a STRING, every entry keeps both of them readable and
+      copyable: press <b>copy</b> for the one you would paste, or open
+      <b>the URLs, in full</b> to read them character by character.</p>
     <p>Two controls appear in nearly every entry and are worth learning once:</p>
     <p>— <b>the PHASE ladder</b> (<code>◀ PHASE</code> / the slider /
       <code>PHASE ▶</code> / <code>the FINISHED level</code>) walks the
@@ -125,7 +243,7 @@
       never regenerate. A link names a RUN.</p>
   </details>
 
-  <details class="sec" open>
+  <details class="sec" id="how-to-read">
     <summary>How to read an entry</summary>
     <p>⛓ <b>This page is a RENDERER, not the catalogue.</b> The catalogue is
       <code>frontend/modules/procgenDocs/demos.js</code> — a frozen array of
@@ -149,6 +267,7 @@ node scripts/procgen/check-procgen-demos.mjs --pages=https://peerinfinity.github
 
   <div id="entries"></div>
 </main>
+</div>
 
 <footer id="foot"></footer>
 
@@ -184,16 +303,35 @@ const hereHref = (entry, url = entry.url) => `${repoUrl(entry.page)}?${url}`;
 const onPages = repoUrl(DEMOS.find((e) => !e.prose).page).startsWith(PAGES_BASE);
 const label = (h) => `<span class="lbl">${h}</span>`;
 
+/**
+ * ⛓⛓ **BOTH ANCHORS ARE ALWAYS RENDERED, INCLUDING WHEN THEY ARE THE SAME
+ * STRING.** `check-procgen-demos.mjs --pages=…` asserts that every entry's
+ * Pages href appears under `.open a` — and on Pages the two hrefs are equal,
+ * so a "they're identical, print one" shortcut would red the row in exactly
+ * the world it is meant to check. The note says they coincide; the anchor
+ * stays.
+ *
+ * ⛔ THE LINK TEXT IS NOT THE URL ANY MORE (see the stylesheet's own note).
+ * The href is untouched, which is what the row reads.
+ */
 function pairOfLinks(entry, url) {
     const here = hereHref(entry, url);
     const live = pagesHref(entry, { url });
     const same = here === live
         ? ' <span class="note">(this page IS on Pages — the two are one link)</span>'
         : '';
-    return `<div class="open"><span class="k">HERE</span>`
-        + `<a href="${esc(here)}">${esc(here)}</a></div>`
-        + `<div class="open"><span class="k">PAGES</span>`
-        + `<a href="${esc(live)}">${esc(live)}</a>${same}</div>`;
+    return `<div class="open">`
+        + `<a class="go" href="${esc(here)}">▸ open it here</a>`
+        + `<a class="go alt" href="${esc(live)}">▸ on Pages</a>`
+        + `<button class="copy" type="button" data-copy="${esc(here)}">copy</button>`
+        + `${same}</div>`
+        /* ⛓ THE STRINGS THEMSELVES, one disclosure away. This page's own prose
+           claims a URL here is a FIXED POINT — the spelling the target page's
+           writer produces — and that is a claim about characters, so the
+           characters have to remain readable. */
+        + `<details class="rawurl"><summary>the URLs, in full</summary>`
+        + `<code><b>here</b> ${esc(here)}</code>`
+        + `<code><b>pages</b> ${esc(live)}</code></details>`;
 }
 
 function openLinks(entry) {
@@ -203,6 +341,36 @@ function openLinks(entry) {
             + pairOfLinks(entry, entry.also);
     }
     return out;
+}
+
+/**
+ * ⛓⛓ **THE TEASER — the first sentence of `demonstrates`, and nothing typed.**
+ * With every entry closed by default the summary is all a reader has to choose
+ * by, and 23 bare titles is an index rather than a catalogue. A hand-written
+ * one-liner per entry would be a SECOND summary that drifts from the first.
+ *
+ * ⛔ Code spans are masked before the sentence is cut, or `procgenCore/sites.js`
+ * inside one would read as a sentence end — the same NUL-placeholder trick
+ * `markdownLite.inline` uses, and for the same reason. A truncation that lands
+ * inside a placeholder drops the fragment rather than leaking a control
+ * character into the page.
+ */
+function teaser(text, max = 165) {
+    const flat = String(text).replace(/\s+/g, ' ').trim();
+    const spans = [];
+    const held = flat.replace(/`([^`]+)`/g, (_, c) => {
+        spans.push(c);
+        return `\u0001${spans.length - 1}\u0001`;
+    });
+    /* ⛔ A COLON IS NOT A SENTENCE END HERE. It was in the first cut and it
+       truncated most teasers to their preamble (*"The SITE vocabulary
+       (`procgenCore/sites.js`, arc 3 slice 1):"*) — in this corpus a colon
+       INTRODUCES the substance rather than closing a thought. */
+    const end = held.match(/^.*?[.!?](?=\s|$)/);
+    let cut = end ? end[0] : held;
+    if (cut.length > max) cut = `${cut.slice(0, max).replace(/\s+\S*$/, '')}…`;
+    cut = cut.replace(/\u0001\d*$/, '');
+    return inline(cut.replace(/\u0001(\d+)\u0001/g, (_, i) => `\`${spans[Number(i)]}\``));
 }
 
 function driveLine(entry) {
@@ -247,8 +415,14 @@ function renderEntry(entry) {
     d.className = `entry${entry.prose ? ' prose' : ''}`;
     d.id = entry.id;
     d.dataset.demoId = entry.id;
-    d.open = true;
-    const parts = [`<summary><b>${entry.n}.</b>${inline(entry.title)}</summary>`,
+    /* ⛔ CLOSED. Every entry was `open` and the page measured 22,883px — 22.9
+       screens of a 1000px window, with no navigation of any kind. The DOM is
+       identical either way, which is why the row is indifferent to it: it reads
+       `details.entry`, `.open a` and `.terms a` with `querySelectorAll`, none
+       of which cares whether a `<details>` is expanded. */
+    d.open = false;
+    const parts = [`<summary><b>${entry.n}.</b>${inline(entry.title)}`
+        + `<span class="teaser">${teaser(entry.demonstrates)}</span></summary>`,
         '<div class="body">'];
     parts.push(label('WHAT IT DEMONSTRATES'), prose(entry.demonstrates));
     if (entry.prose) {
@@ -292,6 +466,111 @@ function renderEntry(entry) {
 const host = document.getElementById('entries');
 for (const entry of DEMOS) host.appendChild(renderEntry(entry));
 
+/* ══════════ THE INDEX ═══════════════════════════════════════════════
+ * ⛓⛓ **IN MODULE ORDER, WHICH IS THE PAGE'S ORDER.** Grouping the rail by
+ * which page an entry drives was the first cut and it was wrong: `#entries`
+ * must render in module order (the row asserts the ids IN ORDER off the DOM),
+ * so a grouped rail would have scrolled the reader up and down a list whose
+ * own sequence disagreed with the page's. The target is a TAG on the row
+ * instead — the three maze entries and the one prose entry are the minority
+ * and saying so costs one word each.
+ *
+ * ⛔ The rail shows the title's HEAD — the part before the em dash — because
+ * the tail is the teaser's job and a 250px column full of wrapped full titles
+ * is not scannable. The full title is the `title` attribute.
+ * ══════════════════════════════════════════════════════════════════════ */
+const MAZE_PAGE = '/frontend/modules/mazeRoom/lab.html';
+const ixlist = document.getElementById('ixlist');
+for (const entry of DEMOS) {
+    const a = document.createElement('a');
+    a.className = 'ix';
+    a.href = `#${entry.id}`;
+    a.dataset.for = entry.id;
+    a.title = entry.title;
+    const head = entry.title.split(/\s+—\s+/)[0];
+    const tag = entry.prose ? 'prose' : (entry.page === MAZE_PAGE ? 'maze' : '');
+    a.innerHTML = `<b>${entry.n}</b><span class="t">${inline(head)}`
+        + `${tag ? ` <span class="tag">${tag}</span>` : ''}</span>`;
+    ixlist.appendChild(a);
+}
+
+/**
+ * ⛓ ONE OPENER FOR EVERY WAY IN — a rail click, a pasted `#id`, a Back press.
+ * A `<details>` is NOT auto-opened by being the fragment target (`:target`
+ * styles it; it does not expand it), so a closed catalogue would answer a deep
+ * link with a scroll to a shut box.
+ */
+function openTarget() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (!el || el.tagName !== 'DETAILS') return;
+    el.open = true;
+    el.scrollIntoView({ block: 'start' });
+    markHere(id);
+}
+window.addEventListener('hashchange', openTarget);
+
+/** The rail's `here` row. ⛔ One writer, so two of them can never both be lit. */
+let lit = null;
+function markHere(id) {
+    if (id === lit) return;
+    for (const a of ixlist.querySelectorAll('a.ix.here')) a.classList.remove('here');
+    const a = ixlist.querySelector(`a.ix[data-for="${CSS.escape(id)}"]`);
+    if (a) a.classList.add('here');
+    lit = id;
+}
+
+/**
+ * ⛓ WHERE YOU ARE = the last entry whose top has passed the reading line.
+ * ⛔ Not `IntersectionObserver`: with the entries closed a dozen of them are
+ * on screen at once, so "is it visible" does not name ONE row, and the answer
+ * a reader wants is the one they last scrolled past.
+ */
+const marks = [...host.querySelectorAll('details.entry')];
+let ticking = false;
+function syncHere() {
+    ticking = false;
+    let cur = null;
+    for (const el of marks) {
+        if (el.getBoundingClientRect().top <= 90) cur = el.id;
+        else break;
+    }
+    if (cur) markHere(cur);
+}
+window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(syncHere);
+}, { passive: true });
+
+document.getElementById('expandAll')
+    .addEventListener('click', () => { for (const el of marks) el.open = true; });
+document.getElementById('collapseAll')
+    .addEventListener('click', () => { for (const el of marks) el.open = false; });
+
+/**
+ * ⛓ THE COPY BUTTON, delegated — 23 entries carry one or two each and a
+ * listener per button is a listener per entry for nothing.
+ * ⛔ EVERY FAILURE PATH IS CAUGHT. The row asserts ZERO console errors on this
+ * page, so a rejected `writeText` (no permission, no clipboard on the origin)
+ * has to become a word on the button rather than an unhandled rejection.
+ */
+host.addEventListener('click', (ev) => {
+    const b = ev.target.closest('button.copy');
+    if (!b) return;
+    const say = (word, ok) => {
+        b.textContent = word;
+        b.classList.toggle('done', ok);
+        setTimeout(() => { b.textContent = 'copy'; b.classList.remove('done'); }, 1600);
+    };
+    try {
+        const p = navigator.clipboard?.writeText(b.dataset.copy);
+        if (p) p.then(() => say('copied', true), () => say('press ⌘/Ctrl+C', false));
+        else say('press ⌘/Ctrl+C', false);
+    } catch { say('press ⌘/Ctrl+C', false); }
+});
+
 const real = DEMOS.filter((e) => !e.prose).length;
 document.getElementById('count').textContent =
     `${DEMOS.length} entries — ${real} with a link and a claim, ${DEMOS.length - real} prose. `
@@ -324,6 +603,12 @@ window.__procgenDemosPage = Object.freeze({
     links: Object.freeze(rendered.flatMap((el) => [...el.querySelectorAll('.open a')].map((a) => a.href))),
     ready: true,
 });
+
+/* ⛓ LAST, so a deep link's open-and-scroll happens on a page that is fully
+   rendered — and AFTER the readout, which is about what was RENDERED and must
+   not depend on which entry a fragment happened to expand. */
+openTarget();
+syncHere();
 </script>
 </body>
 </html>
