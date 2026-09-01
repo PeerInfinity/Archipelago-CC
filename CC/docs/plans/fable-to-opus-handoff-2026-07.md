@@ -6292,7 +6292,7 @@ the eventual fix is on the producing side. No new `.gitignore` lines; the transi
 the preserved list + restore IS the solution. Open: `docs/json/developer/diffs/file-lists/*.md`
 still say 61 (regenerated at release).
 
-## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01, ⚖ 72 RULED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; S1 SHIPPED 2026-09-01 `ad5aef2b0`, S2 SHIPPED 2026-09-01 `e6c84a6f8` + the owed write `5e42d4104`, S3 NEXT)
+## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01, ⚖ 72 RULED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; S1 SHIPPED 2026-09-01 `ad5aef2b0`, S2 SHIPPED 2026-09-01 `e6c84a6f8` + the owed write `5e42d4104`, S3 SHIPPED 2026-09-01 `9f46b2bfd`…`765ea79fa`, S4 NEXT)
 
 **The question (user):** *"At some point I'll want to check why the battery takes so long. Can it
 be moved to CI? Can parts of it run in parallel?"* All numbers re-derived at `dde883de9`, none
@@ -6524,8 +6524,203 @@ were PROSE):
 sentences: *no identity row is unkeyable* and *every row sharing an entry gets the same keyability
 answer*, each guarded against vacuity by a non-empty assertion first (trap 824).
 
-⇒ **S3 (CI runs the browser gates) is NEXT and is the big one** — production-first by construction
-(`feedback_ci_fix_untested_environment`), its own session, nothing of it pulled forward here.
+⇒ **S3 (CI runs the browser gates) was NEXT and is the big one** — production-first by construction
+(`feedback_ci_fix_untested_environment`), its own session, nothing of it pulled forward here. ⛓ Its
+as-built follows.
+
+**⇒ S3 SHIPPED 2026-09-01 — CI RUNS THE BROWSER GATES. 24 ARMS, 3 MATRIX JOBS PARTITIONED
+FROM THE BANK AT RUNTIME, EVERY VERDICT EQUAL TO THE BANKED VALUE, AND `seedling-wasm-element`
+STAYS IN CI AT 0.96× ITS BANKED COST.** (`9f46b2bfd` … `765ea79fa`, PUSHED; six commits,
+six CI runs watched — five pushes and one dispatch.)
+
+⛓ **THE DERIVATION AGREES WITH THE BRIEF'S 23, AND THE ARM MAKES IT 24.** Re-derived here
+from `gateRoster()`: 33 gates = **23 browser + 4 windows + 6 headless**, and
+`check-seedling-editor-generate` declares an `@standing-variant` — so what CI runs is
+**24 ARMS**, the own-server arm being a standing row like any other (⚖ editor v3 §26.7a:
+224/0 under `--host=`, 230/0 on its own server; both now answered by CI).
+
+**Built — the production side, in three pieces.**
+
+1. **`ciGatePlan.js`** — the ONE place that answers *"can CI run this gate?"*
+   (`ciRunnable` = `!gate.windows`: `ubuntu-latest` has headless Chromium and no
+   `/mnt/c/Windows/py.exe`) and *"how do the arms partition across runners?"*
+   (`planCiShards`, longest-first into **600 s of BANKED time**, read from the bank at
+   runtime). ⛔ The matrix is PUBLISHED, never typed (⚖ 17): the plan job prints it and
+   `fromJSON` interpolates it; each shard job recomputes the same plan and takes its
+   slice by index. ⛓ **`seedling-wasm-element` getting a job to itself is a CONSEQUENCE
+   of the budget rule, not a name typed into it** — and a row with NO banked `ms` is
+   priced at the WHOLE budget, so a brand-new gate lands alone instead of silently making
+   one shard the slow one.
+2. **`ci-gates.mjs`** grows `--set=headless|browser|all`, `--shard=`, `--host=`, `--plan`.
+   A browser selection **takes the box** and the gates it spawns pass through on the
+   token — which is what makes it `gates.mjs`-equivalent machinery rather than 24
+   standalone runs: SG1's demos dedup is licensed by `BOX.passthrough` alone. It joins
+   `BOX_LOCK_HOLDERS` for the same reason the other four are named there. ⛓ The default
+   invocation is UNCHANGED and measured so: the headless job's six lines are the same six
+   keys and values.
+3. **The workflow** — a plan job (no submodules, no `npm ci`, ~16 s) plus a matrix of
+   shard jobs: checkout recursive, `npm ci`, the pinned-version Playwright cache,
+   `node_modules/playwright/cli.js install chromium` (⛔ not `npx`, ⛔ no `--with-deps` —
+   `seedling-wasm.yml` carries both measurements), a repo-root `python3 -m http.server`
+   (`wasm-pages` asserts a true byte size, which a compressing server would move).
+   `continue-on-error` on the gates step for 12g′'s reason; `fail-fast: false` because a
+   cancelled sibling is a row with NO answer for that SHA — the one silence ⚖ 72 (b)'s
+   bar cannot see; `timeout-minutes` 45/12/40 because a JOB timeout reports `cancelled`
+   and names neither step nor cause.
+
+**And the same-slice items, all four:** `ciSummary.js` reads the gate lines across EVERY
+job of a run (`gateLogs`, with unreadable job logs NAMED, not swallowed); `ci-summary`'s
+refusal is derived from `ciRunnable`, so the browser half is retired (those keys have
+answers now) while ⚖ 72 (a)'s Windows half and P4b (D)'s `@ci-face` clause stand
+untouched; and the three stale *"four of thirty-one are headless"* comments are replaced
+**by pointers to the derivation rather than by corrected counts** — this arc has produced
+four wrong-and-green counts now and every one of them was prose.
+
+⚠ **ONE THING THE BRIEF DID NOT ASK FOR, AND WHY IT IS HERE: the trigger is widened to
+`frontend/**`.** It is this workflow's own criterion applied a fifth time — the browser
+gates' SUBJECT is the frontend tree (`demos.html`, the preset bundles, the lab pages, the
+wasm submodule pointer), and `frontend/**/*.js` is narrower than what they READ. Without
+it a head that moved a gate's subject without touching a `.js` gets no CI answer at all,
+which is S4's KEEP branch freezing a row for a reason nobody can see. ⛔ Still true after
+the widening, and named for S4: **a commit that touches only `scripts/procgen/standing-
+values.json` or only `CC/docs/**` triggers NO run** — the bank's own commit and this queue
+doc are both outside every path.
+
+**THE RUNS, WATCHED — AND THE FIRST HONEST TEST WAS A PUSH, EXACTLY AS
+`feedback_ci_fix_untested_environment` SAID.** Six runs, five pushes and one dispatch, and
+the iteration count is not the story: **every push after the first was caused by a NAMED
+finding, not by a guess.**
+
+| # | run | head | what it answered |
+|---|---|---|---|
+| 1 | 33540085018 | `e37dd5ff9` | **23 of 24 arms `same` on the FIRST run**; `seedling-wasm-element` exit 1 at 0.4 s with **no evidence in the log** |
+| 2 | 33540828822 | `d3a100d58` | the evidence echo names the cause on its first firing: `assert(!this.paused)` in undici |
+| 3 | 33541690772 | `d49e8e880` | **24 of 24 `same`** — element 11/0 in 895.4 s. Bar reading #1 |
+| 4 | 33543361446 | `5743f5944` | 24 of 24 `same`. Bar reading #2 |
+| 5 | 33543380112 | `5743f5944` (dispatch) | 24 of 24 `same`. Bar reading #3 |
+| 6 | 33543595675 | `765ea79fa` | 23 of 24 — `preset-bundle-load` 9/1, a FLAKE, and the bar caught it (below) |
+
+⛓ **THE ABORT CRITERION IS NOT MET AND `seedling-wasm-element` STAYS IN CI.** The brief's
+bar was *"> 2.5× banked, or flaky across two runs"*. Measured over FOUR runs:
+**895.4 · 890.0 · 895.6 · 895.2 s against 934.7 s banked = 0.95–0.96×**, verdict 11/0
+every time, job wall clock 15 m 17–21 s inside a 45-minute cap. It is not slow here and it
+is not flaky here. ⛓⛓ **The runner is not the constraint anybody feared — it is about TWICE
+THE BOX on the light rows**: shard 2 ran 168.2 s of arm time against 350.6 s banked,
+shard 1 330.2 s against 597.9 s. The whole browser battery, 31.4 banked minutes on the
+box, is **≈ 15 minutes of wall clock in CI and zero minutes of box.**
+
+⛔⛔ **THE ONE RED WAS A REAL DEFECT AND IT WAS NOT ABOUT SPEED — TRAP 1057.**
+`check-seedling-wasm-element.mjs`'s liveness probe is
+`await fetch(WATCH).then((r) => r.ok)`, which leaves the response body UNREAD. On **Node
+22's bundled undici** the socket then ends while the parser is paused and the process dies
+on an internal `assert(!this.paused)` thrown from a socket callback — which no `try`/
+`catch` around the fetch can see, and which takes the gate's buffered stdout with it.
+Reproduced on this box after `nvm install 22.23.2` (the runner's exact version), with the
+byte-identical stack, then MEASURED, 40 runs per arm:
+
+| arm | crashed |
+|---|---|
+| the old form, 85 KB `watch.html` | **5 / 40** |
+| GET + `await r.arrayBuffer()` (shipped) | 0 / 40 |
+| `{ method: 'HEAD' }` | 0 / 40 |
+| ⛓ the NINE sibling gates' form, 26 KB `index.json` | **0 / 40** |
+
+The last row is the negative control and it decides the scope: the trigger is the body's
+size against the socket's close, so the fix goes where the crash is and nine green gates
+keep their keys. ⛔ It is LATENT for all of them — **the box runs Node 18 and the runner
+Node 22, so a gate's environment includes its NODE VERSION**, and the day the box moves
+they join it. (0/25 on Node 18 and on 23.11 — undici was fixed later — which is why the
+reproduction needed the runner's *exact* version rather than "a recent Node".)
+
+⛓ **AND THE FIX THAT FOUND IT IS ITSELF THE SLICE'S SECOND REPAIR:** the evidence echo
+only knew `FAIL:`/`SKIP:` lines, so a gate that died BEFORE printing a verdict produced a
+red with no evidence — the same lesson P3b wrote into this file for `full-tier-owed`,
+arriving in its second costume. It now echoes the tail of whatever the gate did print when
+there is no verdict line at all, and that echo named the undici bug on its first firing.
+
+**⚖ 72 (b), MEASURED RATHER THAN EYEBALLED — AND THE BAR IS PER ROW.** Comparing 24 keys
+by eye once per run is how a bar gets recorded as *"looked fine"*, so the comparison is an
+instrument: **`ci-summary --gates`** prints one row per `## CI-GATE |` line at a SHA beside
+the bank's value for the same key. ⛔ A line with NO bank row is `not-banked`, never a
+match (a `@ci-face` key is a different, bounded claim); a banked arm with NO line is
+`MISSING`, because a shard that never ran must read as an absent answer and not as a
+smaller verdict set that agrees with itself. **`--run=<id>`** names one run, because a SHA
+can carry more than one (a dispatch beside a push — measured) and the bar counts RUNS.
+
+⛔⛔ **AND TWO HEADLESS ROWS ARE `MOVED` IN CI AT EVERY HEAD AND ALWAYS WILL BE — TRAP
+1058.** Both are `actions/checkout`'s depth-1 clone, both predate this slice, and neither
+is `ciSourced` today (both are `cheap`), so nothing consumes them:
+
+- `gate: seedling-full-tier-owed` — `2/0/1` against `5/0`, and **it refuses BY NAME in its
+  own printed line**: *"the campaign baseline … is not in this clone … the normal state in
+  CI, where `actions/checkout` clones at depth 1."* That is the model.
+- `gate: slice-records` — `42/24` exit 1 against `73/0/37`, and it does **not** say so. It
+  derives *"where the `**⇒ ` convention starts"* from history, and in a shallow clone the
+  earliest commit it can see IS HEAD — so every heading is "at or after" it and 24 rows
+  fail, naming a SHA that is simply the head under test. Green on the box at the same tree.
+
+⇒ **Read per RUN, those two would hold the other 26 rows hostage forever.** ⚖ 72 (b) says
+*"three consecutive CI runs whose verdict sets equal the banked values before A ROW
+flips"*, and the per-ROW reading is the one that survives contact with the data. The
+instrument prints both and says which its exit code is.
+
+**⇒ THE BAR, AS OF THIS SLICE'S CLOSE — 23 of the 24 browser arms have CLEARED IT, and
+the twenty-fourth is the reason the bar exists.**
+
+| row(s) | runs 3 · 4 · 5 · 6 | status |
+|---|---|---|
+| 23 browser arms | same · same · same · same | **CLEARED (4 consecutive)** |
+| `gate: preset-bundle-load` | same · same · same · **MOVED** | streak BROKEN at run 6; needs three more |
+| `gate: seedling-full-tier-owed`, `gate: slice-records` | MOVED × 4 | trap 1058 — never clearable at depth 1 |
+
+⛓ **THE FLAKE IS NAMED, BY THE GATE ITSELF.** `preset-bundle-load` read 9/1 in run 6 with
+`FAIL: … Fetch API cannot load userloaded:AP_1_bundle.zip → rules.json. URL scheme
+"userloaded" is not supported.` — a page-error race on the bundle's pseudo-scheme, once in
+four runs of that shard, at a head whose commit touched only `ci-summary.mjs`,
+`ciSummary.js` and a generated table. ⛔ **⚖ 72 (b) earned its keep on its first day:** a
+slice that had flipped this row on one green reading would have banked a value that
+disagrees with CI once every four pushes. Whether the race is CI-only or exists on the box
+is NOT established here — one occurrence, and `feedback_flaky_read_as_order_dependent`'s
+rule (run it ALONE eight times) has not been paid.
+
+**Tests.** `ciGatePlan.test.js`, 20 rows, every one off-network and off-box. RED FIRST
+against four mutants, each caught by exactly the rows it should be: pricing an unmeasured
+row at 0 → 2 fail; dropping the name tie-break → 1 (the plan is computed by TWO processes
+that must agree without talking); `ciRunnable` back to the pre-S3 refusal → 7; the pre-S3
+browser refusal restored in `ci-summary.mjs` → the one row that says a browser key is no
+longer refused. `npx vitest run scripts/procgen frontend/modules/procgenDocs` **35 files /
+971 tests** green, the generated-`--check` row included — the instruments table moved
+three times in this slice because `ci-gates.mjs` and `ci-summary.mjs` gained flags
+(⚖ 52: bounded).
+
+⛓ **THE LOCAL PRE-FLIGHT THAT SAVED AT LEAST ONE CI ROUND TRIP, and the way it caught its
+own slice.** Before spending a runner, `ci-gates.mjs --set=browser --shard=2` was run on
+the box: box lock TAKEN, 17 arms, 442.2 s, and **16 of 17 verdicts equal to the bank**.
+The seventeenth was `procgen-reference` 20/1 — and it was RIGHT: the `--gates` flag added
+minutes earlier had made the generated instruments table stale. Regenerated, re-run, ALL
+CHECKS PASSED. ⛓ *A CI-config slice cannot be tested locally, but the INSTRUMENT it drives
+can be.*
+
+**⇒ S4 (the bank quotes CI) IS NEXT, and it is small — the production side is done and
+measured.** What S4 inherits, all of it named rather than left to be rediscovered:
+
+1. **23 of the 24 browser arms are ready to flip** — four consecutive `same` each.
+   ⛔ `gate: preset-bundle-load` is NOT: its streak broke at run 6 and it owes three more.
+   `ciSourced` becomes `CI-answerable ∧ ¬cheap ∧ ¬ciFace` where CI-answerable is
+   `ciGatePlan.ciRunnable` — the same predicate the workflow and the refusal already read.
+   ⛔ The `¬ciFace` clause stays UNTOUCHED (§4's composition trap; `procgen-help` leaves
+   the box by S5's route or not at all).
+2. ⛔ **`gate: seedling-full-tier-owed` and `gate: slice-records` must NOT be flipped** —
+   trap 1058. Both are `cheap`, so today's rule already excludes them; S4 must make sure
+   its widening does not pull them in by another door.
+3. ⚠ **A bank commit and a queue-doc commit trigger NO run** (`scripts/**/*.json` and
+   `CC/docs/**` are outside every path). A `--write` at such a head has no CI answer for
+   the SHA and every CI-sourced row KEEPs — which is correct behaviour and a surprise
+   worth having in writing before somebody reads it as a bug.
+4. ⛓ **The economics S4 buys, priced off this slice's measurements:** 24 arms = **31.4
+   banked minutes** leave the box. With the Windows rows (~11 min) and `procgen-help`
+   (417 s, S5's) staying, the local battery falls from 70.5 min to **≈ 20 min**, and the
+   CI cost is ≈ 15 minutes of wall clock in three parallel jobs.
 
 ## 6. Everything else (unchanged queues)
 
