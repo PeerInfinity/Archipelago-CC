@@ -37,48 +37,29 @@
 <head>
 <meta charset="utf-8">
 <title>Procgen reference — the six generated tables</title>
+<link rel="stylesheet" href="./procgenDocs.css">
 <style>
-  :root { color-scheme: dark; }
-  body {
-    margin: 0; background: #0b0b0e; color: #d8d8e0;
-    font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
-  }
-  header { padding: 10px 14px; border-bottom: 1px solid #24242c; }
-  h1 { font-size: 14px; margin: 0 0 3px; font-weight: 600; }
-  h1 span { color: #7fe0ff; font-weight: 400; }
-  #count, #where, #also { font-size: 11px; color: #8a8a98; }
-  #where, #also { color: #6a6a78; margin-top: 2px; }
-  main { padding: 10px 14px 40px; max-width: 110ch; }
-  a { color: #7fe0ff; }
-  code { color: #ffd75f; }
-  pre { background: #101014; border: 1px solid #1e1e26; padding: 6px 8px;
-    overflow-x: auto; margin: 6px 0; }
-  pre code { color: #d8d8e0; }
-  p { margin: 6px 0; }
-  .note { color: #8a8a98; font-size: 11px; }
-  #filterBox { margin: 10px 0 4px; display: flex; gap: 8px; align-items: baseline;
-    flex-wrap: wrap; }
-  #filter { background: #101014; color: #d8d8e0; border: 1px solid #2a2a36;
-    padding: 3px 6px; width: 26ch; font: inherit; }
-  #filterNote { color: #7fd88f; }
-  #index { margin: 6px 0 14px; }
-  #index a { margin-right: 10px; white-space: nowrap; }
-  #index .n { color: #8a8a98; }
-  h2 { font-size: 13px; margin: 20px 0 2px; color: #7fe0ff; font-weight: 600;
-    border-top: 1px solid #24242c; padding-top: 10px; }
-  h2 .n { color: #6a6a78; font-weight: 400; }
-  h3 { font-size: 12px; margin: 14px 0 4px; color: #c8c8d4; font-weight: 600; }
-  .blurb { color: #8a8a98; font-size: 11px; margin: 0 0 6px; }
-  details.row { margin: 6px 0; border: 1px solid #1e1e26; background: #0e0e12;
-    padding: 5px 10px; }
-  details.row > summary { cursor: pointer; color: #ffd75f; font-weight: 600; }
+  /* ⛓ THE SHARED SHEET IS `./procgenDocs.css`, LINKED ABOVE. What stays here is
+     the REFERENCE'S OWN VOCABULARY — the section heading, the two row states
+     the generator can produce (retired, finding) and the generated tables. */
+  #count { font-size: 12px; color: #9a9aa8; }
+  #where, #also { font-size: 12px; color: #7a7a88; margin-top: 2px; }
+  /* ⛓ A GENERATED TABLE IS WIDER THAN PROSE. */
+  main { max-width: 104ch; }
+  h2 { font-size: 15px; margin: 22px 0 2px; color: #7fe0ff; font-weight: 600;
+    border-top: 1px solid #24242c; padding-top: 12px; }
+  h2 .n { color: #6a6a78; font-weight: 400; font-size: 12px; }
+  h3 { font-size: 13px; margin: 14px 0 4px; color: #c8c8d4; font-weight: 600; }
+  .blurb { color: #8a8a98; font-size: 12px; margin: 0 0 6px; }
+  /* ⛔ A ROW'S NAME IS AN IDENTIFIER — `?anchortries=`, `no-cut-for-the-kill-lock`
+     — and is read character by character, so the summary is monospace. This is
+     the one page with NO teaser: a row's name and its `sub` ARE the entry.
+     It is a lookup table, not prose. */
+  details.row > summary { font-family: var(--mono); font-size: 13px; }
   details.row > summary .sub { color: #6a6a78; font-weight: 400; margin-left: 8px; }
   details.row.retired > summary { color: #a08a8a; text-decoration: line-through; }
   details.row.finding { border-color: #6a3a3a; background: #140e10; }
   details.row.finding > summary { color: #ff9f9f; }
-  .body { padding: 4px 0 6px 14px; }
-  .lbl { color: #8a8a98; text-transform: uppercase; letter-spacing: .06em;
-    font-size: 10px; display: block; margin: 8px 0 1px; }
   table { border-collapse: collapse; margin: 4px 0; font-size: 12px; }
   th, td { border: 1px solid #1e1e26; padding: 2px 8px; text-align: left;
     vertical-align: top; }
@@ -88,8 +69,6 @@
   .dead { color: #ff9f9f; }
   .warn { color: #ffb86c; }
   .prov { color: #6a6a78; font-size: 11px; }
-  footer { padding: 10px 14px; border-top: 1px solid #24242c; color: #6a6a78;
-    font-size: 11px; }
 </style>
 </head>
 <body>
@@ -99,6 +78,29 @@
   <div id="where" class="note"></div>
   <div id="also" class="note"></div>
 </header>
+
+<!--
+  ⛓⛓ THE SHELL. `#index` is a NAV of SECTIONS, not of rows: there are 524 rows
+  and the filter is the control for finding one. ⛔ Nothing in here wears `row`
+  — the readout counts `details.row` per section off the DOM and the gate
+  compares that against the generated tables.
+-->
+<div id="shell" class="pageShell">
+<nav id="index" class="pageRail" aria-label="the sections">
+  <span class="railHead">find a row</span>
+  <div class="filterBox">
+    <label for="filter" class="note">filter</label>
+    <input id="filter" type="search" placeholder="areas, killgate, no-pocket…"
+      autocomplete="off" spellcheck="false">
+  </div>
+  <div id="filterNote" class="filterNote"></div>
+  <div class="ixctl">
+    <button id="expandAll" type="button">expand all</button>
+    <button id="collapseAll" type="button">collapse all</button>
+  </div>
+  <span class="railHead">the tables</span>
+  <div id="ixlist"></div>
+</nav>
 
 <main>
   <p>⛔⛔ <b>Every table on this page is GENERATED from the code it describes</b>,
@@ -113,16 +115,9 @@
 node scripts/procgen/generate-procgen-reference.mjs --check   # the gate: regenerate = no diff
 node scripts/procgen/check-procgen-reference.mjs              # …and this page renders it</code></pre>
 
-  <div id="filterBox">
-    <label for="filter">filter</label>
-    <input id="filter" type="search" placeholder="areas, killgate, no-pocket…"
-      autocomplete="off" spellcheck="false">
-    <span id="filterNote" class="note"></span>
-  </div>
-
-  <div id="index" class="note"></div>
   <div id="sections"></div>
 </main>
+</div>
 
 <footer id="foot"></footer>
 
@@ -216,7 +211,13 @@ function row(box, { anchor, title, sub = '', kind = '', body, hay }) {
     d.id = anchor;
     d.dataset.rowId = anchor;
     d.dataset.hay = String(hay ?? `${title} ${sub}`).toLowerCase();
-    d.open = true;
+    /* ⛔ CLOSED. 524 rows open measured 140,615px — 140 screens — on a page
+       whose whole job is LOOKUP. ⛓ No teaser here, unlike the catalogue and the
+       glossary: a row's name and its `sub` already ARE the entry, and the body
+       is a table rather than a sentence to preview. The DOM is identical either
+       way, which is why the gate is indifferent: it counts `details.row` per
+       section with `querySelectorAll` and drives `#filter`. */
+    d.open = false;
     d.innerHTML = `<summary>${title}${sub ? `<span class="sub">${sub}</span>` : ''}</summary>`
         + `<div class="body">${body}</div>`;
     box.appendChild(d);
@@ -767,9 +768,25 @@ for (const s of SECTIONS) {
     s.heading.innerHTML = `${esc(s.title)} <span class="n">— ${rowsOf(s).length}</span>`;
 }
 
-document.getElementById('index').innerHTML = SECTIONS.map((s) =>
-    `<a href="#section-${s.id}">${esc(s.title.split(' — ')[0])}</a> `
-    + `<span class="n">${rowsOf(s).length}</span>`).join(' ');
+/* ══════════ THE RAIL ═══════════════════════════════════════
+ * ⛓⛓ ONE ROW PER SECTION, and its count is what the FILTER is currently
+ * showing — so the rail answers "which table holds my matches", which on a
+ * 524-row lookup page is the question. A section the filter has emptied is
+ * dimmed rather than removed: a list of tables that silently lost members
+ * would make a filter with two hits look like a reference with two tables. */
+const ixlist = document.getElementById('ixlist');
+const IX_ROWS = new Map();
+for (const s of SECTIONS) {
+    const el = document.createElement('a');
+    el.className = 'ix';
+    el.href = `#section-${s.id}`;
+    el.dataset.for = `section-${s.id}`;
+    el.title = s.title;
+    el.innerHTML = `<span class="t">${esc(s.title.split(' — ')[0])}</span>`
+        + `<span class="n">${rowsOf(s).length}</span>`;
+    ixlist.appendChild(el);
+    IX_ROWS.set(s.id, el);
+}
 
 const ALL_ROWS = [...document.querySelectorAll('details.row')];
 
@@ -782,16 +799,64 @@ function applyFilter(raw) {
         if (hit) visible += 1;
     }
     for (const s of SECTIONS) {
-        const any = rowsOf(s).some((e) => !e.hidden);
+        const hits = rowsOf(s).filter((e) => !e.hidden).length;
+        const any = hits > 0;
         s.box.hidden = !any;
         s.heading.hidden = !any;
         s.blurb.hidden = !any;
+        /* ⛓ …and the rail says the same thing, off the same count. */
+        const row = IX_ROWS.get(s.id);
+        row.querySelector('.n').textContent = String(hits);
+        row.style.opacity = any ? '' : '.4';
     }
     document.getElementById('filterNote').textContent = q
         ? `${visible} of ${ALL_ROWS.length} rows match ${JSON.stringify(q)}`
-        : `${ALL_ROWS.length} rows — type to narrow by name, source or sentence`;
+        : `${ALL_ROWS.length} rows — narrow by name, source or sentence`;
     return visible;
 }
+
+/**
+ * ⛓ ONE OPENER FOR EVERY WAY IN. ⛔ A `<details>` is NOT auto-opened by being
+ * the fragment target, and this page's anchors are pointed at from the docs,
+ * the glossary and its own findings block (`#findings` in the paragraph above
+ * is one) — with the rows closed every one of them would have landed on a shut
+ * box.
+ */
+function openTarget() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === 'DETAILS') el.open = true;
+    el.scrollIntoView({ block: 'start' });
+}
+window.addEventListener('hashchange', openTarget);
+
+document.getElementById('expandAll')
+    .addEventListener('click', () => { for (const el of ALL_ROWS) el.open = true; });
+document.getElementById('collapseAll')
+    .addEventListener('click', () => { for (const el of ALL_ROWS) el.open = false; });
+
+/** ⛓ WHERE YOU ARE — the last section heading scrolled past. One writer. */
+let lit = null;
+let ticking = false;
+function syncHere() {
+    ticking = false;
+    let cur = null;
+    for (const s of SECTIONS) {
+        if (!s.heading.hidden && s.heading.getBoundingClientRect().top <= 90) cur = s.id;
+    }
+    if (!cur || cur === lit) return;
+    for (const el of ixlist.querySelectorAll('a.ix.here')) el.classList.remove('here');
+    const row = IX_ROWS.get(cur);
+    if (row) row.classList.add('here');
+    lit = cur;
+}
+window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(syncHere);
+}, { passive: true });
 
 const filterInput = document.getElementById('filter');
 filterInput.addEventListener('input', () => { publish(applyFilter(filterInput.value)); });
@@ -872,6 +937,11 @@ function publish(visible) {
     });
 }
 publish(applyFilter(''));
+
+/* ⛓ LAST, and AFTER the readout: a deep link's open-and-scroll happens on a
+   fully rendered page, and the readout is about what was RENDERED. */
+openTarget();
+syncHere();
 </script>
 </body>
 </html>

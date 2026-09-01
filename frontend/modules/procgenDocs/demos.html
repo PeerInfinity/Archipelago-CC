@@ -32,131 +32,22 @@
 <head>
 <meta charset="utf-8">
 <title>Procgen demonstrations — a catalogue</title>
+<link rel="stylesheet" href="./procgenDocs.css">
 <style>
-  /* ⛓⛓ **TWO FAMILIES, AND WHICH ONE A THING GETS IS A DECISION, NOT A
-     DEFAULT.** The whole page was 13px monospace — including `demonstrates`,
-     `howToRun` and `whatIsHappening`, which are multi-paragraph ARGUMENT text
-     several hundred words long. A code face was doing a reading job. Monospace
-     is kept for everything that is a STRING A READER MAY HAVE TO TYPE OR
-     COMPARE CHARACTER BY CHARACTER — code spans, commands, URLs, claims, the
-     entry numbers — and prose gets a prose face. ⛔ This page now differs from
-     its three siblings (`docs.html`, `glossary.html`, `reference.html`), which
-     are still all-monospace; that is a KNOWN divergence, not an oversight. */
-  :root {
-    color-scheme: dark;
-    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    --rail: 250px;
-  }
-  body { margin: 0; background: #0b0b0e; color: #d8d8e0; font: 14px/1.6 var(--sans); }
-  code, pre, kbd { font-family: var(--mono); }
-  header { padding: 10px 14px; border-bottom: 1px solid #24242c; }
-  /* ⛔ The header's own notes ran the FULL viewport width (measured: 1372px of
-     a 1400px window) while the entries were capped at 96ch — the two halves of
-     the page disagreed about line length, and the widest text on it was also
-     the lowest-contrast. One measure for both. */
-  header > * { max-width: 104ch; }
-  h1 { font-size: 15px; margin: 0 0 3px; font-weight: 600; }
-  h1 span { color: #7fe0ff; font-weight: 400; }
+  /* ⛓ THE SHARED SHEET IS `./procgenDocs.css`, LINKED ABOVE — the typography,
+     the shell and rail, the entry box and teaser, the compact links and the
+     filter all live there because all four doc pages want the same ones. What
+     stays here is what is ONLY true of the catalogue. */
   #count { font-size: 12px; color: #9a9aa8; }
-  #where { font-size: 12px; color: #7a7a88; margin-top: 2px; }
-  #also { font-size: 12px; color: #7a7a88; margin-top: 2px; }
-  a { color: #7fe0ff; }
-  code { color: #ffd75f; }
-  /* ⛓ Commands and URLs WRAP rather than clipping. Measured before this rule:
-     17 of the 46 `<pre>` blocks on the page overflowed their box, so a CLI line
-     ended mid-flag with the rest reachable only by horizontal scrolling. */
-  pre { background: #101014; border: 1px solid #1e1e26; padding: 6px 8px;
-    overflow-x: auto; margin: 6px 0; white-space: pre-wrap; overflow-wrap: anywhere; }
-  pre code { color: #d8d8e0; }
-  p { margin: 6px 0; }
-  .note { color: #8a8a98; font-size: 12px; }
+  #where, #also { font-size: 12px; color: #7a7a88; margin-top: 2px; }
   .k { color: #7fd88f; font-family: var(--mono); font-size: 12px; }
-
-  /* ══ THE SHELL — a sticky INDEX beside the column ═══════════════════
-     ⛓ The content column is ~90ch on any screen; on a 1400px window that left
-     roughly 600px of nothing. The index costs none of the column's width and
-     is on screen at every scroll position, which a table of contents printed
-     at the top would not be — with 23 entries over 23 screens, a top-of-page
-     index is itself one more screen to scroll past. */
-  #shell { display: flex; align-items: flex-start; }
-  #index { flex: 0 0 var(--rail); position: sticky; top: 0; max-height: 100vh;
-    overflow-y: auto; padding: 10px 8px 30px 14px; border-right: 1px solid #1e1e26;
-    font-size: 12px; }
-  #index h2 { font-size: 10px; margin: 0 0 6px; color: #8a8a98; font-weight: 600;
-    text-transform: uppercase; letter-spacing: .08em; }
-  #index .ixctl { display: flex; gap: 4px; margin: 0 0 8px; flex-wrap: wrap; }
-  #index button { background: #1e1e26; color: #d8d8e0; border: 1px solid #34343e;
-    padding: 2px 7px; font: inherit; cursor: pointer; }
-  #index button:hover { background: #262630; }
-  #index .ixsec { display: block; padding: 3px 6px; color: #8a8a98; }
-  a.ix { display: flex; gap: 6px; align-items: baseline; padding: 3px 6px;
-    color: #c8c8d4; text-decoration: none; border-left: 2px solid transparent; }
-  a.ix:hover { background: #16161c; color: #fff; }
-  a.ix b { font-family: var(--mono); font-size: 11px; color: #6a6a78;
-    font-weight: 400; flex: 0 0 2.2em; text-align: right; }
-  a.ix .t { flex: 1 1 auto; }
-  a.ix .tag { font-size: 10px; color: #6d5a2a; text-transform: uppercase;
-    letter-spacing: .06em; }
-  /* ⛓ WHERE YOU ARE — set by the scroll handler, which is the only writer. */
-  a.ix.here { border-left-color: #7fe0ff; color: #7fe0ff; background: #14141a; }
-  main { flex: 1 1 auto; min-width: 0; padding: 10px 18px 40px; max-width: 92ch; }
-  @media (max-width: 900px) {
-    /* ⛔ The rail is the FIRST thing on a narrow screen, not a 250px column
-       squeezing the prose to nothing. */
-    #shell { display: block; }
-    #index { position: static; max-height: none; border-right: 0;
-      border-bottom: 1px solid #1e1e26; }
-  }
-
   details.sec { margin: 8px 0; border-left: 2px solid #2a2a36; padding-left: 8px; }
   details.sec > summary { font-weight: 600; color: #c8c8d4; cursor: pointer; }
-  details.entry { margin: 8px 0; border: 1px solid #1e1e26; background: #0e0e12;
-    padding: 6px 10px; }
-  details.entry > summary { cursor: pointer; color: #ffd75f; font-weight: 600; }
   details.entry > summary b { color: #8a8a98; font-weight: 400; margin-right: 6px;
     font-family: var(--mono); }
   details.entry.prose > summary { color: #8a8a98; }
-  details.entry[open] { border-color: #2a2a36; }
-  /* ⛓⛓ **THE TEASER IS WHAT MAKES A CLOSED LIST STILL A CATALOGUE.** Entries
-     are closed on load — 23 of them open is a 22,883px page, measured — and a
-     list of 23 bare titles would be an index, not a catalogue. The teaser is
-     the first sentence of the entry's own `demonstrates` field, so it is the
-     DATA speaking and there is no second summary to keep in step. */
-  details.entry > summary .teaser { display: block; margin: 2px 0 0 1.6em;
-    color: #8a8a98; font-weight: 400; font-size: 13px; }
-  details.entry[open] > summary .teaser { display: none; }
-  .body { padding: 4px 0 6px 14px; }
-  .lbl { color: #8a8a98; text-transform: uppercase; letter-spacing: .06em;
-    font-size: 10px; display: block; margin: 8px 0 1px; }
-
-  /* ══ THE LINKS ══════════════════════════════════════════════════════
-     ⛓⛓ **THE URL IS NO LONGER THE LINK'S TEXT.** Every entry printed both of
-     its URLs in full — 48 of them, median 177 characters, longest 261, under
-     `word-break: break-all` so they chopped mid-token. Measured: 3,582px, or
-     15.7% OF THE WHOLE PAGE, was printed URL text.
-     ⛔ THE URLS ARE NOT GONE, they are one disclosure away: this page's own
-     prose says pasting one back into the bar is a FIXED POINT, which is a
-     claim about a string a reader must be able to SEE and copy. `.rawurl`
-     below is where they live now, and the anchors keep their `href` — which
-     is what `check-procgen-demos.mjs` reads (it asserts the href, never the
-     link text). */
-  .open { display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline;
-    margin: 3px 0; }
-  a.go { color: #7fe0ff; text-decoration: none; border: 1px solid #2a3a44;
-    background: #121a1e; padding: 2px 9px; border-radius: 2px; }
-  a.go:hover { background: #17242a; border-color: #3f5f6d; }
-  a.go.alt { color: #9aa8b0; border-color: #26262e; background: #101014; }
-  button.copy { background: #1e1e26; color: #8a8a98; border: 1px solid #2a2a35;
-    padding: 2px 9px; font: inherit; cursor: pointer; border-radius: 2px; }
-  button.copy:hover { color: #d8d8e0; }
-  button.copy.done { color: #7fd88f; border-color: #2f5a3a; }
-  details.rawurl { margin: 2px 0 0; }
-  details.rawurl > summary { color: #6a6a78; font-size: 12px; cursor: pointer; }
-  details.rawurl code { display: block; font-size: 12px; color: #8a8a98;
-    overflow-wrap: anywhere; margin: 3px 0; }
-  details.rawurl code b { color: #c8c8d4; font-weight: 400; }
-
+  /* ⛓ THE ENTRY'S OWN VOCABULARY — the four labelled bands a catalogue entry
+     has and no other page does. */
   .drive { color: #d8d8e0; }
   .drive b { color: #7fe0ff; font-weight: 600; }
   .claim { color: #a8e6c4; }
@@ -164,8 +55,6 @@
   .terms { color: #8a8a98; }
   .terms a { color: #9fff9f; }
   .dead { color: #ff9f5f; }
-  footer { padding: 10px 14px; border-top: 1px solid #24242c; color: #6a6a78;
-    font-size: 12px; }
 </style>
 </head>
 <body>
@@ -182,8 +71,8 @@
   ORDER, so anything that wore that class here would be counted as a
   twenty-fourth entry. The rail's links are plain `<a href="#id">`.
 -->
-<div id="shell">
-<nav id="index" aria-label="the catalogue">
+<div id="shell" class="pageShell">
+<nav id="index" class="pageRail" aria-label="the catalogue">
   <h2>the catalogue</h2>
   <div class="ixctl">
     <button id="expandAll" type="button">expand all</button>
@@ -191,7 +80,7 @@
   </div>
   <a class="ix" href="#how-to-run"><b>?</b><span class="t">How to run any of these</span></a>
   <a class="ix" href="#how-to-read"><b>?</b><span class="t">How to read an entry</span></a>
-  <h2 style="margin-top:10px">entries</h2>
+  <h2>entries</h2>
   <div id="ixlist"></div>
 </nav>
 

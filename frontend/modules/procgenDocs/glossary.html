@@ -30,52 +30,33 @@
 <head>
 <meta charset="utf-8">
 <title>Procgen glossary — the vocabulary, defined</title>
+<link rel="stylesheet" href="./procgenDocs.css">
 <style>
-  :root { color-scheme: dark; }
-  body {
-    margin: 0; background: #0b0b0e; color: #d8d8e0;
-    font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
-  }
-  header { padding: 10px 14px; border-bottom: 1px solid #24242c; }
-  h1 { font-size: 14px; margin: 0 0 3px; font-weight: 600; }
-  h1 span { color: #7fe0ff; font-weight: 400; }
-  #count, #where, #also { font-size: 11px; color: #8a8a98; }
-  #where, #also { color: #6a6a78; margin-top: 2px; }
-  main { padding: 10px 14px 40px; max-width: 96ch; }
-  a { color: #7fe0ff; }
-  code { color: #ffd75f; }
-  pre { background: #101014; border: 1px solid #1e1e26; padding: 6px 8px;
-    overflow-x: auto; margin: 6px 0; }
-  pre code { color: #d8d8e0; }
-  p { margin: 6px 0; }
-  .note { color: #8a8a98; font-size: 11px; }
-  #filterBox { margin: 10px 0 4px; display: flex; gap: 8px; align-items: baseline;
-    flex-wrap: wrap; }
-  #filter { background: #101014; color: #d8d8e0; border: 1px solid #2a2a36;
-    padding: 3px 6px; width: 24ch; font: inherit; }
-  #filterNote { color: #7fd88f; }
-  #index { margin: 6px 0 14px; }
-  #index a { margin-right: 10px; white-space: nowrap; }
-  #index .n { color: #8a8a98; }
-  h2 { font-size: 13px; margin: 18px 0 2px; color: #7fe0ff; font-weight: 600;
-    border-top: 1px solid #24242c; padding-top: 10px; }
-  h2 .n { color: #6a6a78; font-weight: 400; }
-  .blurb { color: #8a8a98; font-size: 11px; margin: 0 0 6px; }
-  details.entry { margin: 8px 0; border: 1px solid #1e1e26; background: #0e0e12;
-    padding: 6px 10px; }
-  details.entry > summary { cursor: pointer; color: #ffd75f; font-weight: 600; }
+  /* ⛓ THE SHARED SHEET IS `./procgenDocs.css`, LINKED ABOVE. What stays here is
+     the GLOSSARY'S OWN VOCABULARY — the area heading, the two-level entry's
+     first level, and the three kinds of outbound link an entry carries. */
+  #count { font-size: 12px; color: #9a9aa8; }
+  #where, #also { font-size: 12px; color: #7a7a88; margin-top: 2px; }
+  h2 { font-size: 15px; margin: 22px 0 2px; color: #7fe0ff; font-weight: 600;
+    border-top: 1px solid #24242c; padding-top: 12px; }
+  h2 .n { color: #6a6a78; font-weight: 400; font-size: 12px; }
+  .blurb { color: #8a8a98; font-size: 12px; margin: 0 0 6px; }
+  /* ⛓ THE TERM IS AN IDENTIFIER (`rules.json`, `sphere growth`) and reads as
+     one; ⛔ ITS DEFINITION IS PROSE. Putting the mono face on the whole
+     summary put it on the teaser too — a sentence set in a code face, which
+     is the exact thing the font split was for. */
+  details.entry > summary { font-family: var(--mono); }
+  details.entry > summary .teaser { font-family: var(--sans); }
   details.entry > summary .alias { color: #6a6a78; font-weight: 400; margin-left: 8px; }
-  .body { padding: 4px 0 6px 14px; }
+  /* ⛔ THE FIRST LEVEL IS THE ENTRY'S POINT — "one sentence for someone who has
+     read none of the records" — so it keeps its own rule, and it is the string
+     the closed summary teases with. */
   .plain { color: #e8e8f0; border-left: 2px solid #2a4a3a; padding-left: 8px;
     margin: 4px 0 8px; }
-  .lbl { color: #8a8a98; text-transform: uppercase; letter-spacing: .06em;
-    font-size: 10px; display: block; margin: 8px 0 1px; }
   .where a { word-break: break-all; }
-  .where .k { color: #7fd88f; }
+  .where .k { color: #7fd88f; font-family: var(--mono); font-size: 11px; }
   .see a { color: #9fff9f; }
   .demo a { color: #ffd75f; }
-  footer { padding: 10px 14px; border-top: 1px solid #24242c; color: #6a6a78;
-    font-size: 11px; }
 </style>
 </head>
 <body>
@@ -86,23 +67,40 @@
   <div id="also" class="note"></div>
 </header>
 
-<main>
-  <p>Every entry is TWO LEVELS. The first line is one sentence for someone who
-    has read none of the records; <b>in this project</b> is the concrete rule —
-    the number, the refusal's own name — and <b>where it lives</b> points at the
-    tracked doc and the module. ⛔ Nothing here is invented: every entry comes
-    from a doc or from a string one of the lab pages puts on your screen.</p>
-
-  <div id="filterBox">
-    <label for="filter">filter</label>
+<!--
+  ⛓⛓ THE SHELL. `#index` is a NAV of AREAS, not of terms: 159 term rows would
+  be a rail longer than most of the areas it indexes, and the filter is the
+  control for finding ONE term. ⛔ Nothing in here wears `entry` — the row counts
+  `details.entry` off the DOM and asserts the module's term set against it.
+-->
+<div id="shell" class="pageShell">
+<nav id="index" class="pageRail" aria-label="the areas">
+  <span class="railHead">find a term</span>
+  <div class="filterBox">
+    <label for="filter" class="note">filter</label>
     <input id="filter" type="search" placeholder="door, area, draw…"
       autocomplete="off" spellcheck="false">
-    <span id="filterNote" class="note"></span>
   </div>
+  <div id="filterNote" class="filterNote"></div>
+  <div class="ixctl">
+    <button id="expandAll" type="button">expand all</button>
+    <button id="collapseAll" type="button">collapse all</button>
+  </div>
+  <span class="railHead">the areas</span>
+  <div id="ixlist"></div>
+</nav>
 
-  <div id="index" class="note"></div>
+<main>
+  <p>Every entry is TWO LEVELS. The first line — the one the closed entry shows
+    you — is one sentence for someone who has read none of the records;
+    <b>in this project</b> is the concrete rule — the number, the refusal's own
+    name — and <b>where it lives</b> points at the tracked doc and the module.
+    ⛔ Nothing here is invented: every entry comes from a doc or from a string
+    one of the lab pages puts on your screen.</p>
+
   <div id="entries"></div>
 </main>
+</div>
 
 <footer id="foot"></footer>
 
@@ -159,11 +157,24 @@ function renderTerm(entry) {
     d.className = 'entry';
     d.id = entry.id;
     d.dataset.termId = entry.id;
-    d.open = true;
+    /* ⛔ CLOSED. 159 entries open measured 55,741px — 55.7 screens — with no
+       navigation on the page but a filter. The DOM is identical either way,
+       which is why the row is indifferent to it: it reads `details.entry` with
+       `querySelectorAll` and drives `#filter`, neither of which cares whether a
+       `<details>` is expanded. */
+    d.open = false;
     const aliases = entry.aliases.length
         ? `<span class="alias">— also: ${entry.aliases.map((a) => inline(a)).join(' · ')}</span>`
         : '';
-    const parts = [`<summary>${inline(entry.term)}${aliases}</summary>`, '<div class="body">'];
+    /* ⛓⛓ THE TEASER IS THE ENTRY'S OWN FIRST LEVEL. `plain` is already
+       defined as *"one sentence for someone who has read none of the records"*
+       — the perfect teaser, and one nobody has to write a second time. It is
+       the SAME string the body shows in `.plain`, from the same field; the
+       stylesheet hides the teaser once the entry is open so it is never read
+       twice. */
+    const parts = [`<summary>${inline(entry.term)}${aliases}`
+        + `<span class="teaser">${inline(entry.plain)}</span></summary>`,
+        '<div class="body">'];
     parts.push(`<div class="plain">${inline(entry.plain)}</div>`);
     parts.push(label('in this project'), prose(entry.detail));
     parts.push(label('where it lives'));
@@ -206,9 +217,26 @@ for (const area of AREAS) {
     host.appendChild(box);
 }
 
-document.getElementById('index').innerHTML = AREAS.map((a) =>
-    `<a href="#area-${a.id}">${esc(a.title)}</a> <span class="n">${termsInArea(a.id).length}</span>`)
-    .join(' ');
+/* ══════════ THE RAIL ══════════════════════════════════════
+ * ⛓⛓ ONE ROW PER AREA, and the count on it is the count the FILTER is
+ * currently showing — so the rail answers "where are my matches" rather than
+ * repeating a constant the header already prints. An area the filter has
+ * emptied is dimmed rather than removed: a list of areas that silently lost
+ * members would make a filter with two hits look like a glossary with two
+ * areas. */
+const ixlist = document.getElementById('ixlist');
+const IX_ROWS = new Map();
+for (const a of AREAS) {
+    const el = document.createElement('a');
+    el.className = 'ix';
+    el.href = `#area-${a.id}`;
+    el.dataset.for = `area-${a.id}`;
+    el.title = a.blurb;
+    el.innerHTML = `<span class="t">${esc(a.title)}</span>`
+        + `<span class="n">${termsInArea(a.id).length}</span>`;
+    ixlist.appendChild(el);
+    IX_ROWS.set(a.id, el);
+}
 
 /* ══════════ THE FILTER — CLIENT-SIDE, NO FETCH ══════════════════════
  * ⛓ It matches the TERM, its ALIASES and its `plain` sentence — the three
@@ -228,16 +256,66 @@ function applyFilter(raw) {
     }
     for (const area of AREAS) {
         const box = document.querySelector(`[data-area-id="${area.id}"]`);
-        const any = [...box.querySelectorAll('details.entry')].some((e) => !e.hidden);
+        const hits = [...box.querySelectorAll('details.entry')].filter((e) => !e.hidden).length;
+        const any = hits > 0;
         box.hidden = !any;
         document.getElementById(`area-${area.id}`).hidden = !any;
         document.getElementById(`area-${area.id}`).nextElementSibling.hidden = !any;
+        /* ⛓ …and the rail says the same thing, off the same count. */
+        const row = IX_ROWS.get(area.id);
+        row.querySelector('.n').textContent = String(hits);
+        row.style.opacity = any ? '' : '.4';
     }
     document.getElementById('filterNote').textContent = q
         ? `${visible} of ${TERMS.length} entries match ${JSON.stringify(q)}`
-        : `${TERMS.length} entries — type to narrow by term, alias or plain sentence`;
+        : `${TERMS.length} entries — narrow by term, alias or plain sentence`;
     return visible;
 }
+
+/**
+ * ⛓ ONE OPENER FOR EVERY WAY IN — a link from the catalogue, the reference or
+ * a doc, a pasted `#slug`, a Back press. ⛔ A `<details>` is NOT auto-opened by
+ * being the fragment target (`:target` styles it; it does not expand it), so
+ * with the entries closed every inbound term link in the corpus would have
+ * landed on a shut box. There are hundreds of them.
+ */
+function openTarget() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === 'DETAILS') el.open = true;
+    el.scrollIntoView({ block: 'start' });
+}
+window.addEventListener('hashchange', openTarget);
+
+const ENTRY_ALL = [...document.querySelectorAll('details.entry')];
+document.getElementById('expandAll')
+    .addEventListener('click', () => { for (const el of ENTRY_ALL) el.open = true; });
+document.getElementById('collapseAll')
+    .addEventListener('click', () => { for (const el of ENTRY_ALL) el.open = false; });
+
+/** ⛓ WHERE YOU ARE — the last area heading scrolled past. One writer. */
+const HEADS = AREAS.map((a) => document.getElementById(`area-${a.id}`));
+let lit = null;
+let ticking = false;
+function syncHere() {
+    ticking = false;
+    let cur = null;
+    for (const h of HEADS) {
+        if (!h.hidden && h.getBoundingClientRect().top <= 90) cur = h.id;
+    }
+    if (!cur || cur === lit) return;
+    for (const el of ixlist.querySelectorAll('a.ix.here')) el.classList.remove('here');
+    const row = ixlist.querySelector(`a.ix[data-for="${CSS.escape(cur)}"]`);
+    if (row) row.classList.add('here');
+    lit = cur;
+}
+window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(syncHere);
+}, { passive: true });
 
 const filterInput = document.getElementById('filter');
 filterInput.addEventListener('input', () => {
@@ -297,6 +375,12 @@ function publish(visible) {
     });
 }
 publish(applyFilter(''));
+
+/* ⛓ LAST, and AFTER the readout: a deep link's open-and-scroll happens on a
+   fully rendered page, and the readout is about what was RENDERED — it must not
+   depend on which entry a fragment happened to expand. */
+openTarget();
+syncHere();
 </script>
 </body>
 </html>

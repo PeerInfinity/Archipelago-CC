@@ -39,71 +39,66 @@
 <head>
 <meta charset="utf-8">
 <title>Procgen documents — the tracked records, rendered</title>
+<link rel="stylesheet" href="./procgenDocs.css">
 <style>
-  :root { color-scheme: dark; }
-  body {
-    margin: 0; background: #0b0b0e; color: #d8d8e0;
-    font: 13px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
-  }
-  header { padding: 10px 14px; border-bottom: 1px solid #24242c; }
-  header h1 { font-size: 14px; margin: 0 0 3px; font-weight: 600; }
-  header h1 span { color: #7fe0ff; font-weight: 400; }
-  .note { color: #8a8a98; font-size: 11px; }
-  a { color: #7fe0ff; }
-  #layout { display: flex; align-items: flex-start; gap: 0; }
-  #nav {
-    flex: 0 0 30ch; position: sticky; top: 0; max-height: 100vh; overflow-y: auto;
-    padding: 10px 10px 40px 14px; border-right: 1px solid #24242c; font-size: 11px;
-  }
-  #nav .lbl, .lbl {
-    color: #8a8a98; text-transform: uppercase; letter-spacing: .06em;
-    font-size: 10px; display: block; margin: 10px 0 3px;
-  }
+  /* ⛓ THE SHARED SHEET IS `./procgenDocs.css`, LINKED ABOVE — typography, the
+     shell and rail, `pre` wrapping and the header measure. What stays here is
+     the ARTICLE: this is the only one of the four pages whose body is rendered
+     MARKDOWN rather than a list of entries built from a module. */
   #nav a { display: block; padding: 1px 0; text-decoration: none; }
   #nav a:hover { text-decoration: underline; }
   #nav a.here { color: #ffd75f; font-weight: 600; }
-  #nav .w { color: #56566a; }
+  #nav .w { color: #56566a; font-family: var(--mono); font-size: 11px; }
   #toc { margin-top: 6px; }
   #toc summary { cursor: pointer; color: #8a8a98; }
   #toc a { color: #9aa; display: block; text-decoration: none; }
   #toc a:hover { color: #7fe0ff; text-decoration: underline; }
   #toc a.l3 { padding-left: 10px; color: #77778a; }
-  main { flex: 1 1 auto; min-width: 0; padding: 10px 18px 60px; max-width: 110ch; }
-  article h1 { font-size: 17px; margin: 4px 0 10px; color: #e8e8f0; }
+  /* ⛓ A DOCUMENT IS WIDER THAN A CATALOGUE ENTRY: these files are full of
+     wide tables and long code blocks, and 92ch of prose measure would put every
+     one of them in a scroller. */
+  main { max-width: 100ch; padding-bottom: 60px; }
+  /* ⛓⛓ THE HEADINGS ARE SIZED AS PROSE HEADINGS NOW. They were 17/14/13/12px
+     in a monospace face, which is a code comment’s hierarchy, not a
+     document’s — at 250,166 words across seventeen files this is the page the
+     font change was most owed to. */
+  article { font-size: 15px; line-height: 1.65; }
+  article h1 { font-size: 25px; margin: 6px 0 12px; color: #e8e8f0; line-height: 1.3; }
   article h2 {
-    font-size: 14px; margin: 22px 0 6px; color: #7fe0ff;
-    border-top: 1px solid #24242c; padding-top: 10px;
+    font-size: 19px; margin: 26px 0 6px; color: #7fe0ff; line-height: 1.35;
+    border-top: 1px solid #24242c; padding-top: 12px;
   }
-  article h3 { font-size: 13px; margin: 16px 0 4px; color: #9fff9f; }
-  article h4, article h5, article h6 { font-size: 12px; margin: 12px 0 4px; color: #c8c8d4; }
+  article h3 { font-size: 16px; margin: 18px 0 4px; color: #9fff9f; }
+  article h4, article h5, article h6 { font-size: 14px; margin: 14px 0 4px; color: #c8c8d4; }
   article a.anchor {
     color: #3a3a48; text-decoration: none; margin-left: -1.5ch;
-    padding-right: .5ch; font-weight: 400;
+    padding-right: .5ch; font-weight: 400; font-family: var(--mono);
   }
   article a.anchor:hover { color: #7fe0ff; }
-  article code { color: #ffd75f; }
-  article pre {
-    background: #101014; border: 1px solid #1e1e26; padding: 6px 10px;
-    overflow-x: auto; margin: 8px 0;
-  }
-  article pre code { color: #d8d8e0; }
+  article code { color: #ffd75f; font-size: .9em; }
+  article pre { padding: 6px 10px; margin: 8px 0; font-size: 13px; }
+  article pre code { color: #d8d8e0; font-size: 1em; }
   article blockquote {
     margin: 8px 0; padding: 2px 0 2px 10px; border-left: 2px solid #2a4a3a;
     color: #b8b8c8;
   }
-  article table { border-collapse: collapse; margin: 8px 0; display: block; overflow-x: auto; }
+  /* ⛔ TABLES STAY MONOSPACE and stay in their own scroller: a table cell is
+     DATA, and these documents align things inside them. */
+  article table {
+    border-collapse: collapse; margin: 8px 0; display: block; overflow-x: auto;
+    font-size: 12.5px;
+  }
   article th, article td {
     border: 1px solid #24242c; padding: 3px 7px; text-align: left; vertical-align: top;
   }
   article th { background: #14141a; color: #c8c8d4; }
   article img { max-width: 100%; }
   article hr { border: 0; border-top: 1px solid #24242c; margin: 18px 0; }
-  article li { margin: 2px 0; }
+  article li { margin: 3px 0; }
   :target { scroll-margin-top: 10px; }
   #status { padding: 20px 0; }
   #status.bad { color: #ff8a8a; }
   #status .k { color: #ffd75f; }
-  footer { padding: 10px 14px; border-top: 1px solid #24242c; color: #6a6a78; font-size: 11px; }
 </style>
 </head>
 <body>
@@ -113,12 +108,12 @@
   <div id="where" class="note"></div>
 </header>
 
-<div id="layout">
-  <nav id="nav">
-    <span class="lbl">the documents</span>
+<div id="layout" class="pageShell">
+  <nav id="nav" class="pageRail">
+    <span class="railHead">the documents</span>
     <div id="navList"></div>
     <details id="toc" open>
-      <summary class="lbl" style="display:block">on this page</summary>
+      <summary class="railHead">on this page</summary>
       <div id="tocList"></div>
     </details>
   </nav>
