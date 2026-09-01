@@ -70,7 +70,19 @@ describe('every non-prose entry is loadable by the row', () => {
      *  null` on a URL that names no element — the LOAD half of the element
      *  control's third state. ⚠ Its reach is measured and bounded: the row
      *  never presses a ladder button, so the PRESS half is CLAIM 5R's. */
-    it('has 22 of them, and exactly one PROSE entry', () => {
+    /**
+     * ⛓⛓⛓ 22 → **28 — THE EDITOR ARM'S SIX** (`?source=edit`, EDITOR v3 /
+     * queue doc §5h), which closed as an arc with NO entries here at all.
+     * Five on `watch.html` — the fifth source and ⚖ ruling 9's *the URL
+     * carries no edits*, the room flags with their MEASURED reach bound, a
+     * base REFUSED by name (the catalogue's first `cli` declaring a non-zero
+     * exit), the VANILLA 116 as an openable level SET, and *"open in editor"* —
+     * plus one on `lab.html` for the same `editCore` toolkit on the maze.
+     * ⛔ THREE of the six are `press` rows, because ⚖ ruling 9 makes them so:
+     * a URL can carry the STARTING document and never an edit, so an entry
+     * whose subject is what the EDITOR DOES has to click something.
+     */
+    it('has 28 of them, and exactly one PROSE entry', () => {
         // ⛓ R9 slice 6: the `?tapes=` SEQUENCE row — the catalogue's first
         //   entry whose page is not a generation ladder, which is why it names
         //   its own `readout` and the row waits on that instead of a step.
@@ -79,7 +91,7 @@ describe('every non-prose entry is loadable by the row', () => {
         //   its subject is what a PRESS produces. It is also the first to use
         //   `press`, which the check row CLICKS (a row that loaded the
         //   destination would pass with the button wired to nothing, trap 479).
-        expect(real).toHaveLength(22);
+        expect(real).toHaveLength(28);
         expect(DEMOS.filter((e) => e.prose)).toHaveLength(1);
     });
 
@@ -96,6 +108,21 @@ describe('every non-prose entry is loadable by the row', () => {
         // a prose label ("the load button") would resolve to nothing and the
         // row would report a missing control that is right there.
         if (e.control) expect(e.control).toMatch(/^[#.]/);
+        /**
+         * ⛓⛓ AND SO IS A `press` — the row hands it to `document.querySelector`
+         * and CLICKS what comes back, so a prose label there would read as a
+         * missing control rather than as a malformed entry. ⚠ It is deliberately
+         * NOT pinned to `^[#.]`: three editor entries gate the press on the
+         * page's own disabled state (`body:has(#genEditSolve:not(:disabled)) …`)
+         * because *present and not disabled* is not *takeable* for a control the
+         * ARM WIRES AT MOUNT — measured 0/3 bare against 3/3 gated, see the
+         * catalogue's own block comment above `edit-arm`.
+         */
+        if (e.press) {
+            expect(typeof e.press).toBe('string');
+            expect(e.press.length).toBeGreaterThan(0);
+            expect(e.press.startsWith('?')).toBe(false);
+        }
         /**
          * ⛓⛓ R9 slice 1 (E1) — `cli` is `{command, exit[, skip]}` and the
          * BROWSER ROW RUNS IT. ⛔ The shape is pinned here because the row
@@ -119,13 +146,23 @@ describe('every non-prose entry is loadable by the row', () => {
      * level.mjs` exits 6 on a refused `--require=`). ⛔ Pinned because the
      * command carried a `; echo $?` tail until R9 slice 1 — which made the
      * SHELL exit 0 and would have let the row assert a 0 forever.
+     *
+     * ⛓⛓ **ONE → TWO, and the second is a different KIND of refusal.** The
+     * editor catalogue slice added `edit-base-refused`: a base the atlas cannot
+     * resolve, where the failing exit is the PAGE's refusal reaching a terminal
+     * (`export-seedling-view.mjs` exits **2** and writes nothing, printing the
+     * page's own sentence verbatim). ⛔ The population is still pinned as a
+     * LITERAL LIST rather than loosened to a count, because what this row exists
+     * to catch is a `cli` that silently starts tolerating a non-zero exit — and
+     * a count would tolerate any two.
      */
-    it('⛔ `refused-directive` is the ONE entry that expects a NON-ZERO exit — 6', () => {
+    it('⛔ TWO entries expect a NON-ZERO exit — `refused-directive` 6, `edit-base-refused` 2', () => {
         const refused = DEMOS.find((e) => e.id === 'refused-directive');
         expect(refused.cli.exit).toBe(6);
         expect(refused.cli.command).not.toMatch(/echo \$\?/);
+        expect(DEMOS.find((e) => e.id === 'edit-base-refused').cli.exit).toBe(2);
         expect(real.filter((e) => e.cli && e.cli.exit !== 0).map((e) => e.id))
-            .toEqual(['refused-directive']);
+            .toEqual(['refused-directive', 'edit-base-refused']);
     });
 
     /** ⛓ …and the ONE entry the row declines to run names WHY. */

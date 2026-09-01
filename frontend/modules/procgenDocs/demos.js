@@ -978,6 +978,311 @@ export const DEMOS = Object.freeze([
         ]),
         prose: false,
     }),
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ THE EDITOR ARM — `?source=edit` (EDITOR v3, queue doc §5h)
+     * ══════════════════════════════════════════════════════════════════
+     *
+     * ⛔⛔ **⚖ RULING 9 IS WHY THESE FIVE ENTRIES LOOK DIFFERENT FROM EVERY
+     * ENTRY ABOVE: THE URL CARRIES NO EDITS.** `watch.html` says it in its own
+     * identity line and the arm gate asserts it, so an editor entry can NOT
+     * name an EDITED room in its `url:` the way a generate entry names a
+     * generated one. What a URL can carry is the STARTING document; the edit
+     * itself has to be `press`ed.
+     *
+     * ⛓ **THE EDIT ARM HAS NO URL WRITER, AND ONE WAS NOT ADDED.** Every
+     * generate/lab URL above came out of `writeGenerateParams` /
+     * `writeLabParams` because those encode DECISIONS — `bounds` short names,
+     * `require` lists, `run=1` at `step > 0` — that a hand-typed string gets
+     * wrong. This arm's whole vocabulary is `source` + `level` (+ the shared
+     * `?room=`), with nothing to decide, and the PAGE itself spells its own bar
+     * with plain `URLSearchParams.set` in three places (`switchArm`,
+     * `hostLoad`, the preset picker). A writer function used by nobody but this
+     * file would be a FOURTH spelling and the drift the rule exists to prevent.
+     * ⛓ The three `url:`s below were emitted by that same construction in node
+     * (`q.set('source','edit'); q.set('level', String(n))`), and what each
+     * parameter MEANS is on the GENERATED reference page. ⚠ The `?tapes=` /
+     * `?tape=` entries above are authored the same way and for the same reason.
+     *
+     * ⛔⛔⛓ **AND THE TWO `press` SELECTORS ARE ARM-GATED ON PURPOSE — MEASURED,
+     * 0/3 vs 3/3.** The row's press pre-condition is *"the control exists and
+     * is not disabled"*, which for a control the ARM WIRES AT MOUNT is not the
+     * same as *"the control is takeable"*: `#editLoadVanilla` is present and
+     * ENABLED in static HTML while `runEditor` is still awaiting its six
+     * documents, so a bare `press: '#editLoadVanilla'` clicks a dead button and
+     * the claim fails for a reason that is about the harness. Measured at this
+     * head: a bare `#editLoadVanilla` press succeeded **0 of 3** times, and so
+     * did `#editOnly:not([hidden]) #editLoadVanilla` — the panel is UNHIDDEN
+     * before the handlers exist. `body:has(#genEditSolve:not(:disabled)) …`
+     * succeeded **3 of 3**, because `#genEditSolve` is the one control whose
+     * disabled state IS the page's answer to *"has this arm mounted and does it
+     * hold a record"* (`busyNow || !state?.record`) — on the GENERATE page it
+     * is also exactly *"the ladder has finished"*, which is what `#genOpenEditor`
+     * needs before it will hand anything over. ⛓ So the gate is written in the
+     * PAGE'S OWN disabled-state vocabulary rather than as a sleep, and it is
+     * one idiom for both arms.
+     */
+    Object.freeze({
+        id: 'edit-arm',
+        n: 24,
+        title: 'THE FIFTH SOURCE — a room with NO LADDER, and the URL that carries no edits',
+        page: '/frontend/modules/seedlingDemo/watch.html',
+        url: 'source=edit&level=14',
+        also: null,
+        /**
+         * ⛓ THE HEADLESS TWIN IS THE ARM GATE'S OWN CLAIM 9 — the CLI opens
+         * THIS url in a browser it brings itself and writes the picture. 2.3 s
+         * measured, and it says in its own words that `?tick=` names nothing in
+         * an arm that draws one still frame.
+         */
+        cli: { command: 'node scripts/procgen/export-seedling-view.mjs --out=/tmp/seedling-edit-14.png --source=edit --level=14 --tick=0', exit: 0 },
+        phase: null,
+        facts: Object.freeze([]),
+        layer: null,
+        readout: '__editorEdit',
+        control: '#editDownload',
+        /**
+         * ⛓ THE CLAIM IS ABOUT THE URL PARAMETER, not about the arm booting.
+         * `?level=` absent defaults to the atlas's FIRST level (measured:
+         * `base.level === 0`), so a build that dropped the parameter would
+         * still publish an `atlas` base and a drawn room — and `baseKind ==
+         * "atlas"` would pass on it.
+         */
+        claim: 'base.level == 14',
+        demonstrates: 'EDITOR v3 slice C1 (queue doc §5h): free editing stopped\nbeing a collapsible section inside the GENERATE panel and became a fifth\n[arm](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html#edit-arm)\nof its own — **a room with no ladder**. The base here is a COMMITTED atlas room;\nthe identity line names it, its content hash, and ⚖ ruling 9 in the same\nsentence.',
+        howToRun: 'Open the URL. The status line reads `EDIT — the VANILLA\natlas, level 14 — set_id seedling-vanilla-…`; the `base` line under it repeats\nthe hash and says *"⛔ the URL carries NO edits (⚖ ruling 9); the PAYLOAD is the\nreproduction"*. Paint a cell, place a body, press `UNDO the last edit` — the op\nlist beside the canvas gains and loses one row with the adapter\'s own sentence\non it. Then press **Download the PAYLOAD (base + edits)**: THAT file is what\nreproduces what you are looking at.',
+        whatIsHappening: '⛔ **THE ROOM IS `foldEdits(base, ops)`, NEVER A MUTATED\nCOPY.** The session holds the base tag and an ORDERED LIST of ops, so UNDO is a\nPOP rather than an inverse, and a no-op — painting a cell the colour it already\nis — records nothing.\n\n⛔ **AND THIS ARM HAS NO ORACLE.** A room with no ladder has no palette and no\npin union to solve it under, so SOLVE refuses BY NAME rather than inventing an\ninventory nobody asked for; ▶ load in wasm is the certifier here. That refusal\nis the arm\'s honest answer, not a gap.',
+        notes: Object.freeze([
+            '⚠ `?level=` is the ATLAS door and it is the ONLY door to the committed\nVANILLA set: all 116 of its rooms are `embed`-sourced, so none of them can be\nopened through the level-set picker. See entry 27.',
+            '⛓ The CLI beside this entry is the arm gate\'s own CLAIM 9. It writes a\nPNG of exactly this URL — an agent can Read the picture — and it prints, in the\npage\'s words, that `?tick=` names nothing in an arm whose whole output is one\nstill frame.',
+        ]),
+        terms: Object.freeze([
+            'edit-arm',
+            'base',
+            'edit-op',
+            'arm',
+            'payload',
+            'oracle',
+            'readout',
+            'url-parameter',
+            'level',
+        ]),
+        prose: false,
+    }),
+    Object.freeze({
+        id: 'edit-room-flags',
+        n: 25,
+        title: 'THE ROOM FLAGS — a property of the whole room, and the reach bound MEASURED on it',
+        page: '/frontend/modules/seedlingDemo/watch.html',
+        url: 'source=edit&level=45',
+        also: null,
+        cli: { command: 'node scripts/procgen/export-seedling-view.mjs --out=/tmp/seedling-edit-45.png --source=edit --level=45 --tick=0', exit: 0 },
+        phase: null,
+        facts: Object.freeze([]),
+        layer: null,
+        readout: '__editorEdit',
+        control: '#genEditFlags',
+        /**
+         * ⛓ L45 IS CHOSEN FOR ITS FLAGS, and the claim names one of them.
+         * `snow` appears on a minority of the 116 (the L45–L54 snow band), so
+         * this is a claim about THE ROOM THE URL NAMES rather than about the
+         * flag vocabulary — L14, the entry above, carries `lightalpha` alone.
+         */
+        claim: 'flags includes "snow"',
+        demonstrates: 'EDITOR v3 slice C2 claims 14 and 15: a\n[room flag](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html#room-flag)\nis a property of the ROOM rather than of anything in it — its weather, its\nlighting, whether it is on a day/night cycle — and each one is an\n[op](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html#edit-op)\nin the identity like any other edit. ⛓ The section beside them states its own\nREACH, **measured on the room in front of you**.',
+        howToRun: 'Open the URL and look at the ROOM FLAGS section: `snow` and\n`daynight` are ticked, because this is one of the snow-band rooms. Tick a third\nand press `UNDO the last edit` — a presence flag round-trips through the op log\nexactly like a painted cell. The note under the form is the reach bound.',
+        whatIsHappening: '⛔ **THE BOUND IS COMPUTED PER ROOM, NOT PRINTED AS A\nWARNING.** `flagModelReach` builds the world twice — with the flag and without —\nand reports what actually differed: on this room the JS model builds the SAME\nworld for **six of the seven** (`blur`, `blur2`, `daynight`, `droplet`,\n`lightalpha`, `snow`), so changing one of those changes NOTHING it can certify\nand the wasm is the only certifier of them. `control` DOES reach it, because its\ndata is in the built world.\n\n⛓ That distinction is the whole reason the line exists: a reader who edited\n`snow` and then read a green certification would otherwise believe the model had\nchecked something it cannot see.',
+        notes: Object.freeze([
+            '⚠ A warning in a header is not a check. This one is a MEASUREMENT taken\nagainst the room on screen, which is why it can say *six of these seven* rather\nthan naming a fixed list.',
+        ]),
+        terms: Object.freeze([
+            'room-flag',
+            'edit-arm',
+            'edit-op',
+            'base',
+            'certification',
+            'seedling-differential',
+            'oracle',
+            'readout',
+        ]),
+        prose: false,
+    }),
+    Object.freeze({
+        id: 'edit-base-refused',
+        n: 26,
+        title: 'A BASE REFUSED BY NAME — and the CLI exits 2 saying the page\'s own sentence',
+        page: '/frontend/modules/seedlingDemo/watch.html',
+        url: 'source=edit&level=999',
+        /** ⛓ THE CONTRAST IS THE SAME PARAMETER AT A LEVEL THAT EXISTS. */
+        also: 'source=edit&level=14',
+        /**
+         * ⛓⛓ **THE ONLY `cli` IN THIS CATALOGUE THAT DECLARES A NON-ZERO
+         * EXIT**, and that is the entry's subject: a refusal the page makes has
+         * to reach a terminal as a FAILING exit carrying the page's own words,
+         * not as a written PNG of a blank canvas. Measured: exit 2, `(nothing
+         * written to …)`, and the refusal quoted verbatim.
+         */
+        cli: { command: 'node scripts/procgen/export-seedling-view.mjs --out=/tmp/seedling-edit-999.png --source=edit --level=999 --tick=0', exit: 2 },
+        phase: null,
+        facts: Object.freeze([]),
+        layer: null,
+        readout: '__editorEdit',
+        /**
+         * ⛓ THE READOUT IS PUBLISHED ON THE REFUSAL PATH TOO — `{status:
+         * 'refused', base: null, edits: 0}` — which is what makes the wait
+         * terminal in both directions. A page that went blank instead would run
+         * the row's clock out and report a timeout for a refusal that worked.
+         */
+        claim: 'status == "refused"',
+        demonstrates: 'That the EDIT arm REFUSES A BASE IT CANNOT RESOLVE, by\nname, with a number: *"the base was REFUSED — seedling atlas has no level 999\n(it has 116 levels)"*. ⛓ The\n[base](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html#base)\nis a TAG the adapter resolves, so *"cannot be asked"* and *"is wrong"* are\ndifferent answers and the page prints the one it means.',
+        howToRun: 'Open the URL: the status bar is RED and names the level and\nthe atlas\'s size. Open the **Also** link beside it — the same parameter at a\nlevel that exists — and the same arm draws the room. Then run the CLI: it exits\n**2** and prints the page\'s sentence verbatim rather than its own.',
+        whatIsHappening: '⛔ **THE REFUSAL IS THE PAGE\'S, RELAYED — NOT\nRE-WORDED.** The CLI has no opinion about which levels the atlas holds; it waits\non a readiness contract that races `#status.bad`, and when the page loses it the\nCLI reports what the page said and writes nothing.\n\n⚠ A different kind of wrong base is refused by a different sentence: a level SET\nis refused as the set arm\'s, and a `generate` tag is refused because RESOLVING\none would mean re-running the ladder (see entry 28 — the arm that ran it hands\nthe record over instead).',
+        notes: Object.freeze([
+            '⛓ `base` is `null` on this path and `edits` is `0`. The readout exists\nand SAYS it refused, which is why the row can wait on it: a refusal that\npublished nothing would be indistinguishable from a page that hung.',
+        ]),
+        terms: Object.freeze([
+            'edit-arm',
+            'base',
+            'arm',
+            'readout',
+            'url-parameter',
+            'level',
+        ]),
+        prose: false,
+    }),
+    Object.freeze({
+        id: 'edit-vanilla-set',
+        n: 27,
+        title: 'ONE PRESS, 116 OPENABLE ROOMS — the whole vanilla game as a level SET',
+        page: '/frontend/modules/seedlingDemo/watch.html',
+        /**
+         * ⛓ THE URL IS THE STARTING PAGE, NOT THE DESTINATION — the same shape
+         * entry 23 has. It lands on an ordinary one-room edit session with NO
+         * set held at all (`set: null`); the button is what produces one, and
+         * `press` below is what makes the claim a claim about the BUTTON.
+         */
+        url: 'source=edit&level=14',
+        also: null,
+        /** ⛓ ARM GATE CLAIM 27 — the same `vanillaRecordSet` call in node, so
+         *  the two `set_id`s agreeing IS the byte proof. */
+        press: 'body:has(#genEditSolve:not(:disabled)) #editLoadVanilla',
+        cli: { command: 'node scripts/procgen/check-seedling-editor-arm.mjs', exit: 0 },
+        phase: null,
+        facts: Object.freeze([]),
+        layer: null,
+        readout: '__editorEdit',
+        /**
+         * ⛓⛓ READ STRUCTURALLY OFF THE READOUT THE PRESS CAUSED. `set` is
+         * `null` on every page that has not loaded one — it is `null` in the
+         * object this very URL publishes at mount — so `set.openable` cannot
+         * be 116 without the click having built the set AND the intake having
+         * accepted all 116 of its rooms.
+         */
+        claim: 'set.openable == 116',
+        demonstrates: 'EDITOR v3 slice E1: the committed VANILLA set is **116\n`embed`-sourced rooms**, and an `embed` is a path into a SWF\'s `[Embed]` table —\na fact about a source tree — so not one of them can be OPENED on this page. This\nbutton derives the same 116 as an `xml`-sourced\n[level set](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html#level-set)\nout of two documents the page ALREADY HOLDS, and every room of THAT set opens.',
+        howToRun: 'Open the URL and press **LOAD the VANILLA 116 as `xml`**. The\nnote says how long the join took and that 116/116 rooms joined BY PATH; the\nrooms list fills; the whole SET EDITOR appears under it. Pick a room, press\n`OPEN that room`, paint something, press `CLOSE the open room INTO the set`, then\n`Download the SET · OVERLAY · apMapping` — or `Download the BUNDLE (.zip)` for\nall four documents in one press.',
+        whatIsHappening: '⛔ **IT FETCHES NOTHING.** Both inputs are already in\nscope — the map extract this arm awaited at mount and the committed manifest it\nread ⚖ ruling 2\'s hash off — and the arm gate COUNTS REQUESTS ACROSS THE CLICK\nto keep it that way.\n\n⛓ **TWO IDS, ONE GAME\'S ROOMS.** What the button builds carries its own\n`seedling-vanilla-record-…` with `provenance.derived_from` naming the committed\n`seedling-vanilla-…`, which stays the ATLAS base\'s (`?source=edit&level=N` —\nentry 24), the AS3 fork\'s `VanillaSet.SET_ID` and every save stamp\'s. ⛓ And it\ngoes down the PASTED set\'s own intake, so there is ONE door onto this page for a\nlevel set: the same validation, the same overlay handling, the same session.',
+        notes: Object.freeze([
+            '⚠ NO OVERLAY ARRIVES WITH IT, and the note says so — every location and\nevery authored access rule lives in that THIRD document, so the REPORT\'s\nlocation count is the only thing that would tell you it is missing. Paste one\ninto the same box.',
+            '⛓ The set editor under the rooms list is the rest of Tier B: connect and\ndisconnect exits on the room strip, the manifest form, access rules, marked\nlocations, and a REPORT that validates the set, compiles the region atlas and\nsays which edges are still FREE.',
+        ]),
+        terms: Object.freeze([
+            'level-set',
+            'edit-arm',
+            'base',
+            'edit-op',
+            'rules-json',
+            'region',
+            'entrance',
+            'byte-identity',
+            'readout',
+        ]),
+        prose: false,
+    }),
+    Object.freeze({
+        id: 'edit-handover',
+        n: 28,
+        title: '⚖ RULING 9 — "open in editor" is the ONE thing a URL cannot carry',
+        page: '/frontend/modules/seedlingDemo/watch.html',
+        /**
+         * ⛓ THE URL IS A **GENERATE** RUN — `writeGenerateParams`' own spelling,
+         * like every generate entry above. What this entry is about happens
+         * AFTER it: the press hands the ladder's record to the EDIT arm without
+         * a reload and without putting one edit in the bar.
+         */
+        url: 'source=generate&seed=3&biome=pre-sword&count=1&tries=8&k=3&anchortries=1&run=1',
+        also: null,
+        press: 'body:has(#genEditSolve:not(:disabled)) #genOpenEditor',
+        /** ⛓ ARM GATE CLAIM 8 — the handover, asserted against node's own fold. */
+        cli: { command: 'node scripts/procgen/check-seedling-editor-arm.mjs', exit: 0 },
+        phase: null,
+        facts: Object.freeze([]),
+        layer: null,
+        readout: '__editorEdit',
+        /**
+         * ⛓⛓ `__editorEdit` DOES NOT EXIST ON THE GENERATE PAGE — measured
+         * (`typeof window.__editorEdit === 'undefined'` at the press). So this
+         * claim cannot go true without the click having switched the arm in
+         * place AND the handover having survived the crossing with its identity.
+         */
+        claim: 'baseKind == "generate"',
+        demonstrates: '⚖ Ruling 9: *a URL names LAUNCH PARAMETERS and nothing\nelse.* A generated room is a grid of tiles plus its bodies — the bar cannot\ncarry it and must not learn to — so the GENERATE arm hands the RECORD to the\nEDIT arm **in memory, one-shot, with no reload**. ⛓ EDITOR v3 slice C1, plan\n§3.5.',
+        howToRun: 'Open the URL — an ordinary one-step generate run — and press\n**open in editor →** at the end of the ladder row. The panel below becomes the\nEDIT arm on the room you were just looking at; the identity line reads\n`generated seed 3 · pre-sword · step 1` and the address bar becomes\n`?source=edit&…` with NOT ONE EDIT IN IT.',
+        whatIsHappening: '⛔ **A `generate` BASE IS THE ONE KIND THAT REFUSES TO\nRESOLVE**, and that is why the handover exists rather than being a convenience:\nresolving such a tag would mean RE-RUNNING THE LADDER, so the arm that already\nran it hands the answer over. The TAG still travels, which is how the identity\nline survives the crossing.\n\n⛔ **AND THE EDITS CROSS AS THE RECORD, NOT AS OPS.** The ladder\'s record is\nALREADY base + directives + edits, so handing both the folded record and the op\nlist would apply the edits twice. The tag says how many were already folded in;\nthe new session\'s own op list starts EMPTY, because the edit arm cannot vouch\nfor a construction it did not perform.\n\n⛓ **AND IT IS TAKEN, NOT READ.** A second switch back to EDIT must not silently\nreopen a room you left behind — the handover slot is cleared on the way in.',
+        notes: Object.freeze([
+            '⛓ The ladder does NOT follow. The edit arm never runs a directive, which\nis what keeps the ordering law — edits after all directives — true on both\nsides of the crossing.',
+            '⚠ The switch is an IN-PLACE lifetime switch in ONE document: the outgoing\narm is retired BEFORE the incoming one exists, so there is no instant at which\ntwo arms both believe they own the canvas.',
+        ]),
+        terms: Object.freeze([
+            'edit-arm',
+            'base',
+            'edit-op',
+            'arm',
+            'generation-ladder',
+            'payload',
+            'url-parameter',
+            'readout',
+        ]),
+        prose: false,
+    }),
+    Object.freeze({
+        id: 'maze-edit-arm',
+        n: 29,
+        title: 'THE SAME EDITOR ON A SECOND SUBSTRATE — and editing never bypasses the ORACLE',
+        page: '/frontend/modules/mazeRoom/lab.html',
+        /** ⛓ `writeLabParams`' own spelling, with `source: 'edit'` — this page
+         *  HAS a writer and it takes the arm, so nothing here is hand-typed. */
+        url: 'source=edit&seed=1&biome=maze-v1&width=15&height=15&count=2&tries=8&k=3&anchortries=1&expansions=20000&run=1',
+        also: null,
+        cli: { command: 'node scripts/procgen/check-maze-lab.mjs', exit: 0 },
+        phase: null,
+        facts: Object.freeze([]),
+        layer: null,
+        control: '#labUndo',
+        /**
+         * ⛓ THE CLAIM IS THAT THE WRITER'S `source` REACHED THE FOURTH ARM.
+         * The maze lab defaults to GENERATE, so a URL whose `source` was
+         * dropped lands on a page with the same seed, the same step and the
+         * same certified room — and no editor at all.
+         */
+        claim: 'source == "edit"',
+        demonstrates: 'EDITOR v3 arc E2: `procgenCore/editCore.js` and\n`editorView.js` are SUBSTRATE-AGNOSTIC, so the maze lab\'s EDIT arm is the same\nop log, the same fold, the same UNDO-is-a-POP and the same canvas gestures the\nSeedling page uses — over a different adapter. ⚖ Ruling 8 opened free tile and\nobject editing here; §3.8 is the law that makes it safe.',
+        howToRun: 'Open the URL: seed 1 at step 2, in the EDIT arm, `certified`.\nThe tool buttons are rendered from `editorView`\'s own COMMAND TABLE — the label\nand the behaviour cannot disagree because they are the same row. Draw a wall,\nwatch the identity line gain `then 1 manual edit(s)` and go UNCERTIFIED, then\npress `UNDO one edit`.',
+        whatIsHappening: '⛔ **EVERY EDIT LANDS ON A CLONE AND DROPS THE\nCERTIFICATION** (§3.8: *editing never bypasses the oracle*). The maze\'s oracle\nis EXACT — an exhaustive BFS whose differential is a proof rather than an\nestimate — so re-certifying an edited room is cheap and honest, and the page\nre-runs it rather than carrying the old verdict forward.\n\n⛔ **AND THE URL DOES NOT CARRY THE EDITS HERE EITHER.** The identity line says\nso in its own words: *"⚠ the URL is NOT a reproduction after edits — the PAYLOAD\nis"*. Two pages, two substrates, ⚖ ruling 9 spelled once each.',
+        notes: Object.freeze([
+            '⛓ The same core carries the region-library editor (this page\'s fourth\narm, `?source=set`), the bounce editor and the APWorld editor — five editors on\none session type, which is why `base` and an `edit op` are defined once in the\nglossary rather than once per substrate.',
+        ]),
+        terms: Object.freeze([
+            'maze-lab',
+            'edit-arm',
+            'edit-op',
+            'base',
+            'oracle',
+            'bfs-oracle',
+            'certification',
+            'lab-page',
+        ]),
+        prose: false,
+    }),
 ]);
 
 export default DEMOS;
