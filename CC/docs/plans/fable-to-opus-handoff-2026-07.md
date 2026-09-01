@@ -6367,6 +6367,15 @@ one session, after S4:
   `check-seedling-full-tier-owed.mjs:313` already does exactly this and is the model named in trap
   1058; `slice-records` instead reads the shallow clone's own HEAD as the convention's start commit
   and reports 42/24. ⛔ A gate that cannot ask its question must say so, not answer wrongly.
+  ⚠⚠ **THIS BULLET UNDERSTATED IT AND S4b MEASURED THE REST — the shallow defect is THREE
+  mechanisms, not the boundary alone**, reproduced in a real depth-1 clone: (a) the convention
+  boundary collapses onto HEAD (the one written here); (b) ⚖ 22 then reads the graft's
+  `--name-only`, which for a ROOT commit is the WHOLE TREE, so all 33 headings "carry the docsIndex
+  regen" and pass for a reason unrelated to their own commits; (c) the trap citations VANISH — a
+  `git show` of the graft exceeds the reader's 64 MB buffer, the diff returns empty, and check (3)
+  contributes NO ROWS AT ALL. ⛓ A silent zero, in the file whose docblock exists to refuse silent
+  zeros. ⇒ (b) and (c) are why the repair could not be "widen the boundary": two of the three
+  produced FALSE GREEN, not red.
 · **(3) TRAP 1057's LATENT HALF** — the undrained `fetch` body that killed Node 22's undici in
   `check-seedling-wasm-element`'s liveness probe is a PATTERN, and S3's negative control measured
   the nine sibling gates at 0/40 only because their probe body is 26 KB. ⛓ The box's Node has been
