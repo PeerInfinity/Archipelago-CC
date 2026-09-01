@@ -148,8 +148,26 @@ jobs:
       # at the JOB level — so nothing reads the job conclusion:
       # `ci-summary.mjs --gate=<key> <sha>` reads the printed LINE and exits on
       # the gate's own code.
+      #
+      # ⛓⛓ S5 (⚖ 72) — THIS STEP NOW CARRIES THE FULL `procgen-help` CLAIM.
+      # `check-procgen-help.mjs` retired its `@ci-face` and declares
+      # `@ci-argv --in-place`, so the arm run here is `--doors=all` published
+      # under `gate: procgen-help` — 402.8 s of BOX time that a `--write` used
+      # to pay on every full-freight run, against a job that is not this
+      # workflow's critical path (the browser matrix beside it is measured in
+      # tens of minutes). ⛔ Nothing here names the gate or its flags: the arm
+      # and its argv are DERIVED from the gate's own declaration.
+      #
+      # ⛔ AND A STEP TIMEOUT, NOT ONLY THE JOB'S. Without one the default is
+      # the job's, and a job timeout reports `cancelled` naming neither step
+      # nor cause (S3's measurement, on the browser jobs). 20 minutes is a
+      # KILL DEADLINE far above where the set lands — the whole headless set
+      # was 25.4 s of runner time when `procgen-help` ran bounded, and the
+      # full pass is 402.8 banked box seconds against a runner measured at
+      # roughly twice this box's speed on the light rows.
       - name: Run headless procgen gates
         continue-on-error: true
+        timeout-minutes: 20
         run: node scripts/procgen/ci-gates.mjs
 
   # ══════════════════════════════════════════════════════════════════════

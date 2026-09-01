@@ -125,8 +125,16 @@ export function ciRunnable(gate) { return !gate.windows; }
  * CI can produce for me is a DIFFERENT CLAIM"* — `--doors=ci` is a bounded
  * subset of `--doors=all` — and it gives that claim its own key so the two can
  * never be read as one. ⇒ **a gate with a declared ci-face is NEVER
- * CI-sourced.** `procgen-help`'s 409 s leaves the box by S5's route (teach CI
- * the FULL claim, THEN retire the face) or not at all.
+ * CI-sourced.**
+ *
+ * ⛓⛓ S5 TOOK THE OTHER ROUTE AND THE CLAUSE DID NOT MOVE. `procgen-help`'s
+ * 402.8 s left the box by teaching CI the FULL claim and RETIRING that gate's
+ * face in the same change — never by loosening this clause, which still
+ * excludes `check-seedling-producer-boundaries`'s `structure:` face, whose CI
+ * number is `0 VALUES VERIFIED` against a machine-global latch cache and must
+ * never be read as its standing row. ⛓ The gate that stops needing a face
+ * declares `@ci-argv` instead: the same claim under the same key, plus the
+ * flags a checkout needs to ask it (see `gateRoster.js`).
  *
  * ── ⛔⛔⛔ S4 — **A GATE THAT DECLARES `@ci-shallow` IS MEASURED LOCALLY,
  *    BECAUSE CI'S CHECKOUT CANNOT ASK ITS QUESTION** (trap 1058) ────────

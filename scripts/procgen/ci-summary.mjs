@@ -32,9 +32,10 @@
  * pair disagrees.
  *
  * ⛔ A LINE WITH NO BANK ROW IS `not-banked`, NEVER A MATCH. A `@ci-face` key
- * (`gate-help-ci: …`, `structure: …`) is a DIFFERENT, bounded claim and the
- * bank holds no row under it — counting it as agreement would be the quiet
- * zero this file's whole refusal ladder exists to prevent.
+ * (`structure: …` — `gate-help-ci: …` was the other one until S5 retired it)
+ * is a DIFFERENT, bounded claim and the bank holds no row under it — counting
+ * it as agreement would be the quiet zero this file's whole refusal ladder
+ * exists to prevent.
  * ⛔ AND A BANKED ARM WITH NO LINE IS `MISSING`, which is the direction that
  * matters: a shard that never ran must read as an absent answer, not as a
  * smaller verdict set that happens to agree with itself.
@@ -50,7 +51,10 @@
  *     which hold `/mnt/c/Windows/py.exe` and could not resolve their driver
  *     on a runner at all (⚖ 72 (a): they stay box-measured);
  *   · a gate that declares an `@ci-face`, asked for its `gate:` key — its CI
- *     answer is a DIFFERENT, bounded claim under its own prefix;
+ *     answer is a DIFFERENT, bounded claim under its own prefix. ⛓ S5 retired
+ *     `procgen-help`'s face by teaching CI the FULL claim (`@ci-argv`, the
+ *     same key), so this rung now fires for `structure:` alone — the refusal
+ *     is DERIVED from the declaration, so it shrank without being edited;
  *   · a gate that declares an `@ci-shallow` (S4) — CI runs it and prints a
  *     line, but the line answers a DEPTH-1 CLONE's question, not this tree's,
  *     and `--gates` reports it as `shallow` rather than comparing it.

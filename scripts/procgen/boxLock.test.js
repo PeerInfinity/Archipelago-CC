@@ -438,27 +438,39 @@ describe('the CI face', () => {
 
     /**
      * ⛓ …and the gates that declare a face are named, read from the gates
-     * themselves. ⛓⛓ R9 slice P4a added the second: `check-procgen-help`
-     * asks two doors of 262 instruments and costs minutes, so it declares a
-     * BOUNDED face for `ci-gates.mjs`, which runs every headless gate on
-     * every push. Two faces, two DIFFERENT key prefixes — which is the whole
-     * point of `@ci-face`: a bounded number can never be read as the standing
-     * one.
+     * themselves.
+     *
+     * ⛓⛓⛓ S5 (⚖ 72) — **THE LIST IS ONE SHORTER, AND THIS ROW GOING RED IS
+     * HOW A READER FINDS OUT.** P4a gave `check-procgen-help` a BOUNDED
+     * `--doors=ci` face because `ci-gates.mjs` ran it on every push in the one
+     * job a push waits on. S3 put the browser arms in a parallel matrix, so
+     * the full pass costs the push nothing it was not already waiting for —
+     * while a faced row can never be CI-sourced, so the bounded face cost the
+     * BOX 402.8 s of every full-freight `--write`. S5 retired it: the gate
+     * declares `@ci-argv --in-place` instead (the SAME claim under the SAME
+     * key, plus the flag a checkout needs to ask it), and CI now publishes
+     * `gate: procgen-help` with `--doors=all`.
+     *
+     * ⛔ THE LIST STAYS TYPED, DELIBERATELY, AND IT IS THE ONE PLACE IN THIS
+     * MECHANISM THAT SHOULD BE. Everything downstream is derived from the
+     * declarations — which is exactly why a face APPEARING or DISAPPEARING is
+     * invisible everywhere else: `ciSourced` simply selects one more row and
+     * nothing goes red. This pin is what makes that change announce itself.
      */
     it('is DECLARED by the gate, not detected from its text', async () => {
         const { gateRoster, ciFaceIn } = await import('./gateRoster.js');
         const declaring = gateRoster({ repo: REPO }).filter((g) => g.ciFace);
         expect(declaring.map((g) => g.file).sort())
-            .toEqual(['check-procgen-help.mjs', 'check-seedling-producer-boundaries.mjs']);
+            .toEqual(['check-seedling-producer-boundaries.mjs']);
         expect(Object.fromEntries(declaring.map((g) => [g.file, g.ciFace]))).toEqual({
             'check-seedling-producer-boundaries.mjs': { prefix: 'structure', argv: ['--structure'] },
-            /** ⛓ R9 SG1 W2 (⚖ 71 (b)): the default run drives a THROWAWAY
-             *  WORKTREE, and CI declares `--in-place` — its checkout is
-             *  already a throwaway, and a linked worktree there would pay a
-             *  network re-clone of six submodules per push, or hand back a
-             *  false green if the init failed. */
-            'check-procgen-help.mjs': { prefix: 'gate-help-ci', argv: ['--doors=ci', '--in-place'] },
         });
+        /** ⛔ …and the retired one is not merely absent: the gate that used to
+         *  declare it now declares the OTHER tag, so this row cannot pass
+         *  because somebody deleted a declaration and left the gate mute. */
+        const argvDeclaring = gateRoster({ repo: REPO }).filter((g) => g.ciArgv);
+        expect(argvDeclaring.map((g) => g.file)).toEqual(['check-procgen-help.mjs']);
+        expect(argvDeclaring[0].ciArgv.argv).toEqual(['--in-place']);
         /* ⛓ …and no two gates share a prefix, which is what keeps the keys apart. */
         expect(new Set(declaring.map((g) => g.ciFace.prefix)).size).toBe(declaring.length);
         /* ⛔ a malformed declaration is a refusal BY NAME, never a skip. */

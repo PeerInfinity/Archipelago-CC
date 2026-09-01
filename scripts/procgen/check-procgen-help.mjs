@@ -133,13 +133,22 @@
  * the exact property this gate measures, silently shrinking the effectful set.
  * So `submodule status` is read back and an uninitialised line is a REFUSAL.
  *
- * ⛓ AND CI STAYS `--in-place`, DECIDED FROM WHAT CI'S CLONE SUPPORTS.
+ * ⛓⛓ AND CI STAYS `--in-place`, DECIDED FROM WHAT CI'S CLONE SUPPORTS.
  * `unittests_frontend.yml` checks out `submodules: recursive` at the default
  * depth-1. A worktree there does NOT inherit those checkouts, so it would pay
- * a network re-clone of five submodules on every push — for no containment,
- * since the CI checkout is already a throwaway that dies with the runner — and
- * an init that failed would hand back the false green above. The `@ci-face`
- * declares `--in-place` for that reason.
+ * a network re-clone of every submodule `.gitmodules` names, on every push —
+ * for no containment, since the CI checkout is already a throwaway that dies
+ * with the runner — and an init that failed would hand back the false green
+ * above.
+ *
+ * ⛓⛓⛓ S5 (⚖ 72) — **AND THAT IS THE WHOLE OF WHAT CI DOES DIFFERENTLY, WHICH
+ * IS WHY IT IS A `@ci-argv` AND NOT A `@ci-face`.** The flag moves WHERE the
+ * children run; it does not move WHAT is asked. SG1 W2 measured exactly that
+ * at one head: the worktree arm and the `--in-place` arm agree on ALL 265
+ * rows, verdict and both door marks. So CI publishes under the STANDING key,
+ * `gate: procgen-help`, and the row is CI-sourced like any other — where the
+ * old `@ci-face` published a bounded `--doors=ci` number under its own key and
+ * therefore froze the standing row on the box forever (P4b (D)).
  *
  * Run: node scripts/procgen/check-procgen-help.mjs
  *      node scripts/procgen/check-procgen-help.mjs --in-place
@@ -155,7 +164,7 @@
  * `⚠ undocumented` until the rule characters came off. The gate that publishes
  * what an instrument accepts should be able to read itself.
  *
- * @ci-face gate-help-ci: --doors=ci --in-place
+ * @ci-argv --in-place: the runner's checkout IS the throwaway tree the worktree regime builds on the box, and a linked worktree there would re-clone every submodule per push or hand back an uninitialised one's false green
  *
  * ⛓⛓⛓ SG2, ⚖ 71 (a) — **THIS GATE'S CLOSURE IS SIX FILES AND ITS SUBJECT IS
  * ALL 265 INSTRUMENTS**, so the byte key derived from an import closure alone
@@ -215,10 +224,25 @@ const KNOWN_CEILING_MS = Number(arg('known-ceiling', 5000));
 const JOBS = Math.max(1, Number(arg('jobs', 6)));
 
 /**
- * ⛓⛓⛓ **THE CI FACE IS A SMALLER QUESTION, AND IT SAYS SO WITH ITS OWN KEY.**
- * `ci-gates.mjs` runs every headless gate on EVERY PUSH, and a push gate the
- * user waits on is a real cost. The two doors are not equally cheap and not
- * equally urgent:
+ * ⛓⛓⛓ **THE THREE DOOR SETS — AND SINCE S5, CI RUNS THE FULL ONE.**
+ *
+ * ⛔⛔ THE `--doors=ci` FACE IS RETIRED, AND THE ARITHMETIC THAT RETIRED IT IS
+ * NOT THE ONE THAT BUILT IT. P4a gave this gate a bounded `@ci-face` because
+ * `ci-gates.mjs` ran every headless gate SERIALLY in the one job a push waits
+ * on, so ~5½ minutes there was a cost the user paid on every push. S3 (⚖ 72)
+ * changed that arithmetic: CI now runs the browser arms in a parallel matrix
+ * whose wall clock is measured in the tens of minutes, so the full pass costs
+ * the push NOTHING it was not already waiting for — while the bounded face
+ * cost the BOX 402.8 s of every `--write`, forever, because a faced row can
+ * never be CI-sourced.
+ *
+ * ⛔ AND THE TWO NUMBERS ARE INDISTINGUISHABLE, WHICH IS WHY THE VERDICT LINE
+ * NOW NAMES ITS DOOR SET. At a green head `--doors=ci` and `--doors=all` both
+ * print `265/0` — the value counts one row per instrument and every row passes
+ * — and the ALL PASS sentence used to be byte-identical too, because its
+ * import-door figure is the BASELINE'S SIZE and not a measurement. A published
+ * line that cannot say which question it answered is a line the next reader
+ * will read against the wrong one.
  *
  *   `--doors=all`  (default) both doors for every instrument — the STANDING
  *                  row's measurement, taken on the box.
@@ -233,8 +257,10 @@ const JOBS = Math.max(1, Number(arg('jobs', 6)));
  *                  anyway.
  *   `--doors=help` the help door alone.
  *
- * `@ci-face` gives the CI run its own key prefix, so a bounded number can
- * never be read as the standing one (⚖ P3b (g)).
+ * ⛓ `--doors=ci` STAYS on the flag list, and it is not vestigial: it is the
+ * fast local pre-flight, and it is the face any FUTURE consumer with a real
+ * budget would declare. What it no longer is, is CI's — CI runs the claim the
+ * bank quotes.
  */
 const DOORS = arg('doors', 'all');
 if (!['all', 'ci', 'help'].includes(DOORS)) {
@@ -1040,9 +1066,24 @@ console.log('## ⛓ The ceiling is a PROXY — the assertions that decide a row 
     + 'the mtime sweep, the child\'s own cache, its exit code, its stderr, and for the help '
     + 'door that stdout IS the derived help text.');
 if (bad.length === 0) {
-    console.log(`\nALL PASS — ${rows.length} instrument(s) answer \`--help\` with no side `
-        + `effect this gate can observe; ${rows.filter((r) => KNOWN.has(r.file)).length} `
-        + 'still do module-scope work on IMPORT and are the baseline\'s named debt');
+    /**
+     * ⛔⛔ S5 — **THE VERDICT LINE NAMES ITS DOOR SET, AND SAYS WHAT IT DID
+     * NOT ASK.** `headlineOf` publishes this sentence as the row's `total`,
+     * and until S5 it was byte-identical under `--doors=ci` and `--doors=all`:
+     * the value is one row per instrument either way, and the import-door
+     * figure below is the BASELINE'S SIZE — a restatement of a committed file,
+     * true whatever was measured. So the bounded face's published line and the
+     * full claim's were the same bytes, and nothing downstream could tell them
+     * apart except the key prefix. ⛓ The unasked count is DERIVED from the
+     * rows, never from `DOORS`, so it stays honest if a fourth door set is
+     * added.
+     */
+    const unasked = rows.filter((r) => r.import.asked === false).length;
+    console.log(`\nALL PASS — \`--doors=${DOORS}\`: ${rows.length} instrument(s) answer `
+        + '`--help` with no side effect this gate can observe; '
+        + `${rows.filter((r) => KNOWN.has(r.file)).length} are on the import-door baseline as `
+        + `module-scope workers${unasked ? `, and ${unasked} import door(s) were NOT ASKED by `
+            + 'this door set' : ' and every import door was asked'}`);
     process.exit(0);
 }
 console.log(`\n${bad.length} CHECK(S) FAILED`);

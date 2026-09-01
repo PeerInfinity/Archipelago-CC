@@ -223,6 +223,19 @@ describe('@ci-argv — the same claim, run the way CI can run it', () => {
     });
 
     /**
+     * ⛓ …AND THE LIVE ROSTER CARRIES IT, non-vacuously (trap 824). ⛔ WHICH
+     * gate declares it, and what the declaration DOES to the arm CI runs, is
+     * asserted in `ciGatePlan.test.js` where the consequence lives.
+     */
+    it('the roster reads at least one declaration off a real gate', () => {
+        const roster = gateRoster({ repo: REPO });
+        expect(roster.length).toBeGreaterThan(10);
+        const declaring = roster.filter((g) => g.ciArgv);
+        expect(declaring.length).toBeGreaterThan(0);
+        for (const g of declaring) expect(g.ciArgv.reason.length).toBeGreaterThan(20);
+    });
+
+    /**
      * ⛔⛔ THE PAIR REFUSAL, over the LIVE tree — a gate cannot declare both.
      * It is asserted here rather than only in the parser because the refusal
      * lives in `gateRoster()`, which is the one place both declarations are

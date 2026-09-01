@@ -138,6 +138,28 @@ describe('ciGateArms — the arms, and BOTH of an arm\'s keys', () => {
         }
     });
 
+    /**
+     * ⛓⛓⛓ S5 — **THE DECLARER, AND WHAT ITS DECLARATION DOES.** Non-vacuity
+     * for the property above (trap 824): without a gate that declares
+     * `@ci-argv`, "the extras are exactly the declared flags" is `[] === []`
+     * for every arm and the append could be deleted with nothing red.
+     * ⛔ The gate is found by its DECLARATION, not by name — a row that typed
+     * `check-procgen-help.mjs` would go red the day the declaration moves to
+     * a second gate, which is the direction that should stay green.
+     */
+    it('⛔ the gate that declares @ci-argv runs CI with those flags, under its STANDING key', () => {
+        const arms = ciGateArms({ repo: REPO, set: 'all' });
+        const declared = arms.filter((a) => a.gate.ciArgv);
+        expect(declared.length).toBeGreaterThan(0);
+        for (const a of declared) {
+            /** ⛔ the same claim ⇒ the same key. This is the clause that keeps
+             *  `@ci-argv` from becoming a face by accident. */
+            expect(a.key).toBe(a.bankKey);
+            expect(a.key.startsWith('gate:')).toBe(true);
+            for (const f of a.gate.ciArgv.argv) expect(a.argv).toContain(f);
+        }
+    });
+
     /** ⛓ …and the OTHER end of the same property: an arm whose published key
      *  differs from its bank key is a FACE, and its argv is the face's own —
      *  a substitution, never an append. */
@@ -352,6 +374,21 @@ describe('ciSourced over the live tree', () => {
         const declaring = roster.filter((r) => r.ciShallow);
         expect(declaring.length).toBeGreaterThan(0);
         for (const gate of declaring) expect(ciSourced({ gate, cheap: false })).toBe(false);
+    });
+
+    /**
+     * ⛓⛓⛓ S5 — **THE ROW THE WHOLE SLICE IS ABOUT.** P4b (D) measured this
+     * gate frozen: CI-runnable, `cheap: false`, selected by the rule and then
+     * REFUSED BY NAME by the reader, so the CI path could never answer it and
+     * the local path was never chosen again. It is CI-sourced now because its
+     * face is retired and CI answers the FULL claim under the standing key —
+     * ⛔ and NOT because any clause was loosened, which the row below (the
+     * remaining faced gate, still excluded) is the control for.
+     */
+    it('⛓ a gate that declares @ci-argv IS CI-sourced — the same claim, same key', () => {
+        const declaring = gateRoster({ repo: REPO }).filter((g) => g.ciArgv);
+        expect(declaring.length).toBeGreaterThan(0);
+        for (const g of declaring) expect(ciSourced({ gate: g, cheap: false })).toBe(true);
     });
 
     it('⛔ …and so is a declared @ci-face, at the same value', () => {
