@@ -79,6 +79,94 @@ export const CI_SHARD_BUDGET_MS = 600000;
 export function ciRunnable(gate) { return !gate.windows; }
 
 /**
+ * ⛓⛓⛓ R9 P3b (g) / ⚖ 54 (6), WIDENED BY S4 (⚖ 72) — **WHEN A ROW'S ANSWER
+ * COMES FROM CI INSTEAD OF THE BOX.**
+ *
+ * ⚖ **72 RULED (user, 2026-09-01): THE BANK QUOTES CI.** CI is the authority
+ * for the rows it runs; the row's `command` becomes `ci-summary --gate=<key>
+ * --json` and the value cites the pushed head it was read at. The rejected
+ * alternative was CI WRITING the bank, and the deciding argument was that
+ * `cheap` is a 60 s ± 10 % band — under a bot writer it would be re-banded by
+ * WHICH RUNNER ANSWERED rather than by anything in the tree (trap 735's
+ * field-flapping shape).
+ *
+ * ⇒ **a gate row is CI-sourced exactly when CI can answer it under the SAME
+ * KEY and the box should stop paying for it.** Four clauses, every one of
+ * them derived — three from what the gate DECLARES and one from what the bank
+ * MEASURED:
+ *
+ *   `ciRunnable`   CI has a browser and no Windows GPU driver (⚖ 72 (a)).
+ *   `¬ciFace`      P4b (D), below — the face is a DIFFERENT claim.
+ *   `¬ciShallow`   S4, below — a depth-1 checkout cannot ask the question.
+ *   `¬cheap`       ⚖ 52's own criterion: quoting a row the box answers in
+ *                  seconds buys PROVENANCE, not economy, and pays a network
+ *                  call plus a KEEP on every unpushed head for it.
+ *
+ * ⛔ NOT a hand list of "these ones come from CI" — that is the same defect as
+ * a hand-kept value (⚖ 17). ⛓ AND NOT A COUNT EITHER: the sentence that used
+ * to sit here said *"FOUR of thirty-one"* and was wrong-and-green by the time
+ * anybody read it twice. `--write` PRINTS the rows it selected, every run.
+ *
+ * ── ⛔⛔⛔ R9 P4b (D) — **A GATE THAT DECLARES A `@ci-face` IS MEASURED
+ *    LOCALLY, BECAUSE ITS CI FACE ANSWERS A DIFFERENT QUESTION** ────────
+ *
+ * ⚖ 54 (6) and P3b (g) are both right and they do not compose. Measured at
+ * `a61feaaec`, on the first row ever to select the CI path:
+ *
+ *   `gate: procgen-help` is CI-runnable and `cheap: false` (409 s), so the
+ *   rule selects it. Its command then becomes `ci-summary --gate="gate:
+ *   procgen-help"` — and `ci-summary` REFUSES BY NAME, because the gate
+ *   declares `@ci-face gate-help-ci` and CI publishes `gate-help-ci:
+ *   procgen-help` instead. The read returns `null`, `--write` KEEPS, and the
+ *   row is frozen at whatever it last measured **forever**: the CI path can
+ *   never answer it and the local path is never chosen again.
+ *
+ * ⛔ THE FACE IS NOT THE ROW. `@ci-face` exists precisely to say *"the number
+ * CI can produce for me is a DIFFERENT CLAIM"* — `--doors=ci` is a bounded
+ * subset of `--doors=all` — and it gives that claim its own key so the two can
+ * never be read as one. ⇒ **a gate with a declared ci-face is NEVER
+ * CI-sourced.** `procgen-help`'s 409 s leaves the box by S5's route (teach CI
+ * the FULL claim, THEN retire the face) or not at all.
+ *
+ * ── ⛔⛔⛔ S4 — **A GATE THAT DECLARES `@ci-shallow` IS MEASURED LOCALLY,
+ *    BECAUSE CI'S CHECKOUT CANNOT ASK ITS QUESTION** (trap 1058) ────────
+ *
+ * The same shape one door over, and it was found by S3's own instrument
+ * rather than by a frozen row: `gate: seedling-full-tier-owed` (ci `2/0/1` vs
+ * bank `5/0`) and `gate: slice-records` (ci `42/24` vs bank `73/0/37`) are
+ * MOVED in CI at EVERY head and always will be, because `actions/checkout`
+ * clones at depth 1 and both gates' subject is HISTORY.
+ *
+ * ⛔⛔ AND UNTIL S4 THE ONLY THING EXCLUDING THEM WAS `¬cheap` — BY ACCIDENT
+ * OF A TIMING BAND. Both are under 60 s today; `slice-records` is 30.8 s and
+ * grows with every recorded slice. A row that crossed the band would have
+ * become CI-sourced silently and started banking the shallow clone's answer
+ * as this tree's truth — a wrong value under the right key, arriving through
+ * a field whose whole job is to say how LONG something takes. ⇒ the exclusion
+ * is a clause that names the REASON, declared by the gate (`@ci-shallow`),
+ * asserted by `ciGatePlan.test.js` AT `cheap: false` so the band cannot
+ * decide it.
+ *
+ * ⛓ A shallow gate still RUNS in CI and still prints its line. The line is
+ * evidence for whoever repairs the gate — S4b (2) owes `slice-records` a
+ * refusal by name, which is what `full-tier-owed` already does — and
+ * `ci-summary --gates` reports it as `shallow`, never as `same` and never as
+ * a disagreement anybody should chase.
+ *
+ * @param {{gate: object|null, cheap: boolean|undefined}} o  the ROSTER ROW
+ *        (`gateRoster()`'s), or `null` for a row no gate answers.
+ */
+export function ciSourced({ gate, cheap }) {
+    /** ⛔ An identity/producer/suite row has no gate and therefore no CI line
+     *  under its key — S4c is where that question is asked, not here. */
+    if (!gate) return false;
+    if (!ciRunnable(gate)) return false;
+    if (gate.ciFace) return false;
+    if (gate.ciShallow) return false;
+    return cheap === false;
+}
+
+/**
  * ⛓ THE ARMS CI RUNS, in roster order, each declared arm right after the gate
  * it belongs to — the same shape `gates.mjs`'s `armsIn('local')` builds, and
  * for the same reason: an arm that is not in the list is a standing row

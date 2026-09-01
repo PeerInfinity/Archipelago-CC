@@ -274,79 +274,19 @@ export function producerScripts({ repo = REPO } = {}) {
 }
 
 /**
- * ⛓⛓⛓ R9 P3b (g), ⚖ 54 (7)'s sibling ruling ⚖ 54 (6) — **WHEN A ROW'S ANSWER
- * SHOULD COME FROM CI INSTEAD OF THE BOX.**
+ * ⛓⛓⛓ **`ciSourced` LIVES IN `ciGatePlan.js` NOW** (S4, ⚖ 72) — with the
+ * ruling, P4b (D)'s composition trap and S4's shallow-clone clause, beside
+ * `ciRunnable`, which is one of its inputs.
  *
- * ⛔⛔ THE RULING'S PREMISE, MEASURED. ⚖ 54 (6) reads *"more standing rows
- * quoted from CI by SHA (every headless gate; only Windows/GPU rows stay
- * local)"*, and the economy it reaches for is ⚖ 52's: stop spending the box on
- * something CI already ran. At P3b the headless population was the only one CI
- * could run, and most of it is cheap — so quoting it would have bought
- * PROVENANCE, not economy, plus a network call and a red on every unpushed
- * head. ⚠ THE SENTENCE THAT USED TO SIT HERE SAID *"FOUR of thirty-one"* and
- * was WRONG-AND-GREEN by the time anybody read it twice: `full-tier-owed` and
- * `slice-records` had joined the roster, and the CODE — which derives the set
- * — had been running all six for weeks. ⇒ ⛔ NO COUNT IS TYPED HERE ANY MORE.
- * `gateRoster()` is the answer, `ci-gates.mjs`'s own header line is the
- * measurement, and `rosterCategories.test.js` is where a claim about the
- * populations goes so that it can go red instead of stale.
- *
- * ⛓ S3 (⚖ 72) WIDENS WHAT CI CAN ANSWER, AND THIS RULE HAS NOT MOVED YET.
- * CI now runs every gate `ciGatePlan.ciRunnable` selects — the browser arms
- * included — but `ciSourced` still reads `headless ∧ ¬cheap ∧ ¬ciFace`.
- * Widening it to the CI-answerable set is S4, deliberately ordered AFTER the
- * lines exist and after ⚖ 72 (b)'s three-consecutive-runs bar: the cheap
- * consumption rung would otherwise consume `## CI-GATE |` lines that do not
- * exist yet and freeze ~24 rows at their last local values with a polite
- * reason (trap 1047).
- *
- * ⇒ THE RULE IS DERIVED FROM THE SAME TWO FACTS THE FILE ALREADY CARRIES:
- * **a gate row is CI-sourced exactly when it is HEADLESS and NOT `cheap`** —
- * i.e. when it is both answerable by CI and expensive enough that the box
- * should stop paying for it. That is ⚖ 52's own criterion (the unfiltered
- * suite is CI's because it costs ~8 minutes), generalised rather than narrowed.
- *
- * ⛓ AT THIS HEAD IT SELECTS ZERO ROWS, AND `--write` SAYS SO OUT LOUD —
- * "CI-sourced: 0 row(s)" is a STATED zero, not a silence. The mechanism is
- * armed for the day a headless gate crosses the band, which is the day the
- * ruling's economy becomes real.
- *
- * ⛔ NOT a hand list of "these ones come from CI" — that is the same defect as
- * a hand-kept value (⚖ 17), and this file exists to refuse it.
- *
- * ── ⛔⛔⛔ R9 P4b (D) — **A GATE THAT DECLARES A `@ci-face` IS MEASURED
- *    LOCALLY, BECAUSE ITS CI FACE ANSWERS A DIFFERENT QUESTION** ────────
- *
- * ⚖ 54 (6) and P3b (g) are both right and they do not compose. Measured at
- * `a61feaaec`, on the first row ever to select the CI path:
- *
- *   `gate: procgen-help` is HEADLESS and `cheap: false` (573 s), so this rule
- *   selects it. Its command then becomes `ci-summary --gate="gate:
- *   procgen-help"` — and `ci-summary` REFUSES BY NAME, because the gate
- *   declares `@ci-face gate-help-ci` and CI publishes `gate-help-ci:
- *   procgen-help` instead. The read returns `null`, `--write` KEEPS, and the
- *   row is frozen at whatever it last measured **forever**: the CI path can
- *   never answer it and the local path is never chosen again.
- *
- * ⛔ THE FACE IS NOT THE ROW. `@ci-face` exists precisely to say *"the number
- * CI can produce for me is a DIFFERENT CLAIM"* — `--doors=ci` is a bounded
- * subset of `--doors=all` — and it gives that claim its own key so the two can
- * never be read as one. A rule that then routes the STANDING key down the CI
- * path is asking for the value under the key its own declaration excluded.
- *
- * ⇒ **a gate with a declared ci-face is NEVER CI-sourced.** Its full pass is
- * the standing value, measured on the box; the ci-face is CI's own bounded
- * witness under its own key, and the row's `command` says which by naming the
- * gate rather than `ci-summary`. Nothing is hand-listed: the gate declares the
- * face, `gateRoster` reads it, and this rule consumes it.
- *
- * @param {{headless: boolean, cheap: boolean|undefined,
- *          ciFace: {prefix: string}|null|undefined}} o
+ * ⛔ IT MOVED FOR A REASON A COMMENT SHOULD OUTLIVE: the rule reads THREE
+ * facts a gate declares (`windows`, `@ci-face`, `@ci-shallow`) and one the
+ * bank measures (`cheap`), and while it lived here it was called with those
+ * facts SPREAD BY HAND at each call site — `standing-values.mjs` recomputed
+ * "headless" from its own file set and passed `ciFace` separately, and a test
+ * that had not learned the second argument asserted a question production had
+ * stopped asking (`boxLock.test.js`'s own note says so). It now takes the
+ * ROSTER ROW, so a clause added to the rule reaches every caller.
  */
-export function ciSourced({ headless, cheap, ciFace = null }) {
-    if (ciFace) return false;
-    return Boolean(headless) && cheap === false;
-}
 
 /** ⛓ The command that reads one gate's answer out of CI, one spelling. */
 export const ciGateCommand = (key) =>

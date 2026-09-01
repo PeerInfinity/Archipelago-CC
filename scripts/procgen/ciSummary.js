@@ -126,3 +126,52 @@ export function parseGateLines(log) {
     }
     return out;
 }
+
+/**
+ * ⛓⛓⛓ **THE VERDICT OF EVERY GATE LINE AGAINST THE BANK** — ⚖ 72 (b)'s
+ * instrument, as a PURE FUNCTION (S4).
+ *
+ * ⛔ WHY IT IS HERE AND NOT INLINE IN THE SCRIPT. It was inline until S4, and
+ * S4 gave it a third verdict — which is exactly when a rule stops being
+ * readable from its output alone. Every input is a run's log, a bank and a
+ * roster, and a rule that can only be interrogated by a network call to a
+ * finished CI run is a rule whose edges nobody checks. `ciGatePlan.js` made
+ * the same move for the partition, for the same reason.
+ *
+ * The four verdicts, and the direction each one is safe in:
+ *
+ *   `same`        the CI line equals the bank's value for the SAME key.
+ *   `MOVED`       it does not — the only one that reddens the run-level exit.
+ *   `shallow`     the gate declares `@ci-shallow`: CI's depth-1 checkout
+ *                 cannot ask its question, so its line is NEVER compared —
+ *                 not as a disagreement and not as an agreement either (trap
+ *                 1058, S4). ⛔ Checked BEFORE the compare, so a shallow row
+ *                 that happens to match cannot bank a streak it did not earn.
+ *   `not-banked`  no bank row under that key — a `@ci-face` key is a
+ *                 DIFFERENT, bounded claim and the bank holds none. ⛔ Never
+ *                 a match: a quiet zero is what this whole file refuses.
+ *
+ * ⛔ AND A BANKED ARM WITH NO LINE IS `missing`, which is the direction that
+ * matters: a shard that never ran must read as an ABSENT ANSWER, not as a
+ * smaller verdict set that happens to agree with itself.
+ *
+ * @param {{lines: Map, bank: object, arms: object[]}} o  `arms` is
+ *        `ciGateArms({set:'all'})` — both keys and the declaring gate.
+ */
+export function gateVerdicts({ lines, bank, arms }) {
+    /** ⛓ CI key -> the STANDING key its value belongs under. They differ for a
+     *  declared `@ci-face`, which is exactly the pair that must not compare. */
+    const bankKeyOf = new Map(arms.map((a) => [a.key, a.gate.ciFace ? null : a.bankKey]));
+    /** ⛓ …and the arms whose gate declares `@ci-shallow`, off the SAME roster
+     *  row the bank key comes from (never a name typed here). */
+    const shallowOf = new Map(arms.map((a) => [a.key, a.gate.ciShallow?.reason ?? null]));
+    const rows = [...lines.values()].map((row) => {
+        const bankKey = bankKeyOf.has(row.key) ? bankKeyOf.get(row.key) : row.key;
+        const banked = bankKey ? bank[bankKey]?.value ?? null : null;
+        const shallow = shallowOf.get(row.key) ?? null;
+        const verdict = banked === null ? 'not-banked'
+            : (shallow ? 'shallow' : (banked === row.value ? 'same' : 'MOVED'));
+        return { ...row, bankKey, banked, shallow, verdict };
+    });
+    return { rows, missing: arms.filter((a) => !lines.has(a.key)).map((a) => a.key) };
+}

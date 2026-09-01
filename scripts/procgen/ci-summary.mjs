@@ -50,22 +50,32 @@
  *     which hold `/mnt/c/Windows/py.exe` and could not resolve their driver
  *     on a runner at all (⚖ 72 (a): they stay box-measured);
  *   · a gate that declares an `@ci-face`, asked for its `gate:` key — its CI
- *     answer is a DIFFERENT, bounded claim under its own prefix.
+ *     answer is a DIFFERENT, bounded claim under its own prefix;
+ *   · a gate that declares an `@ci-shallow` (S4) — CI runs it and prints a
+ *     line, but the line answers a DEPTH-1 CLONE's question, not this tree's,
+ *     and `--gates` reports it as `shallow` rather than comparing it.
  *
  * ⛓⛓ S3 (⚖ 72) RETIRED THE BROWSER HALF OF THIS REFUSAL. Until then the
  * sentence here read *"twenty-seven of thirty-one gates need a browser or a
  * Windows GPU and CI runs none of them"*; `unittests_frontend.yml` now runs
  * every browser arm in a matrix of shard jobs, so those keys HAVE answers and
  * refusing them would be a refusal about a world that no longer exists.
- * ⛔ What did NOT change is `ciSourced` — no standing row's `command` reads
- * this path yet; widening that is S4, after ⚖ 72 (b)'s stability bar.
+ * ⛓⛓ AND S4 IS THE OTHER HALF: `ciGatePlan.ciSourced` now selects the rows
+ * whose `command` reads this path — CI-runnable ∧ ¬cheap ∧ no declared
+ * `@ci-face` ∧ no declared `@ci-shallow` — so this file is a STANDING VALUE'S
+ * SOURCE now and not only a reader's convenience. ⛔ Which is why the refusal
+ * ladder grew a third rung rather than a special case: every key it refuses
+ * is a key `ciSourced` must never select, and the two are derived from the
+ * same roster row.
  */
 
 import { execFileSync } from 'node:child_process';
 
 import { ciGateArms, ciRunnable } from './ciGatePlan.js';
 import { REPO, gateRoster } from './gateRoster.js';
-import { findRun, gateLogs, jobLog, parseGateLines, parseSummaries, runById } from './ciSummary.js';
+import {
+    findRun, gateLogs, gateVerdicts, jobLog, parseGateLines, parseSummaries, runById,
+} from './ciSummary.js';
 import { readStandingValues } from './standingValues.js';
 
 
@@ -100,6 +110,24 @@ if (GATE) {
             + ' (`/mnt/c/Windows/py.exe`), which a runner does not have — so no answer for it'
             + ' exists at any SHA. Its standing row is measured on the box (⚖ 72 (a)).'
             + ' ⛔ This is a refusal, not a 0/0.');
+        process.exit(5);
+    }
+    /**
+     * ⛔⛔ S4 (⚖ 72; trap 1058) — A GATE THAT DECLARES `@ci-shallow` IS ASKING
+     * A QUESTION `actions/checkout`'s DEPTH-1 CLONE CANNOT ANSWER. CI still
+     * runs it and still prints its line — the line is evidence for whoever
+     * repairs the gate — but that line is an answer about a tree with one
+     * commit in it, and handing it back here would let a `--write` bank the
+     * shallow clone's number as this tree's truth under the right key. ⛓ The
+     * exclusion that MATTERS is `ciSourced`, which never routes such a row
+     * down this path; this refusal is the second lock, so that a widening
+     * that forgot the clause goes red BY NAME instead of quietly banking.
+     */
+    if (gate.ciShallow) {
+        console.error(`REFUSED: ${gate.file} declares \`@ci-shallow\` — ${gate.ciShallow.reason}.`
+            + ' CI runs it and prints a line, but that line is an answer about a depth-1'
+            + ' checkout and NOT about this tree, so it is not this row\'s value. Its standing'
+            + ' row is measured on the box. ⛔ This is a refusal, not a 0/0.');
         process.exit(5);
     }
     if (gate.ciFace && GATE.startsWith('gate:')) {
@@ -147,15 +175,9 @@ if (ALL_GATES) {
     /** ⛓ CI key -> the STANDING key its value belongs under. They differ for a
      *  declared `@ci-face`, which is exactly the pair that must not compare. */
     const arms = ciGateArms({ repo: REPO, set: 'all' });
-    const bankKeyOf = new Map(arms.map((a) => [a.key, a.gate.ciFace ? null : a.bankKey]));
-    const rows = [...lines.values()].map((row) => {
-        const bankKey = bankKeyOf.has(row.key) ? bankKeyOf.get(row.key) : row.key;
-        const banked = bankKey ? bank[bankKey]?.value ?? null : null;
-        return { ...row, bankKey, banked,
-            verdict: banked === null ? 'not-banked' : (banked === row.value ? 'same' : 'MOVED') };
-    });
-    /** ⛔ …and the arms CI was supposed to answer and did not. */
-    const missing = arms.filter((a) => !lines.has(a.key)).map((a) => a.key);
+    /** ⛓ S4 — the rule itself is `ciSummary.gateVerdicts`, a pure function of
+     *  (lines, bank, arms) so its edges can be asked without a runner. */
+    const { rows, missing } = gateVerdicts({ lines, bank, arms });
     const moved = rows.filter((r) => r.verdict === 'MOVED');
     if (json) {
         console.log(JSON.stringify({ sha, run: run.databaseId, conclusion: run.conclusion,
@@ -165,7 +187,10 @@ if (ALL_GATES) {
             + `${gathered.jobs} job(s), ${rows.length} line(s)`);
         for (const r of rows.sort((a, b) => a.key.localeCompare(b.key))) {
             console.log(`  ${r.verdict.padEnd(10)} ${r.key.padEnd(44)} ci=${r.value}`
-                + `${r.verdict === 'MOVED' ? `  bank=${r.banked}` : ''}  exit=${r.exit}`);
+                + `${r.verdict === 'MOVED' || r.verdict === 'shallow' ? `  bank=${r.banked}` : ''}`
+                + `  exit=${r.exit}`);
+            /** ⛔ …and WHY it is not a comparison, in the row itself. */
+            if (r.verdict === 'shallow') console.log(`             ⛔ @ci-shallow: ${r.shallow}`);
         }
         for (const k of missing) console.log(`  MISSING    ${k}`);
         if (gathered.unreadable.length) {
@@ -174,6 +199,8 @@ if (ALL_GATES) {
         }
         console.log(`\n${rows.filter((r) => r.verdict === 'same').length} same, `
             + `${moved.length} MOVED, `
+            + `${rows.filter((r) => r.verdict === 'shallow').length} shallow (declared, never `
+            + 'compared), '
             + `${rows.filter((r) => r.verdict === 'not-banked').length} not-banked, `
             + `${missing.length} MISSING.`);
         /**
@@ -189,7 +216,9 @@ if (ALL_GATES) {
          * per-row column above is the one S4 consumes.
          */
         console.log('⚖ 72 (b): the bar is PER ROW — three consecutive runs in which THAT row '
-            + 'reads `same`. This exit code is the run-level answer, not the bar.');
+            + 'reads `same`. This exit code is the run-level answer, not the bar; since S4 a '
+            + '`shallow` row is outside BOTH (it is excluded from the CI-sourced set by its '
+            + 'own declaration, not by a verdict).');
     }
     process.exit(moved.length || missing.length ? 1 : 0);
 }

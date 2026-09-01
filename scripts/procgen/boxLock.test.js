@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { CHEAP_BAND, CHEAP_MS, cheapFor, ciGateCommand, ciSourced } from './standingValues.js';
+import { CHEAP_BAND, CHEAP_MS, cheapFor, ciGateCommand } from './standingValues.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -405,65 +405,14 @@ try {
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓⛓ (g) WHICH ROWS COME FROM CI — ⚖ 54 (6), DERIVED
+ *
+ * ⛓ S4 (⚖ 72) MOVED `ciSourced` TO `ciGatePlan.js` and its rows to
+ * `ciGatePlan.test.js`, beside `ciRunnable` — one of the four facts the rule
+ * now reads off the roster row it is handed. What stays here is the COMMAND
+ * the rule builds, because that string is this file's business: it is what a
+ * standing row publishes, and ⚖ 8 reads a published command as identity.
  * ══════════════════════════════════════════════════════════════════════ */
-describe('ciSourced', () => {
-    it('selects a HEADLESS row only once it stops being cheap', () => {
-        expect(ciSourced({ headless: true, cheap: false })).toBe(true);
-        expect(ciSourced({ headless: true, cheap: true })).toBe(false);
-    });
-
-    /**
-     * ⛔ A BROWSER OR WINDOWS ROW IS NEVER CI-SOURCED, however expensive. CI
-     * runs neither, so "quote it from CI" would be quoting an answer that does
-     * not exist — the 0/0 the refusal in `ci-summary.mjs` exists to prevent.
-     */
-    it('never selects a row CI cannot answer, at any cost', () => {
-        expect(ciSourced({ headless: false, cheap: false })).toBe(false);
-        expect(ciSourced({ headless: false, cheap: true })).toBe(false);
-    });
-
-    /** ⛓ A row nothing has measured has no `cheap` yet, and is not selected —
-     *  the first measurement is the box's, and it is what decides. */
-    it('does not select a row nothing has measured', () => {
-        expect(ciSourced({ headless: true, cheap: undefined })).toBe(false);
-    });
-
-    /**
-     * ⛓⛓ AND THE RULE SELECTS NOTHING AT THIS HEAD — measured over the real
-     * roster and the committed file, so "CI-sourced: 0 row(s)" is a stated
-     * measurement rather than a claim. ⛔ THE SAME ROW IS THE NON-VACUITY
-     * PROOF: it also asserts the population it ranged over is non-empty, so a
-     * `gateRoster` that stopped answering could not make this pass.
-     */
-    it('selects ZERO rows at this head, over a non-empty headless population', async () => {
-        const { gateRoster } = await import('./gateRoster.js');
-        const { readStandingValues } = await import('./standingValues.js');
-        const headless = gateRoster({ repo: REPO }).filter((g) => !g.browser && !g.windows);
-        expect(headless.length).toBeGreaterThan(0);
-        const file = readStandingValues({ repo: REPO });
-        /**
-         * ⛔⛔ R9 SLICE RR — **THIS CALLER HAD NOT LEARNED THE THIRD
-         * PARAMETER, AND IT RE-MANUFACTURED THE DEFECT THAT PARAMETER EXISTS
-         * TO PREVENT.** P4b gave `ciSourced` a `ciFace` argument and
-         * `standing-values.mjs` passes `g.ciFace` from the same roster row;
-         * this row was still calling it with two fields, so it answered a
-         * question the production caller no longer asks. It went RED the
-         * moment P4b banked `gate: procgen-help` — a HEADLESS row at
-         * `cheap: false`, which is exactly the worked example `standingValues
-         * .js`'s own `ciSourced` docblock uses to explain why a gate with a
-         * declared `@ci-face` is NEVER CI-sourced. ⇒ the face comes off the
-         * SAME roster row the key does, never from a hand list, so a gate that
-         * gains or drops a face moves this row with it.
-         */
-        const selected = headless
-            .map((g) => ({ g, key: `gate: ${g.file.replace(/^check-/, '').replace(/\.mjs$/, '')}` }))
-            .filter(({ g, key }) => ciSourced({
-                headless: true, cheap: file?.rows?.[key]?.cheap, ciFace: g.ciFace,
-            }))
-            .map(({ key }) => key);
-        expect(selected).toEqual([]);
-    });
-
+describe('ciGateCommand', () => {
     it('builds a command the CI reader actually accepts', () => {
         expect(ciGateCommand('gate: seedling-wasm-pins'))
             .toBe('node scripts/procgen/ci-summary.mjs --gate="gate: seedling-wasm-pins" --json');

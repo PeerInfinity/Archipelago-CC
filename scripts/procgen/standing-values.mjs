@@ -89,13 +89,14 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { assertTreeUnmoved, releaseBoxLock, takeBoxLock } from './boxLock.js';
+import { ciSourced } from './ciGatePlan.js';
 import { LOCAL_HOST, REPO, gateRoster } from './gateRoster.js';
 import {
     bankedPopulations, keyContext, keyInputsIn, keyReportLines, nondeterminismFinding,
     rowInputKey, rowRunDecision, unkeyableReason,
 } from './rowInputKey.js';
 import {
-    CHEAP_MS, FILE, ciGateCommand, ciSourced, cheapFor, compositeValue, compositeWhy, head,
+    CHEAP_MS, FILE, ciGateCommand, cheapFor, compositeValue, compositeWhy, head,
     missingScript, readStandingValues, runRow, scriptIn, standingRows,
 } from './standingValues.js';
 
@@ -167,20 +168,31 @@ if (flag('list')) {
     process.exit(0);
 }
 
-/**
- * ⛓ R9 P3b (g) — which gate FILES are headless, derived once. A standing
- * row is matched to its gate by the command naming the file, which is the
- * same join `missingScript` makes.
- */
 const GATES = gateRoster({ repo: REPO });
-const headlessFiles = new Set(GATES.filter((g) => !g.browser && !g.windows).map((g) => g.path));
 /**
  * ⛓ R9 P4b (D) — the gate a row's command names, so `ciSourced` can read
- * that gate's `@ci-face` declaration. ⛔ Derived from the roster, never a
- * list here: the declaration lives in the gate's own docblock and this is
- * only the lookup.
+ * that gate's `@ci-face` and `@ci-shallow` declarations. ⛔ Derived from the
+ * roster, never a list here: the declarations live in the gate's own docblock
+ * and this is only the lookup.
+ *
+ * ⛓ S4 dropped the `headlessFiles` set that used to sit beside this: the rule
+ * no longer asks "is this row headless" but "can CI answer this row", and
+ * that question is `ciGatePlan.ciSourced` reading the WHOLE roster row.
  */
 const gateOf = (command) => GATES.find((g) => command.includes(g.path)) ?? null;
+
+/**
+ * ⛔⛔ THE GATE A ROW'S ANSWER WOULD COME FROM — `null` UNLESS THE ROW *IS*
+ * THAT GATE'S STANDING ROW (S4). `identity: generated set` runs
+ * `check-seedling-generated-set.mjs` too — one entry, two rows under two
+ * kinds (S2 measured three such groups) — and CI prints its `## CI-GATE |`
+ * lines under GATE keys only. A command match alone would ask `ci-summary`
+ * for a key CI never publishes, and the row would KEEP forever with a polite
+ * reason. ⛓ Whether the expensive IDENTITY rows should get CI lines of their
+ * own is a real question and it is **S4c**, where the production side
+ * (`ci-gates.mjs` printing them) is built first — not a widening here.
+ */
+const ciGateFor = (row) => (row.kind === 'gate' ? gateOf(row.command) : null);
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⚖ 71 (a) — THE INPUT KEY
@@ -247,11 +259,7 @@ if (flag('keys')) {
     let unkeyable = 0;
     for (const row of ROWS) {
         const prev = existing?.rows?.[row.key];
-        const headless = row.kind === 'gate'
-            && [...headlessFiles].some((f) => row.command.includes(f));
-        const fromCI = ciSourced({
-            headless, cheap: prev?.cheap, ciFace: gateOf(row.command)?.ciFace ?? null,
-        });
+        const fromCI = ciSourced({ gate: ciGateFor(row), cheap: prev?.cheap });
         const r = keyReportFor(row, { fromCI });
         if (r.unkeyable) {
             unkeyable += 1;
@@ -326,17 +334,14 @@ if (flag('write')) {
         }
         const prev = out.rows[row.key];
         /**
-         * ⛓⛓⛓ ⚖ 54 (6) — **A HEADLESS ROW THE BOX SHOULD STOP PAYING FOR IS
-         * READ FROM CI INSTEAD.** The rule is `ciSourced` and it is derived
-         * from what the file already knows: headless (from `gateRoster`) and
-         * not `cheap` (from the last measurement). At this head it selects
-         * ZERO rows and the summary line says so — a stated zero.
+         * ⛓⛓⛓ ⚖ 54 (6), WIDENED BY S4 (⚖ 72) — **A ROW CI CAN ANSWER AND THE
+         * BOX SHOULD STOP PAYING FOR IS READ FROM CI INSTEAD.** The rule is
+         * `ciGatePlan.ciSourced` and every clause of it is derived: what the
+         * gate DECLARES (`windows`, `@ci-face`, `@ci-shallow`) and what the
+         * bank MEASURED (`cheap`). ⛔ The rows it selects are PRINTED by name
+         * in the summary, every run — the count is never typed anywhere.
          */
-        const headless = row.kind === 'gate'
-            && [...headlessFiles].some((f) => row.command.includes(f));
-        const fromCI = ciSourced({
-            headless, cheap: prev?.cheap, ciFace: gateOf(row.command)?.ciFace ?? null,
-        });
+        const fromCI = ciSourced({ gate: ciGateFor(row), cheap: prev?.cheap });
         /**
          * ⛓⛓⛓ ⚖ 71 (a) — **THE INPUT KEY DECIDES WHETHER THIS ROW RUNS AT
          * ALL**, and it is computed BEFORE the run for the obvious reason: a
@@ -489,8 +494,9 @@ if (flag('write')) {
     console.log(`unkeyed: ${unkeyed.length} row(s)`
         + `${unkeyed.length ? `\n  ${unkeyed.join('\n  ')}` : ' (every selected row is keyed)'}`);
     console.log(`CI-sourced: ${ciRows.length} row(s)`
-        + `${ciRows.length ? ` — ${ciRows.join(', ')}` : ' (headless AND not cheap; at this '
-            + 'head every headless gate is cheap, so the box still answers them)'}`);
+        + `${ciRows.length ? ` — ${ciRows.join(', ')}` : ' (CI-runnable AND not cheap AND no '
+            + 'declared @ci-face or @ci-shallow; at this head nothing qualifies, so the box '
+            + 'answers them all)'}`);
     for (const h of held) {
         console.log(`HELD by hysteresis: ${h.key.padEnd(46)} ${(h.ms / 1000).toFixed(1)}s is `
             + `inside the ±${Math.round(0.1 * 100)} % band around ${CHEAP_MS / 1000}s, so it `

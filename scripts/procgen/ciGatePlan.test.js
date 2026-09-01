@@ -20,9 +20,10 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
-    CI_SHARD_BUDGET_MS, armName, ciGateArms, ciGatePlanFor, ciRunnable, planCiShards,
+    CI_SHARD_BUDGET_MS, armName, ciGateArms, ciGatePlanFor, ciRunnable, ciSourced, planCiShards,
 } from './ciGatePlan.js';
 import { REPO, gateRoster } from './gateRoster.js';
+import { readStandingValues, standingRows } from './standingValues.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -215,6 +216,143 @@ describe('ciGatePlanFor — the live tree', () => {
     });
 });
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ `ciSourced` — WHICH ROWS THE BANK QUOTES FROM CI (⚖ 72, S4)
+ *
+ * ⛓ MOVED HERE FROM `boxLock.test.js` / `standingValues.test.js` WITH THE
+ * FUNCTION, and widened with it. The two old homes each asserted a piece of
+ * the rule with a hand-spread argument list, and one of them had already gone
+ * stale that way once (its own note records asserting a question production
+ * had stopped asking). The rule now takes the ROSTER ROW, so every row here
+ * hands it the same shape production does.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ A roster row with only the fields the rule reads. */
+const g = (o = {}) => ({
+    file: 'check-x.mjs', browser: false, windows: false, ciFace: null, ciShallow: null, ...o,
+});
+
+describe('ciSourced — the four clauses, each on its own', () => {
+    it('selects a CI-runnable row only once it stops being cheap', () => {
+        expect(ciSourced({ gate: g(), cheap: false })).toBe(true);
+        expect(ciSourced({ gate: g(), cheap: true })).toBe(false);
+    });
+
+    /**
+     * ⛓⛓ THE WIDENING S4 IS: a BROWSER row is CI-sourced now. Before S3 CI ran
+     * no browser at all and this arm read `false`; the arms exist and are
+     * measured, so quoting them is the economy ⚖ 54 (6) asked for.
+     */
+    it('⛓ a BROWSER row is CI-sourced — S3 gave those arms answers', () => {
+        expect(ciSourced({ gate: g({ browser: true }), cheap: false })).toBe(true);
+    });
+
+    /** ⛓ A row nothing has measured has no `cheap` yet: the first measurement
+     *  is the box's, and it is what decides. */
+    it('does not select a row nothing has measured', () => {
+        expect(ciSourced({ gate: g(), cheap: undefined })).toBe(false);
+    });
+
+    it('⛔ never selects a Windows row, at any cost (⚖ 72 (a))', () => {
+        expect(ciSourced({ gate: g({ windows: true }), cheap: false })).toBe(false);
+        expect(ciSourced({ gate: g({ windows: true }), cheap: true })).toBe(false);
+    });
+
+    it('⛔ never selects a declared @ci-face (P4b (D))', () => {
+        expect(ciSourced({ gate: g({ ciFace: { prefix: 'gate-help-ci' } }), cheap: false }))
+            .toBe(false);
+    });
+
+    it('⛔ never selects a declared @ci-shallow (S4, trap 1058)', () => {
+        expect(ciSourced({ gate: g({ ciShallow: { reason: 'depth-1' } }), cheap: false }))
+            .toBe(false);
+    });
+
+    /** ⛔ An identity/producer/suite row has no gate: CI prints `## CI-GATE |`
+     *  lines under GATE keys only, so there is nothing to quote. S4c is where
+     *  the identity rows' production side is built, if ever. */
+    it('⛔ a row with no gate is never CI-sourced', () => {
+        expect(ciSourced({ gate: null, cheap: false })).toBe(false);
+    });
+});
+
+/**
+ * ⛓⛓⛓ THE LIVE ROSTER AND THE COMMITTED BANK — the rows whose whole content
+ * is *"and this agrees with the tree"*, each guarded against vacuity first.
+ */
+describe('ciSourced over the live tree', () => {
+    const roster = gateRoster({ repo: REPO });
+    const bank = readStandingValues({ repo: REPO });
+    const gateOf = (command) => roster.find((r) => command.includes(r.path)) ?? null;
+    const rows = standingRows({ repo: REPO });
+    const selected = rows.filter((r) => ciSourced({
+        gate: r.kind === 'gate' ? gateOf(r.command) : null, cheap: bank?.rows?.[r.key]?.cheap,
+    }));
+
+    /**
+     * ⛔⛔ **THE GUARD THE BRIEF ASKED FOR, AND IT IS ASSERTED AT `cheap:
+     * false` ON PURPOSE.** Both declaring gates are UNDER the 60 s band today,
+     * so a rule that only excluded them by `¬cheap` would pass every row that
+     * used their real `cheap` value — and would go silently wrong the day
+     * `slice-records` (30.8 s and growing with every recorded slice) crossed
+     * it. This row hands the rule the value that would have selected them.
+     */
+    it('⛔ a declared @ci-shallow gate is excluded EVEN AT `cheap: false`', () => {
+        const declaring = roster.filter((r) => r.ciShallow);
+        expect(declaring.length).toBeGreaterThan(0);
+        for (const gate of declaring) expect(ciSourced({ gate, cheap: false })).toBe(false);
+    });
+
+    it('⛔ …and so is a declared @ci-face, at the same value', () => {
+        const faced = roster.filter((r) => r.ciFace);
+        expect(faced.length).toBeGreaterThan(0);
+        for (const gate of faced) expect(ciSourced({ gate, cheap: false })).toBe(false);
+    });
+
+    /**
+     * ⛓⛓ **A STATED NON-ZERO.** Until S4 this file's ancestor asserted the
+     * rule selected ZERO rows, which was the honest reading then. S4's whole
+     * point is that the number is no longer zero — so the row asserts the
+     * direction, never the count (a count typed here is the wrong-and-green
+     * this arc has produced four times).
+     */
+    it('selects a NON-EMPTY set at this head, out of a non-empty roster', () => {
+        expect(rows.length).toBeGreaterThan(20);
+        expect(selected.length).toBeGreaterThan(0);
+    });
+
+    /**
+     * ⛔⛔⛔ **THE COMPOSITION PROPERTY, AND IT IS THE ONE THAT CANNOT BE TRUE
+     * BY CONSTRUCTION.** A selected row's `command` becomes `ci-summary
+     * --gate=<its key>`, which can only be answered if CI PRINTS A LINE UNDER
+     * THAT EXACT KEY. `ciGateArms` is what the workflow runs, and an arm whose
+     * gate declares a `@ci-face` publishes under a DIFFERENT key — so a rule
+     * that selected such a row would freeze it at its last local value with a
+     * polite reason, forever, which is precisely P4b (D)'s defect. Asserting
+     * the two sets compose is the only thing that catches a fifth clause
+     * arriving on one side and not the other.
+     */
+    it('⛔ every selected row has an arm publishing a line under the SAME key', () => {
+        const published = new Set(ciGateArms({ repo: REPO, set: 'all' })
+            .filter((a) => !a.gate.ciFace).map((a) => a.key));
+        expect(published.size).toBeGreaterThan(0);
+        expect(selected.length).toBeGreaterThan(0);
+        for (const row of selected) expect(published.has(row.key)).toBe(true);
+    });
+
+    /** ⛓ …and no selected row is one the bank has never measured, because the
+     *  `cheap` clause is a MEASURED field and an unmeasured row has none. */
+    it('every selected row is banked, not cheap, and CI-runnable', () => {
+        for (const row of selected) {
+            expect(bank.rows[row.key]?.cheap).toBe(false);
+            const gate = gateOf(row.command);
+            expect(ciRunnable(gate)).toBe(true);
+            expect(gate.ciFace).toBe(null);
+            expect(gate.ciShallow).toBe(null);
+        }
+    });
+});
+
 /**
  * ⛓⛓⛓ THE OTHER CONSUMER OF `ciRunnable` — `ci-summary.mjs`'s REFUSAL LADDER.
  *
@@ -266,6 +404,22 @@ describe('ci-summary.mjs — the refusal ladder, derived from the same predicate
         const r = runCi(['deadbeef1', `--gate=gate: ${nameOf(faced)}`]);
         expect(r.code).toBe(5);
         expect(r.out).toMatch(/@ci-face/);
+    });
+
+    /**
+     * ⛔⛔ S4's OWN RUNG — THE SECOND LOCK. `ciSourced` never routes a
+     * `@ci-shallow` row down this path; if a later widening forgot the clause,
+     * THIS is what turns a silently-banked depth-1 answer into a red naming
+     * the gate. ⛓ It is the same shape as the `@ci-face` rung above and it is
+     * asserted the same way, off the live roster.
+     */
+    it('REFUSES a @ci-shallow gate by name, exit 5, before any network call', () => {
+        const shallow = roster.find((x) => x.ciShallow);
+        expect(shallow).toBeTruthy();
+        const r = runCi(['deadbeef1', `--gate=gate: ${nameOf(shallow)}`]);
+        expect(r.code).toBe(5);
+        expect(r.out).toMatch(/@ci-shallow/);
+        expect(r.out).toContain(shallow.ciShallow.reason);
     });
 
     /**

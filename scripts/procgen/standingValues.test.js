@@ -17,7 +17,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { gateRoster } from './gateRoster.js';
-import { ciSourced, gateStandingRows, standingRows } from './standingValues.js';
+import { gateStandingRows, standingRows } from './standingValues.js';
 
 const ROWS = standingRows();
 const GATE_ROWS = ROWS.filter((r) => r.kind === 'gate');
@@ -105,34 +105,11 @@ describe('⛔ an arm whose command EQUALS the base row is REFUSED BY NAME', () =
  * ⛓⛓⛓ R9 P4b (D) — **⚖ 54 (6) AND P3b (g) DO NOT COMPOSE, AND THE ROW THAT
  * PROVED IT IS ON DISK.**
  *
- * `gate: procgen-help` is headless and `cheap: false` (573 s at `a61feaaec`),
- * so ⚖ 54 (6)'s rule selects it for the CI read — and `ci-summary` REFUSES it
- * by name, because the gate declares `@ci-face gate-help-ci` and CI publishes
- * that key instead. `--write` could then only ever KEEP, forever.
+ * ⛓ S4 (⚖ 72) MOVED the rule and these rows to `ciGatePlan.test.js`, where
+ * `ciSourced` now lives with `ciRunnable` and the two DECLARED refusals it
+ * reads (`@ci-face`, `@ci-shallow`). ⛔ The reason the move is safe to record
+ * as a pointer rather than a duplicate: the rows went WITH the function and
+ * were widened with it — a `@ci-face` gate is still asserted NOT CI-sourced
+ * at `cheap: false`, over the live roster, with the non-vacuity assertion in
+ * front of it.
  */
-describe('⛔ a gate that declares a @ci-face is NEVER CI-sourced', () => {
-    /** ⛓ The declaring gates, read off the roster — never named here. */
-    const declaring = gateRoster().filter((g) => g.ciFace);
-    const headless = gateRoster().filter((g) => !g.browser && !g.windows);
-
-    it('the roster carries at least one declared face, and it is headless', () => {
-        expect(declaring.length).toBeGreaterThan(0);
-        expect(headless.some((g) => g.ciFace)).toBe(true);
-    });
-
-    it('⛔ headless ∧ ¬cheap ∧ a declared face ⇒ NOT CI-sourced', () => {
-        for (const g of declaring) {
-            expect(ciSourced({ headless: true, cheap: false, ciFace: g.ciFace })).toBe(false);
-        }
-    });
-
-    it('⛓ …and REMOVING the declaration flips the read path, visibly', () => {
-        expect(ciSourced({ headless: true, cheap: false, ciFace: null })).toBe(true);
-    });
-
-    it('the other two arms of the rule are unchanged', () => {
-        expect(ciSourced({ headless: true, cheap: true })).toBe(false);
-        expect(ciSourced({ headless: false, cheap: false })).toBe(false);
-        expect(ciSourced({ headless: true, cheap: undefined })).toBe(false);
-    });
-});
