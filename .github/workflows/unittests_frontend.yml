@@ -33,6 +33,16 @@ on:
       # tests it never ran. The criterion is what the suite READS, not only
       # what `include` collects.
       - 'docs/**'
+      # ⛓⛓ S3 (⚖ 72) — THE SAME HOLE A FIFTH TIME, and this slice is the one
+      # that opens it: the BROWSER GATES run here now, and their SUBJECT is the
+      # frontend tree itself — `demos.html`, the preset bundles, the lab pages,
+      # the `flashPanel/wasm` submodule pointer. `frontend/**/*.js` above is
+      # narrower than what those gates READ, so a head that moved a gate's
+      # subject without touching a `.js` would get no CI answer for it at all,
+      # which is the KEEP branch freezing a row for a reason nobody can see.
+      # ⛔ The criterion is unchanged from the four comments above — what the
+      # job READS, not what a glob happens to collect.
+      - 'frontend/**'
       - 'vitest.config.js'
       - 'vitest.slow.config.js'
       - 'package.json'
@@ -70,6 +80,16 @@ on:
       # tests it never ran. The criterion is what the suite READS, not only
       # what `include` collects.
       - 'docs/**'
+      # ⛓⛓ S3 (⚖ 72) — THE SAME HOLE A FIFTH TIME, and this slice is the one
+      # that opens it: the BROWSER GATES run here now, and their SUBJECT is the
+      # frontend tree itself — `demos.html`, the preset bundles, the lab pages,
+      # the `flashPanel/wasm` submodule pointer. `frontend/**/*.js` above is
+      # narrower than what those gates READ, so a head that moved a gate's
+      # subject without touching a `.js` would get no CI answer for it at all,
+      # which is the KEEP branch freezing a row for a reason nobody can see.
+      # ⛔ The criterion is unchanged from the four comments above — what the
+      # job READS, not what a glob happens to collect.
+      - 'frontend/**'
       - 'vitest.config.js'
       - 'vitest.slow.config.js'
       - 'package.json'
@@ -107,12 +127,18 @@ jobs:
 
       # ⛓⛓⛓ R9 slice P3b (g), ⚖ ruling 54 (6) — THE HEADLESS PROCGEN GATES.
       #
-      # ⛔ Until now NO `check-*.mjs` gate ran in CI at all: one that went red
-      # stayed red until somebody spent the box. Four of the thirty-one are
-      # headless and can run here; `ci-gates.mjs` derives that set from
-      # `gateRoster` and prints one parseable `## CI-GATE | …` line each, with
-      # the other twenty-seven SKIPPED BY NAME so nothing reads as green that
-      # was never run.
+      # ⛔ Before P3b NO `check-*.mjs` gate ran in CI at all: one that went red
+      # stayed red until somebody spent the box. This step runs the HEADLESS
+      # set; `ci-gates.mjs` derives it from `gateRoster` and prints one
+      # parseable `## CI-GATE | …` line each.
+      #
+      # ⚠ THE SENTENCE THAT USED TO SIT HERE SAID "Four of the thirty-one are
+      # headless … the other twenty-seven SKIPPED BY NAME", and it was
+      # WRONG-AND-GREEN: `full-tier-owed` and `slice-records` had joined the
+      # roster (six of thirty-three), and since S3 (⚖ 72) the twenty-seven are
+      # not skipped either — the browser arms run in the `browser-gates` matrix
+      # below and only the four WINDOWS rows are skipped by name. ⛔ No count
+      # is typed here any more: the step's own header line is the measurement.
       #
       # ⛔⛔ `continue-on-error` IS DELIBERATE, AND IT IS NOT HIDING A RED.
       # This step is a STANDING-VALUE READER, not a merge gate:
@@ -125,3 +151,168 @@ jobs:
       - name: Run headless procgen gates
         continue-on-error: true
         run: node scripts/procgen/ci-gates.mjs
+
+  # ══════════════════════════════════════════════════════════════════════
+  # ⛓⛓⛓ S3 (⚖ RULING 72, 2026-09-01) — **THE BROWSER GATES, IN CI.**
+  #
+  # ⚖ 72 ruled: THE BANK QUOTES CI, CI never writes it. This is the
+  # PRODUCTION half — CI learns to print the answers. Nothing reads them yet:
+  # widening `ciSourced` is S4, ordered after these lines exist and after
+  # ⚖ 72 (b)'s three-consecutive-runs bar (trap 1047 — the cheap consumption
+  # rung would otherwise consume lines that do not exist and freeze ~24 rows
+  # at their last local values with a polite reason).
+  #
+  # ⛔ THE SHARDS ARE PUBLISHED, NEVER TYPED (⚖ 17). The plan job asks
+  # `ci-gates.mjs --plan --json` for a partition computed from the BANKED `ms`
+  # of each arm; the matrix interpolates it, and each shard job recomputes the
+  # same plan from the same tree and takes its slice by index. A shard list
+  # committed here would be stale the day a gate is added — and stale in the
+  # direction that drops one silently.
+  # ══════════════════════════════════════════════════════════════════════
+
+  browser-gate-plan:
+    name: Browser gates (shard plan)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      shards: ${{ steps.plan.outputs.shards }}
+    steps:
+      # ⛓ NO submodules and NO `npm ci`: the plan reads `gateRoster()` (a
+      # directory of `check-*.mjs`) and `standing-values.json`, and imports
+      # nothing outside `scripts/procgen`. Paying 127 MB of wasm for a
+      # partition would be a minute per push for nothing.
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+
+      - name: Derive the shard partition from the banked ms
+        id: plan
+        run: |
+          set -o pipefail
+          # ⛓ the human table goes in the log; the JSON goes to the matrix.
+          node scripts/procgen/ci-gates.mjs --plan --set=browser
+          SHARDS=$(node scripts/procgen/ci-gates.mjs --plan --set=browser --json)
+          echo "shards=$SHARDS" >> "$GITHUB_OUTPUT"
+          echo "MEASURED: $SHARDS"
+
+  browser-gates:
+    name: Browser gate shard — ${{ matrix.shard.name }}
+    needs: browser-gate-plan
+    runs-on: ubuntu-latest
+    # ⛔ WITHOUT THIS LINE THE GITHUB DEFAULT IS 360 MINUTES, and this job
+    # holds the one row whose runner cost is genuinely unknown:
+    # `seedling-wasm-element` is 934.7 s of headless SwiftShader on the box.
+    # 45 covers ~2.5× that plus checkout, `npm ci` and the browser install —
+    # and 2.5× banked IS S3's abort criterion, so a job that hits this cap has
+    # answered the question it was sent to answer.
+    timeout-minutes: 45
+    strategy:
+      # ⛔ ONE SHARD'S RED MUST NOT CANCEL THE OTHERS. These jobs are readers,
+      # not merge gates: a cancelled sibling is a standing row with no answer
+      # for this SHA, which is exactly the silence ⚖ 72 (b)'s bar cannot see.
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.browser-gate-plan.outputs.shards) }}
+    steps:
+      # ⛓ RECURSIVE — `frontend/modules/flashPanel/wasm` is the seedling-wasm
+      # submodule and the wasm gates read the builds out of it (~127 MB;
+      # measured in seedling-wasm.yml, which pays the same price).
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # ⛓ The browser cache, keyed on the PINNED playwright version rather
+      # than on the lockfile hash: the browser build a version wants is a
+      # function of that version alone (seedling-wasm.yml carries the same
+      # key and the measurement behind it).
+      - name: Resolve the pinned Playwright version (the cache key)
+        id: pwver
+        run: |
+          V=$(node -p "require('./package-lock.json').packages['node_modules/playwright'].version")
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "MEASURED: playwright pin $V"
+
+      - name: Cache the Playwright browser
+        id: pwcache
+        uses: actions/cache@v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: ms-playwright-${{ runner.os }}-${{ steps.pwver.outputs.version }}
+
+      # ⛔ `node_modules/playwright/cli.js`, NOT `npx` — `npx` runs
+      # @playwright/test's CLI, which downloads the browser build THAT
+      # package wants, while this repo's browser scripts
+      # `import { chromium } from 'playwright'`. seedling-wasm.yml carries the
+      # measurement of that split. ⛔ And no `--with-deps`: measured there at
+      # 178–311 s with, 7–8 s without, boot green on both — the ubuntu image
+      # already carries Chromium's shared libraries, and the apt round trip it
+      # buys is the call that once hung a job for 38 minutes.
+      - name: Install Chromium for Playwright
+        timeout-minutes: 12
+        run: |
+          node node_modules/playwright/cli.js install chromium
+          echo "MEASURED-CACHE: cache-hit=${{ steps.pwcache.outputs.cache-hit }}"
+
+      # ⛔⛔ `continue-on-error` IS DELIBERATE, AND IT IS NOT HIDING A RED —
+      # the same reason the headless step above carries it. These jobs are
+      # STANDING-VALUE READERS, not merge gates: a gate that goes red here is
+      # a fact about a standing row, and R9 slice 12g′ learned that
+      # `continue-on-error` hides a red at the JOB level, which is precisely
+      # why nothing reads the job conclusion — `ci-summary.mjs --gate=<key>
+      # <sha>` reads the printed LINE and exits on the gate's own code.
+      #
+      # ⛓ THE SERVER IS THE REPO ROOT ON :8000, and `python3 -m http.server`
+      # specifically: `check-seedling-wasm-pages.mjs` asserts a true byte
+      # size, which a compressing server would move. The gates take
+      # `--host=<repo root>` and `--root=<host>/frontend` (the Pages-SHAPED
+      # origin) — `ci-gates.mjs` derives both from the one `--host=` here.
+      - name: 'Run the browser gates (shard ${{ matrix.shard.id }})'
+        id: gates
+        continue-on-error: true
+        timeout-minutes: 40
+        run: |
+          set -o pipefail
+          python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
+          echo $! > /tmp/httpd.pid
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:8000/frontend/index.html && break
+            sleep 1
+          done
+          # ⛔ `set -e` would abort AT the failing node, so RC=$? and the kill
+          # below would be unreachable on exactly the path that needs them.
+          set +e
+          node scripts/procgen/ci-gates.mjs \
+            --set=browser --shard=${{ matrix.shard.id }} \
+            --host=http://localhost:8000 2>&1 | tee /tmp/gates.log
+          RC=$?
+          set -e
+          kill "$(cat /tmp/httpd.pid)" 2>/dev/null || true
+          exit $RC
+
+      - name: 'Shard ${{ matrix.shard.id }} — summary'
+        if: always()
+        run: |
+          {
+            echo "## Browser gate shard ${{ matrix.shard.id }} — \`${{ steps.gates.outcome }}\`"
+            echo ""
+            echo "${{ matrix.shard.arms }} arm(s), ${{ matrix.shard.ms }} ms banked on the box."
+            echo ""
+            echo '```'
+            grep -E '^## CI-GATE \||^##   ms \|' /tmp/gates.log 2>/dev/null \
+              || echo '(the step produced no gate lines)'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
