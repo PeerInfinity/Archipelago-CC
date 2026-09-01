@@ -102,7 +102,42 @@ const check = (ok, what, detail) => {
 };
 const say = (l = '') => console.log(l);
 
-const alive = await fetch(WATCH).then((r) => r.ok).catch(() => false);
+/**
+ * ⛓⛓⛓ **THE BODY IS DRAINED, AND THAT IS NOT TIDINESS — IT IS THE FIX FOR A
+ * CRASH THIS GATE TOOK IN CI** (standing-values CI arc, S3; ⚖ 72).
+ *
+ * ⛔⛔ `await fetch(WATCH).then((r) => r.ok)` leaves the response body UNREAD.
+ * Under Node 22's bundled undici the socket then ends while the parser is
+ * paused and the process dies on an internal `assert(!this.paused)` — an
+ * ERR_ASSERTION thrown from a socket callback, which NO `try`/`catch` around
+ * the fetch can see. The first two CI runs of S3 both printed
+ * `gate: seedling-wasm-element | 0/0 | exit=1 | (no total)` at 0.4 s with the
+ * gate's own stdout lost to the abrupt exit.
+ *
+ * ⛓ MEASURED, not reasoned: node **v22.23.2** (the runner's), 40 runs each,
+ * against this repo's own `python3 -m http.server` —
+ *
+ *     the old form (GET, body unread)      **5 / 40 crashed**
+ *     GET + `await r.arrayBuffer()`         0 / 40
+ *     `{ method: 'HEAD' }`                  0 / 40
+ *
+ * …and 0 / 25 on node 18 (the box's) and node 23.11, which is why this never
+ * fired on the box and why it is a LATENT trap there rather than an absent
+ * one: the day the box moves to Node 22 it fires here too.
+ *
+ * ⛓ THE DRAIN, NOT HEAD, because the probe's QUESTION must not move — a GET
+ * that reads the body asks exactly what this line always asked.
+ * ⚠ NINE SIBLING GATES CARRY THE UNDRAINED FORM and are green in the same CI
+ * run, so this is not swept blind — and the reason is MEASURED, not assumed:
+ * their probe is a 26 KB `index.json` and it is **0 / 40** on the same node
+ * 22.23.2, against this line's 85 KB `watch.html` at 5 / 40. The trigger is
+ * the body's size against the socket's close, so the fix goes where the crash
+ * is; a sweep of the other nine would move nine standing keys for a defect
+ * none of them has yet. ⛔ It is a LATENT trap for every one of them: the day
+ * a probe target grows, that gate joins this one.
+ */
+const alive = await fetch(WATCH)
+    .then(async (r) => { await r.arrayBuffer(); return r.ok; }).catch(() => false);
 if (!alive) {
     say(`SKIP: no dev server serving ${HOST} — start one at the REPO ROOT with `
         + '`python3 -m http.server 8000` (or pass --host=)');
