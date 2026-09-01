@@ -2452,19 +2452,59 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-slice-records.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "arg",
+                "flag"
+            ],
             "browser": false,
             "category": "ci",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "host",
+                "json",
+                "plan",
+                "set",
+                "shard",
+                "wait-for-box"
+            ],
             "file": "ci-gates.mjs",
             "flags": [
                 {
                     "how": [
-                        "includes"
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "flag"
                     ],
                     "name": "json"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "plan"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "set"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "shard"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "wait-for-box"
                 }
             ],
             "inheritedFlags": [
@@ -2473,7 +2513,7 @@ export const INSTRUMENTS = frz({
                     "name": "help"
                 }
             ],
-            "oneLiner": "ci-gates — **THE HEADLESS GATES, RUN IN CI, ONE PARSEABLE LINE EACH** (R9 slice P3b (g), ⚖ ruling 54 (6); ⚖ 52 generalised).",
+            "oneLiner": "ci-gates — **THE GATES CI CAN RUN, RUN IN CI, ONE PARSEABLE LINE EACH** (R9 slice P3b (g), ⚖ ruling 54 (6); standing-values CI arc S3, ⚖ ruling 72).",
             "path": "scripts/procgen/ci-gates.mjs"
         },
         {

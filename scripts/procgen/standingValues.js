@@ -280,11 +280,25 @@ export function producerScripts({ repo = REPO } = {}) {
  * ⛔⛔ THE RULING'S PREMISE, MEASURED. ⚖ 54 (6) reads *"more standing rows
  * quoted from CI by SHA (every headless gate; only Windows/GPU rows stay
  * local)"*, and the economy it reaches for is ⚖ 52's: stop spending the box on
- * something CI already ran. Measured against `gateRoster` at this tree the
- * headless population is **FOUR of thirty-one** (23 browser, 4 windows), and
- * their local cost is 0.4 s, 2 s, 7 s and 15 s — all far under the band. So
- * quoting them from CI would buy PROVENANCE, not economy, and would cost a
- * network call plus a red on every unpushed head.
+ * something CI already ran. At P3b the headless population was the only one CI
+ * could run, and most of it is cheap — so quoting it would have bought
+ * PROVENANCE, not economy, plus a network call and a red on every unpushed
+ * head. ⚠ THE SENTENCE THAT USED TO SIT HERE SAID *"FOUR of thirty-one"* and
+ * was WRONG-AND-GREEN by the time anybody read it twice: `full-tier-owed` and
+ * `slice-records` had joined the roster, and the CODE — which derives the set
+ * — had been running all six for weeks. ⇒ ⛔ NO COUNT IS TYPED HERE ANY MORE.
+ * `gateRoster()` is the answer, `ci-gates.mjs`'s own header line is the
+ * measurement, and `rosterCategories.test.js` is where a claim about the
+ * populations goes so that it can go red instead of stale.
+ *
+ * ⛓ S3 (⚖ 72) WIDENS WHAT CI CAN ANSWER, AND THIS RULE HAS NOT MOVED YET.
+ * CI now runs every gate `ciGatePlan.ciRunnable` selects — the browser arms
+ * included — but `ciSourced` still reads `headless ∧ ¬cheap ∧ ¬ciFace`.
+ * Widening it to the CI-answerable set is S4, deliberately ordered AFTER the
+ * lines exist and after ⚖ 72 (b)'s three-consecutive-runs bar: the cheap
+ * consumption rung would otherwise consume `## CI-GATE |` lines that do not
+ * exist yet and freeze ~24 rows at their last local values with a polite
+ * reason (trap 1047).
  *
  * ⇒ THE RULE IS DERIVED FROM THE SAME TWO FACTS THE FILE ALREADY CARRIES:
  * **a gate row is CI-sourced exactly when it is HEADLESS and NOT `cheap`** —

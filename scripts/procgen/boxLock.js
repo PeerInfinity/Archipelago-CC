@@ -318,6 +318,16 @@ export const BOX_LOCK_PREAMBLE_MARK = 'takeBoxLockOrExit(';
 export const BOX_LOCK_HOLDERS = Object.freeze([
     'gates.mjs', 'standing-values.mjs', 'record-standing-value.mjs',
     'rerecord-seedling-campaign.mjs',
+    /**
+     * ⛓ S3 (⚖ 72): `ci-gates.mjs` joins them, and for the SAME reason the
+     * other four are here — it spawns the roster's own arms, so no derivation
+     * over what a file drives can reach it. ⛔ On a runner nothing contends
+     * for the box; what the token buys there is SG1's demos dedup, which is
+     * licensed by `BOX.passthrough` and by nothing else. It takes the lock
+     * only when its selection actually holds a browser arm, which is the same
+     * `SPENDS_BOX` rule `gates.mjs` carries.
+     */
+    'ci-gates.mjs',
 ]);
 
 /**

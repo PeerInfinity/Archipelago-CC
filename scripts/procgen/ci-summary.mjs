@@ -12,7 +12,9 @@
  * command strings as identity; generalising an instrument must not quietly
  * move a standing row's subject).
  *
- * With `--gate=` it reads ONE line printed by `ci-gates.mjs` in the same job.
+ * With `--gate=` it reads ONE line printed by `ci-gates.mjs`, gathered across
+ * EVERY job of that SHA's run — since S3 the browser gates run in a matrix of
+ * shard jobs, so one job's log is no longer the whole answer.
  *
  * Exit codes: 0 green · 1 red · 2 no run for this SHA · 3 not concluded
  * (`--wait` polls) · 4 the log carries no such answer · 5 REFUSED BY NAME —
@@ -20,18 +22,31 @@
  *
  * ── ⛔⛔ THE REFUSAL IS THE POINT OF THE `--gate=` FORM ────────────────
  *
- * Twenty-seven of thirty-one gates need a browser or a Windows GPU and CI runs
- * none of them; one more — `check-seedling-producer-boundaries` — CAN run but
- * its VALUE cannot survive a fresh checkout, so it declares an `@ci-face` and
- * CI prints it under `structure:` instead. Asking this file for a key CI does
- * not produce must therefore be a NAMED REFUSAL and never `0/0`: a quiet zero
- * is how a row that gates nothing gets quoted as a measurement.
+ * Asking this file for a key CI does not produce must be a NAMED REFUSAL and
+ * never `0/0`: a quiet zero is how a row that gates nothing gets quoted as a
+ * measurement. Two things are refused, and the population is DERIVED — the
+ * roster answers both, so neither can outlive what it refused:
+ *
+ *   · a gate `ciGatePlan.ciRunnable` rejects — today the four Windows rows,
+ *     which hold `/mnt/c/Windows/py.exe` and could not resolve their driver
+ *     on a runner at all (⚖ 72 (a): they stay box-measured);
+ *   · a gate that declares an `@ci-face`, asked for its `gate:` key — its CI
+ *     answer is a DIFFERENT, bounded claim under its own prefix.
+ *
+ * ⛓⛓ S3 (⚖ 72) RETIRED THE BROWSER HALF OF THIS REFUSAL. Until then the
+ * sentence here read *"twenty-seven of thirty-one gates need a browser or a
+ * Windows GPU and CI runs none of them"*; `unittests_frontend.yml` now runs
+ * every browser arm in a matrix of shard jobs, so those keys HAVE answers and
+ * refusing them would be a refusal about a world that no longer exists.
+ * ⛔ What did NOT change is `ciSourced` — no standing row's `command` reads
+ * this path yet; widening that is S4, after ⚖ 72 (b)'s stability bar.
  */
 
 import { execFileSync } from 'node:child_process';
 
+import { ciRunnable } from './ciGatePlan.js';
 import { REPO, gateRoster } from './gateRoster.js';
-import { findRun, jobLog, parseGateLines, parseSummaries } from './ciSummary.js';
+import { findRun, gateLogs, jobLog, parseGateLines, parseSummaries } from './ciSummary.js';
 
 
 import { argvHelp } from './argvHelp.js';
@@ -59,10 +74,11 @@ if (GATE) {
             + `${roster.length} gate(s) derived from scripts/procgen/check-*.mjs`);
         process.exit(5);
     }
-    if (gate.browser || gate.windows) {
-        console.error(`REFUSED: ${gate.file} needs a ${gate.windows ? 'Windows GPU' : 'browser'}`
-            + ' and CI runs neither, so no answer for it exists at any SHA. Its standing row is'
-            + ' measured on the box. ⛔ This is a refusal, not a 0/0.');
+    if (!ciRunnable(gate)) {
+        console.error(`REFUSED: ${gate.file} drives the Windows Python driver`
+            + ' (`/mnt/c/Windows/py.exe`), which a runner does not have — so no answer for it'
+            + ' exists at any SHA. Its standing row is measured on the box (⚖ 72 (a)).'
+            + ' ⛔ This is a refusal, not a 0/0.');
         process.exit(5);
     }
     if (gate.ciFace && GATE.startsWith('gate:')) {
@@ -89,7 +105,13 @@ while (run.status !== 'completed') {
     await new Promise((r) => setTimeout(r, 30_000));
     run = findRun(sha);
 }
-const log = jobLog(run);
+/**
+ * ⛓ THE SUITE LIVES IN ONE JOB; THE GATE LINES ARE SPREAD ACROSS ALL OF THEM
+ * (S3's shard matrix). Asking for every job's log when only the suite is
+ * wanted would pay four extra API round trips for nothing.
+ */
+const gathered = GATE ? gateLogs(run) : null;
+const log = gathered ? gathered.log : jobLog(run);
 
 /* ── --gate=: one line, read out of the job log ──────────────────────── */
 
@@ -98,8 +120,14 @@ if (GATE) {
     const row = rows.get(GATE);
     if (!row) {
         console.error(`run ${run.databaseId} (${run.conclusion}) carries no `
-            + `\`## CI-GATE | ${GATE} |\` line. ${rows.size} gate line(s) present: `
-            + `${[...rows.keys()].join(', ') || '(none — the step did not run)'}`);
+            + `\`## CI-GATE | ${GATE} |\` line across its ${gathered.jobs} job(s). `
+            + `${rows.size} gate line(s) present: `
+            + `${[...rows.keys()].join(', ') || '(none — the step did not run)'}`
+            + (gathered.unreadable.length
+                ? `\n⚠ ${gathered.unreadable.length} job log(s) could not be read, so this `
+                  + `may be a job that never ran rather than a missing line: `
+                  + `${gathered.unreadable.join('; ')}`
+                : ''));
         process.exit(4);
     }
     if (json) console.log(JSON.stringify({ sha, run: run.databaseId, ...row }, null, 2));

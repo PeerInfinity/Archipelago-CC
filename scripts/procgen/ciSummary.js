@@ -31,12 +31,47 @@ export function findRun(sha) {
     return rows.find((r) => r.headSha.startsWith(sha)) || null;
 }
 
+/** ⛓ Every job of one run — `per_page` because a matrix run has more than the
+ *  endpoint's default page would return once the shards grow. */
+export function runJobs(run) {
+    return JSON.parse(ghApi(
+        `repos/${CI_REPO}/actions/runs/${run.databaseId}/jobs?per_page=100`)).jobs;
+}
+
 export function jobLog(run) {
     // `gh run view --log` returns an EMPTY body for some concluded runs (measured
     // 2026-08-25 on run 32856555673); the jobs-log endpoint does not.
-    const jobs = JSON.parse(ghApi(`repos/${CI_REPO}/actions/runs/${run.databaseId}/jobs`)).jobs;
+    const jobs = runJobs(run);
     const job = jobs.find((j) => /JavaScript Unit Tests/.test(j.name)) || jobs[0];
     return ghApi(`repos/${CI_REPO}/actions/jobs/${job.id}/logs`);
+}
+
+/**
+ * ⛓⛓⛓ S3 (⚖ 72) — **THE GATE LINES ARE SPREAD ACROSS THE RUN'S JOBS NOW.**
+ *
+ * ⛔ Until S3 there was one job and `jobLog` was the whole log. The browser
+ * gates run in a MATRIX of shard jobs partitioned by banked `ms`, so a reader
+ * that kept asking one job for a key would refuse by name — *"carries no `##
+ * CI-GATE | … |` line"* — for every browser row, which is the quietest way to
+ * make a working production side look broken.
+ *
+ * ⛔ A JOB WHOSE LOG THE API WILL NOT SERVE IS NAMED, NOT SWALLOWED. A queued,
+ * skipped or expired job 404s on the logs endpoint; dropping that silently
+ * would turn "this shard never ran" into "this gate has no answer", which are
+ * different facts and only one of them is the reader's business to hide.
+ *
+ * @returns {{log: string, jobs: number, unreadable: string[]}}
+ */
+export function gateLogs(run) {
+    const jobs = runJobs(run);
+    const parts = [];
+    const unreadable = [];
+    for (const job of jobs) {
+        try { parts.push(ghApi(`repos/${CI_REPO}/actions/jobs/${job.id}/logs`)); } catch {
+            unreadable.push(`${job.name} (${job.status}/${job.conclusion ?? '—'})`);
+        }
+    }
+    return { log: parts.join('\n'), jobs: jobs.length, unreadable };
 }
 
 export function parseSummaries(log) {
