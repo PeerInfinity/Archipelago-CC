@@ -25,15 +25,38 @@ export { DEFAULT_TIME_DRAIN_PER_SECOND };
 const logger = createUniversalLogger('costDataManager');
 
 /**
+ * A source name that carries a scheme fetch() cannot use — `userLoaded:`,
+ * `embedded:`, `hardcodedFallback:` — is a LABEL, not a location. Matched
+ * structurally (RFC 3986's scheme production) rather than by name, and
+ * http/https are the only schemes fetch() resolves in a page. A Windows
+ * drive letter is a single character and so cannot reach this.
+ */
+const _SYNTHETIC_SCHEME = /^(?!https?:)[a-zA-Z][a-zA-Z0-9+.-]+:/;
+
+/**
  * Returns true when the source string looks like a URL or filesystem
  * path that fetch() can resolve. Filters out synthetic source names
  * the rest of the app uses for in-memory loads (procgenPipeline,
- * editorApply, moduleSpecificConfigProvidedRules, hardcodedFallback:*).
+ * editorApply, moduleSpecificConfigProvidedRules) and every LABELLED
+ * source (`userLoaded:…`, `embedded:…`, `hardcodedFallback:…`).
+ *
+ * ⛔⛔ THE SCHEME TEST IS NOT A FOURTH NAME ON THE LIST, and the difference
+ * is a measured defect. `presetUI` labels a hand-loaded document
+ * `userLoaded:<file name>` — which was on no list here and ENDS IN `.json`,
+ * so the inclusive clause below admitted it and `tryLoadEmbedded` fetched
+ * it. The `TypeError` is caught; the console error the BROWSER writes
+ * ("Fetch API cannot load userloaded:… URL scheme "userloaded" is not
+ * supported") is not the caller's to catch, and it is what
+ * `check-preset-bundle-load`'s CLAIM 7 read as a page error once in four CI
+ * runs (S4b (1): green in 8 solo box runs, red on every load once the page
+ * dwells 250 ms longer — the race is against the driver's next navigation).
+ * An enumeration would drop the NEXT label the same way.
+ *
  * @param {string} src
  */
 function _looksLikeRulesPath(src) {
     if (typeof src !== 'string' || src.length === 0) return false;
-    if (src.startsWith('hardcodedFallback:')) return false;
+    if (_SYNTHETIC_SCHEME.test(src)) return false;
     if (src === 'procgenPipeline' || src === 'editorApply'
         || src === 'moduleSpecificConfigProvidedRules') return false;
     // Real paths contain a slash or end in .json; the synthetic names

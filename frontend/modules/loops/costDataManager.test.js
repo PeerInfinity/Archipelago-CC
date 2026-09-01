@@ -289,6 +289,50 @@ describe('CostDataManager — tryLoadEmbedded path filtering', () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
+  /**
+   * ⛔⛔ **A SYNTHETIC SOURCE NAME IS NOT A URL, AND THE FILTER MUST NOT
+   * ENUMERATE THEM** — S4b (1), and this is the `preset-bundle-load` flake's
+   * whole mechanism.
+   *
+   * `presetUI` labels every hand-loaded document `userLoaded:<file name>`
+   * (and a bundle member `userLoaded:<zip> → <entry>`). That name is not on
+   * the exact-match list above, and it ENDS IN `.json` — so the inclusive
+   * clause admitted it, `tryLoadEmbedded` fetched it, and Chrome logged
+   * *"Fetch API cannot load userloaded:… URL scheme "userloaded" is not
+   * supported"* as a page CONSOLE ERROR. The `try`/`catch` here swallows the
+   * `TypeError`; the browser's own error line is not the caller's to swallow,
+   * and `check-preset-bundle-load`'s CLAIM 7 counted it.
+   *
+   * ⛓ MEASURED both ways: the gate is green in 8 solo box runs because it
+   * navigates to the next page as soon as `files:jsonLoaded` publishes — and
+   * red on EVERY load once the page is made to dwell **250 ms** longer, which
+   * is the whole race and is why a slower runner read `9/1` once in four.
+   *
+   * ⇒ the test is STRUCTURAL, not another name on a list: a source carrying a
+   * scheme `fetch` cannot use is a label, whatever it ends in. A list would
+   * drop the next label the same way ([[feedback_op_enumerates_so_a_new_field
+   * _reaches_nothing]]).
+   */
+  it('⛔ returns false (no fetch) for a `userLoaded:` label — including one ENDING IN .json', async () => {
+    const fetchSpy = vi.fn();
+    globalThis.fetch = fetchSpy;
+    expect(await mgr.tryLoadEmbedded('userLoaded:AP_1_rules.json')).toBe(false);
+    expect(await mgr.tryLoadEmbedded('userLoaded:AP_1_bundle.zip \u2192 rules.json')).toBe(false);
+    expect(await mgr.tryLoadEmbedded('embedded:./presets/x/AP_1/AP_1_rules.json')).toBe(false);
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it('⛓ a REAL scheme is still a URL — http(s) and a bare path both fetch', async () => {
+    const fetchSpy = vi.fn(async () => ({ ok: true, json: async () => ({}) }));
+    globalThis.fetch = fetchSpy;
+    await mgr.tryLoadEmbedded('https://example.test/AP_1_rules.json');
+    await mgr.tryLoadEmbedded('./presets/x/AP_1/AP_1_rules.json');
+    expect(fetchSpy.mock.calls.map((c) => c[0])).toEqual([
+      'https://example.test/AP_1_rules.json',
+      './presets/x/AP_1/AP_1_rules.json',
+    ]);
+  });
+
   it('fetches and applies embedded loop_costs when the URL resolves', async () => {
     globalThis.fetch = vi.fn(async () => ({
       ok: true,
