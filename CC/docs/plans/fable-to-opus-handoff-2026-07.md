@@ -6118,6 +6118,89 @@ see, worst `regionAtlasCompiler.js:169` — the only CODE source of the
 presets' wiring); the `oneSpelling` production-side memo. The queue's next
 major item is the PLATFORMER SUBSTRATE (`project_platformer_substrate_arc`).
 
+**⇒ THE EDITOR'S DEMO-CATALOGUE ENTRIES — DONE 2026-08-31 (Opus, `main` @`082229c64` + this docs commit; 3 commits).**
+The editor arm shipped and closed with **no entries in the demo catalogue at
+all**; it has six now, `22 → 28` real entries (+1 prose, unchanged). ⚠ **The
+brief's § pointer was wrong and the correction matters for the feature menu:**
+`watch.html?source=edit` is **§5h**'s (the Seedling EDITOR v3 arc, closed
+2026-08-26) — §5i is the editor-INTEGRATION arc (the world editor on
+`lab.html`, the AP randomizer). The entries were scoped off §5h's shipped list
+and off `check-seedling-editor-arm.mjs`'s own 32 claims.
+
+**The six** (`frontend/modules/procgenDocs/demos.js`; ⛔ nothing else needed
+editing — not `demos.html`, not `demos.md`, not the row): **24 `edit-arm`** the
+FIFTH SOURCE, a room with NO LADDER (`base.level == 14`) · **25
+`edit-room-flags`** the whole-room properties and the reach bound MEASURED per
+room, six of seven changing nothing the JS model can certify (`flags includes
+"snow"`) · **26 `edit-base-refused`** `?level=999` refused BY NAME with the
+atlas's own size (`status == "refused"`) · **27 `edit-vanilla-set`** ONE PRESS
+builds the VANILLA 116 as an OPENABLE `xml` set — the committed one is all
+`embed` (`set.openable == 116`) · **28 `edit-handover`** ⚖ ruling 9's own
+demonstration, *"open in editor"* (`baseKind == "generate"`) · **29
+`maze-edit-arm`** the same `editCore` op log on a second substrate, where
+editing DROPS the certification (`source == "edit"`).
+
+**⛔ ⚖ RULING 9 SHAPES THE WHOLE SLICE.** The URL carries no edits, so an editor
+entry cannot name an edited room the way a generate entry names a generated
+one: three of the six are `press` rows, and all five `watch.html` entries name
+their own `readout: '__editorEdit'` (the arm publishes a different object from
+GENERATE's, and the row's ladder wait would time out on it).
+
+**⛓ FINDING — THE EDIT ARM HAS NO URL WRITER, AND ONE WAS DELIBERATELY NOT
+ADDED.** *Never hand-spell a URL* exists because `writeGenerateParams` /
+`writeLabParams` encode DECISIONS (bounds short names, `require` lists, `run=1`
+at step > 0) a typed string gets wrong. This arm's vocabulary is `source` +
+`level` with nothing to decide, and the PAGE spells its own bar with plain
+`URLSearchParams.set` in three places (`switchArm`, `hostLoad`, the preset
+picker). A writer used by nobody but the catalogue would be a FOURTH spelling —
+the drift the rule exists to prevent. The three `url:`s were emitted by that
+same construction in node; ⛓ the `?tapes=`/`?tape=` entries (22/23) are
+authored the same way for the same reason. Recorded in the catalogue's block
+comment so the next author does not re-open it.
+
+**⛔⛓ DEFECT FOUND BY DRIVING, AND IT IS A GENERAL ONE — 0/3 vs 3/3 MEASURED.**
+The demos row's press pre-condition is *"the control exists and is not
+disabled"*. For a control the ARM WIRES AT MOUNT that is **not** *"takeable"*:
+`#editLoadVanilla` is present and ENABLED in static HTML while `runEditor` is
+still awaiting its six documents. A bare `press: '#editLoadVanilla'` clicked a
+dead button **0 of 3** times (the readout was still `undefined` at the press),
+and `#editOnly:not([hidden]) #editLoadVanilla` also **0 of 3** — the panel is
+UNHIDDEN before the handlers exist. Both presses are therefore gated in the
+PAGE'S OWN disabled-state vocabulary, `body:has(#genEditSolve:not(:disabled))
+…`, whose condition is `busyNow || !state?.record` — exactly *"this arm has
+mounted and holds a record"*, and on the generate page exactly *"the ladder has
+finished"*, which `#genOpenEditor` needs before it will hand anything over:
+**3 of 3**. ⛔ No row change was made: the ENTRY declares what must be true,
+which is where the knowledge belongs. ⚠ The generate-side press succeeded even
+un-gated in a hand probe, and the in-page rAF timing says why that is luck —
+`onclick` lands at 1256 ms and the ladder finishes at 1423 ms, a 167 ms window
+in which the handler exists and refuses.
+
+**⛓ FIVE GLOSSARY TERMS SPENT (159 → 164)**, because an entry naming an
+undefined slug renders a dead literal and reds the unit row: `edit-arm`,
+`base`, `edit-op`, `level-set`, `room-flag`. ⛔ `base` and `edit-op` are
+`procgenCore/editCore.js`'s and are true of the maze, region and APWorld
+editors too — filed ONCE with a detail that says so. **And one correction:**
+`arm` said *"the watch page's FOUR jobs"* and listed four `?source=` values;
+EDIT has been the fifth since slice C1.
+
+**Pins moved, all in the files' own comment style:** `demos.test.js`
+`toHaveLength(22)` → **28** · its NON-ZERO-EXIT population 1 → **2**
+(`edit-base-refused` declares exit **2**: `export-seedling-view.mjs` relays the
+page's refusal verbatim and writes nothing — still a LITERAL LIST, because a
+count would tolerate any two) · a new `press` shape assertion beside
+`control`'s, deliberately NOT pinned to `^[#.]` · `glossary.test.js` 159 → 164
+in three places · `lint-gate-labels.allow.json`'s two glossary keys RE-KEYED by
+hand, ⛔ not by `--write-allow` (the finding is pre-existing and only its label
+moved; regenerating would silently launder anything new). ⛓ The procgen
+reference generator's `--check` is byte-identical — no `docsIndex.js`
+regeneration was owed, because nothing under `docs/` was touched.
+
+**Gates.** `check-procgen-demos.mjs` bare: **252/0 ALL CHECKS PASSED** (204/0 before; ⚠ STANDALONE, so every `cli` row RAN — under a battery the three roster-gate rows dedupe). The six new rows cost `export-seedling-view` 2.4 s + 2.2 s + 12.0 s, `-arm` 64.1 s + 63.7 s and `maze-lab` 59.0 s. Then ONE
+`standing-values.mjs --write` at the records head — the re-bank the docs-page
+session before this one deliberately left (33 MOVED / 1 unmoved of 34 keyed
+rows at `c1ebe4d96`, and this slice moves the same keys again): banked in the commit that follows this one.
+
 ## 5j. The WORLDGEN WRITERS REVIEW — DONE 2026-08-30 (arc opened and closed in one Fable session, every step user-approved; plan file `NewDocs/plans/worldgen-writers-review.md`, gitignored)
 
 **The ruling.** "Most of the worldgen files shouldn't be in the repository at all." Measured at
