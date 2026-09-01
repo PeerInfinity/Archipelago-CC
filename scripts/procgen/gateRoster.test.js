@@ -12,13 +12,14 @@
  * what a derived roster is for, and `lint-gate-labels` says so by name.
  */
 
-import { readdirSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
 import {
-    REPO, SCRIPT_DIR, ciShallowIn, gateRoster, isGateFile, variantsIn,
+    REPO, SCRIPT_DIR, ciArgvIn, ciShallowIn, gateRoster, isGateFile, variantsIn,
 } from './gateRoster.js';
 
 /**
@@ -152,5 +153,93 @@ describe('@ci-shallow — declared, never detected', () => {
         const declaring = roster.filter((g) => g.ciShallow);
         expect(declaring.length).toBeGreaterThan(0);
         for (const g of declaring) expect(g.ciShallow.reason.length).toBeGreaterThan(20);
+    });
+});
+
+/**
+ * ⛓⛓⛓ S5 (⚖ 72) — **`@ci-argv`: THE SAME CLAIM, ASKED THE WAY A CHECKOUT CAN
+ * ASK IT.**
+ *
+ * ⛔ THE ROWS THAT MATTER ARE AGAIN THE REFUSALS, and one of them is NEW in
+ * kind: a gate declaring BOTH `@ci-face` and `@ci-argv` is refused as a PAIR.
+ * The two say opposite things about one run — a different claim under its own
+ * key, and the same claim under the standing one — and whichever a consumer
+ * happened to read first would decide it silently, which is exactly how P4b
+ * (D) froze a row for a month.
+ */
+describe('@ci-argv — the same claim, run the way CI can run it', () => {
+    it('reads the flags off the left side and the argument off the right', () => {
+        const text = '/**\n * @ci-argv --in-place: a runner checkout IS the throwaway tree\n */\n';
+        expect(ciArgvIn(text)).toEqual({
+            argv: ['--in-place'],
+            reason: 'a runner checkout IS the throwaway tree',
+        });
+    });
+
+    it('…and reads more than one flag, in order', () => {
+        const text = '/**\n * @ci-argv --in-place --jobs=4: two flags, one argument\n */\n';
+        expect(ciArgvIn(text).argv).toEqual(['--in-place', '--jobs=4']);
+    });
+
+    it('a gate that declares none answers null', () => {
+        expect(ciArgvIn('/**\n * an ordinary docblock\n */\n')).toBe(null);
+    });
+
+    /** ⛔ The same narrowness the other three tags have: this module's own
+     *  docblock spells the tag out for a reader, mid-sentence. */
+    it('a prose mention of the tag is not a declaration', () => {
+        const prose = '/**\n'
+            + ' * the spelling is  @ci-argv <flags>: <why these flags do not move the\n'
+            + ' * claim>, on a docblock line that STARTS with the tag.\n'
+            + ' */\n';
+        expect(ciArgvIn(prose)).toBe(null);
+    });
+
+    it('⛔ a line with NO argument on it is refused BY NAME', () => {
+        expect(() => ciArgvIn('/**\n * @ci-argv --in-place\n */\n', { file: 'check-scratch.mjs' }))
+            .toThrow(/check-scratch\.mjs.*malformed @ci-argv/s);
+    });
+
+    /**
+     * ⛔⛔ THE REASON IS THE DECLARATION'S ONLY DEFENCE. A flag that narrows
+     * the question would publish a bounded number under the STANDING key —
+     * `@ci-face`'s defect wearing this tag as a costume — so a line that
+     * arms the append without making the argument is refused.
+     */
+    it('⛔ …and an EMPTY argument is refused too, not read as "no reason given"', () => {
+        expect(() => ciArgvIn('/**\n * @ci-argv --in-place:\n */\n', { file: 'check-scratch.mjs' }))
+            .toThrow(/check-scratch\.mjs.*malformed @ci-argv/s);
+    });
+
+    it('⛔ a left-side word that is not a flag is refused, `(none)` included', () => {
+        expect(() => ciArgvIn('/**\n * @ci-argv (none): nothing to add\n */\n',
+            { file: 'check-scratch.mjs' })).toThrow(/check-scratch\.mjs.*"\(none\)".*not a flag/s);
+    });
+
+    it('⛔ two declarations are refused — a gate runs ONE way in CI', () => {
+        const text = '/**\n * @ci-argv --a: one\n * @ci-argv --b: two\n */\n';
+        expect(() => ciArgvIn(text, { file: 'check-scratch.mjs' }))
+            .toThrow(/check-scratch\.mjs declares 2 @ci-argv lines/);
+    });
+
+    /**
+     * ⛔⛔ THE PAIR REFUSAL, over the LIVE tree — a gate cannot declare both.
+     * It is asserted here rather than only in the parser because the refusal
+     * lives in `gateRoster()`, which is the one place both declarations are
+     * read for the same file.
+     */
+    it('⛔ no gate declares both @ci-face and @ci-argv, and the roster REFUSES one that does', () => {
+        const roster = gateRoster({ repo: REPO });
+        expect(roster.filter((g) => g.ciFace && g.ciArgv)).toEqual([]);
+        /** ⛓ …and the refusal is reachable: a scratch tree with one such gate. */
+        const dir = mkdtempSync(join(tmpdir(), 'gate-roster-both-'));
+        mkdirSync(join(dir, SCRIPT_DIR), { recursive: true });
+        writeFileSync(join(dir, SCRIPT_DIR, 'check-scratch.mjs'),
+            '/**\n * @ci-face bounded: --only=one\n'
+            + ' * @ci-argv --in-place: the same claim, in a checkout\n */\n');
+        try {
+            expect(() => gateRoster({ repo: dir }))
+                .toThrow(/check-scratch\.mjs declares BOTH .*@ci-face.*@ci-argv/s);
+        } finally { rmSync(dir, { recursive: true, force: true }); }
     });
 });

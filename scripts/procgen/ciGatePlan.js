@@ -178,6 +178,16 @@ export function ciSourced({ gate, cheap }) {
  *              declared `@ci-face` REPLACES the `gate:` prefix of, so a
  *              bounded CI claim can never be read as the standing value.
  *
+ * ⛓⛓ S5 — **AND THE ARGV COMES FROM ONE OF TWO PLACES, NEVER BOTH.** A
+ * `@ci-face` SUBSTITUTES its argv, because it is a different question; a
+ * `@ci-argv` is APPENDED to the local argv, because it is the same question
+ * asked inside a checkout (`--in-place`, where the box uses a throwaway
+ * worktree). ⛔ The append is the load-bearing half: a substitution can drop
+ * the `--host=`/`--root=` a gate needs and answer about the wrong world, and
+ * a standing-keyed arm that dropped one would publish a number about a tree
+ * nobody asked about — so a standing-keyed arm's argv is the local argv PLUS
+ * the declared flags, asserted in `ciGatePlan.test.js` from both ends.
+ *
  * @param {object} o
  * @param {string} [o.set]  `browser` (default) · `headless` · `all`
  */
@@ -198,16 +208,19 @@ export function ciGateArms({ repo = REPO, host = LOCAL_HOST, set = 'browser' } =
         const rows = gateStandingRows(gate, base);
         const faced = (bankKey) => (gate.ciFace
             ? bankKey.replace(/^gate:/, `${gate.ciFace.prefix}:`) : bankKey);
+        /** ⛓ S5 — the CI-only flags a gate declares, appended to whatever
+         *  argv the arm already needs (see the docblock). */
+        const ciOnly = gate.ciArgv?.argv ?? [];
         out.push({
             gate,
             label: null,
-            argv: gate.ciFace ? gate.ciFace.argv : base,
+            argv: gate.ciFace ? gate.ciFace.argv : [...base, ...ciOnly],
             bankKey: rows[0].key,
             key: faced(rows[0].key),
         });
         (gate.variants ?? []).forEach((v, i) => {
             out.push({
-                gate, label: v.label, argv: v.argv,
+                gate, label: v.label, argv: [...v.argv, ...ciOnly],
                 bankKey: rows[i + 1].key, key: faced(rows[i + 1].key),
             });
         });

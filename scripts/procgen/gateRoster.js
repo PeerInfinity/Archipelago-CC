@@ -185,6 +185,45 @@ const CI_FACE_LINE_RE = /^[ \t]*\*[ \t]*@ci-face\b(.*)$/gm;
 const CI_SHALLOW_LINE_RE = /^[ \t]*\*[ \t]*@ci-shallow\b(.*)$/gm;
 
 /**
+ * ⛓⛓⛓ S5 (⚖ 72) — **A GATE WHOSE CI RUN NEEDS A FLAG THE BOX DOES NOT, AND
+ * WHOSE CLAIM DOES NOT MOVE WITH IT.**
+ *
+ *     * @ci-argv <flags>: <why these flags do not move the claim>
+ *
+ * ⛔⛔ IT IS NOT A SECOND `@ci-face`, AND THE DIFFERENCE IS THE WHOLE SLICE.
+ * A face says *"the number CI can produce for me is a DIFFERENT CLAIM"*, and
+ * takes its own key prefix so a bounded number can never be read as the
+ * standing one — which is also why a faced gate is NEVER CI-sourced (P4b
+ * (D)). This declaration says the opposite: *"the claim is the SAME one, and
+ * CI needs one flag to ask it inside a checkout"*. So its line is published
+ * under the STANDING key, the row is CI-sourced like any other, and not one
+ * clause of `ciSourced` moves.
+ *
+ * ⛓ THE ONE DECLARER TODAY, and it is the case the distinction was measured
+ * on. `check-procgen-help.mjs` drives a throwaway `git worktree` on the box,
+ * because a run that lets 252 module-scope workers write is a run that
+ * dirties the primary tree (SG1 W2, ⚖ 71 (b)). A RUNNER'S CHECKOUT ALREADY
+ * IS THAT THROWAWAY — and a linked worktree there does not inherit
+ * `submodules: recursive`, so it would pay a network re-clone of six
+ * submodules per push for no containment at all, or hand back the false green
+ * an uninitialised submodule produces. `--in-place` is therefore a fact about
+ * WHERE the children run and not about WHAT is asked, and SG1 measured
+ * exactly that: at one head the worktree arm and the `--in-place` arm agree
+ * on ALL 265 rows, verdict and both door marks.
+ *
+ * ⛔⛔ THE HAZARD IT OPENS, NAMED HERE RATHER THAN DISCOVERED LATER. A flag
+ * that NARROWS the question (`--only=`, `--doors=ci`, a mutant flag) would
+ * publish a bounded number under the standing key — which is the exact defect
+ * `@ci-face` exists to prevent, wearing this declaration as a costume. Two
+ * things hold it shut and neither is a promise: the reason is MANDATORY,
+ * because this is the only place that argument can be made; and
+ * `ciGatePlan.test.js` asserts the structural half — a standing-keyed arm's
+ * argv is the LOCAL argv PLUS the declared flags, never a replacement — so a
+ * face's substitution can never arrive through this door.
+ */
+const CI_ARGV_LINE_RE = /^[ \t]*\*[ \t]*@ci-argv\b(.*)$/gm;
+
+/**
  * The variants a gate's docblock declares, refusing a malformed line BY NAME —
  * ⛔ never skipping it. A declaration nobody parsed is a standing row that
  * silently does not exist, which is the failure this whole mechanism is for.
@@ -265,6 +304,40 @@ export function ciShallowIn(text, { file = '(text)' } = {}) {
 }
 
 /**
+ * The CI-only flags a gate declares, or `null`. ⛔ A malformed line, an empty
+ * reason and a second declaration are all refusals BY NAME, for the reason
+ * `ciShallowIn` states one function up: a declaration nobody parsed is a CI
+ * run that silently asks a different question under the standing key.
+ *
+ * ⛓ THE LEFT SIDE IS FLAGS AND THE RIGHT SIDE IS THE ARGUMENT. `(none)` is
+ * not accepted — a `@ci-argv` with no flags declares nothing — and it is
+ * refused by the same clause that refuses any non-flag token.
+ */
+export function ciArgvIn(text, { file = '(text)' } = {}) {
+    const hits = [...text.matchAll(CI_ARGV_LINE_RE)];
+    if (!hits.length) return null;
+    if (hits.length > 1) {
+        throw new Error(`gateRoster: ${file} declares ${hits.length} @ci-argv lines — a gate `
+            + 'runs ONE way in CI, and two declarations would be two argv for one run');
+    }
+    const body = VARIANT_BODY_RE.exec(hits[0][1]);
+    if (!body) {
+        throw new Error(`gateRoster: ${file} has a malformed @ci-argv line — expected `
+            + '`@ci-argv <flags>: <why these flags do not move the claim>`, got '
+            + `${JSON.stringify(hits[0][0].trim())}`);
+    }
+    const [, lhs, reason] = body;
+    const argv = lhs.trim().split(/\s+/);
+    const bad = argv.find((a) => !a.startsWith('--'));
+    if (bad) {
+        throw new Error(`gateRoster: ${file} declares a @ci-argv with ${JSON.stringify(bad)}, `
+            + 'which is not a flag — the left side is the LITERAL extra flags CI adds to this '
+            + "gate's local argv, and the right side is why they do not move the claim");
+    }
+    return { argv, reason };
+}
+
+/**
  * Every gate in `scripts/procgen/`, with the flags it reads and whether it
  * drives a browser — the gate's own text is the only source.
  */
@@ -342,6 +415,24 @@ export function gateRoster({ repo = REPO } = {}) {
     return files.map((file) => {
         const text = D.read(file);
         const flags = ['host', 'root', 'pages'].filter((n) => readsFlag(text, n));
+        const ciFace = ciFaceIn(text, { file });
+        const ciArgv = ciArgvIn(text, { file });
+        /**
+         * ⛔⛔ S5 — **THE TWO CI DECLARATIONS DO NOT COMPOSE, AND THE ROSTER
+         * SAYS SO BY NAME.** A face already carries the argv CI runs it with
+         * AND replaces the key it publishes under; a `@ci-argv` says the run
+         * is the SAME claim under the SAME key. A gate declaring both would
+         * publish one run under two contradictory readings, and whichever of
+         * them a consumer happened to check first would decide silently.
+         * ⛓ This is the same refusal shape as the duplicate-line ones, one
+         * level up: the pair, not the line.
+         */
+        if (ciFace && ciArgv) {
+            throw new Error(`gateRoster: ${file} declares BOTH \`@ci-face `
+                + `${ciFace.prefix}\` and \`@ci-argv ${ciArgv.argv.join(' ')}\` — a face is a `
+                + 'DIFFERENT claim under its own key and already carries its own argv, while '
+                + '@ci-argv is the SAME claim under the standing key. One run cannot be both.');
+        }
         return {
             file,
             path: `${SCRIPT_DIR}/${file}`,
@@ -352,7 +443,10 @@ export function gateRoster({ repo = REPO } = {}) {
              *  that declares none, which is all of them but one. */
             variants: variantsIn(text, { file }),
             /** ⛓ …and the CI face it declares, or `null` (R9 P3b (g)). */
-            ciFace: ciFaceIn(text, { file }),
+            ciFace,
+            /** ⛓ …and the CI-ONLY FLAGS it declares, or `null` (S5, ⚖ 72) —
+             *  the same claim, run the way a checkout can run it. */
+            ciArgv,
             /** ⛓ …and the depth-1 refusal it declares, or `null` (S4, ⚖ 72). */
             ciShallow: ciShallowIn(text, { file }),
             /** ⛓ …and by which sibling, when it is not by itself. */

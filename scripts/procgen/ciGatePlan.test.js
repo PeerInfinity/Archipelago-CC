@@ -22,7 +22,7 @@ import { describe, expect, it } from 'vitest';
 import {
     CI_SHARD_BUDGET_MS, armName, ciGateArms, ciGatePlanFor, ciRunnable, ciSourced, planCiShards,
 } from './ciGatePlan.js';
-import { REPO, gateRoster } from './gateRoster.js';
+import { LOCAL_HOST, REPO, argvFor, gateRoster } from './gateRoster.js';
 import { readStandingValues, standingRows } from './standingValues.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -99,6 +99,57 @@ describe('ciGateArms — the arms, and BOTH of an arm\'s keys', () => {
 
     it('refuses an unknown set BY NAME', () => {
         expect(() => ciGateArms({ repo: REPO, set: 'windows' })).toThrow(/unknown set/);
+    });
+
+    /**
+     * ⛓⛓⛓ S5 — **THE ARGV PROPERTY, FROM BOTH ENDS, AND IT IS THE THIRD
+     * COSTUME'S DOOR.** P4b (D) froze a row because a key was published under
+     * a prefix the reader did not ask for; S4's second costume was a key that
+     * resolved to no file. Both were caught by asserting the two populations
+     * COMPOSE. `@ci-argv` opens a third door onto the same defect, one level
+     * down: an arm can now publish under the STANDING key while running argv
+     * the standing row does not — and a flag that NARROWS the question
+     * (`--only=`, `--doors=ci`) would bank a bounded number under the full
+     * claim's key with nothing red anywhere.
+     *
+     * ⇒ the invariant, asserted over the live tree: **a standing-keyed arm's
+     * argv is the LOCAL argv plus exactly the flags its gate DECLARES** — the
+     * local argv is never dropped (a substitution is what a `@ci-face` does,
+     * and a faced arm is never standing-keyed), and an undeclared extra flag
+     * is a red naming the arm and the flag.
+     */
+    it('⛔ a standing-keyed arm runs the LOCAL argv plus exactly its declared CI flags', () => {
+        const arms = ciGateArms({ repo: REPO, set: 'all', host: 'http://h:1' });
+        const standing = arms.filter((a) => a.key === a.bankKey);
+        /** ⛓ non-vacuity, both halves (trap 824): there ARE standing-keyed
+         *  arms, and at least one of them needs argv to address its world. */
+        expect(standing.length).toBeGreaterThan(20);
+        expect(standing.filter((a) => a.argv.length > 0).length).toBeGreaterThan(0);
+        for (const a of standing) {
+            /** ⛔ a faced gate publishes under its OWN prefix; if one ever
+             *  reaches this list the face has stopped replacing the key. */
+            expect(a.gate.ciFace).toBe(null);
+            const base = a.label
+                ? (a.gate.variants.find((v) => v.label === a.label)?.argv ?? [])
+                : argvFor(a.gate, 'local', { host: 'http://h:1' });
+            for (const f of base) expect(a.argv).toContain(f);
+            const extra = a.argv.filter((f) => !base.includes(f));
+            expect(extra).toEqual(a.gate.ciArgv?.argv ?? []);
+        }
+    });
+
+    /** ⛓ …and the OTHER end of the same property: an arm whose published key
+     *  differs from its bank key is a FACE, and its argv is the face's own —
+     *  a substitution, never an append. */
+    it('⛔ …and every arm that is NOT standing-keyed is a declared face', () => {
+        const arms = ciGateArms({ repo: REPO, set: 'all', host: LOCAL_HOST });
+        const faced = arms.filter((a) => a.key !== a.bankKey);
+        expect(faced.length).toBeGreaterThan(0);
+        for (const a of faced) {
+            expect(a.gate.ciFace).not.toBe(null);
+            expect(a.key.startsWith(`${a.gate.ciFace.prefix}:`)).toBe(true);
+            expect(a.argv).toEqual(a.gate.ciFace.argv);
+        }
     });
 });
 
