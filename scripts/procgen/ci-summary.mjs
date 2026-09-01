@@ -98,8 +98,25 @@ let sha = args.find((a) => !a.startsWith('--'))
 if (GATE) {
     const roster = gateRoster({ repo: REPO });
     const nameOf = (g) => g.file.replace(/^check-/, '').replace(/\.mjs$/, '');
+    /**
+     * ⛔⛔ **A KEY IS RESOLVED THROUGH THE ARMS FIRST, AND S4 FOUND OUT WHY BY
+     * BEING REFUSED BY ITS OWN LADDER.** The name derivation below strips the
+     * `<prefix>: ` and matches a gate FILE — which is right for a gate's base
+     * row and WRONG for a declared second arm: `gate: seedling-editor-generate
+     * (own server)` becomes `seedling-editor-generate (own server)`, no file
+     * is named that, and the reader refuses a key CI publishes a line under.
+     * Measured: the first `--write` after S4 KEPT that row with *"no gate
+     * named …"* — a row frozen by the reader, which is P4b (D)'s defect in a
+     * second costume and the exact hazard the ¬ciFace clause exists for.
+     *
+     * ⇒ the arms are the population that PUBLISHES, so they are the population
+     * that resolves. The file-name fallback stays for a key no arm claims (a
+     * Windows gate, a retired arm), so both refusals below still fire by name.
+     */
+    const arm = ciGateArms({ repo: REPO, set: 'all' })
+        .find((a) => a.key === GATE || a.bankKey === GATE);
     const asked = GATE.replace(/^[a-z-]+:\s*/, '');
-    const gate = roster.find((g) => nameOf(g) === asked);
+    const gate = arm?.gate ?? roster.find((g) => nameOf(g) === asked);
     if (!gate) {
         console.error(`REFUSED: no gate named ${JSON.stringify(asked)} is on the roster — `
             + `${roster.length} gate(s) derived from scripts/procgen/check-*.mjs`);

@@ -194,6 +194,26 @@ const gateOf = (command) => GATES.find((g) => command.includes(g.path)) ?? null;
  */
 const ciGateFor = (row) => (row.kind === 'gate' ? gateOf(row.command) : null);
 
+/**
+ * ⛓⛓ **WHAT A CI READ'S EXIT MEANS, IN THE WORDS A KEPT ROW OWES A READER**
+ * (S4). The KEEP branch used to write *"(no CI run for this SHA, or it has not
+ * concluded)"* for EVERY non-zero exit, and S4's own first `--write` produced
+ * the counter-example: `gate: seedling-editor-generate (own server)` KEPT on
+ * exit **5**, a REFUSAL BY NAME, under a sentence saying the head was probably
+ * just unpushed. ⛔ A row frozen by a refusal and a row waiting for a push are
+ * different facts, and only one of them is nobody's business to chase.
+ * ⛓ Same ladder for the suite row's helper, which is why it is not indexed on
+ * anything gate-specific: 2 no run · 3 not concluded · 4 no such answer ·
+ * 5 refused.
+ */
+const CI_READ_REASON = {
+    2: 'no CI run for this SHA — not pushed, or the path filter did not trigger one',
+    3: 'the run for this SHA has not concluded',
+    4: 'the run carries no answer under this key',
+    5: '⛔ REFUSED BY NAME — CI cannot answer this key at all, and the helper\'s stderr '
+        + 'says why. A row that KEEPs on a 5 is FROZEN, not merely unpushed',
+};
+
 /* ══════════════════════════════════════════════════════════════════════
  * ⚖ 71 (a) — THE INPUT KEY
  * ══════════════════════════════════════════════════════════════════════ */
@@ -385,8 +405,12 @@ if (flag('write')) {
                 + `@${prev.measuredAt} (key unmoved)`);
             continue;
         }
+        /** ⛓ ONE SPELLING of the command this row is actually about — it is
+         *  what runs, what the KEEP reason names and what the bank publishes
+         *  (⚖ 8 reads a published command as identity). */
+        const ranCommand = fromCI ? ciGateCommand(row.key) : row.command;
         const r = fromCI
-            ? await runRow({ ...row, kind: 'ci-gate', command: ciGateCommand(row.key) })
+            ? await runRow({ ...row, kind: 'ci-gate', command: ranCommand })
             : await runRow(row);
         if (fromCI) ciRows.push(row.key);
         /**
@@ -429,8 +453,8 @@ if (flag('write')) {
             out.rows[row.key] = {
                 ...prev,
                 cheap: false,
-                why: `not re-read at ${HEAD}: \`${row.command}\` exited ${r.exit} `
-                    + '(no CI run for this SHA, or it has not concluded) — ⚖ ruling 52',
+                why: `not re-read at ${HEAD}: \`${ranCommand}\` exited ${r.exit} `
+                    + `(${CI_READ_REASON[r.exit] ?? 'see the helper\'s stderr'}) — ⚖ ruling 52`,
             };
             console.log(`KEEP  ${row.key.padEnd(46)} ${String(prev.value).padEnd(46)} `
                 + `@${prev.measuredAt} (helper exit ${r.exit})`);
@@ -441,7 +465,7 @@ if (flag('write')) {
         if (band.held && !row.alwaysQuoted) held.push({ key: row.key, ms: r.ms, ...band });
         out.rows[row.key] = {
             value: r.value,
-            command: fromCI ? ciGateCommand(row.key) : row.command,
+            command: ranCommand,
             kind: row.kind,
             exit: r.exit,
             ms: r.ms,

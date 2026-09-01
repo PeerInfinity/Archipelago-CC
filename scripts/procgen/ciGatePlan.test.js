@@ -407,6 +407,34 @@ describe('ci-summary.mjs — the refusal ladder, derived from the same predicate
     });
 
     /**
+     * ⛔⛔⛔ **THE ROW S4 OWES ITS OWN DEFECT TO — THE READER SIDE OF THE
+     * COMPOSITION PROPERTY.** `ciGatePlan.test.js` already asserts that every
+     * CI-sourced row has an ARM PUBLISHING a line under its key. That is only
+     * half of it: the row's `command` is `ci-summary --gate=<key>`, so the
+     * READER must also be able to ask for that key. It could not — the ladder
+     * derived a gate FILE from the key, and `gate: seedling-editor-generate
+     * (own server)` names no file, so S4's first `--write` KEPT that row with
+     * *"no gate named …"*. A row frozen by its own reader, which is P4b (D)
+     * one costume over. ⛓ Every key here is DERIVED from the rule.
+     */
+    it('⛔ does NOT refuse any key `ciSourced` selects — arm labels included', () => {
+        const bank = readStandingValues({ repo: REPO });
+        const gateOf = (command) => roster.find((x) => command.includes(x.path)) ?? null;
+        const selected = standingRows({ repo: REPO }).filter((r) => ciSourced({
+            gate: r.kind === 'gate' ? gateOf(r.command) : null, cheap: bank?.rows?.[r.key]?.cheap,
+        }));
+        expect(selected.length).toBeGreaterThan(0);
+        /** ⛓ …and the population really does hold a labelled arm, or this row
+         *  would pass without ever testing the case it was written for. */
+        expect(selected.some((r) => /\(.+\)$/.test(r.key))).toBe(true);
+        for (const row of selected) {
+            const r = runCi(['deadbeef1', `--gate=${row.key}`]);
+            expect(`${row.key}: ${r.out}`).not.toMatch(/REFUSED/);
+            expect(r.code).not.toBe(5);
+        }
+    });
+
+    /**
      * ⛔⛔ S4's OWN RUNG — THE SECOND LOCK. `ciSourced` never routes a
      * `@ci-shallow` row down this path; if a later widening forgot the clause,
      * THIS is what turns a silently-banked depth-1 answer into a red naming
