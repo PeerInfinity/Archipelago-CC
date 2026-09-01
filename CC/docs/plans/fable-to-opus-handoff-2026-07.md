@@ -5931,6 +5931,27 @@ L15 `shove` CLOSED: one block-route search (`deriveBlockRoute`) that `shove` and
 
 NEXT: `map-walk` and `mechanic` have no separately banked value — their parts carry a true head and name the run that covers them; the row becomes a pure sum the first time each is driven alone (≈64 and ≈68 min), which no rule owes today. ⚖ 69 (d) — CENSUS DONE 2026-08-30 (Fable session 13, `seedling-bot-r9-campaign13-slow-gates`): the four slow rows (`procgen-help` 596 s · `procgen-demos` 310 s · `wasm-element` 941 s · `wasm-ship` 458 s) = 68% of the 56.8-min battery; census in memory `note_slow_procgen_gates`, ruling ⚖ 71 in the R9 kickoff §1 (user 2026-08-30: both mechanisms STAGED — SG1 demos-dedup + help-gate throwaway-worktree, then SG2 byte-keyed row quoting; re-measure at P2's merged head). SG1 (Opus, `seedling-bot-r9-sliceSG1`) CLOSED same day @ `33a88e282` (4 commits, kickoff §57, trap 1015): demos' 3 sibling-gate cli rows dedupe under a battery (licence = roster membership + bare argv; measured 3m15.7s → 4.6s per row, expected ~250 s off the 310 s row, NOT banked per ⚖ 71 (c)); the help gate drives a throwaway worktree by default (submodule init asserted; 3-arm matrix at one baseline, ALL THREE VERDICT SETS IDENTICAL 265/0; --in-place reproduced the dirtying, worktree arms porcelain-0; observer --no-optional-locks + bounded-retry named refusal + per-batch stderr progress + startup orphan prune-report; CI face --doors=ci --in-place). Trap 1015: the gate's own import door built worktrees its observers cannot see — entry-point guard, mutant PRE 1 / POST 0. SG2 (Opus, `seedling-bot-r9-sliceSG2`) CLOSED same day @ `c66eeac18` (7 commits, tracked-doc `### R9 slice SG2`, traps 1016–1018) — ⚖ 71 CLOSED WHOLE: 34/66 standing rows carry `inputKey`/`keyAt`/`keyPopulations` (populations = CODE closure incl. driven pages · DATA · SPAWN by CALL CONTEXT (1016) · BUILD by containment-OR-naming (1017); an instrument OPENS a doc vs CITES one, scoped to scripts/procgen (1018)); `--write` re-runs only moved-key rows (steady state ≈2/34 on a scripts-only head; docs/plan-only quote everything), `--redrive-unchanged` is the trap-866 nondeterminism detector (3-arm proven, bank never overwritten). ⚖ 71 (c) BANKED at 34c74aecc: demos 310.4→95.1 s · help 596.3→434.1 s AND 264/1→265/0 · element/ship noise-level (intrinsic) — four-row total 2305.7→1917.9 s (−17%), battery 76.4→71.4 min; the first keyed write's 78.9 min is baseline-establishing, not steady state. ⚠ a ~45-min write cannot live in a harness background task — setsid nohup + PID + kill -0 (`feedback_long_measurement_needs_setsid`). Same evening the editor arc DISCHARGED ⚖ 70 (f) on a measurement (full tier at 15e70e7bb, ALL PASS 3633/0/46) and re-banked the owed gate 5/0 in a 1.8 s ONE-ROW write — the key mechanism's first external dividend. ⚖ 69 (d) ARC COMPLETE.
 
+**⇒ SG2 CLOSED (2026-08-30, `main` @`c66eeac18`; 7 commit(s); tracked doc `### R9 slice SG2`; ⚖ 71 CLOSED WHOLE, ⚖ 71 (a) DISCHARGED, ⚖ 71 (c) DISCHARGED).**
+
+⛓⛓ **THIS BLOCK IS A BACK-FILL, AND ITS ABSENCE WAS A BANKED RED.** SG2's
+record went into the TRACKED doc (`### R9 slice SG2`) and never got a queue
+block, so ⚖ 22's fold had one surface written and one missing — which is
+exactly what `gate: slice-records` exists to refuse. It surfaced on 2026-08-31,
+on the first `standing-values --write` since: the editor catalogue slice read
+the row RED (*"SG2: the tracked doc has a heading at :13783 and the queue has
+NO `**⇒ ` block"*) and banked it honestly as `exit: 1` rather than repairing a
+record it did not own. ⛔ That was the right call and this is the other half of
+it: a gate whose red is a MISSING RECORD is retired by writing the record, never
+by widening the gate.
+
+⛔ THE SUBSTANCE IS NOT RESTATED HERE — the tracked doc holds it and the ⚖ 69
+(d) census paragraph above already carries the close; a third copy would be the
+drift the one-record-surface rule exists to prevent. In one line: a standing
+gate row now carries an `inputKey` over four DERIVED input populations (CODE ·
+DATA · SPAWN · BUILD, `scripts/procgen/rowInputKey.js`), so `--write` re-drives
+only the rows whose inputs moved and QUOTES the rest saying so — the ⚖ 70
+pattern, moved from tape categories to gate rows. Traps 1016–1018.
+
 **⇒ CAT CLOSED (2026-08-30, `main` @`44c112087`; 8 commit(s); as-built kickoff §56; ⚖ 17 ANSWERED, ⚖ 22 ANSWERED, ⚖ 40 ANSWERED, ⚖ 69 (c) DISCHARGED, ⚖ 70 DISCHARGED).**
 
 ## 5i. The EDITOR INTEGRATION arc — ⛓ CLOSED 2026-08-31 (opened 2026-08-26; the CLOSE paragraph is at this entry's end; entry first written 2026-08-28 at main `2b0c1bc7c`)
