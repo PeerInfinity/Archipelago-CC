@@ -6292,6 +6292,51 @@ the eventual fix is on the producing side. No new `.gitignore` lines; the transi
 the preserved list + restore IS the solution. Open: `docs/json/developer/diffs/file-lists/*.md`
 still say 61 (regenerated at release).
 
+## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; awaiting ⚖ 72)
+
+**The question (user):** *"At some point I'll want to check why the battery takes so long. Can it
+be moved to CI? Can parts of it run in parallel?"* All numbers re-derived at `dde883de9`, none
+inherited: 66 rows, 64 with `ms`, 4,049.2 s = 67.5 min (the two ms-less rows are `suite: vitest
+(unfiltered)` — ⚖ 52, CI's — and `roster: --win --tier=full` — ⚖ 70's composite); ten rows are
+75 %; only ~10.9 min is Windows-bound (the 4 `py.exe` gates + `identity: generated set`); all 23
+browser gates are banked green from headless-WSL Chromium, so the wasm-on-Windows law
+(tape playback) does not bar them from a Linux runner.
+
+**The finding that reorders everything: ⚖ 71's key mechanism self-invalidates.** Measured:
+`scripts/procgen/standing-values.json` is a member of the `data` population of **30 of 33 keyed
+rows** (it enters via SG2's named-directory rule, not any code literal), so the commit that banks
+a write moves the keys — `--keys` at `dde883de9` reads **31 MOVED / 3 unmoved**, and the 68-min
+write of 2026-08-31 (TWO value movers) re-drove a tree nothing substantive had moved under. SG2's
+measured ≈2/34 steady state has never materialised. Separately the 28 identity/producer rows are
+UNKEYED by a "cost seconds" premise that is false by ~16 min (they sum to ~18 min, paid on every
+`--write`). Also stale, three places: "four of thirty-one are headless" (workflow, `ci-gates.mjs`,
+`standingValues.js`) — the roster is 33 with **6** headless, and the code already runs all 6.
+
+**⚖ 72 (REQUESTED):** when CI runs a gate, does CI write the bank, or does the bank quote CI?
+Plan recommends **the bank quotes CI** (⚖ 52's pattern; `ciSourced()` is armed and selects zero
+rows today; the KEEP branch already handles unpushed heads) — CI-writes loses on the key cascade,
+runner races, `ms`/`cheap` banding poisoned by environment, and bot commits to main. Sub-items:
+(a) Windows rows stay box-measured; (b) stability bar = 3 consecutive CI runs matching the banked
+verdict sets before a row flips; (c) S1's population change (the bank leaves derived `data`
+populations; `full-tier-owed` + `slice-records` declare it back via `@key-inputs`) gets the
+user's nod. ⛔ P4b (D) stands: a `@ci-face` gate is never CI-sourced — `procgen-help`'s 417 s
+leaves the box only by teaching CI the FULL claim first (S5), never by loosening the refusal.
+
+**Ladder (cheapest-first; trap-1047 checked — the cheap `ciSourced` widening consumes S3's CI
+lines, so consumption is ordered after production + the stability bar):** **S1** bank out of its
+own keys (mutant: touch the bank → exactly 2 rows MOVED, was 30; one full-freight write owed at
+S1's head, the last such) → **S2** key the identity/producer rows (~18 min off unmoved-closure
+writes; shared-entry rows share a key, correctly) → **S3** CI runs the browser gates (matrix
+partitioned by banked ms, interpolated never written; `gates.mjs`-style battery so SG1's demos
+dedup applies; `## CI-GATE |` lines; `ciSummary.js` + refusal text + the three stale comments in
+the same slice; wasm-element's first run IS the runner-headroom measurement, abort >2.5× banked
+or flaky; WATCH the run — `feedback_ci_fix_untested_environment`) → **S4** widen `ciSourced` to
+the CI-answerable set, ciFace clause untouched → **S5** (optional) `procgen-help --doors=all
+--in-place` in CI ×3, retire the face in the same change. NOT doing: local parallel runner (box
+lock is right; STARVED), `windows-latest` probe (WSL driver path, software rendering, ≤11 min
+upside vs a 17-push CI-iteration precedent), CI-writes-the-bank. Projected steady state after
+S1–S4: box worst case ~68 → ~11 min (Windows rows), wasm re-drives absorbed by CI in parallel.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
