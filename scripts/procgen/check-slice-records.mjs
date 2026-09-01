@@ -69,12 +69,15 @@
  * what makes it dangerous: the number is not a regression, it is an answer to
  * a different question.
  *
- * ⚠ THE DECLARATION IS NOT THE REPAIR, and S4b (2) owes the repair: a gate
- * that cannot ask its question must SAY SO — `check-seedling-full-tier-owed`
- * refuses by name in the same clone and is the model. What the declaration
- * does is keep this row out of the CI-sourced set for a reason that names
- * the cause, where before S4 the only thing excluding it was `cheap` (30.8 s,
- * and it grows with every recorded slice — a band it can cross).
+ * ⛓⛓ **S4b (2) SHIPPED THE REPAIR AND THE DECLARATION STAYS — TWO LAYERS,
+ * BOTH CORRECT.** The gate now REFUSES BY NAME before it composes one row
+ * (`sliceRecords.shallowRefusal`, and the rung is right below the row
+ * helpers), so the `42/24` above is history: a depth-1 clone reads
+ * `SKIP: this is a SHALLOW CLONE …` and `ALL PASS — REFUSED`, exit 0. ⛔ The
+ * `@ci-shallow` line is NOT redundant and must not be deleted with it: the
+ * declaration governs what the BANK may quote, the refusal governs what the
+ * GATE may say, and a row quoting a refusal as this tree's value would be the
+ * same defect wearing the other costume.
  *
  * @ci-shallow the convention's start commit is derived from `git log`, and a depth-1 checkout's earliest commit is HEAD itself
  *
@@ -104,7 +107,7 @@ import { join } from 'node:path';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import {
     DOCS_INDEX, LADDER_FROZEN_AT, QUEUE_DOC, REPO, TRACKED_DOC,
-    deriveFromGit, memoryDir, parseSection,
+    deriveFromGit, memoryDir, parseSection, shallowRefusal,
 } from './sliceRecords.js';
 import { trapFiles, trapsCitedIn } from './sliceTraps.js';
 
@@ -147,6 +150,40 @@ const note = (m) => rows.push({ kind: 'NOTE', m });
 const pass = (m) => rows.push({ kind: 'PASS', m });
 const fail = (m) => rows.push({ kind: 'FAIL', m });
 const skip = (m) => rows.push({ kind: 'SKIP', m });
+
+/* ── ⛔ CAN THIS CLONE BE ASKED AT ALL? ──────────────────── */
+
+/**
+ * ⛓⛓⛓ **A GATE THAT CANNOT ASK ITS QUESTION SAYS SO — IT DOES NOT ANSWER A
+ * DIFFERENT ONE** (S4b (2); the model is `check-seedling-full-tier-owed.mjs`,
+ * which refuses by name when its baseline is not in the clone).
+ *
+ * ⛔ The reason lives in `sliceRecords.shallowRefusal`, WITH the measurement
+ * of both sides, because it is a fact about the CLONE and not about this
+ * file's checks. Here it is only the ladder rung: refuse BEFORE the roster is
+ * read, so not one row of a wrong answer is ever composed.
+ *
+ * ⛓ Exit **0**, exactly as the model does: "the question could not be put"
+ * is not a failing check, and a red here would be a claim about the tree that
+ * this clone is in no position to make.
+ */
+const REFUSAL = shallowRefusal({ repo: REPO });
+if (REFUSAL) {
+    const m = `${REFUSAL.name} — ${REFUSAL.detail}`;
+    if (JSON_OUT) {
+        console.log(JSON.stringify({
+            slices: [], local: LOCAL, refused: REFUSAL,
+            rows: [{ kind: 'SKIP', m }],
+            counts: { pass: 0, fail: 0, skip: 1, note: 0 },
+        }, null, 2));
+    } else {
+        console.log(`SKIP: ${m}`);
+        console.log('\nALL PASS — REFUSED: this clone cannot be asked (0 of the tracked '
+            + 'doc\'s headings judged, NONE claimed green). ⛔ This is NOT "the records are in '
+            + 'order"; it is "the question could not be put".');
+    }
+    process.exit(0);
+}
 
 /* ── the roster ──────────────────────────────────────────────────────── */
 

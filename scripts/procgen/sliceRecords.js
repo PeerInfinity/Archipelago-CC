@@ -416,6 +416,61 @@ const git = (repo, args) => {
 };
 const ok = (v) => typeof v === 'string';
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛔ CAN THIS CLONE BE ASKED THE QUESTION AT ALL?
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **A DEPTH-1 CHECKOUT CANNOT BE ASKED THE SLICE-RECORDS QUESTION, AND
+ * MUST SAY SO INSTEAD OF ANSWERING A DIFFERENT ONE** (S4b (2), ⚖ 72; trap
+ * 1058). The model is `check-seedling-full-tier-owed.mjs`, which refuses by
+ * name when its baseline commit is not in the clone.
+ *
+ * ⛔ MEASURED, BOTH SIDES, at `e4bb64900`: `git clone --depth 1` of this
+ * repository and `check-slice-records.mjs` in it reads **42 PASS / 24 FAIL**
+ * — byte-for-byte the number CI has published at every head — against the
+ * box's `73/0/37` at the SAME TREE. Every one of those 66 rows is about the
+ * wrong commit:
+ *
+ *   · the convention's beginning is `min(commit date)` over the headings that
+ *     have a queue block, and in a shallow clone `git log -S` resolves EVERY
+ *     heading to the graft, i.e. HEAD — so the boundary IS the head under
+ *     test, all 33 headings are "at or after" it, and the 24 that legitimately
+ *     predate the convention fail;
+ *   · ⚖ 22 then reads the graft's `--name-only`, which for a root commit is
+ *     the WHOLE TREE — so every heading "carries the docsIndex regen" and 33
+ *     rows pass for a reason that has nothing to do with their commits;
+ *   · and the trap citations vanish entirely: `git show` of the graft exceeds
+ *     the reader's buffer, so `trapsCitedIn` is handed an empty diff and the
+ *     check contributes NO rows at all. A silent zero, in the one place this
+ *     gate's docblock already refuses one.
+ *
+ * ⛓ S4's `@ci-shallow` declaration keeps the ROW honest — the bank never
+ * quotes a depth-1 answer — and is NOT this. The two layers are both correct
+ * and neither replaces the other: the declaration governs what the bank may
+ * quote; this governs what the gate may say.
+ *
+ * ⛔ THE TEST IS THE CLONE'S OWN, not a symptom. `--is-shallow-repository` is
+ * the one question whose answer names the cause; inferring shallowness from
+ * "the boundary came out equal to HEAD" would be a detector that also fires on
+ * a legitimate tree whose oldest block IS the head.
+ *
+ * @returns {{name: string, detail: string}|null} null when the clone carries
+ *   the history — a refusal, with its reason, when it does not.
+ */
+export function shallowRefusal({ repo = REPO } = {}) {
+    if (git(repo, ['rev-parse', '--is-shallow-repository']) !== 'true') return null;
+    return {
+        name: 'this is a SHALLOW CLONE and every verdict here is about history',
+        detail: 'the convention\'s start commit is `min(commit date)` over the headings that '
+            + 'have a queue block, and a depth-1 checkout\'s earliest commit is HEAD ITSELF — '
+            + 'so the boundary collapses onto the head under test, ⚖ 22 reads the graft\'s '
+            + 'whole-tree diff as every heading\'s introducing commit, and the trap citations '
+            + 'read an empty diff. ⛓ Measured: `42/24` here against `73/0/37` at the SAME '
+            + 'tree on a full clone. ⇒ clone with history (`fetch-depth: 0`) to ask it',
+    };
+}
+
 /**
  * Everything git can answer about a fold, at `head`.
  *

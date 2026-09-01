@@ -21,7 +21,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 
 import {
     HEADER_RE, LADDER_FROZEN_AT, bareTitle, deriveFromGit, factLines, landedIn, memoryDir,
-    parseSection, rulingsIn, sectionText, REPO,
+    parseSection, rulingsIn, sectionText, shallowRefusal, REPO,
 } from './sliceRecords.js';
 import { insertionPoint, replaceRegion } from './record-slice.mjs';
 
@@ -328,6 +328,40 @@ describe('⛓ the memory directory is DERIVED from the primary worktree', () => 
             { cwd: REPO, encoding: 'utf8' }).trim().replace(/\/\.git\/?$/, '');
         expect(memoryDir({ repo: REPO, env: {} }))
             .toBe(`${process.env.HOME}/.claude/projects/${common.split('/').join('-')}/memory`);
+    });
+});
+
+/**
+ * ⛓⛓⛓ **THE REFUSAL IS DRIVEN AGAINST A REAL DEPTH-1 CLONE, NOT A STUB** —
+ * S4b (2). `git clone --depth 1 file://<TREPO>` of the three-commit throwaway
+ * above is a clone whose `--is-shallow-repository` really answers `true`, and
+ * it costs three objects. ⛔ A stubbed git would assert the branch and nothing
+ * about the question it is a branch ON.
+ *
+ * ⚠ The clone is of the FIXTURE repository, deliberately. Cloning this one at
+ * depth 1 takes ~8,000 files and would put a run of the real tree's history
+ * inside a unit row — the same reason `TREPO` exists at all.
+ */
+describe('⛔ a SHALLOW CLONE is refused BY NAME, because the question is about history', () => {
+    const SHALLOW = join(DIR, 'shallow');
+    execFileSync('git', ['clone', '--quiet', '--depth', '1', `file://${TREPO}`, SHALLOW],
+        { encoding: 'utf8' });
+
+    it('the fixture repository carries its history, so nothing is refused', () => {
+        expect(shallowRefusal({ repo: TREPO })).toBeNull();
+    });
+    it('⛔ its depth-1 clone IS refused, and the reason names the CAUSE', () => {
+        const r = shallowRefusal({ repo: SHALLOW });
+        expect(r).not.toBeNull();
+        expect(r.name).toMatch(/SHALLOW CLONE/);
+        expect(r.detail).toMatch(/HEAD ITSELF/);
+    });
+    it('⛓ …and it names the REPAIR, so a reader is not left with a symptom', () => {
+        expect(shallowRefusal({ repo: SHALLOW }).detail).toMatch(/fetch-depth: 0/);
+    });
+    it('⛔ the clone really is shallow — the control for the two rows above', () => {
+        expect(execFileSync('git', ['rev-parse', '--is-shallow-repository'],
+            { cwd: SHALLOW, encoding: 'utf8' }).trim()).toBe('true');
     });
 });
 
