@@ -6292,7 +6292,7 @@ the eventual fix is on the producing side. No new `.gitignore` lines; the transi
 the preserved list + restore IS the solution. Open: `docs/json/developer/diffs/file-lists/*.md`
 still say 61 (regenerated at release).
 
-## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01, ⚖ 72 RULED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; S1 SHIPPED 2026-09-01 `ad5aef2b0`, S2 SHIPPED 2026-09-01 `e6c84a6f8` + the owed write `5e42d4104`, S3 SHIPPED 2026-09-01 `9f46b2bfd`…`765ea79fa`, S4 SHIPPED 2026-09-01 `91c26b690`…`4a99828ec` — SIX ROWS QUOTE CI; S4b SHIPPED 2026-09-01 `0f9e0cf27`…`3eceb7d18` — all three loose ends closed; S5 + S4c NEXT)
+## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01, ⚖ 72 RULED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; S1 SHIPPED 2026-09-01 `ad5aef2b0`, S2 SHIPPED 2026-09-01 `e6c84a6f8` + the owed write `5e42d4104`, S3 SHIPPED 2026-09-01 `9f46b2bfd`…`765ea79fa`, S4 SHIPPED 2026-09-01 `91c26b690`…`4a99828ec` — SIX ROWS QUOTE CI; S4b SHIPPED 2026-09-01 `0f9e0cf27`…`3eceb7d18` — all three loose ends closed; S5 SHIPPED 2026-09-01 `def23822a`…`e5c19cece` — the FULL `procgen-help` claim leaves the box, the `@ci-face` RETIRED and `¬ciFace` untouched, battery 46.8 → 38.8 min; S5b + S4c NEXT)
 
 **The question (user):** *"At some point I'll want to check why the battery takes so long. Can it
 be moved to CI? Can parts of it run in parallel?"* All numbers re-derived at `dde883de9`, none
@@ -7039,6 +7039,181 @@ read `42/24`. ⛓ `preset-bundle-load` reads `same` in that run (ci `10/0`), str
 ⇒ **WHAT S4b LEAVES.** S5 (`procgen-help --doors=all --in-place` in CI, then retire the face)
 and S4c (identity rows need CI to publish a line first) are untouched and unchanged. The
 `¬ciFace` clause is exactly as S4 left it.
+
+**⇒ S5 SHIPPED 2026-09-01 (`def23822a` … `e172d631f`, PUSHED; TWO code commits, plus the write `e5c19cece`) — THE FULL
+`procgen-help` CLAIM IS ANSWERED BY CI UNDER THE STANDING KEY, THE `@ci-face` IS RETIRED IN THE
+SAME CHANGE, AND `¬ciFace` IS UNTOUCHED. ⛓⛓ AND THE SLICE'S OWN ACCEPTANCE TEST WAS VACUOUS WHEN
+IT ARRIVED: THE BOUNDED FACE AND THE FULL CLAIM PUBLISHED BYTE-IDENTICAL LINES.**
+
+⛔ **THE ORDER THE BRIEF MADE NON-NEGOTIABLE WAS HONOURED, AND THE THING THAT MADE IT POSSIBLE IS
+A NEW DECLARATION RATHER THAN A LOOSENED CLAUSE.** `@ci-face` says *"the number CI can produce for
+me is a DIFFERENT CLAIM"* and takes its own key prefix — which is exactly why a faced gate is never
+CI-sourced (P4b (D)). There was no way for a gate to say the OPPOSITE, so the only route out of the
+box for `procgen-help` looked like loosening `¬ciFace`, which protects every other faced gate. ⇒
+**`@ci-argv <flags>: <why these flags do not move the claim>`** (`gateRoster.js`, `def23822a`): the
+SAME claim under the SAME key, plus the flags a checkout needs to ask it. `ciSourced` is untouched,
+clause for clause, and `check-seedling-producer-boundaries`'s `structure:` face still selects the
+`¬ciFace` exclusion — so the clause stayed load-bearing rather than becoming vacuous by having no
+subject.
+
+⛓ **THE FLAGS ARE APPENDED, AND THAT IS THE LOAD-BEARING HALF.** A face SUBSTITUTES its argv; an
+append cannot drop the `--host=`/`--root=` a gate needs to address a world. `ciGatePlan.test.js`
+asserts the invariant over the live tree from both ends: **a standing-keyed arm's argv is the LOCAL
+argv plus exactly its gate's declared flags**, and **every arm that is NOT standing-keyed is a
+declared face running the face's own argv**. ⛔ The hazard is named where it is opened — a flag that
+NARROWS the question (`--only=`, `--doors=ci`) would bank a bounded number under the full claim's
+key, which is `@ci-face`'s own defect wearing the new tag as a costume — and a gate declaring BOTH
+tags is refused as a PAIR by `gateRoster()`, because whichever a consumer read first would decide
+it silently.
+
+⛓ **WHAT `check-procgen-help.mjs` DECLARES NOW** (`e172d631f`): `@ci-argv --in-place: the runner's
+checkout IS the throwaway tree the worktree regime builds on the box …`. SG1 W2's decision is
+unchanged and is now stated as what it always was — a fact about WHERE the children run, not about
+WHAT is asked, measured at one head as identical verdicts across all 265 rows. ⛔ `--doors=ci` is
+NOT deleted: it stays the fast local pre-flight and the face a future consumer with a real budget
+would declare. What it no longer is, is CI's.
+
+⛓ **THE ARITHMETIC THAT RETIRED THE FACE IS NOT THE ONE THAT BUILT IT, AND THAT IS THE WHOLE
+SLICE.** P4a bounded the push because `ci-gates.mjs` ran every headless gate SERIALLY in the one job
+a push waits on, so ~5½ minutes there was a cost the user paid on every push (P4a residue item 3:
+*"nothing gates the cost `@ci-face` exists to avoid"*). S3 put the browser arms in a parallel matrix
+whose wall clock is 23 minutes, so the full pass costs the push nothing it was not already waiting
+for — while the bounded face cost the BOX 402.8 s of every full-freight `--write`, forever, because
+a faced row can never be CI-sourced. ⇒ **RETIRE, not re-scope**, and the brief's alternative was
+live until the wall clocks were read.
+
+**⛔⛔⛔ THE FINDING THIS SLICE HAD TO MAKE BEFORE IT COULD BELIEVE ITS OWN GATE: `--doors=ci` AND
+`--doors=all` PUBLISHED THE SAME BYTES.** Read off run 33555725728, the last run before this slice:
+
+```
+## CI-GATE | gate-help-ci: procgen-help | 265/0 | exit=0 | ALL PASS — 265 instrument(s) answer
+`--help` with no side effect this gate can observe; 252 still do module-scope work on IMPORT …
+```
+
+— and the bank's `total` for `gate: procgen-help`, measured on the box under `--doors=all`, was
+that sentence VERBATIM. Two mechanisms, both structural: the VALUE is the count of `PASS:` lines,
+which is one row per instrument whichever doors were opened; and the import-door figure in the
+total is `KNOWN.size`, **the size of a committed baseline FILE**, a restatement that is true
+whatever was measured. Only the KEY PREFIX ever distinguished them. ⇒ ⚖ 72 (b)'s bar — *"three
+consecutive runs in which that row reads `same`"* — **could have been cleared in full by a run that
+never switched door sets**, and the slice would have banked the CI number believing it was the full
+claim. ⛓ Fixed in the same commit: the verdict line now names its door set and the count of import
+doors NOT ASKED, derived from the rows and never from `DOORS`, so a fourth door set inherits it.
+Measured on one instrument: `--doors=all` → *"every import door was asked"*; `--doors=ci` → *"1
+import door(s) were NOT ASKED by this door set"*. **That sentence is now the only thing in the
+published artifact that can tell the two claims apart, and it is what makes the three runs below
+evidence rather than a coincidence.**
+
+**THE THREE RUNS, AND THE BAR READ PER ROW WITH `ci-summary --gates --run=<id>`.**
+
+| # | run | event | `gate: procgen-help` | `here=` | headless step | that JOB | the browser matrix beside it |
+|---|---|---|---|---|---|---|---|
+| 1 | 33563524638 | push `e172d631f` | **same**, ci `265/0` | 252.1 s | 4 m 21 s | 10 m 38 s | 23 m 34 s |
+| 2 | 33564571352 | dispatch, same head | **same**, ci `265/0` | 255.3 s | 4 m 24 s | 10 m 49 s | 23 m 34 s |
+| 3 | 33564586068 | dispatch, same head | **same**, ci `265/0` | 214.0 s | 3 m 41 s | 8 m 49 s | 22 m 40 s |
+
+Run-level in all three, identically: **27 same, 0 MOVED, 2 shallow, 1 not-banked, 0 MISSING.**
+⛓ `not-banked` was **2** before this slice and is **1** now — the retired `gate-help-ci:` key
+leaving the published set is itself an observable of the retirement, printed by the instrument
+rather than asserted by me. ⛓ Before the slice the row could not appear in this table AT ALL: its
+`gate:` key had no CI line and its face was `not-banked` by construction.
+
+⛓ **AND A CONTROL THE BRIEF DID NOT ASK FOR, TAKEN BECAUSE IT WAS THE LAST CHANCE TO TAKE IT.** The
+bar compares CI against a bank measured two heads back; once the row is CI-sourced the box never
+runs this gate again. So the full `--doors=all` pass was driven ON THE BOX at the SAME head
+`e172d631f`, worktree default: **ALL PASS, 265/0, 432.9 s, 6 submodule(s) initialised, primary tree
+porcelain 0.** The claim therefore agrees THREE ways — the bank's 265/0, the box at this head, and
+CI's `--in-place` run — rather than two. ⛓ **CI is 0.58× the box on this row** (252.1 s against
+432.9 s), the same direction S3 measured on the light browser arms.
+
+⛓ **THE PUSH DID NOT GET SLOWER, AND THE COST THE FACE EXISTED TO AVOID IS MEASURED RATHER THAN
+ASSUMED.** The headless step went **33 s → 4 m 21 s** and its job **7 m 03 s → 10 m 35 s**, against
+a browser matrix at **23 m 01 s** in the same run: the workflow's critical path did not move. The
+step gains a `timeout-minutes: 20` KILL DEADLINE, because a JOB timeout reports `cancelled` and
+names neither step nor cause (S3's measurement).
+
+⛓ **A THING THAT IS NEW AND WAS WORTH WATCHING: IN CI THIS GATE NOW DIRTIES THE TREE ITS SIBLINGS
+RUN IN.** `procgen-help` sorts first in the headless set, and `--in-place` means its 252 module-scope
+workers really write — the gate repairs tracked paths and REPORTS untracked droppings rather than
+deleting them. On the box that lands in a throwaway worktree and no sibling ever sees it. In all
+three runs every one of the five following headless gates read its previous value, so the answer is
+"it does not disturb them" — but it is a property nobody had before this slice, and the next gate
+added to that set inherits it.
+
+**⛔⛔⛔ AND A DEFECT THAT IS NOT S5's, THAT S5's W0 FOUND, THAT IS LIVE ON EVERY PUSH, AND THAT NO
+TEST CAN SEE: S4's OWN WRITE RE-PRICED THE SHARD PARTITION.** `standing-values --write` records
+`ms` as *how long this ROW took to produce* — which for a CI-sourced row is the `ci-summary`
+NETWORK READ. `planCiShards` prices arms off exactly that field. Measured, both sides:
+
+| the six CI-sourced arms | banked `ms` before S4's write (`5e42d4104`) | after (`4a99828ec`) |
+|---|---|---|
+| `maze-lab` · `procgen-demos` · `seedling-editor-generate` · `… (own server)` · `seedling-wasm-element` · `seedling-wasm-pages` | **1,547.8 s** — what the gates cost | **37.5 s** — what six network calls cost |
+
+`seedling-wasm-element` fell **934.7 s → 6.1 s**, under the 600 s budget that had been giving it a
+job to itself, and the partition collapsed:
+
+| run | head | shards | browser wall clock |
+|---|---|---|---|
+| 33548827760 | `9c3600602` (before the bank commit) | **3** | **15 m 27 s** |
+| 33555725728 | `3eceb7d18` (after) | **1** | **23 m 01 s** |
+
+⇒ **+7 m 57 s of CI wall on every push, and `seedling-wasm-element` — the one row S3's abort
+criterion exists to watch — no longer runs alone.** ⛔ Nothing went red and nothing could: every
+unit row about the partition uses a STUB bank, and the live-tree rows assert only that the shards
+COVER the arms, which one shard does perfectly. ⛓ It is the WRONG-SUBJECT shape one level down — the
+planner asked *"what does this arm cost to run"* and a field whose meaning had changed under it
+answered about a network call.
+
+⇒ **QUEUED AS S5b, NOT FIXED HERE**, because the repair is a design choice and not a line: (a) treat
+a `ciSourced` row as UNPRICED, which is one clause, needs no new field, and follows the module's own
+rule that an unmeasured arm lands alone — at the cost of seven shards where three would do; (b) keep
+the gate's own last measured cost in a field of its own; (c) have `ci-summary` hand back the
+runner's `##   ms | <key> | here=` and price the partition on THAT, which is the number it actually
+wants. ⛔ Whichever is taken owes a row that can SEE it, and the obvious one CANNOT:
+`ciGatePlan.test.js` already asserts *"no shard exceeds the budget unless a single arm does"* and
+that row was green throughout — the collapsed shard's PRICED total is **423.8 s**, well inside the
+600 s budget, while the job it produced ran **23 m 01 s**. A budget assertion over prices cannot see
+prices that are wrong. The guard has to refuse the INPUT: a bank row carrying `ciSourced: true`
+holds a network read, not an arm's cost.
+
+**THE GATE, ALL FOUR PARTS.**
+
+| # | the brief asked | measured |
+|---|---|---|
+| 1 | three CI runs, the row `same` in each | the table above — `same` · `same` · `same`, `ci-summary --gates --run=<id>` |
+| 2 | the face retired in the SAME change; `ci-summary --gate="gate: procgen-help"` no longer refuses BY NAME | `e172d631f`. At the pre-slice SHA it now exits **4** (*"carries no such line"*) where it exited **5**; at `e172d631f` it exits **0** and prints the full-claim line |
+| 3 | a `--write` at a PUSHED head reads from CI in seconds; at an UNPUSHED head it KEEPs with the right reason | pushed `e172d631f`: **5.6 s** against 402.8 banked box seconds. Unpushed `e5c19cece` (a bank commit, which triggers no run at all): **KEEP, value NOT blanked** — `265/0 @e172d631f` with `not re-read at e5c19cece…: node …ci-summary.mjs --gate="gate: procgen-help" --json exited 2 (no CI run for this SHA — not pushed, or the path filter did not trigger one)`. ⛓ Exit **5** keeps its own sentence (*"a row that KEEPs on a 5 is FROZEN, not merely unpushed"*), so trap 1060's separation holds for the new row |
+| 4 | `npx vitest run scripts/procgen` bounded (⚖ 52) | 30 files / **565 tests** green; plus `frontend/modules/procgenDocs` 7 / 447 and `generate-procgen-reference --check` ALL 6 MODULES AND 4 REGIONS MATCH |
+
+**THE WRITE, AT THE HEAD CI HAD CONCLUDED ON** (`e5c19cece`, run 33564586068 success). 41 rows
+re-measured, **22.7 min of wall of which 47.1 s was seven CI reads — 22.0 min of box**; `--keys` had
+priced it at 33 MOVED + 8 unkeyable and it was exactly that. ⛓ **ONE value moved and it is CI's:**
+`suite: vitest (unfiltered)` 416/12615 → 416/12629. Every gate and identity verdict unchanged; no
+nondeterminism findings, no EXIT rows, 0 rows HELD.
+
+⛓⛓ **THE BATTERY: 46.8 → 38.8 min** of full-freight box time over 65 timed rows. `gate:
+procgen-help` is the **seventh** CI-sourced row and the **eighth** unkeyed one (*"its recipe already
+reads CI by SHA"*), `ms` **402,750 → 5,569**.
+
+⚠ And named rather than left to be rediscovered: that new `ms` is a network read like the other
+six, so this row JOINS the population S5b is about. It has no consequence today — `procgen-help` is
+headless and the headless set is not sharded — but the day anybody partitions that set, it is priced
+at 5.6 s.
+
+**Tests.** `gateRoster.test.js` 15 → 24 rows, `ciGatePlan.test.js` 34 → 38, `boxLock.test.js`'s
+typed face list corrected. **MUTANTS, each caught by exactly the rows it should be:** `ciArgvIn`
+always `null` → 7 fail · the PAIR refusal deleted → 1 · the argv append reverted to a bare base
+argv → 2 · **the pre-S5 build, with the `@ci-face` restored on the gate → 3** (the declarer row, the
+argv property, and `ciSourced` selecting it). ⛓ `boxLock.test.js`'s typed list of face declarers
+went RED on its own, which is the row WORKING: it is the one typed pin in a mechanism that is
+derived end to end, so a face appearing or disappearing announces itself instead of silently moving
+one more row onto the CI path. It is now paired with an assertion that the gate declares the OTHER
+tag, so it cannot pass because somebody deleted a declaration and left the gate mute.
+
+⇒ **WHAT S5 LEAVES.** **S4c** (identity rows need CI to publish a line first) is untouched and
+unchanged. **S5b** is the shard mispricing above. ⛓ The `¬ciFace` clause is exactly as S4 left it,
+and it now has exactly one subject — which is worth knowing, because a clause with no subject is a
+clause the next slice deletes.
 
 ## 6. Everything else (unchanged queues)
 
