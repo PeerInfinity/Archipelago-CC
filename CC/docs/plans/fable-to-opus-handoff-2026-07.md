@@ -6292,7 +6292,7 @@ the eventual fix is on the producing side. No new `.gitignore` lines; the transi
 the preserved list + restore IS the solution. Open: `docs/json/developer/diffs/file-lists/*.md`
 still say 61 (regenerated at release).
 
-## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01, ⚖ 72 RULED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; S1 SHIPPED 2026-09-01 `ad5aef2b0`, S2 SHIPPED 2026-09-01 `e6c84a6f8` + the owed write `5e42d4104`, S3 SHIPPED 2026-09-01 `9f46b2bfd`…`765ea79fa`, S4 NEXT)
+## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01, ⚖ 72 RULED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; S1 SHIPPED 2026-09-01 `ad5aef2b0`, S2 SHIPPED 2026-09-01 `e6c84a6f8` + the owed write `5e42d4104`, S3 SHIPPED 2026-09-01 `9f46b2bfd`…`765ea79fa`, S4 SHIPPED 2026-09-01 `91c26b690`…`4a99828ec` — SIX ROWS QUOTE CI; S4b + S4c NEXT)
 
 **The question (user):** *"At some point I'll want to check why the battery takes so long. Can it
 be moved to CI? Can parts of it run in parallel?"* All numbers re-derived at `dde883de9`, none
@@ -6753,6 +6753,133 @@ measured.** What S4 inherits, all of it named rather than left to be rediscovere
    banked minutes** leave the box. With the Windows rows (~11 min) and `procgen-help`
    (417 s, S5's) staying, the local battery falls from 70.5 min to **≈ 20 min**, and the
    CI cost is ≈ 15 minutes of wall clock in three parallel jobs.
+
+
+**⇒ S4 SHIPPED 2026-09-01 — THE BANK QUOTES CI. SIX ROWS, 25.8 OF THE 31.4 BANKED BROWSER
+MINUTES, READ FROM A PUSHED HEAD IN 8 SECONDS EACH; AND THE `¬cheap` THREAD THE BRIEF PULLED
+TURNED OUT TO BE HOLDING TWO ROWS UP BY ACCIDENT.** (`91c26b690` … `4a99828ec`, PUSHED;
+FIVE commits.)
+
+**THE RULE, WIDENED AND MOVED.** `ciSourced` = `ciGatePlan.ciRunnable ∧ ¬cheap ∧ ¬ciFace ∧
+¬ciShallow`, and it MOVES to `ciGatePlan.js` — beside `ciRunnable`, which is one of the four
+facts it reads. ⛔ The move is not tidying: both call sites in `standing-values.mjs` re-derived
+"headless" from their own file set and passed `ciFace` separately, and `boxLock.test.js`'s own
+note records a row that had not learned the second argument and so asserted a question
+production had stopped asking. The rule now takes the ROSTER ROW, so a clause added to it
+reaches every caller. Three clauses are DECLARED by the gate, one is MEASURED by the bank.
+
+⛔ **THE `¬ciFace` CLAUSE IS UNTOUCHED** (§4's composition trap): `procgen-help`'s 409 s leaves
+the box by S5's route or not at all.
+
+**⛓⛓ THE BRIEF'S ITEM 3, ANSWERED THE WAY IT ASKED TO BE — `¬cheap` WAS NOT THE RIGHT GUARD.**
+Before S4 the ONLY thing keeping `full-tier-owed` (1.7 s) and `slice-records` (30.8 s) out of the
+CI-sourced set was that both are `cheap` — a MEASURED 60 s ± 10 % hysteresis band that says
+nothing about whether CI's answer is TRUE. `slice-records` grows with every recorded slice; the
+day it crossed the band it would have become CI-sourced silently and started banking a depth-1
+clone's answer as this tree's truth. ⇒ a new declaration, `@ci-shallow <reason>`, read by
+`gateRoster` exactly as `@ci-face` is and for the same argument (trap 566: whether a value
+survives a fresh checkout is a fact only the GATE knows — a mention-detector filed the wrong gate
+last time). The two gates declare it, in their own docblocks, with their own reasons.
+
+⛓ **AND IT IS ASSERTED AT `cheap: false`, WHICH IS THE WHOLE POINT.** `ciGatePlan.test.js` hands
+the rule the value that WOULD have selected them; a guard tested at their real `cheap` would pass
+today and rot silently. ⛔ It is also one line to DELETE if a later slice gives CI the history
+(`fetch-depth: 0`, priced against every job's clone) — in the gate that knows.
+
+**WHAT THE RULE SELECTS AT THIS HEAD — SIX ROWS, PRINTED BY `--write`, NEVER TYPED:**
+`maze-lab` (66.4 s) · `procgen-demos` (100.3) · `seedling-editor-generate` (126.8) ·
+`… (own server)` (128.8) · `seedling-wasm-element` (934.7) · `seedling-wasm-pages` (190.8)
+= **1,547.8 s = 25.8 min**, out of the 31.4 banked browser minutes S3 moved to CI.
+
+⛔ **THE OTHER 18 BROWSER ARMS ARE `cheap` AND STAY THE BOX'S — DELIBERATELY.** ⚖ 52's criterion
+is economy, not provenance: quoting a row the box answers in 10 s buys a network call and a KEEP
+on every unpushed head for nothing. ⛓ `preset-bundle-load` is among them at 21.7 s, so it is
+excluded by `cheap` and NOT by the bar — its held-back streak never came into it, and S4b still
+owes the characterisation before it could flip if it ever crossed the band.
+
+**⚖ 72 (b), VERIFIED PER ROW BY THIS SESSION RATHER THAN INHERITED.** `ci-summary --gates
+--run=<id>` on runs 33541690772 · 33543361446 · 33543380112 · 33543595675: all six selected rows
+read `same` in **four consecutive runs**. ⛓ This slice's own run **33548827760** at `9c3600602` is the FIFTH: **26 same, 0
+MOVED, 2 shallow, 2 not-banked, 0 MISSING** — the first run in this arc whose run-level exit is
+**0**, because the two structural rows are no longer counted as disagreements.
+
+**THE GATE, BOTH HALVES, MEASURED.**
+
+| arm | reading |
+|---|---|
+| `--write` at an UNPUSHED head (`b5ac83dfb`, no run for the SHA) | all six **KEEP**, ⛔ **no value blanked**, each row carrying the CI command and the exit's reason |
+| `--write` at a PUSHED head (`9c3600602`) | all six read from CI in **62.6 s total** (7.4–13.5 s each) against **1,547.8 s = 25.8 min** of banked box time; ⛓ **not one value moved** — 231/0 · 252/0 · 224/0 · 230/0 · 11/0 · 20/0, each row now carrying `ciSourced: true`, the `ci-summary` command and the pushed head it is an answer about |
+| `--keys` at the bank commit `4a99828ec` | **58 keyed / 7 unkeyable** (the suite row + the six CI rows, all by ⚖ 52's clause) — every one of S2's 30 identity rows still keyed; and the S1 mutant re-run under the NEW code moves **exactly two rows** (`seedling-full-tier-owed`, `slice-records`) when the bank is touched. ⚠ The *whole-file* reading is 34 MOVED / 24 unmoved, which is correct for a head that moved `gateRoster.js` (in nearly every closure) and says nothing about S1/S2 — the two mutants above are what do |
+| `npx vitest run scripts/procgen` | 29 files / 543 tests green (⚖ 52: bounded) |
+
+**⛔⛔ AND THE UNPUSHED-HEAD ARM FOUND TWO DEFECTS THE CODE READING HAD NOT — BOTH IN THE FIRST
+`--write` S4 EVER TOOK.**
+
+1. **`gate: seedling-editor-generate (own server)` COULD NEVER BE READ FROM CI.** `ci-summary
+   --gate=` derived a gate FILE from the key by stripping the `<prefix>: ` — right for a base row,
+   WRONG for a declared second arm: no file is named `seedling-editor-generate (own server)`, so
+   the reader REFUSED (exit 5) a key CI publishes a line under, and the row KEPT with *"no gate
+   named …"*. ⛓ That is P4b (D)'s frozen-row defect in a second costume, arriving through the
+   ladder built to prevent it. ⇒ a key is resolved through `ciGateArms` FIRST — **the population
+   that PUBLISHES is the population that RESOLVES** — with the file-name match as the fallback so
+   both existing refusals still fire by name. ⛓ The test that would have caught it is the READER
+   half of the composition property the same slice already asserted on the writer side.
+2. **A KEEP NAMED THE WRONG COMMAND AND THE WRONG REASON.** It printed *"`node
+   …/check-maze-lab.mjs --host=…` exited 2 (no CI run for this SHA, or it has not concluded)"* —
+   but the command that exited 2 was `ci-summary`, and a browser gate cannot exit "no CI run".
+   Worse, exit **5** (a REFUSAL) got the same sentence, so a FROZEN row read as a merely unpushed
+   one. The reason now names the command that actually ran (one spelling, shared with the banked
+   `command` field — ⚖ 8) and translates the exit: 2 no run · 3 not concluded · 4 no answer under
+   this key · 5 REFUSED BY NAME, *"a row that KEEPs on a 5 is FROZEN, not merely unpushed"*.
+
+**⛓ `--gates` STOPS READING A STRUCTURAL FACT AS A DISAGREEMENT.** The verdict rule becomes
+`ciSummary.gateVerdicts`, a pure function of (lines, bank, arms) — it was inline until it grew a
+third verdict, which is when a rule stops being readable from its output. A `@ci-shallow` row
+reads **`shallow`**, both numbers printed with the gate's reason under them, and the check runs
+BEFORE the compare so a coincidence can never bank a streak the row did not earn. ⛓ The run-level
+exit code means something again: run 33543361446 now exits **0** (26 same, 0 MOVED, 2 shallow)
+where it exited 1 forever. ⛔ The refusal ladder grew a third rung for the same key population, so
+a widening that forgot the clause goes red BY NAME instead of quietly banking a depth-1 answer.
+
+**Tests.** `ciGatePlan.test.js` 20 → 34 rows (the `ciSourced` rows MOVED here from
+`boxLock.test.js` and `standingValues.test.js` with the function, and were widened with it);
+`ciSummary.test.js` is NEW, 7 rows, off-network; `gateRoster.test.js` +6. **RED FIRST against
+SEVEN mutants, each caught by exactly the rows it should be:** drop `¬ciShallow` → 2 · drop
+`¬ciFace` → 4 · the pre-S4 headless-only rule → 3 · compare before the shallow check → 1 · remove
+the `@ci-shallow` refusal rung → 1 · accept an empty `@ci-shallow` reason → 1 · the pre-fix key
+resolution → 1 (the arm defect above). ⛓ Two of them are the properties that cannot be true by
+construction: **every selected row has an arm publishing a line under the SAME key**, and
+**no key the rule selects is refused by the reader** — P4b (D) stated as a property, from both
+ends.
+
+**⛓ WHAT S4 DID NOT DO, AND WHY — S4c IS PARKED, NOT FORGOTTEN.** The brief asked whether the
+expensive identity rows (carved/empty pairs, ends-meet) join the CI-sourced set. ⛔ They cannot in
+this slice, and the reason is ⚖ 72 (b) itself: **CI prints no line for them at all**, so no
+identity row can have a streak, and flipping one would be banking a value nothing has ever
+published. The production side (`ci-gates.mjs` printing identity lines, the shard plan pricing
+them, three runs of bar) is a slice the size of S3's, not a widening here. ⇒ **S4c QUEUED**, and
+the code says so where somebody would try it: `standing-values.mjs`'s `ciGateFor` returns `null`
+for a non-gate row, with the reason and the slice name in its docblock, and a unit row asserts it.
+
+**⇒ WHAT S4 LEAVES FOR S4b AND S5**, unchanged by this slice: (1) characterise the
+`preset-bundle-load` flake (still `cheap`, still not CI-sourced, still owed eight solo runs);
+(2) `slice-records` should REFUSE BY NAME in a shallow clone — ⛓ S4's declaration keeps its ROW
+honest but is **not** the repair, and `check-seedling-full-tier-owed.mjs:313` is still the model;
+(3) trap 1057's latent nine. S5 (`procgen-help --doors=all --in-place` in CI, then retire the
+face) is untouched and the `¬ciFace` clause is exactly as it was.
+
+**⛓ THE ECONOMICS, RE-PRICED OFF THIS SLICE'S OWN BANK — AND S3's PROJECTION IS CORRECTED.**
+S3 wrote *"the local battery falls from 70.5 min to ≈ 20 min"*, which assumed all 24 arms leave.
+Under `¬cheap` six leave: **70.5 → 44.7 min** of full-freight box time, for **62.6 s** of
+network. The other 18 browser arms are **5.6 min in total** — quoting them would buy a network
+call and a KEEP on every unpushed head for no economy, which is ⚖ 52's criterion working, not
+a shortfall. ⛓ The 6 rows are now UNKEYED (`its recipe already reads CI by SHA`) and so re-read
+on EVERY `--write` at 8 s each: that is the point — a CI answer can move at unmoved tree bytes.
+
+⚠ **AND THE SURPRISE S3 PUT IN WRITING IS NOW LOAD-BEARING:** a commit touching only
+`scripts/**/*.json` (the bank) or `CC/docs/**` (this queue doc) triggers NO run, so a `--write`
+at such a head KEEPs all six with the exit's reason. Correct behaviour, and the KEEP now says
+which kind of "no answer" it hit.
 
 ## 6. Everything else (unchanged queues)
 
