@@ -6197,9 +6197,37 @@ reference generator's `--check` is byte-identical — no `docsIndex.js`
 regeneration was owed, because nothing under `docs/` was touched.
 
 **Gates.** `check-procgen-demos.mjs` bare: **252/0 ALL CHECKS PASSED** (204/0 before; ⚠ STANDALONE, so every `cli` row RAN — under a battery the three roster-gate rows dedupe). The six new rows cost `export-seedling-view` 2.4 s + 2.2 s + 12.0 s, `-arm` 64.1 s + 63.7 s and `maze-lab` 59.0 s. Then ONE
-`standing-values.mjs --write` at the records head — the re-bank the docs-page
-session before this one deliberately left (33 MOVED / 1 unmoved of 34 keyed
-rows at `c1ebe4d96`, and this slice moves the same keys again): banked in the commit that follows this one.
+`standing-values.mjs --write` at the records head `95603e266` — the re-bank the
+docs-page session before this one deliberately left (33 MOVED / 1 unmoved of 34
+keyed rows at `c1ebe4d96`; this slice moved the same keys again and `--keys`
+read the same 33/1 at `95603e266`). **68 min, 66 rows, 49 cheap, 17 quoted, 1
+HELD by hysteresis** (`gate: maze-lab` 65.3 s inside the ±10 % band — trap 735
+again). ⛓ **Row set UNCHANGED** — no new row, no row gone, **ZERO `cheap`
+movers**. **TWO value movers:**
+
+ · `gate: procgen-demos` **204/0 → 252/0** — predicted, and this slice's own.
+   ⚠ It cost 95.1 → **107.2 s** for six entries: three cite roster gates
+   (`-arm` ×2, `maze-lab`) and DEDUPE under a battery — this is that dedup
+   working, since a standalone run of the same catalogue paid 187 s for those
+   three rows.
+ · `gate: slice-records` **71/0/33 → 72/1/37, exit 1 — ⛔ RED, AND IT IS NOT
+   THIS SLICE'S.** *"SG2: the tracked doc has a heading at :13783 and the queue
+   has NO `**⇒ ` block."* PROVED by a control arm rather than asserted: with the
+   queue doc restored to `082229c64` (this session's tree one commit before the
+   as-built was appended) the gate fails with **the same single check and the
+   same 33-slice roster**. It is SG2's close (2026-08-30, `c66eeac18`) — whose
+   record went into the TRACKED doc as `### R9 slice SG2` and never got a queue
+   `**⇒ ` block — and it surfaced now only because this is the first `--write`
+   since. ⛓ Banked honestly (`exit: 1`, `total: "1 CHECK(S) FAILED"`) rather
+   than papered over; **the fix is authoring SG2's queue block and belongs to
+   whoever owns that record**, not to a catalogue slice.
+
+⚠ Three rows were QUOTED rather than driven and each names its own head:
+`suite: vitest (unfiltered)` 413/12528 and `roster: --win --tier=full`
+150 tapes 3259/0/3 (both @`eb7593655`), and `gate: seedling-producer-boundaries`
+19/0 @`34c74aecc` on an UNMOVED key. ⛓ `gate: seedling-wasm-pins` re-ran cheap
+and its `total` is still *ALL PASS — 3 pinned builds, four views in agreement*;
+its `0/0` value is that row's own shape and did not move.
 
 ## 5j. The WORLDGEN WRITERS REVIEW — DONE 2026-08-30 (arc opened and closed in one Fable session, every step user-approved; plan file `NewDocs/plans/worldgen-writers-review.md`, gitignored)
 
