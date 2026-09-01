@@ -23,9 +23,9 @@ import { describe, expect, it } from 'vitest';
 import {
     DERIVED_DATA_EXCLUDED, POPULATIONS, digestOf, expandDeclared, globToRe, inputPopulations,
     keyInputsIn, keyReportLines, nondeterminismFinding, rowInputKey, rowRunDecision,
-    spawnTargetsIn, stripComments,
+    spawnTargetsIn, stripComments, unkeyableReason,
 } from './rowInputKey.js';
-import { FILE as STANDING_VALUES } from './standingValues.js';
+import { FILE as STANDING_VALUES, scriptIn, standingRows } from './standingValues.js';
 
 /** A context whose every input is a literal — the only kind a rule can be
  *  tested against without testing the tree as well. */
@@ -561,5 +561,136 @@ describe("the writer's own output is not one of its inputs", () => {
             const text = readFileSync(new URL(gate, import.meta.url), 'utf8');
             expect(keyInputsIn(text, { file: gate }).data).toContain(STANDING_VALUES);
         }
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * WHICH ROWS MAY BE KEYED AT ALL — ⚖ 72's ladder, R9 slice S2
+ *
+ * ⛔⛔ THE ROW THAT MATTERS IS THE FIRST ONE. `unkeyableReason` used to open
+ * with `row.kind !== 'gate'`, and the 30 identity/producer rows it refused
+ * cost **1,078,564 ms = 18.0 min** of banked `ms` on EVERY `--write`.
+ *
+ * ⛓⛓ MEASURED RED-FIRST, against a module carrying that clause again: FOUR
+ * rows fail and 58 pass — the headline below, and three in the roster
+ * describe (`leaves NO identity row unkeyable`, `still refuses the CI-read
+ * suite row` — the suite row is `kind: ci-suite`, so the old clause answered
+ * it for the wrong reason — and `gives every row sharing an entry the same
+ * keyability answer`, which is red because ONE shared entry crosses kinds:
+ * `check-seedling-generated-set.mjs` carries both `identity: generated set`
+ * and `gate: seedling-generated-set`, and the old clause split them). ⛔ The
+ * clauses that STAYED are asserted on GATE rows on purpose, so they are green
+ * on both sides and the red set is attributable to the one clause that moved.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('unkeyableReason — the clause set, and the one S2 removed', () => {
+    const identity = { kind: 'identity', shell: true,
+        command: 'node scripts/procgen/dump-seedling-kind-pairs.mjs --kind=empty --count=3' };
+    /** ⛓ A GATE row for the clauses that stayed — see the header: they must be
+     *  green against the pre-S2 module too, or the red set says nothing about
+     *  which clause moved. */
+    const gate = { kind: 'gate', command: 'node scripts/procgen/check-procgen-docs.mjs' };
+
+    /** ⛔ THE HEADLINE. An identity row naming an instrument IS keyable. */
+    it('KEYS an identity row — the `kind !== gate` clause is gone', () => {
+        expect(unkeyableReason(identity, {})).toBeNull();
+    });
+
+    it('refuses an alwaysQuoted row, and a CI-sourced one, by the same reason', () => {
+        expect(unkeyableReason({ ...gate, alwaysQuoted: true }, {}))
+            .toMatch(/reads CI by SHA/);
+        expect(unkeyableReason(gate, { fromCI: true })).toMatch(/reads CI by SHA/);
+    });
+
+    it('refuses a row whose command names a REMOTE ORIGIN', () => {
+        expect(unkeyableReason({ ...gate,
+            command: 'node scripts/procgen/check-x.mjs --pages=https://example.invalid' }, {}))
+            .toMatch(/REMOTE ORIGIN/);
+    });
+
+    it('refuses a gate that DECLARES itself unkeyable, carrying its reason', () => {
+        expect(unkeyableReason(gate, { declared: { unkeyable: 'it drives a live site' } }))
+            .toBe('declared by the gate: it drives a live site');
+    });
+
+    it('refuses a row that names no instrument in this directory', () => {
+        expect(unkeyableReason({ kind: 'gate', command: 'md5sum frontend/x.js' }, {}))
+            .toMatch(/names no script/);
+    });
+
+    /** ⛓⛓ …and the ORDER of the first two clauses is load-bearing: a row that
+     *  is BOTH quoted and scriptless must say the CI reason, because that is
+     *  the one the writer's KEEP branch acts on. */
+    it('answers with the CI reason first when two clauses could both fire', () => {
+        expect(unkeyableReason({ kind: 'gate', alwaysQuoted: true, command: 'true' }, {}))
+            .toMatch(/reads CI by SHA/);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * …AGAINST THE LIVE ROSTER, because a count nobody checks goes stale green.
+ *
+ * ⛓ Two counts in this arc were wrong-and-green (the plan's "30 of 33", a
+ * test comment's "three catalogue entries"), and both survived because they
+ * were PROSE. These assert the same claims as PROPERTIES derived from the
+ * roster, so a new row or a re-worded command re-derives them instead of
+ * contradicting a sentence.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('the roster S2 actually keys', () => {
+    const rows = standingRows();
+
+    /** ⛔ EVERY identity/producer row is keyable — the 18 minutes, as a claim
+     *  something re-checks. A new identity row whose command names no
+     *  instrument would land here rather than in a `--write` log. */
+    it('leaves NO identity row unkeyable, and there is at least one to leave', () => {
+        const identity = rows.filter((r) => r.kind === 'identity');
+        expect(identity.length).toBeGreaterThan(0);
+        expect(identity.filter((r) => unkeyableReason(r, {})).map((r) => r.key)).toEqual([]);
+    });
+
+    /** ⛓ …and the one row that stays unkeyable stays so for the STATED
+     *  reason, not by accident of a clause that no longer exists. */
+    it('still refuses the CI-read suite row, by its recipe', () => {
+        const suite = rows.filter((r) => r.alwaysQuoted);
+        expect(suite.length).toBeGreaterThan(0);
+        for (const r of suite) expect(unkeyableReason(r, {})).toMatch(/reads CI by SHA/);
+    });
+
+    /**
+     * ⚠⚠ SHARED ENTRIES — STATED AS A PROPERTY SO THE NEXT READER MEETS IT AS
+     * A DESIGN AND NOT AS A BUG. Eight identity rows run three scripts under
+     * different FLAGS, so their keys are IDENTICAL. If one of a group is owed
+     * a re-drive all of them are, which is the conservative direction. ⛓ The
+     * groups are DERIVED here, never named: the assertion is that a group's
+     * members agree about being keyable, and the guard below is that a group
+     * exists at all (trap 824 — a vacuous green).
+     */
+    it('gives every row sharing an entry the same keyability answer', () => {
+        const groups = new Map();
+        for (const r of rows) {
+            const e = scriptIn(r.command);
+            if (!e) continue;
+            if (!groups.has(e)) groups.set(e, []);
+            groups.get(e).push(r);
+        }
+        const shared = [...groups.values()].filter((g) => g.length > 1);
+        expect(shared.length).toBeGreaterThan(0);
+        for (const g of shared) {
+            expect(new Set(g.map((r) => unkeyableReason(r, {}) ?? 'KEYED')).size).toBe(1);
+        }
+    });
+
+    /** ⛔⛔ …and the reason those keys collide, at the unit level: THE KEY IS A
+     *  FUNCTION OF THE ENTRY, NOT OF THE COMMAND. This is the row that fails
+     *  the day somebody "fixes" the collision by hashing the flags in — which
+     *  would move all three keys whenever anybody re-words a flag, buying
+     *  re-drives for no change in bytes. */
+    it('keys two rows that share an entry identically, whatever their flags', () => {
+        const ctx = stubCtx({ files: { 'scripts/procgen/dump-x.mjs': 'export const a = 1;\n' },
+            edges: {}, fixtures: [] });
+        const a = rowInputKey({ entry: 'scripts/procgen/dump-x.mjs', ctx });
+        const b = rowInputKey({ entry: 'scripts/procgen/dump-x.mjs', ctx });
+        expect(a.key).toBe(b.key);
     });
 });

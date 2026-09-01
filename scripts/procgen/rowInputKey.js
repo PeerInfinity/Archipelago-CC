@@ -106,7 +106,7 @@ import { join } from 'node:path';
 import { REPO, buildGraph } from './reachClosure.js';
 import { cliTargetsIn } from './gateDedup.js';
 import { SCRIPT_DIR } from './gateRoster.js';
-import { FILE as STANDING_VALUES } from './standingValues.js';
+import { FILE as STANDING_VALUES, scriptIn } from './standingValues.js';
 
 /** ⛓ The order is the report's order and the key's order — one spelling. */
 export const POPULATIONS = Object.freeze(['code', 'data', 'spawn', 'build']);
@@ -745,6 +745,85 @@ export function rowInputKey({ entry, declared = null, ctx }) {
 /* ══════════════════════════════════════════════════════════════════════
  * THE DECISION — pure, so that the edges are testable without a box
  * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛔⛔ **WHY A ROW MAY NOT BE KEYED** — and every clause is DERIVED from what
+ * the row and its gate already say, never a list of exceptions here (⚖ 17).
+ *
+ * · an `alwaysQuoted` or CI-SOURCED row. Its recipe already reads CI by SHA —
+ *   its "inputs" are a pushed head and a job log, which are not bytes in this
+ *   tree, and the writer's KEEP branch already owns that case.
+ * · a row whose command names a REMOTE ORIGIN (`--pages=`). Its subject is
+ *   the published site: a byte key over this checkout would be a key over the
+ *   wrong tree, which is the stale green wearing a derivation. ⛓ At this head
+ *   the local arms carry no `--pages=` and this selects ZERO rows — a STATED
+ *   zero, printed by `--keys`, armed for the day a live row is banked.
+ * · a gate that DECLARES itself unkeyable, with its reason.
+ * · a row whose command names no script in the instrument directory — there
+ *   is no entry file to walk a closure from.
+ *
+ * ── ⛔⛔ THE CLAUSE THAT IS NOT HERE ANY MORE, AND THE MEASUREMENT THAT
+ *    REMOVED IT (R9 slice S2, ⚖ 72's ladder) ──────────────────────────
+ *
+ * This function used to open with `if (row.kind !== 'gate') return 'not a
+ * gate row'`, on the stated premise that *"the identity and producer rows are
+ * md5s of a producer's own `--check` and COST SECONDS; keying them would buy
+ * a second failure mode for no time at all."*
+ *
+ * **The premise was false by eighteen minutes.** Measured at `cf2af27ab` off
+ * the banked `ms` the writer itself records: the 30 `kind: identity` rows sum
+ * to **1,078,564 ms = 18.0 min**, and being unkeyed they were paid on EVERY
+ * `--write` regardless of what the head had moved. Four rows are 63 % of it —
+ * `identity: carved pairs c4` 270.2 s, `producer: plan-seedling-r7-ends-meet
+ * --check` 221.5 s, `identity: empty pairs c6` 154.5 s, `identity: empty
+ * pairs c3` 96.0 s. Seven exceed 60 s. ⛓ Nothing about a `kind` makes a row
+ * cheap; the writer's own `cheap` band is the field that answers that
+ * question, and it is MEASURED.
+ *
+ * ⛓ The rest of the machinery needed no change at all: the entry is
+ * `scriptIn(row.command)` for an identity row exactly as for a gate row, the
+ * four populations are the same four, and `--redrive-unchanged`, `--rekey`
+ * and `--force-row=` reach these rows through `rowRunDecision` as they always
+ * did. An identity row names no gate file, so `gateOf` finds no gate and its
+ * declaration is empty — which is correct, not a gap: an identity row that
+ * needs to declare an input can grow a `@key-inputs` docblock the same way.
+ *
+ * ── ⚠ SHARED ENTRIES: SOME OF THESE ROWS GET IDENTICAL KEYS, AND THAT IS
+ *    THE RIGHT ANSWER ────────────────────────────────────────────────────
+ *
+ * A key is a function of the ENTRY FILE, not of the command line, and eight
+ * identity rows run one script under different FLAGS. At `cf2af27ab` the 30
+ * rows have 25 distinct entries, in three groups:
+ *
+ *   `dump-seedling-kind-pairs.mjs`      empty pairs c3 · c6 · carved pairs c4
+ *   `census-seedling-killgate-clears.mjs`  killgate s2 · s5 · s9
+ *   `generate-seedling-level.mjs`       level pre-sword s1 · post-sword s1
+ *
+ * Each group's rows therefore carry the SAME `inputKey`, and every member of
+ * a group quotes or re-drives together. ⛓ That is sound rather than a
+ * collision: the rows share an entry, share a closure and share their data,
+ * so if one of them is owed a re-drive all of them are — the conservative
+ * direction. A flag is not an input population; it is part of the row's
+ * IDENTITY, which is what the row KEY (`row.key`) already is. ⛔ Do not
+ * "fix" this by hashing the command into the key: that would move all three
+ * keys the day anybody re-words a flag, buying re-drives for no change in
+ * bytes. It is written down here so the next reader meets it as a designed
+ * property and not as a bug they discovered.
+ *
+ * @param {{kind: string, command: string, alwaysQuoted?: boolean}} row
+ * @param {{declared?: {unkeyable: string|null}|null, fromCI?: boolean}} opts
+ * @returns {string|null} the reason, or `null` when the row is keyable
+ */
+export function unkeyableReason(row, { declared = null, fromCI = false } = {}) {
+    if (row.alwaysQuoted || fromCI) return 'its recipe already reads CI by SHA';
+    if (/--pages=/.test(row.command)) {
+        return 'its command names a REMOTE ORIGIN (--pages=) — no byte of this tree is its '
+            + 'subject';
+    }
+    if (declared?.unkeyable) return `declared by the gate: ${declared.unkeyable}`;
+    if (!scriptIn(row.command)) return 'its command names no script in this directory';
+    return null;
+}
 
 /**
  * ⛓⛓⛓ **WHETHER A ROW RUNS, AND WHY — AS A PURE FUNCTION.** The same move

@@ -92,7 +92,7 @@ import { assertTreeUnmoved, releaseBoxLock, takeBoxLock } from './boxLock.js';
 import { LOCAL_HOST, REPO, gateRoster } from './gateRoster.js';
 import {
     bankedPopulations, keyContext, keyInputsIn, keyReportLines, nondeterminismFinding,
-    rowInputKey, rowRunDecision,
+    rowInputKey, rowRunDecision, unkeyableReason,
 } from './rowInputKey.js';
 import {
     CHEAP_MS, FILE, ciGateCommand, ciSourced, cheapFor, compositeValue, compositeWhy, head,
@@ -187,33 +187,11 @@ const gateOf = (command) => GATES.find((g) => command.includes(g.path)) ?? null;
  * ══════════════════════════════════════════════════════════════════════ */
 
 /**
- * ⛔⛔ WHY A ROW MAY NOT BE KEYED — and every clause is DERIVED from what the
- * row and its gate already say, never a list of exceptions here (⚖ 17).
- *
- * · a row that is not a GATE row. The identity and producer rows are md5s of
- *   a producer's own `--check` and cost seconds; keying them would buy a
- *   second failure mode for no time at all.
- * · an `alwaysQuoted` or CI-SOURCED row. Its recipe already reads CI by SHA —
- *   its "inputs" are a pushed head and a job log, which are not bytes in this
- *   tree, and the writer's KEEP branch already owns that case.
- * · a row whose command names a REMOTE ORIGIN (`--pages=`). Its subject is
- *   the published site: a byte key over this checkout would be a key over the
- *   wrong tree, which is the stale green wearing a derivation. ⛓ At this head
- *   the local arms carry no `--pages=` and this selects ZERO rows — a STATED
- *   zero, printed by `--keys`, armed for the day a live row is banked.
- * · a gate that DECLARES itself unkeyable, with its reason.
+ * ⛓ WHY A ROW MAY NOT BE KEYED — `rowInputKey.unkeyableReason`, imported so
+ * the clause set is a pure function a unit test can interrogate rather than
+ * a rule that lives inside a 68-minute writer. R9 slice S2 moved it there and
+ * dropped its `kind !== 'gate'` clause; that docblock carries the measurement.
  */
-function unkeyableReason(row, { declared, fromCI }) {
-    if (row.kind !== 'gate') return `not a gate row (kind: ${row.kind})`;
-    if (row.alwaysQuoted || fromCI) return 'its recipe already reads CI by SHA';
-    if (/--pages=/.test(row.command)) {
-        return 'its command names a REMOTE ORIGIN (--pages=) — no byte of this tree is its '
-            + 'subject';
-    }
-    if (declared?.unkeyable) return `declared by the gate: ${declared.unkeyable}`;
-    if (!scriptIn(row.command)) return 'its command names no script in this directory';
-    return null;
-}
 
 /** ⛓ The graph, the tracked set and every digest cache — built ONCE for a
  *  whole battery. Per row it is ~0.15 s; building it per row would pay the
