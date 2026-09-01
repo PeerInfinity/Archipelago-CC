@@ -6292,7 +6292,7 @@ the eventual fix is on the producing side. No new `.gitignore` lines; the transi
 the preserved list + restore IS the solution. Open: `docs/json/developer/diffs/file-lists/*.md`
 still say 61 (regenerated at release).
 
-## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01, ⚖ 72 RULED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; S1 SHIPPED 2026-09-01 `ad5aef2b0`, S2 NEXT)
+## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01, ⚖ 72 RULED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; S1 SHIPPED 2026-09-01 `ad5aef2b0`, S2 SHIPPED 2026-09-01 `e6c84a6f8` + the owed write `5e42d4104`, S3 NEXT)
 
 **The question (user):** *"At some point I'll want to check why the battery takes so long. Can it
 be moved to CI? Can parts of it run in parallel?"* All numbers re-derived at `dde883de9`, none
@@ -6417,6 +6417,115 @@ claims.
 computed under the OLD population and are not comparable to the new ones. That is expected and is
 not evidence against the fix; the evidence is the two-mutant table above, which is a diff of keys
 taken under the SAME rule.
+
+**⇒ S2 SHIPPED 2026-09-01 (`e6c84a6f8`) — THE IDENTITY/PRODUCER ROWS ARE KEYED, AND THE ONE OWED
+`--write` IS SPENT (`5e42d4104`). ⛓⛓ THE STEADY STATE ⚖ 71 PROMISED IN JULY EXISTS: `--keys`
+AFTER THE BANK'S OWN COMMIT READS **2 MOVED, 62 UNMOVED**.**
+
+⛓ **The premise the clause rested on was false by eighteen minutes.** `unkeyableReason` opened
+with `row.kind !== 'gate'`, stating that the identity/producer rows "cost seconds; keying them
+would buy a second failure mode for no time at all". Measured at `cf2af27ab` off the writer's own
+banked `ms`: the 30 `kind: identity` rows sum to **1,078,564 ms = 18.0 min**, paid on EVERY
+`--write` whatever the head moved. Four rows are 63 % of it (`carved pairs c4` 270.2 s,
+`plan-seedling-r7-ends-meet --check` 221.5 s, `empty pairs c6` 154.5 s, `empty pairs c3` 96.0 s);
+seven exceed 60 s. Nothing about a `kind` makes a row cheap — `cheap` is the field that answers
+that question and it is MEASURED.
+
+**Built:** the clause is dropped and `unkeyableReason` MOVES to `rowInputKey.js` as an exported
+pure function, beside `rowRunDecision` and for its stated reason — a rule that lives inside a
+68-minute writer can be interrogated by nothing cheaper than the battery. Entry is
+`scriptIn(row.command)` exactly as for a gate row; the four populations, `--redrive-unchanged`,
+`--rekey` and `--force-row=` all applied unchanged, with no other edit needed.
+
+**THE BEFORE/AFTER `--keys` PAIR, TAKEN BY THIS SESSION, BOX-FREE:**
+
+| reading | head | result |
+|---|---|---|
+| pre-fix | `cf2af27ab` | 34 keyed, **31 unkeyable** (30 identity + the CI-read suite row) |
+| post-fix | `cf2af27ab` | 64 keyed (30 born with nothing banked), **1 unkeyable** |
+| pre-write | `e6c84a6f8` | 31 MOVED, 3 unmoved, 30 with nothing banked, 1 unkeyable |
+| ⛓⛓ **POST-WRITE, AFTER THE BANK COMMIT** | `5e42d4104` | ⛓ **2 MOVED, 62 unmoved, 0 with nothing banked, 1 unkeyable** |
+
+The 2 are `seedling-full-tier-owed` and `slice-records` — the two rows that DECLARE the bank via
+`@key-inputs`, moved by the bank commit they declare, and nothing else. **This is the first time
+anyone has observed the ≈2-of-34 steady state SG2 measured in July and the mechanism never once
+delivered; ~31 at this point would have meant S1+S2 did not work.** The one remaining unkeyed row
+is `suite: vitest (unfiltered)`, now refused by the clause that always should have answered it
+("its recipe already reads CI by SHA") rather than by a `kind`.
+
+**THE MUTANTS — the brief said VERIFY the closure, not trust it, and it was right to.**
+
+| mutant | measured |
+|---|---|
+| one line appended to `frontend/modules/procgenCore/skeletonKinds.js` (the kind tables) | **44 rows MOVED**, the three kind-pairs rows among them ⇒ `dump-seedling-kind-pairs.mjs`'s closure DOES reach the kind tables — and **20 unmoved**, which is the control |
+| one line appended to THIS queue doc | **2 rows MOVED** (`procgen-help`, `slice-records` — both declare or read it) and **0 of the 30 new ones** ⇒ a docs-only head carries them |
+
+⚠⚠ **SHARED ENTRIES: THREE GROUPS, NOT ONE, AND THE SHAPE IS OLDER THAN S2.** A key is a function
+of the ENTRY FILE, not of the command line, so rows that run one script under different FLAGS get
+IDENTICAL keys. The brief named one group; measured, there are three, covering eight rows:
+
+```
+dump-seedling-kind-pairs.mjs         empty pairs c3 · empty pairs c6 · carved pairs c4
+census-seedling-killgate-clears.mjs  killgate s2 · killgate s5 · killgate s9
+generate-seedling-level.mjs          level pre-sword s1 · level post-sword s1
+```
+
+⛓ **That is CORRECT, and it is not new.** Same entry ⇒ same closure ⇒ same data, so if one member
+of a group is owed a re-drive all of them are — the conservative direction. And `gate:
+seedling-editor-generate` and its own-server variant have shared a banked key since SG2, so S2
+adds groups to a property the mechanism already had rather than introducing one. ⛓ S2 also makes
+`identity: generated set` and `gate: seedling-generated-set` share a key — which is the duplicate
+drive §6 parked as **S6 (a)**, now visible from the key side rather than only from the clock.
+⛔ Do NOT "fix" the collision by hashing the command into the key: that would move three keys
+every time anybody re-words a flag, buying re-drives for no change in bytes.
+
+**THE WRITE, AND WHAT IT COST.** `standing-values --write` at `e6c84a6f8`, `setsid nohup`, PID
+from the log, polled with `kill -0`: **65 rows, 62 driven / 3 quoted, 70.1 min of row time, exit
+0** — no EXIT row, no nondeterminism finding. The 3 quotes are exactly the three rows that never
+carried the bank (`producer-boundaries` @`34c74aecc`, `rerecord-rehearsal` and `wasm-pins`
+@`95603e266c`). **ONE value moved and it is CI's:** `suite: vitest (unfiltered)` 413/12528 →
+413/12566. Every gate and identity verdict is unchanged — which is what a 70-minute re-drive over
+a tree nothing substantive moved under ought to read, and is the third such write in a row to say
+so.
+
+⛓ **Against the plan's projection, honestly:** this write does NOT test it. Its head is a SCRIPTS
+head that moved `rowInputKey.js` and `standing-values.mjs`, files in nearly every closure, so full
+freight was the correct price and both key births rode it. The projection is tested by the reading
+that follows it, and that reading is the 2-MOVED row above. Priced off the new bank, the next
+`--write` on a docs/plan-only head re-drives `seedling-full-tier-owed` (1.7 s) + `slice-records`
+(30.8 s) + the CI read (4.3 s) ≈ **37 seconds**, not "low minutes". ⚠ With one caveat worth
+having: a docs head that touches THIS queue doc also moves `procgen-help` (417 s), so that
+particular flavour of docs commit costs ~7.5 min. The box's local battery now stands at **70.5 min
+/ 65 timed rows** (up from 67.5 — the identity block re-measured at 21.5 min rather than 18.0, so
+the standing saving is the larger number).
+
+**Tests.** `rowInputKey.test.js` +10 rows (62 in the file). RED FIRST against a module carrying the
+clause again: **4 fail / 58 pass** — the headline, two roster rows (`leaves NO identity row
+unkeyable`; `still refuses the CI-read suite row`, which the old clause answered for the wrong
+reason since the suite row is `kind: ci-suite`) and the shared-entry row, red because ONE shared
+entry crosses kinds (`check-seedling-generated-set.mjs` carries both an identity and a gate row,
+and the old clause split them). ⛓ The clauses that STAYED are asserted on GATE rows on purpose, so
+they are green on both sides and the red set attributes to the one clause that moved. `npx vitest
+run scripts/procgen` 27 files / **504 tests** green (⚖ 52, bounded).
+
+⛓ **Three counts the brief carried are corrected by measurement, and the roster assertions are the
+form that keeps them from going stale again** (this arc has now produced two wrong-and-green counts
+— the plan's 30/33 and a test comment's "three catalogue entries" — and both survived because they
+were PROSE):
+
+1. The unkeyed population is **30 identity rows**, not the plan's 28.
+2. The launching session's **32** is the BANK-side count and is right as such: it also holds
+   `roster: --win --tier=full` (⚖ 70's composite, `alwaysQuoted`) and the suite row, neither of
+   which carries an `ms` — so both figures are true of different populations and the 18.0 min is
+   the 30 rows'.
+3. The shared-entry groups are **three**, not one.
+
+⛓ Two of the three are now PROPERTIES the suite re-derives from the live roster rather than
+sentences: *no identity row is unkeyable* and *every row sharing an entry gets the same keyability
+answer*, each guarded against vacuity by a non-empty assertion first (trap 824).
+
+⇒ **S3 (CI runs the browser gates) is NEXT and is the big one** — production-first by construction
+(`feedback_ci_fix_untested_environment`), its own session, nothing of it pulled forward here.
 
 ## 6. Everything else (unchanged queues)
 
