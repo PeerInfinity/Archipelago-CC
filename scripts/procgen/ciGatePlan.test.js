@@ -14,12 +14,17 @@
  * non-empty assertion first (trap 824).
  */
 
+import { execFileSync } from 'node:child_process';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
     CI_SHARD_BUDGET_MS, armName, ciGateArms, ciGatePlanFor, ciRunnable, planCiShards,
 } from './ciGatePlan.js';
 import { REPO, gateRoster } from './gateRoster.js';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
 
 /** ⛓ An arm shaped like `ciGateArms`' output, with only the fields the
  *  partition reads — the planner must not need a real gate to be asked. */
@@ -207,5 +212,77 @@ describe('ciGatePlanFor — the live tree', () => {
         expect(armName({ gate: { file: 'check-a-b.mjs' }, label: null })).toBe('a-b');
         expect(armName({ gate: { file: 'check-a-b.mjs' }, label: 'own server' }))
             .toBe('a-b (own server)');
+    });
+});
+
+/**
+ * ⛓⛓⛓ THE OTHER CONSUMER OF `ciRunnable` — `ci-summary.mjs`'s REFUSAL LADDER.
+ *
+ * ⛔⛔ EVERY ROW HERE IS OFF-NETWORK BY CONSTRUCTION, and that is asserted
+ * rather than hoped: the refusals all fire BEFORE the first `gh` call, and the
+ * one row that must get PAST them runs with a `PATH` that holds no `gh` at
+ * all — so a row that stopped refusing would fail at the network instead of
+ * quietly querying GitHub from a unit test. ⛓ Every key is DERIVED from the
+ * live roster; a typed gate name here would be the hand list this arc keeps
+ * finding wrong-and-green.
+ */
+describe('ci-summary.mjs — the refusal ladder, derived from the same predicate', () => {
+    const CI_SUMMARY = join(HERE, 'ci-summary.mjs');
+    const roster = gateRoster({ repo: REPO });
+    const nameOf = (g) => g.file.replace(/^check-/, '').replace(/\.mjs$/, '');
+    const runCi = (args) => {
+        try {
+            const out = execFileSync(process.execPath, [CI_SUMMARY, ...args], {
+                cwd: REPO,
+                encoding: 'utf8',
+                stdio: ['ignore', 'pipe', 'pipe'],
+                timeout: 60000,
+                env: { ...process.env, PATH: '/nonexistent' },
+            });
+            return { code: 0, out };
+        } catch (e) {
+            return { code: e.status ?? -1, out: `${e.stdout ?? ''}${e.stderr ?? ''}` };
+        }
+    };
+
+    it('REFUSES a Windows row by name, exit 5, without a network call', () => {
+        const win = roster.find((g) => g.windows);
+        expect(win).toBeTruthy();
+        const r = runCi(['deadbeef1', `--gate=gate: ${nameOf(win)}`]);
+        expect(r.code).toBe(5);
+        expect(r.out).toMatch(/REFUSED/);
+        expect(r.out).toMatch(/Windows/);
+    });
+
+    it('REFUSES a gate that is not on the roster at all, exit 5', () => {
+        const r = runCi(['deadbeef1', '--gate=gate: no-such-gate-anywhere']);
+        expect(r.code).toBe(5);
+        expect(r.out).toMatch(/no gate named/);
+    });
+
+    it('REFUSES a @ci-face gate asked under its `gate:` key, exit 5', () => {
+        const faced = roster.find((g) => g.ciFace);
+        expect(faced).toBeTruthy();
+        const r = runCi(['deadbeef1', `--gate=gate: ${nameOf(faced)}`]);
+        expect(r.code).toBe(5);
+        expect(r.out).toMatch(/@ci-face/);
+    });
+
+    /**
+     * ⛔⛔ THE ROW S3 EXISTS FOR. Before this slice a browser key was refused
+     * BY NAME — *"needs a browser and CI runs neither, so no answer for it
+     * exists at any SHA"* — and that sentence is now false. A refusal that
+     * outlives the thing it refused is the quietest way to make a working
+     * production side look broken.
+     */
+    it('does NOT refuse a browser key any more — it goes on to ask CI', () => {
+        const browser = roster.find((g) => g.browser && !g.windows);
+        expect(browser).toBeTruthy();
+        const r = runCi(['deadbeef1', `--gate=gate: ${nameOf(browser)}`]);
+        expect(r.out).not.toMatch(/REFUSED/);
+        expect(r.code).not.toBe(5);
+        /** ⛓ …and it died at the NETWORK, which is what "got past the ladder"
+         *  looks like when there is no `gh` on the PATH. */
+        expect(r.out).toMatch(/ENOENT|spawnSync|gh/);
     });
 });

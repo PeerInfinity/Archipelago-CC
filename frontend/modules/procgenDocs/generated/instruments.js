@@ -2538,6 +2538,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "flag"
                     ],
+                    "name": "gates"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
                     "name": "json"
                 },
                 {

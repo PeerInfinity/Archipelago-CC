@@ -5,6 +5,7 @@
  *
  *   node scripts/procgen/ci-summary.mjs [<sha>] [--wait] [--json]
  *   node scripts/procgen/ci-summary.mjs [<sha>] --gate='<standing key>' [--json]
+ *   node scripts/procgen/ci-summary.mjs [<sha>] --gates [--json]
  *
  * Without `--gate=` this is exactly what `ci-vitest-summary.mjs` has always
  * been — and that file is now a SHIM onto this one, so the `suite:` standing
@@ -19,6 +20,23 @@
  * Exit codes: 0 green · 1 red · 2 no run for this SHA · 3 not concluded
  * (`--wait` polls) · 4 the log carries no such answer · 5 REFUSED BY NAME —
  * CI cannot answer this key at all.
+ *
+ * ── ⛓⛓⛓ `--gates`: **THE WHOLE VERDICT SET, AGAINST THE BANK** ───────
+ *
+ * ⚖ 72 (b) sets the bar a row must clear before the bank may quote CI for it:
+ * **three consecutive CI runs whose verdict sets equal the banked values.**
+ * Comparing two dozen keys by eye once per run is how a bar gets recorded as
+ * "looked fine". This form prints one row per `## CI-GATE |` line at a SHA,
+ * beside the bank's value for the SAME key, and exits non-zero if any COMPARED
+ * pair disagrees.
+ *
+ * ⛔ A LINE WITH NO BANK ROW IS `not-banked`, NEVER A MATCH. A `@ci-face` key
+ * (`gate-help-ci: …`, `structure: …`) is a DIFFERENT, bounded claim and the
+ * bank holds no row under it — counting it as agreement would be the quiet
+ * zero this file's whole refusal ladder exists to prevent.
+ * ⛔ AND A BANKED ARM WITH NO LINE IS `MISSING`, which is the direction that
+ * matters: a shard that never ran must read as an absent answer, not as a
+ * smaller verdict set that happens to agree with itself.
  *
  * ── ⛔⛔ THE REFUSAL IS THE POINT OF THE `--gate=` FORM ────────────────
  *
@@ -44,9 +62,10 @@
 
 import { execFileSync } from 'node:child_process';
 
-import { ciRunnable } from './ciGatePlan.js';
+import { ciGateArms, ciRunnable } from './ciGatePlan.js';
 import { REPO, gateRoster } from './gateRoster.js';
 import { findRun, gateLogs, jobLog, parseGateLines, parseSummaries } from './ciSummary.js';
+import { readStandingValues } from './standingValues.js';
 
 
 import { argvHelp } from './argvHelp.js';
@@ -59,6 +78,7 @@ const arg = (n) => (args.find((a) => a.startsWith(`--${n}=`)) ?? '').slice(n.len
 const wait = flag('wait');
 const json = flag('json');
 const GATE = arg('gate');
+const ALL_GATES = flag('gates');
 const sha = args.find((a) => !a.startsWith('--'))
     || execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
 
@@ -110,8 +130,50 @@ while (run.status !== 'completed') {
  * (S3's shard matrix). Asking for every job's log when only the suite is
  * wanted would pay four extra API round trips for nothing.
  */
-const gathered = GATE ? gateLogs(run) : null;
+const gathered = (GATE || ALL_GATES) ? gateLogs(run) : null;
 const log = gathered ? gathered.log : jobLog(run);
+
+/* ── --gates: the whole verdict set, beside the bank's ───────────────── */
+
+if (ALL_GATES) {
+    const lines = parseGateLines(log);
+    const bank = readStandingValues({ repo: REPO })?.rows ?? {};
+    /** ⛓ CI key -> the STANDING key its value belongs under. They differ for a
+     *  declared `@ci-face`, which is exactly the pair that must not compare. */
+    const arms = ciGateArms({ repo: REPO, set: 'all' });
+    const bankKeyOf = new Map(arms.map((a) => [a.key, a.gate.ciFace ? null : a.bankKey]));
+    const rows = [...lines.values()].map((row) => {
+        const bankKey = bankKeyOf.has(row.key) ? bankKeyOf.get(row.key) : row.key;
+        const banked = bankKey ? bank[bankKey]?.value ?? null : null;
+        return { ...row, bankKey, banked,
+            verdict: banked === null ? 'not-banked' : (banked === row.value ? 'same' : 'MOVED') };
+    });
+    /** ⛔ …and the arms CI was supposed to answer and did not. */
+    const missing = arms.filter((a) => !lines.has(a.key)).map((a) => a.key);
+    const moved = rows.filter((r) => r.verdict === 'MOVED');
+    if (json) {
+        console.log(JSON.stringify({ sha, run: run.databaseId, conclusion: run.conclusion,
+            jobs: gathered.jobs, unreadable: gathered.unreadable, rows, missing }, null, 2));
+    } else {
+        console.log(`CI gates @ ${sha.slice(0, 9)} — run ${run.databaseId} ${run.conclusion}, `
+            + `${gathered.jobs} job(s), ${rows.length} line(s)`);
+        for (const r of rows.sort((a, b) => a.key.localeCompare(b.key))) {
+            console.log(`  ${r.verdict.padEnd(10)} ${r.key.padEnd(44)} ci=${r.value}`
+                + `${r.verdict === 'MOVED' ? `  bank=${r.banked}` : ''}  exit=${r.exit}`);
+        }
+        for (const k of missing) console.log(`  MISSING    ${k}`);
+        if (gathered.unreadable.length) {
+            console.log(`  ⚠ ${gathered.unreadable.length} job log(s) unreadable: `
+                + gathered.unreadable.join('; '));
+        }
+        console.log(`\n${rows.filter((r) => r.verdict === 'same').length} same, `
+            + `${moved.length} MOVED, `
+            + `${rows.filter((r) => r.verdict === 'not-banked').length} not-banked, `
+            + `${missing.length} MISSING — ⚖ 72 (b) wants three consecutive runs with `
+            + '0 MOVED and 0 MISSING.');
+    }
+    process.exit(moved.length || missing.length ? 1 : 0);
+}
 
 /* ── --gate=: one line, read out of the job log ──────────────────────── */
 
