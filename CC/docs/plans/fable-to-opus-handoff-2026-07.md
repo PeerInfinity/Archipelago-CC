@@ -6341,6 +6341,38 @@ a push. `suite: vitest (unfiltered)` has behaved exactly this way since ⚖ 52 (
 reads `quoted: true`, `measuredAt: eb7593655`, with the reason attached), and that is the precedent
 the ruling extends rather than a new hazard.
 
+**⚖ 72 (b) AMENDED (user, 2026-09-01, on S3's measurement): THE BAR IS PER ROW.** As ruled it
+read *"three consecutive CI runs whose verdict sets equal the banked values"* — a RUN-level test,
+written before anyone knew that two rows disagree with the bank in CI at EVERY head and always
+will. `seedling-full-tier-owed` (ci 2/0/1 vs bank 5/0) and `slice-records` (ci 42/24 vs bank
+73/0/37) both read the depth-1 clone `actions/checkout` makes (trap 1058), which is a fact about
+the CHECKOUT, not about the tree. ⛔ Under the run-level reading those two hold the other 26 rows
+hostage forever and no row could ever flip. The bar is therefore **three consecutive runs in which
+THAT ROW reads `same`**, counted by `ci-summary --gates` (S3's instrument, which prints the
+per-row verdict and says in its own footer that the exit code is the run-level answer and not the
+bar).
+
+⛓ THE AMENDMENT DOES NOT WEAKEN THE BAR, and the first row to test it proves so: 23 of the 24 CI
+arms had four consecutive `same` at S3's close, and the 24th — `preset-bundle-load`, ci 9/1 against
+a banked 10/0, a `userloaded:` scheme page-error race once in four runs of its shard — restarted
+its streak and is held back. A run-level bar would have blocked all 24 on those two structural
+rows; the per-row bar blocked exactly the one row that deserved blocking.
+
+**⇒ S4b QUEUED (2026-09-01, the three loose ends S1–S3 named and did not own).** Small, box-light,
+one session, after S4:
+· **(1) CHARACTERISE the `preset-bundle-load` flake** — one occurrence is not a characterisation
+  (`feedback_flaky_read_as_order_dependent`: run it ALONE 8×). It is 21.7 s banked, so eight runs
+  is ~3 min of box. Until it is characterised it stays out of the CI-sourced set.
+· **(2) `slice-records` SHOULD REFUSE BY NAME IN A SHALLOW CLONE, not go red.**
+  `check-seedling-full-tier-owed.mjs:313` already does exactly this and is the model named in trap
+  1058; `slice-records` instead reads the shallow clone's own HEAD as the convention's start commit
+  and reports 42/24. ⛔ A gate that cannot ask its question must say so, not answer wrongly.
+· **(3) TRAP 1057's LATENT HALF** — the undrained `fetch` body that killed Node 22's undici in
+  `check-seedling-wasm-element`'s liveness probe is a PATTERN, and S3's negative control measured
+  the nine sibling gates at 0/40 only because their probe body is 26 KB. ⛓ The box's Node has been
+  hiding this for months. Drain them (or pin the runner's Node deliberately) before the next Node
+  bump makes it nine reds at once.
+
 **Ladder (cheapest-first; trap-1047 checked — the cheap `ciSourced` widening consumes S3's CI
 lines, so consumption is ordered after production + the stability bar):** **S1** bank out of its
 own keys (mutant: touch the bank → exactly 2 rows MOVED, was 30; one full-freight write owed at
