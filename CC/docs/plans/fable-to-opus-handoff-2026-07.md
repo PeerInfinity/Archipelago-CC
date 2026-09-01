@@ -6292,7 +6292,7 @@ the eventual fix is on the producing side. No new `.gitignore` lines; the transi
 the preserved list + restore IS the solution. Open: `docs/json/developer/diffs/file-lists/*.md`
 still say 61 (regenerated at release).
 
-## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01, ⚖ 72 RULED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; S1 SHIPPED 2026-09-01 `ad5aef2b0`, S2 SHIPPED 2026-09-01 `e6c84a6f8` + the owed write `5e42d4104`, S3 SHIPPED 2026-09-01 `9f46b2bfd`…`765ea79fa`, S4 SHIPPED 2026-09-01 `91c26b690`…`4a99828ec` — SIX ROWS QUOTE CI; S4b + S4c NEXT)
+## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01, ⚖ 72 RULED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; S1 SHIPPED 2026-09-01 `ad5aef2b0`, S2 SHIPPED 2026-09-01 `e6c84a6f8` + the owed write `5e42d4104`, S3 SHIPPED 2026-09-01 `9f46b2bfd`…`765ea79fa`, S4 SHIPPED 2026-09-01 `91c26b690`…`4a99828ec` — SIX ROWS QUOTE CI; S4b SHIPPED 2026-09-01 `0f9e0cf27`…`3eceb7d18` — all three loose ends closed; S5 + S4c NEXT)
 
 **The question (user):** *"At some point I'll want to check why the battery takes so long. Can it
 be moved to CI? Can parts of it run in parallel?"* All numbers re-derived at `dde883de9`, none
@@ -6880,6 +6880,156 @@ on EVERY `--write` at 8 s each: that is the point — a CI answer can move at un
 `scripts/**/*.json` (the bank) or `CC/docs/**` (this queue doc) triggers NO run, so a `--write`
 at such a head KEEPs all six with the exit's reason. Correct behaviour, and the KEEP now says
 which kind of "no answer" it hit.
+
+**⇒ S4b SHIPPED 2026-09-01 (`0f9e0cf27` … `3eceb7d18`, PUSHED; THREE code commits) — ALL THREE
+LOOSE ENDS CLOSED, AND EVERY ONE OF THEM WAS BIGGER OR DIFFERENT THAN THE BRIEF SAID.** ⛓ The
+pattern this arc keeps producing held for a fourth time: each item's stated shape was a
+REPORTED fact nothing had checked, and each one moved when it was measured.
+
+**⛓ (1) THE `preset-bundle-load` FLAKE IS AN APP DEFECT, NOT A TEST FLAKE — AND THE BOX CANNOT
+SEE IT.** Eight SOLO runs at `e4bb64900` (`feedback_flaky_read_as_order_dependent`'s bar):
+**8/8 green, 0/8 reproduced**, 28.1–41.7 s each against a 21.7 s bank. ⛔ Eight greens do not
+refute a 1-in-4 CI reading (0.75⁸ ≈ 10 %), so the rate was never going to be the answer — and
+the brief's own instruction (don't fix it until you can say what races with what) is what made
+the next step reading CI's FAIL line instead of adding a wait.
+
+⇒ **WHAT FETCHES WHAT.** `presetUI.js:1539` labels every hand-loaded document
+`userLoaded:<file name>` — a bundle member `userLoaded:<zip> → <entry>`. On
+`stateManager:rulesLoaded` the loops module hands `eventData.source` to
+`costDataManager.tryLoadEmbedded`, whose `_looksLikeRulesPath` **ENUMERATED** the synthetic
+source names by exact match (`procgenPipeline`, `editorApply`,
+`moduleSpecificConfigProvidedRules`, prefix `hardcodedFallback:`) and then admitted anything
+`endsWith('.json')`. The label ends in `.json`. So it was FETCHED AS A URL, and Chrome wrote
+`Fetch API cannot load userloaded:AP_1_bundle.zip → rules.json. URL scheme "userloaded" is not
+supported.` — the `TypeError` is caught inside `tryLoadEmbedded`; **the browser's own console
+error is not the caller's to catch**, and CLAIM 7 counted it.
+
+⇒ **WHAT RACES WITH WHAT: the app's post-`files:jsonLoaded` chain against the DRIVER'S NEXT
+NAVIGATION.** `upload()` returns the moment the tap fires and `openApp()` immediately
+`page.goto`s; the `rulesLoaded → loops → fetch` chain has to get its request out first.
+MEASURED by making the page dwell, one probe run per cell:
+
+| extra dwell | `userloaded` console errors | CLAIM 7 |
+|---|---|---|
+| 0 ms (the gate as shipped) | 0 (and 0 in all 8 solo runs) | PASS |
+| 100 ms | 2 | FAIL |
+| 250 ms | 3 | FAIL |
+| 1 s / 2 s / 3 s | 4 / 4 / 3 | FAIL |
+
+⇒ the window is **under 250 ms**, and it fires on the PLAIN `.json` loads too
+(`userLoaded:AP_1_rules.json`) — the bundle was never special. A slower runner reading `9/1`
+once in four is exactly this.
+
+⛓ **THE FIX IS STRUCTURAL AND IS NOT A FOURTH NAME ON THE LIST** (`0f9e0cf27`): a source
+carrying a scheme `fetch` cannot use is a LABEL whatever it ends in, so
+`/^(?!https?:)[a-zA-Z][a-zA-Z0-9+.-]+:/` refuses it — `userLoaded:`, `embedded:`,
+`hardcodedFallback:` and whatever is written next
+([[feedback_op_enumerates_so_a_new_field_reaches_nothing]]). RED FIRST: the new row fetched all
+three labels before the change. A second row asserts `https://…` and `./presets/…json` still
+fetch, so the guard cannot pass by refusing everything. ⛓ AND THE END-TO-END PAIR: the 3 s-dwell
+arm read **3 errors + a red CLAIM 7** before and **0 errors + ALL CHECKS PASSED** after; the
+un-dwelt gate is green either way, which is why the box could never have found this.
+
+⚠ **THE ROW IS STILL `cheap` AND STILL NOT CI-SOURCED**, so nothing downstream moves — S4's
+reading (excluded by `cheap`, not by the bar) is unchanged. What changes is that the held-back
+streak was held back for a cause that no longer exists.
+
+**⛓⛓ (2) `slice-records` REFUSES BY NAME IN A SHALLOW CLONE** (`6e4736745`), and the
+reproduction found the defect is WORSE than the queue doc recorded. A real `git clone --depth 1`
+of this repository at `e4bb64900` reads **42 PASS / 24 FAIL** — byte-for-byte CI's number — and
+all 66 rows are about the wrong commit, by THREE mechanisms and not one:
+
+  · `git log -S` resolves EVERY heading to the graft (HEAD), so the derived convention boundary
+    IS the head under test and the 24 folds that legitimately predate the convention fail — the
+    one the doc already named;
+  · ⚖ 22 then reads the graft's `--name-only`, which for a root commit is the WHOLE TREE, so all
+    33 headings "carry the docsIndex regen" and pass for a reason unrelated to their commits;
+  · and the trap citations **VANISH**: `git show` of the graft exceeds the reader's 64 MB
+    buffer, the diff comes back empty, and check (3) contributes NO ROWS AT ALL. A silent zero,
+    in the file whose docblock exists to refuse silent zeros.
+
+⇒ `sliceRecords.shallowRefusal()` — `rev-parse --is-shallow-repository`, the clone's OWN
+question. ⛔ Not a symptom: inferring shallowness from "the boundary equals HEAD" would also
+fire on a legitimate tree whose oldest block IS the head. The rung sits BEFORE the roster is
+read, so not one row of a wrong answer is ever composed, and `--json` refuses in its own shape.
+Exit **0**, following `check-seedling-full-tier-owed.mjs:313`: "the question could not be put"
+is not a failing check.
+
+⛓ **S4's `@ci-shallow` LINE STAYS, AND THE GATE NOW SAYS WHY IT IS NOT REDUNDANT** — the
+declaration governs what the BANK may quote, the refusal governs what the GATE may say. Both
+layers correct, neither replacing the other.
+
+BOTH ARMS MEASURED AFTER: depth-1 → `SKIP: this is a SHALLOW CLONE …` + `ALL PASS — REFUSED`,
+exit 0; full clone's CI face → **73/0/37**, unmoved, and `--local` → 86/0/24 + 2 notes. Four
+unit rows driven against a REAL depth-1 clone of the three-commit throwaway fixture (not a
+stub), with the control that the clone really is shallow; MUTANT (`shallowRefusal` → always
+null) reds exactly the two rows that assert the refusal and leaves the control green.
+
+**⛔⛔ (3) TRAP 1057: THE COUNT WAS WRONG IN BOTH DIRECTIONS, AND ONE PROBE WAS NEVER LATENT**
+(`3eceb7d18`). Census of every `fetch(` in `scripts/` — 22 sites, 3 of them inside
+`page.evaluate` (the BROWSER's fetch, not undici) — gives **12 node-side undrained non-HEAD
+sites**, not S3's nine and not the brief's ten:
+
+  · the **9** `check-seedling-editor-*.mjs` (boot, export, lanes, manual, overlays, refusal,
+    shapes, solve, world) — S3's nine, confirmed;
+  · `check-seedling-wasm-ship.mjs` (Windows-only), `probe-seedling-watch-page.mjs`, and
+    `scripts/test/test-health-check.js` — **named by nobody**;
+  · and `check-seedling-wasm-pages.mjs` **IS NOT ONE** — the brief counted it; it uses
+    `{ method: 'HEAD' }`, one of the two forms the original measurement found safe at 0/40.
+
+⛓⛓⛓ **AND THE "LATENT" READING HELD FOR THE NINE AND FAILED FOR THE PROBE.** Measured here on
+node **v22.23.2**, 40 fresh processes per cell, against this repo's own `python3 -m http.server`:
+
+| probe body | undrained | drained |
+|---|---|---|
+| 26 KB `tapes/index.json` (the nine editor gates) | **0/40** | 0/40 |
+| 82 KB `tapes/r4-walk-full.json` (`probe-seedling-watch-page`) | **32/40** | 0/40 |
+| 85 KB `watch.html` (the one already fixed) | **19/40** | 0/40 |
+
+`probe-seedling-watch-page.mjs` takes the tape NAME on the command line and the largest committed
+tape is 82 KB — so it was not latent at all; it is an **80 %-crash probe** that nothing had ever
+run on node 22. ⛓ S3's inference was SOUND OVER THE POPULATION IT MEASURED; the population was
+the nine editor gates and it did not contain this file. (The 85 KB cell also shows the rate is
+load-dependent: 19/40 here against S3's 5/40 at the same body.)
+
+⛔ **DECIDED DELIBERATELY: DRAIN, DO NOT PIN THE RUNNER'S NODE.** A pin fixes one consumer and
+leaves the box, every contributor and every future runner exposed to a crash thrown from a
+socket callback no `try`/`catch` at the call site can see — the process dies and the gate's
+stdout goes with it. The drain is one line per site and does not move the probe's question, and
+the reasoning ("a DRAIN and not a `HEAD`, because the probe's QUESTION must not move") travels
+with every site while the NUMBERS stay where they were measured.
+
+⛓⛓ **AND A UNIT ROW HOLDS THE PATTERN** — `fetchDrain.test.js`: every `fetch(` in `scripts/`
+drains its body or asks for none. ⛔ A vitest row and not a `check-*.mjs` report
+([[feedback_lint_report_is_not_the_gate]]) — a report somebody must remember to run gates
+nothing, and **the box's node 18 hides this defect**, so the row is the only thing that can see
+it here. Its call detector reads `maskComments`' own `REGEX_AFTER_KEYWORD` rather than keeping a
+second copy of "which word may precede a call", and it carries its own two controls (it sees an
+undrained call; it does NOT see `sphere-log fetch(es)` in prose or `api.fetch(`). MUTANT
+(un-drain one gate) reds it with the file, the line and the call.
+
+**THE COST OF THIS SLICE'S HEAD, PRICED RATHER THAN ASSUMED.** `--keys` at `3eceb7d18` reads
+**34 MOVED / 24 unmoved / 7 unkeyable** — the whole-file shape S4 already named, and the cause
+here is `costDataManager.js` (in most frontend closures) plus the ten touched gate files. The
+moved rows sum to **1,711 s = 28.5 min** of banked box, of which 474.5 s is the Windows
+`seedling-wasm-ship` row and 409.1 s is `procgen-help`'s ciFace (S5's subject).
+
+**THE CLOSING WRITE, AT THE HEAD CI HAD CONCLUDED ON** (`df127df68`, run 33555725728 success).
+31.8 min of box for the 34 moved rows; the six CI-sourced rows read from CI in **37.5 s total**
+(5.5–7.0 s each) against their 25.8 banked minutes. ⛓ **ZERO gate values moved** — every drained
+probe, the shallow refusal and the `userLoaded:` filter are byte-inert to what the gates ANSWER on
+the box, which is what they were supposed to be. The one move in the bank is `suite: vitest
+(unfiltered)` 413/12566 → 416/12615, CI's own count at this SHA. No nondeterminism findings;
+`seedling-editor-arm` at 65.0 s HELD by the ±10 % band (trap 735).
+
+⛓⛓ **AND THE PAIR THE REPAIR WAS FOR, READ IN PRODUCTION:** at `3eceb7d18` the SAME code answers
+`73/0/37` on the box and `ci=0/0/1` under the `shallow` verdict in CI — where every previous head
+read `42/24`. ⛓ `preset-bundle-load` reads `same` in that run (ci `10/0`), streak 2. Run-level:
+**26 same, 0 MOVED, 2 shallow, 2 not-banked, 0 MISSING.**
+
+⇒ **WHAT S4b LEAVES.** S5 (`procgen-help --doors=all --in-place` in CI, then retire the face)
+and S4c (identity rows need CI to publish a line first) are untouched and unchanged. The
+`¬ciFace` clause is exactly as S4 left it.
 
 ## 6. Everything else (unchanged queues)
 
