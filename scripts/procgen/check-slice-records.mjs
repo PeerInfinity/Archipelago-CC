@@ -65,6 +65,17 @@
  *   node scripts/procgen/check-slice-records.mjs --local --kickoff=<path>
  *   node scripts/procgen/check-slice-records.mjs --memory=<dir>
  *   node scripts/procgen/check-slice-records.mjs --json
+ *
+ * ⛓⛓⛓ **THE BANK IS THIS ROW'S SUBJECT, SO THIS ROW DECLARES IT** (⚖ 72 (c),
+ * R9 slice S1). `standing-values.json` was in the DERIVED `data` population of
+ * 31 of 34 keyed rows — measured — so banking a write re-armed a near-full
+ * re-drive; `rowInputKey.DERIVED_DATA_EXCLUDED` took it out of the derived
+ * rules. But `sliceRecords.js` OPENS it (`STANDING_VALUES`, and a record
+ * accounts for its line count), so its bytes really are an input HERE, and a
+ * derivation-wide exclusion without this line would be exactly the stale green
+ * that file's docblock exists to refuse.
+ *
+ * @key-inputs data: scripts/procgen/standing-values.json
  */
 
 import { execFileSync } from 'node:child_process';

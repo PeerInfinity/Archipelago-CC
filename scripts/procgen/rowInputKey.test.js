@@ -16,13 +16,16 @@
  * case that matters (an input that moved).
  */
 
+import { readFileSync } from 'node:fs';
+
 import { describe, expect, it } from 'vitest';
 
 import {
-    POPULATIONS, digestOf, expandDeclared, globToRe, inputPopulations, keyInputsIn,
-    keyReportLines, nondeterminismFinding, rowInputKey, rowRunDecision, spawnTargetsIn,
-    stripComments,
+    DERIVED_DATA_EXCLUDED, POPULATIONS, digestOf, expandDeclared, globToRe, inputPopulations,
+    keyInputsIn, keyReportLines, nondeterminismFinding, rowInputKey, rowRunDecision,
+    spawnTargetsIn, stripComments,
 } from './rowInputKey.js';
+import { FILE as STANDING_VALUES } from './standingValues.js';
 
 /** A context whose every input is a literal — the only kind a rule can be
  *  tested against without testing the tree as well. */
@@ -449,5 +452,114 @@ describe('markdown and directory inputs — an instrument READS, everything else
         for (const t of tracked) c.tracked.add(t);
         expect(inputPopulations({ entry: 'scripts/procgen/check-y.mjs', ctx: c }).data)
             .not.toContain('docs/dev/two.md');
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * THE WRITER'S OWN OUTPUT — ⚖ 72 (c), R9 slice S1
+ *
+ * ⛔⛔ THE MUTANT PAIR, AND BOTH HALVES ARE LOAD-BEARING. Half one is the
+ * headline: the bank leaves the derived populations. Half two is the
+ * NEGATIVE CONTROL (trap 1018 — *a negative control finds a stale green*,
+ * found on this very key machinery): an exclusion that accidentally emptied
+ * the whole `data` population would pass half one perfectly and destroy the
+ * mechanism. So every row below that asserts an ABSENCE is paired with one
+ * asserting the presences around it.
+ *
+ * ⛓ Measured on the real tree at `2f46ba941`, with `--keys` before and after
+ * and every row's key diffed: touching the bank moved **31 of 34** keyed rows
+ * before and **2** after — exactly `seedling-full-tier-owed` and
+ * `slice-records`, the two that declare it. Touching a real data member of a
+ * wasm row (`frontend/modules/flashPanel/games/seedling.json`) moved **29**
+ * rows before AND after, the same 29 by name. These stubs are that pair,
+ * bounded to the rule.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe("the writer's own output is not one of its inputs", () => {
+    const OTHER = 'scripts/procgen/some-baseline.json';
+    const world = {
+        files: {
+            'scripts/procgen/check-b.mjs': "import './r.js';\n",
+            /** ⛓ BOTH routes in, because the bank used both: the DIRECTORY
+             *  literal (29 rows, via `gateRoster.js`'s `'scripts/procgen'`)
+             *  and the PATH literal (the 2 rows that spell it). */
+            'scripts/procgen/r.js': "const DIR = 'scripts/procgen';\n"
+                + `const B = '${STANDING_VALUES}';\n`,
+        },
+        edges: { 'scripts/procgen/check-b.mjs': ['scripts/procgen/r.js'] },
+        fixtures: [],
+    };
+    const ctxOf = () => {
+        const c = stubCtx(world);
+        c.tracked.add(STANDING_VALUES);
+        c.tracked.add(OTHER);
+        return c;
+    };
+    const ENTRY_B = 'scripts/procgen/check-b.mjs';
+    const declaringIt = { code: [], data: [STANDING_VALUES], spawn: [], build: [],
+        unkeyable: null };
+    /** ⛓ The bank's BYTES, moved — the only thing a touch of it changes. */
+    const moved = (ctx) => {
+        const c = { ...ctx };
+        c.hash = (rel) => (rel === STANDING_VALUES ? 'MOVED' : ctx.hash(rel));
+        return c;
+    };
+
+    /** ⛔ THE CONSTANT IS THE WRITER'S, NOT A COPY OF ITS SPELLING. A literal
+     *  retyped here would go stale the day the bank moves and the exclusion
+     *  would silently stop excluding. */
+    it('excludes exactly the path `standingValues` itself declares', () => {
+        expect(DERIVED_DATA_EXCLUDED).toBe(STANDING_VALUES);
+    });
+
+    /** 1 THE HEADLINE — neither derived route puts it in the population. */
+    it('is in NO derived data population, by either route that put it there', () => {
+        expect(inputPopulations({ entry: ENTRY_B, ctx: ctxOf() }).data)
+            .not.toContain(STANDING_VALUES);
+    });
+
+    /** ⛔⛔ 2 THE NEGATIVE CONTROL, at the unit level: the directory rule that
+     *  carried the bank in still carries everything else. An exclusion that
+     *  emptied `data` would pass the row above and fail here. */
+    it('leaves every OTHER file the directory rule finds in the population', () => {
+        expect(inputPopulations({ entry: ENTRY_B, ctx: ctxOf() }).data).toContain(OTHER);
+    });
+
+    it('does NOT move the key when the bank alone moves', () => {
+        const ctx = ctxOf();
+        expect(rowInputKey({ entry: ENTRY_B, ctx: moved(ctx) }).key)
+            .toBe(rowInputKey({ entry: ENTRY_B, ctx }).key);
+    });
+
+    /** ⛔ …and the same tree, same rule, with the OTHER data file moved: the
+     *  key MUST move. This is the second half of the control — "unmoved" is
+     *  only meaningful from a context that can move. */
+    it('DOES move the key when a data member that is not the bank moves', () => {
+        const ctx = ctxOf();
+        const other = { ...ctx, hash: (rel) => (rel === OTHER ? 'MOVED' : ctx.hash(rel)) };
+        expect(rowInputKey({ entry: ENTRY_B, ctx: other }).key)
+            .not.toBe(rowInputKey({ entry: ENTRY_B, ctx }).key);
+    });
+
+    /** ⛔⛔ 3 THE DECLARATION SURVIVES THE EXCLUSION — the whole reason this is
+     *  safe. A row whose SUBJECT is the bank says so, and then it keys on it
+     *  again; without this the two rows the bank can falsify would be quoted
+     *  forever, which is the stale green the exclusion must not buy. */
+    it('keeps it for a row that DECLARES it, and that row moves when it moves', () => {
+        const ctx = ctxOf();
+        expect(inputPopulations({ entry: ENTRY_B, declared: declaringIt, ctx }).data)
+            .toContain(STANDING_VALUES);
+        expect(rowInputKey({ entry: ENTRY_B, declared: declaringIt, ctx: moved(ctx) }).key)
+            .not.toBe(rowInputKey({ entry: ENTRY_B, declared: declaringIt, ctx }).key);
+    });
+
+    /** ⛓ …and the two gates that carry that declaration on disk are the two
+     *  the real-tree mutant named. A declaration nobody parses is an input
+     *  population that silently does not exist. */
+    it('is declared by the two gates whose SUBJECT it is', () => {
+        for (const gate of ['./check-seedling-full-tier-owed.mjs', './check-slice-records.mjs']) {
+            const text = readFileSync(new URL(gate, import.meta.url), 'utf8');
+            expect(keyInputsIn(text, { file: gate }).data).toContain(STANDING_VALUES);
+        }
     });
 });

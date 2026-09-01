@@ -48,7 +48,11 @@
  *               every `fixtures/**.json` whose STEM the closure names as a
  *               delimited token (`dataReach`'s own law, run FORWARD), plus
  *               every path literal in the closure that resolves to a tracked
- *               non-code file, plus what the gate declares.
+ *               non-code file, plus what the gate declares. ⛔ MINUS exactly
+ *               one file — `standing-values.json`, the writer's OWN OUTPUT;
+ *               see `DERIVED_DATA_EXCLUDED` for the measurement that forced
+ *               it and for why a row whose subject IS the bank declares it
+ *               back rather than inheriting it.
  *   3 **SPAWN** the shell-out targets and their closures. **An `execFileSync`
  *               reach is invisible to an import sweep (trap 901)** — this
  *               population exists so that it is not. `check-procgen-demos`
@@ -67,8 +71,10 @@
  *     * @key-inputs <population>: <repo-relative path or glob> …
  *     * @key-inputs unkeyable: <the reason>
  *
- * At this head `check-procgen-help.mjs` is the only declarer, and it needs one
- * line: its CLOSURE is six files but its SUBJECT is all 265 instruments.
+ * At this head there are THREE declarers: `check-procgen-help.mjs` (its
+ * CLOSURE is six files but its SUBJECT is all 265 instruments), and — since
+ * ⚖ 72 (c) — `check-seedling-full-tier-owed.mjs` and `check-slice-records.mjs`,
+ * each declaring the one file the derived rules now refuse to see.
  *
  * ── ⚠ WHAT A KEY STILL CANNOT SEE, stated rather than implied ─────────
  *
@@ -100,6 +106,7 @@ import { join } from 'node:path';
 import { REPO, buildGraph } from './reachClosure.js';
 import { cliTargetsIn } from './gateDedup.js';
 import { SCRIPT_DIR } from './gateRoster.js';
+import { FILE as STANDING_VALUES } from './standingValues.js';
 
 /** ⛓ The order is the report's order and the key's order — one spelling. */
 export const POPULATIONS = Object.freeze(['code', 'data', 'spawn', 'build']);
@@ -108,6 +115,43 @@ export const POPULATIONS = Object.freeze(['code', 'data', 'spawn', 'build']);
 export const UNKEYABLE = 'unkeyable';
 
 const md5 = (s) => createHash('md5').update(s).digest('hex');
+
+/**
+ * ⛓⛓⛓ **THE WRITER'S OWN OUTPUT IS NOT ONE OF ITS INPUTS — ⚖ 72 (c), R9
+ * slice S1.** `standing-values.json` is the file `--write` PRODUCES, and it
+ * was a member of the DERIVED `data` population of **31 of the 34 keyed rows**
+ * (measured at `2f46ba941`, by touching it and diffing every row's key).
+ *
+ * ⛔⛔ THAT IS A CACHE WHOSE KEY COVERS THE CACHE. Banking a write moved 31
+ * keys, so the commit that recorded a measurement re-armed the next full
+ * re-drive, and ⚖ 71 (a)'s promised ≈2/34 steady state never once
+ * materialised: `--keys` at `d51a0e409` — two docs commits and a one-row
+ * re-bank past the last write — read **31 MOVED, 3 unmoved**.
+ *
+ * ⛓ HOW IT GOT IN, since a grep exonerates the wrong suspect: for 29 of those
+ * rows NO file in the closure spells the path at all. It arrives through the
+ * DIRECTORY rule below — `gateRoster.js` spells `'scripts/procgen'`, and the
+ * bank is a `.json` directly under it. (For the two rows that DO spell it —
+ * `standingValues.js`'s own `FILE`, `sliceRecords.js`'s `STANDING_VALUES` —
+ * the path literal rule found it, which is why those two are exactly the rows
+ * that must declare it back.)
+ *
+ * ⇒ the derived rules do not see this one file. ⛔ IT IS AN EXCLUSION OF ONE
+ * IMPORTED CONSTANT, NOT A LIST (⚖ 17): the only file exempt is the one this
+ * mechanism's own writer emits, named by the module that emits it, so it
+ * cannot drift from what `--write` actually writes.
+ *
+ * ⛔⛔ AND IT IS AN EXCLUSION FROM THE **DERIVED** RULES ONLY. A row whose
+ * SUBJECT is the bank still keys on it — by DECLARING it, through the
+ * `@key-inputs data:` mechanism that already exists, which is the same law
+ * this file states everywhere else: *what derivation cannot see, a gate says*.
+ * At this head that is `check-seedling-full-tier-owed` (the composite row it
+ * reads back) and `check-slice-records` (the bank is one of the artifacts a
+ * slice record accounts for). ⛓ The declaration is what makes the exclusion
+ * SAFE rather than a stale green: the two rows the bank can actually falsify
+ * are the two that still re-run when it moves.
+ */
+export const DERIVED_DATA_EXCLUDED = STANDING_VALUES;
 
 /* ══════════════════════════════════════════════════════════════════════
  * THE DECLARATION — what derivation cannot see, said by the gate itself
@@ -564,6 +608,14 @@ export function inputPopulations({ entry, declared = null, ctx }) {
 
     const data = new Set(expandDeclared(decl.data, ctx.tracked,
         { file: entry, population: 'data' }));
+    /**
+     * ⛔ THE ONE GATE THE DERIVED RULES PASS THROUGH — see
+     * `DERIVED_DATA_EXCLUDED`. It is deliberately NOT applied to the declared
+     * set above: a row whose SUBJECT is the bank says so, and its declaration
+     * must survive the exclusion or the two rows the bank can falsify would be
+     * quoted forever.
+     */
+    const addData = (p) => { if (p !== DERIVED_DATA_EXCLUDED) data.add(p); };
     const spawnTargets = new Set(expandDeclared(decl.spawn, ctx.tracked,
         { file: entry, population: 'spawn' }));
 
@@ -574,7 +626,7 @@ export function inputPopulations({ entry, declared = null, ctx }) {
             ctx.stemRe.lastIndex = 0;
             let m = ctx.stemRe.exec(text);
             while (m !== null) {
-                for (const p of ctx.stems.get(m[1]) ?? []) data.add(p);
+                for (const p of ctx.stems.get(m[1]) ?? []) addData(p);
                 m = ctx.stemRe.exec(text);
             }
         }
@@ -582,7 +634,7 @@ export function inputPopulations({ entry, declared = null, ctx }) {
         let lit = PATH_LITERAL_RE.exec(text);
         while (lit !== null) {
             for (const p of resolveLiteral(lit[1], rel, ctx.tracked)) {
-                if (!code.has(p)) data.add(p);
+                if (!code.has(p)) addData(p);
             }
             lit = PATH_LITERAL_RE.exec(text);
         }
@@ -601,13 +653,13 @@ export function inputPopulations({ entry, declared = null, ctx }) {
             MD_LITERAL_RE.lastIndex = 0;
             let md = MD_LITERAL_RE.exec(bare);
             while (md !== null) {
-                for (const p of resolveLiteral(md[1], rel, ctx.tracked)) data.add(p);
+                for (const p of resolveLiteral(md[1], rel, ctx.tracked)) addData(p);
                 md = MD_LITERAL_RE.exec(bare);
             }
             DIR_LITERAL_RE.lastIndex = 0;
             let dl = DIR_LITERAL_RE.exec(bare);
             while (dl !== null) {
-                for (const p of ctx.filesDirectlyUnder(dl[1])) if (!code.has(p)) data.add(p);
+                for (const p of ctx.filesDirectlyUnder(dl[1])) if (!code.has(p)) addData(p);
                 dl = DIR_LITERAL_RE.exec(bare);
             }
         }
