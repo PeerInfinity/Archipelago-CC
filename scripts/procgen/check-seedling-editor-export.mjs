@@ -169,7 +169,15 @@ check(a.stdout.includes(`layers [${DEFAULT_ON.join(', ')}]`)
 const port = Number(/127\.0\.0\.1:(\d+)/.exec(a.stdout)?.[1] ?? 0);
 check(port > 0 && port !== 8000, 'it served itself on a free 127.0.0.1 port, not :8000',
     `port ${port}`);
-const stillUp = await fetch(`http://127.0.0.1:${port}/`).then(() => true).catch(() => false);
+/* ⛔ THE BODY IS DRAINED — trap 1057, swept in S4b (3). An UNREAD body kills
+ * Node 22's undici on an internal `assert(!this.paused)` thrown from a socket
+ * callback that no `try`/`catch` here can see; the process dies and this
+ * gate's stdout goes with it. Measured at `check-seedling-wasm-element.mjs`,
+ * which carries the numbers: 5/40 crashed undrained, 0/40 drained, 0/40 HEAD.
+ * ⛓ A DRAIN AND NOT A `HEAD`, because the probe's QUESTION must not move — a
+ * GET that reads the body asks exactly what this line always asked. */
+const stillUp = await fetch(`http://127.0.0.1:${port}/`)
+    .then(async (r) => { await r.arrayBuffer(); return true; }).catch(() => false);
 check(!stillUp, '…and shut that server down on the way out', `nothing answers on ${port}`);
 
 // ── ROW 2: (b) the arrows-on view — the same frame, plus the arrows ──────

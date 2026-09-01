@@ -104,8 +104,15 @@ const check = (ok, what, detail) => {
 const unexpectedErrors = (errors) =>
     errors.filter((e) => !/fixtures\/traces\/[^\s\]]+\.trace\.json/.test(e));
 
+/* ⛔ THE BODY IS DRAINED — trap 1057, swept in S4b (3). An UNREAD body kills
+ * Node 22's undici on an internal `assert(!this.paused)` thrown from a socket
+ * callback that no `try`/`catch` here can see; the process dies and this
+ * gate's stdout goes with it. Measured at `check-seedling-wasm-element.mjs`,
+ * which carries the numbers: 5/40 crashed undrained, 0/40 drained, 0/40 HEAD.
+ * ⛓ A DRAIN AND NOT A `HEAD`, because the probe's QUESTION must not move — a
+ * GET that reads the body asks exactly what this line always asked. */
 const alive = await fetch(`${HOST}/${TAPES}/index.json`)
-    .then((r) => r.ok).catch(() => false);
+    .then(async (r) => { await r.arrayBuffer(); return r.ok; }).catch(() => false);
 if (!alive) {
     console.log(`SKIP: no dev server serving ${HOST}/${TAPES}/ — start one at the REPO `
         + 'ROOT with `python3 -m http.server 8000` (or pass --host=)');

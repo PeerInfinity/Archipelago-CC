@@ -56,6 +56,9 @@ async function runHealthCheck() {
 async function checkServerRunning() {
   try {
     const response = await fetch('http://localhost:8000/frontend/');
+    // ⛔ DRAIN before reading `.ok` — trap 1057, S4b (3): an unread body kills
+    // Node 22's undici from a socket callback no `try`/`catch` can see.
+    await response.arrayBuffer();
     return {
       name: 'Development Server',
       passed: response.ok,

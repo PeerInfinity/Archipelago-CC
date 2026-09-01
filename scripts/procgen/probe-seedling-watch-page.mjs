@@ -91,7 +91,15 @@ const PLAY_MS = 6000;
 /** ⛔ Skip politely, or FAIL by name — see the docblock. */
 const STRICT = process.argv.includes('--strict') || process.env.SEEDLING_PROBE_STRICT === '1';
 
-const alive = await fetch(`${HOST}/${TAPE}`).then((r) => r.ok).catch(() => false);
+/* ⛔ THE BODY IS DRAINED — trap 1057, swept in S4b (3). An UNREAD body kills
+ * Node 22's undici on an internal `assert(!this.paused)` thrown from a socket
+ * callback that no `try`/`catch` here can see; the process dies and this
+ * gate's stdout goes with it. Measured at `check-seedling-wasm-element.mjs`,
+ * which carries the numbers: 5/40 crashed undrained, 0/40 drained, 0/40 HEAD.
+ * ⛓ A DRAIN AND NOT A `HEAD`, because the probe's QUESTION must not move — a
+ * GET that reads the body asks exactly what this line always asked. */
+const alive = await fetch(`${HOST}/${TAPE}`)
+    .then(async (r) => { await r.arrayBuffer(); return r.ok; }).catch(() => false);
 if (!alive) {
     const why = `no dev server serving ${HOST}/${TAPE} — start one at the REPO ROOT `
         + 'with `python3 -m http.server 8000`';
