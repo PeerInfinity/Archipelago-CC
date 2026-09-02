@@ -9397,6 +9397,30 @@ NO test file of its own before this slice, only the wait rows F-a put in `pollUn
 
 **NEXT: F-c/F-d are ⚖ for the user.** F-b was the last pre-authorized rung of the F ladder.
 
+**⇒ F-b VERIFIED BY THE PLANNER — THE PRE-AUTHORIZED LADDER IS EXHAUSTED; STOP (2026-09-02, `maze-lab-planning-2`).**
+Main `b35d25a03` re-checked from disk: the seven commits on `origin/main`; the owners at their lines
+(`wasmGamePage.js` `runtimeUp:132`/`gameUp:143`/`callBot:185`/`botOver:198`; `seedlingLevelSetDelivery.deliverChunks:133`
+called from `watchWasm.js:1247` and `deliver():295`; `mapDocumentPath.js:67` imported by `levelSource.js:36`, the
+wiring `:82` and `watchViewer`; `WasmBridgeAdapter.bot():145`, `waitForRuntime():107` with `flashPanelUI.js:451` its one
+caller; the `map_ref` census docblock corrected at `seedlingAtlasAnalysis.js:48-54`); F-a's `closure()` at HEAD
+**44 / 663,768** with the ONE added file `wasmGamePage.js` (a diff of the file lists) and `grep -c seedlingDemo` = 0;
+`standing-values.json` no diff over the range; F-b's own logs read as its as-built says (reach 22/23 → 23/23 after
+the generator, `check-maze-lab` 265/0 ×2, the four `windows` rows 4/4, node rows 6/6); `compare-runs.js …T20-07-18
+…T22-07-14` re-run here = 61/61, no differences; bounded vitest here 29 files / 919 green; digest `677b7d9c…`
+unmoved; `check-slice-records` 73/0/37; **`check-maze-lab.mjs` LIVE here at `b35d25a03` = PASS 265 / FAIL 0**.
+**Recorded (plan §38):** the KICKOFF's own count was wrong — `set-readback-disagrees` has two readers, not three
+(`git grep -c` in `watchWasm.test.js` = 0; the planner had read a five-string alternation's file list as one
+string's) · F4's order was answered by MEASUREMENT and the size is the finding (two registration batches 1,542 ms
+apart; the panel's `_getFlash` used to answer at the first) — ⚠ the raw probe printout is not in a kept log, the
+docblock is the record · route (b) for F1 refused on a third measurement (a guard passed by manufacturing its
+input) · a docblock above a function the procgen REFERENCE cites moved a generated line — kickoffs that touch such a
+file owe `generate-procgen-reference.mjs` · `gates.mjs --json` without `--list` RUNS the gates. **The ladder**: Q-a ·
+Q-b · S2a · S0+S1 · S2b · R-b · D1+D2+D5 · D3+D4 · F-a · F-b — all shipped and verified; `gate: maze-lab` 265/0
+unmoved through six slices. **⚖ FOR THE USER, nothing launched:** F-c (F10 — the `shared` submodule ⇒ gitlink), F-d
+(F8 — a gate on `watchWasm.WASM_PAGE` vs `builds.json` capabilities), residues D6 (`editBaseTag` omits `roster`), D7
+(`hasOwnProperty` vs `in`), F7b (the hosted lab honouring `map_document` — zero instances, no channel), optional
+S4/S5/S6; the cross-substrate queue VIEWER is its own planning arc (§23/§26/§28).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
