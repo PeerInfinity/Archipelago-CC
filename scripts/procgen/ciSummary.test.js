@@ -14,7 +14,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { gateVerdicts, parseGateLines } from './ciSummary.js';
+import { gateVerdicts, parseGateLines, parseGateMsLines, shardNoteIn } from './ciSummary.js';
 
 /** ⛓ An arm shaped like `ciGateArms`' output, with only the fields the rule
  *  reads — and BOTH keys, which differ exactly for a declared face. */
@@ -121,5 +121,57 @@ describe('gateVerdicts — same, MOVED, shallow, not-banked', () => {
             lines: parseGateLines(log), bank: bankOf({ 'gate: a': '10/0' }), arms: [arm('gate: a')],
         });
         expect(rows[0]).toMatchObject({ key: 'gate: a', value: '10/0', exit: 0, verdict: 'same' });
+    });
+});
+
+/**
+ * ⛓⛓ S5b — **THE COST LINE, WHICH IS NOT THE VERDICT LINE** (trap 1068).
+ *
+ * ⛔ THE ROW THAT MATTERS IS THE LAST ONE: a job log carries BOTH markers and
+ * the two readers must not see each other's lines. `##   ms |` contains
+ * `## ` and a `|`, so a reader written loosely enough would fold an arm's
+ * cost into the verdict map as a row with no `exit=` — which is exactly the
+ * shape `parseGateLines` already drops, and dropping it silently is how the
+ * next widening of the line format goes unnoticed.
+ */
+describe('parseGateMsLines — what the arm cost the runner', () => {
+    const LOG = [
+        '2026-09-01T22:10:00.0000000Z ## CI-GATE | gate: maze-lab | 231/0 | exit=0 | ALL PASS',
+        '2026-09-01T22:10:00.0000000Z ##   ms | gate: maze-lab | here=33.2s',
+        '2026-09-01T22:10:00.0000000Z ##   ms | gate: seedling-wasm-element | here=901.2s',
+        '2026-09-01T22:10:00.0000000Z ##   ms | mangled | here=soon',
+        '2026-09-01T22:10:00.0000000Z something else entirely',
+    ].join('\n');
+
+    it('reads every `here=` line, in milliseconds, past the log timestamp', () => {
+        const ms = parseGateMsLines(LOG);
+        expect(ms.get('gate: maze-lab')).toBe(33200);
+        expect(ms.get('gate: seedling-wasm-element')).toBe(901200);
+    });
+
+    it('drops a line whose `here=` is not a number, rather than banking NaN', () => {
+        expect(parseGateMsLines(LOG).has('mangled')).toBe(false);
+        expect(parseGateMsLines(LOG).size).toBe(2);
+    });
+
+    /** ⛔ THE TWO READERS DO NOT SEE EACH OTHER'S LINES. */
+    it('the verdict reader takes nothing from a cost line, and the reverse', () => {
+        expect([...parseGateLines(LOG).keys()]).toEqual(['gate: maze-lab']);
+        expect(parseGateMsLines(LOG).has('231/0')).toBe(false);
+    });
+});
+
+describe('shardNoteIn — was this job a slice of a partition?', () => {
+    it('reads the id and the count out of the job\'s own note', () => {
+        expect(shardNoteIn('## shard 2 of 3 — maze-lab +16; 171.7s banked'))
+            .toEqual({ id: 2, of: 3 });
+    });
+
+    /** ⛔ A job that ran its whole set printed no note, and answering `shard 0
+     *  of 1` for it would judge an unpartitioned job against a per-shard
+     *  budget nobody chose for it. */
+    it('answers null for a job that was never sharded', () => {
+        expect(shardNoteIn('# ci-gates — the headless procgen gates, on this pushed head'))
+            .toBe(null);
     });
 });

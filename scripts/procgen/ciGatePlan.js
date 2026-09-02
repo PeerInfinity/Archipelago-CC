@@ -287,6 +287,64 @@ export function planCiShards({ arms, bank, budgetMs = CI_SHARD_BUDGET_MS }) {
 }
 
 /**
+ * ⛓⛓⛓ S5b — **THE AUDIT: DID THE PARTITION HOLD, MEASURED BY THE RUNNER
+ * ITSELF?** (trap 1068.)
+ *
+ * ⛔⛔ WHY IT READS NOTHING THIS MODULE PRICED. The regression this exists to
+ * catch was a WRONG PRICE, and every guard that existed read the price. S4's
+ * write collapsed the 24 browser arms to 47 s of priced cost; the collapsed
+ * shard's priced total was 423.8 s, comfortably inside the 600 s budget, and
+ * `ciGatePlan.test.js`'s *"no shard exceeds the budget unless a single arm
+ * does"* was green while the job it produced ran 23 m 01 s. **A budget
+ * assertion over prices cannot see prices that are wrong.**
+ *
+ * ⇒ the only inputs here are the `##   ms | <key> | here=` lines the runner
+ * printed and the `## shard i of n` note each job printed about itself. No
+ * bank, no costs file, no plan. If the partition put more work in one job than
+ * a job may hold, the runner's own seconds say so and nothing else needs to
+ * agree.
+ *
+ * ⛓ THE RULE IS THE MODULE'S OWN, TURNED ROUND. `planCiShards` gives an arm at
+ * or above the budget a shard to itself, so a ONE-ARM job over budget is the
+ * rule working, not failing (`seedling-wasm-element` is 901 s of headless
+ * SwiftShader and there is nowhere smaller to put it). A job that ran TWO OR
+ * MORE arms and exceeded the budget is the partition being wrong.
+ *
+ * ⛔ A JOB THAT WAS NEVER SHARDED IS REPORTED, NEVER JUDGED. The headless set
+ * runs whole, with no `--shard=`, so it was never partitioned under a budget
+ * and holding it to one would be an exclusion by a number nobody chose.
+ *
+ * ⚠ AND THE RED DIRECTION IS NAMED: this reds on UNDERPRICING, which is what
+ * costs wall clock. OVER-splitting — two shards whose arms would have fitted
+ * in one — costs a runner and not a minute, varies run to run, and is
+ * REPORTED as `loose` rather than red. Saying which direction a guard is blind
+ * in is the difference between a bound and a hope.
+ *
+ * @param {{jobs: {name:string, shard:object|null, arms:{key:string,ms:number}[]}[],
+ *          budgetMs?: number}} o  `jobs` is `ciSummary.runShardCosts()`'s
+ * @returns {{rows: object[], over: object[], loose: object|null, ok: boolean}}
+ */
+export function auditRunShards({ jobs, budgetMs = CI_SHARD_BUDGET_MS }) {
+    const rows = jobs.map((j) => {
+        const ms = j.arms.reduce((n, a) => n + a.ms, 0);
+        const heaviest = j.arms.slice().sort((a, b) => b.ms - a.ms)[0] ?? null;
+        return { name: j.name, shard: j.shard, arms: j.arms.length, ms, heaviest,
+            sharded: Boolean(j.shard),
+            /** ⛓ over budget AND holding more than one arm — see above. */
+            over: Boolean(j.shard) && j.arms.length > 1 && ms > budgetMs };
+    });
+    const over = rows.filter((r) => r.over);
+    /** ⛓ the other direction, reported: multi-arm shards that would have fitted
+     *  in one job. Never red — it costs a runner, not wall clock. */
+    const multi = rows.filter((r) => r.sharded && r.arms > 1 && !r.over);
+    const loose = multi.length > 1
+        && multi.reduce((n, r) => n + r.ms, 0) <= budgetMs
+        ? { jobs: multi.map((r) => r.name), ms: multi.reduce((n, r) => n + r.ms, 0) }
+        : null;
+    return { rows, over, loose, ok: over.length === 0 };
+}
+
+/**
  * The whole plan for a tree — the arms, the shards, and the bank they were
  * priced from. ⛓ One call, so the `--plan` printer and the `--shard=` runner
  * cannot compute it two different ways.

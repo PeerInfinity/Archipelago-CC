@@ -20,7 +20,8 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
-    CI_SHARD_BUDGET_MS, armName, ciGateArms, ciGatePlanFor, ciRunnable, ciSourced, planCiShards,
+    CI_SHARD_BUDGET_MS, armName, auditRunShards, ciGateArms, ciGatePlanFor, ciRunnable,
+    ciSourced, planCiShards,
 } from './ciGatePlan.js';
 import { LOCAL_HOST, REPO, argvFor, gateRoster } from './gateRoster.js';
 import { readStandingValues, standingRows } from './standingValues.js';
@@ -554,5 +555,68 @@ describe('ci-summary.mjs — the refusal ladder, derived from the same predicate
         /** ⛓ …and it died at the NETWORK, which is what "got past the ladder"
          *  looks like when there is no `gh` on the PATH. */
         expect(r.out).toMatch(/ENOENT|spawnSync|gh/);
+    });
+});
+
+/**
+ * ⛓⛓⛓ S5b — **THE AUDIT, WHICH READS NOTHING THIS MODULE PRICED.**
+ *
+ * ⛔ Its inputs are the runner's own `here=` seconds and each job's own shard
+ * note. That is the whole reason it can see what every priced assertion in
+ * this file could not: the 24-arm shard whose PRICED total was 423.8 s ran
+ * 1,388.8 s, and only the second number is in here.
+ */
+describe('auditRunShards — did the partition hold, by the runner\'s own clock?', () => {
+    const job = (name, shard, arms) => ({ name, shard,
+        arms: Object.entries(arms).map(([key, ms]) => ({ key, ms })) });
+
+    /** ⛓ The regression itself: run 33563524638's one browser job, rounded. */
+    it('REDS a multi-arm shard over budget — the collapsed partition', () => {
+        const a = auditRunShards({
+            jobs: [job('shard', { id: 0, of: 1 },
+                { element: 901200, pages: 160500, arm: 43800, rest: 283300 })],
+            budgetMs: 600000,
+        });
+        expect(a.ok).toBe(false);
+        expect(a.over.map((r) => r.ms)).toEqual([1388800]);
+    });
+
+    /**
+     * ⛔ THE CONTROL WITHOUT WHICH THE ROW ABOVE IS VACUOUS. A guard that reds
+     * on every run is not a guard, and the shape it must NOT red on is the
+     * module's own rule working: `seedling-wasm-element` is 901 s and there is
+     * nowhere smaller to put it.
+     */
+    it('allows a ONE-ARM shard over budget — that is `planCiShards`\' own rule', () => {
+        const a = auditRunShards({
+            jobs: [job('element', { id: 0, of: 2 }, { element: 901200 }),
+                job('rest', { id: 1, of: 2 }, { pages: 160500, arm: 43800 })],
+            budgetMs: 600000,
+        });
+        expect(a.ok).toBe(true);
+        expect(a.rows.map((r) => r.over)).toEqual([false, false]);
+    });
+
+    /** ⛔ An unsharded job was never partitioned under a budget; holding it to
+     *  one is an exclusion by a number nobody chose for it. */
+    it('reports an unsharded job and never judges it', () => {
+        const a = auditRunShards({
+            jobs: [job('headless', null, { help: 700000 })], budgetMs: 600000,
+        });
+        expect(a.ok).toBe(true);
+        expect(a.rows[0].sharded).toBe(false);
+    });
+
+    /** ⛓ …and the OTHER direction, reported and not red — the pre-S4 box-proxy
+     *  over-split, which run 33548827760 shows at 466.7 s across two shards. */
+    it('names over-splitting as `loose`, without failing on it', () => {
+        const a = auditRunShards({
+            jobs: [job('a', { id: 0, of: 3 }, { p: 158000, q: 137000 }),
+                job('b', { id: 1, of: 3 }, { r: 44400, s: 127300 }),
+                job('c', { id: 2, of: 3 }, { element: 896500 })],
+            budgetMs: 600000,
+        });
+        expect(a.ok).toBe(true);
+        expect(a.loose.ms).toBe(466700);
     });
 });

@@ -76,15 +76,95 @@ export function jobLog(run) {
  * @returns {{log: string, jobs: number, unreadable: string[]}}
  */
 export function gateLogs(run) {
+    const { parts, jobs, unreadable } = gateLogParts(run);
+    return { log: parts.map((p) => p.log).join('\n'), jobs, unreadable };
+}
+
+/**
+ * ⛓⛓⛓ S5b — **THE SAME LOGS, STILL SEPARATED BY JOB.** `gateLogs` joins them
+ * because a reader looking for ONE key does not care which shard answered.
+ *
+ * ⛔ THE AUDIT DOES CARE, and that is the whole of why this exists: the
+ * question *"did the partition put more work in one job than a job may hold?"*
+ * is a question ABOUT the grouping, and a joined log has thrown the grouping
+ * away. A caller that reconstructed shards by re-reading the plan would be
+ * asking the priced field again — which is the field under test.
+ *
+ * @returns {{parts: {job: string, log: string}[], jobs: number, unreadable: string[]}}
+ */
+export function gateLogParts(run) {
     const jobs = runJobs(run);
     const parts = [];
     const unreadable = [];
     for (const job of jobs) {
-        try { parts.push(ghApi(`repos/${CI_REPO}/actions/jobs/${job.id}/logs`)); } catch {
+        try {
+            parts.push({ job: job.name,
+                log: ghApi(`repos/${CI_REPO}/actions/jobs/${job.id}/logs`) });
+        } catch {
             unreadable.push(`${job.name} (${job.status}/${job.conclusion ?? '—'})`);
         }
     }
-    return { log: parts.join('\n'), jobs: jobs.length, unreadable };
+    return { parts, jobs: jobs.length, unreadable };
+}
+
+/** ⛓ ONE spelling of the cost line `ci-gates.mjs` prints beside every arm. */
+export const CI_MS_MARK = '##   ms |';
+/** ⛓ …and of the note a SHARDED invocation prints about itself. */
+const SHARD_NOTE_RE = /^## shard (\d+) of (\d+)\b/;
+
+/**
+ * ⛓⛓⛓ S5b — **WHAT EACH ARM COST THE RUNNER, out of one job's log.**
+ *
+ * ⛔ THIS IS A DIFFERENT NUMBER FROM `parseGateLines`' AND THE DISTINCTION IS
+ * THE WHOLE SLICE (trap 1068). `## CI-GATE |` carries the arm's VERDICT; this
+ * carries what the arm COST on the machine that will run it again next push.
+ * S4's write conflated the second with *"what it cost to ANSWER the standing
+ * row"* — a network call — and the partition priced twenty-four arms at 47 s
+ * of `gh` traffic. The runner's own line is the number the partition wants and
+ * it has been printed on every run since S3.
+ *
+ * @returns {Map<string, number>} CI key -> milliseconds
+ */
+export function parseGateMsLines(log) {
+    const out = new Map();
+    for (const raw of strip(log).split('\n')) {
+        const i = raw.indexOf(CI_MS_MARK);
+        if (i < 0) continue;
+        const [key, here] = raw.slice(i + CI_MS_MARK.length).split('|').map((p) => p.trim());
+        const m = /^here=([0-9.]+)s$/.exec(here ?? '');
+        if (!key || !m) continue;
+        out.set(key, Math.round(Number(m[1]) * 1000));
+    }
+    return out;
+}
+
+/**
+ * ⛓ Was this job one SLICE of a partition, and which? `ci-gates.mjs` prints
+ * `## shard i of n — …` only when it was given a `--shard=`; the headless job
+ * runs its whole set and prints none, so it is reported and never judged
+ * against a per-shard budget it was never partitioned under.
+ */
+export function shardNoteIn(log) {
+    for (const raw of strip(log).split('\n')) {
+        const i = raw.indexOf('## shard ');
+        if (i < 0) continue;
+        const m = SHARD_NOTE_RE.exec(raw.slice(i));
+        if (m) return { id: Number(m[1]), of: Number(m[2]) };
+    }
+    return null;
+}
+
+/**
+ * ⛓ One finished run, reduced to what the audit needs: per JOB, the arms it
+ * actually ran and what each cost, and whether it was a shard of a partition.
+ */
+export function runShardCosts(run) {
+    const { parts, unreadable } = gateLogParts(run);
+    const jobs = parts
+        .map((p) => ({ name: p.job, shard: shardNoteIn(p.log),
+            arms: [...parseGateMsLines(p.log)].map(([key, ms]) => ({ key, ms })) }))
+        .filter((j) => j.arms.length);
+    return { jobs, unreadable };
 }
 
 export function parseSummaries(log) {

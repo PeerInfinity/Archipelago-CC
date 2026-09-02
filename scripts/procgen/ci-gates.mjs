@@ -63,14 +63,17 @@
  *   node scripts/procgen/ci-gates.mjs --set=browser      every browser arm
  *   node scripts/procgen/ci-gates.mjs --set=browser --shard=1 --host=http://localhost:8000
  *   node scripts/procgen/ci-gates.mjs --plan [--json]    the shard partition
- *   --set=headless|browser|all   --json   --wait-for-box=<sec>
+ *   node scripts/procgen/ci-gates.mjs --audit --run=<id>  did the partition HOLD?
+ *   --set=headless|browser|all   --json   --wait-for-box=<sec>   --run=<id>
  */
 
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 
 import { releaseBoxLock, takeBoxLock } from './boxLock.js';
-import { CI_SHARD_BUDGET_MS, ciGatePlanFor, ciRunnable } from './ciGatePlan.js';
+import { CI_SHARD_BUDGET_MS, auditRunShards, ciGatePlanFor, ciRunnable }
+    from './ciGatePlan.js';
+import { runById, runShardCosts } from './ciSummary.js';
 import { LOCAL_HOST, REPO, gateRoster } from './gateRoster.js';
 import { headlineOf } from './standingValues.js';
 
@@ -91,6 +94,7 @@ const SET = arg('set', 'headless');
 const SHARD = arg('shard');
 const HOST = arg('host', LOCAL_HOST);
 const WAIT_FOR_BOX = Number(arg('wait-for-box', '0')) || 0;
+const AUDIT_RUN = arg('run');
 
 /** ⛓ The marker every consumer greps for — ONE spelling, exported. */
 export const CI_GATE_MARK = '## CI-GATE |';
@@ -125,6 +129,55 @@ if (flag('plan')) {
         for (const k of s.keys) console.log(`     ${k}`);
     }
     process.exit(0);
+}
+
+/* ── --audit: did the partition HOLD, measured by the runner? ─────────── */
+
+/**
+ * ⛔⛔⛔ **THE GUARD THAT CAN FAIL.** S4's write mispriced this partition by a
+ * factor of forty and NOTHING went red — the budget row prices off the same
+ * field the partition does, so it agreed with the mistake. This mode reads
+ * ONLY what the runner printed about itself: each job's `##   ms | … | here=`
+ * lines and its own `## shard i of n` note. No bank, no costs file, no plan.
+ *
+ * ⛓ Exit 1 when a job that ran MORE THAN ONE arm exceeded the budget — a lone
+ * arm over budget is `planCiShards`' own rule working (`seedling-wasm-element`
+ * is 901 s and has nowhere smaller to go). See `auditRunShards`.
+ */
+if (flag('audit')) {
+    if (!AUDIT_RUN) {
+        console.log('FAIL: --audit needs --run=<id> — a SHA can carry more than one run '
+            + 'and an audit that cannot address a particular one is taken by eye');
+        process.exit(1);
+    }
+    const audited = runById(Number(AUDIT_RUN));
+    const { jobs, unreadable } = runShardCosts(audited);
+    const audit = auditRunShards({ jobs, budgetMs });
+    console.log(`# ci-gates --audit — run ${audited.databaseId} @${audited.headSha.slice(0, 9)} `
+        + `(${audited.conclusion}), ${audit.rows.length} job(s) that ran arms; budget `
+        + `${(budgetMs / 1000).toFixed(0)}s of the RUNNER'S OWN seconds per sharded job`);
+    for (const r of audit.rows) {
+        console.log(`\n${r.over ? 'FAIL:' : 'PASS:'} ${r.name}`);
+        console.log(`      ${r.sharded ? `shard ${r.shard.id} of ${r.shard.of}` : 'NOT sharded — '
+            + 'ran its whole set, so no per-shard budget applies'}`
+            + ` · ${r.arms} arm(s) · ${(r.ms / 1000).toFixed(1)}s measured here`
+            + `${r.heaviest ? ` · heaviest ${r.heaviest.key} ${(r.heaviest.ms / 1000).toFixed(1)}s`
+                : ''}`);
+        if (r.over) {
+            console.log(`      ⛔ ${r.arms} arms and ${(r.ms / 1000).toFixed(1)}s > the `
+                + `${(budgetMs / 1000).toFixed(0)}s budget. A job holding ONE arm may exceed `
+                + 'it; a job holding several may not — the partition underpriced these arms.');
+        }
+    }
+    if (audit.loose) {
+        console.log(`\n⚠ LOOSE (reported, NOT a failure): ${audit.loose.jobs.length} multi-arm `
+            + `shard(s) totalling ${(audit.loose.ms / 1000).toFixed(1)}s would have fitted in `
+            + 'ONE job. Over-splitting costs a runner, not wall clock, and varies run to run.');
+    }
+    for (const u of unreadable) console.log(`\n⚠ job log unreadable: ${u}`);
+    if (JSON_OUT) console.log(JSON.stringify(audit, null, 2));
+    console.log(`\n${audit.ok ? 'ALL CHECKS PASSED' : `${audit.over.length} CHECK(S) FAILED`}`);
+    process.exit(audit.ok ? 0 : 1);
 }
 
 /* ── which arms this invocation runs ─────────────────────────────────── */
