@@ -7845,6 +7845,91 @@ written: `NewDocs/plans/maze-lab-arms-sliceQa-prompt.md`** (ten changes each wit
 ceremony; ⛔ no report-backs). Q-b's kickoff is written AFTER Q-a's as-built, off its real exports.
 Ladder final: Q-a → Q-b → S0/S1 → S2a → S2b → R-b → D1–D4 → F-a/F-b → ⚖ F-c/F-d → opt S3–S6.
 
+**⇒ Q-a AS BUILT (2026-09-02; submodule `frontend/modules/shared` @`ef31e39`, outer `main` @`7e9cd873b`
+— the gitlink bump the user authorized).** All ten changes landed. Every number below names the command
+that produced it.
+
+| A# | as built | where |
+|---|---|---|
+| A1 | recordings are ID-LESS. `serialize({ids:false})` drops `entryId`; the DEFAULT keeps it (loadouts and the live queue need identity). `normalizeEntry(raw, {mintId})` mints only on the live-queue path — `add`, `deserialize`, `undoLast` all pass `{mintId:true}`, the two converters pass nothing | `actionTypes.js`, `actionQueue.js`; `jtaSubstrateWrapperLibrary.convertPerformedActionsToQueue`, `omsiSubstrateWrapperLibrary.convertPlanToQueue` |
+| A2 | ONE `normalizeEntry(raw, {mintId})`. The three hand-written eight-field copies are gone; an unknown key is KEPT under `params`. `updateEntry` re-normalizes too, so a rider passed there also lands in `params` and the key order stays canonical | `actionTypes.js:normalizeEntry` |
+| A3 | optional `params`, keys sorted, AND the declared fields emitted in a FIXED order (`DECLARED_KEYS`) — byte-identity needs both, since `JSON.stringify` follows insertion order | same |
+| A4 | optional `substrate`; both converters stamp theirs; an entry without one is legal | converters + `validateEntry` |
+| A5 | `serialize()` → `{format:'actionQueue/1', entries}`; `deserialize` refuses an unknown format naming BOTH the one it got and the one it wants, and accepts a legacy bare `{entries}` as `/1` (which is what every stored jta LOADOUT is) | `ACTION_QUEUE_FORMAT`, `actionQueue.deserialize` |
+| A6 | `validateEntry(entry) → string\|null` + `assertEntry(entry, where)`. Called by `add`, `deserialize`, and `savedQueueStore.saveQueue` for every action of an actionQueue-shaped recording (detected on the FIRST action carrying a string `actionType`; a recording in another vocabulary passes through untouched) → `'invalid'`, with the field named on the console | `actionTypes.js`, `savedQueueStore.js:actionQueueProblem` |
+| A7 | `add(entry, atIndex)` REFUSES `atIndex < cursor` by name; inserting AT the cursor is legal (the new entry becomes next to run, and no cursor shift is ever needed once the done region is closed). `reorder` refuses when EITHER end is `< cursor`. `remove` keeps its decrement | `actionQueue.js` |
+| A8 | `label` optional; converters stop writing it; `describeAction(entry) → string` is an optional slot on the registry ENTRY CONTRACT, declared by jta and omsi | `substrateRegistry.js` + `substrate-registry.md` "Action labelling" |
+| A9 | `RuntimeStatus`'s five jta fields → a generic `actuals: object`; `startTime`/`endTime`/`actualTimeMs` stay top-level (they are not one game's economy). `updateStatus` MERGES `actuals` in both `ActionQueue` and `ExecutionSnapshot` — jta writes it in three passes and an assign would have dropped the earlier ones | `actionTypes.js:mergeStatus`, `jtaQueueExecutor.js`, `jtaQueuePanelUI.js` |
+| A10 | `subscribe(listener) → unsubscribe` (emits on add/remove/removeAt/reorder/updateEntry/updateStatus/clear/deserialize/undoLast/advance/reset/stepOne/drainPending, with a batch guard so `stepOne` is ONE emit), `stepOne(executor) → {entry,state,error,result}`, `removeAt(index)`, `snapshot()` (frozen entries+statuses+cursor), `drainPending() → count` | `actionQueue.js` |
+
+**⚖ `zoneId` — decided: a jta RIDER in `params`, not a declared field.** It is jta's zone; a shared
+shape that declares one game's geography is exactly the leak Q3 named, and A2's fold makes it free —
+`createQueueEntry` and `jtaQueueBuilder.makeTaskEntry` keep writing `zoneId` at the top level of the raw
+object and `normalizeEntry` puts it in `params` for them (which is also why `jtaQueueBuilder.js`, outside
+the touchable list, needed no edit). `jtaQueuePanelUI` reads it through one `entryZoneId(entry)` helper at
+both sites. Pinned by two rows in `jtaActionDefs.test.js`.
+
+**THREE DEFECTS THE TESTS FOUND — all in the brief's own premises.**
+1. ⚠ **`blockAnnotations.js:93` reads `a.label` to NAME the consumed item.** §3 of the brief listed this
+   file as "unchanged — `actionType === 'useItem'` at :92". Line 93 is the one that breaks: with A8
+   dropping the stored label, every recorded jta item use would have keyed as `jta/null` and been
+   dropped by `itemKey`, silently emptying the item annotations. Fixed the way A8 intends — the
+   substrate's `describeAction`, with `label` as the fallback — and pinned by a NEW blockModes row
+   ("names a LABEL-LESS item use through the substrate's describeAction", 140 → 141 rows in that file).
+2. ⚠ **A6's `loops` integer ≥ 1 would have made every omsi recording unsaveable.** `convertPlanToQueue`
+   preserves a 0-rep plan entry deliberately (`_readLoops`, pinned since arc D slice 4). The rule shipped
+   as **integer ≥ 0**, with the reason in the doc comment.
+3. ⚠ **A6's `disabled` boolean / `loops` integer as REQUIRED fields refused legal recordings.** Caught by
+   `blockModes.test.js` going red: a hand-built or legacy recording omits them and the store validates
+   RAW entries, before `normalizeEntry` fills the defaults in. The rule shipped as **`actionType` is the
+   one REQUIRED field; every other field is refused by name only when PRESENT and wrong.**
+
+**Two smaller as-builts.** The jta queue panel gained `entryLabel(entry)` = `label` → registry
+`describeAction` → raw `actionId`, so a REPLAYED recording (whose entries now carry no label) still
+renders names in the current-list, the tooltips and the prediction-vs-actual table; the executor's debug
+line got the same fallback. jta's labeller is a module-level name index fed by the performed-actions
+capture and by a new exported `noteCatalogNames(catalog)` — the seam a future viewer wires the live
+catalogue into; omsi needs none (the action name IS the `actionId`).
+
+**Where the tests landed and why.** `actionQueue.test.js` (47) and `executionSnapshot.test.js` (3) are IN
+THE SUBMODULE beside the sources — `vitest.config.js:10` includes `frontend/**/*.test.js` and 24 other
+`*.test.js` already live under `frontend/modules/shared/`, so no config change was needed and the package's
+first tests travel with the package to any consumer of the `shared` repo. Consumer-side rows went to the
+consumers: converter shape + `describeAction` in each wrapper's own test, `zoneId` → `params` in
+`jtaActionDefs.test.js`, the dedup/refusal rows in `savedQueueStore.test.js`, the labeller row in
+`blockModes.test.js`.
+
+**Discriminators, run rather than reasoned** (traps 1067/1070/1072 — mutants applied to a copy, restored
+from the copy, never `git checkout`): re-minting `entryId` in the jta converter reds **3** rows including
+`savedQueueStore` "a re-record of an unchanged jta visit reads 'duplicate'"; making `normalizeEntry` drop
+unknown keys again reds **3** rows including "an omsi rider survives add → undoLast → undoLast →
+serialize". Both byte-identity claims run the converter TWICE and compare, per
+`feedback_stdout_inertness_needs_a_nondeterminism_control`.
+
+**Gates.** ⚖ 52 bounded vitest, one command:
+`npx vitest run frontend/modules/shared/ frontend/modules/jtaQueueEngine/ frontend/modules/jtaActionQueue/ frontend/modules/jtaSubstrateWrapper/ frontend/modules/omsiSubstrateWrapper/ frontend/modules/loops/ frontend/modules/procgenDocs/ frontend/modules/mazeRoom/`
+→ **95 files / 3051 tests, 0 failed** (`jtaQueueExecutor.test.js` still 5/5; the package's own 50 are
+inside it). `node scripts/procgen/generate-procgen-reference.mjs --check` → ALL 6 GENERATED MODULES AND 4
+MARKDOWN REGIONS MATCH (the registry matrix moved 61 → 62 fields, 10 → 11 groups, one `describeAction`
+row, `fn` under jta and omsi). In-app `npm test -- --mode=test-substrates --batch=fast` → **61/61 PASSED,
+3.5 min**, no `compare-runs` attribution needed. Suite row from CI by SHA: `ci-vitest-summary.mjs 7e9cd873b`.
+
+**What Q-b reads off this — the exact exports.**
+`shared/actionQueue/index.js` exports `ActionQueue`, `ExecutionSnapshot`, `LoadoutManager`, `ActionState`,
+`ACTION_QUEUE_FORMAT`, `normalizeEntry`, `validateEntry`, `assertEntry`, `mergeStatus`, `generateEntryId`.
+`ActionQueue`'s surface for the maze executor: `add(entry, atIndex?)` · `removeAt(index)` ·
+`remove(entryId)` · `reorder(from, to)` · `updateEntry(entryId, changes)` · `currentEntry()` ·
+`stepOne(executor)` → `{entry, state, error, result}` · `advance()` · `drainPending()` · `reset()` ·
+`clear()` · `snapshot()` → `{cursor, running, entries:[{…entry, status}]}` · `getEntries()` ·
+`getStatus(entryId)` · `updateStatus(entryId, update)` · `subscribe(listener)` → unsubscribe ·
+`serialize({ids})` / `deserialize(data)` · `undoLast()` / `recordLast()` · `findIndex(entryId)` ·
+`isExhausted()` · getters `length`, `cursor`, `running`.
+⚠ Three things Q-b must know that the plan did not say: (i) `add` THROWS a `RangeError` into the done
+region and `reorder` THROWS across the cursor — `MazeRoomQueue` clamped silently, so the keypress handler
+owns the refusal now; (ii) `stepOne` advances even on FAILED, so R2's "stop the driver" is the CALLER's
+`if (out.state === 'failed') stop()`; (iii) the maze's `describeAction` is owed by the same slice that
+switches the entry shape, because `blockAnnotations` and the panel now both ask for it.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
