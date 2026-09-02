@@ -18,6 +18,7 @@ import {
     TILE_WALL, createWorld, setObstacle, setTile,
 } from './mazeRoomEngine.js';
 import { mazeWorldDigest } from './mazeQueueExecutor.js';
+import { TILE_PX } from './mazeRoomRender.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 /**
@@ -2798,5 +2799,143 @@ describe('MazeRoomUI — R-b: a replay refuses BEFORE step 0', () => {
         expect(byKey['1'].label).toContain('recorded on an older version of this level');
         expect(byKey['2'].stale).toBe(false);
         expect(byKey['2'].label).not.toContain('older version');
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ D2 / DEDUP M6 — THE CANVAS CLICK, MEASURED UNDER A SCALED CANVAS
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * The panel divided by the INTRINSIC `TILE_PX` and ignored the canvas's own
+ * 1 px border, which `getBoundingClientRect` includes. Both are wrong the
+ * moment the browser presents the canvas at anything but 1:1 — a CSS width, a
+ * page zoom or a device-pixel ratio all do it — and the editor then painted a
+ * cell several tiles from the one the person clicked.
+ *
+ * ⛔ MEASURED, NOT REASONED: each row computes what the OLD arithmetic
+ * answered for the same point and asserts the new answer differs from it, so a
+ * row cannot pass by agreeing with the bug (a fixed point is not correctness).
+ */
+describe('MazeRoomUI — a canvas click is `tileAtPoint`\'s answer, not `/ TILE_PX`', () => {
+    /** `.maze-room-canvas` has `border: 1px solid #333` — restated HERE, in the
+     *  fixture, because the fixture is describing a page the test cannot load. */
+    const CSS_BORDER_PX = 1;
+    const ROOM = { width: 8, height: 6 };
+
+    function makeEditPanel() {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = makeWorld(ROOM);
+        panel.state = { player_pos: { x: 0, y: 0 }, turn: 0, inventory: new Set() };
+        panel.editMode = true;
+        panel.render = () => {};
+        const painted = [];
+        // ⛓ The editor is stubbed so the row reads WHICH CELL was addressed and
+        //   nothing else; `_ensureEditor` refreshes libraries on the held one.
+        panel._editor = {
+            setLibraries: () => {},
+            applyAt: (world, x, y) => {
+                painted.push({ x, y });
+                return { ok: false, description: 'stub', type: 'noop' };
+            },
+        };
+        return { panel, painted };
+    }
+
+    /** A canvas presented at `scale` x its intrinsic size, with a CSS border. */
+    const canvasAt = ({ scale = 1, border = 0 } = {}) => ({
+        getBoundingClientRect: () => ({
+            left: 100,
+            top: 50,
+            width: ROOM.width * TILE_PX * scale + 2 * border,
+            height: ROOM.height * TILE_PX * scale + 2 * border,
+        }),
+        ownerDocument: {
+            defaultView: {
+                getComputedStyle: () => ({
+                    borderLeftWidth: `${border}px`,
+                    borderTopWidth: `${border}px`,
+                    borderRightWidth: `${border}px`,
+                    borderBottomWidth: `${border}px`,
+                }),
+            },
+        },
+    });
+
+    /** ⛔ THE ARITHMETIC THIS SLICE REMOVED, kept as the row's control. */
+    const oldAnswer = (canvas, clientX, clientY) => {
+        const rect = canvas.getBoundingClientRect();
+        return {
+            x: Math.floor((clientX - rect.left) / TILE_PX),
+            y: Math.floor((clientY - rect.top) / TILE_PX),
+        };
+    };
+
+    const click = (panel, canvas, clientX, clientY) =>
+        panel._handleCanvasClick({ clientX, clientY }, canvas);
+
+    it('⛔ a 2x-scaled canvas: the visual CENTRE of tile (3,2) is tile (3,2) — the old '
+        + 'arithmetic said (7,5)', () => {
+        const { panel, painted } = makeEditPanel();
+        const canvas = canvasAt({ scale: 2 });
+        const rect = canvas.getBoundingClientRect();
+        const cx = rect.left + (3 + 0.5) * TILE_PX * 2;
+        const cy = rect.top + (2 + 0.5) * TILE_PX * 2;
+        expect(oldAnswer(canvas, cx, cy)).toEqual({ x: 7, y: 5 });
+        click(panel, canvas, cx, cy);
+        expect(painted).toEqual([{ x: 3, y: 2 }]);
+    });
+
+    it('⛔ …and its top-left CORNER is the same tile — the old arithmetic said (6,4)', () => {
+        const { panel, painted } = makeEditPanel();
+        const canvas = canvasAt({ scale: 2 });
+        const rect = canvas.getBoundingClientRect();
+        const ox = rect.left + 3 * TILE_PX * 2;
+        const oy = rect.top + 2 * TILE_PX * 2;
+        expect(oldAnswer(canvas, ox, oy)).toEqual({ x: 6, y: 4 });
+        click(panel, canvas, ox, oy);
+        expect(painted).toEqual([{ x: 3, y: 2 }]);
+    });
+
+    it('⛓ every visual pixel of a tile is that tile, at both edges of the box', () => {
+        const { panel, painted } = makeEditPanel();
+        const canvas = canvasAt({ scale: 2 });
+        const rect = canvas.getBoundingClientRect();
+        // first pixel of tile (3,2) and its last pixel, at 2x
+        click(panel, canvas, rect.left + 3 * TILE_PX * 2, rect.top + 2 * TILE_PX * 2);
+        click(panel, canvas, rect.left + 4 * TILE_PX * 2 - 1, rect.top + 3 * TILE_PX * 2 - 1);
+        expect(painted).toEqual([{ x: 3, y: 2 }, { x: 3, y: 2 }]);
+    });
+
+    it('⛔ the 1 px BORDER is subtracted — a click on the first pixel of tile (5,4) is '
+        + 'tile (5,4), and NOT the neighbour (4,3) the border-blind arithmetic names', () => {
+        const { panel, painted } = makeEditPanel();
+        const canvas = canvasAt({ border: CSS_BORDER_PX });
+        const rect = canvas.getBoundingClientRect();
+        // ⛓ The point is DERIVED: one border in, then five whole tiles across
+        //   and four down — the first pixel the room paints for tile (5,4).
+        const px = rect.left + CSS_BORDER_PX + 5 * TILE_PX;
+        const py = rect.top + CSS_BORDER_PX + 4 * TILE_PX;
+        click(panel, canvas, px, py);
+        expect(painted).toEqual([{ x: 5, y: 4 }]);
+        /**
+         * ⛔ THE CONTROL — the same point, scaled by the BORDER BOX instead of
+         * the content box, is one tile up and one tile left. The border is a
+         * single pixel and it still moves the answer, because the error is a
+         * RATIO error: it grows with the distance from the origin.
+         */
+        const borderBlind = (client, origin, extent, n) =>
+            Math.floor(((client - origin) * n) / extent);
+        expect(borderBlind(px, rect.left, rect.width, ROOM.width)).toBe(4);
+        expect(borderBlind(py, rect.top, rect.height, ROOM.height)).toBe(3);
+    });
+
+    it('⛓ a point off the room paints nothing and does not throw — the panel is not a lab, '
+        + 'so the refusal is SILENT but it is `tileAtPoint`\'s', () => {
+        const { panel, painted } = makeEditPanel();
+        const canvas = canvasAt({ scale: 2 });
+        const rect = canvas.getBoundingClientRect();
+        expect(() => click(panel, canvas, rect.left + rect.width + 40, rect.top + 5)).not.toThrow();
+        expect(() => click(panel, canvas, rect.left - 40, rect.top + 5)).not.toThrow();
+        expect(painted).toEqual([]);
     });
 });

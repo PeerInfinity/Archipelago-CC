@@ -72,6 +72,12 @@ import {
 // same worlds with the same pixels. `_drawWorld` is now an adapter that
 // builds `drawWorld`'s `view` out of this panel's own state.
 import { TILE_PX, drawWorld } from './mazeRoomRender.js';
+/**
+ * ⛓ DEDUP M6 — the ONE pixel→tile conversion, DOM-free and unit-tested. The
+ * lab page's canvas has used it since editor v3; the panel divided by the
+ * INTRINSIC `TILE_PX` instead, which is a live bug under any CSS scaling.
+ */
+import { tileAtPoint } from '../procgenCore/labView.js';
 import {
     tickHazards,
     resetHazards,
@@ -3035,12 +3041,54 @@ export class MazeRoomUI {
         return section;
     }
 
+    /**
+     * ⛓⛓⛓ DEDUP M6 — **WHICH TILE A CLICK LANDED ON IS `labView.tileAtPoint`'S
+     * ANSWER**, derived from the ROOM's dimensions and the ELEMENT's on-screen
+     * size — never from `TILE_PX`, which is the canvas's INTRINSIC scale and
+     * says nothing about how the browser is presenting it.
+     *
+     * ⛔ THE OLD LINE WAS A LIVE BUG, MEASURED not reasoned: with the canvas
+     * presented at 2x its intrinsic size (CSS width, browser zoom or a
+     * device-pixel ratio all do it), a click at the visual centre of tile
+     * (3,2) mapped to (6,4) — the editor painted a cell four tiles away from
+     * the one the person clicked. `mazeRoomUI.test.js` drives exactly that.
+     *
+     * ⛓ AND THE 1 px BORDER IS SUBTRACTED. `.maze-room-canvas` has
+     * `border: 1px solid #333` (`mazeRoom.css`) and `getBoundingClientRect`
+     * is the BORDER box, so both the origin and the size are one border too
+     * big. ⛔ It is read off the COMPUTED STYLE rather than restated as a
+     * constant here: a second spelling of a CSS value in JS is the drift this
+     * whole rung is removing, and a border the stylesheet changes would
+     * silently move every click. A run with no stylesheet (jsdom, the tests)
+     * reads `0`, which is the honest answer for a canvas with no border.
+     *
+     * ⛔ AN OUT-OF-RANGE POINT STILL RETURNS SILENTLY — the panel is not a lab
+     * and has no refusal box — but the ANSWER is `tileAtPoint`'s own, so the
+     * two callers cannot disagree about where the room ends.
+     */
     _handleCanvasClick(event, canvas) {
         if (!this.world || !this.editMode) return;
         const rect = canvas.getBoundingClientRect();
-        const x = Math.floor((event.clientX - rect.left) / TILE_PX);
-        const y = Math.floor((event.clientY - rect.top) / TILE_PX);
-        if (x < 0 || x >= this.world.width || y < 0 || y >= this.world.height) return;
+        const px = (v) => (Number.parseFloat(v) || 0);
+        const cs = canvas.ownerDocument?.defaultView?.getComputedStyle?.(canvas) ?? null;
+        const border = {
+            left: px(cs?.borderLeftWidth), top: px(cs?.borderTopWidth),
+            right: px(cs?.borderRightWidth), bottom: px(cs?.borderBottomWidth),
+        };
+        let x;
+        let y;
+        try {
+            ({ tx: x, ty: y } = tileAtPoint({
+                x: event.clientX - rect.left - border.left,
+                y: event.clientY - rect.top - border.top,
+                width: rect.width - border.left - border.right,
+                height: rect.height - border.top - border.bottom,
+                cols: this.world.width,
+                rows: this.world.height,
+            }));
+        } catch {
+            return;
+        }
 
         const editor = this._ensureEditor();
         const result = editor.applyAt(this.world, x, y);
