@@ -565,13 +565,78 @@ describe('H3 — the pendingExit arm', () => {
             for (const n of [0, 8, -1, 104, 4096]) expect(String(n)).not.toContain('|');
         });
 
-        /** ⛔ PINNED to the derivation's own formula, so the two cannot drift. */
+        /**
+         * ⛔⛔ **THIS ROW IS THE LICENCE FOR THE ONE SPELLING IT PINS**
+         * (maze-lab arms F-a / plan §17.1 F6). F6 proposed importing
+         * `seedlingAtlasDerivation.outExitId` instead of restating it. Measured
+         * at `8a1eb6b1a` over the static import closure, that import costs the
+         * panel **+27 files and +1,267,998 B** (`flashPanel/index.js`: 43
+         * files / 650,891 B → 70 / 1,918,889) — `seedlingRegionBinding` is IN
+         * the panel's static closure, so every page that mounts the panel would
+         * pay 1.27 MB for twelve characters. The panel reaches the derivation
+         * the other way, dynamically, through `AP_MODULE_PATHS.derivation`.
+         *
+         * ⇒ the spelling stays and THIS is the drift guard. A test file is not
+         * in the bundle, so the pin costs the page nothing; delete it and the
+         * duplicate has no reason to be allowed.
+         *
+         * ⛓ Every `LINK_TAGS` value, not three literals — a fourth tag is
+         * covered the day it is added.
+         */
         it('rebuilds the exit id the ATLAS spells, per seedlingAtlasDerivation.outExitId', () => {
+            expect(LINK_TAGS.length).toBeGreaterThan(0);
             for (const type of LINK_TAGS) {
-                const e = { type, x: 104, y: 72 };
-                expect(outExitIdOf(e)).toBe(outExitId(e));
+                for (const [x, y] of [[104, 72], [0, 0], [8, 8], [4096, 1]]) {
+                    expect(outExitIdOf({ type, x, y })).toBe(outExitId({ type, x, y }));
+                }
             }
         });
+    });
+
+    /**
+     * ⛔⛔ **THE MEASUREMENT F6 TURNS ON, DERIVED RATHER THAN TYPED.** The
+     * docblock above `outExitIdOf` says the import was refused because it costs
+     * the panel 1.27 MB. A number in a comment is unfalsifiable; this row walks
+     * the static import graph from `flashPanel/index.js` and asserts the shape
+     * that number describes — the panel's SHIPPED closure does not reach
+     * `seedlingAtlasDerivation`, which it uses through a dynamic
+     * `AP_MODULE_PATHS.derivation` import instead.
+     *
+     * ⛓ It is a claim about STATIC imports only: a dynamic `import(...)` is a
+     * separate chunk and is deliberately not followed, which is the whole
+     * arrangement being asserted.
+     */
+    it('the panel\'s STATIC closure does not reach seedlingAtlasDerivation — F6\'s refusal, derived', async () => {
+        const { readFileSync } = await import('node:fs');
+        const { dirname, resolve } = await import('node:path');
+        const { fileURLToPath } = await import('node:url');
+
+        const SPEC = /^\s*(?:import|export)\s[^'"]*?from\s*['"]([^'"]+)['"]|^\s*import\s*['"]([^'"]+)['"]/gm;
+        const walk = (entry) => {
+            const seen = new Set();
+            const stack = [entry];
+            while (stack.length) {
+                const file = stack.pop();
+                if (seen.has(file)) continue;
+                seen.add(file);
+                let src;
+                try { src = readFileSync(file, 'utf8'); } catch { continue; }
+                for (const m of src.matchAll(SPEC)) {
+                    const spec = m[1] ?? m[2];
+                    if (spec?.startsWith('.')) stack.push(resolve(dirname(file), spec));
+                }
+            }
+            return seen;
+        };
+
+        const closure = walk(fileURLToPath(new URL('./index.js', import.meta.url)));
+        // the subject really is in it — otherwise the assertion below is vacuous
+        expect([...closure].some((f) => f.endsWith('/seedlingRegionBinding.js'))).toBe(true);
+        expect([...closure].some((f) => f.endsWith('/seedlingAtlasDerivation.js'))).toBe(false);
+        // …and the panel does reach it, the other way
+        const wiring = readFileSync(
+            fileURLToPath(new URL('./seedlingRandomizerWiring.js', import.meta.url)), 'utf8');
+        expect(wiring).toContain('derivation: \'modules/seedlingDemo/seedlingAtlasDerivation.js\'');
     });
 
     it('an EXTERNAL door publishes a regionMove, naming the exit it matched', () => {

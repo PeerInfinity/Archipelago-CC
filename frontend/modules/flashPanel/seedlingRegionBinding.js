@@ -147,9 +147,30 @@ export function parsePendingExit(value) {
 }
 
 /**
- * The atlas exit id a door report names. ⛔ NOT SPELLED HERE: it is
- * `seedlingAtlasDerivation.outExitId`'s own formula, and the two must not
- * drift, so the shape is stated once and a row pins it against the derivation.
+ * The atlas exit id a door report names.
+ *
+ * ⛔⛔ **IT IS SPELLED HERE, AND THE REASON IS A MEASUREMENT, NOT A PREFERENCE**
+ * (maze-lab arms F-a / plan §17.1 F6). The formula is
+ * `seedlingAtlasDerivation.outExitId`'s, the two must not drift, and the
+ * obvious fix is to import it. That was PRICED at `8a1eb6b1a` over the static
+ * import closure, and refused:
+ *
+ *   `flashPanel/index.js` today ............... 43 files,   650,891 B
+ *   + a static `seedlingAtlasDerivation` ...... 70 files, 1,918,889 B
+ *   ⇒ the cost of one line ..................... +27 files, +1,267,998 B
+ *
+ * This module is IN the panel's static closure (`index.js` reaches it), so the
+ * import would be paid by every page that mounts the flash panel, to spell
+ * twelve characters. `seedlingAtlasDerivation` is reached from the panel the
+ * other way — a DYNAMIC import through `AP_MODULE_PATHS.derivation`
+ * (`seedlingRandomizerWiring.js:93`) — which is exactly the arrangement §5i's
+ * 1 MB lesson bought.
+ *
+ * ⇒ the drift guard is not an import, it is the PIN: `seedlingRegionBinding.
+ * test.js`'s *"rebuilds the exit id the ATLAS spells"* row imports the
+ * derivation (a test file is not in the bundle) and asserts this function
+ * against it for every `LINK_TAGS` value. That row is the reason this line may
+ * exist; deleting it deletes the licence.
  */
 export const outExitIdOf = ({ type, x, y }) => `out_${type}_${x}_${y}`;
 
