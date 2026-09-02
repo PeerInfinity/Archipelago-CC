@@ -27,6 +27,8 @@
  * global entry points can dispatch to the right instance.
  */
 
+import { pollUntil } from './pollUntil.js';
+
 const adapters = new Map(); // flashObjectId -> adapter
 
 function ensureGlobalEntryPoints() {
@@ -200,14 +202,14 @@ export class FlashBridgeAdapter {
     return document.getElementById(this.flashObjectId);
   }
 
+  // The loop is `pollUntil`'s (F3); WHAT is waited for and WHAT the refusal
+  // says are this transport's. No cancellation: a real-Flash <object> is not
+  // replaced under a running wait the way the wasm iframe is.
   async waitForBridge(maxMs) {
-    const start = Date.now();
-    while (Date.now() - start < maxMs) {
+    return pollUntil(() => {
       const el = this._getFlash();
-      if (el && typeof el.wireCheck === 'function') return el;
-      await new Promise((r) => setTimeout(r, 100));
-    }
-    throw new Error(`bridge did not become ready within ${maxMs}ms`);
+      return el && typeof el.wireCheck === 'function' ? el : null;
+    }, { maxMs, timeoutMessage: `bridge did not become ready within ${maxMs}ms` });
   }
 
   configureBridge() {

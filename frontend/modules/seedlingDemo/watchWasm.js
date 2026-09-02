@@ -1109,6 +1109,21 @@ export async function shipToWasm(payload, host) {
         try { return raw ? JSON.parse(raw) : null; } catch { return null; }
     };
     /**
+     * ⛔ THIS IS **NOT** A FOURTH COPY OF THE PANEL'S `pollUntil`
+     * (`flashPanel/pollUntil.js`, F-a / plan §17.1 F3), and the difference was
+     * measured before it was kept. Four things this loop does that a
+     * `cancelled` predicate cannot express:
+     *
+     *  1. `lifetime.guard('wasm-until', …)` RECORDS the blocked tick in the
+     *     arm's `stopped` list (`procgenCore/pageLifetime.js:160-171`) — the
+     *     page's leak witness. Routing this through a boolean check would
+     *     delete that evidence, not a duplicate.
+     *  2. `lifetime.onRetire` rejects the INSTANT the arm retires, not at the
+     *     next tick, and with its own wording.
+     *  3. A throw from `pred` is swallowed here; the adapters let one out.
+     *  4. 200 ms / 180 s are the LAB's numbers, chosen against a user who has
+     *     not yet pressed ▶ Start.
+     *
      * ⚠ A THREE-MINUTE POLL IS A LOOP WITH A LONG FUSE. Retired, it would go
      * on asking a discarded iframe for `__runtimeReady` every 200 ms and then
      * TIME OUT under some other arm, painting a wasm refusal over whatever

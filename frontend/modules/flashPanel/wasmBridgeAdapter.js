@@ -34,10 +34,15 @@
  */
 
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
+import { pollUntil } from './pollUntil.js';
 
 // Push cadence for host->game queue items. The game polls its local
 // getItemQueue every frame (~33ms); pushing less often just batches.
 const PUSH_INTERVAL_MS = 100;
+
+// What an aborted readiness wait throws. ⛔ ONE spelling: both waits refuse
+// with it, and `detach()` is the only thing that arms it.
+const DETACHED_MESSAGE = 'adapter detached';
 
 export class WasmBridgeAdapter extends FlashBridgeAdapter {
   constructor(opts) {
@@ -76,13 +81,16 @@ export class WasmBridgeAdapter extends FlashBridgeAdapter {
    * waitForBridge, which waits for the game's registered callbacks.
    */
   async waitForShim(maxMs) {
-    const start = Date.now();
-    while (Date.now() - start < maxMs) {
-      if (this._cancelled) throw new Error('adapter detached');
-      if (this._getBridge()) return true;
-      await new Promise((r) => setTimeout(r, 100));
-    }
-    throw new Error(`__swfBridge shim did not appear within ${maxMs}ms`);
+    await pollUntil(() => this._getBridge(), {
+      maxMs,
+      cancelled: () => this._cancelled,
+      cancelledMessage: DETACHED_MESSAGE,
+      timeoutMessage: `__swfBridge shim did not appear within ${maxMs}ms`,
+    });
+    // ⛔ `true`, not the shim: the callers treat this as a stage gate, and
+    // handing out the bridge object would invite a second capture of the very
+    // reference `_getBridge()` exists to re-read.
+    return true;
   }
 
   // Same probe loop as the inherited version, plus the cancellation
@@ -91,14 +99,12 @@ export class WasmBridgeAdapter extends FlashBridgeAdapter {
   // replacement iframe reuses the same element id, so a stale loop
   // would otherwise resolve against the NEW game page).
   async waitForBridge(maxMs) {
-    const start = Date.now();
-    while (Date.now() - start < maxMs) {
-      if (this._cancelled) throw new Error('adapter detached');
-      const el = this._getFlash();
-      if (el) return el;
-      await new Promise((r) => setTimeout(r, 100));
-    }
-    throw new Error(`bridge did not become ready within ${maxMs}ms`);
+    return pollUntil(() => this._getFlash(), {
+      maxMs,
+      cancelled: () => this._cancelled,
+      cancelledMessage: DETACHED_MESSAGE,
+      timeoutMessage: `bridge did not become ready within ${maxMs}ms`,
+    });
   }
 
   /**
