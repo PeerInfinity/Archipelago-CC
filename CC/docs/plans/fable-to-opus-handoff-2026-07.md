@@ -7375,6 +7375,22 @@ still not sharded; if it ever is, the numbers are already there.
 **⇒ S4c SHIPPED (2026-09-02, `main` @`0e7454b67`…`43c70162b`; 5 commits + the write): THE IDENTITY
 ROWS HAVE CI LINES, AND THE ROW THAT SAID THEY NEVER COULD IS NOW THE RULE THAT SAYS WHEN THEY DO.**
 
+**⛓⛓ WHICH NUMBER "THE BATTERY" MEANS — PINNED, because TWO of them are true and this arc has
+already been bitten once by an unlabelled count (the plan's 30/33, which its own `--keys` reading
+contradicted inside the same report).** Measured at `b798b3783`:
+
+| | |
+|---|---|
+| **21.5 min** | EVERY row's banked `ms` — what a `--write` actually costs on a head that moved everything |
+| **19.8 min** | the same, MINUS the 13 CI-sourced rows — what the BOX still computes |
+| 1.7 min | the difference: the CI-sourced rows' `ci-summary` network reads, 13 rows |
+
+⛔ Neither is wrong and they answer different questions. **Where this arc quotes a single figure it
+means 19.8** — the box-side number, because the arc's subject was *what the box spends* — and the
+before-figures it is compared against (70.5, 46.8, 38.8) are box-side too, so the series is
+consistent. ⚠ A reader pricing a `--write` wants 21.5.
+
+
 **⛔⛔ STEP 1 FIRST, AND IT IS THE HALF THAT COULD HAVE ENDED THE SLICE.** ⚖ 72 (b) wants three
 consecutive runs of `same` before a row flips, and nobody had ever run ONE. A gate verdict (`265/0`)
 is portable by construction; **an md5 over generated levels is portable only if generation is
