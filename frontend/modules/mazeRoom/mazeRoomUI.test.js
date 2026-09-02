@@ -2939,3 +2939,102 @@ describe('MazeRoomUI — a canvas click is `tileAtPoint`\'s answer, not `/ TILE_
         expect(painted).toEqual([]);
     });
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ D5 — THE VISUALIZER MIRROR COPIES THE **TURN**, NOT ONLY THE POSITION
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * §30's residue, named by S2a and left for whoever next touched the mirror:
+ * `_onVisualizerChange` copied `vState.player_pos` into `this.state` and
+ * tracked `_lastVisualizerTurn` for the wait mirror, but never wrote
+ * `this.state.turn` — so during a loops-delegated walk the panel's own counter
+ * stood still and *"Reached exit in N steps."* under-counted the whole walk.
+ */
+describe('MazeRoomUI — a delegated walk advances the panel\'s OWN turn counter (D5)', () => {
+    beforeEach(() => {
+        _testOnly_resetModuleState();
+        resetDiscoverySingleton();
+    });
+
+    /** A delegated walk: `moves` tile-steps east and `waits` turn-only ticks,
+     *  played through the mirror exactly as the visualizer's tick fires it. */
+    function delegate(panel, { moves, waits }) {
+        let turn = 0;
+        let pos = { ...panel.state.player_pos };
+        const tick = () => {
+            panel._visualizer = { getState: () => ({ player_pos: { ...pos }, turn }) };
+            panel._onVisualizerChange();
+        };
+        // ⛓ The first observation only PRIMES `_lastVisualizerTurn` (by design —
+        //   it is the pickup, not a tick), so the walk starts from turn 0.
+        tick();
+        for (let i = 0; i < moves; i += 1) {
+            pos = { x: pos.x + 1, y: pos.y };
+            turn += 1;
+            tick();
+        }
+        for (let i = 0; i < waits; i += 1) {
+            turn += 1;
+            tick();
+        }
+    }
+
+    it('⛔ k moves and w waits leave `state.turn` at k + w', () => {
+        const world = createWorld(8, 6, {
+            entrance: { x: 0, y: 0 }, exits: [{ exit_id: 'E', x: 5, y: 0 }],
+        });
+        const panel = new MazeRoomUI(null, {});
+        panel.world = world;
+        panel.state = { player_pos: { x: 0, y: 0 }, turn: 0, inventory: new Set() };
+        panel.currentRegionId = 'R';
+        panel.render = () => {};
+        panel._loopsDrivenAction = { type: 'regionMove' };
+        panel._loopsDrivenSteps = [{ x: 0, y: 0 }];
+        panel._loopsDrivenCost = 0;
+
+        delegate(panel, { moves: 3, waits: 2 });
+
+        expect(panel.state.player_pos).toEqual({ x: 3, y: 0 });
+        expect(panel.state.turn).toBe(5);
+    });
+
+    it('⛔ …and the end-of-region message SAYS so — it used to under-count the whole walk',
+        () => {
+            const world = createWorld(8, 6, {
+                entrance: { x: 0, y: 0 }, exits: [{ exit_id: 'E', x: 4, y: 0 }],
+            });
+            const panel = new MazeRoomUI(null, {});
+            panel.world = world;
+            panel.state = { player_pos: { x: 0, y: 0 }, turn: 0, inventory: new Set() };
+            panel.currentRegionId = 'R';
+            panel.render = () => {};
+            panel._loopsDrivenAction = { type: 'regionMove' };
+            panel._loopsDrivenSteps = [{ x: 0, y: 0 }];
+            panel._loopsDrivenCost = 0;
+
+            // 3 delegated moves to (3,0) and 2 delegated waits — 5 turns.
+            delegate(panel, { moves: 3, waits: 2 });
+            // The walk ends; the person takes the last step onto the exit.
+            panel._loopsDrivenAction = null;
+            panel._executeMoveAction(moveEntry('E'));
+
+            expect(panel.state.player_pos).toEqual({ x: 4, y: 0 });
+            expect(panel.state.turn).toBe(6);
+            expect(panel.message).toBe('Reached exit in 6 steps.');
+        });
+
+    it('⛓ a visualizer that carries no counter leaves the panel\'s number alone', () => {
+        // ⛔ The guard is on the TYPE, not on truthiness: an older stub with no
+        //   `turn` must not blank a counter the panel has been keeping.
+        const world = createWorld(8, 6, { entrance: { x: 0, y: 0 } });
+        const panel = new MazeRoomUI(null, {});
+        panel.world = world;
+        panel.state = { player_pos: { x: 0, y: 0 }, turn: 7, inventory: new Set() };
+        panel.currentRegionId = 'R';
+        panel.render = () => {};
+        panel._visualizer = { getState: () => ({ player_pos: { x: 1, y: 0 } }) };
+        panel._onVisualizerChange();
+        expect(panel.state.player_pos).toEqual({ x: 1, y: 0 });
+        expect(panel.state.turn).toBe(7);
+    });
+});

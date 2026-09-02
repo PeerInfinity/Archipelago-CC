@@ -2289,7 +2289,26 @@ export class MazeRoomUI {
             const oldPos = this.state.player_pos;
             newPos = { ...vState.player_pos };
             stepHappened = !!oldPos && (oldPos.x !== newPos.x || oldPos.y !== newPos.y);
-            this.state.player_pos = newPos;
+            /**
+             * ⛓⛓⛓ D5 — **THE TURN IS COPIED BESIDE THE POSITION**, in the one
+             * statement, because they are one fact about one tick. Before this
+             * the mirror carried `player_pos` alone, so during a loops-delegated
+             * walk the panel's own counter stood still and *"Reached exit in N
+             * steps."* under-counted the whole walk — the residue S2a named
+             * (§30) when it fixed the visualizer's `getState().turn` and left
+             * this reader unfinished.
+             *
+             * ⛔ Guarded on the TYPE and not on truthiness: turn 0 is a real
+             * turn, and a visualizer that carries no counter (an older stub)
+             * must leave the panel's own number alone rather than blank it.
+             * ⛔ And it is a copy, not an increment: the visualizer is the
+             * authority on how many turns its walk took, exactly as it is on
+             * where the player is.
+             */
+            Object.assign(this.state, {
+                player_pos: newPos,
+                ...(typeof vState.turn === 'number' ? { turn: vState.turn } : {}),
+            });
         }
         // Tick detection: the visualizer's turn counter strictly
         // increases on every tick (move OR wait). Comparing against
