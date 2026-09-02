@@ -72,6 +72,7 @@
  * table is byte-for-byte the one `verify-seedling-ap-placement.mjs` builds.
  */
 
+import { indexLevels } from '../seedlingDemo/atlasSource.js';
 import {
     AP_ITEM_CAPABILITY,
     seedlingRandomizerEligibility,
@@ -683,7 +684,7 @@ export async function loadSeedlingRandomizer({
         [AP_MODULE_PATHS.rewriter, AP_MODULE_PATHS.exporter, AP_MODULE_PATHS.validator,
             AP_MODULE_PATHS.ledger, AP_MODULE_PATHS.derivation].map((p) => importModule(url(p))));
 
-    const roomsByLevel = new Map((mapDoc.levels ?? []).map((r) => [r.level, r]));
+    const roomsByLevel = indexLevels(mapDoc);
     const { locationItemOf, ledgerUsed, census } = buildLocationResolver({
         ledger: ledgerMod.R7_GOAL_LEDGER,
         gameConfig,

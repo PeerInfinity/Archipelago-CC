@@ -12,6 +12,7 @@
 // Headless-safe: no top-level await, no literal node: imports.
 
 import { analyzeRegion, applyRegionAnalysis } from '../procgenPipeline/regionAtlasAnalyzer.js';
+import { indexLevels } from '../seedlingDemo/atlasSource.js';
 
 import {
     buildSeedlingRegionGrid,
@@ -23,13 +24,40 @@ import {
 /**
  * Index a Seedling map document (the `seedling-map.json` extract) by level id.
  * Accepts the document or an already-built Map.
+ *
+ * ⛔⛔ **THE KEY IS THE NUMBER NOW, AND THAT IS THE POINT** (maze-lab arms F-a /
+ * plan §17.1 F11). This was the only one of the repo's four "index rooms by
+ * level" maps that keyed by `String(level.level)`; the other three use the
+ * number the documents actually carry. Since this function has always accepted
+ * "the document or an already-built Map", a number-keyed Map from any of the
+ * other three looked up as a string and MISSED — silently, as `undefined`. One
+ * spelling, in `seedlingDemo/atlasSource.js`, and the lookups below convert.
  */
 export function indexSeedlingLevels(mapDoc) {
-    if (mapDoc instanceof Map) return mapDoc;
-    const byId = new Map();
-    for (const level of mapDoc?.levels ?? []) byId.set(String(level.level), level);
-    return byId;
+    return indexLevels(mapDoc);
 }
+
+/**
+ * The number-keyed index's key for a region's `map_ref`.
+ *
+ * ⛓ WHY THIS IS NOT `Number(mapRef)`. `region-atlas.schema.json:126-128` allows
+ * `map_ref` to be *"an integer or non-empty string level id"*, and a Seedling
+ * level id IS an integer — so a region written `map_ref: "19"` names level 19
+ * and hit this index when it was string-keyed. Dropping that would be a
+ * behaviour change shipped under a "nothing observable moved" claim.
+ *
+ * ⛔ But a naive `Number()` would be a WORSE change in the other direction:
+ * `Number(null)` is 0, so a region with `map_ref: null` — three of them in
+ * `atlases/seedling-fixture.json` — would start resolving to LEVEL 0. So the
+ * conversion is a round trip: only a string that `Number` maps back to itself
+ * is a level number. `null`, `undefined`, `'mz_3'`, `''`, `'007'` and `' 19'`
+ * are returned as-is and miss, which is exactly what `String(…)` did.
+ */
+const levelKeyOf = (mapRef) => {
+    if (Number.isInteger(mapRef)) return mapRef;
+    if (typeof mapRef === 'string' && String(Number(mapRef)) === mapRef) return Number(mapRef);
+    return mapRef;
+};
 
 /**
  * The analyzer options for Seedling: condition identity and condition -> rule,
@@ -66,7 +94,7 @@ export function analyzeSeedlingRegion(atlas, regionId, { mapDoc, gameConfig }) {
     if (region.map_ref === undefined || region.map_ref === null) {
         return { region_id: regionId, skipped: 'region has no map_ref — graph-only, there is no tile map to analyze' };
     }
-    const level = indexSeedlingLevels(mapDoc).get(String(region.map_ref));
+    const level = indexSeedlingLevels(mapDoc).get(levelKeyOf(region.map_ref));
     if (!level) {
         throw new Error(`region "${regionId}" names map_ref ${JSON.stringify(region.map_ref)}, which is not a level in the map document`);
     }
@@ -111,7 +139,7 @@ export function seedlingMazeProjectionDeps({ mapDoc, gameConfig }) {
         resolveCondition: options.resolveCondition,
         unresolved: options.unresolved,
         gridFor: (region) => {
-            const level = levels.get(String(region.map_ref));
+            const level = levels.get(levelKeyOf(region.map_ref));
             return level ? buildSeedlingRegionGrid(region.bounds, level) : null;
         },
     };

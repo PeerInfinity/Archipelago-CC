@@ -25,6 +25,45 @@
  */
 
 /**
+ * ⛓ **INDEX A MAP DOCUMENT'S ROOMS BY LEVEL — THE ONE SPELLING** (maze-lab arms
+ * F-a / plan §17.1 F11).
+ *
+ * `{ levels: [{level, …}] }` is the shape the committed Seedling extract
+ * (`flashPanel/atlases/seedling-map.json`, 116 rooms) and every derived room set
+ * carry, and three places built the same Map from it — here,
+ * `flashPanel/seedlingRandomizerWiring.js`, and
+ * `flashPanel/seedlingAtlasAnalysis.indexSeedlingLevels`. The third keyed it by
+ * `String(level.level)` while the other two used the number, so a number-keyed
+ * Map handed to it looked up as a string and MISSED — silently, as `undefined`.
+ * ⇒ ONE key type, and it is the number the documents actually carry (measured:
+ * all 116 `level` fields in the extract are integers).
+ *
+ * ⛔ THIS FILE, and not `flashPanel/seedlingSemantics.js`, because the panel is
+ * the side with the bundle constraint and this direction is the cheap one.
+ * MEASURED at `8a1eb6b1a` over the static-import closure: `atlasSource.js` has
+ * no imports at all, so importing it costs a flashPanel module **+1 file,
+ * +2,138 B** (`seedlingRandomizerWiring` 6 files/78,888 B → 7/81,026;
+ * `seedlingAtlasAnalysis` 6/162,009 → 7/164,147). The reverse — the panel's
+ * semantics module reaching seedlingDemo — is what §5i priced at 1 MB.
+ *
+ * ⛔ `apPlacementRewriter.recordsByLevel` is NOT a caller and that is
+ * deliberate: it indexes to `{record, i}` rather than to the record, and it
+ * REFUSES a non-integer level and a duplicate one by name, because the ledger
+ * addresses rooms by level and an array position would silently address the
+ * neighbour. A refusing index with a different value type is a different
+ * function, not a fourth copy of this one.
+ *
+ * @param {{levels?: object[]}|Map} doc  the document, or an already-built Map,
+ *   which is returned unchanged — `indexSeedlingLevels` has always accepted
+ *   both and its callers rely on it.
+ * @returns {Map<number, object>} level number -> the room record.
+ */
+export function indexLevels(doc) {
+    if (doc instanceof Map) return doc;
+    return new Map((doc?.levels ?? []).map((l) => [l.level, l]));
+}
+
+/**
  * A `levelSource` over an already-loaded atlas object.
  *
  * Throws by name on a level the atlas does not have, rather than returning
@@ -33,7 +72,7 @@
  * wrong by transcription, and it should say so.
  */
 export function levelSourceFromAtlas(atlas) {
-    const byLevel = new Map((atlas?.levels ?? []).map((l) => [l.level, l]));
+    const byLevel = indexLevels(atlas);
     return (level) => {
         const record = byLevel.get(level);
         if (!record) {
