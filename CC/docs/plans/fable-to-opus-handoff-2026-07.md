@@ -8771,6 +8771,22 @@ the verdict came from the SUMMARY line, never from the poll returning.
 
 **NEXT (pre-authorized): D3+D4.**
 
+**⇒ D1+D2+D5 VERIFIED BY THE PLANNER; D3+D4 LAUNCHED (2026-09-02, `maze-lab-planning`, per `a16f09b62`).**
+D1 `d7416903a` / D2 `8d9f57064` / D5 `7facc1b2c` / as-built `25115999f` re-checked: `identityFields`/
+`labUrlFields`/`labReadoutIdentity` exported, the click through `tileAtPoint`, the mirror copies `turn`,
+`gate: maze-lab` 265/0 UNMOVED, digest unmoved, bounded vitest 30 files/1312. **Overturned (plan §35):** M4's
+"the readout omits four fields" was STALE at `44e47f445` (the planner re-read the wrong block — §16.3's own
+lesson); what was real was five copies and a DEFAULT-arm divergence (`?? null` vs `?? DEFAULT_SKELETON`),
+now pinned on VALUES; D2's "(6,4)" was the tile's corner (the centre mapped to (7,5)); two mutants were
+needed for the click (scale AND border are non-redundant). **Residue → D6:** `editBaseTag` omits `bounds`/
+`budget`/`roster` and `roster` bites — asserted by a row that reds on purpose when taken (moves every
+committed payload's `base`). **D3+D4 launched** (`NewDocs/plans/maze-lab-arms-sliceD3-prompt.md`,
+`maze-lab-arms-sliceD3`): M7 param forms, M8 `assertViewFields`, M11 `canOpenRoom` (the ONE behaviour
+change — the asymmetric exemption), M12 `fetchOrRefuse`, M13 `posKey` exports/`slot_`/download; M9
+`worldRulesJsonOf` with a `projectRegions` hook (the all-maze rules.json byte-identical, `stats`/`dropped`
+restored), M10 `deriveWorldAtlasOf` returns `parts`. Claim everywhere: UNMOVED (265/0, op-log fixtures,
+hosting 66/0), captured before and asserted after.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
