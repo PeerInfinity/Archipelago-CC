@@ -6292,7 +6292,7 @@ the eventual fix is on the producing side. No new `.gitignore` lines; the transi
 the preserved list + restore IS the solution. Open: `docs/json/developer/diffs/file-lists/*.md`
 still say 61 (regenerated at release).
 
-## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01, ⚖ 72 RULED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; S1 SHIPPED 2026-09-01 `ad5aef2b0`, S2 SHIPPED 2026-09-01 `e6c84a6f8` + the owed write `5e42d4104`, S3 SHIPPED 2026-09-01 `9f46b2bfd`…`765ea79fa`, S4 SHIPPED 2026-09-01 `91c26b690`…`4a99828ec` — SIX ROWS QUOTE CI; S4b SHIPPED 2026-09-01 `0f9e0cf27`…`3eceb7d18` — all three loose ends closed; S5 SHIPPED 2026-09-01 `def23822a`…`e5c19cece` — the FULL `procgen-help` claim leaves the box, the `@ci-face` RETIRED and `¬ciFace` untouched, battery 46.8 → 38.8 min; S5b + S4c NEXT)
+## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01, ⚖ 72 RULED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; S1 SHIPPED 2026-09-01 `ad5aef2b0`, S2 SHIPPED 2026-09-01 `e6c84a6f8` + the owed write `5e42d4104`, S3 SHIPPED 2026-09-01 `9f46b2bfd`…`765ea79fa`, S4 SHIPPED 2026-09-01 `91c26b690`…`4a99828ec` — SIX ROWS QUOTE CI; S4b SHIPPED 2026-09-01 `0f9e0cf27`…`3eceb7d18` — all three loose ends closed; S5 SHIPPED 2026-09-01 `def23822a`…`e5c19cece` — the FULL `procgen-help` claim leaves the box, the `@ci-face` RETIRED and `¬ciFace` untouched, battery 46.8 → 38.8 min; **S5b SHIPPED 2026-09-01 `a1ee8275b`…`13dc57a1e` — the partition prices in the RUNNER'S OWN seconds, browser wall 23 m 01 s → 15 m 20 s in TWO shards, trap 1068 closed**; S4c NEXT)
 
 **The question (user):** *"At some point I'll want to check why the battery takes so long. Can it
 be moved to CI? Can parts of it run in parallel?"* All numbers re-derived at `dde883de9`, none
@@ -7225,6 +7225,128 @@ tag, so it cannot pass because somebody deleted a declaration and left the gate 
 unchanged. **S5b** is the shard mispricing above. ⛓ The `¬ciFace` clause is exactly as S4 left it,
 and it now has exactly one subject — which is worth knowing, because a clause with no subject is a
 clause the next slice deletes.
+
+**⇒ S5b SHIPPED 2026-09-01 — THE SHARD PARTITION PRICES IN THE RUNNER'S OWN SECONDS. `planCiShards`
+NO LONGER TAKES A BANK AT ALL; THE BROWSER WALL IS 23 m 01 s → **15 m 20 s** IN TWO JOBS, AND THE
+GUARD THAT MISSED THIS NOW READS ONLY WHAT THE RUNNER PRINTED ABOUT ITSELF.** (`a1ee8275b` …
+`13dc57a1e`, PUSHED; FOUR commits.)
+
+**THE DEFECT, RESTATED FROM THE FIX'S SIDE.** `standing-values --write` records `ms` as *how long
+this ROW took to produce*. ⚖ 72 made rows CI-SOURCED, so producing one became a `ci-summary`
+NETWORK CALL — and `planCiShards` priced arms off exactly that field. Not one line of the partition
+changed; the MEANING of the field under it did. `seedling-wasm-element` 934.7 s → 5.5 s, 24 browser
+arms priced at 47 s of `gh` traffic, three shards → one, **+7 m 57 s of CI wall on every push** with
+nothing red anywhere.
+
+**⛔ THE FIX IS STRUCTURAL, NOT A CLAUSE — AND THAT WAS THE BRIEF'S OWN ARGUMENT.** `ciGatePlan.js`'s
+docblock had defended this carefully against an UNKNOWN cost (*"pricing an unknown at zero is how one
+shard silently becomes the slow one"*) and had no defence against a KNOWN-BUT-WRONG one. So the
+repair is not *"exclude a `ciSourced` row"*: `planCiShards({arms, costs, budgetMs})` **has no `bank`
+parameter**, and there is nothing a caller can pass that puts a standing row's `ms` back into a
+price. An arm no runner has measured is UNPRICED and lands alone — the module's own rule, unchanged,
+and NOT a fallback to the bank, because a fallback reinstates the defect for exactly the rows that
+had it.
+
+**⛓⛓ (c) OVER (b), AND THE MEASUREMENT THAT DECIDED IT — the brief asked to be overturned with
+reasons and this is the one place it needed to be sharpened rather than overturned.** (b) — a field
+holding the gate's own last LOCAL cost — is smaller and would have worked. It loses on two measured
+facts:
+
+| | measured |
+|---|---|
+| the box was never a *proxy* for the runner | across the 24 browser arms × 3 runs the runner is **0.18× to 0.96×** the box — `editor-sequence` 26.2 → 4.8 s, `wasm-element` 934.7 → 901.2 s. A FIVE-FOLD spread is not a headroom factor; it is a different question |
+| (b)'s number would never be re-measured | a CI-sourced row's last local cost is from the last time the box ran a gate **this whole arc exists to stop the box running**. It freezes on the day it is written |
+
+⇒ `scripts/procgen/ci-arm-costs.json`, written by `ci-gates.mjs --write-costs` out of the `##   ms |
+<key> | here=` lines every run has printed **since S3**. Re-measured by the very jobs being priced,
+at no new cost, in the currency the partition actually spends. ⛓ MAX across the runs, not the
+latest: same-arm spread over three runs is ~25 % (`editor-generate` 34.0 / 34.3 / 42.3 s) and a
+bin-packer fed the fastest sample packs a bin that does not fit.
+
+⚠ **`here=` IS available at plan time and the brief's fallback was not needed** — but not the way
+the brief pictured it. The plan must be a pure function of the tree (two jobs at one SHA agree
+without talking, and the box runs `--plan` too), so a network read at plan time is out; the runner's
+number reaches the planner by being BANKED, which is (b)'s structure carrying (c)'s value.
+
+**⛔⛔ THE GUARD, BUILT AND SHOWN FAILING BEFORE THE FIX** — `ci-gates.mjs --audit --run=<id>`
+(commit 1, `a1ee8275b`, alone). Its only inputs are each job's `here=` lines and its own `## shard i
+of n` note: no bank, no costs file, no plan, nothing this module priced.
+
+| run | head | shards | audit |
+|---|---|---|---|
+| 33555725728 / 33563524638 | the regression, LIVE at slice start | 1 | **FAIL** — *24 arms and 1388.8s > the 600s budget* |
+| 33548827760 | `9c3600602`, the 3-shard baseline | 3 | **ALL CHECKS PASSED** — and `wasm-element` ALONE at 896.5 s over budget is NOT red, because a one-arm shard over budget is `planCiShards`' own rule working |
+| **33575117635** | **`8a386aea8`, this slice** | **2** | **ALL CHECKS PASSED** |
+
+⛓ The control is the half that matters: a guard that reds on every run is not a guard. And the
+control found the OTHER direction unprompted — the baseline's two multi-arm shards total **466.7
+runner-seconds** and would have fitted in ONE job. **THREE was itself the box-`ms` proxy
+over-splitting.** That is reported as `loose` and never red: over-splitting costs a runner, not a
+minute, and varies run to run. ⛔ Saying which direction a guard is blind in is the difference
+between a bound and a hope — this one reds on UNDERPRICING only.
+
+**THE GATE, ALL FOUR PARTS.**
+
+| # | the brief asked | measured |
+|---|---|---|
+| 1 | the failing case, shown failing before the fix | two of them. (a) `--audit` on the live run, above, at commit 1 with no fix present. (b) unit: `ciGatePlan.test.js` gained two rows that pass BOTH the corrupted bank AND the runner's costs and assert the plan is the costs' — **2 failed / 38 passed against the pre-fix module**, 44/44 after |
+| 2 | the partition is correct, and WHY that many shards | **TWO.** `seedling-wasm-element` 901.2 s is at or above the 600 s budget, so the module's own rule gives it a job; the other 23 arms sum to **489.0 s** and fit in one. The predicted wall is wasm-element's own ~15 min, which is irreducible — and it is ONE JOB FEWER than the 3-shard baseline, for the `loose` reason above |
+| 3 | a pushed run, watched, against 23 m 01 s and 15 m 27 s | run **33575117635** @`8a386aea8`: **2 shard jobs, browser wall 15 m 20 s** (element 15.3 min, the 23-arm shard 8.6 min). vs **23 m 01 s** regression and **15 m 27 s** baseline. `ci-summary --gates`: **27 same, 0 MOVED, 2 shallow, 1 not-banked, 0 MISSING** — the 2-way cover loses no arm. ⛓ The plan priced the 23-arm shard at 489.0 s and it ran **481.7 s** — 1.5 % |
+| 4 | `npx vitest run scripts/procgen` bounded (⚖ 52) | **30 files / 578 tests** green (was 565; +13 rows). Plus `frontend/modules/procgenDocs` 7 / 447, `check-procgen-help --only=ci-gates.mjs` ALL PASS, `check-procgen-reference` ALL CHECKS PASSED after the instruments index was regenerated for the two new flags |
+
+**⛔⛔ A FINDING THE BRIEF DID NOT NAME AND THE DESIGN CREATED: A NEW `scripts/procgen/*.json`
+RE-ARMS S1's KEY CASCADE.** Measured both sides on the real tree. `ci-arm-costs.json` is a `.json`
+directly under `scripts/procgen/`, so `rowInputKey`'s DIRECTORY rule carries it into the same `data`
+populations the bank was in:
+
+| `--keys` | MOVED |
+|---|---|
+| costs file TRACKED, no exclusion | **30 of 34** |
+| costs file tracked, exclusion applied | **2** — and the whole report BYTE-IDENTICAL to the one taken with the file absent |
+| negative control: touch `frontend/modules/flashPanel/games/seedling.json` | **51** — the exclusion emptied nothing (trap 1018's shape) |
+
+⇒ `DERIVED_DATA_EXCLUDED` becomes a **Set of two imported constants**, each named by the module that
+writes it — never a spelling (⚖ 17), so neither can drift from what its writer emits. ⛓ AND UNLIKE
+THE BANK, NO GATE DECLARES THE COSTS FILE BACK, which is the right asymmetry: the bank has two rows
+whose SUBJECT it is; nothing a gate reports is a function of what a runner charged. ⚠ The first
+mutant I ran was VACUOUS and said so — an UNTRACKED file cannot enter any population, because
+`tracked` is `git ls-files`. The pair above is the re-run with the file staged.
+
+**THE BUDGET STOPS BEING A PROXY.** Its docblock said ten BANKED minutes left *"a 2× factor before a
+shard reaches the twenty it is aiming at"* — true when written, before anyone had seen a runner. It
+is now ten of the RUNNER's minutes, and it stays at ten rather than rising to the plan's twenty for
+an arithmetic reason now stated in the constant: `wasm-element` exceeds any budget under fifteen
+minutes and takes a job alone, every other arm sums to 489 s, so **600 s yields two shards whose
+wall is wasm-element's own — while 1200 s would pack 300 s of light arms in beside it and push the
+wall towards the twenty it is aiming at.** A budget above the irreducible arm buys nothing and
+spends wall.
+
+**THE SWEEP FOR A SECOND MISLED CONSUMER, AND ITS BOUND.** `planCiShards` was the only reader of a
+banked `ms` outside `standing-values.mjs` itself. Swept: every `.ms` reference in
+`scripts/procgen/*.{js,mjs}`, and every file naming `standing-values.json` or `readStandingValues`
+(14). `cheapFor(r.ms, …)` reads the FRESH result, not the bank, and a `fromCI` row is written
+`cheap: false` unconditionally — so the `cheap` band was never poisoned. No instrument sums the
+bank's `ms` into a battery total; the 70.5 → 38.8 min figures in this arc's as-builts are computed
+by the session that writes them. ⛓ NOT swept: consumers outside `scripts/procgen`, and prose.
+
+**RECORDS CORRECTED WHERE THEY STAND** (`13dc57a1e`), in the 30/33 house style — what was true when
+written, and what changed: §5k's S4 bullet 4 (*"≈ 15 minutes of wall clock in three parallel
+jobs"* — true at `9c3600602`, false one commit later at S4's own write, and the "three" was itself
+over-splitting), and `NewDocs/plans/standing-values-ci-and-parallelism-plan.md` §6 in two places
+(S3's *"partition by banked `ms` … aiming ≤ ~20 min per job"*, and the steady-state projection —
+whose "~16 min wall, parallel" is right to the minute and whose "~11 min" local is 38.8, because
+`¬cheap` keeps eighteen browser arms on the box exactly as ⚖ 52 asks).
+
+⇒ **WHAT S5b LEAVES.** **S4c stays parked**, untouched — CI publishes no line for an identity row,
+so no identity row can have a streak. ⛓ Two things a later slice may want: (1) `ci-arm-costs.json`
+goes STALE on its own — a new gate is UNPRICED and lands alone (correct, coarse), and a gate that
+gets slower is underpriced until somebody re-runs `--write-costs`; the audit is what says so, and
+its repair is one command. (2) The audit is a manual instrument, not a gate — wiring it into a run
+is possible but a run cannot audit ITSELF (it must read a FINISHED run's logs), so it would have to
+audit the PREVIOUS run, which is a different claim and deserves its own ruling. ⛓ The headless set
+is priced now too (`procgen-help` 255.3 s on a runner, its first full-claim CI measurement) but is
+still not sharded; if it ever is, the numbers are already there.
+
 
 ## 6. Everything else (unchanged queues)
 
