@@ -3411,6 +3411,31 @@ try {
     '⛓ (the row\'s own precondition: the subject room at step 1 really does place `door_red` '
         + 'on the route and `key_red` before it)',
     `${json(doorLevel.obstacles)} / ${json(doorLevel.items)}`);
+    /**
+     * ⛓⛓⛓ **THE DISCRIMINATING HALF, AND IT WAS FOUND BY MUTANT (c).** The same
+     * four presses over the level with its key STILL ON THE FLOOR must answer
+     * `requires: []` — the walk picks the key up at (1,0) on its way to the
+     * door at (1,2), and an item collected on the way in is not an item that
+     * has to be carried in.
+     *
+     * ⛔ Without this row every `requires: []` in CLAIM 22b came from a level
+     * with NO OBSTACLE AT ALL, so `deriveRequires` with its subtract-what-was-
+     * picked-up step DELETED left the whole browser gate GREEN (measured:
+     * 264/0). A fixture that cannot tell two builds apart asserts nothing —
+     * the S2b lesson, one slice later, on the recording side.
+     */
+    const floorKeySession = createWalkSession(doorBase);
+    for (const dir of ['E', 'S', 'S', 'S']) floorKeySession.press(moveEntry(dir));
+    const floorKeyDoc = floorKeySession.fold();
+    check(floorKeySession.reachedGoal === true
+        && json(floorKeyDoc.requires) === json([])
+        && json(floorKeyDoc.itemsPickedUp) === json(['key_red']),
+    '⛓⛓⛓ **AND THE SAME FOUR PRESSES OVER THE SAME DOOR ANSWER `[]` WHEN THE KEY IS ON '
+        + 'THE ROUTE** — the walk collected it on the way in, so it is not something the '
+        + 'replay has to be carrying. ⛔ This is the row that tells `requires` apart from a '
+        + 'list of the doors a walk crossed',
+    `requires=${json(floorKeyDoc.requires)}, itemsPickedUp=${json(floorKeyDoc.itemsPickedUp)}`);
+
     clearItem(doorBase.record, 1, 0);
     const keyedState = { ...doorBase, palette: { ...doorBase.palette, items: ['key_red'] } };
     const keySession = createWalkSession(keyedState);
