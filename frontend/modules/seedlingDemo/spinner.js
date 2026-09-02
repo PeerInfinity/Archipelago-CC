@@ -95,7 +95,7 @@
  * the 13 px hammer on the freeze's FIRST frame and it is clear for all 150.
  */
 
-import { rectsOverlap, SOLIDS_BY_MOVER } from './levelWorld.js';
+import { rectsOverlap, SOLIDS_BY_MOVER, TILE_SIZE } from './levelWorld.js';
 /**
  * ⛓⛓ `World.collideLine`, THE ONE TRANSCRIPTION — imported from the module
  * whose caller happened to need it first.
@@ -116,7 +116,7 @@ export class SpinnerError extends Error {
 }
 const fail = (m) => { throw new SpinnerError(m); };
 
-const TILE = 16;
+const TILE = TILE_SIZE;
 
 /** `FP.sign` — 0 maps to 0, which `Math.sign` also does. */
 const sign = (n) => Math.sign(n);

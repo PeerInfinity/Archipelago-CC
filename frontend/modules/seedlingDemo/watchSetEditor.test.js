@@ -30,7 +30,7 @@ import { loadAtlasSchema, loadRulesSchema } from '../procgenCore/jsonSchemaFiles
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
 import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import { assertShape } from '../procgenCore/editorView.js';
-import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
+import { tileTypeForPlacement, SEEDLING_TILE_SIZE } from '../flashPanel/seedlingSemantics.js';
 import {
     NAMED_ROOMS, MUSIC_COUNT, MUSIC_NONE, stampLevelSetIdentity,
 } from './levelSetValidator.js';
@@ -50,7 +50,7 @@ import {
     overviewLayout, reportOf, roomFormRows, roomRowsOf, ruleTargetKeys, ruleTargetsOf,
 } from './watchSetEditor.js';
 
-const TILE = 16;
+const TILE = SEEDLING_TILE_SIZE;
 const ROOMS = 6;
 const DEPS = Object.freeze({
     parseOel: parseOelLevel,

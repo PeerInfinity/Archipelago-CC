@@ -87,7 +87,15 @@ export class PushableError extends Error {
     }
 }
 
-/** `Scenery/Tile.w` / `Tile.h`. */
+/**
+ * `Scenery/Tile.w` / `Tile.h` — the pitch every OEL coordinate is in.
+ *
+ * ⛓ NOT imported from `levelWorld.TILE_SIZE` (maze-lab arms F-a / plan §17.1 F9),
+ * and the reason is measured, not stylistic: this module has NO imports at all (1 file, 34,444 B), and
+ * a `levelWorld` import would make its static closure 10 files / 787,419 B
+ * (measured at `8a1eb6b1a`) to share one integer. The three files that kept the
+ * literal are the three where it is not free; the other eleven import it.
+ */
 export const TILE = 16;
 
 /** `PushableBlockFire.moveSpeed` — px per tick, per axis. */

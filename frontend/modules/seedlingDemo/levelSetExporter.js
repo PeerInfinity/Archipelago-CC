@@ -63,6 +63,7 @@
  * Headless-safe: no `node:` imports and no DOM.
  */
 
+import { SEEDLING_TILE_SIZE } from '../flashPanel/seedlingSemantics.js';
 import { stableStringify } from '../procgenCore/contentIdentity.js';
 import { linkGeneratedRooms } from './levelSetExits.js';
 import {
@@ -87,8 +88,15 @@ const fail = (message) => { throw new LevelSetExportError(message); };
  * is in TILES and a manifest spawn is in PIXELS, exactly as `recordToOel`
  * converts geometry — the same factor, and getting it wrong would put the player
  * one sixteenth of the way into the room with nothing erroring.
+ *
+ * ⛓ SO IT IS THE CANONICAL ONE (maze-lab arms F-a / plan §17.1 F9). This is the
+ * tile↔pixel factor the panel reads back as `mapDoc.tile_size`
+ * (`seedlingRandomizerWiring.js:765`), which makes the exporter and
+ * `seedlingSemantics.SEEDLING_TILE_SIZE` two ends of ONE number. The import
+ * costs nothing: `seedlingSemantics` is already in this file's static closure
+ * (17 files, 1,048,012 B before and after — measured at `8a1eb6b1a`).
  */
-const TILE_SIZE = 16;
+const TILE_SIZE = SEEDLING_TILE_SIZE;
 
 /** Music.songs index used when nothing determines one. Always reported. */
 export const DEFAULT_MUSIC = 0;

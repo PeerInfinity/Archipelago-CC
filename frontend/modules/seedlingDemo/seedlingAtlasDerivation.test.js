@@ -24,7 +24,7 @@ import { buildLevelSet, reachabilityOf, vanillaRecordSet } from './levelSetExpor
 import { emptyLevel } from './procgenLevel.js';
 import { parseOelLevel } from './procgenLevelOel.js';
 import * as OV from '../flashPanel/seedlingPlaythroughOverlay.js';
-import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
+import { tileTypeForPlacement, SEEDLING_TILE_SIZE } from '../flashPanel/seedlingSemantics.js';
 import { compileRegionAtlas, substrateIdFor } from '../procgenPipeline/regionAtlasCompiler.js';
 import { indexMapDocument, validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
@@ -37,7 +37,7 @@ import {
 
 const ATLAS_SCHEMA = loadAtlasSchema();
 const RULES_SCHEMA = loadRulesSchema();
-const TILE = 16;
+const TILE = SEEDLING_TILE_SIZE;
 const ROOMS = 6;
 
 /**

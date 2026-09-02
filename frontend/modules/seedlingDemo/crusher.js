@@ -56,14 +56,14 @@
  * shield the next lane. `CRUSHER_VERBS` names the three.
  */
 
-import { rectsOverlap } from './levelWorld.js';
+import { rectsOverlap, TILE_SIZE } from './levelWorld.js';
 
 export class CrusherError extends Error {
     constructor(message) { super(message); this.name = 'CrusherError'; }
 }
 const fail = (m) => { throw new CrusherError(m); };
 
-const TILE = 16;
+const TILE = TILE_SIZE;
 
 /** `Crusher.as:18-38`, transcribed. */
 export const CRUSHER = Object.freeze({

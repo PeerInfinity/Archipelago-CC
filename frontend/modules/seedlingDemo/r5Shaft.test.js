@@ -16,7 +16,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { atlasLevelSource } from './levelSource.js';
-import { buildLevelWorld, ROLES } from './levelWorld.js';
+import { buildLevelWorld, ROLES, TILE_SIZE } from './levelWorld.js';
 import { createLevelRun } from './levelRun.js';
 import { fireHits, FIRE_WINDOW, FIRE_PRESS_CADENCE } from './fireVerb.js';
 import { hitPushableFromPoint, newPushable } from './pushables.js';
@@ -30,7 +30,7 @@ import {
 } from './r5Shaft.js';
 
 const source = atlasLevelSource();
-const TILE = 16;
+const TILE = TILE_SIZE;
 const INVENTORY = { hasSword: true, hasFire: true, canSwim: true, hasFeather: true };
 const world39 = () => buildLevelWorld(source(LEVEL), { roles: ROLES, inventory: INVENTORY });
 

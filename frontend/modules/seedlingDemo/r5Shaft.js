@@ -82,6 +82,10 @@
 import { TICKS_PER_TILE } from './pushables.js';
 import { FIRE_PRESS_CADENCE, FIRE_WINDOW } from './fireVerb.js';
 import { opensOnTick } from './activators.js';
+// ⛓ F-a / plan §17.1 F9 — the canonical tile size, re-exported by `levelWorld`.
+// FREE here: `levelWorld` is already in this file's static closure (18 files,
+// 1,062,491 B, unchanged by the direct import), measured at `8a1eb6b1a`.
+import { TILE_SIZE } from './levelWorld.js';
 
 export class ShaftError extends Error {
     constructor(message) { super(message); this.name = 'ShaftError'; }
@@ -89,7 +93,7 @@ export class ShaftError extends Error {
 const fail = (m) => { throw new ShaftError(m); };
 
 export const LEVEL = 39;
-const TILE = 16;
+const TILE = TILE_SIZE;
 
 /** A tile's centre, which is where a stance stands and a press fires from. */
 export const centre = (tx, ty) => ({ x: tx * TILE + TILE / 2, y: ty * TILE + TILE / 2 });

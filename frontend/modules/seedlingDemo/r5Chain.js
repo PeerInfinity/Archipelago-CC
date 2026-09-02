@@ -46,7 +46,15 @@ export class R5ChainError extends Error {
 }
 const fail = (m) => { throw new R5ChainError(m); };
 
-/** `Scenery/Tile.as` — the pitch every OEL coordinate is in. */
+/**
+ * `Scenery/Tile.as` — the pitch every OEL coordinate is in.
+ *
+ * ⛓ NOT imported from `levelWorld.TILE_SIZE` (maze-lab arms F-a / plan §17.1 F9),
+ * and the reason is measured, not stylistic: this module has a two-file static closure (35,352 B), and
+ * a `levelWorld` import would make its static closure 11 files / 788,327 B
+ * (measured at `8a1eb6b1a`) to share one integer. The three files that kept the
+ * literal are the three where it is not free; the other eleven import it.
+ */
 export const TILE = 16;
 
 // ─────────────────────────────────────────────────────────────────────

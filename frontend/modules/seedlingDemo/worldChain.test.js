@@ -47,7 +47,7 @@ import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js'
 import { buildWarehouse } from '../procgenPlayer/procgenPlayerEngine.js';
 import { substrateRegistryEntry as FLASH_SEEDLING_ENTRY } from '../flashPanel/flashSeedlingLibrary.js';
 import { resolveCrossingExit } from '../flashPanel/seedlingRegionBinding.js';
-import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
+import { tileTypeForPlacement, SEEDLING_TILE_SIZE } from '../flashPanel/seedlingSemantics.js';
 import { tileGridDeserializer } from '../shared/procgen/adapterPrimitives.js';
 import {
     MAZE_CONDITION_DEPS, emptyMazeOverlay, mazeGridFor,
@@ -68,7 +68,7 @@ const PACK = JSON.parse(readFileSync(
     fileURLToPath(new URL('../../region-libraries/demo-maze-pack.json', import.meta.url)), 'utf8',
 ));
 
-const TILE = 16;
+const TILE = SEEDLING_TILE_SIZE;
 const SEED_DEPS = Object.freeze({
     parseOel: parseOelLevel,
     tileSize: TILE,

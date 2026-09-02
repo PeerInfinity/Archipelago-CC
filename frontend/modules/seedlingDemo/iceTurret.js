@@ -60,7 +60,7 @@
  * 32-tick glide is a 32-tick commitment to keeping the body on screen.
  */
 
-import { rect } from './levelWorld.js';
+import { rect, TILE_SIZE } from './levelWorld.js';
 // ⛓⛓⛓ R5 SLICE 21: THE DAMAGE ARM. `enemyDamage.js` owns `Enemy.hit`'s
 // five gates, the i-frame timer, the death staging and `Mobile.death()`'s
 // eleven-tick fade for EVERY class; this file owns what is specific to
@@ -86,7 +86,7 @@ const fail = (m) => { throw new IceTurretError(m); };
 /** `FP.sign` — `value < 0 ? -1 : (value > 0 ? 1 : 0)` (`FP.as:142-145`). */
 const fpSign = (n) => (n < 0 ? -1 : (n > 0 ? 1 : 0));
 
-const TILE = 16;
+const TILE = TILE_SIZE;
 
 /**
  * The constructor's numbers, verbatim. Every one is `private const` or a

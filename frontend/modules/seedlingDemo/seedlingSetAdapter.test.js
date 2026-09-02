@@ -32,7 +32,7 @@ import { reachableRegions } from '../procgenCore/rulesGraph.js';
 import { reportOver, roomRowsOf, ruleTargetsOver } from '../procgenCore/setEditorCore.js';
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
 import { indexMapDocument, validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
-import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
+import { tileTypeForPlacement, SEEDLING_TILE_SIZE } from '../flashPanel/seedlingSemantics.js';
 import { buildLevelSet, reachabilityOf } from './levelSetExporter.js';
 import { removeExitFromRoomXml, signForTransition } from './levelSetExits.js';
 import {
@@ -52,7 +52,7 @@ import {
     validateForDownload, whatLinksHere,
 } from './seedlingSetAdapter.js';
 
-const TILE = 16;
+const TILE = SEEDLING_TILE_SIZE;
 const ROOMS = 6;
 const ATLAS_SCHEMA = loadAtlasSchema();
 const RULES_SCHEMA = loadRulesSchema();

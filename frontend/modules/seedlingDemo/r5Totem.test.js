@@ -28,7 +28,7 @@ import { atlasLevelSource } from './levelSource.js';
 import { playerBoxAt, resolveTerrainState } from './playerPhysicsV2.js';
 import { HITBOX } from './playerPhysicsV1.js';
 import { fireRect } from './fireVerb.js';
-import { rectsOverlap } from './levelWorld.js';
+import { rectsOverlap, TILE_SIZE } from './levelWorld.js';
 import { chestStanceBand } from './chest.js';
 import { plannerObstacleAt, synthesizeLegs } from './botDriverV2.js';
 import { crusherRect, detectionRects, laneHitsPlayer, scanCrusher } from './crusher.js';
@@ -344,7 +344,7 @@ describe('the press, stepped', () => {
 // geometry, and a helper that returned the declaration would hide a drift
 // between them. `probe-seedling-r5-l38-entrance` is the readable version.
 
-const TILE = 16;
+const TILE = TILE_SIZE;
 
 /** An 8 px lattice flood, the pitch every R5 route plans at. */
 const flood = (world, rec, start, { open = new Set(), pushables = null } = {}) => {
@@ -510,7 +510,6 @@ describe('⛔ the rope\'s declared stance was unreachable, and its water was not
  * what the two predictions turn on.
  */
 describe('⛔⛔ L40 from the L39 arrival — two predictions, both named failures', () => {
-    const TILE = 16;
     const l40 = () => buildLevelWorld(atlasLevelSource()(40), {
         roles: ROLES,
         inventory: { hasSword: true, hasFire: true, canSwim: true, hasFeather: true },
@@ -620,7 +619,6 @@ describe('⛔⛔ L40 from the L39 arrival — two predictions, both named failur
  * is the claim, and is why nothing here asserts a count from the probe.
  */
 describe('⛓⛓ L40\'s opening chain — the join is a PAIR, and the key is behind a BLOCK', () => {
-    const TILE = 16;
     const INV = { hasSword: true, hasFire: true, canSwim: true, hasFeather: true };
     const rec = atlasLevelSource()(40);
     /** ⚠ The burn has no per-visit family, so it is stood in for at BUILD. */
@@ -822,7 +820,6 @@ describe('control@224,432 — a parameter block, not a trigger', () => {
  * itself is not a check.
  */
 describe('⛓⛓ the burn — L37\'s door and L40\'s join', () => {
-    const TILE = 16;
     const INV = { hasSword: true, hasFire: true, canSwim: true, hasFeather: true };
     const w37 = () => buildLevelWorld(atlasLevelSource()(37), { roles: ROLES, inventory: INV });
     const w40 = () => buildLevelWorld(atlasLevelSource()(40), { roles: ROLES, inventory: INV });
