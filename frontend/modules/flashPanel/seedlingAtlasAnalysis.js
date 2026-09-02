@@ -47,11 +47,26 @@ export function indexSeedlingLevels(mapDoc) {
  * behaviour change shipped under a "nothing observable moved" claim.
  *
  * ⛔ But a naive `Number()` would be a WORSE change in the other direction:
- * `Number(null)` is 0, so a region with `map_ref: null` — three of them in
- * `atlases/seedling-fixture.json` — would start resolving to LEVEL 0. So the
- * conversion is a round trip: only a string that `Number` maps back to itself
- * is a level number. `null`, `undefined`, `'mz_3'`, `''`, `'007'` and `' 19'`
- * are returned as-is and miss, which is exactly what `String(…)` did.
+ * `Number(null)` is 0 and level 0 is the real starting room, so ANY `map_ref`
+ * a naive conversion coerced to 0 would start resolving to it.
+ *
+ * ⚠ **AND THE CENSUS THIS DOCBLOCK USED TO CITE WAS FALSE** (maze-lab arms
+ * F-b, correcting F-a). It said *"three regions in `atlases/seedling-fixture.
+ * json` carry `map_ref: null`"*. MEASURED: the fixture has 3 regions and
+ * **`with_map_ref=0 null=0 absent=3`** — they OMIT the key. No committed JSON
+ * carries a null `map_ref` at all, and `region-atlas.schema.json:126-128`
+ * types the field `["integer","string"]`, so null is not even a legal value —
+ * OMISSION is (*"a game whose map is ONE space omits it"*). `dict.get()`
+ * answering `None` for an ABSENT key was read as a null that was written.
+ *
+ * ⛓ The RULE is untouched by that, which is why the correction is one
+ * sentence and not a rewrite: `Number(undefined)` is `NaN` and misses either
+ * way, and a hand-written null must be REFUSED rather than resolved to level
+ * 0. So the conversion is a round trip: only a string that `Number` maps back
+ * to itself is a level number. `null`, `undefined`, `'mz_3'`, `''`, `'007'`
+ * and `' 19'` are returned as-is and miss, which is exactly what `String(…)`
+ * did — and the row that proves it builds its own synthetic `map_ref: null`,
+ * because no committed document has one.
  */
 const levelKeyOf = (mapRef) => {
     if (Number.isInteger(mapRef)) return mapRef;

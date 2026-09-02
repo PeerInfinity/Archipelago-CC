@@ -83,14 +83,37 @@ describe('a region\'s map_ref resolves through the conversion', () => {
     /**
      * ⛔⛔ THE REASON THE CONVERSION IS A ROUND TRIP AND NOT `Number()`.
      * `Number(null)` is 0 and level 0 is the real starting room, so a naive
-     * conversion would resolve a `map_ref: null` region to it. Three regions in
-     * `atlases/seedling-fixture.json` carry exactly that.
+     * conversion would resolve a `map_ref: null` region to it.
+     *
+     * ⚠ **AND THE SUBJECT IS SYNTHETIC, BECAUSE NO COMMITTED DOCUMENT HAS ONE**
+     * (maze-lab arms F-b, correcting F-a). This comment used to say *"three
+     * regions in `atlases/seedling-fixture.json` carry exactly that"*; the row
+     * below MEASURES the fixture and it carries none — the three regions OMIT
+     * the key, which is what the schema blesses. The rule is unchanged
+     * (`Number(undefined)` is NaN and misses either way) and this row's `null`
+     * is written here, by hand, precisely because nothing on disk supplies one.
      */
     it('a NULL map_ref does not become LEVEL 0 — it is graph-only, as it always was', () => {
         expect(analyzeSeedlingRegion(atlasWith(null), 'r', deps).skipped).toMatch(/graph-only/);
         const gridFor = seedlingMazeProjectionDeps(deps).gridFor;
         expect(gridFor({ map_ref: null, bounds: BOUNDS })).toBeNull();
         expect(gridFor({ map_ref: undefined, bounds: BOUNDS })).toBeNull();
+    });
+
+    /**
+     * ⛔ **A CENSUS IN A COMMENT IS UNFALSIFIABLE — so it is a ROW** (F-a's own
+     * lesson, applied to F-a's own sentence). The docblock at
+     * `seedlingAtlasAnalysis.js` cited three null `map_ref`s in this fixture;
+     * this is the measurement, and it reds the day one is written.
+     */
+    it('⚖ the committed fixture carries NO null map_ref — the three regions OMIT the key', () => {
+        const fixture = JSON.parse(readFileSync(
+            fileURLToPath(new URL('./atlases/seedling-fixture.json', import.meta.url)), 'utf8'));
+        const regions = fixture.regions;
+        expect(regions).toHaveLength(3);
+        expect(regions.filter((r) => 'map_ref' in r)).toHaveLength(0);
+        expect(regions.filter((r) => r.map_ref === null)).toHaveLength(0);
+        expect(regions.filter((r) => !('map_ref' in r))).toHaveLength(3);
     });
 
     it('and the padded / spaced strings that never resolved still do not', () => {
