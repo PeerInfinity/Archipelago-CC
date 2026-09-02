@@ -159,7 +159,15 @@ export function paletteFor(biome) {
 }
 
 /**
- * The FOUR arms. ⛔ Named, because `?source=` selects one and a typo must refuse.
+ * The FIVE arms. ⛔ Named, because `?source=` selects one and a typo must refuse.
+ *
+ * ⛓⛓⛓ SLICE S2b — **`MANUAL` IS THE FIFTH, AND IT JOINS THE ENUM FOR THE SAME
+ * REASON `SET` DID.** It drives the level on screen with the KEYBOARD: one press
+ * is one shared `actionQueue` entry executed at once, and the walk it authors is
+ * the same recording a region visit produces (`mazeLabWalk.js`). ⚠ Adding it RED
+ * `check-maze-lab` CLAIM 17b, which matched the refusal's literal
+ * `[generate, edit, solve, set]` — that is the gate working, and the row now
+ * derives the list from `Object.values(SOURCES)` as this file does.
  *
  * ⛓⛓ EDITOR v3 E2c — **`SET` IS THE FOURTH, AND IT JOINS THE ENUM RATHER THAN
  * BYPASSING IT.** The refusal in `readLabParams` reads `Object.values(SOURCES)`,
@@ -174,6 +182,7 @@ export const SOURCES = Object.freeze({
     EDIT: 'edit',
     SOLVE: 'solve',
     SET: 'set',
+    MANUAL: 'manual',
 });
 
 /**
@@ -1632,7 +1641,7 @@ export function loadPayload(payload, { biome = DEFAULT_MAZE_BIOME } = {}) {
  * ⚠ EVERY BOUND THAT RAN IS IN IT (⚖ kickoff §5), including the two the
  * Seedling line has no room for: the ROOM and the EXPANSION cap.
  */
-export function describeState(state, solved = null) {
+export function describeState(state, solved = null, walk = null) {
     const s = state.summary;
     const edits = (state.edits ?? []).length;
     /**
@@ -1777,6 +1786,15 @@ export function describeState(state, solved = null) {
         bits.push(`solve: ${solved.verdict}`
             + (solved.ticks ? ` in ${solved.ticks} step(s)` : ''));
     }
+    /**
+     * ⛓⛓⛓ SLICE S2b — **THE WITNESS CLAUSE.** ⚖ §3.8 / §13.1: a hand walk that
+     * reached the goal is EVIDENCE that a route exists and is NOT a
+     * certification — `certified` is the oracle's answer or nothing, and this
+     * line touches it in neither direction. ⛔ The sentence itself is
+     * `mazeLabWalk.witnessOf`'s, so the identity line and the SEAM check cannot
+     * drift apart; this function only decides WHERE it goes.
+     */
+    if (walk?.clause) bits.push(walk.clause);
     return bits.join('  ·  ');
 }
 

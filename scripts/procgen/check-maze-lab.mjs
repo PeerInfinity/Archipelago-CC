@@ -117,9 +117,12 @@ const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name
 
 const MAZE = (p) => import(join(REPO, 'frontend/modules/mazeRoom', p));
 const {
-    MazeRoomEditor, PALETTE_TYPES, applyEdit, applyEditOpToState, generateStep,
-    generateWithDirectives, labPayload, serializeMazeLevel,
+    MazeRoomEditor, PALETTE_TYPES, SOURCES, applyEdit, applyEditOpToState, generateStep,
+    generateWithDirectives, labPayload, readLabParams, serializeMazeLevel,
 } = await MAZE('mazeLab.js');
+/** ⛓ SLICE S2b — the manual arm's own session, node-side: CLAIM 22 builds the
+ *  WALLED level a loaded walk must refuse from the page's own functions. */
+const { createWalkSession } = await MAZE('mazeLabWalk.js');
 /**
  * ⛓⛓ EDITOR v3 E2c — THE SET ARM'S NODE-SIDE ANCHORS. ⛔ The strip's geometry
  * constants are `setEditorCore`'s OWN, never numbers typed here: `overviewLayout`
@@ -2234,10 +2237,20 @@ try {
     await page.goto(`${PAGE}?source=sets`, { waitUntil: 'domcontentloaded' });
     await settled(() => window.__mazeLab?.fatal, 'the refusal of a near-miss ?source=');
     const nearMiss = await read();
-    check(/\[generate, edit, solve, set\]/.test(nearMiss.fatal ?? ''),
-        '⛓⛓ **CLAIM 17b — A NEAR-MISS `?source=` STILL REFUSES, NAMING ALL FOUR.** The fourth '
-        + 'arm JOINED the enum; a page that reached `set` around the check would open the arm '
-        + 'and let `sets` fall through to GENERATE', nearMiss.fatal);
+    /**
+     * ⛓⛓⛓ **THE LIST IS DERIVED FROM `SOURCES`, NOT TYPED.** It WAS the literal
+     * `[generate, edit, solve, set]`, and slice S2b's fifth arm RED this row —
+     * which is the gate working: a page that grew an arm the refusal did not
+     * name would let a typo fall through to one nobody asked for. ⛔ The row now
+     * reads the page's own enum (this file already imports the module), so the
+     * SIXTH arm costs it nothing and a MISSING one still reds.
+     */
+    const armList = `[${Object.values(SOURCES).join(', ')}]`;
+    check(nearMiss.fatal?.includes(armList) === true,
+        `⛓⛓ **CLAIM 17b — A NEAR-MISS \`?source=\` STILL REFUSES, NAMING ALL `
+        + `${Object.values(SOURCES).length}.** Every arm JOINED the enum; a page that reached `
+        + 'one around the check would open it and let `sets` fall through to GENERATE',
+        `${nearMiss.fatal} (expected ${armList})`);
     await page.goto(`${PAGE}?source=set&library=/frontend/region-libraries/__no-such-pack.json`,
         { waitUntil: 'domcontentloaded' });
     await settled(() => window.__mazeLab?.fatal, 'the refusal of a bad ?library=');
@@ -2993,6 +3006,261 @@ try {
         + `⛔ Before E2c's first commit this press refused the maze's own PRIMARY document by `
         + `name, quoting a roster of ${BUNDLE_KINDS.length - 1}`,
         `${json(bundle.kinds)} · ${bundle.bytes} B`);
+
+
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ CLAIM 22 — THE MANUAL ARM (SLICE S2b)
+     * ══════════════════════════════════════════════════════════════════
+     *
+     * ⛔ **DRIVEN BY REAL KEY PRESSES**, `page.keyboard.press`, never by calling
+     * into the page: the arm's whole subject is a keyboard binding on `window`
+     * under an arm's lifetime, and a row that called `pressWalk` directly would
+     * assert everything about the session and nothing about the thing that can
+     * actually break.
+     *
+     * THE SUBJECT is `?seed=1&width=5&height=5&skeleton=winding`, whose room is
+     *
+     *     ..###        entrance (0,0) · goal (1,3) · oracle plan E S S S
+     *     #.###        ⛔ (2,1) is a WALL — the refusal row's subject, and
+     *     #.###           `whyBlocked` names the CELL, so the row can assert
+     *     #.###           the sentence rather than the fact that there was one.
+     *     #####
+     *
+     * ⚠ The brief's own sketch said "ArrowRight ×2" for the two accepted moves;
+     * on THIS room the second E is the wall. The two accepted presses are
+     * therefore E then S, and the wall press is the E that follows — the same
+     * three rows, in the order this room admits.
+     */
+    const MANUAL_QUERY = 'seed=1&width=5&height=5&skeleton=winding';
+    const manualWeb = await load(`${MANUAL_QUERY}&source=manual`,
+        () => window.__mazeLab?.source === 'manual',
+        'the MANUAL arm to mount');
+    check(manualWeb.walk === null && manualWeb.play === null,
+        '⛓ before START there is NO walk and NO replay — `__mazeLab.walk` is `null` outside '
+        + 'a session, which is what makes every count below a fact about a drive',
+        `walk=${json(manualWeb.walk)}, play=${json(manualWeb.play)}`);
+    const manualPanels = await page.evaluate(() => ({
+        generate: document.getElementById('generatePanel').hidden,
+        edit: document.getElementById('editPanel').hidden,
+        solve: document.getElementById('solvePanel').hidden,
+        set: document.getElementById('setPanel').hidden,
+        manual: document.getElementById('manualPanel').hidden,
+        replay: document.getElementById('replayPanel').hidden,
+    }));
+    check(manualPanels.manual === false && manualPanels.replay === false
+        && manualPanels.generate && manualPanels.edit && manualPanels.solve && manualPanels.set,
+    '⛓⛓ …and the FIFTH panel is the one showing, beside the REPLAY panel the SOLVE arm '
+        + 'shares with it — ⛔ one scrub over one `play.index`, never a second copy of the '
+        + 'controls inside this panel', json(manualPanels));
+
+    await page.click('#labWalkStart');
+    await settled(() => window.__mazeLab?.walk?.moves === 0, 'the walk session to open');
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('ArrowDown');
+    await settled(() => window.__mazeLab?.walk?.moves === 2,
+        'two REAL key presses to reach the session');
+    const drove2 = await read();
+    const hud2 = await page.textContent('#manualNote');
+    check(drove2.walk.moves === 2 && drove2.play.author === 'hand'
+        && hud2.includes(`player (${drove2.play.player.x},${drove2.play.player.y})`),
+    '⛓⛓⛓ **TWO KEY PRESSES ARE TWO ENTRIES, TWO FRAMES AND ONE AUTHOR** — `page.keyboard` '
+        + 'drove them, `play.author` is `hand`, and the HUD names the cell the player is on '
+        + '(read off the SAME frame the picture was drawn from)',
+    `moves=${drove2.walk.moves}, author=${drove2.play.author} | ${hud2.trim().slice(0, 110)}`);
+    check(drove2.play.frames === drove2.walk.moves + 1 && drove2.play.turn === 2,
+        '⛓ …and the drive IS the replay: `play.frames` is the walk plus its start frame, and '
+        + 'the ENGINE turn moved with it',
+        `${drove2.play.frames} frame(s), turn ${drove2.play.turn}`);
+
+    /**
+     * ⛓⛓⛓ **A REFUSED PRESS IS KEPT, AND THE HUD NAMES `whyBlocked`'s SENTENCE**
+     * (plan §28). ⛔ The sentence is DERIVED node-side from the engine, not typed:
+     * (2,1) is the wall this room puts beside the route, and the page must print
+     * the engine's own words for it.
+     */
+    await page.keyboard.press('ArrowRight');
+    await settled(() => window.__mazeLab?.walk?.refused === 1, 'the wall press to be refused');
+    const refusedWeb = await read();
+    const hudRefused = await page.textContent('#manualNote');
+    check(refusedWeb.walk.refused === 1 && refusedWeb.walk.moves === 2
+        && hudRefused.includes('wall at (2,1)') && hudRefused.includes('REFUSED'),
+    '⛓⛓⛓ **A PRESS INTO A WALL IS REFUSED, COUNTED AND NAMED** — the HUD prints the '
+        + 'ENGINE\'s own sentence (`mazeRoomEngine.whyBlocked`), which is why a refusal reads '
+        + 'as a fact about the LEVEL rather than as a page that stopped responding',
+    `refused=${refusedWeb.walk.refused} | ${hudRefused.trim().slice(-90)}`);
+    const stripAfterRefusal = await page.$$eval('#labInputStrip .in',
+        (ns) => ns.map((n) => n.classList.contains('refused')));
+    check(stripAfterRefusal.length === refusedWeb.play.frames - 1
+        && stripAfterRefusal.filter(Boolean).length === 1,
+    '⛓⛓⛓ **AND THE ENTRY IS KEPT** — the strip has one cell per TURN INCLUDING the refused '
+        + 'one, marked. ⛔ Dropping it would shift every later hazard phase, which is the '
+        + 'divergence R2 exists to catch (plan §28 withdrew "the lab drops it")',
+    `${stripAfterRefusal.length} cell(s), ${stripAfterRefusal.filter(Boolean).length} marked, `
+        + `${refusedWeb.play.frames} frame(s)`);
+
+    /** ⛓ WAIT — an ENGINE input since S2a: the turn advances, the player does not. */
+    const beforeWait = await read();
+    await page.keyboard.press(' ');
+    await settled(() => window.__mazeLab?.walk?.waits === 1, 'the SPACE press to wait a turn');
+    const waited = await read();
+    check(waited.walk.waits === 1 && waited.play.turn === beforeWait.play.turn + 1
+        && json(waited.play.player) === json(beforeWait.play.player),
+    '⛓⛓ **SPACE WAITS: THE TURN ADVANCES AND THE PLAYER DOES NOT** — S2a put "a turn '
+        + 'passes" in the engine, and this is the lab reading it back',
+    `turn ${beforeWait.play.turn} → ${waited.play.turn}, player ${json(waited.play.player)}`);
+
+    /** ⛓ …and on to the goal, which is a WITNESS and not a certification. */
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('ArrowDown');
+    await settled(() => window.__mazeLab?.walk?.reachedGoal === true,
+        'the hand walk to reach the goal');
+    const arrived = await read();
+    const identity = await page.textContent('#identity');
+    check(identity.includes(`walked to the goal by hand in ${arrived.walk.moves} move(s)`)
+        && identity.includes('a witness, not the oracle\'s certification'),
+    '⛓⛓⛓ **THE WITNESS CLAUSE, NAMING THE WALK\'S OWN MOVE COUNT** (⚖ §13.1) — evidence '
+        + 'that a route exists, and NOT a certification', identity.slice(-140));
+
+    /** ⛓⛓ STOP folds, replays and reports — the acceptance row, on the page. */
+    await page.click('#labWalkStop');
+    await settled(() => window.__mazeLab?.walk?.roundTrip !== null,
+        'STOP to fold the walk and run its round trip');
+    const stopped = await read();
+    const boxDoc = await page.evaluate(
+        () => JSON.parse(document.getElementById('labWalkText').value));
+    check(stopped.walk.roundTrip.faithful === true
+        && json(stopped.walk.roundTrip.mismatches) === json([]),
+    '⛓⛓⛓ **STOP: THE RECORDING REPLAYS TO THE FRAMES IT WAS DRIVEN TO** — both sides are '
+        + 'the same `step` from the same `startStateFor`, so this row is what says the two '
+        + 'have not drifted', json(stopped.walk.roundTrip));
+    const foldedTurns = boxDoc.actions.reduce((n, a) => n + (a.loops ?? 1), 0);
+    check(boxDoc.actions.length > 0 && foldedTurns === stopped.play.frames - 1
+        && boxDoc.substrate === 'maze' && boxDoc.lab.author === 'hand'
+        && boxDoc.lab.reachedGoal === true && boxDoc.lab.refused === 1
+        && boxDoc.departureExitId !== null,
+    '⛓⛓ …and the BOX holds the document: the loops `SavedQueue` envelope, run-length '
+        + `FOLDED (${boxDoc.actions.length} stored entry(ies) = ${foldedTurns} turns = the `
+        + 'walk\'s own frame count − 1), with an additive `lab` block naming the author, the '
+        + 'goal and the refusal', json(boxDoc.actions));
+
+    /** ⛓⛓ LOAD IT BACK on the same level — the scrub then works over a hand walk. */
+    await page.click('#labWalkLoad');
+    await settled(`window.__mazeLab?.play?.frames === ${stopped.play.frames}`,
+        'the walk to load back out of its own box');
+    const walkReloaded = await read();
+    check(walkReloaded.play.frames === stopped.play.frames && walkReloaded.play.index === 0
+        && walkReloaded.play.author === 'hand' && walkReloaded.walk === null,
+    '⛓⛓⛓ **LOADED BACK, THE WALK IS THE SAME WALK** — the same frame count, at frame 0, '
+        + 'authored by hand and with NO session running: a load is a REPLAY of somebody\'s '
+        + 'drive, not a drive',
+    `${walkReloaded.play.frames} frame(s), author ${walkReloaded.play.author}`);
+
+    /**
+     * ⛓⛓⛓ **AND ON A LEVEL THAT MOVED, IT REFUSES BY NAME AT THE INDEX.**
+     *
+     * ⛔ The walled level is built HERE, from the page's own functions over the
+     * same URL parameters, and spliced into the document's `lab.payload` — so
+     * the actions are the ones the KEYBOARD drove and only the level changed.
+     * That is what "the walk was driven on a different level, or the level
+     * moved" actually means, and a fixture would have been a fourth copy of a
+     * level two runtimes already agree on.
+     */
+    const manualParams = readLabParams(MANUAL_QUERY);
+    const manualBase = generateStep({
+        seed: manualParams.seed,
+        step: 0,
+        width: manualParams.width,
+        height: manualParams.height,
+        bounds: manualParams.bounds,
+        budget: manualParams.budget,
+        skeleton: manualParams.skeleton,
+        areas: manualParams.areas,
+        elements: manualParams.elements,
+        require: manualParams.require,
+        roster: manualParams.roster,
+        biome: manualParams.biome,
+    });
+    const wallEditor = new MazeRoomEditor({
+        itemLib: manualBase.record.itemLib,
+        obstacleLib: manualBase.record.obstacleLib,
+    });
+    wallEditor.selectType(PALETTE_TYPES.WALL);
+    const walled = applyEdit(manualBase, wallEditor, 1, 1);
+    check(walled.result.ok === true,
+        '⛓ (the row\'s own precondition: a wall really was painted onto the route\'s second '
+        + 'step)', walled.result.description);
+    const beforeBadLoad = await read();
+    await page.evaluate(({ doc, payload }) => {
+        document.getElementById('labWalkText').value = JSON.stringify(
+            { ...doc, lab: { ...doc.lab, payload } }, null, 2);
+    }, { doc: boxDoc, payload: labPayload(walled.state) });
+    await page.click('#labWalkLoad');
+    await settled(() => /REFUSED/.test(document.getElementById('walkLoadNote').textContent),
+        'the walk to be refused on a level it was not driven on');
+    const badNote = await page.textContent('#walkLoadNote');
+    const afterBadLoad = await read();
+    check(/input 1 \(move \(S\)\) is illegal on this level/.test(badNote)
+        && badNote.includes('wall at (1,1)')
+        && /driven on a different level, or the level moved/.test(badNote),
+    '⛓⛓⛓ **A WALK THE LEVEL WILL NOT TAKE REFUSES BY NAME, AT THE INDEX** — the TURN '
+        + 'index (a folded run is expanded before counting), the entry, and the engine\'s own '
+        + 'reason for that exact cell', badNote.trim().slice(0, 160));
+    check(json(afterBadLoad.play) === json(beforeBadLoad.play)
+        && json(afterBadLoad.level) === json(beforeBadLoad.level),
+    '⛓⛓⛓ **AND NOTHING PARTIAL IS DRAWN** — `play` and the LEVEL are byte-identical to '
+        + 'what they were before the press. ⛔ A page that had adopted the document\'s level '
+        + 'and then refused its actions would be showing a room nobody asked for',
+    `play ${json(afterBadLoad.play?.frames)} frame(s) / index ${afterBadLoad.play?.index}`);
+
+    /**
+     * ⛓⛓⛓ **A WITNESS DOES NOT MOVE `certified`** — the other half of ⚖ §13.1,
+     * and the one that needs a level the ORACLE has actually solved. SOLVE
+     * first, then walk to the goal by hand in the next arm: the clause appears
+     * and `certified` is STILL `true`.
+     */
+    await load(`${MANUAL_QUERY}&source=solve`,
+        () => window.__mazeLab?.source === 'solve', 'the SOLVE arm on the manual subject');
+    await page.click('#labSolve');
+    await settled(() => window.__mazeLab?.solve?.verdict === 'SOLVED',
+        'the oracle to certify the manual subject');
+    const certifiedWeb = await read();
+    check(certifiedWeb.certified === true,
+        '⛓ (the row\'s own precondition: the oracle CERTIFIED this level)',
+        `certified=${certifiedWeb.certified}, ${certifiedWeb.solve.verdict}`);
+    await page.selectOption('#source', 'manual');
+    await settled(() => window.__mazeLab?.source === 'manual', 'the switch to the MANUAL arm');
+    await page.click('#labWalkStart');
+    await settled(() => window.__mazeLab?.walk?.moves === 0, 'a second walk session');
+    for (const key of ['ArrowRight', 'ArrowDown', 'ArrowDown', 'ArrowDown']) {
+        // eslint-disable-next-line no-await-in-loop
+        await page.keyboard.press(key);
+    }
+    await settled(() => window.__mazeLab?.walk?.reachedGoal === true,
+        'the hand walk to reach the CERTIFIED level\'s goal');
+    const witnessed = await read();
+    const witnessLine = await page.textContent('#identity');
+    check(witnessed.certified === true && witnessed.walk.reachedGoal === true
+        && witnessLine.includes('a witness, not the oracle\'s certification')
+        && witnessLine.includes('CERTIFIED'),
+    '⛓⛓⛓ **THE WITNESS CLAUSE STANDS BESIDE THE CERTIFICATION AND DOES NOT REPLACE IT** — '
+        + '`certified` is still `true` and the line says both things, because certification '
+        + 'is the ORACLE\'s answer or nothing (⚖ §3.8)',
+    `certified=${witnessed.certified} | ${witnessLine.slice(-150)}`);
+    /**
+     * ⛓ AND THE NODE SIDE AGREES ABOUT THE SAME WALK — `createWalkSession`
+     * driven with the same four moves. ⛔ Not a second assertion of the same
+     * thing: the browser row proves the KEYBOARD reaches the session, and this
+     * proves the session the keyboard reached is the one node's tests pin.
+     */
+    const nodeSession = createWalkSession(manualBase);
+    for (const dir of ['E', 'S', 'S', 'S']) nodeSession.press({ actionType: 'move', actionId: dir, substrate: 'maze' });
+    check(nodeSession.reachedGoal === witnessed.walk.reachedGoal
+        && nodeSession.moves === witnessed.walk.moves
+        && nodeSession.frames.length === witnessed.play.frames,
+    '⛓⛓ …and NODE\'s own session over the same four moves agrees with the browser\'s about '
+        + 'the move count, the frame count and the goal — one session, two runtimes',
+    `node ${nodeSession.moves} moves / ${nodeSession.frames.length} frames vs browser `
+        + `${witnessed.walk.moves} / ${witnessed.play.frames}`);
 
     /* ── CLAIM 13: `?directed=` IS REFUSED BY NAME (SLICE 12) ────────── */
     /**

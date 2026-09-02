@@ -65,6 +65,33 @@
             step-through landed in `4e0ac0690`. The route line over the room is
             still drawn — it is the walk, and the frames are the walk MOVING.)
 
+  MANUAL    **DRIVE THE PLAYER YOURSELF**, one tile per key — the arm the
+            Seedling lab page has had since its manual mode, in the shape a
+            TURN-BASED engine allows. ← ↑ → ↓ / WASD move, SPACE waits, and
+            each press is ONE shared `actionQueue` entry (`mazeKeys.KEY_MAP`)
+            appended to a live queue and executed AT ONCE through
+            `mazeQueueExecutor.executeMazeEntry` — the panel's own executor, on
+            a page that mounts no panel. No pacer, no wall clock, no held-key
+            set: every one of Seedling's manual-arm hazards is a consequence of
+            per-tick physics, and a turn-based engine has none of it.
+
+            The frames a walk produces are THE SAME frames the SOLVE scrub
+            draws (`author: 'hand'` rather than `'oracle'`), so ⏮ / ◀ / ▶ / the
+            SCRUB / the INPUT STRIP all work over a hand walk unchanged.
+
+            ⛔ A REFUSED PRESS IS KEPT AND MARKED (`params.refused`), never
+            dropped: a refused turn still ticks the hazards, so a recording
+            missing it would shift every later phase. STOP folds the queue into
+            the loops `SavedQueue` envelope plus an additive `lab` block, and
+            REPLAYS it through the one stepper to report the round trip on the
+            page. A walk that reaches the goal is a WITNESS, not a
+            certification — `certified` stays the ORACLE's answer or nothing.
+
+            ⛔ NO UNDO in v1 (`ActionQueue.removeAt` refuses the done region by
+            design, and every entry of an append-and-execute session is done);
+            RESTART re-opens the session. Switching arms retires the lifetime:
+            a STOPPED walk survives in its box, an un-stopped one is lost.
+
   SET       a REGION LIBRARY — a positionally addressed LIST of interchangeable
             maze rooms — through `procgenCore/setEditorView.mountSetEditor`, the
             SAME mount `seedlingDemo/watch.html` binds to Seedling. ⛔ Nothing
@@ -93,12 +120,12 @@
 
   Shared with watch.html (procgenCore/urlParams.js — one grammar, two pages):
 
-  ?source=   generate | edit | solve | set. ⚠ Defaults to GENERATE, where
+  ?source=   generate | edit | solve | set | manual. ⚠ Defaults to GENERATE, where
              watch.html refuses to infer it: a Seedling solve costs SECONDS and
              an arm that waits for a press must not be the one a stale URL lands
-             in; a maze solve is milliseconds. ⛔ A value outside the four
-             REFUSES BY NAME, listing all of them — the fourth arm JOINED the
-             enum rather than being reached around it.
+             in; a maze solve is milliseconds. ⛔ A value outside the five
+             REFUSES BY NAME, listing all of them — the fourth and fifth arms
+             JOINED the enum rather than being reached around it.
   ?seed=N    the level's identity (⚖ kickoff §5: same seed, same level)
   ?biome=    the PALETTE — `maze-v1` today. ⚠ The same KEY watch.html uses for
              its boot inventory, because one grammar across two pages is worth
@@ -399,6 +426,14 @@
         `mazeLab.SOURCES`, so `?source=` refuses a typo naming all four.
       -->
       <option value="set">SET — a REGION LIBRARY: rooms, links, rules, REPORT</option>
+      <!--
+        ⛓⛓⛓ SLICE S2b — THE FIFTH ARM. The keyboard AUTHORS a recording: one
+        press is one shared `actionQueue` entry, executed at once against the
+        level on screen through the panel's own headless executor. It joins
+        `mazeLab.SOURCES` like the fourth did, so `?source=` refuses a typo
+        naming all five.
+      -->
+      <option value="manual">MANUAL — drive the player yourself, one tile per key</option>
     </select>
   </div>
   <!-- ⛓ IS THIS PAGE RUNNING THE CODE THAT IS ON DISK? See mazeLabView.stamp. -->
@@ -539,6 +574,25 @@
         <span class="note">— the route is drawn over the room, and the STEP
           controls below walk the plan frame by frame</span>
       </div>
+      <!-- ⛓⛓ S2b — ONE DOCUMENT KIND, TWO AUTHORS. The oracle's plan is a walk
+           whose `author` is `oracle`; the manual arm's LOAD reads it back and
+           the scrub shows it exactly as it shows a hand walk. -->
+      <div class="line">
+        <button id="labSolveDownloadWalk">Download the plan as a walk</button>
+        <span class="note">— the same envelope the MANUAL arm writes,
+          <code>author: "oracle"</code></span>
+      </div>
+      <div id="solveNote"></div>
+    </div>
+
+    <!--
+      ⛓⛓⛓ SLICE S2b — **THE REPLAY CONTROLS ARE THEIR OWN PANEL**, shown in the
+      SOLVE arm and in the MANUAL arm, because they answer a question neither
+      arm owns: *which frame of this walk is on screen*. ⛔ Not duplicated into
+      the manual panel — two scrubs over one `play.index` would be two answers
+      to that question, which is the exact law `shownFrame()` exists to keep.
+    -->
+    <div id="replayPanel" class="armPanel" hidden>
       <!-- ⛓⛓⛓ THE STEP-THROUGH (⚖ design ruling 6 fn. 3: "step-through
            visualisation is non-negotiable"). The plan LINE says where the
            player walked; only the replay says that the walk PUSHED something,
@@ -580,7 +634,46 @@
            input. (Seedling's held-keys HUD and the panel's queue icon row, in
            one control — and the row a hand walk's own entries will fill.) -->
       <div id="labInputStrip"></div>
-      <div id="solveNote"></div>
+    </div>
+
+    <!--
+      ⛓⛓⛓ SLICE S2b — **THE MANUAL ARM.** The keyboard authors a recording:
+      arrows / WASD move, SPACE waits, and each press is ONE entry appended to a
+      live `ActionQueue` and executed at once — `mazeKeys.KEY_MAP` and
+      `mazeQueueExecutor.executeMazeEntry`, the panel's own two, on a page that
+      mounts no panel. ⛔ The keys are bound on WINDOW under the ARM's lifetime,
+      so leaving the arm drops them (`watchViewer.js:5088-5100` is the hazard
+      this inherits and does not repeat), and they only `preventDefault` while a
+      session is STARTED — typing in the walk box below must not move the player.
+
+      ⛔ NO UNDO in v1: `ActionQueue.removeAt` refuses the DONE region by design
+      and every entry of an append-and-execute session is done. RESTART re-opens
+      the session from the level on screen.
+    -->
+    <div id="manualPanel" class="armPanel" hidden>
+      <div class="line">
+        <button id="labWalkStart">START a walk</button>
+        <button id="labWalkStop">STOP &amp; fold</button>
+        <button id="labWalkRestart">RESTART</button>
+        <span class="note">— ← ↑ → ↓ / WASD move · SPACE waits · one press,
+          one turn. A refused press is KEPT and marked: it consumed a turn, and
+          a recording missing it would shift every later hazard phase.</span>
+      </div>
+      <div id="manualNote" class="note"></div>
+      <!-- ⛔ THE WALK BOX IS THE MANUAL ARM'S OWN, for the SET arm's measured
+           reason: `render()` calls `refreshSaveBox()` on every render, which
+           overwrites `#labText` with the LEVEL's payload. One intake path per
+           document KIND, and a walk and a level are two documents. -->
+      <details id="labWalkIO" open>
+        <summary data-term="walk">the walk — Download / Load from box / Upload</summary>
+        <div class="line">
+          <button id="labWalkDownload">Download</button>
+          <button id="labWalkLoad">Load from box</button>
+          <label>Upload <input id="labWalkUpload" type="file" accept=".json,application/json"></label>
+        </div>
+        <div id="walkLoadNote" class="note"></div>
+        <textarea id="labWalkText" class="box" rows="8" spellcheck="false"></textarea>
+      </details>
     </div>
 
     <!--

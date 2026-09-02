@@ -48,8 +48,18 @@ import { COLORS, TILE_PX, drawWorld, plainView } from './mazeRoomRender.js';
  * input was; `mazeLab.framesForActions` is what produced the entry.
  */
 import {
-    ACTION_LOCATION_CHECK, ACTION_MOVE, ACTION_WAIT, describeMazeAction,
+    ACTION_LOCATION_CHECK, ACTION_MOVE, ACTION_WAIT, KEY_MAP, describeMazeAction, moveEntry,
 } from './mazeKeys.js';
+/**
+ * ⛓⛓⛓ SLICE S2b — **THE MANUAL ARM'S SESSION, HEADLESS.** ⛔ Everything about a
+ * hand walk that is not DOM lives there and is unit-tested in node: the queue,
+ * the executor loop, the frames, the recording, the round trip, the witness
+ * sentence and the document's refusals. What is left in this file is a panel,
+ * a keyboard binding and a box.
+ */
+import {
+    createWalkSession, describeReplayRefusal, refuseWalkDocument, witnessOf,
+} from './mazeLabWalk.js';
 /**
  * ⛓⛓⛓ THE AREA OVERLAY IS A **SIBLING** DRAW, called after `drawWorld` exactly
  * as the plan and the hover overlays are — a graph is a fact about the MODEL,
@@ -69,9 +79,9 @@ import {
     DEFAULT_MAZE_BIOME, DIRECTED_ANCHOR_TRIES, MAZE_BIOME_NAMES, MAZE_DEFAULTS,
     MazeRoomEditor, PALETTE_ENTRIES, PALETTE_TYPES,
     SOURCES, agreementWithPayload, applyDirective, applyEdits, certifyInto, describeState,
-    generateStep, generateWithDirectives, labCatalogue, labPayload, loadPayload,
-    openEditSession, planFrames, projectSession, readLabParams, serializeMazeLevel,
-    skeletonCatalogue, stepFromParams, writeLabParams,
+    framesForActions, generateStep, generateWithDirectives, labCatalogue, labPayload,
+    loadPayload, openEditSession, planFrames, projectSession, readLabParams,
+    serializeMazeLevel, skeletonCatalogue, stepFromParams, writeLabParams,
 } from './mazeLab.js';
 /**
  * ⛓⛓⛓ EDITOR v3 SLICE A2 — **THE SHARED TOOL, MOUNTED.** ⛔ The canvas tool,
@@ -347,6 +357,34 @@ export function main() {
      */
     let playRateMs = PLAY_FRAME_MS;
     /**
+     * ⛓⛓⛓ SLICE S2b — **THE HAND WALK IN PROGRESS**, or `null` outside a
+     * session. `mazeLabWalk.createWalkSession`'s object: the queue, the frames,
+     * the counters, `fold()` and `roundTrip()`.
+     *
+     * ⛔ It is ENDED, not merely cleared, by everything that ends a replay — an
+     * edit, a rung, a LOAD — because a session's frames are frames OF a level
+     * and the level moved. Retiring the arm ends it too: an un-stopped drive is
+     * lost, and a STOPPED one survives in the walk box because the DOM does.
+     */
+    let walk = null;
+    /**
+     * ⛓⛓⛓ **WHAT THE PAGE SAYS ABOUT THE WALK** — `{moves, refused, waits,
+     * reachedGoal, roundTrip}`, or `null` when this level has had no hand walk.
+     *
+     * ⛔ ONE object, and it OUTLIVES the session on purpose: STOP ends the drive
+     * and the round trip it measured is the thing a reader most wants after it.
+     * `roundTrip` stays `null` until STOP has actually run one — a readout that
+     * reported an acceptance row before it was measured would be the page
+     * claiming a check it never made. Dropped the moment the level moves
+     * (`clearPlay`), because the evidence is evidence about THAT level.
+     */
+    let walkReport = null;
+    /** The walk box's own note — separate from `say`, exactly as the SET arm's
+     *  `setLoadNote` is, and for the same reason: two documents, two intakes. */
+    let walkNote = '';
+    let walkNoteBad = false;
+
+    /**
      * ⛓⛓⛓ **THE ONE ANSWER TO "WHICH FRAME IS ON SCREEN"**, and it is
      * deliberately ONE function rather than several agreeing ones.
      *
@@ -596,7 +634,19 @@ export function main() {
         playTimer = null;
         if (play) play = { ...play, playing: false };
     };
-    const clearPlay = () => { stopPlaying(); play = null; };
+    /**
+     * ⛓⛓ AND IT ENDS THE HAND WALK TOO (S2b). ⛔ The callers are the same set —
+     * a rung, a directive, an edit, an undo, a LOAD — and they are exactly the
+     * events that replace the level a session's frames are frames OF. A walk
+     * that survived one would keep appending presses to a queue whose engine
+     * states belong to a world that is no longer on screen.
+     */
+    const clearPlay = () => {
+        stopPlaying();
+        play = null;
+        walk = null;
+        walkReport = null;
+    };
     /**
      * ⛓⛓ **THE ONE WRITER OF `play.index`.** ⛔ Every control that moves the
      * cursor — ⏮, ◀, ▶, the autoplay tick, the scrub and a click on the input
@@ -1056,9 +1106,15 @@ export function main() {
             : 'no clip — arm RECT and click two opposite corners';
     };
 
-    const renderSolvePanel = () => {
-        const note = $('solveNote');
-        note.textContent = '';
+    /**
+     * ⛓⛓⛓ SLICE S2b — **THE REPLAY PANEL IS SHARED BY TWO ARMS.** It was inside
+     * `renderSolvePanel` while the oracle was the only author of a walk; the
+     * MANUAL arm authors one too, and it needs the SAME scrub, the SAME HUD and
+     * the SAME strip over the SAME `play`. ⛔ Not copied into the manual panel:
+     * two scrubs over one `play.index` would be a second answer to *"which
+     * frame is on screen"*, which is the one law this page keeps hardest.
+     */
+    const renderReplayPanel = () => {
         /**
          * ⛓⛓⛓ THE REPLAY'S OWN LINE — ⚖ design ruling 6 fn. 3. It names the
          * FRAME, the BLOCK LAYOUT at that frame and how many DISTINCT layouts
@@ -1130,6 +1186,13 @@ export function main() {
                 strip.appendChild(cell);
             });
         }
+    };
+
+    const renderSolvePanel = () => {
+        const note = $('solveNote');
+        note.textContent = '';
+        // ⛓ The plan is only downloadable as a walk once there IS one.
+        $('labSolveDownloadWalk').disabled = !play || play.author !== 'oracle';
         if (!lastSolve) {
             note.appendChild(el('div', 'rj',
                 'press SOLVE — the ORACLE runs on the world now on screen (the same '
@@ -1142,6 +1205,217 @@ export function main() {
         // ⛔ VERBATIM — the oracle's own sentence, never a paraphrase.
         note.appendChild(el('div', 'rj', `classified by: ${lastSolve.classifiedBy}`));
         if (lastSolve.reasonText) note.appendChild(el('div', 'rj', lastSolve.reasonText));
+    };
+
+
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ SLICE S2b — THE MANUAL ARM
+     * ══════════════════════════════════════════════════════════════════ */
+
+    const walkSay = (text, bad = false) => { walkNote = text; walkNoteBad = bad; };
+
+    /** `JSON.parse` that answers `null` rather than throwing — the walk box may
+     *  hold anything at all, including nothing. */
+    const safeJson = (text) => { try { return JSON.parse(text); } catch { return null; } };
+
+    /**
+     * ⛓⛓ **THE ONE PLACE THE DRIVE'S FRAMES BECOME THE PICTURE.** The session's
+     * `frames` array IS `play.frames` — the same object, appended to — so the
+     * element overlay, the frame HUD, the input strip and `__mazeLab.play` all
+     * read the live drive through `shownFrame()` and there is no second path.
+     * The INDEX moves through `seekFrame()`, the one writer, exactly as ◀ / ▶ /
+     * the scrub move it.
+     */
+    const showWalk = () => {
+        if (!walk) return;
+        walkReport = {
+            moves: walk.moves,
+            refused: walk.refused,
+            waits: walk.waits,
+            reachedGoal: walk.reachedGoal,
+            roundTrip: null,
+        };
+        play = {
+            frames: walk.frames,
+            index: play?.frames === walk.frames ? play.index : 0,
+            playing: false,
+            author: 'hand',
+        };
+        seekFrame(walk.frames.length - 1);
+    };
+
+    const startWalk = () => {
+        stopPlaying();
+        try {
+            walk = createWalkSession(state);
+        } catch (e) {
+            say(e.message, true);
+            render();
+            return;
+        }
+        walkReport = null;
+        play = null;
+        showWalk();
+        say('walk STARTED — the arrows / WASD move, SPACE waits. ⛔ There is no UNDO: '
+            + 'every press has already run. RESTART re-opens the session.');
+        render();
+    };
+
+    /**
+     * ⛓⛓⛓ **STOP FOLDS, REPLAYS AND REPORTS.** The round trip runs here rather
+     * than being offered as a button: it is the acceptance row, and a recording
+     * nobody replayed is a recording nobody has any reason to trust. Because
+     * both sides are the same `step` from the same `startStateFor`, a mismatch
+     * is a SEAM DEFECT and the sentence says so.
+     */
+    const stopWalk = () => {
+        if (!walk) { say('no walk is running — press START', true); render(); return; }
+        const doc = walk.fold();
+        const roundTrip = walk.roundTrip();
+        walkReport = {
+            moves: walk.moves,
+            refused: walk.refused,
+            waits: walk.waits,
+            reachedGoal: walk.reachedGoal,
+            roundTrip,
+        };
+        $('labWalkText').value = JSON.stringify(doc, null, 2);
+        walkSay(`folded ${doc.actions.length} stored entry(ies) — `
+            + `${walk.turns} turn(s), ${walk.refused} refused`);
+        say(roundTrip.faithful
+            ? `walk STOPPED — the recording replays to the SAME ${walk.frames.length} frame(s) `
+                + 'it was driven to (the round trip is the acceptance row)'
+            : '⛔ SEAM: the recording does NOT replay to the frames it was driven to — '
+                + `${roundTrip.mismatches.length} mismatch(es), first at index `
+                + `${roundTrip.mismatches[0]?.at}. Both sides are the same \`step\` from `
+                + 'the same boot, so this is a defect and not a difference of opinion.',
+        !roundTrip.faithful);
+        walk = null;
+        render();
+    };
+
+    /**
+     * ⛓ ONE PRESS. ⛔ Every branch ends in `showWalk()` — including a REFUSED
+     * one, which pushes a frame equal to the previous engine state (plan §28:
+     * the entry is kept and marked, because a refused turn still ticks hazards
+     * and dropping it would shift every later phase).
+     */
+    const pressWalk = (spec) => {
+        if (!walk) return;
+        const { entry, reason } = walk.press(spec);
+        showWalk();
+        walkSay(reason === null
+            ? `${describeMazeAction(entry)} — ACCEPTED`
+            : `${describeMazeAction(entry)} — REFUSED: ${reason} (the press is KEPT and marked)`,
+        reason !== null);
+        render();
+    };
+
+    /**
+     * ⛓⛓ **LOAD A WALK: the LEVEL first, then the actions.** ⛔ In that order and
+     * through the EXISTING loaders — `refuseWalkDocument` runs every action past
+     * the shared `validateEntry` before a single byte is drawn, `loadPayload` is
+     * the page's one level intake (so the level lands UNCERTIFIED like any load),
+     * and `framesForActions` is the one stepper. A walk the level will not take
+     * REFUSES BY NAME at the first illegal index and NOTHING PARTIAL IS DRAWN:
+     * the page keeps the level and the play it already had.
+     */
+    const loadWalkFromBox = () => {
+        let doc = null;
+        try {
+            doc = JSON.parse($('labWalkText').value);
+        } catch (e) {
+            walkSay(`⛔ REFUSED — ${e.message}`, true);
+            render();
+            return;
+        }
+        const problem = refuseWalkDocument(doc);
+        if (problem !== null) {
+            walkSay(`⛔ REFUSED — ${problem}`, true);
+            render();
+            return;
+        }
+        let loaded = null;
+        try {
+            loaded = loadPayload(doc.lab.payload);
+        } catch (e) {
+            walkSay(`⛔ REFUSED — the walk's own level would not load: ${e.message}`, true);
+            render();
+            return;
+        }
+        const frames = framesForActions(loaded, doc.actions);
+        if (frames === null) {
+            /**
+             * ⛔ **NOTHING PARTIAL IS DRAWN, AND THE PAGE KEEPS WHAT IT HAD** —
+             * `loaded` was never adopted, so `state`, `play` and the level on
+             * screen are untouched and the document's own level is discarded
+             * with the refusal. `framesForActions` answers `null` for the whole
+             * walk and says nothing about WHERE, so the sentence comes from
+             * `describeReplayRefusal`, which walks the EXPANDED actions and
+             * names the turn index.
+             */
+            walkSay(`⛔ REFUSED — ${describeReplayRefusal(loaded, doc.actions)}`, true);
+            render();
+            return;
+        }
+        adopt(loaded);
+        editor = null;
+        lastSolve = null;
+        payloadCheck = null;
+        stopPlaying();
+        walk = null;
+        walkReport = null;
+        play = { frames, index: 0, playing: false, author: doc.lab.author ?? 'hand' };
+        walkSay(`loaded a ${doc.lab.author ?? 'hand'} walk of ${frames.length - 1} turn(s) `
+            + `over its own ${state.width}x${state.height} level`);
+        say('the walk\'s LEVEL was loaded with it — UNCERTIFIED until SOLVE, like any load');
+        render();
+    };
+
+    const downloadWalk = (doc, name) => {
+        const blob = new Blob([`${JSON.stringify(doc, null, 2)}\n`],
+            { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = name;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        say(`downloaded ${a.download}`);
+    };
+
+    /**
+     * ⛓⛓ **THE HUD** — the WALK's own line, beside (never instead of) the frame
+     * HUD the replay panel prints. It names the cell the player is on, the
+     * counters and the last press with `whyBlocked`'s sentence when it was
+     * refused, which is what makes a refusal legible as a fact about the LEVEL
+     * rather than as a page that stopped responding.
+     */
+    const renderManualPanel = () => {
+        $('labWalkStart').disabled = walk !== null;
+        $('labWalkStop').disabled = walk === null;
+        $('labWalkRestart').disabled = false;
+        const note = $('manualNote');
+        const box = $('walkLoadNote');
+        box.textContent = walkNote;
+        box.className = walkNoteBad ? 'bad' : 'note';
+        if (!walk) {
+            note.textContent = walkReport?.roundTrip
+                ? 'no walk is running — the last one is folded in the box below, and it '
+                    + `${walkReport.roundTrip.faithful ? 'ROUND-TRIPPED' : 'did NOT round-trip'}. `
+                    + 'START opens a new session over the level on screen.'
+                : 'no walk is running — press START. ⛔ Leaving this arm ends an un-stopped '
+                    + 'walk (a STOPPED one survives in the box below); an edit, a rung or a '
+                    + 'LOAD ends it too, because the level its frames are frames OF has moved.';
+            return;
+        }
+        const f = shownFrame();
+        const last = walk.last;
+        note.textContent = `moves ${walk.moves} · waits ${walk.waits} · refused ${walk.refused}`
+            + ` · turn ${f.turn} · player (${f.player.x},${f.player.y})`
+            + ` · inventory [${f.inventory.join(' ')}]`
+            + ` · last: ${last === null ? '—' : `${describeMazeAction(last.entry)} `
+                + `${last.reason === null ? 'ACCEPTED' : `REFUSED — ${last.reason}`}`}`
+            + (walk.reachedGoal ? ' · ⛳ REACHED THE GOAL' : '');
     };
 
     /* ══════════════════════════════════════════════════════════════════
@@ -2770,6 +3044,9 @@ export function main() {
         $('solvePanel').hidden = src !== SOURCES.SOLVE;
         // ⛓ EDITOR v3 E2c — the fourth panel, hidden on exactly the same terms.
         $('setPanel').hidden = src !== SOURCES.SET;
+        // ⛓ S2b — the fifth, and the REPLAY panel that TWO arms share.
+        $('manualPanel').hidden = src !== SOURCES.MANUAL;
+        $('replayPanel').hidden = src !== SOURCES.SOLVE && src !== SOURCES.MANUAL;
         $('source').value = src;
         fillForm();
         draw();
@@ -2803,9 +3080,20 @@ export function main() {
         }
         if (src === SOURCES.SOLVE) renderSolvePanel();
         if (src === SOURCES.SET) renderSetPanel();
+        if (src === SOURCES.MANUAL) renderManualPanel();
+        if (src === SOURCES.SOLVE || src === SOURCES.MANUAL) renderReplayPanel();
         refreshSaveBox();
 
-        $('identity').textContent = describeState(state, lastSolve);
+        /**
+         * ⛓⛓⛓ S2b — **THE WITNESS CLAUSE, AND `certified` UNTOUCHED.** The
+         * sentence is `mazeLabWalk.witnessOf`'s (⚖ §13.1), and the SEAM half of
+         * it is printed in the STATUS line, in red, because a page whose oracle
+         * refused a level a person then solved is not reporting about the walk
+         * any more — it is reporting about itself.
+         */
+        const witness = witnessOf(state, walkReport);
+        $('identity').textContent = describeState(state, lastSolve, witness);
+        if (witness.seam) say(witness.seam, true);
         $('status').textContent = message || '—';
         $('status').className = messageBad ? 'bad' : 'ok';
         $('detail').textContent = payloadCheck
@@ -3239,6 +3527,25 @@ export function main() {
                     layouts: new Set(play.frames.map((f) => JSON.stringify(f.blocks))).size,
                 }
                 : null,
+            /**
+             * ⛓⛓⛓ SLICE S2b — **THE HAND WALK.** `null` outside a session; the
+             * counters, whether the ORACLE's goal predicate says the walk
+             * arrived, and the round trip (⛔ `null` until STOP has run it —
+             * a readout that reported one before it was measured would be a
+             * page claiming an acceptance row it never ran).
+             */
+            walk: walkReport
+                ? {
+                    moves: walkReport.moves,
+                    refused: walkReport.refused,
+                    waits: walkReport.waits,
+                    reachedGoal: walkReport.reachedGoal,
+                    roundTrip: walkReport.roundTrip && {
+                        faithful: walkReport.roundTrip.faithful,
+                        mismatches: walkReport.roundTrip.mismatches,
+                    },
+                }
+                : null,
             level: requireRefusal() ? null : serializeMazeLevel(state.record),
             trace: state.trace ?? [],
             payload: requireRefusal() ? null : labPayload(state),
@@ -3620,6 +3927,83 @@ export function main() {
             startPlaying();
             say(`replaying the plan at ${playRateMs} ms/frame — the BLOCK moves with `
                 + '`state.blocks`');
+            render();
+        });
+        /* ── ⛓⛓⛓ SLICE S2b — THE MANUAL ARM, ON THIS ARM'S OWN LIFETIME ──
+         *
+         * ⛔ **THE KEYS ARE ON `window`, REGISTERED ON `lt`** — the exact hazard
+         * `watchViewer.js:5088-5100` names: a manual arm that bound the keyboard
+         * outside a lifetime kept driving after the reader had left it. Here
+         * `lifetimes.start` retires this arm before the next one exists, and
+         * `lt.on` detaches with it.
+         *
+         * ⛔ `preventDefault` ON BOUND KEYS ONLY, and ONLY while a session is
+         * STARTED: the arrows scroll the page otherwise, SPACE is a page-down,
+         * and typing a walk into the box below must never move the player.
+         *
+         * ⚠ OS KEY-REPEAT IS ACCEPTED — one `keydown` is one entry, which is the
+         * panel's own rule (`_handleKeydown`). A held arrow walks, and the
+         * recording says exactly what the keyboard sent.
+         */
+        lt.on(window, 'keydown', (e) => {
+            if (params.source !== SOURCES.MANUAL || !walk) return;
+            if (e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLInputElement) {
+                return;
+            }
+            if (e.ctrlKey || e.metaKey || e.altKey) return;
+            const spec = KEY_MAP[e.key];
+            if (!spec) return;
+            e.preventDefault();
+            pressWalk(spec);
+        });
+        lt.on($('labWalkStart'), 'click', startWalk);
+        lt.on($('labWalkStop'), 'click', stopWalk);
+        lt.on($('labWalkRestart'), 'click', () => {
+            walk = null;
+            startWalk();
+        });
+        lt.on($('labWalkDownload'), 'click', () => {
+            const doc = walk ? walk.fold() : safeJson($('labWalkText').value);
+            if (doc === null) {
+                walkSay('⛔ nothing to download — no walk is running and the box holds no '
+                    + 'walk. START one, or paste one in.', true);
+                render();
+                return;
+            }
+            downloadWalk(doc, `maze-walk-seed${state.seed}-${doc.lab?.author ?? 'hand'}`
+                + `-${doc.actions.length}entry.json`);
+            render();
+        });
+        lt.on($('labWalkLoad'), 'click', loadWalkFromBox);
+        lt.on($('labWalkUpload'), 'change', (e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            const r = new FileReader();
+            r.onload = () => lt.report('a walk upload finished after the arm was retired', () => {
+                $('labWalkText').value = String(r.result);
+                loadWalkFromBox();
+            });
+            r.readAsText(file);
+            e.target.value = '';
+        });
+        /**
+         * ⛓⛓ **ONE DOCUMENT KIND, TWO AUTHORS.** The SOLVE arm writes the same
+         * envelope with `author: 'oracle'` — the oracle's plan through
+         * `moveEntry`, folded by the same `projectActions`. ⛔ It is built from a
+         * SESSION driven over the plan rather than from a second folder: a
+         * download that assembled its own actions would be a third author of the
+         * recording shape.
+         */
+        lt.on($('labSolveDownloadWalk'), 'click', () => {
+            if (!lastSolve?.plan?.length) {
+                say('no plan to download — press SOLVE first', true);
+                render();
+                return;
+            }
+            const session = createWalkSession(state);
+            for (const dir of lastSolve.plan) session.press(moveEntry(dir));
+            downloadWalk(session.fold('oracle'),
+                `maze-walk-seed${state.seed}-oracle-${lastSolve.plan.length}step.json`);
             render();
         });
         lt.on($('labUndo'), 'click', undoCommand.run);
