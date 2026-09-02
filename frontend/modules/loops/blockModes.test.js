@@ -453,6 +453,9 @@ function registerRecordSubstrate() {
     getPlaybackController: () => ({
       replayActions: (actions, opts) => { handles.replayCalls.push({ actions, opts }); return true; },
     }),
+    // The action labeller (actionQueue A8). Recordings no longer store a
+    // `label`, so this is how a useItem entry gets its item NAME.
+    describeAction: (entry) => (entry?.actionType === 'useItem' ? `Item${entry.actionId}` : ''),
   });
   centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', (region) => (
     region === 'A' ? { substrate: 'rec_sub', label: 'Rec', manaEnabled: true } : null
@@ -1323,6 +1326,20 @@ describe('M4 — Record annotations (fine-grained)', () => {
     // interleaving (every spend before any gain) = −6, so the UI's
     // "needs ≥6 at start" can only overstate, never understate.
     expect(savedEntry().annotations.items['rec_sub/Food']).toEqual({ net: -2, min: -6 });
+  });
+
+  it("names a LABEL-LESS item use through the substrate's describeAction", () => {
+    // A1/A8 stopped the converters writing `label` into recordings, so without
+    // the labeller the item key would be `rec_sub/null` and the whole use would
+    // be dropped. The stored entry is exactly what a converter emits today.
+    park();
+    bus.publish('crossSubstrate:itemGranted', { to: 'rec_sub', from: 'host', itemType: 'Item1', count: 4 });
+    handles.stash = makeStash({
+      actions: [{ substrate: 'rec_sub', actionType: 'useItem', actionId: 1, loops: 6, disabled: false }],
+    });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B' });
+
+    expect(savedEntry().annotations.items['rec_sub/Item1']).toEqual({ net: -2, min: -6 });
   });
 
   it('a block that moved no economy stores no annotations object', () => {

@@ -2,7 +2,7 @@
 // catalog from a live "currently-loaded actions" report rather than a static
 // table, so it must reflect exactly what JtA reports for the loaded zone.
 import { describe, it, expect } from 'vitest';
-import { buildCatalogFromReport, JTAActionType } from './jtaActionDefs.js';
+import { buildCatalogFromReport, createQueueEntry, JTAActionType } from './jtaActionDefs.js';
 
 describe('buildCatalogFromReport', () => {
     it('maps all reported zones to clickTask catalog entries grouped by zone name', () => {
@@ -43,5 +43,41 @@ describe('buildCatalogFromReport', () => {
     it('tolerates a null/empty report', () => {
         expect(buildCatalogFromReport(null)).toEqual({ tasks: [], items: [], prestige: [] });
         expect(buildCatalogFromReport({})).toEqual({ tasks: [], items: [], prestige: [] });
+    });
+});
+
+describe('createQueueEntry — the catalogue riders land in params (format slice Q-a)', () => {
+    // `zoneId` is jta's zone, not a field of the SHARED shape (plan §23.1 Q3):
+    // it rides in `params`, which is also where `taskType` / `maxReps` / `icon`
+    // now survive instead of being dropped on the first undoLast (Q2). The jta
+    // queue panel's zone column reads `entry.params.zoneId`.
+    const catalogEntry = {
+        actionType: JTAActionType.CLICK_TASK,
+        actionId: 12,
+        label: 'Chop Wood',
+        group: 'The Fields',
+        zoneId: 3,
+        taskType: 'normal',
+        maxReps: 5,
+    };
+
+    it('puts zoneId and the other catalogue riders under params', () => {
+        const entry = createQueueEntry(catalogEntry, 4);
+        expect(entry.params).toEqual({ zoneId: 3, taskType: 'normal', maxReps: 5 });
+        expect(entry.zoneId).toBeUndefined();
+    });
+
+    it('keeps the declared fields where they were, and stamps the substrate', () => {
+        const entry = createQueueEntry(catalogEntry, 4);
+        expect(entry).toMatchObject({
+            substrate: 'jta',
+            actionType: JTAActionType.CLICK_TASK,
+            actionId: 12,
+            label: 'Chop Wood',
+            group: 'The Fields',
+            loops: 4,
+            disabled: false,
+        });
+        expect(typeof entry.entryId).toBe('string');
     });
 });

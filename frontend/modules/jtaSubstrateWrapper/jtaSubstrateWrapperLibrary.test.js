@@ -1,6 +1,7 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { validateEntry } from '../shared/actionQueue/actionTypes.js';
 import { JTA_VANILLA_DATASET } from './vanillaDataset.js';
 import { stampDatasetIdentity } from './datasetValidator.js';
 import {
@@ -8,7 +9,9 @@ import {
     substrateRegistryEntry,
     convertPerformedActionsToQueue,
     ingestVisitRecording,
+    noteCatalogNames,
     takeLastVisitRecording,
+    _testOnly_clearActionNames,
 } from './jtaSubstrateWrapperLibrary.js';
 
 // The library registers on import (side effect) — same pattern the
@@ -65,14 +68,16 @@ describe('jta per-visit recording converter (M4 fine-grained)', () => {
             { type: 'task', name: 'Chop Wood', task_id: 12, zone_id: 3, reps: 5 },
         ]);
         expect(out).toHaveLength(1);
-        expect(out[0]).toMatchObject({
+        // ⛔ NO entryId and NO label (format slice Q-a, A1/A8): a recording has
+        // to be byte-identical to a second capture of the same visit, and the
+        // name is derived by describeAction rather than stored.
+        expect(out[0]).toEqual({
+            substrate: 'jta',
             actionType: 'clickTask',
             actionId: 12,
-            label: 'Chop Wood',
             loops: 5,
             disabled: false,
         });
-        expect(typeof out[0].entryId).toBe('string');
     });
 
     it('converts an item use to one useItem with actionId=ItemType and loops=count', () => {
@@ -80,10 +85,10 @@ describe('jta per-visit recording converter (M4 fine-grained)', () => {
             { type: 'item', name: 'Food', item: 7, count: 3, zone_id: 3 },
         ]);
         expect(out).toHaveLength(1);
-        expect(out[0]).toMatchObject({
+        expect(out[0]).toEqual({
+            substrate: 'jta',
             actionType: 'useItem',
             actionId: 7,
-            label: 'Food',
             loops: 3,
             disabled: false,
         });
@@ -123,12 +128,64 @@ describe('jta per-visit recording converter (M4 fine-grained)', () => {
         expect(convertPerformedActionsToQueue(undefined)).toEqual([]);
     });
 
-    it('gives each entry a unique entryId', () => {
+    it('mints NO entry ids — two captures of the same visit are byte-identical', () => {
+        const visit = [
+            { type: 'task', name: 'A', task_id: 1, reps: 1 },
+            { type: 'item', name: 'Food', item: 7, count: 2 },
+        ];
+        // Run TWICE rather than reasoning about it: a wall-clock id would make
+        // these differ and no byte-identity gate could ever be written.
+        const first = JSON.stringify(convertPerformedActionsToQueue(visit));
+        const second = JSON.stringify(convertPerformedActionsToQueue(visit));
+        expect(second).toBe(first);
+        expect(first).not.toMatch(/entryId/);
+    });
+
+    it('every entry carries its substrate, so a viewer can tell whose move it is', () => {
         const out = convertPerformedActionsToQueue([
             { type: 'task', name: 'A', task_id: 1, reps: 1 },
-            { type: 'task', name: 'A', task_id: 1, reps: 1 },
+            { type: 'item', name: 'Food', item: 7, count: 2 },
         ]);
-        expect(out[0].entryId).not.toBe(out[1].entryId);
+        expect(out.map((e) => e.substrate)).toEqual(['jta', 'jta']);
+    });
+
+    it('every converted entry is a LEGAL shared entry', () => {
+        const out = convertPerformedActionsToQueue([
+            { type: 'task', name: 'A', task_id: 1, reps: 1 },
+            { type: 'item', name: 'Food', item: 7, count: 2 },
+        ]);
+        for (const entry of out) expect(validateEntry(entry)).toBeNull();
+    });
+});
+
+describe('jta describeAction — the labeller that replaced the stored label (A8)', () => {
+    beforeEach(() => { _testOnly_clearActionNames(); });
+
+    it('gives back the labels the converter used to store, over one recording', () => {
+        const visit = [
+            { type: 'task', name: 'Chop Wood', task_id: 12, reps: 5 },
+            { type: 'item', name: 'Food', item: 7, count: 3 },
+        ];
+        const out = convertPerformedActionsToQueue(visit);
+        expect(out.map((e) => substrateRegistryEntry.describeAction(e)))
+            .toEqual(['Chop Wood', 'Food']);
+    });
+
+    it('can be fed from an action CATALOGUE instead of a capture', () => {
+        noteCatalogNames({
+            tasks: [{ actionType: 'clickTask', actionId: 4, label: 'Buy Glasses' }],
+            items: [{ actionType: 'useItem', actionId: 2, label: 'Potion' }],
+        });
+        expect(substrateRegistryEntry.describeAction({ actionType: 'clickTask', actionId: 4 }))
+            .toBe('Buy Glasses');
+        expect(substrateRegistryEntry.describeAction({ actionType: 'useItem', actionId: 2 }))
+            .toBe('Potion');
+    });
+
+    it('names an unknown id rather than returning nothing', () => {
+        expect(substrateRegistryEntry.describeAction({ actionType: 'clickTask', actionId: 99 }))
+            .toBe('clickTask 99');
+        expect(substrateRegistryEntry.describeAction(null)).toBe('');
     });
 });
 

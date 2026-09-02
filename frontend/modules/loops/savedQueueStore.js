@@ -50,6 +50,8 @@
  *   }
  */
 
+import { validateEntry } from '../shared/actionQueue/actionTypes.js';
+
 const STORAGE_KEY = 'loops:savedQueues:v1';
 
 export const SAVED_QUEUE_PER_REGION_LIMIT = 10;
@@ -100,6 +102,32 @@ function actionsEqual(a, b) {
     if (a === b) return true;
     if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) return false;
     return JSON.stringify(a) === JSON.stringify(b);
+}
+
+/**
+ * Refuse a malformed actionQueue-vocabulary recording, by field name.
+ *
+ * A recording whose FIRST action carries a string `actionType` is in the
+ * shared actionQueue vocabulary (jta, omsi, and — after the maze migration —
+ * the maze); every one of its actions must then be a legal entry. Without this
+ * a recording with no `actionType` or a fractional `loops` is stored happily
+ * and replays as garbage (plan §23.1 Q6). A recording in some OTHER vocabulary
+ * is not this function's business and passes through untouched.
+ * @param {object[]} actions
+ * @returns {string|null} the problem, or null when there is none
+ */
+function actionQueueProblem(actions) {
+    const first = actions[0];
+    if (!first || typeof first !== 'object' || typeof first.actionType !== 'string') return null;
+    for (let i = 0; i < actions.length; i++) {
+        const problem = validateEntry(actions[i]);
+        if (problem) {
+            const message = `savedQueueStore.saveQueue: action ${i} — ${problem}`;
+            try { console.warn(message); } catch { /* no console in some hosts */ }
+            return message;
+        }
+    }
+    return null;
 }
 
 /** Same persistent recording tag: (arrivalExitId, ordinal). Region is
@@ -207,6 +235,7 @@ export function saveQueue(rulesHash, queue) {
     if (!rulesHash || !queue || !queue.regionName || !queue.substrate || !Array.isArray(queue.actions)) {
         return 'invalid';
     }
+    if (actionQueueProblem(queue.actions)) return 'invalid';
     const cache = loadCache();
     const key = bucketKey(rulesHash, queue.regionName, queue.substrate);
     const bucket = cache.get(key) ?? [];

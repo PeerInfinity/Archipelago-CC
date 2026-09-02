@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 
+import { convertPerformedActionsToQueue } from '../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 import {
     SAVED_QUEUE_PER_REGION_LIMIT,
     getSavedQueues,
@@ -280,5 +281,63 @@ describe('savedQueueStore — the M5 summary envelope', () => {
         const bucket = getSavedQueues(RULES_HASH, 'region_2_2', 'runner');
         expect(bucket).toHaveLength(1);
         expect(bucket[0].summary.durationSeconds).toBe(9);
+    });
+});
+
+describe('actionQueue-vocabulary recordings (format slice Q-a)', () => {
+    // A jta visit, converted the way the substrate converts it. Before A1 the
+    // converter minted `aq_${Date.now()}_n` ids INTO the recording, so two
+    // captures of the same visit never compared equal and the 'duplicate'
+    // no-op was dead for every actionQueue substrate (plan §23.1 Q1).
+    const jtaVisit = () => [
+        { type: 'task', name: 'Chop Wood', task_id: 12, reps: 5 },
+        { type: 'item', name: 'Food', item: 7, count: 2 },
+    ];
+    const jtaQueue = () => ({
+        regionName: 'region_1_0',
+        substrate: 'jta',
+        arrivalExitId: 'entrance',
+        departureExitId: 'east',
+        actions: convertPerformedActionsToQueue(jtaVisit()),
+        manaAtEntry: 100,
+        manaAtExit: 80,
+        manaMin: 75,
+        locationsChecked: [],
+        itemsPickedUp: [],
+    });
+
+    it('a re-record of an unchanged jta visit reads "duplicate"', () => {
+        expect(saveQueue(RULES_HASH, jtaQueue())).toBe('saved');
+        expect(saveQueue(RULES_HASH, jtaQueue())).toBe('duplicate');
+    });
+
+    it('a CHANGED jta visit still reads "saved"', () => {
+        expect(saveQueue(RULES_HASH, jtaQueue())).toBe('saved');
+        const changed = jtaQueue();
+        changed.actions = convertPerformedActionsToQueue([
+            { type: 'task', name: 'Chop Wood', task_id: 12, reps: 6 },
+        ]);
+        expect(saveQueue(RULES_HASH, changed)).toBe('saved');
+    });
+
+    it('REFUSES a malformed actionQueue recording as invalid (A6)', () => {
+        const bad = jtaQueue();
+        bad.actions = [{ actionType: 'clickTask', actionId: 1, loops: 1 }, { actionType: 'clickTask', loops: 1.5 }];
+        expect(saveQueue(RULES_HASH, bad)).toBe('invalid');
+        expect(getSavedQueues(RULES_HASH, 'region_1_0', 'jta')).toEqual([]);
+    });
+
+    it('leaves a recording in ANOTHER vocabulary alone', () => {
+        // The maze's native shape has no `actionType` — not this gate's business.
+        expect(saveQueue(RULES_HASH, makeQueue())).toBe('saved');
+    });
+
+    it('accepts a legacy entry that still carries entryId and label', () => {
+        const legacy = jtaQueue();
+        legacy.actions = [{
+            entryId: 'aq_1700000000000_3', actionType: 'useItem', actionId: 7,
+            label: 'Food', loops: 2, disabled: false,
+        }];
+        expect(saveQueue(RULES_HASH, legacy)).toBe('saved');
     });
 });

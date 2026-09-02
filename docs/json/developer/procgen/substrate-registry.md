@@ -45,6 +45,12 @@ All fields below are observed in the registered entries; every group after Ident
 
 The **PlaybackController** contract is substrate-neutral: `play(rateHz?)`, `stop()`, `step()`, `instant()`, `reset()`, `setRate(rateHz)`, `walkTo(target)` where target is `{ kind: 'location'|'exit'|'tile', name?, region?, x?, y? }`, and optional `replayActions(actions, { onComplete, departureExitId, instant })` for replaying a recorded visit — the substrate replays the interior actions, then crosses `departureExitId` itself (recordings exclude the departing move), draining in one frame when `instant` is set. See [Loop Recording and Block Modes](./loop-recording.md). Every method returns `void` or `Promise<void>`; the bot's dispatch is fire-and-forget and progress comes back through the normal dispatcher events (`user:locationCheck`, `user:regionMove`). Iframe-backed substrates implement the controller as a host-side proxy that forwards commands to an in-iframe bridge — the wrapper's proxy publishes `textAdventureSubstrateWrapper:control` events; bounce's publishes on `bounce:playbackControl` and the in-game bot driver plays real physics from input synthesis.
 
+### Action labelling
+
+| Field | Type | Meaning |
+|-------|------|---------|
+| `describeAction` | `(entry) → string` (optional) | How this substrate says **one shared `actionQueue` entry** out loud — `'move E'`, `'Chop Wood'`, `'check Chest'`. A recording stores no `label`: the name is DERIVED from `actionType`/`actionId` and only the substrate knows the derivation (actionQueue format slice Q-a, A8; plan §23.1 Q8), so every surface that renders an entry — the substrate's own panel, a tooltip, loops' item-annotation folder (`blockAnnotations.foldRecordedItemUses`), and the future cross-substrate queue viewer — calls this rather than carrying its own copy of the wording. Absent ⇒ callers fall back to the entry's own `label`, then to its raw `actionId`. Declared by **jta** (a name table fed by the performed-actions capture and by `noteCatalogNames`) and **omsi** (the action name IS the id, so it is exact). |
+
 ### Loop mode
 
 | Field | Type | Meaning |
@@ -156,7 +162,7 @@ Everything outside the two markers — including the hand-kept annotations below
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**8 registered entries · 61 fields · 10 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**8 registered entries · 62 fields · 11 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported.
 
@@ -187,6 +193,12 @@ Groups are this document's own § headings, matched to a field by the section th
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
 |---|---|---|---|---|---|---|---|---|
 | `getPlaybackController` | fn | fn | fn | fn | fn | fn | fn | fn |
+
+**Action labelling**
+
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|
+| `describeAction` | — | — | — | — | — | — | fn | fn |
 
 **Loop mode**
 

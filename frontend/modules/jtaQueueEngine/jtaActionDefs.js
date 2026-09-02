@@ -1,5 +1,5 @@
 // JTA action definitions - enumerates all available actions from game data
-import { generateEntryId } from '../shared/actionQueue/actionTypes.js';
+import { generateEntryId, normalizeEntry } from '../shared/actionQueue/actionTypes.js';
 
 /**
  * JTA action types
@@ -119,20 +119,22 @@ export function buildCatalogFromReport(report) {
 }
 
 /**
- * Create a QueueEntry from a catalog action definition
+ * Create a QueueEntry from a catalog action definition.
+ *
+ * The catalogue's jta-only riders (`zoneId`, `taskType`, `maxReps`, `icon`)
+ * are NOT enumerated here: `normalizeEntry` folds every non-declared key into
+ * `params`, which is where a substrate's own fields live in the shared shape.
+ * Before that they were dropped on the first `undoLast` (plan §23.1 Q2).
  * @param {object} catalogEntry - Entry from buildActionCatalog()
  * @param {number} [loops=1] - Number of times to repeat
  * @returns {import('../shared/actionQueue/actionTypes.js').QueueEntry}
  */
 export function createQueueEntry(catalogEntry, loops = 1) {
-    return {
+    return normalizeEntry({
+        ...catalogEntry,
         entryId: generateEntryId(),
-        actionType: catalogEntry.actionType,
-        actionId: catalogEntry.actionId,
-        label: catalogEntry.label,
-        group: catalogEntry.group || '',
-        zoneId: catalogEntry.zoneId,
+        substrate: 'jta',
         loops,
         disabled: false,
-    };
+    });
 }

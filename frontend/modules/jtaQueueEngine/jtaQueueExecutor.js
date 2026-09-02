@@ -321,10 +321,10 @@ export class JTAQueueExecutor {
             return;
         }
 
-        log('debug', `Executing: ${entry.label} (${entry.actionType}:${entry.actionId})`);
+        log('debug', `Executing: ${entry.label ?? entry.actionId} (${entry.actionType}:${entry.actionId})`);
         this.#snapshot.updateStatus(entry.entryId, {
             state: ActionState.ACTIVE,
-            energyBefore: this.#lastKnownEnergy,
+            actuals: { energyBefore: this.#lastKnownEnergy },
             startTime: Date.now(),
         });
         this.#notifyStatusChange();
@@ -482,8 +482,11 @@ export class JTAQueueExecutor {
             const now = Date.now();
             this.#snapshot.updateStatus(entry.entryId, {
                 state: ActionState.COMPLETED,
-                energyAfter: this.#lastKnownEnergy,
-                actualEnergyCost: (status.energyBefore ?? this.#lastKnownEnergy) - this.#lastKnownEnergy,
+                actuals: {
+                    energyAfter: this.#lastKnownEnergy,
+                    actualEnergyCost:
+                        (status.actuals?.energyBefore ?? this.#lastKnownEnergy) - this.#lastKnownEnergy,
+                },
                 endTime: now,
                 actualTimeMs: now - (status.startTime || now),
             });
@@ -535,8 +538,11 @@ export class JTAQueueExecutor {
         this.#snapshot.updateStatus(entry.entryId, {
             state: ActionState.FAILED,
             error,
-            energyAfter: this.#lastKnownEnergy,
-            actualEnergyCost: (status?.energyBefore ?? this.#lastKnownEnergy) - this.#lastKnownEnergy,
+            actuals: {
+                energyAfter: this.#lastKnownEnergy,
+                actualEnergyCost:
+                    (status?.actuals?.energyBefore ?? this.#lastKnownEnergy) - this.#lastKnownEnergy,
+            },
             endTime: now,
             actualTimeMs: now - (status?.startTime || now),
         });
@@ -559,8 +565,7 @@ export class JTAQueueExecutor {
         this.#snapshot.updateStatus(entry.entryId, {
             state: ActionState.SKIPPED,
             error: reason,
-            energyAfter: this.#lastKnownEnergy,
-            actualEnergyCost: 0,
+            actuals: { energyAfter: this.#lastKnownEnergy, actualEnergyCost: 0 },
             endTime: now,
             actualTimeMs: 0,
         });
@@ -672,24 +677,25 @@ export class JTAQueueExecutor {
             this.#pendingNextEntryId = null;
 
             const status = this.#snapshot.getStatus(entryId);
-            const update = {};
+            const update = { actuals: {} };
 
             // Skill gains: use consecutive "after" snapshots as baseline
             const before = this.#lastSkillSnapshot || {};
-            update.actualSkillGains = computeSkillGainsBetween(before, skillSnap);
+            update.actuals.actualSkillGains = computeSkillGainsBetween(before, skillSnap);
 
             // Energy: retroactively fix energyAfter and actualEnergyCost from authoritative state.
             // The detailed snapshot is read in the iframe BEFORE the next entry starts,
             // so this energy value is the true post-entry energy.
             if (data.state.currentEnergy !== undefined) {
-                update.energyAfter = data.state.currentEnergy;
-                update.actualEnergyCost = (status?.energyBefore ?? data.state.currentEnergy) - data.state.currentEnergy;
+                update.actuals.energyAfter = data.state.currentEnergy;
+                update.actuals.actualEnergyCost =
+                    (status?.actuals?.energyBefore ?? data.state.currentEnergy) - data.state.currentEnergy;
 
                 // Also fix the next entry's energyBefore — it was set with stale #lastKnownEnergy
                 // but the authoritative energy is the true starting point
                 if (nextEntryId) {
                     this.#snapshot.updateStatus(nextEntryId, {
-                        energyBefore: data.state.currentEnergy,
+                        actuals: { energyBefore: data.state.currentEnergy },
                     });
                 }
             }

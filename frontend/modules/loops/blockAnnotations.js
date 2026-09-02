@@ -39,6 +39,8 @@
  * channel as grants, this fold is the one place that changes.
  */
 
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+
 /**
  * The namespaced item id (ruling D2). Owner is the substrate that holds the
  * item in its own inventory — grants name it as `to`, recorded uses name it
@@ -88,9 +90,18 @@ export class BlockAnnotationTracker {
      * @param {string} substrateId - the recording's owning substrate
      */
     foldRecordedItemUses(actions, substrateId) {
+        const describe = substrateRegistry?.get?.(substrateId)?.describeAction;
         for (const a of Array.isArray(actions) ? actions : []) {
             if (a?.actionType !== 'useItem') continue;
-            const name = (typeof a.label === 'string' && a.label) ? a.label : null;
+            // The item's NAME. Recordings stopped storing `label` when it
+            // became a derived field (actionQueue A8), so the substrate's
+            // labeller is the owner; `label` remains the fallback for entries
+            // captured before that and for hand-built ones.
+            let name = (typeof a.label === 'string' && a.label) ? a.label : null;
+            if (!name && typeof describe === 'function') {
+                const described = describe(a);
+                if (typeof described === 'string' && described) name = described;
+            }
             const count = (typeof a.loops === 'number' && a.loops > 0) ? a.loops : 1;
             this.noteItemDelta(itemKey(substrateId, name), -count);
         }

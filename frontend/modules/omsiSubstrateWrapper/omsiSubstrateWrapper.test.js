@@ -1,6 +1,7 @@
 import { afterEach, describe, it, expect } from 'vitest';
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { validateEntry } from '../shared/actionQueue/actionTypes.js';
 import {
     substrateRegistryEntry,
     ingestVisitRecording,
@@ -103,16 +104,39 @@ describe('recording vocabulary conversion (arc D slice 4)', () => {
     it('converts a native plan to the shared actionQueue vocabulary', () => {
         const q = convertPlanToQueue(PLAN);
         expect(q).toHaveLength(2);
-        expect(q[0]).toMatchObject({
-            actionType: 'clickTask', actionId: 'Wander', label: 'Wander',
-            loops: 2, disabled: false, loopsType: 'actions',
+        // The action NAME is the id (omsi names are stable engine ids); the
+        // disabled flag is a declared field and `loopsType` rides in `params`,
+        // so a recording reinstalls as the plan it was captured from.
+        // ⛔ NO entryId and NO label (format slice Q-a, A1/A8).
+        expect(q[0]).toEqual({
+            substrate: 'omsi', actionType: 'clickTask', actionId: 'Wander',
+            params: { loopsType: 'actions' }, loops: 2, disabled: false,
         });
-        // The action NAME is the id (omsi names are stable engine ids), and
-        // the disabled flag rides along so a recording reinstalls as the plan
-        // it was captured from.
         expect(q[1]).toMatchObject({ actionId: 'Smash Pots', loops: 5, disabled: true });
-        // Every entry carries a unique shared-vocabulary entry id.
-        expect(new Set(q.map((e) => e.entryId)).size).toBe(2);
+        for (const e of q) expect(validateEntry(e)).toBeNull();
+    });
+
+    it('mints NO entry ids — two conversions of the same plan are byte-identical', () => {
+        // Run TWICE rather than reasoning about it (the wall-clock id in
+        // `generateEntryId` is exactly what this rules out).
+        const first = JSON.stringify(convertPlanToQueue(PLAN));
+        expect(JSON.stringify(convertPlanToQueue(PLAN))).toBe(first);
+        expect(first).not.toMatch(/entryId/);
+    });
+
+    it('describeAction gives back the labels the converter used to store', () => {
+        expect(convertPlanToQueue(PLAN).map((e) => substrateRegistryEntry.describeAction(e)))
+            .toEqual(['Wander', 'Smash Pots']);
+    });
+
+    it('reads loopsType from params AND from a legacy top-level rider', () => {
+        expect(convertQueueToPlan([
+            { actionType: 'clickTask', actionId: 'Wander', loops: 1, params: { loopsType: 'x' } },
+            { actionType: 'clickTask', actionId: 'Smash Pots', loops: 1, loopsType: 'y' },
+        ])).toEqual([
+            { name: 'Wander', loops: 1, disabled: false, loopsType: 'x' },
+            { name: 'Smash Pots', loops: 1, disabled: false, loopsType: 'y' },
+        ]);
     });
 
     it('round-trips a plan through the shared vocabulary unchanged', () => {

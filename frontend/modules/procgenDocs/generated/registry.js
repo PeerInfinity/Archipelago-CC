@@ -60,13 +60,13 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
         },
         {
-            "fields": 21,
+            "fields": 22,
             "id": "jta",
             "label": "JtA",
             "registeredBy": "frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js"
         },
         {
-            "fields": 17,
+            "fields": 18,
             "id": "omsi",
             "label": "Idle Loops",
             "registeredBy": "frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js"
@@ -97,6 +97,12 @@ export const REGISTRY = frz({
                 "getPlaybackController"
             ],
             "title": "Playback"
+        },
+        {
+            "rows": [
+                "describeAction"
+            ],
+            "title": "Action labelling"
         },
         {
             "rows": [
@@ -940,6 +946,73 @@ export const REGISTRY = frz({
             "documentedHow": "bullet",
             "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
             "name": "defaultProcgenParams"
+        },
+        {
+            "carriedBy": [
+                "jta",
+                "omsi"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Action labelling",
+            "name": "describeAction"
         },
         {
             "carriedBy": [

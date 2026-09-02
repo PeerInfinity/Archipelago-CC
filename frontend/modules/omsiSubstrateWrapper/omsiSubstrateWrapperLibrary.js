@@ -25,7 +25,7 @@
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { generateEntryId } from '../shared/actionQueue/actionTypes.js';
+import { normalizeEntry } from '../shared/actionQueue/actionTypes.js';
 import {
     buildUnlockPool,
     accessRuleFor,
@@ -89,12 +89,18 @@ export function ingestVisitRecording(payload) {
  * The fork's authored plan → the shared `actionQueue` vocabulary (jta
  * precedent: `convertPerformedActionsToQueue`). A native entry names an
  * action and how many reps of it the loop should run, which is exactly a
- * `clickTask` with `loops` = reps; `loopsType` and `disabled` ride along as
- * riders so a recording can be reinstalled as the plan it was captured from.
+ * `clickTask` with `loops` = reps; `disabled` is a declared field and
+ * `loopsType` rides in `params` so a recording can be reinstalled as the plan
+ * it was captured from.
  *
  * The action NAME is the id: omsi action names are stable engine identifiers
  * (`getActionPrototype` keys off them, and the fork's own save format stores
- * names), unlike jta's numeric task ids.
+ * names), unlike jta's numeric task ids. That is also why omsi needs no name
+ * table for `describeAction` — the id IS the name.
+ *
+ * ⛔ NO `entryId` and NO `label` (plan §23.1 A1/A8): a recording must be
+ * byte-identical to a second capture of the same plan, which a wall-clock id
+ * makes impossible, and the label is derived from the id anyway.
  * @param {object[]} entries native NextActionEntry-shaped objects
  * @returns {object[]}
  */
@@ -102,17 +108,28 @@ export function convertPlanToQueue(entries) {
     const out = [];
     for (const e of Array.isArray(entries) ? entries : []) {
         if (typeof e?.name !== 'string' || !e.name) continue;
-        out.push({
-            entryId: generateEntryId(),
+        out.push(normalizeEntry({
+            substrate: 'omsi',
             actionType: 'clickTask',
             actionId: e.name,
-            label: e.name,
             loops: _readLoops(e.loops),
             disabled: e.disabled === true,
-            loopsType: typeof e.loopsType === 'string' ? e.loopsType : 'actions',
-        });
+            params: { loopsType: typeof e.loopsType === 'string' ? e.loopsType : 'actions' },
+        }));
     }
     return out;
+}
+
+/**
+ * Registry hook `describeAction` — how omsi says one queue entry out loud.
+ * The action name IS the id, so this is exact rather than a lookup.
+ * @param {object} entry - a shared actionQueue entry
+ * @returns {string}
+ */
+export function describeOmsiAction(entry) {
+    if (!entry || typeof entry.actionType !== 'string') return '';
+    if (typeof entry.actionId === 'string' && entry.actionId) return entry.actionId;
+    return entry.actionType;
 }
 
 /**
@@ -134,11 +151,12 @@ export function convertQueueToPlan(actions) {
     for (const a of Array.isArray(actions) ? actions : []) {
         if (a?.actionType !== 'clickTask') continue;
         if (typeof a.actionId !== 'string' || !a.actionId) continue;
+        const loopsType = a.params?.loopsType ?? a.loopsType;
         out.push({
             name: a.actionId,
             loops: _readLoops(a.loops),
             disabled: a.disabled === true,
-            loopsType: typeof a.loopsType === 'string' ? a.loopsType : 'actions',
+            loopsType: typeof loopsType === 'string' ? loopsType : 'actions',
         });
     }
     return out;
@@ -415,6 +433,10 @@ export const substrateRegistryEntry = Object.freeze({
     // a coarse omsi would double-bill every visit (loops charging
     // loop_costs on top of the bridge's native mana mirror).
     takeLastRecording: () => takeLastVisitRecording(),
+
+    // The action LABELLER (plan §23.1 A8) — recordings carry no `label`, so a
+    // panel, a tooltip or a cross-substrate queue viewer asks the substrate.
+    describeAction: (entry) => describeOmsiAction(entry),
 
     // Cross-substrate sharing: participates in the shared-mana channel
     // (cross-game plan D1/D8). The in-iframe bridge publishes the

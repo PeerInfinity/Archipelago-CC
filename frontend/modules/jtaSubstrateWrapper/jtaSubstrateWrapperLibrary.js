@@ -28,7 +28,7 @@ import { JTA_VANILLA_DATASET } from './vanillaDataset.js';
 import { activePerkItemNames } from './perkOrigin.js';
 import { createRng } from '../shared/rng.js';
 import { validateJtaDataset, stampDatasetIdentity } from './datasetValidator.js';
-import { generateEntryId } from '../shared/actionQueue/actionTypes.js';
+import { normalizeEntry } from '../shared/actionQueue/actionTypes.js';
 
 // Host-side PlaybackProxy, injected by index.js's initialize() once the
 // eventBus exists (setter injection rather than importing index.js so
@@ -102,27 +102,81 @@ export function convertPerformedActionsToQueue(actions) {
     for (const a of Array.isArray(actions) ? actions : []) {
         if (a?.type === 'task') {
             if (typeof a.task_id !== 'number') continue;
-            out.push({
-                entryId: generateEntryId(),
+            rememberActionName('clickTask', a.task_id, a.name);
+            out.push(normalizeEntry({
+                substrate: 'jta',
                 actionType: 'clickTask',
                 actionId: a.task_id,
-                label: a.name ?? String(a.task_id),
                 loops: (typeof a.reps === 'number' && a.reps > 0) ? a.reps : 1,
                 disabled: false,
-            });
+            }));
         } else if (a?.type === 'item') {
             if (a.item == null) continue;
-            out.push({
-                entryId: generateEntryId(),
+            rememberActionName('useItem', a.item, a.name);
+            out.push(normalizeEntry({
+                substrate: 'jta',
                 actionType: 'useItem',
                 actionId: a.item,
-                label: a.name ?? String(a.item),
                 loops: (typeof a.count === 'number' && a.count > 0) ? a.count : 1,
                 disabled: false,
-            });
+            }));
         }
     }
     return out;
+}
+
+// --- The action LABELLER (plan §23.1 A8) ---
+//
+// A recording stores no `label`: the name of a task or an item is DERIVED from
+// its id, and the substrate is the one that knows the derivation. The registry
+// entry's `describeAction(entry)` is that function; a cross-substrate queue
+// viewer, the jta queue panel and the loops annotation folder all call it
+// rather than each carrying their own copy of the wording.
+//
+// jta's ids are the fork's numeric task / item ids, so the derivation needs the
+// live name table. It is filled from the two places jta ever sees names: the
+// performed-actions stream above (a capture always names what it performed) and
+// `noteCatalogNames`, which the panel's catalogue build can hand over. An id
+// never seen resolves to `'<actionType> <id>'` rather than to nothing.
+const _actionNames = new Map();
+
+function nameKey(actionType, actionId) {
+    return `${actionType}:${actionId}`;
+}
+
+function rememberActionName(actionType, actionId, name) {
+    if (typeof name !== 'string' || !name) return;
+    _actionNames.set(nameKey(actionType, actionId), name);
+}
+
+/**
+ * Feed the labeller from an action CATALOGUE (jtaActionDefs.buildCatalogFrom*).
+ * @param {{tasks?: object[], items?: object[], prestige?: object[]}} catalog
+ */
+export function noteCatalogNames(catalog) {
+    for (const group of ['tasks', 'items', 'prestige']) {
+        for (const entry of (catalog?.[group] ?? [])) {
+            rememberActionName(entry?.actionType, entry?.actionId, entry?.label);
+        }
+    }
+}
+
+/**
+ * Registry hook `describeAction` — how jta says one queue entry out loud.
+ * @param {object} entry - a shared actionQueue entry
+ * @returns {string}
+ */
+export function describeJtaAction(entry) {
+    if (!entry || typeof entry.actionType !== 'string') return '';
+    const known = _actionNames.get(nameKey(entry.actionType, entry.actionId));
+    if (known) return known;
+    if (entry.actionId === null || entry.actionId === undefined) return entry.actionType;
+    return `${entry.actionType} ${entry.actionId}`;
+}
+
+/** Test-only — drop the remembered names so one test cannot leak into another. */
+export function _testOnly_clearActionNames() {
+    _actionNames.clear();
 }
 
 // --- Zone-locations channel (Phase 1 skeleton, param-gated) ---
@@ -561,6 +615,11 @@ export const substrateRegistryEntry = Object.freeze({
     // discriminator is `takeLastRecording` on the registry entry); loops
     // persists it to savedQueueStore only on a successful Record-mode exit.
     takeLastRecording: () => takeLastVisitRecording(),
+
+    // Runtime — the action LABELLER (plan §23.1 A8). Recordings carry no
+    // `label`; this is how jta names one entry for a panel, a tooltip, the
+    // loops annotation folder or a cross-substrate queue viewer.
+    describeAction: (entry) => describeJtaAction(entry),
 
     // Loop-mode capabilities (M4). jta is a FINE-GRAINED substrate:
     //   - record + playback: DECLARED — the fork performed-actions recorder
