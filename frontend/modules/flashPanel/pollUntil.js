@@ -2,7 +2,7 @@
  * ⛓ **ONE "POLL A PREDICATE UNTIL A DEADLINE" LOOP FOR THE PANEL'S THREE
  * READINESS WAITS** (maze-lab arms F-a / plan §17.1 F3).
  *
- * `FlashBridgeAdapter.waitForBridge`, `WasmBridgeAdapter.waitForShim` and
+ * `FlashBridgeAdapter.waitForBridge`, `WasmBridgeAdapter.waitForRuntime` and
  * `WasmBridgeAdapter.waitForBridge` were the same eight lines three times over
  * — a `Date.now()` deadline, a 100 ms sleep, a throw naming the timeout — and
  * two of them carried a cancellation check the third did not. This is the loop;

@@ -35,6 +35,9 @@
 
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
 import { pollUntil } from './pollUntil.js';
+import {
+  bridgeOf, frameWindow, gameUp, runtimeUp, RUNTIME_WITNESSES,
+} from './wasmGamePage.js';
 
 // Push cadence for host->game queue items. The game polls its local
 // getItemQueue every frame (~33ms); pushing less often just batches.
@@ -56,38 +59,60 @@ export class WasmBridgeAdapter extends FlashBridgeAdapter {
     };
   }
 
+  /**
+   * The frame's own window, re-read from the DOM on every call.
+   *
+   * ⛔ RE-READ, NEVER CAPTURED: a preset switch replaces the iframe under the
+   * SAME element id, and a captured window is the previous game's.
+   */
+  _getWin() {
+    return frameWindow(document.getElementById(this.flashObjectId));
+  }
+
   _getBridge() {
-    const el = document.getElementById(this.flashObjectId);
-    try {
-      return el?.contentWindow?.__swfBridge || null;
-    } catch {
-      // cross-origin access throws; the page must be same-origin
-      return null;
-    }
+    return bridgeOf(this._getWin());
   }
 
   // The inherited waitForBridge/configureBridge/wireCheck/readState all
   // probe `_getFlash()` for callback methods — return the wasm page's
   // callback surface (only once the game registered its callbacks,
   // which happens after the in-iframe Start click).
+  //
+  // ⛔⛔ THE GATE IS `wasmGamePage.gameUp` NOW, AND IT MOVED — this used to
+  // answer on `wireCheck` alone. MEASURED on the live p4d page (see that
+  // file's table): `wireCheck` registers 1,542 ms BEFORE `botStatus`, so for a
+  // second and a half this method handed out a `game` on which `botLoadLevels`
+  // and `botLevelSet` did not exist yet. The lab has always waited for
+  // `botStatus`; both hosts now ask the same question.
   _getFlash() {
-    const game = this._getBridge()?.game;
-    return game && typeof game.wireCheck === 'function' ? game : null;
+    return gameUp(this._getWin());
   }
 
   /**
-   * Wait for the page's __swfBridge shim itself (present as soon as
-   * the page loads, long before the game starts). Distinct from
+   * Wait for the page's RUNTIME (`wasmGamePage.runtimeUp`, Q1). Distinct from
    * waitForBridge, which waits for the game's registered callbacks.
+   *
+   * ⛔⛔ IT USED TO WAIT ON THE SHIM ALONE, AND THAT WAS 271 ms TOO EARLY —
+   * WHICH IS ALSO WHY IT IS NO LONGER CALLED `waitForShim`. `__swfBridge` is
+   * installed by a CLASSIC script before the wasm glue (measured at 0.3 ms,
+   * with `game` still `{}`), while `__runtimeReady` is what
+   * `Module.onRuntimeInitialized` sets and what ENABLES the ▶ Start button. So
+   * the caller's *"click ▶ Start in the game"* was printed over a disabled
+   * button. Q1 is the later of the two, and a method named for the earlier one
+   * would be the next reader's first wrong idea.
+   *
+   * ⛓ The TIMEOUT stays the caller's: 30 s here, 180 s in the lab. What is
+   * waited for is a fact about the page; how long is a judgement about a user.
    */
-  async waitForShim(maxMs) {
-    await pollUntil(() => this._getBridge(), {
+  async waitForRuntime(maxMs) {
+    await pollUntil(() => runtimeUp(this._getWin()), {
       maxMs,
       cancelled: () => this._cancelled,
       cancelledMessage: DETACHED_MESSAGE,
-      timeoutMessage: `__swfBridge shim did not appear within ${maxMs}ms`,
+      timeoutMessage: `the wasm page's runtime did not come up within ${maxMs}ms `
+        + `(${RUNTIME_WITNESSES.join(' + ')})`,
     });
-    // ⛔ `true`, not the shim: the callers treat this as a stage gate, and
+    // ⛔ `true`, not the bridge: the callers treat this as a stage gate, and
     // handing out the bridge object would invite a second capture of the very
     // reference `_getBridge()` exists to re-read.
     return true;

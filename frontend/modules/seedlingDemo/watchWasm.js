@@ -946,6 +946,23 @@ import { levelSetDisagreement } from './levelSetDisagreement.js';
 export { levelSetDisagreement };
 
 /**
+ * ⛓⛓ **THE TWO READINESS QUESTIONS, ASKED THE SAME WAY THE PANEL ASKS THEM**
+ * (maze-lab arms F-b / plan §17.1 F4). Four properties of one page were
+ * answering two questions with a different witness on each host; the
+ * predicates now live in `flashPanel/wasmGamePage.js`, which carries the boot
+ * order MEASURED on the live p4d page. ⛔ The two `until` calls below keep
+ * their loop, their cadence and their fuse — see `pollUntil.js`'s header for
+ * the four differences that were measured before `until` was kept.
+ *
+ * ⛔ AND THE IMPORT IS THE FREE DIRECTION. `seedlingDemo` → `flashPanel` costs
+ * the shipped panel bundle NOTHING (this file is not in
+ * `flashPanel/index.js`'s static closure, and the lab page is not bundled);
+ * `flashPanel` → `seedlingDemo` is the one F6 priced at +1,267,998 B.
+ * `wasmGamePage.js` imports nothing, so this costs the lab one file.
+ */
+import { frameWindow, gameUp, runtimeUp } from '../flashPanel/wasmGamePage.js';
+
+/**
  * ── ⛓⛓⛓ SHIP IT ──────────────────────────────────────────────────────
  *
  * @param {object} payload
@@ -1098,7 +1115,7 @@ export async function shipToWasm(payload, host) {
     });
     enter('probe', 'the build is served');
 
-    const win = () => frame.contentWindow;
+    const win = () => frameWindow(frame);
     const bot = (name, arg) => {
         const g = win() && win().__swfBridge && win().__swfBridge.game;
         if (!g || typeof g[name] !== 'function') return null;
@@ -1147,7 +1164,7 @@ export async function shipToWasm(payload, host) {
 
     // ── runtime ──────────────────────────────────────────────────────
     try {
-        await until('__runtimeReady', () => win() && win().__runtimeReady);
+        await until('__runtimeReady', () => runtimeUp(win()));
     } catch (e) {
         return refuse('runtime', 'runtime-never-ready', e.message);
     }
@@ -1181,7 +1198,7 @@ export async function shipToWasm(payload, host) {
     readout.onStage('start', 'waiting for ▶ Start inside the frame', state);
     try {
         await until('the game\'s bot callbacks (press Start in the frame)',
-            () => bot('botStatus') !== null);
+            () => gameUp(win()));
     } catch (e) {
         return refuse('start', 'start-never-pressed', `${e.message}. The frame is up but `
             + 'the SWF has not begun, which is what a missed Start looks like.');

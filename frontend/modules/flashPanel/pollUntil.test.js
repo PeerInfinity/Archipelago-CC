@@ -13,9 +13,15 @@
  *
  * ⛓ So the loop gets its rows here, and the three CALL SITES get theirs: a
  * shared owner is only worth having if the thing it owns is asserted once.
- * `_getFlash`/`_getBridge` are stubbed on real adapter instances — the classes
+ * `_getFlash`/`_getWin` are stubbed on real adapter instances — the classes
  * construct in node (the adapter guards on `typeof window`), and the DOM lookup
  * is the one line these rows are not about.
+ *
+ * ⛓ F-b moved the WASM adapter's stub point one level out, from `_getBridge()`
+ * to `_getWin()`: the readiness pair is now `wasmGamePage.runtimeUp`/`gameUp`,
+ * which read `__runtimeReady` off the frame's WINDOW as well as the shim off
+ * it. A row that stubbed the bridge could not express *"the shim is there and
+ * the runtime is not"*, which is the 271 ms this arc measured.
  */
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -135,33 +141,52 @@ describe('the three call sites keep their own wording and their own cancellation
             .toEqual({ message: 'bridge did not become ready within 60ms' });
     });
 
-    it('WasmBridgeAdapter.waitForShim returns TRUE (not the shim) once __swfBridge appears', async () => {
+    it('WasmBridgeAdapter.waitForRuntime returns TRUE (not the shim) once the RUNTIME is up', async () => {
         const a = new WasmBridgeAdapter(adapterOpts());
-        let bridge = null;
-        a._getBridge = () => bridge;
-        const p = a.waitForShim(5000);
+        let win = null;
+        a._getWin = () => win;
+        const p = a.waitForRuntime(5000);
         await new Promise((r) => setTimeout(r, 10));
-        bridge = { game: {} };
+        win = { __swfBridge: { game: {} }, __runtimeReady: true };
         await expect(p).resolves.toBe(true);
     });
 
-    it('…and names the SHIM in its refusal, not the bridge', async () => {
+    /**
+     * ⛔⛔ **THE 271 ms** (maze-lab arms F-b / plan §17.1 F4). `__swfBridge` is
+     * installed by a CLASSIC script before the wasm glue — measured at 0.3 ms
+     * on the live p4d page, against 271.5 ms for `__runtimeReady`, which is
+     * also what enables the ▶ Start button. This wait used to resolve on the
+     * shim, so the panel printed *"click ▶ Start in the game"* over a button
+     * that was still `disabled`.
+     */
+    it('⛔ and the SHIM ALONE is not enough — ▶ Start is not pressable yet', async () => {
         const a = new WasmBridgeAdapter(adapterOpts());
-        a._getBridge = () => null;
-        expect(await settle(a.waitForShim(5)))
-            .toEqual({ message: '__swfBridge shim did not appear within 5ms' });
+        a._getWin = () => ({ __swfBridge: { game: {} }, __runtimeReady: false });
+        expect(await settle(a.waitForRuntime(5))).toEqual({
+            message: "the wasm page's runtime did not come up within 5ms "
+                + '(__swfBridge + __runtimeReady)',
+        });
+    });
+
+    it('…and names the RUNTIME in its refusal, with both witnesses', async () => {
+        const a = new WasmBridgeAdapter(adapterOpts());
+        a._getWin = () => null;
+        expect(await settle(a.waitForRuntime(5))).toEqual({
+            message: "the wasm page's runtime did not come up within 5ms "
+                + '(__swfBridge + __runtimeReady)',
+        });
     });
 
     /**
      * ⛔⛔ THE ROW THE ARC WAS MISSING. `flashPanelUI.js:451` waits 30 s for the
-     * shim and `:457` waits TEN MINUTES for the user's ▶ Start; a preset switch
-     * in between must abort both, or a stale loop resolves against the
+     * runtime and `:457` waits TEN MINUTES for the user's ▶ Start; a preset
+     * switch in between must abort both, or a stale loop resolves against the
      * replacement iframe — same element id, different game.
      */
-    it('detach() ABORTS an in-flight shim wait', async () => {
+    it('detach() ABORTS an in-flight runtime wait', async () => {
         const a = new WasmBridgeAdapter(adapterOpts());
-        a._getBridge = () => null;
-        const p = a.waitForShim(30000);
+        a._getWin = () => null;
+        const p = a.waitForRuntime(30000);
         await new Promise((r) => setTimeout(r, 10));
         a.detach();
         expect(await settle(p)).toEqual({ message: 'adapter detached' });
@@ -169,7 +194,8 @@ describe('the three call sites keep their own wording and their own cancellation
 
     it('detach() ABORTS an in-flight bridge wait — the ten-minute one', async () => {
         const a = new WasmBridgeAdapter(adapterOpts());
-        a._getBridge = () => ({ game: {} });   // shim up, game callbacks not registered
+        // runtime up, game callbacks not registered
+        a._getWin = () => ({ __swfBridge: { game: {} }, __runtimeReady: true });
         const p = a.waitForBridge(600000);
         await new Promise((r) => setTimeout(r, 10));
         a.detach();
@@ -178,18 +204,37 @@ describe('the three call sites keep their own wording and their own cancellation
 
     it('WasmBridgeAdapter.waitForBridge resolves with the GAME callback surface', async () => {
         const a = new WasmBridgeAdapter(adapterOpts());
-        const game = { wireCheck() {} };
-        let bridge = { game: { wireCheck: undefined } };
-        a._getBridge = () => bridge;
+        const game = { wireCheck() {}, botStatus() {} };
+        let win = { __swfBridge: { game: { wireCheck: undefined } }, __runtimeReady: true };
+        a._getWin = () => win;
         const p = a.waitForBridge(5000);
         await new Promise((r) => setTimeout(r, 10));
-        bridge = { game };
+        win = { __swfBridge: { game }, __runtimeReady: true };
         await expect(p).resolves.toBe(game);
+    });
+
+    /**
+     * ⛔⛔ **THE 1,542 ms, ON THE PANEL'S SIDE OF IT.** `wireCheck` registers
+     * with BridgeGeneric's three; `botStatus` with Bot.as's eleven, a second
+     * and a half later (measured on the live p4d page). This wait used to
+     * resolve on `wireCheck` alone, so `_getFlash()` handed the AP-placement
+     * delivery a `game` with no `botLoadLevels` on it. The lab has always
+     * waited for `botStatus`; the shared `gameUp` is why they now agree.
+     */
+    it('⛔ and BridgeGeneric\'s wireCheck ALONE is not the game being up', async () => {
+        const a = new WasmBridgeAdapter(adapterOpts());
+        a._getWin = () => ({
+            __swfBridge: { game: { wireCheck() {}, configure() {}, readState() {} } },
+            __runtimeReady: true,
+        });
+        expect(a._getFlash()).toBeNull();
+        expect(await settle(a.waitForBridge(5)))
+            .toEqual({ message: 'bridge did not become ready within 5ms' });
     });
 
     it('…and its refusal is the inherited wording, on the wasm transport too', async () => {
         const a = new WasmBridgeAdapter(adapterOpts());
-        a._getBridge = () => null;
+        a._getWin = () => null;
         expect(await settle(a.waitForBridge(5)))
             .toEqual({ message: 'bridge did not become ready within 5ms' });
     });

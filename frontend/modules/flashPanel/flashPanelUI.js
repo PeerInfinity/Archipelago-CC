@@ -448,7 +448,7 @@ export class FlashPanelUI {
 
     try {
       this._setStatus('loading wasm page…');
-      await adapter.waitForShim(30000);
+      await adapter.waitForRuntime(30000);
       if (this.adapter !== adapter) return;
       this._setStatus('click ▶ Start in the game');
       this._panelLog('wasm page loaded — click ▶ Start in the game to boot it');

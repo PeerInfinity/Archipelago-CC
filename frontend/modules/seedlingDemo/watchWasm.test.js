@@ -28,6 +28,7 @@ import {
     verdictBlock, verdictLine, verdictOf, WASM_PAGE, WASM_STAGES, concatDrains,
     continuationTape,
 } from './watchWasm.js';
+import { frameWindow, gameUp, runtimeUp } from '../flashPanel/wasmGamePage.js';
 import { LOAD_FADE_FRAMES } from './gameClock.js';
 import { BOOT_PRESWAP_FRAMES } from './r7Acceptance.js';
 
@@ -906,6 +907,86 @@ describe('⛓⛓⛓ the continuation projection — the TICK-0 WRITE, AFTER the 
     it('⛔ the GAME never sees the field itself', () => {
         expect(continuationTape(tape()).tape).not.toHaveProperty('tick0');
         expect(continuationTape(tape()).tape.tape_version).toBe(8);
+    });
+});
+
+
+/**
+ * ⛓⛓⛓ **THE READINESS PAIR IS SHARED WITH THE PANEL** (maze-lab arms F-b /
+ * plan §17.1 F4).
+ *
+ * Four properties of ONE page were answering two questions with a different
+ * witness on each host: the lab waited on `__runtimeReady` then on
+ * `bot('botStatus') !== null`; the panel waited on `__swfBridge` existing then
+ * on `game.wireCheck` being a function. MEASURED on the live p4d page, real-GPU
+ * Windows Chrome, one boot, `performance.now()` at first sight of each:
+ *
+ *     __swfBridge      0.3 ms   |   game.wireCheck   2024.8 ms
+ *     __runtimeReady 271.5 ms   |   game.botStatus   3567.1 ms
+ *
+ * ⇒ the panel called the game up **1,542 ms** before this page would have. The
+ * predicates are now `flashPanel/wasmGamePage.js`'s, imported by both.
+ *
+ * ⛔ THE ROWS BELOW ARE THIS PAGE'S SIDE OF THAT, AND THEY ARE DRIVEN. The
+ * `until` calls themselves cannot be (`shipToWasm` needs an iframe and a live
+ * game — the same reason the ▶ Start law and the chunk loop are asserted over
+ * the source), so the WITNESS is driven here on the page shapes the boot really
+ * passes through, and a source row says the call sites read it. A mutant in the
+ * shared predicate reds BOTH files; one that stays green on one side is a side
+ * that is not reading it.
+ */
+describe('the readiness pair — the LAB\'s side of one shared question', () => {
+    const AT_SHIM = { __swfBridge: { game: {} }, __runtimeReady: false };
+    const AT_RUNTIME = { __swfBridge: { game: {} }, __runtimeReady: true };
+    const AT_WIRECHECK = {
+        __swfBridge: { game: { wireCheck() {}, configure() {}, readState() {} } },
+        __runtimeReady: true,
+    };
+    const AT_BOTSTATUS = {
+        __swfBridge: { game: { wireCheck() {}, botStatus() {}, botLoadLevels() {} } },
+        __runtimeReady: true,
+    };
+
+    it('the `runtime` stage does not pass on the shim alone — ▶ Start is not pressable at 0.3 ms', () => {
+        expect(runtimeUp(AT_SHIM)).toBe(false);
+        expect(runtimeUp(AT_RUNTIME)).toBe(true);
+    });
+
+    it('⛔ the `start` stage does not pass on BridgeGeneric\'s batch — botStatus is 1,542 ms later', () => {
+        expect(gameUp(AT_WIRECHECK)).toBeNull();
+        expect(gameUp(AT_BOTSTATUS)).toBe(AT_BOTSTATUS.__swfBridge.game);
+    });
+
+    it('⛓ and a retired frame answers "not up" rather than throwing', () => {
+        const el = { get contentWindow() { throw new Error('cross-origin'); } };
+        expect(runtimeUp(frameWindow(el))).toBe(false);
+        expect(gameUp(frameWindow(el))).toBeNull();
+    });
+
+    /**
+     * ⛔ ASSERTED OVER THE SOURCE, for the reason the two rows above cannot be:
+     * that the two `until` calls actually ASK these predicates. Without this,
+     * the rows above are a second test of `wasmGamePage.js` and say nothing
+     * about this file.
+     */
+    describe('the call sites read them — the import is not decorative', () => {
+        const code = () => source('watchWasm.js').split('\n')
+            .filter((line) => !/^\s*(\*|\/\/|\/\*)/.test(line))
+            .join('\n');
+
+        it('both `until` calls are the shared predicates, and the old inline witnesses are gone', () => {
+            const body = code();
+            expect(body).toMatch(/until\('__runtimeReady',\s*\(\)\s*=>\s*runtimeUp\(win\(\)\)\)/);
+            expect(body).toMatch(/\(\)\s*=>\s*gameUp\(win\(\)\)/);
+            expect(body).toMatch(/from '\.\.\/flashPanel\/wasmGamePage\.js'/);
+        });
+
+        it('⚠ and the scan is NOT vacuous — it sees the old inline forms when they are there', () => {
+            const mutant = "        await until('__runtimeReady', () => win() && win().__runtimeReady);\n"
+                + "            () => bot('botStatus') !== null);";
+            expect(/until\('__runtimeReady',\s*\(\)\s*=>\s*runtimeUp\(win\(\)\)\)/.test(mutant)).toBe(false);
+            expect(/\(\)\s*=>\s*gameUp\(win\(\)\)/.test(mutant)).toBe(false);
+        });
     });
 });
 
