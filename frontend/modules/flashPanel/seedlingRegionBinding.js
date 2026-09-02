@@ -69,6 +69,8 @@
  * releases it ONCE. Un-parking with nothing queued does nothing at all.
  */
 
+import { parseSeqPayload } from './seqPayload.js';
+
 /** How long an in-flight arrival teleport stays armed before it is written off. */
 export const ARRIVAL_ECHO_TIMEOUT_MS = 15000;
 
@@ -132,12 +134,12 @@ export function resolveArrivalSpawn(world, arrivedFrom) {
  */
 export const PENDING_EXIT_FIELDS = 6;
 export function parsePendingExit(value) {
-    if (typeof value !== 'string' || value === '') return null;
-    const parts = value.split('|');
-    if (parts.length !== PENDING_EXIT_FIELDS) return null;
-    // ⛔ EMPTY IS NOT ZERO. `Number('')` is 0, so a payload with an unwritten
-    // field would otherwise parse as a door to level 0 at (0, 0).
-    if (parts.some((part) => part === '')) return null;
+    // ⛔ The five refusal rules — including EMPTY IS NOT ZERO, which is why an
+    // unwritten field is not a door to level 0 at (0, 0) — are
+    // `parseSeqPayload`'s. The TYPING below is this caller's: `type` stays a
+    // STRING, so only five of the six fields are swept.
+    const parts = parseSeqPayload(value, PENDING_EXIT_FIELDS);
+    if (!parts) return null;
     const [seq, fromLevel, type, x, y, to] = parts;
     const nums = [seq, fromLevel, x, y, to].map(Number);
     if (nums.some((n) => !Number.isInteger(n))) return null;

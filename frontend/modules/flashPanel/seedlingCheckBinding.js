@@ -51,6 +51,8 @@
  * the adapter can stand down on exactly those and no others.
  */
 
+import { parseSeqPayload } from './seqPayload.js';
+
 /** How many `|`-separated fields the report carries. */
 export const PENDING_CHECK_FIELDS = 4;
 
@@ -66,14 +68,11 @@ export const PENDING_CHECK_FIELDS = 4;
  *   null for the empty boot report and for anything malformed.
  */
 export function parsePendingCheck(value) {
-    if (typeof value !== 'string' || value === '') return null;
-    const parts = value.split('|');
-    if (parts.length !== PENDING_CHECK_FIELDS) return null;
-    // ⛔ EMPTY IS NOT ZERO. `Number('')` is 0 and `Number.isInteger(0)` is true,
-    // so `"1|19|4|"` — a payload whose last field never got written — would
-    // otherwise parse as a CLEAR at a real address. Found by the row that feeds
-    // this function its own malformed shapes.
-    if (parts.some((part) => part === '')) return null;
+    // ⛔ The five refusal rules — including EMPTY IS NOT ZERO, which is why
+    // `"1|19|4|"` is not a CLEAR at a real address — are `parseSeqPayload`'s,
+    // stated once for both string reports. The TYPING below is this caller's.
+    const parts = parseSeqPayload(value, PENDING_CHECK_FIELDS);
+    if (!parts) return null;
     const [seq, level, tag, written] = parts.map(Number);
     if (![seq, level, tag, written].every(Number.isInteger)) return null;
     if (written !== 0 && written !== 1) return null;
