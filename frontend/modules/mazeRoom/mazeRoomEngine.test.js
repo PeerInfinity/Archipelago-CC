@@ -2230,9 +2230,19 @@ describe('whyBlocked — it AGREES with step (the property)', () => {
             '#..X#',
             '#####',
         ]),
+        /**
+         * ⛔ THE KEY IS OFF THE ROUTE, AND THAT IS THE FIXTURE'S WHOLE POINT.
+         * The obvious spelling — `#PKR.#`, key between player and door — has
+         * NO reachable state in which the door is shut: `step` picks the key up
+         * on the way past, so the door branch of this property would be
+         * VACUOUS there (measured: mutant (c), `whyBlocked` returning `null`
+         * for a shut door, left that fixture GREEN). Here the door is reachable
+         * BEFORE the key is.
+         */
         'a door and its key': () => picture([
             '######',
-            '#PKR.#',
+            '#P.R.#',
+            '#.K..#',
             '######',
         ]),
         'the 7×7 guard gadget': () => picture(PUSH_LANE_7x7),
