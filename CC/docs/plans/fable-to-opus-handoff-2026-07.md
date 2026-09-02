@@ -8498,6 +8498,12 @@ EVERY missing id, in the lab's LOAD path and the panel's `_replaySavedActions` (
 customQueue picker hides or labels a stale recording; CLAIM 22b; three mutants (ignore requires / ignore
 digest / forget the subtraction) each named with the row it must red. Re-bank at a CODE head after CI.
 
+**⚖ USER 2026-09-02: "Yes, we can continue in that order."** The remaining ladder is PRE-AUTHORIZED: after R-b
+verifies → **D1+D2+D5** (one session) → **D3+D4** (one session) → **F-a** then **F-b** (Seedling/flash; F-b owes a
+Windows Chrome wasm run). The planner launches each on the previous as-built without asking; it STOPS for a
+report that fails verification, or at **F-c/F-d** (each needs its own ⚖ — a `shared` submodule change; a gate
+over a deliberate fixed point) and at the optional S4–S6.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
