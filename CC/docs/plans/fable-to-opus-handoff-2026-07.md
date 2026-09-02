@@ -6292,7 +6292,7 @@ the eventual fix is on the producing side. No new `.gitignore` lines; the transi
 the preserved list + restore IS the solution. Open: `docs/json/developer/diffs/file-lists/*.md`
 still say 61 (regenerated at release).
 
-## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01, ⚖ 72 RULED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; S1 SHIPPED 2026-09-01 `ad5aef2b0`, S2 SHIPPED 2026-09-01 `e6c84a6f8` + the owed write `5e42d4104`, S3 SHIPPED 2026-09-01 `9f46b2bfd`…`765ea79fa`, S4 SHIPPED 2026-09-01 `91c26b690`…`4a99828ec` — SIX ROWS QUOTE CI; S4b SHIPPED 2026-09-01 `0f9e0cf27`…`3eceb7d18` — all three loose ends closed; S5 SHIPPED 2026-09-01 `def23822a`…`e5c19cece` — the FULL `procgen-help` claim leaves the box, the `@ci-face` RETIRED and `¬ciFace` untouched, battery 46.8 → 38.8 min; **S5b SHIPPED 2026-09-01 `a1ee8275b`…`13dc57a1e` — the partition prices in the RUNNER'S OWN seconds, browser wall 23 m 01 s → 15 m 20 s in TWO shards, trap 1068 closed**; S4c NEXT)
+## 5k. The STANDING-VALUES CI arc — PLANNED 2026-09-01, ⚖ 72 RULED 2026-09-01 (Fable planning session; plan file `NewDocs/plans/standing-values-ci-and-parallelism-plan.md`, gitignored; S1 SHIPPED 2026-09-01 `ad5aef2b0`, S2 SHIPPED 2026-09-01 `e6c84a6f8` + the owed write `5e42d4104`, S3 SHIPPED 2026-09-01 `9f46b2bfd`…`765ea79fa`, S4 SHIPPED 2026-09-01 `91c26b690`…`4a99828ec` — SIX ROWS QUOTE CI; S4b SHIPPED 2026-09-01 `0f9e0cf27`…`3eceb7d18` — all three loose ends closed; S5 SHIPPED 2026-09-01 `def23822a`…`e5c19cece` — the FULL `procgen-help` claim leaves the box, the `@ci-face` RETIRED and `¬ciFace` untouched, battery 46.8 → 38.8 min; **S5b SHIPPED 2026-09-01 `a1ee8275b`…`13dc57a1e` — the partition prices in the RUNNER'S OWN seconds, browser wall 23 m 01 s → 15 m 20 s in TWO shards, trap 1068 closed**; S5c SHIPPED 2026-09-02 `6768e1bec` — the `--write` partition audit; **S4c SHIPPED 2026-09-02 `0e7454b67`…`43c70162b` — the identity digests are PORTABLE (a runner reproduced all six md5s), CI publishes 26 identity lines, ⚖ 72 (b) met over FOUR runs, battery 38.8 → 19.8 min**; the ladder is EXHAUSTED — what is left is the ⚖ economics question S4c raised)
 
 **The question (user):** *"At some point I'll want to check why the battery takes so long. Can it
 be moved to CI? Can parts of it run in parallel?"* All numbers re-derived at `dde883de9`, none
@@ -7370,6 +7370,199 @@ is possible but a run cannot audit ITSELF (it must read a FINISHED run's logs), 
 audit the PREVIOUS run, which is a different claim and deserves its own ruling. ⛓ The headless set
 is priced now too (`procgen-help` 255.3 s on a runner, its first full-claim CI measurement) but is
 still not sharded; if it ever is, the numbers are already there.
+
+
+**⇒ S4c SHIPPED (2026-09-02, `main` @`0e7454b67`…`43c70162b`; 5 commits + the write): THE IDENTITY
+ROWS HAVE CI LINES, AND THE ROW THAT SAID THEY NEVER COULD IS NOW THE RULE THAT SAYS WHEN THEY DO.**
+
+**⛔⛔ STEP 1 FIRST, AND IT IS THE HALF THAT COULD HAVE ENDED THE SLICE.** ⚖ 72 (b) wants three
+consecutive runs of `same` before a row flips, and nobody had ever run ONE. A gate verdict (`265/0`)
+is portable by construction; **an md5 over generated levels is portable only if generation is
+deterministic across environments**, and if a runner disagreed then no identity row could ever meet
+the bar and every line of plumbing would be waste. ⇒ a `workflow_dispatch` scratch job ran the six
+candidate rows once and printed each CI value beside its banked one. **Run 33581070573 @`0e7454b67`:
+6 same, 0 MOVED of 6.** The digests are portable. The scratch job is deleted in the same slice
+(`49b2461df`) — its numbers live here.
+
+    row                                    box (banked)   runner    ratio
+    identity: carved pairs c4                   363.5s     63.8s    0.18x
+    producer: plan-seedling-r7-ends-meet         224.0s    212.5s    0.95x
+    identity: empty pairs c6                    207.1s     22.9s    0.11x
+    identity: empty pairs c3                    124.2s     13.2s    0.11x
+    producer: plan-seedling-r7-attribution        93.9s     21.3s    0.23x
+    identity: acceptance batch                   81.7s     15.7s    0.19x
+                                              1,094.3s    349.4s
+
+⛓⛓ **AND THE 5–9× IS THE MACHINE, NOT THE RUNTIME — MEASURED, BECAUSE IT WAS THE FIRST THING A
+DISAGREEMENT WOULD HAVE BEEN BLAMED ON.** CI runs node 22 and this box's `node` is v18.20.6, so a
+node-22 control ran on the box in parallel with the CI job: `identity: acceptance batch` 97.8 s
+(node 18) → 92.3 s (node 22), same digest, and `plan-seedling-r7-attribution` the same both ways.
+⇒ the runtime accounts for ~6 %, the box is genuinely ~5–9× a shared runner on pure-node work, and
+S5b's 0.18×–0.96× over the browser arms extends DOWN to 0.11× here.
+
+**⛓ THE CANDIDATE SET WAS RE-DERIVED AND AGREES WITH THE BRIEF'S SIX** — non-cheap `kind:
+'identity'` standing rows, minus the box-locked-to-Windows one — at 1,094.279 s exactly.
+
+⚠ **BUT ⚖ 72 (a) EXCLUDES FOUR IDENTITY ROWS, NOT ONE, AND THE CANDIDATE SET COULD NOT SHOW IT.**
+`identity: generated set` is the expensive one the brief named; `solve-seedling-r8-d2-chain`,
+`solve-seedling-r8-tail` and `solve-seedling-r9-campaign` each hold `/mnt/c/Windows/py.exe` as a
+literal too. All three are `cheap`, so no economy turns on them and the brief's arithmetic is
+unaffected — but a rule written to the CANDIDATE SET would have shipped a one-row exclusion where
+the population needs a four-row one. ⛓ Nothing names any of them: `machineDrivers()` (⚖ 62) already
+classifies every `.mjs` in the directory from its own text, one classifier for one question, and
+`ciIdentityArms` asks it. The OTHER row the brief named, `roster: --win --tier=full`, never reaches
+the function at all — `standingRows()` does not derive it.
+
+**⛓⛓⛓ THE BUILD (`07c3b104c`) — AND THE PARKED ROW BECAME THE RULE RATHER THAN BEING DELETED.**
+`ciSourced`'s `if (!gate) return false;` carried S4c's name and a unit row asserting it, and its
+stated reason was TRUE: *"CI prints no line for an identity row, so no identity row can have a
+streak."* S4c built the production side, so the reason expired — and the replacement is the **same
+sentence read forwards**: a gate-less row is CI-sourced when **an arm publishes a line under its own
+key**. ⛓ That is the rule `ci-summary` already resolves keys by (*"the arms are the population that
+PUBLISHES, so they are the population that resolves"*, S4's own repair), so the rule and the reader
+now agree BY CONSTRUCTION rather than by two lists somebody keeps level. The old unit row is not
+deleted: it is now four rows asserting both directions plus ⚖ 72 (a) at `cheap: false`.
+
+⛔ **THE UNTOUCHABLES ARE UNTOUCHED.** `¬ciFace` and `¬ciShallow` are inside the `if (gate)` branch,
+byte-identical; neither has an identity analogue to invent (`@ci-face` says *"CI's number is a
+different claim"* and an identity arm runs the box's own command; `@ci-shallow` is about the
+CHECKOUT and these rows' subject is generated levels). `¬cheap` is asked of the identity rows too
+and is doing real work: **the twenty cheap identity arms are 103.6 s = 1.7 min between them.**
+
+⛓ **26 IDENTITY ARMS JOIN THE POPULATION, NOT 6.** `¬cheap` is a CONSUMPTION clause and always was,
+so CI RUNS the cheap ones and their lines are free evidence — exactly how the 18 non-CI-sourced
+browser gates already work, and how a `@ci-shallow` gate still runs and still prints. 25 headless
+(joining a job that already had submodules and `npm ci`), 1 browser.
+
+**⛓ THE PARTITION MOVED, AND HERE IS WHAT IT MOVED TO — MEASURED TWICE, BECAUSE THE FIRST READING
+WAS THE UNPRICED ONE.** `plan-seedling-r7-ends-meet --check` is a standing IDENTITY row that drives
+a browser, so it is a browser ARM. **2 shards → 3**, and the three jobs are not the three anybody
+would have guessed:
+
+    at the push (ends-meet UNPRICED, so priced at the whole budget and alone):
+      shard 0  seedling-wasm-element                901.2s   1 arm    <- ran 3, named in the job list
+      shard 1  plan-seedling-r7-ends-meet --check   600.0s   1 arm       as `Browser gate shard —
+      shard 2  the 23 light arms                    489.0s  23 arms      producer: plan-…-ends-meet`
+    after `--write-costs` priced it from three runs at 212.3s:
+      shard 0  seedling-wasm-element                897.5s   1 arm
+      shard 1                                       599.1s   9 arms
+      shard 2                                       109.7s  15 arms
+
+⛔ **I PREDICTED IT WOULD STAY ALONE AND IT DOES NOT.** 489 + 213 > 600 is true and was the wrong
+sum: the bin-packer is longest-first over ALL the arms, so ends-meet packs with eight lighter ones
+to 599.1 s and the remaining fifteen make a 109.7 s job. ⛓ Still 3 shards, and **the wall clock is
+unchanged either way** — `seedling-wasm-element` sets it and always will. Recorded because the arc's
+standing instruction is to say what the partition changed to, and a predicted partition is not one.
+
+**⛓ DRIVEN, NOT ARGUED — BOTH ARM SHAPES, END TO END, BECAUSE UNIT ROWS CANNOT SEE A CALL SITE IN AN
+UNREACHABLE BRANCH** (this arc's own recurring shape, and S5c's reason for its one-row write):
+· `--set=headless --shard=8` printed `## CI-GATE | identity: killgate s2 |
+  1b4eab8ed32b8e709fe5fef6232e21d2 | exit=0` and its `##   ms |` line — the bank's own digest.
+· `--set=browser --shard=1` printed `## CI-GATE | producer: plan-seedling-r7-ends-meet --check |
+  67bd57b2b92bb70875e944f4d182da37 | exit=0 | here=228.8s` — the bank's digest again, **and it is
+  the box-lock passthrough's own test**: `ci-gates` took the lock once and the non-gate child
+  recognised itself as the holder's child (`boxLock` rule 3) instead of refusing. Nothing had
+  established that rule 3 reaches a `bash -c` identity pipeline; it does, because `runRow`'s spawn
+  inherits the token env like every other.
+
+**FIVE MUTANTS, each caught by exactly the rows it should be, all restored byte-identical (md5):**
+drop the ⚖ 72 (a) filter → 2 · `ciSourced` stops asking the arms → 4 · it drops `¬cheap` → 2 ·
+`ciGateArms` stops appending identity arms → 5 · the set filter reads `gate.browser` again → 1.
+⛓ The last is the one a reader would call cosmetic: an identity arm has no gate, so a rule that
+reached through one would have thrown on the first of them.
+
+**⛓⛓⛓ THE ECONOMICS, MEASURED AGAINST WHAT S2 ALREADY COLLECTS — AND THE HEADLINE 18.2 MINUTES IS
+THE PRE-S2 PRICE, NOT S4c's PRIZE.** The brief costs the candidate set at 1,094.4 s = 18.2 min,
+which is right as the SIZE OF THE SET and would be wrong as the saving: S2 keyed these rows, so a
+`--write` has paid for one only when its input closure moved. Traced across the four writes after
+S2's own (`4a99828ec`, `df127df68`, `e5c19cece`, `6768e1bec`):
+
+    six rows x four writes = 24 row-opportunities
+    actually driven:          2   (both `plan-seedling-r7-ends-meet`, at S4b's and S5's heads)
+    box actually spent:     444.0s
+    the same four writes, CI-sourced: 6 rows x 4 writes x ~6s of `gh` = ~144s
+
+⇒ **S4c's measured saving over the last four writes is ~300 s, not ~73 min**, and the other four
+rows have not been re-driven ONCE since S2 banked them 35 heads ago (`--keys` at this head: all six
+`same`). ⛓ **The value is the TAIL, not the mean** — S4c removes the 18.2-minute worst case, which
+lands on exactly the heads that move the seedling generator, i.e. the platformer arc's own. ⚠ And
+the cost is the mirror image: a CI-sourced row is UNKEYED by construction (`unkeyableReason`: *"its
+recipe already reads CI by SHA"*), so **S2's keying and S4c's quoting are the SAME 18 minutes claimed
+twice, never two savings**, and post-S4c these six pay ~36 s of network on EVERY write including the
+ones S2 was already answering for free.
+
+⚖ **THIS IS A RULING QUESTION AND IT IS NAMED RATHER THAN DECIDED HERE.** The brief commissioned the
+build on step 1 passing and it is built as briefed. But a cheaper shape exists and deserves to be
+on the record: **keep the production side and DROP the consumption side** — CI would still publish
+all 26 identity lines as free evidence (and as the ⚖ 72 (b) instrument), the six rows would stay
+KEYED and cost nothing on unmoved heads, and the 18-minute tail would remain. That trades the worst
+case for the network call. ⛓ Whichever way it is ruled, the production half is the half worth having
+and it is not in question.
+
+**⛓ THE DEFECT THIS SLICE LOOKED FOR IN ITSELF — AND THE HONEST ANSWER IS THAT IT IS NOT ONE.**
+(The brief: *"three of the last four CI-widening slices shipped a defect the next slice had to
+find. Expect to be the fourth unless you look for it."*) The candidate found was real and specific:
+`--write`'s CI read was `runRow({ ...row, kind: 'ci-gate', command })`, and `{ ...row }` carries
+`shell: true` — which no CI-sourced row had before S4c, because S4's six were all GATE rows. So the
+`ci-summary` NETWORK CALL was being run wrapped in `identity-block.sh`'s digest helpers with
+`exit "${PIPESTATUS[0]}"` after it. ⛔ **The mutant did not discriminate.** A helper that PRINTS was
+added to `identity-block.sh` and both shapes returned the same value and the same exit, because
+`identityShellHelpers`' extractor matches only whole FUNCTION DEFINITIONS (`^name () { … }$`) — the
+prepended text cannot emit a byte, and `PIPESTATUS[0]` of a simple command is that command's own
+exit. ⇒ shipped as a TIDY-UP with its inertness stated (`64e589b2a`), not as a repair. ⛓ That is
+trap 1067's own question — *"what in the OUTPUT would differ if the change had not been made?"* —
+asked against this slice's own work, and answered against it.
+
+**⛓ THE BATTERY, RE-DERIVED OFF THIS SLICE'S OWN BANK: 38.8 → 19.8 min of full-freight box time**,
+19.0 min of it now read from CI (the six identity rows' 18.2 plus the seven gate rows' ~42 s of
+`gh`). ⛓ That is the brief's own *"a perfect S4c leaves the battery ≈20 min"*, met — and the floor
+below it is `gate: seedling-wasm-ship` (474 s) plus the three other Windows rows, which ⚖ 72 (a)
+keeps on the box forever.
+
+**⇒ WHAT S4c LEAVES.**
+· ⚖ **THE ECONOMICS RULING ABOVE** is the only open item this slice creates, and it is a design
+  question rather than a defect: keep the consumption side, or keep only the production side and
+  leave the six rows KEYED.
+· `ci-arm-costs.json` now prices the identity arms as well; S5b's *"it goes stale on its own"* is
+  unchanged and its repair is still one command.
+· The audit's CI variant stays rejected on S5c's two counts.
+· ⛓ `--plan --set=headless` read ~26 shards for one push, because every identity arm was UNPRICED
+  and an unpriced arm is priced at the whole budget. It is **ONE shard, 422.0 s** now that
+  `--write-costs` has seen them. Nothing consumed it either way — the workflow runs the headless
+  set whole, with no `--shard=` — but it is written down because a reader who ran `--plan
+  --set=headless` between the push and the re-price would have seen a number worth chasing.
+
+**⛓ AND THE HEADLESS JOB'S OWN NUMBER, FROM ITS FIRST RUN CARRYING THEM: `31 headless arm(s)
+reported; 0 non-zero; 4 skipped by name; 419.7s of arm time here.`** — 25 identity arms beside the
+6 headless gates, inside a step whose kill deadline is 20 minutes. ⛓ The four `## CI-SKIPPED |
+identity: …` lines are in the same log, so no reader has to work out why a row is absent.
+
+**⛓⛓⛓ ⚖ 72 (b)'s BAR, MET PER ROW — FOUR CONSECUTIVE RUNS, EVERY IDENTITY ROW `same` IN EVERY
+ONE.** Counted by `ci-summary --gates`, the ruling's own instrument (the bar asks for three):
+
+    33582569819  49b2461df  push        53 same, 0 MOVED, 2 shallow, 1 not-banked, 0 MISSING
+    33582603367  49b2461df  dispatch    53 same, 0 MOVED, 2 shallow, 1 not-banked, 0 MISSING
+    33582627018  49b2461df  dispatch    53 same, 0 MOVED, 2 shallow, 1 not-banked, 0 MISSING
+    33583214640  64e589b2a  push        53 same, 0 MOVED, 2 shallow, 1 not-banked, 0 MISSING
+
+⛓ **SAME-HEAD DISPATCHES ARE THE RIGHT INSTRUMENT AND THAT IS DELIBERATE.** The bar exists because
+of `preset-bundle-load` — a `userloaded:` page-error race that read MOVED once in four runs of its
+shard — so what it tests is RUN-TO-RUN stability, which three runs of one head ask directly and
+three heads would confound with tree movement. ⛓ The scratch run at `0e7454b67` is a fourth reading
+at a DIFFERENT head, and it agrees.
+
+⛔ **AND ALL TWENTY CHEAP IDENTITY ROWS READ `same` TOO** — they are not CI-sourced and nothing banks
+them, but they are the negative control for the six that are: had CI's environment moved a digest
+for a reason unrelated to the six, twenty other rows would have said so. `0 MISSING` is the other
+half of that: every arm the plan holds published a line.
+
+**THE CLOSING WRITE, AT THE HEAD RUN 4 CONCLUDED ON** (`64e589b2a`, run 33583214640 success).
+`--write --key=` per row: **9.9 / 13.5 / 7.1 / 7.8 / 7.2 / 7.4 s = 52.9 s of `gh`** against 1,094.3
+banked box-seconds. ⛓ **ZERO values moved** — every digest is the one the box banked, now cited to a
+pushed head. Each row is `ciSourced: true` and UNKEYED, with the mechanism's own reason (*"its
+recipe already reads CI by SHA"*). ⛓ **The partition audit printed GREEN in all six writes** —
+*"the last CI run's shard partition HELD — run 33583214640 @64e589b2a, 4 job(s) that ran arms"* (3
+before: the browser matrix gained a shard and the headless job is the fourth).
 
 
 ## 6. Everything else (unchanged queues)
