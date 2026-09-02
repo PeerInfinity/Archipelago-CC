@@ -8107,6 +8107,77 @@ visualizer's private branch `:443`, the panel's `_executeWaitAction:3640`); `INP
 the maze byte-identity row read BEFORE and AFTER as the control; the `next === state` callers re-derived;
 mutant = `step` refusing WAIT again must red three rows. S2b's kickoff follows S2a's as-built.
 
+**⇒ S2a AS BUILT (2026-09-02; outer `main` @`6a8b285b6`, ONE commit, no submodule touched).**
+`INPUT_WAIT` is an engine input. `step(world, state, INPUT_WAIT)` returns `cloneState(state)` with
+`turn + 1` and nothing else moved, handled BEFORE the `DELTAS` lookup; the three surfaces that used
+to disagree about what a turn was now all read that branch.
+
+**The four sites, each as it stands.**
+
+| site | before | after |
+|---|---|---|
+| `mazeRoomEngine.js` `step` (`:673` after the insert) | `DELTAS['WAIT']` is `undefined` ⇒ `return null` — **the engine REFUSED a wait** | a 5-line branch ahead of the lookup: `cloneState` + `turn += 1`. No pickup (`getItem` is only reached on arrival), no push (the block scan is inside the delta branch), no inventory change. The `INPUT_WAIT` doc-comment at `:47`→`:58` now says why it is NOT in `INPUTS` |
+| `mazeQueueExecutor.js` `executeMazeEntry` `ACTION_WAIT` (`:118` → `:122`) | `return { next: state, reason: null }` + the S2a comment | `return { next: step(world, state, INPUT_WAIT), reason: null }`; comment deleted; `INPUT_WAIT` added to the engine import |
+| `mazeRoomVisualizer.js` `_tick` (`:443` at `089d809a9`) | a PRIVATE branch ahead of `step`: `this._state.turn += 1`, its own `_log.push`, its own `_publishSnapshot`/`_notifyChange`, its own `return` — 17 lines | **DELETED.** A WAIT falls into the normal path: `step` → `detectStepEvents` (empty) → the one `_log.push`, which writes `from === to` and `turn` off the returned state. `INPUT_WAIT` dropped from the file's imports (no longer named in code) |
+| `mazeRoomUI.js` `_executeWaitAction` (`:3750` at `089d809a9`) | hazard validation at `(pos,pos)`, mana charge, `_tickAndCheckHazards()` — **never touched `state.turn`** | all three kept, plus `executeMazeEntry(world, state, entry ?? waitEntry())` and `this.state = next`. Takes the entry now (`_executeQueueAction` passes it); the parameter is optional so the keyboard path and the older tests still call it bare |
+
+**The `next === state` callers, re-derived.** `grep -rn -- "=== state\|next === " frontend/modules/mazeRoom/ frontend/modules/loops/` gives **one** non-test, non-doc hit that is about `executeMazeEntry`: `mazeRoomUI._executeMoveAction` (`:3697`), and it tests `next === null` (refusal), not `next === state`. **Nothing read `next === state` to mean "no transition."** So there was no condition to re-derive from the entry — the contract comment is what changed instead: `next === state` is now the `locationCheck`'s ALONE, said in `executeMazeEntry`'s JSDoc and pinned by an executor row that names it. (`mazeRoomVisualizer.js:463` and `procgenMaze.js:2825` are `next === null` on `step`, and `mazeRoomUI.js:3466` is `this._editCursor === next` — a different `next`.)
+
+**⚠ THREE THINGS THIS SLICE OVERTURNED IN ITS OWN BRIEF.**
+
+1. **`mazeRoomVisualizer.test.js` had ZERO wait rows, not the brief's "5 (re-count)".** `grep -n -i wait` over that file at `089d809a9` returns only `_awaitingRegionLoad` hits and one prose comment. The visualizer's private turn+1 branch — a second implementation of "a turn passes", live since the hazard slice — **shipped with no test of its own**, which is exactly why deleting it moved nothing in the suite. The brief's plan for this file ("its WAIT rows now go through `step`") had no rows to move; the 5 rows now there are the pin the branch never had, written against the path that replaced it. ⛓ Generalisable: *a count of tests quoted for a file you have not run is a guess* — and a branch with no rows is the one deletion that can never go red.
+2. **`MazeRoomVisualizer.getState()` never exposed `turn`, so the reader the brief names was DEAD CODE.** The brief's §2.4 says "the panel's only readers are the visualizer-turn mirror (`:2165-2171`) and the exit message". The mirror is real and complete — `_onVisualizerChange` computes `waitHappened` and the `else if (waitHappened && this._loopsDrivenAction)` branch (`mazeRoomUI.js:2240` at `089d809a9`) does mana deduction, bestPath tracking, `_mazeQueue.advance()` and `_tickAndCheckHazards()`. But it gates on `typeof vState?.turn === 'number'`, and `getState()` returned `{player_pos, inventory, checkedLocations, target, log, completed, stuck, running}` — **no `turn`**. So the guard was false on every tick since the branch was written: a wait inside a loops-delegated plan advanced no queue icon, deducted no mana and ticked no hazard. **Fixed here** (one field, commented in place) and pinned by a visualizer row that asserts `typeof getState().turn === 'number'`. ⛓ Generalisable, and it is trap 1049's shape one level up: *a reader that is present and correct is not a reader that RUNS — the field it reads has to be in the bag.*
+3. **The brief's site line numbers had all drifted** (they were measured at `44e47f445`, and Q-b moved `mazeRoomUI.js` by ~110 lines). Every site was re-located by name, and the table above carries the `089d809a9` numbers. Q-b's own as-built line "`_executeWaitAction` (`mazeRoomUI.js:3640`)" is the dispatch call site, not the method (`:3750`).
+
+**The panel's behaviour change, said plainly (brief item 4).** A hand-played wait now advances `state.turn`. `grep -n "state\.turn\|\.turn\b" mazeRoomUI.js` gives exactly the two readers the brief named: `:2196-2202` at `089d809a9` (the mirror — which reads the VISUALIZER's counter, not this one, so it is untouched by the panel's new turn) and `:3729`, `Reached exit in ${this.state.turn} steps.`. **That message now counts hand-played waits, and it is right to: a wait IS a turn.** No decision anywhere reads `state.turn`. ⚠ Noted and NOT changed: the mirror at `:2186` copies the visualizer's `player_pos` into `this.state` but never its `turn`, so during a loops-delegated walk the panel's own counter does not advance at all and the exit message under-counts a bot walk. That predates this slice, is orthogonal to WAIT, and belongs to whoever owns the mirror.
+
+**The engine's WAIT is deliberately not the oracle's.** `INPUTS` (`:54`) and `bfsSolver`'s `inputs` (`:839`) are untouched, pinned by an engine row that asserts `INPUTS` is the four moves and does not contain `INPUT_WAIT`. The reasoning (a wait is a self-loop `mazeVisitedKey` would prune) is written down in the engine and in `maze.md`, but **the byte-identity row is the measurement** — see below.
+
+**Docs.** `maze.md:9`'s "a `WAIT` pseudo-input exists at the playback level (it advances the turn without calling the engine's `step`…)" is replaced by the true sentence: a first-class `step` input, `turn + 1` and nothing else, deliberately out of `INPUTS` and the solver's list, with the four surfaces named. Owed pins paid: `generate-procgen-reference.mjs` rewrote `docsIndex.js` and the README's `GENERATED:procgen-docs-index` region (word counts 250,882 → 250,966; maze.md 10,971 → 11,055) and `--check` is clean.
+
+**Gates, each with the command that produced it.**
+
+| gate | command | result |
+|---|---|---|
+| maze byte-identity **BEFORE** (the control) | `node scripts/procgen/dump-maze-byteidentity.mjs 2>/dev/null \| md5sum` at `089d809a9` | `677b7d9cae51023e82fa2e365a8095dc` — the standing value |
+| maze byte-identity **AFTER** | same command at `6a8b285b6` | **`677b7d9cae51023e82fa2e365a8095dc` — IDENTICAL.** The row did not move: WAIT through `step` changes nothing the oracle produces |
+| ⚖ 52 bounded vitest | `npx vitest run frontend/modules/mazeRoom/ frontend/modules/loops/ frontend/modules/playbackBot/ frontend/modules/procgenDocs/` | **59 files / 2346 tests, 0 failed** (the same list before the slice: 59 / 2327, and 2 of those failed — the two `procgenDocs` word-count pins the doc edit owed). ⚠ Not comparable to Q-b's 61/2377: the brief's path list drops `shared/actionQueue/` |
+| `gate: maze-lab` UNMOVED | `node scripts/procgen/check-maze-lab.mjs` | **231 rows, 0 FAIL** — the claim at `44e47f445`, unmoved through Q-b and S2a |
+| procgen reference | `node scripts/procgen/generate-procgen-reference.mjs --check` (inside the vitest run) | ALL 6 GENERATED MODULES AND 4 MARKDOWN REGIONS MATCH |
+| in-app | `npm test -- --mode=test-substrates --batch=fast` | **61/61 PASSED, 3.6 min** — the five maze rows (`maze-consumable-tile-grants-foreign-item`, `-one-shot-then-respawns`, `maze-mana-tile-refills-pool`, `maze-record-playback-crosses-exit`, `maze-parked-live-drain`) and both `seedling-atlas-maze` rows among them |
+| attribution | `node scripts/test/compare-runs.js` | `05-40-04` (Q-b's) → `06-04-16`, both 61/61 — *No differences in status, roster, or duration* |
+
+**The rows added — 20 `it(`s, one replaced, net +19** (derived from `git show HEAD -- <file> \| grep -cE "^\+ +it\("` and the per-file vitest totals, not typed):
+
+| file | before → after | what the new rows say |
+|---|---|---|
+| `mazeRoomEngine.test.js` | 158 → **164** (+6) | turn+1 and nothing else; a NEW state (input unmutated); NO pickup on an item tile — *with the arrival row beside it, so the fixture is proven live*; `blocks` identical — *with the push beside it*; `INPUTS` is still the four moves; `detectStepEvents` emits **nothing** for a wait, next to a row where the same tiles DO emit |
+| `mazeQueueExecutor.test.js` | 35 → **38** (+4, −1) | the old "same state object" row is REPLACED by "a NEW state, turn + 1"; no pickup; `blocks` alone; N waits ⇒ turn N; and the `locationCheck` row now carries the note that `next === state` is its alone |
+| `mazeRoomVisualizer.test.js` | 43 → **48** (+5) | the branch's missing pin: turn advances, player still; the log row is a `step` with `from === to` and the new turn and empty `events`; a wait on an item tile fires no pickup event and no pickup log; a wait notifies; **`getState()` carries `turn`** |
+| `mazeRoomUI.test.js` | 148 → **151** (+3) | `state.turn` advances and nothing else moves; a hazard-REFUSED wait STILL passes the turn (the hazard question gates the mana charge, not time); a queued `wait` entry reaches the engine through `_executeQueueAction`. Two existing rows gained turn assertions ("ticks hazards even when no mana deducted", "no-op outside playback mode" — "no-op" was always about MANA) |
+| `mazeAutopather.test.js` | 48 → **50** (+2) | the autopather is UNCHANGED, and these say what changed around it: a planned path with waits replays straight through `step` (before S2a `step` returned `null` and only a surface that intercepted the input first could replay it), in both the `stepsToInputs` and the `stepsToActions` forms |
+
+**MUTANT, RUN NOT REASONED.** `step`'s WAIT branch replaced by `return null` (the pre-S2a refusal), applied to the committed tree, restored from a copy kept in the scratchpad (trap 1072 — never `git checkout --`).
+
+| file | reds |
+|---|---|
+| `mazeRoomEngine.test.js` | **5** |
+| `mazeQueueExecutor.test.js` | **4** |
+| `mazeRoomVisualizer.test.js` | **4** |
+| `mazeRoomUI.test.js` | **5** |
+| `mazeAutopather.test.js` | **2** |
+| **total** | **20 reds over 5 files** — the brief asked for the executor row, the visualizer row and the engine row to ALL go red; all three do, and the panel and the autopather come with them |
+
+⚠ The one wait row that does **not** red under the mutant is the visualizer's `getState()` row — correctly: that defect is independent of whether `step` accepts a WAIT.
+
+**What S2b reads off this.**
+
+- `step(world, state, INPUT_WAIT)` never returns `null`. Anywhere S2b would have written a wait side-branch, it calls `step` (or `executeMazeEntry(world, state, waitEntry())`) instead — the lab's `framesForActions` included.
+- `executeMazeEntry` now returns `next === state` for **`locationCheck` only**. A lab replayer that wants "did the world change?" compares positions or asks the entry.
+- `MazeRoomVisualizer.getState()` gained `turn` — the lab HUD can show it without reaching into `_state`.
+- ⛔ `whyBlocked` is still S2b's: `refusalReason` in `mazeQueueExecutor.js` is untouched by this slice, and a WAIT never reaches it (the engine has no refusal to explain).
+- The panel's `_executeWaitAction` keeps its own mana + hazard wrapper. The lab arm needs its own wrapper or none — the engine half is all that moved.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
