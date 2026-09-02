@@ -8484,6 +8484,20 @@ test NAMES carried counts the allowlist keyed on — names interpolated, allowli
 LADDER IS NOW THE USER'S TO ORDER (plan §33):** R-b · D1 · D2 · D5 (new: the panel mirror never copies
 `turn`) · D3 · D4 · F-a/F-b · ⚖ F-c/F-d · opt S4–S6; the cross-substrate queue VIEWER is its own arc.
 
+**⇒ ⚖ USER ORDERED THE REST — R-b FIRST; R-b LAUNCHED (2026-09-02, `maze-lab-planning`).** Asked with
+the four candidates (R-b · D1+D2+D5 · D3+D4 · F-a); the user chose **R-b, the recording PRECONDITIONS**
+(plan §20 R3/R4). Kickoff `NewDocs/plans/maze-lab-arms-sliceRb-prompt.md`, session `maze-lab-arms-sliceRb`:
+`mazeWorldDigest(world)` (one function, `contentIdentity`'s primitives over `serializeMazeLevel`);
+`deriveRequires(world, startState, actions)` — the combo of each passed obstacle's `clear_set` the
+inventory satisfied, MINUS what the walk itself picked up first, derived tokens excluded, `rule`-typed
+gates answered `null` with a reason rather than guessed; both stamped by ONE function on every maze
+recording — panel and lab — as optional TOP-LEVEL envelope fields (planner's call over S2b's lab-block
+suggestion: the motivating case is the panel's edited region, and `saveQueue` keeps unknown fields);
+`refuseReplayPreconditions(rec, {world, startInventory})` refuses BEFORE step 0 naming the digest pair or
+EVERY missing id, in the lab's LOAD path and the panel's `_replaySavedActions` (block left PARKED); the
+customQueue picker hides or labels a stale recording; CLAIM 22b; three mutants (ignore requires / ignore
+digest / forget the subtraction) each named with the row it must red. Re-bank at a CODE head after CI.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
