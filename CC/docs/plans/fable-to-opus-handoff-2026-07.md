@@ -7775,6 +7775,56 @@ now** (round-trip tested both ways incl. wait compression; ⚠ `generateEntryId`
 injected id source, run twice) so the migration is a reader switch later. Ladder, final: S0 → S1 → S2a →
 S2b(+converters) → R-a → R-b → D1–D4 → F-a/F-b → ⚖ F-c/F-d → opt S3–S6.
 
+**⇒ THE actionQueue FORMAT REVIEW + THE MAZE MIGRATION MOVES FIRST (plan Part V, §23–§25) — user 2026-09-02:**
+*"I was planning to eventually implement a cross-substrate queue editor, or at least a cross-substrate
+queue viewer. Let's go ahead and make the switch to the actionQueue format before we do anything else
+that involves recording. But first let's check if there are any changes we might want to make to that
+format. It's still new and mostly untested."* (Also: the launching session is NOT in charge of this
+arc and its context is full — no further report-backs.) **The package** (`shared/actionQueue/`, FIVE
+files, 22 KB, in the `shared` SUBMODULE @917e4de ⇒ every change = gitlink bump = the user's push):
+**ZERO tests inside it**; the only importer that tests it is `jtaQueueExecutor.test.js` (5 `it(`).
+**ELEVEN FINDINGS, each at its line:** ⛔ **Q1 wall-clock `entryId`s are minted INTO recordings**
+(`actionTypes.js:38` `aq_${Date.now()}_n`; jta's `convertPerformedActionsToQueue:106,116` and omsi's
+`convertPlanToQueue:106` call it per entry) — so `savedQueueStore.isDuplicate`'s JSON compare
+(`:99-102,122`) is **DEAD for every actionQueue substrate** and no byte-identity row over a recording is
+possible · **Q2 the field list is restated 3× (`add`/`deserialize`/`undoLast`) and DROPS riders** —
+omsi's `loopsType` survives only because omsi never passes a recording through `ActionQueue`; jta's
+`taskType`/`maxReps`/`icon` are dropped on `add` (trap 823's shape) · Q3 scalar `actionId`, no `params`
+(`useAllItems` is a separate actionType where a flag would do) · Q4 no `substrate` on an entry (a
+platformer `move` vs a maze `move` are the same word) · Q5 no format version (`serialize()` → bare
+`{entries}`; only the STORE key is `v1`) · Q6 no validation (`deserialize` normalises a malformed entry
+silently) · **Q7 the cursor is not maintained by `add(atIndex)` or `reorder`** (only `remove` adjusts) —
+jta escapes because it executes on the frozen `ExecutionSnapshot`; the maze's live queue would NOT ·
+Q8 `label` stored in recordings though DERIVED · Q9 jta fields in the "game-agnostic" `RuntimeStatus`
+typedef · Q10 `ActionQueue`'s own cursor/advance surface is unused by its only consumer · Q11 zero
+package tests. **Changes A1–A10:** id-less recordings (ids are a live-queue concern) · one
+`normalizeEntry`/`assertEntry` · optional `params` · optional `substrate` stamped by every converter ·
+`format:'actionQueue/1'` · cursor maintenance + tests · `label` optional with `describeAction(entry)`
+on the registry entry (the viewer's labeller) · generic `actuals` · package tests. **The `zoneId`
+field is in the code and NOT the typedef** (jta's zone leaked into the shared shape). **THREE
+VOCABULARIES MEET IN LOOPS** — gameState's path (`type`/`locationName`, also loops' `_liveCaptureBuffer`
+read by `_applyCoarseReplacement` at `loopState.js:1742`), the maze's native, and actionQueue; the
+migration retires the maze's; whether loops' own converges is the VIEWER's first design question (⚖).
+**Q-b the maze switch (§24.2):** `MazeRoomQueue` STAYS as the live queue (25 pins on its editing
+semantics) with actionQueue-shaped entries (`move`→`actionId: dir`, `wait`, `locationCheck`→`actionId:
+name`, `substrate:'maze'`); live queue UNCOMPRESSED (one press = one icon), RECORDING compressed via
+`loops` by `projectActions`, replay expands; every reader of `.dir`/`locationName` re-pointed incl.
+`_applyCoarseReplacement` through one `coarseOf(entry)` adapter that reads both shapes; the store
+upgrades legacy maze entries ON READ keyed on the PRESENCE of `type` and the key moves `v1→v2`;
+`describeAction` on the maze registry entry (the icon-row glyph table is its second caller); R1/R2/R5
+ride Q-b (same lines); **S2b needs NO converters** (§21's converter paragraph WITHDRAWN). Test pins
+rewritten, derived by grep at `44e47f445`: `mazeRoomUI.test.js` 27 · `mazeRoomQueue.test.js` 25 ·
+`manualMode.test.js` 6 · `mazeAutopather.test.js` 6 · `savedQueueStore.test.js` 4 · `mazeLab.test.js` 3 ·
+`procgenMaze.test.js` 1; in-app `mazeBlockModeTests`/`mazeConsumableTileTests`/`playbackBotTests`.
+**LADDER, RE-ORDERED (§25; trap 1047 re-checked — S2a moves AFTER Q-b because Q-b re-dispatches the
+wait executor S2a rewrites):** **Q-a** format (submodule, ⚖ gitlink) → **Q-b** the maze switch (main) →
+S0/S1 (may precede or run beside Q-a; no recording touched) → S2a WAIT → S2b MANUAL on the migrated
+queue → R-b `requires`+`worldDigest` → D1–D4 → F-a/F-b → ⚖ F-c/F-d → opt S3–S6. **⚖ (§25):** (1) Q-a's
+gitlink bump, all ten changes or a subset (recommend all; A1 and A7 have live consequences) · (2) keep
+`MazeRoomQueue` as the live queue (recommended) vs replace with `ActionQueue` after A7 · (3) converge
+loops' own path vocabulary now (recommend NOT in Q-b — the viewer's question; `coarseOf` reads both) ·
+(4) run-length compression in recordings via `loops` (recommended).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
