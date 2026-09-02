@@ -200,7 +200,26 @@ export function getDefaultExit(world) {
     return world.exits.values().next().value ?? null;
 }
 
-function posKey(x, y) { return `${x},${y}`; }
+/**
+ * ⛓ DEDUP M13 — **THE OVERLAY KEY, AND ITS INVERSE, IN ONE PLACE.** Every
+ * `Map<posKey, …>` in this file is keyed here; the READ-BACK was open-coded
+ * five times outside it (twice below in `serializeMazeEntities`, twice in
+ * `mazeAutopather`, once in `mazeElementOverlay`), so the two halves of one
+ * encoding had six authors and only one of them was named. ⛔ EXPORTED because
+ * the readers are in other files — the key's SPELLING is this module's, and a
+ * consumer that splits it by hand is a second spelling waiting to disagree.
+ */
+export function posKey(x, y) { return `${x},${y}`; }
+
+/**
+ * ⛓ `"3,4"` → `{x: 3, y: 4}`. ⚠ It takes the FIRST TWO fields and ignores the
+ * rest, which is what the autopather's time-expanded `"x,y,t"` state keys need
+ * — the reconstruction wants the CELL out of a key that also carries the turn.
+ */
+export function unposKey(key) {
+    const [x, y] = String(key).split(',').map(Number);
+    return { x, y };
+}
 
 /**
  * Inverse of procgenPipeline's serializeMazeWorld. Reconstructs a
@@ -442,16 +461,13 @@ export function serializeMazeEntities(world) {
     const rowMajor = (a, b) => (a.y - b.y) || (a.x - b.x);
     if (world.blocks?.size) {
         out.blocks = [...world.blocks.keys()]
-            .map((key) => {
-                const [x, y] = key.split(',').map(Number);
-                return { x, y };
-            })
+            .map(unposKey)
             .sort(rowMajor);
     }
     if (world.buttons?.size) {
         out.buttons = [...world.buttons.entries()]
             .map(([key, id]) => {
-                const [x, y] = key.split(',').map(Number);
+                const { x, y } = unposKey(key);
                 return { x, y, id };
             })
             .sort(rowMajor);

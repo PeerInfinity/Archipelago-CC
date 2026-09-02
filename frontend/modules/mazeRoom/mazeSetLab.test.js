@@ -17,6 +17,7 @@ import { describe, expect, it } from 'vitest';
 import {
     LAB_SUBSTRATE, SEEDLING_ATLAS_GAME, bindWorldParts, makeDrawRoomStill, mazeLibraryRows,
     mazeSetBindings, roomBaseTag, sniffSetDocument, worldDoorDisconnectOp, worldDoorOp,
+    roomOpenRefusal,
     worldAllMazeRulesJson, worldDoorPreview, worldDoorRows, worldDownloadMembers,
     worldPartDescriptors, worldSetBindings,
 } from './mazeSetLab.js';
@@ -1049,5 +1050,65 @@ describe('⛓⛓⛓ W4 — the REPORT rows a world can only answer PER PART', ()
             .map((r) => r.text);
         expect(after).toEqual(['part "seed": 0 location(s) in its own overlay',
             'part "mz": 1 location(s) in its own overlay']);
+    });
+});
+
+describe('⛓⛓⛓ DEDUP M11 — "another room is open", ONE rule for both open routes', () => {
+    /**
+     * ⛔⛔ **THIS IS THE PIN FOR D3'S ONE BEHAVIOUR CHANGE**, and it is here
+     * rather than in the browser gate for the reason `roomOpenRefusal`'s own
+     * docblock gives: the branch that moved needs the page to hold a LOCAL room
+     * session at an index whose cell reads as the OTHER substrate, which the
+     * page can barely reach — a browser row would be a fixture that cannot tell
+     * the two builds apart (⛓ the vacuous-mutant family). The rule is pure, so
+     * the state is just an argument.
+     */
+    const OPEN_NOTHING = { foreignRoomIndex: null, roomIndex: null, roomOps: 0 };
+
+    it('nothing open ⇒ every index opens', () => {
+        expect(roomOpenRefusal(OPEN_NOTHING, 0)).toBe(null);
+        expect(roomOpenRefusal(OPEN_NOTHING, 7)).toBe(null);
+        // ⛓ …and the DEFAULTS say the same thing, so a caller that knows of no
+        //   open room does not have to spell three nulls.
+        expect(roomOpenRefusal({}, 3)).toBe(null);
+        expect(roomOpenRefusal(undefined, 3)).toBe(null);
+    });
+
+    it('a FOREIGN room open blocks every OTHER index and exempts its own', () => {
+        const open = { ...OPEN_NOTHING, foreignRoomIndex: 2 };
+        expect(roomOpenRefusal(open, 3)).toBe('foreign');
+        expect(roomOpenRefusal(open, 0)).toBe('foreign');
+        expect(roomOpenRefusal(open, 2)).toBe(null);
+    });
+
+    it('a LOCAL room open with UNWRITTEN edits blocks every OTHER index', () => {
+        const open = { ...OPEN_NOTHING, roomIndex: 2, roomOps: 1 };
+        expect(roomOpenRefusal(open, 3)).toBe('local');
+        expect(roomOpenRefusal(open, 0)).toBe('local');
+    });
+
+    /**
+     * ⛓⛓⛓ **THE ROW THE ASYMMETRY WOULD RED.** Before D3 the FOREIGN route did
+     * not exempt the same index from the LOCAL guard: `openForeignRoomAt` asked
+     * `roomIndex !== null && ops > 0` where `openSetRoomAt` asked
+     * `roomIndex !== null && roomIndex !== index && ops > 0`. Reinstating the
+     * asymmetric spelling makes this row return `'local'`.
+     */
+    it('⛔ …and NOT its own index — the same-index exemption is in BOTH guards', () => {
+        expect(roomOpenRefusal({ ...OPEN_NOTHING, roomIndex: 2, roomOps: 1 }, 2)).toBe(null);
+        expect(roomOpenRefusal({ ...OPEN_NOTHING, roomIndex: 0, roomOps: 9 }, 0)).toBe(null);
+    });
+
+    it('a LOCAL room open with NO unwritten edit blocks nothing', () => {
+        const clean = { ...OPEN_NOTHING, roomIndex: 2, roomOps: 0 };
+        expect(roomOpenRefusal(clean, 3)).toBe(null);
+        expect(roomOpenRefusal(clean, 2)).toBe(null);
+    });
+
+    /** ⛓ …and the FOREIGN guard is asked FIRST, which is the order both routes
+     *  printed their sentences in. */
+    it('both open ⇒ the FOREIGN guard answers', () => {
+        expect(roomOpenRefusal({ foreignRoomIndex: 1, roomIndex: 2, roomOps: 1 }, 3))
+            .toBe('foreign');
     });
 });

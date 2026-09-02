@@ -50,6 +50,11 @@
  * unit runner.
  */
 
+/** ⛓ DEDUP M8 — the SHARED object-and-field-list check. ⛔ The only import this
+ *  file has: the sentence comes back as a STRING and `fail` below throws THIS
+ *  module's own error with it, so nothing about the refusal moved. */
+import { viewFieldsRefusal } from './mazeRoomRender.js';
+
 export class AreaOverlayError extends Error {
     constructor(message) {
         super(message);
@@ -92,18 +97,21 @@ export const OVERLAY_COLORS = Object.freeze({
 /** The fields this draw reads. Named, so a caller cannot forget one silently. */
 export const OVERLAY_VIEW_FIELDS = Object.freeze(['tilePx', 'layer']);
 
+/** ⛓ THIS MODULE'S OWN DECLARATION — DEDUP M8's shared check reads it, and the
+ *  sentences below are this file's, unchanged. ⚠ `own` is left at its default:
+ *  this copy tested presence with `in`, and `mazeRoomRender.viewFieldsRefusal`'s
+ *  docblock says why that difference is preserved rather than unified. */
+const OVERLAY_VIEW_SPEC = Object.freeze({
+    module: 'mazeAreaOverlay',
+    draw: 'drawAreaOverlay',
+    fields: OVERLAY_VIEW_FIELDS,
+    missingWhy: '⛔ A default here would be a picture this file chose under the caller\'s name '
+        + '— the same law `mazeRoomRender.assertView` states.',
+});
+
 export function assertOverlayView(view) {
-    if (!view || typeof view !== 'object') {
-        fail('mazeAreaOverlay: drawAreaOverlay needs a view object '
-            + `(fields: ${OVERLAY_VIEW_FIELDS.join(', ')}).`);
-    }
-    for (const key of OVERLAY_VIEW_FIELDS) {
-        if (!(key in view)) {
-            fail(`mazeAreaOverlay: the view is missing "${key}". ⛔ A default here would be a `
-                + 'picture this file chose under the caller\'s name — the same law '
-                + '`mazeRoomRender.assertView` states.');
-        }
-    }
+    const why = viewFieldsRefusal(view, OVERLAY_VIEW_SPEC);
+    if (why) fail(why);
     if (!(typeof view.tilePx === 'number' && view.tilePx > 0)) {
         fail('mazeAreaOverlay: view.tilePx must be a positive number of canvas pixels.');
     }

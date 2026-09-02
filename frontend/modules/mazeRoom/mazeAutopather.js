@@ -47,7 +47,7 @@
  */
 
 import {
-    isFloor, getObstacle, getExitAt,
+    isFloor, getObstacle, getExitAt, unposKey,
     INPUT_N, INPUT_S, INPUT_E, INPUT_W, INPUT_WAIT,
 } from './mazeRoomEngine.js';
 import { isObstacleCleared } from '../shared/procgen/library.js';
@@ -179,8 +179,7 @@ function makeGoalPredicate(world, target, opts) {
             let pos = null;
             for (const [key, name] of world.itemLocationNames) {
                 if (name === target.locationName) {
-                    const [x, y] = key.split(',').map(Number);
-                    pos = { x, y };
+                    pos = unposKey(key);
                     break;
                 }
             }
@@ -369,10 +368,13 @@ function _lcm(a, b) {
     return (a / _gcd(a, b)) * b;
 }
 
-function _parseStateKeyXY(key) {
-    const parts = key.split(',');
-    return { x: Number(parts[0]), y: Number(parts[1]) };
-}
+/**
+ * ⛓ DEDUP M13 — the engine's OWN key reader. A state key is `"x,y"` on the
+ * fast path and `"x,y,t"` when the search is time-expanded, and `unposKey`
+ * takes the first two fields either way — which is the one thing this
+ * reconstruction needed of it.
+ */
+const _parseStateKeyXY = (key) => unposKey(key);
 
 function _reconstructPath(parent, fromKey, toKey) {
     const steps = [_parseStateKeyXY(toKey)];

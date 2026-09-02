@@ -125,8 +125,9 @@ import { applyGlossaryTips } from '../procgenDocs/glossaryTips.js';
  */
 import {
     LAB_SUBSTRATE, bindWorldParts, makeDrawRoomStill, mazeLibraryRows, mazeSetBindings,
-    roomBaseTag, sniffSetDocument, worldAllMazeRulesJson, worldDoorDisconnectOp, worldDoorOp,
-    worldDoorPreview, worldDoorRows, worldPartDescriptors, worldSetBindings,
+    roomBaseTag, roomOpenRefusal, sniffSetDocument, worldAllMazeRulesJson,
+    worldDoorDisconnectOp, worldDoorOp, worldDoorPreview, worldDoorRows, worldPartDescriptors,
+    worldSetBindings,
 } from './mazeSetLab.js';
 import { createEditSession } from '../procgenCore/editCore.js';
 /**
@@ -1464,6 +1465,76 @@ export function main() {
     ];
 
     /**
+     * ── ⛓⛓⛓ DEDUP M7 — **ONE PARAMETER FORM, THREE CALLERS** ────────────
+     *
+     * The skeleton's, the element's and the area spec's parameter panes were
+     * three copies of the same twenty lines over the same `{key, domain,
+     * default, why}` schema (`templateContract.assertParamSchema` is what makes
+     * that ONE shape). ⛔ **Lifted HERE and not to `procgenCore/labView.js`**:
+     * Seedling mounts a form of this kind too, but its caller is not in this
+     * slice — a shared owner is written at the SECOND caller, not before it.
+     *
+     * ⛓⛓ **`anyOption` IS THE ONE DECLARED DIFFERENCE, AND IT SAYS BOTH HALVES
+     * AT ONCE**: the element form prepends "any (draw it)" AND its read skips an
+     * unset select — because for an element a parameter the caller NAMES is an
+     * override that spends no draw and one they omit is DRAWN, so the form needs
+     * a way to say "draw it" and the read must not turn that into a value.
+     *
+     * ⚠ **AND IT ALSO CARRIES THE PRE-SELECTION RULE, WHICH IS NOT THE SAME ON
+     * BOTH ARMS AND MUST NOT BECOME SO.** Without `anyOption` an absent value
+     * pre-selects the schema's DEFAULT (`values[key] ?? p.default`, compared
+     * with `===`, so a domain number is not matched by its spelling); WITH it
+     * there is no default arm at all — an absent value must leave "any (draw
+     * it)" selected, and `p.default` (which `assertParamSchema` guarantees is IN
+     * the domain) would silently turn every omitted element knob into a NAMED
+     * one. The two comparisons are the two copies', unchanged.
+     */
+    const ANY_OPTION = 'any (draw it)';
+    /** ⛓ `skelParam` ⇄ `data-skel-param` — the dataset key and the selector are
+     *  the SAME name in the two spellings the DOM uses, derived rather than
+     *  written twice. */
+    const dataAttrOf = (key) => `data-${key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`;
+    /** ⛓ THE KIND'S ROW OF THE CATALOGUE — read by the mount AND the read, which
+     *  is the third copy of this `find` the pair carried. */
+    const skeletonParamSchema = (kind) => skeletonCatalogue({ simulator: true })
+        .find((r) => r.kind === kind)?.params ?? [];
+
+    const mountParamForm = (boxId, attr, schema, { values = {}, anyOption = null } = {}) => {
+        const box = $(boxId);
+        box.innerHTML = '';
+        for (const p of schema) {
+            const label = document.createElement('label');
+            label.textContent = `${p.key} `;
+            label.title = p.why;
+            const sel = document.createElement('select');
+            sel.dataset[attr] = p.key;
+            if (anyOption !== null) sel.appendChild(new Option(anyOption, ''));
+            for (const v of p.domain) {
+                const o = new Option(String(v), String(v));
+                const chosen = anyOption !== null
+                    ? String(v) === String(values[p.key])
+                    : v === (values[p.key] ?? p.default);
+                if (chosen) o.selected = true;
+                sel.appendChild(o);
+            }
+            label.appendChild(sel);
+            box.appendChild(label);
+        }
+    };
+
+    const readParamForm = (boxId, attr, schema, { anyOption = null } = {}) => {
+        const out = {};
+        for (const p of schema) {
+            const sel = $(boxId).querySelector(`select[${dataAttrOf(attr)}="${p.key}"]`);
+            if (!sel) continue;
+            if (anyOption !== null && sel.value === '') continue;
+            const v = p.domain.find((d) => String(d) === sel.value);
+            if (v !== undefined) out[p.key] = v;
+        }
+        return out;
+    };
+
+    /**
      * ── ⛓⛓⛓ SLICE 7 — THE KIND'S PARAMETERS, AS A FORM ─────────────────
      *
      * ⛔ MOUNTED FROM THE CATALOGUE'S OWN SCHEMA (the options ARE the declared
@@ -1473,39 +1544,12 @@ export function main() {
      * nobody reads. ⚠ No "any (draw it)" option: a template parameter may be
      * drawn, a room parameter is chosen.
      */
-    const mountSkeletonParams = (kind, values = {}) => {
-        const box = $('labSkeletonParams');
-        box.innerHTML = '';
-        const row = skeletonCatalogue({ simulator: true }).find((r) => r.kind === kind);
-        for (const p of row?.params ?? []) {
-            const label = document.createElement('label');
-            label.textContent = `${p.key} `;
-            label.title = p.why;
-            const sel = document.createElement('select');
-            sel.dataset.skelParam = p.key;
-            for (const v of p.domain) {
-                const o = new Option(String(v), String(v));
-                if (v === (values[p.key] ?? p.default)) o.selected = true;
-                sel.appendChild(o);
-            }
-            label.appendChild(sel);
-            box.appendChild(label);
-        }
-    };
+    const mountSkeletonParams = (kind, values = {}) => mountParamForm(
+        'labSkeletonParams', 'skelParam', skeletonParamSchema(kind), { values });
     /** ⛔ TYPED FROM THE DOMAIN — a `<select>` hands back a string and the
      *  state, the payload and the URL all carry the domain's own number. */
-    const readSkeletonParams = (kind) => {
-        const out = {};
-        const row = skeletonCatalogue({ simulator: true }).find((r) => r.kind === kind);
-        for (const p of row?.params ?? []) {
-            const sel = $('labSkeletonParams')
-                .querySelector(`select[data-skel-param="${p.key}"]`);
-            if (!sel) continue;
-            const v = p.domain.find((d) => String(d) === sel.value);
-            if (v !== undefined) out[p.key] = v;
-        }
-        return out;
-    };
+    const readSkeletonParams = (kind) => readParamForm(
+        'labSkeletonParams', 'skelParam', skeletonParamSchema(kind));
 
     /**
      * ⛓⛓ THE AREA PANE — the module's own sentence, and a LEGEND with one row
@@ -1617,72 +1661,22 @@ export function main() {
      * when `len` resolves to 3 (`elementSpec.namedParams`). A form with no way
      * to say "draw it" could only ever produce the first kind.
      */
-    const mountElementParams = (name, values = {}) => {
-        const box = $('labElementParams');
-        box.innerHTML = '';
-        for (const p of paramSchemaFor(name)) {
-            const label = document.createElement('label');
-            label.textContent = `${p.key} `;
-            label.title = p.why;
-            const sel = document.createElement('select');
-            sel.dataset.elemParam = p.key;
-            sel.appendChild(new Option('any (draw it)', ''));
-            for (const v of p.domain) {
-                const o = new Option(String(v), String(v));
-                if (String(v) === String(values[p.key])) o.selected = true;
-                sel.appendChild(o);
-            }
-            label.appendChild(sel);
-            box.appendChild(label);
-        }
-    };
+    const mountElementParams = (name, values = {}) => mountParamForm(
+        'labElementParams', 'elemParam', paramSchemaFor(name), { values, anyOption: ANY_OPTION });
     /** ⛔ TYPED FROM THE DOMAIN, and an UNSET select contributes NOTHING —
      *  which is exactly how "draw this one" is spelled in the spec. */
-    const readElementParams = (name) => {
-        const out = {};
-        for (const p of paramSchemaFor(name)) {
-            const sel = $('labElementParams').querySelector(`select[data-elem-param="${p.key}"]`);
-            if (!sel || sel.value === '') continue;
-            const v = p.domain.find((d) => String(d) === sel.value);
-            if (v !== undefined) out[p.key] = v;
-        }
-        return out;
-    };
+    const readElementParams = (name) => readParamForm(
+        'labElementParams', 'elemParam', paramSchemaFor(name), { anyOption: ANY_OPTION });
 
     /**
      * ⛓ THE AREA SPEC'S PARAMETERS, AS A FORM — mounted from the codec's own
      * schema (the options ARE the declared domain, the pre-selection IS the
      * declared default), exactly as the skeleton's params form is.
      */
-    const mountAreaParams = (values = {}) => {
-        const box = $('labAreaParams');
-        box.innerHTML = '';
-        for (const p of AREA_PARAM_SCHEMA) {
-            const label = document.createElement('label');
-            label.textContent = `${p.key} `;
-            label.title = p.why;
-            const sel = document.createElement('select');
-            sel.dataset.areaParam = p.key;
-            for (const v of p.domain) {
-                const o = new Option(String(v), String(v));
-                if (v === (values[p.key] ?? p.default)) o.selected = true;
-                sel.appendChild(o);
-            }
-            label.appendChild(sel);
-            box.appendChild(label);
-        }
-    };
+    const mountAreaParams = (values = {}) => mountParamForm(
+        'labAreaParams', 'areaParam', AREA_PARAM_SCHEMA, { values });
     /** ⛔ TYPED FROM THE DOMAIN — a `<select>` hands back a string. */
-    const readAreaParams = () => {
-        const out = {};
-        for (const p of AREA_PARAM_SCHEMA) {
-            const sel = $('labAreaParams').querySelector(`select[data-area-param="${p.key}"]`);
-            if (!sel) continue;
-            const v = p.domain.find((d) => String(d) === sel.value);
-            if (v !== undefined) out[p.key] = v;
-        }
-        return out;
-    };
+    const readAreaParams = () => readParamForm('labAreaParams', 'areaParam', AREA_PARAM_SCHEMA);
     /**
      * ⛔ THE DIRECTIVE IS PARSED THROUGH THE ONE CODEC, at the press — an empty
      * box is NO directive (which is what absence means in the URL too), and a
@@ -1797,16 +1791,18 @@ export function main() {
         $('labText').value = JSON.stringify(labPayload(state), null, 2);
     };
 
+    /**
+     * ⛓ DEDUP M13 — **ONE BLOB→ANCHOR→CLICK→REVOKE ON THIS PAGE.** This one and
+     * the SET arm's four downloads wrote the idiom twice; `setDownload` is the
+     * writer and this is a NAME, a BODY and a note. ⛔ It is declared below (its
+     * own docblock says why — the mount-time TDZ) and reached only from a press,
+     * which is long after the closure is built.
+     */
     const download = () => {
-        const blob = new Blob([`${JSON.stringify(labPayload(state), null, 2)}\n`],
-            { type: 'application/json' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `maze-seed${state.seed}-step${state.step}`
+        const name = `maze-seed${state.seed}-step${state.step}`
             + `${(state.edits ?? []).length ? `-e${state.edits.length}` : ''}.json`;
-        a.click();
-        URL.revokeObjectURL(a.href);
-        say(`downloaded ${a.download}`);
+        setDownload(name, `${JSON.stringify(labPayload(state), null, 2)}\n`, 'application/json');
+        say(`downloaded ${name}`);
     };
 
     const loadFromBox = () => {
@@ -2030,6 +2026,27 @@ export function main() {
     };
 
     /**
+     * ⛓⛓⛓ DEDUP M11 — **THE CLOSURE'S THREE FACTS, HANDED TO THE ONE RULE.**
+     * Both openers carried their own copy of both guards and DISAGREED on the
+     * same-index exemption; `mazeSetLab.roomOpenRefusal` is the rule now, its
+     * docblock states which reading was taken and why, and it is PURE so a unit
+     * runner can ask it. ⛔ What stays here is reading the closure and saying
+     * the refusal in each route's OWN words — the two routes close into
+     * different documents and only one of them has a frame to point at.
+     *
+     * @param {number} index
+     * @returns {{ok: boolean, why: null|'foreign'|'local'}}
+     */
+    const canOpenRoom = (index) => {
+        const why = roomOpenRefusal({
+            foreignRoomIndex: foreignRoom?.index ?? null,
+            roomIndex: setRoomIndex,
+            roomOps: setRoomSess?.ops().length ?? 0,
+        }, index);
+        return { ok: why === null, why };
+    };
+
+    /**
      * ⛓⛓⛓ EDITOR INTEGRATION W4 — **A ROOM OF THE OTHER SUBSTRATE OPENS IN ITS
      * OWN PAGE, THROUGH W3's ROOM-EDITOR CONTRACT.**
      *
@@ -2047,15 +2064,17 @@ export function main() {
      * legacy `xml` one, because an edit may never convert a room's KIND (§22.8).
      */
     const openForeignRoomAt = (index, cell) => {
-        if (foreignRoom !== null) {
-            if (foreignRoom.index === index) return true;
-            say(`⛔ room ${foreignRoom.index} is already open in the ${foreignRoom.substrate} `
-                + 'editor — CLOSE it there first.', true);
-            return false;
-        }
-        if (setRoomIndex !== null && setRoomSess?.ops().length > 0) {
-            say(`⛔ room ${setRoomIndex} is open HERE with ${setRoomSess.ops().length} unwritten `
-                + 'edit(s). CLOSE it into the world first (that is ONE `replace-room`).', true);
+        // ⛓ THE NO-OP SUCCESS, which is not a refusal: this room is ALREADY the
+        //   one open in the other page, so there is nothing to open.
+        if (foreignRoom !== null && foreignRoom.index === index) return true;
+        const can = canOpenRoom(index);
+        if (!can.ok) {
+            say(can.why === 'foreign'
+                ? `⛔ room ${foreignRoom.index} is already open in the ${foreignRoom.substrate} `
+                    + 'editor — CLOSE it there first.'
+                : `⛔ room ${setRoomIndex} is open HERE with ${setRoomSess.ops().length} `
+                    + 'unwritten edit(s). CLOSE it into the world first (that is ONE '
+                    + '`replace-room`).', true);
             return false;
         }
         const decl = ROOM_EDITOR_DECLARATIONS[cell.substrate] ?? null;
@@ -2202,20 +2221,18 @@ export function main() {
          * discovered that in the other page's note would be telling the reader
          * about a refusal they cannot see.
          */
-        if (foreignRoom !== null && foreignRoom.index !== index) {
-            say(`⛔ room ${foreignRoom.index} is open in the ${foreignRoom.substrate} editor `
-                + `(${foreignRoom.page}.html, in the frame below). CLOSE it there first — its `
-                + 'edits reach this world through that page\'s own close, as ONE '
-                + '`replace-room`, and opening a second room would leave them with nowhere '
-                + 'to go.', true);
-            return false;
-        }
-        if (setRoomIndex !== null && setRoomIndex !== index
-            && setRoomSess.ops().length > 0) {
-            say(`⛔ room ${setRoomIndex} is open with ${setRoomSess.ops().length} unwritten `
-                + 'edit(s). CLOSE it into the LIBRARY first (that is ONE `replace-room`), or '
-                + 'its edits go nowhere — a room session is the only place they live until '
-                + 'then.', true);
+        const can = canOpenRoom(index);
+        if (!can.ok) {
+            say(can.why === 'foreign'
+                ? `⛔ room ${foreignRoom.index} is open in the ${foreignRoom.substrate} editor `
+                    + `(${foreignRoom.page}.html, in the frame below). CLOSE it there first — `
+                    + 'its edits reach this world through that page\'s own close, as ONE '
+                    + '`replace-room`, and opening a second room would leave them with nowhere '
+                    + 'to go.'
+                : `⛔ room ${setRoomIndex} is open with ${setRoomSess.ops().length} unwritten `
+                    + 'edit(s). CLOSE it into the LIBRARY first (that is ONE `replace-room`), '
+                    + 'or its edits go nowhere — a room session is the only place they live '
+                    + 'until then.', true);
             return false;
         }
         if (setRoomIndex === index) return true;
@@ -4249,6 +4266,36 @@ export function main() {
     }
 
     /**
+     * ⛓⛓⛓ DEDUP M12 — **ONE FETCH-AND-REFUSE FOR THE TWO BOOT PARAMETERS.**
+     * `?library=` and `?world=` said the same law in the same words, differing
+     * in the PARAMETER, the NOUN and `text()` vs `arrayBuffer()` — and the
+     * possessive in *"an arm with no library/world"* is the parameter's own
+     * name, so the sentence is one template with two fillings rather than two
+     * sentences that have to be kept in step. ⛔ The refusal text is unchanged,
+     * byte for byte: `check-maze-lab`'s CLAIM 17b and CLAIM 21b read it.
+     *
+     * @param {string} url
+     * @param {object} o
+     * @param {string} o.param  the URL parameter that named this document
+     * @param {string} o.noun   what the address promised, in the refusal's words
+     * @param {'text'|'bytes'} o.as  a library is TEXT, a world bundle is BYTES
+     */
+    const fetchOrRefuse = async (url, { param, noun, as }) => {
+        const refuse = (what) => new Error(`?${param}=${url} — ${what}. ⛔ REFUSED rather than `
+            + `opened on nothing: the address names a ${noun}, and an arm with no ${param} `
+            + 'under a link that names one would be a page saying something the address does '
+            + 'not.');
+        let res;
+        try {
+            res = await fetch(url);
+        } catch (e) {
+            throw refuse(`the fetch FAILED (${e.message})`);
+        }
+        if (!res.ok) throw refuse(`HTTP ${res.status}`);
+        return as === 'bytes' ? new Uint8Array(await res.arrayBuffer()) : res.text();
+    };
+
+    /**
      * ⛓⛓⛓ EDITOR v3 E2c — **`?library=` IS `?gen=`'s SIBLING, AND THE TWO
      * FAILURE MODES ARE TOLD APART.**
      *
@@ -4264,22 +4311,12 @@ export function main() {
      * is nothing to REPRODUCE-and-compare and the page takes it as it stands.
      */
     const bootLibrary = async (url) => {
-        let res;
-        try {
-            res = await fetch(url);
-        } catch (e) {
-            throw new Error(`?library=${url} — the fetch FAILED (${e.message}). ⛔ REFUSED `
-                + 'rather than opened on nothing: the address names a REGION LIBRARY, and an '
-                + 'arm with no library under a link that names one would be a page saying '
-                + 'something the address does not.');
-        }
-        if (!res.ok) {
-            throw new Error(`?library=${url} — HTTP ${res.status}. ⛔ REFUSED rather than `
-                + 'opened on nothing: the address names a REGION LIBRARY, and an arm with no '
-                + 'library under a link that names one would be a page saying something the '
-                + 'address does not.');
-        }
-        holdLibrary(parseRegionLibrary(await res.text()), `?library=${url}`);
+        holdLibrary(
+            parseRegionLibrary(await fetchOrRefuse(url, {
+                param: 'library', noun: 'REGION LIBRARY', as: 'text',
+            })),
+            `?library=${url}`,
+        );
     };
 
     /**
@@ -4291,22 +4328,10 @@ export function main() {
      * through `takeSetBundle`, which leaves the rest of the page working.
      */
     const bootWorld = async (url) => {
-        let res;
-        try {
-            res = await fetch(url);
-        } catch (e) {
-            throw new Error(`?world=${url} — the fetch FAILED (${e.message}). ⛔ REFUSED `
-                + 'rather than opened on nothing: the address names a WORLD BUNDLE, and an arm '
-                + 'with no world under a link that names one would be a page saying something '
-                + 'the address does not.');
-        }
-        if (!res.ok) {
-            throw new Error(`?world=${url} — HTTP ${res.status}. ⛔ REFUSED rather than opened `
-                + 'on nothing: the address names a WORLD BUNDLE, and an arm with no world '
-                + 'under a link that names one would be a page saying something the address '
-                + 'does not.');
-        }
-        await takeSetBundle(new Uint8Array(await res.arrayBuffer()), `?world=${url}`);
+        await takeSetBundle(
+            await fetchOrRefuse(url, { param: 'world', noun: 'WORLD BUNDLE', as: 'bytes' }),
+            `?world=${url}`,
+        );
     };
 
     const boot = async () => {

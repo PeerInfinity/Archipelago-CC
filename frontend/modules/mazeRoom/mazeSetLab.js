@@ -46,6 +46,7 @@ import {
     validateWorldForDownload, worldAdapterFns,
 } from '../procgenCore/worldSetAdapter.js';
 import { deserializeMazeWorld } from './mazeRoomEngine.js';
+import { slotName } from './mazeLibraryEntry.js';
 import { drawWorld, plainView } from './mazeRoomRender.js';
 import { emptyMazeOverlay } from './mazeAtlasDerivation.js';
 import {
@@ -353,8 +354,11 @@ export function mazeSetBindings({
             disconnectOp: (room, value) => ({ op: 'disconnect', room, exit_id: String(value) }),
         },
         locations: {
+            /** ⛓ DEDUP M13 — the fallback label is `mazeLibraryEntry`'s OWN slot
+             *  name, imported rather than re-spelled: it is the id the capture
+             *  path mints, and a rename there must reach this list. */
             options: (cell) => (cell.payload?.items ?? []).map((it, i) => ({
-                value: String(i), label: `${it.id ?? `slot_${i}`} @(${it.x},${it.y})`,
+                value: String(i), label: `${it.id ?? slotName(i)} @(${it.x},${it.y})`,
             })),
             emptyWhy: '⛔ pick a SLOT first — `mark-location` names an `items[]` ORDINAL and '
                 + 'this entry carries none',
@@ -1327,6 +1331,48 @@ export function worldAllMazeRulesJson(session, deps, {
     };
 }
 
+
+/**
+ * ⛓⛓⛓ DEDUP M11 — **"ANOTHER ROOM IS OPEN": ONE RULE, AND IT IS PURE.**
+ *
+ * `mazeLabView` opened a room by two routes — `openSetRoomAt` for a room of
+ * THIS substrate and `openForeignRoomAt` for one of the other page's — and each
+ * carried its own copy of both guards. The copies DISAGREED on one: the local
+ * one exempted the SAME INDEX (`roomIndex !== index`) and the foreign one did
+ * not, so *"open room N over there while room N is open HERE with unwritten
+ * edits"* refused on one route and not on the other.
+ *
+ * ⚖ **THE RULE CHOSEN IS THE SAME-INDEX EXEMPTION IN BOTH GUARDS ON BOTH
+ * ROUTES**, and it is D3's ONE behaviour change. Every other guard on that page
+ * already says *"a room that is open does not block a request to open THAT
+ * room"* — the foreign guard's own `foreignRoomIndex !== index`, and each
+ * route's no-op-success return — so the asymmetric copy was the odd one out
+ * rather than a rule anybody had stated.
+ *
+ * ⛔ **IT RETURNS WHICH GUARD REFUSED, NOT A SENTENCE.** The two routes say
+ * different true things about the same condition (one closes into the WORLD and
+ * the other into the LIBRARY; one names the frame the other editor sits in), so
+ * the words stay at the callers and only the CONDITION lives here.
+ *
+ * ⛓ It is HERE, and pure, because a rule inside `mazeLabView`'s mount closure
+ * is a rule no unit runner can ask — and the branch this slice changed needs a
+ * state the page can barely reach, so a browser row alone would be a fixture
+ * that cannot tell the two builds apart.
+ *
+ * @param {object} open
+ * @param {number|null} [open.foreignRoomIndex]  the room open in the OTHER page, or null
+ * @param {number|null} [open.roomIndex]         the room open HERE, or null
+ * @param {number} [open.roomOps]                that session's unwritten op count
+ * @param {number} index  the room being asked for
+ * @returns {null|'foreign'|'local'} which guard refuses, or `null` to open
+ */
+export function roomOpenRefusal({
+    foreignRoomIndex = null, roomIndex = null, roomOps = 0,
+} = {}, index) {
+    if (foreignRoomIndex !== null && foreignRoomIndex !== index) return 'foreign';
+    if (roomIndex !== null && roomIndex !== index && roomOps > 0) return 'local';
+    return null;
+}
 
 /**
  * ⛓⛓⛓ **THE TWO REPORT ROWS A WORLD CANNOT ANSWER WHOLE, MADE PER PART.**

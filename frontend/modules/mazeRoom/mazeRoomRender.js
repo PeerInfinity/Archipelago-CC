@@ -142,22 +142,73 @@ export const VIEW_FIELDS = Object.freeze([
     'isConsumableCollected',
 ]);
 
+/**
+ * ⛓⛓⛓ DEDUP M8 — **ONE OBJECT-AND-FIELD-LIST CHECK, THREE DRAWS.** The two
+ * overlays wrote this loop again over their own declared list and QUOTED this
+ * file's law in their error text; one owner is the law and the three copies.
+ *
+ * ⛔ **IT RETURNS THE SENTENCE, IT DOES NOT THROW.** Each module refuses with
+ * its OWN error class — `MazeRenderError`, `AreaOverlayError`,
+ * `ElementOverlayError` — and a shared thrower would hand a caller the wrong
+ * one (`mazeAreaOverlay.test.js` asserts `toThrow(AreaOverlayError)` on exactly
+ * this path). The caller does `const why = viewFieldsRefusal(…); if (why) fail(why);`
+ * and keeps its own extra checks after it.
+ *
+ * ⚠ **`own` IS THE ONE SPELLING THE THREE COPIES DID NOT SHARE, AND IT IS
+ * PRESERVED RATHER THAN UNIFIED.** This file tested presence with
+ * `hasOwnProperty`, both overlays with `in` — so an INHERITED field is a field
+ * to them and is not to this one. MEASURED before the dedup, over views built
+ * on `Object.create`: render refuses all 12, the overlays accept all 5.
+ * Unifying either way moves behaviour on an input no caller constructs today,
+ * which is not this slice's to decide.
+ *
+ * @param {*} view                    the caller's view, unchecked
+ * @param {object} spec               the module's own declaration
+ * @param {string} spec.module        the module name every sentence opens with
+ * @param {string} spec.draw          the draw the view is FOR
+ * @param {ReadonlyArray<string>} spec.fields  the declared field list
+ * @param {boolean} [spec.own]        `hasOwnProperty` (true) or `in` (false)
+ * @param {Function} [spec.notObjectDetail]  `(view) => string` spliced before `(fields: …)`
+ * @param {string} [spec.notObjectTail]      spliced after it
+ * @param {string} spec.missingWhy    the module's own "why every field" sentence
+ * @returns {string|null} the refusal sentence, or `null` when the view passes
+ */
+export function viewFieldsRefusal(view, {
+    module, draw, fields, own = false, notObjectDetail = () => '',
+    notObjectTail = '.', missingWhy,
+}) {
+    if (!view || typeof view !== 'object') {
+        return `${module}: ${draw} needs a view object ${notObjectDetail(view)}`
+            + `(fields: ${fields.join(', ')})${notObjectTail}`;
+    }
+    for (const key of fields) {
+        const present = own
+            ? Object.prototype.hasOwnProperty.call(view, key)
+            : key in view;
+        if (!present) return `${module}: the view is missing "${key}". ${missingWhy}`;
+    }
+    return null;
+}
+
+/** ⛓ THIS FILE'S OWN DECLARATION — the sentences, verbatim, in one place. */
+export const VIEW_SPEC = Object.freeze({
+    module: 'mazeRoomRender',
+    draw: 'drawWorld',
+    fields: VIEW_FIELDS,
+    own: true,
+    notObjectDetail: (view) => `— got ${JSON.stringify(view)}. The view is the WHOLE input `,
+    notObjectTail: '; there is no reading of a panel instance left in this file for it to fall '
+        + 'back on.',
+    missingWhy: 'Every field is REQUIRED and `null` is how "I have no such thing" is spelled '
+        + '— a default would be a PICTURE chosen by this file (an absent fog reads as "no fog", '
+        + 'an absent visibility predicate as "everything is visible"), drawn under a caller\'s '
+        + 'name.',
+});
+
 /** ⛔ Refuses a MISSING field by name; `null` is the way to say "none". */
 export function assertView(view) {
-    if (!view || typeof view !== 'object') {
-        fail(`mazeRoomRender: drawWorld needs a view object — got ${JSON.stringify(view)}. `
-            + `The view is the WHOLE input (fields: ${VIEW_FIELDS.join(', ')}); there is no `
-            + 'reading of a panel instance left in this file for it to fall back on.');
-    }
-    for (const key of VIEW_FIELDS) {
-        if (!Object.prototype.hasOwnProperty.call(view, key)) {
-            fail(`mazeRoomRender: the view is missing "${key}". Every field is REQUIRED and `
-                + '`null` is how "I have no such thing" is spelled — a default would be a '
-                + 'PICTURE chosen by this file (an absent fog reads as "no fog", an absent '
-                + 'visibility predicate as "everything is visible"), drawn under a caller\'s '
-                + 'name.');
-        }
-    }
+    const why = viewFieldsRefusal(view, VIEW_SPEC);
+    if (why) fail(why);
     if (!Number.isFinite(view.tilePx) || view.tilePx <= 0) {
         fail(`mazeRoomRender: view.tilePx must be a positive number, got `
             + `${JSON.stringify(view.tilePx)} — the canvas is sized from it by the caller, so `

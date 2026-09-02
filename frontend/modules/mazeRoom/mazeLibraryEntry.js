@@ -26,6 +26,16 @@ function sideOf(exit) {
 }
 
 /**
+ * ⛓ DEDUP M13 — **THE SLOT NAME IS MINTED IN ONE PLACE.** `mazeSetLab`'s
+ * location `<select>` re-spelled `slot_${i}` as the label for an entry whose
+ * `items[]` carries no `id`, which is a second author of the same name: a
+ * rename here would leave that list labelling the slots by a name nothing else
+ * uses. ⛔ The ORDINAL is the caller's (it is the `items[]` index both sides
+ * address a `mark-location` by); only the spelling lives here.
+ */
+export const slotName = (i) => `slot_${i}`;
+
+/**
  * Capture a live tile-grid region descriptor into a library entry.
  * @param region  the region object (playable_payload is the tile world)
  * @param meta    { entry_id?, name? } author-facing identity
@@ -56,7 +66,7 @@ export function captureTileGridLibraryEntry(region, meta = {}, deps) {
         .map((it) => ({ x: it.x, y: it.y }))
         .sort((a, b) => (a.y - b.y) || (a.x - b.x));
     sidecar.items = slots.map((s, i) => ({
-        x: s.x, y: s.y, id: `slot_${i}`, locationName: null,
+        x: s.x, y: s.y, id: slotName(i), locationName: null,
     }));
 
     const exit_sides = [...new Set((sidecar.exits ?? []).map(sideOf))];

@@ -259,6 +259,23 @@ describe('mazeRoomRender — the extraction is behaviour-preserving', () => {
 });
 
 describe('mazeRoomRender — the view is the WHOLE input', () => {
+    /**
+     * ⛔⛔ **THE FIELD LIST IS NAMED HERE, AND D3'S OWN MUTANT IS WHY.** The row
+     * below walks `VIEW_FIELDS` — so it walks whatever the module declares, and
+     * a build that DROPS a field simply has one fewer case to check and stays
+     * GREEN (measured: dropping `seenTiles` left all 22 rows passing). A
+     * population read off the thing under test cannot discriminate; this row is
+     * the second, independent statement of the same list, and the two overlays
+     * already have theirs in their hard-coded `missing "layer"` rows.
+     */
+    it('the declared field list is stated INDEPENDENTLY, so a dropped field reds', () => {
+        expect([...VIEW_FIELDS]).toEqual([
+            'tilePx', 'playerPos', 'inventory', 'isPlayback', 'checkedLocations',
+            'ruleEvaluator', 'fogEnabled', 'isTileVisible', 'seenTiles', 'isExitVisible',
+            'isLocationVisible', 'isConsumableCollected',
+        ]);
+    });
+
     it('refuses a MISSING field by name rather than defaulting it', () => {
         const world = CASES.plain().world;
         for (const key of VIEW_FIELDS) {

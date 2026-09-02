@@ -59,6 +59,13 @@
  * unit runner.
  */
 
+/** ⛓ DEDUP M8 — the SHARED object-and-field-list check. ⛔ The only import this
+ *  file has: the sentence comes back as a STRING and `fail` below throws THIS
+ *  module's own error with it, so nothing about the refusal moved. */
+import { viewFieldsRefusal } from './mazeRoomRender.js';
+/** ⛓ DEDUP M13 — the engine's own `posKey` inverse (`blocks` are posKeys). */
+import { unposKey } from './mazeRoomEngine.js';
+
 export class ElementOverlayError extends Error {
     constructor(message) {
         super(message);
@@ -86,20 +93,22 @@ export const ELEMENT_COLORS = Object.freeze({
 /** The fields this draw reads. Named, so a caller cannot forget one silently. */
 export const ELEMENT_VIEW_FIELDS = Object.freeze(['tilePx', 'layer', 'blocks']);
 
+/** ⛓ THIS MODULE'S OWN DECLARATION — DEDUP M8's shared check reads it, and the
+ *  sentences below are this file's, unchanged (`own` left at its default `in`,
+ *  which is what this copy tested presence with). */
+const ELEMENT_VIEW_SPEC = Object.freeze({
+    module: 'mazeElementOverlay',
+    draw: 'drawElementOverlay',
+    fields: ELEMENT_VIEW_FIELDS,
+    missingWhy: '⛔ A default here would be a picture this file chose under the caller\'s name '
+        + '— the same law `mazeRoomRender.assertView` and `mazeAreaOverlay.assertOverlayView` '
+        + 'state. ⚠ `blocks: null` is how "draw the level\'s own layout" is spelled, and it is '
+        + 'a DIFFERENT statement from "the replay is at frame 0".',
+});
+
 export function assertElementView(view) {
-    if (!view || typeof view !== 'object') {
-        fail('mazeElementOverlay: drawElementOverlay needs a view object '
-            + `(fields: ${ELEMENT_VIEW_FIELDS.join(', ')}).`);
-    }
-    for (const key of ELEMENT_VIEW_FIELDS) {
-        if (!(key in view)) {
-            fail(`mazeElementOverlay: the view is missing "${key}". ⛔ A default here would be `
-                + 'a picture this file chose under the caller\'s name — the same law '
-                + '`mazeRoomRender.assertView` and `mazeAreaOverlay.assertOverlayView` state. '
-                + '⚠ `blocks: null` is how "draw the level\'s own layout" is spelled, and it '
-                + 'is a DIFFERENT statement from "the replay is at frame 0".');
-        }
-    }
+    const why = viewFieldsRefusal(view, ELEMENT_VIEW_SPEC);
+    if (why) fail(why);
     if (!(typeof view.tilePx === 'number' && view.tilePx > 0)) {
         fail('mazeElementOverlay: view.tilePx must be a positive number of canvas pixels.');
     }
@@ -112,11 +121,9 @@ export function assertElementView(view) {
     return view;
 }
 
-/** `"3,4"` → `{x:3, y:4}`. The engine's posKey, read back. */
-const cellOf = (key) => {
-    const [x, y] = String(key).split(',').map(Number);
-    return { x, y };
-};
+/** ⛓ DEDUP M13 — `"3,4"` → `{x:3, y:4}`, the engine's OWN `posKey` read back.
+ *  ⛔ Imported and not re-spelled: the encoding has one author. */
+const cellOf = unposKey;
 
 /**
  * ⛓⛓⛓ THE DRAW. ⛔ **ZERO OPS** when there is nothing to draw — `layer: 'off'`,
