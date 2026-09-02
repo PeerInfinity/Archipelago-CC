@@ -9496,6 +9496,114 @@ unmoved through six slices. **⚖ FOR THE USER, nothing launched:** F-c (F10 —
 (`hasOwnProperty` vs `in`), F7b (the hosted lab honouring `map_document` — zero instances, no channel), optional
 S4/S5/S6; the cross-substrate queue VIEWER is its own planning arc (§23/§26/§28).
 
+**⇒ F-d AS BUILT — the lab's build literal is a GATED fixed point; row (h) in `check-seedling-wasm-pins.mjs`
+(2026-09-02, `maze-lab-arms-sliceFd`, main `3770314bf` + `b8ef249b2`).**
+W0 `086391b53`, tree clean; the gate `ALL PASS — 3 pinned builds, four views in agreement` before and after.
+Census, derived not typed: `git grep -l seedling_bot_ap_p4d -- ':!frontend/modules/flashPanel/wasm' | wc -l`
+= **63** tracked files name the lab's build outside the submodule (the plan's 56 was an older head), and they
+agree only because EDITOR INTEGRATION P2 hand-edited them in one pass.
+
+**(h1) the literal names a manifest build.** Parsed off the tracked file with the gate's OWN `SPELLINGS[0]`
+(reused, not restated — `scannable()`'s lesson), so the row also asserts the literal is still written in the
+one spelling the REFERENCED view can SEE, which is the entire reason it is a literal (trap 411). Then MANIFEST
+membership and the JOIN to `<name>/game.html` on disk. ⛔ Not the bytes — views (b)/(c) own those.
+
+**(h2) the lab's build is the build its certifiers drive — subject set DERIVED, with one named addition.**
+Derived: every gate (`isGateFile`, IMPORTED from `gateRoster.js`, never a second copy of `check-*.mjs`) whose
+CODE spells a MANIFEST build name, bounded to the manifest's own names so the sweep cannot invent a build the
+way a general `'seedling_*'` would. Named: `verify-seedling-bot-differential.mjs` — a `verify-`, invisible to
+the membership rule, and the one instrument that drives the lab's build tick-for-tick against the JS model.
+**Result at this head: FIVE certifiers**, not the two the kickoff named —
+`check-seedling-wasm-pages.mjs` (its `BUILD` literal) plus the three `windows` gates that spell their own
+`SEEDLING_PAGE` default (`check-seedling-{generated-set,save-stamp,vanilla-manifest}.mjs`), plus the named
+differential. The commands: `node scripts/procgen/gates.mjs --list` = **33 gates**; over those, comments
+stripped and bounded to the manifest, **4 of 33** spell a build (the pins gate is excluded from its own sweep
+for the reason the REFERENCED view excludes it).
+⛔ **Excluded, and why**: `git grep -ln 'watch\.html' -- scripts/` = **40 files at W0** boot or name the lab
+page; exactly **3** of them spell a build name at all, and `check-seedling-wasm-ship.mjs`'s single occurrence
+(`:1573`) is a sentence in a docblock — the kickoff's measurement REPRODUCED. Ship, `check-seedling-wasm-element.mjs`
+and the seventeen `check-seedling-editor-*.mjs` go THROUGH `WASM_PAGE` and therefore cannot disagree with it;
+asserting that they agree would be the fixed point the row exists to avoid. The panel's preset default
+(`regionAtlasCompiler.js:169`) is excluded from the other side: the panel is DATA-driven and capability-gated
+at run time by `seedlingRandomizerEligibility.js`, so its wiring default is a preset's datum, not a claim
+about the lab. ⛔ `SEEDLING_PAGE=` at run time is an override; the DEFAULT is the pin (row (f)'s rule).
+⛓ **`codeOnly` is LOAD-BEARING, measured**: the mutant that stops stripping comments turns THREE files'
+historical prose into false subjects (`check-seedling-generated-set.mjs`, `check-seedling-wasm-ship.mjs`,
+`verify-seedling-bot-differential.mjs` all "drive" p4c in a docblock).
+
+**(h3) the capabilities the lab's build must declare — MEASURED, and the answer is NONE.** `WASM_PAGE` pointed
+at the manifest build declaring `[]` (p4b) and `check-seedling-wasm-pages.mjs --root=http://localhost:8000/frontend`
+run once, against a control run of the same gate on the current build (box lock announced; ~3.5 min each):
+**control 20 PASS / 0 FAIL · arm 19 PASS / 1 FAIL**, row labels otherwise identical. The ONE row that moved is
+`watch.html pointed its iframe at the game page` — the pages gate comparing the iframe src against its own
+`BUILD` literal, i.e. (h2)'s disagreement seen through a browser and phrased as *the page pointed somewhere
+else*. Every capability-bearing row — the three ▶ ship arms (SOLVE/GENERATE/MANUAL), the drain, the per-tick
+wasm verdict — stayed GREEN on a build declaring nothing. ⇒ **(h3) asserts nothing and prints what it
+measured.** ⚠ Also seen: the arm's row 2 (`seedling_bot_ap_p4d.wasm is served`) stayed green while the page
+loaded p4b — the gate HEAD-probes its own build, so only one of its twenty rows can see the split at all. The
+literal was restored immediately and `git status --porcelain` was empty before anything else ran.
+
+**Mutants — run, not reasoned (trap 1072), copy/restore, all six reds verified from the gate's output:**
+(i) `WASM_PAGE` → a non-manifest build ⇒ **4 problems**: view (a) three ways (absent from WHITELIST/TRACKED/MANIFEST)
+AND (h1) — (h1) is the one that names the LAB; (ii) `check-seedling-wasm-pages.mjs`'s `BUILD` → another manifest
+build ⇒ (h2) reds naming BOTH files; (iii) the named certifier's `SEEDLING_PAGE` default → another build ⇒ (h2)
+reds; (iv) that default made non-literal ⇒ (h2) reds as *a pin that stopped existing rather than a subject that
+agrees*; (v) `WASM_PAGE` composed from a variable ⇒ **(h1) reds while view (a) stays GREEN** (62 other files
+still name the build) — the hole this row fills, shown rather than argued; (vi) `codeOnly` removed from (h2)
+⇒ 3 false subjects. ⚠ **A fixture defect, recorded**: (iii)'s first form was a `sed` whose `|` delimiter
+collided with `||` in the pattern; it never applied and the gate printed ALL PASS. A green mutant is a fixture
+question first — rebuilt in python, it reds. ⛔ (h3) has no mutant BY CONSTRUCTION: it asserts nothing.
+
+**The standing row.** `--check --only='seedling-wasm-pins'` before = `PASS 0/0` (cheap rows re-run regardless,
+so `--check` does not report a key move). MEASURED with `rowInputKey.inputPopulations` instead: at W0
+`inputKey c6522201…`, populations code 7 / data 2 / spawn 0 / build 1 — and **neither `check-seedling-wasm-pages.mjs`
+nor `verify-seedling-bot-differential.mjs` was in ANY population**, so the exact edit (h2) exists to catch
+would not have re-run the row. Cause: a `.mjs` named by a literal is population 1's business and arrives only
+by being IMPORTED, and (h2) READS those sources. ⇒ the gate now DECLARES them, `@key-inputs data:` (the
+mechanism `rowInputKey.js` names for exactly this), `data` not `code` because the BYTES are the input and
+their closures are not. After: `inputKey 07f1e348…`, code 165 / data 231 / spawn 234 / build 3 — the +34 in
+`data` is the 33 gates plus the differential; the rest is `gateRoster.js`'s closure and its `'scripts/procgen'`
+directory literal. `standing-values.json` stays OUT of the key (`DERIVED_DATA_EXCLUDED`) — the bank does not
+cover itself. ⛔ Banked in its OWN commit rather than folded into the gate edit: `measuredAt`/`keyAt` name the
+head the row was measured at, and an amend would leave both pointing at a SHA that never lands (the previous
+value, `95603e266`, is a real main commit — the convention).
+
+**Gates, derived.** `reach-seedling-change.mjs --files=scripts/procgen/check-seedling-wasm-pins.mjs` names
+**1 node gate — this one — and 0 tests, 0 pages, 0 producers, 0 identity rows**; the kickoff expected
+`slice-records` too and the reach does not name it. Run anyway: `check-slice-records.mjs` **73 VERIFIED / 0 /
+37 UNVERIFIABLE — UNMOVED**. `check-maze-lab.mjs` is NOT reached (nothing under `mazeRoom/` or the lab page
+moves) — said rather than run. `--self-test` **9 seen / 4 not seen, ALL PASS**. `watchWasm.js` was NOT edited
+(the (h3) flip was reverted), so `check-procgen-reference` is not owed. ⛔ `gates.mjs reach <range> local
+--list` prints the WHOLE roster — the range is ignored in `--list` mode; the reach selector itself is
+`reach-seedling-change.mjs`.
+
+**⚠ MAIN IS RED AT W0, AND IT IS NOT F-d's.** Bounded vitest (`scripts/procgen/` +
+`seedlingRandomizerEligibility.test.js`) = **31 files, 608 passed / 1 FAILED**. The failure is
+`lintGateLabels.test.js` → *"a NEW label or test name carries a count its own check computes"* on
+`frontend/modules/flashPanel/seedlingAtlasAnalysis.test.js:40` (`MAP_DOC → toHaveLength(116)`). Reproduced with
+F-d's change STASHED: identical at `086391b53`. And `ci-vitest-summary.mjs 086391b53` reads **run 33689965891
+FAILURE — 12,996 passed | 8 skipped | 1 failed**, i.e. F-b's arc left main red and its as-built says green.
+⛔ NOT fixed here: the two remedies the lint itself offers (interpolate the derived value, or `--write-allow`
+saying the number is an input the row chose) are a claim about a row this slice does not own, and memory's
+`feedback_count_in_a_test_name_is_an_allowlist_key` says moving a count reds CI twice. It goes back to the
+planner named. ⚠ `standing-values --write` also printed that the last CI shard partition did not hold (run
+33662632579 @`8a1eb6b1a`, 605.9 s > 600 s budget, trap 1068) — pre-existing, not this slice's.
+
+**What F-d overturned in its brief:** the (h2) subject set is **five**, not the two the kickoff named — three
+`windows` gates spell their own `SEEDLING_PAGE` default too, and a derived sweep finds them where a typed pair
+would not · the kickoff said to read the tracked BLOB with `git show HEAD:<path>`; rows (f) and (g) do NOT —
+they take tracked MEMBERSHIP from git and the CONTENT from the working tree, so the gate answers about the tree
+you are about to commit, and (h) copies its siblings · the reach names `wasm-pins` only, not `slice-records` ·
+`check-seedling-wasm-ship.mjs`'s "no build of its own" was reproduced, and `codeOnly` is what makes it true ·
+the kickoff's key advice ("its `inputKey` almost certainly covers the gate's own source, so your edit MOVES the
+key") was right about the move and wrong about the coverage that matters: the key did NOT cover the row's
+subjects and had to be declared.
+
+**Still ⚖ for the user after F-d:** **F-c** (F10, the host transport handshake — and §39 already measured that
+its premise is false: `iframeAdapterCore.js` and `labRoomEditor.js` are both OUTER-repo files, so there is NO
+gitlink bump), residues **D6**/**D7** (maze-side), **F7b**, optional **S4/S5/S6**, and now the
+`lintGateLabels` red above.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
