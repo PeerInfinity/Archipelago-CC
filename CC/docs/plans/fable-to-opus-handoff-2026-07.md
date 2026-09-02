@@ -8293,6 +8293,162 @@ refusing by name at the first illegal index; SOLVE's *Download the plan as a wal
 witness line, `certified` untouched, the SEAM line unit-driven; demo `maze-manual-arm` + glossary
 `walk`/`witness`; CLAIM 22 by real key presses; three mutants named; re-banks after the CI run concludes.
 
+**⇒ S2b AS BUILT (2026-09-02, `maze-lab-arms-sliceS2b`; `826ecd8d4` the engine, `cb8da2757` the
+arm, `60eb59815` the docs, `6d0cd0256` a fixture the mutants found — pushed).** The maze lab has
+FIVE arms; the fifth is a keyboard that authors a recording.
+
+**The arm.** `SOURCES.MANUAL = 'manual'`; `<select id="source">` gains *MANUAL — drive the player
+yourself, one tile per key*; `readLabParams`' refusal names five off `Object.values(SOURCES)`
+unchanged. `#manualPanel` holds START · STOP & fold · RESTART · `#manualNote` (the walk HUD) · the
+walk box (`#labWalkText` / Download / Load from box / Upload). ⚠ **A THING THE BRIEF DID NOT
+FORESEE: the replay controls had to MOVE.** The scrub, the frame HUD and the input strip lived
+inside `#solvePanel`, and §2.5 asks the MANUAL arm to use them — so they are now `#replayPanel`,
+`hidden` unless the arm is SOLVE or MANUAL, and `renderSolvePanel` split into `renderReplayPanel()`
+(shared) + the solve note. ⛔ Not copied into the manual panel: two scrubs over one `play.index`
+would be a second answer to *"which frame is on screen"*, the one law this page keeps hardest. Every
+id is unchanged, so CLAIM 15b never noticed.
+
+**The session — `mazeRoom/mazeLabWalk.js`, 372 lines, headless, 32 unit rows.**
+
+```js
+createWalkSession(state)          // .queue (a shared ActionQueue) · .frames · .press(spec)
+                                  // .moves .refused .waits .reachedGoal .last .turns .engineState
+  .press(spec) → {entry, state, reason}      // validateEntry → queue.add → queue.stepOne(exec)
+  .fold(author = 'hand') → the recording     // projectActions over queue.snapshot().entries
+  .roundTrip() → {faithful, mismatches:[{at, drove, replayed}]}
+witnessOf(state, walk) → {clause, seam}      // the identity line's clause, and the SEAM
+refuseWalkDocument(doc) → string|null        // every action past the shared validateEntry
+describeReplayRefusal(state, actions) → string   // the TURN index framesForActions will not name
+LAB_ARRIVAL_EXIT_ID = 'entrance'
+```
+
+⛔ ONE boot (`startStateFor(world, state.palette?.items ?? null)`), one executor
+(`executeMazeEntry`), one frame shape (`frameOf`), one goal predicate
+(`oracleFor(state).goalPred`). The executor THROWS on a refusal, which is what makes `stepOne` mark
+the entry `FAILED`, which is what makes `projectActions` stamp `params.refused` — one mechanism,
+three readers. No undo (`ActionQueue.removeAt` refuses the done region and every entry of an
+append-and-execute session is done); RESTART re-opens.
+
+**`whyBlocked` — and the FIRST thing it found.** `mazeRoomEngine.whyBlocked(world, state, input,
+inventoryOverride, clearanceOpts)`, beside `step` and in `step`'s own guard order. Sentences, all
+pinned: `off the grid` · `wall at (1,0)` · `'NE' is not an input` · `door_red is shut — needs
+key_red` · `door_A is shut — nothing on button_A` (the missing token resolved back through
+`buttonLib[*].holds`) · `door_A is shut — needs sw_A` when NO button holds it · `block at (3,1)
+cannot move: beyond is a wall | beyond is a block | beyond is off the grid | door_red is shut —
+needs key_red` · `null` for a legal move and for WAIT. `mazeQueueExecutor.refusalReason` is now four
+lines that delegate.
+
+⚠ **THE DELEGATION SURFACED A LIVE DEFECT IN ITS FIRST RUN**: `refusalReason` was asked WITHOUT the
+`inventoryOverride` `step` was asked WITH, so a door a playback inventory does not open reported
+nothing at all. Caught by an existing row (`inventoryOverride is the playback-mode truth`) the
+moment the body changed — the old body never read an inventory, so the argument had never been
+passed. Both now take one argument list. A `null` from `whyBlocked` on a refused move prints
+`⛔ SEAM — step refused it and whyBlocked says it is legal` rather than an empty reason.
+
+**Three executor/panel rows moved with the wording** (`wall or off-grid` was ONE string for two
+facts and is now two): `mazeQueueExecutor.test.js` ×3, `mazeRoomUI.test.js` ×2.
+
+**The recording, as built** — the loops `SavedQueue` envelope, `format: 'actionQueue/1'` included
+(the panel stamps it too, and R5's own comment named the lab's box as the reader that would refuse
+an unknown one by name), plus `lab: {generator, payload, author, reachedGoal, refused}`.
+`itemsPickedUp` is the FRAMES' inventory delta; `departureExitId` is `getExitAt(world, …)?.exit_id`
+at the final cell, `null` otherwise; `name` is `lab: entrance→goal` or `…→stopped`. A refused press
+is KEPT and marked (plan §28) and pushes a frame equal to the previous engine state — **`turn`
+included**, because `step` never returned a new state.
+
+**LOAD** = `refuseWalkDocument` → `loadPayload` → `framesForActions`; on `null` the level is
+DISCARDED unadopted (nothing partial drawn) and `describeReplayRefusal` names the TURN index:
+*"input 1 (move (S)) is illegal on this level — move S blocked: wall at (1,1). The walk was driven
+on a different level, or the level moved."* The SOLVE arm gained **Download the plan as a walk**,
+built by driving a `createWalkSession` over `lastSolve.plan` (⛔ not a second folder).
+
+**The picture and the readout.** While driving, `play = {frames: session.frames, index, playing:
+false, author: 'hand'}` — the session's array IS `play.frames`, and the index moves through S1's
+`seekFrame()`, the one writer. `__mazeLab.walk` = `null` until a session opens, then
+`{moves, refused, waits, reachedGoal, roundTrip}` — ⚠ **and it OUTLIVES the session**, because the
+brief's own CLAIM 22 asks for `walk.roundTrip.faithful` AFTER STOP. `roundTrip` is `null` until STOP
+has actually measured one. The identity line gains the witness clause through a THIRD argument to
+`describeState(state, solved, walk)`; `certified` is untouched, and the SEAM goes to the status line
+in red (`say(..., true)`), unit-driven with `certified: false`.
+
+**CLAIM 22, by REAL `page.keyboard.press`.** Subject `?seed=1&width=5&height=5&skeleton=winding` —
+the room is `..###` over `#.###`×3, entrance (0,0), goal (1,3), oracle plan `E S S S`, and **(2,1)
+is a WALL**. ⚠ The brief's sketch said *ArrowRight ×2* for the two accepted moves; on this room the
+second E IS the wall, so the two accepted presses are **E then S** and the wall press is the E that
+follows — the same three rows in the order the room admits. The rows: `walk === null` and `play ===
+null` before START; the fifth panel and the shared replay panel showing and the other four hidden;
+two presses ⇒ `moves === 2`, `play.author === 'hand'`, the HUD names the cell; `play.frames ===
+moves + 1` and `turn === 2`; the wall press ⇒ `refused === 1`, `moves` UNMOVED, the HUD prints
+`wall at (2,1)`; the strip has one cell per turn INCLUDING the refused one, exactly one marked;
+`Space` ⇒ `waits === 1`, `turn + 1`, player unmoved; the goal ⇒ the witness clause naming the walk's
+own move count; STOP ⇒ `roundTrip.faithful === true`, and the box's folded turns EQUAL
+`play.frames − 1`; Load ⇒ same frame count, index 0, `author 'hand'`, `walk === null`; the WALLED
+level (built node-side by `applyEdit` over the same URL parameters and spliced into the document's
+`lab.payload`) ⇒ REFUSED by name at index 1 with `play` and `level` BYTE-IDENTICAL to before; then
+SOLVE → certified → switch to MANUAL → walk the goal ⇒ the clause stands BESIDE `CERTIFIED` and
+`certified` is still `true`; and node's own session over the same four moves agrees with the
+browser's about moves, frames and the goal. **CLAIM 17b re-derived** from `Object.values(SOURCES)` —
+it red on the fifth arm, which is the gate working.
+
+**Gate totals, with the commands.**
+
+| gate | before | after | command |
+|---|---|---|---|
+| `check-maze-lab.mjs` | 238/0 | **255/0** | `node scripts/procgen/check-maze-lab.mjs` |
+| `procgen-demos` | 252/0 | **261/0** | `node scripts/procgen/check-procgen-demos.mjs` |
+| `procgen-lab-hosting` | 66/0 | 66/0 | `node scripts/procgen/check-procgen-lab-hosting.mjs` |
+| `procgen-docs` | 128/0 | 128/0 | `node scripts/procgen/check-procgen-docs.mjs` |
+| maze byte identity | `677b7d9c…` | **`677b7d9cae51023e82fa2e365a8095dc`** (unmoved) | `dump-maze-byteidentity.mjs \| md5sum` |
+| `procgen-reference` | — | `--check` clean (regenerated: `docsIndex`, `urlGrammar`, README's index) | `generate-procgen-reference.mjs --check` |
+| ⚖ 52 bounded vitest | 34 files/1617 | **38 files/1750** | `npx vitest run frontend/modules/mazeRoom/ frontend/modules/procgenDocs/ frontend/modules/loops/savedQueueStore.test.js frontend/modules/shared/actionQueue/` |
+| in-app | — | **61/61, 3.5 min**, `compare-runs.js` *No differences in status, roster, or duration* | `npm test -- --mode=test-substrates --batch=fast` |
+| cold verify | — | fresh detached worktree at `6d0cd0256` (+ `submodule update --init frontend/modules/shared`): bounded vitest **38/1750**, `check-maze-lab` **255/0**, byte-identity md5 identical, generator `--check` PASS | |
+
+**Pins re-derived, never typed**: `mazeLab.test.js` 114 → **116**; `mazeLabWalk.test.js` **32** (new);
+`mazeRoomEngine.test.js` 163 → **176**; `mazeQueueExecutor.test.js` 38 (unmoved, 3 rewordings);
+`glossary.js` 164 → **166** (`walk`, `witness`); `demos.js` 29 → **30** ENTRIES / 28 → **29**
+non-prose (its 47 TESTS unmoved); the doc-link census 220 → **221** in BOTH `docLinks.test.js` and
+`docsRender.test.js` (one new sibling-doc link in `loop-recording.md`).
+
+**THREE MUTANTS, RUN NOT REASONED** (each applied to a COMMITTED tree and restored from a copy —
+trap 1072):
+
+| mutant | reds |
+|---|---|
+| (a) `framesForActions` boots the REPLAY without the palette items | **2** in `mazeLabWalk.test.js` — the door-key round trip and its own vacuity control |
+| (b) `framesForActions` returns the partial prefix instead of `null` | **3** unit rows AND the browser gate: `check-maze-lab` **210 PASS / 1 FAIL**, STUCK on *"the walk to be refused on a level it was not driven on"* |
+| (c) `whyBlocked` returns `null` for a shut door | **8** over two files, including the PROPERTY row on both door fixtures |
+
+⚠ **MUTANT (c) FOUND A VACUOUS FIXTURE, AND IT IS FIXED (`6d0cd0256`).** The door-key property
+fixture was `#PKR.#` — key BETWEEN player and door — so `step` picks the key up on the way past and
+**no reachable state ever meets a shut door**: the door branch of `whyBlocked === null ⇔ step !==
+null` was vacuous there, and mutant (c) left that fixture GREEN while only the guard gadget red. The
+key is now off the route (`#P.R.#` over `#.K..#`) and the mutant reds both. ⛓ A property test over
+"every REACHABLE state" is only as strong as what its fixture makes reachable — the same shape as
+[[feedback_fixture_must_discriminate_two_builds]], one level down.
+
+**What R-b (`requires` + `worldDigest`) reads off this slice's refusal path.** `describeReplayRefusal`
+is the one place a document's actions are walked against a level and the first illegal TURN index is
+named; it takes `(state, actions)` and answers a sentence, so a `requires` check that must refuse
+BEFORE the walk (an inventory the level's palette cannot supply) belongs BESIDE it in
+`refuseWalkDocument`, which already runs every action past `validateEntry` and already owns
+"nothing partial is drawn". `worldDigest` has a natural home too: the `lab` block is additive and
+loops ignores it, so a digest of `lab.payload.level` rides there and `refuseWalkDocument` gains one
+comparison — ⛔ NOT on the envelope, which is the store's shape and not the lab's to extend.
+
+**Notes for whoever is next.**
+- ⚠ The demo catalogue's runner gained a `keys` field (DOM key names pressed through
+  `page.keyboard.press` after `press`). No wait follows them, and that is DERIVED: the page's
+  `keydown` handler runs its executor and `render()` synchronously, so the readout is already
+  republished when the press resolves — a poll there would be a row waiting for its own assertion.
+- ⚠ The catalogue press is `body:has(#labWalkStop:disabled) #labWalkStart`, not `#labWalkStart`:
+  START is present and ENABLED in static HTML before `mazeLabView` has mounted, and `#labWalkStop`
+  is disabled by `renderManualPanel` and by nothing else. The §5i lesson, second substrate.
+- ⚠ `check-procgen-demos.mjs` now takes **~10 minutes** (it runs every entry's `cli`, and entry 30's
+  is `check-maze-lab.mjs` at 70 s). Run it with `setsid nohup` and a captured PID; `$!` after
+  `setsid` is the WRAPPER's pid, not node's — measured here, and a `kill -0` on it reported "done"
+  while the run was still going (and the re-launch then TRUNCATED the live log).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
