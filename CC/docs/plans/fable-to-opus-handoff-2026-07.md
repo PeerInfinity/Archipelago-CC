@@ -8198,6 +8198,77 @@ PLAY rate, `__mazeLab.play` +`turn`/`inventory`/`input`/`author`), `framesForAct
 `gate: maze-lab` re-banked `--write --key=` at the pushed head. The ladder had skipped S0/S1 when S2a
 was launched straight after Q-b; S2b consumes S1's `play` object (trap 1047), so S1 goes first.
 
+**⇒ S0+S1 AS BUILT (2026-09-02, `maze-lab-arms-sliceS1`; S0 `6ae598a9a`, S1 `f1a8ebef4`, pushed).**
+
+**S0 — the stale texts were FIVE, not three.** The brief named `lab.html:42-45`, `lab.html:505` and
+`maze.md` § *The three modes*. Two more said the same wrong thing and were fixed in the same commit:
+`maze.md:443` ("the three modes' logic") and `procgenDocs/glossary.js:2480` (the `maze-lab` entry:
+*"with three modes — GENERATE, EDIT, SOLVE"*), plus `mazeLab.js`'s own docblock header ("THREE MODES,
+ONE STATE"). `SOURCES` has had four values since the SET arm, so every one of those counts was wrong
+about the ARM COUNT as well as about the plan being drawn. The modes table is now four rows (`set`
+joined it, `solve` says STEPPED and points at § *On the lab page*). Owed and run: the generator
+(`docsIndex` + README's index region re-emitted) and `procgenDocs/` vitest — 7 files / 447 green.
+
+**S1 — the scrub, and ONE stepper.** Signatures S2b reads, as built:
+- `procgenMaze.startStateFor(world, items = null) → state` — ⚠ **not** the brief's `startStateFor(state)`:
+  `procgenMaze` is the substrate's file and may not know `mazeLab`'s state shape, so the lift is the
+  oracle's `makeStart` exactly (a WORLD + the starting item ids). The lab passes `state.record` and
+  `state.palette?.items`. `makeStart` is now `(world) => startStateFor(world, items)`.
+- `mazeLab.framesForActions(state, entries) → ReadonlyArray<frame>|null` — boots `startStateFor`,
+  expands `loops` (`expandEntries`), steps each entry through `mazeQueueExecutor.executeMazeEntry`.
+  `null` on a refusal **unless** the entry carries `params.refused`, in which case the refusal is a
+  COMPLETION and the frame repeats the previous engine state.
+- `mazeLab.frameOf(state, input = null) → frozen frame` — `{player, blocks, inventory, turn, input}`.
+- `mazeLab.planFrames(state, solved)` = `framesForActions(state, solved.plan.map(moveEntry))`;
+  `planCells(state, solved)` = the frames' `player` projection (M2: it was a second full replay, and
+  it ran on every draw at `mazeLabView.js:693` — the view now maps `play.frames`).
+- readout `__mazeLab.play` = `{index, frames, playing, player, turn, inventory, input, author, blocks,
+  layouts}`. `input` is the HUD's own string (`describeMazeAction`, `'—'` on frame 0), `author` is
+  `'oracle'`. `shownFrame()` is the widened `overlayBlocks()` law: ONE function answers "which frame is
+  on screen" for the picture, the HUD and the readout.
+- page: `#labScrub` (bound to the hoisted `seekFrame()`, the one writer of `play.index`), `#playNote`
+  as the frame HUD, `#labInputStrip` (one `.in` per turn, one `.lit`, clickable), `#labPlayRate`.
+  ⛔ none in the URL (⚖ ruling 9). `startPlaying()` is the one arming site so a rate change restarts a
+  running interval.
+
+**Two things the brief asked for that could not both hold.** (a) *"`planFrames` unchanged output —
+byte-equal to before"* and (b) *"`__mazeLab.play` gains `turn`"*. `turn` has to come off the FRAME (it
+is not the index: a `locationCheck` costs a frame and no engine turn, and a refusal costs neither), so
+(a) is met on the three fields the frame always had and NOT on the object: the frames are byte-equal on
+`player`/`blocks`/`inventory` over three fixtures measured before and after, and gained `turn` and
+`input`. `mazeLab.test.js` pins that by spelling the OLD hand loop out and comparing to it.
+
+**Gate totals, with commands.**
+| gate | before | after | command |
+|---|---|---|---|
+| `check-maze-lab.mjs` | 231/0 | **238/0** | `node scripts/procgen/check-maze-lab.mjs` |
+| bounded vitest (⚖ 52) | 27 files/1156 | **34 files/1617** | `npx vitest run frontend/modules/mazeRoom/ frontend/modules/procgenDocs/ frontend/modules/procgenCore/labView.test.js` |
+| `mazeLab.test.js` | 100 | **114** | (in the above) |
+| `procgen-lab-hosting` | 66/0 | 66/0 | `node scripts/procgen/check-procgen-lab-hosting.mjs` |
+| maze byte identity | `677b7d9c…` | **`677b7d9cae51023e82fa2e365a8095dc`** (unmoved) | `node scripts/procgen/dump-maze-byteidentity.mjs \| md5sum` |
+| `procgen-reference` | — | `--check` clean | `node scripts/procgen/generate-procgen-reference.mjs --check` |
+
+⚠ **CLAIM 15b is SEVEN rows, not the brief's three** (231 → 238): the slider's `max`; setting it to k
+moves `play.index` AND the HUD names the index, the engine turn and the player cell; the HUD names the
+ENTRY and the readout publishes the same string; the strip has `frames − 1` cells; exactly one is lit
+and it is cell k−1; clicking the first letter seeks to frame 1; and **at frame 0 NO cell is lit** — the
+start is not an input, which the brief's "exactly one lit" would have made false at the one index the
+buttons already reach. Every number is derived from the readout or the DOM.
+
+**Mutant, run not reasoned** (restored from a COPY, trap 1072): the HUD reading `play.frames[0]` instead
+of `shownFrame()` → **exit 1, 236/2** — the two HUD rows red and nothing else, which is the discrimination
+the rows were written for.
+
+**RE-BANK.** `gate: maze-lab` is CI-sourced (`ci-summary.mjs --gate=… --json`), and the first
+`--write --key='gate: maze-lab'` at `f1a8ebef4` came back *"exited 3 — the run for this SHA has not
+concluded"* and **KEPT 231/0** (`feedback_suite_row_write_needs_a_ci_head`, live: a write on a head whose
+CI has not finished banks the stale number and reports it as a KEEP). That write was reverted, and re-run
+once `JavaScript Unit Tests` @`f1a8ebef4` concluded **success**: `ok gate: maze-lab 238/0 7.0s`, 66 rows
+written. ⚠ The write also printed the standing shard-partition warning — *"Browser gate shard: 9 arm(s),
+602.5s > the 600s budget, heaviest producer `plan-seedling-r7-ends-meet --check` 211.5s"* — which is
+**pre-existing and not this slice's**: the same warning names run `33597305784` @`aaddf5acf` in S2a's own
+write. It belongs to whoever next runs `ci-gates.mjs --write-costs`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:

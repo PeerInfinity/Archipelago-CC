@@ -1076,7 +1076,7 @@ export function main() {
          * ⛓⛓ THE SCRUB IS REWRITTEN FROM `play` ON EVERY RENDER — it is a VIEW
          * of the index, never a second copy of it. A press of ◀ / ▶ / ⏮, an
          * autoplay tick and a drag all land in `seekFrame()`, and this line is
-         * makes the knob agree with whatever moved it.
+         * what makes the knob agree with whatever moved it.
          */
         scrub.disabled = !play;
         scrub.max = String(play ? play.frames.length - 1 : 0);
