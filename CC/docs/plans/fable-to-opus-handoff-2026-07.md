@@ -7930,6 +7930,164 @@ owns the refusal now; (ii) `stepOne` advances even on FAILED, so R2's "stop the 
 `if (out.state === 'failed') stop()`; (iii) the maze's `describeAction` is owed by the same slice that
 switches the entry shape, because `blockAnnotations` and the panel now both ask for it.
 
+
+**⇒ Q-b AS BUILT (2026-09-02; outer `main` @`ede5285be`, submodule UNTOUCHED at
+`ef31e39` as the brief required).** `MazeRoomQueue` is DELETED; the maze panel holds a shared
+`ActionQueue` and its recordings are `actionQueue/1`. Three commits: `6f50a2608` (the migration),
+`6db444128` (the tests), `ede5285be` (the docs + the regenerated matrix).
+
+**Every file touched.**
+
+| file | what |
+|---|---|
+| `mazeRoom/mazeKeys.js` | NEW, 121 lines, DOM-free and ENGINE-free. `MAZE_SUBSTRATE`, `ACTION_MOVE/WAIT/LOCATION_CHECK` (same string values), `ACTION_TYPES`, `DIRECTIONS`, `mazeEntry`/`moveEntry`/`waitEntry`/`locationCheckEntry`, `KEY_MAP`, `describeMazeAction`. S2b imports this file whole. |
+| `mazeRoom/mazeQueueExecutor.js` | NEW, 235 lines, headless. `executeMazeEntry`, `MOVE_DIR_TO_INPUT`, `MOVE_DIR_TO_DELTA`, `intendedTileFor`, `isRefused`, `projectActions`, `expandEntries`, `expandedLength`. |
+| `mazeRoom/mazeRoomUI.js` | `_mazeQueue = new ActionQueue()`; `_editCursor` + `_queueRefusal` are new panel state; `_runEntry` (bound), `_clampedEditIndex`, `_setEditCursor`, `_appendEntries`, `_clearPendingEntries`, `_abortReplay`, `_notePickupForVisit` are new methods; `_executeQueueAction`/`_executeMoveAction` take an ENTRY and return a reason; `_handleKeydown`, `_replayBestPath`, `_replaySavedActions`, `_startReplayDriver`, `_renderActionQueue`, `_renderQueueIcon`, `_finalizeVisitOnExit`, `_startVisitRecording`, `_populateLoopsDrivenQueue`, `_getReplayableTargets` rewritten. Local `KEY_MAP`/`MOVE_DIR_TO_*` deleted; `INPUT_N/S/E/W`, `step` and `getObstacle` no longer imported here. |
+| `mazeRoom/mazeAutopather.js` | `stepsToActions` emits `moveEntry`/`waitEntry` — ONE entry per step; the fold is the recorder's. |
+| `mazeRoom/mazeRoomLibrary.js` | the registry entry gains `describeAction: (entry) => describeMazeAction(entry)`. |
+| `loops/loopState.js` | NEW exported `coarseOf(entry)`; `_applyCoarseReplacement` reads it. |
+| `loops/savedQueueStore.js` | `isLegacyMazeRecording` + the `loadCache` filter + `_testOnly_resetCache`. |
+| `mazeRoom/mazeRoomQueue.js`, `mazeRoomQueue.test.js` | **DELETED** (346 + 540 lines). |
+| tests | `mazeQueueExecutor.test.js` NEW (35 rows); rows added to `mazeRoomUI.test.js`, `mazeRoomLibrary.test.js`, `mazeAutopather.test.js`, `loops/loopState.test.js`, `loops/savedQueueStore.test.js`; fixtures rewritten in `mazeRoomUI.test.js`, `mazeAutopather.test.js`, `loops/manualMode.test.js`, `loops/savedQueueStore.test.js`. |
+| docs | `loop-recording.md` (the "grandfathered" paragraph replaced), `maze.md` § *The action queue* (retitled, three files named, the R2 rule), `substrate-registry.md` (`describeAction` prose + the GENERATED matrix row `— → fn` under `maze`), `README.md` word counts (generator). |
+
+**⚠ FOUR THINGS THIS SLICE OVERTURNED IN ITS OWN BRIEF — all found by building, not by reading.**
+
+1. **§3.4/§20's R2 and §15.4's "the panel keeps a refused press" CONTRADICT each other, and neither
+   half is safe alone.** The panel appends a bumped-wall press to the queue and the recorder slices
+   the queue, so a recording CAN contain a refusal; R2 replaying that recording would then refuse a
+   legal script. The obvious fix — drop refused entries from the recording ("a plan has no no-ops",
+   §15.4) — is WRONG here: `_executeMoveAction` ticks hazards whether the move ran or not, so a
+   dropped entry shifts every later hazard phase and manufactures the divergence R2 exists to catch.
+   **Shipped: keep it, mark it.** `projectActions` stamps a `FAILED` entry `params: {refused:true}`
+   (Q-a's rider bag, A2), and `_runEntry` throws only for a refusal the entry does NOT carry. So a
+   refusal reproduced is a COMPLETION and a refusal that is new is a FAILURE — which is what
+   "replayed on a level it was not made on" actually means. ⚠ The converse (an entry marked refused
+   that SUCCEEDS at replay) is also a divergence and is deliberately NOT checked: the side effects
+   have already landed by the time you know, and the cheap half buys the whole R2 mutant.
+2. **The replay-failure shape: PARKED, not a `loops:substrateActionCompleted` failure.** Derived,
+   not chosen — `_handlePlaybackReplayEntry` (`loopState.js:1812` after this slice's insert) and
+   `_handleCustomQueueEntry` (`:2637`) both park the block, publish `loopState:manualEntered`, and pass an `onComplete` that
+   is a literal no-op ("reserved for future UI"); the block advances on the departing `regionMove`
+   wake. There is no completion event on this path to fail into — `substrateActionCompleted` belongs
+   to the `substrateActionBegan` DELEGATION path, which is a different driver. So the refusal is
+   *withholding the completion*: `_abortReplay` stops the driver and never calls `onReplayComplete`,
+   so `_crossRecordedDeparture` never fires, no `regionMove` wakes the block, and it stays parked in
+   manual mode with the panel's message naming the index and the reason. That is the shape
+   `loopState` already handles.
+3. **§24.2's reader list was wrong in one place and short in another.** `mazeRoomVisualizer` does
+   NOT mirror queue actions — its `locationName` hits are event payloads and its `.dir` hits do not
+   exist; it needed no edit. And `mazeAutopather.stepsToActions` (which §24.2 did name) is the only
+   OTHER producer of maze entries, so `mazeKeys` had to be importable from the autopather — which is
+   why `mazeKeys.js` imports nothing at all, not even the engine (`MOVE_DIR_TO_INPUT` lives in
+   `mazeQueueExecutor.js` instead, where the engine is already imported).
+4. **`ActionQueue` has no `clearPending` and no `appendAll`.** `MazeRoomQueue` had both and the
+   panel used them at seven sites (3 `clearPending`, 4 `appendAll`, counted at `d557038b3`). `clear()` takes the DONE history with it, and the recorder slices
+   the done region on exit — so `_clearPendingEntries()` removes from the tail down to the cursor
+   (panel-side, 8 lines) and `_appendEntries()` is a loop of `add`. ⚠ Worth knowing for the viewer
+   arc: "drop the pending tail, keep the history" is a live-queue affordance the shared class lacks.
+
+**The counts, re-derived rather than reused.**
+
+- ⚠ The planner's grep of `actionQueue.test.js` (37) undercounted; **vitest says 47**, which is what
+  Q-a's as-built claimed. The gap is `it(` titles written as concatenated string literals across two
+  lines. `grep -c "^\s*it("` is not a test count in this repo.
+- The old-shape pin census, re-run at `d557038b3` with the brief's own grep over
+  `frontend/modules/mazeRoom frontend/modules/loops --include=*.test.js`: **113 grep-lines over 11
+  files**, not the brief's 72 over 7 — the brief's list omitted `loops/blockModes.test.js` (33),
+  `loops/actionQueueManager.test.js` (6), `loopEvents` (1) and `loopBlockBuilder` (1).
+- **65 of those 113 are gone**, all of them genuinely the retired maze vocabulary: 25 died with
+  `mazeRoomQueue.test.js`, 24 in `mazeRoomUI.test.js`, 6 in `mazeAutopather.test.js`, 6 in
+  `manualMode.test.js` (7 literals — one line held two) and 4 in `savedQueueStore.test.js` (5
+  literals).
+- The same grep now gives **54 lines over 9 files**, and every survivor was JUDGED rather than left:
+  `blockModes` 33 + `actionQueueManager` 6 + `loopEvents` 1 + `loopBlockBuilder` 1 + the 3 left in
+  `mazeRoomUI.test.js` are **loops' PATH vocabulary** (`observeParkedLiveAction` payloads,
+  `_liveCaptureBuffer`, gameState path entries, and the loops-action arguments to
+  `_populateLoopsDrivenQueue`) and stay by design; `mazeLab.test.js` 3 + `procgenMaze.test.js` 1 are
+  the **door-key gadget template's `dir` parameter**, never a queue verb at all (⚠ the brief warned
+  that `locationName` over-matches; `dir: '` over-matches too); `loopState.test.js` 4 are the NEW
+  `coarseOf` branch-(ii) rows and `savedQueueStore.test.js` 2 are the NEW legacy-filter fixtures —
+  both deliberately written in the shapes they exist to read.
+- **Legacy maze entries dropped: 0 observed, and ⚠ the measurement is narrower than the brief's
+  question.** The in-app `test-substrates` run drove the real app against the real store and the
+  filter's console line (`[savedQueueStore] dropped N maze recording(s)…`) fired **0** times
+  (`grep -c "savedQueueStore.*dropped"` over the run log). That is a CLEAN-PROFILE browser: this
+  session has no read access to the user's own long-lived Chrome profile, so "0" is what the harness
+  saw, not a claim about the user's disk. Consistent with the user's own ruling that there were no
+  saved maze queues worth keeping — and the filter is a no-op when there are none.
+
+**Decisions the brief asked for, answered.**
+
+- **Folded vs expanded count** (`_getReplayableTargets`): the button shows the **EXPANDED turn
+  count** (`expandedLength(q.actions)`). A folded recording's `actions.length` is now a storage
+  detail — a 40-step corridor is ONE row — and the button promises the player a walk length. Pinned
+  ("the replay button promises the EXPANDED turn count, not the stored row count", 7 for a
+  `loops: 7` entry).
+- **The edit cursor** is panel state (`_editCursor`), not a `MazeRoomQueue` field and not a new
+  `ActionQueue` field. `_clampedEditIndex()` clamps into `[queue.cursor, queue.length]` before any
+  index reaches `add`/`removeAt`. Its discriminator is a row of its own: *an unclamped done-region
+  index really does throw a `RangeError`* — so the clamp is load-bearing, not decorative.
+- **Wait** is unchanged behaviour (`next === state`, the panel keeps its hazard tick and mana around
+  it); `executeMazeEntry`'s `ACTION_WAIT` branch carries the one-line comment S2a edits.
+
+**Gates, each with the command that produced it.**
+
+| gate | command | result |
+|---|---|---|
+| ⚖ 52 bounded vitest | `npx vitest run frontend/modules/mazeRoom/ frontend/modules/loops/ frontend/modules/shared/actionQueue/ frontend/modules/playbackBot/ frontend/modules/procgenDocs/` | **61 files / 2377 tests, 0 failed** |
+| in-app | `npm test -- --mode=test-substrates --batch=fast` | **61/61 PASSED, 3.4 min** (the five maze rows and both seedling-atlas-maze rows among them) |
+| attribution | `node scripts/test/compare-runs.js` | `05-00-54` → `05-40-04`, both 61/61 — *No differences in status, roster, or duration* |
+| `gate: maze-lab` UNMOVED | `node scripts/procgen/check-maze-lab.mjs` | **231 rows, 0 FAIL** — the claim at `44e47f445`, unmoved |
+| maze byte-identity UNMOVED | `node scripts/procgen/dump-maze-byteidentity.mjs 2>/dev/null \| md5sum` | `677b7d9cae51023e82fa2e365a8095dc` — the standing value |
+| procgen reference | `node scripts/procgen/generate-procgen-reference.mjs --check` | ALL 6 GENERATED MODULES AND 4 MARKDOWN REGIONS MATCH (registry 62 fields / 11 groups unchanged; the maze's `describeAction` cell moved `—` → `fn`) |
+| cold verify | fresh detached worktree at `ede5285be`, submodule re-init to `ef31e39` | bounded vitest **61/2377**, generator `--check` PASS, byte-identity md5 identical |
+
+**FOUR MUTANTS, RUN NOT REASONED** (each applied to a copy and restored from the copy — trap 1072;
+every one was applied on a COMMITTED tree):
+
+| mutant | reds |
+|---|---|
+| A — remove the stop-on-`FAILED` from both replay drivers (the brief's own R2 mutant) | **2**: "the ticked driver stops at the first refused entry…" and "the INSTANT drain obeys the same rule". The driver walks on, exactly as before Q-b. |
+| B — `projectActions` never folds a run | **9** over two files, including the fold round trip, the byte-stability row and "the recording is FOLDED: a 4-step corridor is ONE entry" |
+| C — `projectActions` DROPS a refused entry instead of marking it | **4**, including "a REFUSED turn stays in the recording, marked, because it consumed a turn the hazard phase depends on" |
+| D — `isLegacyMazeRecording` returns false for everything | **2**: the discard row and the console-count row |
+
+**What S2b reads off this — the exact signatures.**
+
+```js
+// mazeRoom/mazeKeys.js  — DOM-free, engine-free; import the whole file
+MAZE_SUBSTRATE = 'maze'; ACTION_MOVE/ACTION_WAIT/ACTION_LOCATION_CHECK; ACTION_TYPES; DIRECTIONS
+mazeEntry(actionType, actionId = null, loops?) -> {actionType, actionId, substrate, loops?}
+moveEntry(dir, loops?) · waitEntry(loops?) · locationCheckEntry(name)
+KEY_MAP: {DOM key -> entry}          // arrows + WASD + ' '
+describeMazeAction(entry) -> string  // 'move E' | 'wait' | 'check <name>'; the ×n is the CALLER's
+
+// mazeRoom/mazeQueueExecutor.js — headless
+executeMazeEntry(world, state, entry, {inventoryOverride, clearanceOpts}) -> {next, reason}
+    // next === state  : the verb passes a turn with no engine transition (wait, locationCheck)
+    // next === null   : REFUSED, and `reason` is one sentence
+MOVE_DIR_TO_INPUT · MOVE_DIR_TO_DELTA · intendedTileFor(from, dir) · isRefused(entry)
+projectActions(entries, from = 0, to?) -> stored entries   // entries may carry snapshot `status`
+expandEntries(entries) -> one entry per turn, loops: 1
+expandedLength(entries) -> number
+```
+
+- ⚠ **`refusalReason` is where `whyBlocked` lands.** It is one private function in
+  `mazeQueueExecutor.js` and it deliberately does NOT re-derive `effectiveInventory`: it says
+  *wall or off-grid* / *obstacle '<id>'* / the bare *blocked at (x,y)* (which is what a refused BLOCK
+  PUSH falls through to, pinned as such). S2b replaces its body with
+  `mazeRoomEngine.whyBlocked(world, state, input)` and nothing else moves — every caller already
+  reads one string.
+- ⚠ **S2a's `_executeWaitAction` is still the panel's**, and `executeMazeEntry`'s `ACTION_WAIT`
+  branch is the second place to edit (three lines and a comment naming S2a).
+- ⚠ **The lab's manual arm gets the clamp for free only if it copies it.** The shared class throws;
+  `mazeRoomUI._clampedEditIndex`/`_setEditCursor` are ~15 lines of panel code that S2b will want in
+  the lab too. If a third caller appears, promote them — not into `ActionQueue` (the edit point is
+  UI state, per Q-a A7's own reasoning) but into a small `mazeQueueEditing.js`.
+- **R-b (`requires`, `worldDigest`) is unblocked**: the refusal path it sits under is
+  `_abortReplay` + `params.refused`, both in place.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
