@@ -7581,6 +7581,109 @@ recipe already reads CI by SHA"*). ⛓ **The partition audit printed GREEN in al
 before: the browser matrix gained a shard and the headless job is the fourth).
 
 
+## 5l. The MAZE LAB ARMS — steppable SOLVE completion + a MANUAL arm — PLANNED 2026-09-02 (Fable planning session at main `f86b7b99a`; plan file `NewDocs/plans/maze-lab-arms-plan.md`, gitignored; memory `project_maze_lab_arms`)
+
+**The ask (user, verbatim):** *"investigate if and how the lab page for the maze substrate should be
+connected with the other maze substrate components, and whether there are any more features from the
+Seedling substrate that would be worthwhile to add to the maze substrate. I specifically want the maze
+lab page to have a steppable solve mode and a manual mode, like the Seedling lab page. Code for that
+already exists elsewhere in the repository."*
+
+**⛔ THE BRIEF'S CRUX WAS A STALE DOCBLOCK.** The launching session read `lab.html:42-45` (*"the plan is
+drawn over the room"*, blame `8ee37b98` 2026-08-15) and concluded SOLVE is a one-shot verdict. **The
+step-through landed the next day** — PROCGEN ELEMENTS arc 2 slice 4, `4e0ac0690` 2026-08-16:
+`mazeLab.planFrames` replays the oracle's plan through the engine's own `step`, `lab.html:516-519` has
+⏮ / ◀ STEP / STEP ▶ / ▶ PLAY, `window.__mazeLab.play` is the readout, `check-maze-lab.mjs` CLAIM 15
+gates it (the block MOVES between frames; PLAY stops on the last frame), demo entry `maze-element`
+demonstrates it. `maze.md`'s *The three modes* table (`:472`) is stale the same way (and says THREE
+where the SET section below it makes four). ⇒ the tape-vs-plan question the brief led with DISSOLVES:
+**a maze plan IS a tape** (the engine's input letters; `procgenMaze.js:2337`), `planFrames` IS the
+stepper, and because the engine is turn-based the frames are precomputed rather than re-run.
+Seedling's `watchSolve` shape (staging block → solver → span-folded tape → `createTapeStepper`) does
+not apply and is not ported. What the maze lacks against Seedling is the SCRUB — a slider, a per-frame
+HUD, the input strip (half a session), not a port.
+
+**`manual` is a gap on the PAGE, not in the SUBSTRATE.** `mazeRoomUI._handleKeydown` (`:3330`) +
+`KEY_MAP` (`:125`, arrows/WASD/space=WAIT) already drive `step` through `MazeRoomQueue`, the visit
+recorder captures a `SavedQueue` of `{type:'move',dir}` actions (`:589-680`) and `_startReplayDriver`
+replays it — two SPELLINGS of one walk (`stepsToInputs`/`stepsToActions` convert). None of it is
+importable by the lab (the panel imports app core), so the design is: **a manual walk is a plan with a
+human author** — one key = one engine input = one turn; `step` decides; accepted inputs are the walk;
+`planFrames` replays it; the SOLVE arm's `play` object draws it. One stepper, one scrub, two authors.
+
+**Part (a) — the map (plan §2).** `mazeLabBridge.js` is NOT the connection to the substrate: it is the
+page→HOST bridge (`procgenLabPanel`, dynamic import under `?iframeId=` only). The lab's real connections
+are the engine, `drawWorld`, the editor ops and the library adapter (already shared), the registry's
+`roomEditor:{kind:'lab',page:'maze',arm:'set'}` → Edit ▸ (§5i W3), and the world bundle → ALL-MAZE
+`rules.json` route (§5i W4) as the document-level path to region play. Two connections worth MAKING,
+both cheap: a hoisted `mazeKeys.js` (one keyboard map, two importers) and `mazeRoomEngine.whyBlocked`
+(one blocked-move reason beside `step`, agreement with `step` asserted as a PROPERTY over fixture
+levels). NOT worth making: a live "play this level in the panel" hand-off. ⛔ `mazeGameDataPanel` is
+the A-Mazing-Idle iframe inspector, not the maze substrate — the brief listed it. **§5i's Q4 stands;
+nothing reopens it** — the manual arm drives the LADDER level; driving a library ROOM inside the SET
+arm is named as a later question.
+
+**Part (b) — the survey (plan §7).** ACCEPT: the scrub completion (S1), the MANUAL arm + walk I/O +
+round trip (S2). OPTIONAL: a REACH overlay for a REFUSED solve — the maze's counterpart of Seedling's
+decision trace — ⚠ needs `makeBfsSolver` to return its private `visited` (`shared/simulatorCore.js:151`)
+= a `shared` SUBMODULE change ⇒ gitlink bump ⇒ ⚖; the PNG view exporter with `--page=maze`. REJECT,
+with reasons: the REPLAY roster (pins nothing the identity rows do not), the GENERATE phase slider (the
+maze model records no phases; a binding change for a picture the element overlay already tells), the
+boot/staging panel (the `require` differential's `planWithoutKey` already answers it), `?level=` ◀ ▶,
+per-layer checkboxes, `?walk=`/`?tick=`/`?solve=1`/`?speed=` (each a new parameter in the ONE
+reader/writer with the generated reference and CLAIM 8 moving; none asked for).
+
+**Where things live (plan §6):** everything in `mazeRoom/` — the session is `createState`/`step`/
+`goalPred`; `whyBlocked` needs the engine-private `effectiveInventory`; the walk document is not
+Seedling's tape (held-key sets over a staging block). The scrub CONTROL is the one neutral piece and
+its second caller of the right shape does not exist at this head — lift `scrubView.js` to
+`procgenCore/` when the platformer's lab page lands, and leave Seedling's until someone is paid to move
+it. `editCore` was lifted at its second caller; this is why the answer is "not automatically the same".
+
+**Design pins (plan §4–§5):** `SOURCES` gains `MANUAL`; `startStateFor(state)` extracted so
+`planFrames`, `planCells` and the session boot from ONE construction (the round trip's whole
+guarantee); `frameOf` exported; the goal predicate is the ORACLE's (`goalPred`); keys on WINDOW on the
+ARM's lifetime; WAIT counted, not recorded (no hazards on a lab level; `step` has no WAIT); the walk
+document `{kind:'maze-walk', payload:<labPayload>, walk:{author:'hand'|'oracle', inputs, reachedGoal}}`
+in its OWN box (⛔ not a field on the level payload — `agreementWithPayload`'s blast radius); LOAD-walk
+= the existing `loadPayload` then `replayWalk`, refusing BY NAME at the first illegal index; a walk
+reaching the goal is a WITNESS line, `certified` untouched; a free SEAM line when the oracle REFUSED
+the record a hand walk then completes; round-trip mutant named (replay booted WITHOUT the palette
+items must red at the door). ⛔ CLAIM 17b (`check-maze-lab.mjs:2169`) regex-matches the literal
+`[generate, edit, solve, set]` — it WILL red at S2 and that is the gate working; S2 reads
+`Object.values(SOURCES)`.
+
+**⚖ FOR THE USER (plan §8):** (1) is the EXISTING step-through what "steppable solve" meant (try
+`lab.html?source=solve&seed=2&width=15&height=15&skeleton=rooms&areas=1&elements=guard;len=2;turns=1&count=2&run=1`
+→ SOLVE → STEP ▶) — S1 completes it; stepping the SEARCH instead is S4 and needs the submodule bump ·
+(2) `?source=manual` as the name · (3) witness-not-certification · (4) WAIT ignored vs recorded ·
+(5) walk document in its own box · (6) no live panel hand-off · (7) extend `check-maze-lab.mjs`
+(recommended: no new CI arm) vs a new gate file (a new arm is priced at the WHOLE 600 s budget until
+CI measures it — its own shard for one run, `ciGatePlan.js:41-46`).
+
+**LADDER (plan §9; trap 1047 checked — S2 CONSUMES S1's `play` object, and S1 is the cheaper, so the
+orders agree):** **S0** docs truth (`lab.html` header + `#solvePanel` note + `maze.md:472`; the doc
+edit owes the generator run + `procgenDocs/` vitest) → **S1** the scrub (`#labScrub`, HUD, input
+strip, PLAY rate as a view setting; `__mazeLab.play` +`turn`/`inventory`/`input`/`author`; CLAIM 15
++3) → **S2** the MANUAL arm (`mazeLabWalk.js` +test, `whyBlocked` +property test, `mazeKeys.js`,
+the arm, CLAIM 22 + 17b, demo `maze-manual-arm` as a `press` row gated in the page's own
+disabled-state vocabulary, glossary `walk`/`witness`) → S3 (opt) the plan as a walk document →
+S4 (opt, ⚖) REACH overlay → S5 (opt) the exporter. S0+S1 one Opus session, S2 its own.
+
+**Pins each rung moves — DERIVED, never typed (plan §10):** `grep -c '^    check(' check-maze-lab.mjs`
+(219 @f86b7b99a) · `demos.test.js` `toHaveLength(28)` → 29 · `glossary.test.js` 164 → 166 ·
+`generate-procgen-reference.mjs --check` (the `source` enum is in the refusal text it scans) ·
+`ci-gates.mjs --plan` (a new gate FILE is a new arm) · `standing-values.json` 66 rows; `gate: maze-lab`
+231/0 and `gate: procgen-demos` 252/0 are CI-SOURCED ⇒ `--write --key=` at a PUSHED head, never on a
+docs-only one. Runner cost of `maze-lab` 32.9 s (`ci-arm-costs.json`, max of 3 @`49b2461df`), box
+59–65 s (§5i catalogue slice).
+
+**Deltas against the brief, by §:** §"⛔ BUT `solve` ALREADY EXISTS" — wrong, it steps (above);
+§"the likely crux" — dissolved; §"`mazeLabBridge` … the connection" — host bridge, not substrate;
+§"WHAT TO SURVEY" — `mazeGameDataPanel` excluded; "≈20 modules" — 24 non-test + `mazeAlgorithms/` (4),
+27 tests, by `ls`. Nothing under `kittyengine*` exists on this tree at this head.
+
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
