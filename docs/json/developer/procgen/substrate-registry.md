@@ -49,7 +49,7 @@ The **PlaybackController** contract is substrate-neutral: `play(rateHz?)`, `stop
 
 | Field | Type | Meaning |
 |-------|------|---------|
-| `describeAction` | `(entry) → string` (optional) | How this substrate says **one shared `actionQueue` entry** out loud — `'move E'`, `'Chop Wood'`, `'check Chest'`. A recording stores no `label`: the name is DERIVED from `actionType`/`actionId` and only the substrate knows the derivation (actionQueue format slice Q-a, A8; plan §23.1 Q8), so every surface that renders an entry — the substrate's own panel, a tooltip, loops' item-annotation folder (`blockAnnotations.foldRecordedItemUses`), and the future cross-substrate queue viewer — calls this rather than carrying its own copy of the wording. Absent ⇒ callers fall back to the entry's own `label`, then to its raw `actionId`. Declared by **jta** (a name table fed by the performed-actions capture and by `noteCatalogNames`) and **omsi** (the action name IS the id, so it is exact). |
+| `describeAction` | `(entry) → string` (optional) | How this substrate says **one shared `actionQueue` entry** out loud — `'move E'`, `'Chop Wood'`, `'check Chest'`. A recording stores no `label`: the name is DERIVED from `actionType`/`actionId` and only the substrate knows the derivation (actionQueue format slice Q-a, A8; plan §23.1 Q8), so every surface that renders an entry — the substrate's own panel, a tooltip, loops' item-annotation folder (`blockAnnotations.foldRecordedItemUses`), and the future cross-substrate queue viewer — calls this rather than carrying its own copy of the wording. Absent ⇒ callers fall back to the entry's own `label`, then to its raw `actionId`. Declared by **jta** (a name table fed by the performed-actions capture and by `noteCatalogNames`), **omsi** (the action name IS the id, so it is exact) and **maze** (slice Q-b: `describeMazeAction` in `mazeRoom/mazeKeys.js` — `move E` / `wait` / `check <name>`, kept out of `mazeRoomLibrary.js` so that file stays DOM-free and headless-loadable). The `×n` suffix for a run-length folded entry is the CALLER's, so a `loops: 4` maze move still describes as `move E`. |
 
 ### Loop mode
 
@@ -198,7 +198,7 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
 |---|---|---|---|---|---|---|---|---|
-| `describeAction` | — | — | — | — | — | — | fn | fn |
+| `describeAction` | fn | — | — | — | — | — | fn | fn |
 
 **Loop mode**
 

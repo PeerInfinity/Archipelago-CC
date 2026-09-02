@@ -24,7 +24,7 @@ export const REGISTRY = frz({
     "columnOrder": "the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported",
     "columns": [
         {
-            "fields": 22,
+            "fields": 23,
             "id": "maze",
             "label": "Maze",
             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"
@@ -949,15 +949,16 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "maze",
                 "jta",
                 "omsi"
             ],
             "cells": [
                 {
                     "id": "maze",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
