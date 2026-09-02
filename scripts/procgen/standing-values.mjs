@@ -413,8 +413,37 @@ if (flag('write')) {
          *  what runs, what the KEEP reason names and what the bank publishes
          *  (⚖ 8 reads a published command as identity). */
         const ranCommand = fromCI ? ciGateCommand(row.key) : row.command;
+        /**
+         * ⛓⛓ S4c — **THE CI ROW IS BUILT FROM AN ALLOW-LIST, NOT SPREAD — AND
+         * IT IS INERT TODAY, WHICH IS SAID HERE RATHER THAN IMPLIED.**
+         *
+         * `{ ...row }` carried `shell: true`, and until S4c no CI-sourced row
+         * had it: the six S4 flipped were all GATE rows. An identity row IS a
+         * shell row, so the `ci-summary` network read was being run as
+         * `<identity-block.sh's helper definitions>\n<the command>\nexit
+         * "${PIPESTATUS[0]}"` — digest helpers wrapped around a read that is
+         * not a pipeline and has no digest.
+         *
+         * ⛔ AND IT CHANGES NOTHING, MEASURED, WHICH IS WHY THIS IS A TIDY-UP
+         * AND NOT A DEFECT REPAIR. The obvious mutant — a helper that PRINTS —
+         * was built and did not discriminate: `identityShellHelpers`' extractor
+         * matches only whole FUNCTION DEFINITIONS (`^name () { … }$`), so the
+         * prepended text can never emit a byte, and `PIPESTATUS[0]` of a simple
+         * command is that command's own exit. Both shapes returned the same
+         * value and the same exit. ⛓ Saying so is the point: an "obvious
+         * hardening" whose output is byte-identical is exactly the claim trap
+         * 1067 was about, and the honest version names what would have to
+         * change for it to matter (a helper that is not a function definition).
+         *
+         * ⛓ THE ALLOW-LIST IS STILL THE RIGHT SHAPE, for the reason that does
+         * not depend on today: `shell: false` would delete the one field that
+         * leaks and leave the next one to leak in its turn, while naming the
+         * three fields a CI read needs cannot regress that way. ⛔ `command` is
+         * `ranCommand` either way, so ⚖ 8's published string is unmoved: this
+         * changes what RUNS, and nothing that is written.
+         */
         const r = fromCI
-            ? await runRow({ ...row, kind: 'ci-gate', command: ranCommand })
+            ? await runRow({ key: row.key, kind: 'ci-gate', command: ranCommand })
             : await runRow(row);
         if (fromCI) ciRows.push(row.key);
         /**
