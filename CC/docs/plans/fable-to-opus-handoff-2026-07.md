@@ -8612,8 +8612,14 @@ launched by accident was still running the whole suite in three workers. Killed 
 solo, 61/61. `compare-runs.js`'s default baseline picked the STARVED run, so the comparison had to name
 the last good `fast` run explicitly — a starved run in the directory is a silent baseline.
 
-**Re-bank:** `gate: maze-lab` re-banked CI-sourced at `54877a7ac` (a head that touched
-`scripts/**` — S2b's finding applied), after that SHA's `JavaScript Unit Tests` concluded.
+**Re-bank:** `gate: maze-lab` **255/0 → 265/0**, CI-sourced, `measuredAt` `54877a7ac` — CI's own
+answer for that SHA is byte-equal to the local run (`ci-summary.mjs 54877a7ac --gate="gate: maze-lab"
+--json` → `265/0`, run `33651783736`). ⚠ **AND S2b's FINDING BIT AGAIN, ONE STEP FURTHER ON.** The
+row's recipe reads CI **at HEAD**, so running `--write --key=` after the as-built commit answered
+`KEEP … (helper exit 2) — no CI run for this SHA`: `CC/docs/**` triggers nothing, so the docs head has
+no run to read. Knowing the rule is not enough — the WRITE has to *happen* at a code head. Done from a
+throwaway `git worktree` detached at `54877a7ac` (node_modules symlinked) and the four-line diff copied
+back, rather than moving a SHARED tree's HEAD under another session.
 
 **Notes for whoever is next.**
 - ⚠ `savedQueueStore`'s tag is `(arrivalExitId, ordinal)` and a save **REPLACES the same tag**, so two
