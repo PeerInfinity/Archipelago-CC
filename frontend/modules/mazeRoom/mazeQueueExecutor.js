@@ -24,7 +24,7 @@
  */
 
 import {
-    INPUT_N, INPUT_S, INPUT_E, INPUT_W,
+    INPUT_N, INPUT_S, INPUT_E, INPUT_W, INPUT_WAIT,
     step,
     isFloor,
     getObstacle,
@@ -95,8 +95,12 @@ function refusalReason(world, state, dir) {
  *   keeps the engine's historical pickup-into-state.inventory behaviour.
  * @param {object} [opts.clearanceOpts] - `{evaluateRule}` for logic gates.
  * @returns {{next: object|null, reason: string|null}} `next === state` means
- *   the verb passes a turn without an engine transition (wait, locationCheck);
- *   `next === null` means the entry was REFUSED and `reason` says why.
+ *   the verb passes a turn the ENGINE has no opinion about (`locationCheck`
+ *   — a panel-side publish); `next === null` means the entry was REFUSED and
+ *   `reason` says why. ⚠ Since S2a a `wait` is NOT in that first class: it
+ *   returns a NEW state with `turn + 1`, because the engine now owns "a turn
+ *   passes". `next === state` is therefore not a test for "nothing happened"
+ *   — ask the ENTRY (`actionType`) or compare positions.
  */
 export function executeMazeEntry(world, state, entry, { inventoryOverride, clearanceOpts } = {}) {
     if (!world || !state) {
@@ -116,10 +120,11 @@ export function executeMazeEntry(world, state, entry, { inventoryOverride, clear
         return { next, reason: null };
     }
     if (actionType === ACTION_WAIT) {
-        // S2a will route this through `step(world, state, INPUT_WAIT)`; until
-        // the engine accepts a wait input, a wait is a turn the CALLER passes
-        // (mana + hazard tick) around an unchanged engine state.
-        return { next: state, reason: null };
+        // S2a: the engine owns "a turn passes". `step` never refuses a WAIT,
+        // so `next` is always a NEW state with `turn + 1` and everything else
+        // byte-equal. The caller still wraps its own per-turn side effects
+        // (mana, hazard tick) around it.
+        return { next: step(world, state, INPUT_WAIT), reason: null };
     }
     if (actionType === ACTION_LOCATION_CHECK) {
         // The check itself is a panel-side publish, not an engine transition.

@@ -19,7 +19,7 @@
  */
 
 import {
-    INPUT_N, INPUT_S, INPUT_E, INPUT_W, INPUT_WAIT,
+    INPUT_N, INPUT_S, INPUT_E, INPUT_W,
     step,
     detectStepEvents,
     getObstacle,
@@ -389,6 +389,16 @@ export class MazeRoomVisualizer {
     getState() {
         return {
             player_pos: this._state ? { ...this._state.player_pos } : null,
+            // ⚠ S2a found this MISSING. The maze panel's `_onVisualizerChange`
+            // has always read `vState.turn` to spot a WAIT — a tick where the
+            // player did not move but a turn passed — and drive the
+            // `waitHappened` branch (mana, bestPath, queue mirror, hazard
+            // tick) off it. `turn` was never in this bag, so `typeof
+            // vState.turn === 'number'` was false on every tick and that whole
+            // branch was DEAD: a wait in a loops-delegated plan advanced no
+            // queue icon and ticked no hazard. Exposing it arms the reader
+            // that was already written for it.
+            turn: this._state ? this._state.turn : null,
             inventory: new Map(this._inventory),
             checkedLocations: new Set(this._checkedLocations),
             target: this._target ? { ...this._target } : null,
@@ -434,29 +444,12 @@ export class MazeRoomVisualizer {
 
         const input = this._plan[this._planIdx];
         const oldPos = { ...this._state.player_pos };
-        // Wait input: skip engine.step entirely. The player stays in
-        // place; only the turn counter advances. Log the wait so the
-        // playback log shows it, and notify so the substrate's
-        // _onVisualizerChange ticks hazards + advances the action
-        // queue for this turn (matches a normal step's downstream
-        // effects, minus the actual move).
-        if (input === INPUT_WAIT) {
-            this._state.turn += 1;
-            this._planIdx += 1;
-            this._log.push({
-                type: 'step',
-                input: INPUT_WAIT,
-                from: oldPos,
-                to: { ...oldPos },
-                turn: this._state.turn,
-                events: [],
-                target: this._target ? { ...this._target } : null,
-            });
-            if (this._planIdx >= this._plan.length) this._target = null;
-            this._publishSnapshot();
-            this._notifyChange();
-            return;
-        }
+        // ⛓ S2a: a WAIT takes the SAME path as every other input. The
+        // private branch that used to sit here (turn += 1, its own log row,
+        // its own notify) is gone — `step` returns a clone with `turn + 1`
+        // and the player where they were, `detectStepEvents` emits nothing
+        // when the position did not change, and the log row below writes
+        // `from === to` off the returned state. Same behaviour, one author.
         const next = step(this._world, this._state, input, this._inventory,
             this._clearanceOpts ?? undefined);
 
@@ -740,8 +733,9 @@ export class MazeRoomVisualizer {
                 // hazards. Null/empty hazards falls back to the plain
                 // (faster) BFS path.
                 hazards: this._world?.hazards,
-                // Allow waiting in the plan — _tick handles INPUT_WAIT
-                // by advancing turn without moving, and the substrate's
+                // Allow waiting in the plan — a WAIT is an engine input
+                // (S2a), so _tick steps it like any other and the turn
+                // advances with the player still; the substrate's
                 // _onVisualizerChange ticks hazards + advances the
                 // queue on each wait via the waitHappened branch.
                 allowWait: true,

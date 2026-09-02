@@ -109,20 +109,60 @@ describe('mazeQueueExecutor — executeMazeEntry over an OPEN ROOM', () => {
         expect(reason).toContain('wall or off-grid');
     });
 
-    it('a wait passes the turn to the CALLER: same state object, no reason', () => {
+    // ⛓ S2a — a wait is an ENGINE transition now: `step(world, state,
+    // INPUT_WAIT)` returns a NEW state with `turn + 1`. Before this slice it
+    // returned `state` itself and the CALLER was expected to pass the turn.
+    it('a wait is an ENGINE transition: a NEW state, turn + 1, no reason', () => {
         const world = openRoom();
         const state = createState(world);
         const { next, reason } = executeMazeEntry(world, state, waitEntry());
-        // S2a routes this through step(); until then a wait is the caller's
-        // turn (mana + hazard tick) around an unchanged engine state.
-        expect(next).toBe(state);
         expect(reason).toBeNull();
+        expect(next).not.toBe(state);
+        expect(next.turn).toBe(state.turn + 1);
+        expect(next.player_pos).toEqual(state.player_pos);
+        expect([...next.inventory]).toEqual([...state.inventory]);
+    });
+
+    it('a wait picks NOTHING up while standing on an item tile', () => {
+        const world = doorKey();
+        const state = createState(world);
+        const onKey = executeMazeEntry(world, state, moveEntry('E')).next;
+        expect([...onKey.inventory]).toEqual(['key_red']);
+        const empty = { ...onKey, inventory: new Set() };
+        const waited = executeMazeEntry(world, empty, waitEntry()).next;
+        expect([...waited.inventory]).toEqual([]);
+        expect(waited.turn).toBe(empty.turn + 1);
+    });
+
+    it('a wait leaves `blocks` alone — nothing is pushed', () => {
+        const world = guardGadget();
+        const state = createState(world);
+        const waited = executeMazeEntry(world, state, waitEntry()).next;
+        expect(waited.blocks).toEqual(state.blocks);
+        // ...and the SAME state pushes when the entry is the move, so the
+        // fixture's blocks really are reachable from here.
+        const pushed = executeMazeEntry(world, state, moveEntry('E')).next;
+        expect(pushed.blocks).not.toEqual(state.blocks);
+    });
+
+    it('N waits advance the turn by N — the executor is the only author', () => {
+        const world = openRoom();
+        let state = createState(world);
+        for (let i = 0; i < 4; i++) {
+            state = executeMazeEntry(world, state, waitEntry()).next;
+        }
+        expect(state.turn).toBe(4);
+        expect(state.player_pos).toEqual(createState(world).player_pos);
     });
 
     it('a locationCheck is a no-op for the engine — the publish is the panel\'s', () => {
         const world = openRoom();
         const state = createState(world);
         const { next, reason } = executeMazeEntry(world, state, locationCheckEntry('Sword'));
+        // ⛓ `next === state` is now the locationCheck's ALONE: it is the one
+        // verb the engine has no opinion about. A wait no longer answers this
+        // way (see the S2a rows above), so no caller may read `next === state`
+        // as "the entry did nothing".
         expect(next).toBe(state);
         expect(reason).toBeNull();
     });

@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { findPath, bestPathKey, stepsToInputs, stepsToActions } from './mazeAutopather.js';
+import { createState, createWorld, step } from './mazeRoomEngine.js';
+import { executeMazeEntry } from './mazeQueueExecutor.js';
 
 // Minimal world fixture: tiles array of 0 (floor) / 1 (wall). Caller
 // supplies entrance and exits.
@@ -333,6 +335,51 @@ describe('mazeAutopather — findPath', () => {
                 { x: 2, y: 0 }, // E
             ];
             expect(stepsToInputs(steps)).toEqual(['E', 'WAIT', 'E']);
+        });
+
+        // ⛓ S2a — the autopather is UNCHANGED by that slice; what changed is
+        // that its waits now replay through `step` with no side branch. Before
+        // S2a `step(world, state, 'WAIT')` returned null, so a plan carrying a
+        // wait could only be replayed by a surface that intercepted the input
+        // first (the visualizer's private branch). This is the row that says
+        // it no longer needs one.
+        it('a planned path WITH waits replays straight through engine.step', () => {
+            const world = createWorld(4, 2);
+            const steps = [
+                { x: 0, y: 0 },
+                { x: 1, y: 0 }, // E
+                { x: 1, y: 0 }, // wait
+                { x: 1, y: 0 }, // wait
+                { x: 2, y: 0 }, // E
+            ];
+            const inputs = stepsToInputs(steps);
+            expect(inputs).toEqual(['E', 'WAIT', 'WAIT', 'E']);
+            let state = createState(world);
+            for (const input of inputs) {
+                state = step(world, state, input);
+                expect(state).not.toBeNull();
+            }
+            expect(state.player_pos).toEqual({ x: 2, y: 0 });
+            expect(state.turn).toBe(inputs.length);
+        });
+
+        it('...and the ENTRY form of the same plan replays through the executor', () => {
+            const world = createWorld(4, 2);
+            const entries = stepsToActions([
+                { x: 0, y: 0 },
+                { x: 1, y: 0 },
+                { x: 1, y: 0 },
+                { x: 2, y: 0 },
+            ]);
+            expect(entries.map((e) => e.actionType)).toEqual(['move', 'wait', 'move']);
+            let state = createState(world);
+            for (const entry of entries) {
+                const { next, reason } = executeMazeEntry(world, state, entry);
+                expect(reason).toBeNull();
+                state = next;
+            }
+            expect(state.player_pos).toEqual({ x: 2, y: 0 });
+            expect(state.turn).toBe(3);
         });
     });
 

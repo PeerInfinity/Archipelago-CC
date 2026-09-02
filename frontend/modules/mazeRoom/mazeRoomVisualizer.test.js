@@ -11,6 +11,8 @@ import {
     TILE_WALL,
     setConsumableTile,
     setManaTile,
+    INPUT_E,
+    INPUT_WAIT,
 } from './mazeRoomEngine.js';
 
 const ITEM_LIB = {
@@ -314,6 +316,83 @@ describe('MazeRoomVisualizer — playback events', () => {
         const pickupLogs = v.getState().log.filter((e) => e.type === 'pickup');
         expect(pickupLogs).toHaveLength(1);
         expect(pickupLogs[0].locationName).toBe('Single Pickup');
+    });
+});
+
+// ⛓ S2a — the visualizer used to carry a PRIVATE wait branch ahead of `step`
+// (turn += 1, its own log row, its own notify). It shipped with NO test of
+// its own, which is why deleting it moved nothing: these rows are the pin the
+// branch never had, written against the engine path that replaced it.
+describe('MazeRoomVisualizer — WAIT goes through engine.step (S2a)', () => {
+    /** Put an explicit plan on the visualizer and step it, no planner. */
+    function drivePlan(v, plan) {
+        v._target = { kind: 'tile', x: 0, y: 0, name: 'fixture' };
+        v._plan = plan;
+        v._planIdx = 0;
+        for (let i = 0; i < plan.length; i++) v.step();
+    }
+
+    it('a wait advances the turn and leaves the player where they were', () => {
+        const v = new MazeRoomVisualizer({});
+        const world = makeOpenWorld(5, 1);
+        v.setWorld(world, 'R');
+        expect(v.getState().turn).toBe(0);
+        drivePlan(v, [INPUT_WAIT, INPUT_WAIT]);
+        expect(v.getState().turn).toBe(2);
+        expect(v.getState().player_pos).toEqual({ x: 0, y: 0 });
+        expect(v.isStuck()).toBe(false);
+    });
+
+    it('logs the wait as a step with from === to and the new turn', () => {
+        const v = new MazeRoomVisualizer({});
+        v.setWorld(makeOpenWorld(5, 1), 'R');
+        drivePlan(v, [INPUT_E, INPUT_WAIT]);
+        const steps = v.getState().log.filter((e) => e.type === 'step');
+        expect(steps).toHaveLength(2);
+        const wait = steps[1];
+        expect(wait.input).toBe(INPUT_WAIT);
+        expect(wait.from).toEqual({ x: 1, y: 0 });
+        expect(wait.to).toEqual({ x: 1, y: 0 });
+        expect(wait.turn).toBe(2);
+        expect(wait.events).toEqual([]);
+    });
+
+    it('a wait on an item tile fires NO pickup event and NO pickup log', () => {
+        const events = [];
+        const v = new MazeRoomVisualizer({
+            onLocationCheck: (locationName) => events.push(locationName),
+        });
+        const world = makeOpenWorld(5, 1);
+        setItem(world, 1, 0, 'key_red');
+        if (!world.itemLocationNames) world.itemLocationNames = new Map();
+        world.itemLocationNames.set('1,0', 'Single Pickup');
+        v.setWorld(world, 'R');
+        drivePlan(v, [INPUT_E, INPUT_WAIT, INPUT_WAIT]);
+        // One arrival, one pickup — the two waits on the same tile add none.
+        expect(events).toEqual(['Single Pickup']);
+        expect(v.getState().log.filter((e) => e.type === 'pickup')).toHaveLength(1);
+        expect(v.getState().turn).toBe(3);
+    });
+
+    it('notifies on a wait, so the panel sees the tick', () => {
+        const seen = [];
+        const v = new MazeRoomVisualizer({ onStateChange: () => seen.push(v.getState().turn) });
+        v.setWorld(makeOpenWorld(5, 1), 'R');
+        seen.length = 0;
+        drivePlan(v, [INPUT_WAIT]);
+        expect(seen.at(-1)).toBe(1);
+    });
+
+    it('getState() carries `turn` — the panel\'s wait detector reads it', () => {
+        // ⚠ It did NOT before S2a: `_onVisualizerChange`'s `waitHappened`
+        // branch tests `typeof vState.turn === 'number'`, which was false on
+        // every tick, so the branch never ran. Exposing the field arms it.
+        const v = new MazeRoomVisualizer({});
+        expect(v.getState().turn).toBeNull();
+        v.setWorld(makeOpenWorld(5, 1), 'R');
+        expect(typeof v.getState().turn).toBe('number');
+        drivePlan(v, [INPUT_E]);
+        expect(v.getState().turn).toBe(1);
     });
 });
 

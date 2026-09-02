@@ -1393,6 +1393,9 @@ describe('MazeRoomUI — action queue integration (Phase 1)', () => {
         // Should not throw and should not deduct mana (no gameState
         // singleton interaction).
         expect(() => panel._executeWaitAction()).not.toThrow();
+        // ⛓ S2a: "no-op" is about MANA. The turn passes either way — that is
+        // the whole point of routing the wait through the engine.
+        expect(panel.state.turn).toBe(1);
     });
 
     it('_executeWaitAction deducts mana in playback mode', async () => {
@@ -1936,6 +1939,44 @@ describe('MazeRoomUI — hazard runtime integration (Phase 2e)', () => {
         // externalInventory null → no mana deduction path. Wait still ticks.
         panel._executeWaitAction();
         expect(haz.phase).toBe(1);
+        // ⛓ S2a: and the ENGINE turn advanced with it. Before this slice the
+        // panel ticked the hazard but left `state.turn` at 0, so a
+        // hand-played wait and a visualizer wait disagreed about the turn.
+        expect(panel.state.turn).toBe(1);
+    });
+
+    // ⛓ S2a — the wait's turn, in the panel. `_executeWaitAction` now routes
+    // through `executeMazeEntry` → `step(world, state, INPUT_WAIT)`.
+    it('_executeWaitAction advances state.turn and moves nothing else', () => {
+        const world = makeWorldWithHazards([], { width: 6, height: 2 });
+        const panel = makePanelOnWorld(world, { playerPos: { x: 2, y: 1 } });
+        panel.state.inventory = new Set(['key_red']);
+        panel._executeWaitAction();
+        panel._executeWaitAction();
+        expect(panel.state.turn).toBe(2);
+        expect(panel.state.player_pos).toEqual({ x: 2, y: 1 });
+        expect([...panel.state.inventory]).toEqual(['key_red']);
+    });
+
+    it('a hazard-REFUSED wait still passes the turn — the engine never refuses a wait', () => {
+        // The same fixture as the pre-tick-stomp row below, but with the
+        // teleport disarmed so the turn is the only thing under test: the
+        // hazard question gates the MANA CHARGE, not whether time passed.
+        const haz = makeHazardLinear([{ x: 0, y: 0 }, { x: 1, y: 0 }], 0);
+        const world = makeWorldWithHazards([haz], { width: 3, height: 1 });
+        const panel = makePanelOnWorld(world, { playerPos: { x: 1, y: 0 } });
+        panel._fireHazardTeleport = () => {};
+        panel._tickAndCheckHazards = () => {};
+        panel._executeWaitAction();
+        expect(panel.state.turn).toBe(1);
+        expect(panel.state.player_pos).toEqual({ x: 1, y: 0 });
+    });
+
+    it('a queued `wait` entry reaches the engine through _executeQueueAction', () => {
+        const world = makeWorldWithHazards([], { width: 6, height: 2 });
+        const panel = makePanelOnWorld(world, { playerPos: { x: 0, y: 0 } });
+        expect(panel._executeQueueAction(waitEntry())).toBeNull();
+        expect(panel.state.turn).toBe(1);
     });
 
     it('_executeWaitAction rejection + stomp triggers a pre-tick teleport', () => {

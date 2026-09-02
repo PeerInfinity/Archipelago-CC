@@ -45,11 +45,16 @@ export const INPUT_N = 'N';
 export const INPUT_S = 'S';
 export const INPUT_E = 'E';
 export const INPUT_W = 'W';
-// Wait input — recognised by the visualizer's tick loop (skips
-// engine.step, advances state.turn) and emitted by stepsToInputs
-// for duplicate-tile entries in a planned path. NOT included in
-// INPUTS because step() doesn't consume it; only the playback
-// surfaces need to know about it.
+// Wait input — a first-class `step` input (slice S2a): `step(world, state,
+// INPUT_WAIT)` returns a clone with `turn + 1` and NOTHING else moved. Every
+// surface that passes a turn without moving the player — the visualizer's
+// tick loop, the panel's wait action, the queue executor's `wait` verb —
+// goes through that one branch, so "a turn passes" has ONE author.
+// ⛔ NOT in INPUTS, and not in the bfs solver's input list: `mazeVisitedKey`
+// excludes `turn`, so a wait is a self-loop the search would prune anyway,
+// and the oracle's plans (and the identity rows that hash them) stay
+// exactly what they were. A time-aware oracle is the autopather's
+// time-expanded mode, one layer up.
 export const INPUT_WAIT = 'WAIT';
 export const INPUTS = [INPUT_N, INPUT_S, INPUT_E, INPUT_W];
 
@@ -662,6 +667,14 @@ function effectiveInventory(world, inventory, playerPos, blocks) {
 // stays open for as long as the block sits there. This is why the gadget uses
 // a block, and it is a fact about the model rather than a defect in it.
 export function step(world, state, input, inventoryOverride, clearanceOpts) {
+    // A WAIT is a turn and nothing else: no arrival, so no pickup, no push,
+    // no inventory change. Handled BEFORE the DELTAS lookup — WAIT has no
+    // delta and would otherwise fall out as a refusal (slice S2a).
+    if (input === INPUT_WAIT) {
+        const waited = cloneState(state);
+        waited.turn += 1;
+        return waited;
+    }
     const delta = DELTAS[input];
     if (!delta) return null;
     const nx = state.player_pos.x + delta.dx;

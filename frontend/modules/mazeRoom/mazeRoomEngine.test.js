@@ -4,7 +4,8 @@ import { reach } from '../shared/simulatorCore.js';
 import { createRng } from '../shared/rng.js';
 import {
     TILE_FLOOR, TILE_WALL,
-    INPUT_N, INPUT_S, INPUT_E, INPUT_W,
+    INPUT_N, INPUT_S, INPUT_E, INPUT_W, INPUT_WAIT,
+    INPUTS,
     createWorld, createState,
     getTile, setTile, isFloor,
     getObstacle, setObstacle,
@@ -94,6 +95,81 @@ describe('step', () => {
         step(world, before, INPUT_E);
         expect(before.player_pos).toEqual({ x: 0, y: 0 });
         expect(before.turn).toBe(0);
+    });
+});
+
+// ⛓ S2a — WAIT is an ENGINE input. Before this slice `step` REFUSED it
+// (`DELTAS` has no entry, so the lookup fell through to `return null`) and
+// two other surfaces implemented "a turn passes" for themselves, disagreeing
+// about whether it advanced the turn. These rows are the contract the
+// visualizer, the panel and the queue executor now all read.
+describe('step — INPUT_WAIT (S2a)', () => {
+    const world = createWorld(3, 3);
+
+    it('advances the turn and moves NOTHING else', () => {
+        const start = createState(world);
+        const waited = step(world, start, INPUT_WAIT);
+        expect(waited).not.toBeNull();
+        expect(waited.turn).toBe(start.turn + 1);
+        expect(waited.player_pos).toEqual(start.player_pos);
+        expect([...waited.inventory]).toEqual([]);
+    });
+
+    it('does not mutate the input state (a new state comes back)', () => {
+        const start = createState(world);
+        const waited = step(world, start, INPUT_WAIT);
+        expect(waited).not.toBe(start);
+        expect(start.turn).toBe(0);
+        waited.player_pos.x = 99;
+        expect(start.player_pos.x).toBe(0);
+    });
+
+    it('picks NOTHING up while standing on an item tile — the player arrived nowhere', () => {
+        const itemWorld = createWorld(3, 3);
+        setItem(itemWorld, 1, 0, 'key_red');
+        const start = createState(itemWorld);
+        // Prove the tile really does grant on ARRIVAL, so the wait row below
+        // is a claim about waiting and not about an inert fixture.
+        const arrived = step(itemWorld, start, INPUT_E);
+        expect([...arrived.inventory]).toEqual(['key_red']);
+        // Now wait ON that tile: the turn passes, the item does not re-grant
+        // and (with an empty-handed state on the same tile) does not grant.
+        const waited = step(itemWorld, arrived, INPUT_WAIT);
+        expect(waited.turn).toBe(arrived.turn + 1);
+        expect([...waited.inventory]).toEqual(['key_red']);
+        const empty = { ...arrived, inventory: new Set() };
+        const waitedEmpty = step(itemWorld, empty, INPUT_WAIT);
+        expect([...waitedEmpty.inventory]).toEqual([]);
+    });
+
+    it('leaves `blocks` identical — a wait pushes nothing', () => {
+        const blockWorld = createWorld(5, 3);
+        setBlock(blockWorld, 2, 1, 'block_a');
+        const start = createState(blockWorld);
+        start.player_pos = { x: 1, y: 1 };
+        const waited = step(blockWorld, start, INPUT_WAIT);
+        expect(waited.blocks).toEqual(start.blocks);
+        expect(waited.blocks).not.toBe(start.blocks);
+        // ...and the same start really can push, so `blocks` is live here.
+        const pushed = step(blockWorld, start, INPUT_E);
+        expect(pushed.blocks).not.toEqual(start.blocks);
+    });
+
+    it('is NOT in INPUTS, and the oracle therefore never waits', () => {
+        expect(INPUTS).toEqual([INPUT_N, INPUT_S, INPUT_E, INPUT_W]);
+        expect(INPUTS).not.toContain(INPUT_WAIT);
+    });
+
+    it('detectStepEvents emits nothing for a wait — the position did not change', () => {
+        const evWorld = createWorld(3, 3);
+        setItem(evWorld, 1, 0, 'key_red');
+        const start = createState(evWorld);
+        const arrived = step(evWorld, start, INPUT_E);
+        // Arriving on the item tile DOES emit; waiting on it does not.
+        expect(detectStepEvents(evWorld, start.player_pos, arrived.player_pos).length)
+            .toBeGreaterThan(0);
+        const waited = step(evWorld, arrived, INPUT_WAIT);
+        expect(detectStepEvents(evWorld, arrived.player_pos, waited.player_pos)).toEqual([]);
     });
 });
 

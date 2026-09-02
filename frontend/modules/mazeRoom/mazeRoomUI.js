@@ -54,6 +54,7 @@ import {
     ACTION_LOCATION_CHECK,
     describeMazeAction,
     locationCheckEntry,
+    waitEntry,
 } from './mazeKeys.js';
 import {
     executeMazeEntry,
@@ -826,8 +827,8 @@ export class MazeRoomUI {
                     // Null/empty falls back to the plain (faster) BFS.
                     hazards: this.world?.hazards,
                     // Loops-delegated walks tolerate waits in the
-                    // plan — the visualizer's tick loop knows to
-                    // INPUT_WAIT (no engine.step, advance turn) and
+                    // plan — INPUT_WAIT is an engine input (S2a), so the
+                    // visualizer's tick loop steps it like any other and
                     // _onVisualizerChange mirrors waits into the
                     // queue + ticks hazards.
                     allowWait: true,
@@ -3638,7 +3639,7 @@ export class MazeRoomUI {
             return this._executeMoveAction(entry);
         }
         if (entry?.actionType === ACTION_WAIT) {
-            this._executeWaitAction();
+            this._executeWaitAction(entry);
             return null;
         }
         if (entry?.actionType === ACTION_LOCATION_CHECK) {
@@ -3746,13 +3747,35 @@ export class MazeRoomUI {
      * rate (same cost as a move-onto-floor, per the plan's "wait
      * has same mana cost as move"). Ticks hazards after the wait so
      * the player can wait out hazard cycles.
+     *
+     * ⛓ S2a: the wait ADVANCES THE ENGINE STATE, through the same
+     * `executeMazeEntry` → `step(world, state, INPUT_WAIT)` the queue
+     * executor and the visualizer use. Before this slice the panel's wait
+     * charged mana and ticked hazards but left `state.turn` alone, so a
+     * hand-played wait and a visualizer wait disagreed about what a turn was.
+     *
+     * ⚠ The engine NEVER refuses a wait, so the state advances whatever the
+     * hazard question below answers — that question gates the MANA CHARGE
+     * only, exactly as it did before. (Contrast `_executeMoveAction`, where a
+     * hazard refusal really does mean the move did not happen.)
+     *
+     * ⚠ Measured consequence: `state.turn` is read in exactly two places —
+     * the visualizer-turn mirror in `_onVisualizerChange` (which compares the
+     * VISUALIZER's counter, not this one) and the end-of-region message
+     * "Reached exit in N steps.". That message now counts hand-played waits,
+     * and it is right to: a wait IS a turn. No decision reads `state.turn`.
+     *
+     * @param {object} [entry] - the `wait` queue entry; a bare call (the
+     *   keyboard path and the older tests) waits all the same.
      */
-    _executeWaitAction() {
+    _executeWaitAction(entry) {
         if (!this.world || !this.state) return;
         const pos = this.state.player_pos;
         const hazardAllowed = validateMoveAgainstHazards(
             this.world.hazards, pos, pos,
         );
+        const { next } = executeMazeEntry(this.world, this.state, entry ?? waitEntry());
+        if (next) this.state = next;
         if (hazardAllowed
                 && this.externalInventory !== null
                 && this._shouldDeductMazeMana()) {
