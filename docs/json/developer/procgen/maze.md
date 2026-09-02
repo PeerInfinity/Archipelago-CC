@@ -440,7 +440,7 @@ python3 -m http.server 8000        # from the repo root
 http://localhost:8000/frontend/modules/mazeRoom/lab.html?seed=3&count=4&run=1
 ```
 
-Its headless half is `mazeLab.js` (URL reader/writer, the three modes' logic,
+Its headless half is `mazeLab.js` (URL reader/writer, the four arms' logic,
 the payload); its DOM arm is `mazeLabView.js`; its unit tests are
 `mazeLab.test.js`.
 
@@ -469,17 +469,19 @@ and folding them again would apply each one twice. `?gen=` — which replays the
 ops from the ladder — is the channel that reproduces an edited level, and the
 payload carries a `base` tag naming what its edits are edits of.
 
-### The three modes
+### The four modes
 
 A `?source=` selector switches between them **in place** — no reload — and each
 switch starts a new page lifetime (`procgenCore/pageLifetime.js`) so the arm
-being left drops its listeners.
+being left drops its listeners. `mazeLab.SOURCES` has four values, which is why
+this table has four rows; the fourth has its own section below (*The SET arm*).
 
 | mode | what it does |
 |---|---|
 | `generate` (default) | the loop, in the page. STEP places one template and re-solves; RUN-ALL runs to the target or to SATURATION. The generation pane shows every attempt with its outcome word (`KEPT` / `REVERTED` / `NO_ANCHOR` / `ILLEGAL_PLACEMENT`) and the oracle's **verbatim** refusal. A catalogue lists what the palette can generate, by family; unticking a family RESTRICTS the roster the run may draw from, and ATTEMPT on a row runs one directed attempt for that template. |
 | `edit` | `mazeRoomEditor.js`'s palette — floor / wall / entrance / item / obstacle / **block / button / flag** / erase — applied to the clicked tile, plus the four tools `procgenCore/editorView.js` brings (brush, RECT copy, PASTE, FLOOD). Every edit lands on a **clone**, and the level the page says it generated is never rewritten underneath it. |
-| `solve` | `mazeOracle` on the world now on screen, with the plan drawn over the room: SOLVED / REFUSED / BUDGET_EXHAUSTED, reason verbatim. |
+| `solve` | `mazeOracle` on the world now on screen: SOLVED / REFUSED / BUDGET_EXHAUSTED, reason verbatim. The route is drawn over the room **and the plan is STEPPED** — `planFrames` replays it through the engine's own `step` and `⏮ / ◀ STEP / STEP ▶ / ▶ PLAY` walk the frames, so a pushed block visibly moves. See *On the lab page* above for what a frame carries and what the readout publishes. |
+| `set` | a REGION LIBRARY — a positionally addressed list of interchangeable maze rooms — on the shared `setEditorView` mount, and the same arm edits a WORLD under `?world=`. Its own two sections below. |
 
 A step-*k* level **is** `generate-maze-level.mjs --seed=S --count=k`, byte for
 byte, because it is the same call — the browser row asserts that across the two

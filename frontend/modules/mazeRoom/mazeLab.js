@@ -18,11 +18,14 @@
  * reached through `procgenMaze.generateMazeLevel` — the same entry
  * `scripts/procgen/generate-maze-level.mjs` calls.
  *
- * ── ⛔⛔ THREE MODES, ONE STATE, AND THE THIRD ONE IS THE POINT ────────
+ * ── ⛔⛔ FOUR ARMS, ONE STATE, AND THE THIRD ONE IS THE POINT ─────────
  *
  * GENERATE is the ladder (STEP = "obstacleTarget = k, re-run", so a step-k
  * level IS `generate-maze-level.mjs --seed=S --count=k` byte for byte).
- * EDIT is `mazeRoomEditor.js`'s palette. SOLVE is `mazeOracle`.
+ * EDIT is `mazeRoomEditor.js`'s palette. SOLVE is `mazeOracle` — and its plan
+ * is STEPPED, not merely drawn: `planFrames` replays it through the engine's
+ * own `step` and the page walks the frames. SET (⚖ ruling 9(b), slice 5) is
+ * the region library, and `SOURCES` has had four values since it landed.
  *
  * ⚖ §3.8's certification law is what binds them: **editing never bypasses the
  * oracle.** A generated state is certified — the loop's own last accepting

@@ -40,9 +40,17 @@
             it generated is never rewritten under it.
 
   SOLVE     the ORACLE on the world now on screen: the same `mazeOracle` the
-            loop uses, certified by REPLAY through the engine's own `step`. The
-            plan is drawn over the room. SOLVED / REFUSED / BUDGET_EXHAUSTED,
-            with the reason verbatim.
+            loop uses, certified by REPLAY through the engine's own `step`.
+            SOLVED / REFUSED / BUDGET_EXHAUSTED, with the reason verbatim.
+
+            ⛔ AND THE PLAN IS **STEPPED**, not merely drawn — `mazeLab.planFrames`
+            replays it through the engine's own `step` and ⏮ / ◀ STEP / STEP ▶ /
+            ▶ PLAY walk the frames, one per position; the element overlay is
+            handed the FRAME's `state.blocks`, so a pushed block visibly moves.
+            (These four lines said "the plan is drawn over the room" until
+            2026-09-01: they were written 2026-08-15, one day before the
+            step-through landed in `4e0ac0690`. The route line over the room is
+            still drawn — it is the walk, and the frames are the walk MOVING.)
 
   SET       a REGION LIBRARY — a positionally addressed LIST of interchangeable
             maze rooms — through `procgenCore/setEditorView.mountSetEditor`, the
@@ -502,7 +510,8 @@
     <div id="solvePanel" class="armPanel" hidden>
       <div class="line">
         <button id="labSolve">SOLVE the world on screen</button>
-        <span class="note">— the plan is drawn over the room</span>
+        <span class="note">— the route is drawn over the room, and the STEP
+          controls below walk the plan frame by frame</span>
       </div>
       <!-- ⛓⛓⛓ THE STEP-THROUGH (⚖ design ruling 6 fn. 3: "step-through
            visualisation is non-negotiable"). The plan LINE says where the

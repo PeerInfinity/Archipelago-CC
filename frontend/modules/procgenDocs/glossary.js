@@ -2477,8 +2477,9 @@ export const TERMS = Object.freeze([
         aliases: ['`lab.html`'],
         area: 'maze',
         plain: 'The maze substrate\'s own page for generating, editing and solving one room.',
-        detail: '`frontend/modules/mazeRoom/lab.html`, with three modes — GENERATE, EDIT, '
-            + 'SOLVE (the exact BFS oracle). It is where the [area graph](#area-graph) and '
+        detail: '`frontend/modules/mazeRoom/lab.html`, with four modes — GENERATE, EDIT, '
+            + 'SOLVE (the exact BFS oracle, whose plan the page STEPS frame by frame) and '
+            + 'SET (a region library). It is where the [area graph](#area-graph) and '
             + 'the first [element](#element) were built, and where they accept routinely: at '
             + '15×15 the room is big enough that the graph works, against '
             + '**0–4 of 12** on a 10×10 Seedling room. ⚠ On THIS page a refused '
