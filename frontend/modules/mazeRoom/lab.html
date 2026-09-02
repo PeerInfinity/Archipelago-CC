@@ -45,8 +45,21 @@
 
             ⛔ AND THE PLAN IS **STEPPED**, not merely drawn — `mazeLab.planFrames`
             replays it through the engine's own `step` and ⏮ / ◀ STEP / STEP ▶ /
-            ▶ PLAY walk the frames, one per position; the element overlay is
-            handed the FRAME's `state.blocks`, so a pushed block visibly moves.
+            ▶ PLAY, a SCRUB slider and a click on the INPUT STRIP all walk the
+            frames, one per turn; the element overlay is handed the FRAME's
+            `state.blocks`, so a pushed block visibly moves. A frame HUD names
+            `frame i/n · turn · player · inventory · blocks · input`, all off
+            the ONE frame the picture was drawn from. ⛔ None of the three new
+            controls is in the URL (⚖ ruling 9) — which frame a reader is
+            looking at, and how fast the animation runs, are not part of a run
+            somebody could type.
+
+            ⛓ ONE STEPPER: `planFrames` is `framesForActions` over one
+            `moveEntry` per plan letter, and `framesForActions` boots through
+            `procgenMaze.startStateFor` (the construction the ORACLE certifies
+            from) and steps through `mazeQueueExecutor.executeMazeEntry` (the
+            panel's own headless executor). The oracle's plan and slice S2b's
+            hand walk are the same array with a different `author`.
             (These four lines said "the plan is drawn over the room" until
             2026-09-01: they were written 2026-08-15, one day before the
             step-through landed in `4e0ac0690`. The route line over the room is
@@ -285,6 +298,19 @@
   #labDirectives .dRow { padding: 2px 6px; border-bottom: 1px solid #15151a; }
   #labDirectives .dRow b { color: #7fe0ff; font-weight: 600; }
   #labPalette { display: flex; gap: 4px; flex-wrap: wrap; margin: 4px 0; }
+  /* ⛓ THE SOLVE SCRUB AND ITS STRIP (S1). `#labInputStrip` is ENUMERATED by
+     the browser row — one `.in` per turn of the walk, exactly one `.lit` — so
+     nothing that is not an input may be dropped into that box (the group-B
+     lesson `#labPalette` above carries, at the second box that has it). */
+  #labScrub { width: 240px; }
+  #labPlayRate { width: 90px; }
+  #labInputStrip { display: flex; gap: 2px; flex-wrap: wrap; margin: 4px 0; }
+  #labInputStrip .in { background: #14141a; color: #8a8a98; border: 1px solid #24242c;
+    border-radius: 3px; font: inherit; font-size: 11px; min-width: 17px; padding: 1px 3px;
+    text-align: center; cursor: pointer; }
+  #labInputStrip .in.lit { background: #ffd75f; color: #101014; border-color: #ffd75f;
+    font-weight: 600; }
+  #labInputStrip .in.refused { border-color: #6d2a2a; color: #ff9a6a; }
   #labIO { margin-top: 8px; border-top: 1px solid #24242c; padding-top: 6px; }
   #labAreaNote { margin: 4px 0; padding: 6px 8px; border-radius: 4px; font-size: 12px;
     line-height: 1.45; display: none; }
@@ -526,8 +552,34 @@
         <button id="labPlayPrev">◀ STEP</button>
         <button id="labPlayNext">STEP ▶</button>
         <button id="labPlay">▶ PLAY the plan</button>
-        <span id="playNote" class="note"></span>
       </div>
+      <!-- ⛓⛓ S1 — THE SCRUB. One `<input type=range>` over `play.index`, and
+           ⛔ NOT in the URL (⚖ ruling 9: the bar is a RUN somebody could type,
+           and which frame a reader is looking at is not part of that — the
+           same sentence `areaLayer` carries). Dragging it STOPS play, as ◀ and
+           ▶ do: a slider fighting an interval for the same index is a control
+           that lies about what it did. The PLAY rate beside it is a VIEW
+           setting for the same reason and by the same rule. -->
+      <div class="line">
+        <label class="note" for="labScrub">scrub</label>
+        <input id="labScrub" type="range" min="0" max="0" value="0" step="1" disabled>
+        <label class="note" for="labPlayRate">PLAY rate</label>
+        <input id="labPlayRate" type="range" min="30" max="600" step="10" value="110">
+        <span id="labPlayRateNote" class="note"></span>
+      </div>
+      <!-- ⛓⛓⛓ THE FRAME HUD. ⛔ ONE element, not a second one beside the
+           existing line: every field here is read off THE FRAME `overlayBlocks()`
+           answers with (`shownFrame()`), so the picture, this sentence and
+           `__mazeLab.play` cannot disagree about which frame is on screen.
+           `turn` is the ENGINE's counter, not the index — they part company on
+           a hand walk's `locationCheck` or refused press (slice S2b). -->
+      <div id="playNote" class="note"></div>
+      <!-- ⛓⛓ THE INPUT STRIP — the walk as the letters that produced it, the
+           one that produced the CURRENT frame lit, and clicking a letter seeks
+           to the frame it produced. Frame 0 lights nothing: the start is not an
+           input. (Seedling's held-keys HUD and the panel's queue icon row, in
+           one control — and the row a hand walk's own entries will fill.) -->
+      <div id="labInputStrip"></div>
       <div id="solveNote"></div>
     </div>
 

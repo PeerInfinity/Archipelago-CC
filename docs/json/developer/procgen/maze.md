@@ -408,12 +408,33 @@ the carved level. ⚠ Most 11×11 seeds refuse and that is the honest state;
 
 **SOLVE steps through the plan.** `mazeLab.planFrames(state, solved)` replays the
 oracle's plan through the engine's own `step` and returns one frame per position,
-each carrying the player's cell and `state.blocks` verbatim; `⏮ / ◀ STEP /
-STEP ▶ / ▶ PLAY` walk them and the overlay is handed the frame's block layout, so
-the block visibly moves onto its button and the button fills. The readout
-publishes the same array the overlay was handed (one function answers *"which
-layout is on screen"*), and the page names how many DISTINCT layouts the whole
-plan visits — one means the walk pushes nothing.
+each carrying the player's cell, the engine's `turn`, `state.blocks` verbatim and
+the ENTRY that produced it; `⏮ / ◀ STEP / STEP ▶ / ▶ PLAY`, a **scrub** slider and
+a click on the **input strip** all walk them, and the overlay is handed the
+frame's block layout, so the block visibly moves onto its button and the button
+fills. A **frame HUD** prints `frame i/n · turn · player · inventory · blocks ·
+input`, the strip shows the walk as its letters with the one that produced the
+current frame lit, and a PLAY-rate slider paces the animation. The scrub, the
+strip and the rate are **view settings and are not in the URL** (⚖ ruling 9: the
+bar is a run somebody could type). The readout publishes what the HUD prints, off
+the same frame the overlay was drawn from (`shownFrame()` — one function answers
+*"which frame is on screen"*), and the page names how many DISTINCT layouts the
+whole plan visits — one means the walk pushes nothing.
+
+**One stepper, one boot.** `planFrames` is
+`framesForActions(state, solved.plan.map(moveEntry))` — the oracle's plan is a
+tape of engine inputs and `INPUT_N` *is* `'N'`. `framesForActions(state, entries)`
+takes shared **`actionQueue` entries** (`mazeKeys`), expands their `loops`, boots
+through `procgenMaze.startStateFor` — the construction the ORACLE certifies from
+— and steps each entry through `mazeQueueExecutor.executeMazeEntry`, the same
+headless executor the substrate panel runs its keyboard and its recordings
+through. So a wait passes a turn the way the engine says it does, a refusal is a
+refusal for the same reason on both sides, and an oracle plan and a hand walk are
+the same array with a different `author`. A walk that does not replay is `null`
+(an oracle plan that does not replay is a seam defect, and an animation is not
+where one is discovered) — unless the entry is stamped `params.refused`, in which
+case the refusal is a **completion** and the frame repeats the previous engine
+state. `planCells` is `planFrames(...).map(f => f.player)`.
 
 The **edit palette** gains **block / button / flag**. Each writes the library
 entry without which the mechanism is inert — a button with no `buttonLib` entry

@@ -43,6 +43,14 @@ import { createLifetimeHolder } from '../procgenCore/pageLifetime.js';
 import { describeKeptKind, generationRows, ladderCost, tileAtPoint } from '../procgenCore/labView.js';
 import { COLORS, TILE_PX, drawWorld, plainView } from './mazeRoomRender.js';
 /**
+ * ⛓ THE MAZE'S ACTION VOCABULARY — the same module the substrate panel's
+ * keyboard reads, importing nothing. The page needs it to SAY what a frame's
+ * input was; `mazeLab.framesForActions` is what produced the entry.
+ */
+import {
+    ACTION_LOCATION_CHECK, ACTION_MOVE, ACTION_WAIT, describeMazeAction,
+} from './mazeKeys.js';
+/**
  * ⛓⛓⛓ THE AREA OVERLAY IS A **SIBLING** DRAW, called after `drawWorld` exactly
  * as the plan and the hover overlays are — a graph is a fact about the MODEL,
  * not a property of the world, and the panel (the renderer's other caller) has
@@ -62,7 +70,7 @@ import {
     MazeRoomEditor, PALETTE_ENTRIES, PALETTE_TYPES,
     SOURCES, agreementWithPayload, applyDirective, applyEdits, certifyInto, describeState,
     generateStep, generateWithDirectives, labCatalogue, labPayload, loadPayload,
-    openEditSession, planCells, planFrames, projectSession, readLabParams, serializeMazeLevel,
+    openEditSession, planFrames, projectSession, readLabParams, serializeMazeLevel,
     skeletonCatalogue, stepFromParams, writeLabParams,
 } from './mazeLab.js';
 /**
@@ -207,6 +215,36 @@ const el = (tag, cls, text) => {
 const WORST_CASE_SOLVE_MS = 3;
 
 /**
+ * ⛓⛓ HOW A FRAME SAYS WHAT PRODUCED IT — the maze's OWN wording, once.
+ *
+ * ⛔ `describeMazeAction` is the registry's `describeAction` hook (Q-a A8) and
+ * the one owner of "move E" / "wait" / "check <name>"; the icon row, the block
+ * annotations and any cross-substrate queue viewer read it, and a page that
+ * spelled its own would be the second authority the hook exists to prevent.
+ * Frame 0 has no input — the start is not something somebody pressed — and it
+ * prints an em dash rather than an empty string, so the HUD's field list never
+ * silently loses a column.
+ */
+const describeFrameInput = (frame) => (frame?.input
+    ? `${describeMazeAction(frame.input)}${frame.input.params?.refused === true
+        ? ' (REFUSED — the turn passed, the player did not move)' : ''}`
+    : '—');
+
+/**
+ * ⛓ ONE CELL OF THE INPUT STRIP. A move is its direction LETTER (which is also
+ * the engine's own input constant); a wait and a check get a glyph, because the
+ * strip is a row of single characters and `wait` would break the rhythm the
+ * eye reads it by. The full sentence is the cell's `title`.
+ */
+const stripLetter = (entry) => {
+    if (!entry) return '·';
+    if (entry.actionType === ACTION_MOVE) return entry.actionId ?? '?';
+    if (entry.actionType === ACTION_WAIT) return '·';
+    if (entry.actionType === ACTION_LOCATION_CHECK) return '✓';
+    return '?';
+};
+
+/**
  * ⛓ HOW FAST THE SOLVE REPLAY AUTOPLAYS. ⚠ THIS IS A WALL CLOCK AND IT IS
  * ALLOWED TO BE ONE: it paces an ANIMATION and decides nothing. ⛔ No budget,
  * no bound and no generated artifact reads it — the generator's budgets are
@@ -301,19 +339,30 @@ export function main() {
     let play = null;
     let playTimer = null;
     /**
-     * ⛓⛓⛓ **THE ONE ANSWER TO "WHICH BLOCK LAYOUT IS ON SCREEN"**, and it is
-     * deliberately ONE function rather than two agreeing ones.
-     *
-     * The element overlay is HANDED this, and the readout PUBLISHES this — so
-     * `window.__mazeLab.play.blocks` is not a claim ABOUT the picture, it is
-     * the picture's own argument. A build that drew the level's INITIAL layout
-     * during a replay (`world.blocks` rather than `state.blocks`) therefore
-     * moves the readout too, and the browser row's "the block moved between
-     * frames" claim can see it. Two functions would have let the picture be
-     * wrong while the readout stayed right, which is the echo/value split
-     * (trap 269) reappearing inside one page.
+     * ⛓ HOW FAST PLAY ADVANCES, in ms — a VIEW setting like `areaLayer`, ⛔ NOT
+     * in the URL (⚖ ruling 9). `PLAY_FRAME_MS` is where it starts; the range
+     * beside the scrub moves it, and a change while PLAY is running restarts
+     * the interval so the slider's number is the interval that is actually
+     * running rather than the one the next press will use.
      */
-    const overlayBlocks = () => (play ? play.frames[play.index].blocks : null);
+    let playRateMs = PLAY_FRAME_MS;
+    /**
+     * ⛓⛓⛓ **THE ONE ANSWER TO "WHICH FRAME IS ON SCREEN"**, and it is
+     * deliberately ONE function rather than several agreeing ones.
+     *
+     * The element overlay is handed its `blocks`, the frame HUD prints its
+     * fields and the readout PUBLISHES them — so `window.__mazeLab.play.blocks`
+     * is not a claim ABOUT the picture, it is the picture's own argument. A
+     * build that drew the level's INITIAL layout during a replay (`world.blocks`
+     * rather than `state.blocks`) therefore moves the readout too, and the
+     * browser row's "the block moved between frames" claim can see it. Two
+     * functions would have let the picture be wrong while the readout stayed
+     * right, which is the echo/value split (trap 269) reappearing inside one
+     * page — and S1 widened the law rather than adding a second reader: the
+     * HUD's `turn`, `inventory` and `input` come through the same door.
+     */
+    const shownFrame = () => (play ? play.frames[play.index] : null);
+    const overlayBlocks = () => shownFrame()?.blocks ?? null;
     /**
      * ⛓⛓ SLICE 4 — THE OPTIONAL HOST BRIDGE. `null` STANDALONE, and that is
      * not a fallback: `mazeLabBridge.js` is never even FETCHED without
@@ -548,6 +597,20 @@ export function main() {
         if (play) play = { ...play, playing: false };
     };
     const clearPlay = () => { stopPlaying(); play = null; };
+    /**
+     * ⛓⛓ **THE ONE WRITER OF `play.index`.** ⛔ Every control that moves the
+     * cursor — ⏮, ◀, ▶, the autoplay tick, the scrub and a click on the input
+     * strip — lands here, so the clamp is written once and the render that
+     * makes the knob agree with the index happens for all of them. It was
+     * inside `mount()` when the only callers were the four buttons; the scrub
+     * and the strip are built by `renderSolvePanel`, which is not.
+     */
+    const seekFrame = (to) => {
+        if (!play) return;
+        const n = play.frames.length;
+        play = { ...play, index: Math.max(0, Math.min(n - 1, to)) };
+        render();
+    };
 
     /* ══════════════════════════════════════════════════════════════════
      * THE URL — written at every press, read only at boot
@@ -667,7 +730,7 @@ export function main() {
          */
         drawWorld(ctx, w, plainView({
             tilePx: TILE_PX,
-            playerPos: play ? play.frames[play.index].player : null,
+            playerPos: shownFrame()?.player ?? null,
         }));
         /**
          * ⛔⛔ EDITOR v3 E2c — **THE THREE SIBLING OVERLAYS ARE THE LAB LEVEL'S,
@@ -690,7 +753,14 @@ export function main() {
                 tilePx: TILE_PX, layer: areaLayer, blocks: overlayBlocks(),
             });
 
-            const cells = lastSolve ? planCells(state, lastSolve) : null;
+            /**
+             * ⛓⛓ THE ROUTE LINE READS THE FRAMES `play` ALREADY HOLDS (dedup
+             * M2). It called `planCells` here — a SECOND full replay of the
+             * whole walk, on EVERY repaint, for positions the frames beside it
+             * already carry. `play` is non-null exactly when the plan replayed,
+             * so there is no case this drops.
+             */
+            const cells = play ? play.frames.map((f) => f.player) : null;
             if (cells && cells.length > 1) {
                 ctx.save();
                 ctx.strokeStyle = COLORS.player;
@@ -997,9 +1067,22 @@ export function main() {
          * moves a block visits exactly one.
          */
         const pn = $('playNote');
+        const scrub = $('labScrub');
+        const strip = $('labInputStrip');
         for (const id of ['labPlayPrev', 'labPlayNext', 'labPlay', 'labPlayReset']) {
             $(id).disabled = !play;
         }
+        /**
+         * ⛓⛓ THE SCRUB IS REWRITTEN FROM `play` ON EVERY RENDER — it is a VIEW
+         * of the index, never a second copy of it. A press of ◀ / ▶ / ⏮, an
+         * autoplay tick and a drag all land in `seekFrame()`, and this line is
+         * makes the knob agree with whatever moved it.
+         */
+        scrub.disabled = !play;
+        scrub.max = String(play ? play.frames.length - 1 : 0);
+        scrub.value = String(play ? play.index : 0);
+        $('labPlayRateNote').textContent = `${playRateMs} ms/frame`;
+        strip.textContent = '';
         if (!play) {
             pn.textContent = lastSolve
                 ? 'no plan to replay — the solve produced none, or it did not replay through '
@@ -1007,24 +1090,45 @@ export function main() {
                     + 'problem).'
                 : '';
         } else {
-            const f = play.frames[play.index];
+            const f = shownFrame();
             const layouts = new Set(play.frames.map((g) => JSON.stringify(g.blocks))).size;
             /**
-             * ⛓⛓ THE LINE PRINTS `overlayBlocks()`, NOT `f.blocks` — a defect
-             * MUTANT (b) found in this file. Reading the frame directly made
-             * the sentence a SECOND answer to "which layout is on screen": under
-             * a build that handed the overlay the level's initial layout the
-             * picture showed one thing and this line said another, and it was
-             * the LINE that was right. ⛔ One function answers that question.
+             * ⛓⛓ THE LINE PRINTS `shownFrame()` / `overlayBlocks()`, NOT a
+             * frame it indexes for itself — a defect MUTANT (b) found in this
+             * file. Reading the frame directly made the sentence a SECOND answer
+             * to "which layout is on screen": under a build that handed the
+             * overlay the level's initial layout the picture showed one thing
+             * and this line said another, and it was the LINE that was right.
+             * ⛔ One function answers that question, and S1's `turn`,
+             * `inventory` and `input` come through the same door.
              * ⚠ `layouts` is deliberately still off the FRAMES: it is a
              * statement about the PLAN, not about the picture.
              */
             const shown = overlayBlocks();
             pn.textContent = `frame ${play.index}/${play.frames.length - 1}`
+                + ` · turn ${f.turn}`
                 + ` · player (${f.player.x},${f.player.y})`
+                + ` · inventory [${f.inventory.join(' ')}]`
                 + ` · blocks ${shown === null ? '(this level has none)' : `[${shown.join(' ')}]`}`
+                + ` · input: ${describeFrameInput(f)}`
                 + ` · ${layouts} DISTINCT block layout(s) over the whole plan`
                 + `${layouts > 1 ? ' — the walk PUSHES' : ''}`;
+            /**
+             * ⛓⛓ THE STRIP — one cell per TURN of the walk, in order, read off
+             * the frames' own `input`. ⛔ Not off `lastSolve.plan`: the plan is
+             * the ORACLE's spelling of the walk and a hand walk (S2b) has no
+             * plan at all, while every author's walk has frames. The lit cell
+             * is the one that produced the frame on screen — so frame 0 lights
+             * NOTHING, because the start is not an input.
+             */
+            play.frames.slice(1).forEach((g, i) => {
+                const cell = el('button', 'in', stripLetter(g.input));
+                cell.title = `frame ${i + 1} — ${describeFrameInput(g)}`;
+                if (play.index === i + 1) cell.classList.add('lit');
+                if (g.input?.params?.refused === true) cell.classList.add('refused');
+                lifetimes.current().on(cell, 'click', () => { stopPlaying(); seekFrame(i + 1); });
+                strip.appendChild(cell);
+            });
         }
         if (!lastSolve) {
             note.appendChild(el('div', 'rj',
@@ -3115,7 +3219,20 @@ export function main() {
                     index: play.index,
                     frames: play.frames.length,
                     playing: play.playing,
-                    player: play.frames[play.index].player,
+                    /**
+                     * ⛓⛓ EVERY ONE OF THESE IS WHAT THE HUD PRINTS, off the
+                     * SAME frame (`shownFrame()`) — the widened `overlayBlocks`
+                     * law. A build whose HUD read a different frame from the
+                     * picture would move this readout too, which is what makes
+                     * CLAIM 15's "the HUD names `frames[k].player`" a claim
+                     * about the page rather than about a string.
+                     */
+                    player: shownFrame().player,
+                    turn: shownFrame().turn,
+                    inventory: [...shownFrame().inventory],
+                    input: describeFrameInput(shownFrame()),
+                    /** ⛓ Who wrote this walk — `'oracle'` here, `'hand'` at S2b. */
+                    author: play.author ?? null,
                     blocks: overlayBlocks(),
                     /** ⛓ How many DISTINCT block layouts the whole plan visits.
                      *  1 means the walk pushes nothing. */
@@ -3417,7 +3534,13 @@ export function main() {
                  */
                 clearPlay();
                 const frames = planFrames(state, lastSolve);
-                play = frames ? { frames, index: 0, playing: false } : null;
+                /**
+                 * ⛓ `author` — WHO WROTE THIS WALK. `'oracle'` is the only
+                 * value on this arm; slice S2b's hand walk is the second, and
+                 * the field exists now so the HUD and the readout do not have
+                 * to grow a shape when it lands.
+                 */
+                play = frames ? { frames, index: 0, playing: false, author: 'oracle' } : null;
                 say(`SOLVE: ${lastSolve.verdict}`
                     + (frames ? ` — ${frames.length - 1} frame(s) to replay` : ''),
                 lastSolve.verdict !== 'SOLVED');
@@ -3435,34 +3558,35 @@ export function main() {
          * leave a second one running over the first (trap 259's shape for
          * timers rather than listeners).
          */
-        const seek = (to) => {
-            if (!play) return;
-            const n = play.frames.length;
-            play = { ...play, index: Math.max(0, Math.min(n - 1, to)) };
-            render();
-        };
         lt.onRetire(() => stopPlaying());
-        lt.on($('labPlayPrev'), 'click', () => { stopPlaying(); seek(play.index - 1); });
-        lt.on($('labPlayNext'), 'click', () => { stopPlaying(); seek(play.index + 1); });
-        lt.on($('labPlayReset'), 'click', () => { stopPlaying(); seek(0); });
-        lt.on($('labPlay'), 'click', () => {
+        lt.on($('labPlayPrev'), 'click', () => { stopPlaying(); seekFrame(play.index - 1); });
+        lt.on($('labPlayNext'), 'click', () => { stopPlaying(); seekFrame(play.index + 1); });
+        lt.on($('labPlayReset'), 'click', () => { stopPlaying(); seekFrame(0); });
+        /**
+         * ⛓⛓ THE SCRUB. `input` and not `change`, so the picture follows the
+         * knob while it is being dragged; and it STOPS PLAY first, exactly as
+         * ◀ / ▶ do — a slider and an interval writing the same index would each
+         * be undoing the other, and the reader could not tell which one moved.
+         */
+        lt.on($('labScrub'), 'input', (e) => {
+            stopPlaying();
+            seekFrame(Number(e.target.value));
+        });
+        /**
+         * ⛓ ARMING THE INTERVAL, in one place — the PLAY press and a RATE
+         * change while it is running are the two callers, and a second literal
+         * would be a second `PLAY_FRAME_MS` the moment the rate moved.
+         *
+         * ⛔ THE TICK THAT LANDS ON THE LAST FRAME STOPS THERE — it does not
+         * advance and then discover on the NEXT tick that it is done. The
+         * difference is observable: a reader (and a browser row) that sees
+         * `index` at the last frame would otherwise still find `playing: true`
+         * for one interval, which is a readout describing an animation that has
+         * nothing left to do.
+         */
+        const startPlaying = () => {
             if (!play) return;
-            if (play.playing) {
-                stopPlaying();
-                say('replay paused');
-                render();
-                return;
-            }
-            if (play.index >= play.frames.length - 1) play = { ...play, index: 0 };
             play = { ...play, playing: true };
-            /**
-             * ⛔ THE TICK THAT LANDS ON THE LAST FRAME STOPS THERE — it does
-             * not advance and then discover on the NEXT tick that it is done.
-             * The difference is observable: a reader (and a browser row) that
-             * sees `index` at the last frame would otherwise still find
-             * `playing: true` for one interval, which is a readout describing
-             * an animation that has nothing left to do.
-             */
             playTimer = setInterval(lt.guard('the SOLVE replay', () => {
                 if (!play) return;
                 const next = play.index + 1;
@@ -3472,8 +3596,30 @@ export function main() {
                     say('replay finished — the block is where the plan left it');
                 }
                 render();
-            }), PLAY_FRAME_MS);
-            say('replaying the plan — the BLOCK moves with `state.blocks`');
+            }), playRateMs);
+        };
+        /**
+         * ⛓ THE PLAY RATE — a VIEW setting (⛔ not in the URL, ⚖ ruling 9). A
+         * change WHILE PLAY IS RUNNING restarts the interval, so the number the
+         * page prints is the interval that is actually running.
+         */
+        lt.on($('labPlayRate'), 'input', (e) => {
+            playRateMs = Number(e.target.value) || PLAY_FRAME_MS;
+            if (play?.playing) { stopPlaying(); startPlaying(); }
+            render();
+        });
+        lt.on($('labPlay'), 'click', () => {
+            if (!play) return;
+            if (play.playing) {
+                stopPlaying();
+                say('replay paused');
+                render();
+                return;
+            }
+            if (play.index >= play.frames.length - 1) play = { ...play, index: 0 };
+            startPlaying();
+            say(`replaying the plan at ${playRateMs} ms/frame — the BLOCK moves with `
+                + '`state.blocks`');
             render();
         });
         lt.on($('labUndo'), 'click', undoCommand.run);

@@ -2287,6 +2287,33 @@ export function mazeModel({
  */
 export const DEFAULT_MAZE_BUDGET = Object.freeze({ maxExpansions: 20000 });
 
+/**
+ * ⛓⛓⛓ **THE ONE START CONSTRUCTION** — dedup finding M1 (plan §16.1).
+ *
+ * `createState(world)` plus the items the player STARTS with, and nothing else.
+ * It was spelled out four times: the oracle's own `makeStart` (which called it
+ * twice, for the BFS and for the certifying replay), and `mazeLab.planFrames`
+ * and `mazeLab.planCells` on the lab page. Two of those literals boot the walk
+ * a solve is CERTIFIED by and two boot the walk the page DRAWS; the day they
+ * drift is the day the page animates a walk the oracle never certified — the
+ * two-cost-models shape at its smallest, which is why the oracle's own docblock
+ * already refused to write it twice.
+ *
+ * ⛔ The argument is a WORLD, not a lab state: this file is the substrate's and
+ * knows nothing about `mazeLab`'s state shape. The lab passes `state.record`
+ * and `state.palette?.items`.
+ *
+ * @param {object} world
+ * @param {Iterable<string>|null} [items] ids the player starts holding; `null`
+ *   (the default) is an empty inventory.
+ * @returns {object} a fresh engine state
+ */
+export function startStateFor(world, items = null) {
+    const s = createState(world);
+    for (const id of items ?? []) s.inventory.add(id);
+    return s;
+}
+
 export function assertMazeBudget(budget = DEFAULT_MAZE_BUDGET) {
     const b = { ...DEFAULT_MAZE_BUDGET, ...(budget ?? {}) };
     if (!Number.isInteger(b.maxExpansions) || b.maxExpansions <= 0) {
@@ -2335,13 +2362,11 @@ export function mazeOracle({ model, items = null, budget = DEFAULT_MAZE_BUDGET }
      * ⛔ ONE START CONSTRUCTION, CALLED TWICE. The BFS and the replay must begin
      * from the same state or the certification would be certifying a different
      * walk; a second literal here would be the two-cost-models shape at its
-     * smallest.
+     * smallest. ⛓ Since S1 the construction itself is `startStateFor` — the
+     * lab's `framesForActions` boots the SAME way, so the walk the page steps
+     * through starts where the certified one did (dedup M1).
      */
-    const makeStart = (world) => {
-        const s = createState(world);
-        for (const id of items ?? []) s.inventory.add(id);
-        return s;
-    };
+    const makeStart = (world) => startStateFor(world, items);
     const inventory = (world) => {
         const tiles = { walls: 0 };
         for (const t of world.tiles) if (t === TILE_WALL) tiles.walls += 1;

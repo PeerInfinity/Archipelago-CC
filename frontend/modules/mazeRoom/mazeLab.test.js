@@ -19,9 +19,11 @@ import {
     readLabParams, SKELETON_KIND_NAMES, DEFAULT_SKELETON, serializeMazeLevel,
     skeletonCatalogue, solveState, stepFromParams, undoEdit, writeLabParams,
     certifyInto, editBaseTag, openEditSession, projectSession, readRoomParam,
+    frameOf, framesForActions,
 } from './mazeLab.js';
-import { deserializeMazeLevel } from './procgenMaze.js';
-import { TILE_FLOOR, TILE_WALL, getTile } from './mazeRoomEngine.js';
+import { deserializeMazeLevel, mazeOracle, startStateFor } from './procgenMaze.js';
+import { TILE_FLOOR, TILE_WALL, getTile, step } from './mazeRoomEngine.js';
+import { locationCheckEntry, moveEntry, waitEntry } from './mazeKeys.js';
 import { UrlParamsError } from '../procgenCore/urlParams.js';
 import { describeKeptKind } from '../procgenCore/labView.js';
 
@@ -1468,6 +1470,194 @@ describe('mazeLab — planFrames, the SOLVE replay (⚖ design ruling 6 fn. 3)',
         const st = guarded();
         expect(planFrames(st, null)).toBe(null);
         expect(planFrames(st, { plan: [] })).toBe(null);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ SLICE S1 — ONE STEPPER, ONE BOOT (dedup M1 + M2)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('mazeLab — `startStateFor` is the boot the ORACLE certifies from (M1)', () => {
+    /**
+     * ⛔ THE DISCRIMINATOR IS A DOOR THE PLAYER ALREADY HAS THE KEY TO.
+     * A `startStateFor` that dropped the starting items would still be a
+     * plausible-looking boot on every level the v1 palette generates, because
+     * that palette starts the player EMPTY-handed (`MAZE_PALETTE.items: null`)
+     * — the two constructions would agree and the test would prove nothing.
+     * With `key_red` in hand the oracle plans STRAIGHT THROUGH `door_red`, and
+     * that plan is illegal from an empty start: `step` refuses at the door.
+     * Measured at seed 1 / step 2 / 5x5 — plan `SESS`, door at (1,2).
+     */
+    const doorKey = () => generateStep({ seed: 1, step: 2, ...ROOM });
+
+    it('⛔ carries the starting items, and the oracle\'s plan REPLAYS from it', () => {
+        const st = doorKey();
+        expect([...st.record.obstacles.values()]).toContain('door_red');
+        const solved = mazeOracle({ model: st.model, items: ['key_red'] }).solve(st.record);
+        expect(solved.verdict).toBe('SOLVED');
+        let s = startStateFor(st.record, ['key_red']);
+        expect([...s.inventory]).toEqual(['key_red']);
+        for (const input of solved.plan) {
+            const next = step(st.record, s, input);
+            expect(next).not.toBe(null);
+            s = next;
+        }
+        expect(s.player_pos).toEqual(st.model.goalPos);
+    });
+
+    it('⛔⛔ …and the SAME plan is ILLEGAL from a boot that dropped them — which is '
+        + 'what makes the row above a claim and not a tautology', () => {
+        const st = doorKey();
+        const solved = mazeOracle({ model: st.model, items: ['key_red'] }).solve(st.record);
+        let s = startStateFor(st.record, null);
+        let refusedAt = null;
+        for (const [i, input] of solved.plan.entries()) {
+            const next = step(st.record, s, input);
+            if (!next) { refusedAt = i; break; }
+            s = next;
+        }
+        expect(refusedAt).not.toBe(null);
+    });
+
+    it('⛓ `null` items and no items are the same empty boot', () => {
+        const st = doorKey();
+        expect([...startStateFor(st.record).inventory]).toEqual([]);
+        expect([...startStateFor(st.record, null).inventory]).toEqual([]);
+    });
+});
+
+describe('mazeLab — `framesForActions`, the ONE stepper (M1 + M2)', () => {
+    const walked = () => generateStep({ seed: 3, step: 3, ...ROOM });
+
+    it('⛔⛔ AGREES WITH THE HAND LOOP IT REPLACED, frame for frame — the walk did '
+        + 'not move when the stepper did', () => {
+        for (const st of [walked(), guarded()]) {
+            const solved = solveState(st);
+            const frames = planFrames(st, solved);
+            /**
+             * ⛓ THE OLD LOOP, SPELLED OUT HERE ON PURPOSE: `createState` +
+             * palette items + `step` per plan letter, which is exactly what
+             * `planFrames` and `planCells` each carried before S1. The three
+             * fields it produced are pinned; `turn` and `input` are what S1
+             * ADDED, and the row below names them.
+             */
+            let s = startStateFor(st.record, st.palette?.items ?? null);
+            const hand = [s].concat(solved.plan.map((input) => {
+                s = step(st.record, s, input);
+                return s;
+            })).map((t) => ({
+                player: { x: t.player_pos.x, y: t.player_pos.y },
+                blocks: t.blocks === undefined ? null : [...t.blocks],
+                inventory: [...t.inventory].sort(),
+            }));
+            expect(frames.map((f) => ({
+                player: f.player, blocks: f.blocks, inventory: f.inventory,
+            }))).toEqual(hand);
+        }
+    });
+
+    it('⛓ a frame carries FIVE fields — the three it always had, plus the ENGINE\'s '
+        + '`turn` and the ENTRY that produced it; frame 0\'s input is `null`', () => {
+        const st = walked();
+        const frames = planFrames(st, solveState(st));
+        expect(Object.keys(frames[0]).sort())
+            .toEqual(['blocks', 'input', 'inventory', 'player', 'turn']);
+        expect(frames[0].input).toBe(null);
+        expect(frames[0].turn).toBe(0);
+        expect(frames[1].input).toMatchObject({ actionType: 'move', substrate: 'maze' });
+        // ⛓ every move costs exactly one engine turn, so on a plan of moves the
+        //   two numbers agree — and `turn` is the one that keeps agreeing when
+        //   a hand walk (S2b) puts a `locationCheck` in the middle.
+        frames.forEach((f, i) => expect(f.turn).toBe(i));
+    });
+
+    it('⛓⛓ `planFrames` IS `framesForActions` over one `moveEntry` per plan letter — '
+        + 'the letters ARE the directions', () => {
+        const st = walked();
+        const solved = solveState(st);
+        expect(framesForActions(st, solved.plan.map((d) => moveEntry(d))))
+            .toEqual(planFrames(st, solved));
+    });
+
+    it('⛓⛓ `planCells` is a PROJECTION of the frames, not a second replay (M2)', () => {
+        const st = walked();
+        const solved = solveState(st);
+        expect(planCells(st, solved)).toEqual(planFrames(st, solved).map((f) => f.player));
+    });
+
+    it('⛔ a WAIT passes a turn and moves nobody — the ENGINE\'s answer (S2a), not '
+        + 'a page-side one', () => {
+        const st = walked();
+        const frames = framesForActions(st, [moveEntry('S'), waitEntry(), moveEntry('S')]);
+        expect(frames).toHaveLength(4);
+        expect(frames[2].player).toEqual(frames[1].player);
+        expect(frames[2].turn).toBe(frames[1].turn + 1);
+        expect(frames[3].player).not.toEqual(frames[2].player);
+    });
+
+    it('⛓ a `locationCheck` costs a FRAME and no engine TURN — which is why `turn` '
+        + 'is on the frame and the index is not enough', () => {
+        const st = walked();
+        const frames = framesForActions(st, [moveEntry('S'), locationCheckEntry('loc_1')]);
+        expect(frames).toHaveLength(3);
+        expect(frames[2].player).toEqual(frames[1].player);
+        expect(frames[2].turn).toBe(frames[1].turn);
+        expect(frames[2].input.actionType).toBe('locationCheck');
+    });
+
+    it('⛓⛓ `loops` is EXPANDED — a folded recording and the live queue it was '
+        + 'folded from give the same frames', () => {
+        const st = walked();
+        const folded = framesForActions(st, [moveEntry('S', 2)]);
+        const flat = framesForActions(st, [moveEntry('S'), moveEntry('S')]);
+        expect(folded).toEqual(flat);
+        expect(folded).toHaveLength(3);
+    });
+
+    it('⛔⛔ A REFUSAL IS `null` — an oracle plan that does not replay is a SEAM '
+        + 'DEFECT and an animation is not where one is discovered', () => {
+        const st = walked();
+        // ⛓ NORTH out of the entrance at (0,0) — off the grid, refused by `step`.
+        expect(framesForActions(st, [moveEntry('N')])).toBe(null);
+        expect(framesForActions(st, [moveEntry('S'), moveEntry('N'), moveEntry('N')])).toBe(null);
+    });
+
+    it('⛔⛔ …UNLESS THE ENTRY SAYS IT WAS REFUSED WHEN IT WAS RECORDED (plan §28, '
+        + 'R2) — then the frame REPEATS the previous engine state', () => {
+        const st = walked();
+        // ⛓ WEST from (0,1) is off the grid; NORTH would walk BACK to the
+        //   entrance, which is legal and would test nothing.
+        const refused = { ...moveEntry('W'), params: { refused: true } };
+        const frames = framesForActions(st, [moveEntry('S'), refused, moveEntry('S')]);
+        expect(frames).toHaveLength(4);
+        expect(frames[2].player).toEqual(frames[1].player);
+        expect(frames[2].blocks).toEqual(frames[1].blocks);
+        expect(frames[2].inventory).toEqual(frames[1].inventory);
+        // ⚠ `turn` REPEATS TOO: `step` returned nothing, so the engine's counter
+        //   did not advance. The turn a refusal costs is the PANEL's (hazards
+        //   tick either way) and is not this state's to spend.
+        expect(frames[2].turn).toBe(frames[1].turn);
+        expect(frames[2].input.params.refused).toBe(true);
+        expect(frames[3].player).not.toEqual(frames[2].player);
+    });
+
+    it('⛓ `null` for nothing to replay, and for a state with no world', () => {
+        const st = walked();
+        expect(framesForActions(st, [])).toBe(null);
+        expect(framesForActions(st, null)).toBe(null);
+        expect(framesForActions(st, [moveEntry('S', 0)])).toBe(null);
+        expect(framesForActions({}, [moveEntry('S')])).toBe(null);
+    });
+
+    it('⛓ `frameOf` freezes what it publishes — a caller cannot edit the frame the '
+        + 'picture was drawn from', () => {
+        const st = walked();
+        const f = frameOf(startStateFor(st.record, ['key_red']), moveEntry('S'));
+        expect(Object.isFrozen(f)).toBe(true);
+        expect(Object.isFrozen(f.player)).toBe(true);
+        expect(f.inventory).toEqual(['key_red']);
+        expect(f.input.actionId).toBe('S');
+        expect(frameOf(startStateFor(st.record)).input).toBe(null);
     });
 });
 

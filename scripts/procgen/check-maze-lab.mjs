@@ -1597,6 +1597,74 @@ try {
         '⛓⛓ …naming the SAME block layout the readout publishes — the page and the picture '
         + 'have ONE answer to "which layout is on screen"',
         `${playText.trim().slice(0, 90)} vs ${json(frameN.play.blocks)}`);
+    /**
+     * ⛓⛓⛓ **CLAIM 15b — THE SCRUB, THE HUD AND THE INPUT STRIP (SLICE S1).**
+     *
+     * ⛔ EVERY NUMBER HERE IS DERIVED FROM THE READOUT OR THE DOM, never typed:
+     * the slider's `max` is compared against `play.frames`, the strip's length
+     * against the same, and the frame the HUD names against `frames[k]` — read
+     * back through `__mazeLab.play`, which is the frame the OVERLAY was drawn
+     * from (`shownFrame()`). A build whose HUD read a different frame from the
+     * picture moves this readout too, which is the mutant this slice ran.
+     */
+    const scrubMax = await page.$eval('#labScrub', (n) => Number(n.max));
+    check(scrubMax === frameN.play.frames - 1,
+        '⛓⛓ the SCRUB\'s `max` IS the last frame index — the control describes the walk '
+        + 'it scrubs, and a slider that could not reach the end would be a control that '
+        + 'lies about what it can do',
+        `max=${scrubMax}, frames=${frameN.play.frames}`);
+    /**
+     * ⛓ A MIDDLE FRAME, chosen from the frame COUNT rather than named: the
+     * claim is that the slider ADDRESSES a frame, and frame 0 or the last one
+     * would be reachable by the buttons that were already gated above.
+     */
+    const k = Math.floor((frameN.play.frames - 1) / 2);
+    await page.$eval('#labScrub', (n, v) => {
+        n.value = String(v);
+        n.dispatchEvent(new Event('input', { bubbles: true }));
+    }, k);
+    await settled(`window.__mazeLab?.play?.index === ${k}`, 'the SCRUB to move the frame');
+    const scrubbed = await read();
+    const hudText = await page.textContent('#playNote');
+    check(scrubbed.play.index === k
+        && hudText.includes(`frame ${k}/${scrubbed.play.frames - 1}`)
+        && hudText.includes(`player (${scrubbed.play.player.x},${scrubbed.play.player.y})`)
+        && hudText.includes(`turn ${scrubbed.play.turn}`),
+    '⛓⛓⛓ **SETTING THE SCRUB TO k MOVES THE FRAME AND THE HUD NAMES IT** — the index, '
+        + 'the ENGINE turn and the player cell, all off the ONE frame the picture was '
+        + 'drawn from',
+    `k=${k} | ${hudText.trim().slice(0, 120)}`);
+    check(scrubbed.play.author === 'oracle' && hudText.includes(`input: ${scrubbed.play.input}`),
+        '⛓⛓ …and the HUD names the ENTRY that produced that frame, which the readout '
+        + 'publishes as the same string — one walk, one author, said once',
+        `author=${scrubbed.play.author}, input=${json(scrubbed.play.input)}`);
+    const stripCells = await page.$$eval('#labInputStrip .in',
+        (ns) => ns.map((n) => ({ text: n.textContent, lit: n.classList.contains('lit') })));
+    check(stripCells.length === scrubbed.play.frames - 1,
+        '⛓⛓ the INPUT STRIP has one cell per TURN of the walk — `frames − 1`, derived '
+        + 'from the readout and not from the plan the page could have counted twice',
+        `${stripCells.length} cell(s), ${scrubbed.play.frames} frame(s)`);
+    check(stripCells.filter((c) => c.lit).length === 1 && stripCells[k - 1]?.lit === true,
+        '⛓⛓⛓ **EXACTLY ONE CELL IS LIT, AND IT IS THE ONE THAT PRODUCED THE FRAME ON '
+        + 'SCREEN** — cell k−1 for frame k, because the start is not an input',
+        `lit at ${stripCells.findIndex((c) => c.lit)}, expected ${k - 1}`);
+    /** ⛓ …and clicking a letter SEEKS to the frame it produced. */
+    await page.click('#labInputStrip .in:nth-child(1)');
+    await settled(() => window.__mazeLab?.play?.index === 1,
+        'a click on the FIRST strip cell to seek to frame 1');
+    const clicked = await read();
+    check(clicked.play.index === 1 && json(clicked.play.player) !== json(frame0.play.player),
+        '⛓ clicking the first letter SEEKS to the frame it produced — frame 1, and the '
+        + 'player is no longer where the start left them',
+        `index=${clicked.play.index}, ${json(frame0.play.player)} → ${json(clicked.play.player)}`);
+    /** ⛓ AND FRAME 0 LIGHTS NOTHING — the start is not something somebody pressed. */
+    await page.click('#labPlayReset');
+    await settled(() => window.__mazeLab?.play?.index === 0, 'the replay to rewind');
+    const litAtZero = await page.$$eval('#labInputStrip .in.lit', (ns) => ns.length);
+    check(litAtZero === 0,
+        '⛓⛓ …and at frame 0 NO cell is lit — the start is not an input, and a strip that '
+        + 'lit one anyway would name a press that never happened',
+        `${litAtZero} lit`);
     // ⛓ AUTOPLAY: asserted on a CONDITION (it reaches the last frame), never on
     // a sleep — the frame interval is a wall clock and nothing may gate on it.
     await page.click('#labPlayReset');

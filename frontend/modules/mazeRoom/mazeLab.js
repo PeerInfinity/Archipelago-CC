@@ -102,12 +102,21 @@ import {
 import {
     MazeRoomEditor, PALETTE_ENTRIES, PALETTE_TYPES,
 } from './mazeRoomEditor.js';
-import { createState, step } from './mazeRoomEngine.js';
 import {
     DEFAULT_MAZE_BUDGET, MAZE_DEFAULTS, MAZE_PALETTE, MAZE_SKELETON_KINDS, assertMazeBudget,
     deserializeMazeLevel, generateMazeLevel, mazeCostRecords, mazeModel, mazeOracle,
-    requireOutcome, serializeMazeLevel, worldsEqual,
+    requireOutcome, serializeMazeLevel, startStateFor, worldsEqual,
 } from './procgenMaze.js';
+/**
+ * ⛓⛓⛓ S1 — **THE PAGE REPLAYS A WALK THROUGH THE SUBSTRATE'S OWN EXECUTOR.**
+ * ⛔ `mazeQueueExecutor` is the headless half of the panel's queue driver (Q-b)
+ * and `mazeKeys` is the shared-actionQueue vocabulary both sides speak; neither
+ * imports the DOM, the app core or the panel, which is exactly why the lab may
+ * have them. `framesForActions` is what they buy: ONE stepper for the oracle's
+ * plan here and for slice S2b's hand walk.
+ */
+import { moveEntry } from './mazeKeys.js';
+import { executeMazeEntry, expandEntries, isRefused } from './mazeQueueExecutor.js';
 import { mazeEditAdapter } from './mazeEditAdapter.js';
 import { SEED_MAX, rngFor } from './procgenRng.js';
 
@@ -1159,71 +1168,124 @@ export function certify(state) {
 }
 
 /**
- * ⛓ THE CELLS A PLAN WALKS — what the canvas overlay draws.
+ * ⛓⛓⛓ **THE STEPPER — ONE OF THEM, FOR EVERY AUTHOR OF A WALK.**
  *
- * ⛔ IT REPLAYS THE PLAN THROUGH THE ENGINE'S OWN `step`, from the same start
- * construction the oracle used. A page-side "apply the direction letters to a
- * coordinate" would be a SECOND movement model, and the first world with a
- * closed door in it would draw a path through it — the picture would show the
- * walk the solver was refused. ⚠ Which is also why this returns `null` for a
- * plan that does not replay rather than a partial path: the oracle's own replay
- * throws a SEAM DEFECT in that case, and an overlay is not the place to
- * discover one.
+ * Dedup findings M1 + M2 (plan §16.1). Before S1 this page replayed a walk in
+ * TWO hand-written loops (`planFrames` and `planCells`), each with its own
+ * `createState` + palette boot and its own `step` call, beside the oracle's own
+ * certifying replay and the panel's queue driver. Now there is one:
+ *
+ *   - the BOOT is `procgenMaze.startStateFor` — the construction the ORACLE
+ *     certifies from (M1), so the walk this page steps through starts exactly
+ *     where the certified one did;
+ *   - the STEP is `mazeQueueExecutor.executeMazeEntry` — Q-b's headless
+ *     executor, the same one the substrate panel runs its keyboard and its
+ *     recordings through, so `wait` passes a turn the way the ENGINE says it
+ *     does (S2a) and a refusal is a refusal for the same reason in both places;
+ *   - the INPUT is a list of shared `actionQueue` ENTRIES, not letters, which
+ *     is what lets an oracle plan (`planFrames`, below) and a hand walk
+ *     (slice S2b) be the same array with a different author.
+ *
+ * ⛔ **IT REPLAYS THROUGH THE ENGINE, NEVER OVER A COORDINATE.** A page-side
+ * "apply the direction letters to a position" would be a SECOND movement model,
+ * and the first thing it would get wrong is which cell a push vacates — the
+ * whole reverse-pull gadget is a claim about pushing.
+ *
+ * ⚠ **A REFUSAL IS `null`, NOT A PARTIAL WALK** — unless the entry SAYS it was
+ * refused when it was recorded. An oracle plan that does not replay is a SEAM
+ * DEFECT (the oracle's own replay throws on one) and an animation is not where
+ * one is discovered. But a RECORDING keeps its refused presses, stamped
+ * `params.refused` by `projectActions`, because a refused turn still ticked the
+ * hazards and dropping it would shift every later phase (plan §28, R2). Such an
+ * entry refused AGAIN is a COMPLETION: the frame it yields is the previous
+ * frame's engine state — the player did not move and `step` never returned a
+ * new state, so `turn` does not advance either; the per-turn side effects a
+ * refusal DOES have live around this call, in the panel, not in it.
+ *
+ * @param {object} state a lab state (`record` is the world, `palette.items` the
+ *   ids the player starts holding)
+ * @param {object[]} entries shared actionQueue entries; `loops` is expanded
+ *   here (`expandEntries`), so a folded recording and a live queue give the
+ *   same frames
+ * @returns {ReadonlyArray<object>|null} `expandedLength(entries) + 1` frames —
+ *   frame 0 is the start — or `null` when the walk does not replay
  */
-/**
- * ⛓⛓⛓ **THE SOLVE, FRAME BY FRAME** — arc-2 §10.11.4 / ⚖ design ruling 6 fn. 3
- * (*"step-through visualisation is non-negotiable"*), and the mechanism this
- * arc exists for is only visible in it: **A BLOCK MOVES.** A static plan line
- * over the room shows where the player walked; it cannot show that the walk
- * PUSHED something, and the whole reverse-pull gadget is a claim about pushing.
- *
- * ⛔ **IT REPLAYS THROUGH THE ENGINE'S OWN `step`, from `createState`** — the
- * same construction the oracle used, and for `planCells`' reason one order of
- * magnitude louder now that there are blocks: a page-side "apply the direction
- * letters to a coordinate" would be a SECOND movement model, and the first
- * thing it would get wrong is which cell a push vacates.
- *
- * ⚠ It returns `null` for a plan that does not replay, exactly as `planCells`
- * does: the oracle's own replay throws a SEAM DEFECT in that case and an
- * animation is not the place to discover one.
- *
- * @returns {Array<{player:{x,y}, blocks:string[]|null, inventory:string[]}>|null}
- *   one frame per position ALONG the plan, `plan.length + 1` of them (frame 0
- *   is the start). `blocks` is `state.blocks` VERBATIM — the engine's sorted
- *   posKey array — or `null` on a world that has none (⚖ ruling 5: absence, not
- *   emptiness, is the switch, and this projection keeps it).
- */
-export function planFrames(state, solved) {
-    if (!solved?.plan?.length) return null;
-    let s = createState(state.record);
-    for (const id of state.palette?.items ?? []) s.inventory.add(id);
-    const frameOf = (t) => Object.freeze({
-        player: Object.freeze({ x: t.player_pos.x, y: t.player_pos.y }),
-        blocks: t.blocks === undefined ? null : Object.freeze([...t.blocks]),
-        inventory: Object.freeze([...t.inventory].sort()),
-    });
-    const frames = [frameOf(s)];
-    for (const input of solved.plan) {
-        const next = step(state.record, s, input);
-        if (!next) return null;
-        s = next;
-        frames.push(frameOf(s));
+export function framesForActions(state, entries) {
+    if (!state?.record || !Array.isArray(entries)) return null;
+    const world = state.record;
+    const expanded = expandEntries(entries);
+    if (expanded.length === 0) return null;
+    let s = startStateFor(world, state.palette?.items ?? null);
+    const frames = [frameOf(s, null)];
+    for (const entry of expanded) {
+        const { next } = executeMazeEntry(world, s, entry);
+        if (next === null) {
+            // ⛔ A refusal the entry ALREADY CARRIES is a completion; any other
+            //   refusal means this walk does not replay through this world.
+            if (!isRefused(entry)) return null;
+        } else {
+            s = next;
+        }
+        frames.push(frameOf(s, entry));
     }
     return Object.freeze(frames);
 }
 
-export function planCells(state, solved) {
+/**
+ * ⛓⛓ ONE FRAME — what the picture, the HUD and the readout all read.
+ *
+ * ⛔ `blocks` is `state.blocks` VERBATIM (the engine's sorted posKey array), or
+ * `null` on a world that has none: ⚖ ruling 5's ABSENCE, not emptiness, and this
+ * projection keeps it. `turn` is the ENGINE's turn counter and not the frame
+ * index — a `locationCheck` costs no engine turn and a refusal costs none
+ * either, so the two numbers part company the moment a hand walk has one in it.
+ * `input` is the ENTRY that produced this frame (`null` on frame 0, the start).
+ *
+ * @param {object} t an engine state
+ * @param {object|null} [input] the queue entry that produced it
+ */
+export function frameOf(t, input = null) {
+    return Object.freeze({
+        player: Object.freeze({ x: t.player_pos.x, y: t.player_pos.y }),
+        blocks: t.blocks === undefined ? null : Object.freeze([...t.blocks]),
+        inventory: Object.freeze([...t.inventory].sort()),
+        turn: t.turn ?? 0,
+        input: input === null || input === undefined ? null : Object.freeze({ ...input }),
+    });
+}
+
+/**
+ * ⛓⛓⛓ **THE SOLVE, FRAME BY FRAME** — arc-2 §10.11.4 / ⚖ design ruling 6
+ * fn. 3 (*"step-through visualisation is non-negotiable"*), and the mechanism
+ * this arc exists for is only visible in it: **A BLOCK MOVES.** A static plan
+ * line over the room shows where the player walked; it cannot show that the
+ * walk PUSHED something, and the whole reverse-pull gadget is a claim about
+ * pushing.
+ *
+ * ⛓ **THE ORACLE'S PLAN IS A TAPE OF MOVES** — `res.plan` is the engine's own
+ * input letters, and `INPUT_N` *is* `'N'`, which is the maze's counterpart of a
+ * recorded walk with `author: 'oracle'`. So this is `framesForActions` over one
+ * `moveEntry` per letter and nothing else; the boot, the step and the refusal
+ * rule are all up there, in one place, with the hand walk's.
+ */
+export function planFrames(state, solved) {
     if (!solved?.plan?.length) return null;
-    let s = createState(state.record);
-    for (const id of state.palette?.items ?? []) s.inventory.add(id);
-    const cells = [{ x: s.player_pos.x, y: s.player_pos.y }];
-    for (const input of solved.plan) {
-        const next = step(state.record, s, input);
-        if (!next) return null;
-        s = next;
-        cells.push({ x: s.player_pos.x, y: s.player_pos.y });
-    }
-    return cells;
+    return framesForActions(state, solved.plan.map((dir) => moveEntry(dir)));
+}
+
+/**
+ * ⛓ THE CELLS A PLAN WALKS — what the canvas overlay draws.
+ *
+ * ⛓⛓ IT IS A PROJECTION OF THE FRAMES, NOT A SECOND REPLAY (dedup M2). It was
+ * its own `createState`+`step` loop, and the DOM arm called it on EVERY DRAW
+ * while `play` already held the same positions — a per-repaint re-run of the
+ * whole walk. The view now maps `play.frames`; this stays for the callers that
+ * have no `play` (the unit tests, and any reader who wants the route without
+ * animating it).
+ */
+export function planCells(state, solved) {
+    const frames = planFrames(state, solved);
+    return frames ? frames.map((f) => f.player) : null;
 }
 
 /* ══════════════════════════════════════════════════════════════════════
