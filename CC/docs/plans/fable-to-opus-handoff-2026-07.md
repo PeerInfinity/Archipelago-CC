@@ -8436,6 +8436,20 @@ BEFORE the walk (an inventory the level's palette cannot supply) belongs BESIDE 
 loops ignores it, so a digest of `lab.payload.level` rides there and `refuseWalkDocument` gains one
 comparison — ⛔ NOT on the envelope, which is the store's shape and not the lab's to extend.
 
+**RE-BANK, and a red CI found on the way.** ⚠ The as-built commit did NOT trigger `JavaScript Unit
+Tests`: its trigger path list holds `docs/**` but this file lives under `CC/docs/`, so the gate
+answers existed only at the CODE head — `ci-summary.mjs 6d0cd0256 --gate=…` confirmed **255/0** and
+**261/0**, byte-equal to the local runs. That head's run was RED, and it was mine:
+`lintGateLabels.test.js` ×2. `docLinks.test.js` and `glossary.test.js` carry counts IN THEIR TEST
+NAMES and those names are allowlisted **by their text**, so moving 215 → 221 and 164 → 166 broke each
+key TWICE — as a new finding and as a stale entry. Fixed the way the lint asks and
+[[feedback_deriving_a_roster_arms_a_dormant_lint]] asks: the two NAMES now interpolate the roster
+they measure (`${CORPUS.length}`, `${TERMS.length}`) and leave the allowlist for good; only
+`TERMS → toHaveLength(166)`, a PIN and therefore a deliberate input, was re-keyed with
+`--write-allow`. The allowlist SHRANK 87 → 85 (`65bc20898`, CI **success**). Re-banked at that head
+once its run concluded: `ok gate: maze-lab 255/0 7.1s` and `ok gate: procgen-demos 261/0 12.0s`,
+both CI-sourced, 66 rows written.
+
 **Notes for whoever is next.**
 - ⚠ The demo catalogue's runner gained a `keys` field (DOM key names pressed through
   `page.keyboard.press` after `press`). No wait follows them, and that is DERIVED: the page's
@@ -8444,6 +8458,11 @@ comparison — ⛔ NOT on the envelope, which is the store's shape and not the l
 - ⚠ The catalogue press is `body:has(#labWalkStop:disabled) #labWalkStart`, not `#labWalkStart`:
   START is present and ENABLED in static HTML before `mazeLabView` has mounted, and `#labWalkStop`
   is disabled by `renderManualPanel` and by nothing else. The §5i lesson, second substrate.
+- ⚠ **A COUNT IN A TEST NAME IS AN ALLOWLIST KEY.** `lint-gate-labels` keys by `file::rule::label`,
+  so editing an already-allowlisted count reds CI twice over. Interpolate the name; allowlist only
+  the assertion.
+- ⚠ **`CC/docs/**` IS NOT A CI TRIGGER PATH** — an as-built commit gets no `JavaScript Unit Tests`
+  run, so plan the re-bank for a head that touched `frontend/**`, `scripts/**` or `docs/**`.
 - ⚠ `check-procgen-demos.mjs` now takes **~10 minutes** (it runs every entry's `cli`, and entry 30's
   is `check-maze-lab.mjs` at 70 s). Run it with `setsid nohup` and a captured PID; `$!` after
   `setsid` is the WRAPPER's pid, not node's — measured here, and a `kill -0` on it reported "done"
