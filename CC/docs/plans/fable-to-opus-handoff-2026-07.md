@@ -9025,7 +9025,9 @@ integers**; asserted in a row rather than typed).
 `region-atlas.schema.json:126-128` blesses *"an integer or non-empty string level id"*, so
 `map_ref: "19"` named level 19 when the index was string-keyed and still does — dropping that would
 be a behaviour change shipped under a byte-inert claim. But `Number(null)` is **0** and level 0 is
-the real starting room (**three regions in `atlases/seedling-fixture.json` carry `map_ref: null`**),
+the real starting room (⚠ **FALSE — measured `with_map_ref=0 null=0 absent=3`; the three regions OMIT the field, and no committed
+JSON carries a null `map_ref`. `dict.get()` returns `None` for an ABSENT key and I read that as null. The
+round-trip rule stands on its own — `Number(undefined)` misses either way — and its row is synthetic**),
 so only a string `Number` maps back to itself converts; `null`, `undefined`, `'mz_3'`, `''`, `'007'`
 and `' 19'` miss, exactly as `String(…)` left them.
 
@@ -9042,7 +9044,7 @@ flash panel, to spell twelve characters:
 
 | the closure from `flashPanel/index.js` | files | bytes |
 |---|---|---|
-| at `8a1eb6b1a` | 43 | 650,891 |
+| at `8a1eb6b1a` | 43 | 650,891 | ⚠ **MIS-LABELLED — see the planner's correction below: 41 / 644,012 at that head; this row is post-F3. The DELTA is the claim and it reproduces to the byte.**
 | + a static `seedlingAtlasDerivation` | 70 | 1,918,889 |
 | **the cost of one line** | **+27** | **+1,267,998** |
 
@@ -9172,7 +9174,7 @@ the machine. **Not owed.** ⛓ Second lesson from the same incident: an unbounde
 - **§17.1 F11 says four indexes; there are five.** The fifth
   (`regionAtlasValidator.indexMapDocument`) is string-keyed BY DESIGN over a union type and is
   pinned that way; it is not a duplicate.
-- **§17.1 F11 does not name the `map_ref: null` hazard.** `Number(null) === 0` and level 0 is the
+- **§17.1 F11 does not name the `map_ref: null` hazard** (⚠ the FIXTURE census in this bullet is wrong — see above). `Number(null) === 0` and level 0 is the
   starting room, so the obvious conversion at the caller would have resolved three fixture regions
   to a real level.
 - **§17.1 F9's "7" and the brief's "13" are both right** — production files vs the whole grep. And
