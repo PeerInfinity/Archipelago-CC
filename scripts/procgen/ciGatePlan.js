@@ -421,6 +421,71 @@ export function auditRunShards({ jobs, budgetMs = CI_SHARD_BUDGET_MS }) {
 }
 
 /**
+ * ⛓⛓⛓ **THE LAST RUN'S PARTITION, AUDITED WHERE SOMEBODY IS ALREADY LOOKING.**
+ *
+ * ⚖ The user, 2026-09-02, after S5b: the audit existed and nothing ran it. A
+ * guard nobody runs is not a guard — which is this arc's own repeated lesson,
+ * and the +8 min/push regression trap 1068 records lived for days precisely
+ * because no artifact could disagree with the partition.
+ *
+ * ⛔ **THIS IS THE LOCAL VARIANT, AND THE CHOICE WAS MEASURED.** Wiring the
+ * audit into CI was costed first and rejected FOR NOW: it needs an `actions:
+ * read` `permissions:` block the workflow does not have (a workflow-wide change
+ * whose first honest test is production), and — the deciding cost — a CI job can
+ * only audit the PREVIOUS run, so the push that CHANGES a partition audits the
+ * pre-change one and the guard reds on its own repair, while the obvious
+ * mitigation (audit only when the plan identity matches) goes silent exactly
+ * when the plan changes and the risk is highest. Running it from `--write`
+ * audits a FINISHED run deliberately, needs no permissions, and fires where a
+ * human is already reading output. ⚠ Its named cost is cadence: a regression
+ * can live between writes.
+ *
+ * ⛔ **IT NEVER CHANGES THE WRITE'S EXIT CODE.** The write's verdict is about
+ * the BANK; the partition is a fact about CI. A reader that failed the write
+ * would make a bank commit hostage to a runner, which is the exact coupling
+ * ⚖ 72 ruled against.
+ *
+ * ⛔ **AND IT NEVER SKIPS QUIETLY.** Every way this can fail to produce an
+ * answer returns `available: false` WITH ITS REASON, because a quiet skip is
+ * how an unaudited partition reads the same as a healthy one (trap 403's shape).
+ *
+ * ⛓ The readers are INJECTED so this module stays network-free and the failing
+ * cases are constructible — `ciSummary.js` owns the `gh` calls, this file owns
+ * the arithmetic, and the test needs neither.
+ *
+ * @param {{recentRuns: Function, runShardCosts: Function, budgetMs?: number}} io
+ * @returns {{available: boolean, why?: string, run?: object, audit?: object}}
+ */
+export function lastRunShardAudit({ recentRuns, runShardCosts,
+    budgetMs = CI_SHARD_BUDGET_MS }) {
+    let runs;
+    try {
+        runs = recentRuns({ limit: 1 });
+    } catch (e) {
+        return { available: false, why: `the run list could not be read — ${e.message}` };
+    }
+    const run = runs?.[0] ?? null;
+    if (!run) {
+        return { available: false,
+            why: 'no SUCCESSFUL run of the workflow to audit (a cancelled or failed run\'s '
+                + 'shard job may have died part-way, so it is not a population)' };
+    }
+    let jobs; let unreadable;
+    try {
+        ({ jobs, unreadable } = runShardCosts(run));
+    } catch (e) {
+        return { available: false, run,
+            why: `run ${run.databaseId}'s logs could not be read — ${e.message}` };
+    }
+    if (!jobs?.length) {
+        return { available: false, run,
+            why: `run ${run.databaseId} published no \`ms | <key> | here=\` lines — it ran `
+                + 'no arms, so there is no partition to audit' };
+    }
+    return { available: true, run, unreadable, audit: auditRunShards({ jobs, budgetMs }) };
+}
+
+/**
  * The whole plan for a tree — the arms, the shards, and the costs they were
  * priced from. ⛓ One call, so the `--plan` printer and the `--shard=` runner
  * cannot compute it two different ways.

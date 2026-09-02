@@ -20,8 +20,15 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
-    CI_SHARD_BUDGET_MS, armName, auditRunShards, ciGateArms, ciGatePlanFor, ciRunnable,
-    ciSourced, planCiShards,
+    CI_SHARD_BUDGET_MS,
+    armName,
+    auditRunShards,
+    ciGateArms,
+    ciGatePlanFor,
+    ciRunnable,
+    ciSourced,
+    lastRunShardAudit,
+    planCiShards,
 } from './ciGatePlan.js';
 import { LOCAL_HOST, REPO, argvFor, gateRoster } from './gateRoster.js';
 import { readStandingValues, standingRows } from './standingValues.js';
@@ -679,5 +686,75 @@ describe('auditRunShards — did the partition hold, by the runner\'s own clock?
         });
         expect(a.ok).toBe(true);
         expect(a.loose.ms).toBe(466700);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ `lastRunShardAudit` — THE WIRING, NOT THE ARITHMETIC.
+ *
+ * `auditRunShards` is already covered above. What these rows hold is the part
+ * that decides whether the guard EXISTS in practice: that a run which cannot be
+ * read produces a NAMED reason rather than silence, and that a real
+ * underpricing still comes back red once it is behind an injected reader.
+ * ⛔ Every no-answer path is asserted to be `available: false` WITH a `why`,
+ * because a quiet skip reads exactly like a healthy partition.
+ * ══════════════════════════════════════════════════════════════════════ */
+describe('lastRunShardAudit — the last run, audited where somebody is looking', () => {
+    const RUN = { databaseId: 42, headSha: 'abcdef1234567890', conclusion: 'success' };
+    const runs = () => [RUN];
+    const jobs = (list) => () => ({ jobs: list, unreadable: [] });
+
+    /** ⛓ one 2-arm shard over budget — the trap-1068 shape. */
+    const OVER = [{ name: 'browser (2)', shard: '0 of 1', arms: [
+        { key: 'gate: a', ms: 500_000 }, { key: 'gate: b', ms: 400_000 }] }];
+    /** ⛓ the healthy two-shard shape S5b shipped. */
+    const HELD = [
+        { name: 'browser (1)', shard: '0 of 2', arms: [{ key: 'gate: heavy', ms: 901_000 }] },
+        { name: 'browser (2)', shard: '1 of 2', arms: [
+            { key: 'gate: a', ms: 200_000 }, { key: 'gate: b', ms: 289_000 }] },
+    ];
+
+    it('⛔ reds on an UNDERPRICED multi-arm shard, and names the job', () => {
+        const r = lastRunShardAudit({ recentRuns: runs, runShardCosts: jobs(OVER) });
+        expect(r.available).toBe(true);
+        expect(r.audit.ok).toBe(false);
+        expect(r.audit.over).toHaveLength(1);
+        expect(r.audit.over[0].name).toBe('browser (2)');
+    });
+
+    it('⛓ passes the shape S5b shipped — and a ONE-arm shard over budget is not red', () => {
+        const r = lastRunShardAudit({ recentRuns: runs, runShardCosts: jobs(HELD) });
+        expect(r.available).toBe(true);
+        expect(r.audit.ok).toBe(true);
+        expect(r.audit.rows.find((x) => x.arms === 1).ms).toBeGreaterThan(600_000);
+    });
+
+    it('⛔ a run list that THROWS is unavailable BY NAME, never a crash and never green', () => {
+        const r = lastRunShardAudit({
+            recentRuns: () => { throw new Error('gh: not authenticated'); },
+            runShardCosts: jobs(OVER) });
+        expect(r.available).toBe(false);
+        expect(r.audit).toBeUndefined();
+        expect(r.why).toMatch(/not authenticated/);
+    });
+
+    it('⛔ NO successful run is unavailable BY NAME', () => {
+        const r = lastRunShardAudit({ recentRuns: () => [], runShardCosts: jobs(OVER) });
+        expect(r.available).toBe(false);
+        expect(r.why).toMatch(/no SUCCESSFUL run/);
+    });
+
+    it('⛔ logs that cannot be read are unavailable BY NAME, with the run identified', () => {
+        const r = lastRunShardAudit({ recentRuns: runs,
+            runShardCosts: () => { throw new Error('404'); } });
+        expect(r.available).toBe(false);
+        expect(r.run.databaseId).toBe(42);
+        expect(r.why).toMatch(/logs could not be read/);
+    });
+
+    it('⛔ a run that published no `ms |` lines is unavailable BY NAME, not an empty PASS', () => {
+        const r = lastRunShardAudit({ recentRuns: runs, runShardCosts: jobs([]) });
+        expect(r.available).toBe(false);
+        expect(r.why).toMatch(/no .*ms \| <key> \| here=.* lines/);
     });
 });

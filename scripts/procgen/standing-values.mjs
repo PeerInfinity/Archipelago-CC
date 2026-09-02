@@ -89,7 +89,8 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { assertTreeUnmoved, releaseBoxLock, takeBoxLock } from './boxLock.js';
-import { ciSourced } from './ciGatePlan.js';
+import { CI_SHARD_BUDGET_MS, ciSourced, lastRunShardAudit } from './ciGatePlan.js';
+import { recentRuns, runShardCosts } from './ciSummary.js';
 import { LOCAL_HOST, REPO, gateRoster } from './gateRoster.js';
 import {
     bankedPopulations, keyContext, keyInputsIn, keyReportLines, nondeterminismFinding,
@@ -532,6 +533,37 @@ if (flag('write')) {
     console.log(`\nwrote ${FILE} — ${Object.keys(out.rows).length} row(s), `
         + `${cheap} cheap (re-run by --check), ${Object.keys(out.rows).length - cheap} quoted`
         + `${held.length ? `, ${held.length} HELD by hysteresis` : ', 0 HELD by hysteresis'}`);
+    /* ══ THE LAST CI RUN'S PARTITION ═════════════════════════════════
+     * ⛓ See `lastRunShardAudit`'s docblock for why this lives here and not in
+     * a CI job, and why it never touches the exit code below. */
+    const shardAudit = lastRunShardAudit({ recentRuns, runShardCosts });
+    if (!shardAudit.available) {
+        console.log(`\n# the last CI run's shard partition was NOT audited — ${shardAudit.why}`);
+    } else {
+        const { run, audit } = shardAudit;
+        const head = `run ${run.databaseId} @${String(run.headSha).slice(0, 9)}`;
+        if (audit.ok) {
+            console.log(`\n# the last CI run's shard partition HELD — ${head}, `
+                + `${audit.rows.length} job(s) that ran arms`
+                + `${audit.loose ? `; ⚠ LOOSE: ${audit.loose.jobs.length} multi-arm shard(s) `
+                    + `total ${(audit.loose.ms / 1000).toFixed(1)}s and would have fitted in ONE `
+                    + '— over-splitting costs a RUNNER, not wall clock, and is never red' : ''}`);
+        } else {
+            console.log(`\n⛔ THE LAST CI RUN'S SHARD PARTITION DID NOT HOLD — ${head}. `
+                + 'A multi-arm job exceeded the budget in the RUNNER\'s own seconds, which means '
+                + `the arms were UNDERPRICED (trap 1068). Re-price with \`node `
+                + `scripts/procgen/ci-gates.mjs --write-costs\`:`);
+            for (const r of audit.over) {
+                console.log(`   ${r.name}: ${r.arms} arm(s), ${(r.ms / 1000).toFixed(1)}s measured `
+                    + `> the ${(CI_SHARD_BUDGET_MS / 1000).toFixed(0)}s budget`
+                    + `${r.heaviest ? ` · heaviest ${r.heaviest.key} `
+                        + `${(r.heaviest.ms / 1000).toFixed(1)}s` : ''}`);
+            }
+            console.log('   ⛔ this does NOT fail the write — the write\'s verdict is about the '
+                + 'BANK, and a bank commit must not be hostage to a runner (⚖ 72).');
+        }
+    }
+
     if (findings.length) {
         console.log(`\n⛔ ${findings.length} NONDETERMINISM FINDING(S) — a verdict moved at an `
             + 'UNCHANGED input key. Either the key misses an input or the gate is not a '
