@@ -77,11 +77,19 @@ import { AREA_LAYERS, areaLegend, drawAreaOverlay } from './mazeAreaOverlay.js';
  * state, not world, and `drawWorld`'s contract is "draw this world".
  */
 import { drawElementOverlay, elementLegend } from './mazeElementOverlay.js';
+/**
+ * ⛓ DEDUP M5 — the ONE element block, straight from the binding that builds it.
+ * ⛔ Imported here rather than re-exported through `mazeLab.js`: the readout is
+ * publishing what the MODEL holds, and a hop through the page module would put
+ * a second name on the same object for no reader's benefit.
+ */
+import { elementSummaryOf } from './procgenMaze.js';
 import {
     DEFAULT_MAZE_BIOME, DIRECTED_ANCHOR_TRIES, MAZE_BIOME_NAMES, MAZE_DEFAULTS,
     MazeRoomEditor, PALETTE_ENTRIES, PALETTE_TYPES,
     SOURCES, agreementWithPayload, applyDirective, applyEdits, certifyInto, describeState,
-    framesForActions, generateStep, generateWithDirectives, labCatalogue, labPayload,
+    framesForActions, generateStep, generateWithDirectives, labCatalogue,
+    labPayload, labReadoutIdentity, labUrlFields,
     loadPayload, openEditSession, planFrames, projectSession, readLabParams,
     serializeMazeLevel, skeletonCatalogue, stepFromParams, writeLabParams,
 } from './mazeLab.js';
@@ -679,26 +687,19 @@ export function main() {
      */
     const writeUrl = () => {
         if (!state) return;
+        /**
+         * ⛓⛓ DEDUP M4 — **THE BAR IS `labUrlFields`' PROJECTION**, which is the
+         * identity minus two fields it names as omissions. This line is where
+         * the defect happened: `elements` was added to the reader, the form,
+         * the identity line and the model, and missed HERE, so the SELECTOR
+         * built the gadget and handed back a bar naming no element — a link to
+         * a level it does not describe. A field added to `identityFields` now
+         * reaches the bar without anyone remembering to come here, and the
+         * omissions are a row in `mazeLab.test.js` rather than a comment.
+         */
         const search = writeLabParams(window.location.search, {
             source: params.source,
-            seed: state.seed,
-            biome: state.biome,
-            width: state.width,
-            height: state.height,
-            bounds: state.bounds,
-            budget: state.budget,
-            step: state.step,
-            roster: state.roster,
-            // ⛔ SLICE 12: NO `directives` — ⚖ §3.9 took the list off the bar.
-            skeleton: state.skeleton,
-            areas: state.areas,
-            require: state.require,
-            /** ⛓ ARC 2 SLICE 4 — and the ELEMENT. ⛔ A defect this slice's own
-             *  browser row found: the reader, the form, the identity line and
-             *  the model all had it while THIS line did not, so the SELECTOR
-             *  built the gadget and handed back a bar that names no element —
-             *  a link to a level it does not describe. */
-            elements: state.elements,
+            ...labUrlFields(state),
         });
         window.history.replaceState(null, '', `${window.location.pathname}?${search}`);
     };
@@ -3132,14 +3133,18 @@ export function main() {
         window.__mazeLab = {
             source: src,
             url: window.location.search,
-            seed: state.seed,
-            biome: state.biome,
-            width: state.width,
-            height: state.height,
-            step: state.step,
-            bounds: state.bounds,
-            budget: state.budget,
-            roster: state.roster ?? null,
+            /**
+             * ⛓⛓ DEDUP M4 — **THE IDENTITY FIELDS ARE SPREAD, NOT RESTATED.**
+             * `mazeLab.labReadoutIdentity` is the projection the base tag, the
+             * payload and the URL writer also come off, so a field added there
+             * lands here too — which is what the five hand-written copies could
+             * not do (`elements` reached four of them). ⛓ It carries
+             * `skeleton`/`areas`/`elements`/`require`/`directives`, which used
+             * to be written far below beside the things DERIVED from them
+             * (`areaGraph`, `elementInfo`, `skeletons`) — those stay where they
+             * are, because a spec and what a run DID with it are two facts.
+             */
+            ...labReadoutIdentity(state),
             stop: state.stop,
             saturated: state.saturated,
             /**
@@ -3440,23 +3445,18 @@ export function main() {
                     connected: foreignRoom.transport.ready(),
                 } : null,
             } : null,
-            directives: (state.directives ?? []).map((d) => ({
-                instance: d.instance, outcome: d.outcome, keptKind: d.keptKind, at: d.at,
-            })),
             rows: generationRows(state.trace ?? []),
             catalogue: labCatalogue(state.biome),
             /** ⛓ SLICE 5 — the SKELETONS section, beside the template catalogue. */
             skeletons: skeletonCatalogue({ simulator: true }),
-            skeleton: state.skeleton ?? null,
             /**
-             * ⛓⛓⛓ SLICE 3 — THE GRAPH THE PAGE IS SHOWING, and ⛔ **NO LEVEL
+             * ⛓⛓⛓ SLICE 3 — WHAT THE DIRECTIVE'S RUN ANSWERED. ⛔ **NO LEVEL
              * AND NO PAYLOAD WHEN THE DIRECTIVE WAS REFUSED**: a run that did
              * not produce what was asked for has no artifact to hand out, and a
              * readout that offered one anyway would be the page disagreeing
-             * with its own refusal box.
+             * with its own refusal box. ⛓ The `require` LIST it answers is up
+             * in the identity spread — the ask and the answer are two facts.
              */
-            areas: state.areas ?? null,
-            require: state.require ?? null,
             requireResult: state.requireResult ?? null,
             areaGraph: state.model?.areas?.ran
                 ? {
@@ -3492,34 +3492,27 @@ export function main() {
             areaNote: $('labAreaNote').textContent,
             /**
              * ⛓⛓⛓ ARC 2 SLICE 4 — THE GADGET THE PAGE IS SHOWING. ⛔ `elements`
-             * is the SPEC the run was asked for and `elementInfo` is what the
-             * BINDING did with it — two fields because they are two facts, and
-             * a page that published only the first would let a build that read
-             * `?elements=` into the bar and never passed it to the model look
-             * exactly like one that did (trap 269, and mutant (a) of this
-             * slice is precisely that build).
+             * (up in the identity spread) is the SPEC the run was asked for and
+             * `elementInfo` is what the BINDING did with it — two fields because
+             * they are two facts, and a page that published only the first would
+             * let a build that read `?elements=` into the bar and never passed it
+             * to the model look exactly like one that did (trap 269, and mutant
+             * (a) of that slice is precisely that build).
              */
-            elements: state.elements ?? null,
+            /**
+             * ⛓⛓ DEDUP M5 — **`elementSummaryOf`'s BLOCK, VERBATIM.** This was
+             * a hand projection of `model.elements.placed[]` that dropped
+             * `element`, `family`, `drawsBefore`, `drawsAtConstruct`, `binds`,
+             * `entryMouth` and `carveOverwrote` — and `drawsBefore` is the one
+             * `procgenMaze`'s own docblock says a REBUILD needs (`params` +
+             * `drawsBefore` with the seed IS the record). The payload has
+             * carried the full block all along, so the readout was the only
+             * reader seeing less than the file on disk.
+             * ⛔ The guard stays: `elementSummaryOf` reads `model.elements`,
+             * which a LOADED level does not have.
+             */
             elementInfo: state.model?.elements
-                ? {
-                    ran: state.model.elements.ran,
-                    spec: state.model.elements.spec,
-                    placed: state.model.elements.placed.map((p) => ({
-                        instance: p.instance,
-                        index: p.index,
-                        params: p.params,
-                        site: p.site,
-                        block: p.block,
-                        button: p.button,
-                        door: p.door,
-                        flagCell: p.flagCell,
-                        ports: p.ports,
-                        tunnel: p.tunnel,
-                        guards: p.guards ?? null,
-                        cost: p.cost,
-                    })),
-                    refused: state.model.elements.refused,
-                }
+                ? elementSummaryOf(state.model)
                 : null,
             elementLegend: elementLegend(state.model?.elements ?? null),
             elementNote: $('labElementNote').textContent,

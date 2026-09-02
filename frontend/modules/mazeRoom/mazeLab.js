@@ -879,6 +879,104 @@ export { skeletonCatalogue } from '../procgenCore/skeletonKinds.js';
  * which is the one reconstruction. What differs is who holds the op list.
  */
 
+/* ═════════════════════════════════════════════════════════════════════
+ * THE IDENTITY FIELDS — ONE list, and every reader is a PROJECTION (dedup M4)
+ * ═════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **WHICH LEVEL IS THIS** — the field list the base tag, the payload,
+ * the URL writer and the readout all PROJECT FROM.
+ *
+ * ⛔ IT EXISTS BECAUSE THE LIST WAS RESTATED FIVE TIMES AND ONE COPY DRIFTED.
+ * `editBaseTag`, `labPayload`, `mazeLabView.writeUrl`, `window.__mazeLab` and
+ * `mazeLabBridge.mazeLabSummary` each spelled it out; when `elements` was added
+ * it reached FOUR of the five and missed the URL writer, so the SELECTOR built
+ * the gadget and handed back a bar naming no element — *"a link to a level it
+ * does not describe"* (`mazeLabView.writeUrl`'s own note). A reader that DROPS
+ * a field now has to say so by name, and `mazeLab.test.js`'s coverage row is
+ * derived over `Object.keys(identityFields(...))` rather than typed.
+ *
+ * ⚠ IT IS THE IDENTITY, NOT THE STATE. What the run PRODUCED (`record`,
+ * `model`, `trace`, `summary`), what somebody ASSERTED about it (`certified`,
+ * `edits`) and what the page is DOING (`stop`, `saturated`) are not in it —
+ * only the answer to *which level is this*. ⛓ `loaded` IS one of them: a level
+ * that came in through LOAD is not the level its seed and step reproduce, which
+ * is the whole reason `__mazeLab.loaded` was added (slice 4's mutant).
+ *
+ * ⛔ AND THE DEFAULT ARMS ARE WRITTEN HERE AND NOWHERE ELSE. Every generated,
+ * directed and loaded state carries all four specs already (`generateStep`'s
+ * `common`, `loadPayload`'s tail), so a `??` arm is the shape a PARTIAL state
+ * takes in a test — and it must be the SAME arm for all four readers, which is
+ * exactly what five copies could not guarantee (the readout said `?? null`
+ * where the payload said `?? DEFAULT_SKELETON`).
+ */
+export function identityFields(state) {
+    return Object.freeze({
+        seed: state.seed,
+        biome: state.biome,
+        width: state.width,
+        height: state.height,
+        step: state.step,
+        bounds: state.bounds,
+        budget: state.budget,
+        roster: state.roster ?? null,
+        skeleton: state.skeleton ?? DEFAULT_SKELETON,
+        areas: state.areas ?? DEFAULT_AREAS,
+        elements: state.elements ?? DEFAULT_ELEMENTS,
+        require: state.require ?? null,
+        directives: state.directives ?? [],
+        loaded: Boolean(state.loaded),
+    });
+}
+
+/**
+ * ⛓⛓ **THE BAR'S SHARE OF THE IDENTITY** — every field except two, and both are
+ * DESTRUCTURED OUT BY NAME rather than left off a list. ⛔ That is the whole
+ * fix: the URL writer used to restate the list, and the restatement is what
+ * missed `elements`.
+ *
+ * ⛔ `directives` — ⚖ §3.9 took the list off the bar (the reader REFUSES
+ * `?directed=`, and `writeLabParams` DELETES a stale one on the way out).
+ * ⛔ `loaded` — how a level ARRIVED is not a parameter that reproduces it. A
+ * bar saying `loaded=1` would be an instruction nobody can run.
+ */
+export function labUrlFields(state) {
+    const { directives: _offTheBar, loaded: _howItArrived, ...bar } = identityFields(state);
+    return bar;
+}
+
+/**
+ * ⛓⛓ **THE READOUT'S IDENTITY BLOCK** — `window.__mazeLab`'s share of the
+ * projection, here rather than in `mazeLabView` so it is unit-testable and so
+ * the DOM arm SPREADS it instead of restating it for a fifth time.
+ *
+ * ⛔ `directives` IS THE OUTCOME RECORD AND NOT THE INSTANCE STRING: a browser
+ * row asks whether a directive was KEPT and what kind was kept in its place,
+ * which the instance alone cannot say. It is still a projection OF
+ * `identityFields`' list — the same directives, read shallower.
+ */
+export function labReadoutIdentity(state) {
+    const id = identityFields(state);
+    return {
+        seed: id.seed,
+        biome: id.biome,
+        width: id.width,
+        height: id.height,
+        step: id.step,
+        bounds: id.bounds,
+        budget: id.budget,
+        roster: id.roster,
+        skeleton: id.skeleton,
+        areas: id.areas,
+        elements: id.elements,
+        require: id.require,
+        directives: id.directives.map((d) => ({
+            instance: d.instance, outcome: d.outcome, keptKind: d.keptKind, at: d.at,
+        })),
+        loaded: id.loaded,
+    };
+}
+
 /**
  * ⛓⛓ **THE IDENTITY TAG A PAYLOAD CARRIES** — §3.2's `base`, in this page's
  * own spelling and in the payload's own field names.
@@ -887,21 +985,34 @@ export { skeletonCatalogue } from '../procgenCore/skeletonKinds.js';
  * opaque tagged value, carried verbatim, and resolving one back to a record is
  * a substrate's business. It exists so a payload can say *what these edits are
  * edits OF* without the reader having to diff two levels to find out.
+ *
+ * ⚠⚠ **IT OMITS `bounds`, `budget` AND `roster`, AND THIS SLICE DID NOT ADD
+ * THEM.** `roster` is the one that bites: two runs of one seed and step under
+ * different rosters draw from different palettes and produce different levels,
+ * and this tag calls them the same base. Adding a field would move every
+ * committed payload's `base` block, which is the byte gate D1 is written
+ * under — so it is NAMED here as residue rather than fixed silently, and the
+ * omission is asserted (`mazeLab.test.js`, the identity-coverage row) so it
+ * stays a decision instead of becoming a second drift.
  */
 export function editBaseTag(state) {
+    const id = identityFields(state);
     return Object.freeze({
         kind: 'maze-lab',
-        seed: state.seed,
-        biome: state.biome,
-        width: state.width,
-        height: state.height,
-        step: state.step,
-        skeleton: state.skeleton ?? DEFAULT_SKELETON,
-        areas: state.areas ?? DEFAULT_AREAS,
-        elements: state.elements ?? DEFAULT_ELEMENTS,
-        require: state.require ?? null,
-        directives: (state.directives ?? []).map((d) => d.instance),
-        loaded: Boolean(state.loaded),
+        seed: id.seed,
+        biome: id.biome,
+        width: id.width,
+        height: id.height,
+        step: id.step,
+        skeleton: id.skeleton,
+        areas: id.areas,
+        elements: id.elements,
+        require: id.require,
+        /** ⛓ The INSTANCE STRINGS, not the outcome records: a base tag says
+         *  what was ASKED FOR, and what each directive's run DID is the trace's
+         *  business (and the readout's). */
+        directives: id.directives.map((d) => d.instance),
+        loaded: id.loaded,
     });
 }
 
@@ -1315,18 +1426,27 @@ export function planCells(state, solved) {
  * no seed will reproduce).
  */
 export function labPayload(state) {
+    /**
+     * ⛓ DEDUP M4 — the identity fields come from the ONE projection.
+     * ⚠ `step` and `loaded` reach a payload through `base` and NOT at the top
+     * level, and that is deliberate: `loadPayload` puts a loaded level at step
+     * 0 and marks it `loaded: true`, so a top-level `step` would be a number no
+     * reader may believe. The coverage row names them as `base`-only rather
+     * than letting the absence pass for an oversight.
+     */
+    const id = identityFields(state);
     return {
         generator: 'frontend/modules/mazeRoom/lab.html',
-        seed: state.seed,
+        seed: id.seed,
         palette: state.palette?.name ?? null,
-        biome: state.biome,
-        width: state.width,
-        height: state.height,
-        bounds: state.bounds,
-        budget: state.budget,
-        roster: state.roster ?? null,
-        directives: state.directives ?? [],
-        skeleton: state.skeleton ?? DEFAULT_SKELETON,
+        biome: id.biome,
+        width: id.width,
+        height: id.height,
+        bounds: id.bounds,
+        budget: id.budget,
+        roster: id.roster,
+        directives: id.directives,
+        skeleton: id.skeleton,
         /**
          * ⛓ SLICE 3 — the AREA SPEC and the DIRECTIVE, beside the skeleton's
          * block and on the same terms: written UNCONDITIONALLY, because a
@@ -1334,7 +1454,7 @@ export function labPayload(state) {
          * their default (`agreementWithPayload` normalizes both sides, so a
          * payload written before this slice still AGREES).
          */
-        areas: state.areas ?? DEFAULT_AREAS,
+        areas: id.areas,
         /**
          * ⛓ ARC 2 SLICE 4 — THE ELEMENT SPEC, on the same terms as `areas`.
          * ⚠ AND IT IS THE **SPEC**, NOT `elementSummaryOf`'s block: this payload
@@ -1345,8 +1465,8 @@ export function labPayload(state) {
          * a CLI payload — whose `elements` IS the summary — be read back all the
          * same.
          */
-        elements: state.elements ?? DEFAULT_ELEMENTS,
-        require: state.require ?? null,
+        elements: id.elements,
+        require: id.require,
         /**
          * ⛓⛓ EDITOR v3 SLICE A2 — **THE IDENTITY TAG THE EDITS ARE EDITS OF**
          * (§3.2's `base`, carried opaquely by `editCore`). ⛔ It is written

@@ -20,6 +20,7 @@ import {
     skeletonCatalogue, solveState, stepFromParams, undoEdit, writeLabParams,
     certifyInto, editBaseTag, openEditSession, projectSession, readRoomParam,
     frameOf, framesForActions,
+    identityFields, labReadoutIdentity, labUrlFields,
 } from './mazeLab.js';
 import { deserializeMazeLevel, mazeOracle, startStateFor } from './procgenMaze.js';
 import { TILE_FLOOR, TILE_WALL, getTile, step } from './mazeRoomEngine.js';
@@ -1895,4 +1896,109 @@ describe('mazeLab — `?room=`, the SET arm\'s room selector', () => {
         + 'parameter', () => {
         expect(() => readLabParams('?source=set&room=1&room=2')).toThrow();
     });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ DEDUP M4 — THE IDENTITY FIELD LIST, AND THE ROWS THAT MAKE THE
+ * RECORDED DEFECT UNREPEATABLE
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * The defect: the list was restated FIVE times, and when `elements` was added
+ * it reached four of them and missed `mazeLabView.writeUrl` — the bar named no
+ * element, *"a link to a level it does not describe"*. Every row below is
+ * DERIVED over `Object.keys(identityFields(state))` rather than typed, so a
+ * field added to the projection is a field these rows immediately ask about.
+ * ⛔ A COUNT would not do it: four of five copies having a field is a count of
+ * four either way.
+ */
+describe('mazeLab — ONE identity field list, and every reader is a projection', () => {
+    const IDENTITY_FIXTURES = () => [
+        ['a plain ladder state', generateStep({ seed: 3, step: 2, ...ROOM })],
+        ['a DIRECTED state', applyDirective(generateStep({ seed: 6, step: 0, ...ROOM }), {
+            template: 'wall-segment', params: { ori: 'v', len: 2 }, anchor: null, bound: 4,
+        }, 0)],
+        ['a state naming every spec', guarded()],
+        ['a LOADED state', loadPayload(labPayload(guarded()))],
+    ];
+
+    it('⛔ the PAYLOAD carries every identity field — at the top level, or on `base` for '
+        + 'exactly the two that cannot be believed there', () => {
+        for (const [what, st] of IDENTITY_FIXTURES()) {
+            const fields = Object.keys(identityFields(st));
+            const pay = labPayload(st);
+            const top = Object.keys(pay);
+            const base = Object.keys(pay.base);
+            expect(fields.filter((k) => !top.includes(k) && !base.includes(k)), what).toEqual([]);
+            /**
+             * ⛔ …and the two on `base` ALONE are named. `loadPayload` puts a
+             * loaded level at step 0 and marks it `loaded: true`, so a
+             * top-level `step` would be a number no reader may believe — the
+             * absence is a decision, and this row is where it is stated.
+             */
+            expect(fields.filter((k) => !top.includes(k)), what).toEqual(['step', 'loaded']);
+        }
+    });
+
+    it('⛔ the READOUT block carries every identity field and nothing else', () => {
+        for (const [what, st] of IDENTITY_FIXTURES()) {
+            expect(Object.keys(labReadoutIdentity(st)).sort(), what)
+                .toEqual(Object.keys(identityFields(st)).sort());
+        }
+    });
+
+    it('⛔ the BAR omits EXACTLY `directives` and `loaded`, and adds nothing', () => {
+        for (const [what, st] of IDENTITY_FIXTURES()) {
+            const fields = Object.keys(identityFields(st));
+            const bar = Object.keys(labUrlFields(st));
+            expect(fields.filter((k) => !bar.includes(k)), what).toEqual(['directives', 'loaded']);
+            expect(bar.filter((k) => !fields.includes(k)), what).toEqual([]);
+        }
+    });
+
+    it('⛓⛓ …and `elements` — the field that DID drift — moves the bar it is written on', () => {
+        const url = (st) => writeLabParams('', { source: SOURCES.GENERATE, ...labUrlFields(st) });
+        const withGadget = guarded();
+        const without = guarded({ elements: undefined });
+        expect(url(withGadget)).toMatch(/elements=/);
+        expect(url(without)).not.toMatch(/elements=/);
+        expect(url(withGadget)).not.toBe(url(without));
+        // ⛓ …and the bar READS BACK as the level it describes, which is the
+        //   claim the missing line broke.
+        expect(readLabParams(`?${url(withGadget)}`).elements)
+            .toEqual(identityFields(withGadget).elements);
+    });
+
+    it('⛔ the BASE TAG omits `bounds`, `budget` and `roster` — NAMED RESIDUE, not drift', () => {
+        /**
+         * ⚠ `roster` is the one that bites: two runs of one seed and step under
+         * different rosters draw from different palettes and make different
+         * levels, and this tag calls them the same base. Adding a field would
+         * move every committed payload's `base` block, which is the byte gate
+         * D1 is written under — so the omission is ASSERTED rather than fixed
+         * silently, and a slice that fixes it will red this row on purpose.
+         */
+        for (const [what, st] of IDENTITY_FIXTURES()) {
+            const tag = editBaseTag(st);
+            expect(Object.keys(identityFields(st)).filter((k) => !(k in tag)), what)
+                .toEqual(['bounds', 'budget', 'roster']);
+        }
+    });
+
+    it('⛓ every reader agrees on the VALUE, not only on the key — the five copies did not',
+        () => {
+            /**
+             * ⛔ The readout used to say `state.skeleton ?? null` where the
+             * payload said `?? DEFAULT_SKELETON`: two spellings of one field,
+             * which is how a drift starts. One projection, one default arm.
+             */
+            for (const [what, st] of IDENTITY_FIXTURES()) {
+                const id = identityFields(st);
+                const pay = labPayload(st);
+                for (const k of ['skeleton', 'areas', 'elements', 'require', 'roster']) {
+                    expect(pay[k], `${what} — payload.${k}`).toEqual(id[k]);
+                    expect(labReadoutIdentity(st)[k], `${what} — readout.${k}`).toEqual(id[k]);
+                    expect(labUrlFields(st)[k], `${what} — bar.${k}`).toEqual(id[k]);
+                }
+            }
+        });
 });

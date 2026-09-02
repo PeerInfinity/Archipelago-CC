@@ -808,6 +808,31 @@ describe('the cost record and the payload', () => {
         expect(JSON.stringify(block)).not.toMatch(/areaCells|"tiles"/);
     });
 
+    /**
+     * ⛓⛓⛓ DEDUP M5 — **THIS BLOCK IS NOW WHAT THE LAB PUBLISHES**, so the
+     * fields its readers name are pinned HERE rather than only in a browser
+     * gate. `mazeLabView`'s `__mazeLab.elementInfo` used to be a hand
+     * projection that dropped seven of them; it now publishes this function
+     * verbatim, and `check-maze-lab`'s CLAIM 14 plus the `maze-element` demo
+     * entry read the first group off the published object.
+     *
+     * ⛔ A field RENAMED reds a gate; a field ADDED does not — which is why the
+     * row asserts the READERS' fields are present and the seven RESTORED ones
+     * are present, and does not assert the set is closed.
+     */
+    it('⛓ carries every field the lab readout\'s readers name, and the seven the hand '
+        + 'projection dropped', () => {
+        const block = elementSummaryOf(modelAt(29, { areas: { keys: 1 } }));
+        // What `check-maze-lab.mjs` (CLAIM 14) and `procgenDocs/demos.js` read.
+        for (const k of ['ran', 'spec', 'placed', 'refused']) expect(block).toHaveProperty(k);
+        for (const k of ['guards', 'tunnel']) expect(block.placed[0]).toHaveProperty(k);
+        // …and the seven `mazeLabView` was dropping before this slice.
+        for (const k of ['element', 'family', 'drawsBefore', 'drawsAtConstruct', 'binds',
+            'entryMouth', 'carveOverwrote']) {
+            expect(block.placed[0], k).toHaveProperty(k);
+        }
+    });
+
     /** ⛓ The gadget's entities round-trip through the level payload — and the
      *  restored world is re-certified against the SAME plan rather than only
      *  compared with its own emission (a fixed point is not correctness). */
