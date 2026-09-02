@@ -8966,6 +8966,13 @@ number-keyed `indexLevels` (the bundle constraint decides the home), F6 the `out
 against the bundle, F9 the exporter imports the canonical tile size (13 `const TILE = 16` files at this
 head, not the survey's 7 — derive). Byte-inert claims captured first.
 
+**⇒ PLANNER HANDOFF (2026-09-02 11:56): `maze-lab-planning` → `maze-lab-planning-2`.** The user asked when a
+new planning session should have started; the honest answer was at `a16f09b62` (the plan complete, the
+ladder pre-authorized) — raised late. Handoff `NewDocs/plans/maze-lab-arms-planning-2-prompt.md` (Fable,
+primary tree, `-t maze-lab-planning-2`); F-a redirected to report to the successor; the successor owns F-a's
+verification, F-b's kickoff, and the F-c/F-d ⚖ conversation, plus the residues D6/D7 and the VIEWER arc's
+opening question.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
