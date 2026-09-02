@@ -8504,6 +8504,129 @@ Windows Chrome wasm run). The planner launches each on the previous as-built wit
 report that fails verification, or at **F-c/F-d** (each needs its own ⚖ — a `shared` submodule change; a gate
 over a deliberate fixed point) and at the optional S4–S6.
 
+**⇒ R-b AS BUILT — THE PRECONDITIONS SHIP, AND ONE OF ITS OWN BROWSER ROWS WAS VACUOUS
+(2026-09-02, `54877a7ac`).**
+
+**The three signatures**, all in `mazeQueueExecutor.js` (headless), plus one stamp:
+
+```js
+mazeWorldDigest(world)                          // → 8 hex; fnv1a32(stableStringify(serializeMazeLevel(w)))
+deriveRequires(world, startState, actions)      // → {requires: string[]|null, why: string|null}
+stampRecordingPreconditions(rec, world, start)  // → rec, IN PLACE; both recorders call THIS
+refuseReplayPreconditions(rec, {world, startInventory, selfContained})  // → string|null
+```
+
+- ⛔ **`computeContentHash` is NOT called** — it hashes a document minus `provenance` and minus its
+  own id key, and a serialized level has neither. The two primitives underneath it are the contract.
+- `deriveRequires` re-walks the recording's own actions through `executeMazeEntry` and reads **which
+  `clear_set` combination the EFFECTIVE inventory satisfied** at each crossing (first fully-held
+  combo, declared order — `library.js:10-14`), **minus what the walk picked up before that turn**. It
+  asks the cell BEYOND on a push too (`step` refuses to push a block into a shut door and asks that
+  cell with the same inventory, so it is the same question about the same turn). Hold tokens are
+  excluded **by name derived from `world.buttonLib[*].holds`**, ⛔ not by a `sw_` prefix — the prefix
+  is the default library's spelling, not a rule any world is held to. A `rule`-typed gate answers
+  `{requires: null, why: 'rule-typed gate <id> at turn k'}` and the recording then carries **no
+  `requires` field at all** (⚠ absent, not `null`: `null` would be indistinguishable from a pre-R-b
+  recording, and "this recording does not say" is the truth in both cases).
+- `mazeRoomEngine.effectiveInventory` is now **exported**, for one reason: a combination naming a
+  HELD token is satisfied by the world's stance, and a second copy of `heldTokens` outside the engine
+  would answer that differently the next time a gadget lands — `whyBlocked`'s own argument.
+
+**Overturned in the brief, all three deliberate and all three recorded:**
+
+1. ⚠ **§2.4's TWO call sites in the lab are ONE FUNCTION.** "right after `refuseWalkDocument`, before
+   `loadPayload`" and "`describeReplayRefusal`'s caller before `framesForActions`" both name
+   `mazeLabView.loadWalkFromBox`. The single call sits **after `loadPayload`** because that is what
+   SUPPLIES the two things the check needs — the world and the palette the walk boots with — and it
+   draws nothing (`adopt(loaded)` is still below, so a refusal leaves the page the level and the play
+   it already had, the law CLAIM 22 already holds).
+2. **`_getReplayableTargets` LABELS a stale recording, it does not hide it** (§2.5 asked for a
+   decision): hiding makes a recording VANISH with no account of itself, and a player cannot tell one
+   the level outgrew from one that was never made — the picker is the only surface in a position to
+   say *"recorded on an older version of this level"*. Pressing it still refuses by name
+   (`_replayBestPath` → `_refuseReplayPreconditions`). ⚠ And the digest is computed **lazily**, on
+   the first stored recording that carries one: written unconditionally it spent
+   `serializeMazeLevel` on every repaint and broke on the panel's own partial fixtures.
+3. **The envelope had to reach the panel replayer**, so `loopState` now passes
+   `replayActions(actions, {…, recording: saved})` at both call sites — `_replaySavedActions` was
+   given only `actions` and the preconditions are on the envelope. Additive; nothing in loops reads
+   the field, and a caller that omits it is unaffected (absent fields ⇒ `null`).
+
+**A defect the panel's own tests found.** `_startVisitRecording` runs at the TOP of
+`_adoptLoadedRegion` (it must — `actionsAtStart` aligns with the queue it just cleared), where
+`this.world`, `this.state` and `this.externalInventory` are all still the region the player is
+LEAVING. A second call site, `_noteVisitStart()`, fires once the world and playback inventory are
+settled; the stamp is skipped entirely when it did not run, because ⛔ **the RECORDING matters more
+than its preconditions** — an enrichment that throws on an unexpected world shape destroys the thing
+it was decorating (it did, on a fixture, before the guard).
+
+**CLAIM 22b's rows** (`check-maze-lab.mjs`, all built from the page's own `generateStep` over CLAIM
+22's URL parameters — ⛔ the keyboard is CLAIM 22's proof and is not re-paid for here):
+
+| row | what it says |
+|---|---|
+| the stamp | `worldDigest` is the level's own hash, `requires` is `[]`, and **neither is in the `lab` block** |
+| the NEGATIVE | the untouched document still LOADS — without it the two refusals below are consistent with a LOAD path that stopped accepting walks |
+| R4 | one tile flipped in `lab.payload.level` refuses BY DIGEST, **both hashes read out of the sentence and compared** (a message printing the same hash twice would satisfy a one-sided check); nothing partial drawn |
+| R3 record-time | the subject room at `step: 1` places `door_red` at (1,2) and `key_red` at (1,0); erase the key TILE, put it in the PALETTE, and the fold names `requires: ["key_red"]` |
+| **R3 discriminating** | **the SAME four presses over the SAME door with the key still ON THE ROUTE answer `[]`** — added after mutant (c) (below) |
+| R3 replay-time | the page, whose palette starts the player empty-handed, refuses NAMING `key_red` before step 0; nothing partial drawn |
+
+⚠ **CLAIM 22's own "refuses at the INDEX" row now splices a PRE-R-b recording** (both fields
+stripped). That row's subject is R2, which R-b would otherwise pre-empt — and stripping them makes it
+the browser's witness that a recording written before this slice is **still replayable**, which is
+why both fields are optional forever.
+
+**⛓⛓⛓ MUTANT (c) FOUND A VACUOUS ROW SET, AND IT IS FIXED (`54877a7ac`).** Every `requires: []` in
+CLAIM 22b's first draft came from a level with **no obstacle at all**, so deleting the
+subtract-what-the-walk-picked-up step left **the whole browser gate GREEN — 264/0, FAIL 0**. Measured,
+not reasoned. The discriminating row is the same four presses over the same door with the key on the
+route (`requires: []`, `itemsPickedUp: ["key_red"]`); the mutant now reds it. ⛓ **S2b's lesson one
+slice later, on the recording side** — and the second time in two slices that mutant (c) was the one
+that found it (trap family 824/825).
+
+**The three mutants, RUN (copy/restore, trap 1072 — the code was committed first):**
+
+| mutant | vitest (3 files, 255 rows) | `check-maze-lab` |
+|---|---|---|
+| (a) `refuseReplayPreconditions` ignores `requires` | **3 red** | **1 red** — and the note shows R2 catching it mid-walk instead: *"input 2 (move (S)) is illegal … door_red is shut — needs key_red"* |
+| (b) …ignores `worldDigest` | **5 red** | **STUCK at the digest row**, run aborts at 217 PASS |
+| (c) `deriveRequires` drops the subtraction | **1 red** | **1 red** *(was 0 — see above)* |
+
+**Gates, before → after.**
+
+| gate | before | after | command |
+|---|---|---|---|
+| `check-maze-lab.mjs` | 255/0 | **265/0** | `node scripts/procgen/check-maze-lab.mjs` |
+| `mazeQueueExecutor.test.js` | 38 | **60** | bounded vitest |
+| `mazeLabWalk.test.js` | 32 | **38** | ” |
+| `mazeRoomUI.test.js` | 151 | **157** | ” |
+| bounded ⚖ 52 | — | **59 files / 2373** | `npx vitest run frontend/modules/mazeRoom/ frontend/modules/loops/ frontend/modules/procgenDocs/` |
+| in-app `--batch=fast` | 61/61 | **61/61** | `compare-runs.js` vs `…T08-00-17`: *No differences in status, roster, or duration* |
+| maze byte-identity | `677b7d9c…` | **unmoved** | `node scripts/procgen/dump-maze-byteidentity.mjs \| md5sum` |
+| doc link census | 221 | **223** | a MUTUAL pair (`loop-recording.md` ⇄ `maze.md`); `lintGateLabels.test.js` **14/14 green — no allowlist key moved**, the two names S2b interpolated stayed interpolated |
+
+⚠ **`--batch=fast` STARVED on its first run** (0/0, *"Timeout waiting for tests to start"*, load 11.1
+across 8 cpus) — **and it was mine**: a stray `npx playwright test --config=playwright.config.js` I
+launched by accident was still running the whole suite in three workers. Killed by captured PID, re-run
+solo, 61/61. `compare-runs.js`'s default baseline picked the STARVED run, so the comparison had to name
+the last good `fast` run explicitly — a starved run in the directory is a silent baseline.
+
+**Re-bank:** `gate: maze-lab` re-banked CI-sourced at `54877a7ac` (a head that touched
+`scripts/**` — S2b's finding applied), after that SHA's `JavaScript Unit Tests` concluded.
+
+**Notes for whoever is next.**
+- ⚠ `savedQueueStore`'s tag is `(arrivalExitId, ordinal)` and a save **REPLACES the same tag**, so two
+  recordings of one block cannot coexist. The stale LABEL is therefore what a *second* block's
+  recording or an untouched history entry gets — a re-record of the same block simply overwrites the
+  stale one. Verified on disk while writing the picker's row.
+- ⚠ A LAB walk's `requires` is **always `[]` in practice**: `MAZE_PALETTE.items` is `null`, so a lab
+  session starts empty-handed and anything it crosses it must have picked up. The non-empty case
+  reaches the page only through a document authored elsewhere — which is exactly what CLAIM 22b's R3
+  rows are.
+- ⚠ `deriveRequires` reports a `rule`-typed gate only when the walk **crossed** it; a rule gate
+  standing elsewhere on the level does not spoil the derivation (a row asserts it).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
