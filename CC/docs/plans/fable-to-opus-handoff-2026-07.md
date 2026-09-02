@@ -8973,6 +8973,216 @@ primary tree, `-t maze-lab-planning-2`); F-a redirected to report to the success
 verification, F-b's kickoff, and the F-c/F-d ⚖ conversation, plus the residues D6/D7 and the VIEWER arc's
 opening question.
 
+
+**⇒ F-a AS BUILT (2026-09-02, `maze-lab-arms-sliceFa`; main `dcc962623` … `34c915f18`).** Five
+findings, five commits, **six mutants RUN** (copy/restore, trap 1072 — every one restored and the
+tree diffed clean before the next). Every claim is *"nothing observable moved"*; the two that could
+NOT be made byte-inert (F11's key type, F6's refusal) are named below with what changed and why.
+
+| # | one owner | what moved | the proof |
+|---|---|---|---|
+| F5 | `flashPanel/seqPayload.parseSeqPayload(value, fields)` | the five refusal rules leave BOTH parsers; each keeps its typing | both callers' `.test.js` files **untouched** (`git show --stat` names neither) |
+| F3 | `flashPanel/pollUntil.js` — the three adapter waits | **21 loop lines removed**; the refusal strings and the iteration order preserved exactly | 17 NEW rows; **`check-seedling-wasm-ship` 263/0 on Windows Chrome** |
+| F11 | `seedlingDemo/atlasSource.indexLevels(doc)` — number-keyed | `indexSeedlingLevels`' STRING key is gone; the two lookups convert | 16 rows across two NEW files; the mutant reds 13 rows in 5 files |
+| F6 | ⛔ **NOT** imported — the spelling stays | the docblock now carries the PRICE, and a derived row asserts it | two mutants: the pin, and TAKING the import |
+| F9 | 11 of 14 `16`s import the canonical; 3 keep it with the price | `levelSetExporter.TILE_SIZE = SEEDLING_TILE_SIZE` | `levelSetExporter.test.js` 45/45 unmoved; the mutant reds 6 |
+
+**F5 (`dcc962623`).** `Game.pendingCheck` (4 fields) and `Game.pendingExit` (6) are one BridgeGeneric
+dialect and spelled the same five rules — non-string, the empty boot report, an exact field count,
+*"EMPTY IS NOT ZERO"* (written out twice, in two wordings), and a `<seq>` returned but never
+compared. `parseSeqPayload` states them once and **does NOT type**: `pendingCheck` sweeps all four
+fields to integers and folds the fourth into `cleared: written === 0`; `pendingExit` sweeps five of
+six and keeps `type` a STRING. Those contracts do not agree, and folding them in would be the drift
+the hoist exists to prevent. ⛔ Its own file rather than a function in `seedlingSemantics.js`: both
+binding modules import NOTHING today, and `seedlingSemantics` is the 700-line tile/entity
+transcription with a census guard of its own.
+
+**F3 (`fca9de132`), and the mutant that would have been VACUOUS.** The brief's proof was *"drop the
+`cancelled` check ⇒ the adapter's detach row reds"*. **There was no detach row.** At `8a1eb6b1a`,
+`git grep -n "_cancelled\|waitForShim"` reaches `wasmBridgeAdapter.js` and `flashPanelUI.js` and
+NOTHING under a `.test.js` — so the cancellation that exists so a preset switch cannot resolve a
+stale wait against the NEW game page (same element id, different game; `flashPanelUI.js:451` waits
+30 s for the shim, `:457` TEN MINUTES for the user's ▶ Start) was asserted by nobody, on any
+transport. 17 rows now cover the loop and all three call sites; **the mutant reds 4, two of them the
+`detach()` rows.** `adapter detached` is now spelled ONCE, as `DETACHED_MESSAGE` in the file that
+owns the notion — `pollUntil`'s own default is colourless.
+
+⛔ **`watchWasm.until()` STAYS, and the difference was MEASURED before it was kept** (four
+observable differences, now in its docblock): `lifetime.guard('wasm-until', …)` **records the
+blocked tick in the arm's `stopped` list** (`procgenCore/pageLifetime.js:160-171`) — the page's LEAK
+WITNESS, which a `cancelled` predicate cannot record, so routing it through `pollUntil` would delete
+evidence rather than a duplicate; `onRetire` rejects the INSTANT the arm retires, not at the next
+tick; a predicate throw is swallowed there and not here; 200 ms / 180 s are the lab's numbers.
+
+**F11 (`95e8521a2`) — the one place a number-keyed Map met a string-keyed lookup.** Three sites
+built `Map<level, room>` from a `{levels:[…]}` document; `indexSeedlingLevels` keyed by
+`String(level.level)` AND accepts *"the document or an already-built Map"*, so a number-keyed Map
+from either of the others looked up as a string and MISSED, silently, as `undefined`. The key is the
+number the documents carry (measured: **all 116 `level` fields in the committed extract are
+integers**; asserted in a row rather than typed).
+
+⚠ **The conversion is at the CALLER and it is a ROUND TRIP, not `Number()`.**
+`region-atlas.schema.json:126-128` blesses *"an integer or non-empty string level id"*, so
+`map_ref: "19"` named level 19 when the index was string-keyed and still does — dropping that would
+be a behaviour change shipped under a byte-inert claim. But `Number(null)` is **0** and level 0 is
+the real starting room (**three regions in `atlases/seedling-fixture.json` carry `map_ref: null`**),
+so only a string `Number` maps back to itself converts; `null`, `undefined`, `'mz_3'`, `''`, `'007'`
+and `' 19'` miss, exactly as `String(…)` left them.
+
+⛔ **NOT adopted, each with its reason.** `apPlacementRewriter.recordsByLevel` indexes to
+`{record, i}` and REFUSES a non-integer or duplicate level by name — a refusing index with a
+different value type is a different function. **And the survey named FOUR maps where there are
+FIVE**: `regionAtlasValidator.indexMapDocument` is string-keyed BY DESIGN (it takes the Seedling
+extract OR any `{id: {width,height}}` object, so a string is the union's common denominator) and
+`regionAtlasValidator.test.js:747-748` pins both key shapes.
+
+**F6 (`3f17fe132`) — the import was PRICED and REFUSED.** `seedlingRegionBinding` is IN the panel's
+static closure, so importing `seedlingAtlasDerivation` would be paid by every page that mounts the
+flash panel, to spell twelve characters:
+
+| the closure from `flashPanel/index.js` | files | bytes |
+|---|---|---|
+| at `8a1eb6b1a` | 43 | 650,891 |
+| + a static `seedlingAtlasDerivation` | 70 | 1,918,889 |
+| **the cost of one line** | **+27** | **+1,267,998** |
+
+⛓ **The closure walk, so the numbers are re-derivable** (relative specifiers only — a dynamic
+`import(…)` is a separate chunk and is deliberately NOT followed, which is the arrangement being
+asserted):
+
+```
+closure() { node -e '
+const {readFileSync,statSync}=require("fs"),{dirname,resolve}=require("path");
+const RE=/^\s*(?:import|export)\s[^"\x27]*?from\s*["\x27]([^"\x27]+)["\x27]|^\s*import\s*["\x27]([^"\x27]+)["\x27]/gm;
+const seen=new Set(),stack=process.argv.slice(1).map(f=>resolve(f));
+while(stack.length){const f=stack.pop();if(seen.has(f))continue;seen.add(f);
+let s;try{s=readFileSync(f,"utf8")}catch{continue}
+for(const m of s.matchAll(RE)){const p=m[1]??m[2];if(p&&p.startsWith("."))stack.push(resolve(dirname(f),p));}}
+let b=0;for(const f of seen){try{b+=statSync(f).size}catch{}}
+console.log(`files=${seen.size} bytes=${b}`);' "$@"; }
+
+closure frontend/modules/flashPanel/index.js
+closure frontend/modules/flashPanel/index.js frontend/modules/seedlingDemo/seedlingAtlasDerivation.js
+```
+
+⛔ **A number in a comment is unfalsifiable, so the refusal is a ROW.** `seedlingRegionBinding.test.js`
+now walks that graph and asserts the SHAPE the number describes: the closure reaches
+`seedlingRegionBinding` (or the claim is vacuous) and does NOT reach `seedlingAtlasDerivation`, while
+the wiring's dynamic `AP_MODULE_PATHS.derivation` still names it. The pin row is now the documented
+**licence** for the duplicate and sweeps four coordinate pairs per `LINK_TAGS` value. Two mutants:
+drifting the spelling reds the pin; **taking the import F6 proposed reds the closure row.**
+
+**F11's home was priced the same way, and it is the cheap direction.** `atlasSource.js` has no
+imports at all, so importing it costs a flashPanel module **+1 file / +2,138 B** (measured at
+`8a1eb6b1a`: `seedlingRandomizerWiring` 6 files/78,888 B → 7/81,026; `seedlingAtlasAnalysis`
+6/162,009 → 7/164,147). §5i's 1 MB lesson is about the OTHER direction.
+
+**F9 (`34c915f18`) — the count, derived.** `grep -ln "const TILE = 16" frontend/modules/seedlingDemo/*.js`
+= **13** files at `8a1eb6b1a`; **the survey's 7 is the PRODUCTION subset** (crusher, iceTurret,
+r5Chain, spinner, r5Shaft, pushables, r5Swim) and the other 6 are `.test.js`. Both numbers are right
+about different populations. Plus `levelSetExporter.TILE_SIZE` = **14 spellings** besides the
+canonical.
+
+- **11 CHANGED**, on a measured rule — import where the file's static closure ALREADY contains
+  `levelWorld`/`seedlingSemantics`, so the import costs zero bytes: crusher, iceTurret, spinner and
+  6 test files import one directly; r5Shaft (18 files/1,062,491 B) and levelSetExporter
+  (17/1,048,012 B) reach one transitively, both **unchanged** by the direct import. `r5Totem.test.js`
+  also loses three inner shadows of its own module-level `TILE`.
+- **3 KEPT THE LITERAL** with the price in the docblock: `pushables` and `r5Swim` have NO imports at
+  all (1 file, 34,444 / 35,911 B) and `r5Chain` has two (35,352 B); a `levelWorld` import would make
+  their closures 10, 10 and 11 files and **~788 KB each** — three quarters of a megabyte to share
+  one integer.
+
+⚠ **AND A FINDING ABOUT THE PROOF ITSELF.** The brief asked for *"the exporter's output
+byte-identical on its fixtures"*. A hand-rolled md5 capture of
+`vanillaRecordSet` / `reachabilityOf` / `buildLevelSet` was byte-identical — under the real change
+**AND under the mutant that moves the canonical to 32**. It never reached the tile→pixel multiply,
+so it could not have told the two builds apart: *a fixture that does not discriminate is not
+evidence.* The instrument that DOES discriminate is the exporter's own suite, which reds **6 rows**
+under that mutant.
+
+**Mutants — RUN, not reasoned.**
+
+| # | mutant | red |
+|---|---|---|
+| (a) | drop the empty-part check in `parseSeqPayload` | **3 rows** — both callers' malformed rows AND the new shared row |
+| (b) | drop the `cancelled` check in `pollUntil` | **4 rows**, two of them the `detach()` rows |
+| (c) | string-key `indexLevels` | **13 rows across 5 files** (incl. pre-existing rows in `regionAtlasAnalyzer`, `regionAtlasMazeProjection`, `mazeSetLab`) |
+| (d) | drift `outExitIdOf`'s spelling | 1 row — the pin |
+| (e) | TAKE the static `seedlingAtlasDerivation` import | 1 row — the closure row |
+| (f) | `SEEDLING_TILE_SIZE = 32` | **6 rows** in `levelSetExporter.test.js` (and the ad-hoc byte capture stayed GREEN — see above) |
+
+**Gates, all run here.**
+
+| gate | result | command |
+|---|---|---|
+| the DERIVED reach | **23/23 green** — the reach names 29 gates, 22 browser + 1 arm run | `node scripts/procgen/gates.mjs reach 8a1eb6b1a..HEAD local` |
+| `check-maze-lab.mjs` | **265/0 UNMOVED** | (in the reach run) |
+| `check-procgen-lab-hosting.mjs` | **66/0 UNMOVED** | (in the reach run) |
+| `check-seedling-editor-boot` / `-world` | **41/0** / **50/0** | (in the reach run) |
+| `check-seedling-wasm-element` / `-pages` | **11/0** / **20/0** | (in the reach run) |
+| ⚠ **`check-seedling-wasm-ship.mjs`** | **263/0, 456.6 s — REAL-GPU WINDOWS CHROME** | `node scripts/procgen/gates.mjs local wasm-ship generated-set` |
+| `check-seedling-generated-set.mjs` | **32/0** (windows) | same line |
+| `check-seedling-wasm-pins` / `full-tier-owed` | **3 builds four views** / **5/0** | `node scripts/procgen/gates.mjs local wasm-pins full-tier-owed` |
+| `verify-seedling-ap-placement.mjs` | **ALL ROWS PASSED** | `node scripts/procgen/verify-seedling-ap-placement.mjs` |
+| ⚠ **…and its `--win` arm** | **ALL ROWS PASSED on real-GPU Windows Chrome** | `python3 -m http.server 8129` **then** `node … --win` |
+| `verify-seedling-atlas-maze` / `verify-region-marking-tool` | **OK** (10 sub-regions, 20 exits, 14 gates) / **OK** | run directly |
+| identity rows | **ALL CHECKS PASSED — 16 rows UNMOVED** | `node scripts/procgen/standing-values.mjs --check --only=identity` |
+| bounded ⚖ 52 | **32 files / 1016 tests** | see below |
+| in-app `--batch=fast` | **61/61**, *No differences in status, roster, or duration* | `compare-runs.js …T17-37-26 …T20-07-18` |
+
+⛓ **The `--win` arm is the strongest single row for F3 and F5**: the REAL panel booted through the
+changed `waitForShim`/`waitForBridge` (`boot 18.85s, status=ready`), loaded the p4d page the preset
+names, and dispatched a location check through `parsePendingCheck` → `parseSeqPayload` on the live
+game (*"found Light for you at Level 030 - Torchpickup"*). One of its own rows reads *"the slot is a
+STRING, so `Number('') === 0` is a live risk and is guarded"* — the exact class of bug F5's shared
+parser now owns in one place.
+
+⛓ The bounded set was WIDENED beyond the brief's six paths by every file this slice touches:
+`npx vitest run frontend/modules/flashPanel/ frontend/modules/seedlingDemo/{atlasSource,apPlacementRewriter,levelSetExporter,seedlingAtlasDerivation,watchWasm,r5Shaft,r5Totem,seedlingSetAdapter,watchSetEditor,worldChain,crusher,iceTurret,spinner,pushables,r5Chain,r5Swim}.test.js`
+
+**⚠ A LOCAL FULL-DIRECTORY VITEST IS NOT A VALID INSTRUMENT ON THIS BOX (⚖ 52, measured again).**
+`npx vitest run frontend/modules/seedlingDemo/ frontend/modules/flashPanel/` red `solverBot` here
+and, at a **pristine `8a1eb6b1a` control in a throwaway worktree**, `watchSetEditor`'s wall-clock
+budget row (`expect(54.07).toBeLessThan(50)`) — three different reds over two runs, **every one
+green alone**. ⛓ And the worktree control needed its own repair: a git worktree's submodule
+directories are EMPTY, which red 45 files on `Cannot find module '../shared/…'`; symlinking the six
+submodules in fixed that but then loaded `shared/procgen/mazeAlgorithms/registry.js` under two
+absolute paths, so `worldChain.test.js` died on `registerBackend: duplicate id 'empty'` — a rig
+artefact of the symlink, not a finding.
+
+**⛔ `verify-seedling-bot-differential.mjs` was STARTED AND STOPPED, and the planner was right to
+stop it.** The reach names it, but the only change on its path is 15 lines of DOCBLOCK in
+`watchWasm.js` — it drives the wasm page through its own driver, not through `flashPanel`'s
+adapters, so `pollUntil` is not on it. It was launched headless and FULL TIER (150 tapes, 152 s on
+the first ⇒ ~6 h) holding a `windows`-kind box lock: against
+`feedback_wasm_gates_run_on_windows_chrome_never_headless`, and blocking every other browser gate on
+the machine. **Not owed.** ⛓ Second lesson from the same incident: an unbounded
+`until ! kill -0 $PID` wait loop cannot be interrupted by a peer's message — bound the loop.
+
+**No re-bank.** No CI-sourced row moved; `gate: maze-lab` stays 265/0.
+
+**What this slice overturned in the brief.**
+- **§17.1 F3's proof did not exist.** No `.test.js` at `8a1eb6b1a` named `_cancelled` or
+  `waitForShim`; the mutant would have been vacuously green. The rows are written.
+- **The bounded ⚖ 52 run named `frontend/modules/seedlingDemo/atlasSource.test.js`, which did not
+  exist.** `levelSourceFromAtlas` was reached only INDIRECTLY by seven `procgen*`/`watch*` files on
+  their way elsewhere, so its throw-by-name — the function's whole documented reason for existing —
+  was asserted by nobody. Written, plus `seedlingAtlasAnalysis.test.js`.
+- **§17.1 F11 says four indexes; there are five.** The fifth
+  (`regionAtlasValidator.indexMapDocument`) is string-keyed BY DESIGN over a union type and is
+  pinned that way; it is not a duplicate.
+- **§17.1 F11 does not name the `map_ref: null` hazard.** `Number(null) === 0` and level 0 is the
+  starting room, so the obvious conversion at the caller would have resolved three fixture regions
+  to a real level.
+- **§17.1 F9's "7" and the brief's "13" are both right** — production files vs the whole grep. And
+  the brief's proof (the exporter's bytes) does not discriminate unless the capture reaches the
+  tile→pixel multiply; it did not, and the mutant proved that before the claim was made.
+- **§17.1 F6's import is refused on a MEASUREMENT**, +1,267,998 B, now asserted by a row rather
+  than stated in prose.
+
+**NEXT: F-b** (the lab constructing the panel's delivery — its own kickoff). F-c/F-d remain ⚖ open.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
