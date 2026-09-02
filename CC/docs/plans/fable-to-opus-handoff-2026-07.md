@@ -9604,6 +9604,26 @@ its premise is false: `iframeAdapterCore.js` and `labRoomEditor.js` are both OUT
 gitlink bump), residues **D6**/**D7** (maze-side), **F7b**, optional **S4/S5/S6**, and now the
 `lintGateLabels` red above.
 
+**⇒ F-d VERIFIED BY THE PLANNER; F-c LAUNCHED (2026-09-02, `maze-lab-planning-2`; ⚖ user 2026-09-02: F-d then F-c
+approved, residues ride along).** Main `bb2b858e8` re-checked from disk: gate `3770314bf` / bank `b8ef249b2` /
+as-built on `origin/main`; row (h) prints *"WASM_PAGE → seedling_bot_ap_p4d … certified by 5 gate(s)"* plus the (h3)
+measurement line; `check-seedling-wasm-pins.mjs` ALL PASS and `--self-test` 9/4; the standing row's `inputKey`
+`c6522201… → 07f1e348…` (data 197 → 231) with `measuredAt = 3770314bf` ON main; `check-slice-records` 73/0/37;
+digest unmoved; bounded vitest 30 files green + ONE red. **Recorded (plan §40):** the (h2) subject set is FIVE and is
+now DERIVED (the kickoff typed two — a census in prose, again) · rows read the working tree, not the HEAD blob ·
+`--check` cannot see key COVERAGE (compute `rowInputKey.inputPopulations`) · the bank is its own commit · `gates.mjs
+reach … --list` ignores the range · (h3) = NONE, measured on the `[]` build at 19/20 with the one red being (h2)
+through a browser. **⚠ MAIN IS RED AT W0 AND IT IS F-b's**: `lintGateLabels.test.js` reds on
+`seedlingAtlasAnalysis.test.js:40`'s typed `toHaveLength(116)` (CI 33689965891 @ `086391b53`, 1 failed);
+F-b's bounded set omitted `scripts/procgen/`, so its "green" never asked the lint. Cure = a non-vacuity arm, no
+allowlist write — **Task 0 of F-c**, its own commit; every slice adding a test row now owes that lint test.
+**F-c launched** (`NewDocs/plans/maze-lab-arms-sliceFc-prompt.md`, `maze-lab-arms-sliceFc`) — ⚠ **NO GITLINK**:
+§17.1 F10's premise is false at this head (`iframeAdapter/iframeAdapterCore.js` and
+`procgenLabPanel/labRoomEditor.js` are OUTER-repo; `shared/` mentions neither); the user's approval of a bump is
+unconsumed. The finding survives: the page transport's docblock claims a subscription record its handler lacks.
+Design: a pure `handshakeStep` in `iframeAdapter/`, both hosts apply its effects, closures priced per commit
+(the lab page must not gain `gameState`), BOTH in-app batches owed (every iframe substrate boots through it).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
