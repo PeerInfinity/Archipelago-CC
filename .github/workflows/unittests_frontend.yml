@@ -158,13 +158,25 @@ jobs:
       # tens of minutes). ⛔ Nothing here names the gate or its flags: the arm
       # and its argv are DERIVED from the gate's own declaration.
       #
+      # ⛓⛓⛓ S4c (⚖ 72) — AND THIS STEP NOW CARRIES THE HEADLESS IDENTITY AND
+      # PRODUCER ROWS TOO. `ci-gates.mjs` derives them from `standingRows()`
+      # the same way it derives the gates from `gateRoster()`; the four whose
+      # instrument holds `/mnt/c/Windows/py.exe` get no arm (⚖ 72 (a)) and are
+      # named `## CI-SKIPPED`. ⛔ Nothing here lists them: a set typed into a
+      # workflow is stale the day a row is added, and stale in the direction
+      # that DROPS one silently.
+      #
       # ⛔ AND A STEP TIMEOUT, NOT ONLY THE JOB'S. Without one the default is
       # the job's, and a job timeout reports `cancelled` naming neither step
       # nor cause (S3's measurement, on the browser jobs). 20 minutes is a
-      # KILL DEADLINE far above where the set lands — the whole headless set
-      # was 25.4 s of runner time when `procgen-help` ran bounded, and the
-      # full pass is 402.8 banked box seconds against a runner measured at
-      # roughly twice this box's speed on the light rows.
+      # KILL DEADLINE far above where the set lands. ⚠ THE MEASUREMENT BEHIND
+      # THAT SENTENCE MOVED AT S4c and is restated rather than left to rot:
+      # the headless GATES were 25.4 s of runner time plus `procgen-help`'s
+      # 255.3 s, and S4c's identity arms add 136.9 runner-seconds measured for
+      # the five expensive ones (1,094.3 banked BOX seconds — the runner is
+      # 0.11x-0.23x this box on pure-node work, measured in S4c's step-1
+      # scratch run 33581070573) plus the twenty cheap ones, which are 2.1 min
+      # of box between them.
       - name: Run headless procgen gates
         continue-on-error: true
         timeout-minutes: 20
@@ -195,6 +207,13 @@ jobs:
   # wall went 15 m 27 s → 23 m 01 s with nothing red anywhere. `ci-gates.mjs
   # --audit --run=<id>` is the guard, and it reads only the runner's own
   # `##   ms | … | here=` lines.
+  #
+  # ⛓⛓ S4c — AND THE MATRIX IS NOT ONLY GATES EITHER. `plan-seedling-r7-ends-meet
+  # --check` is a standing IDENTITY row that drives a browser, so it is a browser
+  # ARM and lands in this partition like any other. ⛔ It arrived UNPRICED, which
+  # `planCiShards` prices at the whole budget on purpose, so it takes a job of its
+  # own until a `--write-costs` has seen it: 2 shards -> 3, with the wall clock
+  # unchanged because `seedling-wasm-element`'s 901 s still sets it.
   # ══════════════════════════════════════════════════════════════════════
 
   browser-gate-plan:
