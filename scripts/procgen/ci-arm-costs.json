@@ -1,0 +1,177 @@
+{
+  "why": "What each CI arm COST THE RUNNER, keyed by the CI key its `##   ms | … | here=` line is printed under. `planCiShards` prices the shard partition off THIS and never off a standing row's `ms`, which is what it cost to ANSWER that row — for a CI-sourced row, a network call (trap 1068). `ms` is the MAX across the runs below, because a bin-packer fed the fastest sample packs a bin that does not fit. Written by `node scripts/procgen/ci-gates.mjs --write-costs`.",
+  "measuredAt": "2026-09-02T00:15:51.804Z",
+  "budgetMs": 600000,
+  "runs": [
+    {
+      "id": 33564586068,
+      "headSha": "e172d631f1408ab498ce826554840e35eca9108e",
+      "createdAt": "2026-09-01T22:06:23Z",
+      "arms": 30
+    },
+    {
+      "id": 33564571352,
+      "headSha": "e172d631f1408ab498ce826554840e35eca9108e",
+      "createdAt": "2026-09-01T22:06:14Z",
+      "arms": 30
+    },
+    {
+      "id": 33563524638,
+      "headSha": "e172d631f1408ab498ce826554840e35eca9108e",
+      "createdAt": "2026-09-01T21:54:00Z",
+      "arms": 30
+    }
+  ],
+  "arms": {
+    "gate: maze-lab": {
+      "ms": 33200,
+      "samples": 3,
+      "maxFrom": 33563524638
+    },
+    "gate: preset-bundle-load": {
+      "ms": 10500,
+      "samples": 3,
+      "maxFrom": 33564571352
+    },
+    "gate: procgen-demos": {
+      "ms": 42200,
+      "samples": 3,
+      "maxFrom": 33563524638
+    },
+    "gate: procgen-docs": {
+      "ms": 2800,
+      "samples": 3,
+      "maxFrom": 33563524638
+    },
+    "gate: procgen-help": {
+      "ms": 255300,
+      "samples": 3,
+      "maxFrom": 33564571352
+    },
+    "gate: procgen-lab-hosting": {
+      "ms": 7000,
+      "samples": 3,
+      "maxFrom": 33564571352
+    },
+    "gate: procgen-reference": {
+      "ms": 4100,
+      "samples": 3,
+      "maxFrom": 33563524638
+    },
+    "gate: seedling-editor-arm": {
+      "ms": 43800,
+      "samples": 3,
+      "maxFrom": 33564571352
+    },
+    "gate: seedling-editor-boot": {
+      "ms": 5500,
+      "samples": 3,
+      "maxFrom": 33564571352
+    },
+    "gate: seedling-editor-edit": {
+      "ms": 9000,
+      "samples": 3,
+      "maxFrom": 33564571352
+    },
+    "gate: seedling-editor-export": {
+      "ms": 32900,
+      "samples": 3,
+      "maxFrom": 33563524638
+    },
+    "gate: seedling-editor-generate": {
+      "ms": 42300,
+      "samples": 3,
+      "maxFrom": 33563524638
+    },
+    "gate: seedling-editor-generate (own server)": {
+      "ms": 43000,
+      "samples": 3,
+      "maxFrom": 33563524638
+    },
+    "gate: seedling-editor-lanes": {
+      "ms": 3100,
+      "samples": 3,
+      "maxFrom": 33563524638
+    },
+    "gate: seedling-editor-manual": {
+      "ms": 6900,
+      "samples": 3,
+      "maxFrom": 33564571352
+    },
+    "gate: seedling-editor-overlays": {
+      "ms": 2500,
+      "samples": 3,
+      "maxFrom": 33564571352
+    },
+    "gate: seedling-editor-phases": {
+      "ms": 7600,
+      "samples": 3,
+      "maxFrom": 33563524638
+    },
+    "gate: seedling-editor-refusal": {
+      "ms": 3300,
+      "samples": 3,
+      "maxFrom": 33563524638
+    },
+    "gate: seedling-editor-sequence": {
+      "ms": 4800,
+      "samples": 3,
+      "maxFrom": 33563524638
+    },
+    "gate: seedling-editor-shapes": {
+      "ms": 6600,
+      "samples": 3,
+      "maxFrom": 33563524638
+    },
+    "gate: seedling-editor-solve": {
+      "ms": 1500,
+      "samples": 3,
+      "maxFrom": 33564571352
+    },
+    "gate: seedling-editor-switch": {
+      "ms": 6000,
+      "samples": 3,
+      "maxFrom": 33564571352
+    },
+    "gate: seedling-editor-world": {
+      "ms": 9900,
+      "samples": 3,
+      "maxFrom": 33563524638
+    },
+    "gate: seedling-full-tier-owed": {
+      "ms": 200,
+      "samples": 3,
+      "maxFrom": 33564586068
+    },
+    "gate: seedling-rerecord-rehearsal": {
+      "ms": 6900,
+      "samples": 3,
+      "maxFrom": 33563524638
+    },
+    "gate: seedling-wasm-element": {
+      "ms": 901200,
+      "samples": 3,
+      "maxFrom": 33563524638
+    },
+    "gate: seedling-wasm-pages": {
+      "ms": 160500,
+      "samples": 3,
+      "maxFrom": 33563524638
+    },
+    "gate: seedling-wasm-pins": {
+      "ms": 1100,
+      "samples": 3,
+      "maxFrom": 33564571352
+    },
+    "gate: slice-records": {
+      "ms": 0,
+      "samples": 3,
+      "maxFrom": 33564586068
+    },
+    "structure: seedling-producer-boundaries": {
+      "ms": 100,
+      "samples": 3,
+      "maxFrom": 33564586068
+    }
+  }
+}
