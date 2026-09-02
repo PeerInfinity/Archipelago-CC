@@ -318,6 +318,15 @@ export function clearForRegion(rulesHash, regionName, substrate) {
 }
 
 // Test-only — drop all stored queues and the in-memory cache.
+/**
+ * Test-only — drop the in-memory cache WITHOUT touching storage, so the next
+ * read goes through `loadCache`'s parse path (where the legacy-maze filter
+ * lives). `_testOnly_clearAll` cannot serve: it clears storage too.
+ */
+export function _testOnly_resetCache() {
+    _cache = null;
+}
+
 export function _testOnly_clearAll() {
     _cache = new Map();
     persistCache();

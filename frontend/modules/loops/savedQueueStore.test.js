@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 import { convertPerformedActionsToQueue } from '../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 import {
@@ -10,6 +10,7 @@ import {
     hasPlayableRecording,
     hasSummaryRecording,
     _testOnly_clearAll,
+    _testOnly_resetCache,
 } from './savedQueueStore.js';
 
 const RULES_HASH = 'a1b2c3d4';
@@ -339,5 +340,100 @@ describe('actionQueue-vocabulary recordings (format slice Q-a)', () => {
             label: 'Food', loops: 2, disabled: false,
         }];
         expect(saveQueue(RULES_HASH, legacy)).toBe('saved');
+    });
+});
+
+// ---------------------------------------------------------------------------
+// Slice Q-b — legacy maze recordings are DISCARDED on read.
+//
+// The user ruled there are no saved maze queues worth keeping compatible, so
+// `loadCache` drops a `substrate:'maze'` entry whose actions carry the retired
+// `type` key rather than upgrading it. No upgrade code, no version dance; the
+// store key stays `v1`, because jta and omsi entries are already
+// actionQueue-shaped and are not the maze's to drop.
+// ---------------------------------------------------------------------------
+
+describe('savedQueueStore — the legacy-maze filter (Q-b)', () => {
+    const KEY = 'loops:savedQueues:v1';
+    let store;
+    let warnings;
+    let realLocalStorage;
+    let realConsoleWarn;
+
+    function seed(obj) {
+        store.set(KEY, JSON.stringify(obj));
+        _testOnly_resetCache();
+    }
+
+    beforeEach(() => {
+        store = new Map();
+        warnings = [];
+        realLocalStorage = globalThis.localStorage;
+        realConsoleWarn = console.warn;
+        globalThis.localStorage = {
+            getItem: (k) => (store.has(k) ? store.get(k) : null),
+            setItem: (k, v) => store.set(k, v),
+            removeItem: (k) => store.delete(k),
+        };
+        console.warn = (msg) => warnings.push(String(msg));
+    });
+
+    afterEach(() => {
+        globalThis.localStorage = realLocalStorage;
+        console.warn = realConsoleWarn;
+        _testOnly_clearAll();
+    });
+
+    const legacyMaze = {
+        regionName: 'Forest', substrate: 'maze',
+        arrivalExitId: 'entrance', departureExitId: 'east',
+        actions: [{ type: 'move', dir: 'E' }, { type: 'wait' }],
+        manaAtEntry: 100, manaAtExit: 80, manaMin: 75,
+        locationsChecked: [], itemsPickedUp: [], recordedAt: 1,
+    };
+    const currentMaze = {
+        ...legacyMaze,
+        actions: [{ actionType: 'move', actionId: 'E', substrate: 'maze', loops: 2 }],
+        recordedAt: 2,
+    };
+
+    it('drops a maze recording whose actions carry the retired `type` key', () => {
+        seed({ [`h1|maze|Forest`]: [legacyMaze, currentMaze] });
+        const queues = getSavedQueues('h1', 'Forest', 'maze');
+        expect(queues).toHaveLength(1);
+        expect(queues[0].recordedAt).toBe(2);
+    });
+
+    it('names how many it dropped on the console', () => {
+        seed({ [`h1|maze|Forest`]: [legacyMaze, { ...legacyMaze, recordedAt: 3 }] });
+        getSavedQueues('h1', 'Forest', 'maze');
+        expect(warnings.join('\n')).toMatch(/dropped 2 maze recordings/);
+    });
+
+    it('says nothing when there is nothing to drop', () => {
+        seed({ [`h1|maze|Forest`]: [currentMaze] });
+        getSavedQueues('h1', 'Forest', 'maze');
+        expect(warnings.join('\n')).not.toMatch(/dropped/);
+    });
+
+    it('a NON-maze recording in another vocabulary is NOT the maze\'s to drop', () => {
+        const textAdventure = {
+            ...legacyMaze, substrate: 'text_adventure',
+            actions: [{ type: 'go', dir: 'north' }], recordedAt: 4,
+        };
+        seed({ [`h1|text_adventure|Forest`]: [textAdventure] });
+        expect(getSavedQueues('h1', 'Forest', 'text_adventure')).toHaveLength(1);
+    });
+
+    it('an ACTIONS-LESS maze entry (a coarse annotations envelope) survives', () => {
+        const annotationsOnly = { ...legacyMaze, actions: [], recordedAt: 5 };
+        seed({ [`h1|maze|Forest`]: [annotationsOnly] });
+        expect(getSavedQueues('h1', 'Forest', 'maze')).toHaveLength(1);
+    });
+
+    it('the store key is still v1 — the ruling was DISCARD, not migrate', () => {
+        seed({ [`h1|maze|Forest`]: [currentMaze] });
+        getSavedQueues('h1', 'Forest', 'maze');
+        expect([...store.keys()]).toEqual(['loops:savedQueues:v1']);
     });
 });

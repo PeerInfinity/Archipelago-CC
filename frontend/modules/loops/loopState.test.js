@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { LoopState } from './loopState.js';
+import { LoopState, coarseOf } from './loopState.js';
 import { GameState } from '../gameState/state.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -376,5 +376,78 @@ describe('LoopState — _applyActionEffects regionMove dispatch (Phase 6g)', () 
     expect(dispatcher.calls.some(
       (c) => c.eventName === 'loop:moveCompleted',
     )).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Slice Q-b — `coarseOf` is the seam between TWO vocabularies.
+//
+// A fine substrate's recording is now a shared actionQueue entry
+// (`actionType`/`actionId`) — jta, omsi and, since this slice, the maze. Loops'
+// OWN `_liveCaptureBuffer` and gameState's path entries still speak
+// `type`/`locationName`. `_applyCoarseReplacement` is handed both, so it reads
+// both through this one adapter. ⛔ The user has ruled the two converge LATER,
+// in the viewer's arc; that arc deletes branch (ii), not this whole function.
+// ---------------------------------------------------------------------------
+
+describe('coarseOf — reads both recording vocabularies (Q-b)', () => {
+  it('(i) the SHARED actionQueue vocabulary', () => {
+    expect(coarseOf({ actionType: 'locationCheck', actionId: 'Loc1' }))
+      .toEqual({ kind: 'locationCheck', name: 'Loc1' });
+    expect(coarseOf({ actionType: 'explore', actionId: null }))
+      .toEqual({ kind: 'explore' });
+  });
+
+  it("(ii) loops' OWN path vocabulary", () => {
+    expect(coarseOf({ type: 'locationCheck', locationName: 'Loc1' }))
+      .toEqual({ kind: 'locationCheck', name: 'Loc1' });
+    expect(coarseOf({ type: 'explore', regionName: 'A' }))
+      .toEqual({ kind: 'explore' });
+  });
+
+  it("a maze 'move' has NO coarse meaning in either vocabulary — fine-grained "
+    + 'substrate actions live only in the recorded fine script', () => {
+    expect(coarseOf({ actionType: 'move', actionId: 'E', substrate: 'maze' })).toBeNull();
+    expect(coarseOf({ type: 'move', dir: 'E' })).toBeNull();
+    expect(coarseOf({ actionType: 'wait', actionId: null })).toBeNull();
+  });
+
+  it('a shared entry WINS the vocabulary test even when it also carries a '
+    + '`type` rider, so one entry is never read twice', () => {
+    expect(coarseOf({ actionType: 'move', actionId: 'E', type: 'locationCheck', locationName: 'X' }))
+      .toBeNull();
+  });
+
+  it('a nameless locationCheck is not a coarse entry in either vocabulary', () => {
+    expect(coarseOf({ actionType: 'locationCheck', actionId: null })).toBeNull();
+    expect(coarseOf({ type: 'locationCheck' })).toBeNull();
+  });
+
+  it('junk is null, never a throw', () => {
+    expect(coarseOf(null)).toBeNull();
+    expect(coarseOf(undefined)).toBeNull();
+    expect(coarseOf('locationCheck')).toBeNull();
+    expect(coarseOf({})).toBeNull();
+  });
+});
+
+describe('_applyCoarseReplacement reads a MAZE recording in the new shape', () => {
+  it('a maze recording\'s locationCheck entries become coarse queue entries, '
+    + 'and its moves do not', () => {
+    const gs = new GameState();
+    const calls = [];
+    gs.clearActionsAt = () => calls.push(['clear']);
+    gs.insertLocationCheckAt = (name) => calls.push(['check', name]);
+    gs.insertCustomActionAt = (name) => calls.push(['custom', name]);
+    const loopState = new LoopState({ eventBus: makeBus(), gameState: gs });
+    loopState._gs = () => gs;
+    loopState._applyCoarseReplacement('A', 1, {
+      actions: [
+        { actionType: 'move', actionId: 'E', substrate: 'maze', loops: 4 },
+        { actionType: 'locationCheck', actionId: 'Sword Room', substrate: 'maze', loops: 1 },
+        { actionType: 'wait', actionId: null, substrate: 'maze', loops: 2 },
+      ],
+    });
+    expect(calls).toEqual([['clear'], ['check', 'Sword Room']]);
   });
 });

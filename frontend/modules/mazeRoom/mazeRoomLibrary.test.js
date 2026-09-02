@@ -109,3 +109,41 @@ describe('applyMazeContentModules — X1 consumable tiles', () => {
         expect(b.consumableTiles.size).toBe(2);
     });
 });
+
+// ---------------------------------------------------------------------------
+// Slice Q-b — the maze declares the registry's `describeAction` hook (Q-a A8).
+//
+// One owner of the wording: the panel's icon-row tooltips, loops'
+// `blockAnnotations` item naming and a cross-substrate queue viewer all read
+// this rather than each carrying a copy of "move E" / "check <name>".
+// ---------------------------------------------------------------------------
+
+describe('maze registry entry — describeAction', () => {
+    const describe_ = substrateRegistryEntry.describeAction;
+
+    it('is declared on the entry', () => {
+        expect(typeof describe_).toBe('function');
+    });
+
+    it('says each verb out loud', () => {
+        expect(describe_({ actionType: 'move', actionId: 'E' })).toBe('move E');
+        expect(describe_({ actionType: 'wait', actionId: null })).toBe('wait');
+        expect(describe_({ actionType: 'locationCheck', actionId: 'Sword Room' }))
+            .toBe('check Sword Room');
+    });
+
+    it('the ×n suffix is the CALLER\'s — a folded entry describes as one action', () => {
+        expect(describe_({ actionType: 'move', actionId: 'E', loops: 12 })).toBe('move E');
+    });
+
+    it('an entry it does not know falls back to actionType [+ actionId] rather '
+        + 'than to nothing', () => {
+        expect(describe_({ actionType: 'teleport', actionId: 'hub' })).toBe('teleport hub');
+        expect(describe_({ actionType: 'teleport', actionId: null })).toBe('teleport');
+    });
+
+    it('junk is the empty string, never a throw', () => {
+        expect(describe_(null)).toBe('');
+        expect(describe_({})).toBe('');
+    });
+});
