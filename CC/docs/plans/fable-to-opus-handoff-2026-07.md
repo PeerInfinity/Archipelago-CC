@@ -7825,6 +7825,26 @@ gitlink bump, all ten changes or a subset (recommend all; A1 and A7 have live co
 loops' own path vocabulary now (recommend NOT in Q-b — the viewer's question; `coarseOf` reads both) ·
 (4) run-length compression in recordings via `loops` (recommended).
 
+**⇒ PART V RULED (plan Part VI, §26–§27) — user 2026-09-02:** *"I don't think there are any saved maze
+queues that we need to worry about maintaining backward compatibility for. I'll also want to standardize
+gameState and actionQueue at some point. I authorize the gitlink bump. I still expect that it would be
+better to migrate the maze queue format now, but I'll trust your judgement if you disagree. I approve of
+the rest of the plan."* ⇒ Q-b's on-read upgrade is DROPPED (legacy `substrate:'maze'` entries carrying
+`type` are DISCARDED on load; the store key stays `v1`) · loops' path vocabulary converges LATER, in the
+viewer's arc (a direction, not a rung; `coarseOf` is the seam it removes) · the gitlink bump is
+AUTHORIZED for Q-a (recorded in the kickoff; submodule commit with the OUTER identity from the PRIMARY
+tree) · **⚖ #2 FLIPS to REPLACE — the planner defers:** keeping `MazeRoomQueue` was a COST argument (25
+pins), not a design one, and against a stated intent to standardize gameState too a maze-private queue
+class would be the last thing left to migrate after the editor exists. So **Q-a also carries the
+LIVE-queue surface into `ActionQueue`** (§26.1: `add(atIndex)` refusing the done region, `stepOne(executor)`
+with `COMPLETED`/`FAILED`+`error`, `subscribe`, `removeAt`, `snapshot`, `drainPending`) and **Q-b DELETES
+`MazeRoomQueue`** (its `ACTION_*`/`DIRECTIONS` move to `mazeKeys.js`; the maze executor turns a refused
+`step` into `FAILED` + `whyBlocked` and STOPS the driver = R2 on the shared status vocabulary). **Kickoff
+written: `NewDocs/plans/maze-lab-arms-sliceQa-prompt.md`** (ten changes each with its proving test; the
+`zoneId` decision; byte-inertness owed on the jta/omsi in-app rows; ⚖ 52 bounded vitest; the submodule
+ceremony; ⛔ no report-backs). Q-b's kickoff is written AFTER Q-a's as-built, off its real exports.
+Ladder final: Q-a → Q-b → S0/S1 → S2a → S2b → R-b → D1–D4 → F-a/F-b → ⚖ F-c/F-d → opt S3–S6.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
