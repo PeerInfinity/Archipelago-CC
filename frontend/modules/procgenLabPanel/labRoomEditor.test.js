@@ -20,6 +20,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
 
 let eventBus;
 let mod;
@@ -359,10 +360,24 @@ describe('labRoomEditor — what it is allowed to know', () => {
          * submodule every side reads and is not a substrate. The claim the loop
          * below makes — no substrate, ever — is untouched.
          */
+        /**
+         * ⛓⛓⛓ F-c — **`iframeAdapter/iframeHandshake.js` JOINED, AND THAT
+         * DIRECTION IS THE POINT.** The four-message handshake is now ONE pure
+         * reducer that BOTH hosts of an `AdapterClient` run — this transport and
+         * the app's `iframeAdapterCore` (plan §17.1 row F10, whose drift was a
+         * docblock here describing a subscription record this file never kept).
+         * `iframeAdapter` is not a substrate and is not the app edge: it is the
+         * module `procgenLabPanel`'s own `moduleInfo.requires` already names, and
+         * the helper imports `shared/communicationProtocol.js` and NOTHING else —
+         * measured, because the constraint is that the two closures must not meet
+         * (a lab page must not gain `gameState`, which the adapter CORE has).
+         * The closure walk is the row below.
+         */
         expect(specs).toEqual([
             '../procgenCore/labProtocol.js',
             '../procgenCore/labRoomEnvelope.js',
             '../shared/communicationProtocol.js',
+            '../iframeAdapter/iframeHandshake.js',
         ]);
         expect(specs.some((sp) => sp.includes('app/'))).toBe(false);
         /**
@@ -378,6 +393,57 @@ describe('labRoomEditor — what it is allowed to know', () => {
         }
         // ⛓ …and there is no DYNAMIC one either — the same rule, the other spelling.
         expect(src).not.toMatch(/\bimport\s*\(/);
+    });
+
+    /**
+     * ⛓⛓⛓ F-c — **THE TWO HOSTS' CLOSURES MUST NOT MEET, AND THAT IS A WALK, NOT
+     * A PROMISE.** The shared handshake is only safe because the file both hosts
+     * import reaches `shared/communicationProtocol.js` and nothing else. The
+     * danger is real in one direction and named: `iframeAdapterCore.js` imports
+     * `gameState/singleton.js`, and a lab page — a standalone static document —
+     * that gained the app's game state through a "shared" helper would be a
+     * 1 MB-class regression of the kind §5i's bundle measurement caught. So the
+     * row WALKS the static graph (relative specifiers only, the same rule F-a's
+     * `closure()` uses) rather than asserting a byte count that rots.
+     */
+    it('⛔ the shared handshake helper brings NO third party — a lab page never gains `gameState`', () => {
+        const IMPORTS = /^\s*(?:import|export)\s[^'"]*?from\s*['"]([^'"]+)['"]|^\s*import\s*['"]([^'"]+)['"]/gm;
+        const closure = (entry) => {
+            const seen = new Set();
+            const stack = [entry];
+            while (stack.length) {
+                const file = stack.pop();
+                if (seen.has(file)) continue;
+                seen.add(file);
+                let src;
+                try { src = readFileSync(file, 'utf8'); } catch { continue; }
+                for (const m of src.matchAll(IMPORTS)) {
+                    const spec = m[1] ?? m[2];
+                    if (spec?.startsWith('.')) stack.push(resolve(dirname(file), spec));
+                }
+            }
+            return [...seen].map((f) => f.split('/frontend/modules/')[1] ?? f).sort();
+        };
+        const here = fileURLToPath(new URL('.', import.meta.url));
+        /** ⛓ the helper's OWN closure — the protocol, and that is the whole list */
+        expect(closure(resolve(here, '../iframeAdapter/iframeHandshake.js'))).toEqual([
+            'iframeAdapter/iframeHandshake.js',
+            'shared/communicationProtocol.js',
+        ]);
+        /** ⛔ …so this transport's closure gains the helper and NOTHING with it */
+        const transport = closure(resolve(here, 'labRoomEditor.js'));
+        expect(transport).toContain('iframeAdapter/iframeHandshake.js');
+        expect(transport.filter((f) => f.startsWith('gameState/'))).toEqual([]);
+        expect(transport.filter((f) => f.startsWith('iframeAdapter/'))).toEqual([
+            'iframeAdapter/iframeHandshake.js',
+        ]);
+        /**
+         * ⛓ …and the claim is not vacuous: the OTHER host, whose rules these now
+         * are, does carry `gameState` — which is exactly why the reducer, and not
+         * `iframeAdapterCore` itself, is what this file imports.
+         */
+        expect(closure(resolve(here, '../iframeAdapter/iframeAdapterCore.js')))
+            .toContain('gameState/singleton.js');
     });
 });
 
@@ -523,5 +589,61 @@ describe('⛓⛓⛓ createPageLabTransport — a HOST that is a page', () => {
             eventName: 'procgenLab:ready', eventData: {},
         }));
         expect(seen).toEqual(['ready', 'procgenLab:ready']);
+    });
+
+    /**
+     * ⛓⛓⛓ F-c — **WHAT THIS HOST PUTS ON THE WIRE, now that the rules are the
+     * app adapter's too.** The two decisions this slice made about reply CONTENT
+     * are here; `iframeAdapter/iframeHandshake.test.js` holds the same rules
+     * against the reducer, and the pins for *why* it is safe to unify them are
+     * the two rows there that read the CHILD (`shared/adapterClient.js`).
+     */
+    it('declares its ONE capability, and answers a beat in the SAME shape the app adapter does', async () => {
+        const w = stubWorld();
+        const { MessageTypes, createMessage } = await import('../shared/communicationProtocol.js');
+        const t = mod.createPageLabTransport({
+            page: 'maze', src: '/x.html', mount: w.mount, win: w.win, doc: w.doc,
+        });
+        w.deliver(createMessage(MessageTypes.IFRAME_READY, t.iframeId, {}));
+        /**
+         * ⛔ **ONE ENTRY, AND THE APP ADAPTER'S FOUR ARE BOTH RIGHT.** A
+         * standalone lab page fronts an event bus and nothing else. The list is a
+         * HOST PARAMETER no child keys on, so this row is the only thing holding
+         * it honest — the child would connect just the same if it were empty.
+         */
+        expect(w.posted[0].type).toBe(MessageTypes.ADAPTER_READY);
+        expect(w.posted[0].data).toEqual({ capabilities: ['eventBus'] });
+        w.deliver(createMessage(MessageTypes.HEARTBEAT, t.iframeId, { timestamp: 1 }));
+        /**
+         * ⛓ **ONE RESPONSE SHAPE.** This host used to answer `{}` and the app
+         * adapter `{timestamp}`, for one reason: nobody reads either
+         * (`adapterClient.js:226-228` is `case HEARTBEAT_RESPONSE:` with the body
+         * untouched). Two shapes for a thing nothing reads is drift with no
+         * upside, so the reducer states the richer one and both hosts send it.
+         */
+        const beat = w.posted[w.posted.length - 1];
+        expect(beat.type).toBe(MessageTypes.HEARTBEAT_RESPONSE);
+        expect(beat.data).toEqual({ timestamp: expect.any(Number) });
+    });
+
+    it('answers NOTHING before `IFRAME_READY` — the app adapter\'s registration rule, now this host\'s', () => {
+        const w = stubWorld();
+        const t = mod.createPageLabTransport({
+            page: 'maze', src: '/x.html', mount: w.mount, win: w.win, doc: w.doc,
+        });
+        /**
+         * ⛔ A beat or a flush point from a frame that never introduced itself is
+         * answered by neither host now. It is unreachable for the real child —
+         * `AdapterClient.startHeartbeat` runs inside `handleAdapterReady`, and
+         * `notifyAppReady()` is called after `connect()` resolves — so the rule
+         * costs nothing and means a stray message cannot flip a host's FLUSH
+         * POINT, which is the one fact `load` is gated on.
+         */
+        for (const type of ['HEARTBEAT', 'IFRAME_APP_READY']) {
+            w.deliver({ type, iframeId: t.iframeId, data: {} });
+        }
+        expect(w.posted).toEqual([]);
+        expect(t.ready()).toBe(false);
+        expect(t.load({ rooms: [] })).toBe(false);
     });
 });

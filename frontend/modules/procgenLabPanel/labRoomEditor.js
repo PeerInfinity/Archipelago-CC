@@ -61,8 +61,20 @@ import { openRoomOf } from '../procgenCore/labRoomEnvelope.js';
  * never edited.
  */
 import { MessageTypes, createMessage } from '../shared/communicationProtocol.js';
+import { handshakeStep, newHandshakeState } from '../iframeAdapter/iframeHandshake.js';
 
 const MODULE_ID = 'procgenLabRoomEditor';
+
+/**
+ * ⛓ **WHAT THIS HOST DECLARES IN `ADAPTER_READY`** — a HOST PARAMETER, and one
+ * entry where the app adapter's `IframeAdapterCore.CAPABILITIES` has four. Both
+ * are honest: a standalone lab page fronts an event bus and nothing else — no
+ * dispatcher, no stateManager, no logging config. ⚠ Measured: no child keys on
+ * the list (`shared/adapterClient.js` names `capabilities` only in its OWN
+ * outbound `IFRAME_READY`, and `connect()` resolves on `ADAPTER_READY` arriving
+ * at all), so a row is the only thing that can hold either list honest.
+ */
+const PAGE_CAPABILITIES = ['eventBus'];
 
 /* ══════════════════════════════════════════════════════════════════════
  * THE LIVE PANEL INSTANCES
@@ -376,24 +388,48 @@ export function createPageLabBus() {
 }
 
 /**
- * ⛓⛓⛓ **THE FOUR WIRE MESSAGES AN `AdapterClient` WAITS FOR**, and what each
- * one is for. ⛔ The names are `shared/communicationProtocol.js`'s own — this
- * file spells no message string of its own, for `labProtocol`'s reason.
+ * ⛓⛓⛓ **THE WIRE MESSAGES AN `AdapterClient` WAITS FOR**, and where each rule
+ * lives. ⛔ The names are `shared/communicationProtocol.js`'s own — this file
+ * spells no message string of its own, for `labProtocol`'s reason.
+ *
+ * Four of them are `iframeAdapter/iframeHandshake.js`'s `handshakeStep`, the
+ * reducer this transport shares with the APP's `iframeAdapterCore` — the two
+ * hosts answer the same child, and before the helper they spelled the rules
+ * twice (plan §17.1 row F10):
  *
  *   `IFRAME_READY`     → answer `ADAPTER_READY`, which RESOLVES the child's
  *                        `connect()` promise. Without it the client retries for
  *                        10 s and then rejects, and the page comes up with no
  *                        bridge at all (a working standalone page, silently).
- *   `SUBSCRIBE_EVENT_BUS` → the child says which events it wants. Recorded, so
- *                        a `load` sent before the subscription can be re-sent.
+ *                        `PAGE_CAPABILITIES` is what THIS host declares in it.
+ *   `SUBSCRIBE_EVENT_BUS` → the child says which events it wants; recorded in
+ *                        the handshake state, refused when the frame never sent
+ *                        `IFRAME_READY`. ⚠ **CORRECTED**: this docblock used to
+ *                        say the record lets *"a `load` sent before the
+ *                        subscription be re-sent"*, and no host has ever done
+ *                        that. The record is ROUTING, and only on the APP side
+ *                        (`handleEventBusEvent` picks the frames an app-bus
+ *                        event reaches); a page transport pushes straight down
+ *                        its one frame and reads the set nowhere. It never
+ *                        needed one either: `procgenCore/labBridge.js`
+ *                        subscribes ×3 (`:112-124`) BEFORE `notifyAppReady()`
+ *                        (`:174`), the order its own docblock (`:17-19`) states
+ *                        as the contract, so nothing can arrive early enough to
+ *                        need re-sending.
  *   `IFRAME_APP_READY` → the child has subscribed AND drawn. This is the flush
  *                        point, and it is the SECOND catch-up
  *                        `feedback_iframe_adapter_gotchas` names: a publish
  *                        before this reaches nobody and is not even queued.
- *   `PUBLISH_EVENT_BUS` → everything the page says, `levelChanged` included.
+ *   `HEARTBEAT`        → answered because the client starts a beat on connect.
+ *                        Nothing HERE depends on it (the app host stamps
+ *                        `lastHeartbeat` and drops a 60 s-stale frame; this one
+ *                        has a single frame it can see), and an unanswered beat
+ *                        is not fatal to the client either — it reads no part of
+ *                        the response (`shared/adapterClient.js:226-228`).
  *
- * ⚠ `HEARTBEAT` is answered because the client starts one on connect; nothing
- * here depends on it, and an unanswered beat is not fatal to the client either.
+ * The fifth is this transport's alone, and stays below:
+ *
+ *   `PUBLISH_EVENT_BUS` → everything the page says, `levelChanged` included.
  *
  * @param {object} o
  * @param {'maze'|'seedling'} o.page   which lab page this frame is
@@ -459,15 +495,21 @@ export function createPageLabTransport({
         }
     };
 
+    let handshake = newHandshakeState();
+
     const onMessage = (event) => {
         const message = event?.data;
         if (disposed || !message || typeof message !== 'object') return;
         const id = message.clientId || message.iframeId || message.windowId;
         if (id !== iframeId) return;
         const T = MessageTypes;
-        if (message.type === T.IFRAME_READY) {
-            post(T.ADAPTER_READY, { capabilities: ['eventBus'] });
-        } else if (message.type === T.IFRAME_APP_READY) {
+
+        /** ⛓ the four rules, from the reducer the app adapter also runs */
+        const step = handshakeStep(handshake, message, { capabilities: PAGE_CAPABILITIES });
+        handshake = step.state;
+        for (const reply of step.replies) post(reply.type, reply.data);
+        for (const effect of step.effects) {
+            if (effect.kind !== 'appReady') continue;
             ready = true;
             flush();
             /**
@@ -481,11 +523,18 @@ export function createPageLabTransport({
              * family: a wait on a readout that no writer moves).
              */
             onEvent('ready');
-        } else if (message.type === T.PUBLISH_EVENT_BUS) {
+        }
+        /**
+         * ⛓ The `refuse` effect has no channel HERE and is deliberately dropped:
+         * the app host answers it with a `CONNECTION_ERROR`, this one has no
+         * error path to the child and inventing one would be a new contract.
+         * A host applies the effects it CAN.
+         */
+        if (step.handled) return;
+
+        if (message.type === T.PUBLISH_EVENT_BUS) {
             bus.publish(message.data?.eventName, message.data?.eventData);
             onEvent(message.data?.eventName);
-        } else if (message.type === T.HEARTBEAT) {
-            post(T.HEARTBEAT_RESPONSE, {});
         }
     };
 
