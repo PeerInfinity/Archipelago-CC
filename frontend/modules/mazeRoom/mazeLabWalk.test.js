@@ -11,7 +11,9 @@ import { describe, expect, it } from 'vitest';
 
 import {
     MazeRoomEditor, PALETTE_TYPES, applyEdit, framesForActions, generateStep, labPayload,
+    loadPayload,
 } from './mazeLab.js';
+import { mazeWorldDigest, refuseReplayPreconditions } from './mazeQueueExecutor.js';
 import { moveEntry, waitEntry, locationCheckEntry } from './mazeKeys.js';
 import { ACTION_QUEUE_FORMAT } from '../shared/actionQueue/actionTypes.js';
 import {
@@ -379,5 +381,97 @@ describe('there is no UNDO in v1 — the queue refuses the done region by design
         // `remove` of a done entry would silently move the cursor under the
         // frames; the arm offers RESTART instead, and the panel says so.
         expect(() => session.queue.add(moveEntry('N'), 0)).toThrow(/inside the done region/);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ SLICE R-b — THE RECORDING'S PRECONDITIONS, ON A LAB WALK
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ TOP-LEVEL, NOT IN THE `lab` BLOCK. `worldDigest` and `requires` are facts
+ * about a RECORDING and a panel region-visit has no `lab` block to put them in
+ * — one shape, both recorders, one `stampRecordingPreconditions`.
+ */
+describe('fold — the preconditions ride the envelope (R-b)', () => {
+    it('a plain walk carries the level\'s digest and an EMPTY requires', () => {
+        const state = level();
+        const doc = walkOf(state, PLAN).fold();
+        expect(doc.worldDigest).toBe(mazeWorldDigest(state.record));
+        expect(doc.requires).toEqual([]);
+        // ⛔ Top level, beside the store's own fields — NOT inside `lab`.
+        expect('worldDigest' in doc.lab).toBe(false);
+        expect('requires' in doc.lab).toBe(false);
+    });
+
+    it('a walk that crossed a door on a carried key NAMES the key', () => {
+        const doc = walkOf(doorKeyLevel(), PLAN).fold();
+        expect(doc.requires).toEqual(['key_red']);
+    });
+
+    it('the digest is the DOCUMENT\'S OWN payload — a self-consistent walk passes', () => {
+        const doc = walkOf(level(), PLAN).fold();
+        const loaded = loadPayload(doc.lab.payload);
+        expect(refuseReplayPreconditions(doc, {
+            world: loaded.record,
+            startInventory: loaded.palette?.items ?? null,
+            selfContained: true,
+        })).toBeNull();
+    });
+
+    /**
+     * ⛓⛓ **A HAND-EDITED `lab.payload.level` REFUSES BY DIGEST** — the check the
+     * lab's LOAD path makes, spelled here without a DOM. ⛔ For a lab walk the
+     * level IS the document's own payload, so this is a SELF-CONSISTENCY
+     * finding about a file somebody typed in, and the sentence says so rather
+     * than blaming a level that moved.
+     */
+    it('a doc whose lab.payload.level was edited by hand refuses by digest', () => {
+        const doc = walkOf(level(), PLAN).fold();
+        // ⛔ The FAR corner, and the flip is read off the value that is there —
+        // a hard-coded 0→1 on a cell that is already 1 would edit nothing and
+        // the row would pass for the wrong reason.
+        const tiles = [...doc.lab.payload.level.tiles];
+        const flipAt = tiles.length - 1;
+        tiles[flipAt] = tiles[flipAt] === 0 ? 1 : 0;
+        const edited = {
+            ...doc,
+            lab: { ...doc.lab, payload: { ...doc.lab.payload, level: { ...doc.lab.payload.level, tiles } } },
+        };
+        const loaded = loadPayload(edited.lab.payload);
+        const said = refuseReplayPreconditions(edited, {
+            world: loaded.record,
+            startInventory: loaded.palette?.items ?? null,
+            selfContained: true,
+        });
+        expect(said).toContain(`digest ${doc.worldDigest}`);
+        expect(said).toContain('edited by hand after the walk was recorded');
+    });
+
+    /**
+     * ⛓⛓ **AND A WALK BOOTED WITH A KEY THE PAGE CANNOT SUPPLY REFUSES BY
+     * NAME** — the maze palette starts the player empty-handed, so a walk
+     * recorded on a state whose palette carried `key_red` names it at load
+     * instead of dying at the door, mid-walk, as R2 alone would have it.
+     */
+    it('…and a requires the loaded palette cannot supply refuses NAMING it', () => {
+        const doc = walkOf(doorKeyLevel(), PLAN).fold();
+        const loaded = loadPayload(doc.lab.payload);
+        expect(loaded.palette?.items ?? null).toBeNull();
+        expect(refuseReplayPreconditions(doc, {
+            world: loaded.record,
+            startInventory: loaded.palette?.items ?? null,
+            selfContained: true,
+        })).toBe('this walk needs key_red, and the start inventory holds none of them');
+    });
+
+    it('a recording that predates this slice (no fields) still loads — R2 is the net', () => {
+        const doc = walkOf(level(), PLAN).fold();
+        delete doc.worldDigest;
+        delete doc.requires;
+        const loaded = loadPayload(doc.lab.payload);
+        expect(refuseReplayPreconditions(doc, {
+            world: loaded.record, selfContained: true,
+        })).toBeNull();
+        expect(framesForActions(loaded, doc.actions)).not.toBeNull();
     });
 });

@@ -57,6 +57,8 @@ import {
     expandedLength,
     isRefused,
     projectActions,
+    refuseReplayPreconditions,
+    stampRecordingPreconditions,
 } from './mazeQueueExecutor.js';
 import { frameOf, framesForActions, labPayload, oracleFor } from './mazeLab.js';
 
@@ -180,7 +182,7 @@ export function createWalkSession(state) {
      */
     const fold = (author = 'hand') => {
         const actions = projectActions(queue.snapshot().entries);
-        return {
+        const doc = {
             substrate: MAZE_SUBSTRATE,
             format: ACTION_QUEUE_FORMAT,
             regionName: null,
@@ -203,6 +205,21 @@ export function createWalkSession(state) {
                 refused,
             },
         };
+        /**
+         * ⛓⛓⛓ SLICE R-b — **THE PRECONDITIONS, TOP-LEVEL, THE PANEL'S OWN
+         * STAMP.** ⛔ Not in the `lab` block: `worldDigest` and `requires` are
+         * facts about a RECORDING, and a region visit recorded in the panel has
+         * no `lab` block to put them in. One function stamps both recorders
+         * (`mazeQueueExecutor.stampRecordingPreconditions`), which is what makes
+         * a lab walk and a region visit refuse on the same grounds.
+         *
+         * ⛔ The start state is `startStateFor(world, palette.items)` — the SAME
+         * boot this session opened with and the same one `framesForActions`
+         * replays from, so what `deriveRequires` walks is the walk that
+         * happened.
+         */
+        return stampRecordingPreconditions(
+            doc, world, startStateFor(world, state.palette?.items ?? null));
     };
 
     /**

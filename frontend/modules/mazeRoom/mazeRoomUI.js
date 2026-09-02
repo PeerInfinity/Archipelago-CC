@@ -62,7 +62,10 @@ import {
     expandedLength,
     intendedTileFor,
     isRefused,
+    mazeWorldDigest,
     projectActions,
+    refuseReplayPreconditions,
+    stampRecordingPreconditions,
 } from './mazeQueueExecutor.js';
 // ⛓ CONSTRUCTIVE-MODE slice 3 (⚖ kickoff §3.5): the canvas draw, the tile
 // size and the palette left this file so `mazeRoom/lab.html` can draw the
@@ -594,7 +597,37 @@ export class MazeRoomUI {
             // Census gap R1: filled as the visit runs (both play surfaces call
             // _notePickupForVisit), where it used to be a literal [] at flush.
             itemsPickedUp: [],
+            // ⛓ SLICE R-b (gaps R3/R4) — the level this visit is driven on, read
+            // off the PAYLOAD: this runs BEFORE `_adoptLoadedRegion` has adopted
+            // it, so `this.world` is still the previous region's.
+            world: payload?.world ?? null,
+            // Filled by `_noteVisitStart` once the panel HAS adopted the world —
+            // at this instant `this.state` and `this.externalInventory` are both
+            // still the region the player is leaving.
+            startPos: null,
+            startInventory: null,
         };
+    }
+
+    /**
+     * ⛓ SLICE R-b — **WHERE THIS VISIT BEGAN**, for `deriveRequires`: the
+     * arrival cell and the inventory the player carried in.
+     *
+     * ⛔ A SECOND CALL SITE RATHER THAN A FIELD IN `_startVisitRecording`, and
+     * the ordering is the reason: the recording opens at the TOP of
+     * `_adoptLoadedRegion` (it has to — `actionsAtStart` must align with the
+     * queue it just cleared), and the world, the spawn cell and the playback
+     * inventory are all established further down. Reading them at the top would
+     * record the region the player just LEFT.
+     */
+    _noteVisitStart() {
+        const rec = this._visitRecording;
+        if (!rec) return;
+        rec.world = this.world ?? rec.world;
+        rec.startPos = this.state
+            ? { x: this.state.player_pos.x, y: this.state.player_pos.y }
+            : null;
+        rec.startInventory = new Set(this.externalInventory ?? this.state?.inventory ?? []);
     }
 
     /** Rolling-minimum update for the current visit's mana tracker. */
@@ -657,6 +690,37 @@ export class MazeRoomUI {
             locationsChecked,
             itemsPickedUp: (rec.itemsPickedUp ?? []).slice(),
         };
+
+        /**
+         * ⛓⛓⛓ SLICE R-b — **THE PRECONDITIONS, STAMPED BY THE SAME FUNCTION THE
+         * LAB CALLS.** `worldDigest` says which level this walk was driven on
+         * (a region EDITED through `layout.edits[]` does not move the
+         * `rulesHash` bucket this recording is filed under — plan §20 R4) and
+         * `requires` says what the walker had to be carrying. Both are OPTIONAL
+         * top-level fields: `savedQueueStore.saveQueue` spreads `...queue`, so
+         * they survive persistence, and loops reads neither.
+         *
+         * ⚠ Derived from the visit's OWN start (`_noteVisitStart`), not from
+         * where the player is standing now — `deriveRequires` re-walks the
+         * recorded actions, and re-walking them from the EXIT would answer a
+         * question about a route nobody took.
+         */
+        /**
+         * ⚠ ONLY WHEN THE VISIT'S START WAS RECORDED. `_noteVisitStart` runs on
+         * the one path that opens a recording (`_adoptLoadedRegion`), so in the
+         * app this is always true; a recording assembled without it — a harness
+         * that calls `_startVisitRecording` on a hand-made world — gets the
+         * envelope it always got. ⛔ The RECORDING matters more than its
+         * preconditions: an enrichment that could throw on an unexpected world
+         * shape would destroy the thing it was decorating.
+         */
+        const world = rec.world ?? this.world;
+        if (world && rec.startPos) {
+            const startState = createState(world);
+            if (rec.startPos) startState.player_pos = { ...rec.startPos };
+            for (const id of rec.startInventory ?? []) startState.inventory.add(id);
+            stampRecordingPreconditions(this._lastVisitRecording, world, startState);
+        }
     }
 
     /**
@@ -1505,6 +1569,9 @@ export class MazeRoomUI {
         const snapshot = stateManagerProxySingleton.getSnapshot();
         this.externalInventory = inventoryFromSnapshot(snapshot);
         this.externalCheckedLocations = checkedLocationsFromSnapshot(snapshot);
+        // ⛓ SLICE R-b: the world, the spawn cell and the entry inventory are all
+        // settled now — remember them for this visit's `requires` derivation.
+        this._noteVisitStart();
         // Discovery semantics depend on fog of war:
         //   - Panel fog rendering ON: only tiles within the spawn's
         //     visibility are revealed. Further tiles uncover as the
@@ -1794,10 +1861,41 @@ export class MazeRoomUI {
      * Returns true if a replay was started; false when actions is
      * empty or invalid.
      */
-    _replaySavedActions(actions, { onComplete, departureExitId = null, instant = false } = {}) {
+    /**
+     * ⛓⛓⛓ SLICE R-b — **THE PRECONDITION GATE, BEFORE STEP 0.** `null` when the
+     * recording may run here; a sentence when it may not, already published as
+     * the panel's message.
+     *
+     * ⛔ THE BLOCK IS LEFT **PARKED** — the caller returns `false`, no completion
+     * is fired and no departure is crossed. That is the S2b/Q-b shape: a
+     * completion withheld is a loops block that stays where it is instead of
+     * reporting a walk it did not make.
+     */
+    _refuseReplayPreconditions(recording) {
+        if (!recording || !this.world) return null;
+        const problem = refuseReplayPreconditions(recording, {
+            world: this.world,
+            startInventory: this.externalInventory ?? this.state?.inventory ?? null,
+        });
+        if (problem === null) return null;
+        this.message = `Replay refused before it started: ${problem}`;
+        this._queueRefusal = problem;
+        // eslint-disable-next-line no-console
+        console.warn(`[mazeRoom] ${this.message}`);
+        this.render();
+        return problem;
+    }
+
+    _replaySavedActions(actions, {
+        onComplete, departureExitId = null, instant = false, recording = null,
+    } = {}) {
         const hasActions = Array.isArray(actions) && actions.length > 0;
         // Nothing to replay AND no exit to cross — genuinely a no-op.
         if (!hasActions && !departureExitId) return false;
+        // ⛓ R-b: the RECORDING (loops passes the whole envelope) is asked before
+        // anything is queued. A caller that passes only actions — a pre-R-b
+        // recording, or a test — is unaffected: absent fields answer `null`.
+        if (this._refuseReplayPreconditions(recording) !== null) return false;
         this._stopReplay();
         // A maze region recording captures only the INTERIOR moves — the
         // exit-crossing move is NOT in the slice (see _finalizeVisitOnExit;
@@ -3480,6 +3578,9 @@ export class MazeRoomUI {
     _replayBestPath(recordedAtKey) {
         const queue = this._lookupSavedQueueByRecordedAt(recordedAtKey);
         if (!queue || !Array.isArray(queue.actions) || queue.actions.length === 0) return;
+        // ⛓ R-b: the picker offers a stale recording LABELLED rather than hidden
+        // (see `_getReplayableTargets`), so pressing one has to refuse by name.
+        if (this._refuseReplayPreconditions(queue) !== null) return;
         this._stopReplay();
         // A recording is run-length COMPRESSED (`loops: n`); the live queue is
         // one entry per turn, so expand before adding.
@@ -3589,13 +3690,41 @@ export class MazeRoomUI {
         const queues = getSavedQueues(rulesHash, this.currentRegionId, 'maze')
             .filter((q) => q.arrivalExitId === arrivalExitId)
             .filter((q) => q.departureExitId);
+        /**
+         * ⛓⛓ SLICE R-b — **A STALE RECORDING IS LABELLED, NOT HIDDEN.**
+         *
+         * ⛔ THE DECISION AND ITS REASON: hiding it makes the recording VANISH
+         * with no account of itself, and a player cannot tell a recording the
+         * level outgrew from one that was never made — the picker is the only
+         * surface in a position to say *"this one was recorded on a level that
+         * has since been edited"*. Pressing it still refuses by name
+         * (`_replayBestPath` → `_refuseReplayPreconditions`), so the label
+         * costs nothing and buys the explanation. A recording that predates
+         * this slice carries no digest and is never marked.
+         */
+        /**
+         * ⛔ LAZILY, AND THE LAZINESS IS LOAD-BEARING: hashing the world on
+         * every render to answer a question no stored recording is asking
+         * would spend `serializeMazeLevel` on each repaint — and it broke on
+         * the panel's own partial fixtures the moment it was written
+         * unconditionally. Computed on the FIRST recording that carries a
+         * digest, then reused.
+         */
+        let here;
+        const digestHere = () => {
+            if (here === undefined) here = this.world ? mazeWorldDigest(this.world) : null;
+            return here;
+        };
         const out = queues.map((q) => {
             const exit = this.world?.exits?.get?.(q.departureExitId);
             const exitLabel = exit?.exitName ?? exit?.targetRegion ?? q.departureExitId;
             const manaCost = (q.manaAtEntry ?? 0) - (q.manaMin ?? q.manaAtEntry ?? 0);
+            const stale = typeof q.worldDigest === 'string'
+                && digestHere() !== null && q.worldDigest !== digestHere();
             return {
                 key: String(q.recordedAt),
-                label: `exit: ${exitLabel}`,
+                stale,
+                label: `exit: ${exitLabel}${stale ? ' — recorded on an older version of this level' : ''}`,
                 totalCost: manaCost,
                 // The EXPANDED count — how many turns the replay will take.
                 // A recording is run-length folded, so `actions.length` is now

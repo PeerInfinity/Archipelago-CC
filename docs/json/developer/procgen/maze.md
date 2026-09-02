@@ -807,9 +807,33 @@ step. The refusal's sentence is `mazeRoomEngine.whyBlocked`'s (below).
 
 **LOAD** runs every action past the shared `validateEntry`, then `loadPayload`
 (the page's one level intake — the level lands UNCERTIFIED like any load), then
-`framesForActions`. A walk the level will not take **refuses by name at the turn
-index** (*"input 1 (move (S)) is illegal on this level — move S blocked: wall at
-(1,1)"*) and nothing partial is drawn.
+the recording's **preconditions**, then `framesForActions`. A walk the level will
+not take **refuses by name at the turn index** (*"input 1 (move (S)) is illegal
+on this level — move S blocked: wall at (1,1)"*) and nothing partial is drawn.
+
+**Two of those refusals happen BEFORE step 0** (slice R-b, census gaps R3/R4).
+Every maze recording — the lab's and the panel's — carries two optional
+top-level fields, stamped by `mazeQueueExecutor.stampRecordingPreconditions`:
+
+- **`worldDigest`** — `fnv1a32(stableStringify(serializeMazeLevel(world)))`, the
+  8-hex content hash of the level the walk was driven on. A mismatch refuses
+  *"this recording was made on a different level (digest a1b2c3d4, this level is
+  e5f6a7b8) — the level moved or was edited"*. ⚠ For a LAB walk the level **is**
+  the document's own payload, so the same mismatch means the file's
+  `lab.payload.level` was hand-edited after the walk was recorded, and the
+  sentence says that instead.
+- **`requires`** — the item ids the walk depended on to pass obstacles,
+  `deriveRequires` re-walking the recording's own actions and reading which
+  `clear_set` combination the inventory satisfied at each crossing, MINUS what
+  the walk picked up on the way in. A missing one refuses naming **every**
+  missing id. Derived tokens are excluded: a `holds` token (`sw_A`) is a fact
+  about the world's stance, not something a player can carry. A `rule`-typed
+  gate is not derivable — the recording then carries no `requires` at all rather
+  than a guess, and R2 catches such a walk at replay.
+
+Both are OPTIONAL forever: a recording written before R-b carries neither and
+still replays — R2 is the net underneath. See
+[loop-recording.md](loop-recording.md) for the panel's side.
 
 **STOP folds, replays and reports.** The round trip is the acceptance row and it
 runs at STOP rather than behind a button: both sides are the same `step` from the

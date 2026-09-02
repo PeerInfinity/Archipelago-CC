@@ -610,8 +610,15 @@ function heldTokens(world, playerPos, blocks) {
  * WORLD's current configuration and not about what the player is carrying.
  *
  * The caller's Set is never mutated.
+ *
+ * ⛓ EXPORTED BY SLICE R-b, and ⛔ for ONE reason: `deriveRequires` has to ask
+ * WHICH combination of an obstacle's `clear_set` was satisfied at the turn the
+ * walk crossed it, and a combination naming a HELD token (`sw_A`) is satisfied
+ * by the world's stance and not by anything the player carries. A second copy
+ * of `heldTokens` outside this file would answer that question differently the
+ * next time a gadget lands — the same argument that put `whyBlocked` here.
  */
-function effectiveInventory(world, inventory, playerPos, blocks) {
+export function effectiveInventory(world, inventory, playerPos, blocks) {
     const held = heldTokens(world, playerPos, blocks);
     if (held === null) return inventory;
     const out = new Set(inventory);

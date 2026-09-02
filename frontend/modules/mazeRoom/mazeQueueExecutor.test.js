@@ -3,19 +3,24 @@ import { describe, it, expect } from 'vitest';
 import {
     TILE_WALL,
     createWorld, createState,
-    setTile, setObstacle, setItem, setBlock,
+    setTile, setObstacle, setItem, setBlock, setButton,
 } from './mazeRoomEngine.js';
+import { startStateFor } from './procgenMaze.js';
 import {
     ACTION_MOVE, ACTION_WAIT, ACTION_LOCATION_CHECK,
     moveEntry, waitEntry, locationCheckEntry, describeMazeAction, KEY_MAP, DIRECTIONS,
 } from './mazeKeys.js';
 import {
+    deriveRequires,
     executeMazeEntry,
     expandEntries,
     expandedLength,
     intendedTileFor,
     isRefused,
+    mazeWorldDigest,
     projectActions,
+    refuseReplayPreconditions,
+    stampRecordingPreconditions,
     MOVE_DIR_TO_INPUT,
 } from './mazeQueueExecutor.js';
 
@@ -25,6 +30,16 @@ import {
 //   '#' wall · '.' floor · 'P' entrance · 'X' exit
 //   'R' door_red · 'K' key_red · 'B' a pushable block
 // ---------------------------------------------------------------------------
+
+/** ⛓ SLICE R-b — the gadget's per-instance entries, the engine test's own
+ *  (`mazeRoomEngine.test.js`): a door cleared by a HOLD, the button that holds
+ *  it, and a flag the walk picks up. ⛔ `shared/procgen/library.js` is not
+ *  touched by this arc — these ride on the world's own copies. */
+const DOOR_A_ENTRY = {
+    name: 'Door A', id: 'door_A', clear_set_type: 'combo_list', clear_set: [['sw_A']],
+};
+const BUTTON_A_ENTRY = { name: 'Button A', id: 'button_A', kind: 'button', holds: 'sw_A' };
+const FLAG_B_ENTRY = { name: 'Flag B', id: 'flag_B', kind: 'flag', classification: 'progression' };
 
 function picture(rows) {
     const height = rows.length;
@@ -41,11 +56,17 @@ function picture(rows) {
         entrance,
         exits: [{ exit_id: 'exit', ...(exit ?? entrance) }],
     });
+    w.obstacleLib = { ...w.obstacleLib, door_A: DOOR_A_ENTRY };
+    w.itemLib = { ...w.itemLib, flag_B: FLAG_B_ENTRY };
+    w.buttonLib = { button_A: BUTTON_A_ENTRY };
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
             const c = rows[y][x];
             if (c === '#') setTile(w, x, y, TILE_WALL);
             if (c === 'B') setBlock(w, x, y);
+            if (c === 'b') setButton(w, x, y, 'button_A');
+            if (c === 'D') setObstacle(w, x, y, 'door_A');
+            if (c === 'F') setItem(w, x, y, 'flag_B');
             if (c === 'R') setObstacle(w, x, y, 'door_red');
             if (c === 'K') setItem(w, x, y, 'key_red');
         }
@@ -444,5 +465,280 @@ describe('mazeQueueExecutor — projectActions / expandEntries (the recording)',
             actionType: ACTION_WAIT, actionId: null, substrate: 'maze', loops: 2,
         });
         expect(expandEntries(folded)[1].actionId).toBeNull();
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ SLICE R-b — RECORDING PRECONDITIONS (census gaps R3 + R4)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ The S2b property fixture, VERBATIM: the key is OFF the route, so the door
+ * is reachable BEFORE the key is. That is what lets one walk (key, then door)
+ * answer `[]` and another (booted holding the key, straight at the door) answer
+ * `['key_red']` on the SAME level — a fixture on which every route picks the key
+ * up first could not tell the two apart (mutant (c)'s lesson, one level down).
+ */
+const doorKeyOffRoute = () => picture([
+    '######',
+    '#P.R.#',
+    '#.K..#',
+    '######',
+]);
+
+/** ⛓ The 7×7 guard gadget — a door held by a BUTTON and a FLAG to collect. */
+const pushLane = () => picture([
+    '#######',
+    '#P....#',
+    '##.B#.#',
+    '##....#',
+    '##b#.##',
+    '####DF#',
+    '#######',
+]);
+
+const moves = (...dirs) => dirs.map((d) => moveEntry(d));
+
+describe('mazeWorldDigest — R4, the level a walk was driven on', () => {
+    it('two identical levels agree, and one changed tile moves it', () => {
+        const a = doorKeyOffRoute();
+        const b = doorKeyOffRoute();
+        expect(mazeWorldDigest(a)).toBe(mazeWorldDigest(b));
+        expect(mazeWorldDigest(a)).toMatch(/^[0-9a-f]{8}$/);
+        setTile(b, 4, 1, TILE_WALL);
+        expect(mazeWorldDigest(b)).not.toBe(mazeWorldDigest(a));
+    });
+
+    it('an OVERLAY change moves it too — a level is not only its tiles', () => {
+        const a = doorKeyOffRoute();
+        const b = doorKeyOffRoute();
+        setItem(b, 4, 1, 'key_red');
+        expect(mazeWorldDigest(b)).not.toBe(mazeWorldDigest(a));
+    });
+
+    /**
+     * ⛔ THE PIN, AND THE COMMAND THAT PRODUCED IT. The S2b manual-arm subject
+     * room — `lab.html?seed=1&width=5&height=5&skeleton=winding`, the room
+     * `check-maze-lab` CLAIM 22 drives by keyboard — at the SKELETON rung:
+     *
+     *   node --input-type=module -e "
+     *     const {generateStep, readLabParams} =
+     *       await import('./frontend/modules/mazeRoom/mazeLab.js');
+     *     const {mazeWorldDigest} =
+     *       await import('./frontend/modules/mazeRoom/mazeQueueExecutor.js');
+     *     const p = readLabParams('seed=1&width=5&height=5&skeleton=winding');
+     *     console.log(mazeWorldDigest(generateStep({ ...p, step: 0 }).record));"
+     *
+     * ⚠ It moves if `serializeMazeLevel`'s bytes move, if the FNV constants
+     * move, or if that seed's skeleton moves — which is exactly what a pin is
+     * for. The level itself is asserted here so a reader can see WHAT is hashed
+     * rather than only the hash.
+     */
+    it('the S2b subject room hashes to 8223c3a9 (the pin)', () => {
+        const w = createWorld(5, 5, {
+            entrance: { x: 0, y: 0 },
+            exits: [{ exit_id: 'goal', x: 1, y: 3 }],
+        });
+        const tiles = [0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1];
+        for (let i = 0; i < tiles.length; i += 1) {
+            if (tiles[i] === TILE_WALL) setTile(w, i % 5, Math.floor(i / 5), TILE_WALL);
+        }
+        expect(mazeWorldDigest(w)).toBe('8223c3a9');
+    });
+});
+
+describe('deriveRequires — R3, what the walk had to be carrying', () => {
+    it('a walk that collects the key on the way in needs NOTHING carried in', () => {
+        const w = doorKeyOffRoute();
+        // S, E (onto the key), N, E (through the door)
+        expect(deriveRequires(w, startStateFor(w, null), moves('S', 'E', 'N', 'E')))
+            .toEqual({ requires: [], why: null });
+    });
+
+    it('the SAME level, a walk booted WITH the key straight at the door, needs it', () => {
+        const w = doorKeyOffRoute();
+        expect(deriveRequires(w, startStateFor(w, ['key_red']), moves('E', 'E')))
+            .toEqual({ requires: ['key_red'], why: null });
+    });
+
+    it('a walk that never reaches the door needs nothing', () => {
+        const w = doorKeyOffRoute();
+        expect(deriveRequires(w, startStateFor(w, ['key_red']), moves('E')))
+            .toEqual({ requires: [], why: null });
+    });
+
+    /**
+     * ⛔ THE HOLD IS NOT AN ITEM. The guard gadget's door is cleared by `sw_A`,
+     * which `effectiveInventory` derives from the stance every turn and never
+     * stores — nothing a replayer could be carrying satisfies it, so naming it
+     * in `requires` would mint a refusal no player could ever clear. The FLAG
+     * is a pickup, and it is collected ON the walk, so it subtracts out too.
+     */
+    it('the guard gadget needs NOTHING: the door is a HOLD and the flag a pickup', () => {
+        const w = pushLane();
+        const plan = ['E', 'E', 'S', 'N', 'E', 'E', 'S', 'S', 'W',
+            'W', 'N', 'W', 'S', 'E', 'E', 'S', 'S', 'E'];
+        const start = startStateFor(w, null);
+        expect(deriveRequires(w, start, moves(...plan))).toEqual({ requires: [], why: null });
+    });
+
+    it('a REFUSED turn contributes nothing — the walk did not cross anything', () => {
+        const w = doorKeyOffRoute();
+        // N is a wall from the entrance; the door is never reached.
+        expect(deriveRequires(w, startStateFor(w, ['key_red']), moves('N')))
+            .toEqual({ requires: [], why: null });
+    });
+
+    /**
+     * ⛔ A `rule`-TYPED GATE IS NOT DERIVABLE AND SAYS SO. `clear_set_type:
+     * 'rule'` is a Rule Builder expression against an inventory; there is no
+     * combination to read off it, and a guess printed as a fact is worse than a
+     * recording that admits it does not know. R2 still catches such a walk.
+     */
+    it('a rule-typed gate answers requires: null WITH a reason naming it', () => {
+        const w = doorKeyOffRoute();
+        setObstacle(w, 3, 1, 'logic_gate_0');
+        w.obstacleLib = {
+            ...w.obstacleLib,
+            logic_gate_0: {
+                id: 'logic_gate_0', clear_set_type: 'rule', clear_rule: { rule: 'True_' },
+            },
+        };
+        const out = deriveRequires(w, startStateFor(w, null), moves('E', 'E'));
+        expect(out.requires).toBeNull();
+        expect(out.why).toBe('rule-typed gate logic_gate_0 at turn 1');
+    });
+
+    /** ⛔ …and only when the walk actually CROSSED it: a rule gate standing
+     *  somewhere else on the level is not this walk's problem. */
+    it('a rule-typed gate the walk never crosses does not spoil the derivation', () => {
+        const w = doorKeyOffRoute();
+        setObstacle(w, 4, 1, 'logic_gate_0');
+        w.obstacleLib = {
+            ...w.obstacleLib,
+            logic_gate_0: {
+                id: 'logic_gate_0', clear_set_type: 'rule', clear_rule: { rule: 'True_' },
+            },
+        };
+        expect(deriveRequires(w, startStateFor(w, ['key_red']), moves('E', 'E')))
+            .toEqual({ requires: ['key_red'], why: null });
+    });
+
+    it('an obstacle id the library does not hold is NO gate (isObstacleCleared is permissive)', () => {
+        const w = doorKeyOffRoute();
+        setObstacle(w, 2, 1, 'door_nobody_declared');
+        expect(deriveRequires(w, startStateFor(w, null), moves('E', 'E')))
+            .toEqual({ requires: [], why: null });
+    });
+
+    it('no world / no start state answers null with a reason rather than throwing', () => {
+        expect(deriveRequires(null, null, []).requires).toBeNull();
+        expect(deriveRequires(null, null, []).why).toBe('no world or start state to derive from');
+    });
+});
+
+describe('stampRecordingPreconditions — ONE stamp, both recorders', () => {
+    it('writes both fields onto the envelope, in place', () => {
+        const w = doorKeyOffRoute();
+        const rec = { actions: projectActions(moves('E', 'E')) };
+        const out = stampRecordingPreconditions(rec, w, startStateFor(w, ['key_red']));
+        expect(out).toBe(rec);
+        expect(rec.worldDigest).toBe(mazeWorldDigest(w));
+        expect(rec.requires).toEqual(['key_red']);
+    });
+
+    /** ⚠ ABSENT, not `null`: a recording saying `requires: null` would be
+     *  indistinguishable from one written before this slice, and "this
+     *  recording does not say" is the truth in both cases. */
+    it('omits `requires` entirely when the walk crossed something underivable', () => {
+        const w = doorKeyOffRoute();
+        setObstacle(w, 2, 1, 'logic_gate_0');
+        w.obstacleLib = {
+            ...w.obstacleLib,
+            logic_gate_0: {
+                id: 'logic_gate_0', clear_set_type: 'rule', clear_rule: { rule: 'True_' },
+            },
+        };
+        const rec = { actions: projectActions(moves('E')) };
+        stampRecordingPreconditions(rec, w, startStateFor(w, null));
+        expect('requires' in rec).toBe(false);
+        expect(typeof rec.worldDigest).toBe('string');
+    });
+});
+
+describe('refuseReplayPreconditions — the refusal BEFORE step 0', () => {
+    it('a recording carrying NEITHER field is still replayable (R2 is the net)', () => {
+        const w = doorKeyOffRoute();
+        expect(refuseReplayPreconditions({ actions: [] }, { world: w })).toBeNull();
+        expect(refuseReplayPreconditions({ actions: [] },
+            { world: w, startInventory: new Set() })).toBeNull();
+    });
+
+    it('a matching digest and a held requirement pass', () => {
+        const w = doorKeyOffRoute();
+        const rec = stampRecordingPreconditions(
+            { actions: projectActions(moves('E', 'E')) }, w, startStateFor(w, ['key_red']));
+        expect(refuseReplayPreconditions(rec, { world: w, startInventory: ['key_red'] }))
+            .toBeNull();
+    });
+
+    it('a level that MOVED refuses, naming BOTH digests', () => {
+        const w = doorKeyOffRoute();
+        const rec = stampRecordingPreconditions(
+            { actions: projectActions(moves('E', 'E')) }, w, startStateFor(w, ['key_red']));
+        const moved = doorKeyOffRoute();
+        setTile(moved, 4, 1, TILE_WALL);
+        const said = refuseReplayPreconditions(rec,
+            { world: moved, startInventory: ['key_red'] });
+        expect(said).toContain(`digest ${rec.worldDigest}`);
+        expect(said).toContain(`this level is ${mazeWorldDigest(moved)}`);
+        expect(said).toContain('the level moved or was edited');
+    });
+
+    /** ⛓ The same mismatch on a SELF-CONTAINED document (a lab walk carries its
+     *  own level) is not "the level moved" — it is a file somebody edited. */
+    it('…and a self-contained walk says the DOCUMENT was edited instead', () => {
+        const w = doorKeyOffRoute();
+        const rec = stampRecordingPreconditions({ actions: [] }, w, startStateFor(w, null));
+        const moved = doorKeyOffRoute();
+        setTile(moved, 4, 1, TILE_WALL);
+        const said = refuseReplayPreconditions(rec, { world: moved, selfContained: true });
+        expect(said).toContain('its own payload is');
+        expect(said).toContain('edited by hand after the walk was recorded');
+    });
+
+    /** ⛔ EVERY missing id, not the first: a walk short two keys that named one
+     *  would send the reader back for a second refusal. */
+    it('a missing requirement refuses NAMING EVERY missing id', () => {
+        const rec = { requires: ['key_green', 'key_red'] };
+        const w = doorKeyOffRoute();
+        expect(refuseReplayPreconditions(rec, { world: w, startInventory: [] }))
+            .toBe('this walk needs key_green and key_red, and the start inventory holds none of them');
+        expect(refuseReplayPreconditions(rec, { world: w, startInventory: ['key_green'] }))
+            .toBe('this walk needs key_green and key_red, and the start inventory is missing key_red');
+        expect(refuseReplayPreconditions(rec, { world: w, startInventory: ['key_red'] }))
+            .toBe('this walk needs key_green and key_red, and the start inventory is missing key_green');
+    });
+
+    it('an empty `requires` never refuses, and a Set start inventory is read as one', () => {
+        const w = doorKeyOffRoute();
+        expect(refuseReplayPreconditions({ requires: [] }, { world: w })).toBeNull();
+        expect(refuseReplayPreconditions({ requires: ['key_red'] },
+            { world: w, startInventory: new Set(['key_red']) })).toBeNull();
+    });
+
+    it('the DIGEST is asked first — a stale level refuses even when the items are held', () => {
+        const w = doorKeyOffRoute();
+        const rec = stampRecordingPreconditions(
+            { actions: projectActions(moves('E', 'E')) }, w, startStateFor(w, ['key_red']));
+        const moved = doorKeyOffRoute();
+        setTile(moved, 4, 1, TILE_WALL);
+        expect(refuseReplayPreconditions(rec, { world: moved, startInventory: ['key_red'] }))
+            .toContain('the level moved or was edited');
+    });
+
+    it('no recording, or no world, is not a refusal', () => {
+        expect(refuseReplayPreconditions(null, { world: doorKeyOffRoute() })).toBeNull();
+        expect(refuseReplayPreconditions({ requires: ['key_red'] }, {})).toBeNull();
     });
 });

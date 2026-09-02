@@ -2,7 +2,7 @@
  * procgenDocs/docLinks — **EVERY LINK IN THE CORPUS, RESOLVED, COUNTED AND
  * PINNED** (PROCGEN DOCS · P4, D3).
  *
- * ⛓ `resolveDocLink` is pure, so it can be run over all 221 links the
+ * ⛓ `resolveDocLink` is pure, so it can be run over all 223 links the
  * seventeen tracked documents contain without a browser and without a server.
  * That is the whole reason it is a separate function from the page: the page
  * can only ever show one document at a time, and a resolver nobody ran over
@@ -101,22 +101,28 @@ describe('the corpus census — printed, then pinned', () => {
          *              lab walk is the SAME envelope, and a reader meeting one
          *              in the store needs the arm that writes it (`doc` 151 →
          *              152; `same-doc` unmoved at 14).
+         *   221 → 223  MAZE SLICE R-b: the recording PRECONDITIONS are one fact
+         *              read from both ends, so each end points at the other —
+         *              `loop-recording.md`'s store § → `maze.md` § *The MANUAL
+         *              arm* for the maze's side, and that § → `loop-recording.md`
+         *              for the panel's. TWO sibling-doc links (`doc` 152 → 154;
+         *              `same-doc` unmoved at 14).
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
          */
         expect(by).toEqual({
             'same-doc': 14,
-            doc: 152,
+            doc: 154,
             external: 23,
             repo: 32,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(221);
+        expect(CORPUS.length).toBe(223);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(152);
+        expect(docs).toHaveLength(154);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

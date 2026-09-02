@@ -1839,6 +1839,12 @@ export class LoopState {
           // Instant (M3): drain the whole replay in one frame instead of
           // animating one action per clock tick.
           instant,
+          // The whole ENVELOPE, beside its actions (maze slice R-b): a
+          // substrate that stamps preconditions on a recording
+          // (`worldDigest` / `requires`) can then refuse a replay BEFORE
+          // step 0 and name what is missing. Substrates that stamp none
+          // ignore the field, and so does everything in this file.
+          recording: saved,
         });
       } catch (err) {
         log('warn', '[LoopState] playback replayActions threw:', err);
@@ -2668,6 +2674,9 @@ export class LoopState {
           controller.replayActions(saved.actions, {
             onComplete: () => { /* reserved for future UI */ },
             instant,
+            // See `_handlePlaybackReplayEntry` — the envelope rides along so a
+            // substrate can refuse a stale recording before step 0.
+            recording: saved,
           });
         } catch (err) {
           log('warn', '[LoopState] customQueue replayActions threw:', err);

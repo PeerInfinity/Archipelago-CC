@@ -14,6 +14,10 @@ import {
     _testOnly_clearAll as _resetSavedQueueStore,
 } from '../loops/savedQueueStore.js';
 import { hashRulesData, clearRulesHashCache } from '../shared/rulesHash.js';
+import {
+    TILE_WALL, createWorld, setObstacle, setTile,
+} from './mazeRoomEngine.js';
+import { mazeWorldDigest } from './mazeQueueExecutor.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 /**
@@ -2602,5 +2606,197 @@ describe('MazeRoomUI — the visit recording (R1, R5, the loops fold)', () => {
             return JSON.stringify(panel._takeLastRecording().actions);
         };
         expect(capture()).toBe(capture());
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ SLICE R-b — THE RECORDING'S PRECONDITIONS, IN THE PANEL
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * Census gaps R3 (`requires`) and R4 (`worldDigest`): a recording replayed
+ * under a smaller inventory, or on a region that has been EDITED, is refused
+ * BEFORE step 0 and NAMED — where R2 alone caught it mid-walk, after the
+ * player had already been driven somewhere.
+ */
+describe('MazeRoomUI — R-b: a replay refuses BEFORE step 0', () => {
+    beforeEach(() => {
+        _testOnly_resetModuleState();
+        resetDiscoverySingleton();
+    });
+
+    /** `######` / `#P.R.#` / `######` — a corridor with `door_red` on it. */
+    function doorCorridor() {
+        const w = createWorld(6, 3, {
+            entrance: { x: 1, y: 1 },
+            exits: [{ exit_id: 'north', x: 4, y: 1, exitName: 'north', targetRegion: 'Cave' }],
+        });
+        for (let x = 0; x < 6; x += 1) {
+            setTile(w, x, 0, TILE_WALL);
+            setTile(w, x, 2, TILE_WALL);
+        }
+        setTile(w, 0, 1, TILE_WALL);
+        setTile(w, 5, 1, TILE_WALL);
+        setObstacle(w, 3, 1, 'door_red');
+        return w;
+    }
+
+    /** A panel mid-visit on `world`, holding `carrying`. */
+    function visitingPanel(world, carrying = []) {
+        const panel = new MazeRoomUI(null, {});
+        panel.render = () => {};
+        panel.currentRegionId = 'Forest';
+        panel.world = world;
+        panel.state = { player_pos: { x: 1, y: 1 }, turn: 0, inventory: new Set() };
+        panel.externalInventory = new Set(carrying);
+        panel._startVisitRecording({
+            region_id: 'Forest', arrivedFrom: { exit_id: 'south' }, world,
+        });
+        // `_adoptLoadedRegion` calls this once the world and the playback
+        // inventory are settled — at `_startVisitRecording` they are not yet.
+        panel._noteVisitStart();
+        return panel;
+    }
+
+    it('the recording carries BOTH fields, derived from the visit\'s own start', () => {
+        const world = doorCorridor();
+        const panel = visitingPanel(world, ['key_red']);
+        runEntries(panel, [moveEntry('E'), moveEntry('E')]);
+        panel._finalizeVisitOnExit('north');
+        const rec = panel._takeLastRecording();
+        expect(rec.worldDigest).toBe(mazeWorldDigest(world));
+        expect(rec.requires).toEqual(['key_red']);
+    });
+
+    it('…and an empty-handed visit that never crossed the door needs nothing', () => {
+        const world = doorCorridor();
+        const panel = visitingPanel(world);
+        runEntries(panel, [moveEntry('E')]);
+        panel._finalizeVisitOnExit('north');
+        expect(panel._takeLastRecording().requires).toEqual([]);
+    });
+
+    it('a replay on an EDITED world refuses before the first step, naming the digest', () => {
+        const world = doorCorridor();
+        const panel = visitingPanel(world, ['key_red']);
+        runEntries(panel, [moveEntry('E'), moveEntry('E')]);
+        panel._finalizeVisitOnExit('north');
+        const rec = panel._takeLastRecording();
+
+        // The region is EDITED — one tile — and the recording replayed onto it.
+        const edited = doorCorridor();
+        setTile(edited, 4, 1, TILE_WALL);
+        const replayer = new MazeRoomUI(null, {});
+        replayer.render = () => {};
+        replayer.world = edited;
+        replayer.state = { player_pos: { x: 1, y: 1 }, turn: 0, inventory: new Set() };
+        replayer.externalInventory = new Set(['key_red']);
+        const started = replayer._replaySavedActions(rec.actions, {
+            departureExitId: 'north', recording: rec,
+        });
+        expect(started).toBe(false);
+        expect(replayer.message).toContain(`digest ${rec.worldDigest}`);
+        expect(replayer.message).toContain('the level moved or was edited');
+        // ⛔ NOTHING WAS QUEUED — the block is left PARKED, which is what makes
+        //   a withheld completion mean "no departure crossed".
+        expect(replayer._mazeQueue.length).toBe(0);
+    });
+
+    it('a replay lacking a required key refuses NAMING it, and queues nothing', () => {
+        const world = doorCorridor();
+        const panel = visitingPanel(world, ['key_red']);
+        runEntries(panel, [moveEntry('E'), moveEntry('E')]);
+        panel._finalizeVisitOnExit('north');
+        const rec = panel._takeLastRecording();
+
+        const replayer = new MazeRoomUI(null, {});
+        replayer.render = () => {};
+        replayer.world = doorCorridor();
+        replayer.state = { player_pos: { x: 1, y: 1 }, turn: 0, inventory: new Set() };
+        replayer.externalInventory = new Set(); // the key is gone this loop
+        expect(replayer._replaySavedActions(rec.actions, {
+            departureExitId: 'north', recording: rec,
+        })).toBe(false);
+        expect(replayer.message).toBe('Replay refused before it started: this walk needs '
+            + 'key_red, and the start inventory holds none of them');
+        expect(replayer._mazeQueue.length).toBe(0);
+    });
+
+    it('a recording that predates this slice still replays — R2 is the net', () => {
+        const replayer = new MazeRoomUI(null, {});
+        replayer.render = () => {};
+        replayer.world = doorCorridor();
+        replayer.state = { player_pos: { x: 1, y: 1 }, turn: 0, inventory: new Set() };
+        replayer.externalInventory = new Set();
+        // No `recording` opt at all (the shape every caller had before R-b) …
+        expect(replayer._replaySavedActions([moveEntry('E')], {})).toBe(true);
+        replayer._stopReplay();
+        replayer._mazeQueue.clear();
+        // … and an envelope carrying neither field.
+        expect(replayer._replaySavedActions([moveEntry('E')], {
+            recording: { actions: [moveEntry('E')] },
+        })).toBe(true);
+        replayer._stopReplay();
+    });
+
+    /**
+     * ⛓ THE PICKER **LABELS** A STALE RECORDING RATHER THAN HIDING IT — a
+     * recording that vanished would be indistinguishable from one that was
+     * never made, and the picker is the only surface that can say why.
+     */
+    it('_getReplayableTargets LABELS a recording whose digest no longer matches', () => {
+        _resetSavedQueueStore();
+        clearRulesHashCache();
+        const rulesData = { regions: { 1: ['Forest'] } };
+        const rulesHash = hashRulesData(rulesData);
+        const world = doorCorridor();
+        const stale = doorCorridor();
+        setTile(stale, 4, 1, TILE_WALL);
+        saveQueue(rulesHash, {
+            regionName: 'Forest',
+            substrate: 'maze',
+            arrivalExitId: 'entrance',
+            departureExitId: 'north',
+            actions: [moveEntry('E')],
+            manaAtEntry: 100,
+            manaAtExit: 100,
+            manaMin: 100,
+            locationsChecked: [],
+            itemsPickedUp: [],
+            worldDigest: mazeWorldDigest(stale),
+            ordinal: 0,
+            recordedAt: 1,
+        });
+        saveQueue(rulesHash, {
+            regionName: 'Forest',
+            substrate: 'maze',
+            arrivalExitId: 'entrance',
+            departureExitId: 'north',
+            actions: [moveEntry('E'), moveEntry('E')],
+            manaAtEntry: 100,
+            manaAtExit: 100,
+            manaMin: 100,
+            locationsChecked: [],
+            itemsPickedUp: [],
+            worldDigest: mazeWorldDigest(world),
+            // ⚠ A DIFFERENT ORDINAL, and the store is why: its tag is
+            // (arrivalExitId, ordinal) and a save REPLACES the same tag, so two
+            // recordings of the same block cannot coexist for the picker to
+            // choose between. The stale label is what a SECOND block's
+            // recording, or an untouched history entry, gets.
+            ordinal: 1,
+            recordedAt: 2,
+        });
+        const panel = new MazeRoomUI(null, {});
+        panel.render = () => {};
+        panel._cachedRulesData = rulesData;
+        panel.currentRegionId = 'Forest';
+        panel.world = world;
+        const targets = panel._getReplayableTargets();
+        expect(targets).toHaveLength(2);
+        const byKey = Object.fromEntries(targets.map((t) => [t.key, t]));
+        expect(byKey['1'].stale).toBe(true);
+        expect(byKey['1'].label).toContain('recorded on an older version of this level');
+        expect(byKey['2'].stale).toBe(false);
+        expect(byKey['2'].label).not.toContain('older version');
     });
 });

@@ -60,6 +60,8 @@ import {
 import {
     createWalkSession, describeReplayRefusal, refuseWalkDocument, witnessOf,
 } from './mazeLabWalk.js';
+/** ⛓ SLICE R-b — the recording preconditions, the headless half's own function. */
+import { refuseReplayPreconditions } from './mazeQueueExecutor.js';
 /**
  * ⛓⛓⛓ THE AREA OVERLAY IS A **SIBLING** DRAW, called after `drawWorld` exactly
  * as the plan and the hover overlays are — a graph is a fact about the MODEL,
@@ -1340,6 +1342,33 @@ export function main() {
             loaded = loadPayload(doc.lab.payload);
         } catch (e) {
             walkSay(`⛔ REFUSED — the walk's own level would not load: ${e.message}`, true);
+            render();
+            return;
+        }
+        /**
+         * ⛓⛓⛓ SLICE R-b — **THE PRECONDITIONS, BEFORE THE FIRST STEP.**
+         *
+         * ⛔ ONE CALL, HERE, AND THE BRIEF ASKED FOR TWO. §2.4 named "right
+         * after `refuseWalkDocument`, before `loadPayload`" AND "in
+         * `describeReplayRefusal`'s caller before `framesForActions`" — which in
+         * this page are the same function, this one. It sits AFTER `loadPayload`
+         * because that is what SUPPLIES the two things the check needs (the
+         * world, and the palette the walk boots with) and it draws nothing:
+         * `adopt(loaded)` is still below, so a refusal here still leaves the
+         * page with the level and the play it already had.
+         *
+         * ⚠ FOR A LAB WALK THE LEVEL **IS** THE DOCUMENT'S OWN PAYLOAD, so a
+         * digest mismatch here is not "the level moved under this recording" —
+         * it is a file whose `lab.payload.level` was edited by hand after the
+         * walk was recorded. `selfContained` is what makes the sentence say so.
+         */
+        const stale = refuseReplayPreconditions(doc, {
+            world: loaded.record,
+            startInventory: loaded.palette?.items ?? null,
+            selfContained: true,
+        });
+        if (stale !== null) {
+            walkSay(`⛔ REFUSED — ${stale}`, true);
             render();
             return;
         }
