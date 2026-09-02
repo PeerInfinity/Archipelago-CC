@@ -6,6 +6,7 @@ import {
     safePostMessage,
     createErrorMessage
 } from './communicationProtocol.js';
+import { handshakeStep } from './iframeHandshake.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 
 // Helper function for logging with fallback
@@ -19,6 +20,16 @@ function log(level, message, ...data) {
 }
 
 export class IframeAdapterCore {
+    /**
+     * ⛓ **WHAT THIS HOST DECLARES IN `ADAPTER_READY`** — a HOST PARAMETER, not a
+     * constant of the protocol: the lab page's `createPageLabTransport` declares
+     * `['eventBus']` and both are honest. Measured: no child keys on it
+     * (`shared/adapterClient.js` names `capabilities` only in its own outbound
+     * `IFRAME_READY`), so this list is documentation on the wire and the pin for
+     * it is a row, not the child's behaviour.
+     */
+    static CAPABILITIES = ['eventBus', 'dispatcher', 'stateManager', 'logging'];
+
     constructor(eventBus, dispatcher, registerDynamicPublisher, moduleId) {
         this.eventBus = eventBus;
         this.dispatcher = dispatcher;
@@ -248,39 +259,91 @@ export class IframeAdapterCore {
     }
 
     /**
+     * ⛓ **THE HANDSHAKE STATE THIS ADAPTER ALREADY KEEPS, read as one object.**
+     * ⛔ There is no SECOND store: the fields are a VIEW over `iframes` and
+     * `eventBusSubscriptions`, which is what `checkHeartbeats`,
+     * `handleEventBusEvent` and `getIframeInfo` read. A separate copy would be
+     * a thing to drift.
+     * @param {string} iframeId - Iframe identifier
+     * @returns {object} the shape `iframeHandshake.newHandshakeState()` describes
+     */
+    _handshakeState(iframeId) {
+        const entry = this.iframes.get(iframeId);
+        return {
+            registered: this.iframes.has(iframeId),
+            appReady: entry?.appReady === true,
+            lastHeartbeat: entry?.lastHeartbeat ?? null,
+            eventBusSubscriptions: this.eventBusSubscriptions.get(iframeId) ?? new Set()
+        };
+    }
+
+    /**
+     * Write a `handshakeStep` result back into this adapter's own structures.
+     * ⛔ Writes NOTHING for a frame that is not registered — the refusal path
+     * must not create the entry it is refusing.
+     * @param {string} iframeId - Iframe identifier
+     * @param {object} state - the `state` a `handshakeStep` returned
+     */
+    _applyHandshake(iframeId, state) {
+        const entry = this.iframes.get(iframeId);
+        if (!entry) return;
+        entry.appReady = state.appReady;
+        entry.lastHeartbeat = state.lastHeartbeat;
+        this.eventBusSubscriptions.set(iframeId, state.eventBusSubscriptions);
+    }
+
+    /**
+     * The logging configuration handed to a joining iframe in `ADAPTER_READY`.
+     * ⛓ Host-side and staying host-side: the lab-page transport has no logger to
+     * describe, which is exactly why `handshakeStep` does not know about this.
+     * @returns {object|null} `{defaultLevel, categoryLevels, enabled}` or null
+     */
+    _loggingConfigForIframe() {
+        if (typeof window === 'undefined' || !window.logger) return null;
+        try {
+            const currentConfig = window.logger.getConfig();
+            return {
+                defaultLevel: currentConfig.defaultLevel,
+                categoryLevels: currentConfig.categoryLevels || {},
+                enabled: currentConfig.enabled
+            };
+        } catch (error) {
+            log('warn', 'Could not get logging config for ready response:', error);
+            return null;
+        }
+    }
+
+    /**
      * Handle iframe ready message
+     * ⛓ The RULE is `iframeHandshake.handshakeStep`'s, shared with the lab page's
+     * `createPageLabTransport`; the `register` effect, the capability list and the
+     * two extra reply fields are this host's.
      * @param {object} message - The message object
      * @param {Window} source - Source window
      */
     handleIframeReady(message, source) {
         const { iframeId } = message;
-        
-        // Register the iframe
-        this.registerIframe(iframeId, source);
-        
-        // Get current logging configuration to send with ready response
-        let loggingConfig = null;
-        if (typeof window !== 'undefined' && window.logger) {
-            try {
-                const currentConfig = window.logger.getConfig();
-                loggingConfig = {
-                    defaultLevel: currentConfig.defaultLevel,
-                    categoryLevels: currentConfig.categoryLevels || {},
-                    enabled: currentConfig.enabled
-                };
-            } catch (error) {
-                log('warn', 'Could not get logging config for ready response:', error);
-            }
-        }
-        
-        // Send adapter ready response with initial logging configuration
-        const response = createMessage(MessageTypes.ADAPTER_READY, iframeId, {
-            adapterVersion: '1.0.0',
-            capabilities: ['eventBus', 'dispatcher', 'stateManager', 'logging'],
-            loggingConfig: loggingConfig
+        const step = handshakeStep(this._handshakeState(iframeId), message, {
+            capabilities: IframeAdapterCore.CAPABILITIES
         });
 
-        safePostMessage(source, response, this._targetOrigin(iframeId));
+        // Register the iframe — the publisher registration, the `iframe:connected`
+        // publish and the first region sync are all this adapter's own
+        for (const effect of step.effects) {
+            if (effect.kind === 'register') this.registerIframe(iframeId, source);
+        }
+        this._applyHandshake(iframeId, step.state);
+
+        // Send adapter ready response with initial logging configuration
+        for (const reply of step.replies) {
+            const response = createMessage(reply.type, iframeId, {
+                adapterVersion: '1.0.0',
+                ...reply.data,
+                loggingConfig: this._loggingConfigForIframe()
+            });
+
+            safePostMessage(source, response, this._targetOrigin(iframeId));
+        }
     }
 
     /**
@@ -290,16 +353,15 @@ export class IframeAdapterCore {
      */
     handleIframeAppReady(message, source) {
         const { iframeId } = message;
+        const step = handshakeStep(this._handshakeState(iframeId), message, {});
+        this._applyHandshake(iframeId, step.state);
 
-        if (this.iframes.has(iframeId)) {
-            const iframeState = this.iframes.get(iframeId);
-            iframeState.appReady = true;
-
+        for (const effect of step.effects) {
             // Publish event to notify modules that iframe app is fully initialized
-            if (this.eventBus && this.moduleId) {
+            if (effect.kind === 'appReady' && this.eventBus && this.moduleId) {
                 this.eventBus.publish('iframe:appReady', {
                     iframeId: iframeId,
-                    timestamp: Date.now()
+                    timestamp: effect.at
                 });
             }
         }
@@ -312,15 +374,14 @@ export class IframeAdapterCore {
      */
     handleHeartbeat(message, source) {
         const { iframeId } = message;
+        const step = handshakeStep(this._handshakeState(iframeId), message, {});
 
-        if (this.iframes.has(iframeId)) {
-            // Update last heartbeat timestamp
-            this.iframes.get(iframeId).lastHeartbeat = Date.now();
+        // ⛓ The STAMP is what `checkHeartbeats` reads; the response is a courtesy
+        // the client never inspects (`shared/adapterClient.js:226-228`)
+        this._applyHandshake(iframeId, step.state);
 
-            // Send heartbeat response
-            const response = createMessage(MessageTypes.HEARTBEAT_RESPONSE, iframeId, {
-                timestamp: Date.now()
-            });
+        for (const reply of step.replies) {
+            const response = createMessage(reply.type, iframeId, reply.data);
 
             safePostMessage(source, response, this._targetOrigin(iframeId));
         }
@@ -332,21 +393,22 @@ export class IframeAdapterCore {
      * @param {Window} source - Source window
      */
     handleSubscribeEventBus(message, source) {
-        const { iframeId, data } = message;
-        const { eventName } = data;
+        const { iframeId } = message;
+        const step = handshakeStep(this._handshakeState(iframeId), message, {});
+        this._applyHandshake(iframeId, step.state);
 
-        if (!this.iframes.has(iframeId)) {
-            this.sendErrorToIframe(source, iframeId, 'NOT_REGISTERED', 'Iframe not registered');
-            return;
+        for (const effect of step.effects) {
+            if (effect.kind === 'refuse') {
+                this.sendErrorToIframe(source, iframeId, effect.code, effect.message);
+                return;
+            }
+            // If this is the first iframe subscribing to this event, subscribe the adapter to it
+            if (effect.kind === 'subscribedEventBus') {
+                this.ensureEventBusSubscription(effect.eventName);
+
+                log('debug', `Iframe ${iframeId} subscribed to eventBus event: ${effect.eventName}`);
+            }
         }
-
-        // Add to subscriptions
-        this.eventBusSubscriptions.get(iframeId).add(eventName);
-
-        // If this is the first iframe subscribing to this event, subscribe the adapter to it
-        this.ensureEventBusSubscription(eventName);
-
-        log('debug', `Iframe ${iframeId} subscribed to eventBus event: ${eventName}`);
     }
 
     /**
