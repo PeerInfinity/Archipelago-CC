@@ -75,7 +75,7 @@
 
 import { execFileSync } from 'node:child_process';
 
-import { ciGateArms, ciRunnable } from './ciGatePlan.js';
+import { ciGateArms, ciRunnable, ciUnrunnableIdentityRows } from './ciGatePlan.js';
 import { REPO, gateRoster } from './gateRoster.js';
 import {
     findRun, gateLogs, gateVerdicts, jobLog, parseGateLines, parseSummaries, runById,
@@ -121,12 +121,40 @@ if (GATE) {
         .find((a) => a.key === GATE || a.bankKey === GATE);
     const asked = GATE.replace(/^[a-z-]+:\s*/, '');
     const gate = arm?.gate ?? roster.find((g) => nameOf(g) === asked);
-    if (!gate) {
+    /**
+     * ⛓⛓⛓ S4c — **AN IDENTITY ARM HAS NO GATE, AND EVERY RUNG BELOW ASKS A
+     * GATE A QUESTION.** `plan-seedling-r7-ends-meet --check` is an arm CI
+     * publishes a line for; without this the ladder would fall through to the
+     * file-name fallback, find no `check-*.mjs` named after it, and REFUSE by
+     * name — a row frozen by its own reader, which is exactly the defect S4
+     * shipped and had to repair one costume over (see the paragraph above).
+     *
+     * ⛔ NOTHING IS SKIPPED HERE THAT COULD APPLY. `ciIdentityArms` builds no
+     * arm for a row whose instrument holds the Windows driver, so the ⚖ 72 (a)
+     * rung is already spent BEFORE this point; and `@ci-face`/`@ci-shallow`
+     * are gate declarations with no identity analogue. An identity key that is
+     * NOT an arm still reaches the refusal below and is named there.
+     */
+    const identityArm = arm && !arm.gate ? arm : null;
+    if (!identityArm && !gate) {
+        /**
+         * ⛔ S4c — an IDENTITY key that no arm claims is refused with its own
+         * reason, never with a sentence about `check-*.mjs`. The only way to
+         * be an identity row with no arm is ⚖ 72 (a).
+         */
+        const winRow = ciUnrunnableIdentityRows({ repo: REPO }).find((r) => r.key === GATE);
+        if (winRow) {
+            console.error(`REFUSED: ${JSON.stringify(GATE)} runs an instrument that holds the `
+                + 'Windows Python driver (`/mnt/c/Windows/py.exe`), which a runner does not '
+                + 'have — so no answer for it exists at any SHA. Its standing row is measured '
+                + 'on the box (⚖ 72 (a)). ⛔ This is a refusal, not a 0/0.');
+            process.exit(5);
+        }
         console.error(`REFUSED: no gate named ${JSON.stringify(asked)} is on the roster — `
             + `${roster.length} gate(s) derived from scripts/procgen/check-*.mjs`);
         process.exit(5);
     }
-    if (!ciRunnable(gate)) {
+    if (!identityArm && !ciRunnable(gate)) {
         console.error(`REFUSED: ${gate.file} drives the Windows Python driver`
             + ' (`/mnt/c/Windows/py.exe`), which a runner does not have — so no answer for it'
             + ' exists at any SHA. Its standing row is measured on the box (⚖ 72 (a)).'
@@ -144,14 +172,14 @@ if (GATE) {
      * down this path; this refusal is the second lock, so that a widening
      * that forgot the clause goes red BY NAME instead of quietly banking.
      */
-    if (gate.ciShallow) {
+    if (!identityArm && gate.ciShallow) {
         console.error(`REFUSED: ${gate.file} declares \`@ci-shallow\` — ${gate.ciShallow.reason}.`
             + ' CI runs it and prints a line, but that line is an answer about a depth-1'
             + ' checkout and NOT about this tree, so it is not this row\'s value. Its standing'
             + ' row is measured on the box. ⛔ This is a refusal, not a 0/0.');
         process.exit(5);
     }
-    if (gate.ciFace && GATE.startsWith('gate:')) {
+    if (!identityArm && gate.ciFace && GATE.startsWith('gate:')) {
         console.error(`REFUSED: ${gate.file} declares \`@ci-face ${gate.ciFace.prefix}\`, so CI `
             + `publishes \`${gate.ciFace.prefix}: ${asked}\` and NOT \`gate: ${asked}\`. Its `
             + 'VALUE cannot survive a fresh checkout — asking for it here would return a '

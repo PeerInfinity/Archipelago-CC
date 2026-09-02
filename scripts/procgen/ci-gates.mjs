@@ -74,11 +74,11 @@ import { join } from 'node:path';
 import { promisify } from 'node:util';
 
 import { releaseBoxLock, takeBoxLock } from './boxLock.js';
-import { CI_ARM_COSTS_FILE, CI_SHARD_BUDGET_MS, auditRunShards, ciGatePlanFor, ciRunnable }
-    from './ciGatePlan.js';
+import { CI_ARM_COSTS_FILE, CI_SHARD_BUDGET_MS, auditRunShards, ciGatePlanFor, ciRunnable,
+    ciUnrunnableIdentityRows } from './ciGatePlan.js';
 import { recentRuns, runById, runShardCosts } from './ciSummary.js';
 import { LOCAL_HOST, REPO, gateRoster } from './gateRoster.js';
-import { headlineOf } from './standingValues.js';
+import { headlineOf, runRow } from './standingValues.js';
 
 
 import { argvHelp } from './argvHelp.js';
@@ -271,6 +271,10 @@ const roster = gateRoster({ repo: REPO });
 /** ⛔ The gates CI cannot run AT ALL — named in every job's own log, so no
  *  log is a partial picture and nothing reads as green that never ran. */
 const unrunnable = roster.filter((g) => !ciRunnable(g));
+/** ⛓⛓ S4c — …AND THE IDENTITY ROWS ⚖ 72 (a) KEEPS ON THE BOX, by the same
+ *  rule and for the same reason. Four of them hold `/mnt/c/Windows/py.exe`;
+ *  a runner cannot resolve it, so they get no arm and are named instead. */
+const unrunnableRows = ciUnrunnableIdentityRows({ repo: REPO });
 /** ⛓ …and the arms this RUN answers that this JOB does not — a sibling
  *  shard's, not a skip. The distinction is the whole point of naming both. */
 const elsewhereInRun = arms.filter((a) => !selected.includes(a));
@@ -278,11 +282,14 @@ const elsewhereInRun = arms.filter((a) => !selected.includes(a));
 console.log(`# ci-gates — the ${SET} procgen gates, on this pushed head\n`);
 console.log(`## ${selected.length} arm(s) run here, out of ${arms.length} the `
     + `\`${SET}\` set holds and ${roster.length} gate(s) on the roster. `
-    + `${unrunnable.length} need a Windows GPU and are SKIPPED BY NAME below — `
-    + 'never counted, never implied green.');
+    + `${unrunnable.length} gate(s) and ${unrunnableRows.length} identity row(s) need the `
+    + 'Windows driver and are SKIPPED BY NAME below — never counted, never implied green.');
 if (shardNote) console.log(`## ${shardNote}`);
 
-const SPENDS_BOX = selected.filter((a) => a.gate.browser);
+/** ⛓ S4c — `arm.browser`, not `arm.gate.browser`: an identity arm has no
+ *  gate and `plan-seedling-r7-ends-meet --check` is one of the arms that
+ *  genuinely drives the machine. */
+const SPENDS_BOX = selected.filter((a) => a.browser);
 if (SPENDS_BOX.length) {
     /**
      * ⛓⛓ THE RUNNER TAKES THE BOX ONCE FOR ALL ITS ARMS, and each gate's own
@@ -312,18 +319,34 @@ for (const arm of selected) {
     const { gate, argv } = arm;
     let out = '';
     let exit = 0;
+    let value = null;
+    let total = null;
     const t0 = Date.now();
-    try {
-        const r = await run('node', [gate.path, ...argv], { cwd: REPO, maxBuffer: 1 << 26 });
-        out = `${r.stdout}${r.stderr}`;
-    } catch (e) {
-        exit = typeof e.code === 'number' ? e.code : 1;
-        out = `${e.stdout ?? ''}${e.stderr ?? ''}` || String(e.message ?? e);
+    if (gate) {
+        try {
+            const r = await run('node', [gate.path, ...argv], { cwd: REPO, maxBuffer: 1 << 26 });
+            out = `${r.stdout}${r.stderr}`;
+        } catch (e) {
+            exit = typeof e.code === 'number' ? e.code : 1;
+            out = `${e.stdout ?? ''}${e.stderr ?? ''}` || String(e.message ?? e);
+        }
+        ({ value, total } = headlineOf('gate', out));
+    } else {
+        /**
+         * ⛓⛓⛓ S4c — **AN IDENTITY ARM IS RUN BY `runRow`, NOT RE-IMPLEMENTED
+         * HERE.** Its command is a SHELL PIPELINE with `identity-block.sh`'s
+         * own `m`/`b` helpers prepended and `${PIPESTATUS[0]}` for the exit —
+         * *"a copy of it in JS would be a second spelling of what an identity
+         * value MEANS"* (`runRow`'s docblock). ⛔ The box runs these rows
+         * through exactly this function, so a CI line that disagreed with the
+         * bank would be a fact about the MACHINE and never about two readers.
+         */
+        const r = await runRow(arm.row, { repo: REPO });
+        ({ value, total, exit, out } = r);
     }
-    const { value, total } = headlineOf('gate', out);
     const ms = Date.now() - t0;
-    rows.push({ key: arm.key, file: gate.file, argv, value, exit, total, ms,
-        face: gate.ciFace?.prefix ?? null });
+    rows.push({ key: arm.key, file: gate?.file ?? arm.row.command, argv, value, exit, total, ms,
+        face: gate?.ciFace?.prefix ?? null });
     console.log(`${CI_GATE_MARK} ${arm.key} | ${value} | exit=${exit} | ${total ?? '(no total)'}`);
     /**
      * ⛓⛓ …AND WHAT IT COST HERE, BESIDE WHAT IT COSTS ON THE BOX. This is the
@@ -373,6 +396,10 @@ for (const arm of selected) {
 console.log('');
 for (const g of unrunnable) {
     console.log(`## CI-SKIPPED | ${g.file} | needs a Windows GPU — not run here, and NOT green`);
+}
+for (const r of unrunnableRows) {
+    console.log(`## CI-SKIPPED | ${r.key} | its instrument holds the Windows Python driver `
+        + '(⚖ 72 (a)) — not run here, and NOT green');
 }
 for (const a of elsewhereInRun) {
     console.log(`## CI-ELSEWHERE | ${a.key} | a sibling shard of THIS run answers it — `

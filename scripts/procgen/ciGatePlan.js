@@ -98,8 +98,8 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { argvFor, gateRoster, LOCAL_HOST, REPO } from './gateRoster.js';
-import { gateStandingRows } from './standingValues.js';
+import { argvFor, gateRoster, LOCAL_HOST, machineDrivers, REPO } from './gateRoster.js';
+import { gateStandingRows, standingRows } from './standingValues.js';
 
 /**
  * ⛓ ONE SHARD'S BUDGET — ten minutes of the RUNNER'S OWN milliseconds (S5b).
@@ -235,14 +235,135 @@ export function ciRunnable(gate) { return !gate.windows; }
  * @param {{gate: object|null, cheap: boolean|undefined}} o  the ROSTER ROW
  *        (`gateRoster()`'s), or `null` for a row no gate answers.
  */
-export function ciSourced({ gate, cheap }) {
-    /** ⛔ An identity/producer/suite row has no gate and therefore no CI line
-     *  under its key — S4c is where that question is asked, not here. */
-    if (!gate) return false;
-    if (!ciRunnable(gate)) return false;
-    if (gate.ciFace) return false;
-    if (gate.ciShallow) return false;
-    return cheap === false;
+export function ciSourced({ gate, row = null, cheap, repo = REPO }) {
+    if (gate) {
+        if (!ciRunnable(gate)) return false;
+        if (gate.ciFace) return false;
+        if (gate.ciShallow) return false;
+        return cheap === false;
+    }
+    /**
+     * ⛓⛓⛓ S4c — **AND A ROW WITH NO GATE IS DECIDED BY THE ARM THAT
+     * PUBLISHES IT, WHICH IS THE ONLY THING THAT CAN DECIDE IT.**
+     *
+     * ⛔ This clause used to be `if (!gate) return false;`, with S4c's name in
+     * its docblock and a unit row asserting it, and the reason it gave was
+     * TRUE: *"CI prints no line for an identity row, so no identity row can
+     * have a streak, and flipping one would bank a value nothing has ever
+     * published."* S4c built the production side, so the reason expired — and
+     * the replacement is not a second clause but the SAME sentence read
+     * forwards: a row is CI-sourced when an arm publishes a line under its own
+     * key. ⛓ `ci-summary.mjs` learned this the hard way at S4 (*"the arms are
+     * the population that PUBLISHES, so they are the population that
+     * resolves"*); the rule and the reader now agree by construction rather
+     * than by two lists somebody has to keep level.
+     *
+     * ⛔ `¬cheap` IS ASKED OF THESE ROWS TOO, and it is doing real work here
+     * rather than being copied across: the other twenty identity arms total
+     * 2.1 min on the box, and quoting a row the box answers in two seconds
+     * buys a network round trip and a KEEP on every unpushed head for no
+     * economy (⚖ 52's own criterion).
+     *
+     * ⛓ ⚖ 72 (a) NEEDS NO CLAUSE HERE. `ciIdentityArms` builds no arm for a
+     * row whose instrument drives the Windows Python driver, so such a row has
+     * nothing publishing under its key and is excluded by the same sentence
+     * that excludes everything else.
+     */
+    if (!row) return false;
+    if (cheap !== false) return false;
+    return ciIdentityArms({ repo }).some((a) => a.key === row.key);
+}
+
+const IDENTITY_KINDS = new Map();
+
+/**
+ * ⛓⛓⛓ S4c — **THE IDENTITY AND PRODUCER ARMS: THE ROWS CI CAN ANSWER THAT
+ * NO GATE ANSWERS.**
+ *
+ * ⛔⛔ WHY THEY ARE ARMS AND NOT A SECOND MECHANISM. `ci-gates.mjs` publishes
+ * `## CI-GATE | <key> | …` and `##   ms | <key> | here=` lines; `ci-summary`
+ * resolves a key through the arms; `planCiShards` prices them; `gateVerdicts`
+ * counts ⚖ 72 (b)'s per-row streak off them. An identity row that arrived by
+ * any other road would have to be taught to four readers separately, and the
+ * fourth is the one somebody forgets.
+ *
+ * ── ⛔⛔⛔ ⚖ 72 (a) IS A DERIVATION HERE, NOT A NAME ──────────
+ *
+ * `machineDrivers()` (⚖ 62, R9 12j) already classifies EVERY `.mjs` in
+ * `scripts/procgen/` as `windows` or `browser` from the file's own text, and
+ * its docblock says why there is exactly one such classifier: *"a second copy
+ * of the two regexes would be a second answer to 'does this thing drive the
+ * machine'"*. So this asks IT. Measured at `908b99309`:
+ *
+ *   dump-seedling-kind-pairs.mjs      not a machine driver   -> headless
+ *   batch-seedling-acceptance.mjs     not a machine driver   -> headless
+ *   plan-seedling-r7-attribution.mjs  not a machine driver   -> headless
+ *   plan-seedling-r7-ends-meet.mjs    browser                -> a browser arm
+ *   check-seedling-generated-set.mjs  windows                -> NO ARM (⚖ 72 (a))
+ *
+ * ⛓ `identity: generated set` is the row the brief called one of *"the two
+ * that cannot go"*, and nothing here names it: it takes the box lock with
+ * `kind: 'windows'` and the classifier reads that. The OTHER one, `roster:
+ * --win --tier=full`, never reaches this function — `standingRows()` does not
+ * derive it (⚖ 70's composite, `alwaysQuoted`, and it has no command).
+ *
+ * ⛔ AN ARM'S KEY IS THE STANDING KEY, WITH NOTHING BETWEEN THEM. A gate may
+ * declare a `@ci-face` and publish a bounded claim under a different prefix
+ * (P4b (D)); an identity row runs CI-side the command the box runs, so there
+ * is no second claim to keep apart and `key === bankKey` by construction.
+ * ⛓ Which is also why there is no `ciFace`/`ciShallow` analogue to invent
+ * here: these rows' subject is generated levels, not the checkout.
+ *
+ * ⛓ MEMOISED PER REPO, because `ciSourced` asks it once per row and the walk
+ * behind it reads the whole instrument directory (measured: 121 ms a call, so
+ * ~16 s over a `--write`'s two passes). ⛔ The memo is only sound because the
+ * one long-running caller FREEZES THE TREE — `--write` calls
+ * `assertTreeUnmoved` at every row — and every test builds its repo before it
+ * asks. A process that edits `scripts/procgen/` under itself must start a new
+ * one.
+ */
+function identityRowKinds({ repo = REPO } = {}) {
+    if (IDENTITY_KINDS.has(repo)) return IDENTITY_KINDS.get(repo);
+    const kindOf = new Map(machineDrivers({ repo }).map((d) => [d.file, d.kind]));
+    const rows = standingRows({ repo })
+        .filter((row) => row.kind === 'identity')
+        .map((row) => {
+            const script = (/scripts\/procgen\/[A-Za-z0-9._-]+/.exec(row.command) ?? [])[0]
+                ?? null;
+            return { row,
+                drives: script
+                    ? kindOf.get(script.slice('scripts/procgen/'.length)) ?? null : null };
+        });
+    IDENTITY_KINDS.set(repo, rows);
+    return rows;
+}
+
+export function ciIdentityArms({ repo = REPO } = {}) {
+    return identityRowKinds({ repo })
+        /** ⛔ ⚖ 72 (a) — a runner has no `/mnt/c/Windows/py.exe`, so this row
+         *  has no answer at any SHA and gets no arm to imply one. */
+        .filter((r) => r.drives !== 'windows')
+        .map(({ row, drives }) => ({ gate: null, row, label: null, argv: null,
+            browser: drives === 'browser', bankKey: row.key, key: row.key }));
+}
+
+/**
+ * ⛓ The identity rows ⚖ 72 (a) keeps on the box — named by every job that
+ * runs an identity set, for the same reason `ci-gates.mjs` names the Windows
+ * GATES: a row absent from a log without a sentence reads as one that passed.
+ *
+ * ⛓⛓ IT IS FOUR ROWS AND NOT ONE, WHICH THE CANDIDATE SET DID NOT SHOW.
+ * `identity: generated set` is the expensive one; `solve-seedling-r8-d2-chain`,
+ * `solve-seedling-r8-tail` and `solve-seedling-r9-campaign` each hold the same
+ * literal and are excluded by the same clause. ⛔ All three are `cheap`, so no
+ * economy turns on them today — and the classifier is a TEXT classifier, so a
+ * row that holds the path but never reaches it on its `--check` path is
+ * excluded anyway. That is conservative in the direction that keeps a value
+ * the runner cannot produce out of the bank, which is the direction ⚖ 72 (a)
+ * chose.
+ */
+export function ciUnrunnableIdentityRows({ repo = REPO } = {}) {
+    return identityRowKinds({ repo }).filter((r) => r.drives === 'windows').map((r) => r.row);
 }
 
 /**
@@ -267,19 +388,31 @@ export function ciSourced({ gate, cheap }) {
  * nobody asked about — so a standing-keyed arm's argv is the local argv PLUS
  * the declared flags, asserted in `ciGatePlan.test.js` from both ends.
  *
+ * ⛓⛓⛓ S4c — **AND SINCE S4c THE POPULATION IS NOT ONLY GATES.** The
+ * identity/producer arms (`ciIdentityArms`, above) are appended, and every
+ * consumer already wanted the union rather than the gates: `ci-summary`
+ * resolves a key through this, `gateVerdicts` counts ⚖ 72 (b)'s streaks off
+ * it, `planCiShards` prices it. ⛔ The NAME stays `ciGateArms` and the marker
+ * stays `## CI-GATE |` on purpose — ⚖ 8 reads a published string as identity,
+ * and moving every arm's line to rename a prefix buys nothing. Read "gate"
+ * here as *"an arm CI runs and publishes a line for"*.
+ *
+ * ⛔ THE `set` NOW FILTERS ON `arm.browser`, NOT ON `gate.browser`. An identity
+ * arm has no gate; a rule that reached through one would have thrown on the
+ * first of them, and a rule that special-cased them would be the second answer
+ * to "does this arm need a browser" that `machineDrivers` exists to prevent.
+ *
  * @param {object} o
  * @param {string} [o.set]  `browser` (default) · `headless` · `all`
  */
 export function ciGateArms({ repo = REPO, host = LOCAL_HOST, set = 'browser' } = {}) {
-    const wants = (g) => {
-        if (!ciRunnable(g)) return false;
-        if (set === 'all') return true;
-        if (set === 'headless') return !g.browser;
-        if (set === 'browser') return g.browser;
+    if (!['all', 'headless', 'browser'].includes(set)) {
         throw new Error(`ciGatePlan: unknown set ${JSON.stringify(set)} — browser, headless or all`);
-    };
+    }
+    const wants = (arm) => (set === 'all' ? true
+        : (set === 'browser' ? arm.browser : !arm.browser));
     const out = [];
-    for (const gate of gateRoster({ repo }).filter(wants)) {
+    for (const gate of gateRoster({ repo }).filter(ciRunnable)) {
         const base = argvFor(gate, 'local', { host });
         /** ⛔ A gate that cannot address the local world at all is NOT run —
          *  named by the caller, never run against the wrong tree. */
@@ -293,23 +426,34 @@ export function ciGateArms({ repo = REPO, host = LOCAL_HOST, set = 'browser' } =
         out.push({
             gate,
             label: null,
+            /** ⛓ S4c — every arm declares whether it needs the machine, so the
+             *  `set` filter and `ci-gates.mjs`'s box lock read ONE field. */
+            browser: gate.browser,
             argv: gate.ciFace ? gate.ciFace.argv : [...base, ...ciOnly],
             bankKey: rows[0].key,
             key: faced(rows[0].key),
         });
         (gate.variants ?? []).forEach((v, i) => {
             out.push({
-                gate, label: v.label, argv: [...v.argv, ...ciOnly],
+                gate, label: v.label, browser: gate.browser, argv: [...v.argv, ...ciOnly],
                 bankKey: rows[i + 1].key, key: faced(rows[i + 1].key),
             });
         });
     }
-    return out;
+    out.push(...ciIdentityArms({ repo }));
+    return out.filter(wants);
 }
 
-/** ⛓ How an arm is NAMED, everywhere — the gate, then the arm it is. */
-export const armName = (arm) => `${arm.gate.file.replace(/^check-/, '').replace(/\.mjs$/, '')}`
-    + `${arm.label ? ` (${arm.label})` : ''}`;
+/**
+ * ⛓ How an arm is NAMED, everywhere — the gate, then the arm it is.
+ * ⛓⛓ S4c — an identity arm has no gate, and its STANDING KEY is already the
+ * name a reader would ask about (`identity: carved pairs c4`), so it is used
+ * verbatim rather than given a second spelling to keep level.
+ */
+export const armName = (arm) => (arm.gate
+    ? `${arm.gate.file.replace(/^check-/, '').replace(/\.mjs$/, '')}`
+        + `${arm.label ? ` (${arm.label})` : ''}`
+    : arm.key);
 
 /**
  * ⛓⛓ THE PARTITION — longest-first, into bins of `budgetMs`.

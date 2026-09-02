@@ -489,7 +489,15 @@ export async function runRow(row, { repo = REPO } = {}) {
     }
     const ms = Number((process.hrtime.bigint() - t0) / 1000000n);
     const { value, total } = headlineOf(row.kind, out);
-    return { value, total, exit: code, ms };
+    /**
+     * ⛓ S4c — **`out` IS RETURNED BESIDE THE HEADLINE, and the caller that
+     * needed it is `ci-gates.mjs`.** A red arm whose line carries no evidence
+     * is *"a red nobody can act on"* (that file's own docblock, twice over);
+     * the gate path echoes the failing lines out of the gate's stdout, and an
+     * identity arm had no stdout to echo. ⛔ Every existing caller builds its
+     * bank row field by field, so the extra field reaches no artifact.
+     */
+    return { value, total, exit: code, ms, out };
 }
 
 /** The script a command names, so `--check` can refuse a RETIRED instrument. */

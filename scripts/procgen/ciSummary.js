@@ -254,10 +254,16 @@ export function parseGateLines(log) {
 export function gateVerdicts({ lines, bank, arms }) {
     /** ⛓ CI key -> the STANDING key its value belongs under. They differ for a
      *  declared `@ci-face`, which is exactly the pair that must not compare. */
-    const bankKeyOf = new Map(arms.map((a) => [a.key, a.gate.ciFace ? null : a.bankKey]));
+    const bankKeyOf = new Map(arms.map((a) => [a.key, a.gate?.ciFace ? null : a.bankKey]));
     /** ⛓ …and the arms whose gate declares `@ci-shallow`, off the SAME roster
-     *  row the bank key comes from (never a name typed here). */
-    const shallowOf = new Map(arms.map((a) => [a.key, a.gate.ciShallow?.reason ?? null]));
+     *  row the bank key comes from (never a name typed here).
+     *  ⛓⛓ S4c — `a.gate?`, because an identity arm HAS no gate. Neither
+     *  declaration has an identity analogue: `@ci-face` says *"CI's number is
+     *  a different claim"* and an identity arm runs the box's own command, and
+     *  `@ci-shallow` is about the CHECKOUT while these rows' subject is
+     *  generated levels. An arm with no gate therefore declares neither, which
+     *  is the answer rather than a gap. */
+    const shallowOf = new Map(arms.map((a) => [a.key, a.gate?.ciShallow?.reason ?? null]));
     const rows = [...lines.values()].map((row) => {
         const bankKey = bankKeyOf.has(row.key) ? bankKeyOf.get(row.key) : row.key;
         const banked = bankKey ? bank[bankKey]?.value ?? null : null;

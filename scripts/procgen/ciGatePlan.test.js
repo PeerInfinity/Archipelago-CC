@@ -25,6 +25,8 @@ import {
     auditRunShards,
     ciGateArms,
     ciGatePlanFor,
+    ciIdentityArms,
+    ciUnrunnableIdentityRows,
     ciRunnable,
     ciSourced,
     lastRunShardAudit,
@@ -73,21 +75,48 @@ describe('ciRunnable — what a runner can answer', () => {
 });
 
 describe('ciGateArms — the arms, and BOTH of an arm\'s keys', () => {
-    it('the browser set is the browser gates plus their declared arms', () => {
+    it('the browser set is the browser gates, their declared arms and the browser '
+        + 'IDENTITY arms', () => {
         const roster = gateRoster({ repo: REPO });
         const gates = roster.filter((g) => g.browser && !g.windows);
         const variants = gates.reduce((n, g) => n + (g.variants?.length ?? 0), 0);
         expect(gates.length).toBeGreaterThan(15);
         const arms = ciGateArms({ repo: REPO, set: 'browser' });
-        expect(arms.length).toBe(gates.length + variants);
+        /** ⛓⛓ S4c — the identity arms are DERIVED into the same population, so
+         *  the equality is stated against `ciIdentityArms` rather than loosened
+         *  to an inequality. A count typed here is the wrong-and-green this arc
+         *  has produced repeatedly. */
+        const identity = ciIdentityArms({ repo: REPO }).filter((a) => a.browser);
+        expect(identity.length).toBeGreaterThan(0);
+        expect(arms.length).toBe(gates.length + variants + identity.length);
         /** ⛓ …and a declared arm is a SECOND standing row, keyed apart. */
         expect(new Set(arms.map((a) => a.key)).size).toBe(arms.length);
     });
 
-    it('the headless set is unchanged, and a @ci-face still replaces the prefix', () => {
+    /**
+     * ⛔⛔ S4c — **THE TWO SETS PARTITION THE ARMS, and an arm that fell out of
+     * both would be a standing row CI silently stopped answering.** `browser`
+     * and `headless` are complementary filters over one population now that
+     * identity arms are in it; before S4c they were two different roster
+     * filters and nothing said they were exhaustive.
+     */
+    it('⛔ browser ∪ headless = all, with no arm in both', () => {
+        const all = ciGateArms({ repo: REPO, set: 'all' }).map((a) => a.key).sort();
+        const b = ciGateArms({ repo: REPO, set: 'browser' }).map((a) => a.key);
+        const h = ciGateArms({ repo: REPO, set: 'headless' }).map((a) => a.key);
+        expect(all.length).toBeGreaterThan(30);
+        expect(b.length).toBeGreaterThan(0);
+        expect(h.length).toBeGreaterThan(0);
+        expect([...b, ...h].sort()).toEqual(all);
+    });
+
+    it('the headless set holds gates and identity rows, and a @ci-face still '
+        + 'replaces the prefix', () => {
         const arms = ciGateArms({ repo: REPO, set: 'headless' });
         expect(arms.length).toBeGreaterThan(3);
-        const faced = arms.filter((a) => a.gate.ciFace);
+        /** ⛓ S4c — non-vacuity: the headless set really did gain identity arms. */
+        expect(arms.filter((a) => !a.gate).length).toBeGreaterThan(0);
+        const faced = arms.filter((a) => a.gate?.ciFace);
         expect(faced.length).toBeGreaterThan(0);
         for (const a of faced) {
             expect(a.key.startsWith(`${a.gate.ciFace.prefix}:`)).toBe(true);
@@ -98,7 +127,10 @@ describe('ciGateArms — the arms, and BOTH of an arm\'s keys', () => {
     });
 
     it('a browser arm is pointed at the caller\'s host, both shapes of it', () => {
-        const arms = ciGateArms({ repo: REPO, set: 'browser', host: 'http://h:1' });
+        const arms = ciGateArms({ repo: REPO, set: 'browser', host: 'http://h:1' })
+            /** ⛓ S4c — an identity arm's command is the shell pipeline
+             *  `identity-block.sh` prints; it has no argv to point anywhere. */
+            .filter((a) => a.gate);
         const hosted = arms.filter((a) => a.argv.some((x) => x.startsWith('--host=')));
         const rooted = arms.filter((a) => a.argv.some((x) => x.startsWith('--root=')));
         expect(hosted.length).toBeGreaterThan(0);
@@ -132,7 +164,7 @@ describe('ciGateArms — the arms, and BOTH of an arm\'s keys', () => {
      */
     it('⛔ a standing-keyed arm runs the LOCAL argv plus exactly its declared CI flags', () => {
         const arms = ciGateArms({ repo: REPO, set: 'all', host: 'http://h:1' });
-        const standing = arms.filter((a) => a.key === a.bankKey);
+        const standing = arms.filter((a) => a.gate && a.key === a.bankKey);
         /** ⛓ non-vacuity, both halves (trap 824): there ARE standing-keyed
          *  arms, and at least one of them needs argv to address its world. */
         expect(standing.length).toBeGreaterThan(20);
@@ -161,7 +193,7 @@ describe('ciGateArms — the arms, and BOTH of an arm\'s keys', () => {
      */
     it('⛔ the gate that declares @ci-argv runs CI with those flags, under its STANDING key', () => {
         const arms = ciGateArms({ repo: REPO, set: 'all' });
-        const declared = arms.filter((a) => a.gate.ciArgv);
+        const declared = arms.filter((a) => a.gate?.ciArgv);
         expect(declared.length).toBeGreaterThan(0);
         for (const a of declared) {
             /** ⛔ the same claim ⇒ the same key. This is the clause that keeps
@@ -180,6 +212,7 @@ describe('ciGateArms — the arms, and BOTH of an arm\'s keys', () => {
         const faced = arms.filter((a) => a.key !== a.bankKey);
         expect(faced.length).toBeGreaterThan(0);
         for (const a of faced) {
+            expect(a.gate).not.toBe(null);
             expect(a.gate.ciFace).not.toBe(null);
             expect(a.key.startsWith(`${a.gate.ciFace.prefix}:`)).toBe(true);
             expect(a.argv).toEqual(a.gate.ciFace.argv);
@@ -206,7 +239,7 @@ describe('planCiShards — the partition', () => {
      */
     it('holds every gate the demos catalogue dedups against', () => {
         const { arms } = ciGatePlanFor({ repo: REPO, set: 'browser' });
-        const names = new Set(arms.map((a) => a.gate.file));
+        const names = new Set(arms.filter((a) => a.gate).map((a) => a.gate.file));
         for (const f of ['check-seedling-editor-generate.mjs', 'check-seedling-editor-sequence.mjs',
             'check-seedling-editor-arm.mjs', 'check-maze-lab.mjs']) {
             expect({ f, held: names.has(f) }).toEqual({ f, held: true });
@@ -352,11 +385,54 @@ describe('ciSourced — the four clauses, each on its own', () => {
             .toBe(false);
     });
 
-    /** ⛔ An identity/producer/suite row has no gate: CI prints `## CI-GATE |`
-     *  lines under GATE keys only, so there is nothing to quote. S4c is where
-     *  the identity rows' production side is built, if ever. */
-    it('⛔ a row with no gate is never CI-sourced', () => {
+    /**
+     * ⛔⛔⛔ **THE ROW S4c CHANGED, AND IT IS THE SAME SENTENCE READ FORWARDS.**
+     *
+     * It used to read *"a row with no gate is never CI-sourced"*, and the
+     * reason it gave was TRUE at the time: CI printed `## CI-GATE |` lines
+     * under GATE keys only, so an identity row could never have a ⚖ 72 (b)
+     * streak and flipping one would bank a value nothing had ever published.
+     * ⛔ It is NOT deleted, because the property it was protecting has not gone
+     * away — it has become conditional on the thing S4c built. The rule is now
+     * *"a gate-less row is CI-sourced when an arm publishes a line under its
+     * key"*, and these rows assert both directions of that.
+     */
+    it('⛓ S4c — a gate-less row with NO row handed over is still never CI-sourced', () => {
         expect(ciSourced({ gate: null, cheap: false })).toBe(false);
+        expect(ciSourced({ gate: null, row: null, cheap: false })).toBe(false);
+    });
+
+    it('⛓ S4c — a gate-less row an ARM publishes IS CI-sourced, at ¬cheap', () => {
+        const identity = ciIdentityArms({ repo: REPO });
+        expect(identity.length).toBeGreaterThan(0);
+        const row = identity[0].row;
+        expect(ciSourced({ gate: null, row, cheap: false })).toBe(true);
+        /** ⛔ …and `¬cheap` is asked of these rows too — ⚖ 52's criterion, the
+         *  clause that keeps the twenty cheap identity rows on the box. */
+        expect(ciSourced({ gate: null, row, cheap: true })).toBe(false);
+        expect(ciSourced({ gate: null, row, cheap: undefined })).toBe(false);
+    });
+
+    /**
+     * ⛔⛔ **⚖ 72 (a) FOR AN IDENTITY ROW, ASSERTED AT `cheap: false`** — the
+     * same shape as the `@ci-shallow` row below and for the same reason. All
+     * four Windows-driving identity rows are `cheap` today, so a rule that
+     * excluded them only by the timing band would pass every row that used
+     * their real `cheap` value and go silently wrong the day one crossed it.
+     * This hands the rule the value that would otherwise have selected them.
+     */
+    it('⛔ S4c — a Windows-driving identity row is excluded EVEN AT `cheap: false`', () => {
+        const win = ciUnrunnableIdentityRows({ repo: REPO });
+        expect(win.length).toBeGreaterThan(0);
+        for (const row of win) expect(ciSourced({ gate: null, row, cheap: false })).toBe(false);
+    });
+
+    /** ⛔ …and a row of a kind that has no arms at all — the `ci-suite` row is
+     *  `alwaysQuoted` and CI answers it through its OWN helper, never here. */
+    it('⛔ S4c — a non-identity gate-less row is never CI-sourced', () => {
+        expect(ciSourced({ gate: null, cheap: false,
+            row: { key: 'suite: vitest (unfiltered)', kind: 'ci-suite', command: 'x' } }))
+            .toBe(false);
     });
 });
 
@@ -370,7 +446,8 @@ describe('ciSourced over the live tree', () => {
     const gateOf = (command) => roster.find((r) => command.includes(r.path)) ?? null;
     const rows = standingRows({ repo: REPO });
     const selected = rows.filter((r) => ciSourced({
-        gate: r.kind === 'gate' ? gateOf(r.command) : null, cheap: bank?.rows?.[r.key]?.cheap,
+        gate: r.kind === 'gate' ? gateOf(r.command) : null, row: r,
+        cheap: bank?.rows?.[r.key]?.cheap,
     }));
 
     /**
@@ -433,7 +510,7 @@ describe('ciSourced over the live tree', () => {
      */
     it('⛔ every selected row has an arm publishing a line under the SAME key', () => {
         const published = new Set(ciGateArms({ repo: REPO, set: 'all' })
-            .filter((a) => !a.gate.ciFace).map((a) => a.key));
+            .filter((a) => !a.gate?.ciFace).map((a) => a.key));
         expect(published.size).toBeGreaterThan(0);
         expect(selected.length).toBeGreaterThan(0);
         for (const row of selected) expect(published.has(row.key)).toBe(true);
@@ -442,8 +519,19 @@ describe('ciSourced over the live tree', () => {
     /** ⛓ …and no selected row is one the bank has never measured, because the
      *  `cheap` clause is a MEASURED field and an unmeasured row has none. */
     it('every selected row is banked, not cheap, and CI-runnable', () => {
+        /** ⛓ S4c — non-vacuity for the identity half: the set really holds
+         *  rows of both kinds, so neither branch below is unreached. */
+        expect(selected.some((r) => r.kind === 'gate')).toBe(true);
+        expect(selected.some((r) => r.kind === 'identity')).toBe(true);
+        const identityKeys = new Set(ciIdentityArms({ repo: REPO }).map((a) => a.key));
         for (const row of selected) {
             expect(bank.rows[row.key]?.cheap).toBe(false);
+            if (row.kind !== 'gate') {
+                /** ⛔ the identity clause IS "an arm publishes under this key",
+                 *  so this is that sentence and not a second spelling of it. */
+                expect(identityKeys.has(row.key)).toBe(true);
+                continue;
+            }
             const gate = gateOf(row.command);
             expect(ciRunnable(gate)).toBe(true);
             expect(gate.ciFace).toBe(null);
@@ -520,7 +608,8 @@ describe('ci-summary.mjs — the refusal ladder, derived from the same predicate
         const bank = readStandingValues({ repo: REPO });
         const gateOf = (command) => roster.find((x) => command.includes(x.path)) ?? null;
         const selected = standingRows({ repo: REPO }).filter((r) => ciSourced({
-            gate: r.kind === 'gate' ? gateOf(r.command) : null, cheap: bank?.rows?.[r.key]?.cheap,
+            gate: r.kind === 'gate' ? gateOf(r.command) : null, row: r,
+            cheap: bank?.rows?.[r.key]?.cheap,
         }));
         expect(selected.length).toBeGreaterThan(0);
         /** ⛓ …and the population really does hold a labelled arm, or this row
@@ -547,6 +636,25 @@ describe('ci-summary.mjs — the refusal ladder, derived from the same predicate
         expect(r.code).toBe(5);
         expect(r.out).toMatch(/@ci-shallow/);
         expect(r.out).toContain(shallow.ciShallow.reason);
+    });
+
+    /**
+     * ⛔⛔⛔ S4c — **THE ⚖ 72 (a) RUNG FOR AN IDENTITY ROW.** `ciSourced` never
+     * routes such a row down this path (it has no arm), so this is the SECOND
+     * LOCK — the same role the `@ci-shallow` rung plays for gates. ⛓ And it
+     * had to be written: before it, the ladder derived a gate FILE from the
+     * key, found none named `generated set`, and refused with a sentence about
+     * `check-*.mjs` — a true refusal for a reason that is not the reason.
+     */
+    it('REFUSES a Windows-driving IDENTITY row by name, exit 5, off-network', () => {
+        const win = ciUnrunnableIdentityRows({ repo: REPO });
+        expect(win.length).toBeGreaterThan(0);
+        for (const row of win) {
+            const r = runCi(['deadbeef1', `--gate=${row.key}`]);
+            expect(r.code).toBe(5);
+            expect(r.out).toMatch(/REFUSED/);
+            expect(r.out).toMatch(/Windows Python driver/);
+        }
     });
 
     /**

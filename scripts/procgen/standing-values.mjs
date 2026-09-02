@@ -186,12 +186,15 @@ const gateOf = (command) => GATES.find((g) => command.includes(g.path)) ?? null;
  * ⛔⛔ THE GATE A ROW'S ANSWER WOULD COME FROM — `null` UNLESS THE ROW *IS*
  * THAT GATE'S STANDING ROW (S4). `identity: generated set` runs
  * `check-seedling-generated-set.mjs` too — one entry, two rows under two
- * kinds (S2 measured three such groups) — and CI prints its `## CI-GATE |`
- * lines under GATE keys only. A command match alone would ask `ci-summary`
- * for a key CI never publishes, and the row would KEEP forever with a polite
- * reason. ⛓ Whether the expensive IDENTITY rows should get CI lines of their
- * own is a real question and it is **S4c**, where the production side
- * (`ci-gates.mjs` printing them) is built first — not a widening here.
+ * kinds (S2 measured three such groups) — and a command match alone would
+ * make an IDENTITY row inherit a GATE's declarations, which are answers about
+ * a different claim.
+ *
+ * ⛓⛓ S4c — **AND `null` IS NO LONGER THE END OF THE SENTENCE.** CI publishes
+ * `## CI-GATE |` lines for the identity rows now, so `ciSourced` takes the
+ * ROW as well and decides a gate-less row by whether an arm publishes under
+ * its key. This lookup keeps doing exactly what it did — it says which GATE's
+ * declarations apply — and the row it hands over is what carries the rest.
  */
 const ciGateFor = (row) => (row.kind === 'gate' ? gateOf(row.command) : null);
 
@@ -280,7 +283,7 @@ if (flag('keys')) {
     let unkeyable = 0;
     for (const row of ROWS) {
         const prev = existing?.rows?.[row.key];
-        const fromCI = ciSourced({ gate: ciGateFor(row), cheap: prev?.cheap });
+        const fromCI = ciSourced({ gate: ciGateFor(row), row, cheap: prev?.cheap });
         const r = keyReportFor(row, { fromCI });
         if (r.unkeyable) {
             unkeyable += 1;
@@ -362,7 +365,7 @@ if (flag('write')) {
          * bank MEASURED (`cheap`). ⛔ The rows it selects are PRINTED by name
          * in the summary, every run — the count is never typed anywhere.
          */
-        const fromCI = ciSourced({ gate: ciGateFor(row), cheap: prev?.cheap });
+        const fromCI = ciSourced({ gate: ciGateFor(row), row, cheap: prev?.cheap });
         /**
          * ⛓⛓⛓ ⚖ 71 (a) — **THE INPUT KEY DECIDES WHETHER THIS ROW RUNS AT
          * ALL**, and it is computed BEFORE the run for the obvious reason: a
@@ -519,9 +522,10 @@ if (flag('write')) {
     console.log(`unkeyed: ${unkeyed.length} row(s)`
         + `${unkeyed.length ? `\n  ${unkeyed.join('\n  ')}` : ' (every selected row is keyed)'}`);
     console.log(`CI-sourced: ${ciRows.length} row(s)`
-        + `${ciRows.length ? ` — ${ciRows.join(', ')}` : ' (CI-runnable AND not cheap AND no '
-            + 'declared @ci-face or @ci-shallow; at this head nothing qualifies, so the box '
-            + 'answers them all)'}`);
+        + `${ciRows.length ? ` — ${ciRows.join(', ')}` : ' (a GATE row: CI-runnable AND not '
+            + 'cheap AND no declared @ci-face or @ci-shallow; an IDENTITY row: not cheap AND '
+            + 'an arm publishes a line under its key. At this head nothing qualifies, so the '
+            + 'box answers them all)'}`);
     for (const h of held) {
         console.log(`HELD by hysteresis: ${h.key.padEnd(46)} ${(h.ms / 1000).toFixed(1)}s is `
             + `inside the ±${Math.round(0.1 * 100)} % band around ${CHEAP_MS / 1000}s, so it `
