@@ -9183,6 +9183,34 @@ the machine. **Not owed.** ⛓ Second lesson from the same incident: an unbounde
 
 **NEXT: F-b** (the lab constructing the panel's delivery — its own kickoff). F-c/F-d remain ⚖ open.
 
+**⇒ F-a VERIFIED BY THE PLANNER; F-b LAUNCHED (2026-09-02, `maze-lab-planning-2`, per `a16f09b62`).** Main
+`394294151` re-checked from disk: the six commits on `origin/main`; `pollUntil.js:59` / `seqPayload.js:47` /
+`atlasSource.js:61` exported; `standing-values.json` has NO diff over `63652ca6f..HEAD` (no re-bank claimed,
+none made); the reach log reads 23/23 with `check-maze-lab` 265/0 and `check-procgen-lab-hosting` 66/0;
+`win-gates.log` reads `generated-set` 32/0 and `wasm-ship` 263/0 on Windows Chrome; `compare-runs.js
+…T17-37-26 …T20-07-18` = 61/61, no differences; bounded vitest here 26 files / 798 green; digest
+`677b7d9c…` unmoved; `check-maze-lab.mjs` LIVE here at `394294151` = PASS 265 / FAIL 0, ALL CHECKS PASSED;
+`check-slice-records` 73/0/37. **Two data claims in the as-built did not survive measurement (plan §37):**
+(1) the F6 closure baseline "43 files / 650,891 B at `8a1eb6b1a`" is **41 / 644,012** at that head (throwaway
+worktree, the six submodules symlinked in — unlinked it answers 27); the 43 is post-F3 (`pollUntil.js` +
+`seqPayload.js`, by a diff of the two file lists). **The delta reproduces to the byte, +27 / +1,267,998**,
+which is what the row asserts. (2) *"three regions in `atlases/seedling-fixture.json` carry `map_ref:
+null`"* is FALSE — measured `with_map_ref=0 null=0 absent=3`; no committed JSON carries a null `map_ref`;
+`region-atlas.schema.json` types it `["integer","string"]` (omission is the legal form). The round-trip
+rule stands (`Number(undefined)` misses; a hand-written null is refused, not resolved to level 0) and its
+row is synthetic; the census sentence at `seedlingAtlasAnalysis.js:50` is corrected by F-b. All four
+"overturned in the brief" items HOLD at the line. **On the record:** the planner stopped F-a's headless
+FULL-TIER `verify-seedling-bot-differential.mjs` (not on the change's path, against the Windows-Chrome rule,
+~6 h on a windows box lock, under an unbounded wait loop); F-a accepted. Kickoffs now bound every wait loop.
+**F-b launched** (`NewDocs/plans/maze-lab-arms-sliceFb-prompt.md`, `maze-lab-arms-sliceFb`): F1 one owner of
+the pending/ok/readback protocol WITHOUT weakening `arm()` (the lab has no invalidation companion — measured
+0 lines); F2 `bot(name, arg)` on `WasmBridgeAdapter`, re-read per call; F4 ONE readiness pair, with the shim's
+install order read from source (`__swfBridge` before `__runtimeReady`; the panel's "click ▶ Start" fires while
+the button is disabled) and the callback order MEASURED on Windows Chrome first; **F7 SCALED on a measurement**
+— 3 presets carry `map_document`, all name the default, and the hosted lab receives no rules — to the one
+relative-path derivation, with "the lab honours the override when hosted" as residue **F7b** for the user.
+Every import priced by F-a's closure walk before commit; the four `windows` gates run, never `--no-windows`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
