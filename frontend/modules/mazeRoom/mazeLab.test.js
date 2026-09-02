@@ -67,7 +67,7 @@ describe('mazeLab — the URL, ONE reader and ONE writer', () => {
     it('⛔ refuses an unknown ?source= rather than falling back to GENERATE', () => {
         expect(() => readLabParams('?source=drive')).toThrow(MazeLabError);
         expect(() => readLabParams('?source=drive'))
-            .toThrow(/is not one of \[generate, edit, solve, set\]/);
+            .toThrow(/is not one of \[generate, edit, solve, set, manual\]/);
     });
 
     /**
@@ -81,9 +81,26 @@ describe('mazeLab — the URL, ONE reader and ONE writer', () => {
         expect(SOURCES.SET).toBe('set');
         expect(readLabParams('?source=set').source).toBe(SOURCES.SET);
         expect(readLabParams('?source=SET').source).toBe(SOURCES.SET);
-        expect(Object.values(SOURCES)).toEqual(['generate', 'edit', 'solve', 'set']);
-        // ⛔ …and a near-miss still refuses, naming all four.
-        expect(() => readLabParams('?source=sets')).toThrow(/\[generate, edit, solve, set\]/);
+        expect(Object.values(SOURCES))
+            .toEqual(['generate', 'edit', 'solve', 'set', 'manual']);
+        // ⛔ …and a near-miss still refuses, naming all five.
+        expect(() => readLabParams('?source=sets'))
+            .toThrow(/\[generate, edit, solve, set, manual\]/);
+    });
+
+    /**
+     * ⛓⛓⛓ SLICE S2b — **AND THE FIFTH JOINS IT THE SAME WAY.** ⛔ The same
+     * ACCEPT-and-REFUSE pair against the SAME reader: a page that reached
+     * `manual` around the enum (a page-side `if (raw === 'manual')`) would open
+     * the arm while a typo still fell through to GENERATE, and only asserting
+     * both halves can tell those apart.
+     */
+    it('⛓ `?source=manual` is the FIFTH arm and it is read by the same enum', () => {
+        expect(SOURCES.MANUAL).toBe('manual');
+        expect(readLabParams('?source=manual').source).toBe(SOURCES.MANUAL);
+        expect(readLabParams('?source=MANUAL').source).toBe(SOURCES.MANUAL);
+        expect(() => readLabParams('?source=manuel'))
+            .toThrow(/\[generate, edit, solve, set, manual\]/);
     });
 
     /**
@@ -481,6 +498,27 @@ describe('mazeLab — EDIT (⚖ ruling 8 + §3.8)', () => {
         expect(describeState(state)).toMatch(/UNCERTIFIED/);
         expect(describeState(state))
             .toMatch(/the URL is NOT a reproduction of this construction/);
+    });
+
+    /**
+     * ⛓⛓⛓ SLICE S2b — **THE WITNESS CLAUSE IS A THIRD ARGUMENT AND NOTHING
+     * MORE.** ⛔ `describeState` decides WHERE the sentence goes and never what
+     * it says (that is `mazeLabWalk.witnessOf`'s, pinned in its own file), and it
+     * touches `certified` in neither direction — the tri-state and the clause
+     * are two facts and the line carries both.
+     */
+    it('⛓ the WITNESS clause rides on `describeState`\'s third argument, and '
+        + 'the certification is untouched', () => {
+        const state = generateStep({ seed: 3, step: 3, ...ROOM });
+        expect(state.certified).toBe(true);
+        expect(describeState(state)).not.toMatch(/a witness/);
+        expect(describeState(state, null, { clause: null })).not.toMatch(/a witness/);
+        const withWalk = describeState(state, null,
+            { clause: 'walked to the goal by hand in 7 move(s) — a witness, not the '
+                + "oracle's certification" });
+        expect(withWalk).toMatch(/walked to the goal by hand in 7 move\(s\)/);
+        expect(withWalk).toMatch(/CERTIFIED — the oracle walked/);
+        expect(state.certified).toBe(true);
     });
 
     /**

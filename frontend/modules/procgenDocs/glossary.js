@@ -162,6 +162,8 @@ const STANDING_LAWS = `${SEEDLING}#the-standing-laws`;
 const MAZE_AREAS = `${MAZE}#the-area-graph`;
 const MAZE_ELEMENT = `${MAZE}#the-first-element`;
 const MAZE_LAB = `${MAZE}#the-maze-lab-page-frontendmodulesmazeroomlabhtml`;
+/** ⛓ S2b — the MANUAL arm's own section, for `walk` and `witness`. */
+const MAZE_MANUAL = `${MAZE}#the-manual-arm-sourcemanual--the-keyboard-authors-a-recording`;
 
 export const TERMS = Object.freeze([
 
@@ -2477,15 +2479,64 @@ export const TERMS = Object.freeze([
         aliases: ['`lab.html`'],
         area: 'maze',
         plain: 'The maze substrate\'s own page for generating, editing and solving one room.',
-        detail: '`frontend/modules/mazeRoom/lab.html`, with four modes — GENERATE, EDIT, '
-            + 'SOLVE (the exact BFS oracle, whose plan the page STEPS frame by frame) and '
-            + 'SET (a region library). It is where the [area graph](#area-graph) and '
+        detail: '`frontend/modules/mazeRoom/lab.html`, with five modes — GENERATE, EDIT, '
+            + 'SOLVE (the exact BFS oracle, whose plan the page STEPS frame by frame), '
+            + 'SET (a region library) and MANUAL (drive the level yourself — the keyboard '
+            + 'authors a [walk](#walk)). It is where the [area graph](#area-graph) and '
             + 'the first [element](#element) were built, and where they accept routinely: at '
             + '15×15 the room is big enough that the graph works, against '
             + '**0–4 of 12** on a 10×10 Seedling room. ⚠ On THIS page a refused '
             + '[directive](#require-directive) offers no level and no payload.',
         where: [{ label: 'maze.md § The maze lab page', doc: MAZE_LAB }],
-        seeAlso: ['lab-page', 'bfs-oracle', 'area-graph', 'maze-substrate', 'require-directive'],
+        seeAlso: ['lab-page', 'bfs-oracle', 'area-graph', 'maze-substrate', 'require-directive',
+            'walk', 'witness'],
+    }),
+    /**
+     * ⛓⛓ SLICE S2b SPENDS TWO, and says whose licence: ⚖ the user's own ask for
+     * *"a manual mode, like the Seedling lab page"*. `walk` is the DOCUMENT the
+     * arm produces — a reader who meets one in a download needs to know it is
+     * the loops recording envelope and not a new file format — and `witness` is
+     * the word that keeps a hand walk from being read as a CERTIFICATION, which
+     * is the one thing ⚖ §3.8 forbids. ⛔ Neither is an alias of an existing
+     * entry: `certification` is the oracle's answer and a witness is explicitly
+     * NOT it, and a `walk` is a recording the store has no tag for yet.
+     */
+    t({
+        id: 'walk',
+        term: 'a walk',
+        aliases: ['a hand walk', 'a lab walk'],
+        area: 'maze',
+        plain: 'A route somebody actually took through a level, saved as a file you can '
+            + 'replay.',
+        detail: 'What the maze lab\'s MANUAL arm ([`?source=manual`](#maze-lab)) produces: '
+            + 'the loops `SavedQueue` RECORDING envelope — the same shape a region visit '
+            + 'produces in the substrate panel — plus an additive `lab` block carrying the '
+            + 'LEVEL it was driven on and its `author` (`hand` or `oracle`). ⛔ A refused '
+            + 'press is KEPT in it, marked `params.refused`, because a refused move still '
+            + 'ticks the hazards and dropping it would shift every later phase. Replaying '
+            + 'one on a level it was not driven on refuses BY NAME at the turn index.',
+        where: [
+            { label: 'maze.md § The MANUAL arm', doc: MAZE_MANUAL },
+            { label: 'loop-recording.md § Recordings and the saved-queue store', doc: `${LOOPREC}#recordings-and-the-saved-queue-store` },
+        ],
+        seeAlso: ['maze-lab', 'witness', 'lab-page'],
+    }),
+    t({
+        id: 'witness',
+        term: 'a witness',
+        aliases: [],
+        area: 'maze',
+        plain: 'Evidence that a level CAN be finished, which is not the same as the '
+            + 'solver having proved it.',
+        detail: 'A [walk](#walk) that reaches the goal shows a route exists. It is NOT a '
+            + '[certification](#certification): certification is the ORACLE\'s answer or '
+            + 'nothing (⚖ §3.8), so the identity line gains *"walked to the goal by hand in '
+            + 'N move(s) — a witness, not the oracle\'s certification"* and `certified` is '
+            + 'left exactly as it was. ⛔ If the oracle REFUSED a level and a hand walk then '
+            + 'reaches its goal, one of the two is wrong and it is not the person: the page '
+            + 'prints a SEAM in red.',
+        where: [{ label: 'maze.md § The MANUAL arm', doc: MAZE_MANUAL }],
+        seeAlso: ['walk', 'certification', 'bfs-oracle', 'maze-lab'],
     }),
     t({
         id: 'bfs-oracle',

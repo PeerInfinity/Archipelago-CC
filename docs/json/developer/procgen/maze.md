@@ -449,8 +449,9 @@ straight through.
 ## The maze lab page (`frontend/modules/mazeRoom/lab.html`)
 
 A **standalone static page** — no frontend, no GL panel, no eventBus — that
-generates, edits and solves maze levels from URL parameters alone, and (since
-editor v3 E2c) edits a REGION LIBRARY in a fourth arm. It is the maze's
+generates, edits and solves maze levels from URL parameters alone, edits a
+REGION LIBRARY in a fourth arm (editor v3 E2c) and lets a person DRIVE a level
+by hand in a fifth (slice S2b). It is the maze's
 counterpart of `seedlingDemo/watch.html`, and what the two have in common now
 lives in `frontend/modules/procgenCore/` (`urlParams.js`, `labView.js`,
 `paletteRoster.js`, `pageLifetime.js`, `setEditorView.js`) rather than being
@@ -461,9 +462,9 @@ python3 -m http.server 8000        # from the repo root
 http://localhost:8000/frontend/modules/mazeRoom/lab.html?seed=3&count=4&run=1
 ```
 
-Its headless half is `mazeLab.js` (URL reader/writer, the four arms' logic,
-the payload); its DOM arm is `mazeLabView.js`; its unit tests are
-`mazeLab.test.js`.
+Its headless half is `mazeLab.js` (URL reader/writer, the five arms' logic,
+the payload) plus `mazeLabWalk.js` (the MANUAL arm's session); its DOM arm is
+`mazeLabView.js`; its unit tests are `mazeLab.test.js` and `mazeLabWalk.test.js`.
 
 The room's edits are also available as an **`editCore` adapter** — `mazeRoom/mazeEditAdapter.js` says the maze in the six words the edit core asks for (`architecture.md` § "The edit core"), which is what gives the maze a base+ops identity, grouped strokes, rectangle copy/paste and flood fill. It is a wrapper: the ops are `EDIT_OPS`, the application path is `applyEditOp`, and `equal` is `procgenMaze.worldsEqual` (the comparison `applyEdit` already made, extracted rather than re-spelled).
 
@@ -490,18 +491,20 @@ and folding them again would apply each one twice. `?gen=` — which replays the
 ops from the ladder — is the channel that reproduces an edited level, and the
 payload carries a `base` tag naming what its edits are edits of.
 
-### The four modes
+### The five modes
 
 A `?source=` selector switches between them **in place** — no reload — and each
 switch starts a new page lifetime (`procgenCore/pageLifetime.js`) so the arm
-being left drops its listeners. `mazeLab.SOURCES` has four values, which is why
-this table has four rows; the fourth has its own section below (*The SET arm*).
+being left drops its listeners. `mazeLab.SOURCES` has five values, which is why
+this table has five rows; the fourth and fifth have their own sections below
+(*The SET arm*, *The MANUAL arm*).
 
 | mode | what it does |
 |---|---|
 | `generate` (default) | the loop, in the page. STEP places one template and re-solves; RUN-ALL runs to the target or to SATURATION. The generation pane shows every attempt with its outcome word (`KEPT` / `REVERTED` / `NO_ANCHOR` / `ILLEGAL_PLACEMENT`) and the oracle's **verbatim** refusal. A catalogue lists what the palette can generate, by family; unticking a family RESTRICTS the roster the run may draw from, and ATTEMPT on a row runs one directed attempt for that template. |
 | `edit` | `mazeRoomEditor.js`'s palette — floor / wall / entrance / item / obstacle / **block / button / flag** / erase — applied to the clicked tile, plus the four tools `procgenCore/editorView.js` brings (brush, RECT copy, PASTE, FLOOD). Every edit lands on a **clone**, and the level the page says it generated is never rewritten underneath it. |
 | `solve` | `mazeOracle` on the world now on screen: SOLVED / REFUSED / BUDGET_EXHAUSTED, reason verbatim. The route is drawn over the room **and the plan is STEPPED** — `planFrames` replays it through the engine's own `step` and `⏮ / ◀ STEP / STEP ▶ / ▶ PLAY` walk the frames, so a pushed block visibly moves. See *On the lab page* above for what a frame carries and what the readout publishes. |
+| `manual` | **drive the player yourself.** ← ↑ → ↓ / WASD move, SPACE waits, and each press is ONE shared `actionQueue` entry executed at once against the level on screen. The frames are the SAME frames the SOLVE scrub draws (`author: 'hand'`), so ⏮ / ◀ / ▶ / the scrub / the input strip all work over a hand walk. STOP folds the walk into the loops `SavedQueue` envelope and replays it to report the round trip. Its own section below. |
 | `set` | a REGION LIBRARY — a positionally addressed list of interchangeable maze rooms — on the shared `setEditorView` mount, and the same arm edits a WORLD under `?world=`. Its own two sections below. |
 
 A step-*k* level **is** `generate-maze-level.mjs --seed=S --count=k`, byte for
@@ -752,6 +755,97 @@ state rather than something to tune away.
   is a KEPT candidate that happens to be decoration today. Named as residue in
   the generation review (2026-08-17, §3 row 7) and unmeasured.
 - ~~**kind parameters**~~ — landed in slice 7; see *Kind parameters* above.
+
+### The MANUAL arm (`?source=manual`) — the keyboard authors a recording
+
+The arm the Seedling lab page has had since its manual mode, in the shape a
+**turn-based** engine allows. ← ↑ → ↓ / WASD move, SPACE waits; **one key press
+is one shared `actionQueue` entry** (`mazeKeys.KEY_MAP`) appended to a live
+`ActionQueue` and executed at once through `mazeQueueExecutor.executeMazeEntry`
+— the substrate panel's own two modules, on a page that mounts no panel. There
+is no pacer, no rAF, no speed slider and no held-key set: every one of
+Seedling's manual-arm hazards is a consequence of a wall clock, and this engine
+has none. The keys are bound on `window` **under the arm's own lifetime**, so
+leaving the arm drops them, and they `preventDefault` only on bound keys and
+only while a session is STARTED — typing in the walk box must not move the
+player.
+
+Everything that is not DOM is `mazeRoom/mazeLabWalk.js`, unit-tested in node:
+`createWalkSession(state)` boots through `procgenMaze.startStateFor` (the
+construction the ORACLE certifies from), pushes one `mazeLab.frameOf` per
+executed entry into the same `play` object the SOLVE scrub reads, and asks
+`mazeLab.oracleFor(state).goalPred` — the oracle's own predicate — whether the
+walk arrived.
+
+**A walk** is the loops `SavedQueue` envelope plus an additive `lab` block:
+
+```json
+{ "substrate": "maze", "format": "actionQueue/1", "regionName": null,
+  "arrivalExitId": "entrance", "departureExitId": "goal",
+  "actions": [{"actionType":"move","actionId":"S","substrate":"maze","loops":3}],
+  "locationsChecked": [], "itemsPickedUp": [],
+  "manaAtEntry": 0, "manaAtExit": 0, "manaMin": 0, "name": "lab: entrance→goal",
+  "lab": { "generator": "frontend/modules/mazeRoom/lab.html",
+           "payload": { "…the level's own labPayload…": true },
+           "author": "hand", "reachedGoal": true, "refused": 1 } }
+```
+
+Everything above `lab` is the store's own envelope, so **a lab walk and a region
+visit are the same shape** — the day a lab level is a region the walk is
+persistable under that region's tag with nothing rewritten. ⛔ It is not a field
+on the level payload (that is a REPRODUCTION RECIPE whose identity
+`agreementWithPayload` compares) and not in the URL (⚖ ruling 9). The SOLVE arm
+writes the same envelope with `author: "oracle"`, so there is one document kind
+and two authors.
+
+**A refused press is KEPT and marked** `params: {refused: true}`, never dropped.
+A refused move still ticks the hazards, so a recording missing it would shift
+every later phase and manufacture the divergence R2 exists to catch (plan §28,
+and the same rule both replayers read). Such a press pushes a frame too — one
+equal to the previous engine state, `turn` included, because the engine did not
+step. The refusal's sentence is `mazeRoomEngine.whyBlocked`'s (below).
+
+**LOAD** runs every action past the shared `validateEntry`, then `loadPayload`
+(the page's one level intake — the level lands UNCERTIFIED like any load), then
+`framesForActions`. A walk the level will not take **refuses by name at the turn
+index** (*"input 1 (move (S)) is illegal on this level — move S blocked: wall at
+(1,1)"*) and nothing partial is drawn.
+
+**STOP folds, replays and reports.** The round trip is the acceptance row and it
+runs at STOP rather than behind a button: both sides are the same `step` from the
+same boot, so a mismatch is a seam defect and the page says so.
+
+⛔ **There is no undo in v1.** `ActionQueue.removeAt` refuses the done region by
+design and every entry of an append-and-execute session is done; RESTART re-opens
+the session. Switching arms retires the lifetime — a STOPPED walk survives in its
+box (the DOM does), an un-stopped one is lost, and the panel says so.
+
+**A hand walk that reaches the goal is a WITNESS, not a certification.** The
+identity line gains *"· walked to the goal by hand in N move(s) — a witness, not
+the oracle's certification"* and `certified` is untouched: certification is the
+oracle's answer or nothing (⚖ §3.8). One free soundness check rides along — if
+the oracle REFUSED this exact record and a hand walk reaches its goal, the page
+prints `⛔ SEAM: the oracle refused this level and a hand walk reached its goal`
+in red. That is unreachable without a broken oracle, so the row that drives it
+stubs a refusing one; the browser row cannot and does not claim to.
+
+### `whyBlocked` — why the engine refused, in one place
+
+`mazeRoomEngine.whyBlocked(world, state, input, inventoryOverride,
+clearanceOpts)` answers `null` for a legal move (and for a WAIT, which the engine
+never refuses) and otherwise one sentence: `wall at (x,y)` · `off the grid` ·
+`door_red is shut — needs key_red` · `door_A0 is shut — nothing on button_A0` ·
+`block at (x,y) cannot move: beyond is a wall | beyond is a block | door_K is
+shut — …`. It lives beside `step`, in `step`'s own guard order, because it needs
+the engine-private `effectiveInventory`: a derivation outside the engine cannot
+tell a missing ITEM from an unpressed BUTTON, and *"needs sw_A"* would send a
+reader looking for something no player can pick up.
+
+`mazeQueueExecutor.refusalReason` delegates to it — every caller already read one
+string — and the visualizer's `_logBlockedStep` keeps its own for now (adopting it
+there is a one-line follow-up nobody is owed). ⛔ The test is a **property, not a
+count**: over every reachable `(state, input)` of three fixture worlds,
+`whyBlocked(...) === null` ⇔ `step(...) !== null`.
 
 ### The SET arm (`?source=set`) — a region library on the shared mount
 

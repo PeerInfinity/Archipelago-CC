@@ -64,6 +64,14 @@
  *                   is not PRESSED by the row: `#loadWasm` starts a wasm
  *                   boot, which is `check-seedling-wasm-pages.mjs`'s job
  *                   and needs a real ▶ Start the catalogue row cannot give.
+ *   keys            optional: DOM key names the row PRESSES (in order, through
+ *                   `page.keyboard.press`) after `press` and before reading the
+ *                   claim — for an arm whose subject is a KEYBOARD binding.
+ *                   ⛔ The distinction from `press` is the one `press` itself
+ *                   makes from `control`: a row that clicked its way into the
+ *                   same state would pass with the keyboard bound to nothing,
+ *                   or bound OUTSIDE the arm's lifetime (the exact hazard the
+ *                   maze's manual arm inherits from Seedling's).
  *   press           optional: a control the row CLICKS before reading the
  *                   claim, as a CSS selector — for an entry whose whole
  *                   subject is WHAT THE PRESS PRODUCES (R9 slice 10's
@@ -1278,6 +1286,65 @@ export const DEMOS = Object.freeze([
             'base',
             'oracle',
             'bfs-oracle',
+            'certification',
+            'lab-page',
+        ]),
+        prose: false,
+    }),
+    /**
+     * ⛓⛓⛓ SLICE S2b — **THE MANUAL ARM, AND THE CATALOGUE'S FIRST KEYBOARD
+     * ROW.** ⚖ Ruling 9's shape again, one arm over: a URL can name the LEVEL
+     * and never the walk, so an entry whose subject is *what the keyboard
+     * does* has to press something. Here it has to press KEYS — the arm's whole
+     * claim is that `keydown` on `window`, under the arm's own lifetime,
+     * reaches the session — so this is also the first entry to carry `keys`.
+     *
+     * ⛔⛔ **THE PRESS IS GATED IN THE PAGE'S OWN DISABLED-STATE VOCABULARY**
+     * (the §5i catalogue lesson, and the block comment above `edit-arm` has the
+     * measurement): `#labWalkStart` is present and ENABLED in the static HTML
+     * before `mazeLabView` has mounted anything, so a bare selector clicks a
+     * button with no listener on it and the claim fails for a reason that is
+     * about the harness. `#labWalkStop` is disabled by `renderManualPanel` and
+     * by nothing else, so `body:has(#labWalkStop:disabled)` is the page's own
+     * answer to *"has this arm rendered"*.
+     */
+    Object.freeze({
+        id: 'maze-manual-arm',
+        n: 30,
+        title: 'DRIVE IT YOURSELF — the keyboard authors a recording',
+        page: '/frontend/modules/mazeRoom/lab.html',
+        /** ⛓ `writeLabParams`' own spelling, with `source: 'manual'`. */
+        url: 'source=manual&seed=1&biome=maze-v1&width=5&height=5&count=0&tries=8&k=3&anchortries=1&skeleton=winding&expansions=20000',
+        also: null,
+        cli: { command: 'node scripts/procgen/check-maze-lab.mjs', exit: 0 },
+        phase: null,
+        facts: Object.freeze([]),
+        layer: null,
+        control: '#labWalkStop',
+        press: 'body:has(#labWalkStop:disabled) #labWalkStart',
+        /** ⛓ TWO REAL KEY PRESSES, after the session is open. This room is
+         *  `..###` over `#.###`×3 — E then S are the two legal moves out of the
+         *  entrance, and a second E would be the wall. */
+        keys: Object.freeze(['ArrowRight', 'ArrowDown']),
+        /**
+         * ⛓ THE CLAIM IS THAT THE KEYS REACHED THE SESSION. ⛔ Not `walk !=
+         * null`, which the START press alone produces: a build whose keyboard
+         * was bound outside the arm (or not at all) would open a session and
+         * then ignore every press, and `moves == 2` is the difference.
+         */
+        claim: 'walk.moves == 2',
+        demonstrates: 'Slice S2b: the maze lab\'s FIFTH arm. One key press is ONE\nentry in the shared `actionQueue` vocabulary (`mazeKeys.KEY_MAP`), appended to a\nlive queue and executed AT ONCE through `mazeQueueExecutor.executeMazeEntry` —\nthe substrate panel\'s own two modules, on a page that mounts no panel. The\nframes are the SAME frames the SOLVE scrub draws, so the scrub, the HUD and the\ninput strip all work over a hand walk with nothing added.',
+        howToRun: 'Open the URL and press **START a walk**, then drive with\n← ↑ → ↓ / WASD; SPACE waits a turn. Walk into the wall on your right: the press\nis REFUSED, the HUD prints the engine\'s own sentence for that cell, and the\nstrip KEEPS the press, marked. Reach the goal and the identity line gains a\nWITNESS clause. Then press **STOP & fold**: the walk box fills with the\nrecording and the page reports its ROUND TRIP.',
+        whatIsHappening: '⛔ **A REFUSED PRESS IS KEPT AND MARKED, NEVER\nDROPPED.** A refused move still ticks the hazards, so a recording missing it\nwould shift every later phase and manufacture the divergence the replayer\nexists to catch — both replayers read one rule (`params.refused`).\n\n⛔ **AND A HAND WALK THAT REACHES THE GOAL IS A WITNESS, NOT A CERTIFICATION.**\n`certified` stays the ORACLE\'s answer or nothing; the clause says so in the\nsame line. If the oracle REFUSED a level a hand walk then solved, the page\nprints a SEAM in red — which is unreachable without a broken oracle, so the row\nthat drives it stubs one.',
+        notes: Object.freeze([
+            '⛓ The recording is the loops `SavedQueue` envelope plus an additive\n`lab` block, so a lab walk and a region visit are the SAME SHAPE — the day a lab\nlevel is a region the walk is persistable under that region\'s tag with nothing\nrewritten. The SOLVE arm writes the same envelope with `author: "oracle"`.',
+            '⚠ There is no UNDO in v1: `ActionQueue.removeAt` refuses the done\nregion by design and every entry of an append-and-execute session is done.\nRESTART re-opens the session.',
+        ]),
+        terms: Object.freeze([
+            'maze-lab',
+            'walk',
+            'witness',
+            'oracle',
             'certification',
             'lab-page',
         ]),

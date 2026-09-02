@@ -160,14 +160,23 @@ describe('the glossary as data', () => {
      * `room-flag`. ⛔ `base` and `edit-op` are `procgenCore/editCore.js`'s and
      * are true of the MAZE editor too; they are filed ONCE with a detail that
      * says so, rather than twice per substrate.
+     *
+     * ⛓⛓ **166 — MAZE SLICE S2b SPENDS TWO**, and says whose licence: ⚖ the
+     * user's own ask for *"a manual mode, like the Seedling lab page"*. `walk`
+     * is the DOCUMENT the arm produces (a reader who meets one in a download
+     * needs to know it is the loops recording envelope, not a new format) and
+     * `witness` is the word that keeps a hand walk from being read as a
+     * CERTIFICATION — the one thing ⚖ §3.8 forbids, and an alias buried in
+     * `certification`'s list would say the opposite of what it means.
      */
-    it('holds 164 entries — 149 + arc-5 slices 1/3/4/5\'s two + one + two + two, '
+    it('holds 166 entries — 149 + arc-5 slices 1/3/4/5\'s two + one + two + two, '
         + '6b\'s `density-block`, R9 slice 1\'s `element-subset`, R9 slice 2\'s '
-        + '`window` and the editor catalogue\'s five, and every one is filed',
+        + '`window`, the editor catalogue\'s five and maze slice S2b\'s two, '
+        + 'and every one is filed',
     () => {
-        expect(TERMS).toHaveLength(164);
+        expect(TERMS).toHaveLength(166);
         expect(TERMS.length).toBeGreaterThanOrEqual(80);
-        expect(TERMS.length).toBeLessThanOrEqual(164);
+        expect(TERMS.length).toBeLessThanOrEqual(166);
         expect(TERMS.filter((e) => !AREA_IDS.includes(e.area))).toHaveLength(0);
     });
 

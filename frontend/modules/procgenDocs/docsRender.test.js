@@ -219,7 +219,9 @@ describe('⛓ the links the render emits', () => {
                 checked += 1;
             }
         }
-        expect(checked).toBe(220);
+        // ⛓ 220 → 221: MAZE SLICE S2b's one new sibling-doc link in
+        //   `loop-recording.md` (see `docLinks.test.js`'s census).
+        expect(checked).toBe(221);
     });
 
     it('tags each link with the kind that produced it', () => {

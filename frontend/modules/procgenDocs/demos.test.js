@@ -82,7 +82,7 @@ describe('every non-prose entry is loadable by the row', () => {
      * a URL can carry the STARTING document and never an edit, so an entry
      * whose subject is what the EDITOR DOES has to click something.
      */
-    it('has 28 of them, and exactly one PROSE entry', () => {
+    it('has 29 of them, and exactly one PROSE entry', () => {
         // ⛓ R9 slice 6: the `?tapes=` SEQUENCE row — the catalogue's first
         //   entry whose page is not a generation ladder, which is why it names
         //   its own `readout` and the row waits on that instead of a step.
@@ -91,7 +91,12 @@ describe('every non-prose entry is loadable by the row', () => {
         //   its subject is what a PRESS produces. It is also the first to use
         //   `press`, which the check row CLICKS (a row that loaded the
         //   destination would pass with the button wired to nothing, trap 479).
-        expect(real).toHaveLength(28);
+        // ⛓ 28 → 29: MAZE SLICE S2b's MANUAL arm — the catalogue's first
+        //   KEYBOARD row. A URL can name the LEVEL and never the walk, so an
+        //   entry whose subject is what the keyboard does must press keys; a
+        //   row that clicked its way into the same state would pass with the
+        //   binding wired to nothing, or wired OUTSIDE the arm's lifetime.
+        expect(real).toHaveLength(29);
         expect(DEMOS.filter((e) => e.prose)).toHaveLength(1);
     });
 

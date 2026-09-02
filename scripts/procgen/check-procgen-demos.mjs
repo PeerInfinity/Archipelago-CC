@@ -33,6 +33,9 @@
  *            asserted to EXIST on the page (never pressed; see below)
  *   press    optional: a CSS selector this row CLICKS before reading the claim
  *            — for an entry whose subject IS what the press produces (slice 10)
+ *   keys     optional: DOM key names this row PRESSES, in order, through the
+ *            REAL keyboard, after `press` — for an arm whose subject IS a
+ *            keyboard binding (the maze lab's MANUAL arm, slice S2b)
  *   claim    `<path> <op> <value>`, asserted off the page's readout
  *   prose    an entry that names no url of its own (it points at a doc)
  *
@@ -563,7 +566,25 @@ try {
                     readout, { timeout: 300000 }).catch(() => {});
             }
         }
-        if (entry.phase || entry.facts.length || entry.layer || entry.press) {
+        /**
+         * ⛓⛓⛓ SLICE S2b — **THE KEYS ARE PRESSED FOR REAL.** `page.keyboard`,
+         * never a synthesised event and never a call into the page: an arm
+         * whose whole claim is *"`keydown` on `window`, under this arm's
+         * lifetime, reaches the session"* is not gated by anything that skips
+         * the browser's own dispatch.
+         *
+         * ⛔ NO WAIT AFTER THEM, AND THAT IS DERIVED: the page's `keydown`
+         * handler runs its executor and its `render()` SYNCHRONOUSLY, so the
+         * readout is already republished by the time the press resolves. A poll
+         * here would have to be a poll on the claim itself, which is a row
+         * waiting for its own assertion to come true.
+         */
+        for (const key of entry.keys ?? []) {
+            // eslint-disable-next-line no-await-in-loop
+            await page.keyboard.press(key);
+        }
+        if (entry.phase || entry.facts.length || entry.layer || entry.press
+            || (entry.keys ?? []).length) {
             // eslint-disable-next-line no-await-in-loop
             driven = await page.evaluate((r) => window[r] ?? null, readout);
         }
