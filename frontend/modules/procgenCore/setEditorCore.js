@@ -743,6 +743,17 @@ export function reportOver({
         rules: compiled.rules,
         report: compiled.report,
         atlas: derived.atlas,
+        /**
+         * ⛓⛓ DEDUP M10 — **WHAT THE DERIVATION PRODUCED PER PART, WHERE A
+         * `reportRows` HOOK CAN REACH IT.** A composite (world) derivation
+         * carries its parts' own atlases; a single-document one has no parts
+         * and this is `null`. ⛔ It is HANDED OVER rather than re-derived
+         * because the merge renames every region — a binding whose extra rows
+         * join on the PART's local `map_ref` cannot slice them back out of
+         * `atlas` above, and derived them a second time until this field
+         * existed.
+         */
+        derivedParts: derived.parts ?? null,
         download: Object.freeze({
             rules: Object.freeze({
                 allowed,

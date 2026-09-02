@@ -357,6 +357,67 @@ describe('deriveWorldAtlasOf / worldRulesJsonOf — the injected substrate halve
         expect(() => worldRulesJsonOf(RECORD(), {}, { parts: [] })).toThrow(/needs `compileRegionAtlas` injected/);
     });
 
+    /**
+     * ⛓⛓⛓ DEDUP M10 — **THE PER-PART ATLASES COME BACK BESIDE THE MERGE**, so
+     * a reader whose rows join on a part's LOCAL `map_ref` does not derive them
+     * all a second time. ⛔ The merge renames every region (`pa.a`), and these
+     * are the PRE-merge atlases — the row asserts that, not just that the field
+     * is populated.
+     */
+    it('deriveWorldAtlasOf returns each part\'s OWN atlas beside the merged one', () => {
+        const derived = deriveWorldAtlasOf(RECORD(), {
+            parts: [toyPart('pa', 'sub_a', 'game_a'), toyPart('pb', 'sub_b', 'game_b')],
+        });
+        expect(derived.parts.map((p) => p.id)).toEqual(['pa', 'pb']);
+        expect(derived.parts.map((p) => p.atlas.regions.map((r) => r.region_id)))
+            .toEqual([['a', 'b'], ['a', 'b']]);
+        expect(derived.atlas.regions.map((r) => r.region_id))
+            .toEqual(['pa.a', 'pa.b', 'pb.a', 'pb.b']);
+        // ⛓ …and one derivation per part, counted — not one per part per reader
+        let derives = 0;
+        const spy = (id, sub, game) => {
+            const part = toyPart(id, sub, game);
+            return { ...part, deriveAtlasOf: (r) => { derives++; return part.deriveAtlasOf(r); } };
+        };
+        deriveWorldAtlasOf(RECORD(), { parts: [spy('pa', 'sa', 'ga'), spy('pb', 'sb', 'gb')] });
+        expect(derives).toBe(2);
+    });
+
+    /**
+     * ⛓⛓⛓ DEDUP M9 — **`projectRegions` IS THE HOOK A SECOND `rules.json` PATH
+     * NEEDED**, and it changes BOTH what the compiler is handed AND what this
+     * function says it compiled. ⛔ That second half is why it is not a
+     * `compileOptions` flag: the maze's own row reads `out.atlas` to assert the
+     * projection was compile-time only.
+     */
+    it('worldRulesJsonOf projects every region through `projectRegions`, and SAYS so', () => {
+        const seen = [];
+        const fakeCompile = (atlas) => {
+            seen.push(atlas);
+            return { rules: { ok: true }, report: {} };
+        };
+        const parts = [toyPart('pa', 'sub_a', 'game_a'), toyPart('pb', 'sub_b', 'game_b')];
+        const plain = worldRulesJsonOf(RECORD(), {}, { compileRegionAtlas: fakeCompile, parts });
+        expect(plain.atlas.regions.every((r) => typeof r.substrate === 'string')).toBe(true);
+        const projected = worldRulesJsonOf(RECORD(), {}, {
+            compileRegionAtlas: fakeCompile,
+            parts,
+            projectRegions: ({ substrate: _dropped, ...region }) => region,
+        });
+        expect(seen[1].regions.every((r) => r.substrate === undefined)).toBe(true);
+        expect(projected.atlas.regions.every((r) => r.substrate === undefined)).toBe(true);
+        // ⛔ …and the UNPROJECTED path hands back the derivation's OWN atlas
+        //   object, un-copied — which is why no existing row had to move.
+        expect(seen[0].regions.map((r) => r.region_id))
+            .toEqual(['pa.a', 'pa.b', 'pb.a', 'pb.b']);
+        expect(plain.atlas).toBe(seen[0]);
+        // ⛓ …and BOTH shapes are the FULL one: `stats` and `dropped` included.
+        for (const out of [plain, projected]) {
+            expect(Object.keys(out))
+                .toEqual(['rules', 'report', 'atlas', 'notes', 'displaced', 'stats', 'dropped']);
+        }
+    });
+
     /** ⛔ The fence, stated locally as well as in `bindingContract`'s roster. */
     it('this module imports no substrate', async () => {
         const fs = await import('node:fs');

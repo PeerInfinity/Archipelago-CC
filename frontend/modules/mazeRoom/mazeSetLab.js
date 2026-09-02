@@ -923,7 +923,9 @@ export function worldSetBindings({
          * the refusal: whether a `rules.json` may be exported is `reportOver`'s
          * alone.
          */
-        reportRows: (record) => worldPartReportRows(record, parts, deps),
+        reportRows: (record, report) => worldPartReportRows(record, parts, deps, {
+            derivedParts: report?.derivedParts ?? null,
+        }),
         /** ⛓ …and the identity line names the parts, where a set names its overlay. */
         identityOf: (record) => `${parts.length} part(s): ${parts
             .map((p) => `${p.id} (${p.kind}, ${p.bounds(partRecordOf(record, p)).w} room(s))`)
@@ -1317,18 +1319,22 @@ export function worldDoorDisconnectOp(from) {
 export function worldAllMazeRulesJson(session, deps, {
     parts = [], compileRegionAtlas, mazeProjection, gameName = 'World (all-maze)',
 } = {}) {
-    const record = typeof session?.record === 'function' ? session.record() : session;
-    const derived = deriveWorldAtlasOf(record, { parts, deps });
-    const projected = {
-        ...derived.atlas,
-        regions: (derived.atlas.regions ?? []).map(({ substrate: _dropped, ...region }) => region),
-    };
-    const { rules, report } = compileRegionAtlas(projected, {
-        gameName, sidecarFlavor: MAZE_SUBSTRATE, mazeProjection,
+    return worldRulesJsonOf(session, deps, {
+        compileRegionAtlas,
+        parts,
+        gameName,
+        compileOptions: { sidecarFlavor: MAZE_SUBSTRATE, mazeProjection },
+        /**
+         * ⛓ THE ONE REAL STEP, and it is the whole difference between this and
+         * the flash-default download beside it: each region loses its authored
+         * `substrate` FOR THIS COMPILE, so `regionSubstrateOf` answers `maze`
+         * everywhere and the compiler's own built-in maze row — with its full
+         * `mazeCtx` — projects both parts. ⛔ A COMPILE-TIME projection: the
+         * atlas handed back is a fresh object and the world, both parts and
+         * every authored `substrate` are untouched.
+         */
+        projectRegions: ({ substrate: _dropped, ...region }) => region,
     });
-    return {
-        rules, report, atlas: projected, notes: derived.notes, displaced: derived.displaced,
-    };
 }
 
 
@@ -1394,7 +1400,20 @@ export function roomOpenRefusal({
  *
  * @returns {Array<{severity, kind, text}>}
  */
-export function worldPartReportRows(record, parts, deps, { ruleKeys } = {}) {
+export function worldPartReportRows(record, parts, deps, {
+    ruleKeys, derivedParts = null,
+} = {}) {
+    /**
+     * ⛓⛓⛓ DEDUP M10 — **THE PART ATLASES THE REPORT ALREADY DERIVED.**
+     * `reportOver` derives the world (which derives every part) and hands the
+     * per-part atlases back on its own return; before this they were discarded
+     * and every one of them was derived a SECOND time right here. ⛔ The
+     * fallback is not a nicety: `reportOver` returns EARLY with no derivation
+     * when the world's atlas does not build, and these rows must still say
+     * which part it was that did not derive — so an absent `derivedParts` means
+     * "derive it yourself", exactly as this function always did.
+     */
+    const derivedById = new Map((derivedParts ?? []).map((p) => [p.id, p.atlas]));
     const rows = [];
     /**
      * ⛓⛓⛓ **AND A THIRD ROW, WHICH THIS SLICE'S OWN TEST FOUND.**
@@ -1423,9 +1442,9 @@ export function worldPartReportRows(record, parts, deps, { ruleKeys } = {}) {
     });
     for (const part of parts) {
         const partRecord = partRecordOf(record, part);
-        let atlas = null;
+        let atlas = derivedById.get(part.id) ?? null;
         try {
-            atlas = part.deriveAtlasOf(partRecord, deps[part.id] ?? {}).atlas;
+            if (atlas === null) atlas = part.deriveAtlasOf(partRecord, deps[part.id] ?? {}).atlas;
         } catch (e) {
             if (!(e instanceof Error)) throw e;
             rows.push({

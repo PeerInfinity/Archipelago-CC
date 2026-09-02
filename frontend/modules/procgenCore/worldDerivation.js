@@ -345,7 +345,19 @@ export function deriveWorldAtlasOf(record, { parts = [], deps = {} } = {}) {
             regionIdOfRoom: part.regionIdOfRoom,
         };
     });
-    return deriveWorldAtlas({ parts: derivedParts, links: world.links, world }, deps.world ?? {});
+    /**
+     * ⛓⛓⛓ DEDUP M10 — **THE PER-PART ATLASES COME BACK BESIDE THE MERGE.**
+     * They were derived here and DISCARDED, and the world REPORT then derived
+     * every one of them again to say its per-part rows (the merge renames every
+     * region and the local `map_ref` is what those rows join on, so a slice of
+     * the merged atlas cannot answer them). ⛔ Returned rather than cached: a
+     * caller that already has this object has the answer, and one that does not
+     * derives for itself exactly as before.
+     */
+    return {
+        ...deriveWorldAtlas({ parts: derivedParts, links: world.links, world }, deps.world ?? {}),
+        parts: derivedParts.map(({ id, atlas }) => ({ id, atlas })),
+    };
 }
 
 /**
@@ -360,6 +372,7 @@ export function deriveWorldAtlasOf(record, { parts = [], deps = {} } = {}) {
  */
 export function worldRulesJsonOf(session, deps = {}, {
     compileRegionAtlas, parts = [], gameName = 'World', compileOptions = {},
+    projectRegions = null,
 } = {}) {
     if (typeof compileRegionAtlas !== 'function') {
         fail('worldRulesJsonOf needs `compileRegionAtlas` injected — it lives in '
@@ -367,11 +380,33 @@ export function worldRulesJsonOf(session, deps = {}, {
     }
     const record = typeof session?.record === 'function' ? session.record() : session;
     const derived = deriveWorldAtlasOf(record, { parts, deps });
-    const { rules, report } = compileRegionAtlas(derived.atlas, { gameName, ...compileOptions });
+    /**
+     * ⛓⛓⛓ DEDUP M9 — **THE ONE HOOK A SECOND `rules.json` PATH NEEDED.** The
+     * maze lab's ALL-MAZE download was a second copy of this function whose one
+     * real step is projecting each region before the compile (it strips the
+     * authored `substrate` so the compiler's built-in maze row runs everywhere)
+     * — and, being a copy, it dropped `stats` and `dropped` from its return, so
+     * one page had two `rules.json` paths with two shapes.
+     *
+     * ⛔ **A `projectRegions` HOOK AND NOT A `compileOptions` FLAVOUR**, for a
+     * reason the return value states: the projected atlas is what this function
+     * HANDS BACK (`atlas:` below), and the maze's own row reads it to assert
+     * nothing was written back. A compile-time flag could only tell the
+     * compiler; it could not answer *"which atlas was compiled"*.
+     *
+     * ⛓ It DEFAULTS TO NULL and the no-hook path returns `derived.atlas`
+     * ITSELF, unchanged and un-copied — which is why `worldDerivation.test.js`'s
+     * existing rows did not have to move.
+     */
+    const atlas = projectRegions === null ? derived.atlas : {
+        ...derived.atlas,
+        regions: (derived.atlas.regions ?? []).map((region) => projectRegions(region)),
+    };
+    const { rules, report } = compileRegionAtlas(atlas, { gameName, ...compileOptions });
     return {
         rules,
         report,
-        atlas: derived.atlas,
+        atlas,
         notes: derived.notes,
         displaced: derived.displaced,
         stats: derived.stats,

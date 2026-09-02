@@ -972,6 +972,26 @@ describe('⛓⛓⛓ W4 — the ALL-MAZE projection (M2)', () => {
         expect(after.atlas.regions.map((r) => r.substrate))
             .toEqual(['flash_seedling', 'flash_seedling', 'maze', 'maze']);
         expect(out.atlas.regions.every((r) => r.substrate === undefined)).toBe(true);
+        /**
+         * ⛓⛓⛓ DEDUP M9 — **AND IT IS THE SAME SHAPE THE OTHER `rules.json`
+         * PATH RETURNS.** This function was a second copy of
+         * `worldRulesJsonOf` and its copy DROPPED `stats` and `dropped`, so the
+         * same page had two rules.json paths with two shapes and a reader that
+         * asked this one for the derivation's own numbers got `undefined`. It
+         * is a three-line wrapper now; the row states the shape.
+         */
+        expect(Object.keys(out))
+            .toEqual(['rules', 'report', 'atlas', 'notes', 'displaced', 'stats', 'dropped']);
+        expect(out.stats.substrates).toEqual({ flash_seedling: 2, maze: 2 });
+        expect(out.stats.parts).toBe(2);
+        expect(out.dropped).toEqual([]);
+        /**
+         * ⛔ …and `stats` is the DERIVATION's, not the compile's: the atlas it
+         * counts still names both substrates, where `report.substrates` above
+         * says `{maze: 4}`. Two true sentences about two different objects, and
+         * the copy could say neither.
+         */
+        expect(out.report.substrates).toEqual({ maze: 4 });
     });
 });
 
@@ -1050,6 +1070,74 @@ describe('⛓⛓⛓ W4 — the REPORT rows a world can only answer PER PART', ()
             .map((r) => r.text);
         expect(after).toEqual(['part "seed": 0 location(s) in its own overlay',
             'part "mz": 1 location(s) in its own overlay']);
+    });
+
+    /**
+     * ⛓⛓⛓ DEDUP M10 — **THE ROWS READ THE ATLASES THE REPORT ALREADY
+     * DERIVED**, and the count is what says so. Every part's atlas was derived
+     * a second time here for rows that are byte-identical either way, so a
+     * claim about the ROWS cannot see this change at all — the subject is the
+     * NUMBER OF DERIVATIONS, counted with a spy on each part's own
+     * `deriveAtlasOf` and stated as a function of `parts.length` rather than
+     * typed.
+     *
+     * ⛔ The FALLBACK is exercised beside it: `reportOver` returns EARLY with no
+     * derivation when the world's atlas does not build, so rows called without
+     * a report must still derive for themselves — which is what makes a
+     * `derivedParts`-less call produce the SAME rows at the OLD price.
+     */
+    it('the per-part rows cost the report NOTHING to derive, and say the same thing', () => {
+        const h = w4Session();
+        let derives = 0;
+        const spied = h.parts.map((p) => ({
+            ...p,
+            deriveAtlasOf: (...a) => { derives++; return p.deriveAtlasOf(...a); },
+        }));
+        const b = worldSetBindings({
+            parts: spied,
+            deps: h.deps,
+            parseOel: parseOelLevel,
+            drawMazeStill: makeDrawRoomStill(),
+            compileOptions: {
+                mazeProjection: {
+                    ...MAZE_CONDITION_DEPS,
+                    gridFor: (region) => {
+                        if (partOfRegion(region.region_id) !== 'mz') return null;
+                        const entry = h.session.record().parts.mz.entries[region.map_ref];
+                        return entry ? mazeGridFor(entry.payload) : null;
+                    },
+                },
+            },
+            gameName: 'W4 World',
+        });
+        const rep = reportOver({
+            session: h.session,
+            deps: h.deps,
+            adapterFns: b.adapterFns,
+            document: b.document,
+            ruleKeys: b.ruleKeys,
+            compileRegionAtlas,
+            validateRegionAtlas,
+            atlasSchema: loadAtlasSchema(),
+        });
+        /**
+         * ⛓ The REPORT itself derives the world twice — once for the atlas it
+         * validates and once inside the compile — so its own price is
+         * `2 × parts`. What this row is about is the NEXT number.
+         */
+        const forReport = derives;
+        expect(forReport).toBe(2 * h.parts.length);
+        const withReport = b.reportRows(h.session.record(), rep);
+        expect(derives - forReport).toBe(0);
+        // ⛓ …and WITHOUT the report's derivation the rows are the same rows,
+        //   derived here — one per part, the price this change removed.
+        const before = derives;
+        const withoutReport = b.reportRows(h.session.record(), null);
+        expect(derives - before).toBe(h.parts.length);
+        expect(withoutReport).toEqual(withReport);
+        expect(withReport.filter((r) => r.kind === 'locations' && r.text.startsWith('part "'))
+            .map((r) => r.text)).toEqual(h.parts
+            .map((p) => `part "${p.id}": 0 location(s) in its own overlay`));
     });
 });
 
