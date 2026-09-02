@@ -79,6 +79,7 @@ import {
 } from './seedlingRandomizerEligibility.js';
 import { SeedlingCheckBinding } from './seedlingCheckBinding.js';
 import { SeedlingLevelSetDelivery } from './seedlingLevelSetDelivery.js';
+import { ATLAS_DIR, mapDocumentPath } from './mapDocumentPath.js';
 
 /**
  * The four modules the rewrite needs, as DOCUMENT-relative specifiers. ⛔ They
@@ -94,11 +95,18 @@ export const AP_MODULE_PATHS = Object.freeze({
     derivation: 'modules/seedlingDemo/seedlingAtlasDerivation.js',
 });
 
-/** The two documents the rewrite is built FROM, likewise document-relative. */
+/**
+ * The two documents the rewrite is built FROM, likewise document-relative.
+ *
+ * ⛓ THE ATLAS HALF IS DERIVED, NOT SPELLED (maze-lab arms F-b / plan §17.1 F7).
+ * The same relative path is read by the lab (`watchViewer.ATLAS_URL`) and by
+ * node (`levelSource.ATLAS_PATH`), each against its own base; it is stated once
+ * in `mapDocumentPath.js`.
+ */
 export const AP_ASSET_PATHS = Object.freeze({
     recordSet: 'modules/seedlingDemo/fixtures/seedling-vanilla-set.json',
-    atlasDir: 'modules/flashPanel/atlases/',
-    defaultMap: 'modules/flashPanel/atlases/seedling-map.json',
+    atlasDir: ATLAS_DIR,
+    defaultMap: mapDocumentPath(null).path,
 });
 
 /**
@@ -232,12 +240,16 @@ export function buildLocationResolver({ ledger, gameConfig, locations, roomsByLe
     };
 }
 
-/** The map document this preset declares, and where that answer came from. */
+/**
+ * The map document this preset declares, and where that answer came from.
+ *
+ * ⛓ THE FACE STAYS, THE DERIVATION MOVED. `{path, source}` is what this
+ * module's callers and its rows read; the path itself is `mapDocumentPath`'s,
+ * shared with the two spellings on the lab's side (F-b / plan §17.1 F7).
+ */
 export function resolveMapPath(rawRules) {
-    const named = rawRules?.region_atlas?.map_document;
-    return typeof named === 'string' && named !== ''
-        ? { path: AP_ASSET_PATHS.atlasDir + named, source: 'region_atlas.map_document' }
-        : { path: AP_ASSET_PATHS.defaultMap, source: 'the atlases default' };
+    const { path, source } = mapDocumentPath(rawRules);
+    return { path, source };
 }
 
 /**

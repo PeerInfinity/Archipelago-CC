@@ -33,6 +33,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
+import { mapDocumentPath } from '../flashPanel/mapDocumentPath.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 
 // ⚠ RE-EXPORTED, NOT DEFINED HERE. This file imports `node:fs` at the top,
@@ -44,9 +45,18 @@ import { levelSourceFromAtlas } from './atlasSource.js';
 // the first real browser caller and found it immediately.
 export { levelSourceFromAtlas };
 
-/** The committed extract. */
+/**
+ * The committed extract.
+ *
+ * ⛓ THE PATH IS DERIVED, THE BASE IS NODE'S (maze-lab arms F-b / plan §17.1
+ * F7). `mapDocumentPath` is dependency-free and browser-safe — importing it
+ * here adds nothing to anyone's bundle, and the relative path is now stated
+ * once for this file, `watchViewer.ATLAS_URL` and the panel's `resolveMapPath`.
+ * `../../` because this file sits two levels under `frontend/`, which is what
+ * that path is relative to.
+ */
 export const ATLAS_PATH = fileURLToPath(
-    new URL('../flashPanel/atlases/seedling-map.json', import.meta.url),
+    new URL(`../../${mapDocumentPath(null).path}`, import.meta.url),
 );
 
 let cachedAtlas = null;

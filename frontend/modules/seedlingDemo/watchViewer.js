@@ -137,6 +137,7 @@ import { levelSourceFromAtlas } from './atlasSource.js';
  * headless-safe by their own docblocks (no `node:` imports, no DOM), which is
  * why a browser page may import them at all.
  */
+import { mapDocumentPath } from '../flashPanel/mapDocumentPath.js';
 import { buildStagedTape } from './botDriverV1.js';
 import { buildLevelSet, vanillaRecordSet } from './levelSetExporter.js';
 import {
@@ -380,7 +381,15 @@ function repoUrl(path) {
         ? new URL(p.slice('frontend/'.length), FRONTEND_ROOT).href
         : new URL(p, REPO_ROOT).href;
 }
-const ATLAS_URL = repoUrl('frontend/modules/flashPanel/atlases/seedling-map.json');
+/**
+ * ⛓ THE PATH IS DERIVED, THE BASE IS THIS PAGE'S (maze-lab arms F-b / plan
+ * §17.1 F7). `mapDocumentPath` states `modules/flashPanel/atlases/…` once, for
+ * this page, for node's `levelSource.ATLAS_PATH` and for the panel's
+ * `resolveMapPath`; `repoUrl` is the only part of the answer that is ours.
+ * ⛔ `null` because THE LAB IS NEVER TOLD which document a preset wants — the
+ * hosted lab receives an address and a payload, never rules (residue F7b).
+ */
+const ATLAS_URL = repoUrl(`frontend/${mapDocumentPath(null).path}`);
 
 /**
  * ⛓ THIS MODULE'S COMMITTED-ARTIFACT DIRECTORY — one spelling, because the
