@@ -934,13 +934,18 @@ export function verdictBlock(v, note = null) {
  * keeps its spelling.
  */
 // ⛔ IMPORTED, then re-exported — NOT `export … from …`, which creates no
-// LOCAL binding. `shipToWasm` calls this function itself (`the readback is the
-// point`), and the re-export-only form left that call site referencing a name
-// this module does not have: `node --check` is happy, every unit row that
+// LOCAL binding. `shipToWasm` used to call this function itself (`the readback
+// is the point`), and the re-export-only form left that call site referencing a
+// name this module does not have: `node --check` is happy, every unit row that
 // imports the SYMBOL is happy (the re-export resolves fine), and the page
 // throws `levelSetDisagreement is not defined` the moment a set mounts. Found
-// by `check-seedling-wasm-pages.mjs`'s GENERATE arm, which is the only thing
-// in the repo that drives this path.
+// by `check-seedling-wasm-pages.mjs`'s GENERATE arm, which is the only thing in
+// the repo that drives this path.
+//
+// ⛓ F-b MOVED THAT CALL SITE — the readback diff is inside `deliverChunks` now
+// — so this file no longer has a local reader and the two forms would behave
+// alike today. The form STAYS anyway: the next reader who adds one would walk
+// into the same trap, and the only thing that catches it is a browser gate.
 import { levelSetDisagreement } from './levelSetDisagreement.js';
 
 export { levelSetDisagreement };
@@ -961,6 +966,21 @@ export { levelSetDisagreement };
  * `wasmGamePage.js` imports nothing, so this costs the lab one file.
  */
 import { botOver, frameWindow, gameUp, runtimeUp } from '../flashPanel/wasmGamePage.js';
+
+/**
+ * ⛓⛓ **THE `botLoadLevels`/`botLevelSet` PROTOCOL, IMPORTED** (maze-lab arms
+ * F-b / plan §17.1 F1). This page's `levels` stage and
+ * `flashPanel/seedlingLevelSetDelivery`'s `deliver()` were the same three rules
+ * written twice, and they HAD drifted: the loop here read
+ * `if (said !== 'ok') throw` for a year, refusing the first chunk of every
+ * multi-chunk delivery, and the panel's copy is what found it. One
+ * implementation now; ⛔ the delivery's STATE MACHINE stays over there —
+ * `arm()`'s `apMappingInvalidation` precondition guards the panel's teleport
+ * tables, a hazard this page does not have (measured: `grep -n invalidation
+ * seedlingDemo/watch*.js` = 0 lines), and `watchViewer.validatedChunks` keeps
+ * its planning/validation boundary on the SENDER.
+ */
+import { deliverChunks } from '../flashPanel/seedlingLevelSetDelivery.js';
 
 /**
  * ── ⛓⛓⛓ SHIP IT ──────────────────────────────────────────────────────
@@ -1210,51 +1230,27 @@ export async function shipToWasm(payload, host) {
 
     // ── levels ───────────────────────────────────────────────────────
     if (levelSet) {
-        try {
-            /**
-             * ⛔⛔ `"pending"` IS THE SUCCESS ANSWER FOR EVERY CHUNK BUT THE
-             * LAST — `Bot.botLoadLevels`' own contract (`Bot.as:3358-3368`,
-             * `LevelSet.as:331`): *pending* = accepted, more chunks owed,
-             * nothing mounted; *ok* = this chunk COMPLETED the delivery.
-             *
-             * ⚠ THIS LINE READ `if (said !== 'ok') throw` FOR A YEAR, and it
-             * refuses the FIRST chunk of any delivery of more than one with
-             * the message `botLoadLevels: pending`. It never bit because every
-             * set THIS page ships is one chunk; the vanilla 116 is nine, and
-             * H7/H8's browser gate — the first multi-chunk delivery anyone
-             * drove — is what found it (plan §17.2.5, trap 954). One line owed
-             * to this file, paid here.
-             *
-             * ⛔ AND AN EARLY `ok` IS A REFUSAL TOO: it says the receiver
-             * mounted a set the sender had not finished sending, which is a
-             * PARTIAL set the game then runs happily on.
-             */
-            const list = chunks ?? [];
-            for (let i = 0; i < list.length; i += 1) {
-                const last = i === list.length - 1;
-                const want = last ? 'ok' : 'pending';
-                const said = bot('botLoadLevels', JSON.stringify(list[i]));
-                if (said !== want) {
-                    throw new Error(`botLoadLevels answered ${JSON.stringify(said)} to chunk `
-                        + `${i + 1}/${list.length}, and the ${last ? 'LAST' : 'non-final'} chunk `
-                        + `of a delivery must answer ${JSON.stringify(want)}`);
-                }
-            }
-        } catch (e) {
-            return refuse('levels', e.message,
-                `${(chunks ?? []).length} chunk(s) for ${levelSet.set_id}`);
-        }
         /**
-         * ⛔ THE READBACK IS THE POINT. Reading state back out of the artifact
-         * is the only check that does not share the producer's assumptions —
-         * Phase 3b's manifest gate caught `new Array(45)` this way, a defect
-         * no tape and no unit test could see because both read the same wrong
-         * object.
+         * ⛓ ONE PROTOCOL, TWO REFUSAL VOCABULARIES. `deliverChunks` sends the
+         * chunks on the `pending`/`ok` contract and reads the set back; what it
+         * hands back are the PARTS, so this page keeps its own stage codes —
+         * `set-readback-disagrees` is read by `watchSummary.test.js` and by
+         * `docs/json/developer/procgen/seedling-bot.md`, and a shared function
+         * that worded the refusal would have taken them with it.
+         *
+         * ⛔ THE CHUNKS ARRIVE ALREADY PLANNED AND ALREADY CHECKED.
+         * `watchViewer.validatedChunks` validates the set on the SENDER and
+         * refuses an oversized room before any of this; that boundary did not
+         * move.
          */
-        const back = botJson('botLevelSet');
-        const why = levelSetDisagreement(levelSet, back);
-        if (why) return refuse('levels', 'set-readback-disagrees', why);
-        state.readback = back;
+        const list = chunks ?? [];
+        const out = deliverChunks({ bot, chunks: list, set: levelSet });
+        if (!out.ok) {
+            return out.stage === 'readback'
+                ? refuse('levels', 'set-readback-disagrees', out.disagreement ?? out.why)
+                : refuse('levels', out.why, `${list.length} chunk(s) for ${levelSet.set_id}`);
+        }
+        state.readback = out.readback;
         enter('levels', `${levelSet.rooms.length} room(s) mounted — ${levelSet.set_id}`);
     }
 

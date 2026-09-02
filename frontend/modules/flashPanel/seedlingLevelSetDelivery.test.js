@@ -12,7 +12,8 @@ import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
 
 import {
-    DELIVERY_STATES, READBACK_FIELDS, SeedlingLevelSetDelivery, readbackDisagreement,
+    DELIVERY_STATES, READBACK_FIELDS, SeedlingLevelSetDelivery, deliverChunks,
+    readbackDisagreement,
 } from './seedlingLevelSetDelivery.js';
 import { SeedlingRegionGlue } from './seedlingRegionGlue.js';
 import {
@@ -352,5 +353,156 @@ describe('the ordering gate — the set goes in BEFORE the first region load', (
         expect(glue.stats.setDeliveries).toBe(1);
         expect(glue.stats.loads).toBe(5);
         expect(bot.calls.filter((c) => c.name === 'botLevelSet')).toHaveLength(1);
+    });
+});
+
+/**
+ * ⛓⛓⛓ **`deliverChunks` — THE PROTOCOL BOTH HOSTS RUN** (maze-lab arms F-b /
+ * plan §17.1 F1).
+ *
+ * The lab's `levels` stage and this module's `deliver()` were the same three
+ * rules written twice, and they HAD drifted: `watchWasm`'s loop read
+ * `if (said !== 'ok') throw` for a year and refused the first chunk of every
+ * multi-chunk delivery. The rules are one function now.
+ *
+ * ⛔ **AND THIS IS WHERE THE LAB'S HALF BECAME DRIVABLE.** `shipToWasm` needs
+ * an iframe and a live recompiled game, so its copy of this contract could only
+ * ever be asserted by scanning its own source text — a scan cannot tell you
+ * what the loop DOES. These rows drive it on the shapes the lab really ships,
+ * over the real chunk planner and the real rewritten set.
+ */
+describe('deliverChunks — the pending/ok contract and the readback, once', () => {
+    const { set } = rewritten();
+    const chunksFor = (s2) => planLevelSetChunks(s2).chunks;
+
+    it('the vanilla rewrite really is a MULTI-chunk delivery — the shape that found the bug', () => {
+        expect(chunksFor(set).length).toBeGreaterThan(1);
+    });
+
+    it('sends every chunk IN ORDER, accepts `pending` for all but the last, and reads back', () => {
+        const bot = fakeBot(set);
+        const out = deliverChunks({ bot, chunks: chunksFor(set), set });
+        expect(out).toMatchObject({ ok: true, stage: null, why: null, disagreement: null });
+        expect(out.sent).toBe(chunksFor(set).length);
+        expect(bot.calls.map((c) => c.name))
+            .toEqual([...new Array(out.sent).fill('botLoadLevels'), 'botLevelSet']);
+        expect(out.readback.table_levels).toBe(set.rooms.length);
+    });
+
+    /**
+     * ⛔ THE ONE-CHUNK CASE IS NOT THE CONTRACT. Every set the LAB ships is one
+     * chunk, which is exactly why its `!== 'ok'` bug never bit there.
+     */
+    it('⛓ a ONE-chunk delivery wants `ok` on that chunk — the lab\'s own shape', () => {
+        const one = { ...set, rooms: set.rooms.slice(0, 1) };
+        const chunks = chunksFor(one);
+        expect(chunks).toHaveLength(1);
+        const bot = fakeBot(one);
+        expect(deliverChunks({ bot, chunks, set: one })).toMatchObject({ ok: true, sent: 1 });
+    });
+
+    it('⛔ REFUSES a `pending` on the LAST chunk — nothing mounted, and it says which', () => {
+        const chunks = chunksFor(set);
+        const bot = fakeBot(set, { on: 'botLoadLevels', at: chunks.length, say: 'pending' });
+        const out = deliverChunks({ bot, chunks, set });
+        expect(out.ok).toBe(false);
+        expect(out.stage).toBe('chunks');
+        expect(out.sent).toBe(chunks.length - 1);
+        expect(out.why).toMatch(
+            new RegExp(`answered "pending" to chunk ${chunks.length}/${chunks.length}, and the LAST`));
+    });
+
+    it('⛔ REFUSES an EARLY `ok` — a receiver that mounted before the sender finished', () => {
+        const chunks = chunksFor(set);
+        const bot = fakeBot(set, { on: 'botLoadLevels', at: 1, say: 'ok' });
+        const out = deliverChunks({ bot, chunks, set });
+        expect(out.ok).toBe(false);
+        expect(out.sent).toBe(0);
+        expect(out.why).toMatch(/an early `ok` means the receiver mounted a set/);
+    });
+
+    it('names the chunk a REFUSAL BY NAME stopped on, and stops there', () => {
+        const chunks = chunksFor(set);
+        const bot = fakeBot(set, { on: 'botLoadLevels', at: 2, say: 'error:arena' });
+        const out = deliverChunks({ bot, chunks, set });
+        expect(out.why).toMatch(new RegExp(`answered "error:arena" to chunk 2/${chunks.length}`));
+        expect(bot.calls.filter((c) => c.name === 'botLoadLevels')).toHaveLength(2);
+        expect(bot.calls.some((c) => c.name === 'botLevelSet')).toBe(false);
+    });
+
+    /**
+     * ⛓ THE THROW ARM IS DISTINCT FROM THE ANSWER ARM, and both are reachable:
+     * `wasmGamePage.callBot` answers null for a verb that is not there (that is
+     * the ANSWER arm, "answered null"), while a verb that exists and raises
+     * inside the game reaches this one.
+     */
+    it('⛓ a bot that THROWS is a different refusal from one that answers wrong', () => {
+        const chunks = chunksFor(set);
+        const threw = deliverChunks({
+            bot: fakeBot(set, { on: 'botLoadLevels', at: 1, throw: 'arena died' }), chunks, set });
+        expect(threw.why).toBe(`botLoadLevels threw on chunk 1/${chunks.length}: arena died`);
+
+        const answered = deliverChunks({ bot: () => null, chunks, set });
+        expect(answered.why).toMatch(/answered null to chunk 1\//);
+    });
+
+    it('⛔ REFUSES when the readback disagrees, and hands the DISAGREEMENT back unwrapped', () => {
+        const chunks = chunksFor(set);
+        const bot = fakeBot(set);
+        const wrapped = (name, arg) => (name === 'botLevelSet'
+            ? JSON.stringify({ active: 'someone-elses-set', table_levels: 1, start_level: 0 })
+            : bot(name, arg));
+        const out = deliverChunks({ bot: wrapped, chunks, set });
+        expect(out.ok).toBe(false);
+        expect(out.stage).toBe('readback');
+        expect(out.disagreement).toBe(readbackDisagreement(set, {
+            active: 'someone-elses-set', table_levels: 1, start_level: 0 }));
+        expect(out.why).toBe(`the set that mounted is not the set that was sent — ${out.disagreement}`);
+        expect(out.readback.active).toBe('someone-elses-set');
+    });
+
+    /**
+     * ⛓ THE TWO READBACK FAILURES ARE ONE STAGE, WHICH IS WHAT LETS THE LAB
+     * KEEP ITS CODE: `watchWasm` refuses `set-readback-disagrees` for both, and
+     * reads `stage` rather than parsing the sentence.
+     */
+    it('a `botLevelSet` that is not JSON is a READBACK failure too, named as one', () => {
+        const chunks = chunksFor(set);
+        const bot = fakeBot(set);
+        const out = deliverChunks({
+            bot: (n, a) => (n === 'botLevelSet' ? '<not json>' : bot(n, a)), chunks, set });
+        expect(out.stage).toBe('readback');
+        expect(out.disagreement).toBeNull();
+        expect(out.why).toMatch(/^botLevelSet did not answer JSON: /);
+    });
+
+    it('⛓ a NULL botLevelSet is not a parse failure — it is a disagreement, as it always was', () => {
+        const chunks = chunksFor(set);
+        const bot = fakeBot(set);
+        const out = deliverChunks({
+            bot: (n, a) => (n === 'botLevelSet' ? null : bot(n, a)), chunks, set });
+        expect(out.stage).toBe('readback');
+        expect(out.disagreement).toBe(readbackDisagreement(set, null));
+    });
+
+    it('an EMPTY chunk list sends nothing and still reads the set back', () => {
+        const bot = fakeBot(set);
+        const out = deliverChunks({ bot, chunks: [], set });
+        expect(out.sent).toBe(0);
+        expect(bot.calls.map((c) => c.name)).toEqual(['botLevelSet']);
+        expect(out.ok).toBe(false);   // nothing was mounted, so the readback disagrees
+        expect(out.stage).toBe('readback');
+    });
+
+    /** ⛓ `deliver()` is this function plus the state machine — nothing else. */
+    it('⛓ deliver() and deliverChunks agree, because deliver() IS this function', () => {
+        const { set: s2, invalidation } = rewritten();
+        const bot = fakeBot(s2);
+        const d = deliveryFor({ bot }).arm(s2, invalidation);
+        const viaMachine = d.deliver();
+        const viaProtocol = deliverChunks({ bot: fakeBot(s2), chunks: chunksFor(s2), set: s2 });
+        expect(viaMachine.ok).toBe(viaProtocol.ok);
+        expect(viaMachine.chunks).toBe(viaProtocol.sent);
+        expect(viaMachine.readback).toEqual(viaProtocol.readback);
     });
 });

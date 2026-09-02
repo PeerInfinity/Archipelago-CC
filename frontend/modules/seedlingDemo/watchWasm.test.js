@@ -992,55 +992,62 @@ describe('the readiness pair — the LAB\'s side of one shared question', () => 
 
 
 /**
- * ⛓⛓ **THE `pending`/`ok` CONTRACT** (EDITOR INTEGRATION M1; plan §17.2.5,
- * trap 954).
+ * ⛓⛓ **THE `pending`/`ok` CONTRACT — AND IT IS NO LONGER THIS FILE'S**
+ * (EDITOR INTEGRATION M1, plan §17.2.5, trap 954; hoisted by maze-lab arms F-b
+ * / plan §17.1 F1).
  *
  * `Bot.botLoadLevels` answers `"pending"` for every chunk but the last and
  * `"ok"` only on the one that COMPLETES the delivery. This file's chunk loop
  * read `if (said !== 'ok') throw` for a year — refusing the FIRST chunk of any
- * multi-chunk delivery with the message `botLoadLevels: pending`. It never bit
- * because every set THIS page ships is one chunk; the vanilla 116 is nine, and
- * H7/H8's browser gate is what found it.
+ * multi-chunk delivery. It never bit because every set THIS page ships is one
+ * chunk; the vanilla 116 is nine, and the PANEL's copy of the same loop is what
+ * found it, in H7/H8's browser gate.
  *
- * ⛔ ASSERTED OVER THE SOURCE, for the same reason the ▶ Start law above is:
- * `shipToWasm` needs `fetch` and a live game frame, so there is no node moment
- * at which this loop can be driven. The BEHAVIOUR of the identical contract is
- * driven at runtime by `seedlingLevelSetDelivery.test.js`, whose loop this one
- * now matches, and in the browser by `check-seedling-generated-set.mjs`.
+ * ⛔ **THAT IS THE ARGUMENT FOR ONE OWNER, AND IT IS NOW ONE OWNER.** The loop
+ * and the readback are `flashPanel/seedlingLevelSetDelivery.deliverChunks`,
+ * called by this page's `levels` stage and by the panel's `deliver()`. So the
+ * CONTRACT is driven — over an injected `bot`, in
+ * `seedlingLevelSetDelivery.test.js` — where it could only ever be SCANNED
+ * before (`shipToWasm` needs an iframe and a live game, so there is no node
+ * moment at which the old inline loop could be run).
+ *
+ * ⛓ What stays here is the claim the drive cannot make: that this page's stage
+ * calls it, and refuses in its OWN vocabulary when it says no.
  */
-describe('the chunk loop accepts `pending` for every chunk but the last', () => {
-    const CHUNK_LOOP = /botLoadLevels[\s\S]{0,400}?\n\s*\}/;
-
-    /** The old form, and the shape a regression would take. */
-    const REFUSES_PENDING = /said\s*!==\s*'ok'/;
-
-    /**
-     * ⛔ COMMENTS ARE STRIPPED FIRST, and a row caught me needing it: the fix's
-     * own docblock QUOTES the line it replaced, so a scan that could not tell
-     * code from prose reported a false finding about the code — trap 395's
-     * family, and the same discipline the ▶ Start law above uses.
-     */
+describe('the `levels` stage delegates the contract, and keeps its own codes', () => {
     const code = () => source('watchWasm.js').split('\n')
         .filter((line) => !/^\s*(\*|\/\/|\/\*)/.test(line))
         .join('\n');
 
-    it('no longer demands `ok` from every chunk', () => {
-        expect(REFUSES_PENDING.test(code())).toBe(false);
-    });
+    /** The old inline forms, and the shape a regression would take. */
+    const REFUSES_PENDING = /said\s*!==\s*'ok'/;
+    const INLINE_LOOP = /bot\('botLoadLevels'/;
 
-    it('asks for `ok` on the LAST chunk and `pending` on the others', () => {
+    it('the stage CALLS the shared protocol and no longer spells the loop', () => {
         const body = code();
-        // The predicate is the expectation the loop computes, not the whole
-        // loop: `last ? 'ok' : 'pending'` is the entire contract in one line.
-        expect(body).toMatch(/last\s*\?\s*'ok'\s*:\s*'pending'/);
-        expect(CHUNK_LOOP.test(body)).toBe(true);
+        expect(body).toMatch(/deliverChunks\(\{\s*bot,\s*chunks: list,\s*set: levelSet\s*\}\)/);
+        expect(body).toMatch(/from '\.\.\/flashPanel\/seedlingLevelSetDelivery\.js'/);
+        expect(REFUSES_PENDING.test(body)).toBe(false);
+        expect(INLINE_LOOP.test(body)).toBe(false);
     });
 
-    it('⚠ and the scan is NOT vacuous — it sees the old line when one is there', () => {
-        // The mutant, inline. Without this the row above passes on a file that
-        // no longer mentions botLoadLevels at all, or on a broken regex.
-        const mutant = "                if (said !== 'ok') throw new Error(`botLoadLevels: ${said}`);";
+    /**
+     * ⛔ THE CODES ARE THE PAGE'S, NOT THE PROTOCOL'S.
+     * `set-readback-disagrees` is read by `watchSummary.test.js` and by
+     * `docs/json/developer/procgen/seedling-bot.md`; a shared function that
+     * worded the refusal would have taken them with it.
+     */
+    it('a readback failure still refuses by the CODE the summary and the docs read', () => {
+        const body = code();
+        expect(body).toMatch(/refuse\('levels', 'set-readback-disagrees'/);
+        expect(body).toMatch(/out\.stage === 'readback'/);
+    });
+
+    it('⚠ and the scan is NOT vacuous — it sees the old inline loop when one is there', () => {
+        const mutant = "            const said = bot('botLoadLevels', JSON.stringify(list[i]));\n"
+            + "                if (said !== 'ok') throw new Error(`botLoadLevels: ${said}`);";
         expect(REFUSES_PENDING.test(mutant)).toBe(true);
-        expect(/last\s*\?\s*'ok'\s*:\s*'pending'/.test(mutant)).toBe(false);
+        expect(INLINE_LOOP.test(mutant)).toBe(true);
+        expect(/deliverChunks\(\{/.test(mutant)).toBe(false);
     });
 });
