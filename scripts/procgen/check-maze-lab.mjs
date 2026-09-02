@@ -123,6 +123,11 @@ const {
 /** ⛓ SLICE S2b — the manual arm's own session, node-side: CLAIM 22 builds the
  *  WALLED level a loaded walk must refuse from the page's own functions. */
 const { createWalkSession } = await MAZE('mazeLabWalk.js');
+/** ⛓ SLICE R-b — CLAIM 22b's two preconditions, and the ONE digest function the
+ *  page itself stamps with (⛔ never a second hash spelled in this file). */
+const { mazeWorldDigest } = await MAZE('mazeQueueExecutor.js');
+const { moveEntry } = await MAZE('mazeKeys.js');
+const { clearItem } = await MAZE('mazeRoomEngine.js');
 /**
  * ⛓⛓ EDITOR v3 E2c — THE SET ARM'S NODE-SIDE ANCHORS. ⛔ The strip's geometry
  * constants are `setEditorCore`'s OWN, never numbers typed here: `overviewLayout`
@@ -3190,9 +3195,19 @@ try {
         '⛓ (the row\'s own precondition: a wall really was painted onto the route\'s second '
         + 'step)', walled.result.description);
     const beforeBadLoad = await read();
+    /**
+     * ⚠ **AND THE SPLICED DOCUMENT IS A *PRE-R-b* RECORDING** — `worldDigest`
+     * and `requires` are stripped, deliberately. Slice R-b refuses a digest
+     * mismatch BEFORE step 0, and this row's subject is the OTHER refusal: R2
+     * naming the first illegal TURN INDEX. Stripping them keeps this row about
+     * what it was always about AND makes it the browser's witness that a
+     * recording written before R-b is still replayable — which is the whole
+     * reason both fields are optional. CLAIM 22b drives the digest.
+     */
     await page.evaluate(({ doc, payload }) => {
+        const { worldDigest, requires, ...preRb } = doc;
         document.getElementById('labWalkText').value = JSON.stringify(
-            { ...doc, lab: { ...doc.lab, payload } }, null, 2);
+            { ...preRb, lab: { ...doc.lab, payload } }, null, 2);
     }, { doc: boxDoc, payload: labPayload(walled.state) });
     await page.click('#labWalkLoad');
     await settled(() => /REFUSED/.test(document.getElementById('walkLoadNote').textContent),
@@ -3261,6 +3276,173 @@ try {
         + 'the move count, the frame count and the goal — one session, two runtimes',
     `node ${nodeSession.moves} moves / ${nodeSession.frames.length} frames vs browser `
         + `${witnessed.walk.moves} / ${witnessed.play.frames}`);
+
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ CLAIM 22b — THE RECORDING'S PRECONDITIONS (SLICE R-b)
+     * ══════════════════════════════════════════════════════════════════
+     *
+     * CLAIM 22 proved a walk the level will not take refuses AT THE INDEX —
+     * mid-walk, after the replayer has already been driven somewhere. R-b adds
+     * the two refusals that happen BEFORE step 0, and they are asserted here
+     * because both ends of each one are page-owned: the recorder stamps the
+     * field and the LOAD path reads it back.
+     *
+     * ⛔ **THE DOCUMENTS ARE BUILT NODE-SIDE AND THE PAGE IS ONLY ASKED TO
+     * REFUSE THEM.** CLAIM 22 already proved the keyboard reaches the session;
+     * what is unproven is the LOAD path's own reading of two fields, and a row
+     * that re-drove the keyboard to get there would be paying for a fact it
+     * already holds. The levels come from the page's own `generateStep` over
+     * the same URL parameters, exactly as CLAIM 22's walled level does.
+     */
+    const manualWalkDoc = () => {
+        const session = createWalkSession(manualBase);
+        for (const dir of ['E', 'S', 'S', 'S']) session.press(moveEntry(dir));
+        return session.fold();
+    };
+    const cleanDoc = manualWalkDoc();
+    check(cleanDoc.worldDigest === mazeWorldDigest(manualBase.record)
+        && json(cleanDoc.requires) === json([]),
+    '⛓⛓ **THE RECORDER STAMPS BOTH FIELDS, TOP-LEVEL** — `worldDigest` is this '
+        + 'level\'s own content hash and `requires` is EMPTY, because the subject room has '
+        + 'no obstacle to depend on. ⛔ Not in the `lab` block: a panel region visit carries '
+        + 'the same two fields and has no `lab` block to put them in',
+    `worldDigest=${cleanDoc.worldDigest}, requires=${json(cleanDoc.requires)}, `
+        + `lab has neither=${!('worldDigest' in cleanDoc.lab) && !('requires' in cleanDoc.lab)}`);
+
+    await load(`${MANUAL_QUERY}&source=manual`,
+        () => window.__mazeLab?.source === 'manual', 'the MANUAL arm for CLAIM 22b');
+
+    /** ⛓ THE NEGATIVE FIRST: the untouched document still loads. ⛔ Without it
+     *  the two refusals below would be consistent with a LOAD path that had
+     *  simply stopped accepting walks. */
+    await page.evaluate((doc) => {
+        document.getElementById('labWalkText').value = JSON.stringify(doc, null, 2);
+    }, cleanDoc);
+    await page.click('#labWalkLoad');
+    await settled(() => (window.__mazeLab?.play?.frames ?? 0) === 5,
+        'the self-consistent walk to load');
+    const okLoad = await read();
+    check(okLoad.play.frames === 5 && !/REFUSED/.test(
+        await page.textContent('#walkLoadNote')),
+    '⛓ (the row\'s own precondition, and the NEGATIVE: a document whose digest matches its '
+        + 'own payload and whose `requires` the palette can supply LOADS)',
+    `${okLoad.play.frames} frame(s)`);
+
+    /**
+     * ⛓⛓⛓ **R4 — A HAND-EDITED LEVEL REFUSES BY DIGEST, BEFORE STEP 0.**
+     *
+     * ⛔ ONE TILE, flipped IN THE JSON, and the flip is read off the value that
+     * is there — a hard-coded 0 → 1 on a cell that is already 1 would edit
+     * nothing and this row would pass for the wrong reason. ⚠ For a LAB walk
+     * the level IS the document's own payload, so the sentence must say the
+     * FILE was edited rather than blame a level that moved under it.
+     */
+    const beforeDigestLoad = await read();
+    const editedDoc = await page.evaluate((doc) => {
+        const tiles = [...doc.lab.payload.level.tiles];
+        const at = tiles.length - 1;
+        tiles[at] = tiles[at] === 0 ? 1 : 0;
+        const edited = {
+            ...doc,
+            lab: {
+                ...doc.lab,
+                payload: { ...doc.lab.payload, level: { ...doc.lab.payload.level, tiles } },
+            },
+        };
+        document.getElementById('labWalkText').value = JSON.stringify(edited, null, 2);
+        return edited;
+    }, cleanDoc);
+    await page.click('#labWalkLoad');
+    await settled(() => /REFUSED/.test(document.getElementById('walkLoadNote').textContent),
+        'the hand-edited level to be refused by digest');
+    const digestNote = await page.textContent('#walkLoadNote');
+    const afterDigestLoad = await read();
+    /** ⛔ BOTH digests are read OUT OF THE SENTENCE and compared, rather than
+     *  matched against one literal: a message that printed the same hash twice
+     *  would satisfy a one-sided check and tell a reader nothing. */
+    const digestsSaid = digestNote.match(/\b[0-9a-f]{8}\b/g) ?? [];
+    check(digestNote.includes(`digest ${cleanDoc.worldDigest}`)
+        && digestsSaid.length === 2 && digestsSaid[0] === cleanDoc.worldDigest
+        && digestsSaid[1] !== digestsSaid[0]
+        && digestNote.includes('its own payload is')
+        && /edited by hand after the walk was recorded/.test(digestNote),
+    '⛓⛓⛓ **R4 — THE LEVEL MOVED AND THE WALK SAYS SO BEFORE STEP 0**, naming the digest it '
+        + 'was recorded on and the one the document now carries. ⛔ Not the turn index: '
+        + 'nothing was stepped, which is the whole point of a PRECONDITION',
+    digestNote.trim().slice(0, 170));
+    check(json(afterDigestLoad.play) === json(beforeDigestLoad.play)
+        && json(afterDigestLoad.level) === json(beforeDigestLoad.level),
+    '⛓⛓ …**AND NOTHING PARTIAL IS DRAWN** — `play` and the LEVEL are byte-identical to '
+        + 'what they were before the press, the same law CLAIM 22 holds the index refusal to',
+    `play ${json(afterDigestLoad.play?.frames)} frame(s)`);
+    check(editedDoc.worldDigest === cleanDoc.worldDigest,
+        '⛓ (the row\'s own precondition: only the PAYLOAD was edited — the recording still '
+        + 'carries the digest it was stamped with)', editedDoc.worldDigest);
+
+    /**
+     * ⛓⛓⛓ **R3 — A WALK BOOTED WITH A KEY THE PAGE CANNOT SUPPLY REFUSES BY
+     * NAME.**
+     *
+     * The SAME subject room ONE RUNG UP (`step: 1`) places `door_red` on the
+     * route at (1,2) and `key_red` at (1,0). ⛔ The key tile is ERASED and the
+     * key put in the PALETTE instead, which is what makes the walk depend on
+     * something it did not pick up: with the key on the floor `deriveRequires`
+     * subtracts it and answers `[]` (the record-time half of the same law).
+     * The maze palette starts the player EMPTY-HANDED, so reloading that
+     * document on this page is exactly the case R3 exists for.
+     */
+    const doorBase = generateStep({
+        seed: manualParams.seed,
+        step: 1,
+        width: manualParams.width,
+        height: manualParams.height,
+        bounds: manualParams.bounds,
+        budget: manualParams.budget,
+        skeleton: manualParams.skeleton,
+        areas: manualParams.areas,
+        elements: manualParams.elements,
+        require: manualParams.require,
+        roster: manualParams.roster,
+        biome: manualParams.biome,
+    });
+    const doorLevel = serializeMazeLevel(doorBase.record);
+    check(json(doorLevel.obstacles) === json([{ x: 1, y: 2, id: 'door_red' }])
+        && json(doorLevel.items) === json([{ x: 1, y: 0, id: 'key_red' }]),
+    '⛓ (the row\'s own precondition: the subject room at step 1 really does place `door_red` '
+        + 'on the route and `key_red` before it)',
+    `${json(doorLevel.obstacles)} / ${json(doorLevel.items)}`);
+    clearItem(doorBase.record, 1, 0);
+    const keyedState = { ...doorBase, palette: { ...doorBase.palette, items: ['key_red'] } };
+    const keySession = createWalkSession(keyedState);
+    for (const dir of ['E', 'S', 'S', 'S']) keySession.press(moveEntry(dir));
+    const keyDoc = keySession.fold();
+    check(keySession.reachedGoal === true && json(keyDoc.requires) === json(['key_red']),
+        '⛓⛓⛓ **THE RECORDING NAMES WHAT THE WALK HAD TO BE CARRYING** — the walk crossed '
+        + '`door_red` on a key it did not pick up, so `requires` is `["key_red"]`. ⛔ Derived '
+        + 'from the walk, never declared: the same four presses over a level whose key is on '
+        + 'the floor answer `[]`',
+        `reachedGoal=${keySession.reachedGoal}, requires=${json(keyDoc.requires)}`);
+
+    const beforeKeyLoad = await read();
+    await page.evaluate((doc) => {
+        document.getElementById('labWalkText').value = JSON.stringify(doc, null, 2);
+    }, keyDoc);
+    await page.click('#labWalkLoad');
+    await settled(() => /REFUSED/.test(document.getElementById('walkLoadNote').textContent),
+        'the walk to be refused for the key its replay cannot hold');
+    const keyNote = await page.textContent('#walkLoadNote');
+    const afterKeyLoad = await read();
+    check(/this walk needs key_red/.test(keyNote)
+        && /start inventory holds none of them/.test(keyNote)
+        && !/input \d+ /.test(keyNote),
+    '⛓⛓⛓ **R3 — REFUSED BEFORE STEP 0, NAMING THE ITEM** — the maze palette starts the '
+        + 'player empty-handed, so this walk can never run here and the page says WHICH item '
+        + 'is missing instead of dying at the door mid-walk',
+    keyNote.trim().slice(0, 170));
+    check(json(afterKeyLoad.play) === json(beforeKeyLoad.play)
+        && json(afterKeyLoad.level) === json(beforeKeyLoad.level),
+    '⛓⛓ …and NOTHING PARTIAL IS DRAWN for this refusal either',
+    `play ${json(afterKeyLoad.play?.frames)} frame(s)`);
 
     /* ── CLAIM 13: `?directed=` IS REFUSED BY NAME (SLICE 12) ────────── */
     /**
