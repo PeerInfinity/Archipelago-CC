@@ -8945,6 +8945,27 @@ the two `seedlingDemo` set-editor test files, which are the only other consumers
 
 **NEXT (pre-authorized): F-a.**
 
+**⇒ D3+D4 VERIFIED BY THE PLANNER; F-a LAUNCHED (2026-09-02, `maze-lab-planning`, per `a16f09b62`).** D3
+`4d8791688` / D4 `a42d99451` / as-built `8a1eb6b1a` re-checked: `mazeSetLab.roomOpenRefusal`,
+`mazeRoomRender.assertViewFields`, `posKey`/`unposKey` exported, `worldRulesJsonOf`'s `projectRegions` hook,
+`reportOver`'s `derivedParts`; `gate: maze-lab` 265/0 UNMOVED ×3; digest unmoved; bounded vitest 67 files/2608
+green. **Recorded (plan §36):** M11's rule = the same-index exemption in BOTH guards on BOTH routes (lifted
+PURE to `roomOpenRefusal`; the branch is near-unreachable on the page, so the pin is a unit row) · **a live
+fixture defect**: `mazeRoomRender.test.js` built its missing-field rows by WALKING the list under test — 22
+rows green under the mutant (*a population read off the subject cannot discriminate*) · **residue D7**: the
+render module tests presence with `hasOwnProperty`, the overlays with `in` — measured 12 vs 5 over
+`Object.create` views; the shared check preserves both; which is right is a question about what a view IS ·
+M7's "skips an empty select" was an EQUIVALENT mutant; the real difference is that `assertParamSchema`
+guarantees every element knob a default, so pre-selecting `?? default` would NAME every omitted knob ·
+M10 needed `setEditorCore.reportOver` to carry `derivedParts` (the report never called the derivation);
+its row is the derivation COUNT 6 → 4, the rows being byte-identical by construction · the ALL-MAZE
+rules.json capture was the NODE W4 world, CLAIM 21g the page-side evidence. **F-a launched**
+(`NewDocs/plans/maze-lab-arms-sliceFa-prompt.md`, `maze-lab-arms-sliceFa`): F5 `parseSeqPayload`, F3
+`pollUntil` (⚠ the wasm boot path — the wasm gates run on WINDOWS CHROME, announce and run), F11 a
+number-keyed `indexLevels` (the bundle constraint decides the home), F6 the `outExitId` import measured
+against the bundle, F9 the exporter imports the canonical tile size (13 `const TILE = 16` files at this
+head, not the survey's 7 — derive). Byte-inert claims captured first.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
