@@ -8651,6 +8651,126 @@ outputs captured first) + `elementInfo` = `elementSummaryOf` verbatim (CLAIM 14'
 panel's click through `tileAtPoint` with a scaled-canvas jsdom measurement (before: (6,4); after: (3,2))
 · the mirror copies `turn` beside `player_pos` (`k + w` pinned). Three commits, three mutants.
 
+**⇒ D1+D2+D5 AS BUILT (2026-09-02, `maze-lab-arms-sliceD1`; main `d7416903a` / `8d9f57064` /
+`7facc1b2c`).** Three independent correctness fixes, one commit each, three mutants each RUN.
+
+**D1 — ONE identity field list (`d7416903a`, M4 + M5).** `mazeLab.identityFields(state)` is the one
+frozen projection `{seed, biome, width, height, step, bounds, budget, roster, skeleton, areas,
+elements, require, directives, loaded}`; `editBaseTag`, `labPayload`, the new `labUrlFields` (what
+`mazeLabView.writeUrl` spreads) and the new `labReadoutIdentity` (what `window.__mazeLab` spreads)
+all PROJECT from it, and `mazeLabBridge.mazeLabSummary` stays the protocol's own field list
+(`labProtocol.js:109`), a projection of the projection. The two URL omissions are DESTRUCTURED OUT
+by name — `directives` (⚖ §3.9) and `loaded` (how a level arrived is not a parameter that runs).
+
+*The byte capture, taken BEFORE the first edit and re-taken after* (script kept in the session
+scratchpad; four fixtures — a plain ladder state, a DIRECTED state, `guard;len=2;turns=1` on
+`rooms` 15x15 with `areas={keys:1}`, and that payload LOADED back): **`labPayload`'s output,
+`editBaseTag`'s block, the URL writer's output and `mazeLabSummary`'s output are byte-identical
+before/after on all four**; the readout's identity block has the same KEY SET and the same value for
+every key — only its key ORDER moves (it is now a spread), and nothing stringifies the readout whole
+(checked: no `JSON.stringify(__mazeLab)` in `check-maze-lab.mjs` or `check-procgen-lab-hosting.mjs`).
+
+*M5 — the element readout, field set derived not typed* (`elementSummaryOf(model).placed[0]`):
+- BEFORE (12): `instance, index, params, site, block, button, door, flagCell, ports, tunnel, guards, cost`
+- AFTER (19): the same twelve **plus** `element, family, drawsBefore, drawsAtConstruct, binds,
+  entryMouth, carveOverwrote` — **7 added, 0 dropped, 0 renamed**, so CLAIM 14's reads
+  (`elementInfo.ran`, `placed[0].guards`, `placed[0].tunnel`, `refused.reason`) and the
+  `maze-element` demo entry (`elementInfo.ran == true`) are all still answered.
+
+*The rows that make the recorded defect unrepeatable* are DERIVED over
+`Object.keys(identityFields(state))`, never typed (a count of four cannot tell the defect from its
+absence): the payload carries every field (top level, or `base` for exactly `step`/`loaded`); the
+readout block carries every field and nothing else; the bar omits EXACTLY `directives` and `loaded`;
+`elements` moves the bar and reads back as the level it describes; and every reader agrees on the
+VALUE, not only the key.
+
+⚠ **RESIDUE FOUND AND NAMED, not fixed: `editBaseTag` omits `bounds`, `budget` and `roster`.**
+`roster` is the one that bites — two runs of one seed and step under different rosters draw from
+different palettes and make different levels, and the tag calls them the same base. Adding a field
+would move every committed payload's `base` block, which is the byte gate D1 is written under, so
+the omission is ASSERTED by a row instead (a slice that fixes it will red that row on purpose).
+
+**D2 — the panel's pixel→tile click (`8d9f57064`, M6, a live bug).** `_handleCanvasClick` now calls
+`procgenCore/labView.tileAtPoint` with the rect's own size and the world's cols/rows, and subtracts
+the canvas border read off the **computed style** (not restated as a JS constant — a second spelling
+of a CSS value is the drift this rung removes; jsdom reads 0, the honest answer for a canvas with no
+stylesheet). The silent return for a point off the room is kept — the panel is not a lab — but the
+out-of-range ANSWER is `tileAtPoint`'s.
+
+*Measured, each row carrying the old arithmetic as its control:*
+
+| point | before | after |
+|---|---|---|
+| 2x canvas, visual CENTRE of tile (3,2) | **(7,5)** | (3,2) |
+| 2x canvas, top-left CORNER of tile (3,2) | **(6,4)** | (3,2) |
+| 1 px border, first pixel of tile (5,4) | **(4,3)** (border-blind) | (5,4) |
+
+⚠ The brief's "(6,4)" is the CORNER mapping; the CENTRE of the same tile maps to (7,5). Both are the
+same defect; both are pinned.
+
+**D5 — the mirror copies `turn` (`7facc1b2c`).** §30's residue. `_onVisualizerChange` writes
+`turn` beside `player_pos` in one `Object.assign`, guarded on the TYPE (turn 0 is a real turn; a
+visualizer with no counter must leave the panel's number alone). ⛔ The wait-mirror branch S2a fixed
+is untouched. Pinned: 3 delegated moves + 2 delegated waits ⇒ `state.turn === 5`; the last step onto
+the exit ⇒ *"Reached exit in 6 steps."*; a counter of 7 stays 7 under a turn-less visualizer.
+
+**Mutants — RUN, not reasoned** (copy/restore, trap 1072; each restored and `git diff` confirmed
+empty before the next):
+
+| # | mutant | red |
+|---|---|---|
+| (a) | `elements` off the bar again (`labUrlFields`) | 3 rows |
+| (b) | `elements` dropped from `labReadoutIdentity` | 2 rows |
+| (c) | the click back to `/ TILE_PX` | 3 rows |
+| (d) | the border not subtracted | 1 row |
+| (e) | the `turn` copy dropped | 2 rows |
+
+⚠ **(c) leaves the BORDER row green** — at 1:1 the intrinsic division happens to answer correctly
+there — so the two D2 mutants are non-redundant and neither alone certifies the pair (trap 1081's
+shape, one step milder: two rules, each sufficient for a different row).
+
+**Gates, all run here.**
+
+| gate | before | after | command |
+|---|---|---|---|
+| `check-maze-lab.mjs` | 265/0 | **265/0 UNMOVED**, `ALL CHECKS PASSED` | `node scripts/procgen/check-maze-lab.mjs` |
+| `check-procgen-lab-hosting.mjs` | 66/0 | **66/0 UNMOVED**, `ALL CHECKS PASSED` | `node scripts/procgen/check-procgen-lab-hosting.mjs` |
+| bounded ⚖ 52 | — | **37 files / 1764** | `npx vitest run frontend/modules/mazeRoom/ frontend/modules/procgenLabPanel/ frontend/modules/procgenCore/labView.test.js frontend/modules/procgenDocs/` |
+| `mazeLab.test.js` | 115 | **122** | ” |
+| `mazeRoomUI.test.js` | 157 | **165** | ” |
+| `procgenMazeElements.test.js` | 161 | **162** | ” |
+| in-app `--batch=fast` | 61/61 | **61/61** (3.5 min) | `compare-runs.js …T15-54-08 …T16-41-30` → *No differences in status, roster, or duration* |
+| maze byte-identity | `677b7d9c…` | **unmoved** | `node scripts/procgen/dump-maze-byteidentity.mjs | md5sum` |
+
+⚠ **The baseline was NAMED, per R-b's own note** — the STARVED `…T15-49-23` (0/0, *"Timeout waiting
+for tests to start"*) still sits in `test-results/in-app-tests/` and is what `compare-runs.js` picks
+by default. The last good `test-substrates/fast` run is `…T15-54-08`.
+
+**No re-bank.** `gate: maze-lab` stays 265/0 — D1 is a projection refactor and no CI-sourced row moved.
+
+⚠ **A wait-loop note, measured here.** Launching a browser gate under `setsid nohup … &` and reading
+`$!` gives the **wrapper's** pid, not the gate's. The liveness poll on that number went false while
+`ps -eo pid,cmd` still showed `node scripts/procgen/check-maze-lab.mjs` one pid along with 77 of 265
+checks done — so the tail I read as “finished” was a log MID-RUN, with an exit code of 0 and **no
+`ALL CHECKS PASSED` line**. CLAUDE.md's “a wrapper's children outlive it”, in its READING form rather
+than its killing form, and `feedback_exit_code_without_a_summary_is_not_a_verdict` is what caught it:
+the verdict came from the SUMMARY line, never from the poll returning.
+
+**What this slice overturned in the brief.**
+- **The readout does NOT omit `skeleton`/`areas`/`elements`/`require`** — §16.1's M4 row was written
+  at `44e47f445` and the readout has carried all four (plus `directives`) ever since, just far below
+  the block the brief quotes and beside the things DERIVED from them. What was true is the rest of
+  M4: five copies, five spellings, and one of them (`?? null` vs `?? DEFAULT_SKELETON`) a live
+  divergence in the DEFAULT arm — which the new value row asserts away.
+- **The brief's “(6,4)” is the tile's CORNER, not its centre.** At 2x, the visual CENTRE of tile
+  (3,2) mapped to **(7,5)**; its top-left corner mapped to (6,4). Both are pinned.
+- **`labPayload` has no top-level `step` or `loaded`** — they reach a payload through `base`. The
+  coverage row names the two rather than letting the absence pass for an oversight.
+- **`elementSummaryOf` takes the MODEL, not `model.elements`**, and a LOADED level has no
+  `model.elements` at all — the readout's existing guard had to stay.
+
+**NEXT (pre-authorized): D3+D4.**
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
