@@ -6762,6 +6762,17 @@ measured.** What S4 inherits, all of it named rather than left to be rediscovere
    banked minutes** leave the box. With the Windows rows (~11 min) and `procgen-help`
    (417 s, S5's) staying, the local battery falls from 70.5 min to **≈ 20 min**, and the
    CI cost is ≈ 15 minutes of wall clock in three parallel jobs.
+   > ⛔ **CORRECTED 2026-09-01 (S5b).** The last clause was TRUE WHEN WRITTEN — run
+   > 33548827760 at `9c3600602` ran three parallel jobs in 15 m 27 s — and FALSE from
+   > `4a99828ec`, S4's own write, which is one commit later. That write replaced the six
+   > CI-sourced rows' banked `ms` with the `ci-summary` NETWORK READ, `planCiShards`
+   > priced off exactly that field, and the matrix collapsed to ONE job of **23 m 01 s**
+   > (run 33555725728). ⛓ Since S5b the partition prices on what each arm COST THE
+   > RUNNER, and the browser set is **TWO** jobs — `seedling-wasm-element` alone at
+   > 901.2 s and the other 23 arms at 489.0 s — so the wall is ≈15 min again with one
+   > job FEWER than the sentence above claims. Three was itself the box-`ms` proxy
+   > over-splitting: the baseline's two multi-arm shards total 466.7 runner-seconds and
+   > fit inside one budget. Trap 1068.
 
 
 **⇒ S4 SHIPPED 2026-09-01 — THE BANK QUOTES CI. SIX ROWS, 25.8 OF THE 31.4 BANKED BROWSER
