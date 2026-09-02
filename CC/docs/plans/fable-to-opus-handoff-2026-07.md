@@ -8178,6 +8178,26 @@ to disagree about what a turn was now all read that branch.
 - ⛔ `whyBlocked` is still S2b's: `refusalReason` in `mazeQueueExecutor.js` is untouched by this slice, and a WAIT never reaches it (the engine has no refusal to explain).
 - The panel's `_executeWaitAction` keeps its own mana + hazard wrapper. The lab arm needs its own wrapper or none — the engine half is all that moved.
 
+**⇒ S2a VERIFIED BY THE PLANNER; S0+S1 LAUNCHED (2026-09-02, `maze-lab-planning`).** S2a (`6a8b285b6`/
+`aaddf5acf`) re-checked: the engine's WAIT case at `mazeRoomEngine.js:673`, `getState().turn` at the
+visualizer, the identity digest `677b7d9cae51023e82fa2e365a8095dc` reproduced by the row's own command
+here, bounded vitest 53 files/1877 green. **Two brief premises overturned (plan §30):** the visualizer's
+WAIT branch had ZERO tests (my "5 wait rows" was a grep matching `_awaitingRegionLoad` — a count for a
+file nobody ran), and **`getState()` never carried `turn`, so the panel's `waitHappened` mirror
+(`mazeRoomUI.js:2240` @089d809a9 — mana, bestPath, queue advance, hazard tick for a wait inside a
+loops-delegated walk) was gated FALSE on every tick since it was written** — fixed and pinned; S2a's
+lesson: *a reader that is PRESENT is not a reader that RUNS — grep the PRODUCER for the field*. The
+`next === state` re-derivation had no subject (the one caller tests `=== null`; contract: `next ===
+state` is the `locationCheck`'s alone). Mutant: `step` refusing WAIT again reds 20 rows over 5 files.
+**Residue flagged, not fixed → D5:** the panel mirror at `:2186` copies the visualizer's `player_pos`
+but never its `turn` — "Reached exit in N steps" under-counts a bot walk. **S0+S1 launched**
+(`NewDocs/plans/maze-lab-arms-sliceS1-prompt.md`, `maze-lab-arms-sliceS1`): the three stale docs
+(`lab.html:42-45`/`:505`, `maze.md` modes table), then the scrub (`#labScrub`, frame HUD, input strip,
+PLAY rate, `__mazeLab.play` +`turn`/`inventory`/`input`/`author`), `framesForActions` over
+`executeMazeEntry` + `startStateFor` (M1/M2 — `planCells` stops replaying on every draw), CLAIM 15 +3,
+`gate: maze-lab` re-banked `--write --key=` at the pushed head. The ladder had skipped S0/S1 when S2a
+was launched straight after Q-b; S2b consumes S1's `play` object (trap 1047), so S1 goes first.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
