@@ -7751,6 +7751,30 @@ delivery + `bot()`/readiness on the adapter (⚠ wasm gates on **`--win`**) → 
 the build-literal gate) → S3–S6 opt. ⚖ OPEN (§19): layout (parked by the user), vocabulary
 convergence (recommend NO), dedup order (D1+D2 first), F-c/F-d, S6, S4's submodule need.
 
+**⇒ THE RECORDING FORMAT'S FEATURE CENSUS (plan Part IV, §20–§22) — user 2026-09-02:** *"I would like to
+migrate the maze recordings to actionQueue eventually, if it makes sense to do so. For now, what matters
+is that the maze recording format has all of the features that it needs."* Eighteen features derived
+from what a maze VISIT can contain, checked against `_finalizeVisitOnExit`/`_replaySavedActions` at
+`44e47f445`. Fourteen are present or implicit (moves, checks, arrival/departure, block/button/flag
+through `step`, consumables through `_publishPlaybackEvents`, hazards reset on entry). **FOUR GAPS:**
+⛔ **R2 replay integrity — a refused move is marked DONE and the driver CONTINUES** (`mazeRoomQueue.js:299`,
+`mazeRoomUI.js:3483`): a recording replayed on the wrong level or inventory walks a different route and
+Playback reports SUCCESS — the replayer must REFUSE BY NAME at the first refused action, both replayers,
+one rule · **R1** `itemsPickedUp: []` is a LITERAL never filled (`:664`) · **R3** `requires:[items]`
+DERIVED from the obstacles the walk crossed, refused before the first step · **R4** `worldDigest` via
+`contentIdentity.computeContentHash` (an EDITED region — `layout.edits[]` — invalidates a recording while
+the `rulesHash` bucket does not move) · **R5** `format:'maze-recording/1'` (only the STORE is versioned).
+Rungs **R-a** (R1+R2+R5, with S2b — both replayers adopt R2 together) and **R-b** (R3+R4). **THE
+actionQueue MIGRATION (§21):** the maze maps 1:1 (`move`→`actionId: dir`, `wait`→`loops: n`,
+`locationCheck`→`actionId: name`), but `MazeRoomQueue` is the panel's LIVE queue (editCursor, mid-insert,
+Backspace, append-and-execute, the icon row) not only a store shape — migrating the store alone would leave
+two vocabularies in one panel. "Makes sense" = any of: a cross-substrate queue EDITOR showing maze
+interiors beside jta's (the block builder), file interchange between substrates, `ActionQueue`'s
+statuses/undo wanted in the panel. None live. **S2b lands `toActionQueueEntries`/`fromActionQueueEntries`
+now** (round-trip tested both ways incl. wait compression; ⚠ `generateEntryId` uses `Date.now()` — an
+injected id source, run twice) so the migration is a reader switch later. Ladder, final: S0 → S1 → S2a →
+S2b(+converters) → R-a → R-b → D1–D4 → F-a/F-b → ⚖ F-c/F-d → opt S3–S6.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
