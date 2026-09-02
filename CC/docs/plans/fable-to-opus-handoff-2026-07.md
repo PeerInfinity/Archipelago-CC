@@ -7684,6 +7684,73 @@ docs-only one. Runner cost of `maze-lab` 32.9 s (`ci-arm-costs.json`, max of 3 @
 27 tests, by `ls`. Nothing under `kittyengine*` exists on this tree at this head.
 
 
+**⇒ ⚖ ANSWERED + TWO REDIRECTIONS + THE TWO DEDUP SURVEYS — same session, later 2026-09-02 (plan Parts II–III).**
+The user confirmed the SOLVE step-through exists (*"I didn't notice them at first because the layout was
+different from the Seedling lab page, and there was no scrubber"* — layout consistency PARKED by the
+user, not designed) · `?source=manual` YES · witness-not-certification explained (§13.1) and decided as
+recommended · live panel hand-off NO for now · gate placement = extend `check-maze-lab.mjs`.
+**REDIRECTION 1 — WAIT (§14):** *"We should add support for waiting in all parts of the maze substrate."*
+Measured at `44e47f445`: the engine's `step` REFUSES `INPUT_WAIT` (`DELTAS` has no entry); the visualizer
+has a private turn+1 branch BEFORE `step` (`:443-459`); the panel's `_executeWaitAction` (`:3571`) ticks
+hazards and charges mana but never advances `state.turn` — two implementations of "a turn passes" that
+DISAGREE, plus a refusal. Design: `step(…, WAIT)` = clone with turn+1, ONE place; the visualizer branch
+retires; the panel's wait goes through `step` (its only `state.turn` readers are the visualizer-turn
+mirror `:2165` and the "Reached exit in N steps" message `:3547` — measured, no decision reads it);
+`INPUTS`/the oracle UNTOUCHED (`mazeVisitedKey` excludes `turn`, so WAIT would be a pruned self-loop —
+and the maze byte-identity row is the CONTROL, not the reasoning); the lab records WAIT. New rung **S2a**
+before the arm (trap 1047: the arm consumes the engine's WAIT).
+**REDIRECTION 2 — the walk is a RECORDING (§15):** *"use the same system that the Loops module and the
+JtA and omsi substrates use."* Checked: `loop-recording.md` + `loops-coarse-capture-plan.md` + the
+gitignored loops M1–M5 kickoffs. The system = the universal `SavedQueue` envelope
+(`savedQueueStore.js:25-50`), the maze GRANDFATHERED on its native `move`/`wait`/`locationCheck`
+vocabulary (jta/omsi converged on `actionQueue`'s — *"converging the maze is optional and was explicitly
+not done in M4"*), recordings EXCLUDE the departing move, loops the SOLE persister via `takeLastRecording`,
+replay = `replayActions` = `MazeRoomQueue.appendAll`+`stepOne` (`mazeRoomUI.js:1770-1815`), and NO file
+export/import of a `SavedQueue` exists anywhere. ⇒ §5.6's separate document is WITHDRAWN: the manual arm
+IS a headless `MazeRoomQueue` (executor = `step`; `handleInput(KEY_MAP[key])` — the panel's own call at
+`:3364`); the walk = `queue.actions` through a `projectActions` lifted from `_finalizeVisitOnExit`; the
+recording = the `SavedQueue` envelope + an additive `lab:{payload, author, reachedGoal}` block, so a
+lab walk and a region recording are ONE shape and a later loops importer (S6, opt) is a rename not a
+rewrite; `framesForActions` is the ONE stepper (`planFrames` becomes its letter→dir wrapper — the letters
+ARE the dirs). A refused key is NOT an action (the lab deletes it; the panel marks it done — measured
+`mazeRoomUI.js:3483` — the two agree on what a recording MEANS). Persistence into the loops store: NOT
+from the lab (no rulesHash, no region; sole-persister ruling).
+**DEDUP SURVEY 1 — maze lab ↔ maze substrate (§16), 13 adopted, every one RE-READ at its line:** the
+ENGINE-STATE BOOT restated 3× beside `makeStart`'s *"ONE START CONSTRUCTION"* docblock (M1 = S2b's
+`startStateFor`) · the plan replayed through `step` in FOUR hand loops, `planCells` on EVERY DRAW
+(`mazeLabView.js:693`) (M2 = `framesForActions`) · SEVEN delta tables (`DELTAS` not exported; ⛔ keep
+the E,W,S,N order — BFS tie-breaks on it) · the IDENTITY field list restated 5× with a RECORDED DEFECT
+(`mazeLabView.js:580-585`: `elements` missed `writeUrl`) · `elementInfo` hand-projects
+`elementSummaryOf` and DROPS `drawsBefore` · ⛔ **the PANEL's pixel→tile is a LIVE BUG** — divides by
+intrinsic `TILE_PX` and ignores the 1 px border (`mazeRoomUI.js:2887`) where the lab uses the tested
+`tileAtPoint` · three copy-pasted param forms · `assertView` 3× · `worldAllMazeRulesJson` is a second
+`worldRulesJsonOf` dropping `stats`/`dropped` (two rules.json paths on one page) · the room-open guard
+twice with DIFFERENT exemptions · `bootLibrary`/`bootWorld` · `posKey` parsed 5×, not exported.
+**⛔ ONE SURVEY FINDING WAS FALSE** (§16.3): *"`stepsToActions` silently drops a wait"* — re-read at
+`mazeAutopather.js:146-149`: it has the branch. Recorded so nobody re-derives it.
+**DEDUP SURVEY 2 — Seedling lab ↔ flash panel (§17), 11 adopted:** the `botLoadLevels` chunk delivery
+written twice, agreeing ONLY because the panel's header records repairing `watchWasm`'s
+`pending`-is-failure (F1: the lab should CONSTRUCT `SeedlingLevelSetDelivery`; the reverse import is the
+1.0 MB bundle constraint) · `bot()` twice, the PANEL's worse (captures `g` once into an iframe whose
+`__swfBridge` is replaced on reload; unknown verb THROWS; `readWorld` re-wraps = a third copy) · "poll
+until" 4× on different axes · two READINESS witnesses (four page properties for two questions; a build
+gaining `wireCheck` before `botStatus` boots one side and hangs the other) · `parsePendingCheck`/
+`parsePendingExit` rule-for-rule twins ("EMPTY IS NOT ZERO" written twice) · `out_<type>_<x>_<y>` spelled
+in a file whose docblock says "NOT SPELLED HERE" · THREE map-document path spellings, only the panel
+honouring `region_atlas.map_document` · "which wasm build": the lab's `WASM_PAGE` literal vs the panel's
+`builds.json` + capabilities (⚖ — a deliberate fixed point; the minimum is a GATE, not an import) ·
+`16` restated 9× · two host transports over `labProtocol` with a docblock describing a resend the code
+lacks (⚖ — `iframeAdapterCore` is in the `shared` SUBMODULE) · four level-index maps, one STRING-keyed.
+NOT duplicated (checked): `KEY_CODES`, `levelSetDisagreement`, `labBridge`, the look book, every event
+name, the exporters/validators (dynamic import, no copy); the two `__swfBridge` DIALECTS are deliberate.
+**LADDER, REVISED (§18):** S0 docs → S1 scrub (+`framesForActions`) → **S2a WAIT** (+`DELTAS`/`posKey`
+exports; byte-identity row = control) → **S2b MANUAL on `MazeRoomQueue`** → D1 readout correctness
+(identity fields + `elementSummaryOf`) → D2 the panel pixel→tile BUG (measured under CSS scaling) →
+D3 lab tidy → D4 world rules.json hook → F-a `flashPanel/`-internal → F-b the lab constructs the
+delivery + `bot()`/readiness on the adapter (⚠ wasm gates on **`--win`**) → F-c/F-d ⚖ (submodule;
+the build-literal gate) → S3–S6 opt. ⚖ OPEN (§19): layout (parked by the user), vocabulary
+convergence (recommend NO), dedup order (D1+D2 first), F-c/F-d, S6, S4's submodule need.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
