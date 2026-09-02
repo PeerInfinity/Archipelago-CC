@@ -6358,6 +6358,30 @@ a banked 10/0, a `userloaded:` scheme page-error race once in four runs of its s
 its streak and is held back. A run-level bar would have blocked all 24 on those two structural
 rows; the per-row bar blocked exactly the one row that deserved blocking.
 
+**⇒ S5c SHIPPED (2026-09-02, `main` @`6768e1bec`; 2 commits): THE AUDIT RUNS.** ⚖ The user, after
+S5b: *"let's implement the local variant."* `standing-values --write` now audits the last successful
+CI run's shard partition and prints the verdict — the guard S5b built and left manual.
+
+⛔ **THE CI VARIANT WAS COSTED FIRST AND REJECTED FOR NOW, on two counts.** (1) It needs an
+`actions: read` `permissions:` block `unittests_frontend.yml` does not have — workflow-wide, first
+honest test in production. (2) The deciding one: a CI job can only audit the PREVIOUS run, so the
+push that CHANGES a partition audits the pre-change one and **the guard reds on its own repair**;
+and the obvious mitigation (audit only when the plan identity matches) goes silent exactly when the
+plan changes and the risk is highest. ⚠ Named cost of the local variant, accepted: CADENCE — a
+regression can live between writes. ⛓ Recorded in `lastRunShardAudit`'s docblock so the next reader
+inherits the trade rather than the conclusion.
+
+⛔ It never touches the write's EXIT CODE (the write's verdict is about the BANK; a bank commit must
+not be hostage to a runner, ⚖ 72) and it never skips QUIETLY — `gh` unauthenticated, no successful
+run, unreadable logs, a run with no `ms |` lines each return `available: false` WITH the reason and
+print it, because a quiet skip reads exactly like a healthy partition.
+
+⛓ Driven, not argued: two mutants, each reddening exactly ONE row of 50 (the unavailable path
+returning green; the audit taking `budgetMs: Infinity`), both restored byte-identical. ⛔ AND a real
+one-row `--write`, because six green unit rows would ALL still pass with the call site in an
+unreachable branch — the helper-that-is-never-invoked shape. It printed *"the last CI run's shard
+partition HELD — run 33575117635 @8a386aea8, 3 job(s)"*. vitest 30 files / 584.
+
 **⇒ S4b QUEUED (2026-09-01, the three loose ends S1–S3 named and did not own).** Small, box-light,
 one session, after S4:
 · **(1) CHARACTERISE the `preset-bundle-load` flake** — one occurrence is not a characterisation
