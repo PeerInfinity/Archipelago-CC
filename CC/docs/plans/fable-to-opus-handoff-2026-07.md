@@ -8633,6 +8633,24 @@ back, rather than moving a SHARED tree's HEAD under another session.
 - ⚠ `deriveRequires` reports a `rule`-typed gate only when the walk **crossed** it; a rule gate
   standing elsewhere on the level does not spoil the derivation (a row asserts it).
 
+**⇒ R-b VERIFIED BY THE PLANNER — R3/R4 CLOSED; D1+D2+D5 LAUNCHED (2026-09-02, `maze-lab-planning`, per
+`a16f09b62`).** R-b (`54877a7ac`, as-built `0efe2e249`, bank `a4e197517`) re-checked: `gate: maze-lab` 265/0
+CI-sourced at the CODE head; `mazeWorldDigest`/`deriveRequires`/`stampRecordingPreconditions`/
+`refuseReplayPreconditions` exported; loops passes `{recording}` through `replayActions`; digest unmoved;
+bounded vitest 52 files/1921 green. **Overturned (plan §34):** the lab's two call sites were ONE function
+(after `loadPayload`, before `adopt`); the picker LABELS a stale recording (hiding it would be
+indistinguishable from never-recorded); the digest is LAZY; `_startVisitRecording` fired while the panel
+still held the region being LEFT (a second site stamps once settled); **mutant (c) found a vacuous row set
+AGAIN** — every `requires: []` row sat on a level with no obstacle — fixed by the discriminating row. Facts
+for later: one recording per `(arrivalExitId, ordinal)` tag; a LAB walk's `requires` is `[]` in practice
+(the palette's items are null); a STARVED in-app run becomes `compare-runs.js`'s default baseline — name
+the last good one. **D1+D2+D5 launched** (`NewDocs/plans/maze-lab-arms-sliceD1-prompt.md`,
+`maze-lab-arms-sliceD1`): ONE `identityFields(state)` the base tag, payload and readout project from with
+omissions SPELLED (the recorded `writeUrl` defect made unrepeatable by a derived-keys test; byte-equal
+outputs captured first) + `elementInfo` = `elementSummaryOf` verbatim (CLAIM 14's read set kept) · the
+panel's click through `tileAtPoint` with a scaled-canvas jsdom measurement (before: (6,4); after: (3,2))
+· the mirror copies `turn` beside `player_pos` (`k + w` pinned). Three commits, three mutants.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
