@@ -25,7 +25,7 @@
  * origin = probe install (just after `domcontentloaded`):
  *
  *   ORDER  PROPERTY            FIRST SEEN     registered with
- *     1    `__swfBridge`           0.3 ms     (already there — a CLASSIC script,
+ *     1    `__swfBridge`         ≤ 0.3 ms     (already there — a CLASSIC script,
  *                                             before the wasm glue: `game` is {})
  *     2    `__runtimeReady`      271.5 ms     `Module.onRuntimeInitialized`,
  *                                             which also ENABLES ▶ Start
@@ -43,6 +43,20 @@
  *     believed the game was up while `botLoadLevels`, `botLevelSet` and
  *     `botStatus` did not exist yet — a window in which the AP-placement
  *     delivery would have called `undefined`.
+ *
+ * ⛔ **THE 0.3 ms IS AN UPPER BOUND, NOT A MEASUREMENT**, and the difference
+ * matters to nothing here: the probe installs after `domcontentloaded` and
+ * recorded `atInstall.__swfBridge === true`, so the shim was already there when
+ * it started looking. Every other row is a first sight the probe actually
+ * caught, and both gaps the pair rests on (271.2 ms and 1,542.3 ms) are
+ * differences between rows it caught.
+ *
+ * ⛓ **AND THE NUMBERS ARE RE-DERIVABLE RATHER THAN QUOTED.** A number in a
+ * docblock is unfalsifiable, so the probe, its plan and its raw result are
+ * written out in the queue doc's `⇒ F-b AS BUILT` block (§5l) — one `read`
+ * step over the EXISTING `seedling-watch-ship-win.py`, no instrument added.
+ * The page's own `[swfBridge] callback registered:` console lines are the
+ * independent second witness to the two registration batches.
  *
  * ── THE TWO QUESTIONS, AND WHY EACH IS THE **LATER** WITNESS ─────────────
  *

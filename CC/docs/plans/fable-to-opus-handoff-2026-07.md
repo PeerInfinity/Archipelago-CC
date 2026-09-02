@@ -9300,6 +9300,81 @@ markdown regions and the other five generated modules came back unchanged; `proc
 / 452 tests green after. ⛓ **A docblock is not free when a generator reads line numbers** — the
 "prose is free" family again, on a new surface.
 
+⛓⛓ **THE F4 PROBE, VERBATIM, SO THE FOUR NUMBERS ARE RE-DERIVABLE** (the planner's note at
+verification: they otherwise live only in a docblock, and a number in a docblock is unfalsifiable —
+F-a's own lesson, which is why its `closure()` walk is written out above). Raw result of the run the
+table reports: `webgpu_adapter "intel / gen-9"`, `finished true`, `crashed false`, `aborted false`,
+waits `0.5 s` to `__runtimeReady` and `2.0 s` from the ▶ Start click to both callbacks; and the
+`__registerCallback` order off the page's own console, which is the independent second witness to the
+two batches:
+
+```
+t          {"__swfBridge":0.3,"__runtimeReady":271.5,"game.wireCheck":2024.8,"game.botStatus":3567.1}
+atInstall  {"__swfBridge":true,"__runtimeReady":false,"game.wireCheck":false,"game.botStatus":false}
+keysLog    [{"ms":2024.8,"keys":"wireCheck,configure,readState"},
+            {"ms":3567.1,"keys":"wireCheck,configure,readState,botLoadTape,botStart,botStatus,
+                                 botDrain,botReset,botMobiles,botRngProbe,botSeam,botLoadLevels,
+                                 botLevelSet,botForgeSaveStamp"}]
+console    [swfBridge] callback registered: wireCheck, configure, readState, botLoadTape, botStart,
+           botStatus, botDrain, botReset, botMobiles, botRngProbe, botSeam, botLoadLevels,
+           botLevelSet, botForgeSaveStamp          (14 lines, in that order)
+```
+
+⛔ `atInstall.__swfBridge` is `true`, so **0.3 ms is an UPPER BOUND** on the shim, not a measurement of
+it — the probe installs after `domcontentloaded` and the shim was already there. Every other row is a
+first sight the probe actually caught. The two gaps the design rests on (271.2 ms and 1,542.3 ms) are
+differences between rows the probe DID catch, so the bound does not touch them.
+
+⛓ Re-run it with the EXISTING driver — no repo file was added for this. Write the plan to
+`C:\playwright\f4-boot-order-plan.json`, copy `scripts/procgen/seedling-watch-ship-win.py` beside it,
+and run it the way `check-seedling-wasm-ship.mjs` runs that driver:
+
+```js
+// the probe, installed by the plan's FIRST step (a `read` whose expression is this IIFE)
+(() => {
+  if (window.__bootProbe) return 'already';
+  const P = { t: {}, order: {}, atInstall: {}, keysLog: [], n: 0, t0: performance.now() };
+  const NAMES = ['__swfBridge', '__runtimeReady', 'game.wireCheck', 'game.botStatus'];
+  const sight = {
+    '__swfBridge':     () => !!window.__swfBridge,
+    '__runtimeReady':  () => window.__runtimeReady === true,
+    'game.wireCheck':  () => typeof window.__swfBridge?.game?.wireCheck === 'function',
+    'game.botStatus':  () => typeof window.__swfBridge?.game?.botStatus === 'function',
+  };
+  for (const k of NAMES) { P.t[k] = null; P.order[k] = null; P.atInstall[k] = sight[k](); }
+  let lastKeys = '';
+  const poll = () => {
+    for (const k of NAMES) if (P.t[k] === null && sight[k]()) {
+      P.t[k] = Math.round((performance.now() - P.t0) * 100) / 100; P.order[k] = ++P.n;
+    }
+    const keys = window.__swfBridge ? Object.keys(window.__swfBridge.game).join(',') : '';
+    if (keys !== lastKeys) { lastKeys = keys;
+      P.keysLog.push({ ms: Math.round((performance.now() - P.t0) * 100) / 100, keys }); }
+  };
+  poll(); setInterval(poll, 1);
+  const raf = () => { poll(); requestAnimationFrame(raf); }; requestAnimationFrame(raf);
+  window.__bootProbe = P; return 'installed';
+})()
+```
+
+```
+url    http://localhost:8000/frontend/modules/flashPanel/wasm/seedling_bot_ap_p4d/game.html
+steps  1 read   <the IIFE above>                                            as probeInstall
+       2 wait   window.__bootProbe.t["__runtimeReady"] !== null              sec 180
+       3 read   JSON.stringify(window.__bootProbe)                           as afterRuntime
+       4 click  #btn-start          ⛔ THE REAL ▶ Start — Playwright's click carries user activation,
+                                       which the page's own document may never supply
+       5 wait   both game.wireCheck and game.botStatus first-seen            sec 180
+       6 sleep_ms 3000
+       7 read   JSON.stringify(window.__bootProbe)                           as final
+
+py.exe -3.12 C:\playwright\seedling-watch-ship-win.py --plan C:\playwright\f4-boot-order-plan.json \
+                                                        --out  C:\playwright\f4-boot-order-results.json
+```
+
+⛔ Step 3 exists to prove the probe was watching BEFORE Start: it must show `game.wireCheck` and
+`game.botStatus` still `null` while `__runtimeReady` already has a time. It did.
+
 **Mutants — RUN, not reasoned.**
 
 | # | mutant | red |
