@@ -8468,6 +8468,22 @@ both CI-sourced, 66 rows written.
   `setsid` is the WRAPPER's pid, not node's — measured here, and a `kill -0` on it reported "done"
   while the run was still going (and the re-launch then TRUNCATED the live log).
 
+**⇒ S2b VERIFIED BY THE PLANNER — BOTH NAMED ASKS CLOSED (2026-09-02, `maze-lab-planning`).** Main
+`858b57306` re-checked: `SOURCES.MANUAL`, `#replayPanel`/`#manualPanel`, `mazeRoomEngine.whyBlocked`,
+`mazeLabWalk.js` (32 tests), the catalogue's `keys` field; `gate: maze-lab` **255/0** and `procgen-demos`
+**261/0** banked CI-sourced at `65bc20898` (a head that touched code — ⚠ S2b's finding: **`CC/docs/**` is
+NOT a CI trigger path**, so an as-built commit gets no unit-test run and a re-bank must target a code head);
+digest `677b7d9c…` unmoved; bounded vitest 37 files/1718; `check-maze-lab.mjs` ALL CHECKS PASSED live here.
+**Overturned (plan §32):** the scrub had to MOVE to a shared `#replayPanel` (one `play.index`, one scrub);
+`walk` null-until-walked with `roundTrip` null-until-STOP; the catalogue runner had no keyboard (a `keys`
+row field added); a defect mine by construction — `refusalReason` asked without the `inventoryOverride`
+`step` was asked with; **mutant (c) exposed a VACUOUS FIXTURE** (the key sat between player and door, so
+no reachable state met a shut door — moved; the mutant now reds 8 rows); `lintGateLabels` red because two
+test NAMES carried counts the allowlist keyed on — names interpolated, allowlist 87→85. R-b lands beside
+`refuseWalkDocument`/`describeReplayRefusal`; `worldDigest` in the `lab` block, not the envelope. **THE
+LADDER IS NOW THE USER'S TO ORDER (plan §33):** R-b · D1 · D2 · D5 (new: the panel mirror never copies
+`turn`) · D3 · D4 · F-a/F-b · ⚖ F-c/F-d · opt S4–S6; the cross-substrate queue VIEWER is its own arc.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
