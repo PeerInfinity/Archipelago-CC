@@ -36,6 +36,10 @@ const arm = (key, file = `check-${key}.mjs`) => ({
 const bankOf = (msByKey) => ({
     rows: Object.fromEntries(Object.entries(msByKey).map(([k, ms]) => [k, { ms }])),
 });
+/** ⛓ …and what the partition ACTUALLY prices off since S5b: the runner's own
+ *  `here=` seconds, keyed by the arm's CI key. */
+const costsOf = (msByKey) =>
+    Object.fromEntries(Object.entries(msByKey).map(([k, ms]) => [k, { ms }]));
 
 describe('ciRunnable — what a runner can answer', () => {
     it('rejects the Windows rows and NOTHING else', () => {
@@ -179,7 +183,7 @@ describe('ciGateArms — the arms, and BOTH of an arm\'s keys', () => {
 describe('planCiShards — the partition', () => {
     it('is a COVER: every arm lands in exactly one shard', () => {
         const arms = ciGateArms({ repo: REPO, set: 'browser' });
-        const shards = planCiShards({ arms, bank: null, budgetMs: 300000 });
+        const shards = planCiShards({ arms, costs: {}, budgetMs: 300000 });
         const placed = shards.flatMap((s) => s.keys);
         expect(placed.length).toBeGreaterThan(0);
         expect(placed.slice().sort()).toEqual(arms.map((a) => a.key).sort());
@@ -204,8 +208,8 @@ describe('planCiShards — the partition', () => {
 
     it('gives an arm at or above the budget a shard of its own', () => {
         const arms = [arm('a'), arm('big'), arm('b')];
-        const bank = bankOf({ a: 10, big: 999, b: 10 });
-        const shards = planCiShards({ arms, bank, budgetMs: 100 });
+        const shards = planCiShards({ arms, costs: costsOf({ a: 10, big: 999, b: 10 }),
+            budgetMs: 100 });
         const alone = shards.find((s) => s.keys.includes('big'));
         expect(alone.keys).toEqual(['big']);
     });
@@ -215,10 +219,9 @@ describe('planCiShards — the partition', () => {
      * added today has nothing banked; pricing that at zero packs it into a
      * shard for free and the shard silently becomes the slow one.
      */
-    it('prices a row with NO banked ms at the whole budget, so it lands alone', () => {
+    it('prices an arm NO RUNNER has measured at the whole budget, so it lands alone', () => {
         const arms = [arm('a'), arm('brand-new'), arm('b')];
-        const bank = bankOf({ a: 10, b: 10 });
-        const shards = planCiShards({ arms, bank, budgetMs: 100 });
+        const shards = planCiShards({ arms, costs: costsOf({ a: 10, b: 10 }), budgetMs: 100 });
         const alone = shards.find((s) => s.keys.includes('brand-new'));
         expect(alone.keys).toEqual(['brand-new']);
         expect(alone.unpriced).toBe(1);
@@ -227,17 +230,17 @@ describe('planCiShards — the partition', () => {
             .flatMap((s) => s.keys).sort()).toEqual(['a', 'b']);
     });
 
-    it('an empty bank makes every arm its own shard, and never drops one', () => {
+    it('an empty costs file makes every arm its own shard, and never drops one', () => {
         const arms = [arm('a'), arm('b'), arm('c')];
-        const shards = planCiShards({ arms, bank: null, budgetMs: 100 });
+        const shards = planCiShards({ arms, costs: {}, budgetMs: 100 });
         expect(shards.length).toBe(3);
         expect(shards.flatMap((s) => s.keys).sort()).toEqual(['a', 'b', 'c']);
     });
 
     it('no shard exceeds the budget unless a single arm does', () => {
         const arms = [arm('a'), arm('b'), arm('c'), arm('d')];
-        const bank = bankOf({ a: 60, b: 50, c: 40, d: 30 });
-        const shards = planCiShards({ arms, bank, budgetMs: 100 });
+        const shards = planCiShards({ arms, costs: costsOf({ a: 60, b: 50, c: 40, d: 30 }),
+            budgetMs: 100 });
         for (const s of shards) expect(s.ms).toBeLessThanOrEqual(100);
     });
 
@@ -249,16 +252,16 @@ describe('planCiShards — the partition', () => {
      */
     it('is deterministic, ties broken by name', () => {
         const arms = [arm('z'), arm('y'), arm('x')];
-        const bank = bankOf({ x: 50, y: 50, z: 50 });
-        const a = planCiShards({ arms, bank, budgetMs: 100 });
-        const b = planCiShards({ arms: arms.slice().reverse(), bank, budgetMs: 100 });
+        const costs = costsOf({ x: 50, y: 50, z: 50 });
+        const a = planCiShards({ arms, costs, budgetMs: 100 });
+        const b = planCiShards({ arms: arms.slice().reverse(), costs, budgetMs: 100 });
         expect(a.map((s) => s.keys)).toEqual(b.map((s) => s.keys));
         expect(a[0].keys).toEqual(['x', 'y']);
     });
 
     it('names a shard for its heaviest member', () => {
         const arms = [arm('a'), arm('b')];
-        const shards = planCiShards({ arms, bank: bankOf({ a: 10, b: 80 }), budgetMs: 100 });
+        const shards = planCiShards({ arms, costs: costsOf({ a: 10, b: 80 }), budgetMs: 100 });
         expect(shards[0].name).toBe('b +1');
     });
 });
@@ -555,6 +558,64 @@ describe('ci-summary.mjs — the refusal ladder, derived from the same predicate
         /** ⛓ …and it died at the NETWORK, which is what "got past the ladder"
          *  looks like when there is no `gh` on the PATH. */
         expect(r.out).toMatch(/ENOENT|spawnSync|gh/);
+    });
+});
+
+/**
+ * ⛔⛔⛔ S5b — **THE PARTITION PRICES IN THE RUNNER'S OWN SECONDS, AND A
+ * STANDING ROW'S `ms` CAN NO LONGER REACH IT** (trap 1068).
+ *
+ * ⛓ THE INCIDENT THIS FILE FAILED TO SEE, IN MINIATURE AND WITH ITS OWN
+ * NUMBERS. S4's write replaced six CI-sourced rows' banked `ms` — the GATE's
+ * cost — with the `ci-summary` NETWORK READ, and `planCiShards` priced off
+ * exactly that field. `seedling-wasm-element` fell 934.7 s -> 5.5 s, the 24
+ * browser arms priced at 391.9 s total, the partition collapsed to ONE shard
+ * and the job ran 23 m 01 s against a 15 m 27 s baseline. Every row in the
+ * `planCiShards` describe above stayed GREEN, because every one of them
+ * prices its stub bank itself: a budget assertion over prices cannot see
+ * prices that are wrong.
+ *
+ * ⛔ THE FIX IS STRUCTURAL, NOT A CLAUSE: the function no longer takes a bank.
+ * These rows pass BOTH — the corrupted bank AND the runner's own costs — and
+ * assert the plan is the costs'. Against the pre-fix module they fail, because
+ * the pre-fix module reads `bank.rows[key].ms` and there is nothing a caller
+ * can pass that stops it.
+ */
+describe('planCiShards — S5b: the price is CI\'s own measurement, never the bank\'s `ms`', () => {
+    /** ⛓ The real thing, measured: `here=` off run 33563524638 (head
+     *  `e172d631f`) against the corrupted bank at that same head. */
+    const CI_MS = { 'seedling-wasm-element': 901200, 'seedling-wasm-pages': 160500,
+        'seedling-editor-arm': 43800, 'maze-lab': 33200 };
+    const CORRUPT_MS = { 'seedling-wasm-element': 5507, 'seedling-wasm-pages': 5930,
+        'seedling-editor-arm': 59999, 'maze-lab': 6282 };
+    const armsOf = (o) => Object.keys(o).map((k) => arm(k));
+
+    it('gives the heavy arm its own shard even when the BANK says it is cheap', () => {
+        const shards = planCiShards({
+            arms: armsOf(CI_MS), bank: bankOf(CORRUPT_MS), costs: costsOf(CI_MS),
+            budgetMs: 600000,
+        });
+        const alone = shards.find((s) => s.keys.includes('seedling-wasm-element'));
+        expect(alone.keys).toEqual(['seedling-wasm-element']);
+        expect(shards.length).toBe(2);
+    });
+
+    /**
+     * ⛔ THE INPUT REFUSAL, which is the row the brief asked for: an arm the
+     * runner has never priced is UNPRICED — it does NOT fall back to the
+     * bank's `ms`. A fallback here reinstates the defect exactly
+     * (`feedback_fallback_reinstates_the_defect`).
+     */
+    it('an arm with no CI cost is UNPRICED even when the bank has an `ms` for it', () => {
+        const shards = planCiShards({
+            arms: [arm('a'), arm('never-run-in-ci'), arm('b')],
+            bank: bankOf({ a: 10, 'never-run-in-ci': 10, b: 10 }),
+            costs: costsOf({ a: 10, b: 10 }),
+            budgetMs: 100,
+        });
+        const alone = shards.find((s) => s.keys.includes('never-run-in-ci'));
+        expect(alone.keys).toEqual(['never-run-in-ci']);
+        expect(alone.unpriced).toBe(1);
     });
 });
 

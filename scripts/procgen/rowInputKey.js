@@ -106,6 +106,7 @@ import { join } from 'node:path';
 import { REPO, buildGraph } from './reachClosure.js';
 import { cliTargetsIn } from './gateDedup.js';
 import { SCRIPT_DIR } from './gateRoster.js';
+import { CI_ARM_COSTS_FILE } from './ciGatePlan.js';
 import { FILE as STANDING_VALUES, scriptIn } from './standingValues.js';
 
 /** ⛓ The order is the report's order and the key's order — one spelling. */
@@ -136,10 +137,23 @@ const md5 = (s) => createHash('md5').update(s).digest('hex');
  * the path literal rule found it, which is why those two are exactly the rows
  * that must declare it back.)
  *
- * ⇒ the derived rules do not see this one file. ⛔ IT IS AN EXCLUSION OF ONE
- * IMPORTED CONSTANT, NOT A LIST (⚖ 17): the only file exempt is the one this
- * mechanism's own writer emits, named by the module that emits it, so it
- * cannot drift from what `--write` actually writes.
+ * ⇒ the derived rules do not see these files. ⛔ EVERY MEMBER IS AN IMPORTED
+ * CONSTANT, NOT A SPELLING (⚖ 17): each exempt file is named by the module
+ * that emits it, so none can drift from what its writer actually writes.
+ *
+ * ⛓⛓ S5b ADDED THE SECOND MEMBER, AND MEASURED THE COST OF NOT ADDING IT.
+ * `ci-arm-costs.json` is what each CI arm cost the runner — written by
+ * `ci-gates.mjs --write-costs`, read by `planCiShards`, and a `.json` directly
+ * under `scripts/procgen/` exactly as the bank is. Tracked WITHOUT this
+ * exclusion, `--keys` reads **30 of 34 rows MOVED** against a steady-state 2:
+ * S1's cascade, re-armed by a file no gate's verdict is an answer about. ⛓ And
+ * no gate DECLARES it back, which is the difference from the bank — the bank
+ * has two rows whose subject it is; the costs file has none, because nothing
+ * a gate reports is a function of what a runner charged.
+ *
+ * ⛔ THE SET IS DERIVED FROM ITS MEMBERS' WRITERS, NOT GROWN BY HABIT. A third
+ * member is only ever an artifact this directory's own instruments EMIT — a
+ * file some row READS is an input and belongs in the population.
  *
  * ⛔⛔ AND IT IS AN EXCLUSION FROM THE **DERIVED** RULES ONLY. A row whose
  * SUBJECT is the bank still keys on it — by DECLARING it, through the
@@ -151,7 +165,8 @@ const md5 = (s) => createHash('md5').update(s).digest('hex');
  * SAFE rather than a stale green: the two rows the bank can actually falsify
  * are the two that still re-run when it moves.
  */
-export const DERIVED_DATA_EXCLUDED = STANDING_VALUES;
+export const DERIVED_DATA_EXCLUDED = Object.freeze(
+    new Set([STANDING_VALUES, CI_ARM_COSTS_FILE]));
 
 /* ══════════════════════════════════════════════════════════════════════
  * THE DECLARATION — what derivation cannot see, said by the gate itself
@@ -615,7 +630,7 @@ export function inputPopulations({ entry, declared = null, ctx }) {
      * must survive the exclusion or the two rows the bank can falsify would be
      * quoted forever.
      */
-    const addData = (p) => { if (p !== DERIVED_DATA_EXCLUDED) data.add(p); };
+    const addData = (p) => { if (!DERIVED_DATA_EXCLUDED.has(p)) data.add(p); };
     const spawnTargets = new Set(expandDeclared(decl.spawn, ctx.tracked,
         { file: entry, population: 'spawn' }));
 

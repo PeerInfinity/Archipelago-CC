@@ -35,16 +35,52 @@
  * --json`) and interpolates them into `strategy.matrix`; each shard job then
  * recomputes the SAME plan from the same tree and takes its slice by index.
  *
- * ⛓ THE COST OF A ROW IS ITS BANKED `ms` — the only measured number there is.
- * ⛔ AND A ROW WITH NO BANKED `ms` IS PRICED AT THE WHOLE BUDGET, so it lands
- * in a shard of its own. A brand-new gate is precisely the row whose cost is
- * unknown, and pricing an unknown at zero is how one shard silently becomes
- * the slow one. Conservative in the direction that keeps the OTHER shards
- * honest.
+ * ⛓⛓⛓ **THE COST OF AN ARM IS WHAT IT COST THE RUNNER, MEASURED BY THE
+ * RUNNER** — `ci-arm-costs.json`, written from the `##   ms | <key> | here=`
+ * lines `ci-gates.mjs` has printed beside every arm since S3.
+ * ⛔ AND AN ARM THE RUNNER HAS NEVER PRICED IS PRICED AT THE WHOLE BUDGET, so
+ * it lands in a shard of its own. A brand-new gate is precisely the arm whose
+ * cost is unknown, and pricing an unknown at zero is how one shard silently
+ * becomes the slow one. Conservative in the direction that keeps the OTHER
+ * shards honest.
  *
- * ⛓ `seedling-wasm-element` (934.7 s banked) getting a job to itself is a
+ * ⛓ `seedling-wasm-element` (901.2 s on a runner) getting a job to itself is a
  * CONSEQUENCE of that rule, not a name typed into it: any arm at or above the
  * budget is its own shard.
+ *
+ * ── ⛔⛔⛔ S5b — **IT USED TO BE THE STANDING ROW'S BANKED `ms`, AND THAT
+ *    FIELD'S MEANING CHANGED UNDER IT** (trap 1068) ────────────────────
+ *
+ * `standing-values --write` records `ms` as *how long this ROW took to
+ * produce*. ⚖ 72 made six rows CI-SOURCED, so producing them became a
+ * `ci-summary` NETWORK CALL — and `seedling-wasm-element`'s price fell
+ * **934.7 s → 5.5 s** without one line of this module changing. The 24 browser
+ * arms priced at 47 s of `gh` traffic, the partition collapsed from three
+ * shards to one, and the browser job went 15 m 27 s → **23 m 01 s** on every
+ * push. ⛔ NOTHING WENT RED, and nothing could: the budget assertion prices off
+ * the same field.
+ *
+ * ⛓ THE PARAGRAPH ABOVE HAD DEFENDED THIS CAREFULLY AGAINST AN **UNKNOWN**
+ * COST AND HAD NO DEFENCE AT ALL AGAINST A **KNOWN-BUT-WRONG** ONE. So the fix
+ * is not a clause excusing CI-sourced rows — `planCiShards` no longer takes a
+ * bank at all, and there is nothing a caller can pass that puts a standing
+ * row's `ms` back into a price.
+ *
+ * ── ⛓⛓ …AND THE BOX'S `ms` WAS THE WRONG CURRENCY EVEN UNCORRUPTED ───
+ *
+ * The budget's own 2× headroom (below) existed because the bank's seconds are
+ * this WSL box's and the shards run on a runner. Measured across the 24 browser
+ * arms on three runs, the runner's seconds are **0.18× to 0.96×** the box's —
+ * `seedling-editor-sequence` 26.7 s → 4.8 s, `seedling-wasm-element` 934.7 s →
+ * 901.2 s. A five-fold spread is not a headroom factor, it is a different
+ * question, and bin-packing on it over-split the light arms: the 3-shard
+ * baseline's two multi-arm jobs total 466.7 runner-seconds and would have
+ * fitted in one. ⇒ pricing in the runner's own seconds is what stops the
+ * partition being a proxy, and the budget becomes the wall-clock target it
+ * always meant.
+ *
+ * ⛔ AND THE GUARD IS `auditRunShards`, WHICH READS NONE OF THIS. See its
+ * docblock: a guard that reads the number under test is not a guard.
  *
  * ⛔⛔ AND THE PARTITION IS A COVER, WHICH IS LOAD-BEARING FOR SG1's DEMOS
  * DEDUP. `check-procgen-demos` skips a `cli` row that invokes a roster gate,
@@ -59,18 +95,53 @@
  * licence at all.
  */
 
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import { argvFor, gateRoster, LOCAL_HOST, REPO } from './gateRoster.js';
-import { gateStandingRows, readStandingValues } from './standingValues.js';
+import { gateStandingRows } from './standingValues.js';
 
 /**
- * ⛓ ONE SHARD'S BUDGET, in banked (this-box) milliseconds — ten minutes.
+ * ⛓ ONE SHARD'S BUDGET — ten minutes of the RUNNER'S OWN milliseconds (S5b).
  *
- * ⛔ It is NOT the twenty-minute target the plan names, and the gap is the
- * point: the bank's `ms` are this WSL box's, and a shared runner is the
- * unknown this slice exists to measure. Ten banked minutes leaves a 2× factor
- * before a shard reaches the twenty it is aiming at.
+ * ⛓⛓ IT USED TO BE TEN BANKED (THIS-BOX) MINUTES, and its docblock said so:
+ * *"a shared runner is the unknown this slice exists to measure. Ten banked
+ * minutes leaves a 2× factor before a shard reaches the twenty it is aiming
+ * at."* That was right when written — S3 had never seen a runner. S3, S4 and
+ * S5 measured it, three runs deep and 24 arms wide, and the runner is 0.18× to
+ * 0.96× the box: a five-fold spread, not a factor. ⇒ the proxy is retired and
+ * the number is now the thing itself.
+ *
+ * ⛔ TEN AND NOT TWENTY, deliberately, and the arithmetic is the reason: at the
+ * measured costs `seedling-wasm-element` (901 s) exceeds ANY budget under
+ * fifteen minutes and takes a job alone, and every other browser arm sums to
+ * 494 s. A 600 s budget therefore yields TWO shards whose wall clock is
+ * wasm-element's own — while a 1200 s budget would pack wasm-element together
+ * with 300 s of light arms and push the wall clock towards the twenty it is
+ * aiming at. A budget above the irreducible arm buys nothing and spends wall.
  */
 export const CI_SHARD_BUDGET_MS = 600000;
+
+/**
+ * ⛓⛓⛓ **WHAT EACH ARM COSTS THE RUNNER** — written by `ci-gates.mjs
+ * --write-costs` out of finished runs' own `here=` lines, read here.
+ *
+ * ⛔ WHY IT IS NOT A FIELD ON THE STANDING ROW, which was the obvious place.
+ * The bank answers *"what is this row's VALUE, and what did it cost to
+ * ANSWER"*; this answers *"what does this GATE cost to RUN, on the machine
+ * that will run it again"*. Trap 1068 is precisely those two questions sharing
+ * a field, and giving them one file each is the version that cannot recur. ⛓ It
+ * is also written on a different cadence by a different instrument, and — the
+ * practical half — a second frequently-rewritten artifact inside
+ * `scripts/procgen/` would re-arm S1's key cascade, which `rowInputKey.
+ * DERIVED_DATA_EXCLUDED` now excludes it from BY NAME OF ITS WRITER.
+ */
+export const CI_ARM_COSTS_FILE = 'scripts/procgen/ci-arm-costs.json';
+
+export function readCiArmCosts({ repo = REPO } = {}) {
+    const p = join(repo, CI_ARM_COSTS_FILE);
+    return existsSync(p) ? JSON.parse(readFileSync(p, 'utf8')) : null;
+}
 
 /**
  * Can CI run this gate at all? See the docblock — `ubuntu-latest` has a
@@ -248,20 +319,25 @@ export const armName = (arm) => `${arm.gate.file.replace(/^check-/, '').replace(
  * takes shard *i* out of it are two different processes at the same SHA, and
  * they must agree without talking.
  *
+ * ⛔⛔ THERE IS NO `bank` PARAMETER AND THAT IS THE S5b FIX (trap 1068). The
+ * price comes from `costs`, keyed by the arm's CI key — the key its `here=`
+ * line is printed under — and an arm absent from it is UNPRICED. ⛓ NOT a
+ * fallback to the bank: a fallback reinstates the defect for exactly the rows
+ * that had it (`feedback_fallback_reinstates_the_defect`).
+ *
  * @param {object} o
  * @param {object[]} o.arms      from `ciGateArms`
- * @param {object|null} o.bank   `readStandingValues()`'s document, or `null`
+ * @param {object} [o.costs]     `readCiArmCosts()`'s `arms` map, CI key -> `{ms}`
  * @param {number} [o.budgetMs]
  * @returns {{id:number,name:string,ms:number,unpriced:number,keys:string[]}[]}
  */
-export function planCiShards({ arms, bank, budgetMs = CI_SHARD_BUDGET_MS }) {
-    const rows = bank?.rows ?? {};
+export function planCiShards({ arms, costs = {}, budgetMs = CI_SHARD_BUDGET_MS }) {
     const priced = arms.map((arm) => {
-        const ms = rows[arm.bankKey]?.ms;
+        const ms = costs?.[arm.key]?.ms;
         return {
             arm,
             name: armName(arm),
-            /** ⛔ unmeasured ⇒ priced at the whole budget (see the docblock). */
+            /** ⛔ never priced by a runner ⇒ the whole budget (see the docblock). */
             ms: Number.isFinite(ms) ? ms : budgetMs,
             unpriced: !Number.isFinite(ms),
         };
@@ -345,14 +421,16 @@ export function auditRunShards({ jobs, budgetMs = CI_SHARD_BUDGET_MS }) {
 }
 
 /**
- * The whole plan for a tree — the arms, the shards, and the bank they were
+ * The whole plan for a tree — the arms, the shards, and the costs they were
  * priced from. ⛓ One call, so the `--plan` printer and the `--shard=` runner
  * cannot compute it two different ways.
  */
 export function ciGatePlanFor({ repo = REPO, host = LOCAL_HOST, set = 'browser',
     budgetMs = CI_SHARD_BUDGET_MS } = {}) {
     const arms = ciGateArms({ repo, host, set });
-    const bank = readStandingValues({ repo });
-    const shards = planCiShards({ arms, bank, budgetMs });
-    return { arms, shards, budgetMs, measuredAt: bank?.measuredAt ?? null };
+    const doc = readCiArmCosts({ repo });
+    const shards = planCiShards({ arms, costs: doc?.arms ?? {}, budgetMs });
+    return { arms, shards, budgetMs,
+        measuredAt: doc?.measuredAt ?? null,
+        pricedFrom: doc?.runs ?? [] };
 }

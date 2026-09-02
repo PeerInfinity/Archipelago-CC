@@ -64,16 +64,19 @@
  *   node scripts/procgen/ci-gates.mjs --set=browser --shard=1 --host=http://localhost:8000
  *   node scripts/procgen/ci-gates.mjs --plan [--json]    the shard partition
  *   node scripts/procgen/ci-gates.mjs --audit --run=<id>  did the partition HOLD?
+ *   node scripts/procgen/ci-gates.mjs --write-costs [--runs=3]  re-price the arms
  *   --set=headless|browser|all   --json   --wait-for-box=<sec>   --run=<id>
  */
 
 import { execFile } from 'node:child_process';
+import { writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { promisify } from 'node:util';
 
 import { releaseBoxLock, takeBoxLock } from './boxLock.js';
-import { CI_SHARD_BUDGET_MS, auditRunShards, ciGatePlanFor, ciRunnable }
+import { CI_ARM_COSTS_FILE, CI_SHARD_BUDGET_MS, auditRunShards, ciGatePlanFor, ciRunnable }
     from './ciGatePlan.js';
-import { runById, runShardCosts } from './ciSummary.js';
+import { recentRuns, runById, runShardCosts } from './ciSummary.js';
 import { LOCAL_HOST, REPO, gateRoster } from './gateRoster.js';
 import { headlineOf } from './standingValues.js';
 
@@ -95,11 +98,12 @@ const SHARD = arg('shard');
 const HOST = arg('host', LOCAL_HOST);
 const WAIT_FOR_BOX = Number(arg('wait-for-box', '0')) || 0;
 const AUDIT_RUN = arg('run');
+const COST_RUNS = Number(arg('runs', '3')) || 3;
 
 /** ⛓ The marker every consumer greps for — ONE spelling, exported. */
 export const CI_GATE_MARK = '## CI-GATE |';
 
-const { arms, shards, budgetMs, measuredAt } = ciGatePlanFor({
+const { arms, shards, budgetMs, measuredAt, pricedFrom } = ciGatePlanFor({
     repo: REPO, host: HOST, set: SET, budgetMs: CI_SHARD_BUDGET_MS,
 });
 
@@ -120,14 +124,80 @@ if (flag('plan')) {
         process.exit(0);
     }
     console.log(`# ci-gates --plan — ${arms.length} ${SET} arm(s) in ${shards.length} shard(s), `
-        + `budget ${(budgetMs / 1000).toFixed(0)}s of BANKED (this-box) time per shard; `
-        + `bank measured at ${measuredAt ? measuredAt.slice(0, 9) : '(no bank)'}`);
+        + `budget ${(budgetMs / 1000).toFixed(0)}s of the RUNNER'S OWN time per shard; `
+        + `priced from ${pricedFrom.length} run(s) at `
+        + `${measuredAt ? measuredAt.slice(0, 10) : '(NO COSTS FILE — every arm lands alone)'}`);
     for (const s of shards) {
-        console.log(`\n## shard ${s.id} — ${(s.ms / 1000).toFixed(1)}s banked, `
-            + `${s.keys.length} arm(s)${s.unpriced ? `, ${s.unpriced} UNPRICED (a row with no `
-                + 'banked `ms` is priced at the whole budget, so it lands alone)' : ''}`);
+        console.log(`\n## shard ${s.id} — ${(s.ms / 1000).toFixed(1)}s measured in CI, `
+            + `${s.keys.length} arm(s)${s.unpriced ? `, ${s.unpriced} UNPRICED (an arm no runner `
+                + 'has priced is priced at the whole budget, so it lands alone)' : ''}`);
         for (const k of s.keys) console.log(`     ${k}`);
     }
+    process.exit(0);
+}
+
+/* ── --write-costs: re-price the arms off finished runs ──────────────── */
+
+/**
+ * ⛓⛓⛓ **THE PRICE IS A MEASUREMENT, TAKEN FROM THE MACHINE THAT WILL PAY IT.**
+ * One `gh` read of the last few successful runs gives every arm's `here=`, and
+ * `ci-arm-costs.json` is that, verbatim. ⛔ NOT typed, NOT the box's `ms`, and
+ * NOT a field on a standing row (trap 1068 — `ciGatePlan.CI_ARM_COSTS_FILE`
+ * says why).
+ *
+ * ⛓ THE MAX ACROSS THE RUNS, NOT THE LATEST. Measured spread on the same arm
+ * across three runs is ~25 % (`seedling-editor-generate` 34.0 / 34.3 / 42.3 s),
+ * and a bin-packer fed the fastest sample packs a bin that then does not fit.
+ * Conservative in the direction that keeps the shard honest — the same
+ * direction `planCiShards` prices an unknown in.
+ */
+if (flag('write-costs')) {
+    const runs = AUDIT_RUN ? [runById(Number(AUDIT_RUN))] : recentRuns({ limit: COST_RUNS });
+    if (!runs.length) {
+        console.log('FAIL: no successful run of the workflow to price from');
+        process.exit(1);
+    }
+    const armsOut = {};
+    const seen = [];
+    for (const r of runs) {
+        const { jobs, unreadable } = runShardCosts(r);
+        const n = jobs.reduce((k, j) => k + j.arms.length, 0);
+        seen.push({ id: r.databaseId, headSha: r.headSha, createdAt: r.createdAt, arms: n });
+        for (const u of unreadable) console.log(`⚠ job log unreadable in ${r.databaseId}: ${u}`);
+        for (const j of jobs) {
+            for (const a of j.arms) {
+                const prev = armsOut[a.key];
+                armsOut[a.key] = {
+                    ms: Math.max(prev?.ms ?? 0, a.ms),
+                    samples: (prev?.samples ?? 0) + 1,
+                    maxFrom: (prev && prev.ms >= a.ms) ? prev.maxFrom : r.databaseId,
+                };
+            }
+        }
+    }
+    const doc = {
+        why: 'What each CI arm COST THE RUNNER, keyed by the CI key its `##   ms | … | here=` '
+            + 'line is printed under. `planCiShards` prices the shard partition off THIS and '
+            + 'never off a standing row\'s `ms`, which is what it cost to ANSWER that row — '
+            + 'for a CI-sourced row, a network call (trap 1068). `ms` is the MAX across the '
+            + 'runs below, because a bin-packer fed the fastest sample packs a bin that does '
+            + 'not fit. Written by `node scripts/procgen/ci-gates.mjs --write-costs`.',
+        measuredAt: new Date().toISOString(),
+        budgetMs,
+        runs: seen,
+        arms: Object.fromEntries(Object.entries(armsOut).sort(([a], [b]) => a.localeCompare(b))),
+    };
+    writeFileSync(join(REPO, CI_ARM_COSTS_FILE), `${JSON.stringify(doc, null, 2)}\n`);
+    const total = Object.values(armsOut).reduce((n, a) => n + a.ms, 0);
+    for (const r of seen) {
+        console.log(`## run ${r.id} @${r.headSha.slice(0, 9)} — ${r.arms} arm line(s)`);
+    }
+    for (const [k, v] of Object.entries(doc.arms)) {
+        console.log(`     ${(v.ms / 1000).toFixed(1).padStart(7)}s  ${String(v.samples)
+            .padStart(2)} sample(s)  ${k}`);
+    }
+    console.log(`\n${Object.keys(doc.arms).length} arm(s) priced from ${seen.length} run(s), `
+        + `${(total / 1000).toFixed(1)}s total ⇒ ${CI_ARM_COSTS_FILE}`);
     process.exit(0);
 }
 
@@ -194,7 +264,7 @@ if (SHARD !== null) {
     const want = new Set(shard.keys);
     selected = arms.filter((a) => want.has(a.key));
     shardNote = `shard ${shard.id} of ${shards.length} — ${shard.name}; `
-        + `${(shard.ms / 1000).toFixed(1)}s banked`;
+        + `${(shard.ms / 1000).toFixed(1)}s measured in CI`;
 }
 
 const roster = gateRoster({ repo: REPO });
@@ -262,6 +332,12 @@ for (const arm of selected) {
      * runner can carry that is a genuine open question. ⛔ It is a SEPARATE
      * line, never a sixth field: `parseGateLines` folds every field after
      * `exit=` into `total`, so widening the line would move a published value.
+     *
+     * ⛓⛓ S5b — **AND SINCE S5b IT IS NOT ONLY A MEASUREMENT, IT IS THE PRICE.**
+     * `--write-costs` reads these lines back into `ci-arm-costs.json` and
+     * `planCiShards` partitions on them. The line was already correct; what
+     * changed is that something now depends on it, so `parseGateMsLines` pins
+     * its shape in `ciSummary.test.js`.
      */
     console.log(`##   ms | ${arm.key} | here=${(ms / 1000).toFixed(1)}s`);
     if (exit !== 0 || value.includes('/0/')) {

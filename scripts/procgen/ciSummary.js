@@ -38,6 +38,19 @@ export function runById(id) {
         conclusion: r.conclusion, createdAt: r.created_at };
 }
 
+/**
+ * ⛓ The most recent runs of the workflow, newest first — `--write-costs`'
+ * population. ⛔ SUCCESSFUL ONES ONLY: a cancelled or failed run's shard job
+ * may have died part-way, and its arms' `here=` lines would then be a sample
+ * of a truncated battery banked as an arm's cost.
+ */
+export function recentRuns({ limit = 3 } = {}) {
+    const rows = JSON.parse(gh('run', 'list', `--workflow=${WORKFLOW}`, '--limit', '30',
+        '--json', 'databaseId,headSha,status,conclusion,createdAt'));
+    return rows.filter((r) => r.status === 'completed' && r.conclusion === 'success')
+        .slice(0, limit);
+}
+
 export function findRun(sha) {
     const rows = JSON.parse(gh('run', 'list', `--workflow=${WORKFLOW}`, '--limit', '50',
         '--json', 'databaseId,headSha,status,conclusion,createdAt'));

@@ -25,6 +25,7 @@ import {
     keyInputsIn, keyReportLines, nondeterminismFinding, rowInputKey, rowRunDecision,
     spawnTargetsIn, stripComments, unkeyableReason,
 } from './rowInputKey.js';
+import { CI_ARM_COSTS_FILE } from './ciGatePlan.js';
 import { FILE as STANDING_VALUES, scriptIn, standingRows } from './standingValues.js';
 
 /** A context whose every input is a literal — the only kind a rule can be
@@ -492,6 +493,7 @@ describe("the writer's own output is not one of its inputs", () => {
     const ctxOf = () => {
         const c = stubCtx(world);
         c.tracked.add(STANDING_VALUES);
+        c.tracked.add(CI_ARM_COSTS_FILE);
         c.tracked.add(OTHER);
         return c;
     };
@@ -505,11 +507,33 @@ describe("the writer's own output is not one of its inputs", () => {
         return c;
     };
 
-    /** ⛔ THE CONSTANT IS THE WRITER'S, NOT A COPY OF ITS SPELLING. A literal
-     *  retyped here would go stale the day the bank moves and the exclusion
-     *  would silently stop excluding. */
-    it('excludes exactly the path `standingValues` itself declares', () => {
-        expect(DERIVED_DATA_EXCLUDED).toBe(STANDING_VALUES);
+    /** ⛔ EVERY MEMBER IS ITS WRITER'S OWN CONSTANT, NOT A COPY OF ITS
+     *  SPELLING. A literal retyped here would go stale the day an artifact
+     *  moves and the exclusion would silently stop excluding. */
+    it('excludes exactly the paths the two writer modules declare', () => {
+        expect([...DERIVED_DATA_EXCLUDED].sort())
+            .toEqual([STANDING_VALUES, CI_ARM_COSTS_FILE].sort());
+    });
+
+    /**
+     * ⛓⛓ S5b — **THE SECOND MEMBER, AND THE MEASUREMENT THAT FORCED IT.**
+     * `ci-arm-costs.json` is a `.json` directly under `scripts/procgen/`, so
+     * the DIRECTORY rule carries it into the same 30 rows the bank was in:
+     * tracked without the exclusion, `--keys` on the real tree read **30 of 34
+     * MOVED** against a steady-state 2. ⛔ And unlike the bank, NO row declares
+     * it back — nothing a gate reports is a function of what a runner charged.
+     */
+    it('is in NO derived data population either, by the directory route', () => {
+        expect(inputPopulations({ entry: ENTRY_B, ctx: ctxOf() }).data)
+            .not.toContain(CI_ARM_COSTS_FILE);
+    });
+
+    it('does NOT move the key when the CI costs alone move', () => {
+        const ctx = ctxOf();
+        const costsMoved = { ...ctx,
+            hash: (rel) => (rel === CI_ARM_COSTS_FILE ? 'MOVED' : ctx.hash(rel)) };
+        expect(rowInputKey({ entry: ENTRY_B, ctx: costsMoved }).key)
+            .toBe(rowInputKey({ entry: ENTRY_B, ctx }).key);
     });
 
     /** 1 THE HEADLINE — neither derived route puts it in the population. */

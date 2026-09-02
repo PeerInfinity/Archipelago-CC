@@ -2461,15 +2461,25 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "audit",
                 "host",
                 "json",
                 "plan",
+                "run",
+                "runs",
                 "set",
                 "shard",
-                "wait-for-box"
+                "wait-for-box",
+                "write-costs"
             ],
             "file": "ci-gates.mjs",
             "flags": [
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "audit"
+                },
                 {
                     "how": [
                         "arg"
@@ -2492,6 +2502,18 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "run"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "runs"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "set"
                 },
                 {
@@ -2505,6 +2527,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "wait-for-box"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "write-costs"
                 }
             ],
             "inheritedFlags": [

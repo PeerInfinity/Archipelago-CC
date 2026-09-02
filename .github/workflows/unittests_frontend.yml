@@ -181,11 +181,20 @@ jobs:
   # at their last local values with a polite reason).
   #
   # ⛔ THE SHARDS ARE PUBLISHED, NEVER TYPED (⚖ 17). The plan job asks
-  # `ci-gates.mjs --plan --json` for a partition computed from the BANKED `ms`
-  # of each arm; the matrix interpolates it, and each shard job recomputes the
-  # same plan from the same tree and takes its slice by index. A shard list
-  # committed here would be stale the day a gate is added — and stale in the
-  # direction that drops one silently.
+  # `ci-gates.mjs --plan --json` for a partition computed from what each arm
+  # COST THE RUNNER on recent runs (`ci-arm-costs.json`); the matrix
+  # interpolates it, and each shard job recomputes the same plan from the same
+  # tree and takes its slice by index. A shard list committed here would be
+  # stale the day a gate is added — and stale in the direction that drops one
+  # silently.
+  #
+  # ⛔⛔ IT USED TO PRICE OFF THE STANDING ROW'S BANKED `ms`, AND ⚖ 72 CHANGED
+  # THAT FIELD'S MEANING UNDER IT (S5b, trap 1068): a CI-sourced row's `ms` is
+  # what a `ci-summary` NETWORK CALL cost, so `seedling-wasm-element` priced at
+  # 5.5 s instead of 934.7 s, this matrix collapsed to ONE job and the browser
+  # wall went 15 m 27 s → 23 m 01 s with nothing red anywhere. `ci-gates.mjs
+  # --audit --run=<id>` is the guard, and it reads only the runner's own
+  # `##   ms | … | here=` lines.
   # ══════════════════════════════════════════════════════════════════════
 
   browser-gate-plan:
@@ -196,7 +205,7 @@ jobs:
       shards: ${{ steps.plan.outputs.shards }}
     steps:
       # ⛓ NO submodules and NO `npm ci`: the plan reads `gateRoster()` (a
-      # directory of `check-*.mjs`) and `standing-values.json`, and imports
+      # directory of `check-*.mjs`) and `ci-arm-costs.json`, and imports
       # nothing outside `scripts/procgen`. Paying 127 MB of wasm for a
       # partition would be a minute per push for nothing.
       - name: Checkout repository
@@ -207,7 +216,7 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Derive the shard partition from the banked ms
+      - name: Derive the shard partition from the runner's own measured cost
         id: plan
         run: |
           set -o pipefail
@@ -327,7 +336,7 @@ jobs:
           {
             echo "## Browser gate shard ${{ matrix.shard.id }} — \`${{ steps.gates.outcome }}\`"
             echo ""
-            echo "${{ matrix.shard.arms }} arm(s), ${{ matrix.shard.ms }} ms banked on the box."
+            echo "${{ matrix.shard.arms }} arm(s), ${{ matrix.shard.ms }} ms measured in CI."
             echo ""
             echo '```'
             grep -E '^## CI-GATE \||^##   ms \|' /tmp/gates.log 2>/dev/null \
