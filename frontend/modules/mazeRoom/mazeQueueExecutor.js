@@ -26,8 +26,7 @@
 import {
     INPUT_N, INPUT_S, INPUT_E, INPUT_W, INPUT_WAIT,
     step,
-    isFloor,
-    getObstacle,
+    whyBlocked,
 } from './mazeRoomEngine.js';
 import {
     ACTION_MOVE,
@@ -62,26 +61,33 @@ export function intendedTileFor(from, dir) {
 /**
  * Why `step` refused, said in one sentence.
  *
- * Deliberately reads only what `step`'s own guards can answer WITHOUT
- * re-deriving `effectiveInventory` (which would duplicate the engine's
- * clearance logic in a second place, and get it wrong the next time a gadget
- * lands). The full sentence — "door_red is shut, needs key_red" — is
- * `mazeRoomEngine.whyBlocked`, an S2b addition; until it exists this names the
- * TARGET CELL and, when there is one, the obstacle standing in it, which is
- * enough to tell a wall from a locked door from a stuck block.
+ * ⛓⛓ SLICE S2b — **IT DELEGATES.** This function used to name the TARGET CELL
+ * and, when there was one, the obstacle standing in it, because it deliberately
+ * would not re-derive `effectiveInventory` (engine-private, and a second copy
+ * of the clearance logic would get it wrong the next time a gadget landed). The
+ * engine now answers the question itself — `mazeRoomEngine.whyBlocked`, beside
+ * `step`, in `step`'s own guard order — so a held button reads as *"door_A0 is
+ * shut — nothing on button_A0"* rather than as an obstacle id. ⛔ Every caller
+ * already read ONE string; nothing else moved.
  */
-function refusalReason(world, state, dir) {
-    const target = intendedTileFor(state?.player_pos, dir);
-    if (!target) return `move ${dir} blocked: no player position`;
-    const at = `(${target.x},${target.y})`;
-    if (!isFloor(world, target.x, target.y)) {
-        return `move ${dir} blocked at ${at}: wall or off-grid`;
-    }
-    const obstacleId = getObstacle(world, target.x, target.y);
-    if (obstacleId) {
-        return `move ${dir} blocked at ${at}: obstacle '${obstacleId}'`;
-    }
-    return `move ${dir} blocked at ${at}`;
+function refusalReason(world, state, dir, inventoryOverride, clearanceOpts) {
+    const input = MOVE_DIR_TO_INPUT[dir];
+    /**
+     * ⛔ THE OVERRIDE AND THE CLEARANCE OPTIONS GO THROUGH — a defect this
+     * slice's own suite caught the moment the delegation landed. `step` was
+     * asked with a playback inventory and the reason with the state's own, so a
+     * door the OVERRIDE does not open reported *"the engine refused it"* while
+     * `step` knew exactly which door it was. Two callers, one question, one
+     * argument list.
+     */
+    const why = whyBlocked(world, state, input, inventoryOverride, clearanceOpts);
+    /**
+     * ⛔ `null` here would mean `whyBlocked` and `step` DISAGREE about this
+     * world, which is a seam defect and not a fact about the move — so the
+     * sentence says so rather than printing an empty reason.
+     */
+    return `move ${dir} blocked: ${why ?? '⛔ SEAM — `step` refused it and `whyBlocked` says '
+        + 'it is legal'}`;
 }
 
 /**
@@ -115,7 +121,10 @@ export function executeMazeEntry(world, state, entry, { inventoryOverride, clear
         }
         const next = step(world, state, input, inventoryOverride, clearanceOpts);
         if (next === null) {
-            return { next: null, reason: refusalReason(world, state, dir) };
+            return {
+                next: null,
+                reason: refusalReason(world, state, dir, inventoryOverride, clearanceOpts),
+            };
         }
         return { next, reason: null };
     }

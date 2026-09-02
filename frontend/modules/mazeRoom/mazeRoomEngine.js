@@ -720,6 +720,112 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
     return next;
 }
 
+// --- whyBlocked: the engine's own answer to "why not" ---
+//
+// ⛓⛓⛓ SLICE S2b — **ONE DERIVATION OF A REFUSAL, AND IT LIVES BESIDE `step`.**
+//
+// `step` returns `null` for a wall, an off-grid target, an uncleared obstacle,
+// an unpushable block and an unknown input, and says nothing about which. Every
+// surface that wants to TELL somebody had to re-derive it: the visualizer's
+// `_logBlockedStep`, `mazeQueueExecutor.refusalReason`, and (before this
+// function existed) a third copy in the lab's manual arm. A re-derivation that
+// does not read `effectiveInventory` cannot name a HELD button at all — which
+// is why this one is in the engine, where that function is private.
+//
+// ⛔ **IT MUST AGREE WITH `step`, AND THE TEST IS A PROPERTY, NOT A COUNT**:
+// over every reachable `(state, input)` of three fixture worlds,
+// `whyBlocked(...) === null` ⇔ `step(...) !== null`. The guards below are in
+// `step`'s own order for exactly that reason — a reason derived in a different
+// order would name the second cause of a doubly-blocked move.
+//
+// ⛔ It decides NOTHING. A caller that wants to know whether a move is legal
+// asks `step`; this answers a move `step` already refused.
+
+/**
+ * Which button, if any, holds this clearance token — so a shut guard door can
+ * be reported as *"nothing on button_A"* rather than as a missing item nobody
+ * can pick up. `null` when no button in this world holds it.
+ */
+function buttonHolding(world, token) {
+    for (const [id, entry] of Object.entries(world.buttonLib ?? {})) {
+        if (entry?.holds === token) return id;
+    }
+    return null;
+}
+
+/**
+ * The sentence for an obstacle the effective inventory does not clear.
+ *
+ * ⛔ The MISSING half of the cheapest combination, not the whole `clear_set`: a
+ * door with `[[key_red]]` says *"needs key_red"*, and one whose token is held
+ * by a button says *"nothing on button_A"* — the same fact in the vocabulary
+ * of the thing the player must actually do.
+ */
+function shutBecause(world, obstacleId, inv) {
+    const entry = world.obstacleLib?.[obstacleId];
+    const head = `${obstacleId} is shut`;
+    if (!entry) return head;
+    if ((entry.clear_set_type ?? 'combo_list') === 'rule') {
+        return `${head} — its clear_rule is not satisfied`;
+    }
+    const combos = entry.clear_set ?? [];
+    if (combos.length === 0) return `${head} — nothing clears it`;
+    let best = null;
+    for (const combo of combos) {
+        const missing = combo.filter((id) => !inv.has(id));
+        if (best === null || missing.length < best.length) best = missing;
+    }
+    if (best.length === 0) return head;
+    const phrases = best.map((token) => {
+        const button = buttonHolding(world, token);
+        return button === null ? `needs ${token}` : `nothing on ${button}`;
+    });
+    return `${head} — ${phrases.join(', ')}`;
+}
+
+/**
+ * Why `step` refused this input, in one sentence — or `null` when it did not.
+ *
+ * @param {object} world
+ * @param {object} state
+ * @param {string} input one of `INPUTS`, or `INPUT_WAIT`
+ * @param {Set<string>} [inventoryOverride] the same override `step` takes
+ * @param {object} [clearanceOpts] the same `{evaluateRule}` `step` takes
+ * @returns {string|null} `null` iff `step` would return a state
+ */
+export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts) {
+    if (!world || !state) return 'no world or state loaded';
+    // ⛓ S2a: a WAIT is always legal — the engine owns "a turn passes".
+    if (input === INPUT_WAIT) return null;
+    const delta = DELTAS[input];
+    if (!delta) return `'${input}' is not an input`;
+    const nx = state.player_pos.x + delta.dx;
+    const ny = state.player_pos.y + delta.dy;
+    if (nx < 0 || nx >= world.width || ny < 0 || ny >= world.height) return 'off the grid';
+    if (!isFloor(world, nx, ny)) return `wall at (${nx},${ny})`;
+    const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
+    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks);
+    const obstacleId = getObstacle(world, nx, ny);
+    if (obstacleId && !isObstacleCleared(obstacleId, inv, world.obstacleLib, clearanceOpts)) {
+        return shutBecause(world, obstacleId, inv);
+    }
+    if (state.blocks !== undefined && state.blocks.includes(posKey(nx, ny))) {
+        const bx = nx + delta.dx;
+        const by = ny + delta.dy;
+        const cannot = `block at (${nx},${ny}) cannot move`;
+        if (bx < 0 || bx >= world.width || by < 0 || by >= world.height) {
+            return `${cannot}: beyond is off the grid`;
+        }
+        if (!isFloor(world, bx, by)) return `${cannot}: beyond is a wall`;
+        if (state.blocks.includes(posKey(bx, by))) return `${cannot}: beyond is a block`;
+        const beyond = getObstacle(world, bx, by);
+        if (beyond && !isObstacleCleared(beyond, inv, world.obstacleLib, clearanceOpts)) {
+            return `${cannot}: ${shutBecause(world, beyond, inv)}`;
+        }
+    }
+    return null;
+}
+
 // --- Goal predicates ---
 
 export function reachedExit(state, world) {

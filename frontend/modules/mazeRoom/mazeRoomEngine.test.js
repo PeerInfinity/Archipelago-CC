@@ -28,6 +28,7 @@ import {
     getBlock, setBlock, clearBlock,
     getButton, setButton, clearButton,
     serializeMazeEntities, mazeVisitedKey,
+    whyBlocked,
 } from './mazeRoomEngine.js';
 import { isObstacleCleared, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
@@ -2183,5 +2184,170 @@ describe('the node cap is the budget (⚖ ruling 6)', () => {
         const r = reach(w, bfsSolver, createState(w), reachedExit, { budget: 20000 });
         expect(r.ok).toBe(true);
         expect(r.expanded).toBe(119);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ SLICE S2b — `whyBlocked`: THE ENGINE'S OWN ANSWER TO "WHY NOT"
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ THE CENTRAL ROW IS A **PROPERTY, NOT A COUNT** (plan §5.4): over every
+ * `(state, input)` REACHABLE in three fixture worlds — an open room, a door and
+ * its key, and the 7×7 guard gadget — `whyBlocked(...) === null` ⇔
+ * `step(...) !== null`. A sentence that disagreed with the engine would be a
+ * page telling a reader a move is illegal that the engine allows, and no count
+ * of hand-picked cases can rule that out.
+ */
+
+/** Every state reachable from `createState(world)` by `INPUTS`, de-duplicated
+ *  by the engine's own visited key. ⛔ Bounded, and the bound is ASSERTED not
+ *  reached — an exploration that silently truncated would test a prefix. */
+function reachableStates(world, cap = 4000) {
+    const start = createState(world);
+    const seen = new Map([[mazeVisitedKey(start), start]]);
+    const frontier = [start];
+    while (frontier.length > 0) {
+        const s = frontier.pop();
+        for (const input of INPUTS) {
+            const next = step(world, s, input);
+            if (next === null) continue;
+            const key = mazeVisitedKey(next);
+            if (seen.has(key)) continue;
+            seen.set(key, next);
+            frontier.push(next);
+            if (seen.size > cap) return { states: [...seen.values()], truncated: true };
+        }
+    }
+    return { states: [...seen.values()], truncated: false };
+}
+
+describe('whyBlocked — it AGREES with step (the property)', () => {
+    const FIXTURES = {
+        'an open room': () => picture([
+            '#####',
+            '#P..#',
+            '#...#',
+            '#..X#',
+            '#####',
+        ]),
+        'a door and its key': () => picture([
+            '######',
+            '#PKR.#',
+            '######',
+        ]),
+        'the 7×7 guard gadget': () => picture(PUSH_LANE_7x7),
+    };
+
+    for (const [name, build] of Object.entries(FIXTURES)) {
+        it(`over every reachable (state, input) of ${name}, `
+            + 'whyBlocked === null ⇔ step !== null', () => {
+            const world = build();
+            const { states, truncated } = reachableStates(world);
+            expect(truncated).toBe(false);
+            expect(states.length).toBeGreaterThan(3);
+            let pairs = 0;
+            let refusals = 0;
+            for (const s of states) {
+                for (const input of [...INPUTS, INPUT_WAIT]) {
+                    pairs += 1;
+                    const legal = step(world, s, input) !== null;
+                    const why = whyBlocked(world, s, input);
+                    if (!legal) refusals += 1;
+                    expect(
+                        `${input}@(${s.player_pos.x},${s.player_pos.y}) legal=${legal} `
+                        + `why=${why}`,
+                    ).toBe(
+                        `${input}@(${s.player_pos.x},${s.player_pos.y}) legal=${legal} `
+                        + `why=${legal ? null : why}`,
+                    );
+                    expect(why === null).toBe(legal);
+                }
+            }
+            // ⛔ BOTH SIDES OF THE ⇔ ARE EXERCISED — a fixture on which nothing
+            //   is ever refused would pass the property vacuously.
+            expect(pairs).toBeGreaterThan(states.length);
+            expect(refusals).toBeGreaterThan(0);
+            expect(refusals).toBeLessThan(pairs);
+        });
+    }
+
+    it('a WAIT is never blocked — the engine owns "a turn passes" (S2a)', () => {
+        const world = picture(['#####', '#P..#', '#####']);
+        const s = createState(world);
+        expect(whyBlocked(world, s, INPUT_WAIT)).toBeNull();
+        expect(step(world, s, INPUT_WAIT)).not.toBeNull();
+    });
+
+    it('an unknown input is refused BY NAME, as step refuses it silently', () => {
+        const world = picture(['#####', '#P..#', '#####']);
+        const s = createState(world);
+        expect(step(world, s, 'NE')).toBeNull();
+        expect(whyBlocked(world, s, 'NE')).toBe("'NE' is not an input");
+    });
+});
+
+describe('whyBlocked — the sentences', () => {
+    it('a wall names the CELL; off the grid names neither (there is no cell)', () => {
+        const walled = picture(['#####', '#P..#', '#####']);
+        expect(whyBlocked(walled, createState(walled), INPUT_N)).toBe('wall at (1,0)');
+        const edge = picture(['P.', '..']);
+        expect(whyBlocked(edge, createState(edge), INPUT_N)).toBe('off the grid');
+    });
+
+    it('a shut door names WHAT IT NEEDS, and the same door opens once it is held', () => {
+        const world = picture(['######', '#PKR.#', '######']);
+        const start = createState(world);
+        // (1,1) P → (2,1) K → (3,1) R. Without the key the door names it.
+        const beforeKey = { ...start, player_pos: { x: 2, y: 1 }, inventory: new Set() };
+        expect(whyBlocked(world, beforeKey, INPUT_E)).toBe('door_red is shut — needs key_red');
+        const onKey = step(world, start, INPUT_E);
+        expect(onKey.inventory.has('key_red')).toBe(true);
+        expect(whyBlocked(world, onKey, INPUT_E)).toBeNull();
+    });
+
+    /**
+     * ⛓⛓ **A HELD DOOR IS NOT A MISSING ITEM, AND THE SENTENCE SAYS SO.** This
+     * is the whole reason the function is in the ENGINE: `sw_A` is a token no
+     * player can pick up, so *"needs sw_A"* would send a reader looking for an
+     * item that does not exist. `buttonLib` is what turns it into a thing to do.
+     */
+    it('a guard door names the BUTTON nothing is standing on', () => {
+        const world = picture(['#####', '#PD.#', '#####']);
+        expect(whyBlocked(world, createState(world), INPUT_E))
+            .toBe('door_A is shut — nothing on button_A');
+    });
+
+    it('…and a door whose token NO button holds falls back to naming the token', () => {
+        const world = picture(['#####', '#PD.#', '#####'], { buttonLib: {} });
+        expect(whyBlocked(world, createState(world), INPUT_E))
+            .toBe('door_A is shut — needs sw_A');
+    });
+
+    it('a block that cannot move names the BLOCK and what is beyond it', () => {
+        const intoWall = picture(['#####', '#.PB#', '#####']);
+        expect(whyBlocked(intoWall, createState(intoWall), INPUT_E))
+            .toBe('block at (3,1) cannot move: beyond is a wall');
+        const intoBlock = picture(['######', '#PBB.#', '######']);
+        expect(whyBlocked(intoBlock, createState(intoBlock), INPUT_E))
+            .toBe('block at (2,1) cannot move: beyond is a block');
+        const intoDoor = picture(['######', '#PBR.#', '######']);
+        expect(whyBlocked(intoDoor, createState(intoDoor), INPUT_E))
+            .toBe('block at (2,1) cannot move: door_red is shut — needs key_red');
+    });
+
+    it('a block CAN be pushed off the grid\'s edge only if there is floor beyond', () => {
+        const offGrid = picture(['PB', '..']);
+        expect(whyBlocked(offGrid, createState(offGrid), INPUT_E))
+            .toBe('block at (1,0) cannot move: beyond is off the grid');
+    });
+
+    it('the effective inventory it reads is the OVERRIDE when one is given — the '
+        + 'same argument step takes, so the sentence and the refusal agree', () => {
+        const world = picture(['######', '#PKR.#', '######']);
+        const onKey = step(world, createState(world), INPUT_E);
+        expect(whyBlocked(world, onKey, INPUT_E)).toBeNull();
+        expect(step(world, onKey, INPUT_E, new Set())).toBeNull();
+        expect(whyBlocked(world, onKey, INPUT_E, new Set()))
+            .toBe('door_red is shut — needs key_red');
     });
 });

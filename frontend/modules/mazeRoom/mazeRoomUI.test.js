@@ -2312,7 +2312,9 @@ describe('MazeRoomUI — append-and-execute on a keypress (Q-b)', () => {
         keydown(panel, 'ArrowUp'); // off-grid: y = -1
         const entry = panel._mazeQueue.getEntries()[0];
         expect(panel._mazeQueue.getStatus(entry.entryId).state).toBe(ActionState.FAILED);
-        expect(panel._queueRefusal).toContain('wall or off-grid');
+        // ⛓ S2b: the sentence is `mazeRoomEngine.whyBlocked`'s now — a wall and
+        // an off-grid target were one string before and are two.
+        expect(panel._queueRefusal).toContain('off the grid');
         expect(panel.state.player_pos).toEqual({ x: 0, y: 0 });
     });
 });
@@ -2440,7 +2442,8 @@ describe('MazeRoomUI — R2: a replay REFUSES BY NAME rather than walking on', (
             // One move ran (0 → 1); the second was refused at the wall.
             expect(panel.state.player_pos).toEqual({ x: 1, y: 0 });
             expect(panel.message).toMatch(/^Replay stopped at action 1 \(move E\): /);
-            expect(panel.message).toContain('wall or off-grid');
+            // ⛓ S2b: `whyBlocked`'s wording, through `refusalReason`.
+            expect(panel.message).toContain('wall at (2,0)');
             expect(onComplete).not.toHaveBeenCalled();
         } finally {
             vi.useRealTimers();

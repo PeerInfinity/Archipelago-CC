@@ -93,20 +93,24 @@ describe('mazeQueueExecutor — executeMazeEntry over an OPEN ROOM', () => {
         for (const dir of DIRECTIONS) expect(MOVE_DIR_TO_INPUT[dir]).toBeTruthy();
     });
 
-    it('a move into a wall is REFUSED, and the reason names the target cell', () => {
+    // ⛓⛓ S2b — THE REASON IS THE ENGINE'S. `refusalReason` delegates to
+    // `mazeRoomEngine.whyBlocked`, so a wall and an off-grid target are now two
+    // different sentences (they were one, `wall or off-grid`, because the old
+    // derivation only had `isFloor` to ask).
+    it('a move into a wall is REFUSED, and the reason names the WALL and its cell', () => {
         const world = openRoom();
         const state = createState(world);
         const { next, reason } = executeMazeEntry(world, state, moveEntry('N'));
         expect(next).toBeNull();
-        expect(reason).toBe('move N blocked at (1,0): wall or off-grid');
+        expect(reason).toBe('move N blocked: wall at (1,0)');
     });
 
-    it('an off-grid move is refused rather than throwing', () => {
+    it('an off-grid move is refused rather than throwing, and says so BY NAME', () => {
         const world = picture(['P.', '..']);
         const state = createState(world);
         const { next, reason } = executeMazeEntry(world, state, moveEntry('N'));
         expect(next).toBeNull();
-        expect(reason).toContain('wall or off-grid');
+        expect(reason).toBe('move N blocked: off the grid');
     });
 
     // ⛓ S2a — a wait is an ENGINE transition now: `step(world, state,
@@ -200,7 +204,10 @@ describe('mazeQueueExecutor — executeMazeEntry over a DOOR + KEY', () => {
         // Without the key in the effective inventory the door refuses.
         const barred = executeMazeEntry(world, { ...onKey, inventory: new Set() }, moveEntry('E'));
         expect(barred.next).toBeNull();
-        expect(barred.reason).toBe("move E blocked at (3,1): obstacle 'door_red'");
+        // ⛓ S2b: the door's own sentence, with WHAT IT NEEDS — the old form
+        // could only name the obstacle id, because `effectiveInventory` is
+        // engine-private and the executor would not re-derive it.
+        expect(barred.reason).toBe('move E blocked: door_red is shut — needs key_red');
     });
 
     it('the SAME entry is allowed once the key is carried', () => {
@@ -243,16 +250,18 @@ describe('mazeQueueExecutor — executeMazeEntry over the BLOCK gadget', () => {
         expect(next.blocks).toEqual(['3,1']);
     });
 
-    it('a push into a wall is refused with a reason that names NEITHER a wall '
-        + 'at the target NOR an obstacle — the target cell is open floor', () => {
+    it('a push into a wall names the BLOCK and what is beyond it — the target '
+        + 'cell is open floor and neither a wall nor an obstacle refused it', () => {
         const world = guardGadget();
         let state = createState(world);
         state = executeMazeEntry(world, state, moveEntry('E')).next; // block to (3,1)
         const stuck = executeMazeEntry(world, state, moveEntry('E'));
         expect(stuck.next).toBeNull();
-        // (3,1) is floor and carries no obstacle: the refusal falls through to
-        // the bare form, which is exactly what whyBlocked (S2b) will replace.
-        expect(stuck.reason).toBe('move E blocked at (3,1)');
+        // ⛓ S2b: the old derivation fell through to a bare `blocked at (3,1)`
+        // here — floor, no obstacle, and nothing left to say. `whyBlocked` walks
+        // `step`'s own push guards, so the sentence names the block AND the
+        // reason it cannot move.
+        expect(stuck.reason).toBe('move E blocked: block at (3,1) cannot move: beyond is a wall');
     });
 });
 
