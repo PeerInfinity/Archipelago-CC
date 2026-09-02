@@ -40,6 +40,7 @@ import {
     consumableTilesActive,
 } from '../shared/procgen/contentModules/consumableTileGen.js';
 import { getPanelInstance } from './index.js';
+import { describeMazeAction } from './mazeKeys.js';
 
 /**
  * Content-module pass (registry `applyContentModules` hook): stamp tile-grid
@@ -154,6 +155,14 @@ export const substrateRegistryEntry = Object.freeze({
      * so the two are separate fields on purpose.
      */
     roomEditor: Object.freeze({ kind: 'lab', page: 'maze', arm: 'set' }),
+
+    // Action labelling (Q-a A8). How the maze says one shared actionQueue
+    // entry out loud — `move E`, `wait`, `check Sword Room`. The ONE owner of
+    // this wording: the panel's icon-row tooltips, loops' blockAnnotations and
+    // a cross-substrate queue viewer all read it rather than each carrying a
+    // copy. The `×n` suffix for a run-length folded entry is the CALLER's.
+    // Lives in mazeKeys.js so this file stays DOM-free and panel-free.
+    describeAction: (entry) => describeMazeAction(entry),
 
     // Runtime — playback. Returns the live panel's controller so the
     // bot can drive the visualizer directly. null when no panel mounted.

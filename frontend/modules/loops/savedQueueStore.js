@@ -73,8 +73,24 @@ function loadCache() {
         if (!raw) return _cache;
         const parsed = JSON.parse(raw);
         if (parsed && typeof parsed === 'object') {
+            let dropped = 0;
             for (const [k, v] of Object.entries(parsed)) {
-                if (Array.isArray(v)) _cache.set(k, v);
+                if (!Array.isArray(v)) continue;
+                const kept = v.filter((entry) => {
+                    if (!isLegacyMazeRecording(entry)) return true;
+                    dropped++;
+                    return false;
+                });
+                _cache.set(k, kept);
+            }
+            if (dropped > 0) {
+                try {
+                    console.warn(
+                        `[savedQueueStore] dropped ${dropped} maze recording`
+                        + `${dropped === 1 ? '' : 's'} in the pre-actionQueue`
+                        + " shape (actions carry 'type', not 'actionType')",
+                    );
+                } catch { /* no console in some hosts */ }
             }
         }
     } catch (err) {
@@ -83,6 +99,30 @@ function loadCache() {
         _cache = new Map();
     }
     return _cache;
+}
+
+/**
+ * A maze recording written BEFORE slice Q-b, in the retired maze-private
+ * vocabulary (`{type:'move', dir}` rather than `{actionType:'move', actionId}`).
+ *
+ * The user ruled there is no backward compatibility to maintain for saved maze
+ * queues, so such an entry is DISCARDED on read rather than upgraded — no
+ * upgrade code, no version dance, and the store key stays `v1`. Keyed on the
+ * PRESENCE of the old `type` field, never on a version the entry does not have.
+ * jta and omsi entries are already actionQueue-shaped and are not the maze's to
+ * drop, so the substrate stamp gates the whole test.
+ *
+ * @param {object} entry - a stored SavedQueue
+ * @returns {boolean}
+ */
+function isLegacyMazeRecording(entry) {
+    if (!entry || typeof entry !== 'object') return false;
+    if (entry.substrate !== 'maze') return false;
+    if (!Array.isArray(entry.actions) || entry.actions.length === 0) return false;
+    const first = entry.actions[0];
+    return !!first && typeof first === 'object'
+        && typeof first.type === 'string'
+        && typeof first.actionType !== 'string';
 }
 
 function persistCache() {

@@ -3,7 +3,24 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { MazeRoomUI } from './mazeRoomUI.js';
 import { _testOnly_resetModuleState } from './index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
-import { ACTION_MOVE, ACTION_WAIT, ACTION_LOCATION_CHECK } from './mazeRoomQueue.js';
+import { ActionQueue, ActionState } from '../shared/actionQueue/index.js';
+import {
+    ACTION_MOVE, ACTION_WAIT, ACTION_LOCATION_CHECK,
+    moveEntry, waitEntry, locationCheckEntry,
+} from './mazeKeys.js';
+
+/**
+ * Put entries through the panel's live queue as if they had RUN, without the
+ * executor's side effects: add, then advance the cursor. The visit recorder
+ * slices the DONE region (`snapshot().entries` up to the cursor), so a test
+ * that only `add`s would record nothing.
+ */
+function runEntries(panel, entries) {
+    for (const entry of entries) {
+        panel._mazeQueue.add(entry);
+        panel._mazeQueue.advance();
+    }
+}
 import {
     getSavedQueues,
     saveQueue,
@@ -428,15 +445,20 @@ describe('MazeRoomUI — M2 Playback departure crossing', () => {
             // Inject a fake queue so we drive the replay driver deterministically
             // without executing real move side effects.
             panel._mazeQueue = {
-                appendAll: () => {},
-                isIdle: () => remaining <= 0,
-                stepOne: () => { remaining -= 1; order.push('step'); },
+                add: () => {},
+                cursor: 0,
+                isExhausted: () => remaining <= 0,
+                stepOne: () => {
+                    remaining -= 1;
+                    order.push('step');
+                    return { state: ActionState.COMPLETED, error: null };
+                },
                 drainPending: () => {},
             };
             panel._crossRecordedDeparture = vi.fn(() => { order.push('cross'); return true; });
 
             const started = panel._replaySavedActions(
-                [{ type: 'move', dir: 'E' }, { type: 'move', dir: 'E' }],
+                [moveEntry('E'), moveEntry('E')],
                 { departureExitId: 'east_id' },
             );
             expect(started).toBe(true);
@@ -460,9 +482,14 @@ describe('MazeRoomUI — M2 Playback departure crossing', () => {
         // Fake queue: stepOne runs the executor (advances position); length
         // bounds the instant drain guard.
         panel._mazeQueue = {
-            appendAll: () => {},
-            isIdle: () => remaining <= 0,
-            stepOne: () => { remaining -= 1; order.push('step'); },
+            add: () => {},
+            cursor: 0,
+            isExhausted: () => remaining <= 0,
+            stepOne: () => {
+                remaining -= 1;
+                order.push('step');
+                return { state: ActionState.COMPLETED, error: null };
+            },
             drainPending: () => {},
             length: 2,
         };
@@ -471,7 +498,7 @@ describe('MazeRoomUI — M2 Playback departure crossing', () => {
         panel._crossRecordedDeparture = vi.fn(() => { order.push('cross'); return true; });
 
         const started = panel._replaySavedActions(
-            [{ type: 'move', dir: 'E' }, { type: 'move', dir: 'E' }],
+            [moveEntry('E'), moveEntry('E')],
             { departureExitId: 'east_id', instant: true },
         );
         expect(started).toBe(true);
@@ -1004,14 +1031,14 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         saveQueue(rulesHash, {
             regionName: 'Forest', substrate: 'maze',
             arrivalExitId: 'south', ordinal: 0, departureExitId: 'exit_a',
-            actions: [{ type: 'move', dir: 'E' }],
+            actions: [moveEntry('E', 1)],
             manaAtEntry: 100, manaAtExit: 90, manaMin: 90,
             locationsChecked: [], itemsPickedUp: [], recordedAt: 1,
         });
         saveQueue(rulesHash, {
             regionName: 'Forest', substrate: 'maze',
             arrivalExitId: 'south', ordinal: 1, departureExitId: 'exit_b',
-            actions: [{ type: 'move', dir: 'S' }],
+            actions: [moveEntry('S', 1)],
             manaAtEntry: 100, manaAtExit: 50, manaMin: 50,
             locationsChecked: [], itemsPickedUp: [], recordedAt: 2,
         });
@@ -1148,15 +1175,13 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         const panel = new MazeRoomUI(null, {});
         panel._cachedRulesData = rulesData;
         panel.currentRegionId = 'Forest';
-        panel._mazeQueue._executor = () => {};
         // Begin recording, with arrival exit + entry mana.
         panel._startVisitRecording({
             region_id: 'Forest',
             arrivedFrom: { exit_id: 'south_door' },
         });
         // Simulate the visit: a couple of moves through the maze queue.
-        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'S' });
-        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'E' });
+        runEntries(panel, [moveEntry('S'), moveEntry('E')]);
         // Mid-visit mana dip — drives the rolling min lower than entry.
         const gs = createGameStateSingleton(null);
         gs.currentMana = 60;
@@ -1175,8 +1200,8 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
             arrivalExitId: 'south_door',
             departureExitId: 'north_door',
             actions: [
-                { type: 'move', dir: 'S' },
-                { type: 'move', dir: 'E' },
+                { actionType: 'move', actionId: 'S', substrate: 'maze', loops: 1 },
+                { actionType: 'move', actionId: 'E', substrate: 'maze', loops: 1 },
             ],
             manaMin: 60,
         });
@@ -1210,13 +1235,11 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         const panel = new MazeRoomUI(null, {});
         panel._cachedRulesData = rulesData;
         panel.currentRegionId = 'Forest';
-        panel._mazeQueue._executor = () => {};
         panel._startVisitRecording({
             region_id: 'Forest',
             arrivedFrom: { exit_id: 'south' },
         });
-        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'E' });
-        panel._mazeQueue.handleInput({ type: ACTION_LOCATION_CHECK, locationName: 'Slay Yorgle' });
+        runEntries(panel, [moveEntry('E'), locationCheckEntry('Slay Yorgle')]);
         panel._finalizeVisitOnExit('north');
         expect(panel._takeLastRecording().locationsChecked).toEqual(['Slay Yorgle']);
     });
@@ -1300,42 +1323,56 @@ describe('MazeRoomUI — action queue integration (Phase 1)', () => {
         resetDiscoverySingleton();
     });
 
-    it('constructs a MazeRoomQueue exposed as panel._mazeQueue', () => {
+    it('constructs the SHARED ActionQueue as panel._mazeQueue (Q-b)', () => {
         const panel = new MazeRoomUI(null, {});
-        expect(panel._mazeQueue).toBeTruthy();
+        expect(panel._mazeQueue).toBeInstanceOf(ActionQueue);
         expect(panel._mazeQueue.length).toBe(0);
-        expect(panel._mazeQueue.isIdle()).toBe(true);
+        expect(panel._mazeQueue.isExhausted()).toBe(true);
+        // The edit cursor is PANEL state now: the shared class throws for an
+        // index inside the done region rather than clamping, so the clamp is
+        // the panel's (_clampedEditIndex).
+        expect(panel._editCursor).toBeNull();
     });
 
-    it('routes move actions through _executeMoveAction', () => {
+    it('routes move entries through _executeMoveAction', () => {
         const panel = new MazeRoomUI(null, {});
-        const spy = vi.spyOn(panel, '_executeMoveAction').mockImplementation(() => {});
-        panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'N' });
-        expect(spy).toHaveBeenCalledWith('N');
+        const spy = vi.spyOn(panel, '_executeMoveAction').mockImplementation(() => null);
+        panel._mazeQueue.add(moveEntry('N'));
+        panel._mazeQueue.stepOne(panel._runEntry);
+        expect(spy).toHaveBeenCalledWith(expect.objectContaining({
+            actionType: ACTION_MOVE, actionId: 'N',
+        }));
     });
 
-    it('routes wait actions through _executeWaitAction', () => {
+    it('routes wait entries through _executeWaitAction', () => {
         const panel = new MazeRoomUI(null, {});
         const spy = vi.spyOn(panel, '_executeWaitAction').mockImplementation(() => {});
-        panel._mazeQueue.handleInput({ type: ACTION_WAIT });
+        panel._mazeQueue.add(waitEntry());
+        panel._mazeQueue.stepOne(panel._runEntry);
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
-    it('routes locationCheck actions through _executeLocationCheckAction', () => {
+    it('routes locationCheck entries through _executeLocationCheckAction', () => {
         const panel = new MazeRoomUI(null, {});
         const spy = vi.spyOn(panel, '_executeLocationCheckAction').mockImplementation(() => {});
-        panel._mazeQueue.handleInput({
-            type: ACTION_LOCATION_CHECK,
-            locationName: 'Slay Yorgle',
-        });
+        panel._mazeQueue.add(locationCheckEntry('Slay Yorgle'));
+        panel._mazeQueue.stepOne(panel._runEntry);
         expect(spy).toHaveBeenCalledWith('Slay Yorgle');
+    });
+
+    it('refuses an unknown actionType by name rather than silently doing nothing', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel._mazeQueue.add({ actionType: 'teleport', actionId: 'x' });
+        const out = panel._mazeQueue.stepOne(panel._runEntry);
+        expect(out.state).toBe(ActionState.FAILED);
+        expect(out.error).toContain('teleport');
     });
 
     it('clears the queue on region adoption', () => {
         const panel = new MazeRoomUI(null, {});
-        // Programmatic appends bypass the executor (no execution).
-        panel._mazeQueue.append({ type: ACTION_MOVE, dir: 'N' });
-        panel._mazeQueue.append({ type: ACTION_WAIT });
+        // Programmatic adds bypass the executor (no execution).
+        panel._mazeQueue.add(moveEntry('N'));
+        panel._mazeQueue.add(waitEntry());
         expect(panel._mazeQueue.length).toBe(2);
         panel.applyLoadedRegion({
             region_id: 'A',
@@ -1343,8 +1380,8 @@ describe('MazeRoomUI — action queue integration (Phase 1)', () => {
             arrivedFrom: null,
         });
         expect(panel._mazeQueue.length).toBe(0);
-        expect(panel._mazeQueue.executionIndex).toBe(0);
-        expect(panel._mazeQueue.editCursor).toBeNull();
+        expect(panel._mazeQueue.cursor).toBe(0);
+        expect(panel._editCursor).toBeNull();
     });
 
     it('_executeWaitAction is a no-op outside playback mode', () => {
@@ -1470,7 +1507,7 @@ describe('MazeRoomUI — saved queue replay', () => {
             arrivalExitId: 'south',
             ordinal: 0,
             departureExitId: 'exit_a',
-            actions: [{ type: 'move', dir: 'N' }],
+            actions: [moveEntry('N', 1)],
             manaAtEntry: 100,
             manaAtExit: 95,
             manaMin: 95,
@@ -1484,7 +1521,7 @@ describe('MazeRoomUI — saved queue replay', () => {
             substrate: 'maze',
             arrivalExitId: 'south',
             departureExitId: 'e',
-            actions: [{ type: 'wait' }],
+            actions: [waitEntry(1)],
             manaAtEntry: 100,
             manaAtExit: 99,
             manaMin: 99,
@@ -1498,7 +1535,7 @@ describe('MazeRoomUI — saved queue replay', () => {
             substrate: 'maze',
             arrivalExitId: 'north',
             departureExitId: 'exit_a',
-            actions: [{ type: 'wait' }],
+            actions: [waitEntry(1)],
             manaAtEntry: 100,
             manaAtExit: 98,
             manaMin: 98,
@@ -1513,7 +1550,7 @@ describe('MazeRoomUI — saved queue replay', () => {
             arrivalExitId: 'south',
             ordinal: 1,
             departureExitId: 'exit_b',
-            actions: [{ type: 'move', dir: 'E' }],
+            actions: [moveEntry('E', 1)],
             manaAtEntry: 100,
             manaAtExit: 99,
             manaMin: 99,
@@ -1548,7 +1585,7 @@ describe('MazeRoomUI — saved queue replay', () => {
             substrate: 'maze',
             arrivalExitId: 'entrance',
             departureExitId: 'a',
-            actions: [{ type: 'move', dir: 'N' }],
+            actions: [moveEntry('N', 1)],
             manaAtEntry: 100,
             manaAtExit: 93,
             manaMin: 93,
@@ -1580,9 +1617,9 @@ describe('MazeRoomUI — saved queue replay', () => {
             arrivalExitId: 'south',
             departureExitId: 'e',
             actions: [
-                { type: 'move', dir: 'N' },
-                { type: 'move', dir: 'E' },
-                { type: 'wait' },
+                moveEntry('N', 1),
+                moveEntry('E', 1),
+                waitEntry(1),
             ],
             manaAtEntry: 100,
             manaAtExit: 90,
@@ -1595,15 +1632,70 @@ describe('MazeRoomUI — saved queue replay', () => {
         panel.render = () => {};
         panel.currentRegionId = 'Forest';
         panel.arrivedFromExitId = 'south';
-        const ran = [];
-        panel._mazeQueue._executor = (a) => ran.push(a.type);
         panel._replayBestPath('3000');
         expect(panel._replayDriver).not.toBeNull();
         expect(panel._mazeQueue.length).toBe(3);
-        expect(panel._mazeQueue.actions.map((a) => a.type)).toEqual([
+        expect(panel._mazeQueue.getEntries().map((a) => a.actionType)).toEqual([
             'move', 'move', 'wait',
         ]);
         panel._stopReplay();
+    });
+
+    it('_replayBestPath EXPANDS a run-length folded recording into one entry '
+        + 'per turn', () => {
+        const rulesHash = hashRulesData(RULES_DATA);
+        saveQueue(rulesHash, {
+            regionName: 'Forest',
+            substrate: 'maze',
+            arrivalExitId: 'south',
+            departureExitId: 'e',
+            // One stored entry, four turns.
+            actions: [moveEntry('E', 4), waitEntry(2)],
+            manaAtEntry: 100,
+            manaAtExit: 90,
+            manaMin: 90,
+            locationsChecked: [],
+            itemsPickedUp: [],
+            recordedAt: 3100,
+        });
+        const panel = panelWithRules();
+        panel.render = () => {};
+        panel.currentRegionId = 'Forest';
+        panel.arrivedFromExitId = 'south';
+        panel._replayBestPath('3100');
+        expect(panel._mazeQueue.length).toBe(6);
+        expect(panel._mazeQueue.getEntries().map((a) => a.actionId)).toEqual([
+            'E', 'E', 'E', 'E', null, null,
+        ]);
+        expect(panel._mazeQueue.getEntries().every((a) => a.loops === 1)).toBe(true);
+        panel._stopReplay();
+    });
+
+    it('the replay button promises the EXPANDED turn count, not the stored '
+        + 'row count', () => {
+        const rulesHash = hashRulesData(RULES_DATA);
+        saveQueue(rulesHash, {
+            regionName: 'Forest',
+            substrate: 'maze',
+            arrivalExitId: 'south',
+            departureExitId: 'a',
+            actions: [moveEntry('E', 7)],
+            manaAtEntry: 100,
+            manaAtExit: 90,
+            manaMin: 90,
+            locationsChecked: [],
+            itemsPickedUp: [],
+            recordedAt: 3200,
+        });
+        const panel = panelWithRules();
+        panel.world = {
+            exits: new Map([['a', { exit_id: 'a', x: 0, y: 0, targetRegion: 'B' }]]),
+        };
+        panel.currentRegionId = 'Forest';
+        panel.arrivedFromExitId = 'south';
+        const targets = panel._getReplayableTargets();
+        expect(targets).toHaveLength(1);
+        expect(targets[0].actionCount).toBe(7);
     });
 
     it('_replayBestPath no-ops on missing key', () => {
@@ -1619,7 +1711,7 @@ describe('MazeRoomUI — saved queue replay', () => {
         const panel = new MazeRoomUI(null, {});
         panel.render = () => {};
         // Hand-start the driver to test stop in isolation.
-        panel._mazeQueue.append({ type: ACTION_WAIT });
+        panel._mazeQueue.add(waitEntry());
         panel._startReplayDriver();
         expect(panel._replayDriver).not.toBeNull();
         panel._stopReplay();
@@ -1650,14 +1742,14 @@ describe('MazeRoomUI — saved queue replay', () => {
             width: 5, height: 1, tiles: new Int8Array(5),
             exits: new Map(), items: new Map(), itemLocationNames: new Map(),
         };
-        panel._mazeQueue._executor = () => {};
         panel._populateLoopsDrivenQueue(
             { type: 'regionMove', destinationRegion: 'X' },
             { x: 0, y: 0 },
             { x: 4, y: 0 },
         );
         // 4 east moves
-        expect(panel._mazeQueue.actions.map((a) => `${a.type}:${a.dir ?? ''}`)).toEqual([
+        expect(panel._mazeQueue.getEntries()
+            .map((a) => `${a.actionType}:${a.actionId ?? ''}`)).toEqual([
             'move:E', 'move:E', 'move:E', 'move:E',
         ]);
     });
@@ -1673,7 +1765,8 @@ describe('MazeRoomUI — saved queue replay', () => {
             { x: 0, y: 0 },
             { x: 2, y: 0 },
         );
-        expect(panel._mazeQueue.actions.map((a) => `${a.type}:${a.dir ?? a.locationName ?? ''}`)).toEqual([
+        expect(panel._mazeQueue.getEntries()
+            .map((a) => `${a.actionType}:${a.actionId ?? ''}`)).toEqual([
             'move:E', 'move:E', 'locationCheck:Slay Yorgle',
         ]);
     });
@@ -1702,8 +1795,10 @@ describe('MazeRoomUI — saved queue replay', () => {
             { x: 0, y: 0 },
             { x: 1, y: 1 },
         );
-        expect(panel._mazeQueue.actions).toEqual([
-            expect.objectContaining({ type: 'locationCheck', locationName: 'L' }),
+        expect(panel._mazeQueue.getEntries()).toEqual([
+            expect.objectContaining({
+                actionType: 'locationCheck', actionId: 'L', substrate: 'maze',
+            }),
         ]);
     });
 
@@ -1715,8 +1810,7 @@ describe('MazeRoomUI — saved queue replay', () => {
         };
         panel.state = { player_pos: { x: 0, y: 0 }, turn: 0 };
         panel._loopsDrivenAction = { type: 'regionMove' };
-        const executor = vi.fn();
-        panel._mazeQueue._executor = executor;
+        const executor = vi.spyOn(panel, '_executeQueueAction');
         const fakeEvent = {
             key: 'ArrowRight',
             preventDefault: vi.fn(),
@@ -1737,7 +1831,7 @@ describe('MazeRoomUI — saved queue replay', () => {
             substrate: 'maze',
             arrivalExitId: 'entrance',
             departureExitId: 'e',
-            actions: [{ type: 'wait' }, { type: 'wait' }],
+            actions: [waitEntry(2)],
             manaAtEntry: 100, manaAtExit: 98, manaMin: 98,
             locationsChecked: [], itemsPickedUp: [],
             recordedAt: 5000,
@@ -1747,7 +1841,6 @@ describe('MazeRoomUI — saved queue replay', () => {
         panel.render = () => {};
         panel.currentRegionId = 'r';
         panel.arrivedFromExitId = null;
-        panel._mazeQueue._executor = () => {}; // suppress side effects
         panel._replayBestPath('5000');
         expect(panel._replayDriver).not.toBeNull();
         // Adopting a region clears the queue + stops the replay.
@@ -1820,7 +1913,7 @@ describe('MazeRoomUI — hazard runtime integration (Phase 2e)', () => {
         const haz = makeHazardLinear([{ x: 0, y: 0 }, { x: 1, y: 0 }], 0);
         const world = makeWorldWithHazards([haz], { width: 4, height: 1 });
         const panel = makePanelOnWorld(world, { playerPos: { x: 2, y: 0 } });
-        panel._executeMoveAction('W');
+        panel._executeMoveAction(moveEntry('W'));
         // Player didn't move (blocked); turn advanced (hazard ticked).
         expect(panel.state.player_pos).toEqual({ x: 2, y: 0 });
         expect(haz.phase).toBe(1);
@@ -1831,7 +1924,7 @@ describe('MazeRoomUI — hazard runtime integration (Phase 2e)', () => {
         const haz = makeHazardLinear([{ x: 5, y: 0 }, { x: 5, y: 1 }], 0);
         const world = makeWorldWithHazards([haz], { width: 6, height: 2 });
         const panel = makePanelOnWorld(world, { playerPos: { x: 0, y: 0 } });
-        panel._executeMoveAction('E');
+        panel._executeMoveAction(moveEntry('E'));
         expect(panel.state.player_pos).toEqual({ x: 1, y: 0 });
         expect(haz.phase).toBe(1);
     });
@@ -1894,8 +1987,8 @@ describe('MazeRoomUI — hazard runtime integration (Phase 2e)', () => {
         world.entrance = { x: 0, y: 0 };
         const panel = makePanelOnWorld(world, { playerPos: { x: 2, y: 2 } });
         // Populate the queue with some pending and start a fake replay.
-        panel._mazeQueue.append({ type: 'move', dir: 'N' });
-        panel._mazeQueue.append({ type: 'move', dir: 'E' });
+        panel._mazeQueue.add(moveEntry('N'));
+        panel._mazeQueue.add(moveEntry('E'));
         panel._startReplayDriver();
         expect(panel._replayDriver).not.toBeNull();
         expect(panel._mazeQueue.length).toBeGreaterThan(0);
@@ -1972,7 +2065,7 @@ describe('MazeRoomUI — hazard runtime integration (Phase 2e)', () => {
         const world = makeWorldWithHazards([haz], { width: 4, height: 1 });
         world.entrance = { x: 3, y: 0 };
         const panel = makePanelOnWorld(world, { playerPos: { x: 1, y: 0 } });
-        panel._executeMoveAction('W');
+        panel._executeMoveAction(moveEntry('W'));
         expect(panel.state.player_pos).toEqual({ x: 3, y: 0 });
         expect(haz.phase).toBe(0);
     });
@@ -1986,7 +2079,7 @@ describe('MazeRoomUI — hazard runtime integration (Phase 2e)', () => {
         const world = makeWorldWithHazards([haz], { width: 4, height: 3 });
         world.entrance = { x: 3, y: 2 };
         const panel = makePanelOnWorld(world, { playerPos: { x: 1, y: 0 } });
-        panel._executeMoveAction('S');
+        panel._executeMoveAction(moveEntry('S'));
         expect(panel.state.player_pos).toEqual({ x: 1, y: 1 });
         expect(haz.phase).toBe(1); // hazard ticked
         expect(panel.message).not.toMatch(/Hazard-trapped/);
@@ -2007,7 +2100,7 @@ describe('MazeRoomUI — hazard runtime integration (Phase 2e)', () => {
         // First call sets _lastVisualizerTurn (no wait detected on
         // first observation, by design — initial pickup).
         panel._visualizer = { getState: () => ({ player_pos: { x: 0, y: 0 }, turn: 0 }) };
-        panel._mazeQueue.append({ type: 'wait' });
+        panel._mazeQueue.add(waitEntry());
         panel._onVisualizerChange();
         // Now advance the turn (simulating a wait tick).
         panel._visualizer = { getState: () => ({ player_pos: { x: 0, y: 0 }, turn: 1 }) };
@@ -2015,7 +2108,7 @@ describe('MazeRoomUI — hazard runtime integration (Phase 2e)', () => {
         // Hazard ticked.
         expect(haz.phase).toBe(1);
         // Queue advanced.
-        expect(panel._mazeQueue.executionIndex).toBe(1);
+        expect(panel._mazeQueue.cursor).toBe(1);
         // bestPath tracking saw a duplicate-tile step.
         expect(panel._loopsDrivenSteps).toEqual([
             { x: 0, y: 0 }, { x: 0, y: 0 },
@@ -2027,7 +2120,7 @@ describe('MazeRoomUI — hazard runtime integration (Phase 2e)', () => {
         const world = makeWorldWithHazards([haz], { width: 8, height: 8 });
         const panel = makePanelOnWorld(world, { playerPos: { x: 0, y: 0 } });
         panel._loopsDrivenAction = { type: 'regionMove' };
-        panel._executeMoveAction('E');
+        panel._executeMoveAction(moveEntry('E'));
         // Loops walks the visualizer; the queue-executor path
         // doesn't tick — _onVisualizerChange does.
         expect(haz.phase).toBe(0);

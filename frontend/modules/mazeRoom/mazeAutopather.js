@@ -52,6 +52,7 @@ import {
 } from './mazeRoomEngine.js';
 import { isObstacleCleared } from '../shared/procgen/library.js';
 import { validateMove as validateMoveAgainstHazards } from '../shared/procgen/contentModules/hazardRuntime.js';
+import { moveEntry, waitEntry } from './mazeKeys.js';
 
 /**
  * @param {Object} world - maze world (width, height, tiles, exits, etc.)
@@ -123,19 +124,21 @@ export function stepsToInputs(steps) {
 }
 
 /**
- * Convert a sequence of tile coordinates into queue action specs
+ * Convert a sequence of tile coordinates into queue entries
  * (move N/S/E/W). Used to translate visualizer-driven walks (loops
  * delegation) into the same verb format the maze action queue uses,
  * so saved best-queues have a single canonical shape regardless of
  * which path produced them.
  *
- * Returns an empty array on bad input or a single-tile path. Output
- * actions carry no id / status — those are queue-level concerns; the
+ * Returns an empty array on bad input or a single-tile path. Entries
+ * carry no entryId / status — those are queue-level concerns; the
  * stored shape is just the verb list (Cavernous's strip-progress-on-
- * save convention).
+ * save convention). One entry per step: the run-length fold into
+ * `loops` happens at RECORD time (mazeQueueExecutor.projectActions),
+ * not here, because the live queue shows one icon per turn.
  *
  * @param {Array<{x:number,y:number}>} steps - 4-connected tile path
- * @returns {Array<{type:'move',dir:'N'|'S'|'E'|'W'}>}
+ * @returns {Array<object>} shared actionQueue entries, substrate 'maze'
  */
 export function stepsToActions(steps) {
     if (!Array.isArray(steps) || steps.length < 2) return [];
@@ -144,7 +147,7 @@ export function stepsToActions(steps) {
         const dx = steps[i].x - steps[i - 1].x;
         const dy = steps[i].y - steps[i - 1].y;
         if (dx === 0 && dy === 0) {
-            out.push({ type: 'wait' });
+            out.push(waitEntry());
             continue;
         }
         let dir = null;
@@ -152,7 +155,7 @@ export function stepsToActions(steps) {
         else if (dx === -1 && dy === 0) dir = 'W';
         else if (dx === 0 && dy === 1) dir = 'S';
         else if (dx === 0 && dy === -1) dir = 'N';
-        if (dir) out.push({ type: 'move', dir });
+        if (dir) out.push(moveEntry(dir));
     }
     return out;
 }

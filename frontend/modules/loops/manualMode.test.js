@@ -552,7 +552,7 @@ describe('Custom Queue — processFrame handling', () => {
             substrate: 'test_substrate',
             arrivalExitId: 'entrance',
             departureExitId: 'north',
-            actions: [{ type: 'move', dir: 'N' }, { type: 'move', dir: 'E' }],
+            actions: [{ actionType: 'move', actionId: 'N', substrate: 'maze', loops: 1 }, { actionType: 'move', actionId: 'E', substrate: 'maze', loops: 1 }],
             manaAtEntry: 100, manaAtExit: 90, manaMin: 88,
             locationsChecked: [], itemsPickedUp: [],
             recordedAt: 7777,
@@ -570,8 +570,8 @@ describe('Custom Queue — processFrame handling', () => {
 
         expect(replayCalls).toHaveLength(1);
         expect(replayCalls[0].actions).toEqual([
-            { type: 'move', dir: 'N' },
-            { type: 'move', dir: 'E' },
+            { actionType: 'move', actionId: 'N', substrate: 'maze', loops: 1 },
+            { actionType: 'move', actionId: 'E', substrate: 'maze', loops: 1 },
         ]);
         expect(loopState._manualActionEntered).toBe(true);
         expect(loopState.isProcessing).toBe(false);
@@ -588,7 +588,7 @@ describe('Custom Queue — processFrame handling', () => {
             substrate: 'test_substrate',
             arrivalExitId: 'entrance',
             departureExitId: 'n',
-            actions: [{ type: 'wait' }],
+            actions: [{ actionType: 'wait', actionId: null, substrate: 'maze', loops: 1 }],
             manaAtEntry: 100, manaAtExit: 99, manaMin: 99,
             locationsChecked: [], itemsPickedUp: [],
             recordedAt: 9000,
@@ -645,7 +645,7 @@ describe('Custom Queue — processFrame handling', () => {
         saveQueue(rulesHash, {
             regionName: 'cqRegion', substrate: 'test_substrate',
             arrivalExitId: 'entrance', departureExitId: 'n',
-            actions: [{ type: 'wait' }],
+            actions: [{ actionType: 'wait', actionId: null, substrate: 'maze', loops: 1 }],
             manaAtEntry: 100, manaAtExit: 99, manaMin: 99,
             locationsChecked: [], itemsPickedUp: [],
             recordedAt: 5,
@@ -674,7 +674,7 @@ describe('Custom Queue — processFrame handling', () => {
         saveQueue(rulesHash, {
             regionName: 'cqRegion', substrate: 'test_substrate',
             arrivalExitId: 'entrance', departureExitId: 'n',
-            actions: [{ type: 'wait' }],
+            actions: [{ actionType: 'wait', actionId: null, substrate: 'maze', loops: 1 }],
             manaAtEntry: 100, manaAtExit: 99, manaMin: 99,
             locationsChecked: [], itemsPickedUp: [],
             recordedAt: 5,

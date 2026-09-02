@@ -6,10 +6,8 @@
 
 import { setPanelInstance, getModuleApis, consumePendingLoadRegion } from './index.js';
 import {
-    INPUT_N, INPUT_S, INPUT_E, INPUT_W,
     createState,
-    getObstacle, getItem,
-    step,
+    getItem,
     detectStepEvents,
     generateMaze,
     extractPathsAndObstacles,
@@ -47,12 +45,24 @@ import { SubstrateInactiveOverlay } from '../shared/substrateInactiveOverlay.js'
 import { substrateRegistryEntry } from './mazeRoomLibrary.js';
 import { getSavedQueues } from '../loops/savedQueueStore.js';
 import { hashRulesData } from '../shared/rulesHash.js';
+import { ACTION_QUEUE_FORMAT, ActionQueue, ActionState } from '../shared/actionQueue/index.js';
 import {
-    MazeRoomQueue,
+    KEY_MAP,
+    MAZE_SUBSTRATE,
     ACTION_MOVE,
     ACTION_WAIT,
     ACTION_LOCATION_CHECK,
-} from './mazeRoomQueue.js';
+    describeMazeAction,
+    locationCheckEntry,
+} from './mazeKeys.js';
+import {
+    executeMazeEntry,
+    expandEntries,
+    expandedLength,
+    intendedTileFor,
+    isRefused,
+    projectActions,
+} from './mazeQueueExecutor.js';
 // ⛓ CONSTRUCTIVE-MODE slice 3 (⚖ kickoff §3.5): the canvas draw, the tile
 // size and the palette left this file so `mazeRoom/lab.html` can draw the
 // same worlds with the same pixels. `_drawWorld` is now an adapter that
@@ -111,38 +121,6 @@ const DEFAULT_PARAMS = {
 };
 
 
-// Maps DOM key strings to queue action specs. Queue verbs are the
-// substrate-neutral representation; the move executor translates
-// dir→engine input via MOVE_DIR_TO_INPUT.
-const KEY_MAP = {
-    ArrowUp:    { type: ACTION_MOVE, dir: 'N' },
-    w:          { type: ACTION_MOVE, dir: 'N' },
-    W:          { type: ACTION_MOVE, dir: 'N' },
-    ArrowDown:  { type: ACTION_MOVE, dir: 'S' },
-    s:          { type: ACTION_MOVE, dir: 'S' },
-    S:          { type: ACTION_MOVE, dir: 'S' },
-    ArrowLeft:  { type: ACTION_MOVE, dir: 'W' },
-    a:          { type: ACTION_MOVE, dir: 'W' },
-    A:          { type: ACTION_MOVE, dir: 'W' },
-    ArrowRight: { type: ACTION_MOVE, dir: 'E' },
-    d:          { type: ACTION_MOVE, dir: 'E' },
-    D:          { type: ACTION_MOVE, dir: 'E' },
-    ' ':        { type: ACTION_WAIT },
-};
-
-const MOVE_DIR_TO_INPUT = {
-    N: INPUT_N,
-    S: INPUT_S,
-    E: INPUT_E,
-    W: INPUT_W,
-};
-
-const MOVE_DIR_TO_DELTA = {
-    N: { dx: 0, dy: -1 },
-    S: { dx: 0, dy: 1 },
-    E: { dx: 1, dy: 0 },
-    W: { dx: -1, dy: 0 },
-};
 
 export class MazeRoomUI {
     static moduleApis = null;
@@ -262,14 +240,25 @@ export class MazeRoomUI {
         });
 
         // Tile-level action queue (Cavernous-2-style). Player keydowns
-        // route through this rather than calling step() directly. The
-        // executor is bound here so the queue can run actions
-        // synchronously; the UI re-renders after each handleInput in
-        // _handleKeydown. Cleared on region transitions. See
-        // docs/json/developer/procgen/maze.md ("The action queue").
-        this._mazeQueue = new MazeRoomQueue({
-            executor: (action) => this._executeQueueAction(action),
-        });
+        // route through this rather than calling step() directly.
+        //
+        // Slice Q-b: this is the SHARED `ActionQueue` (shared/actionQueue),
+        // the same class jta and omsi record into — the maze-private
+        // `MazeRoomQueue` is gone. Two consequences the panel owns:
+        //   - the EDIT CURSOR is panel state (`_editCursor`), because the
+        //     shared class refuses an insert into the done region by throwing
+        //     rather than clamping. `_clampedEditIndex()` is the clamp.
+        //   - `stepOne(executor)` advances even on FAILED, so STOPPING is the
+        //     driver's job: `_startReplayDriver` halts at the first refused
+        //     entry and names it (census gap R2).
+        // See docs/json/developer/procgen/maze.md ("The action queue").
+        this._mazeQueue = new ActionQueue();
+        // Where a keypress inserts. null = tail (the default). Clicking
+        // between icons sets it; it can never point into the done region.
+        this._editCursor = null;
+        // The reason the last entry was refused, shown under the icon row and
+        // set by the replay driver when it stops.
+        this._queueRefusal = null;
 
         // Replay driver state. Non-null while a saved best-queue is
         // being replayed; holds the setInterval handle so direct input
@@ -598,9 +587,12 @@ export class MazeRoomUI {
         this._visitRecording = {
             regionName: payload?.region_id ?? null,
             arrivalExitId,
-            actionsAtStart: this._mazeQueue?.executionIndex ?? 0,
+            actionsAtStart: this._mazeQueue?.cursor ?? 0,
             manaAtEntry,
             manaMin: manaAtEntry,
+            // Census gap R1: filled as the visit runs (both play surfaces call
+            // _notePickupForVisit), where it used to be a literal [] at flush.
+            itemsPickedUp: [],
         };
     }
 
@@ -635,25 +627,26 @@ export class MazeRoomUI {
         }
         this._visitRecording = null;
 
-        const executionIndex = this._mazeQueue?.executionIndex ?? 0;
-        const queueActions = this._mazeQueue?.actions ?? [];
-        const sliceStart = Math.min(rec.actionsAtStart ?? 0, executionIndex);
-        const actions = queueActions.slice(sliceStart, executionIndex).map((a) => {
-            const out = { type: a.type };
-            if (a.dir !== undefined) out.dir = a.dir;
-            if (a.locationName !== undefined) out.locationName = a.locationName;
-            return out;
-        });
+        // The recording is the slice of the live queue this visit executed,
+        // projected into the stored shape: id-less, status-less, and run-length
+        // folded through the shared `loops` field (mazeQueueExecutor).
+        const snap = this._mazeQueue?.snapshot() ?? { cursor: 0, entries: [] };
+        const sliceStart = Math.min(rec.actionsAtStart ?? 0, snap.cursor);
+        const actions = projectActions(snap.entries, sliceStart, snap.cursor);
         const locationsChecked = actions
-            .filter((a) => a.type === 'locationCheck' && a.locationName)
-            .map((a) => a.locationName);
+            .filter((a) => a.actionType === ACTION_LOCATION_CHECK && a.actionId)
+            .map((a) => a.actionId);
 
         const gs = (() => { try { return getGameStateSingleton?.(); } catch { return null; } })();
         const manaAtExit = typeof gs?.getCurrentMana === 'function' ? gs.getCurrentMana() : rec.manaMin;
 
         this._lastVisitRecording = {
             regionName: rec.regionName,
-            substrate: 'maze',
+            substrate: MAZE_SUBSTRATE,
+            // Census gap R5: the actions' own vocabulary, named on the
+            // envelope. Additive — loops ignores it; an importer outside the
+            // browser (the lab's walk box, S2b) refuses an unknown one by name.
+            format: ACTION_QUEUE_FORMAT,
             arrivalExitId: rec.arrivalExitId,
             departureExitId: departureExitId ?? null,
             actions,
@@ -661,8 +654,21 @@ export class MazeRoomUI {
             manaAtExit,
             manaMin: rec.manaMin,
             locationsChecked,
-            itemsPickedUp: [],
+            itemsPickedUp: (rec.itemsPickedUp ?? []).slice(),
         };
+    }
+
+    /**
+     * Census gap R1 — remember an item this visit picked up. Called from BOTH
+     * play surfaces (`_publishPlaybackEvents`' pickup branch for keyboard and
+     * replay, `_onVisualizerLocationCheck` for bot / loops-delegated walks), so
+     * the recording says what the walk collected regardless of who drove it.
+     * Before this slice `itemsPickedUp` was written as a literal `[]`.
+     */
+    _notePickupForVisit(itemId) {
+        if (!itemId || !this._visitRecording) return;
+        const seen = this._visitRecording.itemsPickedUp;
+        if (Array.isArray(seen) && !seen.includes(itemId)) seen.push(itemId);
     }
 
     /**
@@ -793,9 +799,9 @@ export class MazeRoomUI {
     _populateLoopsDrivenQueue(action, startPos, target) {
         if (!this._mazeQueue) return;
         // Clear any in-flight pending — loops-driven walks own the
-        // queue while they run. (clearPending preserves done history
+        // queue while they run. (_clearPendingEntries preserves done history
         // from prior loops actions in the same region.)
-        this._mazeQueue.clearPending();
+        this._clearPendingEntries();
         // findPath requires world.tiles + width/height to BFS through.
         // Test fixtures often stub world without these, in which case
         // we skip queue population and let the visualizer drive
@@ -804,10 +810,7 @@ export class MazeRoomUI {
             || typeof this.world.width !== 'number'
             || typeof this.world.height !== 'number') {
             if (action.type === 'locationCheck' && action.locationName) {
-                this._mazeQueue.append({
-                    type: 'locationCheck',
-                    locationName: action.locationName,
-                });
+                this._mazeQueue.add(locationCheckEntry(action.locationName));
             }
             return;
         }
@@ -838,21 +841,30 @@ export class MazeRoomUI {
             // terminal verb for location targets so the queue
             // reflects what's about to happen.
             if (action.type === 'locationCheck' && action.locationName) {
-                this._mazeQueue.append({
-                    type: 'locationCheck',
-                    locationName: action.locationName,
-                });
+                this._mazeQueue.add(locationCheckEntry(action.locationName));
             }
             return;
         }
-        const moves = stepsToActions(path.steps);
-        if (moves.length > 0) this._mazeQueue.appendAll(moves);
+        this._appendEntries(stepsToActions(path.steps));
         if (action.type === 'locationCheck' && action.locationName) {
-            this._mazeQueue.append({
-                type: 'locationCheck',
-                locationName: action.locationName,
-            });
+            this._mazeQueue.add(locationCheckEntry(action.locationName));
         }
+    }
+
+    /**
+     * Drop the PENDING entries, keeping the done region (the visit recorder
+     * slices it on exit). `ActionQueue.clear()` would take the history with it,
+     * so this removes from the tail down to the cursor.
+     */
+    _clearPendingEntries() {
+        const q = this._mazeQueue;
+        if (!q) return 0;
+        let dropped = 0;
+        for (let i = q.length - 1; i >= q.cursor; i--) {
+            if (q.removeAt(i)) dropped++;
+        }
+        this._editCursor = null;
+        return dropped;
     }
 
     /**
@@ -1425,12 +1437,14 @@ export class MazeRoomUI {
         // queue" rule applies. Also stop any in-flight replay driver
         // — its actions are for the previous region.
         this._stopReplay?.();
-        this._mazeQueue?.clearAll();
+        this._mazeQueue?.clear();
+        this._editCursor = null;
+        this._queueRefusal = null;
         // Start a new saved-queue visit recording. Any in-flight
         // recording from a previous region (not finalized by an exit
         // cross) is discarded — that path was non-departing and not
         // useful to save. The new recording's actionsAtStart aligns
-        // with the now-cleared maze queue's executionIndex (0).
+        // with the now-cleared maze queue's cursor (0).
         this._startVisitRecording(payload);
         // Reset direct-walk tracking. Items / locations are session-
         // scoped to the region; cost accumulates from the entrance.
@@ -1797,7 +1811,9 @@ export class MazeRoomUI {
             }
         };
         if (hasActions) {
-            this._mazeQueue.appendAll(actions);
+            // A recording is run-length COMPRESSED (`loops: n`); the live
+            // queue is one entry per turn, so expand before adding.
+            this._appendEntries(expandEntries(actions));
             if (instant) {
                 // Instant (M3): drain the whole interior synchronously (no
                 // animation clock), then cross the departure in the same
@@ -1806,13 +1822,25 @@ export class MazeRoomUI {
                 // wait — so _crossRecordedDeparture still issues the transition
                 // from the (now-at-exit) engine state.
                 // stepOne() runs the executor (advances the engine state),
-                // unlike drainPending() which only marks statuses — we need the
-                // real position advance so the departure crosses from the exit.
-                let guard = (this._mazeQueue.length ?? actions.length) + 1;
-                while (!this._mazeQueue.isIdle() && guard-- > 0) {
-                    this._mazeQueue.stepOne();
+                // unlike drainPending() which only moves the cursor — we need
+                // the real position advance so the departure crosses from the
+                // exit.
+                let guard = this._mazeQueue.length + 1;
+                let refused = false;
+                while (!this._mazeQueue.isExhausted() && guard-- > 0) {
+                    const index = this._mazeQueue.cursor;
+                    const out = this._mazeQueue.stepOne(this._runEntry);
+                    // R2: same rule as the ticked driver — the first refused
+                    // entry stops the drain and the departure is NOT crossed,
+                    // so the loops block stays parked instead of reporting a
+                    // walk it did not make.
+                    if (out?.state === ActionState.FAILED) {
+                        this._abortReplay(index, out);
+                        refused = true;
+                        break;
+                    }
                 }
-                onReplayComplete();
+                if (!refused) onReplayComplete();
             } else {
                 this._startReplayDriver({ onComplete: onReplayComplete });
             }
@@ -1994,6 +2022,9 @@ export class MazeRoomUI {
         // touched during this action. (No longer used for saved-queue
         // serialization — that reads from _mazeQueue.actions in
         // _finalizeVisitOnExit.)
+        // R1: same visit-recording bookkeeping as the keyboard path's
+        // _publishPlaybackEvents, so a bot-driven walk records its pickups too.
+        this._notePickupForVisit(itemId);
         if (this._loopsDrivenAction) {
             if (Array.isArray(this._loopsDrivenLocations)
                 && !this._loopsDrivenLocations.includes(locationName)) {
@@ -2191,7 +2222,7 @@ export class MazeRoomUI {
             // verb done so the icon row drains in lockstep. No
             // executor invocation — the side effects already happened
             // via the visualizer.
-            this._mazeQueue?.markCurrentDone();
+            this._mazeQueue?.advance();
             // Phase 2e: every tile-step is a turn — tick hazards. The
             // autopather doesn't currently plan around hazards (v1
             // limitation), so if a delegated walk ends in a doomed
@@ -2237,7 +2268,7 @@ export class MazeRoomUI {
                 });
                 this._loopsDrivenCost += cost;
             }
-            this._mazeQueue?.markCurrentDone();
+            this._mazeQueue?.advance();
             this._tickAndCheckHazards();
             if (!this._loopsDrivenAction) {
                 this._pendingFreshLocationCheck = null;
@@ -2326,7 +2357,7 @@ export class MazeRoomUI {
         );
         if (path && Array.isArray(path.steps) && path.steps.length >= 2) {
             const moves = stepsToActions(path.steps);
-            if (moves.length > 0) this._mazeQueue?.appendAll(moves);
+            this._appendEntries(moves);
         }
         this._visualizer.walkToTile({ x: next.x, y: next.y, name: null });
         this._ensureVisualizerPlaying();
@@ -2380,7 +2411,9 @@ export class MazeRoomUI {
         wrap.className = 'maze-room-queue';
 
         const snap = this._mazeQueue.snapshot();
-        const pending = snap.actions.length - snap.executionIndex;
+        const entries = snap.entries;
+        const editCursor = this._editCursor;
+        const pending = entries.length - snap.cursor;
         // Read-only mode: loops queue is driving the walk. User edits
         // would race the visualizer's execution. Replay buttons hide
         // for the same reason — can't start a replay mid-loop-walk.
@@ -2391,30 +2424,36 @@ export class MazeRoomUI {
         if (readOnly) {
             const verb = this._loopsDrivenAction?.type ?? 'loops';
             status.textContent
-                = `Loops driving — ${verb} (${pending} pending of ${snap.actions.length})`;
-        } else if (snap.actions.length === 0) {
+                = `Loops driving — ${verb} (${pending} pending of ${entries.length})`;
+        } else if (entries.length === 0) {
             status.textContent = 'Empty — press a movement key or Space to wait.';
         } else {
-            const cursorText = snap.editCursor !== null
-                ? ` · cursor @ ${snap.editCursor}`
-                : '';
+            const cursorText = editCursor !== null ? ` · cursor @ ${editCursor}` : '';
             status.textContent
-                = `${snap.actions.length} action${snap.actions.length === 1 ? '' : 's'}`
+                = `${entries.length} action${entries.length === 1 ? '' : 's'}`
                 + ` · ${pending} pending${cursorText}`;
         }
         wrap.appendChild(status);
 
+        // R2: the reason the last entry was refused (a bumped wall, or the
+        // entry a replay stopped on). Cleared on region entry.
+        if (this._queueRefusal) {
+            const refusal = document.createElement('div');
+            refusal.className = 'maze-room-queue-refusal';
+            refusal.textContent = `Refused: ${this._queueRefusal}`;
+            wrap.appendChild(refusal);
+        }
+
         const row = document.createElement('div');
         row.className = 'maze-room-queue-row'
             + (readOnly ? ' is-read-only' : '');
-        for (let i = 0; i < snap.actions.length; i++) {
-            if (!readOnly && snap.editCursor === i) {
+        for (let i = 0; i < entries.length; i++) {
+            if (!readOnly && editCursor === i) {
                 row.appendChild(this._renderQueueCursor());
             }
-            row.appendChild(this._renderQueueIcon(snap.actions[i], i, readOnly));
+            row.appendChild(this._renderQueueIcon(entries[i], i, snap.cursor, readOnly));
         }
-        if (!readOnly
-            && snap.editCursor !== null && snap.editCursor === snap.actions.length) {
+        if (!readOnly && editCursor !== null && editCursor === entries.length) {
             row.appendChild(this._renderQueueCursor());
         }
         // Trailing click region: clicking here clears the cursor.
@@ -2424,7 +2463,7 @@ export class MazeRoomUI {
         if (!readOnly) {
             tailSlot.title = 'Click to insert at tail (clear cursor)';
             tailSlot.addEventListener('click', () => {
-                this._mazeQueue.setEditCursor(null);
+                this._setEditCursor(null);
                 this.render();
                 this.rootElement?.focus();
             });
@@ -2440,7 +2479,7 @@ export class MazeRoomUI {
         clearBtn.textContent = 'Clear pending';
         clearBtn.disabled = readOnly || pending === 0;
         clearBtn.addEventListener('click', () => {
-            this._mazeQueue.clearPending();
+            this._clearPendingEntries();
             this.render();
             this.rootElement?.focus();
         });
@@ -2499,42 +2538,57 @@ export class MazeRoomUI {
         return el;
     }
 
-    _renderQueueIcon(action, index, readOnly = false) {
+    /**
+     * One icon. The GLYPH table is the panel's (it is pixels, not words); the
+     * TOOLTIP WORDING comes from the registry's `describeAction` so the panel,
+     * `blockAnnotations` and any cross-substrate viewer say the same thing —
+     * the `×n` suffix for a folded entry is appended here, per that function's
+     * contract that the caller owns it.
+     *
+     * @param {object} entry - a frozen `snapshot()` entry (carries `status`)
+     * @param {number} index
+     * @param {number} queueCursor - snapshot cursor (the next entry to run)
+     * @param {boolean} readOnly
+     */
+    _renderQueueIcon(entry, index, queueCursor, readOnly = false) {
         const el = document.createElement('div');
-        const isDone = action.status === 'done';
-        const isNext = !isDone && index === this._mazeQueue.executionIndex;
+        const state = entry.status?.state;
+        const isDone = index < queueCursor;
+        const isFailed = state === ActionState.FAILED;
+        const isNext = !isDone && index === queueCursor;
         el.className = 'maze-room-queue-icon'
             + (isDone ? ' is-done' : ' is-pending')
+            + (isFailed ? ' is-failed' : '')
             + (isNext ? ' is-next' : '');
         el.dataset.index = String(index);
 
         let glyph;
-        let tooltip;
-        if (action.type === ACTION_MOVE) {
-            glyph = { N: '↑', S: '↓', E: '→', W: '←' }[action.dir] ?? '?';
-            tooltip = `move ${action.dir}`;
-        } else if (action.type === ACTION_WAIT) {
+        if (entry.actionType === ACTION_MOVE) {
+            glyph = { N: '↑', S: '↓', E: '→', W: '←' }[entry.actionId] ?? '?';
+        } else if (entry.actionType === ACTION_WAIT) {
             glyph = '◌';
-            tooltip = 'wait';
-        } else if (action.type === ACTION_LOCATION_CHECK) {
+        } else if (entry.actionType === ACTION_LOCATION_CHECK) {
             glyph = '✓';
-            tooltip = `check ${action.locationName ?? ''}`;
         } else {
             glyph = '?';
-            tooltip = action.type;
         }
+        const loops = Number.isInteger(entry.loops) ? entry.loops : 1;
+        const described = substrateRegistryEntry.describeAction?.(entry) ?? entry.actionType;
+        const tooltip = loops > 1 ? `${described} ×${loops}` : described;
         el.textContent = glyph;
-        el.title = `${tooltip} (#${index}${isDone ? ', done' : ''})`;
+        const suffix = isFailed ? ', refused' : (isDone ? ', done' : '');
+        el.title = `${tooltip} (#${index}${suffix})`
+            + (isFailed && entry.status?.error ? ` — ${entry.status.error}` : '');
 
         if (!isDone && !readOnly) {
             // Click sets edit cursor BEFORE this icon. Done actions
             // are non-interactive (the cursor can't enter the done
-            // region anyway — setEditCursor clamps to executionIndex).
+            // region anyway — _setEditCursor clamps to the queue cursor).
             // Loops-driving (read-only) blocks edits to prevent
             // racing the visualizer.
             el.addEventListener('click', (e) => {
                 e.stopPropagation();
-                this._mazeQueue.setEditCursor(index);
+                this._setEditCursor(index);
                 this.render();
                 this.rootElement?.focus();
             });
@@ -3343,9 +3397,10 @@ export class MazeRoomUI {
         if (e.key === 'Backspace') {
             e.preventDefault();
             const q = this._mazeQueue;
-            const cursor = q.editCursor ?? q.length;
-            if (cursor > q.executionIndex) {
-                q.deleteAt(cursor - 1);
+            const cursor = this._clampedEditIndex();
+            if (cursor > q.cursor) {
+                q.removeAt(cursor - 1);
+                if (this._editCursor !== null) this._editCursor -= 1;
                 this.render();
             }
             return;
@@ -3359,12 +3414,57 @@ export class MazeRoomUI {
         if (this._replayDriver) {
             this._stopReplay();
         }
-        // Route through the queue. Append-and-execute fires the
-        // executor synchronously when cursor is at tail; pure insert
-        // when cursor is set mid-queue. Either way the queue's state
-        // is current before render().
-        this._mazeQueue.handleInput(spec);
+        // Append-and-execute (the contract `MazeRoomQueue.handleInput` used to
+        // own): the entry lands at the edit point and, when that point is the
+        // tail and nothing is pending ahead of it, runs synchronously.
+        //
+        // ⚠ `ActionQueue.add` THROWS a RangeError for an index inside the done
+        // region rather than clamping, so the CLAMP lives here — the panel's
+        // edit cursor is never handed to `add` unclamped.
+        const q = this._mazeQueue;
+        const at = this._clampedEditIndex();
+        const insert = at < q.length;
+        q.add(spec, at);
+        if (insert) {
+            if (this._editCursor !== null) this._editCursor += 1;
+        } else if (q.cursor === q.length - 1) {
+            // Appended AND next to run: execute synchronously. When entries
+            // are still pending ahead (a replay tail the user typed into),
+            // the press only appends — the driver will reach it in order.
+            q.stepOne(this._runEntry);
+        }
         this.render();
+    }
+
+    /**
+     * Where the next keypress inserts, guaranteed outside the done region.
+     *
+     * `MazeRoomQueue.setEditCursor` clamped to `>= executionIndex`; the shared
+     * `ActionQueue` refuses instead, by throwing — so the clamp has to happen
+     * before `add`/`removeAt` see the index, and this is the one place it does.
+     */
+    _clampedEditIndex() {
+        const q = this._mazeQueue;
+        if (this._editCursor === null) return q.length;
+        return Math.max(q.cursor, Math.min(this._editCursor, q.length));
+    }
+
+    /**
+     * Place the edit cursor. `null` means "tail" (the default). Indices are
+     * clamped into `[cursor, length]` — the cursor can never point into the
+     * done region.
+     */
+    _setEditCursor(index) {
+        let next;
+        if (index === null) {
+            next = null;
+        } else if (!Number.isInteger(index)) {
+            return;
+        } else {
+            next = Math.max(this._mazeQueue.cursor, Math.min(index, this._mazeQueue.length));
+        }
+        if (this._editCursor === next) return;
+        this._editCursor = next;
     }
 
     /**
@@ -3380,10 +3480,23 @@ export class MazeRoomUI {
         const queue = this._lookupSavedQueueByRecordedAt(recordedAtKey);
         if (!queue || !Array.isArray(queue.actions) || queue.actions.length === 0) return;
         this._stopReplay();
-        this._mazeQueue.appendAll(queue.actions);
+        // A recording is run-length COMPRESSED (`loops: n`); the live queue is
+        // one entry per turn, so expand before adding.
+        this._appendEntries(expandEntries(queue.actions));
         this._startReplayDriver();
         this.render();
         this.rootElement?.focus();
+    }
+
+    /**
+     * Add already-expanded entries at the tail without executing any of them.
+     * (`ActionQueue` has no `appendAll`; a batch of `add`s is one emit each,
+     * which the panel does not subscribe to — it re-renders explicitly.)
+     */
+    _appendEntries(entries) {
+        if (!Array.isArray(entries) || entries.length === 0) return 0;
+        for (const entry of entries) this._mazeQueue.add(entry);
+        return entries.length;
     }
 
     _lookupSavedQueueByRecordedAt(recordedAt) {
@@ -3399,15 +3512,45 @@ export class MazeRoomUI {
         if (this._replayDriver) return;
         this._replayCompletionCallback = typeof onComplete === 'function' ? onComplete : null;
         const tick = () => {
-            if (this._mazeQueue.isIdle()) {
+            if (this._mazeQueue.isExhausted()) {
                 this._stopReplay({ fireCompletion: true });
                 this.render();
                 return;
             }
-            this._mazeQueue.stepOne();
+            const index = this._mazeQueue.cursor;
+            const out = this._mazeQueue.stepOne(this._runEntry);
+            if (out?.state === ActionState.FAILED) {
+                this._abortReplay(index, out);
+                return;
+            }
             this.render();
         };
         this._replayDriver = setInterval(tick, this._replayTickMs);
+    }
+
+    /**
+     * Census gap R2 — a replayed entry the engine REFUSED means the replay has
+     * left the route it was recorded on. Stop the driver, name the index and
+     * the reason, and do NOT fire the completion callback.
+     *
+     * Not firing the completion is the whole refusal: for a loops Playback /
+     * customQueue block the callback is what crosses the recorded departure
+     * exit, so withholding it leaves the block PARKED in manual mode —
+     * the shape `loopState` already handles (it parks every such block and
+     * wakes on the departing `regionMove`, which now never comes on its own).
+     * There is no `loops:substrateActionCompleted` on this path to publish a
+     * failure into: that event belongs to the `substrateActionBegan`
+     * delegation path, not to a replay.
+     */
+    _abortReplay(index, out) {
+        this._stopReplay();
+        const reason = out?.error ?? this._queueRefusal ?? 'refused';
+        const label = describeMazeAction(out?.entry) || `action ${index}`;
+        this._queueRefusal = reason;
+        this.message = `Replay stopped at action ${index} (${label}): ${reason}`;
+        // eslint-disable-next-line no-console
+        console.warn(`[mazeRoom] ${this.message}`);
+        this.render();
     }
 
     _stopReplay({ fireCompletion = false } = {}) {
@@ -3453,7 +3596,11 @@ export class MazeRoomUI {
                 key: String(q.recordedAt),
                 label: `exit: ${exitLabel}`,
                 totalCost: manaCost,
-                actionCount: q.actions.length,
+                // The EXPANDED count — how many turns the replay will take.
+                // A recording is run-length folded, so `actions.length` is now
+                // a storage detail (a 40-step corridor is ONE entry); the
+                // button promises the player a walk length, not a row count.
+                actionCount: expandedLength(q.actions),
             };
         });
         out.sort((a, b) => a.totalCost - b.totalCost);
@@ -3461,33 +3608,62 @@ export class MazeRoomUI {
     }
 
     /**
-     * Executor injected into the queue. Dispatches on action type.
-     * Called synchronously by MazeRoomQueue.handleInput (append-and-
-     * execute path) and by stepOne (replay paths, future phases).
+     * The executor handed to `ActionQueue.stepOne`. Runs the entry and, when
+     * the entry was REFUSED, THROWS — that is how `stepOne` records
+     * `ActionState.FAILED` with the reason (census gap R2).
+     *
+     * An entry carrying `params.refused` is a refusal the RECORDING already
+     * knew about (the player bumped a wall while recording; the turn still
+     * passed, so the entry has to stay in the script for hazard phase to line
+     * up). Reproducing that refusal is the recording replaying CORRECTLY, so
+     * it completes rather than failing. A refusal on any OTHER entry means the
+     * replay has left the route it was recorded on and the driver stops.
+     *
+     * Bound once (`_runEntry`) so `stepOne(this._runEntry)` keeps `this`.
      */
-    _executeQueueAction(action) {
-        if (action.type === ACTION_MOVE) {
-            this._executeMoveAction(action.dir);
-        } else if (action.type === ACTION_WAIT) {
-            this._executeWaitAction();
-        } else if (action.type === ACTION_LOCATION_CHECK) {
-            this._executeLocationCheckAction(action.locationName);
+    _runEntry = (entry) => {
+        const reason = this._executeQueueAction(entry);
+        this._queueRefusal = reason ?? null;
+        if (reason && !isRefused(entry)) throw new Error(reason);
+        return { reason: reason ?? null };
+    };
+
+    /**
+     * Dispatch one entry on `actionType` and apply the panel-side side
+     * effects around the pure `executeMazeEntry` call. Returns the refusal
+     * reason, or null when the entry ran.
+     */
+    _executeQueueAction(entry) {
+        if (entry?.actionType === ACTION_MOVE) {
+            return this._executeMoveAction(entry);
         }
+        if (entry?.actionType === ACTION_WAIT) {
+            this._executeWaitAction();
+            return null;
+        }
+        if (entry?.actionType === ACTION_LOCATION_CHECK) {
+            this._executeLocationCheckAction(entry.actionId);
+            return null;
+        }
+        return `unknown maze action type '${entry?.actionType}'`;
     }
 
     /**
-     * Execute a queued move. Mirrors the pre-queue _handleKeydown
-     * move logic exactly: step() with the panel's rule evaluator,
-     * playback-mode mana deduction + event publishing, fog
-     * expansion, end-of-region message. A blocked move (step returns
-     * null) is a no-op for state/mana/events — the queue still
-     * advances per the plan's "queued move becomes a no-op for that
-     * step" semantics.
+     * Execute a queued move: the panel-side side effects wrapped around the
+     * pure `executeMazeEntry` call — playback-mode mana deduction + event
+     * publishing, fog expansion, end-of-region message, hazard tick.
+     *
+     * A refused move is a no-op for state/mana/events and the turn still
+     * passes, exactly as before; what changed in slice Q-b is that the
+     * refusal is REPORTED (returned here, thrown by `_runEntry`) instead of
+     * being marked done and forgotten.
+     *
+     * @param {object} entry - a `move` queue entry; `actionId` is the direction
+     * @returns {string|null} the refusal reason, or null when the move ran
      */
-    _executeMoveAction(dir) {
-        if (!this.world || !this.state) return;
-        const input = MOVE_DIR_TO_INPUT[dir];
-        if (!input) return;
+    _executeMoveAction(entry) {
+        const dir = entry?.actionId;
+        if (!this.world || !this.state) return 'no world or state loaded';
         // In playback mode (externalInventory non-null) the snapshot is
         // truth and step() must not mutate state.inventory; in Generate
         // dev mode the override is undefined and step keeps its
@@ -3500,22 +3676,28 @@ export class MazeRoomUI {
         // the turn still passes (hazards tick below). Mirrors the
         // "queued move becomes a no-op for that step" semantics from
         // wall-bumped moves.
-        const intendedPos = this._intendedTileFor(oldPos, dir);
+        const intendedPos = intendedTileFor(oldPos, dir);
         const hazardAllowed = validateMoveAgainstHazards(
             this.world.hazards, oldPos, intendedPos,
         );
-        let stepped = false;
-        if (hazardAllowed) {
+        let refusal = null;
+        if (!hazardAllowed) {
+            refusal = `move ${dir} blocked at (${intendedPos?.x},${intendedPos?.y}): hazard`;
+        } else {
             // Use the same clearance evaluator path as the renderer so a
             // visibly-open logic gate is also walkable (and a closed
             // one blocks). Falls through to the local subset evaluator
             // when no snapshot is loaded.
             const ruleEvaluator = this._currentRuleEvaluator();
             const clearOpts = ruleEvaluator ? { evaluateRule: ruleEvaluator } : undefined;
-            const next = step(this.world, this.state, input, this.externalInventory ?? undefined, clearOpts);
-            if (next !== null) {
+            const { next, reason } = executeMazeEntry(this.world, this.state, entry, {
+                inventoryOverride: this.externalInventory ?? undefined,
+                clearanceOpts: clearOpts,
+            });
+            if (next === null) {
+                refusal = reason;
+            } else {
                 this.state = next;
-                stepped = true;
                 if (this.externalInventory !== null) {
                     // Phase 3: deduct mana for the tile-step before
                     // publishing events. Charges location cost if the
@@ -3555,9 +3737,7 @@ export class MazeRoomUI {
         if (!this._loopsDrivenAction) {
             this._tickAndCheckHazards();
         }
-        // Suppress unused-var lint if we ever change the branching;
-        // `stepped` documents intent and is reserved for future use.
-        void stepped;
+        return refusal;
     }
 
     /**
@@ -3602,9 +3782,7 @@ export class MazeRoomUI {
      * before engine.step runs.
      */
     _intendedTileFor(from, dir) {
-        const d = MOVE_DIR_TO_DELTA[dir];
-        if (!d) return from;
-        return { x: from.x + d.dx, y: from.y + d.dy };
+        return intendedTileFor(from, dir);
     }
 
     /**
@@ -3669,7 +3847,7 @@ export class MazeRoomUI {
         }
         this._visualizer?.stop?.();
         this._stopReplay?.();
-        this._mazeQueue?.clearPending();
+        this._clearPendingEntries();
         this.state.player_pos = { x: tile.x, y: tile.y };
         resetHazards(this.world.hazards);
         this.message = 'Hazard-trapped — teleported to entrance.';
@@ -3734,6 +3912,11 @@ export class MazeRoomUI {
                 // Track + record direct walk before publishing — the
                 // publish may trigger a region transition synchronously
                 // (rare for locationCheck, but defensive).
+                // R1: the visit recording's itemsPickedUp, filled here rather
+                // than left a literal []. Unconditional (not gated on mana or
+                // on who is driving) — the recording says what the walk
+                // collected either way.
+                this._notePickupForVisit(ev.itemId);
                 if (this.world?.manaEnabled && !this._loopsDrivenAction) {
                     if (ev.itemId && !this._directWalkItems.includes(ev.itemId)) {
                         this._directWalkItems.push(ev.itemId);

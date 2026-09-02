@@ -20,7 +20,7 @@ function makeQueue(overrides = {}) {
         substrate: 'maze',
         arrivalExitId: 'entrance',
         departureExitId: 'east',
-        actions: [{ type: 'move', dir: 'E' }],
+        actions: [{ actionType: 'move', actionId: 'E', substrate: 'maze', loops: 1 }],
         manaAtEntry: 100,
         manaAtExit: 80,
         manaMin: 75,
@@ -47,7 +47,7 @@ describe('savedQueueStore', () => {
         expect(queues[0]).toMatchObject({
             arrivalExitId: 'entrance',
             departureExitId: 'east',
-            actions: [{ type: 'move', dir: 'E' }],
+            actions: [{ actionType: 'move', actionId: 'E', substrate: 'maze', loops: 1 }],
             manaAtEntry: 100,
             manaAtExit: 80,
             manaMin: 75,
@@ -87,9 +87,9 @@ describe('savedQueueStore', () => {
     });
 
     it('REPLACES the same-tag entry on re-record (different actions)', () => {
-        saveQueue(RULES_HASH, makeQueue({ actions: [{ type: 'move', dir: 'E' }] }));
+        saveQueue(RULES_HASH, makeQueue({ actions: [{ actionType: 'move', actionId: 'E', substrate: 'maze', loops: 1 }] }));
         const status = saveQueue(RULES_HASH, makeQueue({
-            actions: [{ type: 'move', dir: 'E' }, { type: 'move', dir: 'W' }],
+            actions: [{ actionType: 'move', actionId: 'E', substrate: 'maze', loops: 1 }, { actionType: 'move', actionId: 'W', substrate: 'maze', loops: 1 }],
         }));
         expect(status).toBe('saved');
         const queues = getSavedQueues(RULES_HASH, 'region_0_0', 'maze');

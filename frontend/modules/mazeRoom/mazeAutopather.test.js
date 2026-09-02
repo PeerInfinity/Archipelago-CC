@@ -342,19 +342,19 @@ describe('mazeAutopather — findPath', () => {
             expect(stepsToActions([{ x: 0, y: 0 }])).toEqual([]);
         });
 
-        it('encodes cardinal moves as {type:move, dir}', () => {
+        it('encodes cardinal moves as shared actionQueue move entries', () => {
             const steps = [
                 { x: 0, y: 0 },
                 { x: 1, y: 0 },
                 { x: 1, y: 1 },
             ];
             expect(stepsToActions(steps)).toEqual([
-                { type: 'move', dir: 'E' },
-                { type: 'move', dir: 'S' },
+                { actionType: 'move', actionId: 'E', substrate: 'maze' },
+                { actionType: 'move', actionId: 'S', substrate: 'maze' },
             ]);
         });
 
-        it('emits {type:wait} for duplicate-tile entries', () => {
+        it('emits a wait entry for duplicate-tile entries', () => {
             const steps = [
                 { x: 0, y: 0 },
                 { x: 1, y: 0 },
@@ -363,11 +363,21 @@ describe('mazeAutopather — findPath', () => {
                 { x: 2, y: 0 },
             ];
             expect(stepsToActions(steps)).toEqual([
-                { type: 'move', dir: 'E' },
-                { type: 'wait' },
-                { type: 'wait' },
-                { type: 'move', dir: 'E' },
+                { actionType: 'move', actionId: 'E', substrate: 'maze' },
+                { actionType: 'wait', actionId: null, substrate: 'maze' },
+                { actionType: 'wait', actionId: null, substrate: 'maze' },
+                { actionType: 'move', actionId: 'E', substrate: 'maze' },
             ]);
+        });
+
+        it('emits ONE entry per step — the run-length fold into `loops` is the'
+            + " RECORDER's, not the planner's", () => {
+            const steps = [
+                { x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 3, y: 0 },
+            ];
+            const out = stepsToActions(steps);
+            expect(out).toHaveLength(3);
+            expect(out.every((e) => e.loops === undefined)).toBe(true);
         });
     });
 

@@ -53,6 +53,44 @@ function log(level, message, ...data) {
  * their legacy behavior (e.g. clickToQueue interception) instead of
  * treating it as either live play or a block.
  */
+/**
+ * The COARSE meaning of one recorded entry, or null when it has none.
+ *
+ * Two vocabularies reach `_applyCoarseReplacement` and this is the seam
+ * between them:
+ *   - the shared actionQueue entry (`actionType` / `actionId`) a FINE
+ *     substrate's recording carries — jta, omsi and, since slice Q-b, the
+ *     maze; and
+ *   - loops' OWN path vocabulary (`type` / `locationName`), which is what
+ *     `_liveCaptureBuffer` holds for a coarse or summary substrate and what
+ *     `gameState`'s path entries speak.
+ *
+ * ⛔ Reading both is deliberate and TEMPORARY: the user has ruled that
+ * gameState and actionQueue converge later, in the cross-substrate viewer's
+ * own arc (plan §26). That arc deletes the second branch; nothing else here
+ * has to move for it. Converting the buffer now is explicitly NOT this slice.
+ *
+ * @param {object} entry
+ * @returns {{kind:'locationCheck', name:string}|{kind:'explore'}|null}
+ */
+export function coarseOf(entry) {
+  if (!entry || typeof entry !== 'object') return null;
+  // (i) the shared actionQueue vocabulary
+  if (typeof entry.actionType === 'string') {
+    if (entry.actionType === 'locationCheck' && entry.actionId) {
+      return { kind: 'locationCheck', name: entry.actionId };
+    }
+    if (entry.actionType === 'explore') return { kind: 'explore' };
+    return null;
+  }
+  // (ii) loops' own path vocabulary
+  if (entry.type === 'locationCheck' && entry.locationName) {
+    return { kind: 'locationCheck', name: entry.locationName };
+  }
+  if (entry.type === 'explore') return { kind: 'explore' };
+  return null;
+}
+
 export function gateReasonOutOfScope(reason) {
   return reason === 'loopModeOff' || reason === 'noRegion'
     || reason === 'apNative' || reason === 'substrateNotGated';
@@ -1739,9 +1777,10 @@ export class LoopState {
     if (!gs || typeof gs.clearActionsAt !== 'function') return;
     gs.clearActionsAt(region, instance);
     for (const a of rec?.actions ?? []) {
-      if (a?.type === 'locationCheck' && a.locationName) {
-        gs.insertLocationCheckAt?.(a.locationName, region, instance, region);
-      } else if (a?.type === 'explore') {
+      const coarse = coarseOf(a);
+      if (coarse?.kind === 'locationCheck') {
+        gs.insertLocationCheckAt?.(coarse.name, region, instance, region);
+      } else if (coarse?.kind === 'explore') {
         gs.insertCustomActionAt?.('explore', region, instance, {});
       }
       // Fine-grained substrate actions (maze 'move', etc.) are NOT coarse
