@@ -8088,6 +8088,25 @@ expandedLength(entries) -> number
 - **R-b (`requires`, `worldDigest`) is unblocked**: the refusal path it sits under is
   `_abortReplay` + `params.refused`, both in place.
 
+**⇒ Q-a + Q-b VERIFIED BY THE PLANNER; PLAN PART VII; S2a LAUNCHED (2026-09-01/02, `maze-lab-planning`).**
+Q-a (submodule `ef31e39`, main `7e9cd873b`/`d557038b3`) and Q-b (main `089d809a9`) both re-checked on disk:
+gitlink matches, `MazeRoomQueue` gone, the named exports present, bounded vitest 52 files/1855 green at
+Q-b's head, `actionQueue.test.js` = **47 by vitest** (the planner's `grep -c it(` read 37 — multi-line
+titles; a count in prose again). **DESIGN CHANGE Q-b FORCED, accepted (plan §28):** plan §15.4 ("the lab
+drops a refused press") is WITHDRAWN — a refused move still TICKS HAZARDS, so dropping it from a recording
+shifts every later hazard phase and MANUFACTURES the divergence R2 catches; shipped for BOTH replayers:
+`projectActions` keeps the entry with `params:{refused:true}`, a reproduced refusal is a COMPLETION, a new
+one a FAILURE (`isRefused`/`_abortReplay`) ⇒ S2b's lab arm KEEPS refused presses too. Replay failure =
+the block stays PARKED (no `substrateActionCompleted` on that path — derived from `loopState.js:1812/2637`).
+Other corrections on the record: the visualizer mirrors nothing; the pin table was 113 lines/11 files not
+72/7 (four hits were the door-key template's `dir` PARAMETER); `ActionQueue` has no `clearPending`/
+`appendAll` — "drop the pending tail, keep the history" is a viewer-arc design line; the edit cursor is
+PANEL state (S2b copies ~15 lines). **S2a kickoff written and launched** (`NewDocs/plans/maze-lab-arms-sliceS2a-prompt.md`,
+`maze-lab-arms-sliceS2a`): WAIT through `step` at FOUR sites (engine, `executeMazeEntry:118`, the
+visualizer's private branch `:443`, the panel's `_executeWaitAction:3640`); `INPUTS`/oracle untouched;
+the maze byte-identity row read BEFORE and AFTER as the control; the `next === state` callers re-derived;
+mutant = `step` refusing WAIT again must red three rows. S2b's kickoff follows S2a's as-built.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
