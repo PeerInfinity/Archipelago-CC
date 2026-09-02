@@ -8787,6 +8787,164 @@ change — the asymmetric exemption), M12 `fetchOrRefuse`, M13 `posKey` exports/
 restored), M10 `deriveWorldAtlasOf` returns `parts`. Claim everywhere: UNMOVED (265/0, op-log fixtures,
 hosting 66/0), captured before and asserted after.
 
+**⇒ D3+D4 AS BUILT (2026-09-02, `maze-lab-arms-sliceD3`; main `4d8791688` / `a42d99451`).** Seven
+dedup findings, two commits, seven mutants RUN. **Every claim is "nothing observable moved" except
+ONE named behaviour change (M11)** — the outputs were captured before the first edit and re-taken
+after, and the captures are what the rows below quote.
+
+**D3 — the lab page's five internal duplicates (`4d8791688`).**
+
+| # | one owner | code lines | the byte capture |
+|---|---|---|---|
+| M7 | `mountParamForm(boxId, attr, schema, {values, anyOption})` / `readParamForm(…)` + `skeletonParamSchema(kind)` in `mazeLabView.js` | **−61 +20** | the **whole form capture** below |
+| M8 | `mazeRoomRender.viewFieldsRefusal(view, spec)` + three frozen `*_VIEW_SPEC`s | −36 **+52** | every refusal message and error class, identical |
+| M11 | `mazeSetLab.roomOpenRefusal(open, index)` — PURE | −25 +39 | ⚠ the one behaviour change |
+| M12 | `fetchOrRefuse(url, {param, noun, as})` | **−32 +24** | both refusal sentences, verbatim |
+| M13 | `download` → `setDownload`; `mazeLibraryEntry.slotName`; engine `posKey`/`unposKey` and its five hand parsers | **−27 +18** across five files | the gate's own rows |
+
+⛓ The column is DERIVED, not typed: hunks of `4d8791688` attributed by content, comment and blank
+lines dropped; the six buckets sum to the commit's own **−188 +202** (of which +41 are the new test
+rows and 7/8 are import lines that belong to no single finding). ⚠ **M8 and M11 ADD code** and that
+is the shape of both: M8 moves five per-module SENTENCES out of `if` bodies and into three frozen
+specs (the copies removed are the LOOP), and M11 gains a documented pure rule plus a pin. What the
+slice removes outright is the three copy-pasted forms (M7) and the two fetch bodies (M12).
+
+⛔ **M7 was NOT lifted to `procgenCore/labView.js`** — Seedling mounts a form of this kind but its
+caller is not in this slice, and a shared owner is written at the SECOND caller, not before it.
+
+*`anyOption` says BOTH halves of the element form's difference at once* — the "any (draw it)" option
+AND the **pre-selection rule**, which is the half the brief did not name: without it an absent value
+pre-selects the schema's DEFAULT (`values[k] ?? p.default`, compared with `===`), and WITH it there
+is no default arm at all, because `templateContract.assertParamSchema` GUARANTEES every element knob
+has a default IN its domain — so applying it would silently turn every omitted knob into a NAMED
+one, which is the difference between `guard` and `guard;len=3` (`elementSpec.namedParams`).
+
+*M8 returns the SENTENCE and does not throw*, because each module refuses with its own error class
+and `mazeAreaOverlay.test.js` asserts `toThrow(AreaOverlayError)` on exactly that path.
+
+**⚠ M11 — the one behaviour change, and the rule chosen.** The two openers each carried both guards
+and DISAGREED on one: `openSetRoomAt` exempted the SAME INDEX from the local-session guard
+(`setRoomIndex !== index`) and `openForeignRoomAt` did not. **The rule taken is the same-index
+exemption in BOTH guards on BOTH routes** — every other guard on that page already reads *"a room
+that is open does not block a request to open THAT room"* (the foreign guard's own
+`foreignRoom.index !== index`, and each route's no-op-success return), so the asymmetric copy was
+the odd one out rather than a rule anybody had stated. The refusal SENTENCES stay at the callers:
+the routes close into different documents (one into the WORLD, one into the LIBRARY) and only one of
+them has a frame to point at.
+
+**D4 — the world rules.json path (`a42d99451`).**
+
+- **M9.** `worldRulesJsonOf` gains a `projectRegions` hook; `worldAllMazeRulesJson` is a wrapper.
+  ⛔ **A hook and not a `compileOptions` flavour, for a reason the return value states**: the
+  projected atlas is what the function HANDS BACK, and the maze's own row reads `out.atlas` to
+  assert the projection was compile-time only — a compile-time flag could tell the compiler and
+  could not answer *"which atlas was compiled"*. It defaults to `null`, and the no-hook path returns
+  `derived.atlas` ITSELF, un-copied (asserted: `plain.atlas` **is** the object handed to the
+  compiler), which is why `worldDerivation.test.js`'s existing rows did not have to move.
+- **M10.** `deriveWorldAtlasOf` returns `parts: [{id, atlas}]`; `reportOver` hands them on as
+  `derivedParts`; `worldPartReportRows` reads them. ⛔ The per-part fallback STAYS and is exercised —
+  `reportOver` returns EARLY with no derivation when the world's atlas does not build, and the rows
+  must still name the part that failed.
+
+*The D4 capture, on the W4 world with the crossing on:*
+
+| subject | before | after |
+|---|---|---|
+| the ALL-MAZE `rules.json` | 13,311 bytes, md5 `f85dd94cc781e131a38672288319d8f5` | **identical** |
+| `report`, `atlas.regions`, `notes`, `displaced` | — | **identical** |
+| the REPORT's per-part rows, and the core's own rows | — | **identical** |
+| the return's keys | `rules, report, atlas, notes, displaced` | **+ `stats`, `dropped`** |
+| `stats` | `undefined` | `{parts:2, regions:4, exits:12, locations:0, connections:3, links:1, displaced:1, substrates:{flash_seedling:2, maze:2}}` |
+| derivations of a part's own atlas, spied, over report + rows | **6** | **4** (2 parts) |
+
+⛓ The rows' own cost is **N → 0** and the report+rows pair halves; the report itself still derives
+twice (the atlas it validates, and the compile), which the row states as `2 × parts.length` rather
+than typing a 4.
+
+**The byte captures (both kept in the session scratchpad).**
+
+- *Forms + both fetch refusals, in a real browser*, enumerated from the page's own selects rather
+  than a typed list: **9 skeleton kinds** × (form DOM, every option's `value`/`text`/`selected`, the
+  `?skeleton=kind;…` values path, the read-back and the URL a change writes) · **6 element heads** ×
+  the same · the area form and all **4** of its knobs · both `?library=`/`?world=` 404 sentences.
+  **68,775 bytes, md5 `a7131f0e5de033501e8925c93e59925d` BEFORE and AFTER.**
+- *M8's refusals in node*: 8 non-object inputs, and per field three shapes (deleted, `undefined`,
+  inherited-only), plus every module-specific extra check — message, error class and return,
+  **identical**.
+
+**Mutants — RUN, not reasoned** (copy/restore, trap 1072; each restored and the file diffed clean
+before the next).
+
+| # | mutant | red |
+|---|---|---|
+| (a) | drop `layer` from `ELEMENT_VIEW_FIELDS` | 1 row |
+| (b) | drop `layer` from `OVERLAY_VIEW_FIELDS` | 1 row |
+| (c) | drop `seenTiles` from `VIEW_FIELDS` | **GREEN — see below** |
+| (d) | reinstate the asymmetric exemption in `roomOpenRefusal` | 1 row (the new pin) |
+| (e) | the element form pre-selects the schema DEFAULT | the browser capture moves (`selectedIndex` 0 → 2) |
+| (f) | drop `stats` from `worldRulesJsonOf`'s return | 3 rows |
+| (g) | `deriveWorldAtlasOf` hands back an empty `parts` | 2 rows |
+| (h) | remove the wrapper's substrate strip | 1 row |
+
+⚠ **(c) WAS GREEN, and that is a fixture defect this slice's own mutant found (§34).**
+`mazeRoomRender.test.js` walked `VIEW_FIELDS` to build its cases — a population read off the thing
+under test — so a build that DROPS a field simply had one fewer case to check and all 22 rows
+passed. The list is now stated INDEPENDENTLY in that file and the same mutant reds. (The two
+overlays already had theirs, in their hard-coded `missing "layer"` rows — which is why (a) and (b)
+were red from the start.)
+
+⚠ **(g) leaves the ROWS byte-identical** — the fallback derives them — so the row that reds is the
+DERIVATION COUNT. A rows-only fixture could not have seen M10 at all.
+
+**Gates, all run here.**
+
+| gate | before | after | command |
+|---|---|---|---|
+| `check-maze-lab.mjs` | 265/0 | **265/0 UNMOVED** ×3 (baseline, post-D3, post-D4), `ALL CHECKS PASSED` | `node scripts/procgen/check-maze-lab.mjs` |
+| `check-procgen-lab-hosting.mjs` | 66/0 | **66/0 UNMOVED** | `node scripts/procgen/check-procgen-lab-hosting.mjs` |
+| `generate-procgen-reference --check` | — | **6 modules + 4 regions MATCH** | `node scripts/procgen/generate-procgen-reference.mjs --check` |
+| bounded ⚖ 52 | 32 files / **1404** | **32 / 1411** (D3) → **32 / 1414** (D4) | `npx vitest run frontend/modules/mazeRoom/ frontend/modules/procgenCore/{worldDerivation,worldSetAdapter,labView,setEditorCore,setEditorView}.test.js` |
+| the other `reportOver` consumers | — | **104/104** | `npx vitest run frontend/modules/seedlingDemo/{worldChain,seedlingSetAdapter}.test.js` |
+| in-app `--batch=fast` | 61/61 | **61/61** ×2 (3.5 min, 3.4 min) | `compare-runs.js …T16-41-30 …T17-25-47` and `… …T17-37-26` → *No differences in status, roster, or duration* |
+
+⛓ The bounded set was WIDENED beyond the brief's four files by `setEditorCore.test.js` and
+`setEditorView.test.js`, because D4's M10 adds a field to `reportOver`'s frozen return — and then by
+the two `seedlingDemo` set-editor test files, which are the only other consumers of it
+(`grep -rl reportOver`).
+
+**No re-bank.** `gate: maze-lab` stays 265/0; no CI-sourced row moved.
+
+**What this slice overturned in the brief.**
+- **M8's three copies differ in a way the brief did not name, and it is OBSERVABLE**: this file
+  tested presence with `hasOwnProperty` and both overlays with `in`, so an INHERITED field is a
+  field to the overlays and is not to the render module. Measured over views built on
+  `Object.create`: render refuses all 12, the overlays accept all 5. The shared check takes `own`
+  and PRESERVES both — unifying either way is a second behaviour change nobody asked for.
+  ⚠ **Residue → a later slice**: one of the two spellings is wrong, and which one is a question
+  about what a view IS, not about this refactor.
+- **M7's "skips an empty select" is REDUNDANT, measured**: dropping the `continue` changes nothing,
+  because the domain lookup below it (`p.domain.find(d => String(d) === sel.value)`) already fails
+  for `''`. It is KEPT as the declared statement of intent — the mutant that proves the capture
+  discriminates had to be the PRE-SELECTION one (e) instead.
+- **M11's changed branch is close to unreachable on the page** (it needs a LOCAL room session open
+  at an index whose cell reads as the OTHER substrate), which is why the rule was lifted to a pure
+  function in `mazeSetLab.js` and pinned there. A browser row would have been a fixture that cannot
+  tell the two builds apart.
+- **M12's two sentences share more than the brief said**: the possessive in *"an arm with no
+  library/world"* IS the parameter's own name, so ONE template with two fillings reproduces both
+  byte for byte — there is no third string to keep in step.
+- **M13's `_parseStateKeyXY` was NOT identical to the other four parsers**: it returned
+  `{x: Number(parts[0]), y: Number(parts[1])}`, which is `NaN` where `unposKey` gives `undefined` on
+  a one-field key. Every state key is `"x,y"` or `"x,y,t"` (checked at the producer), so the
+  difference is unreachable and the shared reader is the engine's.
+- **M10 could not be done inside the two files the brief names.** `worldPartReportRows` does not
+  call `deriveWorldAtlasOf` — it derives each part itself — so "the report reads them" needed the
+  derivation to REACH it: `reportOver` now carries `derivedParts` on its return (the `reportRows`
+  hook is already handed the report). One nullable field on a frozen return, and no key-set
+  assertion anywhere reads it.
+
+**NEXT (pre-authorized): F-a.**
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
