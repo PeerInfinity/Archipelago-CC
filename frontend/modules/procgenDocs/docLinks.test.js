@@ -50,7 +50,10 @@ const RESOLVED = CORPUS.map((l) => ({ ...l, ...resolveDocLink(l.href, { doc: l.d
 const SLUGS = new Map(FILES.map((f) => [f, new Set(headingsOf(read(f)).map((h) => h.slug))]));
 
 describe('the corpus census — printed, then pinned', () => {
-    it('resolves all 221 links into five kinds and no others', () => {
+    // ⛓ THE COUNT IS INTERPOLATED, NOT TYPED (`lint-gate-labels`): the name
+    //   states the roster this row measured, so it cannot go stale against the
+    //   pin three lines down.
+    it(`resolves all ${CORPUS.length} links into five kinds and no others`, () => {
         const by = {};
         for (const r of RESOLVED) by[r.kind] = (by[r.kind] ?? 0) + 1;
         // eslint-disable-next-line no-console
