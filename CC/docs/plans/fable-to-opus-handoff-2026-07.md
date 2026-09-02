@@ -8269,6 +8269,30 @@ written. ⚠ The write also printed the standing shard-partition warning — *"B
 **pre-existing and not this slice's**: the same warning names run `33597305784` @`aaddf5acf` in S2a's own
 write. It belongs to whoever next runs `ci-gates.mjs --write-costs`.
 
+**⇒ S0+S1 VERIFIED BY THE PLANNER; S2b (THE MANUAL ARM) LAUNCHED (2026-09-02, `maze-lab-planning`).**
+S0 `6ae598a9a` / S1 `f1a8ebef4` / as-built `e22505c2d` re-checked: `gate: maze-lab` banked **238/0** CI-sourced
+at `f1a8ebef4`; `startStateFor(world, items)` in `procgenMaze.js:2311`, `framesForActions`/`frameOf`/
+`planFrames`/`planCells` in `mazeLab.js`; `#labScrub` in the page; the five stale "three modes" texts gone;
+bounded vitest 34 files/1617 green, `mazeLab.test.js` 114, `demos.test.js` 47 TESTS (its 28 is the ENTRY
+count). **Overturned in the brief (plan §31):** FIVE stale texts, not three (`maze.md:443`, the glossary's
+`maze-lab` entry, `mazeLab.js`'s own header); `startStateFor` takes a WORLD, not the lab's state (the
+substrate's file may not know the page's shape); "planFrames byte-equal" and "play gains turn" could not
+both hold — a frame must carry `turn` (a `locationCheck` costs a frame and no turn; a marked refusal
+neither), so the three old fields are byte-equal and `turn`/`input` are new; CLAIM 15b is SEVEN rows and
+"exactly one cell lit" is FALSE at frame 0 (⏮ reaches it; the start is not an input) — a gate written as I
+spelled it would have red on its own page. `feedback_suite_row_write_needs_a_ci_head` fired live (a KEEP
+banked before the CI run concluded; reverted, re-run). Pre-existing, seen while banking: the browser shard
+partition warns 602.5 s > 600 s (heaviest `plan-seedling-r7-ends-meet --check`) — owner = the next
+`ci-gates.mjs --write-costs`. **S2b launched** (`NewDocs/plans/maze-lab-arms-sliceS2b-prompt.md`,
+`maze-lab-arms-sliceS2b`): `?source=manual` (CLAIM 17b re-derived from `SOURCES` — it will red first);
+`mazeLabWalk.js` on the shared `ActionQueue` + `executeMazeEntry` + `startStateFor`, no undo in v1
+(`removeAt` refuses the done region by design); `whyBlocked` in the ENGINE with `refusalReason` delegating,
+tested as the PROPERTY `whyBlocked === null ⇔ step !== null`; a refused press KEPT and marked (§28); the
+recording = the loops `SavedQueue` envelope + a `lab` block, Load = `loadPayload` then `framesForActions`
+refusing by name at the first illegal index; SOLVE's *Download the plan as a walk* (old S3, folded in);
+witness line, `certified` untouched, the SEAM line unit-driven; demo `maze-manual-arm` + glossary
+`walk`/`witness`; CLAIM 22 by real key presses; three mutants named; re-banks after the CI run concludes.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
