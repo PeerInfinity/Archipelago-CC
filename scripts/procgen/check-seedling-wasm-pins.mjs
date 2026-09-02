@@ -90,6 +90,23 @@
  * gate reads the js name out of game.html's own <script src>, the way
  * the browser resolves it, and cross-checks builds.json against that.
  *
+ * ── WHAT DERIVATION CANNOT SEE, THIS GATE SAYS ───────────────────────
+ *
+ * ⛓ ROW (h2) READS EVERY GATE'S SOURCE AND NEVER IMPORTS ONE, so no rule in
+ * `rowInputKey.js` can find them: a `.mjs` named by a literal is population
+ * 1's business and arrives there only by being IMPORTED, and (h2)'s list is
+ * built at run time from the tracked tree rather than spelled. MEASURED at
+ * this head, before the declaration below: `check-seedling-wasm-pages.mjs`
+ * and `verify-seedling-bot-differential.mjs` were in NO population of this
+ * row's key — so the exact edit (h2) exists to catch would not have re-run it.
+ *
+ * ⛔ DECLARED `data`, NOT `code`: what this row reads is their BYTES. Pulling
+ * their import closures in would key this gate on most of the tree to answer
+ * a question about two string literals.
+ *
+ * @key-inputs data: scripts/procgen/check-*.mjs
+ * @key-inputs data: scripts/procgen/verify-seedling-bot-differential.mjs
+ *
  * Run: node scripts/procgen/check-seedling-wasm-pins.mjs
  * Exit 0 all agree · 1 a named difference · 2 the submodule is absent.
  */
@@ -101,6 +118,14 @@ import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+/**
+ * ⛓ THE GATE MEMBERSHIP RULE, IMPORTED — row (h2) sweeps "every gate of this
+ * repo", and `isGateFile` is where that sentence is already defined. A second
+ * copy of `check-*.mjs` spelled here is the `scannable()` mistake again.
+ * ⛔ The predicate only, never `gateRoster()`: this gate must not start
+ * throwing because some other gate's CI header is malformed.
+ */
+import { SCRIPT_DIR, isGateFile } from './gateRoster.js';
 /**
  * ⛓ THE CAPABILITY VOCABULARY, IMPORTED FROM ITS ONE CONSUMER — never a
  * second copy spelled here. A gate spelled differently from the code it
@@ -579,6 +604,209 @@ function codeOnly(text) {
         console.log(`  ${drivable.join(', ')} declare${drivable.length === 1 ? 's' : ''} no `
             + `${ARM_CAPABILITY}, and ${drivable.length === 1 ? 'is' : 'are'} referenced `
             + '— so both corrections still have a negative arm to be proved on');
+    }
+}
+
+/**
+ * ── (h) ⚖ THE LAB'S BUILD LITERAL, MADE A *GATED* FIXED POINT ────────
+ *   (maze-lab arms slice F-d, §17.1 row F8; ⚖ user 2026-09-02)
+ *
+ * ⛔ THE LITERAL STAYS A LITERAL. `watchWasm.js`'s `WASM_PAGE` is a hard-coded
+ * path ON PURPOSE — its own docblock says why, and row (f)'s neighbourhood
+ * says it again: a name composed from a variable is invisible to the
+ * REFERENCED scan above and could clear a build for retirement while the lab
+ * page still loaded it (trap 411). Importing it from `builds.json` would fix
+ * the drift by deleting the pin. ⇒ this row does the other thing: it leaves
+ * the literal alone and makes something CHECK it (trap 769 — a fixed point
+ * tests self-consistency; a gate over two independent sources does not).
+ *
+ * ⛓ WHAT VIEW (a) CANNOT ANSWER, AGAIN. The four-way law asks *does SOMEBODY
+ * name this build*. It cannot ask *does the LAB name the build its gates
+ * certify*: 63 tracked files outside the submodule name the current build
+ * (`git grep -l <name> -- ':!frontend/modules/flashPanel/wasm' | wc -l`, at
+ * 086391b53), they agree only because EDITOR INTEGRATION slice P2 hand-edited
+ * them in one pass, and if the lab's literal and a certifying gate's default
+ * drifted apart every view would stay in perfect agreement. Rows (f) and (g)
+ * exist for that same shape of hole keyed on a CAPABILITY's absence; this one
+ * is keyed on the AGREEMENT of two sources neither of which reads the other.
+ *
+ * ── (h1) THE LITERAL NAMES A MANIFEST BUILD ──────────────────────────
+ * Parsed off the tracked file with the gate's OWN `SPELLINGS[0]` — reused,
+ * never restated (`scannable()` learned that lesson one screen up: a detector
+ * spelled twice tests itself). So (h1) also asserts the literal is still
+ * written in the one spelling the REFERENCED scan can SEE, which is the whole
+ * reason it is a literal. Then: the name is in the MANIFEST, and the file the
+ * path actually resolves to exists. ⛔ Not the bytes — (b)/(c) own those.
+ * This row owns the JOIN.
+ *
+ * ── (h2) THE LAB'S BUILD IS THE BUILD ITS CERTIFIERS DRIVE ───────────
+ * ⛓ THE SUBJECT SET IS DERIVED, WITH ONE NAMED ADDITION.
+ *
+ *   DERIVED — every gate of this repo (`isGateFile`, imported: the ONE
+ *   membership rule, `check-*.mjs` under `scripts/procgen/`) whose CODE spells
+ *   a MANIFEST build name. Comments are stripped first, with (g1)'s
+ *   `codeOnly`, and that is load-bearing rather than tidy: the ONE build name
+ *   in `check-seedling-wasm-ship.mjs` is a sentence in a docblock about a
+ *   reading taken on another build years ago, and historical prose is not a
+ *   pin. Bounded to the manifest's own names, so this sweep can never invent
+ *   a build the way a general `'seedling_*'` would (`PRESET_ID =
+ *   'seedling_atlas_maze'`, the docblock above records it).
+ *
+ *   NAMED — `verify-seedling-bot-differential.mjs`. It is a `verify-`, so the
+ *   membership rule cannot see it, and it is the one instrument that drives
+ *   the lab's build tick for tick against the JS model. A named subject that
+ *   stops being tracked `fail()`s here rather than vanishing, exactly as (f)'s
+ *   control file and (g1)'s two correction sites do.
+ *
+ * ⛔ EXCLUDED, AND WHY — A GATE THAT GOES *THROUGH* THE LITERAL IS NOT A
+ * SUBJECT. `check-seedling-wasm-ship.mjs` and `check-seedling-wasm-element.mjs`
+ * boot `watch.html` and inherit whatever `WASM_PAGE` says; the ~17
+ * `check-seedling-editor-*.mjs` do the same. They cannot DISAGREE with the
+ * lab, so asserting they agree would be the fixed point this row exists to
+ * avoid. Measured at 086391b53: 4 of the 33 roster gates spell a build in
+ * code — this gate is excluded from its own sweep for the reason the
+ * REFERENCED scan excludes it, and the other three are the `windows` gates
+ * that drive the build directly. The panel's preset default
+ * (`procgenPipeline/regionAtlasCompiler.js`, `wasm: '<name>/game.html'`) is
+ * NOT a subject either, in the other direction: the panel is DATA-driven and
+ * capability-gated at run time by `seedlingRandomizerEligibility.js`, so its
+ * wiring default is a preset's datum, not a claim about the lab.
+ *
+ * ⛔ THE DEFAULT IS THE PIN. `SEEDLING_PAGE=` at run time is an override and
+ * is not the subject — row (f)'s rule, and the same reason it is spelled
+ * there.
+ *
+ * ── (h3) THE CAPABILITIES THE LAB'S BUILD MUST DECLARE — MEASURED ─────
+ * ⛓ NONE, AND THAT IS A MEASUREMENT, NOT AN OMISSION. The lab's own source
+ * keys on no capability BY NAME (`grep -n '\.arm\b\|armed_at\|apitem'
+ * frontend/modules/seedlingDemo/*.js` minus tests: `r5Acceptance.js`'s
+ * `preSwapCorrection` reads the RUNTIME `status.arm` field and tolerates its
+ * absence — which is row (g1)'s subject, not this one). So whether the lab
+ * NEEDS a capability is a question about its GATES' rows, and F-d answered it
+ * by running them: `WASM_PAGE` pointed at the manifest build declaring `[]`
+ * and `check-seedling-wasm-pages.mjs --root=…/frontend` run once, against a
+ * control run of the same gate on the current build.
+ *
+ *     control (build declaring [arm, apitem])   20 PASS / 0 FAIL
+ *     arm     (build declaring [])              19 PASS / 1 FAIL
+ *
+ * The one row that moved is `watch.html pointed its iframe at the game page`
+ * — the pages gate comparing the iframe src against its OWN `BUILD` literal,
+ * i.e. (h2)'s disagreement showing up in a browser, in the only row that can
+ * see it and phrased as *the page pointed somewhere else*. Every
+ * capability-bearing row — the three ▶ ship arms, the drain, the per-tick
+ * wasm verdict — stayed GREEN on a build declaring nothing. ⇒ (h3) ASSERTS
+ * NOTHING and prints what it measured. Whoever gives the lab a capability
+ * dependency turns this paragraph into a check and names the rows that moved.
+ *
+ * ⛓ WHAT THIS BUYS, STATED SO IT CAN BE ARGUED WITH: the 3.5-minute browser
+ * row above sees the disagreement only for the gate that boots the lab page,
+ * and reports it as a page fault. (h2) answers the same question in 2.5 s off
+ * the source, names BOTH files, and covers the certifiers no browser row
+ * reaches at all.
+ */
+const LAB_FILE = 'frontend/modules/seedlingDemo/watchWasm.js';
+const LAB_SPELLING = /export const WASM_PAGE\s*=\s*'([^']*)'/;
+/** ⛓ Certifiers the `check-*.mjs` membership rule cannot see. Named, with the
+ *  reason, the way (f) names its control file. */
+const NAMED_CERTIFIERS = [
+    ['scripts/procgen/verify-seedling-bot-differential.mjs',
+        'it opens the build\'s game page itself and drives it tick for tick '
+        + 'against the JS model'],
+];
+{
+    console.log('\n# the lab\'s build');
+    // (h1) ── the literal, off the tracked file, in the scan's own spelling.
+    let labBuild = null;
+    if (!trackedFiles.includes(LAB_FILE)) {
+        fail(`${LAB_FILE} is not tracked — it carries \`WASM_PAGE\`, the build the `
+            + 'lab page loads, and this row has no subject without it');
+    } else {
+        let labText = null;
+        try { labText = scannable(readFileSync(join(REPO, LAB_FILE), 'utf8')); } catch { /* below */ }
+        const literal = labText?.match(LAB_SPELLING)?.[1] ?? null;
+        const [spelling1] = SPELLINGS[0];
+        spelling1.lastIndex = 0;
+        const named = literal === null ? null : spelling1.exec(literal)?.[1] ?? null;
+        if (literal === null) {
+            fail(`${LAB_FILE} exports no \`WASM_PAGE\` string literal — the lab's build `
+                + 'is spelled as a literal ON PURPOSE (trap 411): a path composed from a '
+                + 'variable is invisible to the REFERENCED view above, which would then '
+                + 'clear a build for retirement while this page still loaded it');
+        } else if (named === null) {
+            fail(`${LAB_FILE}: \`WASM_PAGE\` = ${JSON.stringify(literal)} is not written in `
+                + 'the `wasm/<name>` spelling the REFERENCED view scans for, so the lab '
+                + 'no longer pins the build it loads');
+        } else if (!MANIFEST.has(named)) {
+            fail(`${LAB_FILE}: \`WASM_PAGE\` names ${named}, which is not in the manifest — `
+                + 'the lab page would load a 404, which is the failure this submodule exists '
+                + 'to retire');
+        } else if (!existsSync(join(SUB, named, 'game.html'))) {
+            fail(`${LAB_FILE}: \`WASM_PAGE\` resolves to ${named}/game.html, which is not `
+                + 'on disk');
+        } else {
+            labBuild = named;
+        }
+    }
+
+    // (h2) ── every certifier that spells a build of its own names THAT one.
+    const GATE_DIR = `${SCRIPT_DIR}/`;
+    const SELF = `${GATE_DIR}check-seedling-wasm-pins.mjs`;
+    const rosterGates = trackedFiles.filter((rel) => rel.startsWith(GATE_DIR)
+        && !rel.slice(GATE_DIR.length).includes('/')
+        && isGateFile(rel.slice(GATE_DIR.length))
+        && rel !== SELF);
+    const buildsNamedIn = (rel) => {
+        let text = null;
+        try { text = codeOnly(readFileSync(join(REPO, rel), 'utf8')); } catch { return null; }
+        return sorted(set([...MANIFEST].filter((n) => text.includes(n))));
+    };
+    const certifiers = [];
+    for (const rel of rosterGates) {
+        const names = buildsNamedIn(rel);
+        if (names?.length) certifiers.push([rel, names, 'a gate that spells its own build']);
+    }
+    for (const [rel, why] of NAMED_CERTIFIERS) {
+        if (!trackedFiles.includes(rel)) {
+            fail(`${rel} is not tracked — it is a named certifier of the lab's build `
+                + `(${why}), and dropping it drops the check that it drives the same build `
+                + 'the lab does');
+            continue;
+        }
+        const names = buildsNamedIn(rel);
+        if (!names?.length) {
+            fail(`${rel} names NO manifest build in code — it is a named certifier of the `
+                + `lab's build (${why}), so a default it no longer spells is a pin that `
+                + 'stopped existing rather than a subject that agrees');
+            continue;
+        }
+        certifiers.push([rel, names, why]);
+    }
+    const agreeing = [];
+    for (const [rel, names, why] of certifiers) {
+        const wrong = labBuild === null ? [] : names.filter((n) => n !== labBuild);
+        if (labBuild === null) continue;   // (h1) already said what is wrong
+        if (wrong.length) {
+            fail(`${rel} drives ${wrong.join(', ')} but ${LAB_FILE}'s \`WASM_PAGE\` names `
+                + `${labBuild} — ${why}, so it would certify a build the lab does not load. `
+                + 'These two are spelled separately ON PURPOSE (a `BUILD` imported from the '
+                + 'lab would compare the page against its own source and pass for any '
+                + 'value); the duplication is the discriminator, and this row is what makes '
+                + 'it one. Move BOTH, or say here why this one is a control');
+        } else {
+            agreeing.push(rel);
+        }
+    }
+
+    // (h3) ── measured, asserts nothing. See the docblock for the two runs.
+    if (labBuild !== null) {
+        const caps = manifest.builds.find((b) => b.name === labBuild)?.capabilities ?? [];
+        console.log(`  ${LAB_FILE}`);
+        console.log(`  WASM_PAGE → ${labBuild}, capabilities=[${caps.join(', ')}]; certified by`
+            + ` ${agreeing.length} gate(s) naming it: ${agreeing.join(', ')}`);
+        console.log('  the lab keys on no capability by name — measured on the build declaring '
+            + '[]: check-seedling-wasm-pages 19/20 green, the one red being (h2) seen through '
+            + 'a browser, so (h3) asserts nothing');
     }
 }
 
