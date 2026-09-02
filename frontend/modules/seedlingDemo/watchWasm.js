@@ -960,7 +960,7 @@ export { levelSetDisagreement };
  * `flashPanel` → `seedlingDemo` is the one F6 priced at +1,267,998 B.
  * `wasmGamePage.js` imports nothing, so this costs the lab one file.
  */
-import { frameWindow, gameUp, runtimeUp } from '../flashPanel/wasmGamePage.js';
+import { botOver, frameWindow, gameUp, runtimeUp } from '../flashPanel/wasmGamePage.js';
 
 /**
  * ── ⛓⛓⛓ SHIP IT ──────────────────────────────────────────────────────
@@ -1116,11 +1116,13 @@ export async function shipToWasm(payload, host) {
     enter('probe', 'the build is served');
 
     const win = () => frameWindow(frame);
-    const bot = (name, arg) => {
-        const g = win() && win().__swfBridge && win().__swfBridge.game;
-        if (!g || typeof g[name] !== 'function') return null;
-        return arg === undefined ? g[name]() : g[name](arg);
-    };
+    /**
+     * ⛓ THE VERB-CALL RULE IS SHARED WITH THE PANEL (maze-lab arms F-b / plan
+     * §17.1 F2) — `flashPanel/wasmGamePage.botOver`, which is this page's own
+     * rule (re-read the callback table per call; null for a verb that is not
+     * there) stated once. The panel used to capture the table and throw.
+     */
+    const bot = botOver(win);
     const botJson = (name, arg) => {
         const raw = bot(name, arg);
         try { return raw ? JSON.parse(raw) : null; } catch { return null; }

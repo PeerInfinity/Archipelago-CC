@@ -16,7 +16,8 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    bridgeOf, frameWindow, gameOf, gameUp, GAME_WITNESSES, runtimeUp, RUNTIME_WITNESSES,
+    botOver, bridgeOf, callBot, frameWindow, gameOf, gameUp, GAME_WITNESSES,
+    runtimeUp, RUNTIME_WITNESSES,
 } from './wasmGamePage.js';
 
 /** The page as it is at each of the four moments, in order. */
@@ -167,5 +168,95 @@ describe('frameWindow — the walk that is re-read, never captured', () => {
         expect(runtimeUp(frameWindow(el))).toBe(true);
         el.contentWindow = { __swfBridge: { game: {} }, __runtimeReady: false };
         expect(runtimeUp(frameWindow(el))).toBe(false);
+    });
+});
+
+/**
+ * ⛓⛓ **THE VERB-CALL RULE** (maze-lab arms F-b / plan §17.1 F2). It was
+ * spelled three times — the lab re-read and answered null, the panel captured
+ * once and threw, and `readWorld` restated it as a `try`/`catch` per call.
+ */
+describe('callBot — one rule: re-read per call, null for a missing verb', () => {
+    const pageWith = (game) => ({ __swfBridge: { game }, __runtimeReady: true });
+
+    it('calls the verb and hands back what the game returned', () => {
+        const win = pageWith({ botStatus: () => '{"tick":166}' });
+        expect(callBot(win, 'botStatus')).toBe('{"tick":166}');
+    });
+
+    it('passes ONE argument, and passes NONE when none was given', () => {
+        const seen = [];
+        const win = pageWith({ botLoadLevels: (...a) => { seen.push(a); return 'ok'; } });
+        expect(callBot(win, 'botLoadLevels', '{"chunk":1}')).toBe('ok');
+        callBot(win, 'botLoadLevels');
+        expect(seen).toEqual([['{"chunk":1}'], []]);
+    });
+
+    /**
+     * ⛔ `undefined` IS THE ONLY "NO ARGUMENT". A caller that means to send
+     * null must be able to: `botLoadLevels(null)` is a call with an argument.
+     */
+    it('⛔ a null argument is an ARGUMENT — only `undefined` means "no argument"', () => {
+        const seen = [];
+        const win = pageWith({ v: (...a) => { seen.push(a.length); return 'ok'; } });
+        callBot(win, 'v', null);
+        callBot(win, 'v', undefined);
+        expect(seen).toEqual([1, 0]);
+    });
+
+    /**
+     * ⛔ THE ANSWER THE DELIVERY READS. `seedlingLevelSetDelivery` turns this
+     * null into *"botLoadLevels answered null to chunk 1/1…"*; the capture-and-
+     * throw form produced a raw TypeError instead.
+     */
+    it('⛔ answers NULL for a verb this build does not have — never a TypeError', () => {
+        const win = pageWith({ wireCheck() {} });
+        expect(callBot(win, 'botLoadLevels', '{}')).toBeNull();
+        expect(() => callBot(win, 'botLoadLevels', '{}')).not.toThrow();
+    });
+
+    it('⛓ but a verb that EXISTS and raises inside the game still throws — that arm is not dead', () => {
+        const win = pageWith({ botStart: () => { throw new Error('arena died'); } });
+        expect(() => callBot(win, 'botStart')).toThrow('arena died');
+    });
+
+    it('a page, shim or callback table that is not there is null, not a throw', () => {
+        expect(callBot(null, 'botStatus')).toBeNull();
+        expect(callBot({}, 'botStatus')).toBeNull();
+        expect(callBot({ __swfBridge: {} }, 'botStatus')).toBeNull();
+        expect(callBot({ __swfBridge: { game: {} } }, 'botStatus')).toBeNull();
+    });
+
+    it('a NON-function of the right name is not a verb', () => {
+        expect(callBot(pageWith({ botStatus: '{"tick":1}' }), 'botStatus')).toBeNull();
+    });
+});
+
+describe('botOver — the re-read is the point', () => {
+    /**
+     * ⛔⛔ **THE MUTANT'S ROW.** An iframe reload replaces the whole
+     * `__swfBridge` object, and a preset switch replaces the iframe under the
+     * SAME element id. A `bot` that captured the callback table would go on
+     * calling the PREVIOUS game's — wired to a runtime that is gone.
+     */
+    it('⛔ a bot built BEFORE a reload reaches the NEW game after it', () => {
+        let win = { __swfBridge: { game: { botStatus: () => 'first' } }, __runtimeReady: true };
+        const bot = botOver(() => win);
+        expect(bot('botStatus')).toBe('first');
+        win = { __swfBridge: { game: { botStatus: () => 'second' } }, __runtimeReady: true };
+        expect(bot('botStatus')).toBe('second');
+    });
+
+    it('⛓ and a bot built before the game has ANY callbacks answers null, then answers', () => {
+        let win = { __swfBridge: { game: {} }, __runtimeReady: true };
+        const bot = botOver(() => win);
+        expect(bot('botStatus')).toBeNull();
+        win = { __swfBridge: { game: { botStatus: () => 'up' } }, __runtimeReady: true };
+        expect(bot('botStatus')).toBe('up');
+    });
+
+    it('⛓ a frame that has gone away answers null rather than throwing', () => {
+        const bot = botOver(() => null);
+        expect(bot('botStatus')).toBeNull();
     });
 });

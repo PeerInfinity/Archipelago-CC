@@ -148,3 +148,53 @@ export function gameUp(win) {
     }
     return game;
 }
+
+/**
+ * ⛓⛓⛓ **CALL A VERB ON THE GAME — THE WHOLE RULE, IN ONE PLACE**
+ * (maze-lab arms F-b / plan §17.1 F2).
+ *
+ * It was spelled three times and the three did not agree:
+ *
+ *   `watchWasm.js`'s `bot()`      re-read `__swfBridge.game` on EVERY call and
+ *                                 answered **null** for a missing verb
+ *   `flashPanelUI.js:560`         captured `adapter._getFlash()` ONCE and
+ *                                 **THREW** (`g[name] is not a function`)
+ *   `seedlingRandomizerWiring.
+ *   readWorld`                    each call in its own `try`/`catch`, i.e. the
+ *                                 same rule a third time, as error handling
+ *
+ * ⛔ **THE RE-READ IS THE HALF THAT WAS A LATENT BUG.** An iframe reload
+ * REPLACES the whole `__swfBridge` object (`wasmBridgeAdapter`'s header says
+ * so, and `installStateHook` exists because of it) and a preset switch
+ * replaces the iframe under the SAME element id — so a captured `game` is the
+ * PREVIOUS game's callback table, wired to a runtime that is gone.
+ *
+ * ⛔ **AND `null` IS THE BETTER ANSWER FOR A MISSING VERB, MEASURED AGAINST
+ * WHAT READS IT.** `seedlingLevelSetDelivery.deliver()` distinguishes a bot
+ * that THROWS (*"botLoadLevels threw on chunk 1/9: …"*) from one that answers
+ * something other than `ok`/`pending` (*"botLoadLevels answered null to chunk
+ * 1/9, and the LAST chunk of a delivery must answer \"ok\""*). Under the
+ * capture-and-throw form a build with no `botLoadLevels` produced a raw
+ * TypeError text; under this rule it produces the second sentence, which names
+ * the verb, the chunk and the contract. ⛓ The THROW arm is not dead — a verb
+ * that exists and raises inside the game still reaches it.
+ *
+ * @returns {*} whatever the game returned, or `null` if the page, the shim,
+ *   the callback table or the verb is not there.
+ */
+export function callBot(win, name, arg) {
+    const game = gameOf(win);
+    if (!game || typeof game[name] !== 'function') return null;
+    return arg === undefined ? game[name]() : game[name](arg);
+}
+
+/**
+ * `callBot` bound to a WINDOW GETTER — the form a host holds onto.
+ *
+ * ⛔ A GETTER, NOT A WINDOW. Binding the window would reinstate the capture
+ * this file exists to remove; the getter is what makes "re-read per call" true
+ * of the returned function rather than of its call sites.
+ */
+export function botOver(getWin) {
+    return (name, arg) => callBot(getWin(), name, arg);
+}

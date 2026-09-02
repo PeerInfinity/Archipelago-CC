@@ -557,7 +557,6 @@ export class FlashPanelUI {
         overlay.remove();
         return;
       }
-      const g = adapter._getFlash();
       // ⛓ Stashed so a gate can read the whole step log — the reset's
       // before/after world, its wait in ms, the delivery's chunk count. A
       // browser row that could only see the END state cannot tell a reset that
@@ -566,7 +565,13 @@ export class FlashPanelUI {
         loaded,
         glue,
         teleport: (t) => adapter.teleport(t),
-        bot: (name, arg) => (arg === undefined ? g[name]() : g[name](arg)),
+        // ⛔ THE ADAPTER'S, NOT A CAPTURED `game` (maze-lab arms F-b / §17.1
+        // F2). This was `const g = adapter._getFlash()` above and `g[name](arg)`
+        // here — one capture, held across every step of a load that can outlive
+        // an iframe reload, and a raw TypeError for a verb the build does not
+        // have. `adapter.bot` re-reads the callback table per call and answers
+        // null for a missing verb, which is what the delivery names.
+        bot: (name, arg) => adapter.bot(name, arg),
         overlay,
         log: (msg, cls) => this._panelLog(msg, cls),
       });

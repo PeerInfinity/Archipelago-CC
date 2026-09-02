@@ -36,7 +36,7 @@
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
 import { pollUntil } from './pollUntil.js';
 import {
-  bridgeOf, frameWindow, gameUp, runtimeUp, RUNTIME_WITNESSES,
+  bridgeOf, callBot, frameWindow, gameUp, runtimeUp, RUNTIME_WITNESSES,
 } from './wasmGamePage.js';
 
 // Push cadence for host->game queue items. The game polls its local
@@ -130,6 +130,20 @@ export class WasmBridgeAdapter extends FlashBridgeAdapter {
       cancelledMessage: DETACHED_MESSAGE,
       timeoutMessage: `bridge did not become ready within ${maxMs}ms`,
     });
+  }
+
+  /**
+   * Call one of the game's registered verbs — `wasmGamePage.callBot`, which is
+   * the ONE statement of the rule (null for a verb that is not there, and the
+   * callback table re-read on every call).
+   *
+   * ⛔ IT IS A METHOD SO THE RE-READ IS THE ADAPTER'S. `flashPanelUI` used to
+   * capture `adapter._getFlash()` once and index it; after an iframe reload
+   * that captured object is the PREVIOUS game's. Hosts now hand
+   * `(n, a) => adapter.bot(n, a)` to whatever needs a bot.
+   */
+  bot(name, arg) {
+    return callBot(this._getWin(), name, arg);
   }
 
   /**
