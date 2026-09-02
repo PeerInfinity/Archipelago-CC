@@ -9213,6 +9213,190 @@ the button is disabled) and the callback order MEASURED on Windows Chrome first;
 relative-path derivation, with "the lab honours the override when hosted" as residue **F7b** for the user.
 Every import priced by F-a's closure walk before commit; the four `windows` gates run, never `--no-windows`.
 
+**⇒ F-b AS BUILT (2026-09-02, `maze-lab-arms-sliceFb`; main `b26df6747` … `8d2d299c5`).** Four rows,
+six commits, **seven mutants RUN** (copy/restore, trap 1072 — every one restored and the file diffed
+clean before the next). The constraint every row lived under held: **`flashPanel/index.js`'s static
+closure gains NO `seedlingDemo` file and no lab file** — derived, not asserted (`closurelist … | grep -c
+seedlingDemo` = **0** at HEAD).
+
+| # | one owner | route, and why | the proof |
+|---|---|---|---|
+| F4 | `flashPanel/wasmGamePage.js` — `runtimeUp` (Q1) / `gameUp` (Q2) | the CONJUNCTION of each pair = "the later of the two", written so it survives a build that reverses the order | the boot order MEASURED on the live p4d page, real-GPU Windows Chrome; 2 mutants red **one row in each of three files** |
+| F2 | `wasmGamePage.callBot` + `botOver`; `WasmBridgeAdapter.bot()` | null for a missing verb, callback table re-read PER CALL | 2 mutants; the panel's whole AP-placement load driven on Windows Chrome |
+| F1 | `seedlingLevelSetDelivery.deliverChunks` — route **(a)**, the protocol hoisted, the state machine NOT | route (b) refused on three measurements (below) | 2 mutants, one of them the year-old bug itself → **17 reds** |
+| F7 | `flashPanel/mapDocumentPath.js` — one relative path, three bases | the row was SCALED on a measurement; F7b is residue | 1 mutant → **11 reds in 2 files** |
+
+**F4 (`d9f47c750`) — THE BOOT ORDER, MEASURED, AND IT NAMED TWO LIVE DIVERGENCES.** One boot of
+`wasm/seedling_bot_ap_p4d/game.html` on **real-GPU Windows Chrome** (`intel / gen-9`, headed, through
+`seedling-watch-ship-win.py` with a probe polling at 1 ms and on every rAF, `performance.now()` at first
+sight, origin = probe install just after `domcontentloaded`):
+
+| order | property | first seen | registered with |
+|---|---|---|---|
+| 1 | `__swfBridge` | **0.3 ms** | already there — a CLASSIC script before the wasm glue, `game` still `{}` |
+| 2 | `__runtimeReady` | **271.5 ms** | `Module.onRuntimeInitialized`, which also ENABLES ▶ Start |
+| 3 | `game.wireCheck` | **2024.8 ms** | with `configure`, `readState` — BridgeGeneric's three, ONE batch |
+| 4 | `game.botStatus` | **3567.1 ms** | with Bot.as's other ten — a SECOND batch, **1,542 ms** later |
+
+⇒ they are **not** in the same tick, and the answer was not derivable from the source. Both gaps were
+the PANEL's, and both are closed: `waitForShim` resolved at 0.3 ms, so the panel printed *"click ▶
+Start in the game"* for 271 ms over a `disabled` button; and `_getFlash()` answered at `wireCheck`, so
+for **1,542 ms** the panel called the game up while `botLoadLevels`/`botLevelSet`/`botStatus` did not
+exist — the exact surface its AP-placement delivery calls. ⛔ `waitForShim` → **`waitForRuntime`**: it
+no longer waits for the shim, and a method named for the earlier witness is the next reader's first
+wrong idea (one caller; the timeout message now names both witnesses). ⛔ Each side KEEPS its timeouts
+(lab 200 ms/180 s, panel 30 s/10 min) and `watchWasm.until` keeps its loop — F-a's four differences all
+still hold.
+
+**F2 (`bc9027f93`) — AND THE MISSING-VERB ANSWER WAS CHECKED AGAINST ITS READER BEFORE IT WAS PICKED.**
+Three spellings: the lab re-read and answered `null`; `flashPanelUI.js:560` captured
+`adapter._getFlash()` ONCE and indexed it (a raw TypeError for a verb the build lacks, and after an
+iframe reload the PREVIOUS game's table); `readWorld` restated the rule a third time as a `try`/`catch`
+per call. `git grep 'threw on chunk'` = **the source line only, no row pins it**, so `null` is free to
+be the rule — and it turns a TypeError into *"botLoadLevels answered null to chunk 1/1, and the LAST
+chunk of a delivery must answer \"ok\""*. ⛓ The THROW arm is NOT dead (a verb that exists and raises
+inside the game still reaches it) and a row says so.
+
+**F1 (`27663001a`) — ROUTE (a), AND ROUTE (b) WAS REFUSED ON THREE MEASUREMENTS.** `deliverChunks({bot,
+chunks, set})` is the `pending`/`ok` loop plus the readback; `deliver()` calls it after its plan/refuse,
+`watchWasm`'s `levels` stage calls it with the chunks it already holds. Route (b) — the lab CONSTRUCTS a
+`SeedlingLevelSetDelivery` — was measured and refused: (1) `arm()`'s `apMappingInvalidation` precondition
+guards the PANEL's hazard and `grep -n invalidation seedlingDemo/watch*.js` is **0 lines over 28 files**,
+so the lab would have had to MANUFACTURE a companion to pass a guard that protects nothing on its side,
+making the guard vacuous there; (2) `apMappingInvalidation` lives in `levelSetExporter`, which
+`watchWasm` does not import (`watchViewer` does) — a new payload field for a document the lab has no
+notion of; (3) the lab would plan its chunks TWICE, or `watchViewer.validatedChunks` would stop planning
+— and its own docblock says that boundary is *"UPSTREAM of the sender, the only place it can be if there
+is to be exactly one of it"*. ⇒ the PROTOCOL moves; the state machine, the companion rule and the
+planning boundary stay. **Byte-inert, captured BEFORE the first edit:** `WASM_STAGES` and `stagesOf`
+unmoved, both `refuse('levels', …)` codes unmoved (`stage: 'readback'` is what lets the lab keep
+`set-readback-disagrees`, which `watchSummary.test.js` and `docs/json/developer/procgen/seedling-bot.md`
+read). The `levels` stage is **49 → 25 lines (23 → 11 with comments stripped)**.
+
+⛓ **AND THE HOIST MADE THE LAB'S HALF DRIVABLE, WHICH IS THE REAL PAYMENT.** `shipToWasm` needs an
+iframe and a live game, so `watchWasm.test.js` could only ever SCAN ITS OWN SOURCE for `last ? 'ok' :
+'pending'` — and a scan cannot say what a loop DOES. That row went red on the hoist, on purpose, and is
+re-aimed at what a drive cannot say (the stage calls it; it refuses in its own vocabulary), keeping its
+non-vacuity arm. The contract itself is now driven over an injected bot on the real rewritten set and
+the real chunk planner: `seedlingLevelSetDelivery.test.js` **18 → 30**.
+
+**F7 (`02635d3f7`) — THE ROW WAS SCALED ON A MEASUREMENT, AND THE MEASUREMENT IS RE-DERIVED IN THE
+ROWS.** `mapDocumentPath.js` states `modules/flashPanel/atlases/<name>` once; `watchViewer.ATLAS_URL`,
+node's `levelSource.ATLAS_PATH` and the panel's `resolveMapPath` each resolve it against their OWN base.
+Byte-identical, verified by resolving both forms (node's absolute path and the lab's href are the same
+before and after); `resolveMapPath` keeps its exact `{path, source}` face (a row asserts the key list)
+and `AP_ASSET_PATHS.atlasDir`/`.defaultMap` are DERIVED. ⚖ All 3 presets carrying
+`region_atlas.map_document` name **the default**, and the hosted lab is never handed rules
+(`labProtocol.LAB_PAYLOAD_FIELDS[load]`, asserted by IMPORTING the table, not by grep) ⇒ *"the lab
+honours the override when hosted"* is a `labProtocol` field for a case with **zero instances**: residue
+**F7b**, ⚖ for the user, NOT built. **Two rows now assert that absence** and red the day the first
+instance appears.
+
+**⇒ AND F7 OWED A GENERATED FILE NOBODY PREDICTED (`8d2d299c5`).** `check-procgen-reference.mjs` came
+back **20/1** in the derived reach: `urlGrammar.js DIFFERS — line 1037, on disk 658, the code 667`. F7
+put one import and an eight-line docblock above `watchViewer.readParams`, and the generated URL grammar
+records that function's LINE. One line, from `generate-procgen-reference.mjs`, never by hand; all four
+markdown regions and the other five generated modules came back unchanged; `procgenDocs/` vitest 7 files
+/ 452 tests green after. ⛓ **A docblock is not free when a generator reads line numbers** — the
+"prose is free" family again, on a new surface.
+
+**Mutants — RUN, not reasoned.**
+
+| # | mutant | red |
+|---|---|---|
+| (a) | Q2 on the EARLIER callback alone (`wireCheck`) | **3 rows, ONE IN EACH OF THREE FILES** — `wasmGamePage.test.js`, `pollUntil.test.js` (panel), `watchWasm.test.js` (lab). A side that stayed green would not be reading it |
+| (b) | Q1 on the EARLIER page-side witness alone (the shim) | **5 rows in 3 files** |
+| (c) | `botOver` captures the window once | 2 rows |
+| (d) | the ADAPTER captures once (`flashPanelUI`'s old form, moved into the method) | 1 row — the reload row in the NEW `wasmBridgeAdapter.test.js` |
+| (e) | `want = 'ok'` always — **the year-old lab bug, now in the shared function** | **17 rows** |
+| (f) | drop the readback diff | 5 rows |
+| (g) | misspell `ATLAS_DIR` in the ONE derivation | **11 rows in 2 files** — the derivation's own (incl. the one that OPENS the file at the resolved path, and node's `ATLAS_PATH`) and the wiring's whole construction |
+
+**Closure walk, per commit** (`seedlingRegionBinding.test.js:609`'s `walk()`), and the bundle metafile:
+
+| | `flashPanel/index.js` | `watchWasm.js` | metafile `inputs` |
+|---|---|---|---|
+| at `394294151` | 43 / 652,023 | 17 / 1,067,790 | 517 |
+| after the census fix | 43 / 652,023 | — | — |
+| after **F4** | **44 / 660,305** (+1 file: `wasmGamePage.js`, 6,910 B) | 18 / 1,075,656 | 518 |
+| after **F2** | 44 / 663,768 (no new file) | 18 / 1,078,257 | 518 |
+| after **F1** | 44 / 663,768 (UNMOVED) | 19 / 1,096,047 | 518 |
+| after **F7** | 44 / 663,768 (UNMOVED) | — | 518 |
+
+⇒ **one file added to the shipped panel bundle for the whole slice** — F4's dependency-free predicate
+module, the only one of the three new/hoisted owners that the panel's static graph reaches. F7's
+derivation (`mapDocumentPath.js`, 3,968 B) and F1's `deliverChunks` are behind the loader stub and cost
+the bundle nothing; the lab paid for them instead (`watchViewer` 149→150 / +4,494 B, `levelSource`
+2→3 / +4,464 B, the wiring 7→8 / +4,318 B), which is the FREE direction.
+
+**Gates, all run here.**
+
+| gate | result | command |
+|---|---|---|
+| the DERIVED reach (browser) | **22/23**, then **23/23** after the regeneration | `node scripts/procgen/gates.mjs reach 394294151..HEAD local` |
+| `check-maze-lab.mjs` | **265/0 UNMOVED**, 88.2 s | (in the reach) |
+| `check-procgen-lab-hosting.mjs` | **66/0 UNMOVED** | (in the reach) |
+| `check-procgen-reference.mjs` | **20/1 → ALL CHECKS PASSED** after the generator run | (in the reach, then direct) |
+| `check-seedling-editor-*` (15 arms) | all PASS, incl. `-arm` 226/0, `-generate` 224/0 + 230/0 (own server), `-world` 50/0, `-boot` 41/0 | (in the reach) |
+| `check-seedling-wasm-element` / `-pages` | **11/0** (929.4 s headless) / **20/0** | (in the reach) |
+| node rows | **6/6 green** — `wasm-pins` (3 builds, four views), `full-tier-owed` 5/0, `producer-boundaries` 19/0, `rerecord-rehearsal` 28/0, `procgen-help` 265/0, `slice-records` **73/0/37** | `node scripts/procgen/gates.mjs local wasm-pins full-tier-owed slice-records producer-boundaries rerecord-rehearsal procgen-help` |
+| ⚠ **the four `windows` rows** | **4/4 GREEN ON REAL-GPU WINDOWS CHROME** — `wasm-ship` **263/0** (460.1 s), `generated-set` **32/0**, `save-stamp` **21/0**, `vanilla-manifest` **24/0** | `node scripts/procgen/gates.mjs local wasm-ship generated-set save-stamp vanilla-manifest` |
+| ⚠ **`verify-seedling-ap-placement.mjs --win`** | **ALL ROWS PASSED** on real-GPU Windows Chrome | `python3 -m http.server 8129` **then** `node … --win` |
+| identity rows | **ALL CHECKS PASSED — 16 rows UNMOVED** | `standing-values.mjs --check --only=identity` |
+| bounded ⚖ 52 | **29 files / 1,144 tests** (baseline before the slice: 19 / 397 over the brief's paths) | see below |
+| in-app `--batch=fast` | **61/61**, *No differences in status, roster, or duration* | `compare-runs.js …T20-07-18 …T22-07-14` (the baseline NAMED — F-a's post-slice run at `394294151`) |
+
+⛓ **THE `--win` ARM IS THE STRONGEST SINGLE ROW FOR ALL THREE CODE FINDINGS**, because it is the only
+one that boots the REAL PANEL: `boot 19.19s, status=ready` through the changed `waitForRuntime` (Q1) and
+`_getFlash` (Q2); *"[ap placement] **116 randomized room(s) mounted in 9 chunk(s)**; 39 location(s)
+replaced; started at level 0 (new-game-arm)"* — the NINE-chunk delivery through the hoisted
+`deliverChunks`, on the real game; and the whole load — teleport, the polled reset ceremony, the
+location check, *"found Light for you at Level 030 - Torchpickup"* — carried by `adapter.bot`, F2's
+method. `check-seedling-wasm-ship` 263/0 and `generated-set` 32/0 are the same three changes on the
+LAB's side of the same page.
+
+⛓ The bounded set was WIDENED past the brief's four paths by every file this slice touches and every
+test file that reaches one: `npx vitest run frontend/modules/flashPanel/
+frontend/modules/seedlingDemo/{watchWasm,watchSummary,atlasSource,levelSetDisagreement,watchLifetime,
+gameClock,director,levelWorld,tapeRunner}.test.js scripts/procgen/reachClosure.test.js` (`levelSource.js`
+has no test file of its own — `mapDocumentPath.test.js` now asserts its `ATLAS_PATH`; `watchViewer.js`
+has none either and is covered by the browser gates plus a source row).
+
+**Rows written:** `wasmGamePage.test.js` NEW (27), `wasmBridgeAdapter.test.js` NEW (11 — the adapter had
+NO test file of its own before this slice, only the wait rows F-a put in `pollUntil.test.js`),
+`mapDocumentPath.test.js` NEW (12), `seedlingLevelSetDelivery.test.js` 18→30, `pollUntil.test.js` 17→19,
+`watchWasm.test.js` 70→75, `seedlingAtlasAnalysis.test.js` 9→10.
+
+**No re-bank.** No CI-sourced row moved; `gate: maze-lab` stays 265/0.
+
+**What this slice overturned in the brief.**
+- **§17.1 F4's central unknown resolved the way the brief hoped, but the SIZE is the finding.** The
+  order was not knowable from source and the two callbacks are **1,542 ms and two registration batches**
+  apart — not a same-tick coin flip. The panel had a real one-and-a-half-second window in which
+  `_getFlash()` handed out a game with no `botLoadLevels` on it.
+- **The brief's F1 says `set-readback-disagrees` is read by `watchWasm.test.js`, `watchSummary.test.js`
+  and the doc. It is TWO, not three:** `grep -c` in `watchWasm.test.js` = **0** (`git grep -ln` reaches
+  `watchSummary.test.js`, `watchWasm.js` and `seedling-bot.md`). The code was preserved anyway; the
+  count-in-prose family again, and this time in the brief.
+- **F2's "which rows pin `threw on chunk`" answered NONE.** No test anywhere pins the throw wording, so
+  the null-returning rule was free — and it improves the message rather than degrading it.
+- **F1's route (b) is worse than the brief's two-line sketch suggested**: not only the double-planning,
+  but a PRECONDITION that would have had to be satisfied with a manufactured document. A guard passed by
+  manufacturing its own input is not a guard.
+- **A docblock moved a GENERATED line number.** `check-procgen-reference` reds on a nine-line insertion
+  above a function it cites — a gate nothing in the brief predicted F-b would reach.
+- **`gates.mjs --json` without `--list` RUNS the gates** (the `--help`-runs-the-instrument family, trap
+  864's neighbour). Caught in ~3 min, stopped by PID — and killing the wrapper LEFT ITS CHILD
+  (`check-procgen-demos.mjs` + its chromium tree) alive, exactly as CLAUDE.md warns; both killed by
+  captured PID, box lock verified free afterwards.
+
+**Residue for the user.**
+- **F7b** — the hosted lab honouring `region_atlas.map_document`. Zero instances and no channel today;
+  it is a `labProtocol` field, ⚖.
+- ⛔ **F-c / F-d remain ⚖ open** and were not touched.
+
+**NEXT: F-c/F-d are ⚖ for the user.** F-b was the last pre-authorized rung of the F ladder.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
