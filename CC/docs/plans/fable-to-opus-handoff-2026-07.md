@@ -9624,6 +9624,106 @@ unconsumed. The finding survives: the page transport's docblock claims a subscri
 Design: a pure `handshakeStep` in `iframeAdapter/`, both hosts apply its effects, closures priced per commit
 (the lab page must not gain `gameState`), BOTH in-app batches owed (every iframe substrate boots through it).
 
+**⇒ F-c AS BUILT (2026-09-02, `maze-lab-arms-sliceFc`, Opus; main `5cd4f3803` + `2956ca5cf` + `a39b71699` +
+`df2c0cbf8`, pushed).** Row F10 shipped in four commits, one per finding, and ⚠ **it consumed no gitlink** —
+§39's measurement held at the line: both hosts are outer-repo files, `shared/` was READ and never written.
+
+**Task 0 — main was RED at W0 and is green now.** `seedlingAtlasAnalysis.test.js:40`'s
+`toHaveLength(116)` → `expect(MAP_DOC.levels.length).toBeGreaterThan(0)`, the row's real claim being the next
+line. No `--write-allow`. Proof: the two files green (24 rows); `lint-gate-labels.mjs` diffed W0 vs after =
+**86 → 85 findings**, the diff being exactly this finding's three lines, no NEW one. CI **33694270389** at
+`5cd4f3803`: **12,997 passed / 8 skipped / 0 failed** (W0's run 33689965891 had 1 failed).
+
+**The reducer.** `iframeAdapter/iframeHandshake.js` — `handshakeStep(state, message, {capabilities, now}) →
+{handled, state, replies, effects}`, importing `shared/communicationProtocol.js` and nothing else. Rules:
+READY → register + `ADAPTER_READY {capabilities}`; APP_READY → `appReady` flip + an `appReady` effect (no
+reply); HEARTBEAT → `HEARTBEAT_RESPONSE {timestamp}` + the `lastHeartbeat` stamp; SUBSCRIBE_EVENT_BUS →
+recorded, or a `refuse` effect when unregistered. Every rule but READY is conditioned on registration (the
+app's own `iframes.has` rule, now the page's too). `handled:false` for anything else, so each host's own
+chain still runs. The state is never mutated — the Set is copied.
+
+**The three decisions, each MEASURED before it was made:**
+1. **The page transport does NOT need a subscription record, and the docblock was wrong about BOTH hosts.**
+   `procgenCore/labBridge.js` subscribes ×3 (`:112-124`) before `notifyAppReady()` (`:174`) — the order its
+   own docblock `:17-19` states as the contract — and APP_READY is the flush point, so nothing can arrive
+   early enough to re-send. And no host has ever re-sent on a subscription: the app's record is **ROUTING**
+   (`handleEventBusEvent` picks which frames an app-bus event reaches). The record therefore lives in the
+   reducer because the APP routes on it; the docblock is corrected to say that. ⚑ Mutant (d) is the proof
+   the record is load-bearing on the app side and not on the page's.
+2. **`capabilities` IS a host parameter and NOTHING keys on it.** `shared/adapterClient.js` names it only at
+   `:131`/`:154`, both its OWN outbound `IFRAME_READY`; `handleAdapterReady:251` reads `loggingConfig` and
+   resolves `connect()` on the message ARRIVING. So the app keeps four (`IframeAdapterCore.CAPABILITIES`),
+   the lab page keeps one (`PAGE_CAPABILITIES`), both honest, and each is held by a ROW because the child
+   cannot hold it. ⚑ **This overturns the kickoff's mutant (a)** — see below.
+3. **The heartbeat body is read by nobody** — `adapterClient.js:226-228` is
+   `case MessageTypes.HEARTBEAT_RESPONSE: // Heartbeat acknowledged` with the body untouched; three
+   producers, zero consumers. ⇒ ONE shape, `{timestamp}` (the app's and `windowAdapterCore.js:313`'s, 2 of
+   the 3 producers already). The page transport's `{}` → `{timestamp}` is the slice's ONLY wire change.
+   ⚠ The STAMP, not the reply, is the load-bearing half: `checkHeartbeats` drops a 60 s-stale frame.
+
+**Byte-inert capture (taken BEFORE the first edit).** A node drive of each host over the child's real send
+order — IFRAME_READY, SUBSCRIBE_EVENT_BUS ×3, IFRAME_APP_READY, HEARTBEAT — recording replies, target
+origins, app-bus publishes, `appReady`, the stamp, both subscription sets and the unregistered
+`CONNECTION_ERROR`, timestamps normalised. **W0 → after commit 2: identical. → after commit 3 (the app
+host): identical. → after commit 4: ONE difference, the three lines of `{timestamp}` decision 3 names.**
+
+**Closures per commit** (F-a's `closure()` walk): `labRoomEditor.js` 4 files / 52,696 B → 4 / 52,696 →
+4 / 52,696 → **5 / 64,904**; `iframeAdapterCore.js` 5 / 85,682 → 5 / 85,682 → **6 / 98,332** → 6 / 98,332.
+Each gains exactly `iframeHandshake.js` (own closure 2 files / 14,922 B). ⛔ The lab page still has no
+`gameState`, the app no lab file — and that is a ROW now (`labRoomEditor.test.js`), with the non-vacuity arm
+that `iframeAdapterCore`'s closure DOES carry `gameState/singleton.js`.
+
+**Gates, derived not typed.** `reach-seedling-change.mjs --files=<the 7 changed>` (the selector — `gates.mjs
+reach … --list` ignores the range, F-d's lesson) names **4 gates, 0 windows rows**, so no `--win` was owed.
+`node scripts/procgen/gates.mjs reach bb2b858e8..HEAD local` ran all four: **`check-maze-lab` 265/0 (UNMOVED
+through seven slices)** · `check-procgen-demos` 261/0 · **`check-procgen-lab-hosting` 66/0** ·
+`check-procgen-reference` 21/0 — ⚑ the reference stayed green with no generator run, so this slice's
+docblocks moved no cited line (§38's hazard did not fire). `check-slice-records` **73/0/37 UNMOVED**.
+Bounded vitest over the reach's 7 tests + `lintGateLabels` + `iframeAdapter/`: **8 files / 132 green**.
+
+**Mutants — run, never reasoned** (all four in the one file the rules now live in, copy/restore, tree
+verified clean after):
+- **(a) as the kickoff wrote it is an EQUIVALENT MUTANT.** Answering READY with `capabilities: []` reds
+  exactly the 2 rows that assert the lists — and `check-procgen-lab-hosting` is **66/0 GREEN**. The child's
+  `connect()` does not read the list, so no browser row can. Replaced by **(a1) drop the ADAPTER_READY reply
+  entirely**: 4 vitest rows red AND the gate **5/1** — *"STUCK waiting for both frames to publish
+  procgenLab:ready"*.
+- **(b) drop the APP_READY flip**: 4 vitest rows red; `check-procgen-lab-hosting` **64/2** (CLAIM 1,
+  `iframe:appReady` reached the host bus, for BOTH panels) AND `check-maze-lab` **240/1** (*"STUCK waiting
+  for the SEEDLING room to open in the hosted watch.html frame"*). Both hosts, as designed.
+- **(c) HEARTBEAT unanswered**: exactly 2 rows red, one per host, and `check-procgen-lab-hosting` **66/0
+  GREEN** — the measured confirmation that nothing else depends on the response. Those two rows ARE the pin.
+- **(d) drop the subscription record**: 2 reducer rows red AND `check-procgen-lab-hosting` **11/1**
+  (*"STUCK waiting for the maze frame to show a LOADED level"*) — the app's routing, exactly as decision 1
+  says. No green mutant.
+
+**In-app, both batches** (they take the box; announced): `test-substrates --batch=fast` **61/61**,
+`compare-runs.js test-results-2026-09-02T22-07-14.json test-results-2026-09-02T23-50-18.json` → *"No
+differences in status, roster, or duration"*. `--batch=bot-walks` **3/3** (crosses-region 85.6 s,
+multi-reset-walk 291.2 s, instant 6.8 s) — ⚠ there is NO prior bot-walks run in the 30-run retention window,
+so it has no named baseline; the comparer says so itself (it fell back to the `fast` run and WARNED).
+
+**⚑ THE KICKOFF'S "asserted through the in-app runner" IS FALSE — the four Iframe Base rows run in NO
+mode.** `iframe-baseTests.js`'s ids are named by exactly one config, `playwright_tests_config-custom.json`
+(mode `test-custom`), and all four are `enabled: false` there — including `test_iframe_base_heartbeat`.
+Measured by running it: `npm test -- --mode=test-custom` ran **2 tests**, both `test_meta_game_*`, and both
+FAILED — **pre-existing**, proven with a W0 control (`git checkout bb2b858e8 --` the two host files, re-run:
+the same two tests, the same conditions, 49.6 s / 18.1 s). ⇒ the app adapter's handshake is covered today by
+`check-procgen-lab-hosting` (which mutants a1/b/d all redden), the substrate wrappers in the `fast` batch,
+and the new vitest rows — not by those four. **Residue: four dormant in-app rows nobody runs**; enabling
+them is a decision of its own and was not taken here.
+
+**Rows added**: `iframeAdapter/iframeHandshake.test.js` (11 — the four rules, the unregistered refusal,
+HEARTBEAT's order-independence, purity, `handled:false`, plus two that READ the child for decisions 2 and 3);
+3 in `labRoomEditor.test.js` (the closure walk, the capability + beat shapes, the pre-READY silence); the
+import-specifier pin at `:362` updated. `iframeAdapter/` had NO `.test.js` before this slice.
+⚑ **The lint fired on this slice's own new test NAME** ("outside its four" — a count over a roster the check
+derives); renamed, not allowlisted. The standing rule F-d left works.
+
+**After F-c: STOP.** Nothing beyond it is authorized. Open: residues **D6**/**D7** (maze-side, ride the next
+maze slice), **F7b**, the four dormant Iframe Base rows, optional **S4/S5/S6**, and the cross-substrate queue
+VIEWER as its own planning arc.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
