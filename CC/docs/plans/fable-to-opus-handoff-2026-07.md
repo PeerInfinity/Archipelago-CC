@@ -9731,7 +9731,7 @@ applied by both hosts (`iframeAdapterCore.js:9`, `labRoomEditor.js:64`); closure
 4 → 5 files / 64,904 B, `iframeAdapterCore.js` 5 → 6 / 98,332, the helper 2 / 14,922, the lab page still without
 `gameState`; Task 0 on disk and the lint green; bounded vitest 5 files / 85 green; **CI at the Task 0 head
 `5cd4f3803` = run 33694270389, 12,997 passed / 0 failed — main is GREEN again**; CI at the code head `df2c0cbf8`
-(run 33697707046) was QUEUED at verification — the successor checks it at W0; in-app `fast` 61/61 vs the named
+(run 33697707046) concluded after verification: **13,011 passed / 8 skipped / 0 failed, slow battery 217/0**; in-app `fast` 61/61 vs the named
 `…T22-07-14`, no differences; `bot-walks` 3/3 with NO prior baseline in the window (first baseline `…T23-57-18`);
 LIVE here at `904faab69`: `check-procgen-lab-hosting` **66/0**, `check-maze-lab` **265/0**; `check-slice-records`
 73/0/37; digest unmoved; NO gitlink consumed. **Recorded (plan §41):** mutant (a) was EQUIVALENT — `capabilities`
