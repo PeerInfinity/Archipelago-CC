@@ -9746,6 +9746,107 @@ F7b, the four dormant Iframe Base rows, optional S4/S5/S6, the CI shard partitio
 cross-substrate queue VIEWER, its own planning session per the user's approval of 2026-09-02
 (`NewDocs/plans/queue-viewer-planning-prompt.md`, session `queue-viewer-planning`).
 
+## 5m. The CROSS-SUBSTRATE QUEUE VIEWER / EDITOR — PLANNED 2026-09-02 (Fable planning session `queue-viewer-planning` at main `a69a9b295`; plan file `NewDocs/plans/queue-viewer-plan.md`, gitignored; memory `project_queue_viewer`; successor to §5l)
+
+**The ask (user, 2026-09-02, recorded in §5l Part V):** *"I was planning to eventually implement a
+cross-substrate queue editor, or at least a cross-substrate queue viewer."* The maze arc did the format
+work first (Q-a/Q-b: every fine-grained recording is `actionQueue/1`, `substrate` per entry,
+`describeAction` on maze/jta/omsi). This entry plans the viewer. Everything measured at `87a5f6515`
+(→ `a69a9b295`, docs only); every count names its command in the plan's §12.
+
+**Verdict (plan §0).** (1) The read side has ONE blocking gap: `savedQueueStore` cannot ENUMERATE — 8
+exports (`grep -c '^export function'`), every reader supplies `(rulesHash, region, substrate)` up front;
+no delete-one either (`clearForRegion` drops a bucket). (2) **Vocabulary convergence is not a rung of
+this arc**: gameState's path vocabulary is read by 29 non-test files (a BOUND — 11 are registry
+`queueActions` declarations), `loopState.js` alone holds 74 grep-lines of the five type strings; what
+§26 of the maze plan actually promised this arc is the SEAM — `coarseOf`'s second branch, 8
+`_liveCaptureBuffer` sites in one file. (3) The ENTRY already says enough (`substrate` stamped by all
+three producers; `describeAction` `fn|fn|fn` in the registry matrix); the gaps are on the ENVELOPE —
+enumerate, delete-one, "which block is this bound to" (derivable from `blockIdentity`), and an edit
+must PRESERVE `recordedAt` or every `customQueue` reference to it silently misses. (4) The live-queue
+affordance ("drop the pending tail, keep the history") has THREE homes — the maze panel's `ActionQueue`
+(panel-side `_clearPendingEntries`/`_appendEntries`), jta's `engine.queue` on a frozen
+`ExecutionSnapshot`, omsi's plan INSIDE the fork's iframe — so v1 edits RECORDINGS; the shared class
+gains `replacePending` only when a second live consumer exists (V5, submodule ⇒ gitlink asked). (5) A
+new panel module `queueViewer` in the default layout beside the loops panel, with a "view" link from
+each block's `●`; NOT inside the loops panel (2,577 lines; it renders the other vocabulary). (6) No
+reader anywhere renders a jta or omsi recording's entries today; the only cross-substrate "view" is
+the Custom-queue dropdown's `name — Δmana` line (`loopBlockBuilder.js:702`).
+
+**The three vocabularies, measured (plan §3):** (i) gameState PATH `{type:'regionMove'|'locationCheck'|
+'customAction'|'manual'|'customQueue', …}` (`state.js:21-23`, 40 methods); (iii) `shared/actionQueue`
+(14 non-test consumers); they meet at `loopState.coarseOf` (2 callers), `_applyCoarseReplacement`,
+the capture buffer, and `_persistSummaryForBlock:1744` (reads `a.type` off the buffer). Three shapes
+priced: **A FULL** (gameState stores actionQueue entries — weeks, its own arc, every block-mode in-app
+row a gate; §3.3 names the first two rungs if wanted) · **B PROJECTION** (a read-only adapter — a
+second, poorer renderer of what the loops panel shows; rejected) · **C SEAM** (the buffer speaks
+actionQueue, `coarseOf` one branch — one Opus slice, the promise kept). Recommend C now, A as a
+direction with its price on the record.
+
+**Design (plan §6):** module `frontend/modules/queueViewer/` (`index.js`, `queueViewerPanel.js` on the
+Golden Layout contract, DOM-free `queueViewerLibrary.js` + test, css); registrations `modules.json`
+(loadPriority 73 → 74), `layout_presets.json` `default`, `moduleMetadata.js`, `init-bundled.js`,
+`settings.json`. Reads `listSavedQueues(rulesHash)` (V0) with `rulesHash` from a new public
+`loops.getRulesHash()` (today the block builder reads `loopState._cachedRulesData` directly); a store
+`subscribe`; re-render on `loopState:queueUpdated`. Row model `{substrate, region, tag, name,
+recordedAt, departure, kind:'script'|'annotations'|'summary', preconditions, mana, rows:[{text, loops,
+disabled, refused, fallback}]}` with `text = describeAction → label → "actionType actionId"` and
+`fallback` said out loud (jta's name table is session-local — a stored jta recording from an earlier
+session names only ids the capture has seen since; a jta concern, named, not the viewer's). Edits (V2)
+on a WORKING COPY in an `ActionQueue` (`deserialize({entries})` gives reorder/undo — the AUTHORING role
+its docblock names); Save = `saveQueue` with `recordedAt` and `name` preserved → `'saved'`
+(replace-on-tag) / `'duplicate'` / `'invalid'` by field name. ⛔ The TAG is not editable — loops derives
+it from the block structure. Validation is SHAPE in the editor, SEMANTICS at replay by name (R2/R3/R4)
+— a `checkRecording(envelope)` registry slot is a later rung.
+
+**⚖ FOR THE USER (plan §8) — asked with LIVE LINKS** (`feedback_scenario_image_with_rulings`; all four
+loaded headless here with 0 page errors: L1 `manualHidden:false, source:"manual"`, L2 loops + maze
+panels present, L3 the `JTA Action Queue` tab present (33 console errors from the fork's own boot —
+"Couldn't find skill" + one 404 — observed, not attributed), L4 empty store → sample renders 5
+recordings, maze rows `move E` / `move N` / `wait` through the real `describeMazeAction`):
+**L1** the shared vocabulary live — `lab.html?source=manual&seed=2&width=15&height=15&skeleton=rooms&areas=1&elements=guard;len=2;turns=1&count=2`
+(the walk box IS the store's envelope) · **L2** `index.html?game=procgen_maze&seed=1` → Loops panel →
+loop mode → a maze block (the path vocabulary; the only recording view today) · **L3**
+`index.html?mode=jta&game=jta_substrate_test&seed=1` → JTA Action Queue (the row shape V1 reuses) ·
+**L4** `NewDocs/scratch/queue-viewer-prototype.html` — a THROWAWAY page (gitignored) over the user's
+own `loops:savedQueues:v1`, rendering every recording cross-substrate the way §6 proposes, with
+in-memory edit controls and Save DISABLED; a synthetic sample (maze/jta/omsi/summary/annotations) when
+the store is empty. The questions: (1) convergence = the SEAM + the block↔recording JOIN, FULL later
+at §3.3's price? (2) v1 = recordings only? (3) a new panel with a `●` link, not an expander inside
+each loops block? (4) an edit replaces under its tag keeping `recordedAt`/`name`, no "save as copy"?
+(5) shape-only validation in the editor? (6) live-queue binding wanted at all (V5: registry slot +
+submodule `replacePending` + gitlink)? Names `queueViewer`/`queueViewerPanel`/"Queue Viewer" unless
+told otherwise.
+
+**LADDER (plan §9; trap 1047 checked — no rung consumes a state a later rung rewrites; V5 last because
+it is the only submodule commit):** **V0** store `listSavedQueues` + `deleteQueue` + `subscribe`,
+`loops.getRulesHash()`, one `loop-recording.md` paragraph (generator run + `procgenDocs/` vitest owed)
+→ **V1** the read-only panel (module + 5 registrations + docs page + one in-app row, category
+`queueViewer`, absorbed by `fast`) → **V2** the editor over recordings → **V3** the SEAM (mutant: a
+buffer writer restored to `type:` must red the coarse-replacement row AND the summary `checks` row;
+in-app `TA block modes` 4 + `Runner block modes` 2 are the live gate) → **V4** the JOIN
+(`assignRecordingTags(resolveQueueBlocks(queue), warehouse)` → "bound to block #k" / "history") + the
+`●` link → **V5** (⚖ 6) live binding → **V6** (parked) maze recording → lab picture, blocked on the SET
+arm's "drive a library room" question (§5l). V0+V1 one Opus session; V2, V3, V4 their own.
+
+**Pins each rung moves — DERIVED (plan §10):** `savedQueueStore.test.js` **32** · `actionQueue/` **47+3**
+(unmoved until V5) · `loopState.test.js` **29** (V3 DELETES the `coarseOf` legacy rows) ·
+`modules.json` loadPriority **73** → 74 · substrates in-app config **66** rows (⚠ a count in a test
+name is an allowlist key) · in-app `fast` **61/61** vs `…T22-07-14` → 62 · generator `--check` at V0's
+doc edit and V5's matrix row · `standing-values.json` **66** rows, none naming loops/jta/queue — no
+row moves · `check-slice-records` **73/0/37** · maze digest `677b7d9c…` unmoved by every rung ·
+`check-maze-lab` 265/0 only for V6.
+
+**Deltas against the brief (`queue-viewer-planning-prompt.md`), by §:** §1 "whether (i) converges onto
+(iii) … THIS arc's first design question" — answered as a price and a seam, not a rung; §1 "a viewer that
+edits a live queue needs a home for that" — three homes measured, deferred to V5; §1 "a viewer over a
+store cannot assume two recordings of one block coexist" — confirmed at `sameTag`, and it also means an
+edit is a REPLACE (⚖ 4); §2 the residues — none launched, none this arc's; §3 the CI loose end —
+`df2c0cbf8` concluded green (run 33697707046, 13,011/0/8 skipped, slow 217/0), verified from the CLI
+after the predecessor's `a69a9b295`. **NOT DONE, deliberately:** full convergence (A), a projection
+adapter (B), live-queue editing in v1, tag editing, a persistent jta name table, per-entry cost, a new
+gate file or standing-values row, any submodule change before V5.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
