@@ -9857,6 +9857,14 @@ generation with live denominator-less progress `406695f46`, on main NOT pushed,
 byte-inert — see `project_grid_growth_retirement`); docs migration help module;
 flashPanel unification. Nothing from the 07-10/11 work blocks on them.
 
+**Kittyengine engine-scripts CLI slice — QUEUED 2026-09-03, timing the user's.**
+⚖ The user, verbatim (orchestrator-4's window): *"Yes, I will want to run a slice
+for the engine scripts at some point."* Subject: `LEDGER-REPORT.md` §11e.5's
+static survey — 15 of the 21 `scripts/*.py` in `~/CC/kittyengine-CC` hand-roll
+their CLI with no `--help`/`-h` handler, so `--help` RUNS the gate (two of them
+are CI steps); six use argparse after the ledger fix-up (`0791cfd`). Not PZ4's;
+no brief until the user names the moment. Memory: `project_platformer_substrate_arc`.
+
 ---
 
 ## Dependency sketch
