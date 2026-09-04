@@ -127,13 +127,30 @@ The step-by-step CLI drivers are `scripts/procgen/sphere-step.js` and `scripts/p
 
 ## rules.json extensions
 
-A procgen-compiled `rules.json` is a standard rules file plus up to three extra top-level keys:
+A procgen-compiled `rules.json` is a standard rules file plus extra top-level keys. Three carry the
+world itself:
 
 | Key | Purpose |
 |-----|---------|
 | `preset_sidecars` | Per-player, per-region **playable payloads** — the serialized substrate world for each region (tile grids, platform geometry, prose templates, …), keyed by region id with the substrate id alongside. **The substrate is per REGION, and always was on this side**: one sidecar per AP region, each naming its own. What the atlas compiler adds is where that id comes from — the atlas region's own optional `substrate` field, else the compile's default (`options.substrateId`, else the maze flavour, else the atlas game's `flash_<game>`) — so one compiled preset can now carry two substrates the way a grown one always could. This key is also the marker the runtime uses to recognize a procgen world. |
 | `procgen_metadata` | Generation metadata: source counts, the sphere tree, and enough structure that a stepped-pipeline envelope can be rebuilt from a compiled `rules.json` (`rebuildEnvelopeFromRulesJson` in the engine). |
-| `loop_costs` | Per-action mana costs for loop mode. Its presence is what enables loop mode for the world. |
+| `loop_costs` | Per-action mana costs for loop mode. Its presence is what enables loop mode for the world. Note the asymmetry: `regions` maps a region name to a cost **object** (`moveCost` / `timeDrainPerSecond` / `xpEffect`), while `locations` maps a location name straight to a **number**. |
+
+Six more appear in committed presets, each written by exactly one producer:
+
+| Key | Producer | Purpose |
+|-----|----------|---------|
+| `assume_bidirectional_exits` | `procgenPipelineEngine.js` (`scaffold.assume_bidirectional_exits`) | Every back-exit inherits its paired forward exit's rule, and consumers may construct back-exits the document does not list. ⛔ Not the same field as the exporter's nested `exporter_settings.assume_bidirectional_exits` (`exporter/games/base/handler.py`). |
+| `region_atlas` | `procgenPipeline/regionAtlasCompiler.js` | Which atlas this graph was compiled from (`atlas_id`, `game`, optional `map_document`). The id ends in the atlas content hash, so a restamped atlas visibly invalidates a stale preset. |
+| `flash_panel` | `regionAtlasCompiler.js` (`FLASH_PANEL_WIRING`, the only *code* source) and `tileMapAnalyzer/rulesExporter.js` | Wiring that boots the recompiled original game (`config`, `wasm`, or `swf`). |
+| `provenance` | `regionAtlasCompiler.js`, passed through verbatim from `options.provenance`; `procgenCore/contentIdentity.js` adds `content_hash` | **Opaque** — whatever the generator that produced the document wants to say about its inputs. The schema states no inner shape. |
+| `preset_label` | `exporter/exporter.py`, from the world class's `preset_label` attribute | Short label on this preset's frontend button (e.g. `canth s4`). |
+| `playerId` | `exporter/exporter.py` | The slot id of a **player-specific** export; absent from the combined multiworld document. |
+
+All nine are declared in `frontend/schema/rules.schema.json`, with `preset_sidecars` entries typed by
+`$defs/presetSidecarEntry` (`substrate` required; `playable_payload` deliberately opaque, because the
+payload belongs to the substrate). The top level stays permissive — `additionalProperties` is unset — so a
+producer that adds a key does not red the schema gate until somebody declares it.
 
 Everything else in the file — regions, exits, locations, items, access rules — is ordinary `rules.json` content, which is why non-procgen consumers need no special handling.
 
