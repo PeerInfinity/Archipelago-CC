@@ -67,10 +67,10 @@ state in your browser's localStorage. No data is sent to any server.
 ### Documentation Page Content
 
 Links to:
-- [User Overview](docs/json/user/overview.md)
-- [Quick Start Guide](docs/json/user/quick-start.md)
-- [Tips & Tricks / FAQ](docs/json/user/tips-and-tricks.md)
-- [Project Roadmap](docs/json/project-roadmap.md)
+- [User Overview](../../../docs/json/user/overview.md)
+- [Quick Start Guide](../../../docs/json/user/quick-start.md)
+- [Tips & Tricks / FAQ](../../../docs/json/user/tips-and-tricks.md)
+- [Project Roadmap](../../../docs/json/project-roadmap.md)
 - [Report an Issue](https://github.com/PeerInfinity/Archipelago-CC/issues)
 
 ## Technical Implementation
@@ -205,7 +205,7 @@ The panel should remember which page the user was on:
 
 ## Related Documents
 
-- [Module System Guide](../../docs/json/developer/guides/module-system.md)
-- [Creating Modules Guide](../../docs/json/developer/guides/creating-modules.md)
-- [User Quick Start](../../docs/json/user/quick-start.md)
-- [Tips & Tricks](../../docs/json/user/tips-and-tricks.md)
+- [Module System Guide](../../../docs/json/developer/guides/module-system.md)
+- [Creating Modules Guide](../../../docs/json/developer/guides/creating-modules.md)
+- [User Quick Start](../../../docs/json/user/quick-start.md)
+- [Tips & Tricks](../../../docs/json/user/tips-and-tricks.md)
