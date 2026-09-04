@@ -46,6 +46,14 @@ source .venv/bin/activate
   - For a listing, `ps -eo pid,cmd | grep -v eval` and read the output rather than counting it.
 - **Killing a wrapper does NOT kill its children.** `kill <wrapper-pid>` leaves the `sleep`/`node`/`npx` it spawned running (exit **143/144** = the wrapper died, not the job). After any kill, list the strays and kill those too — `pgrep -af "^sleep"`, or `ps -eo pid,ppid,cmd | awk '$2==<wrapper-pid>'`.
 
+- **⛔ `grep` SILENTLY SKIPS NUL-BEARING FILES — use `grep -a` (NOT `LC_ALL=C`).** **Three** tracked frontend sources carry stray NUL bytes (measured 2026-09-04 over 1,111 tracked `frontend/**/*.js`): `procgenPipeline/procgenPipelineUI.js` (3), `regionMarkingTool/regionMarkingToolUI.js` (3), `procgenPipeline/regionAtlasAnalyzer.js` (2). grep classifies those as binary and suppresses its output: the match is there, you get no output, no error, and **exit 1** — a silent false negative that reads exactly like "not found". Measured on `frontend/modules/procgenPipeline/procgenPipelineUI.js`, searching a string that IS present on line 868:
+  ```bash
+  grep -c "Grid growth" frontend/modules/procgenPipeline/procgenPipelineUI.js           # no output, exit 1
+  LC_ALL=C grep -c "Grid growth" frontend/modules/procgenPipeline/procgenPipelineUI.js  # no output, exit 1  ⛔ does NOT help
+  grep -ac "Grid growth" frontend/modules/procgenPipeline/procgenPipelineUI.js          # 1                  ✅
+  ```
+  ⚠ **`LC_ALL=C` is a folk remedy that does not work** — it was the advice in `CC/docs/cleanup-backlog.md` until 2026-09-04, and it was measured failing. The cause is NUL bytes, not emoji or multibyte UTF-8 (that same file has 1,286 non-ASCII bytes, which are harmless on their own). **Use `grep -a`, `rg`, or the Grep tool.** A sweep that reports "zero hits" over frontend sources without `-a` has not measured anything.
+
 - **Submodule paths**: there are SIX git submodules (authoritative list: `.gitmodules`): `frontend/modules/shared/`, `frontend/modules/textAdventureEngine/`, `frontend/modules/journey-to-ascension/`, `frontend/modules/omsi-loops/`, `frontend/modules/cavernous-ii/` and `frontend/modules/flashPanel/wasm/` (the SWFRecomp Seedling builds, `PeerInfinity/seedling-wasm`). Edits to files under these paths land in the *submodule*, not the outer repo — the outer `git status` only flags them as "modified content." To verify which side a change lives on, run `git -C <path> status`. To land such a change: commit inside the submodule (using the outer repo's git identity), then bump the submodule pointer in a separate outer-repo commit.
 
 ---
