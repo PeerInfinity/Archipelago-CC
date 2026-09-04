@@ -9949,6 +9949,10 @@ unset a schema entry is DOCUMENTATION, not a guard, and its ABSENCE is invisible
 unexpected)` — cross-checked by an independent top-level-key scan naming the same file and key. CONTROL
 (schema as committed) → **205/205**. ⇒ **Going strict costs exactly one preset, and the offender is the one
 key with no producer.**
+**CI ALL GREEN at the pushed SHAs.** `860608b0a`: `unittests` (the job carrying `test_schema_validation.py`),
+`JavaScript Unit Tests`, `Test ALTTP Spoiler & Frontend Regression`, `CodeQL` — all success. ⚖ 52 suite row,
+QUOTED from CI by SHA (run 33930322122): `suite: vitest (unfiltered) 427/13019 (13011 passed | 8 skipped |
+0 failed)`; `slow battery 12/217 (217 passed | 0 failed)`. `69b7ebc64`: `unittests` success.
 **⚖ THE USER OWES:** (1) strict top level — the measurement is above, and mutant A is the argument FOR it
 (with a permissive top level, deleting a declaration is invisible to the gate); (2) `_stub` — delete the key,
 declare it, or leave it (H0 left it; ⛓ deleting it is the same commit as strict); (3) NEW — whether a
