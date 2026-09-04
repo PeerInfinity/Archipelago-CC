@@ -89,6 +89,49 @@ Recorded here when the originating project wrapped so they aren't lost; none are
 
 - [x] **FIXED 2026-07-25 (`6fddeded1`, "cleanup item 1: fix swapped pollForCondition args in path-analyzer panel test") — the box was just never ticked; closed 2026-09-04.** Verified: all six `pollForCondition` call sites in `frontend/modules/tests/testCases/pathAnalyzerTests.js` now pass `(fn, description, timeoutMs, intervalMs)` in signature order, including the two named here (now at :211 and :227). Corroborated independently by `NewDocs/plans/cleanup-2026-07-post-d2-opus-kickoff.md` — "Item 1 — DONE + PUSHED (`6fddeded1`). Two swapped `pollForCondition` calls in `testPathAnalyzerPanel`; **no slow-path unmasking**. Regression 31/31." — which also answers this entry's ⚠: the real 15 s budget unmasked nothing. ~~**`test_path_analyzer_panel` polls for 50 ms instead of 15 s — argument-order bug, a load-sensitive flake in the `test-regression` gate** (found 2026-07-25 while gating omsi arc D slice 4; PRE-EXISTING, the file was last touched in `1c0d39b8e`). `frontend/modules/tests/testCases/pathAnalyzerTests.js:211-224` (and the sibling call a few lines below at :227-236) call `testController.pollForCondition(fn, 15000, 50, 'Analysis to complete …')`, but the signature is `pollForCondition(fn, label, timeoutMs, intervalMs)`. So the LABEL becomes `"15000"`, the TIMEOUT becomes 50 ms and the INTERVAL becomes the label string — the poll gives up after ~0.1 s and the harness reports `Timeout polling for condition: "15000" … 8/NaN polls in 0.1s — STUCK`. The test therefore passes only when the analysis happens to finish inside ~100 ms: green solo, red under load (observed failing once at load 2.83/8cpu, green on an immediate solo re-run). Fix is a one-line argument swap per call site. ⚠ **Do it in its own commit and expect it to change what the gate measures**: a real 15 s budget may unmask a genuinely slow analysis path that the 50 ms version has been silently skipping past. Until then, a `test_path_analyzer_panel` red in `test-regression` deserves a solo re-run before it is attributed to the change under test (`node scripts/test/compare-runs.js`).~~
 
+## Quick wins carried over from the todo triage (2026-07-26)
+
+**Provenance, and why they are copied rather than linked.** These come from
+bucket D ("Quick wins — small, self-contained") of
+`NewDocs/todo/todo-triage-2026-07-26.md`, a triage of `NewDocs/todo/todo.txt`.
+That triage is otherwise a FEATURE/BUG backlog and defers *to* this file twice;
+bucket D was the one part of it that is cleanup-shaped and had no home here.
+⚠ **`NewDocs/` is gitignored** (`.gitignore:233`), so a cross-reference to it
+would be a dead pointer for anyone who clones — hence copied verbatim. The
+`Line` column indexes `todo.txt` as it stood on 2026-07-26.
+
+⚠ **NOT RE-VERIFIED against the tree.** Everything else in this file was
+re-checked on 2026-09-04; these 17 were not — re-verifying them is its own
+task, and several are phrased as questions precisely because nobody had looked.
+Treat each as a lead, not a finding: confirm the subject still exists and still
+has the shape described before starting. Several may already be done.
+
+| Line | Item |
+|---|---|
+| 4 | Fuzz results: sort failed seeds numerically in the `errors` lists (`scripts/output/ut-fuzz`) |
+| 23 | DepGraph (proofGraph): order doesn't matter — update frontend modules accordingly |
+| 26 | DepGraph: decide behavior when first row has too many nodes |
+| 29 | DepGraph: node limit as a named code constant |
+| 32 | preset_files.json: auto-remove entries for missing files |
+| 41 | Dungeons panel: "this game has no dungeons" empty state (module exists; check which games have dungeon data) |
+| 186 | Region graph: don't switch hover target to a region node inside the location-circle radius |
+| 337 | Region graph: clicking a node selects that region in the APWorld Editor dropdown |
+| 666 | Send goal to the server in the other modes (incl. depgraph) |
+| 685 | Check: are the new jta prestige-menu settings gated behind advanced automation options? |
+| 689 | Progress indicator for shuffled-spiral mode (verify not already covered by the async-progress work) |
+| 692 | Tool to copy files from one Archipelago directory to another |
+| 944 | omsi: Skills + Buffs as collapsible sections in the Automation panel |
+| 959 | Check: omsi planning accounts for the "Pots Smashed" controls? |
+| 968 | Check: how to toggle omsi between mobile/desktop display |
+| 971 | Check: omsi through the window adapter |
+| 309 | Answer "what does loadSettingsFromServer do?" (5-minute read) |
+
+Deliberately NOT copied: the triage's other buckets. A/H are closed-or-dropped
+records, B is "already queued in an active arc", C is bugs wanting a repro
+first, E is the ruled deferred-UI session, F needs design passes and G is the
+far-future park. This file is for cleanup, and bucket D is the only bucket that
+is cleanup.
+
 ## Tooling notes (Claude Code sessions)
 
 - **Plain `grep` silently returns nothing on some frontend sources** — the match exists but grep produces no output and no error. ⚠ **CORRECTED 2026-09-04: this note had the cause AND the remedy wrong, and the wrong remedy was measured to fail.** The cause is not emoji/multibyte UTF-8 — it is **NUL bytes**, which make grep treat the file as binary and suppress its output. `procgenPipelineUI.js` holds **3 NUL bytes** (alongside 1,286 non-ASCII bytes, which are harmless on their own). Measured on it, searching a string that IS present:
