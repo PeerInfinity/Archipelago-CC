@@ -169,19 +169,26 @@ python scripts/test/test-all-templates.py --include-list "Game1.yaml" "Game2.yam
 
 **Output:**
 - `playwright-report.json` (project root)
-- `test-results/in-app-tests/test-results-[TIMESTAMP].json` — kept for the last
-  30 runs (Playwright's own cleanup is scoped to `test-results/playwright/`), so
-  runs can be compared against each other
+- `test-results/in-app-tests/test-results-[TIMESTAMP].json` — the most recent
+  runs are kept and older ones pruned, so runs can be compared against each
+  other. The retention is `KEEP_RUNS` in `test_json/e2e/app.spec.js` (Playwright's
+  own cleanup is a different thing, scoped to `test-results/playwright/`).
 
 ### Test batches
 The in-app runner races the whole roster against one wall-clock budget
-(`AUTO_START_TIMEOUT_MS`, 600s, in `frontend/modules/tests/testLogic.js`).
-`test-substrates` outgrew it: three real-time omsi bot walks are ~70% of its
-540s. Run it in batches instead:
+(`AUTO_START_TIMEOUT_MS` in `frontend/modules/tests/testLogic.js`).
+`test-substrates` outgrew it — the real-time omsi bot walks dominate its wall
+clock — so run it in batches instead:
 ```
-npm test -- --mode=test-substrates --batch=fast        # 57 tests, ~2.5 min
-npm test -- --mode=test-substrates --batch=bot-walks   # 3 real-time bot legs, ~6.5 min
+npm test -- --mode=test-substrates --batch=fast        # everything except the bot walks
+npm test -- --mode=test-substrates --batch=bot-walks   # the real-time bot legs only
 ```
+⛔ **No roster counts or durations are quoted here on purpose** — they go stale
+silently and then get trusted. To derive today's numbers, read
+`frontend/test-configs/playwright_tests_config-substrates.json` (note
+`defaultEnabledState`, and that a test counts only if its own `enabled` says so)
+and group by `category`; `bot-walks` claims the `Omsi bot walks` category and
+`fast` takes the rest. The authoritative number is a run.
 Batches select whole **categories** and live in `frontend/modules/tests/testBatches.js`.
 `fast` is the default batch: it absorbs every category no other batch claims, so
 a new test category still *runs* even if nobody classified it. Omitting `--batch`
@@ -223,6 +230,37 @@ change and running a control. The default baseline is the newest earlier run of
 the **same mode** (results carry the mode that produced them); comparing a
 substrates run against a regression one would report the whole roster as
 changed.
+
+### JS unit tests (vitest) — a separate suite from `npm test`
+
+Everything above drives the BROWSER (Playwright + the in-app runner). The
+JavaScript unit tests are a different suite entirely, run by vitest, in three
+tiers:
+
+```
+npm run test:unit          # default tier — the fast one; excludes *.slow and *.calib
+npm run test:unit:slow     # heavy generate-and-test property suites, run SERIALLY
+npm run test:unit:calib    # demoted calibration sweeps, manual only, never in CI
+```
+
+The tiers exist because the slow suites are synchronous and CPU-bound: they pass
+alone but flake with `STACK_TRACE_ERROR` under the default run's parallelism,
+because vitest's `testTimeout` cannot interrupt synchronous work. `test:unit:slow`
+sets `fileParallelism: false` so each file gets the whole CPU.
+
+⚠ **`vitest.slow.config.js` carries deliberate exclusions with reasons in the
+file** — read the comment block before concluding a suite is missing. The
+runnerDemo slow battery is excluded by a ⚖ user ruling ahead of a runner
+redesign, and the patterns there are deliberately BROAD, so a newly written
+`runnerDemo/*.slow.test.js` would also be skipped. That is the opposite of
+`testBatches.js`'s default-batch rule, and it is why the config says so out loud.
+
+⛔ **⚖ RULING 52 (user, 2026-08-25): do NOT run the local unfiltered vitest.**
+- Pre-push check = `npx vitest run <the test paths you touched>`, bounded.
+- The SUITE number comes from CI at the pushed SHA, never from a local run:
+  `node scripts/procgen/ci-vitest-summary.mjs <sha> [--wait]`.
+- Any standing `suite: vitest (unfiltered)` row is QUOTED from CI, not measured
+  here.
 
 ### Configure Spoiler Settings
 ```
