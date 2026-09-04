@@ -28,7 +28,7 @@ Each item has an **Edit** button that sends that item's data to the Editor panel
 
 ### Export/Import via the Editor
 
-- **Export to Text** — Sends the selected data to the [Editor](../editor.md) panel as JSON text, where you can inspect or edit it before applying.
+- **Export to Text** — Sends the selected data to the [Editor](./editor.md) panel as JSON text, where you can inspect or edit it before applying.
 - **Import from Text** — Reads JSON from the Editor panel and applies it. Paste your JSON into the Editor first, then click this button.
 
 ### Save to Browser (LocalStorage)

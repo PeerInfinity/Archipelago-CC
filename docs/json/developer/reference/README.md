@@ -19,7 +19,7 @@ This directory contains detailed technical reference material for specific subsy
 
 ## Project Information
 
-- **[Repository Changes](./repository-changes.md)**: Overview of changes made to the Archipelago codebase for this fork
+- **[Repository Changes](../diffs/repository-changes.md)**: Overview of changes made to the Archipelago codebase for this fork
   - See also: **[Diff Files](../diffs/)** for detailed line-by-line changes
 
 ## Game-Specific References

@@ -46,7 +46,7 @@ These modules each correspond to a UI panel that the user can interact with in t
 -   **[Inventory](./inventory.md):** Displays and manages the player's item inventory.
 -   **[JSON](./json.md):** Handles saving and loading of the application's entire configuration state (modes).
 -   **[Locations](./locations.md):** Displays all game locations and their real-time accessibility status.
--   **[Loops](./loops.md):** The main UI panel for the Archipelago Loops incremental game mode.
+-   **[Loops](../../features/loops.md):** The main UI panel for the Archipelago Loops incremental game mode.
 -   **[Loops Cost Debugger](./loopsCostDebugger.md):** Step-through planner/verifier for loop-mode mana costs, and the headless path that stamps generated costs into the live store.
 -   **[Modules](./modules.md):** A panel for viewing and managing the loaded frontend modules.
 -   **[Path Analyzer Panel](./pathAnalyzerPanel.md):** A dedicated panel for running the path analysis tool.
@@ -82,8 +82,8 @@ These modules provide shared functionality but do not have their own UI panels.
 
 ## Related Documentation
 
-- **[Developer Guides](../developer/guides/)** - Development guides for working with modules
-- **[Module System Guide](../developer/guides/module-system.md)** - How the module system works
-- **[Creating Modules Guide](../developer/guides/creating-modules.md)** - Build your own modules
-- **[Event System Guide](../developer/guides/event-system.md)** - Inter-module communication
-- **[Frontend README](../../../frontend/README.md)** - Frontend overview and directory structure
+- **[Developer Guides](../guides/)** - Development guides for working with modules
+- **[Module System Guide](../guides/module-system.md)** - How the module system works
+- **[Creating Modules Guide](../guides/creating-modules.md)** - Build your own modules
+- **[Event System Guide](../guides/event-system.md)** - Inter-module communication
+- **[Frontend README](../../../../frontend/README.md)** - Frontend overview and directory structure
