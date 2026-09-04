@@ -9847,15 +9847,85 @@ after the predecessor's `a69a9b295`. **NOT DONE, deliberately:** full convergenc
 adapter (B), live-queue editing in v1, tag editing, a persistent jta name table, per-entry cost, a new
 gate file or standing-values row, any submodule change before V5.
 
+## 5n. The APWorld EDITOR as the HUB over every procgen editor — PLANNED 2026-09-04 (Fable planning session `next-priorities-planning` at main `697c94ee6`; plan file `NewDocs/plans/apworld-editor-hub-plan.md`, gitignored; memory `project_apworld_editor_hub`)
+
+**How this entry came to exist.** The session was briefed to hold the "next main priorities" conversation
+across everything but the platformer. The user's first move set the queue viewer (§5m) aside — *"The session
+that wrote the queue editor plan should have started with a discussion of where it fits into the plans for
+the features that would use the queue editor"* — and asked for a review of every procgen editor and how they
+fit together. The review found that §5i (EDITOR INTEGRATION, CLOSED 2026-08-31) had already done that recon
+and ruled the integration (A2 / B1 / `lab.html`); what the tree says TODAY that §5i did not close is in the
+plan's §8. The user then stated the target directly, and this entry records it.
+
+**⚖ THE ASK (user, 2026-09-04, verbatim in plan §1):** *"I want to combine all of these editors into one
+coherent whole. The top level would be the APWorld editor. … I want it to be able to display and edit every
+single element that appears in the rules.json files, including the sidecars. For elements that already have
+dedicated editors for them, I want the APWorld Editor to have buttons or some other type of link to open the
+relevant editor for that data."* Plus: a Links tab reaching every editor even when the document has no data
+for it; the pipeline panel's composite-grid MAP factored out into a hub tab; a button on the Presets panel's
+opened-preset screen that opens the data in the APWorld Editor.
+
+**⚖ RULINGS (user, 2026-09-04):** (1) all eight integration ideas approved EXCEPT the queue viewer — *"the
+individual queues are not part of the rules.json data"*; `loop_costs` IS and gets an editor link. (2) Linked
+editors open from the **WORKING COPY** (*"Applied state could be much more difficult to implement, and might
+not work for some things"*). (3) Map = the composite grid ONLY, for documents whose sidecars carry grid cells;
+the region graph stays its own panel, reachable by a one-way button — *"I don't want a button in the region
+graph leading back to the APWorld editor."* (4) *"Yes, extend the schema first."* (5) Save destination = the
+rules.json document: a raw view (*"disabled if the data is too big. We might need to test to see what counts
+as too big"*), a download to file, and *"load the rules.json data into the app, as if it was a preset"* —
+writing presets to disk is out of scope.
+
+**Measured at `697c94ee6` (plan §2, commands in §9).** The APWorld editor reads THREE document keys
+(`regions`, `items`, `game_name`) and has three tabs; the schema declares 25 top-level keys and across the 205
+committed presets TEN more appear undeclared (`preset_sidecars` 192 · `preset_label` 42 ·
+`assume_bidirectional_exits` 26 · `procgen_metadata` 17 · `loop_costs` 12 · `playerId` 12 · `flash_panel` 4 ·
+`region_atlas` 3 · `provenance` 1 · `_stub` 1); top-level `additionalProperties` is unset. The editor has
+ZERO in-app rows and no docs page. Presets → hub is ONE publish: a preset load already reaches the editor
+through the state manager's `rawJsonDataLoaded` re-emit. Apply publishes `files:jsonLoaded` but not
+`rules:loaded` (the presets panel publishes both) — that is the "load as if a preset" delta. The map painter
+is one 380-line block (`procgenPipelineUI.js:3743-4122`) whose only outside reads are two tile constants and
+the panel's selection; `reconstructResultFromSidecars` (`:340`, pure, node-tested) already rebuilds a grid from
+`preset_sidecars` (first player only); four `verify-*-steps-ui.mjs` are its only gates. ⛔ The renderer cannot
+move into `procgenCore/` (`bindingContract.test.js` forbids the maze import it carries). rules.json sizes:
+median 203 KB, p90 767 KB, max 2.62 MB; no editor has a size guard today. Only the grown worlds' sidecar
+entries carry `grid_cell`; Seedling/jta entries do not.
+
+**LADDER (plan §5; trap-1047 checked):** **H0** schema (declare the ten keys + `presetSidecarEntry`; name
+the producers of `preset_label`/`playerId`/`_stub`; `test_schema_validation.py` 205/205 stays green) →
+**H1** hub chrome (player selector; a key REGISTRY + `set-key` op; generic Document tab with raw fallback;
+derived Links tab; the FIRST in-app row; docs page) → **H2** presets button + Download + Load-into-app (=
+Apply + `rules:loaded`) + Raw view with a MEASURED threshold → **H3** the map (extract the painter to
+`procgenPipeline/compositeMapRenderer.js`, pipeline imports it BYTE-INERT under the four verify gates; hub Map
+tab; click selects the region; "Open region graph") → **H4** per-region Edit ▸ off the sidecar substrate via
+`getRegionEditor`, opened from the fold, ONE `replace-region-sidecar` op back (undo covers the sub-edit); reverse
+"Open in APWorld Editor" links from the lab pages and the bounce editor → **H5** sidecar block links
+(`region_atlas` → marking tool; `procgen_metadata` → pipeline; `loop_costs` → cost debugger, working-copy
+intake MEASURED; `flash_panel`/`provenance` raw). One Opus session each; H4 splits a/b if the report says so.
+
+**⚖ OPEN (plan §7), none blocking H0–H2:** strict `additionalProperties: false` as H0's last commit if
+205/205 validate (recommend yes); `_stub`/`playerId` schema'd vs fixed at the producer (H0 names the producers
+first); zone-only worlds get "no map" in v1 (recommend accept); the raw-view threshold is a measurement, not a
+ruling.
+
+**NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
+6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
+stands as its own arc, ruled OUT of the hub. **Nothing launched.** ⚑ Two stale carries in §6 corrected this
+session, both measured with `git branch -r --contains`: top-down phases 4/5/6 and the two grid-growth commits
+are ALL on `origin/main`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
-top-down stepped pipeline phases 4/5/6 (editors); sphere-growth soft
-difficulty (deferred); grid-growth **KEPT + modernized** (user 2026-07-15 chose
+~~top-down stepped pipeline phases 4/5/6 (editors)~~ (**DONE and on `origin/main`** — `7b8c278f1` /
+`544017aff` / `be3b01a00`, verified 2026-09-04 with `git branch -r --contains`); sphere-growth soft
+difficulty (deferred — DELAYED by the user until a substrate supports it better than bounce);
+grid-growth **KEPT + modernized** (user 2026-07-15 chose
 refactor over deletion; `insertBackExit` extraction `a6cbdd35d` + async
-generation with live denominator-less progress `406695f46`, on main NOT pushed,
-byte-inert — see `project_grid_growth_retirement`); docs migration help module;
-flashPanel unification. Nothing from the 07-10/11 work blocks on them.
+generation with live denominator-less progress `406695f46`, ~~on main NOT pushed~~ **both on `origin/main`**
+(verified 2026-09-04) — what remains is the panel LABEL question in `CC/docs/cleanup-backlog.md`; see
+`project_grid_growth_retirement`); docs migration help module
+(`CC/docs/plans/help-module-plan.md`, status Pending); flashPanel unification (plan on disk, Shape 1
+decided; adjacent to the platformer arc's Flash side). Nothing from the 07-10/11 work blocks on them.
 
 **Kittyengine engine-scripts CLI slice — QUEUED 2026-09-03, timing the user's.**
 ⚖ The user, verbatim (orchestrator-4's window): *"Yes, I will want to run a slice
