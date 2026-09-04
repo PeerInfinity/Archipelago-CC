@@ -15,7 +15,7 @@ source .venv/bin/activate
 | Regression test | `npm test --mode=test-regression` |
 | Check if dev server is running | `ss -ltn \| grep ":8000"` (or `pgrep -af "[h]ttp.server"` — note the brackets) |
 | Start dev server | `python -m http.server 8000` (only if not already running) |
-| Stop dev server | `pkill -f "[h]ttp.server"` — brackets REQUIRED; the plain form SIGTERMs its own wrapper (measured: exit 144, the next command in the line never runs) |
+| Stop dev server | `ss -ltnp \| grep ":8000"` → read `pid=NNN` → `kill NNN`. ⛔ NOT `pkill` in any form: a PreToolUse hook refuses every pattern kill, brackets or no brackets |
 
 ## Important Gotchas
 - **Path in Generate.py**: Use `"Templates/[GameName].yaml"` NOT `"Players/Templates/[GameName].yaml"` - the latter will fail
@@ -32,11 +32,14 @@ source .venv/bin/activate
     until ! pgrep -f "[b]ench.mjs" && ! pgrep -f "checkout -q HEAD"; do sleep 10; done
     ```
     Checking "did I bracket it?" is not enough; the check is "did I bracket **all of them**?"
-  - **`pkill -f` is the same trap with teeth: it SIGTERMs the wrapper instead of miscounting it.** Measured on a stand-in process: plain form → exit **144** and the rest of the line never runs; bracketed + sole occurrence → exit 0, wrapper lives, target dies. ⚠ **So a restart one-liner kills itself even when the `pkill` half is bracketed**, because the start half puts the plain name back on the line:
+  - **⛔ `pkill`/`killall` ARE REFUSED OUTRIGHT — bracketing is not the answer any more.** A `PreToolUse(Bash)` hook (`~/.claude/hooks/block-pattern-kill.sh`) denies every pattern kill, every `xargs … kill`, and any `kill` fed from a `ps`/`pgrep` harvest — brackets included, because a bracketed pattern still matches by pattern. It exists because pattern kills SIGTERMed live Claude sessions twice (seven sessions on 2026-08-11; a live session at rc=143 plus batches of siblings inside 30 ms on 2026-08-16).
+    **Kill by a PID you can point at instead:**
     ```bash
-    pkill -f "[h]ttp.server"; python -m http.server 8000   # dies at the pkill
+    p=$(ss -ltnp | grep ":8000" | grep -oE 'pid=[0-9]+' | head -1 | cut -d= -f2)
+    kill "$p"                      # a literal PID: allowed, and it cannot hit a sibling
     ```
-    Restart in **two separate commands**, or `kill` the PID from `ss -ltnp`.
+    ⛑ The old advice here was *"bracket it, and restart in two commands because a restart one-liner kills itself"* — measured then and true then (plain form → exit **144**, the rest of the line never running). It is now moot: the pattern form does not run at all, and the PID form has no wrapper to SIGTERM, so a restart one-liner is fine again. **What survives is the `pgrep` half above** — that is a miscount, not a kill, and it is still live.
+    If you genuinely have no PID to point at, append `# PATTERN-KILL-OK` to override the guard; if it fired on the word as *text* (an `echo`, a `grep`, a comment, a heredoc) that is a bug in the guard — its regression net is `~/.claude/hooks/test-block-pattern-kill.py`.
   - For a listing, `ps -eo pid,cmd | grep -v eval` and read the output rather than counting it.
 - **Killing a wrapper does NOT kill its children.** `kill <wrapper-pid>` leaves the `sleep`/`node`/`npx` it spawned running (exit **143/144** = the wrapper died, not the job). After any kill, list the strays and kill those too — `pgrep -af "^sleep"`, or `ps -eo pid,ppid,cmd | awk '$2==<wrapper-pid>'`.
 
