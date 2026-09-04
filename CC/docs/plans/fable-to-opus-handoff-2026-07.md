@@ -9957,6 +9957,15 @@ declare it, or leave it (H0 left it; ⛓ deleting it is the same commit as stric
 `properties` (each new key's `description` names its producer — that is the row label), and its raw-JSON
 fallback row is NOT optional while `_stub` sits in a committed preset outside the schema.
 
+**⚖ RULED 2026-09-04 (user, on H0's report): (1) STRICT top level — `additionalProperties:false` plus
+deleting `_stub` from `robotkitty_tilemap`'s preset (H0 measured strict = 204/205, the one red being the key
+with no producer) — carried by H1 as Task 0. (2) A 4-player procgen preset WILL be generated as a fixture
+BEFORE H4 (H0 found `preset_sidecars` is `{}` in 158 of 192 carriers and every populated one keys under slot
+"1", the four-player documents included); H1's selector ships on regions/items. H0's five brief overturns are
+in the plan's §2 and §10 (headline: the top-level `assume_bidirectional_exits` producer is
+`procgenPipelineEngine.js:6292`, not the exporter; `_stub` has NO producer). **H1 LAUNCHED 2026-09-04** as
+`apworld-hub-sliceH1` (Opus, kickoff `NewDocs/plans/apworld-hub-sliceH1-prompt.md`).
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing launched.** ⚑ Two stale carries in §6 corrected this
