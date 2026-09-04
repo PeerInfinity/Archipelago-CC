@@ -14,8 +14,10 @@
  * The repo ships no JSON-Schema library for JS (`package.json`: `playwright`,
  * `@playwright/test`, `@vitest/coverage-v8`, `esbuild`, `jsdoc`, `vitest` —
  * zero schema hits), and the two schemas this repo actually validates against
- * use exactly the keyword subset below, MEASURED: `rules.schema.json` (833 l)
- * needs nothing this evaluator lacked; `region-atlas.schema.json` (218 l)
+ * use exactly the keyword subset below, MEASURED: `rules.schema.json` (1,045 l
+ * since APWORLD HUB H0 declared nine of the ten previously-undeclared
+ * top-level keys; 833 l when this was written) needs nothing this evaluator
+ * lacked; `region-atlas.schema.json` (218 l)
  * needed six more, which slice D0b added. Python's `jsonschema` covers the
  * committed presets in `test/general/test_schema_validation.py` and is the
  * cross-check for the rules half. Adding ajv would buy a user-visible

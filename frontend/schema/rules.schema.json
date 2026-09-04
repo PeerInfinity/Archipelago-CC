@@ -312,6 +312,182 @@
         }
       },
       "additionalProperties": false
+    },
+    "playerId": {
+      "type": "string",
+      "description": "Player slot ID (string) of a PLAYER-SPECIFIC export; absent from the combined multiworld document. Producer: exporter/exporter.py:2864-2866 (value from :3024, `player_str`).",
+      "pattern": "^[0-9]+$"
+    },
+    "preset_label": {
+      "type": "string",
+      "description": "Short label shown on this preset's frontend button (e.g. 'canth s4'). Producer: exporter/exporter.py:1391-1396, copied from the first player world declaring a `preset_label` class attribute (world_generator/_template_init.py:688-694).",
+      "minLength": 1
+    },
+    "assume_bidirectional_exits": {
+      "type": "boolean",
+      "description": "When true, every back-exit inherits its paired forward exit's rule, and consumers may construct back-exits that the document does not list. Producer: frontend/modules/procgenPipeline/procgenPipelineEngine.js:6292 (the top-level flag; the exporter's same-named `exporter_settings` field, exporter/games/base/handler.py:1817-1820, is a DIFFERENT, nested field)."
+    },
+    "preset_sidecars": {
+      "type": "object",
+      "description": "Per-region playable payloads for procgen substrates, keyed by player slot ID (string). Producers: exporter/exporter.py:1073 (the empty `{}` every export carries), exporter/games/base/handler.py:2102 (the worldgen `_worldgen_sidecars.json` round-trip), frontend/modules/procgenPipeline/procgenPipelineEngine.js:6331 (`buildPresetSidecars`, defined at :6053) and frontend/modules/procgenPipeline/regionAtlasCompiler.js:722.",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "description": "Mapping of region name to that region's sidecar entry — keyed exactly like this player's `regions` block.",
+          "additionalProperties": { "$ref": "#/$defs/presetSidecarEntry" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "procgen_metadata": {
+      "type": "object",
+      "description": "How this document was procedurally generated. Producers: frontend/modules/procgenPipeline/procgenPipelineEngine.js:6351 (which merges the caller's block with the auto-derived `region_count` and `grid_dims`), whose callers supply the rest — procgenPipeline/sphereSteps.js:491 and procgenPipeline/topDownSteps.js:134 — and exporter/games/base/handler.py:2135 (the worldgen `_worldgen_procgen_metadata.json` round-trip). Open-ended by construction: the caller's fields are spread in, so consumers must tolerate unlisted ones.",
+      "properties": {
+        "driver": {
+          "type": "string",
+          "description": "Which pipeline driver built the world — 'sphere-growth' (sphereSteps.js:492), 'top-down' or 'top-down-sphere' (topDownSteps.js:135)."
+        },
+        "stop_reason": {
+          "type": "string",
+          "description": "Why grid growth stopped, from the driver's own stats."
+        },
+        "region_count": {
+          "type": "integer",
+          "description": "Number of generated regions. Auto-derived by procgenPipelineEngine.js:6351, never caller-supplied."
+        },
+        "grid_dims": {
+          "type": "object",
+          "description": "Bounding size of the generated grid in cells. Auto-derived by procgenPipelineEngine.js:6353-6356 from the maximum `grid_cell`.",
+          "properties": {
+            "width": { "type": "integer" },
+            "height": { "type": "integer" }
+          },
+          "required": ["width", "height"]
+        },
+        "source_game": {
+          "type": ["string", "null"],
+          "description": "Name of the source world a top-down build was derived from. Producer: procgenPipeline/topDownSteps.js:136."
+        },
+        "source_counts": {
+          "type": "object",
+          "description": "Item/location tallies of the source world a top-down build consumed. Producer: procgenPipeline/topDownSteps.js:137 (`computeSourceCounts`)."
+        },
+        "sphere_plan": {
+          "type": "object",
+          "description": "Compact per-sphere plan the driver executed. Producers: procgenPipeline/sphereSteps.js:494 and topDownSteps.js:142; read back by `rebuildEnvelopeFromRulesJson` (procgenPipelineEngine.js:4072-4078)."
+        },
+        "sphere_tree": {
+          "type": "object",
+          "description": "Compact region-to-wave attribution — the abstract topology without the grid. Producer: procgenPipeline/topDownSteps.js:142; read back by `rebuildEnvelopeFromRulesJson`."
+        },
+        "edits": {
+          "type": "array",
+          "description": "Recorded hand edits to the generated grid, kept as provenance. Producers: procgenPipeline/sphereSteps.js and topDownSteps.js:141 (omitted entirely when nothing was edited)."
+        }
+      }
+    },
+    "loop_costs": {
+      "type": "object",
+      "description": "Loop-mode mana economy for this world. Producers: frontend/modules/shared/procgen/loopCostGenerator.js:134-146 (`generateLoopCosts`, invoked from procgenPipelineEngine.js:6412), exporter/games/base/handler.py:2171 (the worldgen `_worldgen_loop_costs.json` round-trip) and the hand-written test-preset writers under scripts/test/generate-*-preset.*. Consumed by frontend/modules/loops/costDataManager.js.",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Cost-data format version ('1.0'). Producer: loopCostGenerator.js:135."
+        },
+        "generatedAt": {
+          "type": "string",
+          "description": "ISO-8601 timestamp of generation. Producer: loopCostGenerator.js:136."
+        },
+        "generatedFrom": {
+          "type": ["string", "null"],
+          "description": "Name of the source file the costs were simulated from. Producer: loopCostGenerator.js:137."
+        },
+        "regions": {
+          "type": "object",
+          "description": "Region name -> cost entry. Producer: loopCostGenerator.js:186-194 and :316-330.",
+          "additionalProperties": {
+            "type": "object",
+            "description": "One region's cost entry.",
+            "properties": {
+              "moveCost": {
+                "type": "number",
+                "description": "Mana charged for entering this region. The EXPLICIT per-region cost costDataManager.js:368-371 reads."
+              },
+              "timeDrainPerSecond": {
+                "type": "number",
+                "description": "Mana drained per second of live play — how SUMMARY substrates (runner, bounce) are priced instead of per action."
+              },
+              "xpEffect": {
+                "type": "string",
+                "description": "Per-region XP effect mode — 'cost', 'speed', 'both' or 'none' (loopCostGenerator.js:77-79)."
+              }
+            }
+          }
+        },
+        "locations": {
+          "type": "object",
+          "description": "Location name -> mana cost. The values are NUMBERS, not objects (loopCostGenerator.js:204, :342; read at costDataManager.js:346-348).",
+          "additionalProperties": { "type": "number" }
+        },
+        "defaultRegionCost": {
+          "type": "number",
+          "description": "Fallback move cost for regions `regions` does not name. Producer: loopCostGenerator.js:144 (default 50)."
+        },
+        "defaultLocationCost": {
+          "type": "number",
+          "description": "Fallback check cost for locations `locations` does not name. Producer: loopCostGenerator.js:145 (default 10)."
+        },
+        "defaultRegionXpEffect": {
+          "type": "string",
+          "description": "Fallback XP effect mode for regions that state none. Producer: loopCostGenerator.js:146."
+        },
+        "error": {
+          "type": "string",
+          "description": "Set instead of real costs when generation threw — costDataManager.js:209 skips a block carrying it. Producer: procgenPipelineEngine.js:6422-6430."
+        }
+      }
+    },
+    "region_atlas": {
+      "type": "object",
+      "description": "Which region atlas this document's graph was compiled from. Producer: frontend/modules/procgenPipeline/regionAtlasCompiler.js:564-568.",
+      "properties": {
+        "atlas_id": {
+          "type": "string",
+          "description": "The atlas's stamped id; it ends in the atlas content hash, so a restamped atlas visibly invalidates a stale preset."
+        },
+        "game": {
+          "type": "string",
+          "description": "The atlas's game identifier."
+        },
+        "map_document": {
+          "type": "string",
+          "description": "Path of the tile-space map document the atlas was marked on. Omitted when the atlas declares no tile space."
+        }
+      },
+      "required": ["atlas_id", "game"]
+    },
+    "flash_panel": {
+      "type": "object",
+      "description": "Wiring that boots the recompiled original game for this preset in the Flash panel. Producers: frontend/modules/procgenPipeline/regionAtlasCompiler.js:720 (from the FLASH_PANEL_WIRING table at :148, the only CODE source of this block) and frontend/modules/tileMapAnalyzer/rulesExporter.js:350-355. Blocks in hand-authored presets are provisional (flashPanel/README.md).",
+      "properties": {
+        "config": {
+          "type": "string",
+          "description": "Panel config file name for the game."
+        },
+        "wasm": {
+          "type": "string",
+          "description": "Path of the recompiled WASM build's page (e.g. 'seedling_bot_ap_p4d/game.html')."
+        },
+        "swf": {
+          "type": "string",
+          "description": "Injected SWF file name, for games still booted from Flash. Producer: tileMapAnalyzer/rulesExporter.js:353."
+        }
+      },
+      "required": ["config"]
+    },
+    "provenance": {
+      "type": "object",
+      "description": "OPAQUE — whatever the generator that produced this document wants to say about where it came from; stamped, never derived, so the fields vary per generator. Producer: frontend/modules/procgenPipeline/regionAtlasCompiler.js:561 (passes `options.provenance` through verbatim); frontend/modules/procgenCore/contentIdentity.js:119-133 adds `content_hash` when a document is identity-stamped."
     }
   },
   "required": [
@@ -828,6 +1004,42 @@
         "type": { "oneOf": [{ "type": "integer" }, { "type": "string" }] }
       },
       "required": ["name", "type"]
+    },
+    "presetSidecarEntry": {
+      "type": "object",
+      "description": "One region's procgen sidecar: which substrate owns the region, how to draw it, where it sits on the driver's grid, and the substrate's own serialized world. Producer: `buildPresetSidecars`, frontend/modules/procgenPipeline/procgenPipelineEngine.js:6106-6129.",
+      "properties": {
+        "substrate": {
+          "type": "string",
+          "description": "Substrate id owning this region (`region.substrate`, defaulting to 'maze'). Resolves through substrateRegistry; measured values across the committed presets: bounce, flash_seedling, jta, maze, omsi, runner, text_adventure."
+        },
+        "render_hint": {
+          "type": "string",
+          "description": "How a map renderer should draw this region; defaults to the substrate id when the region declares none."
+        },
+        "grid_cell": {
+          "type": "object",
+          "description": "Driver-level layout coordinate, so consumers reproduce the driver's spatial layout instead of running their own force-directed pass. Present only for grid-grown worlds.",
+          "properties": {
+            "gx": { "type": "integer" },
+            "gy": { "type": "integer" }
+          },
+          "required": ["gx", "gy"]
+        },
+        "playable_payload": {
+          "type": "object",
+          "description": "OPAQUE — the substrate's own serialized world, produced by that substrate's adapter `serializeWorld`. This schema deliberately states no inner shape: the payload belongs to the substrate, not to rules.json."
+        },
+        "biome": {
+          "type": "object",
+          "description": "Resolved biome configuration, so regenerating this region can reuse it. Omitted (not null) for substrates with no biome concept."
+        },
+        "grow_telemetry": {
+          "type": "object",
+          "description": "Substrate-side auto-grow telemetry from `generateRegionCore`; read by `computeProcgenStats` to surface formula under-provisioning. Omitted when the adapter reported none."
+        }
+      },
+      "required": ["substrate"]
     }
   }
 }
