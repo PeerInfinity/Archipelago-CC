@@ -76,11 +76,11 @@ Proposals for upstream Archipelago changes that would reduce fork maintenance:
 
 | Proposal | Status | Impact |
 |----------|--------|--------|
-| [Generation Hooks](./proposals/generation-hooks-proposal.md) | Draft | High |
+| Generation Hooks | Not written | High |
 | [Global Generation Hooks](./proposals/global-generation-hooks-proposal.md) | Draft | Medium |
 | [Skip Required Files](./proposals/skip-required-files-proposal.md) | Draft | High |
-| [Settings Extension](./proposals/settings-extension-proposal.md) | Draft | Low |
-| [In-Memory World Builder](./proposals/in-memory-world-builder-proposal.md) | Draft | Medium |
+| Settings Extension | Not written | Low |
+| In-Memory World Builder | Not written | Medium |
 
 ### [Test Results](./test-results/)
 

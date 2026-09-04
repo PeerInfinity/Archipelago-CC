@@ -4,7 +4,7 @@
 
 Idea from MetaMath Discord thread (2026-03-30). User **lights** proposed a calculator-themed Archipelago game where the player receives math operations and numbers as items, and solves equations to reach target answers as checks. Name "APCalc" coined in the thread and immediately endorsed.
 
-See also: [MetaMath world](/worlds/metamath/) for the formal-proof-based predecessor that inspired the concept.
+See also: [MetaMath world](../../../worlds/metamath/) for the formal-proof-based predecessor that inspired the concept.
 
 ---
 
@@ -442,9 +442,9 @@ Two display modes (configurable):
 
 ## References
 
-- [MetaMath world](/worlds/metamath/) — formal-proof predecessor
-- [MetaMath docs](/worlds/metamath/docs/) — gameplay, settings, developer docs
-- [Cost generator (Loops)](/frontend/modules/loops/costGenerator.js) — frontend generation pattern
-- [Cost generator (JTA)](/frontend/modules/jtaCostDebugger/jtaCostPlanner.js) — alternative generation pattern
-- [World generator](/world_generator/) — rules.json → world package pipeline
-- [Rules schema](/frontend/schema/rules.schema.json) — rules.json format specification
+- [MetaMath world](../../../worlds/metamath/) — formal-proof predecessor
+- [MetaMath docs](../../../worlds/metamath/docs/) — gameplay, settings, developer docs
+- [Cost generator (Loops)](../../../frontend/modules/loops/costGenerator.js) — frontend generation pattern
+- [Cost generator (JTA)](../../../frontend/modules/jtaCostDebugger/jtaCostPlanner.js) — alternative generation pattern
+- [World generator](../../../world_generator/) — rules.json → world package pipeline
+- [Rules schema](../../../frontend/schema/rules.schema.json) — rules.json format specification

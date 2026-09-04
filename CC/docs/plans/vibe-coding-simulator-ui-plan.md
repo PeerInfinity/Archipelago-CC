@@ -9,7 +9,7 @@ The interface serves two modes through the same UI:
 
 The UI is a frontend module within the existing Archipelago-CC frontend, using the same module registration, event bus, dispatcher, and panel system.
 
-See also: [Main planning doc](plan.md), [Balance variables](../../../scripts/vibe-coding-simulator/balance.md)
+See also: [Main planning doc](vibe-coding-simulator-plan.md), [Balance variables](../../../scripts/vibe-coding-simulator/balance.md)
 
 ---
 

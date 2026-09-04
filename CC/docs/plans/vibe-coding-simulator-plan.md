@@ -10,7 +10,6 @@ The game has two modes of use:
 
 The Archipelago connection is optional. The interface should work standalone for projects that don't have pre-built dependency data.
 
-See also: [Original brainstorm](../../chats/vibe%20coding%20simulator.md)
 
 ---
 

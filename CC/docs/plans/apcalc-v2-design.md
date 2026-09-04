@@ -342,7 +342,7 @@ class Edge:
 ## References
 
 - [APCalc v1 plan](apcalc-plan.md) — original design document
-- [APCalc generator](../../apcalc_generator/) — Python generation code
-- [APCalc frontend module](../../frontend/modules/apcalc/) — game UI
-- [APCalc frontend generator](../../frontend/modules/apcalcGenerator/) — JS generation code
-- [Region graph module](../../frontend/modules/regionGraph/) — graph visualization
+- [APCalc generator](../../../worlds/apcalc/generator/) — Python generation code
+- [APCalc frontend module](../../../frontend/modules/apcalc/) — game UI
+- [APCalc frontend generator](../../../frontend/modules/apcalcGenerator/) — JS generation code
+- [Region graph module](../../../frontend/modules/regionGraph/) — graph visualization
