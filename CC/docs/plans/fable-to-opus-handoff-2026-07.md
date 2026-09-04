@@ -9907,6 +9907,20 @@ intake MEASURED; `flash_panel`/`provenance` raw). One Opus session each; H4 spli
 first); zone-only worlds get "no map" in v1 (recommend accept); the raw-view threshold is a measurement, not a
 ruling.
 
+**⚖ APPROVED 2026-09-04 ("I approve of that plan. Please begin.") with ONE addition:** *"I want to refactor
+the map rendering code so that each substrate declares whether it supports map rendering, and has a way to
+call the renderer. I don't want to hardcode support for map rendering for specific substrates."* Measured:
+the painter's `_drawRegion` (`procgenPipelineUI.js:3856-3873`) dispatches by hand on `render_hint`
+(`'text_adventure'` / `'maze'` / generic). ⇒ H3 becomes a registry SLOT (working name
+`compositeMap.drawRegion`, the `roomEditor` declaration-is-data precedent) declared by maze and
+text_adventure, each carrying its own painter; the shared renderer keeps grid/connections/stub/generic and
+dispatches through the registry, generic BY NAME when the slot is absent; the capability matrix and the
+registry doc gain the row (generator `--check` + `procgenDocs/` vitest owed). This OVERTURNS the entry's ⛔
+above: with the substrate painters moved out, the shared renderer imports no substrate module and CAN live in
+`procgenCore/`. **H0 LAUNCHED 2026-09-04** as `apworld-hub-sliceH0` (Opus, kickoff
+`NewDocs/plans/apworld-hub-sliceH0-prompt.md`); the ladder self-advances on verified report-backs
+(`feedback_session_prompts_report_back`), stopping at each ⚖.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing launched.** ⚑ Two stale carries in §6 corrected this
