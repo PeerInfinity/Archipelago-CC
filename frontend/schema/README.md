@@ -14,6 +14,13 @@ The **generic base schema** that defines the structure for all Archipelago games
 - World metadata, exporter settings, and game-specific info
 - Helper function definitions
 - Canonical placements for deterministic seed generation
+- The procgen / preset extension keys — `preset_sidecars` (typed by `$defs/presetSidecarEntry`),
+  `procgen_metadata`, `loop_costs`, `assume_bidirectional_exits`, `region_atlas`, `flash_panel`,
+  `provenance`, `preset_label` and `playerId`. Each carries a `description` naming the file that
+  WRITES it; see `docs/json/developer/procgen/architecture.md` § rules.json extensions.
+
+The top level is deliberately permissive (`additionalProperties` is unset), so a producer that adds a
+key does not fail validation before anyone declares it.
 
 This schema validates any rules.json file from any supported Archipelago game.
 
