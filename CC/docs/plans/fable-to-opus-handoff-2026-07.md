@@ -9921,6 +9921,42 @@ above: with the substrate painters moved out, the shared renderer imports no sub
 `NewDocs/plans/apworld-hub-sliceH0-prompt.md`); the ladder self-advances on verified report-backs
 (`feedback_session_prompts_report_back`), stopping at each ⚖.
 
+**⇒ H0 AS BUILT 2026-09-04** (`eb16b6279` schema · `f2627128d` procgen docs · `860608b0a` schema README ·
+this commit = the record; as-built = plan §10, which is in `NewDocs/` and so untracked). The census
+REPRODUCED exactly at `230c5def3` — same ten keys, same counts, 205 files. **NINE declared** with `$defs/presetSidecarEntry` (`substrate` required,
+`playable_payload` opaque); schema 25 → 34 properties, 16 → 17 `$defs`, 833 → 1,045 lines. `test_schema_validation.py`
+**2 passed, 205 subtests** (315 s); 14 more vitest files, 672 rows, green; `check-slice-records` ALL PASS.
+**Five overturns.** (1) `preset_label` and `playerId` DO have producers — `exporter/exporter.py:1391-1396`
+and `:2864-2866` (a STRING, player-specific exports only) — but **`_stub` has NONE**: zero writers in the
+tree, a hand-written English sentence in one preset, left UNDECLARED per the brief's rule. (2) §2 attributed
+`assume_bidirectional_exits` to `handler.py:1817-1820`; that is a NESTED `exporter_settings` field — the
+top-level key is `procgenPipelineEngine.js:6292`. (3) `procgen_metadata` carries nine fields, not four
+(`source_game`/`source_counts`/`sphere_plan`/`sphere_tree`/`edits`), and is open by construction (the caller's
+block is spread in). (4) `loop_costs.regions` → an OBJECT but `loop_costs.locations` → a **number**
+(`loopCostGenerator.js:204/:342`, read at `costDataManager.js:346-348`) — a mirrored declaration would have
+been wrong about half of it. (5) `flash_panel` has a third field, `swf` (`tileMapAnalyzer/rulesExporter.js:353`).
+**Two facts H1 needs:** `preset_sidecars` is EMPTY (`{}`) in 158 of its 192 presets — only 34 carry data and
+every one keys under slot `"1"`, the four-player multiworld documents included, so H1's player selector has
+no committed per-player sidecar to select; and the 1,360 entries measured are what typed the `$def`.
+⛔ **A constraint on every future schema edit:** `procgenCore/jsonSchemaCheck.js` throws BY NAME on an unknown
+assertion keyword, so a keyword outside its `KNOWN_KEYWORDS` reds every JS row while the Python gate stays
+green. H0 stayed inside that set and re-walked the emitted schema to prove it (0 unknown).
+**MUTANTS (both temporary, both recorded).** MUTANT A (drop the `preset_sidecars` declaration, top level still
+permissive) → **205/205 validate** — nothing reds, which is the substance of ⚖ 1: with `additionalProperties`
+unset a schema entry is DOCUMENTATION, not a guard, and its ABSENCE is invisible to the gate. MUTANT B
+(`additionalProperties: false`, nothing else) → **204/205**, the single red being
+`robotkitty_tilemap/AP_14089154938208861744` on `<root>: Additional properties are not allowed ('_stub' was
+unexpected)` — cross-checked by an independent top-level-key scan naming the same file and key. CONTROL
+(schema as committed) → **205/205**. ⇒ **Going strict costs exactly one preset, and the offender is the one
+key with no producer.**
+**⚖ THE USER OWES:** (1) strict top level — the measurement is above, and mutant A is the argument FOR it
+(with a permissive top level, deleting a declaration is invisible to the gate); (2) `_stub` — delete the key,
+declare it, or leave it (H0 left it; ⛓ deleting it is the same commit as strict); (3) NEW — whether a
+4-player procgen preset is worth generating, since no committed document exercises a per-player sidecar.
+**NEXT = H1** (hub chrome), unblocked; ⛓ its `documentKeys.js` should be DERIVED from the schema's
+`properties` (each new key's `description` names its producer — that is the row label), and its raw-JSON
+fallback row is NOT optional while `_stub` sits in a committed preset outside the schema.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing launched.** ⚑ Two stale carries in §6 corrected this
