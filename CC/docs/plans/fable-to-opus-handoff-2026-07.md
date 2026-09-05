@@ -10873,6 +10873,13 @@ intended-re-pin vs defect); then triage the six pre-existing reds; then the **RE
 → `check-`, report-shaped → `dump-`/`report-`) so the three mechanisms adopt them for free — ruled YES, after
 the drift and the triage.
 
+**V1 LAUNCHED 2026-09-05** as `procgen-drift-bisect` (Opus; kickoff `NewDocs/plans/procgen-drift-bisect-prompt.md`;
+the survey session read idle first): a node-only bisect of the 45 code commits in `697c94ee6..HEAD` on the
+`maze_consumable_test` emission md5, in throwaway worktrees with the submodule matched per SHA (the gitlink
+moved once, at `9035a46a6`); a by-path diff of the two emissions; the ruling intended-vs-defect on evidence;
+and `verify-atlas-sphere-roundtrip` resolved in the primary tree. Then V2 (the six pre-existing reds), V3
+(the rename).
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
