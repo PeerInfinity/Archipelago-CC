@@ -10733,12 +10733,12 @@ the five new ones being Phase F2, which drives the marking tool's new `onSave` s
 Docs: `modules/apworldEditor.md`'s `editor` slot section rewritten, the Links tab section, the Events table.
 Traps **1206–1211**.
 
-**CI at `6a4c38423` — MEASURED (⚖ 52, plan §19.7).** `unittests` **success** (the job carrying
-`test_schema_validation.py` over every committed preset) · ALTTP regression **success** · CodeQL **success** ·
-Docker **success** · Pages **success** · `JavaScript Unit Tests` (run **33977025059**): its **Vitest job
-success**, and its `maze-lab +14` and `plan-seedling-r7-ends-meet +8` browser-gate shards **success**, so
-`check-maze-lab` and `check-procgen-lab-hosting` are green on a RUNNER at this head; one
-`seedling-wasm-element` shard still running at the time of writing. `suite: vitest (unfiltered)`
+**CI at `6a4c38423` — MEASURED, ALL SIX WORKFLOWS GREEN (⚖ 52, plan §19.7).** `unittests` (the job carrying
+`test_schema_validation.py` over every committed preset), ALTTP regression, CodeQL, Docker, Pages, and
+`JavaScript Unit Tests` (run **33977025059**) with **all five of its jobs success** — the Vitest job, the
+shard plan, and the `maze-lab +14`, `plan-seedling-r7-ends-meet +8` and `seedling-wasm-element` browser-gate
+shards — so `check-maze-lab` and `check-procgen-lab-hosting` are green on a RUNNER at this head.
+`suite: vitest (unfiltered)`
 **436 / 13,296** (13,288 passed | 8 skipped | 0 failed), slow battery 12/217 unmoved; baseline `074684c0a` =
 435 / 13,260.
 
