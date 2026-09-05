@@ -34,8 +34,16 @@
  *      silently OPEN a gated world.
  *   3. **Some regions cannot be round-tripped at all.** A `procgen_topdown`
  *      maze region's locations are named by the SOURCE GAME (`global_name`,
- *      which the payload does not carry); a bounce region whose exit portal is
- *      not called `side_exit_<side>` re-assembles under a different portal id.
+ *      which the payload does not carry). ⛓ **H6b (2026-09-05) RETIRED THE
+ *      SECOND EXAMPLE THIS LINE USED TO CARRY** — a bounce region whose exit
+ *      portal is authored (`exit_up`) re-assembled under a different id, which
+ *      this door found and which turned out to be a defect in the ASSEMBLER
+ *      rather than a fact about the payload. `assembleBounceRegionFromLevel`
+ *      now reads the level's own portal ids and the bounce corpus goes
+ *      15/25 → **25/25**. The door found it precisely BECAUSE the baseline is
+ *      a byte check: nothing else was looking. ⛔ Today the whole class is the
+ *      ten `seedling_atlas_maze` rooms (payloads the atlas derivation writes
+ *      and `serializeMazeWorld` does not) — H6a's to answer for.
  *
  * ⛓ **ONE MECHANISM ANSWERS ALL THREE: RUN THE ROUND TRIP ON THE UNEDITED
  * PAYLOAD FIRST.** `regionRoundTrip.open()` returns both the editor's session
