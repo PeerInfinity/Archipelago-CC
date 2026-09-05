@@ -10038,7 +10038,9 @@ attempt at the failing row ALONE could not even start its roster: `Timeout waiti
 `load 21.74 across 8 cpus`, `ps` naming a dozen concurrent `cc1` compiles under
 `~/CC/SWFRecomp-CC/.claude/worktrees/agent-*` — **another arc's** work, which was NOT killed. ⇒ a confirming
 `fast` run on a quiet box is owed and cheap; it is not a gate this slice could run while another arc owned
-the CPUs.
+the CPUs. ⛔ It was ATTEMPTED, not merely promised: a watcher armed to fire the batch the moment load fell
+below 5 expired after ~33 minutes **at load 13**. The measurement stays owed; what is recorded is the attempt
+and its outcome.
 
 **H1's CI, quoted by SHA (⚖ 52).** `a525748cd` (run 33936562406) and `cebabdfd5` (run 33936714005) — **all
 six jobs success at both**: `unittests` (carries `test_schema_validation.py`, so the strict schema is green in
