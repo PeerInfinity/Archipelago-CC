@@ -1263,11 +1263,18 @@ class ApworldEditorUI {
   _makeDocumentValueEditor(row) {
     const wrap = document.createElement('div');
     wrap.style.margin = '5px 0 0';
-    if (row.summary.kind === 'object' || row.summary.kind === 'array') {
-      wrap.appendChild(this._makeDocumentBlockEditor(row));
-      return wrap;
-    }
-    wrap.appendChild(this._makeDocumentScalarEditor(row));
+    /**
+     * ⛓ The editor is chosen by the key's DECLARED type first and by the value
+     * only when the schema says nothing. ⛔ Routing on the value alone gives an
+     * ABSENT object key a text box, and the first thing typed into it is a
+     * string the schema then refuses — a control that can only produce a
+     * refusal is not an affordance.
+     */
+    const container = row.type === 'object' || row.type === 'array'
+      || row.summary.kind === 'object' || row.summary.kind === 'array';
+    wrap.appendChild(container
+      ? this._makeDocumentBlockEditor(row)
+      : this._makeDocumentScalarEditor(row));
     return wrap;
   }
 
@@ -1330,7 +1337,10 @@ class ApworldEditorUI {
 
     const text = document.createElement('textarea');
     text.className = 'apworld-doc-json';
-    text.value = JSON.stringify(row.value, null, 2);
+    // ⛓ An absent container is seeded with its own EMPTY form, so "add the key"
+    //   and "edit the key" are the same gesture.
+    const seed = row.value !== undefined ? row.value : (row.type === 'array' ? [] : {});
+    text.value = JSON.stringify(seed, null, 2);
     Object.assign(text.style, {
       width: '100%', minHeight: '160px', marginTop: '5px', boxSizing: 'border-box',
       backgroundColor: '#111', color: '#ddd', border: '1px solid #444', borderRadius: '3px',
