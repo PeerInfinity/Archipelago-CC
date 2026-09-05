@@ -10733,6 +10733,17 @@ the five new ones being Phase F2, which drives the marking tool's new `onSave` s
 Docs: `modules/apworldEditor.md`'s `editor` slot section rewritten, the Links tab section, the Events table.
 Traps **1206–1211**.
 
+**CI at `6a4c38423`, WATCHED and partially in flight when this was written (plan §19.7):** `unittests`
+**success** (the job carrying `test_schema_validation.py` over every committed preset), `Deploy to GitHub
+Pages` **success**, `Build and Publish Docker Images` **success**; `JavaScript Unit Tests` (run
+**33977025059**) still running at ≈2 h with its **`maze-lab +14` browser-gate shard already SUCCESS**, so the
+two gates H4c moved are green on a RUNNER at this head; ALTTP regression and CodeQL still running. ⛔ The
+`suite: vitest (unfiltered)` row is therefore NOT quoted yet. The delta this slice OWES, derived per file:
+`regionAtlasCompiler` +4 · `sphereSteps` +3 · `procgenPipelineUI` +8 · `documentKeys` +8 · `documentLinks` +5
+· `documentStateManager` +12 (the ONE new file) ⇒ **+40 rows, +1 file = 436 / 13,300 against `074684c0a`'s
+435 / 13,260**. No directory-rostered term (the new file is under `loopsCostDebugger/`). ⇒ **H6a's first act:
+`node scripts/procgen/ci-vitest-summary.mjs 6a4c38423` and check that expectation.**
+
 **NEXT = H6a** (the atlas derivation emitting the serializer's shape — and the natural home for an atlas
 RESOLVER, which is the missing half of H5's `region_atlas` door), then **H6b**. ⚖ open for the user in plan
 §19.6: enable `regionMarkingTool`/`editor` in the default `modules.json`?; the `loop_costs` WRITE-BACK
