@@ -1318,3 +1318,206 @@ console and exits 0 regardless of `n`. Turning that count into a failing asserti
 claim, not a rename, and it is out of this slice — so the added line names what the run actually
 asserted (the phases and revisits that would have thrown), and the error count stays diagnostic.
 ⚖ **A candidate for a later slice**, named rather than silently left.
+
+---
+
+# V3b as built — the tier is renamed, and the CI plan did not move (2026-09-05)
+
+Four commits on `main`, each staged by path:
+
+| commit | what |
+|---|---|
+| `5f39eb83f9` | Task 0 — the derived rename table, **before any file moves** |
+| `df404e911b` | the GATE batch: 49 `git mv` + the 2 deletions + the `@ci-box` mechanism |
+| `486670cc13` | every reader of a renamed script, and two FALSE claims retired |
+| `af54c20d46` | the help baseline, re-recorded at the renamed head (627.0 s) |
+
+## What moved
+
+| class | count | outcome |
+|---|---|---|
+| GATE | **49** | `git mv` → `check-<name>.mjs` (27 browser · 20 node · 2 windows) |
+| REPORT | **11** | unchanged — every one was already `dump-` |
+| STALE | **2** | deleted (`verify-dj-real-embed.mjs`, `verify-bot-playthrough.mjs`) |
+
+Every move is a `git mv`, so `git log --follow` reaches the pre-rename history of each file.
+
+## The roster, and the shard plan that did NOT move
+
+```
+BEFORE (580b178cd3)  33 gate(s) + 1 declared arm(s); 23 browser, 4 windows. local 34, live 4
+AFTER  (486670cc13)  82 gate(s) + 1 declared arm(s); 52 browser, 6 windows. local 83, live 4
+```
+
+| `ci-gates --plan` | BEFORE | the NAKED rename (measured in a mirror) | **AFTER, with `@ci-box`** |
+|---|---|---|---|
+| `--set=browser` | 25 arms / **3 shards** | 52 arms / **30 shards** | **25 arms / 3 shards** |
+| `--set=headless` | 31 arms / **1 shard** | 51 arms / **21 shards** | **31 arms / 1 shard** |
+| procgen gate jobs per push | **4** | **51** | **4** |
+
+⛓ **BEFORE == AFTER is the check, and no roster-count assertion could have made it.** 47 of the 49
+newly adopted gates declare `@ci-box` (the other two are the Windows pair, which `ciRunnable`'s
+first clause already excluded and which therefore declare nothing). ⚖ Deciding which of the 49 CI
+should adopt is a slice of its own; each is one line to delete, in the gate that knows.
+
+## The mechanism, in four files
+
+- `gateRoster.js` — `CI_BOX_LINE_RE` + `ciBoxIn()`, refusing by name an empty reason, a second
+  declaration, and the PAIR `@ci-box` + (`@ci-face` | `@ci-argv`) — a box-only gate has no CI run
+  for a face to re-key or for argv to point at.
+- `ciGatePlan.js` — `ciRunnable = !gate.windows && !gate.ciBox`. ⛓ The two clauses are different in
+  kind and the docblock says so: `windows` is READ OFF THE FILE (it holds `/mnt/c/Windows/py.exe`),
+  `ciBox` is a JUDGEMENT somebody wrote down. The first cannot be wrong; the second is one line to
+  delete when it stops being true.
+- `ci-gates.mjs` — the `## CI-SKIPPED |` line prints the gate's OWN reason instead of the Windows
+  sentence, because "cannot be answered here" and "somebody decided the box answers this" are two
+  different things to tell a reader.
+- `ci-summary.mjs` — a second refusal rung with its own sentence, above the Windows one.
+
+Tests: `gateRoster.test.js` gains the parser describe (reason as free text · null when absent ·
+a prose mention is not a declaration · empty refused by name · two refused by name · the live roster
+carries them, non-vacuously) and the two-way pair refusal; `ciGatePlan.test.js`'s `ciRunnable`
+describe now asserts the refused set is **exactly `windows ∪ @ci-box`** as a SET over files with
+each half proved non-empty first, plus a new row that a gate declaring NEITHER is still accepted —
+without which a `ciRunnable` that returned `false` for everything would pass every other row.
+
+## The reader sweep
+
+**187 tracked files** rewritten longest-name-first (so `…-sphere-roundtrip` never ate
+`…-sphere-roundtrip-maze`), plus **five** a whole-name sweep structurally cannot see:
+
+| site | why the sweep missed it |
+|---|---|
+| `frontend/modules/flashPanel/index.js` | basename wrapped across a `//` comment break |
+| `frontend/modules/flashPanel/README.md` | a `{wasm-bridge,atlas-play}` brace spelling |
+| `probe-seedling-r9-dash-rect-mobiles.mjs` | basename wrapped inside a docblock |
+| `check-maze-loop-mana.mjs` · `check-omsi-mana-leg.mjs` | eventBus SUBSCRIBER IDs, not paths |
+
+⛔ **`CC/docs/procgen-verify-tier.md` is deliberately NOT rewritten.** It is the survey; its subject
+is the `verify-*` tier as it was, and rewriting `verify-` out of *"the 50 `verify-*` scripts are not
+fifty oversights, they are one naming rule"* would make the record nonsense. The map lives in
+§"V3b — the rename" above, two screens down from every old name in it.
+
+## Two FALSE claims the survey found, retired with the rename
+
+- `vitest.slow.config.js:60-66` and `docs/json/developer/procgen/runner.md:103` both said the
+  `verify-runner-*.mjs` Playwright instruments *"still run"*. **Nothing ran them** — all four were in
+  no battery of any kind. They PASS, so the sentence was wrong about the MECHANISM, not the state.
+  Both sites now quote what they said and say what was measured.
+- `frontend/modules/procgenPipeline/braidSphereBot.slow.test.js` called itself *"the headless
+  analogue of `scripts/procgen/verify-bot-playthrough.mjs`"*. That script is deleted, so this file is
+  now the ONLY driver of the claim — and the docblock says that instead of sending a reader after a
+  sibling that is not there.
+
+## Generated artifacts, each delta derived per file
+
+| artifact | before | after | why |
+|---|---|---|---|
+| `procgenDocs/generated/instruments.js` | 267 files | **265** | the two deletions; 0 FINDING(S), `--check` exits 0 |
+| `check-procgen-help.baseline.json` — instruments | 262 | **265** | the gate's population is every `*.mjs` |
+| — importDoorEffectful | 252 | **250** | the two deletions |
+| — wroteIntoTheRepo | 13 | **19** | ⚠ a CEILING artifact, below |
+
+⛔ **The `wroteIntoTheRepo` jump is a measurement artifact, not new behaviour, and it is named here
+rather than left to be found.** The gate kills a baselined file's import door at that file's own
+recorded ceiling; a file the baseline does not name yet has none. So the six roundtrip gates
+(`atlas-sphere`, `jta-locations`, `region-library` ×4) ran to completion under their NEW names for
+the first time and their real write sets were recorded — `check-atlas-sphere-roundtrip` alone writes
+**411** paths (Python `__pycache__`, a generated world, `host.yaml.tmp`). They always did that; the
+old record was truncated by its own ceiling. ⛑ Every byte of it landed in the gate's throwaway
+worktree: `git status` after the write run was the baseline file and nothing else. ⛓ Every key delta
+in that file is accounted for by the rename, derived rather than eyeballed — canonicalising
+`verify-` → `check-` over the old keys leaves **zero** entries appearing or disappearing for any
+other reason.
+
+## Standing values — 49 candidates NAMED, none added
+
+`standingRows()` derives **114** rows now (was 65 + the composite); `standing-values.json` banks
+**66**. ⇒ **49 derived rows have no banked value**, one per newly adopted gate, and per the brief
+none was added here. They are the same 49 the `@ci-box` question is about: a row earns a value when
+somebody decides the gate is worth standing behind, and that decision and the CI one are the same
+decision.
+
+## ⚠ A roster fidelity finding the rename exposed — the flag is read in a spelling the roster does not know
+
+`gateRoster.readsFlag` matches this directory's ONE spelling, `arg('host', …)`. Measured over the 49:
+
+| | count |
+|---|---|
+| declare `host` the way the roster reads it | **5** |
+| read `--host=` by hand (`process.argv.find(a => a.startsWith('--host='))`) — roster shows `[-]` | **20** |
+| take no host at all | **24** |
+
+⛑ **Consequence today: nil**, and that is exactly why it is written down. All 20 default to
+`http://localhost:8000`, which is the right server on this box, and `@ci-box` keeps every one of them
+off the runner. It becomes load-bearing the moment one is adopted: `argvFor` would hand it no
+`--host=`, and it would drive a server the runner does not have while reporting a clean pass or a
+timeout that names the wrong thing. ⚖ **A candidate for the adoption slice** — teaching those 20 the
+`arg('host')` spelling is part of the price of adopting them, not a separate cleanup.
+
+## Measured and NOT changed
+
+- **`seedling-wasm.yml`'s `paths:` filter still does not list the bridge gate.** Editing
+  `check-seedling-wasm-bridge.mjs` STILL does not trigger its own workflow — the survey's finding,
+  unmoved by the rename, because only the `check-seedling-wasm-pins.mjs` line was ever in the filter.
+  The rename moved one line in that workflow (the `node …bridge.mjs` invocation at `:231`), which is
+  `continue-on-error` and gates nothing.
+- **`package.json` names no procgen script at all** — so the brief's "package.json scripts" leg is
+  empty, measured rather than assumed.
+- **The `seedling-wasm` submodule still names four old scripts** —
+  `frontend/modules/flashPanel/wasm/README.md` (4) and `builds.json` (5). Editing them is a submodule
+  commit plus a gitlink bump, which is an ask-first step and out of this slice; the submodule is
+  clean and untouched. ⚖ Named for whoever next bumps that pointer.
+- **`check-seedling-bot-differential.mjs` was NOT run.** Its full drive is a measured 142-minute GPU
+  run; it joins the roster as a `--win` row, `ciRunnable` excludes it on the Windows clause, and it
+  remains the one script of the original 62 with no verdict from this arc.
+
+## Gates
+
+| gate | verdict |
+|---|---|
+| `node scripts/procgen/gates.mjs --list` | **82 gate(s) + 1 declared arm; 52 browser, 6 windows** — all 49 adopted scripts appear |
+| `ci-gates.mjs --plan --set=browser` | **25 arms / 3 shards** — identical to the pre-rename partition |
+| `ci-gates.mjs --plan --set=headless` | **31 arms / 1 shard** — identical |
+| `check-procgen-help.mjs --doors=all` | **ALL PASS** — 265 instruments, 250 on the import-door baseline, **618.9 s** |
+| `check-procgen-reference.mjs --check` | **ALL 6 GENERATED MODULES AND 4 MARKDOWN REGIONS MATCH THE CODE** |
+| `check-procgen-docs.mjs --host=…:8000` | **ALL CHECKS PASSED** |
+| `check-slice-records.mjs` | **ALL PASS — 73 VERIFIED, 37 UNVERIFIABLE (not claimed green), 2 NOTE(S)** |
+| bounded vitest — `scripts/procgen/` + `procgenDocs/` | **37 files / 1049 tests / 0 failed** (see the flake note) |
+| in-app `test-substrates --batch=fast` | **83/83 passed**, `[PROGRESS 83/83]` |
+| `compare-runs.js` | **83/83 → 83/83, no new failures, no roster change**, exit 0 |
+| `check-seedling-bot-differential.mjs --win` | **NOT RUN** — a measured 142-minute GPU drive, named rather than silently absent |
+
+### ⛑ The one red, and it is a contention flake — measured, not asserted
+
+The 37-file bounded vitest failed twice and passed three times over **five** samples, always the same
+way: `frontend/modules/procgenDocs/generated.test.js` → *"Hook timed out in 10000ms"* at `:557`, a
+`beforeAll` that imports the eight substrate libraries in `REGISTRY_LIBRARIES`. Three controls, in
+increasing strength:
+
+1. **That file alone: 3 runs, 3 green** (7 files / 452 tests each), and inside the full batch it
+   takes 17.4 s of wall for 49 tests — the hook is the slow part, not a test.
+2. **None of the eight libraries moved in this slice** — `git diff --stat 580b178cd3..HEAD` over all
+   eight is empty.
+3. **The only V3b edit to the failing FILE is one word inside a comment** (`verify-runner-smoke.mjs`
+   → `check-runner-smoke.mjs` in a docblock sentence).
+
+⇒ this is the parallelism flake `vitest.slow.config.js`'s own docblock describes (synchronous
+CPU-bound imports under the default run's file parallelism), reached through a `beforeAll` hook
+rather than a test body. ⛔ It is NOT a `--batch` or roster question and it is not this rename's;
+recorded here so the next reader does not re-derive it from one red sample.
+
+## ⚖ FOR THE USER — what V3b leaves on the record
+
+1. **Which of the 49 does CI adopt?** Each carries a `@ci-box` line with a measured reason (an
+   uncommitted fixture · this tree's Python venv · a hardcoded `localhost:8000` · never priced on a
+   runner). Adoption is deleting that line — and paying for it: an unpriced arm takes a whole 600 s
+   shard until a finished run re-prices it, and the 20 hand-read `--host=` gates above need the
+   `arg('host')` spelling first.
+2. **Should `check-bounce-embed.mjs`'s `ERRORS (n)` count FAIL the run?** It prints the page's
+   console errors and exits 0 whatever `n` is. V3b gave it the PASS line the survey named and
+   deliberately did NOT turn that count into an assertion — that is a new claim, not a rename.
+3. **The `seedling-wasm` submodule names four old scripts** (`README.md` ×4, `builds.json` ×5).
+   A submodule commit plus a gitlink bump — ask-first, and out of this slice.
+4. **33 memory files under `~/.claude/projects/…/memory/` name a renamed script.** Only this arc's
+   own project note was touched; the rest are the planner's, listed in the report back.
