@@ -733,3 +733,142 @@ CI vitest @ 84b5e7115 — run 33992632924 success (2026-09-05T21:17:58Z)
 hub arc's standing `436/13,301` is comparable — and V2 moves neither number. It touches exactly one test
 file (`scripts/procgen/boxLock.test.js`, +16/−1) and adds no test, which is what a zero delta should look
 like here: the change declares two files in an existing row's list rather than asserting anything new.
+
+---
+
+# V2b as built — the loops halt is a **PARK, by design**; V2's SUBJECT ruling is OVERTURNED (2026-09-05)
+
+⚖ user, 2026-09-05: *"Investigate the loops halt now, before the rename."* A diagnosis slice — reproduce,
+isolate, name the cause; fix only if the cause is one clear defect. **It is not.** The halt is loops'
+documented M4/M6 park, and `verify-maze-loop-mana.mjs` is a **fourth INSTRUMENT** red — the same shape, from
+the same week, as the omsi mana leg.
+
+## The firing site, in one stack
+
+Reproduced first try, headless, on the regenerated fixture, with a throwaway probe that replaced
+`loopState.isProcessing` and `.currentActionIndex` with accessors and printed the stack of every write.
+Two writes in the whole run, 45 ms apart:
+
+```
+[+1ms]  isProcessing = true    (index 0)
+    at LoopState._beginProcessing   (loopState.js:871)
+    at LoopState.startProcessing    (loopState.js:836)
+
+[+30ms] currentActionIndex 0 -> 1  (action 0, the Menu -> region_2_2 hop, completed)
+    at LoopState._completeCurrentAction (loopState.js:3243)
+
+[+45ms] isProcessing = false   (index 1)
+    at LoopState.stopProcessing          (loopState.js:915)
+    at LoopState._handleManualRegionEntry(loopState.js:2516)
+    at LoopState._processFrame           (loopState.js:1220)
+```
+
+`loopState.js:1220` is the M4 **block-mode dispatch**:
+
+```js
+if (modeBlock && (blockMode === 'manual' || blockMode === 'record')) {
+  …
+  this._handleManualRegionEntry(modeBlock.region);   // → stopProcessing()
+  return;
+}
+```
+
+`loopState:manualEntered` fires with `regionName: "region_2_2"`, and the omsi bridge's own log flips to
+`step gate: CLOSED (enforced=true, livePlay=region_2_2, …)` in the same frame — the park is visible from a
+second subsystem. **Nothing throws, nothing is dropped, no message races a subscriber**: V1's
+publish-before-subscribe shape is refuted here by the stack alone (a direct synchronous call, not an
+`eventBus` hop).
+
+## Why the block is in a parking mode: two commits, six days after the instrument was written
+
+Measured on the page, per region, with the queue built exactly as the instrument builds it:
+
+| region | `getBlockMode(r,1)` | supportsManual | supportsRecord | captureShape | `regionSolver` | boundRecording |
+|---|---|---|---|---|---|---|
+| `region_2_2` | **`record`** | true | true | `fine` | `delegation` | false |
+| `region_2_3` | **`record`** | true | true | `fine` | `delegation` | false |
+| `region_3_3` | **`record`** | true | true | `fine` | `delegation` | false |
+
+No block has an explicit mode, so `getBlockMode` falls through to `this.defaultBlockMode`
+(`loopState.js:216`) — **`'record'`**, set by **`47c3a7f346`** (2026-07-23, *"loops M4 (5/n): … Record
+default"*). The instrument was added by **`48458da2bc`** (2026-07-17). **Six days.**
+
+And the other half, which is what makes this unfixable by re-defaulting: **`05979752fb`** (2026-07-23,
+*"loops M6 (2/n): the Bot radio — one trigger for both solvers"*) **deleted the unconditional delegation
+dispatch from `_processFrame`**. The removal left its own tombstone at `loopState.js:1314-1318`:
+
+> `// (M6: the unconditional bot dispatch that used to sit here — the last leg of the auto execution chain`
+> `// — is gone. Solver execution is reachable only through the Bot branch above. …)`
+
+So **substrate delegation — the exact seam this instrument exists to observe — is reachable only from a
+`bot`-mode block.** Every other mode parks a fine-grained maze block: `manual` and `record` at `:1220`,
+`playback` with no bound recording at `:1249`, a `bot` block with no engageable solver at `:1295`. The
+contract is written down: `docs/json/developer/procgen/loop-recording.md:18,23,34` — *"a **Bot** block is
+the one trigger for both [solvers]"*, *"Bot is an explicit per-block choice: it does not join the
+`defaultBlockMode` enum"*.
+
+## The discriminator: the same run with the blocks set to `bot`
+
+One line changed in the probe (`setBlockMode(r, 1, 'bot')` on the three regions before
+`startProcessing()`), nothing else — same fixture, same queue, same 30 s window:
+
+| observable | default (`record`) | forced `bot` |
+|---|---|---|
+| `loopState:manualEntered` | `["region_2_2"]` | `[]` |
+| `manaChanged` events | 1 | **11** |
+| per-tile decrements | none | **16.67, 13.75, 13.75, 13.75**, then 42.08 |
+| region XP | all 0 | `region_2_2` 16.67, `region_2_3` 41.25, `region_3_3` 60 |
+| `loops:substrateActionCompleted` | `[]` | `[true,true,true,**false**,true]` |
+| `loopResetCount` | 0 | **1**, mana refilled, queue snapped to index 0 |
+| final region | `region_2_2`, frozen at index 1 | walked the whole chain to `region_3_3` |
+
+**Every claim `verify-maze-loop-mana.mjs` makes — delegated per-tile charging, 1:1 XP, `completed:false`
+from the interrupted walk, the OOM reset — is satisfied by the app as it stands.** The instrument asks for
+them without asking for the mode that produces them.
+
+## Verdict: INSTRUMENT (⚖ named, not fixed) — and V2's own ruling is overturned
+
+V2 wrote *"The script is right and its fixture is right; what stops is the app."* The first two clauses hold;
+**the third does not.** The app is doing what M4 and M6 designed and documented. `verify-maze-loop-mana.mjs`
+joins the other three as **INSTRUMENT**, which makes V2's tally **five INSTRUMENT / two STALE / zero
+SUBJECT** — one more worked example of this survey's thesis, and the strongest one: the red had already been
+mis-attributed to the app twice (the survey, then V2).
+
+⛑ The contrast the brief asked for lands in one line: **`mazeBlockModeTests.js:212` calls
+`setBlockMode(region, visit.instance, 'manual')`.** The green maze block-mode rows are green *because they
+set a mode*; they drive the park deliberately. **No `scripts/procgen/*.mjs` instrument sets a block mode at
+all** (grepped, zero hits) — so every node-side instrument that expects a maze block to auto-execute has
+been asking for a path M6 removed.
+
+## ⚖ (a) and ⚖ (c) — ONE cause family, TWO opposite repairs
+
+Both instruments were written on **2026-07-17**; both were invalidated by loops' park-gating week,
+**2026-07-23/24** (`47c3a7f346` Record default, `05979752fb` bot-only solver dispatch, `f2e392df1`
+park-gated omsi stepping). That is one design change with two stale consumers — but the repairs point in
+**opposite directions**, so this is not one code fix:
+
+- **maze (⚖ a)** needs its blocks set to **`bot`**, so delegation dispatches and **no park happens**;
+- **omsi (⚖ c)** needs a loops queue **parked** on a `manual`/`record`/`bot` block in the omsi region, so
+  `_mayStepClock` (`omsiSubstrateWrapper/bridge.js:531`) sees `livePlayRegion()` and **opens**.
+
+The park the maze leg must avoid is the same park the omsi leg must create. Reading them as "probably one
+piece of work" (V2) is right about the *cause* and wrong about the *fix*.
+
+## ⚖ FOR THE USER — the question, with its answer already measured
+
+**Is "a maze region in a loops queue parks for live play unless its block is explicitly set to Bot" the
+intended contract?** M4/M6's code comments and `loop-recording.md` both say yes, and M6 says why: a Bot
+block that can't engage *"parks for live play with a loud `console.warn`, never a silent generic-timer
+teleport through content the bot was meant to play."*
+
+- **If yes** — `verify-maze-loop-mana.mjs` gains three `setBlockMode(region, 1, 'bot')` calls before
+  `startProcessing()` and goes green (measured above), and the same slice can decide whether the omsi leg
+  gets its manual park. That is **instrument design**, one small slice, and it would close both ⚖ at once.
+- **If no** — i.e. loops *should* auto-run a solver for a fine-grained substrate with no recording — then
+  `05979752fb` is the defect, and reverting it re-opens exactly the silent-teleport failure mode M6 was
+  written to prevent. That reading contradicts a documented ruling, so it is the user's call, not a
+  triage call.
+
+**Not fixed here.** Per the slice's own rule — DESIGN ⇒ record the reproduction, the site and the question,
+and stop. No product code and no instrument was touched by V2b; the probes were throwaways in gitignored
+`NewDocs/scratch/`.
