@@ -10842,6 +10842,17 @@ the 5 scripts CI names by path), run everything outside them, and classify each 
 fail / red (pre-existing or new) / crash / timeout / needs-Windows / stale. Launches when H6b's CI closes and its
 session reads idle. The two reviews (marking tool; loop costs) remain queued, one of them LAST; H6a parked.
 
+**H6b CI CLOSED green at `ef2f40efe`** (run 33979314466): suite **436 / 13,301** (13,293 passed | 8 skipped |
+0 failed) over H5's baseline `6a4c38423` = 436 / 13,296 ⇒ **+5 rows, +0 files**, skips unmoved, slow battery
+12/217 unmoved. Attributed per file by checking each out at both SHAs and running it alone:
+`zoneIntegration.test.js` **9 → 13** (+4) · `regionRoundTrip.test.js` 26 → 27 (+1). **Nothing in the suite
+moved that is not a row this slice wrote.** ⛑ The expectation recorded before the run said **+4** and was
+wrong by one — I TYPED `10 → 13 = +3` instead of deriving it, and got the baseline wrong (9, not 10 — the
+brief's "10" is `deriveRules`) AND my own addition wrong (4 rows, not 3), which did not cancel. Straight
+`feedback_a_count_in_prose_is_unfalsifiable`; it was catchable only because the expectation was written with
+its terms. ⚠ Instrument note: `ci-vitest-summary.mjs` re-execs with `stdio: 'inherit'`, so under a detached
+`setsid nohup … > log` it wrote an EMPTY file and exited **0** — a clean exit with no summary is not a verdict.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
