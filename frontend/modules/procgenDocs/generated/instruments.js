@@ -103,8 +103,8 @@ export const INSTRUMENTS = frz({
             "id": "make"
         },
         {
-            "browser": 0,
-            "count": 1,
+            "browser": 1,
+            "count": 2,
             "id": "measure"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 246,
-        "browser": 77,
+        "blockStyle": 247,
+        "browser": 78,
         "cited": 88,
-        "files": 265,
+        "files": 266,
         "lineStyle": 19,
-        "withDocblock": 265,
-        "withFlags": 171
+        "withDocblock": 266,
+        "withFlags": 172
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3965,6 +3965,58 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "scripts/procgen/make-seedling-vanilla-overlay — **THE VANILLA AUTHORED OVERLAY** (EDITOR v3 slice E5; plan §27.6, §34).",
             "path": "scripts/procgen/make-seedling-vanilla-overlay.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "measure",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "json"
+            ],
+            "file": "measure-apworld-raw-view.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-sweep"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "samples"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "measure-apworld-raw-view — **WHAT COUNTS AS \"TOO BIG\" FOR THE APWORLD HUB'S RAW VIEW, MEASURED IN A REAL BROWSER** (APWORLD EDITOR HUB slice H2; ⚖ user: *\"Or maybe this should be disabled if the data is too big.",
+            "path": "scripts/procgen/measure-apworld-raw-view.mjs"
         },
         {
             "argvHelpers": [
