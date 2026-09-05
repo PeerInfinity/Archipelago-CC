@@ -10219,6 +10219,15 @@ including the one that DRAWS a maze region and asserts the generic box's signatu
 declaration wired to the wrong function reds too. (b) `?? 'maze'` restored → 1 row red. (c) the named
 player slot ignored → 2 rows red.
 
+**H3's CI, quoted by SHA (⚖ 52).** `836d6145d` (run 33944254014) — **all six jobs success**.
+`suite: vitest (unfiltered) 432/13115 (13107 passed | 8 skipped | 0 failed)`,
+`slow battery 12/217 (217 passed | 0 failed)`. ⛓ Against H2's `430/13088 (13080 passed)` at
+`4b52d8484` that is **+2 files and +27 rows, every one accounted**: `compositeMapRenderer.test.js`
+**32** + `compositeMapDocument.test.js` **9**, minus the **15** that moved OUT of
+`procgenPipelineUI.test.js` (22 → 7), plus **1** — `bindingContract.test.js`'s `it.each(SHIPPING)`,
+whose roster is READ OFF the `procgenCore/` directory, so the new renderer enrolled itself in the
+import scan with no edit to the gate. Skips unmoved at 8, slow battery unmoved at 217/0.
+
 **NEXT = H2b** (the CM6 raw view, ⚖ ruled), then H4 (Task 0 = the 4-player fixture), then H5.
 
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
