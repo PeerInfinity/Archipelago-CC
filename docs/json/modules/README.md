@@ -86,7 +86,7 @@ Documented in depth in the [procgen developer docs](../developer/procgen/README.
 
 - **APCalc** (`apcalc`) *(disabled)* — calculator-themed puzzle game for Archipelago (enabled in the apcalc launch mode).
 - **APCalc Generator** (`apcalcGenerator`) — generates APCalc puzzle data with configurable parameters.
-- **APWorld Editor** (`apworldEditor`) — GUI editor for an apworld's rules.json (regions, exits, locations, access rules).
+- [APWorld Editor](./apworldEditor.md) (`apworldEditor`) — the HUB over a rules.json: GUI editing of regions, exits, locations, access rules and items, a schema-derived Document tab over every top-level key, a player selector, and links to every other editor that owns part of the document.
 - **Options Panel** (`optionsPanel`) — general application settings and preferences, including the auto-generated All Settings view.
 - **Rule Converter** (`ruleConverter`) *(disabled)* — converts between Python code and JSON rule format.
 - **JtA panel cluster** *(all disabled; superseded for substrate use by `jtaSubstrateWrapper`)*: `jtaGameDataPanel` (view/control JtA game data), `jtaActionQueue` (queue and execute JtA actions), `jtaQueueEngine` (headless queue execution strategy and predictions), `jtaArchipelago` (bridges JtA game events to AP checks/items), `jtaCostDebugger` (step-through debugger for JtA cost generation).

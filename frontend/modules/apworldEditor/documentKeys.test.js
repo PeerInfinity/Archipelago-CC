@@ -263,4 +263,24 @@ describe('the player slots, and which one is the default', () => {
         expect(defaultPlayerOf({}, SCHEMA, '7')).toBe('7');
         expect(playerSlotsOf({}, SCHEMA)).toEqual([]);
     });
+
+    /**
+     * ⛓⛓ **NO SCHEMA IS AN ANSWER, NOT A THROW — and this row is a defect H1's
+     * own first in-app run found.** The panel fetches the schema
+     * asynchronously and renders before it lands, so a throwing slot derivation
+     * took out the whole `stateManager:rawJsonDataLoaded` handler on the first
+     * render (the event bus logged `buildDocumentKeys`' refusal sentence out of
+     * `_syncPlayer`). The refusal belongs to the REGISTRY builder, which is
+     * asked for something that does not exist without a schema; "which slots
+     * does this document have" is answerable as "none I can see".
+     */
+    it('⛓⛓ without a schema: no slots, and the default still reads the document', () => {
+        expect(playerSlotsOf(combined(), null)).toEqual([]);
+        expect(playerSlotsOf(combined(), {})).toEqual([]);
+        expect(defaultPlayerOf(playerTwo(), null)).toBe('2');
+        expect(defaultPlayerOf(combined(), null)).toBe('1');
+        expect(defaultPlayerOf({}, null, '4')).toBe('4');
+        // ⛔ The registry builder still refuses — the tolerance is scoped.
+        expect(() => buildDocumentKeys(null)).toThrow();
+    });
 });

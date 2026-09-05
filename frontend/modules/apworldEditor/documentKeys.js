@@ -210,7 +210,15 @@ export function documentKeyRows(doc, schema, { player = '1' } = {}) {
  * uneditable with no visible reason.
  */
 export function playerSlotsOf(doc, schema) {
+    // ⛔ NO SCHEMA, NO SLOTS — and it must be an ANSWER, not a throw. The panel
+    //   fetches the schema asynchronously and renders before it lands, so a
+    //   throwing derivation took out the whole `rawJsonDataLoaded` handler on
+    //   the first render (measured in H1's first in-app run: the event bus
+    //   logged this module's own refusal sentence out of `_syncPlayer`). The
+    //   refusal belongs to `buildDocumentKeys`, which is asked for a REGISTRY;
+    //   "which slots does this document have" is answerable as "none I can see".
     const slots = new Set();
+    if (!schema || typeof schema !== 'object' || !schema.properties) return [];
     for (const entry of buildDocumentKeys(schema)) {
         if (!entry.perPlayer) continue;
         const top = doc ? doc[entry.key] : undefined;
@@ -234,6 +242,9 @@ export function playerSlotsOf(doc, schema) {
  * with no way to see why.
  */
 export function defaultPlayerOf(doc, schema, fallback = '1') {
+    // ⛓ Works WITHOUT a schema: with no slots derivable, `playerId` is honoured
+    //   unconditionally and `player_names` is the next answer — which is exactly
+    //   what the panel needs on the render before its fetch lands.
     const slots = playerSlotsOf(doc, schema);
     const declared = doc ? doc.playerId : undefined;
     if (typeof declared === 'string' && declared !== ''

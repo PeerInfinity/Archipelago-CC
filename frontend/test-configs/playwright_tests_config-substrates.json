@@ -346,6 +346,24 @@
             "enabled": true,
             "category": "Seedling atlas maze",
             "_comment": "Region-atlas Phase 8 slice B. The SHIPPED playback bot beats the grown world end to end; the headless witness (atlasMazeBot.slow.test.js) proves the same world beatable by walking tiles directly, so the two strata are independent."
+        },
+        {
+            "id": "apworld-document-tab-lists-every-schema-key",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H1. The Document tab is DERIVED from rules.schema.json; this row fetches the schema at run time and asserts the drawn key set EQUALS the declared one, both directions."
+        },
+        {
+            "id": "apworld-set-key-round-trips-through-undo",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H1. One set-key through the real change event, then the panel's own Undo: the fold over the shorter list is what catches an op that stored the caller's object instead of a copy."
+        },
+        {
+            "id": "apworld-links-tab-covers-every-room-editor-declarer",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H1. The Links tab's substrate rows are derived from the live substrateRegistry's roomEditor declarations; the expected set is read off the registry in the browser, never listed here."
         }
     ]
 }
