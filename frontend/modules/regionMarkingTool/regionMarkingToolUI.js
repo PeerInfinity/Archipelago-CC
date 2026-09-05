@@ -79,6 +79,8 @@ export class RegionMarkingToolUI {
         // A pending analyzer proposal, session-local until accepted.
         this.analysis = null;
         this._gameConfigCache = null;
+        // ⛓ H5 — the hand-off caller's return path; null = Save downloads a file.
+        this._onSaveHandoff = null;
         this.showEntities = true;
         this.status = 'loading map…';
 
@@ -103,6 +105,11 @@ export class RegionMarkingToolUI {
     _consumeSession() {
         const session = consumePendingSession();
         if (!session) return;
+        // ⛓ H5 — the caller's return path, replaced wholesale by each hand-off:
+        //   a session that supplies no `onSave` means "download it", and
+        //   carrying the PREVIOUS caller's callback forward would post one
+        //   person's atlas into another person's document.
+        this._onSaveHandoff = typeof session.onSave === 'function' ? session.onSave : null;
         if (session.atlas) {
             this.session = this._newSession(session.atlas);
             this.selectedRegionId = this.session.regions()[0]?.region_id ?? null;
@@ -550,6 +557,22 @@ export class RegionMarkingToolUI {
             if (!window.confirm(`This atlas has ${result.errors.length} validation error(s). Save anyway?`)) return;
         }
         const doc = this.session.toDocument();
+        // ⛓⛓ H5 — **A HAND-OFF CALLER IS THE DESTINATION.** `toDocument()` has
+        //   already stamped the identity, so what the caller receives is the
+        //   same document the download would have carried, byte for byte. ⛔ A
+        //   throwing caller must not eat the author's Save: the status line
+        //   names the refusal and the atlas is still in the session.
+        if (this._onSaveHandoff) {
+            try {
+                this._onSaveHandoff(doc);
+                this._setStatus(`handed ${doc.atlas_id} back to the editor that opened this tool`
+                    + `${result.ok ? '' : ' (with errors)'}`);
+            } catch (e) {
+                log('error', 'hand-off onSave threw', e);
+                this._setStatus(`hand-off refused: ${e.message}`, true);
+            }
+            return;
+        }
         const text = compactJsonFile(doc);
         const blob = new Blob([text], { type: 'application/json' });
         const url = URL.createObjectURL(blob);

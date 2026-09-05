@@ -33,6 +33,7 @@ import {
     substrateIdFor,
     regionSubstrateOf,
     compileDefaultSubstrate,
+    regionAtlasReference,
     REGION_ATLAS_LOCATION_ID_BASE,
     REGION_ATLAS_ITEM_ID_BASE,
 } from './regionAtlasCompiler.js';
@@ -845,5 +846,57 @@ describe('refusals', () => {
         atlasRegion(collide, 'starting_house').region_id = MENU_REGION;
         expect(() => compileRegionAtlas(collide, { mapDoc: MAP_DOC, allowInvalid: true }))
             .toThrow(/reserves for the start region/);
+    });
+});
+
+/**
+ * ⛓⛓⛓ APWORLD EDITOR HUB slice H5 — **THE `region_atlas` BLOCK IS ONE
+ * DERIVATION, AND THE COMPILER IS ITS ONLY AUTHOR.** The hub's Document-tab
+ * door writes this block too (when the marking tool hands a saved atlas back),
+ * so the rows below pin the two together: the function must reproduce what a
+ * full compile emits, or the second door writes a reference the first one would
+ * not recognise.
+ */
+describe('regionAtlasReference — the block the compiler writes, hoisted', () => {
+    it('⛓⛓ is BYTE-EQUAL to what a full compile puts in rules.region_atlas', () => {
+        for (const atlas of [FIXTURE, STARTER]) {
+            const { rules } = compileRegionAtlas(atlas, { mapDoc: MAP_DOC, allowInvalid: true });
+            expect(regionAtlasReference(atlas)).toEqual(rules.region_atlas);
+        }
+    });
+
+    it('⛓ carries the atlas id, the game, and map_document only when the atlas '
+        + 'declares a tile space', () => {
+        // The starter declares one; the fixture does not (measured on disk).
+        expect(regionAtlasReference(STARTER)).toEqual({
+            atlas_id: STARTER.atlas_id,
+            game: STARTER.game,
+            map_document: STARTER.tile_space.map_document,
+        });
+        expect(FIXTURE.tile_space?.map_document).toBeUndefined();
+        expect(regionAtlasReference(FIXTURE)).toEqual({
+            atlas_id: FIXTURE.atlas_id, game: FIXTURE.game,
+        });
+        expect('map_document' in regionAtlasReference(FIXTURE)).toBe(false);
+    });
+
+    it('⛔ reads the STAMPED id, so a restamp moves the reference', () => {
+        const edited = clone(STARTER);
+        edited.regions = edited.regions.slice(0, 1);
+        const restamped = stampAtlasIdentity(edited, 'seedling');
+        expect(restamped.atlas_id).not.toBe(STARTER.atlas_id);
+        expect(regionAtlasReference(restamped).atlas_id).toBe(restamped.atlas_id);
+    });
+
+    it('⛔ the COMMITTED carriers hold a REFERENCE and no atlas — the fact the '
+        + "hub's door is built on", () => {
+        // Three presets carry `region_atlas`; every one of them is exactly the
+        // three-field reference, so nothing downstream can rebuild the atlas.
+        for (const name of ['seedling_atlas', 'seedling_atlas_maze', 'seedling_playthrough']) {
+            const doc = read(`../../presets/${name}/AP_1/AP_1_rules.json`);
+            expect(Object.keys(doc.region_atlas).sort())
+                .toEqual(['atlas_id', 'game', 'map_document']);
+            expect(doc.region_atlas.regions).toBeUndefined();
+        }
     });
 });

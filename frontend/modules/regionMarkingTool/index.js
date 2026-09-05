@@ -70,9 +70,36 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
     };
 }
 
-/** Open the tool on an existing atlas document. */
-export function openRegionMarkingTool({ atlas = null, levelId = null } = {}) {
-    pendingSession = { atlas, levelId };
+/**
+ * Open the tool on an existing atlas document.
+ *
+ * ⛓⛓⛓ APWORLD EDITOR HUB slice H5 — **`onSave` IS THE RETURN PATH, AND IT IS
+ * THE ROOM-EDITOR CONTRACT'S SHAPE** (`procgenPipeline/regionEditors.js`:
+ * *"`onSave(edited)` is the ONLY return path and the CALLER decides what one
+ * saved document is"*; bounce's `{region, contract, onSave}` is the same
+ * gesture one level down). Before H5 the tool's only exit was the whole-document
+ * hand-off `apworldEditor:loadRules` with a freshly COMPILED rules.json — a new
+ * session boundary, not an op — so a caller that already holds a document had
+ * no way to receive one atlas back into it.
+ *
+ * ⛔ **THE ATLAS HANDED BACK IS THE STAMPED ONE.** `AtlasSession.toDocument()`
+ * runs the validator's own `stampAtlasIdentity` on a clone, so `atlas_id` ends
+ * in the content hash of what was actually saved; handing back the session's
+ * live record instead would give the caller a document whose id describes an
+ * earlier edit.
+ *
+ * ⚠ When `onSave` is supplied, Save HANDS OVER instead of downloading a file:
+ * the caller is the destination. Standalone Save (no hand-off) is unchanged,
+ * which is what keeps `scripts/procgen/verify-region-marking-tool.mjs` — a
+ * standalone driver that captures the download — 0-moved.
+ *
+ * @param {object}   [o.atlas]    an atlas document to edit, or null for whatever
+ *   the panel already holds.
+ * @param {number}   [o.levelId]  the level to show first.
+ * @param {function} [o.onSave]   `(stampedAtlasDocument) => void`, called on Save.
+ */
+export function openRegionMarkingTool({ atlas = null, levelId = null, onSave = null } = {}) {
+    pendingSession = { atlas, levelId, onSave };
     const bus = getModuleEventBus();
     bus.publish(LOAD_EVENT, { regions: atlas?.regions?.length ?? 0 });
     bus.publish('ui:activatePanel', { panelId: REGION_MARKING_COMPONENT_TYPE });

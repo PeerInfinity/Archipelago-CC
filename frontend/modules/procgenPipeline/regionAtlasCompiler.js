@@ -284,6 +284,37 @@ function buildFlashRegionSidecars(atlas, region, wiredInfo, substrate, options) 
 }
 
 /** The AP region names a single atlas region projects into, in declared order. */
+/**
+ * ⛓⛓⛓ **THE `region_atlas` BLOCK, DERIVED FROM AN ATLAS — THE ONE
+ * DERIVATION** (APWORLD EDITOR HUB slice H5). `compileRegionAtlas` writes this
+ * block at the end of projection 1, and H5's Document-tab door writes it again
+ * when the marking tool hands a saved atlas back: the hub cannot open the
+ * region marking tool on a compiled document (see below) but it CAN record
+ * which atlas the person just saved, and that record must be the compiler's
+ * own or the two spellings drift.
+ *
+ * ⛔ **THE BLOCK IS A REFERENCE, NOT AN ATLAS**, and H5 measured what that
+ * costs: all three committed carriers (`seedling_atlas`, `seedling_atlas_maze`,
+ * `seedling_playthrough`) hold exactly `{atlas_id, game, map_document}` — no
+ * `regions`, no `tile_space`. So no consumer can reconstruct the atlas from a
+ * rules.json, and nothing in the tree maps an `atlas_id` back to the file that
+ * carries it. The hub's door says so by name rather than opening the marking
+ * tool on a broken document.
+ *
+ * @param {object} atlas a STAMPED atlas document (`AtlasSession.toDocument()`
+ *   or the validator's `stampAtlasIdentity` output) — `atlas_id` ends in the
+ *   content hash, so a restamped atlas visibly invalidates a stale preset.
+ * @returns {{atlas_id: string, game: string, map_document?: string}}
+ */
+export function regionAtlasReference(atlas) {
+    return {
+        atlas_id: atlas?.atlas_id,
+        game: atlas?.game,
+        ...(atlas?.tile_space?.map_document
+            ? { map_document: atlas.tile_space.map_document } : {}),
+    };
+}
+
 export function apRegionNamesFor(region) {
     return apBindingsFor(region).map((b) => b.apName);
 }
@@ -561,11 +592,7 @@ export function compileRegionAtlas(atlas, options = {}) {
     if (options.provenance) rules.provenance = options.provenance;
     // Provenance: which atlas this graph came from. atlas_id ends in the
     // content hash, so a restamped atlas visibly invalidates a stale preset.
-    rules.region_atlas = {
-        atlas_id: atlas.atlas_id,
-        game: atlas.game,
-        ...(atlas.tile_space?.map_document ? { map_document: atlas.tile_space.map_document } : {}),
-    };
+    rules.region_atlas = regionAtlasReference(atlas);
 
     // --- projection 3: play-time binding -----------------------------------
     //
