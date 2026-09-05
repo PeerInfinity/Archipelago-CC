@@ -18,6 +18,10 @@
 import { BounceRegionEditorUI } from './bounceRegionEditorUI.js';
 
 export const LOAD_EVENT = 'bounceRegionEditor:load';
+/** ⛓ H4c — spelled here, and `apworldEditor/index.js` exports the same literal:
+ *  importing that module for one string would put the hub's whole panel graph
+ *  (and `centralRegistry`'s printing init) behind this one. */
+export const APWORLD_EDITOR_SELECT_REGION = 'apworldEditor:selectRegion';
 export const BOUNCE_EDITOR_COMPONENT_TYPE = 'bounceRegionEditorPanel';
 
 export const moduleInfo = {
@@ -46,6 +50,16 @@ export function register(registrationApi) {
     registrationApi.registerPanelComponent(BOUNCE_EDITOR_COMPONENT_TYPE, BounceRegionEditorUI);
     registrationApi.registerEventBusPublisher(LOAD_EVENT);
     registrationApi.registerEventBusPublisher('ui:activatePanel');
+    /**
+     * ⛓⛓⛓ APWORLD EDITOR HUB, H4c — **THE REVERSE LINK.** This panel and the
+     * hub are Golden Layout panels in the SAME app, so the door needs no
+     * protocol: it raises the hub and names the region this editor is on.
+     * ⛔ REGISTERED HERE because the bus DROPS an unregistered publisher with a
+     * warn line and no throw — the H4b lesson, met once on the way to it. And
+     * registered in `register()` rather than `initialize()` for the reason the
+     * docblock two paragraphs down gives: `register` runs for every module.
+     */
+    registrationApi.registerEventBusPublisher(APWORLD_EDITOR_SELECT_REGION);
 }
 
 export async function initialize(_moduleId, _priorityIndex, initializationApi) {
@@ -89,6 +103,26 @@ export function openBounceRegionEditor({ region, contract, onSave } = {}) {
         eventBus.publish(LOAD_EVENT, { regionId: region?.region_id ?? null });
         eventBus.publish('ui:activatePanel', { panelId: BOUNCE_EDITOR_COMPONENT_TYPE });
     }
+}
+
+/**
+ * ⛓⛓⛓ APWORLD EDITOR HUB, H4c — **THE REVERSE LINK, PUBLISHED FROM HERE.**
+ * Two events, the app's own pair: name the region, then raise the hub. ⛔ In
+ * that order — reversed, the panel would come forward showing whatever it was
+ * showing before and jump a frame later.
+ *
+ * ⛓ IT LIVES BESIDE `openBounceRegionEditor` and not in the UI class because
+ * the MODULE bus is the one with the two-argument `publish` (the raw singleton
+ * takes a third, the publisher's name), and this module already keeps every
+ * publish on this side of that line.
+ *
+ * @returns {boolean} whether the pair went out — `false` before `initialize()`.
+ */
+export function openRegionInApworldEditor(regionId) {
+    if (!regionId || !eventBus) return false;
+    eventBus.publish(APWORLD_EDITOR_SELECT_REGION, { region: regionId, player: null });
+    eventBus.publish('ui:activatePanel', { panelId: 'apworldEditorPanel' });
+    return true;
 }
 
 /** Consume (and clear) the pending hand-off session, or null. */

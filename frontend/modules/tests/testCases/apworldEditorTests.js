@@ -41,6 +41,16 @@ import { makeSetRecordEnvelope } from '../../procgenCore/labRoomEnvelope.js';
  * ⇒ the row registers itself the way any publisher does, once.
  */
 import appEventBus from '../../../app/core/eventBus.js';
+/**
+ * ⛓⛓ H4c — **THE REVERSE LINK IS DRIVEN THROUGH ITS OWN PUBLISHER.** The
+ * bounce editor's door is `openRegionInApworldEditor`, and a row that published
+ * `apworldEditor:selectRegion` by hand would prove the hub's SUBSCRIBER works
+ * while saying nothing about whether the button reaches it — the two halves
+ * only meet through this function.
+ */
+import {
+    openRegionInApworldEditor, APWORLD_EDITOR_SELECT_REGION,
+} from '../../bounceRegionEditor/index.js';
 
 const PANEL_ID = 'apworldEditorPanel';
 const PANEL_SELECTOR = '.apworld-editor-panel';
@@ -1884,6 +1894,117 @@ export async function apworldEditOpensTheLabDoorAndItsSaveIsOneOp(testController
         if (restore) restore();
     }
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ H4c — THE REVERSE LINK FROM THE BOUNCE EDITOR
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **THE BOUNCE EDITOR SAYS A NAME AND THE HUB ANSWERS ON THE DOCUMENT IT
+ * HAS.** Four cases, and they are four different answers rather than one claim
+ * driven four times:
+ *
+ *  1. a region THIS SLOT holds → selected, the Regions tab forward, the block
+ *     marked;
+ *  2. a region the document does NOT hold → the status line SAYS SO. ⛔ This is
+ *     the case the door exists for: the hub keeps its own document, so a bounce
+ *     panel opened from the pipeline on a world the hub never loaded must not
+ *     silently switch to a tab with nothing highlighted;
+ *  3. a `player` the document HAS → the slot moves first, then the selection —
+ *     the fixture's slots 3/4 are bounce, so this is the ordinary shape of the
+ *     real door;
+ *  4. a `player` the document does NOT have → named, and the slot does not move.
+ *
+ * ⛔ Case 1 goes through `openRegionInApworldEditor` — the bounce module's OWN
+ * publisher — so the row measures the door and not a hand-written publish. The
+ * slot cases carry a field that function does not take, so they publish
+ * directly and REGISTER THEMSELVES first: the bus drops an unregistered
+ * publisher with only a warn line (H4b's own lesson, one event over).
+ */
+export async function apworldBounceReverseLinkSelectsTheRegion(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+
+        const doc = panel.rulesDoc;
+        const slot1 = Object.keys(doc?.preset_sidecars?.['1'] ?? {});
+        const slot3 = Object.keys(doc?.preset_sidecars?.['3'] ?? {});
+        testController.reportCondition(
+            'the fixture carries sidecars in slot 1 AND slot 3',
+            slot1.length > 0 && slot3.length > 0);
+        if (slot1.length === 0 || slot3.length === 0) {
+            return testController.getOverallResult();
+        }
+        testController.assertEqual('the hub opened on slot 1', '1', String(panel.playerId));
+
+        /* ── 1. a region of the slot the hub is showing ─────────────────── */
+        selectTab(panel, 'document');
+        const sent = openRegionInApworldEditor(slot1[0]);
+        testController.reportCondition(
+            'the bounce editor\'s door published (the module is initialized)', sent === true);
+        const marked = await testController.pollForValue(
+            () => document.querySelector(
+                `${PANEL_SELECTOR} .apworld-region-block[data-region-name="${slot1[0]}"]`
+                + '[data-selected="true"]'),
+            'the named region\'s block, marked selected', 8000, 50);
+        testController.reportCondition('the hub selected the region it was named', !!marked);
+        testController.assertEqual('and switched to the Regions tab',
+            'regions', panel.activeTab);
+        testController.assertEqual('the panel\'s own selection moved',
+            slot1[0], panel._selectedRegion);
+
+        /* ── 2. a region no slot of this document holds ─────────────────── */
+        const ABSENT = '__no_such_region__';
+        openRegionInApworldEditor(ABSENT);
+        const said = await testController.pollForValue(
+            () => (panel._opMessage && panel._opMessage.includes(ABSENT)
+                ? panel._opMessage : null),
+            'the status line names the region it could not find', 8000, 50);
+        testController.reportCondition(
+            'a region this document does not hold is SAID SO, not silently ignored',
+            !!said && /not in/.test(said));
+
+        /* ── 3 + 4. the optional slot ───────────────────────────────────── */
+        appEventBus.registerPublisher(APWORLD_EDITOR_SELECT_REGION, 'tests');
+        appEventBus.publish(APWORLD_EDITOR_SELECT_REGION,
+            { region: slot3[0], player: '3' }, 'tests');
+        const moved = await testController.pollForValue(
+            () => (String(panel.playerId) === '3' ? panel : null),
+            'the hub moved to the slot the link named', 8000, 50);
+        testController.reportCondition('a named slot the document HAS is switched to', !!moved);
+        testController.assertEqual('…and the region of THAT slot is selected',
+            slot3[0], panel._selectedRegion);
+
+        appEventBus.publish(APWORLD_EDITOR_SELECT_REGION,
+            { region: slot3[0], player: '9' }, 'tests');
+        const refused = await testController.pollForValue(
+            () => (panel._opMessage && panel._opMessage.includes('Slot 9')
+                ? panel._opMessage : null),
+            'the status line names a slot this document does not carry', 8000, 50);
+        testController.reportCondition(
+            'a named slot the document does NOT have is refused BY NAME', !!refused);
+        testController.assertEqual('…and the hub stayed on the slot it was showing',
+            '3', String(panel.playerId));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('bounce reverse-link test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-bounce-reverse-link-selects-the-region',
+    name: 'APWorld hub: the bounce editor\'s "Open in APWorld Editor" selects that region',
+    description: 'Drives the bounce region editor\'s own publisher on the four-player '
+               + 'fixture: a region of the slot the hub is showing is selected and its block '
+               + 'marked; a region no slot holds is SAID SO in the status line rather than '
+               + 'silently ignored; a link naming a slot the document has moves the hub to '
+               + 'it first and then selects; and a slot it does not have is refused by name '
+               + 'with the hub staying where it was.',
+    testFunction: apworldBounceReverseLinkSelectsTheRegion,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
 
 registerTest({
     id: 'apworld-edit-button-is-offered-per-region-and-refused-by-name',

@@ -384,16 +384,37 @@ class ApworldEditorUI {
    * not hold that region" — and `selectRegion` is what says the latter.
    */
   _adoptRegionSelection(region, player) {
+    let slotNote = null;
     if (player != null && String(player) !== String(this.playerId)) {
       const slots = this._playerSlots();
       if (slots.includes(String(player))) {
-        this.playerId = String(player);
+        /**
+         * ⛔ `_chosenPlayer`, NOT `playerId`. `_syncPlayer` re-derives
+         * `playerId` from the record on EVERY render and honours only a
+         * DELIBERATE pick — so a slot written straight onto `playerId` would
+         * be overwritten by the very `_render()` this door ends with, and the
+         * hub would answer on the slot it was already showing while reporting
+         * that it had moved. (Measured: the in-app row below caught exactly
+         * that, because the panel's own selector goes through this field too.)
+         */
+        this._chosenPlayer = String(player);
+        this._syncPlayer();
       } else {
-        this._opMessage = `Slot ${player} is not in this document (slots: `
-          + `${slots.join(', ') || 'none'}); selecting ${region} in slot ${this.playerId}.`;
+        slotNote = `Slot ${player} is not in this document (slots: `
+          + `${slots.join(', ') || 'none'}) — staying on slot ${this.playerId}. `;
       }
     }
-    this.selectRegion(region);
+    this.selectRegion(region, 'the editor that asked');
+    /**
+     * ⛓ THE SLOT REFUSAL GOES IN FRONT OF `selectRegion`'S OWN SENTENCE rather
+     * than instead of it: two things happened (the slot was refused AND the
+     * region was looked for), and a status line that reported only the first
+     * would leave the reader guessing what the hub is now showing.
+     */
+    if (slotNote) {
+      this._opMessage = slotNote + this._opMessage;
+      this._render();
+    }
   }
 
   // Adopt a world handed directly to the editor (load-rules channel). Same
@@ -1785,15 +1806,19 @@ class ApworldEditorUI {
    *   sidecar, the missing one being `Menu`).
    * @returns {boolean} true when the working copy carries that region.
    */
-  selectRegion(name) {
+  selectRegion(name, from = 'the map') {
     if (!name) return false;
     this._selectedRegion = name;
     const known = Object.prototype.hasOwnProperty.call(this._regions(), name);
     this.activeTab = 'regions';
     this._updateTabStyles();
+    // ⛓ H4c — `from` NAMES THE CALLER, because there are two now: the Map tab's
+    // own click and a reverse link from another panel. A sentence that said
+    // "from the map" about a bounce editor's door would be a true refusal (or a
+    // true confirmation) about the wrong subject.
     this._opMessage = known
-      ? `Selected region ${name} from the map.`
-      : `Region ${name} is on the map but not in \`regions.${this.playerId}\`.`;
+      ? `Selected region ${name} from ${from}.`
+      : `Region ${name} is named by ${from} but is not in \`regions.${this.playerId}\`.`;
     this._render();
     const block = this.scrollContainer.querySelector(
       `.apworld-region-block[data-region-name="${CSS.escape(name)}"]`);

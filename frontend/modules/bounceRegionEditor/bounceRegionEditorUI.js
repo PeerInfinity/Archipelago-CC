@@ -54,6 +54,7 @@ import { fork } from '../bounceDemo/fixtures/fork.js';
 import { fillerClimb } from '../bounceDemo/fixtures/fillerClimb.js';
 import {
     getModuleApis, setPanelInstance, consumePendingSession, LOAD_EVENT,
+    openRegionInApworldEditor,
 } from './index.js';
 import { createEditSession, describeOps, group } from '../procgenCore/editCore.js';
 import { bounceEditAdapter } from './bounceEditAdapter.js';
@@ -434,7 +435,54 @@ export class BounceRegionEditorUI {
             ? 'Write the edited region back into the pipeline (3)'
             : 'Export the level JSON (standalone)';
         bar.appendChild(save);
+
+        /**
+         * ⛓⛓⛓ APWORLD EDITOR HUB, H4c — **THE REVERSE LINK** (plan §3 idea 6).
+         *
+         * ⛔ **ONLY WHEN THIS SESSION IS ON A REAL REGION.** A FIXTURE has a
+         * label (`bounceStack`) and no `region_id`, and no document anywhere
+         * holds a region by that name — a button offered there would raise the
+         * hub and hand it a name it can only refuse. `sess.region?.region_id`
+         * is the one test, and it is the same field the write-back keys on.
+         *
+         * ⛓ IT CARRIES NO DOCUMENT AND NO LEVEL. The hub already holds a
+         * rules.json; this says *"look at this region of it"*. A link that
+         * pushed a document would replace whatever the reader was editing —
+         * and the level in front of this panel is a WORKING COPY that has not
+         * been saved back yet, so pushing it would also publish edits nobody
+         * committed.
+         */
+        const regionId = sess.region?.region_id ?? null;
+        if (regionId) {
+            const open = this._btn('Open in APWorld Editor', () => this._openInApworldEditor());
+            open.title = `Raise the APWorld Editor and select region "${regionId}" in it. `
+                + 'The hub keeps its own document — nothing from this panel is sent.';
+            bar.appendChild(open);
+        }
         return bar;
+    }
+
+    /**
+     * ⛓ TWO EVENTS, the app's own pair: name the region, then raise the panel.
+     * ⛔ In that order — reversed, the hub would come forward showing whatever
+     * it was showing before and jump a frame later.
+     *
+     * ⚠ NO `player`. This editor is opened on ONE region and does not carry the
+     * slot it came from; `null` means *"whichever slot the hub is showing"*,
+     * which is a smaller claim than a guess would be.
+     */
+    _openInApworldEditor() {
+        const regionId = this._session?.region?.region_id ?? null;
+        if (!regionId) {
+            this._message = 'No region to open — this is a fixture, not a document\'s region.';
+            this.render();
+            return;
+        }
+        this._message = openRegionInApworldEditor(regionId)
+            ? `Opened ${regionId} in the APWorld Editor.`
+            : `Could not open ${regionId} — this module has not been initialized, so it has `
+              + 'no bus to publish on.';
+        this.render();
     }
 
     _renderCanvas(sess) {
