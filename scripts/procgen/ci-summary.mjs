@@ -47,7 +47,8 @@
  * measurement. Two things are refused, and the population is DERIVED — the
  * roster answers both, so neither can outlive what it refused:
  *
- *   · a gate `ciGatePlan.ciRunnable` rejects — today the four Windows rows,
+ *   · a gate `ciGatePlan.ciRunnable` rejects — the Windows rows, and since
+ *     V3b the gates that declare `@ci-box` (refused with their OWN reason),
  *     which hold `/mnt/c/Windows/py.exe` and could not resolve their driver
  *     on a runner at all (⚖ 72 (a): they stay box-measured);
  *   · a gate that declares an `@ci-face`, asked for its `gate:` key — its CI
@@ -152,6 +153,20 @@ if (GATE) {
         }
         console.error(`REFUSED: no gate named ${JSON.stringify(asked)} is on the roster — `
             + `${roster.length} gate(s) derived from scripts/procgen/check-*.mjs`);
+        process.exit(5);
+    }
+    /**
+     * ⛔ V3b — `ciRunnable` has TWO clauses and they refuse with two different
+     * sentences. A Windows row has NO answer at any SHA; a `@ci-box` row has
+     * one, and it is the box's, for the reason the gate itself gives. Reading
+     * them back as one message is how a reader concludes a gate is unanswerable
+     * when it is merely un-adopted.
+     */
+    if (!identityArm && gate.ciBox) {
+        console.error(`REFUSED: ${gate.file} declares \`@ci-box\` — ${gate.ciBox.reason.replace(/\.$/, '')}.`
+            + ' CI runs no arm for it and prints no line, so there is nothing here to quote.'
+            + ' Its standing row is measured on the box, and adopting it into CI is deleting'
+            + ' that one line. ⛔ This is a refusal, not a 0/0.');
         process.exit(5);
     }
     if (!identityArm && !ciRunnable(gate)) {

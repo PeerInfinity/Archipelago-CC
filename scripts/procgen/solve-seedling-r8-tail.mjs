@@ -37,7 +37,7 @@
  *   node scripts/procgen/solve-seedling-r8-tail.mjs --only=8 --game
  *
  * Then record the fixtures (the game is the only oracle):
- *   node scripts/procgen/verify-seedling-bot-differential.mjs --win --record \
+ *   node scripts/procgen/check-seedling-bot-differential.mjs --win --record \
  *       --only=r8-solve-5
  */
 

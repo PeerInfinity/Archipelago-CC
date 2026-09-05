@@ -419,7 +419,7 @@ try {
 
     // Hand-rolled poll: `window.eventBus` appears part-way through the app's
     // own boot, and `waitForFunction` rejects on the first throw rather than
-    // polling past it (`verify-seedling-atlas-maze.mjs`' own note).
+    // polling past it (`check-seedling-atlas-maze.mjs`' own note).
     let tapped = false;
     for (const deadline = Date.now() + 90000; Date.now() < deadline && !tapped;) {
         try { tapped = await installTap(); } catch { /* still booting */ }

@@ -69,7 +69,7 @@ describe('⛓ comments go, code stays, offsets do not move', () => {
      * ⛔⛔ THE DEFECT THE POSITIVE CONTROL FOUND IN THIS MODULE'S FIRST CUT.
      * `Array.from` iterates code POINTS, so one astral character made the
      * masked text one UTF-16 unit shorter than the source and every offset
-     * after it was wrong — `verify-topdown-steps-ui.mjs`, 22564 → 22563.
+     * after it was wrong — `check-topdown-steps-ui.mjs`, 22564 → 22563.
      */
     it('⛔ an astral character does not move a single offset', () => {
         const t = 'const e = "🎯"; // gone\nconst n = 1;';

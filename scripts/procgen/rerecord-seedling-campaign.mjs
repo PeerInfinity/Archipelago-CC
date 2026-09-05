@@ -1626,7 +1626,7 @@ function record(ctx, s0, s1, s2) {
         return;
     }
     shell(ctx, 'the differential RECORDS the derived set', 'node',
-        [ctx.scriptPath('verify-seedling-bot-differential.mjs'), '--win', '--record',
+        [ctx.scriptPath('check-seedling-bot-differential.mjs'), '--win', '--record',
             `--only=${set.join(',')}`]);
     flush(ctx, 'S3', { set, moved, appeared, vanished });
 }
@@ -1735,7 +1735,7 @@ function prove(ctx) {
     console.log(`## the solver roster: ${solver.length} tape(s), derived from the producers' `
         + 'own `--segments` (⚖ 17) plus the four hand witnesses');
     rows.push(['the solver-roster differential', shell(ctx, 'the solver-roster differential',
-        'node', [ctx.scriptPath('verify-seedling-bot-differential.mjs'), '--win',
+        'node', [ctx.scriptPath('check-seedling-bot-differential.mjs'), '--win',
             `--only=${solver.join(',')}`]).ok]);
     /**
      * ⛓⛓⛓ R9 P3 (C) — **THE THREE ⚖ 40 WITNESSES S4 NEVER COVERED** (§42.7 ii).
@@ -1755,7 +1755,7 @@ function prove(ctx) {
     console.log(`## the ⚖ 40 dash witnesses: ${DASH_WITNESSES.length} tape(s) — outside the `
         + 'solver roster by construction, and covered here rather than assumed');
     rows.push(['the ⚖ 40 dash witnesses', shell(ctx, 'the ⚖ 40 dash witnesses', 'node',
-        [ctx.scriptPath('verify-seedling-bot-differential.mjs'), '--win',
+        [ctx.scriptPath('check-seedling-bot-differential.mjs'), '--win',
             `--only=${DASH_WITNESSES.join(',')}`]).ok]);
     /**
      * ⛓⛓⛓ R9 P3b, §47.6 — **THE COMPLEMENT, DERIVED AND PRINTED, AND THE
@@ -1791,7 +1791,7 @@ function prove(ctx) {
             : 'size not derived in a rehearsal (see below)'}`);
         rows.push([`the \`${category}\` category${tapes ? ` (${tapes.length} tape(s))` : ''}`,
             shell(ctx, `the \`${category}\` category`, 'node',
-                [ctx.scriptPath('verify-seedling-bot-differential.mjs'), '--win',
+                [ctx.scriptPath('check-seedling-bot-differential.mjs'), '--win',
                     `--tier=${category}`]).ok]);
     }
     const { roster, complement, duplicates } = proveCoverage(ctx);
@@ -1840,7 +1840,7 @@ function prove(ctx) {
             + 'their OWN differential row, so S4 covers the roster BY CONSTRUCTION');
         rows.push([`the roster complement (${complement.length} tape(s))`,
             shell(ctx, `the roster complement (${complement.length} tape(s))`, 'node',
-                [ctx.scriptPath('verify-seedling-bot-differential.mjs'), '--win',
+                [ctx.scriptPath('check-seedling-bot-differential.mjs'), '--win',
                     `--only=${complement.join(',')}`]).ok]);
         console.log('## ⛓ ⚖ 32 E — **S4 IS THE GATE RUN**, over the whole roster.');
     } else {

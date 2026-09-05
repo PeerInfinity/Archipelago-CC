@@ -55,7 +55,7 @@
  * Usage:
  *   node scripts/procgen/probe-seedling-r5-spinner.mjs
  *   node scripts/procgen/probe-seedling-r5-spinner.mjs --write
- *   node scripts/procgen/verify-seedling-bot-differential.mjs --record --win \
+ *   node scripts/procgen/check-seedling-bot-differential.mjs --record --win \
  *       --only=r5-press-glide,r5-press-repeat
  */
 
@@ -263,7 +263,7 @@ console.log('   ⛔ `r5-press-axes` is NOT reconstructible — its eleven-tick w
     + `tick (${probe('r5-press-axes').divergesAt}) at the same y.`);
 console.log('   ⚠ the two checks above are ONE TICK EACH. Byte-exactness over the whole '
     + 'stream needs the recording:');
-console.log('     node scripts/procgen/verify-seedling-bot-differential.mjs --record --win '
+console.log('     node scripts/procgen/check-seedling-bot-differential.mjs --record --win '
     + '--only=r5-press-glide,r5-press-repeat');
 
 const bad = checks.filter((c) => !c.ok).length;

@@ -79,7 +79,7 @@
  *
  * ⚠ SCOPED TO `PAGE_NAME`, deliberately, and that is measured rather than
  * cautious. The general form — any quoted `'seedling_*'` — matches
- * `PRESET_ID = 'seedling_atlas_maze'` in verify-seedling-atlas-maze.mjs,
+ * `PRESET_ID = 'seedling_atlas_maze'` in check-seedling-atlas-maze.mjs,
  * which is a PRESET, not a build directory, and would invent a pin for a
  * build that does not exist. Scoped to `PAGE_NAME` the sweep over the tracked
  * tree returns exactly the 23 files and exactly one build name.
@@ -97,7 +97,7 @@
  * 1's business and arrives there only by being IMPORTED, and (h2)'s list is
  * built at run time from the tracked tree rather than spelled. MEASURED at
  * this head, before the declaration below: `check-seedling-wasm-pages.mjs`
- * and `verify-seedling-bot-differential.mjs` were in NO population of this
+ * and `check-seedling-bot-differential.mjs` were in NO population of this
  * row's key — so the exact edit (h2) exists to catch would not have re-run it.
  *
  * ⛔ DECLARED `data`, NOT `code`: what this row reads is their BYTES. Pulling
@@ -105,7 +105,7 @@
  * a question about two string literals.
  *
  * @key-inputs data: scripts/procgen/check-*.mjs
- * @key-inputs data: scripts/procgen/verify-seedling-bot-differential.mjs
+ * @key-inputs data: scripts/procgen/check-seedling-bot-differential.mjs
  *
  * Run: node scripts/procgen/check-seedling-wasm-pins.mjs
  * Exit 0 all agree · 1 a named difference · 2 the submodule is absent.
@@ -436,7 +436,7 @@ for (const b of manifest.builds) {
  * still spells the older build somewhere — so nothing above notices when the
  * one reference that MATTERS goes.
  *
- * And exactly one does matter. `verify-seedling-ap-placement.mjs` is built on
+ * And exactly one does matter. `check-seedling-ap-placement.mjs` is built on
  * a PAIR: `Game.as`'s XML loop enumerates known element names, so on a build
  * with no `APItem` class an `<apitem>` element is IGNORED and the AP tile
  * reads EMPTY — that absence is the H7 discriminator, and P1-e's
@@ -460,7 +460,7 @@ for (const b of manifest.builds) {
  * verifier's SOURCE and the submodule's MANIFEST. Neither reads the other, so
  * this is not a fixed point (trap 769).
  */
-const CONTROL_FILE = 'scripts/procgen/verify-seedling-ap-placement.mjs';
+const CONTROL_FILE = 'scripts/procgen/check-seedling-ap-placement.mjs';
 const CONTROL_SPELLING = /process\.env\.SEEDLING_PAGE\s*\|\|\s*'(seedling_[a-z0-9_]+)'/;
 {
     let controlText = null;
@@ -652,7 +652,7 @@ function codeOnly(text) {
  *   a build the way a general `'seedling_*'` would (`PRESET_ID =
  *   'seedling_atlas_maze'`, the docblock above records it).
  *
- *   NAMED — `verify-seedling-bot-differential.mjs`. It is a `verify-`, so the
+ *   NAMED — `check-seedling-bot-differential.mjs`. It is a `verify-`, so the
  *   membership rule cannot see it, and it is the one instrument that drives
  *   the lab's build tick for tick against the JS model. A named subject that
  *   stops being tracked `fail()`s here rather than vanishing, exactly as (f)'s
@@ -710,7 +710,7 @@ const LAB_SPELLING = /export const WASM_PAGE\s*=\s*'([^']*)'/;
 /** ⛓ Certifiers the `check-*.mjs` membership rule cannot see. Named, with the
  *  reason, the way (f) names its control file. */
 const NAMED_CERTIFIERS = [
-    ['scripts/procgen/verify-seedling-bot-differential.mjs',
+    ['scripts/procgen/check-seedling-bot-differential.mjs',
         'it opens the build\'s game page itself and drives it tick for tick '
         + 'against the JS model'],
 ];

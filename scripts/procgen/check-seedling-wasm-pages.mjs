@@ -33,7 +33,7 @@
  * one thing the live proof could not include, on the page's own warning
  * that nothing it does can substitute for a user gesture. True of the
  * PARENT document — not of Playwright, whose click is a real input event
- * with real user activation (`verify-seedling-wasm-bridge.mjs` has always
+ * with real user activation (`check-seedling-wasm-bridge.mjs` has always
  * started the game that way). So the last arm drives one tape into the
  * live wasm and reads `botLoadTape`/`botStart`'s verdict off the status
  * line. If it does not get there, it prints the STAGE it reached rather
@@ -132,7 +132,7 @@ if (!ROOT) { console.log('FAIL: --root=<siteRoot> is required'); process.exit(1)
  * row and leaves all four ship arms running against whatever `WASM_PAGE`
  * says. A knob that appears
  * to switch builds and switches three rows is worse than no knob. Driving
- * another build is `verify-seedling-bot-differential.mjs`'s job; it honours
+ * another build is `check-seedling-bot-differential.mjs`'s job; it honours
  * `SEEDLING_PAGE` for real, because it opens the game page itself.
  */
 const BUILD = 'seedling_bot_ap_p4d';
@@ -197,7 +197,7 @@ for (const [name, url] of [['game.html', GAME], [`${BUILD}.wasm`, WASM]]) {
  * is a JS-side milestone; the ▶ click then invokes `runSWF`, the WebGPU
  * renderer cannot initialise, `botStatus` never appears, and 180 s later the
  * page says "the tape never started". Measured here, first run of the play
- * arm. These are `verify-seedling-wasm-bridge.mjs`'s own flags.
+ * arm. These are `check-seedling-wasm-bridge.mjs`'s own flags.
  */
 const browser = await chromium.launch({
     args: [

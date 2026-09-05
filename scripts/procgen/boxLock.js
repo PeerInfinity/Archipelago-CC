@@ -347,7 +347,7 @@ export const BOX_LOCK_EXEMPT = Object.freeze(['seedling-bot-replay-win.py']);
  * ⛔⛔ WHAT THIS FIXES, AND IT WAS MEASURED. P3b derived this population from
  * `gateRoster` — i.e. from the files whose name begins `check-`. So the
  * instruments that hold the GPU LONGEST took no lock at all: a **142-minute**
- * `verify-seedling-bot-differential --win --tier=full` ran with NO
+ * `check-seedling-bot-differential --win --tier=full` ran with NO
  * `lock.json` on disk while three sessions worked beside it. **A lock whose
  * population is a naming convention is not a lock over a box.** The
  * population is now `machineDrivers` — every `scripts/procgen/*.mjs` that

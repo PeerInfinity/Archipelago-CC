@@ -51,14 +51,37 @@ const costsOf = (msByKey) =>
     Object.fromEntries(Object.entries(msByKey).map(([k, ms]) => [k, { ms }]));
 
 describe('ciRunnable — what a runner can answer', () => {
-    it('rejects the Windows rows and NOTHING else', () => {
+    /**
+     * ⛓⛓ V3b — **THE REFUSED SET IS EXACTLY `windows ∪ @ci-box`, AND BOTH
+     * HALVES ARE ASSERTED NON-VACUOUSLY.** Before V3b the refusal was the
+     * Windows rows alone; the `verify-*` rename put 47 gates on the roster
+     * that the box answers and CI does not, each declaring its own reason.
+     * ⛔ The equality is stated as a SET over files, not a count, and each
+     * half is proved non-empty first (trap 824): a clause that stopped
+     * matching would otherwise pass by emptiness.
+     */
+    it('rejects exactly the Windows rows and the @ci-box rows', () => {
         const roster = gateRoster({ repo: REPO });
         expect(roster.length).toBeGreaterThan(20);
         const refused = roster.filter((g) => !ciRunnable(g));
         expect(refused.length).toBeGreaterThan(0);
-        expect(refused.every((g) => g.windows)).toBe(true);
-        expect(roster.filter((g) => g.windows).map((g) => g.file).sort())
+        expect(refused.every((g) => g.windows || g.ciBox)).toBe(true);
+        expect(roster.filter((g) => g.windows).length).toBeGreaterThan(0);
+        expect(roster.filter((g) => g.ciBox).length).toBeGreaterThan(0);
+        expect(roster.filter((g) => g.windows || g.ciBox).map((g) => g.file).sort())
             .toEqual(refused.map((g) => g.file).sort());
+    });
+
+    /**
+     * ⛔⛔ V3b — **AND A GATE THAT DECLARES NEITHER IS STILL ACCEPTED**, which
+     * is the half that keeps the new clause from being a blanket. If a later
+     * edit made `ciRunnable` false for everything, every row above would still
+     * pass — this one would not.
+     */
+    it('accepts every gate that declares neither', () => {
+        const plain = gateRoster({ repo: REPO }).filter((g) => !g.windows && !g.ciBox);
+        expect(plain.length).toBeGreaterThan(10);
+        expect(plain.filter((g) => !ciRunnable(g))).toEqual([]);
     });
 
     /**
@@ -68,7 +91,12 @@ describe('ciRunnable — what a runner can answer', () => {
      * its CI answer while the workflow keeps printing lines for it.
      */
     it('accepts every browser gate — that is what S3 bought', () => {
-        const browser = gateRoster({ repo: REPO }).filter((g) => g.browser && !g.windows);
+        /** ⛓ V3b — `&& !g.ciBox`: the population S3 bought is the browser gates
+         *  CI is ASKED to run, and a box-only gate was never in it. Widening
+         *  the filter instead of the assertion would have let the new clause
+         *  swallow this row silently. */
+        const browser = gateRoster({ repo: REPO })
+            .filter((g) => g.browser && !g.windows && !g.ciBox);
         expect(browser.length).toBeGreaterThan(15);
         expect(browser.filter((g) => !ciRunnable(g))).toEqual([]);
     });
@@ -78,7 +106,10 @@ describe('ciGateArms — the arms, and BOTH of an arm\'s keys', () => {
     it('the browser set is the browser gates, their declared arms and the browser '
         + 'IDENTITY arms', () => {
         const roster = gateRoster({ repo: REPO });
-        const gates = roster.filter((g) => g.browser && !g.windows);
+        /** ⛓ V3b — `ciRunnable` is the predicate `ciGateArms` itself filters
+         *  on, so the expectation is stated through it rather than through a
+         *  copy of its clauses that a fifth one could go stale against. */
+        const gates = roster.filter((g) => g.browser && ciRunnable(g));
         const variants = gates.reduce((n, g) => n + (g.variants?.length ?? 0), 0);
         expect(gates.length).toBeGreaterThan(15);
         const arms = ciGateArms({ repo: REPO, set: 'browser' });
@@ -665,7 +696,10 @@ describe('ci-summary.mjs — the refusal ladder, derived from the same predicate
      * production side look broken.
      */
     it('does NOT refuse a browser key any more — it goes on to ask CI', () => {
-        const browser = roster.find((g) => g.browser && !g.windows);
+        /** ⛓ V3b — a browser gate CI IS ASKED TO RUN. The first browser gate on
+         *  the roster is now a `@ci-box` one, and refusing that one is correct;
+         *  the row S3 exists for is about a gate with an arm. */
+        const browser = roster.find((g) => g.browser && ciRunnable(g));
         expect(browser).toBeTruthy();
         const r = runCi(['deadbeef1', `--gate=gate: ${nameOf(browser)}`]);
         expect(r.out).not.toMatch(/REFUSED/);

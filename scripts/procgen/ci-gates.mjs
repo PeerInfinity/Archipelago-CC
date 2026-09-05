@@ -283,7 +283,8 @@ console.log(`# ci-gates — the ${SET} procgen gates, on this pushed head\n`);
 console.log(`## ${selected.length} arm(s) run here, out of ${arms.length} the `
     + `\`${SET}\` set holds and ${roster.length} gate(s) on the roster. `
     + `${unrunnable.length} gate(s) and ${unrunnableRows.length} identity row(s) need the `
-    + 'Windows driver and are SKIPPED BY NAME below — never counted, never implied green.');
+    + 'Windows driver or declare `@ci-box`, and are SKIPPED BY NAME below with their own '
+    + 'reason — never counted, never implied green.');
 if (shardNote) console.log(`## ${shardNote}`);
 
 /** ⛓ S4c — `arm.browser`, not `arm.gate.browser`: an identity arm has no
@@ -395,7 +396,14 @@ for (const arm of selected) {
 
 console.log('');
 for (const g of unrunnable) {
-    console.log(`## CI-SKIPPED | ${g.file} | needs a Windows GPU — not run here, and NOT green`);
+    /** ⛓ V3b — the two clauses of `ciRunnable` are two different sentences,
+     *  and a skip that gave both the same one would be a reason nobody could
+     *  act on: the Windows rows CANNOT be answered here, a `@ci-box` row is
+     *  one somebody decided the box answers, and its own reason is the thing
+     *  a later slice deletes. */
+    console.log(`## CI-SKIPPED | ${g.file} | ${g.ciBox
+        ? `declares \`@ci-box\` — ${g.ciBox.reason}`
+        : 'needs a Windows GPU'} — not run here, and NOT green`);
 }
 for (const r of unrunnableRows) {
     console.log(`## CI-SKIPPED | ${r.key} | its instrument holds the Windows Python driver `

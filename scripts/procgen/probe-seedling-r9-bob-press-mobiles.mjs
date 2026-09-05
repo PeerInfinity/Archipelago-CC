@@ -3,7 +3,7 @@
  * cannot be one.
  *
  * ⛔⛔ WHY THIS FILE EXISTS, STATED AS THE HOLE IT PLUGS.
- * `verify-seedling-bot-differential --win --record` recorded
+ * `check-seedling-bot-differential --win --record` recorded
  * `r9-l6-bob-press` and the model reproduced all 193 observations. That is a
  * real agreement and it is NOT the claim: an expectation carries the PLAYER's
  * positions and the PLAYER's own `hits`, and the player in this tape STANDS

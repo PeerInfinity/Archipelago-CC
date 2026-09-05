@@ -21,7 +21,7 @@ itself may never press it (the WebGPU renderer and the AudioContext consume the
 user activation, and a parent-side click latches `started` and hides the button
 without ever supplying one). A Playwright click IS a real input event with real
 user activation, so a ROW may do what the page must not — the same licence
-`verify-seedling-wasm-bridge.mjs` has always used.
+`check-seedling-wasm-bridge.mjs` has always used.
 
 Recipe: SWFRecomp-CC `tools/divergence/perf/WINDOWS_PLAYWRIGHT_FROM_WSL.md`
   1. Windows Python, never `python3`: `py.exe -3.12`.

@@ -50,7 +50,7 @@
  * Usage:
  *   node scripts/procgen/plan-seedling-r5-l40-part1.mjs
  *   node scripts/procgen/plan-seedling-r5-l40-part1.mjs --write
- *   node scripts/procgen/verify-seedling-bot-differential.mjs --record --win \
+ *   node scripts/procgen/check-seedling-bot-differential.mjs --record --win \
  *       --only=r5-l40-part1
  */
 

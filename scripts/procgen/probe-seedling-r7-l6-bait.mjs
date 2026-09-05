@@ -300,7 +300,7 @@ for (const arm of ARMS) {
  * ⛔ THE COMPARISON IS OFFSET BY ONE ON PURPOSE. The driver pushes an
  * observation for tick 0 BEFORE dispatching any input, so the game's stream
  * is `tick_count + 1` long and `game[i + 1]` is the state after the model's
- * `i`th `advance` — the same alignment `verify-seedling-bot-differential`
+ * `i`th `advance` — the same alignment `check-seedling-bot-differential`
  * uses. Comparing index for index would report every tick as divergent and
  * the LAST one as agreeing, which is exactly what it did the first time.
  */

@@ -11,7 +11,7 @@ time, that difference is the whole cost of the differential harness: a
 So this script is deliberately DUMB: it is only a browser driver. It knows
 nothing about fixtures, expectations or diffing — it boots the page, replays
 the tape it is handed, and writes the drained observation stream to a file.
-All the logic stays in `verify-seedling-bot-differential.mjs` on the Linux
+All the logic stays in `check-seedling-bot-differential.mjs` on the Linux
 side, which shells out to this per tape. That split is what keeps the tape
 format and the comparison in ONE implementation rather than two.
 
@@ -53,7 +53,7 @@ import time
 #
 # ⛔ IT LIVES IN THIS FILE, and that is a decision rather than an accident.
 # Every consumer that drives the game COPIES this single file into the Windows
-# scratch directory and runs it from there (`verify-seedling-bot-differential
+# scratch directory and runs it from there (`check-seedling-bot-differential
 # .mjs`'s `replayOnWindows`, and the rest). A sibling module would have to be
 # copied by every one of them, and the first consumer that forgot would not
 # lose the GATE — it would lose the whole driver to an ImportError. One file
@@ -67,7 +67,7 @@ import time
 #     grep -rl "seedling-bot-replay-win.py" --include=*.mjs scripts/procgen \
 #       | xargs grep -l "writeFileSync(.*'seedling-bot-replay-win.py'"
 #
-# (plus this script's own consumer in `verify-seedling-bot-differential.mjs`,
+# (plus this script's own consumer in `check-seedling-bot-differential.mjs`,
 # which stages it through a local `driverWsl` binding rather than inline.)
 #
 # ⛓⛓⛓ WHAT THE RACE IS (12f, §43.7). `Bot.botStart` ends with
@@ -769,7 +769,7 @@ def main():
                 # even as a sidecar. The file is written after the whole loop,
                 # so the raise skips it; the consumers all delete `--out`
                 # before a run and every one of them re-raises with this
-                # driver's stdout attached (`verify-seedling-bot-differential
+                # driver's stdout attached (`check-seedling-bot-differential
                 # .mjs:647`, `run-seedling-director.mjs:135`,
                 # `derive-seedling-tick0.mjs:256`,
                 # `rerecord-seedling-campaign.mjs:906/1267`), so the refusal

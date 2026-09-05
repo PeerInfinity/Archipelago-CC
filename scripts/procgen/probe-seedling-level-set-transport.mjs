@@ -115,7 +115,7 @@ const SEEDLING = process.env.SEEDLING_SRC || join(process.env.HOME, 'CC', 'seedl
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 
-// The Windows side. Same staging rules as verify-seedling-bot-differential.mjs:
+// The Windows side. Same staging rules as check-seedling-bot-differential.mjs:
 // py.exe cannot take Linux paths, so the driver and both JSON files live in
 // C:\playwright\ (= /mnt/c/playwright/).
 const WIN_WSL = '/mnt/c/playwright';

@@ -74,7 +74,7 @@ const WINDOWS_RE = /=\s*'\/mnt\/c\/Windows\/py\.exe'/;
  * taker set is derived from since 12j) it was catastrophic: of the twenty
  * files it pulled in transitively, exactly ONE reached a browser by a real
  * reference and NINETEEN merely printed
- * `node scripts/procgen/verify-seedling-bot-differential.mjs --win --record`
+ * `node scripts/procgen/check-seedling-bot-differential.mjs --win --record`
  * in a docblock. Four of those nineteen are the headless `solve-seedling-*`
  * producers, whose 2-second `--check` would have been made to queue behind a
  * 142-minute drive — the exact failure `boxLock`'s two-directional lint
@@ -224,6 +224,44 @@ const CI_SHALLOW_LINE_RE = /^[ \t]*\*[ \t]*@ci-shallow\b(.*)$/gm;
 const CI_ARGV_LINE_RE = /^[ \t]*\*[ \t]*@ci-argv\b(.*)$/gm;
 
 /**
+ * ⛓⛓⛓ V3b (⚖ user, 2026-09-05) — **A GATE THE BOX MUST ANSWER, BECAUSE A
+ * RUNNER CANNOT — AND IT SAYS SO ITSELF.**
+ *
+ *     * @ci-box <why the box must answer this gate>
+ *
+ * ⛔⛔ THE DEFECT IT NAMES, MEASURED BEFORE IT EXISTED. V3b renamed the 49
+ * `verify-*` scripts that print a verdict and can fail to `check-*`, which is
+ * the ONE membership rule all three gate mechanisms key on. `ciRunnable` was
+ * `!gate.windows` — the whole predicate — so the rename alone would have
+ * enrolled every non-Windows one of them in CI, and `planCiShards` prices an
+ * arm the runner has never measured AT THE WHOLE BUDGET (its own docblock:
+ * *"pricing an unknown at zero is how one shard silently becomes the slow
+ * one"*). Measured in a mirrored repo root with the naked rename applied:
+ * browser **25 arms / 3 shards → 52 / 30**, headless **31 / 1 → 51 / 21** —
+ * **4 → 51 procgen gate jobs on every push**, 47 of them unpriced at 600 s
+ * each, and an unknown number of them RED (an uncommitted fixture, a
+ * `Generate.py` and a Python venv, the omsi submodule, 171 s of wall clock).
+ *
+ * ⛔⛔ AND IT IS A DECLARATION FOR THE REASON `@ci-shallow` IS ONE, WORD FOR
+ * WORD: *"a row that must never be CI-sourced is excluded by a clause that
+ * names the REASON, and the reason is a fact only the gate knows"*. A timing
+ * band would have been the alternative and it is the shape this file already
+ * refuses — `feedback_exclusion_by_a_timing_band_names_no_reason`: a gate that
+ * got faster would join CI silently, and a gate that got slower would leave it
+ * silently, in both cases without anyone deciding.
+ *
+ * ⛓ THE FREE TEXT IS THE REASON, like `@ci-shallow` and unlike `@ci-face`: a
+ * box-only gate publishes NO claim in CI at all, so there is no second key to
+ * name and no argv to declare. It is what `ci-gates` prints beside the SKIP
+ * and what `ci-summary` refuses with.
+ *
+ * ⛓ AND IT IS ONE LINE TO DELETE. Adopting a gate into CI is removing its
+ * declaration — in the gate that knows, not in a rule three files away — and
+ * the shard plan moving is then a DECISION somebody made, visible in a diff.
+ */
+const CI_BOX_LINE_RE = /^[ \t]*\*[ \t]*@ci-box\b(.*)$/gm;
+
+/**
  * The variants a gate's docblock declares, refusing a malformed line BY NAME —
  * ⛔ never skipping it. A declaration nobody parsed is a standing row that
  * silently does not exist, which is the failure this whole mechanism is for.
@@ -298,6 +336,28 @@ export function ciShallowIn(text, { file = '(text)' } = {}) {
     if (!reason) {
         throw new Error(`gateRoster: ${file} has a malformed @ci-shallow line — expected `
             + '`@ci-shallow <why a depth-1 checkout cannot answer this gate>`, got '
+            + `${JSON.stringify(hits[0][0].trim())}`);
+    }
+    return { reason };
+}
+
+/**
+ * The box-only refusal a gate declares, or `null`. ⛔ Same refusals as
+ * `ciShallowIn`, and for the same reason: an empty reason would arm a SILENT
+ * exclusion from CI, which is the exact shape this declaration replaces.
+ */
+export function ciBoxIn(text, { file = '(text)' } = {}) {
+    const hits = [...text.matchAll(CI_BOX_LINE_RE)];
+    if (!hits.length) return null;
+    if (hits.length > 1) {
+        throw new Error(`gateRoster: ${file} declares ${hits.length} @ci-box lines — a gate is `
+            + 'answerable on a runner or it is not, and two reasons for one exclusion is two '
+            + 'rules');
+    }
+    const reason = hits[0][1].trim();
+    if (!reason) {
+        throw new Error(`gateRoster: ${file} has a malformed @ci-box line — expected `
+            + '`@ci-box <why the box must answer this gate>`, got '
             + `${JSON.stringify(hits[0][0].trim())}`);
     }
     return { reason };
@@ -386,7 +446,7 @@ function instrumentDir(repo) {
  * ⛔⛔ THE DEFECT THIS CLOSES, MEASURED. P3b derived the box lock's takers
  * from `gateRoster`, i.e. from `check-*.mjs`. So the instruments that hold
  * the GPU LONGEST took no lock at all: a 142-minute
- * `verify-seedling-bot-differential --win --tier=full` ran with no
+ * `check-seedling-bot-differential --win --tier=full` ran with no
  * `lock.json` on disk while three sessions worked beside it. A lock whose
  * population is "the files somebody named `check-`" is a lock over a naming
  * convention, not over a box.
@@ -417,6 +477,7 @@ export function gateRoster({ repo = REPO } = {}) {
         const flags = ['host', 'root', 'pages'].filter((n) => readsFlag(text, n));
         const ciFace = ciFaceIn(text, { file });
         const ciArgv = ciArgvIn(text, { file });
+        const ciBox = ciBoxIn(text, { file });
         /**
          * ⛔⛔ S5 — **THE TWO CI DECLARATIONS DO NOT COMPOSE, AND THE ROSTER
          * SAYS SO BY NAME.** A face already carries the argv CI runs it with
@@ -427,6 +488,21 @@ export function gateRoster({ repo = REPO } = {}) {
          * ⛓ This is the same refusal shape as the duplicate-line ones, one
          * level up: the pair, not the line.
          */
+        /**
+         * ⛔⛔ V3b — **A BOX-ONLY GATE HAS NO CI RUN, SO IT CANNOT ALSO
+         * DECLARE HOW ONE GOES.** `@ci-face` says *"the number CI can produce
+         * for me is a different claim"* and `@ci-argv` says *"CI needs one
+         * flag to ask my claim inside a checkout"* — both are statements about
+         * a run that `@ci-box` says does not happen. A gate declaring the pair
+         * would leave whichever consumer read which declaration first to
+         * decide silently, which is the refusal one clause down, one level up.
+         */
+        if (ciBox && (ciFace || ciArgv)) {
+            throw new Error(`gateRoster: ${file} declares \`@ci-box\` AND `
+                + `\`${ciFace ? `@ci-face ${ciFace.prefix}` : `@ci-argv ${ciArgv.argv.join(' ')}`}\``
+                + ' — a box-only gate has no CI run for a face to re-key or for argv to point,'
+                + ' so one of the two is not true of this gate.');
+        }
         if (ciFace && ciArgv) {
             throw new Error(`gateRoster: ${file} declares BOTH \`@ci-face `
                 + `${ciFace.prefix}\` and \`@ci-argv ${ciArgv.argv.join(' ')}\` — a face is a `
@@ -449,6 +525,9 @@ export function gateRoster({ repo = REPO } = {}) {
             ciArgv,
             /** ⛓ …and the depth-1 refusal it declares, or `null` (S4, ⚖ 72). */
             ciShallow: ciShallowIn(text, { file }),
+            /** ⛓ …and the BOX-ONLY refusal it declares, or `null` (V3b) —
+             *  `ciRunnable` reads this, so a gate with one gets no CI arm. */
+            ciBox,
             /** ⛓ …and by which sibling, when it is not by itself. */
             browserVia: D.browserVia(file),
         };

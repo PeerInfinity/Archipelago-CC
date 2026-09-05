@@ -43,7 +43,7 @@
  *     would call are exercised (`botLevelSet` calls them); the one-line
  *     substitutions that call them are not, in this build or any tape.
  *   · that the right room loads — that is the tape sweep's job
- *     (`verify-seedling-bot-differential.mjs`), which drives 116 rooms'
+ *     (`check-seedling-bot-differential.mjs`), which drives 116 rooms'
  *     geometry through the same resolver.
  *
  * ⛔ REAL-GPU WINDOWS CHROME (⚖ user), on `seedling-level-set-win.py` — the

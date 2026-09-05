@@ -4,7 +4,7 @@
  *
  * ⛔⛔ WHY THIS FILE EXISTS, STATED AS THE HOLE IT PLUGS — and it is the same
  * hole `probe-seedling-r9-bob-press-mobiles.mjs` plugs, one mechanism further
- * in. `verify-seedling-bot-differential --win --record` recorded both arms of
+ * in. `check-seedling-bot-differential --win --record` recorded both arms of
  * the harmless-window pair and the model reproduced all 43 observations of
  * each. That is a real agreement and it is NOT the claim: an expectation
  * carries the PLAYER's positions and the PLAYER's own `hits` (trap 564). ⚖

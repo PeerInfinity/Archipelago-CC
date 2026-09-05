@@ -60,7 +60,7 @@
  *   node scripts/procgen/plan-seedling-r9-l6-sword-dash-hit.mjs --check
  *
  * Then record (the game is the only oracle for a rect):
- *   node scripts/procgen/verify-seedling-bot-differential.mjs --win --record \
+ *   node scripts/procgen/check-seedling-bot-differential.mjs --win --record \
  *       --only=r9-l6-sword-dash-hit
  *
  * ⚠ AND THE EXPECTATION IS THE PLAYER'S, WHICH IS TRAP 564. A green

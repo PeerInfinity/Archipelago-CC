@@ -27,7 +27,7 @@
  *
  * ── ⛔ THE DYNAMIC FORM SURVIVES EVERY GREP — trap 543 ────────────────
  *
- * `verify-seedling-bot-differential.mjs:207` reads
+ * `check-seedling-bot-differential.mjs:207` reads
  *
  *     const { playthroughAcceptanceFindings } =
  *         await import(join(REPO, 'frontend/modules/seedlingDemo/playthroughAcceptance.js'));

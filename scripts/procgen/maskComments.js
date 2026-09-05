@@ -78,7 +78,7 @@ export function maskComments(text) {
     /** ⛔ SPLIT BY UTF-16 UNIT, NOT BY CODE POINT. `Array.from` iterates code
      *  POINTS, so one astral character (an emoji outside the BMP) makes the
      *  array SHORTER than `text.length` and every offset after it is wrong by
-     *  one — measured on `verify-topdown-steps-ui.mjs`, whose masked length
+     *  one — measured on `check-topdown-steps-ui.mjs`, whose masked length
      *  came back 22563 for a 22564-character file. Every other index in this
      *  module (`indexOf`, `text[i]`) is a UTF-16 index. */
     const out = text.split('');

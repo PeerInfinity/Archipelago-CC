@@ -13,13 +13,24 @@
  *
  * ── ⛔⛔ WHAT CI CAN RUN, IN ONE PREDICATE ────────────────────────────
  *
- * `ciRunnable` is `!gate.windows`, and the negative is the whole content of
- * it: `ubuntu-latest` has a browser (SwiftShader, headless Chromium — the
+ * `ciRunnable` is `!gate.windows && !gate.ciBox`, and the first negative is
+ * the whole content of it: `ubuntu-latest` has a browser (SwiftShader, headless Chromium — the
  * bank's own 23 browser rows are all banked green from headless WSL Chromium)
  * and it has NO `/mnt/c/Windows/py.exe`. The four Windows rows hold that path
  * as a literal, so they cannot even RESOLVE their driver on a runner; ⚖ 72
  * (a) rules they stay box-measured, and `ci-gates.mjs` names them SKIPPED
  * rather than letting a run imply them green.
+ *
+ * ⛓⛓ V3b ADDED THE SECOND CLAUSE, AND ITS SIZE IS THE REASON IT EXISTS. The
+ * rename of the `verify-*` tier gave the roster 49 new gates in one commit —
+ * the ONE membership rule all three gate mechanisms key on is the filename —
+ * and `planCiShards` prices an arm the runner has never measured at the WHOLE
+ * budget, so the naked rename measured **4 → 51 procgen gate jobs per push**
+ * (browser 25 arms/3 shards → 52/30; headless 31/1 → 51/21). ⚖ The user ruled
+ * a fourth DECLARATION rather than a timing band: `@ci-box <reason>`, read
+ * here, so that CI adoption is a per-gate decision visible in a diff and the
+ * shard plan did not move at all across the rename (BEFORE == AFTER, which is
+ * the check a roster-count assertion could not have made).
  *
  * ⛔ IT IS ONE PREDICATE BECAUSE THERE IS ONE QUESTION. The workflow derives
  * its jobs from it, `ci-gates.mjs` derives what it runs from it, and
@@ -146,8 +157,17 @@ export function readCiArmCosts({ repo = REPO } = {}) {
 /**
  * Can CI run this gate at all? See the docblock — `ubuntu-latest` has a
  * browser and no Windows GPU driver.
+ *
+ * ⛓⛓ V3b (⚖ user, 2026-09-05) — **AND THE SECOND CLAUSE IS DECLARED, NOT
+ * DETECTED.** A gate carrying `@ci-box <reason>` is one whose answer only this
+ * box can produce, and it says so in its own docblock (`gateRoster.ciBoxIn`).
+ * ⛔ The two clauses are not the same shape and that is deliberate:
+ * `gate.windows` is READ OFF THE FILE (it holds `/mnt/c/Windows/py.exe`, so it
+ * could not resolve its driver on a runner if it tried), while `gate.ciBox` is
+ * a JUDGEMENT the gate's author made and wrote down. The first cannot be wrong;
+ * the second is one line to delete when it stops being true.
  */
-export function ciRunnable(gate) { return !gate.windows; }
+export function ciRunnable(gate) { return !gate.windows && !gate.ciBox; }
 
 /**
  * ⛓⛓⛓ R9 P3b (g) / ⚖ 54 (6), WIDENED BY S4 (⚖ 72) — **WHEN A ROW'S ANSWER

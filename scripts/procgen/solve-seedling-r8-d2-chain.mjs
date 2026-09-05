@@ -61,7 +61,7 @@
  *
  * Then record (the game is the only oracle) — ⛔ ALWAYS `--only=`, and ⛔ NOT
  * `r8-solve-18`, which this chain promoted and did not re-author:
- *   node scripts/procgen/verify-seedling-bot-differential.mjs --win --record \
+ *   node scripts/procgen/check-seedling-bot-differential.mjs --win --record \
  *       --only=r8-d2,r8-d2-19,r8-d2-20
  */
 

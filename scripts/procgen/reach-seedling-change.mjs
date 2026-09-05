@@ -40,7 +40,7 @@
  * every chain those tapes belong to (a moved segment moves its chain's headline
  * and its siblings' seams). Feed it straight in:
  *
- *   node scripts/procgen/verify-seedling-bot-differential.mjs --win \
+ *   node scripts/procgen/check-seedling-bot-differential.mjs --win \
  *     --only=$(node scripts/procgen/reach-seedling-change.mjs --range=A..B --only-list)
  *
  * `--check=<file>` reads a seal — one predicted mover per line, `#` comments

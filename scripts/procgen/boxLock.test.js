@@ -264,7 +264,7 @@ describe('who takes the box', () => {
         expect(nonGates.length).toBeGreaterThan(0);
         /* ⛓ the longest GPU row in the campaign, by name. */
         expect(expected.map((e) => e.file))
-            .toContain('verify-seedling-bot-differential.mjs');
+            .toContain('check-seedling-bot-differential.mjs');
     });
 
     it('and NO headless instrument carries it', async () => {

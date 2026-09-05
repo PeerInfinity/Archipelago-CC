@@ -11,7 +11,7 @@
  * ── Run ───────────────────────────────────────────────────────────────
  *
  *   node scripts/procgen/record-standing-value.mjs --key='roster: --win --tier=full' \
- *        --from='node scripts/procgen/verify-seedling-bot-differential.mjs --win --tier=full'
+ *        --from='node scripts/procgen/check-seedling-bot-differential.mjs --win --tier=full'
  *
  *   …--kind=gate|identity|suite    how to read the headline (default: guessed
  *                                  from the command — a `check-*` is a gate, a

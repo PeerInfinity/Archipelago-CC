@@ -5,7 +5,7 @@
  * ⛔⛔ WHY THESE SPAWN THE REAL INSTRUMENT. The category selection itself is
  * pinned in `fixtures/tiers.test.js`, against the derivation. What THIS file
  * pins is the wiring a unit test cannot see: that
- * `verify-seedling-bot-differential.mjs` refuses an unknown `--tier=` BY NAME
+ * `check-seedling-bot-differential.mjs` refuses an unknown `--tier=` BY NAME
  * **without taking the box**, and that the owed gate's per-category verdict is
  * the one the tree implies.
  *
@@ -32,7 +32,7 @@ import {
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
-const DIFFERENTIAL = join(HERE, 'verify-seedling-bot-differential.mjs');
+const DIFFERENTIAL = join(HERE, 'check-seedling-bot-differential.mjs');
 
 /** Run a script and hand back `{code, out}` rather than throwing on non-zero. */
 const run = (file, args, env) => {

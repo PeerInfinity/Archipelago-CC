@@ -180,7 +180,7 @@ const WIN_DRIVER = join(HERE, 'seedling-bot-replay-win.py');
 
 /**
  * One tape on real-GPU Windows Chrome, staged where `py.exe` can see it.
- * The same shape `verify-seedling-bot-differential.mjs` uses — the driver
+ * The same shape `check-seedling-bot-differential.mjs` uses — the driver
  * stays dumb, every decision stays here.
  */
 function replayOnWindows(name, tapeObj, deadlineSec) {

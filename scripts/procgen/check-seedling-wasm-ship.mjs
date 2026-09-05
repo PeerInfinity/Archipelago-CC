@@ -62,7 +62,7 @@
  * against the JS MODEL of this same tape rather than a recorded expectation —
  * and it is blind to any defect in the code both runtimes SHARE (trap 389).
  * The instrument that compares the game against RECORDED oracles is still
- * `verify-seedling-bot-differential.mjs`.
+ * `check-seedling-bot-differential.mjs`.
  *
  * ⚠ REAL-GPU WINDOWS CHROME ONLY. WSL's own chromium is SwiftShader at ~0.5
  * ticks/s, so a 255-tick solve would take eight minutes of software rasterising

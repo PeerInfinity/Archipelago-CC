@@ -29,7 +29,7 @@
  *
  * ⛔ **AND WHAT IT CANNOT.** It is blind to any defect the two runtimes SHARE
  * (trap 389) — the instrument that compares the game against RECORDED oracles
- * is `verify-seedling-bot-differential.mjs`. And swiftshader emits a few
+ * is `check-seedling-bot-differential.mjs`. And swiftshader emits a few
  * hundred `A valid external Instance reference no longer exists` page errors
  * during any headless ship; slice 1 measured a DENSE control emitting the same
  * number, so they are the renderer's and this row does not assert zero of
@@ -148,7 +148,7 @@ say(`# a GENERATED level containing \`${ELEMENTS}\`, shipped to the real game, H
 say(`  ${WATCH}`);
 say('');
 
-/** ⛔ The WebGPU flags are `verify-seedling-wasm-bridge.mjs`' own and are not
+/** ⛔ The WebGPU flags are `check-seedling-wasm-bridge.mjs`' own and are not
  *  optional: without them the page reaches `runtime ready`, the ▶ click
  *  invokes `runSWF`, the renderer cannot initialise and `botStatus` never
  *  appears — a failure that looks like a tape problem and is not. */

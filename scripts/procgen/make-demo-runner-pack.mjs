@@ -16,7 +16,7 @@
  * can relabel any needed side.
  *
  * Deterministic + idempotent (content-hash identity). Re-run after any capture
- * change; the e2e (verify-region-library-sphere-roundtrip-runner.mjs) loads the
+ * change; the e2e (check-region-library-sphere-roundtrip-runner.mjs) loads the
  * output.
  *   node scripts/procgen/make-demo-runner-pack.mjs
  */

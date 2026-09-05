@@ -53,7 +53,7 @@ async function main() {
   /**
    * ⛓ A GoldenLayout tab is NOT clickable through a locator: several docks are
    * laid out off-screen in headless, so Playwright's visibility check never
-   * settles. `verify-sphere-steps-ui.mjs` dispatches the events itself, and this
+   * settles. `check-sphere-steps-ui.mjs` dispatches the events itself, and this
    * follows it rather than inventing a second answer.
    */
   const goTab = (title) => page.evaluate((t) => {

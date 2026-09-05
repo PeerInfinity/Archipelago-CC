@@ -82,7 +82,7 @@
  * the pair below is its historical witness rather than a live hazard.
  *
  * ⛔⛔ AND THE CONTROL'S FAILURE IS THE INTERESTING ONE, BECAUSE IT IS
- * SILENT AND POINTS THE WRONG WAY. `verify-seedling-bot-differential`'s own
+ * SILENT AND POINTS THE WRONG WAY. `check-seedling-bot-differential`'s own
  * docblock argues the `hits` EQUALITY is safe where `hits_timer` is only a
  * bound: *"nothing moves it after the tape stops except a further hit, and
  * that would fail the equality loudly rather than quietly."* A further hit
@@ -107,9 +107,9 @@
  *   node scripts/procgen/plan-seedling-r9-l6-harmless-window.mjs --check
  *
  * Then record (the game is the only oracle — ⚖ ruling 16, announced first):
- *   node scripts/procgen/verify-seedling-bot-differential.mjs --win --record \
+ *   node scripts/procgen/check-seedling-bot-differential.mjs --win --record \
  *       --only=r9-l6-harmless-press
- *   node scripts/procgen/verify-seedling-bot-differential.mjs --win --record \
+ *   node scripts/procgen/check-seedling-bot-differential.mjs --win --record \
  *       --only=r9-l6-harmless-control
  *
  * ⚠ AND THE DIFFERENTIAL IS NOT THE CLAIM (trap 564). A green `--win --record`
@@ -251,7 +251,7 @@ check('⛔ …and one tick SHORTER does not complete them, so the number is a bo
  * DERIVED.** This row used to read *"each arm's `hits` is unmoved for at least
  * twice `POLL_FRAMES`"*, with `POLL_FRAMES = ceil(0.25 s x 30 fps) = 8` typed
  * here out of `seedling-bot-replay-win.py`'s `poll_sec`. Its premise — stated
- * here, in `verify-seedling-bot-differential.mjs`, and in ⚖ 47b (2), and
+ * here, in `check-seedling-bot-differential.mjs`, and in ⚖ 47b (2), and
  * measured in none of the three — was that the differential compares a status
  * *"read up to ~8 engine frames after the tape's last observation, with the
  * tape's last keys STILL HELD because nothing dispatches a release"*.

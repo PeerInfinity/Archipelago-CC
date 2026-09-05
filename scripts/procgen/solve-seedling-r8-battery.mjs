@@ -57,7 +57,7 @@
  *
  * Then record the fixtures (the game is the only oracle) — ⛔ ALWAYS `--only=`.
  * THE SEVEN LEG-ONLY ROOMS (R8 slice 2):
- *   node scripts/procgen/verify-seedling-bot-differential.mjs --win --record \
+ *   node scripts/procgen/check-seedling-bot-differential.mjs --win --record \
  *       --only=r8-solve-1,r8-solve-2,r8-solve-3,r8-solve-7,r8-solve-9,r8-solve-10,r8-solve-11
  *
  * ⛓ THE TWO SLICE-3b ROOMS (L4 and L6) HAVE THEIR OWN LINE, and until R9 slice
@@ -65,9 +65,9 @@
  * reports. This script WRITES all nine rows on every non-`--check` run, so a
  * re-record that names only the drifted one is the only honest way to spend a
  * licence on it:
- *   node scripts/procgen/verify-seedling-bot-differential.mjs --win --record \
+ *   node scripts/procgen/check-seedling-bot-differential.mjs --win --record \
  *       --only=r8-solve-4
- *   node scripts/procgen/verify-seedling-bot-differential.mjs --win --record \
+ *   node scripts/procgen/check-seedling-bot-differential.mjs --win --record \
  *       --only=r8-solve-6
  *
  * ⛔ AND `--check` RUNS AT EVERY CLOSE (R8 §18.9 lesson 3 / trap 169). The

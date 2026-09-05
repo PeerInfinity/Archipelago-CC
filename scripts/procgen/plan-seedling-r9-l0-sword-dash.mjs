@@ -69,7 +69,7 @@
  *   node scripts/procgen/plan-seedling-r9-l0-sword-dash.mjs --check
  *
  * Then record (the game is the only oracle):
- *   node scripts/procgen/verify-seedling-bot-differential.mjs --win --record \
+ *   node scripts/procgen/check-seedling-bot-differential.mjs --win --record \
  *       --only=r9-l0-sword-dash
  */
 

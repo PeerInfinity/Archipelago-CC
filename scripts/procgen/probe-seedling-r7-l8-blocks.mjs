@@ -526,7 +526,7 @@ console.log('\n── full: + the column-6 walk to the teleporter, then the MODE
      * ⛔ THE COMPARISON IS OFFSET BY ONE ON PURPOSE — the driver pushes an
      * observation for tick 0 before dispatching any input, so `game[i + 1]`
      * is the state after the model's `i`th `advance` (the same alignment
-     * `verify-seedling-bot-differential` uses).
+     * `check-seedling-bot-differential` uses).
      */
     const run = createLevelRun({
         levelSource: atlasLevelSource(),

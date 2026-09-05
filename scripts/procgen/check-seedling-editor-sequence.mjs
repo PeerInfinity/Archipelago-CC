@@ -19,7 +19,7 @@
  * stream that comes out must be the headline's TICK FOR TICK.
  *
  * ⛔ THE ORACLE IS RE-DERIVED HERE, in node, with `runTapeToStream` — the same
- * function `verify-seedling-bot-differential.mjs` feeds. A digest computed in
+ * function `check-seedling-bot-differential.mjs` feeds. A digest computed in
  * the page and compared to a digest computed here would be an ECHO (trap 269):
  * two spellings of one derivation agreeing with themselves. So the row takes
  * the page's OBSERVATIONS and diffs them against a stream this process made.

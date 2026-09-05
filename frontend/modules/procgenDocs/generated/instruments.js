@@ -48,8 +48,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 22,
-            "count": 33,
+            "browser": 51,
+            "count": 82,
             "id": "check"
         },
         {
@@ -64,7 +64,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 6,
+            "count": 5,
             "id": "dump"
         },
         {
@@ -201,20 +201,15 @@ export const INSTRUMENTS = frz({
             "browser": 0,
             "count": 6,
             "id": "sweep"
-        },
-        {
-            "browser": 31,
-            "count": 50,
-            "id": "verify"
         }
     ],
     "counts": {
-        "blockStyle": 248,
-        "browser": 79,
+        "blockStyle": 254,
+        "browser": 77,
         "cited": 88,
-        "files": 267,
-        "lineStyle": 19,
-        "withDocblock": 267,
+        "files": 265,
+        "lineStyle": 11,
+        "withDocblock": 265,
         "withFlags": 173
     },
     "dir": "scripts/procgen",
@@ -1142,6 +1137,350 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/census-skeleton-kinds.mjs"
         },
         {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-atlas-sphere-roundtrip.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "End-to-end round-trip gate for REGION-ATLAS placement in sphere growth (CC/docs/plans/region-atlas-plan.md, Phase 6 — the atlas analogue of check-region-library-sphere-roundtrip.mjs).",
+            "path": "scripts/procgen/check-atlas-sphere-roundtrip.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/architecture.md",
+                "docs/json/developer/procgen/bounce.md",
+                "docs/json/developer/procgen/playback-and-debugging.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-bounce-embed.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "@ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at a hardcoded `localhost:8000` and it takes no `--host=` at all, so the roster cannot point it elsewhere. ⇒ deleting this one line is how a later slice adopts it into CI.",
+            "path": "scripts/procgen/check-bounce-embed.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-bounce-touch.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "@ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at a hardcoded `localhost:8000` and it takes no `--host=` at all, so the roster cannot point it elsewhere. ⇒ deleting this one line is how a later slice adopts it into CI.",
+            "path": "scripts/procgen/check-bounce-touch.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-cli-sphere-config.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Phase-2 check: the headless CLIs build their sphere-growth config through the SAME substrate-hook assembly the panel uses (sphereConfigHooks), so the CLI's emitted regionParams / starting items / exclusive spheres match what the panel produces — no more inline arrow block + minimal {fallBehavior, physicsProfile} reg…",
+            "path": "scripts/procgen/check-cli-sphere-config.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-dj-swf-patch.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "@ci-box V3b adopted this script's NAME, not its RUN: it has never been priced on a runner, and `planCiShards` gives an unpriced arm a whole 600 s shard — adopting it is a costed decision, not a rename's side effect. ⇒ deleting this one line is how a later slice adopts it into CI.",
+            "path": "scripts/procgen/check-dj-swf-patch.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-grid-growth-ui.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app smoke test for gridGrowth mode's async generation + live progress.",
+            "path": "scripts/procgen/check-grid-growth-ui.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-item-channels.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app verify for the cross-substrate item channels (cross-game P1).",
+            "path": "scripts/procgen/check-item-channels.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/jta.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-jta-balance-pass.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Phase 3d verification: run the Pass-B forward balancing pass against a REAL post-fill seed and report what it produced.",
+            "path": "scripts/procgen/check-jta-balance-pass.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/jta.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-jta-cost-hooks.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Phase 3d-hooks verification: behavior probe for the two Tier-1 fork hooks added to frontend/modules/journey-to-ascension (branch `substrate`):",
+            "path": "scripts/procgen/check-jta-cost-hooks.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-jta-dataset-load.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Headless load smoke for the fork's synthetic game data boundary (`window.loadGameData`, Fork 1.7; jta-synthetic-data plan §3 / Phase 5b).",
+            "path": "scripts/procgen/check-jta-dataset-load.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/stepped-pipeline.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-jta-dataset-pipeline-preset.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Stepped-spiral Part 3, Phase-B gate (c): a panel/pipeline-generated jta spiral world solves + plays in-app.",
+            "path": "scripts/procgen/check-jta-dataset-pipeline-preset.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-jta-dataset-transfer.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "@ci-box V3b adopted this script's NAME, not its RUN: it has never been priced on a runner, and `planCiShards` gives an unpriced arm a whole 600 s shard — adopting it is a costed decision, not a rename's side effect. ⇒ deleting this one line is how a later slice adopts it into CI.",
+            "path": "scripts/procgen/check-jta-dataset-transfer.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-jta-dataset-url-boot.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "@ci-box V3b adopted this script's NAME, not its RUN: it has never been priced on a runner, and `planCiShards` gives an unpriced arm a whole 600 s shard — adopting it is a costed decision, not a rename's side effect. ⇒ deleting this one line is how a later slice adopts it into CI.",
+            "path": "scripts/procgen/check-jta-dataset-url-boot.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-jta-generated-dataset.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Phase 5d guard: generated synthetic datasets are deterministic, valid, and PLAY on the committed fork build.",
+            "path": "scripts/procgen/check-jta-generated-dataset.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/stepped-pipeline.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-jta-locations-roundtrip.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Phase 1 round-trip verification for the jta zone-locations channel (plan §2b enabler).",
+            "path": "scripts/procgen/check-jta-locations-roundtrip.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/jta.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-jta-managed-zone-skip.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Regression probe: `skipFreeZones()` must terminate in MANAGED (substrate) mode.",
+            "path": "scripts/procgen/check-jta-managed-zone-skip.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-maze-consumable-tiles.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app verify for X1 maze consumable tiles (cross-game consumable pool).",
+            "path": "scripts/procgen/check-maze-consumable-tiles.mjs"
+        },
+        {
             "argvHelpers": [
                 "arg"
             ],
@@ -1177,6 +1516,52 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-maze-lab.mjs"
         },
         {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-maze-loop-mana.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app verify for the MAZE mana leg under LOOP MODE after its migration onto the shared resourceChannels helpers (cross-game R1 slice 3).",
+            "path": "scripts/procgen/check-maze-loop-mana.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-omsi-mana-leg.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app verify for the OMSI (Idle Loops) mana leg — cross-game R2 slice 2. The unit suite pins the registry entry / zone channel; the in-app substrate tests drive the bridge through the test controller; this script is the independent stratum: it drives the leg through the REAL app boot path — real preset load, real d…",
+            "path": "scripts/procgen/check-omsi-mana-leg.mjs"
+        },
+        {
             "argvHelpers": [
                 "arg"
             ],
@@ -1208,6 +1593,28 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-preset-bundle-load — **THE MAIN APP OPENS A BUNDLE AND A `.json.gz`.**",
             "path": "scripts/procgen/check-preset-bundle-load.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-preset-panel-click.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "The Presets-panel CLICK gate: open the panel the way a user does and click through to real presets.",
+            "path": "scripts/procgen/check-preset-panel-click.mjs"
         },
         {
             "argvHelpers": [
@@ -1420,6 +1827,28 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-procgen-lab-hosting.mjs"
         },
         {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-procgen-presets.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app smoke test for the Procgen Pipeline panel's preset drop-down (presetDefs.js + _renderPresetBar). check-sphere-growth-ui.mjs is the template.",
+            "path": "scripts/procgen/check-procgen-presets.mjs"
+        },
+        {
             "argvHelpers": [
                 "arg"
             ],
@@ -1460,6 +1889,456 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-procgen-reference — **THE REFERENCE PAGE RENDERS WHAT THE GENERATED MODULES HOLD, AND THE MODULES ARE WHAT THE CODE SAYS** (PROCGEN DOCS · P3a, D5).",
             "path": "scripts/procgen/check-procgen-reference.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-region-library-roundtrip.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "End-to-end round-trip verification for the region-library content source (region-library-plan.md gate §5.3).",
+            "path": "scripts/procgen/check-region-library-roundtrip.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-region-library-sphere-roundtrip-maze.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "End-to-end round-trip verification for the region-library content source in SPHERE-GROWTH mode with a MAZE library and the connection settings BOTH OFF (region-library F6c — the maze analogue of the bounce/runner sphere roundtrips).",
+            "path": "scripts/procgen/check-region-library-sphere-roundtrip-maze.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-region-library-sphere-roundtrip-runner.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "End-to-end round-trip verification for the region-library content source in SPHERE-GROWTH mode with a RUNNER library (region-library F6c, the runner analogue of check-region-library-sphere-roundtrip.mjs).",
+            "path": "scripts/procgen/check-region-library-sphere-roundtrip-runner.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-region-library-sphere-roundtrip.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "End-to-end round-trip verification for the region-library content source in SPHERE-GROWTH mode (region-library F6a, the sphere analogue of check-region-library-roundtrip.mjs).",
+            "path": "scripts/procgen/check-region-library-sphere-roundtrip.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-region-library-ui.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app UI verification for the region-library panel (region-library F3/F5).",
+            "path": "scripts/procgen/check-region-library-ui.mjs"
+        },
+        {
+            "argvHelpers": [
+                "HOST"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-region-marking-tool.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app UI verification for the Region Marking Tool panel (region-atlas plan, Phase 2, Deliverable 2).",
+            "path": "scripts/procgen/check-region-marking-tool.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-region-step-editing.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Headless engine-level proofs for ③ region-step editing (re-roll + bounce editor save).",
+            "path": "scripts/procgen/check-region-step-editing.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-rule-gated-portals.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app smoke test for RULE-GATED PORTALS (sphere-driven growth priority #2): a bounce world where a non-ability item (key_red) gates a portal as an AUTHORED LOCK — no geometry; the host bridge evaluates the payload's gate_rules against live inventory and pushes booleans into the game (__swfBridge.setGateStates).",
+            "path": "scripts/procgen/check-rule-gated-portals.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/runner.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-runner-bot.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Runner phase-8 gate (plan §4.8, phase table row 8) — the playback bot drives a runner_worldgen region in the REAL frontend, end to end through the phase-8 chain: the registry entry's getPlaybackController (the PlaybackProxy runnerDemo/index.js injects) publishes walkTo on runner:playbackControl → the in-iframe flash…",
+            "path": "scripts/procgen/check-runner-bot.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/runner.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-runner-embed.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Runner phase-9 gate (plan §4.9, phase table row 9) — the full embed round-trip on a SPHERE-GROWN world, first check → Victory, driven end to end by the phase-8 playback bot (no sendLocation/sendExit shortcuts — every check and region move is the game playing itself). check-bounce-embed.mjs is the template; check-run…",
+            "path": "scripts/procgen/check-runner-embed.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/runner.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-runner-game.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "@ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at a hardcoded `localhost:8000` and it takes no `--host=` at all, so the roster cannot point it elsewhere. ⇒ deleting this one line is how a later slice adopts it into CI.",
+            "path": "scripts/procgen/check-runner-game.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/runner.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-runner-smoke.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "check-runner-smoke — **VERIFIES THAT A GENERATED RUNNER WORLD BOOTS, RENDERS AND IS PLAYED THROUGH BY ITS OWN SOLVER WITNESS IN THE REAL FRONTEND** (runner phase-7 gate, plan §5 row 7) — no manual play anywhere in it.",
+            "path": "scripts/procgen/check-runner-smoke.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-seedling-ap-placement.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-panel"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "win"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "win-port"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "check-seedling-ap-placement — **AP'S PLACEMENT, DELIVERED INTO THE LIVE ARTIFACT, AND THE ROOM MEASURED** (EDITOR INTEGRATION slice H7/H8; plan §17.1.4, §17.2).",
+            "path": "scripts/procgen/check-seedling-ap-placement.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-seedling-atlas-maze.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-browser"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Phase-5b gate for the region atlas (CC/docs/plans/region-atlas-plan.md): the atlas's analyzed tile map, projected into the MAZE substrate, is a payload the runtime can actually play — and the committed preset still IS that projection.",
+            "path": "scripts/procgen/check-seedling-atlas-maze.mjs"
+        },
+        {
+            "argvHelpers": [
+                "HOST"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-seedling-atlas-play.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Phase-4 milestone check for the region atlas (CC/docs/plans/region-atlas-plan.md): the REAL Seedling game plays inside the compiled atlas preset — walking through one of the game's own level transitions crosses the AP region boundary, and arriving in a region teleports the player to the marked entrance spawn.",
+            "path": "scripts/procgen/check-seedling-atlas-play.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-seedling-atlas-preset.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Phase-3 milestone check for the region atlas (CC/docs/plans/region-atlas-plan.md): the compiled Seedling atlas preset LOADS IN THE FRONTEND with the full region graph.",
+            "path": "scripts/procgen/check-seedling-atlas-preset.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-seedling-bot-differential.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "resume"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "tier"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "win"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "check-seedling-bot-differential — replay every committed tape through the REAL recompiled Seedling and compare what the game did against the committed observation streams.",
+            "path": "scripts/procgen/check-seedling-bot-differential.mjs"
         },
         {
             "argvHelpers": [
@@ -2186,6 +3065,39 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "HOST"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-seedling-wasm-bridge.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app verify for the flashPanel WASM transport (Seedling Stage 1): the SWFRecomp-recompiled Seedling page (same-origin iframe, __swfBridge contract) driven by WasmBridgeAdapter, against the seed-1 seedling preset (which wires flash_panel.wasm).",
+            "path": "scripts/procgen/check-seedling-wasm-bridge.mjs"
+        },
+        {
+            "argvHelpers": [
                 "arg"
             ],
             "browser": true,
@@ -2455,6 +3367,248 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-slice-records — **A FOLD WHOSE SURFACES DISAGREE IS REFUSED** (R9 slice P4b, ⚖ ruling 54 (8)).",
             "path": "scripts/procgen/check-slice-records.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-sphere-batch-stepping.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app smoke test for SPHERE-MAJOR (batch < all) stepping in the Procgen Pipeline panel (Phase 2.8).",
+            "path": "scripts/procgen/check-sphere-batch-stepping.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-sphere-envelope-resume.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app verification of the sphere-growth ENVELOPE interop (export / load & auto-resume) in the Procgen Pipeline panel.",
+            "path": "scripts/procgen/check-sphere-envelope-resume.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-sphere-growth-ui.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app smoke test for the sphereGrowth pipeline mode (sphere-driven growth step 6).",
+            "path": "scripts/procgen/check-sphere-growth-ui.mjs"
+        },
+        {
+            "argvHelpers": [
+                "HOST"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-sphere-steps-ui.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app smoke test for the STEPPED sphere-growth pipeline + plan editor.",
+            "path": "scripts/procgen/check-sphere-steps-ui.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/stepped-pipeline.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-spiral-byteidentity.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "@ci-box V3b adopted this script's NAME, not its RUN: it has never been priced on a runner, and `planCiShards` gives an unpriced arm a whole 600 s shard — adopting it is a costed decision, not a rename's side effect. ⇒ deleting this one line is how a later slice adopts it into CI.",
+            "path": "scripts/procgen/check-spiral-byteidentity.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-spiral-steps-ui.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app smoke test for the STEPPED shuffled-spiral pipeline (Part 2c).",
+            "path": "scripts/procgen/check-spiral-steps-ui.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-ta-mana-leg.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app verify for the TEXT-ADVENTURE mana leg after its migration onto the shared resourceChannels helpers (cross-game R1 slice 2).",
+            "path": "scripts/procgen/check-ta-mana-leg.mjs"
+        },
+        {
+            "argvHelpers": [
+                "HOST"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-topdown-steps-ui.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app smoke test for the STEPPED top-down pipeline (Phase 2).",
+            "path": "scripts/procgen/check-topdown-steps-ui.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/stepped-pipeline.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-topdown-steps.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "@ci-box V3b adopted this script's NAME, not its RUN: it has never been priced on a runner, and `planCiShards` gives an unpriced arm a whole 600 s shard — adopting it is a costed decision, not a rename's side effect. ⇒ deleting this one line is how a later slice adopts it into CI.",
+            "path": "scripts/procgen/check-topdown-steps.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-world-persistence-reload.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "In-app end-to-end verify for \"World persistence across reloads\".",
+            "path": "scripts/procgen/check-world-persistence-reload.mjs"
         },
         {
             "argvHelpers": [
@@ -2821,26 +3975,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Byte-identity harness for the sphere-growth -> generateRegion wiring (unify substrates, Phase 2c).",
             "path": "scripts/procgen/dump-sphere-byteidentity.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "dump",
-            "citedBy": [
-                "docs/json/developer/procgen/stepped-pipeline.md"
-            ],
-            "docblockStyle": "line",
-            "documentedFlags": [],
-            "file": "dump-spiral-byteidentity.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Byte-identity guard for the stepped SHUFFLED-SPIRAL pipeline (spiralSteps.js).",
-            "path": "scripts/procgen/dump-spiral-byteidentity.mjs"
         },
         {
             "argvHelpers": [],
@@ -8818,1169 +9952,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "sweep-yield-table — **THE YIELD TABLE**: what pass 2 actually yields over a carved room, per skeleton kind, per room size, per seed, on BOTH substrates.",
             "path": "scripts/procgen/sweep-yield-table.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-atlas-sphere-roundtrip.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "End-to-end round-trip gate for REGION-ATLAS placement in sphere growth (CC/docs/plans/region-atlas-plan.md, Phase 6 — the atlas analogue of verify-region-library-sphere-roundtrip.mjs).",
-            "path": "scripts/procgen/verify-atlas-sphere-roundtrip.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-bot-playthrough.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app verify for the PLAYBACK BOT driving bounce regions (sphere- driven growth priority #4): the bot replays the committed preset's Python sphere log end-to-end through REAL physics — the host-side PlaybackProxy publishes controller commands, the in-iframe flash bridge translates AP names to game goals, and the ga…",
-            "path": "scripts/procgen/verify-bot-playthrough.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [
-                "docs/json/developer/procgen/architecture.md",
-                "docs/json/developer/procgen/bounce.md",
-                "docs/json/developer/procgen/playback-and-debugging.md"
-            ],
-            "docblockStyle": "line",
-            "documentedFlags": [],
-            "file": "verify-bounce-embed.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "8b in-app playthrough — seed 1 canonical placement.",
-            "path": "scripts/procgen/verify-bounce-embed.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "line",
-            "documentedFlags": [],
-            "file": "verify-bounce-touch.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Bounce touch-controls retrofit gate (runner plan §6): standalone bounce page in a hasTouch context — holding the RIGHT half-panel touch zone sets keys.right and produces horizontal drift during the bounce (abilities gate it: no drift before the Right arrow item).",
-            "path": "scripts/procgen/verify-bounce-touch.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-cli-sphere-config.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Phase-2 check: the headless CLIs build their sphere-growth config through the SAME substrate-hook assembly the panel uses (sphereConfigHooks), so the CLI's emitted regionParams / starting items / exclusive spheres match what the panel produces — no more inline arrow block + minimal {fallBehavior, physicsProfile} reg…",
-            "path": "scripts/procgen/verify-cli-sphere-config.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-dj-real-embed.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app verify for the REAL-DJ renderer embed: with moduleSettings.bounceDemo.renderer = 'ruffle', bounce region loads route to the bounceDjRealPanel iframe (modules/bounceDemo/djReal/), whose page patches the user-supplied original Doodle Jump SWF in-browser (loader bytecode splice + 600px header RECT) and runs it u…",
-            "path": "scripts/procgen/verify-dj-real-embed.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "line",
-            "documentedFlags": [],
-            "file": "verify-dj-swf-patch.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "verify-dj-swf-patch.mjs — assert the in-browser SWF patcher (frontend/modules/bounceDemo/djReal/swf_inject.mjs, vendored verbatim from SWFRecomp-CC tools/divergence/) produces output byte-identical to SWFRecomp-CC's reference tool: inject_tracer.py <original DJ swf> --bytecode loader_bytecode.bin --stage-width 600",
-            "path": "scripts/procgen/verify-dj-swf-patch.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-grid-growth-ui.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app smoke test for gridGrowth mode's async generation + live progress.",
-            "path": "scripts/procgen/verify-grid-growth-ui.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-item-channels.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app verify for the cross-substrate item channels (cross-game P1).",
-            "path": "scripts/procgen/verify-item-channels.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [
-                "docs/json/developer/procgen/jta.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-jta-balance-pass.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Phase 3d verification: run the Pass-B forward balancing pass against a REAL post-fill seed and report what it produced.",
-            "path": "scripts/procgen/verify-jta-balance-pass.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [
-                "docs/json/developer/procgen/jta.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-jta-cost-hooks.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Phase 3d-hooks verification: behavior probe for the two Tier-1 fork hooks added to frontend/modules/journey-to-ascension (branch `substrate`):",
-            "path": "scripts/procgen/verify-jta-cost-hooks.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-jta-dataset-load.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Headless load smoke for the fork's synthetic game data boundary (`window.loadGameData`, Fork 1.7; jta-synthetic-data plan §3 / Phase 5b).",
-            "path": "scripts/procgen/verify-jta-dataset-load.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [
-                "docs/json/developer/procgen/stepped-pipeline.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-jta-dataset-pipeline-preset.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Stepped-spiral Part 3, Phase-B gate (c): a panel/pipeline-generated jta spiral world solves + plays in-app.",
-            "path": "scripts/procgen/verify-jta-dataset-pipeline-preset.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "line",
-            "documentedFlags": [],
-            "file": "verify-jta-dataset-transfer.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Verify the new-stack dataset import/export logic (synthetic-data rider D-b, jta-synthetic-post-v1-design.md §4.4) — the pure datasetTransfer.js half the wrapper panel's toolbar wraps.",
-            "path": "scripts/procgen/verify-jta-dataset-transfer.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "line",
-            "documentedFlags": [],
-            "file": "verify-jta-dataset-url-boot.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Verify the fork's standalone `?dataset=<url>` boot (synthetic-data rider D-a, jta-synthetic-post-v1-design.md §4.4).",
-            "path": "scripts/procgen/verify-jta-dataset-url-boot.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-jta-generated-dataset.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Phase 5d guard: generated synthetic datasets are deterministic, valid, and PLAY on the committed fork build.",
-            "path": "scripts/procgen/verify-jta-generated-dataset.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [
-                "docs/json/developer/procgen/stepped-pipeline.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-jta-locations-roundtrip.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Phase 1 round-trip verification for the jta zone-locations channel (plan §2b enabler).",
-            "path": "scripts/procgen/verify-jta-locations-roundtrip.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [
-                "docs/json/developer/procgen/jta.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-jta-managed-zone-skip.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Regression probe: `skipFreeZones()` must terminate in MANAGED (substrate) mode.",
-            "path": "scripts/procgen/verify-jta-managed-zone-skip.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-maze-consumable-tiles.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app verify for X1 maze consumable tiles (cross-game consumable pool).",
-            "path": "scripts/procgen/verify-maze-consumable-tiles.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-maze-loop-mana.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app verify for the MAZE mana leg under LOOP MODE after its migration onto the shared resourceChannels helpers (cross-game R1 slice 3).",
-            "path": "scripts/procgen/verify-maze-loop-mana.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-omsi-mana-leg.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app verify for the OMSI (Idle Loops) mana leg — cross-game R2 slice 2. The unit suite pins the registry entry / zone channel; the in-app substrate tests drive the bridge through the test controller; this script is the independent stratum: it drives the leg through the REAL app boot path — real preset load, real d…",
-            "path": "scripts/procgen/verify-omsi-mana-leg.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-preset-panel-click.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "The Presets-panel CLICK gate: open the panel the way a user does and click through to real presets.",
-            "path": "scripts/procgen/verify-preset-panel-click.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-procgen-presets.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app smoke test for the Procgen Pipeline panel's preset drop-down (presetDefs.js + _renderPresetBar). verify-sphere-growth-ui.mjs is the template.",
-            "path": "scripts/procgen/verify-procgen-presets.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-region-library-roundtrip.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "End-to-end round-trip verification for the region-library content source (region-library-plan.md gate §5.3).",
-            "path": "scripts/procgen/verify-region-library-roundtrip.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-region-library-sphere-roundtrip-maze.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "End-to-end round-trip verification for the region-library content source in SPHERE-GROWTH mode with a MAZE library and the connection settings BOTH OFF (region-library F6c — the maze analogue of the bounce/runner sphere roundtrips).",
-            "path": "scripts/procgen/verify-region-library-sphere-roundtrip-maze.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-region-library-sphere-roundtrip-runner.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "End-to-end round-trip verification for the region-library content source in SPHERE-GROWTH mode with a RUNNER library (region-library F6c, the runner analogue of verify-region-library-sphere-roundtrip.mjs).",
-            "path": "scripts/procgen/verify-region-library-sphere-roundtrip-runner.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-region-library-sphere-roundtrip.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "End-to-end round-trip verification for the region-library content source in SPHERE-GROWTH mode (region-library F6a, the sphere analogue of verify-region-library-roundtrip.mjs).",
-            "path": "scripts/procgen/verify-region-library-sphere-roundtrip.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-region-library-ui.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app UI verification for the region-library panel (region-library F3/F5).",
-            "path": "scripts/procgen/verify-region-library-ui.mjs"
-        },
-        {
-            "argvHelpers": [
-                "HOST"
-            ],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "host"
-            ],
-            "file": "verify-region-marking-tool.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "startsWith"
-                    ],
-                    "name": "host"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app UI verification for the Region Marking Tool panel (region-atlas plan, Phase 2, Deliverable 2).",
-            "path": "scripts/procgen/verify-region-marking-tool.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-region-step-editing.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Headless engine-level proofs for ③ region-step editing (re-roll + bounce editor save).",
-            "path": "scripts/procgen/verify-region-step-editing.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-rule-gated-portals.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app smoke test for RULE-GATED PORTALS (sphere-driven growth priority #2): a bounce world where a non-ability item (key_red) gates a portal as an AUTHORED LOCK — no geometry; the host bridge evaluates the payload's gate_rules against live inventory and pushes booleans into the game (__swfBridge.setGateStates).",
-            "path": "scripts/procgen/verify-rule-gated-portals.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [
-                "docs/json/developer/procgen/runner.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-runner-bot.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Runner phase-8 gate (plan §4.8, phase table row 8) — the playback bot drives a runner_worldgen region in the REAL frontend, end to end through the phase-8 chain: the registry entry's getPlaybackController (the PlaybackProxy runnerDemo/index.js injects) publishes walkTo on runner:playbackControl → the in-iframe flash…",
-            "path": "scripts/procgen/verify-runner-bot.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [
-                "docs/json/developer/procgen/runner.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-runner-embed.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Runner phase-9 gate (plan §4.9, phase table row 9) — the full embed round-trip on a SPHERE-GROWN world, first check → Victory, driven end to end by the phase-8 playback bot (no sendLocation/sendExit shortcuts — every check and region move is the game playing itself). verify-bounce-embed.mjs is the template; verify-r…",
-            "path": "scripts/procgen/verify-runner-embed.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [
-                "docs/json/developer/procgen/runner.md"
-            ],
-            "docblockStyle": "line",
-            "documentedFlags": [],
-            "file": "verify-runner-game.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Runner phase-2 gate (plan §5 row 2) — standalone game page, all synthesized input, no manual play: A. keyboard: input tape traverses the gapJump fixture — the 3.2-unit gap needs a FULL-HOLD running jump — and the portal touch is observed (dev harness records sendExit).",
-            "path": "scripts/procgen/verify-runner-game.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [
-                "docs/json/developer/procgen/runner.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-runner-smoke.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "verify-runner-smoke — **VERIFIES THAT A GENERATED RUNNER WORLD BOOTS, RENDERS AND IS PLAYED THROUGH BY ITS OWN SOLVER WITNESS IN THE REAL FRONTEND** (runner phase-7 gate, plan §5 row 7) — no manual play anywhere in it.",
-            "path": "scripts/procgen/verify-runner-smoke.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [
-                "docs/json/developer/procgen/flash.md",
-                "docs/json/developer/procgen/seedling-bot.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-seedling-ap-placement.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "no-panel"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "win"
-                },
-                {
-                    "how": [
-                        "startsWith"
-                    ],
-                    "name": "win-port"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "verify-seedling-ap-placement — **AP'S PLACEMENT, DELIVERED INTO THE LIVE ARTIFACT, AND THE ROOM MEASURED** (EDITOR INTEGRATION slice H7/H8; plan §17.1.4, §17.2).",
-            "path": "scripts/procgen/verify-seedling-ap-placement.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-seedling-atlas-maze.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "no-browser"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Phase-5b gate for the region atlas (CC/docs/plans/region-atlas-plan.md): the atlas's analyzed tile map, projected into the MAZE substrate, is a payload the runtime can actually play — and the committed preset still IS that projection.",
-            "path": "scripts/procgen/verify-seedling-atlas-maze.mjs"
-        },
-        {
-            "argvHelpers": [
-                "HOST"
-            ],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [
-                "docs/json/developer/procgen/flash.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "host"
-            ],
-            "file": "verify-seedling-atlas-play.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "startsWith"
-                    ],
-                    "name": "host"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Phase-4 milestone check for the region atlas (CC/docs/plans/region-atlas-plan.md): the REAL Seedling game plays inside the compiled atlas preset — walking through one of the game's own level transitions crosses the AP region boundary, and arriving in a region teleports the player to the marked entrance spawn.",
-            "path": "scripts/procgen/verify-seedling-atlas-play.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-seedling-atlas-preset.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Phase-3 milestone check for the region atlas (CC/docs/plans/region-atlas-plan.md): the compiled Seedling atlas preset LOADS IN THE FRONTEND with the full region graph.",
-            "path": "scripts/procgen/verify-seedling-atlas-preset.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-seedling-bot-differential.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "startsWith"
-                    ],
-                    "name": "only"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "record"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "resume"
-                },
-                {
-                    "how": [
-                        "startsWith"
-                    ],
-                    "name": "tier"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "win"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "verify-seedling-bot-differential — replay every committed tape through the REAL recompiled Seedling and compare what the game did against the committed observation streams.",
-            "path": "scripts/procgen/verify-seedling-bot-differential.mjs"
-        },
-        {
-            "argvHelpers": [
-                "HOST"
-            ],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "host"
-            ],
-            "file": "verify-seedling-wasm-bridge.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "startsWith"
-                    ],
-                    "name": "host"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app verify for the flashPanel WASM transport (Seedling Stage 1): the SWFRecomp-recompiled Seedling page (same-origin iframe, __swfBridge contract) driven by WasmBridgeAdapter, against the seed-1 seedling preset (which wires flash_panel.wasm).",
-            "path": "scripts/procgen/verify-seedling-wasm-bridge.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-sphere-batch-stepping.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app smoke test for SPHERE-MAJOR (batch < all) stepping in the Procgen Pipeline panel (Phase 2.8).",
-            "path": "scripts/procgen/verify-sphere-batch-stepping.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-sphere-envelope-resume.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app verification of the sphere-growth ENVELOPE interop (export / load & auto-resume) in the Procgen Pipeline panel.",
-            "path": "scripts/procgen/verify-sphere-envelope-resume.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-sphere-growth-ui.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app smoke test for the sphereGrowth pipeline mode (sphere-driven growth step 6).",
-            "path": "scripts/procgen/verify-sphere-growth-ui.mjs"
-        },
-        {
-            "argvHelpers": [
-                "HOST"
-            ],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-sphere-steps-ui.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "startsWith"
-                    ],
-                    "name": "host"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app smoke test for the STEPPED sphere-growth pipeline + plan editor.",
-            "path": "scripts/procgen/verify-sphere-steps-ui.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-spiral-steps-ui.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app smoke test for the STEPPED shuffled-spiral pipeline (Part 2c).",
-            "path": "scripts/procgen/verify-spiral-steps-ui.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-ta-mana-leg.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app verify for the TEXT-ADVENTURE mana leg after its migration onto the shared resourceChannels helpers (cross-game R1 slice 2).",
-            "path": "scripts/procgen/verify-ta-mana-leg.mjs"
-        },
-        {
-            "argvHelpers": [
-                "HOST"
-            ],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-topdown-steps-ui.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "startsWith"
-                    ],
-                    "name": "host"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app smoke test for the STEPPED top-down pipeline (Phase 2).",
-            "path": "scripts/procgen/verify-topdown-steps-ui.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "verify",
-            "citedBy": [
-                "docs/json/developer/procgen/stepped-pipeline.md"
-            ],
-            "docblockStyle": "line",
-            "documentedFlags": [],
-            "file": "verify-topdown-steps.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Verify the stepped TOP-DOWN runner (topDownSteps.js) reproduces the monolithic topDownFromRulesJson engine-phase output byte-for-byte, and that ④ compile yields a well-formed rules.json.",
-            "path": "scripts/procgen/verify-topdown-steps.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "verify",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "verify-world-persistence-reload.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "In-app end-to-end verify for \"World persistence across reloads\".",
-            "path": "scripts/procgen/verify-world-persistence-reload.mjs"
         }
     ],
     "terms": [

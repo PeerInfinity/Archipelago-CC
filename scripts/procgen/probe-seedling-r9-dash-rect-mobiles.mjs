@@ -2,7 +2,7 @@
  * ⛓⛓⛓ R9 SLICE 12c — **THE DASH RECT'S ENEMY-SIDE WITNESS**, because the
  * differential cannot be one.
  *
- * ⛔⛔ THE HOLE THIS PLUGS, STATED AS A HOLE. `verify-seedling-bot-
+ * ⛔⛔ THE HOLE THIS PLUGS, STATED AS A HOLE. `check-seedling-bot-
  * differential --win --record` checks an expectation built from the PLAYER's
  * observations. `r9-l6-sword-dash-hit`'s claim is not about the player: it is
  * that a press `set slashing` took the DASH arm swings a **24 x 20.8** rect

@@ -161,7 +161,7 @@ const expectationPath = join(MODULE, 'fixtures', 'expectations', `${probe.name}.
 if (READ) {
     if (!existsSync(expectationPath)) {
         console.log(`\n⚠ ${probe.name} has not been recorded yet — run\n`
-            + `   node scripts/procgen/verify-seedling-bot-differential.mjs --win --record `
+            + `   node scripts/procgen/check-seedling-bot-differential.mjs --win --record `
             + `--only=${probe.name}`);
     } else {
         const stream = JSON.parse(readFileSync(expectationPath, 'utf8'));

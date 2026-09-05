@@ -8,7 +8,7 @@
  * capturing the victory zone is fine.
  *
  * Deterministic + idempotent (content-hash identity). Re-run after any capture
- * change; the e2e (verify-region-library-sphere-roundtrip.mjs) loads the output.
+ * change; the e2e (check-region-library-sphere-roundtrip.mjs) loads the output.
  *   node scripts/procgen/make-demo-bounce-pack.mjs
  */
 import fs from 'node:fs';

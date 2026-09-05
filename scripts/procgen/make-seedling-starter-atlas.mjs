@@ -11,7 +11,7 @@
  *
  * It goes through the panel's own model — AtlasSession + the compact writer —
  * so what lands on disk is exactly what the panel's Save produces. (That
- * equality is not an assumption: verify-region-marking-tool.mjs drives the real
+ * equality is not an assumption: check-region-marking-tool.mjs drives the real
  * panel in a browser and asserts its download is byte-identical to this same
  * model's output for the same edits.) A script rather than a hand-typed JSON
  * because the geometry is DERIVED from the committed map extract — every exit

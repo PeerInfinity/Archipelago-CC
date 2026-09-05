@@ -187,10 +187,10 @@ describe('⛓ the corpus, and the two sites the calibration named', () => {
     it('⛔ the fixture tile count and the substrate quota are IN the corpus and CLEAN', () => {
         const files = corpus();
         expect(files).toContain('scripts/procgen/seedlingOgmo.test.js');
-        expect(files).toContain('scripts/procgen/verify-procgen-presets.mjs');
+        expect(files).toContain('scripts/procgen/check-procgen-presets.mjs');
         expect(FINDINGS.filter((f) => f.file === 'scripts/procgen/seedlingOgmo.test.js'))
             .toEqual([]);
-        expect(FINDINGS.filter((f) => f.file === 'scripts/procgen/verify-procgen-presets.mjs'))
+        expect(FINDINGS.filter((f) => f.file === 'scripts/procgen/check-procgen-presets.mjs'))
             .toEqual([]);
     });
 });

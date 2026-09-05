@@ -487,7 +487,7 @@ for (const judged of JUDGED) {
             + `judged against its OWN head @${base.slice(0, 9)}`,
         debts.length
             ? `${debts.join('\n      ')}\n      ⛓ RE-DRIVE IT: `
-                + `node scripts/procgen/verify-seedling-bot-differential.mjs --win `
+                + `node scripts/procgen/check-seedling-bot-differential.mjs --win `
                 + `--tier=${judged.category} — ${describeFullTierEstimate(
                     { tapes: judged.tapes.length, ticks })}`
             : `${cleared.join(', ')} — nothing this category is measured under has moved`);

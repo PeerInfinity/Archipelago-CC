@@ -19,7 +19,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import {
-    REPO, SCRIPT_DIR, ciArgvIn, ciShallowIn, gateRoster, isGateFile, variantsIn,
+    REPO, SCRIPT_DIR, ciArgvIn, ciBoxIn, ciShallowIn, gateRoster, isGateFile, variantsIn,
 } from './gateRoster.js';
 
 /**
@@ -157,6 +157,59 @@ describe('@ci-shallow — declared, never detected', () => {
 });
 
 /**
+ * ⛓⛓⛓ V3b (⚖ user, 2026-09-05) — **`@ci-box`: THE GATE SAYS ONLY THIS BOX CAN
+ * ANSWER IT.**
+ *
+ * ⛔ THE ROWS THAT MATTER ARE THE REFUSALS, exactly as for `@ci-shallow` one
+ * describe up — an exclusion armed by an empty line is an exclusion nobody can
+ * audit, and this one keeps 49 gates out of CI.
+ */
+describe('@ci-box — declared, never detected', () => {
+    it('reads the reason off the line, as free text', () => {
+        const text = '/**\n * @ci-box its fixture is regenerated, not committed\n */\n';
+        expect(ciBoxIn(text)).toEqual({ reason: 'its fixture is regenerated, not committed' });
+    });
+
+    it('a gate that declares none answers null', () => {
+        expect(ciBoxIn('/**\n * an ordinary docblock\n */\n')).toBe(null);
+    });
+
+    /** ⛔ The same narrowness every declaration in this file has: `gateRoster`'s
+     *  own docblock spells the tag out for a reader. */
+    it('a prose mention of the tag is not a declaration', () => {
+        const prose = '/**\n'
+            + ' * the spelling is  @ci-box <why the box must answer this gate>,\n'
+            + ' * on a docblock line that STARTS with the tag.\n'
+            + ' */\n';
+        expect(ciBoxIn(prose)).toBe(null);
+    });
+
+    it('⛔ a line with NO reason on it is refused BY NAME', () => {
+        expect(() => ciBoxIn('/**\n * @ci-box\n */\n', { file: 'check-scratch.mjs' }))
+            .toThrow(/check-scratch\.mjs.*malformed @ci-box/s);
+    });
+
+    it('⛔ two declarations are refused — one exclusion cannot have two reasons', () => {
+        const text = '/**\n * @ci-box reason one\n * @ci-box reason two\n */\n';
+        expect(() => ciBoxIn(text, { file: 'check-scratch.mjs' }))
+            .toThrow(/check-scratch\.mjs declares 2 @ci-box lines/);
+    });
+
+    /**
+     * ⛓ …AND THE LIVE ROSTER CARRIES THEM, with a non-vacuity assertion first
+     * (trap 824). ⛔ WHICH gates declare it, and that the CI plan therefore did
+     * not move, is asserted in `ciGatePlan.test.js` where the consequence lives.
+     */
+    it('the roster reads the declarations off real gates', () => {
+        const roster = gateRoster({ repo: REPO });
+        expect(roster.length).toBeGreaterThan(10);
+        const declaring = roster.filter((g) => g.ciBox);
+        expect(declaring.length).toBeGreaterThan(0);
+        for (const g of declaring) expect(g.ciBox.reason.length).toBeGreaterThan(15);
+    });
+});
+
+/**
  * ⛓⛓⛓ S5 (⚖ 72) — **`@ci-argv`: THE SAME CLAIM, ASKED THE WAY A CHECKOUT CAN
  * ASK IT.**
  *
@@ -255,4 +308,30 @@ describe('@ci-argv — the same claim, run the way CI can run it', () => {
                 .toThrow(/check-scratch\.mjs declares BOTH .*@ci-face.*@ci-argv/s);
         } finally { rmSync(dir, { recursive: true, force: true }); }
     });
+
+    /**
+     * ⛔⛔ V3b — **AND THE SAME PAIR REFUSAL FOR `@ci-box`, BOTH WAYS ROUND.**
+     * A box-only gate has no CI run for a face to re-key or for argv to point
+     * at, so either declaration beside it is a statement about a run that does
+     * not happen. ⛓ Two cases and not one: a refusal that only fired for the
+     * face would let the argv arrive through the other door.
+     */
+    it('⛔ no gate declares @ci-box beside @ci-face or @ci-argv, and both pairs are REFUSED',
+        () => {
+            const roster = gateRoster({ repo: REPO });
+            expect(roster.filter((g) => g.ciBox && (g.ciFace || g.ciArgv))).toEqual([]);
+            for (const [beside, re] of [
+                [' * @ci-face bounded: --only=one\n', /@ci-box.*AND.*@ci-face/s],
+                [' * @ci-argv --in-place: the same claim, in a checkout\n', /@ci-box.*AND.*@ci-argv/s],
+            ]) {
+                const dir = mkdtempSync(join(tmpdir(), 'gate-roster-box-'));
+                mkdirSync(join(dir, SCRIPT_DIR), { recursive: true });
+                writeFileSync(join(dir, SCRIPT_DIR, 'check-scratch.mjs'),
+                    `/**\n * @ci-box only this box has the fixture\n${beside} */\n`);
+                try {
+                    expect(() => gateRoster({ repo: dir })).toThrow(re);
+                    expect(() => gateRoster({ repo: dir })).toThrow(/check-scratch\.mjs/);
+                } finally { rmSync(dir, { recursive: true, force: true }); }
+            }
+        });
 });

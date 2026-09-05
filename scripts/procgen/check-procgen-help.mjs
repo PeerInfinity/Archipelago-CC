@@ -576,7 +576,7 @@ const PORCELAIN_TRIES = 3;
  * read as inertness.** This gate's subject is what an import DOES, and taking
  * a git lock is one of the things it can do — the same class as taking the box
  * lock, which this gate already reports by name (that is what
- * `verify-seedling-ap-placement.mjs` is on the baseline for). Making the
+ * `check-seedling-ap-placement.mjs` is on the baseline for). Making the
  * children stop doing the observable thing would suppress the evidence along
  * with the collision. A child that genuinely collides is a finding about THAT
  * INSTRUMENT; the bounded retry below is what keeps the run alive to report it.

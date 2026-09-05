@@ -494,7 +494,7 @@ export function buildRehearsalTree({ dir, repo, sourceTapes, deps, scenario = {}
     }
 
     // ── 4. the stubs S2, S3 and S4 shell ────────────────────────────────
-    writeFileSync(join(target, 'stubs', 'verify-seedling-bot-differential.mjs'), RECORD_STUB);
+    writeFileSync(join(target, 'stubs', 'check-seedling-bot-differential.mjs'), RECORD_STUB);
     writeFileSync(join(target, 'stubs', 'derive-seedling-tick0.mjs'), TICK0_STUB);
     for (const [file, what] of [
         ['check-seedling-editor-sequence.mjs', 'the JS sequence gate'],

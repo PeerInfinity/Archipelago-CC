@@ -9,7 +9,7 @@
  *
  * ── WHY THIS EXISTS ───────────────────────────────────────────────────
  *
- * `verify-seedling-bot-differential`'s dead-frame budget compares
+ * `check-seedling-bot-differential`'s dead-frame budget compares
  *
  *     residue = dead_frames − modelled
  *

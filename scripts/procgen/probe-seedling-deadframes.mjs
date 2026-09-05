@@ -74,7 +74,7 @@ takeBoxLockOrExit({ name: 'probe-seedling-deadframes.mjs', kind: 'windows' });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
-const VERIFY = join(HERE, 'verify-seedling-bot-differential.mjs');
+const VERIFY = join(HERE, 'check-seedling-bot-differential.mjs');
 const TAPE_DIR = join(REPO, 'frontend', 'modules', 'seedlingDemo', 'fixtures', 'tapes');
 const PAGE_URL = 'http://localhost:8000/frontend/modules/flashPanel/wasm/'
     + `${process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d'}/game.html`;
