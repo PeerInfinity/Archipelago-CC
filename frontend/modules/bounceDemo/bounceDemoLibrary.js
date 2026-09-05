@@ -852,6 +852,31 @@ export function createBounceSubstrateEntry({
                 .then((m) => m.openBounceRegionEditor(session)),
         }),
 
+        /**
+         * ⛓⛓⛓ APWORLD EDITOR HUB H4b — **THE DOCUMENT ⇄ ROOM ROUND TRIP.**
+         * `roomEditor` says which editor opens a bounce room; this says what
+         * that editor wants handed IN when the room comes out of a `rules.json`
+         * document, and how to read its save back into one. The hub resolves it
+         * off the registry and names no substrate — H3's `compositeMap`
+         * precedent and the same ⚖.
+         *
+         * ⛔ **THE IMPORT IS DYNAMIC FOR A SECOND REASON ON TOP OF `open`'s.**
+         * `bounceRegionEditor/bounceRegionRoundTrip.js` is headless-safe on its
+         * own (no panel, no Golden Layout), but it imports
+         * `buildEditedRegion.js`, which imports THIS FILE — a static import
+         * here would be a module cycle. Deferring it keeps the declaration DATA
+         * and the graph acyclic.
+         *
+         * ⚠ Both members are therefore ASYNC where the maze's are sync. The hub
+         * awaits both, which is what lets a substrate choose either.
+         */
+        regionRoundTrip: Object.freeze({
+            open: (ctx) => import('../bounceRegionEditor/bounceRegionRoundTrip.js')
+                .then((m) => m.bounceRegionRoundTrip.open(ctx)),
+            save: (saved, ctx) => import('../bounceRegionEditor/bounceRegionRoundTrip.js')
+                .then((m) => m.bounceRegionRoundTrip.save(saved, ctx)),
+        }),
+
         // Playback bot: overrides the flash entry's `() => null` stub.
         // The proxy publishes controller commands on
         // BOUNCE_PLAYBACK_CONTROL_EVENT; the in-iframe flash bridge

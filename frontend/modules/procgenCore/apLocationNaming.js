@@ -1,6 +1,8 @@
 // frontend/modules/procgenCore/apLocationNaming.js
 //
-// THE AP-canonical LOCATION-NAME convention, in one place.
+// THE AP-canonical NAME conventions for a region's ENDPOINTS, in one place —
+// the location names the pipeline mints, and (since H4b) the two spellings an
+// EXIT's name can have in a committed document.
 //
 // ⛓ APWORLD EDITOR HUB slice H3b. It was `procgenPipelineEngine.js:2240`, next
 // to `apIdNamespaces.js`'s id bases, and it had TWO callers inside that one
@@ -41,4 +43,45 @@
 export function makeLocationName(regionName, locId, position) {
     const suffix = position ? `__${position.x}_${position.y}` : '';
     return `${regionName}__${locId}${suffix}`;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD EDITOR HUB slice H4b — READING A NAME BACK
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * A room editor hands back GEOMETRY, and the ids in it are the ones
+ * `extractPathsAndObstacles` / a zone payload use — `exit_1`, `key_red_pickup`,
+ * `loc_arrow`. The DOCUMENT names the same endpoints differently, and there are
+ * exactly two spellings for each, both DERIVED and neither guessed:
+ *
+ *   · a LOCATION is `makeLocationName` above, with or without the position
+ *     suffix (a substrate with no tile coordinates omits it — bounce's
+ *     `ap_locations` map is the payload saying so itself);
+ *
+ *   · an EXIT is its raw id, UNLESS the raw id occurs on more than one region
+ *     of the document, in which case `world_generator/extractors.py:549` mints
+ *     `f"{region_name}__{raw_name}"` to keep AP Entrance names globally unique.
+ *     ⛔ MEASURED on the H4a fixture: `region_1_0`'s two exits are
+ *     `region_1_0__exit_1` (because `exit_1` occurs in three regions) and
+ *     `region_1_1` (because it occurs once) — so the prefix is NOT uniform
+ *     even inside ONE region, and a matcher that assumed either spelling
+ *     alone would miss half of them.
+ *
+ * ⚠ CANDIDATES, in preference order — never a single answer. The caller looks
+ * each one up in the document it holds and takes the first that is there; a
+ * candidate list that matches NOTHING is what makes an unmappable endpoint
+ * REFUSABLE BY NAME instead of silently renamed.
+ */
+
+/** ⛓ The names a compiled location may go by in a rules.json document. */
+export function apLocationNameCandidates(regionName, locId, position) {
+    const withPos = makeLocationName(regionName, locId, position);
+    const bare = makeLocationName(regionName, locId);
+    return withPos === bare ? [bare] : [withPos, bare];
+}
+
+/** ⛓ The names a compiled exit may go by. See the block above for the second. */
+export function apExitNameCandidates(regionName, exitId) {
+    const prefixed = `${regionName}__${exitId}`;
+    return exitId === prefixed ? [exitId] : [exitId, prefixed];
 }

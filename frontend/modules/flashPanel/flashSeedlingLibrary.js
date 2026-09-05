@@ -93,6 +93,31 @@ export const substrateRegistryEntry = Object.freeze({
      * each one says which is its own.
      */
     roomEditor: Object.freeze({ kind: 'lab', page: 'seedling', arm: 'edit' }),
+
+    /**
+     * ⛓⛓⛓ APWORLD EDITOR HUB H4b — **THERE IS NO DOCUMENT ⇄ ROOM ROUND TRIP
+     * FOR SEEDLING, AND THE ENTRY SAYS WHY** (rather than the hub inferring it
+     * from an absent field, which would read as *"nobody has written it yet"*).
+     *
+     * ⛔ MEASURED: a Seedling sidecar's `playable_payload` is
+     * `{gameId, atlas_ref, atlas_region, atlas_sub_region, level, tile_size,
+     * exits}` — an ATLAS REFERENCE into a level, not an authored room record.
+     * The room itself lives in the LEVEL SET and the atlas that the region
+     * marking tool and `watch.html` own, and a rules.json carries neither. So
+     * there is no one-room set document for the lab's EDIT arm to open, and
+     * nothing a save could be written back INTO on this side.
+     *
+     * ⛓ `roomEditor` above stays exactly as it is: the pipeline's own Edit
+     * still opens a Seedling room from a LIVE run, where the level set is in
+     * hand. It is the DOCUMENT direction that has no answer.
+     */
+    regionRoundTrip: Object.freeze({
+        refused: 'a Seedling sidecar payload is an ATLAS REFERENCE '
+            + '(`atlas_ref` / `atlas_region` / `atlas_sub_region` / `level`), not an authored '
+            + 'room record — the room lives in the level set and the atlas that the region '
+            + 'marking tool and `watch.html` own, and a rules.json carries neither, so there '
+            + 'is no one-room document to hand the lab\'s edit arm.',
+    }),
 });
 
 // Side-effect on import — the standing convention (see

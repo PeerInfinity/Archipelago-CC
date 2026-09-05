@@ -42,6 +42,7 @@ import {
 import { getPanelInstance } from './index.js';
 import { describeMazeAction } from './mazeKeys.js';
 import { drawMazeCompositeRegion } from './mazeCompositeMap.js';
+import { mazeRegionRoundTrip } from './mazeRegionRoundTrip.js';
 
 /**
  * Content-module pass (registry `applyContentModules` hook): stamp tile-grid
@@ -156,6 +157,22 @@ export const substrateRegistryEntry = Object.freeze({
      * so the two are separate fields on purpose.
      */
     roomEditor: Object.freeze({ kind: 'lab', page: 'maze', arm: 'set' }),
+
+    /**
+     * ⛓⛓⛓ APWORLD EDITOR HUB H4b — **THE DOCUMENT ⇄ ROOM ROUND TRIP.**
+     * `roomEditor` says WHICH editor opens a room; this says what that editor
+     * wants handed IN when the room comes out of a `rules.json` document, and
+     * how to read its save back into one. The hub
+     * (`apworldEditor/regionRoundTrip.js`) resolves it through the registry and
+     * imports no substrate module — the `compositeMap` precedent, and the same
+     * ⚖ behind it.
+     *
+     * ⛔ **DATA, like the other two.** The implementation lives in
+     * `mazeRegionRoundTrip.js` beside its imports (the engine, the serializer,
+     * the library capture path, the compiler), so this file stays
+     * `loadable: true` in the generated matrix.
+     */
+    regionRoundTrip: mazeRegionRoundTrip,
 
     /**
      * ⛓⛓⛓ APWORLD EDITOR HUB H3 — **THE COMPOSITE-MAP DECLARATION**
