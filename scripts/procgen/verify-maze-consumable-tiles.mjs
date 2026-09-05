@@ -169,6 +169,31 @@ try {
         async () => typeof (await omsiEval('resources.gold')) === 'number', 45000);
     console.log('  ✓ omsi engine booted; resources bag readable');
 
+    // ⛑ A SECOND boot barrier, and the reason this script was red for
+    // months. `resources.gold` readable proves the omsi GAME loaded
+    // inside the iframe; it says nothing about the omsi BRIDGE having
+    // subscribed to the host's grant bus. Those are different clocks:
+    // measured here, the engine is readable while the frame has no
+    // `eventBusSubscriptions` entry at all, and the entry (with
+    // crossSubstrate:itemGranted in it) lands ~5 s later. The bot
+    // reaches the tile in ~1 s, so the pickup's grant is published
+    // into the gap — and per iframeHandshake.js's contract, *"a publish
+    // before [IFRAME_APP_READY] reaches nobody and is not even queued"*.
+    // The grant is dropped silently: the maze logs `consumable_pickup`,
+    // no `[resourceChannels] grantItem rejected` warning fires (the
+    // grant validated fine), and `resources.houses` simply never moves.
+    // Whether the run went green was a race between the maze's first
+    // tick and the frame's SUBSCRIBE_EVENT_BUS — which is exactly why
+    // the same tree passed and failed on consecutive runs. Wait for the
+    // subscription, not for the engine.
+    await waitFor(page, logs, 'omsi bridge subscribed to the cross-substrate grant bus',
+        () => page.evaluate(async () => {
+            const m = await import('./modules/iframeAdapter/index.js');
+            const subs = m.adapterCore?.eventBusSubscriptions?.get('omsiSubstrateWrapper');
+            return !!subs?.has('crossSubstrate:itemGranted');
+        }), 45000);
+    console.log('  ✓ omsi bridge subscribed to crossSubstrate:itemGranted');
+
     // ── (6) collect policy default, checked BEFORE anything is
     // collected so there are genuinely tiles available to detour to ──
     await moveTo(consRegion, null);
