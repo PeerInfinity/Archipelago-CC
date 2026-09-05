@@ -53,7 +53,17 @@ import {
   documentKeyRows,
   playerSlotsOf,
 } from './documentKeys.js';
-import { buildLinkRows } from './documentLinks.js';
+import { buildLinkRows, DOCUMENT_LINKS } from './documentLinks.js';
+/**
+ * ⛓ H3 — the MAP tab. The renderer names no substrate (each one declares its
+ * own `compositeMap.drawRegion`); `compositeMapDocument` is the pure
+ * sidecars → Grid reader, which is on the pipeline side because it builds a
+ * `Grid`. Neither import drags a panel in.
+ */
+import {
+  TILE_PX, drawCompositeMap, canvasPointOf, cellAtPoint,
+} from '../procgenCore/compositeMapRenderer.js';
+import { reconstructResultFromSidecars } from '../procgenPipeline/compositeMapDocument.js';
 import { downloadJson, rulesDownloadName } from './downloadJson.js';
 import {
   RAW_VIEW_LIMIT_BYTES,
@@ -96,6 +106,7 @@ const TABS = [
   { id: 'regions', label: 'Regions' },
   { id: 'items', label: 'Items' },
   { id: 'meta', label: 'Meta' },
+  { id: 'map', label: 'Map' },
   { id: 'document', label: 'Document' },
   { id: 'links', label: 'Links' },
   { id: 'raw', label: 'Raw JSON' },
@@ -166,6 +177,18 @@ class ApworldEditorUI {
     this.rawJsonUnsubscribe = null;
     this.loadRulesUnsubscribe = null;
     this.activeTab = 'regions';
+    /**
+     * ⛓⛓ H3 — **THE REGION THE MAP PICKED**, and the memoised map behind it.
+     * A click on the Map tab's canvas selects a region in the Regions tab
+     * (plan §3 idea 4); the cache exists because `_render` runs on every tab
+     * switch and rebuilding a whole `Grid` out of `preset_sidecars` per render
+     * would put a deserialize pass beside the `validateRules` pass H2 measured
+     * at 4.6 s on `stardew_valley`. Keyed on the RECORD's identity (the session
+     * hands out a new object per op) plus the slot, so an edit or a slot change
+     * invalidates it and nothing else has to remember to.
+     */
+    this._selectedRegion = null;
+    this._mapCache = null;
 
     /**
      * ⛓⛓ **THE SELECTED SLOT, AND THE ONE THE PERSON PICKED, KEPT APART.**
@@ -304,6 +327,10 @@ class ApworldEditorUI {
     this._originSourceName = baseTag?.origin ?? null;
     this._rawDraft = null;
     this._rawForced = false;
+    // ⛓ A boundary installs a different world: a region name from the old one
+    //   means nothing in the new, and neither does a cached grid.
+    this._selectedRegion = null;
+    this._mapCache = null;
     this._render();
   }
 
@@ -978,6 +1005,8 @@ class ApworldEditorUI {
       this._renderLinksTab();
     } else if (this.activeTab === 'raw') {
       this._renderRawTab();
+    } else if (this.activeTab === 'map') {
+      this._renderMapTab();
     } else {
       const regions = this._regions();
       this._renderRegionsTab(regions, Object.keys(regions));
@@ -1015,6 +1044,12 @@ class ApworldEditorUI {
       summary = `${gameName} — ${n} editor link${n === 1 ? '' : 's'}`;
     } else if (this.activeTab === 'raw') {
       summary = `${gameName} — ${this._rawVerdict().bytes.toLocaleString()} bytes`;
+    } else if (this.activeTab === 'map') {
+      const result = this._mapResult();
+      summary = result
+        ? `${gameName} — ${result.stats.regionsBuilt} region${result.stats.regionsBuilt === 1 ? '' : 's'} `
+          + `on a ${result.grid.width}×${result.grid.height} grid (slot ${result.playerId})`
+        : `${gameName} — no map for this world`;
     } else {
       const n = this._regionNames().length;
       summary = `${gameName} — ${n} region${n === 1 ? '' : 's'}`;
@@ -1563,6 +1598,162 @@ class ApworldEditorUI {
       + 'their editor EMPTY when this document has nothing for it — that is the point of the tab.';
     this.scrollContainer.appendChild(intro);
     for (const row of rows) this.scrollContainer.appendChild(this._renderLinkRow(row));
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+   * THE MAP TAB (H3)
+   * ══════════════════════════════════════════════════════════════════ */
+
+  /**
+   * ⛓⛓ **THE COMPOSITE GRID, FROM THE WORKING COPY** — ⚖ *"I want [the code
+   * that graphically displays all of the regions as an interconnected map] to
+   * be accessible directly from a tab in the APWorld editor"*, and ⚖
+   * *"show the composite grid only for presets that have grid data"*.
+   *
+   * ⛔ **NO GRAPH FALLBACK.** A document whose sidecars carry no `grid_cell`
+   * (Seedling, jta, bounce; only the GROWN worlds carry them) gets a sentence
+   * saying so and the one-way button, not a second drawing of what the region
+   * graph panel already draws. The ⚖ is explicit that the graph stays its own
+   * panel and gets NO button back.
+   *
+   * Memoised on the record's identity + the slot — see `_mapCache`.
+   */
+  _mapResult() {
+    const doc = this.rulesDoc;
+    if (!doc) return null;
+    const c = this._mapCache;
+    if (c && c.doc === doc && c.playerId === this.playerId) return c.result;
+    const result = reconstructResultFromSidecars(doc, { playerId: this.playerId });
+    this._mapCache = { doc, playerId: this.playerId, result };
+    return result;
+  }
+
+  /**
+   * ⛓ **ONE-WAY, BY ⚖.** *"We could add a button to open the region graph, but
+   * I don't want a button in the region graph leading back to the APWorld
+   * editor."* The panel id is the same one the Links tab's row names, so the
+   * two doors cannot drift; nothing was added under `regionGraph/`.
+   */
+  _openRegionGraph() {
+    const row = DOCUMENT_LINKS.find((r) => r.id === 'regionGraphPanel');
+    if (!row) {
+      this._opMessage = 'Region graph: no link row declares it (documentLinks.js).';
+      this._renderChrome();
+      return;
+    }
+    this._openLink(row);
+  }
+
+  /**
+   * ⛓⛓⛓ **THE SELECTION API H4 READS.** A click on the map selects a region in
+   * the Regions tab. There was no selection API on this panel, so this is it:
+   * ONE method, named for what it does, returning whether the document
+   * actually has that region — a map cell whose sidecar names a region the
+   * `regions` block does not is a real document, and the caller should be able
+   * to say so rather than silently switching to a tab with nothing highlighted.
+   *
+   * @param {string} name a region name (a sidecar's key, which is the same key
+   *   `regions[player]` uses — 3 of `procgen_maze/AP_1`'s 4 region names have a
+   *   sidecar, the missing one being `Menu`).
+   * @returns {boolean} true when the working copy carries that region.
+   */
+  selectRegion(name) {
+    if (!name) return false;
+    this._selectedRegion = name;
+    const known = Object.prototype.hasOwnProperty.call(this._regions(), name);
+    this.activeTab = 'regions';
+    this._updateTabStyles();
+    this._opMessage = known
+      ? `Selected region ${name} from the map.`
+      : `Region ${name} is on the map but not in \`regions.${this.playerId}\`.`;
+    this._render();
+    const block = this.scrollContainer.querySelector(
+      `.apworld-region-block[data-region-name="${CSS.escape(name)}"]`);
+    if (block && typeof block.scrollIntoView === 'function') {
+      block.scrollIntoView({ block: 'nearest' });
+    }
+    return known;
+  }
+
+  _renderMapTab() {
+    const result = this._mapResult();
+
+    const intro = document.createElement('div');
+    Object.assign(intro.style, { color: '#888', fontSize: '11px', padding: '2px 0 6px' });
+    intro.className = 'apworld-map-intro';
+
+    const bar = document.createElement('div');
+    Object.assign(bar.style, {
+      display: 'flex', alignItems: 'center', gap: '8px', margin: '0 0 6px',
+    });
+    const graphBtn = this._makeButton('Open region graph', '#2e5f8a',
+      () => this._openRegionGraph());
+    graphBtn.className = 'apworld-map-open-graph';
+    graphBtn.title = 'Raises the region graph panel. One-way by ⚖: the graph has no button back here.';
+
+    if (!result) {
+      /**
+       * ⛔ The sentence names the REASON, not just the absence — "no map" and
+       * "no grid data in the sidecars" are different claims, and only the
+       * second tells the person whether a different document would work.
+       */
+      intro.textContent = 'No map for this world (no grid data in the sidecars). '
+        + 'Only grown worlds — the maze / top-down / spiral pipelines — write a `grid_cell` '
+        + 'per region; Seedling, JtA and zone-only worlds do not, so there is no composite '
+        + 'grid to draw. The region graph draws the topology for any document.';
+      this.scrollContainer.appendChild(intro);
+      bar.appendChild(graphBtn);
+      this.scrollContainer.appendChild(bar);
+      return;
+    }
+
+    const { grid, regionSize } = result;
+    intro.textContent = 'The composite grid, rebuilt from `preset_sidecars` — the WORKING '
+      + 'COPY\'s. Each substrate paints its own cells (registry slot `compositeMap`); one that '
+      + 'declares no painter gets a box labelled with its id. Click a cell to select that '
+      + 'region in the Regions tab.';
+    this.scrollContainer.appendChild(intro);
+
+    const slot = document.createElement('span');
+    slot.className = 'apworld-map-slot';
+    slot.textContent = `player slot ${result.playerId} · `
+      + `${result.stats.regionsBuilt} region${result.stats.regionsBuilt === 1 ? '' : 's'}`;
+    Object.assign(slot.style, { color: '#9ab', fontSize: '11px' });
+    bar.appendChild(slot);
+    graphBtn.style.marginLeft = 'auto';
+    bar.appendChild(graphBtn);
+    this.scrollContainer.appendChild(bar);
+
+    const canvas = document.createElement('canvas');
+    canvas.className = 'apworld-map-canvas';
+    canvas.width = grid.width * regionSize.width * TILE_PX;
+    canvas.height = grid.height * regionSize.height * TILE_PX;
+    // ⛓ The same geometry data-attrs the pipeline's canvas carries, so a
+    //   headless row can map a cell index to a click without re-deriving TILE_PX.
+    canvas.dataset.gridW = String(grid.width);
+    canvas.dataset.gridH = String(grid.height);
+    canvas.dataset.cellW = String(regionSize.width * TILE_PX);
+    canvas.dataset.cellH = String(regionSize.height * TILE_PX);
+    canvas.dataset.regions = String(result.stats.regionsBuilt);
+    canvas.style.cursor = 'pointer';
+    canvas.style.maxWidth = '100%';
+    canvas.title = 'Click a region to select it in the Regions tab';
+
+    // The selected region's cell, so the map shows what the Regions tab shows.
+    let selection = null;
+    if (this._selectedRegion) {
+      const hit = grid.allRegions().find((r) => r.region_id === this._selectedRegion);
+      if (hit?.cell) selection = { kind: 'region', cell: hit.cell };
+    }
+    drawCompositeMap(canvas, grid, regionSize, { selection });
+
+    canvas.addEventListener('click', (evt) => {
+      const cell = cellAtPoint(grid, regionSize, canvasPointOf(canvas, evt));
+      const region = cell ? grid.getRegion(cell) : null;
+      if (!region) return;
+      this.selectRegion(region.region_id);
+    });
+    this.scrollContainer.appendChild(canvas);
   }
 
   _renderLinkRow(row) {
@@ -2340,11 +2531,21 @@ class ApworldEditorUI {
 
   _renderRegion(regionName, region) {
     const block = document.createElement('div');
+    /**
+     * ⛓ H3 — the region block is ADDRESSABLE by name, which is what
+     * `selectRegion` scrolls to and what a headless row asserts on. The
+     * highlight is the same colour the map outlines the cell with, so the two
+     * surfaces agree about which region is selected.
+     */
+    block.className = 'apworld-region-block';
+    block.dataset.regionName = regionName;
+    const selected = this._selectedRegion === regionName;
+    if (selected) block.dataset.selected = 'true';
     Object.assign(block.style, {
-      border: '1px solid #333',
+      border: selected ? '1px solid #ffd24a' : '1px solid #333',
       borderRadius: '4px',
       marginBottom: '10px',
-      backgroundColor: '#242424',
+      backgroundColor: selected ? '#2b2a20' : '#242424',
     });
 
     const header = document.createElement('div');

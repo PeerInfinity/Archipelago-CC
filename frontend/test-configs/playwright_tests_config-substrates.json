@@ -369,7 +369,7 @@
             "id": "apworld-presets-button-opens-the-same-world",
             "enabled": true,
             "category": "apworldEditor",
-            "_comment": "APWorld hub H2. The button the \u2696 asked for on the opened-preset screen. It only RAISES the hub (ui:activatePanel) — the preset load already published the document app-wide — so the assertion is that the hub's session names the same game and seed, read off the loaded document."
+            "_comment": "APWorld hub H2. The button the ⚖ asked for on the opened-preset screen. It only RAISES the hub (ui:activatePanel) — the preset load already published the document app-wide — so the assertion is that the hub's session names the same game and seed, read off the loaded document."
         },
         {
             "id": "apworld-download-writes-the-working-copy",
@@ -388,6 +388,24 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "APWorld hub H2. The raw view saves the whole document as ONE replace-document op that one undo folds away byte for byte, and the size guard is driven AT the measured threshold, one byte over it, and through the 'show it anyway' escape — the constant imported from rawView.js, never typed in the test."
+        },
+        {
+            "id": "apworld-map-draws-the-documents-grid",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H3. The Map tab's canvas is compared against what the document's own preset_sidecars say — region count and grid dimensions derived at run time, never typed — and then a drawn cell's PIXEL is sampled, because a renderer that threw after sizing the canvas would leave every dimension check green."
+        },
+        {
+            "id": "apworld-map-click-selects-the-region",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H3, plan §3 idea 4. The click→cell mapping is the renderer's exported geometry, the same one the pipeline's hit-tester uses; the row clicks the first placed cell's centre and asserts EXACTLY one region block is marked selected in the Regions tab, then that a click off the grid moves nothing."
+        },
+        {
+            "id": "apworld-map-says-no-map-without-grid-data",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H3, ⚖ 'show the composite grid only for presets that have grid data'. Loads a committed jta preset (one of the 4 of 205 whose sidecars carry no grid_cell), asserts that premise off the document, and then that the tab names the reason and draws NO canvas — the region graph stays its own panel rather than a fallback drawn here."
         }
     ]
 }

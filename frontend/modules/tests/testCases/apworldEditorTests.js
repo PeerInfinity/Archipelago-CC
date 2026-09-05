@@ -28,12 +28,21 @@ import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 const PANEL_ID = 'apworldEditorPanel';
 const PANEL_SELECTOR = '.apworld-editor-panel';
 const PRESET_PATH = './presets/procgen_maze/AP_1/AP_1_rules.json';
+/**
+ * ⛓ H3 — a document whose sidecars carry NO `grid_cell`. Measured over the 205
+ * committed presets: 4 have sidecars with no grid cell at all, and this is the
+ * jta one. It is the "no map for this world" case the ⚖ ruled on (no graph
+ * fallback), and it must be a real committed document rather than a fixture —
+ * the claim is about what the corpus contains.
+ */
+const NO_GRID_PRESET_PATH =
+    './presets/jta_substrate_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 const SCHEMA_PATH = './schema/rules.schema.json';
 
 /** Load the preset, raise the panel, and hand back its live instance. */
-async function openHub(testController) {
-    testController.log(`Loading ${PRESET_PATH}…`);
-    await testController.loadRulesFromFile(PRESET_PATH);
+async function openHub(testController, presetPath = PRESET_PATH) {
+    testController.log(`Loading ${presetPath}…`);
+    await testController.loadRulesFromFile(presetPath);
     await testController.stateManager.pingWorker('after-rules-load', 5000);
     testController.reportCondition('rules loaded', true);
 
@@ -640,6 +649,193 @@ export async function apworldRawViewReplacesTheDocumentAsOneOp(testController) {
     return testController.getOverallResult();
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+ * H3 — THE MAP TAB
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ What the document ITSELF says the map should be, read at run time from the
+ * loaded record rather than typed here: one drawn region per sidecar entry that
+ * carries a `grid_cell`, and a grid sized by the largest cell coordinate. A
+ * preset that grew a region retargets this row instead of breaking it.
+ */
+function expectedMapFromDocument(doc, playerId) {
+    const entries = Object.entries(doc?.preset_sidecars?.[playerId] ?? {})
+        .filter(([, sc]) => sc && sc.grid_cell);
+    let gw = 0; let gh = 0;
+    for (const [, sc] of entries) {
+        gw = Math.max(gw, sc.grid_cell.gx + 1);
+        gh = Math.max(gh, sc.grid_cell.gy + 1);
+    }
+    return { regions: entries.length, gridW: gw, gridH: gh, names: entries.map(([n]) => n) };
+}
+
+export async function apworldMapDrawsTheDocumentsGrid(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+
+        const expected = expectedMapFromDocument(panel.rulesDoc, panel.playerId);
+        testController.reportCondition(
+            'the loaded document really carries grid cells', expected.regions > 0);
+
+        selectTab(panel, 'map');
+        const canvas = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`),
+            'the Map tab\'s canvas',
+            8000,
+            50,
+        );
+        testController.reportCondition('the Map tab draws a canvas', !!canvas);
+        if (!canvas) return testController.getOverallResult();
+
+        testController.assertEqual('one drawn region per sidecar cell',
+            String(expected.regions), canvas.dataset.regions);
+        testController.assertEqual('the grid is as wide as the document says',
+            String(expected.gridW), canvas.dataset.gridW);
+        testController.assertEqual('the grid is as tall as the document says',
+            String(expected.gridH), canvas.dataset.gridH);
+
+        /**
+         * ⛓⛓ **THE CANVAS HAS PAINT ON IT**, which a size check cannot see: a
+         * renderer that threw after sizing would leave every one of the
+         * assertions above green. Sampled at the CENTRE of the first cell, and
+         * compared against the empty-cell colour the renderer fills a canvas
+         * with before it draws anything.
+         */
+        const cw = Number(canvas.dataset.cellW);
+        const ch = Number(canvas.dataset.cellH);
+        const ctx = canvas.getContext('2d');
+        const first = panel._mapResult().grid.allRegions()[0];
+        const px = ctx.getImageData(
+            first.cell.gx * cw + cw / 2, first.cell.gy * ch + ch / 2, 1, 1).data;
+        testController.reportCondition(
+            'a drawn cell is not the empty-cell background',
+            !(px[0] === 0x14 && px[1] === 0x14 && px[2] === 0x14));
+
+        // The slot the map read is the slot the toolbar selector reports.
+        const slot = document.querySelector(`${PANEL_SELECTOR} .apworld-map-slot`);
+        testController.reportCondition('the map names the player slot it read',
+            !!slot && slot.textContent.includes(`slot ${panel.playerId}`));
+        testController.reportCondition('the one-way region-graph button is present',
+            !!document.querySelector(`${PANEL_SELECTOR} .apworld-map-open-graph`));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-draw test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+export async function apworldMapClickSelectsTheRegion(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+
+        selectTab(panel, 'map');
+        const canvas = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`),
+            'the Map tab\'s canvas',
+            8000,
+            50,
+        );
+        if (!canvas) {
+            testController.reportCondition('the Map tab draws a canvas', false);
+            return testController.getOverallResult();
+        }
+
+        // ⛓ The TARGET is read off the live grid, so the row never names a
+        //   region id: a different preset would still pick its own first cell.
+        const target = panel._mapResult().grid.allRegions()[0];
+        const rect = canvas.getBoundingClientRect();
+        const cw = Number(canvas.dataset.cellW);
+        const ch = Number(canvas.dataset.cellH);
+        // canvas px → client px (the canvas may be CSS-scaled by max-width).
+        const sx = rect.width / canvas.width;
+        const sy = rect.height / canvas.height;
+        canvas.dispatchEvent(new MouseEvent('click', {
+            bubbles: true,
+            clientX: rect.left + (target.cell.gx * cw + cw / 2) * sx,
+            clientY: rect.top + (target.cell.gy * ch + ch / 2) * sy,
+        }));
+
+        testController.assertEqual('the click selected the region under it',
+            target.region_id, panel._selectedRegion);
+        testController.assertEqual('and switched to the Regions tab',
+            'regions', panel.activeTab);
+
+        const block = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-region-block[data-region-name="${target.region_id}"]`);
+        testController.reportCondition(
+            'the Regions tab draws that region\'s block', !!block);
+        testController.reportCondition(
+            'and marks it selected', !!block && block.dataset.selected === 'true');
+
+        /**
+         * ⛔ EXACTLY ONE block is marked — a highlight that stuck to every row
+         * would satisfy the check above and mean nothing.
+         */
+        const marked = document.querySelectorAll(
+            `${PANEL_SELECTOR} .apworld-region-block[data-selected="true"]`);
+        testController.assertEqual('exactly one region block is marked selected',
+            '1', String(marked.length));
+
+        // A click outside the grid selects nothing new.
+        selectTab(panel, 'map');
+        await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`),
+            'the Map tab\'s canvas again', 8000, 50);
+        const c2 = document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`);
+        const r2 = c2.getBoundingClientRect();
+        c2.dispatchEvent(new MouseEvent('click', {
+            bubbles: true, clientX: r2.right + 50, clientY: r2.bottom + 50,
+        }));
+        testController.assertEqual('a click off the grid changes nothing',
+            target.region_id, panel._selectedRegion);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-click test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+export async function apworldMapSaysNoMapWithoutGridData(testController) {
+    try {
+        const panel = await openHub(testController, NO_GRID_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+
+        // The premise: this document HAS sidecars, and none of them has a cell.
+        const sidecars = panel.rulesDoc?.preset_sidecars?.[panel.playerId] ?? {};
+        const entries = Object.values(sidecars);
+        testController.reportCondition(
+            'the document carries sidecars at all', entries.length > 0);
+        testController.reportCondition(
+            'and not one of them carries a grid_cell',
+            entries.length > 0 && entries.every((sc) => !sc?.grid_cell));
+
+        selectTab(panel, 'map');
+        const intro = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-intro`),
+            'the Map tab\'s intro line',
+            8000,
+            50,
+        );
+        testController.reportCondition('the Map tab renders', !!intro);
+        testController.reportCondition(
+            'it says there is no map, and WHY',
+            !!intro && intro.textContent.includes('no grid data in the sidecars'));
+        testController.reportCondition(
+            '⛔ and draws NO canvas — no graph fallback, by ⚖',
+            !document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`));
+        testController.reportCondition(
+            'the region-graph button is still offered',
+            !!document.querySelector(`${PANEL_SELECTOR} .apworld-map-open-graph`));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('no-map test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
 registerTest({
     id: 'apworld-presets-button-opens-the-same-world',
     name: 'APWorld hub: the Presets screen\'s button raises the hub on the world it just opened',
@@ -686,6 +882,44 @@ registerTest({
                + 'it, and through the "show it anyway" escape — the threshold imported from '
                + 'the module that carries the measurement, never typed here.',
     testFunction: apworldRawViewReplacesTheDocumentAsOneOp,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-draws-the-documents-grid',
+    name: 'APWorld hub: the Map tab draws the composite grid the document describes',
+    description: 'Opens a grown preset, selects the Map tab, and asserts the canvas\'s '
+               + 'region count and grid dimensions EQUAL what the document\'s own '
+               + '`preset_sidecars` say (derived at run time, never typed) — then samples a '
+               + 'drawn cell\'s pixel, because a renderer that threw after sizing the canvas '
+               + 'would leave every dimension check green.',
+    testFunction: apworldMapDrawsTheDocumentsGrid,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-click-selects-the-region',
+    name: 'APWorld hub: a click on the map selects that region in the Regions tab',
+    description: 'Clicks the centre of the first placed cell — its coordinates read off the '
+               + 'live grid and the canvas\'s own geometry data-attrs — and asserts the panel '
+               + 'switched to the Regions tab with EXACTLY that region\'s block marked; then '
+               + 'clicks outside the grid and asserts nothing moved.',
+    testFunction: apworldMapClickSelectsTheRegion,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-says-no-map-without-grid-data',
+    name: 'APWorld hub: a world with no grid data says so, and draws no map',
+    description: 'Loads a committed jta preset whose sidecars carry no `grid_cell`, asserts '
+               + 'that premise off the document, and then that the Map tab names the reason '
+               + 'and draws NO canvas — the ⚖ ruling is "composite grid only for presets that '
+               + 'have grid data", with the region graph as its own panel rather than a '
+               + 'fallback drawn here.',
+    testFunction: apworldMapSaysNoMapWithoutGridData,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

@@ -22,6 +22,8 @@ document.
 | `ruleTreeEditor.js` | the access-rule tree widget |
 | `documentKeys.js` | the top-level **key registry**, derived from `rules.schema.json` |
 | `documentLinks.js` | the **Links** tab's rows |
+| `../procgenCore/compositeMapRenderer.js` | the **Map** tab's painter — shared with the procgen pipeline panel, substrate-neutral |
+| `../procgenPipeline/compositeMapDocument.js` | `reconstructResultFromSidecars` — `preset_sidecars` → a `Grid` |
 | `rawView.js` | the **Raw JSON** tab's text, its parse, and the **measured** size limit |
 | `downloadJson.js` | the download exit — the file name and the bytes |
 
@@ -51,6 +53,7 @@ reset the session, so an undo after an Apply still works. It republishes the
 | **Regions** | regions, exits, locations, access rules |
 | **Items** | items, classifications, pool counts, starting counts |
 | **Meta** | the fields in `rulesDocOps.META_FIELDS`, plus the start region and the victory condition |
+| **Map** | the composite grid, for documents whose sidecars carry grid cells — see below |
 | **Document** | **every** top-level key — see below |
 | **Links** | every other editor that owns part of a `rules.json` |
 | **Raw JSON** | the whole document as text — see *The exits* below |
@@ -118,6 +121,52 @@ never for somebody else's pre-existing violation.
 fill — `region_atlas` → the marking tool, `procgen_metadata` → the pipeline,
 `loop_costs` → the cost debugger. It is **empty** today, and a test row asserts so,
 so the day it is filled is visible rather than buried in a diff.
+
+## The Map tab
+
+⚖ *"One specific thing that I want to factor out of the procgen pipeline panels
+is the code to graphically display all of the regions as an interconnected map.
+I want that to be accessible directly from a tab in the APWorld editor."*
+
+The tab rebuilds a `Grid` from the **working copy's** `preset_sidecars` —
+`reconstructResultFromSidecars(record, {playerId})`, the same pure function the
+pipeline panel uses for a loaded preset — and hands it to
+`drawCompositeMap(canvas, grid, regionSize, {selection})`. The renderer names no
+substrate: each one declares its own painter in the registry's `compositeMap`
+slot ([substrate registry](../developer/procgen/substrate-registry.md) §
+*Composite map*), and a substrate that declares none gets a generic box
+**labelled with its id**.
+
+**Only grown worlds have a map**, by ⚖ (*"show the composite grid only for
+presets that have grid data"*). A `grid_cell` per region is written by the maze /
+top-down / spiral pipelines; Seedling, JtA and zone-only worlds write sidecars
+without one, so the tab prints *"No map for this world (no grid data in the
+sidecars)"* and the reason — and draws **nothing else**. There is deliberately no
+region-graph fallback here: the graph is its own panel.
+
+**Clicking a cell selects that region in the Regions tab** (`panel.selectRegion(name)`,
+the panel's one selection entry point). The click→cell mapping is the renderer's
+exported geometry (`canvasPointOf` / `cellAtPoint`), the same functions the
+pipeline's hit-tester calls, so a click and a pixel cannot disagree about where a
+cell is. The map outlines the selected cell and the Regions tab marks the same
+region's block (`[data-region-name][data-selected]`).
+
+**"Open region graph" is ONE-WAY**, by ⚖: *"We could add a button to open the
+region graph, but I don't want a button in the region graph leading back to the
+APWorld editor."* The button raises `regionGraphPanel` through the same
+`DOCUMENT_LINKS` row the Links tab uses, and **nothing was added under
+`regionGraph/`**.
+
+The rebuilt grid is memoised on the record's object identity plus the selected
+slot, because `_render` runs on every tab switch and a whole deserialize pass per
+render would sit beside the `validateRules` pass that already costs 4.6 s on the
+corpus's largest document.
+
+⚠ A region rebuilt from sidecars carries no top-level `exits` (the field the
+pipeline's own placements set), so a **loaded** document's map draws the cells and
+their exit squares but no inter-region connection lines. That is pre-existing —
+the pipeline panel's loaded-preset view has always looked that way — and H3 left
+it alone rather than changing a view it was asked to keep byte-inert.
 
 ## The Links tab
 
@@ -249,13 +298,15 @@ It is a **costed follow-up**, with its numbers, not part of this rung.
 | subscribes | `stateManager:rawJsonDataLoaded` | opens a session; its own Apply echo is ignored **by object identity** (`_appliedDocs`) — the source name is no longer a marker |
 | subscribes | `apworldEditor:loadRules` | the focus-safe hand-off the pipeline and the marking tool use |
 | publishes | `files:jsonLoaded` | Apply — a full-document clone, under the **origin's** `sourceName` (`apworldEditorApply` only when there is no origin) |
-| publishes | `ui:activatePanel` | the Links tab's rows |
+| publishes | `ui:activatePanel` | the Links tab's rows, and the Map tab's one-way *Open region graph* |
 
 ## Tests
 
 | Suite | Where |
 |-------|-------|
 | `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js` | vitest, `frontend/modules/apworldEditor/` |
+| `../procgenCore/compositeMapRenderer.test.js` | vitest — the Map tab's renderer, driven by a TOY substrate |
+| `../procgenPipeline/compositeMapDocument.test.js` | vitest — `preset_sidecars` → `Grid`, including the player slot |
 | `presetUI.test.js` | vitest — the "Open in APWorld Editor" descriptor |
 | `measure-apworld-raw-view.mjs` | `scripts/procgen/` — the browser measurement `RAW_VIEW_LIMIT_BYTES` is set from |
 | `apworldEditorTests.js` | the in-app runner, category `apworldEditor`, enabled in `playwright_tests_config-substrates.json` (`npm test -- --mode=test-substrates --batch=fast`) |
