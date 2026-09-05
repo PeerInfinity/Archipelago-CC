@@ -11091,6 +11091,19 @@ calls `restartLoop()` — the bot, replay and host-reset paths all call `_forceL
 takes the job. ⇒ **V3b (the rename) is unblocked and is next.** V3b also still owns the two STALE names
 (`verify-dj-real-embed`, `verify-bot-playthrough`) — neither was deleted here.
 
+**V3a VERIFIED by the planner 2026-09-05** (`b86580f9ca` · `226e397674` · `2b8c9be271` · `53387ed0ef` on
+origin/main; all three instruments 3× green solo; CI 436/13301 delta ZERO at `2b8c9be27`; no app code). The
+omsi fix was FOUR layers (the park; a park-vs-region-entry race that sets `_queuePausedUntilReset`, which
+`startProcessing()` cannot clear; the fork booting at a HELD boundary so an open gate still steps nothing —
+every bridge-mediated plan install calls `_forceLoopRecompile()` and live play has none; victory ahead of the
+exhaustion leg because the reset's teleport destroys the park). Lesson: a green in-app row is NOT a control
+for a standalone instrument — `omsi-loop-exhaustion-single-reset` is green only because the row before it
+cold-starts the fork. The survey's eight reds are now ALL accounted: 6 fixed instruments, 2 STALE, 0 SUBJECT.
+**⚖ NEW for the user (V3a, an APP question, not fixed):** should LIVE PLAY cold-start the omsi fork's loop the
+way every bridge-mediated plan install does? Today a player entering a freshly-booted omsi region, parking a
+Manual block and queueing in the game's own UI gets a game that never starts. Next: **V3b** the rename
+(launches after V3a idles); then the HANDOFF to a new Fable session for reviews R1/R2 (⚖ user 2026-09-05).
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
