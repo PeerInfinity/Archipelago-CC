@@ -10651,6 +10651,18 @@ seventeen the viewer lists — the resolver working).
 **NEXT = H5** (sidecar block links), then H6a, then H6b. The two ⚖ H4b left were NOT touched, as the kickoff
 asked.
 
+**H4c VERIFIED by the planner 2026-09-05** (`1413efc4e` on origin/main; the eighth lab-protocol name, the
+shared mount option on `setEditorView`, the bounce editor's door, zero "Edit in APWorld Editor" left in code;
+`check-procgen-lab-hosting` 66 → 78, `check-maze-lab` 265/0 unmoved; CI in flight, watched by H4c). H4c's
+design finding: the two lab pages' buttons are ONE, because both SET arms bind the same shared mount — so
+anything both lab pages should gain belongs in `procgenCore/setEditorView`, not in two page files. It also
+fixed a bus defect (`eventBus.publish` swallowed a subscriber's throw silently). **H5 LAUNCHED 2026-09-05** as
+`apworld-hub-sliceH5` (Opus, kickoff `NewDocs/plans/apworld-hub-sliceH5-prompt.md`): the sidecar-block links
+filling H1's empty `DOCUMENT_KEY_EDITORS` — `region_atlas` → the marking tool with an additive `onSave` (one
+op back), `procgen_metadata` → the pipeline through a new `procgenPipeline:loadRules` (a document, not an
+op), `loop_costs` → the cost debugger (working-copy intake MEASURED, else "Apply, then open"), `sphere_log`
+→ the spoiler checklist, everything else "edited as JSON here" BY NAME; Links-tab parity. After H5: H6a, H6b.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
