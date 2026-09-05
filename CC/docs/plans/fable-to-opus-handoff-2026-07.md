@@ -9847,7 +9847,7 @@ after the predecessor's `a69a9b295`. **NOT DONE, deliberately:** full convergenc
 adapter (B), live-queue editing in v1, tag editing, a persistent jta name table, per-entry cost, a new
 gate file or standing-values row, any submodule change before V5.
 
-## 5n. The APWorld EDITOR as the HUB over every procgen editor — PLANNED 2026-09-04; **H0 + H1 + H2 + H3 + H2b + H3b + H4a SHIPPED 2026-09-04/05, NEXT = H4b** (Fable planning session `next-priorities-planning` at main `697c94ee6`; plan file `NewDocs/plans/apworld-editor-hub-plan.md`, gitignored; memory `project_apworld_editor_hub`)
+## 5n. The APWorld EDITOR as the HUB over every procgen editor — PLANNED 2026-09-04; **H0 + H1 + H2 + H3 + H2b + H3b + H4a + H4b SHIPPED 2026-09-04/05, NEXT = H4c** (Fable planning session `next-priorities-planning` at main `697c94ee6`; plan file `NewDocs/plans/apworld-editor-hub-plan.md`, gitignored; memory `project_apworld_editor_hub`)
 
 **How this entry came to exist.** The session was briefed to hold the "next main priorities" conversation
 across everything but the platformer. The user's first move set the queue viewer (§5m) aside — *"The session
@@ -10449,7 +10449,7 @@ adds none), slow battery **12/217**. Also green: `JavaScript Unit Tests`, `type 
 were SUBTESTS of a row pytest counts once, so a run-to-run comparison on "passed" alone would have shown
 nothing.
 
-**NEXT = H4b** (per-region Edit ▸ + reverse links), then H5.
+~~**NEXT = H4b**~~ — H4b SHIPPED, see below. **NEXT = H4c** (reverse links), then H5.
 
 **H4a VERIFIED by the planner 2026-09-05** (`7e52dd5df` on origin/main, all eight workflows green at
 `0f480500d`): the fixture `frontend/presets/multiworld/AP_05594871498841892311/` (seed 4 — seed 1 would have
@@ -10465,6 +10465,94 @@ Edit ▸ + the `replace-region-sidecar` op; H4c = reverse links. **H4b LAUNCHED 
 user from the brief's measurement: a Seedling sidecar payload is an ATLAS REFERENCE (`atlas_ref`,
 `atlas_region`, `level`, …), not a room record, so Edit ▸ from a rules.json cannot open the Seedling room
 editor without the level set — H4b disables it by name; an atlas round-trip would be its own ⚖.
+
+⇒ **H4b AS BUILT 2026-09-05** (Opus session `apworld-hub-sliceH4b`, launched at `ec5d79613`; commits
+`1d26f06a5` the op · `1ba13475a` the round trip · `e511c3d4b` the door, the rows and the docs; plan
+§17 has the full record). **Per-region `Edit ▸` ships, and the substrate DECLARES its half.**
+
+`roomEditor` (W3) says WHICH editor opens a region's room; the new registry slot **`regionRoundTrip`**
+says what that editor wants handed IN when the room comes out of a `rules.json`, and how to read its
+save back — `{open, save}`, or `{refused: '<why>'}`. `apworldEditor/regionRoundTrip.js` resolves both
+off the registry and imports NO substrate module: the H3 `compositeMap` precedent and the same ⚖
+(*"I don't want to hardcode support for … specific substrates"*). Declarers: maze
+(`mazeRoom/mazeRegionRoundTrip.js`, static), bounce
+(`bounceRegionEditor/bounceRegionRoundTrip.js`, DYNAMIC — a static import would be a cycle through
+`buildEditedRegion.js`), Seedling (`{refused}` — its payload is an ATLAS REFERENCE, and the entry says
+so in its own words rather than the hub inferring "nobody wrote it yet" from an absent field). The
+save folds into ONE op, `replace-region-sidecar {player, region, payload, rules}`, which one Undo
+takes back.
+
+⛔ **THE BRIEF'S WRITE-BACK WAS WRONG THREE WAYS, ALL THREE INVISIBLE UNTIL RUN.** (a) The maze lab's
+document is a REGION LIBRARY, and `captureTileGridLibraryEntry` strips instance identity ON PURPOSE —
+measured on the H4a fixture, writing its payload back raw nulls every `targetRegion` (so the map loses
+the connection lines H4a just gave it), renames every item to `slot_N` with `locationName: null`, and
+drops `fogEnabled`. ⇒ the write-back RE-STAMPS from the document, keyed on geometry. (b) The derived
+rules are NOT the document's rules: grid-level gating is not drawn in the region's tiles
+(`procgen_maze/AP_2` `region_3_3` carries `And(Has key_red, Has key_green)` and re-derives as `True_`
+— overwriting it would silently OPEN a gated world), and the Python round trip renormalizes
+`And(Has a, Has b)` into `HasAll([a,b])`. (c) Some regions cannot round-trip at all.
+
+⛓ **ONE MECHANISM ANSWERS ALL THREE: THE BASELINE.** `open()` returns the editor's session AND what
+its save would carry for a session nobody touched; feeding that back through `save()` says what this
+door does when the reader changes nothing. The door is offered only where that is a NO-OP (byte-equal
+payload, every endpoint named both ways), and a rule moves only where the baseline REPRODUCES the
+document's own — everything else is FROZEN and the panel says how many. Rule comparison is byte
+equality OR the same EXACT requirement from `extractItemRequirementFromRule`, whose `exact` flag is
+the whole guard (`True_` is exact, `False_` is not, so an unreachable exit never compares equal to an
+open one).
+
+⛓⛓ **AND THE PAYLOAD NAMES ITS OWN AP LOCATIONS — reading the producer, not adding a heuristic, is
+what made the door useful.** `serializeMazeWorld` bakes `items[].locationName` from
+`global_name ?? makeLocationName(…)` (`mazeSerializer.js:49-55`), so a `procgen_topdown` region's
+locations carry the SOURCE GAME's names (`Inside Yellow Castle`) that no convention can reconstruct.
+Answering with the baked name — as bounce already answers from `ap_locations` — took the door from
+**394 to 1,036 of the 1,046** committed maze-payload sidecar regions. Measured over every committed
+preset: maze **1,036/1,046** · bounce **15/25** · Seedling 0/260, jta 0/31, omsi 0/6, runner 0/9,
+text_adventure 0/15 — and every one of the 341 refusals carries a sentence naming its own cause.
+Endpoints inside the editable regions: **3,018 movable · 841 FROZEN**.
+
+⚠ **The bounce contract IS buildable from a document, minus three fields** — `physicsProfile`,
+`mode`, `freeArrow` are world-level generation settings the exporter never carried
+(`procgen_metadata` is `{driver, stop_reason, region_count, grid_dims}`). The cost is a DEGRADED
+editor, not a disabled button: they change how rules are DERIVED and what a Regenerate builds, not
+what the level IS. ⛔ But `mode` had to be MEASURED: the pipeline's `_editRegionTD` spells its own
+fallback `?? 'braid'`, and taking that made every derived rule `False_` on the fixture; the right
+fallback is `column`, which is `buildBounceRegionContract`'s and `buildEditedRegion`'s own.
+
+Gates: `apworldEditor/` **168/168** (`rulesDocOps` 58→68 · `rulesEditAdapter` 14→15 ·
+`regionRoundTrip` **26 NEW**) · the five touched module trees **3,809/3,809** · `procgenDocs/`
+452/452 · `check-procgen-docs` + `check-slice-records` ALL PASS · **`check-maze-lab` 265/0 and
+`check-procgen-lab-hosting` 66/0, both UNMOVED** · in-app `fast` **76 → 78**, `compare-runs` `ADDED (2)` and nothing else. ⛔ The four
+`dump-*-byteidentity.mjs` are NOT quoted — H4a measured them vacuous for `apworldEditor/` work. No
+preset and no Python changed, so trap 1175's whole-`pytest` rule does not bite. ⚖ 52: the suite row
+is quoted from CI by SHA.
+
+⛑ **THE IN-APP LAB-DOOR ROW MEASURED THE WRONG THING THREE TIMES, and each failure is a trap.**
+(1) A real mounted maze lab connected INSIDE the row's own 8 s poll, opened room 0 for real and
+published its OWN close, so `onSave` fired with the page's UNEDITED record and the row measured a
+no-op while asserting an edit — a live page and a synthetic one cannot both author the same
+three-phase conversation. ⇒ the host is a PANEL-SHAPED stub, W4's own contract shape. (2) Asserting
+that no lab was mounted failed: an earlier row in the roster had raised one. ⇒ stand the real ones
+aside and put them back. (3) **`procgenLab:levelChanged` has NO static publisher** — the adapter
+registers `iframe_<iframeId>` DYNAMICALLY at publish time — so the bus SKIPPED every publish with
+only a warn log. ⇒ the row registers itself as a publisher, once.
+
+⛑ **TWO MUTANTS WERE GREEN AT FIRST, and they are the same family: a fixture on which two
+implementations agree cannot tell you which one you shipped.** Dropping the `regionRoundTrip` lookup
+from the button stayed green (jta refuses one branch earlier; no row drove a DECLARED refusal) ⇒ a
+Seedling control row. Ignoring the baked `locationName` stayed green (for a maze-grown region it
+equals what the convention reconstructs) ⇒ three `procgen_topdown` rows, which assert first that no
+document name there contains `__` at all.
+
+**⚖ TWO OPEN QUESTIONS FOR THE USER**, both found by measurement, neither blocking H4c: (a) the ten
+`seedling_atlas_maze` rooms are the only maze regions the door refuses — their payloads are written
+by the atlas derivation, not by `serializeMazeWorld`, so a round trip adds an `itemLib: {}` and a
+computed `longestShortestPath` they do not carry; (b) `assembleBounceRegionFromLevel` names every
+exit `side_exit_<side>`, so a bounce region whose portal is authored under its own name (`exit_up` in
+the `spring_gap` zone) cannot be re-assembled — **which is a defect in the PIPELINE's own `Edit ▸`
+path too, not only in the hub's**. The hub refuses both BY NAME rather than rewriting them.
+
+**NEXT = H4c** (reverse links from `lab.html` / `watch.html` / the bounce editor), then H5.
 
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
