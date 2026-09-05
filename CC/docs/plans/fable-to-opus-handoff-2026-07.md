@@ -10346,6 +10346,19 @@ PASSED · `procgenDocs/` **452/452** · in-app `--mode=test-substrates --batch=f
 "No differences in status, roster, or duration". ⚖ 52: the suite row is quoted from CI by SHA, never measured
 here.
 
+**H3b's CI row, quoted from CI by SHA (⚖ 52), not measured locally:** `ci-vitest-summary.mjs f76c0799c`
+→ run **33948522027 success** (2026-09-05T05:57:18Z) — `suite: vitest (unfiltered)` **433/13187**
+(13,179 passed | 8 skipped | **0 failed**); slow battery **12/217** (217 passed | 0 failed). The
+follow-up `a1d7dd92a` (a derived-count correction in one docblock + the records — see below) was
+still in flight at report-back.
+
+⚑ **A COUNT IN THIS RECORD WAS TYPED, NOT DERIVED, AND WAS WRONG** — corrected in `a1d7dd92a` before
+close, and named here because the as-built is the artifact that carries it. The first figure for the
+maze→pipeline residue said "eleven imports over six files"; parsing the specifiers gives **20 over 8
+files before the move, 16 over 6 files after**. The slice's law and every gate are unaffected; what
+was misreported is the size of the residue §15.7 #3 offers to a future slice. (Family: a count in
+prose is unfalsifiable unless it is derived — the same family as trap 1170, recorded by this slice.)
+
 **For H4** (plan §15.7): there is no maze residue left in `procgenPipeline/` — §7b's tile-grid vocabulary is
 the whole of what is shared now. `mazeRoom/`'s remaining **16** pipeline imports over 6 files are the
 atlas/library vocabulary and would be their OWN slice with its own ⚖ — five modules, not one function. **NEXT = H4, then H5.**
