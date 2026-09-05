@@ -1091,3 +1091,10 @@ the app took the job.
 | bounded vitest (`boxLock` · `argvHelp` · `gateRoster` · `rosterCategories` · `procgenDocs/`) | **11 files, 526 tests, 0 failed**, 17.1 s — including `--check` exits 0 — regenerating produces byte-identical files |
 | in-app `test-substrates --batch=fast` | **83/83 passed** |
 | `compare-runs.js` | **No differences in status, roster, or duration** (83/83 → 83/83) |
+
+⛑ One docblock-only follow-up (`ea70…`, the omsi header's step numbering) landed after the table
+above, so its three affected gates were re-run on the final bytes: `VERIFY OMSI MANA LEG: OK
+(17.9s wall)` (END 22:41:20Z, rc=0, load 2.05 0.98 1.68) · `check-procgen-reference --check`
+**ALL CHECKS PASSED** · bounded vitest (`boxLock` + `procgenDocs/`) **8 files / 475 tests / 0
+failed**. A comment edit is exactly the change `boxLock.test.js` has read as a defect before, which
+is why it was re-driven rather than reasoned about.

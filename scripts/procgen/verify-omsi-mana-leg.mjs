@@ -27,12 +27,13 @@
  *      'Victory' item lands in the AP inventory (the preset's
  *      completion condition is item_check on it). ⚠ Asserted HERE, while
  *      the park is alive — leg 4 destroys it; see the ⛓⛓ note.
- *   3a. The fork's loop is COLD-STARTED past the boundary it boots
- *      holding, so the queued plan compiles. See the ⛓⛓ note there —
- *      the park alone is not enough on a fresh page.
  *   3. A queued Wander run drains the pool in MANY SMALL decrements
  *      (the 5-tick step batches, ≈1 mana/tick) that track the game's
  *      own budget — the substrate:resourceDelta mirroring.
+ *   3a. (inside 3, after the plan is written) The fork's loop is
+ *      COLD-STARTED past the boundary it boots holding, so that plan
+ *      compiles. See the ⛓⛓ note there — the park alone is not enough
+ *      on a fresh page.
  *   4. Budget exhaustion (the game's natural restart) collapses with
  *      pool depletion into EXACTLY ONE loop reset: count +1 and stable,
  *      pool refilled, player teleported to the resolved start region,
