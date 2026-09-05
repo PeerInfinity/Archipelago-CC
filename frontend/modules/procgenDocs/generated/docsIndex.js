@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 17,
         "headings": 785,
         "indexHeadings": 2,
-        "lines": 20896,
+        "lines": 20898,
         "pages": 4,
-        "words": 254462
+        "words": 254639
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -96,7 +96,7 @@ export const DOCS_INDEX = frz({
             "file": "bounce.md",
             "h1": "Bounce Substrate",
             "headings": 11,
-            "lines": 117,
+            "lines": 119,
             "links": [
                 "architecture.md",
                 "gotchas.md",
@@ -105,7 +105,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/bounce.md",
-            "words": 2365
+            "words": 2542
         },
         {
             "description": "Runner (\"Runner Demo\", substrate id `runner`) is an auto-runner platformer substrate in `frontend/modules/runnerDemo/`.",
