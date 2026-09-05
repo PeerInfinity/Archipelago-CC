@@ -85,7 +85,15 @@ export function reconstructResultFromSidecars(rulesJson, { playerId = null } = {
     let teleporters = 0;
     for (const [region_id, sc] of regionEntries) {
         if (!sc?.grid_cell) continue;
-        const substrateId = sc.substrate ?? 'maze';
+        // ⛓ H3b: the `?? 'maze'` that used to end this line is GONE.
+        // MEASURED 2026-09-05 over all 205 committed rules.json: 1,360 of 1,360
+        // sidecar entries carry `substrate`, so the fallback never fired — and
+        // where it COULD fire (a hand-written document), guessing 'maze' paints
+        // some other substrate's payload as a maze grid instead of skipping the
+        // region, which is what the next line already does for a substrate with
+        // no registered deserializer. The renderer's twin fallback went in H3
+        // (§13) for the same reason; this was the last one on the map path.
+        const substrateId = sc.substrate;
         const adapter = substrateRegistry.get(substrateId);
         if (!adapter || typeof adapter.deserializeWorld !== 'function') continue;
         const world = adapter.deserializeWorld(sc.playable_payload);

@@ -87,6 +87,23 @@ describe('reconstructResultFromSidecars', () => {
         });
         expect(result).toBeNull();
     });
+
+    /**
+     * ⛓ H3b. This line used to read `sc.substrate ?? 'maze'`, so an entry with
+     * NO substrate was painted as a maze. MEASURED over all 205 committed
+     * documents: 1,360 of 1,360 entries carry `substrate`, so the fallback
+     * never fired on real data — and on a hand-written document it guesses,
+     * where skipping is what every other unknown substrate gets. ⛔ This row is
+     * what makes the deletion DRIVEN rather than merely unreachable: restore
+     * the `?? 'maze'` and it reds, because the region reconstructs.
+     */
+    it('⛓ skips an entry with NO substrate rather than guessing maze', () => {
+        const sc = minimalSidecar(0, 0);
+        delete sc.substrate;
+        expect(reconstructResultFromSidecars({
+            preset_sidecars: { '1': { region_0_0: sc } },
+        })).toBeNull();
+    });
 });
 
 /**
