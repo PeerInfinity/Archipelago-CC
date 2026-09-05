@@ -3965,8 +3965,12 @@ export function sphereRebuildRefusal(rulesJson, opts = {}) {
         let adapter = null;
         try {
             adapter = getAdapter(node.substrate);
-        } catch (_) {
-            return SPHERE_REBUILD_REFUSALS.zoneSubstrate(node.substrate);
+        } catch (e) {
+            // ⛔ VERBATIM, not translated. An UNREGISTERED substrate is not a
+            //   ZONE substrate — the first is "nobody imported that library",
+            //   the second is "this world's geometry cannot be recovered" —
+            //   and the rebuild would surface `getAdapter`'s own sentence here.
+            return e.message;
         }
         if (typeof adapter.deserializeWorld !== 'function'
                 || typeof adapter.extractPathsAndObstacles !== 'function') {

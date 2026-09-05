@@ -4,7 +4,7 @@
  * collapsible compiled-rules JSON block.
  */
 
-import { setPanelInstance, getModuleApis } from './index.js';
+import { setPanelInstance, getModuleApis, PROCGEN_PIPELINE_LOAD_RULES } from './index.js';
 import eventBus from '../../app/core/eventBus.js';
 import {
     growMazeAsync,
@@ -14,6 +14,7 @@ import {
     getRegionExits,
     buildRegionContract,
     buildTopDownRegionContract,
+    sphereRebuildRefusal,
     Grid,
 } from './procgenPipelineEngine.js';
 // The sphere-growth pipeline steps + envelope serde live in the shared
@@ -441,6 +442,29 @@ export class ProcgenPipelineUI {
             eventBus.unsubscribe('sphereState:dataLoaded', sphereLogHandler, 'procgenPipeline');
             eventBus.unsubscribe('sphereState:dataCleared', sphereLogHandler, 'procgenPipeline');
         };
+        /**
+         * ⛓⛓⛓ APWORLD EDITOR HUB slice H5 — **THE WORKING-COPY HAND-OFF.**
+         * `procgenPipeline:loadRules {jsonData, source}` is the door the hub's
+         * `procgen_metadata` row opens: a panel in the SAME app needs no lab
+         * protocol (H4c's rule), just `ui:activatePanel` and a named event.
+         *
+         * ⛔ **IT IS NOT `stateManager:rawJsonDataLoaded`, AND THAT DISTINCTION
+         * IS THE ⚖.** The handler above adopts whatever the APP has loaded —
+         * APPLIED state. This one adopts a WORKING COPY that exists only in the
+         * editor's session and may never be applied at all (plan §1: *"Linked
+         * editors open from the WORKING COPY"*). So it turns the "Use
+         * currently-loaded rules.json" checkbox OFF: leaving it on would let the
+         * next app-wide load silently replace the document the person handed
+         * over, with no gesture of theirs in between.
+         */
+        const handoffHandler = (ev) => {
+            if (!ev?.jsonData) return;
+            this._adoptHandoffRules(ev.jsonData, typeof ev.source === 'string' ? ev.source : null);
+        };
+        eventBus.subscribe(PROCGEN_PIPELINE_LOAD_RULES, handoffHandler, 'procgenPipeline');
+        this._unsubHandoff = () => eventBus.unsubscribe(
+            PROCGEN_PIPELINE_LOAD_RULES, handoffHandler, 'procgenPipeline',
+        );
         this.render();
     }
 
@@ -450,6 +474,7 @@ export class ProcgenPipelineUI {
     destroy() {
         if (this._unsubRawJsonLoaded) { this._unsubRawJsonLoaded(); this._unsubRawJsonLoaded = null; }
         if (this._unsubSphereLog) { this._unsubSphereLog(); this._unsubSphereLog = null; }
+        if (this._unsubHandoff) { this._unsubHandoff(); this._unsubHandoff = null; }
         setPanelInstance(null);
     }
     onPanelShow() { this.render(); }
@@ -727,6 +752,58 @@ export class ProcgenPipelineUI {
     // Adopt the frontend's currently-loaded rules.json as the top-down source
     // (the "Use currently-loaded rules.json" checkbox / the rawJsonDataLoaded
     // event when that box is checked). No-op when nothing is loaded yet.
+    /**
+     * ⛓⛓⛓ H5 — **ADOPT A HANDED-OVER DOCUMENT, AND SAY WHAT CAN BE DONE WITH
+     * IT.** Three answers, and each one is DERIVED rather than typed:
+     *
+     *   · **"append a sphere"** — `sphereRebuildRefusal` (the engine's own
+     *     precondition check, sharing the exact strings
+     *     `rebuildEnvelopeFromRulesJson` throws) returns null, so
+     *     `importSphereEnvelope` would reconstruct an append-ready envelope.
+     *   · **"top-down from this"** — it would not, but the document names
+     *     regions for this slot, which is all `layoutTopDown` reads. ⛔ The
+     *     engine's refusal is QUOTED in the sentence rather than summarised:
+     *     "zone world" is one of four reasons and the other three are not it.
+     *   · **nothing** — no regions for the slot, so neither driver has an
+     *     input. Named, not silent.
+     *
+     * ⛔ The mode is switched to `topDown` because that is the mode whose
+     * source picker SHOWS the adopted document; a panel that adopted a document
+     * into a picker the person cannot see would be reporting an intake nobody
+     * could act on.
+     */
+    _adoptHandoffRules(jsonData, source) {
+        this.useLoadedRules = false;
+        this.topDownSource = jsonData;
+        this.topDownSourceLabel = source ? `hand-off (${source})` : 'hand-off';
+        this._applyGridDimsFromSource(jsonData);
+        this.mode = 'topDown';
+        const reconstructed = reconstructResultFromSidecars(jsonData);
+        if (reconstructed) this.result = reconstructed;
+        this.message = this._handoffAnswer(jsonData);
+        this.render();
+    }
+
+    /** ⛓ The sentence `_adoptHandoffRules` prints — separated so a row can ask
+     *  for it without driving a render. */
+    _handoffAnswer(jsonData, playerId = '1') {
+        const regions = jsonData?.regions?.[playerId];
+        const regionCount = regions && typeof regions === 'object' ? Object.keys(regions).length : 0;
+        const refusal = sphereRebuildRefusal(jsonData, { playerId });
+        if (!refusal) {
+            return `Adopted ${this.topDownSourceLabel}: this is a sphere-grown world — `
+                + 'you can APPEND A SPHERE to it (Load envelope / rules.json in sphere mode), '
+                + `or realise it top-down (${regionCount} source regions).`;
+        }
+        if (regionCount > 0) {
+            return `Adopted ${this.topDownSourceLabel}: TOP-DOWN FROM THIS `
+                + `(${regionCount} source regions). It cannot be appended to — ${refusal}`;
+        }
+        return `Adopted ${this.topDownSourceLabel}, but NOTHING can be built from it: it names `
+            + `no regions for player ${playerId}, so top-down has no source, and it cannot be `
+            + `appended to either — ${refusal}`;
+    }
+
     _applyLoadedRules() {
         if (!this.loadedRulesJson) return;
         this.topDownSource = this.loadedRulesJson;

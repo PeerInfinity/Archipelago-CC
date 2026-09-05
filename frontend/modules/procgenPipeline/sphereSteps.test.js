@@ -6,6 +6,7 @@ import '../bounceDemo/bounceDemoLibrary.js';
 import {
     growSpheres, growSpheresBatchedGen, buildRulesJson, compactSphereTree,
     rebuildEnvelopeFromRulesJson, growMaze, topDownFromRulesJson, getRegionExits,
+    sphereRebuildRefusal,
 } from './procgenPipelineEngine.js';
 import { planSpheres } from './spherePlanner.js';
 import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
@@ -535,6 +536,48 @@ describe('appendSphere (envelope path)', () => {
         expect(fromRulesJson).toBe(false);
         expect(env.config.regionSize).toEqual(makeConfig().regionSize);
         expect(detectCompleted(env)).toBe(5);
+    });
+
+    /**
+     * ⛓⛓⛓ APWORLD EDITOR HUB slice H5 — **THE REFUSAL AND THE THROW ARE ONE
+     * SENTENCE.** The pipeline panel shows a person what it can do with a
+     * document handed to it from the APWorld editor, and it must not invent a
+     * second predicate for *"is this appendable"*: `sphereRebuildRefusal`
+     * answers with the string `rebuildEnvelopeFromRulesJson` would throw.
+     * ⛔ These rows compare the two AGAINST EACH OTHER rather than against a
+     * typed expectation — a guard that read its own constant could not see
+     * either half move.
+     */
+    it('⛓⛓ sphereRebuildRefusal returns null exactly when the rebuild succeeds', async () => {
+        const src = await runToStep(newEnvelope(makeConfig()));
+        expect(sphereRebuildRefusal(src.compile.rulesJson)).toBeNull();
+        expect(() => rebuildEnvelopeFromRulesJson(src.compile.rulesJson)).not.toThrow();
+    });
+
+    it('⛓⛓ and its sentence is VERBATIM the one the rebuild throws — zone '
+        + 'substrate, and a document that is not sphere-grown at all', async () => {
+        const zone = await runToStep(newEnvelope(makeConfig({
+            substrateQuotas: { bounce: 99 }, startSubstrate: 'bounce',
+            sphereCount: 2, maxItemsPerRegion: 4, victoryItem: 'Victory',
+            exclusiveSpheres: { 2: ['Springs', 'Victory'] },
+            itemPool: { 'Right arrow': 1, Springs: 1, Jetpacks: 1, Victory: 1 },
+        })));
+        for (const doc of [zone.compile.rulesJson, { regions: { 1: {} } }, {}]) {
+            const said = sphereRebuildRefusal(doc);
+            expect(said).toBeTruthy();
+            let thrown = null;
+            try { rebuildEnvelopeFromRulesJson(doc); } catch (e) { thrown = e.message; }
+            expect(thrown).toBe(said);
+        }
+    });
+
+    it('⛓ names the MISSING SIDECAR by region, not by a count', async () => {
+        const src = await runToStep(newEnvelope(makeConfig()));
+        const doc = JSON.parse(JSON.stringify(src.compile.rulesJson));
+        const [firstRegion] = Object.keys(doc.preset_sidecars['1']);
+        delete doc.preset_sidecars['1'][firstRegion];
+        expect(sphereRebuildRefusal(doc)).toContain(firstRegion);
+        expect(() => rebuildEnvelopeFromRulesJson(doc)).toThrow(firstRegion);
     });
 
     it('rebuild throws for a zone substrate (bounce) — needs the saved envelope', async () => {
