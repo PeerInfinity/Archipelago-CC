@@ -137,15 +137,15 @@ the report to the planner.
 | `dump-sphere-growth.js` | node | — | **none** | 8 | exit 0 | 0.4s |  |
 | `dump-spiral-byteidentity.mjs` | node | — | **none** | 5 | exit 0 | 0.6s | ALL PASS — stepped spiral == monolith |
 | `dump-topdown-byteidentity.mjs` | node | — | **none** | 1 | exit 0 | 0.9s |  |
-| `verify-atlas-sphere-roundtrip.mjs` | node | — | **none** | 0 | exit 1 | 18.5s | 1 assertion(s) FAILED. |
-| `verify-bot-playthrough.mjs` | browser (:8000) | — | **none** | 1 | exit 1 | 250s | Error: [A — bounce-only full sphere playthrough] timeout waiting for: bot finished its queue |
+| `verify-atlas-sphere-roundtrip.mjs` | node | — | **none** | 0 | exit 1 | 18.5s | 1 assertion(s) FAILED. | **RESOLVED** — the preset is regenerated (V2 Task 0); 68 PASS / 0 FAIL. |
+| `verify-bot-playthrough.mjs` | browser (:8000) | — | **none** | 1 | exit 1 | 250s | Error: [A — bounce-only full sphere playthrough] timeout waiting for: bot finished its queue | **STALE** — `bounce_sphere_worldgen` / `bounce_mixed_worldgen` deleted at `ccfc5bad0` (2026-06-26). |
 | `verify-bounce-embed.mjs` | browser (:8000) | — | **none** | 2 | exit 0 | 18s |  |
 | `verify-bounce-touch.mjs` | browser (:8000) | — | **none** | 0 | exit 0 | 9s | All bounce touch checks passed. |
 | `verify-cli-sphere-config.mjs` | node | — | **none** | 0 | exit 0 | 2.7s | VERIFY CLI SPHERE CONFIG: ALL OK |
-| `verify-dj-real-embed.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 101s | Error: timeout waiting for: dj page configured with region_3_3 |
+| `verify-dj-real-embed.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 101s | Error: timeout waiting for: dj page configured with region_3_3 | **STALE** — `bounce_dj_worldgen` deleted at `ccfc5bad0` (2026-06-26). |
 | `verify-dj-swf-patch.mjs` | node | — | **none** | 0 | exit 0 | 0.3s | PASS: swf_inject.mjs output byte-identical to inject_tracer.py --stage-width 600 (681148 bytes) |
 | `verify-grid-growth-ui.mjs` | browser (:8000) | — | **none** | 0 | exit 0 | 15s | PASS — grid-growth streams denominator-less live progress and produces a result |
-| `verify-item-channels.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 27s | ‼ FAILURE: rep 0 leaked a cross-substrate grant |
+| `verify-item-channels.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 27s | ‼ FAILURE: rep 0 leaked a cross-substrate grant | **INSTRUMENT — and a FLAKE, not a standing red** (5 red / 2 green solo at HEAD). The "leak" is the check losing a race to the task's OWN auto-repeat: `omsi gold 0 -> 2` is rep 1's scheduled award arriving on time, and the rep counter reads `reps=2` at the failure. FIXED. |
 | `verify-jta-balance-pass.mjs` | node | — | **none** | 6 | exit 0 | 7.2s | PASS: full coverage, no stalls, no saturation |
 | `verify-jta-cost-hooks.mjs` | node | — | **none** | 0 | exit 0 | 3.2s | ALL CHECKS PASSED |
 | `verify-jta-dataset-load.mjs` | node | — | **none** | 1 | exit 0 | 0.2s | All dataset-load smoke checks passed. |
@@ -155,9 +155,9 @@ the report to the planner.
 | `verify-jta-generated-dataset.mjs` | node | — | **none** | 0 | exit 0 | 1.0s | All generated-dataset assertions passed. |
 | `verify-jta-locations-roundtrip.mjs` | node | — | **none** | 5 | exit 0 | 15.4s | All round-trip assertions passed. |
 | `verify-jta-managed-zone-skip.mjs` | node | — | **none** | 0 | exit 0 | 0.7s | All managed-mode zone-skip assertions passed. |
-| `verify-maze-consumable-tiles.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 35s | ‼ FAILURE: timeout waiting for: omsi resources.houses reaches 1 |
-| `verify-maze-loop-mana.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 44s | ‼ FAILURE: timeout waiting for: loop mode auto-enabled |
-| `verify-omsi-mana-leg.mjs` | browser (:8000) | — | **none** | 1 | exit 1 | 41s | ‼ FAILURE: timeout waiting for: per-batch draining (≥5 small decrements tracking the budget) |
+| `verify-maze-consumable-tiles.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 35s | ‼ FAILURE: timeout waiting for: omsi resources.houses reaches 1 | (V1's — fixed there) |
+| `verify-maze-loop-mana.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 44s | ‼ FAILURE: timeout waiting for: loop mode auto-enabled | **INSTRUMENT** — its uncommitted fixture was simply ABSENT, so the page loaded no world; regenerated, that assertion passes. FIXED (a preflight). ⚖ Underneath is **SUBJECT**: loops HALTS at the first maze `locationCheck`. |
+| `verify-omsi-mana-leg.mjs` | browser (:8000) | — | **none** | 1 | exit 1 | 41s | ‼ FAILURE: timeout waiting for: per-batch draining (≥5 small decrements tracking the budget) | **INSTRUMENT** — it drives UNPARKED live play, which `f2e392df1` (2026-07-24, park-gated stepping) froze BY DESIGN a week after the script was written. 304 messages, 304 `skippedGated`, 0 `ticksStepped`. ⚖ Named, not fixed. |
 | `verify-preset-panel-click.mjs` | browser (:8000) | — | **none** | 0 | exit 0 | 24s | ALL OK |
 | `verify-procgen-presets.mjs` | browser (:8000) | — | **none** | 1 | exit 0 | 171s | All 27 preset drop-down checks passed. |
 | `verify-region-library-roundtrip.mjs` | node | — | **none** | 2 | exit 0 | 15.8s | All region-library round-trip assertions passed. |
@@ -167,7 +167,7 @@ the report to the planner.
 | `verify-region-library-ui.mjs` | browser (:8000) | — | **none** | 0 | exit 0 | 45s | All region-library UI assertions passed. |
 | `verify-region-marking-tool.mjs` | browser (:8000) | host | **none** | 13 | exit 0 | 11s | OK: region marking tool verified in-app |
 | `verify-region-step-editing.mjs` | node | — | **none** | 3 | exit 0 | 19.0s | VERIFY REGION-STEP EDITING: ALL OK |
-| `verify-rule-gated-portals.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 45s | locator.click: Timeout 30000ms exceeded. |
+| `verify-rule-gated-portals.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 45s | locator.click: Timeout 30000ms exceeded. | **INSTRUMENT**, stale TWICE from 2026-06-19 (`85c1c3ba1` label, `06eafea4e` prep hook). FIXED; the app's authored-lock claim is now GREEN and newly witnessed. ⚖ One leg (the no-input climb reaching the portal) remains. |
 | `verify-runner-bot.mjs` | browser (:8000) | — | **none** | 1 | exit 0 | 31s | All runner bot checks passed. |
 | `verify-runner-embed.mjs` | browser (:8000) | — | **none** | 1 | exit 0 | 80s | All runner embed checks passed (sphere-grown world, bot-driven). |
 | `verify-runner-game.mjs` | browser (:8000) | — | **none** | 0 | exit 0 | 11s | All runner game-page checks passed. |
@@ -195,16 +195,18 @@ Eight scripts fail at HEAD. **Every one is in no battery**, so every one had bee
 Each was re-run **solo on a quiet box** before being called red; the first failure of a ninth,
 `verify-bounce-embed`, did **not** reproduce solo and is classed as starvation, not a defect.
 
-| script | first failing line | pre-existing at `697c94ee6`? |
-|---|---|---|
-| `verify-item-channels.mjs` | `‼ FAILURE: rep 0 leaked a cross-substrate grant` | **PRE-EXISTING** — identical failure on the pre-arc tree |
-| `verify-maze-loop-mana.mjs` | `‼ FAILURE: timeout waiting for: loop mode auto-enabled` | **PRE-EXISTING** — identical |
-| `verify-omsi-mana-leg.mjs` | `‼ FAILURE: timeout waiting for: per-batch draining (≥5 small decrements tracking the budget)` | **PRE-EXISTING** — identical |
-| `verify-dj-real-embed.mjs` | `Error: timeout waiting for: dj page configured with region_3_3` | **PRE-EXISTING** — identical |
-| `verify-rule-gated-portals.mjs` | `locator.click: Timeout 30000ms exceeded` waiting for the pipeline panel's Generate button (`:153`) | **PRE-EXISTING** — H6b already controlled this one at `f45b82789~1`; reproduced here |
-| `verify-maze-consumable-tiles.mjs` | `‼ FAILURE: timeout waiting for: omsi resources.houses reaches 1` | **NEW — and the cause is the FIXTURE, not the tree** (see below) |
-| `verify-bot-playthrough.mjs` | `Error: [A — bounce-only full sphere playthrough] timeout waiting for: bot finished its queue` | **PRE-EXISTING** — identical failure on the pre-arc tree (253 s) |
-| `verify-atlas-sphere-roundtrip.mjs` | `FAIL: the committed seedling_atlas_sphere preset regenerates byte-identically` (1 FAIL against 67 PASS) | **INCONCLUSIVE** — the pre-arc control CRASHED (see below) |
+⇒ **V2 (below) gives every row a verdict.** The third column is the survey's; the fourth is V2's.
+
+| script | first failing line | pre-existing at `697c94ee6`? | ⇒ V2 verdict |
+|---|---|---|---|
+| `verify-item-channels.mjs` | `‼ FAILURE: rep 0 leaked a cross-substrate grant` | **PRE-EXISTING** — identical failure on the pre-arc tree | **INSTRUMENT — and a FLAKE, not a standing red** (5 red / 2 green solo at HEAD). The "leak" is the check losing a race to the task's OWN auto-repeat: `omsi gold 0 -> 2` is rep 1's scheduled award arriving on time, and the rep counter reads `reps=2` at the failure. FIXED. |
+| `verify-maze-loop-mana.mjs` | `‼ FAILURE: timeout waiting for: loop mode auto-enabled` | **PRE-EXISTING** — identical | **INSTRUMENT** — its uncommitted fixture was simply ABSENT, so the page loaded no world; regenerated, that assertion passes. FIXED (a preflight). ⚖ Underneath is **SUBJECT**: loops HALTS at the first maze `locationCheck`. |
+| `verify-omsi-mana-leg.mjs` | `‼ FAILURE: timeout waiting for: per-batch draining (≥5 small decrements tracking the budget)` | **PRE-EXISTING** — identical | **INSTRUMENT** — it drives UNPARKED live play, which `f2e392df1` (2026-07-24, park-gated stepping) froze BY DESIGN a week after the script was written. 304 messages, 304 `skippedGated`, 0 `ticksStepped`. ⚖ Named, not fixed. |
+| `verify-dj-real-embed.mjs` | `Error: timeout waiting for: dj page configured with region_3_3` | **PRE-EXISTING** — identical | **STALE** — `bounce_dj_worldgen` deleted at `ccfc5bad0` (2026-06-26). |
+| `verify-rule-gated-portals.mjs` | `locator.click: Timeout 30000ms exceeded` waiting for the pipeline panel's Generate button (`:153`) | **PRE-EXISTING** — H6b already controlled this one at `f45b82789~1`; reproduced here | **INSTRUMENT**, stale TWICE from 2026-06-19 (`85c1c3ba1` label, `06eafea4e` prep hook). FIXED; the app's authored-lock claim is now GREEN and newly witnessed. ⚖ One leg (the no-input climb reaching the portal) remains. |
+| `verify-maze-consumable-tiles.mjs` | `‼ FAILURE: timeout waiting for: omsi resources.houses reaches 1` | **NEW — and the cause is the FIXTURE, not the tree** (see below) | (V1's — fixed there) |
+| `verify-bot-playthrough.mjs` | `Error: [A — bounce-only full sphere playthrough] timeout waiting for: bot finished its queue` | **PRE-EXISTING** — identical failure on the pre-arc tree (253 s) | **STALE** — `bounce_sphere_worldgen` / `bounce_mixed_worldgen` deleted at `ccfc5bad0` (2026-06-26). |
+| `verify-atlas-sphere-roundtrip.mjs` | `FAIL: the committed seedling_atlas_sphere preset regenerates byte-identically` (1 FAIL against 67 PASS) | **INCONCLUSIVE** — the pre-arc control CRASHED (see below) | **RESOLVED** — the preset is regenerated (V2 Task 0); 68 PASS / 0 FAIL. |
 
 ### ⛑ The `maze-consumable-tiles` red is a GENERATOR-OUTPUT drift, proved by a cross-control
 
@@ -480,3 +482,241 @@ user's call, not the slice's.
 | `check-procgen-help.mjs` | `2 CHECK(S) FAILED` — `measure-apworld-raw-view.mjs` (IMPORT side effect) and `shot-loaded-composite-map.mjs` (HELP + IMPORT side effects). **Neither is touched by this slice** (its one code commit edits one file, and it is not either of them). ⛑ Unattributed here and left for V2: the survey's population was the 62 `verify-*`/`dump-*` scripts, so it never ran this gate — these two reds have no prior measurement to compare against. |
 | bounded vitest | none owed — `git grep -al verify-maze-consumable-tiles` finds only the two everything-registries (`instruments.js`, `check-procgen-help.baseline.json`), and the header docblock the catalogue reads was not edited. |
 | ⚖ 52 suite, from CI at the pushed SHA | run `33987686739` at `e104f62e3` **success** — `suite: vitest (unfiltered) 436/13301 (13293 passed \| 8 skipped \| 0 failed)`; slow battery `12/217 (217 passed \| 0 failed)`. **Delta 0/0** against the H6b close (`ef2f40efe`, 436/13,301), derived per file: `git merge-base --is-ancestor ef2f40efe e104f62e3` holds, and the four files changed in that range include **zero** `*.test.js` — `regionRoundTrip.js` is another session's, the other three are this slice's one script and two docs. |
+
+# V2 as built — the ⚖ regeneration, the six reds, the help gate (2026-09-05)
+
+Three tasks, and **the survey's "cluster" is dissolved**: the three scripts it grouped as *"cross-substrate
+grant + two mana legs, may be one defect"* have **three unrelated causes**, and V1's grant-before-subscribe
+race explains **none** of them. Two more rows turn out to be **STALE** — their subject was deleted
+2.5 months ago and nobody noticed, which is this survey's thesis arriving twice more.
+
+## Task 0 — `seedling_atlas_sphere` regenerated (⚖ user, 2026-09-05)
+
+Regenerated with the command the preset's own README and `verify-atlas-sphere-roundtrip.mjs:287-292`
+both run — `dump-sphere-growth.js --seed 1 --region 8x6 --quota maze=6 --quota atlas:seedling=10
+--start maze --fillers 3 --atlas frontend/atlas-pools/seedling-atlas-pool.json --rules-out <the preset>`.
+⛑ The brief pointed at `:220-228`; that is the THROWAWAY `atlas_sphere_worldgen` world's
+`world_generator` + `Generate.py` path. The committed preset's regeneration is the `dump-sphere-growth.js`
+call at `:287`, which is also what its byte-identity assertion compares against.
+
+**Exactly the six values V1 named moved**, no keys added or removed, file length unchanged at
+124 377 bytes — a 1:1 match for `c8447dd56`'s diff to the atlas pool:
+
+| path | before (committed) | after (regenerated) |
+|---|---|---|
+| `/preset_sidecars/1/overworld_start__r8c0/playable_payload/tiles/[211]` | 1 | 0 |
+| `/preset_sidecars/1/overworld_start__r8c0/playable_payload/tiles/[231]` | 1 | 0 |
+| `/preset_sidecars/1/owls_nest_entrance/playable_payload/tiles/[9]` | 1 | 0 |
+| `/preset_sidecars/1/starting_house/playable_payload/tiles/[19]` | 1 | 0 |
+| `/preset_sidecars/1/owls_nest_entrance/playable_payload/entrance/x` | 4 | 2 |
+| `/preset_sidecars/1/owls_nest_entrance/playable_payload/exits/[2]/x` | 4 | 2 |
+
+| gate | verdict |
+|---|---|
+| `verify-atlas-sphere-roundtrip.mjs` | **68 PASS / 0 FAIL** (was 67/1), run twice |
+| `pytest test test_json worlds` | **1507 passed, 2 skipped, 21 299 subtests**, 492 s |
+| `test/general/test_schema_validation.py` (strict schema) | 2 passed, 210 subtests |
+| `test/test_rules_json_writer_agreement.py` | 6 passed, 307 subtests |
+| `frontend/presets/preset_files.json` | **unchanged** — same file, same path |
+| pins naming this preset | **none** (re-derived: `standing-values.json` has zero `atlas` rows; there is no `scripts/known-original-md5s.json`) |
+
+⚠ **The whole-`pytest` run WRITES INTO THE TREE, and that is not this slice's change.** It generated an
+APQuest seed and appended it to the *tracked* `frontend/presets/preset_files.json`, leaving
+`frontend/presets/apquest/AP_07758176404715800194/` untracked beside it. Both were restored and neither is
+in any commit here — but anyone reading `git status` after a full pytest should know the tree is dirty by
+the test run, not by them.
+
+## Task 1 — the six pre-existing reds, one verdict each
+
+| script | verdict | cause, dated |
+|---|---|---|
+| `verify-rule-gated-portals.mjs` | **INSTRUMENT** (fixed; one leg is a ⚖) | `85c1c3ba1` + `06eafea4e`, both 2026-06-19 | **INSTRUMENT**, stale TWICE from 2026-06-19 (`85c1c3ba1` label, `06eafea4e` prep hook). FIXED; the app's authored-lock claim is now GREEN and newly witnessed. ⚖ One leg (the no-input climb reaching the portal) remains. |
+| `verify-maze-loop-mana.mjs` | **INSTRUMENT** over a **SUBJECT** ⚖ | fixture absent; then loops halts | **INSTRUMENT** — its uncommitted fixture was simply ABSENT, so the page loaded no world; regenerated, that assertion passes. FIXED (a preflight). ⚖ Underneath is **SUBJECT**: loops HALTS at the first maze `locationCheck`. |
+| `verify-omsi-mana-leg.mjs` | **INSTRUMENT** (named, not fixed — ⚖) | `f2e392df1`, 2026-07-24 | **INSTRUMENT** — it drives UNPARKED live play, which `f2e392df1` (2026-07-24, park-gated stepping) froze BY DESIGN a week after the script was written. 304 messages, 304 `skippedGated`, 0 `ticksStepped`. ⚖ Named, not fixed. |
+| `verify-item-channels.mjs` | **INSTRUMENT** (fixed) — a FLAKE, not a standing red | the task's own auto-repeat | **INSTRUMENT — and a FLAKE, not a standing red** (5 red / 2 green solo at HEAD). The "leak" is the check losing a race to the task's OWN auto-repeat: `omsi gold 0 -> 2` is rep 1's scheduled award arriving on time, and the rep counter reads `reps=2` at the failure. FIXED. |
+| `verify-dj-real-embed.mjs` | **STALE** | `ccfc5bad0`, 2026-06-26 | **STALE** — `bounce_dj_worldgen` deleted at `ccfc5bad0` (2026-06-26). |
+| `verify-bot-playthrough.mjs` | **STALE** | `ccfc5bad0`, 2026-06-26 | **STALE** — `bounce_sphere_worldgen` / `bounce_mixed_worldgen` deleted at `ccfc5bad0` (2026-06-26). |
+
+### `verify-rule-gated-portals.mjs` — INSTRUMENT, stale twice from the SAME day
+
+Written 2026-06-10; the sphere pipeline was reworked on **2026-06-19** and this file was never re-pointed.
+
+1. **`85c1c3ba1`** made sphere mode's primary button **"Run all"**, not "Generate" — and re-pointed
+   `verify-sphere-growth-ui.mjs` *in the same commit*. `git show --stat 85c1c3ba1` touches two scripts and
+   neither is this one, its sibling driving the same mode. Every run since died on that selector.
+2. **`06eafea4e`** moved bounce's free arrow into the substrate adapter hook `prepareSphereGrowth`, where
+   it became a STARTING ITEM and **left the pool** (`itemPoolDelta: {[pick]: -1}`). This file hand-copied
+   the OLD contract. Past defect 1 the panel answered
+   `ERROR: planSpheres: 3 spheres need at least 3 items; pool has 2`.
+
+Fixed: the selector; a two-arrow pool so one can still be spent on sphere 1; and `buildWorld` now **calls**
+`collectSphereGrowthPrep` — the same function `procgenPipelineUI.js:4263` calls — instead of duplicating it.
+
+⛓ **The app's claim under test is GREEN, and it had never been witnessed before.** A new assertion splits
+step 3's two claims apart, so "the bridge never re-evaluated the rule" can no longer hide inside "the player
+did not arrive":
+
+```
+SEED 14: start region_2_2 | free 'Right arrow' | pool 'Left arrow' in the start region
+         | key_red in region_3_2 (gate [Left arrow]) | key-gated region_2_1 on start side N
+GATE STATES (pre-key): {"portals":{"side_exit_N":false},"pickups":{}}
+LOCKED PORTAL HOLDS: still in region_2_2 after the column climb
+KEY COLLECTED: key_red in inventory
+PORTAL UNLOCKED: gate_rules re-evaluated on the snapshot update
+```
+
+⚖ **FOR THE USER — the fourth leg, not fixed here.** *"The no-input player climbs the column and exits
+through the unlocked portal BY ITSELF"* times out at 90 s. Measured, holding **both** arrows:
+`CLIMB REACHED: entrance → b0 → b1 → b2`, then it bounces on `b2` for the remaining ~85 s
+(`botStatus.active` false throughout — this leg is pure physics). The seed scan reasons over the sphere
+TREE and cannot see whether the gated portal is physically reachable by an unaided climb; the old seed
+happened to satisfy it, the new pool's seeds do not. Closing it means deriving per-portal reachability
+(`canJump.js` / `deriveRules.js`) into the scan, or driving the last hop the way step 2 does — which would
+gut the claim. **That is instrument DESIGN, not triage.**
+
+### `verify-maze-loop-mana.mjs` — INSTRUMENT on top, SUBJECT underneath
+
+⛔ **Its fixture was simply not on disk.** `frontend/presets/maze_loop_worldgen/` is deliberately NOT
+committed (the header says so and carries the regeneration command) and was absent, so the page loaded no
+world and the run died on `timeout waiting for: loop mode auto-enabled` — a line that reads exactly like the
+app failing to auto-enable loop mode, and was recorded that way. Regenerated with the header's own command
+the fixture is the documented shape to the letter (`region_2_2 -> region_2_3 -> region_3_3`, one location
+each, `loop_costs` present) and that assertion **passes**. A preflight now names the prerequisite and prints
+the command; it was driven with the fixture moved aside before being believed.
+
+⛑ This also settles the brief's `?mode=loops` question: it is unrelated. `frontend/modes.json:233` really
+does define a `loops` mode (the backlog entry recording otherwise was already corrected 2026-09-04), and
+this red was a missing file.
+
+⚖ **FOR THE USER — what the fixture uncovers is SUBJECT.** With it present the run reaches
+`timeout waiting for: per-tile charging (≥3 small decrements + XP accrual)`. Measured twice — through the
+script, and through a standalone probe sampling every 5 s for 60 s:
+
+- the loops queue builds correctly: **6 actions** (`regionMove Menu->region_2_2`,
+  `locationCheck region_2_2__loc_0__5_4`, `regionMove region_2_2->region_2_3`, …);
+- `getLoopState().startProcessing()` **does** start — `isProcessing` true, `isPaused` false,
+  `currentActionIndex` 0 → 1 (action 0, the Menu hop, runs);
+- within 5 s `isProcessing` is false again and never resumes: index frozen at **1**, region `region_2_2`,
+  mana **100/100**, `manaEvents` `[100]`, `substrateCompleted` `[]`, every region's XP 0, for 60–180 s.
+
+**Processing HALTS at the first maze `locationCheck`** — the delegated per-tile charging the instrument
+exists to observe never runs. The script is right and its fixture is right; what stops is the app.
+
+### `verify-omsi-mana-leg.mjs` — INSTRUMENT: it drives a mode the app deliberately froze
+
+Its first four assertions pass (`loop mode auto-enabled`, `omsi region entered; bridge clock running`,
+`native budget bonus 250 raised maxMana (100 → 350)`, `game budget pinned to pool`). Then nothing drains,
+and the timeout dump says why in one field:
+
+```
+clockStats: {"messages":304,"callbacks":304,"ticksStepped":0,"skippedGated":304, …}
+[omsi-bridge] step gate: CLOSED (enforced=true, livePlay=none, bot=none, here=none)
+```
+
+**All 304 ticks were refused by the step gate.** `_mayStepClock()` (`omsiSubstrateWrapper/bridge.js:531`)
+opens only for a replay, a bot region, or `_stepGateLiveRegion === _currentRegionId`; and
+`loopState.livePlayRegion()` (`loopState.js:2283`) returns null unless the loops queue is **parked** on a
+`manual` / `record` / `bot` block. This script does not build a loops queue at all — it enters the omsi
+region and queues a Wander **inside the game**. That is unparked live play, which **`f2e392df1`
+(2026-07-24, "omsi arc D slice 2: park-gated stepping")** froze *by design*, one week after this script was
+written (`7f8862ec2`, 2026-07-17).
+
+⚠ The bridge's own docblock says *"Both default to the OPEN position, so the game is never stuck waiting for
+a push that never comes"* — and `enforced=true` with `livePlay=none` is exactly stuck. That sentence is true
+of each half separately and false of the pair.
+
+⚖ **FOR THE USER — named, not fixed.** The repair is to teach the instrument to park a loops queue on a
+manual block in the omsi region before driving, which is instrument design; and the row above shows loops
+halting at the first substrate action anyway, so the two ⚖ are probably one piece of work.
+
+### `verify-item-channels.mjs` — INSTRUMENT: a FLAKE, and the flake was a race with the task's own repeat
+
+⛔ **It is not a standing red.** Solo runs at HEAD: **5 red / 2 green** over seven, every red identical.
+The survey's `‼ FAILURE: rep 0 leaked a cross-substrate grant` could not name what it saw, so the first fix
+was to make it print the numbers — which produced the answer immediately: `omsi gold 0 -> 2`, and 2 is
+**exactly rep 1's scheduled foreign award** (`omsi/gold x2`).
+
+Three alternatives were measured rather than argued:
+
+- **the omsi engine drifting on its own** — refuted: a probe held the `jta_schedule_test` page 30 s driving
+  nothing, sampling every 2 s; `gold` 0 and `timer` 250 in all 15 samples, with the step gate CLOSED;
+- **stale progress surviving the save clear** — refuted: the task's own counter reads `reps: 0` immediately
+  before the call (`{"id":14,"name":"Salvage the Pressure Door","reps":0,"maxReps":10,…}`);
+- **the task's own auto-repeat** — **confirmed**: reading the counter at the moment of failure gives
+  **`reps=2`**. `maxReps` is 10 and the fork starts the next rep as soon as one finishes, so rep 1 had
+  already run and its gold had arrived **on time**. The old check polled rep 0's local deposit at 400 ms
+  and then read gold, so whenever rep 1 landed inside that window it reported a leak that never happened.
+
+Fixed: the rep counter and the omsi bag are now read in **one round trip** and polled together at 50 ms, and
+the no-early-crossing claim is made **only about a window actually observed** (`reps === 1` — rep 0 done,
+rep 1 not). If the reps run past that window the leg says so and **skips** the claim rather than inventing a
+verdict, and it then does not re-drive rep 1 (which would be rep 2, a different schedule entry).
+
+### `verify-dj-real-embed.mjs` and `verify-bot-playthrough.mjs` — STALE, same commit
+
+Their subjects were deleted **2.5 months ago**. `ccfc5bad0` (2026-06-26, *"presets: regenerate post-0.6.8 +
+preserve dev presets"*) says in its own message that it *"drops … the `*_worldgen` preset dirs that the
+workflow does not produce"*, and among them were all three of these:
+
+| preset | on disk | in `preset_files.json` | tracked | deleted by |
+|---|---|---|---|---|
+| `bounce_dj_worldgen` | no | no | no | `ccfc5bad0` |
+| `bounce_sphere_worldgen` | no | no | no | `ccfc5bad0` |
+| `bounce_mixed_worldgen` | no | no | no | `ccfc5bad0` |
+
+Both scripts address them as `?game=<name>&seed=1`, and `modeDataLoader.js:366-395` resolves `?game=`
+**through `preset_files.json`** — a name that is not in it yields no `rulesOverride` at all, so the app boots
+with no world and the waits (`dj page configured with region_3_3`; `bot finished its queue`) can only time
+out. ⛔ **Neither script is deleted here** — V3 owns names.
+
+## Task 2 — `check-procgen-help.mjs`: **ALL PASS**
+
+```
+ALL PASS — `--doors=all`: 267 instrument(s) answer `--help` with no side effect this gate can
+observe; 252 are on the import-door baseline as module-scope workers and every import door was asked
+```
+
+Both reds were the APWorld hub arc's, and both postdate the baseline's `measuredAt` (`c5b7bd876`), so the
+gate red them **by name** as new module-scope workers — the gate working, not a regression.
+
+- `measure-apworld-raw-view.mjs` (H2) — **IMPORT** door only. The box lock, the corpus scan and
+  `chromium.launch()` ran at module scope, so a bare `await import()` **took the real box and drove a
+  headless browser**. `--help` was already inert.
+- `shot-loaded-composite-map.mjs` (H4a) — **BOTH** doors: it had no `argvHelp` call at all, so `--help` ran
+  the whole shot, and its body was module scope, so an import did too.
+
+Fixed **to the law, not baselined**: the driving half of each moves into an `async function main()` behind
+`if (isEntryPoint(import.meta.url))` — the pattern `check-slice-records.mjs` and `record-slice.mjs` already
+use, and 15 of the 267 instruments have an inert import this way. ⛔ Baselining was the local precedent
+(252 of 262 entries are on the baseline, and `verify-seedling-ap-placement.mjs` was **hand-interpolated**
+there at EDITOR INTEGRATION P2 for this exact symptom), but the baseline names the IMPORT door only and
+`shot-loaded-composite-map.mjs` was failing HELP too.
+
+Measured on the working tree, both doors, each child in its own `XDG_CACHE_HOME`:
+
+| door | before | after |
+|---|---|---|
+| import | exit 1, 1 cache entry (`seedling-box`), `# box lock: TAKEN …` on stdout | exit 0, **0** cache entries, no stdout, no stderr |
+| help | (shot) ran the instrument | exit 0, the derived help text, empty stderr |
+
+⚠ **`verify-seedling-ap-placement.mjs`'s row is GREEN** — the brief asked. It is not fixed; it is
+**on the baseline**, hand-interpolated at P2, and `ALL PASS` above includes it.
+
+⛑ Adding `argvHelp` to one file moves its derived row, so `generate-procgen-reference.mjs` was re-run:
+`instruments.js` gains one inherited-flag entry and `architecture.md`'s generated region moves
+**264 → 265** argvHelp inheritors. `check-procgen-reference.mjs` was RED on the stale `instruments.js`
+before that regeneration — that red was this slice's, and it is green after.
+
+## What V2 overturns
+
+- **The survey's cluster is dissolved.** *"The first three CLUSTER (cross-substrate grant + two mana legs)
+  and may be one defect"* — they have three unrelated causes: a race with a task's own auto-repeat, a
+  fixture that was not on disk, and a step gate that freezes unparked live play by design.
+- **V1's grant-before-subscribe race explains none of them**, and it was the brief's leading hypothesis.
+- **`verify-item-channels` was never a standing red** — it is a flake (5/7 at HEAD), so the survey's
+  "eight scripts fail at HEAD" is **seven that fail and one that sometimes does**.
+- **Two of the six are STALE**, not failing: their presets were deleted at `ccfc5bad0` on 2026-06-26 and
+  nothing in the tree said so. That is two more worked examples of this survey's thesis.
+- The reds that remain are **two ⚖ for the user** (loops halting at the first substrate action; the
+  no-input climb not reaching a correctly-unlocked portal) plus one instrument-design job the omsi leg
+  needs — and the omsi one is probably the same piece of work as the loops one.
