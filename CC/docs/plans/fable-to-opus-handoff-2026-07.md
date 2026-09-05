@@ -10880,6 +10880,34 @@ moved once, at `9035a46a6`); a by-path diff of the two emissions; the ruling int
 and `verify-atlas-sphere-roundtrip` resolved in the primary tree. Then V2 (the six pre-existing reds), V3
 (the rename).
 
+**⇒ V1 AS BUILT 2026-09-05** (`e0408c3b4` fix + `6f9771d6c` record; "V1 as built" section in
+`CC/docs/procgen-verify-tier.md`). ⛔ **The drift V1 was launched to chase does not exist, and the survey's
+row above is superseded.** `spiral-step.js run`'s only nondeterminism is `generatedAt`; normalise it away and
+the pre-arc tree and HEAD emit the SAME document (`9d529f46…`, 5623 bytes canonical). The survey compared RAW
+file bytes, which carry that wall clock, so `2ef8f4ab`→`40e87ff5` was never evidence of anything. No bisect
+was possible: there was nothing to bisect.
+`verify-maze-consumable-tiles` moves **NEW → PRE-EXISTING** (making it **seven** pre-existing reds and an
+empty "new" column): the script hardcodes `localhost:8000`, so the survey's worktree "control" drove HEAD's
+frontend anyway; given its own server on :8001 the pre-arc tree fails on the same assertion. The mechanism is
+a race in the INSTRUMENT — its boot gate waited for the omsi ENGINE (`resources.gold` readable) when what has
+to be ready is the omsi BRIDGE's `crossSubstrate:itemGranted` subscription, which lands ~5 s after the frame
+while the bot reaches the tile in ~1 s; the grant is published into that gap and, per `iframeHandshake.js`,
+*"a publish before [IFRAME_APP_READY] reaches nobody and is not even queued"*. One `waitFor` on the
+subscription: **3/3 FAIL before, 4/4 `VERIFY MAZE CONSUMABLE TILES: OK` after.**
+**The REAL generator-output drift is the OTHER script**, which the survey had left inconclusive.
+`verify-atlas-sphere-roundtrip` runs 67 PASS / 1 FAIL in the primary tree; the byte diff is exactly six
+values (four `tiles` `1→0`, `entrance.x` and `exits[2].x` `4→2`), bisected in 11 steps over 1568 commits to
+**`c8447dd56`** (2026-08-24), which re-pinned `frontend/atlas-pools/seedling-atlas-pool.json` — the same four
+tiles and the same `4→2`, 1:1 — without regenerating the pool's second consumer. **Ruling: (a) INTENDED.**
+The commit's own *"the atlas half was already byte-identical"* is true of `seedling_playthrough`, not of
+`seedling_atlas_sphere`. The committed preset has been **12 days stale**; the script is right.
+⚖ **FOR THE USER:** regenerating `frontend/presets/seedling_atlas_sphere/AP_1/AP_1_rules.json` moves six
+values in a TRACKED file (a ⚖ 49-class re-record) — **not done here**. Measured: exactly ONE committed preset
+is affected (`seedling_atlas_maze` already carries the new pool; `seedling_atlas` holds an `atlas_ref`), and
+no `check-*` gate names `seedling_atlas_sphere` at all. ⚑ Also unattributed and left for V2:
+`check-procgen-help.mjs` is `2 CHECK(S) FAILED` at HEAD (`measure-apworld-raw-view`, `shot-loaded-composite-map`) —
+neither touched by V1, and the survey never ran that gate, so there is no prior measurement.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
