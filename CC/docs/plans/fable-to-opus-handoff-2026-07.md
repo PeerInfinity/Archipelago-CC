@@ -10240,6 +10240,18 @@ one-liner offered to H4). **H2b LAUNCHED 2026-09-05** as `apworld-hub-sliceH2b` 
 `NewDocs/plans/apworld-hub-sliceH2b-prompt.md`): the raw view on CodeMirror 6, retiring the 2 MB limit on
 the measurement's say-so, the measurement script re-run over the hub's real editor.
 
+**⚖ 2026-09-05 (user): "refactor the rest of the grid display code to move maze-specific code into the maze
+substrate" — "Please do this. I prefer the cleaner option, not the quicker option."** Measured (plan §7b):
+the display files import nothing from `mazeRoom/` after H3; what remains there is tile-grid vocabulary shared
+with text_adventure. The maze-specific residue is in the ENGINE — `serializeMazeWorld` (183 lines) lives in
+`procgenPipelineEngine.js` while its inverse lives in `mazeRoom/mazeRoomEngine.js`; the engine's ONLY
+`mazeRoom/` import is used once, inside it; and the dependency is INVERTED (four maze files and the shared
+submodule's `adapterPrimitives.js` import the pipeline engine to reach it). ⇒ **slice H3b** (kickoff
+`NewDocs/plans/apworld-hub-sliceH3b-prompt.md`): the serializer goes home, the helpers it needs are homed
+where both can import, the submodule's re-export is corrected and the **gitlink bump is pre-authorized by
+the ruling** (submodule pushed first; SHAs reported). Queued to launch when H2b reports (both touch the
+primary tree). Ladder: H2b → H3b → H4 → H5.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
