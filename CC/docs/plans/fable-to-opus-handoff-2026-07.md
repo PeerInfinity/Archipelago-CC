@@ -10908,6 +10908,22 @@ no `check-*` gate names `seedling_atlas_sphere` at all. ⚑ Also unattributed an
 `check-procgen-help.mjs` is `2 CHECK(S) FAILED` at HEAD (`measure-apworld-raw-view`, `shot-loaded-composite-map`) —
 neither touched by V1, and the survey never ran that gate, so there is no prior measurement.
 
+**V1 VERIFIED by the planner 2026-09-05** (`e0408c3b4` fix · `6f9771d6c` table · `e104f62e3` record, all
+on origin/main). V1 overturned the survey twice: the "generator-output drift" did not exist — the survey
+compared raw bytes carrying `generatedAt`, and pre-arc and HEAD emit the same normalised document
+(`9d529f46…`); and the maze red was PRE-EXISTING (a worktree "control" still drove the primary tree's
+frontend through `localhost:8000`). The maze red was a RACE IN THE INSTRUMENT (the boot gate proved the omsi
+GAME loaded, not that the omsi BRIDGE had subscribed; a grant published into that ~5 s gap is dropped silently
+by the iframe handshake's own contract) — fixed, 4/4 green. The REAL drift is `verify-atlas-sphere-roundtrip`:
+`frontend/presets/seedling_atlas_sphere/AP_1/AP_1_rules.json` is 12 days stale against the atlas pool —
+`c8447dd56` (2026-08-24) re-pinned the pool (four tiles + one entrance x 4→2) and regenerated
+`seedling_playthrough` but not this second consumer; verified here: `seedling_atlas_maze` carries x=2,
+`seedling_atlas_sphere` x=4. **⚖ RULED 2026-09-05 (user): REGENERATE it** (a ⚖ 49-class re-record, six
+values, cause = `c8447dd56`). Also left for V2: `check-procgen-help.mjs` is 2 CHECKS FAILED at HEAD
+(`measure-apworld-raw-view.mjs` import side effect; `shot-loaded-composite-map.mjs` help + import). Ladder:
+**V2** = Task 0 the regeneration; the six remaining pre-existing reds; the two help-gate rows → **V3** the
+rename. V2 launches after V1's CI closes and its session reads idle.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
