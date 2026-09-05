@@ -9847,7 +9847,7 @@ after the predecessor's `a69a9b295`. **NOT DONE, deliberately:** full convergenc
 adapter (B), live-queue editing in v1, tag editing, a persistent jta name table, per-entry cost, a new
 gate file or standing-values row, any submodule change before V5.
 
-## 5n. The APWorld EDITOR as the HUB over every procgen editor — PLANNED 2026-09-04; **H0 + H1 SHIPPED 2026-09-04/05, NEXT = H2** (Fable planning session `next-priorities-planning` at main `697c94ee6`; plan file `NewDocs/plans/apworld-editor-hub-plan.md`, gitignored; memory `project_apworld_editor_hub`)
+## 5n. The APWorld EDITOR as the HUB over every procgen editor — PLANNED 2026-09-04; **H0 + H1 + H2 + H3 + H2b + H3b + H4a SHIPPED 2026-09-04/05, NEXT = H4b** (Fable planning session `next-priorities-planning` at main `697c94ee6`; plan file `NewDocs/plans/apworld-editor-hub-plan.md`, gitignored; memory `project_apworld_editor_hub`)
 
 **How this entry came to exist.** The session was briefed to hold the "next main priorities" conversation
 across everything but the platformer. The user's first move set the queue viewer (§5m) aside — *"The session
@@ -10375,6 +10375,70 @@ links. **H4a LAUNCHED 2026-09-05** as `apworld-hub-sliceH4a` (Opus, kickoff
 `NewDocs/plans/apworld-hub-sliceH4a-prompt.md`): a maze worldgen world from `procgen_maze` seed 1, a
 four-player two-game generation so the slots differ, committed per the `bounce_worldgen` precedent under the
 shared-reachability and strict-schema gates.
+
+**⇒ H4a AS BUILT 2026-09-05** (plan §16; commits `40fc5ea68` world · `781fadcad` fixture · `66d75f656`
+connection lines · `801a58028` rows + the third "no map" reason · `1606ba7c5` regenerated reference; pushed).
+⚖ 2b's fixture EXISTS: **`frontend/presets/multiworld/AP_05594871498841892311/` at SEED 4** — four slots over
+two games, `{1:3, 2:3, 3:5, 4:5}` sidecar regions, the ONLY committed document whose `preset_sidecars` carry
+more than one slot. Its maze half comes from a new tracked world `worlds/procgen_maze_worldgen` (generated
+from `procgen_maze/AP_1`; 3 regions, all with `grid_cell`). ⚖ 3's census reproduced EXACTLY before it
+(192 carriers · 158 `{}` · populated slot keys `{1: 34}` · 0 multi-slot) and now reads
+`197 · 158 · {1:36, 2:2, 3:2, 4:2} · 1 multi-slot`.
+
+⛔ **SEED 4, NOT SEED 1 — and this is the finding to carry.** The exporter routes every multi-game generation
+to `frontend/presets/multiworld/AP_<seed id>/` by SEED ID ALONE, with no game discriminator, so a seed-1
+four-player run OVERWRITES the committed ALTTP-family preset. Measured, not predicted: it did, all eight
+files, and `git checkout --` restored them. Seeds 1–3 are the three committed multiworld presets; 4 is the
+first free one. Named in `architecture.md` § "The Python round-trip".
+
+⚑ **TWO PREMISES THE FIXTURE OVERTURNED THE MOMENT IT EXISTED.** (a) ⚖ 3's *"every populated one keys under
+slot 1"* is a fact about the CORPUS, not about the producer: the exporter keys under the player's own slot
+(`handler.py:2073-2102`), so the fixture's per-player files key under `"2"`, `"3"`, `"4"`. The hub's
+per-player paths were never wrong — they were UNOBSERVABLE. (b) ⛔ **`grid_cell` does not mean "there is a
+map"**: the two `Bounce Demo WorldGen` slots carry a `grid_cell` on all five of their regions and still draw
+nothing, because a bounce payload has no tile-grid `width`/`height` (its geometry is `params.bounceLevel.size`
+in PIXELS). The Map tab was therefore telling a person *"no grid data in the sidecars"* about a document that
+visibly has them — a THIRD no-map cause, found by the first in-app run, fixed in the CODE
+(`panel._noMapReason()` derives which of four reasons it is; H3's jta row still gets its own string).
+
+**The connection lines** (§13.1 #6, §13.7 item 5): `exits: world.exits` in the placement. MEASURED on
+`procgen_maze` seed 1 through a recording 2d context — **0 → 2 connection lines, 203 → 211 draw ops, 0 → 3
+regions carrying top-level exits**; the expected 2 is DERIVED from the document's own reciprocal exit pairs by
+a spelling that never calls the function under test. Before/after PNGs via the new
+`scripts/procgen/shot-loaded-composite-map.mjs` (the PIPELINE panel's loaded-preset view, 336×168 px, grid
+3×2) — the two differ.
+
+Rows: `compositeMapDocument.test.js` **10 → 14** · three new in-app rows, in-app `fast` **73 → 76**,
+`compare-runs` "ADDED (3)", nothing else moved. **FIVE mutants**, all driven, none committed — and two of them
+are the record's point: **B** (place the RAW on-disk exits array instead of the deserialized `Map`) leaves the
+line count IDENTICAL, so a line-count gate cannot tell WHICH exits object was placed; **3** (`documentKeyRows`
+slices at `'1'`) left slot **2** green, because it holds the same 3 entries as slot 1 — which is exactly what
+that row's vacuity check exists for. ⚠ The four `dump-*-byteidentity.mjs` are 0-moved but the gate is
+**VACUOUS** for this change, measured: a `throw` at the top of `compositeMapDocument.js` produces 0 probe hits
+in all four — none of them imports it. Gates: `test/general` **346 passed / 19,579 subtests** ·
+`test_reachability` 2,997 subtests · `test_schema_validation` **205 → 210**, the five new files 5/5 (4/4
+per-player) under H1's strict schema · bounded vitest 177/177 · `procgenDocs/` 452/452 ·
+`check-procgen-docs` + `check-slice-records` ALL PASS. ⚖ 52: the suite row is quoted from CI by SHA.
+
+⚑ **CI WENT RED AT `1606ba7c5` AND WAS FIXED IN THE SAME SESSION — the red is the record's point.**
+`unittests` failed on ALL SIX matrix legs (`3 failed, 1498 passed, 3 skipped`) on ONE row,
+`test/test_rules_json_writer_agreement.py::test_the_trailing_newline_belongs_to_the_write_site`, over exactly
+the three tiles-bearing files of the new fixture. Everything else at that SHA was green. **Why the local
+sweep missed it:** the kickoff named two files under `test/general/`, I swept that whole subtree (346 passed,
+19,579 subtests) and called the Python side covered — but CI runs `pytest` over `test`, `test_json` and
+`worlds`, and the failing module is at `test/`, one level ABOVE. ⇒ **a new committed preset owes the WHOLE
+`pytest`, not `test/general`.** **Why the row failed:** it selected fixtures as *"presets whose spliced
+`tiles` array is COMPACT — i.e. JS wrote them"* and asserted each such FILE ends with a newline. That was a
+true classifier at EDITOR v3 W1 (gotchas.md's lineage table records **Python-spliced: 0**) — and W1's own fix
+is what gave `exporter.py` compact separators, so the two writers' output has been byte-identical APART FROM
+THAT ONE CHARACTER ever since. This fixture is the first Python-exported preset ever committed with a maze
+payload. **The fix** identifies the writer by a MECHANISM instead: `Generate.py` writes an `AP_*.archipelago`
+beside its `rules.json` and the node script cannot — measured over all 210 presets, of the **177** with such a
+sibling, **0** carry a trailing newline. Row 3 now drives BOTH halves of its own sentence (node files HAVE
+one, exporter files do NOT) where before it drove one; subtests **111 → 307**; two data mutants driven; NO
+test name moved. Trap **1175**.
+
+**NEXT = H4b** (per-region Edit ▸ + reverse links), then H5.
 
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m

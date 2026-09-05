@@ -592,13 +592,24 @@ Two separate facts, both measured, both about `exporter.py`'s
    | JS-spliced | `"tiles": [0,0,…]` | 16 | `stringifyRulesJson` — all of `procgen_topdown/AP_1..12`, `procgen_maze/AP_1..3`, `seedling_atlas_maze/AP_1` |
    | exploded | `"tiles": [\n  0,…]` | 7 | a plain `json.dump(indent=2)`, no splice — e.g. `jta_mixed_test/AP_1`, the five `omsi_*_test`, `seedling_atlas_sphere/AP_1` |
    | no tiles | `playable_payload` with no `tiles` array | 11 | e.g. every `jta_*_test`, `seedling_playthrough/AP_1`, `seedling_atlas/AP_1` |
-   | **Python-spliced** | `"tiles": [0, 0,…]` | **0** | — |
+   | **Python-spliced** | `"tiles": [0,0,…]` — *the same signature* | **0 → 3** | `exporter.py` after W1; the first three are APWorld hub H4a's four-player fixture (2026-09-05) |
 
    ⛓ The trailing newline is the WRITE SITE's, not the writer's: neither
    `stringifyRulesJson` nor `_dump_with_compact_sidecar_tiles` emits one, the
    node write sites append it (`scripts/utils/generate-procgen-rules.js`:
-   `text + '\n'`) and the Python write site does not. All 16 JS-written files
-   carry it; 30 of the 259 do.
+   `text + '\n'`) and the Python write site does not.
+
+   ⛔ **AND THIS IS WHY THE "JS-SPLICED" ROW STOPPED IDENTIFYING A WRITER.**
+   W1's fix is what gave the Python splice compact separators, so its output has
+   the SAME signature as the JS lineage — the two are byte-identical apart from
+   that one trailing character. `test_rules_json_writer_agreement.py` selected
+   its fixtures by that signature and called them JS-written; the first
+   Python-spliced preset ever committed reddened it on three files that
+   correctly have no trailing newline. The writer is now identified by a
+   MECHANISM instead: `Generate.py` writes an `AP_*.archipelago` beside its
+   `rules.json` and the node writer cannot. Measured 2026-09-05 over all 210
+   committed presets — of the **177** with such a sibling, **0** carry a
+   trailing newline; 30 of the 210 carry one at all.
 
 ## "Byte-pinned" was a sentence three files repeated and no mechanism backed
 
