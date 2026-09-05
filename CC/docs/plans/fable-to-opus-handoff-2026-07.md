@@ -11049,6 +11049,10 @@ INTENDED contract.** ⇒ **V3a** = three instrument-design fixes (maze leg → B
 `verify-rule-gated-portals` physics leg CUT, the witnessed claim kept); **V3b** = the RENAME (gate-shaped
 `verify-*` → `check-`, report-shaped → `dump-`/`report-`), its own session because of the pins it moves.
 
+**V3a LAUNCHED 2026-09-05** as `procgen-instrument-fixes` (Opus; kickoff
+`NewDocs/plans/procgen-instrument-fixes-prompt.md`; V2b's session read idle first): the maze mana leg sets
+Bot ×3, the omsi mana leg creates its park, the portals script drops its physics leg. No app change. Then V3b.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
