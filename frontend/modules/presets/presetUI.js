@@ -272,6 +272,18 @@ const PRESET_STYLES = `
 .back-button:hover {
     background-color: #555;
 }
+.preset-open-apworld {
+    background-color: #2e7d32;
+    color: #fff;
+    border: 1px solid #555;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0 0 8px;
+}
+.preset-open-apworld:hover {
+    background-color: #3a9440;
+}
 .preset-detail-header {
     display: flex;
     flex-wrap: wrap;
@@ -998,6 +1010,44 @@ export function selectIndexFile({ hostname = '', search = '' } = {}) {
     };
 }
 
+/**
+ * ⛓⛓⛓ **"OPEN IN APWORLD EDITOR" — ONE DESCRIPTOR, TWO SCREENS** (APWORLD
+ * EDITOR HUB slice H2; ⚖ user: *"in the screen in the Presets panel that
+ * displays after a preset has been opened, I want a button to open the data in
+ * the APWorld Editor"*).
+ *
+ * ⛔ **THE EVENT IS `ui:activatePanel`, NOT `apworldEditor:loadRules`**, and
+ * that is a measured choice rather than a shortcut. The hub already HOLDS this
+ * document: a preset load publishes `files:jsonLoaded`, the state manager
+ * re-emits it as `stateManager:rawJsonDataLoaded`, and the hub opens a session
+ * on that. The focus-safe `apworldEditor:loadRules` channel exists for loads
+ * that must NOT go global (the pipeline's and the marking tool's hand-offs) —
+ * a preset load already went global, so handing the document over a second
+ * time would open a SECOND session boundary and throw away whatever the person
+ * had already edited.
+ *
+ * ⛓ The markup and the wiring read the SAME `id` off this object, so a rename
+ * cannot leave a handler querying a selector nothing renders — two gates, one
+ * opener.
+ */
+export const APWORLD_EDITOR_BUTTON = Object.freeze({
+    id: 'open-in-apworld-editor',
+    label: 'Open in APWorld Editor',
+    title: 'Raise the APWorld Editor panel, which already holds this document — '
+        + 'the preset load published it app-wide.',
+    event: 'ui:activatePanel',
+    payload: Object.freeze({ panelId: 'apworldEditorPanel' }),
+});
+
+/** ⛓ The control's markup, from the descriptor above and nothing else. */
+export function apworldEditorButtonHtml(button = APWORLD_EDITOR_BUTTON) {
+    const esc = (unsafe) => String(unsafe)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    return `<button class="preset-open-apworld" id="${esc(button.id)}" `
+        + `title="${esc(button.title)}">${esc(button.label)}</button>`;
+}
+
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -1468,6 +1518,7 @@ export class PresetUI {
       <div class="preset-info">
         <h3>Loaded: ${this.escapeHtml(fileName)}</h3>
         <p>This file was loaded manually from your computer.</p>
+        ${apworldEditorButtonHtml()}
         <div id="preset-status"></div>
         <pre style="max-height: 300px; overflow: auto; background: #111; padding: 10px; border-radius: 4px;">${this.escapeHtml(
           JSON.stringify(jsonData, null, 2)
@@ -1482,6 +1533,7 @@ export class PresetUI {
         this.renderGamesList();
       });
     }
+    this._wireApworldEditorButton(container);
 
     // Work out which player this file is for before handing it off. A
     // combined multiworld rules.json describes every player, so we infer the
@@ -1511,6 +1563,23 @@ export class PresetUI {
         this.processManuallyLoadedRules(jsonData, fileName, playerId);
       });
     }
+  }
+
+  /**
+   * ⛓ Wire the "Open in APWorld Editor" control on whichever screen just
+   * rendered it. ⛔ The selector is DERIVED from the same descriptor the markup
+   * is, so the two cannot drift apart; a screen that did not render the button
+   * simply finds nothing and wires nothing.
+   */
+  _wireApworldEditorButton(container) {
+    const btn = container && container.querySelector(`#${APWORLD_EDITOR_BUTTON.id}`);
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      log('info',
+        `Opening the APWorld Editor: publishing ${APWORLD_EDITOR_BUTTON.event}.`);
+      this.eventBus.publish(
+        APWORLD_EDITOR_BUTTON.event, { ...APWORLD_EDITOR_BUTTON.payload });
+    });
   }
 
   async processManuallyLoadedRules(rulesData, fileName, playerId = DEFAULT_PLAYER_ID) {
@@ -1756,6 +1825,7 @@ export class PresetUI {
         <div class="preset-info">
           <h3>${headerTitle}</h3>
           <p>${this.escapeHtml(folderData.description || 'Multiworld Seed')}</p>
+          ${apworldEditorButtonHtml()}
           <div class="preset-files">
             <div class="preset-files-header">
               <h4>Files:</h4>
@@ -1801,6 +1871,8 @@ export class PresetUI {
           this.renderGamesList();
         });
       }
+
+      this._wireApworldEditorButton(container);
 
       // Wire next/previous nav buttons
       const wireNav = (id, target) => {

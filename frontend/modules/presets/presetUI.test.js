@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 
 import {
+    APWORLD_EDITOR_BUTTON,
+    apworldEditorButtonHtml,
     selectIndexFile,
     filterAndSortPresets,
     computeDetailNav,
@@ -725,5 +727,55 @@ describe('computeProcgenStats', () => {
         expect(stats.outputCounts).toEqual({
             regions: 2, locations: 3, exits: 3, logic_gates: 0,
         });
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * "Open in APWorld Editor" — the control the ⚖ asked for on the screen a
+ * preset opens into (APWORLD EDITOR HUB slice H2)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('APWORLD_EDITOR_BUTTON', () => {
+    /**
+     * ⛓⛓ **THE CHOICE OF EVENT IS THE WHOLE DESIGN, SO IT IS THE ASSERTION.**
+     * `apworldEditor:loadRules` is the pipeline's and the marking tool's
+     * FOCUS-SAFE hand-off, for documents that must not go app-wide. A preset
+     * load already published `files:jsonLoaded`, the hub already opened a
+     * session on the re-emit — so handing it over again would open a SECOND
+     * session boundary and discard whatever the person had edited. The button
+     * only RAISES the panel.
+     */
+    it('raises the hub instead of handing the document over again', () => {
+        expect(APWORLD_EDITOR_BUTTON.event).toBe('ui:activatePanel');
+        expect(APWORLD_EDITOR_BUTTON.payload).toEqual({ panelId: 'apworldEditorPanel' });
+        expect(APWORLD_EDITOR_BUTTON.event).not.toBe('apworldEditor:loadRules');
+    });
+
+    /**
+     * ⛓ TWO GATES, ONE OPENER: the markup and the click wiring read the same
+     * `id`, so the selector the handler queries is the one the html renders.
+     */
+    it('renders markup carrying the id the wiring queries', () => {
+        const html = apworldEditorButtonHtml();
+        expect(html).toContain(`id="${APWORLD_EDITOR_BUTTON.id}"`);
+        expect(html).toContain(APWORLD_EDITOR_BUTTON.label);
+        expect(html).toContain('class="preset-open-apworld"');
+    });
+
+    it('escapes a label and title rather than interpolating them raw', () => {
+        const html = apworldEditorButtonHtml({
+            ...APWORLD_EDITOR_BUTTON,
+            label: '<b>x</b>',
+            title: 'a "quoted" & <tagged> title',
+        });
+        expect(html).not.toContain('<b>x</b>');
+        expect(html).toContain('&lt;b&gt;x&lt;/b&gt;');
+        expect(html).toContain('&quot;quoted&quot;');
+        expect(html).toContain('&amp;');
+    });
+
+    it('is frozen, so no caller can retarget the panel it raises', () => {
+        expect(Object.isFrozen(APWORLD_EDITOR_BUTTON)).toBe(true);
+        expect(Object.isFrozen(APWORLD_EDITOR_BUTTON.payload)).toBe(true);
     });
 });
