@@ -11104,6 +11104,10 @@ way every bridge-mediated plan install does? Today a player entering a freshly-b
 Manual block and queueing in the game's own UI gets a game that never starts. Next: **V3b** the rename
 (launches after V3a idles); then the HANDOFF to a new Fable session for reviews R1/R2 (⚖ user 2026-09-05).
 
+**⚖ RULED 2026-09-05 (user):** the omsi live-play cold-start question is DELAYED to the loop-costs ↔ procgen
+discussion (review R2); nothing changes now. R2's agenda: loop costs' write-back (H5), the cost generator's
+pre-procgen design, and the omsi live-play start.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
