@@ -65,6 +65,20 @@ import {
 } from '../procgenCore/compositeMapRenderer.js';
 import { reconstructResultFromSidecars } from '../procgenPipeline/compositeMapDocument.js';
 import { downloadJson, rulesDownloadName } from './downloadJson.js';
+/**
+ * ⛓⛓ H2b — the raw tab is a CodeMirror 6 view, not a `<textarea>`. The barrel
+ * is the LOCAL bundled CM6 library (no CDN) and it is already in this app's
+ * import graph in BOTH modes: `init-bundled.js:73` imports
+ * `editorCodeMirror6/index.js` statically, and that module is `enabled: true`
+ * in `module-configs/modules.json`, so the 837 KB library is fetched at init on
+ * localhost too. ⇒ this import costs the bundle and the first paint nothing;
+ * H2b measured both (plan §14).
+ *
+ * ⛔ The extension list is NOT built here — `jsonEditorExtensions` is the one
+ * list both raw-JSON editors mount, so the two cannot drift apart.
+ */
+import { EditorState, EditorView } from '../editorCodeMirror6/codemirror6Imports.js';
+import { jsonEditorExtensions } from '../editorCodeMirror6/jsonEditorExtensions.js';
 import {
   RAW_VIEW_LIMIT_BYTES,
   parseRawView,
@@ -172,6 +186,10 @@ class ApworldEditorUI {
     this._appliedDocs = new WeakSet();
     /** ⛓ The raw tab's uncommitted text, so a re-render does not eat a draft. */
     this._rawDraft = null;
+    /** ⛓ Whether that text differs from the record — the status line's source. */
+    this._rawEdited = false;
+    /** ⛓ H2b — the MOUNTED CodeMirror 6 view, or null when the tab is elsewhere. */
+    this.rawEditorView = null;
     /** ⛓ A person's explicit "show it anyway" over the size guard, per session. */
     this._rawForced = false;
     this.rawJsonUnsubscribe = null;
@@ -326,6 +344,7 @@ class ApworldEditorUI {
     //   document's provenance is known, and Apply is downstream of every op.
     this._originSourceName = baseTag?.origin ?? null;
     this._rawDraft = null;
+    this._rawEdited = false;
     this._rawForced = false;
     // ⛓ A boundary installs a different world: a region name from the old one
     //   means nothing in the new, and neither does a cached grid.
@@ -503,6 +522,7 @@ class ApworldEditorUI {
   }
 
   onPanelDestroy() {
+    this._teardownRawEditor();
     if (this._keyHandler) {
       this.rootElement.removeEventListener('keydown', this._keyHandler);
       this.rootElement.removeEventListener('mousedown', this._focusHandler);
@@ -976,6 +996,8 @@ class ApworldEditorUI {
   // ---------- Rendering ----------
 
   _render() {
+    // ⛔ BEFORE the container is emptied — see `_teardownRawEditor`.
+    this._teardownRawEditor();
     this.scrollContainer.innerHTML = '';
     this._renderChrome();
 
@@ -1874,9 +1896,40 @@ class ApworldEditorUI {
     }
   }
 
-  /** ⛓ The raw view's text — the DRAFT when there is one, else the record. */
+  /**
+   * ⛓⛓ The raw view's text, from wherever it currently lives: the MOUNTED
+   * editor if there is one, else the draft parked at its teardown, else the
+   * record.
+   *
+   * ⛔ This is the ONLY place the CM6 document is materialised as a string, and
+   * it is called at SAVE time, not per keystroke. `doc.toString()` on a 3.1 MB
+   * document allocates 3.1 MB; a listener that did it on every key would put
+   * back exactly the cost CM6 was mounted to remove.
+   */
   _rawText() {
+    if (this.rawEditorView) return this.rawEditorView.state.doc.toString();
     return this._rawDraft ?? rawViewText(this.rulesDoc);
+  }
+
+  /**
+   * ⛓⛓⛓ **THE EDITOR IS TORN DOWN BEFORE THE CONTAINER IT LIVES IN IS
+   * EMPTIED** — `_render()` sets `scrollContainer.innerHTML = ''`, and a CM6
+   * view whose DOM is yanked out from under it keeps its document, its
+   * listeners and its `requestMeasure` loop alive with nothing to draw into.
+   * (Trap family: a remounted panel keeping its old listeners.)
+   *
+   * ⛔ And the unsaved text has to survive the teardown, because a re-render is
+   * something the panel does to ITSELF — an Apply elsewhere, an undo, a
+   * validation refresh. Losing a person's half-typed document to a repaint
+   * they did not ask for is the defect; the draft is captured here and the
+   * next mount starts from it.
+   */
+  _teardownRawEditor() {
+    if (!this.rawEditorView) return;
+    if (this._rawEdited) this._rawDraft = this.rawEditorView.state.doc.toString();
+    this.rawEditorView.destroy();
+    this.rawEditorView = null;
+    this.rawStatus = null;
   }
 
   /** ⛓ The size question, asked of the RECORD rather than of a stale draft. */
@@ -1901,8 +1954,9 @@ class ApworldEditorUI {
     const intro = document.createElement('div');
     Object.assign(intro.style, { color: '#888', fontSize: '11px', padding: '2px 0 6px' });
     intro.textContent = 'The whole document as text — the WORKING COPY, including every edit '
-      + 'made in the other tabs and not yet applied. Saving replaces the document as ONE op, '
-      + 'so a single undo takes the text edit back out.';
+      + 'made in the other tabs and not yet applied. Save JSON (or Ctrl/Cmd+Enter) replaces the '
+      + 'document as ONE op, so a single undo takes the text edit back out. Ctrl/Cmd+Z inside '
+      + 'the editor is the editor\'s own undo, not the session\'s.';
     this.scrollContainer.appendChild(intro);
 
     const size = document.createElement('div');
@@ -1943,33 +1997,81 @@ class ApworldEditorUI {
       return;
     }
 
-    const text = document.createElement('textarea');
-    text.className = 'apworld-raw-text';
-    text.spellcheck = false;
-    text.value = this._rawText();
-    Object.assign(text.style, {
-      width: '100%', minHeight: '420px', boxSizing: 'border-box',
-      backgroundColor: '#111', color: '#ddd', border: '1px solid #444', borderRadius: '3px',
-      fontFamily: 'monospace', fontSize: '11px', whiteSpace: 'pre', overflowWrap: 'normal',
-    });
     /**
-     * ⛔ The draft is kept OUT of the record until Save. A per-keystroke op
-     * would make one pasted document a thousand undos, and a per-keystroke
-     * PARSE would refuse every intermediate state a person types through.
+     * ⛓⛓⛓ **CODEMIRROR 6, NOT A `<textarea>` — AND THAT IS WHAT RETIRED THE
+     * SIZE LIMIT** (H2b). Measured on the REAL mounted editor over the corpus
+     * (`scripts/procgen/measure-apworld-raw-view.mjs`, table in `rawView.js`):
+     * CM6 is viewport-virtualised, so its cost is FLAT in the document's size
+     * where the textarea's is superlinear — the corpus maximum opened in 12.9 s
+     * and typed at 1.25 s per keystroke on a textarea, which is why H2 needed a
+     * threshold at all.
+     *
+     * ⛔ The extensions are `jsonEditorExtensions`', shared with the
+     * `editorCodeMirror6` panel — the two raw-JSON editors in this app show the
+     * same document the same way or one of them is lying about what it is.
      */
-    text.addEventListener('input', () => { this._rawDraft = text.value; this._renderRawStatus(); });
-    this.scrollContainer.appendChild(text);
-    this.rawTextArea = text;
+    const host = document.createElement('div');
+    host.className = 'apworld-raw-editor';
+    Object.assign(host.style, {
+      height: '420px', border: '1px solid #444', borderRadius: '3px', overflow: 'hidden',
+      fontSize: '11px',
+    });
+    this.scrollContainer.appendChild(host);
+    this._teardownRawEditor();
+    this.rawEditorView = new EditorView({
+      state: EditorState.create({
+        doc: this._rawDraft ?? rawViewText(this.rulesDoc),
+        /**
+         * ⛔ The draft is kept OUT of the record until Save. A per-keystroke op
+         * would make one pasted document a thousand undos, and a per-keystroke
+         * PARSE would refuse every intermediate state a person types through.
+         * So the listener records only THAT something changed — it never reads
+         * the text (see `_rawText`).
+         */
+        extensions: jsonEditorExtensions({
+          keys: [{
+            /**
+             * ⛓ The keyboard twin of the Save JSON button. ⛔ Deferred out of
+             * the keydown: saving re-renders the panel, which destroys this
+             * very editor, and doing that inside CM6's own key handler
+             * unmounts the DOM the event is still travelling through.
+             */
+            key: 'Mod-Enter',
+            run: () => { setTimeout(() => this._handleRawSave(), 0); return true; },
+          }],
+          onDocChanged: () => { this._rawEdited = true; this._renderRawStatus(); },
+        }),
+      }),
+      parent: host,
+    });
+    this._rawEdited = this._rawDraft !== null && this._rawDraft !== undefined;
 
     const bar = document.createElement('div');
     Object.assign(bar.style, {
       display: 'flex', alignItems: 'center', gap: '8px', margin: '6px 0 0', flexWrap: 'wrap',
     });
+    /**
+     * ⛓⛓ **THE APPLY-FROM-TEXT CONTROL IS CALLED "Save JSON"**, and it keeps
+     * that name deliberately. ⛔ NOT "Apply": this panel's toolbar already has
+     * an Apply, and it means something else entirely — publish the document to
+     * the whole app. Two buttons called Apply, one writing the working copy and
+     * one loading the app, would be two doors into different rooms with the
+     * same sign on them. Save writes the RECORD; Apply publishes it.
+     *
+     * ⛔ And it is a CONTROL, not a keystroke handler: reading the text costs a
+     * full-document string and parsing it a full `JSON.parse`, which at the
+     * corpus maximum is 3.1 MB of each. Per key that is the wrong cost, and it
+     * would refuse every intermediate state a person types through.
+     */
     const save = this._makeButton('Save JSON', '#2e7d32', () => this._handleRawSave());
     save.className = 'apworld-raw-save';
+    save.title = 'Parse the text and replace the whole document as ONE op '
+      + '(Ctrl/Cmd+Enter inside the editor does the same). Apply, in the toolbar, '
+      + 'is the separate gesture that loads the document into the app.';
     bar.appendChild(save);
     const revert = this._makeButton('Revert to the record', '#444', () => {
       this._rawDraft = null;
+      this._rawEdited = false;
       this._opMessage = 'Raw text reverted to the document.';
       this._render();
     });
@@ -1987,15 +2089,23 @@ class ApworldEditorUI {
     this._renderRawStatus();
   }
 
-  /** ⛓ Whether the draft differs from the record, said out loud. */
+  /**
+   * ⛓ Whether the text differs from the record, said out loud.
+   *
+   * ⛔ The character count comes from `doc.length`, which CM6 answers in O(1)
+   * off its rope. ⛔ NOT `doc.toString().length` — that is the 3 MB allocation
+   * this whole design exists to keep out of the keystroke path.
+   */
   _renderRawStatus() {
     if (!this.rawStatus) return;
-    if (this._rawDraft === null) {
+    if (!this._rawEdited) {
       this.rawStatus.textContent = 'Unmodified.';
       this.rawStatus.style.color = '#888';
       return;
     }
-    const chars = this._rawDraft.length;
+    const chars = this.rawEditorView
+      ? this.rawEditorView.state.doc.length
+      : (this._rawDraft?.length ?? 0);
     this.rawStatus.textContent = `Edited — ${chars.toLocaleString()} characters, not saved yet.`;
     this.rawStatus.style.color = '#d6a030';
   }
@@ -2032,6 +2142,7 @@ class ApworldEditorUI {
       return;
     }
     this._rawDraft = null;
+    this._rawEdited = false;
     this._applyOp(op);
   }
 
