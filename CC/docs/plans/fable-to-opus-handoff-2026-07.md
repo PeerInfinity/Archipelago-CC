@@ -10292,6 +10292,14 @@ purpose — it imports the browser CM6 bundle, so its claim is asserted in the i
 now the expensive half (`depgraph` 3,326 ms panel-only vs a 263 ms editor), which sharpens §12.7 #2's
 `validateRules`-per-tab-switch line.
 
+**H2b VERIFIED by the planner 2026-09-05** (`c5bf77bca` on origin/main; the raw tab is CodeMirror 6 through the
+shared `jsonEditorExtensions`, the 2 MB constant retired on a 205/205 `--all` corpus arm — TTI max 262.9 ms,
+16 MB opens in 179 ms; bundle −359 B; the Apply-from-text control is **Save JSON**). Method lesson recorded
+(trap 1165): the ranking by TIME is not the ranking by SIZE — the slowest documents were `depgraph` presets
+under the old limit — so an "every preset" claim in this arc uses `--all`, never a percentile pick. The PANEL
+is now the expensive half (`validateRules` per tab switch: 3.3 s on `depgraph` against a 263 ms editor).
+**H3b LAUNCHED 2026-09-05** as `apworld-hub-sliceH3b` (Opus, kickoff `NewDocs/plans/apworld-hub-sliceH3b-prompt.md`).
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
