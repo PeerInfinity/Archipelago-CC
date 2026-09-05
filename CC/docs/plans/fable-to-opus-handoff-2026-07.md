@@ -11114,6 +11114,62 @@ V3a's session read idle first): the derived rename table committed FIRST, then g
 asked), the CI shard partition quoted before/after with slow gates kept behind the roster's exclusions, the
 generated instrument catalogue and 22 docs pages repointed. After V3b: the HANDOFF to a new Fable session.
 
+⇒ **V3b AS BUILT 2026-09-05** — five commits on `main` (`5f39eb83f9` table · `df404e911b` gates +
+mechanism · `486670cc13` readers · `af54c20d46` baseline · `25b8b8d2fb` record), staged by path,
+every move a `git mv`. **49 GATE-class scripts → `check-*.mjs`; 11 REPORT-class unchanged; 2 STALE
+deleted.** Record: `CC/docs/procgen-verify-tier.md` §"V3b — the rename" (the derived table,
+committed BEFORE any file moved) and §"V3b as built".
+
+⚑ **What overturned the brief.** It said to put slow newly-adopted gates *"behind the roster's
+existing cost/`--win` exclusions"*. **There is no cost exclusion.** `ciGatePlan.js:150` is
+`ciRunnable = !gate.windows`, whole — so the rename alone enrols every non-Windows gate in CI, and
+`planCiShards` prices an arm the runner has never measured at the WHOLE 600 s budget. Measured on a
+mirrored repo root with the naked rename applied (the mirror reproduces the real tree's BEFORE
+numbers exactly, which is what makes it a control): browser **25 arms / 3 shards → 52 / 30**,
+headless **31 / 1 → 51 / 21** — **4 → 51 procgen gate jobs on every push**, 47 of them unpriced at
+600 s each and an unknown number RED. ⇒ **⚖ RULED (user, 2026-09-05):** a fourth declaration,
+`@ci-box <reason>`, in the family of `@ci-face`/`@ci-shallow`/`@ci-argv`, read by `ciRunnable`.
+47 gates declare one (the other two are the `--win` pair the Windows clause already excluded).
+**The shard plan is UNMOVED: browser 25/3, headless 31/1 — BEFORE == AFTER, which is the check a
+roster-count assertion could not have made.** Roster 33 → 82 gates.
+
+⚖ **RULED (user, 2026-09-05) on the two STALE:** deleted. `verify-dj-real-embed.mjs` and
+`verify-bot-playthrough.mjs` — all three of their worlds went at `ccfc5bad0` (2026-06-26), so
+neither could pass at any SHA. The `stale-` alternative was declined: a third prefix with two
+members no mechanism reads.
+
+⚑ **And a derived answer the brief asked for: there is NO `report-` prefix.** All 11 REPORT-class
+scripts were already `dump-`, so a third prefix would have had a population of zero. The traffic ran
+the other way on exactly one file — `dump-spiral-byteidentity.mjs` ends `process.exit(allOk ? 0 : 1)`,
+prints `ALL PASS`, and its own header says *"Not a passive dump"* ⇒ it is now
+`check-spiral-byteidentity.mjs`, while its three byte-identity siblings genuinely cannot fail.
+
+Readers: **187 tracked files** swept longest-name-first, plus five a whole-name sweep structurally
+cannot see (two line-wrapped basenames, a `{a,b}` brace spelling, two eventBus subscriber IDs).
+`CC/docs/procgen-verify-tier.md` is deliberately NOT rewritten — it is the survey, and its §V3b
+table is the map. Two tracked FALSE claims retired with the rename: `vitest.slow.config.js` and
+`runner.md` both said the `verify-runner-*.mjs` instruments *"still run"* (nothing did), and
+`braidSphereBot.slow.test.js` called itself the analogue of a script that no longer exists.
+
+Gates: `check-procgen-help --doors=all` **ALL PASS** (265 instruments, 618.9 s) · reference
+`--check` all match · `check-procgen-docs` **ALL CHECKS PASSED** · `check-slice-records` **ALL PASS**
+(73 VERIFIED / 37 UNVERIFIABLE / 2 NOTE) · bounded vitest **37 files / 1049 tests / 0 failed** ·
+in-app `fast` **83/83** · `compare-runs` **83/83 → 83/83**, exit 0, no roster change. The one red
+seen was a five-sample contention flake (3 green / 2 red) in a `beforeAll` hook, with three controls
+recorded. ⛔ `check-seedling-bot-differential --win` NOT run — a measured 142-minute GPU drive, and
+still the one script of the original 62 with no verdict from this arc.
+
+⚖ **NEW for the user, four items, all on the record in §"V3b as built":** (1) which of the 49 CI
+adopts — deleting a `@ci-box` line, and paying an unpriced 600 s shard until a run re-prices it;
+(2) should `check-bounce-embed`'s `ERRORS (n)` count FAIL the run (V3b gave it the PASS line the
+survey named and left the count diagnostic — asserting it is a NEW claim); (3) 20 of the 49 read
+`--host=` in a spelling `gateRoster.readsFlag` does not know, so the roster shows `[-]` for them —
+nil consequence today, load-bearing on adoption; (4) the `seedling-wasm` submodule still names four
+old scripts, which is a submodule commit plus a gitlink bump.
+
+**Next: the HANDOFF to a new Fable session for reviews R1 (marking tool) / R2 (loop costs — carries
+the omsi live-play cold-start question).** The verify-tier arc's coded ladder is DONE.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
