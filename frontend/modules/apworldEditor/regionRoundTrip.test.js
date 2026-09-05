@@ -11,16 +11,31 @@
  * slots 3–4 are `Bounce Demo WorldGen` (5 regions each, the PANEL door), so one
  * file exercises both kinds and the per-slot stamp at once.
  *
- * ⛔ The libraries are imported for their REGISTRATION side effect — that is
- * how a headless caller gets a populated registry (`substrate-registry.md`'s
- * own "that first bullet is load-bearing").
+ * ⛔ The libraries are imported for their REGISTRATION side effect — see the
+ * import block below for why that is a STATIC import.
  */
 
 import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { beforeAll, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
+/**
+ * ⛓⛓ **THE LIBRARIES ARE IMPORTED AT THE TOP, NOT IN A `beforeAll`.** They are
+ * imported for their REGISTRATION side effect — that is how a headless caller
+ * gets a populated registry (`substrate-registry.md`'s own "that first bullet
+ * is load-bearing"). ⛔ In a hook they were a FLAKE: `mazeRoomLibrary` pulls
+ * `mazeRoomUI` and the whole panel graph behind it, which takes longer than
+ * vitest's 10 s hook budget when the rest of the suite is competing for the
+ * CPU — measured, this file passed alone and timed out its hook beside
+ * `frontend/modules/mazeRoom/`. A static import is module loading, which no
+ * hook timeout applies to.
+ */
+import '../mazeRoom/mazeRoomLibrary.js';
+import '../bounceDemo/bounceDemoLibrary.js';
+import '../flashPanel/flashSeedlingLibrary.js';
+import '../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { createEditSession } from '../procgenCore/editCore.js';
@@ -34,20 +49,23 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const PRESETS = join(HERE, '..', '..', 'presets');
 const FIXTURE = join(PRESETS, 'multiworld', 'AP_05594871498841892311',
     'AP_05594871498841892311_rules.json');
+/**
+ * ⛓⛓ **THE OTHER LINEAGE, and the biggest class of regions this door serves.**
+ * A `procgen_topdown` region carries a maze payload whose AP location names are
+ * the SOURCE GAME's (`Inside Yellow Castle`), not anything
+ * `makeLocationName(region, id, position)` could reconstruct — `compileRegion`
+ * passes `global_name` through and `extractPathsAndObstacles` cannot recover it
+ * from tiles. The payload BAKES them (`mazeSerializer.js:49-55`), which is the
+ * only reason such a region is editable at all: measured, 978 of the 1,046
+ * committed maze-payload sidecar regions are this lineage.
+ */
+const TOPDOWN = join(PRESETS, 'procgen_topdown', 'AP_1', 'AP_1_rules.json');
 
 const read = (p) => JSON.parse(readFileSync(p, 'utf8'));
 const clone = (o) => JSON.parse(JSON.stringify(o));
 const bytes = (o) => JSON.stringify(o);
 
-let doc;
-
-beforeAll(async () => {
-    await import('../mazeRoom/mazeRoomLibrary.js');
-    await import('../bounceDemo/bounceDemoLibrary.js');
-    await import('../flashPanel/flashSeedlingLibrary.js');
-    await import('../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js');
-    doc = read(FIXTURE);
-});
+const doc = read(FIXTURE);
 
 describe('the fixture is what the rows think it is', () => {
     it('⛓ four slots, two games, maze 3 regions and bounce 5', () => {
@@ -203,6 +221,54 @@ describe('inspectRegionRoom — what the Edit button knows before it is pressed'
         expect(verdicts['3']).toEqual(verdicts['4']);
         expect(verdicts['1'].filter((v) => v.endsWith(':edit'))).toHaveLength(3);
         expect(verdicts['3'].filter((v) => v.endsWith(':edit'))).toHaveLength(3);
+    });
+});
+
+describe('the top-down lineage — names the convention cannot reconstruct', () => {
+    const tdDoc = read(TOPDOWN);
+
+    it('⛓ its location names really are the SOURCE GAME\'s, not the convention\'s', () => {
+        const region = tdDoc.regions['1'].YellowCastle;
+        const names = region.locations.map((l) => l.name);
+        expect(names).toContain('Inside Yellow Castle');
+        // ⛔ the premise, asserted rather than assumed: NOTHING here looks like
+        //    `Region__id__x_y`, so a matcher built on the convention alone
+        //    cannot name a single one of them.
+        for (const n of names) expect(n).not.toMatch(/__/);
+        // …and the payload BAKES them, which is what makes the region editable.
+        const items = tdDoc.preset_sidecars['1'].YellowCastle.playable_payload.items;
+        expect(items.map((i) => i.locationName).sort()).toEqual([...names].sort());
+    });
+
+    it('⛓⛓ …and the door opens it, mapping every endpoint', async () => {
+        const r = await inspectRegionRoom(tdDoc, '1', 'YellowCastle');
+        expect(r.ok, r.why).toBe(true);
+        expect(r.substrate).toBe('maze');
+        expect(r.movableLocations.size + r.frozen.length)
+            .toBe(tdDoc.regions['1'].YellowCastle.locations.length
+                + tdDoc.regions['1'].YellowCastle.exits.length
+                - r.movableExits.size);
+        expect([...r.movableLocations]).toContain('Inside Yellow Castle');
+    });
+
+    it('⛔ an edit keeps those names and moves only the rule it explains', async () => {
+        const ins = await inspectRegionRoom(tdDoc, '1', 'YellowCastle');
+        const library = clone(ins.session.record);
+        // ⛓ open every wall of the room: the geometry changes, the AP identity
+        //   must not — every location keeps the source game's own name.
+        library.entries[0].payload.obstacles = [];
+        const { op } = await buildSidecarOp({
+            saved: { library, overlay: {} }, inspection: ins,
+        });
+        expect(Object.keys(op.rules.locations).sort())
+            .toEqual(tdDoc.regions['1'].YellowCastle.locations.map((l) => l.name).sort());
+        const res = applyRulesDocOp(tdDoc, op);
+        expect(res.ok, res.error).toBe(true);
+        expect(res.doc.regions['1'].YellowCastle.locations.map((l) => l.name))
+            .toEqual(tdDoc.regions['1'].YellowCastle.locations.map((l) => l.name));
+        expect(res.doc.preset_sidecars['1'].YellowCastle.playable_payload.items
+            .map((i) => i.locationName).sort())
+            .toEqual(tdDoc.regions['1'].YellowCastle.locations.map((l) => l.name).sort());
     });
 });
 

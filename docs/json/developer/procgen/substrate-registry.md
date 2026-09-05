@@ -97,13 +97,16 @@ The optional `sharing` field declares which resource-channel categories the subs
 
 ### Editing
 
-One field, and it is the whole *room-editor contract* (`NewDocs/plans/editor-integration.md` §3.2): **"open room i of document D in this substrate's editor and receive ONE saved room back."** Two spellings of that existed before it — the pipeline panel's `Edit ▸` (`procgenPipeline/regionEditors.js`, bounce only) and the set editors' `openRoomAt` → room session → one `replace-room` op (maze on `lab.html`, Seedling on `watch.html`) — and the second one is on a LAB PAGE, which a module self-registration in the app could never have reached, because a page never calls `initialize()`.
+Two fields. The first is the whole *room-editor contract* (`NewDocs/plans/editor-integration.md` §3.2): **"open room i of document D in this substrate's editor and receive ONE saved room back."** Two spellings of that existed before it — the pipeline panel's `Edit ▸` (`procgenPipeline/regionEditors.js`, bounce only) and the set editors' `openRoomAt` → room session → one `replace-room` op (maze on `lab.html`, Seedling on `watch.html`) — and the second one is on a LAB PAGE, which a module self-registration in the app could never have reached, because a page never calls `initialize()`.
 
 | Field | Type | Meaning |
 |-------|------|---------|
 | `roomEditor` | object | **Declares this substrate's room editor, as DATA.** `kind` selects how it is opened; the rest of the object is that kind's own. `kind: 'panel'` carries `open({region \| record, base?, contract?, onSave})`, a Golden Layout panel launcher (bounce's, reached by a DYNAMIC import so this library stays node-loadable). `kind: 'lab'` carries `page` — the `procgenLabPanel` lab page (`maze`, `seedling`; **not** the substrate id, which is `flash_seedling` for Seedling) — and `arm`, that page's own `?source=` for the arm that holds a SET document (`set` on `lab.html`, `edit` on `watch.html`). `procgenPipeline/regionEditors.getRegionEditor(id)` resolves the declaration; an entry with no `roomEditor` is the graceful *"No region editor for X yet"* the panel already prints. |
+| `regionRoundTrip` | object | **Declares how a region of a `rules.json` DOCUMENT goes into that editor and comes back** (APWorld editor hub, H4b). `roomEditor` says WHICH editor; this says what it wants handed in and how to read its save. `open({regionId, payload, region, itemPool, expectedItems})` returns `{session, unedited}` — `session` is spread into `roomEditor.open()` beside `onSave`, and `unedited` is the value that editor's save would carry for a session nobody touched. `save(saved, ctx)` returns `{payload, exits, locations}`, the re-derived sidecar payload and the compiled endpoints (`compileRegion`'s shape; a `name` on an endpoint is the DOCUMENT's own name when the substrate knows it, as bounce does from `ap_locations`). Either member may be async. `{refused: '<why>'}` instead of the two declares that there IS no document round trip and says why in the substrate's own words — Seedling's payload is an atlas reference, not a room record. `apworldEditor/regionRoundTrip.js` resolves it and names no substrate. |
 
 ⛔ **It is a declaration, not a registration**, and that is what lets a headless caller (this matrix, a `check-*.mjs` gate) ask *"does this substrate have a room editor, and of what kind"* with no browser: `substrateRegistry.register` validates only `id` and `sharing`, so the field costs the `shared/` submodule nothing.
+
+⛓ **`unedited` is not a convenience — it is the BASELINE the hub's whole safety rests on.** Running the round trip on the UNCHANGED payload first is what tells the hub (a) whether an unedited open-and-save would already rewrite the document's bytes — if it would, the Edit door is DISABLED BY NAME, because it would edit the region behind the reader — and (b) which access rules this door can prove it authored, which are the only ones an edit is allowed to overwrite. Measured over the committed corpus: 394 of 1,046 maze-payload regions and 15 of 25 bounce regions pass, and every one of the rest gets a named reason.
 
 The `lab` kind's hand-off adds **no** `procgenLab:` vocabulary — a document in over `load` (each page sniffs it through the ONE classifier it already has), one room over `navigate` with `?source=<arm>&room=<n>`, and the folded document back out over `levelChanged`, whose payload is a `procgenCore/labRoomEnvelope` while a SET arm holds a session. `onSave` fires on that envelope's open-room index going from *n* to `null` — the CLOSE, as a transition rather than a count of edits. See [The stepped pipeline](./stepped-pipeline.md) § *Region editors* and [Architecture](./architecture.md) § the lab-hosting paragraph.
 
@@ -176,7 +179,7 @@ Everything outside the two markers — including the hand-kept annotations below
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**8 registered entries · 63 fields · 12 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**8 registered entries · 64 fields · 12 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported.
 
@@ -249,6 +252,7 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
 |---|---|---|---|---|---|---|---|---|
+| `regionRoundTrip` | {open, save} | — | {open, save} | — | — | {refused} | — | — |
 | `roomEditor` | {arm, kind, page} | — | {kind, open} | — | — | {arm, kind, page} | — | — |
 
 **Build-time — procedural substrates**

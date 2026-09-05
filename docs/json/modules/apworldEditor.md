@@ -22,6 +22,7 @@ document.
 | `ruleTreeEditor.js` | the access-rule tree widget |
 | `documentKeys.js` | the top-level **key registry**, derived from `rules.schema.json` |
 | `documentLinks.js` | the **Links** tab's rows |
+| `regionRoundTrip.js` | the per-region **Edit ▸** door — resolves the substrate's declarations, runs the baseline, folds a save into ONE op |
 | `../procgenCore/compositeMapRenderer.js` | the **Map** tab's painter — shared with the procgen pipeline panel, substrate-neutral |
 | `../procgenPipeline/compositeMapDocument.js` | `reconstructResultFromSidecars` — `preset_sidecars` → a `Grid` |
 | `rawView.js` | the **Raw JSON** tab's text and its parse (the size limit was RETIRED by measurement — H2b) |
@@ -50,7 +51,7 @@ reset the session, so an undo after an Apply still works. It republishes the
 
 | Tab | What it edits |
 |-----|---------------|
-| **Regions** | regions, exits, locations, access rules |
+| **Regions** | regions, exits, locations, access rules — and **Edit ▸**, the door into a region's own room |
 | **Items** | items, classifications, pool counts, starting counts |
 | **Meta** | the fields in `rulesDocOps.META_FIELDS`, plus the start region and the victory condition |
 | **Map** | the composite grid, for documents whose sidecars carry grid cells — see below |
@@ -203,6 +204,81 @@ whole per-player half of this panel is tested against it. Slots 1–2 are
 per-player slice each have a document that can tell *"read the selected slot"*
 from *"read the first one"*. Before it, 158 of the 192 committed carriers held
 `{}` and every populated one keyed under slot `"1"`.
+
+## Edit ▸ — a region's room, in its own editor
+
+A region with a `preset_sidecars` entry has a **room**, and the substrate that
+owns it usually has an editor for it. The Regions header's `Edit ▸` opens that
+editor on the hub's **working copy** (⚖ *"Let's implement working copy for now"*)
+and its save comes back as **ONE** `replace-region-sidecar` op — so a whole
+sub-edit made in the maze lab or the bounce editor is one entry in this panel's
+edit list and one Undo (⚖ idea 3, *"one undo stack"*).
+
+**Two declarations, no substrate names.** `regionRoundTrip.js` resolves
+`roomEditor` (which editor) and `regionRoundTrip` (what it wants handed in, and
+how to read its save) off the [substrate
+registry](../developer/procgen/substrate-registry.md) § *Editing*. A substrate
+that grows a room editor gets an `Edit ▸` here by declaring two fields, and
+nothing under `apworldEditor/` learns its name — the `compositeMap` precedent
+and the same ⚖.
+
+**Three answers, and "absent" is one of them.**
+
+| the region | the button |
+|---|---|
+| no `preset_sidecars` entry | **no button** — a classic AP region has no room, and a disabled control would imply it might have one |
+| a substrate with no `roomEditor` (jta, omsi, runner, text_adventure) | **disabled**, titled *"No region editor for X yet"* |
+| a substrate that declares `regionRoundTrip: {refused}` (Seedling) | **disabled**, titled with the substrate's own sentence — its payload is an atlas reference, not a room record |
+| a region whose payload does not round-trip | **enabled until pressed**, then disabled with the reason (see below) |
+| anything else | **enabled** |
+
+### The baseline, and why the door is ever refused
+
+Before the room is handed over, the round trip is run on the **unedited**
+payload. What that answers is not cosmetic:
+
+1. **Would an unedited open-and-save move a byte?** If it would, this door would
+   rewrite the region behind you, and it is disabled by name. The maze lab's
+   document is a *region library* — interchangeable content whose capture path
+   deliberately strips the exit stitching and the baked AP location names — so
+   the write-back **re-stamps** that identity from the document; where it cannot
+   (a payload written by a different producer, one carrying fields the
+   serializer does not emit), the region is refused rather than silently
+   rewritten.
+2. **Which access rules can this door prove it authored?** Only those the
+   baseline REPRODUCES. A rule the grid composed, or one the Python round trip
+   renormalized beyond the `True_ / Has / And / HasAll` fragment
+   `extractItemRequirementFromRule` can compare, is **frozen**: an edit moves
+   the payload and leaves that rule exactly as it is, and the status line says
+   how many.
+
+Measured over the committed corpus: **394 of 1,046** maze-payload sidecar
+regions and **15 of 25** bounce regions are editable, and every one of the rest
+gets a named reason. `procgen_topdown`'s maze regions are the biggest refusal
+class — their locations are named by the source game (`global_name`), which the
+payload does not carry.
+
+### What the op may and may not move
+
+`replace-region-sidecar` writes the payload and the **access rules only**. Exit
+targets, location names, AP ids and item placements are the **fill's**, and the
+op's rules map must be TOTAL in both directions:
+
+- a location or exit the edited room **lost** is REFUSED by name, and the
+  sentence says what the fill placed there — dropping it would delete somebody's
+  item placement inside an op whose description says *"room replaced"*;
+- a location or exit the edited room **added** is REFUSED too: a new AP location
+  in a filled document needs an id and a pool entry, which is `add-location`,
+  not a geometry editor.
+
+### Where the open room lives
+
+The room session is **parked** on the panel (`roomEditorSession`), not torn down
+on a re-render — the opposite of the raw view's rule, and for the opposite
+reason: the raw editor lives inside this panel's DOM and `_render` must unmount
+it, while a room lives in *another* panel and must survive every render here. It
+is closed in exactly two places: when a second room is opened, and on
+`onPanelDestroy`.
 
 ## The Links tab
 
@@ -393,7 +469,7 @@ The import is free in both modes, measured:
 
 | Suite | Where |
 |-------|-------|
-| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js` | vitest, `frontend/modules/apworldEditor/` |
+| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js` | vitest, `frontend/modules/apworldEditor/` |
 | `../procgenCore/compositeMapRenderer.test.js` | vitest — the Map tab's renderer, driven by a TOY substrate |
 | `../procgenPipeline/compositeMapDocument.test.js` | vitest — `preset_sidecars` → `Grid`, including the player slot |
 | `presetUI.test.js` | vitest — the "Open in APWorld Editor" descriptor |

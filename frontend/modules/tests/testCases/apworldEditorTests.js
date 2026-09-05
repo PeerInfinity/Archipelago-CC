@@ -24,6 +24,23 @@
 
 import { registerTest } from '../testRegistry.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
+/** ⛓ H4b — the LAB door's host registry and the SET arm's envelope, so the row
+ *  drives the real three-phase contract instead of waiting on an iframe. */
+import {
+    findLabPanel, labPanelInstances, registerLabPanelInstance, unregisterLabPanelInstance,
+} from '../../procgenLabPanel/labRoomEditor.js';
+import { makeSetRecordEnvelope } from '../../procgenCore/labRoomEnvelope.js';
+/**
+ * ⛓⛓ H4b — **THE APP'S BUS, BECAUSE `procgenLab:levelChanged` HAS NO STATIC
+ * PUBLISHER.** It is a PAGE → HOST event, and the app adapter registers its
+ * publisher DYNAMICALLY as `iframe_<iframeId>` at publish time
+ * (`iframeAdapterCore.handlePublishEventBus`); the bus SKIPS a publish from an
+ * unregistered name with only a warn log, so a row publishing as `tests`
+ * publishes nothing at all. Measured: the first run of the row below sat
+ * through all three phases and reported the door never asked for a room.
+ * ⇒ the row registers itself the way any publisher does, once.
+ */
+import appEventBus from '../../../app/core/eventBus.js';
 
 const PANEL_ID = 'apworldEditorPanel';
 const PANEL_SELECTOR = '.apworld-editor-panel';
@@ -74,6 +91,15 @@ const FOUR_PLAYER_PATH =
  *  in `playerId`, and carries only that slot's sidecars. */
 const FOUR_PLAYER_P3_PATH =
     './presets/multiworld/AP_05594871498841892311/AP_05594871498841892311_P3_rules.json';
+
+/**
+ * ⛓ H4b — a committed document whose sidecars are SEEDLING's. Its substrate
+ * declares a `roomEditor` (the pipeline still opens a Seedling room from a live
+ * run) and `regionRoundTrip: {refused}` — the ONE case where the button is
+ * disabled by a DECLARATION rather than by an absence, and the sentence in its
+ * title is the substrate's own.
+ */
+const SEEDLING_PRESET_PATH = './presets/seedling_atlas/AP_1/AP_1_rules.json';
 
 const SCHEMA_PATH = './schema/rules.schema.json';
 
@@ -1531,6 +1557,366 @@ registerTest({
                + 'count and its badge names that slot — then that the four summaries are not '
                + 'all the same string, which is what makes the slice observable at all.',
     testFunction: apworldDocumentTabSlicesSidecarsBySlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ H4b — THE PER-REGION Edit ▸ DOOR
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ The Edit button of one region block, or null. */
+function editButtonFor(regionName) {
+    return document.querySelector(
+        `${PANEL_SELECTOR} .apworld-region-block[data-region-name="${regionName}"] `
+        + '.apworld-edit-room');
+}
+
+/** ⛓ Which regions of a slot carry a sidecar — the expectation, off the document. */
+function sidecarRegions(doc, slot) {
+    return Object.keys(doc?.preset_sidecars?.[slot] ?? {});
+}
+
+/**
+ * ⛓⛓⛓ **Edit ▸ IS OFFERED PER REGION, AND EVERY REFUSAL IS NAMED.**
+ *
+ * Three claims one document cannot make on its own, so this row drives two:
+ *
+ *  · a region with a SIDECAR gets a button; a region WITHOUT one (the fixture's
+ *    `Menu`) gets NO button at all — "there is no room here" is an absence, not
+ *    a disabled control;
+ *  · a substrate with no `roomEditor` at all (jta) is disabled with THAT
+ *    sentence, and it is readable in the button's own `title`;
+ *  · a region whose payload does not round-trip is disabled with a DIFFERENT
+ *    sentence, and only after the press — the expensive half of the check runs
+ *    on demand. The fixture's slot-3 `region_1_1` is that case, measured: its
+ *    `spring_gap` level's north portal is authored as `exit_up`, and the bounce
+ *    re-assembly names every exit `side_exit_<side>`, so an UNEDITED save would
+ *    already rewrite the payload.
+ */
+export async function apworldEditButtonIsOfferedPerRegionAndRefusedByName(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        testController.reportCondition('the toolbar carries a player selector', !!select);
+        if (!select) return testController.getOverallResult();
+
+        /* ── slot 1: maze rooms, every one of them openable ─────────────── */
+        selectPlayer(select, '1');
+        selectTab(panel, 'regions');
+        await testController.pollForCondition(
+            () => !!editButtonFor(sidecarRegions(doc, '1')[0]),
+            'slot 1 draws an Edit button on a sidecar-bearing region', 8000, 50);
+
+        const withRoom = sidecarRegions(doc, '1');
+        testController.reportCondition(
+            'the fixture has more regions than sidecars (a Menu with no room)',
+            Object.keys(doc.regions['1']).length > withRoom.length);
+        let enabled = 0;
+        for (const name of withRoom) {
+            const btn = editButtonFor(name);
+            testController.reportCondition(`slot 1 "${name}" has an Edit button`, !!btn);
+            if (btn && !btn.disabled) enabled += 1;
+        }
+        testController.assertEqual(
+            'every maze region of slot 1 offers its room', String(withRoom.length),
+            String(enabled));
+        const noRoom = Object.keys(doc.regions['1']).filter((n) => !withRoom.includes(n));
+        for (const name of noRoom) {
+            testController.reportCondition(
+                `"${name}" has NO sidecar and therefore NO Edit button`, !editButtonFor(name));
+        }
+
+        /* ── slot 3: a bounce region the door REFUSES, named on the press ── */
+        selectPlayer(select, '3');
+        selectTab(panel, 'regions');
+        const refusedRegion = 'region_1_1';
+        const before = await testController.pollForValue(
+            () => editButtonFor(refusedRegion), `slot 3's "${refusedRegion}" Edit button`,
+            8000, 50);
+        testController.reportCondition(
+            '⛓ it starts ENABLED — the cheap half of the check cannot see the payload',
+            !!before && !before.disabled);
+        if (before) before.click();
+        const named = await testController.pollForValue(
+            () => {
+                const b = editButtonFor(refusedRegion);
+                return b && b.disabled && b.title ? b : null;
+            },
+            'the pressed button is disabled and names its reason', 8000, 50);
+        testController.reportCondition(
+            '⛔ …and after the press it is DISABLED with the reason in its title',
+            !!named && named.title.includes('UNCHANGED would already rewrite'));
+        testController.reportCondition(
+            'the status line says the same thing',
+            !!panel.statusLabel && panel.statusLabel.textContent.includes('Edit refused'));
+        // ⛓ …and a SIBLING bounce region in the same slot is still offered, so
+        //   the refusal is about the region and not about the substrate.
+        const ok = editButtonFor('region_1_0');
+        testController.reportCondition(
+            '⛓ a sibling bounce region in the SAME slot is still enabled',
+            !!ok && !ok.disabled);
+
+        /* ── the jta control: no room editor at all ──────────────────────── */
+        const jtaPanel = await openHub(testController, NO_GRID_PRESET_PATH);
+        if (jtaPanel) {
+            selectTab(jtaPanel, 'regions');
+            const jtaDoc = jtaPanel.rulesDoc;
+            const jtaRegion = sidecarRegions(jtaDoc, jtaPanel.playerId)[0];
+            const jtaBtn = await testController.pollForValue(
+                () => editButtonFor(jtaRegion), `the jta region "${jtaRegion}"'s Edit button`,
+                8000, 50);
+            testController.reportCondition(
+                '⛔ a jta region\'s button is DISABLED without being pressed',
+                !!jtaBtn && jtaBtn.disabled);
+            testController.reportCondition(
+                '…and its title names the substrate and the missing declaration',
+                !!jtaBtn && jtaBtn.title.includes('No region editor for "jta"'));
+        }
+        /* ── the Seedling control: a DECLARED refusal, not an absence ────── */
+        const seedlingPanel = await openHub(testController, SEEDLING_PRESET_PATH);
+        if (seedlingPanel) {
+            selectTab(seedlingPanel, 'regions');
+            const sDoc = seedlingPanel.rulesDoc;
+            const sRegion = sidecarRegions(sDoc, seedlingPanel.playerId)[0];
+            testController.assertEqual(
+                'the control document\'s sidecars are Seedling\'s', 'flash_seedling',
+                String(sDoc.preset_sidecars[seedlingPanel.playerId][sRegion].substrate));
+            const sBtn = await testController.pollForValue(
+                () => editButtonFor(sRegion), `the Seedling region "${sRegion}"'s Edit button`,
+                8000, 50);
+            testController.reportCondition(
+                '⛔ a Seedling region\'s button is DISABLED without being pressed',
+                !!sBtn && sBtn.disabled);
+            // ⛓⛓ …and NOT for the jta reason: Seedling HAS a room editor. The
+            //    title is the substrate's own sentence about its PAYLOAD.
+            testController.reportCondition(
+                '⛓⛓ …and its title is the SUBSTRATE\'s own sentence, not "no region editor"',
+                !!sBtn && sBtn.title.includes('ATLAS REFERENCE')
+                    && !sBtn.title.includes('No region editor'));
+            testController.reportCondition(
+                'the substrate does declare a roomEditor — the refusal is about the DOCUMENT',
+                !!substrateRegistry.get('flash_seedling')?.roomEditor);
+        }
+        return testController.getOverallResult();
+    } catch (error) {
+        testController.reportCondition(`Test error: ${error.message}`, false);
+        return testController.getOverallResult();
+    }
+}
+
+/**
+ * ⛓⛓⛓ **THE LAB DOOR, DRIVEN OVER THE REAL BUS, AND ITS SAVE IS ONE OP.**
+ *
+ * Pressing Edit ▸ on a maze region must hand the maze lab a ONE-ENTRY REGION
+ * LIBRARY (the document its SET arm sniffs for) and ask for ROOM 0 of it — and
+ * when that room closes, exactly ONE edit must land in the hub, which one Undo
+ * folds away, sidecar AND rules together.
+ *
+ * ⛔ NO IFRAME IS WAITED ON. The three phases of `labRoomEditor`'s contract are
+ * facts the PAGE publishes on `procgenLab:levelChanged`, so the row publishes
+ * them itself — the same thing `check-procgen-lab-hosting.mjs` does — and the
+ * host's own `pendingLoad` / `pendingNavigate` (or the published messages, when
+ * the frame did connect) are what it reads. That makes the row a test of the
+ * CONTRACT rather than of a page's load time.
+ *
+ * ⛓ The EDIT is "take the red door out of the room": the fixture's slot-1
+ * `region_1_0` has exactly one obstacle, `door_red` at (3,4), and exactly one
+ * location gated on it. Removing it must open that location and nothing else.
+ */
+export async function apworldEditOpensTheLabDoorAndItsSaveIsOneOp(testController) {
+    const REGION = 'region_1_0';
+    let host = null;
+    let restore = null;
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+
+        /**
+         * ⛓⛓⛓ **THE HOST IS A PANEL-SHAPED STUB, AND THAT IS THE POINT.**
+         * `openLabRoomEditor` resolves its host through `findLabPanel(page)`,
+         * and W4's own contract says a host is `{substrate, iframeId, load,
+         * navigate, raise?}` — `createPageLabTransport` is a second
+         * implementation of exactly that shape. So the row supplies one and
+         * reads the two messages the door sends DIRECTLY.
+         *
+         * ⛔ AND IT IS NOT A CONVENIENCE. The first version of this row mounted
+         * the real maze lab and drove the phases over the bus; the PAGE then
+         * connected inside the row's own 8 s poll, opened room 0 for real, and
+         * published its OWN close — so `onSave` fired with the page's UNEDITED
+         * record and the row measured a no-op. A live page and a synthetic one
+         * cannot both be the author of the same three-phase conversation.
+         */
+        /**
+         * ⛔ AND AN ALREADY-MOUNTED REAL PANEL IS STOOD ASIDE, not asserted
+         * absent. `findLabPanel` takes the FIRST registered instance for a
+         * page, and an earlier row in the roster may well have raised the lab
+         * (measured: it had — the first version of this row asserted the
+         * registry was empty and failed on it). The real ones are unregistered
+         * for the length of this row and put back in `finally`, so the row is
+         * order-independent either way.
+         */
+        const displaced = labPanelInstances().filter((p) => p.substrate === 'maze');
+        for (const p of displaced) unregisterLabPanelInstance(p);
+        restore = () => { for (const p of displaced) registerLabPanelInstance(p); };
+
+        const sent = { load: null, navigate: null, raised: 0 };
+        host = {
+            substrate: 'maze',
+            iframeId: 'apworld-h4b-stub',
+            load: (payload) => { sent.load = payload; return true; },
+            navigate: (search) => { sent.navigate = search; return true; },
+            raise: () => { sent.raised += 1; return true; },
+            _note: () => {},
+        };
+        registerLabPanelInstance(host);
+        appEventBus.registerPublisher('procgenLab:levelChanged', 'tests');
+        testController.reportCondition(
+            'the stub IS the host the door will find for the maze page',
+            findLabPanel('maze') === host);
+
+        const doc = panel.rulesDoc;
+        const sidecarBefore = JSON.stringify(doc.preset_sidecars['1'][REGION].playable_payload);
+
+        selectTab(panel, 'regions');
+        const btn = await testController.pollForValue(
+            () => editButtonFor(REGION), `the "${REGION}" Edit button`, 8000, 50);
+        testController.reportCondition('a maze region offers Edit ▸', !!btn && !btn.disabled);
+        if (!btn) return testController.getOverallResult();
+        btn.click();
+
+        const library = await testController.pollForValue(
+            () => sent.load ?? null, 'the maze lab was handed a document', 8000, 50);
+        testController.reportCondition('the lab door delivered a load', !!library);
+        if (!library) return testController.getOverallResult();
+        testController.reportCondition(
+            '⛓ the document is a REGION LIBRARY — what the SET arm sniffs for',
+            typeof library.library_id === 'string' && Array.isArray(library.entries));
+        testController.assertEqual(
+            'it holds exactly ONE entry — this region\'s room', '1',
+            String(library.entries.length));
+        testController.assertEqual(
+            'and the entry is this region, on this substrate', `${REGION}|maze`,
+            `${library.entries[0].entry_id}|${library.entries[0].substrate}`);
+        testController.reportCondition(
+            '⛓ the door raised its host — a hidden Golden Layout tab has a zero-sized canvas',
+            sent.raised > 0);
+
+        // ── phase 1: the page says it holds the document with NO room open.
+        const envelope = (room, record) => ({
+            substrate: 'maze', iframeId: host.iframeId,
+            payload: makeSetRecordEnvelope({ substrate: 'maze', room, record }),
+        });
+        const held = { library, overlay: {} };
+        testController.eventBus.publishAs(
+            'procgenLab:levelChanged', envelope(null, held), 'tests');
+        const search = await testController.pollForValue(
+            () => sent.navigate ?? null, 'the door asked for a room', 8000, 50);
+        testController.assertEqual(
+            '⛓ …and the room it asked for is ROOM 0 of the SET arm', '?source=set&room=0',
+            String(search));
+
+        // ── phase 2: the room is open. ── phase 3: it closes, edited.
+        testController.eventBus.publishAs(
+            'procgenLab:levelChanged', envelope(0, held), 'tests');
+        const edited = JSON.parse(JSON.stringify(held));
+        testController.assertEqual(
+            'the room carried the one obstacle the edit removes', '1',
+            String(edited.library.entries[0].payload.obstacles.length));
+        edited.library.entries[0].payload.obstacles = [];
+        testController.eventBus.publishAs(
+            'procgenLab:levelChanged', envelope(null, edited), 'tests');
+
+        // ── ONE op, and it moved both halves.
+        const landed = await testController.pollForValue(
+            () => (panel.session.ops().length === 1 ? panel.session.ops() : null),
+            'exactly ONE edit landed in the hub', 8000, 50);
+        testController.reportCondition('the close returned ONE op', !!landed);
+        const after = panel.rulesDoc;
+        testController.reportCondition(
+            '⛓ the SIDECAR payload moved',
+            JSON.stringify(after.preset_sidecars['1'][REGION].playable_payload) !== sidecarBefore);
+        testController.assertEqual(
+            'the obstacle is gone from the document', '0',
+            String(after.preset_sidecars['1'][REGION].playable_payload.obstacles.length));
+        const gated = after.regions['1'][REGION].locations
+            .filter((l) => JSON.stringify(l.access_rule) !== '{"rule":"True_"}');
+        testController.assertEqual(
+            '⛓ …and the rule the door PROVED it authored moved with it', '0',
+            String(gated.length));
+        // ⛔ the AP identity the library capture strips is back, or the map
+        //    would lose its connection lines and the panel its location names.
+        const payloadAfter = after.preset_sidecars['1'][REGION].playable_payload;
+        testController.reportCondition(
+            '⛔ the exit targets survived the library round trip',
+            payloadAfter.exits.every((e) => !!e.targetRegion));
+        testController.reportCondition(
+            '⛔ …and so did the baked AP location names',
+            payloadAfter.items.every((i) => typeof i.locationName === 'string'));
+        const shown = await testController.pollForValue(
+            () => document.querySelector(
+                `${PANEL_SELECTOR} .apworld-region-block[data-region-name="${REGION}"]`),
+            'the Regions tab redrew the edited region', 8000, 50);
+        testController.reportCondition('the Regions tab redrew the region', !!shown);
+
+        // ── ONE undo takes both halves back.
+        const undo = document.querySelector(`${PANEL_SELECTOR} .apworld-undo`);
+        testController.reportCondition('the Undo button is there', !!undo);
+        if (undo) undo.click();
+        const restored = await testController.pollForValue(
+            () => (panel.session.ops().length === 0 ? panel.rulesDoc : null),
+            'one undo emptied the edit list', 8000, 50);
+        testController.assertEqual(
+            '⛓⛓ ONE undo restored the SIDECAR', sidecarBefore,
+            JSON.stringify(restored?.preset_sidecars?.['1']?.[REGION]?.playable_payload));
+        testController.assertEqual(
+            '⛓⛓ …and the RULES with it', '1',
+            String((restored?.regions?.['1']?.[REGION]?.locations ?? [])
+                .filter((l) => JSON.stringify(l.access_rule) !== '{"rule":"True_"}').length));
+        return testController.getOverallResult();
+    } catch (error) {
+        testController.reportCondition(`Test error: ${error.message}`, false);
+        return testController.getOverallResult();
+    } finally {
+        if (host) unregisterLabPanelInstance(host);
+        if (restore) restore();
+    }
+}
+
+registerTest({
+    id: 'apworld-edit-button-is-offered-per-region-and-refused-by-name',
+    name: 'APWorld hub: Edit ▸ is offered per region, and every refusal is named',
+    description: 'On the four-player fixture: every sidecar-bearing maze region of slot 1 '
+               + 'offers its room and the sidecar-less regions draw NO button at all; a '
+               + 'bounce region whose payload does not round-trip starts enabled (the cheap '
+               + 'half of the check cannot see a payload), and after the press is DISABLED '
+               + 'with its own reason in the title while a sibling in the same slot stays '
+               + 'open; and a jta region — a substrate with no roomEditor — is disabled '
+               + 'without being pressed at all; and a Seedling region — a substrate that '
+               + 'HAS a room editor and declares `regionRoundTrip: {refused}` — is disabled '
+               + 'with the substrate\'s OWN sentence about its payload, which is the one case '
+               + 'the refusal comes from a declaration rather than from an absence.',
+    testFunction: apworldEditButtonIsOfferedPerRegionAndRefusedByName,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-edit-opens-the-lab-door-and-its-save-is-one-op',
+    name: 'APWorld hub: Edit ▸ hands the maze lab room 0 of a one-entry library, and its save is ONE op',
+    description: 'Registers a PANEL-SHAPED host (W4\'s own contract shape — a live lab page '
+               + 'and a synthetic one cannot both author the same three-phase conversation), '
+               + 'presses Edit ▸ on a maze region of the four-player fixture, and asserts the '
+               + 'document it was handed is a ONE-ENTRY region library for that region, then '
+               + 'drives the three phases over the real bus — held, open, closed-with-an-edit. '
+               + 'The close '
+               + 'must return exactly ONE hub op that moves the sidecar payload AND the one '
+               + 'access rule the door proved it authored, keep the exit targets and the '
+               + 'baked AP location names the library capture strips, and be folded away by '
+               + 'ONE Undo.',
+    testFunction: apworldEditOpensTheLabDoorAndItsSaveIsOneOp,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

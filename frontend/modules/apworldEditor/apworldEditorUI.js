@@ -45,6 +45,15 @@ import {
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { getRegionEditor } from '../procgenPipeline/regionEditors.js';
+/**
+ * ⛓ H4b — the per-region Edit door. `regionRoundTrip` names NO substrate: it
+ * resolves `roomEditor` and `regionRoundTrip` off the registry, so this panel
+ * grows an Edit button for a new substrate the day that substrate declares two
+ * fields, and never here.
+ */
+import {
+  inspectRegionRoom, openRegionRoom, regionRoundTripOf, sidecarOf,
+} from './regionRoundTrip.js';
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { applyRulesDocOp } from './rulesDocOps.js';
 import {
@@ -206,6 +215,31 @@ class ApworldEditorUI {
     this._mapCache = null;
 
     /**
+     * ⛓⛓⛓ H4b — **THE OPEN ROOM IS PARKED, NOT TORN DOWN ON A RE-RENDER.**
+     * `rawEditorView` (H2b) is the precedent for state a tab holds across
+     * renders, and its rule is the OPPOSITE of this one on purpose: the raw
+     * view lives INSIDE this panel's DOM, so `_render` has to unmount it before
+     * emptying the container. A room session lives in ANOTHER panel (the maze
+     * lab, the bounce editor) and outlives every render of this one — closing
+     * it here would shut the room the reader is standing in the moment an
+     * unrelated field re-rendered the Regions tab.
+     *
+     * ⇒ it is closed in exactly two places: when a SECOND room is opened, and
+     * in `onPanelDestroy`.
+     */
+    this.roomEditorSession = null;
+    /**
+     * ⛓ Per-region verdicts the ASYNC inspection produced, `key → why`. The
+     * cheap half of the check (does this substrate have a room editor and a
+     * round trip at all?) is two registry lookups and runs on every render; the
+     * expensive half (does THIS region's payload round-trip?) deserializes a
+     * world, so it runs when the button is PRESSED and its refusal is
+     * remembered here so the button can then say so without being pressed again.
+     * ⛔ Cleared by `_applyOp`: an edit can change the answer.
+     */
+    this._roomVerdicts = new Map();
+
+    /**
      * ⛓⛓ **THE SELECTED SLOT, AND THE ONE THE PERSON PICKED, KEPT APART.**
      * `playerId` is what every tab reads and every op is stamped with;
      * `_chosenPlayer` is non-null only after a deliberate pick, so a NEW
@@ -346,6 +380,15 @@ class ApworldEditorUI {
     //   means nothing in the new, and neither does a cached grid.
     this._selectedRegion = null;
     this._mapCache = null;
+    /**
+     * ⛓ H4b — …and neither does a remembered room verdict. The key is
+     * `slot|region`, and two documents can hold the same slot and the same
+     * region NAME while one of them round-trips and the other does not. ⛔ Also
+     * the open room: it was opened on the OLD record's working copy, so its save
+     * would land an op built against a document nobody is editing any more.
+     */
+    this._roomVerdicts.clear();
+    this._closeRoomEditor();
     this._render();
   }
 
@@ -365,6 +408,10 @@ class ApworldEditorUI {
       return { ok: false, applied: false, description: 'no session' };
     }
     const res = this.session.apply(this._stampPlayer(op));
+    // ⛓ H4b — an applied edit can change whether a region's room round-trips
+    //   (its rules moved, its sidecar was replaced), so the remembered
+    //   refusals go with it rather than outliving the document they described.
+    if (res.ok && res.applied) this._roomVerdicts.clear();
     if (!res.ok) {
       this._opMessage = `Refused: ${res.description}`;
       log('warn', `op refused: ${res.description}`);
@@ -519,6 +566,7 @@ class ApworldEditorUI {
 
   onPanelDestroy() {
     this._teardownRawEditor();
+    this._closeRoomEditor();
     if (this._keyHandler) {
       this.rootElement.removeEventListener('keydown', this._keyHandler);
       this.rootElement.removeEventListener('mousedown', this._focusHandler);
@@ -2643,6 +2691,135 @@ class ApworldEditorUI {
   }
 
 
+  /**
+   * ⛓⛓⛓ H4b — **THE PER-REGION Edit DOOR**, in the Regions header.
+   *
+   * ⛔ **THREE OUTCOMES, AND "ABSENT" IS ONE OF THEM.** A classic AP region has
+   * no `preset_sidecars` entry and therefore no ROOM: there is nothing to edit
+   * and no reason to draw a control that says so. A region WITH a sidecar
+   * always gets a button — enabled, or disabled with the reason in its `title`
+   * — because "this world has a room here and you cannot open it" is a fact the
+   * reader is owed.
+   *
+   * ⛓⛓ **THE CHEAP HALF RUNS PER RENDER, THE EXPENSIVE HALF ON THE PRESS.**
+   * Whether a substrate HAS a room editor and a document round trip is two
+   * registry lookups. Whether THIS region's payload actually round-trips
+   * deserializes a world and re-derives its rules — measured at ~90 ms a region
+   * — and a document can hold a hundred of them, so it runs when the button is
+   * pressed and its answer is remembered in `_roomVerdicts`. ⇒ a refusal is
+   * named either way; only WHEN it is named differs.
+   *
+   * @returns {HTMLElement|null} the button, or null when there is no room here
+   */
+  _makeRoomEditorButton(regionName) {
+    const sidecar = sidecarOf(this.rulesDoc, this.playerId, regionName);
+    if (!sidecar) return null;
+    const substrate = sidecar.substrate ?? '(none)';
+    const key = `${this.playerId}|${regionName}`;
+
+    let why = null;
+    if (!getRegionEditor(substrate)) {
+      why = `No region editor for "${substrate}" yet — its registry entry declares no `
+        + '`roomEditor`.';
+    } else {
+      const decl = regionRoundTripOf(substrate);
+      if (!decl.rt) why = decl.why;
+      else if (this._roomVerdicts.has(key)) why = this._roomVerdicts.get(key);
+    }
+
+    const btn = this._makeButton('Edit ▸', why ? '#3a3a3a' : '#33506e',
+      () => this._handleEditRoom(regionName));
+    btn.classList.add('apworld-edit-room');
+    btn.dataset.substrate = substrate;
+    if (why) {
+      btn.disabled = true;
+      btn.style.cursor = 'not-allowed';
+      btn.style.color = '#999';
+      btn.title = why;
+    } else {
+      btn.title = `Open this ${substrate} region's room in its own editor. Saving returns ONE `
+        + 'edit here, which one Undo folds away.';
+    }
+    return btn;
+  }
+
+  /**
+   * ⛓⛓ Press: run the full inspection, then open the room from the WORKING
+   * COPY (⚖ *"Let's implement working copy for now"*) — `this.rulesDoc` IS
+   * `session.record()`, and the op the save returns is applied to that same
+   * session. Nothing here reads applied state.
+   */
+  async _handleEditRoom(regionName) {
+    const key = `${this.playerId}|${regionName}`;
+    let inspection;
+    try {
+      inspection = await inspectRegionRoom(this.rulesDoc, this.playerId, regionName);
+    } catch (err) {
+      inspection = { ok: false, why: `the inspection threw — ${err.message}` };
+    }
+    if (!inspection.ok) {
+      // ⛔ REMEMBERED, so the button now says it without being pressed again.
+      this._roomVerdicts.set(key, inspection.why);
+      this._opMessage = `Edit refused: ${inspection.why}`;
+      this._render();
+      return;
+    }
+    this._closeRoomEditor();
+    let handle;
+    try {
+      handle = await openRegionRoom(inspection, (out) => this._onRoomEdited(regionName, out));
+    } catch (err) {
+      this._opMessage = `Edit failed: ${err.message}`;
+      this._render();
+      return;
+    }
+    // ⛓ The LAB door answers `{ok, why, close}` synchronously; the PANEL door
+    //   answers nothing (its ONE return path is `onSave`). A refusal is the
+    //   door's own sentence — "no Procgen Lab panel is mounted", say — and is
+    //   NOT cached: it is about the app's layout right now, not this document.
+    if (handle && handle.ok === false) {
+      this._opMessage = `Edit refused: ${handle.why}`;
+      this._render();
+      return;
+    }
+    this.roomEditorSession = { key, region: regionName, handle: handle ?? null };
+    const frozen = inspection.frozen.length;
+    this._opMessage = `Editing "${regionName}" in the ${inspection.substrate} editor. `
+      + `Save there to return ONE edit here.${frozen
+        ? ` ⚠ ${frozen} access rule${frozen === 1 ? '' : 's'} here cannot be re-derived from `
+          + 'the room and will be left exactly as they are.'
+        : ''}`;
+    this._render();
+  }
+
+  /**
+   * ⛓ The save, arriving as `{op, moved}` or `{error}` — the linked editors'
+   * single return path, wrapped in the hub's single op.
+   */
+  _onRoomEdited(regionName, out) {
+    this.roomEditorSession = null;
+    if (out.error) {
+      this._opMessage = `Save refused: ${out.error}`;
+      log('warn', `room save refused: ${out.error}`);
+      alert(out.error);
+      this._render();
+      return;
+    }
+    this._applyOp(out.op, {
+      message: (res) => `${res.description}${out.moved
+        ? ` — ${out.moved} access rule${out.moved === 1 ? '' : 's'} re-derived`
+        : ' — no access rule moved'}`,
+    });
+  }
+
+  /** ⛓ Give up on the parked room. ⛔ Its `onSave` never fires afterwards. */
+  _closeRoomEditor() {
+    try {
+      this.roomEditorSession?.handle?.close?.();
+    } catch (_) { /* the other panel may be mid-teardown */ }
+    this.roomEditorSession = null;
+  }
+
   _renderRegion(regionName, region) {
     const block = document.createElement('div');
     /**
@@ -2688,6 +2865,13 @@ class ApworldEditorUI {
     const spacer = document.createElement('span');
     spacer.style.flex = '1 1 auto';
     header.appendChild(spacer);
+
+    /**
+     * ⛓ H4b — Edit ▸ sits between the name and Delete, and is ABSENT for a
+     * region with no sidecar (a classic AP region has no room).
+     */
+    const editBtn = this._makeRoomEditorButton(regionName);
+    if (editBtn) header.appendChild(editBtn);
 
     const delBtn = this._makeButton('× Delete', '#8a2a2a', () => this._handleDeleteRegion(regionName));
     header.appendChild(delBtn);

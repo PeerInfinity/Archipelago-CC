@@ -175,7 +175,29 @@ function save(saved, { regionId, payload }) {
     const world = deserializeMazeWorld(next);
     const extracted = extractPathsAndObstacles(world, { regionId });
     const compiled = compileRegion(extracted, { obstacleLib: obstacleLibOf(next) });
-    return { payload: next, exits: compiled.exits, locations: compiled.locations };
+    /**
+     * ⛓⛓⛓ **THE PAYLOAD NAMES ITS OWN AP LOCATIONS, AND THAT IS WHAT MAKES A
+     * TOP-DOWN REGION EDITABLE AT ALL.** `serializeMazeWorld` bakes
+     * `items[].locationName` from `extractedRules.locations[].global_name ??
+     * makeLocationName(...)` (`mazeSerializer.js:49-55`) — so for a region
+     * grown by the maze pipeline the baked name IS what the naming convention
+     * would reconstruct, and for a `procgen_topdown` region it is the SOURCE
+     * GAME's name (`Inside Yellow Castle`), which no convention can.
+     *
+     * ⛔ Answering with it rather than leaving the hub to guess is the same
+     * thing bounce does with `ap_locations`, and it is not a shortcut: an item
+     * the reader MOVED or ADDED has no baked name (the re-stamp fills only the
+     * tiles the document already had one on), so it comes back nameless and the
+     * hub refuses it BY NAME instead of renaming somebody's AP location.
+     */
+    const nameByTile = new Map(
+        (next.items ?? []).filter((it) => it.locationName).map((it) => [tileKey(it), it.locationName]),
+    );
+    const locations = compiled.locations.map((l) => {
+        const name = l.position ? nameByTile.get(tileKey(l.position)) : null;
+        return name ? { ...l, name } : l;
+    });
+    return { payload: next, exits: compiled.exits, locations };
 }
 
 /**

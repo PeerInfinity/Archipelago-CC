@@ -24,7 +24,7 @@ export const REGISTRY = frz({
     "columnOrder": "the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported",
     "columns": [
         {
-            "fields": 24,
+            "fields": 25,
             "id": "maze",
             "label": "Maze",
             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"
@@ -36,7 +36,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 36,
+            "fields": 37,
             "id": "bounce",
             "label": "Bounce Demo",
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
@@ -54,7 +54,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js"
         },
         {
-            "fields": 10,
+            "fields": 11,
             "id": "flash_seedling",
             "label": "Seedling (region atlas)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
@@ -137,6 +137,7 @@ export const REGISTRY = frz({
         },
         {
             "rows": [
+                "regionRoundTrip",
                 "roomEditor"
             ],
             "title": "Editing"
@@ -3882,6 +3883,82 @@ export const REGISTRY = frz({
             "documentedHow": "bullet",
             "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
             "name": "prepareSphereGrowth"
+        },
+        {
+            "carriedBy": [
+                "maze",
+                "bounce",
+                "flash_seedling"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": true,
+                    "short": "{open, save}",
+                    "type": "object",
+                    "value": [
+                        "open",
+                        "save"
+                    ]
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": true,
+                    "short": "{open, save}",
+                    "type": "object",
+                    "value": [
+                        "open",
+                        "save"
+                    ]
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": true,
+                    "short": "{refused}",
+                    "type": "object",
+                    "value": [
+                        "refused"
+                    ]
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Editing",
+            "name": "regionRoundTrip"
         },
         {
             "carriedBy": [

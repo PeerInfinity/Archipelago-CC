@@ -436,6 +436,18 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "APWorld hub H4a. The Document tab's per-player slice, finally observable: 158 of 192 carriers held {} and every populated one keyed under slot '1', so no committed document could discriminate. The fixture's slots hold 3/3/5/5, and the row asserts the four summaries are not all the same string."
+        },
+        {
+            "id": "apworld-edit-button-is-offered-per-region-and-refused-by-name",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H4b. Three shapes of answer on two documents: a sidecar-bearing region offers its room, a sidecar-less one draws NO button (an absence, not a disabled control), a substrate with no roomEditor (jta) is disabled without being pressed, and a region whose payload does not round-trip is disabled only AFTER the press — the expensive half of the check deserializes a world, so it runs on demand. The fixture's slot-3 region_1_1 is that case: its spring_gap level's north portal is authored as exit_up and the bounce re-assembly names every exit side_exit_<side>. A Seedling region is the fourth shape — its substrate HAS a room editor and declares regionRoundTrip: {refused}, so the title is the substrate's OWN sentence about its payload. Driving that is what kills the mutant that ignores the declaration: without it the button-side use of regionRoundTripOf was uncovered and the mutant stayed green."
+        },
+        {
+            "id": "apworld-edit-opens-the-lab-door-and-its-save-is-one-op",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H4b. The lab door end to end without an iframe: the host is a PANEL-SHAPED stub (W4's own contract shape, the same one createPageLabTransport implements) and the three phases of labRoomEditor's contract are published on procgenLab:levelChanged. The first version mounted the real maze lab; the page connected inside the row's own poll, opened room 0 for real and published its OWN close, so onSave fired with the page's UNEDITED record and the row measured a no-op — a live page and a synthetic one cannot both author the same conversation. Asserts the handed document is a ONE-ENTRY region library, the navigate asks for ?source=set&room=0, the close returns exactly ONE hub op moving payload AND the one rule the door proved it authored, the exit targets and baked AP location names the library capture strips are restored, and ONE Undo folds it all away."
         }
     ]
 }
