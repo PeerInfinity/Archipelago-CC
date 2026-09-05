@@ -11036,6 +11036,19 @@ explicitly set to Bot"* the intended contract? If yes, both ⚖ close in one sma
 reverting it re-opens the silent-teleport failure M6 exists to prevent. No product code or instrument was
 touched. **V3 (the rename + the portals cut) is unblocked.**
 
+**V2b VERIFIED by the planner 2026-09-05** (`78ea0b437` + `ce7720dfb` on origin/main; docs-only). The loops
+halt is loops' OWN M4/M6 PARK: on the first maze action the block's mode resolves to the default `record`
+(`loopState.js:216`, flipped 2026-07-23 by `47c3a7f346`), and M4's manual/record branch parks the queue for
+live play (`_handleManualRegionEntry:2516` ← `_processFrame:1220`, a direct synchronous call — no bus hop);
+M6 (`05979752fb`) made substrate delegation reachable only from a `bot` block, documented in
+`loop-recording.md`. The two instruments were written six days earlier and set NO block mode; with
+`setBlockMode(…,'bot')` ×3 every claim passes. So V2's SUBJECT ruling is overturned: 5 INSTRUMENT / 2 STALE /
+0 SUBJECT. The omsi mana leg shares the cause family with the OPPOSITE repair (it must CREATE a park).
+**⚖ RULED 2026-09-05 (user): "a maze block parks for live play unless explicitly set to Bot" is the
+INTENDED contract.** ⇒ **V3a** = three instrument-design fixes (maze leg → Bot ×3; omsi leg → a manual park;
+`verify-rule-gated-portals` physics leg CUT, the witnessed claim kept); **V3b** = the RENAME (gate-shaped
+`verify-*` → `check-`, report-shaped → `dump-`/`report-`), its own session because of the pins it moves.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
