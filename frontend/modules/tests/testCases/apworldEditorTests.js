@@ -661,17 +661,25 @@ export async function apworldRawViewReplacesTheDocumentAsOneOp(testController) {
             'H2b raw view', panel.rulesDoc.preset_label);
         testController.assertEqual('it was exactly ONE op',
             String(opsBefore + 1), String(panel.session.ops().length));
+        /**
+         * ⛔ `?? {}` — a REFUSED save leaves the op list where it was, and
+         * `.at(-1)` on an empty list is `undefined`. A row that throws there
+         * reports "test error-free: failed" instead of naming the condition
+         * that actually moved, which is exactly the diagnosis a mutant run
+         * needs. (Measured: mutant (a) below did precisely this.)
+         */
+        const lastOp = panel.session.ops().at(-1) ?? {};
         testController.assertEqual('and the op is a replace-document',
-            'replace-document', panel.session.ops().at(-1).op);
+            'replace-document', String(lastOp.op));
         /**
          * ⛔⛔ **THE OP CARRIES THE PARSED DOCUMENT, NEVER THE TEXT.** This is
          * the discriminator for the mutant that feeds `replace-document` the
          * raw string: an edit list whose payload can fail to re-parse is not a
          * record, and a string document is refused by the schema veto rather
-         * than applied — so the assertions above would go red too.
+         * than applied — so the assertions above go red too.
          */
         testController.assertEqual('…and its payload is a parsed OBJECT, not a string',
-            'object', typeof panel.session.ops().at(-1).document);
+            'object', typeof lastOp.document);
 
         document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
         testController.reportCondition(

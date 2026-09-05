@@ -3976,10 +3976,17 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "host",
-                "json"
+                "json",
+                "samples"
             ],
             "file": "measure-apworld-raw-view.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "all"
+                },
                 {
                     "how": [
                         "arg"

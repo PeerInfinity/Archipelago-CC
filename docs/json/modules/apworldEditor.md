@@ -24,7 +24,7 @@ document.
 | `documentLinks.js` | the **Links** tab's rows |
 | `../procgenCore/compositeMapRenderer.js` | the **Map** tab's painter — shared with the procgen pipeline panel, substrate-neutral |
 | `../procgenPipeline/compositeMapDocument.js` | `reconstructResultFromSidecars` — `preset_sidecars` → a `Grid` |
-| `rawView.js` | the **Raw JSON** tab's text, its parse, and the **measured** size limit |
+| `rawView.js` | the **Raw JSON** tab's text and its parse (the size limit was RETIRED by measurement — H2b) |
 | `downloadJson.js` | the download exit — the file name and the bytes |
 
 ## The document is a session, and the only way in is an op
@@ -56,7 +56,7 @@ reset the session, so an undo after an Apply still works. It republishes the
 | **Map** | the composite grid, for documents whose sidecars carry grid cells — see below |
 | **Document** | **every** top-level key — see below |
 | **Links** | every other editor that owns part of a `rules.json` |
-| **Raw JSON** | the whole document as text — see *The exits* below |
+| **Raw JSON** | the whole document in a CodeMirror 6 editor — see *The exits* below |
 
 ## The player selector
 
@@ -254,42 +254,95 @@ published.
 ⚠ `rules:loaded` is **not** published and must not be: it has no subscriber
 anywhere in `frontend/` — only a publisher registration in `presets/index.js`.
 
-### The Raw JSON tab, and its MEASURED limit
+### The Raw JSON tab — CodeMirror 6, and no size limit
 
-The tab shows `JSON.stringify(record, null, 2)` in a text area. Saving parses the
-text and records **one** `replace-document` op, so a single undo folds the whole
-text edit away — and, as with `set-key`, the schema gets a veto first (a preview,
-validated whole, differenced against the errors the document already had).
+The tab mounts a **CodeMirror 6** view over `JSON.stringify(record, null, 2)` —
+the same editor the `editorCodeMirror6` panel is, built from the same extension
+list (`editorCodeMirror6/jsonEditorExtensions.js`: line numbers, fold gutter,
+JSON grammar, `oneDark`, wrapping). ⛔ There is deliberately **no second list**:
+two raw-JSON editors that each build their own drift on the first theme change
+and nothing reds, because each half stays internally consistent.
+
+**Save JSON** (or **Ctrl/Cmd+Enter** inside the editor) parses the text and
+records **one** `replace-document` op, so a single undo folds the whole text edit
+away — and, as with `set-key`, the schema gets a veto first (a preview, validated
+whole, differenced against the errors the document already had). It is a control
+rather than a keystroke handler because reading the text costs a full-document
+string and parsing it a full `JSON.parse`, which per key is the wrong cost and
+would refuse every intermediate state a person types through.
 
 ⛔ The op carries the **parsed** document, never the text: an edit list whose
 payload is a recipe that can fail to re-parse is not a record.
 
-`rawView.RAW_VIEW_LIMIT_BYTES` is **2,000,000 bytes of pretty-printed JSON**, and
-it is a *measurement* — `node scripts/procgen/measure-apworld-raw-view.mjs` drives
-the real panel over the median, p90 and true-max committed documents plus a
-synthetic size sweep, reporting the panel's own re-render cost, the raw tab's
-time-to-interactive and keystroke latency. The full table is in that constant's
-comment. The short version:
+⛔ It is called **Save**, not Apply: the toolbar's Apply means *load this document
+into the app*. Save writes the record; Apply publishes it.
 
-| pretty bytes | textarea open | textarea keystroke | CM6 open | CM6 keystroke |
-|---|---|---|---|---|
-| 203,178 (median preset) | 403 ms | 235 ms | 133 ms | 141 ms |
-| 766,891 (p90 preset) | 2,050 ms | 192 ms | 105 ms | 37 ms |
-| **2,000,000 (the limit)** | **1,504 ms** | **279 ms** | 43 ms | 14 ms |
-| 2,620,225 (`stardew_valley`) | ~7,185 ms | 468–809 ms | 100 ms | 58 ms |
-| 3,146,656 (`procgen_topdown/AP_8`, the max) | 12,942 ms | 1,251 ms | 88 ms | 123 ms |
+#### The limit is RETIRED, and that is a measurement too
 
-2,000,000 is the largest size **measured usable**, not a round number between two
-points. The guard refuses **4 of the 205** presets. Above it the tab says the
-size, names the limit, offers the download — and offers **Show it anyway**,
-because a limit that cannot be overridden is a document its owner cannot look at.
+H2 shipped `RAW_VIEW_LIMIT_BYTES = 2,000,000` here, with a refusal screen and a
+"Show it anyway" escape, because the tab was a `<textarea>` and a textarea over
+the corpus maximum took **12,942 ms to open and 1,251 ms per keystroke**. H2b
+changed the widget and re-ran the same instrument with a new arm:
 
-⚠ **The measurement also says the textarea is the wrong widget.** CodeMirror 6 is
-viewport-virtualised and flat (30–133 ms to open, 11–240 ms per keystroke, from
-200 KB to 8 MB) and would retire this constant. Mounting it is six lines from
-`editorCodeMirror6/codemirror6Imports.js`; integrating it into the hub is not (a
-second read-the-text path, undo interplay, theming, the bundled import graph).
-It is a **costed follow-up**, with its numbers, not part of this rung.
+```
+node scripts/procgen/measure-apworld-raw-view.mjs --all --samples=5 --json=<path>
+```
+
+`--all` opens the raw tab over **every committed preset**, because retiring a
+limit is a claim about 205 documents and cannot be interpolated from three
+(2026-09-05, 8 cpus, load 2.02 → 3.53):
+
+```
+opened 205/205; 0 did NOT mount an editable editor
+time-to-interactive:  min 13.9 ms · median 30.8 ms · p90 99.5 ms · MAX 262.9 ms
+over the textarea's 1,504 ms (H2's limit point): 0    over 500 ms: 0
+```
+
+⇒ no size in this corpus the view cannot open, so the constant, the refusal
+screen, the escape hatch and `rawViewVerdict`'s `overLimit` are **gone**. The
+verdict is now the size, said out loud.
+
+⚠⚠ **The raw tab's cost is NOT ordered by document size.** The ten slowest to
+open are led by three `depgraph` presets at **1,198,656 B** (262.9 / 259.9 /
+179.2 ms) — *under* H2's limit, so never suspect — with the 3,146,656 B corpus
+maximum only **third** at 211.9 ms. H2's median/p90/max-by-size method would have
+reported the worst case as 211.9 ms and been wrong by 51 ms and by four
+documents. That is what `--all` is for.
+
+The synthetic sweep runs to **16 MB**, 5× past the corpus, over the same shipped
+extension list — because "no document is too big" is only defensible if somebody
+looked above the corpus:
+
+| pretty bytes | open | keystroke |
+|---|---|---|
+| 500,000 | 41.1 ms | 67.5 ms |
+| 1,000,000 | 32.3 ms | 14.4 ms |
+| 2,000,000 (H2's limit) | 38.6 ms | 17.8 ms |
+| 4,000,000 | 53.1 ms | 12.1 ms |
+| 8,000,000 | 89.4 ms | 10.5 ms |
+| 16,000,000 | 179.2 ms | 16.9 ms |
+
+16 MB opens faster than the textarea opened 500 KB.
+
+#### Undo, and the cost of the import
+
+**Ctrl/Cmd+Z inside the editor is the editor's**; outside it, it is the session's
+(B-c's rule). The panel's key handler refuses the binding inside
+`input, select, textarea` and inside anything `isContentEditable` — that last
+clause is what carries a CodeMirror view, and H2b is the first time a
+`contenteditable` widget has ever been under it. CM6's own history handles the
+undo, through the shared list's keymap.
+
+The import is free in both modes, measured:
+
+* **bundled** — `frontend/dist/bundle.js` went 4,372,452 → **4,372,093 B**
+  (−359): `init-bundled.js` already imports `editorCodeMirror6/index.js`
+  statically, so the 837 KB CM6 library was always an input;
+* **unbundled** — the ordered `.js` request list of a cold load differs by
+  exactly **one** file (`jsonEditorExtensions.js`, 3,755 B).
+  `codemirror6-bundle.js` was already fetched at the same position (347 → 346),
+  because `editorCodeMirror6` is `enabled: true` in `module-configs/modules.json`
+  and imports the barrel statically.
 
 ## Events
 
@@ -308,5 +361,5 @@ It is a **costed follow-up**, with its numbers, not part of this rung.
 | `../procgenCore/compositeMapRenderer.test.js` | vitest — the Map tab's renderer, driven by a TOY substrate |
 | `../procgenPipeline/compositeMapDocument.test.js` | vitest — `preset_sidecars` → `Grid`, including the player slot |
 | `presetUI.test.js` | vitest — the "Open in APWorld Editor" descriptor |
-| `measure-apworld-raw-view.mjs` | `scripts/procgen/` — the browser measurement `RAW_VIEW_LIMIT_BYTES` is set from |
+| `measure-apworld-raw-view.mjs` | `scripts/procgen/` — the browser measurement; `--all` opens the raw tab over every committed preset, which is what RETIRED `RAW_VIEW_LIMIT_BYTES` |
 | `apworldEditorTests.js` | the in-app runner, category `apworldEditor`, enabled in `playwright_tests_config-substrates.json` (`npm test -- --mode=test-substrates --batch=fast`) |
