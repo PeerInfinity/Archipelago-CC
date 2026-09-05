@@ -10552,6 +10552,22 @@ exit `side_exit_<side>`, so a bounce region whose portal is authored under its o
 the `spring_gap` zone) cannot be re-assembled — **which is a defect in the PIPELINE's own `Edit ▸`
 path too, not only in the hub's**. The hub refuses both BY NAME rather than rewriting them.
 
+**CI at the close, quoted by SHA (⚖ 52) — ALL SIX WORKFLOWS GREEN at `c7481aed4`.** `unittests`
+success on all six matrix legs plus hosting; `Test ALTTP Spoiler & Frontend Regression`, `CodeQL`,
+`Build and Publish Docker Images`, `Deploy to GitHub Pages` and `JavaScript Unit Tests` all success —
+the last one's browser-gate shards include `maze-lab +14`, so that gate passed in CI as well as on the
+box. `ci-vitest-summary.mjs c7481aed4` → run **33956151040 success** — `suite: vitest (unfiltered)`
+**434/13229** (13,221 passed | 8 skipped | **0 failed**), slow battery 12/217. Baseline at H4a's close
+(`0f480500d`) was 433/13191, 13,183 passed.
+
+⛓⛓ **The +38 RECONCILES EXACTLY, and the 38th row is one I did not write** — derived by diffing the
+two runs' own per-file tables, not typed: `rulesDocOps` +10, `rulesEditAdapter` +1,
+`regionRoundTrip` +26 (the one new FILE, 433 → 434) and **`mazeSerializer.test.js` 70 → 71**. That
+last one is its `it.each(MAZE_FILES)` — a roster read off the `mazeRoom/` DIRECTORY asserting H3b's
+law that no maze file imports `procgenPipelineEngine`; `mazeRegionRoundTrip.js` enrolled in it by
+existing, and passes. ⇒ a slice that adds a file to a scanned directory moves a suite count it never
+edited, and deriving the delta is what turns that from a surprise into a confirmation.
+
 **NEXT = H4c** (reverse links from `lab.html` / `watch.html` / the bounce editor), then H5.
 
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
