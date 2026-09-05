@@ -10834,6 +10834,14 @@ surfaced during this arc — a SURVEY slice, not a feature, is what one more sli
 reviews R1 (marking tool ↔ editor) and R2 (loop costs ↔ procgen ↔ editor), one of them LAST; H6a parked
 behind R1.
 
+**⚖ RULED 2026-09-05 (user, on the residue): "The verify-script survey."** An Opus SURVEY session
+(`procgen-verify-tier-survey`, kickoff `NewDocs/plans/procgen-verify-tier-survey-prompt.md`; no product code;
+one tracked table `CC/docs/procgen-verify-tier.md`) will join the 50 `verify-*` + 34 `check-*` scripts against
+the batteries that exist (the derived `gateRoster`, `ci-gates`, `standing-values.json` — 28 stems named — and
+the 5 scripts CI names by path), run everything outside them, and classify each as gate / report-that-cannot-
+fail / red (pre-existing or new) / crash / timeout / needs-Windows / stale. Launches when H6b's CI closes and its
+session reads idle. The two reviews (marking tool; loop costs) remain queued, one of them LAST; H6a parked.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
