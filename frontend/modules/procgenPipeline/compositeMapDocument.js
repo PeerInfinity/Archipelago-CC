@@ -107,6 +107,16 @@ export function reconstructResultFromSidecars(rulesJson, { playerId = null } = {
             substrate: substrateId,
             render_hint: sc.render_hint ?? substrateId,
             playable_payload: world,
+            // ⛓ H4a: the region's exits at the TOP LEVEL, which is where the
+            // renderer's connection pass and its exit-selection highlight look
+            // (`exitsOf(region)` = `region?.exits`, mirroring the engine's own
+            // `getRegionExits`). The engine's placements have always set this
+            // (`procgenPipelineEngine.js:3970`); this reader did not, so a
+            // LOADED document drew cells and their in-cell exit squares but NO
+            // inter-region connection lines. Found by H3 (plan §13.1 #6) and
+            // left for a slice that was allowed to move the picture.
+            // MEASURED on `procgen_maze` seed 1: 0 → 2 connection lines (3 regions).
+            exits: world.exits,
             grow_telemetry: sc.grow_telemetry ?? null,
         });
         placed += 1;
