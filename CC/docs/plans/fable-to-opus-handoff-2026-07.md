@@ -10858,6 +10858,21 @@ its terms. ⚠ Instrument note: `ci-vitest-summary.mjs` re-execs with `stdio: 'i
 `procgen-verify-tier-survey` (Opus, no product code; kickoff `NewDocs/plans/procgen-verify-tier-survey-prompt.md`;
 output `CC/docs/procgen-verify-tier.md`).
 
+**SURVEY DONE 2026-09-05** (`1f9b437cc`, `CC/docs/procgen-verify-tier.md`, 62 scripts): **59 of 62 are in NO
+battery, and the exclusion is a NAMING RULE** — `gateRoster.isGateFile` (`/^check-[a-z0-9-]+\.mjs$/`),
+`reachClosure.js:813` and `ci-gates.mjs` all select by the `check-` prefix, so no `verify-*` can join by
+declaring anything; `check-procgen-help` and `instruments.js` COVER all 50 (hygiene + catalogue) but nothing
+RUNS them. 8 reds: 6 pre-existing at `697c94ee6` (`verify-item-channels`, `verify-maze-loop-mana`,
+`verify-omsi-mana-leg`, `verify-dj-real-embed`, `verify-bot-playthrough`, `verify-rule-gated-portals`), 1 NEW
+(`verify-maze-consumable-tiles` — a GENERATOR-OUTPUT drift proved by cross-control: HEAD tree + pre-arc
+fixture PASSES; the documented regen command now emits md5 `2ef8f4ab`→`40e87ff5`), 1 inconclusive
+(`verify-atlas-sphere-roundtrip`, same byte-identity claim). Correlation: 6 of the 23 scripts referenced by
+nothing but the catch-all registries are red (26%) vs 2 of 27 (7%). **⚖ RULED 2026-09-05 (user):** first
+slice = **chase the generator-output drift** (node-only bisect of `697c94ee6..HEAD` on the fixture md5, then
+intended-re-pin vs defect); then triage the six pre-existing reds; then the **RENAME** (gate-shaped `verify-*`
+→ `check-`, report-shaped → `dump-`/`report-`) so the three mechanisms adopt them for free — ruled YES, after
+the drift and the triage.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
