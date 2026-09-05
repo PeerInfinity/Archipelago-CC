@@ -10128,6 +10128,15 @@ measured-usable size; re-anchored on two REAL documents (`smz3` 1,936,130 must b
 `stardew_valley` 2,620,225 must not) it reds. *A guard whose whole suite reads its own default cannot
 see the default move.* (c) Apply without the origin reds the panel-source scan.
 
+**H2's CI, quoted by SHA (⚖ 52).** `4b52d8484` (run 33941849160) — **all six jobs success**:
+`unittests`, `JavaScript Unit Tests`, `Test ALTTP Spoiler & Frontend Regression`, `CodeQL`,
+`Deploy to GitHub Pages`, `Build and Publish Docker Images`.
+`suite: vitest (unfiltered) 430/13088 (13080 passed | 8 skipped | 0 failed)`,
+`slow battery 12/217 (217 passed | 0 failed)`. ⛓ Against H1's `429/13058 (13050 passed)` at
+`cebabdfd5` that is **+1 file and +30 rows — exactly** `hubExits.test.js` 21 + `rulesDocOps`' 5 new
+`replace-document` rows + `presetUI.test.js`' 4 new button rows. Skips unmoved at 8, slow battery
+unmoved at 217/0. Nothing else in the suite moved, which is the claim a bounded local run cannot make.
+
 **NEXT = H3** (the map): the registry slot `compositeMap.drawRegion` DECLARED by maze +
 text_adventure, the shared `procgenCore/compositeMapRenderer.js`, `reconstructResultFromSidecars`
 gaining `playerId`, the hub Map tab + click-select + one-way "Open region graph". ⚠ H2 leaves H3 three
