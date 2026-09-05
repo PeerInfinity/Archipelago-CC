@@ -9847,7 +9847,7 @@ after the predecessor's `a69a9b295`. **NOT DONE, deliberately:** full convergenc
 adapter (B), live-queue editing in v1, tag editing, a persistent jta name table, per-entry cost, a new
 gate file or standing-values row, any submodule change before V5.
 
-## 5n. The APWorld EDITOR as the HUB over every procgen editor — PLANNED 2026-09-04; **H0 + H1 + H2 + H3 + H2b + H3b + H4a + H4b SHIPPED 2026-09-04/05, NEXT = H4c** (Fable planning session `next-priorities-planning` at main `697c94ee6`; plan file `NewDocs/plans/apworld-editor-hub-plan.md`, gitignored; memory `project_apworld_editor_hub`)
+## 5n. The APWorld EDITOR as the HUB over every procgen editor — PLANNED 2026-09-04; **H0 + H1 + H2 + H3 + H2b + H3b + H4a + H4b + H4c SHIPPED 2026-09-04/05, NEXT = H5** (Fable planning session `next-priorities-planning` at main `697c94ee6`; plan file `NewDocs/plans/apworld-editor-hub-plan.md`, gitignored; memory `project_apworld_editor_hub`)
 
 **How this entry came to exist.** The session was briefed to hold the "next main priorities" conversation
 across everything but the platformer. The user's first move set the queue viewer (§5m) aside — *"The session
@@ -10449,7 +10449,7 @@ adds none), slow battery **12/217**. Also green: `JavaScript Unit Tests`, `type 
 were SUBTESTS of a row pytest counts once, so a run-to-run comparison on "passed" alone would have shown
 nothing.
 
-~~**NEXT = H4b**~~ — H4b SHIPPED, see below. **NEXT = H4c** (reverse links), then H5.
+~~**NEXT = H4b**~~ · ~~**NEXT = H4c**~~ — both SHIPPED, see below. **NEXT = H5** (sidecar block links), then H6a, H6b.
 
 **H4a VERIFIED by the planner 2026-09-05** (`7e52dd5df` on origin/main, all eight workflows green at
 `0f480500d`): the fixture `frontend/presets/multiworld/AP_05594871498841892311/` (seed 4 — seed 1 would have
@@ -10589,6 +10589,67 @@ the atlas byte gates (a moved pin is a ⚖ 49-class re-record question); (b) **f
 to preserve authored exit ids** — slice **H6b**, after H5. H4b's CI closed all six green at `c7481aed4`
 (suite 13,221/8/0; +38 rows, one of them from a directory-rostered scan the slice never edited). Ladder:
 H4c (live) → H5 → H6a → H6b.
+
+### ⇒ H4c AS BUILT (Opus `apworld-hub-sliceH4c`, 2026-09-05, from `b518f75a5`) — plan §18
+
+Commits: `d73aa7823` (the eighth protocol name) · `5c0fe94f4` (the lab pages' button, in the SHARED mount) ·
+`818137b3b` (the bounce editor's link and the hub's answer) · `4871e0d2b` (one label for six doors, the
+hosting gate's claim 12, the docs).
+
+**The two shapes, and the choice is not a preference.** A page across an iframe boundary needs a lab-protocol
+name — there is no app `eventBus` there, and `apworldEditor:loadRules` exists only on the host side — so the
+vocabulary gained its EIGHTH name, `procgenLab:openInApworldEditor {substrate, iframeId, rules, source}`,
+page→host, forwarded by `procgenLabPanel` onto `apworldEditor:loadRules` + `ui:activatePanel` (in that order;
+reversed, the hub comes forward showing what it held a moment ago). A panel in the SAME app needs none, so
+the bounce editor publishes `apworldEditor:selectRegion {region, player?}` and the hub answers on the document
+it already holds. **H5's sidecar-block links are all the second shape.**
+
+**⛓⛓⛓ THE BRIEF'S TWO PAGE BUTTONS ARE ONE BUTTON.** `lab.html`'s SET arm and `watch.html`'s SET arm both bind
+`procgenCore/setEditorView.mountSetEditor`, and the compile the brief names on both sides IS
+`adapterFns.rulesJsonOf` — which that mount already runs for the REPORT. ⇒ one optional mount option
+(`apworldEditor: {available, open}`), one handler beside `editDownloadRules`, one `<button>` per page; each
+page supplies only its own bridge and its own provenance string. ⛓ **And no wasm gate is owed**: the compile is
+node-side (the hosting gate, headless Chromium on this box, pressed it and got `Seedling Set` / 5 regions).
+
+**⛔ It hands over the REPORT's `rules`, never a second compile** — a second answer to *"what does this page
+hold"* on the far side of a postMessage boundary, where the two can never be compared.
+**⛔ HIDDEN, not disabled, standalone** — no app to open, and the transport is not even fetched. The DISABLED
+half is `reportOver`'s `download.rules.allowed`, unchanged: a graph that does not close has no document to hand.
+
+**One label, six doors: "Open in APWorld Editor"** — Presets (H2 already said it), the pipeline and the marking
+tool (renamed from *"Edit in"*; `verify-region-marking-tool.mjs` clicks that text twice and moved with them),
+both lab pages, the bounce editor. Zero `Edit in APWorld Editor` left outside two historical planning docs.
+
+**Two defects the rows found, both invisible in the shipped build until driven:**
+(a) **the hub's slot switch had to be `_chosenPlayer`, not `playerId`** — `_syncPlayer()` re-derives `playerId`
+on every render and honours only a deliberate pick, so the door's own final `_render()` would have undone the
+move while the status line reported it; (b) **the panel must CATCH its validator's refusal and print it** —
+`eventBus.publish` try/catches every subscriber and logs, so a throw would forward nothing AND say nothing.
+
+**⛑ And two rows that measured the wrong thing first.** The in-app row asserted *"the hub opened on
+slot 1"* and got **4** — the hub panel is a SINGLETON that outlives every row in its file, and an
+earlier row's deliberate slot pick survives on `_chosenPlayer` whenever the next document carries
+that slot. It reads the shown slot and picks its switch-target off the document now, naming no
+number. And one row could not see its own mutant: *"No host link ⇒ `hidden` is true"* stayed GREEN under
+`btn.disabled = !here`, because the mount's WIRING sets `hidden = true` once before any paint. The claim is the
+TRANSITION, both directions. Five mutants driven, all red.
+
+**Gates.** `check-procgen-lab-hosting` **66 → 78 PASS / 0 FAIL** (claim 9 gains the standalone-hidden half;
+CLAIM 12 drives the chain on TWO documents — the unwired maze pack shows the button DISABLED with
+`reportOver`'s own sentence and refuses the press, the LINKED Seedling set shows it ENABLED and one press ends
+as a hub session tagged `hand-off · the Seedling watch page (SET arm)`; either document alone could not tell
+"reads `download.rules.allowed`" from "always enabled"). `check-maze-lab` **265/0 UNMOVED**. In-app `--batch=fast` **79/79** (was 78/78); `compare-runs` = `ADDED (1)`
+and nothing else. Bounded vitest
+`procgenCore/ procgenLabPanel/ apworldEditor/ bounceRegionEditor/` **1568/1568**; `presets/ procgenPipeline/
+regionMarkingTool/` **902/902**; `procgenDocs/` **452/452**; `lintGateLabels` 14/14; `check-procgen-docs`
+ALL CHECKS PASSED. **`lint-gate-labels.allow.json` SHRANK 85 → 84** — the trap's order kept (interpolate the
+NAME first, `--write-allow` the ASSERTION second). Docs: `modules/apworldEditor.md` (the six-door table),
+`procgen/maze.md`, `procgen/architecture.md` (W3 added no word, this did, and why), `seedling-bot.md`,
+`procgenLabPanel/README.md`; the link census moved 223 → 225 with `repo` 32 → 34 (that page is not one of the
+seventeen the viewer lists — the resolver working).
+
+**NEXT = H5** (sidecar block links), then H6a, then H6b. The two ⚖ H4b left were NOT touched, as the kickoff
+asked.
 
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m

@@ -448,6 +448,12 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "APWorld hub H4b. The lab door end to end without an iframe: the host is a PANEL-SHAPED stub (W4's own contract shape, the same one createPageLabTransport implements) and the three phases of labRoomEditor's contract are published on procgenLab:levelChanged. The first version mounted the real maze lab; the page connected inside the row's own poll, opened room 0 for real and published its OWN close, so onSave fired with the page's UNEDITED record and the row measured a no-op — a live page and a synthetic one cannot both author the same conversation. Asserts the handed document is a ONE-ENTRY region library, the navigate asks for ?source=set&room=0, the close returns exactly ONE hub op moving payload AND the one rule the door proved it authored, the exit targets and baked AP location names the library capture strips are restored, and ONE Undo folds it all away."
+        },
+        {
+            "id": "apworld-bounce-reverse-link-selects-the-region",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H4c. The reverse link that needs no protocol: the bounce region editor and the hub are panels in ONE app, so the door names a region and raises the hub, carrying no document at all (the level in that panel is a working copy nobody saved back). Driven through the bounce module's OWN publisher, not a hand-written publish — the button and the hub's subscriber only meet there. Four answers, not one claim four times: a region of the slot the hub is showing is selected and its block marked; a region no slot holds is SAID SO rather than switching to a tab with nothing highlighted; a named slot the document has moves the selector FIRST and then selects (through _chosenPlayer, because _syncPlayer re-derives playerId on every render and would otherwise undo the move inside the door's own re-render); and a slot the document does not have is refused by name with the hub staying where it was."
         }
     ]
 }

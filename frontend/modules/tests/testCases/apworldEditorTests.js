@@ -1926,32 +1926,48 @@ export async function apworldBounceReverseLinkSelectsTheRegion(testController) {
         const panel = await openHub(testController, FOUR_PLAYER_PATH);
         if (!panel) return testController.getOverallResult();
 
+        /**
+         * ⛑ **THE SHOWN SLOT IS READ, NEVER ASSUMED TO BE 1.** The first shape
+         * of this row asserted the hub opens on slot 1 and FAILED with 4: the
+         * panel is a SINGLETON that outlives every row in this file, and an
+         * earlier row's deliberate pick survives on `_chosenPlayer` as long as
+         * the next document carries that slot — which the four-player fixture
+         * does. ⇒ every claim below is relative to the slot the hub is actually
+         * showing, and the slot-switch case picks a DIFFERENT one off the
+         * document rather than naming a number.
+         */
         const doc = panel.rulesDoc;
-        const slot1 = Object.keys(doc?.preset_sidecars?.['1'] ?? {});
-        const slot3 = Object.keys(doc?.preset_sidecars?.['3'] ?? {});
+        const shown = String(panel.playerId);
+        const sidecars = doc?.preset_sidecars ?? {};
+        const here = Object.keys(sidecars[shown] ?? {});
+        const otherSlot = Object.keys(sidecars)
+            .find((k) => k !== shown && Object.keys(sidecars[k] ?? {}).length > 0) ?? null;
+        const there = otherSlot ? Object.keys(sidecars[otherSlot]) : [];
         testController.reportCondition(
-            'the fixture carries sidecars in slot 1 AND slot 3',
-            slot1.length > 0 && slot3.length > 0);
-        if (slot1.length === 0 || slot3.length === 0) {
+            'the fixture carries sidecars in the shown slot AND in another one',
+            here.length > 0 && there.length > 0);
+        if (here.length === 0 || there.length === 0) {
             return testController.getOverallResult();
         }
-        testController.assertEqual('the hub opened on slot 1', '1', String(panel.playerId));
+        testController.log(`the hub is showing slot ${shown}; the other slot is ${otherSlot}`);
 
         /* ── 1. a region of the slot the hub is showing ─────────────────── */
         selectTab(panel, 'document');
-        const sent = openRegionInApworldEditor(slot1[0]);
+        const sent = openRegionInApworldEditor(here[0]);
         testController.reportCondition(
             'the bounce editor\'s door published (the module is initialized)', sent === true);
         const marked = await testController.pollForValue(
             () => document.querySelector(
-                `${PANEL_SELECTOR} .apworld-region-block[data-region-name="${slot1[0]}"]`
+                `${PANEL_SELECTOR} .apworld-region-block[data-region-name="${here[0]}"]`
                 + '[data-selected="true"]'),
             'the named region\'s block, marked selected', 8000, 50);
         testController.reportCondition('the hub selected the region it was named', !!marked);
         testController.assertEqual('and switched to the Regions tab',
             'regions', panel.activeTab);
         testController.assertEqual('the panel\'s own selection moved',
-            slot1[0], panel._selectedRegion);
+            here[0], panel._selectedRegion);
+        testController.assertEqual('…without moving the slot (the link named none)',
+            shown, String(panel.playerId));
 
         /* ── 2. a region no slot of this document holds ─────────────────── */
         const ABSENT = '__no_such_region__';
@@ -1962,29 +1978,30 @@ export async function apworldBounceReverseLinkSelectsTheRegion(testController) {
             'the status line names the region it could not find', 8000, 50);
         testController.reportCondition(
             'a region this document does not hold is SAID SO, not silently ignored',
-            !!said && /not in/.test(said));
+            !!said && /is not in/.test(said));
 
         /* ── 3 + 4. the optional slot ───────────────────────────────────── */
         appEventBus.registerPublisher(APWORLD_EDITOR_SELECT_REGION, 'tests');
         appEventBus.publish(APWORLD_EDITOR_SELECT_REGION,
-            { region: slot3[0], player: '3' }, 'tests');
+            { region: there[0], player: otherSlot }, 'tests');
         const moved = await testController.pollForValue(
-            () => (String(panel.playerId) === '3' ? panel : null),
+            () => (String(panel.playerId) === otherSlot ? panel : null),
             'the hub moved to the slot the link named', 8000, 50);
         testController.reportCondition('a named slot the document HAS is switched to', !!moved);
         testController.assertEqual('…and the region of THAT slot is selected',
-            slot3[0], panel._selectedRegion);
+            there[0], panel._selectedRegion);
 
+        const NO_SLOT = '__no_such_slot__';
         appEventBus.publish(APWORLD_EDITOR_SELECT_REGION,
-            { region: slot3[0], player: '9' }, 'tests');
+            { region: there[0], player: NO_SLOT }, 'tests');
         const refused = await testController.pollForValue(
-            () => (panel._opMessage && panel._opMessage.includes('Slot 9')
+            () => (panel._opMessage && panel._opMessage.includes(NO_SLOT)
                 ? panel._opMessage : null),
             'the status line names a slot this document does not carry', 8000, 50);
         testController.reportCondition(
             'a named slot the document does NOT have is refused BY NAME', !!refused);
         testController.assertEqual('…and the hub stayed on the slot it was showing',
-            '3', String(panel.playerId));
+            otherSlot, String(panel.playerId));
     } catch (error) {
         testController.log(`ERROR: ${error.message}`);
         testController.reportCondition('bounce reverse-link test error-free', false);
