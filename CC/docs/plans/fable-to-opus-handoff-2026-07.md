@@ -10438,6 +10438,17 @@ sibling, **0** carry a trailing newline. Row 3 now drives BOTH halves of its own
 one, exporter files do NOT) where before it drove one; subtests **111 → 307**; two data mutants driven; NO
 test name moved. Trap **1175**.
 
+**CI at the close, quoted by SHA (⚖ 52) — ALL EIGHT WORKFLOWS GREEN at `0f480500d`.** `unittests` run
+**33951868855 success**: `1498 passed, 3 skipped` on all six matrix legs (ubuntu 3.11.2/3.12/3.13, windows
+3.11/3.13, macos 3.13) plus hosting. `ci-vitest-summary.mjs 0f480500d` → run **33951868869 success** —
+`suite: vitest (unfiltered)` **433/13191** (13,183 passed | 8 skipped | **0 failed**; 13,179 → 13,183 is
+exactly the four new `compositeMapDocument.test.js` rows — a new preset adds no vitest row and a new world
+adds none), slow battery **12/217**. Also green: `JavaScript Unit Tests`, `type check`, `CodeQL`,
+`Analyze modified files`, `Test ALTTP Spoiler & Frontend Regression`, `Build and Publish Docker Images`,
+`Deploy to GitHub Pages`. ⚠ **1,498 is the SAME number the red run reported passing** — the three failures
+were SUBTESTS of a row pytest counts once, so a run-to-run comparison on "passed" alone would have shown
+nothing.
+
 **NEXT = H4b** (per-region Edit ▸ + reverse links), then H5.
 
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
