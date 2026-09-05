@@ -169,7 +169,8 @@ missing and left it (the slice had to stay byte-inert); **H4a added the one line
 (`exits: world.exits` in `compositeMapDocument.js`). Measured on `procgen_maze`
 seed 1 through a recording 2d context: 0 → 2 connection lines, 203 → 211 draw
 ops. It moves the **pipeline panel's** loaded-preset view too, which is the same
-function's other reader.
+function's other reader — `scripts/procgen/shot-loaded-composite-map.mjs` writes
+a PNG of exactly that view, which is how the before/after pair was taken.
 
 ### The three ways there is no map
 

@@ -168,6 +168,11 @@ export const INSTRUMENTS = frz({
             "id": "seedling"
         },
         {
+            "browser": 1,
+            "count": 1,
+            "id": "shot"
+        },
+        {
             "browser": 0,
             "count": 1,
             "id": "show"
@@ -204,13 +209,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 247,
-        "browser": 78,
+        "blockStyle": 248,
+        "browser": 79,
         "cited": 88,
-        "files": 266,
+        "files": 267,
         "lineStyle": 19,
-        "withDocblock": 266,
-        "withFlags": 172
+        "withDocblock": 267,
+        "withFlags": 173
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7887,6 +7892,31 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "seedlingRouteGraph — the `(level, component)` reachability graph the seedling route planners walk, with ONE implementation and two callers.",
             "path": "scripts/procgen/seedlingRouteGraph.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "shot",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "shot-loaded-composite-map.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "H4a — **THE BEFORE/AFTER PAIR FOR THE CONNECTION LINES.**",
+            "path": "scripts/procgen/shot-loaded-composite-map.mjs"
         },
         {
             "argvHelpers": [],
