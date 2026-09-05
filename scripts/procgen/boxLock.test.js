@@ -315,9 +315,24 @@ describe('who takes the box', () => {
          * still column zero and still unconditional; a `let`, an `if`, or any
          * indentation is not.
          */
+        /**
+         * ⛓⛓ PROCGEN VERIFY-TIER V2 — **AND A SECOND REASON TO GUARD ONE: THE
+         * IMPORT DOOR.** The five above sit behind their run's own argv
+         * predicate, so a metadata query does not queue behind a drive. These
+         * two sit behind `isEntryPoint(import.meta.url)` instead, because
+         * `check-procgen-help.mjs`'s IMPORT door caught them taking the REAL
+         * box on a bare `await import()` — which is what a vitest file
+         * importing anything from this directory does. Same mechanism, other
+         * cause; and the row's own warning about reading a REFORMATTING as a
+         * defect applies to a MOVE into `main()` exactly as it did to a brace
+         * block and to a bound return value. What both lists share is the
+         * thing this row actually protects: a guard nobody declared is a taker
+         * that silently stopped taking.
+         */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
-            'solve-seedling-r9-campaign.mjs'];
+            'solve-seedling-r9-campaign.mjs',
+            'measure-apworld-raw-view.mjs', 'shot-loaded-composite-map.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
