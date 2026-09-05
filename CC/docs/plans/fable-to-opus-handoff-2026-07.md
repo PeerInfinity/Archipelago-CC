@@ -11108,6 +11108,12 @@ Manual block and queueing in the game's own UI gets a game that never starts. Ne
 discussion (review R2); nothing changes now. R2's agenda: loop costs' write-back (H5), the cost generator's
 pre-procgen design, and the omsi live-play start.
 
+**V3b LAUNCHED 2026-09-05** as `procgen-verify-rename` (Opus; kickoff `NewDocs/plans/procgen-verify-rename-prompt.md`;
+V3a's session read idle first): the derived rename table committed FIRST, then gate-shaped `verify-*` →
+`check-` (the three mechanisms adopt them), report-shaped → `dump-`/`report-`, the two STALE deleted (or
+asked), the CI shard partition quoted before/after with slow gates kept behind the roster's exclusions, the
+generated instrument catalogue and 22 docs pages repointed. After V3b: the HANDOFF to a new Fable session.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
