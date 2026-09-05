@@ -10733,16 +10733,23 @@ the five new ones being Phase F2, which drives the marking tool's new `onSave` s
 Docs: `modules/apworldEditor.md`'s `editor` slot section rewritten, the Links tab section, the Events table.
 Traps **1206–1211**.
 
-**CI at `6a4c38423`, WATCHED and partially in flight when this was written (plan §19.7):** `unittests`
-**success** (the job carrying `test_schema_validation.py` over every committed preset), `Deploy to GitHub
-Pages` **success**, `Build and Publish Docker Images` **success**; `JavaScript Unit Tests` (run
-**33977025059**) still running at ≈2 h with its **`maze-lab +14` browser-gate shard already SUCCESS**, so the
-two gates H4c moved are green on a RUNNER at this head; ALTTP regression and CodeQL still running. ⛔ The
-`suite: vitest (unfiltered)` row is therefore NOT quoted yet. The delta this slice OWES, derived per file:
-`regionAtlasCompiler` +4 · `sphereSteps` +3 · `procgenPipelineUI` +8 · `documentKeys` +8 · `documentLinks` +5
-· `documentStateManager` +12 (the ONE new file) ⇒ **+40 rows, +1 file = 436 / 13,300 against `074684c0a`'s
-435 / 13,260**. No directory-rostered term (the new file is under `loopsCostDebugger/`). ⇒ **H6a's first act:
-`node scripts/procgen/ci-vitest-summary.mjs 6a4c38423` and check that expectation.**
+**CI at `6a4c38423` — MEASURED (⚖ 52, plan §19.7).** `unittests` **success** (the job carrying
+`test_schema_validation.py` over every committed preset) · ALTTP regression **success** · CodeQL **success** ·
+Docker **success** · Pages **success** · `JavaScript Unit Tests` (run **33977025059**): its **Vitest job
+success**, and its `maze-lab +14` and `plan-seedling-r7-ends-meet +8` browser-gate shards **success**, so
+`check-maze-lab` and `check-procgen-lab-hosting` are green on a RUNNER at this head; one
+`seedling-wasm-element` shard still running at the time of writing. `suite: vitest (unfiltered)`
+**436 / 13,296** (13,288 passed | 8 skipped | 0 failed), slow battery 12/217 unmoved; baseline `074684c0a` =
+435 / 13,260.
+
+⛑⛑ **AND THE EXPECTATION THIS SESSION RECORDED BEFORE THE RUN LANDED WAS WRONG — +40 claimed, +36 measured —
+which is exactly why it was written down as an expectation with its per-file terms.** Every term was measured
+and correct; the error is that `regionAtlasCompiler.test.js` (+4) shipped in `5410e56bc`, which H4c's
+`git add -A` (trap 1200) left as an **ANCESTOR of the baseline**, so summing every file this slice wrote
+double-counted four rows already banked there. 40 − 4 = 36; 13,260 + 36 = 13,296 to the row, 435 + 1 = 436
+files. Skips unmoved at 8. **Nothing in the suite moved that is not a row this slice wrote.** ⇒ **trap 1212**:
+a delta is `HEAD − BASELINE`, so run `git merge-base --is-ancestor <your first commit> <baseline>` before
+summing your files — the sweep bit twice, once on attribution and once on arithmetic.
 
 **NEXT = H6a** (the atlas derivation emitting the serializer's shape — and the natural home for an atlas
 RESOLVER, which is the missing half of H5's `region_atlas` door), then **H6b**. ⚖ open for the user in plan
