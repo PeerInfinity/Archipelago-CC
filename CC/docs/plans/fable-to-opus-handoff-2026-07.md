@@ -10451,6 +10451,21 @@ nothing.
 
 **NEXT = H4b** (per-region Edit ▸ + reverse links), then H5.
 
+**H4a VERIFIED by the planner 2026-09-05** (`7e52dd5df` on origin/main, all eight workflows green at
+`0f480500d`): the fixture `frontend/presets/multiworld/AP_05594871498841892311/` (seed 4 — seed 1 would have
+overwritten the committed ALTTP four-player preset, and did once before restore: the exporter routes
+multi-game runs by seed id alone), sidecars {1:3, 2:3, 3:5, 4:5} over the new tracked
+`worlds/procgen_maze_worldgen` and `bounce_worldgen`; the loaded map draws its connection lines; a CI red the
+slice itself caused (a Python-exported maze payload met a test that identified the writer by an output
+signature) found and fixed by mechanism. ⚖ 2b CLOSED. Lessons carried: a `grid_cell` is not a map (bounce
+carries one, draws nothing — the no-map reason is now derived); a committed preset owes the WHOLE `pytest`;
+the four byte-identity dumps are vacuous for `apworldEditor/` work. **H4 splits once more:** H4b = per-region
+Edit ▸ + the `replace-region-sidecar` op; H4c = reverse links. **H4b LAUNCHED 2026-09-05** as
+`apworld-hub-sliceH4b` (Opus, kickoff `NewDocs/plans/apworld-hub-sliceH4b-prompt.md`). Finding for the
+user from the brief's measurement: a Seedling sidecar payload is an ATLAS REFERENCE (`atlas_ref`,
+`atlas_region`, `level`, …), not a room record, so Edit ▸ from a rules.json cannot open the Seedling room
+editor without the level set — H4b disables it by name; an atlas round-trip would be its own ⚖.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
