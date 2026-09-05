@@ -10040,6 +10040,15 @@ attempt at the failing row ALONE could not even start its roster: `Timeout waiti
 `fast` run on a quiet box is owed and cheap; it is not a gate this slice could run while another arc owned
 the CPUs.
 
+**H1's CI, quoted by SHA (⚖ 52).** `a525748cd` (run 33936562406) and `cebabdfd5` (run 33936714005) — **all
+six jobs success at both**: `unittests` (carries `test_schema_validation.py`, so the strict schema is green in
+CI against all 205 presets), `JavaScript Unit Tests`, `Test ALTTP Spoiler & Frontend Regression`, `CodeQL`,
+`Deploy to GitHub Pages`, `Build and Publish Docker Images`.
+`suite: vitest (unfiltered) 429/13058 (13050 passed | 8 skipped | 0 failed)`, `slow battery 12/217 (217
+passed | 0 failed)` at both. ⛓ Against H0's `427/13019 (13011 passed)` at `860608b0a` that is **+2 files and
++39 rows — exactly** `documentKeys` 21 + `documentLinks` 10 + `rulesDocOps`' 8 new `set-key` rows, with skips
+unmoved at 8 and the slow battery unmoved at 217/0. Nothing else in the suite moved.
+
 **NEXT = H2** (Presets button · Download · Load-into-app = Apply + `rules:loaded` · Raw view with a MEASURED
 threshold). H3 gets `panel.playerId` + `documentKeys.playerSlotsOf` as its slot API and `entry.editor` is
 where H5 hangs its links; ⛔ nothing may gate on `preset_sidecars` before the ⚖-ruled four-player procgen
