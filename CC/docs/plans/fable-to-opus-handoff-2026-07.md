@@ -10054,6 +10054,14 @@ threshold). H3 gets `panel.playerId` + `documentKeys.playerSlotsOf` as its slot 
 where H5 hangs its links; ⛔ nothing may gate on `preset_sidecars` before the ⚖-ruled four-player procgen
 fixture exists (H4's Task 0).
 
+**H1 VERIFIED by the planner 2026-09-05** (`2ea6633f9` on origin/main; strict schema, 205 presets / 0
+undeclared keys re-derived here; `documentKeys.js`/`documentLinks.js` + tests, 3 in-app rows, docs page all
+on disk). ⚠ Overturn found while briefing H2: `rules:loaded` has NO subscriber in `frontend/` — the real
+Apply-vs-preset delta is the SPHERE LOG (`sphereState/index.js:199` embedded, `:307` fetched by the load's
+`sourceName`; Apply's `APPLY_SOURCE` fetches nothing). **H2 LAUNCHED 2026-09-05** as `apworld-hub-sliceH2`
+(Opus, kickoff `NewDocs/plans/apworld-hub-sliceH2-prompt.md`): the Presets button, Download, Load-into-app
+with the sphere-log delta measured and closed, and the raw view with a MEASURED threshold.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
