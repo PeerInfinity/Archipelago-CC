@@ -120,6 +120,16 @@ const FOUR_PLAYER_P3_PATH =
  * title is the substrate's own.
  */
 const SEEDLING_PRESET_PATH = './presets/seedling_atlas/AP_1/AP_1_rules.json';
+/**
+ * ⛓ **THE DOCUMENT THAT STILL FAILS CHECK (1)**, and the reason this row needed
+ * a new one at H6b. Its ten rooms are written by the ATLAS DERIVATION rather
+ * than by `serializeMazeWorld`, so a round trip adds an `itemLib: {}` and a
+ * computed `longestShortestPath` they do not carry — the "an unedited save
+ * would already rewrite this payload" refusal, which is the only refusal that
+ * costs a deserialize and therefore the only one that lands AFTER the press.
+ * ⚖ Fixing these ten is H6a's job; when it lands, this arm moves with it.
+ */
+const ATLAS_MAZE_PRESET_PATH = './presets/seedling_atlas_maze/AP_1/AP_1_rules.json';
 
 const SCHEMA_PATH = './schema/rules.schema.json';
 
@@ -1619,10 +1629,16 @@ function sidecarRegions(doc, slot) {
  *    sentence, and it is readable in the button's own `title`;
  *  · a region whose payload does not round-trip is disabled with a DIFFERENT
  *    sentence, and only after the press — the expensive half of the check runs
- *    on demand. The fixture's slot-3 `region_1_1` is that case, measured: its
- *    `spring_gap` level's north portal is authored as `exit_up`, and the bounce
- *    re-assembly names every exit `side_exit_<side>`, so an UNEDITED save would
- *    already rewrite the payload.
+ *    on demand. ⛓ **H6b MOVED THIS ARM ONTO ANOTHER DOCUMENT.** It used to be
+ *    the fixture's slot-3 `region_1_1`: its `spring_gap` level's north portal
+ *    is authored as `exit_up` and the bounce re-assembly minted
+ *    `side_exit_<side>` for every exit, so an unedited save already rewrote the
+ *    payload. H6b made the assembler read the level's own portal ids, and the
+ *    bounce door went 15/25 → **25/25** over the committed corpus — which left
+ *    this claim with no bounce subject at all. The ten `seedling_atlas_maze`
+ *    rooms are the refusal that remains, so the press-then-refuse arm drives
+ *    one of those and slot 3 now asserts the OPPOSITE: every bounce region of
+ *    the slot offers its room, `exit_up` regions included.
  */
 export async function apworldEditButtonIsOfferedPerRegionAndRefusedByName(testController) {
     try {
@@ -1659,35 +1675,56 @@ export async function apworldEditButtonIsOfferedPerRegionAndRefusedByName(testCo
                 `"${name}" has NO sidecar and therefore NO Edit button`, !editButtonFor(name));
         }
 
-        /* ── slot 3: a bounce region the door REFUSES, named on the press ── */
+        /* ── slot 3: EVERY bounce region offers its room (H6b) ──────────── */
         selectPlayer(select, '3');
         selectTab(panel, 'regions');
-        const refusedRegion = 'region_1_1';
-        const before = await testController.pollForValue(
-            () => editButtonFor(refusedRegion), `slot 3's "${refusedRegion}" Edit button`,
-            8000, 50);
+        const bounceRegions = sidecarRegions(doc, '3');
+        await testController.pollForCondition(
+            () => !!editButtonFor(bounceRegions[0]),
+            'slot 3 draws an Edit button on a bounce region', 8000, 50);
+        // ⛓ the premise, read off the document: this slot really does hold a
+        //   region whose level portal is AUTHORED rather than minted.
+        const authored = doc.preset_sidecars['3'].region_1_1
+            ?.playable_payload?.params?.bounceLevel?.portals ?? [];
         testController.reportCondition(
-            '⛓ it starts ENABLED — the cheap half of the check cannot see the payload',
-            !!before && !before.disabled);
-        if (before) before.click();
-        const named = await testController.pollForValue(
-            () => {
-                const b = editButtonFor(refusedRegion);
-                return b && b.disabled && b.title ? b : null;
-            },
-            'the pressed button is disabled and names its reason', 8000, 50);
-        testController.reportCondition(
-            '⛔ …and after the press it is DISABLED with the reason in its title',
-            !!named && named.title.includes('UNCHANGED would already rewrite'));
-        testController.reportCondition(
-            'the status line says the same thing',
-            !!panel.statusLabel && panel.statusLabel.textContent.includes('Edit refused'));
-        // ⛓ …and a SIBLING bounce region in the same slot is still offered, so
-        //   the refusal is about the region and not about the substrate.
-        const ok = editButtonFor('region_1_0');
-        testController.reportCondition(
-            '⛓ a sibling bounce region in the SAME slot is still enabled',
-            !!ok && !ok.disabled);
+            '⛓ slot 3 "region_1_1" really does carry an AUTHORED `exit_up` portal',
+            authored.some((p) => p.id === 'exit_up'));
+        let bounceEnabled = 0;
+        for (const name of bounceRegions) {
+            const btn = editButtonFor(name);
+            testController.reportCondition(`slot 3 "${name}" has an Edit button`, !!btn);
+            if (btn && !btn.disabled) bounceEnabled += 1;
+        }
+        testController.assertEqual(
+            '⛓ every bounce region of slot 3 offers its room (H6b: was 3 of 5)',
+            String(bounceRegions.length), String(bounceEnabled));
+
+        /* ── the check-(1) refusal, on the document that still fails it ──── */
+        const atlasPanel = await openHub(testController, ATLAS_MAZE_PRESET_PATH);
+        if (atlasPanel) {
+            selectTab(atlasPanel, 'regions');
+            const refusedRegion = 'starting_house';
+            const before = await testController.pollForValue(
+                () => editButtonFor(refusedRegion), `the atlas room "${refusedRegion}"'s button`,
+                8000, 50);
+            testController.reportCondition(
+                '⛓ it starts ENABLED — the cheap half of the check cannot see the payload',
+                !!before && !before.disabled);
+            if (before) before.click();
+            const named = await testController.pollForValue(
+                () => {
+                    const b = editButtonFor(refusedRegion);
+                    return b && b.disabled && b.title ? b : null;
+                },
+                'the pressed button is disabled and names its reason', 8000, 50);
+            testController.reportCondition(
+                '⛔ …and after the press it is DISABLED with the reason in its title',
+                !!named && named.title.includes('UNCHANGED would already rewrite'));
+            testController.reportCondition(
+                'the status line says the same thing',
+                !!atlasPanel.statusLabel
+                    && atlasPanel.statusLabel.textContent.includes('Edit refused'));
+        }
 
         /* ── the jta control: no room editor at all ──────────────────────── */
         const jtaPanel = await openHub(testController, NO_GRID_PRESET_PATH);

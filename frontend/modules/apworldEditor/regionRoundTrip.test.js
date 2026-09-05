@@ -60,6 +60,17 @@ const FIXTURE = join(PRESETS, 'multiworld', 'AP_05594871498841892311',
  * committed maze-payload sidecar regions are this lineage.
  */
 const TOPDOWN = join(PRESETS, 'procgen_topdown', 'AP_1', 'AP_1_rules.json');
+/**
+ * ⛓ **THE DOCUMENT THAT STILL REFUSES CHECK (1)** — the ten
+ * `seedling_atlas_maze` rooms, written by the ATLAS DERIVATION rather than by
+ * `serializeMazeWorld`, so a round trip adds an `itemLib: {}` and a computed
+ * `longestShortestPath` they do not carry. H6b took the door's other check-(1)
+ * subject away (the bounce `exit_up` regions now round-trip, 15/25 → 25/25), so
+ * without a row here the "an unedited save must not move a byte" refusal would
+ * have no driver at all and a mutant deleting it would stay green. ⚖ These ten
+ * are H6a's to fix, and this row is what will have to move when it does.
+ */
+const ATLAS_MAZE = join(PRESETS, 'seedling_atlas_maze', 'AP_1', 'AP_1_rules.json');
 
 const read = (p) => JSON.parse(readFileSync(p, 'utf8'));
 const clone = (o) => JSON.parse(JSON.stringify(o));
@@ -180,15 +191,36 @@ describe('inspectRegionRoom — what the Edit button knows before it is pressed'
         expect(r.session.contract.expectedItems).toEqual([]);
     });
 
-    it('⛔ a bounce region whose portal is not `side_exit_<side>` is REFUSED BY NAME', async () => {
-        // ⛓ `region_1_1` is the `spring_gap` zone: its north portal is authored
-        //   as `exit_up`, and `assembleBounceRegionFromLevel` names every exit
-        //   `side_exit_<side>` — so an UNEDITED save would already rewrite the
-        //   payload's `sidePortals`. Measured, not predicted.
+    /**
+     * ⛓⛓⛓ **H6b TURNED THIS ROW OVER.** `region_1_1` is the `spring_gap` zone:
+     * its north portal is AUTHORED as `exit_up`, and until H6b
+     * `assembleBounceRegionFromLevel` minted `side_exit_<side>` for every exit
+     * regardless — so an unedited save already rewrote the payload's
+     * `sidePortals` and this door refused the region BY NAME. The assembler now
+     * reads the level's own portal ids, and the region opens. Measured over the
+     * committed corpus, the bounce door went **15/25 → 25/25** and the ten
+     * refusals it lost were all this one cause.
+     */
+    it('⛓ a bounce region whose portal is AUTHORED opens, under THAT id', async () => {
         const r = await inspectRegionRoom(doc, '3', 'region_1_1');
+        expect(r.ok, r.why).toBe(true);
+        // the premise, off the document rather than assumed
+        const payload = sidecarOf(doc, '3', 'region_1_1').playable_payload;
+        expect(payload.params.bounceLevel.portals.map((p) => p.id))
+            .toEqual(['exit_up', 'side_exit_E', 'side_exit_W']);
+        // ⛔ and the door's BASELINE — what an untouched save would carry —
+        //    names the document's own portal, which is the whole of check (1).
+        expect(r.unedited.playable_payload.params.sidePortals)
+            .toEqual(payload.params.sidePortals);
+        expect(r.unedited.playable_payload.params.sidePortals.N).toBe('exit_up');
+    });
+
+    it('⛔ an atlas-derived maze room IS still refused by name — check (1) lives', async () => {
+        const atlas = read(ATLAS_MAZE);
+        const r = await inspectRegionRoom(atlas, '1', 'starting_house');
         expect(r.ok).toBe(false);
         expect(r.why).toContain('UNCHANGED would already rewrite');
-        expect(r.why).toContain('region_1_1');
+        expect(r.why).toContain('starting_house');
     });
 
     it('⛔ a jta region is disabled BY NAME — no `roomEditor` at all', async () => {
@@ -220,7 +252,9 @@ describe('inspectRegionRoom — what the Edit button knows before it is pressed'
         expect(verdicts['1']).toEqual(verdicts['2']);
         expect(verdicts['3']).toEqual(verdicts['4']);
         expect(verdicts['1'].filter((v) => v.endsWith(':edit'))).toHaveLength(3);
-        expect(verdicts['3'].filter((v) => v.endsWith(':edit'))).toHaveLength(3);
+        // ⛓ H6b: 3 → 5. Both `exit_up` regions (`region_1_1`, `region_2_1`) now
+        //   round-trip, so every bounce region of the slot offers its room.
+        expect(verdicts['3'].filter((v) => v.endsWith(':edit'))).toHaveLength(5);
     });
 });
 
