@@ -162,11 +162,46 @@ slot, because `_render` runs on every tab switch and a whole deserialize pass pe
 render would sit beside the `validateRules` pass that already costs 4.6 s on the
 corpus's largest document.
 
-⚠ A region rebuilt from sidecars carries no top-level `exits` (the field the
-pipeline's own placements set), so a **loaded** document's map draws the cells and
-their exit squares but no inter-region connection lines. That is pre-existing —
-the pipeline panel's loaded-preset view has always looked that way — and H3 left
-it alone rather than changing a view it was asked to keep byte-inert.
+A region rebuilt from sidecars is placed **with its top-level `exits`** — the
+field the renderer's connection pass and its exit-selection highlight read, and
+the one `procgenPipelineEngine`'s own placements have always set. H3 found it
+missing and left it (the slice had to stay byte-inert); **H4a added the one line**
+(`exits: world.exits` in `compositeMapDocument.js`). Measured on `procgen_maze`
+seed 1 through a recording 2d context: 0 → 2 connection lines, 203 → 211 draw
+ops. It moves the **pipeline panel's** loaded-preset view too, which is the same
+function's other reader.
+
+### The three ways there is no map
+
+The tab names WHICH one, because "no map" and "no grid data" are different claims
+and only the second tells you whether another document would work
+(`panel._noMapReason()`):
+
+| what the document has | the sentence |
+|---|---|
+| no `preset_sidecars` at all | *this document carries no `preset_sidecars`* |
+| sidecars, none for the selected slot | *player slot N carries no sidecars* |
+| sidecars, no `grid_cell` on any | *no grid data in the sidecars* — Seedling, JtA |
+| `grid_cell` on every region, no tile-grid payload | *N regions carry a grid cell, but `bounce` stores no tile-grid geometry in the payload* |
+
+⚠ The last row is a **zone** substrate, and it looked like the third one until
+H4a: every no-map document in the corpus carried no `grid_cell`, so one sentence
+covered the corpus by accident. A bounce level's geometry is
+`params.bounceLevel.size` **in pixels**; the composite view sizes its cells from
+`playable_payload.width`/`height` **in tiles**, which bounce has none of. It is
+the ⚖-ruled "no map for this world" answer for zone worlds (plan §7 ⚖ 3),
+reached for a reason the panel can now state.
+
+### The four-player fixture
+
+`frontend/presets/multiworld/AP_05594871498841892311/` (seed 4) is the only
+committed document whose `preset_sidecars` carry more than one slot, and the
+whole per-player half of this panel is tested against it. Slots 1–2 are
+`Procgen Maze WorldGen` (3 grown regions each), slots 3–4 `Bounce Demo WorldGen`
+(5 zone regions each) — so the selector, the Map tab and the Document tab's
+per-player slice each have a document that can tell *"read the selected slot"*
+from *"read the first one"*. Before it, 158 of the 192 committed carriers held
+`{}` and every populated one keyed under slot `"1"`.
 
 ## The Links tab
 

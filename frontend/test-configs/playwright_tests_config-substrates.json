@@ -418,6 +418,24 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "APWorld hub H3, ⚖ 'show the composite grid only for presets that have grid data'. Loads a committed jta preset (one of the 4 of 205 whose sidecars carry no grid_cell), asserts that premise off the document, and then that the tab names the reason and draws NO canvas — the region graph stays its own panel rather than a fallback drawn here."
+        },
+        {
+            "id": "apworld-selector-reads-the-documents-own-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H4a. The four-player fixture's first row: the combined export (no playerId) opens on the first slot and offers exactly the slots the document carries; the per-player P3 export (playerId \"3\") opens on 3. One document alone cannot tell 'honour playerId' from 'take the first slot' — this row drives both."
+        },
+        {
+            "id": "apworld-map-follows-the-selected-player-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H4a. One document, four slots, two games: the maze slots draw a canvas holding THAT slot's region count, the bounce slots say 'no map for this world' and draw none (⚖ 3's v1 answer, now on the same document as a slot that draws). Switches back at the end — a map that never re-derived passes the walk in order."
+        },
+        {
+            "id": "apworld-document-tab-slices-preset-sidecars-by-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H4a. The Document tab's per-player slice, finally observable: 158 of 192 carriers held {} and every populated one keyed under slot '1', so no committed document could discriminate. The fixture's slots hold 3/3/5/5, and the row asserts the four summaries are not all the same string."
         }
     ]
 }

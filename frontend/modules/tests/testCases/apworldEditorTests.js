@@ -53,6 +53,28 @@ const NO_GRID_PRESET_PATH =
  */
 const REFUSED_PRESET_PATH =
     './presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+/**
+ * ⛓⛓ **H4a — THE FOUR-PLAYER FIXTURE**, and the only committed document whose
+ * `preset_sidecars` carry more than one slot. Measured over the presets tree
+ * before it existed: 192 documents carry the key, 158 hold `{}`, and all 34
+ * populated ones key under slot `"1"` — the fifteen four-player `multiworld`
+ * files included, because every one of them is an ALTTP-family world whose
+ * sidecars are empty. So every per-player path in this panel (the selector, the
+ * Map tab's slot, the Document tab's per-player slice) had NEVER met a document
+ * that could tell "read the selected slot" from "read the first one".
+ *
+ * Slots 1 and 2 are `Procgen Maze WorldGen` (3 grown regions each, `grid_cell`
+ * on every one); slots 3 and 4 are `Bounce Demo WorldGen` (5 ZONE regions each,
+ * no `grid_cell`) — the ⚖-ruled "no map for this world" answer, on the SAME
+ * document as a slot that does draw.
+ */
+const FOUR_PLAYER_PATH =
+    './presets/multiworld/AP_05594871498841892311/AP_05594871498841892311_rules.json';
+/** ⛓ The same generation's PER-PLAYER export for slot 3: it names its own slot
+ *  in `playerId`, and carries only that slot's sidecars. */
+const FOUR_PLAYER_P3_PATH =
+    './presets/multiworld/AP_05594871498841892311/AP_05594871498841892311_P3_rules.json';
+
 const SCHEMA_PATH = './schema/rules.schema.json';
 
 /**
@@ -89,6 +111,52 @@ async function openHub(testController, presetPath = PRESET_PATH, budgetMs = 8000
 /** Select a tab through the panel's own control, then let it render. */
 function selectTab(panel, tabId) {
     panel._selectTab(tabId);
+}
+
+/**
+ * ⛓ H4a — pick a player slot through the REAL toolbar control, not by setting
+ * `panel.playerId`. The handler stores `_chosenPlayer` and re-renders; a row
+ * that assigned the field directly would pass over a selector wired to nothing.
+ */
+function selectPlayer(select, slot) {
+    select.value = String(slot);
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+/** ⛓ The slots a document's own `preset_sidecars` carry, and how many regions
+ *  each holds — the expectation, read off the document rather than typed. */
+function sidecarCounts(doc) {
+    const out = {};
+    for (const [slot, regions] of Object.entries(doc?.preset_sidecars ?? {})) {
+        out[slot] = Object.keys(regions ?? {}).length;
+    }
+    return out;
+}
+
+/** ⛓ How many of a slot's regions carry a `grid_cell`. */
+function withGridCells(doc, slot) {
+    return Object.values(doc?.preset_sidecars?.[slot] ?? {})
+        .filter((sc) => !!sc?.grid_cell).length;
+}
+
+/**
+ * ⛓⛓ **AND HOW MANY CAN ACTUALLY BE DRAWN — which is NOT the same count.**
+ * A cell placement needs a cell AND a tile-grid payload; the composite view
+ * sizes its cells from `playable_payload.width`/`height`.
+ *
+ * ⚠ H4a's first in-app run found this the hard way: the row assumed
+ * `grid_cell ⇒ a map`, and the fixture's two `Bounce Demo WorldGen` slots carry
+ * a `grid_cell` on all five of their regions and still draw nothing, because a
+ * bounce level's geometry is `params.bounceLevel.size` in PIXELS and there is
+ * no tile grid at all. Every no-map document in the corpus before this fixture
+ * was the other case (no `grid_cell`), so one predicate covered the corpus by
+ * accident.
+ */
+function withCompositeGeometry(doc, slot) {
+    return Object.values(doc?.preset_sidecars?.[slot] ?? {}).filter(
+        (sc) => !!sc?.grid_cell
+            && Number.isFinite(sc?.playable_payload?.width)
+            && Number.isFinite(sc?.playable_payload?.height)).length;
 }
 
 /* ══════════════════════════════════════════════════════════════════════ */
@@ -1062,6 +1130,254 @@ export async function apworldMapSaysNoMapWithoutGridData(testController) {
     return testController.getOverallResult();
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+ * H4a — THE FOUR-PLAYER FIXTURE: the selector, the map and the slice
+ * ══════════════════════════════════════════════════════════════════════ */
+
+export async function apworldSelectorReadsTheDocumentsOwnSlot(testController) {
+    try {
+        /* ── the COMBINED file: four slots, and no `playerId` to name one ── */
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const doc = panel.rulesDoc;
+        const counts = sidecarCounts(doc);
+        const slots = Object.keys(counts);
+
+        // The premise, asserted off the document: this is the four-slot case
+        // no committed preset offered before H4a.
+        testController.assertEqual('the fixture carries four sidecar slots',
+            '4', String(slots.length));
+        testController.reportCondition(
+            'and the four slots are NOT all the same size — so the map can discriminate',
+            new Set(Object.values(counts)).size > 1);
+        testController.assertEqual('the combined export names no playerId of its own',
+            'undefined', typeof doc.playerId);
+
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        testController.reportCondition('the toolbar carries a player selector', !!select);
+        if (!select) return testController.getOverallResult();
+
+        // ⛓ The options are DERIVED from the document — the union over every
+        //   per-player key, not `player_names` alone — so the expectation is a
+        //   set read off the live document, never a typed list.
+        const perPlayerKeys = Object.keys(doc).filter(
+            (k) => doc[k] && typeof doc[k] === 'object' && !Array.isArray(doc[k])
+                && Object.keys(doc[k]).length > 0
+                && Object.keys(doc[k]).every((sub) => /^[0-9]+$/.test(sub)));
+        const expected = [...new Set(perPlayerKeys.flatMap((k) => Object.keys(doc[k])))]
+            .sort((a, b) => Number(a) - Number(b));
+        const offered = [...select.options].map((o) => o.value);
+        testController.assertEqual('the selector offers exactly the document\'s own slots',
+            JSON.stringify(expected), JSON.stringify(offered));
+        testController.reportCondition('and it is ENABLED — four slots is a real choice',
+            !select.disabled);
+        testController.assertEqual('with no playerId, the default is the FIRST slot',
+            offered[0], String(panel.playerId));
+
+        /* ── the PER-PLAYER file: `playerId` names slot 3, and wins ── */
+        const p3 = await openHub(testController, FOUR_PLAYER_P3_PATH);
+        if (!p3) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!p3._rulesSchema, 'the panel loaded rules.schema.json (P3)', 8000, 50);
+
+        testController.assertEqual('the per-player export names its own slot in playerId',
+            '3', String(p3.rulesDoc.playerId));
+        /**
+         * ⛔ THE DISCRIMINATING HALF. A panel that simply took the first slot it
+         * found would land on '3' here too — because a per-player export carries
+         * only its own slot. So the row asserts BOTH: '1' on the combined file
+         * (where first-slot and playerId disagree, playerId being absent) and
+         * '3' here, where the document states it. Neither alone can tell the two
+         * rules apart.
+         */
+        testController.assertEqual('and the panel opens on THAT slot, not on slot 1',
+            '3', String(p3.playerId));
+        const sel3 = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        testController.assertEqual('the selector shows it', '3', sel3 ? sel3.value : null);
+        /**
+         * ⛓ …and it still offers ALL FOUR slots, because a per-player export
+         * keeps the whole `player_names` block. MEASURED in H4a's first in-app
+         * run, which expected a disabled one-slot selector and got a live
+         * four-slot one. That is the RIGHT behaviour and not a defect: the
+         * selector's options are the UNION over every per-player key by design
+         * (a slot named but not carried shows its rows as absent, which is a
+         * legible answer), and a selector that hid slot 1 here would make the
+         * document's own `player_names` unreachable. Pinned so the next reader
+         * meets the measurement rather than the assumption.
+         */
+        testController.assertEqual(
+            'and still offers every slot player_names declares — a per-player export keeps them',
+            JSON.stringify(Object.keys(p3.rulesDoc.player_names)),
+            JSON.stringify(sel3 ? [...sel3.options].map((o) => o.value) : null));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('four-player selector test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+export async function apworldMapFollowsTheSelectedPlayerSlot(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const doc = panel.rulesDoc;
+        const counts = sidecarCounts(doc);
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        if (!select) {
+            testController.reportCondition('the toolbar carries a player selector', false);
+            return testController.getOverallResult();
+        }
+
+        // ⛓ WHICH slots can draw is derived from the document, not assumed from
+        //   the game name: a slot draws when its sidecars carry a cell AND a
+        //   tile-grid payload the composite view can size a cell from.
+        const drawable = Object.keys(counts).filter((s) => withCompositeGeometry(doc, s) > 0);
+        const flat = Object.keys(counts).filter((s) => withCompositeGeometry(doc, s) === 0);
+        testController.reportCondition(
+            'the document has at least one slot with composite geometry', drawable.length > 0);
+        testController.reportCondition(
+            'and at least one WITHOUT — the ⚖-ruled "no map" case, same document',
+            flat.length > 0);
+        /**
+         * ⛔ THE THIRD "no map" CAUSE, and the one this fixture is the first
+         * committed document to carry: the flat slots here have a `grid_cell`
+         * on EVERY region and still cannot be drawn. H3's no-map row uses a jta
+         * preset with no `grid_cell` at all, so "no grid data in the sidecars"
+         * was the whole story until now.
+         */
+        testController.reportCondition(
+            '⛔ and the flat slots are flat DESPITE carrying grid cells (zone substrate)',
+            flat.length > 0 && flat.every((s) => withGridCells(doc, s) > 0));
+
+        for (const slot of drawable) {
+            selectPlayer(select, slot);
+            const canvas = await testController.pollForValue(
+                () => {
+                    selectTab(panel, 'map');
+                    return document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`);
+                },
+                `slot ${slot}'s map canvas`, 8000, 50);
+            testController.reportCondition(`slot ${slot} draws a canvas`, !!canvas);
+            if (!canvas) continue;
+            testController.assertEqual(
+                `slot ${slot}: the canvas holds that slot's region count`,
+                String(withCompositeGeometry(doc, slot)), String(canvas.dataset.regions));
+            const label = document.querySelector(`${PANEL_SELECTOR} .apworld-map-slot`);
+            testController.reportCondition(
+                `slot ${slot}: the map says which slot it read`,
+                !!label && label.textContent.includes(`player slot ${slot}`));
+        }
+
+        for (const slot of flat) {
+            selectPlayer(select, slot);
+            const intro = await testController.pollForValue(
+                () => {
+                    selectTab(panel, 'map');
+                    const el = document.querySelector(`${PANEL_SELECTOR} .apworld-map-intro`);
+                    return el && el.textContent.includes('No map') ? el : null;
+                },
+                `slot ${slot}'s "no map" sentence`, 8000, 50);
+            /**
+             * ⛓ The sentence must name THIS slot's reason. "no grid data in the
+             * sidecars" would be a wrong answer about a slot whose five regions
+             * all carry one — the panel derives the reason (`_noMapReason`).
+             */
+            const n = withGridCells(doc, slot);
+            testController.reportCondition(
+                `slot ${slot} says there is no map, and WHY`,
+                !!intro && intro.textContent.includes(
+                    `${n} region${n === 1 ? '' : 's'} carry a grid cell`)
+                && intro.textContent.includes('no tile-grid geometry in the payload'));
+            testController.reportCondition(
+                `⛔ slot ${slot} draws NO canvas — no fallback, by ⚖`,
+                !document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`));
+        }
+
+        /**
+         * ⛔ AND BACK. A panel that drew slot 1 and then never re-derived would
+         * pass every check above in order; going back to a drawable slot after a
+         * flat one is what catches a map that stayed where it was.
+         */
+        selectPlayer(select, drawable[0]);
+        const again = await testController.pollForValue(
+            () => {
+                selectTab(panel, 'map');
+                return document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`);
+            },
+            'the first drawable slot\'s canvas, after a flat one', 8000, 50);
+        testController.assertEqual('switching back re-draws that slot\'s map',
+            String(withCompositeGeometry(doc, drawable[0])),
+            again ? String(again.dataset.regions) : null);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-per-slot test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+export async function apworldDocumentTabSlicesSidecarsBySlot(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const doc = panel.rulesDoc;
+        const counts = sidecarCounts(doc);
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        if (!select) {
+            testController.reportCondition('the toolbar carries a player selector', false);
+            return testController.getOverallResult();
+        }
+
+        const seen = [];
+        for (const slot of Object.keys(counts)) {
+            selectPlayer(select, slot);
+            const summary = await testController.pollForValue(
+                () => {
+                    selectTab(panel, 'document');
+                    const row = document.querySelector(
+                        `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="preset_sidecars"]`);
+                    return row ? row.querySelector('.apworld-doc-summary') : null;
+                },
+                `slot ${slot}'s preset_sidecars row`, 8000, 50);
+            testController.reportCondition(
+                `slot ${slot}: the Document tab draws a preset_sidecars row`, !!summary);
+            if (!summary) continue;
+            seen.push(summary.textContent.trim());
+            const n = counts[slot];
+            testController.assertEqual(
+                `slot ${slot}: the row summarises THAT slot's entries`,
+                `{ ${n} key${n === 1 ? '' : 's'} }`, summary.textContent.trim());
+            const row = document.querySelector(
+                `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="preset_sidecars"]`);
+            testController.reportCondition(
+                `slot ${slot}: and the row names the slot it is about`,
+                !!row && row.textContent.includes(`player ${slot}`));
+        }
+
+        /**
+         * ⛔ THE VACUITY CHECK. Every assertion above would also pass on a panel
+         * that ignored the selector, if the four slots happened to hold the same
+         * number of regions. This fixture's do NOT (3, 3, 5, 5), so the summaries
+         * the tab actually drew must have more than one distinct value.
+         */
+        testController.reportCondition(
+            '⛔ the summaries are not all the same string — the slice is observable',
+            new Set(seen).size > 1);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('document-slice test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
 registerTest({
     id: 'apworld-presets-button-opens-the-same-world',
     name: 'APWorld hub: the Presets screen\'s button raises the hub on the world it just opened',
@@ -1173,6 +1489,48 @@ registerTest({
                + 'have grid data", with the region graph as its own panel rather than a '
                + 'fallback drawn here.',
     testFunction: apworldMapSaysNoMapWithoutGridData,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-selector-reads-the-documents-own-slot',
+    name: 'APWorld hub: the player selector is derived from the document, and honours its playerId',
+    description: 'Drives the four-player fixture BOTH ways: the combined export, which '
+               + 'names no playerId, must open on the first slot and offer exactly the '
+               + 'slots the document carries (the set read off the document at run time); '
+               + 'and the same generation\'s per-player export for slot 3, which names '
+               + '"3" in playerId, must open on 3. Neither document alone can tell '
+               + '"honour playerId" from "take the first slot".',
+    testFunction: apworldSelectorReadsTheDocumentsOwnSlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-follows-the-selected-player-slot',
+    name: 'APWorld hub: the Map tab draws the SELECTED slot, and says "no map" for the zone slots',
+    description: 'On one document with four slots — two grown maze worlds and two zone-only '
+               + 'bounce worlds — walks every slot through the real toolbar selector: a slot '
+               + 'whose sidecars carry grid cells draws a canvas holding THAT slot\'s region '
+               + 'count and names the slot it read; a slot whose sidecars carry none says so '
+               + 'and draws no canvas, the ⚖-ruled answer. Then switches back, because a map '
+               + 'that never re-derived would pass the walk in order.',
+    testFunction: apworldMapFollowsTheSelectedPlayerSlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-document-tab-slices-preset-sidecars-by-slot',
+    name: 'APWorld hub: the Document tab\'s preset_sidecars row is the SELECTED slot\'s slice',
+    description: 'The per-player rows have always claimed to be sliced by the selected slot, '
+               + 'and until this fixture no committed document could show it: 158 of 192 '
+               + 'carriers hold {} and every populated one keyed under slot "1". Walks all '
+               + 'four slots and asserts the row\'s summary equals that slot\'s own entry '
+               + 'count and its badge names that slot — then that the four summaries are not '
+               + 'all the same string, which is what makes the slice observable at all.',
+    testFunction: apworldDocumentTabSlicesSidecarsBySlot,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

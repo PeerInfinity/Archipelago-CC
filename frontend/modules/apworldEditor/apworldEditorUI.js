@@ -1693,6 +1693,32 @@ class ApworldEditorUI {
     return known;
   }
 
+  /**
+   * ⛓ WHY there is no map for the selected slot, in the document's own terms.
+   * The four answers are the four ways `reconstructResultFromSidecars` returns
+   * null, in the order it decides them — so a reader can act on the sentence
+   * rather than guess which one it means.
+   */
+  _noMapReason() {
+    const byPlayer = this.rulesDoc?.preset_sidecars;
+    if (!byPlayer || typeof byPlayer !== 'object' || Object.keys(byPlayer).length === 0) {
+      return 'this document carries no `preset_sidecars` at all';
+    }
+    const entries = Object.values(byPlayer[this.playerId] ?? {});
+    if (entries.length === 0) return `player slot ${this.playerId} carries no sidecars`;
+    const withCells = entries.filter((sc) => !!sc?.grid_cell);
+    if (withCells.length === 0) return 'no grid data in the sidecars';
+    const sized = withCells.filter((sc) => Number.isFinite(sc?.playable_payload?.width)
+      && Number.isFinite(sc?.playable_payload?.height));
+    if (sized.length === 0) {
+      const names = [...new Set(withCells.map((sc) => sc.substrate).filter(Boolean))];
+      return `${withCells.length} region${withCells.length === 1 ? '' : 's'} carry a grid cell, `
+        + `but ${names.length === 1 ? `\`${names[0]}\`` : 'their substrates'} stores no `
+        + 'tile-grid geometry in the payload';
+    }
+    return 'no registered substrate here can rebuild a region from its payload';
+  }
+
   _renderMapTab() {
     const result = this._mapResult();
 
@@ -1714,11 +1740,21 @@ class ApworldEditorUI {
        * ⛔ The sentence names the REASON, not just the absence — "no map" and
        * "no grid data in the sidecars" are different claims, and only the
        * second tells the person whether a different document would work.
+       *
+       * ⛓ H4a: there are THREE reasons, and the fixture proved it. Until the
+       * four-player preset landed, every no-map document in the corpus was the
+       * "no `grid_cell`" one (jta, Seedling), so one sentence covered the
+       * corpus by accident. A ZONE slot — `Bounce Demo WorldGen` here — carries
+       * a `grid_cell` on every region and STILL cannot be drawn, because its
+       * payload has no `width`/`height` in tiles: bounce geometry lives under
+       * `params.bounceLevel.size` in pixels. Telling a person "no grid data"
+       * about a document that visibly has grid cells is a wrong answer.
        */
-      intro.textContent = 'No map for this world (no grid data in the sidecars). '
+      intro.textContent = `No map for this world (${this._noMapReason()}). `
         + 'Only grown worlds — the maze / top-down / spiral pipelines — write a `grid_cell` '
-        + 'per region; Seedling, JtA and zone-only worlds do not, so there is no composite '
-        + 'grid to draw. The region graph draws the topology for any document.';
+        + 'AND a tile-grid payload per region; Seedling, JtA and zone-only worlds do not, so '
+        + 'there is no composite grid to draw. The region graph draws the topology for any '
+        + 'document.';
       this.scrollContainer.appendChild(intro);
       bar.appendChild(graphBtn);
       this.scrollContainer.appendChild(bar);
