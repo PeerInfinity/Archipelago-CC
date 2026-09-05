@@ -9847,7 +9847,7 @@ after the predecessor's `a69a9b295`. **NOT DONE, deliberately:** full convergenc
 adapter (B), live-queue editing in v1, tag editing, a persistent jta name table, per-entry cost, a new
 gate file or standing-values row, any submodule change before V5.
 
-## 5n. The APWorld EDITOR as the HUB over every procgen editor — PLANNED 2026-09-04 (Fable planning session `next-priorities-planning` at main `697c94ee6`; plan file `NewDocs/plans/apworld-editor-hub-plan.md`, gitignored; memory `project_apworld_editor_hub`)
+## 5n. The APWorld EDITOR as the HUB over every procgen editor — PLANNED 2026-09-04; **H0 + H1 SHIPPED 2026-09-04/05, NEXT = H2** (Fable planning session `next-priorities-planning` at main `697c94ee6`; plan file `NewDocs/plans/apworld-editor-hub-plan.md`, gitignored; memory `project_apworld_editor_hub`)
 
 **How this entry came to exist.** The session was briefed to hold the "next main priorities" conversation
 across everything but the platformer. The user's first move set the queue viewer (§5m) aside — *"The session
@@ -9957,9 +9957,9 @@ QUOTED from CI by SHA (run 33930322122): `suite: vitest (unfiltered) 427/13019 (
 (with a permissive top level, deleting a declaration is invisible to the gate); (2) `_stub` — delete the key,
 declare it, or leave it (H0 left it; ⛓ deleting it is the same commit as strict); (3) NEW — whether a
 4-player procgen preset is worth generating, since no committed document exercises a per-player sidecar.
-**NEXT = H1** (hub chrome), unblocked; ⛓ its `documentKeys.js` should be DERIVED from the schema's
-`properties` (each new key's `description` names its producer — that is the row label), and its raw-JSON
-fallback row is NOT optional while `_stub` sits in a committed preset outside the schema.
+~~**NEXT = H1** (hub chrome)~~ — **H1 SHIPPED 2026-09-04/05; NEXT = H2.** (H1's `documentKeys.js` is
+DERIVED from the schema's `properties` exactly as this line asked, and the raw-JSON fallback row shipped even
+though Task 0 removed the one committed key that needed it — a user-loaded file can still carry any key.)
 
 **⚖ RULED 2026-09-04 (user, on H0's report): (1) STRICT top level — `additionalProperties:false` plus
 deleting `_stub` from `robotkitty_tilemap`'s preset (H0 measured strict = 204/205, the one red being the key
@@ -9970,9 +9970,84 @@ in the plan's §2 and §10 (headline: the top-level `assume_bidirectional_exits`
 `procgenPipelineEngine.js:6292`, not the exporter; `_stub` has NO producer). **H1 LAUNCHED 2026-09-04** as
 `apworld-hub-sliceH1` (Opus, kickoff `NewDocs/plans/apworld-hub-sliceH1-prompt.md`).
 
+**⇒ H1 (HUB CHROME) AS BUILT — SHIPPED 2026-09-04/05** (Opus session `apworld-hub-sliceH1` from
+`8acff0e95`; commits `34dfa26d4` Task 0 · `db17ac6b6` Tasks 1–4 · `aaf8d98b3` Task 5 · this record.
+As-built = plan §11, in `NewDocs/` so untracked).
+
+**Task 0, the ⚖ ruling, done and MEASURED.** `additionalProperties: false` at the schema's top level and
+`_stub` deleted from `robotkitty_tilemap`'s preset — a 2-line diff that leaves the file's formatting alone;
+`preset_files.json` still indexes it. `python -m pytest test/general/test_schema_validation.py -q` →
+**2 passed, 205 subtests passed in 250.35s** — 205/205, exactly what H0's mutant B predicted (204/205 with
+`_stub` present). Schema 1,045 → **1,046 lines**, 34 properties unchanged.
+⛑ **H0's KNOWN_KEYWORDS law held and cost nothing**: `additionalProperties` was already in that set AND
+implemented in `schemaErrors`' object branch, so the strict top level cost `jsonSchemaCheck.js` a line count
+and no code. The FUNCTION census the brief named (`rg -ln rulesJsonSchemaErrors frontend --glob '*.test.js'`
+= 8 files) ran green at **363 rows**, including `jsonSchemaCheck.test.js`'s *"all 205 of them"* — so the JS
+evaluator and Python agree on the same corpus under the strict schema.
+
+**What H1 built.** `apworldEditor/documentKeys.js` — the top-level key REGISTRY, one entry per
+`rules.schema.json` property, in the schema's own order, with per-player read off each property's
+`patternProperties {"^[0-9]+$"}` (18 of the 34) and `DOCUMENT_KEY_EDITORS` as the EMPTY `key → {open}` slot
+H5 fills · `apworldEditor/documentLinks.js` — substrate rows DERIVED from `roomEditor` declarations plus a
+six-row document-level table written once as data · a `set-key` op (#20) with `SET_KEY_SCOPES` · the
+**Document** and **Links** tabs · the **player selector** (`PLAYER_ID`, a module constant read at 42 sites,
+→ `this.playerId`, re-derived per render; `_applyOp` STAMPS it, group members included, never overwriting a
+slot a cascade builder chose) · the panel's FIRST three in-app rows (category `apworldEditor`, absorbed by
+the `fast` batch through `testBatches.js`' default rule, so no batch definition moved) ·
+`docs/json/modules/apworldEditor.md`, linked from the index.
+
+**Five things H1 overturned or pinned (plan §11.1).**
+1. **The selector's default rule is FORCED by a committed preset, not chosen.**
+   `multiworld/AP_01043188731678011336_P2_rules.json` carries `playerId: "2"` and keys `regions`/`items`
+   under `"2"` ALONE, while its `player_names` still starts at `"1"`. So the old constant AND a
+   `player_names`-first fallback BOTH draw an EMPTY world for a document that is not empty. Order:
+   `playerId` → first `player_names` key → first slot carried; a `playerId` naming a slot the document does
+   not hold is ignored.
+2. **§10.6's "derive where it can be" admitted no exception** — label, description (H0's producer line),
+   type, required and per-player are all in the schema. The only hand-written table is which TAB owns a key,
+   and half of that is derived from `META_FIELDS`.
+3. **⛔ `set-key`'s SCOPE is RECORDED, never inferred from `player`.** Every op in `rulesDocOps` carries
+   `player` and the panel stamps it, so "a player is named ⇒ nest under the slot" would put document-level
+   keys under a slot the moment the Document tab grew its selector — the tab the op exists for.
+4. **The schema veto is a pure PREVIEW + a DIFFERENCE.** `applyRulesDocOp` is pure, so a candidate op is
+   applied to a preview, `rulesJsonSchemaErrors` runs over the whole thing, and the errors the document
+   ALREADY had are subtracted — `rulesDocOps`' own law. A fetch failure makes the veto a no-op rather than
+   the tab read-only.
+5. **⚠ A DEFECT THE IN-APP RUN FOUND THAT ITS OWN THREE GREEN ROWS COULD NOT FAIL ON.** `defaultPlayerOf` →
+   `playerSlotsOf` → `buildDocumentKeys` threw on a null schema, and the panel fetches the schema
+   ASYNCHRONOUSLY — so the first render killed the whole `stateManager:rawJsonDataLoaded` handler, visible
+   ONLY as an `[eventBus] Error in event handler` line in the browser log while all three rows PASSED. Fixed
+   and pinned. General shape: after a green in-app run of new panel code, grep the log for handler failures.
+
+**MUTANTS — driven, none committed.** (a) filter one key (`loop_costs`) out of `buildDocumentKeys`'
+derivation → **3 rows red**, including the parity row in both directions. (b) `set-key` storing the CALLER's
+reference instead of `carried()`'s copy → the aliasing row reds (1 failed / 52 passed).
+
+**GATES.** `frontend/modules/apworldEditor/` vitest = 5 files / **107 rows** (`rulesDocOps` 45 → **53**,
+`rulesEditAdapter` 14, `rulesUtils` 8, new `documentKeys` **21**, new `documentLinks` **10**) ·
+`scripts/procgen/lintGateLabels.test.js` 14 passed · `procgenDocs/` 445 passed / 7 skipped with the KNOWN
+pre-existing red (`generated.test.js` `beforeAll` `:557` hook timeout) · the reference generator re-ran for
+the `architecture.md` edit, `registry`/`refusals`/`instruments` all unchanged, 0 FINDINGS.
+
+**IN-APP: the three new rows PASSED in BOTH `fast` runs (63/64 each); the two reds are the MACHINE, and the
+attribution is measured, not assumed.** A DIFFERENT omsi row failed each run and each PASSED in the other
+(`omsi-award-schedule` FAILED 32.1 s / passed 1.97 s; `omsi-multi-run-replay-retry` passed 23.5 s / FAILED
+184.8 s). **24 prior `fast` runs on disk (2026-07-28 → 09-02) have both rows `passed` in every single one.**
+The runner's own readout named the cause — `machine at failure: load 11.86 across 8 cpus` — and a third
+attempt at the failing row ALONE could not even start its roster: `Timeout waiting for tests to start`,
+`load 21.74 across 8 cpus`, `ps` naming a dozen concurrent `cc1` compiles under
+`~/CC/SWFRecomp-CC/.claude/worktrees/agent-*` — **another arc's** work, which was NOT killed. ⇒ a confirming
+`fast` run on a quiet box is owed and cheap; it is not a gate this slice could run while another arc owned
+the CPUs.
+
+**NEXT = H2** (Presets button · Download · Load-into-app = Apply + `rules:loaded` · Raw view with a MEASURED
+threshold). H3 gets `panel.playerId` + `documentKeys.playerSlotsOf` as its slot API and `entry.editor` is
+where H5 hangs its links; ⛔ nothing may gate on `preset_sidecars` before the ⚖-ruled four-player procgen
+fixture exists (H4's Task 0).
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
-stands as its own arc, ruled OUT of the hub. **Nothing launched.** ⚑ Two stale carries in §6 corrected this
+stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
 session, both measured with `git branch -r --contains`: top-down phases 4/5/6 and the two grid-growth commits
 are ALL on `origin/main`.
 
