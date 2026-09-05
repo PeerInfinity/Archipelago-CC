@@ -20,7 +20,7 @@ import {
 import { rulesEditAdapter } from './rulesEditAdapter.js';
 import { validateRules } from './rulesUtils.js';
 import {
-    EXIT_FIELDS, ITEM_FIELDS, META_FIELDS, RULES_OP_KINDS,
+    EXIT_FIELDS, ITEM_FIELDS, META_FIELDS, RULES_OP_KINDS, SET_KEY_SCOPES,
     applyRulesDocOp, deleteItemOps, deleteRegionOps, exitsPointingAt, nextName,
 } from './rulesDocOps.js';
 
@@ -98,6 +98,7 @@ describe('the contract shape', () => {
             'set-start-region': { op: 'set-start-region', region: 'Vault' },
             'set-completion-condition': { op: 'set-completion-condition', condition: { type: 'constant', value: true } },
             'set-rule-tree': { op: 'set-rule-tree', path: { region: 'Hall', kind: 'exit', index: 0 }, tree: { rule: 'True_' } },
+            'set-key': { op: 'set-key', key: 'preset_label', value: 'a label' },
             clear: { op: 'clear' },
         };
         // ⛔ The sample table covers the WHOLE vocabulary — derived, so a new op
@@ -486,6 +487,20 @@ describe('a carried payload is COPIED into the record', () => {
     });
 
     /**
+     * ⛓⛓ **H1's `set-key` CARRIES ARBITRARY JSON, so it is in this family.** The
+     * Document tab hands it a parsed block a person may go on editing; storing
+     * the reference would put the caller's object in the record AND in the edit
+     * list, which is the defect the first browser run of B-c measured on
+     * `set-rule-tree`.
+     */
+    it('⛓⛓ set-key with a whole block', () => {
+        aliasRow(
+            { op: 'set-key', key: 'procgen_metadata', value: { driver: 'sphere', edits: [] } },
+            (d) => d.procgen_metadata,
+        );
+    });
+
+    /**
      * ⛓⛓⛓ **THE SESSION-SHAPED ROW** — the defect as the panel met it: apply,
      * then edit the handed-in object in place (a keystroke in the rule editor),
      * then apply again. The second apply must be a REAL edit, not the no-op an
@@ -535,6 +550,83 @@ describe('a carried payload is COPIED into the record', () => {
             .toMatchObject({ op: 'add-exit', region: 'Vault', name: 'Vault → ?' });
         expect(applied(doc, { op: 'add-location', region: 'Vault' }).op)
             .toMatchObject({ op: 'add-location', region: 'Vault', name: 'New Location' });
+    });
+});
+
+describe('set-key — one top-level key of the document (H1)', () => {
+    it('⛓ writes a DOCUMENT-scope key and keeps every other key in place', () => {
+        const doc = fixture();
+        const res = applied(doc, { op: 'set-key', key: 'preset_label', value: 'canth s4' });
+        expect(res.doc.preset_label).toBe('canth s4');
+        expect(res.description).toBe('preset_label = "canth s4"');
+        // ⛔ key ORDER is content for this document (the adapter's `equal` reads
+        //    it), so a new key APPENDS and an existing one keeps its position.
+        expect(Object.keys(res.doc).slice(0, -1)).toEqual(Object.keys(doc));
+        expect(Object.keys(res.doc).at(-1)).toBe('preset_label');
+    });
+
+    it('⛓ `scope: \'player\'` writes the SLOT\'s slice and leaves the other slots alone', () => {
+        const doc = fixture();
+        doc.regions['2'] = { Lobby: makeRegion('Lobby', [], []) };
+        const res = applied(doc, {
+            op: 'set-key', key: 'regions', scope: 'player', player: '2',
+            value: { Foyer: makeRegion('Foyer', [], []) },
+        });
+        expect(Object.keys(res.doc.regions['2'])).toEqual(['Foyer']);
+        expect(Object.keys(res.doc.regions[P])).toEqual(['Hall', 'Vault']);
+        expect(res.description).toBe('regions[2] = {1 key}');
+    });
+
+    /**
+     * ⛔⛔ **THE SCOPE IS RECORDED, NEVER INFERRED FROM `player`.** Every op in
+     * this module carries `player` and the panel stamps it on all of them, so a
+     * `set-key` that nested whenever a player was named would put a
+     * document-level key under a slot the moment the Document tab grew its
+     * selector — which is the tab this op exists for.
+     */
+    it('⛓⛓ a `player` alone does NOT nest — the default scope is the document', () => {
+        const res = applied(fixture(), {
+            op: 'set-key', key: 'preset_label', value: 'x', player: '3',
+        });
+        expect(res.doc.preset_label).toBe('x');
+        expect(res.doc.preset_label).not.toEqual({ 3: 'x' });
+    });
+
+    it('⛓ an absent `value` DELETES the key, as set-meta does', () => {
+        const doc = fixture();
+        doc.preset_label = 'gone';
+        const res = applied(doc, { op: 'set-key', key: 'preset_label' });
+        expect('preset_label' in res.doc).toBe(false);
+        expect(res.description).toBe('preset_label deleted');
+    });
+
+    it('⛓ refuses a blank key and an unknown scope, naming the vocabulary', () => {
+        expect(apply(fixture(), { op: 'set-key', key: '', value: 1 }).error)
+            .toContain('set-key needs a top-level key NAME');
+        const bad = apply(fixture(), { op: 'set-key', key: 'x', scope: 'slot' });
+        expect(bad.ok).toBe(false);
+        for (const name of Object.keys(SET_KEY_SCOPES)) expect(bad.error).toContain(name);
+    });
+
+    it('⛓ the description SIZES a container rather than dumping it', () => {
+        const big = Object.fromEntries([...Array(400).keys()].map((i) => [`k${i}`, i]));
+        expect(applied(fixture(), { op: 'set-key', key: 'procgen_metadata', value: big }).description)
+            .toBe('procgen_metadata = {400 keys}');
+        expect(applied(fixture(), { op: 'set-key', key: 'sphere_log', value: [1, 2, 3] }).description)
+            .toBe('sphere_log = [3 items]');
+    });
+
+    /** ⛓ It folds and undoes like every other op — the session-shaped row. */
+    it('⛓⛓ one set-key is ONE undo, and the fold reproduces the document', () => {
+        const doc = fixture();
+        const s = createEditSession(rulesEditAdapter, doc, { base: { kind: 'rules' } });
+        expect(s.apply({ op: 'set-key', key: 'preset_label', value: 'a' }).applied).toBe(true);
+        expect(s.apply({ op: 'set-key', key: 'preset_label', value: 'b' }).applied).toBe(true);
+        expect(bytes(s.record())).toBe(bytes(foldEdits(rulesEditAdapter, doc, s.ops()).record));
+        s.undo();
+        expect(s.record().preset_label).toBe('a');
+        s.undo();
+        expect('preset_label' in s.record()).toBe(false);
     });
 });
 

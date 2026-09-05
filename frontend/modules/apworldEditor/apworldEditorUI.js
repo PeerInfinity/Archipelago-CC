@@ -33,7 +33,7 @@ import { getModuleEventBus, APWORLD_EDITOR_LOAD_RULES, consumePendingEditorRules
 import { stateManagerProxySingleton as stateManager, getLastRawJsonData } from '../stateManager/index.js';
 import RuleTreeEditor from './ruleTreeEditor.js';
 import { validateRules, cloneFullRulesDoc } from './rulesUtils.js';
-import { createEditSession, describeOps, group } from '../procgenCore/editCore.js';
+import { createEditSession, describeOps, group, isGroup } from '../procgenCore/editCore.js';
 import { rulesEditAdapter } from './rulesEditAdapter.js';
 import {
   EXIT_FIELDS,
@@ -43,20 +43,57 @@ import {
   deleteRegionOps,
 } from './rulesDocOps.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { getRegionEditor } from '../procgenPipeline/regionEditors.js';
+import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
+import { applyRulesDocOp } from './rulesDocOps.js';
+import {
+  buildDocumentKeys,
+  defaultPlayerOf,
+  documentKeyRows,
+  playerSlotsOf,
+} from './documentKeys.js';
+import { buildLinkRows } from './documentLinks.js';
 
 const RAW_JSON_LOADED = 'stateManager:rawJsonDataLoaded';
 const APP_READY = 'app:readyForUiDataLoad';
 const APPLY_SOURCE = 'apworldEditorApply';
-// ⛓ Was a module-local `= '1'` — one of the three duplicates of
-// shared/playerIdUtils' DEFAULT_PLAYER_ID (§15 D12). The other two are inside
-// the `shared/` SUBMODULE and are not this slice's to delete.
-const PLAYER_ID = DEFAULT_PLAYER_ID;
+/**
+ * ⛓⛓⛓ **THE SLOT IS A PANEL FIELD NOW, NOT A MODULE CONSTANT** (APWORLD
+ * EDITOR HUB slice H1). It used to be `const PLAYER_ID = DEFAULT_PLAYER_ID` and
+ * 42 sites read it, which made this panel a single-player editor over documents
+ * that are not: 15 committed presets carry four players, and their `regions`,
+ * `items`, `itempool_counts` and `world` really are per-slot.
+ *
+ * ⛔ `DEFAULT_PLAYER_ID` survives as the FALLBACK only — the slot a document
+ * with no per-player data at all is edited under. Everything else reads
+ * `this.playerId`, which `_syncPlayer` derives from the document on every
+ * render (`documentKeys.defaultPlayerOf` holds the order and why the document's
+ * own `playerId` key comes first).
+ *
+ * ⚠ H0's ⚖ 3: `preset_sidecars` is `{}` in 158 of its 192 carriers and every
+ * populated one keys under slot "1" — the four-player multiworld documents
+ * INCLUDED. So nothing about the selector may be gated on sidecars; what makes
+ * it falsifiable against committed data is `regions`/`items`/`world`.
+ */
+
+/**
+ * ⛓ The Document and Links tabs are the HUB's two: `document` renders EVERY
+ * top-level key the schema names (plus anything the file carries that it does
+ * not), and `links` is the door to every other editor. The first three are the
+ * editor this panel already was.
+ */
 
 const TABS = [
   { id: 'regions', label: 'Regions' },
   { id: 'items', label: 'Items' },
   { id: 'meta', label: 'Meta' },
+  { id: 'document', label: 'Document' },
+  { id: 'links', label: 'Links' },
 ];
+
+/** ⛓ Where the page fetches the schema the Document tab is DERIVED from. */
+const RULES_SCHEMA_URL = './schema/rules.schema.json';
 
 const ITEM_CLASSIFICATIONS = [
   'progression',
@@ -99,6 +136,28 @@ class ApworldEditorUI {
     this.loadRulesUnsubscribe = null;
     this.pendingApply = false;
     this.activeTab = 'regions';
+
+    /**
+     * ⛓⛓ **THE SELECTED SLOT, AND THE ONE THE PERSON PICKED, KEPT APART.**
+     * `playerId` is what every tab reads and every op is stamped with;
+     * `_chosenPlayer` is non-null only after a deliberate pick, so a NEW
+     * document re-derives its own default instead of inheriting the previous
+     * one's — a session boundary installs a different world, and slot 3 of the
+     * old one means nothing in the new.
+     */
+    this.playerId = DEFAULT_PLAYER_ID;
+    this._chosenPlayer = null;
+
+    /**
+     * ⛓ The parsed `rules.schema.json`, fetched once. ⛔ NOT imported: the
+     * evaluator's own law is that the schema is INJECTED (`jsonSchemaCheck.js`
+     * is in the browser page graph and a `node:fs` import would make that whole
+     * graph unloadable), so the page fetches and hands it in.
+     */
+    this._rulesSchema = null;
+    this._schemaError = null;
+    /** ⛓ Which Document rows are expanded — per KEY, so a re-render keeps them. */
+    this._expandedKeys = new Set();
 
     this.rootElement = document.createElement('div');
     this.rootElement.classList.add('apworld-editor-panel');
@@ -149,7 +208,7 @@ class ApworldEditorUI {
       // Full-doc clone preserves non-standard top-level keys (procgen_metadata
       // etc.) the editor doesn't edit — see cloneFullRulesDoc's contract.
       this._openSession(eventData.rawJsonData, {
-        kind: 'rules', source: eventData.source ?? 'app-load', player: PLAYER_ID,
+        kind: 'rules', source: eventData.source ?? 'app-load', player: this.playerId,
       });
     });
 
@@ -170,18 +229,20 @@ class ApworldEditorUI {
     } else if (!this.session) {
       const current = this._getCurrentAppRules();
       if (current) {
-        this._openSession(current, { kind: 'rules', source: 'app-cache', player: PLAYER_ID });
+        this._openSession(current, { kind: 'rules', source: 'app-cache', player: this.playerId });
       }
     }
 
     this.isInitialized = true;
+    this._loadRulesSchema();
+
     log('info', 'ApworldEditorUI initialized.');
   }
 
   // Adopt a world handed directly to the editor (load-rules channel). Same
   // full-doc clone the global load path uses, so procgen_metadata is preserved.
   _adoptHandoffRules(jsonData) {
-    this._openSession(jsonData, { kind: 'rules', source: 'hand-off', player: PLAYER_ID });
+    this._openSession(jsonData, { kind: 'rules', source: 'hand-off', player: this.playerId });
   }
 
   /**
@@ -215,7 +276,7 @@ class ApworldEditorUI {
       alert('Load a rules.json first.');
       return { ok: false, applied: false, description: 'no session' };
     }
-    const res = this.session.apply(op);
+    const res = this.session.apply(this._stampPlayer(op));
     if (!res.ok) {
       this._opMessage = `Refused: ${res.description}`;
       log('warn', `op refused: ${res.description}`);
@@ -227,6 +288,115 @@ class ApworldEditorUI {
     }
     if (rerender) this._render(); else this._renderChrome();
     return res;
+  }
+
+  /**
+   * ⛓⛓ **THE SCHEMA, FETCHED ONCE, AND A FAILURE IS NAMED RATHER THAN
+   * SILENT.** The Document tab is DERIVED from it, so without it there is no
+   * registry — but the tab still has to draw, because a document's own keys are
+   * visible whether or not the schema arrived. ⇒ on failure the tab says which
+   * URL failed and falls back to the unknown-key row for EVERY key, which is
+   * the same row an undeclared key gets.
+   */
+  _loadRulesSchema() {
+    if (this._rulesSchema || this._schemaPending) return;
+    this._schemaPending = true;
+    fetch(RULES_SCHEMA_URL)
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then((schema) => {
+        this._rulesSchema = schema;
+        this._schemaError = null;
+        this._schemaPending = false;
+        log('info', `Loaded rules.schema.json — ${Object.keys(schema.properties ?? {}).length} `
+          + 'top-level keys for the Document tab.');
+        if (this.isInitialized) this._render();
+      })
+      .catch((err) => {
+        this._schemaPending = false;
+        this._schemaError = `${RULES_SCHEMA_URL}: ${err.message}`;
+        log('warn', `Could not load the rules schema: ${this._schemaError}`);
+        if (this.isInitialized) this._render();
+      });
+  }
+
+  /**
+   * ⛓⛓ **THE SLOT, RE-DERIVED FROM THE RECORD ON EVERY RENDER.** ⛔ Not cached
+   * across a session boundary and not trusted across an undo: a slot the
+   * document no longer carries would leave every tab drawing an empty world
+   * with no visible reason, so a chosen slot that vanished falls back to the
+   * document's own default rather than persisting as a ghost.
+   */
+  _syncPlayer() {
+    const slots = this._playerSlots();
+    if (this._chosenPlayer && (slots.length === 0 || slots.includes(this._chosenPlayer))) {
+      this.playerId = this._chosenPlayer;
+      return;
+    }
+    this._chosenPlayer = null;
+    this.playerId = this.rulesDoc
+      ? defaultPlayerOf(this.rulesDoc, this._rulesSchema, DEFAULT_PLAYER_ID)
+      : DEFAULT_PLAYER_ID;
+  }
+
+  /** ⛓ The slots this document is ABOUT — the union over every per-player key. */
+  _playerSlots() {
+    if (!this.rulesDoc || !this._rulesSchema) return [];
+    try {
+      return playerSlotsOf(this.rulesDoc, this._rulesSchema);
+    } catch (err) {
+      log('warn', `Could not derive the document's player slots: ${err.message}`);
+      return [];
+    }
+  }
+
+  /**
+   * ⛓ THE SELECTOR, DERIVED. Its options are the document's own slots and its
+   * value is `this.playerId`; a document with one slot still shows it, because
+   * "which player am I editing" is a question the panel used to answer silently
+   * with `'1'` and now answers out loud.
+   */
+  _renderPlayerSelector() {
+    if (!this.playerSelect) return;
+    const slots = this._playerSlots();
+    const shown = slots.length > 0 ? slots : [this.playerId];
+    const names = this.rulesDoc?.player_names ?? {};
+    this.playerSelect.innerHTML = '';
+    for (const slot of shown) {
+      const opt = document.createElement('option');
+      opt.value = slot;
+      opt.textContent = names[slot] ? `${slot} — ${names[slot]}` : `Player ${slot}`;
+      this.playerSelect.appendChild(opt);
+    }
+    this.playerSelect.value = this.playerId;
+    this.playerSelect.disabled = !this.rulesDoc || shown.length <= 1;
+    this.playerSelect.style.opacity = this.playerSelect.disabled ? '0.5' : '1';
+    this.playerSelect.title = slots.length > 1
+      ? `This document carries ${slots.length} player slots; every tab and every edit `
+        + 'is about the one selected here.'
+      : 'This document is about one player slot.';
+  }
+
+  /**
+   * ⛓⛓ **THE SELECTED SLOT IS STAMPED HERE, NOT REMEMBERED BY EACH CALLER.**
+   * Every op in `rulesDocOps` carries `player` and every handler in this file
+   * passes `this.playerId` — but a handler that FORGOT would silently edit slot
+   * `'1'` (`playerOf`'s default) while the person is looking at slot 3, and
+   * nothing would say so. So the one application path fills a missing `player`
+   * in, group members included; an op that names one keeps it.
+   *
+   * ⛔ It never OVERWRITES a stated slot: `deleteRegionOps`/`deleteItemOps`
+   * build their cascades against a slot the caller chose, and a stamp that won
+   * over the builder would silently re-target a cascade mid-group.
+   */
+  _stampPlayer(op) {
+    if (!op || typeof op !== 'object') return op;
+    if (isGroup(op)) {
+      return { ...op, ops: op.ops.map((member) => this._stampPlayer(member)) };
+    }
+    return op.player === undefined ? { ...op, player: this.playerId } : op;
   }
 
   /** ⛓ UNDO — the fold over a shorter list, never a stack pop. */
@@ -315,6 +485,29 @@ class ApworldEditorUI {
     this.undoButton = this._makeButton('↶ Undo', '#444', () => this._undo());
     this.undoButton.classList.add('apworld-undo');
     toolbar.appendChild(this.undoButton);
+
+    /**
+     * ⛓ THE PLAYER SELECTOR sits in the toolbar because it is not a property of
+     * any one tab — every tab and every op reads it.
+     */
+    const playerWrap = document.createElement('label');
+    Object.assign(playerWrap.style, {
+      display: 'flex', alignItems: 'center', gap: '4px', color: '#aaa', fontSize: '12px',
+    });
+    playerWrap.appendChild(document.createTextNode('Player'));
+    this.playerSelect = document.createElement('select');
+    this.playerSelect.className = 'apworld-player-select';
+    Object.assign(this.playerSelect.style, {
+      backgroundColor: '#333', color: '#eee', border: '1px solid #555',
+      borderRadius: '3px', fontSize: '12px', padding: '2px 4px',
+    });
+    this.playerSelect.addEventListener('change', (e) => {
+      this._chosenPlayer = e.target.value;
+      this._opMessage = `Editing player ${this._chosenPlayer}.`;
+      this._render();
+    });
+    playerWrap.appendChild(this.playerSelect);
+    toolbar.appendChild(playerWrap);
 
     this.statusLabel = document.createElement('span');
     this.statusLabel.style.color = '#888';
@@ -452,13 +645,13 @@ class ApworldEditorUI {
   // ---------- Accessors on the session's record ----------
   //
   // ⛔ PURE READS, every one. Each of these used to lazily CREATE its container
-  //   (`all[PLAYER_ID] || (all[PLAYER_ID] = {})`), which over a session is a
+  //   (`all[this.playerId] || (all[this.playerId] = {})`), which over a session is a
   //   write THROUGH the folded record — and at zero ops `record()` IS the base,
   //   so a render would have modified the document the fold starts from. The
   //   ops create what they need, copy-on-write.
 
   _regions() {
-    return this.rulesDoc?.regions?.[PLAYER_ID] ?? {};
+    return this.rulesDoc?.regions?.[this.playerId] ?? {};
   }
 
   _regionNames() {
@@ -466,15 +659,15 @@ class ApworldEditorUI {
   }
 
   _items() {
-    return this.rulesDoc?.items?.[PLAYER_ID] ?? {};
+    return this.rulesDoc?.items?.[this.playerId] ?? {};
   }
 
   _itemPoolCounts() {
-    return this.rulesDoc?.itempool_counts?.[PLAYER_ID] ?? {};
+    return this.rulesDoc?.itempool_counts?.[this.playerId] ?? {};
   }
 
   _startingItems() {
-    const list = this.rulesDoc?.starting_items?.[PLAYER_ID];
+    const list = this.rulesDoc?.starting_items?.[this.playerId];
     return Array.isArray(list) ? list : [];
   }
 
@@ -489,14 +682,14 @@ class ApworldEditorUI {
   // ---------- Mutations — every one an OP through the session ----------
 
   _setStartingCount(itemName, count) {
-    this._applyOp({ op: 'set-starting-count', item: itemName, count, player: PLAYER_ID });
+    this._applyOp({ op: 'set-starting-count', item: itemName, count, player: this.playerId });
   }
 
   _handleAddRegion() {
     // ⛓ The name is DERIVED BY THE OP from the record, so `{op:'add-region'}`
     //   with no name folds to the same name every time (bounceLevelOps.nextId's
     //   rule) and undo reproduces the document byte for byte.
-    this._applyOp({ op: 'add-region', player: PLAYER_ID });
+    this._applyOp({ op: 'add-region', player: this.playerId });
   }
 
   _handleDeleteRegion(oldName) {
@@ -505,52 +698,52 @@ class ApworldEditorUI {
     //    destinations the delete blanked. The atomic `delete-region` REFUSES
     //    while a surviving exit still points at it, which is what makes the
     //    split enforceable rather than conventional.
-    const ops = deleteRegionOps(this.rulesDoc, oldName, PLAYER_ID);
+    const ops = deleteRegionOps(this.rulesDoc, oldName, this.playerId);
     this._applyOp(ops.length === 1 ? ops[0] : group(`delete region ${oldName}`, ops));
   }
 
   _handleRenameRegion(oldName, newName) {
     this._applyOp({
-      op: 'rename-region', from: oldName, to: newName, player: PLAYER_ID,
+      op: 'rename-region', from: oldName, to: newName, player: this.playerId,
     });
   }
 
   _handleAddExit(regionName) {
-    this._applyOp({ op: 'add-exit', region: regionName, player: PLAYER_ID });
+    this._applyOp({ op: 'add-exit', region: regionName, player: this.playerId });
   }
 
   _handleDeleteExit(regionName, index) {
-    this._applyOp({ op: 'delete-exit', region: regionName, index, player: PLAYER_ID });
+    this._applyOp({ op: 'delete-exit', region: regionName, index, player: this.playerId });
   }
 
   _handleAddLocation(regionName) {
-    this._applyOp({ op: 'add-location', region: regionName, player: PLAYER_ID });
+    this._applyOp({ op: 'add-location', region: regionName, player: this.playerId });
   }
 
   _handleDeleteLocation(regionName, index) {
-    this._applyOp({ op: 'delete-location', region: regionName, index, player: PLAYER_ID });
+    this._applyOp({ op: 'delete-location', region: regionName, index, player: this.playerId });
   }
 
   _handleRenameLocation(regionName, index, newName) {
     this._applyOp({
-      op: 'rename-location', region: regionName, index, to: newName, player: PLAYER_ID,
+      op: 'rename-location', region: regionName, index, to: newName, player: this.playerId,
     });
   }
 
   _handleAddItem() {
-    this._applyOp({ op: 'add-item', player: PLAYER_ID });
+    this._applyOp({ op: 'add-item', player: this.playerId });
   }
 
   _handleDeleteItem(name) {
     if (!confirm(`Delete item "${name}"?`)) return;
     // ⛓⛓ The same cascade shape: the pool count and the starting entries are
     //    cleared FIRST — each is a validator ERROR on its own — then the item.
-    const ops = deleteItemOps(this.rulesDoc, name, PLAYER_ID);
+    const ops = deleteItemOps(this.rulesDoc, name, this.playerId);
     this._applyOp(ops.length === 1 ? ops[0] : group(`delete item ${name}`, ops));
   }
 
   _handleRenameItem(oldName, newName) {
-    this._applyOp({ op: 'rename-item', from: oldName, to: newName, player: PLAYER_ID });
+    this._applyOp({ op: 'rename-item', from: oldName, to: newName, player: this.playerId });
   }
 
   /**
@@ -568,7 +761,7 @@ class ApworldEditorUI {
     }
     if (!confirm('Discard your edits and reload the rules data the rest of the app currently has loaded?')) return;
     this._opMessage = null;
-    this._openSession(current, { kind: 'rules', source: 'reload', player: PLAYER_ID });
+    this._openSession(current, { kind: 'rules', source: 'reload', player: this.playerId });
     log('info', 'Reloaded rules from the app\'s last published rules.json.');
   }
 
@@ -598,7 +791,7 @@ class ApworldEditorUI {
    */
   _handleClear() {
     if (!confirm('Remove all regions, exits, locations, items, pool counts, and starting items? (Other rules.json metadata is kept.)')) return;
-    this._applyOp({ op: 'clear', player: PLAYER_ID });
+    this._applyOp({ op: 'clear', player: this.playerId });
   }
 
   /**
@@ -620,7 +813,7 @@ class ApworldEditorUI {
       // the apply round-trip alongside the edited regions/items/rules.
       this.eventBus.publish('files:jsonLoaded', {
         jsonData: cloneFullRulesDoc(this.rulesDoc),
-        selectedPlayerId: PLAYER_ID,
+        selectedPlayerId: this.playerId,
         sourceName: APPLY_SOURCE,
       });
       this._flashButton(this.applyButton, true);
@@ -638,11 +831,18 @@ class ApworldEditorUI {
     this.scrollContainer.innerHTML = '';
     this._renderChrome();
 
-    if (!this.rulesDoc) {
+    /**
+     * ⛓ THE LINKS TAB DRAWS WITH NO DOCUMENT, and that is the ⚖ the tab exists
+     * for: *"a convenient way to open [the other editors] even if the current
+     * rules.json file doesn't contain any relevant data for them"* — and "no
+     * document at all" is the strongest case of that.
+     */
+    if (!this.rulesDoc && this.activeTab !== 'links') {
       const msg = document.createElement('div');
       msg.style.color = '#888';
       msg.style.padding = '12px';
-      msg.textContent = 'Load a rules.json (via Presets, File, or Editor) to begin editing.';
+      msg.textContent = 'Load a rules.json (via Presets, File, or Editor) to begin editing. '
+        + 'The Links tab works without one.';
       this.scrollContainer.appendChild(msg);
       return;
     }
@@ -651,6 +851,10 @@ class ApworldEditorUI {
       this._renderItemsTab();
     } else if (this.activeTab === 'meta') {
       this._renderMetaTab();
+    } else if (this.activeTab === 'document') {
+      this._renderDocumentTab();
+    } else if (this.activeTab === 'links') {
+      this._renderLinksTab();
     } else {
       const regions = this._regions();
       this._renderRegionsTab(regions, Object.keys(regions));
@@ -665,6 +869,8 @@ class ApworldEditorUI {
    * asked to sweep for.
    */
   _renderChrome() {
+    this._syncPlayer();
+    this._renderPlayerSelector();
     this._renderValidationBar();
     this._renderUndoButton();
     if (!this.rulesDoc) {
@@ -678,6 +884,12 @@ class ApworldEditorUI {
       summary = `${gameName} — ${count} item${count === 1 ? '' : 's'}`;
     } else if (this.activeTab === 'meta') {
       summary = `${gameName} — metadata`;
+    } else if (this.activeTab === 'document') {
+      const n = this._documentRows().length;
+      summary = `${gameName} — ${n} top-level key${n === 1 ? '' : 's'}`;
+    } else if (this.activeTab === 'links') {
+      const n = buildLinkRows(substrateRegistry).length;
+      summary = `${gameName} — ${n} editor link${n === 1 ? '' : 's'}`;
     } else {
       const n = this._regionNames().length;
       summary = `${gameName} — ${n} region${n === 1 ? '' : 's'}`;
@@ -699,7 +911,7 @@ class ApworldEditorUI {
     this.validationBar.innerHTML = '';
     if (!this.rulesDoc) return;
 
-    const issues = validateRules(this.rulesDoc, PLAYER_ID);
+    const issues = validateRules(this.rulesDoc, this.playerId);
     const errorCount = issues.filter(i => i.severity === 'error').length;
     const warnCount = issues.length - errorCount;
 
@@ -878,7 +1090,7 @@ class ApworldEditorUI {
     ));
     this.scrollContainer.appendChild(this._makeMetaRow(
       'World class name', 'world_class_name',
-      (doc.world && doc.world[PLAYER_ID] && doc.world[PLAYER_ID].world_class_name) || '', {
+      (doc.world && doc.world[this.playerId] && doc.world[this.playerId].world_class_name) || '', {
         description: 'Python class name for the generated World (e.g. "RobotKittyWorld")',
       },
     ));
@@ -905,12 +1117,408 @@ class ApworldEditorUI {
     this.scrollContainer.appendChild(this._makeSectionHeader('Player 1'));
     this.scrollContainer.appendChild(this._makeMetaRow(
       'Player name', 'player_name',
-      (doc.player_names && doc.player_names[PLAYER_ID]) || '',
+      (doc.player_names && doc.player_names[this.playerId]) || '',
     ));
     this.scrollContainer.appendChild(this._makeStartRegionRow());
 
     this.scrollContainer.appendChild(this._makeSectionHeader('Victory condition'));
     this.scrollContainer.appendChild(this._makeCompletionConditionEditor());
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+   * THE DOCUMENT TAB — every top-level key, derived from the schema
+   * ══════════════════════════════════════════════════════════════════ */
+
+  /**
+   * ⛓ The rows, from the registry. ⛔ With no schema the registry is empty and
+   * EVERY key the document carries falls through to the unknown-key row — which
+   * is a degradation that still shows the whole document, rather than a tab
+   * that renders nothing because a fetch failed.
+   */
+  _documentRows() {
+    const schema = this._rulesSchema ?? { properties: {} };
+    try {
+      return documentKeyRows(this.rulesDoc, schema, { player: this.playerId });
+    } catch (err) {
+      log('warn', `Could not build the document rows: ${err.message}`);
+      return [];
+    }
+  }
+
+  _renderDocumentTab() {
+    const schema = this._rulesSchema;
+    const rows = this._documentRows();
+    const declared = schema ? buildDocumentKeys(schema).length : 0;
+
+    const intro = document.createElement('div');
+    Object.assign(intro.style, { color: '#888', fontSize: '11px', padding: '2px 0 6px' });
+    intro.textContent = schema
+      ? `Every top-level key of this rules.json. ${declared} are declared in `
+        + `rules.schema.json; ${rows.length - declared} more are in this document and not in `
+        + 'the schema. Per-player keys show the selected slot.'
+      : 'The rules schema has not loaded, so every key below is shown raw.';
+    this.scrollContainer.appendChild(intro);
+
+    if (this._schemaError) {
+      const warn = document.createElement('div');
+      Object.assign(warn.style, {
+        color: '#e0a030', fontSize: '11px', padding: '4px 6px', marginBottom: '6px',
+        border: '1px solid #5a4520', backgroundColor: '#2a2216', borderRadius: '3px',
+      });
+      warn.textContent = `⚠ Could not load ${this._schemaError} — the key registry is DERIVED `
+        + 'from that file, so without it there are no labels, no producers and no per-player '
+        + 'slicing. Every key is drawn as raw JSON instead.';
+      this.scrollContainer.appendChild(warn);
+    }
+
+    if (rows.length === 0) {
+      const none = document.createElement('div');
+      none.style.color = '#888';
+      none.textContent = 'This document has no top-level keys.';
+      this.scrollContainer.appendChild(none);
+      return;
+    }
+    for (const row of rows) this.scrollContainer.appendChild(this._renderDocumentRow(row));
+  }
+
+  /** ⛓ ONE key: what it is, who writes it, what it holds, and how to change it. */
+  _renderDocumentRow(row) {
+    const box = document.createElement('div');
+    box.className = 'apworld-doc-row';
+    box.dataset.docKey = row.key;
+    Object.assign(box.style, {
+      border: '1px solid #333', borderRadius: '3px', margin: '0 0 6px',
+      padding: '6px 8px', backgroundColor: row.unknown ? '#241f19' : '#1f1f1f',
+    });
+
+    const head = document.createElement('div');
+    Object.assign(head.style, { display: 'flex', alignItems: 'baseline', gap: '8px' });
+    const name = document.createElement('code');
+    name.textContent = row.key;
+    Object.assign(name.style, { color: '#cfe', fontWeight: 'bold', fontSize: '12px' });
+    head.appendChild(name);
+    for (const [text, colour] of [
+      [row.perPlayer ? `player ${row.player}` : null, '#7a9'],
+      [row.required ? 'required' : null, '#9a7'],
+      [row.type, '#888'],
+      [row.unknown ? 'NOT in the schema' : null, '#e0a030'],
+    ]) {
+      if (!text) continue;
+      const badge = document.createElement('span');
+      badge.textContent = text;
+      Object.assign(badge.style, { color: colour, fontSize: '10px' });
+      head.appendChild(badge);
+    }
+    const summary = document.createElement('span');
+    summary.className = 'apworld-doc-summary';
+    summary.textContent = row.summary.inline;
+    Object.assign(summary.style, { color: '#aaa', fontSize: '11px', marginLeft: 'auto' });
+    head.appendChild(summary);
+    box.appendChild(head);
+
+    if (row.description) {
+      const desc = document.createElement('div');
+      desc.textContent = row.description;
+      Object.assign(desc.style, {
+        color: '#777', fontSize: '10px', margin: '3px 0 0', lineHeight: '1.35',
+      });
+      box.appendChild(desc);
+    }
+
+    if (row.ownedByTab) {
+      box.appendChild(this._makeOwnedByTabLine(row));
+      return box;
+    }
+    box.appendChild(this._makeDocumentValueEditor(row));
+    return box;
+  }
+
+  /**
+   * ⛓ A key another tab already edits gets a POINTER, not a second editor. ⛔ Two
+   * editors over one key is two places a person can change it and one of them
+   * will be the stale one — and the tab that owns it knows the shape (a region
+   * map is not a JSON blob to its own editor).
+   */
+  _makeOwnedByTabLine(row) {
+    const line = document.createElement('div');
+    Object.assign(line.style, {
+      display: 'flex', alignItems: 'center', gap: '6px', margin: '5px 0 0',
+      color: '#8a8', fontSize: '11px',
+    });
+    const tab = TABS.find((t) => t.id === row.ownedByTab);
+    line.appendChild(document.createTextNode(`Edited in the ${tab ? tab.label : row.ownedByTab} tab.`));
+    const btn = this._makeButton(`Go to ${tab ? tab.label : row.ownedByTab}`, '#3a3a3a',
+      () => this._selectTab(row.ownedByTab));
+    btn.style.fontSize = '11px';
+    line.appendChild(btn);
+    return line;
+  }
+
+  /**
+   * ⛓⛓ **THE EDIT AFFORDANCE IS ONE OP.** A scalar commits on blur/Enter (the
+   * Meta tab's `change`-not-`input` rule: a per-keystroke op makes `Vault` five
+   * undos); a container is a pretty-printed JSON block behind a disclosure, with
+   * a Save that PARSES first and refuses by name.
+   */
+  _makeDocumentValueEditor(row) {
+    const wrap = document.createElement('div');
+    wrap.style.margin = '5px 0 0';
+    if (row.summary.kind === 'object' || row.summary.kind === 'array') {
+      wrap.appendChild(this._makeDocumentBlockEditor(row));
+      return wrap;
+    }
+    wrap.appendChild(this._makeDocumentScalarEditor(row));
+    return wrap;
+  }
+
+  _makeDocumentScalarEditor(row) {
+    const line = document.createElement('div');
+    Object.assign(line.style, { display: 'flex', alignItems: 'center', gap: '6px' });
+    if (row.type === 'boolean') {
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.className = 'apworld-doc-input';
+      cb.checked = row.value === true;
+      cb.addEventListener('change', () => this._applySetKey(row, cb.checked));
+      line.appendChild(cb);
+      const lbl = document.createElement('span');
+      lbl.style.color = '#aaa';
+      lbl.style.fontSize = '11px';
+      lbl.textContent = row.present ? String(row.value) : '(absent — unchecked writes false)';
+      line.appendChild(lbl);
+      return line;
+    }
+    const input = this._makeTextInput(
+      row.value === undefined || row.value === null ? '' : String(row.value), '100%');
+    input.className = 'apworld-doc-input';
+    input.dataset.docKey = row.key;
+    input.addEventListener('change', (e) => {
+      const raw = e.target.value;
+      if (row.type === 'integer' || row.type === 'number') {
+        const n = Number(raw);
+        if (raw === '' || !Number.isFinite(n)) {
+          this._opMessage = `Refused: \`${row.key}\` is a ${row.type} and `
+            + `${JSON.stringify(raw)} is not one.`;
+          this._render();
+          return;
+        }
+        this._applySetKey(row, row.type === 'integer' ? Math.trunc(n) : n);
+        return;
+      }
+      this._applySetKey(row, raw);
+    });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+    });
+    line.appendChild(input);
+    return line;
+  }
+
+  _makeDocumentBlockEditor(row) {
+    const wrap = document.createElement('div');
+    const expanded = this._expandedKeys.has(row.key);
+
+    const toggle = this._makeButton(expanded ? '▾ Hide JSON' : '▸ Show JSON', '#3a3a3a', () => {
+      if (this._expandedKeys.has(row.key)) this._expandedKeys.delete(row.key);
+      else this._expandedKeys.add(row.key);
+      this._render();
+    });
+    toggle.style.fontSize = '11px';
+    toggle.className = 'apworld-doc-toggle';
+    wrap.appendChild(toggle);
+    if (!expanded) return wrap;
+
+    const text = document.createElement('textarea');
+    text.className = 'apworld-doc-json';
+    text.value = JSON.stringify(row.value, null, 2);
+    Object.assign(text.style, {
+      width: '100%', minHeight: '160px', marginTop: '5px', boxSizing: 'border-box',
+      backgroundColor: '#111', color: '#ddd', border: '1px solid #444', borderRadius: '3px',
+      fontFamily: 'monospace', fontSize: '11px',
+    });
+    wrap.appendChild(text);
+
+    const size = document.createElement('div');
+    size.style.color = '#777';
+    size.style.fontSize = '10px';
+    size.textContent = `${row.summary.inline} · ${text.value.length.toLocaleString()} characters `
+      + 'of pretty-printed JSON';
+    wrap.appendChild(size);
+
+    const save = this._makeButton('Save JSON', '#2e7d32', () => {
+      let parsed;
+      try {
+        parsed = JSON.parse(text.value);
+      } catch (err) {
+        this._opMessage = `Refused: \`${row.key}\` — ${err.message}. ⛔ The op carries the `
+          + 'PARSED value, never the text: an edit list whose payload is a recipe that can '
+          + 'fail to re-parse is not a record.';
+        this._renderChrome();
+        return;
+      }
+      this._applySetKey(row, parsed);
+    });
+    save.style.marginTop = '4px';
+    wrap.appendChild(save);
+    return wrap;
+  }
+
+  /**
+   * ⛓⛓⛓ **ONE `set-key`, AND THE SCHEMA GETS A VETO FIRST.**
+   *
+   * The op is applied to a PREVIEW of the document (`applyRulesDocOp` is pure,
+   * so this costs one copy-on-write and touches no session), the preview is
+   * validated whole, and the errors are DIFFERENCED against the ones the
+   * document already had — `rulesDocOps`' own law, so an edit is never refused
+   * for somebody else's pre-existing violation. Only then does it reach the
+   * session.
+   */
+  _applySetKey(row, value) {
+    if (!this.session) {
+      alert('Load a rules.json first.');
+      return;
+    }
+    const op = {
+      op: 'set-key',
+      key: row.key,
+      value,
+      scope: row.perPlayer ? 'player' : 'document',
+      player: this.playerId,
+    };
+    const errors = this._schemaErrorsAddedBy(op);
+    if (errors.length > 0) {
+      this._opMessage = `Refused: \`${row.key}\` — ${errors.length} schema `
+        + `error${errors.length === 1 ? '' : 's'}: ${errors.slice(0, 3).join(' · ')}`
+        + `${errors.length > 3 ? ' · …' : ''}`;
+      log('warn', `set-key refused by the schema: ${errors.join(' | ')}`);
+      this._renderChrome();
+      return;
+    }
+    this._applyOp(op);
+  }
+
+  /**
+   * ⛓ The schema errors this op would ADD — `[]` when it adds none, and `[]`
+   * when there is no schema to ask (a fetch failure must not make the whole tab
+   * read-only; the Python gate is still the authority on the corpus).
+   */
+  _schemaErrorsAddedBy(op) {
+    if (!this._rulesSchema || !this.rulesDoc) return [];
+    const preview = applyRulesDocOp(this.rulesDoc, op);
+    if (!preview.ok) return [];
+    try {
+      const before = new Set(rulesJsonSchemaErrors(this.rulesDoc, this._rulesSchema));
+      return rulesJsonSchemaErrors(preview.doc, this._rulesSchema).filter((e) => !before.has(e));
+    } catch (err) {
+      log('warn', `Schema check could not run: ${err.message}`);
+      return [];
+    }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+   * THE LINKS TAB — every other editor, derived where it can be
+   * ══════════════════════════════════════════════════════════════════ */
+
+  _renderLinksTab() {
+    const rows = buildLinkRows(substrateRegistry);
+    const intro = document.createElement('div');
+    Object.assign(intro.style, { color: '#888', fontSize: '11px', padding: '2px 0 6px' });
+    intro.textContent = 'Every editor that owns part of a rules.json. The substrate rows are '
+      + 'DERIVED from the registry\'s `roomEditor` declarations; the rest is a table. Rows open '
+      + 'their editor EMPTY when this document has nothing for it — that is the point of the tab.';
+    this.scrollContainer.appendChild(intro);
+    for (const row of rows) this.scrollContainer.appendChild(this._renderLinkRow(row));
+  }
+
+  _renderLinkRow(row) {
+    const box = document.createElement('div');
+    box.className = 'apworld-link-row';
+    box.dataset.linkId = row.id;
+    Object.assign(box.style, {
+      border: '1px solid #333', borderRadius: '3px', margin: '0 0 6px',
+      padding: '6px 8px', backgroundColor: '#1f1f1f',
+    });
+
+    const head = document.createElement('div');
+    Object.assign(head.style, { display: 'flex', alignItems: 'center', gap: '8px' });
+    const label = document.createElement('span');
+    label.textContent = row.label;
+    Object.assign(label.style, { color: '#ddd', fontWeight: 'bold', fontSize: '12px' });
+    head.appendChild(label);
+    if (row.key) {
+      const k = document.createElement('code');
+      k.textContent = row.key;
+      Object.assign(k.style, { color: '#cfe', fontSize: '10px' });
+      head.appendChild(k);
+      const has = document.createElement('span');
+      has.textContent = this._documentHasDataFor(row.key) ? 'this document has data' : 'no data here';
+      Object.assign(has.style, {
+        color: this._documentHasDataFor(row.key) ? '#7a9' : '#777', fontSize: '10px',
+      });
+      head.appendChild(has);
+    }
+    const open = this._makeButton('Open', row.target ? '#2e5f8a' : '#444',
+      () => this._openLink(row));
+    open.className = 'apworld-link-open';
+    open.style.marginLeft = 'auto';
+    open.disabled = !row.target;
+    open.style.opacity = row.target ? '1' : '0.45';
+    head.appendChild(open);
+    box.appendChild(head);
+
+    const note = document.createElement('div');
+    note.textContent = row.note;
+    Object.assign(note.style, {
+      color: '#777', fontSize: '10px', margin: '3px 0 0', lineHeight: '1.35',
+    });
+    box.appendChild(note);
+    return box;
+  }
+
+  /** ⛓ Does the working copy carry anything for this key, in ANY slot? */
+  _documentHasDataFor(key) {
+    const top = this.rulesDoc ? this.rulesDoc[key] : undefined;
+    if (top === undefined || top === null) return false;
+    if (Array.isArray(top)) return top.length > 0;
+    if (typeof top === 'object') return Object.keys(top).length > 0;
+    return true;
+  }
+
+  /**
+   * ⛓ A row's `target` resolved to an action. ⛔ The two kinds are named, and an
+   * unknown one says so rather than doing nothing: a button that silently does
+   * not work is indistinguishable from a panel the layout does not hold.
+   */
+  _openLink(row) {
+    const target = row.target;
+    if (!target) {
+      this._opMessage = `${row.label}: no way to open it — ${row.note}`;
+      this._renderChrome();
+      return;
+    }
+    if (target.kind === 'panel') {
+      this.eventBus.publish('ui:activatePanel', { panelId: target.panelId });
+      this._opMessage = `Opened ${row.label} (${target.panelId}). ⚠ Nothing happens if that `
+        + 'panel is not in the current layout.';
+      this._renderChrome();
+      return;
+    }
+    if (target.kind === 'substrateRoomEditor') {
+      const open = getRegionEditor(target.substrate);
+      if (typeof open !== 'function') {
+        this._opMessage = `${row.label}: \`${target.substrate}\` declares a room editor that `
+          + '`regionEditors.getRegionEditor` could not resolve — see the console for the reason '
+          + 'it named.';
+        this._renderChrome();
+        return;
+      }
+      open({});
+      this._opMessage = `Opened ${row.label} with no region.`;
+      this._renderChrome();
+      return;
+    }
+    this._opMessage = `${row.label}: unknown link target kind ${JSON.stringify(target.kind)}.`;
+    this._renderChrome();
   }
 
   _makeSectionHeader(text) {
@@ -958,7 +1566,7 @@ class ApworldEditorUI {
     input.addEventListener('change', (e) => {
       const raw = e.target.value;
       this._applyOp({
-        op: 'set-meta', key, value: parse ? parse(raw) : raw, player: PLAYER_ID,
+        op: 'set-meta', key, value: parse ? parse(raw) : raw, player: this.playerId,
       });
     });
     input.addEventListener('keydown', (e) => {
@@ -970,12 +1578,12 @@ class ApworldEditorUI {
 
   /**
    * ⛔ THE OLD BODY WROTE THE DOCUMENT WHILE RENDERING — it created
-   * `start_regions[PLAYER_ID]` and coerced `default` to an array before drawing
+   * `start_regions[this.playerId]` and coerced `default` to an array before drawing
    * anything. Over a session that is a write through the folded record; the
    * reads here are pure and `set-start-region` creates what it needs.
    */
   _makeStartRegionRow() {
-    const sr = this.rulesDoc?.start_regions?.[PLAYER_ID] ?? {};
+    const sr = this.rulesDoc?.start_regions?.[this.playerId] ?? {};
     const currentList = Array.isArray(sr.default) ? sr.default : [];
 
     const row = document.createElement('div');
@@ -1031,7 +1639,7 @@ class ApworldEditorUI {
     }
     select.value = current;
     select.addEventListener('change', (e) => {
-      this._applyOp({ op: 'set-start-region', region: e.target.value, player: PLAYER_ID });
+      this._applyOp({ op: 'set-start-region', region: e.target.value, player: this.playerId });
     });
     wrap.appendChild(select);
 
@@ -1063,7 +1671,7 @@ class ApworldEditorUI {
    * and the first edit writes one.
    */
   _makeCompletionConditionEditor() {
-    const cc = this.rulesDoc?.game_info?.[PLAYER_ID]?.completion_condition;
+    const cc = this.rulesDoc?.game_info?.[this.playerId]?.completion_condition;
     const isItemCheck = !!cc && cc.type === 'item_check';
     const shown = (cc && typeof cc === 'object' && !Array.isArray(cc)) ? cc : {};
 
@@ -1111,7 +1719,7 @@ class ApworldEditorUI {
       const condition = e.target.value === 'item_check'
         ? { type: 'item_check', item: shown.item || 'Victory' }
         : (isItemCheck ? { type: 'constant', value: true } : shown);
-      this._applyOp({ op: 'set-completion-condition', condition, player: PLAYER_ID });
+      this._applyOp({ op: 'set-completion-condition', condition, player: this.playerId });
     });
     typeRow.appendChild(typeSelect);
     wrap.appendChild(typeRow);
@@ -1164,7 +1772,7 @@ class ApworldEditorUI {
         this._applyOp({
           op: 'set-completion-condition',
           condition: { ...shown, item: e.target.value },
-          player: PLAYER_ID,
+          player: this.playerId,
         });
       });
       itemRow.appendChild(itemSelect);
@@ -1215,7 +1823,7 @@ class ApworldEditorUI {
       ta.addEventListener('change', () => {
         const condition = parse();
         if (condition) {
-          this._applyOp({ op: 'set-completion-condition', condition, player: PLAYER_ID });
+          this._applyOp({ op: 'set-completion-condition', condition, player: this.playerId });
         }
       });
       rawRow.appendChild(ta);
@@ -1250,7 +1858,7 @@ class ApworldEditorUI {
     const setField = (field, value) => {
       if (!(field in ITEM_FIELDS)) throw new Error(`apworldEditorUI: no ITEM_FIELDS entry "${field}"`);
       return this._applyOp({
-        op: 'set-item-field', item: name, field, value, player: PLAYER_ID,
+        op: 'set-item-field', item: name, field, value, player: this.playerId,
       });
     };
     const onCommit = (input, handler) => {
@@ -1366,7 +1974,7 @@ class ApworldEditorUI {
 
   _makeClassificationEditor(name, item) {
     const setClassification = (value) => this._applyOp({
-      op: 'set-item-field', item: name, field: 'classification', value, player: PLAYER_ID,
+      op: 'set-item-field', item: name, field: 'classification', value, player: this.playerId,
     });
     const current = item.classification || 'filler';
     if (ITEM_CLASSIFICATIONS.includes(current)) {
@@ -1488,7 +2096,7 @@ class ApworldEditorUI {
         throw new Error(`apworldEditorUI: no EXIT_FIELDS entry "${field}"`);
       }
       return this._applyOp({
-        op: 'set-exit-field', region: regionName, index, field, value, player: PLAYER_ID,
+        op: 'set-exit-field', region: regionName, index, field, value, player: this.playerId,
       });
     };
     const row = document.createElement('div');
@@ -1646,7 +2254,7 @@ class ApworldEditorUI {
       access_rule: cloneFullRulesDoc(node.access_rule ?? { rule: 'True_' }),
     };
     const commit = () => this._applyOp({
-      op: 'set-rule-tree', path, tree: holder.access_rule, player: PLAYER_ID,
+      op: 'set-rule-tree', path, tree: holder.access_rule, player: this.playerId,
     }, { rerender: false });
 
     const tree = new RuleTreeEditor(holder, 'access_rule', {
@@ -1662,7 +2270,7 @@ class ApworldEditorUI {
 
   _allItemNames() {
     if (!this.rulesDoc) return [];
-    const items = (this.rulesDoc.items && this.rulesDoc.items[PLAYER_ID]) || {};
+    const items = (this.rulesDoc.items && this.rulesDoc.items[this.playerId]) || {};
     return Object.keys(items);
   }
 

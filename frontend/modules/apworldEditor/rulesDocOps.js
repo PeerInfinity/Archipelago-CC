@@ -101,8 +101,22 @@ export const RULES_OP_KINDS = Object.freeze([
     'set-start-region',
     'set-completion-condition',
     'set-rule-tree',
+    'set-key',
     'clear',
 ]);
+
+/**
+ * ⛓⛓ **WHERE A `set-key` WRITES**, as a table rather than a boolean, so the op
+ * that RECORDS a Document-tab edit says out loud which of the two shapes it
+ * meant. ⛔ Presence of `player` could not carry this: every op in this module
+ * carries `player`, and the panel stamps it on all of them, so "a player is
+ * named" would silently nest EVERY key under a slot the moment the Document tab
+ * grew a selector — which is exactly the tab that op exists for.
+ */
+export const SET_KEY_SCOPES = Object.freeze({
+    document: Object.freeze({ path: (key) => [key] }),
+    player: Object.freeze({ path: (key, p) => [key, p] }),
+});
 
 /**
  * ⛓⛓⛓ **ONE TABLE THE OP AND THE ROW BOTH READ** — trap 823's cure. An op
@@ -325,6 +339,7 @@ function dispatchRulesDocOp(doc, op) {
         case 'set-start-region': return opSetStartRegion(doc, op);
         case 'set-completion-condition': return opSetCompletionCondition(doc, op);
         case 'set-rule-tree': return opSetRuleTree(doc, op);
+        case 'set-key': return opSetKey(doc, op);
         case 'clear': return opClear(doc, op);
         default:
             return refuse(`apworld: unknown op ${JSON.stringify(op?.op)} — the vocabulary is `
@@ -741,6 +756,55 @@ function opSetMeta(doc, op) {
     }
     const shown = op.value === undefined ? '(absent)' : JSON.stringify(op.value);
     return ok(setPath(doc, spec.path(p), op.value), `${op.key} = ${shown}`);
+}
+
+/**
+ * ⛓⛓⛓ **ONE TOP-LEVEL KEY OF THE DOCUMENT — the Document tab's whole
+ * vocabulary** (APWORLD EDITOR HUB slice H1).
+ *
+ * `{key, value, scope?, player?}`. `scope: 'document'` (the default) writes
+ * `doc[key]`; `scope: 'player'` writes `doc[key][player]`, which is the shape
+ * the eighteen slot-map keys have. `value === undefined` DELETES, exactly as
+ * `set-meta` does — and for the same reason: that is what the bytes did.
+ *
+ * ⛓⛓ **THE VALUE IS COPIED AT THE DOOR AND THE OP CARRIES THE RESULT.** It is
+ * `applyRulesDocOp`'s `carried()` that does it, once, before dispatch — so the
+ * record and the caller's object share nothing and a Document row that keeps
+ * editing its own parsed JSON in place cannot write THROUGH the record. That is
+ * the defect the first browser run of B-c found on `set-rule-tree`, and this op
+ * carries arbitrary JSON for exactly the same reason.
+ *
+ * ⛔ NO SCHEMA IS READ HERE. Whether a key is per-player is a fact about
+ * `rules.schema.json`, and this module is pure and knows nothing about it: the
+ * CALLER resolves the scope from the registry (`documentKeys.js`) and the op
+ * RECORDS it, so re-folding the edit list reproduces the same document without
+ * the schema that was loaded when the edit was made.
+ */
+function opSetKey(doc, op) {
+    const key = op.key;
+    if (typeof key !== 'string' || key === '') {
+        return refuse(`apworld: set-key needs a top-level key NAME, got ${JSON.stringify(key)}.`);
+    }
+    const scopeName = op.scope ?? 'document';
+    const scope = Object.prototype.hasOwnProperty.call(SET_KEY_SCOPES, scopeName)
+        ? SET_KEY_SCOPES[scopeName] : null;
+    if (!scope) {
+        return refuse(`apworld: set-key scope ${JSON.stringify(op.scope)} is not one of `
+            + `[${Object.keys(SET_KEY_SCOPES).join(', ')}]. \`document\` writes the key itself; `
+            + '`player` writes the selected slot\'s slice of it.');
+    }
+    const p = playerOf(op);
+    const next = setPath(doc, scope.path(key, p), op.value);
+    const where = scopeName === 'player' ? `${key}[${p}]` : key;
+    return ok(next, `${where} ${op.value === undefined ? 'deleted' : `= ${describeValue(op.value)}`}`);
+}
+
+/** ⛓ A description is a SENTENCE, not a dump: a 2 MB block gets its size. */
+function describeValue(value) {
+    if (value === null || typeof value !== 'object') return JSON.stringify(value);
+    if (Array.isArray(value)) return `[${value.length} item${value.length === 1 ? '' : 's'}]`;
+    const n = Object.keys(value).length;
+    return `{${n} key${n === 1 ? '' : 's'}}`;
 }
 
 /** ⛓ `{region}` — `''`/absent CLEARS. `start_regions[p].default` is a LIST and
