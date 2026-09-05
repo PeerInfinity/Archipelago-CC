@@ -10064,6 +10064,78 @@ Apply-vs-preset delta is the SPHERE LOG (`sphereState/index.js:199` embedded, `:
 (Opus, kickoff `NewDocs/plans/apworld-hub-sliceH2-prompt.md`): the Presets button, Download, Load-into-app
 with the sphere-log delta measured and closed, and the raw view with a MEASURED threshold.
 
+⇒ **H2 AS BUILT 2026-09-05** (`apworld-hub-sliceH2`, Opus; on `main` at `3fd522a2e`, pushed as
+`ee05462d4` → `6fa10c442` → `f8b0ae13f` → `4b52d8484`; plan §12 is the full record). The three exits the
+⚖ asked for all ship, and **six things the brief said are overturned by measurement**:
+
+1. **The ⚖'s screen is `loadPreset` (`:1702`), not `displayLoadedJsonFileDetails` (`:1455`)** — the
+   latter is the MANUALLY-LOADED-FILE screen ("This file was loaded manually from your computer"). The
+   button ships on BOTH from one frozen descriptor, and the click wiring queries `#${…BUTTON.id}` so
+   markup and handler cannot drift. It publishes `ui:activatePanel`, never `apworldEditor:loadRules`.
+2. **The sphere-log delta is 199 of 205 presets, not 173.** `sphereState/index.js:254` recognises
+   exactly FOUR in-memory sources by name and tries the embedded log for three of them;
+   `apworldEditorApply` is not one — so Apply lost the log for the **26 embedded-log** presets as well
+   as the **173 file-logged** ones (measured: 173 file-only · 26 embedded-only · 0 both · 6 neither).
+   ⇒ Apply now republishes the session's recorded ORIGIN source name, which makes both cases work
+   through code that already exists. ⛔ NOT embedding the fetched log: that would put bytes in the
+   person's document their preset never had, and the ⚖ says the document IS the save destination.
+   ⛔ The echo of our own Apply is told apart by OBJECT IDENTITY now — the source name is
+   indistinguishable from an incoming load, and a panel keeping the old test would discard the edits
+   it had just published. `APPLY_SOURCE` survives as the no-origin fallback, which is what
+   `verify-region-marking-tool.mjs:653` grabs by; a node row pins that pairing.
+3. **§2's size census is in FILE bytes and the raw view's units are PRETTY bytes — different corpus,
+   different maximum.** 13 presets are written COMPACT (up to **1.75×**), so the worst case is
+   `procgen_topdown/AP_8` at **3,146,656** pretty bytes (1,799,872 on disk), not `stardew_valley`'s
+   2,620,221. A threshold in pretty bytes measured against a file-size ranking would never have seen
+   its own worst case.
+4. **THE THRESHOLD, MEASURED**: `RAW_VIEW_LIMIT_BYTES = 2_000_000` pretty bytes —
+   `node scripts/procgen/measure-apworld-raw-view.mjs`, four runs, box loaded 8–17 throughout (another
+   arc's `cc1` compiles; every table prints its own load). It is the largest size measured USABLE
+   (1,504 ms to open, 279 ms/keystroke); 2.62 MB types at 468–809 ms and 3.15 MB takes **12,942 ms** to
+   open and 1,251 ms/keystroke. Refuses **4 of 205**. ⛓ The instrument separates the PANEL's own
+   re-render from the widget's, which is what makes it an attribution: at the maximum the panel costs
+   515 ms and the textarea the other 12.4 s.
+5. **⚠ AND THE MEASUREMENT SAYS THE TEXTAREA IS THE WRONG WIDGET.** CodeMirror 6 is
+   viewport-virtualised and FLAT — **30–133 ms to open, 11–240 ms per keystroke, from 200 KB to 8 MB**,
+   150× faster at the corpus maximum — and would retire the constant. The mount is six lines from
+   `editorCodeMirror6/codemirror6Imports.js`; the hub integration is not. Named as a **costed
+   follow-up with its numbers**, which is what the brief asked for. ⚖ **for the user**: take it?
+6. **The brief's "eight `createObjectURL` copies" is 19** (18 outside submodules, 17 with
+   `application/json`), listed by name in plan §12.1 as a cleanup-backlog lead. ⛔ Not consolidated.
+   And the download name carries BOTH identifiers: `seed_name` alone gives **24** distinct names over
+   205 documents and is the EMPTY STRING in **29** of them.
+
+**Gates.** `apworldEditor/` vitest 107 → **132** (6 files; new `hubExits.test.js` 21) ·
+`presetUI.test.js` 66 → **70** · `lintGateLabels` 14 · the procgen generator 265 → 266 instruments,
+0 FINDINGS · `procgenDocs/` **452 passed, 0 skipped, 0 failed** — ⚠ the kickoff's KNOWN pre-existing
+red (`generated.test.js` `beforeAll` 10 s hook timeout) **did not fire**, so it is load-flaky, not
+deterministic · in-app `--batch=fast` **68/68** (run 2), all four new rows green, `compare-runs`
+against H1's quoted run reporting ADDED (4) all passed and **FIXED (1): `omsi-multi-run-replay-retry`**
+— ⛓ which CONFIRMS H1's load attribution of that red, without a line of omsi changing ·
+browser-log grep for thrown handlers **0**.
+
+**A defect this slice's own first in-app run found — in the ROW, not the code.**
+`apworld-apply-keeps-the-sphere-log` failed `expected "4", got "10"` in **0.6 s** while
+`Apply did NOT lose the sphere log` PASSED beside it. `sphereState` is an app-wide SINGLETON and the
+rows before it leave `procgen_maze`'s 4-sphere log in it, so a poll for "non-empty" returned
+INSTANTLY with the previous row's data. ⇒ **a poll for "this shared thing is non-empty" is a poll the
+PREVIOUS test can satisfy**; the 0.6 s duration was the tell. Fixed by resetting the singleton first.
+
+**Mutants — three driven, none committed.** (a) `carried(op)` → `{...op}` reds the new
+`replace-document` aliasing row (7 red total). (b) the threshold halved — ⚠ **its first anchor row did
+NOT catch it**, because that row bounded the limit at the p90 preset and 1,000,000 is *also* a
+measured-usable size; re-anchored on two REAL documents (`smz3` 1,936,130 must be viewable,
+`stardew_valley` 2,620,225 must not) it reds. *A guard whose whole suite reads its own default cannot
+see the default move.* (c) Apply without the origin reds the panel-source scan.
+
+**NEXT = H3** (the map): the registry slot `compositeMap.drawRegion` DECLARED by maze +
+text_adventure, the shared `procgenCore/compositeMapRenderer.js`, `reconstructResultFromSidecars`
+gaining `playerId`, the hub Map tab + click-select + one-way "Open region graph". ⚠ H2 leaves H3 three
+carries (plan §12.7): `_openSession` now takes an `origin` on its base tag and a new intake path must
+DECIDE what it is (`null` is legitimate and costs the sphere log); the panel's per-render cost is a
+live number — `panel-only TTI` **4.6 s** on `stardew_valley`, dominated by `validateRules` over the
+whole document on EVERY tab switch, which H3's Map tab pays too; and CM6 is the costed follow-up above.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
