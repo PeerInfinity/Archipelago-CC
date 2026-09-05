@@ -61,7 +61,7 @@ import {
 } from '../procgenPipeline/regionLibraryValidator.js';
 import { blankTileGridLibraryEntry, captureTileGridLibraryEntry } from './mazeLibraryEntry.js';
 import { createWorld, deserializeMazeWorld, extractPathsAndObstacles } from './mazeRoomEngine.js';
-import { serializeMazeWorld } from '../procgenPipeline/procgenPipelineEngine.js';
+import { serializeMazeWorld } from './mazeSerializer.js';
 import {
     LINK_ONE_WAY_DEFAULT, assertOverlay, deriveAtlasOf, emptyMazeOverlay, exitRuleKey,
     locationRuleKey, overlayErrors, parseRuleTarget, renumberOverlay, rulesJsonOf,

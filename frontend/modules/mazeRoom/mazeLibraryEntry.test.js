@@ -12,7 +12,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { serializeMazeWorld } from '../procgenPipeline/procgenPipelineEngine.js';
+import { serializeMazeWorld } from './mazeSerializer.js';
 import { blankTileGridLibraryEntry, validateTileGridLibraryEntry } from './mazeLibraryEntry.js';
 import {
     TILE_FLOOR, createWorld, deserializeMazeWorld, extractPathsAndObstacles,

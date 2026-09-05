@@ -31,7 +31,7 @@ import { roomRowsOf } from '../procgenCore/setEditorCore.js';
 import { createEditSession } from '../procgenCore/editCore.js';
 import { mazeEditAdapter } from './mazeEditAdapter.js';
 import { deserializeMazeWorld, extractPathsAndObstacles } from './mazeRoomEngine.js';
-import { serializeMazeWorld } from '../procgenPipeline/procgenPipelineEngine.js';
+import { serializeMazeWorld } from './mazeSerializer.js';
 import { serializeMazeLevel } from './procgenMaze.js';
 import {
     LIBRARY_FIELDS, MAZE_CAPTURE_DEPS, MazeSetAdapterError, ROOM_FIELDS, SET_OP_KINDS,

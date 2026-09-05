@@ -12,7 +12,7 @@ import {
     TILE_FLOOR,
 } from './mazeRoomEngine.js';
 import { createRng } from '../shared/rng.js';
-import { serializeMazeWorld } from '../procgenPipeline/procgenPipelineEngine.js';
+import { serializeMazeWorld } from './mazeSerializer.js';
 
 describe('mazeRoomLibrary substrateRegistryEntry', () => {
     it('declares the maze identity, panel type, and load event', () => {

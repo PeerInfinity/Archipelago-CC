@@ -222,10 +222,11 @@ export function unposKey(key) {
 }
 
 /**
- * Inverse of procgenPipeline's serializeMazeWorld. Reconstructs a
- * playable maze world from a sidecar payload (JSON-safe arrays /
- * plain objects) into the in-memory shape (Int8Array for tiles, Maps
- * for obstacles and items).
+ * Inverse of `mazeSerializer.js`'s serializeMazeWorld — its sibling in this
+ * module since APWORLD EDITOR HUB slice H3b brought it home from
+ * `procgenPipeline/`. Reconstructs a playable maze world from a sidecar
+ * payload (JSON-safe arrays / plain objects) into the in-memory shape
+ * (Int8Array for tiles, Maps for obstacles and items).
  *
  * AP-canonical metadata baked into the sidecar by the pipeline at
  * serialization time (per-item locationName, per-exit exitName /
@@ -449,8 +450,8 @@ export function clearButton(world, x, y) {
  * Rows are sorted row-major so the emission is a function of the SET, not of
  * Map insertion order.
  *
- * Nothing calls this yet: the pipeline's serializeMazeWorld
- * (procgenPipeline/procgenPipelineEngine.js) and procgenMaze's
+ * Nothing calls this yet: serializeMazeWorld (`mazeSerializer.js`, moved here
+ * from procgenPipeline by slice H3b) and procgenMaze's
  * serializeMazeLevel are both outside this slice's file scope. It exists so
  * the shape is FIXED here — the round-trip through deserializeMazeWorld is
  * proved against this emitter rather than against a hand-built literal that
