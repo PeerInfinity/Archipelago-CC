@@ -11010,6 +11010,32 @@ V2's session read idle first): instrument the eleven `isProcessing`-clearing sit
 the one that fires on the first maze location check and its caller, diff against a green maze loop-mode
 row, and rule ONE CLEAR DEFECT (fix, pinned) or DESIGN (stop, ⚖). Then V3 the rename + the portals cut.
 
+**⇒ V2b AS BUILT 2026-09-05** (`78ea0b437`; the "V2b as built" section in `CC/docs/procgen-verify-tier.md`
+carries the stacks, the capability table and the discriminator). **DESIGN, not a defect — and V2's own
+ruling is OVERTURNED.** The halt reproduced first try headless; a throwaway probe replaced
+`loopState.isProcessing` with an accessor and printed the stack of every write. Two writes, 45 ms apart:
+`stopProcessing` (`loopState.js:915`) ← `_handleManualRegionEntry` (`:2516`) ← `_processFrame` (`:1220`) —
+the M4 block-mode branch for `manual | record`. All three maze blocks resolve to **`record`**: no explicit
+mode, so `getBlockMode` falls through to `defaultBlockMode` (`:216`), set to `'record'` by **`47c3a7f346`**
+(2026-07-23, loops M4 5/n) — **six days after** the instrument was written (`48458da2bc`, 2026-07-17). And
+**`05979752fb`** (2026-07-23, loops M6 2/n) deleted the unconditional delegation dispatch from
+`_processFrame`, leaving its tombstone at `:1314`: substrate delegation — the seam this instrument exists to
+observe — is reachable **only from a `bot` block** (`loop-recording.md:18,23,34` documents it). Discriminator,
+one line changed: with the blocks forced to `bot` the same run gives 11 `manaChanged` events, per-tile
+decrements 16.67/13.75×3, XP 16.67/41.25/60, `completed:false`, `loopResetCount` 1 — **every claim the
+instrument makes**. It asks for them without asking for the mode that produces them. So
+`verify-maze-loop-mana.mjs` is a **fourth INSTRUMENT** red and V2's tally becomes **5 INSTRUMENT / 2 STALE /
+0 SUBJECT**. Contrast, in one line: `mazeBlockModeTests.js:212` sets `'manual'` explicitly — the green maze
+rows are green *because they set a mode*, and **no `scripts/procgen/*.mjs` instrument sets one at all**.
+⚖ (a) and ⚖ (c) are **one cause family** (both instruments 2026-07-17; both invalidated by the 2026-07-23/24
+park-gating week: `47c3a7f346`, `05979752fb`, `f2e392df1`) with **opposite repairs** — the maze leg must
+AVOID the park (set `bot`), the omsi leg must CREATE one (its step gate opens only on `livePlayRegion()`).
+**⚖ OPEN FOR THE USER, with the answer already measured:** is *"a maze block parks for live play unless
+explicitly set to Bot"* the intended contract? If yes, both ⚖ close in one small instrument-design slice
+(three `setBlockMode(r,1,'bot')` calls here; a manual park for omsi). If no, `05979752fb` is the defect and
+reverting it re-opens the silent-teleport failure M6 exists to prevent. No product code or instrument was
+touched. **V3 (the rename + the portals cut) is unblocked.**
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
