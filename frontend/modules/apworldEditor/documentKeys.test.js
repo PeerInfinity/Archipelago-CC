@@ -24,6 +24,7 @@ import { describe, expect, it } from 'vitest';
 import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import {
     DOCUMENT_KEY_EDITORS,
+    EDITOR_RETURN_KINDS,
     KEYS_OWNED_BY_TAB,
     buildDocumentKeys,
     defaultPlayerOf,
@@ -146,15 +147,86 @@ describe('the tab-ownership table', () => {
     });
 });
 
-describe('the editor slot', () => {
+describe('the editor slot — FILLED by H5', () => {
     /**
-     * ⛓ H1 builds the slot and H5 fills it. This row is what makes the filling
-     * VISIBLE: it will red the day a key gets an editor, and the fix is to say
-     * so here rather than to discover the change by reading a diff.
+     * ⛓⛓⛓ H1 built the slot and asserted it EMPTY; H5 fills it, and this is
+     * the row that flipped. What replaces "it is empty" is not "it has five
+     * entries" — a count in a row is an allowlist key and says nothing about
+     * whether the entries are usable. What replaces it is the PARITY and the
+     * CONTRACT: every editor key is a schema key, every entry carries the four
+     * fields a Document row draws, and every `returns` is one of the three the
+     * module names.
      */
-    it('⛓ is EMPTY at H1 — every entry\'s `editor` is null', () => {
-        expect(Object.keys(DOCUMENT_KEY_EDITORS)).toEqual([]);
-        for (const entry of buildDocumentKeys(SCHEMA)) expect(entry.editor, entry.key).toBeNull();
+    it('⛓⛓ every editor key is a SCHEMA key — a row about a key nothing '
+        + 'produces would draw a button on a document that cannot have it', () => {
+        const schemaKeys = new Set(buildDocumentKeys(SCHEMA).map((e) => e.key));
+        for (const key of Object.keys(DOCUMENT_KEY_EDITORS)) {
+            expect(schemaKeys.has(key), key).toBe(true);
+        }
+    });
+
+    it('⛓⛓ and `buildDocumentKeys` hangs each one on its own row, leaving the '
+        + 'rest null — derived, never listed twice', () => {
+        const byKey = new Map(buildDocumentKeys(SCHEMA).map((e) => [e.key, e]));
+        for (const [key, editor] of Object.entries(DOCUMENT_KEY_EDITORS)) {
+            expect(byKey.get(key).editor, key).toBe(editor);
+        }
+        for (const [key, entry] of byKey) {
+            if (!(key in DOCUMENT_KEY_EDITORS)) expect(entry.editor, key).toBeNull();
+        }
+    });
+
+    it('⛓⛓ every entry carries the whole contract, and `returns` is one of the '
+        + 'THREE the module names', () => {
+        for (const [key, editor] of Object.entries(DOCUMENT_KEY_EDITORS)) {
+            expect(typeof editor.label, key).toBe('string');
+            expect(editor.label.length, key).toBeGreaterThan(0);
+            expect(typeof editor.note, key).toBe('string');
+            expect(typeof editor.open, key).toBe('function');
+            expect(Object.keys(EDITOR_RETURN_KINDS), key).toContain(editor.returns);
+        }
+    });
+
+    it('⛔ NO DOOR IMPORTS ITS PANEL AT MODULE LOAD — this module is loaded by '
+        + 'node rows and by both tabs', () => {
+        // The measurement is textual because the alternative is to import the
+        // panels here, which is the thing being forbidden. Every `open` that
+        // reaches another module does it inside the function body.
+        const src = readFileSync(fileURLToPath(new URL('./documentKeys.js', import.meta.url)),
+            'utf8');
+        const staticImports = [...src.matchAll(/^import .*from '([^']+)';$/gm)].map((m) => m[1]);
+        expect(staticImports).toEqual(['./rulesDocOps.js']);
+        // …and every module a door reaches is reached DYNAMICALLY. ⛔ The
+        // check is on the SOURCE, not on `String(fn)`: the test runner rewrites
+        // `import(` to its own helper, so a stringified function proves nothing
+        // about what the file says.
+        for (const module of [
+            '../regionMarkingTool/index.js',
+            '../procgenPipeline/regionAtlasCompiler.js',
+            '../procgenPipeline/index.js',
+            '../loopsCostDebugger/index.js',
+        ]) {
+            expect(src, module).toContain(`import('${module}')`);
+            expect(staticImports, module).not.toContain(module);
+        }
+    });
+
+    it('⛓ `region_atlas` returns an op and `procgen_metadata` does not — the '
+        + "arc's rule that generation is not an edit", () => {
+        expect(DOCUMENT_KEY_EDITORS.region_atlas.returns).toBe('op');
+        expect(DOCUMENT_KEY_EDITORS.procgen_metadata.returns).toBe('document');
+    });
+
+    it('⛓⛓ `region_atlas`\'s note SAYS the block is a reference — the fact the '
+        + 'door is built on', () => {
+        expect(DOCUMENT_KEY_EDITORS.region_atlas.note).toContain('REFERENCE');
+        expect(DOCUMENT_KEY_EDITORS.region_atlas.note).toContain('atlas_id');
+    });
+
+    it('⛓ the two APPLIED-state doors say so, and the working-copy ones do not '
+        + 'claim it', () => {
+        expect(DOCUMENT_KEY_EDITORS.sphere_log.note).toContain('APPLIED STATE');
+        expect(DOCUMENT_KEY_EDITORS.loop_costs.note).toContain('WORKING COPY');
     });
 });
 

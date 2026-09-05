@@ -13,8 +13,15 @@
 
 import { describe, expect, it } from 'vitest';
 
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
 import { REGISTRY } from '../procgenDocs/generated/registry.js';
-import { DOCUMENT_LINKS, buildLinkRows, substrateEditorLinks } from './documentLinks.js';
+import {
+    DOCUMENT_LINKS, buildLinkRows, substrateEditorLinks, documentKeyEditorLinks,
+} from './documentLinks.js';
+import { DOCUMENT_KEY_EDITORS } from './documentKeys.js';
+import { register as registerApworldEditor } from './index.js';
 
 /** ⛓ A registry-shaped stand-in: `getAll()` and nothing else is read. */
 const fakeRegistry = (entries) => ({ getAll: () => entries });
@@ -92,14 +99,25 @@ describe('the substrate half is DERIVED', () => {
 
 describe('the document half is DATA, and it is complete', () => {
     it('⛓ every row the ⚖ named is present, each with a panel to open', () => {
+        // ⛓ H5 — the marking tool, the pipeline and the cost debugger LEFT this
+        //   table for `DOCUMENT_KEY_EDITORS`, where the Document tab and this
+        //   tab read one label and one `open`. `buildLinkRows` still shows all
+        //   six; the split is about who owns the row, not about what the tab
+        //   offers, and the "derived from the registry" suite below asserts the
+        //   other half.
         const ids = DOCUMENT_LINKS.map((r) => r.id);
         expect(ids).toEqual([
-            'regionMarkingTool',
-            'procgenPipelinePanel',
-            'loopsCostDebuggerPanel',
             'editorCodeMirror6Panel',
             'editorPanel',
             'regionGraphPanel',
+        ]);
+        expect(buildLinkRows(fakeRegistry([])).map((r) => r.id)).toEqual([
+            'key:region_atlas',
+            'key:procgen_metadata',
+            'key:loop_costs',
+            'key:sphere_log',
+            'key:preset_sidecars',
+            ...ids,
         ]);
         for (const row of DOCUMENT_LINKS) {
             expect(row.target, row.id).toMatchObject({ kind: 'panel' });
@@ -121,7 +139,7 @@ describe('the document half is DATA, and it is complete', () => {
     });
 
     it('⛓ the applied-state editors WARN, because they do not see the working copy', () => {
-        for (const id of ['loopsCostDebuggerPanel', 'editorCodeMirror6Panel', 'editorPanel']) {
+        for (const id of ['editorCodeMirror6Panel', 'editorPanel']) {
             expect(DOCUMENT_LINKS.find((r) => r.id === id).note, id).toMatch(/[Aa]pplied|Apply/);
         }
     });
@@ -132,8 +150,92 @@ describe('the whole tab', () => {
         const rows = buildLinkRows(fakeRegistry([
             { id: 'maze', roomEditor: { kind: 'lab', page: 'maze', arm: 'set' } },
         ]));
-        expect(rows).toHaveLength(DOCUMENT_LINKS.length + 1);
+        expect(rows).toHaveLength(
+            DOCUMENT_LINKS.length + Object.keys(DOCUMENT_KEY_EDITORS).length + 1);
         expect(rows[0].id).toBe('substrate:maze');
         expect(new Set(rows.map((r) => r.id)).size).toBe(rows.length);
+    });
+});
+
+/**
+ * ⛓⛓⛓ APWORLD EDITOR HUB slice H5 — **ONE SOURCE OF TRUTH FOR BOTH TABS.**
+ * ⚖ *"Maybe there should be a tab that just has links to all of the other
+ * editors, as a convenient way to open them even if the current rules.json file
+ * doesn't contain any relevant data for them."* — so every door the Document
+ * tab offers has to be reachable here with no data. These rows assert the two
+ * sets EQUAL in both directions: a door missing from the Links tab is an editor
+ * an empty document cannot reach, and a Links row with no registry entry is a
+ * button that resolves to nothing.
+ */
+describe('the key-editor rows are DERIVED from DOCUMENT_KEY_EDITORS', () => {
+    it('⛓⛓ one row per registry key, and no key without a row', () => {
+        const rows = documentKeyEditorLinks();
+        expect(rows.map((r) => r.key).sort())
+            .toEqual(Object.keys(DOCUMENT_KEY_EDITORS).sort());
+        expect(new Set(rows.map((r) => r.id)).size).toBe(rows.length);
+    });
+
+    it('⛓⛓ each row carries the registry\'s OWN label, note and returns — not a '
+        + 'second copy that could drift', () => {
+        for (const row of documentKeyEditorLinks()) {
+            const editor = DOCUMENT_KEY_EDITORS[row.key];
+            expect(row.label, row.key).toBe(editor.label);
+            expect(row.note, row.key).toBe(editor.note);
+            expect(row.returns, row.key).toBe(editor.returns);
+        }
+    });
+
+    it('⛓ and its target names the KEY, so the panel resolves the SAME `open` '
+        + 'the Document row calls', () => {
+        for (const row of documentKeyEditorLinks()) {
+            expect(row.target).toEqual({ kind: 'documentKeyEditor', key: row.key });
+        }
+    });
+
+    it('⛔ the hand-written table no longer duplicates any of them', () => {
+        const keyed = new Set(Object.keys(DOCUMENT_KEY_EDITORS));
+        for (const row of DOCUMENT_LINKS) {
+            if (row.key === null) continue;
+            expect(keyed.has(row.key), row.id).toBe(false);
+        }
+    });
+});
+
+/**
+ * ⛓⛓⛓ **AND EVERY EVENT THE PANEL PUBLISHES IS REGISTERED** — the defect H5
+ * found. `eventBus.publish` refuses an unregistered publisher: it logs a
+ * warning and RETURNS (`eventBus.js:126-129`), so H1's Links tab Open button
+ * and H3's "Open region graph" button had been silently doing nothing in the
+ * real app since they shipped, because `apworldEditor` never registered
+ * `ui:activatePanel`. Neither in-app row pressed them — they assert the rows
+ * the tabs draw. (Family: H4b's trap 1180, an unregistered publish DROPPED.)
+ *
+ * ⛔ The row scans the SOURCES rather than listing the events, so the next door
+ * cannot forget its registration.
+ */
+describe('publisher registration covers every publish site', () => {
+    const read = (rel) => readFileSync(fileURLToPath(new URL(rel, import.meta.url)), 'utf8');
+
+    it('⛓⛓ every `publish(\'…\')` in the panel and the registry is declared in '
+        + 'register()', () => {
+        const sources = ['./apworldEditorUI.js', './documentKeys.js'].map(read).join('\n');
+        const published = new Set(
+            [...sources.matchAll(/publish\(\s*'([^']+)'/g)].map((m) => m[1]));
+        // Events published through a CONSTANT rather than a literal.
+        published.add('procgenPipeline:loadRules');
+        published.add('loopsCostDebugger:loadRules');
+
+        const registered = new Set();
+        registerApworldEditor({
+            registerPanelComponent: () => {},
+            registerEventBusPublisher: (e) => registered.add(e),
+            registerEventBusSubscriberIntent: () => {},
+            registerPublicFunction: () => {},
+        });
+        for (const event of published) {
+            expect(registered.has(event), `${event} is published but not registered`).toBe(true);
+        }
+        // The one that was missing, named so the regression is legible.
+        expect(published.has('ui:activatePanel')).toBe(true);
     });
 });

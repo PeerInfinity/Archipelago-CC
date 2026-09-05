@@ -38,7 +38,13 @@
  * `labRoomEditor.js` both record (`[centralRegistry] CentralRegistry
  * initialized` printing from a headless consumer). The PANEL resolves a row's
  * `target` to an action; this file only says which.
+ *
+ * ⛓ H5 — the ONE import here is `documentKeys.js`, which is DATA by the same
+ * rule (its `open`s defer their panel modules), and importing it is what makes
+ * the Document tab and this tab the same door rather than two lists.
  */
+
+import { DOCUMENT_KEY_EDITORS } from './documentKeys.js';
 
 /**
  * ⛓ Where a lab-kind room editor is hosted. ⛔ BOTH lab pages mount as
@@ -49,40 +55,19 @@
 const LAB_HOST_PANEL = 'procgenLabPanel';
 
 /**
- * ⛓⛓ **THE DOCUMENT-LEVEL TABLE — the only hand-written list in this file.**
- * One row per editor that edits something a rules.json carries, or the whole
- * document. `key` names the top-level key it edits where there is one, so the
- * Document tab and this tab agree about who owns what; `null` = the whole file.
+ * ⛓⛓ **THE DOCUMENT-LEVEL TABLE — what is left of the hand-written list.**
+ * One row per editor that edits the WHOLE document, or a key no registry slot
+ * claims. `key` names the top-level key it edits where there is one; `null` =
+ * the whole file.
+ *
+ * ⛓⛓⛓ **H5 TOOK THREE ROWS OUT OF HERE**, and that is the point of the slice:
+ * the marking tool, the pipeline panel and the cost debugger are now
+ * `DOCUMENT_KEY_EDITORS` rows, so the Document tab's button and this tab's row
+ * open the SAME door with the SAME label — one source of truth, asserted in
+ * both directions by `documentLinks.test.js`. What stays is what has no
+ * top-level key of its own to hang off.
  */
 export const DOCUMENT_LINKS = Object.freeze([
-    Object.freeze({
-        id: 'regionMarkingTool',
-        label: 'Region marking tool',
-        key: 'region_atlas',
-        note: 'Draws and edits the region atlas a document\'s graph was compiled from. '
-            + 'The module\'s own door is `openRegionMarkingTool({atlas, levelId})` '
-            + '(regionMarkingTool/index.js:74); this row opens the panel EMPTY.',
-        target: Object.freeze({ kind: 'panel', panelId: 'regionMarkingTool' }),
-    }),
-    Object.freeze({
-        id: 'procgenPipelinePanel',
-        label: 'Procgen pipeline',
-        key: 'procgen_metadata',
-        note: 'The generator that wrote `procgen_metadata`, `preset_sidecars` and '
-            + '`assume_bidirectional_exits`. Re-opening THIS document in it is H5\'s '
-            + '`rebuildEnvelopeFromRulesJson` link; this row opens the panel EMPTY.',
-        target: Object.freeze({ kind: 'panel', panelId: 'procgenPipelinePanel' }),
-    }),
-    Object.freeze({
-        id: 'loopsCostDebuggerPanel',
-        label: 'Loops cost debugger',
-        key: 'loop_costs',
-        note: 'Reads the loop-mode mana economy. ⚠ It reads APPLIED state '
-            + '(`stateManager:rulesLoaded` / `sphereState:dataLoaded`), not this panel\'s '
-            + 'working copy — so press Apply first if you want it to see your edits '
-            + '(plan §4; H5 measures what a working-copy intake would cost).',
-        target: Object.freeze({ kind: 'panel', panelId: 'loopsCostDebuggerPanel' }),
-    }),
     Object.freeze({
         id: 'editorCodeMirror6Panel',
         label: 'Raw JSON editor (CodeMirror 6)',
@@ -162,7 +147,35 @@ export function substrateEditorLinks(registry) {
         });
 }
 
-/** ⛓ The whole tab: derived substrate rows first, then the document table. */
+/**
+ * ⛓⛓⛓ **THE KEY-EDITOR ROWS, DERIVED FROM `DOCUMENT_KEY_EDITORS`** (H5).
+ *
+ * ⚖ *"Maybe there should be a tab that just has links to all of the other
+ * editors, as a convenient way to open them even if the current rules.json file
+ * doesn't contain any relevant data for them."* — so every door the Document
+ * tab can offer must be reachable HERE TOO, with no data. Writing them out
+ * twice would be the `regionEditors` mistake this arc refuses everywhere else:
+ * two lists that agree until somebody adds a door to one of them.
+ *
+ * ⛔ The row carries the KEY, not a copy of the opener: `_openLink` resolves it
+ * through the registry, so the Links row and the Document row are literally the
+ * same `open`.
+ */
+export function documentKeyEditorLinks() {
+    return Object.entries(DOCUMENT_KEY_EDITORS).map(([key, editor]) => ({
+        id: `key:${key}`,
+        label: editor.label,
+        key,
+        returns: editor.returns,
+        note: editor.note,
+        target: { kind: 'documentKeyEditor', key },
+    }));
+}
+
+/**
+ * ⛓ The whole tab: derived substrate rows, derived key-editor rows, then what
+ * is left of the hand-written document table.
+ */
 export function buildLinkRows(registry) {
-    return [...substrateEditorLinks(registry), ...DOCUMENT_LINKS];
+    return [...substrateEditorLinks(registry), ...documentKeyEditorLinks(), ...DOCUMENT_LINKS];
 }

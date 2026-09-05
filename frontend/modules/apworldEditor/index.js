@@ -101,6 +101,25 @@ export function register(registrationApi) {
 
   registrationApi.registerEventBusPublisher('files:jsonLoaded');
   registrationApi.registerEventBusPublisher('apworldEditor:rulesEdited');
+
+  /**
+   * ⛓⛓⛓ H5 — **AND A DEFECT THIS SLICE FOUND: `ui:activatePanel` WAS NEVER
+   * REGISTERED HERE.** `eventBus.publish` refuses an unregistered publisher —
+   * it logs a warning and RETURNS (`eventBus.js:126-129`) — so H1's Links tab
+   * Open button and H3's "Open region graph" button have both been silently
+   * doing nothing in the real app since they shipped. Neither in-app row
+   * pressed them: they assert the ROWS the tabs draw. Same family as H4b's
+   * trap 1180 (an unregistered publish is DROPPED) and the `procgenLab:
+   * levelChanged` finding.
+   *
+   * ⛔ The list below is checked against the panel's own `publish(` call sites
+   * by `documentLinks.test.js`, so the next door to be added cannot forget it.
+   */
+  registrationApi.registerEventBusPublisher('ui:activatePanel');
+  // H5's block doors, published from this module's bus by
+  // `DOCUMENT_KEY_EDITORS[...].open`.
+  registrationApi.registerEventBusPublisher('procgenPipeline:loadRules');
+  registrationApi.registerEventBusPublisher('loopsCostDebugger:loadRules');
 }
 
 export function initialize(moduleId, priorityIndex, initializationApi) {

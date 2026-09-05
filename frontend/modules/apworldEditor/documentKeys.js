@@ -23,15 +23,21 @@
  * list of "the per-player keys" would have to be re-derived every time the
  * schema grows one, which is the failure H0 measured on the schema itself.
  *
- * ── ⛓ THE `editor` SLOT IS EMPTY ON PURPOSE ───────────────────────────
+ * ── ⛓ THE `editor` SLOT, FILLED BY H5 ─────────────────────────────────
  *
- * `DOCUMENT_KEY_EDITORS` is the `key → {open}` table the LINKED editors fill —
- * `region_atlas` → the marking tool, `procgen_metadata` → the pipeline,
- * `loop_costs` → the cost debugger (plan §5's **H5** row). H1 builds the slot
- * and leaves it empty; a filled row makes `entry.editor` non-null and the
- * Document tab draws an Open button for it. ⛔ Do not fill it here — H5 measures
- * each editor's working-copy intake cost first, and a link that opens an editor
- * on APPLIED state would break the working-copy ruling (§1).
+ * `DOCUMENT_KEY_EDITORS` is the `key → {label, returns, note, open}` table the
+ * LINKED editors hang off — `region_atlas` → the marking tool,
+ * `procgen_metadata` → the pipeline, `loop_costs` → the cost debugger,
+ * `sphere_log` → the spoiler checklist, `preset_sidecars` → the Regions tab's
+ * per-region Edit ▸. A filled row makes `entry.editor` non-null and the
+ * Document tab draws its Open button. See the table's own docblock for the
+ * contract and for what each door's `returns` means.
+ *
+ * ⛔ **THE OTHER TWENTY-NINE KEYS HAVE NO DEDICATED EDITOR, AND THE REGISTRY
+ * SAYS SO BY THE ABSENCE OF A ROW, NOT BY OMISSION FROM THE TAB**: every schema
+ * key still gets a Document row and a JSON block editor. `regions`, `items`,
+ * `itempool_counts`, `starting_items` and the meta fields are OWNED BY TABS
+ * (`KEYS_OWNED_BY_TAB`, below) and point at them instead.
  *
  * ── ⛓ AND THE UNKNOWN-KEY ROW IS NOT OPTIONAL ─────────────────────────
  *
@@ -75,11 +81,165 @@ const TAB_FOR_KEY = Object.freeze(Object.fromEntries(
     Object.entries(KEYS_OWNED_BY_TAB).flatMap(([tab, keys]) => keys.map((k) => [k, tab]))));
 
 /**
- * ⛓⛓ **THE `editor` SLOT — EMPTY UNTIL H5.** `key → {label, open(context)}`.
- * `open` receives `{record, player, key, value, onSave}` and returns ONE op
- * (plan §4's working-copy hand-off). Left empty deliberately; see the docblock.
+ * ⛓⛓⛓ **THE `editor` SLOT — FILLED BY H5.** `key → {label, returns, note,
+ * open(context)}`.
+ *
+ * ── THE CONTRACT ──────────────────────────────────────────────────────
+ *
+ *     open({ record, player, key, value, onSave, eventBus, goToTab })
+ *
+ * `record` is the WORKING COPY (⚖ plan §1); `value` is this key's slice of it
+ * (the selected player's, for a per-player key). `open` may be async — three of
+ * the five doors import a panel module lazily.
+ *
+ * ⛓ **`onSave` IS THE RETURN PATH, and `returns` says whether there is one.**
+ * H1's docblock said `open` "returns ONE op"; it does not, and it cannot: every
+ * editor here is a PANEL a person works in for a while, so the op comes back
+ * through `onSave(op)` whenever they save — the room-editor contract's shape
+ * (`procgenPipeline/regionEditors.js`), one level up. What H5 adds is
+ * `returns`, printed on the Document row, because *"will Save come back as an
+ * undo step here"* is the question a person actually has:
+ *
+ *     'op'        → `onSave` fires with ONE op; undo in the hub undoes the
+ *                   whole sub-edit.
+ *     'document'  → the editor's own exit is a NEW document (the arc's rule
+ *                   that generation is not an edit); nothing returns here.
+ *     'none'      → the editor READS this block; nothing comes back at all.
+ *
+ * ⛔ **NO PANEL MODULE IS IMPORTED AT THE TOP OF THIS FILE.** `documentKeys.js`
+ * is loaded by node rows, by the Links tab and by the Document tab; a static
+ * `import` of `regionMarkingTool/index.js` would drag the Golden-Layout panel
+ * graph into all of them. Every door defers its module — the measured
+ * `bounceDemoLibrary.js:835-852` precedent, and the same rule `documentLinks.js`
+ * states for its own rows.
+ *
+ * ⛓ **AND THE LINKS TAB IS DERIVED FROM THIS TABLE**, not written beside it
+ * (`documentLinks.buildLinkRows`), so ⚖ *"a tab that just has links to all of
+ * the other editors … even if the current rules.json file doesn't contain any
+ * relevant data"* reaches the SAME door the Document row does. A parity row
+ * asserts the two in both directions.
  */
-export const DOCUMENT_KEY_EDITORS = Object.freeze({});
+export const DOCUMENT_KEY_EDITORS = Object.freeze({
+    /**
+     * ⛔⛔ **THE BLOCK IS A REFERENCE, NOT AN ATLAS**, and the door says so
+     * rather than pretending. Measured over the corpus (H5): all three carriers
+     * hold exactly `{atlas_id, game, map_document}` — no `regions` — and
+     * nothing in the tree resolves an `atlas_id` back to the file that holds
+     * it. So the tool opens on the atlas IT holds, and a Save writes this
+     * document's reference to whatever was saved, through the compiler's own
+     * `regionAtlasReference`.
+     */
+    region_atlas: Object.freeze({
+        label: 'Open in the region marking tool',
+        returns: 'op',
+        note: 'This block is a REFERENCE to an atlas ({atlas_id, game, map_document}), not the '
+            + 'atlas itself, and nothing resolves an atlas id back to its file — so the tool '
+            + 'opens on the atlas it already holds (New / Load a .json there). Its Save comes '
+            + 'back here as ONE `set-key region_atlas` naming what you saved.',
+        open: async ({ key, onSave }) => {
+            const [{ openRegionMarkingTool }, { regionAtlasReference }] = await Promise.all([
+                import('../regionMarkingTool/index.js'),
+                import('../procgenPipeline/regionAtlasCompiler.js'),
+            ]);
+            openRegionMarkingTool({
+                onSave: (atlas) => onSave({
+                    op: 'set-key',
+                    key,
+                    value: regionAtlasReference(atlas),
+                    scope: 'document',
+                }),
+            });
+        },
+    }),
+
+    /**
+     * ⛓ The generator that WROTE this block. Its exit is its own "Open in
+     * APWorld Editor" — a NEW document, because generation is not an edit —
+     * so nothing comes back through `onSave`.
+     */
+    procgen_metadata: Object.freeze({
+        label: 'Open in the procgen pipeline',
+        returns: 'document',
+        note: 'Hands this working copy to the pipeline, which says what it can do with it — '
+            + 'append a sphere, realise it top-down, or neither, quoting the engine\'s own '
+            + 'refusal. Nothing comes back as an op: the pipeline\'s exit is its own "Open in '
+            + 'APWorld Editor", which is a NEW document.',
+        open: async ({ record, player, eventBus }) => {
+            const { PROCGEN_PIPELINE_LOAD_RULES } = await import('../procgenPipeline/index.js');
+            eventBus.publish(PROCGEN_PIPELINE_LOAD_RULES, {
+                jsonData: record, source: 'the APWorld editor', player,
+            });
+            eventBus.publish('ui:activatePanel', { panelId: 'procgenPipelinePanel' });
+        },
+    }),
+
+    /**
+     * ⛓⛓ **A REAL WORKING-COPY INTAKE, and plan §4's "Apply, then open" for
+     * this editor is OVERTURNED** — H5 measured the seam at two methods and
+     * built it (`loopsCostDebugger/documentStateManager.js`).
+     *
+     * ⚠ `returns: 'none'` all the same, and that is a SEPARATE fact: the
+     * debugger PLANS costs, and its plan (`CostPlanner.getCostData()`, already
+     * exactly this block's shape) has no gesture that writes it back. That
+     * write-back is one door away and is named here rather than implied — all
+     * twelve committed `loop_costs` blocks are EMPTY (`regions: {}`,
+     * `locations: {}`), so it is the useful next slice, not a tidy-up.
+     */
+    loop_costs: Object.freeze({
+        label: 'Open in the loops cost debugger',
+        returns: 'none',
+        note: 'Plans this WORKING COPY\'s mana economy — the debugger reads the document you '
+            + 'are editing, not the applied world (press "Use applied state" there to go back). '
+            + 'It needs a sphere log: this document\'s own embedded one, or it says so. '
+            + 'Nothing comes back as an op yet — `CostPlanner.getCostData()` is already this '
+            + 'block\'s shape and has no write-back gesture.',
+        open: async ({ record, player, eventBus }) => {
+            const { LOOPS_COST_DEBUGGER_LOAD_RULES } = await import('../loopsCostDebugger/index.js');
+            eventBus.publish(LOOPS_COST_DEBUGGER_LOAD_RULES, {
+                jsonData: record, source: 'the APWorld editor', player,
+            });
+            eventBus.publish('ui:activatePanel', { panelId: 'loopsCostDebuggerPanel' });
+        },
+    }),
+
+    /**
+     * ⛓ The checklist READS the sphere log, and it reads it from APPLIED state
+     * (`sphereState`), not from this session. Named in the note rather than
+     * hidden: the ⚖ says linked editors open from the working copy, and this
+     * one cannot yet — so a person pressing it should know what they will see.
+     */
+    sphere_log: Object.freeze({
+        label: 'Open the spoiler checklist',
+        returns: 'none',
+        note: '⚠ APPLIED STATE: the checklist reads the sphere log the app has loaded '
+            + '(`sphereState`), not this working copy — press Apply first if you want it to '
+            + 'see your edits. Nothing comes back.',
+        open: async ({ eventBus }) => {
+            eventBus.publish('ui:activatePanel', { panelId: 'spoilerChecklistPanel' });
+        },
+    }),
+
+    /**
+     * ⛓ Already linked, PER REGION, from the Regions tab (H4b's Edit ▸ through
+     * the registry's `regionRoundTrip` slot). ⛔ A second whole-block door would
+     * be a second place to edit one key, and the per-region one knows the shape.
+     */
+    preset_sidecars: Object.freeze({
+        label: 'Go to the Regions tab',
+        returns: 'op',
+        note: 'Edited PER REGION in the Regions tab: Edit ▸ opens that region\'s own editor '
+            + '(H4b) and its save comes back as ONE `replace-region-sidecar`. There is no '
+            + 'whole-block editor, deliberately.',
+        open: async ({ goToTab }) => { goToTab('regions'); },
+    }),
+});
+
+/** ⛓ The three answers a `returns` can carry, so nothing spells a fourth. */
+export const EDITOR_RETURN_KINDS = Object.freeze({
+    op: 'Save comes back here as one undoable step.',
+    document: 'That editor\'s exit is a NEW document, not an edit of this one.',
+    none: 'That editor only reads this block; nothing comes back.',
+});
 
 /** ⛓ `preset_sidecars` → `Preset sidecars`. A label, not a second name. */
 export function labelForKey(key) {

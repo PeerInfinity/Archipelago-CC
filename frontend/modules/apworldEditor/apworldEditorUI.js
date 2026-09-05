@@ -64,6 +64,8 @@ import {
   defaultPlayerOf,
   documentKeyRows,
   playerSlotsOf,
+  DOCUMENT_KEY_EDITORS,
+  EDITOR_RETURN_KINDS,
 } from './documentKeys.js';
 import { buildLinkRows, DOCUMENT_LINKS } from './documentLinks.js';
 /**
@@ -1538,8 +1540,189 @@ class ApworldEditorUI {
       box.appendChild(this._makeOwnedByTabLine(row));
       return box;
     }
+    // ⛓ H5 — the DEDICATED editor's door, above the raw JSON rather than
+    //   instead of it: the block is still data and the block editor is still
+    //   the way to fix a value the dedicated editor cannot express.
+    if (row.editor) box.appendChild(this._makeDocumentEditorLine(row));
+    if (row.key === 'loop_costs') box.appendChild(this._makeLoopCostsTable(row));
     box.appendChild(this._makeDocumentValueEditor(row));
     return box;
+  }
+
+  /**
+   * ⛓⛓⛓ **THE LINKED EDITOR'S DOOR** (H5). One button, the registry's own
+   * label — the same string the Links tab shows for the same key, because both
+   * read `DOCUMENT_KEY_EDITORS[key].label`.
+   *
+   * ⛓ **`returns` IS PRINTED, and it is the question a person actually has**:
+   * *"if I save over there, does it come back here as an undo step?"* Three
+   * answers, spelled by `EDITOR_RETURN_KINDS` so nothing invents a fourth.
+   */
+  _makeDocumentEditorLine(row) {
+    const line = document.createElement('div');
+    line.className = 'apworld-doc-editor';
+    Object.assign(line.style, {
+      display: 'flex', alignItems: 'center', gap: '8px', margin: '5px 0 0',
+      flexWrap: 'wrap',
+    });
+    const btn = this._makeButton(row.editor.label, '#2e5f8a',
+      () => this._openDocumentKeyEditor(row.key));
+    btn.className = 'apworld-doc-editor-open';
+    btn.dataset.docKey = row.key;
+    line.appendChild(btn);
+
+    const returns = document.createElement('span');
+    returns.className = 'apworld-doc-editor-returns';
+    returns.textContent = `returns: ${row.editor.returns} — `
+      + `${EDITOR_RETURN_KINDS[row.editor.returns] ?? 'unknown return kind'}`;
+    Object.assign(returns.style, { color: '#8a8', fontSize: '10px' });
+    line.appendChild(returns);
+
+    const note = document.createElement('div');
+    note.textContent = row.editor.note;
+    Object.assign(note.style, {
+      color: '#777', fontSize: '10px', lineHeight: '1.35', flexBasis: '100%',
+    });
+    line.appendChild(note);
+    return line;
+  }
+
+  /**
+   * ⛓⛓ **THE PER-REGION COST TABLE** (H5), beside the raw JSON rather than
+   * instead of it — `loop_costs` is small (12 presets carry it) and its shape
+   * is two flat maps plus two defaults, which reads far better as rows.
+   *
+   * ⛔ **AND IT SAYS "NONE" OUT LOUD**, because that is what the corpus holds:
+   * MEASURED at this tree, all twelve committed `loop_costs` blocks have
+   * `regions: {}` and `locations: {}` and carry only the two defaults. A table
+   * that rendered nothing for them would look like a rendering bug rather than
+   * a true statement about the document.
+   */
+  _makeLoopCostsTable(row) {
+    const wrap = document.createElement('div');
+    wrap.className = 'apworld-loop-costs';
+    Object.assign(wrap.style, { margin: '5px 0 0', fontSize: '11px' });
+    const block = row.value && typeof row.value === 'object' ? row.value : {};
+    const regions = block.regions && typeof block.regions === 'object' ? block.regions : {};
+    const locations = block.locations && typeof block.locations === 'object'
+      ? block.locations : {};
+    const priced = Object.keys(regions).length;
+    const worldRegions = Object.keys(this._regions()).length;
+
+    const head = document.createElement('div');
+    head.className = 'apworld-loop-costs-summary';
+    head.textContent = `${priced} of ${worldRegions} region`
+      + `${worldRegions === 1 ? '' : 's'} priced · ${Object.keys(locations).length} location`
+      + `${Object.keys(locations).length === 1 ? '' : 's'} priced · default region cost `
+      + `${block.defaultRegionCost ?? '(unset)'} · default location cost `
+      + `${block.defaultLocationCost ?? '(unset)'}`;
+    Object.assign(head.style, { color: '#9ab' });
+    wrap.appendChild(head);
+
+    if (priced === 0) {
+      const none = document.createElement('div');
+      none.className = 'apworld-loop-costs-none';
+      none.textContent = 'No region carries a cost, so every region falls back to the default. '
+        + '(Every committed preset that carries this block is in the same state — the cost '
+        + 'debugger is what fills it in.)';
+      Object.assign(none.style, { color: '#777', fontSize: '10px', marginTop: '2px' });
+      wrap.appendChild(none);
+      return wrap;
+    }
+
+    const table = document.createElement('table');
+    table.className = 'apworld-loop-costs-table';
+    Object.assign(table.style, { borderCollapse: 'collapse', marginTop: '4px', width: '100%' });
+    for (const [name, data] of Object.entries(regions)) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.textContent = name;
+      Object.assign(td.style, { color: '#cfe', padding: '1px 6px 1px 0' });
+      const cost = document.createElement('td');
+      cost.textContent = data && typeof data === 'object'
+        ? String(data.moveCost ?? '') : String(data);
+      Object.assign(cost.style, { color: '#aaa', textAlign: 'right' });
+      tr.append(td, cost);
+      table.appendChild(tr);
+    }
+    wrap.appendChild(table);
+    return wrap;
+  }
+
+  /**
+   * ⛓⛓⛓ **ONE OPENER FOR BOTH TABS** (H5). The Document row's button and the
+   * Links tab's row both land here, so the door cannot behave differently
+   * depending on which tab a person pressed it from.
+   *
+   * ⛔ **`onSave` WRAPS THE EDITOR'S ANSWER IN THE SESSION'S OWN `_applyOp`**,
+   * which is where the schema veto, the slot stamp and the undo step live —
+   * an editor handing back an op that bypassed them would be an edit the hub
+   * could neither refuse nor undo.
+   *
+   * @param {string} key
+   * @param {{withDocument?: boolean}} [opts] `false` from the Links tab, whose
+   *   whole purpose is opening an editor with nothing (⚖ user).
+   */
+  _openDocumentKeyEditor(key, { withDocument = true } = {}) {
+    const editor = DOCUMENT_KEY_EDITORS[key];
+    if (!editor) {
+      this._opMessage = `No dedicated editor is registered for \`${key}\`.`;
+      this._renderChrome();
+      return;
+    }
+    const rows = withDocument ? this._documentRows() : [];
+    const row = rows.find((r) => r.key === key) ?? null;
+    let context;
+    try {
+      context = {
+        record: withDocument ? this.rulesDoc : null,
+        player: this.playerId,
+        key,
+        value: row ? row.value : undefined,
+        eventBus: this.eventBus,
+        goToTab: (tab) => this._selectTab(tab),
+        onSave: (op) => this._acceptEditorOp(key, op),
+      };
+      const result = editor.open(context);
+      if (result && typeof result.catch === 'function') {
+        result.catch((err) => {
+          log('error', `${key}: the editor door threw`, err);
+          this._opMessage = `${editor.label}: ${err.message}`;
+          this._renderChrome();
+        });
+      }
+    } catch (err) {
+      log('error', `${key}: the editor door threw`, err);
+      this._opMessage = `${editor.label}: ${err.message}`;
+      this._renderChrome();
+      return;
+    }
+    this._opMessage = `${editor.label}${withDocument ? '' : ' (with no document)'}. `
+      + `${EDITOR_RETURN_KINDS[editor.returns] ?? ''}`;
+    this._renderChrome();
+  }
+
+  /**
+   * ⛓ An op handed back by a linked editor. ⛔ It goes through `_applyOp` like
+   * any other, and a door declared `returns: 'none'` handing one back is a
+   * DEFECT in that door — said out loud rather than silently applied.
+   */
+  _acceptEditorOp(key, op) {
+    const editor = DOCUMENT_KEY_EDITORS[key];
+    if (!op || typeof op !== 'object') return;
+    if (editor && editor.returns !== 'op') {
+      log('warn', `${key}: a door declared \`returns: '${editor.returns}'\` handed back an op`);
+    }
+    if (!this.session) {
+      this._opMessage = `${key}: an editor saved, but there is no session to apply it to — `
+        + 'load a rules.json first.';
+      this._renderChrome();
+      return;
+    }
+    this._applyOp(op);
+    this._opMessage = `${editor ? editor.label : key} saved — applied as one \`${op.op}\` `
+      + 'you can undo here.';
+    this._renderChrome();
   }
 
   /**
@@ -2016,6 +2199,13 @@ class ApworldEditorUI {
       this._opMessage = `Opened ${row.label} (${target.panelId}). ⚠ Nothing happens if that `
         + 'panel is not in the current layout.';
       this._renderChrome();
+      return;
+    }
+    // ⛓ H5 — the registry's own door, with NO document: ⚖ *"a convenient way to
+    //   open them even if the current rules.json file doesn't contain any
+    //   relevant data for them"*.
+    if (target.kind === 'documentKeyEditor') {
+      this._openDocumentKeyEditor(target.key, { withDocument: false });
       return;
     }
     if (target.kind === 'substrateRoomEditor') {
