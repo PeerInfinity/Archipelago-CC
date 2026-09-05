@@ -11005,6 +11005,11 @@ mana-leg's "needs a loops park" is read as the same work. (2) `verify-rule-gated
 CUT; the witnessed claim (gate rules re-evaluated on the snapshot update) stays — one commit in V3. Ladder:
 **V2b** loops-halt diagnosis → **V3** rename (+ the cut).
 
+**V2b LAUNCHED 2026-09-05** as `loops-halt-diagnosis` (Opus; kickoff `NewDocs/plans/loops-halt-diagnosis-prompt.md`;
+V2's session read idle first): instrument the eleven `isProcessing`-clearing sites in `loopState.js`, name
+the one that fires on the first maze location check and its caller, diff against a green maze loop-mode
+row, and rule ONE CLEAR DEFECT (fix, pinned) or DESIGN (stop, ⚖). Then V3 the rename + the portals cut.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
