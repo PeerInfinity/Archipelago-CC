@@ -32,11 +32,32 @@ export const moduleInfo = {
   requires: ['loops', 'sphereState'],
 };
 
+/**
+ * ⛓⛓⛓ APWORLD EDITOR HUB slice H5 — **THE WORKING-COPY INTAKE.** Published by
+ * the hub's `loop_costs` Document row with `{jsonData, source, player}`.
+ *
+ * ⛔ Before H5 this panel read APPLIED state only (`costDebuggerUI.js:162-163`
+ * marks itself stale on `sphereState:dataLoaded` / `stateManager:rulesLoaded`,
+ * and every number it shows comes through `getCostPlanner()`'s state manager),
+ * so plan §4 priced its hub link as *"Apply, then open"*. The measurement said
+ * otherwise: `CostPlanner` takes its state manager as a constructor argument
+ * and touches it through TWO methods, so a document nobody has applied can wear
+ * that face — see `documentStateManager.js` for the seam and its cost.
+ */
+export const LOOPS_COST_DEBUGGER_LOAD_RULES = 'loopsCostDebugger:loadRules';
+
 // Module-level references
 let thisModuleId = moduleInfo.name;
 let moduleEventBus = null;
 let moduleDispatcher = null;
 let costPlannerInstance = null;
+/**
+ * ⛓ One-shot hand-off slot (the `apworldEditor/index.js` pattern, same measured
+ * reason): the panel's subscription lives on the PANEL, so a door pressed while
+ * this panel has never been mounted would publish into nothing. The module's
+ * `initialize()` always runs; the panel's runs when somebody opens it.
+ */
+let pendingWorkingCopy = null;
 
 /**
  * Registration function
@@ -64,6 +85,11 @@ export function register(registrationApi) {
   );
   registrationApi.registerPublicFunction(moduleInfo.name, 'getSphereLog', getSphereLog);
 
+  // ⛓ H5 — the hub's hand-off. The bus auto-registers a subscriber intent on
+  // subscribe(); declaring it here puts the event in the module's registration
+  // record whether or not the panel is mounted.
+  registrationApi.registerEventBusSubscriberIntent(LOOPS_COST_DEBUGGER_LOAD_RULES);
+
   // Register event publishers
   registrationApi.registerEventBusPublisher('loopsCostDebugger:stepPlanned');
   registrationApi.registerEventBusPublisher('loopsCostDebugger:allPlanned');
@@ -88,6 +114,18 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     eventBus: moduleEventBus,
   });
 
+  // ⛓ H5 — stash a hand-off that arrives before the panel exists; the panel
+  // drains it on mount and its own live subscription clears the slot.
+  moduleEventBus.subscribe(LOOPS_COST_DEBUGGER_LOAD_RULES, (ev) => {
+    if (ev && ev.jsonData) {
+      pendingWorkingCopy = {
+        jsonData: ev.jsonData,
+        source: ev.source ?? null,
+        player: ev.player ?? null,
+      };
+    }
+  }, moduleInfo.name);
+
   // Expose on window for console debugging
   if (typeof window !== 'undefined') {
     window.costPlanner = costPlannerInstance;
@@ -100,6 +138,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     costPlannerInstance = null;
     moduleEventBus = null;
     moduleDispatcher = null;
+    pendingWorkingCopy = null;
     if (typeof window !== 'undefined') {
       delete window.costPlanner;
     }
@@ -112,6 +151,13 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
 export function getCostPlanner() {
   return costPlannerInstance;
+}
+
+/** ⛓ H5 — consume (and clear) a stashed working copy, or null. */
+export function consumePendingWorkingCopy() {
+  const wc = pendingWorkingCopy;
+  pendingWorkingCopy = null;
+  return wc;
 }
 
 export function getModuleEventBus() {

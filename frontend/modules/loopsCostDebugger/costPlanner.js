@@ -202,6 +202,44 @@ export class CostPlanner {
     // Verification mode
     this._mode = 'plan';              // 'plan' or 'verify'
     this._loadedCostData = null;      // Cost data to verify against
+
+    /**
+     * ⛓ H5 — the slot this planner is about, when a caller KNOWS it. Null =
+     * ask sphereState, which is what the applied-state path has always done.
+     */
+    this._playerIdOverride = null;
+  }
+
+  /**
+   * ⛓⛓⛓ APWORLD EDITOR HUB slice H5 — **PLAN AGAINST A DIFFERENT WORLD.**
+   * The state manager was a constructor argument and nothing else in this class
+   * assumes it is the app's; swapping it is how the panel plans a WORKING COPY
+   * the app has never applied (`loopsCostDebugger/documentStateManager.js`).
+   *
+   * ⛔ **IT DROPS THE LOADED PLAN, and that is not tidiness.** Every planned
+   * step names regions and locations of the world it was planned against; a
+   * planner that kept them while its topology changed underneath would show a
+   * plan through a world that is no longer there. `isLoaded()` goes false, the
+   * panel's Load is how a person opts back in.
+   *
+   * ⚠ `playerId` OVERRIDES sphereState. `_getCurrentPlayerId` asks the app's
+   * sphereState first, which is right for applied state and wrong for a working
+   * copy: the document names its own slot and the app may be holding a
+   * different world entirely.
+   */
+  useStateManager(stateManager, { playerId = null } = {}) {
+    this.stateManager = stateManager;
+    this._playerIdOverride = playerId === null || playerId === undefined
+      ? null : String(playerId);
+    this._sphereLog = null;
+    this._entries = [];
+    this._plannedSteps = [];
+    this._isLoaded = false;
+    this._simState = null;
+    this._adjacencyMap = null;
+    this._startRegion = null;
+    this._mode = 'plan';
+    this._loadedCostData = null;
   }
 
   loadSphereLog(sphereLog) {
@@ -1162,6 +1200,9 @@ export class CostPlanner {
    * @returns {string|null}
    */
   _getCurrentPlayerId() {
+    // ⛓ H5 — a caller that KNOWS the slot wins over sphereState: a working copy
+    //   names its own, and sphereState's belongs to the applied world.
+    if (this._playerIdOverride) return this._playerIdOverride;
     const getIdFn = centralRegistry.getPublicFunction('sphereState', 'getCurrentPlayerId');
     const id = getIdFn?.();
     if (id) return String(id);

@@ -5,7 +5,13 @@
  * cost generation reasoning. Each step = one action queue (one loop).
  */
 
-import { getCostPlanner, getModuleEventBus, getSphereLog } from './index.js';
+import {
+  getCostPlanner, getModuleEventBus, getSphereLog,
+  consumePendingWorkingCopy, LOOPS_COST_DEBUGGER_LOAD_RULES,
+} from './index.js';
+import {
+  documentStateManager, documentPlayerId, documentSphereLog,
+} from './documentStateManager.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 
@@ -37,11 +43,23 @@ export class CostDebuggerUI {
     this._verifyCancelled = false;
     // Set when the sphere-log slice or the rules changed under a loaded plan.
     this._isStale = false;
+    /**
+     * ⛓ H5 — the WORKING COPY this panel is planning, or null for applied
+     * state. `{jsonData, source, player, stats}`. It is the panel's, not the
+     * planner's: the planner holds only the state manager it was handed, and
+     * the panel is what has to SAY which world the numbers describe.
+     */
+    this._workingCopy = null;
 
     this.rootElement = this._createRootElement();
     this.container.element.appendChild(this.rootElement);
 
     this._subscribeToEvents();
+
+    // ⛓ A hand-off may have been stashed before this panel existed; the live
+    //   subscription in _subscribeToEvents clears the slot when it fires first.
+    const pending = consumePendingWorkingCopy();
+    if (pending) this._adoptWorkingCopy(pending.jsonData, pending.source, pending.player);
 
     this.container.on('destroy', () => this._onDestroy());
 
@@ -68,6 +86,7 @@ export class CostDebuggerUI {
         <button class="cd-btn-plan-sphere" disabled title="Plan remaining steps for current sphere entry">Plan Sphere</button>
         <button class="cd-btn-plan-all" disabled title="Plan all remaining steps">Plan All</button>
         <button class="cd-btn-reset" disabled title="Reset to initial state">Reset</button>
+        <button class="cd-btn-applied" style="display: none;" title="Stop planning the handed-over working copy and go back to the world the app has loaded">Use applied state</button>
       </div>
       <div class="cd-status-bar">
         <span class="cd-status">No sphere log loaded</span>
@@ -115,6 +134,7 @@ export class CostDebuggerUI {
     el.querySelector('.cd-btn-plan-sphere').addEventListener('click', () => this._handlePlanSphere());
     el.querySelector('.cd-btn-plan-all').addEventListener('click', () => this._handlePlanAll());
     el.querySelector('.cd-btn-reset').addEventListener('click', () => this._handleReset());
+    el.querySelector('.cd-btn-applied').addEventListener('click', () => this._useAppliedState());
   }
 
   _attachResizeHandle(el) {
@@ -161,11 +181,93 @@ export class CostDebuggerUI {
     // the user's planned steps without being asked.
     subscribe('sphereState:dataLoaded', this._handleDataChangedEvent);
     subscribe('stateManager:rulesLoaded', this._handleDataChangedEvent);
+
+    /**
+     * ⛓⛓⛓ H5 — **THE HUB'S `loop_costs` DOOR.** One door, two entries (live
+     * event / stash drained at mount), so the adoption and everything it says
+     * cannot drift between them — H4c's rule for `apworldEditor:loadRules`.
+     */
+    subscribe(LOOPS_COST_DEBUGGER_LOAD_RULES, (ev) => {
+      if (ev && ev.jsonData) {
+        this._adoptWorkingCopy(ev.jsonData, ev.source ?? null, ev.player ?? null);
+      }
+      consumePendingWorkingCopy();
+    });
+  }
+
+  /**
+   * ⛓⛓⛓ H5 — **PLAN A DOCUMENT THE APP HAS NEVER APPLIED** (plan §1's ⚖:
+   * *"Linked editors open from the WORKING COPY"*).
+   *
+   * ⛔ It is ASYNC because the translation is `StateManager.loadFromJSON`,
+   * dynamically imported (see `documentStateManager.js` for why, and for the
+   * measured cost — 4 ms to 306 ms across the committed corpus). The status
+   * line says so while it runs: a panel that sat silent for a third of a second
+   * on the biggest document and then changed every number is a panel that
+   * looked broken.
+   *
+   * ⛔ AND IT DOES NOT PLAN. Adoption re-points the planner and drops the old
+   * plan; Load is the person's gesture, and the log it would use is a separate
+   * refusal this panel has to be able to state (`documentSphereLog`).
+   */
+  async _adoptWorkingCopy(jsonData, source, player) {
+    const planner = getCostPlanner();
+    if (!planner) {
+      this._setStatus('CostPlanner is not available — the loops module has not initialized.');
+      return;
+    }
+    const playerId = player ? String(player) : documentPlayerId(jsonData);
+    const label = source ? `working copy · ${source}` : 'working copy';
+    this._setStatus(`Adopting the ${label} for player ${playerId}…`);
+    try {
+      const sm = await documentStateManager(jsonData, playerId);
+      planner.useStateManager(sm, { playerId });
+      this._workingCopy = { jsonData, source, player: playerId, stats: sm.stats };
+      this._isStale = false;
+      this.verificationResults = [];
+      this.selectedStepIndex = -1;
+      this._refreshStepList();
+      this._refreshDetailView();
+      this._updateSummary();
+      this._updateStatus();
+      this._updateButtons();
+      log('info', `Adopted a working copy: ${sm.stats.regions} regions, `
+        + `${sm.stats.locations} locations, ${sm.stats.ms} ms`);
+    } catch (e) {
+      log('error', 'working-copy adoption failed', e);
+      this._setStatus(`Could not read that working copy: ${e.message}`);
+    }
+  }
+
+  /**
+   * ⛓ Back to the world the app has loaded. ⛔ Named rather than implicit: a
+   * panel that silently reverted on the next `stateManager:rulesLoaded` would
+   * discard a hand-off nobody asked it to discard, and one that never reverted
+   * would show applied-state numbers under a working-copy label forever.
+   */
+  _useAppliedState() {
+    const planner = getCostPlanner();
+    if (!planner) return;
+    planner.useStateManager(stateManagerProxySingleton, { playerId: null });
+    this._workingCopy = null;
+    this._isStale = false;
+    this.verificationResults = [];
+    this.selectedStepIndex = -1;
+    this._refreshStepList();
+    this._refreshDetailView();
+    this._updateSummary();
+    this._updateStatus();
+    this._updateButtons();
+    this._setStatus('Back on APPLIED state — press Load to plan the loaded world.');
   }
 
   _handleDataChangedEvent() {
     const planner = getCostPlanner();
     if (!planner?.isLoaded()) return;
+    // ⛓ H5 — an APP-WIDE load does not invalidate a WORKING COPY's plan: the
+    //   plan describes a document the app was never holding, and marking it
+    //   stale would tell a person to re-Load a world that has not changed.
+    if (this._workingCopy) return;
     this._isStale = true;
     this._updateStatus();
   }
@@ -207,7 +309,21 @@ export class CostDebuggerUI {
       return;
     }
 
-    const sphereLog = getSphereLog();
+    /**
+     * ⛓⛓ H5 — **A WORKING COPY IS PLANNED AGAINST ITS OWN LOG OR NOT AT ALL.**
+     * The app's log describes whatever world is applied; borrowing it for a
+     * handed-over document would manufacture the panel's own "ALL n sphere-log
+     * locations are not in this player's world" condition instead of reporting
+     * it. `documentSphereLog` returns the entries or the refusal to print.
+     */
+    let sphereLog;
+    if (this._workingCopy) {
+      const answer = documentSphereLog(this._workingCopy.jsonData);
+      if (answer.refusal) { this._setStatus(answer.refusal); return; }
+      sphereLog = answer.entries;
+    } else {
+      sphereLog = getSphereLog();
+    }
     if (!sphereLog || sphereLog.length === 0) {
       this._setStatus('No sphere log available. Load a game with sphere data first.');
       return;
@@ -566,7 +682,14 @@ export class CostDebuggerUI {
       || null;
     if (!playerId) return 'Player ?';
 
-    const staticData = stateManagerProxySingleton?.getStaticData?.();
+    /**
+     * ⛓ H5 — the STATE MANAGER THE PLANNER IS ACTUALLY USING, not the app's.
+     * With a working copy adopted this is the document's own; reading the
+     * proxy here would label a handed-over world with the applied one's player
+     * names and game — a true sentence about the wrong subject, which is
+     * precisely what this label exists to prevent.
+     */
+    const staticData = (planner?.stateManager ?? stateManagerProxySingleton)?.getStaticData?.();
     const name = staticData?.player_names?.[playerId] || null;
     // game_name describes the LOADED world only — claiming it for some other
     // player is exactly the confusion this label exists to prevent.
@@ -631,11 +754,24 @@ export class CostDebuggerUI {
     return warnings;
   }
 
+  /**
+   * ⛓ H5 — WHICH WORLD the numbers describe, in front of every status
+   * sentence. ⛔ Not a badge somewhere else on the panel: a person reading
+   * "Complete: 12 loops" has to know whether those loops are the applied
+   * world's or a document that has never been applied.
+   */
+  _sourcePrefix() {
+    if (!this._workingCopy) return '';
+    const { source, stats } = this._workingCopy;
+    return `[working copy${source ? ` · ${source}` : ''} — `
+      + `${stats.regions} regions, ${stats.locations} locations] `;
+  }
+
   _updateStatus() {
     if (this.isVerifying) return; // Status managed by verify loop
     const planner = getCostPlanner();
     if (!planner || !planner.isLoaded()) {
-      this._setStatus('No sphere log loaded');
+      this._setStatus(`${this._sourcePrefix()}No sphere log loaded`);
       this._setWarnings([]);
       return;
     }
@@ -648,11 +784,11 @@ export class CostDebuggerUI {
       const matched = this.verificationResults.filter(r =>
         Math.abs(r.actual.manaConsumed - r.predicted.manaConsumed) <= tolerance
       ).length;
-      this._setStatus(`${who} · Verified: ${this.verificationResults.length} steps, ${matched}/${this.verificationResults.length} within tolerance`);
+      this._setStatus(`${this._sourcePrefix()}${who} · Verified: ${this.verificationResults.length} steps, ${matched}/${this.verificationResults.length} within tolerance`);
     } else if (planner.isComplete()) {
-      this._setStatus(`${who} · Complete: ${steps} loops, ${entries} entries`);
+      this._setStatus(`${this._sourcePrefix()}${who} · Complete: ${steps} loops, ${entries} entries`);
     } else {
-      this._setStatus(`${who} · ${steps} loops planned`);
+      this._setStatus(`${this._sourcePrefix()}${who} · ${steps} loops planned`);
     }
 
     this._setWarnings(this._collectWarnings(planner));
@@ -670,6 +806,12 @@ export class CostDebuggerUI {
     const btnPlanSphere = this.rootElement.querySelector('.cd-btn-plan-sphere');
     const btnPlanAll = this.rootElement.querySelector('.cd-btn-plan-all');
     const btnReset = this.rootElement.querySelector('.cd-btn-reset');
+    // ⛓ H5 — the way back exists only while there is something to go back from.
+    const btnApplied = this.rootElement.querySelector('.cd-btn-applied');
+    if (btnApplied) {
+      btnApplied.style.display = this._workingCopy ? '' : 'none';
+      btnApplied.disabled = this.isVerifying;
+    }
 
     if (this.isVerifying) {
       if (btnLoad) btnLoad.disabled = true;
