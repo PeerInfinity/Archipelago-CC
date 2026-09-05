@@ -10229,6 +10229,7 @@ whose roster is READ OFF the `procgenCore/` directory, so the new renderer enrol
 import scan with no edit to the gate. Skips unmoved at 8, slow battery unmoved at 217/0.
 
 **NEXT = H2b** (the CM6 raw view, ⚖ ruled), then H4 (Task 0 = the 4-player fixture), then H5.
+⛓ **H2b SHIPPED 2026-09-05 — see the ⇒ H2b AS BUILT block below. NEXT = H3b, then H4, then H5.**
 
 **H3 VERIFIED by the planner 2026-09-05** (`390fe0da6` on origin/main; the slot on both declarers, the
 renderer in `procgenCore/`, the reconstruct pipeline-side, the docs section and the regenerated matrix, the
@@ -10251,6 +10252,41 @@ submodule's `adapterPrimitives.js` import the pipeline engine to reach it). ⇒ 
 where both can import, the submodule's re-export is corrected and the **gitlink bump is pre-authorized by
 the ruling** (submodule pushed first; SHAs reported). Queued to launch when H2b reports (both touch the
 primary tree). Ladder: H2b → H3b → H4 → H5.
+
+⇒ **H2b AS BUILT 2026-09-05** (plan §14; `main` `eec53e9b2` → `3959ee1bd` → `60b12b89c` → `d7bfd7966`,
+pushed). **The raw tab is CodeMirror 6 and `RAW_VIEW_LIMIT_BYTES` is GONE**, on
+`measure-apworld-raw-view.mjs --all --samples=5`: **205/205 presets open**, TTI min 13.9 / median 30.8 /
+p90 99.5 / **MAX 262.9 ms**, zero above the textarea's 1,504 ms at H2's limit point (load 2.02 → 3.53).
+The refusal screen, "Show it anyway", `_rawForced` and `overLimit` are deleted with it.
+· **⚠ THE OVERTURN: the raw tab's cost is NOT ordered by document size.** The three slowest to open are
+`depgraph` presets at **1,198,656 B** — *under* H2's limit, never suspect — and the 3,146,656 B corpus
+maximum is only THIRD. H2's median/p90/max-by-size method would have named 211.9 ms as the worst case and
+been wrong by 51 ms and four documents. ⇒ **a percentile pick off variable A cannot bound variable B**; the
+`--all` arm exists for that and costs six minutes.
+· **ONE extension list, shared.** `editorCodeMirror6/jsonEditorExtensions.js` — `codeMirror6UI.js` rebuilt
+on it byte-inert, and while moving it a `readOnlyCompartment`/`themeCompartment` pair and a `basicSetup`
+import were found **ALL DEAD** (constructed, never in a list, never reconfigured). The kickoff asked which
+compartments to reuse: the answer is neither, and they are not carried.
+· **The Apply-from-text control is "Save JSON"** (⌘/Ctrl+Enter its twin), deliberately NOT "Apply" — the
+toolbar's Apply means *load into the app*. The op path is unchanged: `parseRawView` → ONE `replace-document`
+carrying the PARSED document.
+· **The import is free, measured both ways.** Bundle 4,372,452 → **4,372,093 B (−359)**; unbundled the
+ordered `.js` request set differs by exactly ONE file (3,755 B) because `codemirror6-bundle.js` was already
+fetched at the same position — `editorCodeMirror6` is `enabled: true` and imports the barrel statically.
+· ⚠ **§12.3's `stardew_valley` pretty size 2,620,225 is 2,620,221** — that row came from
+`json.dumps(indent=2)`'s `ensure_ascii`; the view's units are `JSON.stringify`'s.
+· Gates: apworldEditor **131** (`hubExits` 21 → 20), presets+lintGateLabels 115 unmoved, generator
+instruments/browser/flags **266/78/172 UNMOVED** + 0 FINDINGS, `procgenDocs` **452/0/0**, in-app fast
+**73/73** (compare-runs: ADDED 2, both passed, no new failures), browser-log grep 0.
+· **FOUR mutants driven**, all red where they should be — including (d) the limit REINSTATED, which reds 3
+of 20 rows. ⚠ Its lesson: the row asking about 1,234 bytes stayed GREEN, so **a retirement whose suite reads
+a small value cannot see the guard come back** — what discriminates is naming the verdict's keys
+exhaustively plus an anchor at real document sizes. And mutant (a) found a defect in the ROW: `.at(-1)` on
+the op list a refused save left empty threw, so the run reported "test error-free" instead of its four
+conditions.
+· For H4: `panel.rawEditorView` + `_teardownRawEditor()` are the pair any stateful tab owes; the PANEL is
+now the expensive half (`depgraph` 3,326 ms panel-only vs a 263 ms editor), which sharpens §12.7 #2's
+`validateRules`-per-tab-switch line.
 
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
