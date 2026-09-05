@@ -19,9 +19,27 @@
  *      auto-player keeps bouncing without exiting through it.
  *   2. Drive to the wave-1 region (sendExit); auto-play collects
  *      key_red; stateManager:snapshotUpdated re-evaluates the rules.
- *   3. Drive back to start; the portal is now OPEN — the no-input
- *      player climbs the column and exits through it BY ITSELF;
- *      Victory auto-collects in the wave-2 region.
+ *   3. Drive back to start; the SAME portal now reports OPEN — the
+ *      bridge re-evaluated gate_rules against the new inventory and
+ *      pushed the boolean back into the game.
+ *
+ * ⛔ WHAT THIS DOES **NOT** ASSERT — PER-PORTAL PHYSICAL REACHABILITY.
+ * There used to be a fourth leg: "the no-input player climbs the column
+ * and exits through the unlocked portal BY ITSELF, and Victory
+ * auto-collects behind it". It was CUT (⚖ user, 2026-09-05, procgen
+ * verify tier V3a). It is not a claim this instrument can make: the seed
+ * scan below reasons over the SPHERE TREE (which region hangs off which,
+ * behind which gate) and has no model of the level's geometry, so it can
+ * pick a topology whose gated portal is correctly unlocked and simply not
+ * climbable by an unaided bounce. Measured at V2: `CLIMB REACHED:
+ * entrance → b0 → b1 → b2`, then ~85 s bouncing on b2 with BOTH arrows
+ * held and `botStatus.active` false throughout — the unlock was right and
+ * the climb was the thing that failed. Closing that leg honestly means
+ * deriving per-portal reachability (canJump.js / deriveRules.js) into the
+ * scan; driving the last hop with sendExit the way step 2 does would gut
+ * the claim. The AUTHORED LOCK contract — locked before the key, open
+ * after it, re-evaluated on the snapshot update — is what is witnessed
+ * here, and steps 1 and 2 are still real physics auto-play.
  *
  * Prereq: dev server on :8000 (python -m http.server 8000).
  * Run: node scripts/procgen/verify-rule-gated-portals.mjs
@@ -125,14 +143,22 @@ for (let seed = 1; seed <= 30; seed++) {
             && keyHost.parent === start.index
             && keyHost.index !== start.index && keyHost.index !== keyGated.index
             && poolArrow && start.items.some((i) => i.item === poolArrow)
-            // ⛔ NOT A SOUTH PORTAL. `sideExits.js` places S "low and
-            //    right-of-center (never in the spawn column — a platform there
-            //    would intercept the spawn fall and instantly exit)", so the
-            //    NO-INPUT player, who only ever climbs, cannot reach it: step 3
-            //    would time out on a portal that had correctly unlocked. N
-            //    reuses the level's own top-of-climb portal and E/W sit at the
-            //    side edges "reachable by drifting from the bottom of the
-            //    climb" — all three are on the auto-player's path.
+            // ⛔ NOT A SOUTH PORTAL — AND THE REASON CHANGED WITH V3a.
+            //    `sideExits.js` places S "low and right-of-center (never in the
+            //    spawn column — a platform there would intercept the spawn fall
+            //    and instantly exit)", so the NO-INPUT player, who only ever
+            //    climbs, cannot reach it. That used to matter because the cut
+            //    fourth leg waited for the player to fly THROUGH the portal.
+            //    It still matters for step 1, which is the surviving physics
+            //    claim: "the locked portal HOLDS — still in the start region
+            //    after the column climb" is only a claim about a lock if the
+            //    climb actually passes the portal. On an unreachable S exit the
+            //    player could not have left through it locked or open, and the
+            //    step would pass vacuously. N reuses the level's own
+            //    top-of-climb portal and E/W sit at the side edges "reachable by
+            //    drifting from the bottom of the climb" — all three are on the
+            //    auto-player's path. (Dropping this line re-picks the seed:
+            //    measured, seeds 12/14/15 match, and 12 is the S one.)
             && keyGated.side !== 'S') {
         SEED = seed;
         world = w;
@@ -278,46 +304,29 @@ await waitFor('key_red in inventory', async () => {
 console.log('KEY COLLECTED: key_red in inventory');
 
 // 3. Drive back to start. The bridge re-evaluated gate_rules on the
-//    snapshot update, so the portal is OPEN — the no-input player
-//    climbs the column and exits through it by itself; Victory
-//    auto-collects in the key-gated region.
+//    snapshot update, so the SAME portal that reported LOCKED in step 1
+//    now reports OPEN — with nothing changed but the inventory.
 const backSide = (await gameDebug())?.backExitSide;
 if (!backSide) throw new Error('expected a back exit side in the key region');
 await bounceFrame().evaluate(
     (side) => window.__swfBridge.sendExit('verify_back', side), backSide);
-// ⛓⛓ THE UNLOCK AND THE FLY-THROUGH ARE TWO CLAIMS, SO ASSERT THEM APART.
-//    Waiting only for the region change collapses "the bridge never
-//    re-evaluated the rule" (a SUBJECT defect) into "the auto-player did not
-//    reach the portal in 90 s" (physics / the portal's side) — one timeout,
-//    two utterly different findings, and no way to tell which from the text.
+// ⛓⛓ THE UNLOCK AND THE FLY-THROUGH ARE TWO CLAIMS, AND ONLY THE FIRST IS
+//    THIS INSTRUMENT'S. Polling the REGION instead would collapse "the bridge
+//    never re-evaluated the rule" (a SUBJECT defect) into "the auto-player did
+//    not reach the portal in 90 s" (physics / the portal's side) — one
+//    timeout, two utterly different findings, and no way to tell which from
+//    the text. That split is why V2 could see the unlock was correct and the
+//    climb was not; V3a then cut the climb claim entirely (header).
 await waitFor(`portal '${lockedPortalId}' reports OPEN back in the start region`,
     async () => (await gameDebug())?.gateStates?.portals?.[lockedPortalId] === true, 30000);
-console.log('PORTAL UNLOCKED: gate_rules re-evaluated on the snapshot update');
-// ⛓⛓ A CLIMB THAT STALLS AND A PLAYER THAT NEVER STARTED LOOK IDENTICAL TO A
-//   REGION POLL — both are 90 s of silence. So track the highest platform the
-//   no-input climb ever stood on, and name it in the failure: "reached b2 of
-//   the column" is a reachability finding, "reached entrance" is a dead player,
-//   and the bare timeout was neither.
-const climb = new Set();
-await waitFor(`auto-exit through the unlocked portal into ${keyGated.region_id}`
-    + ' (the no-input climb must physically reach it)', async () => {
-    const d = await gameDebug();
-    if (d?.botStatus?.lastPlatform) climb.add(d.botStatus.lastPlatform);
-    if ((await currentRegion()) === keyGated.region_id) return true;
-    return null;
-}, 90000).catch((e) => {
-    const d = climb.size ? [...climb].join(' → ') : '(never left the spawn)';
-    console.log(`CLIMB REACHED: ${d}`);
-    throw e;
-});
 const dbg2 = await gameDebug();
-console.log('UNLOCKED PORTAL FIRED: now in', keyGated.region_id,
+console.log('PORTAL UNLOCKED: gate_rules re-evaluated on the snapshot update',
     '| gate states:', JSON.stringify(dbg2?.gateStates));
-await waitFor('victory in inventory', async () => {
-    const s = await snapshot();
-    return s.inventory?.victory > 0 ? s : null;
-}, 90000);
-console.log('VICTORY COLLECTED (behind the authored key gate)');
+// ⛔ THE FLY-THROUGH LEG STOPS HERE — see the header. Whether the no-input
+//    climb can physically REACH this correctly-unlocked portal is a property
+//    of the level's geometry, and the seed scan above reasons over the sphere
+//    tree, which cannot see geometry. Asserting it here made a reachability
+//    miss read as a gate-rule defect for ~85 s of silence.
 
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {
