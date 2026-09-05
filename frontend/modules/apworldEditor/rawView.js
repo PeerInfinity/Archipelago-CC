@@ -1,17 +1,20 @@
 /**
- * apworldEditor/rawView — **THE WHOLE DOCUMENT AS TEXT, AND THE SIZE GUARD IT
- * NEEDS** (APWORLD EDITOR HUB slice H2; ⚖ user: *"I want to have a way to view
- * the raw data in a text editor, or a json editor. Or maybe this should be
- * disabled if the data is too big. We might need to test to see what counts as
- * too big."*).
+ * apworldEditor/rawView — **THE WHOLE DOCUMENT AS TEXT** (APWORLD EDITOR HUB
+ * slices H2 and H2b; ⚖ user: *"I want to have a way to view the raw data in a
+ * text editor, or a json editor. Or maybe this should be disabled if the data
+ * is too big. We might need to test to see what counts as too big."* — H2
+ * tested, H2b changed the widget, and the answer is now **nothing in this
+ * corpus counts as too big**).
  *
  * ⛓ The view is over the WORKING COPY (`session.record()`), not applied state —
  * the arc's ⚖. Everything a person types comes back as ONE `replace-document`
  * op, so one undo folds the whole text edit away.
  *
- * ⛔ THE THRESHOLD IS A MEASUREMENT. See `RAW_VIEW_LIMIT_BYTES` below: the
- * numbers, the command that produced them and the reasoning are in its comment,
- * and the plan's §12 carries the table. Nothing here was typed from intuition.
+ * ⛔ **THE SIZE GUARD IS GONE, AND THAT TOO IS A MEASUREMENT** (slice H2b): the
+ * tab mounts CodeMirror 6 now, every committed preset opens, and
+ * `rawViewVerdict` below carries the numbers, the command and the reasoning.
+ * Nothing here was typed from intuition — not the limit H2 shipped, and not its
+ * removal.
  */
 
 /**
@@ -42,91 +45,83 @@ export function utf8Bytes(text) {
 }
 
 /**
- * ⛓⛓⛓ **THE RAW VIEW'S SIZE LIMIT, IN BYTES OF PRETTY-PRINTED JSON — MEASURED,
- * NOT CHOSEN.**
+ * ⛓⛓⛓ **HOW BIG THIS DOCUMENT IS — AND NOTHING ELSE. THE LIMIT IS RETIRED.**
+ *
+ * H2 shipped `RAW_VIEW_LIMIT_BYTES = 2_000_000` here, with a refusal screen and
+ * a "show it anyway" escape, because the raw tab was a `<textarea>` and a
+ * textarea over the corpus maximum took **12,942 ms to open and 1,251 ms per
+ * keystroke**. H2's own measurement said the widget was the problem rather than
+ * the document, and ⚖ (user, 2026-09-05) took CM6 as its own slice: **H2b**.
+ *
+ * The tab now mounts CodeMirror 6, which is viewport-virtualised — it lays out
+ * the lines you can see, not the document. Re-measured against the REAL mounted
+ * editor:
  *
  * ```
- * node scripts/procgen/measure-apworld-raw-view.mjs --json=<path>
+ * node scripts/procgen/measure-apworld-raw-view.mjs --all --samples=5 --json=<path>
  * ```
  *
- * drives the REAL hub panel in a real browser (headless Chromium, this box, 8
- * cpus; the load average is printed with every table because these numbers are
- * load-dependent). It reports, per document: the panel's own re-render cost on
- * a NON-raw tab ("panel-only"), the raw tab's time-to-interactive, and the
- * median of five keystrokes measured from `execCommand('insertText')` to the
- * frame after the resulting `input` event.
+ * **The corpus arm — ALL 205 committed presets**, opened in the real tab
+ * (2026-09-05, 8 cpus, load 2.02 at start / 3.53 at end):
  *
- * **The document arm** — the median, p90 and max committed presets, ranked by
- * PRETTY bytes (⛔ not by file size: 13 presets are written compact, so
- * `procgen_topdown/AP_8` is 1,799,872 B on disk and **3,146,656 B** in the
- * view — it, and not `stardew_valley`, is the worst case):
+ * ```
+ * opened 205/205; 0 did NOT mount an editable editor
+ * time-to-interactive:  min 13.9 ms · median 30.8 ms · p90 99.5 ms · MAX 262.9 ms
+ * over the textarea's 1,504 ms (H2's limit point): 0    over 500 ms: 0
+ * ```
  *
- * | document | pretty B | panel-only TTI | textarea TTI | textarea key | CM6 TTI | CM6 key |
- * |---|---|---|---|---|---|---|
- * | `raft` (median)          |   203,178 |  1,107 ms |     403 ms |   235 ms |  133 ms | 141 ms |
- * | `kh1` (p90)              |   766,891 |    793 ms |   2,050 ms |   192 ms |  105 ms |  37 ms |
- * | `procgen_topdown/AP_8`   | 3,146,656 |    515 ms |  12,942 ms | 1,251 ms |   88 ms | 123 ms |
- * | `stardew_valley` (¹)     | 2,620,225 |  4,553 ms |   7,185 ms |   809 ms |  100 ms |  58 ms |
+ * ⚠⚠ **AND THE COST IS NOT ORDERED BY DOCUMENT SIZE** — which is why the whole
+ * corpus had to be opened rather than three documents picked off a size
+ * ranking. The ten slowest to open are led by three `depgraph` presets at
+ * **1,198,656 B** (262.9 / 259.9 / 179.2 ms) — under H2's 2,000,000-byte limit,
+ * so never even suspect — with the 3,146,656 B maximum only THIRD at 211.9 ms.
+ * H2's median/p90/max method would have reported 211.9 ms as the worst case and
+ * been wrong by 51 ms and by four documents.
  *
- * ⛓ The panel-only column is what makes this an attribution rather than a
- * total: at 3.1 MB the panel costs 515 ms and the TEXTAREA costs the other
- * 12.4 s, so the guard is guarding the right thing. (¹ from the previous run,
- * which ranked by file size; kept because it is the second-largest document.)
+ * **The document arm** — the median, p90 and max presets, five keystrokes each,
+ * timed through the PANEL'S OWN view (its extensions, its update listener):
  *
- * **The widget sweep** — the same two questions over sliced text, because the
- * corpus has a 3.4× hole between p90 and max and a threshold interpolated
- * across it would not be measured:
- *
- * | pretty B | textarea TTI | textarea key | CM6 TTI | CM6 key |
+ * | document | pretty B | panel-only TTI | raw tab TTI | keystroke |
  * |---|---|---|---|---|
- * |   500,000 |   661 ms | 231 ms | 43 ms | 240 ms |
- * | 1,000,000 |   880 ms | 143 ms | 46 ms |  29 ms |
- * | 1,500,000 | 1,288 ms | 199 ms | 30 ms |  27 ms |
- * | 2,000,000 | 1,504 ms | 279 ms | 43 ms |  14 ms |
- * | 4,000,000 |        — |      — | 51 ms |  15 ms |
- * | 8,000,000 |        — |      — | 85 ms |  11 ms |
+ * | `raft` (median)          |   203,178 |   444 ms |  52.4 ms | 120.6 ms |
+ * | `kh1` (p90)              |   766,891 |   304 ms |  60.1 ms |  31.7 ms |
+ * | `procgen_topdown/AP_8`   | 3,146,656 |   263 ms | 157.1 ms |  17.0 ms |
  *
- * ⇒ **2,000,000 is the largest size measured USABLE**, and it is a measured
- * point rather than a round number picked between two: 1,504 ms to open and
- * 279 ms per keystroke. The next measured sizes are not — 2.62 MB types at
- * 468–809 ms per keystroke across three runs, and 3.15 MB takes 12.9 s to open
- * and 1.25 s per keystroke. The guard refuses **4 of the 205** committed
- * presets (three `procgen_topdown` at 3.15 MB, `stardew_valley` at 2.62 MB).
+ * ⛓ The `panel-only` column is the control H2 introduced and it still earns its
+ * place: `_selectTab` re-renders the WHOLE panel, so timing the raw tab alone
+ * would credit the editor with the panel's own cost. Here it runs the other
+ * way — the panel is now the expensive half (up to 3,326 ms on a `depgraph`
+ * preset's Items tab), and the editor is noise beside it.
  *
- * ⚠ **AND THE MEASUREMENT SAYS THE TEXTAREA IS THE WRONG WIDGET.** CodeMirror 6
- * is viewport-virtualised and therefore FLAT: 30–133 ms to open and 11–240 ms
- * per keystroke from 200 KB to 8 MB, which is 150× faster than the textarea at
- * the corpus maximum and would retire this constant entirely. It mounts in six
- * lines from `editorCodeMirror6/codemirror6Imports.js` (the measurement script
- * does exactly that). It is NOT what ships here — the mount is six lines but
- * the hub integration is not (a second read-the-text path, undo interplay,
- * theming, and the bundled-build import graph), and the guard it would remove
- * bites four presets. It is named as a costed follow-up with its numbers,
- * which is what the brief asked for.
+ * **The widget sweep**, over sliced text and the SAME shipped extension list,
+ * to 16 MB — 5× past the corpus maximum, because "no document is too big" is
+ * only defensible if somebody looked above the corpus:
+ *
+ * | pretty B | TTI | keystroke |
+ * |---|---|---|
+ * |    500,000 |  41.1 ms | 67.5 ms |
+ * |  1,000,000 |  32.3 ms | 14.4 ms |
+ * |  2,000,000 |  38.6 ms | 17.8 ms |
+ * |  4,000,000 |  53.1 ms | 12.1 ms |
+ * |  8,000,000 |  89.4 ms | 10.5 ms |
+ * | 16,000,000 | 179.2 ms | 16.9 ms |
+ *
+ * ⛓ 16 MB opens faster than H2's textarea opened 500 KB. The growth is there —
+ * TTI roughly doubles per doubling above 4 MB — but it starts so low that the
+ * corpus is nowhere near it.
+ *
+ * ⇒ **there is no size in this corpus the view cannot open**, so there is no
+ * threshold left to guard and the constant, its refusal screen and its escape
+ * hatch are gone. `rawViewVerdict` is now what its name always described: the
+ * size, said out loud, with no verdict attached.
+ *
+ * ⛔ A limit is not deleted because it was annoying — it is deleted because the
+ * measurement that justified it no longer holds against the widget that
+ * replaced the one it was measured on. If the raw tab ever goes back to a
+ * plain text control, the number to reinstate is in the plan's §12.3 table.
  */
-export const RAW_VIEW_LIMIT_BYTES = 2_000_000;
-
-/**
- * ⛓ What the raw tab should do with a document of this size, as data. The panel
- * renders the verdict; the verdict is what a node row can assert and what the
- * mutant (the constant halved) flips.
- *
- * `overLimit` never hard-BLOCKS: the guard is advice with the download beside
- * it, plus an explicit "show it anyway" the person can take. ⛔ A limit that
- * cannot be overridden is a document its owner cannot look at, and the ⚖ asked
- * for a view, not a lock.
- */
-export function rawViewVerdict(bytes, limit = RAW_VIEW_LIMIT_BYTES) {
-    const over = bytes > limit;
-    return {
-        bytes,
-        limit,
-        overLimit: over,
-        message: over
-            ? `${bytes.toLocaleString()} bytes — above the ${limit.toLocaleString()}-byte view `
-              + 'limit; download instead.'
-            : `${bytes.toLocaleString()} bytes of pretty-printed JSON.`,
-    };
+export function rawViewVerdict(bytes) {
+    return { bytes, message: `${bytes.toLocaleString()} bytes of pretty-printed JSON.` };
 }
 
 /**

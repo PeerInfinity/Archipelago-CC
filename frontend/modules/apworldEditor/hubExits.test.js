@@ -1,11 +1,11 @@
 /**
- * The HUB'S EXITS — download, the raw view's size guard, and the source name
- * Apply publishes under (APWORLD EDITOR HUB slice H2).
+ * The HUB'S EXITS — download, the raw view, and the source name Apply publishes
+ * under (APWORLD EDITOR HUB slices H2 and H2b).
  *
  * ⛓ The three exits the ⚖ asked for share one property: each is a function of
  * the WORKING COPY plus one decision, and the decision is the thing worth
- * pinning. The DOM halves are the in-app rows' job (a Blob's bytes, a textarea
- * mounting); these are the decisions.
+ * pinning. The DOM halves are the in-app rows' job (a Blob's bytes, a
+ * CodeMirror 6 view mounting); these are the decisions.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -15,12 +15,12 @@ import { fileURLToPath } from 'node:url';
 
 import { rulesDownloadName, rulesDownloadText } from './downloadJson.js';
 import {
-    RAW_VIEW_LIMIT_BYTES,
     parseRawView,
     rawViewText,
     rawViewVerdict,
     utf8Bytes,
 } from './rawView.js';
+import * as rawViewModule from './rawView.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 
@@ -95,62 +95,62 @@ describe('utf8Bytes', () => {
     });
 });
 
-describe('rawViewVerdict — the MEASURED size guard', () => {
-    it('the limit is a positive byte count somebody measured', () => {
-        expect(Number.isInteger(RAW_VIEW_LIMIT_BYTES)).toBe(true);
-        expect(RAW_VIEW_LIMIT_BYTES).toBeGreaterThan(0);
+describe('rawViewVerdict — the size question, with no limit left to guard', () => {
+    /**
+     * ⛓⛓⛓ **THE H2 GUARD IS RETIRED, AND THIS IS THE ROW THAT SAYS SO.**
+     *
+     * H2 shipped `RAW_VIEW_LIMIT_BYTES = 2_000_000`, measured against a
+     * `<textarea>` that took 12,942 ms to open the corpus maximum. H2b mounted
+     * CodeMirror 6 in the tab and re-ran the same instrument with `--all`: the
+     * raw tab opens EVERY committed preset, so there is no threshold left to
+     * express.
+     *
+     * ⛔ A retirement is only real if something reds when it is undone. What
+     * discriminates here is the verdict's SHAPE: reinstating a limit means
+     * putting `limit`/`overLimit` back on the object, and this row names the
+     * keys exhaustively rather than asserting one of them is false — an
+     * `overLimit: false` that a reinstated constant could flip would sail
+     * straight through a `toBe(false)`.
+     */
+    it('⛔ the module exports NO limit constant any more', () => {
+        expect(rawViewModule.RAW_VIEW_LIMIT_BYTES).toBeUndefined();
+        expect(Object.keys(rawViewModule)).not.toContain('RAW_VIEW_LIMIT_BYTES');
+    });
+
+    it('⛔ the verdict is a SIZE, not a decision — exactly two keys', () => {
+        expect(Object.keys(rawViewVerdict(10)).sort()).toEqual(['bytes', 'message']);
+    });
+
+    it('says the size, and nothing about a limit or a download', () => {
+        const v = rawViewVerdict(1234);
+        expect(v.bytes).toBe(1234);
+        expect(v.message).toContain('1,234 bytes');
+        expect(v.message).not.toMatch(/limit|download instead|too big/i);
     });
 
     /**
-     * ⛓⛓⛓ **AN ANCHOR IN THE CORPUS, BECAUSE EVERY OTHER ROW HERE READS THE
-     * CONSTANT ITSELF.** A guard whose whole test suite is expressed in terms
-     * of its own default cannot see the default move: the rows below still pass
-     * with the constant halved, which is exactly the mutant this slice was
-     * asked to drive. ⚠ MEASURED, not assumed — the first version of this row
-     * bounded the limit at the p90 preset (766,899 B) and the halved mutant
-     * sailed through it, because 1,000,000 is *also* a measured-usable size.
+     * ⛓⛓ **THE H2 ANCHOR, INVERTED — "BOTH VIEWABLE".** H2's discriminating
+     * row named two real documents either side of its threshold: `smz3` at
+     * 1,936,130 pretty bytes had to be viewable and `stardew_valley` at
+     * 2,620,221 had to be refused. Those are still the sizes that matter, and
+     * the claim about them is now the opposite one. The corpus maximum is in
+     * here too, because a limit reinstated ABOVE stardew would leave the H2
+     * pair green and still refuse the biggest document in the tree.
      *
-     * The bounds that DO discriminate are two real documents:
-     *
-     *   · **1,936,130 B** — `smz3`, the largest committed preset the instrument
-     *     says is viewable (2,000,000 B measures at 1,504 ms to open and 279 ms
-     *     per keystroke). A limit below it refuses a document that works, and
-     *     halving the constant refuses **13 more presets** (17 of the 205
-     *     exceed 1,000,000 pretty bytes; only 4 exceed 2,000,000).
-     *   · **2,620,225 B** — `stardew_valley`, measured NOT usable (468–809 ms
-     *     per keystroke over three runs). A limit above it admits a document
-     *     the instrument says is not viewable.
-     *
-     * ⇒ `scripts/procgen/measure-apworld-raw-view.mjs` is what moves this row.
+     * ⇒ `scripts/procgen/measure-apworld-raw-view.mjs --all` is what moves this
+     * row: it is the run that opened all 205.
      */
-    it('⛔ sits inside the MEASURED band — the largest viewable preset below it, '
-        + 'the first unviewable one above', () => {
-        expect(RAW_VIEW_LIMIT_BYTES).toBeGreaterThanOrEqual(1_936_130);
-        expect(RAW_VIEW_LIMIT_BYTES).toBeLessThan(2_620_225);
-    });
-
-    /**
-     * ⛓⛓ **THE DISCRIMINATOR FOR MUTANT (b)** — halve the constant and this
-     * pair flips, because the two documents it names sit either side of the
-     * measured limit rather than at arbitrary sizes.
-     */
-    it('a document at the limit is shown; one byte over it is not', () => {
-        expect(rawViewVerdict(RAW_VIEW_LIMIT_BYTES).overLimit).toBe(false);
-        expect(rawViewVerdict(RAW_VIEW_LIMIT_BYTES + 1).overLimit).toBe(true);
-    });
-
-    it('says the size either way, and names the limit only when it bites', () => {
-        const under = rawViewVerdict(10);
-        expect(under.message).toContain('10 bytes');
-        expect(under.message).not.toContain('download instead');
-        const over = rawViewVerdict(RAW_VIEW_LIMIT_BYTES + 1);
-        expect(over.message).toContain('download instead');
-        expect(over.message).toContain(RAW_VIEW_LIMIT_BYTES.toLocaleString());
-    });
-
-    it('takes an explicit limit, so a caller can ask about a different one', () => {
-        expect(rawViewVerdict(100, 50).overLimit).toBe(true);
-        expect(rawViewVerdict(100, 500).overLimit).toBe(false);
+    it('⛔ every real document H2 measured is VIEWABLE now, the refused one included', () => {
+        const sizes = [
+            ['smz3 (H2: viewable)', 1_936_130],
+            ['stardew_valley (H2: REFUSED)', 2_620_221],
+            ['procgen_topdown/AP_8 (the corpus maximum)', 3_146_656],
+        ];
+        for (const [what, bytes] of sizes) {
+            const v = rawViewVerdict(bytes);
+            expect(Object.keys(v).sort(), what).toEqual(['bytes', 'message']);
+            expect(v.message, what).not.toMatch(/limit|download instead|too big/i);
+        }
     });
 });
 

@@ -387,7 +387,19 @@
             "id": "apworld-raw-view-replaces-the-document-as-one-op",
             "enabled": true,
             "category": "apworldEditor",
-            "_comment": "APWorld hub H2. The raw view saves the whole document as ONE replace-document op that one undo folds away byte for byte, and the size guard is driven AT the measured threshold, one byte over it, and through the 'show it anyway' escape — the constant imported from rawView.js, never typed in the test."
+            "_comment": "APWorld hub H2b. The raw tab mounts CodeMirror 6 (editable, whole working copy, the shared extension list's line numbers and fold gutter, no textarea left) and Save JSON writes ONE replace-document op carrying a PARSED OBJECT that one undo folds away byte for byte. H2's size-guard cases are gone with the guard; the largest-preset case moved to its own row."
+        },
+        {
+            "id": "apworld-raw-view-undo-inside-the-editor-is-the-editors",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H2b, B-c's undo rule over a widget that is not an <input>. The hub's key handler refuses Ctrl+Z inside anything isContentEditable — a clause that had never had a contenteditable widget under it until CM6 mounted here. Drives BOTH halves: inside the editor the session must not move, on the panel chrome the same keystroke must pop it."
+        },
+        {
+            "id": "apworld-raw-view-opens-the-preset-the-textarea-refused",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H2b. stardew_valley is 2,620,221 pretty bytes — above H2's RAW_VIEW_LIMIT_BYTES = 2,000,000, so at H2 the tab showed it a refusal screen. The row asserts that premise off the document, then that the view holds the WHOLE document to the character: a virtualised editor draws only the visible lines, so a truncated string would look identical on screen."
         },
         {
             "id": "apworld-map-draws-the-documents-grid",

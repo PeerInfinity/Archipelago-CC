@@ -80,7 +80,6 @@ import { downloadJson, rulesDownloadName } from './downloadJson.js';
 import { EditorState, EditorView } from '../editorCodeMirror6/codemirror6Imports.js';
 import { jsonEditorExtensions } from '../editorCodeMirror6/jsonEditorExtensions.js';
 import {
-  RAW_VIEW_LIMIT_BYTES,
   parseRawView,
   rawViewText,
   rawViewVerdict,
@@ -190,8 +189,6 @@ class ApworldEditorUI {
     this._rawEdited = false;
     /** ⛓ H2b — the MOUNTED CodeMirror 6 view, or null when the tab is elsewhere. */
     this.rawEditorView = null;
-    /** ⛓ A person's explicit "show it anyway" over the size guard, per session. */
-    this._rawForced = false;
     this.rawJsonUnsubscribe = null;
     this.loadRulesUnsubscribe = null;
     this.activeTab = 'regions';
@@ -345,7 +342,6 @@ class ApworldEditorUI {
     this._originSourceName = baseTag?.origin ?? null;
     this._rawDraft = null;
     this._rawEdited = false;
-    this._rawForced = false;
     // ⛓ A boundary installs a different world: a region name from the old one
     //   means nothing in the new, and neither does a cached grid.
     this._selectedRegion = null;
@@ -1938,15 +1934,18 @@ class ApworldEditorUI {
   }
 
   /**
-   * ⛓⛓⛓ **THE RAW VIEW IS OVER THE WORKING COPY, GUARDED BY A MEASURED
-   * THRESHOLD.** ⛔ Not over applied state: the arc's ⚖ is that every linked
-   * editor opens from `session.record()` and returns ONE op, and the raw view is
-   * the most linked-editor-shaped of them all — a whole document in, a whole
-   * document back, folded away by one undo.
+   * ⛓⛓⛓ **THE RAW VIEW IS OVER THE WORKING COPY, AND IT OPENS ANYTHING.**
+   * ⛔ Not over applied state: the arc's ⚖ is that every linked editor opens
+   * from `session.record()` and returns ONE op, and the raw view is the most
+   * linked-editor-shaped of them all — a whole document in, a whole document
+   * back, folded away by one undo.
    *
-   * Above the threshold the tab says the size, names the limit, and offers the
-   * download — with an explicit "show it anyway" beside it, because a limit
-   * that cannot be overridden is a document its owner cannot look at.
+   * ⛓ H2 shipped a measured size threshold here with a refusal screen and a
+   * "show it anyway" escape, because the widget was a `<textarea>` and the
+   * corpus maximum took 12.9 s to open in one. H2b replaced the widget and
+   * re-ran the measurement over ALL 205 committed presets; every one opens, so
+   * the threshold, the refusal and the escape are gone. `rawView.js` carries
+   * the table.
    */
   _renderRawTab() {
     const verdict = this._rawVerdict();
@@ -1962,40 +1961,8 @@ class ApworldEditorUI {
     const size = document.createElement('div');
     size.className = 'apworld-raw-size';
     size.textContent = verdict.message;
-    Object.assign(size.style, {
-      color: verdict.overLimit ? '#e0a030' : '#777', fontSize: '11px', padding: '0 0 6px',
-    });
+    Object.assign(size.style, { color: '#777', fontSize: '11px', padding: '0 0 6px' });
     this.scrollContainer.appendChild(size);
-
-    if (verdict.overLimit && !this._rawForced) {
-      const box = document.createElement('div');
-      box.className = 'apworld-raw-overlimit';
-      Object.assign(box.style, {
-        border: '1px solid #5a4520', backgroundColor: '#2a2216', borderRadius: '3px',
-        padding: '8px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap',
-      });
-      const why = document.createElement('div');
-      why.style.color = '#e0a030';
-      why.style.fontSize = '11px';
-      why.textContent = `This document is ${verdict.bytes.toLocaleString()} bytes, above the `
-        + `${verdict.limit.toLocaleString()}-byte view limit. The limit is a MEASUREMENT — see `
-        + '`rawView.js`\'s RAW_VIEW_LIMIT_BYTES for the numbers and the command. Download it and '
-        + 'open it in a real editor instead.';
-      box.appendChild(why);
-      const dl = this._makeButton('⭳ Download instead', '#33506e', () => this._handleDownload());
-      dl.className = 'apworld-raw-download';
-      box.appendChild(dl);
-      const anyway = this._makeButton('Show it anyway', '#444', () => {
-        this._rawForced = true;
-        this._render();
-      });
-      anyway.className = 'apworld-raw-force';
-      anyway.title = 'Mount the text view over this document regardless. Expect the numbers in '
-        + 'RAW_VIEW_LIMIT_BYTES\' table.';
-      box.appendChild(anyway);
-      this.scrollContainer.appendChild(box);
-      return;
-    }
 
     /**
      * ⛓⛓⛓ **CODEMIRROR 6, NOT A `<textarea>` — AND THAT IS WHAT RETIRED THE

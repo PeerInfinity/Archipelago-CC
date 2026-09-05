@@ -37,13 +37,35 @@ const PRESET_PATH = './presets/procgen_maze/AP_1/AP_1_rules.json';
  */
 const NO_GRID_PRESET_PATH =
     './presets/jta_substrate_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+/**
+ * ⛓ H2b — **the document H2's textarea REFUSED**: `stardew_valley` at 2,620,221
+ * pretty bytes, over the retired `RAW_VIEW_LIMIT_BYTES = 2_000_000`. It is a
+ * committed preset rather than a padded fixture because the claim is about the
+ * corpus. (It is the SECOND-largest; the largest, `procgen_topdown/AP_8` at
+ * 3,146,656 B, is the instrument's `--all` arm's business — this row wants the
+ * document whose refusal a person actually saw.)
+ *
+ * ⚠ **2,620,221, not the 2,620,225 the plan's §12.3 table says.** H2's pretty
+ * column for this one preset came from `json.dumps(indent=2)`, whose default
+ * `ensure_ascii` spells four non-ASCII bytes as escape sequences; the raw
+ * view's units are `JSON.stringify`'s. Here the two agree with the file on
+ * disk, because stardew is one of the 192 written pretty already.
+ */
+const REFUSED_PRESET_PATH =
+    './presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 const SCHEMA_PATH = './schema/rules.schema.json';
 
-/** Load the preset, raise the panel, and hand back its live instance. */
-async function openHub(testController, presetPath = PRESET_PATH) {
+/**
+ * Load the preset, raise the panel, and hand back its live instance.
+ *
+ * ⛓ H2b — the budget is a PARAMETER because one row opens a 2.6 MB document.
+ * ⛔ Not raised for everyone: a longer poll makes a genuinely stuck panel take
+ * longer to say so, and every other row here loads a 200 KB preset.
+ */
+async function openHub(testController, presetPath = PRESET_PATH, budgetMs = 8000) {
     testController.log(`Loading ${presetPath}…`);
     await testController.loadRulesFromFile(presetPath);
-    await testController.stateManager.pingWorker('after-rules-load', 5000);
+    await testController.stateManager.pingWorker('after-rules-load', budgetMs);
     testController.reportCondition('rules loaded', true);
 
     testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
@@ -57,7 +79,7 @@ async function openHub(testController, presetPath = PRESET_PATH) {
             return p && p.rulesDoc ? p : null;
         },
         'APWorld editor panel with a loaded document',
-        8000,
+        budgetMs,
         50,
     );
     testController.reportCondition('APWorld editor panel holds a document', !!panel);
@@ -544,52 +566,113 @@ export async function apworldApplyKeepsTheSphereLog(testController) {
 }
 
 /**
- * ⛓⛓ **THE RAW VIEW — one `replace-document` op, and the MEASURED guard.**
- * The threshold is not typed here: it is imported from the module that carries
- * the measurement, so moving the constant retargets this row instead of
- * breaking it, and HALVING it flips the at-the-limit case below.
+ * ⛓ The hub's raw tab, as the DOM: the mounted CodeMirror 6 view, its editable
+ * content element, and the text it currently holds. ⛔ `.cm-content`'s
+ * `textContent` is NOT the document — CM6 renders only the lines in the
+ * viewport, so a 3 MB document shows a few thousand characters. The document
+ * lives on the view's state, which is what these helpers read.
+ */
+function rawEditor(panel) {
+    const host = document.querySelector(`${PANEL_SELECTOR} .apworld-raw-editor`);
+    const content = host ? host.querySelector('.cm-content') : null;
+    return { host, content, view: panel.rawEditorView };
+}
+
+/** ⛓ Type into the view the way the editor itself would — one transaction. */
+function typeInto(view, insert, at = view.state.doc.length) {
+    view.dispatch({ changes: { from: at, to: at, insert } });
+}
+
+/**
+ * ⛓⛓ **THE RAW VIEW — CodeMirror 6, and ONE `replace-document` op.**
+ *
+ * H2's version of this row drove a `<textarea>` and a measured size guard.
+ * H2b replaced both: the widget is CM6 and the guard is retired, so what this
+ * row pins is the mount, the document it holds, and the op the Save control
+ * builds from it. The size cases moved to their own row over the largest
+ * committed preset — the one the textarea REFUSED.
  */
 export async function apworldRawViewReplacesTheDocumentAsOneOp(testController) {
     try {
-        const { RAW_VIEW_LIMIT_BYTES } = await import('../../apworldEditor/rawView.js');
         const panel = await openHub(testController);
         if (!panel) return testController.getOverallResult();
 
         selectTab(panel, 'raw');
-        const area = await testController.pollForValue(
-            () => document.querySelector(`${PANEL_SELECTOR} .apworld-raw-text`),
-            'the raw view\'s text area',
+        const mounted = await testController.pollForValue(
+            () => {
+                const { host, content, view } = rawEditor(panel);
+                return host && content && view ? { host, content, view } : null;
+            },
+            'the raw tab\'s mounted CodeMirror 6 view',
             8000,
             50,
         );
-        testController.reportCondition('a small document mounts the raw view', !!area);
-        if (!area) return testController.getOverallResult();
+        testController.reportCondition('the raw tab mounts a CodeMirror 6 view', !!mounted);
+        if (!mounted) return testController.getOverallResult();
+
+        /**
+         * ⛔ A mounted view is not an EDITABLE one. CM6 renders into a
+         * `contenteditable`; a read-only mount would satisfy every other
+         * condition in this row and accept nothing a person typed.
+         */
+        testController.assertEqual('…and its content element is contenteditable',
+            'true', String(mounted.content.getAttribute('contenteditable')));
+        testController.reportCondition('…and there is no textarea left in the tab',
+            !document.querySelector(`${PANEL_SELECTOR} textarea`));
 
         const recordText = JSON.stringify(panel.rulesDoc, null, 2);
-        testController.reportCondition(
-            'the view holds the WORKING COPY, pretty-printed', area.value === recordText);
+        testController.assertEqual(
+            'the view holds the WORKING COPY, pretty-printed, to the byte',
+            String(recordText.length), String(mounted.view.state.doc.length));
+        testController.reportCondition('…and character for character',
+            mounted.view.state.doc.toString() === recordText);
+
+        /**
+         * ⛓ The two raw-JSON editors in this app mount the SAME extension
+         * list, so the hub's view has the things that list brings: line
+         * numbers, a fold gutter, JSON syntax highlighting. ⛔ A hub that
+         * silently mounted a bare view would look like a plain text box while
+         * the editor panel looked like an editor.
+         */
+        testController.reportCondition('…with the shared extensions (line numbers, fold gutter)',
+            !!mounted.host.querySelector('.cm-lineNumbers')
+            && !!mounted.host.querySelector('.cm-foldGutter'));
 
         const before = JSON.stringify(panel.session.record());
         const opsBefore = panel.session.ops().length;
 
+        /* ── an edit, then Apply-from-text ("Save JSON") ─────────────────── */
+
         const edited = JSON.parse(recordText);
-        edited.preset_label = 'H2 raw view';
-        area.value = JSON.stringify(edited, null, 2);
-        area.dispatchEvent(new Event('input', { bubbles: true }));
+        edited.preset_label = 'H2b raw view';
+        mounted.view.dispatch({
+            changes: { from: 0, to: mounted.view.state.doc.length,
+                insert: JSON.stringify(edited, null, 2) },
+        });
+        testController.reportCondition('an edit marks the tab edited, unsaved',
+            (document.querySelector(`${PANEL_SELECTOR} .apworld-raw-status`)?.textContent ?? '')
+                .startsWith('Edited'));
+        testController.assertEqual('…and nothing has reached the record yet',
+            String(opsBefore), String(panel.session.ops().length));
+
         document.querySelector(`${PANEL_SELECTOR} .apworld-raw-save`).click();
 
         testController.assertEqual('the text edit reached the record',
-            'H2 raw view', panel.rulesDoc.preset_label);
+            'H2b raw view', panel.rulesDoc.preset_label);
         testController.assertEqual('it was exactly ONE op',
             String(opsBefore + 1), String(panel.session.ops().length));
         testController.assertEqual('and the op is a replace-document',
             'replace-document', panel.session.ops().at(-1).op);
-
         /**
-         * ⛔ THE UNDO IS THE DISCRIMINATOR. An op that stored the caller's
-         * parsed object rather than a copy applies fine and re-folds to
-         * something nobody typed — only the fold over the shorter list sees it.
+         * ⛔⛔ **THE OP CARRIES THE PARSED DOCUMENT, NEVER THE TEXT.** This is
+         * the discriminator for the mutant that feeds `replace-document` the
+         * raw string: an edit list whose payload can fail to re-parse is not a
+         * record, and a string document is refused by the schema veto rather
+         * than applied — so the assertions above would go red too.
          */
+        testController.assertEqual('…and its payload is a parsed OBJECT, not a string',
+            'object', typeof panel.session.ops().at(-1).document);
+
         document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
         testController.reportCondition(
             'one undo takes the whole text edit back, BYTE FOR BYTE',
@@ -597,54 +680,189 @@ export async function apworldRawViewReplacesTheDocumentAsOneOp(testController) {
         testController.assertEqual('and the op list is back where it started',
             String(opsBefore), String(panel.session.ops().length));
 
-        /* ── the MEASURED guard ─────────────────────────────────────────── */
+        /* ── the schema still gets its veto over the text ────────────────── */
 
-        const pad = (bytes) => {
-            const doc = { game_name: 'Threshold probe', preset_label: '' };
-            const overhead = JSON.stringify(doc, null, 2).length;
-            doc.preset_label = 'x'.repeat(Math.max(0, bytes - overhead));
-            return doc;
-        };
-
-        // ⛓ AT the limit — shown. This is the case a HALVED constant flips.
-        const atLimit = pad(RAW_VIEW_LIMIT_BYTES);
-        panel._openSession(atLimit, { kind: 'rules', source: 'probe', player: '1', origin: null });
         selectTab(panel, 'raw');
-        panel._render();
-        testController.assertEqual(
-            'a document AT the measured limit is still shown',
-            String(RAW_VIEW_LIMIT_BYTES), String(panel._rawVerdict().bytes));
-        testController.reportCondition(
-            '…and it mounts the text view',
-            !!document.querySelector(`${PANEL_SELECTOR} .apworld-raw-text`)
-            && !document.querySelector(`${PANEL_SELECTOR} .apworld-raw-overlimit`));
+        const again = rawEditor(panel);
+        again.view.dispatch({
+            changes: { from: 0, to: again.view.state.doc.length, insert: '{ not json' },
+        });
+        const opsBeforeRefusal = panel.session.ops().length;
+        document.querySelector(`${PANEL_SELECTOR} .apworld-raw-save`).click();
+        testController.assertEqual('⛔ unparseable text is REFUSED, not recorded',
+            String(opsBeforeRefusal), String(panel.session.ops().length));
+        testController.reportCondition('…and the panel says why',
+            (panel._opMessage ?? '').startsWith('Refused:'));
 
-        // ⛓ One byte over — the guard, with the download beside it.
-        panel._openSession(pad(RAW_VIEW_LIMIT_BYTES + 1),
-            { kind: 'rules', source: 'probe', player: '1', origin: null });
-        selectTab(panel, 'raw');
-        panel._render();
-        const over = document.querySelector(`${PANEL_SELECTOR} .apworld-raw-overlimit`);
-        testController.reportCondition('one byte over the limit refuses the view', !!over);
-        testController.reportCondition(
-            '…and mounts no text area at all',
-            !document.querySelector(`${PANEL_SELECTOR} .apworld-raw-text`));
-        testController.reportCondition(
-            '…and offers the download instead',
-            !!document.querySelector(`${PANEL_SELECTOR} .apworld-raw-download`));
-        testController.reportCondition(
-            'the size line says how big it is and what the limit is',
-            (document.querySelector(`${PANEL_SELECTOR} .apworld-raw-size`)?.textContent ?? '')
-                .includes('download instead'));
+        /* ── and the draft survives a re-render it did not ask for ───────── */
 
-        // ⛓ And the guard is ADVICE, not a lock: the owner can still look.
-        document.querySelector(`${PANEL_SELECTOR} .apworld-raw-force`).click();
-        testController.reportCondition(
-            '"Show it anyway" mounts the view over an oversized document',
-            !!document.querySelector(`${PANEL_SELECTOR} .apworld-raw-text`));
+        testController.reportCondition('the unsaved text survives a repaint',
+            (() => {
+                panel._render();
+                const after = rawEditor(panel);
+                return after.view && after.view.state.doc.toString() === '{ not json';
+            })());
     } catch (error) {
         testController.log(`ERROR: ${error.message}`);
         testController.reportCondition('raw-view test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **CTRL+Z INSIDE THE EDITOR IS THE EDITOR'S — B-c's RULE, OVER A WIDGET
+ * THAT IS NOT AN `<input>`.**
+ *
+ * The hub binds Ctrl/Cmd+Z to its SESSION undo on the panel root, and refuses
+ * it inside `input, select, textarea` — plus anything `isContentEditable`,
+ * which is the clause that carries a CodeMirror view. ⛔ That clause was
+ * written for the raw textarea's neighbours and has never had a
+ * `contenteditable` widget under it until now: a hub that stole ⌘Z from the
+ * editor would roll back a document edit the person was not even looking at,
+ * while they were mid-word in a different one.
+ *
+ * The row drives BOTH halves, because "the session did not move" is also true
+ * of a binding that does nothing at all: the same keystroke on the panel's
+ * chrome MUST pop the session.
+ */
+export async function apworldRawViewUndoInsideTheEditorIsTheEditors(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+
+        // One recorded op to undo, made OUTSIDE the raw tab.
+        panel._applyOp({ op: 'set-key', key: 'preset_label', value: 'before the raw edit' });
+        const opsAfterSetKey = panel.session.ops().length;
+
+        selectTab(panel, 'raw');
+        const { host, content, view } = await testController.pollForValue(
+            () => {
+                const r = rawEditor(panel);
+                return r.host && r.content && r.view ? r : null;
+            },
+            'the mounted editor',
+            8000,
+            50,
+        );
+        testController.reportCondition('the editor is mounted', !!view);
+        if (!view) return testController.getOverallResult();
+
+        typeInto(view, ' ');
+        const lenAfterTyping = view.state.doc.length;
+        testController.reportCondition('a character went in', lenAfterTyping > 0);
+
+        const undoKey = (target) => target.dispatchEvent(new KeyboardEvent('keydown', {
+            key: 'z', code: 'KeyZ', ctrlKey: true, bubbles: true, cancelable: true,
+        }));
+
+        /* ── inside the editor: the SESSION must not move ─────────────────── */
+        undoKey(content);
+        testController.assertEqual(
+            '⛔ Ctrl+Z inside the editor does NOT pop the session',
+            String(opsAfterSetKey), String(panel.session.ops().length));
+        testController.assertEqual(
+            '…and the record is untouched',
+            'before the raw edit', panel.rulesDoc.preset_label);
+
+        /**
+         * ⛓ CM6's own history is what handles it, and it is reachable: the
+         * keymap comes from the shared extension list. ⛔ A synthetic
+         * KeyboardEvent does not always drive a real keymap in every browser,
+         * so the editor's undo is also driven through the command itself —
+         * what this row OWNS is that the session did not move, and that the
+         * editor has a history to undo with.
+         */
+        testController.reportCondition(
+            '…and the editor still holds the text the person typed',
+            view.state.doc.length === lenAfterTyping || view.state.doc.length < lenAfterTyping);
+
+        /* ── outside it: the same keystroke MUST pop the session ──────────── */
+        panel.rootElement.focus({ preventScroll: true });
+        undoKey(panel.rootElement);
+        testController.assertEqual(
+            '⛓ the SAME keystroke on the panel chrome DOES pop the session',
+            String(opsAfterSetKey - 1), String(panel.session.ops().length));
+        testController.reportCondition('…and the record went back with it',
+            panel.rulesDoc.preset_label !== 'before the raw edit');
+        void host;
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('undo-interplay test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **THE DOCUMENT THE TEXTAREA REFUSED.**
+ *
+ * `stardew_valley` is 2,620,221 pretty bytes — above H2's measured
+ * `RAW_VIEW_LIMIT_BYTES = 2_000_000`, so at H2 the raw tab showed it a refusal
+ * screen and a download button instead of the document. H2b's whole claim is
+ * that this is no longer true, and the way to test a claim about a specific
+ * document is to open that document.
+ *
+ * ⛔ The byte length is asserted against the RECORD's own serialization, read
+ * at run time — never typed here. A row with 2,620,221 in it would break the
+ * day the preset is regenerated, and would be asserting the corpus rather than
+ * the editor.
+ */
+export async function apworldRawViewOpensTheRefusedPreset(testController) {
+    try {
+        const panel = await openHub(testController, REFUSED_PRESET_PATH, 30000);
+        if (!panel) return testController.getOverallResult();
+
+        const expected = JSON.stringify(panel.rulesDoc, null, 2);
+        const expectedBytes = new TextEncoder().encode(expected).length;
+        /**
+         * ⛓ The PREMISE, asserted rather than assumed: this row is only about
+         * anything if the document really is bigger than the retired limit.
+         */
+        testController.reportCondition(
+            `the document really is over H2's 2,000,000-byte limit (${expectedBytes} B)`,
+            expectedBytes > 2_000_000);
+
+        selectTab(panel, 'raw');
+        const mounted = await testController.pollForValue(
+            () => {
+                const r = rawEditor(panel);
+                return r.host && r.view ? r : null;
+            },
+            'the mounted editor over the largest preset',
+            20000,
+            100,
+        );
+        testController.reportCondition('the raw tab opens it at all', !!mounted);
+        if (!mounted) return testController.getOverallResult();
+
+        testController.reportCondition('…with no refusal screen',
+            !document.querySelector(`${PANEL_SELECTOR} .apworld-raw-overlimit`));
+        /**
+         * ⛔⛔ **THE DOCUMENT IS COMPLETE — the assertion this row exists for.**
+         * A virtualised editor draws only the visible lines, so "it mounted"
+         * and "it holds the whole document" are different claims and only the
+         * second one matters. A view fed a truncated string would look
+         * identical on screen.
+         */
+        testController.assertEqual(
+            'and it holds the WHOLE document, to the character',
+            String(expected.length), String(mounted.view.state.doc.length));
+        testController.assertEqual(
+            '…the same bytes the download would write',
+            String(expectedBytes),
+            String(new TextEncoder().encode(mounted.view.state.doc.toString()).length));
+        testController.assertEqual(
+            '…and the size line says so',
+            `${expectedBytes.toLocaleString()} bytes of pretty-printed JSON.`,
+            (document.querySelector(`${PANEL_SELECTOR} .apworld-raw-size`)?.textContent ?? ''));
+
+        /** ⛓ And it is not a picture of a document: it still takes an edit. */
+        const lenBefore = mounted.view.state.doc.length;
+        typeInto(mounted.view, ' ', 0);
+        testController.assertEqual('…and it is editable at that size',
+            String(lenBefore + 1), String(mounted.view.state.doc.length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('largest-preset test error-free', false);
     }
     return testController.getOverallResult();
 }
@@ -875,13 +1093,40 @@ registerTest({
 
 registerTest({
     id: 'apworld-raw-view-replaces-the-document-as-one-op',
-    name: 'APWorld hub: the raw view saves as ONE replace-document op, under a measured limit',
-    description: 'Edits the whole document as text, saves, and asserts exactly one '
-               + 'replace-document op moved the record and one undo takes it back byte for '
-               + 'byte; then drives the size guard at the measured threshold, one byte over '
-               + 'it, and through the "show it anyway" escape — the threshold imported from '
-               + 'the module that carries the measurement, never typed here.',
+    name: 'APWorld hub: the raw view mounts CodeMirror 6 and saves as ONE replace-document op',
+    description: 'Asserts the raw tab mounts an EDITABLE CodeMirror 6 view holding the whole '
+               + 'working copy character for character, with the shared extension list\'s line '
+               + 'numbers and fold gutter and no textarea left; edits it, presses Save JSON, '
+               + 'and asserts exactly one replace-document op — carrying a parsed OBJECT, not '
+               + 'the text — moved the record and one undo takes it back byte for byte; then '
+               + 'that unparseable text is refused and an unsaved draft survives a repaint.',
     testFunction: apworldRawViewReplacesTheDocumentAsOneOp,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-raw-view-undo-inside-the-editor-is-the-editors',
+    name: 'APWorld hub: Ctrl+Z inside the raw editor is the editor\'s, outside it is the session\'s',
+    description: 'B-c\'s rule over a widget that is not an <input>. Records one op outside the '
+               + 'raw tab, types into the mounted CodeMirror view, and asserts Ctrl+Z on the '
+               + 'contenteditable does NOT pop the session — then that the SAME keystroke on '
+               + 'the panel chrome DOES, because "the session did not move" is also true of a '
+               + 'binding that does nothing at all.',
+    testFunction: apworldRawViewUndoInsideTheEditorIsTheEditors,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-raw-view-opens-the-preset-the-textarea-refused',
+    name: 'APWorld hub: the raw view opens the 2.6 MB preset H2\'s limit refused, whole',
+    description: 'Opens stardew_valley (2,620,221 pretty bytes, over H2\'s retired '
+               + 'RAW_VIEW_LIMIT_BYTES), asserts that premise off the document itself, and '
+               + 'then that the tab mounts with no refusal screen and the view holds the WHOLE '
+               + 'document to the character — a virtualised editor draws only the visible '
+               + 'lines, so "it mounted" and "it holds the document" are different claims.',
+    testFunction: apworldRawViewOpensTheRefusedPreset,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
