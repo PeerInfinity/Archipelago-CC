@@ -22,14 +22,21 @@
  *
  * What it asserts:
  *   1. loop_costs loaded → loop mode auto-enabled.
- *   2. A loops queue over the chain, once started, DELEGATES maze
+ *   2. Every maze block in the queue is set to BOT, and reads back as
+ *      Bot — see the ⛓⛓ note at the setter. Without this the run
+ *      witnesses nothing at all.
+ *   3. A loops queue over the chain, once started, DELEGATES maze
  *      actions to the substrate walker: mana drains in MANY SMALL
  *      per-tile decrements (the generic queue path charges once per
  *      action — coarse), and region XP accrues 1:1 alongside.
- *   3. Total chain cost exceeds max mana → the walker's OOM reset
+ *   4. Total chain cost exceeds max mana → the walker's OOM reset
  *      fires mid-run: loopResetCount increments, mana refills to max,
  *      the player teleports to the resolved start region, and loops
  *      receives completed:false (queue processing stops).
+ *   5. The queue walked the WHOLE chain: every region including the
+ *      last was entered at some point in the run. The parked (default)
+ *      run freezes in the first maze region and never reaches it, so
+ *      this is the claim that most directly separates the two.
  *
  * Prereq: dev server on :8000 (python -m http.server 8000).
  * Run: node scripts/procgen/verify-maze-loop-mana.mjs
@@ -110,6 +117,8 @@ async function state() {
             isProcessing: loopState?.isProcessing ?? null,
             manaEvents: window.__manaEvents ?? [],
             substrateCompleted: window.__substrateCompleted ?? [],
+            regionsEntered: window.__regionsEntered ?? [],
+            regionLog: window.__regionLog ?? [],
         };
     });
 }
@@ -156,6 +165,38 @@ async function main() {
         }, 'verify-maze-loop');
         eventBus.subscribe('loops:substrateActionCompleted', (d) => {
             window.__substrateCompleted.push(!!d?.completed);
+        }, 'verify-maze-loop');
+        /**
+         * ⛓⛓ REGION ENTRIES ARE READ FROM THE EVENT STREAM, NEVER SAMPLED —
+         * TWO OF THIS SCRIPT'S CLAIMS ARE ABOUT TRANSIENTS. Measured on the
+         * Bot-mode run this instrument now drives, the OOM reset's teleport
+         * and the queue's next move land in the SAME millisecond:
+         *     +1917ms region_2_3->region_2_2 … resets 1 [fromReset]
+         *     +1917ms region_2_2->region_3_3 … resets 1
+         * A 500 ms poll on `getCurrentRegion()` therefore never observes the
+         * player standing in the reset target, and the old
+         * `teleport back to start region` wait timed out on a teleport that
+         * had happened perfectly. The same applies to "did the chain get
+         * walked": where the player HAPPENS to be at the end says nothing
+         * about how far the queue got.
+         */
+        window.__regionsEntered = [];
+        window.__regionLog = [];
+        const t0 = Date.now();
+        const { getGameStateSingleton } = await import('./modules/gameState/singleton.js');
+        eventBus.subscribe('gameState:regionChanged', (d) => {
+            if (!d?.newRegion) return;
+            window.__regionsEntered.push(d.newRegion);
+            const g = getGameStateSingleton();
+            window.__regionLog.push({
+                t: Date.now() - t0,
+                from: d.oldRegion ?? null,
+                to: d.newRegion,
+                mana: g.getCurrentMana(),
+                maxMana: g.getMaxMana(),
+                resets: g.getLoopResetCount(),
+                fromReset: d.fromReset === true,
+            });
         }, 'verify-maze-loop');
     });
 
@@ -215,6 +256,60 @@ async function main() {
     const before = await state();
     console.log(`  mana before start: ${before.currentMana}/${before.maxMana}`);
 
+    /**
+     * ⛓⛓ EVERY MAZE BLOCK IS SET TO **BOT** — WITHOUT IT THIS RUN WITNESSES
+     * NOTHING, AND THAT IS THE APP'S DESIGN, NOT A BUG (⚖ user, 2026-09-05).
+     * A queue block with no explicit mode falls through to
+     * `loopState.defaultBlockMode`, which is **`record`** since `47c3a7f346`
+     * (2026-07-23, loops M4), and `_processFrame` (`loopState.js:1220`) PARKS a
+     * manual/record block for live play — `_handleManualRegionEntry` calls
+     * `stopProcessing()`. `05979752fb` (2026-07-23, loops M6) then deleted the
+     * unconditional delegation dispatch, leaving its tombstone at
+     * `loopState.js:1314`: substrate delegation — the exact seam this
+     * instrument exists to observe — is reachable ONLY from a `bot` block.
+     * This script was written `48458da2bc` (2026-07-17), six days before both.
+     *
+     * Diagnosed at procgen verify tier V2b; V3a is the repair. Measured on the
+     * same fixture and queue, default vs forced Bot: 1 vs **11** manaChanged
+     * events; no per-tile drops vs **16.67, 13.75, 13.75, 13.75**; all-zero XP
+     * vs `region_2_2` 16.67 / `region_2_3` 41.25 / `region_3_3` 60;
+     * `substrateActionCompleted` `[]` vs `[true,true,true,false,true]`;
+     * `loopResetCount` 0 vs **1**; frozen in `region_2_2` at index 1 vs the
+     * whole chain walked to `region_3_3`.
+     *
+     * `mazeBlockModeTests.js:212` is the in-app precedent — the green maze
+     * block-mode rows are green BECAUSE they set a mode. The read-back below
+     * is the row that reds if this is ever left at the default again: it fails
+     * HERE, by name, instead of 180 s later as a mana timeout that reads like
+     * the walker never charging.
+     */
+    const modes = await page.evaluate(async ([chain]) => {
+        const { centralRegistry } = await import('./app/core/centralRegistry.js');
+        const loopState = centralRegistry.getPublicFunction('loops', 'getLoopState')?.();
+        if (!loopState) return null;
+        // The public "set all" control: it walks the queue's resolved blocks
+        // and skips any region whose substrate can't offer the mode, so it
+        // cannot silently claim a block it did not set.
+        const changed = loopState.setAllBlockModes('bot');
+        const readBack = {};
+        for (const region of chain) readBack[region] = loopState.getBlockMode(region, 1);
+        return { changed, readBack };
+    }, [plan.chain]);
+    if (!modes) fail('loops getLoopState() unavailable — cannot set block modes');
+    const notBot = Object.entries(modes.readBack).filter(([, m]) => m !== 'bot');
+    if (notBot.length > 0) {
+        fail('maze blocks did not read back as Bot after setAllBlockModes(\'bot\'): '
+            + JSON.stringify(modes.readBack)
+            + ' — a non-Bot maze block PARKS for live play (loopState.js:1220) and'
+            + ' delegation never dispatches (M6 tombstone, loopState.js:1314).');
+    }
+    if (modes.changed < plan.chain.length) {
+        fail(`setAllBlockModes('bot') changed ${modes.changed} block(s), expected at least `
+            + `${plan.chain.length} (one per chain region)`);
+    }
+    console.log(`  ✓ every maze block set to Bot (${modes.changed} changed; read back `
+        + `${JSON.stringify(modes.readBack)})`);
+
     await page.evaluate(async () => {
         const { centralRegistry } = await import('./app/core/centralRegistry.js');
         centralRegistry.getPublicFunction('loops', 'getLoopState')?.().startProcessing();
@@ -251,18 +346,55 @@ async function main() {
         const gap = after.maxMana - after.currentMana;
         if (gap > 30) fail(`reset did not refill mana: ${after.currentMana}/${after.maxMana}`);
     }
-    await waitFor('teleport back to start region', async () => {
-        const s = await state();
-        return s.currentRegion === plan.startRegion;
-    }, 30000);
-    if (!after.substrateCompleted.includes(false)) {
-        fail('loops never received completed:false from the interrupted walk');
-    }
+    const resetTarget = await page.evaluate(async () => {
+        const { centralRegistry } = await import('./app/core/centralRegistry.js');
+        return centralRegistry.getPublicFunction?.('procgenPlayer', 'getResolvedStartRegion')?.() ?? null;
+    });
+    console.log(`  reset target (procgenPlayer.getResolvedStartRegion): ${resetTarget}`);
+    // The teleport is asserted on the EVENT, with its `fromReset` flag — see
+    // the ⛓⛓ note at the subscription. Bounded, because the reset's own
+    // regionChanged can land a poll after `loopResetCount` does.
+    const teleport = await waitFor(`the reset teleported to ${resetTarget} (regionChanged fromReset)`,
+        async () => {
+            const s = await state();
+            return (s?.regionLog ?? []).find((e) => e.fromReset && e.to === resetTarget) ?? null;
+        }, 30000);
+    const fmt = (e) => `+${e.t}ms ${e.from ?? 'null'}->${e.to} mana ${e.mana.toFixed(2)}/${e.maxMana}`
+        + ` resets ${e.resets}${e.fromReset ? ' [fromReset]' : ''}`;
+    console.log('  region log:\n    '
+        + ((await state()).regionLog ?? []).map(fmt).join('\n    '));
+    console.log(`  ✓ reset teleport: ${fmt(teleport)}`);
+    // Bounded rather than read off `after`: `loopResetCount` and the
+    // interrupted walk's `substrateActionCompleted` are two publishes, and
+    // the snapshot that first saw the reset need not carry the second yet.
+    const completed = await waitFor('loops received completed:false from the interrupted walk',
+        async () => {
+            const s = await state();
+            return s?.substrateCompleted?.includes(false) ? s.substrateCompleted : null;
+        }, 30000);
+    console.log(`  ✓ substrateActionCompleted: [${completed.join(', ')}]`);
     await waitFor('queue processing stopped after reset', async () => {
         const s = await state();
         return s.isProcessing === false;
     }, 30000);
-    console.log(`  ✓ OOM reset: count ${after.loopResetCount}, refilled, teleported to ${plan.startRegion}, completed:false delivered, queue stopped`);
+    console.log(`  ✓ OOM reset: count ${after.loopResetCount}, refilled, teleported to ${resetTarget}, completed:false delivered, queue stopped`);
+
+    // (5) The whole chain was walked. Read from the CUMULATIVE region-entry
+    // log, so this is order-independent: the reset teleports mid-chain and
+    // the queue carries on from there (measured: `region_2_3->region_2_2
+    // [fromReset]` then `region_2_2->region_3_3`, same millisecond), so where
+    // the player HAPPENS to stand at the end says nothing about how far the
+    // queue got. The parked (default-mode) run enters exactly one maze region
+    // and stops (V2b), so the last chain region is the sharpest single
+    // discriminator between the two arms there is.
+    const walked = await waitFor(`the queue walked the whole chain (last region ${plan.chain[plan.chain.length - 1]} entered)`,
+        async () => {
+            const s = await state();
+            return s?.regionsEntered?.includes(plan.chain[plan.chain.length - 1]) ? s : null;
+        }, 60000);
+    const missed = plan.chain.filter((r) => !walked.regionsEntered.includes(r));
+    if (missed.length > 0) fail(`chain regions never entered: ${missed.join(', ')}`);
+    console.log(`  ✓ chain walked: ${plan.chain.join(' -> ')} (entries: ${walked.regionsEntered.join(', ')})`);
 
     const errors = logs.filter((l) => l.startsWith('[pageerror]'));
     if (errors.length > 0) fail('page errors:\n  ' + errors.join('\n  '));
