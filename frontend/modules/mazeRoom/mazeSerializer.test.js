@@ -174,13 +174,16 @@ describe('⛓ serializeMazeWorld is the inverse of its module sibling', () => {
  * half of a round trip whose other half it took from here.
  *
  * ⚠ THE LAW IS ABOUT THE ENGINE, NOT ABOUT `procgenPipeline/` WHOLE. The H3b
- * brief asked for "no maze file imports `procgenPipeline/`"; MEASURED at the
- * slice, `mazeRoom/` has ELEVEN other pipeline imports across six files
- * (`regionAtlasCompiler`, `regionAtlasValidator`, `regionAtlasMazeProjection`,
- * `regionLibraryValidator`, `regionLibraryLoader`) — the ATLAS/LIBRARY
- * vocabulary, which the maze lab genuinely consumes and which no ruling has
- * moved. Asserting the broader claim would have been a red row, not a law. The
- * ENGINE is the one this slice emptied, and the count it names is 0.
+ * brief asked for "no maze file imports `procgenPipeline/`". DERIVED by parsing
+ * the specifiers (not by eyeballing a grep — the first pass here said "eleven"
+ * and was wrong): `mazeRoom/` made TWENTY `../procgenPipeline/` imports over
+ * eight files before this slice, of which four were the serializer. SIXTEEN
+ * remain, over six files, naming five modules — `regionAtlasCompiler`,
+ * `regionAtlasValidator`, `regionAtlasMazeProjection`, `regionLibraryValidator`,
+ * `regionLibraryLoader`: the ATLAS/LIBRARY vocabulary, which the maze lab
+ * genuinely consumes and which no ruling has moved. Asserting the broader claim
+ * would have been a red row, not a law. The ENGINE is the one this slice
+ * emptied, and the count it names is 0.
  *
  * ⛔ The roster is read off the DIRECTORY (trap 574's rule), so a maze file
  * added later joins this scan by existing.

@@ -10318,9 +10318,10 @@ from `mazeRoom/`, so loading the adapter catalog no longer drags the pipeline en
 **FIVE THINGS THE BRIEF GOT WRONG, all measured (plan §15.1).** (1) `spiralCells` is NOT a serializer
 dependency — it is the shuffled-spiral driver's generator, adjacent in the file and used once at the engine's
 own `:3268`; it stayed. The serializer's free identifiers are exactly four. (2) "the maze module imports
-NOTHING from `procgenPipeline/`" is unachievable: `mazeRoom/` holds **eleven** pipeline imports over six
-files, and only four were the serializer — the rest is the ATLAS / REGION-LIBRARY vocabulary the maze lab
-genuinely consumes. The law shipped is the true one: **no `mazeRoom/` file imports `procgenPipelineEngine`**,
+NOTHING from `procgenPipeline/`" is unachievable: DERIVED by parsing specifiers (the as-built's first figure,
+"eleven", was eyeballed off a grep and WRONG), `mazeRoom/` made **20** pipeline imports over **8** files
+before the move; four were the serializer, **16 remain over 6 files naming 5 modules** — the ATLAS /
+REGION-LIBRARY vocabulary the maze lab genuinely consumes. The law shipped is the true one: **no `mazeRoom/` file imports `procgenPipelineEngine`**,
 asserted over a roster read off the DIRECTORY. (3) The engine test's "10 `serializeMazeWorld` rows" did NOT
 move — that file never imported the serializer; all ten drive `buildPresetSidecars`, which dispatches through
 the registry and did not move, so the count is **203 unmoved**, exactly as plan §6's own pin said. ⇒ **a row
@@ -10346,8 +10347,8 @@ PASSED · `procgenDocs/` **452/452** · in-app `--mode=test-substrates --batch=f
 here.
 
 **For H4** (plan §15.7): there is no maze residue left in `procgenPipeline/` — §7b's tile-grid vocabulary is
-the whole of what is shared now. `mazeRoom/`'s remaining eleven pipeline imports are the atlas/library
-vocabulary and would be their OWN slice with its own ⚖ — five modules, not one function. **NEXT = H4, then H5.**
+the whole of what is shared now. `mazeRoom/`'s remaining **16** pipeline imports over 6 files are the
+atlas/library vocabulary and would be their OWN slice with its own ⚖ — five modules, not one function. **NEXT = H4, then H5.**
 
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
