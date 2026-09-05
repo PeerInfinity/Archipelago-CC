@@ -88,6 +88,16 @@ const TAB_FOR_KEY = Object.freeze(Object.fromEntries(
  *
  *     open({ record, player, key, value, onSave, eventBus, goToTab })
  *
+ * ⛓⛓ **`panelId` IS PART OF THE DECLARATION, AND IT IS NOT COSMETIC.** A door
+ * whose panel's module is not loaded in this app publishes `ui:activatePanel`
+ * into a `panelManager` that warns and returns — H5 measured two such rows
+ * already shipped, because `module-configs/modules.json` has `regionMarkingTool`
+ * and `editor` **disabled by default** (the marking tool is enabled under
+ * `?mode=flash`, which is where its own gate drives it). ⇒ the panel asks
+ * `centralRegistry.getAllPanelComponents()` whether that component type is
+ * registered and DISABLES the button with the reason in its `title`, rather
+ * than offering a control that does nothing. `null` = this door raises no panel.
+ *
  * `record` is the WORKING COPY (⚖ plan §1); `value` is this key's slice of it
  * (the selected player's, for a per-player key). `open` may be async — three of
  * the five doors import a panel module lazily.
@@ -132,6 +142,7 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
     region_atlas: Object.freeze({
         label: 'Open in the region marking tool',
         returns: 'op',
+        panelId: 'regionMarkingTool',
         note: 'This block is a REFERENCE to an atlas ({atlas_id, game, map_document}), not the '
             + 'atlas itself, and nothing resolves an atlas id back to its file — so the tool '
             + 'opens on the atlas it already holds (New / Load a .json there). Its Save comes '
@@ -142,12 +153,7 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
                 import('../procgenPipeline/regionAtlasCompiler.js'),
             ]);
             openRegionMarkingTool({
-                onSave: (atlas) => onSave({
-                    op: 'set-key',
-                    key,
-                    value: regionAtlasReference(atlas),
-                    scope: 'document',
-                }),
+                onSave: (atlas) => onSave(regionAtlasSetKeyOp(key, regionAtlasReference(atlas))),
             });
         },
     }),
@@ -160,6 +166,7 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
     procgen_metadata: Object.freeze({
         label: 'Open in the procgen pipeline',
         returns: 'document',
+        panelId: 'procgenPipelinePanel',
         note: 'Hands this working copy to the pipeline, which says what it can do with it — '
             + 'append a sphere, realise it top-down, or neither, quoting the engine\'s own '
             + 'refusal. Nothing comes back as an op: the pipeline\'s exit is its own "Open in '
@@ -188,6 +195,7 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
     loop_costs: Object.freeze({
         label: 'Open in the loops cost debugger',
         returns: 'none',
+        panelId: 'loopsCostDebuggerPanel',
         note: 'Plans this WORKING COPY\'s mana economy — the debugger reads the document you '
             + 'are editing, not the applied world (press "Use applied state" there to go back). '
             + 'It needs a sphere log: this document\'s own embedded one, or it says so. '
@@ -211,6 +219,7 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
     sphere_log: Object.freeze({
         label: 'Open the spoiler checklist',
         returns: 'none',
+        panelId: 'spoilerChecklistPanel',
         note: '⚠ APPLIED STATE: the checklist reads the sphere log the app has loaded '
             + '(`sphereState`), not this working copy — press Apply first if you want it to '
             + 'see your edits. Nothing comes back.',
@@ -227,12 +236,23 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
     preset_sidecars: Object.freeze({
         label: 'Go to the Regions tab',
         returns: 'op',
+        panelId: null,
         note: 'Edited PER REGION in the Regions tab: Edit ▸ opens that region\'s own editor '
             + '(H4b) and its save comes back as ONE `replace-region-sidecar`. There is no '
             + 'whole-block editor, deliberately.',
         open: async ({ goToTab }) => { goToTab('regions'); },
     }),
 });
+
+/**
+ * ⛓ The op the `region_atlas` door hands back, as a pure function so a node row
+ * can assert its shape without a DOM. The door's only other job is deriving the
+ * reference, which `regionAtlasCompiler.regionAtlasReference` owns and its own
+ * rows pin byte-equal to a full compile.
+ */
+export function regionAtlasSetKeyOp(key, reference) {
+    return { op: 'set-key', key, value: reference, scope: 'document' };
+}
 
 /** ⛓ The three answers a `returns` can carry, so nothing spells a fourth. */
 export const EDITOR_RETURN_KINDS = Object.freeze({

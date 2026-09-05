@@ -25,6 +25,7 @@ import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import {
     DOCUMENT_KEY_EDITORS,
     EDITOR_RETURN_KINDS,
+    regionAtlasSetKeyOp,
     KEYS_OWNED_BY_TAB,
     buildDocumentKeys,
     defaultPlayerOf,
@@ -221,6 +222,29 @@ describe('the editor slot — FILLED by H5', () => {
         + 'door is built on', () => {
         expect(DOCUMENT_KEY_EDITORS.region_atlas.note).toContain('REFERENCE');
         expect(DOCUMENT_KEY_EDITORS.region_atlas.note).toContain('atlas_id');
+    });
+
+    it('⛓⛓ every door that raises a panel DECLARES which one, so the hub can ask '
+        + 'whether this app even loads it', () => {
+        // ⛔ Measured, and the reason the field exists: `module-configs/modules.json`
+        //    has `regionMarkingTool` DISABLED in the default mode, so its door
+        //    would publish `ui:activatePanel` into a warn-and-return.
+        expect(DOCUMENT_KEY_EDITORS.region_atlas.panelId).toBe('regionMarkingTool');
+        expect(DOCUMENT_KEY_EDITORS.preset_sidecars.panelId).toBeNull();
+        for (const [key, editor] of Object.entries(DOCUMENT_KEY_EDITORS)) {
+            expect(Object.prototype.hasOwnProperty.call(editor, 'panelId'), key).toBe(true);
+        }
+    });
+
+    it('⛓ `regionAtlasSetKeyOp` is the op the marking tool\'s save becomes — one '
+        + 'document-scope set-key carrying the reference verbatim', () => {
+        const reference = { atlas_id: 'seedling-deadbeef', game: 'seedling' };
+        expect(regionAtlasSetKeyOp('region_atlas', reference)).toEqual({
+            op: 'set-key', key: 'region_atlas', value: reference, scope: 'document',
+        });
+        // ⛔ The reference goes in BY IDENTITY: the door derives it once, from
+        //    the stamped document, and nothing here re-shapes it.
+        expect(regionAtlasSetKeyOp('region_atlas', reference).value).toBe(reference);
     });
 
     it('⛓ the two APPLIED-state doors say so, and the working-copy ones do not '

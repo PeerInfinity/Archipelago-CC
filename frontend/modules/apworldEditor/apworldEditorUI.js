@@ -58,6 +58,14 @@ import {
   inspectRegionRoom, openRegionRoom, regionRoundTripOf, sidecarOf,
 } from './regionRoundTrip.js';
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
+/**
+ * ⛓⛓ H5 — **IS THAT PANEL EVEN IN THIS APP?** `ui:activatePanel` reaches a
+ * `panelManager` that warns and returns when the component type is not in the
+ * layout, so a link to a module `module-configs/modules.json` has DISABLED is a
+ * control that does nothing and says nothing. The component registry is the one
+ * place that knows: a module that never loaded never registered its panel.
+ */
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { applyRulesDocOp } from './rulesDocOps.js';
 import {
   buildDocumentKeys,
@@ -1558,6 +1566,24 @@ class ApworldEditorUI {
    * *"if I save over there, does it come back here as an undo step?"* Three
    * answers, spelled by `EDITOR_RETURN_KINDS` so nothing invents a fourth.
    */
+  /**
+   * ⛓ Why this door cannot be pressed, or null when it can. ⛔ It names the
+   * CONFIG FILE, because "not loaded" is a thing a person can fix in one line
+   * and a bare "nothing happened" is not.
+   */
+  _panelRefusal(panelId) {
+    if (!panelId) return null;
+    try {
+      if (centralRegistry.getAllPanelComponents().has(panelId)) return null;
+    } catch (err) {
+      log('warn', `Could not ask the registry about ${panelId}: ${err.message}`);
+      return null;
+    }
+    return `\`${panelId}\` is not loaded in this app — its module is disabled in `
+      + '`frontend/module-configs/modules.json` for this mode. (The region marking tool '
+      + 'is enabled under `?mode=flash`.)';
+  }
+
   _makeDocumentEditorLine(row) {
     const line = document.createElement('div');
     line.className = 'apworld-doc-editor';
@@ -1565,10 +1591,17 @@ class ApworldEditorUI {
       display: 'flex', alignItems: 'center', gap: '8px', margin: '5px 0 0',
       flexWrap: 'wrap',
     });
-    const btn = this._makeButton(row.editor.label, '#2e5f8a',
+    const refusal = this._panelRefusal(row.editor.panelId);
+    const btn = this._makeButton(row.editor.label, refusal ? '#444' : '#2e5f8a',
       () => this._openDocumentKeyEditor(row.key));
     btn.className = 'apworld-doc-editor-open';
     btn.dataset.docKey = row.key;
+    // ⛓ SHOWN, DISABLED, with the reason in the title — H4c's claim-12 shape.
+    //   Hiding it would make "this app does not carry that editor" and "this
+    //   block has no editor at all" look identical.
+    btn.disabled = !!refusal;
+    btn.style.opacity = refusal ? '0.45' : '1';
+    if (refusal) btn.title = refusal;
     line.appendChild(btn);
 
     const returns = document.createElement('span');
@@ -1667,6 +1700,12 @@ class ApworldEditorUI {
     const editor = DOCUMENT_KEY_EDITORS[key];
     if (!editor) {
       this._opMessage = `No dedicated editor is registered for \`${key}\`.`;
+      this._renderChrome();
+      return;
+    }
+    const refusal = this._panelRefusal(editor.panelId);
+    if (refusal) {
+      this._opMessage = `${editor.label}: ${refusal}`;
       this._renderChrome();
       return;
     }
@@ -2155,12 +2194,20 @@ class ApworldEditorUI {
       });
       head.appendChild(has);
     }
-    const open = this._makeButton('Open', row.target ? '#2e5f8a' : '#444',
+    // ⛓ H5 — a row whose panel this app does not load is DISABLED with the
+    //   reason in its title, exactly like the Document tab's door.
+    const notHere = row.target && (row.target.kind === 'panel'
+      ? this._panelRefusal(row.target.panelId)
+      : (row.target.kind === 'documentKeyEditor'
+        ? this._panelRefusal(DOCUMENT_KEY_EDITORS[row.target.key]?.panelId) : null));
+    const usable = !!row.target && !notHere;
+    const open = this._makeButton('Open', usable ? '#2e5f8a' : '#444',
       () => this._openLink(row));
     open.className = 'apworld-link-open';
     open.style.marginLeft = 'auto';
-    open.disabled = !row.target;
-    open.style.opacity = row.target ? '1' : '0.45';
+    open.disabled = !usable;
+    open.style.opacity = usable ? '1' : '0.45';
+    if (notHere) open.title = notHere;
     head.appendChild(open);
     box.appendChild(head);
 
@@ -2195,6 +2242,12 @@ class ApworldEditorUI {
       return;
     }
     if (target.kind === 'panel') {
+      const refusal = this._panelRefusal(target.panelId);
+      if (refusal) {
+        this._opMessage = `${row.label}: ${refusal}`;
+        this._renderChrome();
+        return;
+      }
       this.eventBus.publish('ui:activatePanel', { panelId: target.panelId });
       this._opMessage = `Opened ${row.label} (${target.panelId}). ⚠ Nothing happens if that `
         + 'panel is not in the current layout.';

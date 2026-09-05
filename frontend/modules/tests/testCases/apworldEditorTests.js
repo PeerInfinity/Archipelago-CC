@@ -51,6 +51,16 @@ import appEventBus from '../../../app/core/eventBus.js';
 import {
     openRegionInApworldEditor, APWORLD_EDITOR_SELECT_REGION,
 } from '../../bounceRegionEditor/index.js';
+/**
+ * ⛓⛓ H5 — **THE EXPECTATION FOR THE MARKING TOOL'S RETURN IS THE COMPILER'S
+ * OWN DERIVATION.** `regionAtlasReference` is what `compileRegionAtlas` writes
+ * into `rules.region_atlas`; a row that rebuilt those three fields by hand
+ * would agree with the door and say nothing about whether either agrees with
+ * the compiler.
+ */
+import { regionAtlasReference } from '../../procgenPipeline/regionAtlasCompiler.js';
+/** ⛓ H5 — the registry the Document row and the Links row both read. */
+import { DOCUMENT_KEY_EDITORS } from '../../apworldEditor/documentKeys.js';
 
 const PANEL_ID = 'apworldEditorPanel';
 const PANEL_SELECTOR = '.apworld-editor-panel';
@@ -112,6 +122,16 @@ const FOUR_PLAYER_P3_PATH =
 const SEEDLING_PRESET_PATH = './presets/seedling_atlas/AP_1/AP_1_rules.json';
 
 const SCHEMA_PATH = './schema/rules.schema.json';
+
+/**
+ * ⛓ H5 — the only committed documents that carry `region_atlas`, and it is a
+ * REFERENCE (`{atlas_id, game, map_document}`), never an atlas. Measured over
+ * the corpus: three carriers, all three the same three fields.
+ */
+const REGION_ATLAS_PRESET_PATH = './presets/seedling_playthrough/AP_1/AP_1_rules.json';
+/** ⛓ H5 — carries `loop_costs` AND its own embedded `sphere_log`. */
+const LOOP_COSTS_PRESET_PATH =
+    './presets/jta_schedule_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 
 /**
  * Load the preset, raise the panel, and hand back its live instance.
@@ -2055,6 +2075,348 @@ registerTest({
                + 'baked AP location names the library capture strips, and be folded away by '
                + 'ONE Undo.',
     testFunction: apworldEditOpensTheLabDoorAndItsSaveIsOneOp,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * H5 — THE SIDECAR-BLOCK LINKS
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ The Document tab's door for one key, through the real button. */
+async function pressDocumentKeyEditor(testController, panel, key) {
+    selectTab(panel, 'document');
+    const btn = await testController.pollForValue(
+        () => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${key}"] .apworld-doc-editor-open`),
+        `the ${key} row's editor button`,
+        8000,
+        50,
+    );
+    testController.reportCondition(`the ${key} row offers its dedicated editor`, !!btn);
+    if (btn) {
+        testController.assertEqual(
+            `and the button carries the REGISTRY's label, not a second copy`,
+            DOCUMENT_KEY_EDITORS[key].label, btn.textContent);
+        btn.click();
+    }
+    return btn;
+}
+
+/**
+ * ⛓⛓⛓ **A DOOR TO A MODULE THIS APP DOES NOT LOAD SAYS SO.**
+ *
+ * ⛔ **MEASURED, and it is why this row is not the end-to-end one the brief
+ * asked for**: `frontend/module-configs/modules.json` has `regionMarkingTool`
+ * `"enabled": false`, so in the default mode — the one the in-app runner drives
+ * — the tool's module never registers its panel, `openRegionMarkingTool`
+ * publishes `ui:activatePanel` from an unregistered publisher, and
+ * `panelManager` would warn and return anyway. The first shape of this row
+ * waited 8 s for a panel that cannot exist and reported STARVED.
+ *
+ * A control that does nothing and says nothing is the defect; the button is
+ * therefore SHOWN, DISABLED, with the reason in its `title` (H4c's claim-12
+ * shape). The end-to-end save is proven where the tool actually runs:
+ * `scripts/procgen/verify-region-marking-tool.mjs`, under `?mode=flash`.
+ */
+export async function apworldRegionAtlasDoorRefusesAModuleThisAppLacks(testController) {
+    try {
+        const panel = await openHub(testController, REGION_ATLAS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        // The premise, read off the document rather than assumed: a REFERENCE.
+        testController.assertEqual(
+            'the document carries region_atlas as a three-field REFERENCE',
+            'atlas_id,game,map_document',
+            Object.keys(panel.rulesDoc.region_atlas ?? {}).sort().join(','));
+
+        selectTab(panel, 'document');
+        const btn = await testController.pollForValue(
+            () => document.querySelector(
+                `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="region_atlas"] `
+                + '.apworld-doc-editor-open'),
+            'the region_atlas row\'s editor button',
+            8000,
+            50,
+        );
+        testController.reportCondition('the region_atlas row offers its door', !!btn);
+        if (!btn) return testController.getOverallResult();
+
+        testController.assertEqual(
+            'the button carries the REGISTRY\'s label, not a second copy',
+            DOCUMENT_KEY_EDITORS.region_atlas.label, btn.textContent);
+
+        /**
+         * ⛓ The premise again, this time about the APP rather than the
+         * document: the registry is the one place that knows whether a module
+         * loaded, and a module that never loaded never registered its panel.
+         */
+        const { centralRegistry } = await import('../../../app/core/centralRegistry.js');
+        const loaded = centralRegistry.getAllPanelComponents().has('regionMarkingTool');
+        testController.reportCondition(
+            'the marking tool is NOT loaded in this mode (modules.json disables it)', !loaded);
+
+        testController.assertEqual(
+            'so the door is DISABLED rather than doing nothing', 'true', String(btn.disabled));
+        testController.assertEqual(
+            'and its title names the panel and the file to fix',
+            'true',
+            String(btn.title.includes('regionMarkingTool') && btn.title.includes('modules.json')));
+
+        // ⛔ And the returns line is still printed: a person must be able to see
+        //    what the door WOULD do, not only that it is shut.
+        const returns = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="region_atlas"] `
+            + '.apworld-doc-editor-returns');
+        testController.assertEqual(
+            'the row still says a save would come back as one op',
+            'true', String(!!returns && returns.textContent.startsWith('returns: op')));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('region_atlas door test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **THE `procgen_metadata` DOOR: the pipeline says what it can do.**
+ *
+ * ⛔ The expected sentence is not typed here — the row reads the ENGINE's own
+ * refusal for this document (`sphereRebuildRefusal`) and asserts the panel
+ * printed it. A typed string would pass while the panel invented a summary.
+ */
+export async function apworldProcgenMetadataDoorNamesWhatThePipelineCanDo(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const { sphereRebuildRefusal } = await import(
+            '../../procgenPipeline/procgenPipelineEngine.js');
+        const refusal = sphereRebuildRefusal(panel.rulesDoc, { playerId: panel.playerId });
+        testController.reportCondition(
+            'this document is NOT sphere-appendable, so the answer is top-down', !!refusal);
+
+        await pressDocumentKeyEditor(testController, panel, 'procgen_metadata');
+
+        const msg = await testController.pollForValue(
+            () => {
+                const el = document.querySelector('.procgen-pipeline-panel .procgen-pipeline-message');
+                return el && el.textContent.startsWith('Adopted ') ? el : null;
+            },
+            'the pipeline panel\'s answer to the hand-off',
+            8000,
+            50,
+        );
+        testController.reportCondition('the pipeline answered the hand-off', !!msg);
+        if (!msg) return testController.getOverallResult();
+
+        testController.assertEqual(
+            'it names the door it came from',
+            'true', String(msg.textContent.includes('hand-off (the APWorld editor)')));
+        testController.assertEqual(
+            'it says TOP-DOWN FROM THIS',
+            'true', String(msg.textContent.includes('TOP-DOWN FROM THIS')));
+        testController.assertEqual(
+            'and it QUOTES the engine\'s own refusal rather than summarising it',
+            'true', String(msg.textContent.includes(refusal)));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('procgen_metadata door test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **THE `loop_costs` DOOR: the cost debugger plans the WORKING COPY.**
+ * Plan §4 priced this link as "Apply, then open"; the panel's status line is
+ * where that is now false, and it says which world the numbers describe.
+ */
+export async function apworldLoopCostsDoorHandsTheWorkingCopyToTheDebugger(testController) {
+    try {
+        const panel = await openHub(testController, LOOP_COSTS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        selectTab(panel, 'document');
+
+        // The per-region table, and what it says about the corpus.
+        const summary = await testController.pollForValue(
+            () => document.querySelector(
+                `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="loop_costs"] `
+                + '.apworld-loop-costs-summary'),
+            'the loop_costs summary line',
+            8000,
+            50,
+        );
+        testController.reportCondition('the loop_costs row draws a cost summary', !!summary);
+        const regionCount = Object.keys(panel.rulesDoc.regions[panel.playerId] ?? {}).length;
+        testController.assertEqual(
+            'and it counts the priced regions against the world\'s own, derived',
+            'true',
+            String(!!summary && summary.textContent.startsWith(
+                `${Object.keys(panel.rulesDoc.loop_costs.regions ?? {}).length} of ${regionCount} region`)));
+
+        await pressDocumentKeyEditor(testController, panel, 'loop_costs');
+
+        const status = await testController.pollForValue(
+            () => {
+                const el = document.querySelector('.cost-debugger-panel .cd-status');
+                // ⛔ `[working copy` — the BRACKETED prefix, which only the
+                //   finished adoption prints. A poll for the bare words was
+                //   satisfied by the panel's own progress line ("Adopting the
+                //   working copy · … for player 1…"), which names the door but
+                //   not yet the counts: measured, the first shape of this row
+                //   read that line and then failed on the region count.
+                return el && el.textContent.includes('[working copy') ? el : null;
+            },
+            'the cost debugger, planning the working copy',
+            8000,
+            50,
+        );
+        testController.reportCondition('the debugger adopted the working copy', !!status);
+        if (!status) return testController.getOverallResult();
+
+        testController.assertEqual(
+            'it names the door and the DOCUMENT\'s own region count',
+            'true',
+            String(status.textContent.includes('working copy · the APWorld editor')
+                && status.textContent.includes(`${regionCount} regions`)));
+
+        const backBtn = document.querySelector('.cost-debugger-panel .cd-btn-applied');
+        testController.reportCondition(
+            'and there is a named way back to applied state',
+            !!backBtn && backBtn.style.display !== 'none');
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('loop_costs door test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **⚖ *"even if the current rules.json file doesn't contain any relevant
+ * data for them"*.** A document with NO `region_atlas` must still carry that
+ * block's row in the Links tab — through the SAME registry entry the Document
+ * tab uses, which is what makes the two labels one string — and the row must
+ * say both things a reader needs: that this document has nothing for it, and
+ * (here) that this app does not load its editor either. Two different absences,
+ * named apart.
+ */
+export async function apworldLinksTabReachesAnEditorWithNoData(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        testController.assertEqual(
+            'this document has no region_atlas at all',
+            'false',
+            String(Object.prototype.hasOwnProperty.call(panel.rulesDoc, 'region_atlas')));
+
+        selectTab(panel, 'links');
+        const row = await testController.pollForValue(
+            () => document.querySelector(
+                `${PANEL_SELECTOR} .apworld-link-row[data-link-id="key:region_atlas"]`),
+            'the Links tab\'s region_atlas row',
+            8000,
+            50,
+        );
+        testController.reportCondition('the Links tab carries the block-editor row', !!row);
+        if (!row) return testController.getOverallResult();
+
+        testController.assertEqual(
+            'it uses the REGISTRY\'s label — the same string the Document tab shows',
+            'true', String(row.textContent.includes(DOCUMENT_KEY_EDITORS.region_atlas.label)));
+        testController.assertEqual(
+            'and it says this document has nothing for it',
+            'true', String(row.textContent.includes('no data here')));
+
+        // ⛓ The OTHER absence, and it is a different sentence: the editor's
+        //   module is disabled in this mode, so the row is disabled too.
+        const open = row.querySelector('.apworld-link-open');
+        testController.assertEqual(
+            'the row is disabled because this app does not load that editor',
+            'true', String(!!open && open.disabled && open.title.includes('regionMarkingTool')));
+
+        /**
+         * ⛓⛓ And a row whose editor IS loaded stays OPENABLE — otherwise this
+         * row would pass on a tab that disabled everything. `sphere_log`'s
+         * spoiler checklist is enabled in this mode.
+         */
+        const live = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-link-row[data-link-id="key:sphere_log"] .apworld-link-open`);
+        testController.assertEqual(
+            'while a row whose editor IS loaded is still openable',
+            'true', String(!!live && !live.disabled));
+        live.click();
+        testController.assertEqual(
+            'and pressing it says which panel it raised',
+            'true',
+            String((panel._opMessage || '').includes(DOCUMENT_KEY_EDITORS.sphere_log.label)));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('links-with-no-data test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-region-atlas-door-refuses-a-module-this-app-lacks',
+    name: 'APWorld hub: the region_atlas door is disabled by name when its editor is not loaded',
+    description: 'MEASURED: `module-configs/modules.json` disables `regionMarkingTool` in the '
+               + 'default mode, so the door would publish `ui:activatePanel` into a warn-and-'
+               + 'return. The row asserts the block really is a three-field REFERENCE, that '
+               + 'the button carries the REGISTRY\'s own label, that the component registry '
+               + 'really does not hold that panel, and that the button is therefore SHOWN and '
+               + 'DISABLED with the panel and the config file named in its title — while still '
+               + 'printing what a save WOULD come back as. The end-to-end save lives in '
+               + '`verify-region-marking-tool.mjs`, under `?mode=flash`, where the tool runs.',
+    testFunction: apworldRegionAtlasDoorRefusesAModuleThisAppLacks,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-procgen-metadata-door-names-what-the-pipeline-can-do',
+    name: 'APWorld hub: the procgen_metadata door hands the working copy over and the pipeline answers',
+    description: 'Presses the Document tab\'s procgen_metadata button and asserts the pipeline '
+               + 'panel adopted the hand-off, named the door it came from, said what it can '
+               + 'build from the document, and QUOTED the engine\'s own refusal for the half '
+               + 'it cannot — the expected sentence read from `sphereRebuildRefusal` at run '
+               + 'time rather than typed here.',
+    testFunction: apworldProcgenMetadataDoorNamesWhatThePipelineCanDo,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-loop-costs-door-hands-the-working-copy-to-the-debugger',
+    name: 'APWorld hub: the loop_costs door makes the cost debugger plan the WORKING COPY',
+    description: 'Asserts the loop_costs row draws a per-region cost summary counted against '
+               + 'the document\'s own regions, then presses its door and asserts the loops '
+               + 'cost debugger is planning the handed-over document rather than applied '
+               + 'state — its status line naming the door and the document\'s region count, '
+               + 'and a named way back to applied state on offer.',
+    testFunction: apworldLoopCostsDoorHandsTheWorkingCopyToTheDebugger,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-links-tab-reaches-an-editor-with-no-data',
+    name: 'APWorld hub: the Links tab opens a block editor for a key this document does not have',
+    description: 'On a document with no `region_atlas` at all, the Links tab must still carry '
+               + 'that block\'s row — with the REGISTRY\'s own label, the same string the '
+               + 'Document tab shows — and name TWO different absences apart: this document '
+               + 'has no data for it, and this app does not load its editor. A row whose '
+               + 'editor IS loaded (`sphere_log`) must stay openable and say which panel it '
+               + 'raised, so the claim is not "the tab disabled everything".',
+    testFunction: apworldLinksTabReachesAnEditorWithNoData,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

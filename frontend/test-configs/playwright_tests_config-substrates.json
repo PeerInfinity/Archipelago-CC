@@ -454,6 +454,30 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "APWorld hub H4c. The reverse link that needs no protocol: the bounce region editor and the hub are panels in ONE app, so the door names a region and raises the hub, carrying no document at all (the level in that panel is a working copy nobody saved back). Driven through the bounce module's OWN publisher, not a hand-written publish — the button and the hub's subscriber only meet there. Four answers, not one claim four times: a region of the slot the hub is showing is selected and its block marked; a region no slot holds is SAID SO rather than switching to a tab with nothing highlighted; a named slot the document has moves the selector FIRST and then selects (through _chosenPlayer, because _syncPlayer re-derives playerId on every render and would otherwise undo the move inside the door's own re-render); and a slot the document does not have is refused by name with the hub staying where it was."
+        },
+        {
+            "id": "apworld-region-atlas-door-refuses-a-module-this-app-lacks",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H5. Two measurements meet here. (1) The region_atlas block in a rules.json is a REFERENCE ({atlas_id, game, map_document}) and never an atlas \u2014 all three committed carriers \u2014 and nothing resolves an atlas id back to its file. (2) module-configs/modules.json disables regionMarkingTool in the DEFAULT mode, so the door would publish ui:activatePanel into a warn-and-return: the first shape of this row waited 8 s for a panel that cannot exist and reported STARVED. The button is therefore SHOWN, DISABLED, with the panel and the config file in its title, while still printing what a save WOULD come back as. The end-to-end save lives in verify-region-marking-tool.mjs, under ?mode=flash."
+        },
+        {
+            "id": "apworld-procgen-metadata-door-names-what-the-pipeline-can-do",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H5. procgenPipeline:loadRules is a SECOND channel beside stateManager:rawJsonDataLoaded on purpose: one means 'the app loaded this', the other 'here is a document nobody applied'. The row asserts the pipeline adopted the hand-off, named the door, and QUOTED the engine's own refusal \u2014 read from sphereRebuildRefusal at run time, never typed. Measured: procgen_maze/AP_1 is grid-growth with no sphere tree, so its answer is TOP-DOWN, not 'append a sphere'."
+        },
+        {
+            "id": "apworld-loop-costs-door-hands-the-working-copy-to-the-debugger",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H5. Plan \u00a74 priced this link as 'Apply, then open' because the cost debugger reads applied state; the measurement overturned it \u2014 CostPlanner takes its state manager as a constructor argument and touches it through two methods, so a rules.json can wear that face via StateManager.loadFromJSON (4 ms to 306 ms across the corpus). The row asserts the debugger's status line says which world the numbers describe, and that there is a named way back."
+        },
+        {
+            "id": "apworld-links-tab-reaches-an-editor-with-no-data",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H5. The \u2696 the Links tab exists for: 'even if the current rules.json file doesn't contain any relevant data for them'. On a document with no region_atlas the row must still be there, carry the REGISTRY's own label (the same string the Document tab shows, because both read DOCUMENT_KEY_EDITORS), say the document has nothing for it, and open the editor anyway."
         }
     ]
 }

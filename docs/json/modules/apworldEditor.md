@@ -116,12 +116,103 @@ document (`applyRulesDocOp` is pure), validates the preview with
 document already had. So an edit is refused by name for what *it* breaks, and
 never for somebody else's pre-existing violation.
 
-### The `editor` slot
+### The `editor` slot (H5)
 
-`documentKeys.DOCUMENT_KEY_EDITORS` is a `key → {open}` table that later rungs
-fill — `region_atlas` → the marking tool, `procgen_metadata` → the pipeline,
-`loop_costs` → the cost debugger. It is **empty** today, and a test row asserts so,
-so the day it is filled is visible rather than buried in a diff.
+`documentKeys.DOCUMENT_KEY_EDITORS` is a `key → {label, returns, note, open}`
+table naming, for the five top-level keys that have a dedicated editor, how to
+open it. A filled row makes the Document row draw an **Open** button beside the
+raw JSON — beside, not instead of: the block is still data, and the block editor
+is still the way to fix a value the dedicated editor cannot express.
+
+| key | editor | `returns` |
+|---|---|---|
+| `region_atlas` | the region marking tool | `op` |
+| `procgen_metadata` | the procgen pipeline | `document` |
+| `loop_costs` | the loops cost debugger | `none` |
+| `sphere_log` | the spoiler checklist | `none` |
+| `preset_sidecars` | the Regions tab's per-region **Edit ▸** | `op` |
+
+The other twenty-nine schema keys have **no dedicated editor**, and the registry
+says so by *not having a row*, never by dropping the key from the tab: every
+schema key still gets a Document row and a JSON block editor.
+
+**`open` does not return an op**, and H1's contract said it would. It cannot:
+every editor here is a panel a person works in for a while, so a save comes back
+through `onSave(op)` — the room-editor contract's shape, one level up. What the
+Document row prints instead is **`returns`**, because *"if I save over there,
+does it come back here as an undoable step?"* is the question a reader has:
+
+- **`op`** — `onSave` fires with ONE op, applied through the panel's own
+  `_applyOp` (schema veto, slot stamp, undo step); one Undo folds the whole
+  sub-edit away.
+- **`document`** — that editor's exit is a NEW document (the arc's rule that
+  generation is not an edit); nothing comes back here.
+- **`none`** — that editor only READS the block.
+
+No door imports its panel at module load. `documentKeys.js` is loaded by node
+rows and by both tabs, so every door defers its module with a dynamic `import()`
+— the `bounceDemoLibrary` precedent — and a test row asserts the file's static
+imports are exactly `['./rulesDocOps.js']`.
+
+#### `region_atlas` — the block is a REFERENCE, not an atlas
+
+Measured over the corpus: all three carriers (`seedling_atlas`,
+`seedling_atlas_maze`, `seedling_playthrough`) hold exactly
+`{atlas_id, game, map_document}`, and **nothing in the tree resolves an
+`atlas_id` back to the file that holds it**. So the door cannot open the marking
+tool on *this document's* atlas; it opens the tool on the atlas the tool holds,
+and a Save writes the document's reference to whatever was saved, through the
+compiler's own `regionAtlasCompiler.regionAtlasReference` — the same three
+fields `compileRegionAtlas` writes, hoisted so the two spellings cannot drift.
+
+#### `procgen_metadata` — the pipeline says what it can do
+
+`procgenPipeline:loadRules {jsonData, source, player}` is a **second channel**
+beside `stateManager:rawJsonDataLoaded` on purpose: that one means *"the app has
+loaded this document"* (applied state), this one means *"here is a document
+nobody has applied"*. Adoption therefore turns the pipeline's *"Use
+currently-loaded rules.json"* checkbox **off**, so the next app-wide load cannot
+silently replace the handed-over document.
+
+The panel then prints one of three answers, each derived rather than typed:
+
+- **append a sphere** — `procgenPipelineEngine.sphereRebuildRefusal` returns
+  null, so `importSphereEnvelope` would reconstruct an append-ready envelope;
+- **top-down from this** — it would not, but the document names regions for the
+  slot, which is all `layoutTopDown` reads. The engine's refusal is **quoted**,
+  not summarised: "zone world" is one of four reasons and the other three are
+  not it;
+- **nothing** — no regions for the slot, so neither driver has an input.
+
+`sphereRebuildRefusal` shares its strings with `rebuildEnvelopeFromRulesJson`'s
+throws (`SPHERE_REBUILD_REFUSALS`), so what the panel shows is the engine's own
+sentence. An *unregistered* substrate returns `getAdapter`'s message verbatim
+rather than being translated into "zone substrate": those are different problems.
+
+#### `loop_costs` — a real working-copy intake
+
+Plan §4 priced this link as its named fallback, *"Apply, then open"*, because the
+cost debugger reads applied state. The measurement overturned it: `CostPlanner`
+takes its state manager as a **constructor argument** and touches it through two
+methods (`getStaticData()`, `getLatestStateSnapshot()`), so a rules.json can wear
+that face. `loopsCostDebugger/documentStateManager.js` builds one by running the
+same code the worker runs — `StateManager.loadFromJSON` + `getStaticGameData` —
+on the main thread, from a dynamic import. Measured: 4.4 ms
+(`procgen_maze/AP_1`), 21.3 ms (`jta_substrate_test`), 305.7 ms
+(`stardew_valley`, the corpus's heaviest), plus a one-time ~117 ms import.
+
+A working copy is planned against **its own** embedded `sphere_log` or not at
+all: the app's log describes whatever world is applied, and borrowing it would
+manufacture the debugger's existing *"ALL n sphere-log locations are not in this
+player's world"* condition instead of reporting it. Its status line carries
+`[working copy · <door> — n regions, m locations]`, and a **Use applied state**
+button is the named way back.
+
+`returns` is still `none`: the debugger PLANS costs and has no gesture that
+writes them back. `CostPlanner.getCostData()` is already exactly this block's
+shape, so that write-back is one door away — and worth having, because all twelve
+committed `loop_costs` blocks are EMPTY (`regions: {}`, `locations: {}`), which
+is what the Document row's per-region cost table says out loud.
 
 ## The Map tab
 
@@ -282,16 +373,21 @@ is closed in exactly two places: when a second room is opened, and on
 
 ## The Links tab
 
-Substrate rows are **derived** from the substrate registry's own `roomEditor`
-declarations (see [`regionEditors`](../developer/procgen/architecture.md)); the
-document-level rows — the region marking tool, the procgen pipeline, the loops
-cost debugger, the two raw JSON editors and the region graph — are a table
-written once, because a panel declares nothing about which key it edits.
+Rows come from three places, and only one of them is a hand-written list:
+
+- **substrate rows**, derived from the substrate registry's own `roomEditor`
+  declarations (see [`regionEditors`](../developer/procgen/architecture.md));
+- **block-editor rows**, derived from `DOCUMENT_KEY_EDITORS` (H5) — so the
+  Links row and the Document row carry the **same label** and resolve the
+  **same `open`**, rather than being two lists that agree until somebody adds a
+  door to one of them. A test row asserts the two sets equal in both directions;
+- the **document-level table** — the two raw JSON editors and the region graph
+  — written once, because those have no top-level key of their own to hang off.
 
 Rows open their editor **empty** when the document has no data for it; the tab
 draws even with no document loaded at all. Rows whose editor reads **applied**
-state (the cost debugger, both raw editors) say so, because they will not see the
-working copy until you press Apply.
+state (both raw editors, and the spoiler checklist behind `sphere_log`) say so,
+because they will not see the working copy until you press Apply.
 
 ⚖ The region graph link is **one-way** by user ruling: this tab opens the graph,
 and the graph has no button back here. Do not "fix" that asymmetry.
@@ -499,7 +595,9 @@ The import is free in both modes, measured:
 | subscribes | `apworldEditor:loadRules` | the focus-safe hand-off — the pipeline, the marking tool, and (H4c, via `procgenLabPanel`) both lab pages. `{jsonData, source?}`; `source` NAMES the door and the session's base tag says `hand-off · <door>`, while `origin` stays `null` because an in-memory compile has no preset path whose sphere log belongs to it |
 | subscribes | `apworldEditor:selectRegion` | H4c — `{region, player?}` from the bounce region editor; answered with `selectRegion(name, from)`, which says so when this document does not hold that region |
 | publishes | `files:jsonLoaded` | Apply — a full-document clone, under the **origin's** `sourceName` (`apworldEditorApply` only when there is no origin) |
-| publishes | `ui:activatePanel` | the Links tab's rows, and the Map tab's one-way *Open region graph* |
+| publishes | `ui:activatePanel` | the Links tab's rows, the Document tab's block-editor doors, and the Map tab's one-way *Open region graph*. ⛔ H5 found this was **never registered** in the module's `register()`, and `eventBus.publish` refuses an unregistered publisher — warns and returns — so H1's Links tab Open and H3's *Open region graph* had been silently doing nothing since they shipped. A test row now scans the panel's own `publish('…')` sites against `register()` |
+| publishes | `procgenPipeline:loadRules` | H5 — the `procgen_metadata` door; `{jsonData, source, player}` |
+| publishes | `loopsCostDebugger:loadRules` | H5 — the `loop_costs` door; same payload |
 
 ## Tests
 

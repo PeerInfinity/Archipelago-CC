@@ -326,9 +326,15 @@ try {
     // the slot is empty, the click fills it. A publish the bus rejected (the
     // publisher not registered in regionMarkingTool/index.js) leaves it empty,
     // so this check pins that registration too.
+    // ⛑ H5: the stash is `{jsonData, source}`, NOT the bare document — H4c
+    //   (`d73aa7823`) changed its shape so every intake could name its door, and
+    //   this reader still asked for `.regions` on the wrapper. It had been
+    //   returning null, i.e. FAILING, ever since: this gate is not in H4c's
+    //   quoted battery, so nothing looked. Read through `jsonData`.
     const readStash = () => page.evaluate(async () => {
         const mod = await import('./modules/apworldEditor/index.js');
-        const doc = mod.consumePendingEditorRules();
+        const stash = mod.consumePendingEditorRules();
+        const doc = stash?.jsonData ?? null;
         return doc?.regions?.['1'] ? Object.keys(doc.regions['1']) : null;
     });
     check('Phase F: nothing stashed for the editor before the button is pressed',
@@ -341,6 +347,77 @@ try {
     check('Phase F: the APWorld Editor\'s OWN model holds the compiled regions',
         Array.isArray(adopted) && adopted.sort().join(',') === EXPECTED_AP_REGIONS,
         JSON.stringify(adopted));
+
+    // ── Phase F2 (APWORLD EDITOR HUB slice H5) — the hand-off RETURN path ──
+    //
+    // The hub's `region_atlas` Document row opens this tool through
+    // `openRegionMarkingTool({onSave})` and turns the saved atlas into ONE
+    // `set-key`. This phase drives that seam where the tool actually runs: the
+    // in-app runner's default mode has `regionMarkingTool` DISABLED in
+    // `module-configs/modules.json`, so its rows can only assert that the hub's
+    // door refuses by name. `?mode=flash` is the one place both exist.
+    //
+    // ⛔ THREE CLAIMS, and the second is the one a weaker row would miss: the
+    //   document handed back must be the STAMPED one — the same atlas_id Save
+    //   would have written — and Save must NOT also download, because with a
+    //   hand-off installed the CALLER is the destination.
+    await page.evaluate(async () => {
+        const mod = await import('./modules/regionMarkingTool/index.js');
+        globalThis.__rmtHandoff = null;
+        globalThis.__rmtHandoffCount = 0;
+        mod.openRegionMarkingTool({
+            onSave: (atlas) => {
+                globalThis.__rmtHandoff = atlas;
+                globalThis.__rmtHandoffCount += 1;
+            },
+        });
+    });
+    await page.waitForSelector('.rmt-panel select', { state: 'visible', timeout: 15000 });
+    check('Phase F2: nothing handed back before Save is pressed',
+        (await page.evaluate(() => globalThis.__rmtHandoff)) === null);
+
+    // What Save WOULD have written, read through the panel's own serialize()
+    // seam — the same bytes Phase C captured off a real download.
+    const expectedSaved = await page.evaluate(
+        () => document.querySelector('.rmt-panel').__panel.serialize());
+
+    let sawDownload = false;
+    const noteDownload = () => { sawDownload = true; };
+    page.on('download', noteDownload);
+    await clickToolbar('Save');
+    await page.waitForTimeout(500);
+    page.off('download', noteDownload);
+
+    const handed = await page.evaluate(() => globalThis.__rmtHandoff);
+    const handedCount = await page.evaluate(() => globalThis.__rmtHandoffCount);
+    check('Phase F2: Save handed the atlas back to the caller, exactly once',
+        handedCount === 1 && !!handed, `count ${handedCount}`);
+    check('Phase F2: and it is the STAMPED document — the same atlas_id Save would write',
+        !!handed && !!expectedSaved && handed.atlas_id === JSON.parse(expectedSaved).atlas_id,
+        `${handed?.atlas_id} vs ${expectedSaved ? JSON.parse(expectedSaved).atlas_id : null}`);
+    check('Phase F2: Save did NOT also download — the caller is the destination',
+        !sawDownload);
+    const handoffStatus = (await page.textContent('.rmt-status')).trim();
+    check('Phase F2: the status line names the hand-off',
+        handoffStatus.includes('handed') && handoffStatus.includes(handed?.atlas_id ?? ' '),
+        handoffStatus);
+
+    // ⛓ And the hand-off is CONSUMED, not sticky: a later session with no
+    //   `onSave` must go back to downloading, or one caller's return path would
+    //   swallow the next person's Save.
+    await page.evaluate(async () => {
+        const mod = await import('./modules/regionMarkingTool/index.js');
+        globalThis.__rmtHandoff = null;
+        mod.openRegionMarkingTool({});
+    });
+    await page.waitForSelector('.rmt-panel select', { state: 'visible', timeout: 15000 });
+    const secondDownload = page.waitForEvent('download', { timeout: 15000 });
+    await clickToolbar('Save');
+    const second = await secondDownload;
+    check('Phase F2: a later session with NO onSave downloads again',
+        !!second.suggestedFilename()
+        && (await page.evaluate(() => globalThis.__rmtHandoff)) === null,
+        second.suggestedFilename());
 
     // ── Phase G (Phase 5a) — analyze a real room ──────────────────────────
     //
