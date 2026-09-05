@@ -10853,6 +10853,11 @@ brief's "10" is `deriveRules`) AND my own addition wrong (4 rows, not 3), which 
 its terms. ⚠ Instrument note: `ci-vitest-summary.mjs` re-execs with `stdio: 'inherit'`, so under a detached
 `setsid nohup … > log` it wrote an EMPTY file and exited **0** — a clean exit with no summary is not a verdict.
 
+**H6b CI CLOSED green at `ef2f40efe`** (suite 13,293/8/0 = +5, both terms derived per file; `main` at
+`f29c74243`; the session read idle before the successor launched). **SURVEY LAUNCHED 2026-09-05** as
+`procgen-verify-tier-survey` (Opus, no product code; kickoff `NewDocs/plans/procgen-verify-tier-survey-prompt.md`;
+output `CC/docs/procgen-verify-tier.md`).
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
