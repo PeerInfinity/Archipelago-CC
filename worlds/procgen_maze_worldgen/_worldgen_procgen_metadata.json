@@ -1,0 +1,9 @@
+{
+  "driver": "grid-growth",
+  "stop_reason": "pool_empty",
+  "region_count": 3,
+  "grid_dims": {
+    "width": 3,
+    "height": 2
+  }
+}
