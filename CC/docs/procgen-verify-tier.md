@@ -1098,3 +1098,19 @@ above, so its three affected gates were re-run on the final bytes: `VERIFY OMSI 
 **ALL CHECKS PASSED** · bounded vitest (`boxLock` + `procgenDocs/`) **8 files / 475 tests / 0
 failed**. A comment edit is exactly the change `boxLock.test.js` has read as a defect before, which
 is why it was re-driven rather than reasoned about.
+
+## ⚖ 52 — the suite row, QUOTED from CI at the pushed SHA
+
+```
+CI vitest @ 2b8c9be27 — run 33995895019 success (2026-09-05T22:26:02Z)
+  suite: vitest (unfiltered)  436/13301   (13293 passed | 8 skipped | 0 failed)
+  slow battery                12/217      (217 passed | 0 failed)
+```
+
+**Delta: ZERO on both counts, and derived per file rather than eyeballed.**
+`git merge-base --is-ancestor` holds for BOTH standing baselines against `2b8c9be271` — `ef2f40efe`
+(the APWorld hub arc's `436/13,301`) and `84b5e7115` (V2's own row) — so the numbers are comparable, and
+they are the same numbers. V3a's three code commits touch **3 files, of which 0 are test files**
+(`git diff --name-only 16c11b0e78..2b8c9be271` → the three `scripts/procgen/verify-*.mjs` and nothing
+else), and add no test, so a zero delta is what this change *must* look like. `2b8c9be271` is the last
+code commit; everything after it on this slice is docs.
