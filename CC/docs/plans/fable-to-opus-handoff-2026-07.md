@@ -10284,6 +10284,10 @@ a small value cannot see the guard come back** — what discriminates is naming 
 exhaustively plus an anchor at real document sizes. And mutant (a) found a defect in the ROW: `.at(-1)` on
 the op list a refused save left empty threw, so the run reported "test error-free" instead of its four
 conditions.
+· CI at `d7bfd7966` (⚖ 52, quoted by SHA): `suite: vitest (unfiltered) 432/13114 (13106 passed | 8 skipped |
+0 failed)`, slow battery 217/0, **all six jobs green**. Against H3's `836d6145d` (432/13115): files unmoved,
+**rows −1** = `hubExits` 21 → 20, exactly the row H2b moved. `jsonEditorExtensions.js` adds no node suite on
+purpose — it imports the browser CM6 bundle, so its claim is asserted in the in-app row instead.
 · For H4: `panel.rawEditorView` + `_teardownRawEditor()` are the pair any stateful tab owes; the PANEL is
 now the expensive half (`depgraph` 3,326 ms panel-only vs a 263 ms editor), which sharpens §12.7 #2's
 `validateRules`-per-tab-switch line.
