@@ -10675,6 +10675,70 @@ op back), `procgen_metadata` → the pipeline through a new `procgenPipeline:loa
 op), `loop_costs` → the cost debugger (working-copy intake MEASURED, else "Apply, then open"), `sphere_log`
 → the spoiler checklist, everything else "edited as JSON here" BY NAME; Links-tab parity. After H5: H6a, H6b.
 
+⇒ **H5 AS BUILT 2026-09-05** (`apworld-hub-sliceH5`, Opus, on `main` at `99ce11f5b`; plan §19). H1's empty
+`DOCUMENT_KEY_EDITORS` is **FILLED** — five doors, each carrying `label` / `returns` / `note` / `open` /
+`panelId`, with the other twenty-nine schema keys saying *"no dedicated editor"* by the ABSENCE of a row
+rather than by dropping the key from the tab: `region_atlas` → the marking tool (`op`), `procgen_metadata` →
+the pipeline (`document`), `loop_costs` → the cost debugger (`none`), `sphere_log` → the spoiler checklist
+(`none`), `preset_sidecars` → the Regions tab's per-region Edit ▸ (`op`). The **Links tab is DERIVED from the
+same table** (three rows LEFT `DOCUMENT_LINKS` to make that true), so ⚖ *"even if the current rules.json file
+doesn't contain any relevant data for them"* reaches the SAME `open` with the SAME label, asserted in both
+directions.
+
+**Six things H5 overturned or found, each measured.** ⛔ **`region_atlas` is a REFERENCE, not an atlas** —
+all three committed carriers hold exactly `{atlas_id, game, map_document}` and nothing in the tree maps an
+`atlas_id` back to its file, so the door opens the marking tool on the atlas the TOOL holds and the SAVE
+writes this document's reference back through the compiler's own `regionAtlasReference` (hoisted out of
+`compileRegionAtlas`, pinned byte-equal to a full compile). ⛓ **`open` does NOT return an op** and H1's
+docblock said it would — every editor here is a panel, so the op arrives through `onSave(op)`, and `returns`
+is what the Document row prints instead. ⛓⛓ **Plan §4's "Apply, then open" is OVERTURNED for the cost
+debugger**: `CostPlanner` takes its state manager as a CONSTRUCTOR argument and touches it through exactly
+TWO methods over 1,247 lines, so a working copy wears that face by running the same
+`StateManager.loadFromJSON` + `getStaticGameData` the worker runs — **4.4 ms / 21.3 ms / 305.7 ms** across
+`procgen_maze`, `jta_substrate_test` and `stardew_valley` (the corpus's heaviest), plus a one-time ~117 ms
+dynamic import; nothing re-implements the parse. ⛔ Its real cost is the SPHERE LOG, not the topology: a
+working copy is planned against its own embedded `sphere_log` or not at all, else you MANUFACTURE the panel's
+existing *"ALL n sphere-log locations are not in this player's world"* warning (26 presets embed a log, 12
+carry `loop_costs`, TEN carry both). ⛓ **`procgenPipeline:loadRules` is a SECOND channel beside
+`stateManager:rawJsonDataLoaded` on purpose** — applied vs never-applied — and adoption turns the panel's
+"Use currently-loaded rules.json" checkbox OFF; its three answers are DERIVED from a new
+`sphereRebuildRefusal`, which shares `SPHERE_REBUILD_REFUSALS` with `rebuildEnvelopeFromRulesJson`'s throws,
+so the panel QUOTES the engine rather than summarising it ("zone world" is NOT one of the three: a zone world
+still realises top-down). ⛓ Measured: `procgen_topdown/AP_*` is the appendable family; **`procgen_maze/AP_1`
+— the brief's named fixture — is `grid-growth` with no sphere tree, so its answer is TOP-DOWN.**
+
+**⛔⛔ TWO DEFECTS IN ALREADY-SHIPPED CODE, both about a button that does nothing and says nothing.**
+(1) `apworldEditor` **never registered `ui:activatePanel`**; `eventBus.publish` refuses an unregistered
+publisher — warns and RETURNS — so **H1's Links tab Open and H3's "Open region graph" have done NOTHING since
+they shipped**, and neither in-app row pressed them (both assert the ROWS the tabs draw). A row now scans the
+panel's own `publish('…')` sites against `register()`. (2) **Two Links rows point at modules
+`frontend/module-configs/modules.json` DISABLES** — `regionMarkingTool` and `editor`, 13 of its 73 modules
+are off in the default mode — so `ui:activatePanel` reached a `panelManager` that warns and returns. Every
+door now declares its `panelId` and the hub asks `centralRegistry.getAllPanelComponents()`; absent ⇒ the
+button is SHOWN, DISABLED, with the panel and the config file in its `title`. ⛔ The default config was NOT
+changed: turning a panel on for every user is ⚖ the user's, and it is open in plan §19.6.
+
+**⛑ And `verify-region-marking-tool.mjs` was ALREADY RED at HEAD.** H4c (`d73aa7823`) changed the hub's
+module stash to `{jsonData, source}` so every intake could name its door; that gate's Phase F still asked for
+`.regions` on the wrapper and had been returning `null` ever since. It is not one of the nine gates H4c's
+§18.3 quotes, so nothing looked. Fixed here (one line) — **45 checks with one FAILING → 50 PASS / 0 FAIL**,
+the five new ones being Phase F2, which drives the marking tool's new `onSave` seam end to end under
+`?mode=flash` (the only mode where the tool and the hub's module both exist).
+
+**Gates.** `apworldEditor/` **8 files / 191** (`documentKeys` 21 → **29**, `documentLinks` 10 → **15**) ·
+`loopsCostDebugger/` **2 / 24** (new `documentStateManager` **12**) · `sphereSteps` 47 → **50** ·
+`procgenPipelineUI` 7 → **15** · `procgenPipelineEngine` **203 unmoved** · `regionAtlasCompiler` 59 → **63** ·
+`lintGateLabels` **14** · `verify-region-marking-tool` **50/0** · `check-procgen-docs` ALL CHECKS PASSED ·
+`generate-procgen-reference` re-run, 0 FINDINGS · `procgenDocs/` **452**. Four mutants driven, none committed.
+Docs: `modules/apworldEditor.md`'s `editor` slot section rewritten, the Links tab section, the Events table.
+Traps **1206–1211**.
+
+**NEXT = H6a** (the atlas derivation emitting the serializer's shape — and the natural home for an atlas
+RESOLVER, which is the missing half of H5's `region_atlas` door), then **H6b**. ⚖ open for the user in plan
+§19.6: enable `regionMarkingTool`/`editor` in the default `modules.json`?; the `loop_costs` WRITE-BACK
+(`CostPlanner.getCostData()` is already the block's shape and all twelve committed carriers are EMPTY); the
+marking tool's hardcoded `MAP_DOCUMENT_URL` as a fourth spelling of `flashPanel/mapDocumentPath`.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
