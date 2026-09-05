@@ -221,7 +221,15 @@ describe('Apply publishes the ORIGIN source name', () => {
      * memory, so there is no preset path whose sphere log belongs to it.
      */
     it('⛓ the hand-off boundary records origin: null', () => {
-        expect(panelSource).toMatch(/source: 'hand-off', player: this\.playerId, origin: null/);
+        /**
+         * ⛓ H4c — the tag's `source` now NAMES the door (`hand-off · <page>`)
+         * because two more publishers joined this channel, but `origin` is
+         * still `null` and for the unchanged reason: an in-memory compile has
+         * no preset path whose sphere log belongs to it.
+         */
+        expect(panelSource).toContain("? `hand-off · ${handOffSource}`");
+        expect(panelSource).toContain("player: this.playerId,");
+        expect(panelSource).toMatch(/_adoptHandoffRules\([\s\S]{0,1400}?origin: null,/);
     });
 
     /**

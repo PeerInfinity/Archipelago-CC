@@ -83,6 +83,7 @@ let LAB_PAGES;
 let nextLabIframeId;
 let standaloneUrlFrom;
 let LAB_EVENTS;
+let PAGE_TO_HOST;
 let moduleIndex;
 let eventBus;
 
@@ -107,7 +108,7 @@ beforeEach(async () => {
     ({
         ProcgenLabPanelUI, LAB_PAGES, nextLabIframeId, standaloneUrlFrom,
     } = await import('./procgenLabPanelUI.js'));
-    ({ LAB_EVENTS } = await import('../procgenCore/labProtocol.js'));
+    ({ LAB_EVENTS, PAGE_TO_HOST } = await import('../procgenCore/labProtocol.js'));
     moduleIndex = await import('./index.js');
 });
 
@@ -170,18 +171,29 @@ describe('procgenLabPanel — what the module declares', () => {
         expect(moduleIndex.moduleInfo.requires).toEqual(['iframeAdapter']);
     });
 
-    it('⛓ publishes the THREE host→page events and subscribes to the FOUR page→host '
-        + 'ones plus iframe:appReady', () => {
+    it('⛓ publishes the host→page events plus the reverse link\'s two, and subscribes '
+        + 'to the page→host ones plus iframe:appReady', () => {
         const api = recordingApi();
         moduleIndex.register(api);
         expect(api.seen.panels.map(([t]) => t)).toEqual(['procgenLabPanel']);
-        // ⛔ Stated literally rather than mapped off HOST_TO_PAGE: a test that
-        // read the same table the code reads would pass whatever that table said.
+        /**
+         * ⛔ Stated literally rather than mapped off HOST_TO_PAGE: a test that
+         * read the same table the code reads would pass whatever that table said.
+         *
+         * ⛓⛓ H4c — the last two are NOT lab-protocol names. A page's reverse
+         * link arrives here as `procgenLab:openInApworldEditor` and leaves as
+         * the app's own pair; the bus DROPS an unregistered publisher with a
+         * warn line and no throw, so the door would silently do nothing without
+         * these two rows.
+         */
         expect(api.seen.publishers.sort()).toEqual([
+            'apworldEditor:loadRules',
             'procgenLab:load', 'procgenLab:navigate', 'procgenLab:requestState',
+            'ui:activatePanel',
         ]);
         expect(api.seen.subscriberIntents.sort()).toEqual([
-            'iframe:appReady', 'procgenLab:levelChanged', 'procgenLab:ready',
+            'iframe:appReady', 'procgenLab:levelChanged',
+            'procgenLab:openInApworldEditor', 'procgenLab:ready',
             'procgenLab:selectTile', 'procgenLab:stateChanged',
         ]);
     });
@@ -389,6 +401,85 @@ describe('procgenLabPanel — the panel validates what it sends', () => {
 });
 
 /* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ H4c — THE REVERSE LINK, FORWARDED
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('procgenLabPanel — a page\'s "open in the APWorld editor"', () => {
+    /** ⛓ Watch the app-side pair the panel republishes onto. */
+    const watchForward = () => {
+        const seen = [];
+        for (const name of ['apworldEditor:loadRules', 'ui:activatePanel']) {
+            eventBus.subscribe(name, (d) => seen.push({ name, d }), 'test-observer');
+        }
+        return seen;
+    };
+
+    const RULES = Object.freeze({ game_name: 'Maze Library', regions: { 1: {} } });
+
+    it('forwards the page\'s compiled document and then raises the hub — in that order',
+        () => {
+            const panel = mountPanel('maze');
+            const seen = watchForward();
+            publishAs(LAB_EVENTS.openInApworldEditor, {
+                substrate: 'maze', iframeId: panel.iframeId,
+                rules: RULES, source: 'the maze lab (SET arm)',
+            }, `iframe_${panel.iframeId}`);
+            expect(seen.map((s) => s.name))
+                .toEqual(['apworldEditor:loadRules', 'ui:activatePanel']);
+            // ⛓ VERBATIM: the panel forwards, it does not interpret.
+            expect(seen[0].d.jsonData).toBe(RULES);
+            expect(seen[0].d.source).toBe('the maze lab (SET arm)');
+            expect(seen[1].d).toEqual({ panelId: 'apworldEditorPanel' });
+            expect(byRole(panel.getRootElement(), 'note').textContent)
+                .toMatch(/opened in the APWorld editor — the maze lab \(SET arm\)/);
+        });
+
+    /**
+     * ⛔ THE ADDRESS IS THE WHOLE ROUTING CLAIM, one message later. Two lab
+     * panels share one host bus, so a reverse link from the Seedling frame must
+     * not open the maze frame's document — and this is the ONE page→host event
+     * whose forward has a side effect outside the panel.
+     */
+    it('⛔ ignores a reverse link addressed to another frame', () => {
+        const maze = mountPanel('maze');
+        const seedling = mountPanel('seedling');
+        const seen = watchForward();
+        publishAs(LAB_EVENTS.openInApworldEditor, {
+            substrate: 'seedling', iframeId: seedling.iframeId,
+            rules: RULES, source: 'the Seedling watch page (SET arm)',
+        }, `iframe_${seedling.iframeId}`);
+        expect(seen).toHaveLength(2);
+        expect(byRole(maze.getRootElement(), 'note').textContent ?? '')
+            .not.toMatch(/APWorld/);
+        expect(byRole(seedling.getRootElement(), 'note').textContent)
+            .toMatch(/the Seedling watch page \(SET arm\)/);
+    });
+
+    /**
+     * ⛓ THE PANEL VALIDATES WHAT IT FORWARDS. A malformed payload from a stale
+     * page build is refused HERE, where the defect is visible, rather than
+     * reaching the hub as a document with no story about where it came from.
+     *
+     * ⛔⛔ AND THE REFUSAL IS **PRINTED**, which is the half a throw would have
+     * lost: `eventBus.publish` try/catches every subscriber and logs, so a
+     * handler that let the validator throw would forward nothing AND say
+     * nothing — a button that does not work and does not admit it. Measured:
+     * the first shape of this row asserted `toThrow` and got `undefined`.
+     */
+    it('⛔ refuses a payload the protocol does not accept, and SAYS SO on the panel', () => {
+        const panel = mountPanel('maze');
+        const seen = watchForward();
+        publishAs(LAB_EVENTS.openInApworldEditor, {
+            substrate: 'maze', iframeId: panel.iframeId, rules: RULES, source: '',
+        }, `iframe_${panel.iframeId}`);
+        expect(seen).toEqual([]);
+        const note = byRole(panel.getRootElement(), 'note');
+        expect(note.textContent).toMatch(/non-empty string/);
+        expect(note.className).toMatch(/bad/);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
  * THE READOUT
  * ══════════════════════════════════════════════════════════════════════ */
 
@@ -465,7 +556,13 @@ describe('procgenLabPanel — open standalone', () => {
 describe('procgenLabPanel — destroy', () => {
     it('⛔ unsubscribes EVERY subscription it made, so a destroyed panel is deaf', () => {
         const panel = mountPanel('maze');
-        expect(panel._unsubs.length).toBe(5);
+        /**
+         * ⛓ DERIVED, not typed: every PAGE→HOST name plus `iframe:appReady`.
+         * H4c added an eighth protocol name and this count moved with it —
+         * a typed number here would have reported that as a defect
+         * ([[feedback_count_in_a_test_name_is_an_allowlist_key]]'s family).
+         */
+        expect(panel._unsubs.length).toBe(PAGE_TO_HOST.length + 1);
         panel.destroy();
         expect(panel._unsubs).toEqual([]);
         // The bus still carries the event; the panel must no longer take it.

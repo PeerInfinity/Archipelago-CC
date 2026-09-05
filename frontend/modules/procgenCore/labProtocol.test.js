@@ -20,7 +20,7 @@ import {
     ADDRESS_FIELDS, HOST_TO_PAGE, LAB_EVENTS, LAB_EVENT_PREFIX, LAB_PAYLOAD_FIELDS,
     LAB_VALIDATORS, LabProtocolError, PAGE_TO_HOST, SUBSTRATES, addressedTo, assertLabPayload,
     assertLevelChanged, assertLoad, assertNavigate, assertReady, assertRequestState,
-    assertSelectTile, assertStateChanged,
+    assertOpenInApworldEditor, assertSelectTile, assertStateChanged,
 } from './labProtocol.js';
 
 /** ⛓ ONE GOOD PAYLOAD PER EVENT, spelled out — never derived from the field
@@ -51,18 +51,37 @@ const GOOD = Object.freeze({
     [LAB_EVENTS.selectTile]: {
         substrate: 'maze', iframeId: 'procgenLab-maze-1', tx: 3, ty: 7,
     },
+    [LAB_EVENTS.openInApworldEditor]: {
+        substrate: 'maze', iframeId: 'procgenLab-maze-1',
+        rules: { game_name: 'Maze Library', regions: {} },
+        source: 'the maze lab (SET arm)',
+    },
 });
 
 const ALL_EVENTS = Object.values(LAB_EVENTS);
 
 describe('labProtocol — the table itself', () => {
-    it('names all seven events under the procgenLab: prefix, and nothing else', () => {
-        expect(ALL_EVENTS).toHaveLength(7);
-        for (const name of ALL_EVENTS) expect(name.startsWith(LAB_EVENT_PREFIX)).toBe(true);
-        // ⛔ The two directions PARTITION the seven — an event in neither list
-        // is one no `register()` declares, and one in both is a loop.
-        expect([...HOST_TO_PAGE, ...PAGE_TO_HOST].sort()).toEqual([...ALL_EVENTS].sort());
-        expect(HOST_TO_PAGE.filter((e) => PAGE_TO_HOST.includes(e))).toEqual([]);
+    it(`names all ${ALL_EVENTS.length} events under the procgenLab: prefix, and nothing else`,
+        () => {
+            expect(ALL_EVENTS).toHaveLength(8);
+            for (const name of ALL_EVENTS) expect(name.startsWith(LAB_EVENT_PREFIX)).toBe(true);
+            // ⛔ The two directions PARTITION the vocabulary — an event in
+            // neither list is one no `register()` declares, and one in both is
+            // a loop.
+            expect([...HOST_TO_PAGE, ...PAGE_TO_HOST].sort()).toEqual([...ALL_EVENTS].sort());
+            expect(HOST_TO_PAGE.filter((e) => PAGE_TO_HOST.includes(e))).toEqual([]);
+        });
+
+    /**
+     * ⛓⛓ H4c — **THE EIGHTH IS PAGE→HOST, and that is not a detail.** It is
+     * the only name a PAGE publishes that asks the app to do something rather
+     * than reporting what the page shows; declaring it host→page would make
+     * `procgenLabPanel` register itself as its publisher and the pages'
+     * subscription would then never fire.
+     */
+    it('⛓ the reverse link is declared PAGE → HOST', () => {
+        expect(PAGE_TO_HOST).toContain(LAB_EVENTS.openInApworldEditor);
+        expect(HOST_TO_PAGE).not.toContain(LAB_EVENTS.openInApworldEditor);
     });
 
     it('gives every event a field list that starts with the ADDRESS', () => {
@@ -135,8 +154,12 @@ describe('labProtocol — the ADDRESS is checked, not merely present', () => {
         expect(() => assertLoad(null)).toThrow(/needs a payload object/);
         expect(() => assertLoad([])).toThrow(/needs a payload object/);
     });
-    it('refuses an event name that is not one of the seven', () => {
+    it('refuses an event name that is not in the vocabulary', () => {
         expect(() => assertLabPayload('procgenLab:teleport', {})).toThrow(/is not one of/);
+        // ⛓ …and the refusal QUOTES the roster, so a reader sees the eight
+        // names rather than being told their name is not among some of them.
+        expect(() => assertLabPayload('procgenLab:teleport', {}))
+            .toThrow(new RegExp(LAB_EVENTS.openInApworldEditor));
     });
 });
 
@@ -200,6 +223,37 @@ describe('labProtocol — the per-field types', () => {
     it('requestState carries the address and nothing else', () => {
         expect(() => assertRequestState({ ...GOOD[LAB_EVENTS.requestState], why: 'because' }))
             .toThrow(/unexpected field "why"/);
+    });
+
+    /* ── H4c — the reverse link's two fields ─────────────────────────── */
+
+    it('⛓ openInApworldEditor.rules must be an OBJECT — a compiled document', () => {
+        const good = GOOD[LAB_EVENTS.openInApworldEditor];
+        expect(() => assertOpenInApworldEditor({ ...good, rules: null }))
+            .toThrow(/must be an object/);
+        // ⛓ …and the refusal names THIS noun, not `load`'s. The shared checker
+        // takes the noun as a parameter for exactly this reason: a sentence
+        // calling a compiled rules.json a "level payload" would be a true
+        // refusal about the wrong subject.
+        expect(() => assertOpenInApworldEditor({ ...good, rules: null }))
+            .toThrow(/compiled rules\.json/);
+        expect(() => assertOpenInApworldEditor({ ...good, rules: '{}' }))
+            .toThrow(/must be an object/);
+    });
+
+    /**
+     * ⛔ AN EMPTY `source` IS REFUSED SEPARATELY FROM A MISSING ONE. The
+     * hub files every intake under its provenance, and `''` would pass the
+     * string check while filing the document under nothing — which is
+     * indistinguishable, downstream, from a door that never said where it was.
+     */
+    it('⛓ openInApworldEditor.source is a NON-EMPTY string', () => {
+        const good = GOOD[LAB_EVENTS.openInApworldEditor];
+        expect(() => assertOpenInApworldEditor({ ...good, source: '' }))
+            .toThrow(/non-empty string/);
+        expect(() => assertOpenInApworldEditor({ ...good, source: 7 }))
+            .toThrow(/must be a string/);
+        expect(() => assertOpenInApworldEditor({ ...good })).not.toThrow();
     });
 });
 

@@ -1,7 +1,7 @@
 /**
  * procgenCore/labBridge — **THE IN-PAGE HALF OF THE HOSTING CONTRACT, ONCE.**
  * Connect to the host over the existing iframe adapter, route the three
- * host→page events by `iframeId`, publish the four page→host ones.
+ * host→page events by `iframeId`, publish the page→host ones.
  *
  * CONSTRUCTIVE-MODE arc, slice 4 (`NewDocs/plans/seedling-constructive-mode-
  * kickoff.md` §3.5). The vocabulary is `labProtocol.js`; this is the transport
@@ -51,8 +51,9 @@
  */
 
 import {
-    LAB_EVENTS, addressedTo, assertLevelChanged, assertLoad, assertNavigate, assertReady,
-    assertRequestState, assertSelectTile, assertStateChanged,
+    LAB_EVENTS, addressedTo, assertLevelChanged, assertLoad, assertNavigate,
+    assertOpenInApworldEditor, assertReady, assertRequestState, assertSelectTile,
+    assertStateChanged,
 } from './labProtocol.js';
 
 /**
@@ -103,7 +104,17 @@ export async function createLabBridge({ substrate, client, iframeId, page, log =
         return false;
     });
     if (connected === false) {
+        /**
+         * ⛓⛓ THE STANDALONE HANDLE ANSWERS EVERY VERB, AND `openInApworldEditor`
+         * ANSWERS `false` (H4c). A page with no host has no app to open the hub
+         * in — so the button that would call it is HIDDEN, not disabled, and
+         * `connected` is what the page reads to decide that. The method exists
+         * anyway because a handle that dropped a verb would make every caller
+         * write `bridge.x?.()` and turn "there is no host" into "this build is
+         * older than that verb".
+         */
         return { iframeId, substrate, connected: false, announce() {}, selectTile() {},
+            openInApworldEditor() { return false; },
             dispose() { disposed = true; } };
     }
 
@@ -169,6 +180,23 @@ export async function createLabBridge({ substrate, client, iframeId, page, log =
         return publish(LAB_EVENTS.selectTile, { ...address(), tx, ty }, assertSelectTile);
     }
 
+    /**
+     * ⛓⛓⛓ **THE REVERSE LINK** (APWorld editor hub, H4c). The page compiled its
+     * own document and wants the app to open it in the APWorld editor.
+     *
+     * ⛔ THE PAGE COMPILES, THIS FILE ONLY CARRIES. `rules` is whatever the
+     * page's own `rulesJsonOf` returned — the same value its `Download
+     * rules.json` writes — because a bridge that re-derived a document would be
+     * a second answer to *"what does this page hold"* on the far side of a
+     * postMessage boundary, where the two answers could never be compared.
+     *
+     * @returns {boolean} whether the message went out (`false` = disposed).
+     */
+    function openInApworldEditor(rules, source) {
+        return Boolean(publish(LAB_EVENTS.openInApworldEditor,
+            { ...address(), rules, source }, assertOpenInApworldEditor));
+    }
+
     /* ── 3 + 4. READY ─────────────────────────────────────────────────── */
 
     client.notifyAppReady();
@@ -187,6 +215,7 @@ export async function createLabBridge({ substrate, client, iframeId, page, log =
         connected: true,
         announce,
         selectTile,
+        openInApworldEditor,
         dispose() { disposed = true; },
     };
 }

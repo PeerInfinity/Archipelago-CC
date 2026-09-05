@@ -43,7 +43,8 @@
 
 import eventBus from '../../app/core/eventBus.js';
 import {
-    LAB_EVENTS, SUBSTRATES, addressedTo, assertLoad, assertNavigate, assertRequestState,
+    LAB_EVENTS, SUBSTRATES, addressedTo, assertLoad, assertNavigate,
+    assertOpenInApworldEditor, assertRequestState,
 } from '../procgenCore/labProtocol.js';
 import {
     registerAppEventBus, registerLabPanelInstance, unregisterLabPanelInstance,
@@ -62,6 +63,17 @@ import {
 registerAppEventBus(eventBus);
 
 const MODULE_ID = 'procgenLabPanel';
+
+/**
+ * ⛓ THE TWO NAMES THE REVERSE LINK PUBLISHES UNDER (H4c), spelled here rather
+ * than imported: `apworldEditor/index.js` is a MODULE with a panel class, an
+ * `initialize` and the app `eventBus` in its graph, and this panel importing it
+ * for two strings would put the hub's whole module behind every lab panel. The
+ * strings are what `procgenPipeline/index.js` and `regionMarkingTool/index.js`
+ * already register by hand, for the same reason.
+ */
+const APWORLD_EDITOR_LOAD_RULES = 'apworldEditor:loadRules';
+const APWORLD_EDITOR_PANEL_ID = 'apworldEditorPanel';
 
 /**
  * ⛓ THE TWO PAGES, AND THEIR BOOT QUERY.
@@ -333,6 +345,50 @@ export class ProcgenLabPanelUI {
         this._on(LAB_EVENTS.selectTile, (data) => {
             if (!addressedTo(data, this.iframeId)) return;
             this.lastTile = { tx: data.tx, ty: data.ty };
+            this._render();
+        });
+        /**
+         * ⛓⛓⛓ **THE REVERSE LINK, FORWARDED** (APWorld editor hub, H4c). The
+         * page compiled its own rules.json and asked the app to open it; this
+         * panel is the only thing on the host side of that iframe boundary, so
+         * it is the one that can put the document on the app's bus.
+         *
+         * ⛔ **IT FORWARDS, IT DOES NOT INTERPRET** — the panel's own law one
+         * docblock up. Nothing here reads a region, counts a location or
+         * decides whether the document is worth opening: `data.rules` goes
+         * across verbatim and `data.source` with it, because the PAGE is the
+         * authority on both what it compiled and where that came from.
+         *
+         * ⛓ TWO EVENTS, IN THIS ORDER, and it is the pipeline's own pair
+         * (`procgenPipelineUI.js`): the focus-safe `apworldEditor:loadRules`
+         * hands the document over WITHOUT a global `files:jsonLoaded` (which
+         * would wake every substrate panel and steal focus), and
+         * `ui:activatePanel` then raises the editor. Reversed, the hub would be
+         * raised showing whatever it held a moment ago.
+         */
+        this._on(LAB_EVENTS.openInApworldEditor, (data) => {
+            if (!addressedTo(data, this.iframeId)) return;
+            /**
+             * ⛔⛔ THE REFUSAL IS CAUGHT AND PRINTED, and that is not defensive
+             * decoration: `eventBus.publish` wraps every subscriber in a
+             * try/catch and LOGS the error (`eventBus.js:151`), so a validator
+             * throwing out of this handler would leave the reader pressing a
+             * button that does nothing, with the only evidence in a console
+             * they are not looking at. ⛓ The panel's own rule for every other
+             * refused message (`_note(e.message, true)` on a bad SEND).
+             */
+            try {
+                assertOpenInApworldEditor(data);
+            } catch (e) {
+                this._note(e.message, true);
+                this._render();
+                return;
+            }
+            eventBus.publish(APWORLD_EDITOR_LOAD_RULES,
+                { jsonData: data.rules, source: data.source }, MODULE_ID);
+            eventBus.publish('ui:activatePanel',
+                { panelId: APWORLD_EDITOR_PANEL_ID }, MODULE_ID);
+            this._note(`opened in the APWorld editor — ${data.source}`);
             this._render();
         });
     }

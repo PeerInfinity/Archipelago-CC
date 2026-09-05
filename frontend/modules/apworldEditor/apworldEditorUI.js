@@ -29,7 +29,10 @@
  * the session reconstructs from.
  */
 
-import { getModuleEventBus, APWORLD_EDITOR_LOAD_RULES, consumePendingEditorRules } from './index.js';
+import {
+  getModuleEventBus, APWORLD_EDITOR_LOAD_RULES, APWORLD_EDITOR_SELECT_REGION,
+  consumePendingEditorRules, consumePendingSelectRegion,
+} from './index.js';
 import { stateManagerProxySingleton as stateManager, getLastRawJsonData } from '../stateManager/index.js';
 import RuleTreeEditor from './ruleTreeEditor.js';
 import { validateRules, cloneFullRulesDoc } from './rulesUtils.js';
@@ -200,6 +203,8 @@ class ApworldEditorUI {
     this.rawEditorView = null;
     this.rawJsonUnsubscribe = null;
     this.loadRulesUnsubscribe = null;
+    /** ⛓ H4c — the bounce editor's "select this region" door. */
+    this.selectRegionUnsubscribe = null;
     this.activeTab = 'regions';
     /**
      * ⛓⛓ H3 — **THE REGION THE MAP PICKED**, and the memoised map behind it.
@@ -321,15 +326,29 @@ class ApworldEditorUI {
     // don't auto-activate and steal focus. Adopt immediately when we're already
     // open; the consume() also clears any stash so it can't go stale.
     this.loadRulesUnsubscribe = this.eventBus.subscribe(APWORLD_EDITOR_LOAD_RULES, (ev) => {
-      if (ev && ev.jsonData) this._adoptHandoffRules(ev.jsonData);
+      if (ev && ev.jsonData) this._adoptHandoffRules(ev.jsonData, ev.source ?? null);
       consumePendingEditorRules();
     });
+
+    /**
+     * ⛓⛓⛓ H4c — **THE BOUNCE EDITOR'S REVERSE LINK.** It carries a region NAME
+     * and no document: this panel already holds one, and the answer is
+     * `selectRegion`'s own — which says, in the status line, when the document
+     * in front of the reader does not hold that region rather than switching to
+     * a tab with nothing highlighted.
+     */
+    this.selectRegionUnsubscribe = this.eventBus.subscribe(APWORLD_EDITOR_SELECT_REGION,
+      (ev) => {
+        if (!ev || typeof ev.region !== 'string' || ev.region === '') return;
+        this._adoptRegionSelection(ev.region, ev.player ?? null);
+        consumePendingSelectRegion();
+      });
 
     // If rules were loaded before the panel opened, pick them up now: first a
     // hand-off stashed by the load-rules channel, else the app-wide cache.
     const pending = consumePendingEditorRules();
     if (pending) {
-      this._adoptHandoffRules(pending);
+      this._adoptHandoffRules(pending.jsonData, pending.source);
     } else if (!this.session) {
       const current = this._getCurrentAppRules();
       if (current.doc) {
@@ -339,22 +358,61 @@ class ApworldEditorUI {
       }
     }
 
+    /**
+     * ⛓ …and a stashed SELECTION last, because it names a region of whatever
+     * document the two branches above just opened. Draining it first would
+     * select into a session `_openSession` is about to discard.
+     */
+    const pendingSelect = consumePendingSelectRegion();
+    if (pendingSelect) {
+      this._adoptRegionSelection(pendingSelect.region, pendingSelect.player);
+    }
+
     this.isInitialized = true;
     this._loadRulesSchema();
 
     log('info', 'ApworldEditorUI initialized.');
   }
 
+  /**
+   * ⛓⛓ H4c — one door, two entries (live event / stash drained at mount), so
+   * the slot-switch and the refusal sentence cannot drift between them.
+   *
+   * ⛔ THE SLOT IS SWITCHED ONLY WHEN THE DOCUMENT HAS IT. A caller that named
+   * a player this document does not carry would otherwise leave the hub
+   * pointing at an empty slot, which is a worse answer than "this document does
+   * not hold that region" — and `selectRegion` is what says the latter.
+   */
+  _adoptRegionSelection(region, player) {
+    if (player != null && String(player) !== String(this.playerId)) {
+      const slots = this._playerSlots();
+      if (slots.includes(String(player))) {
+        this.playerId = String(player);
+      } else {
+        this._opMessage = `Slot ${player} is not in this document (slots: `
+          + `${slots.join(', ') || 'none'}); selecting ${region} in slot ${this.playerId}.`;
+      }
+    }
+    this.selectRegion(region);
+  }
+
   // Adopt a world handed directly to the editor (load-rules channel). Same
   // full-doc clone the global load path uses, so procgen_metadata is preserved.
-  _adoptHandoffRules(jsonData) {
+  _adoptHandoffRules(jsonData, handOffSource = null) {
     /**
      * ⛔ A HAND-OFF HAS NO ORIGIN, and that is the honest answer rather than a
-     * missing feature: the pipeline and the marking tool build this document in
-     * memory, so there is no preset path whose sphere log belongs to it.
+     * missing feature: the pipeline, the marking tool and (H4c) the two lab
+     * pages build this document in memory, so there is no preset path whose
+     * sphere log belongs to it. ⛓ `origin` stays `null` for exactly that
+     * reason and `source` NAMES the door instead — H4c added a third and fourth
+     * publisher to this channel, and "hand-off" alone no longer tells a reader
+     * which one they pressed.
      */
     this._openSession(jsonData, {
-      kind: 'rules', source: 'hand-off', player: this.playerId, origin: null,
+      kind: 'rules',
+      source: handOffSource ? `hand-off · ${handOffSource}` : 'hand-off',
+      player: this.playerId,
+      origin: null,
     });
   }
 
@@ -580,6 +638,10 @@ class ApworldEditorUI {
     if (this.loadRulesUnsubscribe) {
       try { this.loadRulesUnsubscribe(); } catch (_) { /* noop */ }
       this.loadRulesUnsubscribe = null;
+    }
+    if (this.selectRegionUnsubscribe) {
+      try { this.selectRegionUnsubscribe(); } catch (_) { /* noop */ }
+      this.selectRegionUnsubscribe = null;
     }
   }
 

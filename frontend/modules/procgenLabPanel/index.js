@@ -57,11 +57,21 @@ export function register(registrationApi) {
      * ⛓⛓ PAGE → HOST: the panel SUBSCRIBES to these; the publisher is the
      * adapter, which registers `iframe_<iframeId>` dynamically at publish time
      * (`iframeAdapterCore.handlePublishEventBus`). ⛔ The intent is declared
-     * here anyway so the Modules panel shows the four names as part of this
+     * here anyway so the Modules panel shows every one of them as part of this
      * module's contract — a vocabulary that appears in the app only when a
      * frame happens to be connected is a vocabulary nobody can look up.
      */
     for (const event of PAGE_TO_HOST) registrationApi.registerEventBusSubscriberIntent(event);
+    /**
+     * ⛓⛓⛓ **AND THE TWO THE REVERSE LINK FORWARDS ONTO** (APWorld editor hub,
+     * H4c). `procgenLab:openInApworldEditor` arrives from a page (above); this
+     * panel then republishes it on the app's own bus as the pipeline and the
+     * marking tool already do. ⛔ The bus REFUSES an unregistered publisher —
+     * it warns and drops the publish — so a door declared only in the handler
+     * would be a button that reported success and did nothing.
+     */
+    registrationApi.registerEventBusPublisher('apworldEditor:loadRules');
+    registrationApi.registerEventBusPublisher('ui:activatePanel');
     /**
      * ⛔ THE RESEND CUE. `iframe:appReady` is how the panel learns its frame is
      * subscribed and can receive the `load`/`navigate` it queued — see

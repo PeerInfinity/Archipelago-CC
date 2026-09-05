@@ -1,5 +1,5 @@
 /**
- * procgenCore/labProtocol — **THE HOSTING VOCABULARY, ONCE.** Seven event
+ * procgenCore/labProtocol — **THE HOSTING VOCABULARY, ONCE.** Eight event
  * names, their payload shapes as frozen field lists, and one `assert*`
  * validator each.
  *
@@ -63,9 +63,18 @@ const fail = (message) => { throw new LabProtocolError(message); };
 export const LAB_EVENT_PREFIX = 'procgenLab:';
 
 /**
- * ⛓ THE SEVEN NAMES. ⛔ The keys are the vocabulary the kickoff §3.5 wrote and
- * the values are `procgenLab:<key>` — spelled out rather than computed, so a
- * grep for the wire name finds this table.
+ * ⛓ THE NAMES. ⛔ The keys are the vocabulary the kickoff §3.5 wrote and the
+ * values are `procgenLab:<key>` — spelled out rather than computed, so a grep
+ * for the wire name finds this table.
+ *
+ * ⛓⛓ **THE EIGHTH IS A REVERSE LINK** (APWorld editor hub, H4c). Seven names
+ * carry a HOST driving a page and a page reporting what it shows; this one
+ * carries the page asking the app to open something ELSE — the APWorld editor,
+ * on the document this page just compiled. It is page→host like the other
+ * four, and it is a lab-protocol name rather than a direct publish because a
+ * lab page has no app `eventBus` at all: `apworldEditor:loadRules` exists only
+ * on the host side of the iframe boundary, and the ONE transport across that
+ * boundary is this vocabulary.
  */
 export const LAB_EVENTS = Object.freeze({
     load: 'procgenLab:load',
@@ -75,6 +84,7 @@ export const LAB_EVENTS = Object.freeze({
     stateChanged: 'procgenLab:stateChanged',
     levelChanged: 'procgenLab:levelChanged',
     selectTile: 'procgenLab:selectTile',
+    openInApworldEditor: 'procgenLab:openInApworldEditor',
 });
 
 /** ⛔ Direction is part of the contract: `register()` declares each side. */
@@ -83,7 +93,7 @@ export const HOST_TO_PAGE = Object.freeze([
 ]);
 export const PAGE_TO_HOST = Object.freeze([
     LAB_EVENTS.ready, LAB_EVENTS.stateChanged, LAB_EVENTS.levelChanged,
-    LAB_EVENTS.selectTile,
+    LAB_EVENTS.selectTile, LAB_EVENTS.openInApworldEditor,
 ]);
 
 /**
@@ -110,6 +120,7 @@ export const LAB_PAYLOAD_FIELDS = Object.freeze({
         'url', 'source', 'seed', 'step', 'identity', 'certified', 'edits', 'directives']),
     [LAB_EVENTS.levelChanged]: Object.freeze([...ADDRESS_FIELDS, 'payload']),
     [LAB_EVENTS.selectTile]: Object.freeze([...ADDRESS_FIELDS, 'tx', 'ty']),
+    [LAB_EVENTS.openInApworldEditor]: Object.freeze([...ADDRESS_FIELDS, 'rules', 'source']),
 });
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -123,8 +134,9 @@ export const LAB_PAYLOAD_FIELDS = Object.freeze({
  */
 function assertFields(event, payload) {
     const fields = LAB_PAYLOAD_FIELDS[event];
-    if (!fields) fail(`labProtocol: ${JSON.stringify(event)} is not one of the seven lab `
-        + `events [${Object.values(LAB_EVENTS).join(', ')}].`);
+    if (!fields) fail(`labProtocol: ${JSON.stringify(event)} is not one of the `
+        + `${Object.keys(LAB_EVENTS).length} lab events `
+        + `[${Object.values(LAB_EVENTS).join(', ')}].`);
     if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
         fail(`labProtocol: ${event} needs a payload object — got ${JSON.stringify(payload)}. `
             + `Its fields are [${fields.join(', ')}].`);
@@ -170,11 +182,18 @@ const assertString = (event, payload, key) => {
     }
 };
 
-const assertObject = (event, payload, key) => {
+/**
+ * ⚠ `noun` NAMES THE THING, and it is a parameter rather than the literal
+ * "level payload" it used to be: the same refusal now guards `load.payload`,
+ * `levelChanged.payload` AND `openInApworldEditor.rules`, and a sentence that
+ * called a compiled rules.json a level would be a true refusal about the wrong
+ * subject.
+ */
+const assertObject = (event, payload, key, noun = 'payload') => {
     if (!payload[key] || typeof payload[key] !== 'object' || Array.isArray(payload[key])) {
         fail(`labProtocol: ${event}.${key} must be an object, got `
-            + `${JSON.stringify(payload[key])}. ⛔ \`null\` is NOT accepted here: a level `
-            + 'payload is the thing the message is FOR, and "no payload" is a message '
+            + `${JSON.stringify(payload[key])}. ⛔ \`null\` is NOT accepted here: the `
+            + `${noun} is the thing the message is FOR, and "no ${noun}" is a message `
             + 'nobody should have sent.');
     }
 };
@@ -196,14 +215,14 @@ const assertInteger = (event, payload, key) => {
 };
 
 /* ══════════════════════════════════════════════════════════════════════
- * THE SEVEN VALIDATORS
+ * THE VALIDATORS — ONE PER NAME
  * ══════════════════════════════════════════════════════════════════════ */
 
 /** HOST → PAGE. Load a level payload through the page's ONE reconstruction. */
 export function assertLoad(payload) {
     assertFields(LAB_EVENTS.load, payload);
     assertAddress(LAB_EVENTS.load, payload);
-    assertObject(LAB_EVENTS.load, payload, 'payload');
+    assertObject(LAB_EVENTS.load, payload, 'payload', 'level payload');
     return payload;
 }
 
@@ -268,7 +287,7 @@ export function assertStateChanged(payload) {
 export function assertLevelChanged(payload) {
     assertFields(LAB_EVENTS.levelChanged, payload);
     assertAddress(LAB_EVENTS.levelChanged, payload);
-    assertObject(LAB_EVENTS.levelChanged, payload, 'payload');
+    assertObject(LAB_EVENTS.levelChanged, payload, 'payload', 'level payload');
     return payload;
 }
 
@@ -278,6 +297,33 @@ export function assertSelectTile(payload) {
     assertAddress(LAB_EVENTS.selectTile, payload);
     assertInteger(LAB_EVENTS.selectTile, payload, 'tx');
     assertInteger(LAB_EVENTS.selectTile, payload, 'ty');
+    return payload;
+}
+
+/**
+ * PAGE → HOST. ⛓⛓ **THE REVERSE LINK** (H4c): *"open what I am holding in the
+ * APWorld editor."* `rules` is the page's OWN compiled rules.json document —
+ * whatever `adapterFns.rulesJsonOf` returned for the session in front of the
+ * reader, which is the same value the page's `Download rules.json` writes — and
+ * `source` is the page's own name for where it came from.
+ *
+ * ⛔ `source` IS REQUIRED AND IS NOT THE HOST'S TO INVENT. The hub records the
+ * provenance of every document it opens (H2's rule: every intake DECIDES its
+ * origin), and a lab document has no preset path and no sphere log. A host that
+ * defaulted this would be filing an in-memory compile under a name the page
+ * never claimed.
+ */
+export function assertOpenInApworldEditor(payload) {
+    const e = LAB_EVENTS.openInApworldEditor;
+    assertFields(e, payload);
+    assertAddress(e, payload);
+    assertObject(e, payload, 'rules', 'compiled rules.json');
+    assertString(e, payload, 'source');
+    if (payload.source === '') {
+        fail(`labProtocol: ${e}.source must be a non-empty string — it is the PROVENANCE the `
+            + 'hub files this document under, and an empty one is a document with no story '
+            + 'about where it came from.');
+    }
     return payload;
 }
 
@@ -294,13 +340,15 @@ export const LAB_VALIDATORS = Object.freeze({
     [LAB_EVENTS.stateChanged]: assertStateChanged,
     [LAB_EVENTS.levelChanged]: assertLevelChanged,
     [LAB_EVENTS.selectTile]: assertSelectTile,
+    [LAB_EVENTS.openInApworldEditor]: assertOpenInApworldEditor,
 });
 
 /** Validate by NAME. Refuses an unknown event rather than passing it through. */
 export function assertLabPayload(event, payload) {
     const validator = LAB_VALIDATORS[event];
-    if (!validator) fail(`labProtocol: ${JSON.stringify(event)} is not one of the seven lab `
-        + `events [${Object.values(LAB_EVENTS).join(', ')}].`);
+    if (!validator) fail(`labProtocol: ${JSON.stringify(event)} is not one of the `
+        + `${Object.keys(LAB_EVENTS).length} lab events `
+        + `[${Object.values(LAB_EVENTS).join(', ')}].`);
     return validator(payload);
 }
 
