@@ -357,7 +357,15 @@ async function verifyJtaOutboundLeg() {
     if (s0?.success !== true) fail(`rep 0 did not start: ${JSON.stringify(s0)}`);
     await waitFor(page, logs, 'rep 0 deposited the original item locally',
         async () => (await localCount()) === localBefore + 1, 30000);
-    if ((await omsiGold()) !== goldBefore) fail('rep 0 leaked a cross-substrate grant');
+    // ⛓ NAME THE NUMBERS. "leaked" over a bare !== cannot tell a real crossing
+    //   (gold moved) from an instrument fault (the iframe went away and
+    //   `omsiGold()` returned null, which is also !== goldBefore).
+    const goldAfterRep0 = await omsiGold();
+    if (goldAfterRep0 !== goldBefore) {
+        fail(`rep 0 leaked a cross-substrate grant: omsi gold ${JSON.stringify(goldBefore)} `
+            + `-> ${JSON.stringify(goldAfterRep0)}`
+            + (goldAfterRep0 === null ? ' (null = the omsi iframe is GONE, not a crossing)' : ''));
+    }
     console.log('  ✓ rep 0: original item deposited locally, nothing crossed');
 
     // Rep 1: foreign — nothing locally, omsi/gold x2 over the full bus.
