@@ -10145,6 +10145,17 @@ DECIDE what it is (`null` is legitimate and costs the sphere log); the panel's p
 live number — `panel-only TTI` **4.6 s** on `stardew_valley`, dominated by `validateRules` over the
 whole document on EVERY tab switch, which H3's Map tab pays too; and CM6 is the costed follow-up above.
 
+**H2 VERIFIED by the planner 2026-09-05** (`81d658343` on origin/main; `rawView.js` with
+`RAW_VIEW_LIMIT_BYTES = 2_000_000`, `hubExits.test.js`, the measurement script, the `origin` carry, the
+Presets button — all on disk). **⚖ RULED 2026-09-05 (user, on H2's measurement): the CodeMirror 6 raw view
+is taken as its OWN slice, H2b, AFTER H3** — CM6 opens in 30–133 ms and types at 11–240 ms per keystroke up
+to 8 MB where the textarea needs a 2 MB limit; H2b retires the constant. Ladder: H3 → H2b → H4 (Task 0 =
+the 4-player fixture) → H5. **H3 LAUNCHED 2026-09-05** as `apworld-hub-sliceH3` (Opus, kickoff
+`NewDocs/plans/apworld-hub-sliceH3-prompt.md`): the per-substrate `compositeMap` registry slot declared by
+maze + text_adventure with their painters moved out of the pipeline panel, the shared renderer in
+`procgenCore/`, the pipeline swapped byte-inert under its four verify scripts, and the hub's Map tab with
+click-select and the one-way "Open region graph" button.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
