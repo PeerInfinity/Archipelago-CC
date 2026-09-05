@@ -16,7 +16,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
     assertAdapterBehaviour, canonicalJson, createEditSession, describeOps,
-    floodOps, hasCellSpace, rectCopy, resolveBase, CELL_SPACE_LAWS,
+    floodOps, foldEdits, hasCellSpace, rectCopy, resolveBase, CELL_SPACE_LAWS,
 } from '../procgenCore/editCore.js';
 import { deepEqualKeyOrder } from '../procgenCore/deepEqualKeyOrder.js';
 import { makeExit, makeRegion, makeRulesJsonScaffold } from '../shared/rulesJsonBuilder.js';
@@ -168,6 +168,34 @@ describe('the session — a bare createEditSession, and no session module', () =
         expect(ops).toHaveLength(2);
         s.apply({ op: 'group', label: 'delete region Vault', ops });
         expect(describeOps(s.ops())).toBe('1 edit(s) (1 group of 2)');
+        expect(s.undo()).toBe(true);
+        expect(JSON.stringify(s.record())).toBe(before);
+    });
+
+    /**
+     * ⛓⛓ **H4b — A ROOM SUB-EDIT IS ONE OP IN THIS LIST, AND THE FOLD
+     * REPRODUCES IT.** The whole point of `replace-region-sidecar` is that a
+     * session inside the maze lab or the bounce editor comes back as ONE entry
+     * here, so the hub's undo undoes a whole sub-edit — and the edit list has
+     * to be RE-FOLDABLE, which is what `foldEdits` over `payload().edits`
+     * asserts (the op carries the RESULT payload, never a recipe).
+     */
+    it('⛓⛓ a room sub-edit is ONE op, and re-folding the list reproduces the bytes', () => {
+        const doc = fixture();
+        doc.preset_sidecars = {
+            [P]: { Hall: { substrate: 'maze', playable_payload: { width: 1, tiles: 'a' } } },
+        };
+        const s = open(doc);
+        const before = JSON.stringify(doc);
+        const res = s.apply({
+            op: 'replace-region-sidecar', region: 'Hall',
+            payload: { width: 2, tiles: 'bb' },
+            rules: { exits: { 'Hall → Vault': { rule: 'True_' } }, locations: {} },
+        });
+        expect(res.ok && res.applied).toBe(true);
+        expect(describeOps(s.ops())).toBe('1 edit(s)');
+        const refolded = foldEdits(rulesEditAdapter, doc, s.payload().edits).record;
+        expect(JSON.stringify(refolded)).toBe(JSON.stringify(s.record()));
         expect(s.undo()).toBe(true);
         expect(JSON.stringify(s.record())).toBe(before);
     });

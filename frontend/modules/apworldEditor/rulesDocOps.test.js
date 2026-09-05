@@ -54,8 +54,35 @@ function fixture() {
     doc.itempool_counts[P] = { Key: 1 };
     doc.starting_items[P] = ['Key'];
     doc.game_info[P].completion_condition = { type: 'item_check', item: 'Victory' };
+    /**
+     * ⛓ H4b — A SIDECAR ON `Hall`, and only on `Hall`. `replace-region-sidecar`
+     * refuses a region with no sidecar entry BY NAME, so the fixture needs both
+     * kinds of region for that row to mean anything: `Hall` has a room and
+     * `Vault` is a classic AP region that never had one.
+     *
+     * ⛔ The payload is DELIBERATELY not a real maze world. This op is pure and
+     * treats a payload as opaque bytes — the substrate's own round-trip is what
+     * knows a maze world from a bounce level, and it is tested where it lives.
+     */
+    doc.preset_sidecars = {
+        [P]: {
+            Hall: {
+                substrate: 'maze',
+                render_hint: 'maze',
+                grid_cell: { gx: 0, gy: 0 },
+                playable_payload: { width: 3, height: 3, tiles: 'aaa' },
+            },
+        },
+    };
     return doc;
 }
+
+/** ⛓ The rules map `Hall`'s own exits and locations require — DERIVED from the
+ *  fixture, so a row cannot pass by naming a thing the fixture stopped having. */
+const hallRules = (doc, rule = { rule: 'True_' }) => ({
+    exits: Object.fromEntries(doc.regions[P].Hall.exits.map((e) => [e.name, rule])),
+    locations: Object.fromEntries(doc.regions[P].Hall.locations.map((l) => [l.name, rule])),
+});
 
 const apply = (doc, op) => applyRulesDocOp(doc, op);
 const applied = (doc, op) => {
@@ -98,6 +125,10 @@ describe('the contract shape', () => {
             'set-start-region': { op: 'set-start-region', region: 'Vault' },
             'set-completion-condition': { op: 'set-completion-condition', condition: { type: 'constant', value: true } },
             'set-rule-tree': { op: 'set-rule-tree', path: { region: 'Hall', kind: 'exit', index: 0 }, tree: { rule: 'True_' } },
+            'replace-region-sidecar': {
+                op: 'replace-region-sidecar', region: 'Hall',
+                payload: { width: 4, height: 4, tiles: 'bbbb' }, rules: hallRules(doc),
+            },
             'set-key': { op: 'set-key', key: 'preset_label', value: 'a label' },
             'replace-document': { op: 'replace-document', document: { game_name: 'Replaced' } },
             clear: { op: 'clear' },
@@ -553,6 +584,145 @@ describe('a carried payload is COPIED into the record', () => {
             .toMatchObject({ op: 'add-location', region: 'Vault', name: 'New Location' });
     });
 });
+
+describe('replace-region-sidecar — the room editor\'s one op back (H4b)', () => {
+    const P2 = { width: 4, height: 4, tiles: 'bbbb' };
+
+    it('writes the payload AND the rules, in one op, and NAMES the region', () => {
+        const doc = fixture();
+        const rules = hallRules(doc, { rule: 'Has', args: { item_name: 'Key' } });
+        const res = applied(doc, { op: 'replace-region-sidecar', region: 'Hall', payload: P2, rules });
+        expect(res.doc.preset_sidecars[P].Hall.playable_payload).toEqual(P2);
+        for (const e of res.doc.regions[P].Hall.exits) {
+            expect(e.access_rule).toEqual({ rule: 'Has', args: { item_name: 'Key' } });
+        }
+        for (const l of res.doc.regions[P].Hall.locations) {
+            expect(l.access_rule).toEqual({ rule: 'Has', args: { item_name: 'Key' } });
+        }
+        expect(res.description).toContain('Hall');
+        // ⛓ Everything ELSE the sidecar entry carries survives — the op replaces
+        //   the PAYLOAD, not the entry.
+        expect(res.doc.preset_sidecars[P].Hall.grid_cell).toEqual({ gx: 0, gy: 0 });
+        expect(res.doc.preset_sidecars[P].Hall.substrate).toBe('maze');
+        // ⛓ …and so do the region's own name, its exits' targets and its AP ids.
+        expect(res.doc.regions[P].Hall.name).toBe('Hall');
+        expect(res.doc.regions[P].Hall.exits[0].connected_region).toBe('Vault');
+        expect(res.doc.regions[P].Hall.locations[0].id).toBe(1);
+    });
+
+    it('⛓⛓ AN UNCHANGED ROUND TRIP IS A NO-OP BY `equal` — editCore law (b)', () => {
+        const doc = fixture();
+        const same = doc.preset_sidecars[P].Hall.playable_payload;
+        const rules = {
+            exits: Object.fromEntries(doc.regions[P].Hall.exits.map((e) => [e.name, e.access_rule])),
+            locations: Object.fromEntries(
+                doc.regions[P].Hall.locations.map((l) => [l.name, l.access_rule]),
+            ),
+        };
+        const session = createEditSession(rulesEditAdapter, doc);
+        const res = session.apply({
+            op: 'replace-region-sidecar', region: 'Hall', payload: same, rules, player: P,
+        });
+        expect(res.ok).toBe(true);
+        expect(res.applied, 'an open-and-save-unchanged moved the document').toBe(false);
+        expect(session.ops()).toHaveLength(0);
+    });
+
+    it('⛔ REFUSES a location the new geometry lost, and says what is ON it', () => {
+        const doc = fixture();
+        const rules = hallRules(doc);
+        delete rules.locations['Hall Chest'];
+        const res = apply(doc, { op: 'replace-region-sidecar', region: 'Hall', payload: P2, rules });
+        expect(res.ok).toBe(false);
+        expect(res.error).toContain('Hall Chest');
+        expect(res.error).toContain('no longer has');
+    });
+
+    it('⛔ REFUSES an exit the new geometry lost, naming where it went', () => {
+        const doc = fixture();
+        const rules = hallRules(doc);
+        delete rules.exits['Hall → Vault'];
+        const res = apply(doc, { op: 'replace-region-sidecar', region: 'Hall', payload: P2, rules });
+        expect(res.ok).toBe(false);
+        expect(res.error).toContain('Hall → Vault');
+        expect(res.error).toContain('Vault');
+    });
+
+    it('⛔ REFUSES a rule for a name the region does not hold', () => {
+        const doc = fixture();
+        const rules = hallRules(doc);
+        rules.locations['Hall Chest 2'] = { rule: 'True_' };
+        const res = apply(doc, { op: 'replace-region-sidecar', region: 'Hall', payload: P2, rules });
+        expect(res.ok).toBe(false);
+        expect(res.error).toContain('Hall Chest 2');
+        expect(res.error).toContain('does not have');
+    });
+
+    it('⛔ REFUSES a region with no sidecar, and lists the ones this slot has', () => {
+        const doc = fixture();
+        const res = apply(doc, {
+            op: 'replace-region-sidecar', region: 'Vault', payload: P2,
+            rules: { exits: {}, locations: { 'Vault Chest': { rule: 'True_' } } },
+        });
+        expect(res.ok).toBe(false);
+        expect(res.error).toContain('no sidecar for region "Vault"');
+        expect(res.error).toContain('Hall');
+    });
+
+    it('⛔ REFUSES a missing region name, a non-object payload and a malformed rules map', () => {
+        const doc = fixture();
+        const base = { op: 'replace-region-sidecar', region: 'Hall', payload: P2 };
+        expect(apply(doc, { ...base, region: '' }).error).toMatch(/needs a region NAME/);
+        expect(apply(doc, { ...base, payload: [1, 2] }).error).toMatch(/a room payload is an object/);
+        expect(apply(doc, { ...base, rules: { exits: {} } }).error).toMatch(/<exit name>/);
+        expect(apply(doc, { ...base, rules: hallRules(doc) }).ok).toBe(true);
+    });
+
+    it('⛓⛓ THE PAYLOAD IS COPIED AT THE DOOR — the caller may keep editing it', () => {
+        const doc = fixture();
+        const payload = { width: 4, height: 4, tiles: 'bbbb' };
+        const out = applied(doc, {
+            op: 'replace-region-sidecar', region: 'Hall', payload, rules: hallRules(doc),
+        }).doc;
+        const before = bytes(out);
+        payload.__mutatedAfterApply = true;
+        payload.tiles = 'cccc';
+        expect(bytes(out), 'the record moved when the caller touched its own payload').toBe(before);
+        expect(out.preset_sidecars[P].Hall.playable_payload.__mutatedAfterApply).toBeUndefined();
+    });
+
+    it('⛓ ONE UNDO folds the whole sub-edit away — payload AND rules', () => {
+        const doc = fixture();
+        const session = createEditSession(rulesEditAdapter, doc);
+        const before = bytes(session.record());
+        session.apply({
+            op: 'replace-region-sidecar', region: 'Hall', payload: P2, player: P,
+            rules: hallRules(doc, { rule: 'Has', args: { item_name: 'Key' } }),
+        });
+        expect(bytes(session.record())).not.toBe(before);
+        expect(session.ops()).toHaveLength(1);
+        expect(session.undo()).toBe(true);
+        expect(bytes(session.record()), 'undo left the payload or the rules behind').toBe(before);
+    });
+
+    it('⛓ THE SLOT IS THE OP\'S OWN FIELD, never inferred (H1\'s rule)', () => {
+        const doc = fixture();
+        doc.preset_sidecars['2'] = {
+            Hall: { substrate: 'maze', playable_payload: { width: 1, height: 1, tiles: 'a' } },
+        };
+        doc.regions['2'] = { Hall: makeRegion('Hall', [], [makeLocation('Slot 2 Chest', 9)]) };
+        const res = applied(doc, {
+            op: 'replace-region-sidecar', region: 'Hall', payload: P2, player: '2',
+            rules: { exits: {}, locations: { 'Slot 2 Chest': { rule: 'True_' } } },
+        });
+        expect(res.doc.preset_sidecars['2'].Hall.playable_payload).toEqual(P2);
+        // ⛔ slot 1's Hall — same NAME, different slot — is untouched.
+        expect(res.doc.preset_sidecars[P].Hall.playable_payload.tiles).toBe('aaa');
+        expect(res.doc.regions[P].Hall.locations[0].access_rule)
+            .toEqual(doc.regions[P].Hall.locations[0].access_rule);
+    });
+});
+
 
 describe('replace-document — the raw view\'s one op (H2)', () => {
     it('⛓ replaces the WHOLE record and says how many keys arrived', () => {

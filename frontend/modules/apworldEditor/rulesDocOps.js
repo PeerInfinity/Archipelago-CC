@@ -101,6 +101,7 @@ export const RULES_OP_KINDS = Object.freeze([
     'set-start-region',
     'set-completion-condition',
     'set-rule-tree',
+    'replace-region-sidecar',
     'set-key',
     'replace-document',
     'clear',
@@ -340,6 +341,7 @@ function dispatchRulesDocOp(doc, op) {
         case 'set-start-region': return opSetStartRegion(doc, op);
         case 'set-completion-condition': return opSetCompletionCondition(doc, op);
         case 'set-rule-tree': return opSetRuleTree(doc, op);
+        case 'replace-region-sidecar': return opReplaceRegionSidecar(doc, op);
         case 'set-key': return opSetKey(doc, op);
         case 'replace-document': return opReplaceDocument(doc, op);
         case 'clear': return opClear(doc, op);
@@ -879,6 +881,132 @@ function opSetRuleTree(doc, op) {
     );
 }
 
+/* ── the region's room: payload + rules, atomically ──────────────────── */
+
+/**
+ * ⛓⛓⛓ **THE ROOM EDITOR'S ONE OP BACK** (APWORLD EDITOR HUB slice H4b).
+ * `{region, payload, rules}` — replace `preset_sidecars[p][region].playable_payload`
+ * AND the region's ACCESS RULES, in ONE op, so a whole sub-edit made in the
+ * maze lab or the bounce editor folds away with one undo (§4's "one undo stack").
+ *
+ * ── ⛓ WHY THE RULES ARE A NAME → RULE MAP AND NOT A REGION ────────────
+ *
+ * The op could have carried the whole rebuilt region entry, and that would have
+ * made it a `set-key` with extra steps: an editor could then rename a location,
+ * drop an exit or re-place an item through a door whose only mandate is
+ * geometry. ⛔ What an edited ROOM may move is the ACCESS RULES — the
+ * document's exit TARGETS, its location NAMES and their AP placements are the
+ * FILL's, and the fill is not in this document's gift. So the payload arrives
+ * whole and the rules arrive as `{exits: {<exit name>: rule}, locations:
+ * {<location name>: rule}}`, keyed by the names the document already holds.
+ *
+ * ── ⛓⛓ THE MAP IS TOTAL, IN BOTH DIRECTIONS, AND THAT IS THE REFUSAL ──
+ *
+ * ⛔ **A key naming nothing** is a rule for an exit/location this region does
+ * not have — the derivation matched something that is not here.
+ * ⛔ **A missing key** is the important one: it means THE NEW GEOMETRY NO
+ * LONGER HAS a location or an exit the document names, and the fill placed an
+ * item at that location. Dropping it silently would delete somebody's item
+ * placement inside an op whose description says "room replaced"; the op refuses
+ * BY NAME and says what is on the location.
+ *
+ * ⚠ Totality is checked HERE and not only in the caller, because it is the only
+ * thing that makes the op safe to re-fold: an edit list replayed against a
+ * document whose region has since been edited must refuse rather than write
+ * rules onto the wrong names.
+ *
+ * ⛓ THE PAYLOAD IS COPIED AT THE DOOR — `applyRulesDocOp`'s `carried()` clones
+ * the whole op before dispatch, so a room editor that keeps mutating its own
+ * world object cannot write THROUGH the record. That is `set-rule-tree`'s
+ * defect (see `carried`), and a room payload is a much bigger object to alias.
+ */
+function opReplaceRegionSidecar(doc, op) {
+    const p = playerOf(op);
+    const name = op.region;
+    if (typeof name !== 'string' || !name.trim()) {
+        return refuse('apworld: replace-region-sidecar needs a region NAME, got '
+            + `${JSON.stringify(op.region)}.`);
+    }
+    const slotSidecars = doc?.preset_sidecars?.[p];
+    const sidecar = slotSidecars?.[name];
+    if (!sidecar || typeof sidecar !== 'object' || Array.isArray(sidecar)) {
+        return refuse(`apworld: player ${p} has no sidecar for region "${name}", and a region `
+            + 'with no sidecar entry has no room to edit. This slot\'s sidecars are '
+            + `[${Object.keys(slotSidecars ?? {}).join(', ') || 'none'}].`);
+    }
+    if (!op.payload || typeof op.payload !== 'object' || Array.isArray(op.payload)) {
+        return refuse('apworld: a room payload is an object (the substrate\'s own serialized '
+            + `world), got ${Array.isArray(op.payload) ? 'an array' : JSON.stringify(op.payload)}.`);
+    }
+    const region = regionsOf(doc, p)[name];
+    if (!region) {
+        return refuse(`apworld: no region "${name}" in \`regions.${p}\` — the sidecar names a `
+            + 'region the document does not carry, so there are no rules to move.');
+    }
+    const rules = op.rules;
+    if (!rules || typeof rules !== 'object' || Array.isArray(rules)
+        || !isNameMap(rules.exits) || !isNameMap(rules.locations)) {
+        return refuse('apworld: replace-region-sidecar needs `rules` as '
+            + '`{exits: {<exit name>: rule}, locations: {<location name>: rule}}` — the names '
+            + `the DOCUMENT holds, got ${JSON.stringify(rules)}.`);
+    }
+
+    const exits = region.exits ?? [];
+    const locations = region.locations ?? [];
+    for (const [what, list] of [['exit', exits], ['location', locations]]) {
+        const seen = new Set();
+        for (const e of list) {
+            if (seen.has(e?.name)) {
+                return refuse(`apworld: region "${name}" holds two ${what}s named `
+                    + `"${e.name}", and a name → rule map cannot address either of them. `
+                    + 'Rename one first.');
+            }
+            seen.add(e?.name);
+        }
+    }
+
+    const missing = [
+        ...exits.filter((e) => !(e?.name in rules.exits))
+            .map((e) => `exit "${e?.name}" (→ ${e?.connected_region || 'nowhere'})`),
+        ...locations.filter((l) => !(l?.name in rules.locations))
+            .map((l) => `location "${l?.name}"`
+                + (l?.item?.name ? ` (the fill placed "${l.item.name}" there)` : '')),
+    ];
+    if (missing.length) {
+        return refuse(`apworld: the edited room of "${name}" no longer has ${missing.length} `
+            + `thing(s) the document names — ${missing.join('; ')}. ⛔ REFUSED rather than `
+            + 'dropped: this document is FILLED, and a location that disappears takes an item '
+            + 'placement with it. Edit the geometry back, or delete them in the Regions tab '
+            + 'first (which is a different op, and one undo of its own).');
+    }
+    const strayExits = Object.keys(rules.exits).filter((k) => !exits.some((e) => e?.name === k));
+    const strayLocs = Object.keys(rules.locations)
+        .filter((k) => !locations.some((l) => l?.name === k));
+    if (strayExits.length || strayLocs.length) {
+        return refuse(`apworld: the rules for "${name}" name things this region does not have — `
+            + `${[...strayExits.map((k) => `exit "${k}"`), ...strayLocs.map((k) => `location "${k}"`)]
+                .join('; ')}. An edited room may move ACCESS RULES; adding an exit or a `
+            + 'location to a filled document is `add-exit` / `add-location`, with an AP id and '
+            + 'a pool entry of its own.');
+    }
+
+    const withRules = (list, map) => list.map((e) => withKey(e, 'access_rule', map[e.name]));
+    const nextRegion = withKey(
+        withKey(region, 'exits', withRules(exits, rules.exits)),
+        'locations', withRules(locations, rules.locations),
+    );
+    const next = withRegion(
+        setPath(doc, ['preset_sidecars', p, name, 'playable_payload'], op.payload),
+        p, name, nextRegion,
+    );
+    return ok(next, `region ${name}: room replaced (${exits.length} exit rule`
+        + `${exits.length === 1 ? '' : 's'}, ${locations.length} location rule`
+        + `${locations.length === 1 ? '' : 's'})`);
+}
+
+/** ⛓ A `{name: rule}` map — an object, and never an array. */
+const isNameMap = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+
 /* ── the whole document ───────────────────────────────────────────────── */
 
 /**
@@ -888,7 +1016,7 @@ function opSetRuleTree(doc, op) {
  * The raw view is a text editor over `JSON.stringify(record, null, 2)`, and a
  * person editing text can move any part of the document at once — rename a
  * region and add a top-level key in the same keystroke run. ⛔ There is no
- * decomposition of that into the nineteen atomic ops, and inventing one would
+ * decomposition of that into the other atomic ops, and inventing one would
  * be a diff algorithm whose output nobody typed. So the edit IS the new
  * document, recorded as one op, and one undo folds it away entirely.
  *
