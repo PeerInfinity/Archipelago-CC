@@ -11062,7 +11062,10 @@ for: 6 fixed instruments, 2 STALE**). All three 3× green solo, quoted with END 
 Gates: `check-procgen-help --doors=all` **ALL PASS** (267) · `check-procgen-reference --check`
 **ALL CHECKS PASSED** (no docblock first sentence moved, so no generator run was owed) · bounded vitest
 **11 files / 526 tests / 0 failed** · in-app `test-substrates --batch=fast` **83/83** with `compare-runs`
-reporting **no differences in status, roster, or duration**.
+reporting **no differences in status, roster, or duration** · ⚖ 52 from CI at the pushed SHA,
+`CI vitest @ 2b8c9be27 — run 33995895019 success`, **436/13301 (0 failed)** and slow battery 12/217 —
+**delta ZERO**, derived per file (3 files touched, 0 of them test files; `--is-ancestor` holds for both
+`ef2f40efe` and `84b5e7115`).
 
 ⚑ **What V3a overturns.** (i) The omsi leg was **not** "build the park" — the park is one of FOUR layers,
 and the other three were invisible until it worked: the park **races the region entry** (a `user:regionMove`
