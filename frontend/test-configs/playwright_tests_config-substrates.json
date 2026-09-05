@@ -364,6 +364,30 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "APWorld hub H1. The Links tab's substrate rows are derived from the live substrateRegistry's roomEditor declarations; the expected set is read off the registry in the browser, never listed here."
+        },
+        {
+            "id": "apworld-presets-button-opens-the-same-world",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H2. The button the \u2696 asked for on the opened-preset screen. It only RAISES the hub (ui:activatePanel) — the preset load already published the document app-wide — so the assertion is that the hub's session names the same game and seed, read off the loaded document."
+        },
+        {
+            "id": "apworld-download-writes-the-working-copy",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H2. Intercepts URL.createObjectURL and asserts the BLOB's bytes, not that a file appeared: a page-initiated download is inert in some sandboxes. A working-copy edit must be in those bytes, which a download reading applied state would fail."
+        },
+        {
+            "id": "apworld-apply-keeps-the-sphere-log",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H2. Apply published 'apworldEditorApply', which sphereState can neither parse as a preset path nor recognise as one of its four in-memory sources, so it reset the sphere state and loaded nothing for 199 of 205 presets. This row opens a FILE-LOGGED preset, applies, and asserts the log survived."
+        },
+        {
+            "id": "apworld-raw-view-replaces-the-document-as-one-op",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H2. The raw view saves the whole document as ONE replace-document op that one undo folds away byte for byte, and the size guard is driven AT the measured threshold, one byte over it, and through the 'show it anyway' escape — the constant imported from rawView.js, never typed in the test."
         }
     ]
 }

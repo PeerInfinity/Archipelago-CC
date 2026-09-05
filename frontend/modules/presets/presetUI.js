@@ -1141,6 +1141,11 @@ export class PresetUI {
     if (!this.rootElement) {
       this.rootElement = document.createElement('div');
       this.rootElement.id = 'presets-panel';
+      // ⛓ The handle every browser verifier and in-app row reaches this panel
+      //   through — the marking tool's `.rmt-panel.__panel` precedent, and the
+      //   APWorld hub's. Without it a test can only drive the DOM, which for a
+      //   preset means clicking through a 205-entry list.
+      this.rootElement.__panel = this;
       this.rootElement.classList.add('panel-container');
       this.rootElement.style.height = '100%';
       this.rootElement.style.overflowY = 'auto';

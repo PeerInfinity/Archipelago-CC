@@ -54,6 +54,14 @@ import {
   playerSlotsOf,
 } from './documentKeys.js';
 import { buildLinkRows } from './documentLinks.js';
+import { downloadJson, rulesDownloadName } from './downloadJson.js';
+import {
+  RAW_VIEW_LIMIT_BYTES,
+  parseRawView,
+  rawViewText,
+  rawViewVerdict,
+  utf8Bytes,
+} from './rawView.js';
 
 const RAW_JSON_LOADED = 'stateManager:rawJsonDataLoaded';
 const APP_READY = 'app:readyForUiDataLoad';
@@ -90,6 +98,7 @@ const TABS = [
   { id: 'meta', label: 'Meta' },
   { id: 'document', label: 'Document' },
   { id: 'links', label: 'Links' },
+  { id: 'raw', label: 'Raw JSON' },
 ];
 
 /** ⛓ Where the page fetches the schema the Document tab is DERIVED from. */
@@ -132,9 +141,30 @@ class ApworldEditorUI {
     });
     this.session = null;
     this.isInitialized = false;
+    /**
+     * ⛓⛓⛓ **WHERE THIS DOCUMENT CAME FROM, CARRIED THROUGH APPLY** (H2 Task 3).
+     * The string the app published as `sourceName` when the session opened,
+     * kept only when it is a real load path rather than an in-panel hand-off.
+     * `_handleApply` re-publishes it, which is the whole of "load into the app
+     * as if it was a preset" — see the method for the measurement.
+     */
+    this._originSourceName = null;
+    /**
+     * ⛓⛓ **THE ECHO OF OUR OWN APPLY, TOLD APART BY OBJECT IDENTITY.** It used
+     * to be told apart by `sourceName === APPLY_SOURCE`, which stopped working
+     * the moment Apply started republishing the ORIGIN's source name: the panel
+     * would have seen a preset path, called it a session boundary, and thrown
+     * away the very edits it had just published. `stateManager` re-emits
+     * `rawJsonData: eventData.jsonData` BY REFERENCE, so the object we handed
+     * out is the object that comes back.
+     */
+    this._appliedDocs = new WeakSet();
+    /** ⛓ The raw tab's uncommitted text, so a re-render does not eat a draft. */
+    this._rawDraft = null;
+    /** ⛓ A person's explicit "show it anyway" over the size guard, per session. */
+    this._rawForced = false;
     this.rawJsonUnsubscribe = null;
     this.loadRulesUnsubscribe = null;
-    this.pendingApply = false;
     this.activeTab = 'regions';
 
     /**
@@ -200,8 +230,8 @@ class ApworldEditorUI {
 
     this.rawJsonUnsubscribe = this.eventBus.subscribe(RAW_JSON_LOADED, (eventData) => {
       if (!eventData || !eventData.rawJsonData) return;
-      if (this.pendingApply && eventData.source === APPLY_SOURCE) {
-        this.pendingApply = false;
+      if (this._appliedDocs.has(eventData.rawJsonData)) {
+        this._appliedDocs.delete(eventData.rawJsonData);
         log('info', 'Ignoring our own apply round-trip.');
         return;
       }
@@ -209,6 +239,8 @@ class ApworldEditorUI {
       // etc.) the editor doesn't edit — see cloneFullRulesDoc's contract.
       this._openSession(eventData.rawJsonData, {
         kind: 'rules', source: eventData.source ?? 'app-load', player: this.playerId,
+        // ⛓ The load's OWN source string — the one Apply re-publishes.
+        origin: eventData.source ?? null,
       });
     });
 
@@ -228,8 +260,10 @@ class ApworldEditorUI {
       this._adoptHandoffRules(pending);
     } else if (!this.session) {
       const current = this._getCurrentAppRules();
-      if (current) {
-        this._openSession(current, { kind: 'rules', source: 'app-cache', player: this.playerId });
+      if (current.doc) {
+        this._openSession(current.doc, {
+          kind: 'rules', source: 'app-cache', player: this.playerId, origin: current.source,
+        });
       }
     }
 
@@ -242,7 +276,14 @@ class ApworldEditorUI {
   // Adopt a world handed directly to the editor (load-rules channel). Same
   // full-doc clone the global load path uses, so procgen_metadata is preserved.
   _adoptHandoffRules(jsonData) {
-    this._openSession(jsonData, { kind: 'rules', source: 'hand-off', player: this.playerId });
+    /**
+     * ⛔ A HAND-OFF HAS NO ORIGIN, and that is the honest answer rather than a
+     * missing feature: the pipeline and the marking tool build this document in
+     * memory, so there is no preset path whose sphere log belongs to it.
+     */
+    this._openSession(jsonData, {
+      kind: 'rules', source: 'hand-off', player: this.playerId, origin: null,
+    });
   }
 
   /**
@@ -258,6 +299,11 @@ class ApworldEditorUI {
   _openSession(jsonData, baseTag) {
     this.session = createEditSession(rulesEditAdapter, cloneFullRulesDoc(jsonData),
       { base: baseTag });
+    // ⛓ RECORDED, never inferred later: a boundary is the only place the
+    //   document's provenance is known, and Apply is downstream of every op.
+    this._originSourceName = baseTag?.origin ?? null;
+    this._rawDraft = null;
+    this._rawForced = false;
     this._render();
   }
 
@@ -464,9 +510,23 @@ class ApworldEditorUI {
       flex: '0 0 auto',
     });
 
+    /**
+     * ⛓ APPLY KEEPS ITS NAME. The ⚖ asked for "a way to load the rules.json
+     * data into the app, as if it was a preset", and that is what this button
+     * has always done — a second button beside it doing the same thing under a
+     * different name would be two doors into one room. What changed is the
+     * BEHAVIOUR (the origin source name rides along, so the sphere log
+     * survives) and the title, which now says what the gesture means.
+     */
     this.applyButton = this._makeButton('Apply', '#2e7d32', () => this._handleApply());
-    this.applyButton.title = 'Publish edits as a fresh rules reload';
+    this.applyButton.title = 'Load this document into the app, as if it were a preset '
+      + '(publishes it app-wide under the source it came from, so its sphere log follows)';
     toolbar.appendChild(this.applyButton);
+
+    this.downloadButton = this._makeButton('⭳ Download', '#33506e', () => this._handleDownload());
+    this.downloadButton.classList.add('apworld-download');
+    this.downloadButton.title = 'Save this document as a rules.json file';
+    toolbar.appendChild(this.downloadButton);
 
     this.clearButton = this._makeButton('Clear', '#8a2a2a', () => this._handleClear());
     this.clearButton.title = 'Remove all regions, exits, locations, and items (metadata kept)';
@@ -755,26 +815,33 @@ class ApworldEditorUI {
    */
   _handleReload() {
     const current = this._getCurrentAppRules();
-    if (!current) {
+    if (!current.doc) {
       alert('No rules data is currently loaded in the app.');
       return;
     }
     if (!confirm('Discard your edits and reload the rules data the rest of the app currently has loaded?')) return;
     this._opMessage = null;
-    this._openSession(current, { kind: 'rules', source: 'reload', player: this.playerId });
+    this._openSession(current.doc, {
+      kind: 'rules', source: 'reload', player: this.playerId, origin: current.source,
+    });
     log('info', 'Reloaded rules from the app\'s last published rules.json.');
   }
 
+  /**
+   * ⛓⛓ **THE DOCUMENT *AND* THE NAME THE APP LOADED IT UNDER, together.** ⛔ The
+   * two used to be fetched separately and that is how a provenance goes wrong:
+   * the legacy `G_combinedModeData` fallback reflects only the STARTUP load and
+   * goes stale after a preset switch, so pairing its document with the last
+   * published source would attribute one world's bytes to another world's path
+   * — and Apply would then fetch the wrong sphere log.
+   */
   _getCurrentAppRules() {
-    // Last rules.json the app published (covers any load, not just the
-    // startup one). The G_combinedModeData global is the legacy
-    // fallback — it only reflects the startup load and goes stale
-    // after preset switches.
-    const last = getLastRawJsonData()?.rawJsonData;
-    if (last) return last;
-    return (typeof window !== 'undefined'
+    const last = getLastRawJsonData();
+    if (last?.rawJsonData) return { doc: last.rawJsonData, source: last.source ?? null };
+    const legacy = (typeof window !== 'undefined'
       && window.G_combinedModeData
       && window.G_combinedModeData.rulesConfig) || null;
+    return { doc: legacy, source: null };
   }
 
   /**
@@ -799,8 +866,53 @@ class ApworldEditorUI {
    * back to the app as a fresh rules reload and leaves the op list alone: the
    * person may well keep editing, and an undo after an Apply must still work.
    * ⛔ The echo of that publish is the one `RAW_JSON_LOADED` this panel ignores
-   * (`pendingApply` + `APPLY_SOURCE`), which is what stops its own Apply from
-   * opening a boundary that would discard the very edits it just published.
+   * (`_appliedDocs`, by object identity), which is what stops its own Apply
+   * from opening a boundary that would discard the edits it just published.
+   *
+   * ── ⛓⛓⛓ **APPLY IS "LOAD IT AS IF IT WERE A PRESET", AND THE DELTA IS THE
+   *    SPHERE LOG** (H2 Task 3; ⚖ user: *"I want a way to load the rules.json
+   *    data into the app, as if it was a preset."*)
+   *
+   * The brief's first guess was that the delta was the `rules:loaded` event a
+   * preset load publishes and Apply does not. ⚠ OVERTURNED before this slice
+   * started: `rules:loaded` has NO subscriber anywhere in `frontend/` — only a
+   * publisher registration (`presets/index.js:55`) — so publishing it from here
+   * would be a cargo-cult line.
+   *
+   * ⛓ **THE REAL DELTA, MEASURED.** `files:jsonLoaded.sourceName` becomes
+   * `stateManagerProxy.currentRulesSource` (`app/initialization/index.js:730`)
+   * and reaches `sphereState` as `stateManager:rulesLoaded.source`
+   * (`stateManagerProxy.js:523`). `sphereState/index.js:254` parses it as a
+   * preset path to derive `./presets/<game>/<dir>/<seed>_sphere_log.jsonl`, and
+   * when it cannot parse it, it recognises exactly four in-memory sources by
+   * name (`moduleSpecificConfigProvidedRules`, `editorApply`, `procgenPipeline`,
+   * `hardcodedFallback:*`) and tries the EMBEDDED `sphere_log` for three of
+   * them. `apworldEditorApply` is not one of the four. ⇒ Apply used to reset the
+   * sphere state and then load nothing at all:
+   *
+   *   · **173 of the 205 committed presets** keep their sphere log as a
+   *     SIBLING FILE and carry no embedded one — the file path is the only way
+   *     to reach it, and Apply threw the path away.
+   *   · **26** carry an embedded `sphere_log` and no file — and those lost it
+   *     too, because the embedded fallback is gated on that four-name list.
+   *   · 6 have neither. (Measured over the 205 committed presets; the command
+   *     is in the plan's §12.)
+   *
+   * ⇒ **Apply re-publishes the session's ORIGIN source name.** That is the
+   * smaller of the two fixes the brief offered and the only one that does not
+   * change the document: embedding the fetched log under the schema's
+   * `sphere_log` key would put bytes into the person's document that their
+   * preset never had, and the ⚖ says the save destination IS the rules.json
+   * data. Carrying the origin makes both cases work through the code that
+   * already exists — the file path re-derives the sibling log; an embedded log
+   * rides along inside the document it was always part of.
+   *
+   * ⛔ `APPLY_SOURCE` survives as the fallback for a document with NO origin (a
+   * pipeline or marking-tool hand-off, which was built in memory and has no
+   * preset path). `scripts/procgen/verify-region-marking-tool.mjs:653` grabs the
+   * published event by that exact string, and its session is a hand-off — a
+   * node row below pins that pairing so a future change to the fallback reds
+   * here rather than in a hand-run browser gate.
    */
   _handleApply() {
     if (!this.rulesDoc) {
@@ -808,18 +920,27 @@ class ApworldEditorUI {
       return;
     }
     try {
-      this.pendingApply = true;
       // Emit a full-doc clone so preserved keys (procgen_metadata etc.) survive
       // the apply round-trip alongside the edited regions/items/rules.
+      const published = cloneFullRulesDoc(this.rulesDoc);
+      this._appliedDocs.add(published);
+      const sourceName = this._originSourceName ?? APPLY_SOURCE;
       this.eventBus.publish('files:jsonLoaded', {
-        jsonData: cloneFullRulesDoc(this.rulesDoc),
+        jsonData: published,
         selectedPlayerId: this.playerId,
-        sourceName: APPLY_SOURCE,
+        sourceName,
+        // ⛓ An explicit marker, since `sourceName` is now the ORIGIN's. Extra
+        //   fields are dropped by the state manager's `rawJsonDataLoaded`
+        //   re-emit, so nothing downstream can key on it by accident.
+        appliedBy: APPLY_SOURCE,
       });
       this._flashButton(this.applyButton, true);
-      log('info', 'Published files:jsonLoaded from APWorld Editor.');
+      this._opMessage = sourceName === APPLY_SOURCE
+        ? 'Applied — this document has no preset origin, so no sphere log is fetched.'
+        : `Applied as ${sourceName}.`;
+      this._renderChrome();
+      log('info', `Published files:jsonLoaded from APWorld Editor as ${sourceName}.`);
     } catch (err) {
-      this.pendingApply = false;
       log('error', 'Apply failed:', err);
       this._flashButton(this.applyButton, false);
     }
@@ -855,6 +976,8 @@ class ApworldEditorUI {
       this._renderDocumentTab();
     } else if (this.activeTab === 'links') {
       this._renderLinksTab();
+    } else if (this.activeTab === 'raw') {
+      this._renderRawTab();
     } else {
       const regions = this._regions();
       this._renderRegionsTab(regions, Object.keys(regions));
@@ -890,6 +1013,8 @@ class ApworldEditorUI {
     } else if (this.activeTab === 'links') {
       const n = buildLinkRows(substrateRegistry).length;
       summary = `${gameName} — ${n} editor link${n === 1 ? '' : 's'}`;
+    } else if (this.activeTab === 'raw') {
+      summary = `${gameName} — ${this._rawVerdict().bytes.toLocaleString()} bytes`;
     } else {
       const n = this._regionNames().length;
       summary = `${gameName} — ${n} region${n === 1 ? '' : 's'}`;
@@ -1529,6 +1654,194 @@ class ApworldEditorUI {
     }
     this._opMessage = `${row.label}: unknown link target kind ${JSON.stringify(target.kind)}.`;
     this._renderChrome();
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+   * THE EXITS — download, and the raw view over the working copy
+   * ══════════════════════════════════════════════════════════════════ */
+
+  /**
+   * ⛓ DOWNLOAD. The bytes are the WORKING COPY's, pretty-printed exactly as the
+   * committed presets are, so a file saved here and a file checked out of the
+   * repo differ only where the person edited.
+   */
+  _handleDownload() {
+    if (!this.rulesDoc) {
+      this._flashButton(this.downloadButton, false);
+      return;
+    }
+    try {
+      const written = downloadJson(rulesDownloadName(this.rulesDoc), this.rulesDoc);
+      this._opMessage = `Downloaded ${written.fileName} (${written.bytes.toLocaleString()} bytes).`;
+      log('info', `Downloaded ${written.fileName} — ${written.bytes} bytes.`);
+      this._renderChrome();
+    } catch (err) {
+      log('error', 'Download failed:', err);
+      this._opMessage = `Download failed: ${err.message}`;
+      this._flashButton(this.downloadButton, false);
+      this._renderChrome();
+    }
+  }
+
+  /** ⛓ The raw view's text — the DRAFT when there is one, else the record. */
+  _rawText() {
+    return this._rawDraft ?? rawViewText(this.rulesDoc);
+  }
+
+  /** ⛓ The size question, asked of the RECORD rather than of a stale draft. */
+  _rawVerdict() {
+    return rawViewVerdict(utf8Bytes(rawViewText(this.rulesDoc)));
+  }
+
+  /**
+   * ⛓⛓⛓ **THE RAW VIEW IS OVER THE WORKING COPY, GUARDED BY A MEASURED
+   * THRESHOLD.** ⛔ Not over applied state: the arc's ⚖ is that every linked
+   * editor opens from `session.record()` and returns ONE op, and the raw view is
+   * the most linked-editor-shaped of them all — a whole document in, a whole
+   * document back, folded away by one undo.
+   *
+   * Above the threshold the tab says the size, names the limit, and offers the
+   * download — with an explicit "show it anyway" beside it, because a limit
+   * that cannot be overridden is a document its owner cannot look at.
+   */
+  _renderRawTab() {
+    const verdict = this._rawVerdict();
+
+    const intro = document.createElement('div');
+    Object.assign(intro.style, { color: '#888', fontSize: '11px', padding: '2px 0 6px' });
+    intro.textContent = 'The whole document as text — the WORKING COPY, including every edit '
+      + 'made in the other tabs and not yet applied. Saving replaces the document as ONE op, '
+      + 'so a single undo takes the text edit back out.';
+    this.scrollContainer.appendChild(intro);
+
+    const size = document.createElement('div');
+    size.className = 'apworld-raw-size';
+    size.textContent = verdict.message;
+    Object.assign(size.style, {
+      color: verdict.overLimit ? '#e0a030' : '#777', fontSize: '11px', padding: '0 0 6px',
+    });
+    this.scrollContainer.appendChild(size);
+
+    if (verdict.overLimit && !this._rawForced) {
+      const box = document.createElement('div');
+      box.className = 'apworld-raw-overlimit';
+      Object.assign(box.style, {
+        border: '1px solid #5a4520', backgroundColor: '#2a2216', borderRadius: '3px',
+        padding: '8px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap',
+      });
+      const why = document.createElement('div');
+      why.style.color = '#e0a030';
+      why.style.fontSize = '11px';
+      why.textContent = `This document is ${verdict.bytes.toLocaleString()} bytes, above the `
+        + `${verdict.limit.toLocaleString()}-byte view limit. The limit is a MEASUREMENT — see `
+        + '`rawView.js`\'s RAW_VIEW_LIMIT_BYTES for the numbers and the command. Download it and '
+        + 'open it in a real editor instead.';
+      box.appendChild(why);
+      const dl = this._makeButton('⭳ Download instead', '#33506e', () => this._handleDownload());
+      dl.className = 'apworld-raw-download';
+      box.appendChild(dl);
+      const anyway = this._makeButton('Show it anyway', '#444', () => {
+        this._rawForced = true;
+        this._render();
+      });
+      anyway.className = 'apworld-raw-force';
+      anyway.title = 'Mount the text view over this document regardless. Expect the numbers in '
+        + 'RAW_VIEW_LIMIT_BYTES\' table.';
+      box.appendChild(anyway);
+      this.scrollContainer.appendChild(box);
+      return;
+    }
+
+    const text = document.createElement('textarea');
+    text.className = 'apworld-raw-text';
+    text.spellcheck = false;
+    text.value = this._rawText();
+    Object.assign(text.style, {
+      width: '100%', minHeight: '420px', boxSizing: 'border-box',
+      backgroundColor: '#111', color: '#ddd', border: '1px solid #444', borderRadius: '3px',
+      fontFamily: 'monospace', fontSize: '11px', whiteSpace: 'pre', overflowWrap: 'normal',
+    });
+    /**
+     * ⛔ The draft is kept OUT of the record until Save. A per-keystroke op
+     * would make one pasted document a thousand undos, and a per-keystroke
+     * PARSE would refuse every intermediate state a person types through.
+     */
+    text.addEventListener('input', () => { this._rawDraft = text.value; this._renderRawStatus(); });
+    this.scrollContainer.appendChild(text);
+    this.rawTextArea = text;
+
+    const bar = document.createElement('div');
+    Object.assign(bar.style, {
+      display: 'flex', alignItems: 'center', gap: '8px', margin: '6px 0 0', flexWrap: 'wrap',
+    });
+    const save = this._makeButton('Save JSON', '#2e7d32', () => this._handleRawSave());
+    save.className = 'apworld-raw-save';
+    bar.appendChild(save);
+    const revert = this._makeButton('Revert to the record', '#444', () => {
+      this._rawDraft = null;
+      this._opMessage = 'Raw text reverted to the document.';
+      this._render();
+    });
+    revert.className = 'apworld-raw-revert';
+    bar.appendChild(revert);
+    const dl = this._makeButton('⭳ Download', '#33506e', () => this._handleDownload());
+    dl.className = 'apworld-raw-download';
+    bar.appendChild(dl);
+
+    this.rawStatus = document.createElement('span');
+    this.rawStatus.className = 'apworld-raw-status';
+    Object.assign(this.rawStatus.style, { color: '#888', fontSize: '11px' });
+    bar.appendChild(this.rawStatus);
+    this.scrollContainer.appendChild(bar);
+    this._renderRawStatus();
+  }
+
+  /** ⛓ Whether the draft differs from the record, said out loud. */
+  _renderRawStatus() {
+    if (!this.rawStatus) return;
+    if (this._rawDraft === null) {
+      this.rawStatus.textContent = 'Unmodified.';
+      this.rawStatus.style.color = '#888';
+      return;
+    }
+    const chars = this._rawDraft.length;
+    this.rawStatus.textContent = `Edited — ${chars.toLocaleString()} characters, not saved yet.`;
+    this.rawStatus.style.color = '#d6a030';
+  }
+
+  /**
+   * ⛓⛓⛓ **ONE `replace-document`, AND THE SCHEMA GETS A VETO FIRST** — the
+   * `set-key` veto's shape (a PREVIEW, validated whole, DIFFERENCED against the
+   * errors the document already had, so an edit is never refused for somebody
+   * else's dangling reference).
+   *
+   * ⛔ The op carries the PARSED document, never the text. An edit list whose
+   * payload is a recipe that can fail to re-parse is not a record.
+   */
+  _handleRawSave() {
+    if (!this.session) {
+      alert('Load a rules.json first.');
+      return;
+    }
+    const parsed = parseRawView(this._rawText());
+    if (!parsed.ok) {
+      this._opMessage = `Refused: ${parsed.error}`;
+      log('warn', `raw save refused: ${parsed.error}`);
+      this._renderChrome();
+      return;
+    }
+    const op = { op: 'replace-document', document: parsed.document, player: this.playerId };
+    const errors = this._schemaErrorsAddedBy(op);
+    if (errors.length > 0) {
+      this._opMessage = `Refused: ${errors.length} schema `
+        + `error${errors.length === 1 ? '' : 's'} this edit would ADD: `
+        + `${errors.slice(0, 3).join(' · ')}${errors.length > 3 ? ' · …' : ''}`;
+      log('warn', `replace-document refused by the schema: ${errors.join(' | ')}`);
+      this._renderChrome();
+      return;
+    }
+    this._rawDraft = null;
+    this._applyOp(op);
   }
 
   _makeSectionHeader(text) {

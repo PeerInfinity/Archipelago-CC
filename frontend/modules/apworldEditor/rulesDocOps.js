@@ -102,6 +102,7 @@ export const RULES_OP_KINDS = Object.freeze([
     'set-completion-condition',
     'set-rule-tree',
     'set-key',
+    'replace-document',
     'clear',
 ]);
 
@@ -340,6 +341,7 @@ function dispatchRulesDocOp(doc, op) {
         case 'set-completion-condition': return opSetCompletionCondition(doc, op);
         case 'set-rule-tree': return opSetRuleTree(doc, op);
         case 'set-key': return opSetKey(doc, op);
+        case 'replace-document': return opReplaceDocument(doc, op);
         case 'clear': return opClear(doc, op);
         default:
             return refuse(`apworld: unknown op ${JSON.stringify(op?.op)} — the vocabulary is `
@@ -875,6 +877,50 @@ function opSetRuleTree(doc, op) {
         withRegion(doc, p, path.region, withKey(region, listKey, next)),
         `access rule on ${path.kind} #${path.index} in ${path.region} = ${op.tree.rule}`,
     );
+}
+
+/* ── the whole document ───────────────────────────────────────────────── */
+
+/**
+ * ⛓⛓⛓ **THE RAW VIEW'S ONE OP — `{document}` REPLACES THE WHOLE RECORD**
+ * (APWORLD EDITOR HUB slice H2).
+ *
+ * The raw view is a text editor over `JSON.stringify(record, null, 2)`, and a
+ * person editing text can move any part of the document at once — rename a
+ * region and add a top-level key in the same keystroke run. ⛔ There is no
+ * decomposition of that into the nineteen atomic ops, and inventing one would
+ * be a diff algorithm whose output nobody typed. So the edit IS the new
+ * document, recorded as one op, and one undo folds it away entirely.
+ *
+ * ⛓⛓ **THE VALUE IS COPIED AT THE DOOR** — `applyRulesDocOp`'s `carried()`
+ * clones the whole op before dispatch, so the record and the textarea's parsed
+ * object share nothing. Without that, a raw view that re-parses its own text on
+ * every keystroke writes THROUGH the record: `equal(record, next)` then sees
+ * two identical documents, the session reports a NO-OP for an edit that already
+ * happened invisibly, and undo cannot see it either. That is the defect the
+ * first browser run of B-c found on `set-rule-tree`, and this op carries a
+ * WHOLE document for exactly the same reason.
+ *
+ * ⛔ NO SCHEMA IS READ HERE, and no `validateRules` either. This module is pure
+ * and the op is a replacement, not an edit of a reference: `newValidationError`
+ * differences against the document BEING REPLACED, whose errors say nothing
+ * about the one arriving. The CALLER (the panel) runs `rulesJsonSchemaErrors`
+ * over the candidate and refuses BY PATH before the op is ever built — the
+ * `set-key` veto's shape, and for the same reason.
+ *
+ * ⚠ `player` is ignored on purpose: a whole document is not a slot's slice of
+ * one. The panel still stamps the field (`_stampPlayer` stamps every op) and
+ * the op records it, which costs nothing and keeps the edit list uniform.
+ */
+function opReplaceDocument(doc, op) {
+    const next = op.document;
+    if (!next || typeof next !== 'object' || Array.isArray(next)) {
+        return refuse('apworld: replace-document needs a rules document (a JSON object), got '
+            + `${Array.isArray(next) ? 'an array' : JSON.stringify(next)}.`);
+    }
+    const keys = Object.keys(next);
+    return ok(next, `document replaced (${keys.length} top-level key`
+        + `${keys.length === 1 ? '' : 's'})`);
 }
 
 /* ── clear ───────────────────────────────────────────────────────────── */

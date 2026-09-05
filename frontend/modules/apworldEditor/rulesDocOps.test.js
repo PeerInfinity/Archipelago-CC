@@ -99,6 +99,7 @@ describe('the contract shape', () => {
             'set-completion-condition': { op: 'set-completion-condition', condition: { type: 'constant', value: true } },
             'set-rule-tree': { op: 'set-rule-tree', path: { region: 'Hall', kind: 'exit', index: 0 }, tree: { rule: 'True_' } },
             'set-key': { op: 'set-key', key: 'preset_label', value: 'a label' },
+            'replace-document': { op: 'replace-document', document: { game_name: 'Replaced' } },
             clear: { op: 'clear' },
         };
         // ⛔ The sample table covers the WHOLE vocabulary — derived, so a new op
@@ -550,6 +551,69 @@ describe('a carried payload is COPIED into the record', () => {
             .toMatchObject({ op: 'add-exit', region: 'Vault', name: 'Vault → ?' });
         expect(applied(doc, { op: 'add-location', region: 'Vault' }).op)
             .toMatchObject({ op: 'add-location', region: 'Vault', name: 'New Location' });
+    });
+});
+
+describe('replace-document — the raw view\'s one op (H2)', () => {
+    it('⛓ replaces the WHOLE record and says how many keys arrived', () => {
+        const doc = fixture();
+        const next = { game_name: 'Replaced', schema_version: 3 };
+        const res = applied(doc, { op: 'replace-document', document: next });
+        expect(res.doc).toEqual(next);
+        expect(res.description).toBe('document replaced (2 top-level keys)');
+        // ⛔ and the input is untouched, like every other op.
+        expect(doc.game_name).toBe('Fixture');
+    });
+
+    it('⛓ singular/plural in the description, so a one-key document reads right', () => {
+        expect(applied(fixture(), { op: 'replace-document', document: { a: 1 } }).description)
+            .toBe('document replaced (1 top-level key)');
+    });
+
+    /**
+     * ⛓⛓⛓ **THE ALIASING ROW — the discriminator for mutant (a).** The op
+     * carries a whole document a CALLER built, and the raw view is a caller
+     * that keeps its parsed object around. If `applyRulesDocOp` stored the
+     * caller's reference instead of `carried(op)`'s copy, the record and the
+     * caller's object would be the same object: the next thing the caller
+     * touched would write THROUGH the record, and the fold would reconstruct a
+     * document nobody typed.
+     */
+    it('⛔ COPIES the document at the door — the record and the caller share nothing', () => {
+        const doc = fixture();
+        const mine = { game_name: 'Mine', regions: { 1: { Hall: { name: 'Hall' } } } };
+        const res = applied(doc, { op: 'replace-document', document: mine });
+
+        // The caller keeps editing its own object, as the raw view does.
+        mine.game_name = 'Mutated after the op';
+        mine.regions[1].Hall.name = 'Mutated too';
+
+        expect(res.doc.game_name).toBe('Mine');
+        expect(res.doc.regions['1'].Hall.name).toBe('Hall');
+        // ⛓ and the RECORDED op is a copy as well — the edit list is the identity.
+        expect(res.op.document.game_name).toBe('Mine');
+        expect(res.op.document).not.toBe(mine);
+    });
+
+    it('⛔ refuses anything that is not a JSON object, BY SHAPE', () => {
+        for (const bad of [null, undefined, 42, 'a string', true]) {
+            const res = apply(fixture(), { op: 'replace-document', document: bad });
+            expect(res.ok, JSON.stringify(bad)).toBe(false);
+            expect(res.error).toContain('needs a rules document');
+        }
+        // ⛔ An array passes `typeof === 'object'`; it is refused by name.
+        const arr = apply(fixture(), { op: 'replace-document', document: [] });
+        expect(arr.ok).toBe(false);
+        expect(arr.error).toContain('an array');
+    });
+
+    /**
+     * ⛓ The op is in the vocabulary the unknown-op refusal quotes, so a
+     * mistyped `replace-doc` names the real one.
+     */
+    it('⛓ is part of the vocabulary an unknown op is refused against', () => {
+        expect(RULES_OP_KINDS).toContain('replace-document');
+        expect(apply(fixture(), { op: 'replace-doc' }).error).toContain('replace-document');
     });
 });
 
