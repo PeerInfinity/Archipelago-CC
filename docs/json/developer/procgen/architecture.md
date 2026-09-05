@@ -88,7 +88,7 @@ Headless equivalents of everything the pages do live in `scripts/procgen/`. The 
 
 79 of them drive a real browser; 173 accept at least one `--flag` OF THEIR OWN; 88 are cited by one of these documents; and 0 open with no comment at all.
 
-Each also accepts what a module it IMPORTS parses: `--help` (264, in `argvHelp.js`) · `--wait-for-box` (99, in `boxLock.js`) · `--only` (1, in `rehearsalTree.js`) · `--record` (1, in `rehearsalTree.js`) · `--walk-report` (1, in `rehearsalTree.js`). Those are listed per row with the parse site named, so the table says what a file ACCEPTS without losing where the parse lives.
+Each also accepts what a module it IMPORTS parses: `--help` (265, in `argvHelp.js`) · `--wait-for-box` (99, in `boxLock.js`) · `--only` (1, in `rehearsalTree.js`) · `--record` (1, in `rehearsalTree.js`) · `--walk-report` (1, in `rehearsalTree.js`). Those are listed per row with the parse site named, so the table says what a file ACCEPTS without losing where the parse lives.
 
 One row each — the one-liner from the file's own docblock, the flags it reads out of `argv`, whether it needs a browser, and which document cites it — is on the [reference page](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html#section-instruments), which can filter them.
 

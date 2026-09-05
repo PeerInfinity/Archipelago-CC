@@ -7911,6 +7911,10 @@ export const INSTRUMENTS = frz({
             ],
             "inheritedFlags": [
                 {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
                     "from": "boxLock.js",
                     "name": "wait-for-box"
                 }
