@@ -34,7 +34,7 @@ import { BOUNCE_LIBRARY_ITEMS } from '../../frontend/modules/bounceDemo/bounceDe
 import { growSpheres } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import { planSpheres } from '../../frontend/modules/procgenPipeline/spherePlanner.js';
 import { DEFAULT_ITEMS } from '../../frontend/modules/shared/procgen/library.js';
-import { createRng } from '../../frontend/modules/shared/rng.js';
+import { collectSphereGrowthPrep } from '../../frontend/modules/procgenPipeline/sphereConfigHooks.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -51,17 +51,38 @@ import { argvHelp } from './argvHelp.js';
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'verify-rule-gated-portals.mjs', kind: 'browser' });
 
-const ITEM_POOL = { 'Right arrow': 1, key_red: 1, victory: 1 };
+/**
+ * ⛓⛓ TWO ARROWS, AND THAT IS THE PANEL'S ARITHMETIC, NOT A TASTE. Bounce's
+ * `prepareSphereGrowth` hook GRANTS one arrow free and REMOVES it from the pool
+ * (`itemPoolDelta: {[pick]: -1}`), so a 3-item pool leaves 2 instances for 3
+ * spheres and `planSpheres` refuses. The second arrow is what the pool spends
+ * on sphere 1 — and it is also what gates the wave-1 region that hosts key_red,
+ * which is the shape this instrument asserts.
+ */
+const ITEM_POOL = { 'Left arrow': 1, 'Right arrow': 1, key_red: 1, victory: 1 };
 const ITEM_LIB = { ...DEFAULT_ITEMS, ...BOUNCE_LIBRARY_ITEMS };
 
+/**
+ * ⛓⛓⛓ THE MIRROR IS THE PANEL'S OWN HOOK, NOT A COPY OF IT. This used to
+ * re-implement `_runSphereGrowth`'s pre-plan step by hand — pick an arrow with
+ * `createRng((seed * 31 + 17) | 0)` and pin it `exclusiveSpheres: {1: [arrow]}`
+ * — which was true of the panel until `06eafea4e` (2026-06-19) moved that
+ * contribution into the bounce substrate's `prepareSphereGrowth` adapter hook,
+ * where the arrow became a FREE STARTING ITEM and left the pool entirely. A
+ * hand copy cannot notice a change like that; `collectSphereGrowthPrep` is the
+ * same function `procgenPipelineUI.js:4263` calls, so it cannot drift again.
+ */
 function buildWorld(seed) {
-    // Mirror the panel's _runSphereGrowth (bounce-only quotas → bounce
-    // start → one seeded arrow exclusive to sphere 1).
-    const arrows = ['Left arrow', 'Right arrow'].filter((a) => (ITEM_POOL[a] ?? 0) > 0);
-    const startArrow = arrows[Math.floor(createRng((seed * 31 + 17) | 0).next() * arrows.length)];
+    const itemPool = { ...ITEM_POOL };
+    // ⛔ MUTATES itemPool (the hook's `itemPoolDelta`) — post-prep is what the
+    //    panel plans over, so read it AFTER this call, never before.
+    const prep = collectSphereGrowthPrep({
+        activeIds: ['bounce'], itemPool, quotas: { bounce: 99 },
+        startSubstrate: 'bounce', seed, params: {},
+    });
     const plan = planSpheres({
-        itemPool: ITEM_POOL, sphereCount: 3,
-        exclusiveSpheres: { 1: [startArrow] },
+        itemPool, sphereCount: 3,
+        exclusiveSpheres: prep.exclusiveSpheres,
         victoryItem: 'victory', seed,
     });
     const { tree } = growSpheres({
@@ -74,9 +95,11 @@ function buildWorld(seed) {
             fillerCount: 0,
             revisitRatio: 0.25,
             substrateQuotas: { bounce: 99 },
+            startingItems: prep.startingItems,
+            regionParams: prep.regionParams,
         },
     });
-    return { plan, tree };
+    return { plan, tree, prep };
 }
 
 let SEED = null;
@@ -92,10 +115,25 @@ for (let seed = 1; seed <= 30; seed++) {
     const keyGated = w.tree.nodes.find((n) => n.gate.includes('key_red'));
     const keyHost = w.tree.nodes.find((n) =>
         n.items.some((i) => i.item === 'key_red'));
-    // Need: the key-gated region hangs off the START (lock observable
-    // before the key is collected) and key_red lives elsewhere.
+    // Need: the key-gated region hangs off the START (lock observable before
+    // the key is collected); key_red lives in another region that ALSO hangs
+    // off the start (step 2 drives there with one sendExit); and the start
+    // hosts the pool's arrow, so step 1's climb has something to collect —
+    // the free arrow is in the inventory from tick 0 and cannot witness that.
+    const poolArrow = w.plan.spheres[0].items.find((i) => i.endsWith('arrow'));
     if (keyGated && keyHost && keyGated.parent === start.index
-            && keyHost.index !== start.index && keyHost.index !== keyGated.index) {
+            && keyHost.parent === start.index
+            && keyHost.index !== start.index && keyHost.index !== keyGated.index
+            && poolArrow && start.items.some((i) => i.item === poolArrow)
+            // ⛔ NOT A SOUTH PORTAL. `sideExits.js` places S "low and
+            //    right-of-center (never in the spawn column — a platform there
+            //    would intercept the spawn fall and instantly exit)", so the
+            //    NO-INPUT player, who only ever climbs, cannot reach it: step 3
+            //    would time out on a portal that had correctly unlocked. N
+            //    reuses the level's own top-of-climb portal and E/W sit at the
+            //    side edges "reachable by drifting from the bottom of the
+            //    climb" — all three are on the auto-player's path.
+            && keyGated.side !== 'S') {
         SEED = seed;
         world = w;
         break;
@@ -108,7 +146,11 @@ const startNode = tree.nodes[0];
 const keyGated = tree.nodes.find((n) => n.gate.includes('key_red'));
 const keyHost = tree.nodes.find((n) => n.items.some((i) => i.item === 'key_red'));
 const lockedPortalId = `side_exit_${keyGated.side}`;
+/** The arrow the POOL spends on sphere 1 — NOT the one the hook grants free. */
+const POOL_ARROW = world.plan.spheres[0].items.find((i) => i.endsWith('arrow'));
+const FREE_ARROW = world.prep.startingItems[0];
 console.log(`SEED ${SEED}: start ${startNode.region_id}`,
+    `| free '${FREE_ARROW}' (bounce prepareSphereGrowth) | pool '${POOL_ARROW}' in the start region`,
     `| key_red in ${keyHost.region_id} (side ${keyHost.side}, gate [${keyHost.gate}])`,
     `| key-gated ${keyGated.region_id} on start side ${keyGated.side}`);
 
@@ -150,7 +192,14 @@ if (!activated) throw new Error('Procgen Pipeline tab not found');
 await page.waitForTimeout(1500);
 
 const panel = page.locator('.procgen-pipeline-panel');
-await panel.locator('button:has-text("Generate")').first().click();
+// ⛓ SPHERE MODE'S PRIMARY BUTTON IS "Run all", NOT "Generate" — this page is
+//   pinned to `mode: 'sphereGrowth'` by the addInitScript above, and in that
+//   mode `procgenPipelineUI.js` labels the primary button "Run all" / "Run all
+//   (finish)". `85c1c3ba1` (the stepped sphere pipeline) introduced that label
+//   and re-pointed `verify-sphere-growth-ui.mjs` in the same commit, but not
+//   this file — its sibling that drives the same mode. Left behind, the
+//   locator matched nothing and every run died on a 30 s click timeout.
+await panel.locator('button:has-text("Run all")').first().click();
 await page.waitForTimeout(3000);
 const message = await panel.locator('.procgen-pipeline-message').textContent();
 console.log('PANEL MESSAGE:', message);
@@ -197,9 +246,12 @@ async function waitFor(desc, fn, timeoutMs = 60000) {
 
 // 1. The arrow auto-collects in the start column, and the key-gate
 //    portal reports LOCKED the whole time (key_red doesn't exist yet).
-await waitFor('start arrow in inventory', async () => {
+// ⛔ THE *POOL* ARROW, BY NAME. `FREE_ARROW` is in the inventory from tick 0
+//    (the substrate hook grants it), so "either arrow" would be satisfied
+//    before the climb had happened and this step would witness nothing.
+await waitFor(`the start column collects the pool arrow '${POOL_ARROW}'`, async () => {
     const s = await snapshot();
-    return s.inventory?.['Right arrow'] > 0 || s.inventory?.['Left arrow'] > 0 ? s : null;
+    return s.inventory?.[POOL_ARROW] > 0 ? s : null;
 }, 90000);
 const dbg1 = await gameDebug();
 console.log('GATE STATES (pre-key):', JSON.stringify(dbg1?.gateStates));
@@ -233,9 +285,31 @@ const backSide = (await gameDebug())?.backExitSide;
 if (!backSide) throw new Error('expected a back exit side in the key region');
 await bounceFrame().evaluate(
     (side) => window.__swfBridge.sendExit('verify_back', side), backSide);
-await waitFor(`auto-exit through the unlocked portal into ${keyGated.region_id}`, async () => {
-    return (await currentRegion()) === keyGated.region_id ? true : null;
-}, 90000);
+// ⛓⛓ THE UNLOCK AND THE FLY-THROUGH ARE TWO CLAIMS, SO ASSERT THEM APART.
+//    Waiting only for the region change collapses "the bridge never
+//    re-evaluated the rule" (a SUBJECT defect) into "the auto-player did not
+//    reach the portal in 90 s" (physics / the portal's side) — one timeout,
+//    two utterly different findings, and no way to tell which from the text.
+await waitFor(`portal '${lockedPortalId}' reports OPEN back in the start region`,
+    async () => (await gameDebug())?.gateStates?.portals?.[lockedPortalId] === true, 30000);
+console.log('PORTAL UNLOCKED: gate_rules re-evaluated on the snapshot update');
+// ⛓⛓ A CLIMB THAT STALLS AND A PLAYER THAT NEVER STARTED LOOK IDENTICAL TO A
+//   REGION POLL — both are 90 s of silence. So track the highest platform the
+//   no-input climb ever stood on, and name it in the failure: "reached b2 of
+//   the column" is a reachability finding, "reached entrance" is a dead player,
+//   and the bare timeout was neither.
+const climb = new Set();
+await waitFor(`auto-exit through the unlocked portal into ${keyGated.region_id}`
+    + ' (the no-input climb must physically reach it)', async () => {
+    const d = await gameDebug();
+    if (d?.botStatus?.lastPlatform) climb.add(d.botStatus.lastPlatform);
+    if ((await currentRegion()) === keyGated.region_id) return true;
+    return null;
+}, 90000).catch((e) => {
+    const d = climb.size ? [...climb].join(' → ') : '(never left the spawn)';
+    console.log(`CLIMB REACHED: ${d}`);
+    throw e;
+});
 const dbg2 = await gameDebug();
 console.log('UNLOCKED PORTAL FIRED: now in', keyGated.region_id,
     '| gate states:', JSON.stringify(dbg2?.gateStates));
