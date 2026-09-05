@@ -34,6 +34,10 @@
  * Prereq: dev server on :8000 (python -m http.server 8000).
  * Run: node scripts/procgen/verify-maze-loop-mana.mjs
  */
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { chromium } from 'playwright';
 import { takeBoxLockOrExit } from './boxLock.js';
 
@@ -51,6 +55,28 @@ import { argvHelp } from './argvHelp.js';
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'verify-maze-loop-mana.mjs', kind: 'browser' });
 
+const RULES = 'frontend/presets/maze_loop_worldgen/AP_1/AP_1_rules.json';
+/**
+ * ⛓⛓ THE FIXTURE IS NOT COMMITTED, SO ITS ABSENCE IS A PREREQUISITE FAILURE —
+ * AND IT MUST NOT LOOK LIKE A DEFECT. Without this check the page loads no
+ * world at all and the run dies 30 s later on `timeout waiting for: loop mode
+ * auto-enabled`, which reads exactly like the app failing to auto-enable loop
+ * mode. That is how it was recorded in the 2026-09-05 verify-tier survey. The
+ * header already carries the regeneration command; this prints it.
+ */
+if (!existsSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..', RULES))) {
+    console.log(`‼ PREREQUISITE MISSING: ${RULES}\n`
+        + '  This fixture is deliberately NOT committed. Regenerate it with:\n\n'
+        + '    node scripts/procgen/dump-sphere-growth.js --seed 1 --region 8x6 \\\n'
+        + '      --items key_red=1 --items key_blue=1 --items victory=1 \\\n'
+        + '      --spheres 3 --victory victory --start maze --quota maze=99 \\\n'
+        + '      --enable-loop-mode \\\n'
+        + `      --rules-out ${RULES} \\\n`
+        + '      -o /tmp/maze-loop-dump.json\n');
+    process.exit(1);
+}
+/** ⛔ This shadows the global `URL` for the whole module — see the path
+ *  resolution above, which must NOT use `new URL()`. */
 const URL = 'http://localhost:8000/frontend/?rules=presets/maze_loop_worldgen/AP_1/AP_1_rules.json';
 const TIMEOUT_MS = 180000;
 
