@@ -10776,6 +10776,54 @@ trap 1212). **H6b LAUNCHED 2026-09-05** as `apworld-hub-sliceH6b` (Opus, kickoff
 `NewDocs/plans/apworld-hub-sliceH6b-prompt.md`): the bounce assembler keeps authored exit ids, the last coded
 rung; after it, the two planning reviews (marking tool ↔ editor; loop costs ↔ procgen ↔ editor).
 
+⇒ **H6b AS BUILT 2026-09-05** (`apworld-hub-sliceH6b`, Opus, on `main` at `5314b0753`; plan §20). Commits
+`f45b82789` (assembler + shared reader + rows) · `8fbf6e523` (hub rows, unit + in-app) · `057afa5db`
+(`bounce.md` + the generator run). **The bounce door: 15/25 → 25/25**, movable endpoints 3,018 → 3,048
+corpus-wide with **841 FROZEN unchanged** — so the 30 new ones are rules the door can prove it authored, not
+rules it stopped refusing. Maze unmoved at 1,036/1,046.
+
+**⛔ IT WAS TWO DEFECTS, NOT ONE, AND THE SECOND WAS INVISIBLE.** §17 named the byte half (the minted name
+moves `sidePortals`, so check (1) refuses). Reading the assembler found the worse half: `derived` is keyed by
+the LEVEL's own portal ids, so `derived.exits['side_exit_N']` missed and the deliberate warn-but-allow
+`?? []` turned a perfectly good `exit_up` exit into **empty minimal sets — `False_`, an exit nobody can ever
+take**. The pipeline's own Edit ▸ was not merely renaming a portal on save; it was writing an unreachable
+exit and leaving ④'s oracle to notice. Nothing surfaced it, because the branch it lands in is legitimate.
+⇒ the row asserts BOTH halves; a name-only assertion would pass a name-only fix.
+
+**Three more things measured.** (a) ⛑ **Three of the four `dump-*-byteidentity.mjs` are VACUOUS here** —
+probed with a module-scope throw (trap 1173): sphere REACHES the assembler (rc 1, 2 hits) and its md5 is
+UNMOVED; top-down, maze and spiral all run **green with the assembler throwing**, so their unmoved md5s prove
+nothing and are not quoted. The top-down one is the trap: it dumps a "mixed maze+bounce" layout and really
+does contain bounce levels with portals, but those arrive through `assembleZoneRegion`/library-entry
+instantiation, never through a re-generation. (b) **Neither `dump-bounce-region.js` nor `dump-bounce-level.js`
+is a byte-identity oracle** — a text report and an ASCII trajectory renderer, no stored expectation, no test,
+gate or workflow invoking either (the kickoff's parenthetical implied otherwise). (c) **`portalSide` reads the
+ARROW before the minted name, and that is a measurement**: `bounceLibraryEntry` relabels a captured portal by
+re-pointing `direction` and leaving the id, so a stale `side_exit_N` can sit on E. Over all 25 committed
+bounce levels + 36 generated portals, 0 lack a `direction` and 0 disagree with their id — the orders differ
+only on a relabelled entry.
+
+**A row had to be ADDED, not just flipped.** The H4b bounce refusal was `regionRoundTrip.test.js`'s ONLY
+driver of check (1) ("an unedited save must not move a byte"); with bounce at 25/25 a mutant deleting check
+(1) would have stayed green. The ten `seedling_atlas_maze` rooms still fail it, and one drives it now — in
+the unit file and in the in-app row. ⚖ **H6a will take that subject away too**, and then the corpus has no
+check-(1) refusal left; that is H6a's to answer for.
+
+**Gates.** sphere byte-identity md5 unmoved · `verify-region-step-editing.mjs` A–N identical, ALL OK ·
+bounded vitest 1,246/1,246 (`bounceDemo`, `bounceRegionEditor`, `apworldEditor`, `procgenPipeline`) · bounce
+`.slow` 102/102 · `procgenDocs/` 452/452 with `--check` at 0 · in-app `test-substrates --batch=fast`
+**83/83**, `compare-runs` "No differences in status, roster, or duration", browser log free of throws.
+Mutant (restore the mint): 12/13, red exactly on the `spring_gap` row.
+⚠ **A PRE-EXISTING RED, not this slice's:** `scripts/procgen/verify-rule-gated-portals.mjs` times out waiting
+for the pipeline panel's Generate button (`:153`). CONTROLLED — the same failure, byte for byte, with the four
+source files checked out at `f45b82789~1`. It is in no gate battery and no CI job; nobody had run it.
+
+**⚖ open for the user (plan §20.6):** (1) whether the `False_`-exit finding deserves a reader-facing note —
+any bounce world saved through Edit ▸ on an `exit_up` region carries an unreachable exit (nothing committed
+is in that state); (2) check (1) losing its last corpus subject after H6a; (3) the pre-existing
+`verify-rule-gated-portals` red. **The coded ladder ENDS HERE** — next are the two planning reviews (marking
+tool ↔ editor; loop costs ↔ procgen ↔ editor), with H6a parked behind the first.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
