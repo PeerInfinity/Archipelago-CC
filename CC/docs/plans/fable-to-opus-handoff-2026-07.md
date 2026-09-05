@@ -10824,6 +10824,16 @@ is in that state); (2) check (1) losing its last corpus subject after H6a; (3) t
 `verify-rule-gated-portals` red. **The coded ladder ENDS HERE** — next are the two planning reviews (marking
 tool ↔ editor; loop costs ↔ procgen ↔ editor), with H6a parked behind the first.
 
+**H6b VERIFIED by the planner 2026-09-05** (`ef2f40efe` on origin/main; bounce door 25/25; CI in flight,
+watched by H6b). H6b found the ruled defect was TWO: the pipeline's own bounce Edit ▸ had been writing an
+UNREACHABLE exit (`False_`) on save for authored-id portals, invisible because the branch it landed in is
+legitimate. **THE CODED LADDER H0…H6b IS COMPLETE.** Residue, ranked by H6b: a reader-facing note on the
+pre-fix `False_` exit (nothing committed is in that state); check (1) of the round-trip suite loses its last
+subject when H6a lands; and the procgen `verify-*.mjs` tier has no battery — three unwatched reds/inerts
+surfaced during this arc — a SURVEY slice, not a feature, is what one more slice should buy. Open by ⚖:
+reviews R1 (marking tool ↔ editor) and R2 (loop costs ↔ procgen ↔ editor), one of them LAST; H6a parked
+behind R1.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
