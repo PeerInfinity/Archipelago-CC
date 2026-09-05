@@ -1114,3 +1114,207 @@ they are the same numbers. V3a's three code commits touch **3 files, of which 0 
 (`git diff --name-only 16c11b0e78..2b8c9be271` → the three `scripts/procgen/verify-*.mjs` and nothing
 else), and add no test, so a zero delta is what this change *must* look like. `2b8c9be271` is the last
 code commit; everything after it on this slice is docs.
+
+---
+
+# V3b — the rename (2026-09-05, `main` at `580b178cd3`)
+
+**⚖ RULED (user, 2026-09-05):** the rename happens, after V1's drift bisect and V2/V2b/V3a's red
+triage. The survey deliberately made no recommendation on which script gets which name; this
+section DERIVES it from the class and says the rule out loud. **This table is committed BEFORE any
+file moves**, so the derivation is readable on its own in the diff.
+
+## The rule, and the mechanism it is made true for
+
+Three mechanisms select the gate population by the filename prefix `check-`, and only by that:
+
+- `gateRoster.js:47` — `export const isGateFile = (f) => /^check-[a-z0-9-]+\.mjs$/.test(f)`
+- `reachClosure.js:813` — `git(['ls-files', '--', 'scripts/procgen/check-*.mjs'])`
+- `ci-gates.mjs` — reads the roster, so it inherits the rule
+
+`gateRoster.js`'s header promises a gate *"joins this roster by READING ITS FLAG, which is the only
+membership rule that cannot go stale."* That is true of the FLAGS (`--host=`, `--root=`, `--pages=`)
+— but **the population those flags are read over is chosen by NAME first**, so no `verify-*` can join
+by declaring anything. ⇒ the rename makes the name mean what all three mechanisms already assume.
+
+**The class rule, in one sentence each:**
+
+- **GATE** — *its exit status is a function of its own findings*, and it prints a verdict line.
+  Measured two ways, both in the table's evidence column: a `process.exit()` whose argument is
+  computed from a failure counter (`failures === 0 ? 0 : 1`, `allOk ? 0 : 1`), **or** a literal
+  `process.exit(1)` reached from a check on the SUBJECT, **or** — where neither exists — assertions
+  that `throw`, which under Node 18 exit non-zero as an unhandled rejection (the survey measured
+  exactly this for `verify-bounce-embed`). ⇒ `check-<name>.mjs`.
+- **REPORT** — *every non-zero exit it can reach is a guard on its INPUT, never a claim about its
+  subject*: an unknown flag, a missing `--quota`, a bad fixture id. The status says "you called me
+  wrong", and the script prints no verdict at all. ⇒ keeps `dump-<name>`.
+- **STALE** — the subject the script drives no longer exists in the tree. ⇒ deleted.
+
+## ⛔ There is no third prefix, and that is a DERIVED answer, not a preference
+
+The brief asked which prefix a report takes — `dump-` or a new `report-` — and to say why. **The
+question dissolves on the measurement: all 11 REPORT-class scripts are already named `dump-`.** A
+`report-` prefix introduced here would have a population of ZERO after this slice, and the one
+mechanism that would have to learn it (`check-procgen-help.mjs`, whose population is `*.mjs`) does
+not key on a prefix at all. ⇒ **no `report-` prefix is created.** A report IS a dump in this
+directory, and the reason is that nobody ever wrote a report under another name.
+
+⚠ The traffic runs the OTHER way, and it is one file: **`dump-spiral-byteidentity.mjs` is a GATE**.
+Its own header says so — *"Not a passive dump: it self-checks and exits non-zero on any mismatch"* —
+it ends `process.exit(allOk ? 0 : 1)` and prints `ALL PASS — stepped spiral == monolith`. Its three
+byte-identity siblings (`dump-maze-`, `dump-sphere-`, `dump-topdown-byteidentity.mjs`) genuinely
+cannot fail: no non-zero exit exists anywhere in them. Four files with one naming stem, and the
+prefix was wrong on exactly the one that carries a verdict.
+
+## ⛔⛔ WHAT OVERTURNED THE BRIEF: the roster has NO cost exclusion, and the rename is a 4 → 51 CI job change
+
+The kickoff said to put the slow newly-adopted gates *"behind the roster's existing cost/`--win`
+exclusions"*. **Measured: no cost exclusion exists.** `ciGatePlan.js:150` is the whole predicate —
+
+```js
+export function ciRunnable(gate) { return !gate.windows; }
+```
+
+— so every non-Windows `check-*.mjs` becomes a CI arm the moment it is renamed, and
+`planCiShards` prices *an arm the runner has never measured at the WHOLE budget*, deliberately
+(`ciGatePlan.js:41`: *"pricing an unknown at zero is how one shard silently becomes the slow one"*).
+A brand-new gate is precisely such an arm, so each one lands **in a shard of its own**.
+
+Measured by mirroring the repo root (every top-level entry symlinked, `scripts/procgen` a real copy)
+and applying the full rename there — the mirror reproduces the real tree's BEFORE numbers exactly,
+which is what makes it a control:
+
+| set | BEFORE | AFTER the naked rename |
+|---|---|---|
+| `--set=browser` | **25 arms / 3 shards** | **52 arms / 30 shards** (27 unpriced at 600 s each) |
+| `--set=headless` | **31 arms / 1 shard** | **51 arms / 21 shards** (20 unpriced) |
+| procgen gate jobs per push | **4** | **51** |
+
+⇒ **⚖ RULED (user, 2026-09-05): the fourth declaration — `@ci-box` — and the CI plan does not move.**
+
+`ciRunnable` becomes `!gate.windows && !gate.ciBox`, and every newly adopted gate declares
+
+```
+ * @ci-box <why the box must answer this gate>
+```
+
+in its own docblock, parsed by `gateRoster.js` the way `@ci-face`, `@ci-shallow` and `@ci-argv`
+already are, with the same by-name refusal for a missing reason. This is not a new idea in this
+file — it is the argument `@ci-shallow`'s own docblock makes, verbatim: *"a row that must never be
+CI-sourced is excluded by a clause that names the REASON, and the reason is a fact only the gate
+knows"*, and *"it is one line to delete"*. ⛓ The verification is that **BEFORE == AFTER**: the shard
+plan after this slice is byte-identical to the one above, which no timing band or roster-count
+assertion could have told us.
+
+⛑ **What this deliberately does NOT do.** It does not decide which of the 49 belongs in CI. That is
+a per-gate question with a real answer each (an uncommitted fixture; a `Generate.py` and a Python
+venv; the omsi submodule; 171 s of wall clock), and answering 49 of them is a slice of its own. What
+the declaration buys is that each answer is written where the gate is, one line to delete, instead of
+being a silence.
+
+## The `--win` tier
+
+`verify-seedling-ap-placement.mjs` and `verify-seedling-bot-differential.mjs` hold
+`/mnt/c/Windows/py.exe` as a literal, so `gateRoster`'s `WINDOWS_RE` classifies them `windows` and
+`ciRunnable` already excludes them — the `--win` half of the brief's sentence is real, and it needs
+nothing added. Both are renamed to `check-`. ⛔ **`check-seedling-bot-differential.mjs` is NOT run
+in this slice**: its full drive is a measured 142-minute GPU run (`gateRoster.js:80`, `:388`), it was
+the one script of 62 the survey left without a verdict, and it is named here so that is visible
+rather than silently absent.
+
+## The derived table — 62 rows, one per script
+
+**Class counts: 49 GATE · 11 REPORT · 2 STALE.** GATE by driver: 27 browser · 20 node · 2 windows.
+⚠ The `evidence` column's verdict quote is the SURVEY's measurement, so five rows quote a `‼ FAILURE`
+line — that is the strongest possible evidence for the class (the script both printed a verdict and
+failed on it), and those five were fixed at V2/V3a; see §(a).
+
+| old | new | class | drives | wall | evidence |
+|---|---|---|---|---|---|
+| `dump-spiral-byteidentity.mjs` | `check-spiral-byteidentity.mjs` | GATE | node | 0.6s | `process.exit(allOk ? 0 : 1)` · ALL PASS — stepped spiral == monolith |
+| `verify-atlas-sphere-roundtrip.mjs` | `check-atlas-sphere-roundtrip.mjs` | GATE | node | 18.5s | `process.exit(failures === 0 ? 0 : 1)` · 1 assertion(s) FAILED. |
+| `verify-bounce-embed.mjs` | `check-bounce-embed.mjs` | GATE | browser | 18s | `throw`×4 (unhandled rejection ⇒ non-zero) · **no verdict line — one added here** |
+| `verify-bounce-touch.mjs` | `check-bounce-touch.mjs` | GATE | browser | 9s | `process.exit(1)` · All bounce touch checks passed. |
+| `verify-cli-sphere-config.mjs` | `check-cli-sphere-config.mjs` | GATE | node | 2.7s | `process.exit(1)` · VERIFY CLI SPHERE CONFIG: ALL OK |
+| `verify-dj-swf-patch.mjs` | `check-dj-swf-patch.mjs` | GATE | node | 0.3s | `process.exit(1)` · PASS: swf_inject.mjs output byte-identical to inject_trace |
+| `verify-grid-growth-ui.mjs` | `check-grid-growth-ui.mjs` | GATE | browser | 15s | `process.exit(1)` · PASS — grid-growth streams denominator-less live progress  |
+| `verify-item-channels.mjs` | `check-item-channels.mjs` | GATE | browser | 27s | `process.exit(1)` · ‼ FAILURE: rep 0 leaked a cross-substrate grant |
+| `verify-jta-balance-pass.mjs` | `check-jta-balance-pass.mjs` | GATE | node | 7.2s | `process.exit(2 / 1)` · PASS: full coverage, no stalls, no saturation |
+| `verify-jta-cost-hooks.mjs` | `check-jta-cost-hooks.mjs` | GATE | node | 3.2s | `process.exit(1)` · ALL CHECKS PASSED |
+| `verify-jta-dataset-load.mjs` | `check-jta-dataset-load.mjs` | GATE | node | 0.2s | `process.exit(1)` · All dataset-load smoke checks passed. |
+| `verify-jta-dataset-pipeline-preset.mjs` | `check-jta-dataset-pipeline-preset.mjs` | GATE | node | 0.2s | `process.exit(failures === 0 ? 0 : 1 / 1)` · ALL PASS — the pipeline reproduces the playable jta_datase |
+| `verify-jta-dataset-transfer.mjs` | `check-jta-dataset-transfer.mjs` | GATE | node | 0.4s | `process.exit(1)` · All dataset-transfer assertions passed. |
+| `verify-jta-dataset-url-boot.mjs` | `check-jta-dataset-url-boot.mjs` | GATE | node | 2.0s | `process.exit(1)` · All ?dataset= boot assertions passed. |
+| `verify-jta-generated-dataset.mjs` | `check-jta-generated-dataset.mjs` | GATE | node | 1.0s | `process.exit(failures === 0 ? 0 : 1)` · All generated-dataset assertions passed. |
+| `verify-jta-locations-roundtrip.mjs` | `check-jta-locations-roundtrip.mjs` | GATE | node | 15.4s | `process.exit(failures === 0 ? 0 : 1)` · All round-trip assertions passed. |
+| `verify-jta-managed-zone-skip.mjs` | `check-jta-managed-zone-skip.mjs` | GATE | node | 0.7s | `process.exit(failures === 0 ? 0 : 1)` · All managed-mode zone-skip assertions passed. |
+| `verify-maze-consumable-tiles.mjs` | `check-maze-consumable-tiles.mjs` | GATE | browser | 35s | `process.exit(1)` · ‼ FAILURE: timeout waiting for: omsi resources.houses reac |
+| `verify-maze-loop-mana.mjs` | `check-maze-loop-mana.mjs` | GATE | browser | 44s | `process.exit(1)` · ‼ FAILURE: timeout waiting for: loop mode auto-enabled |
+| `verify-omsi-mana-leg.mjs` | `check-omsi-mana-leg.mjs` | GATE | browser | 41s | `process.exit(1)` · ‼ FAILURE: timeout waiting for: per-batch draining (≥5 sma |
+| `verify-preset-panel-click.mjs` | `check-preset-panel-click.mjs` | GATE | browser | 24s | `process.exit(failures === 0 ? 0 : 1)` · ALL OK |
+| `verify-procgen-presets.mjs` | `check-procgen-presets.mjs` | GATE | browser | 171s | `throw`×7 (unhandled rejection ⇒ non-zero) · All 27 preset drop-down checks passed. |
+| `verify-region-library-roundtrip.mjs` | `check-region-library-roundtrip.mjs` | GATE | node | 15.8s | `process.exit(failures === 0 ? 0 : 1)` · All region-library round-trip assertions passed. |
+| `verify-region-library-sphere-roundtrip-maze.mjs` | `check-region-library-sphere-roundtrip-maze.mjs` | GATE | node | 30.8s | `process.exit(failures === 0 ? 0 : 1)` · All maze sphere region-library round-trip assertions passe |
+| `verify-region-library-sphere-roundtrip-runner.mjs` | `check-region-library-sphere-roundtrip-runner.mjs` | GATE | node | 51.3s | `process.exit(failures === 0 ? 0 : 1)` · All runner sphere region-library round-trip assertions pas |
+| `verify-region-library-sphere-roundtrip.mjs` | `check-region-library-sphere-roundtrip.mjs` | GATE | node | 25.9s | `process.exit(failures === 0 ? 0 : 1)` · All sphere region-library round-trip assertions passed. |
+| `verify-region-library-ui.mjs` | `check-region-library-ui.mjs` | GATE | browser | 45s | `process.exit(failures.length ? 1 : 0)` · All region-library UI assertions passed. |
+| `verify-region-marking-tool.mjs` | `check-region-marking-tool.mjs` | GATE | browser | 11s | `process.exit(failures === 0 ? 0 : 1)` · OK: region marking tool verified in-app |
+| `verify-region-step-editing.mjs` | `check-region-step-editing.mjs` | GATE | node | 19.0s | `process.exit(1)` · VERIFY REGION-STEP EDITING: ALL OK |
+| `verify-rule-gated-portals.mjs` | `check-rule-gated-portals.mjs` | GATE | browser | 45s | `process.exit(1)` · locator.click: Timeout 30000ms exceeded. |
+| `verify-runner-bot.mjs` | `check-runner-bot.mjs` | GATE | browser | 31s | `process.exit(1)` · All runner bot checks passed. |
+| `verify-runner-embed.mjs` | `check-runner-embed.mjs` | GATE | browser | 80s | `process.exit(1)` · All runner embed checks passed (sphere-grown world, bot-dr |
+| `verify-runner-game.mjs` | `check-runner-game.mjs` | GATE | browser | 11s | `process.exit(1)` · All runner game-page checks passed. |
+| `verify-runner-smoke.mjs` | `check-runner-smoke.mjs` | GATE | browser | 16s | `process.exit(1)` · All runner smoke checks passed. |
+| `verify-seedling-ap-placement.mjs` | `check-seedling-ap-placement.mjs` | GATE | windows | 442s | `process.exit(failures === 0 ? 0 : 1)` · ALL ROWS PASSED — seedling_bot_ap_p4c, END 2026-09-05T18:2 |
+| `verify-seedling-atlas-maze.mjs` | `check-seedling-atlas-maze.mjs` | GATE | node | 11.4s | `process.exit(failures === 0 ? 0 : 1)` · OK: 10 atlas sub-regions are playable maze worlds (20 exit |
+| `verify-seedling-atlas-play.mjs` | `check-seedling-atlas-play.mjs` | GATE | browser | 43s | `process.exit(failures === 0 ? 0 : 1)` · OK: the real Seedling game walks between atlas regions, an |
+| `verify-seedling-atlas-preset.mjs` | `check-seedling-atlas-preset.mjs` | GATE | browser | 5s | `process.exit(failures === 0 ? 0 : 1)` · OK: seedling_atlas preset loads with 11 regions and 23 exi |
+| `verify-seedling-bot-differential.mjs` | `check-seedling-bot-differential.mjs` | GATE | windows | — | `process.exit(1 / failures === 0 ? 0 : 1)` · **no verdict line — one added here** |
+| `verify-seedling-wasm-bridge.mjs` | `check-seedling-wasm-bridge.mjs` | GATE | browser | 45s | `process.exit(failures === 0 ? 0 : 1)` · ALL PASS |
+| `verify-sphere-batch-stepping.mjs` | `check-sphere-batch-stepping.mjs` | GATE | browser | 63s | `process.exit(1)` · VERIFY SPHERE BATCH STEPPING: ALL OK |
+| `verify-sphere-envelope-resume.mjs` | `check-sphere-envelope-resume.mjs` | GATE | browser | 24s | `process.exit(1)` · VERIFY SPHERE ENVELOPE RESUME: ALL OK |
+| `verify-sphere-growth-ui.mjs` | `check-sphere-growth-ui.mjs` | GATE | browser | 22s | `process.exit(1)` · VERIFY SPHERE GROWTH UI: ALL OK |
+| `verify-sphere-steps-ui.mjs` | `check-sphere-steps-ui.mjs` | GATE | browser | 103s | `process.exit(1)` · VERIFY SPHERE STEPS UI: ALL OK |
+| `verify-spiral-steps-ui.mjs` | `check-spiral-steps-ui.mjs` | GATE | browser | 19s | `process.exit(1 / failures.length ? 1 : 0)` · ✅ ALL PASS |
+| `verify-ta-mana-leg.mjs` | `check-ta-mana-leg.mjs` | GATE | browser | 9s | `process.exit(1)` · verify-ta-mana-leg: ALL PASS |
+| `verify-topdown-steps-ui.mjs` | `check-topdown-steps-ui.mjs` | GATE | browser | 81s | `process.exit(1 / failures.length ? 1 : 0)` · ✅ ALL PASS |
+| `verify-topdown-steps.mjs` | `check-topdown-steps.mjs` | GATE | node | 1.1s | `process.exit(allOk ? 0 : 1)` · ALL PASS — stepped runner == monolith |
+| `verify-world-persistence-reload.mjs` | `check-world-persistence-reload.mjs` | GATE | browser | 82s | `throw`×2 (unhandled rejection ⇒ non-zero) · PASS — 23 checks |
+| `dump-bounce-level.js` | *(unchanged)* | REPORT | node | 0.1s | non-zero exit is a usage/IO guard only (`process.exit(1)`); survey §(b) |
+| `dump-bounce-region.js` | *(unchanged)* | REPORT | node | 0.2s | non-zero exit is a usage/IO guard only (`process.exit(1)`); survey §(b) |
+| `dump-dj-traces.mjs` | *(unchanged)* | REPORT | node | 0.1s | non-zero exit is a usage/IO guard only (`process.exit(2)`); survey §(b) |
+| `dump-grid-growth.js` | *(unchanged)* | REPORT | node | 0.5s | non-zero exit is a usage/IO guard only (`process.exit(1)`); survey §(b) |
+| `dump-maze-byteidentity.mjs` | *(unchanged)* | REPORT | node | 2.3s | no non-zero exit at all; survey §(b) |
+| `dump-runner-level.js` | *(unchanged)* | REPORT | node | 0.1s | no non-zero exit at all; survey §(b) |
+| `dump-seedling-kind-pairs.mjs` | *(unchanged)* | REPORT | node | 118.9s | non-zero exit is a usage/IO guard only (`process.exit(2)`); survey §(b) |
+| `dump-shuffled-spiral.js` | *(unchanged)* | REPORT | node | 0.5s | non-zero exit is a usage/IO guard only (`process.exit(1)`); survey §(b) |
+| `dump-sphere-byteidentity.mjs` | *(unchanged)* | REPORT | node | 3.1s | no non-zero exit at all; survey §(b) |
+| `dump-sphere-growth.js` | *(unchanged)* | REPORT | node | 0.4s | non-zero exit is a usage/IO guard only (`process.exit(1)`); survey §(b) |
+| `dump-topdown-byteidentity.mjs` | *(unchanged)* | REPORT | node | 0.9s | no non-zero exit at all; survey §(b) |
+| `verify-bot-playthrough.mjs` | *(deleted)* | STALE | browser | 250s | subject world deleted at `ccfc5bad0`; V2 §Task 1 |
+| `verify-dj-real-embed.mjs` | *(deleted)* | STALE | browser | 101s | subject world deleted at `ccfc5bad0`; V2 §Task 1 |
+
+## The STALE two — ⚖ RULED: deleted
+
+**⚖ RULED (user, 2026-09-05): delete both.** `verify-dj-real-embed.mjs` drives
+`bounce_dj_worldgen`; `verify-bot-playthrough.mjs` drives `bounce_sphere_worldgen` /
+`bounce_mixed_worldgen`. All three worlds were deleted at `ccfc5bad0` (2026-06-26), so neither
+script can pass at any SHA — V2 §Task 1 measured both failing identically on the pre-arc tree. A
+script whose subject no longer exists has no name in the new scheme, and history keeps both
+recoverable by SHA. The alternative on the record — keeping them under a `stale-` prefix — was
+declined: it would create a third prefix with two members that no mechanism reads, still inside
+`check-procgen-help`'s population and still in the docs catalogue.
+
+## One instrument change, and it is the one the survey named
+
+`verify-bounce-embed.mjs` is the survey's one misfiled row: it CAN fail (four `throw`s plus a
+`waitFor` that throws on timeout — measured exit 1 under contention, 0 solo) but **prints no verdict
+at all**, so a green run is indistinguishable from a truncated one. V2 and V3a never touched it,
+because it was not red. The survey's own conclusion — *"The fix is one `console.log`, not a
+redesign"* — is applied here, and then it is renamed with the rest of the GATE class.
+
+⛑ **What that line does NOT claim.** The script ends by printing `ERRORS (n)` from the page's
+console and exits 0 regardless of `n`. Turning that count into a failing assertion would be a NEW
+claim, not a rename, and it is out of this slice — so the added line names what the run actually
+asserted (the phases and revisits that would have thrown), and the error count stays diagnostic.
+⚖ **A candidate for a later slice**, named rather than silently left.
