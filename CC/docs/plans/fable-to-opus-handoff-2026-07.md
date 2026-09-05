@@ -10770,6 +10770,12 @@ the LAST feature integrated with the editor**. The atlas resolver waits on the m
 PARKED behind that review; two REVIEWS are queued as planning conversations (marking tool ↔ editor; loop
 costs ↔ procgen ↔ editor). Next slice = **H6b** (bounce exit ids), launched after H5's CI closes.
 
+**H5 CI CLOSED green at `6a4c38423`** (suite 13,288/8/0 = +36 over `074684c0a`, every term a row H5 wrote;
+the first-recorded +40 double-counted four rows a swept commit had already banked — a delta is HEAD − BASELINE,
+trap 1212). **H6b LAUNCHED 2026-09-05** as `apworld-hub-sliceH6b` (Opus, kickoff
+`NewDocs/plans/apworld-hub-sliceH6b-prompt.md`): the bounce assembler keeps authored exit ids, the last coded
+rung; after it, the two planning reviews (marking tool ↔ editor; loop costs ↔ procgen ↔ editor).
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
