@@ -123,8 +123,16 @@ export const ADAPTER_FNS = Object.freeze([
  * *"ROOM n open with k edit(s)"* — the same stale-readout shape one control
  * over, and the CLOSE half was the only one that had a notification.
  */
+/**
+ * ⛓⛓ **AND A SEVENTH, H4c: `handoff`.** *"Open in APWorld Editor"* writes the
+ * same readout globals and the same note the `rules.json` download beside it
+ * writes, so by the rule two paragraphs up it notifies — but it is NOT a
+ * download, and reusing that word would tell a page's handler a file was
+ * written when none was. The roster is EXPORTED precisely so a value can be
+ * added where the call site is.
+ */
 export const SET_CHANGE_WHY = Object.freeze([
-    'op', 'report', 'close', 'select', 'room', 'download',
+    'op', 'report', 'close', 'select', 'room', 'download', 'handoff',
 ]);
 
 const el = (doc, tag, className, text) => {
@@ -186,6 +194,14 @@ const el = (doc, tag, className, text) => {
  *   every path, so a page may publish what it derives from the MOUNT and not
  *   only what it derives from the SESSION. `why` is one of `SET_CHANGE_WHY`
  * @param {Function} [o.loadZip]   `() => Promise<JSZip>`
+ * @param {object} [o.apworldEditor] the REVERSE LINK (APWorld editor hub, H4c)
+ *   — `{available: () => boolean, open: (rules) => boolean}`. ⛔ `null` (the
+ *   default) is the STANDALONE answer and the button stays HIDDEN, not
+ *   disabled: a page with no host has no app to open the hub in, and a disabled
+ *   control would advertise a door that does not exist here. ⚠ `available()` is
+ *   asked on every render rather than once at mount, because a lab page
+ *   installs its bridge ASYNCHRONOUSLY and after its first draw — a value read
+ *   at mount would say "standalone" for every hosted session
  * @param {object}  [o.doc]        the DOM the `edit*` ids live in
  */
 export function mountSetEditor({
@@ -198,7 +214,7 @@ export function mountSetEditor({
     cellSubstrate = () => null, identityOf = null, reportRows = null,
     say = () => {}, roomSession = () => null, openRoomAt = () => false,
     discardRoom = () => {}, download = () => {}, onSetChange = null,
-    loadZip = null,
+    loadZip = null, apworldEditor = null,
     doc = globalThis.document,
 } = {}) {
     /**
@@ -250,6 +266,38 @@ export function mountSetEditor({
     const bundleId = (out) => document.idOf(
         out.members.find((m) => m.kind === document.kind)?.doc ?? {});
     const $ = (id) => doc.getElementById(id);
+
+    /**
+     * ⛓⛓⛓ **THE REVERSE LINK'S BUTTON, PAINTED IN ONE PLACE** (APWorld editor
+     * hub, H4c). Two states, and they answer two different questions:
+     *
+     *  · **HIDDEN** — `apworldEditor` is absent or `available()` says no. There
+     *    is no app on the other side of this page: standalone, `lab.html` and
+     *    `watch.html` are documents, and a disabled button would advertise a
+     *    door that does not exist rather than one that is shut.
+     *  · **DISABLED** — the same three conditions the `rules.json` download
+     *    beside it is disabled on, read off `download.rules.allowed`. ⛔ NOT a
+     *    second condition of this file's own: the refusal is `reportOver`'s
+     *    alone (`setEditorCore.js`'s own docblock), and a graph that does not
+     *    close has no compiled document to hand anybody.
+     *
+     * ⚠ `available()` is asked on EVERY paint. A lab page installs its bridge
+     * asynchronously, after its first draw, so a value captured at mount would
+     * say "standalone" for every hosted session there is.
+     */
+    const paintApworldButton = () => {
+        const btn = $('editOpenApworldEditor');
+        if (!btn) return;
+        const here = Boolean(apworldEditor) && apworldEditor.available() === true;
+        btn.hidden = !here;
+        if (!here) return;
+        const allowed = lastReport ? lastReport.download.rules.allowed : false;
+        btn.disabled = !allowed;
+        btn.title = allowed
+            ? 'compile this document and open it in the APWorld Editor panel'
+            : (lastReport?.download.rules.why
+                ?? 'press REPORT first — the APWorld Editor opens the COMPILED document');
+    };
 
     /**
      * ⛓⛓⛓ **THIS MOUNT OWNS ITS OWN LIFETIME, AND THAT IS A DEFECT THIS SLICE
@@ -1118,6 +1166,7 @@ export function mountSetEditor({
             btn.disabled = !lastReport.download.rules.allowed;
             btn.title = lastReport.download.rules.why ?? 'write rules.json';
         }
+        paintApworldButton();
         const why = $('editSetReportNote');
         if (why) {
             why.textContent = lastReport.download.rules.why
@@ -1209,6 +1258,7 @@ export function mountSetEditor({
         renderManifest();
         renderRoomForm();
         renderIdentity();
+        paintApworldButton();
         const close = $('editRoomClose');
         if (close) close.disabled = roomSession() === null;
     }
@@ -1500,6 +1550,50 @@ export function mountSetEditor({
          */
         render();
         onSetChange?.({ why: 'download' });
+    });
+
+    /**
+     * ⛓⛓⛓ **"OPEN IN APWORLD EDITOR" — THE SAME DOCUMENT, A DIFFERENT EXIT**
+     * (APWorld editor hub, H4c; plan §3 idea 6, *"reverse links everywhere"*).
+     *
+     * ⛔ **IT HANDS OVER THE REPORT'S `rules`, WHICH IS WHAT THE DOWNLOAD
+     * WRITES.** Not a second compile: `runReport` already ran
+     * `adapterFns.rulesJsonOf(session, deps, {compileRegionAtlas})`, and a
+     * button that compiled again could hand the hub a document that differs
+     * from the one the reader is looking at — with no way to notice, because
+     * the two never meet.
+     *
+     * ⛓ THE BYTES ARE NOT STRINGIFIED. The download's blob goes through
+     * `stringifyRulesJson` because a person receives a FILE; the hub receives a
+     * DOCUMENT and opens an edit session on a clone of it, so a round trip
+     * through text here would only be a place for the two to disagree.
+     *
+     * ⛔ AND THE PAGE OWNS THE PROVENANCE. `apworldEditor.open` is the PAGE's
+     * function; this mount does not name a substrate, a page or a URL, and the
+     * `source` the hub files the document under is the caller's word.
+     */
+    const apworldBtn = $('editOpenApworldEditor');
+    if (apworldBtn) { apworldBtn.hidden = true; apworldBtn.disabled = true; }
+    on('editOpenApworldEditor', () => {
+        pressScope('__editorSetApworldPresses', ['__editorSetApworldOut']);
+        if (!apworldEditor || apworldEditor.available() !== true) {
+            setNote('⛔ NOT OPENED — this page has no host to open the APWorld Editor in. '
+                + 'A lab page is a standalone document; the editor lives in the app.', true);
+            return;
+        }
+        const rep = lastReport ?? runReport();
+        if (!rep.download.rules.allowed) {
+            setNote(rep.download.rules.why, true);
+            return;
+        }
+        const sent = apworldEditor.open(rep.rules) === true;
+        globalThis.__editorSetApworldOut = rep.rules;
+        setNote(sent
+            ? `OPENED in the APWorld Editor — ${rep.report.ap_regions} AP region(s), `
+              + `${rep.report.exits} exit(s), ${rep.report.locations} location(s)`
+            : '⛔ NOT OPENED — the host link refused the hand-off.', !sent);
+        render();
+        onSetChange?.({ why: 'handoff' });
     });
 
     /**

@@ -2392,6 +2392,24 @@ export function main() {
              * rows hand the deps in directly and never go through the mount.
              */
             deps: heldWorld ? worldDeps : {},
+            /**
+             * ⛓⛓⛓ APWORLD EDITOR HUB, H4c — **THE REVERSE LINK, AND `bridge?.`
+             * IS THE WHOLE STANDALONE ANSWER.** `available()` is asked on every
+             * paint (the mount's own rule) because this page installs its bridge
+             * ASYNCHRONOUSLY, after the first draw and only under `?iframeId=`
+             * — a value captured at mount time would say "standalone" for every
+             * hosted session there is.
+             *
+             * ⛓ THE PROVENANCE IS THIS PAGE'S WORD, and it names the ARM: the
+             * SET arm holds a region LIBRARY and the WORLD arm a two-part
+             * world, and the hub files what it opens under the door it came
+             * through.
+             */
+            apworldEditor: {
+                available: () => bridge?.connected === true,
+                open: (rules) => bridge?.openInApworldEditor(rules,
+                    heldWorld ? 'the maze lab (WORLD arm)' : 'the maze lab (SET arm)') === true,
+            },
             compileRegionAtlas,
             validateRegionAtlas,
             atlasSchema: atlasSchema ?? undefined,

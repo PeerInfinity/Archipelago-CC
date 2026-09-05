@@ -9323,6 +9323,21 @@ async function runEditor(params, lifetime) {
             compileRegionAtlas,
             validateRegionAtlas,
             atlasSchema: atlasSchema ?? undefined,
+            /**
+             * ⛓⛓⛓ APWORLD EDITOR HUB, H4c — **THE REVERSE LINK.** The same
+             * seam `mazeRoom/lab.html` binds, over this page's own host bridge.
+             * ⛔ `hostBridge` is `null` standalone and installed
+             * ASYNCHRONOUSLY when hosted, so `available()` is a THUNK: a value
+             * read at mount would say "standalone" for every hosted session.
+             * ⛓ The compile is node-side — `reportOver` already runs
+             * `rulesJsonOf` for the REPORT with no wasm in sight — so this
+             * button needs nothing the page does not already do headlessly.
+             */
+            apworldEditor: {
+                available: () => hostBridge?.connected === true,
+                open: (rules) => hostBridge?.openInApworldEditor(
+                    rules, 'the Seedling watch page (SET arm)') === true,
+            },
             recordToOel,
             drawRoomStill,
             emptyLevel: () => emptyLevel({ level: setSession.record().set.rooms.length }),

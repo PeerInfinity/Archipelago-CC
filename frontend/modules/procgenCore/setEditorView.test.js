@@ -191,6 +191,8 @@ const PANEL_IDS = Object.freeze([
     'editSetAddRoom', 'editSetDisconnect', 'editSetRuleCommit', 'editSetMarkLocation',
     'editSetReport', 'editSetGesture', 'editSetUndo', 'editRoomClose',
     'editDownloadSet', 'editDownloadRules', 'editDownloadBundle',
+    // ⛓ H4c — the reverse link, `hidden` in the HTML of both pages.
+    'editOpenApworldEditor',
 ]);
 
 /** ⛓ The ids that are `<select>` in both documents this mount is bound in. */
@@ -267,7 +269,9 @@ const generatedSet = (n = ROOMS, setId = 'set-editor-view-test') => buildLevelSe
     Array.from({ length: n }, (_, level) => emptyLevel({ level })), { setId, link: true },
 ).set;
 
-const seedlingHarness = ({ rooms = ROOMS, onSetChange = null, embeds = [] } = {}) => {
+const seedlingHarness = ({
+    rooms = ROOMS, onSetChange = null, embeds = [], apworldEditor = null,
+} = {}) => {
     const adapter = createSeedlingSetAdapter(DEPS);
     /**
      * ⛓ A ROOM SESSION STUB — the mount reads `{room, ops}` and
@@ -340,12 +344,33 @@ const seedlingHarness = ({ rooms = ROOMS, onSetChange = null, embeds = [] } = {}
          * PIN is untouched by the existence of this option.
          */
         onSetChange,
+        /**
+         * ⛓ H4c — the REVERSE LINK seam. ⛔ `null` by default, which is the
+         * STANDALONE answer and `mountSetEditor`'s own default, so every row
+         * that predates this slice drives the same mount it always did.
+         */
+        apworldEditor,
         doc,
     });
     return {
         adapter, session, doc, said, downloads, stillCalls, ui,
         openRoom: (i) => { open = openStub(i); },
     };
+};
+
+/**
+ * ⛓ A HOST LINK STUB — the `{available, open}` seam plus what it was handed.
+ * ⛔ `state.here` is MUTABLE and `available()` reads it at call time: the claim
+ * under test is that the mount asks on every paint (a lab page installs its
+ * bridge asynchronously), and a fixed `true`/`false` could not show that.
+ */
+const hostLink = ({ here = true, accepts = true } = {}) => {
+    const state = { here, seen: [], asked: 0 };
+    state.link = {
+        available: () => { state.asked += 1; return state.here; },
+        open: (rules) => { state.seen.push(rules); return accepts; },
+    };
+    return state;
 };
 
 
@@ -1281,9 +1306,10 @@ describe('⛓⛓⛓ EDITOR v3 E3a — the mount renders FIRST, then tells the pa
      * the roster SHRINKS (a value is dropped from `SET_CHANGE_WHY`, or a call
      * site stops passing one) — the second expectation names exactly which.
      */
-    it('`SET_CHANGE_WHY` is the SIX reasons, and every call site passes one of them', () => {
+    it(`\`SET_CHANGE_WHY\` is the ${SET_CHANGE_WHY.length} reasons, and every call site `
+        + 'passes one of them', () => {
         expect(SET_CHANGE_WHY)
-            .toEqual(['op', 'report', 'close', 'select', 'room', 'download']);
+            .toEqual(['op', 'report', 'close', 'select', 'room', 'download', 'handoff']);
         const h = recordingHarness();
         runScript(h);
         click(h, 'editSetReport');
@@ -1398,6 +1424,108 @@ describe('⛓⛓⛓ EDITOR v3 E3a — the mount renders FIRST, then tells the pa
      * SET press already did and the rules press did not — one family, two
      * behaviours, which is the asymmetry item 1 exists to end.
      */
+    /* ══════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ H4c — THE REVERSE LINK: "Open in APWorld Editor"
+     * ══════════════════════════════════════════════════════════════ */
+
+    /**
+     * ⛔⛔ **HIDDEN, NOT DISABLED, WITH NO HOST.** A standalone lab page has no
+     * app to open the hub in — the bridge module is not even FETCHED — so a
+     * disabled button would advertise a door that does not exist rather than
+     * one that is shut.
+     *
+     * ⛑ **THE FIRST SHAPE OF THIS ROW COULD NOT SEE ITS OWN MUTANT.** With
+     * only *"no link ⇒ `hidden` is true"* it stayed GREEN under
+     * `btn.disabled = !here` — because the mount's WIRING already sets
+     * `hidden = true` once, before any paint, and the row was reading that
+     * initial value rather than anything the painter did. ⇒ the claim is the
+     * TRANSITION, in both directions: a link that arrives SHOWS the button and
+     * a link that goes away (a bridge disposed, a frame gone) HIDES it again.
+     * Under the mutant the second half reds, because `hidden` never returns to
+     * true. Same family as H4b's mutants 15/16: a fixture on which two
+     * implementations agree cannot say which one shipped.
+     */
+    it('⛔ the APWorld button is HIDDEN with no host link, and hidden AGAIN when one goes '
+        + 'away', () => {
+        const bare = seedlingHarness();
+        expect($(bare, 'editOpenApworldEditor').hidden).toBe(true);
+        click(bare, 'editSetReport');
+        expect($(bare, 'editOpenApworldEditor').hidden).toBe(true);
+
+        const host = hostLink();
+        const h = seedlingHarness({ apworldEditor: host.link });
+        click(h, 'editSetReport');
+        expect($(h, 'editOpenApworldEditor').hidden).toBe(false);
+        host.here = false;
+        click(h, 'editSetReport');
+        expect($(h, 'editOpenApworldEditor').hidden).toBe(true);
+    });
+
+    /**
+     * ⛓⛓ **AND `available()` IS ASKED ON EVERY PAINT.** The maze and Seedling
+     * pages install their bridge ASYNCHRONOUSLY and after the first draw, so a
+     * value captured at mount would say "standalone" for every hosted session.
+     * ⛔ MUTANT: read `apworldEditor.available()` once into a `const` at mount
+     * — the button never appears and this row reds on the second expectation.
+     */
+    it('⛓ the button appears when the host link ARRIVES after the mount', () => {
+        const host = hostLink({ here: false });
+        const h = seedlingHarness({ apworldEditor: host.link });
+        expect($(h, 'editOpenApworldEditor').hidden).toBe(true);
+        host.here = true;
+        click(h, 'editSetReport');
+        expect($(h, 'editOpenApworldEditor').hidden).toBe(false);
+    });
+
+    /**
+     * ⛓⛓⛓ **IT HANDS OVER THE REPORT'S OWN `rules`** — the same document the
+     * `Download rules.json` button beside it writes, and not a second compile.
+     * ⛔ MUTANT: call `adapterFns.rulesJsonOf` again in the handler — this row
+     * still passes on VALUE, so the claim is asserted by IDENTITY.
+     */
+    it('⛓⛓ hands the host link the REPORT\'s document, by identity, and notifies '
+        + '`why: \'handoff\'`', () => {
+        const host = hostLink();
+        const seen = [];
+        const h = seedlingHarness({
+            apworldEditor: host.link, onSetChange: (c) => seen.push(c.why),
+        });
+        click(h, 'editSetReport');
+        const btn = $(h, 'editOpenApworldEditor');
+        expect(btn.hidden).toBe(false);
+        expect(btn.disabled).toBe(false);
+        seen.length = 0;
+        click(h, 'editOpenApworldEditor');
+        expect(host.seen).toHaveLength(1);
+        /**
+         * ⛔ IDENTITY AGAINST THE **REPORT**, not against the global this same
+         * handler writes — that comparison is a fixed point and would hold for
+         * any document the press invented. `ui.report()` is the accessor over
+         * `lastReport`, so this is the object `runReport` compiled.
+         */
+        expect(host.seen[0]).toBe(h.ui.report().rules);
+        expect(globalThis.__editorSetApworldOut).toBe(host.seen[0]);
+        expect(seen).toEqual(['handoff']);
+        expect(textOf(h, 'editSetNote')).toMatch(/OPENED in the APWorld Editor/);
+        // ⛔ AND NOTHING WAS WRITTEN TO DISK. This is a hand-off, not a download.
+        expect(h.downloads).toEqual([]);
+    });
+
+    /**
+     * ⛓ AND A LINK THAT REFUSES THE HAND-OFF SAYS SO. `open` returns whether
+     * the message went out; a bridge disposed between the paint and the press
+     * answers `false`, and a button that reported success anyway would be the
+     * one failure mode a reader cannot tell from a working door.
+     */
+    it('⛓ says NOT OPENED when the host link refuses the hand-off', () => {
+        const host = hostLink({ accepts: false });
+        const h = seedlingHarness({ apworldEditor: host.link });
+        click(h, 'editSetReport');
+        click(h, 'editOpenApworldEditor');
+        expect(host.seen).toHaveLength(1);
+        expect(textOf(h, 'editSetNote')).toMatch(/NOT OPENED — the host link refused/);
+    });
+
     it('the SET download and the rules download BOTH notify with `why: \'download\'`', () => {
         const h = recordingHarness();
         click(h, 'editSetReport');
@@ -1438,6 +1566,7 @@ const mazeBindings = (rulesSchema, blankSize = null) => mazeSetBindings({ rulesS
 
 const mazeHarness = ({
     overlay = emptyMazeOverlay(), loadZip = null, extraMember = null, blankSize = null,
+    apworldEditor = null,
 } = {}) => {
     for (const k of [...READOUT_NAMES, ...PRESS_COUNTERS]) delete globalThis[k];
     const adapter = createMazeSetAdapter({ rulesSchema: DEPS.rulesSchema });
@@ -1456,6 +1585,7 @@ const mazeHarness = ({
         compileRegionAtlas,
         validateRegionAtlas,
         atlasSchema: ATLAS_SCHEMA,
+        apworldEditor,
         ...(() => {
             const b = mazeBindings(DEPS.rulesSchema, blankSize);
             if (!extraMember) return b;
@@ -1713,6 +1843,46 @@ describe('⛓⛓⛓ EDITOR v3 E2b — the SAME mount, bound to `mazeSetAdapter`,
         expect(r4.download.rules.allowed).toBe(true);
         expect(r4.rows.filter((row) => row.severity === 'error')).toEqual([]);
     });
+
+    /**
+     * ⛓⛓⛓ H4c — **THE APWORLD BUTTON'S REFUSAL IS `reportOver`'S, NOT ITS
+     * OWN.** A graph that does not close has no compiled document to hand
+     * anybody, and the sentence the button prints is the core's — a second
+     * condition in the view would be a second answer to *"may this be
+     * exported"*, which is exactly what `setEditorCore`'s docblock forbids.
+     *
+     * ⛓ THE TWO-LINK LIBRARY IS THE ONE DETERMINISTIC REFUSAL IN THIS FILE
+     * (the row above owns it), which is why this claim lives on the MAZE
+     * binding and not beside the other four.
+     */
+    it('⛓ H4c — a refused rules download refuses the APWorld hand-off, in the same words',
+        () => {
+            const host = hostLink();
+            const two = mazeHarness({ apworldEditor: host.link });
+            connectAll(two, RING.slice(0, 2));
+            const rep = two.ui.runReport();
+            expect(rep.download.rules.allowed).toBe(false);
+            const btn = $(two, 'editOpenApworldEditor');
+            expect(btn.hidden).toBe(false);
+            expect(btn.disabled).toBe(true);
+            expect(btn.title).toBe(rep.download.rules.why);
+            // ⛔ AND THE HANDLER REFUSES TOO, not only the disabled attribute:
+            // a `<button disabled>` is a hint to a person, and the press path
+            // is what a driver (or a keyboard) actually reaches.
+            click(two, 'editOpenApworldEditor');
+            expect(host.seen).toEqual([]);
+            expect(textOf(two, 'editSetNote')).toBe(rep.download.rules.why);
+
+            // …and the closed ring hands it over.
+            const four = mazeHarness({ apworldEditor: host.link });
+            connectAll(four, RING);
+            const r4 = four.ui.runReport();
+            expect(r4.download.rules.allowed).toBe(true);
+            expect($(four, 'editOpenApworldEditor').disabled).toBe(false);
+            click(four, 'editOpenApworldEditor');
+            expect(host.seen).toHaveLength(1);
+            expect(host.seen[0]).toBe(r4.rules);
+        });
 
     /**
      * ⛓ MUTANT: the identity line reads `record().set.set_id` — `undefined` on
