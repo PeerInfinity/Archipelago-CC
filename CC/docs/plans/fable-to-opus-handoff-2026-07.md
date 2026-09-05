@@ -10648,6 +10648,18 @@ NAME first, `--write-allow` the ASSERTION second). Docs: `modules/apworldEditor.
 `procgenLabPanel/README.md`; the link census moved 223 → 225 with `repo` 32 → 34 (that page is not one of the
 seventeen the viewer lists — the resolver working).
 
+**CI at the close, quoted by SHA (⚖ 52) — ALL SIX WORKFLOWS GREEN at `1413efc4e`.** `unittests`, ALTTP
+regression, CodeQL, Docker, Pages and `JavaScript Unit Tests` all success — the last one's browser-gate shards
+run `procgen-lab-hosting` and `maze-lab` off the same roster this slice moved, so CLAIM 12 passed on a RUNNER
+too. `ci-vitest-summary.mjs 1413efc4e` → run **33974257917 success** — `suite: vitest (unfiltered)`
+**435/13256** (13,248 passed | 8 skipped | 0 failed), slow battery 12/217. Baseline `c7481aed4` = 434/13229,
+13,221. ⛓⛓ **The +27 reconciles exactly and nothing in it is a row I did not write** — derived by diffing the
+two runs' own per-file tables: `labProtocol` 61→70 (+9) · `setEditorView` **42→47** (+5) · `procgenLabPanel`
+27→30 (+3) · `reverseLinks` —→10 (+10, the one new FILE, 434→435). ⛑ **And that exposed a TYPED number in this
+slice's own commit message**: `5c0fe94f4` says `setEditorView` 43→47; CI says 42→47. I never ran the pre-edit
+file — the baseline was prose, the five new rows are real. Unlike H4b's +38 there is no term from a
+directory-rostered scan here: the new file landed under `apworldEditor/`, which no roster scans.
+
 **NEXT = H5** (sidecar block links), then H6a, then H6b. The two ⚖ H4b left were NOT touched, as the kickoff
 asked.
 

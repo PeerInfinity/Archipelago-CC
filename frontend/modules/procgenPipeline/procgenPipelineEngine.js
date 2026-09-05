@@ -3913,6 +3913,69 @@ export function placeSphereTreeItems(plan, nodes) {
  * envelope. `opts` overrides recovered/defaulted config (regionSize,
  * regionParams, substrateQuotas, maxItemsPerRegion, …).
  */
+/**
+ * ⛓⛓⛓ APWORLD EDITOR HUB slice H5 — **THE REBUILD'S REFUSALS, SPELLED ONCE.**
+ * `rebuildEnvelopeFromRulesJson` throws these, and `sphereRebuildRefusal` asks
+ * the same four questions WITHOUT building anything, so a caller that only
+ * wants to know *"can this document be appended to"* — the pipeline panel
+ * answering a hand-off from the APWorld editor — gets the engine's own sentence
+ * rather than a second copy of the predicate that would drift from it.
+ *
+ * ⛔ The two must never diverge, which is why they are the SAME strings and not
+ * two tables that happen to agree today.
+ */
+const SPHERE_REBUILD_REFUSALS = Object.freeze({
+    notSphere: () => 'rebuildEnvelopeFromRulesJson: not a sphere-growth rules.json',
+    noTree: () => 'rebuildEnvelopeFromRulesJson: rules.json lacks procgen_metadata.'
+        + 'sphere_tree / sphere_plan — regenerate it with a current build, or append '
+        + 'from a saved envelope',
+    missingSidecar: (regionId) => `rebuildEnvelopeFromRulesJson: region ${regionId} `
+        + 'missing from preset_sidecars',
+    zoneSubstrate: (substrate) => `rebuildEnvelopeFromRulesJson: substrate '${substrate}' `
+        + "can't be reconstructed from compiled rules.json (zone substrate — no path "
+        + 'extractor). Append from the saved envelope instead.',
+});
+
+/**
+ * ⛓⛓ **WHY THIS DOCUMENT CANNOT BE APPENDED TO, OR `null` WHEN IT CAN.** Pure,
+ * cheap (it deserializes nothing — it only asks each placed node's adapter
+ * whether it declares the two functions the rebuild calls), and it is the
+ * predicate a UI should show BEFORE offering "append a sphere".
+ *
+ * ⚠ It answers about the SPHERE path only. A document it refuses may still be
+ * realisable top-down: `layoutTopDown` re-realises every region from scratch
+ * off the `regions` block and never reads a sidecar.
+ *
+ * @param {object} rulesJson
+ * @param {{playerId?: string}} [opts]
+ * @returns {string|null} the refusal, verbatim as the rebuild would throw it
+ */
+export function sphereRebuildRefusal(rulesJson, opts = {}) {
+    const playerId = opts.playerId ?? '1';
+    const meta = rulesJson?.procgen_metadata;
+    if (meta?.driver !== 'sphere-growth' && meta?.driver !== 'top-down-sphere') {
+        return SPHERE_REBUILD_REFUSALS.notSphere();
+    }
+    if (!meta.sphere_tree || !meta.sphere_plan) return SPHERE_REBUILD_REFUSALS.noTree();
+    const sidecars = rulesJson.preset_sidecars?.[playerId] ?? {};
+    for (const node of meta.sphere_tree.nodes ?? []) {
+        if (!node.cell) continue;
+        const region_id = nodeRegionId(node);
+        if (!sidecars[region_id]) return SPHERE_REBUILD_REFUSALS.missingSidecar(region_id);
+        let adapter = null;
+        try {
+            adapter = getAdapter(node.substrate);
+        } catch (_) {
+            return SPHERE_REBUILD_REFUSALS.zoneSubstrate(node.substrate);
+        }
+        if (typeof adapter.deserializeWorld !== 'function'
+                || typeof adapter.extractPathsAndObstacles !== 'function') {
+            return SPHERE_REBUILD_REFUSALS.zoneSubstrate(node.substrate);
+        }
+    }
+    return null;
+}
+
 export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
     const playerId = opts.playerId ?? '1';
     const meta = rulesJson?.procgen_metadata;
@@ -3921,12 +3984,10 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
     // sphere_tree + sphere_plan + procedural (maze) substrates this path
     // needs, so accept it alongside born sphere-growth.
     if (meta?.driver !== 'sphere-growth' && meta?.driver !== 'top-down-sphere') {
-        throw new Error('rebuildEnvelopeFromRulesJson: not a sphere-growth rules.json');
+        throw new Error(SPHERE_REBUILD_REFUSALS.notSphere());
     }
     if (!meta.sphere_tree || !meta.sphere_plan) {
-        throw new Error('rebuildEnvelopeFromRulesJson: rules.json lacks procgen_metadata.'
-            + 'sphere_tree / sphere_plan — regenerate it with a current build, or append '
-            + 'from a saved envelope');
+        throw new Error(SPHERE_REBUILD_REFUSALS.noTree());
     }
     const plan = meta.sphere_plan;
     const treeMeta = meta.sphere_tree;
@@ -3951,13 +4012,11 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
         // region names; born sphere-growth falls back to the cell id).
         const region_id = nodeRegionId(node);
         const sc = sidecars[region_id];
-        if (!sc) throw new Error(`rebuildEnvelopeFromRulesJson: region ${region_id} missing from preset_sidecars`);
+        if (!sc) throw new Error(SPHERE_REBUILD_REFUSALS.missingSidecar(region_id));
         const adapter = getAdapter(node.substrate);
         if (typeof adapter.deserializeWorld !== 'function'
                 || typeof adapter.extractPathsAndObstacles !== 'function') {
-            throw new Error(`rebuildEnvelopeFromRulesJson: substrate '${node.substrate}' can't be `
-                + 'reconstructed from compiled rules.json (zone substrate — no path extractor). '
-                + 'Append from the saved envelope instead.');
+            throw new Error(SPHERE_REBUILD_REFUSALS.zoneSubstrate(node.substrate));
         }
         const world = adapter.deserializeWorld(sc.playable_payload, {
             baseItemLib: itemLib, baseObstacleLib: obstacleLib,
