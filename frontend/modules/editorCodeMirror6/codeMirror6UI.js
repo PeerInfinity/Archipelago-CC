@@ -16,25 +16,16 @@ const APPLY_SUPPORTED_MODES = ['rules', 'localStorageMode', 'dataForExport', 'me
 const G_LOCAL_STORAGE_MODE_PREFIX = 'archipelagoToolSuite_modeData_';
 import {
   EditorView,
-  keymap,
-  lineNumbers,
-  highlightActiveLine,
-  drawSelection,
   EditorState,
-  Compartment,
-  json,
-  foldGutter,
-  foldKeymap,
   foldAll,
   unfoldAll,
-  basicSetup,
-  oneDark,
-  defaultKeymap,
-  history,
-  historyKeymap,
-  searchKeymap,
-  highlightSelectionMatches,
 } from './codemirror6Imports.js';
+/**
+ * ⛓ APWORLD EDITOR HUB slice H2b: the extension list moved out so the hub's Raw
+ * JSON tab mounts THE SAME ONE. ⛔ Two raw-JSON editors that build their own
+ * arrays drift on the first theme change and nothing reds.
+ */
+import { jsonEditorExtensions } from './jsonEditorExtensions.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -46,9 +37,15 @@ function log(level, message, ...data) {
   }
 }
 
-// Configuration compartments for dynamic reconfiguration
-const readOnlyCompartment = new Compartment();
-const themeCompartment = new Compartment();
+/**
+ * ⛔ H2b removed a `readOnlyCompartment` / `themeCompartment` pair declared
+ * here since the panel was written: both were CONSTRUCTED and never placed in
+ * the extension list nor reconfigured (measured by grep at H2b — 2 hits each,
+ * both the declaration). A compartment nothing reconfigures is an intention,
+ * not a mechanism, and moving the list to `jsonEditorExtensions.js` would have
+ * carried the confusion to a second editor. `basicSetup` was imported and
+ * unused for the same reason.
+ */
 
 class CodeMirror6UI {
   constructor(container, componentState) {
@@ -256,54 +253,28 @@ class CodeMirror6UI {
     const initialDoc = content.loaded ? content.text : '';
 
     // Create CodeMirror 6 editor
-    const updateListener = EditorView.updateListener.of((update) => {
-      if (update.docChanged && !this.isUpdatingFromService) {
-        // Sync changes back to data service
-        const newText = update.state.doc.toString();
-        editorDataService.updateCurrentContent(newText);
-      }
-    });
-
-    // Custom keymap for Apply (Ctrl+Enter)
-    const applyKeymap = keymap.of([
-      {
-        key: 'Ctrl-Enter',
-        run: () => {
-          const currentSourceKey = editorDataService.getCurrentSourceKey();
-          if (APPLY_SUPPORTED_MODES.includes(currentSourceKey)) {
-            log('info', `[CodeMirror6UI] Ctrl+Enter shortcut detected, applying ${currentSourceKey}...`);
-            this._handleApplyClick();
-            return true;
-          }
-          return false;
-        },
+    // Custom key binding for Apply (Ctrl+Enter)
+    const applyKey = {
+      key: 'Ctrl-Enter',
+      run: () => {
+        const currentSourceKey = editorDataService.getCurrentSourceKey();
+        if (APPLY_SUPPORTED_MODES.includes(currentSourceKey)) {
+          log('info', `[CodeMirror6UI] Ctrl+Enter shortcut detected, applying ${currentSourceKey}...`);
+          this._handleApplyClick();
+          return true;
+        }
+        return false;
       },
-    ]);
+    };
 
-    const extensions = [
-      lineNumbers(),
-      highlightActiveLine(),
-      drawSelection(),
-      history(),
-      foldGutter(),
-      json(),
-      oneDark,
-      applyKeymap,
-      keymap.of([
-        ...defaultKeymap,
-        ...historyKeymap,
-        ...foldKeymap,
-        ...searchKeymap,
-      ]),
-      highlightSelectionMatches(),
-      updateListener,
-      EditorView.lineWrapping,
-      // Make editor fill container
-      EditorView.theme({
-        '&': { height: '100%' },
-        '.cm-scroller': { overflow: 'auto' },
-      }),
-    ];
+    const extensions = jsonEditorExtensions({
+      keys: [applyKey],
+      onDocChanged: (update) => {
+        if (this.isUpdatingFromService) return;
+        // Sync changes back to data service
+        editorDataService.updateCurrentContent(update.state.doc.toString());
+      },
+    });
 
     this.editorView = new EditorView({
       state: EditorState.create({
