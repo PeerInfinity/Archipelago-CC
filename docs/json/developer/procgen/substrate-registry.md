@@ -51,6 +51,20 @@ The **PlaybackController** contract is substrate-neutral: `play(rateHz?)`, `stop
 |-------|------|---------|
 | `describeAction` | `(entry) → string` (optional) | How this substrate says **one shared `actionQueue` entry** out loud — `'move E'`, `'Chop Wood'`, `'check Chest'`. A recording stores no `label`: the name is DERIVED from `actionType`/`actionId` and only the substrate knows the derivation (actionQueue format slice Q-a, A8; plan §23.1 Q8), so every surface that renders an entry — the substrate's own panel, a tooltip, loops' item-annotation folder (`blockAnnotations.foldRecordedItemUses`), and the future cross-substrate queue viewer — calls this rather than carrying its own copy of the wording. Absent ⇒ callers fall back to the entry's own `label`, then to its raw `actionId`. Declared by **jta** (a name table fed by the performed-actions capture and by `noteCatalogNames`), **omsi** (the action name IS the id, so it is exact) and **maze** (slice Q-b: `describeMazeAction` in `mazeRoom/mazeKeys.js` — `move E` / `wait` / `check <name>`, kept out of `mazeRoomLibrary.js` so that file stays DOM-free and headless-loadable). The `×n` suffix for a run-length folded entry is the CALLER's, so a `loops: 4` maze move still describes as `move E`. |
 
+### Composite map
+
+The composite map is the pipeline panel's grid-of-regions canvas — and, since the APWorld editor hub's H3 slice, the hub's own **Map** tab. It used to be one 380-line block of `procgenPipeline/procgenPipelineUI.js` whose per-region step named its substrates by hand (`render_hint === 'text_adventure'` → one painter, `'maze'` → another, anything else → a generic box). ⚖ *"each substrate declares whether it supports map rendering, and has a way to call the renderer. I don't want to hardcode support for map rendering for specific substrates"* (user, 2026-09-04) replaced that dispatch with this slot.
+
+| Field | Type | Meaning |
+|-------|------|---------|
+| `compositeMap` | object (optional) | **Declares that this substrate can paint its own cell of the composite map.** One field today: `drawRegion(ctx, region, { offX, offY, regionSize, tilePx, colors })`, called once per placed region with the cell's origin in canvas pixels and the shared geometry. Declared by **maze** (`mazeRoom/mazeCompositeMap.js`) and **text_adventure** (`textAdventureSubstrateWrapper/textAdventureCompositeMap.js`), each carrying the imports that make its painter substrate-specific. ABSENT ⇒ the region gets the shared **generic box, labelled with the substrate's own id**, so an undrawn substrate is legible rather than silent. |
+
+The shared renderer is `procgenCore/compositeMapRenderer.js`: `drawCompositeMap(canvas, grid, regionSize, { selection, tilePx, colors, registry })` paints the empty cells, the stub cells (a region with no `playable_payload` — top-down's *1 Layout* before *2 Realise* — which never reaches a declared painter), the cell borders, the connection lines and the selection highlight, and resolves every other cell through `substrateRegistry.get(region.render_hint ?? region.substrate)?.compositeMap?.drawRegion`. It also exports the geometry three readers share — `resolveExitTilePositions`, `fitTextToWidth`, `canvasPointOf`, `cellAtPoint`, `TILE_PX`, `COLORS`.
+
+⛔ **It is a declaration, not a registration** — the `roomEditor` law again: `substrateRegistry.register` validates only `id` and `sharing`, so a headless caller (this matrix, a `check-*.mjs` gate) can ask *"does this substrate paint itself"* with no browser. That is why a painter takes `ctx` as a PARAMETER and lives in its own module beside the library rather than inside it: both declarers stay node-importable.
+
+⛓ **The old `?? 'maze'` default is GONE.** `_drawRegion` ended its chain with it, so a region naming neither `render_hint` nor `substrate` drew as a maze. Measured before removing it: over the 205 committed presets, **0 of 1,360** `preset_sidecars` entries name neither (270 omit `render_hint` alone, 0 disagree with `substrate`), and `growMaze` / `topDownFromRulesJson` / `layoutTopDown` produce **0** payload-bearing regions that name neither. Such a region now resolves to no painter and gets the generic box — which is the point of the ⚖.
+
 ### Loop mode
 
 | Field | Type | Meaning |
@@ -162,7 +176,7 @@ Everything outside the two markers — including the hand-kept annotations below
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**8 registered entries · 62 fields · 11 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**8 registered entries · 63 fields · 12 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported.
 
@@ -200,6 +214,13 @@ Groups are this document's own § headings, matched to a field by the section th
 |---|---|---|---|---|---|---|---|---|
 | `describeAction` | fn | — | — | — | — | — | fn | fn |
 
+**Composite map**
+
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|
+| `compositeMap` | {drawRegion} | — | — | — | {drawRegion} | — | — | — |
+| `sharing` | {mana} | — | — | — | {mana} | — | {items, mana} | {items, mana} |
+
 **Loop mode**
 
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
@@ -220,7 +241,6 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
 |---|---|---|---|---|---|---|---|---|
-| `sharing` | {mana} | — | — | — | {mana} | — | {items, mana} | {items, mana} |
 | `sharing.items` | — | — | — | — | — | — | {getTypes} | {types} |
 | `sharing.mana` | {loopActionDelegation} | — | — | — | {} | — | {} | {} |
 | `sharing.mana.loopActionDelegation` | yes | — | — | — | — | — | — | — |

@@ -46,13 +46,18 @@ import {
 import {
     SPIRAL_STEPS, runSpiralStep, nextSpiralStep, newSpiralEnvelope,
 } from './spiralSteps.js';
+// ⛓ APWORLD EDITOR HUB H3 — the composite map moved out. The GRID, the
+// connection lines, the stub cell, the generic box and the click geometry are
+// `procgenCore/compositeMapRenderer.js`; each substrate's own cell is its
+// registry `compositeMap.drawRegion` declaration. ⛔ THIS PANEL NO LONGER
+// IMPORTS `mazeRoom/` AT ALL — the maze painter's `TILE_WALL`/`getTile` went
+// with it to `mazeRoom/mazeCompositeMap.js`.
 import {
-    TILE_WALL, getTile, getObstacle, getItem,
-} from '../mazeRoom/mazeRoomEngine.js';
-import {
-    DEFAULT_ITEMS, DEFAULT_OBSTACLES,
-    isObstacleCleared, getItemRenderHints,
-} from '../shared/procgen/library.js';
+    TILE_PX, drawCompositeMap, resolveExitTilePositions,
+    canvasPointOf, cellAtPoint,
+} from '../procgenCore/compositeMapRenderer.js';
+import { reconstructResultFromSidecars } from './compositeMapDocument.js';
+import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
     defaultProcgenParams, activeSubstrateIds,
@@ -81,102 +86,6 @@ const LS_VIEW_KEY = 'procgenPipeline_view';
 // F5 "working library" (regions captured from the ③ view, pending export) —
 // its own key so a capture doesn't churn the main params bundle.
 const LS_WORKING_LIBRARY_KEY = 'procgenPipeline_workingLibrary';
-const TILE_PX = 14;
-
-const COLORS = {
-    floor: '#2a2a2a',
-    wall: '#000000',
-    // Same §5 palette as mazeRoomUI — keep the two views consistent.
-    entrance: '#3aa85a',
-    exit: '#3aa85a',
-    exitBlocked: '#d04040',
-    locationBlocked: '#d04040',
-    grid: '#1a1a1a',
-    cellBorder: '#3a3a50',
-    emptyCell: '#141414',
-    // Text-adventure cells: warm parchment tint so they stand apart
-    // from the dark maze cells at a glance, without losing the cell
-    // border / exit / blocked palette.
-    textAdventureBg: '#3a3326',
-    textAdventureFg: '#f0e6c8',
-    textAdventureFgDim: '#a89d80',
-    genericBg: '#2a2a3a',
-};
-
-/**
- * Resolve a list of exits to their tile (x, y) inside the cell.
- *
- * Substrates whose adapter populates per-exit tile coords (current maze
- * + text-adventure path) round-trip their `(x, y)` verbatim. Future
- * substrates that omit them get an even distribution along their wall,
- * keyed by `side` (N/S/E/W). Mixing both modes per region is fine.
- *
- * Returns `[{ exit, x, y }, …]` in the input order.
- */
-export function resolveExitTilePositions(exits, regionSize) {
-    // Accept either the on-disk Array shape (sidecar JSON) or the
-    // in-memory Map shape (after deserializeWorld), since both paths
-    // feed _drawRegion. Normalize to a plain array.
-    let list;
-    if (Array.isArray(exits)) list = exits;
-    else if (exits && typeof exits.values === 'function') list = [...exits.values()];
-    else return [];
-    if (list.length === 0) return [];
-    const result = [];
-    const bySide = { N: [], S: [], E: [], W: [] };
-    for (const exit of list) {
-        const hasXY = Number.isFinite(exit?.x) && Number.isFinite(exit?.y);
-        if (hasXY) {
-            result.push({ exit, x: exit.x, y: exit.y });
-        } else if (exit?.side && bySide[exit.side]) {
-            bySide[exit.side].push({ exit, slotIndex: result.length });
-            result.push(null);
-        } else {
-            result.push(null);
-        }
-    }
-    const lastX = regionSize.width - 1;
-    const lastY = regionSize.height - 1;
-    for (const side of ['N', 'S', 'E', 'W']) {
-        const queue = bySide[side];
-        if (queue.length === 0) continue;
-        const horizontal = (side === 'N' || side === 'S');
-        const span = horizontal ? regionSize.width : regionSize.height;
-        // Even distribution: slot k of N gets the (k+1)/(N+1) fraction
-        // of the span (avoids landing on the corners).
-        for (let i = 0; i < queue.length; i++) {
-            const frac = (i + 1) / (queue.length + 1);
-            const along = Math.max(0, Math.min(span - 1, Math.round(frac * (span - 1))));
-            let x; let y;
-            if (side === 'N') { x = along; y = 0; }
-            else if (side === 'S') { x = along; y = lastY; }
-            else if (side === 'W') { x = 0; y = along; }
-            else { x = lastX; y = along; }
-            const { exit, slotIndex } = queue[i];
-            result[slotIndex] = { exit, x, y };
-        }
-    }
-    return result.filter(Boolean);
-}
-
-/**
- * Truncate `text` with an ellipsis so it fits within `maxPx` using the
- * canvas's currently-set font. No-op if the text already fits.
- */
-export function fitTextToWidth(ctx, text, maxPx) {
-    if (!text) return '';
-    if (ctx.measureText(text).width <= maxPx) return text;
-    const ellipsis = '…';
-    let lo = 0;
-    let hi = text.length;
-    while (lo < hi) {
-        const mid = (lo + hi + 1) >> 1;
-        if (ctx.measureText(text.slice(0, mid) + ellipsis).width <= maxPx) lo = mid;
-        else hi = mid - 1;
-    }
-    return lo > 0 ? text.slice(0, lo) + ellipsis : ellipsis;
-}
-
 const DEFAULT_PARAMS = {
     seed: 1,
     gridWidth: 3,
@@ -324,87 +233,6 @@ export function groupLibraryByFeature(allEntries, selectedEntries) {
     groups.substrateSpecific = [...specificMap.values()]
         .sort((a, b) => a.label.localeCompare(b.label));
     return groups;
-}
-
-/**
- * Reconstruct a Grid + composite-view payload from a rules.json that
- * carries `preset_sidecars`. Returns the same shape `growMaze` /
- * `topDownFromRulesJson` produce as their `result` (subset of
- * fields — poolRemaining is unknown post-hoc), so the existing
- * _renderGrid / _renderStats paths can paint it without further
- * branching. Returns null if the input has no procgen data, or if no
- * registered substrate can deserialize any of the regions.
- *
- * Pure function — exported for testing.
- */
-export function reconstructResultFromSidecars(rulesJson) {
-    const sidecarsByPlayer = rulesJson?.preset_sidecars;
-    if (!sidecarsByPlayer || typeof sidecarsByPlayer !== 'object') return null;
-    // v1 single-player: pick the first player. (Per-player composite
-    // views would need a player picker in the panel; deferred.)
-    const playerKeys = Object.keys(sidecarsByPlayer);
-    if (playerKeys.length === 0) return null;
-    const playerSidecars = sidecarsByPlayer[playerKeys[0]];
-    const regionEntries = Object.entries(playerSidecars ?? {});
-    if (regionEntries.length === 0) return null;
-
-    let maxGx = 0;
-    let maxGy = 0;
-    let maxW = 0;
-    let maxH = 0;
-    for (const [, sc] of regionEntries) {
-        const cell = sc?.grid_cell;
-        if (cell) {
-            if (cell.gx > maxGx) maxGx = cell.gx;
-            if (cell.gy > maxGy) maxGy = cell.gy;
-        }
-        const payload = sc?.playable_payload || {};
-        if (payload.width > maxW) maxW = payload.width;
-        if (payload.height > maxH) maxH = payload.height;
-    }
-    if (maxW === 0 || maxH === 0) return null;
-
-    const grid = new Grid({ width: maxGx + 1, height: maxGy + 1 });
-    let placed = 0;
-    let teleporters = 0;
-    for (const [region_id, sc] of regionEntries) {
-        if (!sc?.grid_cell) continue;
-        const substrateId = sc.substrate ?? 'maze';
-        const adapter = substrateRegistry.get(substrateId);
-        if (!adapter || typeof adapter.deserializeWorld !== 'function') continue;
-        const world = adapter.deserializeWorld(sc.playable_payload);
-        if (world?.exits) {
-            for (const e of world.exits.values()) {
-                if (e.isTeleporter) teleporters += 1;
-            }
-        }
-        grid.placeRegion(sc.grid_cell, {
-            region_id,
-            substrate: substrateId,
-            render_hint: sc.render_hint ?? substrateId,
-            playable_payload: world,
-            grow_telemetry: sc.grow_telemetry ?? null,
-        });
-        placed += 1;
-    }
-    if (placed === 0) return null;
-
-    const meta = rulesJson.procgen_metadata ?? {};
-    return {
-        grid,
-        regionSize: { width: maxW, height: maxH },
-        stats: {
-            regionsBuilt: placed,
-            regionsSkipped: 0,
-            stopReason: meta.stop_reason ?? null,
-            teleportersPlaced: teleporters,
-        },
-        poolRemaining: null,
-        // Marker for the renderers that this view came from a loaded
-        // rules.json rather than a fresh pipeline run, so labels can
-        // signal that and we don't claim a fresh-generation pool stat.
-        fromLoadedPreset: true,
-    };
 }
 
 // Sphere-growth runs as a stepped pipeline. The tree build (2 Build tree)
@@ -3314,18 +3142,13 @@ export class ProcgenPipelineUI {
     }
 
     // Hit-test a click on the composite grid canvas → the region at that cell
-    // (or null outside the grid). Maps client px → canvas px (CSS may scale the
-    // canvas), then to grid cell using the same TILE_PX × regionSize layout
-    // _drawGrid paints with.
+    // (or null outside the grid). ⛓ H3: the client-px → canvas-px → cell
+    // mapping is the RENDERER's (`canvasPointOf` / `cellAtPoint`), so a click
+    // and a pixel cannot drift apart — this was one of two identical inline
+    // copies of it here, and the hub's Map tab is a third reader.
     _gridRegionAt(canvas, grid, regionSize, evt) {
-        const rect = canvas.getBoundingClientRect();
-        if (!rect.width || !rect.height) return null;
-        const cx = (evt.clientX - rect.left) * (canvas.width / rect.width);
-        const cy = (evt.clientY - rect.top) * (canvas.height / rect.height);
-        const gx = Math.floor(cx / (regionSize.width * TILE_PX));
-        const gy = Math.floor(cy / (regionSize.height * TILE_PX));
-        if (gx < 0 || gy < 0 || gx >= grid.width || gy >= grid.height) return null;
-        return grid.getRegion({ gx, gy });
+        const cell = this._cellCoordsAt(canvas, grid, regionSize, evt);
+        return cell ? grid.getRegion(cell) : null;
     }
 
     _renderCompileFeedback(compile) {
@@ -3497,14 +3320,8 @@ export class ProcgenPipelineUI {
 
     // Grid cell {gx,gy} under a canvas click (or null outside the grid).
     _cellCoordsAt(canvas, grid, regionSize, evt) {
-        const rect = canvas.getBoundingClientRect();
-        if (!rect.width || !rect.height) return null;
-        const cx = (evt.clientX - rect.left) * (canvas.width / rect.width);
-        const cy = (evt.clientY - rect.top) * (canvas.height / rect.height);
-        const gx = Math.floor(cx / (regionSize.width * TILE_PX));
-        const gy = Math.floor(cy / (regionSize.height * TILE_PX));
-        if (gx < 0 || gy < 0 || gx >= grid.width || gy >= grid.height) return null;
-        return { gx, gy };
+        const hit = cellAtPoint(grid, regionSize, canvasPointOf(canvas, evt));
+        return hit ? { gx: hit.gx, gy: hit.gy } : null;
     }
 
     _onMapClick(canvas, grid, regionSize, evt) {
@@ -3548,12 +3365,7 @@ export class ProcgenPipelineUI {
 
     // Canvas-backing pixel under a click (null if the canvas isn't laid out).
     _canvasPx(canvas, evt) {
-        const rect = canvas.getBoundingClientRect();
-        if (!rect.width || !rect.height) return null;
-        return {
-            cx: (evt.clientX - rect.left) * (canvas.width / rect.width),
-            cy: (evt.clientY - rect.top) * (canvas.height / rect.height),
-        };
+        return canvasPointOf(canvas, evt);
     }
 
     // The exit whose green square contains the within-cell pixel (wx, wy), or null.
@@ -3740,382 +3552,30 @@ export class ProcgenPipelineUI {
         return wrap;
     }
 
+    /**
+     * ⛓⛓ THE COMPOSITE MAP, DRAWN BY THE SHARED RENDERER (H3). This method WAS
+     * 380 lines — the grid, the connections, a hand-written
+     * `render_hint === 'maze' / 'text_adventure'` dispatch and the two painters
+     * those branches named. All of it is now
+     * `procgenCore/compositeMapRenderer.js` plus a `compositeMap.drawRegion`
+     * declaration in each substrate's own library (⚖ user: map rendering is
+     * DECLARED per substrate, never hardcoded).
+     *
+     * ⛓ The panel's `_mapSel`/`_mapMode` become the renderer's `selection`:
+     * an exit selection outlines that exit's square, and a Move-Region
+     * selection outlines the whole cell — exactly the two cases the old code
+     * had, with the mode test that distinguished them kept HERE, where the
+     * modes live.
+     */
     _drawGrid(canvas, grid, regionSize) {
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = COLORS.emptyCell;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        for (let gy = 0; gy < grid.height; gy++) {
-            for (let gx = 0; gx < grid.width; gx++) {
-                const region = grid.getRegion({ gx, gy });
-                const offX = gx * regionSize.width * TILE_PX;
-                const offY = gy * regionSize.height * TILE_PX;
-                if (!region) {
-                    ctx.strokeStyle = COLORS.cellBorder;
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(offX + 0.5, offY + 0.5,
-                        regionSize.width * TILE_PX - 1, regionSize.height * TILE_PX - 1);
-                    continue;
-                }
-                this._drawRegion(ctx, region, offX, offY, regionSize);
-            }
-        }
-
-        // Cell borders so regions are visually distinct.
-        ctx.strokeStyle = COLORS.cellBorder;
-        ctx.lineWidth = 1;
-        for (let gx = 0; gx <= grid.width; gx++) {
-            ctx.beginPath();
-            ctx.moveTo(gx * regionSize.width * TILE_PX + 0.5, 0);
-            ctx.lineTo(gx * regionSize.width * TILE_PX + 0.5, canvas.height);
-            ctx.stroke();
-        }
-        for (let gy = 0; gy <= grid.height; gy++) {
-            ctx.beginPath();
-            ctx.moveTo(0, gy * regionSize.height * TILE_PX + 0.5);
-            ctx.lineTo(canvas.width, gy * regionSize.height * TILE_PX + 0.5);
-            ctx.stroke();
-        }
-
-        this._drawConnections(ctx, grid, regionSize);
-
-        // Highlight the pending selection: the whole cell (Move Region) or the
-        // selected exit's green square (Move Exits).
         const sel = this._mapSel;
-        const cw = regionSize.width * TILE_PX;
-        const ch = regionSize.height * TILE_PX;
+        let selection = null;
         if (sel?.kind === 'exit') {
-            const region = grid.getRegion(sel.cell);
-            const placed = region
-                ? resolveExitTilePositions(getRegionExits(region) ?? [], regionSize)
-                : [];
-            const hit = placed.find((p) => p?.exit?.exit_id === sel.exitId);
-            if (hit) {
-                ctx.strokeStyle = '#ffd24a';
-                ctx.lineWidth = 3;
-                ctx.strokeRect(
-                    sel.cell.gx * cw + hit.x * TILE_PX - 1.5,
-                    sel.cell.gy * ch + hit.y * TILE_PX - 1.5,
-                    TILE_PX + 3, TILE_PX + 3,
-                );
-            }
+            selection = { kind: 'exit', cell: sel.cell, exitId: sel.exitId };
         } else if (sel && this._mapMode === 'moveRegion') {
-            const { gx, gy } = sel.cell;
-            ctx.strokeStyle = '#ffd24a';
-            ctx.lineWidth = 3;
-            ctx.strokeRect(gx * cw + 1.5, gy * ch + 1.5, cw - 3, ch - 3);
+            selection = { kind: 'region', cell: sel.cell };
         }
-    }
-
-    // Thin yellow lines linking each exit's green square to its paired
-    // entrance's green square (the reciprocal exit in the target region, found
-    // via targetExitId). Usually the two sit adjacent so the line is tiny, but
-    // for teleporter links (regions placed apart) it shows the connection. Drawn
-    // last so the lines sit on top of the cells.
-    _drawConnections(ctx, grid, regionSize) {
-        const cellW = regionSize.width * TILE_PX;
-        const cellH = regionSize.height * TILE_PX;
-        // Global green-square center for every (region_id, exit_id).
-        const centers = new Map();
-        for (const region of grid.allRegions()) {
-            const cell = region.cell;
-            if (!cell) continue;
-            const placed = resolveExitTilePositions(getRegionExits(region) ?? [], regionSize);
-            for (const p of placed) {
-                if (!p?.exit?.exit_id) continue;
-                centers.set(`${region.region_id} ${p.exit.exit_id}`, {
-                    px: cell.gx * cellW + (p.x + 0.5) * TILE_PX,
-                    py: cell.gy * cellH + (p.y + 0.5) * TILE_PX,
-                });
-            }
-        }
-        ctx.strokeStyle = '#e6c84a';
-        ctx.lineWidth = 3;
-        const drawn = new Set();
-        for (const region of grid.allRegions()) {
-            const exits = getRegionExits(region);
-            const list = Array.isArray(exits) ? exits : [...(exits?.values?.() ?? [])];
-            for (const exit of list) {
-                if (!exit?.targetRegion || !exit?.targetExitId) continue;
-                const fromKey = `${region.region_id} ${exit.exit_id}`;
-                const toKey = `${exit.targetRegion} ${exit.targetExitId}`;
-                const pairKey = fromKey < toKey ? `${fromKey}|${toKey}` : `${toKey}|${fromKey}`;
-                if (drawn.has(pairKey)) continue;
-                drawn.add(pairKey);
-                const a = centers.get(fromKey);
-                const b = centers.get(toKey);
-                if (!a || !b) continue;
-                ctx.beginPath();
-                ctx.moveTo(a.px, a.py);
-                ctx.lineTo(b.px, b.py);
-                ctx.stroke();
-            }
-        }
-    }
-
-    _drawRegion(ctx, region, offX, offY, regionSize) {
-        const hint = region?.render_hint ?? region?.substrate ?? 'maze';
-        const payload = region?.playable_payload;
-        // Stub region: placed in 1 Layout (top-down) but not yet realised in 2,
-        // so it has no playable_payload. Draw a labelled placeholder instead of
-        // dispatching to a substrate drawer (which assumes a payload).
-        if (!payload) {
-            this._drawStubRegion(ctx, region, offX, offY, regionSize);
-            return;
-        }
-        if (hint === 'text_adventure') {
-            this._drawTextAdventureRegion(ctx, region, offX, offY, regionSize);
-        } else if (hint === 'maze') {
-            this._drawMazeRegion(ctx, payload, offX, offY);
-        } else {
-            this._drawGenericRegion(ctx, region, offX, offY, regionSize);
-        }
-    }
-
-    // A region placed but not yet realised (top-down 1 Layout → 2 Realise).
-    // Muted fill + the region_id so the live grid is viewable mid-pipeline.
-    _drawStubRegion(ctx, region, offX, offY, regionSize) {
-        const w = regionSize.width * TILE_PX;
-        const h = regionSize.height * TILE_PX;
-        ctx.fillStyle = COLORS.emptyCell;
-        ctx.fillRect(offX, offY, w, h);
-        ctx.strokeStyle = COLORS.cellBorder;
-        ctx.setLineDash([4, 3]);
-        ctx.lineWidth = 1;
-        ctx.strokeRect(offX + 1.5, offY + 1.5, w - 3, h - 3);
-        ctx.setLineDash([]);
-        ctx.fillStyle = '#888';
-        ctx.font = '10px monospace';
-        ctx.fillText(String(region?.region_id ?? '?').slice(0, 12), offX + 4, offY + 14);
-    }
-
-    _drawMazeRegion(ctx, world, offX, offY) {
-        const obsLib = world.obstacleLib ?? DEFAULT_OBSTACLES;
-        const itemLib = world.itemLib ?? DEFAULT_ITEMS;
-        // Composite view doesn't have a player inventory — gates
-        // always render closed here. (The maze panel's playable view
-        // is the right place to see them open as the player picks up
-        // keys.)
-        const inventory = new Set();
-
-        // Tile base layer
-        for (let y = 0; y < world.height; y++) {
-            for (let x = 0; x < world.width; x++) {
-                const tile = getTile(world, x, y);
-                ctx.fillStyle = tile === TILE_WALL ? COLORS.wall : COLORS.floor;
-                ctx.fillRect(offX + x * TILE_PX, offY + y * TILE_PX, TILE_PX, TILE_PX);
-            }
-        }
-
-        // Quick lookup from tile coords to the exit at that position.
-        const exitAt = new Map();
-        for (const e of world.exits.values()) {
-            exitAt.set(`${e.x},${e.y}`, e);
-        }
-
-        // §5 rendering pass — same shape as mazeRoomUI._drawWorld.
-        for (let y = 0; y < world.height; y++) {
-            for (let x = 0; x < world.width; x++) {
-                const key = `${x},${y}`;
-                const obstacleId = world.obstacles.get(key);
-                const obstacle = obstacleId ? obsLib[obstacleId] : null;
-                const isLogicGate = obstacle?.clear_set_type === 'rule';
-                const gateClosed = isLogicGate
-                    && !isObstacleCleared(obstacleId, inventory, obsLib);
-                const exit = exitAt.get(key);
-                const isExit = !!exit;
-                const isEntrance = (x === world.entrance.x && y === world.entrance.y);
-                const itemId = world.items.get(key);
-
-                if (isExit) {
-                    ctx.fillStyle = (isLogicGate && gateClosed) ? COLORS.exitBlocked : COLORS.exit;
-                    ctx.fillRect(offX + x * TILE_PX, offY + y * TILE_PX, TILE_PX, TILE_PX);
-                }
-                if (obstacle && !isLogicGate) {
-                    const color = obstacle.color ?? '#b84040';
-                    ctx.fillStyle = color;
-                    ctx.fillRect(offX + x * TILE_PX + 2, offY + y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
-                }
-                if (itemId) {
-                    const hints = getItemRenderHints(itemId, itemLib);
-                    const cx = offX + x * TILE_PX + TILE_PX / 2;
-                    const cy = offY + y * TILE_PX + TILE_PX / 2;
-                    ctx.fillStyle = hints.color;
-                    ctx.beginPath();
-                    ctx.arc(cx, cy, TILE_PX * 0.3, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.strokeStyle = '#000';
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-                    if (hints.label) {
-                        ctx.save();
-                        ctx.fillStyle = '#000';
-                        ctx.font = `bold ${Math.floor(TILE_PX * 0.55)}px sans-serif`;
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(hints.label, cx, cy);
-                        ctx.restore();
-                    }
-                    if (isLogicGate && gateClosed) {
-                        ctx.strokeStyle = COLORS.locationBlocked;
-                        ctx.lineWidth = 2;
-                        ctx.strokeRect(offX + x * TILE_PX + 1, offY + y * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);
-                    }
-                }
-                if (isEntrance && !isExit) {
-                    ctx.strokeStyle = COLORS.entrance;
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(offX + x * TILE_PX + 1, offY + y * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);
-                }
-            }
-        }
-    }
-
-    _drawTextAdventureRegion(ctx, region, offX, offY, regionSize) {
-        const payload = region?.playable_payload ?? {};
-        const cellW = regionSize.width * TILE_PX;
-        const cellH = regionSize.height * TILE_PX;
-        const obsLib = payload.obstacleLib ?? DEFAULT_OBSTACLES;
-        const inventory = new Set();
-
-        ctx.fillStyle = COLORS.textAdventureBg;
-        ctx.fillRect(offX, offY, cellW, cellH);
-
-        const placedExits = resolveExitTilePositions(payload.exits, regionSize);
-        for (const { x, y } of placedExits) {
-            const obstacleId = payload.obstacles?.get?.(`${x},${y}`);
-            const obstacle = obstacleId ? obsLib[obstacleId] : null;
-            const isLogicGate = obstacle?.clear_set_type === 'rule';
-            const gateClosed = isLogicGate
-                && !isObstacleCleared(obstacleId, inventory, obsLib);
-            ctx.fillStyle = gateClosed ? COLORS.exitBlocked : COLORS.exit;
-            ctx.fillRect(offX + x * TILE_PX, offY + y * TILE_PX, TILE_PX, TILE_PX);
-        }
-
-        if (payload.entrance && Number.isFinite(payload.entrance.x) && Number.isFinite(payload.entrance.y)) {
-            const ex = payload.entrance.x;
-            const ey = payload.entrance.y;
-            const onExit = placedExits.some(({ x, y }) => x === ex && y === ey);
-            if (!onExit) {
-                ctx.strokeStyle = COLORS.entrance;
-                ctx.lineWidth = 2;
-                ctx.strokeRect(offX + ex * TILE_PX + 1, offY + ey * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);
-            }
-        }
-
-        // Items live in two parallel Maps keyed by "x,y": payload.items
-        // (Map → itemId) and payload.itemLocationNames (Map → AP name).
-        // Skip items whose location name didn't make it through serialization.
-        const locationNames = [];
-        const lockedLocations = new Set();
-        const items = payload.items;
-        const itemLocationNames = payload.itemLocationNames;
-        if (items && typeof items.entries === 'function') {
-            for (const [posKey] of items) {
-                const locationName = itemLocationNames?.get?.(posKey);
-                if (!locationName) continue;
-                locationNames.push(locationName);
-                const obstacleId = payload.obstacles?.get?.(posKey);
-                const obstacle = obstacleId ? obsLib[obstacleId] : null;
-                const isLogicGate = obstacle?.clear_set_type === 'rule';
-                const gateClosed = isLogicGate
-                    && !isObstacleCleared(obstacleId, inventory, obsLib);
-                if (gateClosed) lockedLocations.add(locationName);
-            }
-        }
-
-        const padX = 6;
-        const padY = 6;
-        const headerSize = 11;
-        const lineSize = 10;
-        const lineGap = 2;
-        let textY = offY + padY;
-
-        ctx.save();
-        ctx.fillStyle = COLORS.textAdventureFg;
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'top';
-
-        ctx.font = `bold ${headerSize}px sans-serif`;
-        const heading = region?.region_id ?? region?.name ?? '(region)';
-        const headingLine = fitTextToWidth(ctx, heading, cellW - padX * 2);
-        if (headingLine && textY + headerSize <= offY + cellH - padY) {
-            ctx.fillText(headingLine, offX + padX, textY);
-            textY += headerSize + lineGap;
-        }
-
-        ctx.font = `${lineSize}px sans-serif`;
-        const summary = `${locationNames.length} location${locationNames.length === 1 ? '' : 's'}`;
-        if (textY + lineSize <= offY + cellH - padY) {
-            ctx.fillText(summary, offX + padX, textY);
-            textY += lineSize + lineGap;
-        }
-
-        const maxY = offY + cellH - padY;
-        let truncated = 0;
-        for (let i = 0; i < locationNames.length; i++) {
-            const name = locationNames[i];
-            const remaining = locationNames.length - i;
-            if (textY + lineSize > maxY) {
-                truncated = remaining;
-                break;
-            }
-            // Last visible slot may need to host a "+N more" instead.
-            const isLastSlot = textY + lineSize * 2 + lineGap > maxY;
-            if (isLastSlot && remaining > 1) {
-                ctx.fillStyle = COLORS.textAdventureFgDim;
-                ctx.fillText(`+${remaining} more`, offX + padX, textY);
-                truncated = 0;
-                textY += lineSize + lineGap;
-                break;
-            }
-            const prefix = lockedLocations.has(name) ? '\u{1F512} ' : '• ';
-            ctx.fillStyle = lockedLocations.has(name) ? COLORS.locationBlocked : COLORS.textAdventureFg;
-            ctx.fillText(fitTextToWidth(ctx, prefix + name, cellW - padX * 2), offX + padX, textY);
-            textY += lineSize + lineGap;
-        }
-        if (truncated > 0) {
-            ctx.fillStyle = COLORS.textAdventureFgDim;
-            ctx.fillText(`+${truncated} more`, offX + padX, textY);
-        }
-        ctx.restore();
-    }
-
-    _drawGenericRegion(ctx, region, offX, offY, regionSize) {
-        const cellW = regionSize.width * TILE_PX;
-        const cellH = regionSize.height * TILE_PX;
-        ctx.fillStyle = COLORS.genericBg;
-        ctx.fillRect(offX, offY, cellW, cellH);
-
-        const exits = getRegionExits(region) ?? [];
-        const placedExits = resolveExitTilePositions(exits, regionSize);
-        ctx.fillStyle = COLORS.exit;
-        for (const { x, y } of placedExits) {
-            ctx.fillRect(offX + x * TILE_PX, offY + y * TILE_PX, TILE_PX, TILE_PX);
-        }
-
-        ctx.save();
-        ctx.fillStyle = COLORS.textAdventureFg;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        const label = region?.substrate ?? region?.render_hint ?? '?';
-        // Zone-based substrates carry a numeric index in
-        // playable_payload (currently just JtA's jtaZone). Surface it
-        // here so the shuffled-spiral preview shows zone ordering at
-        // a glance; procedural substrates render unchanged.
-        const zoneIdx = region?.playable_payload?.jtaZone;
-        const hasZone = typeof zoneIdx === 'number';
-        const cx = offX + cellW / 2;
-        if (hasZone) {
-            ctx.font = `bold ${Math.max(14, Math.floor(cellH * 0.25))}px sans-serif`;
-            ctx.fillText(`Zone ${zoneIdx}`, cx, offY + cellH / 2 - 6);
-            ctx.font = '10px sans-serif';
-            ctx.fillText(`(${label})`, cx, offY + cellH / 2 + 12);
-        } else {
-            ctx.font = '10px sans-serif';
-            ctx.fillText(`(${label})`, cx, offY + cellH / 2);
-        }
-        ctx.restore();
+        drawCompositeMap(canvas, grid, regionSize, { selection });
     }
 
     // --- rules.json export ---

@@ -24,7 +24,7 @@ export const REGISTRY = frz({
     "columnOrder": "the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported",
     "columns": [
         {
-            "fields": 23,
+            "fields": 24,
             "id": "maze",
             "label": "Maze",
             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"
@@ -48,7 +48,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/runnerDemo/runnerDemoLibrary.js"
         },
         {
-            "fields": 14,
+            "fields": 15,
             "id": "text_adventure",
             "label": "Text Adventure",
             "registeredBy": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js"
@@ -106,6 +106,13 @@ export const REGISTRY = frz({
         },
         {
             "rows": [
+                "compositeMap",
+                "sharing"
+            ],
+            "title": "Composite map"
+        },
+        {
+            "rows": [
                 "loopSupport",
                 "loopSupport.customQueues",
                 "loopSupport.executeVia",
@@ -122,7 +129,6 @@ export const REGISTRY = frz({
         },
         {
             "rows": [
-                "sharing",
                 "sharing.items",
                 "sharing.mana",
                 "sharing.mana.loopActionDelegation"
@@ -859,6 +865,77 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Build-time — region library entries (capture / instantiate / validate)",
             "name": "captureLibraryEntry"
+        },
+        {
+            "carriedBy": [
+                "maze",
+                "text_adventure"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": true,
+                    "short": "{drawRegion}",
+                    "type": "object",
+                    "value": [
+                        "drawRegion"
+                    ]
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": true,
+                    "short": "{drawRegion}",
+                    "type": "object",
+                    "value": [
+                        "drawRegion"
+                    ]
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Composite map",
+            "name": "compositeMap"
         },
         {
             "carriedBy": [
@@ -4101,7 +4178,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "prose",
-            "group": "Cross-substrate sharing",
+            "group": "Composite map",
             "name": "sharing"
         },
         {

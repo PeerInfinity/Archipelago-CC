@@ -41,6 +41,7 @@ import {
 } from '../shared/procgen/contentModules/consumableTileGen.js';
 import { getPanelInstance } from './index.js';
 import { describeMazeAction } from './mazeKeys.js';
+import { drawMazeCompositeRegion } from './mazeCompositeMap.js';
 
 /**
  * Content-module pass (registry `applyContentModules` hook): stamp tile-grid
@@ -155,6 +156,26 @@ export const substrateRegistryEntry = Object.freeze({
      * so the two are separate fields on purpose.
      */
     roomEditor: Object.freeze({ kind: 'lab', page: 'maze', arm: 'set' }),
+
+    /**
+     * ⛓⛓⛓ APWORLD EDITOR HUB H3 — **THE COMPOSITE-MAP DECLARATION**
+     * (⚖ user 2026-09-04: *"each substrate declares whether it supports map
+     * rendering, and has a way to call the renderer. I don't want to hardcode
+     * support for map rendering for specific substrates."*).
+     *
+     * `drawRegion(ctx, region, {offX, offY, regionSize, tilePx, colors})` paints
+     * ONE cell of the composite grid. The shared renderer
+     * (`procgenCore/compositeMapRenderer.js`) draws the grid, the connection
+     * lines, the stub cells and the selection, and resolves each region's
+     * painter THROUGH THIS SLOT — it names no substrate. Absent ⇒ the region
+     * gets the generic box labelled with its own substrate id.
+     *
+     * ⛔ **DATA, like `roomEditor`**, and for the same reason: this file is
+     * `loadable: true` in the generated capability matrix, so the painter lives
+     * in `mazeCompositeMap.js` and takes `ctx` as a parameter. Nothing here
+     * touches a DOM at module load.
+     */
+    compositeMap: Object.freeze({ drawRegion: drawMazeCompositeRegion }),
 
     // Action labelling (Q-a A8). How the maze says one shared actionQueue
     // entry out loud — `move E`, `wait`, `check Sword Room`. The ONE owner of

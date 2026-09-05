@@ -25,6 +25,7 @@ import {
 } from '../shared/procgen/adapterPrimitives.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { getPlaybackProxy } from './index.js';
+import { drawTextAdventureCompositeRegion } from './textAdventureCompositeMap.js';
 
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
@@ -63,6 +64,16 @@ export const substrateRegistryEntry = Object.freeze({
     // takeLastRecording, loops owns coarse capture during Record blocks,
     // and Playback runs the block's own interior through the generic
     // executor. Only fine-grained substrates (maze) supply a recorder.
+
+    /**
+     * ⛓⛓ APWORLD EDITOR HUB H3 — **THE COMPOSITE-MAP DECLARATION** (⚖ user:
+     * map rendering is declared per substrate, never hardcoded). The painter
+     * that used to be `procgenPipelineUI.js`'s `hint === 'text_adventure'`
+     * branch; see `textAdventureCompositeMap.js` and the maze's twin in
+     * `mazeRoom/mazeRoomLibrary.js`. DATA, so this library stays
+     * node-importable.
+     */
+    compositeMap: Object.freeze({ drawRegion: drawTextAdventureCompositeRegion }),
 
     // Loop-mode capabilities. custom queues stays NO — the customQueue
     // DROPDOWN would duplicate what the loops queue already expresses
