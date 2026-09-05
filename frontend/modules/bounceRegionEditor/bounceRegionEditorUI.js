@@ -47,6 +47,7 @@ import {
     deriveAccessRules, deriveBraidAccessRules, formatRule,
 } from '../bounceDemo/deriveRules.js';
 import { resolvePhysicsStamp } from '../bounceDemo/physics.js';
+import { portalSide } from '../bounceDemo/sideExits.js';
 import { bounceStack } from '../bounceDemo/fixtures/bounceStack.js';
 import { easyTower } from '../bounceDemo/fixtures/easyTower.js';
 import { springGap } from '../bounceDemo/fixtures/springGap.js';
@@ -805,18 +806,18 @@ export class BounceRegionEditorUI {
     }
 
     // Derive exit specs from a level's portals for free-mode regenerate: the
-    // side comes from a `side_exit_<side>` id, else from the portal direction,
-    // else the first free side. Deduped to the 4 grid sides.
+    // side is `sideExits.portalSide`'s — ⛓ H6b made that ONE function, shared
+    // with `assembleBounceRegionFromLevel`, which asks the same question from
+    // the other end (side → portal id). This file used to carry its own copy of
+    // the id regex + arrow table; two answers to one question is how the
+    // assembler and the editor came to disagree about `exit_up`.
+    // A portal naming no side at all still takes the first free side.
     _specsFromLevelPortals(level) {
-        const DIR_TO_SIDE = { up: 'N', down: 'S', right: 'E', left: 'W' };
         const ALL = ['N', 'S', 'E', 'W'];
         const used = new Set();
         const specs = [];
         for (const p of level.portals ?? []) {
-            let side = null;
-            const m = /^side_exit_([NSEW])$/.exec(p.id || '');
-            if (m) side = m[1];
-            else if (p.direction && DIR_TO_SIDE[p.direction]) side = DIR_TO_SIDE[p.direction];
+            let side = portalSide(p);
             if (!side || used.has(side)) side = ALL.find((x) => !used.has(x)) ?? null;
             if (!side) continue;
             used.add(side);

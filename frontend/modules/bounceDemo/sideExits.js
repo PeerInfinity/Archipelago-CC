@@ -39,7 +39,56 @@
  * the sidecar payload).
  */
 
-const DIRECTIONS = { N: 'up', S: 'down', E: 'right', W: 'left' };
+/** side → the `direction` arrow a portal on that side points along. */
+export const SIDE_DIRECTIONS = Object.freeze({ N: 'up', S: 'down', E: 'right', W: 'left' });
+/** …and the inverse: the arrow that NAMES a side. */
+export const DIRECTION_SIDES = Object.freeze({ up: 'N', down: 'S', right: 'E', left: 'W' });
+const DIRECTIONS = SIDE_DIRECTIONS;
+
+const SIDE_EXIT_ID = /^side_exit_([NSEW])$/;
+
+/**
+ * ⛓⛓ **THE ONE ANSWER TO "WHICH GRID SIDE IS THIS LEVEL PORTAL ON"** (H6b).
+ * Two readers had their own regex for this — the assembler's minted-name
+ * convention and `bounceRegionEditorUI._specsFromLevelPortals` — and they are
+ * the same question, so it is one function.
+ *
+ * ⛔ **THE ARROW IS READ FIRST, AND THAT IS A MEASUREMENT, NOT A STYLE PICK.**
+ * `side_exit_<side>` is a MINTED name, and one producer OUTLIVES it:
+ * `bounceLibraryEntry.instantiateLibraryEntryForSpecs` relabels a captured
+ * portal onto a different side — it re-keys `sidePortals` and re-points the
+ * portal's `direction`, and deliberately leaves the id alone (the id is what
+ * `ap_locations` and the carried rules key on). After that relabel the id says
+ * `side_exit_N` while the portal really sits on E, and only the arrow is
+ * current. Measured over every committed bounce level (25 sidecar regions) and
+ * every generated one in the sphere + top-down byte-identity dumps (36
+ * portals): 0 carry no `direction`, and 0 disagree with their id — so the two
+ * orders differ ONLY on a relabelled entry, where the arrow is the right answer.
+ *
+ * @returns {'N'|'S'|'E'|'W'|null} null when the portal names no side at all.
+ */
+export function portalSide(portal) {
+    const byArrow = DIRECTION_SIDES[portal?.direction];
+    if (byArrow) return byArrow;
+    const m = SIDE_EXIT_ID.exec(portal?.id ?? '');
+    return m ? m[1] : null;
+}
+
+/**
+ * ⛓ side → the id of the LEVEL'S OWN portal on that side. First portal wins,
+ * in the level's own order — a hand-edited level can carry two portals on one
+ * side, and a re-assembly has to be deterministic about which one it names.
+ * A side with no portal is absent, and the caller mints (see
+ * `assembleBounceRegionFromLevel`).
+ */
+export function portalIdsBySide(level) {
+    const bySide = new Map();
+    for (const p of level?.portals ?? []) {
+        const side = portalSide(p);
+        if (side && p?.id && !bySide.has(side)) bySide.set(side, p.id);
+    }
+    return bySide;
+}
 
 function sideSpot(side, size) {
     switch (side) {

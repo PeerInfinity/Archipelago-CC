@@ -23,7 +23,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
 import { physicsStampFor, resolvePhysicsStamp } from './physics.js';
 import { deriveAccessRules, deriveBraidAccessRules } from './deriveRules.js';
-import { attachSideExits } from './sideExits.js';
+import { attachSideExits, portalIdsBySide, SIDE_DIRECTIONS } from './sideExits.js';
 import { generateLevelFromSpecsGen } from './generator.js';
 import {
     ABILITY_ITEM_NAMES, minimalSetsToRule, composeAuthoredRule,
@@ -205,7 +205,8 @@ function makeExtractZoneRules(zones, { portalPlacement = 'directional' } = {}) {
 // exit). There is no gate vocabulary anymore: any AP item gates any
 // portal/pickup via the authored channel.
 
-const SIDE_DIRECTIONS = { N: 'up', S: 'down', E: 'right', W: 'left' };
+// (`SIDE_DIRECTIONS` is `sideExits.js`'s — the module that owns the
+// side ⇄ arrow relation and, since H6b, the portal→side reader too.)
 
 const ABILITY_BY_ITEM_NAME = Object.freeze(Object.fromEntries(
     Object.entries(ABILITY_ITEM_NAMES).map(([ability, name]) => [name, ability])));
@@ -637,13 +638,38 @@ export function assembleBounceRegionFromLevel(level, {
     derived = null,
     authoredReqs = null,
 } = {}) {
+    /**
+     * ⛓⛓⛓ **THE EXIT'S ID COMES FROM THE LEVEL, NOT FROM ITS SIDE** (H6b, ⚖
+     * user 2026-09-05). This function is the RE-ASSEMBLY path: the level is in
+     * hand and already carries its portals, so their ids are a FACT to read,
+     * not a name to mint. Minting `side_exit_<side>` unconditionally — what
+     * this did until H6b — is wrong twice over on a level whose portal is
+     * authored under its own name (`exit_up`, which `generator.js` writes for
+     * a climb's top exit and `attachSideExits` deliberately REUSES for N):
+     *
+     *   · `derived.exits[e.id]` misses, so the exit's rule silently becomes
+     *     "unreachable" (empty minimal sets → `False_`) — the warn-but-allow
+     *     branch below, firing on a level that is perfectly fine; and
+     *   · `sidePortals` is written with a portal id the level does not
+     *     contain, so an UNCHANGED save already moves the payload's bytes.
+     *
+     * Measured before the fix, over every committed bounce sidecar region:
+     * 10 of 25 re-assembled to a different `sidePortals` than the document's,
+     * and the APWorld hub refused all 10 by name (15/25 doors).
+     *
+     * ⛔ `side_exit_<side>` survives as the FALLBACK, for the side a contract
+     * asks about that the level has no portal for — a contract-breaking edit
+     * (a deleted portal). That case still reaches the missing-derivation
+     * branch below and is still ④'s oracle to flag, unchanged.
+     */
+    const levelPortalIds = portalIdsBySide(level);
     const exits = exitSpecs.map((s) => {
         if (!SIDE_DIRECTIONS[s.side]) {
             throw new Error(`bounce zone '${region_id}': unknown exit side '${s.side}'`);
         }
         const { physics, authored } = splitRequirement(s.requirement, s.counts);
         return {
-            id: `side_exit_${s.side}`,
+            id: levelPortalIds.get(s.side) ?? `side_exit_${s.side}`,
             side: s.side,
             direction: SIDE_DIRECTIONS[s.side],
             requirement: physics,

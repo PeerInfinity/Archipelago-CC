@@ -16,6 +16,7 @@
 // that constraint — deferred with F6.) Instantiate draws no rng.
 
 import { assembleZoneRegion } from '../procgenPipeline/procgenPipelineEngine.js';
+import { SIDE_DIRECTIONS } from './sideExits.js';
 
 // exit_<side> → side (assembleZoneRegion's synthetic exit id convention).
 function sideOfExitId(id) {
@@ -115,10 +116,11 @@ export function instantiateBounceLibraryEntry(entry, ctx = {}, deps) {
     });
 }
 
-// side -> level portal direction arrow (mirrors SIDE_DIRECTIONS in
-// bounceDemoLibrary / DIRECTIONS in sideExits; duplicated here to avoid a
-// circular import, since bounceDemoLibrary imports this module).
-const SIDE_DIRECTIONS = { N: 'up', S: 'down', E: 'right', W: 'left' };
+// ⛓ H6b: the third copy of this table is gone. The stated reason for the copy
+// — "a circular import, since bounceDemoLibrary imports this module" — was
+// about importing it FROM bounceDemoLibrary; `sideExits.js` is a LEAF (it
+// imports nothing), so taking it from there is not a cycle. It is now the one
+// place that owns the side ⇄ arrow relation, alongside `portalSide`.
 
 /**
  * Requirement-aware sphere instantiate (region-library F6a). Where the spiral

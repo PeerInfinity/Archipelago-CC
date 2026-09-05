@@ -6,8 +6,11 @@
  */
 import { describe, it, expect } from 'vitest';
 import './bounceDemoLibrary.js'; // registers the 'bounce' substrate
-import { extractZoneRules, ZONES, substrateRegistryEntry } from './bounceDemoLibrary.js';
-import { attachSideExits } from './sideExits.js';
+import {
+    extractZoneRules, ZONES, substrateRegistryEntry, assembleBounceRegionFromLevel,
+} from './bounceDemoLibrary.js';
+import { attachSideExits, portalSide } from './sideExits.js';
+import { springGap } from './fixtures/springGap.js';
 import { minimalSetsToRule } from './apRules.js';
 import { validateLevel } from './level.js';
 import { bounceStack } from './fixtures/bounceStack.js';
@@ -35,6 +38,92 @@ describe('attachSideExits', () => {
         expect(level.platforms.some((p) => p.id === 'side_pf_E')).toBe(true);
         // pure: input fixture untouched
         expect(bounceStack.platforms.some((p) => p.id === 'side_pf_E')).toBe(false);
+    });
+});
+
+describe('portalSide — the ONE portal→side reader (H6b)', () => {
+    it('reads a minted name, an authored arrow, and neither', () => {
+        expect(portalSide({ id: 'side_exit_W', direction: 'left' })).toBe('W');
+        expect(portalSide({ id: 'exit_up', direction: 'up' })).toBe('N');
+        expect(portalSide({ id: 'exit_up' })).toBe(null);
+        expect(portalSide({ id: 'anything', direction: 'down' })).toBe('S');
+        expect(portalSide(null)).toBe(null);
+    });
+
+    /**
+     * ⛔ THE CASE THE TWO ORDERS DISAGREE ON, and the reason the arrow is read
+     * first: `bounceLibraryEntry.instantiateLibraryEntryForSpecs` relabels a
+     * CAPTURED portal onto a new side by re-pointing its `direction` and
+     * leaving the minted id alone. After that the id is a stale name and only
+     * the arrow is current — an id-first reader would put this portal on N.
+     */
+    it('⛓ a RELABELLED portal is on the side its ARROW says, not its stale id', () => {
+        expect(portalSide({ id: 'side_exit_N', direction: 'right' })).toBe('E');
+    });
+});
+
+/**
+ * ⛓⛓⛓ **H6b — THE RE-ASSEMBLY NAMES THE EXIT THE LEVEL ALREADY NAMES.**
+ * `assembleBounceRegionFromLevel` is the path a hand-edited level takes back
+ * into a region (the pipeline's Edit ▸ and the APWorld hub's door both). Until
+ * H6b it minted `side_exit_<side>` for every exit regardless of what the level
+ * called its portal, which is wrong TWICE on an authored one: the derivation is
+ * keyed by the level's OWN portal id, so the lookup missed and the exit's rule
+ * silently became `False_`; and `sidePortals` came back naming a portal the
+ * level does not contain, so an unedited save already moved bytes.
+ */
+describe('assembleBounceRegionFromLevel — the exit id (H6b)', () => {
+    // ⛓ Built the way every committed bounce region was: `attachSideExits`
+    //   REUSES the level's authored up-portal for N and mints the rest.
+    const build = (level, sides) => {
+        const attached = attachSideExits(level, sides).level;
+        return {
+            level: attached,
+            built: assembleBounceRegionFromLevel(attached, {
+                region_id: 'r_h6b',
+                exitSpecs: sides.map((side) => ({ side, requirement: [], counts: {} })),
+                locationSpecs: [],
+                mode: 'column',
+            }),
+        };
+    };
+
+    it('⛓ an AUTHORED portal id survives, and its rule is DERIVED not empty', () => {
+        const { level, built } = build(springGap, ['N', 'E']);
+        // the premise, asserted rather than assumed
+        expect(level.portals.map((p) => p.id)).toEqual(['exit_up', 'side_exit_E']);
+        expect(built.payload.params.sidePortals)
+            .toEqual({ N: 'exit_up', E: 'side_exit_E' });
+        // ⛔ THE HALF A NAME CHECK ALONE WOULD MISS. Minting `side_exit_N`
+        //   misses `derived.exits.exit_up`, and the warn-but-allow branch turns
+        //   that into empty minimal sets — i.e. `False_`, an exit nobody can
+        //   ever take. A mutant that mints again reds HERE as well as above.
+        expect(built.exitRules.N).not.toEqual({ rule: 'False_' });
+        expect(built.exitPaths.N.length).toBeGreaterThan(0);
+    });
+
+    it('⛓ a portal that names NO side falls back to `side_exit_<side>`', () => {
+        const { level } = build(springGap, ['N', 'E']);
+        // strip both of the portal's side markers — the id convention AND the
+        // arrow — so nothing in the level claims N.
+        const orphaned = {
+            ...level,
+            portals: level.portals.map((p) => (p.id === 'exit_up'
+                ? { ...p, id: 'somewhere', direction: null } : p)),
+        };
+        const built = assembleBounceRegionFromLevel(orphaned, {
+            region_id: 'r_h6b',
+            exitSpecs: [{ side: 'N', requirement: [], counts: {} },
+                { side: 'E', requirement: [], counts: {} }],
+            locationSpecs: [],
+            mode: 'column',
+        });
+        expect(built.payload.params.sidePortals)
+            .toEqual({ N: 'side_exit_N', E: 'side_exit_E' });
+        // ⛓ …and the warn-but-allow branch is UNCHANGED by H6b: a contract exit
+        //   the level has no portal for still assembles, as unreachable, and it
+        //   is ④'s oracle that flags it — not a crash in the save.
+        expect(built.exitRules.N).toEqual({ rule: 'False_' });
     });
 });
 
