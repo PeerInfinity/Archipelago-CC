@@ -10583,6 +10583,13 @@ LAUNCHED 2026-09-05** as `apworld-hub-sliceH4c` (Opus, kickoff `NewDocs/plans/ap
 "Open in APWorld Editor" from the lab pages (an eighth lab-protocol name, page→host, forwarded to
 `apworldEditor:loadRules`; hidden when standalone) and from the bounce editor (`apworldEditor:selectRegion`).
 
+**⚖ RULED 2026-09-05 (user, on H4b's two questions):** (a) **the atlas derivation will emit the serializer's
+shape** so the ten `seedling_atlas_maze` rooms round-trip like grown ones — slice **H6a**, atlas-side, under
+the atlas byte gates (a moved pin is a ⚖ 49-class re-record question); (b) **fix `assembleBounceRegionFromLevel`
+to preserve authored exit ids** — slice **H6b**, after H5. H4b's CI closed all six green at `c7481aed4`
+(suite 13,221/8/0; +38 rows, one of them from a directory-rostered scan the slice never edited). Ladder:
+H4c (live) → H5 → H6a → H6b.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
