@@ -55,6 +55,5 @@
         "value": true
       }
     }
-  },
-  "_stub": "Placeholder rules.json so the preset loads in the frontend before the TileMapAnalyzer (phase 5) generates a real one. Has only the empty Menu region required by the schema. Will be overwritten by rulesExporter.js once the analyzer can produce regions, exits, locations, and access rules from the tile map."
+  }
 }

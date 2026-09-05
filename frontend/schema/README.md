@@ -19,8 +19,11 @@ The **generic base schema** that defines the structure for all Archipelago games
   `provenance`, `preset_label` and `playerId`. Each carries a `description` naming the file that
   WRITES it; see `docs/json/developer/procgen/architecture.md` § rules.json extensions.
 
-The top level is deliberately permissive (`additionalProperties` is unset), so a producer that adds a
-key does not fail validation before anyone declares it.
+The top level is **strict** (`additionalProperties: false`, APWorld hub H1, ⚖ user 2026-09-04), so a
+producer that adds an undeclared top-level key fails `test/general/test_schema_validation.py` until the
+key is declared here. It was permissive until then, and that is precisely how ten keys accumulated
+undeclared: with `additionalProperties` unset, a declaration is DOCUMENTATION rather than a guard —
+H0 measured that deleting the declaration of a key 192 presets carry reds nothing at all.
 
 This schema validates any rules.json file from any supported Archipelago game.
 

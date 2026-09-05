@@ -490,6 +490,7 @@
       "description": "OPAQUE — whatever the generator that produced this document wants to say about where it came from; stamped, never derived, so the fields vary per generator. Producer: frontend/modules/procgenPipeline/regionAtlasCompiler.js:561 (passes `options.provenance` through verbatim); frontend/modules/procgenCore/contentIdentity.js:119-133 adds `content_hash` when a document is identity-stamped."
     }
   },
+  "additionalProperties": false,
   "required": [
     "schema_version",
     "game_name",

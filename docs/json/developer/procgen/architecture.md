@@ -149,8 +149,12 @@ Six more appear in committed presets, each written by exactly one producer:
 
 All nine are declared in `frontend/schema/rules.schema.json`, with `preset_sidecars` entries typed by
 `$defs/presetSidecarEntry` (`substrate` required; `playable_payload` deliberately opaque, because the
-payload belongs to the substrate). The top level stays permissive — `additionalProperties` is unset — so a
-producer that adds a key does not red the schema gate until somebody declares it.
+payload belongs to the substrate). The top level is **strict** — `additionalProperties: false` (H1,
+⚖ user 2026-09-04) — so a producer that adds an undeclared top-level key reds the schema gate. It was
+permissive until then, which is how ten keys accumulated undeclared: H0 measured that deleting the
+declaration of a key 192 presets carry changed nothing the gate could see, while going strict cost
+exactly one preset — `_stub`, the one key in the whole corpus with no producer, deleted by the same
+ruling.
 
 Everything else in the file — regions, exits, locations, items, access rules — is ordinary `rules.json` content, which is why non-procgen consumers need no special handling.
 
