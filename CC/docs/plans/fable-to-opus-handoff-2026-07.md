@@ -10924,6 +10924,11 @@ values, cause = `c8447dd56`). Also left for V2: `check-procgen-help.mjs` is 2 CH
 **V2** = Task 0 the regeneration; the six remaining pre-existing reds; the two help-gate rows → **V3** the
 rename. V2 launches after V1's CI closes and its session reads idle.
 
+**V2 LAUNCHED 2026-09-05** as `procgen-red-triage` (Opus; kickoff `NewDocs/plans/procgen-red-triage-prompt.md`;
+V1's session read idle first): Task 0 the ⚖-ruled regeneration of `seedling_atlas_sphere` (six values, cause
+`c8447dd56`, whole `pytest` owed); the six pre-existing reds each ruled INSTRUMENT (fix) / SUBJECT (⚖, stop) /
+STALE (name the commit) on evidence; the two `check-procgen-help` rows. Then V3, the rename.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
