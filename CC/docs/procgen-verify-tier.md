@@ -305,3 +305,177 @@ script. Only four are references a machine follows:
 Two more read a script's **source as text** without running it —
 `apworldEditor/hubExits.test.js:214` pins a literal inside `verify-region-marking-tool.mjs`, and
 `check-seedling-wasm-pins.mjs:463` pins a spelling inside `verify-seedling-ap-placement.mjs`.
+
+---
+
+# V1 as built — the drift bisect (2026-09-05, `main` at `e0408c3b4`)
+
+**⛔ The finding this slice was launched to chase does not exist.** V1's brief was "chase the
+GENERATOR-OUTPUT drift" the survey proved by cross-control above. Re-measured here, the
+`maze_consumable_test` generator emits **the same document before and after the arc**, and the red is
+**pre-existing**, not new. The survey's own §"⛑ The `maze-consumable-tiles` red is a GENERATOR-OUTPUT
+drift" is superseded by this section. What the slice DID find is a real generator-output drift — in the
+OTHER script, `verify-atlas-sphere-roundtrip`, which the survey had left inconclusive.
+
+## (1) The normalisation, and why the survey's md5s could not have agreed
+
+`spiral-step.js run` writes one file and one only (measured: `find frontend/presets/maze_consumable_test
+-type f` → 1). Its only nondeterminism is a wall-clock field: two consecutive HEAD runs differ in
+`generatedAt` and in **nothing else** (`json.dumps(..., sort_keys=True)` diff → one line).
+
+So the identity used from here on is the **normalised** md5: parse, recursively drop every
+`generatedAt`, `json.dumps(sort_keys=True, separators=(',',':'))`, md5 that. The survey's two md5s were
+of RAW FILE BYTES, which carry `generatedAt` — **two raw md5s of this document can never be equal**,
+whatever the tree. That is why the survey read a drift where there is none.
+
+| tree | shared submodule | normalised md5 | length |
+|---|---|---|---|
+| pre-arc `697c94ee6` (throwaway worktree) | `ef31e39` | `9d529f460a4fe3d6969f49b4001a8092` | 5623 |
+| HEAD `ba892d0cb` (primary tree) | `4b78f33` | `9d529f460a4fe3d6969f49b4001a8092` | 5623 |
+
+**Identical.** `90543c26f..HEAD` is docs-only (`git diff --stat` → 2 files, both `CC/docs/`), so the
+survey's HEAD and this one are the same code. No bisect was possible, because there is nothing to
+bisect: the generator did not drift.
+
+## (2) The red is PRE-EXISTING, and the survey's control drove the wrong tree
+
+The cross-control was re-run properly. ⚠ **`verify-maze-consumable-tiles.mjs` hardcodes
+`http://localhost:8000/...`, and the dev server on :8000 serves the PRIMARY tree.** A run launched
+from a worktree still drives HEAD's frontend — so a "pre-arc control" that only changes the *cwd*
+measures nothing. Here the worktree got its own server (`python3 -m http.server 8001` rooted at
+`wt-prearc`, all six submodules initialised, script copied with the port rewritten; the script itself
+is byte-identical at the two SHAs — `diff` → no output):
+
+| tree serving :800N | fixture | result |
+|---|---|---|
+| HEAD (`:8000`) | HEAD's | **FAIL** — `omsi resources.houses reaches 1`, 3/3 runs |
+| pre-arc `697c94ee6` (`:8001`) | pre-arc's | **FAIL** — same assertion, same five ✓ lines before it |
+
+`verify-maze-consumable-tiles` moves from the survey's **NEW** row to **PRE-EXISTING**. That makes the
+count of pre-existing reds **seven**, and the "new" column empty.
+
+## (3) The mechanism: the script waited for the ENGINE, not for the BRIDGE
+
+The red is genuine but it is a defect in the **instrument**, and it is a race, which is why the same
+tree passed for the survey and failed here.
+
+Traced at 1 Hz (`_visualizer._state.player_pos`, `_target`, `_clock._running`, the omsi frame's
+`eventBusSubscriptions`, and `resources.houses`), the maze side ALWAYS works: the player starts at
+(4,3), steps to (5,3) within ~1–5 s, the visualiser logs `consumable_pickup: Collected 1x omsi/houses`,
+`grantItem` validates and returns true, and **no** `[resourceChannels] grantItem rejected` warning
+fires. `resources.houses` nonetheless stays 0 in most runs.
+
+The discriminator is the frame table. At the moment `walkToTile` is issued:
+
+```
+T0 omsi grant-sub: {"present":false,"hasGrant":null,"n":null}
++4906ms          : {"present":true,"hasGrant":true,"n":9}   pos={"x":5,"y":3}
+```
+
+The omsi frame has **no `eventBusSubscriptions` entry at all** at T0; the entry (with
+`crossSubstrate:itemGranted` in it) lands ~5 s later, while the bot reaches the tile in ~1 s. The
+grant is published into that gap, and per `iframeHandshake.js`'s own contract *"a publish before
+[IFRAME_APP_READY] reaches nobody and is not even queued"* — dropped silently, by design (these tiles
+are logic-inert per D5, so a dropped grant can never make a world unwinnable).
+
+The script's boot gate was `typeof (await omsiEval('resources.gold')) === 'number'`. That proves the
+omsi **game** loaded inside the iframe and says nothing about the omsi **bridge** having subscribed on
+the host. **Two different clocks.**
+
+**Fix (`e0408c3b4`):** one more `waitFor` before the walk, on the subscription rather than the engine —
+`adapterCore.eventBusSubscriptions.get('omsiSubstrateWrapper').has('crossSubstrate:itemGranted')`.
+
+```
+  ✓ omsi bridge subscribed to crossSubstrate:itemGranted
+  …
+VERIFY MAZE CONSUMABLE TILES: OK
+```
+
+Same tree, same fixture: **3/3 FAIL before, 4/4 OK after.**
+
+## (4) `verify-atlas-sphere-roundtrip` — resolved, and THIS one is the real drift
+
+Run in the PRIMARY tree where `Generate.py` works (16.7 s): **67 PASS, 1 FAIL** — the survey's row
+reproduces exactly. ⛑ The pre-arc control that crashed for the survey was never re-attempted here and
+is not needed: the bisect below dates the cause directly, and it predates `697c94ee6` anyway, so a
+pre-arc control would have failed too.
+
+The failing assertion regenerates the committed preset with `dump-sphere-growth.js` and compares bytes.
+Both files are 124 377 bytes; the **normalised** md5s differ too (`810782be…` regenerated vs
+`4b2b0c50…` committed), so this is real content, not the wall clock. A JSON diff by path gives
+**exactly six differing values, no keys added or removed**:
+
+| path | regenerated | committed |
+|---|---|---|
+| `/preset_sidecars/1/overworld_start__r8c0/playable_payload/tiles/[211]` | 0 | 1 |
+| `/preset_sidecars/1/overworld_start__r8c0/playable_payload/tiles/[231]` | 0 | 1 |
+| `/preset_sidecars/1/owls_nest_entrance/playable_payload/tiles/[9]` | 0 | 1 |
+| `/preset_sidecars/1/starting_house/playable_payload/tiles/[19]` | 0 | 1 |
+| `/preset_sidecars/1/owls_nest_entrance/playable_payload/entrance/x` | 2 | 4 |
+| `/preset_sidecars/1/owls_nest_entrance/playable_payload/exits/[2]/x` | 2 | 4 |
+
+**Bisected** (`ddfe003b2`..`697c94ee6`, 1568 commits, 11 steps, ~8 s total; `git bisect run` in a
+throwaway worktree, `git submodule update --init --force frontend/modules/shared` per step, the
+normalised md5 as the predicate):
+
+> **`c8447dd56` is the first bad commit** — *"chore(procgen): regenerate the two artifacts whose
+> `--check` gates had gone stale on main (⚖ user 2026-08-25)"*, 2026-08-24.
+
+Its diff to `frontend/atlas-pools/seedling-atlas-pool.json` is **four tiles `1 → 0`, `entrance_tile.x`
+and `entrance.x` `4 → 2`, plus `pool_id`/`content_hash`** — a 1:1 match for the six values above. The
+drift is not in the generator. It is in the generator's **INPUT**.
+
+### The ruling: (a) INTENDED — a stale committed derivative, not a defect
+
+`c8447dd56` deliberately re-pinned the pool because the pool's OWN `--check` gate had gone stale. What
+it did not do is regenerate the pool's other consumer. The committed
+`frontend/presets/seedling_atlas_sphere/AP_1/AP_1_rules.json` was last regenerated at `ddfe003b2`
+(2026-07-27) — **before** the pool moved — so it has been stale for **12 days**. The commit's own
+record says *"The atlas half was already byte-identical; no atlas_ref moves"*, and that sentence is
+true — **of `seedling_playthrough`**, the other artifact it regenerated. `seedling_atlas_sphere` is a
+different, second consumer of the same pool, and nothing in the tree told anyone.
+
+`verify-atlas-sphere-roundtrip`'s FAIL is therefore **correct and true**. The script is right; the
+committed preset is stale. **It was not fixed here** — see the ⚖ below.
+
+### Which committed presets share the producer path (measured, not assumed)
+
+`git grep -al "owls_nest_entrance" -- frontend/presets` → three. They do not share a fate:
+
+| preset | shape | state |
+|---|---|---|
+| `seedling_atlas` | `atlas_ref` + `atlas_region` — a **REFERENCE** (the H5 finding) | cannot go stale on tile bytes |
+| `seedling_atlas_maze` | inlines `playable_payload`; `owls_nest_entrance.entrance.x` = **2** | current with the pool |
+| `seedling_atlas_sphere` | inlines `playable_payload`; `.entrance.x` = **4** | **STALE** |
+
+**Exactly one** committed preset is affected. No `check-*` gate names `seedling_atlas_sphere` at all
+(`git grep -al seedling_atlas_sphere -- scripts/procgen` → only the two `verify-*` scripts) — which is
+this survey's whole thesis, arriving with a worked example.
+
+### ⚖ FOR THE USER — a committed preset whose bytes would move
+
+Regenerating `frontend/presets/seedling_atlas_sphere/AP_1/AP_1_rules.json` would move six values in a
+tracked file and is a ⚖ 49-class re-record. **Not done here.** The three options, for the record:
+regenerate it (six values, and the script goes green); leave it and pin the six known deltas as an
+accepted diff; or drop the byte-identity assertion in favour of a normalised comparison. The first
+looks right — the pool is the source of truth and the preset is simply behind it — but it is the
+user's call, not the slice's.
+
+## (5) What this section overturns
+
+- The survey's **"NEW — and the cause is the FIXTURE, not the tree"** for `verify-maze-consumable-tiles`:
+  wrong on both halves. The fixture is byte-stable across the arc, and the tree fails at `697c94ee6` too.
+- The survey's **"Two unwatched scripts are reporting one drift."** They are reporting **two unrelated
+  things**: an iframe-subscription race in one instrument, and a stale committed derivative behind a
+  re-pinned atlas pool in the other.
+- **`verify-atlas-sphere-roundtrip` is no longer inconclusive** — it is a true red with a named cause
+  and a named first-bad commit.
+
+## (6) Gates run for this slice
+
+| gate | verdict |
+|---|---|
+| `verify-maze-consumable-tiles.mjs` | **`VERIFY MAZE CONSUMABLE TILES: OK`** — 4/4 |
+| `check-procgen-reference.mjs` | `ALL CHECKS PASSED` |
+| `check-procgen-help.mjs` | `2 CHECK(S) FAILED` — `measure-apworld-raw-view.mjs` (IMPORT side effect) and `shot-loaded-composite-map.mjs` (HELP + IMPORT side effects). **Neither is touched by this slice** (its one code commit edits one file, and it is not either of them). ⛑ Unattributed here and left for V2: the survey's population was the 62 `verify-*`/`dump-*` scripts, so it never ran this gate — these two reds have no prior measurement to compare against. |
+| bounded vitest | none owed — `git grep -al verify-maze-consumable-tiles` finds only the two everything-registries (`instruments.js`, `check-procgen-help.baseline.json`), and the header docblock the catalogue reads was not edited. |
