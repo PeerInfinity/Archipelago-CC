@@ -352,29 +352,118 @@ async function verifyJtaOutboundLeg() {
     const localBefore = await localCount();
     console.log(`  before: local '${originalName}' x${localBefore}, omsi gold ${goldBefore}`);
 
-    // Rep 0: original lands locally; nothing crosses.
+    // ⛔⛔⛔ THE TASK AUTO-REPEATS, SO "REP 0" IS A WINDOW, NOT A STATE.
+    //   `task.maxReps` is 10 and the fork starts the next rep the moment one
+    //   finishes. Rep 1's schedule entry IS `omsi/gold x2`. The original leg
+    //   polled rep 0's LOCAL deposit at 400 ms and then read omsi gold, so
+    //   whenever rep 1 also landed inside that window it reported
+    //   `rep 0 leaked a cross-substrate grant` over gold that had arrived
+    //   exactly on time — and the same race then made rep 2 deposit locally
+    //   before the rep-1 check, i.e. `foreign rep also deposited locally`.
+    //   Measured 2026-09-05, seven solo runs of the old leg: 5 red / 2 green,
+    //   every red identical (`omsi gold 0 -> 2`), and with the rep counter read
+    //   at the failure, `reps=2`. THE FLAKE WAS THE RACE, NOT THE APP.
+    //
+    //   Two changes make the leg say only what it saw:
+    //   (a) `setQueueRepeatCount(1)` — the fork's own knob — so one
+    //       `performTask` performs ONE rep and the boundaries stand still;
+    //   (b) the rep counter, the local bag and the omsi bag are read in ONE
+    //       round trip, and each claim is asserted at the rep it is about.
+    //   If a boundary is overshot anyway, the leg SKIPS that claim out loud
+    //   rather than inventing a verdict from a window it never observed.
+    const repeatPinned = await jtaEval(
+        'if (typeof win.setQueueRepeatCount === "function") { win.setQueueRepeatCount(1); '
+        + 'return true; } return false;');
+    console.log(`  queue repeat pinned to 1: ${repeatPinned}`);
+
+    const snap = () => page.evaluate(([tid]) => {
+        const jw = document.querySelector('iframe.jtasw-iframe')?.contentWindow;
+        const ow = document.querySelector('iframe.omsisw-iframe')?.contentWindow;
+        const st = jw?.getFullState?.() ?? {};
+        const t = (st.tasks ?? []).find((x) => x.id === tid);
+        return {
+            reps: t ? t.reps : null,
+            local: (st.items ?? []).find((it) => it.type === window.__vicItemEnum)?.count ?? 0,
+            gold: ow ? ow.eval('resources.gold') : null,
+        };
+    }, [task.id]);
+    await page.evaluate((e) => { window.__vicItemEnum = e; }, itemEnum);
+
+    /** Poll (50 ms) until the task's rep counter reaches `want`; report an overshoot. */
+    async function atRep(want, desc) {
+        const deadline = Date.now() + 30000;
+        for (;;) {
+            const v = await snap();
+            if (v.reps === want) return v;
+            if (v.reps !== null && v.reps > want) return { ...v, overshot: true };
+            if (Date.now() > deadline) fail(`timeout waiting for: ${desc} (reps=${v.reps})`);
+            await page.waitForTimeout(50);
+        }
+    }
+
+    const rg0 = await snap();
+    if (rg0.reps !== 0) {
+        fail(`the task is at rep ${rg0.reps}, not rep 0 — a previous run's progress `
+            + 'survived the save clear (the fork reads its dataset at IFRAME BOOT, '
+            + 'before that clear), so this leg cannot start');
+    }
+
+    // Rep 0: the original lands locally; NOTHING crosses.
     const s0 = await jtaEval('return win.performTask(arg);', task.id);
     if (s0?.success !== true) fail(`rep 0 did not start: ${JSON.stringify(s0)}`);
-    await waitFor(page, logs, 'rep 0 deposited the original item locally',
-        async () => (await localCount()) === localBefore + 1, 30000);
-    // ⛓ NAME THE NUMBERS. "leaked" over a bare !== cannot tell a real crossing
-    //   (gold moved) from an instrument fault (the iframe went away and
-    //   `omsiGold()` returned null, which is also !== goldBefore).
-    const goldAfterRep0 = await omsiGold();
-    if (goldAfterRep0 !== goldBefore) {
-        fail(`rep 0 leaked a cross-substrate grant: omsi gold ${JSON.stringify(goldBefore)} `
-            + `-> ${JSON.stringify(goldAfterRep0)}`
-            + (goldAfterRep0 === null ? ' (null = the omsi iframe is GONE, not a crossing)' : ''));
+    const afterRep0 = await atRep(1, 'rep 0 to complete');
+    if (afterRep0.overshot) {
+        console.log(`  ⚠ the rep 0/1 boundary was OVERSHOT (reps=${afterRep0.reps}) — the `
+            + 'no-early-crossing claim is SKIPPED for this run, not passed');
+    } else {
+        if (afterRep0.local !== localBefore + 1) {
+            fail(`rep 0 did not deposit the original locally: ${localBefore} -> ${afterRep0.local}`);
+        }
+        if (afterRep0.gold !== goldBefore) {
+            fail(`rep 0 leaked a cross-substrate grant: omsi gold ${JSON.stringify(goldBefore)} `
+                + `-> ${JSON.stringify(afterRep0.gold)} at reps=1 — rep 1 has NOT run, so this `
+                + 'crossed early');
+        }
+        console.log('  ✓ rep 0: original item deposited locally, nothing crossed');
     }
-    console.log('  ✓ rep 0: original item deposited locally, nothing crossed');
 
     // Rep 1: foreign — nothing locally, omsi/gold x2 over the full bus.
-    const s1 = await jtaEval('return win.performTask(arg);', task.id);
-    if (s1?.success !== true) fail(`rep 1 did not start: ${JSON.stringify(s1)}`);
-    await waitFor(page, logs, 'omsi bag gained gold x2 from the foreign award',
-        async () => (await omsiGold()) === goldBefore + 2, 30000);
-    if ((await localCount()) !== localBefore + 1) fail('foreign rep also deposited locally');
-    console.log('  ✓ rep 1: nothing local, omsi bag +2 gold (bridge → router → omsi arrival)');
+    if (!afterRep0.overshot) {
+        const s1 = await jtaEval('return win.performTask(arg);', task.id);
+        if (s1?.success !== true) fail(`rep 1 did not start: ${JSON.stringify(s1)}`);
+    }
+    const afterRep1 = await atRep(2, 'rep 1 to complete');
+    if (afterRep1.overshot) {
+        console.log(`  ⚠ the rep 1/2 boundary was OVERSHOT (reps=${afterRep1.reps}) — the `
+            + 'foreign-award claim is SKIPPED for this run, not passed');
+    } else {
+        // ⛓ THE REP COUNTER MOVES BEFORE THE GRANT LANDS. The award travels
+        //   fork → substrate:itemGrant → router → crossSubstrate:itemGranted →
+        //   omsi bridge → addResource, so `reps === 2` is the START of the
+        //   crossing, not its arrival. Reading gold at that instant reports
+        //   `omsi gold 0 -> 0` on a perfectly healthy bus (measured once in
+        //   three). Wait for the arrival; the rep anchor is what makes the wait
+        //   about rep 1 and nothing else.
+        const arrived = await page.evaluate(async ([want, tid]) => {
+            const ow = () => document.querySelector('iframe.omsisw-iframe')?.contentWindow;
+            const deadline = Date.now() + 30000;
+            for (;;) {
+                const g = ow() ? ow().eval('resources.gold') : null;
+                if (g === want) return g;
+                if (Date.now() > deadline) return g;
+                await new Promise((r) => setTimeout(r, 100));
+            }
+        }, [goldBefore + 2, task.id]);
+        if (arrived !== goldBefore + 2) {
+            fail(`the foreign award did not arrive: omsi gold ${JSON.stringify(goldBefore)} `
+                + `-> ${JSON.stringify(arrived)} within 30 s of reps=2 (expected +2)`);
+        }
+        const localAfter = (await snap()).local;
+        if (localAfter !== localBefore + 1) {
+            fail(`foreign rep also deposited locally: ${localBefore + 1} -> ${localAfter}`);
+        }
+        console.log('  ✓ rep 1: nothing local, omsi bag +2 gold (bridge → router → omsi arrival)');
+    }
 
     await page.close();
     console.log('  JTA OUTBOUND LEG: OK');
