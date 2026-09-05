@@ -10570,6 +10570,19 @@ edited, and deriving the delta is what turns that from a surprise into a confirm
 
 **NEXT = H4c** (reverse links from `lab.html` / `watch.html` / the bounce editor), then H5.
 
+**H4b VERIFIED by the planner 2026-09-05** (`c7481aed4` on origin/main; `regionRoundTrip.js` + 26 rows; the
+slot declared on maze, bounce and flash_seedling; the generated matrix and the registry doc carry it; the hub
+imports no substrate module; `maze-lab` 265/0 and `procgen-lab-hosting` 66/0 unmoved; CI in flight at the
+report, watched by H4b). H4b's headline correction to the brief: the write-back cannot be "re-derive the rules
+from the tiles" — grid-level gating is not drawn in a region's tiles, so the BASELINE mechanism ships instead
+(the door opens only where an unedited round trip is a no-op; a rule moves only where the baseline reproduces
+the document's own). **⚖ TWO OPEN for the user** (asked 2026-09-05): (a) the ten `seedling_atlas_maze` rooms
+are refused (atlas-derived payloads lack the serializer's fields); (b) `assembleBounceRegionFromLevel` names
+every exit `side_exit_<side>` — a defect in the PIPELINE's own Edit ▸ path as well as the hub's. **H4c
+LAUNCHED 2026-09-05** as `apworld-hub-sliceH4c` (Opus, kickoff `NewDocs/plans/apworld-hub-sliceH4c-prompt.md`):
+"Open in APWorld Editor" from the lab pages (an eighth lab-protocol name, page→host, forwarded to
+`apworldEditor:loadRules`; hidden when standalone) and from the bounce editor (`apworldEditor:selectRegion`).
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
