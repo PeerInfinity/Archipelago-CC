@@ -10363,6 +10363,19 @@ prose is unfalsifiable unless it is derived — the same family as trap 1170, re
 the whole of what is shared now. `mazeRoom/`'s remaining **16** pipeline imports over 6 files are the
 atlas/library vocabulary and would be their OWN slice with its own ⚖ — five modules, not one function. **NEXT = H4, then H5.**
 
+**H3b VERIFIED by the planner 2026-09-05** (`a4f31ee64` on origin/main; gitlink `ef31e39` → `4b78f33`
+pushed first; `mazeRoom/mazeSerializer.js` + 14 direct rows; `procgenCore/apLocationNaming.js`; the engine
+imports nothing from `mazeRoom/`; the shared `adapterPrimitives.js` takes both halves of the tile-grid round
+trip from `mazeRoom/`). Corrections H3b made to the brief: `spiralCells` was never a serializer dependency;
+"the maze module imports nothing from the pipeline" is unachievable — 16 imports over 6 maze files are the
+atlas/region-library vocabulary (their own slice, own ⚖); `COLORS.floor/wall` are live through a default
+parameter and stay (trap 1169). §7b's "maze residue in the engine" is DISCHARGED. **H4 SPLIT:** H4a = the
+4-player procgen fixture (⚖ 2026-09-04) + the loaded map's connection lines; H4b = per-region Edit ▸ + reverse
+links. **H4a LAUNCHED 2026-09-05** as `apworld-hub-sliceH4a` (Opus, kickoff
+`NewDocs/plans/apworld-hub-sliceH4a-prompt.md`): a maze worldgen world from `procgen_maze` seed 1, a
+four-player two-game generation so the slots differ, committed per the `bounce_worldgen` precedent under the
+shared-reachability and strict-schema gates.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
