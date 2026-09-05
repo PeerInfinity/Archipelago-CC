@@ -11053,6 +11053,41 @@ INTENDED contract.** ⇒ **V3a** = three instrument-design fixes (maze leg → B
 `NewDocs/plans/procgen-instrument-fixes-prompt.md`; V2b's session read idle first): the maze mana leg sets
 Bot ×3, the omsi mana leg creates its park, the portals script drops its physics leg. No app change. Then V3b.
 
+⇒ **V3a AS BUILT 2026-09-05** — three commits on `origin/main`, one per script, **no app code touched**:
+`b86580f9ca` portals · `226e397674` maze · `2b8c9be271` omsi. Record: `CC/docs/procgen-verify-tier.md`
+§"V3a as built" (and the §(a) reds table gains a fifth column — **all eight survey rows are now accounted
+for: 6 fixed instruments, 2 STALE**). All three 3× green solo, quoted with END times and load:
+`VERIFY RULE-GATED PORTALS: ALL OK` 27/26/29 s (was ~120 s — the cut leg was ~85 s of it) ·
+`VERIFY MAZE LOOP MANA: OK` 13/12/13 s · `VERIFY OMSI MANA LEG: OK (17.0s wall)` 18/18/18 s.
+Gates: `check-procgen-help --doors=all` **ALL PASS** (267) · `check-procgen-reference --check`
+**ALL CHECKS PASSED** (no docblock first sentence moved, so no generator run was owed) · bounded vitest
+**11 files / 526 tests / 0 failed** · in-app `test-substrates --batch=fast` **83/83** with `compare-runs`
+reporting **no differences in status, roster, or duration**.
+
+⚑ **What V3a overturns.** (i) The omsi leg was **not** "build the park" — the park is one of FOUR layers,
+and the other three were invisible until it worked: the park **races the region entry** (a `user:regionMove`
+lands as more than one `regionChanged`, and a late one is read as `manualWrongRegion`, setting
+`_queuePausedUntilReset`, which `startProcessing()` cannot clear — fixed by waiting for the region-event
+stream to go QUIET, and by refusing early and by name on that flag); the fork **boots at a HELD boundary**
+(`shouldRestart: true, currentLen: 0`, so `skippedHeldBoundary: 301` even with the gate open); and
+**victory had to move ahead of the exhaustion leg**, because the reset's teleport destroys the park and the
+victory `locationCheck` needs it to pass loops' M3b strict gate. (ii) **A green in-app row is not a control
+for a standalone instrument** — `omsi-loop-exhaustion-single-reset` is green because
+`omsi-out-of-mana-loop-reset` runs FIRST in the same page and its host reset cold-starts the fork.
+(iii) The brief's *"REAL-TIME bot walk class (minutes each)"* is **wrong for this fixture** — 17 s measured,
+~11.6 s of it the fixed page boot. (iv) Two of the MAZE leg's claims were about **transients**: the reset's
+teleport and the queue's next move land in the same millisecond, so the old 500 ms poll timed out on a
+teleport that had happened perfectly; both now read the event stream.
+
+⚖ **NEW, OPEN FOR THE USER — and it is an APP question, deliberately not fixed here.** *Should LIVE PLAY
+cold-start the fork's loop, the way every bridge-mediated plan install already does?* A player who enters a
+freshly-booted omsi region, parks a Manual block and queues an action in the game's own UI gets a game that
+never starts: the boundary is held, the host clock refuses to step it, and nothing in the live-play path
+calls `restartLoop()` — the bot, replay and host-reset paths all call `_forceLoopRecompile()`
+(`bridge.js:1650`). The instrument's own cold start is CONDITIONAL, so it goes quiet on its own if the app
+takes the job. ⇒ **V3b (the rename) is unblocked and is next.** V3b also still owns the two STALE names
+(`verify-dj-real-embed`, `verify-bot-playthrough`) — neither was deleted here.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this

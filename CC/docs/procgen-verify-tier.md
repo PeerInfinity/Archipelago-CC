@@ -137,15 +137,15 @@ the report to the planner.
 | `dump-sphere-growth.js` | node | — | **none** | 8 | exit 0 | 0.4s |  |
 | `dump-spiral-byteidentity.mjs` | node | — | **none** | 5 | exit 0 | 0.6s | ALL PASS — stepped spiral == monolith |
 | `dump-topdown-byteidentity.mjs` | node | — | **none** | 1 | exit 0 | 0.9s |  |
-| `verify-atlas-sphere-roundtrip.mjs` | node | — | **none** | 0 | exit 1 | 18.5s | 1 assertion(s) FAILED. | **RESOLVED** — the preset is regenerated (V2 Task 0); 68 PASS / 0 FAIL. |
-| `verify-bot-playthrough.mjs` | browser (:8000) | — | **none** | 1 | exit 1 | 250s | Error: [A — bounce-only full sphere playthrough] timeout waiting for: bot finished its queue | **STALE** — `bounce_sphere_worldgen` / `bounce_mixed_worldgen` deleted at `ccfc5bad0` (2026-06-26). |
+| `verify-atlas-sphere-roundtrip.mjs` | node | — | **none** | 0 | exit 1 | 18.5s | 1 assertion(s) FAILED. | **RESOLVED** — the preset is regenerated (V2 Task 0); 68 PASS / 0 FAIL. | (V2 Task 0) — untouched here. |
+| `verify-bot-playthrough.mjs` | browser (:8000) | — | **none** | 1 | exit 1 | 250s | Error: [A — bounce-only full sphere playthrough] timeout waiting for: bot finished its queue | **STALE** — `bounce_sphere_worldgen` / `bounce_mixed_worldgen` deleted at `ccfc5bad0` (2026-06-26). | STALE — **V3b owns the name**; not deleted here. |
 | `verify-bounce-embed.mjs` | browser (:8000) | — | **none** | 2 | exit 0 | 18s |  |
 | `verify-bounce-touch.mjs` | browser (:8000) | — | **none** | 0 | exit 0 | 9s | All bounce touch checks passed. |
 | `verify-cli-sphere-config.mjs` | node | — | **none** | 0 | exit 0 | 2.7s | VERIFY CLI SPHERE CONFIG: ALL OK |
-| `verify-dj-real-embed.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 101s | Error: timeout waiting for: dj page configured with region_3_3 | **STALE** — `bounce_dj_worldgen` deleted at `ccfc5bad0` (2026-06-26). |
+| `verify-dj-real-embed.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 101s | Error: timeout waiting for: dj page configured with region_3_3 | **STALE** — `bounce_dj_worldgen` deleted at `ccfc5bad0` (2026-06-26). | STALE — **V3b owns the name**; not deleted here. |
 | `verify-dj-swf-patch.mjs` | node | — | **none** | 0 | exit 0 | 0.3s | PASS: swf_inject.mjs output byte-identical to inject_tracer.py --stage-width 600 (681148 bytes) |
 | `verify-grid-growth-ui.mjs` | browser (:8000) | — | **none** | 0 | exit 0 | 15s | PASS — grid-growth streams denominator-less live progress and produces a result |
-| `verify-item-channels.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 27s | ‼ FAILURE: rep 0 leaked a cross-substrate grant | **INSTRUMENT — and a FLAKE, not a standing red** (5 red / 2 green solo at HEAD). The "leak" is the check losing a race to the task's OWN auto-repeat: `omsi gold 0 -> 2` is rep 1's scheduled award arriving on time, and the rep counter reads `reps=2` at the failure. FIXED. |
+| `verify-item-channels.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 27s | ‼ FAILURE: rep 0 leaked a cross-substrate grant | **INSTRUMENT — and a FLAKE, not a standing red** (5 red / 2 green solo at HEAD). The "leak" is the check losing a race to the task's OWN auto-repeat: `omsi gold 0 -> 2` is rep 1's scheduled award arriving on time, and the rep counter reads `reps=2` at the failure. FIXED. | **GREEN at V2** — untouched here. |
 | `verify-jta-balance-pass.mjs` | node | — | **none** | 6 | exit 0 | 7.2s | PASS: full coverage, no stalls, no saturation |
 | `verify-jta-cost-hooks.mjs` | node | — | **none** | 0 | exit 0 | 3.2s | ALL CHECKS PASSED |
 | `verify-jta-dataset-load.mjs` | node | — | **none** | 1 | exit 0 | 0.2s | All dataset-load smoke checks passed. |
@@ -155,9 +155,9 @@ the report to the planner.
 | `verify-jta-generated-dataset.mjs` | node | — | **none** | 0 | exit 0 | 1.0s | All generated-dataset assertions passed. |
 | `verify-jta-locations-roundtrip.mjs` | node | — | **none** | 5 | exit 0 | 15.4s | All round-trip assertions passed. |
 | `verify-jta-managed-zone-skip.mjs` | node | — | **none** | 0 | exit 0 | 0.7s | All managed-mode zone-skip assertions passed. |
-| `verify-maze-consumable-tiles.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 35s | ‼ FAILURE: timeout waiting for: omsi resources.houses reaches 1 | (V1's — fixed there) |
-| `verify-maze-loop-mana.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 44s | ‼ FAILURE: timeout waiting for: loop mode auto-enabled | **INSTRUMENT** — its uncommitted fixture was simply ABSENT, so the page loaded no world; regenerated, that assertion passes. FIXED (a preflight). ⚖ Underneath is **SUBJECT**: loops HALTS at the first maze `locationCheck`. |
-| `verify-omsi-mana-leg.mjs` | browser (:8000) | — | **none** | 1 | exit 1 | 41s | ‼ FAILURE: timeout waiting for: per-batch draining (≥5 small decrements tracking the budget) | **INSTRUMENT** — it drives UNPARKED live play, which `f2e392df1` (2026-07-24, park-gated stepping) froze BY DESIGN a week after the script was written. 304 messages, 304 `skippedGated`, 0 `ticksStepped`. ⚖ Named, not fixed. |
+| `verify-maze-consumable-tiles.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 35s | ‼ FAILURE: timeout waiting for: omsi resources.houses reaches 1 | (V1's — fixed there) | (V1's) — untouched here. |
+| `verify-maze-loop-mana.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 44s | ‼ FAILURE: timeout waiting for: loop mode auto-enabled | **INSTRUMENT** — its uncommitted fixture was simply ABSENT, so the page loaded no world; regenerated, that assertion passes. FIXED (a preflight). ⚖ Underneath is **SUBJECT**: loops HALTS at the first maze `locationCheck`. | **FIXED (V3a).** The ⚖ is CLOSED by the user's ruling: the park is INTENDED. Every maze block is set to Bot before `startProcessing()` and read back; two transient claims moved onto the event stream. 3× green, 12–13 s. |
+| `verify-omsi-mana-leg.mjs` | browser (:8000) | — | **none** | 1 | exit 1 | 41s | ‼ FAILURE: timeout waiting for: per-batch draining (≥5 small decrements tracking the budget) | **INSTRUMENT** — it drives UNPARKED live play, which `f2e392df1` (2026-07-24, park-gated stepping) froze BY DESIGN a week after the script was written. 304 messages, 304 `skippedGated`, 0 `ticksStepped`. ⚖ Named, not fixed. | **FIXED (V3a).** The park is built the way the green in-app rows build it, and asserted on the bridge's own `step gate: OPEN` line. Three further findings underneath: the park races the region entry; the fork boots at a HELD boundary; victory must be claimed before the exhaustion leg destroys the park. 3× green, 17 s. |
 | `verify-preset-panel-click.mjs` | browser (:8000) | — | **none** | 0 | exit 0 | 24s | ALL OK |
 | `verify-procgen-presets.mjs` | browser (:8000) | — | **none** | 1 | exit 0 | 171s | All 27 preset drop-down checks passed. |
 | `verify-region-library-roundtrip.mjs` | node | — | **none** | 2 | exit 0 | 15.8s | All region-library round-trip assertions passed. |
@@ -167,7 +167,7 @@ the report to the planner.
 | `verify-region-library-ui.mjs` | browser (:8000) | — | **none** | 0 | exit 0 | 45s | All region-library UI assertions passed. |
 | `verify-region-marking-tool.mjs` | browser (:8000) | host | **none** | 13 | exit 0 | 11s | OK: region marking tool verified in-app |
 | `verify-region-step-editing.mjs` | node | — | **none** | 3 | exit 0 | 19.0s | VERIFY REGION-STEP EDITING: ALL OK |
-| `verify-rule-gated-portals.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 45s | locator.click: Timeout 30000ms exceeded. | **INSTRUMENT**, stale TWICE from 2026-06-19 (`85c1c3ba1` label, `06eafea4e` prep hook). FIXED; the app's authored-lock claim is now GREEN and newly witnessed. ⚖ One leg (the no-input climb reaching the portal) remains. |
+| `verify-rule-gated-portals.mjs` | browser (:8000) | — | **none** | 0 | exit 1 | 45s | locator.click: Timeout 30000ms exceeded. | **INSTRUMENT**, stale TWICE from 2026-06-19 (`85c1c3ba1` label, `06eafea4e` prep hook). FIXED; the app's authored-lock claim is now GREEN and newly witnessed. ⚖ One leg (the no-input climb reaching the portal) remains. | **FIXED (V3a).** The ⚖ leg is CUT by the user's ruling; the witnessed `PORTAL UNLOCKED` claim stays and the header now says that per-portal physical reachability is NOT asserted. 3× green, 26–29 s (was ~120 s). |
 | `verify-runner-bot.mjs` | browser (:8000) | — | **none** | 1 | exit 0 | 31s | All runner bot checks passed. |
 | `verify-runner-embed.mjs` | browser (:8000) | — | **none** | 1 | exit 0 | 80s | All runner embed checks passed (sphere-grown world, bot-driven). |
 | `verify-runner-game.mjs` | browser (:8000) | — | **none** | 0 | exit 0 | 11s | All runner game-page checks passed. |
@@ -195,10 +195,13 @@ Eight scripts fail at HEAD. **Every one is in no battery**, so every one had bee
 Each was re-run **solo on a quiet box** before being called red; the first failure of a ninth,
 `verify-bounce-embed`, did **not** reproduce solo and is classed as starvation, not a defect.
 
-⇒ **V2 (below) gives every row a verdict.** The third column is the survey's; the fourth is V2's.
+⇒ **V2 (below) gives every row a verdict; V3a fixes the last three.** The third column is the survey's,
+the fourth is V2's (as amended by V2b), and the fifth is where the row stands after **V3a**.
+**All eight are accounted for: five fixed instruments, one fixed-here omsi instrument, two STALE
+(V3b owns their names), and — with V2's SUBJECT ruling overturned at V2b — ZERO subject defects.**
 
-| script | first failing line | pre-existing at `697c94ee6`? | ⇒ V2 verdict |
-|---|---|---|---|
+| script | first failing line | pre-existing at `697c94ee6`? | ⇒ V2 verdict | ⇒ V3a |
+|---|---|---|---|---|
 | `verify-item-channels.mjs` | `‼ FAILURE: rep 0 leaked a cross-substrate grant` | **PRE-EXISTING** — identical failure on the pre-arc tree | **INSTRUMENT — and a FLAKE, not a standing red** (5 red / 2 green solo at HEAD). The "leak" is the check losing a race to the task's OWN auto-repeat: `omsi gold 0 -> 2` is rep 1's scheduled award arriving on time, and the rep counter reads `reps=2` at the failure. FIXED. |
 | `verify-maze-loop-mana.mjs` | `‼ FAILURE: timeout waiting for: loop mode auto-enabled` | **PRE-EXISTING** — identical | **INSTRUMENT** — its uncommitted fixture was simply ABSENT, so the page loaded no world; regenerated, that assertion passes. FIXED (a preflight). ⚖ Underneath is **SUBJECT**: loops HALTS at the first maze `locationCheck`. |
 | `verify-omsi-mana-leg.mjs` | `‼ FAILURE: timeout waiting for: per-batch draining (≥5 small decrements tracking the budget)` | **PRE-EXISTING** — identical | **INSTRUMENT** — it drives UNPARKED live play, which `f2e392df1` (2026-07-24, park-gated stepping) froze BY DESIGN a week after the script was written. 304 messages, 304 `skippedGated`, 0 `ticksStepped`. ⚖ Named, not fixed. |
@@ -872,3 +875,219 @@ teleport through content the bot was meant to play."*
 **Not fixed here.** Per the slice's own rule — DESIGN ⇒ record the reproduction, the site and the question,
 and stop. No product code and no instrument was touched by V2b; the probes were throwaways in gitignored
 `NewDocs/scratch/`.
+
+---
+
+# V3a as built — three instrument-design fixes; the survey's eight rows are all accounted for (2026-09-05)
+
+⚖ user, 2026-09-05, two rulings, both taken as given: **(1)** *"a maze block parks for live play unless
+explicitly set to Bot"* is the INTENDED contract — the instruments change, the app does not; **(2)**
+`verify-rule-gated-portals.mjs`'s physics leg is **CUT**, its witnessed `PORTAL UNLOCKED` claim stays.
+⛔ **No app code was touched.** Three commits, one per script, pushed on `main`:
+`b86580f9ca` (portals) · `226e397674` (maze) · `2b8c9be271` (omsi).
+
+**Every gate green, and the omsi leg turned out to be four findings, not one.** The maze and portal fixes
+were the size the brief predicted; the omsi one was not, and each layer only became visible once the one
+above it was repaired.
+
+## The three OK lines, quoted with END times and load
+
+| instrument | runs | OK line | wall | load at END |
+|---|---|---|---|---|
+| `verify-rule-gated-portals.mjs` | 3/3 | `VERIFY RULE-GATED PORTALS: ALL OK` | 27 / 26 / 29 s | 1.92 1.48 2.57 · 2.58 1.69 2.62 · 3.92 2.16 2.74 |
+| `verify-maze-loop-mana.mjs` | 3/3 | `VERIFY MAZE LOOP MANA: OK` | 13 / 12 / 13 s | 2.61 2.32 2.66 · 3.84 2.61 2.76 · 3.70 2.62 2.76 |
+| `verify-omsi-mana-leg.mjs` | 3/3 | `VERIFY OMSI MANA LEG: OK (17.0s wall)` | 18 / 18 / 18 s | 1.23 1.16 1.58 · 1.54 1.25 1.60 · 1.48 1.25 1.60 |
+
+END times UTC: portals 21:47:37 / 21:48:03 / 21:48:32 · maze 21:52:15 / 21:52:27 / 21:52:40 ·
+omsi 22:15:20 / 22:15:38 / 22:15:56.
+
+## (1) `verify-maze-loop-mana.mjs` — Bot, read back, and two claims taken off SAMPLING
+
+The fix the brief specified, plus one it could not have: **two of this script's claims are about
+TRANSIENTS**, and a 500 ms poll cannot see either.
+
+The blocks are set with the public *"set all"* control (`setAllBlockModes('bot')`, which skips any region
+whose substrate cannot offer the mode, so it cannot claim a block it did not set) and then **read back**
+per chain region. That read-back is the row that reds by name if the mode is ever left at the default
+again — instead of 180 s later as a mana timeout that reads like the walker never charging.
+
+Measured, and matching V2b's discriminator to the digit:
+
+```
+✓ every maze block set to Bot (3 changed; read back
+  {"region_2_2":"bot","region_2_3":"bot","region_3_3":"bot"})
+manaEvents [100, 83.33, 83.33, 83.33, 69.58, 69.58, 69.58, 55.83, 42.08, 0, 120]   (11)
+drops 16.67 · 13.75 · 13.75 · 13.75 · 42.08
+XP    region_2_2 16.67 | region_2_3 41.25 | region_3_3 60
+substrateActionCompleted [true, true, true, false, true]     loopResetCount 1
+```
+
+⛓ **The transient.** The reset's teleport and the queue's next move land in the SAME MILLISECOND:
+
+```
++1917ms region_2_3->region_2_2 mana 120.00/120 resets 1 [fromReset]
++1917ms region_2_2->region_3_3 mana 120.00/120 resets 1
+```
+
+so the old `teleport back to start region` wait timed out on a teleport that had happened perfectly. It now
+asserts the `gameState:regionChanged` **carrying `fromReset`** and landing on
+`procgenPlayer.getResolvedStartRegion()` — the same function the omsi leg already used, and it answers
+`region_2_2` here. *"The chain was walked"* reads the same cumulative log rather than where the player
+happens to be standing; `completed:false` became a bounded wait rather than a field read off the snapshot
+that first saw the reset (two publishes, not one).
+
+## (2) `verify-rule-gated-portals.mjs` — the leg is cut, and the seed filter's REASON changed
+
+Legs 1–3 stay on real physics auto-play; the witnessed claim now prints its evidence:
+
+```
+GATE STATES (pre-key): {"portals":{"side_exit_N":false},"pickups":{}}
+LOCKED PORTAL HOLDS: still in region_2_2 after the column climb
+KEY COLLECTED: key_red in inventory
+PORTAL UNLOCKED: gate_rules re-evaluated on the snapshot update
+  | gate states: {"portals":{"side_exit_N":true},"pickups":{}}
+```
+
+The header now states what is NOT asserted — per-portal physical reachability — and why the seed scan
+cannot assert it (it reasons over the sphere TREE and has no model of the level's geometry). Cutting the
+leg took ~85 s off each run: **~120 s → 26–29 s**.
+
+⛑ **The `keyGated.side !== 'S'` filter STAYS, with a rewritten reason.** It no longer guards the cut leg;
+it keeps **step 1** non-vacuous — *"the locked portal HOLDS"* is only a claim about a lock if the climb
+actually passes the portal, and on an unreachable S exit the player could not have left through it locked
+or open. Dropping the line would also re-pick the seed: measured, seeds **12 / 14 / 15** match the
+topology and **12 is the S one**, so SEED would move from 14 to 12 and every logged region id with it.
+
+## (3) `verify-omsi-mana-leg.mjs` — FOUR findings, each hidden behind the one before it
+
+The brief predicted one fix (build the park). That fix is right and it is the first of four; the other
+three only became visible once the gate it opens stopped being the thing that failed.
+
+### 3a. The park — and it is asserted on the BRIDGE'S OWN LOG LINE
+
+Built the way the green in-app rows build it (`omsiSubstrateWrapper/test-helpers.js`'s
+`parkManualBlocks`): clear the path (loops' own `clearQueue` would teleport the player out), queue the
+region's one graph exit as the block's departure, set the block Manual, hurry the arrival move, start
+processing. The script cannot import that module (browser-side only), so `exit_N` / `region_1_0` are
+re-declared with a note saying so, and the park fails by name if they drift.
+
+```
+✓ parked Manual block (instance 1, mode manual); step gate OPEN —
+  [omsi-bridge] step gate: OPEN (enforced=true, livePlay=region_1_1, bot=none, here=region_1_1)
+```
+
+That is the same line V2 read the failure off (`CLOSED (… livePlay=none …)`), which is the point: reading
+it back OPEN proves the park reached the bridge, rather than that a getter agreed with itself.
+
+### 3b. THE PARK RACES THE REGION ENTRY — and loops' hard pause is unrecoverable
+
+A `user:regionMove` lands as **more than one** `gameState:regionChanged`, and one arriving after the block
+has parked is read as `manualWrongRegion`. Deterministic, three runs of three, identical:
+
+```
++69ms  regionChanged {"from":"region_0_0","to":"region_1_1"}
++80ms  regionChanged {"from":null,"to":"region_1_1"}
++380ms manualEntered {"regionName":"region_1_1","expectedNextRegion":"region_1_0"}
++527ms queuePausedUntilReset {"actualRegion":"region_1_1","expectedRegion":"region_1_0",
+                              "reason":"manualWrongRegion"}
+```
+
+⛔ **`startProcessing()` does NOT clear `_queuePausedUntilReset`** — only `_releaseParkForReset`,
+`_resetLoop` and `resetForNewRules` do (`loopState.js:3728 / 3789 / 3743`) — so once it is set, no
+re-park can rescue the run. Two changes: the script **waits for the region-event stream to go QUIET**
+before parking (⛔ not a fixed sleep — the quiet period is the thing being waited for), and the gate wait
+**refuses early and by name** on that flag rather than polling out 30 s into a timeout that looks
+identical to "the park never took". Before the settle the park was ~50/50 across nine attempts; after it,
+6/6.
+
+### 3c. THE FORK BOOTS AT A HELD BOUNDARY — the park opens one gate and a different one is shut
+
+With the park in place the run still stepped nothing, and the counters said where:
+`ticksStepped: 0, skippedGated: 0, skippedHeldBoundary: 301`. Measured at boot, before anything is driven:
+
+```
+{shouldRestart: true, timer: 250, timeNeeded: 250, currentLen: 0, loops: 0, effTime: 0}
+```
+
+The fork boots **parked past a loop end with an empty compiled list**. Under the host-driven clock that is
+a deadlock by construction: `clockGate.js`'s `isBoundaryHeld` refuses to step one (stepping mints a phantom
+loop per tick), and only `restart()` clears `shouldRestart` — which `singleTick` would call, if it were
+allowed to run. It is the same shape as gotchas.md's *"a frozen substrate cannot generate the reset that
+unfreezes it"*.
+
+⛑ **Every BRIDGE-mediated plan install already handles this** — `_forceLoopRecompile()`
+(`bridge.js:1650`) runs on the replay install, the bot exit install, the bot cold start and the host's
+reset catch-up. **LIVE PLAY has no such path.** And that is why the green in-app row never needed one:
+`omsi-loop-exhaustion-single-reset` runs AFTER `omsi-out-of-mana-loop-reset` in the same page, and that
+row's host loop reset already ran `restartLoop()` through the catch-up. A standalone script has no
+predecessor. So the instrument makes the call — **conditionally**, mirroring `isBoundaryHeld`'s two halves
+in the same order, so it does nothing and says so if the app ever cold-starts live play itself:
+
+```
+✓ cold start: boundary released
+  {"shouldRestart":true,"timer":250,"timeNeeded":350,"currentLen":0,"nextLen":1,"effTime":0}
+  -> {"shouldRestart":false,"timer":0,"timeNeeded":250,"currentLen":1,"nextLen":1,"effTime":0}
+✓ pool drains in small mirrored steps (6 decrements; pool tracks budget)
+  — ticksStepped 0 → 30, skippedGated 0
+```
+
+It costs **no host reset**: `_handleGameRestart`'s no-progress guard drops a restart whose loop consumed
+under `NO_PROGRESS_LOOP_S` of effective time, and `totals.effectiveTime` is 0 at boot. Measured —
+`loopResetCount` stayed **0** across the call and advanced to 1 only at the genuine exhaustion 2 s later.
+
+### 3d. VICTORY HAD TO MOVE AHEAD OF THE EXHAUSTION LEG
+
+Newly reachable, leg 5 then failed. Not because the victory watch is gated — it is not,
+`_checkVictoryProgress()` is called from `_clockTick` outside the step gate (`bridge.js:718`) — but
+because the `user:locationCheck` it publishes carries no `fromLoop` during live play, so loops' M3b strict
+action gate refuses it without a parked block to exempt it. And by then the park is gone:
+`fireLoopResetTeleport` moves the player out of the omsi region while the queue is parked on a Manual
+block there, which is `manualWrongRegion` again. Re-parking after the reset was measured dead 3/3:
+
+```
+· park after the reset: {"manualEntered":true,"pausedUntilReset":true,"livePlay":null}
+  | stepGate {"enforced":true,"livePlayRegion":null} mayStep=false
+```
+
+So the claim that needs the park is now made **while the park is alive**: victory runs straight after the
+park, before the Wander plan is queued. Re-entry no longer claims the gate re-opens — that is **logged,
+not asserted**: `isClockRunning()` is the bridge's INTERVAL, not the gate, and the old leg 4 was satisfied
+by a bridge that could not step a single tick.
+
+## What V3a overturns
+
+- **The omsi leg was not "build the park".** The park is one of four layers; three of them
+  (the entry race, the cold boot, the victory ordering) were invisible until the park worked.
+- **A green in-app row is not a control for a standalone instrument.**
+  `omsi-loop-exhaustion-single-reset` is green (measured this session, `test-substrates --batch=fast`
+  83/83) **because a sibling row ran first in the same page** and its host reset cold-started the fork.
+  The row is green and the script was right to fail.
+- **The brief's "⚠ it is a REAL-TIME bot walk class of instrument (minutes each)" is wrong for this
+  fixture** — measured 17.0 / 17.2 / 16.9 s wall, ~11.6 s of which is the fixed page boot. It is
+  real-time in KIND (the drain is the pinned pool at ~50 ticks/s), and the pinned pool here is 100.
+  The header now says the measured number instead of a class.
+- **Two of the maze leg's claims were about transients**, which V2b's discriminator could not have
+  revealed: it read final state, and the instrument polls.
+
+## ⚖ FOR THE USER — one new question, and it is an APP question
+
+**Should LIVE PLAY cold-start the fork's loop, the way every bridge-mediated plan install already does?**
+A player who enters a freshly-booted omsi region, parks a Manual block and queues an action in the game's
+own UI gets a game that never starts: the boundary is held, the host clock refuses to step it, and nothing
+in the live-play path calls `restartLoop()`. The bot, replay and host-reset paths all call
+`_forceLoopRecompile()`; live play is the one that does not. **Not fixed here** — this slice's rule is no
+app code — and the instrument's cold start is deliberately conditional so it would go quiet on its own if
+the app took the job.
+
+## Gates
+
+| gate | verdict |
+|---|---|
+| `verify-rule-gated-portals.mjs` | **3/3 green solo** (table above) |
+| `verify-maze-loop-mana.mjs` | **3/3 green solo** |
+| `verify-omsi-mana-leg.mjs` | **3/3 green solo** |
+| `check-procgen-help.mjs --doors=all` | **ALL PASS** — 267 instruments, 252 on the import-door baseline, 430.3 s |
+| `check-procgen-reference.mjs --check` | **ALL CHECKS PASSED** — the docblocks' first sentences are what `instruments.js` catalogues and none moved, so no generator run was owed |
+| bounded vitest (`boxLock` · `argvHelp` · `gateRoster` · `rosterCategories` · `procgenDocs/`) | **11 files, 526 tests, 0 failed**, 17.1 s — including `--check` exits 0 — regenerating produces byte-identical files |
+| in-app `test-substrates --batch=fast` | **83/83 passed** |
+| `compare-runs.js` | **No differences in status, roster, or duration** (83/83 → 83/83) |
