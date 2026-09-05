@@ -10229,7 +10229,7 @@ whose roster is READ OFF the `procgenCore/` directory, so the new renderer enrol
 import scan with no edit to the gate. Skips unmoved at 8, slow battery unmoved at 217/0.
 
 **NEXT = H2b** (the CM6 raw view, ⚖ ruled), then H4 (Task 0 = the 4-player fixture), then H5.
-⛓ **H2b SHIPPED 2026-09-05 — see the ⇒ H2b AS BUILT block below. NEXT = H3b, then H4, then H5.**
+⛓ **H2b + H3b SHIPPED 2026-09-05 — see the ⇒ AS BUILT blocks below. NEXT = H4, then H5.**
 
 **H3 VERIFIED by the planner 2026-09-05** (`390fe0da6` on origin/main; the slot on both declarers, the
 renderer in `procgenCore/`, the reconstruct pipeline-side, the docs section and the regenerated matrix, the
@@ -10299,6 +10299,55 @@ shared `jsonEditorExtensions`, the 2 MB constant retired on a 205/205 `--all` co
 under the old limit — so an "every preset" claim in this arc uses `--all`, never a percentile pick. The PANEL
 is now the expensive half (`validateRules` per tab switch: 3.3 s on `depgraph` against a 263 ms editor).
 **H3b LAUNCHED 2026-09-05** as `apworld-hub-sliceH3b` (Opus, kickoff `NewDocs/plans/apworld-hub-sliceH3b-prompt.md`).
+
+⇒ **H3b AS BUILT 2026-09-05** (Opus `apworld-hub-sliceH3b`, on `main` at `4cde2f975`; plan §15). Submodule
+`frontend/modules/shared` `ef31e39` → `4b78f33` (PUSHED FIRST; ⚖ the gitlink bump was PRE-AUTHORIZED for this
+slice by the 2026-09-05 ruling *"I prefer the cleaner option, not the quicker option"*). Outer commits
+`9035a46a6` (the move + the gitlink) · `67ede2a56` (the `?? 'maze'` deletion + a REFUSED deletion) ·
+`ebea3caf3` (maze.md + the generated docs).
+
+**AS BUILT.** `serializeMazeWorld` → **`mazeRoom/mazeSerializer.js`**, beside its inverse
+`deserializeMazeWorld` — its own file, not part of `mazeRoomEngine.js`, because `mazeGeometry.js` imports
+`isFloor` from the engine and an engine importing `computeLongestShortestPath` back would close a cycle. The
+engine's ONE `mazeRoom/` import travelled with it: `grep -a -c "from '../mazeRoom/" procgenPipelineEngine.js`
+→ **0**; the engine is **6,435 → 6,289** lines. `makeLocationName` → **`procgenCore/apLocationNaming.js`**
+(new, imports nothing) — a home both halves import; ⛔ NOT inside `apIdNamespaces.js`, which is the register
+of NUMERIC id bases. The submodule's `adapterPrimitives.js` now takes BOTH halves of the tile-grid round trip
+from `mazeRoom/`, so loading the adapter catalog no longer drags the pipeline engine in behind it.
+
+**FIVE THINGS THE BRIEF GOT WRONG, all measured (plan §15.1).** (1) `spiralCells` is NOT a serializer
+dependency — it is the shuffled-spiral driver's generator, adjacent in the file and used once at the engine's
+own `:3268`; it stayed. The serializer's free identifiers are exactly four. (2) "the maze module imports
+NOTHING from `procgenPipeline/`" is unachievable: `mazeRoom/` holds **eleven** pipeline imports over six
+files, and only four were the serializer — the rest is the ATLAS / REGION-LIBRARY vocabulary the maze lab
+genuinely consumes. The law shipped is the true one: **no `mazeRoom/` file imports `procgenPipelineEngine`**,
+asserted over a roster read off the DIRECTORY. (3) The engine test's "10 `serializeMazeWorld` rows" did NOT
+move — that file never imported the serializer; all ten drive `buildPresetSidecars`, which dispatches through
+the registry and did not move, so the count is **203 unmoved**, exactly as plan §6's own pin said. ⇒ **a row
+that NAMES a function is not a row that IMPORTS it.** (4) ⛔ **`COLORS.floor`/`COLORS.wall` are NOT dead — the
+deletion was REFUSED.** `mazeRoom/mazeCompositeMap.js:62` reads them through its `colors = COLORS` DEFAULT
+PARAMETER, so the reader's own text says `colors.wall`; a census scoped to the renderer and the two declarers
+cannot see it, and deleting them would blank every maze cell on the composite map. ⇒ **a value consumed
+through a default parameter is read under the PARAMETER's name.** (5) A committed preset cannot be re-emitted
+from its own document — `procgen_metadata` carries no seed and no pools.
+
+**GATES.** Four `dump-*-byteidentity.mjs` oracles 0-moved (md5 identical before/after: maze `8cc31554`,
+sphere `0dbe57bd`, spiral `8f8996cd`, topdown `b844a297`; after-run ENDs 05:43:24Z / :27Z / :31Z / :32Z UTC).
+The moved body is byte-identical to the deleted block (`diff`: no output). In place of the impossible
+re-emit: **1,034 committed maze sidecar payloads re-serialized from the tree's own bytes, 0 serializer
+mismatches** over 22 documents (the three the brief named: 3/3, 235/235, 2/2); ten `seedling_atlas_maze`
+entries differ and are CLASSIFIED — they carry `atlas_exit_id`, i.e. `regionAtlasPool.js` wrote them and this
+serializer never did. Rows: engine **203 unmoved** · `mazeSerializer.test.js` **70 NEW** (14 direct rows — the
+function had none — plus a 56-file import scan) · `adapterPrimitives.test.js` **6→7** · `compositeMapDocument.test.js`
+**9→10** · `bindingContract.test.js` **72→73** (directory-derived roster). Four mutants, each naming the row
+it reds. `check-slice-records` ALL PASS · `check-procgen-reference --check` + `check-procgen-docs` ALL CHECKS
+PASSED · `procgenDocs/` **452/452** · in-app `--mode=test-substrates --batch=fast` **73/73**, `compare-runs`
+"No differences in status, roster, or duration". ⚖ 52: the suite row is quoted from CI by SHA, never measured
+here.
+
+**For H4** (plan §15.7): there is no maze residue left in `procgenPipeline/` — §7b's tile-grid vocabulary is
+the whole of what is shared now. `mazeRoom/`'s remaining eleven pipeline imports are the atlas/library
+vocabulary and would be their OWN slice with its own ⚖ — five modules, not one function. **NEXT = H4, then H5.**
 
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
