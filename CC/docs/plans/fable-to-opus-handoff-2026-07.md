@@ -10989,6 +10989,22 @@ arc's and both postdate the baseline's `measuredAt`, so the gate red them BY NAM
 
 **Ladder: V3 (the rename) is next**, and it inherits two STALE scripts whose subjects no longer exist.
 
+**V2 VERIFIED by the planner 2026-09-05** (`ee4efd74a..84b5e7115`, 9 commits on origin/main; the atlas-sphere
+preset regenerated — exactly V1's six values, `entrance.x` now 2, roundtrip 68/0, whole `pytest` 1507/2
+skipped; `check-procgen-help` ALL PASS with the two hub scripts fixed to the law). The six reds: four
+INSTRUMENT (item-channels — a race with the fixture's own auto-repeat, never a standing red, FIXED;
+maze-loop-mana — its uncommitted fixture was ABSENT, FIXED with a preflight; rule-gated-portals — stale twice
+from 2026-06-19, FIXED, three legs green; omsi-mana-leg — drives unparked live play that `f2e392df1` froze by
+design, NAMED), two STALE (dj-real-embed, bot-playthrough — their worlds deleted at `ccfc5bad0`, 2026-06-26).
+The survey's "cluster" dissolved: three unrelated causes. ⚠ A full `pytest` DIRTIES the tree (appends an
+APQuest seed to the tracked `preset_files.json` and leaves a preset dir untracked) — restore before staging.
+**⚖ RULED 2026-09-05 (user):** (1) the SUBJECT red — **loops HALTS at the first maze location check** (queue
+of 6 builds, processing starts, stops within 5 s at index 1, never resumes; two instruments, 60–180 s) — is
+**investigated NOW, before the rename**, as a diagnosis slice (fix only if one clear defect); the omsi
+mana-leg's "needs a loops park" is read as the same work. (2) `verify-rule-gated-portals`' physics leg is
+CUT; the witnessed claim (gate rules re-evaluated on the snapshot update) stays — one commit in V3. Ladder:
+**V2b** loops-halt diagnosis → **V3** rename (+ the cut).
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
