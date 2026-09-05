@@ -720,3 +720,16 @@ before that regeneration — that red was this slice's, and it is green after.
 - The reds that remain are **two ⚖ for the user** (loops halting at the first substrate action; the
   no-input climb not reaching a correctly-unlocked portal) plus one instrument-design job the omsi leg
   needs — and the omsi one is probably the same piece of work as the loops one.
+
+## ⚖ 52 — the suite row, QUOTED from CI at the pushed SHA
+
+```
+CI vitest @ 84b5e7115 — run 33992632924 success (2026-09-05T21:17:58Z)
+  suite: vitest (unfiltered)  436/13301   (13293 passed | 8 skipped | 0 failed)
+  slow battery                12/217      (217 passed | 0 failed)
+```
+
+**Delta: ZERO on both counts.** `git merge-base --is-ancestor ef2f40efe 84b5e7115` holds, so the APWorld
+hub arc's standing `436/13,301` is comparable — and V2 moves neither number. It touches exactly one test
+file (`scripts/procgen/boxLock.test.js`, +16/−1) and adds no test, which is what a zero delta should look
+like here: the change declares two files in an existing row's list rather than asserting anything new.
