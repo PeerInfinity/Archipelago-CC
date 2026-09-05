@@ -10156,6 +10156,71 @@ maze + text_adventure with their painters moved out of the pipeline panel, the s
 `procgenCore/`, the pipeline swapped byte-inert under its four verify scripts, and the hub's Map tab with
 click-select and the one-way "Open region graph" button.
 
+⇒ **H3 AS BUILT — THE MAP.** `067f6c86a` (Tasks 1–3) + `966993244` (Tasks 4–5) on `main`,
+pushed; plan §13. **`compositeMap: Object.freeze({ drawRegion })`** is the registry slot, DATA like
+`roomEditor`, declared by maze (`mazeRoom/mazeCompositeMap.js`) and text_adventure
+(`textAdventureSubstrateWrapper/textAdventureCompositeMap.js`) — each painter MOVED out of the panel
+with its own imports. The shared `procgenCore/compositeMapRenderer.js` (443 l) draws the grid, the
+connections, the stub cell, the **generic box LABELLED with the id it fell back from**, the selection,
+and the click geometry; it names no substrate, which is what lets it sit under
+`bindingContract.test.js`'s scan. `procgenPipelineUI.js` **6,013 → 5,473 l** (the painter block was
+**378 lines / 17,055 bytes**; `git diff --stat` over the panel + its test = **48 insertions / 779
+deletions**), and ⛓ **the pipeline panel now imports NO `mazeRoom/` module at all** — its only one was
+the painter's, and the census found `getObstacle`/`getItem` unused anywhere in the file.
+
+**Six overturns (plan §13.1).**
+1. **§4's "put the reconstruct in `procgenCore/`" is WRONG, one hop past what the gate can see.**
+   `reconstructResultFromSidecars` builds a `Grid`; `Grid` is in `procgenPipelineEngine.js`, which
+   imports `mazeRoom/mazeGeometry.js`. `bindingContract.test.js` scans **literal import specifiers**,
+   so a core importing the engine passes the row while dragging a BINDING in behind it. ⇒ the RENDERER
+   is in `procgenCore/` (it needs only `width`/`height`/`getRegion`/`allRegions` off a duck-typed grid)
+   and the document reader is `procgenPipeline/compositeMapDocument.js` (128 l), which the hub imports
+   instead of the 6,013-line panel.
+2. **The brief's dispatch key `substrate ?? render_hint` INVERTS the shipping precedence**, and the
+   corpus cannot tell them apart: over the 205 presets, **1,360** sidecar entries, `substrate` present
+   on all 1,360, `render_hint` absent on 270, **0 disagreements**. So `render_hint ?? substrate` stays.
+3. **The `?? 'maze'` default is DROPPED, and named as changed** — measured unreachable three ways:
+   **0 of 1,360** sidecar entries name neither field; `growMaze` (7 regions), `topDownFromRulesJson`
+   (3) and `layoutTopDown` (3, all payload-FREE stubs) produce **0** payload-bearing regions with no
+   id; and the seven `placeRegion`/`replaceRegion` sites either pass no payload or pass a
+   `buildSubstrateRegion` result, whose own signature defaults `substrate = 'maze'`. Keeping it would
+   have left the one hardcoded substrate name the ⚖ asked to remove, where nothing can observe it.
+4. **The kickoff names a script that does not exist**: `verify-grid-growth-steps-ui.mjs` is really
+   **`verify-grid-growth-ui.mjs`**. The other three are as named.
+5. **The four verify scripts are 0-moved, and the ONE differing line is NONDETERMINISTIC at a fixed
+   HEAD.** All four exit 0 before and after; the 150-line logs differ in one informational line, PHASE
+   J's substrate order (= `substrateRegistry.getAll()`'s insertion order). ⚠ Three re-runs at the
+   post-swap HEAD gave **three different orders**, so the app's module loader registers racily and a
+   single before/after pair cannot attribute it. A measurement, not an assumption.
+6. **A finding left UNFIXED on purpose**: a region rebuilt from sidecars carries no top-level `exits`
+   (the engine's own placements set it), so a LOADED document's map draws cells and their in-cell exit
+   squares but **no inter-region connection lines**. Pre-existing; the one-line fix would change the
+   pipeline panel's loaded-preset view, which this slice had to keep byte-inert. Offered to H4.
+
+**The hub's Map tab** reads the WORKING COPY (`reconstructResultFromSidecars(record, {playerId})`,
+memoised on the record's object identity + slot), prints *"No map for this world (no grid data in the
+sidecars)"* **and the reason** with no canvas and **no graph fallback** (⚖), and a click selects the
+region in the Regions tab through the panel's new — and only — selection API, `selectRegion(name)`,
+which returns whether the document actually carries it. *Open region graph* reuses `documentLinks`'
+own `regionGraphPanel` row, and ⛔ **nothing was added under `regionGraph/`** (⚖ one-way).
+
+**Gates.** new `compositeMapRenderer.test.js` **32** (driven by a TOY substrate registered in the
+test, plus a shipped-declarer suite) + new `compositeMapDocument.test.js` **9** · `procgenCore` +
+`procgenPipeline/` **24 files / 820 passed** · `apworldEditor/` **132** (unmoved — H3 adds no node row
+there), `presetUI` **70**, `lintGateLabels` **14** · the procgen generator **62 → 63 fields, 11 → 12
+groups**, 0 FINDINGS, 0 libraries not loadable headless, fixed point on re-run ·
+`npx vitest run frontend/modules/procgenDocs/` **452/0/0** · `check-procgen-docs.mjs` **ALL CHECKS
+PASSED** · in-app `--batch=fast` **71/71**, the three new rows at 0.8 / 0.4 / 0.4 s, `compare-runs`
+vs H2's 68/68 reporting **ADDED (3) all passed and nothing else moved** · browser-log grep for thrown
+handlers **0**.
+
+**Mutants — three driven, none committed.** (a) maze's `compositeMap` deleted → **3 rows red**,
+including the one that DRAWS a maze region and asserts the generic box's signature is absent, so a
+declaration wired to the wrong function reds too. (b) `?? 'maze'` restored → 1 row red. (c) the named
+player slot ignored → 2 rows red.
+
+**NEXT = H2b** (the CM6 raw view, ⚖ ruled), then H4 (Task 0 = the 4-player fixture), then H5.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
