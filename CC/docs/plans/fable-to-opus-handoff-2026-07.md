@@ -10929,6 +10929,66 @@ V1's session read idle first): Task 0 the ⚖-ruled regeneration of `seedling_at
 `c8447dd56`, whole `pytest` owed); the six pre-existing reds each ruled INSTRUMENT (fix) / SUBJECT (⚖, stop) /
 STALE (name the commit) on evidence; the two `check-procgen-help` rows. Then V3, the rename.
 
+**⇒ V2 AS BUILT 2026-09-05** (`edf75e100` regeneration · `604c4f29e` help gate · `2a5957377`
+rule-gated-portals · `d05532c4e` maze-loop-mana · `81dfc0041` item-channels · `75d96d159` record; the
+"V2 as built" section in `CC/docs/procgen-verify-tier.md` carries every measurement).
+
+**Task 0 — the ⚖ regeneration is DONE.** `frontend/presets/seedling_atlas_sphere/AP_1/AP_1_rules.json`
+regenerated with the command its own README and the verify script both run — ⛑ the kickoff pointed at
+`:220-228`, which is the THROWAWAY world's `world_generator`+`Generate.py` path; the committed preset's
+regeneration is the `dump-sphere-growth.js` call at `:287`. **Exactly the six values V1 named moved**, no
+keys added or removed, file length unchanged at 124 377 bytes. `verify-atlas-sphere-roundtrip` **68 PASS /
+0 FAIL** (twice); the WHOLE `pytest test test_json worlds` **1507 passed, 2 skipped, 21 299 subtests**
+(492 s); strict schema green; `preset_files.json` unchanged; no pin names the preset (re-derived).
+⚠ A full `pytest` WRITES INTO THE TREE — it appended an APQuest seed to the tracked `preset_files.json` and
+left `frontend/presets/apquest/AP_077581764…/` untracked. Restored; in no commit here.
+
+**Task 1 — six verdicts, and the survey's CLUSTER IS DISSOLVED.** The three "clustering" scripts have three
+unrelated causes, and V1's grant-before-subscribe race — the brief's leading hypothesis — explains **none**
+of them.
+- `verify-item-channels` **INSTRUMENT, and never a standing red**: 5 red / 2 green solo at HEAD. The "leak"
+  is the check losing a race to the task's OWN auto-repeat (`maxReps` 10) — `omsi gold 0 -> 2` is rep 1's
+  scheduled award arriving on time, and the counter reads `reps=2` at the failure. FIXED
+  (`setQueueRepeatCount(1)`, one atomic read, each claim asserted at its own rep): **3/3 green**.
+- `verify-maze-loop-mana` **INSTRUMENT** — its uncommitted fixture was ABSENT, so the page loaded no world
+  and died on a line that reads like an app defect. Regenerated, that assertion passes; a preflight now
+  names the prerequisite (driven with the fixture moved aside). ⛑ This also settles the `?mode=loops`
+  question: unrelated — `modes.json:233` really defines that mode.
+- `verify-omsi-mana-leg` **INSTRUMENT, named not fixed**: it drives UNPARKED live play, which `f2e392df1`
+  (2026-07-24, park-gated stepping) froze BY DESIGN one week after the script was written. 304 messages,
+  **304 `skippedGated`, 0 `ticksStepped`**, `step gate: CLOSED (enforced=true, livePlay=none)`.
+- `verify-rule-gated-portals` **INSTRUMENT, stale TWICE from one day** — `85c1c3ba1` (sphere mode's button
+  became "Run all"; it re-pointed the SIBLING script in the same commit, not this one) and `06eafea4e` (the
+  free arrow left the pool for the substrate hook), both 2026-06-19. FIXED; `buildWorld` now CALLS
+  `collectSphereGrowthPrep` rather than copying it. **The app's authored-lock claim is GREEN and had never
+  been witnessed**: `PORTAL UNLOCKED: gate_rules re-evaluated on the snapshot update`.
+- `verify-dj-real-embed` and `verify-bot-playthrough` **STALE** — `bounce_dj_worldgen`,
+  `bounce_sphere_worldgen`, `bounce_mixed_worldgen` were all deleted at **`ccfc5bad0`** (2026-06-26,
+  *"drops … the `*_worldgen` preset dirs that the workflow does not produce"*). `?game=` resolves through
+  `preset_files.json`, so a missing name loads no world at all. ⛔ Neither script deleted — V3 owns names.
+
+**Task 2 — `check-procgen-help.mjs` is `ALL PASS`** (267 instruments; 252 baselined). Both reds were the hub
+arc's and both postdate the baseline's `measuredAt`, so the gate red them BY NAME — the gate working. Fixed
+**to the law, not baselined**: each file's driving half moved into `main()` behind `isEntryPoint`.
+`shot-loaded-composite-map.mjs` had no `argvHelp` at all (so `--help` ran the whole shot) and
+`measure-apworld-raw-view.mjs`'s bare import TOOK THE REAL BOX and launched a browser. ⚠
+`verify-seedling-ap-placement`'s row is green because it is BASELINED (hand-interpolated at P2), not fixed.
+
+⚖ **THREE FOR THE USER.**
+1. **SUBJECT — loops halts at the first maze action.** With `maze_loop_worldgen` present the queue builds
+   (6 actions) and `startProcessing()` starts (`isProcessing` true, index 0 → 1), then within 5 s
+   `isProcessing` is false and never resumes: index frozen at 1, mana 100/100, `manaEvents` `[100]`, XP 0,
+   for 60–180 s. Measured twice (script + standalone probe). The app is not fixed here per the brief.
+2. **`verify-rule-gated-portals`' fourth leg.** The no-input climb does not reach the CORRECTLY-UNLOCKED
+   portal: `CLIMB REACHED: entrance → b0 → b1 → b2`, then it bounces on `b2` for ~85 s holding both arrows.
+   The seed scan reasons over the sphere TREE and cannot see physical reachability. Closing it =
+   instrument DESIGN (derive per-portal reachability, or drive the hop and gut the claim).
+3. **`verify-omsi-mana-leg` needs a loops PARK.** Teaching it to park a queue on a manual block in the omsi
+   region is instrument design — and ⚖ 1 shows loops halting at the first substrate action anyway, so these
+   two are probably one piece of work.
+
+**Ladder: V3 (the rename) is next**, and it inherits two STALE scripts whose subjects no longer exist.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
