@@ -451,6 +451,22 @@ export async function apworldApplyKeepsTheSphereLog(testController) {
         const presets = await openPresets(testController);
         if (!presets) return testController.getOverallResult();
 
+        /**
+         * ⛔⛔ **RESET FIRST, OR THE BASELINE IS THE PREVIOUS ROW'S LOG.**
+         * `sphereState` is an app-wide SINGLETON and the rows before this one
+         * leave `procgen_maze`'s embedded log in it. A poll for "sphere data is
+         * non-empty" then returns INSTANTLY with somebody else's data — which is
+         * exactly what the first run of this row measured: it compared 4 spheres
+         * (procgen_maze) against 10 (adventure's own) and reported a truncated
+         * log for a load that was perfectly fine. The reset the preset load
+         * itself performs happens LATER, inside `handleRulesLoaded`, so it does
+         * not close the race; doing it here does.
+         */
+        getSphereStateSingleton()?.reset();
+        testController.reportCondition(
+            'the sphere state starts EMPTY, so the baseline is this preset\'s own log',
+            (getSphereStateSingleton()?.getSphereData() ?? []).length === 0);
+
         presets.loadPreset(FILE_LOGGED_GAME, FILE_LOGGED_SEED);
 
         const before = await testController.pollForValue(
