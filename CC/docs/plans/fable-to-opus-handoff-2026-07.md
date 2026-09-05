@@ -10750,6 +10750,19 @@ RESOLVER, which is the missing half of H5's `region_atlas` door), then **H6b**. 
 (`CostPlanner.getCostData()` is already the block's shape and all twelve committed carriers are EMPTY); the
 marking tool's hardcoded `MAP_DOCUMENT_URL` as a fourth spelling of `flashPanel/mapDocumentPath`.
 
+**H5 VERIFIED by the planner 2026-09-05** (`6a4c38423` on origin/main; the five doors in `DOCUMENT_KEY_EDITORS`
+with a `returns` field each; `documentStateManager.js` — the cost debugger takes a working copy in 4–306 ms;
+`procgenPipeline:loadRules`; CI in flight, watched by H5). H5 found two doors that had done NOTHING since
+they shipped: the hub never registered `ui:activatePanel` (the bus warns and returns), so H1's Links Open and
+H3's "Open region graph" were inert until H5 registered it and added a publish-vs-register scan row. Also:
+`region_atlas` is a REFERENCE nothing in the tree resolves; two Links rows point at modules the default
+config disables. **⚖ RULED 2026-09-05 (user):** the marking tool is EXPERIMENTAL — not enabled; review what
+it does and how it connects before deciding; the plain editor is not needed. `loop_costs` write-back needs
+investigation and discussion (the cost generator predates procgen) — **loop costs, or the marking tool, is
+the LAST feature integrated with the editor**. The atlas resolver waits on the marking-tool review. ⇒ H6a is
+PARKED behind that review; two REVIEWS are queued as planning conversations (marking tool ↔ editor; loop
+costs ↔ procgen ↔ editor). Next slice = **H6b** (bounce exit ids), launched after H5's CI closes.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
