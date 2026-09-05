@@ -86,7 +86,7 @@ const PARAM_KINDS = {
 // wording ("Moved the region", "Swapped the two regions", "Moved exit X to side
 // Y", "Swapped exits A ↔ B"): they now ARE the panel's confirmation messages,
 // and three hand-run browser verifiers assert on that wording
-// (verify-topdown-steps-ui.mjs Phase D/E, verify-sphere-steps-ui.mjs F/J).
+// (check-topdown-steps-ui.mjs Phase D/E, check-sphere-steps-ui.mjs F/J).
 export const LAYOUT_EDIT_SPECS = Object.freeze({
     'move-region': {
         kind: 'layout',

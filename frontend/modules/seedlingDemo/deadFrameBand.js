@@ -76,7 +76,7 @@ export const FADE_STATS = Object.freeze({
     max: 21.0,
     mean: 19.1275,
     sigma: 0.4117,
-    source: 'verify-seedling-bot-differential --win, the sweep that gated 247d859bb; '
+    source: 'check-seedling-bot-differential --win, the sweep that gated 247d859bb; '
         + 're-derived by probe-seedling-deadframe-band',
 });
 

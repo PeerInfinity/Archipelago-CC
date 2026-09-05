@@ -701,7 +701,7 @@ export function createTapeStepper(tape, opts = {}) {
              * and its own docblock says the caller has to add the other two.
              * This is the sum, so a caller that wants "how many engine frames
              * does this tape really spend" no longer has to know how many
-             * builds it has (`verify-seedling-bot-differential`'s deadline is
+             * builds it has (`check-seedling-bot-differential`'s deadline is
              * exactly that caller).
              */
             deadFramesOwed: run ? run.deadFramesOwed : 0,

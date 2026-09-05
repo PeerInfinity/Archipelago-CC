@@ -62,8 +62,18 @@ export default defineConfig({
     // generator, level, parity, physics, runnerDemoLibrary, zoneRules) in
     // `npm run test:unit`; `runnerDemo/generator.calib.test.js` in the manual
     // calibration tier; the in-app runner substrate tests
-    // (`npm test -- --mode=test-substrates`); and the Playwright instruments
-    // `scripts/procgen/verify-runner-*.mjs`.
+    // (`npm test -- --mode=test-substrates`).
+    //
+    // ⛔ AND ONE CLAUSE THAT USED TO BE HERE WAS FALSE, measured by the
+    // verify-tier survey (`CC/docs/procgen-verify-tier.md`): this comment
+    // also listed "the Playwright instruments `scripts/procgen/verify-runner-
+    // *.mjs`" among the things that "still run". NOTHING ran them. All four
+    // were in no battery of any kind, and the survey was the first run any
+    // record can evidence. V3b renamed them `check-runner-*.mjs`, which is the
+    // roster's one membership rule — they are gates now, and each declares
+    // `@ci-box`, so the box runs them and CI does not. ⛓ "Still runs" is a
+    // claim about a MECHANISM; the four were green, so the sentence was wrong
+    // about who runs them, not about their state.
     exclude: [
         ...configDefaults.exclude,
         'frontend/modules/runnerDemo/**/*.slow.test.js',

@@ -69,7 +69,7 @@
  * dropped ones are REPORTED by name. A dropped location keeps the adapter's
  * property path, because `hostOwnedLocations()` is built from the table and
  * cannot contain it. ⚠ For `seedling_playthrough` NOTHING is filtered, so the
- * table is byte-for-byte the one `verify-seedling-ap-placement.mjs` builds.
+ * table is byte-for-byte the one `check-seedling-ap-placement.mjs` builds.
  */
 
 import { indexLevels } from '../seedlingDemo/atlasSource.js';
@@ -390,7 +390,7 @@ export function readWorld(bot) {
      * ⛓ `time` IS CARRIED because the game's own new-game arm
      * (`Game.as:832-840`, `level < 0`) sets `time = dayLength / 2` — the one
      * field that arm writes and an ordinary construction does not.
-     * `verify-seedling-bot-differential.mjs:2094` establishes that `botStatus`
+     * `check-seedling-bot-differential.mjs:2094` establishes that `botStatus`
      * serves `Game.time` and that it ADVANCES while the page runs, so it can
      * only ever be read as a lower bound. ⚠ And it may not discriminate at
      * all: `procgenOracle.js:221` records that a stored `0` is APPLIED as
@@ -623,7 +623,7 @@ const defaultImportModule = (url) => import(/* @vite-ignore */ url);
 /**
  * Everything the panel needs to hand the glue, or a refusal that says why.
  *
- * The construction MIRRORS `verify-seedling-ap-placement.mjs:96-137, 311-323,
+ * The construction MIRRORS `check-seedling-ap-placement.mjs:96-137, 311-323,
  * 1077-1078` verbatim — `vanillaRecordSet` → `buildPlacementTable` →
  * `rewriteRecordSet` → `apMappingInvalidation` → `SeedlingLevelSetDelivery` →
  * `SeedlingCheckBinding` — because that gate is the only other constructor of

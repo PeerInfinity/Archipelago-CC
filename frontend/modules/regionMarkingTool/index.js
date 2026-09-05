@@ -90,7 +90,7 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
  *
  * ⚠ When `onSave` is supplied, Save HANDS OVER instead of downloading a file:
  * the caller is the destination. Standalone Save (no hand-off) is unchanged,
- * which is what keeps `scripts/procgen/verify-region-marking-tool.mjs` — a
+ * which is what keeps `scripts/procgen/check-region-marking-tool.mjs` — a
  * standalone driver that captures the download — 0-moved.
  *
  * @param {object}   [o.atlas]    an atlas document to edit, or null for whatever

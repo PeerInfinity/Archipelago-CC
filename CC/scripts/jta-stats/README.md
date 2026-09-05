@@ -42,7 +42,7 @@ under a configurable automation profile. Used to A/B automation settings.
 - `results/SUMMARY.md` — findings write-up.
 
 AP / synthetic-world sweeps (Phases 4–5f; all need the repo Python env for
-`verify-jta-locations-roundtrip.mjs`'s Generate.py step):
+`check-jta-locations-roundtrip.mjs`'s Generate.py step):
 
 - `make-ap-config.mjs` — exported rules.json + Pass-B report → driver
   config modeling the bridge runtime (grants, suppression + cost patches,

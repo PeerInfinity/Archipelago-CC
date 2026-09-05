@@ -8,8 +8,8 @@
  * checked against worlds the balance pass never saw.
  *
  * Per seed:
- *   1. verify-jta-locations-roundtrip.mjs  (JTA_RT_SEED)  -> exported rules.json
- *   2. verify-jta-balance-pass.mjs         (JTA_BP_REPORT) -> cost patches
+ *   1. check-jta-locations-roundtrip.mjs  (JTA_RT_SEED)  -> exported rules.json
+ *   2. check-jta-balance-pass.mjs         (JTA_BP_REPORT) -> cost patches
  *   3. make-ap-config.mjs                                  -> harness config
  *   4. run-node.mjs                                        -> playthrough
  *
@@ -66,7 +66,7 @@ const VARIANTS = [
 const rows = [];
 for (const seed of seeds) {
     console.log(`\n=== seed ${seed}: regenerating post-fill world (Generate.py) …`);
-    sh('node', ['scripts/procgen/verify-jta-locations-roundtrip.mjs'], {
+    sh('node', ['scripts/procgen/check-jta-locations-roundtrip.mjs'], {
         JTA_RT_SEED: String(seed), JTA_RT_QUOTA: '15', JTA_RT_KEEP: '1',
     });
     const apDirs = fs.readdirSync(PRESET_DIR).filter((n) => n.startsWith('AP_'));
@@ -95,7 +95,7 @@ for (const seed of seeds) {
     let balancePassConverged = true;
     let balancePassFailure = null;
     try {
-        sh('node', ['scripts/procgen/verify-jta-balance-pass.mjs', rules], { JTA_BP_REPORT: bp });
+        sh('node', ['scripts/procgen/check-jta-balance-pass.mjs', rules], { JTA_BP_REPORT: bp });
     } catch (err) {
         balancePassConverged = false;
         const out = String(err.stdout ?? '');

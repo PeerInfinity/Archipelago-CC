@@ -34,7 +34,7 @@
 // log, describe and undo; an input document that is never mutated; and three
 // things this class could not do at all — `renameRegion`, `connect` with
 // `one_way`, and `unwire` by endpoint. `toDocument()` is byte-identical, which
-// is what `verify-region-marking-tool` and the playthrough `--check` gate.
+// is what `check-region-marking-tool` and the playthrough `--check` gate.
 //
 // ⚠ ONE VISIBLE CONSEQUENCE, AND IT IS THE GOOD KIND. `this.atlas` is now a NEW
 // object after every mutation, so a caller holding a reference to the document

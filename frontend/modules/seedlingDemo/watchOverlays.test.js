@@ -1775,7 +1775,7 @@ describe('group B — the ceremony text channel', () => {
  *
  * ⛔ TRAP 383'S GATE. `watch.html`'s per-tick verdict feeds
  * `diffObservationStreams` a stream taken off the walk the page ALREADY made;
- * `verify-seedling-bot-differential.mjs` feeds it `runTapeToStream`. If those
+ * `check-seedling-bot-differential.mjs` feeds it `runTapeToStream`. If those
  * two ever stop being the same thing, the page would be comparing a different
  * subject and reporting it under the same word — so the equality is a ROW,
  * over a committed tape with a real level crossing in it.

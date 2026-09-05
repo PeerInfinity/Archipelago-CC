@@ -203,7 +203,7 @@ describe('Apply publishes the ORIGIN source name', () => {
 
     /**
      * ⛓ The fallback string is load-bearing OUTSIDE this module:
-     * `scripts/procgen/verify-region-marking-tool.mjs` grabs the published
+     * `scripts/procgen/check-region-marking-tool.mjs` grabs the published
      * event by that exact literal, and its session is a hand-off (origin
      * `null`), so it lands on the fallback. A rename here would red a hand-run
      * browser gate; this row reds in two seconds instead.
@@ -211,7 +211,7 @@ describe('Apply publishes the ORIGIN source name', () => {
     it('⛓ the fallback literal is the one the marking-tool verifier grabs by', () => {
         expect(panelSource).toContain("const APPLY_SOURCE = 'apworldEditorApply';");
         const verifier = readFileSync(
-            join(here, '../../../scripts/procgen/verify-region-marking-tool.mjs'), 'utf8');
+            join(here, '../../../scripts/procgen/check-region-marking-tool.mjs'), 'utf8');
         expect(verifier).toContain("sourceName === 'apworldEditorApply'");
     });
 

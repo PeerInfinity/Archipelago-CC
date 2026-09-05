@@ -4,7 +4,7 @@
  *
  * Region-atlas Phase 8, rung R4 slice 5. This writes TAPES (inputs), never
  * expectations: an expectation is an oracle recording and only
- * `verify-seedling-bot-differential.mjs --record` may write one.
+ * `check-seedling-bot-differential.mjs --record` may write one.
  *
  *   node frontend/modules/seedlingDemo/fixtures/regenerate-r4-tapes.mjs
  *   node .../regenerate-r4-tapes.mjs --only=r4-walk-6-health   # one of them

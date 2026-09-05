@@ -432,7 +432,7 @@ Keep the v1 five untouched beside these.
 
 ### 3.6 Harness + gates
 
-Machinery unchanged (`verify-seedling-bot-differential.mjs --win`,
+Machinery unchanged (`check-seedling-bot-differential.mjs --win`,
 `--record`, fresh page per tape, deadlines scaled by tape length, SKIP
 without artifact). Additions:
 - **G1 (CI, vitest)**: every tape's JS stream == its committed oracle
@@ -618,7 +618,7 @@ therefore something to BATCH with any other AS3 change rather than pay the
 
 ### Harness changes made in passing
 
-- **`--only=a,b`** on `verify-seedling-bot-differential.mjs`. Recording a
+- **`--only=a,b`** on `check-seedling-bot-differential.mjs`. Recording a
   new fixture otherwise rewrites every already-oracle-recorded expectation
   on the way past, and `--record` does not compare before it writes — so a
   genuine drift in a v1 fixture would be silently baked into the
@@ -636,7 +636,7 @@ therefore something to BATCH with any other AS3 change rather than pay the
 ### Gates at slice 0 close
 
 - vitest **3890/3890** (was 3876; +14).
-- `verify-seedling-bot-differential.mjs --win` green across all **7**
+- `check-seedling-bot-differential.mjs --win` green across all **7**
   fixtures; the v1 five still match their original recordings bit for bit.
 
 ## 8. Slice 1 — AS BUILT (2026-07-30)
@@ -857,7 +857,7 @@ Mutation checks, each run, each confirmed to bite:
 ### Gates at slice 2 close
 
 - vitest **3969/3969** (was 3929; +40).
-- `verify-seedling-bot-differential.mjs --win` green across all **7**
+- `check-seedling-bot-differential.mjs --win` green across all **7**
   fixtures at ~25 fps, live driver task included. No recording rewritten —
   slice 2 changes no expectation, only the engine that has to hit them.
 
@@ -871,7 +871,7 @@ list is gone. `collide-up-rock` and the v1 five stayed byte-identical
 
 Touched: `playerPhysicsV2.js` (the swap), `tapeRunner.js` (the loop that
 applies it), `tapeFormat.js` (the contract, the derivation, the differ),
-`verify-seedling-bot-differential.mjs` (the game's side), and the three
+`check-seedling-bot-differential.mjs` (the game's side), and the three
 test files. No AS3 edit, as §2.6 predicted.
 
 ### The decision the brief left open: DERIVE AT RECORD TIME
@@ -993,7 +993,7 @@ arrival tiles walk at 0.8 either way.
 ### Gates at slice 3 close
 
 - vitest **3987/3987** (was 3969; +18).
-- `verify-seedling-bot-differential.mjs --win` green across all **7**
+- `check-seedling-bot-differential.mjs --win` green across all **7**
   fixtures at ~25 fps, live driver task included. One expectation
   rewritten, by `--record --only=collide-up-rock,transition-west-return`:
   `collide-up-rock` came back byte-identical and `transition-west-return`
@@ -1193,7 +1193,7 @@ Any coverage claim about "level 0" should say which 103 tiles it means.
 ### Gates at slice 4 close
 
 - vitest **4050/4050** (was 3990; +60).
-- `verify-seedling-bot-differential.mjs --win` green across all **11**
+- `check-seedling-bot-differential.mjs --win` green across all **11**
   fixtures at ~25 fps, plus the swapped live driver task: the brief's
   thread-the-gap + cross-level task, **517 ticks planned at run time**,
   both targets reached in two levels and the crossing at the tick the

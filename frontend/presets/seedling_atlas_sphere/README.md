@@ -18,7 +18,7 @@ which is the case where the real map's charge for a crossing IS the gate the
 world uses and nothing synthetic is added on top.
 
 Regenerate (deterministic — byte-identical every time, and gated by
-`scripts/procgen/verify-atlas-sphere-roundtrip.mjs`). The atlas quota must be at
+`scripts/procgen/check-atlas-sphere-roundtrip.mjs`). The atlas quota must be at
 least the number of regions the sorter accepts (all ten): a smaller one just
 truncates in declaration order, which serves nothing.
 

@@ -26,7 +26,7 @@
 // + buildRulesJson exactly. The rng is a single continuous stream — ① consumes
 // the shuffle and snapshots the state (env.rng = { s }), ② consumes none, ③
 // restores that snapshot and continues the per-cell procedural draws. See
-// scripts/procgen/dump-spiral-byteidentity.mjs.
+// scripts/procgen/check-spiral-byteidentity.mjs.
 //
 // ② content: the presence probe treats "no content source in this world" as a
 // COMPLETED no-op, so detectCompleted's contiguous walk doesn't stall at ② on

@@ -1523,7 +1523,7 @@ game's rendering, its audio, and the 43 unvisited rooms are outside that claim.
 - `probe-seedling-level-set-transport.mjs` (phase 3's, re-run on this build) —
   **ALL ARMS PASS**, 25 arms, one fresh page each. The receiver did not regress,
   and arm 5b still shows a delivered set's XML is what loads.
-- `verify-seedling-bot-differential.mjs --win --tier=full` — **153/153 tapes,
+- `check-seedling-bot-differential.mjs --win --tier=full` — **153/153 tapes,
   3,541 checks, 0 failures, `ALL CHECKS PASSED`**, ~2h35m of serial replay on
   the real-GPU rig (`intel / gen-9`, 26–28 fps). Every tape's `live game matches
   the committed oracle stream`. The 43 `SKIP` lines are the roster's own
@@ -1757,7 +1757,7 @@ on the manifest gate, which is what "non-overlapping" has to mean to be a claim.
   `levelSetValidator.test.js`, which goes 53 → 68).
 - `solve-seedling-r8-battery.mjs --check` md5 **unmoved** at
   `1fedb0ab35b7cd74accecf0345bdc893`.
-- `verify-seedling-bot-differential.mjs --win --tier=full --only=` six tapes
+- `check-seedling-bot-differential.mjs --win --tier=full --only=` six tapes
   (`cross-level-leg`, `diagonal-run`, `friction-stop`, `pit-fall-83`,
   `pit-fall-chain-85`, `grant-sword-room`) — **ALL CHECKS PASSED**.
   ⚠ **A SMOKE TEST, NOT PHASE 3b's SWEEP, AND DELIBERATELY SO.** The AS3 delta

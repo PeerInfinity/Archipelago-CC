@@ -24,7 +24,7 @@
 // Byte-identity: running all four steps reproduces the monolithic
 // topDownFromRulesJson + buildRulesJson output exactly (the rng is created in ①
 // and threaded live through ②; ③/④ draw none). See scripts/procgen/
-// verify-topdown-steps.mjs.
+// check-topdown-steps.mjs.
 
 import { createRng } from '../shared/rng.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';

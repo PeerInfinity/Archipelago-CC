@@ -634,7 +634,7 @@ export class BounceRegionEditorUI {
     /**
      * ⛓⛓⛓ **THE SAVE MERGE IS AN IMPORT** (EDITOR INTEGRATION B-b). The body
      * moved to `buildEditedRegion.js` because
-     * `scripts/procgen/verify-region-step-editing.mjs` held a COPY of it, and
+     * `scripts/procgen/check-region-step-editing.mjs` held a COPY of it, and
      * that verifier's byte-shaped Phases were pinning the copy rather than
      * this file. Both callers import the one body now.
      *

@@ -239,7 +239,7 @@ describe('⛔ KEY ORDER is preserved exactly — the atlases are byte-gated', ()
      * ⛓ `{...obj, key: v}` overwrites an EXISTING key in place and appends a
      * NEW one at the end, which is exactly what the in-place assignments the
      * ops replaced did. If that were not true, every committed atlas would
-     * regenerate with different bytes and `verify-region-marking-tool` and the
+     * regenerate with different bytes and `check-region-marking-tool` and the
      * playthrough `--check` would both go red — so the property is asserted
      * here, where the failure names the key rather than the file.
      */
@@ -664,7 +664,7 @@ describe('B-a: apply-analysis — ONE op, because a group cannot say it', () => 
 describe('B-a: the marking tool has no direct-mutation hatch left', () => {
     /**
      * ⛓ DERIVED FROM THE SOURCE, because the panel is a DOM class no bounded
-     * node run can mount — its live gate is `verify-region-marking-tool`'s
+     * node run can mount — its live gate is `check-region-marking-tool`'s
      * Phase H, in a browser. This row is what keeps a REGRESSION cheap to
      * catch: the six assignments are named one by one, so a new inspector
      * field that writes straight into the document reds here rather than in a

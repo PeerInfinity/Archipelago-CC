@@ -228,7 +228,7 @@ jobs:
           # ⛔ `set -e` would abort AT the failing node, so RC=$? and the
           # kill below were unreachable on exactly the path that needs them.
           set +e
-          node scripts/procgen/verify-seedling-wasm-bridge.mjs 2>&1 | tee /tmp/boot.log
+          node scripts/procgen/check-seedling-wasm-bridge.mjs 2>&1 | tee /tmp/boot.log
           RC=$?
           set -e
           kill "$(cat /tmp/httpd.pid)" 2>/dev/null || true

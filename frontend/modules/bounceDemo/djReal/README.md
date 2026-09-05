@@ -42,7 +42,7 @@ contains no game content.
 |---|---|---|
 | `dj_swf_bridge.js` | `SWFRecomp-CC/ruffle-tests/tests/swfs/_swfbridge/livetest/dj_loader/dj_swf_bridge.js` | verbatim copy; re-copy when their loader/encoder changes (current: increment 2 — `__swfConfigGen` re-configure counter, arrow-key gating, P\| record format v2 sweep fields) |
 | `loader_bytecode.bin` | same dir, built by their `build_loader.sh` (MTASC-compiled `Loader.as`) | re-copy after each loader increment (current: increment 2 — reconfigure, movers, goal visuals) |
-| `swf_inject.mjs` | `SWFRecomp-CC/tools/divergence/swf_inject.mjs` — the canonical browser injector (replaced our provisional `swfPatch.js`) | verbatim copy; byte-identity vs `inject_tracer.py` pinned by `scripts/procgen/verify-dj-swf-patch.mjs` |
+| `swf_inject.mjs` | `SWFRecomp-CC/tools/divergence/swf_inject.mjs` — the canonical browser injector (replaced our provisional `swfPatch.js`) | verbatim copy; byte-identity vs `inject_tracer.py` pinned by `scripts/procgen/check-dj-swf-patch.mjs` |
 | `runtime/` | SWFRecomp browser-WASM build artifacts (gitignored) | see `runtime/README.md` |
 
 Renderer overview: `docs/json/developer/procgen/bounce.md` ("Runtime: panel, renderers, playback").

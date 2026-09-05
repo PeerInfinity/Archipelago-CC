@@ -835,7 +835,7 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
      * ⛓⛓⛓ R9 SLICE 7 — THE DECLARED BOUND, GATED WHERE CI CAN SEE IT.
      *
      * `chainFindings` gained the same row, but its only roster-wide runner is
-     * `verify-seedling-bot-differential.mjs` — a gate that needs the user's
+     * `check-seedling-bot-differential.mjs` — a gate that needs the user's
      * Chrome. A bound that decayed silently for four slices should not depend
      * on a GPU row to notice the next one, so the claim is ALSO made here,
      * over the real `PLAYTHROUGH_CHAINS`, where `npm test` and CI run it.

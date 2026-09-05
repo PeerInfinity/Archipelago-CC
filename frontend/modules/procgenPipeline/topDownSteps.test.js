@@ -1,6 +1,6 @@
 // Rows for the TOP-DOWN stepped runner's recorded layout edits (B-d).
 //
-// verify-topdown-steps.mjs already pins "stepped runner == monolith" and the
+// check-topdown-steps.mjs already pins "stepped runner == monolith" and the
 // codec round-trip; these are the edit-list rows, which are what the layout
 // editor never had. The load-bearing one is `replays AFTER ③, never before`:
 // finalizeTopDown reads layout.cellsByName, so an edit applied before it would
@@ -20,7 +20,7 @@ import {
 } from './topDownSteps.js';
 import { pushLayoutEdit, popLayoutEdit, replayLayoutEdits } from './layoutEdits.js';
 
-// The same synthetic source verify-topdown-steps.mjs uses: a Menu, a hub, three
+// The same synthetic source check-topdown-steps.mjs uses: a Menu, a hub, three
 // children and one gated deep room.
 function mazeSource() {
     const reg = (name, exits, locs) => ({ name, exits, locations: locs });

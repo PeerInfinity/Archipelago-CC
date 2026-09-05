@@ -315,7 +315,7 @@ end-to-end → sorter → RWK → bots. Each phase lands separately.
   places; default off, enabled in `modules-flash.json`.
 - Starter atlas: `frontend/modules/flashPanel/atlases/seedling.json`, built by
   `scripts/procgen/make-seedling-starter-atlas.mjs`.
-- Verifier: `scripts/procgen/verify-region-marking-tool.mjs` drives the real
+- Verifier: `scripts/procgen/check-region-marking-tool.mjs` drives the real
   panel in chromium under `?mode=flash` with actual mouse drags.
 - Tests: 3380 → **3471** vitest (35 atlasSession, 25 extractor, 15 compact
   writer, +16 validator/starter-atlas). `vitest.config.js` `include` gains
@@ -392,10 +392,10 @@ end-to-end → sorter → RWK → bots. Each phase lands separately.
   `files:jsonLoaded`, which wakes the substrate panels and steals focus).
   `regionMarkingTool/index.js` registers the new publisher; the bus rejects
   unregistered ones.
-- Verifiers: `scripts/procgen/verify-seedling-atlas-preset.mjs` (boots
+- Verifiers: `scripts/procgen/check-seedling-atlas-preset.mjs` (boots
   `?game=seedling_atlas&seed=1` and compares the state manager's regions/exits/
   locations against a headless compile) and two new phases in
-  `verify-region-marking-tool.mjs` (E: the downloaded rules.json is
+  `check-region-marking-tool.mjs` (E: the downloaded rules.json is
   byte-identical to the headless compile; F: the hand-off lands in the editor's
   own model).
 - Tests: **3503** vitest (3471 Phase-2 baseline + 32 compiler cases over BOTH
@@ -532,7 +532,7 @@ end-to-end → sorter → RWK → bots. Each phase lands separately.
 test-substrates" bullet is NOT satisfied, because the leg that matters needs the
 gitignored 31 MB wasm artifact, which is machine-local — an enumerated in-app
 test would be red everywhere it is missing. The e2e gate for this phase is
-`scripts/procgen/verify-seedling-atlas-play.mjs`, which SKIPs (exit 0) when the
+`scripts/procgen/check-seedling-atlas-play.mjs`, which SKIPs (exit 0) when the
 artifact is absent. It asserts effects, not silence: the arrival teleport
 reaching the game as a `new Game(...)` and confirmed by an independent
 `readState`; a NATIVE crossing (a `new Game(...)` queued straight into the
@@ -596,7 +596,7 @@ for the binding state machine, 7 for the glue wiring, 6 for the registry entry).
 - **Tests:** 3548 → **3635** vitest. Two strata: hand-built ASCII grids in a
   made-up one-item game (which also prove the core is game-agnostic) and the
   real 116-level extract, where every cell must classify and every emitted rule
-  must name an item the game config knows. `verify-region-marking-tool.mjs`
+  must name an item the game config knows. `check-region-marking-tool.mjs`
   gains Phase G (analyze the real Dungeon1_1 in the browser; assert the document
   is UNTOUCHED while the proposal exists; Accept; prove the result
   byte-identical to a headless analyze+apply).
@@ -719,7 +719,7 @@ verifier still walks the real game between them.
   read off the LIVE world — which exit is ungated, which is gated, what item its
   rule wants, which tile to stand on — so a projection change retargets them
   instead of breaking them.
-- **Verifier:** `scripts/procgen/verify-seedling-atlas-maze.mjs` — four phases
+- **Verifier:** `scripts/procgen/check-seedling-atlas-maze.mjs` — four phases
   over the COMMITTED preset (payload consistency, walkability through the real
   engine, byte-stable regeneration, and a browser phase in the DEFAULT mode). It
   PRINTS the projection report. Nothing SKIPs: no artifact is involved.
@@ -942,7 +942,7 @@ water-locked sub-regions became wave-1 nodes gated on it; the sphere oracle was
 exact, `Generate.py` found a winnable fill, and `Starting House - Chest`
 appeared in the spoiler under the name the map gave it, holding a real item.
 
-**Gates:** `scripts/procgen/verify-atlas-sphere-roundtrip.mjs` (43 assertions,
+**Gates:** `scripts/procgen/check-atlas-sphere-roundtrip.mjs` (43 assertions,
 world_generator + Generate.py, the independent stratum); the in-app leg
 `seedling-atlas-sphere-placed-region` walking the committed
 `seedling_atlas_sphere` preset (the witness the oracle cannot be: it asserts the
@@ -1057,10 +1057,10 @@ map's sword-or-spear crossing.
 
 **Gates (2026-07-28):** vitest 3768 → **3790/3790**; procgenPipeline slow tier
 117 → **121** (whole slow tier **364/364**); `test-substrates --batch=fast`
-**61/61**; `verify-atlas-sphere-roundtrip` fully green including its
+**61/61**; `check-atlas-sphere-roundtrip` fully green including its
 byte-equality regen pin and AP's own fill on the richer world; byte-inert
 against the parent commit on `dump-sphere-byteidentity`,
-`dump-topdown-byteidentity` and `dump-spiral-byteidentity`.
+`dump-topdown-byteidentity` and `check-spiral-byteidentity`.
 
 **The acceptance headline:** the headless bot (573 steps, 33 crossings) beats
 the richer world, and every sword-or-spear crossing in it clears with ONLY the
@@ -1247,9 +1247,9 @@ like content bugs, not harness bugs.*
 autopather, 2 bot); slow tier 339 → **359/359** (the new file; the tier takes
 ~23 min, dominated by the runnerDemo battery, and CI runs it);
 `test-substrates --batch=fast` 60 → **61/61**. All five atlas verifiers green
-(`verify-seedling-atlas-maze`, `-preset`, `-play` — the wasm artifact was
-present, so it did not SKIP — `verify-atlas-sphere-roundtrip`,
-`verify-region-marking-tool`), both region-library round-trips green, and every
+(`check-seedling-atlas-maze`, `-preset`, `-play` — the wasm artifact was
+present, so it did not SKIP — `check-atlas-sphere-roundtrip`,
+`check-region-marking-tool`), both region-library round-trips green, and every
 `--check` gate byte-identical (map extract, starter atlas, analyze, pool,
 compile in both flavours).
 

@@ -157,7 +157,7 @@ export function getSeedlingRegionGlue() {
   return seedlingRegionGlue;
 }
 
-// Test/diagnostic handle (used by scripts/procgen/verify-seedling-wasm-
+// Test/diagnostic handle (used by scripts/procgen/check-seedling-wasm-
 // bridge.mjs to reach the live adapter).
 export function getActivePanelInstance() {
   return activePanelInstance;

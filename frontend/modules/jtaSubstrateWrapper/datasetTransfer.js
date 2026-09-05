@@ -2,7 +2,7 @@
 // rider D-b, jta-synthetic-post-v1-design.md §4.4). The wrapper panel's
 // toolbar is thin DOM glue over these two functions, so the round-trip
 // gate (import → export → import fixed point) runs headless in
-// scripts/procgen/verify-jta-dataset-transfer.mjs.
+// scripts/procgen/check-jta-dataset-transfer.mjs.
 //
 // Import semantics: parse → restamp the content-hash identity if the
 // document was hand-edited (or never stamped) → authoritative validation.

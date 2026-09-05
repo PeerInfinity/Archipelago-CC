@@ -5,7 +5,7 @@
  * ── ⛔⛔ WHY IT MOVED OUT OF THE PANEL ─────────────────────────────────
  *
  * It was `BounceRegionEditorUI._buildEditedRegion`, and
- * `scripts/procgen/verify-region-step-editing.mjs:105` held a COPY of it under
+ * `scripts/procgen/check-region-step-editing.mjs:105` held a COPY of it under
  * the name `buildEdited` with a comment saying *"mirrors
  * bounceRegionEditorUI._buildEditedRegion"*. That verifier's Phases B/C/D/E/F
  * are BYTE-shaped pins on what a save produces — and every one of them was

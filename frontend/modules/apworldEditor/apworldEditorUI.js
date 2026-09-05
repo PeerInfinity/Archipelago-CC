@@ -1093,7 +1093,7 @@ class ApworldEditorUI {
    *
    * ⛔ `APPLY_SOURCE` survives as the fallback for a document with NO origin (a
    * pipeline or marking-tool hand-off, which was built in memory and has no
-   * preset path). `scripts/procgen/verify-region-marking-tool.mjs:653` grabs the
+   * preset path). `scripts/procgen/check-region-marking-tool.mjs:653` grabs the
    * published event by that exact string, and its session is a hand-off — a
    * node row below pins that pairing so a future change to the fallback reds
    * here rather than in a hand-run browser gate.

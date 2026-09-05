@@ -333,7 +333,7 @@ export const CONCH = Object.freeze({
 /**
  * ⛔ THE FIXTURES WHOSE MODEL MIRROR CANNOT BE RIGHT, AND WHY.
  *
- * `verify-seedling-bot-differential` builds its expectation for a tape by
+ * `check-seedling-bot-differential` builds its expectation for a tape by
  * running the tape through the JS engine, and then asserts the game's
  * fourteen item properties, its inventory slot array and its
  * `saw_input_refused` against it. That works because every mechanic on the

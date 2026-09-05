@@ -4,7 +4,7 @@
 (Opus, on `main`, NOT pushed).** Cleanup C1–C3 + features F1, F2, F3 (loader core
 + panel UI), F4, and F5 (capture UI) are DONE and gated; the §5.3
 world_generator/Generate.py end-to-end passes 13/13 and the browser panel is
-proven by `verify-region-library-ui.mjs` (20/20: F3 selection byte-identity
+proven by `check-region-library-ui.mjs` (20/20: F3 selection byte-identity
 through the panel + hybrid-persistence reload + F5 capture→validate→
 re-instantiate). **Remaining: F6 (sphere-growth reuse / exit relabel, stretch) —
 the only deferred item.** Per-phase commit log in §7. Shape confirmed with the
@@ -138,7 +138,7 @@ pool-backed content source, and the first that is *data, not code*.
 - **Index-file precedent:** `frontend/presets/preset_files.json` consumed by
   `presetUI.js` et al.
 - **Byte-identity gates exist and must stay green:**
-  `scripts/procgen/dump-spiral-byteidentity.mjs` (dataset-less spiral worlds
+  `scripts/procgen/check-spiral-byteidentity.mjs` (dataset-less spiral worlds
   byte-identical), plus the stepped-pipeline dataset gates
   (stepped-pipeline.md §JtA dataset residency).
 - **Exit relabel for sidePortals substrates:** `moveSphereExitSide` /
@@ -260,7 +260,7 @@ entries. It appears in the pipeline panel's quota UI alongside substrates.
 ## 3. Cleanup phases (first — the feature lands on these)
 
 Every phase ends with the byte-identity gate green
-(`dump-spiral-byteidentity.mjs`) and its own commit.
+(`check-spiral-byteidentity.mjs`) and its own commit.
 
 - **C1 — absorb `synthesizeZonePayload`.** Move jta's `{jtaZone: zoneIdx}`
   into its `extractZoneRules` payload; delete the hook from
@@ -321,13 +321,13 @@ Every phase ends with the byte-identity gate green
 
 ## 5. Gates / acceptance
 
-1. `dump-spiral-byteidentity.mjs` green after every phase (library absent ⇒
+1. `check-spiral-byteidentity.mjs` green after every phase (library absent ⇒
    byte-identical worlds).
 2. Per-substrate capture→instantiate roundtrip unit tests (F2), in the
    test-substrates config.
 3. End-to-end: a committed demo library + preset whose spiral world mixes
    `library:*` slots with a procedural substrate; world_generator +
-   Generate.py roundtrip on it (the `verify-jta-locations-roundtrip.mjs`
+   Generate.py roundtrip on it (the `check-jta-locations-roundtrip.mjs`
    pattern); an in-app solve test (test-spoilers) proving the reused regions
    are playable and their relocated locations check.
 4. Validator CLI rejects: stale `library_id` after edit, capability metadata
@@ -363,7 +363,7 @@ Every phase ends with the byte-identity gate green
 
 ## 7. Implementation status + per-phase commit log (2026-07-13, Opus)
 
-On `main`, NOT pushed. Every phase kept `dump-spiral-byteidentity.mjs` at 5/5
+On `main`, NOT pushed. Every phase kept `check-spiral-byteidentity.mjs` at 5/5
 (library-absent worlds byte-identical) and its own gates green.
 
 - **C1** `ab9de8a4a` — absorb `synthesizeZonePayload` into jta `extractZoneRules`
@@ -389,7 +389,7 @@ On `main`, NOT pushed. Every phase kept `dump-spiral-byteidentity.mjs` at 5/5
   + repetition + loud no-fit; arrange-time validation; stepped ② residency via
   `LIBRARY_CONTENT_ADAPTER`; onContentEdit restamp). 7 spiral-library tests.
 - **§5.3 e2e** `f5768f336` — committed `frontend/region-libraries/demo-maze-pack.json`
-  + index; `verify-region-library-roundtrip.mjs` (13/13: world_generator +
+  + index; `check-region-library-roundtrip.mjs` (13/13: world_generator +
   Generate.py, relocated locations reachable/checked, winnable). **Fillability
   fix:** the engine stamps `LIBRARY_SLOT_FILLER_ITEM` on un-itemed slots
   (classified 'filler' by compileRegionGraph) so the pool balances 1:1 with
@@ -400,7 +400,7 @@ On `main`, NOT pushed. Every phase kept `dump-spiral-byteidentity.mjs` at 5/5
   checkboxes + per-library count + ad-hoc file loader), hybrid-persistence glue
   (`_serializedLibraries`/`_setPersistedLibraries`/`_resolveRegionLibraries` with
   the `_pendingLibraryRefs` async window), `_buildSpiralEnvelope` merges
-  `buildLibrarySpiralConfig`. Gated by `verify-region-library-ui.mjs` Phases A+B.
+  `buildLibrarySpiralConfig`. Gated by `check-region-library-ui.mjs` Phases A+B.
 - **F5** `c68fbbe68` — "Capture to library" area + sphere-③ Save button →
   `_captureRegionToLibrary` (adapter `captureLibraryEntry`, revalidated) → session
   working library → Download (content-hash-stamped, committable) + Clear. Verifier
@@ -448,7 +448,7 @@ revalidated) → session working library (own localStorage key) → Download
 (content-hash-stamped, committable to `frontend/region-libraries/` + re-indexed)
 + Clear.
 
-**Gate — `scripts/procgen/verify-region-library-ui.mjs`** (verify-spiral-steps-ui
+**Gate — `scripts/procgen/check-region-library-ui.mjs`** (check-spiral-steps-ui
 mould, dev server :8000, 20/20): Phase A drives the checkbox/count controls,
 Generates, and asserts the downloaded rules.json === the headless
 `buildLibrarySpiralConfig` + arrange + compile (byte-identity THROUGH the panel);
@@ -483,10 +483,10 @@ no-fit · rng-free**. Q5/Q6 defaults kept (pure geometry; re-derive at placement
   returns true for a library host (overlay hosts any gate); the upfront quota
   validation (both `growSpheresGen` + the batched driver) skips `library:<id>`.
 - **Gates:** `dump-sphere-byteidentity` byte-identical with no library selected
-  (library-absent worlds take no new code path — proven); `dump-spiral-byteidentity`
-  5/5; `verify-region-library-roundtrip` 13/13; `verify-region-library-ui` 20/20.
+  (library-absent worlds take no new code path — proven); `check-spiral-byteidentity`
+  5/5; `check-region-library-roundtrip` 13/13; `check-region-library-ui` 20/20.
 - **New winnability e2e (independent stratum):**
-  `scripts/procgen/verify-region-library-sphere-roundtrip.mjs` (16/16) — grows a
+  `scripts/procgen/check-region-library-sphere-roundtrip.mjs` (16/16) — grows a
   bounce sphere world mixing the committed `demo-bounce-pack.json` with generated
   bounce regions → `world_generator` → `Generate.py`; AP's OWN fill places the
   goal + the sphere log references every relocated library location (winnable),
@@ -522,15 +522,15 @@ libraries in sphere mode, DISABLE non-bounce packs with a note.
   `realiseSphereBatchGen` (which already accepted `librarySources`). Built once per
   grow, stashed on `env` so the prefer-least-used counter survives sphere-major
   batches; rebuilt on a batch-0 restart. Engine change = the `export` only.
-- **Gate** — `verify-region-library-ui.mjs` **Phase D** (new; 20/20 → **36/36**):
+- **Gate** — `check-region-library-ui.mjs` **Phase D** (new; 20/20 → **36/36**):
   a fresh sphere-mode context proves the subsection renders, the bounce pack is
   enabled while the maze pack is disabled, ticking the bounce library grows a
   compiled sphere-growth world (4 regions) whose playable regions are
   self-contained (no `libraryDoc`, no library id in `regions`; the id may appear in
   `procgen_metadata.sphere_tree` as build provenance), and unticking regenerates a
   materially different world (the selection reached the sphere config).
-- **All arc gates green:** `dump-spiral-byteidentity` 5/5,
-  `verify-region-library-roundtrip` 13/13, `verify-region-library-sphere-roundtrip`
+- **All arc gates green:** `check-spiral-byteidentity` 5/5,
+  `check-region-library-roundtrip` 13/13, `check-region-library-sphere-roundtrip`
   (winnable), `sphereLibrary.slow` 9/9, `sphereSteps` 33/33 (unify invariant
   intact), region-library unit 36/36.
 - **F6b/F6c remain deferred** (capability negotiation / physical enforcement; maze

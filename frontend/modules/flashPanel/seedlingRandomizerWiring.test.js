@@ -308,7 +308,7 @@ describe('the whole construction, driven in node', () => {
 
     /**
      * ⛔⛔ THE EQUALITY ROW. The table built through the REAL resolver over the
-     * REAL rules must be the table `verify-seedling-ap-placement.mjs` builds
+     * REAL rules must be the table `check-seedling-ap-placement.mjs` builds
      * from the same three documents — same addresses, same items, same looks.
      * Nothing here is compared against a literal.
      */

@@ -10854,7 +10854,7 @@ export function createLevelRun({
          * ⚠ AND THE TICK IS THE MODEL'S, NOT THE GAME'S. It is the tick the
          * model made the write on; the differential compares the SET of
          * flags against `persistence_cleared` and reads no tick from here
-         * (`verify-seedling-bot-differential.mjs` takes `level`/`tag`/`id`
+         * (`check-seedling-bot-differential.mjs` takes `level`/`tag`/`id`
          * field by field). Nothing that makes a claim consumes `t`.
          */
         /**

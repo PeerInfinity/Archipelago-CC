@@ -4,7 +4,7 @@
  * ⚠ TOOLING ONLY. This page makes no claims, gates nothing, and nothing
  * that DOES make a claim may depend on it. The gates are vitest (JS stream
  * == the committed oracle recording) and
- * `scripts/procgen/verify-seedling-bot-differential.mjs` (the live game ==
+ * `scripts/procgen/check-seedling-bot-differential.mjs` (the live game ==
  * those recordings); a viewer is a window onto the same run, not a third
  * opinion about it. What this page IS, and its named limits:
  * `docs/json/developer/procgen/seedling-bot.md` § "The editor arc".

@@ -67,7 +67,7 @@
 /**
  * ⛔⛔ ONE COMPARATOR, ONE OBSERVATION VOCABULARY, IMPORTED — NEVER RE-SPELLED.
  *
- * `diffObservationStreams` is the function `verify-seedling-bot-differential.mjs`
+ * `diffObservationStreams` is the function `check-seedling-bot-differential.mjs`
  * feeds, and `gameStreamFromDrain` is the wrap that turns `botDrain`'s payload
  * into the vocabulary it eats (`Bot.as` hardcodes `transitions: []`, so the
  * entries are DERIVED from the ticks — see the docblock over there). A page
@@ -132,7 +132,7 @@ export const BOOT_COST_FRAMES = LOAD_FADE_FRAMES + BOOT_PRESWAP_FRAMES;
  * surface is a strict SUPERSET (it adds botForgeSaveStamp, botLevelSet and
  * botLoadLevels — the last two are what makes the GENERATE ship possible at
  * all), and it was MEASURED to be the same game where it counts: the R8 tape
- * gate — `verify-seedling-bot-differential.mjs --win --only=<the 20 r8-*
+ * gate — `check-seedling-bot-differential.mjs --win --only=<the 20 r8-*
  * tapes>`, whose expectations are seedling_bot_ap's OWN oracle recordings —
  * reads 534 PASS / 0 FAIL / 67 SKIP on BOTH builds, and the two logs agree
  * line for line except in two free-running clocks whose control arm (the same
@@ -534,7 +534,7 @@ const heldItems = (items) => Object.entries(items ?? {})
  * frame — where the real game ended against where the JS model ended — and
  * two runs can agree there while disagreeing on every tick in between. The
  * per-tick differential is a separate instrument
- * (`verify-seedling-bot-differential.mjs`) and a separate slice.
+ * (`check-seedling-bot-differential.mjs`) and a separate slice.
  *
  * @param {object|null} expect  `{level, x, y, items}` — the JS model's last
  *   observation of the SAME tape, or `null` when the run is the user's own
@@ -675,7 +675,7 @@ export const VERDICT_SCOPE =
  * ⛓⛓ THE PER-TICK VERDICT'S OWN SCOPE — **TWO** LIMITS, BOTH NAMED (⚖ D3).
  *
  * 1. It is a comparison against **the JS MODEL of this same tape**, not against
- *    a committed expectation. `verify-seedling-bot-differential.mjs` compares
+ *    a committed expectation. `check-seedling-bot-differential.mjs` compares
  *    the game against RECORDED oracles; this compares two live runs, which is
  *    a weaker claim and a different one.
  * 2. ⛔ Trap 389: a cross-runtime identity claim cannot see a defect in code
@@ -739,7 +739,7 @@ function endStateContradiction(endState) {
  * ── ⛓⛓⛓ THE PER-TICK VERDICT ─────────────────────────────────────────
  *
  * ⛔ ONE COMPARATOR. `diffObservationStreams` from `tapeFormat.js` — the same
- * function `verify-seedling-bot-differential.mjs` feeds, fed the same
+ * function `check-seedling-bot-differential.mjs` feeds, fed the same
  * vocabulary: the GAME's side through `gameStreamFromDrain` (because `Bot.as`
  * hardcodes `transitions: []` and the entries are derived from the ticks), the
  * MODEL's side straight off the walk the page already made. Nothing here
@@ -1425,7 +1425,7 @@ export async function shipToWasm(payload, host) {
          * on a persistence clear, and v10's `despawn` — both statements about
          * what the GAME DOES ON ITS OWN, never instructions to it). The
          * differential has projected since R7 slice 6d
-         * (`verify-seedling-bot-differential.mjs:1709`), the Windows driver's
+         * (`check-seedling-bot-differential.mjs:1709`), the Windows driver's
          * callers project, and this path did not.
          *
          * ⛓ IT WAS INVISIBLE UNTIL A v9 TAPE ENTERED A SEQUENCE, and R9 slice

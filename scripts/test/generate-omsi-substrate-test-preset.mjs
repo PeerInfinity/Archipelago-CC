@@ -1,6 +1,6 @@
 /**
  * Generate the small, deterministic preset the in-app omsi substrate
- * tests and scripts/procgen/verify-omsi-mana-leg.mjs load:
+ * tests and scripts/procgen/check-omsi-mana-leg.mjs load:
  *
  *   omsi_substrate_test   2 maze regions + 1 omsi region (Beginnersville),
  *                         start in the maze, loop_costs embedded (loop

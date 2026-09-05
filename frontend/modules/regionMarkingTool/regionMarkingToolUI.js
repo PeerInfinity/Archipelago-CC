@@ -137,7 +137,7 @@ export class RegionMarkingToolUI {
     _buildDom() {
         this.rootElement = el('div', { class: 'rmt-panel panel-container' });
         // A handle on the root element rather than a global: the UI verifier
-        // (scripts/procgen/verify-region-marking-tool.mjs) drives real canvas
+        // (scripts/procgen/check-region-marking-tool.mjs) drives real canvas
         // drags, which needs the renderer's current pan/zoom to aim at a tile.
         this.rootElement.__panel = this;
 

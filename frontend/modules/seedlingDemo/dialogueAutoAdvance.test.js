@@ -2,7 +2,7 @@
  * ⛓⛓⛓ R9 SLICE 12e⁗ item (iii) — **THE AUTO-ADVANCE COUNT IS THE HELP
  * MODEL'S, NOT THE PICKUP COUNT'S.**
  *
- * `verify-seedling-bot-differential.mjs` derived its expectation as
+ * `check-seedling-bot-differential.mjs` derived its expectation as
  * `wantAutoAdvance = swordPickups`. The third re-record run made that premise
  * come due (kickoff §37.7): the re-recorded 78-tick `r8-solve-10` collects its
  * sword — the inventory mirror matches, the ceremony is priced, the dead-frame

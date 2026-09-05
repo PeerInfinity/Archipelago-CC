@@ -538,7 +538,7 @@ standalone and `pinMaxEnergy` (substrate) budgets.
   headless-safe library / browser pipeline). `dump-shuffled-spiral.js
   --jta-locations` flag.
 - **Round-trip verification (§2b) — PASSED (14/14):**
-  `verify-jta-locations-roundtrip.mjs` drives the full toolchain and confirms
+  `check-jta-locations-roundtrip.mjs` drives the full toolchain and confirms
   task locations + `ap_locations` + `jtaZone` + the sphere log survive
   pipeline → world_generator (`_worldgen_sidecars.json`) → Generate.py
   (exported rules.json `preset_sidecars` + sphere log + spoiler). Nothing
@@ -665,7 +665,7 @@ its native perk task), and exact first-completion recording from that same
 callback. Suppression patches ride the existing `gameDataPatch`, merged with the
 cost patches — the single list the bridge applies on region entry. With
 `apRuntime` absent the driver is byte-identical. New: `make-ap-config.mjs`,
-`summarize-ap-runs.mjs`, `sweep-ap-seeds.mjs`; `verify-jta-locations-roundtrip.mjs`
+`summarize-ap-runs.mjs`, `sweep-ap-seeds.mjs`; `check-jta-locations-roundtrip.mjs`
 gained `JTA_RT_SEED`.
 
 **Result 1 — the first-class assertion holds.** Across four independently

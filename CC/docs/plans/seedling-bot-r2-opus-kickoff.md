@@ -150,7 +150,7 @@ losing an item to a named solid is the ladder working, not failing.**
 
 ### 3.6 Tiers and the frozen milestone
 
-`verify-seedling-bot-differential.mjs` gains `--tier=fast|full` (fast =
+`check-seedling-bot-differential.mjs` gains `--tier=fast|full` (fast =
 the pre-walk fixture roster, minutes; full = everything including the R1
 chain and both headlines). The R1 recordings are FROZEN: never
 re-recorded, still replayed in full-tier sweeps (they remain valid — the

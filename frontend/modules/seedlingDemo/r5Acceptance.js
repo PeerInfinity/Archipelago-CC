@@ -1760,7 +1760,7 @@ export function shaftFindings(replayed) {
                 .filter(Boolean).join(', ') || 'neither'} — "the walk reached the middle `
                 + 'of the cross" is not evidence that eighteen presses put it there. '
                 + 'Re-make both with `node scripts/procgen/plan-seedling-r5-shaft.mjs '
-                + '--write` and `verify-seedling-bot-differential --record --win '
+                + '--write` and `check-seedling-bot-differential --record --win '
                 + '--only=r5-shaft,r5-shaft-control`.',
         }];
     }

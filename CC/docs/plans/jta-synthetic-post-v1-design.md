@@ -134,7 +134,7 @@ Condensed from a code survey this session; cites are current HEAD.
 
 ### 1d. Experiment plumbing added this session
 
-`verify-jta-locations-roundtrip.mjs` gained `JTA_RT_DATASET_FILE`
+`check-jta-locations-roundtrip.mjs` gained `JTA_RT_DATASET_FILE`
 (committed `b95fa96e4`; bypasses
 generation, uses the given document verbatim; generation-time validator/C4
 gates are deliberately skipped — the fork's `loadGameData` validation still
@@ -220,7 +220,7 @@ departures injected via `JTA_RT_DATASET_FILE` (bypassing the generation
 gates ON PURPOSE — the point is to see the runtime instrumentation catch
 what the static gates would have), each exported through the full
 roundtrip (world_generator + Generate.py fill, seed 1, z15 = 130+
-locations) and solved by `verify-jta-balance-pass.mjs`; trigger aggregation
+locations) and solved by `check-jta-balance-pass.mjs`; trigger aggregation
 identical to `sweep-dataset-passb.mjs`. Control = the committed ds1-f1 row
 (`results/dataset-passb/SUMMARY.md`).
 
@@ -571,7 +571,7 @@ dataset loading there), fetch the URL and feed it through the same path as
 `window.loadGameData` (full validation, dataset-keyed save slot; the brief
 vanilla boot never touches the dataset's save). Failures keep the vanilla game
 and surface console + alert. Also exposed `window.getLoadedDatasetId`. Guard:
-`scripts/procgen/verify-jta-dataset-url-boot.mjs` (two local servers, the
+`scripts/procgen/check-jta-dataset-url-boot.mjs` (two local servers, the
 dataset one cross-origin + CORS; asserts vanilla boot absent the param, themed
 zone-0 task + dataset id with it, alert + vanilla-intact on a broken URL).
 Byte-inert leg: native parity 4/4 + UI parity zero DOM diff re-ran green
@@ -587,7 +587,7 @@ import→export→import is a fixed point by construction); thin toolbar glue on
 same-origin iframe `loadGameData`; export downloads live doc ?? vanilla
 fixture; a manual import overrides the running game until the next region load
 re-applies the world's carriage). Guard:
-`scripts/procgen/verify-jta-dataset-transfer.mjs` (fixed point on both
+`scripts/procgen/check-jta-dataset-transfer.mjs` (fixed point on both
 committed fixtures byte-for-byte + a generated synthetic doc; deterministic
 restamp to a fresh id on hand edits; broken inputs refused). Byte-inert when
 unused (substrate suite green with the toolbar present). The retired
@@ -816,7 +816,7 @@ credit helper follows the carrier). Gates all green: native 4/4
 tick-identical (2000/2517/31304/808); re-expressed lockstep 4/4 formula AND
 raw; effect canary DETECTED both modes; UI parity zero clean DOM diff
 native + dataset; vitest 2966; substrate suite 177 in-app checks 0 failed;
-verify-jta-managed-zone-skip re-ran green (skipFreeZones touched); full
+check-jta-managed-zone-skip re-ran green (skipFreeZones touched); full
 guard battery green. BATTERY NOTE for future rungs: balance-pass on the
 JTA_RT_DATASET=1 kept preset exits 1 with 2 stalled entries — proven
 RUNG-INDEPENDENT by a strip-A/B (dataset with all time_compression entries

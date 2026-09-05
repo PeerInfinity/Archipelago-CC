@@ -193,7 +193,7 @@ const gameSide = {
 window.__swfBridge = Object.assign(window.__swfBridge ?? {}, gameSide);
 
 // Test/debug surface (NOT part of the __swfBridge contract):
-// verify-bounce-embed.mjs reads this to assert that host-granted items
+// check-bounce-embed.mjs reads this to assert that host-granted items
 // actually reached the game (the bridge pollItems path), not just the
 // host inventory.
 window.__bounceDebug = () => ({

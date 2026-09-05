@@ -346,11 +346,11 @@ fence only forbids reconfiguring a live instance.)
   `frontend/modules/flashPanel/wasm/seedling_bot_ap/game.html` same-origin,
   click the page's start button (user gesture powers WebGPU+audio), then
   drive `__swfBridge.game.bot*`.
-  Precedent: `scripts/procgen/verify-seedling-wasm-bridge.mjs`.
+  Precedent: `scripts/procgen/check-seedling-wasm-bridge.mjs`.
   - ⛔ **CORRECTED 2026-07-30: run HEADLESS.** The first draft said the
     precedent is headed because "headless Chromium lacks WebGPU". That is
-    stale — both `verify-seedling-wasm-bridge.mjs:58-65` and
-    `verify-seedling-atlas-play.mjs:75-81` launch headless with
+    stale — both `check-seedling-wasm-bridge.mjs:58-65` and
+    `check-seedling-atlas-play.mjs:75-81` launch headless with
     `--enable-unsafe-webgpu --ignore-gpu-blocklist --enable-unsafe-swiftshader
     --use-angle=swiftshader --no-sandbox`, and both document WebGPU coming up
     on swiftshader. The differential runner can be fully unattended.
@@ -361,7 +361,7 @@ fence only forbids reconfiguring a live instance.)
     canvas on click so key input works.
 - SKIP pattern (established, deliberate): existence-check the artifact,
   `console.log('SKIP: ...')`, `process.exit(0)` —
-  `verify-seedling-atlas-play.mjs:30-52` is the template.
+  `check-seedling-atlas-play.mjs:30-52` is the template.
 
 ## 3. Design, concretely
 
@@ -473,7 +473,7 @@ runnerDemo is the structural precedent (pure core + `*.test.js` +
 
 - **CI leg (vitest, always runs)**: JS-vs-committed-recording, exact.
 - **Staleness gate (local, SKIPs without artifact)**:
-  `scripts/procgen/verify-seedling-bot-differential.mjs` — boots the
+  `scripts/procgen/check-seedling-bot-differential.mjs` — boots the
   `seedling_bot_ap` page (§2.6), replays every committed tape via
   `botLoadTape`/`botStart`, drains observations, asserts byte-equality with
   the committed recordings, then runs one live bot-driver task (targets in
@@ -499,7 +499,7 @@ runnerDemo is the structural precedent (pure core + `*.test.js` +
    **Expect the physics-fidelity iteration to happen HERE, in JS** — that's
    the point of the whole arrangement. Investigate any non-exactness before
    tolerating it (§2.3).
-4. **The verify script** — `verify-seedling-bot-differential.mjs` (replay +
+4. **The verify script** — `check-seedling-bot-differential.mjs` (replay +
    staleness + live bot-driver task + `--record`), SKIP pattern, wired into
    the same "run it when the artifact exists" convention as its siblings.
 5. **Docs + memory** — procgen doc (new `seedling-bot.md` or a § in

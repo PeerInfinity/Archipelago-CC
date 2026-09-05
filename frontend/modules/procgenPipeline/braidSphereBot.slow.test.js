@@ -3,8 +3,15 @@
  * SPHERE GROWTH emits gated braids, and the playback bot finishes them with no
  * soft-locks.
  *
- * This is the headless analogue of scripts/procgen/verify-bot-playthrough.mjs
- * (which drives a COLUMN preset in the browser): build a braid bounce sphere
+ * This was written as the headless analogue of
+ * scripts/procgen/verify-bot-playthrough.mjs, which drove a COLUMN preset in
+ * the browser. ⛔ THAT SCRIPT IS GONE — V3b deleted it (2026-09-05): its
+ * worlds `bounce_sphere_worldgen` / `bounce_mixed_worldgen` were deleted at
+ * `ccfc5bad0` (2026-06-26), so it could not pass at any SHA after that, and
+ * nothing ran it to notice (`CC/docs/procgen-verify-tier.md`, V2 Task 1).
+ * ⇒ THIS FILE IS NOW THE ONLY DRIVER OF THIS CLAIM, and the sentence is kept
+ * so the next reader learns that rather than going looking for a sibling.
+ * Build a braid bounce sphere
  * world via growSpheres with regionParams.bounceMode='braid', then
  *   1. assert it is WINNABLE — the realised item spheres match the source plan
  *      (compareSpheresToPlan, the same oracle the column path passes);

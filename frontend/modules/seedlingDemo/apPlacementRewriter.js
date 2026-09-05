@@ -16,7 +16,7 @@
  * ⛔ **THE `apitem` CLASS DOES NOT EXIST ON p4c.** `Game.as`'s XML loop
  * enumerates KNOWN element names, so an unknown `<apitem>` is ignored and a
  * rewritten room shows no pickup at all at an AP location. That is exactly the
- * discriminator `verify-seedling-ap-placement.mjs` measures, and the class
+ * discriminator `check-seedling-ap-placement.mjs` measures, and the class
  * lands in M1's p4d build (plan §17.1.3).
  *
  * ── ⛓ THE ADDRESS: `(level, tag)`, AND WHY 11 OF 39 HAVE NO VANILLA TAG ───

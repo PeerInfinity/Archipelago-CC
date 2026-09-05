@@ -399,7 +399,7 @@ milestones regained a cost-sensitive metric). Solve time 2.4 s.
 
 ## 6. Verification (Phase 3f)
 
-- `scripts/procgen/verify-jta-balance-pass.mjs` (end-to-end, Node): on a real
+- `scripts/procgen/check-jta-balance-pass.mjs` (end-to-end, Node): on a real
   15-zone seed — order covers exactly the v1 task set; 0 stalls; 0
   saturations; every task costed or accounted (skill-less); measured
   milestone gaps within a tolerance band of `resetsPerStep = 5` (band chosen
@@ -411,7 +411,7 @@ milestones regained a cost-sensitive metric). Solve time 2.4 s.
   via `npx tsc` in the submodule, commit `build/`.
 - Suites: `npx vitest run frontend/modules/jtaBalance`, substrate suite
   (`npm test -- --mode=test-substrates`, 18/18), round-trip
-  (`verify-jta-locations-roundtrip.mjs`, 26/26).
+  (`check-jta-locations-roundtrip.mjs`, 26/26).
 - In-app smoke after 3e: load a jta preset, confirm solve-at-rulesLoaded +
   cache hit on reload + patches visible in the iframe's task costs.
 
@@ -420,7 +420,7 @@ milestones regained a cost-sensitive metric). Solve time 2.4 s.
 1. **3d-hooks (submodule):** `setCostedTaskIds` + `setTaskFirstStartCallback`
    + build; byte-identical baseline proof.
 2. **3d-order:** order builder (balanceCore) + vitest units.
-3. **3d-pass:** `balancePass.js` rewrite + `verify-jta-balance-pass.mjs`
+3. **3d-pass:** `balancePass.js` rewrite + `check-jta-balance-pass.mjs`
    green.
 4. **3e:** worker + `jtaBalance` host module + seed-keyed cache +
    registration + in-app test.

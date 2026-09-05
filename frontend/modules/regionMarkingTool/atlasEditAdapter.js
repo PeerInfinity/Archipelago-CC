@@ -22,7 +22,7 @@
  *     STRIPS `provenance` and `atlas_id`, and folds to 32 bits, so two
  *     documents that differ can collide. Either one would tell `foldEdits`
  *     that a key-order-only op moved nothing and drop it from the identity —
- *     on a document whose committed bytes (`verify-region-marking-tool`
+ *     on a document whose committed bytes (`check-region-marking-tool`
  *     Phases D/E/G, the playthrough `--check`) are gated WITH their key order,
  *     and whose op module spells out that its spreads are "key-order-exact on
  *     purpose". So `equal` is `atlasesEqual` below: a deep equality in which

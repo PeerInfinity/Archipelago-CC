@@ -86,7 +86,7 @@
  * readable and diffable in git instead of being conjured on both sides of
  * every comparison. The cost is that adding the field to an existing
  * expectation needs a re-record; that was paid once, for the two v2
- * fixtures. `verify-seedling-bot-differential.mjs` applies it to the live
+ * fixtures. `check-seedling-bot-differential.mjs` applies it to the live
  * stream on BOTH paths (record and compare) and checks that the game's own
  * field is still empty, so an AS3 build that starts reporting transitions
  * is a named failure rather than something the derivation quietly masks.
@@ -2256,7 +2256,7 @@ export function deriveTransitions(ticks) {
  * one derivation; what was NOT in one place was the three-line WRAP around it —
  * "take the drained ticks, derive the transitions, and make a NAMED failure of
  * a build that starts reporting the field for real". That wrap was spelled in
- * `verify-seedling-bot-differential.mjs` (`withDerivedTransitions`) and again in
+ * `check-seedling-bot-differential.mjs` (`withDerivedTransitions`) and again in
  * `run-seedling-director.mjs` (`streamDiff`), and the per-tick verdict on
  * `watch.html` would have been the third — in a page whose whole claim is that
  * the browser and the node differential feed the SAME comparator the SAME

@@ -1677,7 +1677,7 @@ export function r7GoalCriteria(earnedBy = {}, roster) {
  * `{ticks: [{t, x, y, level}], transitions: [{t, from_level, to_level}]}` —
  * 142,774 ticks, zero occurrences of `saw_auto_advance`. What asserts it
  * is the SWEEP, which re-derives `wantAutoAdvance` from the model per run
- * (`verify-seedling-bot-differential.mjs:798-800`).
+ * (`check-seedling-bot-differential.mjs:798-800`).
  *
  * And the counter is the only thing version-scoped: `autoAdvance`'s
  * `dispatchKey` presses are UNCONDITIONAL on all three arms
@@ -1704,7 +1704,7 @@ export const R7_BATCH = Object.freeze({
             cite: 'Bot.as:2153-2212',
             streamEffect: 'IDENTICAL — the counter is scoped, `dispatchKey` is not',
             valueEffect: 'v<=3 tapes that raise a Help or dialogue go 0 -> 1',
-            coChange: 'verify-seedling-bot-differential.mjs must drop the '
+            coChange: 'check-seedling-bot-differential.mjs must drop the '
                 + '`tape_version >= 4` scoping from `wantAutoAdvance`, or the three '
                 + 'named tapes go red BY BEING CORRECT',
         }),

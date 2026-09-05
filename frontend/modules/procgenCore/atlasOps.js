@@ -38,7 +38,7 @@
  * ⚠ AND THE SPREADS ARE KEY-ORDER-EXACT ON PURPOSE. `{...region, exits: […]}`
  * overwrites an EXISTING key in place and appends a NEW one at the end —
  * exactly what the in-place assignments did. The atlas is byte-gated
- * (`verify-region-marking-tool`, the playthrough `--check`), and key order is
+ * (`check-region-marking-tool`, the playthrough `--check`), and key order is
  * part of those bytes, so a spread that re-ordered keys would be a silent
  * regeneration of every committed atlas.
  *

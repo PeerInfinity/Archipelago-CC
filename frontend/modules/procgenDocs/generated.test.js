@@ -731,7 +731,7 @@ describe('the instruments index is one row per file in scripts/procgen', () => {
          * `frontend/modules/jtaSubstrateWrapper/export-vanilla-dataset.mjs`,
          * `CC/scripts/jta-stats/make-ap-config.mjs`,
          * `frontend/modules/seedlingDemo/fixtures/regenerate-r4-tapes.mjs`),
-         * `verify-runner-smoke.mjs` got a leading docblock, and
+         * `check-runner-smoke.mjs` got a leading docblock, and
          * `plan-seedling-segment.mjs` — a driver that was PLANNED and never
          * written — is now MARKED `(never written)` in the row that names it,
          * which this scan reads.

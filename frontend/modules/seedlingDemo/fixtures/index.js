@@ -4,7 +4,7 @@
  *
  * ✅ **Every expectation in `expectations/` is an ORACLE RECORDING** —
  * an observation stream drained from the recompiled Seedling wasm build,
- * written only by `verify-seedling-bot-differential.mjs --record`. That is
+ * written only by `check-seedling-bot-differential.mjs --record`. That is
  * what makes the fixture differential a genuine independent stratum: the
  * expected values came from the GAME, not from the module under test.
  *
@@ -51,7 +51,7 @@ export const PROVISIONAL_SUFFIX = '.provisional.json';
  * the directory it indexes to be fetchable by a relative URL, and this
  * directory is ENUMERATED: without the exclusion below, `fixtureNames()`
  * reports a fixture named `index` and every tape suite, the tier tables and
- * `verify-seedling-bot-differential.mjs` red on a file that is not a tape.
+ * `check-seedling-bot-differential.mjs` red on a file that is not a tape.
  *
  * The name is a constant rather than a literal because three readers have to
  * agree about it: this filter, `scripts/procgen/generate-tape-index.mjs`

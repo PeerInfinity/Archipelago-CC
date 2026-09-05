@@ -1006,7 +1006,7 @@ export function collectRun(tape, levelSource, {
  * generator's RETURN value in `finished` — which is `runTape`'s own result,
  * which is what `runTapeToStream` slices `{ticks, transitions}` out of. So
  * the stream this hands the comparator is byte-identical to the one
- * `verify-seedling-bot-differential.mjs` feeds it for the same tape, and
+ * `check-seedling-bot-differential.mjs` feeds it for the same tape, and
  * `watchOverlays.test.js` PINS that against `runTapeToStream` rather than
  * asserting it in a comment (trap 383: a subject found with a different
  * instrument is a different subject).

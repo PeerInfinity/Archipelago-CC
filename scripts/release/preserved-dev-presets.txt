@@ -14,7 +14,7 @@
 # *_worldgen preset dirs are intentionally NOT preserved — the workflow
 # regenerates them; do not add those here. Hand-maintained demo worldgen
 # presets the workflow does NOT generate (e.g. bounce_worldgen, the
-# verify-bounce-embed fixture) ARE preserved like the other dev presets.
+# check-bounce-embed fixture) ARE preserved like the other dev presets.
 # Their worlds/<id> package lives on main and is restored by the script too; regen
 # recipe: historical rules.json -> world_generator --canonical-seed 1 ->
 # generate_yaml_templates -> Generate.py --seed 1.

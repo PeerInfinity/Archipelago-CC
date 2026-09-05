@@ -384,7 +384,7 @@ export const HELP_DISMISS_KEYS = Object.freeze(['primary', 'secondary']);
  * ⛓⛓⛓ R9 SLICE 12e⁗ — **HOW MANY FREEZE ARRIVALS `Bot.autoAdvance` CAN
  * COUNT, DERIVED FROM THE HELP MODEL RATHER THAN FROM A PICKUP COUNT.**
  *
- * `verify-seedling-bot-differential.mjs` used to derive its expectation as
+ * `check-seedling-bot-differential.mjs` used to derive its expectation as
  * `wantAutoAdvance = swordPickups` — *"each raising `Sword.removed()`'s
  * unguarded `Help(3)`"*. That premise is the one 12e‴ made false, and the
  * third re-record run is where it came due: the re-recorded 78-tick

@@ -43,7 +43,7 @@ import {
 // The shuffled-spiral pipeline steps live in their own shared runner too (same
 // harness as sphere/top-down): ① arrange → ② content [no-op] → ③ regions →
 // ④ compile. Running all four reproduces the monolithic arrangeShuffledSpiral +
-// buildRulesJson byte-for-byte (dump-spiral-byteidentity.mjs).
+// buildRulesJson byte-for-byte (check-spiral-byteidentity.mjs).
 import {
     SPIRAL_STEPS, runSpiralStep, nextSpiralStep, newSpiralEnvelope,
 } from './spiralSteps.js';

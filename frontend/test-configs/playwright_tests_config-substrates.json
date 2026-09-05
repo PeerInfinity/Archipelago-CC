@@ -459,7 +459,7 @@
             "id": "apworld-region-atlas-door-refuses-a-module-this-app-lacks",
             "enabled": true,
             "category": "apworldEditor",
-            "_comment": "APWorld hub H5. Two measurements meet here. (1) The region_atlas block in a rules.json is a REFERENCE ({atlas_id, game, map_document}) and never an atlas \u2014 all three committed carriers \u2014 and nothing resolves an atlas id back to its file. (2) module-configs/modules.json disables regionMarkingTool in the DEFAULT mode, so the door would publish ui:activatePanel into a warn-and-return: the first shape of this row waited 8 s for a panel that cannot exist and reported STARVED. The button is therefore SHOWN, DISABLED, with the panel and the config file in its title, while still printing what a save WOULD come back as. The end-to-end save lives in verify-region-marking-tool.mjs, under ?mode=flash."
+            "_comment": "APWorld hub H5. Two measurements meet here. (1) The region_atlas block in a rules.json is a REFERENCE ({atlas_id, game, map_document}) and never an atlas \u2014 all three committed carriers \u2014 and nothing resolves an atlas id back to its file. (2) module-configs/modules.json disables regionMarkingTool in the DEFAULT mode, so the door would publish ui:activatePanel into a warn-and-return: the first shape of this row waited 8 s for a panel that cannot exist and reported STARVED. The button is therefore SHOWN, DISABLED, with the panel and the config file in its title, while still printing what a save WOULD come back as. The end-to-end save lives in check-region-marking-tool.mjs, under ?mode=flash."
         },
         {
             "id": "apworld-procgen-metadata-door-names-what-the-pipeline-can-do",

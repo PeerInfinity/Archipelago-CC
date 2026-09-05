@@ -19,7 +19,7 @@
  *     - regions[pid][region].locations[].item
  *         the post-fill placement: which item sits on which location
  *
- *   bp.json     (JTA_BP_REPORT from scripts/procgen/verify-jta-balance-pass.mjs)
+ *   bp.json     (JTA_BP_REPORT from scripts/procgen/check-jta-balance-pass.mjs)
  *     - patches[] : { id, cost_multiplier }
  *
  * The emitted `gameDataPatch` is the two patch lists MERGED, which is exactly

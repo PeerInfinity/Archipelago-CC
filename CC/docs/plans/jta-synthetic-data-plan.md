@@ -747,7 +747,7 @@ both halves (the harness already re-extracts the committed HEAD per run).
   would otherwise revive undefined task defs; vanilla blobs/keys unchanged).
   Fixture regenerated → `vanilla-fork-1.7` (envelope-only diff, content
   tables byte-identical).
-  **Verification:** new smoke `scripts/procgen/verify-jta-dataset-load.mjs`
+  **Verification:** new smoke `scripts/procgen/check-jta-dataset-load.mjs`
   (7 broken-dataset rejects leave tables untouched; vanilla dataset ≡ native
   across every table incl. prestige/roles/economy/derived maps; save keying;
   idempotency by GAMESTATE identity; 500-tick play with task completion,
@@ -852,10 +852,10 @@ both halves (the harness already re-extracts the committed HEAD per run).
      `jtaBalance.detectJtaWorld` now SKIPS dataset worlds — Pass-B dataset
      support is 5e; solving vanilla tables against dataset ids would be
      garbage. Unit tests on all three seams.
-  4. Guards: new `scripts/procgen/verify-jta-generated-dataset.mjs`
+  4. Guards: new `scripts/procgen/check-jta-generated-dataset.mjs`
      (determinism ×3 cases, validator + C4 re-check, load+play on the fork
      build incl. a dataset→dataset swap and the 12→10 skill-Count shrink;
-     31/31). `verify-jta-locations-roundtrip.mjs` gained `JTA_RT_DATASET=1`
+     31/31). `check-jta-locations-roundtrip.mjs` gained `JTA_RT_DATASET=1`
      (carriage asserted at Pass A / world_generator / Generate.py /
      warehouse; document structurally identical at every hop; 38/38 — and
      AP fill produced a non-degenerate sphere log over synthetic names).
@@ -916,7 +916,7 @@ both halves (the harness already re-extracts the committed HEAD per run).
      reading live state, so it models the dataset for free; the
      dataset-keyed save slot writes to the stubbed-localStorage black hole
      like the vanilla slot). +5 hostGlue vitest cases.
-  2. Headless guard (`08f12a736`): `verify-jta-balance-pass.mjs`
+  2. Headless guard (`08f12a736`): `check-jta-balance-pass.mjs`
      auto-detects the carriage and mirrors the worker path (loadGameData +
      dataset identity constants); ref-without-carrier fatal. Vanilla inputs
      byte-identical to the pre-change script (verified against HEAD copy).
@@ -952,8 +952,8 @@ both halves (the harness already re-extracts the committed HEAD per run).
      solved costs (modeled on `jta-randomized-balanced-progression`).
   **Gates (all green 2026-07-10):** vitest 2585; substrate suite 22/22
   (solo run); 3 jta guards (managed-zone-skip, cost-hooks, roundtrip 27/27
-  vanilla + 38/38 dataset); verify-jta-generated-dataset 31/31;
-  verify-jta-dataset-load; procgen presets 27/27; vanilla inertness —
+  vanilla + 38/38 dataset); check-jta-generated-dataset 31/31;
+  check-jta-dataset-load; procgen presets 27/27; vanilla inertness —
   vanilla cache keys unchanged, vanilla guard inputs byte-identical,
   vanilla z15 baseline solve PASS.
   **5e addendum (same day, user rulings on the measurement findings):**
@@ -1157,9 +1157,9 @@ both halves (the harness already re-extracts the committed HEAD per run).
        formula fields (the plan's "unused-but-carried" is load-bearing).
     7. **Verification battery (all green):** sim lockstep ×3 modes at
        identical tick counts + both canaries; UI parity zero DOM diff on
-       formula AND raw fixtures; verify-jta-dataset-load (raw rejects,
+       formula AND raw fixtures; check-jta-dataset-load (raw rejects,
        raw ≡ native bit-exact, formula fallback, mode reset);
-       verify-jta-generated-dataset (twin bit-exactness, identity/key
+       check-jta-generated-dataset (twin bit-exactness, identity/key
        asserts); roundtrip default + JTA_RT_DATASET=1 (the raw document
        survives Generate.py fill + carriage + the Pass-B worker walk);
        balance-pass vanilla path unchanged (the sweep's anchor

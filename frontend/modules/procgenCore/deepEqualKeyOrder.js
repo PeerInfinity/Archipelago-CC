@@ -11,7 +11,7 @@
  * stop at the first cell built differently. ⛔ A DOCUMENT is the opposite case.
  * Three substrates pin their key order in bytes somebody reads:
  *
- *   · the ATLAS — `verify-region-marking-tool` Phases D/E/G and the playthrough
+ *   · the ATLAS — `check-region-marking-tool` Phases D/E/G and the playthrough
  *     `--check` compare SAVED BYTES, and `atlasOps`' spreads are "key-order-exact
  *     on purpose";
  *   · the BOUNCE LEVEL — `_exportLevel` writes `JSON.stringify(level, null, 2)`

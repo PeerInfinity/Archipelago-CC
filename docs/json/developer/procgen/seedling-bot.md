@@ -81,7 +81,7 @@ local verify script only has to answer "are the recordings still current?".
 | Route authoring (the `(level, component)` search) | `scripts/procgen/plan-seedling-r1-route.mjs` |
 | R1 tapes, re-synthesized from the route | `frontend/modules/seedlingDemo/fixtures/regenerate-r1-tapes.mjs` |
 | Tapes + oracle recordings | `frontend/modules/seedlingDemo/fixtures/` |
-| The differential harness | `scripts/procgen/verify-seedling-bot-differential.mjs` |
+| The differential harness | `scripts/procgen/check-seedling-bot-differential.mjs` |
 | Real-GPU browser driver | `scripts/procgen/seedling-bot-replay-win.py` |
 | The in-game bot (tape interpreter, flags, grants, readout) | `~/CC/seedling` branch `bot`, `src/Bot.as` |
 | The five one-line flag guards | `~/CC/seedling` branch `bot`, `src/Player.as` |
@@ -762,7 +762,7 @@ A completion run without a terminal assertion is a demo, not a result. So
 - `saw_auto_advance` — a sticky count.
 
 **The JS inventory mirror supplies the EXPECTATION; the game supplies the
-ANSWER.** `verify-seedling-bot-differential.mjs` runs the same tape through
+ANSWER.** `check-seedling-bot-differential.mjs` runs the same tape through
 `runTape` to learn which tick a grant should fire on and which properties
 should then be true, and compares that against `botStatus`. Reading the
 mirror for both would be the mirror agreeing with itself. All 14 properties
@@ -919,10 +919,10 @@ below gets caught even along a route that avoids the statue.
 ss -ltn | grep ":8000" || python3 -m http.server 8000
 
 # 2. the staleness gate: live game vs the committed recordings
-node scripts/procgen/verify-seedling-bot-differential.mjs --win
+node scripts/procgen/check-seedling-bot-differential.mjs --win
 
 # 3. re-record after a deliberate physics or fixture change
-node scripts/procgen/verify-seedling-bot-differential.mjs --record --win \
+node scripts/procgen/check-seedling-bot-differential.mjs --record --win \
     --only=collide-up-rock,transition-west-return
 ```
 
@@ -1016,7 +1016,7 @@ and the wasm page spends it on WebGPU and the AudioContext — so ▶ has to be
 clicked *inside* the frame, and it is a STEP rather than part of the boot
 because when it happens is the caller's business. The extension is additive
 and defaulted; every existing caller is byte-identical, and
-`verify-seedling-ap-placement.mjs --win`'s own M1/M1b arms are the control that
+`check-seedling-ap-placement.mjs --win`'s own M1/M1b arms are the control that
 says so.
 
 ## Rebuilding the game after an AS3 change
@@ -3582,7 +3582,7 @@ load in the level you are in.**
 
 ### ⛔⛔ A `--record` run that passes says nothing about the model
 
-`verify-seedling-bot-differential --record` writes the game's stream and
+`check-seedling-bot-differential --record` writes the game's stream and
 then compares the game against it. That is a self-comparison and it passes
 by construction. The check that matters is `tapeRunner.test.js`'s fixture
 differential — MODEL against recording — and on the shaft tape it says
@@ -4779,7 +4779,7 @@ one whose level is still 42 is where that question has an answer.
 
 ### Use the `--win` channel for anything longer than a few hundred ticks
 
-`verify-seedling-bot-differential.mjs` has two replay channels. The default
+`check-seedling-bot-differential.mjs` has two replay channels. The default
 drives local headless Chromium on SwiftShader, where the recompiled game
 runs at **~0.5 ticks/s** — the constant is measured and stated in the file's
 own header. `--win` drives real-GPU Windows Chrome from WSL at **~24 fps**,
@@ -11340,7 +11340,7 @@ end-state line owns the item set at the last frame.
 The second is trap 389 and it is not a formality: the tape both runtimes execute
 and the vocabulary both streams are read in are this repo's, so a bug in what
 they share agrees with itself. The instrument that compares the game against
-**recorded** oracles is still `verify-seedling-bot-differential.mjs`.
+**recorded** oracles is still `check-seedling-bot-differential.mjs`.
 
 ⚠ **There is no count of how many divergences follow the first**, deliberately.
 Producing one needs either a second equality predicate — a detector with its own
@@ -12749,7 +12749,7 @@ node scripts/procgen/rerecord-seedling-campaign.mjs --from=S2 --run-dir=<dir>
 | **S0 PREDICT** | offline. Derives the subject from `PLAYTHROUGH_CHAINS` (every multi-segment chain), then the SEALED TABLE: per segment `none` / `boot-only` / `walk-moves`, the licensed set, the tick-0 re-derivations. `--dry-run` stops here. |
 | **S1 MEASURE** | the game, IN CHAIN ORDER. Segment k is driven as the artifact segment k−1 just made it, never as a provisional nobody commits. Every boot field comes from the envelope; a per-field diff against the committed block is printed, moved or not. |
 | **S2 WRITE** | surgical text edits of exactly what the table permits, then `derive-seedling-tick0.mjs` over its whole derived set. |
-| **S3 RECORD** | one `verify-seedling-bot-differential.mjs --win --record --only=<set>`. |
+| **S3 RECORD** | one `check-seedling-bot-differential.mjs --win --record --only=<set>`. |
 | **S4 PROVE** | the JS sequence gate · the census · the wasm ship gate · the solver-roster differential. |
 | **S5 REPORT** | the sealed table with its measured column. |
 
@@ -12931,7 +12931,7 @@ driver emits today, and three of the sixteen are driver output — their diff wa
 `tape_version` and nothing else. It was fixed at the producer (`synthesizeLegs`
 now declares a v3 floor, so the driver can no longer emit a retired version), not
 at the assertion. And a dangling `await import(join(REPO, …))` in
-`verify-seedling-bot-differential.mjs` survived both `node --check` and a fully
+`check-seedling-bot-differential.mjs` survived both `node --check` and a fully
 green vitest, because vitest never loads that script; only running the gate found
 it. A path-existence sweep over every such import now reports zero.
 
@@ -13319,7 +13319,7 @@ is the shape the `IceTurret` lift used one class at a time.
 
 #### The game's own enemy readout — and the gate that could not have told us
 
-`verify-seedling-bot-differential --win --record` recorded the witness on a real
+`check-seedling-bot-differential --win --record` recorded the witness on a real
 GPU and the model reproduced all 193 observations. **That is not the claim.** An
 expectation carries the PLAYER's positions and the PLAYER's `hits`, and this
 player stands still for 180 of 192 ticks — its trajectory is very nearly the same
@@ -14656,7 +14656,7 @@ short — is 60, and the GAME refused both arms: press `hits` 1 against 0, contr
 `seedling-bot-replay-win.py` polls `botStatus` every 0.25 s at 30 fps, so the
 status the differential compares is read up to ~8 engine frames PAST the tape
 with its last keys still held. ⛔ And the control's failure is the instructive
-one: `verify-seedling-bot-differential` argued the `hits` EQUALITY was safe
+one: `check-seedling-bot-differential` argued the `hits` EQUALITY was safe
 where `hits_timer` is only a bound — *"a further hit would fail the equality
 loudly"*. **A further hit that is the KILLING one moves it to ZERO**, through
 `Player.hit`'s `hits >= hitsMax` → `die()`. The sentence is corrected in place;

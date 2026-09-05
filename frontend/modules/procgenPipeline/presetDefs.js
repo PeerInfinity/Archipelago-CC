@@ -35,7 +35,7 @@ export const VALID_MODES = ['gridGrowth', 'sphereGrowth', 'shuffledSpiral', 'top
  *   dump-sphere-growth.js --seed 1 --quota runner=99 --start runner
  *   with the Double Jump / Blue Platforms / Springs / Victory pool —
  *   3 spheres, 3 regions, oracle-clean (CLI-verified; the committed
- *   3-item world stays bot-verified by verify-runner-embed.mjs). The
+ *   3-item world stays bot-verified by check-runner-embed.mjs). The
  *   runner difficulty knobs are pinned at the values that world was
  *   generated with, so the preset keeps reproducing it even if the
  *   runner defaults ever move. Note sphere worlds contain no reward
@@ -59,8 +59,8 @@ export const VALID_MODES = ['gridGrowth', 'sphereGrowth', 'shuffledSpiral', 'top
  *   and reward shelves with saws where the seed elects them
  *   (§8.7 steps 2-5).
  *
- * - bounce-sphere-demo is the config verify-sphere-growth-ui.mjs /
- *   verify-sphere-steps-ui.mjs pre-seed the panel with. Bounce knobs
+ * - bounce-sphere-demo is the config check-sphere-growth-ui.mjs /
+ *   check-sphere-steps-ui.mjs pre-seed the panel with. Bounce knobs
  *   are deliberately NOT pinned: those gates run on the live bounce
  *   defaults, so the preset should follow them too.
  */
@@ -201,7 +201,7 @@ export const SHIPPED_PRESETS = Object.freeze([
         id: 'shipped:bounce-sphere-demo',
         label: 'Bounce demo (sphere growth)',
         description: 'Bounce-only 3-sphere world — the '
-            + 'verify-sphere-growth-ui config: seed 1, the 7-item bounce '
+            + 'check-sphere-growth-ui config: seed 1, the 7-item bounce '
             + 'pool, quota bounce=99.',
         state: {
             mode: 'sphereGrowth',

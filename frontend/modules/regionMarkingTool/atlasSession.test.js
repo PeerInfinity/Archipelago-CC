@@ -700,7 +700,7 @@ const emptyAtlas = () => createEmptyAtlas({ game: 'seedling', mapDocument: 'seed
 
 describe('AtlasSession over editCore — the byte pin', () => {
     /**
-     * ⛔ **THE HEADLINE OF THIS SLICE.** `verify-region-marking-tool` Phases
+     * ⛔ **THE HEADLINE OF THIS SLICE.** `check-region-marking-tool` Phases
      * D/E/G compare the panel's SAVED BYTES against this class plus the compact
      * writer, and `atlasOps` says key ORDER is part of them. So the claim is
      * byte identity, not equality of content.

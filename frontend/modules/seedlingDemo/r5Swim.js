@@ -50,7 +50,7 @@ export const TILE = 16;
 /**
  * ⛔ THE FIXTURES THAT ARE SUPPOSED TO DROWN, AND HOW MUCH.
  *
- * `verify-seedling-bot-differential` asserts `drownTimer === 0` on every
+ * `check-seedling-bot-differential` asserts `drownTimer === 0` on every
  * tape that reports one, and that assert is not a formality — it is the
  * POSITIVE CONTROL for the forbidden-floor policy. `Player.as:1426`'s timer
  * is never reset off-hazard (the only three writes in the class are

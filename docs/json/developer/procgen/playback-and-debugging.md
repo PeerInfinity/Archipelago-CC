@@ -53,7 +53,7 @@ The maze panel's playthrough visualizer (`frontend/modules/mazeRoom/mazeRoomVisu
 
 ## Headless verification
 
-The `scripts/procgen/` CLIs are the non-interactive counterparts: the dump scripts print a driver's full output, the `*-step.js` drivers expose the stepped pipelines, `verify-*.mjs` scripts check byte-identity, and `verify-bounce-embed.mjs` drives the real frontend with Playwright. See [scripts/procgen/README.md](../../../../scripts/procgen/README.md).
+The `scripts/procgen/` CLIs are the non-interactive counterparts: the dump scripts print a driver's full output, the `*-step.js` drivers expose the stepped pipelines, `verify-*.mjs` scripts check byte-identity, and `check-bounce-embed.mjs` drives the real frontend with Playwright. See [scripts/procgen/README.md](../../../../scripts/procgen/README.md).
 
 ## Related documentation
 

@@ -412,7 +412,7 @@ a real player cannot finish their world.
 
 ### Coverage holds — the walk's fear was unfounded
 
-`verify-jta-balance-pass.mjs` reports six tasks as `thresholdFloored`: minimum
+`check-jta-balance-pass.mjs` reports six tasks as `thresholdFloored`: minimum
 cost is unaffordable at first touch, and they complete **in the walk** only
 because the walk waits (nothing else is runnable, so the all-skipped Best-Task
 fallback grinds the skill up). The worry was that in free play automation always

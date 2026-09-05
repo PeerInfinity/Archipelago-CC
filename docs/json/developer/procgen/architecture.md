@@ -84,11 +84,11 @@ Headless equivalents of everything the pages do live in `scripts/procgen/`. The 
 
 <!-- GENERATED:procgen-instruments BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**267 instruments** live in `scripts/procgen/`, by prefix: `probe-` 60 (22 browser) · `verify-` 50 (31 browser) · `plan-` 36 (1 browser) · `check-` 33 (22 browser) · `census-` 12 · `solve-` 7 · `dump-` 6 · `make-` 6 · `sweep-` 6 · `recon-` 5 · `region-` 5 · `generate-` 4 · no prefix 4 · `ci-` 3 · `extract-` 3 · `attribute-` 2 · `audit-` 2 · `export-` 2 (1 browser) · `measure-` 2 (1 browser) · `record-` 2 · `batch-` 1 · `build-` 1 · `derive-` 1 · `find-` 1 · `harvest-` 1 · `lint-` 1 · `mine-` 1 · `prove-` 1 · `reach-` 1 · `rerecord-` 1 · `run-` 1 · `seedling-` 1 · `shot-` 1 (1 browser) · `show-` 1 · `stamp-` 1 · `standing-` 1 · `survey-` 1.
+**265 instruments** live in `scripts/procgen/`, by prefix: `check-` 82 (51 browser) · `probe-` 60 (22 browser) · `plan-` 36 (1 browser) · `census-` 12 · `solve-` 7 · `make-` 6 · `sweep-` 6 · `dump-` 5 · `recon-` 5 · `region-` 5 · `generate-` 4 · no prefix 4 · `ci-` 3 · `extract-` 3 · `attribute-` 2 · `audit-` 2 · `export-` 2 (1 browser) · `measure-` 2 (1 browser) · `record-` 2 · `batch-` 1 · `build-` 1 · `derive-` 1 · `find-` 1 · `harvest-` 1 · `lint-` 1 · `mine-` 1 · `prove-` 1 · `reach-` 1 · `rerecord-` 1 · `run-` 1 · `seedling-` 1 · `shot-` 1 (1 browser) · `show-` 1 · `stamp-` 1 · `standing-` 1 · `survey-` 1.
 
-79 of them drive a real browser; 173 accept at least one `--flag` OF THEIR OWN; 88 are cited by one of these documents; and 0 open with no comment at all.
+77 of them drive a real browser; 173 accept at least one `--flag` OF THEIR OWN; 88 are cited by one of these documents; and 0 open with no comment at all.
 
-Each also accepts what a module it IMPORTS parses: `--help` (265, in `argvHelp.js`) · `--wait-for-box` (99, in `boxLock.js`) · `--only` (1, in `rehearsalTree.js`) · `--record` (1, in `rehearsalTree.js`) · `--walk-report` (1, in `rehearsalTree.js`). Those are listed per row with the parse site named, so the table says what a file ACCEPTS without losing where the parse lives.
+Each also accepts what a module it IMPORTS parses: `--help` (263, in `argvHelp.js`) · `--wait-for-box` (97, in `boxLock.js`) · `--only` (1, in `rehearsalTree.js`) · `--record` (1, in `rehearsalTree.js`) · `--walk-report` (1, in `rehearsalTree.js`). Those are listed per row with the parse site named, so the table says what a file ACCEPTS without losing where the parse lives.
 
 One row each — the one-liner from the file's own docblock, the flags it reads out of `argv`, whether it needs a browser, and which document cites it — is on the [reference page](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html#section-instruments), which can filter them.
 
@@ -899,7 +899,7 @@ JSZip is **injected**, never imported: `frontend/libs/jszip/jszip.min.js` is a v
 - **Seeded rng everywhere.** All generation randomness flows from `createRng(seed)` (`frontend/modules/shared/rng.js`, mulberry32 with `getState`/`setState` for step-boundary snapshots).
 - **The sphere plan is an oracle.** In sphere-growth mode, the compile step recomputes actual item spheres from the built world and compares them to the plan; the CLI exits non-zero on a mismatch.
 - **Headless CLI.** Everything the panel does can run in Node under `scripts/procgen/` — dump scripts per driver, the per-step drivers, and byte-identity verifiers. See [scripts/procgen/README.md](../../../../scripts/procgen/README.md).
-- **In-app round-trip test.** `scripts/procgen/verify-bounce-embed.mjs` drives a generated bounce world through the real frontend with Playwright, from first check to Victory.
+- **In-app round-trip test.** `scripts/procgen/check-bounce-embed.mjs` drives a generated bounce world through the real frontend with Playwright, from first check to Victory.
 
 ## Related documentation
 

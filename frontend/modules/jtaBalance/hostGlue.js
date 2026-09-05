@@ -4,7 +4,7 @@
  * Everything here is a pure function of a rules doc / patch list — no DOM, no
  * eventBus, no warehouse — so it is unit-testable in Node (hostGlue.test.js)
  * and reusable from both the host module (index.js) and, if ever needed, the
- * worker. The extraction logic mirrors scripts/procgen/verify-jta-balance-pass.mjs
+ * worker. The extraction logic mirrors scripts/procgen/check-jta-balance-pass.mjs
  * (kept in lockstep — it is the headless guard for this path): ap_locations come from the preset_sidecars
  * `playable_payload` in payload-native direction (taskId -> location name), and
  * gate counts come from a defensive walk of each location's access rule tree
@@ -129,7 +129,7 @@ export function extractApLocations(rulesDoc, playerId) {
 /**
  * The HasFromListUnique perk count on a location's access rule (Phase 3a's loose
  * zone gate); no rule = free (0). Walk the tree defensively — the count may sit
- * under a combinator. Verbatim behaviour of verify-jta-balance-pass.mjs.
+ * under a combinator. Verbatim behaviour of check-jta-balance-pass.mjs.
  */
 export function ruleGateCount(rule) {
     if (!rule || typeof rule !== 'object') return 0;

@@ -2154,7 +2154,7 @@ async function pressDocumentKeyEditor(testController, panel, key) {
  * A control that does nothing and says nothing is the defect; the button is
  * therefore SHOWN, DISABLED, with the reason in its `title` (H4c's claim-12
  * shape). The end-to-end save is proven where the tool actually runs:
- * `scripts/procgen/verify-region-marking-tool.mjs`, under `?mode=flash`.
+ * `scripts/procgen/check-region-marking-tool.mjs`, under `?mode=flash`.
  */
 export async function apworldRegionAtlasDoorRefusesAModuleThisAppLacks(testController) {
     try {
@@ -2412,7 +2412,7 @@ registerTest({
                + 'really does not hold that panel, and that the button is therefore SHOWN and '
                + 'DISABLED with the panel and the config file named in its title — while still '
                + 'printing what a save WOULD come back as. The end-to-end save lives in '
-               + '`verify-region-marking-tool.mjs`, under `?mode=flash`, where the tool runs.',
+               + '`check-region-marking-tool.mjs`, under `?mode=flash`, where the tool runs.',
     testFunction: apworldRegionAtlasDoorRefusesAModuleThisAppLacks,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode

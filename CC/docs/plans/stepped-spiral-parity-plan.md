@@ -178,8 +178,8 @@ Pure dedup, **zero output change**. `sphereSteps.js` and `topDownSteps.js`
 become descriptor + runners over `steppedPipeline.js`; public exports they
 already provide stay stable (panel + CLIs import them). 
 **Acceptance gate:** every existing guard green with NO byte diff —
-`sphereSteps.test.js`, `topDownSteps` coverage, `scripts/procgen/verify-topdown-steps.mjs`,
-`dump-*-byteidentity.mjs`, `verify-procgen-presets.mjs`, the full vitest suite.
+`sphereSteps.test.js`, `topDownSteps` coverage, `scripts/procgen/check-topdown-steps.mjs`,
+`dump-*-byteidentity.mjs`, `check-procgen-presets.mjs`, the full vitest suite.
 **This is the fallback trigger:** if sphere's batch loop (or the async-generator
 `stepRegions` progress streaming) resists clean generalization, STOP the dedup,
 keep the two modes as-is, and build spiral standalone (Part 2) mirroring
@@ -207,7 +207,7 @@ world) — **this is the first thing to drop under essentials.**
 **Acceptance gate:** stepped spiral at defaults === monolithic
 `arrangeShuffledSpiral` byte-for-byte on EVERY existing spiral preset
 (`jta-zone-demo`, the runner spiral demo, any maze spiral); new
-`dump-spiral-byteidentity` guard; `verify-procgen-presets.mjs` green;
+`check-spiral-byteidentity` guard; `check-procgen-presets.mjs` green;
 per-step + serialized-boundary round-trip reproduces the monolithic world.
 
 **rng discipline (the central invariant):** for JtA-only spiral worlds (the
@@ -296,14 +296,14 @@ update the `project_jta_zone_randomization` memory pointer ("NEXT = Phase B" →
   verify-{cli-sphere-config, sphere-envelope-resume, sphere-steps-ui,
   topdown-steps-ui, region-step-editing, topdown-steps} all green; 281 non-slow +
   49 slow (sphereGrowth/sphereBatched/topDownBounce) tests green;
-  verify-procgen-presets green.
+  check-procgen-presets green.
 - `Part 2a` — engine split `arrangeShuffledSpiral` →
   `arrangeSpiralPlan` (①, only pre-loop rng draw) + `realiseSpiralRegions` (③,
   restores post-shuffle rng). Monolith byte-identical (dump-shuffled-spiral
   jta/maze/mixed unchanged).
 - `Part 2b` — `spiralSteps.js` (① arrange / ② content no-op / ③ regions / ④
   compile) + `onContentEdit` restamp seam on the harness (guarded, no-op today) +
-  `dump-spiral-byteidentity.mjs`. **Gate MET:** stepped == monolith byte-for-byte
+  `check-spiral-byteidentity.mjs`. **Gate MET:** stepped == monolith byte-for-byte
   (grid + rules.json), in-process AND serde-each-step, on jta-only, maze-only,
   AND **mixed maze+jta** (the rng-threading proof) — 5 presets ✅. Resume/detect:
   fresh=-1, ② no-op transparently skipped, partial→resume reproduces the full run.
@@ -325,11 +325,11 @@ shared harness exactly like sphere/top-down:
 - `2c-2` — render wiring: "Spiral pipeline" collapsible, `_renderActions` step
   indicator + "Run N …"/Reset row, `_renderStepIndicator` `SPIRAL_STEP_LABELS` arm,
   live composite grid from `_spiralState.regions.grid` (visible from ③ onward).
-- `2c-3` — `scripts/procgen/verify-spiral-steps-ui.mjs` (playwright, :8000): steps
+- `2c-3` — `scripts/procgen/check-spiral-steps-ui.mjs` (playwright, :8000): steps
   1→4 through the UI, asserts the downloaded rules.json === headless
   `arrangeShuffledSpiral`+`buildRulesJson` on BOTH stepped and Run-all paths, plus
   reset/indicator behaviour + no page/singleton warnings. 24/24 green.
-- **Gate met:** dump-spiral-byteidentity (5) + verify-{sphere,topdown,spiral}-steps-ui
+- **Gate met:** check-spiral-byteidentity (5) + verify-{sphere,topdown,spiral}-steps-ui
   + procgenPipelineUI.test.js (22) + full procgenPipeline vitest (314) all green.
 
 **SCOPE DECISION (essentials fallback, recorded):** spiral's composite grid is
@@ -369,17 +369,17 @@ new `dataset_id`), and clears downstream `regions`/`compile` when the id changes
   it unconditionally, so a dataset-less jta world must read as no-content or the ②
   presence probe stalls `detectCompleted` at ②.
 - `3-3` — `spiral-step` CLI `--jta-*` flags + Node fixture generator;
-  `verify-jta-locations-roundtrip.mjs` `JTA_RT_PIPELINE` (gate b).
-- `3-4` — gate (c) `verify-jta-dataset-pipeline-preset.mjs` (pipeline reproduces
+  `check-jta-locations-roundtrip.mjs` `JTA_RT_PIPELINE` (gate b).
+- `3-4` — gate (c) `check-jta-dataset-pipeline-preset.mjs` (pipeline reproduces
   the committed `jta_dataset_test` preset the in-app test solves+plays) + gate (d)
   `spiralSteps.dataset.test.js` (edit → new id → downstream invalidated → resume →
   different `cacheKey` = fresh solve).
 
-**All four Phase-B gates MET:** (a) `dump-spiral-byteidentity` 5/5 (dataset-less
+**All four Phase-B gates MET:** (a) `check-spiral-byteidentity` 5/5 (dataset-less
 byte-identity); (b) `JTA_RT_PIPELINE=1 JTA_RT_DATASET=1` passes every hop
 (carriage + non-degenerate sphere log + Victory gated); (c) pipeline == committed
 playable preset, byte-for-byte; (d) vitest 4/4. procgenPipeline vitest 8 files /
-318 tests; `verify-spiral-steps-ui` 24/24 (② no-op note intact for dataset-less).
+318 tests; `check-spiral-steps-ui` 24/24 (② no-op note intact for dataset-less).
 
 **STILL DEFERRED (unchanged):** `rebuildEnvelopeFromRulesJson` spiral analog;
 interactive spiral grid editing; a panel dataset-config surface (the panel
@@ -444,10 +444,10 @@ started) convention, no batch loop. Build spiral as `_spiralState` alongside
   `await this._runSpiralAll()`; retire/repurpose `_runShuffledSpiral` `:3759`.
 - the Reset-button row (wherever TD/sphere reset is wired) → spiral reset.
 
-**Gate:** new `scripts/procgen/verify-spiral-steps-ui.mjs` modeled on
-`verify-topdown-steps-ui.mjs` (365 lines) — drive the panel in jsdom, run the
+**Gate:** new `scripts/procgen/check-spiral-steps-ui.mjs` modeled on
+`check-topdown-steps-ui.mjs` (365 lines) — drive the panel in jsdom, run the
 spiral steps THROUGH the UI, assert the stepped-UI rules.json == the monolithic
-`arrangeShuffledSpiral`+compile (the same equality `dump-spiral-byteidentity.mjs`
+`arrangeShuffledSpiral`+compile (the same equality `check-spiral-byteidentity.mjs`
 proves headlessly), plus step-indicator/next-button/reset behaviour and no
 `[…] Singleton not yet created` warnings. Also re-run `procgenPipelineUI.test.js`
 and the existing `verify-{sphere,topdown}-steps-ui.mjs` (shared render code).

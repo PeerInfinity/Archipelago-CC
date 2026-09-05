@@ -173,7 +173,7 @@ All four priority questions landed on the recommended option:
   bounce adapter hook `instantiateLibraryEntryForSpecs` (relabel + item map) +
   the dispatch branch in `realiseOneSphereNode` (zero rng) + capability guards
   (`canHost` → true for a library host; quota validation skips `library:<id>`).
-  Gates all green; independent stratum = `verify-region-library-sphere-roundtrip.mjs`
+  Gates all green; independent stratum = `check-region-library-sphere-roundtrip.mjs`
   (Generate.py fill). Full facts in main plan §7 + memory.
 
 - **F6b — capability negotiation (physical enforcement). NEXT, needs rulings.**
@@ -237,7 +237,7 @@ All four priority questions landed on the recommended option:
   - **Gates:** dump-spiral 5/5, dump-sphere byte-identical (engine edits in the
     isLibrarySourceId branch + a generateRegionCore shape-branch — untaken/unchanged
     for library-less worlds; the maze-hook default flip only touches the library path),
-    verify-region-library-ui **38/38** (maze/runner now ENABLED in sphere mode + the
+    check-region-library-ui **38/38** (maze/runner now ENABLED in sphere mode + the
     toggle-default-OFF checks), bounce+runner+maze sphere roundtrips + spiral roundtrip
     green (Generate.py fill = independent winnability stratum), sphereLibrary.slow 9/9,
     maze/runner/region-library units.
@@ -292,10 +292,10 @@ All four priority questions landed on the recommended option:
   check to accept runner too — it currently throws on a non-bounce library).
 
   **Gates (both sub-phases):** byte-inert at defaults (`dump-sphere-byteidentity`
-  diff-clean, `dump-spiral-byteidentity` 5/5, maze settings ON = no change);
+  diff-clean, `check-spiral-byteidentity` 5/5, maze settings ON = no change);
   independent winnability stratum = Generate.py fill — add runner-sphere +
   maze-sphere (both settings OFF) roundtrips mirroring
-  `verify-region-library-sphere-roundtrip.mjs`; keep `verify-region-library-ui`
+  `check-region-library-sphere-roundtrip.mjs`; keep `check-region-library-ui`
   36/36 + the three roundtrips + `sphereLibrary.slow` green. Committed demo packs:
   add a runner pack + a maze-for-sphere pack (make-demo-*-pack.mjs generators).
 
@@ -330,7 +330,7 @@ All four priority questions landed on the recommended option:
     (which already accepted `librarySources`). Built once per grow, stashed on
     `env` so the prefer-least-used counter survives sphere-major batches; rebuilt
     on a batch-0 restart.
-  - Gate: `verify-region-library-ui.mjs` Phase D (new; 20/20 → **36/36**) — a
+  - Gate: `check-region-library-ui.mjs` Phase D (new; 20/20 → **36/36**) — a
     fresh sphere-mode context proves the subsection renders, bounce enabled /
     maze disabled, ticking grows a compiled sphere-growth world (self-contained
     playable regions; library id only as `procgen_metadata.sphere_tree`
@@ -345,16 +345,16 @@ All four priority questions landed on the recommended option:
 
 ## 5. Gates & conventions (unchanged from the arc)
 
-- **Byte-inert at defaults:** `dump-spiral-byteidentity.mjs` 5/5 and the sphere
+- **Byte-inert at defaults:** `check-spiral-byteidentity.mjs` 5/5 and the sphere
   determinism goldens must pass with no library selected (library absent ⇒ zero
   new rng draws, byte-identical worlds).
 - **Independent stratum:** the winnability gate is a witness replay / bot
   completion, NOT a verifier that shares the placement's assumptions
   (`feedback_verifier_shared_assumption`). A sphere-mode analogue of
-  `verify-region-library-roundtrip.mjs` (world_generator + Generate.py +
+  `check-region-library-roundtrip.mjs` (world_generator + Generate.py +
   in-app solve) is the e2e.
-- **Keep green throughout:** `verify-region-library-roundtrip.mjs` (13/13),
-  `verify-region-library-ui.mjs` (20/20), the region-library unit suite, and the
+- **Keep green throughout:** `check-region-library-roundtrip.mjs` (13/13),
+  `check-region-library-ui.mjs` (20/20), the region-library unit suite, and the
   sphere-growth suites.
 - **Git:** commit directly to `main`, one commit per sub-phase, explicit staging
   only (a concurrent Omsi session writes `CC/scripts/omsi-stats/*`,

@@ -132,7 +132,7 @@ function playAndAnalyze({ tag, rules, doc, excludeIds }) {
     let solveConverged = true;
     let solveFailure = null;
     try {
-        sh('node', ['scripts/procgen/verify-jta-balance-pass.mjs', rules], { JTA_BP_REPORT: bp });
+        sh('node', ['scripts/procgen/check-jta-balance-pass.mjs', rules], { JTA_BP_REPORT: bp });
     } catch (err) {
         solveConverged = false;
         solveFailure = (String(err.stdout ?? '').match(/^FAILED: (.*)$/m) ?? [, 'unknown'])[1];
@@ -235,7 +235,7 @@ function playAndAnalyze({ tag, rules, doc, excludeIds }) {
 }
 
 function exportWorld(env) {
-    sh('node', ['scripts/procgen/verify-jta-locations-roundtrip.mjs'], {
+    sh('node', ['scripts/procgen/check-jta-locations-roundtrip.mjs'], {
         JTA_RT_QUOTA: quota, JTA_RT_KEEP: '1', ...env,
     });
     const apDirs = fs.readdirSync(PRESET_DIR).filter((n) => n.startsWith('AP_'));

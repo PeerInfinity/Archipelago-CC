@@ -16,9 +16,9 @@
  *     cost) or starvation (max cost) per zone band.
  *
  * Per (datasetSeed, fillSeed) pair:
- *   1. verify-jta-locations-roundtrip.mjs   JTA_RT_DATASET=1
+ *   1. check-jta-locations-roundtrip.mjs   JTA_RT_DATASET=1
  *      JTA_RT_DATASET_SEED=<ds> JTA_RT_SEED=<fill>  -> exported rules.json
- *   2. verify-jta-balance-pass.mjs          JTA_BP_REPORT -> bp-ds<ds>-f<fill>.json
+ *   2. check-jta-balance-pass.mjs          JTA_BP_REPORT -> bp-ds<ds>-f<fill>.json
  *
  * This is deliberately steps 1-2 of sweep-ap-seeds.mjs only: the emergent
  * free-automation replay of the solved worlds is Phase 5f, not 5e.
@@ -105,7 +105,7 @@ const rows = [];
 for (const job of jobs) {
     const { label: tag, fillSeed } = job;
     console.log(`\n=== ${tag}: generating post-fill dataset world (Generate.py) …`);
-    sh('node', ['scripts/procgen/verify-jta-locations-roundtrip.mjs'], {
+    sh('node', ['scripts/procgen/check-jta-locations-roundtrip.mjs'], {
         JTA_RT_DATASET: '1',
         ...(job.datasetFile ? { JTA_RT_DATASET_FILE: job.datasetFile } : { JTA_RT_DATASET_SEED: String(job.datasetSeed) }),
         JTA_RT_SEED: String(fillSeed),
@@ -124,7 +124,7 @@ for (const job of jobs) {
     let converged = true;
     let failure = null;
     try {
-        sh('node', ['scripts/procgen/verify-jta-balance-pass.mjs', rules], { JTA_BP_REPORT: bp });
+        sh('node', ['scripts/procgen/check-jta-balance-pass.mjs', rules], { JTA_BP_REPORT: bp });
     } catch (err) {
         converged = false;
         failure = (String(err.stdout ?? '').match(/^FAILED: (.*)$/m) ?? [, 'unknown'])[1];

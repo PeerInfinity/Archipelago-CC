@@ -12,7 +12,7 @@
 // configs, and fails naming any value that is not a row here.
 //
 // ⛓ WHY IDS MAY NOT MOVE. `LOCATION_ID_BASE = 1000` is pinned by 29 preset
-// byte-identity dumps; `30000000` by `verify-seedling-atlas-preset.mjs` and by
+// byte-identity dumps; `30000000` by `check-seedling-atlas-preset.mjs` and by
 // `regionAtlasCompiler.test.js` (symbolically, so that test would follow a
 // move — the DUMPS are what would not); `20000000` by the committed
 // `worlds/seedling` presets. Nothing here changes a base. `pinnedBy` on each
@@ -61,7 +61,7 @@ export const AP_ID_NAMESPACES = Object.freeze([
         itemBase: 1,
         owner: 'procgenPipelineEngine.buildRulesJson — a running counter in region-iteration order',
         declaredAt: 'frontend/modules/procgenPipeline/procgenPipelineEngine.js:2182-2183',
-        pinnedBy: '29 preset byte-identity dumps (dump-topdown-byteidentity.mjs, dump-spiral-byteidentity.mjs, verify-topdown-steps.mjs)',
+        pinnedBy: '29 preset byte-identity dumps (dump-topdown-byteidentity.mjs, check-spiral-byteidentity.mjs, check-topdown-steps.mjs)',
         note: 'The ONLY row whose two bases share a decade; harmless, see the docblock on separate id spaces.',
     }),
     Object.freeze({
@@ -70,7 +70,7 @@ export const AP_ID_NAMESPACES = Object.freeze([
         itemBase: 30000000,
         owner: 'regionAtlasCompiler.compileRegionAtlas — base + index in SORTED NAME order (allocateIdsBySortedName)',
         declaredAt: 'frontend/modules/procgenPipeline/regionAtlasCompiler.js:74-75',
-        pinnedBy: 'verify-seedling-atlas-preset.mjs; regionAtlasCompiler.test.js:150-152 (symbolic — it would FOLLOW a move, the preset would not)',
+        pinnedBy: 'check-seedling-atlas-preset.mjs; regionAtlasCompiler.test.js:150-152 (symbolic — it would FOLLOW a move, the preset would not)',
     }),
     Object.freeze({
         name: 'flashpanel-seedling',

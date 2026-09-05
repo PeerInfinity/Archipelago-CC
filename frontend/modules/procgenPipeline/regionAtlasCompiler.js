@@ -157,7 +157,7 @@ export const FLASH_PANEL_WIRING = Object.freeze({
      * LONGER THE ONLY DEFAULT ON p4d: `watchWasm.WASM_PAGE`,
      * `check-seedling-wasm-pages`' `BUILD` literal and every script's
      * `SEEDLING_PAGE` default moved with it over 46 tracked files. What stays
-     * on p4c is exactly the CONTROL — `verify-seedling-ap-placement.mjs`'s
+     * on p4c is exactly the CONTROL — `check-seedling-ap-placement.mjs`'s
      * default, the only tracked build declaring no `apitem`, and
      * `check-seedling-wasm-pins.mjs` row (f) is what keeps it there.
      *

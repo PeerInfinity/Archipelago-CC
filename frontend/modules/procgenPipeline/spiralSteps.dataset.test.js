@@ -1,8 +1,8 @@
 // Stepped-spiral Part 3 — the JtA ② content dataset seam.
 //
 // Covers the two Phase-B gates that live in-process (the toolchain roundtrip is
-// scripts/procgen/verify-jta-locations-roundtrip.mjs JTA_RT_PIPELINE, the in-app
-// solve+play is scripts/procgen/verify-jta-dataset-pipeline-preset.mjs):
+// scripts/procgen/check-jta-locations-roundtrip.mjs JTA_RT_PIPELINE, the in-app
+// solve+play is scripts/procgen/check-jta-dataset-pipeline-preset.mjs):
 //   - a dataset world drives the config seam (① installs from config, ②
 //     materialises the editable document, carriage lands), byte-identical to the
 //     globals-installed monolith;

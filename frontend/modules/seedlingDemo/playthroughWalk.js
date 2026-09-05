@@ -1466,7 +1466,7 @@ export function playthroughTapeNames() {
  * be true HERE and false for the roster.
  *
  * The 118 committed fixtures do not end at arrivals — that convention
- * arrives with the segments — so `verify-seedling-bot-differential.mjs`
+ * arrives with the segments — so `check-seedling-bot-differential.mjs`
  * runs `seamLatchFindings(..., {requireCalm: false})` on all of them and
  * reports the invariants without requiring them. A SEGMENT claims an
  * arrival by construction, so it is required, and this is the only thing

@@ -85,7 +85,7 @@ repo. Memory: `project_platformer_substrate_arc`.
 
 **SHIPPED + PUSHED 2026-07-14 (Opus); on `main`, in `origin/main`.** Commits
 P1 `ea876dd61` → P2 `0725ff0f3` → P1-fix+P3 verify `93919de76` → P4 `4e2c15df9`
-→ opt-in default-OFF `6f550d722`. `scripts/procgen/verify-world-persistence-reload.mjs`
+→ opt-in default-OFF `6f550d722`. `scripts/procgen/check-world-persistence-reload.mjs`
 PASS 23/23 (re-run green 2026-07-15). Memory: `project_world_persistence_reload`.
 
 Implemented P1–P4 of *(NewDocs)* `NewDocs/plans/world-persistence-reload-design.md`
@@ -158,7 +158,7 @@ tick-for-tick triple equivalence green). Memory:
    capture + validator tooling, hybrid persistence, panel UI — maze + bounce)
    AND sphere-growth reuse (F6a bounce, F6c runner + configurable-maze
    connection + registry-driven panel surfacing, F6d panel reachability). All
-   byte-inert (dump-spiral 5/5, dump-sphere diff-clean); `verify-region-library-ui`
+   byte-inert (dump-spiral 5/5, dump-sphere diff-clean); `check-region-library-ui`
    38/38; bounce/runner/maze sphere + spiral Generate.py roundtrips green.
    **F6b (capability negotiation / physical gate enforcement of fixed captured
    entries) is RULED but PARKED until a concrete motivating example exists**
@@ -1127,7 +1127,7 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    travel_onward at 89), `omsiUnlockPool.test.js` (22 cases),
    `tests/testCases/omsiUnlockTests.js` (6 in-app legs).
    Gates: vitest 3115/3115 · test-substrates 41/41 · test-regression
-   31/31 · verify-omsi-mana-leg OK · omsi_substrate_test and
+   31/31 · check-omsi-mana-leg OK · omsi_substrate_test and
    omsi_schedule_test byte-identical.
    **Two ruling REFINEMENTS forced by implementation (both recorded in
    code comments):** (i) `unlockMeta` is WORLD-scoped, not zone-scoped
@@ -2299,7 +2299,7 @@ are COMPLETE and pushed.** Next in order:
    Gates: vitest 3092/3092, test-substrates 35/35 (3 new tests
    registered in `playwright_tests_config-substrates.json`),
    test-regression green, new
-   `scripts/procgen/verify-maze-consumable-tiles.mjs` OK, byte-inert
+   `scripts/procgen/check-maze-consumable-tiles.mjs` OK, byte-inert
    default proved (maze_loop_worldgen regen identical modulo the
    pre-existing `loop_costs.generatedAt` timestamp).
    **X1-R4 resolved: mana-refill tiles ARE in v1** — `gainMana` already
@@ -2377,7 +2377,7 @@ the 3380 Phase-1 baseline).
   renderer / UI / CSS), registered in all four places;
   `atlases/seedling.json` (3 real regions, 10 exits, 1 location, 0 errors)
   built by `make-seedling-starter-atlas.mjs`;
-  `verify-region-marking-tool.mjs` drives the real panel in chromium.
+  `check-region-marking-tool.mjs` drives the real panel in chromium.
 - Additive format deltas: **`map_ref` + `tile_space.map_document`** (Seedling
   is 116 coordinate spaces, not one) and a **compact atlas writer** shared by
   the tool's save path and the CLI's `--restamp`, which kills the
@@ -2419,7 +2419,7 @@ baseline).
   sorted index, clear of the flashPanel `ap_id_offset` (20000000) whose
   *alignment* is Phase 4's concern; `Menu` is reserved and a colliding atlas
   region is a hard error.
-- Verification is by EFFECT, not by silence: `verify-seedling-atlas-preset.mjs`
+- Verification is by EFFECT, not by silence: `check-seedling-atlas-preset.mjs`
   boots `?game=seedling_atlas&seed=1` and compares the state manager's own
   regions/exits/locations against a headless compile; the marking-tool verifier
   gained Phase E (the downloaded rules.json is byte-identical to the headless
@@ -2486,13 +2486,13 @@ entrance spawn.
 - **Testing deviation, deliberate:** no in-app test-substrates leg. The leg that
   matters needs the gitignored 31 MB wasm artifact, which is machine-local, so
   an enumerated test would be red wherever it is missing. The gate is
-  `scripts/procgen/verify-seedling-atlas-play.mjs` (SKIPs exit-0 without the
+  `scripts/procgen/check-seedling-atlas-play.mjs` (SKIPs exit-0 without the
   artifact): arrival teleport confirmed by an independent `readState`; a NATIVE
   crossing queued straight into the iframe publishing `user:regionMove` AND
   moving gameState; a second crossing; and only then the negative — a
   host-driven cross-level arrival that must not echo. The watcher wraps the
   dispatcher's real `publish` and THROWS if it cannot, so the negative cannot
-  pass vacuously. `verify-seedling-atlas-preset.mjs` stays the graph gate and now
+  pass vacuously. `check-seedling-atlas-preset.mjs` stays the graph gate and now
   asserts the sidecars are present and consistent instead of absent.
 - **No `SubstrateInactiveOverlay`**, deliberately not half-wired: flashPanel is
   not procgen-only (it still serves the Stage-1 direct-client presets), so a
@@ -2542,7 +2542,7 @@ COMPUTED from the tile map.
   its own generator, so `--check` gates the analysis. `overworld_start` → 6
   sub-regions, `mixed`; `dungeon1_room1` → 2, `analyzer`; the other two → no
   split, ASSERTED rather than skipped, subgraph correctly omitted. Preset
-  regenerated to 11 AP regions / 23 exits; `verify-seedling-atlas-play.mjs`
+  regenerated to 11 AP regions / 23 exits; `check-seedling-atlas-play.mjs`
   still walks the real game between them, and the marking-tool verifier gained
   Phase G (analyze in the browser, assert the document is untouched while the
   proposal exists, Accept, prove byte-identical to a headless analyze+apply).
@@ -2566,7 +2566,7 @@ testable in the suite, which the flash flavour never could be.
   game, and `seedlingMazeProjectionDeps()` is the single wiring point),
   `compileRegionAtlas({sidecarFlavor: 'maze'})`, `region-atlas-compile.mjs
   --maze`, `frontend/presets/seedling_atlas_maze/` (10 sidecars, 20 exits, 14
-  rule-typed gates), `verify-seedling-atlas-maze.mjs` (four phases, nothing
+  rule-typed gates), `check-seedling-atlas-maze.mjs` (four phases, nothing
   SKIPs), and two enumerated in-app legs in category `Seedling atlas maze`.
 - **The crossing representation** (the phase's one open design point) collapses
   the kickoff's point-vs-area distinction instead of implementing both: ONE exit
@@ -2602,7 +2602,7 @@ testable in the suite, which the flash flavour never could be.
   engine, check the projection instead") held.
 **Phase 6 — sphere growth places pieces of the real map: SHIPPED 2026-07-28**
 (vitest **3753/3753** + 25 `*.slow`, `test-substrates --batch=fast` **60/60**,
-`verify-atlas-sphere-roundtrip.mjs` 43/43 through Generate.py). A sphere-grown
+`check-atlas-sphere-roundtrip.mjs` 43/43 through Generate.py). A sphere-grown
 world can now contain real Seedling regions, gated on what the real game charges
 to get into them.
 - **Rulings (user, 2026-07-28):** (1) **sorter-first, with a built-in fallback**
@@ -2809,7 +2809,7 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   `frontend/modules/seedlingDemo/` JS engine seed, the compiled-in AS3 tape
   bot on the fork's `bot` branch (own EI callbacks — no BridgeGeneric or
   configure change), committed oracle recordings (vitest differential in CI)
-  + `verify-seedling-bot-differential.mjs` (staleness gate, SKIPs without
+  + `check-seedling-bot-differential.mjs` (staleness gate, SKIPs without
   the machine-local `seedling_bot_ap` artifact). Four rulings taken
   2026-07-30, recorded in the kickoff §1 and `region-atlas-plan.md` Phase 8.
   All anchors recon-verified same day; recon-first still applies.
@@ -4319,7 +4319,7 @@ corpus 101 → 91 findings (12 gone, 2 new, ten files), so each needs deciding o
 the one false positive it produced here is allowlisted on the merits (a slice NUMBER read
 as a cardinality). (1) the removal-staging one-tick offset is
 UNFIXED and is what the 195 bound stands on — fixing it would let the constant retire;
-(2) `verify-seedling-bot-differential` reads the game's status up to ~8 engine frames PAST
+(2) `check-seedling-bot-differential` reads the game's status up to ~8 engine frames PAST
 the tape (0.25 s poll at 30 fps), so a tape ending near an event reports one the tape never
 scheduled — the driver-side fix is GAME-FACING and therefore ⚖ ruling 40's full-roster
 checkpoint class. Until it lands, a tape's post-tape MARGIN is part of its design.
@@ -4606,7 +4606,7 @@ would be the re-record's act.
 **GATES:** unfiltered vitest ALONE **352 / 10,951 ALL PASS, +5 exactly**.
 ⚖ 47b **(6) cleared** in `combatVerbs.test.js` (its gate still owed). ⚠ One row
 started and WITHDRAWN, recorded so no log reads as a completed replay:
-`verify-seedling-bot-differential --tier=full` without `--win` still drives
+`check-seedling-bot-differential --tier=full` without `--win` still drives
 LOCAL HEADLESS CHROMIUM, ~350 s/tape under load; killed by captured PID plus its
 `headless_shell` child by ppid, and not re-run — it answers nothing the two-build
 diff has not.
@@ -5349,7 +5349,7 @@ the SKIP path, which declares no `seam.time`, and also reads 1.
 
 **(D) DERIVED:** 53 files / 69 lines flipped, `*.md` excluded as history;
 `check-seedling-wasm-pins` **ALL PASS — 2 pinned builds**, (m5) reds 3 ways by
-name; `verify-seedling-wasm-bridge` ALL PASS on p4c; `-pages` **20/0**. (D) and
+name; `check-seedling-wasm-bridge` ALL PASS on p4c; `-pages` **20/0**. (D) and
 the gitlink are ONE commit, verified in both directions (7 failures unnamed, 3
 unlisted). ⛔ **p4b's pin is NOT free: the gate cannot see prose**, so it is
 held by ONE deliberate `wasm/seedling_bot_ap_p4b/game.html` in
@@ -6005,7 +6005,7 @@ reference 21/0 · suite 372/11587 → 388/11970. Traps 823–884 (+ 856–862,
 traps 946–949 — `editCore`'s no-cell-space widening: `CELL_SPACE_MEMBERS`, laws
 1/6/7 are the cell-space laws and skipped ones are NAMED; the bounce editor on a
 session with 8 ops incl. `replace-level` carrying the RESULT; `verify-region-
-step-editing` IMPORTS the merge; Phase H of `verify-sphere-steps-ui` was VACUOUS
+step-editing` IMPORTS the merge; Phase H of `check-sphere-steps-ui` was VACUOUS
 — now a measured PIN) · B-c MERGED (`31384bfc6`; §16; traps 950–953 — the
 APWorld editor on a session, 19 ops, Clear IS an op, renames ONE op each;
 `deepEqualKeyOrder` hoisted to `procgenCore/`; ⛔ an op storing a payload BY
@@ -6056,7 +6056,7 @@ yet (the next slice's first question); p4d-as-DEFAULT (53 files/69 lines) is a s
 ⚖; the p4c ABSENT/PRESENT arms still run LOCAL (mechanical move to `--win`); Ruffle via
 the step-2 injected SWF (low); the Windows-driven `check-seedling-generated-set`/
 `-vanilla-manifest` owed a real run; `pendingArrival`'s latent age/level order; the
-bot's persistence declaration is a host-visible check; `verify-atlas-sphere-roundtrip
+bot's persistence declaration is a host-visible check; `check-atlas-sphere-roundtrip
 --help` writes a file; AS3 `ap-m1` unpushed on the fork.
 
 **M1 AS IT WAS SCHEDULED:** kickoff `editor-integration-sliceM1-prompt.md`
@@ -6071,8 +6071,8 @@ reach, owed a real run on the Windows box); the engine residue below.
 (`bounds`/`readCell`/`writeOps` an optional trio; cell tools refuse by name;
 law 7 SKIPPED by name) + the bounce editor on a session (eight ops incl.
 `replace-level` for regenerate; `createEditSession` forwards the adapter's
-`value` — trap 857; `verify-region-step-editing.mjs` IMPORTS `buildEditedRegion`
-instead of copying it; Phase G′ on `verify-sphere-steps-ui`) — kickoff
+`value` — trap 857; `check-region-step-editing.mjs` IMPORTS `buildEditedRegion`
+instead of copying it; Phase G′ on `check-sphere-steps-ui`) — kickoff
 `editor-integration-sliceBb-prompt.md`; (2) **B-c** — the APWorld editor
 session (~18 ops, renames as `group`s, no canvas; the second cell-less
 adapter); (3) **M1** — the AS3 seam: W5-0 de-risk first (`Main.levelSetReset`
@@ -6131,7 +6131,7 @@ first: one full-tier drive at the merged head, ALL CHECKS PASSED, composite
 -edit 71 · pins ALL PASS (f)+(g) · procgen-help 265/0 · full-tier-owed 5/0 ·
 reference 21/0. Traps 980–986, 999–1003, 1010–1014, 1021.
 DEFERRED BY NAME (the next planning session's queue): the `main()` refactor
-of `verify-seedling-ap-placement.mjs` (a top-level-await script; baseline
+of `check-seedling-ap-placement.mjs` (a top-level-await script; baseline
 entry carries the debt); Ruffle parity; the producing-side `flash_panel`
 emission (the seed-1 block is HAND-ADDED and PROVISIONAL by ⚖ — a regen
 drops it); the pin gate's spelling widening (three p4d references it cannot
@@ -9126,9 +9126,9 @@ under that mutant.
 | ⚠ **`check-seedling-wasm-ship.mjs`** | **263/0, 456.6 s — REAL-GPU WINDOWS CHROME** | `node scripts/procgen/gates.mjs local wasm-ship generated-set` |
 | `check-seedling-generated-set.mjs` | **32/0** (windows) | same line |
 | `check-seedling-wasm-pins` / `full-tier-owed` | **3 builds four views** / **5/0** | `node scripts/procgen/gates.mjs local wasm-pins full-tier-owed` |
-| `verify-seedling-ap-placement.mjs` | **ALL ROWS PASSED** | `node scripts/procgen/verify-seedling-ap-placement.mjs` |
+| `check-seedling-ap-placement.mjs` | **ALL ROWS PASSED** | `node scripts/procgen/check-seedling-ap-placement.mjs` |
 | ⚠ **…and its `--win` arm** | **ALL ROWS PASSED on real-GPU Windows Chrome** | `python3 -m http.server 8129` **then** `node … --win` |
-| `verify-seedling-atlas-maze` / `verify-region-marking-tool` | **OK** (10 sub-regions, 20 exits, 14 gates) / **OK** | run directly |
+| `check-seedling-atlas-maze` / `check-region-marking-tool` | **OK** (10 sub-regions, 20 exits, 14 gates) / **OK** | run directly |
 | identity rows | **ALL CHECKS PASSED — 16 rows UNMOVED** | `node scripts/procgen/standing-values.mjs --check --only=identity` |
 | bounded ⚖ 52 | **32 files / 1016 tests** | see below |
 | in-app `--batch=fast` | **61/61**, *No differences in status, roster, or duration* | `compare-runs.js …T17-37-26 …T20-07-18` |
@@ -9153,7 +9153,7 @@ submodules in fixed that but then loaded `shared/procgen/mazeAlgorithms/registry
 absolute paths, so `worldChain.test.js` died on `registerBackend: duplicate id 'empty'` — a rig
 artefact of the symlink, not a finding.
 
-**⛔ `verify-seedling-bot-differential.mjs` was STARTED AND STOPPED, and the planner was right to
+**⛔ `check-seedling-bot-differential.mjs` was STARTED AND STOPPED, and the planner was right to
 stop it.** The reach names it, but the only change on its path is 15 lines of DOCBLOCK in
 `watchWasm.js` — it drives the wasm page through its own driver, not through `flashPanel`'s
 adapters, so `pollUntil` is not on it. It was launched headless and FULL TIER (150 tapes, 152 s on
@@ -9202,7 +9202,7 @@ null`"* is FALSE — measured `with_map_ref=0 null=0 absent=3`; no committed JSO
 rule stands (`Number(undefined)` misses; a hand-written null is refused, not resolved to level 0) and its
 row is synthetic; the census sentence at `seedlingAtlasAnalysis.js:50` is corrected by F-b. All four
 "overturned in the brief" items HOLD at the line. **On the record:** the planner stopped F-a's headless
-FULL-TIER `verify-seedling-bot-differential.mjs` (not on the change's path, against the Windows-Chrome rule,
+FULL-TIER `check-seedling-bot-differential.mjs` (not on the change's path, against the Windows-Chrome rule,
 ~6 h on a windows box lock, under an unbounded wait loop); F-a accepted. Kickoffs now bound every wait loop.
 **F-b launched** (`NewDocs/plans/maze-lab-arms-sliceFb-prompt.md`, `maze-lab-arms-sliceFb`): F1 one owner of
 the pending/ok/readback protocol WITHOUT weakening `arm()` (the lab has no invalidation companion — measured
@@ -9416,7 +9416,7 @@ the bundle nothing; the lab paid for them instead (`watchViewer` 149→150 / +4,
 | `check-seedling-wasm-element` / `-pages` | **11/0** (929.4 s headless) / **20/0** | (in the reach) |
 | node rows | **6/6 green** — `wasm-pins` (3 builds, four views), `full-tier-owed` 5/0, `producer-boundaries` 19/0, `rerecord-rehearsal` 28/0, `procgen-help` 265/0, `slice-records` **73/0/37** | `node scripts/procgen/gates.mjs local wasm-pins full-tier-owed slice-records producer-boundaries rerecord-rehearsal procgen-help` |
 | ⚠ **the four `windows` rows** | **4/4 GREEN ON REAL-GPU WINDOWS CHROME** — `wasm-ship` **263/0** (460.1 s), `generated-set` **32/0**, `save-stamp` **21/0**, `vanilla-manifest` **24/0** | `node scripts/procgen/gates.mjs local wasm-ship generated-set save-stamp vanilla-manifest` |
-| ⚠ **`verify-seedling-ap-placement.mjs --win`** | **ALL ROWS PASSED** on real-GPU Windows Chrome | `python3 -m http.server 8129` **then** `node … --win` |
+| ⚠ **`check-seedling-ap-placement.mjs --win`** | **ALL ROWS PASSED** on real-GPU Windows Chrome | `python3 -m http.server 8129` **then** `node … --win` |
 | identity rows | **ALL CHECKS PASSED — 16 rows UNMOVED** | `standing-values.mjs --check --only=identity` |
 | bounded ⚖ 52 | **29 files / 1,144 tests** (baseline before the slice: 19 / 397 over the brief's paths) | see below |
 | in-app `--batch=fast` | **61/61**, *No differences in status, roster, or duration* | `compare-runs.js …T20-07-18 …T22-07-14` (the baseline NAMED — F-a's post-slice run at `394294151`) |
@@ -9511,7 +9511,7 @@ membership and the JOIN to `<name>/game.html` on disk. ⛔ Not the bytes — vie
 **(h2) the lab's build is the build its certifiers drive — subject set DERIVED, with one named addition.**
 Derived: every gate (`isGateFile`, IMPORTED from `gateRoster.js`, never a second copy of `check-*.mjs`) whose
 CODE spells a MANIFEST build name, bounded to the manifest's own names so the sweep cannot invent a build the
-way a general `'seedling_*'` would. Named: `verify-seedling-bot-differential.mjs` — a `verify-`, invisible to
+way a general `'seedling_*'` would. Named: `check-seedling-bot-differential.mjs` — a `verify-`, invisible to
 the membership rule, and the one instrument that drives the lab's build tick-for-tick against the JS model.
 **Result at this head: FIVE certifiers**, not the two the kickoff named —
 `check-seedling-wasm-pages.mjs` (its `BUILD` literal) plus the three `windows` gates that spell their own
@@ -9529,7 +9529,7 @@ at run time by `seedlingRandomizerEligibility.js`, so its wiring default is a pr
 about the lab. ⛔ `SEEDLING_PAGE=` at run time is an override; the DEFAULT is the pin (row (f)'s rule).
 ⛓ **`codeOnly` is LOAD-BEARING, measured**: the mutant that stops stripping comments turns THREE files'
 historical prose into false subjects (`check-seedling-generated-set.mjs`, `check-seedling-wasm-ship.mjs`,
-`verify-seedling-bot-differential.mjs` all "drive" p4c in a docblock).
+`check-seedling-bot-differential.mjs` all "drive" p4c in a docblock).
 
 **(h3) the capabilities the lab's build must declare — MEASURED, and the answer is NONE.** `WASM_PAGE` pointed
 at the manifest build declaring `[]` (p4b) and `check-seedling-wasm-pages.mjs --root=http://localhost:8000/frontend`
@@ -9557,7 +9557,7 @@ question first — rebuilt in python, it reds. ⛔ (h3) has no mutant BY CONSTRU
 **The standing row.** `--check --only='seedling-wasm-pins'` before = `PASS 0/0` (cheap rows re-run regardless,
 so `--check` does not report a key move). MEASURED with `rowInputKey.inputPopulations` instead: at W0
 `inputKey c6522201…`, populations code 7 / data 2 / spawn 0 / build 1 — and **neither `check-seedling-wasm-pages.mjs`
-nor `verify-seedling-bot-differential.mjs` was in ANY population**, so the exact edit (h2) exists to catch
+nor `check-seedling-bot-differential.mjs` was in ANY population**, so the exact edit (h2) exists to catch
 would not have re-run the row. Cause: a `.mjs` named by a literal is population 1's business and arrives only
 by being IMPORTED, and (h2) READS those sources. ⇒ the gate now DECLARES them, `@key-inputs data:` (the
 mechanism `rowInputKey.js` names for exactly this), `data` not `code` because the BYTES are the input and
@@ -10082,7 +10082,7 @@ with the sphere-log delta measured and closed, and the raw view with a MEASURED 
    ⛔ The echo of our own Apply is told apart by OBJECT IDENTITY now — the source name is
    indistinguishable from an incoming load, and a panel keeping the old test would discard the edits
    it had just published. `APPLY_SOURCE` survives as the no-origin fallback, which is what
-   `verify-region-marking-tool.mjs:653` grabs by; a node row pins that pairing.
+   `check-region-marking-tool.mjs:653` grabs by; a node row pins that pairing.
 3. **§2's size census is in FILE bytes and the raw view's units are PRETTY bytes — different corpus,
    different maximum.** 13 presets are written COMPACT (up to **1.75×**), so the worst case is
    `procgen_topdown/AP_8` at **3,146,656** pretty bytes (1,799,872 on disk), not `stardew_valley`'s
@@ -10186,7 +10186,7 @@ the painter's, and the census found `getObstacle`/`getItem` unused anywhere in t
    `buildSubstrateRegion` result, whose own signature defaults `substrate = 'maze'`. Keeping it would
    have left the one hardcoded substrate name the ⚖ asked to remove, where nothing can observe it.
 4. **The kickoff names a script that does not exist**: `verify-grid-growth-steps-ui.mjs` is really
-   **`verify-grid-growth-ui.mjs`**. The other three are as named.
+   **`check-grid-growth-ui.mjs`**. The other three are as named.
 5. **The four verify scripts are 0-moved, and the ONE differing line is NONDETERMINISTIC at a fixed
    HEAD.** All four exit 0 before and after; the 150-line logs differ in one informational line, PHASE
    J's substrate order (= `substrateRegistry.getAll()`'s insertion order). ⚠ Three re-runs at the
@@ -10617,7 +10617,7 @@ hold"* on the far side of a postMessage boundary, where the two can never be com
 half is `reportOver`'s `download.rules.allowed`, unchanged: a graph that does not close has no document to hand.
 
 **One label, six doors: "Open in APWorld Editor"** — Presets (H2 already said it), the pipeline and the marking
-tool (renamed from *"Edit in"*; `verify-region-marking-tool.mjs` clicks that text twice and moved with them),
+tool (renamed from *"Edit in"*; `check-region-marking-tool.mjs` clicks that text twice and moved with them),
 both lab pages, the bounce editor. Zero `Edit in APWorld Editor` left outside two historical planning docs.
 
 **Two defects the rows found, both invisible in the shipped build until driven:**
@@ -10718,7 +10718,7 @@ door now declares its `panelId` and the hub asks `centralRegistry.getAllPanelCom
 button is SHOWN, DISABLED, with the panel and the config file in its `title`. ⛔ The default config was NOT
 changed: turning a panel on for every user is ⚖ the user's, and it is open in plan §19.6.
 
-**⛑ And `verify-region-marking-tool.mjs` was ALREADY RED at HEAD.** H4c (`d73aa7823`) changed the hub's
+**⛑ And `check-region-marking-tool.mjs` was ALREADY RED at HEAD.** H4c (`d73aa7823`) changed the hub's
 module stash to `{jsonData, source}` so every intake could name its door; that gate's Phase F still asked for
 `.regions` on the wrapper and had been returning `null` ever since. It is not one of the nine gates H4c's
 §18.3 quotes, so nothing looked. Fixed here (one line) — **45 checks with one FAILING → 50 PASS / 0 FAIL**,
@@ -10728,7 +10728,7 @@ the five new ones being Phase F2, which drives the marking tool's new `onSave` s
 **Gates.** `apworldEditor/` **8 files / 191** (`documentKeys` 21 → **29**, `documentLinks` 10 → **15**) ·
 `loopsCostDebugger/` **2 / 24** (new `documentStateManager` **12**) · `sphereSteps` 47 → **50** ·
 `procgenPipelineUI` 7 → **15** · `procgenPipelineEngine` **203 unmoved** · `regionAtlasCompiler` 59 → **63** ·
-`lintGateLabels` **14** · `verify-region-marking-tool` **50/0** · `check-procgen-docs` ALL CHECKS PASSED ·
+`lintGateLabels` **14** · `check-region-marking-tool` **50/0** · `check-procgen-docs` ALL CHECKS PASSED ·
 `generate-procgen-reference` re-run, 0 FINDINGS · `procgenDocs/` **452**. Four mutants driven, none committed.
 Docs: `modules/apworldEditor.md`'s `editor` slot section rewritten, the Links tab section, the Events table.
 Traps **1206–1211**.
@@ -10809,19 +10809,19 @@ driver of check (1) ("an unedited save must not move a byte"); with bounce at 25
 the unit file and in the in-app row. ⚖ **H6a will take that subject away too**, and then the corpus has no
 check-(1) refusal left; that is H6a's to answer for.
 
-**Gates.** sphere byte-identity md5 unmoved · `verify-region-step-editing.mjs` A–N identical, ALL OK ·
+**Gates.** sphere byte-identity md5 unmoved · `check-region-step-editing.mjs` A–N identical, ALL OK ·
 bounded vitest 1,246/1,246 (`bounceDemo`, `bounceRegionEditor`, `apworldEditor`, `procgenPipeline`) · bounce
 `.slow` 102/102 · `procgenDocs/` 452/452 with `--check` at 0 · in-app `test-substrates --batch=fast`
 **83/83**, `compare-runs` "No differences in status, roster, or duration", browser log free of throws.
 Mutant (restore the mint): 12/13, red exactly on the `spring_gap` row.
-⚠ **A PRE-EXISTING RED, not this slice's:** `scripts/procgen/verify-rule-gated-portals.mjs` times out waiting
+⚠ **A PRE-EXISTING RED, not this slice's:** `scripts/procgen/check-rule-gated-portals.mjs` times out waiting
 for the pipeline panel's Generate button (`:153`). CONTROLLED — the same failure, byte for byte, with the four
 source files checked out at `f45b82789~1`. It is in no gate battery and no CI job; nobody had run it.
 
 **⚖ open for the user (plan §20.6):** (1) whether the `False_`-exit finding deserves a reader-facing note —
 any bounce world saved through Edit ▸ on an `exit_up` region carries an unreachable exit (nothing committed
 is in that state); (2) check (1) losing its last corpus subject after H6a; (3) the pre-existing
-`verify-rule-gated-portals` red. **The coded ladder ENDS HERE** — next are the two planning reviews (marking
+`check-rule-gated-portals` red. **The coded ladder ENDS HERE** — next are the two planning reviews (marking
 tool ↔ editor; loop costs ↔ procgen ↔ editor), with H6a parked behind the first.
 
 **H6b VERIFIED by the planner 2026-09-05** (`ef2f40efe` on origin/main; bounce door 25/25; CI in flight,
@@ -10862,11 +10862,11 @@ output `CC/docs/procgen-verify-tier.md`).
 battery, and the exclusion is a NAMING RULE** — `gateRoster.isGateFile` (`/^check-[a-z0-9-]+\.mjs$/`),
 `reachClosure.js:813` and `ci-gates.mjs` all select by the `check-` prefix, so no `verify-*` can join by
 declaring anything; `check-procgen-help` and `instruments.js` COVER all 50 (hygiene + catalogue) but nothing
-RUNS them. 8 reds: 6 pre-existing at `697c94ee6` (`verify-item-channels`, `verify-maze-loop-mana`,
-`verify-omsi-mana-leg`, `verify-dj-real-embed`, `verify-bot-playthrough`, `verify-rule-gated-portals`), 1 NEW
-(`verify-maze-consumable-tiles` — a GENERATOR-OUTPUT drift proved by cross-control: HEAD tree + pre-arc
+RUNS them. 8 reds: 6 pre-existing at `697c94ee6` (`check-item-channels`, `check-maze-loop-mana`,
+`check-omsi-mana-leg`, `verify-dj-real-embed`, `verify-bot-playthrough`, `check-rule-gated-portals`), 1 NEW
+(`check-maze-consumable-tiles` — a GENERATOR-OUTPUT drift proved by cross-control: HEAD tree + pre-arc
 fixture PASSES; the documented regen command now emits md5 `2ef8f4ab`→`40e87ff5`), 1 inconclusive
-(`verify-atlas-sphere-roundtrip`, same byte-identity claim). Correlation: 6 of the 23 scripts referenced by
+(`check-atlas-sphere-roundtrip`, same byte-identity claim). Correlation: 6 of the 23 scripts referenced by
 nothing but the catch-all registries are red (26%) vs 2 of 27 (7%). **⚖ RULED 2026-09-05 (user):** first
 slice = **chase the generator-output drift** (node-only bisect of `697c94ee6..HEAD` on the fixture md5, then
 intended-re-pin vs defect); then triage the six pre-existing reds; then the **RENAME** (gate-shaped `verify-*`
@@ -10877,7 +10877,7 @@ the drift and the triage.
 the survey session read idle first): a node-only bisect of the 45 code commits in `697c94ee6..HEAD` on the
 `maze_consumable_test` emission md5, in throwaway worktrees with the submodule matched per SHA (the gitlink
 moved once, at `9035a46a6`); a by-path diff of the two emissions; the ruling intended-vs-defect on evidence;
-and `verify-atlas-sphere-roundtrip` resolved in the primary tree. Then V2 (the six pre-existing reds), V3
+and `check-atlas-sphere-roundtrip` resolved in the primary tree. Then V2 (the six pre-existing reds), V3
 (the rename).
 
 **⇒ V1 AS BUILT 2026-09-05** (`e0408c3b4` fix + `6f9771d6c` record; "V1 as built" section in
@@ -10886,7 +10886,7 @@ row above is superseded.** `spiral-step.js run`'s only nondeterminism is `genera
 the pre-arc tree and HEAD emit the SAME document (`9d529f46…`, 5623 bytes canonical). The survey compared RAW
 file bytes, which carry that wall clock, so `2ef8f4ab`→`40e87ff5` was never evidence of anything. No bisect
 was possible: there was nothing to bisect.
-`verify-maze-consumable-tiles` moves **NEW → PRE-EXISTING** (making it **seven** pre-existing reds and an
+`check-maze-consumable-tiles` moves **NEW → PRE-EXISTING** (making it **seven** pre-existing reds and an
 empty "new" column): the script hardcodes `localhost:8000`, so the survey's worktree "control" drove HEAD's
 frontend anyway; given its own server on :8001 the pre-arc tree fails on the same assertion. The mechanism is
 a race in the INSTRUMENT — its boot gate waited for the omsi ENGINE (`resources.gold` readable) when what has
@@ -10895,7 +10895,7 @@ while the bot reaches the tile in ~1 s; the grant is published into that gap and
 *"a publish before [IFRAME_APP_READY] reaches nobody and is not even queued"*. One `waitFor` on the
 subscription: **3/3 FAIL before, 4/4 `VERIFY MAZE CONSUMABLE TILES: OK` after.**
 **The REAL generator-output drift is the OTHER script**, which the survey had left inconclusive.
-`verify-atlas-sphere-roundtrip` runs 67 PASS / 1 FAIL in the primary tree; the byte diff is exactly six
+`check-atlas-sphere-roundtrip` runs 67 PASS / 1 FAIL in the primary tree; the byte diff is exactly six
 values (four `tiles` `1→0`, `entrance.x` and `exits[2].x` `4→2`), bisected in 11 steps over 1568 commits to
 **`c8447dd56`** (2026-08-24), which re-pinned `frontend/atlas-pools/seedling-atlas-pool.json` — the same four
 tiles and the same `4→2`, 1:1 — without regenerating the pool's second consumer. **Ruling: (a) INTENDED.**
@@ -10914,7 +10914,7 @@ compared raw bytes carrying `generatedAt`, and pre-arc and HEAD emit the same no
 (`9d529f46…`); and the maze red was PRE-EXISTING (a worktree "control" still drove the primary tree's
 frontend through `localhost:8000`). The maze red was a RACE IN THE INSTRUMENT (the boot gate proved the omsi
 GAME loaded, not that the omsi BRIDGE had subscribed; a grant published into that ~5 s gap is dropped silently
-by the iframe handshake's own contract) — fixed, 4/4 green. The REAL drift is `verify-atlas-sphere-roundtrip`:
+by the iframe handshake's own contract) — fixed, 4/4 green. The REAL drift is `check-atlas-sphere-roundtrip`:
 `frontend/presets/seedling_atlas_sphere/AP_1/AP_1_rules.json` is 12 days stale against the atlas pool —
 `c8447dd56` (2026-08-24) re-pinned the pool (four tiles + one entrance x 4→2) and regenerated
 `seedling_playthrough` but not this second consumer; verified here: `seedling_atlas_maze` carries x=2,
@@ -10937,7 +10937,7 @@ rule-gated-portals · `d05532c4e` maze-loop-mana · `81dfc0041` item-channels ·
 regenerated with the command its own README and the verify script both run — ⛑ the kickoff pointed at
 `:220-228`, which is the THROWAWAY world's `world_generator`+`Generate.py` path; the committed preset's
 regeneration is the `dump-sphere-growth.js` call at `:287`. **Exactly the six values V1 named moved**, no
-keys added or removed, file length unchanged at 124 377 bytes. `verify-atlas-sphere-roundtrip` **68 PASS /
+keys added or removed, file length unchanged at 124 377 bytes. `check-atlas-sphere-roundtrip` **68 PASS /
 0 FAIL** (twice); the WHOLE `pytest test test_json worlds` **1507 passed, 2 skipped, 21 299 subtests**
 (492 s); strict schema green; `preset_files.json` unchanged; no pin names the preset (re-derived).
 ⚠ A full `pytest` WRITES INTO THE TREE — it appended an APQuest seed to the tracked `preset_files.json` and
@@ -10946,18 +10946,18 @@ left `frontend/presets/apquest/AP_077581764…/` untracked. Restored; in no comm
 **Task 1 — six verdicts, and the survey's CLUSTER IS DISSOLVED.** The three "clustering" scripts have three
 unrelated causes, and V1's grant-before-subscribe race — the brief's leading hypothesis — explains **none**
 of them.
-- `verify-item-channels` **INSTRUMENT, and never a standing red**: 5 red / 2 green solo at HEAD. The "leak"
+- `check-item-channels` **INSTRUMENT, and never a standing red**: 5 red / 2 green solo at HEAD. The "leak"
   is the check losing a race to the task's OWN auto-repeat (`maxReps` 10) — `omsi gold 0 -> 2` is rep 1's
   scheduled award arriving on time, and the counter reads `reps=2` at the failure. FIXED
   (`setQueueRepeatCount(1)`, one atomic read, each claim asserted at its own rep): **3/3 green**.
-- `verify-maze-loop-mana` **INSTRUMENT** — its uncommitted fixture was ABSENT, so the page loaded no world
+- `check-maze-loop-mana` **INSTRUMENT** — its uncommitted fixture was ABSENT, so the page loaded no world
   and died on a line that reads like an app defect. Regenerated, that assertion passes; a preflight now
   names the prerequisite (driven with the fixture moved aside). ⛑ This also settles the `?mode=loops`
   question: unrelated — `modes.json:233` really defines that mode.
-- `verify-omsi-mana-leg` **INSTRUMENT, named not fixed**: it drives UNPARKED live play, which `f2e392df1`
+- `check-omsi-mana-leg` **INSTRUMENT, named not fixed**: it drives UNPARKED live play, which `f2e392df1`
   (2026-07-24, park-gated stepping) froze BY DESIGN one week after the script was written. 304 messages,
   **304 `skippedGated`, 0 `ticksStepped`**, `step gate: CLOSED (enforced=true, livePlay=none)`.
-- `verify-rule-gated-portals` **INSTRUMENT, stale TWICE from one day** — `85c1c3ba1` (sphere mode's button
+- `check-rule-gated-portals` **INSTRUMENT, stale TWICE from one day** — `85c1c3ba1` (sphere mode's button
   became "Run all"; it re-pointed the SIBLING script in the same commit, not this one) and `06eafea4e` (the
   free arrow left the pool for the substrate hook), both 2026-06-19. FIXED; `buildWorld` now CALLS
   `collectSphereGrowthPrep` rather than copying it. **The app's authored-lock claim is GREEN and had never
@@ -10972,18 +10972,18 @@ arc's and both postdate the baseline's `measuredAt`, so the gate red them BY NAM
 **to the law, not baselined**: each file's driving half moved into `main()` behind `isEntryPoint`.
 `shot-loaded-composite-map.mjs` had no `argvHelp` at all (so `--help` ran the whole shot) and
 `measure-apworld-raw-view.mjs`'s bare import TOOK THE REAL BOX and launched a browser. ⚠
-`verify-seedling-ap-placement`'s row is green because it is BASELINED (hand-interpolated at P2), not fixed.
+`check-seedling-ap-placement`'s row is green because it is BASELINED (hand-interpolated at P2), not fixed.
 
 ⚖ **THREE FOR THE USER.**
 1. **SUBJECT — loops halts at the first maze action.** With `maze_loop_worldgen` present the queue builds
    (6 actions) and `startProcessing()` starts (`isProcessing` true, index 0 → 1), then within 5 s
    `isProcessing` is false and never resumes: index frozen at 1, mana 100/100, `manaEvents` `[100]`, XP 0,
    for 60–180 s. Measured twice (script + standalone probe). The app is not fixed here per the brief.
-2. **`verify-rule-gated-portals`' fourth leg.** The no-input climb does not reach the CORRECTLY-UNLOCKED
+2. **`check-rule-gated-portals`' fourth leg.** The no-input climb does not reach the CORRECTLY-UNLOCKED
    portal: `CLIMB REACHED: entrance → b0 → b1 → b2`, then it bounces on `b2` for ~85 s holding both arrows.
    The seed scan reasons over the sphere TREE and cannot see physical reachability. Closing it =
    instrument DESIGN (derive per-portal reachability, or drive the hop and gut the claim).
-3. **`verify-omsi-mana-leg` needs a loops PARK.** Teaching it to park a queue on a manual block in the omsi
+3. **`check-omsi-mana-leg` needs a loops PARK.** Teaching it to park a queue on a manual block in the omsi
    region is instrument design — and ⚖ 1 shows loops halting at the first substrate action anyway, so these
    two are probably one piece of work.
 
@@ -11001,7 +11001,7 @@ APQuest seed to the tracked `preset_files.json` and leaves a preset dir untracke
 **⚖ RULED 2026-09-05 (user):** (1) the SUBJECT red — **loops HALTS at the first maze location check** (queue
 of 6 builds, processing starts, stops within 5 s at index 1, never resumes; two instruments, 60–180 s) — is
 **investigated NOW, before the rename**, as a diagnosis slice (fix only if one clear defect); the omsi
-mana-leg's "needs a loops park" is read as the same work. (2) `verify-rule-gated-portals`' physics leg is
+mana-leg's "needs a loops park" is read as the same work. (2) `check-rule-gated-portals`' physics leg is
 CUT; the witnessed claim (gate rules re-evaluated on the snapshot update) stays — one commit in V3. Ladder:
 **V2b** loops-halt diagnosis → **V3** rename (+ the cut).
 
@@ -11024,7 +11024,7 @@ observe — is reachable **only from a `bot` block** (`loop-recording.md:18,23,3
 one line changed: with the blocks forced to `bot` the same run gives 11 `manaChanged` events, per-tile
 decrements 16.67/13.75×3, XP 16.67/41.25/60, `completed:false`, `loopResetCount` 1 — **every claim the
 instrument makes**. It asks for them without asking for the mode that produces them. So
-`verify-maze-loop-mana.mjs` is a **fourth INSTRUMENT** red and V2's tally becomes **5 INSTRUMENT / 2 STALE /
+`check-maze-loop-mana.mjs` is a **fourth INSTRUMENT** red and V2's tally becomes **5 INSTRUMENT / 2 STALE /
 0 SUBJECT**. Contrast, in one line: `mazeBlockModeTests.js:212` sets `'manual'` explicitly — the green maze
 rows are green *because they set a mode*, and **no `scripts/procgen/*.mjs` instrument sets one at all**.
 ⚖ (a) and ⚖ (c) are **one cause family** (both instruments 2026-07-17; both invalidated by the 2026-07-23/24
@@ -11046,7 +11046,7 @@ M6 (`05979752fb`) made substrate delegation reachable only from a `bot` block, d
 0 SUBJECT. The omsi mana leg shares the cause family with the OPPOSITE repair (it must CREATE a park).
 **⚖ RULED 2026-09-05 (user): "a maze block parks for live play unless explicitly set to Bot" is the
 INTENDED contract.** ⇒ **V3a** = three instrument-design fixes (maze leg → Bot ×3; omsi leg → a manual park;
-`verify-rule-gated-portals` physics leg CUT, the witnessed claim kept); **V3b** = the RENAME (gate-shaped
+`check-rule-gated-portals` physics leg CUT, the witnessed claim kept); **V3b** = the RENAME (gate-shaped
 `verify-*` → `check-`, report-shaped → `dump-`/`report-`), its own session because of the pins it moves.
 
 **V3a LAUNCHED 2026-09-05** as `procgen-instrument-fixes` (Opus; kickoff
