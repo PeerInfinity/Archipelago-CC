@@ -10230,6 +10230,16 @@ import scan with no edit to the gate. Skips unmoved at 8, slow battery unmoved a
 
 **NEXT = H2b** (the CM6 raw view, ⚖ ruled), then H4 (Task 0 = the 4-player fixture), then H5.
 
+**H3 VERIFIED by the planner 2026-09-05** (`390fe0da6` on origin/main; the slot on both declarers, the
+renderer in `procgenCore/`, the reconstruct pipeline-side, the docs section and the regenerated matrix, the
+hub's `selectRegion`, the pipeline panel with no `mazeRoom/` import — all on disk). Standing-artifact
+corrections from H3: the reconstruct CANNOT live in `procgenCore/` (its `Grid` reaches `mazeRoom/` through
+the engine and the binding contract scans literal specifiers only — trap 1163); `?? 'maze'` was unreachable
+and is gone; a document rebuilt from sidecars draws no inter-region connection lines (pre-existing; a
+one-liner offered to H4). **H2b LAUNCHED 2026-09-05** as `apworld-hub-sliceH2b` (Opus, kickoff
+`NewDocs/plans/apworld-hub-sliceH2b-prompt.md`): the raw view on CodeMirror 6, retiring the 2 MB limit on
+the measurement's say-so, the measurement script re-run over the hub's real editor.
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
