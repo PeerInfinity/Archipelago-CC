@@ -2,8 +2,9 @@
  * apworldEditor/reverseLinks — **THE TWO DOORS THAT POINT *AT* THE HUB**
  * (APWorld editor hub, H4c; plan §3 idea 6, *"reverse links everywhere"*).
  *
- * Five doors publish `apworldEditor:loadRules` or `apworldEditor:selectRegion`
- * now, and every one of them is somewhere else in the tree. What this file
+ * Six controls now carry the label "Open in APWorld Editor" — the Presets
+ * screen, the procgen pipeline, the marking tool, both lab pages and the bounce
+ * editor — and every one of them is somewhere else in the tree. What this file
  * drives is the HUB'S OWN SIDE of both: the module-level stash that catches a
  * hand-off arriving before anybody has opened the panel, and the bounce
  * editor's publisher.

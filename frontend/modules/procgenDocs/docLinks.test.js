@@ -107,6 +107,15 @@ describe('the corpus census — printed, then pinned', () => {
          *              arm* for the maze's side, and that § → `loop-recording.md`
          *              for the panel's. TWO sibling-doc links (`doc` 152 → 154;
          *              `same-doc` unmoved at 14).
+         *   223 → 225  APWORLD EDITOR HUB H4c: the reverse link is one door
+         *              described from two sides, so `maze.md`'s hosting § and
+         *              `architecture.md`'s lab-hosting paragraph each point at
+         *              `docs/json/modules/apworldEditor.md` § *The Links tab*,
+         *              which holds the table of all six controls. ⛓ Both count
+         *              as **`repo`**, not `doc` (32 → 34): that file is not one
+         *              of the seventeen this VIEWER lists, so the resolver
+         *              sends it to GitHub — which is the resolver working, and
+         *              the reason the two kinds are counted apart.
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
          */
@@ -114,10 +123,10 @@ describe('the corpus census — printed, then pinned', () => {
             'same-doc': 14,
             doc: 154,
             external: 23,
-            repo: 32,
+            repo: 34,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(223);
+        expect(CORPUS.length).toBe(225);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
@@ -131,7 +140,7 @@ describe('the corpus census — printed, then pinned', () => {
 
     it('sends every other repo path to GitHub, fragment kept', () => {
         const repo = RESOLVED.filter((r) => r.kind === 'repo');
-        expect(repo).toHaveLength(32);
+        expect(repo).toHaveLength(34);
         for (const r of repo) expect(r.href.startsWith(`${REPO_URL}/`), r.href).toBe(true);
         /** ⛓ The four families the corpus actually names. */
         const tops = [...new Set(repo.map((r) => r.repoPath.split('/')[0]))].sort();

@@ -342,6 +342,20 @@ count at all. Which substrates open this way is the registry's
 `procgenPipeline/regionEditors.js` ([The stepped pipeline](./stepped-pipeline.md)
 § *Region editors*).
 
+**And the door points back, which DID cost a word** (APWorld editor hub, H4c).
+W3's room-editor door added nothing to the vocabulary; the reverse link had to,
+because it is the first thing a page asks the APP to do rather than a report of
+what the page shows. `procgenLab:openInApworldEditor` carries
+`{substrate, iframeId, rules, source}` — the document the page's own REPORT
+compiled, plus the page's own word for where it came from — and
+`procgenLabPanel` forwards it onto `apworldEditor:loadRules` +
+`ui:activatePanel`, in that order, without reading a region of it. The button is
+HIDDEN when the page is standalone: the transport is not even fetched there.
+The bounce region editor needs no protocol for the same trip — it and the hub are
+panels in one app — so it publishes `apworldEditor:selectRegion {region, player?}`
+instead, and the hub answers on the document it already holds
+([APWorld editor](../../modules/apworldEditor.md) § *The Links tab*).
+
 **`onSetChange({why})` has ONE ordering rule, and it is the contract.** The
 mount's own `render()` has already run when a page is called, on every path — so
 a page may publish what it derives from the MOUNT and not only what it derives

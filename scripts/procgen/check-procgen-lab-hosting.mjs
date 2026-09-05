@@ -63,6 +63,15 @@
  *     TAKE button then holds it with zero panel changes.
  *     ⛔ AND THE NEGATIVE: `?room=` with nothing held REFUSES in the page's own
  *     box — not a throw, and claim 10 is what says it was not one.
+ * 12. **THE REVERSE LINK** (APWorld editor hub, H4c) — the HOSTED maze page
+ *     offers *"Open in APWorld Editor"* (the standalone one, claim 9, hides
+ *     the same button), and one press carries the page's OWN compiled
+ *     rules.json across the eighth `procgenLab:` name, through the panel's
+ *     forward, and into a session in the APWorld editor panel — with the door
+ *     named in that session's base tag. ⛔ Five seams that only meet here, and
+ *     TWO documents: the maze's committed pack does not close, so the button is
+ *     shown DISABLED with the core's own sentence; the Seedling set is linked,
+ *     so the same button is ENABLED and one press runs the chain.
  * 10. **ZERO CONSOLE ERRORS** at the end, host page and both frames.
  *
  * ⛔ EVERY WAIT IS ON A CONDITION, never on a readout merely EXISTING (traps
@@ -300,8 +309,18 @@ async function standaloneRequests(url, why) {
         () => Boolean(window.__mazeLab || window.__watch),
         null, { timeout: 60000 },
     ).catch((e) => { throw new Error(`STUCK waiting for ${why} to draw: ${e.message}`); });
+    /**
+     * ⛓ H4c — **AND WHAT THE REVERSE-LINK BUTTON LOOKS LIKE WITH NO HOST.**
+     * Read in the standalone context on purpose: `hidden` is the page's own
+     * first-paint state, before any mount has run, so a build that shipped the
+     * button visible would be caught by the document rather than by a mount.
+     */
+    const apworldHidden = await page.evaluate(() => {
+        const b = document.getElementById('editOpenApworldEditor');
+        return b === null ? null : b.hidden === true;
+    });
     await page.close();
-    return requested;
+    return { requested, apworldHidden };
 }
 
 try {
@@ -309,12 +328,21 @@ try {
         ['maze lab.html', `${base}/frontend/modules/mazeRoom/lab.html?seed=3&count=1&run=1`],
         ['Seedling watch.html', `${base}/frontend/modules/seedlingDemo/watch.html?source=generate`],
     ]) {
-        const requested = await standaloneRequests(url, why);
+        const { requested, apworldHidden } = await standaloneRequests(url, why);
         const bridgey = requested.filter((u) => BRIDGE_FILES.some((f) => u.includes(f)));
         check(bridgey.length === 0,
             `⛓ CLAIM 9 — the STANDALONE ${why} fetched NO bridge module `
             + `(${requested.length} requests, none of [${BRIDGE_FILES.join(', ')}])`,
             bridgey.join(' | '));
+        /**
+         * ⛔ HIDDEN, NOT DISABLED (H4c). A standalone lab page has no app to
+         * open the APWorld editor in — it did not even fetch the transport, one
+         * check up — so the door is not shown at all. A disabled button would
+         * advertise a door that does not exist rather than one that is shut.
+         */
+        check(apworldHidden === true,
+            `⛓ …and its "Open in APWorld Editor" button is HIDDEN, because ${why} standalone `
+            + 'has no host to open it in', json(apworldHidden));
     }
 
     /* ══════════════════════════════════════════════════════════════════
@@ -377,7 +405,10 @@ try {
         window.__labTap = [];
         const names = ['iframe:appReady', 'procgenLab:load', 'procgenLab:navigate',
             'procgenLab:requestState', 'procgenLab:ready', 'procgenLab:stateChanged',
-            'procgenLab:levelChanged', 'procgenLab:selectTile'];
+            'procgenLab:levelChanged', 'procgenLab:selectTile',
+            // ⛓ H4c — the reverse link, and the two app-side events the panel
+            //   forwards it onto. CLAIM 12 reads all three off this tap.
+            'procgenLab:openInApworldEditor', 'apworldEditor:loadRules', 'ui:activatePanel'];
         for (const name of names) {
             window.eventBus.subscribe(name, (data) => {
                 window.__labTap.push({ name, data });
@@ -1325,6 +1356,154 @@ try {
         && json(seedTakenDoc.record.set.rooms) === json(seedClosed.record.set.rooms),
     '⛓⛓ …and the PANEL\'S OWN TAKE button holds the edited document, with ZERO panel changes',
     `${seedTaken.length} bytes, kind=${seedTakenDoc.kind}`);
+
+    /* ══════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ CLAIM 12 — THE REVERSE LINK (APWorld editor hub, H4c)
+     *
+     * Both frames are holding the document the host sent, with the ONE room
+     * edit 11b/11c folded in. Their SET editors compile that document for the
+     * REPORT already; *"Open in APWorld Editor"* hands THAT compile to the app
+     * over the eighth `procgenLab:` name, and the panel forwards it onto
+     * `apworldEditor:loadRules` + `ui:activatePanel`.
+     *
+     * ⛔ **THE TWO FRAMES ARE TWO DIFFERENT CLAIMS, and the pairing is the
+     * measurement.** The maze's document is the COMMITTED region pack, whose
+     * four entries are not wired to each other, so its graph does not close and
+     * `reportOver` refuses the rules.json — the button is SHOWN and DISABLED
+     * with the core's own sentence. The Seedling document is a LINKED set, so
+     * the same button is ENABLED and one press runs the whole chain. A row
+     * driven on either alone could not tell "the button reads
+     * `download.rules.allowed`" from "the button is always enabled" / "always
+     * disabled".
+     *
+     * ⛓ END TO END, THROUGH FIVE SEAMS THAT ONLY MEET HERE: the page's button,
+     * the in-page bridge, the postMessage boundary, the host panel's forward
+     * and the hub's own intake. Every one is unit-tested on its own; none of
+     * those rows can say the chain is connected.
+     * ══════════════════════════════════════════════════════════════ */
+
+    /** ⛓ The button's state in a frame, read after that frame's own REPORT. */
+    const apworldButtonOf = async (frame, why) => {
+        await frame.evaluate(() => document.getElementById('editSetReport').click());
+        await settledFrame(frame, () => {
+            const b = document.getElementById('editOpenApworldEditor');
+            return Boolean(b) && b.hidden === false;
+        }, `the HOSTED ${why} to SHOW "Open in APWorld Editor" after its REPORT`);
+        return frame.evaluate(() => {
+            const b = document.getElementById('editOpenApworldEditor');
+            return { hidden: b.hidden, disabled: b.disabled, text: b.textContent, title: b.title };
+        });
+    };
+
+    await raiseTab(maze.iframeId);
+    const mazeApworld = await apworldButtonOf(mazeFrame, 'maze lab');
+    check(mazeApworld.hidden === false && mazeApworld.text === 'Open in APWorld Editor',
+        '⛓⛓⛓ CLAIM 12 — the HOSTED page SHOWS the reverse link (the standalone one, claim 9, '
+        + 'hides the same button) under the one spelling all six doors use',
+        json(mazeApworld));
+    const mazeWhy = await mazeFrame.evaluate(
+        () => document.getElementById('editSetReportNote')?.textContent ?? '');
+    check(mazeApworld.disabled === true && mazeApworld.title === mazeWhy,
+        '⛔ …and on a document whose graph does NOT close it is DISABLED with `reportOver`\'s '
+        + 'OWN sentence — the same refusal that disables `Download rules.json` beside it, not '
+        + 'a second condition the button invented', `${json(mazeApworld.disabled)} · ${mazeWhy}`);
+
+    const beforePress = (await tap()).length;
+    await mazeFrame.evaluate(() => document.getElementById('editOpenApworldEditor').click());
+    await page.waitForTimeout(1000);
+    const afterRefused = (await tap()).slice(beforePress)
+        .filter((e) => e.name === 'procgenLab:openInApworldEditor');
+    check(afterRefused.length === 0,
+        '⛔ …and the PRESS refuses too, publishing nothing — a `disabled` attribute is a hint '
+        + 'to a person, and the handler is what a keyboard or a driver reaches',
+        json(afterRefused.length));
+
+    /* ── the LINKED document: the same button, and the whole chain ──── */
+
+    await raiseTab(seed.iframeId);
+    const seedApworld = await apworldButtonOf(seedFrame, 'Seedling watch page');
+    check(seedApworld.hidden === false && seedApworld.disabled === false,
+        '⛓⛓ …and on the LINKED set next door the SAME button is ENABLED — which is what says '
+        + 'the disabled half above is the DOCUMENT\'s answer and not the button\'s',
+        json(seedApworld));
+
+    await seedFrame.evaluate(() => document.getElementById('editOpenApworldEditor').click());
+    events = await settledTap(
+        (es) => es.some((e) => e.name === 'apworldEditor:loadRules'),
+        'the host bus to see the forwarded hand-off');
+
+    const reverse = events.find((e) => e.name === 'procgenLab:openInApworldEditor');
+    check(reverse?.data?.iframeId === seed.iframeId && reverse?.data?.substrate === 'seedling',
+        '⛓⛓ …the page published the EIGHTH lab-protocol name, ADDRESSED — two frames share '
+        + 'one host bus, so an unaddressed reverse link would open the other frame\'s document',
+        `${json(reverse?.data?.substrate)} · ${json(reverse?.data?.iframeId)}`);
+
+    /**
+     * ⛓ THE PAGE'S OWN COMPILE IS THE SUBJECT, read off the readout global the
+     * press writes — so this row never types a `game_name`, and a page that
+     * renamed its world retargets the claim instead of breaking it.
+     */
+    const pageCompiled = await seedFrame.evaluate(() => {
+        const out = globalThis.__editorSetApworldOut;
+        return out === null || out === undefined ? null : {
+            game_name: out.game_name ?? null,
+            regions: Object.keys(out.regions?.['1'] ?? {}).length,
+        };
+    });
+    const handoff = events.find((e) => e.name === 'apworldEditor:loadRules');
+    const handedRegions = Object.keys(handoff?.data?.jsonData?.regions?.['1'] ?? {}).length;
+    check(pageCompiled !== null && pageCompiled.regions > 0
+        && handoff?.data?.jsonData?.game_name === pageCompiled.game_name
+        && handedRegions === pageCompiled.regions,
+    '⛓⛓⛓ …and what reached the APP is the page\'s OWN compiled rules.json — the same '
+        + 'document its `Download rules.json` writes, region for region',
+    `${json(pageCompiled)} vs ${json(handoff?.data?.jsonData?.game_name)} / `
+        + `${handedRegions} region(s)`);
+
+    check(handoff?.data?.source === 'the Seedling watch page (SET arm)',
+        '⛔ …carrying the PAGE\'S OWN provenance, which the host does not invent: the hub '
+        + 'files every intake under where it came from, and a lab document has no preset '
+        + 'path and no sphere log', json(handoff?.data?.source));
+
+    const order = events.filter((e) => e.name === 'apworldEditor:loadRules'
+        || (e.name === 'ui:activatePanel' && e.data?.panelId === 'apworldEditorPanel'))
+        .map((e) => e.name);
+    check(json(order.slice(0, 2)) === json(['apworldEditor:loadRules', 'ui:activatePanel']),
+        '⛓⛓ …and the DOCUMENT went first, then the panel was raised — reversed, the hub '
+        + 'would come forward showing what it held a moment ago', json(order));
+
+    /**
+     * ⛓⛓⛓ AND THE HUB ACTUALLY OPENED IT. Everything above is about messages;
+     * this is the only check that says a reader ends up looking at the
+     * document. ⛔ The wait is on the panel HOLDING it, never on the element
+     * existing (traps 246/258).
+     */
+    const hubDoc = await (async () => {
+        for (const deadline = Date.now() + 60000; Date.now() < deadline;) {
+            const got = await page.evaluate(() => {
+                const el = document.querySelector('.apworld-editor-panel');
+                const p = el && el.__panel;
+                const doc = p && p.rulesDoc;
+                return doc ? {
+                    game_name: doc.game_name ?? null,
+                    regions: Object.keys(doc.regions?.['1'] ?? {}).length,
+                    // ⛓ `payload().base` is the accessor — `editCore` carries
+                    //   the base TAG opaquely and exposes it there, not as a
+                    //   field on the session.
+                    source: p.session?.payload?.().base?.source ?? null,
+                } : null;
+            });
+            if (got && got.game_name === pageCompiled?.game_name) return got;
+            await page.waitForTimeout(250);
+        }
+        return null;
+    })();
+    check(hubDoc !== null && hubDoc.regions === pageCompiled.regions,
+        '⛓⛓⛓ …and the APWORLD EDITOR PANEL now HOLDS that document — the chain runs from a '
+        + 'button inside an iframe to a session in the hub', json(hubDoc));
+    check(hubDoc?.source === 'hand-off · the Seedling watch page (SET arm)',
+        '⛔ …with the door NAMED in its base tag: six controls publish this channel now, and '
+        + '"hand-off" alone no longer says which one a reader pressed', json(hubDoc?.source));
 
     /* ── CLAIM 10: zero console errors ─────────────────────────────── */
     const benign = notFound.filter((u) => BENIGN_404.some((b) => new URL(u).pathname === b));

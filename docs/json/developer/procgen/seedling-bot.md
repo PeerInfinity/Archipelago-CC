@@ -9208,6 +9208,12 @@ over the existing `iframeAdapter` bridge in the `procgenLab:` vocabulary, which
 lives **once** in `procgenCore/labProtocol.js`; the in-page halves
 (`mazeRoom/mazeLabBridge.js`, `seedlingDemo/watchBridge.js`) are dynamically
 imported and only under `?iframeId=`, so a standalone load fetches neither.
+⛓ The APWorld editor hub's H4c added the vocabulary's EIGHTH name,
+`procgenLab:openInApworldEditor` (page → host): the SET arm's
+**Open in APWorld Editor** button hands the app the document its own REPORT
+compiled, and the panel forwards it onto `apworldEditor:loadRules` +
+`ui:activatePanel`. The button is HIDDEN standalone, because the transport is not
+fetched there.
 watch.html gained ONE readout for it — `window.__watch`, a projection of the
 four `__editorX` objects the page already writes, plus an `identity` field on
 `__editorGenerate` carrying `describeState`'s own string. ⚠ **watch.html has no

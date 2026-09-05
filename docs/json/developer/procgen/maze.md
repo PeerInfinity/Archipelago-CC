@@ -699,10 +699,21 @@ mounts
 
 and talks to it over the existing `iframeAdapter` bridge in the `procgenLab:`
 vocabulary — `load` / `navigate` / `requestState` in, `ready` /
-`stateChanged` / `levelChanged` / `selectTile` out. **The vocabulary lives once**,
+`stateChanged` / `levelChanged` / `selectTile` / `openInApworldEditor` out.
+**The vocabulary lives once**,
 in `frontend/modules/procgenCore/labProtocol.js` (event names, payload shapes
 as frozen field lists, one `assert*` per event); the panel and its README are
 `frontend/modules/procgenLabPanel/`.
+
+`openInApworldEditor` is the newest, and the only one that asks the app to DO
+something rather than reporting what the page shows: the SET arm's
+**Open in APWorld Editor** button hands over the document its own REPORT
+compiled — the same bytes `Download rules.json` writes — and
+`procgenLabPanel` forwards it onto `apworldEditor:loadRules` +
+`ui:activatePanel`. ⛔ The button is **hidden**, not disabled, when the page is
+standalone: there is no app on the other side to open, and the bridge is not
+even fetched. See [the APWorld editor](../../modules/apworldEditor.md)
+§ *The Links tab* for all six doors that carry that label.
 
 The in-page half is `mazeLabBridge.js`, **dynamically imported and only when
 `?iframeId=` is present** — a standalone load never fetches it, which

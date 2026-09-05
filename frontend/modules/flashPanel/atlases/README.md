@@ -34,7 +34,7 @@ node scripts/procgen/region-atlas-compile.mjs atlases/seedling.json \
 
 The output has no timestamp, so `--check` is exact. Unwired boundary exits are
 **omitted** from the graph and named in the report — the compile is not a silent
-truncation. The marking tool's *Export rules.json* and *Edit in APWorld Editor*
+truncation. The marking tool's *Export rules.json* and *Open in APWorld Editor*
 buttons run the same compiler.
 
 ## Format

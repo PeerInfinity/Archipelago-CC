@@ -66,7 +66,7 @@
 //
 // Headless-safe: no top-level await, no literal node: imports — this module is
 // in the bundled browser graph (the marking tool's "Export rules.json" and
-// "Edit in APWorld Editor" buttons compile through it).
+// "Open in APWorld Editor" buttons compile through it).
 
 import {
     makeRulesJsonScaffold,

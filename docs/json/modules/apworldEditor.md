@@ -296,6 +296,41 @@ working copy until you press Apply.
 ⚖ The region graph link is **one-way** by user ruling: this tab opens the graph,
 and the graph has no button back here. Do not "fix" that asymmetry.
 
+### …and the links pointing the OTHER way (H4c)
+
+Six controls carry the label **"Open in APWorld Editor"**, and the spelling is
+deliberately identical everywhere — it is the reader's only clue that these are
+one door pressed from six places. Two of them said *"Edit in APWorld Editor"*
+until H4c.
+
+| where | what it does | how |
+|---|---|---|
+| Presets, the opened-preset screen | raises this panel, which already holds the document the preset load published | `ui:activatePanel` only |
+| the procgen pipeline (`procgenPipelineUI`) | hands over the world it just generated | `apworldEditor:loadRules` + `ui:activatePanel` |
+| the region marking tool | compiles the atlas and hands over the rules.json | `apworldEditor:loadRules` + `ui:activatePanel` |
+| the maze lab (`mazeRoom/lab.html`), SET / WORLD arm | hands over the document its own REPORT compiled | `procgenLab:openInApworldEditor` → forwarded by `procgenLabPanel` |
+| the Seedling watch page (`seedlingDemo/watch.html`), SET arm | the same, over the same seam | as above |
+| the bounce region editor | names the region it is editing; carries **no** document | `apworldEditor:selectRegion` + `ui:activatePanel` |
+
+The two lab pages are **standalone documents** as well as hosted frames, so their
+button is **hidden** — not disabled — when the page has no host: there is no app
+on the other side to open, and the transport is not even fetched
+([the maze page](../developer/procgen/maze.md) § *Hosted in the frontend*). The
+button's DISABLED half is the shared set editor's existing rule: the same three
+conditions that refuse `Download rules.json` refuse the hand-off, because a graph
+that does not close has no compiled document to hand anybody.
+
+`apworldEditor:selectRegion` carries `{region, player?}`. `player` is optional and
+`null` means *"whichever slot the hub is showing"* — the bounce editor is opened
+on ONE region and does not carry the slot it came from. A named slot the document
+holds switches the selector first and then selects; one it does not hold is named
+in the status line and the hub stays where it was; a region no slot holds is said
+so rather than silently switching to a tab with nothing highlighted.
+
+Both channels are **stashed at module level** when the panel has never been
+mounted, and drained on mount — the panel's subscription lives on the panel, and
+a door pressed before anybody opened the hub would otherwise publish into nothing.
+
 ## The exits
 
 ⚖ *"The save destination is the rules.json data."* There is no disk writer in the
@@ -461,7 +496,8 @@ The import is free in both modes, measured:
 | Direction | Event | Notes |
 |-----------|-------|-------|
 | subscribes | `stateManager:rawJsonDataLoaded` | opens a session; its own Apply echo is ignored **by object identity** (`_appliedDocs`) — the source name is no longer a marker |
-| subscribes | `apworldEditor:loadRules` | the focus-safe hand-off the pipeline and the marking tool use |
+| subscribes | `apworldEditor:loadRules` | the focus-safe hand-off — the pipeline, the marking tool, and (H4c, via `procgenLabPanel`) both lab pages. `{jsonData, source?}`; `source` NAMES the door and the session's base tag says `hand-off · <door>`, while `origin` stays `null` because an in-memory compile has no preset path whose sphere log belongs to it |
+| subscribes | `apworldEditor:selectRegion` | H4c — `{region, player?}` from the bounce region editor; answered with `selectRegion(name, from)`, which says so when this document does not hold that region |
 | publishes | `files:jsonLoaded` | Apply — a full-document clone, under the **origin's** `sourceName` (`apworldEditorApply` only when there is no origin) |
 | publishes | `ui:activatePanel` | the Links tab's rows, and the Map tab's one-way *Open region graph* |
 
@@ -469,9 +505,10 @@ The import is free in both modes, measured:
 
 | Suite | Where |
 |-------|-------|
-| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js` | vitest, `frontend/modules/apworldEditor/` |
+| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `reverseLinks.test.js` | vitest, `frontend/modules/apworldEditor/` |
 | `../procgenCore/compositeMapRenderer.test.js` | vitest — the Map tab's renderer, driven by a TOY substrate |
 | `../procgenPipeline/compositeMapDocument.test.js` | vitest — `preset_sidecars` → `Grid`, including the player slot |
 | `presetUI.test.js` | vitest — the "Open in APWorld Editor" descriptor |
 | `measure-apworld-raw-view.mjs` | `scripts/procgen/` — the browser measurement; `--all` opens the raw tab over every committed preset, which is what RETIRED `RAW_VIEW_LIMIT_BYTES` |
 | `apworldEditorTests.js` | the in-app runner, category `apworldEditor`, enabled in `playwright_tests_config-substrates.json` (`npm test -- --mode=test-substrates --batch=fast`) |
+| `check-procgen-lab-hosting.mjs` claim 12 | `scripts/procgen/` — the reverse link end to end, from a button inside an iframe to a session in this panel |

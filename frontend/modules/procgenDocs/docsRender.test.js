@@ -221,8 +221,10 @@ describe('⛓ the links the render emits', () => {
         }
         // ⛓ 220 → 221: MAZE SLICE S2b's one new sibling-doc link in
         //   `loop-recording.md`; 221 → 223: SLICE R-b's mutual pair between
-        //   `loop-recording.md` and `maze.md` (see `docLinks.test.js`'s census).
-        expect(checked).toBe(223);
+        //   `loop-recording.md` and `maze.md`; 223 → 225: APWORLD EDITOR HUB
+        //   H4c's two pointers at `docs/json/modules/apworldEditor.md` from
+        //   `maze.md` and `architecture.md` (see `docLinks.test.js`'s census).
+        expect(checked).toBe(225);
     });
 
     it('tags each link with the kind that produced it', () => {

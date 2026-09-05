@@ -321,7 +321,7 @@ class ApworldEditorUI {
       });
     });
 
-    // Direct hand-off channel (§2.2): procgen's "Edit in APWorld Editor" routes
+    // Direct hand-off channel (§2.2): procgen's "Open in APWorld Editor" routes
     // a world here without a global files:jsonLoaded, so the substrate panels
     // don't auto-activate and steal focus. Adopt immediately when we're already
     // open; the consume() also clears any stash so it can't go stale.

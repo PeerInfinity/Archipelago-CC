@@ -36,6 +36,7 @@ bridges AND by this panel, so there is no second spelling of any field.
 | page → host | `procgenLab:stateChanged` | `{substrate, iframeId, url, source, seed, step, identity, certified, edits, directives}` |
 | page → host | `procgenLab:levelChanged` | `{substrate, iframeId, payload}` |
 | page → host | `procgenLab:selectTile` | `{substrate, iframeId, tx, ty}` |
+| page → host | `procgenLab:openInApworldEditor` | `{substrate, iframeId, rules, source}` |
 
 They are ordinary eventBus events carried over the adapter's existing
 `SUBSCRIBE_EVENT_BUS`/`PUBLISH_EVENT_BUS` — ⛔ **no new `MessageTypes`**, so
@@ -46,6 +47,18 @@ once and they share one bus: the adapter forwards a host publish to EVERY
 subscribed iframe, and an iframe publish reaches EVERY host subscriber. The
 `iframeId` is the address; `labProtocol.addressedTo` is the one routing
 predicate.
+
+**The eighth name is the only one that asks the app to DO something** (APWorld
+editor hub, H4c). The other seven are a host driving a page and a page reporting
+what it shows; `procgenLab:openInApworldEditor` carries the document the page
+itself compiled and asks for the APWorld Editor to be opened on it. It is a
+lab-protocol name rather than a direct publish because a lab page has no app
+`eventBus` at all — `apworldEditor:loadRules` exists only on the host side of the
+iframe boundary, and this vocabulary is the one transport across it. The panel
+FORWARDS it (`apworldEditor:loadRules`, then `ui:activatePanel`) and does not
+interpret it; `source` is the PAGE's own word for where the document came from,
+and the hub files the session under it. Both are registered publishers of this
+module — the bus drops an unregistered publisher with a warn line and no throw.
 
 ⚠ `certified` is `true` / `false` / **`null`**. `null` is *"nobody has asked"*
 and `false` is *"the oracle said no"* — different facts, kept apart end to end

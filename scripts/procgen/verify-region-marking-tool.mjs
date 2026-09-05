@@ -21,7 +21,7 @@
  *   Phase E (Phase 3) — "Export rules.json" downloads the compiled projection,
  *     byte-identical to what the headless compiler produces for the same atlas:
  *     the panel's export path is the CLI's compiler, not a second projection.
- *   Phase F (Phase 3) — "Edit in APWorld Editor" hands the compiled world over
+ *   Phase F (Phase 3) — "Open in APWorld Editor" hands the compiled world over
  *     the dedicated apworldEditor:loadRules channel, and the EDITOR'S OWN model
  *     ends up holding the compiled regions.
  *   Phase G (Phase 5a) — "Analyze region" on a real room with a real item gate
@@ -336,7 +336,7 @@ try {
 
     // The publish is synchronous inside the click handler, so the stash is
     // filled by the time clickToolbar returns.
-    await clickToolbar('Edit in APWorld Editor');
+    await clickToolbar('Open in APWorld Editor');
     const adopted = await readStash();
     check('Phase F: the APWorld Editor\'s OWN model holds the compiled regions',
         Array.isArray(adopted) && adopted.sort().join(',') === EXPECTED_AP_REGIONS,
@@ -575,7 +575,7 @@ try {
         tab.click();
     });
     await page.waitForSelector('.rmt-panel', { state: 'visible', timeout: 15000 });
-    await clickToolbar('Edit in APWorld Editor');
+    await clickToolbar('Open in APWorld Editor');
     await page.waitForSelector('.apworld-editor-panel', { state: 'visible', timeout: 15000 });
 
     const apState = () => page.evaluate(() => {

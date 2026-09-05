@@ -176,7 +176,8 @@ export class RegionMarkingToolUI {
                 onClick: () => this._exportRules(),
             }),
             el('button', {
-                class: 'rmt-btn', textContent: 'Edit in APWorld Editor',
+                // ⛓ H4c — one spelling across all five doors; this said "Edit in".
+                class: 'rmt-btn', textContent: 'Open in APWorld Editor',
                 title: 'compile and hand the rules.json straight to the APWorld Editor for detail-filling',
                 onClick: () => this._editInApworldEditor(),
             }),

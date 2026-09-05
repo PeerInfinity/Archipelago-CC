@@ -2306,7 +2306,14 @@ export class ProcgenPipelineUI {
                 e.preventDefault();
                 this._loadIntoFrontend(this.result.rulesJson, loadBtn);
             });
-            const editBtn = this._btn('Edit in APWorld Editor', (e) => {
+            /**
+             * ⛓ H4c — **ONE SPELLING, SIX DOORS.** "Open in APWorld Editor" is
+             * what the Presets screen (H2), the marking tool, both lab pages and
+             * the bounce editor say; this button said "Edit in" and was one of
+             * the two that did. The label is the reader's only clue that these
+             * are the same door from six places.
+             */
+            const editBtn = this._btn('Open in APWorld Editor', (e) => {
                 e.preventDefault();
                 this._editInApworldEditor(this.result.rulesJson, editBtn);
             });
@@ -3642,7 +3649,8 @@ export class ProcgenPipelineUI {
         setTimeout(restore, 1200);
     }
 
-    // §2.2 handoff: hand the generated world straight to the APWorld Editor and
+    // §2.2 handoff ("Open in APWorld Editor"): hand the generated world straight
+    // to the APWorld Editor and
     // bring it forward. We deliberately do NOT use the global files:jsonLoaded
     // here: a full app load triggers the substrate panels to self-activate (on
     // their loadRegion) and steal focus from the editor. The dedicated
@@ -3650,7 +3658,7 @@ export class ProcgenPipelineUI {
     // adopts it immediately if open, or drains the stash on mount — so nothing
     // else moves. procgen_metadata rides along untouched (editor preserves it, §2.1).
     _editInApworldEditor(rulesJson, button) {
-        const restore = () => { button.textContent = 'Edit in APWorld Editor'; };
+        const restore = () => { button.textContent = 'Open in APWorld Editor'; };
         const eventBus = this.apis?.eventBus;
         if (!eventBus || typeof eventBus.publish !== 'function') {
             button.textContent = 'No eventBus';

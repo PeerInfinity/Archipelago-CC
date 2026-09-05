@@ -37,7 +37,7 @@ export function register(registrationApi) {
     // generated rules.json — same event + payload shape the editor's
     // Apply button uses.
     registrationApi.registerEventBusPublisher('files:jsonLoaded');
-    // Published by "Edit in APWorld Editor" to bring that panel forward after
+    // Published by "Open in APWorld Editor" to bring that panel forward after
     // handing it the generated rules.json.
     registrationApi.registerEventBusPublisher('ui:activatePanel');
     // Dedicated channel that routes a generated world straight to the APWorld
