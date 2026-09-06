@@ -377,6 +377,14 @@ export class CostDebuggerUI {
    * A file path would be a claim about a file that may not exist — this
    * document has not been saved anywhere yet.
    *
+   * ⚠ **WHAT NEITHER SIDE CAN CHECK: that the hub still holds the document it
+   * handed over.** `onSave` applies into whatever session the hub has open now,
+   * so a person who hands a document over, then loads a different one in the
+   * hub, and only then presses Send, writes THIS plan into THAT document. It is
+   * an arc-wide property, not something this door adds — `region_atlas`'s Save
+   * has the same one — and closing it needs a document identity the hub does
+   * not carry. Named here rather than implied; ⚖ for the user.
+   *
    * ⛔ **THE OUTCOME IS THE HUB'S ANSWER, NOT AN ASSUMPTION.** `onSave` returns
    * `{accepted, applied, errors}` (L4's hub change); before it did, a panel
    * could only say "sent" and hope. A refusal is printed with the schema's own
