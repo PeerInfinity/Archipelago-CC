@@ -19,7 +19,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import {
@@ -251,6 +251,65 @@ describe('the editor slot — FILLED by H5', () => {
         + 'claim it', () => {
         expect(DOCUMENT_KEY_EDITORS.sphere_log.note).toContain('APPLIED STATE');
         expect(DOCUMENT_KEY_EDITORS.loop_costs.note).toContain('WORKING COPY');
+    });
+
+    /**
+     * ⛓⛓⛓ **L4 — the `loop_costs` door RETURNS AN OP** (⚖ user, 2026-09-06).
+     * H5 shipped it `returns: 'none'` and said in its own note that the
+     * write-back was "one door away"; this is that door. The note has to say
+     * two things a person cannot see from the button: what comes back (ONE
+     * `set-key`, one undo), and that a block's PRESENCE is the loop-mode switch
+     * — ⚖ (f) *"keep 'block presence means loop mode on'"* — so sending costs
+     * to a document that had no block turns loop mode ON for that world.
+     */
+    it('⛓⛓ L4 — `loop_costs` returns an op, and its note names ONE set-key and '
+        + 'the loop-mode switch', () => {
+        expect(DOCUMENT_KEY_EDITORS.loop_costs.returns).toBe('op');
+        const note = DOCUMENT_KEY_EDITORS.loop_costs.note;
+        expect(note).toContain('set-key loop_costs');
+        expect(note).toContain('undo');
+        // ⛔ The switch, in the door's own words rather than in a doc nobody
+        //    reads at the moment they press it.
+        expect(note).toContain('PRESENCE');
+        expect(note).toContain('enables loop mode');
+    });
+
+    /**
+     * ⛓⛓⛓ **L4 — `onSave` REACHES THE PANEL, BY IDENTITY.** The gesture that
+     * fires it happens long after `open()` returns (a person plans, then
+     * presses Send), so the door cannot hold it: it goes through the hand-off
+     * payload beside the document.
+     *
+     * ⛔ The panel module is MOCKED, not imported. Importing
+     * `loopsCostDebugger/index.js` here would drag the Golden-Layout panel
+     * graph into this file — the exact thing the "no door imports its panel"
+     * row above forbids — while proving nothing extra about the door.
+     */
+    it('⛓⛓⛓ L4 — the `loop_costs` door passes `onSave` through the hand-off '
+        + 'payload, by identity', async () => {
+        vi.doMock('../loopsCostDebugger/index.js', () => ({
+            LOOPS_COST_DEBUGGER_LOAD_RULES: 'loopsCostDebugger:loadRules',
+        }));
+        const published = [];
+        const eventBus = { publish: (event, payload) => published.push({ event, payload }) };
+        const record = { regions: { 1: {} } };
+        const onSave = () => {};
+
+        await DOCUMENT_KEY_EDITORS.loop_costs.open({
+            record, player: '1', key: 'loop_costs', value: undefined, eventBus, onSave,
+        });
+
+        expect(published.map((p) => p.event)).toEqual([
+            'loopsCostDebugger:loadRules', 'ui:activatePanel']);
+        const handoff = published[0].payload;
+        // ⛔ BY IDENTITY on both: a copied document would be a second answer to
+        //    "what is being edited", and a wrapped `onSave` would be a second
+        //    return path the hub never sees.
+        expect(handoff.jsonData).toBe(record);
+        expect(handoff.onSave).toBe(onSave);
+        expect(handoff.source).toBe('the APWorld editor');
+        expect(handoff.player).toBe('1');
+        vi.doUnmock('../loopsCostDebugger/index.js');
     });
 });
 

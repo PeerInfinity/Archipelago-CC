@@ -27,7 +27,8 @@
  *
  * `DOCUMENT_KEY_EDITORS` is the `key → {label, returns, note, open}` table the
  * LINKED editors hang off — `region_atlas` → the marking tool,
- * `procgen_metadata` → the pipeline, `loop_costs` → the cost debugger,
+ * `procgen_metadata` → the pipeline, `loop_costs` → the cost debugger (L4: its
+ * plan comes back as ONE `set-key`),
  * `sphere_log` → the spoiler checklist, `preset_sidecars` → the Regions tab's
  * per-region Edit ▸. A filled row makes `entry.editor` non-null and the
  * Document tab draws its Open button. See the table's own docblock for the
@@ -185,26 +186,38 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
      * this editor is OVERTURNED** — H5 measured the seam at two methods and
      * built it (`loopsCostDebugger/documentStateManager.js`).
      *
-     * ⚠ `returns: 'none'` all the same, and that is a SEPARATE fact: the
-     * debugger PLANS costs, and its plan (`CostPlanner.getCostData()`, already
-     * exactly this block's shape) has no gesture that writes it back. That
-     * write-back is one door away and is named here rather than implied — all
-     * twelve committed `loop_costs` blocks are EMPTY (`regions: {}`,
-     * `locations: {}`), so it is the useful next slice, not a tidy-up.
+     * ⛓⛓⛓ **L4 — AND THE PLAN COMES BACK AS *ONE* OP** (⚖ user, 2026-09-06;
+     * H5 §19.6 ⚖ 2 recommended it and this is the ruling). The debugger's
+     * `CostPlanner.getCostData()` is already exactly this block's shape — the
+     * BLOCK, write-by-class applied, byte-identical to the one the procgen
+     * pipeline embeds (`check-loop-costs-one-model.mjs`) — so the whole
+     * write-back is one `set-key loop_costs`, undoable here like any other
+     * edit. ⛔ It is ONE op and not a per-region stream on purpose: a cost
+     * block is a single answer to *"what does this world charge"*, and an undo
+     * that took back half a plan would leave a document neither model wrote.
+     *
+     * ⚠ **`onSave` IS PASSED THROUGH THE HAND-OFF PAYLOAD**, not held here: the
+     * panel is a person's workspace, so the gesture that fires it (its "Send
+     * costs to the document" button) happens long after `open()` returned. The
+     * panel keeps it beside the working copy and DROPS it the moment that
+     * working copy goes away — H5's rule that a panel silently holding a stale
+     * hand-off is wrong.
      */
     loop_costs: Object.freeze({
         label: 'Open in the loops cost debugger',
-        returns: 'none',
+        returns: 'op',
         panelId: 'loopsCostDebuggerPanel',
         note: 'Plans this WORKING COPY\'s mana economy — the debugger reads the document you '
             + 'are editing, not the applied world (press "Use applied state" there to go back). '
             + 'It needs a sphere log: this document\'s own embedded one, or it says so. '
-            + 'Nothing comes back as an op yet — `CostPlanner.getCostData()` is already this '
-            + 'block\'s shape and has no write-back gesture.',
-        open: async ({ record, player, eventBus }) => {
+            + 'Its "Send costs to the document" comes back here as ONE `set-key loop_costs` '
+            + 'carrying the whole planned block, which you can undo in one step. ⚠ A block\'s '
+            + 'PRESENCE is what enables loop mode for the world, so sending costs to a document '
+            + 'that had none turns loop mode on for it.',
+        open: async ({ record, player, eventBus, onSave }) => {
             const { LOOPS_COST_DEBUGGER_LOAD_RULES } = await import('../loopsCostDebugger/index.js');
             eventBus.publish(LOOPS_COST_DEBUGGER_LOAD_RULES, {
-                jsonData: record, source: 'the APWorld editor', player,
+                jsonData: record, source: 'the APWorld editor', player, onSave,
             });
             eventBus.publish('ui:activatePanel', { panelId: 'loopsCostDebuggerPanel' });
         },
