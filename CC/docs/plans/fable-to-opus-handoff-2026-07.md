@@ -11698,6 +11698,26 @@ vocabulary check or its CI row is a green that says nothing. (3) `costDebuggerUI
 `_pricingOf` is driven only by the in-app row and its mutant; a small unit file is a candidate, not owed.
 NEXT after L3: **L4** (the hub's write-back op; `documentKeys.js`'s `loop_costs` door is still `returns:'none'`).
 
+**⚖ RULED (user, 2026-09-06): L5b DROPPED** — *"On closer inspection, it looks like we should leave the JtA code as it
+is for now."* **L3 VERIFIED by the planner 2026-09-06** (`660d686bea`; 7 commits by path; the `@ci-box` line gone
+and `ci-gates --plan --set=headless` reads 32 arms / 2 shards; `_pricingOf` labels in the panel;
+`loopState.getSubstrateCaptureShape`; the new row in the substrates config; CI @ `fcb599f715` run 34061588723
+**435/13293, 0 failed**, ±0 derived and matched twice). ⚑ Three corrections the FIRST adoption measured, carried
+into memory `project_procgen_verify_tier_survey`: the "4 → 51 jobs" arithmetic was never a JOB count (only the
+browser plan feeds a matrix; headless arms run in one step — job count unmoved at 4; arm price 0.2 s); a docblock
+naming a flag SPELLING enrols it in the generated instruments index; a gate's CI row is `0/0 | (no total)` unless
+its output speaks `standingValues.headlineOf`'s vocabulary — ⚖ the other 49 adoptions owe that check. Panel: two
+axes (CLASS vs CAPTURE SHAPE — maze is coarse-classed, fine-shaped); Verify scores only priced regions; finding:
+`omsi_substrate_test`'s two MAZE regions have an EMPTY committed block (store answers 50 vs planner 16/21) — a
+fixture regeneration owed later, named. `costDebuggerUI.js` has no vitest file (named).
+**L4 LAUNCHED 2026-09-06** as `loop-costs-L4` (Opus; kickoff `NewDocs/plans/loop-costs-L4-prompt.md`; on L3's idle
+notice): the `loop_costs` door returns ONE `set-key loop_costs` op through the hub's `onSave` (the `region_atlas`
+door's shape; the schema veto is the gate, made ASKABLE by validating a planner block per region class FIRST);
+"Send costs to the document" in the panel, enabled only on a complete plan over a working copy; undo proof; the
+row says presence = loop mode on; mutant: a pre-L2-shaped block must be refused (or the schema's permissiveness
+is REPORTED). The presence switch as an editor action is NAMED, not taken. Then M1 waits on its design
+conversation; R1 owed.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
