@@ -11718,6 +11718,95 @@ row says presence = loop mode on; mutant: a pre-L2-shaped block must be refused 
 is REPORTED). The presence switch as an editor action is NAMED, not taken. Then M1 waits on its design
 conversation; R1 owed.
 
+**⇒ L4 AS BUILT — 2026-09-06, Opus `loop-costs-L4`, main `a10de5899e` (pushed).** Seven commits by path; push
+range ``c706244811..a10de5899e` (left end = this session's own start HEAD, so nobody else moved the branch)`. Full record: plan §14.
+
+**⛔⛔⛔ THE BRIEF'S CENTRAL PREMISE WAS FALSE, AND IT NAMED THE LINES THAT PROVE IT.** The brief said the hub's
+`_acceptEditorOp` *"gives the schema a veto first (`:1908-1934`)"*. Those are two different paths: `:1908-1934`
+is `_applySetKey`, the RAW JSON block editor's Save; `_acceptEditorOp` called `_applyOp` → `applyRulesDocOp`,
+whose own docblock says **"NO SCHEMA IS READ HERE"** and points at the caller. ⇒ **`region_atlas`'s Save has
+been bypassing the schema veto since H5 shipped**, and two places in the tree claimed otherwise
+(`_openDocumentKeyEditor`'s docblock and `docs/json/modules/apworldEditor.md`'s `op` bullet) — both written from
+intent, neither driven. Same family as H5's own #7. Fixed with the SAME call the block editor makes, and
+`_acceptEditorOp` now RETURNS `{accepted, applied, errors, description}` instead of `undefined`, which is what
+lets the panel print an outcome instead of assuming one.
+
+**⛔ AND THE `loop_costs` SCHEMA IS TYPE-ONLY, so the brief's MUTANT IS VACUOUS — the finding it allowed for.**
+Measured through the veto's own arithmetic over the real schema: it REFUSES a `locations` value that is not a
+number, a region entry that is not an object, a string `moveCost`, a number `xpEffect`, a string
+`defaultRegionCost`, and a block that is an array/number/null. It **ACCEPTS** a `moveCost` on a SUMMARY region,
+a missing `defaultRegionXpEffect`, an entry for a NATIVE region, an empty `{}`, an undeclared root key, and
+`xpEffect: "banana"` — whose own description names `VALID_REGION_XP_EFFECTS`. The definition declares `moveCost`
+and `timeDrainPerSecond` as siblings, has no `required` and no `additionalProperties:false`. Driven as an APP
+mutant too (`_blockForDocument` dropping `defaultRegionXpEffect`): the in-app row stays **GREEN**. ⇒ the veto is
+a TYPE gate; the block's MEANING is guarded by `check-loop-costs-one-model` and `loopCostGenerator.test.js`.
+The schema is NOT changed here, per the brief. ⚖ below.
+
+**TASK A — the validation matrix, run BEFORE the wiring, as the brief required.** Seven committed documents, all
+with **0** pre-existing schema errors, every planner block adding **0**: `procgen_maze` 4/4·3 · `maze_loop_worldgen`
+4/4·3 · `jta_schedule_test` 1/4·0 (NATIVE) · `omsi_substrate_test` 3/4·0 (NATIVE+COARSE) · `bounce_worldgen` 6/6
+and `runner_sphere_worldgen` 4/4 (SUMMARY — both entry shapes present) · `shapez` 56/56·139. ⚠ **The measurement
+itself had a trap**: the first run showed no SUMMARY entries at all because the script imported
+`bounceSubstrate/…`/`runnerSubstrate/…`, which do not exist (they are `bounceDemo`/`runnerDemo`), under a
+`.catch(()=>{})`. **An unloaded substrate library does not fail — it reclassifies every region COARSE.**
+
+**WHAT LANDED.** `documentKeys.loop_costs` → `returns: 'op'`, `open()` puts `onSave` in the hand-off payload and
+the note names ONE `set-key loop_costs` and the presence switch · the panel keeps `onSave` on `_workingCopy`,
+REBUILT (never merged) on every adoption and dropped with "Use applied state" · **`sendCostsRefusal()`** — pure,
+exported, five states / five SENTENCES (no working copy · no `onSave` · the planner's own rejection quoted ·
+INCOMPLETE · send), hidden on applied state and shown-DISABLED-with-the-reason on a working copy · the block is
+`getCostData()` with `generatedFrom` re-stamped to the hand-off's source label (never a path an unsaved document
+lacks) · `.apworld-loop-costs-switch` on the hub's row (⚖ f), verified at the line: `handleRulesLoaded`
+auto-enables on `costDataManager.isLoaded()`, which is `costData !== null`.
+
+**ROWS.** `documentKeys.test.js` 29 → **31** (the `returns`/note row; a row driving the door's own `open()` with
+the panel module MOCKED that pins `jsonData` and `onSave` into the payload BY IDENTITY). **`costDebuggerUI.test.js`
+is NEW — 8 rows** over `sendCostsRefusal`, which closes L3's "this file has no vitest file at all". In-app
+`apworld-loop-costs-send-writes-the-plan-as-one-op`, **26 conditions**, on `omsi_substrate_test` — measured as
+the only document where both halves are real (two MAZE regions coarse-classed ⇒ real prices; one omsi region
+NATIVE ⇒ no entry); on `jta_schedule_test` (H5's and L3's document) a send writes exactly ONE entry, `Menu` at
+0, so "an empty block became priced" would be true of a zero.
+
+**⛑ THE UNDO IS PROVEN.** The row presses the hub's own `.apworld-undo` and asserts the block is back to
+`regions: {}` — *restored empty*, not deleted, because `set-key` replaced a value that existed — and the op list
+back to where it started.
+
+**MUTANTS (each reverted).** `_acceptEditorOp`'s veto removed ⇒ **3** in-app conditions, the three veto claims and
+nothing else · the door drops `onSave` ⇒ the `documentKeys` identity row AND 4 in-app conditions · the brief's
+"pre-L2 shape" ⇒ **NOTHING (green)** = the schema finding · `sendCostsRefusal` ignores `isComplete()` ⇒ the unit
+row and, **first time round, NOTHING in-app**. ⛔ **That last one is a finding about my own row**: "Send is
+DISABLED before a plan exists" was satisfied by the REJECTION clause (before Load the planner already says "No
+sphere log loaded"), so it said nothing about completeness. The state that discriminates is **sphere log loaded,
+nothing planned**; the row asserts it now and the mutant reds exactly there. (H4c #4's family: a claim about a
+transition its first form could not see.)
+
+**GATES.** Bounded vitest `apworldEditor`+`loopsCostDebugger`+`loops`+`procgenDocs` **41 files / 1314 tests / 0
+failed** (`documentKeys` 29→31, `costDebuggerUI` new 8; `documentLinks` 15, `costPlanner` 12,
+`documentStateManager` 12, `procgenDocs` 452 all unmoved) · `check-loop-costs-one-model` **ALL PASS 5/5** ·
+`check-procgen-reference --check` + `check-procgen-docs` **ALL CHECKS PASSED** after the generator run, which
+moved nothing generated (neither edited page is one of the seventeen the viewer indexes) · `test-loops-only`
+**8/8** · `test-substrates --batch=fast` ****86/86** (roster 85 → 86, 4.2 min), browser log clean of thrown handlers; RE-RUN at the final code head **86/86** in 4.1 min with `compare-runs` reporting no difference at all** with `compare-runs` ****ADDED (1): apworld-loop-costs-send-writes-the-plan-as-one-op (passed)** and nothing else moved, exit 0 (baseline = L3's own close run, 85/85)**.
+⛔ `check-procgen-help --doors=all` NOT quoted, with a reason: its population is `scripts/procgen/`, untouched,
+and `git grep` finds **zero** instruments importing any of the four changed frontend files; no submodule and no
+gitlink moved (L2 §12's other red path). Precedent H4a §16.1 #7.
+⚖ **52 suite at the pushed SHA** — __CI_ROW__
+
+**⚖ NEW for the user.** (1) **`rules.schema.json`'s `loop_costs` is permissive inside** — it cannot see a
+`moveCost` on a summary region, a missing `defaultRegionXpEffect`, an entry for a native region, or an invalid
+`xpEffect`. Tightening it (`additionalProperties: false` per entry, a `required` root list, an `enum` on
+`xpEffect`) is a schema decision this slice was told to report, not take; ⛔ note that `additionalProperties:
+false` on a region entry would also have to allow both `moveCost` and `timeDrainPerSecond`, which is why the
+declaration is loose in the first place. (2) **`onSave` applies into whatever session the hub has open NOW** —
+hand a document over, load a different one in the hub, then press Send, and this plan lands in that document.
+Arc-wide (`region_atlas` has it too), not introduced here; closing it needs a document identity the hub does not
+carry. Named in the code and here. (3) **The presence switch as an EDITOR ACTION is NOT built** (the brief said
+to name it): the hub could offer "enable / disable loop mode for this world" as an add-or-remove of the block —
+one `set-key loop_costs` with `undefined` to remove — which is the smallest next thing that door could gain, and
+⚖ the user keeps presence semantics "for now". (4) L3's finding stands: `omsi_substrate_test`'s committed block
+is EMPTY while the planner prices its two maze regions 16 and 21 — a person can now FIX that in the app by
+pressing Send, which is a fixture regeneration by hand and probably wants to be a scripted one.
+NEXT after L4: **M1** waits on its design conversation; **R1** (the marking tool) still owed; L6 optional.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
