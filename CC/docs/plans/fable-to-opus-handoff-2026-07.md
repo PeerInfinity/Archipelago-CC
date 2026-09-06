@@ -11170,6 +11170,31 @@ old scripts, which is a submodule commit plus a gitlink bump.
 **Next: the HANDOFF to a new Fable session for reviews R1 (marking tool) / R2 (loop costs — carries
 the omsi live-play cold-start question).** The verify-tier arc's coded ladder is DONE.
 
+**V3b VERIFIED by the planner 2026-09-05** (`54b534edca` on origin/main; 0 `verify-*.mjs` left, 82 `check-*`,
+11 `dump-*`; the two STALE deleted; 47 gates declare `@ci-box`; CI shard plan BEFORE == AFTER — 25 browser
+arms / 3 shards, 31 headless / 1 — confirmed by the runner at the pushed head; CI 436/13309, +8 rows all
+derived). V3b's headline correction: the roster had NO cost exclusion (`ciRunnable = !gate.windows`), so a
+naked rename would have enrolled 47 unpriced 600 s shards per push; a FOURTH declaration `@ci-box <reason>`
+(family of `@ci-face`/`@ci-shallow`/`@ci-argv`) keeps them roster-run but CI-boxed. Also: all 11 reports were
+already `dump-` (no third prefix); `dump-spiral-byteidentity` was a gate in disguise → `check-`; two tracked
+false claims that `verify-runner-*` "still run" retired. ⚠ V3b's `git add -A .` committed the untracked
+`maze_loop_worldgen` fixture once (`486670cc13`) — untracked again at `54b534edca`; the blob stays by SHA;
+no rewrite (trap 1247, the third `add -A` slip of the day — every kickoff now says stage by path).
+**⚖ RULED 2026-09-05 (user, on V3b's four):** (1) CI adopts NONE now — case by case later, each adoption
+deleting its `@ci-box` line and fixing its own `--host=` spelling; (2) `check-bounce-embed`'s `ERRORS (n)`
+count WILL fail the run — a small follow-up; (3) the 20 hand-rolled `--host=` readers are fixed WHEN
+adopted; (4) the `seedling-wasm` submodule's four stale names ARE fixed — a small slice, submodule pushed
+first, **gitlink bump pre-authorized by this ruling**. **THE VERIFY-TIER CODED LADDER IS DONE.** Still no
+verdict from this arc: `check-seedling-bot-differential --win` (a 142-min GPU drive).
+
+**⛓ HANDOFF to session 2 — 2026-09-05.** `priorities-brief` (this Fable session; file
+`next-priorities-planning`) closes at the user's word ("we can wait until after V3b is finished"). Successor
+= `next-priorities-planning-2` (kickoff `NewDocs/plans/next-priorities-planning-2-prompt.md`), opening with
+the two reviews R1 (marking tool ↔ editor) / R2 (loop costs ↔ procgen ↔ editor, carrying the `loop_costs`
+write-back, the omsi live-play cold start, and §5m's "where does the queue viewer fit"), one of them LAST by
+⚖; then the two V3b follow-ups (bounce-embed fail-on-errors; the wasm names + gitlink), H6a parked behind R1,
+and the field as mapped 2026-09-04 (eleven backlog conversations, the maze-lab residues, the docs TODO).
+
 **NOT this arc (plan §8):** the pipeline's unrecorded TREE-step edits; the sphere/top-down twins in the
 6,013-line panel; the in-app maze panel's third editing path (no session, no undo — not in §5i's recon); §5m
 stands as its own arc, ruled OUT of the hub. **Nothing else launched.** ⚑ Two stale carries in §6 corrected this
