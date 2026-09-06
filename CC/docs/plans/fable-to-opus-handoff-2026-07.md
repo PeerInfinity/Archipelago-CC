@@ -11611,6 +11611,26 @@ omsi), and the recorder test excludes text_adventure — proved by mutant before
 Consequence for the product: the loops panel's Generate Costs now stamps exactly the block the pipeline embeds.
 Three slices this session (L1, L5, L2) ⇒ the planner checks in with the user before L5b / L3 / L4 / M1.
 
+**⚖ RULED (user, 2026-09-06):** *"Let's do L5b, L3, L4, and the new one-model check, in whichever order you would
+recommend."* Planner's order: **CI adoption of `check-loop-costs-one-model` as Task 0 of L3 → L3 → L4**; L5b
+HELD on a finding (below). **⚑ L5b's premise does not hold as written — MEASURED:** the jta fork has NO
+player-facing Start/Pause control. Its only pause hooks are the HOST's (`window.pauseGameLoop` /
+`resumeGameLoop` / `isGameLoopPaused`, `journey-to-ascension/build/game.js:115-132`, "in managed mode the host
+owns the tick clock"); the bridge pauses on region exit and resumes on `jta:loadRegion` (`bridge.js:806-818`,
+`:1627-1636`, `:1734`); the fork's "Pause on Block" (`rendering.js:1761`) and priority-edit mode
+(`simulation.js:1823`) pause AUTOMATION / task starts, not the clock; the hotkey handler has no pause; the fork
+runs its OWN `setInterval` game loop (not a host-stepped tick like omsi). So there is no in-game control for
+the L5 rule to respect. **⚖ OPEN for the user:** (a) ADD a player-facing Play/Pause to the jta fork (submodule +
+gitlink; a feature) and then apply the L5 rule; (b) treat the fork's automation pause ("Pause on Block" /
+edit mode) as the state to respect — a different meaning; (c) drop L5b — nothing to respect. Recommend (c)
+unless a jta pause button is wanted for its own sake.
+**L3 LAUNCHED 2026-09-06** as `loop-costs-L3` (Opus; kickoff `NewDocs/plans/loop-costs-L3-prompt.md`; on L2's
+close): Task 0 = CI adopts `check-loop-costs-one-model` (delete its `@ci-box`; plan BEFORE/AFTER quoted — L2
+measured headless 31/1 → 32/2, 4 → 5 gate jobs; the arm's real price read from the run); then the panel: a
+census of every cost readout against the write-by-class block (jta/omsi unpriced-by-design, summary drain-only),
+Verify reading the store as the runtime does, one-engine wording, the dev doc, one in-app row (mutant first).
+No `shared/` change. Reports come to `next-priorities-planning-2`. Then L4.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
