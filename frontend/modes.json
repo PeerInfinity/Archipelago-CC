@@ -239,19 +239,6 @@
       "enabled": true
     }
   },
-  "test-loops": {
-    "userSettings": {
-      "paths": [
-        "./settings/settings.json",
-        "./settings/settings-loops.json"
-      ],
-      "enabled": true
-    },
-    "testsConfig": {
-      "path": "./test-configs/playwright_tests_config.json",
-      "enabled": true
-    }
-  },
   "test-loops-only": {
     "userSettings": {
       "paths": [

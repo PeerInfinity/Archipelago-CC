@@ -445,7 +445,6 @@ The loops module uses a dispatcher-based event system:
 | URL Parameter | Description |
 |---------------|-------------|
 | `?mode=loops` | Normal Loops mode |
-| `?mode=test-loops` | Loops with standard test suite |
 | `?mode=test-loops-only` | Loops with only Loops-specific tests |
 
 ### Test Cases
