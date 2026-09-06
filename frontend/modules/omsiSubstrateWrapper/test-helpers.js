@@ -111,6 +111,41 @@ export function omsiQueueAction(name, loops) {
     return omsiEval(`actions.addAction(${JSON.stringify(name)}, ${Number(loops)})`);
 }
 
+/**
+ * Press the game's own Play button, if it is stopped (⚖ user, 2026-09-06).
+ *
+ * WHY A ROW NEEDS THIS. The fork boots STOPPED (`saving.js`'s `load()` ends
+ * with a `pauseGame()` toggle) and the host clock now honours that during LIVE
+ * play: a Manual/Record park opens the step gate, and the game still will not
+ * advance until the player starts it (`clockGate.js`, the STOPPED gate —
+ * replay and bot windows are exempt). So any row that parks AND expects ticks,
+ * drains or a natural loop reset owes a `pressPlay()` after its park. A row
+ * that parks only to satisfy the strict ACTION gate and then drives the engine
+ * by direct eval needs nothing.
+ *
+ * ⚠ `pauseGame()` IS A TOGGLE — this reads the flag first, so a row that calls
+ * it twice, or after a row that already pressed Play, does not press Pause.
+ * Never write `gameIsStopped` directly: that would bypass the button handler,
+ * whose `restart()` at a held boundary is the cold start this is here for.
+ *
+ * @returns {boolean} the game's stopped flag AFTER the press (false = running)
+ */
+export function pressPlay() {
+    omsiEval('if (gameIsStopped) pauseGame()');
+    return omsiEval('gameIsStopped') === false;
+}
+
+/** Press Pause, if the game is running. The same toggle discipline. */
+export function pressPause() {
+    omsiEval('if (!gameIsStopped) pauseGame()');
+    return omsiEval('gameIsStopped') === true;
+}
+
+/** The game's own start/pause flag — TRUE while the player has it stopped. */
+export function isGameStopped() {
+    return omsiEval('gameIsStopped') === true;
+}
+
 /** Clear the game's plan. */
 export function omsiClearQueue() {
     return omsiEval('actions.next.splice(0, actions.next.length)');

@@ -25,6 +25,14 @@
  *   5. omsi-native-budget-raises-pool — the game's native per-loop
  *      budget (250) is reported as a substrate:resourceBonus and lands
  *      in gameState's per-substrate max-mana accumulator.
+ *   3c. omsi-play-pause-controls-the-clock — ⚖ 2026-09-06: within a PARKED
+ *      live-play region the host clock additionally honours the GAME's own
+ *      start/pause control. A fresh boot is stopped, so a parked region with
+ *      a runnable plan still does not advance; the player's Play press is the
+ *      cold start (unreported — the no-progress guard), Pause freezes the
+ *      clock again and Play resumes it. Standalone by construction: it
+ *      reloads the fork first, so it inherits no started game from the row
+ *      before it.
  *   6. omsi-victory-start-journey — completing Start Journey (town 1
  *      unlocked, simulated via the game's own unlockTown(1) — the
  *      exact call Start Journey's completion makes; a real playthrough
@@ -55,6 +63,10 @@ import {
     OMSI_NATIVE_BUDGET,
     parkManualBlocks,
     unparkManualBlocks,
+    pressPlay,
+    pressPause,
+    isGameStopped,
+    resetOmsiSaveAndReload,
     waitForOmsiActive,
     moveToRegion,
     readManaLeft,
@@ -230,7 +242,15 @@ async function loopExhaustionSingleReset(testController) {
     // the game's natural timer >= timeNeeded restart coincides with
     // the pool hitting 0 through the mirrored drains.
     omsiQueueAction('Wander', 9999);
-    testController.log('queued Wander x9999; waiting for budget exhaustion…');
+
+    // ⚖ 2026-09-06: the park opens the step gate, the PLAYER starts the game.
+    // The fork boots stopped and holding the boundary its empty compiled list
+    // left; one Play press clears both (pauseGame() calls restart() when it
+    // unpauses at a loop end), and the no-progress guard keeps that restart
+    // from costing a loop reset. Pressed AFTER the plan is written — a
+    // recompile before the plan exists compiles nothing.
+    testController.assertEqual('the game is running after the Play press', true, pressPlay());
+    testController.log('queued Wander x9999, pressed Play; waiting for budget exhaustion…');
 
     const drained = await eventually(
         testController,
@@ -355,6 +375,16 @@ async function stepGateParksTheClock(testController) {
         'step gate opened for the parked block',
     );
     testController.assertEqual('step gate opened for the parked block', true, opened);
+
+    // ⚖ 2026-09-06: an OPEN gate is necessary and no longer SUFFICIENT for
+    // live play — the game itself must be started, and the fork boots
+    // stopped. This row's subject is still the PARK, so it just presses Play;
+    // the refusal itself is pinned by omsi-play-pause-controls-the-clock,
+    // which reloads the fork so it can assert from a state it owns. (This row
+    // inherits whatever the row before it left running, which is exactly why
+    // it must not assert on the flag's value here.)
+    testController.assertEqual('the game is running after the Play press', true, pressPlay());
+
     const stepped = await eventually(
         testController,
         () => readSteps() > steps0,
@@ -447,6 +477,158 @@ async function clockRunsOnlyInRegion(testController) {
 
     return testController.getOverallResult();
 }
+
+/**
+ * ⚖ 2026-09-06 — THE GAME'S OWN START/PAUSE CONTROLS THE HOST CLOCK.
+ *
+ * ⛔ STANDALONE BY CONSTRUCTION. This row reloads the fork (a genuine fresh
+ * managed boot) before it asserts anything, because its whole subject is a
+ * state an earlier row can hand it: `omsi-loop-exhaustion-single-reset`
+ * presses Play, and a row that inherited a RUNNING game would find its
+ * "does not step" phase vacuous — green for the wrong reason, exactly the way
+ * `omsi-loop-exhaustion-single-reset` was itself green only because
+ * `omsi-out-of-mana-loop-reset` had cold-started the fork ahead of it.
+ *
+ * The witness for every refusal is `skippedStopped`, never a flat tick count
+ * on its own: flat ticks are equally consistent with a stalled clock, an empty
+ * plan or a closed gate, so each phase asserts the counter that names the
+ * reason AND the effect.
+ */
+async function playPauseControlsTheClock(testController) {
+    const win = await enterOmsiRegion(testController);
+    if (!win) return testController.getOverallResult();
+
+    // A FRESH fork: stopped, holding the boundary its empty compiled list
+    // left, with no inherited plan or progress. The reload needs an omsi
+    // region already active (the bridge clock only runs in one), which is why
+    // it happens after the entry above rather than before it.
+    const fresh = await resetOmsiSaveAndReload(testController);
+    testController.assertEqual('fresh omsi game active after the save reset', true, !!fresh);
+    if (!fresh) return testController.getOverallResult();
+    omsiClearQueue();
+    testController.assertEqual('a fresh managed boot is STOPPED', true, isGameStopped());
+
+    const readSteps = () => Number(bridgeState()?.clockStats?.ticksStepped ?? 0);
+    const stoppedSkips = () => Number(bridgeState()?.clockStats?.skippedStopped ?? 0);
+    const heldSkips = () => Number(bridgeState()?.clockStats?.skippedHeldBoundary ?? 0);
+    const loopEnd = () => omsiEval('({ shouldRestart, timer, timeNeeded, '
+        + 'currentLen: (actions.current || []).length })');
+
+    // Drain headroom. Play runs the game at 50 ticks/s × 1 mana, and this row
+    // runs the game twice; without headroom the pool this row inherits can
+    // empty mid-phase, fire the depletion reset and TELEPORT the player out —
+    // after which "the clock stopped" would be true for the wrong reason.
+    const pool0 = readPool();
+    omsiAddMana(500);
+    const toppedUp = await eventually(testController, () => readPool() > pool0 + 400,
+        'the budget top-up mirrored into the pool (drain headroom)');
+    testController.assertEqual('drain headroom in place', true, toppedUp);
+
+    const park = await parkManualBlocks(testController,
+        [{ from: OMSI_TEST_REGION, to: OMSI_TEST_EXIT_TARGET, exit: OMSI_TEST_EXIT }]);
+    testController.assertEqual('parked a Manual block in the omsi region', true, !!park);
+    if (!park) return testController.getOverallResult();
+    try {
+        const opened = await eventually(testController,
+            () => bridgeState()?.mayStep === true, 'step gate opened for the parked block');
+        testController.assertEqual('step gate opened for the parked block', true, opened);
+        testController.assertEqual('the LIVE arm is the one that opened it',
+            'live', bridgeState()?.stepGateArm);
+
+        // ── Phase 1: parked, a runnable plan, STOPPED ⇒ nothing advances ───
+        omsiQueueAction('Wander', 9999);
+        const steps0 = readSteps();
+        const skips0 = stoppedSkips();
+        const resets0 = readLoopResetCount();
+        const poolAtQueue = readPool();
+        const heldSkips0 = heldSkips();
+        const held0 = loopEnd();
+        testController.log(`stopped baseline: steps=${steps0}, skippedStopped=${skips0}, `
+            + `pool=${poolAtQueue}, loopEnd=${JSON.stringify(held0)}`);
+
+        const withheld = await eventually(testController,
+            () => stoppedSkips() > skips0,
+            'the parked, runnable, STOPPED game is refused as `stopped`');
+        testController.assertEqual('the STOPPED game is what withheld the steps', true, withheld);
+        testController.assertEqual('the bridge stepped the game ZERO times while stopped',
+            steps0, readSteps());
+        testController.assertEqual('the boundary the fork booted on is still held',
+            true, loopEnd()?.shouldRestart === true);
+        testController.assertEqual('the pool did not drain while stopped',
+            true, Math.abs(readPool() - poolAtQueue) < 0.5);
+        testController.assertEqual('no loop reset while stopped', resets0, readLoopResetCount());
+        // Attribution, not inference: the boundary IS held here too, and the
+        // gate's ordering must report the player's reason rather than that
+        // one — otherwise `skippedStopped` would read 0 on the exact state
+        // this row exists to describe.
+        testController.assertEqual('the refusal is `stopped`, not `heldBoundary`',
+            heldSkips0, heldSkips());
+
+        // ── Phase 2: PLAY is the cold start ───────────────────────────────
+        testController.assertEqual('Play started the game', true, pressPlay());
+        testController.assertEqual('Play released the held boundary in the same press',
+            false, loopEnd()?.shouldRestart);
+        const ran = await eventually(testController,
+            () => readSteps() > steps0, 'the bridge steps the game once the player pressed Play');
+        testController.assertEqual('Play started the host clock', true, ran);
+        // The cold-start restart is UNREPORTED — `_handleGameRestart`'s
+        // no-progress guard drops it (effectiveTime 0 at boot), which is why
+        // pressing Play costs the player nothing.
+        testController.assertEqual('the cold start cost no loop reset',
+            resets0, readLoopResetCount());
+
+        // ── Phase 3: PAUSE freezes it again ───────────────────────────────
+        testController.assertEqual('Pause stopped the game', true, pressPause());
+        const skipsAtPause = stoppedSkips();
+        // ≥ 2 clock callbacks (CLOCK_INTERVAL_MS is 100 ms): the callback that
+        // reads the flag may already have been scheduled when the press landed.
+        await new Promise((r) => setTimeout(r, 400));
+        const stepsAtPause = readSteps();
+        const poolAtPause = readPool();
+        await new Promise((r) => setTimeout(r, 800));
+        testController.assertEqual('the clock stepped ZERO times while paused',
+            stepsAtPause, readSteps());
+        testController.assertEqual('the pool did not drain while paused',
+            true, Math.abs(readPool() - poolAtPause) < 0.5);
+        testController.assertEqual('the PAUSE is what withheld the steps',
+            true, stoppedSkips() > skipsAtPause);
+        testController.assertEqual('the bridge clock is still running (frozen, not stopped)',
+            true, isBridgeClockRunning());
+        testController.assertEqual('pausing cost no loop reset', resets0, readLoopResetCount());
+
+        // ── Phase 4: PLAY resumes ─────────────────────────────────────────
+        testController.assertEqual('Play restarted the game', true, pressPlay());
+        const resumed = await eventually(testController,
+            () => readSteps() > stepsAtPause, 'the clock steps again after Play');
+        testController.assertEqual('Play resumed the host clock', true, resumed);
+        testController.log(`resumed: steps=${readSteps()}, pool=${readPool()}, `
+            + `skippedStopped=${stoppedSkips()}`);
+    } finally {
+        // Leave the fork the way it boots — stopped, with no plan — so the
+        // next row inherits nothing this one turned on.
+        omsiClearQueue();
+        pressPause();
+        unparkManualBlocks(park);
+    }
+
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'omsi-play-pause-controls-the-clock',
+    name: "Omsi: the game's own Start/Pause controls the host clock",
+    description: '⚖ 2026-09-06: within a parked live-play region the host clock also '
+               + 'honours the game\'s own start/pause control. A fresh boot is stopped, '
+               + 'so a parked region with a runnable plan still does not advance '
+               + '(skippedStopped rises, ticks flat, boundary held, no reset); the '
+               + 'player\'s Play press is the cold start and costs no loop reset; Pause '
+               + 'freezes the clock again and Play resumes it. Reloads the fork first, '
+               + 'so it inherits no started game from the row before it.',
+    testFunction: playPauseControlsTheClock,
+    category: 'Omsi substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
 
 registerTest({
     id: 'omsi-clock-runs-only-in-region',
