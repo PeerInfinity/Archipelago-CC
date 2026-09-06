@@ -84,11 +84,11 @@ Headless equivalents of everything the pages do live in `scripts/procgen/`. The 
 
 <!-- GENERATED:procgen-instruments BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**265 instruments** live in `scripts/procgen/`, by prefix: `check-` 82 (51 browser) · `probe-` 60 (22 browser) · `plan-` 36 (1 browser) · `census-` 12 · `solve-` 7 · `make-` 6 · `sweep-` 6 · `dump-` 5 · `recon-` 5 · `region-` 5 · `generate-` 4 · no prefix 4 · `ci-` 3 · `extract-` 3 · `attribute-` 2 · `audit-` 2 · `export-` 2 (1 browser) · `measure-` 2 (1 browser) · `record-` 2 · `batch-` 1 · `build-` 1 · `derive-` 1 · `find-` 1 · `harvest-` 1 · `lint-` 1 · `mine-` 1 · `prove-` 1 · `reach-` 1 · `rerecord-` 1 · `run-` 1 · `seedling-` 1 · `shot-` 1 (1 browser) · `show-` 1 · `stamp-` 1 · `standing-` 1 · `survey-` 1.
+**266 instruments** live in `scripts/procgen/`, by prefix: `check-` 83 (51 browser) · `probe-` 60 (22 browser) · `plan-` 36 (1 browser) · `census-` 12 · `solve-` 7 · `make-` 6 · `sweep-` 6 · `dump-` 5 · `recon-` 5 · `region-` 5 · `generate-` 4 · no prefix 4 · `ci-` 3 · `extract-` 3 · `attribute-` 2 · `audit-` 2 · `export-` 2 (1 browser) · `measure-` 2 (1 browser) · `record-` 2 · `batch-` 1 · `build-` 1 · `derive-` 1 · `find-` 1 · `harvest-` 1 · `lint-` 1 · `mine-` 1 · `prove-` 1 · `reach-` 1 · `rerecord-` 1 · `run-` 1 · `seedling-` 1 · `shot-` 1 (1 browser) · `show-` 1 · `stamp-` 1 · `standing-` 1 · `survey-` 1.
 
-77 of them drive a real browser; 173 accept at least one `--flag` OF THEIR OWN; 88 are cited by one of these documents; and 0 open with no comment at all.
+77 of them drive a real browser; 174 accept at least one `--flag` OF THEIR OWN; 88 are cited by one of these documents; and 0 open with no comment at all.
 
-Each also accepts what a module it IMPORTS parses: `--help` (263, in `argvHelp.js`) · `--wait-for-box` (97, in `boxLock.js`) · `--only` (1, in `rehearsalTree.js`) · `--record` (1, in `rehearsalTree.js`) · `--walk-report` (1, in `rehearsalTree.js`). Those are listed per row with the parse site named, so the table says what a file ACCEPTS without losing where the parse lives.
+Each also accepts what a module it IMPORTS parses: `--help` (264, in `argvHelp.js`) · `--wait-for-box` (97, in `boxLock.js`) · `--only` (1, in `rehearsalTree.js`) · `--record` (1, in `rehearsalTree.js`) · `--walk-report` (1, in `rehearsalTree.js`). Those are listed per row with the parse site named, so the table says what a file ACCEPTS without losing where the parse lives.
 
 One row each — the one-liner from the file's own docblock, the flags it reads out of `argv`, whether it needs a browser, and which document cites it — is on the [reference page](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html#section-instruments), which can filter them.
 

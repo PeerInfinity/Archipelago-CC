@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 51,
-            "count": 82,
+            "count": 83,
             "id": "check"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 254,
+        "blockStyle": 255,
         "browser": 77,
         "cited": 88,
-        "files": 265,
+        "files": 266,
         "lineStyle": 11,
-        "withDocblock": 265,
-        "withFlags": 173
+        "withDocblock": 266,
+        "withFlags": 174
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1457,6 +1457,34 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Regression probe: `skipFreeZones()` must terminate in MANAGED (substrate) mode.",
             "path": "scripts/procgen/check-jta-managed-zone-skip.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "set",
+                "verbose"
+            ],
+            "file": "check-loop-costs-one-model.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "verbose"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "⚖ **ONE loop-cost model — the standing proof.** Runs the procgen pipeline's block producer (`generateLoopCosts`) and the runtime's planner (`loopsCostDebugger/costPlanner.js` — what the Loops panel's Generate Costs and the auto-generate on entering loop mode actually run) over the SAME documents, and asserts the two…",
+            "path": "scripts/procgen/check-loop-costs-one-model.mjs"
         },
         {
             "argvHelpers": [],
