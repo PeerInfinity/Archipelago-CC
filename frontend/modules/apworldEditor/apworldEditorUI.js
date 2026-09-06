@@ -1687,10 +1687,13 @@ class ApworldEditorUI {
    * Links tab's row both land here, so the door cannot behave differently
    * depending on which tab a person pressed it from.
    *
-   * ⛔ **`onSave` WRAPS THE EDITOR'S ANSWER IN THE SESSION'S OWN `_applyOp`**,
-   * which is where the schema veto, the slot stamp and the undo step live —
-   * an editor handing back an op that bypassed them would be an edit the hub
-   * could neither refuse nor undo.
+   * ⛔ **`onSave` WRAPS THE EDITOR'S ANSWER IN THE SESSION'S OWN
+   * `_acceptEditorOp`**, which is where the schema veto, the slot stamp and the
+   * undo step live — an editor handing back an op that bypassed them would be
+   * an edit the hub could neither refuse nor undo. ⚠ H5 wrote *"`_applyOp`"*
+   * here and named the veto as one of the three things it does; L4 measured
+   * that the veto was in `_applySetKey` alone, so it is `_acceptEditorOp` that
+   * runs it now and this sentence names that method.
    *
    * @param {string} key
    * @param {{withDocument?: boolean}} [opts] `false` from the Links tab, whose
@@ -1745,23 +1748,67 @@ class ApworldEditorUI {
    * ⛓ An op handed back by a linked editor. ⛔ It goes through `_applyOp` like
    * any other, and a door declared `returns: 'none'` handing one back is a
    * DEFECT in that door — said out loud rather than silently applied.
+   *
+   * ⛔⛔⛔ **L4 — THE SCHEMA VETO IS ON THIS PATH NOW, AND UNTIL L4 IT WAS NOT.**
+   * H5's own docs say an `op` door's save is *"applied through the panel's own
+   * `_applyOp` (schema veto, slot stamp, undo step)"* and `rulesDocOps`'
+   * `set-key` docblock says *"the CALLER (the panel) runs `rulesJsonSchemaErrors`
+   * over the candidate and refuses BY PATH before the op is ever built"*.
+   * MEASURED at L4's W0: neither was true here. The veto lives in
+   * `_applySetKey`, which is the RAW JSON block editor's path; an op arriving
+   * from a linked editor reached `_applyOp` — i.e. `applyRulesDocOp`, which
+   * reads no schema — untouched. So `region_atlas`'s save has been bypassing
+   * the veto since H5 shipped. One call fixes it, and it is the same call the
+   * block editor makes, so the two cannot disagree about what the schema
+   * refuses.
+   *
+   * ⛓⛓ **AND IT ANSWERS.** Before L4 this returned `undefined`, so an editor
+   * could not tell an applied save from a refused one and had to guess from the
+   * hub's log. It returns the outcome now — `{accepted, applied, errors,
+   * description}` — which is what lets the cost debugger's Send print what
+   * happened instead of claiming success.
+   *
+   * @returns {{accepted: boolean, applied: boolean, errors: string[],
+   *   description: string}} `accepted` = the op reached the session without
+   *   being refused; `applied` = it also CHANGED the document (an op that
+   *   restates what is already there is accepted and not applied).
    */
   _acceptEditorOp(key, op) {
     const editor = DOCUMENT_KEY_EDITORS[key];
-    if (!op || typeof op !== 'object') return;
+    const label = editor ? editor.label : key;
+    const refuse = (description, errors) => {
+      this._opMessage = `${label}: ${description}`;
+      this._renderChrome();
+      return { accepted: false, applied: false, errors, description };
+    };
+    if (!op || typeof op !== 'object') {
+      return refuse('an editor saved something that is not an op.',
+        [`${key}: not an op — got ${op === null ? 'null' : typeof op}.`]);
+    }
     if (editor && editor.returns !== 'op') {
       log('warn', `${key}: a door declared \`returns: '${editor.returns}'\` handed back an op`);
     }
     if (!this.session) {
-      this._opMessage = `${key}: an editor saved, but there is no session to apply it to — `
-        + 'load a rules.json first.';
-      this._renderChrome();
-      return;
+      return refuse('an editor saved, but there is no session to apply it to — '
+        + 'load a rules.json first.', [`${key}: no session.`]);
     }
-    this._applyOp(op);
-    this._opMessage = `${editor ? editor.label : key} saved — applied as one \`${op.op}\` `
-      + 'you can undo here.';
+    // ⛓ Previewed with the SAME op the session will see, stamp included: a
+    //   preview of a different op is a veto over something nobody applies.
+    const errors = this._schemaErrorsAddedBy(this._stampPlayer(op));
+    if (errors.length > 0) {
+      log('warn', `${key}: an editor's op was refused by the schema: ${errors.join(' | ')}`);
+      return refuse(`refused by the schema — ${errors.length} `
+        + `error${errors.length === 1 ? '' : 's'}: ${errors.slice(0, 3).join(' · ')}`
+        + `${errors.length > 3 ? ' · …' : ''}`, errors);
+    }
+    const res = this._applyOp(op);
+    const accepted = !!(res && res.ok);
+    const applied = !!(res && res.ok && res.applied);
+    this._opMessage = accepted
+      ? `${label} saved — applied as one \`${op.op}\` you can undo here.`
+      : `${label}: ${res?.description ?? 'refused'}`;
     this._renderChrome();
+    return { accepted, applied, errors: [], description: res?.description ?? '' };
   }
 
   /**
