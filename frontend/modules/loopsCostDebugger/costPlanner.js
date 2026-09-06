@@ -22,6 +22,11 @@ import {
   calculateXPGain,
 } from '../loops/xpFormulas.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
+import {
+  DEFAULT_REGION_COST,
+  DEFAULT_LOCATION_COST,
+  DEFAULT_EXPLORE_MULTIPLIER,
+} from '../shared/procgen/loopCostGenerator.js';
 
 // =========================================================================
 // SimulatedState
@@ -562,8 +567,8 @@ export class CostPlanner {
       generatedFrom: 'loopsCostDebugger',
       regions: {},
       locations: {},
-      defaultRegionCost: 50,
-      defaultLocationCost: 100,
+      defaultRegionCost: DEFAULT_REGION_COST,
+      defaultLocationCost: DEFAULT_LOCATION_COST,
     };
     for (const [region, data] of this._simState.assignedRegionCosts) {
       costs.regions[region] = { moveCost: data.moveCost };
@@ -650,8 +655,9 @@ export class CostPlanner {
 
         const regionName = locData.parent_region || locData.region;
         const regionCost = costs.regions[regionName]?.moveCost ?? costs.defaultRegionCost;
-        // Location cost ~ 2× region cost, matching explore cost ratio
-        costs.locations[locationName] = Math.max(1, regionCost * 2);
+        // Location cost ~ DEFAULT_EXPLORE_MULTIPLIER × region cost, matching
+        // the explore cost ratio.
+        costs.locations[locationName] = Math.max(1, regionCost * DEFAULT_EXPLORE_MULTIPLIER);
       }
     }
   }
@@ -828,7 +834,8 @@ export class CostPlanner {
 
     while (manaRemaining > 0 && this._simState.getUndiscoveredCount(exploreRegion) > 0) {
       const regionXP = this._simState.getRegionXP(exploreRegion);
-      const exploreCost = proposedLinearFinalCost(regionCost * 2, regionXP.level);
+      const exploreCost = proposedLinearFinalCost(
+        regionCost * DEFAULT_EXPLORE_MULTIPLIER, regionXP.level);
 
       if (manaRemaining < exploreCost) {
         notes.push(`Not enough mana for next explore (need ${fmtNum(exploreCost)}, have ${fmtNum(manaRemaining)})`);
@@ -841,7 +848,8 @@ export class CostPlanner {
       queue.push({
         type: 'explore', region: exploreRegion,
         discovered,
-        baseCost: regionCost * 2, level: regionXP.level, cost: exploreCost,
+        baseCost: regionCost * DEFAULT_EXPLORE_MULTIPLIER,
+        level: regionXP.level, cost: exploreCost,
       });
       manaRemaining -= exploreCost;
       discoveries.push(discovered);
@@ -1038,7 +1046,11 @@ export class CostPlanner {
     const costAssignments = [];
 
     // Build a temporary costs object with current assignments
-    const currentCosts = { regions: {}, locations: {}, defaultRegionCost: 50, defaultLocationCost: 100 };
+    const currentCosts = {
+      regions: {}, locations: {},
+      defaultRegionCost: DEFAULT_REGION_COST,
+      defaultLocationCost: DEFAULT_LOCATION_COST,
+    };
     for (const [region, data] of this._simState.assignedRegionCosts) {
       currentCosts.regions[region] = { moveCost: data.moveCost };
     }
@@ -1069,11 +1081,11 @@ export class CostPlanner {
         if (staticData.eventLocations?.[locationName]) continue;
         const regionName = locData.parent_region || locData.region;
         const regionCost = currentCosts.regions[regionName]?.moveCost ?? currentCosts.defaultRegionCost;
-        const locationCost = Math.max(1, regionCost * 2);
+        const locationCost = Math.max(1, regionCost * DEFAULT_EXPLORE_MULTIPLIER);
         this._simState.assignedLocationCosts.set(locationName, locationCost);
         costAssignments.push({
           type: 'location', name: locationName, cost: locationCost,
-          formula: `region cost (${regionCost}) × 2`,
+          formula: `region cost (${regionCost}) × ${DEFAULT_EXPLORE_MULTIPLIER}`,
         });
       }
     }

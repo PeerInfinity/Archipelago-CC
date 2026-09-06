@@ -21,9 +21,13 @@ import {
 } from './xpFormulas.js';
 // The generated-sidecar vocabulary is owned by the generator (a pure
 // module), so reader and writer share one default and cannot drift.
-import { DEFAULT_TIME_DRAIN_PER_SECOND } from '../shared/procgen/loopCostGenerator.js';
+import {
+  DEFAULT_TIME_DRAIN_PER_SECOND,
+  DEFAULT_REGION_COST,
+  DEFAULT_LOCATION_COST,
+} from '../shared/procgen/loopCostGenerator.js';
 
-export { DEFAULT_TIME_DRAIN_PER_SECOND };
+export { DEFAULT_TIME_DRAIN_PER_SECOND, DEFAULT_REGION_COST, DEFAULT_LOCATION_COST };
 
 const logger = createUniversalLogger('costDataManager');
 
@@ -312,7 +316,7 @@ export class CostDataManager {
       return regionData.moveCost;
     }
 
-    return this.costData.defaultRegionCost || 50;
+    return this.costData.defaultRegionCost || DEFAULT_REGION_COST;
   }
 
   /**
@@ -351,13 +355,13 @@ export class CostDataManager {
       return locationCost;
     }
 
-    return this.costData.defaultLocationCost || 100;
+    return this.costData.defaultLocationCost || DEFAULT_LOCATION_COST;
   }
 
   /**
    * The EXPLICIT per-region move cost, or null when the sidecar states
    * none (M5). Distinct from `getRegionCost`, which always answers with a
-   * number by falling back to `defaultRegionCost` / 50.
+   * number by falling back to `defaultRegionCost` / `DEFAULT_REGION_COST`.
    *
    * SUMMARY substrates (runner, bounce) are priced by TIME, not per action:
    * their actions cost mana only where the loop_costs data says so
@@ -416,7 +420,7 @@ export class CostDataManager {
    * @returns {number} Default region move cost
    */
   getDefaultRegionCost() {
-    return this.costData?.defaultRegionCost || 50;
+    return this.costData?.defaultRegionCost || DEFAULT_REGION_COST;
   }
 
   /**
@@ -424,7 +428,7 @@ export class CostDataManager {
    * @returns {number} Default location check cost
    */
   getDefaultLocationCost() {
-    return this.costData?.defaultLocationCost || 100;
+    return this.costData?.defaultLocationCost || DEFAULT_LOCATION_COST;
   }
 
   /**

@@ -10,6 +10,11 @@ import {
   proposedLinearReduction,
   applyRegionXpCostEffect,
 } from './xpFormulas.js';
+import {
+  DEFAULT_REGION_COST,
+  DEFAULT_LOCATION_COST,
+} from './costDataManager.js';
+import { DEFAULT_EXPLORE_MULTIPLIER } from '../shared/procgen/loopCostGenerator.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { DisplaySettingsManager } from './displaySettingsManager.js';
@@ -1010,8 +1015,8 @@ export class LoopUI {
       generatedFrom: 'defaults',
       regions,
       locations: {},
-      defaultRegionCost: 50,
-      defaultLocationCost: 100,
+      defaultRegionCost: DEFAULT_REGION_COST,
+      defaultLocationCost: DEFAULT_LOCATION_COST,
     };
 
     costDataManager.setCostData(costData, 'defaults');
@@ -2341,7 +2346,18 @@ export class LoopUI {
   }
 
   /**
-   * Estimate the mana cost of an action based on the formulas in loopState
+   * Estimate the mana cost of an action based on the formulas in loopState.
+   *
+   * ⚠ **THE THIRD COPY OF THE FALLBACK SWITCH, AND IT IS A DISPLAY ESTIMATE.**
+   * `loopState._calculateActionCost` is what actually CHARGES; this one prices
+   * an action for RENDERING (the per-entry cost badge in the queue list) at a
+   * point where the loop state may not be reachable — the panel renders from
+   * `getCostDataManager()` alone. It deliberately omits the substrate-aware
+   * branches (`_summaryBaseCost`, `manual`/`customQueue`/`timeDrain` = 0) that
+   * the charging path has, so its answer is a generic-model estimate, never the
+   * authority. It reads the same exported defaults so the two cannot disagree
+   * about a NUMBER, only about which branches exist.
+   *
    * @param {Object} action - The action to estimate
    * @returns {number} - Estimated mana cost
    */
@@ -2360,24 +2376,25 @@ export class LoopUI {
           baseCost = costDataManager.getLocationCost(action.locationName);
           break;
         case 'customAction':
-          baseCost = costDataManager.getRegionCost(action.sourceRegion) * 2;
+          baseCost = costDataManager.getRegionCost(action.sourceRegion)
+            * DEFAULT_EXPLORE_MULTIPLIER;
           break;
         default:
-          baseCost = 50;
+          baseCost = DEFAULT_REGION_COST;
       }
     } else {
       switch (action.type) {
         case 'customAction':
-          baseCost = 50;
+          baseCost = DEFAULT_REGION_COST;
           break;
         case 'locationCheck':
-          baseCost = 100;
+          baseCost = DEFAULT_LOCATION_COST;
           break;
         case 'regionMove':
-          baseCost = 50;
+          baseCost = DEFAULT_REGION_COST;
           break;
         default:
-          baseCost = 50;
+          baseCost = DEFAULT_REGION_COST;
       }
     }
 

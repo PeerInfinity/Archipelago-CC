@@ -26,7 +26,14 @@ import {
 import { BlockAnnotationTracker, itemKey } from './blockAnnotations.js';
 import { hashRulesData } from '../shared/rulesHash.js';
 import { isLoopModePlanningSource } from './loopModeExemptions.js';
-import { DEFAULT_TIME_DRAIN_PER_SECOND } from './costDataManager.js';
+import {
+  DEFAULT_TIME_DRAIN_PER_SECOND,
+  DEFAULT_REGION_COST,
+  DEFAULT_LOCATION_COST,
+} from './costDataManager.js';
+// The explore multiplier is the generic model's, not the store's: it is
+// stated once beside the rest of the block vocabulary.
+import { DEFAULT_EXPLORE_MULTIPLIER } from '../shared/procgen/loopCostGenerator.js';
 
 /**
  * Tick period of the SUMMARY substrates' live-play time drain (M5). One
@@ -3515,7 +3522,7 @@ export class LoopState {
         // Explore is 2× the move cost where one exists (matching the
         // generic model); neither runner nor bounce declares the action.
         const move = cdm?.getExplicitRegionCost?.(region);
-        return typeof move === 'number' ? move * 2 : 0;
+        return typeof move === 'number' ? move * DEFAULT_EXPLORE_MULTIPLIER : 0;
       }
       default:
         return 0;
@@ -3558,8 +3565,9 @@ export class LoopState {
           baseCost = this.costDataManager.getLocationCost(action.locationName);
           break;
         case 'customAction':
-          // Explore cost = 2x region's moveCost
-          baseCost = this.costDataManager.getRegionCost(action.sourceRegion) * 2;
+          // Explore cost = DEFAULT_EXPLORE_MULTIPLIER x region's moveCost
+          baseCost = this.costDataManager.getRegionCost(action.sourceRegion)
+            * DEFAULT_EXPLORE_MULTIPLIER;
           break;
         case 'manual':
         case 'customQueue':
@@ -3571,23 +3579,29 @@ export class LoopState {
           break;
         case 'timeDrain':
           // Only the summary branch above produces these; a stray one on
-          // any other substrate is free, never the 50 default.
+          // any other substrate is free, never the region default.
           baseCost = 0;
           break;
         default:
-          baseCost = 50;
+          baseCost = DEFAULT_REGION_COST;
       }
     } else {
-      // Fallback to hardcoded defaults when no cost data is loaded
+      // No cost data loaded: the exported defaults, which are the same
+      // numbers a generated block writes at its root (⚖ 2026-09-06 — one
+      // exported constant, never a typed number).
+      // ⚠ `customAction` is DEFAULT_REGION_COST here, NOT
+      // DEFAULT_REGION_COST × DEFAULT_EXPLORE_MULTIPLIER: the no-data
+      // fallback has always priced an explore at a plain region move, and
+      // this rung moves the location default only. Named, not changed.
       switch (action.type) {
         case 'customAction':
-          baseCost = 50;
+          baseCost = DEFAULT_REGION_COST;
           break;
         case 'locationCheck':
-          baseCost = 100;
+          baseCost = DEFAULT_LOCATION_COST;
           break;
         case 'regionMove':
-          baseCost = 50;
+          baseCost = DEFAULT_REGION_COST;
           break;
         case 'manual':
         case 'customQueue':
@@ -3595,7 +3609,7 @@ export class LoopState {
           baseCost = 0;
           break;
         default:
-          baseCost = 50;
+          baseCost = DEFAULT_REGION_COST;
       }
     }
 

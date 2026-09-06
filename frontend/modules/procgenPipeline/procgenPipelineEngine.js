@@ -18,7 +18,11 @@ import { ScenarioPool } from '../shared/procgen/scenarioPool.js';
 import { makeRulesJsonScaffold, makeHasRule, makeAndRule, makeExit } from '../shared/rulesJsonBuilder.js';
 import { validateSpherePlan } from './spherePlanner.js';
 import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
-import { generateLoopCosts } from '../shared/procgen/loopCostGenerator.js';
+import {
+    generateLoopCosts,
+    DEFAULT_REGION_COST,
+    DEFAULT_LOCATION_COST,
+} from '../shared/procgen/loopCostGenerator.js';
 import {
     SIDE_N, SIDE_S, SIDE_E, SIDE_W, SIDES,
     OPPOSITE_SIDE, SIDE_DELTAS,
@@ -6342,8 +6346,8 @@ export function buildRulesJson(grid, opts = {}) {
                 error: `loopCostGenerator failed: ${e?.message ?? String(e)}`,
                 regions: {},
                 locations: {},
-                defaultRegionCost: 50,
-                defaultLocationCost: 10,
+                defaultRegionCost: DEFAULT_REGION_COST,
+                defaultLocationCost: DEFAULT_LOCATION_COST,
             };
         }
     }

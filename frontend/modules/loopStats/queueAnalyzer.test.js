@@ -5,6 +5,9 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { QueueAnalyzer } from './queueAnalyzer.js';
+import {
+  DEFAULT_REGION_COST, DEFAULT_LOCATION_COST,
+} from '../shared/procgen/loopCostGenerator.js';
 
 describe('QueueAnalyzer', () => {
   let analyzer;
@@ -32,19 +35,19 @@ describe('QueueAnalyzer', () => {
 
   describe('getBaseCost', () => {
     it('returns correct base cost for customAction (explore)', () => {
-      expect(analyzer.getBaseCost('customAction')).toBe(50);
+      expect(analyzer.getBaseCost('customAction')).toBe(DEFAULT_REGION_COST);
     });
 
     it('returns correct base cost for locationCheck action', () => {
-      expect(analyzer.getBaseCost('locationCheck')).toBe(100);
+      expect(analyzer.getBaseCost('locationCheck')).toBe(DEFAULT_LOCATION_COST);
     });
 
     it('returns correct base cost for regionMove action', () => {
-      expect(analyzer.getBaseCost('regionMove')).toBe(50);
+      expect(analyzer.getBaseCost('regionMove')).toBe(DEFAULT_REGION_COST);
     });
 
     it('returns default cost for unknown action type', () => {
-      expect(analyzer.getBaseCost('unknown')).toBe(50);
+      expect(analyzer.getBaseCost('unknown')).toBe(DEFAULT_REGION_COST);
     });
   });
 
@@ -190,7 +193,7 @@ describe('QueueAnalyzer', () => {
       expect(state).toHaveProperty('currentAnalysis');
       expect(state).toHaveProperty('previousAnalysis');
       expect(state).toHaveProperty('baseCosts');
-      expect(state.baseCosts.customAction).toBe(50);
+      expect(state.baseCosts.customAction).toBe(DEFAULT_REGION_COST);
     });
   });
 });

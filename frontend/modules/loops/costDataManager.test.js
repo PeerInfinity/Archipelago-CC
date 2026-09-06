@@ -5,7 +5,9 @@
  * Stubs fetch and the eventBus.
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { CostDataManager } from './costDataManager.js';
+import {
+  CostDataManager, DEFAULT_REGION_COST, DEFAULT_LOCATION_COST,
+} from './costDataManager.js';
 
 function makeBus() {
   const events = [];
@@ -35,12 +37,12 @@ describe('CostDataManager — getters with no data loaded', () => {
     expect(mgr.isLoaded()).toBe(false);
   });
 
-  it('getRegionCost falls back to default 50', () => {
-    expect(mgr.getRegionCost('Anywhere')).toBe(50);
+  it('getRegionCost falls back to DEFAULT_REGION_COST', () => {
+    expect(mgr.getRegionCost('Anywhere')).toBe(DEFAULT_REGION_COST);
   });
 
-  it('getLocationCost falls back to default 100', () => {
-    expect(mgr.getLocationCost('Anywhere')).toBe(100);
+  it('getLocationCost falls back to DEFAULT_LOCATION_COST', () => {
+    expect(mgr.getLocationCost('Anywhere')).toBe(DEFAULT_LOCATION_COST);
   });
 
   it('getRegionXpEffect returns the global default ("cost")', () => {
@@ -113,9 +115,9 @@ describe('CostDataManager — setCostData and lookups', () => {
     expect(mgr.getLocationCost('Unknown')).toBe(100);
   });
 
-  it('getLocationCost falls back to literal 100 when defaultLocationCost is missing', () => {
+  it('getLocationCost falls back to DEFAULT_LOCATION_COST when defaultLocationCost is missing', () => {
     mgr.setCostData({ regions: {}, locations: { L: 5 } });
-    expect(mgr.getLocationCost('Other')).toBe(100);
+    expect(mgr.getLocationCost('Other')).toBe(DEFAULT_LOCATION_COST);
   });
 });
 

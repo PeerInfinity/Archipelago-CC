@@ -27,6 +27,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+// ⚖ 2026-09-06 — the block's root defaults are EXPORTED CONSTANTS, never
+// typed numbers. This writer stamps a deliberately EMPTY block (loop mode is
+// on because the block EXISTS), so the roots are the whole economy it states.
+import {
+    DEFAULT_REGION_COST,
+    DEFAULT_LOCATION_COST,
+} from '../../frontend/modules/shared/procgen/loopCostGenerator.js';
+
 
 import { argvHelp } from './argvHelp.js';
 
@@ -82,7 +90,9 @@ async function main() {
             completionConditionItem: victoryName,
         });
         rules.loop_costs = {
-            regions: {}, locations: {}, defaultRegionCost: 50, defaultLocationCost: 10,
+            regions: {}, locations: {},
+            defaultRegionCost: DEFAULT_REGION_COST,
+            defaultLocationCost: DEFAULT_LOCATION_COST,
         };
         return JSON.stringify(rules, null, 2) + '\n';
     };

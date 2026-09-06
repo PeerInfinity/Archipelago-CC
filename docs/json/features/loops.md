@@ -20,9 +20,17 @@ Inspired by idle games like [Idle Loops](https://stopsign.github.io/idleLoops/),
 
 | Action | Description | Base Cost |
 |--------|-------------|-----------|
-| **Move to Region** | Navigate to an adjacent region | Region's move cost (from cost data, or 50 default) |
-| **Explore Region** | Discover locations and exits in a region | 2x the region's move cost |
-| **Check Location** | Check a location for items | Per-location cost (from cost data, or 100 default) |
+| **Move to Region** | Navigate to an adjacent region | Region's move cost (from cost data, or `DEFAULT_REGION_COST` = 50) |
+| **Explore Region** | Discover locations and exits in a region | `DEFAULT_EXPLORE_MULTIPLIER` (2) × the region's move cost |
+| **Check Location** | Check a location for items | Per-location cost (from cost data, or `DEFAULT_LOCATION_COST` = 10) |
+
+⚖ **Every number in this table is an EXPORTED CONSTANT, not a literal** (user
+ruling 2026-09-06: *"I want the code to use exported constants, not hardcoded
+numbers"*). They are declared once, in
+`frontend/modules/shared/procgen/loopCostGenerator.js`, and re-exported through
+`loops/costDataManager.js` for the runtime's readers. Before that ruling the
+store's location fallback was **100** and the generator's was 10; the two are
+now one value, and **10 is the one that survived**.
 
 Actions are animated in real time. Each action's duration is proportional to its mana cost — expensive actions take longer. The formula is: `time = (cost * 5) / gameSpeed` seconds.
 
@@ -250,13 +258,20 @@ through the running loop engine. It had no callers and was deleted 2026-09-06.
 
 ### Fallback Costs
 
-When no cost data is loaded, hardcoded defaults apply:
+When no cost data is loaded, the exported defaults apply
+(`loopState._calculateActionCost`'s no-data branch):
 
-| Action | Default Cost |
-|--------|-------------|
-| Region move | 50 |
-| Explore | 100 (2×50) |
-| Location check | 100 |
+| Action | Default Cost | Constant |
+|--------|-------------|---|
+| Region move | 50 | `DEFAULT_REGION_COST` |
+| Explore | 50 | `DEFAULT_REGION_COST` |
+| Location check | 10 | `DEFAULT_LOCATION_COST` |
+
+⚠ Explore is **not** `DEFAULT_EXPLORE_MULTIPLIER × DEFAULT_REGION_COST` on this
+path. The no-data branch has always priced an explore at a plain region move
+(this page claimed "100 (2×50)" until 2026-09-06 and the code never did that);
+the multiplier applies only when a block IS loaded, where explore reads the
+region's own `moveCost`. Named, not changed.
 
 ## Loop Stats Panel
 

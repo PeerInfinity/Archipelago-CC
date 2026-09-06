@@ -43,6 +43,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+// ⚖ 2026-09-06 — the block's root defaults are EXPORTED CONSTANTS, never
+// typed numbers. This writer stamps a deliberately EMPTY block (loop mode is
+// on because the block EXISTS), so the roots are the whole economy it states.
+import {
+    DEFAULT_REGION_COST,
+    DEFAULT_LOCATION_COST,
+} from '../../frontend/modules/shared/procgen/loopCostGenerator.js';
+
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '../..');
 
@@ -164,7 +172,9 @@ async function generate(preset, mods) {
     // into loop mode. Arbitrary defaults, never consulted — mirrors
     // scripts/test/generate-jta-substrate-test-preset.py.
     rules.loop_costs = {
-        regions: {}, locations: {}, defaultRegionCost: 50, defaultLocationCost: 10,
+        regions: {}, locations: {},
+            defaultRegionCost: DEFAULT_REGION_COST,
+            defaultLocationCost: DEFAULT_LOCATION_COST,
     };
 
     // stateManager reads starting_items[playerId] as an array of item names and

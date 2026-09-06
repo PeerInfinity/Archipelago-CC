@@ -22,7 +22,9 @@ import {
 } from './savedQueueStore.js';
 import { hashRulesData, clearRulesHashCache } from '../shared/rulesHash.js';
 import { annotationsAreEmpty } from './blockAnnotations.js';
-import { CostDataManager } from './costDataManager.js';
+import {
+  CostDataManager, DEFAULT_REGION_COST, DEFAULT_LOCATION_COST,
+} from './costDataManager.js';
 
 beforeAll(installRafShim);
 afterAll(uninstallRafShim);
@@ -828,16 +830,16 @@ describe('M3b — loops-owned coarse capture + live-play economy', () => {
 
     const before = gs.getCurrentMana();
     loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Performed', regionName: 'A' });
-    // Fallback locationCheck cost: exactly 100 at level 0.
-    expect(before - gs.getCurrentMana()).toBe(100);
+    // Fallback locationCheck cost: exactly DEFAULT_LOCATION_COST at level 0.
+    expect(before - gs.getCurrentMana()).toBe(DEFAULT_LOCATION_COST);
     const afterCheck = gs.getCurrentMana();
     loopState.observeParkedLiveAction({ type: 'explore', regionName: 'A' });
-    // Fallback explore (customAction) cost: 50, discounted by the XP the
-    // first charge awarded (xp-adjusted costs — same economy as the
-    // executor).
+    // Fallback explore (customAction) cost: DEFAULT_REGION_COST, discounted
+    // by the XP the first charge awarded (xp-adjusted costs — same economy as
+    // the executor).
     const exploreCharge = afterCheck - gs.getCurrentMana();
     expect(exploreCharge).toBeGreaterThan(0);
-    expect(exploreCharge).toBeLessThanOrEqual(50);
+    expect(exploreCharge).toBeLessThanOrEqual(DEFAULT_REGION_COST);
     // XP awarded 1:1 with the charge (same economy as the executor).
     expect(gs.getRegionXP('A').xp).toBeGreaterThan(0);
     expect(loopState._liveCaptureBuffer).toEqual([
@@ -847,8 +849,9 @@ describe('M3b — loops-owned coarse capture + live-play economy', () => {
 
     const manaBeforeExit = gs.getCurrentMana();
     loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A' });
-    // The departing move was charged on the wake (fallback regionMove 50,
-    // XP-discounted by the XP the observed actions accrued).
+    // The departing move was charged on the wake (fallback regionMove
+    // DEFAULT_REGION_COST, XP-discounted by the XP the observed actions
+    // accrued).
     expect(gs.getCurrentMana()).toBeLessThan(manaBeforeExit);
 
     // Interior rewritten to the observed actions (boundary moves intact).
@@ -876,7 +879,7 @@ describe('M3b — loops-owned coarse capture + live-play economy', () => {
     park('manual');
     const before = gs.getCurrentMana();
     loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Performed', regionName: 'A' });
-    expect(before - gs.getCurrentMana()).toBe(100);
+    expect(before - gs.getCurrentMana()).toBe(DEFAULT_LOCATION_COST);
     expect(loopState._liveCaptureBuffer).toEqual([]);
 
     loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A' });
@@ -914,7 +917,9 @@ describe('M3b — loops-owned coarse capture + live-play economy', () => {
   it('depletion mid-live-play triggers the loop reset and discards the capture', () => {
     park('record');
     loopState.observeParkedLiveAction({ type: 'explore', regionName: 'A' });
-    gs.currentMana = 60; // next check (100) depletes
+    // A pool the next check cannot cover, derived from the cost itself: the
+    // check is DEFAULT_LOCATION_COST at level 0 and the pool is 60% of it.
+    gs.currentMana = DEFAULT_LOCATION_COST * 0.6;
     loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Expensive', regionName: 'A' });
     // deductMana → manaChanged → _handleManualWake_mana → _resetLoop:
     // refilled, unparked, capture discarded.
@@ -941,7 +946,7 @@ describe('M3b — loops-owned coarse capture + live-play economy', () => {
     loopState.autoRestartQueue = true;
     park('record');
     loopState.observeParkedLiveAction({ type: 'explore', regionName: 'A' });
-    gs.currentMana = 60;
+    gs.currentMana = DEFAULT_LOCATION_COST * 0.6;
     loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Expensive', regionName: 'A' });
 
     expect(gs.getCurrentMana()).toBe(gs.getMaxMana());
@@ -958,7 +963,7 @@ describe('M3b — loops-owned coarse capture + live-play economy', () => {
     loopState.autoRestartQueue = true;
     loopState._stepMode = true;
     park('record');
-    gs.currentMana = 60;
+    gs.currentMana = DEFAULT_LOCATION_COST * 0.6;
     loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Expensive', regionName: 'A' });
     expect(loopState.isProcessing).toBe(false);
 
