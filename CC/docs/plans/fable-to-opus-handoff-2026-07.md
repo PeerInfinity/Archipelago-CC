@@ -11320,6 +11320,14 @@ the hop — M1's own gate). The planner's answer to *"should designing the menu 
 rest of this plan?"*: NO — L1–L5 do not read the panel; both cost models already write Menu 0; the free-by-rule
 start-region constant rides L2; M1 runs whenever the design conversation happens, before or after L4.
 
+**⚖ WITHDRAWN 2026-09-06:** the "is L4 the LAST integration behind R1" question was the planner's misreading of an
+ordering remark — the user: *"The region marking tool is still experimental, and I'm not aware of anything that
+depends on it."* No ordering constraint between R1 and this ladder. **L1 LAUNCHED 2026-09-06** as `loop-costs-L1`
+(Opus, pid 3847489, cwd verified, kickoff `NewDocs/plans/loop-costs-L1-prompt.md`; the user: *"That plan makes
+sense"*): delete the dead generator + its test + the dead Playwright spec + the zero-caller `_costs.json` path;
+retire the initial-menu row, rewrite the pause-resume row; retire the `test-loops` mode; close the two backlog
+entries. Reports come to `next-priorities-planning-2`. Next after L1's idle notice: L5 (omsi Start/Pause), then L2.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
