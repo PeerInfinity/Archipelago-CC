@@ -11688,7 +11688,9 @@ thrown handlers · `test-loops-only` **8/8**. **MUTANT FIRST:** `_pricingOf` →
 ⚖ **52 suite at `abd432a505`** — run 34060382975 success: `suite: vitest (unfiltered)` **435/13293** (13285
 passed | 8 skipped | **0 failed**), slow battery 12/217. Baseline L2's `2b57bf1bbd` 435/13293. Derived BEFORE
 the run: this slice adds **no vitest file and no vitest row** (the panel's claim is an IN-APP row; the gate's
-output change touches no test; `instruments.js` re-pins rather than adds) ⇒ **435/13293, ±0/±0** — matched.
+output change touches no test; `instruments.js` re-pins rather than adds) ⇒ **435/13293, ±0/±0** — matched, and
+matched AGAIN at the final code head `fcb599f715` (run 34061588723, whole workflow success), whose gate row for
+the newly adopted arm reads `4/0/1 | exit=0 | ALL PASS — ONE MODEL: 4 document(s) byte-identical …; 1 skipped`.
 
 **⚖ NEW for the user.** (1) The "4 → 5 gate jobs" price was never real; the shard arithmetic should stop being
 quoted as a job count until something consumes the headless plan. (2) Every adoption owes a `PASS:`/`ALL PASS`
