@@ -1521,3 +1521,43 @@ recorded here so the next reader does not re-derive it from one red sample.
    A submodule commit plus a gitlink bump — ask-first, and out of this slice.
 4. **33 memory files under `~/.claude/projects/…/memory/` name a renamed script.** Only this arc's
    own project note was touched; the rest are the planner's, listed in the report back.
+
+## ⛑ One more control the rename owes — the BOX LOCK's taker set
+
+`machineDrivers()` (⚖ 62) is the population `boxLock` derives its takers from, and it is a scan over
+the whole instrument directory — exactly the shape the brief warned moves counts nobody edited. It
+was measured on both sides, the BEFORE by extracting `scripts/procgen/` from `580b178cd3` into a
+throwaway root:
+
+```
+BEFORE (580b178cd3)  99 machine driver(s) — 22 windows, 77 browser
+AFTER  (76295b9aa3)  97 machine driver(s) — 22 windows, 75 browser
+```
+
+⇒ the delta is **exactly the two deleted scripts**, both browser. A rename cannot move this set —
+`machineDrivers` classifies on the file's TEXT, not its name — and the measurement says so rather
+than the argument.
+
+## ⚖ 52 — the suite row, QUOTED from CI at the pushed SHA
+
+```
+CI vitest @ 76295b9aa — run 33999690283 success (2026-09-05T23:49:40Z)
+  suite: vitest (unfiltered)  436/13309   (13301 passed | 8 skipped | 0 failed)
+  slow battery                12/217      (217 passed | 0 failed)
+```
+
+**Files: 436 → 436, ZERO. Tests: 13,301 → 13,309, +8 — and the +8 is derived PER FILE, not
+eyeballed.** `git diff --name-only 580b178cd3..76295b9aa3` names 17 test files; counting `it(` at
+both ends:
+
+| file | before | after | delta |
+|---|---|---|---|
+| `scripts/procgen/gateRoster.test.js` | 24 | 31 | **+7** (the `@ci-box` describe, plus the two-way pair refusal) |
+| `scripts/procgen/ciGatePlan.test.js` | 55 | 56 | **+1** (`accepts every gate that declares neither`) |
+| the other 15 | — | — | **0** — each changed only by a name rewrite in prose |
+
+⇒ **+8 owed, +8 measured, 0 failed.** `git merge-base --is-ancestor` holds for both standing
+baselines against `76295b9aa3` — `ef2f40efe` (the APWorld hub arc's `436/13,301`) and `2b8c9be271`
+(V3a's own row) — so the numbers are comparable, and the only movement is the tests this slice wrote.
+⛓ The CI run is `success`, which is also the first evidence that the 49 newly adopted gates did NOT
+reach the shards: a run that had picked them up would have published 51 gate jobs.
