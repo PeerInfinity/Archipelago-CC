@@ -11295,6 +11295,22 @@ costs should be the last thing we integrate"* — is L4 (the editor write-back) 
 R1's marking tool? (4) the plain `test` mode's roster is down to one enabled row and it hangs — out of scope,
 named here. **Nothing launched.** NEXT: the user's answers, then L1's kickoff; R1 (marking tool) still owed.
 
+**⚖ RULED (user, 2026-09-06) on §5o's open items:** (1) *"I want the updated default location cost of 10 to be an
+exported constant, not a block field update. In general, I want the code to use exported constants, not
+hardcoded numbers."* ⇒ the runtime's four 100s adopt the constant (L2). (2) rewrite the pause-resume row;
+retire the `test-loops` mode (L1). (3) omsi cold start: *"I don't have a preference"* ⇒ L5 runs as its own
+slice right after L1. (4) *"The rest of the plan sounds good."* Still open: is L4 the LAST integration.
+**⚖ NEW (user, thinking aloud): THE MENU REGION** — a GoldenLayout start-menu panel; advancing costs no mana
+and needs no exploration; undecided whether game logic tracks Menu as a region that needs a move to exit;
+undecided contents (a button per connected region, instructions/links, a Restart that works outside loop
+mode against soft locks). MEASURED (plan §7): Menu is a real region in every rules.json (1 exit, 0 locations);
+plain worlds start there with an empty path and the queue routes from it — free with a planned block, **50
+with the 12 empty blocks** (no start-region exemption in `loopState.js`); procgen worlds SYNTHESIZE the
+`Menu → first region` hop at load (a planning source, never charged) and resets teleport past Menu; no menu
+component, no plan doc, the only restart affordance is the Loops panel's Hard Reset. Two models offered:
+(A) Menu stays a tracked region with a panel as its substrate, the move free BY RULE (one constant), the
+auto-hop the panel's default; (B) Menu a pure wrapper, the hop synthesized everywhere. Recommend (A).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
