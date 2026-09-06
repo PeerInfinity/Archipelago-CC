@@ -479,6 +479,12 @@
             "_comment": "APWorld hub H5. Plan \u00a74 priced this link as 'Apply, then open' because the cost debugger reads applied state; the measurement overturned it \u2014 CostPlanner takes its state manager as a constructor argument and touches it through two methods, so a rules.json can wear that face via StateManager.loadFromJSON (4 ms to 306 ms across the corpus). The row asserts the debugger's status line says which world the numbers describe, and that there is a named way back."
         },
         {
+            "id": "apworld-loop-costs-panel-says-which-numbers-the-block-carries",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "Loop-costs L3. \u2696 (i) the walk prices EVERY region as coarse because that is how the numbers are derived; writeCostsByClass then drops the ones no block should carry. jta_schedule_test separates them: all three regions are NATIVE, so the block holds 1 of 4 regions and 0 of 23 locations while the plan behind it says 50/35/26 and 100/70/52. Before L3 the panel printed those as prices (cost=100 on a location the block does not price) and Verify scored the runtime 1/32 within tolerance for charging nothing, which was the design. Mutant: _pricingOf returning {priced:true} for NATIVE reds this row and nothing else."
+        },
+        {
             "id": "apworld-links-tab-reaches-an-editor-with-no-data",
             "enabled": true,
             "category": "apworldEditor",

@@ -2335,6 +2335,118 @@ export async function apworldLoopCostsDoorHandsTheWorkingCopyToTheDebugger(testC
 }
 
 /**
+ * ⛓⛓⛓ **L3 — THE PANEL IS THE ALGORITHM'S INSPECTOR, AND IT MUST NOT PRINT A
+ * PRICE NOTHING CHARGES.**
+ *
+ * ⚖ (i) the walk prices EVERY region as if it were coarse, because that is how
+ * the numbers are derived; `writeCostsByClass` then drops the ones no block
+ * should carry. `jta_schedule_test` is the case that separates the two: all
+ * three of its regions are NATIVE (jta runs its own mana economy), so the block
+ * holds **1 of 4** regions and **0 of 23** locations — while the plan behind it
+ * says 50 / 35 / 26 and 100 / 70 / 52.
+ *
+ * ⛔ **MUTANT-FIRST, and the mutant is the exact regression this guards.**
+ * Reverting `_pricingOf` to `{priced: true}` for NATIVE — i.e. a panel that
+ * prints `cost=100` for a jta location again — reds this row on the label
+ * conditions and nothing else in the file.
+ *
+ * ⛓ It goes through the HUB's door on purpose: that is the path a person takes
+ * (H5), and it proves the labels survive a WORKING COPY the app never applied —
+ * where the region → substrate map comes from `documentStateManager` rather
+ * than from `procgenPlayer`.
+ */
+export async function apworldLoopCostsPanelSaysWhichNumbersTheBlockCarries(testController) {
+    try {
+        const panel = await openHub(testController, LOOP_COSTS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        await pressDocumentKeyEditor(testController, panel, 'loop_costs');
+
+        // ⛔ `[working copy` — the bracketed prefix only the FINISHED adoption
+        //    prints; the progress line names the door but not the counts.
+        const status = await testController.pollForValue(
+            () => {
+                const el = document.querySelector('.cost-debugger-panel .cd-status');
+                return el && el.textContent.includes('[working copy') ? el : null;
+            },
+            'the cost debugger, planning the working copy',
+            8000,
+            50,
+        );
+        testController.reportCondition('the debugger adopted the working copy', !!status);
+        // ⛔ `reportCondition` returns undefined — the guard reads the VALUE.
+        if (!status) return testController.getOverallResult();
+
+        const press = (sel) => {
+            const btn = document.querySelector(`.cost-debugger-panel ${sel}`);
+            if (btn) btn.click();
+            return !!btn;
+        };
+        testController.reportCondition('Load pressed', press('.cd-btn-load'));
+        await testController.pollForCondition(
+            () => document.querySelectorAll('.cost-debugger-panel .cd-step-row').length === 0
+                || !!document.querySelector('.cost-debugger-panel .cd-btn-plan-all:not([disabled])'),
+            'the planner accepted the document\'s own sphere log', 8000, 50);
+        testController.reportCondition('Plan All pressed', press('.cd-btn-plan-all'));
+
+        const rows = await testController.pollForValue(
+            () => {
+                const r = [...document.querySelectorAll('.cost-debugger-panel .cd-step-row')];
+                return r.length > 1 ? r : null;
+            },
+            'a planned step list',
+            8000,
+            50,
+        );
+        testController.reportCondition('the panel planned the working copy', !!rows);
+        if (!rows) return testController.getOverallResult();
+
+        /**
+         * ⛔ THE CLAIM, and it is a claim about EVERY check step, not about one:
+         * a single row that happened to be labelled would pass a panel that
+         * labels by position. Every CHECK step of this document is in a jta
+         * region, so every one of them must carry the label and NONE may carry
+         * a `cost=` figure.
+         */
+        const checkRows = rows.filter((r) => r.querySelector('.cd-phase-check'));
+        const summaries = checkRows.map((r) => r.querySelector('.cd-step-summary')?.textContent ?? '');
+        testController.assertEqual(
+            'every jta location step says the block prices it by the substrate\'s own economy',
+            'true',
+            String(summaries.length > 0 && summaries.every((t) => t.trim() === 'own economy')));
+        testController.assertEqual(
+            'and none of them prints a cost figure the block does not carry',
+            'true',
+            String(summaries.every((t) => !t.includes('cost='))));
+
+        /**
+         * ⛓ The BLOCK's count against the world's own — `1 / 4` regions and
+         * `0 / 23` locations here. A bare "1" reads as "one region planned",
+         * which is the opposite of what happened.
+         */
+        const regionCount = Object.keys(panel.rulesDoc.regions[panel.playerId] ?? {}).length;
+        const regionsEl = document.querySelector('.cost-debugger-panel .cd-summary-regions');
+        testController.assertEqual(
+            'the summary counts the regions the BLOCK prices against the world\'s own',
+            `1 / ${regionCount}`,
+            regionsEl?.textContent ?? '(missing)');
+
+        // ⛓ ONE engine, named, and which world it was pointed at.
+        const engineEl = document.querySelector('.cost-debugger-panel .cd-summary-engine');
+        testController.assertEqual(
+            'the summary line names the one engine and the world it planned',
+            'true',
+            String(!!engineEl && engineEl.textContent.includes('loopCostPlanner')
+                && engineEl.textContent.includes('working copy')));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('loop_costs panel labelling test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
  * ⛓⛓⛓ **⚖ *"even if the current rules.json file doesn't contain any relevant
  * data for them"*.** A document with NO `region_atlas` must still carry that
  * block's row in the Links tab — through the SAME registry entry the Document
@@ -2440,6 +2552,21 @@ registerTest({
                + 'state — its status line naming the door and the document\'s region count, '
                + 'and a named way back to applied state on offer.',
     testFunction: apworldLoopCostsDoorHandsTheWorkingCopyToTheDebugger,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-loop-costs-panel-says-which-numbers-the-block-carries',
+    name: 'APWorld hub: the cost debugger labels a jta region as priced by its own economy',
+    description: 'Opens the loop_costs door on a jta document (three NATIVE regions, so the '
+               + 'block prices 1 of 4 regions and 0 of 23 locations while the plan behind it '
+               + 'says 50/35/26 and 100/70/52), plans the handed-over working copy, and '
+               + 'asserts EVERY check step says "own economy" and none prints a cost= figure; '
+               + 'that the summary counts the block\'s regions against the world\'s own; and '
+               + 'that the summary line names the one engine (loopCostPlanner) and the world '
+               + 'it was pointed at. Mutant: a panel that prices a NATIVE region reds it.',
+    testFunction: apworldLoopCostsPanelSaysWhichNumbersTheBlockCarries,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
