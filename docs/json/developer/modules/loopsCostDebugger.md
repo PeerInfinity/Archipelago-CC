@@ -113,6 +113,50 @@ divides that cost by the room's longest shortest path and charges it natively).
 The panel's Simulated Queue therefore carries a **Charged by** column — *the
 queue* / *the substrate* / *time (drain)* — separate from whether a cost exists.
 
+### Sending a plan back to a document (L4)
+
+⚖ *(user, 2026-09-06)* **"the debugger's plan comes back as ONE op"**. When the
+APWorld editor hands a working copy over through its `loop_costs` door, the
+payload carries an `onSave` beside the document, and the panel offers **Send
+costs to the document**: one press writes `getCostData()` — the BLOCK, not the
+walk — into the hub as a single document-scope `set-key loop_costs`, which the
+hub applies through its own `_acceptEditorOp` (schema veto, slot stamp, undo
+step) and which **one Undo there takes back out whole**.
+
+`sendCostsRefusal({workingCopy, planner})` is the rule, pure and exported, and it
+answers with a SENTENCE rather than a boolean because every refusal is a state a
+person can leave:
+
+| state | what it says |
+|---|---|
+| no working copy | this panel is on APPLIED state, which the app owns |
+| a working copy with no `onSave` | it arrived without a way back — re-open it from the hub |
+| the planner rejects the document | the planner's own sentence, quoted (it already answers *"No sphere log loaded"*) |
+| a plan that is not COMPLETE | press Plan All — a partial plan's block prices some regions and silently falls back for the rest |
+| otherwise | `null`, and the button is live |
+
+The button is **hidden** on applied state (the gesture does not exist there) and
+**shown-and-disabled with the reason in its `title`** once a document is adopted.
+
+Two facts the panel states because nothing else does:
+
+- **`generatedFrom` names the DOOR.** The planner stamps `'loopsCostDebugger'`,
+  which is true of the store; a block written into a *document* is provenance
+  somebody reads later, so it carries the hand-off's own source label (*"the
+  APWorld editor"*) — never a file path an unsaved working copy does not have.
+- **A `loop_costs` block's PRESENCE is the loop-mode switch**, so sending costs
+  to a document that carried none turns loop mode ON for that world
+  (`loops/index.js handleRulesLoaded` auto-enables on
+  `costDataManager.isLoaded()`, i.e. `costData !== null`). The status line says
+  so on a successful send, and the hub's row says it beside the block.
+
+⛔ **The hub's schema veto cannot check the block's MEANING.** Measured at L4:
+`rules.schema.json`'s `loop_costs` definition is type-only, so it refuses a
+location cost that is not a number or a region entry that is not an object, and
+ACCEPTS a `moveCost` on a summary region, a missing `defaultRegionXpEffect`, an
+entry for a native region, and an `xpEffect` of `"banana"`. What keeps the block
+right is `check-loop-costs-one-model.mjs` and `loopCostGenerator.test.js`.
+
 ### What Verify scores, and what it only reports
 
 Verify replays each planned step through the live loop state and compares the

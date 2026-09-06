@@ -128,7 +128,7 @@ is still the way to fix a value the dedicated editor cannot express.
 |---|---|---|
 | `region_atlas` | the region marking tool | `op` |
 | `procgen_metadata` | the procgen pipeline | `document` |
-| `loop_costs` | the loops cost debugger | `none` |
+| `loop_costs` | the loops cost debugger | `op` |
 | `sphere_log` | the spoiler checklist | `none` |
 | `preset_sidecars` | the Regions tab's per-region **Edit ▸** | `op` |
 
@@ -143,8 +143,14 @@ Document row prints instead is **`returns`**, because *"if I save over there,
 does it come back here as an undoable step?"* is the question a reader has:
 
 - **`op`** — `onSave` fires with ONE op, applied through the panel's own
-  `_applyOp` (schema veto, slot stamp, undo step); one Undo folds the whole
-  sub-edit away.
+  `_acceptEditorOp` (schema veto, slot stamp, undo step); one Undo folds the
+  whole sub-edit away. ⛔ **L4 measured that the veto was not on this path at
+  all** — it lived in `_applySetKey`, which is the RAW JSON block editor's
+  method, so an op arriving from a linked editor reached `applyRulesDocOp`,
+  which reads no schema, untouched. `region_atlas`'s Save had been bypassing it
+  since H5. `_acceptEditorOp` runs the same check the block editor runs now, and
+  RETURNS `{accepted, applied, errors, description}` so the editor can print
+  what happened instead of guessing from the hub's log.
 - **`document`** — that editor's exit is a NEW document (the arc's rule that
   generation is not an edit); nothing comes back here.
 - **`none`** — that editor only READS the block.
@@ -208,11 +214,36 @@ player's world"* condition instead of reporting it. Its status line carries
 `[working copy · <door> — n regions, m locations]`, and a **Use applied state**
 button is the named way back.
 
-`returns` is still `none`: the debugger PLANS costs and has no gesture that
-writes them back. `CostPlanner.getCostData()` is already exactly this block's
-shape, so that write-back is one door away — and worth having, because all twelve
-committed `loop_costs` blocks are EMPTY (`regions: {}`, `locations: {}`), which
-is what the Document row's per-region cost table says out loud.
+**`returns` is `op` as of L4** (⚖ user, 2026-09-06: *"the debugger's plan comes
+back as ONE op"*). `CostPlanner.getCostData()` is already exactly this block's
+shape — the BLOCK, write-by-class applied, byte-identical to the one the procgen
+pipeline embeds (`scripts/procgen/check-loop-costs-one-model.mjs`) — so the whole
+write-back is a single `set-key loop_costs`, undoable here in one step. The door
+passes `onSave` through the hand-off payload rather than holding it: the gesture
+that fires it (the debugger's **Send costs to the document**) happens long after
+`open()` returned. The panel drops it the moment the working copy goes away.
+
+A block written into a document carries `generatedFrom: "the APWorld editor"` —
+the hand-off's own source label, not the `"loopsCostDebugger"` the planner stamps
+for the store and not a file path this unsaved document does not have.
+
+⚠ **The Document row states the switch, and it is not a cost fact:** a
+`loop_costs` block's PRESENCE is what enables loop mode for a world.
+`loops/index.js handleRulesLoaded` auto-enables when `costDataManager.isLoaded()`
+— `this.costData !== null` — with a symmetric auto-exit when a freshly loaded
+preset carries none. So sending costs to a document that had no block turns loop
+mode ON for it, and all twelve committed carriers already boot in loop mode from
+an EMPTY block.
+
+⛔ **THE `loop_costs` SCHEMA IS TYPE-ONLY, and the veto can only see what it
+declares.** Measured at L4 over the real schema and the real documents: it
+refuses a location cost that is not a number, a region entry that is not an
+object, a string `moveCost`, a non-object block — and it ACCEPTS every semantic
+error the write-by-class rule is about: a `moveCost` on a summary region, a
+missing `defaultRegionXpEffect`, an entry for a native region, an empty block,
+an undeclared root key, and an `xpEffect` of `"banana"`. The standing proof that
+the block is right is `check-loop-costs-one-model.mjs` and
+`loopCostGenerator.test.js`, not the schema.
 
 ## The Map tab
 
@@ -597,7 +628,7 @@ The import is free in both modes, measured:
 | publishes | `files:jsonLoaded` | Apply — a full-document clone, under the **origin's** `sourceName` (`apworldEditorApply` only when there is no origin) |
 | publishes | `ui:activatePanel` | the Links tab's rows, the Document tab's block-editor doors, and the Map tab's one-way *Open region graph*. ⛔ H5 found this was **never registered** in the module's `register()`, and `eventBus.publish` refuses an unregistered publisher — warns and returns — so H1's Links tab Open and H3's *Open region graph* had been silently doing nothing since they shipped. A test row now scans the panel's own `publish('…')` sites against `register()` |
 | publishes | `procgenPipeline:loadRules` | H5 — the `procgen_metadata` door; `{jsonData, source, player}` |
-| publishes | `loopsCostDebugger:loadRules` | H5 — the `loop_costs` door; same payload |
+| publishes | `loopsCostDebugger:loadRules` | H5 — the `loop_costs` door; same payload plus L4's `onSave` |
 
 ## Tests
 
