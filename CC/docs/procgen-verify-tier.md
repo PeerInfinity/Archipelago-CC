@@ -1514,6 +1514,31 @@ recorded here so the next reader does not re-derive it from one red sample.
    runner). Adoption is deleting that line — and paying for it: an unpriced arm takes a whole 600 s
    shard until a finished run re-prices it, and the 20 hand-read `--host=` gates above need the
    `arg('host')` spelling first.
+
+   **⇒ THE FIRST ONE IS ADOPTED (⚖ user, 2026-09-06): `check-loop-costs-one-model.mjs`**, in
+   loop-costs L3 (queue doc §5o; `3e229ac2df` / `2b2ae2bc1f` / `abd432a505`). Three things it
+   measured that this section had wrong or did not say:
+
+   - ⛔ **THE SHARD ARITHMETIC IS NOT A JOB COUNT.** `--set=headless` did go 31 arms / 1 shard →
+     32 / 2, exactly as priced. But **nothing consumes the headless plan**:
+     `unittests_frontend.yml` publishes only `--plan --set=browser --json` into a matrix (lines
+     243-245, the only two consumers of a plan in the tree), and every headless arm runs in ONE
+     step inside `javascript-tests`. The procgen gate JOB count was **unmoved at 4**. ⇒ the "600 s
+     shard" price is real for the browser set and notional for the headless one; the true cost of
+     adopting a headless gate is its arm time inside an existing step budgeted at 20 minutes.
+   - **The measured price, so the next adoption need not guess:** `##   ms | gate:
+     loop-costs-one-model | here=0.2s` (run 34060382975), against 0.6 s on the box.
+   - ⚠ **AN ADOPTION OWES A VOCABULARY CHECK, and it is not listed below.** `ci-gates.mjs`
+     publishes an arm by counting line-start `PASS:` / `FAIL:` and reading a total off
+     `ALL PASS…` / `ALL CHECKS PASSED` / `n CHECK(S) FAILED` (`standingValues.headlineOf`). This
+     gate printed `OK <preset>` and `ONE MODEL: ALL OK`, so its first published row was
+     **`0/0 | exit=0 | (no total)`** — a green naming nothing it checked. A `@ci-box` gate has
+     never had to speak that vocabulary, so **every one of the other 49 may owe the same fix.**
+   - ⚠ And a DOCBLOCK edit is not free: `generate-procgen-reference.mjs` harvests every
+     double-dash flag spelling out of a docblock into `documentedFlags`, so an adoption note that
+     merely NAMES `--host=` enrols `host` as a flag the generated index claims the gate takes —
+     which reds `procgenDocs/generated.test.js`. (The `@ci-box` lines themselves have been doing
+     this: the line deleted here had enrolled `set`.)
 2. **Should `check-bounce-embed.mjs`'s `ERRORS (n)` count FAIL the run?** It prints the page's
    console errors and exits 0 whatever `n` is. V3b gave it the PASS line the survey named and
    deliberately did NOT turn that count into an assertion — that is a new claim, not a rename.

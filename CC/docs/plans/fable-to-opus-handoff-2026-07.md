@@ -11631,6 +11631,71 @@ census of every cost readout against the write-by-class block (jta/omsi unpriced
 Verify reading the store as the runtime does, one-engine wording, the dev doc, one in-app row (mutant first).
 No `shared/` change. Reports come to `next-priorities-planning-2`. Then L4.
 
+**⇒ L3 AS BUILT — 2026-09-06, Opus `loop-costs-L3`, main `fcb599f715` (pushed).** Six commits by path; push
+range `1090897af5..fcb599f715` (left end = this session's own start HEAD, so nobody else moved the branch).
+Full record: plan §13.
+
+**Task 0 — the adoption, and CI answered it TWICE.** `@ci-box` deleted; plan quoted BEFORE `31 arms / 1 shard`
+→ AFTER `32 / 2` headless, browser `25 / 3` unmoved — L2's numbers to the digit. ⛔ **But the priced cost the
+user accepted, "4 → 5 procgen gate jobs per push", DOES NOT OCCUR: nothing consumes the headless plan.**
+`unittests_frontend.yml` shards only the BROWSER set (lines 243-245, the only two consumers of a plan in the
+tree); the headless arms run in ONE step inside `javascript-tests`. ⇒ the job count is **UNMOVED at 4**, and the
+real price is the arm's own time inside a step budgeted at 20 minutes: **measured `here=0.2s`** (run 34060382975)
+against 0.6 s on this box. ⚖ **The next adoption can cite 0.2 s instead of the 600 s placeholder — and the other
+49 are cheaper than they were quoted.** The gate reads no host argument at all, so V3b's 20-gate `--host=`
+finding has nothing to fix here.
+⛔ **The two reds, neither in the brief.** (1) The docblock edit moved the GENERATED INSTRUMENTS INDEX —
+`generate-procgen-reference.mjs` harvests every double-dash flag spelling out of a docblock into
+`documentedFlags`, so the sentence saying *"this gate reads no `--host=`"* enrolled `host`; the `@ci-box` line it
+replaced had already enrolled `set`, and that one shipped in L2. The docblock now names no flag spelling and
+says why; the index DROPS `set` and adds nothing. (2) The first CI row read **`0/0 | exit=0 | (no total)`** — a
+green that names nothing it checked, in the gate adopted so a second model could not come back silently.
+`ci-gates` counts line-start `PASS:`/`FAIL:` and reads a total off `ALL PASS…`; this gate printed `OK <preset>`
+and `ONE MODEL: ALL OK`. Fixed; the row now reads **`4/0/1 | exit=0 | ALL PASS — ONE MODEL: 4 document(s)
+byte-identical …; 1 skipped`** (4, not 5: `maze_loop_worldgen` is deliberately untracked). ⚖ **Every one of the
+49 adoptions owes this vocabulary check, and it is not on V3b's list of what an adoption touches.**
+
+**THE PANEL.** The census, per region class, measured (plan §13 has the full table): jta's three regions and
+omsi's one are **NATIVE** — the block writes nothing and the panel printed 50 / 35 / 26 and `cost=100` for
+locations the block does not price; the two maze regions of `omsi_substrate_test` and all three of
+`maze_loop_worldgen` are **COARSE** and their numbers are real; Menu is COARSE at 0. ⚠ **None of the brief's
+three documents has a SUMMARY region** — that case is measured on `bounce_worldgen` and `runner_sphere_worldgen`
+(both committed) and is the worst of the four. Unpriced regions now read **`own economy`** / **`time-priced`**
+with the reason; Cost Assignments gained an "In the block" column, the Simulated Queue a "Charged by" column,
+Regions/Locations became `1 / 4` and `0 / 23` (the block's count against the world's), and a new **`Engine:`**
+item names `loopCostPlanner` and which world it was pointed at.
+⚠ **TWO AXES, and the brief names one.** CLASS (what the block says) and CAPTURE SHAPE (who charges) disagree
+for **maze**, which is COARSE-classed and FINE-shaped; only the first decides whether a number may be printed.
+A new `loopState.getSubstrateCaptureShape(substrateId)` is the runtime's answer keyed by SUBSTRATE, because
+`getRegionCaptureShape(region)` cannot answer for an H5 working copy the app never loaded.
+
+**VERIFY, before → after:** `jta_schedule_test` **1/32 within tolerance (max Δ 165.9)** → 32 steps, the block
+prices none of them, nothing to score · `omsi_substrate_test` **0/5 (max Δ 375.7)** → **0/2**, 3 unpriced by
+design · `maze_loop_worldgen` **10/10, Δ 0.0** → unchanged. ⛑ The omsi **0/2** is a REAL finding the old noise
+buried: those two maze regions have an EMPTY committed block, so the store answers 50 where the planner says 16
+and 21. ⛔ **The brief's instruction was unfollowable as written** — `_calculateActionCost` has NO fine branch;
+the runtime's shape test lives in its CALLERS, so reading the store "the way `_calculateActionCost` does" is
+exactly what produced the false bill. And the first fix, excluding what the QUEUE does not charge, swallowed
+maze (10/10 → "none scored"): the discriminator is **`priced`**, not `chargedByQueue`.
+
+**Gates.** Bounded vitest `loopsCostDebugger` + `loops` **26 files / 678 tests / 0 failed**; `procgenDocs` +
+the four gate-roster files **11 / 565 / 0** · `check-loop-costs-one-model` green 5/5 here, 4/0/1 in CI ·
+`check-procgen-reference --check` + `check-procgen-docs` ALL CHECKS PASSED after the generator run ·
+`check-procgen-help --doors=all` ALONE **ALL PASS, 266 instruments, 473.7 s** · `test-substrates --batch=fast`
+**85/85** with `compare-runs` reporting **ADDED (1)** and nothing else moved, exit 0, browser log swept clean of
+thrown handlers · `test-loops-only` **8/8**. **MUTANT FIRST:** `_pricingOf` → `{priced: true}` for NATIVE reds
+**1 of 85 rows — the new one and nothing else**, on exactly its two label conditions.
+⚖ **52 suite at `abd432a505`** — run 34060382975 success: `suite: vitest (unfiltered)` **435/13293** (13285
+passed | 8 skipped | **0 failed**), slow battery 12/217. Baseline L2's `2b57bf1bbd` 435/13293. Derived BEFORE
+the run: this slice adds **no vitest file and no vitest row** (the panel's claim is an IN-APP row; the gate's
+output change touches no test; `instruments.js` re-pins rather than adds) ⇒ **435/13293, ±0/±0** — matched.
+
+**⚖ NEW for the user.** (1) The "4 → 5 gate jobs" price was never real; the shard arithmetic should stop being
+quoted as a job count until something consumes the headless plan. (2) Every adoption owes a `PASS:`/`ALL PASS`
+vocabulary check or its CI row is a green that says nothing. (3) `costDebuggerUI.js` has no vitest file at all —
+`_pricingOf` is driven only by the in-app row and its mutant; a small unit file is a candidate, not owed.
+NEXT after L3: **L4** (the hub's write-back op; `documentKeys.js`'s `loop_costs` door is still `returns:'none'`).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
