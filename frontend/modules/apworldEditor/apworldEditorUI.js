@@ -1652,6 +1652,22 @@ class ApworldEditorUI {
     Object.assign(head.style, { color: '#9ab' });
     wrap.appendChild(head);
 
+    /**
+     * ⛓⛓ **⚖ (f) — THE PRESENCE OF THIS BLOCK IS THE LOOP-MODE SWITCH**, and
+     * nothing else on the Document tab says so. `loops/index.js`'s
+     * `handleRulesLoaded` turns loop mode on when `costDataManager.isLoaded()`
+     * — i.e. when the block is non-null — so a document that gains one gains
+     * loop mode, and deleting the block is how a world loses it. ⛔ Said on the
+     * ROW rather than only in the door's note: a person editing the raw JSON
+     * beside it never presses the door at all.
+     */
+    const switchLine = document.createElement('div');
+    switchLine.className = 'apworld-loop-costs-switch';
+    switchLine.textContent = 'This block\'s presence enables loop mode for the world — a '
+      + 'document that carries one boots with loop mode ON, even when it prices nothing.';
+    Object.assign(switchLine.style, { color: '#8a8', fontSize: '10px', marginTop: '2px' });
+    wrap.appendChild(switchLine);
+
     if (priced === 0) {
       const none = document.createElement('div');
       none.className = 'apworld-loop-costs-none';
