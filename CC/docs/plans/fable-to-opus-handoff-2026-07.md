@@ -11311,6 +11311,15 @@ component, no plan doc, the only restart affordance is the Loops panel's Hard Re
 (A) Menu stays a tracked region with a panel as its substrate, the move free BY RULE (one constant), the
 auto-hop the panel's default; (B) Menu a pure wrapper, the hop synthesized everywhere. Recommend (A).
 
+**⚖ RULED (user, 2026-09-06): the Menu region = model (A)** — Menu stays a tracked region with a panel as its
+substrate — *plus "an option to automatically skip the menu, possibly as a checkbox in the menu panel. We can set
+the default value to skip the menu, and change that later when we design the actual menu panel."* ⇒ rung **M1**,
+PARKED behind its own design conversation (contents undecided): exit buttons issuing real moves, a Restart that
+works outside loop mode, the skip setting default ON (generalizing today's procgen auto-hop; plain worlds gain
+the hop — M1's own gate). The planner's answer to *"should designing the menu panel come first and block the
+rest of this plan?"*: NO — L1–L5 do not read the panel; both cost models already write Menu 0; the free-by-rule
+start-region constant rides L2; M1 runs whenever the design conversation happens, before or after L4.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
