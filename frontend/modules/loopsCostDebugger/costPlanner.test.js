@@ -208,7 +208,7 @@ describe('CostPlanner — reset()', () => {
       sphere(1, { 1: { sphere_locations: ['Forest Chest'] } }),
     ]);
     expect(planner._startRegion).toBe('Menu');
-    expect(planner._adjacencyMap.has('Forest')).toBe(true);
+    expect(planner.getTopology().adjacency.has('Forest')).toBe(true);
     expect(planner.getTotalEntries()).toBe(1);
 
     // A different world is loaded, and the player switches with it.
@@ -223,7 +223,7 @@ describe('CostPlanner — reset()', () => {
     planner.reset();
 
     expect(planner._startRegion).toBe('Lobby');
-    expect(planner._adjacencyMap.has('Forest')).toBe(false);
+    expect(planner.getTopology().adjacency.has('Forest')).toBe(false);
     // Entries are re-extracted for the NEW player: the log has no slice for 2.
     expect(planner.getTotalEntries()).toBe(0);
     expect(planner.getPlanRejectionReason()).toContain('no data for player 2');

@@ -90,10 +90,10 @@ describe('CostPlanner.useStateManager — planning a different world', () => {
         const sm = await documentStateManager(preset(NO_LOG), '1');
         const planner = new CostPlanner({ stateManager: sm, eventBus: null });
         planner.useStateManager(sm, { playerId: '7' });
-        expect(planner._getCurrentPlayerId()).toBe('7');
+        expect(planner._resolvePlayerId()).toBe('7');
         // Cleared, and the answer falls back to what it always was.
         planner.useStateManager(sm, { playerId: null });
-        expect(planner._getCurrentPlayerId()).toBe(String(sm.getStaticData().playerId));
+        expect(planner._resolvePlayerId()).toBe(String(sm.getStaticData().playerId));
     });
 });
 

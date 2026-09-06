@@ -388,23 +388,23 @@
     },
     "loop_costs": {
       "type": "object",
-      "description": "Loop-mode mana economy for this world. Producers: frontend/modules/shared/procgen/loopCostGenerator.js:134-146 (`generateLoopCosts`, invoked from procgenPipelineEngine.js:6412), exporter/games/base/handler.py:2171 (the worldgen `_worldgen_loop_costs.json` round-trip) and the hand-written test-preset writers under scripts/test/generate-*-preset.*. Consumed by frontend/modules/loops/costDataManager.js.",
+      "description": "Loop-mode mana economy for this world. Producers: frontend/modules/shared/procgen/loopCostGenerator.js `generateLoopCosts` (invoked from procgenPipelineEngine.js when enableLoopMode && embedSphereLog), which drives the ONE cost model in loopCostPlanner.js and applies the write-by-class rule, exporter/games/base/handler.py:2171 (the worldgen `_worldgen_loop_costs.json` round-trip) and the hand-written test-preset writers under scripts/test/generate-*-preset.*. Consumed by frontend/modules/loops/costDataManager.js.",
       "properties": {
         "version": {
           "type": "string",
-          "description": "Cost-data format version ('1.0'). Producer: loopCostGenerator.js:135."
+          "description": "Cost-data format version ('1.0'). Producer: loopCostGenerator.js `generateLoopCosts`."
         },
         "generatedAt": {
           "type": "string",
-          "description": "ISO-8601 timestamp of generation. Producer: loopCostGenerator.js:136."
+          "description": "ISO-8601 timestamp of generation. Producer: loopCostGenerator.js `generateLoopCosts`."
         },
         "generatedFrom": {
           "type": ["string", "null"],
-          "description": "Name of the source file the costs were simulated from. Producer: loopCostGenerator.js:137."
+          "description": "Name of the source file the costs were simulated from. Producer: loopCostGenerator.js `generateLoopCosts` (its `sourceFileName` argument)."
         },
         "regions": {
           "type": "object",
-          "description": "Region name -> cost entry. Producer: loopCostGenerator.js:186-194 and :316-330.",
+          "description": "Region name -> cost entry. Producer: loopCostGenerator.js `writeCostsByClass` — a region's entry depends on its substrate's CLASS: coarse ⇒ {moveCost, xpEffect}; summary ⇒ {timeDrainPerSecond, xpEffect} plus anything the input block states explicitly; a substrate with its own mana economy (jta, omsi) gets NO entry at all.",
           "additionalProperties": {
             "type": "object",
             "description": "One region's cost entry.",
@@ -419,27 +419,27 @@
               },
               "xpEffect": {
                 "type": "string",
-                "description": "Per-region XP effect mode — 'cost', 'speed', 'both' or 'none' (loopCostGenerator.js:77-79)."
+                "description": "Per-region XP effect mode — 'cost', 'speed', 'both' or 'none' (normalized against VALID_REGION_XP_EFFECTS in loopCostDefaults.js)."
               }
             }
           }
         },
         "locations": {
           "type": "object",
-          "description": "Location name -> mana cost. The values are NUMBERS, not objects (loopCostGenerator.js:204, :342; read at costDataManager.js:346-348).",
+          "description": "Location name -> mana cost. The values are NUMBERS, not objects (written by loopCostGenerator.js `writeCostsByClass`; read at costDataManager.js `getLocationCost`).",
           "additionalProperties": { "type": "number" }
         },
         "defaultRegionCost": {
           "type": "number",
-          "description": "Fallback move cost for regions `regions` does not name. Producer: loopCostGenerator.js:144 (default 50)."
+          "description": "Fallback move cost for regions `regions` does not name. Producer: loopCostGenerator.js; the default is the exported DEFAULT_REGION_COST (50) in loopCostDefaults.js."
         },
         "defaultLocationCost": {
           "type": "number",
-          "description": "Fallback check cost for locations `locations` does not name. Producer: loopCostGenerator.js:145 (default 10)."
+          "description": "Fallback check cost for locations `locations` does not name. Producer: loopCostGenerator.js; the default is the exported DEFAULT_LOCATION_COST (10) in loopCostDefaults.js."
         },
         "defaultRegionXpEffect": {
           "type": "string",
-          "description": "Fallback XP effect mode for regions that state none. Producer: loopCostGenerator.js:146."
+          "description": "Fallback XP effect mode for regions that state none. Producer: loopCostGenerator.js `generateLoopCosts` (its `regionXpEffect` argument, normalized)."
         },
         "error": {
           "type": "string",

@@ -58,13 +58,16 @@
  * identities across copies.
  */
 
+import { regionSubstratesFromRulesJson } from '../shared/procgen/loopCostPlanner.js';
+
 /**
  * Build a `CostPlanner`-shaped state manager over a rules.json working copy.
  *
  * @param {object} jsonData the working copy (`session.record()`), never applied
  * @param {string} playerId the slot to plan — the DOCUMENT's, not the app's
  * @returns {Promise<{getStaticData: function, getLatestStateSnapshot: function,
- *   playerId: string, stats: {regions: number, locations: number, ms: number}}>}
+ *   regionSubstrates: Map<string,string>, playerId: string,
+ *   stats: {regions: number, locations: number, ms: number}}>}
  */
 export async function documentStateManager(jsonData, playerId) {
     if (!jsonData || typeof jsonData !== 'object') {
@@ -79,10 +82,16 @@ export async function documentStateManager(jsonData, playerId) {
     const sm = new StateManager(evaluateRule);
     sm.loadFromJSON(jsonData, String(playerId));
     const staticData = sm.getStaticGameData();
+    // ⛓ L2 — the WRITE-BY-CLASS rule needs to know which substrate each region
+    // has, and static data does not carry `preset_sidecars`. The applied-state
+    // path asks `procgenPlayer.getRegionInfo`; a working copy the app has never
+    // applied has no such answer, so the map comes from the DOCUMENT itself.
+    const regionSubstrates = regionSubstratesFromRulesJson(jsonData, String(playerId));
     const elapsed = (typeof performance !== 'undefined' ? performance : Date).now() - started;
     return {
         getStaticData: () => staticData,
         getLatestStateSnapshot: () => sm.getSnapshot(),
+        regionSubstrates,
         playerId: String(playerId),
         stats: {
             regions: staticData.regions?.size ?? 0,
