@@ -11394,6 +11394,81 @@ notice): the host clock's LIVE arm honours the fork's stopped flag (+ a `skipped
 cold start; replay/bot arms unchanged; the instrument presses Play and gains a Pause/Play leg; a census of the 24
 omsi rows; one new standalone row, mutant first; omsi doc. Bridge-side only, no fork change, no gitlink.
 
+**⇒ L5 AS BUILT — 2026-09-06, Opus `loop-costs-L5`, main `ee6942c9ac` (pushed).** Four commits, one per item,
+staged by path; push range `b4c0f197a2..ee6942c9ac` (left end = this session's own start HEAD, so nobody else
+moved the branch). The step gate now resolves which ARM opened it — `unenforced` / `replay` / `bot` / `live` —
+and on the **live** arm additionally requires the fork's `gameIsStopped` to be false. New skip reason
+`'stopped'` and new counter **`skippedStopped`**, ordered `noQueue → gated → stopped → heldBoundary`;
+`getDebugState()` gains `stepGateArm` / `forkStopped` / `liveStopped`. Play is the cold start and costs no
+loop reset (the no-progress guard, now logged at DEBUG). `clockGate.js`'s header paragraph rewritten to state
+the split, its boundary falsification numbers untouched. The instrument presses Play (flag-read first —
+`pauseGame()` is a TOGGLE) and gained a Pause/Play leg. No fork change, no gitlink.
+
+**THE CENSUS (item 4), measured.** Of the **24** enabled omsi rows exactly **2** drive live play under the
+gate and needed `pressPlay()` — `omsi-loop-exhaustion-single-reset` and `omsi-step-gate-parks-the-clock`
+(both park AND assert ticks/drains/a natural reset). **11** park only to satisfy the M3b strict ACTION gate
+and then drive the engine by direct `omsiEval` (`unlockTown(1)`, `finishProgress`, `getActionPrototype(x)
+.finish()`) — green WITHOUT a Play press, and correctly so; **not** "fixed". **8** never park at all. The
+**3 bot walks** plus the playback legs of the three record rows ride the exempt arms and needed nothing, so
+the exemption drew no finding. New row `omsi-play-pause-controls-the-clock` (roster 84 → 85 enabled; 83 → 84
+in `fast`), standalone by construction: it RELOADS the fork so it inherits no started game.
+
+**Gates.** `check-omsi-mana-leg` 3× green solo (18.4 / 19.8 / 19.9 s; baseline 17.1 s) · bounded vitest
+`omsiSubstrateWrapper` 5 files / **105** tests / 0 failed and `procgenDocs` 7 / **452** / 0 · in-app
+`--batch=fast` **84/84** with `compare-runs` vs the pre-slice run reporting **ADDED (1):
+omsi-play-pause-controls-the-clock (passed)** and nothing else moved, exit 0 · `--batch=bot-walks` **3/3**,
+**6 m 29 s** wall (84.4 / 284.1 / 7.0 s) · `check-procgen-help --doors=all` ALL PASS (265 instruments,
+554 s) · `check-procgen-reference --check` + `check-procgen-docs` ALL CHECKS PASSED after the generator run.
+⚖ **52 suite at the pushed SHA** — run 34049137701 success: `suite: vitest (unfiltered)` **435/13281**
+(13273 passed | 8 skipped | **0 failed**), slow battery 12/217. Baseline = L1's `986fbead1a` 435/13274
+(`git merge-base --is-ancestor` confirms; the two commits between are docs-only). Derived BEFORE the run:
+`clockGate.test.js` **+7** straight `it()`s, the two procgenDocs test files **±0** (numbers re-pinned, no rows
+added), no file added or deleted ⇒ **435/13281** — matched exactly.
+
+**MUTANT FIRST.** `_liveArmStopped()` → `return false`, full `--batch=fast`: **1 of 84 rows red — the new one,
+and nothing else** — on five conditions: the two attribution conditions of phase 1 ("the STOPPED game is what
+withheld the steps", STUCK after 40/40 polls; "the refusal is `stopped`, not `heldBoundary`", 0 → 80) and all
+three of the Pause leg. Reverted, `git diff` clean. The brief predicted the Pause leg only; phase 1
+discriminates too.
+
+**What overturned the brief (full record: plan §11).** (1) `getFullState().stoppedAt` is the wrong read and
+is now PRICED: measured in the live iframe, the fork global `gameIsStopped` costs **6.5 ns** a read
+(200,000 reads) against **24.9 µs** for `getFullState().stoppedAt` (20,000) — ~3,800×, because getFullState
+rebuilds the whole skills/buffs/towns readout for one boolean; the bridge reads the global, which is what
+`_loopClock`'s own header argues one line up. (2) The arm test CANNOT live in `clockGate.js` —
+`_mayStepClock()` returned a bare boolean, so the pure module could not tell a live park from a replay; it
+was split into `_stepGateArm()` / `_mayStepClock()` / `_liveArmStopped()` and the module receives the
+resolved `liveStopped`. (3) There is a FOURTH arm the brief's "live branch only" implies but does not
+enumerate: `unenforced` (loop mode off, or before the host's first gate push) is exempt too. (4)
+`pauseGame()` does **not** restart on the way DOWN — a first reading across a split `sed` range suggested an
+unconditional `else { restart(); }`, which would have made Pause discard the loop; the exact source restarts
+only when the toggle leaves the game RUNNING at a held boundary, and the probe's apparent "Pause caused a
+reset" was the host clock still stepping through the boundary during the pause window, i.e. the defect
+itself. (5) Only **2** of the 24 rows drive live play — the 9 other parked rows park for the ACTION gate, a
+distinction nothing in the tree had written down. (6) A refusal assertion cannot go in
+`omsi-step-gate-parks-the-clock`: it runs after the row that presses Play, so the game it inherits is already
+RUNNING. (7) The doc link census is a PIN and it moved: 225 → **227**, with `same-doc` **14 → 15 — the first
+time that count has ever moved**. (8) The `stoppedAt` sweep found no false claim to fix: all 6 queue-doc hits
+are inside "as built" records of arc D2 and the §5o ruling paragraph L5 answers, left verbatim.
+
+⚠ **The first `--batch=bot-walks` run was RED and it was LOAD, not the change** — `omsi-bot-crosses-region`
+FAILED at 290.2 s (`603/720 polls, max gap 2150 ms vs a 250 ms interval`, classified **STUCK**) while
+`check-procgen-help --doors=all` was running 6 node children for 554 s alongside it. Solo it PASSED in
+**84.4 s**, the figure `omsi.md` has carried for it all along. And it could not have been the change: over the
+whole batch the bridge's gate log reads **50 `arm=bot`, 3 `arm=unenforced`, 114 CLOSED — and `arm=live` never
+once**, so `_liveArmStopped()` was structurally false throughout. ⛑ The classifier said STUCK where 603 of
+720 polls at an 8.6× interval overrun is the STARVED shape — named, not fixed (`testLogic.js`, out of scope).
+
+**⚖ NEW / for L2.** (1) A live-play omsi region no longer runs unattended: any L2/L3 instrument that parks an
+omsi block and waits for mana to drain must call `pressPlay()` first (`omsiSubstrateWrapper/test-helpers.js`;
+`pauseGame()` is a TOGGLE and a bare call presses Pause the second time). A Playback replay or a Bot walk
+needs nothing. (2) A frozen omsi region is now attributable from `clockStats` alone — `skippedGated` = the
+park, `skippedStopped` = the player, `skippedHeldBoundary` = a hold, `skippedNoQueue` = no plan; L6's
+bot-measured mode will want exactly this. (3) **jta has the same shape and was deliberately NOT touched**
+(the brief asked it be named if seen): its bridge logs "JtA in managed mode (loop paused)" at boot and its
+`_syncEnergyFromPool` pin is the analogous host-owned clock. Whether jta's own pause control should gate its
+host clock is an open ⚖, not a finding. NEXT after L5: **L2** (the algorithm; own kickoff).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
