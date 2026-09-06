@@ -11587,6 +11587,17 @@ measured locally **1702 → 1714** over the same bounded set ⇒ +12 rows / ±0 
 `loopCostGenerator.test.js` 24 → 36 ⇒ **expected 435 / 13293**, owed at the pushed SHA. `check-procgen-help
 --doors=all` is re-run at the final HEAD (gitlink committed) and its result appended here.
 
+**⛑ THE HELP GATE, RE-RUN AT THE FINAL HEAD (gitlink committed `fbfb5f04a6`): ALL PASS.** 266 instruments,
+`--doors=all`, **480.1 s**, **0 FAIL**, 250 on the import-door baseline (unmoved — the new gate's import door is
+closed by a `main()` guard, so it is not an entrant). Same tree, same population, same command as the 12-FAIL
+run: **the only difference is the gitlink commit.** That is the falsification, not an argument — the twelve
+failures were the pointer, and nothing else.
+⚠ `check-procgen-help.baseline.json`'s `counts.instruments` still reads **265** against 266 files on disk. That
+field is WRITE-ONLY — the gate reads `importDoorEffectful`, never `counts` — and refreshing it means
+`--write-baseline`, which rewrites 250 entries' `ms` timings for one integer. Deliberately NOT done; named here
+so the stale integer is not later mistaken for a measurement.
+
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
