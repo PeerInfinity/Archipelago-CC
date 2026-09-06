@@ -33,28 +33,53 @@ documents. Before that it was a second, disagreeing model.
 - `frontend/modules/loopsCostDebugger/costDebuggerUI.js` — the panel
 - `frontend/modules/loopsCostDebugger/costDebugger.css` — panel styles
 
-## Two consumers
+## One engine, two drivers, and a third caller
 
-| Consumer | Path | What it does with the plan |
-|----------|------|----------------------------|
-| **Cost Debugger panel** | `costDebuggerUI.js` | Load / Plan Step / Plan Sphere / Plan All / Reset / Verify. Nothing is written to the live cost store; the plan is for reading. |
-| **Loop mode, headless** | `loops/loopUI.js` → `_handleGenerateCostsInline()` | When a world has no cost sidecar, runs the same planner and stamps the result into the live store via `costDataManager.setCostData(costData, 'costPlanner')`. Reached from the panel's "Generate Costs" button and from `loops/eventCoordinator.js` when loop mode is entered without cost data. |
+⚖ There is exactly **one** cost algorithm — `shared/procgen/loopCostPlanner.js`.
+Everything below is a way of pointing it at a world; none of them is a model.
+
+| Caller | Path | What it does with the plan |
+|--------|------|----------------------------|
+| **Cost Debugger panel** (driver) | `costDebuggerUI.js` → `loopsCostDebugger/costPlanner.js` | Load / Plan Step / Plan Sphere / Plan All / Reset / Verify. Nothing is written to the live cost store; the plan is for reading, and the panel is the algorithm's INSPECTOR. |
+| **Loop mode, headless** (driver) | `loops/loopUI.js` → `_handleGenerateCostsInline()` → the same `costPlanner.js` | When a world has no cost sidecar, runs the same planner and stamps `getCostData()` into the live store via `costDataManager.setCostData(costData, 'costPlanner')`. Reached from the panel's "Generate Costs" button and from `loops/eventCoordinator.js` when loop mode is entered without cost data. ⚠ Since write-by-class, **what it stamps is the block the pipeline would have embedded**. |
+| **The procgen pipeline** (third caller) | `procgenPipelineEngine.js` → `shared/procgen/loopCostGenerator.js` `generateLoopCosts()` | At BUILD time, when `enableLoopMode && embedSphereLog`: topology from `rulesJson` instead of from a state manager, then the same plan and the same write-by-class, embedded into the world's `loop_costs`. |
+
+`scripts/procgen/check-loop-costs-one-model.mjs` is the standing proof that the
+last two produce byte-identical blocks (modulo `generatedAt` / `generatedFrom`)
+over five documents. A second model can only come back by RED-ing there.
 
 ## Data flow
 
 ```
-sphereState (raw log, all players) ──→ getSphereLog() ──→ CostPlanner.loadSphereLog()
-                                          (raw JSONL entry shape)          │
-stateManagerProxySingleton ─┐                                              │
-  .getStaticData()          ├─→ topologyFromStaticData() ─→ the topology ──┤
-  .getLatestStateSnapshot() │      {startRegion, regions, locations,       │
-procgenPlayer               │       adjacency, regionSubstrates}           │
-  .getRegionInfo() ─────────┘                                              ↓
-                                          shared/procgen/loopCostPlanner.js
-                                                  plan steps  →  getCostData()
-                                                     │             (write by class)
-                                     panel display ──┘        └── costDataManager
-                                                                  (headless path only)
+                 ── THE APP ──                              ── THE BUILD ──
+
+sphereState (raw log, all players)                       rulesJson + its sphere log
+        │                                                          │
+   getSphereLog()                                       topologyFromRulesJson()
+        │                                                          │
+stateManagerProxySingleton ─┐                                      │
+  .getStaticData()          ├─→ topologyFromStaticData()           │
+  .getLatestStateSnapshot() │            │                         │
+procgenPlayer               │            │                         │
+  .getRegionInfo() ─────────┘            │                         │
+   (or documentStateManager,             ↓                         ↓
+    for an H5 working copy)         the topology  {startRegion, regions, locations,
+                                                   adjacency, regionSubstrates}
+                                              │
+                                              ↓
+                          ┌─────── shared/procgen/loopCostPlanner.js ────────┐
+                          │  ONE algorithm: plan the walk, price every       │
+                          │  region as coarse (⚖ i)                          │
+                          └──────────────────────┬───────────────────────────┘
+                                                  ↓
+                                     writeCostsByClass()  ← the substrate decides
+                                       COARSE numbers · NATIVE nothing · SUMMARY drain
+                                                  │
+        ┌────────────────────┬────────────────────┴───────────────┐
+        ↓                    ↓                                    ↓
+  panel display        costDataManager                     the world's `loop_costs`
+  (labels each         (Generate Costs / loop-mode          (generateLoopCosts, at
+   number by class)     entry — the SAME block)              pipeline build time)
 ```
 
 The topology is the whole seam: the pipeline builds the same shape with
@@ -62,6 +87,50 @@ The topology is the whole seam: the pipeline builds the same shape with
 provably plan the same walk. It is rebuilt on every `loadSphereLog()` and
 `reset()`, which is how a rules reload or a player switch is picked up instead
 of replanning against the previous world.
+
+## The plan is not the block — and the panel says which is which
+
+⚖ (i) The walk prices **every** region as if it were coarse, because that is how
+the numbers are derived at all. `writeCostsByClass` then decides what reaches
+the block, per the region's substrate. So a readout that printed the walk's
+number as a price would be stating a cost nothing charges, and every cost the
+panel renders is labelled by two independent facts:
+
+| | what it answers | resolved by |
+|---|---|---|
+| **class** | what the BLOCK says about the region | `classifyRegions()` (shared), over the planner's own topology |
+| **capture shape** | who CHARGES it at run time | `loopState.getSubstrateCaptureShape(substrateId)` — the runtime's one resolver |
+
+| class | block entry | the panel prints | why |
+|---|---|---|---|
+| COARSE | `{moveCost, xpEffect}` + location costs | the number | the block's number is the price |
+| NATIVE (jta, omsi) | *none* | **own economy** | the substrate runs its own mana pool; the loop queue charges nothing |
+| SUMMARY (runner, bounce) | `{timeDrainPerSecond, xpEffect}` | **time-priced** | priced by how long a visit takes; a per-action cost applies only where the input block named one |
+
+⚠ **The two axes are not the same question, and maze is why.** Maze is COARSE
+(the block carries its `moveCost`) *and* FINE (`mazeRoomUI._perTileMoveCost`
+divides that cost by the room's longest shortest path and charges it natively).
+The panel's Simulated Queue therefore carries a **Charged by** column — *the
+queue* / *the substrate* / *time (drain)* — separate from whether a cost exists.
+
+### What Verify scores, and what it only reports
+
+Verify replays each planned step through the live loop state and compares the
+spend. Two rules keep that honest:
+
+1. **A NATIVE region is charged nothing during the replay.**
+   `loopState._calculateActionCost` has no `fine` branch — the runtime's shape
+   test lives in its callers — so calling it directly bills a jta region the
+   store's `defaultRegionCost`. Measured: before this rule, Verify scored the
+   runtime wrong by up to **375.7 mana** on `omsi_substrate_test` and reported
+   **1/32 within tolerance** on `jta_schedule_test`, on worlds where charging
+   nothing is the design.
+2. **A step is SCORED only where the block states a price** (`priced`), not
+   where the queue does the charging. Scoring by the charger swallows maze,
+   whose block-priced steps verify at **10/10, max delta 0.0**.
+
+Steps the block leaves unpriced are replayed and reported — with the region's
+own label — and excluded from the tally, which names how many it excluded.
 
 `getSphereLog()` prefers `sphereState.getRawSphereLog()` — the literal parsed
 entries, every player's slice intact, which the planner then filters itself. A
