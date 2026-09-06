@@ -21,6 +21,9 @@
  *      and the bridge's step gate answers OPEN with
  *      livePlay=<the omsi region> — asserted on the bridge's own log
  *      line, not only on its debug state. See the ⛓⛓ note at the park.
+ *      ⚠ An OPEN gate is no longer enough to make the game run: under the
+ *      ⚖ 2026-09-06 rule live play also needs the game itself started, and
+ *      the fork boots stopped. Leg 3a is what presses Play.
  *   2. Victory (v0, §6 ruling): completing Start Journey — simulated
  *      via the game's own unlockTown(1), the exact call its finish
  *      handler makes — checks `region_1_1__start_journey` and the
@@ -30,10 +33,13 @@
  *   3. A queued Wander run drains the pool in MANY SMALL decrements
  *      (the 5-tick step batches, ≈1 mana/tick) that track the game's
  *      own budget — the substrate:resourceDelta mirroring.
- *   3a. (inside 3, after the plan is written) The fork's loop is
- *      COLD-STARTED past the boundary it boots holding, so that plan
- *      compiles. See the ⛓⛓ note there — the park alone is not enough
- *      on a fresh page.
+ *   3a. (inside 3, after the plan is written) The PLAY BUTTON is pressed,
+ *      which is the cold start: it clears the game's own stopped flag AND
+ *      restarts past the boundary the fork boots holding, so that plan
+ *      compiles. See the ⛓⛓ note there.
+ *   3b. (after the drain is visible) PAUSE stops the host clock and PLAY
+ *      resumes it — the ⚖ 2026-09-06 rule, driven through the game's own
+ *      button handler.
  *   4. Budget exhaustion (the game's natural restart) collapses with
  *      pool depletion into EXACTLY ONE loop reset: count +1 and stable,
  *      pool refilled, player teleported to the resolved start region,
@@ -327,52 +333,67 @@ async function parkOmsiBlock() {
 }
 
 /**
- * ⛓⛓ COLD-START THE FORK'S LOOP — THE PARK ALONE IS NOT ENOUGH ON A FRESH
- * PAGE, AND THIS IS THE SECOND HALF OF THE V3a REPAIR.
+ * ⛓⛓ PRESS PLAY — THE PLAYER'S OWN COLD START (⚖ user, 2026-09-06).
+ *
+ * WHAT CHANGED AND WHY (L5). This function used to call
+ * `IdleLoopsManaged.restartLoop()` — a HOST restart, which released the
+ * boundary the fork boots holding but left the game's own `gameIsStopped`
+ * set. That worked because the host clock ignored the flag. It no longer
+ * does: live play is now gated on it (`clockGate.js`'s header, the STOPPED
+ * gate), and with `restartLoop()` this leg reads
+ * `ticksStepped: 0, skippedGated: 0, skippedStopped: 137` — measured, this
+ * script, right after the rule landed. The instrument was driving a game
+ * nobody had started.
+ *
+ * The ruling: *"I want the restart to be triggered by the player pressing the
+ * in-game start button, not the addition of the first action of the queue."*
+ * So this presses PLAY, and Play alone does both jobs: `pauseGame()`
+ * (`driver.js:272`) clears the flag, and because it unpauses AT a loop end it
+ * calls `restart()` in the same call.
+ *
+ * ⚠ `pauseGame()` IS A TOGGLE — never call it without reading the flag first,
+ * or a leg that runs twice presses Pause the second time.
  *
  * Measured on this fixture at boot, before anything is driven:
- *     {shouldRestart: true, timer: 250, timeNeeded: 250, currentLen: 0}
- * The fork boots PARKED PAST A LOOP END with an empty compiled list. Under
- * the host-driven clock that is a deadlock by construction: `planClockStep`
- * refuses a held boundary (`clockGate.js` `isBoundaryHeld`, because stepping
- * one mints a phantom loop per tick), and only `restart()` clears
- * `shouldRestart` — which `singleTick` would call, if it were allowed to run.
- * With the park in place and no cold start the run reads
- * `ticksStepped: 0, skippedGated: 0, skippedHeldBoundary: 301`: the gate the
- * park opened, and a different gate shut. It is the same shape as
- * `docs/json/developer/procgen/gotchas.md`'s "a frozen substrate cannot
- * generate the reset that unfreezes it".
+ *     {shouldRestart: true, timer: 250, timeNeeded: 350, gameIsStopped: true}
+ * The fork boots STOPPED and PARKED PAST A LOOP END with an empty compiled
+ * list. Both halves have to clear for a step to happen, and the one press
+ * clears both.
  *
- * ⛑ EVERY BRIDGE-MEDIATED PLAN INSTALL ALREADY DOES THIS — `_forceLoopRecompile()`
- * (`bridge.js:1650`) runs on the replay install, the bot exit install, the
- * bot cold start and the host's reset catch-up. LIVE PLAY has no such path,
- * which is why this instrument must be the one to make the call, and why the
- * green in-app row `omsi-loop-exhaustion-single-reset` never needed it: it
- * runs AFTER `omsi-out-of-mana-loop-reset` in the same page, and that row's
- * host loop reset already ran `restartLoop()` through the catch-up. Standing
- * alone, this script has no such predecessor. Recorded at procgen verify tier
- * V3a; whether live play should cold-start itself is a ⚖ for the user, not a
- * change this slice makes.
+ * ⛑ THE BOUNDARY HALF IS STILL WHY THIS RUNS AFTER THE PLAN IS WRITTEN — a
+ * recompile before the plan exists compiles nothing. `_forceLoopRecompile()`
+ * (`bridge.js`) does the same job on the replay install, the bot exit install,
+ * the bot cold start and the host's reset catch-up; those windows are EXEMPT
+ * from the stopped rule and keep the bridge's timing. Live play has no such
+ * path by design: the player is the path.
  *
- * It costs nothing: `_handleGameRestart`'s no-progress guard drops a restart
- * whose loop consumed under `NO_PROGRESS_LOOP_S` of effective time, and at
- * boot `totals.effectiveTime` is 0 — measured, `loopResetCount` stayed 0
- * across the call, then advanced to 1 only at the genuine exhaustion 2 s
- * later. It is also CONDITIONAL: with no boundary held it does nothing and
- * says so, so it cannot mask a future app-side cold start.
+ * It costs no loop reset: `_handleGameRestart`'s no-progress guard drops a
+ * restart whose loop consumed under `NO_PROGRESS_LOOP_S` of effective time,
+ * and at boot `totals.effectiveTime` is 0 — measured, `loopResetCount` stayed
+ * 0 across the press, then advanced to 1 only at the genuine exhaustion. The
+ * bridge logs that drop at DEBUG, so it is attributable.
+ *
+ * The BOUNDARY half stays CONDITIONAL (with no boundary held there is nothing
+ * to release, and the run says so), but the PLAY press is UNCONDITIONAL: a
+ * game left stopped is the state this leg exists to leave.
  */
 async function coldStartIfBoundaryHeld() {
     const READ = '({ shouldRestart: (typeof shouldRestart !== "undefined" ? shouldRestart : null),'
         + ' timer, timeNeeded, currentLen: (actions.current || []).length,'
-        + ' nextLen: actions.next.length, effTime: totals.effectiveTime })';
+        + ' nextLen: actions.next.length, effTime: totals.effectiveTime,'
+        + ' stopped: gameIsStopped })';
     const before = await omsiEval(READ);
     // Mirrors clockGate.js `isBoundaryHeld` — both halves, same order.
     const held = before?.shouldRestart === true
         || (Number.isFinite(before?.timer) && Number.isFinite(before?.timeNeeded)
             && before.timer >= before.timeNeeded);
-    if (!held) return { held: false, before, after: before };
-    await omsiEval('IdleLoopsManaged.restartLoop()');
-    return { held: true, before, after: await omsiEval(READ) };
+    // The player's press, flag-read first (pauseGame is a TOGGLE).
+    await omsiEval('if (gameIsStopped) pauseGame()');
+    const after = await omsiEval(READ);
+    if (after?.stopped !== false) {
+        fail(`Play did not start the game: ${JSON.stringify(before)} -> ${JSON.stringify(after)}`);
+    }
+    return { held, before, after };
 }
 
 function omsiEval(code) {
@@ -531,13 +552,14 @@ async function main() {
     // is — a recompile before the plan exists compiles nothing.
     const cold = await coldStartIfBoundaryHeld();
     if (!cold.held) {
-        console.log(`  · no boundary held at start (${JSON.stringify(cold.before)}) — no cold start needed`);
+        console.log(`  · no boundary held at start (${JSON.stringify(cold.before)}) — `
+            + 'Play pressed anyway (the game boots stopped)');
     } else {
         if (cold.after?.shouldRestart !== false || !(cold.after?.currentLen > 0)) {
-            fail('cold start did not clear the held boundary: '
+            fail('Play did not clear the held boundary: '
                 + `${JSON.stringify(cold.before)} -> ${JSON.stringify(cold.after)}`);
         }
-        console.log(`  ✓ cold start: boundary released `
+        console.log(`  ✓ Play pressed: game started and boundary released `
             + `${JSON.stringify(cold.before)} -> ${JSON.stringify(cold.after)} [${elapsed()}]`);
     }
 
@@ -575,6 +597,59 @@ async function main() {
     if (!(cs.ticksStepped > stepsBefore)) {
         fail(`the gate opened but the bridge stepped nothing: ${JSON.stringify(cs)}`);
     }
+
+    /**
+     * (3b) ⚖ 2026-09-06 — PAUSE STOPS THE HOST CLOCK, PLAY RESUMES IT.
+     *
+     * The rule's own subject, driven through the game's own button handler
+     * (`pauseGame()`, what `onclick='pauseGame()'` on `#pausePlay` calls) —
+     * never by writing `gameIsStopped`, which would test nothing the player
+     * can do.
+     *
+     * ⚠ TWO clock callbacks, not one: the callback that observes the flag may
+     * already have been scheduled when the press landed, and `CLOCK_INTERVAL_MS`
+     * is 100 ms. The wait below spans ≥ 2 of them and then requires the
+     * counters FLAT across a further window, so a single in-flight callback
+     * cannot read as "the pause worked".
+     *
+     * The witness is `skippedStopped`, not merely a flat tick count: a flat
+     * count is equally consistent with a stalled clock, an empty plan or a
+     * closed gate, and this leg would then pass for three wrong reasons.
+     */
+    const pausedFrom = await state();
+    await omsiEval('if (!gameIsStopped) pauseGame()');
+    if ((await omsiEval('gameIsStopped')) !== true) fail('Pause did not stop the game');
+    await page.waitForTimeout(400);            // ≥ 2 clock callbacks at 100 ms
+    const pausedAt = await state();
+    await page.waitForTimeout(800);            // …and the counters must stay put
+    const pausedTo = await state();
+    const csPaused = pausedTo.clockStats ?? {};
+    if (csPaused.ticksStepped !== (pausedAt.clockStats?.ticksStepped ?? -1)) {
+        fail(`the clock kept stepping while paused: ${pausedAt.clockStats?.ticksStepped} `
+            + `-> ${csPaused.ticksStepped}`);
+    }
+    if (Math.abs(pausedTo.currentMana - pausedAt.currentMana) > 0.5) {
+        fail(`the pool kept draining while paused: ${pausedAt.currentMana} -> ${pausedTo.currentMana}`);
+    }
+    if (!(csPaused.skippedStopped > (pausedFrom.clockStats?.skippedStopped ?? 0))) {
+        fail('the clock was flat while paused but skippedStopped never rose — '
+            + `the freeze is not attributable to the pause: ${JSON.stringify(csPaused)}`);
+    }
+    if (pausedTo.loopResetCount !== pausedFrom.loopResetCount) {
+        fail(`pausing cost a loop reset: ${pausedFrom.loopResetCount} -> ${pausedTo.loopResetCount}`);
+    }
+    console.log(`  ✓ Pause froze the host clock: ticksStepped ${pausedAt.clockStats?.ticksStepped}`
+        + ` flat over 0.8 s, pool ${pausedAt.currentMana.toFixed(1)} flat, skippedStopped `
+        + `${pausedFrom.clockStats?.skippedStopped ?? 0} -> ${csPaused.skippedStopped} [${elapsed()}]`);
+
+    await omsiEval('if (gameIsStopped) pauseGame()');
+    if ((await omsiEval('gameIsStopped')) !== false) fail('Play did not restart the game');
+    const resumed = await waitFor('the clock steps again after Play', async () => {
+        const s2 = await state();
+        return (s2?.clockStats?.ticksStepped ?? 0) > csPaused.ticksStepped ? s2 : null;
+    }, 15000);
+    console.log(`  ✓ Play resumed the host clock: ticksStepped ${csPaused.ticksStepped} -> `
+        + `${resumed.clockStats.ticksStepped}, pool ${resumed.currentMana.toFixed(1)} [${elapsed()}]`);
 
     // (4) Exhaustion: exactly one loop reset, refill, teleport, clock off.
     const exhaustTimeout = (poolAtRunStart / 50) * 1000 + 30000;
