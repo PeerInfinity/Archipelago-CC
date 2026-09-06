@@ -11830,6 +11830,20 @@ NOT "exactly one" of moveCost/timeDrain); (2) `onSave` applies into whatever doc
 (bot-measured mode), R1 (marking tool) owed, the `test` mode's one-row hanging roster, `costDataManager
 .exportToJSON()` 0 callers. Nothing launched.
 
+**⚖ RULED (user, 2026-09-06): "I want to take care of the residues next."** Planner's scoping, MEASURED: 14 blocks
+on disk (12 tracked, hand-written, carrying ONLY the four keys `regions`/`locations`/`defaultRegionCost`/
+`defaultLocationCost`); the schema's `loop_costs` has no `required`, no `additionalProperties`, no enum;
+`VALID_REGION_XP_EFFECTS` lives in `shared/procgen/loopCostDefaults.js:31`; the hub's session (`createEditSession`,
+`apworldEditorUI.js:461`) carries no identity; five omsi presets `{maze:2, omsi:1(2)}` with embedded sphere logs
+and 0-region blocks, written by FOUR `generate-omsi-*-preset.mjs` scripts, one of which pins a BYTE-INERTNESS claim
+on `omsi_randomized_test`. ⇒ two slices: **R-a** (hub + schema: required = the four keys; enum on `xpEffect`/
+`defaultRegionXpEffect` pinned to the constant by a row; `additionalProperties:false` on the block and entries;
+`onSave` bound to a monotonic document token and refused across a document swap; the presence switch as two
+buttons issuing ONE `set-key`, undoable) → **R-b** (the omsi generators call `generateLoopCosts` with the sphere
+log in hand; regenerate into SCRATCH; gate; STOP — the committed re-record is ⚖ 49-class, ASK-FIRST).
+**R-a LAUNCHED 2026-09-06** as `loop-costs-Ra` (Opus; kickoff `NewDocs/plans/loop-costs-Ra-prompt.md`; on L4's
+close). R-b's kickoff is drafted; it launches on R-a's idle notice.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
