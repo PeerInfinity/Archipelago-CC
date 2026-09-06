@@ -700,7 +700,6 @@ describe('M3b — strict action gate (evaluateActionGate)', () => {
     expect(evalGate({ data: { fromReset: true } }).reason).toBe('fromReset');
     expect(evalGate({ eventName: 'system:locationCheck' }).reason).toBe('systemEvent');
     expect(evalGate({ data: { source: 'regionGraph-addToPath' } }).reason).toBe('planningSource');
-    expect(evalGate({ data: { source: 'loops-costGenerator' } }).reason).toBe('planningSource');
     expect(evalGate({ data: { source: 'procgenPlayer-start' } }).reason).toBe('planningSource');
     loopState._delegatedAction = { type: 'regionMove' };
     expect(evalGate().reason).toBe('queueExecution');

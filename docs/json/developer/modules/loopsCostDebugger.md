@@ -5,9 +5,10 @@
 **Purpose:** Plan loop-mode mana costs one action queue at a time from a sphere
 log, showing the reasoning behind every assignment, and verify an existing cost
 sidecar against the same formula. It is a *debugger*, not the production cost
-generator — see the [loop-cost engine disambiguation](../procgen/gotchas.md#three-loop-cost-engines-one-store)
-for how it differs from `loops/costGenerator.js` and
-`shared/procgen/loopCostGenerator.js`.
+generator — see the [loop-cost engine disambiguation](../procgen/gotchas.md#two-loop-cost-engines-one-store)
+for how it differs from `shared/procgen/loopCostGenerator.js`. ⚠ Its `costPlanner.js`
+is nevertheless what the **runtime** runs for Generate Costs and for the
+auto-generate on entering loop mode.
 
 ## Key Files
 

@@ -14,14 +14,11 @@
  * Sources:
  *   - 'regionGraph-*'        — region-graph authoring clicks
  *     (addToPath / overwritePath / oneStep / direct move).
- *   - 'loops-costGenerator'  — cost-generation playback (drives the
- *     real queue machinery to measure costs).
  *   - 'procgenPlayer-*'      — procgenPlayer's synthesized transitions
  *     (the initial Menu → first-region placement).
  */
 export function isLoopModePlanningSource(source) {
     if (typeof source !== 'string') return false;
     return source.startsWith('regionGraph')
-        || source === 'loops-costGenerator'
         || source.startsWith('procgenPlayer');
 }

@@ -157,8 +157,9 @@ export function targetGapForMilestone(anchorCurve, index, milestoneCount, { rng,
 }
 
 /**
- * Flatten a sphere log into the ordered list of location checks, the way Loops'
- * costGenerator._extractLocationEntries does.
+ * Flatten a sphere log into the ordered list of location checks, the way the
+ * loop-cost engines' own `extractLocationEntries` does
+ * (`shared/procgen/loopCostGenerator.js`, `loopsCostDebugger/costPlanner.js`).
  *
  * AP writes one `state_update` per progression pickup once the sphere's
  * frontier is open, so the entries are already a total order over the
@@ -176,7 +177,7 @@ export function extractLocationEntries(sphereLog, playerId) {
         // AP attributes a sphere's items to the sphere, not to a specific
         // location. Fractional sub-spheres carry exactly one location each, so
         // the attribution is unambiguous there; when several share a sphere the
-        // items ride the last one, matching costGenerator's convention.
+        // items ride the last one, matching the loop-cost engines' convention.
         for (let i = 0; i < locations.length; i++) {
             out.push({
                 location: locations[i],

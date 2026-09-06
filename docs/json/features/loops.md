@@ -360,7 +360,6 @@ The loops system is split across three frontend modules:
 | `loopBlockBuilder.js` | Region block DOM construction, mana cost coloring |
 | `actionQueueManager.js` | Maps GameState path to action objects, tracks progress |
 | `costDataManager.js` | Loads and caches per-region/per-location cost data |
-| `costGenerator.js` | Generates cost data by simulating sphere log playthrough |
 | `eventCoordinator.js` | Centralizes event subscriptions and routing |
 | `loopEvents.js` | Event handlers for location clicks, exit clicks, mode changes |
 | `displaySettingsManager.js` | Persisted UI display preferences |
@@ -420,7 +419,6 @@ The loops module uses a dispatcher-based event system:
 | `loopState:speedChanged` | LoopState | Game speed adjusted |
 | `loopUI:modeChanged` | LoopUI | Loop mode toggled on/off |
 | `costDataManager:loaded` | CostDataManager | Cost data loaded or generated |
-| `costGenerator:progress` | CostGenerator | Cost generation progress update |
 
 ## Testing
 

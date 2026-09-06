@@ -41,16 +41,17 @@ When you re-home an import like this, assert the registry actually contains the
 id afterwards — and check the ENTRY, not just presence: pointing a script at a
 different library can register a *different* entry shape.
 
-## Three loop-cost engines, one store
+## Two loop-cost engines, one store
 
-Four files deal with loop-mode mana costs and they are easy to conflate:
+Three files deal with loop-mode mana costs and they are easy to conflate. **Which one runs depends on where you are:**
 
-- `frontend/modules/loops/costGenerator.js` — the **live** generator: produces a costs sidecar by actually playing the sphere log through the running loop engine (dispatches real events, waits on state snapshots).
-- `frontend/modules/shared/procgen/loopCostGenerator.js` — a **pure, headless** implementation of the same algorithm for the procgen pipeline and tests (`procgenPipelineEngine.js` calls it to stamp `loop_costs` at compile time). Its sidecars are interchangeable with the live generator's.
-- `frontend/modules/loopsCostDebugger/costPlanner.js` — a **debugger/verifier**, not a production generator. It simulates cost assignment step-by-step with a richer and *intentionally different* model (XP levels, per-loop mana budgets, explore/check phases), so its numbers do not match the generators'; it can also verify an existing sidecar against its formula.
-- `frontend/modules/loops/costDataManager.js` — not a generator at all: the runtime **store** (load/validate/serve) that both generators write into and the loop simulation reads from.
+- `frontend/modules/shared/procgen/loopCostGenerator.js` — a **pure, headless** generator. This is what the **procgen pipeline** runs: `procgenPipelineEngine.js` calls it to stamp a `loop_costs` block at compile time (when `enableLoopMode && embedSphereLog`). It is the only production producer of a block, and the only model that knows the M5 summary vocabulary (`timeDrainPerSecond`, `xpEffect`).
+- `frontend/modules/loopsCostDebugger/costPlanner.js` — despite living in a debugger module, this is what the **runtime** runs: the Loops panel's Generate Costs button and the auto-generate on entering loop mode both stamp its output into the store. It simulates cost assignment step-by-step with a richer model (XP levels, per-loop mana budgets, explore/check phases), knows no summary vocabulary, and defaults an unpriced location to a different number than the pure generator. It can also verify an existing block against its own formula.
+- `frontend/modules/loops/costDataManager.js` — not a generator at all: the runtime **store** (load/validate/serve) that both engines write into and the loop simulation reads from. Its `isLoaded()` being non-null is also the loop-mode switch (block present ⇒ loop mode on).
 
-A change to the *pricing vocabulary* has to land in **both** generators or it is a no-op where it matters. M5's summary time-pricing (`timeDrainPerSecond` instead of a `moveCost`) went into the live generator first; only the pure one actually stamps `loop_costs` into generated presets, so until it followed, every generated world still assigned a moveCost and location costs to runner/bounce regions — charging the time drain *and* the per-action costs on every visit, which is exactly what the ruling forbade. The live generator is the one almost nobody runs.
+⚠ **These two are not the same algorithm.** Run side by side over the same document they agree only on the start region and the first priced region; the maze fixture's far room is 60 from one and 23 from the other. A change to the *pricing vocabulary* therefore has to land in **both** or it is a no-op where it matters — M5's summary time-pricing went into one first, and until it followed, every generated world still assigned a moveCost and location costs to runner/bounce regions, charging the time drain *and* the per-action costs on every visit, exactly what the ruling forbade.
+
+⚖ A third engine, `frontend/modules/loops/costGenerator.js` (the "live" generator, which played the sphere log through the running loop engine), was **deleted 2026-09-06** — it had no caller. The two above are being unified into one (planner's algorithm, in the pure module) by the loop-costs ladder; see the queue doc §5o.
 
 ## procgenPlayer has no panel
 

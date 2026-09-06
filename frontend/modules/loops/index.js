@@ -5,7 +5,6 @@ import { handleUserLocationCheckForLoops, handleUserItemCheckForLoops, handleUse
 import panelManagerInstance from '../../app/core/panelManager.js';
 
 // Cost generation and management
-import { CostGenerator } from './costGenerator.js';
 import { CostDataManager } from './costDataManager.js';
 import { PathFinder } from '../shared/pathfinder.js';
 
@@ -32,7 +31,6 @@ let moduleDispatcher = null; // To store the full dispatcher instance
 let _gameStateAPI = null; // Store gameState API for access by loopUI
 
 // Cost generation instances
-let _costGenerator = null;
 let _costDataManager = null;
 let _pathFinder = null;
 
@@ -47,10 +45,6 @@ export function getGameStateAPI() {
 }
 
 // Export cost generation components
-export function getCostGenerator() {
-  return _costGenerator;
-}
-
 export function getCostDataManager() {
   return _costDataManager;
 }
@@ -241,10 +235,6 @@ export function register(registrationApi) {
   });
 
   // Register cost generation public functions
-  registrationApi.registerPublicFunction(moduleInfo.name, 'getCostGenerator', () => {
-    return _costGenerator;
-  });
-
   registrationApi.registerPublicFunction(moduleInfo.name, 'getCostDataManager', () => {
     return _costDataManager;
   });
@@ -467,8 +457,6 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('ui:activatePanel');
 
   // Cost generation events
-  registrationApi.registerEventBusPublisher('costGenerator:progress');
-  registrationApi.registerEventBusPublisher('costGenerator:complete');
   registrationApi.registerEventBusPublisher('costDataManager:loaded');
   registrationApi.registerEventBusPublisher('costDataManager:loadError');
   registrationApi.registerEventBusPublisher('costDataManager:cleared');
@@ -574,17 +562,6 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     // Create CostDataManager instance
     _costDataManager = new CostDataManager(_moduleEventBus);
 
-    // Create CostGenerator instance with dependencies
-    _costGenerator = new CostGenerator({
-      loopState: loopStateSingleton,
-      stateManager: stateManager,
-      pathFinder: _pathFinder,
-      eventBus: _moduleEventBus,
-      costDataManager: _costDataManager,
-      dispatcher: moduleDispatcher,
-      gameStateAPI: gameStateAPI,
-    });
-
     // Inject costDataManager into loopState for per-region/per-location cost lookups
     if (loopStateSingleton && typeof loopStateSingleton.setCostDataManager === 'function') {
       loopStateSingleton.setCostDataManager(_costDataManager);
@@ -598,7 +575,6 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         // Core state
         get state() { return loopStateSingleton; },
         get costData() { return _costDataManager; },
-        get costGenerator() { return _costGenerator; },
         get pathFinder() { return _pathFinder; },
         get gameState() { return _gameStateAPI; },
 
@@ -639,7 +615,6 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
           console.log(`
 loops.state          - Full LoopState object
 loops.costData       - CostDataManager (region/location costs)
-loops.costGenerator  - CostGenerator instance
 loops.pathFinder     - PathFinder instance
 loops.gameState    - GameState API
 
@@ -713,7 +688,6 @@ loops.queue          - Current action queue
     moduleDispatcher = null; // Clear the dispatcher on cleanup
 
     // Clear cost generation components
-    _costGenerator = null;
     _costDataManager = null;
     _pathFinder = null;
 

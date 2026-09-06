@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 17,
         "headings": 785,
         "indexHeadings": 2,
-        "lines": 20900,
+        "lines": 20901,
         "pages": 4,
-        "words": 254723
+        "words": 254829
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -80,7 +80,7 @@ export const DOCS_INDEX = frz({
             "file": "gotchas.md",
             "h1": "Procgen Gotchas and Disambiguations",
             "headings": 62,
-            "lines": 1050,
+            "lines": 1051,
             "links": [
                 "architecture.md",
                 "jta.md",
@@ -89,7 +89,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/gotchas.md",
-            "words": 12375
+            "words": 12482
         },
         {
             "description": "Bounce (\"Bounce Demo\", substrate id `bounce`) is a Doodle-Jump-style vertical platformer substrate in `frontend/modules/bounceDemo/`.",
@@ -157,7 +157,7 @@ export const DOCS_INDEX = frz({
                 "text-adventure.md"
             ],
             "path": "docs/json/developer/procgen/loop-recording.md",
-            "words": 8241
+            "words": 8240
         },
         {
             "description": "The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders regions as grid-of-tiles maze rooms: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles on the perimeter.",
