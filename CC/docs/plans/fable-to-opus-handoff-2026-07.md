@@ -11328,6 +11328,57 @@ sense"*): delete the dead generator + its test + the dead Playwright spec + the 
 retire the initial-menu row, rewrite the pause-resume row; retire the `test-loops` mode; close the two backlog
 entries. Reports come to `next-priorities-planning-2`. Next after L1's idle notice: L5 (omsi Start/Pause), then L2.
 
+**⇒ L1 AS BUILT — 2026-09-06, Opus `loop-costs-L1`, main `986fbead1a` (pushed).** Six commits, one per item,
+staged by path. `loops/costGenerator.js` + its test are GONE (census re-derived at W0: **0** callers), with every
+wiring site in `loops/index.js`, the dead `'loops-costGenerator'` planning exemption and its `blockModes.test.js`
+pin; `test_json/e2e/costGenerator.spec.js` GONE; the zero-caller `_costs.json` path in `costDataManager.js` GONE
+(108 lines, 5 test rows — the brief named 2); `loops-initial-menu-not-processed` RETIRED and `loops-pause-resume`
+REWRITTEN ⇒ **`test-loops-only` 8/8** (baseline 7/9); the `test-loops` MODE retired (`test-loops-only` kept,
+unrenamed); both backlog entries CLOSED. Gates: bounded vitest over everything touched **37 files / 1247 tests /
+0 failed** · in-app `test-substrates --batch=fast` **83/83** with `compare-runs` reporting **no difference in
+status, roster or duration**, exit 0 · `check-procgen-reference --check` and `check-procgen-docs` ALL CHECKS
+PASSED after the generator run (the gotchas heading rename moved an anchor with three referrers, one of them the
+docs pin `procgenDocs/glossary.js`).
+⚖ **52 suite row, MEASURED at the pushed SHA** — run 34046293200 success: `suite: vitest (unfiltered)`
+**435/13274** (13266 passed | 8 skipped | **0 failed**), slow battery 12/217. Baseline `54b534edca` = 436/13309
+(the four §5o docs commits since did not trigger the path filter; `git merge-base --is-ancestor` confirms it is
+an ancestor). Derived expectation **435/13274 (−1 file, −35 rows)** — matched exactly. ⚠ The brief's predicted
+drop, "30 + the sidecar rows + 1", is wrong in its last term: the retired `blockModes.test.js` pin was one
+`expect` inside an existing `it`, not a row, so the drop is 30 + 5 + **0**.
+
+**What overturned the brief (full record: plan §10).** (1) The pause/resume row could not be rewritten as
+specified: a plain world boots with an EMPTY path, and `setPaused(false)` only starts processing when the queue
+is non-empty — so the row seeds its own entry (`gameState.addManualAction()`, no region hardcoded) and restores
+the path. A seeded `explore` completes in ONE frame (`_advanceActionProgress` shortcuts when `actionCost === 0`
+and the start region costs 0). And the round trip must be asserted **synchronously**: polling lets a rAF frame run
+`_handleManualEntry`, which calls `stopProcessing()` and drops the state to **'idle'** — measured as a coin flip,
+'Pause' one run, 'idle' the next. **⚠ A `manual` park is NOT a stable `running` state — L2/L3 need this.**
+(2) The 0.1 s green was proved falsifiable by an **app mutant** (`loopUI.js` label map `paused:'Resume'` →
+`'Halted'`), which reds exactly that row and nothing else: it is the only guard on that map. (3) `git grep -w
+"test-loops"` cannot discriminate the mode from `test-loops-only` (`-` is a word boundary); the sweep that can is
+`-E "test-loops($|[^-])"`. (4) `costGenerator:complete` was registered as a publisher and never published by
+anything. (5) Two comments in `jtaBalance/balanceCore.js` cited the deleted file and were invisible to the
+brief's sweep pattern.
+
+**⚖ NEW for the user / for L2, four items.** (1) `costDataManager.exportToJSON()` now has **0 production
+callers** (both were in the deleted cluster) but keeps 2 test rows — deleting it is a separate judgment, not
+taken here. (2) `loopStats/queueAnalyzer.js:41-45` carries its own `{customAction: 50, locationCheck: 100,
+regionMove: 50}` base-cost table — a **fifth** hardcoded 100 beside the four ⚖ (k) named, which the review's
+census missed; and `test_json/e2e/loopStats.spec.js` pins the OLD key names against it (`explore`/`checkLocation`/
+`moveToRegion`) and would RED if anyone ran it. That spec is unreachable from `npm test` (only `app.spec.js` is
+selected) but a bare `npx playwright test` collects it, because `playwright.config.js` sets `testDir:
+'./test_json/e2e'`. (3) Two loops in-app rows report PASSED without testing anything —
+`loops-real-actions-processed` (its `addLocationCheck` returns early: "no regionMove entries found in path"; the
+poll goes STUCK and the row logs "integration not available" and returns true) and `loops-mana-consumption`
+(acts only `if (pauseBtn.textContent === 'Resume')`, never true since the idle label is 'Start'). Neither was in
+L1's ruling; named, not fixed. (4) The backlog's ⚖ planning-queue line still lists **BFS dedup**, whose entry L1
+closed into L2 — the brief forbade rewriting that ⚖ line, so the contradiction is named in the file instead.
+
+⚑ **Shared-tree note:** this session's push range reads `56e34b0773..986fbead1a`, not from its start HEAD
+`80564c56c7`, because `next-priorities-planning-2` committed the "L1 launched" paragraph into the same working
+tree between L1's start and its first commit. Linear, no overlap (that commit touches only this file), nothing
+lost either way — but it is why the left end is not L1's own start point.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
