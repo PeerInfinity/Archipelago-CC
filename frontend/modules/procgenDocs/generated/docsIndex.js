@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 17,
-        "headings": 785,
+        "headings": 786,
         "indexHeadings": 2,
-        "lines": 20901,
+        "lines": 20920,
         "pages": 4,
-        "words": 254829
+        "words": 255608
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -80,16 +80,17 @@ export const DOCS_INDEX = frz({
             "file": "gotchas.md",
             "h1": "Procgen Gotchas and Disambiguations",
             "headings": 62,
-            "lines": 1051,
+            "lines": 1053,
             "links": [
                 "architecture.md",
                 "jta.md",
                 "loop-recording.md",
+                "omsi.md",
                 "seedling-bot.md",
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/gotchas.md",
-            "words": 12482
+            "words": 12611
         },
         {
             "description": "Bounce (\"Bounce Demo\", substrate id `bounce`) is a Doodle-Jump-style vertical platformer substrate in `frontend/modules/bounceDemo/`.",
@@ -283,8 +284,8 @@ export const DOCS_INDEX = frz({
             "description": "The omsi substrate (`frontend/modules/omsiSubstrateWrapper/`, id `omsi`) hosts the **`PeerInfinity/omsi-loops` fork of dmchurch's Idle Loops** — included as the `frontend/modules/omsi-loops/` git submodule, pinned at `2bda39b` — in a same-origin iframe as a loop-mode substrate.",
             "file": "omsi.md",
             "h1": "Omsi Substrate (Idle Loops)",
-            "headings": 25,
-            "lines": 279,
+            "headings": 26,
+            "lines": 296,
             "links": [
                 "architecture.md",
                 "gotchas.md",
@@ -293,7 +294,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/omsi.md",
-            "words": 7217
+            "words": 7867
         }
     ],
     "indexIn": "docs/json/developer/procgen/README.md",

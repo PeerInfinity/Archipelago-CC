@@ -116,22 +116,30 @@ describe('the corpus census — printed, then pinned', () => {
          *              of the seventeen this VIEWER lists, so the resolver
          *              sends it to GitHub — which is the resolver working, and
          *              the reason the two kinds are counted apart.
+         *   225 → 227  LOOP COSTS L5 (⚖ 2026-09-06, the omsi Start/Pause rule):
+         *              the stopped gate is one rule read from two places, so
+         *              each points at it. `gotchas.md`'s frozen-substrate §
+         *              → `omsi.md` § *Live play also honours the game's own
+         *              Start/Pause* (`doc` 154 → 155), and `omsi.md`'s OWN
+         *              held-boundary § → that same § so the two gates are
+         *              never confused for each other (`same-doc` 14 → 15 —
+         *              the FIRST time this census's same-doc count has moved).
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
          */
         expect(by).toEqual({
-            'same-doc': 14,
-            doc: 154,
+            'same-doc': 15,
+            doc: 155,
             external: 23,
             repo: 34,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(225);
+        expect(CORPUS.length).toBe(227);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(154);
+        expect(docs).toHaveLength(155);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);
