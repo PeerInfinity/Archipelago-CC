@@ -56,6 +56,55 @@ function log(level, message, ...data) {
 }
 
 /**
+ * ⛓⛓⛓ **L4 — WHY "Send costs to the document" CANNOT BE PRESSED, or `null`
+ * when it can.** Pure, exported and unit-driven, because it is a rule with five
+ * outcomes and a `disabled` flag can only say one of them.
+ *
+ * ⛔ **A REFUSAL IS A SENTENCE, NOT A BOOLEAN.** Every one of these is a state a
+ * person can leave — go back to the hub, press Load, press Plan All — and a
+ * greyed button with no `title` is the one thing that tells them none of that.
+ *
+ * The order is the order the answers become knowable:
+ *
+ *   1. no working copy   — this panel is on APPLIED state, which the app owns;
+ *                          there is no document to write into.
+ *   2. no `onSave`       — a working copy arrived from somewhere that offered no
+ *                          way back (a pre-L4 caller, or a hand-off stashed
+ *                          before the door carried one).
+ *   3. a plan REJECTION  — the planner's own sentence, quoted. It already covers
+ *                          "No sphere log loaded", so there is no separate
+ *                          `isLoaded()` clause here.
+ *   4. INCOMPLETE        — planned, but not to the end. ⛔ A partial plan's
+ *                          `getCostData()` is a block whose defaults phase never
+ *                          ran, so it would name costs for some regions and
+ *                          silently fall back for the rest.
+ *   5. `null`            — send it.
+ *
+ * @param {{workingCopy: object|null, planner: object|null}} state
+ * @returns {string|null}
+ */
+export function sendCostsRefusal({ workingCopy = null, planner = null } = {}) {
+  if (!workingCopy) {
+    return 'Send writes into a document handed over from the APWorld editor. This panel is '
+      + 'planning APPLIED state, which the app owns — open the hub\'s `loop_costs` door to '
+      + 'hand a document over.';
+  }
+  if (typeof workingCopy.onSave !== 'function') {
+    return 'This working copy arrived without a way back, so there is nothing to send it to. '
+      + 'Re-open it from the APWorld editor\'s `loop_costs` row.';
+  }
+  if (!planner) return 'CostPlanner is not available — the loops module has not initialized.';
+  const rejection = typeof planner.getPlanRejectionReason === 'function'
+    ? planner.getPlanRejectionReason() : null;
+  if (rejection) return rejection;
+  if (!planner.isComplete()) {
+    return 'The plan is INCOMPLETE — press Plan All first. A partial plan\'s block prices some '
+      + 'regions and silently falls back for the rest.';
+  }
+  return null;
+}
+
+/**
  * CostDebuggerUI - GoldenLayout panel component
  */
 export class CostDebuggerUI {
@@ -76,9 +125,16 @@ export class CostDebuggerUI {
     this._isStale = false;
     /**
      * ⛓ H5 — the WORKING COPY this panel is planning, or null for applied
-     * state. `{jsonData, source, player, stats}`. It is the panel's, not the
-     * planner's: the planner holds only the state manager it was handed, and
+     * state. `{jsonData, source, player, stats, onSave}`. It is the panel's, not
+     * the planner's: the planner holds only the state manager it was handed, and
      * the panel is what has to SAY which world the numbers describe.
+     *
+     * ⛓⛓ **L4 — `onSave` LIVES HERE AND NOWHERE ELSE**, so it cannot outlive
+     * the document it belongs to: "Use applied state" nulls this whole field,
+     * and a second hand-off REPLACES it rather than merging into it. A panel
+     * that kept a stale return path would write one document's plan into
+     * another document (H5's rule, and the reason `_adoptWorkingCopy` rebuilds
+     * the object instead of assigning into it).
      */
     this._workingCopy = null;
 
@@ -90,7 +146,10 @@ export class CostDebuggerUI {
     // ⛓ A hand-off may have been stashed before this panel existed; the live
     //   subscription in _subscribeToEvents clears the slot when it fires first.
     const pending = consumePendingWorkingCopy();
-    if (pending) this._adoptWorkingCopy(pending.jsonData, pending.source, pending.player);
+    if (pending) {
+      this._adoptWorkingCopy(pending.jsonData, pending.source, pending.player,
+        pending.onSave ?? null);
+    }
 
     this.container.on('destroy', () => this._onDestroy());
 
@@ -118,6 +177,7 @@ export class CostDebuggerUI {
         <button class="cd-btn-plan-all" disabled title="Plan all remaining steps">Plan All</button>
         <button class="cd-btn-reset" disabled title="Reset to initial state">Reset</button>
         <button class="cd-btn-applied" style="display: none;" title="Stop planning the handed-over working copy and go back to the world the app has loaded">Use applied state</button>
+        <button class="cd-btn-send" style="display: none;" title="Write this plan into the handed-over document as one undoable edit">Send costs to the document</button>
       </div>
       <div class="cd-status-bar">
         <span class="cd-status">No sphere log loaded</span>
@@ -170,6 +230,7 @@ export class CostDebuggerUI {
     el.querySelector('.cd-btn-plan-all').addEventListener('click', () => this._handlePlanAll());
     el.querySelector('.cd-btn-reset').addEventListener('click', () => this._handleReset());
     el.querySelector('.cd-btn-applied').addEventListener('click', () => this._useAppliedState());
+    el.querySelector('.cd-btn-send').addEventListener('click', () => this._handleSendCosts());
   }
 
   _attachResizeHandle(el) {
@@ -224,7 +285,8 @@ export class CostDebuggerUI {
      */
     subscribe(LOOPS_COST_DEBUGGER_LOAD_RULES, (ev) => {
       if (ev && ev.jsonData) {
-        this._adoptWorkingCopy(ev.jsonData, ev.source ?? null, ev.player ?? null);
+        this._adoptWorkingCopy(ev.jsonData, ev.source ?? null, ev.player ?? null,
+          typeof ev.onSave === 'function' ? ev.onSave : null);
       }
       consumePendingWorkingCopy();
     });
@@ -245,7 +307,7 @@ export class CostDebuggerUI {
    * plan; Load is the person's gesture, and the log it would use is a separate
    * refusal this panel has to be able to state (`documentSphereLog`).
    */
-  async _adoptWorkingCopy(jsonData, source, player) {
+  async _adoptWorkingCopy(jsonData, source, player, onSave = null) {
     const planner = getCostPlanner();
     if (!planner) {
       this._setStatus('CostPlanner is not available — the loops module has not initialized.');
@@ -257,7 +319,10 @@ export class CostDebuggerUI {
     try {
       const sm = await documentStateManager(jsonData, playerId);
       planner.useStateManager(sm, { playerId });
-      this._workingCopy = { jsonData, source, player: playerId, stats: sm.stats };
+      // ⛓ L4 — REBUILT, never merged: a hand-off that carries no return path
+      //   must not inherit the previous one (`onSave` defaults to null here for
+      //   exactly that reason).
+      this._workingCopy = { jsonData, source, player: playerId, stats: sm.stats, onSave };
       this._isStale = false;
       this.verificationResults = [];
       this.selectedStepIndex = -1;
@@ -294,6 +359,87 @@ export class CostDebuggerUI {
     this._updateStatus();
     this._updateButtons();
     this._setStatus('Back on APPLIED state — press Load to plan the loaded world.');
+  }
+
+  /**
+   * ⛓⛓⛓ **L4 — SEND THE PLAN BACK AS ONE OP** (⚖ user, 2026-09-06).
+   *
+   * `getCostData()` is the BLOCK — write-by-class applied, byte-identical to
+   * the one the procgen pipeline embeds for the same world
+   * (`check-loop-costs-one-model.mjs`) — so the whole write-back is a single
+   * `set-key loop_costs` the hub applies through `_acceptEditorOp`: its schema
+   * veto, its slot stamp, and ONE undo step that takes the whole plan back out.
+   *
+   * ⛓ **`generatedFrom` NAMES THE DOOR, NEVER A PATH.** The planner stamps
+   * `'loopsCostDebugger'` for the store, which is true of the store; a block
+   * written into a DOCUMENT is provenance somebody will read later, and the
+   * honest answer is the hand-off's own source label ("the APWorld editor").
+   * A file path would be a claim about a file that may not exist — this
+   * document has not been saved anywhere yet.
+   *
+   * ⛔ **THE OUTCOME IS THE HUB'S ANSWER, NOT AN ASSUMPTION.** `onSave` returns
+   * `{accepted, applied, errors}` (L4's hub change); before it did, a panel
+   * could only say "sent" and hope. A refusal is printed with the schema's own
+   * error text, and an accepted-but-unapplied op says "no change" rather than
+   * claiming an edit.
+   * @private
+   */
+  _handleSendCosts() {
+    const planner = getCostPlanner();
+    const refusal = sendCostsRefusal({ workingCopy: this._workingCopy, planner });
+    if (refusal) { this._setStatus(refusal); return; }
+
+    const block = this._blockForDocument(planner);
+    const priced = Object.keys(block.regions).length;
+    const locations = Object.keys(block.locations).length;
+
+    let answer;
+    try {
+      answer = this._workingCopy.onSave({
+        op: 'set-key', key: 'loop_costs', value: block, scope: 'document',
+      });
+    } catch (e) {
+      log('error', 'the hub refused the cost block by throwing', e);
+      this._setStatus(`Send failed: ${e.message}`);
+      return;
+    }
+
+    // ⛔ A caller that answers NOTHING is not a caller that ACCEPTED. Said as
+    //    "could not confirm" rather than as success, because the two are
+    //    different facts and only one of them is good news.
+    if (!answer || typeof answer !== 'object') {
+      this._setStatus(`Sent ${priced} region${priced === 1 ? '' : 's'} and ${locations} `
+        + `location${locations === 1 ? '' : 's'} — but the editor did not say whether it `
+        + 'accepted them.');
+      return;
+    }
+    if (!answer.accepted) {
+      const why = Array.isArray(answer.errors) && answer.errors.length
+        ? answer.errors.slice(0, 3).join(' · ')
+        : (answer.description || 'no reason given');
+      this._setStatus(`The APWorld editor REFUSED these costs: ${why}`);
+      return;
+    }
+    this._setStatus(answer.applied
+      ? `Sent to the document: ${priced} region${priced === 1 ? '' : 's'} priced, `
+        + `${locations} location${locations === 1 ? '' : 's'}, as ONE undoable edit. `
+        + 'A `loop_costs` block also switches loop mode ON for that world.'
+      : `No change — the document already carried exactly these costs (${priced} `
+        + `region${priced === 1 ? '' : 's'}).`);
+  }
+
+  /**
+   * ⛓ The block as it goes into a DOCUMENT: the planner's own block with
+   * `generatedFrom` re-stamped to the hand-off's source. ⛔ Everything else is
+   * the planner's, untouched — a second spelling of the block here is exactly
+   * the second cost model ⚖ ruled out.
+   * @private
+   */
+  _blockForDocument(planner) {
+    return {
+      ...planner.getCostData(),
+      generatedFrom: this._workingCopy?.source || 'the APWorld editor',
+    };
   }
 
   _handleDataChangedEvent() {
@@ -1097,6 +1243,25 @@ export class CostDebuggerUI {
     if (btnApplied) {
       btnApplied.style.display = this._workingCopy ? '' : 'none';
       btnApplied.disabled = this.isVerifying;
+    }
+    /**
+     * ⛓⛓ L4 — Send exists only where there is a document to send TO, and it is
+     * HIDDEN rather than disabled in that case for the same reason its
+     * neighbour is: on applied state the gesture does not exist at all, and a
+     * permanently greyed button in the app's ordinary mode would read as
+     * broken. ⛔ With a working copy adopted it is SHOWN and DISABLED with the
+     * reason in its `title` — H4c's claim-12 shape — because "you have not
+     * planned yet" is a thing a person can act on and a missing button is not.
+     */
+    const btnSend = this.rootElement.querySelector('.cd-btn-send');
+    if (btnSend) {
+      btnSend.style.display = this._workingCopy ? '' : 'none';
+      const refusal = this.isVerifying
+        ? 'Verification is running.'
+        : sendCostsRefusal({ workingCopy: this._workingCopy, planner });
+      btnSend.disabled = !!refusal;
+      btnSend.title = refusal
+        || 'Write this plan into the handed-over document as one undoable `set-key loop_costs`.';
     }
 
     if (this.isVerifying) {

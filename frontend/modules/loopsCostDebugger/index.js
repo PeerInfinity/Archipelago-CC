@@ -34,7 +34,9 @@ export const moduleInfo = {
 
 /**
  * ⛓⛓⛓ APWORLD EDITOR HUB slice H5 — **THE WORKING-COPY INTAKE.** Published by
- * the hub's `loop_costs` Document row with `{jsonData, source, player}`.
+ * the hub's `loop_costs` Document row with `{jsonData, source, player, onSave}`
+ * (`onSave` added by L4: the hub's `_acceptEditorOp`, so the panel's "Send costs
+ * to the document" reaches the working copy as ONE undoable `set-key`).
  *
  * ⛔ Before H5 this panel read APPLIED state only (`costDebuggerUI.js:162-163`
  * marks itself stale on `sphereState:dataLoaded` / `stateManager:rulesLoaded`,
@@ -122,6 +124,10 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         jsonData: ev.jsonData,
         source: ev.source ?? null,
         player: ev.player ?? null,
+        // ⛓ L4 — the hub's return path, carried with the document it belongs
+        //   to. A stash that dropped it would mount a panel whose Send is dead
+        //   for a reason nothing states.
+        onSave: typeof ev.onSave === 'function' ? ev.onSave : null,
       };
     }
   }, moduleInfo.name);
