@@ -11469,6 +11469,20 @@ bot-measured mode will want exactly this. (3) **jta has the same shape and was d
 `_syncEnergyFromPool` pin is the analogous host-owned clock. Whether jta's own pause control should gate its
 host clock is an open ⚖, not a finding. NEXT after L5: **L2** (the algorithm; own kickoff).
 
+**L5 VERIFIED by the planner 2026-09-06** (`ee6942c9ac` + `ab9c50ccf0` on origin/main; 4 code commits by path;
+`git diff --stat` under `omsi-loops/` EMPTY — no fork change, no gitlink; `_liveArmStopped`/`skippedStopped` in the
+bridge; `pressPlay`/`pressPause`/`isGameStopped` helpers; the new row in the substrates config; the instrument's
+Pause leg; omsi.md §"The step gate" rewritten; CI @ `ee6942c9ac` run 34049137701 **435/13281, 0 failed**, derived
++7 per file BEFORE the run and matched). What L5 overturned: the flag is read from the fork GLOBAL, not
+`getFullState()` (6.5 ns vs 24.9 µs per read, measured); the gate resolves an ARM (`unenforced`/`replay`/`bot`
+exempt, `live` gated) — a fourth arm the brief did not name; `pauseGame()` restarts only on the way UP; only
+**2 of 24** omsi rows drive live play (11 park for the M3b ACTION gate only, 8 never park); the docs link census
+moved 225 → 227 (`same-doc` 14 → 15, first time). Mutant (`_liveArmStopped` → false) reds exactly the new row.
+Walks 3/3 in 6 m 29 s ALONE — a walk run concurrently with `check-procgen-help` starved and the classifier said
+STUCK for a STARVED shape (`testLogic.js`, named). **⚖ NEW for the user: jta has the same shape** (bridge boots
+"loop paused", `_syncEnergyFromPool` is the host-owned clock) — untouched; same rule as a small slice, or leave?
+NEXT = L2 (the third slice — the planner checks in with the user before launching, per the between-slices rule).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
