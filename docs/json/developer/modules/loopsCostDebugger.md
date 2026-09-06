@@ -5,17 +5,31 @@
 **Purpose:** Plan loop-mode mana costs one action queue at a time from a sphere
 log, showing the reasoning behind every assignment, and verify an existing cost
 sidecar against the same formula. It is a *debugger*, not the production cost
-generator — see the [loop-cost engine disambiguation](../procgen/gotchas.md#two-loop-cost-engines-one-store)
-for how it differs from `shared/procgen/loopCostGenerator.js`. ⚠ Its `costPlanner.js`
+generator — see [one loop-cost engine, one store](../procgen/gotchas.md#one-loop-cost-engine-one-store--and-the-debugger-is-its-inspector)
+for how it relates to `shared/procgen/loopCostGenerator.js`. ⚠ Its `costPlanner.js`
 is nevertheless what the **runtime** runs for Generate Costs and for the
 auto-generate on entering loop mode.
+
+⚖ **Since 2026-09-06 it carries no algorithm of its own.** `costPlanner.js`
+extends `shared/procgen/loopCostPlanner.js` — the one cost model, which the
+procgen pipeline drives too — and supplies only what a pure module cannot know:
+the state manager (turned into a topology), the player id via `sphereState`, and
+each region's substrate via `procgenPlayer.getRegionInfo`. Its `getCostData()`
+applies the same write-by-class rule the pipeline does, so **what Generate Costs
+stamps into the store is the block the pipeline would have embedded**;
+`scripts/procgen/check-loop-costs-one-model.mjs` asserts that over five
+documents. Before that it was a second, disagreeing model.
 
 ## Key Files
 
 - `frontend/modules/loopsCostDebugger/index.js` — registration, the `CostPlanner`
   singleton, and `getSphereLog()`
-- `frontend/modules/loopsCostDebugger/costPlanner.js` — the planning engine
-  (pure; no DOM, no game engine)
+- `frontend/modules/loopsCostDebugger/costPlanner.js` — the app-side DRIVER of
+  the shared model (no DOM, no game engine); the model is
+  `shared/procgen/loopCostPlanner.js`
+- `frontend/modules/loopsCostDebugger/documentStateManager.js` — a rules.json
+  working copy wearing the state manager's face (H5), and the source of the
+  region → substrate map for a document the app has never applied
 - `frontend/modules/loopsCostDebugger/costDebuggerUI.js` — the panel
 - `frontend/modules/loopsCostDebugger/costDebugger.css` — panel styles
 
@@ -29,15 +43,25 @@ auto-generate on entering loop mode.
 ## Data flow
 
 ```
-sphereState (raw log, all players)  ─┐
-                                     ├─→ getSphereLog()  →  CostPlanner.loadSphereLog()
-stateManagerProxySingleton           │        (raw JSONL entry shape)         │
-  .getStaticData()  (this player) ───┘                                        │
-                                                                              ↓
-                                                       plan steps  →  getCostData()
-                                                                       │        │
-                                                       panel display ──┘        └── costDataManager (headless path only)
+sphereState (raw log, all players) ──→ getSphereLog() ──→ CostPlanner.loadSphereLog()
+                                          (raw JSONL entry shape)          │
+stateManagerProxySingleton ─┐                                              │
+  .getStaticData()          ├─→ topologyFromStaticData() ─→ the topology ──┤
+  .getLatestStateSnapshot() │      {startRegion, regions, locations,       │
+procgenPlayer               │       adjacency, regionSubstrates}           │
+  .getRegionInfo() ─────────┘                                              ↓
+                                          shared/procgen/loopCostPlanner.js
+                                                  plan steps  →  getCostData()
+                                                     │             (write by class)
+                                     panel display ──┘        └── costDataManager
+                                                                  (headless path only)
 ```
+
+The topology is the whole seam: the pipeline builds the same shape with
+`topologyFromRulesJson`, so neither side re-implements the parse and the two
+provably plan the same walk. It is rebuilt on every `loadSphereLog()` and
+`reset()`, which is how a rules reload or a player switch is picked up instead
+of replanning against the previous world.
 
 `getSphereLog()` prefers `sphereState.getRawSphereLog()` — the literal parsed
 entries, every player's slice intact, which the planner then filters itself. A

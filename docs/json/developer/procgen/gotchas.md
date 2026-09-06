@@ -41,17 +41,65 @@ When you re-home an import like this, assert the registry actually contains the
 id afterwards — and check the ENTRY, not just presence: pointing a script at a
 different library can register a *different* entry shape.
 
-## Two loop-cost engines, one store
+## One loop-cost engine, one store — and the debugger is its inspector
 
-Three files deal with loop-mode mana costs and they are easy to conflate. **Which one runs depends on where you are:**
+Three files deal with loop-mode mana costs and they used to be easy to conflate, because two of them were
+different *algorithms*. Since 2026-09-06 there is **one**:
 
-- `frontend/modules/shared/procgen/loopCostGenerator.js` — a **pure, headless** generator. This is what the **procgen pipeline** runs: `procgenPipelineEngine.js` calls it to stamp a `loop_costs` block at compile time (when `enableLoopMode && embedSphereLog`). It is the only production producer of a block, and the only model that knows the M5 summary vocabulary (`timeDrainPerSecond`, `xpEffect`).
-- `frontend/modules/loopsCostDebugger/costPlanner.js` — despite living in a debugger module, this is what the **runtime** runs: the Loops panel's Generate Costs button and the auto-generate on entering loop mode both stamp its output into the store. It simulates cost assignment step-by-step with a richer model (XP levels, per-loop mana budgets, explore/check phases), knows no summary vocabulary, and defaults an unpriced location to a different number than the pure generator. It can also verify an existing block against its own formula.
-- `frontend/modules/loops/costDataManager.js` — not a generator at all: the runtime **store** (load/validate/serve) that both engines write into and the loop simulation reads from. Its `isLoaded()` being non-null is also the loop-mode switch (block present ⇒ loop mode on).
+- `frontend/modules/shared/procgen/loopCostPlanner.js` — **THE model**, pure and headless. It simulates a
+  playthrough over the sphere log (⚖ the user: *"assigning costs for each region based on what the player can
+  afford by the time they get there"*): one planned step per action queue, regions priced just-in-time out of
+  what is left after the walk reaches them, explore at `DEFAULT_EXPLORE_MULTIPLIER` × the region's cost, then a
+  defaults fill for whatever the log never reached. It reads a **topology** — `{startRegion, regions, locations,
+  adjacency, regionSubstrates}` — never a state manager and never a rules.json.
+- `frontend/modules/shared/procgen/loopCostGenerator.js` — the **block producer**. It builds the topology from a
+  rules.json (`topologyFromRulesJson`), plans, and applies the **write-by-class** rule (below). This is what the
+  **procgen pipeline** calls at compile time (`procgenPipelineEngine.js`, when `enableLoopMode && embedSphereLog`).
+- `frontend/modules/loopsCostDebugger/costPlanner.js` — the **driver and inspector**, not a model. It extends the
+  shared planner and supplies the three things the pure core must not know: the state manager (it turns
+  `getStaticData()` + `getLatestStateSnapshot()` into the same topology, including for a working copy the app has
+  never applied — H5), the player id via `sphereState`, and which substrate a region has via
+  `procgenPlayer.getRegionInfo`. This is still what the **runtime** runs — the Loops panel's Generate Costs and
+  the auto-generate on entering loop mode — and since the unification **it stamps the SAME block the pipeline
+  embeds** for the same world.
+- `frontend/modules/loops/costDataManager.js` — not a generator at all: the runtime **store** (load/validate/serve)
+  the engine writes into and the loop simulation reads from. Its `isLoaded()` being non-null is also the loop-mode
+  switch (block present ⇒ loop mode on).
 
-⚠ **These two are not the same algorithm.** Run side by side over the same document they agree only on the start region and the first priced region; the maze fixture's far room is 60 from one and 23 from the other. A change to the *pricing vocabulary* therefore has to land in **both** or it is a no-op where it matters — M5's summary time-pricing went into one first, and until it followed, every generated world still assigned a moveCost and location costs to runner/bounce regions, charging the time drain *and* the per-action costs on every visit, exactly what the ruling forbade.
+⛓ **The proof that it is one model is a gate, not a claim.** `scripts/procgen/check-loop-costs-one-model.mjs`
+runs `generateLoopCosts` and the runtime planner over five real documents and asserts the blocks are byte-equal
+modulo `generatedAt`/`generatedFrom`. ⚠ It is a *differential*: it stays green if both sides are wrong the same
+way. The numbers are pinned by `loopCostGenerator.test.js`.
 
-⚖ A third engine, `frontend/modules/loops/costGenerator.js` (the "live" generator, which played the sphere log through the running loop engine), was **deleted 2026-09-06** — it had no caller. The two above are being unified into one (planner's algorithm, in the pure module) by the loop-costs ladder; see the queue doc §5o.
+### Write by class — which regions the block may speak for at all
+
+The simulation prices **every** region as if it were coarse (⚖ the user: *"treat every region as if it's a coarse
+region, when running the simulation, but store the costs according to what we already decided"*). What reaches
+the block then depends on the region's substrate, read from its own registry entry:
+
+| class | who | what the block says |
+|---|---|---|
+| **coarse** | no substrate · text adventure · **maze** | `{moveCost, xpEffect}` + its locations' costs |
+| **summary** | runner, bounce (`loopSupport.summaryRecording`) | `{timeDrainPerSecond, xpEffect}` only, plus anything the INPUT block already stated explicitly — a per-action cost would be charged *on top of* the time drain (M5) |
+| **native** | jta, omsi | **nothing at all.** Their resource-channel router charges the pool with no region attached, so no block value is ever read |
+
+⚠ **maze is COARSE even though it declares shared mana**, and this is the trap the rule exists to avoid. maze has
+both a recorder (`takeLastRecording`) and `sharing.mana` — the same two properties as jta and omsi — so
+"a recorder that is a mana declarer ⇒ no entries" sweeps it in and deletes the very `moveCost` that
+`mazeRoomUI._perTileMoveCost` divides by `longestShortestPath`. The discriminator is
+`sharing.mana.loopActionDelegation`: maze hands the loop action *back* to the host's cost model. ⚠ And
+**text_adventure declares `sharing.mana` too** (so `resourceChannels.isManaDeclarer('text_adventure')` is true)
+while reading the block for all three coarse actions — the *recorder* test is what excludes it. See
+`classifyRegion`, which states both cases where it decides them.
+
+⛓ The start region is `{moveCost: 0}` whatever its class (unless it is summary). That zero is a rule, not a
+price: the HOST's queue reads it for the first move out of the start region.
+
+⚖ Two engines were retired on the way here. `frontend/modules/loops/costGenerator.js` (the "live" generator,
+which played the sphere log through the running loop engine) was **deleted 2026-09-06** — it had no caller. The
+pure generator's own algorithm (a maxMana/2 split across a BFS path) was deleted with the unification; over the
+same document it and the planner had agreed only on the start region and the first priced region. Full history:
+the queue doc §5o.
 
 ## procgenPlayer has no panel
 

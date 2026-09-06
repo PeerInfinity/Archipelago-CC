@@ -440,7 +440,7 @@ export const TERMS = Object.freeze([
             + '**both** generators or it is a no-op where it matters.',
         where: [
             { label: 'architecture.md § rules.json extensions', doc: `${ARCH}#rulesjson-extensions` },
-            { label: 'gotchas.md § Two loop-cost engines, one store', doc: `${GOTCHAS}#two-loop-cost-engines-one-store` },
+            { label: 'gotchas.md § One loop-cost engine, one store', doc: `${GOTCHAS}#one-loop-cost-engine-one-store--and-the-debugger-is-its-inspector` },
         ],
         seeAlso: ['loop-mode', 'rules-json'],
     }),

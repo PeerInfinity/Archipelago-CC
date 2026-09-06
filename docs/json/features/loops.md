@@ -233,28 +233,41 @@ Format of the block:
 
 ### Who generates it
 
-Two engines produce cost data, and which one runs depends on where you are:
+**One engine**, `shared/procgen/loopCostPlanner.js`, driven from two places:
 
-| Engine | Runs | Writes |
+| Caller | Runs | Writes |
 |---|---|---|
 | `shared/procgen/loopCostGenerator.js` (pure, headless) | the **procgen pipeline**, at compile time (`procgenPipelineEngine.js`, when `enableLoopMode && embedSphereLog`) | the `loop_costs` block into the generated `rules.json` |
 | `loopsCostDebugger/costPlanner.js` | the **runtime**: the Loops panel's Generate Costs button, and the auto-generate on entering loop mode | straight into the store |
 
-Both walk the sphere log and assign costs that scale with the game's
-progression — early-sphere locations are cheap, late-sphere ones expensive.
-The shape of the walk: start at the start region with max mana; for each
-location in sphere order, path to it, split the remaining budget across the
-uncosted regions on the path, price the location, then reset the loop; finally
-fill any unvisited region/location from its neighbours.
+Both build a *topology* — regions, locations, exits, adjacency and each region's
+substrate — and hand it to the same model, so **they produce the same block for
+the same world**. `scripts/procgen/check-loop-costs-one-model.mjs` asserts that
+over five documents.
 
-⚠ **They are not the same algorithm.** Over the same document they agree only on
-the start region and the first priced region. ⚖ The user ruled 2026-09-06 that
-the planner's model is the official one; unifying them into a single engine is
-the loop-costs ladder's next rung. See
-[the engine disambiguation](../developer/procgen/gotchas.md#two-loop-cost-engines-one-store).
+The model simulates a playthrough, one action queue per planned step. Start at
+the start region with max mana; for each location in sphere order, path to it,
+pricing each region on the way at what is left of the budget when the walk
+reaches it, split across the regions still ahead; explore the region until the
+budget runs out; then, in a fresh loop, price the location at what remains and
+check it. Items received raise max mana for later loops. Finally, any region the
+log never reached takes its highest costed neighbour's cost, and any unvisited
+location its region's cost × the explore multiplier. The effect is what the
+ruling asked for: costs scale with what the player can afford by the time they
+get there.
 
-A third, "live" generator (`loops/costGenerator.js`) played the sphere log
-through the running loop engine. It had no callers and was deleted 2026-09-06.
+**A region's substrate decides whether the block speaks for it at all** —
+coarse regions (and maze) get full numbers, summary regions (runner, bounce) get
+a time-drain rate and nothing else, and substrates with their own mana economy
+(jta, omsi) get no entries. See
+[one loop-cost engine, one store](../developer/procgen/gotchas.md#one-loop-cost-engine-one-store--and-the-debugger-is-its-inspector).
+
+⚖ Two engines were retired getting here. A "live" generator
+(`loops/costGenerator.js`) that played the sphere log through the running loop
+engine had no callers and was deleted 2026-09-06. The pure generator's own
+model — a flat max-mana/2 split across the path — was deleted with the
+unification: over the same document it and the planner agreed only on the start
+region and the first priced region.
 
 ### Fallback Costs
 
