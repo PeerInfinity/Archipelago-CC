@@ -2558,6 +2558,17 @@ export async function apworldLoopCostsSendWritesThePlanAsOneOp(testController) {
         await testController.pollForCondition(
             () => !!document.querySelector('.cost-debugger-panel .cd-btn-plan-all:not([disabled])'),
             'the planner accepted the document\'s own sphere log', 8000, 50);
+        /**
+         * ⛔ **LOADED BUT NOT PLANNED IS ITS OWN STATE**, and the assertion
+         * above cannot see it: before Load the planner refuses with "No sphere
+         * log loaded", so a Send rule that ignored COMPLETENESS entirely would
+         * still be disabled there. Measured as a mutant — dropping the
+         * `isComplete()` clause left the earlier claim green and reds only here.
+         */
+        testController.assertEqual(
+            'Send is STILL refused with a sphere log loaded but nothing planned',
+            'true',
+            String(!!document.querySelector('.cost-debugger-panel .cd-btn-send')?.disabled));
         testController.reportCondition('Plan All pressed', press('.cd-btn-plan-all'));
         await testController.pollForCondition(
             () => !document.querySelector('.cost-debugger-panel .cd-btn-send')?.disabled,
@@ -2588,11 +2599,14 @@ export async function apworldLoopCostsSendWritesThePlanAsOneOp(testController) {
         testController.assertEqual(
             'it was exactly ONE op',
             String(opsBefore + 1), String(panel.session.ops().length));
+        // ⛓ Optional-chained on purpose: a mutant that sends NOTHING leaves the
+        //   op list empty, and this row must REPORT that rather than throw a
+        //   TypeError into the catch and lose every claim after it.
+        const lastOp = panel.session.ops().at(-1) ?? {};
         testController.assertEqual(
             'and that op is a document-scope set-key on loop_costs',
             'set-key|loop_costs|document',
-            [panel.session.ops().at(-1).op, panel.session.ops().at(-1).key,
-                panel.session.ops().at(-1).scope].join('|'));
+            [lastOp.op, lastOp.key, lastOp.scope].join('|'));
         // ⛓ Provenance names the DOOR, never a path this unsaved document lacks.
         testController.assertEqual(
             'the block records where it came from, by door name',
