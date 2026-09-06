@@ -11496,6 +11496,97 @@ side-by-side script promoted to `check-loop-costs-one-model.mjs`; the two untrac
 three instruments' pins RE-DERIVED (no committed artifact moves); docs. Submodule pushed first; **the outer
 gitlink bump COMMITTED, NOT PUSHED — ask-first at its close.** Reports come to `next-priorities-planning-2`.
 
+**⇒ L2 AS BUILT — 2026-09-06, Opus `loop-costs-L2`.** Submodule `frontend/modules/shared` `4b78f3381e..1e7a1a5d02`
+**PUSHED** (2 commits). Outer: **5 commits by path, NOT PUSHED** (`5e361ccb29` `65cd4d5d04` `52a812a87e`
+`c244c12268` `04dc8afd3f`) + the record and gitlink commits on top. ⛔ **THE WHOLE OUTER PUSH IS HELD, and the
+reason is a measurement, not caution** — see the ⚖ at the end. Full record: plan §12.
+
+**ONE ALGORITHM, as ruled.** The planner's model moved into the submodule as `shared/procgen/
+loopCostPlanner.js` — pure, over a TOPOLOGY (`{startRegion, regions, locations, adjacency, regionSubstrates}`)
+built two ways (`topologyFromRulesJson` for the pipeline, `topologyFromStaticData` for the debugger and H5's
+working copy), so nothing re-implements the parse. `loopCostGenerator.js` is now the BLOCK PRODUCER: topology →
+planAll → **write by class** → block. Its own maxMana/2 algorithm and every helper of it are DELETED.
+`loopsCostDebugger/costPlanner.js` **1,288 → 190 lines**, a subclass supplying the state manager, the player id
+and the region→substrate map. ⚠ Consequence the brief implies but does not state: **the Loops panel's Generate
+Costs now stamps the SAME block the pipeline embeds.** `loops/xpFormulas.js` moved into `shared/procgen/` with a
+one-line re-export left behind (6 importers unmoved). A THIRD module, `loopCostDefaults.js`, holds the constants
+— not tidiness: the producer imports the algorithm and the algorithm needs the numbers, which is a real import
+cycle through a module `costDataManager` and `loopState` both pull in at boot.
+
+**⚖ (k) as built.** `DEFAULT_REGION_COST` 50 · `DEFAULT_LOCATION_COST` **10** · `DEFAULT_EXPLORE_MULTIPLIER` 2 ·
+`DEFAULT_STARTING_MAX_MANA` 100 · `DEFAULT_MANA_PER_ITEM` 10, re-exported from `loopCostGenerator.js`. Readers:
+the brief's list (`costDataManager` ×4, `loopState`, `loopUI` ×2 — the second now DOCUMENTED as the display
+estimate it is, `loopStats/queueAnalyzer`, `costPlanner`, the docs table) **plus six the W0 sweep added** — the
+five `generate-*-test-preset.mjs` writers and `check-jta-dataset-pipeline-preset.mjs`, each stamping the empty
+block's roots as literals — plus `procgenPipelineEngine.js`'s generator-failed marker. ⚠ Two disagreements the
+substitution exposed, NAMED not changed: the no-cost-data fallback prices explore at 50, not 2×50 (the feature
+doc claimed "100 (2×50)" and the code never did — doc corrected), and the four store fallbacks use `||`, so an
+explicit `0` still reads as the default. Five test rows re-pinned FROM THE CONSTANT — one of them a PREMISE, not
+a number: `blockModes.test.js`'s `currentMana = 60; // next check (100) depletes` no longer depletes at 10, which
+reds three rows, two of which never mention 100.
+
+**⛔ THE BRIEF'S CLASSIFICATION RULE WAS WRONG AND WOULD HAVE EMPTIED THE MAZE BLOCK.** Item 3 said
+`takeLastRecording` ∧ `isManaDeclarer` ⇒ no entries, with "maze — NOT a mana declarer". Measured off the
+libraries: **maze declares `sharing.mana: {loopActionDelegation: true}`**, so it IS a mana declarer, and under
+that rule it loses the `moveCost` `mazeRoomUI._perTileMoveCost` divides by `longestShortestPath`. Driven as a
+mutant: 2 unit rows red, and the differential drops `procgen_maze` and `maze_loop_worldgen` from 4/4 regions and
+3 locations to **1/4 and 0**. The discriminator is `loopActionDelegation` — "charges its own pool" vs "hands the
+action back". ⚠ **`text_adventure` also declares `sharing.mana`** while reading the block for all three coarse
+actions — the RECORDER test excludes it. The brief named neither. Also: the brief's topology shape omitted each
+location's parent region, its `id` (null/0 ⇒ auto-collected) and its EVENT flag, and the defaults fill skips
+events but NOT id-null locations, so both predicates are carried.
+
+**THE DIFFERENTIAL, promoted.** `scripts/procgen/check-loop-costs-one-model.mjs` runs both callers over five
+documents and asserts byte-equality modulo `generatedAt`/`generatedFrom`. BEFORE they agreed on 2/4 · 2/4 · 2/4 ·
+2/4 · 5/56 regions; AFTER all five are **identical** (4/4 · 4/4 · 1/4 · 3/4 · 56/56 regions written — jta's three
+regions and omsi's one correctly get no entry). 1.05 / 0.76 / 0.84 s. ⛓ **CI shard plan BEFORE == AFTER**:
+headless 31 arms / 1 shard, browser 25 / 3, 4 procgen gate jobs per push. The naked adoption measured 32 / 2 and
+5 jobs, so it declares `@ci-box` — not for cost (it is the cheapest candidate in the directory) but because
+`planCiShards` prices an unpriced arm at the whole 600 s budget. ⚖ **Adopting it is the same open decision as the
+other 49, and it is the strongest candidate among them.** Its import door is CLOSED (`main()` guard), so the help
+baseline's effectful list does not move for it.
+
+**Fixtures + instruments.** Both untracked maze fixtures regenerated by their headers' commands;
+`maze_loop_worldgen`'s block moved 50/55/60 → **50/32/23** (locations 50/55/60 → **100/66/49**).
+`check-maze-loop-mana.mjs`'s `perTileCap = 30` and its OOM refill tolerance (a SECOND typed 30) are now DERIVED
+from the fixture's own block and printed at run time — `50/3=16.67, 32/4=8.00, 23/1=23.00`. ⚠ **The brief named
+the wrong pins**: `:276-277`'s per-tile figures are PROSE in a measured record, not assertions. And the cap
+CANNOT discriminate alone — `region_3_3` has `longestShortestPath = 1`, so its per-tile charge IS its coarse
+charge (23 = 23); the count (≥3 vs the coarse arm's one manaChanged event) is the claim, now said where it is
+computed. `check-ta-mana-leg.mjs` re-pinned from `DEFAULT_REGION_COST` (4 sites; value unmoved, since only the
+LOCATION default changed). `check-maze-consumable-tiles`, `check-omsi-mana-leg`,
+`check-jta-dataset-pipeline-preset`: measured, nothing to change. **No committed artifact moved** — re-derived at
+close: 12 tracked blocks, all still 0 regions / 0 locations.
+
+**Mutants, each reverted:** a `moveCost` on a summary region ⇒ **2** rows red (both summary, nothing else) · the
+brief's classification rule ⇒ **2** rows (both maze) · NATIVE regions get entries ⇒ **1** row. ⛑ The differential
+stays GREEN under the second — both models share the classifier, so it proves ONE model, not the RIGHT one, and
+its docblock says so.
+
+**Gates.** Bounded vitest over everything touched **63 files / 1741 tests / 0 failed** · `procgenDocs` 7 / **452**
+(L5's number, unmoved — the link census is still **227**; anchors and prose moved, not the link count) ·
+`check-loop-costs-one-model` green · `check-maze-loop-mana` and `check-ta-mana-leg` **3× green solo** ·
+`check-maze-consumable-tiles` / `check-omsi-mana-leg` / `check-jta-dataset-pipeline-preset` green ·
+`check-procgen-reference --check` + `check-procgen-docs` ALL CHECKS PASSED after the generator run (instruments
+265 → **266**, "cited by a doc" 88 → 89) · `test-loops-only` **8/8** · `test-substrates --batch=fast` **84/84**
+with `compare-runs` reporting **no difference in status, roster or duration**, exit 0, and the browser log swept
+clean of thrown handlers (0 `Uncaught`/`TypeError`/`ReferenceError`).
+
+**⚖ OPEN FOR THE USER — THE PUSH IS BLOCKED ON THIS, and it is not the routine gitlink question.**
+`check-procgen-help --doors=all` came back **12 CHECK(S) FAILED**, every one `⛔ HELP: exit 1`, and eleven of the
+twelve are files this slice never touched. Cause, measured: the gate runs its children in a THROWAWAY WORKTREE
+at HEAD and initialises submodules **at the GITLINK** — which is still `4b78f33`, because the bump is ask-first
+and last. In that worktree the constants do not exist, so every importer of them (directly, or through
+`procgenPipelineEngine.js`) dies at import. In the PRIMARY tree the same three `--help` doors exit **0**.
+⇒ **CI has the same property.** Any SHA of this slice WITHOUT the gitlink bump reds the `unittests` job on the
+same missing export, because `loops/costDataManager.js` and `loops/loopState.js` import it at boot. So pushing
+main minus the gitlink would publish a knowingly-red CI and make the ⚖ 52 row unmeasurable. **The whole outer
+push waits on the user's answer**; the submodule IS pushed, because nothing consumes it until the gitlink —
+which is the property push-by-default rests on. ⚖ 52 row DERIVED instead: baseline `ee6942c9ac` 435/13281;
+measured locally **1702 → 1714** over the same bounded set ⇒ +12 rows / ±0 files, all
+`loopCostGenerator.test.js` 24 → 36 ⇒ **expected 435 / 13293**, owed at the pushed SHA. `check-procgen-help
+--doors=all` is re-run at the final HEAD (gitlink committed) and its result appended here.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
