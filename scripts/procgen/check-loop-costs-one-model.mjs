@@ -100,8 +100,19 @@ const DOCUMENTS = [
     { preset: 'shapez', required: true },
 ];
 
+/**
+ * ⛔ **`FAIL:` AT LINE START, THEN A TOTAL LINE — the directory's convention,
+ * and in CI it is the whole verdict.** `ci-gates.mjs` publishes each arm as
+ * `## CI-GATE | <key> | <pass>/<fail> | exit=<n> | <total>`, counting `PASS:`
+ * and `FAIL:` prefixes and taking the total off a line matching `ALL PASS…` /
+ * `ALL CHECKS PASSED` / `n CHECK(S) FAILED` (`standingValues.headlineOf`).
+ * Measured at adoption: printing `OK <preset>` and `ONE MODEL: ALL OK` gave a
+ * published row of **`0/0 | exit=0 | (no total)`** — a green that names nothing
+ * it checked, which is indistinguishable from a gate that checked nothing.
+ */
 function fail(msg) {
-    console.error('FAIL:', msg);
+    console.log(`FAIL: ${msg}`);
+    console.log('1 CHECK(S) FAILED');
     process.exit(1);
 }
 
@@ -174,7 +185,7 @@ async function main() {
         if (!rulesPath) {
             if (required) fail(`${preset}: no rules.json on disk`);
             skipped += 1;
-            console.log(`-- ${preset}: SKIPPED (not on disk${note ? ` — ${note}` : ''})`);
+            console.log(`SKIP: ${preset} — not on disk${note ? ` (${note})` : ''}`);
             continue;
         }
         const doc = JSON.parse(readFileSync(rulesPath, 'utf8'));
@@ -202,7 +213,7 @@ async function main() {
         const locations = Object.keys(a.locations).length;
         const worldRegions = Object.keys(doc.regions?.[playerId] ?? {}).length;
         console.log(
-            `OK ${preset}: identical blocks — ${regions}/${worldRegions} regions written, `
+            `PASS: ${preset} — identical blocks; ${regions}/${worldRegions} regions written, `
             + `${locations} locations, defaults ${a.defaultRegionCost}/${a.defaultLocationCost}`);
         if (verbose) {
             for (const [name, entry] of Object.entries(a.regions)) {
@@ -213,8 +224,13 @@ async function main() {
     }
 
     if (checked === 0) fail('no document was checked');
-    console.log(`\nONE MODEL: ALL OK — ${checked} document(s) identical`
-        + (skipped ? `, ${skipped} skipped` : ''));
+    /**
+     * ⛔ The count is IN the total line, because a CI row reading `4/0` says
+     * four somethings passed and this gate's claim is about DOCUMENTS.
+     */
+    console.log(`\nALL PASS — ONE MODEL: ${checked} document(s) byte-identical `
+        + `between the pipeline's block producer and the panel's planner`
+        + (skipped ? `; ${skipped} skipped by name above` : ''));
 }
 
 // Run only when this file IS the entry point (the import door above).
