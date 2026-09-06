@@ -188,14 +188,22 @@ For the full mechanics, see the developer page [Loop Recording and Block Modes](
 
 The mana cost for each region move and location check can be customized per game via cost data files.
 
-### Cost Data File
+### Where cost data lives
 
-Cost data is stored alongside preset files:
-```
-frontend/presets/{game}/AP_{seed_id}/AP_{seed_id}_costs.json
-```
+Cost data reaches the runtime store (`loops/costDataManager.js`) as a
+**`loop_costs` block embedded in the world's `rules.json`** — `tryLoadEmbedded`
+fetches the rules document and applies `rulesDoc.loop_costs`. A block being
+present is also the loop-mode switch: `isLoaded()` non-null ⇒ loop mode on.
 
-Format:
+Two other doors exist for hand-supplied data: `loadFromURL(url)` and
+`loadFromFile(file)` (the panel's file picker).
+
+⚠ There is **no** standalone `AP_{seed_id}_costs.json` sidecar next to a preset
+any more — the loader for that path had no callers and was deleted 2026-09-06.
+(The tracked `frontend/presets/jta*/…_costs.json` files belong to Journey to
+Ascension's *own* cost system, read by `jtaGameDataPanelUI.js`, not by this one.)
+
+Format of the block:
 ```json
 {
   "version": "1.0",
@@ -215,20 +223,30 @@ Format:
 }
 ```
 
-### Cost Generator
+### Who generates it
 
-The cost generator creates balanced cost data by simulating an actual playthrough of the sphere log using the real loop mechanics:
+Two engines produce cost data, and which one runs depends on where you are:
 
-1. Start at the start region with max mana
-2. For each location in sphere order:
-   - Find the path from start to the target location
-   - For each uncosted region in the path: assign `floor(currentMana / 2 / uncostedRegionsRemaining)`
-   - For the location (if uncosted): assign `floor(currentMana / 2)`
-   - Simulate executing the queued actions using actual loop mechanics
-   - Reset the loop, continue to the next location
-3. Assign default costs to any unvisited regions (use highest neighbor's cost) and locations (use highest existing location cost)
+| Engine | Runs | Writes |
+|---|---|---|
+| `shared/procgen/loopCostGenerator.js` (pure, headless) | the **procgen pipeline**, at compile time (`procgenPipelineEngine.js`, when `enableLoopMode && embedSphereLog`) | the `loop_costs` block into the generated `rules.json` |
+| `loopsCostDebugger/costPlanner.js` | the **runtime**: the Loops panel's Generate Costs button, and the auto-generate on entering loop mode | straight into the store |
 
-This produces costs that scale with the game's progression — early-sphere locations are cheap, late-sphere locations are expensive.
+Both walk the sphere log and assign costs that scale with the game's
+progression — early-sphere locations are cheap, late-sphere ones expensive.
+The shape of the walk: start at the start region with max mana; for each
+location in sphere order, path to it, split the remaining budget across the
+uncosted regions on the path, price the location, then reset the loop; finally
+fill any unvisited region/location from its neighbours.
+
+⚠ **They are not the same algorithm.** Over the same document they agree only on
+the start region and the first priced region. ⚖ The user ruled 2026-09-06 that
+the planner's model is the official one; unifying them into a single engine is
+the loop-costs ladder's next rung. See
+[the engine disambiguation](../developer/procgen/gotchas.md#two-loop-cost-engines-one-store).
+
+A third, "live" generator (`loops/costGenerator.js`) played the sphere log
+through the running loop engine. It had no callers and was deleted 2026-09-06.
 
 ### Fallback Costs
 

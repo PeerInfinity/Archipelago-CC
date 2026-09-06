@@ -355,40 +355,6 @@ describe('CostDataManager — tryLoadEmbedded path filtering', () => {
   });
 });
 
-describe('CostDataManager — tryLoadFromPreset', () => {
-  let mgr;
-  beforeEach(() => {
-    mgr = new CostDataManager();
-  });
-  afterEach(() => {
-    delete globalThis.fetch;
-  });
-
-  it('derives the costs path from the rules path', () => {
-    expect(mgr.getCostsPathFromRulesPath('presets/g/AP_X/AP_X_rules.json'))
-      .toBe('presets/g/AP_X/AP_X_costs.json');
-  });
-
-  it('loads when the preset directory has a costs.json next to it', async () => {
-    globalThis.fetch = vi.fn(async () => ({ ok: true, json: async () => validData() }));
-    const data = await mgr.tryLoadFromPreset('presets/g/AP_X/AP_X_rules.json');
-    expect(data).not.toBeNull();
-    expect(mgr.loadedFrom).toBe('presets/g/AP_X/AP_X_costs.json');
-  });
-
-  it('returns null and stays unloaded when costs file is 404', async () => {
-    globalThis.fetch = vi.fn(async () => ({ ok: false, status: 404 }));
-    const result = await mgr.tryLoadFromPreset('presets/g/AP_X/AP_X_rules.json');
-    expect(result).toBeNull();
-    expect(mgr.isLoaded()).toBe(false);
-  });
-
-  it('returns null when fetch throws', async () => {
-    globalThis.fetch = vi.fn(async () => { throw new Error('boom'); });
-    expect(await mgr.tryLoadFromPreset('presets/g/AP_X/AP_X_rules.json')).toBeNull();
-  });
-});
-
 describe('CostDataManager — clear / exportToJSON', () => {
   let mgr, bus;
   beforeEach(() => {
@@ -410,13 +376,6 @@ describe('CostDataManager — clear / exportToJSON', () => {
     const text = mgr.exportToJSON();
     expect(typeof text).toBe('string');
     expect(JSON.parse(text)).toMatchObject({ regions: { Forest: { moveCost: 30 } } });
-  });
-
-  it('getCostDataForSaving bundles path/filename/content', () => {
-    const out = mgr.getCostDataForSaving('presets/g/AP_X/AP_X_rules.json');
-    expect(out.path).toBe('presets/g/AP_X/AP_X_costs.json');
-    expect(out.filename).toBe('AP_X_costs.json');
-    expect(JSON.parse(out.content)).toMatchObject({ regions: { Forest: { moveCost: 30 } } });
   });
 });
 

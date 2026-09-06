@@ -5,10 +5,13 @@
  * Cost data contains per-region and per-location mana costs used by the
  * queue analyzer and loop simulation.
  *
- * Cost data can be:
- * - Generated from sphere logs using CostGenerator
- * - Loaded from pre-generated JSON files
- * - Cached in memory for performance
+ * Cost data reaches this store from:
+ * - the `loop_costs` block embedded in a procgen `rules.json` (written at
+ *   compile time by the pure `shared/procgen/loopCostGenerator.js`)
+ * - `loopsCostDebugger/costPlanner.js`, which is what the runtime runs for the
+ *   Loops panel's Generate Costs and for the auto-generate on entering loop mode
+ * - a URL or a user-picked file (`loadFromURL` / `loadFromFile`)
+ * and is cached in memory for performance.
  */
 
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
@@ -479,115 +482,6 @@ export class CostDataManager {
       return null;
     }
     return JSON.stringify(this.costData, null, 2);
-  }
-
-  /**
-   * Download cost data as a file
-   * @param {string} filename - Name for the downloaded file
-   */
-  downloadCostData(filename = 'costs.json') {
-    const json = this.exportToJSON();
-    if (!json) {
-      logger.warn('No cost data to download');
-      return;
-    }
-
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-
-    setTimeout(() => {
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }, 0);
-
-    logger.info(`Cost data downloaded as ${filename}`);
-  }
-
-  /**
-   * Derive the costs file path from a rules file path
-   * @param {string} rulesPath - Path to the rules.json file
-   * @returns {string} Path to the corresponding costs.json file
-   */
-  getCostsPathFromRulesPath(rulesPath) {
-    // Rules path: presets/game/AP_SEED/AP_SEED_rules.json
-    // Costs path: presets/game/AP_SEED/AP_SEED_costs.json
-    return rulesPath.replace('_rules.json', '_costs.json');
-  }
-
-  /**
-   * Try to load existing costs from the preset directory
-   * @param {string} rulesPath - Path to the rules.json file
-   * @returns {Object|null} Loaded cost data or null if not found
-   */
-  async tryLoadFromPreset(rulesPath) {
-    const costsPath = this.getCostsPathFromRulesPath(rulesPath);
-
-    try {
-      logger.info(`Checking for existing costs file: ${costsPath}`);
-      const response = await fetch(costsPath);
-
-      if (response.ok) {
-        const data = await response.json();
-        if (this._validateCostData(data)) {
-          this.costData = data;
-          this.loadedFrom = costsPath;
-          this.loadedAt = new Date().toISOString();
-
-          logger.info(`Loaded existing costs: ${Object.keys(data.regions || {}).length} regions, ${Object.keys(data.locations || {}).length} locations`);
-
-          this.eventBus?.publish('costDataManager:loaded', {
-            source: costsPath,
-            regionCount: Object.keys(data.regions || {}).length,
-            locationCount: Object.keys(data.locations || {}).length,
-            fromExisting: true,
-          });
-
-          return data;
-        }
-      }
-
-      logger.info(`No existing costs file found at ${costsPath}`);
-      return null;
-    } catch (error) {
-      logger.debug(`Could not load costs from ${costsPath}: ${error.message}`);
-      return null;
-    }
-  }
-
-  /**
-   * Save cost data to a file path (for use in Node.js/test environments)
-   * In browser context, this triggers a download with the appropriate filename
-   * @param {string} rulesPath - Path to the rules.json file (used to derive costs path)
-   * @returns {string} The path where costs should be saved
-   */
-  saveCostsToPreset(rulesPath) {
-    const costsPath = this.getCostsPathFromRulesPath(rulesPath);
-    const filename = costsPath.split('/').pop();
-
-    // In browser context, trigger download with the correct filename
-    this.downloadCostData(filename);
-
-    logger.info(`Cost data should be saved to: ${costsPath}`);
-    return costsPath;
-  }
-
-  /**
-   * Get cost data as a JSON string for external saving
-   * @returns {Object} Object with path and content for saving
-   */
-  getCostDataForSaving(rulesPath) {
-    const costsPath = this.getCostsPathFromRulesPath(rulesPath);
-    return {
-      path: costsPath,
-      content: this.exportToJSON(),
-      filename: costsPath.split('/').pop(),
-    };
   }
 }
 
