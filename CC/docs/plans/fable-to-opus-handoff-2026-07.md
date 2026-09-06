@@ -11807,6 +11807,29 @@ is EMPTY while the planner prices its two maze regions 16 and 21 — a person ca
 pressing Send, which is a fixture regeneration by hand and probably wants to be a scripted one.
 NEXT after L4: **M1** waits on its design conversation; **R1** (the marking tool) still owed; L6 optional.
 
+**L4 VERIFIED by the planner 2026-09-06** (`82ed0b9323`; 9 commits by path; three op-returning doors; the veto on the
+editor-op path (`_acceptEditorOp` answers `{accepted, applied, errors}`); `sendCostsRefusal` + its unit file; the
+row in the substrates config; `rules.schema.json` UNTOUCHED; CI @ `4485be996a` run 34063989032 **436/13303, 0
+failed**, +1 file / +10 rows derived and matched). ⚑ L4's finding reaches past this ladder: **the hub's editor-op
+path never read the schema** — the veto lived only on the raw block editor's Save, so the `region_atlas` door's
+Save had bypassed it since H5; two docblocks claimed it from intent (memory `feedback_header_warning_is_not_a_check`).
+The `loop_costs` schema is TYPE-ONLY (accepts a moveCost on a summary region, a missing `defaultRegionXpEffect`, an
+entry for a NATIVE region, `xpEffect: "banana"`) — reported, not changed. Validation matrix: 7 documents, 0 errors
+added by any planner block.
+
+**⛓ THE LOOP-COSTS CODED LADDER IS DONE — 2026-09-06.** L1 → L5 → L2 → (adoption + L3) → L4, five Opus sessions,
+every delta derived before its CI run and matched; L5b dropped by ⚖. What the arc leaves: ONE algorithm
+(`shared/procgen/loopCostPlanner.js`, write-by-class), five exported constants (`loopCostDefaults.js`, 13 readers),
+the debugger as its inspector + write-back door, `check-loop-costs-one-model` in CI (the first of the 50 boxed
+gates; measured 0.2 s), omsi live play honouring the game's Start/Pause, the dead generator and stale rows gone.
+**⚖ OPEN for the user (L4's four):** (1) tighten `loop_costs` in the schema (enum on `xpEffect`, required roots —
+NOT "exactly one" of moveCost/timeDrain); (2) `onSave` applies into whatever document the hub has open NOW
+(arc-wide; needs a document identity); (3) the presence switch as an editor action (`set-key loop_costs` with
+`undefined` = remove); (4) the omsi fixture's empty maze block belongs in `scripts/test/generate-*-preset.mjs`.
+**Field:** M1 (menu panel, design conversation first; two vacuous loops rows ride with it), L6 optional
+(bot-measured mode), R1 (marking tool) owed, the `test` mode's one-row hanging roster, `costDataManager
+.exportToJSON()` 0 callers. Nothing launched.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
