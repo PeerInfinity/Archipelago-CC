@@ -19,7 +19,8 @@
  * What it asserts:
  *   1. Loop mode disabled → moving OUT of a non-mana region (Menu)
  *      charges nothing.
- *   2. Moving OUT of AdventureZone charges the region move cost (50)
+ *   2. Moving OUT of AdventureZone charges the region move cost
+ *      (DEFAULT_REGION_COST, 50 today)
  *      and awards 1:1 XP to AdventureZone.
  *   3. With mana below the move cost, departing AdventureZone
  *      depletes the pool → loop reset fires (count +1, mana refilled)
@@ -32,6 +33,11 @@
  */
 import { chromium } from 'playwright';
 import { takeBoxLockOrExit } from './boxLock.js';
+// ⚖ 2026-09-06 — the move cost this leg charges is the block's ROOT default,
+// and that is an exported constant, not a number to type here. The fixture's
+// `loop_costs` is a deliberately EMPTY block (presence = loop mode on), so
+// `defaultRegionCost` IS the whole economy AdventureZone has.
+import { DEFAULT_REGION_COST } from '../../frontend/modules/shared/procgen/loopCostGenerator.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
@@ -136,17 +142,20 @@ try {
     const manaStart = (await gameState()).currentMana;
 
     // 1. AdventureZone → Menu: departing the manaEnabled TA region
-    //    charges the region move cost (default 50 at XP level 0) and
+    //    charges the region move cost (DEFAULT_REGION_COST at XP level 0) and
     //    awards 1:1 XP.
     await dispatchMove('AdventureZone', 'Menu');
     await waitFor('player on Menu', async () => (await gameState()).currentRegion === 'Menu');
     s = await gameState();
     const charged = manaStart - s.currentMana;
-    if (charged !== 50) fail(`expected 50 mana charged departing AdventureZone, got ${charged}`);
-    if ((s.adventureXP?.xp ?? 0) !== 50) {
-        fail(`expected 50 XP on AdventureZone, got ${JSON.stringify(s.adventureXP)}`);
+    if (charged !== DEFAULT_REGION_COST) {
+        fail(`expected ${DEFAULT_REGION_COST} mana charged departing AdventureZone, got ${charged}`);
     }
-    console.log('PASS 1: depart charge 50 + 1:1 XP');
+    if ((s.adventureXP?.xp ?? 0) !== DEFAULT_REGION_COST) {
+        fail(`expected ${DEFAULT_REGION_COST} XP on AdventureZone, `
+            + `got ${JSON.stringify(s.adventureXP)}`);
+    }
+    console.log(`PASS 1: depart charge ${DEFAULT_REGION_COST} + 1:1 XP`);
 
     // 2. Menu → AdventureZone: departing a NON-mana region charges nothing.
     const manaAtMenu = s.currentMana;
@@ -158,13 +167,16 @@ try {
     }
     console.log('PASS 2: no charge departing non-mana region');
 
-    // 3. Depletion: mana now sits at 50 — exactly the next depart's
+    // 3. Depletion: mana now sits at DEFAULT_REGION_COST — exactly the next depart's
     //    cost (still XP level 0). Departing AdventureZone drains to 0
     //    → the leg fires the loop reset (count +1, refill to max) and
     //    teleports the player to the resolved start region, overriding
     //    the Menu move.
     const before = await gameState();
-    if (before.currentMana !== 50) fail(`expected 50 mana before depletion step, got ${before.currentMana}`);
+    if (before.currentMana !== DEFAULT_REGION_COST) {
+        fail(`expected ${DEFAULT_REGION_COST} mana before depletion step, `
+            + `got ${before.currentMana}`);
+    }
     await dispatchMove('AdventureZone', 'Menu');
     s = await waitFor('loop reset fired', async () => {
         const cur = await gameState();
