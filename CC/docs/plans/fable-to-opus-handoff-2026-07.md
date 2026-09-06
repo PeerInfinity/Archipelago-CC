@@ -11598,6 +11598,19 @@ field is WRITE-ONLY — the gate reads `importDoorEffectful`, never `counts` —
 so the stale integer is not later mistaken for a measurement.
 
 
+**⚖ RULED (user, 2026-09-06): "I authorize the push."** Pushed by the planner as ONE unit: `2e64b14839..2b57bf1bbd`
+(8 commits incl. the gitlink `fbfb5f04a6`, shared `4b78f33 → 1e7a1a5`). **L2 VERIFIED by the planner 2026-09-06:**
+tree and submodule level with their origins; `loopCostDefaults.js` (five constants) and
+`check-loop-costs-one-model.mjs` on disk; `costPlanner.js` 185 lines (a subclass of the shared core); help gate
+ALL PASS 266 at the final head; **CI @ `2b57bf1bbd` run 34056697169 435/13293, 0 failed — matched L2's
+derivation (+12 rows, ±0 files) exactly.** Lesson recorded (memory
+`feedback_submodule_export_slice_cannot_split_push_from_gitlink`): a HEAD-measuring gate sees the GITLINK, so a
+submodule-export slice pushes outer code and pointer as one ask-first unit. L2 overturned the brief's
+classification rule — maze IS a mana declarer; the discriminator is `sharing.mana.loopActionDelegation` (jta,
+omsi), and the recorder test excludes text_adventure — proved by mutant before the right rule was chosen.
+Consequence for the product: the loops panel's Generate Costs now stamps exactly the block the pipeline embeds.
+Three slices this session (L1, L5, L2) ⇒ the planner checks in with the user before L5b / L3 / L4 / M1.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
