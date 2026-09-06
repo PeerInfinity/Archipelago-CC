@@ -142,6 +142,25 @@ const REGION_ATLAS_PRESET_PATH = './presets/seedling_playthrough/AP_1/AP_1_rules
 /** ⛓ H5 — carries `loop_costs` AND its own embedded `sphere_log`. */
 const LOOP_COSTS_PRESET_PATH =
     './presets/jta_schedule_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+/**
+ * ⛓⛓ L4 — the WRITE-BACK's document, and it is not the one above.
+ *
+ * ⛔ Measured over the corpus: TWELVE presets carry `loop_costs` and an embedded
+ * `sphere_log`, and the ten TRACKED ones all carry an EMPTY block. Of those,
+ * `jta_schedule_test`'s three regions are all NATIVE, so a plan sent into it
+ * writes exactly one entry — `Menu`, at `moveCost: 0`. That would make "an empty
+ * block became a priced one" true of a zero, which is the weakest possible form
+ * of the claim.
+ *
+ * `omsi_substrate_test` is the document where both halves are real: its
+ * `region_0_0` / `region_1_0` are MAZE (coarse-classed, so the block carries
+ * their `moveCost`) and its `region_1_1` is omsi (NATIVE, so the block carries
+ * nothing for it) — L3 measured 16 and 21 against a stored 50, which is the
+ * finding that motivated this door. So the write-back must ADD non-zero prices
+ * AND leave the native region out, in one document.
+ */
+const LOOP_COSTS_WRITEBACK_PRESET_PATH =
+    './presets/omsi_substrate_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 
 /**
  * Load the preset, raise the panel, and hand back its live instance.
@@ -2447,6 +2466,192 @@ export async function apworldLoopCostsPanelSaysWhichNumbersTheBlockCarries(testC
 }
 
 /**
+ * ⛓⛓⛓ **L4 — THE WRITE-BACK: an EMPTY block becomes a PRICED one, as ONE op,
+ * and one Undo takes it back out.**
+ *
+ * ⚖ (user, 2026-09-06) *"the debugger's plan comes back as ONE op"*. This is the
+ * whole gesture, end to end, through the controls a person presses: the hub's
+ * `loop_costs` door → the debugger's Load and Plan All → its "Send costs to the
+ * document" → the hub's own Undo.
+ *
+ * ⛔ **THE DOCUMENT IS `omsi_substrate_test` AND THAT IS THE MEASUREMENT.** Its
+ * committed block is one of the ten empty ones; its two MAZE regions are
+ * coarse-classed, so the block must gain their real prices; its omsi region is
+ * NATIVE, so the block must NOT gain an entry for it. A document whose regions
+ * were all native would make "it became priced" true of a single zero.
+ *
+ * ⛔ **AND THE VETO IS DRIVEN AT THE SEAM.** L4 measured that the schema veto
+ * was NOT on the editor-op path at all — it lived in `_applySetKey`, the raw
+ * JSON block editor's method — so `region_atlas`'s save had been bypassing it
+ * since H5. The last claim hands `_acceptEditorOp` a type-broken block and
+ * asserts it is REFUSED with the schema's own path, and that the document did
+ * not move. ⚠ It is called directly on purpose: `_acceptEditorOp` IS the
+ * subject there, the panel has no vitest file, and no planner produces a
+ * type-broken block for the button to send.
+ */
+export async function apworldLoopCostsSendWritesThePlanAsOneOp(testController) {
+    try {
+        const panel = await openHub(testController, LOOP_COSTS_WRITEBACK_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        selectTab(panel, 'document');
+
+        // ⛓ ⚖ (f) — the row says the switch, and it says it whether or not the
+        //   block prices anything (this one prices nothing yet).
+        const switchLine = await testController.pollForValue(
+            () => document.querySelector(
+                `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="loop_costs"] `
+                + '.apworld-loop-costs-switch'),
+            'the loop_costs row\'s loop-mode sentence',
+            8000,
+            50,
+        );
+        testController.reportCondition(
+            'the loop_costs row says the block\'s presence enables loop mode', !!switchLine);
+        testController.assertEqual(
+            'and it says it as the SWITCH it is, not as a cost fact',
+            'true',
+            String(!!switchLine && switchLine.textContent.includes('enables loop mode')));
+
+        // ⛔ The premise, READ off the document rather than typed: an empty block.
+        const worldRegions = Object.keys(panel.rulesDoc.regions[panel.playerId] ?? {}).length;
+        testController.assertEqual(
+            'the committed block prices NOTHING before the send',
+            '0', String(Object.keys(panel.rulesDoc.loop_costs?.regions ?? {}).length));
+
+        await pressDocumentKeyEditor(testController, panel, 'loop_costs');
+
+        const status = await testController.pollForValue(
+            () => {
+                const el = document.querySelector('.cost-debugger-panel .cd-status');
+                return el && el.textContent.includes('[working copy') ? el : null;
+            },
+            'the cost debugger, planning the working copy',
+            8000,
+            50,
+        );
+        testController.reportCondition('the debugger adopted the working copy', !!status);
+        if (!status) return testController.getOverallResult();
+
+        /**
+         * ⛓⛓ **SHOWN AND DISABLED, WITH THE REASON** — before anything is
+         * planned. A hidden button here and a hidden button on applied state
+         * would be the same thing on screen and two different facts.
+         */
+        const send = document.querySelector('.cost-debugger-panel .cd-btn-send');
+        testController.reportCondition('the Send control is offered on a working copy',
+            !!send && send.style.display !== 'none');
+        if (!send) return testController.getOverallResult();
+        testController.assertEqual(
+            'and it is DISABLED before a plan exists', 'true', String(send.disabled));
+        testController.assertEqual(
+            'with the reason in its title rather than nothing at all',
+            'true', String((send.title || '').length > 20));
+
+        const press = (sel) => {
+            const btn = document.querySelector(`.cost-debugger-panel ${sel}`);
+            if (btn) btn.click();
+            return !!btn;
+        };
+        testController.reportCondition('Load pressed', press('.cd-btn-load'));
+        await testController.pollForCondition(
+            () => !!document.querySelector('.cost-debugger-panel .cd-btn-plan-all:not([disabled])'),
+            'the planner accepted the document\'s own sphere log', 8000, 50);
+        testController.reportCondition('Plan All pressed', press('.cd-btn-plan-all'));
+        await testController.pollForCondition(
+            () => !document.querySelector('.cost-debugger-panel .cd-btn-send')?.disabled,
+            'Send becomes pressable once the plan is complete', 8000, 50);
+
+        const opsBefore = panel.session.ops().length;
+        testController.reportCondition('Send pressed', press('.cd-btn-send'));
+
+        /**
+         * ⛓⛓⛓ **THE CLAIM: the HUB's document, not the panel's own readout.**
+         * A panel that reported success while writing nowhere is exactly the
+         * failure this row exists to catch.
+         */
+        const after = panel.rulesDoc.loop_costs ?? {};
+        const pricedNames = Object.keys(after.regions ?? {});
+        testController.assertEqual(
+            'the working copy\'s block is priced now, and NOT for every region '
+            + '(the omsi region runs its own economy)',
+            'true',
+            String(pricedNames.length > 1 && pricedNames.length < worldRegions));
+        // ⛓ Real prices, not a row of zeroes: at least one entry carries a
+        //   non-zero moveCost. (The start region's 0 is a rule, not a price.)
+        testController.assertEqual(
+            'and at least one of them carries a non-zero cost',
+            'true',
+            String(Object.values(after.regions ?? {})
+                .some((e) => Number(e?.moveCost) > 0)));
+        testController.assertEqual(
+            'it was exactly ONE op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        testController.assertEqual(
+            'and that op is a document-scope set-key on loop_costs',
+            'set-key|loop_costs|document',
+            [panel.session.ops().at(-1).op, panel.session.ops().at(-1).key,
+                panel.session.ops().at(-1).scope].join('|'));
+        // ⛓ Provenance names the DOOR, never a path this unsaved document lacks.
+        testController.assertEqual(
+            'the block records where it came from, by door name',
+            'the APWorld editor', String(after.generatedFrom));
+
+        testController.assertEqual(
+            'the debugger says what happened, including the loop-mode consequence',
+            'true',
+            String(status.textContent.includes('Sent to the document')
+                && status.textContent.includes('loop mode')));
+
+        /**
+         * ⛓⛓ **ONE UNDO TAKES THE WHOLE PLAN BACK OUT** — proven, not assumed:
+         * `_applyOp` records it in the session's op list like any other edit, so
+         * the fold over the shorter list must reproduce the EMPTY block.
+         */
+        const undoButton = document.querySelector(`${PANEL_SELECTOR} .apworld-undo`);
+        testController.reportCondition('the hub\'s Undo control is present', !!undoButton);
+        undoButton.click();
+        testController.assertEqual(
+            'undo restored the EMPTY block rather than deleting the key',
+            'true',
+            String(!!panel.rulesDoc.loop_costs
+                && Object.keys(panel.rulesDoc.loop_costs.regions ?? {}).length === 0));
+        testController.assertEqual(
+            'and the op list is back where it started',
+            String(opsBefore), String(panel.session.ops().length));
+
+        /**
+         * ⛔⛔ **THE VETO, MADE ASKABLE.** `locations` values are NUMBERS in the
+         * schema, so a block naming an object there is the one shape a
+         * `loop_costs` write can get wrong that the schema can see. It must be
+         * refused BEFORE the session, with the schema's own path.
+         */
+        const opsAtVeto = panel.session.ops().length;
+        const verdict = panel._acceptEditorOp('loop_costs', {
+            op: 'set-key',
+            key: 'loop_costs',
+            value: { regions: {}, locations: { 'Some Location': { cost: 10 } } },
+            scope: 'document',
+        });
+        testController.assertEqual(
+            'the schema REFUSES a block whose location cost is not a number',
+            'false', String(!!verdict?.accepted));
+        testController.assertEqual(
+            'and it says WHERE, in the schema\'s own path',
+            'true',
+            String((verdict?.errors ?? []).some((e) => e.includes('loop_costs.locations'))));
+        testController.assertEqual(
+            'the refused op never reached the session',
+            String(opsAtVeto), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('loop_costs write-back test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
  * ⛓⛓⛓ **⚖ *"even if the current rules.json file doesn't contain any relevant
  * data for them"*.** A document with NO `region_atlas` must still carry that
  * block's row in the Links tab — through the SAME registry entry the Document
@@ -2567,6 +2772,24 @@ registerTest({
                + 'that the summary line names the one engine (loopCostPlanner) and the world '
                + 'it was pointed at. Mutant: a panel that prices a NATIVE region reds it.',
     testFunction: apworldLoopCostsPanelSaysWhichNumbersTheBlockCarries,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-loop-costs-send-writes-the-plan-as-one-op',
+    name: 'APWorld hub: Send costs writes the plan into the working copy as ONE undoable op',
+    description: 'On omsi_substrate_test — whose committed loop_costs block is EMPTY, whose two '
+               + 'maze regions are coarse-classed and whose omsi region is NATIVE — presses the '
+               + 'loop_costs door, plans the handed-over working copy, and presses "Send costs '
+               + 'to the document". Asserts the row states the loop-mode switch; that Send is '
+               + 'shown-and-disabled with a reason before a plan exists; that the HUB\'s '
+               + 'document gains real prices for some but not all regions, as exactly ONE '
+               + 'document-scope `set-key loop_costs` whose `generatedFrom` names the door; that '
+               + 'one Undo restores the EMPTY block; and that the hub\'s schema veto REFUSES a '
+               + 'block whose location cost is not a number, naming the path, without the op '
+               + 'reaching the session.',
+    testFunction: apworldLoopCostsSendWritesThePlanAsOneOp,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

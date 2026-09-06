@@ -485,6 +485,12 @@
             "_comment": "Loop-costs L3. \u2696 (i) the walk prices EVERY region as coarse because that is how the numbers are derived; writeCostsByClass then drops the ones no block should carry. jta_schedule_test separates them: all three regions are NATIVE, so the block holds 1 of 4 regions and 0 of 23 locations while the plan behind it says 50/35/26 and 100/70/52. Before L3 the panel printed those as prices (cost=100 on a location the block does not price) and Verify scored the runtime 1/32 within tolerance for charging nothing, which was the design. Mutant: _pricingOf returning {priced:true} for NATIVE reds this row and nothing else."
         },
         {
+            "id": "apworld-loop-costs-send-writes-the-plan-as-one-op",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "Loop-costs L4. \u2696 (user, 2026-09-06) 'the debugger's plan comes back as ONE op'. Driven on omsi_substrate_test because that is the only shape where both halves are real: its committed block is EMPTY (all ten tracked carriers are), its two maze regions are coarse-classed so the block must gain their real prices (L3 measured 16 and 21 against a stored 50), and its omsi region is NATIVE so it must gain nothing. jta_schedule_test would have made 'it became priced' true of one zero. The row also drives the SCHEMA VETO at _acceptEditorOp \u2014 L4 measured it was not on the editor-op path at all (it lived in _applySetKey, the raw-JSON editor's method), so region_atlas's save had been bypassing it since H5. \u26a0 The loop_costs schema is TYPE-only: it refuses a location cost that is not a number, and accepts every semantic error write-by-class is about (a moveCost on a summary region, a missing defaultRegionXpEffect, an entry for a native region) \u2014 reported, not fixed here."
+        },
+        {
             "id": "apworld-links-tab-reaches-an-editor-with-no-data",
             "enabled": true,
             "category": "apworldEditor",
