@@ -1561,3 +1561,21 @@ baselines against `76295b9aa3` — `ef2f40efe` (the APWorld hub arc's `436/13,30
 (V3a's own row) — so the numbers are comparable, and the only movement is the tests this slice wrote.
 ⛓ The CI run is `success`, which is also the first evidence that the 49 newly adopted gates did NOT
 reach the shards: a run that had picked them up would have published 51 gate jobs.
+
+## ⛓⛓⛓ AND THE PARTITION WAS CONFIRMED BY THE RUNNER, NOT ONLY BY THE PLANNER
+
+`gh run view 33999690283 --json jobs` at the pushed head — the jobs the workflow actually created:
+
+```
+success    Browser gates (shard plan)
+success    JavaScript Unit Tests (Vitest)
+success    Browser gate shard — seedling-wasm-element                     (1 arm)
+success    Browser gate shard — maze-lab +14                             (15 arms)
+success    Browser gate shard — producer: plan-seedling-r7-ends-meet +8   (9 arms)
+```
+
+**Three browser shards of 1 / 15 / 9 — the pre-rename partition, arm for arm.** ⛔ This is the row
+that matters, and it is a different measurement from `ci-gates --plan`: the plan is what THIS box
+computes, the jobs are what the runner built from the plan it computed at that SHA. A `@ci-box` that
+this box read and the runner did not would have shown up here as thirty shards, and nothing local
+could have told us.
