@@ -11483,6 +11483,19 @@ STUCK for a STARVED shape (`testLogic.js`, named). **⚖ NEW for the user: jta h
 "loop paused", `_syncEnergyFromPool` is the host-owned clock) — untouched; same rule as a small slice, or leave?
 NEXT = L2 (the third slice — the planner checks in with the user before launching, per the between-slices rule).
 
+**⚖ RULED (user, 2026-09-06):** *"The L2 plan looks good. I also want to apply the same pause fix to jta. You can
+decide when to schedule that."* ⇒ **L5b** (jta's own pause control gates its host-owned clock, the L5 rule) is
+scheduled by the planner AFTER L2 and BEFORE L3 — L2 is the critical path; L5b is bridge-side, one session.
+**L2 LAUNCHED 2026-09-06** as `loop-costs-L2` (Opus; kickoff `NewDocs/plans/loop-costs-L2-prompt.md`; on L5's
+idle notice): constants first (`DEFAULT_REGION_COST` 50, `DEFAULT_LOCATION_COST` 10, `DEFAULT_EXPLORE_MULTIPLIER`
+2, exported from the shared module and imported by every hardcoded site — six measured, incl. L1's `loopStats`
+table and `loopUI.js:2366-2374`); then the planner's pure core into `shared/procgen/` behind a topology adapter
+(rulesJson OR static data), `xpFormulas.js` moved in with a re-export shim, the old generator algorithm deleted;
+WRITE BY CLASS (coarse/maze numbers; mana-declarers nothing; summary drain + explicit pass-through); the
+side-by-side script promoted to `check-loop-costs-one-model.mjs`; the two untracked maze fixtures regenerated and
+three instruments' pins RE-DERIVED (no committed artifact moves); docs. Submodule pushed first; **the outer
+gitlink bump COMMITTED, NOT PUSHED — ask-first at its close.** Reports come to `next-priorities-planning-2`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
