@@ -3,12 +3,43 @@
  *
  * GoldenLayout panel component that displays step-by-step
  * cost generation reasoning. Each step = one action queue (one loop).
+ *
+ * ── ⚖ WHAT THIS PANEL IS, AFTER 2026-09-06 ────────────────────────────
+ *
+ * ⚖ The user ruled it: **the debugger is the INSPECTOR of the one cost
+ * algorithm, not a model of its own.** There is exactly one engine —
+ * `shared/procgen/loopCostPlanner.js` — with two drivers (this panel, through
+ * `loopsCostDebugger/costPlanner.js`; and the Loops panel's Generate Costs)
+ * and a third caller (the procgen pipeline's `generateLoopCosts`).
+ * `scripts/procgen/check-loop-costs-one-model.mjs` is the standing proof that
+ * the block this panel stamps is byte-for-byte the block the pipeline embeds.
+ *
+ * ⛔ **THE PLAN IS NOT THE BLOCK, AND THIS PANEL HAS TO SAY SO.** ⚖ (i) — the
+ * simulation walks EVERY region as if it were coarse, because that is how the
+ * numbers are derived at all; `writeCostsByClass` then decides what reaches
+ * the block, per the region's substrate:
+ *
+ *   COARSE   a `moveCost` and its locations' costs — the numbers are the price.
+ *   NATIVE   nothing (jta, omsi). The substrate runs its own mana economy.
+ *   SUMMARY  a drain per second only (runner, bounce), plus whatever the input
+ *            block named explicitly.
+ *
+ * A readout that printed the simulation's 50 for a NATIVE region would be
+ * stating a price nothing charges. So every cost this panel renders is
+ * labelled by its region's CLASS — and, separately, by its CAPTURE SHAPE,
+ * which is who charges at RUN TIME and is not the same question: maze is
+ * COARSE (the block carries its `moveCost`) and FINE (the maze panel divides
+ * that cost per tile and charges it natively, so the loop QUEUE charges
+ * nothing).
  */
 
 import {
   getCostPlanner, getModuleEventBus, getSphereLog,
   consumePendingWorkingCopy, LOOPS_COST_DEBUGGER_LOAD_RULES,
 } from './index.js';
+import {
+  classifyRegions, REGION_CLASS,
+} from '../shared/procgen/loopCostGenerator.js';
 import {
   documentStateManager, documentPlayerId, documentSphereLog,
 } from './documentStateManager.js';
@@ -117,6 +148,10 @@ export class CostDebuggerUI {
         <span class="cd-summary-item">
           <span class="cd-summary-label">Locations:</span>
           <span class="cd-summary-value cd-summary-locations">0</span>
+        </span>
+        <span class="cd-summary-item" title="There is ONE cost engine: shared/procgen/loopCostPlanner.js. This panel and the Loops panel's Generate Costs are two drivers of it, and the procgen pipeline's generateLoopCosts is a third caller — scripts/procgen/check-loop-costs-one-model.mjs is the standing proof that they produce the same block. The second half of this line is WHICH WORLD these numbers describe.">
+          <span class="cd-summary-label">Engine:</span>
+          <span class="cd-summary-value cd-summary-engine">loopCostPlanner \u00b7 applied state</span>
         </span>
       </div>
     `;
@@ -377,6 +412,29 @@ export class CostDebuggerUI {
     this._verifyCancelled = false;
     this._updateButtons();
 
+    /**
+     * ⛓ Built once for the whole run: `classifyRegions` walks the topology and
+     * the shape resolver holds ONE `getPublicFunction` call. The topology
+     * cannot change mid-verify — every button is disabled while it runs.
+     */
+    const ctx = this._pricingContext();
+
+    /**
+     * ⚠ Verify drives the APP'S live loop state and gameState. With a working
+     * copy adopted, the plan describes a document the app is not holding, so
+     * this replays the plan's steps against the APPLIED world — right when the
+     * two are the same document (the ordinary hub hand-off) and meaningless
+     * when they are not. Said out loud rather than refused: refusing would
+     * break the case that works.
+     */
+    if (this._workingCopy) {
+      this._setWarnings([{
+        severity: 'warn',
+        text: 'Verify replays these steps through the APPLIED world, not the working copy — '
+            + 'the comparison is only meaningful while the two are the same document.',
+      }]);
+    }
+
     // Save current settings to restore after verification
     const savedInstantMode = loopState.instantMode;
     const savedNoManaReset = gameState.noManaDepletionReset;
@@ -438,7 +496,8 @@ export class CostDebuggerUI {
         // Execute queue actions directly, awaiting each checkLocation to avoid
         // flooding the worker. loopState.startProcessing() fires all actions in
         // one frame (instant mode), which overwhelms the worker command queue.
-        await this._executeStepDirect(loopState, step.queue);
+        const split = this._queueChargeSplit(step, ctx);
+        await this._executeStepDirect(loopState, step.queue, ctx);
 
         // Record state after
         const manaAfter = gameState.currentMana;
@@ -471,7 +530,21 @@ export class CostDebuggerUI {
             manaConsumed: step.simulatedResults.manaConsumed,
             manaRemaining: step.simulatedResults.manaRemaining,
             maxMana: step.stateAfter.maxMana,
+            // ⛓ the part of the prediction the QUEUE is answerable for — the
+            //   only part a replay through the queue can confirm or refute.
+            queueCharged: split.charged,
           },
+          /**
+           * ⛔ A step is COMPARABLE only when the queue bills all of it. A jta
+           * or omsi step (own economy) and a runner or bounce step (time-
+           * priced) are replayed and REPORTED, never scored: the runtime is
+           * correct to charge nothing there, and scoring it would turn the
+           * design into a permanent red.
+           */
+          comparable: split.uncharged === 0,
+          // the simulated spend in regions the block leaves unpriced
+          uncharged: split.uncharged,
+          unchargedReasons: split.reasons,
         });
 
         // Update UI after each step
@@ -486,10 +559,24 @@ export class CostDebuggerUI {
 
       // Final status
       const tolerance = 5;
-      const matched = this.verificationResults.filter(r =>
-        Math.abs(r.actual.manaConsumed - r.predicted.manaConsumed) <= tolerance
+      const comparable = this._comparableResults();
+      const matched = comparable.filter(r =>
+        Math.abs(r.actual.manaConsumed - r.predicted.queueCharged) <= tolerance
       ).length;
-      this._setStatus(`Verification complete: ${executableSteps.length} steps, ${matched}/${this.verificationResults.length} within tolerance`);
+      const notScored = this.verificationResults.length - comparable.length;
+      /**
+       * ⛔ `0/0 within tolerance` is not a sentence about anything. On a world
+       * whose regions are ALL priced by their own substrates (jta, omsi) there
+       * is nothing for a queue replay to score, and the panel says that
+       * instead of printing a ratio with an empty denominator.
+       */
+      this._setStatus(`Verification complete: ${executableSteps.length} steps`
+        + (comparable.length
+          ? `, ${matched}/${comparable.length} within tolerance`
+          : ' — the block prices none of them, so there is nothing to score')
+        + (notScored && comparable.length
+          ? `; ${notScored} unpriced by design (own economy / time-priced)`
+          : notScored ? ' (own economy / time-priced)' : ''));
 
     } catch (error) {
       console.error('[CostDebuggerUI] Verification error:', error);
@@ -604,15 +691,38 @@ export class CostDebuggerUI {
    * Processes actions sequentially, awaiting each checkLocation so the worker
    * is never flooded. Updates loopState mana/XP to match what _processFrame does.
    */
-  async _executeStepDirect(loopState, stepQueue) {
+  async _executeStepDirect(loopState, stepQueue, ctx = null) {
     const gameState = window.centralRegistry?.getPublicFunction?.('gameState', 'getState')?.();
     for (const action of stepQueue) {
-      // Calculate mana cost (same as loopState._processFrame in instant mode)
-      const actionCost = loopState._calculateActionCost({
+      const sourceRegionName = action.region || action.from;
+      const pricing = sourceRegionName && ctx
+        ? this._pricingOf(sourceRegionName, ctx) : null;
+      /**
+       * ⛔⛔ **A NATIVE REGION MUST BE CHARGED NOTHING HERE, BECAUSE THE
+       * RUNTIME CHARGES IT NOTHING.** `_calculateActionCost` has no `fine`
+       * branch — the runtime's shape test lives in its CALLERS
+       * (`observeParkedLiveAction`, `_handleManualWake_regionMove` and
+       * `_completeBotExecutedAction` each return early on 'fine'), so calling
+       * the pricing function on its own bills a jta region the STORE'S
+       * FALLBACK for a move nothing charges. Measured on `jta_schedule_test`:
+       * the block writes no entry for any of the three jta regions, so
+       * `getRegionCost` answered `defaultRegionCost` 50 and `getLocationCost`
+       * answered 10, and Verify scored the runtime wrong by up to **375.7
+       * mana** (omsi) — a permanent red that was the design working. Forcing 0
+       * is what makes "actual" the runtime's actual.
+       *
+       * ⚠ Two things are deliberately NOT forced:
+       *   SUMMARY — `_calculateActionCost`'s summary branch already answers
+       *     with the explicit cost or nothing, which is the runtime's own rule.
+       *   COARSE-classed FINE regions (maze) — the block carries the price and
+       *     the substrate charges exactly it, per tile; zeroing them would
+       *     throw away a comparison that measured 10/10 with delta 0.0.
+       */
+      const actionCost = pricing && pricing.cls === REGION_CLASS.NATIVE ? 0 : loopState._calculateActionCost({
         type: action.type === 'locationCheck' ? 'locationCheck'
             : action.type === 'move' ? 'regionMove'
             : 'customAction',
-        sourceRegion: action.region || action.from,
+        sourceRegion: sourceRegionName,
         destinationRegion: action.to,
         locationName: action.location,
         exitUsed: action.exitUsed,
@@ -651,6 +761,176 @@ export class CostDebuggerUI {
   _setStatus(text) {
     const statusEl = this.rootElement.querySelector('.cd-status');
     if (statusEl) statusEl.textContent = text;
+  }
+
+  // =========================================================================
+  // ⛓⛓⛓ PRICING CLASS — the two questions a cost readout has to answer
+  // =========================================================================
+
+  /**
+   * ⛓⛓ **THE PRICING CONTEXT — built ONCE per render pass, never per row.**
+   *
+   *   `classes`  region → `REGION_CLASS`, from the shared `classifyRegions`
+   *              over the PLANNER'S OWN topology: the same call `getCostData()`
+   *              makes, so the panel cannot disagree with the block it is
+   *              inspecting about which regions the block speaks for.
+   *   `shapeOf`  region → CAPTURE SHAPE, the runtime's answer, asked of the
+   *              runtime (`loopState.getSubstrateCaptureShape`). The substrate
+   *              id comes from the PLAN's topology and not the app's
+   *              `_lookupSubstrateId`: with a working copy adopted, the app is
+   *              holding a different world and its lookup answers 'coarse' for
+   *              every region of the document being planned.
+   *
+   * ⛔ **ONE `getPublicFunction` CALL PER RENDER, and that is not tidiness.**
+   * `centralRegistry.getPublicFunction` LOGS AN ERROR when the module is not up
+   * (measured on a cold page: five `Public function 'getLoopState' not found`
+   * lines before loops registers). A resolver called per region per row would
+   * turn that into a screenful and bury a real error next to it.
+   *
+   * ⛔ Nothing here is CACHED ACROSS renders: an adoption or a rules reload
+   * replaces the topology under the panel, and a cached map would label the new
+   * world with the old world's classes.
+   * @private
+   */
+  _pricingContext() {
+    const topology = getCostPlanner()?.getTopology?.();
+    let classes = new Map();
+    if (topology?.regions) {
+      try {
+        classes = classifyRegions(topology);
+      } catch { /* an unclassifiable topology means every region reads COARSE */ }
+    }
+
+    let ask = null;
+    try {
+      const loopState = centralRegistry.getPublicFunction('loops', 'getLoopState')?.();
+      if (typeof loopState?.getSubstrateCaptureShape === 'function') {
+        ask = (id) => loopState.getSubstrateCaptureShape(id);
+      }
+    } catch { /* loops not up — every region reads 'coarse', the safe direction */ }
+
+    const shapes = new Map();
+    const shapeOf = (regionName) => {
+      if (shapes.has(regionName)) return shapes.get(regionName);
+      const substrateId = topology?.regionSubstrates?.get?.(regionName) ?? null;
+      let shape = 'coarse';
+      if (substrateId && ask) {
+        try { shape = ask(substrateId) || 'coarse'; } catch { shape = 'coarse'; }
+      }
+      shapes.set(regionName, shape);
+      return shape;
+    };
+
+    return { classes, shapeOf, topology };
+  }
+
+  /**
+   * ⛓⛓ **WHAT ONE REGION'S NUMBERS MEAN**, in the one place every readout asks.
+   *
+   *   `cls`             what the BLOCK says about it (COARSE / NATIVE / SUMMARY).
+   *   `shape`           who CHARGES at run time (coarse / fine / summary).
+   *   `priced`          false ⇒ the block deliberately carries no cost for it,
+   *                     so the simulation's number is a step in deriving the
+   *                     OTHER regions' costs and not a price. A readout must
+   *                     NOT print it as one.
+   *   `chargedByQueue`  false ⇒ the loop queue takes nothing for it at run time;
+   *                     a substrate or a clock does the charging.
+   *   `label` / `why`   the phrase that replaces a number, and the sentence a
+   *                     person needs after reading it.
+   *
+   * ⚠ The two axes are NOT the same question and maze is why: it is COARSE (the
+   * block carries its `moveCost`) and FINE (`mazeRoomUI._perTileMoveCost`
+   * divides that cost by the room's longest shortest path and charges it
+   * natively, so the queue charges nothing).
+   * @private
+   */
+  _pricingOf(regionName, ctx) {
+    const cls = ctx.classes.get(regionName) ?? REGION_CLASS.COARSE;
+    const shape = ctx.shapeOf(regionName);
+    const chargedByQueue = shape === 'coarse';
+
+    if (cls === REGION_CLASS.NATIVE) {
+      return {
+        cls, shape, priced: false, chargedByQueue,
+        label: 'own economy',
+        why: 'this substrate runs its own mana economy, so the block writes no cost for '
+           + 'it and the loop queue charges nothing — the number beside it is a step in '
+           + 'deriving the other regions\' costs, not a price.',
+      };
+    }
+    if (cls === REGION_CLASS.SUMMARY) {
+      return {
+        cls, shape, priced: false, chargedByQueue,
+        label: 'time-priced',
+        why: 'a summary substrate is priced by how long a visit takes — the block writes '
+           + 'a drain per second and nothing else, and a per-action cost applies only '
+           + 'where the input block named one explicitly.',
+      };
+    }
+    if (!chargedByQueue) {
+      return {
+        cls, shape, priced: true, chargedByQueue,
+        label: 'per tile',
+        why: 'the block carries this region\'s moveCost and the substrate charges it '
+           + 'natively (maze divides it by the room\'s longest shortest path), so the '
+           + 'loop queue itself charges nothing for the visit.',
+      };
+    }
+    return { cls, shape, priced: true, chargedByQueue, label: null, why: null };
+  }
+
+  /** The region a planned location belongs to, per the plan's own topology. */
+  _regionOfLocation(locationName, ctx) {
+    return ctx.topology?.locations?.get?.(locationName)?.region ?? null;
+  }
+
+  /**
+   * The pricing that governs one cost assignment — a region row is about
+   * itself, a location row about the region that contains it.
+   * @private
+   */
+  _pricingOfAssignment(ca, ctx) {
+    const region = ca.type === 'region' ? ca.name : this._regionOfLocation(ca.name, ctx);
+    return region ? this._pricingOf(region, ctx) : null;
+  }
+
+  /**
+   * ⛓⛓ **HOW MUCH OF A PLANNED STEP THE BLOCK ACTUALLY PRICES.** Verify
+   * compares a prediction against a replay; where the block deliberately
+   * carries no cost, the replay has nothing to confirm and scoring it as a
+   * MISMATCH is the panel accusing the runtime of a bug that is the design.
+   *
+   * ⛔⛔ **THE SPLIT IS `priced`, NOT `chargedByQueue` — and the difference is
+   * MEASURED, not stylistic.** The first shape of this code excluded every
+   * region the QUEUE does not charge, which swallows maze: maze is FINE (its
+   * walker charges per tile) but COARSE-classed (the block carries its
+   * `moveCost`, and per-tile × longest-shortest-path is that same total). On
+   * `maze_loop_worldgen` that cost a real result — **10/10 within tolerance,
+   * max delta 0.0, became "none scored"**. Who charges is a presentational
+   * note (the queue's `Charged by` column); whether the BLOCK states a price
+   * is what decides if there is anything to verify.
+   * @private
+   */
+  _queueChargeSplit(step, ctx) {
+    let scored = 0;
+    let unscored = 0;
+    const reasons = new Map();
+    for (const q of step.queue || []) {
+      const region = q.region || q.from || null;
+      const pricing = region ? this._pricingOf(region, ctx) : null;
+      if (pricing && !pricing.priced) {
+        unscored += q.cost;
+        reasons.set(pricing.label, pricing.why);
+      } else {
+        scored += q.cost;
+      }
+    }
+    return { charged: scored, uncharged: unscored, reasons: [...reasons.entries()] };
+  }
+
+  /** The verification rows the queue actually bills — the only comparable ones. */
+  _comparableResults() {
+    return this.verificationResults.filter(r => r.comparable);
   }
 
   /**
@@ -781,10 +1061,16 @@ export class CostDebuggerUI {
 
     if (this.verificationResults.length > 0) {
       const tolerance = 5;
-      const matched = this.verificationResults.filter(r =>
-        Math.abs(r.actual.manaConsumed - r.predicted.manaConsumed) <= tolerance
+      const comparable = this._comparableResults();
+      const matched = comparable.filter(r =>
+        Math.abs(r.actual.manaConsumed - r.predicted.queueCharged) <= tolerance
       ).length;
-      this._setStatus(`${this._sourcePrefix()}${who} · Verified: ${this.verificationResults.length} steps, ${matched}/${this.verificationResults.length} within tolerance`);
+      const notScored = this.verificationResults.length - comparable.length;
+      this._setStatus(`${this._sourcePrefix()}${who} · Verified: ${this.verificationResults.length} steps`
+        + (comparable.length
+          ? `, ${matched}/${comparable.length} within tolerance`
+          : ' — the block prices none of them, nothing to score')
+        + (notScored && comparable.length ? `, ${notScored} unpriced by design` : ''));
     } else if (planner.isComplete()) {
       this._setStatus(`${this._sourcePrefix()}${who} · Complete: ${steps} loops, ${entries} entries`);
     } else {
@@ -859,23 +1145,57 @@ export class CostDebuggerUI {
       if (locationsLabel) locationsLabel.textContent = 'Max \u0394:';
 
       const tolerance = 5;
-      const matched = this.verificationResults.filter(r =>
-        Math.abs(r.actual.manaConsumed - r.predicted.manaConsumed) <= tolerance
+      const comparable = this._comparableResults();
+      const matched = comparable.filter(r =>
+        Math.abs(r.actual.manaConsumed - r.predicted.queueCharged) <= tolerance
       ).length;
-      if (regionsEl) regionsEl.textContent = `${matched}/${this.verificationResults.length}`;
+      if (regionsEl) {
+        // ⛔ `0/0` claims a ratio there is no denominator for.
+        regionsEl.textContent = comparable.length
+          ? `${matched}/${comparable.length}` : 'none scored';
+        regionsEl.title = 'steps whose replayed spend matched the part of the prediction the '
+          + 'BLOCK states a price for; a step in a region the block leaves unpriced by design '
+          + '(own economy, time-priced) is replayed and reported but never scored';
+      }
 
-      const maxDelta = this.verificationResults.length > 0
-        ? Math.max(...this.verificationResults.map(r =>
-            Math.abs(r.actual.manaConsumed - r.predicted.manaConsumed)
+      const maxDelta = comparable.length > 0
+        ? Math.max(...comparable.map(r =>
+            Math.abs(r.actual.manaConsumed - r.predicted.queueCharged)
           ))
         : 0;
       if (locationsEl) locationsEl.textContent = maxDelta.toFixed(1);
     } else {
       if (regionsLabel) regionsLabel.textContent = 'Regions:';
       if (locationsLabel) locationsLabel.textContent = 'Locations:';
+      /**
+       * ⛔ `getCostData()` is the BLOCK — write-by-class applied — so on a jta
+       * world it holds 1 of 4 regions and 0 of 23 locations. A bare "1" read
+       * as "one region planned" is the opposite of what happened, so the
+       * denominator is the world's own count and the gap is the point.
+       */
       const costData = planner?.getCostData();
-      if (regionsEl) regionsEl.textContent = costData ? Object.keys(costData.regions).length : '0';
-      if (locationsEl) locationsEl.textContent = costData ? Object.keys(costData.locations).length : '0';
+      const topology = planner?.getTopology?.();
+      const worldRegions = topology?.regions?.size ?? 0;
+      const worldLocations = topology?.locations?.size ?? 0;
+      if (regionsEl) {
+        regionsEl.textContent = costData
+          ? `${Object.keys(costData.regions).length} / ${worldRegions}` : '0';
+        regionsEl.title = 'regions the BLOCK prices, of the regions in this world — '
+          + 'a substrate with its own mana economy is left unpriced on purpose';
+      }
+      if (locationsEl) {
+        locationsEl.textContent = costData
+          ? `${Object.keys(costData.locations).length} / ${worldLocations}` : '0';
+        locationsEl.title = 'locations the BLOCK prices, of the locations in this world';
+      }
+    }
+
+    // ⛓ ONE engine, and which world it was pointed at.
+    const engineEl = this.rootElement.querySelector('.cd-summary-engine');
+    if (engineEl) {
+      engineEl.textContent = `loopCostPlanner \u00b7 ${this._workingCopy
+        ? `working copy${this._workingCopy.source ? ` (${this._workingCopy.source})` : ''}`
+        : 'applied state'}`;
     }
   }
 
@@ -896,6 +1216,9 @@ export class CostDebuggerUI {
       listEl.innerHTML = `<div class="cd-step-list-empty">${msg}</div>`;
       return;
     }
+
+    // ⛓ Built ONCE for the whole list — see `_pricingContext`.
+    const ctx = this._pricingContext();
 
     listEl.innerHTML = steps.map(step => {
       const selected = step.stepIndex === this.selectedStepIndex ? ' cd-selected' : '';
@@ -927,7 +1250,17 @@ export class CostDebuggerUI {
             const sign = v.delta > 0 ? '+' : '';
             detail = `<span class="${deltaClass}">${sign}${v.delta}</span>`;
           } else {
-            detail = `<span class="cd-step-new-costs">cost=${locAssignment?.cost || '?'}</span>`;
+            /**
+             * ⛔ A location in a NATIVE or SUMMARY region has NO cost in the
+             * block, so `cost=100` here would be a price nothing charges. The
+             * number is still in the step's detail view, under the label that
+             * says what it is.
+             */
+            const pricing = locAssignment
+              ? this._pricingOfAssignment(locAssignment, ctx) : null;
+            detail = pricing && !pricing.priced
+              ? `<span class="cd-step-unpriced" title="${escapeHtml(pricing.why)}">${pricing.label}</span>`
+              : `<span class="cd-step-new-costs">cost=${locAssignment?.cost || '?'}</span>`;
           }
         }
         truncName = step.phase === 'EXPLORE'
@@ -938,8 +1271,16 @@ export class CostDebuggerUI {
 
       // Override detail with verification result if available
       const vResult = this.verificationResults.find(r => r.stepIndex === step.stepIndex);
-      if (vResult) {
-        const delta = vResult.actual.manaConsumed - vResult.predicted.manaConsumed;
+      if (vResult && !vResult.comparable) {
+        // ⛔ No delta: the BLOCK states no cost for this step's region, so
+        //    there is no prediction for a replay to confirm or refute. The
+        //    label is the region's own, not a generic one.
+        const label = vResult.unchargedReasons?.[0]?.[0] ?? 'not priced';
+        const why = vResult.unchargedReasons?.[0]?.[1]
+          ?? 'the block states no cost for this region, so the replay is reported and not scored';
+        detail = `<span class="cd-step-unpriced" title="${escapeHtml(why)}">${label}</span>`;
+      } else if (vResult) {
+        const delta = vResult.actual.manaConsumed - vResult.predicted.queueCharged;
         const absD = Math.abs(delta);
         const cls = absD <= 1 ? 'cd-verify-exact' : absD <= 5 ? 'cd-verify-close' : 'cd-verify-far';
         const sign = delta > 0 ? '+' : '';
@@ -1073,14 +1414,32 @@ export class CostDebuggerUI {
 
         sections.push(`<div class="cd-reason-section"><div class="cd-reason-label">Cost Verification (${step.costAssignments.length})</div>${pre(rows.join('\n'))}</div>`);
       } else {
-        rows.push(`${pad('Target', NW)} ${rpad('Type', 8)} ${rpad('Cost', 6)}  Formula`);
-        rows.push('\u2500'.repeat(NW + 50));
+        /**
+         * ⛔ **THE PLAN PRICES EVERY REGION; THE BLOCK DOES NOT.** ⚖ (i) — the
+         * simulation walks every region as coarse to derive the numbers at
+         * all, and `writeCostsByClass` then drops the ones no block should
+         * carry. Printing a bare `50` beside a jta region states a price
+         * nothing charges, so each row carries what its region's class makes
+         * of that number, and the ones the block will not carry say so in the
+         * BLOCK column instead of repeating the figure.
+         */
+        const ctx = this._pricingContext();
+        rows.push(`${pad('Target', NW)} ${rpad('Type', 8)} ${rpad('Planned', 8)}  ${pad('In the block', 14)}Formula`);
+        rows.push('\u2500'.repeat(NW + 64));
 
+        const notes = new Map();
         for (const ca of step.costAssignments) {
           const cls = 'cd-reason-new';
           const name = truncate(ca.name, NW - 2);
           const typeLabel = ca.type === 'region' ? 'region' : 'location';
-          rows.push(`<span class="${cls}">\u2713 ${pad(name, NW)} ${rpad(typeLabel, 8)} ${rpad(ca.cost, 6)}  ${ca.formula}</span>`);
+          const pricing = this._pricingOfAssignment(ca, ctx);
+          const blockCol = pricing && !pricing.priced ? pricing.label : 'the cost';
+          if (pricing?.why) notes.set(pricing.label, pricing.why);
+          const rowCls = pricing && !pricing.priced ? 'cd-reason-unpriced' : cls;
+          rows.push(`<span class="${rowCls}">\u2713 ${pad(name, NW)} ${rpad(typeLabel, 8)} ${rpad(ca.cost, 8)}  ${pad(blockCol, 14)}${ca.formula}</span>`);
+        }
+        for (const [label, why] of notes) {
+          rows.push(`<span class="cd-reason-warning">   ${label}: ${escapeHtml(why)}</span>`);
         }
 
         sections.push(`<div class="cd-reason-section"><div class="cd-reason-label">Cost Assignments (${step.costAssignments.length})</div>${pre(rows.join('\n'))}</div>`);
@@ -1091,8 +1450,19 @@ export class CostDebuggerUI {
     if (step.queue.length > 0) {
       const NW = 28;
       const rows = [];
-      rows.push(`${pad('Action', 12)} ${pad('Target', NW)} ${rpad('Base', 6)} ${rpad('Lvl', 4)} ${rpad('Cost', 8)}`);
-      rows.push('\u2500'.repeat(NW + 34));
+      /**
+       * ⛓⛓ **THIS IS THE SIMULATION'S QUEUE, NOT THE RUNTIME'S BILL.** Every
+       * action here is priced as if its region were coarse — that is how the
+       * walk derives the numbers. At run time the region's CAPTURE SHAPE
+       * decides who charges: a `fine` region (maze, jta, omsi) is charged by
+       * its own substrate and the loop queue takes nothing, and a `summary`
+       * region is charged by TIME plus whatever the block names explicitly.
+       * The `Charged by` column is that answer, so a reader cannot mistake a
+       * derivation step for a bill.
+       */
+      const ctx = this._pricingContext();
+      rows.push(`${pad('Action', 12)} ${pad('Target', NW)} ${rpad('Base', 6)} ${rpad('Lvl', 4)} ${rpad('Cost', 8)}          ${pad('Charged by', 12)}`);
+      rows.push('\u2500'.repeat(NW + 60));
 
       let runningMana = step.stateBefore.currentMana;
       for (const q of step.queue) {
@@ -1117,7 +1487,13 @@ export class CostDebuggerUI {
 
         const costStr = q.cost.toFixed(1);
         const remaining = `\u2192 ${runningMana.toFixed(1)}`;
-        rows.push(`${pad(actionLabel, 12)} ${pad(truncTarget, NW)} ${rpad(q.baseCost.toFixed(0), 6)} ${rpad('L' + q.level, 4)} <span class="${manaClass}">${rpad(costStr, 8)} ${remaining}</span>`);
+        const sourceRegion = q.region || q.from || null;
+        const pricing = sourceRegion ? this._pricingOf(sourceRegion, ctx) : null;
+        const chargedBy = !pricing ? ''
+          : pricing.chargedByQueue ? 'the queue'
+          : pricing.shape === 'summary' ? 'time (drain)'
+          : 'the substrate';
+        rows.push(`${pad(actionLabel, 12)} ${pad(truncTarget, NW)} ${rpad(q.baseCost.toFixed(0), 6)} ${rpad('L' + q.level, 4)} <span class="${manaClass}">${rpad(costStr, 8)} ${pad(remaining, 10)}</span><span class="${pricing && !pricing.chargedByQueue ? 'cd-reason-unpriced' : ''}">${pad(chargedBy, 12)}</span>`);
       }
 
       sections.push(`<div class="cd-reason-section"><div class="cd-reason-label">Action Queue (${step.queue.length} actions)</div>${pre(rows.join('\n'))}</div>`);
@@ -1161,9 +1537,24 @@ export class CostDebuggerUI {
       vRows.push(`${pad('Metric', NW)} ${rpad('Predicted', 10)} ${rpad('Actual', 10)} ${rpad('Delta', 8)}`);
       vRows.push('\u2500'.repeat(NW + 32));
 
-      const manaD = vResult.actual.manaConsumed - vResult.predicted.manaConsumed;
+      /**
+       * ⛔ The comparable prediction is `queueCharged`, not the whole
+       * simulated spend: the simulation prices every region as coarse, and a
+       * region a substrate charges natively contributes to `manaConsumed`
+       * without ever reaching the queue. Both are shown — the split IS the
+       * finding — but only the queue's half is scored.
+       */
+      const predictedQueue = vResult.predicted.queueCharged ?? vResult.predicted.manaConsumed;
+      const manaD = vResult.actual.manaConsumed - predictedQueue;
       const manaCls = Math.abs(manaD) <= 1 ? 'cd-verify-exact' : Math.abs(manaD) <= 5 ? 'cd-verify-close' : 'cd-verify-far';
-      vRows.push(`<span class="${manaCls}">${pad('Mana Consumed', NW)} ${rpad(vResult.predicted.manaConsumed.toFixed(1), 10)} ${rpad(vResult.actual.manaConsumed.toFixed(1), 10)} ${rpad((manaD > 0 ? '+' : '') + manaD.toFixed(1), 8)}</span>`);
+      vRows.push(`<span class="${manaCls}">${pad('Mana Consumed', NW)} ${rpad(predictedQueue.toFixed(1), 10)} ${rpad(vResult.actual.manaConsumed.toFixed(1), 10)} ${rpad((manaD > 0 ? '+' : '') + manaD.toFixed(1), 8)}</span>`);
+      if (vResult.uncharged > 0) {
+        vRows.push(`<span class="cd-reason-unpriced">${pad('  \u2514 unpriced by design', NW)} `
+          + `${rpad(vResult.uncharged.toFixed(1), 10)} ${rpad('\u2014', 10)} ${rpad('not scored', 8)}</span>`);
+        for (const [label, why] of (vResult.unchargedReasons || [])) {
+          vRows.push(`<span class="cd-reason-warning">     ${label}: ${escapeHtml(why)}</span>`);
+        }
+      }
 
       const remD = vResult.actual.manaRemaining - vResult.predicted.manaRemaining;
       const remCls = Math.abs(remD) <= 1 ? 'cd-verify-exact' : Math.abs(remD) <= 5 ? 'cd-verify-close' : 'cd-verify-far';

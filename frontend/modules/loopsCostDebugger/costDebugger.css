@@ -151,6 +151,21 @@
   color: #aaf;
 }
 
+/*
+ * ⛓ L3 — a cost the BLOCK deliberately does not carry (a native substrate's own
+ * economy, a summary substrate's time pricing). Deliberately NOT the green of
+ * `.cd-step-new-costs` / `.cd-reason-new`, which means "a number was written":
+ * these rows are the opposite claim, and a reader scanning by colour must not
+ * read them as prices. Dotted underline so the hover text is discoverable.
+ */
+.cd-step-unpriced,
+.cd-reason-unpriced {
+  color: #9ab;
+  font-style: italic;
+  border-bottom: 1px dotted #567;
+  cursor: help;
+}
+
 /* Phase badges */
 .cd-phase-badge {
   font-size: 0.7em;

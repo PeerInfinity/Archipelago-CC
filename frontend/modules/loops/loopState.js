@@ -2176,6 +2176,26 @@ export class LoopState {
   }
 
   /**
+   * ⛓⛓ L3 — **PUBLIC FORM OF `_captureShapeFor`, KEYED BY SUBSTRATE ID.**
+   * `getRegionCaptureShape` answers for a region of the APPLIED world, which
+   * is the wrong question for a panel inspecting a WORKING COPY: the app's
+   * `_lookupSubstrateId` knows nothing about a document it never loaded and
+   * would answer 'coarse' for every region of it.
+   *
+   * ⛔ It exists so the cost-debugger panel does not re-derive the rule. The
+   * panel resolves a region's substrate from the PLAN's own topology (right
+   * for applied state and for a working copy alike) and asks here what that
+   * substrate's shape is — one resolver, one answer, exactly as
+   * `_captureShapeFor`'s own docblock demands of every shape-dependent branch.
+   *
+   * @param {string|null} substrateId
+   * @returns {'fine'|'summary'|'coarse'}
+   */
+  getSubstrateCaptureShape(substrateId) {
+    return this._captureShapeFor(substrateId);
+  }
+
+  /**
    * Public form of _captureShapeForRegion — the panel needs it to decide
    * what "a recording exists" means for a block (loopBlockBuilder's
    * getBlockPlayableContent).
