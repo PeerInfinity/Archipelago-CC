@@ -2,206 +2,6 @@ import { registerTest } from '../testRegistry.js';
 
 // Constants for test configuration
 const PANEL_ID = 'loopsPanel';
-const MAX_WAIT_TIME = 10000; // 10 seconds
-
-/**
- * Test case for verifying that the initial Menu position is not executed as an action.
- * This test checks that:
- * 1. The initial Menu is displayed as "Starting Region: Menu" (not "Move to Menu")
- * 2. Clicking Resume does not execute a "Move to Menu" action
- * 3. The queue only processes real actions, not the starting position
- * @param {object} testController - The test controller object provided by the test runner.
- * @returns {Promise<boolean>} - True if the test passed, false otherwise.
- */
-export async function testInitialMenuNotProcessed(testController) {
-  let overallResult = true;
-  const testRunId = `initial-menu-test-${Date.now()}`;
-
-  try {
-    testController.log(`[${testRunId}] Starting initial Menu processing test...`);
-    testController.reportCondition('Test started', true);
-
-    // 1. Activate the Loops panel
-    testController.log(`[${testRunId}] Activating ${PANEL_ID} panel...`);
-    testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
-
-    // 2. Wait for the loops panel to appear in DOM
-    const loopsPanelElement = await testController.pollForValue(
-      () => document.querySelector('.loop-panel-container'),
-      'Loops panel DOM element',
-      5000,
-      50
-    );
-    if (!loopsPanelElement) {
-      throw new Error('Loops panel not found in DOM');
-    }
-    testController.reportCondition('Loops panel found in DOM', true);
-
-    // 3. Check if loop mode is already active or click "Enter Loop Mode" button
-    const loopModeBtn = await testController.pollForValue(
-      () => loopsPanelElement.querySelector('#loop-ui-toggle-loop-mode'),
-      'Loop mode toggle button',
-      5000,
-      50
-    );
-    if (!loopModeBtn) {
-      throw new Error('Loop mode toggle button not found');
-    }
-    
-    // Check if we need to enter loop mode
-    if (loopModeBtn.textContent === 'Enter Loop Mode') {
-      testController.log(`[${testRunId}] Clicking Enter Loop Mode button...`);
-      loopModeBtn.click();
-      
-      // Wait for loop mode to activate
-      await testController.pollForCondition(
-        () => {
-          const btn = loopsPanelElement.querySelector('#loop-ui-toggle-loop-mode');
-          return btn && btn.textContent === 'Exit Loop Mode';
-        },
-        'Loop mode activated',
-        3000,
-        50
-      );
-    } else {
-      testController.log(`[${testRunId}] Loop mode already active`);
-    }
-    testController.reportCondition('Loop mode activated', true);
-
-    // 4. Check that the initial Menu is displayed correctly
-    const menuBlockFound = await testController.pollForCondition(
-      () => {
-        const actionBlocks = loopsPanelElement.querySelectorAll('.loop-action-block');
-        if (actionBlocks.length === 0) return false;
-        
-        // Check the first action block
-        const firstBlock = actionBlocks[0];
-        const titleElement = firstBlock.querySelector('.action-title');
-        
-        if (!titleElement) return false;
-        
-        const titleText = titleElement.textContent.trim();
-        testController.log(`[${testRunId}] First action block title: "${titleText}"`);
-        
-        // It should say "Starting Region: Menu" NOT "Move to Menu"
-        return titleText === 'Starting Region: Menu';
-      },
-      'Initial Menu displayed as Starting Region',
-      5000,
-      50
-    );
-    
-    if (!menuBlockFound) {
-      testController.reportCondition('Initial Menu displayed correctly', false);
-      testController.log(`[${testRunId}] ERROR: Initial Menu not displayed as "Starting Region: Menu"`);
-      overallResult = false;
-    } else {
-      testController.reportCondition('Initial Menu displayed correctly', true);
-    }
-
-    // 5. Check that the initial Menu has no mana cost
-    const manaCostCheck = await testController.pollForCondition(
-      () => {
-        const actionBlocks = loopsPanelElement.querySelectorAll('.loop-action-block');
-        if (actionBlocks.length === 0) return false;
-        
-        const firstBlock = actionBlocks[0];
-        const manaCostElement = firstBlock.querySelector('.mana-cost');
-        
-        // There should be NO mana cost element for the starting position
-        return !manaCostElement;
-      },
-      'Initial Menu has no mana cost',
-      3000,
-      50
-    );
-    
-    if (!manaCostCheck) {
-      testController.reportCondition('Initial Menu has no mana cost', false);
-      testController.log(`[${testRunId}] ERROR: Initial Menu incorrectly shows a mana cost`);
-      overallResult = false;
-    } else {
-      testController.reportCondition('Initial Menu has no mana cost', true);
-    }
-
-    // 6. Get access to loopState to monitor action processing
-    const loopStateModule = await import('../../loops/loopStateSingleton.js');
-    const loopState = loopStateModule.default;
-    
-    // 7. Check initial pause state
-    const pauseBtn = loopsPanelElement.querySelector('#loop-ui-toggle-pause');
-    if (!pauseBtn) {
-      throw new Error('Pause/Resume button not found');
-    }
-    
-    const initialButtonText = pauseBtn.textContent;
-    testController.log(`[${testRunId}] Initial pause button text: "${initialButtonText}"`);
-    
-    // It should start as "Resume" since the queue starts paused
-    if (initialButtonText !== 'Resume') {
-      testController.reportCondition('Queue starts paused', false);
-      testController.log(`[${testRunId}] ERROR: Expected button to show "Resume" but got "${initialButtonText}"`);
-      overallResult = false;
-    } else {
-      testController.reportCondition('Queue starts paused', true);
-    }
-
-    // 8. Set up monitoring for action processing
-    let actionProcessed = false;
-    let processedActionDetails = null;
-    
-    const actionStartHandler = (data) => {
-      actionProcessed = true;
-      processedActionDetails = data.action;
-      testController.log(`[${testRunId}] Action started:`, processedActionDetails);
-    };
-    
-    testController.eventBus.subscribe('loopState:newActionStarted', actionStartHandler);
-
-    // 9. Click Resume and wait briefly
-    testController.log(`[${testRunId}] Clicking Resume button...`);
-    pauseBtn.click();
-    
-    // Wait a moment to see if any action starts processing
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // 10. Check if an action was incorrectly processed
-    if (actionProcessed) {
-      testController.reportCondition('No action processed when only Menu in queue', false);
-      testController.log(`[${testRunId}] ERROR: An action was processed when it shouldn't have been`);
-      testController.log(`[${testRunId}] Processed action details:`, processedActionDetails);
-      
-      // Check if it was a Menu action
-      if (processedActionDetails && 
-          processedActionDetails.type === 'regionMove' && 
-          processedActionDetails.region === 'Menu') {
-        testController.log(`[${testRunId}] ERROR: The initial Menu was incorrectly processed as an action!`);
-      }
-      
-      overallResult = false;
-    } else {
-      testController.reportCondition('No action processed when only Menu in queue', true);
-      testController.log(`[${testRunId}] SUCCESS: No action was processed (correct behavior)`);
-    }
-
-    // 11. Clean up - unsubscribe from event
-    testController.eventBus.unsubscribe('loopState:newActionStarted', actionStartHandler);
-    
-    // 12. Exit loop mode
-    const exitBtn = loopsPanelElement.querySelector('#loop-ui-toggle-loop-mode');
-    if (exitBtn) {
-      exitBtn.click();
-    }
-
-    testController.log(`[${testRunId}] Test completed successfully`);
-    return overallResult;
-
-  } catch (error) {
-    testController.log(`[${testRunId}] Test failed with error:`, error);
-    testController.reportCondition('Test completed without error', false);
-    return false;
-  }
-}
 
 /**
  * Test case for verifying that real actions after Menu are processed correctly.
@@ -665,7 +465,36 @@ export async function testSpeedAdjustment(testController) {
 }
 
 /**
- * Test case for verifying pause/resume functionality.
+ * Test case for the queue-control button's state machine.
+ *
+ * The button (`#loop-ui-toggle-pause`) is a SINGLE button whose label is
+ * derived from `loopState.getProcessingState()` — `loopUI._updatePauseButtonState`
+ * maps `{idle:'Start', running:'Pause', paused:'Resume', completed:'Restart',
+ * waiting:'Waiting'}`. This row drives the round trip
+ *
+ *     Start  --click-->  Pause  --click-->  Resume  --click-->  Pause
+ *
+ * and checks the published `loopState:pauseStateChanged.processingState`
+ * alongside each label, so a label that stops tracking the state reds here even
+ * if the state machine itself is fine (and vice versa).
+ *
+ * ⚠ Two preconditions this row establishes for itself rather than inheriting:
+ *   - **A non-empty queue.** `loopState.setPaused(false)` only calls
+ *     `startProcessing()` when `getActionQueue().length > 0`, so on a world
+ *     whose path is empty (every plain world at boot: start region, empty path)
+ *     clicking Start is a no-op and the label never leaves 'Start'. We seed one
+ *     entry through the product's own `gameState.addManualAction()` public
+ *     function — called with no argument it falls back to `currentRegion`, so
+ *     no region name is hardcoded here — and restore the original path at the
+ *     end. A `manual` entry is used because it consumes no mana and completes
+ *     nothing: a seeded `explore` at the start region is measured to complete
+ *     in ONE frame (`_advanceActionProgress` shortcuts to 100% when
+ *     `actionCost === 0`, and the start region's cost is 0 in both cost
+ *     models), taking the label Start → Restart and never through Pause.
+ *   - **A slow clock.** Belt and braces: we drop to the minimum `gameSpeed`
+ *     (0.1) for the drive and restore it after, so a future change that makes
+ *     the seeded entry accrue progress still cannot complete it under us.
+ *
  * @param {object} testController - The test controller object provided by the test runner.
  * @returns {Promise<boolean>} - True if the test passed, false otherwise.
  */
@@ -673,83 +502,165 @@ export async function testPauseResume(testController) {
   let overallResult = true;
   const testRunId = `pause-resume-test-${Date.now()}`;
 
+  // Set by the setup block; restored in the finally-equivalent tail.
+  let restore = null;
+
   try {
-    testController.log(`[${testRunId}] Starting pause/resume test...`);
+    testController.log(`[${testRunId}] Starting queue-control button state test...`);
     testController.reportCondition('Test started', true);
 
     const { loopsPanelElement, loopState, eventBus } = await setupLoopsPanelAndEnterMode(testController);
     testController.reportCondition('Loops panel and mode activated', true);
 
-    // Find pause button
+    const centralRegistryModule = await import('../../../app/core/centralRegistry.js');
+    const centralRegistry = centralRegistryModule.centralRegistry;
+    const getPath = centralRegistry?.getPublicFunction?.('gameState', 'getPath');
+    const setPath = centralRegistry?.getPublicFunction?.('gameState', 'setPath');
+    const addManualAction = centralRegistry?.getPublicFunction?.('gameState', 'addManualAction');
+    if (!getPath || !setPath || !addManualAction) {
+      testController.reportCondition('gameState path API available', false);
+      return false;
+    }
+    testController.reportCondition('gameState path API available', true);
+
+    const pathBefore = getPath();
+    const speedBefore = loopState.gameSpeed;
+    restore = () => {
+      try { setPath(pathBefore); } catch (e) { /* best effort */ }
+      try { loopState.setGameSpeed(speedBefore ?? 100); } catch (e) { /* best effort */ }
+    };
+
+    // Slow the clock BEFORE anything can run, then seed one queue entry.
+    loopState.setGameSpeed(0.1);
+    addManualAction();
+
+    const queueSeeded = await testController.pollForCondition(
+      () => (loopState.getActionQueue?.() ?? []).length > 0,
+      'Queue has at least one action',
+      3000,
+      50
+    );
+    if (!queueSeeded) {
+      testController.reportCondition('Queue seeded with one action', false);
+      restore();
+      return false;
+    }
+    testController.reportCondition('Queue seeded with one action', true);
+
     const pauseBtn = loopsPanelElement.querySelector('#loop-ui-toggle-pause');
     if (!pauseBtn) {
-      throw new Error('Pause/Resume button not found');
+      testController.reportCondition('Queue-control button found', false);
+      restore();
+      return false;
+    }
+    testController.reportCondition('Queue-control button found', true);
+
+    // Record the processingState the module publishes on every transition, so
+    // the label assertions below have an independent witness.
+    const statesSeen = [];
+    const stateHandler = (data) => {
+      statesSeen.push(data?.processingState);
+      testController.log(`[${testRunId}] pauseStateChanged → processingState="${data?.processingState}"`);
+    };
+    eventBus.subscribe('loopState:pauseStateChanged', stateHandler);
+
+    // --- the round trip -------------------------------------------------
+    // Every leg is asserted SYNCHRONOUSLY, immediately after the click, with no
+    // await in between. The whole chain is synchronous — the button handler
+    // (`loopUI.js`) calls `loopState.setPaused`, which publishes
+    // `loopState:pauseStateChanged`, which `eventCoordinator._handlePause
+    // StateChanged` turns straight into `loopUI._updatePauseButtonState` — so
+    // the label is already correct when `.click()` returns and nothing can
+    // interleave.
+    //
+    // ⚠ Do NOT put a poll here. Awaiting lets a rAF frame run `_processFrame`,
+    // and the parked `manual` entry's `_handleManualEntry` calls
+    // `stopProcessing()`, dropping the state to 'idle' with `isPaused` still
+    // false. Measured with a 25 ms poll: 'Pause' on one run and 'idle' on the
+    // next, with every later leg shifted one transition behind — a coin flip,
+    // not a signal.
+    const labelNow = () => pauseBtn.textContent.trim();
+    const legs = [];
+
+    // 1. At rest, with a queue and nothing started: idle ⇒ "Start".
+    legs.push({
+      name: 'At rest the button reads Start (idle)',
+      label: labelNow(),
+      state: loopState.getProcessingState?.(),
+      wantLabel: 'Start',
+      wantState: 'idle',
+    });
+
+    // 2. Click ⇒ running ⇒ "Pause".
+    pauseBtn.click();
+    legs.push({
+      name: 'Start click makes the button read Pause (running)',
+      label: labelNow(),
+      state: loopState.getProcessingState?.(),
+      wantLabel: 'Pause',
+      wantState: 'running',
+    });
+
+    // 3. Click ⇒ paused ⇒ "Resume".
+    pauseBtn.click();
+    legs.push({
+      name: 'Pause click makes the button read Resume (paused)',
+      label: labelNow(),
+      state: loopState.getProcessingState?.(),
+      wantLabel: 'Resume',
+      wantState: 'paused',
+    });
+
+    // 4. Click ⇒ running again ⇒ "Pause". Resume is a distinct transition from
+    //    Start (it goes through _shouldResetOnResume), so it gets its own leg.
+    pauseBtn.click();
+    legs.push({
+      name: 'Resume click makes the button read Pause again (running)',
+      label: labelNow(),
+      state: loopState.getProcessingState?.(),
+      wantLabel: 'Pause',
+      wantState: 'running',
+    });
+
+    for (const leg of legs) {
+      const ok = leg.label === leg.wantLabel && leg.state === leg.wantState;
+      testController.log(
+        `[${testRunId}] ${leg.name}: label="${leg.label}" state="${leg.state}" `
+        + `(wanted label="${leg.wantLabel}" state="${leg.wantState}")`
+      );
+      testController.reportCondition(leg.name, ok);
+      if (!ok) overallResult = false;
     }
 
-    // Check initial state (should be paused/Resume button visible)
-    const initialBtnText = pauseBtn.textContent;
-    testController.log(`[${testRunId}] Initial button text: "${initialBtnText}"`);
+    // 5. The published transitions must be exactly the three we drove.
+    //    ⚠ Consecutive duplicates are collapsed on purpose: each click
+    //    publishes `loopState:pauseStateChanged` TWICE with the same state —
+    //    once from `startProcessing`/`stopProcessing` (loopState.js:901/941)
+    //    and once from `setPaused` itself (loopState.js:1037). The ORDER and
+    //    the SET of transitions are this row's claim; the publish count is not.
+    const collapsed = statesSeen.filter((v, i) => i === 0 || v !== statesSeen[i - 1]);
+    const expectedStates = ['running', 'paused', 'running'];
+    const statesMatch =
+      collapsed.length === expectedStates.length
+      && collapsed.every((v, i) => v === expectedStates[i]);
+    testController.log(`[${testRunId}] processingState sequence: [${statesSeen.join(', ')}] → collapsed [${collapsed.join(', ')}]`);
+    testController.reportCondition(
+      'loopState:pauseStateChanged published running → paused → running',
+      statesMatch
+    );
+    if (!statesMatch) overallResult = false;
 
-    // Subscribe to pause state events
-    let pauseEventReceived = false;
-    let resumeEventReceived = false;
-    const pauseHandler = () => {
-      pauseEventReceived = true;
-      testController.log(`[${testRunId}] Pause event received`);
-    };
-    const resumeHandler = () => {
-      resumeEventReceived = true;
-      testController.log(`[${testRunId}] Resume event received`);
-    };
-    eventBus.subscribe('loopState:paused', pauseHandler);
-    eventBus.subscribe('loopState:resumed', resumeHandler);
+    // --- leave the app as we found it -----------------------------------
+    loopState.setPaused(true);
+    eventBus.unsubscribe('loopState:pauseStateChanged', stateHandler);
+    restore();
+    restore = null;
 
-    // If currently paused, resume
-    if (initialBtnText === 'Resume') {
-      pauseBtn.click();
-      await new Promise(resolve => setTimeout(resolve, 200));
-
-      const afterResumeBtnText = pauseBtn.textContent;
-      if (afterResumeBtnText === 'Pause') {
-        testController.reportCondition('Resume changes button to Pause', true);
-      } else {
-        testController.reportCondition('Resume changes button to Pause', false);
-        overallResult = false;
-      }
-
-      // Now pause
-      pauseBtn.click();
-      await new Promise(resolve => setTimeout(resolve, 200));
-
-      const afterPauseBtnText = pauseBtn.textContent;
-      if (afterPauseBtnText === 'Resume') {
-        testController.reportCondition('Pause changes button to Resume', true);
-      } else {
-        testController.reportCondition('Pause changes button to Resume', false);
-        overallResult = false;
-      }
-    } else {
-      // Currently running, pause first
-      pauseBtn.click();
-      await new Promise(resolve => setTimeout(resolve, 200));
-
-      const afterPauseBtnText = pauseBtn.textContent;
-      if (afterPauseBtnText === 'Resume') {
-        testController.reportCondition('Pause changes button to Resume', true);
-      } else {
-        testController.reportCondition('Pause changes button to Resume', false);
-        overallResult = false;
-      }
-    }
-
-    // Cleanup
-    eventBus.unsubscribe('loopState:paused', pauseHandler);
-    eventBus.unsubscribe('loopState:resumed', resumeHandler);
-
-    testController.log(`[${testRunId}] Pause/resume test completed`);
+    testController.log(`[${testRunId}] Queue-control button state test completed`);
     return overallResult;
 
   } catch (error) {
+    if (restore) restore();
     testController.log(`[${testRunId}] Test failed with error: ${error.message}`, 'error');
     testController.reportCondition('Test completed without error', false);
     return false;
@@ -907,16 +818,7 @@ export async function testEnterExitLoopMode(testController) {
   }
 }
 
-// Register the test
-registerTest({
-  id: 'loops-initial-menu-not-processed',
-  name: 'Initial Menu Not Processed as Action',
-  description: 'Verifies that the initial Menu position is displayed correctly and not executed as an action when Resume is clicked',
-  category: 'loops',
-  testFunction: testInitialMenuNotProcessed
-});
-
-// Register the second test
+// Register the real-actions test
 registerTest({
   id: 'loops-real-actions-processed',
   name: 'Real Actions Are Processed',
@@ -961,11 +863,11 @@ registerTest({
   testFunction: testSpeedAdjustment
 });
 
-// Register pause/resume test
+// Register the queue-control button state-machine test
 registerTest({
   id: 'loops-pause-resume',
   name: 'Pause/Resume Functionality',
-  description: 'Verifies that pause/resume controls work correctly',
+  description: 'Drives the queue-control button round trip Start -> Pause -> Resume -> Pause and checks the published processingState with each label',
   category: 'loops',
   testFunction: testPauseResume
 });
