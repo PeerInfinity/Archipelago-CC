@@ -11379,6 +11379,21 @@ closed into L2 — the brief forbade rewriting that ⚖ line, so the contradicti
 tree between L1's start and its first commit. Linear, no overlap (that commit touches only this file), nothing
 lost either way — but it is why the left end is not L1's own start point.
 
+**L1 VERIFIED by the planner 2026-09-06** (`bfc2d4d5b0` on origin/main; 6 commits by path; the three dead files
+gone; the sidecar path gone (0 functions left by grep); `test-loops` gone, `test-loops-only` kept, roster 8 and
+8/8; both backlog entries closed; CI @ `986fbead1a` run 34046293200 **435/13274, 0 failed** — L1 derived 30+5+0
+per file BEFORE the run and matched). L1's findings carried forward: a FIFTH hardcoded 100 in
+`loopStats/queueAnalyzer.js:41-45` (+ `test_json/e2e/loopStats.spec.js` pinning old key names, reachable only by
+a bare `npx playwright test`) → L2 under ⚖ (k); `costDataManager.exportToJSON()` 0 production callers (named);
+two VACUOUS-GREEN loops rows (`loops-real-actions-processed`, `loops-mana-consumption`) → M1; a `manual` entry
+parks via `stopProcessing()` and reads 'idle'; a 0-cost action completes in ONE frame. The backlog's ⚖ planning
+line corrected here (BFS dedup + loop-cost dedup closed into this ladder).
+
+**L5 LAUNCHED 2026-09-06** as `loop-costs-L5` (Opus; kickoff `NewDocs/plans/loop-costs-L5-prompt.md`; on L1's idle
+notice): the host clock's LIVE arm honours the fork's stopped flag (+ a `skippedStopped` clock stat); Play is the
+cold start; replay/bot arms unchanged; the instrument presses Play and gains a Pause/Play leg; a census of the 24
+omsi rows; one new standalone row, mutant first; omsi doc. Bridge-side only, no fork change, no gitlink.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:

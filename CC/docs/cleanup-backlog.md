@@ -10,7 +10,7 @@ Issues noticed while writing the official procgen documentation (2026-07-01) tha
 
 ⚠ **Line numbers here are a snapshot — find the symbol, not the line.** Several had moved by hundreds of lines since 2026-07-01.
 
-⚖ **Planning queue (user, 2026-09-04):** BFS dedup · grid growth · zones · queues · mana · XP · maze · generation failures · runner — plus `dataset-passb`, which needs a conversation for the same reason. Those entries are tagged in place; do not start them as drive-bys.
+⚖ **Planning queue (user, 2026-09-04):** grid growth · zones · queues · mana · XP · maze · generation failures · runner — plus `dataset-passb`, which needs a conversation for the same reason. (BFS dedup and the loop-cost dedup CLOSED 2026-09-06 into the loop-costs ladder, queue §5o.) Those entries are tagged in place; do not start them as drive-bys.
 
 ## Code
 
