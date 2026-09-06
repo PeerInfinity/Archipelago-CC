@@ -13,8 +13,13 @@
  *     re-banks a never-zeroed effectiveTime — the quadratic inflation.
  *
  * Both directions matter: a gate that fails to close mints phantom loops, and
- * a gate that closes on ordinary play freezes the substrate (which is exactly
- * what the originally-proposed `stoppedAt` predicate would have done).
+ * a gate that closes on ordinary play freezes the substrate — which is why the
+ * BOUNDARY predicate never reads the game's stopped flag.
+ *
+ * The stopped flag is a SEPARATE gate (⚖ user, 2026-09-06), pinned in its own
+ * describe block below: live play honours it, replay and bot windows do not,
+ * and the arm test lives in the bridge — this module only ever sees the
+ * already-resolved `liveStopped`.
  */
 import { describe, it, expect } from 'vitest';
 import { isBoundaryHeld, planClockStep, planPumpBatch } from './clockGate.js';
@@ -83,8 +88,9 @@ function createFakeEngine({ heldFromLoop = null, planLength = null, timeNeeded =
 }
 
 /** Run the real decision function over a fake engine, as _clockTick does. */
-function runClock(engine, callbacks, { gateOpen = true, hasRunnableQueue = true } = {}) {
-    const skips = { noQueue: 0, gated: 0, heldBoundary: 0 };
+function runClock(engine, callbacks,
+    { gateOpen = true, hasRunnableQueue = true, liveStopped = false } = {}) {
+    const skips = { noQueue: 0, gated: 0, stopped: 0, heldBoundary: 0 };
     for (let i = 0; i < callbacks; i++) {
         const { ticks, skip } = planClockStep({
             elapsedMs: 200,                       // the bridge's clock interval
@@ -92,6 +98,7 @@ function runClock(engine, callbacks, { gateOpen = true, hasRunnableQueue = true 
             maxTicks: MAX_TICKS,
             hasRunnableQueue,
             gateOpen,
+            liveStopped,
             state: engine.loopEndState(),
         });
         if (skip) skips[skip] += 1;
@@ -133,9 +140,11 @@ describe('isBoundaryHeld', () => {
         expect(isBoundaryHeld({ shouldRestart: 'yes', timer: 10, timeNeeded: 250 })).toBe(false);
     });
 
-    it('does NOT use stoppedAt — which is ambient-true in managed play', () => {
+    it('does NOT use stoppedAt — that is the OTHER gate, and it is per-arm', () => {
         // saving.js load() ends with a pauseGame() toggle, so gameIsStopped is
-        // true for the whole substrate session. Gating on it froze omsi.
+        // true for the whole substrate session. Folding it into the boundary
+        // predicate would have frozen every arm; ⚖ 2026-09-06 gives it its own
+        // skip reason, applied to live play only (see below).
         expect(isBoundaryHeld({ timer: 10, timeNeeded: 250, stoppedAt: true })).toBe(false);
     });
 });
@@ -298,6 +307,107 @@ function runPump(engine, {
     }
     return { stepped, batches, reason };
 }
+
+describe('the STOPPED gate — ⚖ 2026-09-06, live play only', () => {
+    it('withholds every step while live play says stopped, and steps nothing', () => {
+        const engine = createFakeEngine();
+        const skips = runClock(engine, 100, { liveStopped: true });
+
+        expect(skips.stopped).toBe(100);
+        expect(engine.stepCalls).toBe(0);
+        expect(engine.ticksStepped).toBe(0);
+        // The whole point: no time passes for the player who pressed Pause.
+        expect(engine.totals.loops).toBe(0);
+        expect(engine.totals.effectiveTime).toBe(0);
+        expect(engine.timer).toBe(0);
+    });
+
+    it('resumes on the Play press with nothing banked and nothing lost', () => {
+        const engine = createFakeEngine();
+        runClock(engine, 20);                              // running: 200 ticks
+        const timerAtPause = engine.timer;
+        const steppedAtPause = engine.ticksStepped;
+
+        runClock(engine, 50, { liveStopped: true });        // Pause held
+        expect(engine.timer).toBe(timerAtPause);            // the loop is frozen
+        expect(engine.ticksStepped).toBe(steppedAtPause);
+
+        runClock(engine, 2);                                // Play
+        expect(engine.ticksStepped).toBe(steppedAtPause + 20);
+        // The loop picks up where it was parked — the pause cost no progress.
+        expect(engine.timer).toBe(timerAtPause + 20);
+        expect(engine.totals.loops).toBe(0);                // still the first loop
+    });
+
+    it('is EXEMPT on the replay and bot arms — the bridge passes false there', () => {
+        // The arm test is bridge.js `_liveArmStopped`; this module is handed
+        // the resolved answer. A replay or bot window therefore looks exactly
+        // like a running game to the gate, which is the ⚖ ruling verbatim:
+        // "replay and bot windows keep the bridge's timing".
+        const engine = createFakeEngine();
+        const skips = runClock(engine, 20, { liveStopped: false });
+
+        expect(skips.stopped).toBe(0);
+        expect(engine.ticksStepped).toBe(200);
+    });
+
+    it('outranks the held boundary — the boot state the fork always starts in', () => {
+        // A fresh managed boot reads {shouldRestart: true, gameIsStopped: true}
+        // (saving.js load() ends with pauseGame(); the empty compiled list
+        // holds the boundary). BOTH are true, and the honest reason is the
+        // player's: the Play press releases both in one call, because
+        // pauseGame() runs restart() when it unpauses at a loop end.
+        const boot = { shouldRestart: true, timer: 250, timeNeeded: 250 };
+        expect(planClockStep({
+            elapsedMs: 200, ticksPerSecond: TICKS_PER_SECOND, maxTicks: MAX_TICKS,
+            hasRunnableQueue: true, gateOpen: true, liveStopped: true, state: boot,
+        })).toEqual({ ticks: 0, skip: 'stopped' });
+        // …and with the flag cleared the boundary reason is the one left.
+        expect(planClockStep({
+            elapsedMs: 200, ticksPerSecond: TICKS_PER_SECOND, maxTicks: MAX_TICKS,
+            hasRunnableQueue: true, gateOpen: true, liveStopped: false, state: boot,
+        })).toEqual({ ticks: 0, skip: 'heldBoundary' });
+    });
+
+    it('ranks BELOW the closed gate and the empty plan', () => {
+        // A stopped game in a region nothing parked on is refused as `gated`:
+        // the stopped rule is about live play, and there is none here.
+        const state = { timer: 10, timeNeeded: 250 };
+        expect(planClockStep({
+            elapsedMs: 200, ticksPerSecond: TICKS_PER_SECOND, maxTicks: MAX_TICKS,
+            hasRunnableQueue: true, gateOpen: false, liveStopped: true, state,
+        }).skip).toBe('gated');
+        expect(planClockStep({
+            elapsedMs: 200, ticksPerSecond: TICKS_PER_SECOND, maxTicks: MAX_TICKS,
+            hasRunnableQueue: false, gateOpen: true, liveStopped: true, state,
+        }).skip).toBe('noQueue');
+    });
+
+    it('defaults to NOT stopped, so a caller that never heard of it is unmoved', () => {
+        // Every pre-⚖ call site omitted the field; omitting it must mean
+        // "running", never "stopped" — the fail-open posture the rest of this
+        // module takes.
+        const state = { timer: 10, timeNeeded: 250 };
+        expect(planClockStep({
+            elapsedMs: 200, ticksPerSecond: TICKS_PER_SECOND, maxTicks: MAX_TICKS,
+            hasRunnableQueue: true, gateOpen: true, state,
+        }).skip).toBe(null);
+        expect(planPumpBatch({
+            maxBatch: 250, hasRunnableQueue: true, gateOpen: true, state,
+        }).skip).toBe(null);
+    });
+
+    it('the pump shares the gate: same inputs, same skip', () => {
+        const state = { timer: 10, timeNeeded: 250 };
+        const c = { hasRunnableQueue: true, gateOpen: true, liveStopped: true, state };
+        const paced = planClockStep({
+            elapsedMs: 200, ticksPerSecond: TICKS_PER_SECOND, maxTicks: MAX_TICKS, ...c,
+        });
+        const pumped = planPumpBatch({ maxBatch: 250, ...c });
+        expect(paced).toEqual({ ticks: 0, skip: 'stopped' });
+        expect(pumped).toEqual({ ticks: 0, skip: 'stopped' });
+    });
+});
 
 describe('planPumpBatch', () => {
     it('withholds a batch for exactly the reasons a paced tick is withheld', () => {

@@ -30,16 +30,51 @@
  * minted 300 loops and inflated effectiveTime by 2,403 — as much as a genuine
  * 481-loop run.
  *
- * ⚠ The predicate is deliberately NOT `getFullState().stoppedAt`. That reads
- * TRUE during ordinary managed play — `load()` (saving.js) ends with a
- * `pauseGame()` toggle, so `gameIsStopped` is true for the whole substrate
- * session — and gating on it would freeze omsi entirely. The engine's own
- * loop-end condition observed BETWEEN step batches is the discriminator,
- * because a legitimate crossing restarts inside the crossing tick and so can
- * never be observed from out here. Falsification: 1,600 batches at four sizes
- * (7/13/31/250, straddling the 250-tick boundary at every offset) across 481
- * real loops produced zero firings, while a planner hold fired within 4
- * batches.
+ * ⚠ The held-boundary predicate is NOT the game's stopped flag, and the two
+ * are separate gates on purpose (see the split below). The engine's own
+ * loop-end condition observed BETWEEN step batches is the discriminator for
+ * phantom loops, because a legitimate crossing restarts inside the crossing
+ * tick and so can never be observed from out here. Falsification: 1,600
+ * batches at four sizes (7/13/31/250, straddling the 250-tick boundary at
+ * every offset) across 481 real loops produced zero firings, while a planner
+ * hold fired within 4 batches. Those numbers still stand — nothing below
+ * changes what `isBoundaryHeld` reads.
+ *
+ * ── The STOPPED gate, and why only LIVE play honours it ──────────────────
+ *
+ * ⚖ RULED (user, 2026-09-06): *"I want the restart to be triggered by the
+ * player pressing the in-game start button, not the addition of the first
+ * action of the queue. And in general, I want our code to respect the state
+ * of the in-game start and pause controls."*
+ *
+ * So the gate SPLITS by which window is driving:
+ *
+ *   - LIVE PLAY (the loops queue parked on this region's Manual / Record /
+ *     Bot-fallback block) honours the fork's own `gameIsStopped`: the host
+ *     clock withholds every step while the game says stopped, and the
+ *     player's Play press is what starts it. Play's own handler
+ *     (`driver.js` `pauseGame()`) calls `restart()` when it unpauses AT a
+ *     loop end, so pressing Play IS the cold start — the fork boots stopped
+ *     and holding a boundary (`saving.js`'s `load()` ends with a
+ *     `pauseGame()` toggle), and Play releases both in one press. Measured:
+ *     a cold start driven by Play instead of `IdleLoopsManaged.restartLoop()`
+ *     passes the whole mana leg (boundary released, restart unreported by
+ *     the no-progress guard, one reset at exhaustion).
+ *   - A PLAYBACK REPLAY (`_replayInFlight`) and a BOT WALK
+ *     (`_stepGateBotRegion`) do NOT honour it, and must not: there the
+ *     bridge and the fork's own planner own that flag between them
+ *     (`automation.js` `resumeIfPlannerPaused` toggles `pauseGame()`, and
+ *     the pause-while-planning option deliberately parks the game stopped
+ *     between plans). Gating those on the flag would stall a window whose
+ *     timing the player never touches — and there is no Play press coming,
+ *     because nobody is at the keyboard.
+ *
+ * The historical warning this paragraph replaces said gating on the flag
+ * "would freeze omsi entirely". That was true of gating EVERY arm on it —
+ * the game is stopped for the whole managed session unless something presses
+ * Play — and it is exactly why the split above is per-arm, and why the caller
+ * (not this module) decides which arm it is in: `liveStopped` is asserted by
+ * `bridge.js` only when the LIVE arm is the one that opened the gate.
  *
  * ── BOTH halves of that condition (slice 1b) ─────────────────────────────
  *
@@ -90,17 +125,29 @@ export function isBoundaryHeld(state) {
 }
 
 /**
- * The three reasons stepping is withheld, in the order they are checked.
+ * The four reasons stepping is withheld, in the order they are checked.
  *
  * Shared by BOTH tick derivations (paced and Instant-pump) so the two can
  * never drift: Instant is a CADENCE change, and a cadence change that also
  * moved a gate would stop being one. Returns null when stepping may proceed.
  *
- * @returns {null|'noQueue'|'gated'|'heldBoundary'}
+ * `stopped` is checked BEFORE `heldBoundary` because the two coincide at the
+ * boot state this substrate always starts from (`{shouldRestart: true,
+ * gameIsStopped: true}`), and the honest reason there is the player's — the
+ * Play press releases both. It also keeps `heldBoundary` meaning what the bot
+ * cold start and the bot exit crossing in `bridge.js` already read it to mean:
+ * a boundary held by something OTHER than the player.
+ *
+ * @param {boolean} args.liveStopped - the LIVE arm opened the gate AND the
+ *   fork says stopped. Always false on the replay and bot arms (they are
+ *   exempt by ⚖ ruling — see the header), so this module never has to know
+ *   which arm it is in.
+ * @returns {null|'noQueue'|'gated'|'stopped'|'heldBoundary'}
  */
-function stepSkipReason({ hasRunnableQueue, gateOpen, state }) {
+function stepSkipReason({ hasRunnableQueue, gateOpen, liveStopped, state }) {
     if (!hasRunnableQueue) return 'noQueue';
     if (!gateOpen) return 'gated';
+    if (liveStopped) return 'stopped';
     if (isBoundaryHeld(state)) return 'heldBoundary';
     return null;
 }
@@ -117,9 +164,11 @@ function stepSkipReason({ hasRunnableQueue, gateOpen, state }) {
  * @param {number} args.maxTicks         - per-callback ceiling
  * @param {boolean} args.hasRunnableQueue - the plan has an enabled action
  * @param {boolean} args.gateOpen        - the loops step gate (D1 slice 2)
+ * @param {boolean} [args.liveStopped]   - live play, and the game says stopped
  * @param {{shouldRestart?: boolean, timer?: number, timeNeeded?: number}|null}
  *        args.state - the engine's loop-end state
- * @returns {{ticks: number, skip: null|'noQueue'|'gated'|'heldBoundary'}}
+ * @returns {{ticks: number,
+ *            skip: null|'noQueue'|'gated'|'stopped'|'heldBoundary'}}
  */
 export function planClockStep({
     elapsedMs,
@@ -127,9 +176,10 @@ export function planClockStep({
     maxTicks,
     hasRunnableQueue,
     gateOpen,
+    liveStopped = false,
     state,
 }) {
-    const skip = stepSkipReason({ hasRunnableQueue, gateOpen, state });
+    const skip = stepSkipReason({ hasRunnableQueue, gateOpen, liveStopped, state });
     if (skip) return { ticks: 0, skip };
     const ticks = Math.min(maxTicks, Math.round((elapsedMs * ticksPerSecond) / 1000));
     return { ticks: ticks > 0 ? ticks : 0, skip: null };
@@ -169,12 +219,20 @@ export function planClockStep({
  * @param {number} args.maxBatch          - ceiling on one synchronous batch
  * @param {boolean} args.hasRunnableQueue - the plan has an enabled action
  * @param {boolean} args.gateOpen         - the loops step gate (D1 slice 2)
+ * @param {boolean} [args.liveStopped]    - live play, and the game says stopped.
+ *   Reachable only in principle: a pump runs inside a replay or a bot window,
+ *   and both arms are exempt from the stopped rule, so the bridge passes
+ *   false here on every real path. Threaded anyway because the two
+ *   derivations share ONE gate by contract.
  * @param {{shouldRestart?: boolean, timer?: number, timeNeeded?: number}|null}
  *        args.state - the engine's loop-end state
- * @returns {{ticks: number, skip: null|'noQueue'|'gated'|'heldBoundary'}}
+ * @returns {{ticks: number,
+ *            skip: null|'noQueue'|'gated'|'stopped'|'heldBoundary'}}
  */
-export function planPumpBatch({ maxBatch, hasRunnableQueue, gateOpen, state }) {
-    const skip = stepSkipReason({ hasRunnableQueue, gateOpen, state });
+export function planPumpBatch({
+    maxBatch, hasRunnableQueue, gateOpen, liveStopped = false, state,
+}) {
+    const skip = stepSkipReason({ hasRunnableQueue, gateOpen, liveStopped, state });
     if (skip) return { ticks: 0, skip };
     const remaining = state?.timeNeeded - state?.timer;
     // A non-finite budget (a fork build that stopped reporting one half)

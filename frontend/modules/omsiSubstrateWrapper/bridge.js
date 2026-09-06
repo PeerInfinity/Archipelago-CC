@@ -354,6 +354,10 @@ const _BOT_PLANNER_OPTIONS = Object.freeze({
 const _clockStats = {
     messages: 0, inactiveSkips: 0, callbacks: 0,
     ticksStepped: 0, skippedNoQueue: 0, skippedGated: 0,
+    // `skippedStopped` is the LIVE-PLAY refusal (the game's own Pause/Play):
+    // its own counter, not folded into skippedGated, so a refusal is
+    // attributable in a log instead of inferred from a flat tick count.
+    skippedStopped: 0,
     skippedHeldBoundary: 0, maxElapsedMs: 0,
     // Instant pump. `pumpTicks` is a SUBSET of ticksStepped (the pump steps
     // through the same counter), so a leg can assert "the pump really ran"
@@ -413,6 +417,27 @@ function _loopClock() {
     }
     const s = _fullState();
     return s ? { ...s, shouldRestart: flag } : { shouldRestart: flag };
+}
+
+/**
+ * The game's own start/pause flag — TRUE while the player has it stopped.
+ *
+ * Read straight off the fork's global, the `_loopClock` pattern above and for
+ * the same reason: the clock gate consults it on EVERY callback. MEASURED in
+ * the live iframe (200,000 reads vs 20,000): the global costs **6.5 ns** a
+ * read, `IdleLoopsManaged.getFullState().stoppedAt` costs **24.9 µs** — a
+ * ~3,800x difference, because getFullState rebuilds the whole
+ * skills/buffs/towns readout for one boolean. At the clock's 10 callbacks/s
+ * that is 65 ns/s versus 0.25 ms/s; neither would be visible, and the cheap
+ * one needs no justification.
+ *
+ * FAILS OPEN (a fork build without the binding reads as RUNNING), the same
+ * posture `isBoundaryHeld` takes: a missing flag must degrade to "the host
+ * keeps time", never to a frozen substrate.
+ */
+function _forkStopped() {
+    // eslint-disable-next-line no-undef
+    return typeof gameIsStopped !== 'undefined' && gameIsStopped === true;
 }
 
 /** The fork's live options bag, or null (arc D2). */
@@ -528,11 +553,29 @@ function _hasRunnableQueue() {
  * the same reason it does above: the park is per-action, with its own
  * sourceRegion.
  */
+function _stepGateArm() {
+    if (!_stepGateEnforced) return 'unenforced';
+    if (_replayInFlight) return 'replay';
+    if (_stepGateBotRegion !== null && _stepGateBotRegion === _currentRegionId) return 'bot';
+    if (_stepGateLiveRegion !== null && _stepGateLiveRegion === _currentRegionId) return 'live';
+    return null;
+}
+
 function _mayStepClock() {
-    if (!_stepGateEnforced) return true;
-    if (_replayInFlight) return true;
-    if (_stepGateBotRegion !== null && _stepGateBotRegion === _currentRegionId) return true;
-    return _stepGateLiveRegion !== null && _stepGateLiveRegion === _currentRegionId;
+    return _stepGateArm() !== null;
+}
+
+/**
+ * The ⚖ 2026-09-06 rule: LIVE PLAY does not step while the game says stopped.
+ *
+ * The arm test is the whole content of "live play only" — see clockGate.js's
+ * header for why replay and bot windows are exempt (there the bridge and the
+ * fork's planner own that flag, and no Play press is coming). `unenforced`
+ * is exempt too: that is omsi running with loop mode off or before the host's
+ * first gate push, which no queue has parked and no rule has claimed.
+ */
+function _liveArmStopped() {
+    return _stepGateArm() === 'live' && _forkStopped();
 }
 
 /**
@@ -590,6 +633,10 @@ function _runInstantPump() {
             maxBatch: Math.min(PUMP_BATCH_TICKS, PUMP_MAX_TICKS_PER_CALLBACK - stepped),
             hasRunnableQueue: _hasRunnableQueue(),
             gateOpen: _mayStepClock(),
+            // Always false in practice — a pump runs only inside a replay or
+            // bot window, and both arms are exempt. Passed so the two
+            // derivations keep sharing one gate verbatim.
+            liveStopped: _liveArmStopped(),
             // Re-read EVERY batch: timer advances, and timeNeeded can grow
             // under the player's feet (Buy Mana, a host budget pin).
             state: _loopClock(),
@@ -598,6 +645,7 @@ function _runInstantPump() {
             reason = skip;
             if (skip === 'noQueue') _clockStats.skippedNoQueue += 1;
             else if (skip === 'gated') _clockStats.skippedGated += 1;
+            else if (skip === 'stopped') _clockStats.skippedStopped += 1;
             else if (skip === 'heldBoundary') _clockStats.skippedHeldBoundary += 1;
             break;
         }
@@ -657,21 +705,24 @@ function _clockTick() {
     // still reach the pool), while stepping is what the gate withholds.
     // Step by elapsed wall time so the average rate stays at the game's base
     // speed even when the browser throttles callbacks — unless the queue is
-    // empty, the loops gate is closed, or the engine is parked past a loop end
-    // that never restarted (arc D2 slice 1: stepping a HELD boundary mints a
-    // phantom loop per tick and inflates effectiveTime quadratically; see
-    // clockGate.js for why the predicate is `timer >= timeNeeded` and
-    // emphatically not `stoppedAt`).
+    // empty, the loops gate is closed, the PLAYER has the game stopped during
+    // live play (⚖ 2026-09-06 — replay and bot windows are exempt), or the
+    // engine is parked past a loop end that never restarted (arc D2 slice 1:
+    // stepping a HELD boundary mints a phantom loop per tick and inflates
+    // effectiveTime quadratically; see clockGate.js for why the boundary
+    // predicate is `timer >= timeNeeded` and not the stopped flag).
     const { ticks, skip } = planClockStep({
         elapsedMs,
         ticksPerSecond: TICKS_PER_SECOND,
         maxTicks: MAX_TICKS_PER_CALLBACK,
         hasRunnableQueue: _hasRunnableQueue(),
         gateOpen: _mayStepClock(),
+        liveStopped: _liveArmStopped(),
         state: _loopClock(),
     });
     if (skip === 'noQueue') _clockStats.skippedNoQueue += 1;
     else if (skip === 'gated') _clockStats.skippedGated += 1;
+    else if (skip === 'stopped') _clockStats.skippedStopped += 1;
     else if (skip === 'heldBoundary') _clockStats.skippedHeldBoundary += 1;
     // Ruling 4: the exit crosses at the NEXT LOOP BOUNDARY after the gate
     // opens — never mid-loop. A held boundary IS that moment, and the best
@@ -1240,7 +1291,20 @@ function _handleGameRestart() {
     // No-progress guard: a loop that consumed (almost) no effective
     // time means nothing could run — don't ping-pong resets with the
     // host over an unrunnable plan.
-    if (loopDuration < NO_PROGRESS_LOOP_S) return;
+    //
+    // ⚖ 2026-09-06 made this guard PLAYER-VISIBLE, so it says so out loud:
+    // the live-play cold start is now the Play press, whose `pauseGame()`
+    // calls `restart()` at the held boundary the fork boots on. That restart
+    // lands here with `totals.effectiveTime` still 0 and is DROPPED — which
+    // is why pressing Play does not cost the player a loop reset. A refusal
+    // that only ever showed up as "the reset count didn't move" is now a log
+    // line, so it can be attributed instead of inferred.
+    if (loopDuration < NO_PROGRESS_LOOP_S) {
+        log('debug', `restart NOT reported to the host: the loop consumed `
+            + `${loopDuration.toFixed(3)}s < ${NO_PROGRESS_LOOP_S}s `
+            + '(no-progress guard — e.g. the player pressing Play at a held boundary)');
+        return;
+    }
 
     if (!_world?.manaEnabled || !_client) return;
 
@@ -1942,8 +2006,9 @@ function _setStepGate(state) {
     _stepGateLiveRegion = region;
     _stepGateBotRegion = botRegion;
     log('debug', `step gate: ${_mayStepClock() ? 'OPEN' : 'CLOSED'} `
-        + `(enforced=${enforced}, livePlay=${region ?? 'none'}, `
-        + `bot=${botRegion ?? 'none'}, here=${_currentRegionId ?? 'none'})`);
+        + `(arm=${_stepGateArm() ?? 'none'}, enforced=${enforced}, `
+        + `livePlay=${region ?? 'none'}, bot=${botRegion ?? 'none'}, `
+        + `here=${_currentRegionId ?? 'none'}, gameStopped=${_forkStopped()})`);
 }
 
 /**
@@ -2253,8 +2318,14 @@ async function main() {
                 pumpActive: _instantPumpActive(),
             },
             // Step gate (slice 2): whether the game may advance, and the
-            // host state that decides it.
+            // host state that decides it. `arm` names WHICH rule opened it,
+            // because the ⚖ 2026-09-06 stopped rule applies to one arm only;
+            // `forkStopped` is the game's own Play/Pause state and
+            // `liveStopped` the two combined — the refusal a row asserts.
             mayStep: _mayStepClock(),
+            stepGateArm: _stepGateArm(),
+            forkStopped: _forkStopped(),
+            liveStopped: _liveArmStopped(),
             stepGate: {
                 enforced: _stepGateEnforced,
                 livePlayRegion: _stepGateLiveRegion,
