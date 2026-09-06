@@ -34,14 +34,28 @@
  * 0.84 s over three runs.
  * Run: node scripts/procgen/check-loop-costs-one-model.mjs
  *      node scripts/procgen/check-loop-costs-one-model.mjs --verbose
- * ⛓ **ADOPTED INTO CI 2026-09-06 (⚖ user) — the first of V3b's 50 boxed gates.**
- *   The `@ci-box` line that stood here is DELETED. Measured before and after:
- *   `--set=headless` 31 arms / 1 shard → 32 arms / 2 shards, i.e. 4 procgen gate
- *   jobs per push → 5. That extra shard is the priced cost the user accepted; the
- *   600 s figure `planCiShards` charged an unpriced arm is a placeholder, and the
- *   real arm time is read back off the first CI run that carries it.
- *   ⛑ It reads NO `--host=` — pure node, no dev server — so `argvFor` handing it
- *   no host is correct here, unlike the 20 gates V3b measured with a hand-rolled reader.
+ * ⛓ **ADOPTED INTO CI 2026-09-06 (⚖ user) — the first of V3b's 50 boxed
+ * gates.**
+ *    The `@ci-box` line that stood here is DELETED, so `ciRunnable` accepts
+ *    it and `ci-gates.mjs` runs it in the headless set. Measured off that
+ *    script's own plan output before and after: the headless partition goes
+ *    31 arms / 1 shard to 32 arms / 2 shards (the browser one does not
+ *    move), because `planCiShards` prices an arm no runner has run at the
+ *    whole 600 s budget and it therefore lands alone. That 600 s is a
+ *    PLACEHOLDER; the real arm time is read back off the first CI run that
+ *    carries it.
+ *    ⛔ **NO FLAG SPELLING BELONGS IN THIS DOCBLOCK.** `generate-procgen-
+ *    reference.mjs` harvests every double-dash flag spelling it finds here
+ *    into the instruments index's `documentedFlags`, so a flag named only in
+ *    PROSE becomes a flag the generated reference claims this gate takes.
+ *    Measured: writing the host flag's spelling into the very sentence
+ *    saying this gate does NOT take one enrolled `host`, and the `@ci-box`
+ *    line this replaces had already enrolled `set` the same way. Both are
+ *    false; the index now reads `verbose` alone, which is true.
+ *    ⛑ On the host question itself: this gate is pure node, drives no server
+ *    and reads no host argument at all, so V3b's "20 gates read the host
+ *    flag in a spelling the roster cannot see" finding has nothing to fix
+ *    here.
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';

@@ -1467,7 +1467,6 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [
-                "set",
                 "verbose"
             ],
             "file": "check-loop-costs-one-model.mjs",
