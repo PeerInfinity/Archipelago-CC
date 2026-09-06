@@ -11789,7 +11789,7 @@ moved nothing generated (neither edited page is one of the seventeen the viewer 
 ⛔ `check-procgen-help --doors=all` NOT quoted, with a reason: its population is `scripts/procgen/`, untouched,
 and `git grep` finds **zero** instruments importing any of the four changed frontend files; no submodule and no
 gitlink moved (L2 §12's other red path). Precedent H4a §16.1 #7.
-⚖ **52 suite at the pushed SHA** — __CI_ROW__
+⚖ **52 suite at the pushed SHA** — **52 suite at the pushed SHA** — run 34063989032 success: `suite: vitest (unfiltered)` **436/13303** (13295 passed | 8 skipped | **0 failed**), slow battery 12/217. Baseline L3's `fcb599f715` 435/13293 (trap 1212 checked: `git merge-base --is-ancestor fcb599f715 <my first commit>` TRUE, reverse FALSE). Derived BEFORE the run: `documentKeys.test.js` 29 → 31 (+2) and the new `costDebuggerUI.test.js` (+1 file, +8 rows), nothing else adding a vitest row ⇒ **436/13303, +1 file / +10 rows** — matched exactly. ALL SIX workflows green at that SHA
 
 **⚖ NEW for the user.** (1) **`rules.schema.json`'s `loop_costs` is permissive inside** — it cannot see a
 `moveCost` on a summary region, a missing `defaultRegionXpEffect`, an entry for a native region, or an invalid
