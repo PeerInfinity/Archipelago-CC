@@ -34,8 +34,14 @@
  * 0.84 s over three runs.
  * Run: node scripts/procgen/check-loop-costs-one-model.mjs
  *      node scripts/procgen/check-loop-costs-one-model.mjs --verbose
- * @ci-box it is CHEAP but UNPRICED, and `planCiShards` prices an arm no runner has run at the whole 600 s budget, so it lands alone: measured, adopting it naked takes `--set=headless` from 31 arms / 1 shard to 32 / 2, i.e. 4 procgen gate jobs per push to 5.
- *   ⇒ deleting this one line is how a later slice adopts it — and at 0.8 s it is the cheapest candidate in this directory. It is the same costed decision the other 49 @ci-box gates are waiting on (⚖ V3b).
+ * ⛓ **ADOPTED INTO CI 2026-09-06 (⚖ user) — the first of V3b's 50 boxed gates.**
+ *   The `@ci-box` line that stood here is DELETED. Measured before and after:
+ *   `--set=headless` 31 arms / 1 shard → 32 arms / 2 shards, i.e. 4 procgen gate
+ *   jobs per push → 5. That extra shard is the priced cost the user accepted; the
+ *   600 s figure `planCiShards` charged an unpriced arm is a placeholder, and the
+ *   real arm time is read back off the first CI run that carries it.
+ *   ⛑ It reads NO `--host=` — pure node, no dev server — so `argvFor` handing it
+ *   no host is correct here, unlike the 20 gates V3b measured with a hand-rolled reader.
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
