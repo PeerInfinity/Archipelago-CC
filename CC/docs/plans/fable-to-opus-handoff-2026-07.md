@@ -11935,6 +11935,18 @@ mode** button, and that edit is held with the presets because it cannot ship ahe
 GATE (nothing re-runs a writer today)? · the 7 jta presets keep empty blocks, so their Menu is still
 billed 50 — the last place §5o's Menu question survives in the corpus.
 
+**R-b VERIFIED at its STOP by the planner 2026-09-07** (`bb4e2172f2`; the four writers call the one algorithm — 3
+commits by path, pushed; NO committed preset moved — `git diff --stat` over `frontend/presets` empty; scratch blocks
+16/21 · 25/38 · unchanged ×2, Menu 0, omsi no entry; only `loop_costs` bytes move; regeneration deterministic
+(control byte-identical); Verify 0/2 Δ 375.7 → 2/2 Δ 0.0 on the same page). Brief wrong twice (5 presets / 4
+writers; `buildRulesJson` already planned the block — the writers overwrote it).
+**⚖ RULED (user, 2026-09-07): "let's go with your recommendations for all of these."** (1) **LAND the ⚖ 49-class
+re-record** — five omsi presets, block bytes only, then L4's Send row rebuilt on R-a's Disable button (its own
+commit, after the presets), fast batch back to 88/88; (2) `generatedAt` stays OUT of written blocks (a committed
+preset carrying a timestamp can never regenerate byte-identical); (3) the two byte-inertness PROSE claims become a
+GATE later, as a small item — NOT in this landing; (4) the seven jta presets keep their empty blocks (Menu billed
+50 there) — the free-by-rule start-region constant lands with M1. Authorization relayed to `loop-costs-Rb`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
