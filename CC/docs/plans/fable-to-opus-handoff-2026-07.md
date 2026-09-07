@@ -12268,6 +12268,13 @@ see a display-only change; the before/after table is the measurement that does. 
 **⚖ 52 RE-DERIVED:** `shared/queueAnalysis.test.js` NEW → **10** (was 7) ⇒ **+2 files, +27 rows ⇒ expected
 442 / 13384** against CI's 440 / 13357 at `598d326598`.
 
+⇒ **PUSHED and MEASURED. M1b is CLOSED.** `0198d65381..6269bd5f01` (8 commits, both gitlink bumps); submodule
+`1e7a1a5..41e3f6e`, pushed ahead of each bump. CI at `6269bd5f01` — run **34140437549 success** —
+`suite: vitest (unfiltered)` **442 / 13384** (13376 passed, 8 skipped, **0 failed**), slow battery 12/217
+unmoved. **440 → 442 files and 13357 → 13384 rows: +2 / +27, the derivation to the digit.** ⛓ Measurable only
+at a SHA carrying BOTH gitlink bumps — CI checks submodules out at the gitlink, so the two submodule test files
+enter the population only there (L2 §12).
+
 **M1b VERIFIED by the planner 2026-09-07** (`6269bd5f01` on origin/main; 8 commits by path, range
 `0198d65381..6269bd5f01`; submodule `1e7a1a5..41e3f6e` pushed ahead of each of the TWO gitlink bumps
 (`ef88e2f4f1`, `0a4490e736`); all SIX sites read `START_REGION_MOVE_COST` (grep in both repos); no preset moved;
