@@ -12161,6 +12161,14 @@ without it, so there the hop stays unconditional; (b) 7 of 212 presets declare a
 exits (ff1, musedash, factorio, subnautica, robotkitty_tilemap, paint, terraria) — skip warns and does nothing;
 (c) merging the two hop publishers remains the named follow-up. NEXT: **M1b** on M1's idle notice.
 
+**M1b LAUNCHED 2026-09-07** as `menu-panel-M1b` (Opus; kickoff `NewDocs/plans/menu-panel-M1b-prompt.md`; on M1's
+idle notice): `START_REGION_MOVE_COST = 0` exported from `shared/procgen/loopCostDefaults.js` (submodule pushed
+first); the rule at `_calculateActionCost`'s `regionMove` arm in both branches (source is a start region ⇒ the
+constant, before the XP discount); the jta bill measured 50 → 0 with NO preset change; gates unmoved
+(`check-loop-costs-one-model` — the rule is runtime-only); docs; the gitlink committed last and the help gate run
+only at that head; **STOP before the outer push** — the push incl. the gitlink is ONE ask-first unit relayed by the
+planner. Reports come to `next-priorities-planning-3`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
