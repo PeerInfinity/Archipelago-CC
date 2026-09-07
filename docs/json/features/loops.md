@@ -10,7 +10,7 @@ Inspired by idle games like [Idle Loops](https://stopsign.github.io/idleLoops/),
 
 ### Core Loop
 
-1. You start each loop in the Menu region with full mana
+1. You start each loop in the Menu region with full mana — the [Menu panel](../modules/menuPanel.md) is that region's substrate, and its Restart is how you return there outside loop mode
 2. Queue actions: move to regions, explore undiscovered areas, check locations
 3. Actions execute automatically, each consuming mana based on its cost
 4. When mana runs out, the loop resets: mana refills, position resets, queue restarts
@@ -93,6 +93,15 @@ When Loops mode is active, clicking in the tracker queues actions instead of exe
 - **Click an exit** → Queues region moves along the path to the exit's source region, then moves through the exit (or queues an explore if the exit is undiscovered)
 
 Each click replaces the current queue with a fresh path to the clicked target.
+
+**Routes start at Menu** — `findDiscoveredPath` sources every route from
+`startRegions[0]`, the region the [Menu panel](../modules/menuPanel.md) owns.
+That panel is also where the player leaves it by hand: pressing one of its exit
+buttons publishes a real `user:regionMove` tagged `menuPanel-exit`, a **planning
+source**, so the move is authored into the path rather than blocked by loop
+mode's strict action gate. With the panel's *Skip the menu* setting on (the
+default) that first hop is taken automatically at load, exactly as
+`procgenPlayer` has always done for a procgen world.
 
 ### Controls
 
@@ -480,8 +489,8 @@ The loops module uses a dispatcher-based event system:
 The test suite (`frontend/modules/tests/testCases/loopsPanelTests.js`) covers:
 
 1. **Initial Menu not processed** — Starting region isn't treated as an action
-2. **Real actions processed** — Queued actions execute correctly
-3. **Mana consumption** — Mana deducted proportional to action cost
+2. **Real actions processed** — the [Menu panel](../modules/menuPanel.md)'s Restart, then one of its exit buttons pressed *in loop mode*, puts a real `regionMove` in the path; a location check queued behind it, and the queue processes both
+3. **Mana consumption** — the Start/Pause labels driven over one seeded action, asserting mana actually moves (`gameState:manaChanged.current` below the starting value)
 4. **XP awarding** — XP gained matches mana spent
 5. **Level up mechanics** — XP thresholds and cost reduction verified
 6. **Speed adjustment** — Game speed affects processing rate

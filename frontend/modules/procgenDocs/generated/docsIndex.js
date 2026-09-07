@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 17,
         "headings": 787,
         "indexHeadings": 2,
-        "lines": 20968,
+        "lines": 20981,
         "pages": 4,
-        "words": 256001
+        "words": 256129
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -37,7 +37,7 @@ export const DOCS_INDEX = frz({
             "file": "architecture.md",
             "h1": "Procedural Generation Architecture",
             "headings": 24,
-            "lines": 900,
+            "lines": 913,
             "links": [
                 "demos.md",
                 "gotchas.md",
@@ -47,7 +47,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/architecture.md",
-            "words": 21807
+            "words": 21934
         },
         {
             "description": "`frontend/modules/shared/procgen/substrateRegistry.js` is the dispatch hub between the pipeline, the runtime player and the substrates: each registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This is the reference for that entry contract — field by field, a capability matrix GENERATED from the eight entries, and a checklist for adding one.",
@@ -158,7 +158,7 @@ export const DOCS_INDEX = frz({
                 "text-adventure.md"
             ],
             "path": "docs/json/developer/procgen/loop-recording.md",
-            "words": 8240
+            "words": 8241
         },
         {
             "description": "The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders regions as grid-of-tiles maze rooms: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles on the perimeter.",

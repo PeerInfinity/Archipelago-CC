@@ -166,6 +166,19 @@ Everything else in the file — regions, exits, locations, items, access rules �
 2. Present → it builds a **warehouse** (`procgenPlayerEngine.js`): for each sidecar entry it looks up the substrate in the registry and calls the entry's `deserializeWorld(playable_payload)`, storing `{ substrate, world, loadRegionEvent }` per region.
 3. It resolves the start region by walking `start_regions` (following a synthetic AP start region's exits into the warehouse when needed) and, as the player moves between regions, publishes the owning substrate's load event — `maze:loadRegion`, `bounce:loadRegion`, `runner:loadRegion`, `textAdventure:loadRegion`, `flash:loadRegion`, `jta:loadRegion`, or `omsi:loadRegion` — with the deserialized world as payload. The substrate's panel subscribes and renders the region.
 
+**The start hop is now a shared decision.** Step 3's synthesized `start → first
+real region` move fires only when *skip the menu* is on — the setting
+`moduleSettings.menuPanel.skipMenu` (default `true`), owned by the
+[Menu panel](../../modules/menuPanel.md) and read here synchronously through
+`menuPanel.isSkipMenuEnabled()`. Skip off ⇒ procgenPlayer publishes nothing and
+the player stays at the AP-declared start for the panel to play; the cached
+`getResolvedStartRegion()` survives either way, because loop resets teleport to
+it regardless. On a world procgenPlayer does NOT claim, the same setting makes the
+Menu panel publish the hop instead — exactly one publisher per load, decided by
+asking `getResolvedStartRegion()` rather than by inspecting the document. With
+`menuPanel` absent from the module set the answer is the schema default, i.e.
+this module's pre-M1 unconditional hop.
+
 Two systems layer on top of this:
 
 - **Playback bot** (`frontend/modules/playbackBot/`) walks a recorded sphere log through the world. For each region it resolves the current substrate's `getPlaybackController()` from the registry and drives the controller directly (bypassing the eventBus), so each substrate implements its own "walk to X" semantics — bounce, for example, synthesizes real physics input.

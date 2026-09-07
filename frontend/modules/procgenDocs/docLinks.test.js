@@ -124,6 +124,13 @@ describe('the corpus census — printed, then pinned', () => {
          *              held-boundary § → that same § so the two gates are
          *              never confused for each other (`same-doc` 14 → 15 —
          *              the FIRST time this census's same-doc count has moved).
+         *   227 → 228  MENU PANEL M1: `architecture.md`'s runtime § gained the
+         *              shared start-hop paragraph, which points at
+         *              `docs/json/modules/menuPanel.md` — the module that owns
+         *              the `skipMenu` setting procgenPlayer now reads. ⛓ `repo`
+         *              (34 → 35), not `doc`, for the same reason the
+         *              apworldEditor pair are: that file is not one of the
+         *              seventeen this VIEWER lists.
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
          */
@@ -131,10 +138,10 @@ describe('the corpus census — printed, then pinned', () => {
             'same-doc': 15,
             doc: 155,
             external: 23,
-            repo: 34,
+            repo: 35,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(227);
+        expect(CORPUS.length).toBe(228);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
@@ -148,7 +155,7 @@ describe('the corpus census — printed, then pinned', () => {
 
     it('sends every other repo path to GitHub, fragment kept', () => {
         const repo = RESOLVED.filter((r) => r.kind === 'repo');
-        expect(repo).toHaveLength(34);
+        expect(repo).toHaveLength(35);
         for (const r of repo) expect(r.href.startsWith(`${REPO_URL}/`), r.href).toBe(true);
         /** ⛓ The four families the corpus actually names. */
         const tops = [...new Set(repo.map((r) => r.repoPath.split('/')[0]))].sort();

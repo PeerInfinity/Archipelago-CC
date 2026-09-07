@@ -37,6 +37,7 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 - [Inventory](./inventory.md)
 - [JSON](./json.md)
 - [Locations](./locations.md)
+- [Menu Panel](./menuPanel.md) (`menuPanel`) — the start region's substrate: one button per exit, a Restart that works outside loop mode, and the *skip the menu* setting.
 - [Modules](./modules.md)
 - [Path Analyzer Panel](./pathAnalyzerPanel.md)
 - [Game State Panel](./gameStatePanel.md)

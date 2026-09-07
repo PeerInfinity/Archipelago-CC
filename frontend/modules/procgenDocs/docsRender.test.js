@@ -227,7 +227,7 @@ describe('⛓ the links the render emits', () => {
         //   for the omsi Start/Pause rule — `gotchas.md` → `omsi.md`, and
         //   `omsi.md`'s held-boundary § → its own stopped-gate §
         //   (see `docLinks.test.js`'s census).
-        expect(checked).toBe(227);
+        expect(checked).toBe(228);
     });
 
     it('tags each link with the kind that produced it', () => {
