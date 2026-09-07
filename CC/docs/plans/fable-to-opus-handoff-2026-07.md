@@ -12145,6 +12145,22 @@ and does not publish, which is where those worlds already were. (d) Merging the 
 still the named follow-up. **NEXT: M1b** (the `START_REGION_MOVE_COST` constant in `shared/`), the
 planner's to launch.
 
+**M1 VERIFIED by the planner 2026-09-07** (`79568a4f82` on origin/main; 8 commits by path, push range
+`cf5ddcf0fc..79568a4f82` with the left end = M1's own start HEAD; `frontend/modules/menuPanel/` with two test files
++ `docs/json/modules/menuPanel.md` on disk; FIVE registrations (`modules.json`, `layout_presets.json`,
+`moduleMetadata.js`, `init-bundled.js` — the checklist memory said three); `loopUI.js` Hard Reset now calls
+`clearPath()` with the defect named at the line; `isLoopModePlanningSource` gains `menuPanel`; `git diff --stat`
+under `shared/` and `presets/` EMPTY; CI @ `598d326598` run 34090845435 **440/13357, 0 failed** — derived +4 files /
++41 rows before the run against R-b's 436/13316 and matched). What M1 overturned, kept: plain worlds had TWO ways
+out of Menu (the Exits panel drives `regions`' publisher) — the plan's §0.2 was wrong and no doc carried it;
+`gameState:manaChanged` carries `{current, max}`, a second reason the mana row was vacuous; `adventure` carries an
+EMPTY `preset_sidecars` (a plain world — "has sidecars" is not the question; `procgenPlayer.getResolvedStartRegion()`
+is the hand-off predicate); a planning-source mutant is invisible unless the press happens IN loop mode (trap 1293).
+⚖ NEW for the user: (a) `menuPanel` is in the DEFAULT module set only — `modules-apcalc.json` enables procgenPlayer
+without it, so there the hop stays unconditional; (b) 7 of 212 presets declare a start region with ZERO usable
+exits (ff1, musedash, factorio, subnautica, robotkitty_tilemap, paint, terraria) — skip warns and does nothing;
+(c) merging the two hop publishers remains the named follow-up. NEXT: **M1b** on M1's idle notice.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
