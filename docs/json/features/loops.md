@@ -323,6 +323,15 @@ path. The no-data branch has always priced an explore at a plain region move
 the multiplier applies only when a block IS loaded, where explore reads the
 region's own `moveCost`. Named, not changed.
 
+⛔ **THE DISPLAY COPY DISAGREED WITH THIS TABLE UNTIL 2026-09-07.**
+`shared/queueAnalysis.js`'s `BASE_COSTS` — what the Loops and Loop Stats panels
+render a queued action's cost from when no block is loaded — typed
+`locationCheck: 100` while the runtime charged 10. Measured: the panel showed
+100 for a check the queue then billed 10, a 10× disagreement that survived L2
+because L2 moved the CHARGING copy and the display copy typed its own number.
+Both tables now read the same exported constants (⚖ user 2026-09-07), and a
+parity row asserts the display equals the charge for all three action types.
+
 ## Loop Stats Panel
 
 The Loop Stats panel appears in the left column and displays a detailed cost analysis for every action in the queue.
