@@ -11844,6 +11844,35 @@ log in hand; regenerate into SCRATCH; gate; STOP — the committed re-record is 
 **R-a LAUNCHED 2026-09-06** as `loop-costs-Ra` (Opus; kickoff `NewDocs/plans/loop-costs-Ra-prompt.md`; on L4's
 close). R-b's kickoff is drafted; it launches on R-a's idle notice.
 
+**⇒ R-a AS BUILT — THE THREE HUB/SCHEMA RESIDUES SHIP (2026-09-07, `loop-costs-Ra`, main `a1bf4d275f`;
+plan §15).** Four commits, staged by path. (1) **The schema is tightened to what the CORPUS allows**:
+`required` = the four keys all 14 blocks on disk carry (⛔ not `version`/`generatedAt`/
+`defaultRegionXpEffect` — the 12 tracked blocks carry none, and 12 presets would red), an `enum` on
+`xpEffect` and `defaultRegionXpEffect` pinned to `VALID_REGION_XP_EFFECTS` by a vitest row (the JSON
+cannot import the constant), `additionalProperties: false` on the block AND on a region entry, `error`
+kept, `moveCost`/`timeDrainPerSecond` kept as SIBLINGS with no `oneOf` — that rule is write-by-class's.
+**212 preset files, 0 schema errors before and 0 after**, plus Python `jsonschema` 6 passed/212 subtests
+and L4's whole validation matrix re-run at 0 errors added for every region class. ⛑ **A producer the
+brief did not name was checked first**: `procgenPipelineEngine.js`'s FAILURE marker carries all four
+required keys, so a build that threw still emits a valid document — a `required` list drawn from the
+successful producer alone would have broken that, and no committed block carries `error` to show it.
+`KNOWN_KEYWORDS` needed nothing (`required`/`enum`/nested `additionalProperties` all already
+implemented), so the brief's STOP did not fire. (2) **`onSave` is bound to the document it was made
+for**: a monotonic `_documentToken` stamped at `_openSession` — the ONE session boundary — captured by
+`_openDocumentKeyEditor` into the `onSave` closure and checked in `_acceptEditorOp`, FAIL-CLOSED (a
+caller with no token cannot match). ⛔ **No door changed, and that overturns the brief's "every door's
+`open()` receives it":** a `documentToken` in the context would have had zero readers, and the closure
+is the mechanism — which is exactly why both `op` doors gained the guard through one edit. (3) **The
+presence switch is an ACTION**: one button, Enable/Disable, both a single `set-key loop_costs` through
+the same veto and undo step, the empty block built from the exported constants (⚖ k), removal by
+`undefined` (`setPath`'s delete arm, confirmed at the line). **Two in-app rows (21 and 14 conditions),
+roster 86 → 88**, and three mutants driven: the schema reverted reds 9 of 13 new vitest rows (the four
+"accepts" rows stay green, correctly); a hub ignoring the token reds ONE row and exactly its four token
+claims; and a Disable that EMPTIES instead of deleting reds ONE row and exactly its three delete-vs-empty claims (⛑ the two items COMPOSE — `{}` fails item 1's `required`, so the veto refuses the op and the op list does not grow either). `compare-runs` vs L4's close: **ADDED (2), nothing else moved**, exit 0; `test-loops-only` 8/8; `check-loop-costs-one-model` ALL PASS; `check-seedling-editor-arm` (the one instrument that CONSUMES `loadRulesSchema()` — found by grepping for the ARTIFACT, not the filenames) ALL CHECKS PASSED; bounded vitest 50 files/1712 rows/0 failed with `jsonSchemaCheck` 22 → 35 the only mover. ⛔ `check-procgen-help --doors=all` NOT owed: `scripts/procgen/` untouched and the one `git grep` hit for a changed frontend file is a COMMENT, not an import. **⚖ still OPEN:** what a schema cannot say (a `moveCost` on a summary region, an
+entry for a NATIVE region) stays `check-loop-costs-one-model`'s and `loopCostGenerator.test.js`'s.
+**NEXT:** R-b (the omsi fixtures — its regenerated blocks must now pass the tightened schema), then M1
+(design first), R1 owed.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
