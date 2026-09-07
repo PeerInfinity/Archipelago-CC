@@ -11870,6 +11870,10 @@ roster 86 → 88**, and three mutants driven: the schema reverted reds 9 of 13 n
 "accepts" rows stay green, correctly); a hub ignoring the token reds ONE row and exactly its four token
 claims; and a Disable that EMPTIES instead of deleting reds ONE row and exactly its three delete-vs-empty claims (⛑ the two items COMPOSE — `{}` fails item 1's `required`, so the veto refuses the op and the op list does not grow either). `compare-runs` vs L4's close: **ADDED (2), nothing else moved**, exit 0; `test-loops-only` 8/8; `check-loop-costs-one-model` ALL PASS; `check-seedling-editor-arm` (the one instrument that CONSUMES `loadRulesSchema()` — found by grepping for the ARTIFACT, not the filenames) ALL CHECKS PASSED; bounded vitest 50 files/1712 rows/0 failed with `jsonSchemaCheck` 22 → 35 the only mover. ⛔ `check-procgen-help --doors=all` NOT owed: `scripts/procgen/` untouched and the one `git grep` hit for a changed frontend file is a COMMENT, not an import. **⚖ still OPEN:** what a schema cannot say (a `moveCost` on a summary region, an
 entry for a NATIVE region) stays `check-loop-costs-one-model`'s and `loopCostGenerator.test.js`'s.
+**⚖ 52 at the pushed SHA `a1bf4d275f`** — run 34071097837 success: `suite: vitest (unfiltered)`
+**436/13316** (13308 passed | 8 skipped | 0 failed), slow battery 12/217 — derived **+0 files / +13 rows**
+against L4's 436/13303 and **MATCHED EXACTLY**; all SIX workflows green at that SHA (the four browser-gate
+shards and the headless step carrying `check-loop-costs-one-model` passed on a RUNNER, not only on this box).
 **NEXT:** R-b (the omsi fixtures — its regenerated blocks must now pass the tightened schema), then M1
 (design first), R1 owed.
 
