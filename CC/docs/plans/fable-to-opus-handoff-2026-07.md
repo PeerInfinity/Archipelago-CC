@@ -12190,6 +12190,54 @@ resume).
 (the writer and the readers share one name); a mutant on any one of the five must red a row that sees THAT site.
 Everything else in the kickoff stands: submodule pushed first, the outer push incl. the gitlink ONE ask-first unit.
 
+⇒ **M1b AS BUILT — 2026-09-07, STOPPED AT THE PUSH.** Plan §9 carries every number. Four outer commits, NOT
+pushed — `8bedec558f` (the rule), `c1ee1fc287` (docs), `ef88e2f4f1` (the gitlink bump), plus the record commit;
+two submodule commits PUSHED first (`1e7a1a5..3f85b55`, PeerInfinity/archipelago-shared). Staged by path; no
+preset changed; the two maze fixtures stayed untracked.
+
+⛔ **THE RULING'S "four pricers plus the planner's literal" WAS FIVE SITES; THERE ARE SIX, AND THE SIXTH IS THE
+ONE THAT WRITES THE BLOCK.** `loopCostPlanner.js`'s `SimulatedState` is the *simulation's* budget;
+`loopCostGenerator.js`'s `writeCostsByClass` is what stamps `moveCost` into the EMITTED block. Mutating only the
+first reddened five rows — every one of them a planner's-budget row — and left `start region always has moveCost
+0` GREEN. Both now read `START_REGION_MOVE_COST`, so all six sites share the name the user asked for. That is a
+trap worth keeping: *a mutant that reds rows can still be the wrong site.*
+
+⛓ **ONE predicate, not four**: a new public `LoopState.isStartRegion(regionName)` reading the
+`gameStateAPI.isStartRegion` that `loops/index.js:497` already built. The collapse the ruling called "welcome if
+cheap" cost one method; the rule sits before BOTH branches at each reader and before the XP discount.
+
+**The bill, same script both sides** (`measure-menu-bill.mjs`; BEFORE in a throwaway worktree at `3a0024b9d5`
+with the submodule at the old gitlink, served on :8001): CHARGE `Menu → region_0_0` **50 → 0** (loaded block AND
+no-data fallback); `queueAnalysis` base/final **50/50 → 0/0**; the Loops panel's Menu block queued row
+**`-50.0  50.0  2.5s` → `-0.0  100.0  0s`**; its per-exit label **50.0 → 0.0**; `region_0_0`'s label 50.0 → 50.0;
+the STORE's `getRegionCost('Menu')` **50 → 50, unmoved** (the rule is not a lie told to the store); 0 page errors
+both sides. Verify on `jta_schedule_test` is IDENTICAL before and after — `33 loops, 5 entries`, then
+`32 steps — the block prices none of them, so there is nothing to score` — i.e. **no mismatch on Menu**.
+
+**Gates:** `test-loops-only` 8/8 → 8/8 and `test-substrates --batch=fast` 88/88 → 88/88, `compare-runs` "No
+differences in status, roster, or duration" on both; `check-loop-costs-one-model` ALL PASS, 5 documents
+byte-identical (the substitution moved no value); `check-maze-loop-mana` OK with its per-tile derivation
+unmoved; `check-ta-mana-leg` ALL PASS — and **no pin of it could move**, since it departs `AdventureZone` and
+every start region in the corpus is `Menu` (six fixtures checked), so the brief's "re-derive the pin" had
+nothing to re-derive; bounded vitest 41 files / 954 rows; `procgenDocs/` 452 unmoved; the generator re-run +
+`--check` + `check-procgen-docs` clean; `check-procgen-help --doors=all` **ALL PASS, 266 instruments, 460.8 s, at
+the gitlink head** (L2 §12's lesson honoured — run there, never earlier); 0 thrown handlers in all four in-app
+logs, and the substrates browser-error delta is 5 more of an EXISTING 404, with an identical set of distinct
+lines. Six mutants, one per site, each armed and reverted.
+
+**⚖ 52, derived before the run:** baseline CI at `598d326598` = **440 / 13357** (run 34090845435). +3
+`loopCostGenerator.test.js`, +7 new `shared/queueAnalysis.test.js`, +7 `loopState.test.js`, +7 new
+`loops/startRegionMoveCost.test.js` ⇒ **+2 files, +24 rows ⇒ expected 442 / 13381**. ⚠ Measurable only at a SHA
+carrying the gitlink, since CI checks submodules out at the gitlink.
+
+**⚖ OPEN for the user (named, not changed):** `shared/queueAnalysis.js`'s `BASE_COSTS` still types `50/100/50`,
+and its `locationCheck: 100` disagrees with the runtime's `DEFAULT_LOCATION_COST = 10` — L2 moved the charging
+fallback and left this DISPLAY copy behind. Fixing the 100 is a value change this slice did not ask for.
+
+**THE PUSH IS OWED.** `git status -sb` reads `[ahead 4]`. Push range `0198d65381..<record HEAD>`, submodule
+`1e7a1a5..3f85b55`. The outer push incl. the gitlink is ONE unit: any SHA of this slice without `ef88e2f4f1`
+reds CI's `unittests` on a missing export.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
