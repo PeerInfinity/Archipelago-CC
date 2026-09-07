@@ -12085,6 +12085,60 @@ checkbox + plain-world hop with procgenPlayer reading the same setting, Restart 
 the two vacuous loops rows made REAL, docs. **M1b** (the `START_REGION_MOVE_COST` constant in `shared/` + the cost
 rule; gitlink ask-first) launches on M1's idle notice. Reports come to `next-priorities-planning-3`.
 
+**⇒ M1 AS BUILT — 2026-09-07, Opus session `menu-panel-M1`** (deltas only; the full record is
+`NewDocs/plans/menu-panel-plan.md` §8, and the module doc is `docs/json/modules/menuPanel.md`).
+Five commits, one per item, staged by path: `f0e980bc4c` the module · `1a0bcf59fa` procgenPlayer
+reads the setting · `dd27d09f5b` the Hard Reset fix · `0266aeaeaf` the two rows · `1842d8078f` docs.
+
+**What the brief got wrong.** (1) *"On a plain world the only way out of Menu is the Region Graph"*
+is FALSE — the `regions` module is a registered `user:regionMove` sender and publishes at
+`regions/index.js:253`, driven by the **Exits panel**'s `user:exitClicked` (`exits/exitUI.js:355`).
+Plain worlds had TWO ways out. Nothing depended on it and no procgen doc carried the claim.
+(2) `gameState:manaChanged` carries `{current, max}`, **not** `{mana}` — a SECOND, independent
+reason `loops-mana-consumption` was vacuous (`undefined < 100` is false forever); the plan named
+only the 'Resume'-label reason. (3) `adventure`, the world `test-loops-only` loads, carries
+`preset_sidecars: {}` — an EMPTY object, so `buildWarehouse` returns null and it is a PLAIN world:
+"has sidecars" is not the question, "will procgenPlayer hop" is. (4) That question already had an
+exact answer — `procgenPlayer.getResolvedStartRegion()` is non-null iff procgenPlayer will publish
+— so the hand-off is a read, not a new registry. (5) The registrations are **FIVE**, not three:
+`init-bundled.js` too, or `bundle-frontend.js`'s `validateBundledModules` warns and bundled mode
+double-instantiates the singletons. (6) The planning-source mutant is INVISIBLE unless the exit
+press happens IN LOOP MODE — the first cut pressed it with loop mode off and the mutant measured
+GREEN; the row now leaves loop mode for Restart and re-enters it for the press.
+
+**Gates, every number.** `test-loops-only` **8/8** with both rows now REAL (`loops-real-actions-processed`
+4 conditions → **13**, two of the old four being unconditional passes; `loops-mana-consumption` → **9**,
+logging `mana 110 → 109.867` and 4 `manaChanged` events below the start). `test-substrates --batch=fast`
+**88/88**, `compare-runs` = *"No differences in status, roster, or duration."* — every procgen row
+UNMOVED with skip default ON. Bounded vitest **102/102** over the touched files, whole `loops/`
+**644/644**, `procgenDocs/` **452/452**, `check-procgen-docs` ALL CHECKS PASSED, generator re-run
+(docs-index 256,001 → 256,129 words) and the link census +1 (`repo` 34 → 35, corpus 227 → 228 — the
+new `architecture.md` → `docs/json/modules/menuPanel.md` pointer resolves to GitHub, not the viewer).
+`grep -ac "Error in event handler for"` = **0** in all four run logs; `BROWSER LOG (error)` 320 → 304
+on substrates, 1 → 1 on loops (the pre-existing `/_source-mtime` 404). ⚖ 52 per-file delta derived
+BEFORE the CI run: **+4 files, +41 rows** (menuPanelEngine 14, menuPanel/index 14, loopModeExemptions 6,
+hardResetPath 2, procgenPlayer/index 17 → 22; the two procgenDocs files moved COUNTS, not rows).
+
+**Mutants, each armed, measured, reverted.** (A) skip ignored on a plain world ⇒ `loops-real-actions-processed`
+RED on *"Skip-the-menu took the start region's first exit at load"* AND `loops-mana-consumption` RED on
+*"The document names a location in Menu"* — the brief predicted one row, **two** see it. (B) Restart
+without `clearPath` ⇒ RED on *"Restart put the player at a start region with an empty path"*.
+(C) `menuPanel` dropped from `isLoopModePlanningSource` ⇒ **ONE row, ONE condition**:
+`loops-real-actions-processed` on *"The exit press put a regionMove in the path"*. (D) Hard Reset fix
+reverted ⇒ `hardResetPath.test.js` 2 failed, with the exact warning the pre-fix drive printed,
+`[GameState] Region 1 instance 1 not found in path` (path 2 → 2; `clearPath()` takes it to 0).
+
+**⚖ OPEN for the user.** (a) `menuPanel` is in the DEFAULT module set only; `modules-apcalc.json` also
+enables `procgenPlayer` but not `menuPanel`, so there the setting is unavailable and procgenPlayer keeps
+its unconditional hop (the designed schema-default fallback) — should the panel join the other module
+sets? (b) `loops-real-actions-processed`'s leg 0 reads the PAGE'S LOAD, so it is only meaningful while
+that row runs first (order 0, `randomizeOrder: false`); it is the only in-app assertion of the skip hop
+and what makes mutant A red. (c) **7 of 212 presets** declare a start region with zero usable exits
+(`ff1`, `musedash`, `factorio`, `subnautica`, `robotkitty_tilemap`, `paint`, `terraria`): the panel warns
+and does not publish, which is where those worlds already were. (d) Merging the two hop publishers is
+still the named follow-up. **NEXT: M1b** (the `START_REGION_MOVE_COST` constant in `shared/`), the
+planner's to launch.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
