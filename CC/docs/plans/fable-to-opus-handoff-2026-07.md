@@ -12553,6 +12553,27 @@ gitlink, so (i) was already a mover at W0; (ii) names the driver moving at `df40
 2026-09-05) and (iv) the dead-frame accounting at `3770314bfd`. W2 adds no new claim on the
 tier beyond a docs-only bump. Owed if driven: campaign + map-walk + mechanic, ≈143 min.
 
+**⚖ RULED (user, 2026-09-07): "Yes, I authorize the push."** **W2 VERIFIED by the planner 2026-09-07** — on disk and over
+the wire, independently of the slice's block: `3fdb403424` on origin/main (the 6-commit unit `b6c9c90f6d..d3edc84457`
++ the procgen-help standing-row refresh `d3f6db0d4f` + the record); gitlink `2bbabb2..071ac1c`; the submodule's
+diff 5 files / 0 payload bytes (4 wasm files unchanged); the live site's README 80 lines with a 4-row generated table,
+`docs/pin-policy.html` and `docs/history.html` 200; `check-seedling-wasm-pins` ALL PASS with row (i);
+`seedling-wasm-readme.mjs --check` OK; CI vitest @ `d3edc84457` run 34156955539 **442/13384, 0 failed, ±0 as
+derived**; the seedling-wasm workflow green by step outcome. Not taken, with reasons recorded by the slice: the help
+baseline's informational count (a timing-sensitive allowlist re-derivation); the `gate: seedling-wasm-full-tier-owed`
+standing row, stale since W1's gitlink and honest only after a ≈143-minute drive or ⚖ 70 (f) — **⚖ for the user**.
+
+**⛓ THE SEEDLING ORIGINAL WASM ARC IS CLOSED — 2026-09-07 (W1 + W2, two Opus sessions).** Every item of the ask is
+done: the pre-fork branch (already `main`), the source SWF, the wasm at SWFRecomp `master`, the build in seedling-wasm
+with its own live page on the repo's OWN Pages site (enabled by the planner), verified on Pages, the README's
+prominent link to the original, the chart with clickable demo links (GENERATED from the manifest and gated), the
+"where used" descriptions re-verified (three false claims died; roles from the manifest), unused builds (⚖ none
+retired — the two controls stay), the README cleanup (199 → 80 lines, the law and the history moved to `docs/`).
+Named follow-ups, none launched: the full-tier "owed" standing row (⚖ above); spelling 4 of the pin scan widened past
+`PAGE_NAME` (a bare `const BUILD` is invisible — 51 is a lower bound); the help baseline's informational count.
+⚑ Trap **1297** (W2): a CI wait testing `pending == 0` is satisfied by an EMPTY run listing — require a minimum
+population before believing a zero.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
