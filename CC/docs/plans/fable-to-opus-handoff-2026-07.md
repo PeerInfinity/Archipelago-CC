@@ -12063,6 +12063,28 @@ launched:** (a) hand-off Save also downloads the stamped atlas (or the door's no
 `seedling_playthrough` preset index names only the Generate.py folder, so no `?game=` link reaches the
 atlas-compiled document. NEXT: **M1** (the menu panel — design conversation first).
 
+**⚖ RULED (user, 2026-09-06) — M1, THE MENU PANEL, design conversation DONE.** MEASURED first (plan
+`NewDocs/plans/menu-panel-plan.md` §0–§2): all 212 presets carry ONE default start region; on a PLAIN world the only
+way out of Menu is the Region Graph (the one UI that publishes `user:regionMove`); alttp's three start options are
+Menu's three exits (Links House / Sanctuary / Old Man S&Q) ⇒ "one button per exit" IS the multi-start UI; **the
+Loops panel's Hard Reset is DEFECTIVE** — `trimPath(1)` passes the number 1 as a region NAME, warns "Region 1
+instance 1 not found" and leaves the path untouched (driven in node, 2 → 2); the loops RESET path (`clearPath()`
++ a `fromReset` teleport) is the working precedent. The user, verbatim: *"That plan makes sense."* · *"I want it to
+be possible to manually activate the menu panel at any time, even if skip is on. The way the player resets to the
+first region when not in loop mode is to activate the menu panel and press the button to restart from the first
+region. Some games, like alttp, might have more than one option of which region to start from."* · *"Let's go with
+your recommendations for all the options."* (Q1 the panel stays as the Restart home, focused only at Menu with
+skip OFF; Q2 TWO hop publishers, ONE setting; Q3 Restart = path + position + the substrate's own reset via
+`fromReset`; Q4 one line of instructions, no links; Q5 the constant in shared `loopCostDefaults.js`, gitlink as one
+ask) · *"Anything game-specific that the menu displays would need to be sourced from the rules.json file."* · on a
+general MENU SUBSTRATE with sub-menus: the planner recommends naming the seam and WAITING for a use case (plan §6)
+— M1's content is data-driven, keyed on `isStartRegion`, which is all a sub-menu would need from it.
+**M1 LAUNCHED 2026-09-06** as `menu-panel-M1` (Opus; kickoff `NewDocs/plans/menu-panel-M1-prompt.md`): the
+`menuPanel` module (three registrations), exits as real moves (`menuPanel-*` a planning source), the skip setting +
+checkbox + plain-world hop with procgenPlayer reading the same setting, Restart in both modes, the Hard Reset fix,
+the two vacuous loops rows made REAL, docs. **M1b** (the `START_REGION_MOVE_COST` constant in `shared/` + the cost
+rule; gitlink ask-first) launches on M1's idle notice. Reports come to `next-priorities-planning-3`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
