@@ -12268,6 +12268,24 @@ see a display-only change; the before/after table is the measurement that does. 
 **⚖ 52 RE-DERIVED:** `shared/queueAnalysis.test.js` NEW → **10** (was 7) ⇒ **+2 files, +27 rows ⇒ expected
 442 / 13384** against CI's 440 / 13357 at `598d326598`.
 
+**M1b VERIFIED by the planner 2026-09-07** (`6269bd5f01` on origin/main; 8 commits by path, range
+`0198d65381..6269bd5f01`; submodule `1e7a1a5..41e3f6e` pushed ahead of each of the TWO gitlink bumps
+(`ef88e2f4f1`, `0a4490e736`); all SIX sites read `START_REGION_MOVE_COST` (grep in both repos); no preset moved;
+**CI @ `6269bd5f01` run 34140437549 success: `suite: vitest (unfiltered)` 442/13384 (13376 passed | 8 skipped | 0
+failed), slow battery 12/217 — M1b derived +2 files / +27 rows against 440/13357 BEFORE the run and MATCHED
+EXACTLY**). The bill: `Menu → region_0_0` 50 → 0 at the charge, the queue analysis, the panel row and the per-exit
+label; the store unmoved by design. The display 100: `locationCheck` 100/10 → 10/10 display/charge on `adventure`;
+`customAction` reads `DEFAULT_REGION_COST` (the charging fallback prices an explore as a plain move — the planner's
+relayed ×2 was wrong and M1b did not take it; recorded). ⚖ NEW: none beyond M1's three.
+
+**⛓ THE MENU LADDER IS CLOSED — 2026-09-07 (M1 + M1b, two Opus sessions, one pause/resume).** What it leaves: the
+`menuPanel` module (exits as real moves, skip default ON, Restart in both modes, manually activatable), Hard Reset
+fixed, two loops rows REAL, `START_REGION_MOVE_COST` at six sites, the display cost table reading the constants.
+Named follow-ups, none launched: the panel in the other module sets that carry procgenPlayer (`modules-apcalc.json`);
+the 7 presets whose start region has no usable exit; merging the two hop publishers; a general MENU SUBSTRATE
+(sub-menus) waits for a use case (plan §6). **NEXT: the user's replan** — the queue-viewer replan (§5m) now has its
+input (what the menu is); the field otherwise as in §5p's R1 paragraph.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
