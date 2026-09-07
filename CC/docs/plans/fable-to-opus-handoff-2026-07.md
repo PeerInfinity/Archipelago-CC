@@ -12505,6 +12505,38 @@ spellings** — so the REFERENCED count for the default build (51) is a LOWER BO
 `docs/pin-policy.md`, not fixed: whether spelling 4 should widen beyond `PAGE_NAME` is a
 decision about the rule that keeps the historical builds out.
 
+**⚖ RULED (user, 2026-09-07): "Yes, I authorize the push."** — relayed by the planner after the
+ask-first stop. `b6c9c90f6d..d3edc84457` is **ON `origin/main`**, and **ALL SEVEN WORKFLOWS ARE
+GREEN** at that SHA. ⛔ Read by STEP OUTCOME from the LOG, never by the job listing —
+`continue-on-error` rewrites a step's conclusion to `success`, and it did so here for a step
+that failed:
+- **STEP 1 (gating) — `ALL PASS — 4 pinned builds, four views in agreement`**, byte-for-byte
+  the local run, INCLUDING row (i)'s block naming all four roles (`seedling_original` demo ·
+  p4d default · p4c apitem-control · p4b arm-control).
+- **STEP 2 (non-gating) — `ALL PASS`.**
+- **STEP 3 (non-gating) — fails, and it is the DOCUMENTED refusal**: `EACCES mkdir
+  /mnt/c/playwright`, a real-GPU-Windows row on a Linux runner, exactly as W1 recorded. Its
+  step CONCLUSION reads `success`; the log does not.
+**⚖ 52 — the suite row, QUOTED from CI** (`ci-vitest-summary.mjs d3edc84457`, run 34156955539
+success): `suite: vitest (unfiltered)` **442/13384** (13,376 passed | 8 skipped | 0 failed) and
+the slow battery **12/217**. ⛓ **UNMOVED from W1's `168f9968b2` baseline** — the ±0 this slice
+DERIVED before the push, now measured. Pages deployed; the demo build and `watch.html` are 200
+on the Archipelago-CC site too.
+**⇒ THE FOLLOW-UP TAKEN, `d3f6db0d4f` (pushed):** `gate: procgen-help` **265/0 → 267/0**
+(measuredAt `e172d631f1` → `d3edc84457`, baseline count 252 → 250) — a CI-QUOTED row, so it
+could only move once CI had run at a head carrying the new instrument. It was TWO behind, not
+one. ⛔ **`check-procgen-help.baseline.json` DELIBERATELY NOT rewritten**: only its
+informational `counts.instruments` is stale (the `importDoorEffectful` set is unchanged at 250,
+measured), and a `--write-baseline` is an ~8-minute TIMING-SENSITIVE re-derivation of an
+allowlist that reds both ways — a row landing either side of the 5,000 ms ceiling on census day
+would be baked in or silently dropped, which is worse than a count nothing gates.
+**⚠ ⚖ NOT TAKEN, and it is not this slice's to take:** `standing-values.json`'s
+`gate: seedling-wasm-full-tier-owed` row still quotes *"ALL PASS — every category … is still
+about this tree"*, and the gate reads **3 CHECK(S) FAILED** at this head. It went stale at
+**W1's** push (its (i) mover starts at the PRE-W1 gitlink `e645f2e`), and refreshing it would
+record a RED standing value whose only honest cure is the ≈143-minute drive or ⚖ 70 (f)'s
+"the user's word". FOR THE USER.
+
 **Run here:** the pins gate **ALL PASS — 4 pinned builds** (CI's STEP 1, verbatim; the workflow
 runs exactly this) · `--self-test` **ALL PASS, 36 cases** · `seedling-wasm-readme.mjs --check`
 and `--help` exit 0 · `generate-procgen-reference.mjs --check` ALL 6 MODULES AND 4 REGIONS
