@@ -97,10 +97,9 @@ export async function testRealActionsProcessed(testController) {
     const speedBefore = loopState.gameSpeed;
     // ⚠ THE RESTORE IS PART OF THE ROW. This row runs the queue to completion
     // and to mana zero; a later row that inherited THAT would start from
-    // 'Restart'/completed with an empty pool. `restartFromStart({autoStart:
-    // false})` is the loops module's own primitive for "back to the top,
-    // paused" — it refills mana, resets progress and PUBLISHES, so the panel's
-    // own labels are correct again too.
+    // 'Restart'/completed with an empty pool. `resetLoopsToIdle` (see its
+    // docblock) puts the module back where a fresh panel starts, LABEL
+    // included.
     restore = async () => {
       try { loopState.setGameSpeed(speedBefore ?? 100); } catch (e) { /* best effort */ }
       try { await setLoopMode(testController, loopsPanelElement, isLoopModeActive, loopModeAtEntry); } catch (e) { /* best effort */ }
