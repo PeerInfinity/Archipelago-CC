@@ -151,6 +151,16 @@ does it come back here as an undoable step?"* is the question a reader has:
   since H5. `_acceptEditorOp` runs the same check the block editor runs now, and
   RETURNS `{accepted, applied, errors, description}` so the editor can print
   what happened instead of guessing from the hub's log.
+  ⛓⛓ **R-a — and it refuses an op made for a document the hub no longer holds.**
+  The hub stamps a monotonic `_documentToken` at `_openSession`, its ONE session
+  boundary; `_openDocumentKeyEditor` reads it once and binds it into the `onSave`
+  closure it hands the door. A door never sees the token, so no door can forget
+  it — which is how both `op` doors gained the guard without being changed. The
+  check is FAIL-CLOSED: a caller that omits the token hands `undefined`, which
+  cannot equal a token `_openSession` has made. Hand a document to the cost
+  debugger, load a different preset in the hub, press Send, and the answer is
+  `{accepted: false}` carrying *"this plan was made for a document the editor has
+  since replaced — load it again and Send again."*
 - **`document`** — that editor's exit is a NEW document (the arc's rule that
   generation is not an edit); nothing comes back here.
 - **`none`** — that editor only READS the block.
@@ -235,15 +245,44 @@ preset carries none. So sending costs to a document that had no block turns loop
 mode ON for it, and all twelve committed carriers already boot in loop mode from
 an EMPTY block.
 
-⛔ **THE `loop_costs` SCHEMA IS TYPE-ONLY, and the veto can only see what it
-declares.** Measured at L4 over the real schema and the real documents: it
-refuses a location cost that is not a number, a region entry that is not an
-object, a string `moveCost`, a non-object block — and it ACCEPTS every semantic
-error the write-by-class rule is about: a `moveCost` on a summary region, a
-missing `defaultRegionXpEffect`, an entry for a native region, an empty block,
-an undeclared root key, and an `xpEffect` of `"banana"`. The standing proof that
-the block is right is `check-loop-costs-one-model.mjs` and
-`loopCostGenerator.test.js`, not the schema.
+⛓⛓ **R-a — and the switch is an ACTION now, not only a sentence** (⚖ user,
+2026-09-06; L4 named it as the smallest next thing this door could gain). The
+`loop_costs` row carries one button: **Enable loop mode** on a document with no
+block, **Disable loop mode** on one that has it. Both are a single
+`set-key loop_costs` through `_applySetKey` — so both get the schema veto, the
+status line and the undo step every other Document-tab edit gets. Enabling writes
+the four keys the schema requires and nothing hand-typed (`regions: {}`,
+`locations: {}`, and `DEFAULT_REGION_COST` / `DEFAULT_LOCATION_COST` from
+`shared/procgen/loopCostDefaults.js`); disabling passes `undefined` as the value,
+which `opSetKey` routes to `setPath`'s delete arm and describes as
+*"loop_costs deleted"*. ⛔ **Undo tells "no key at all" and "an empty block"
+apart**, because it re-folds over a shorter op list rather than reversing a
+gesture. ⚠ The Apply consequence is in the button's TITLE, not in a gate:
+applying a document that has just gained a block turns loop mode on for the world
+at runtime, and that is the ruled semantics.
+
+⛓ **THE `loop_costs` SCHEMA WAS TYPE-ONLY UNTIL R-a, AND IS NOW AS TIGHT AS THE
+CORPUS ALLOWS.** Measured at L4 over the real schema and the real documents, the
+veto refused a location cost that was not a number, a region entry that was not
+an object, a string `moveCost` and a non-object block — and ACCEPTED every
+semantic error the write-by-class rule is about. R-a took four of those
+(⚖ user, 2026-09-06): the block now `required`s the four keys every block on
+disk carries (`regions`, `locations`, `defaultRegionCost`, `defaultLocationCost`
+— NOT `version`/`generatedAt`/`defaultRegionXpEffect`, which the twelve tracked
+blocks do not carry), declares an `enum` on `xpEffect` and
+`defaultRegionXpEffect` pinned to `VALID_REGION_XP_EFFECTS` by a vitest row, and
+is `additionalProperties: false` at the root and on a region entry. So
+`xpEffect: "banana"`, a misspelt root key, a stray key on an entry, and `{}` are
+all refused by path now.
+
+⛔ **What the schema still cannot say, and deliberately does not:** `moveCost`
+and `timeDrainPerSecond` stay declared SIBLINGS on a region entry. A coarse entry
+carries the first, a summary entry the second, and a summary entry whose input
+block states a `moveCost` explicitly carries BOTH — "exactly one" is
+write-by-class's rule, not a shape. Nor can a schema see that a NATIVE region has
+an entry it should not. The standing proof that the block is RIGHT is still
+`check-loop-costs-one-model.mjs` and `loopCostGenerator.test.js`; the schema's
+job is to refuse a block that is not one.
 
 ## The Map tab
 

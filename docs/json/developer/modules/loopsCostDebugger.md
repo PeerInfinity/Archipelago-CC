@@ -150,12 +150,32 @@ Two facts the panel states because nothing else does:
   `costDataManager.isLoaded()`, i.e. `costData !== null`). The status line says
   so on a successful send, and the hub's row says it beside the block.
 
-⛔ **The hub's schema veto cannot check the block's MEANING.** Measured at L4:
-`rules.schema.json`'s `loop_costs` definition is type-only, so it refuses a
-location cost that is not a number or a region entry that is not an object, and
-ACCEPTS a `moveCost` on a summary region, a missing `defaultRegionXpEffect`, an
-entry for a native region, and an `xpEffect` of `"banana"`. What keeps the block
-right is `check-loop-costs-one-model.mjs` and `loopCostGenerator.test.js`.
+⛓ **R-a — a Send into a document the hub has REPLACED is refused, and the panel
+prints the refusal.** L4 named this as the thing neither side could check:
+`onSave` applied into whatever session the hub had open *now*, so handing a
+document over, loading a different preset in the hub, and only then pressing Send
+wrote this plan into that document. The hub now carries a document identity (a
+monotonic `_documentToken` stamped at its one session boundary, bound into the
+`onSave` closure), and the answer comes back `{accepted: false}` with *"this plan
+was made for a document the editor has since replaced — load it again and Send
+again."* ⛔ Nothing on this side changed: the panel already printed the hub's
+answer rather than assuming one, which is what made the refusal reportable the
+moment the hub could state it.
+
+⛔ **The hub's schema veto still cannot check the block's MEANING — but it is no
+longer type-only.** Measured at L4, `rules.schema.json`'s `loop_costs` definition
+refused a location cost that was not a number or a region entry that was not an
+object, and ACCEPTED a `moveCost` on a summary region, a missing
+`defaultRegionXpEffect`, an entry for a native region, an undeclared root key,
+`{}`, and an `xpEffect` of `"banana"`. R-a tightened it (⚖ user, 2026-09-06):
+`required` on the four keys every block on disk carries, an `enum` on both
+XP-effect fields pinned to `VALID_REGION_XP_EFFECTS`, and
+`additionalProperties: false` at the root and on a region entry — so the last
+four of those are refused by path now. The first three are not, and cannot be: a
+region entry declares `moveCost` and `timeDrainPerSecond` as siblings because a
+summary entry legitimately carries both, and no schema can see that a NATIVE
+region has an entry it should not. What keeps the block RIGHT is still
+`check-loop-costs-one-model.mjs` and `loopCostGenerator.test.js`.
 
 ### What Verify scores, and what it only reports
 
