@@ -12326,6 +12326,64 @@ the demo reason and the (f)/(h) fix → submodule push (publishes; authorized by
 **STOP before the outer push** (gate + gitlink = one ask-first unit). Then the README CONVERSATION, then **W2**
 (README/chart/descriptions). Reports come to `next-priorities-planning-3`.
 
+**⇒ W1 AS BUILT 2026-09-07 — STOPPED at the outer push, as briefed** (Opus `seedling-original-W1`; plan §7 has
+every number). Outer `main` is `[ahead 3]` and UNPUSHED: `881076b540` the gate · `f75b0b6d47` the gitlink ·
+this record. **The submodule IS pushed and IS live** — `PeerInfinity/seedling-wasm` `main`
+`e645f2e5..2bbabb2806`, Pages `built`, and
+**https://peerinfinity.github.io/seedling-wasm/seedling_original/game.html** serves the playable game.
+
+**⚖ RULING 1'S FIRST ARM SUCCEEDED — the source build worked and the Newgrounds recompile was NOT needed.**
+Worktree of `~/CC/seedling` at `826ba77` (the primary clone never left `ap-m1`); the case-sensitive
+`WhirlPool.png` embed DID bite and a symlink in the WORKTREE was enough, so **no source edit** and ruling 2
+holds. mxmlc 9.9 s → SWF `10e24d907088ab828cb34b39df6e426e` / 7,835,568 B; no `inject.py`; SWFRecomp-CC
+`master` `bf907d002` (708 classes / 3759 methods / **0 verify failures**); `FRESH=1`, emcc 5.0.0, 88 TUs,
+**4m34s** — ⛔ NOT comparable to p4b/c/d's 16–22 min, which are a recompiler 209 commits back and 90 TUs.
+Payload: `game.html` `1c22f10c…` / `swf_bridge_avm2.js` `9fbbf1bb…` (byte-identical to all three bot builds) /
+`.js` `a7244078…` 147,657 B / `.wasm` `9a973e54…` 33,633,924 B.
+
+**⛔ THE BRIEF'S mxmlc TARGET WAS RIGHT AND `Shrum.as3proj` DISAGREES — measured.** The project file compiles
+`src/Preloader.as` with `-frame start Main`, and `Preloader.as` is the Newgrounds SPONSOR wrapper: off a
+sponsor domain it builds a `FlashAd`, waits for an ad to load over the network, and starts the game only from
+a click on that ad's play button. An ad that can never load is a game that can never begin. `src/Main.as`
+keeps every byte of the GAME and drops the shell; the finding is written into `builds.json`'s `builtFrom`.
+
+**⛓ IT BOOTS WITH NO BRIDGE, AND THE GAME'S OWN `trace()` IS THE SIGNAL.** `Main.printItems()` prints
+`Level:` at boot AND again from `Game.as:625` in the `Game` constructor, so the SECOND block is the Splash
+ending and the playable world existing. Real-GPU Windows Chrome (`intel / gen-9`, ⚖ the standing rule —
+announced and run), one real ▶ Start click: **Game constructed at 20.3 s, 4,392 frames in 239.5 s (~18.3 fps),
+0 pageerrors**, and exactly ONE console line naming the bridge — `[swfBridge] avm2 shim installed`, the
+PAGE-side shim, with **no `callback registered:` after it** (p4d's control prints fifteen). Re-run against the
+LIVE Pages URL after the push: **Game constructed at 20.2 s, 3,159 frames in 179 s, 0 pageerrors**; the 60 s
+screenshot reads *"Seedling — press any key to play"*. ⇒ the four-file `game.html` shape works and the
+page-bundle `index.html` fallback was NOT needed.
+⚠ **THE HEADLESS ARM CANNOT ANSWER THIS AND ITS RED IS NOT THE BUILD'S:** WSL SwiftShader reads 46 frames in
+95 s (~0.5 fps) and **46 pageerrors of "A valid external Instance reference no longer exists"** — and the
+CONTROL run of the shipped `seedling_bot_ap_p4d` reads the SAME 46 and 46, with byte-identical (all-black)
+screenshots. A red the control shares is the rasteriser's.
+
+**⚖ THE LAW GREW ITS SECOND CLAUSE (ruling 4) AND THE (f)/(h) CONTRADICTION IS CLOSED (ruling 5).** View 1 is
+now **ADMITTED = REFERENCED ∪ DEMO-LINKED** and every run prints WHICH reason admitted each build; a demo is
+admitted iff `demo: true` AND the SUBMODULE README links `<name>/game.html`, measured by CONTENT — the link is
+the load-bearing half, and a `demo: true` linking nowhere is a NAMED problem rather than a silent *"retire
+it"*. Row (f)'s control file is declared ONCE and row (h2) **exempts it BY NAME with the reason printed**.
+⛓ Both driven on the real tree, not only in fixtures: delete the README link ⇒ 4 PROBLEMS led by the named
+one; move the control's default onto p4d ⇒ **1 PROBLEM and it is ROW (f)'s**, (h2) silent. `--self-test`
+13 → 24 cases. Also de-duplicated `check-seedling-bot-differential.mjs`, listed twice in every run since V3b
+made `isGateFile` see it. **Gate: 1 PROBLEM at W0 → ALL PASS, 4 pinned builds.**
+
+**Run here before stopping:** the pins gate (CI's STEP 1) exit 0 · `--self-test` exit 0 · `--help` exit 0 ·
+`check-procgen-reference.mjs` ALL CHECKS PASSED (`instruments.js` does not move) · `check-procgen-help.mjs
+--doors=all` · ⚖ 52 bounded vitest over the touched files' consumers, **8 files / 280 tests green**. No local
+unfiltered run; the suite row is CI's at the pushed SHA.
+
+**⚖ OPEN for the user:** (a) the outer push itself; (b) `standing-values.json`'s `gate: seedling-wasm-pins`
+row quotes *"3 pinned builds"* and keys `build.count: 3` — both are 4 now; the sanctioned refresh is
+`--write --key='gate: seedling-wasm-pins'` at the records head and it takes the box, so it was NOT taken here;
+(c) `gates.mjs:218` quotes *"1 pinned build"* in prose, stale since before this slice; (d) **README facts W2
+needs**: the "Who uses these builds" table's lead still says p4c is THE bot build and every default, false
+since P2 (2026-08-30) — the defaults are p4d's — and the p4d row still says *"not wired into any page yet"*.
+Next: the README CONVERSATION, then **W2**.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
