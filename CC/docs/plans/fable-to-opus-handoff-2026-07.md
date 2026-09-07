@@ -12326,11 +12326,32 @@ the demo reason and the (f)/(h) fix → submodule push (publishes; authorized by
 **STOP before the outer push** (gate + gitlink = one ask-first unit). Then the README CONVERSATION, then **W2**
 (README/chart/descriptions). Reports come to `next-priorities-planning-3`.
 
-**⇒ W1 AS BUILT 2026-09-07 — STOPPED at the outer push, as briefed** (Opus `seedling-original-W1`; plan §7 has
-every number). Outer `main` is `[ahead 3]` and UNPUSHED: `881076b540` the gate · `f75b0b6d47` the gitlink ·
-this record. **The submodule IS pushed and IS live** — `PeerInfinity/seedling-wasm` `main`
-`e645f2e5..2bbabb2806`, Pages `built`, and
+**⇒ W1 AS BUILT AND VERIFIED 2026-09-07** (Opus `seedling-original-W1`; plan §7 has every number).
+⚖ **The user authorized the outer push** — *"Yes, I authorize the push."* — relayed by the planner after the
+ask-first stop, and `a304fc940d..168f9968b2` is **ON `origin/main`**: `881076b540` the gate · `f75b0b6d47` the
+gitlink `e645f2e..2bbabb2` · `168f9968b2` this record. The submodule was pushed before it —
+`PeerInfinity/seedling-wasm` `main` `e645f2e5..2bbabb2806`, Pages `built`, and
 **https://peerinfinity.github.io/seedling-wasm/seedling_original/game.html** serves the playable game.
+⛓ **The gitlink deploy carried it to Archipelago-CC's own site too:**
+`https://peerinfinity.github.io/Archipelago-CC/modules/flashPanel/wasm/seedling_original/game.html` is 200.
+
+**CI AT `168f9968b2` — ALL SIX WORKFLOWS GREEN, and the one this slice owed is the one that had been RED.**
+`Seedling wasm submodule` **success** (red since 2026-09-05 at `76295b9aa3`). ⛔ Read by STEP OUTCOME, never
+by the job listing — `continue-on-error` rewrites a step's conclusion to `success`, as the workflow's own
+header warns:
+- **STEP 1 (gating) — `ALL PASS — 4 pinned builds, four views in agreement`**, byte-for-byte the local run,
+  including the `seedling_original` line naming `demo: true` + the README link as its admitting reason, and
+  the printed row-(f) exemption.
+- **STEP 2 (non-gating) — `ALL PASS`**, all twelve bridge rows including *"teleport new_instance applied by
+  BridgeGeneric"*. A fourth build in the submodule did not disturb the headless boot.
+- **STEP 3 (non-gating) — fails, and it is the DOCUMENTED refusal**: `EACCES mkdir /mnt/c/playwright`. That
+  row drives real-GPU Windows Chrome through `py.exe` by standing rule, so a Linux runner cannot complete it —
+  the workflow header predicts exactly this. One annotation, that step only.
+
+**⚖ 52 — the suite row, QUOTED from CI at the pushed SHA** (`ci-vitest-summary.mjs 168f9968b2`, run
+34147842766 success): `suite: vitest (unfiltered)` **442/13384** (13,376 passed | 8 skipped | 0 failed) and
+the slow battery **12/217** (217 passed | 0 failed). ⛓ **UNMOVED from the M1b baseline** recorded at
+`9b0fa2c7c3` in §5p — this slice moved no test count.
 
 **⚖ RULING 1'S FIRST ARM SUCCEEDED — the source build worked and the Newgrounds recompile was NOT needed.**
 Worktree of `~/CC/seedling` at `826ba77` (the primary clone never left `ap-m1`); the case-sensitive
@@ -12376,13 +12397,13 @@ made `isGateFile` see it. **Gate: 1 PROBLEM at W0 → ALL PASS, 4 pinned builds.
 --doors=all` · ⚖ 52 bounded vitest over the touched files' consumers, **8 files / 280 tests green**. No local
 unfiltered run; the suite row is CI's at the pushed SHA.
 
-**⚖ OPEN for the user:** (a) the outer push itself; (b) `standing-values.json`'s `gate: seedling-wasm-pins`
+**⚖ OPEN for the user** — (a) is CLOSED, the push is taken and CI is green: (b) `standing-values.json`'s `gate: seedling-wasm-pins`
 row quotes *"3 pinned builds"* and keys `build.count: 3` — both are 4 now; the sanctioned refresh is
 `--write --key='gate: seedling-wasm-pins'` at the records head and it takes the box, so it was NOT taken here;
 (c) `gates.mjs:218` quotes *"1 pinned build"* in prose, stale since before this slice; (d) **README facts W2
 needs**: the "Who uses these builds" table's lead still says p4c is THE bot build and every default, false
 since P2 (2026-08-30) — the defaults are p4d's — and the p4d row still says *"not wired into any page yet"*.
-Next: the README CONVERSATION, then **W2**.
+⇒ **W1 IS CLOSED.** Next: the README CONVERSATION, then **W2**.
 
 **⚖ RULED (user, 2026-09-07): "Yes, I authorize the push."** **W1 VERIFIED by the planner 2026-09-07** (`168f9968b2` on
 origin/main: 3 commits by path — the gate `881076b540`, the gitlink `f75b0b6d47` (`e645f2e..2bbabb2`), the record;
