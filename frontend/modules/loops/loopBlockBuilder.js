@@ -16,6 +16,10 @@ import {
   formatTime,
 } from '../shared/queueAnalysis.js';
 import { applyRegionXpCostEffect } from './xpFormulas.js';
+import {
+  DEFAULT_REGION_COST,
+  START_REGION_MOVE_COST,
+} from '../shared/procgen/loopCostGenerator.js';
 import { formatAnnotations } from './blockAnnotations.js';
 
 // Helper function for logging with fallback
@@ -366,7 +370,7 @@ export class LoopBlockBuilder {
     const exploreCostDataManager = getCostDataManager();
     const exploreRegionCost = exploreCostDataManager?.isLoaded()
       ? exploreCostDataManager.getRegionCost(regionName)
-      : 50;
+      : DEFAULT_REGION_COST;
     const exploreBaseCost = exploreRegionCost * 2;
     const exploreXpData = loopState.getRegionXP(regionName);
     const exploreFinalCost = applyRegionXpCostEffect(
@@ -778,6 +782,40 @@ export class LoopBlockBuilder {
    * Adds compact exits list to the details element
    * Shows a single line per exit: name → destination + status
    */
+  /**
+   * What the region block's per-exit cost label shows for a move OUT of
+   * `regionName` — the XP-discounted price of one `regionMove`.
+   *
+   * ⚖ 2026-09-06, model (A) — **LEAVING A START REGION IS FREE BY RULE**, so
+   * the label reads 0.0 whatever the block says. This is the visible face of
+   * the rule `loopState._calculateActionCost` charges by; the two read the same
+   * `START_REGION_MOVE_COST` so the panel cannot show a price the queue does
+   * not charge.
+   *
+   * ⚠ Extracted from `addExits` to be reachable by a unit row: the vitest
+   * environment is `node`, with no DOM in the tree at all, so a row that drove
+   * `addExits` itself could not exist. The in-app measurement is what covers
+   * the DOM half.
+   *
+   * @param {string} regionName
+   * @returns {number} mana, after the region's XP effect
+   */
+  _exitMoveCost(regionName) {
+    const costDataManager = getCostDataManager();
+    const moveBaseCost = loopState.isStartRegion(regionName)
+      ? START_REGION_MOVE_COST
+      // (the `: 50` this replaces was a typed copy of DEFAULT_REGION_COST)
+      : (costDataManager?.isLoaded()
+        ? costDataManager.getRegionCost(regionName)
+        : DEFAULT_REGION_COST);
+    const xpData = loopState.getRegionXP(regionName);
+    return applyRegionXpCostEffect(
+      moveBaseCost,
+      xpData.level,
+      costDataManager?.getRegionXpEffect?.(regionName),
+    );
+  }
+
   addExits(
     detailsEl,
     regionName,
@@ -848,17 +886,7 @@ export class LoopBlockBuilder {
       // Mana cost
       const costSpan = document.createElement('span');
       costSpan.className = 'compact-item-cost';
-      const costDataManager = getCostDataManager();
-      const moveBaseCost = costDataManager?.isLoaded()
-        ? costDataManager.getRegionCost(regionName)
-        : 50;
-      const xpData = loopState.getRegionXP(regionName);
-      const moveFinalCost = applyRegionXpCostEffect(
-        moveBaseCost,
-        xpData.level,
-        costDataManager?.getRegionXpEffect?.(regionName),
-      );
-      costSpan.textContent = moveFinalCost.toFixed(1);
+      costSpan.textContent = this._exitMoveCost(regionName).toFixed(1);
       li.appendChild(costSpan);
 
       // Status badge

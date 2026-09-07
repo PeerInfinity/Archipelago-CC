@@ -1,5 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { LoopState, coarseOf } from './loopState.js';
+import { CostDataManager } from './costDataManager.js';
+import {
+  DEFAULT_REGION_COST,
+  START_REGION_MOVE_COST,
+} from '../shared/procgen/loopCostGenerator.js';
 import { GameState } from '../gameState/state.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -68,6 +73,10 @@ function makeWiredLoopState({ withDispatcher = false } = {}) {
       addCustomAction: (a, p) => gs.addCustomAction(a, p),
       insertLocationCheckAt: (l, r, i, lr) => gs.insertLocationCheckAt(l, r, i, lr),
       insertCustomActionAt: (a, r, i, p) => gs.insertCustomActionAt(a, r, i, p),
+      // The runtime's `gameStateAPI` carries this (loops/index.js), and it is
+      // the handle the free-by-rule start-region move reads.
+      setStartRegions: (r) => gs.setStartRegions(r),
+      isStartRegion: (r) => gs.isStartRegion(r),
     },
   });
   return { loopState, gs, bus, dispatcher };
@@ -449,5 +458,88 @@ describe('_applyCoarseReplacement reads a MAZE recording in the new shape', () =
       ],
     });
     expect(calls).toEqual([['clear'], ['check', 'Sword Room']]);
+  });
+});
+
+/**
+ * ⚖ user ruling 2026-09-06, model (A): *"advancing from the Menu costs no
+ * mana"*. A `regionMove` whose SOURCE is a start region is priced
+ * `START_REGION_MOVE_COST`, whatever the loaded block says and whatever the
+ * no-block fallback says — which is what retires the 50 the twelve
+ * hand-written EMPTY blocks bill for the first move out of Menu, with no preset
+ * change.
+ *
+ * ⛓ These rows are about the site that CHARGES. The three DISPLAY pricers that
+ * read the same constant have their own:
+ * `shared/queueAnalysis.test.js` and `startRegionMoveCost.test.js`.
+ */
+describe('LoopState — the start-region move is free by rule', () => {
+  let loopState, gs;
+
+  /** The shape of the twelve hand-written EMPTY blocks: roots only, no entries. */
+  function emptyBlockStore() {
+    const cdm = new CostDataManager();
+    cdm.setCostData({
+      regions: {}, locations: {},
+      defaultRegionCost: DEFAULT_REGION_COST, defaultLocationCost: 10,
+    }, 'embedded:test');
+    return cdm;
+  }
+
+  const move = (sourceRegion) => ({
+    type: 'regionMove', sourceRegion, destinationRegion: 'A', exitUsed: 'to_a',
+  });
+
+  beforeEach(() => {
+    ({ loopState, gs } = makeWiredLoopState());
+    gs.setStartRegions(['Menu']);
+  });
+
+  it('isStartRegion reads the injected gameState API', () => {
+    expect(loopState.isStartRegion('Menu')).toBe(true);
+    expect(loopState.isStartRegion('A')).toBe(false);
+    expect(loopState.isStartRegion('')).toBe(false);
+    expect(loopState.isStartRegion(undefined)).toBe(false);
+  });
+
+  it('overrides a LOADED block that prices the start region 50', () => {
+    const cdm = emptyBlockStore();
+    loopState.setCostDataManager(cdm);
+    // The block really does say 50 — the store is not being lied to.
+    expect(cdm.getRegionCost('Menu')).toBe(DEFAULT_REGION_COST);
+    expect(loopState._calculateActionCost(move('Menu'))).toBe(0);
+  });
+
+  it('leaves a move out of a NON-start region priced by the block', () => {
+    loopState.setCostDataManager(emptyBlockStore());
+    expect(loopState._calculateActionCost(move('A'))).toBe(DEFAULT_REGION_COST);
+  });
+
+  it('applies the rule in the NO-COST-DATA fallback too', () => {
+    expect(loopState.costDataManager?.isLoaded?.()).toBeFalsy();
+    expect(loopState._calculateActionCost(move('Menu'))).toBe(0);
+    expect(loopState._calculateActionCost(move('A'))).toBe(DEFAULT_REGION_COST);
+  });
+
+  it('prices it at the shared constant, not at a number typed here', () => {
+    loopState.setCostDataManager(emptyBlockStore());
+    expect(loopState._calculateActionCost(move('Menu'))).toBe(START_REGION_MOVE_COST);
+  });
+
+  it('is applied BEFORE the XP discount, so XP on the start region leaves 0 at 0', () => {
+    loopState.setCostDataManager(emptyBlockStore());
+    loopState.addRegionXP('Menu', 500);
+    expect(loopState.getRegionXP('Menu').level).toBeGreaterThan(0);
+    expect(loopState._calculateActionCost(move('Menu'))).toBe(0);
+  });
+
+  it('does NOT free an explore or a location check in the start region', () => {
+    loopState.setCostDataManager(emptyBlockStore());
+    expect(loopState._calculateActionCost({
+      type: 'customAction', actionName: 'explore', sourceRegion: 'Menu',
+    })).toBe(DEFAULT_REGION_COST * 2);
+    expect(loopState._calculateActionCost({
+      type: 'locationCheck', locationName: 'Loc', sourceRegion: 'Menu',
+    })).toBe(10);
   });
 });

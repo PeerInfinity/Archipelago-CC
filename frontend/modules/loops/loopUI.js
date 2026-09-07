@@ -14,7 +14,10 @@ import {
   DEFAULT_REGION_COST,
   DEFAULT_LOCATION_COST,
 } from './costDataManager.js';
-import { DEFAULT_EXPLORE_MULTIPLIER } from '../shared/procgen/loopCostGenerator.js';
+import {
+  DEFAULT_EXPLORE_MULTIPLIER,
+  START_REGION_MOVE_COST,
+} from '../shared/procgen/loopCostGenerator.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { DisplaySettingsManager } from './displaySettingsManager.js';
@@ -2375,7 +2378,13 @@ export class LoopUI {
     const costDataManager = getCostDataManager();
     let baseCost;
 
-    if (costDataManager?.isLoaded()) {
+    // ⚖ 2026-09-06, model (A) — the start-region move is FREE BY RULE, in both
+    // branches. The display estimate must not disagree with what
+    // `loopState._calculateActionCost` charges about a NUMBER, and they read
+    // the same `START_REGION_MOVE_COST` so they cannot.
+    if (action.type === 'regionMove' && loopState.isStartRegion(action.sourceRegion)) {
+      baseCost = START_REGION_MOVE_COST;
+    } else if (costDataManager?.isLoaded()) {
       switch (action.type) {
         case 'regionMove':
           baseCost = costDataManager.getRegionCost(action.sourceRegion);

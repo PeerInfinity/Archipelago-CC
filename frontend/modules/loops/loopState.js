@@ -31,9 +31,13 @@ import {
   DEFAULT_REGION_COST,
   DEFAULT_LOCATION_COST,
 } from './costDataManager.js';
-// The explore multiplier is the generic model's, not the store's: it is
-// stated once beside the rest of the block vocabulary.
-import { DEFAULT_EXPLORE_MULTIPLIER } from '../shared/procgen/loopCostGenerator.js';
+// The explore multiplier and the start-region rule's zero are the generic
+// model's, not the store's: they are stated once beside the rest of the block
+// vocabulary, and imported from the generator the way every runtime reader does.
+import {
+  DEFAULT_EXPLORE_MULTIPLIER,
+  START_REGION_MOVE_COST,
+} from '../shared/procgen/loopCostGenerator.js';
 
 /**
  * Tick period of the SUMMARY substrates' live-play time drain (M5). One
@@ -309,6 +313,30 @@ export class LoopState {
       return this._gameStateInstance;
     }
     return null;
+  }
+
+  /**
+   * Is this a START region? The ONE predicate behind the free-by-rule
+   * start-region move (⚖ 2026-09-06, model (A)) — `_calculateActionCost` below,
+   * `shared/queueAnalysis.getBaseCost`, `loopUI._estimateActionCost` and
+   * `loopBlockBuilder`'s per-exit cost label all ask this and answer
+   * `START_REGION_MOVE_COST`, so there is one implementation of "is it free",
+   * not four.
+   *
+   * The injected gameState API already carries `isStartRegion`
+   * (`loops/index.js`'s `gameStateAPI`); the GameState instance is the fallback
+   * for callers that set only `_gameStateInstance`. Anything else answers
+   * false, which prices the move exactly as before the rule existed.
+   *
+   * @param {string} regionName
+   * @returns {boolean}
+   */
+  isStartRegion(regionName) {
+    if (typeof regionName !== 'string' || regionName === '') return false;
+    if (typeof this.gameState?.isStartRegion === 'function') {
+      return this.gameState.isStartRegion(regionName) === true;
+    }
+    return this._gs()?.isStartRegion?.(regionName) === true;
   }
 
   /**
@@ -3573,7 +3601,17 @@ export class LoopState {
       );
     }
 
-    if (this.costDataManager?.isLoaded()) {
+    // ⚖ 2026-09-06, model (A) — **A `regionMove` OUT OF A START REGION IS FREE
+    // BY RULE.** Tested before BOTH branches below because it holds in both: it
+    // overrides what a loaded block says for the start region (the twelve
+    // hand-written EMPTY blocks bill `defaultRegionCost` 50 for the Menu hop,
+    // which is what this retires — with no preset change), and it overrides the
+    // no-block fallback. Before the XP discount, which leaves 0 at 0.
+    // ⛔ regionMove ONLY: an explore or a location check in a start region is
+    // priced as ever, and the SUMMARY branch above never reaches here.
+    if (action?.type === 'regionMove' && this.isStartRegion(action.sourceRegion)) {
+      baseCost = START_REGION_MOVE_COST;
+    } else if (this.costDataManager?.isLoaded()) {
       // Use per-region/per-location costs from cost data
       switch (action.type) {
         case 'regionMove':
