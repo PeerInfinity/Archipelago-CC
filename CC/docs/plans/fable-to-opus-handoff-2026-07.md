@@ -11891,6 +11891,50 @@ the sphere log in hand; regenerate into SCRATCH; diff (only `loop_costs` may mov
 against the scratch presets; the byte-inertness claim's impact; **STOP before committing a regenerated preset —
 ⚖ 49-class re-record, the user's word relayed by the planner.**
 
+**⇒ R-b AS BUILT, AND STOPPED AT THE RE-RECORD (2026-09-07, `loop-costs-Rb`, main `079db9e85a` pushed;
+plan §16).** Two commits, staged by path — a `--out-dir` seam and a `stampLoopCosts` helper
+(`scripts/test/presetOutDir.mjs`, `presetLoopCosts.mjs`), then the four omsi writers wired to both.
+**The five regenerated presets are NOT committed: ⚖ 49-class, the user's word is owed.**
+⛔ **The brief is wrong twice.** There is no "third" preset from the substrate writer — five presets
+come from four writers, 2+1+1+1 — and `buildRulesJson` ALREADY calls `generateLoopCosts` when
+`enableLoopMode && embedSphereLog` (`procgenPipelineEngine.js:6331`); the writers simply never asked,
+then overwrote the absence with a hand-authored `{regions:{}, locations:{}, …}`. Every writer HAD the
+sphere log in hand (`embedSphereLog` defaults true), so the brief's STOP condition never fired.
+**The control ran first: with the writers unchanged, all five presets regenerate BYTE-IDENTICAL**, so
+every byte that moves is this slice's. After: **the only bytes that move are inside `loop_costs`, in
+all five** — `omsi_substrate_test`/`omsi_schedule_test` 50/50 → **16/21**, `omsi_region_split_test` →
+**25/38**, `omsi_randomized_test`/`omsi_scaled_test` → **50/50 (unchanged — their sphere logs are 2
+entries, so the planner has nothing to price with; they gain shape and provenance, not numbers)**,
+Menu 50 → **0** in all five, omsi regions no entry (NATIVE), 0 locations throughout. Two independent
+runs byte-identical; **0 schema errors** against R-a's tightened block, cross-checked by Python
+`jsonschema` **2 passed / 212 subtests**. ⛔ **`generatedAt` is DROPPED by the helper, deliberately** —
+it is `new Date()`, no CI gate re-runs a writer and diffs (swept by CONTENT over `git ls-files`), and
+two writer headers assert byte-inertness in prose; all twelve tracked blocks already carry no
+`generatedAt`. It cannot be fixed at the source — `loopCostGenerator.js` is in the `shared/` submodule.
+**L3's finding resolves on BOTH axes.** At the store, `getRegionCost` on `omsi_substrate_test` goes
+50/50/50/50 → **Menu 0, region_0_0 16, region_1_0 21** (omsi still 50 — no entry, and nothing charges
+it). At the panel, driven through Load → Plan All → Verify on a real page with only the preset
+differing: the committed empty block reproduces §13's **0/2, max Δ 375.7** to the digit, and the
+regenerated block gives **2/2, max Δ 0.0** — *"5 steps, 2/2 within tolerance; 3 unpriced by design"*.
+⚠ The first reading of that summary was taken MID-RUN and happened to agree with the final value: the
+panel updates the summary per verified step, so a poll for *"the label says Matched"* is satisfied at
+step 1. The terminal condition is the status line no longer reading `Verifying n/m`.
+**Gates against the scratch presets:** `check-loop-costs-one-model` ALL PASS (5 documents) ·
+`check-omsi-mana-leg` OK 20.2 s · `check-item-channels` OK (⚠ one red first, on the **jta** leg this
+slice never touches; attributed by a restored-tree control OK and a scratch re-run OK ⇒ the flake the
+queue doc already records) · bounded vitest 3 files / 82 rows / 0 failed · in-app `--batch=fast`
+**87/88**, `compare-runs` vs R-a's 88/88 = **NEW FAILURES (1), nothing else moved**.
+⛔ **THAT ONE RED IS THE PRICE, AND IT IS NOT A NUMBER TO EDIT.**
+`apworld-loop-costs-send-writes-the-plan-as-one-op` fails on its own premise — *"the committed block
+prices NOTHING before the send"* — and the re-record REMOVES the row's subject: with the block already
+equal to the plan, Send has no transition to witness. Re-derived over all 12 tracked blocks, there is
+no substitute document (the 7 jta ones are NATIVE + Menu, i.e. exactly the "single zero" the row's own
+docblock refuses). ⇒ the row must build its own empty block through R-a's **Disable / Enable loop
+mode** button, and that edit is held with the presets because it cannot ship ahead of them.
+**⚖ FOUR OPEN:** land the re-record? · keep `generatedAt` dropped? · make the byte-inertness claims a
+GATE (nothing re-runs a writer today)? · the 7 jta presets keep empty blocks, so their Menu is still
+billed 50 — the last place §5o's Menu question survives in the corpus.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
