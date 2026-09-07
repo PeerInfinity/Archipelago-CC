@@ -11877,6 +11877,20 @@ shards and the headless step carrying `check-loop-costs-one-model` passed on a R
 **NEXT:** R-b (the omsi fixtures — its regenerated blocks must now pass the tightened schema), then M1
 (design first), R1 owed.
 
+**R-a VERIFIED by the planner 2026-09-07** (`fe1d116fca`; code head `a1bf4d275f`; 6 commits by path; the schema
+reads `required` = the four keys, `additionalProperties: false`, enum `['cost','speed','both','none']`; token guard
+and the two presence buttons on disk; CI run 34071097837 **436/13316, 0 failed**, +13 rows derived and matched;
+corpus 212 presets / 14 blocks 0 → 0 errors, cross-checked by Python jsonschema). R-a overturned the brief twice,
+both kept: the document token is a CLOSURE binding in the one opener, not a context field (a field would have had
+0 readers — documentation, not a guard); the pipeline's FAILURE marker carries the four required keys, so a
+`required` list drawn from the success path alone would red every failed build. The session was RESUMED mid-slice
+(pid 563834 → 2301); its report and idle notice arrived from the new socket — verify by disk, not by address.
+**R-b LAUNCHED 2026-09-07** as `loop-costs-Rb` (Opus; kickoff `NewDocs/plans/loop-costs-Rb-prompt.md`; on R-a's idle
+notice): census of the five omsi presets and their four generators; the generators call `generateLoopCosts` with
+the sphere log in hand; regenerate into SCRATCH; diff (only `loop_costs` may move); every omsi row and instrument
+against the scratch presets; the byte-inertness claim's impact; **STOP before committing a regenerated preset —
+⚖ 49-class re-record, the user's word relayed by the planner.**
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
