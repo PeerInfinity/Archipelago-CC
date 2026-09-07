@@ -12591,6 +12591,111 @@ written by whom, read by whom, which deserve an affordance, which are provenance
 should be linked), then the field as mapped there (menu leftovers, seedling follow-ups, the queue-viewer replan,
 loop-costs follow-ups, V3b's two, the backlog, maze-lab residues, the docs TODO).
 
+## 5s. REVIEW R3 — the APWorld editor's coverage of the rules.json — MEASURED 2026-09-07 (Fable session `next-priorities-planning-4` at main `8f2f8590c5`; successor to §5r's HANDOFF; memory `project_apworld_editor_hub`)
+
+**The ask (user, 2026-09-07):** *"The original reason why we started looking into the loop costs was because we were
+working on the APWorld Editor, trying to update it to include all of the data that can appear in the rules.json
+file."* Everything below was MEASURED at `8f2f8590c5` (212 presets, `glob frontend/presets/*/AP_*/*_rules.json`;
+the registry via `node` over `buildDocumentKeys(loadRulesSchema())`; the live page via a scratch Playwright drive
+of `.apworld-editor-panel.__panel` on :8000 — six documents, `_openSession` + `_selectTab`, the rows read off
+the DOM; scripts in the scratchpad, not kept).
+
+**⛔ THE HANDOFF'S PARTITION WAS WRONG — "27 raw-only" counted TABS, not keys.** The registry's own answer:
+**34 = 5 doors + 14 tab-owned + 15 raw-only.** `KEYS_OWNED_BY_TAB` gives Meta TEN keys (the eight `META_FIELDS`
+paths + `start_regions` + `game_info`), Items three, Regions one. And of the 15 raw-only, **5 are scalars that
+ALREADY draw a typed input** on the live Document tab — checkbox for `is_vanilla` / `is_canonical` /
+`assume_bidirectional_exits`, text for `playerId` / `preset_label` — so the population the kickoff described
+("a raw JSON block and nothing more") is **TEN structured keys**: `helpers`, `dungeons`, `item_groups`,
+`progression_mapping`, `canonical_placements`, `exporter`, `world_classes`, `settings`, `flash_panel`,
+`provenance`.
+
+**The ten, measured** (n = presets carrying the key; "populated" = a non-empty slot; sizes are pretty-printed bytes of
+the largest block; writer by content sweep over `git ls-files`; runtime reader by property-access grep over
+`frontend/modules` minus tests/the hub; "worldgen" = `world_generator/extractors.py` reads it off a rules.json):
+
+| key | n / populated | shape | max | writer | runtime reader | worldgen |
+|---|---|---|---|---|---|---|
+| `helpers` | 211 / 65 | per-player `name → {params, body}`; body = the exporter's `type:` AST dialect (100 %) | **645,675 B** (kh2) | `exporter.py:1213` | the rule engine (`ruleEvaluator`, `astFunctionCalls`, `astHelpers`…); the helpers panel is an EVALUATOR (param checkboxes), not an editor | yes |
+| `dungeons` | 12 / 12 (alttp only) | per-player `name → {name, regions[], bosses{}, medallion_check}` | 32,586 B | `exporter.py:1116` | dungeons panel, `regionBlockBuilder`, `astAttributes` | yes |
+| `item_groups` | 212 / 212 | per-player LIST of group names | 21,604 B (sc2) | `exporter.py:1135`; `rulesJsonBuilder.js` | `ruleEvaluator`, `presetUI`, `consoleUI` | yes |
+| `progression_mapping` | 211 / 15 (12 alttp) | per-player `name → {base_item, items[{name, level}]}` | 17,719 B (factorio) | `exporter.py:1137`; `rulesJsonBuilder.js` | `inventoryManager`, `genericLogic`, `presetUI` | yes |
+| `canonical_placements` | 211 / 86 | per-player `location → item` | 14,155 B (procgen_topdown) | `exporter.py:1371`; `rulesJsonBuilder.js` | `procgenPipelineEngine` ONLY | yes (`--canonical-seed`) |
+| `exporter` | 198 / 23 | per-player map of 1–2 booleans (`use_auto_indirect_conditions` 12, `use_resolved_items` 9, `add_sphere_items_upfront` 5 — the first and third are NOT in the schema's slot subschema, which is permissive) | 85 B | `exporter.py:1193`; `rulesJsonBuilder.js` | `workerSpoilerTest`, `eventProcessor` (spoiler-test flags) | yes |
+| `world_classes` | 32 / 32 | per-player `slot → class name` | 37 B | **`rulesJsonBuilder.js:141` ONLY** (procgen documents) | **NONE**; `extractors.py:238` reads it as the THIRD-priority legacy fallback behind `world[p].world_class_name`, which the same builder also writes | legacy |
+| `settings` | **0** / 0 | schema: *"DEPRECATED: Use 'world' instead"* | — | none | `initialization.js:396` fallback (`jsonData.world?.[p] \|\| jsonData.settings?.[p]`); `scripts/lib/remap_player_ids.py` still lists it | — |
+| `flash_panel` | 4 / 4 | `{game, swf?}` wiring | 74 B | `regionAtlasCompiler.js:720` (from `FLASH_PANEL_WIRING`), `tileMapAnalyzer/rulesExporter.js:353` | `flashPanelUI`, `seedlingRandomizerEligibility` | no |
+| `provenance` | 1 / 1 | opaque | 5,194 B | `regionAtlasCompiler.js:561` | atlas/derivation modules | no |
+
+The five scalars: `preset_label` 42 (`exporter.py:1396`; read by `exporter.py:3277` → the `preset_files.json` label;
+**0** frontend readers), `is_vanilla` 18 / `is_canonical` 20 (`exporter.py:1387/1389`; read by
+`scripts/docs/update-preset-files.py:568-572` → `preset_files.json`; `presetUI` reads `is_vanilla`), `playerId` 16
+(`exporter.py:2864`; the slot marker — the selector's first default), `assume_bidirectional_exits` 28
+(`procgenPipelineEngine.js:6292`; `bidirectionalDetector`, `topDownSteps`, `statePersistence`).
+
+**⛔⛔ THE TAB-OWNED KEYS ARE THE BIGGER GAP, AND IT IS A HIDING ONE.** An owned Document row draws a *"Edited in the
+Meta tab"* pointer and **NO JSON block** (`apworldEditorUI.js:1622` branch; measured on all six documents:
+`jsonToggle=false` on every owned row). What each tab actually edits of its block:
+
+| key | the tab edits | the rest of the block, reachable ONLY through the whole-document Raw JSON tab |
+|---|---|---|
+| `world` (212; max **771,153 B**, smz3) | `world_class_name` — ONE field | `options` (223 slots, **6,287 values**), `option_definitions` (191; types choice 1,408 / range 1,384 / toggle 1,134 / default_on_toggle 377 / removed 63 / start_inventory_pool 62 / freetext 21 / plando 28), `slot_data` (156), `game`, `web`, `world_description`, `world_directory`, and the game's RUNTIME ATTRIBUTES (alttp: 40 keys). ⛓ Options are LOGIC: `OptionValue`/`option_value` nodes = **738** across **43 presets**, read via `astChecks.js:487`; every other world attribute is copied onto the logic's world object (`statePersistence.js:500`). **No panel in the app renders `option_definitions`** (the Options panel edits APP settings — colorblind modes etc.). |
+| `game_info` (212) | `completion_condition` (the rule editor) | `chapter_costs`/`relic_groups` 9, `accumulator_rules`/`prog_items_init` 5, and 11 game singletons (`doors`, `poke_data`, `level_logic`…) — max 87,587 B (pokemon_rb) |
+| `start_regions` (212) | `default` as ONE region (a select → one-element list) | `available` — **empty in all 224 slots**, so nothing is lost today |
+| `player_names` | the selected slot's name | there is **NO op to add or remove a SLOT** (22 ops; none); the selector lists the slots the document has |
+| `items` + `itempool_counts` + `starting_items` | id, classification (select), max, pool, groups, event, starting count — all six `ITEM_FIELDS` + the count | FULL |
+| `regions` | add/rename/delete regions, exits, locations, rule trees | FULL for the `rule:` dialect (**90,935** of the corpus's region-rule nodes); the exporter's `type:` dialect (**13,700** nodes) shows as *(raw)* |
+| the 7 Meta scalars | full | — |
+
+**What a raw block costs a person, measured on the live page:** kh2 `helpers` = **609,538 chars / 18,064 lines in
+one textarea**, 744 ms to open; alttp `dungeons` 30,397 chars / 1,090 lines; alttp `helpers` 52 KB / 2,209 lines.
+Every block is editable ("Save JSON" → one `set-key`, schema-vetoed). The rule-tree editor cannot be reused for
+helpers as-is: it speaks the `rule:` dialect and helpers are 100 % the `type:` dialect (`and`/`or`/`item_check`/
+`block`/`conditional`/`helper`/`state_method`…). ⚠ Perf aside, NOT R3's: on stardew every `_selectTab` re-validates
+the document — Regions **13.5 s**, Items 1.6 s per switch (H2b named the pass).
+
+**Gestures elsewhere — NONE to link.** The eight `files:jsonLoaded` publishers are presets, tileMapAnalyzer,
+apcalcGenerator, procgenPipeline, the two raw editors and the hub; no regions/exits/locations/items/helpers/dungeons/
+options panel writes the document. So every affordance for the ten keys would be BUILT in the hub, not linked.
+
+**A second consumer the kickoff did not name:** the world generator reads **17 of the 34 keys** off a rules.json
+(`extractors.py`: world, game_info, canonical_placements, starting_items, progression_mapping, itempool_counts,
+world_classes, start_regions, schema_version, preset_label, item_groups, is_vanilla, helpers, game_name,
+game_directory, exporter, dungeons, archipelago_version). Download → `python -m world_generator` makes these INPUT
+data, not only runtime data — `canonical_placements` in particular is the `--canonical-seed` input.
+
+**Two smaller findings.** `item_groups` is NOT derivable from the items' own `groups`: equal in 69 slots, different
+in **155** (typically `Event` on items but absent from the list) — an independent list, not a derived one.
+`playerSlotsOf` scopes every per-player row to the selector (4-player fixture: regions 4/4/6/6, canonical 0/0/6/6,
+sidecars 3/3/5/5 by slot) — per-player scope already works; only slot CREATION is missing.
+
+**Planner's assessment.** (A) The cheapest, highest-leverage fix is not a new editor: **let an owned row draw its
+JSON block too** (the pointer stays) — today `world`'s 14 other sub-keys and `game_info`'s extras are reachable only
+through a 2.6 MB Raw JSON view. (B) **`world[p].options` deserves the first real affordance**: a form DERIVED from
+`option_definitions` (choice → select over `name_lookup`, range → number, toggle → checkbox, freetext → text;
+`removed`/plando/`start_inventory_pool` stay raw), because logic reads it, the world generator reads it, nothing in
+the app edits it, and 4,324 of 4,477 definitions are the four simple types. It needs ONE path-scoped op
+(`set-meta`'s path-table shape generalised to `world[p].options[name]`). (C) Small tables next: `exporter` flags as
+checkboxes (declare the two undeclared flags in the schema FIRST — H0's rule), `item_groups` as a list editor,
+`progression_mapping` as a two-level table, `canonical_placements` as `location → item` with pickers over the
+document's own names. (D) `dungeons` (alttp-only) low. (E) **`helpers` LAST**: a second-dialect tree editor is an arc
+of its own; an intermediate "one JSON block PER HELPER" (65 populated presets; kh2's 294 helpers ≠ one 18,064-line
+textarea) is a cheap rung. (F) Read-only, and the row should SAY so: `provenance` (opaque, stamped), `flash_panel`
+(wiring), `preset_label`/`is_vanilla`/`is_canonical` (exporter provenance consumed by the preset index),
+`playerId` (the slot marker — a free text input here is a footgun; a select over the document's slots or read-only).
+(G) Two candidates for DELETION at the producer rather than an affordance: `settings` (0 presets, DEPRECATED, one
+fallback read) and `world_classes` (written by one procgen builder that also writes the authoritative
+`world[p].world_class_name`; 0 frontend readers; third-priority legacy fallback in worldgen).
+
+**⚖ OPEN for the user (asked 2026-09-07, with live links; answers recorded verbatim below when they arrive):**
+1. Ladder order — W0 owned rows draw their block · W1 the options form · W2 exporter flags + `item_groups` +
+   `progression_mapping` · W3 `canonical_placements` · W4 `dungeons` · W5 helpers (per-helper blocks first)?
+2. `settings` and `world_classes`: delete at the producer + schema (strict top level makes the schema the guard), or
+   keep as read-only legacy rows?
+3. `playerId`: read-only / a select over the slots; and should the hub be able to CREATE a player slot (no op exists)?
+4. `helpers`: per-helper JSON blocks now and a `type:`-dialect tree editor as its own later arc — or leave raw?
+5. Read-only rows (`provenance`, `flash_panel`, the three exporter-provenance scalars): mark them read-only, or keep
+   them editable with the note?
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
