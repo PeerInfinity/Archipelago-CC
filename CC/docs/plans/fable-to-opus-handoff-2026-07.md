@@ -12238,6 +12238,14 @@ fallback and left this DISPLAY copy behind. Fixing the 100 is a value change thi
 `1e7a1a5..3f85b55`. The outer push incl. the gitlink is ONE unit: any SHA of this slice without `ef88e2f4f1`
 reds CI's `unittests` on a missing export.
 
+**⚖ RULED (user, 2026-09-07): "Yes, I authorize the push. I also want to update the 100 location cost."** Planner's
+recommendation, taken: the 100 fix rides BEFORE the push so the authorization covers ONE unit (a second submodule
+commit + second gitlink bump, no second ask cycle). The fix is not a typed 10: `shared/queueAnalysis.js`'s
+`BASE_COSTS` IMPORTS `DEFAULT_REGION_COST` / `DEFAULT_LOCATION_COST` / `DEFAULT_REGION_COST × DEFAULT_EXPLORE_MULTIPLIER`
+from `loopCostDefaults.js` (⚖ k: exported constants, never hardcoded numbers), so the display copy cannot drift from
+the charging fallback again. Then the help gate re-runs at the NEW gitlink head, ⚖ 52 is re-derived, and M1b pushes
+the whole range as one unit. Relayed to `menu-panel-M1b`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
