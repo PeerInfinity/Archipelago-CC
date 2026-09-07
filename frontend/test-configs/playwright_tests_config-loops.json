@@ -8,7 +8,7 @@
     {
       "id": "loops-real-actions-processed",
       "name": "Real Actions Are Processed",
-      "description": "Verifies that real actions in the queue are processed when Resume is clicked",
+      "description": "Drives the menu panel's Restart and one exit button into the path, queues a location check behind the move, and asserts the queue PROCESSES both",
       "functionName": "testRealActionsProcessed",
       "enabled": true,
       "order": 0,
@@ -17,7 +17,7 @@
     {
       "id": "loops-mana-consumption",
       "name": "Mana Consumption",
-      "description": "Verifies that mana is consumed correctly during action processing",
+      "description": "Drives the real Start/Pause labels over one seeded action and asserts mana MOVES (gameState:manaChanged.current below the start) and stops on Pause",
       "functionName": "testManaConsumption",
       "enabled": true,
       "order": 1,
