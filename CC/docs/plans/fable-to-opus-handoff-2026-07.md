@@ -12431,6 +12431,91 @@ docs-only; submodule push publishes (manifest-prose exemption: no payload byte m
 gate row + `gates.mjs:218` + the standing-values refresh + gitlink) STOPS before the push. Reports come to
 `next-priorities-planning-3`.
 
+**⇒ W2 AS BUILT 2026-09-07 (STOPPED at the outer push)** (Opus `seedling-original-W2`; plan §9
+has every number). **Submodule PUSHED:** `PeerInfinity/seedling-wasm` `main`
+**`2bbabb2806..071ac1c9`**, Pages `built`, and the rewritten README is LIVE at the site root.
+**Outer, UNPUSHED:** `3e6ae4c02b` the generator + row (i) + the instruments regeneration ·
+`44983ce74c` `gates.mjs`'s prose · `68438a9dca` the gitlink bump · + the standing-values
+refresh and this record. ⛔ Docs-only: no wasm rebuilt, no game driven.
+
+**⛔ THE TWO FALSE STATEMENTS ARE GONE, AND A THIRD WAS FOUND.** p4c as *"THE bot build —
+every `SEEDLING_PAGE` default, `WASM_PAGE`, the three presets"* and p4d as *"not wired into any
+page yet"* die with the hand-kept table. The third: the p4b paragraph named two prose lines of
+`docs/json/developer/procgen/seedling-bot.md` as what holds its pin — those lines exist (935,
+11362) but are BACKTICKED PROSE, invisible to all four of the reference scan's spellings, and
+`builds.json`'s `namedBy` already carried the correction. Nothing measured was dropped.
+
+**README 199 → 80 lines.** What this is · **Play** (the original's prominent link first, then
+the GENERATED table) · the WebGPU + user-gesture note (the *"0 occurrences in the glue"*
+pthread measurement and the headless flags kept) · one sentence on Archipelago-CC's use with
+its three live app links · adding a build · licence. `docs/pin-policy.md` (109 lines) takes the
+law — both admission reasons, the four enforcement points, the four spellings, the
+`<name>`-is-not-the-directory evidence, retiring a build, the manifest-prose exemption.
+`docs/history.md` (61) takes why this is a repository, the 2026-08-19 retirements WITH their
+measurements, which build was the default and when, and the size policy.
+
+**⚖ THE TABLE IS GENERATED AND THE PINS GATE READS IT — ONE IMPLEMENTATION.**
+`scripts/procgen/seedlingWasmReadme.js` (library) + `seedling-wasm-readme.mjs`
+(`--write`/`--check`), and `check-seedling-wasm-pins.mjs` ROW (i) imports the SAME
+`checkReadme`, so CI's existing step 1 covers it with no new job. ⛔ Two files and not one:
+`argvHelp` runs at module scope and ESM imports are hoisted, so a gate importing the instrument
+would answer `--help` with the generator's help. `builds.json` gains `summary`, `role`,
+`source` per entry — every value DERIVED from the existing `builtFrom` prose, and p4c's
+seven-character `d4f1f37` RESOLVED to `d4f1f379515a5699aa1219622b6a0cf261943a78` (which is why
+the row requires a full 40-character SHA: the table LINKS the commit).
+⛓ **ROW (i) DOES NOT STOP AT THE SPELLING** — it asks whether each `role` LABEL IS TRUE OF THE
+TREE, against the readings rows (f) and (h1) already take, so no third scan is invented and the
+manifest and this repo stay independent sources.
+⛓ **THREE MUTANTS DRIVEN ON THE REAL TREE:** a hand-edited cell ⇒ **1 PROBLEM**, row (i)'s,
+with the line printed both ways; p4c relabelled `default` ⇒ **3**, two of them the false
+labels; every `seedling_original/game.html` link removed ⇒ **5**, rows (a) AND (i) — the right
+number, since an unreachable demo and a stale table are different failures sharing an opener.
+`--self-test` **24 → 36 cases**.
+
+**⛔ TWO CONSEQUENCES THE BRIEF DID NOT PREDICT, planner-ruled in scope.** The submodule's
+`.gitignore` is `/*` plus a whitelist, so `docs/` needs a `!/docs/` line — there is NO way to
+add a file to that repository without moving it, and the kickoff's ⛔ was about BUILD whitelist
+lines. And the pins gate's view 3 reads every tracked path's first segment as a build
+directory, so `docs/` would have read as a build: the two files are now DECLARED, view 3 skips
+the prefix, and row (d) refuses a THIRD file there rather than letting the carve-out become a
+hole. ⛓ **The manifest-prose exemption is claimed on its REASONING, not its letter** — clause 1
+says "ONLY `builds.json`" and this diff is five files — and the narrower claim is written into
+`docs/pin-policy.md` and quoted in the gitlink commit with the sixteen unchanged md5s.
+`check-seedling-full-tier-owed.mjs` still reds on the gitlink, deliberately: the exemption
+licenses the DISCHARGE, not a green row.
+
+**⚖ THE READOUTS.** `gates.mjs`'s verdict-vocabulary example stops quoting `1 pinned build` and
+now reads `ALL PASS — <N> pinned build(s), …`, saying `N` is the manifest's entry count and the
+gate's own last line is the only authoritative place — ⛔ the number is not typed, because
+nothing in that argument depends on it. `standing-values.json`'s `gate: seedling-wasm-pins` row
+refreshed at the records head (it takes the box).
+
+**⚖ OPEN / OWED after the push:** (a) `standing-values.json`'s `gate: procgen-help` row is
+`265/0` and is QUOTED FROM CI (`ci-summary.mjs`), so adding an instrument makes it `266/0` only
+once CI has run at the new head — the refresh belongs after the push, not here; (b)
+`check-procgen-help.baseline.json`'s informational `counts.instruments` (265) likewise, and
+moving it costs a full `--write-baseline` census; (c) ⛓ **`check-seedling-wasm-pages.mjs:138`
+spells its build as a bare `const BUILD = '…'`, which matches NONE of the pins gate's four
+spellings** — so the REFERENCED count for the default build (51) is a LOWER BOUND. NAMED in
+`docs/pin-policy.md`, not fixed: whether spelling 4 should widen beyond `PAGE_NAME` is a
+decision about the rule that keeps the historical builds out.
+
+**Run here:** the pins gate **ALL PASS — 4 pinned builds** (CI's STEP 1, verbatim; the workflow
+runs exactly this) · `--self-test` **ALL PASS, 36 cases** · `seedling-wasm-readme.mjs --check`
+and `--help` exit 0 · `generate-procgen-reference.mjs --check` ALL 6 MODULES AND 4 REGIONS
+MATCH (the control on the shared splicer's new `by` default) · `check-procgen-reference.mjs`
+and `check-procgen-docs.mjs` ALL CHECKS PASSED · **`check-procgen-help.mjs --doors=all` ALL
+PASS, 267 instrument(s)**, with the new file reading `HELP ok (182 ms) · IMPORT ok (130 ms)` —
+⛔ run at the COMMITTED head and the first run DISCARDED, because that gate drives a throwaway
+worktree AT HEAD and a run before the commit measures a population without the new instrument ·
+⚖ 52 bounded vitest, **13 files / 641 tests green**, delta DERIVED as ±0 (no `.test.js` moves;
+the `INSTRUMENTS` readers iterate inside one `it()`, not `it.each`).
+⛓ **`check-seedling-full-tier-owed.mjs` reds — 3 CHECK(S) FAILED — AND THE RED IS OLDER THAN
+THIS SLICE.** Its (i) range is `e645f2e54faf -> 071ac1c9eedf`, and `e645f2e` is the PRE-W1
+gitlink, so (i) was already a mover at W0; (ii) names the driver moving at `df404e911b` (V3b,
+2026-09-05) and (iv) the dead-frame accounting at `3770314bfd`. W2 adds no new claim on the
+tier beyond a docs-only bump. Owed if driven: campaign + map-walk + mechanic, ≈143 min.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
