@@ -584,9 +584,25 @@
     }
   ],
   "loop_costs": {
-    "regions": {},
+    "version": "1.0",
+    "generatedFrom": "scripts/test/generate-omsi-region-split-test-preset.mjs",
+    "regions": {
+      "Menu": {
+        "moveCost": 0,
+        "xpEffect": "cost"
+      },
+      "region_0_0": {
+        "moveCost": 25,
+        "xpEffect": "cost"
+      },
+      "region_1_1": {
+        "moveCost": 38,
+        "xpEffect": "cost"
+      }
+    },
     "locations": {},
     "defaultRegionCost": 50,
-    "defaultLocationCost": 10
+    "defaultLocationCost": 10,
+    "defaultRegionXpEffect": "cost"
   }
 }
