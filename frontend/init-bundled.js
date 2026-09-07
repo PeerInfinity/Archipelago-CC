@@ -124,6 +124,7 @@ import * as mazeRoomModule from './modules/mazeRoom/index.js';
 import * as procgenLabPanelModule from './modules/procgenLabPanel/index.js';
 import * as procgenPipelineModule from './modules/procgenPipeline/index.js';
 import * as procgenPlayerModule from './modules/procgenPlayer/index.js';
+import * as menuPanelModule from './modules/menuPanel/index.js';
 import * as resourceChannelsModule from './modules/resourceChannels/index.js';
 import * as textAdventureSubstrateWrapperModule from './modules/textAdventureSubstrateWrapper/index.js';
 import * as jtaSubstrateWrapperModule from './modules/jtaSubstrateWrapper/index.js';
@@ -228,6 +229,7 @@ const BUNDLED_MODULES = {
   procgenLabPanel: procgenLabPanelModule,
   procgenPipeline: procgenPipelineModule,
   procgenPlayer: procgenPlayerModule,
+  menuPanel: menuPanelModule,
   resourceChannels: resourceChannelsModule,
   textAdventureSubstrateWrapper: textAdventureSubstrateWrapperModule,
   jtaSubstrateWrapper: jtaSubstrateWrapperModule,

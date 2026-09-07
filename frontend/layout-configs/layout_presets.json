@@ -183,6 +183,11 @@
             },
             {
               "type": "component",
+              "componentType": "menuPanel",
+              "title": "Menu"
+            },
+            {
+              "type": "component",
               "componentType": "helpersPanel",
               "title": "Helpers"
             },

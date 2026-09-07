@@ -170,6 +170,15 @@ export const moduleMetadata = {
     name: 'loops',
     column: 3
   },
+  // The start region's substrate (the "menu"): its exits, Restart, and the
+  // skip-the-menu checkbox. The module exports its own moduleInfo (priority 4
+  // in the load order above), so this entry is the mobile / fallback copy.
+  menuPanel: {
+    title: 'Menu',
+    icon: '🚪',
+    name: 'menuPanel',
+    column: 3
+  },
   iframePanel: {
     title: 'Iframe Panel',
     icon: '🖼️',

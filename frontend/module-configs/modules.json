@@ -288,6 +288,10 @@
       "path": "./modules/procgenPlayer/index.js",
       "enabled": true
     },
+    "menuPanel": {
+      "path": "./modules/menuPanel/index.js",
+      "enabled": true
+    },
     "playbackBot": {
       "path": "./modules/playbackBot/index.js",
       "enabled": true
@@ -365,6 +369,7 @@
     "procgenPipeline",
     "bounceRegionEditor",
     "procgenPlayer",
+    "menuPanel",
     "jtaBalance",
     "playbackBot"
   ]

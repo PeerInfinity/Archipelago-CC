@@ -1,0 +1,61 @@
+/* menuPanel — the start region's substrate. */
+
+.menu-panel-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  height: 100%;
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+.menu-panel-header {
+  border-bottom: 1px solid #666;
+  padding-bottom: 0.4rem;
+}
+
+.menu-panel-title {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.menu-panel-seed {
+  font-size: 0.8rem;
+  opacity: 0.75;
+}
+
+.menu-panel-instructions,
+.menu-panel-note {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.menu-panel-exits {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.menu-panel-exit-button {
+  text-align: left;
+}
+
+.menu-panel-position {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.menu-panel-controls {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.menu-panel-skip {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  margin-top: auto;
+}
