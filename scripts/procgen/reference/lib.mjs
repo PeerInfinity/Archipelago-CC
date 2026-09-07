@@ -176,12 +176,23 @@ export function firstSentence(text, { limit = 320 } = {}) {
  * hand-kept paragraph BELOW the region where a regeneration cannot eat it.
  */
 
-/** The exact marker pair for one table. ⛔ Spelled ONCE: a marker written by
- *  the generator and matched by a different string is a region nothing gates. */
-export function markdownMarkers(table) {
+/**
+ * The exact marker pair for one table. ⛔ Spelled ONCE: a marker written by
+ * the generator and matched by a different string is a region nothing gates.
+ *
+ * ⛓ `by` NAMES THE WRITER, and it is a parameter because there is now more
+ * than one. `seedling-wasm-readme.mjs` splices a generated table into the
+ * seedling-wasm SUBMODULE's README — another repository, whose reader is a
+ * stranger — and a marker telling that reader to regenerate with a script
+ * that does not write this region would be a false instruction in the one
+ * sentence whose whole job is to stop a hand edit. It DEFAULTS to the four
+ * regions that were here first, so their markers are byte-identical and
+ * `generate-procgen-reference.mjs --check` is the control that says so.
+ */
+export function markdownMarkers(table, by = 'generate-procgen-reference.mjs') {
     return {
         begin: `<!-- GENERATED:${table} BEGIN — by scripts/procgen/`
-            + 'generate-procgen-reference.mjs; do not edit; regenerate -->',
+            + `${by}; do not edit; regenerate -->`,
         end: `<!-- GENERATED:${table} END -->`,
     };
 }
@@ -191,8 +202,8 @@ export function markdownMarkers(table) {
  * are each a NAMED failure — the caller prints the name, and no file is
  * written.
  */
-export function findMarkdownRegion(source, table, { what = table } = {}) {
-    const { begin, end } = markdownMarkers(table);
+export function findMarkdownRegion(source, table, { what = table, by } = {}) {
+    const { begin, end } = markdownMarkers(table, ...(by === undefined ? [] : [by]));
     const lines = source.split('\n');
     const begins = [];
     const ends = [];
@@ -220,8 +231,8 @@ export function findMarkdownRegion(source, table, { what = table } = {}) {
 
 /** The whole file with `body` standing between the markers. Everything outside
  *  them is returned byte-for-byte. */
-export function spliceMarkdownRegion(source, table, body, { what = table } = {}) {
-    const region = findMarkdownRegion(source, table, { what });
+export function spliceMarkdownRegion(source, table, body, { what = table, by } = {}) {
+    const region = findMarkdownRegion(source, table, { what, by });
     const lines = source.split('\n');
     return [
         ...lines.slice(0, region.beginLine),

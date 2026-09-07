@@ -164,7 +164,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 1,
+            "count": 2,
             "id": "seedling"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 255,
+        "blockStyle": 256,
         "browser": 77,
         "cited": 89,
-        "files": 266,
+        "files": 267,
         "lineStyle": 11,
-        "withDocblock": 266,
-        "withFlags": 174
+        "withDocblock": 267,
+        "withFlags": 175
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9037,6 +9037,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "seedling-atlas-goals — THE ONE PLACE A SEEDLING GOAL COORDINATE COMES FROM.",
             "path": "scripts/procgen/seedling-atlas-goals.mjs"
+        },
+        {
+            "argvHelpers": [
+                "flag"
+            ],
+            "browser": false,
+            "category": "seedling",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "write"
+            ],
+            "file": "seedling-wasm-readme.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "seedling-wasm-readme — **WRITE (AND GATE) THE seedling-wasm README'S BUILD TABLE FROM `builds.json`** (SEEDLING ORIGINAL WASM slice W2, ⚖ user 2026-09-07: the build table *\"GENERATED from `builds.json` with a check gate\"*, and *\"I want to fix the false and stale things in the readme\"*).",
+            "path": "scripts/procgen/seedling-wasm-readme.mjs"
         },
         {
             "argvHelpers": [],
