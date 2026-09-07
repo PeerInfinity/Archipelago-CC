@@ -12574,6 +12574,23 @@ Named follow-ups, none launched: the full-tier "owed" standing row (⚖ above); 
 ⚑ Trap **1297** (W2): a CI wait testing `pending == 0` is satisfied by an EMPTY run listing — require a minimum
 population before believing a zero.
 
+## 5r. HANDOFF to session 4 — 2026-09-07 (`next-priorities-planning-3` closes; successor `next-priorities-planning-4` opens with REVIEW R3)
+
+`next-priorities-planning-3` (this Fable session) closes at the user's word (*"Yes, please launch the new session."*)
+after: **R1** (the marking tool — stays DISABLED, low-priority fixes named, H6a parked; §5p), the **Menu ladder**
+(M1 + M1b — `menuPanel`, `START_REGION_MOVE_COST` at six sites, the display cost table reading the constants; §5p) and
+the **Seedling original wasm arc** (W1 + W2 — the pre-fork game live on seedling-wasm's own Pages site, the README
+generated and gated; §5q). Four Opus slices, two ask-first gitlink units, one pause/resume, all verified; nothing
+pending on the tree. The user's next topic: *"The original reason why we started looking into the loop costs was
+because we were working on the APWorld Editor, trying to update it to include all of the data that can appear in the
+rules.json file."* — the planner's answer, MEASURED at `ce7bfd3281`: **34 schema keys = 5 doors + 3 tab-owned + 27
+raw-JSON-block-only** (list in the kickoff), so the hub's "every element displayed and editable" is true only in the
+weak sense; a fresh session for the review, not a tail on this one. Successor = `next-priorities-planning-4`
+(kickoff `NewDocs/plans/next-priorities-planning-4-prompt.md`), opening with **R3** (the 27 keys: populated where,
+written by whom, read by whom, which deserve an affordance, which are provenance, which gestures exist elsewhere and
+should be linked), then the field as mapped there (menu leftovers, seedling follow-ups, the queue-viewer replan,
+loop-costs follow-ups, V3b's two, the backlog, maze-lab residues, the docs TODO).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
