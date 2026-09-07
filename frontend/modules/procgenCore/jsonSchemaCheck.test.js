@@ -25,6 +25,12 @@ import {
     KNOWN_KEYWORDS, atlasSchemaErrors, ruleSchemaErrors, rulesJsonSchemaErrors, schemaErrors,
 } from './jsonSchemaCheck.js';
 import { loadAtlasSchema, loadRulesSchema, loadSchema } from './jsonSchemaFiles.js';
+// ⛓ R-a — the `loop_costs` vocabulary's own constants, so the schema's typed
+//   copy of them is compared against the source rather than against a second
+//   typed copy. `loopCostDefaults.js` has no imports of its own by design.
+import {
+    DEFAULT_LOCATION_COST, DEFAULT_REGION_COST, DEFAULT_REGION_XP_EFFECT, VALID_REGION_XP_EFFECTS,
+} from '../shared/procgen/loopCostDefaults.js';
 
 const REPO = new URL('../../../', import.meta.url);
 const at = (rel) => new URL(rel, REPO);
@@ -144,6 +150,131 @@ describe('every committed preset rules.json is schema-valid', () => {
             if (errs.length) bad.push(`${name}: ${errs.slice(0, 3).join(' | ')}`);
         }
         expect(bad).toEqual([]);
+    });
+});
+
+// ── the `loop_costs` block's tightened vocabulary (R-a) ──────────────────
+
+/**
+ * ⛓⛓⛓ **THE ONE PLACE THE SCHEMA'S `xpEffect` ENUM AND THE RUNTIME'S CONSTANT
+ * ARE COMPARED.** A JSON Schema cannot import `VALID_REGION_XP_EFFECTS`, so the
+ * four strings are typed into `rules.schema.json` — and a typed copy nobody
+ * checks is exactly the drift this arc exists to kill (the same shape as the
+ * registry ↔ schema equality `documentKeys.test.js` asserts in both directions).
+ *
+ * ⛓ These rows live HERE rather than beside the block's producer because this
+ * file already holds the two halves the tightening has to satisfy at once: the
+ * DERIVED preset roster above — every committed document still valid, which is
+ * the ruling's own gate — and the evaluator that answers for both. A tightening
+ * whose "still valid" and "now refuses" claims ran in different files could be
+ * half-green.
+ *
+ * ⛔ `moveCost` and `timeDrainPerSecond` are asserted as SIBLINGS, deliberately.
+ * A coarse entry carries the first, a summary entry the second, and a summary
+ * entry whose input block states a `moveCost` explicitly carries BOTH
+ * (`loopCostGenerator.js` `writeCostsByClass`). "Exactly one" is write-by-class's
+ * rule and not a shape a schema can state — asserting the pair keeps a future
+ * reader from "fixing" that into a `oneOf`.
+ */
+describe('the `loop_costs` block, tightened (R-a)', () => {
+    const BLOCK = RULES_SCHEMA.properties.loop_costs;
+    const ENTRY = BLOCK.properties.regions.additionalProperties;
+    /** The veto's own arithmetic: the errors an op ADDS, differenced. */
+    const addedTo = (doc, block) => {
+        const before = new Set(rulesJsonSchemaErrors(doc, RULES_SCHEMA));
+        const next = { ...doc, loop_costs: block };
+        return rulesJsonSchemaErrors(next, RULES_SCHEMA).filter((e) => !before.has(e));
+    };
+    /** A document with NO block of its own, so `before` is empty by construction. */
+    const HOST = { game_name: 'x' };
+    /** The four required keys, from the constants — never hand-typed numbers. */
+    const EMPTY = {
+        regions: {},
+        locations: {},
+        defaultRegionCost: DEFAULT_REGION_COST,
+        defaultLocationCost: DEFAULT_LOCATION_COST,
+    };
+
+    it('⛓ the schema\'s xpEffect enum IS `VALID_REGION_XP_EFFECTS`, both entry and default', () => {
+        expect(ENTRY.properties.xpEffect.enum).toEqual(VALID_REGION_XP_EFFECTS);
+        expect(BLOCK.properties.defaultRegionXpEffect.enum).toEqual(VALID_REGION_XP_EFFECTS);
+        // …and the default the generator stamps is one of them, so the schema
+        // cannot refuse a block written with no `regionXpEffect` argument.
+        expect(VALID_REGION_XP_EFFECTS).toContain(DEFAULT_REGION_XP_EFFECT);
+    });
+
+    it('requires the FOUR keys every block on disk carries, and no more', () => {
+        expect(BLOCK.required)
+            .toEqual(['regions', 'locations', 'defaultRegionCost', 'defaultLocationCost']);
+        // ⛔ NOT required: the twelve tracked blocks carry none of these.
+        for (const k of ['version', 'generatedAt', 'generatedFrom', 'defaultRegionXpEffect']) {
+            expect(BLOCK.properties[k]).toBeDefined();
+            expect(BLOCK.required).not.toContain(k);
+        }
+    });
+
+    it('is CLOSED at the root and on a region entry', () => {
+        expect(BLOCK.additionalProperties).toBe(false);
+        expect(ENTRY.additionalProperties).toBe(false);
+    });
+
+    it('⛔ declares moveCost and timeDrainPerSecond as SIBLINGS — not "exactly one"', () => {
+        expect(Object.keys(ENTRY.properties).sort())
+            .toEqual(['moveCost', 'timeDrainPerSecond', 'xpEffect']);
+        expect(ENTRY.oneOf).toBeUndefined();
+        expect(ENTRY.required).toBeUndefined();
+        expect(addedTo(HOST, {
+            ...EMPTY,
+            regions: { S: { timeDrainPerSecond: 1, moveCost: 3, xpEffect: 'cost' } },
+        })).toEqual([]);
+    });
+
+    it('accepts the EMPTY block the presence switch writes', () => {
+        expect(addedTo(HOST, EMPTY)).toEqual([]);
+    });
+
+    it("accepts the pipeline's `error` failure marker", () => {
+        // procgenPipelineEngine.js's catch — it carries the four required keys
+        // AND `error`, so `required` cannot refuse a build that failed.
+        expect(addedTo(HOST, {
+            ...EMPTY, version: '1.0', generatedAt: 'now',
+            error: 'loopCostGenerator failed: boom',
+        })).toEqual([]);
+    });
+
+    it('accepts a write-by-class block carrying BOTH entry shapes', () => {
+        expect(addedTo(HOST, {
+            ...EMPTY,
+            version: '1.0',
+            generatedAt: 'now',
+            generatedFrom: 'the APWorld editor',
+            regions: {
+                Menu: { moveCost: 0, xpEffect: 'cost' },
+                Sum: { timeDrainPerSecond: 1, xpEffect: 'speed' },
+            },
+            locations: { L1: 10 },
+            defaultRegionXpEffect: DEFAULT_REGION_XP_EFFECT,
+        })).toEqual([]);
+    });
+
+    /** ⛔ Each of these was ACCEPTED before R-a (plan §14's mutant table). */
+    it.each([
+        ['an xpEffect outside the vocabulary',
+            { ...EMPTY, regions: { A: { moveCost: 1, xpEffect: 'banana' } } }, 'not in enum'],
+        ['a defaultRegionXpEffect outside the vocabulary',
+            { ...EMPTY, defaultRegionXpEffect: 'banana' }, 'not in enum'],
+        ['an undeclared ROOT key (a misspelt defaultRegionXpEffect)',
+            { ...EMPTY, defaultRegionXPEffect: 'cost' }, 'additional property not allowed'],
+        ['a stray key on a region entry',
+            { ...EMPTY, regions: { A: { moveCost: 1, xpEffect: 'cost', mana: 3 } } },
+            'additional property not allowed'],
+        ['a block missing `locations`',
+            { regions: {}, defaultRegionCost: 50, defaultLocationCost: 10 }, "missing required 'locations'"],
+        ['`{}` — no roots at all', {}, "missing required 'regions'"],
+    ])('REFUSES %s', (_name, block, needle) => {
+        const errs = addedTo(HOST, block);
+        expect(errs.length).toBeGreaterThan(0);
+        expect(errs.join(' | ')).toContain(needle);
     });
 });
 

@@ -14,13 +14,16 @@
  * The repo ships no JSON-Schema library for JS (`package.json`: `playwright`,
  * `@playwright/test`, `@vitest/coverage-v8`, `esbuild`, `jsdoc`, `vitest` —
  * zero schema hits), and the two schemas this repo actually validates against
- * use exactly the keyword subset below, MEASURED: `rules.schema.json` (1,046 l
- * since APWORLD HUB H1 set its top level `additionalProperties: false`; 1,045 l
- * after H0 declared nine of the ten previously-undeclared top-level keys,
- * 833 l when this was written) needs nothing this evaluator lacked —
- * `additionalProperties` was already both KNOWN and implemented here
- * (`ASSERTION_KEYWORDS` and `schemaErrors`'s object branch), which is why H1's
- * strict top level cost this file a line count and no code; `region-atlas.schema.json` (218 l)
+ * use exactly the keyword subset below, MEASURED: `rules.schema.json` (1,067 l
+ * since LOOP COSTS R-a tightened `loop_costs` — `required`, `enum` on the two
+ * XP-effect fields, `additionalProperties: false` on the block and on a region
+ * entry; 1,046 l since APWORLD HUB H1 set its top level
+ * `additionalProperties: false`; 1,045 l after H0 declared nine of the ten
+ * previously-undeclared top-level keys, 833 l when this was written) needs
+ * nothing this evaluator lacked — `additionalProperties`, `required` and `enum`
+ * were all already both KNOWN and implemented here (`ASSERTION_KEYWORDS` and
+ * `schemaErrors`), which is why H1's strict top level and R-a's tightening each
+ * cost this file a line count and no code; `region-atlas.schema.json` (218 l)
  * needed six more, which slice D0b added. Python's `jsonschema` covers the
  * committed presets in `test/general/test_schema_validation.py` and is the
  * cross-check for the rules half. Adding ajv would buy a user-visible

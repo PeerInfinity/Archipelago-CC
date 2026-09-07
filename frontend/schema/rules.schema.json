@@ -389,6 +389,14 @@
     "loop_costs": {
       "type": "object",
       "description": "Loop-mode mana economy for this world. Producers: frontend/modules/shared/procgen/loopCostGenerator.js `generateLoopCosts` (invoked from procgenPipelineEngine.js when enableLoopMode && embedSphereLog), which drives the ONE cost model in loopCostPlanner.js and applies the write-by-class rule, exporter/games/base/handler.py:2171 (the worldgen `_worldgen_loop_costs.json` round-trip) and the hand-written test-preset writers under scripts/test/generate-*-preset.*. Consumed by frontend/modules/loops/costDataManager.js.",
+      "$comment": "R-a (loop costs residue 1) TIGHTENED this block, and every constraint below is what the CORPUS and write-by-class allow rather than what a reading of the vocabulary would suggest. `required` is the four keys ALL fourteen blocks on disk carry (twelve tracked, written by scripts/test/generate-*-preset.*; two untracked maze fixtures) AND the four the pipeline's own failure marker carries (procgenPipelineEngine.js's catch writes {version, generatedAt, error, regions, locations, defaultRegionCost, defaultLocationCost}) — `version`, `generatedAt` and `defaultRegionXpEffect` are NOT required, because the twelve tracked blocks carry none of them. `additionalProperties: false` here and on a region entry closes L4's finding that every semantic error write-by-class exists to prevent was invisible to this schema. ⛔ `moveCost` and `timeDrainPerSecond` stay declared SIBLINGS on an entry and the schema does NOT say 'exactly one': a coarse entry and a summary entry are different shapes, a summary entry legitimately carries BOTH when the input block states a moveCost explicitly (loopCostGenerator.js `writeCostsByClass`), and which one is right for a region is write-by-class's answer, not a schema's.",
+      "required": [
+        "regions",
+        "locations",
+        "defaultRegionCost",
+        "defaultLocationCost"
+      ],
+      "additionalProperties": false,
       "properties": {
         "version": {
           "type": "string",
@@ -408,6 +416,7 @@
           "additionalProperties": {
             "type": "object",
             "description": "One region's cost entry.",
+            "additionalProperties": false,
             "properties": {
               "moveCost": {
                 "type": "number",
@@ -419,7 +428,13 @@
               },
               "xpEffect": {
                 "type": "string",
-                "description": "Per-region XP effect mode — 'cost', 'speed', 'both' or 'none' (normalized against VALID_REGION_XP_EFFECTS in loopCostDefaults.js)."
+                "description": "Per-region XP effect mode. The enum is VALID_REGION_XP_EFFECTS in shared/procgen/loopCostDefaults.js, which a JSON document cannot import — jsonSchemaCheck.test.js is the ONE place the two are compared, so a typed copy cannot drift unseen.",
+                "enum": [
+                  "cost",
+                  "speed",
+                  "both",
+                  "none"
+                ]
               }
             }
           }
@@ -439,7 +454,13 @@
         },
         "defaultRegionXpEffect": {
           "type": "string",
-          "description": "Fallback XP effect mode for regions that state none. Producer: loopCostGenerator.js `generateLoopCosts` (its `regionXpEffect` argument, normalized)."
+          "description": "Fallback XP effect mode for regions that state none. Producer: loopCostGenerator.js `generateLoopCosts` (its `regionXpEffect` argument, normalized). Same enum as a region entry's `xpEffect`, and pinned to VALID_REGION_XP_EFFECTS by the same row.",
+          "enum": [
+            "cost",
+            "speed",
+            "both",
+            "none"
+          ]
         },
         "error": {
           "type": "string",
