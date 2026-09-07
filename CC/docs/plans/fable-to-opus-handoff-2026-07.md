@@ -12246,6 +12246,28 @@ from `loopCostDefaults.js` (⚖ k: exported constants, never hardcoded numbers),
 the charging fallback again. Then the help gate re-runs at the NEW gitlink head, ⚖ 52 is re-derived, and M1b pushes
 the whole range as one unit. Relayed to `menu-panel-M1b`.
 
+⇒ **M1b ITEMS 7–8 AS BUILT.** ⚖ user *"I also want to update the 100 location cost."*
+`shared/queueAnalysis.js`'s `BASE_COSTS` now names `DEFAULT_REGION_COST` / `DEFAULT_LOCATION_COST`, and the
+loaded branch's typed `* 2` and two `50`s become `DEFAULT_EXPLORE_MULTIPLIER` / `DEFAULT_REGION_COST`. Measured
+in the app on `adventure` (no block), same script both sides: `locationCheck` **display 100 / charge 10 →
+10 / 10**; `customAction` and `regionMove` unmoved at 50 / 50.
+
+⚠ **The kickoff's THIRD import was not taken, and the kickoff's own parenthetical is why.** It asked for
+`customAction` = `DEFAULT_REGION_COST × DEFAULT_EXPLORE_MULTIPLIER` *"so the display copy reads the same names
+as the charging fallback"* — but the charging fallback prices an explore at a PLAIN region move (50), as
+`loops.md`'s "Fallback Costs" has said since L2 and as the table above measures. That import would have traded a
+10× disagreement on one row for a fresh 2× one on another. Named here rather than done.
+
+Three rows; the load-bearing one is PARITY — display must equal charge for all three action types with no block
+loaded, which a typed number in EITHER copy fails. Mutant (`locationCheck: 100` restored) 2 red. ⛔ **`compare-runs`
+names NOTHING** — `test-loops-only` 8/8 and `test-substrates --batch=fast` 88/88, "No differences in status,
+roster, or duration" against both the item-2 run and W0. No in-app row asserts a RENDERED cost, so none could
+see a display-only change; the before/after table is the measurement that does. Bounded vitest 954 → **957**;
+`check-procgen-help --doors=all` ALL PASS, 266 instruments, re-run at the SECOND gitlink head `0a4490e736`.
+
+**⚖ 52 RE-DERIVED:** `shared/queueAnalysis.test.js` NEW → **10** (was 7) ⇒ **+2 files, +27 rows ⇒ expected
+442 / 13384** against CI's 440 / 13357 at `598d326598`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
