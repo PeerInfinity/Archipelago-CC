@@ -12488,7 +12488,12 @@ licenses the DISCHARGE, not a green row.
 now reads `ALL PASS — <N> pinned build(s), …`, saying `N` is the manifest's entry count and the
 gate's own last line is the only authoritative place — ⛔ the number is not typed, because
 nothing in that argument depends on it. `standing-values.json`'s `gate: seedling-wasm-pins` row
-refreshed at the records head (it takes the box).
+refreshed at the records head `fbde71f23d` (box taken, 1 row, 2.7 s): `total` *"ALL PASS — 3
+pinned builds…"* → *"…4 pinned builds…"*, `inputKey` `07f1e348…` → `659b6670…`. ⛔ **AND
+`keyPopulations.build.count` IS NOT THE PIN COUNT** — W1's open item (b) and this kickoff both
+expected it to read 4. It is `rowInputKey.js`'s SUBMODULE-GITLINK population and its three
+members are named on every run (`flashPanel/wasm`, `journey-to-ascension`, `shared`); it was
+never stale, and what moved is its digest.
 
 **⚖ OPEN / OWED after the push:** (a) `standing-values.json`'s `gate: procgen-help` row is
 `265/0` and is QUOTED FROM CI (`ci-summary.mjs`), so adding an instrument makes it `266/0` only
