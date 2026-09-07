@@ -12169,6 +12169,20 @@ constant, before the XP discount); the jta bill measured 50 → 0 with NO preset
 only at that head; **STOP before the outer push** — the push incl. the gitlink is ONE ask-first unit relayed by the
 planner. Reports come to `next-priorities-planning-3`.
 
+**⏸ M1b PAUSED 2026-09-07 at the user's word (*"Please pause implementing this for now."*).** Verified on disk: nothing
+committed, nothing pushed, outer tree and submodule clean at `3a0024b9d5` / gitlink `1e7a1a5`. The session's two
+uncommitted submodule edits (the constant + its re-export) were DISCARDED from the working tree and saved as
+`NewDocs/scratch/menu-panel-M1b/submodule-item1-constant.patch`; W0 is written up in
+`NewDocs/scratch/menu-panel-M1b/W0-findings-PAUSED.md` (gitignored, on disk). Stopped at item 1, edits 2 of 5.
+⚑ W0 finding that CHANGES THE BRIEF: a move has FOUR pricers, not one — `loopState._calculateActionCost` (charges),
+`shared/queueAnalysis.getBaseCost` (the panel's queue analysis + loopStats), `loopUI._estimateActionCost` ("THE THIRD
+COPY" by its own docblock) and `loopBlockBuilder:851` (the per-exit cost label, the most visible readout) — and
+`loopCostPlanner.js:273` WRITES the same `0` as a literal. The bill measured: `jta_schedule_test` `Menu → region_0_0`
+= 50 in both branches. Every fixture's start region is `Menu`, so `check-ta-mana-leg`'s pins cannot move. Baselines
+green (loops 8/8, fast 88/88, one-model / maze-loop-mana / ta-mana-leg green). A RESUMED M1b re-reads the W0 file and
+applies the patch; the rule lands at all four pricers (or the four collapse to one reader — a design call for the
+resume).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
