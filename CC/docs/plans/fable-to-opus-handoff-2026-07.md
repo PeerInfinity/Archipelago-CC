@@ -11947,6 +11947,36 @@ preset carrying a timestamp can never regenerate byte-identical); (3) the two by
 GATE later, as a small item — NOT in this landing; (4) the seven jta presets keep their empty blocks (Menu billed
 50 there) — the free-by-rule start-region constant lands with M1. Authorization relayed to `loop-costs-Rb`.
 
+**⇒ R-b LANDED — THE ⚖ 49-CLASS RE-RECORD IS IN (2026-09-07, `loop-costs-Rb`, main `0af40232d7` pushed;
+plan §16b).** Two commits on `d5ebfd9bfd`: **`90741263f3`** the five regenerated `*_rules.json` as ONE
+commit with the gate results in the message, and **`0af40232d7`** the rebuilt Send row as its own commit
+after them. ⛑ **What landed is BYTE-IDENTICAL to what was gated** — regenerated fresh with the pushed
+writers, then `cmp`'d against the scratch copies every gate ran on, five for five; the diff is
+`5 files, +90 / −10`, every hunk inside `loop_costs`.
+**The row was REBUILT, not re-numbered.** `apworld-loop-costs-send-writes-the-plan-as-one-op` took its
+premise ("the committed block prices NOTHING") from whatever was on disk, and the re-record removes that
+premise's SUBJECT rather than its value — Send would write back what is already there. Re-derived over all
+12 tracked blocks: no substitute document exists (the 7 jta ones are NATIVE + Menu, the "single zero" the
+row's own docblock refuses). So the row now MAKES the premise through R-a's loop-mode switch — press
+Disable, press Enable, then the door and Send — which is a person's own route to the same state and puts
+the claim back on Send. Four new conditions; every claim about the door, plan, veto, one op and undo is
+untouched, and the docblock and registration description were corrected with it.
+**Gates against the TREE:** `check-loop-costs-one-model` ALL PASS (5 documents) · `check-omsi-mana-leg` OK
+22.2 s · in-app `--batch=fast` **88/88**, `compare-runs` **FIXED (2)** and nothing else.
+⛔ **The first post-landing run was 86/88 and BOTH reds were flakes, attributed rather than assumed** —
+`runner-bot-block-summary-economy` (a runner row this arc never touches) and the Send row, both green in the
+clean re-run and both named FIXED by `compare-runs`. ⛑ **The Send row's flake has a measured cause worth
+keeping:** the browser log carries *"an editor's op was made for document #90 and this hub now holds #91 —
+refused"* — **R-a's token guard firing CORRECTLY**, because something republished the rules between the door
+press and Send. Driven alone afterwards it passes, ops 2 → 3, block stamped `generatedFrom: "the APWorld
+editor"`. ⚠ **The row reported SEVEN mismatched conditions and none named the refusal**, and *"that op is a
+document-scope set-key on loop_costs"* stayed GREEN because the last op was the row's own Enable — a
+one-line "the hub still holds this document" assertion after Send would make that red legible. NAMED, not
+built (the roster is green and the ruling's gate is that number).
+**⚖ ruled with the authorization and honoured:** `generatedAt` stays OUT of a written block; the
+byte-inertness claims become a gate LATER (named, not built); the jta presets stay as they are and their
+Menu-50 goes to **M1**.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
