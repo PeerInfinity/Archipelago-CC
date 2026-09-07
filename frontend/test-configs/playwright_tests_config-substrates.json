@@ -491,6 +491,12 @@
             "_comment": "Loop-costs L4. \u2696 (user, 2026-09-06) 'the debugger's plan comes back as ONE op'. Driven on omsi_substrate_test because that is the only shape where both halves are real: its committed block is EMPTY (all ten tracked carriers are), its two maze regions are coarse-classed so the block must gain their real prices (L3 measured 16 and 21 against a stored 50), and its omsi region is NATIVE so it must gain nothing. jta_schedule_test would have made 'it became priced' true of one zero. The row also drives the SCHEMA VETO at _acceptEditorOp \u2014 L4 measured it was not on the editor-op path at all (it lived in _applySetKey, the raw-JSON editor's method), so region_atlas's save had been bypassing it since H5. \u26a0 The loop_costs schema is TYPE-only: it refuses a location cost that is not a number, and accepts every semantic error write-by-class is about (a moveCost on a summary region, a missing defaultRegionXpEffect, an entry for a native region) \u2014 reported, not fixed here."
         },
         {
+            "id": "apworld-send-into-a-replaced-document-is-refused",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "Loop-costs R-a residue 2. L4 measured that onSave applied into whatever session the hub had open NOW \u2014 arc-wide, region_atlas's Save too \u2014 and could not close it without a document identity the hub did not carry. The hub now stamps a monotonic _documentToken at its ONE session boundary and _openDocumentKeyEditor binds it into the onSave closure, so no door can forget it. The SUBJECT here is the SECOND document: procgen_maze must still carry no loop_costs and its op list must not grow. A row that only read the debugger's status line would pass against a hub that printed a refusal and applied the op anyway."
+        },
+        {
             "id": "apworld-links-tab-reaches-an-editor-with-no-data",
             "enabled": true,
             "category": "apworldEditor",

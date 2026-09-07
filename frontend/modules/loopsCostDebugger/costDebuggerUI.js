@@ -377,13 +377,17 @@ export class CostDebuggerUI {
    * A file path would be a claim about a file that may not exist — this
    * document has not been saved anywhere yet.
    *
-   * ⚠ **WHAT NEITHER SIDE CAN CHECK: that the hub still holds the document it
-   * handed over.** `onSave` applies into whatever session the hub has open now,
-   * so a person who hands a document over, then loads a different one in the
-   * hub, and only then presses Send, writes THIS plan into THAT document. It is
-   * an arc-wide property, not something this door adds — `region_atlas`'s Save
-   * has the same one — and closing it needs a document identity the hub does
-   * not carry. Named here rather than implied; ⚖ for the user.
+   * ⛓⛓⛓ **CLOSED IN R-a: THE HUB CHECKS THAT IT STILL HOLDS THE DOCUMENT IT
+   * HANDED OVER.** L4 named this as the thing neither side could check —
+   * `onSave` applied into whatever session the hub had open NOW, so handing a
+   * document over, loading a different one in the hub, and only then pressing
+   * Send wrote THIS plan into THAT document. The hub now stamps a monotonic
+   * `_documentToken` at its one session boundary and binds it into the `onSave`
+   * closure, so a Send against a replaced document comes back
+   * `{accepted: false}` with a sentence naming the replacement AND the fix.
+   * ⛔ Nothing on THIS side changed and nothing had to: the panel already
+   * printed the hub's answer rather than assuming one, which is what made the
+   * refusal reportable the moment the hub could state it.
    *
    * ⛔ **THE OUTCOME IS THE HUB'S ANSWER, NOT AN ASSUMPTION.** `onSave` returns
    * `{accepted, applied, errors}` (L4's hub change); before it did, a panel

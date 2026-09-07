@@ -2642,12 +2642,22 @@ export async function apworldLoopCostsSendWritesThePlanAsOneOp(testController) {
          * refused BEFORE the session, with the schema's own path.
          */
         const opsAtVeto = panel.session.ops().length;
+        // ⛓ R-a — the third argument is the DOCUMENT TOKEN, and it is required:
+        //   `_acceptEditorOp` is fail-closed, so a direct caller that omitted it
+        //   would be refused for staleness and this claim would stop being about
+        //   the schema at all. Passing the hub's current token is what the one
+        //   opener does, which is the state this claim means to drive.
         const verdict = panel._acceptEditorOp('loop_costs', {
             op: 'set-key',
             key: 'loop_costs',
-            value: { regions: {}, locations: { 'Some Location': { cost: 10 } } },
+            value: {
+                regions: {},
+                locations: { 'Some Location': { cost: 10 } },
+                defaultRegionCost: 50,
+                defaultLocationCost: 10,
+            },
             scope: 'document',
-        });
+        }, panel._documentToken);
         testController.assertEqual(
             'the schema REFUSES a block whose location cost is not a number',
             'false', String(!!verdict?.accepted));
@@ -2661,6 +2671,104 @@ export async function apworldLoopCostsSendWritesThePlanAsOneOp(testController) {
     } catch (error) {
         testController.log(`ERROR: ${error.message}`);
         testController.reportCondition('loop_costs write-back test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **R-a — A PLAN CANNOT LAND IN A DOCUMENT THE HUB HAS SINCE REPLACED**
+ * (residue 2; ⚖ user 2026-09-06). L4 named this and could not close it: `onSave`
+ * applied into whatever session the hub had open NOW, so handing a document to
+ * the cost debugger, loading a different preset here, and only then pressing
+ * Send wrote THIS plan into THAT document — silently, and `region_atlas`'s Save
+ * had the same property.
+ *
+ * ⛔ **THE SECOND DOCUMENT IS THE SUBJECT, NOT THE FIRST.** The claim is not
+ * "something was refused" — it is that `procgen_maze`, which carries no
+ * `loop_costs` at all, still carries none afterwards, and that its op list never
+ * grew. A row that only read the debugger's status line would pass against a hub
+ * that printed a refusal and applied the op anyway.
+ *
+ * ⛓ The premise is MEASURED rather than assumed: `_documentToken` is asserted to
+ * have MOVED between the hand-off and the Send. If it had not, the refusal would
+ * be about something else and this row would be green for the wrong reason.
+ *
+ * Mutant: `_acceptEditorOp` ignoring its `token` argument applies the plan into
+ * `procgen_maze` — the three claims below red together.
+ */
+export async function apworldSendIntoAReplacedDocumentIsRefused(testController) {
+    try {
+        const panel = await openHub(testController, LOOP_COSTS_WRITEBACK_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        const tokenAtHandOff = panel._documentToken;
+
+        await pressDocumentKeyEditor(testController, panel, 'loop_costs');
+        const status = await testController.pollForValue(
+            () => {
+                const el = document.querySelector('.cost-debugger-panel .cd-status');
+                return el && el.textContent.includes('[working copy') ? el : null;
+            },
+            'the cost debugger, planning the working copy', 8000, 50);
+        testController.reportCondition('the debugger adopted the working copy', !!status);
+        if (!status) return testController.getOverallResult();
+
+        const press = (sel) => {
+            const btn = document.querySelector(`.cost-debugger-panel ${sel}`);
+            if (btn) btn.click();
+            return !!btn;
+        };
+        testController.reportCondition('Load pressed', press('.cd-btn-load'));
+        await testController.pollForCondition(
+            () => !!document.querySelector('.cost-debugger-panel .cd-btn-plan-all:not([disabled])'),
+            'the planner accepted the document\'s own sphere log', 8000, 50);
+        testController.reportCondition('Plan All pressed', press('.cd-btn-plan-all'));
+        await testController.pollForCondition(
+            () => !document.querySelector('.cost-debugger-panel .cd-btn-send')?.disabled,
+            'Send becomes pressable once the plan is complete', 8000, 50);
+
+        /**
+         * ⛓⛓ **THE HUB IS HANDED A DIFFERENT WORLD, THROUGH THE APP'S OWN LOAD
+         * PATH** — not by poking the panel. That is the gesture a person makes,
+         * and it is the one that opens a new session.
+         */
+        testController.log(`Loading ${PRESET_PATH} into the hub while the plan is held…`);
+        await testController.loadRulesFromFile(PRESET_PATH);
+        await testController.stateManager.pingWorker('after-second-rules-load', 8000);
+        await testController.pollForCondition(
+            () => panel._documentToken !== tokenAtHandOff,
+            'the hub opened a session on the second document', 8000, 50);
+        testController.assertEqual(
+            'the hub is holding a DIFFERENT document now',
+            'true', String(panel._documentToken !== tokenAtHandOff));
+        testController.assertEqual(
+            'and that document carries no `loop_costs` block of its own',
+            'false', String('loop_costs' in panel.rulesDoc));
+
+        const opsBefore = panel.session.ops().length;
+        testController.reportCondition('Send pressed against the replaced document',
+            press('.cd-btn-send'));
+
+        // ⛔ THE CLAIM: the SECOND document, unmoved.
+        testController.assertEqual(
+            'the plan did NOT land in the document the hub now holds',
+            'false', String('loop_costs' in panel.rulesDoc));
+        testController.assertEqual(
+            'and its op list never grew',
+            String(opsBefore), String(panel.session.ops().length));
+        // ⛓ …and the person is told why, in the debugger's own status line.
+        testController.assertEqual(
+            'the debugger reports the hub\'s REFUSAL rather than claiming a send',
+            'true', String(status.textContent.includes('REFUSED')));
+        testController.assertEqual(
+            'and the reason names the replacement AND what to do about it',
+            'true',
+            String(status.textContent.includes('has since replaced')
+                && status.textContent.includes('load it again')));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('replaced-document refusal test error-free', false);
     }
     return testController.getOverallResult();
 }
@@ -2818,6 +2926,21 @@ registerTest({
                + 'editor IS loaded (`sphere_log`) must stay openable and say which panel it '
                + 'raised, so the claim is not "the tab disabled everything".',
     testFunction: apworldLinksTabReachesAnEditorWithNoData,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-send-into-a-replaced-document-is-refused',
+    name: 'APWorld hub: a cost plan cannot land in a document the hub has since replaced',
+    description: 'Hands omsi_substrate_test to the loops cost debugger, plans it, then loads '
+               + 'procgen_maze into the hub through the app\'s own load path and presses "Send '
+               + 'costs to the document". Asserts the hub\'s document token MOVED (so the '
+               + 'premise is real), that procgen_maze still carries no `loop_costs` block, that '
+               + 'its op list never grew, and that the debugger prints the hub\'s refusal '
+               + 'naming both the replacement and the fix. Mutant: a hub that ignores the token '
+               + 'writes the plan into the wrong document and the three claims red together.',
+    testFunction: apworldSendIntoAReplacedDocumentIsRefused,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

@@ -150,6 +150,17 @@ const TABS = [
 /** ⛓ Where the page fetches the schema the Document tab is DERIVED from. */
 const RULES_SCHEMA_URL = './schema/rules.schema.json';
 
+/**
+ * ⛓⛓ **THE STALE-DOCUMENT REFUSAL, AS ONE SENTENCE** (R-a). It reaches a person
+ * through three surfaces — this panel's status line, the `errors` array the
+ * answer carries, and whatever the door prints from that (the cost debugger's
+ * status line) — so it is stated ONCE. ⛔ It names the FIX, not just the fault:
+ * a refusal a person cannot act on is a silent no-op with extra words.
+ */
+const STALE_DOCUMENT_REFUSAL = 'this plan was made for a document the editor has since '
+  + 'replaced — load it again and Send again.';
+
+
 const ITEM_CLASSIFICATIONS = [
   'progression',
   'useful',
@@ -195,6 +206,28 @@ class ApworldEditorUI {
      * as if it was a preset" — see the method for the measurement.
      */
     this._originSourceName = null;
+    /**
+     * ⛓⛓⛓ **WHICH DOCUMENT THIS HUB IS HOLDING, AS AN IDENTITY A CLOSURE CAN
+     * CAPTURE** (LOOP COSTS R-a, residue 2; ⚖ user 2026-09-06).
+     *
+     * ⛔ L4's finding: `onSave` applied into whatever session the hub had open
+     * NOW. Hand a document to the cost debugger, load a DIFFERENT preset here,
+     * then press Send, and that plan landed in THIS document — arc-wide, not a
+     * property of one door (`region_atlas`'s Save had it too). Closing it needs
+     * a document identity the hub did not carry. This is it.
+     *
+     * ⛓ A MONOTONIC COUNTER, never persisted and never compared across
+     * instances: the only question it answers is *"is the document I was handed
+     * still the one open?"*, and a number bumped at the ONE session boundary
+     * answers exactly that. It is deliberately NOT a hash of the record — two
+     * loads of the same bytes are two documents to a person (they discard an op
+     * list between them), and a content hash would call them one.
+     *
+     * ⛓ It starts at 0 and `_openSession` makes it ≥ 1, which is what makes the
+     * check FAIL-CLOSED: a caller that hands `_acceptEditorOp` no token at all
+     * gets `undefined !== 1` and is refused rather than trusted.
+     */
+    this._documentToken = 0;
     /**
      * ⛓⛓ **THE ECHO OF OUR OWN APPLY, TOLD APART BY OBJECT IDENTITY.** It used
      * to be told apart by `sourceName === APPLY_SOURCE`, which stopped working
@@ -460,6 +493,14 @@ class ApworldEditorUI {
   _openSession(jsonData, baseTag) {
     this.session = createEditSession(rulesEditAdapter, cloneFullRulesDoc(jsonData),
       { base: baseTag });
+    /**
+     * ⛓⛓ R-a — **A NEW DOCUMENT IS A NEW IDENTITY**, stamped at the SAME place
+     * the op list is discarded. ⛔ Bumped here and nowhere else: Apply does not
+     * reset the session (it re-publishes the record), `Clear` is an op, and undo
+     * re-folds — none of those replace the document, so none of them may
+     * invalidate a plan somebody is holding.
+     */
+    this._documentToken += 1;
     // ⛓ RECORDED, never inferred later: a boundary is the only place the
     //   document's provenance is known, and Apply is downstream of every op.
     this._originSourceName = baseTag?.origin ?? null;
@@ -1711,6 +1752,12 @@ class ApworldEditorUI {
    * that the veto was in `_applySetKey` alone, so it is `_acceptEditorOp` that
    * runs it now and this sentence names that method.
    *
+   * ⛓⛓⛓ **R-a — AND THE `onSave` IT BUILDS IS BOUND TO THIS DOCUMENT.** The
+   * `_documentToken` is read here, once, and captured in the closure; a door
+   * never sees it and therefore cannot forget it. That is why both
+   * `region_atlas` and `loop_costs` gained the guard WITHOUT being changed —
+   * one opener, one binding, both tabs.
+   *
    * @param {string} key
    * @param {{withDocument?: boolean}} [opts] `false` from the Links tab, whose
    *   whole purpose is opening an editor with nothing (⚖ user).
@@ -1730,6 +1777,9 @@ class ApworldEditorUI {
     }
     const rows = withDocument ? this._documentRows() : [];
     const row = rows.find((r) => r.key === key) ?? null;
+    // ⛓ R-a — read ONCE, before the door opens: the editor's save may fire long
+    //   after `open()` returned, and this is the document it was opened on.
+    const token = this._documentToken;
     let context;
     try {
       context = {
@@ -1739,7 +1789,13 @@ class ApworldEditorUI {
         value: row ? row.value : undefined,
         eventBus: this.eventBus,
         goToTab: (tab) => this._selectTab(tab),
-        onSave: (op) => this._acceptEditorOp(key, op),
+        /**
+         * ⛓⛓ R-a — **BOUND TO THE DOCUMENT IT WAS MADE FOR.** The token is
+         * captured HERE, in the one opener both tabs go through, so no door can
+         * forget it and no door has to remember it: a door receives `onSave`
+         * and never sees the token at all.
+         */
+        onSave: (op) => this._acceptEditorOp(key, op, token),
       };
       const result = editor.open(context);
       if (result && typeof result.catch === 'function') {
@@ -1784,12 +1840,34 @@ class ApworldEditorUI {
    * description}` — which is what lets the cost debugger's Send print what
    * happened instead of claiming success.
    *
+   * ⛓⛓⛓ **R-a — AND IT REFUSES AN OP MADE FOR A DOCUMENT THIS HUB NO LONGER
+   * HOLDS** (residue 2; ⚖ user 2026-09-06). Until R-a this applied into whatever
+   * session was open NOW: hand a document to the cost debugger, load a different
+   * preset here, press Send, and the plan landed in the second document with
+   * nothing said. The op's `documentToken` is the one `_openDocumentKeyEditor`
+   * captured when it opened that door, and a mismatch is refused BY NAME so the
+   * person is told what to do about it rather than shown a silent no-op.
+   *
+   * ⛔ **THE TOKEN IS A REQUIRED ARGUMENT, AND THE CHECK IS FAIL-CLOSED.** A
+   * caller that omits it hands `undefined`, which cannot equal a token
+   * `_openSession` has made (they start at 1) — so a future door wired past the
+   * opener is refused rather than trusted. ⚠ That makes the arity load-bearing:
+   * a direct caller (the in-app row, which drives this method as its subject)
+   * must pass `panel._documentToken` for the document it means.
+   *
+   * ⛔ The SESSION check comes first on purpose: with nothing loaded, *"load a
+   * rules.json first"* is the actionable sentence and *"the editor replaced the
+   * document"* would be a false account of what happened.
+   *
+   * @param {string} key
+   * @param {object} op
+   * @param {number} token the `_documentToken` this op was made against.
    * @returns {{accepted: boolean, applied: boolean, errors: string[],
    *   description: string}} `accepted` = the op reached the session without
    *   being refused; `applied` = it also CHANGED the document (an op that
    *   restates what is already there is accepted and not applied).
    */
-  _acceptEditorOp(key, op) {
+  _acceptEditorOp(key, op, token) {
     const editor = DOCUMENT_KEY_EDITORS[key];
     const label = editor ? editor.label : key;
     const refuse = (description, errors) => {
@@ -1807,6 +1885,11 @@ class ApworldEditorUI {
     if (!this.session) {
       return refuse('an editor saved, but there is no session to apply it to — '
         + 'load a rules.json first.', [`${key}: no session.`]);
+    }
+    if (token !== this._documentToken) {
+      log('warn', `${key}: an editor's op was made for document #${token} and this hub `
+        + `now holds #${this._documentToken} — refused`);
+      return refuse(STALE_DOCUMENT_REFUSAL, [`${key}: ${STALE_DOCUMENT_REFUSAL}`]);
     }
     // ⛓ Previewed with the SAME op the session will see, stamp included: a
     //   preview of a different op is a veto over something nobody applies.
