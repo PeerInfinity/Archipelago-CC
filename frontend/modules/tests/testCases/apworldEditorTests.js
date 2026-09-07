@@ -2483,10 +2483,12 @@ export async function apworldLoopCostsPanelSaysWhichNumbersTheBlockCarries(testC
  * document" → the hub's own Undo.
  *
  * ⛔ **THE DOCUMENT IS `omsi_substrate_test` AND THAT IS THE MEASUREMENT.** Its
- * committed block is one of the ten empty ones; its two MAZE regions are
- * coarse-classed, so the block must gain their real prices; its omsi region is
- * NATIVE, so the block must NOT gain an entry for it. A document whose regions
- * were all native would make "it became priced" true of a single zero.
+ * two MAZE regions are coarse-classed, so the block must gain their real prices;
+ * its omsi region is NATIVE, so the block must NOT gain an entry for it. A
+ * document whose regions were all native would make "it became priced" true of a
+ * single zero. ⚠ Since R-b its committed block is PLANNED rather than empty, so
+ * the row empties it first through the loop-mode switch — see the note at the
+ * premise, which is where that stopped being the fixture's business.
  *
  * ⛔ **AND THE VETO IS DRIVEN AT THE SEAM.** L4 measured that the schema veto
  * was NOT on the editor-op path at all — it lived in `_applySetKey`, the raw
@@ -2522,10 +2524,43 @@ export async function apworldLoopCostsSendWritesThePlanAsOneOp(testController) {
             'true',
             String(!!switchLine && switchLine.textContent.includes('enables loop mode')));
 
-        // ⛔ The premise, READ off the document rather than typed: an empty block.
+        /**
+         * ⛓⛓ **THE ROW MAKES ITS OWN PREMISE, THROUGH THE PRODUCT'S OWN SWITCH.**
+         * Until R-b this row BORROWED its premise from the fixture: the committed
+         * block was one of the empty ones, so "Send turned an empty block into a
+         * priced one" was, in part, a fact about what happened to be on disk.
+         * R-b's re-record gives every omsi preset a PLANNED block — which does not
+         * make this row's claim false, it removes its SUBJECT, because Send would
+         * now write back what is already there.
+         *
+         * ⛔ **AND THERE IS NO SUBSTITUTE DOCUMENT.** Re-derived over every tracked
+         * preset carrying `loop_costs`: twelve, of which five are the re-recorded
+         * omsi ones and seven are jta, whose regions are all NATIVE plus Menu —
+         * exactly the "single zero" the note above refuses.
+         *
+         * So the row BUILDS the empty block, with R-a's loop-mode switch: Disable,
+         * then Enable. That is a person's own route to the same state, it exercises
+         * two shipped controls on the way, and it puts the claim back on SEND
+         * rather than on the fixture.
+         */
         const worldRegions = Object.keys(panel.rulesDoc.regions[panel.playerId] ?? {}).length;
+        const switchBtn = () => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="loop_costs"] `
+            + '.apworld-loop-costs-switch-btn');
         testController.assertEqual(
-            'the committed block prices NOTHING before the send',
+            'the committed block prices SOME of this world\'s regions to begin with',
+            'true',
+            String(Object.keys(panel.rulesDoc.loop_costs?.regions ?? {}).length > 0));
+        testController.assertEqual(
+            'so the switch offers DISABLE', 'off', String(switchBtn()?.dataset.switchTo));
+        switchBtn().click();
+        testController.assertEqual(
+            'Disable removed the block', 'false', String('loop_costs' in panel.rulesDoc));
+        testController.assertEqual(
+            'and the switch has flipped to ENABLE', 'on', String(switchBtn()?.dataset.switchTo));
+        switchBtn().click();
+        testController.assertEqual(
+            'Enable rebuilt an EMPTY block — the premise, MADE rather than borrowed',
             '0', String(Object.keys(panel.rulesDoc.loop_costs?.regions ?? {}).length));
 
         await pressDocumentKeyEditor(testController, panel, 'loop_costs');
@@ -3030,10 +3065,12 @@ registerTest({
 registerTest({
     id: 'apworld-loop-costs-send-writes-the-plan-as-one-op',
     name: 'APWorld hub: Send costs writes the plan into the working copy as ONE undoable op',
-    description: 'On omsi_substrate_test — whose committed loop_costs block is EMPTY, whose two '
-               + 'maze regions are coarse-classed and whose omsi region is NATIVE — presses the '
-               + 'loop_costs door, plans the handed-over working copy, and presses "Send costs '
-               + 'to the document". Asserts the row states the loop-mode switch; that Send is '
+    description: 'On omsi_substrate_test — whose two maze regions are coarse-classed and whose '
+               + 'omsi region is NATIVE — empties the document\'s (since R-b, PLANNED) block with '
+               + 'the loop-mode switch so the premise is MADE rather than borrowed from the '
+               + 'fixture, then presses the loop_costs door, plans the handed-over working copy, '
+               + 'and presses "Send costs to the document". Asserts the row states the loop-mode '
+               + 'switch; that Disable removes the block and Enable rebuilds it empty; that Send is '
                + 'shown-and-disabled with a reason before a plan exists; that the HUB\'s '
                + 'document gains real prices for some but not all regions, as exactly ONE '
                + 'document-scope `set-key loop_costs` whose `generatedFrom` names the door; that '
