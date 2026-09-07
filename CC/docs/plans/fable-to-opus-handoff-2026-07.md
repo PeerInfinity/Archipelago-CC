@@ -11982,6 +11982,21 @@ green at that SHA, so the regenerated presets passed the Python schema and reach
 byte-inertness claims become a gate LATER (named, not built); the jta presets stay as they are and their
 Menu-50 goes to **M1**. **NEXT: M1 (design conversation first); R1 (marking tool) still owed.**
 
+**R-b LANDED — VERIFIED by the planner 2026-09-07** (`7149eb62b5`; presets `90741263f3` 5 files +90/−10, every hunk
+inside `loop_costs`, byte-identical to the gated scratch copies; Send row `0af40232d7` makes its own empty block via
+R-a's Disable/Enable; fast **88/88**; CI @ `0af40232d7` run 34075079792 **436/13316, 0 failed**, ±0 derived and
+matched; all six workflows green). Committed omsi blocks: 16/21 · 25/38 · 50/50 ×2, Menu 0, omsi regions unpriced,
+no `generatedAt`. ⚑ The landing's one flake was R-a's token guard firing CORRECTLY (a rules republish between the
+door press and Send) — the row reported seven mismatches and none named the refusal; a post-Send assertion "the hub
+still holds the document this plan was made for" is NAMED, not built.
+
+**⛓ THE LOOP-COSTS ARC IS CLOSED — 2026-09-07 (ladder L1, L5, L2, L3, L4 + residues R-a, R-b; L5b dropped).**
+Named follow-ups, none launched: the post-Send document assertion; the byte-inertness claims as a GATE (⚖ ruled
+"later"); jta's seven presets bill Menu 50 (→ M1's free-by-rule constant); `costDataManager.exportToJSON()` 0
+callers; the `test` mode's one-row hanging roster; the two vacuous loops rows (→ M1). **NEXT for the user: M1 (the
+menu panel — design conversation FIRST: contents, the skip default, the Restart outside loop mode) and R1 (the
+marking-tool review, owed since the HANDOFF).** L6 (bot-measured costs) optional.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
