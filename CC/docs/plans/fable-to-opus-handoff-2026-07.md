@@ -12117,7 +12117,13 @@ new `architecture.md` → `docs/json/modules/menuPanel.md` pointer resolves to G
 `grep -ac "Error in event handler for"` = **0** in all four run logs; `BROWSER LOG (error)` 320 → 304
 on substrates, 1 → 1 on loops (the pre-existing `/_source-mtime` 404). ⚖ 52 per-file delta derived
 BEFORE the CI run: **+4 files, +41 rows** (menuPanelEngine 14, menuPanel/index 14, loopModeExemptions 6,
-hardResetPath 2, procgenPlayer/index 17 → 22; the two procgenDocs files moved COUNTS, not rows).
+hardResetPath 2, procgenPlayer/index 17 → 22; the two procgenDocs files moved COUNTS, not rows) —
+**and CI measured exactly that**: `suite: vitest (unfiltered)` **436/13316 → 440/13357** (13349 passed,
+8 skipped, **0 failed**), slow battery 12/217 unmoved, quoted from run 34090845435 at the pushed SHA
+`598d326598` (and identically from 34090786761 at `6581520f22` — the only file between them,
+`loopsPanelTests.js`, is not a `.test.js` and is outside vitest's include set).
+⇒ SIX commits, not five: `6581520f22` is this queue record and `598d326598` a stale comment in the
+row's restore that still named `restartFromStart`.
 
 **Mutants, each armed, measured, reverted.** (A) skip ignored on a plain world ⇒ `loops-real-actions-processed`
 RED on *"Skip-the-menu took the start region's first exit at load"* AND `loops-mana-consumption` RED on
