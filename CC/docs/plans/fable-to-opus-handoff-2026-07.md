@@ -12416,6 +12416,21 @@ verification blocks in this section were written 22 s apart by the slice and the
 lost — the slice's read landed after the planner's commit); the planner's block was cut to this paragraph.
 **NEXT: the README conversation (the user + the planner), then W2** — its inputs are item (d) above.
 
+**⚖ RULED (user, 2026-09-07) — the README conversation:** *"I want to fix the false and stale things in the readme.
+Your plan sounds like an improvement over the current state."* · the build table GENERATED from `builds.json` with a
+check gate: *"Yes."* · canonical link = the repo's own Pages page, p4d's app links in one sentence: *"Yes."* ·
+*"I want to reduce clutter in the main readme. A lot of the content there should be moved somewhere more
+appropriate."* · refresh the two stale Archipelago-CC readouts: *"Yes."* Planner's destinations (plan §8): README
+≈60 lines (what · PLAY with the original first + the generated table · one sentence on Archipelago-CC's use + p4d's
+app links · WebGPU note · adding a build · licence); `docs/pin-policy.md` (the law, both reasons, four spellings,
+the `<name>` caveat, retiring); `docs/history.md` (why a repo, the retirements, size policy). Writer + checker =
+ONE script `scripts/procgen/seedling-wasm-readme.mjs` (`--write`/`--check`), its check a new ROW of the pins gate
+so CI step 1 covers it; three new manifest fields only (`summary`, `role`, `source`).
+**W2 LAUNCHED 2026-09-07** as `seedling-original-W2` (Opus; kickoff `NewDocs/plans/seedling-original-W2-prompt.md`):
+docs-only; submodule push publishes (manifest-prose exemption: no payload byte moves); the outer unit (generator +
+gate row + `gates.mjs:218` + the standing-values refresh + gitlink) STOPS before the push. Reports come to
+`next-priorities-planning-3`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
