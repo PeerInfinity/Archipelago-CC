@@ -11997,6 +11997,16 @@ callers; the `test` mode's one-row hanging roster; the two vacuous loops rows (�
 menu panel — design conversation FIRST: contents, the skip default, the Restart outside loop mode) and R1 (the
 marking-tool review, owed since the HANDOFF).** L6 (bot-measured costs) optional.
 
+**⛓ HANDOFF to session 3 — 2026-09-07.** `next-priorities-planning-2` (this Fable session) closes at the user's word
+(*"Would you recommend starting a new Fable planning session for the remaining tasks?"* — yes; *"let's start the new
+session with the R1 conversation"*). Successor = `next-priorities-planning-3` (kickoff
+`NewDocs/plans/next-priorities-planning-3-prompt.md`), opening with **R1** (the marking tool ↔ the editor — product
+surface or authoring tool; default layout; the round trip; H6a parked behind it; ⚑ the `region_atlas` door is now
+token-bound and schema-vetoed and nobody has driven an atlas Save through it since L4), then **M1** (the menu panel:
+design conversation first — model (A) + skip default ON are ruled; contents open), then the field as mapped above
+(V3b's two follow-ups, the backlog conversations, the maze-lab residues, the docs TODO, the queue-viewer replan
+after M1). This session's arc: §5o whole — R2 + L1/L5/L2/L3/L4 + R-a/R-b, all verified; nothing pending.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
