@@ -12183,6 +12183,13 @@ green (loops 8/8, fast 88/88, one-model / maze-loop-mana / ta-mana-leg green). A
 applies the patch; the rule lands at all four pricers (or the four collapse to one reader — a design call for the
 resume).
 
+**⚖ RULED (user, 2026-09-07): "Ok, please resume. I will want all four places to use the constant, if possible."**
+⇒ **M1b RESUMED** in the same session (`menu-panel-M1b`, pid 205036): the rule lands at ALL FOUR pricers
+(`loopState._calculateActionCost`, `shared/queueAnalysis.getBaseCost`, `loopUI._estimateActionCost`,
+`loopBlockBuilder:851`) reading `START_REGION_MOVE_COST`, and `loopCostPlanner.js:273`'s literal `0` reads it too
+(the writer and the readers share one name); a mutant on any one of the five must red a row that sees THAT site.
+Everything else in the kickoff stands: submodule pushed first, the outer push incl. the gitlink ONE ask-first unit.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
