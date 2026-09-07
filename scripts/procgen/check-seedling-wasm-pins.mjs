@@ -210,6 +210,153 @@ function scannable(text) {
     return text.replace(/'\s*\+\s*'/g, '').replace(/"\s*\+\s*"/g, '');
 }
 
+/**
+ * ── ⚖ THE AMENDED LAW, AND WHERE ITS TWO REASONS ARE SPELLED ─────────
+ *   (SEEDLING ORIGINAL WASM slice W1, ⚖ user 2026-09-07 ruling 4)
+ *
+ * The law was ONE clause: *a build lives here iff a tracked file of this
+ * repository names it*. That is exactly right for a build an instrument
+ * DRIVES, and it FORBIDS the other thing this submodule now also holds — a
+ * build that exists to be PLAYED, by a person, at a URL. `seedling_original`
+ * is the whole game recompiled, with no bridge, no bot and no Archipelago:
+ * nothing here loads it and nothing should have to, so under the one-clause
+ * law it is unpinnable, and the only alternatives were to leave it unpublished
+ * or to write a fake reference and call it a pin.
+ *
+ * ⇒ A SECOND REASON, and it is a REASON rather than an exception: an entry may
+ * declare `demo: true`, and it is admitted iff the SUBMODULE'S OWN README
+ * links `<name>/game.html`. ⛔ THE LINK IS THE LOAD-BEARING HALF. `demo: true`
+ * on its own would let an entry admit itself — the manifest asserting the
+ * manifest — while the README link is the thing a person actually follows, in
+ * a file this gate never writes, so the two halves are independent sources
+ * (trap 769: a fixed point tests self-consistency, not correctness). Measured
+ * by CONTENT of the README, never by a path: a link that is not in the text a
+ * reader sees is not a link.
+ *
+ * ⛔ AND A `demo: true` THAT LINKS NOWHERE IS A NAMED PROBLEM, not a silent
+ * non-admission. Left to view (a) it would surface as "in MANIFEST, absent
+ * from ADMITTED" and read as *retire it* — the precise opposite of what the
+ * entry is asking for. It is reported for what it is: a demo nobody can reach.
+ */
+const demoLink = (name) => new RegExp(`(?<![\\w-])${name}/game\\.html`);
+/** Does the SUBMODULE's README link this build's page? By CONTENT. */
+const readmeLinks = (readmeText, name) => demoLink(name).test(readmeText);
+/**
+ * ⛓ EVERY VIEW MESSAGE NAMES THE REASON THAT ADMITTED A BUILD, so "why is
+ * this 34 MB here" is answered where it is asked rather than in a commit
+ * message. Zero reasons means not admitted; both reasons at once is normal
+ * (a demo the tree also happens to name).
+ */
+function admissionReasons(name, { referenced, entry, readmeText }) {
+    const reasons = [];
+    if (referenced) reasons.push('a tracked file of this repo names it');
+    if (entry?.demo === true && readmeLinks(readmeText, name)) {
+        reasons.push(`\`demo: true\` + the README links ${name}/game.html`);
+    }
+    return reasons;
+}
+/** ⛔ The other half of the demo reason: declared, and reachable from nowhere. */
+const demoIsUnreachable = (entry, readmeText) =>
+    entry?.demo === true && !readmeLinks(readmeText, entry.name);
+
+/**
+ * ── ⛓ ROW (f)'s CONTROL FILE, DECLARED ONCE ──────────────────────────
+ *   (SEEDLING ORIGINAL WASM slice W1, ⚖ user 2026-09-07 ruling 5)
+ *
+ * ⛔ TWO ROWS CONTRADICTED EACH OTHER FOR TWO DAYS AND BOTH WERE RIGHT.
+ * Row (f) REQUIRES this file's `SEEDLING_PAGE` default to name a build that
+ * LACKS `apitem`: it is the negative half of the H7 pair. Row (h2) requires
+ * every gate spelling a build of its own to spell the one the LAB loads, and
+ * the lab loads `apitem`-declaring p4d. So (f) demands this file DISAGREE with
+ * the lab while (h2) demands it AGREE. The contradiction was latent until V3b
+ * renamed `verify-seedling-ap-placement.mjs` to `check-…`, because until then
+ * the `check-*.mjs` membership rule could not SEE it; the rename made it real
+ * and `seedling-wasm.yml` has been red on exactly this row since 2026-09-05 —
+ * with (h2)'s own message naming the way out: *"or say here why this one is a
+ * control"*.
+ *
+ * ⇒ THE CONTROL IS DECLARED HERE, ONCE, AND (h2) READS THAT DECLARATION
+ * instead of re-deciding. It is EXEMPT BY NAME and the reason is PRINTED on
+ * every run, so the exemption is a claim a reader can argue with rather than a
+ * hole. ⛔ The exemption costs nothing (f) does not already buy: move this
+ * default onto an `apitem`-declaring build and ROW (f) REDS. That is the
+ * mutant, `--self-test` drives it below, and (h2) must NOT be what catches it
+ * — a second row that fires on the same edit is one row wearing two labels
+ * (`feedback_two_gates_one_opener`).
+ */
+const CONTROL_FILE = 'scripts/procgen/check-seedling-ap-placement.mjs';
+const CONTROL_EXEMPTION = 'row (f)\'s `apitem` CONTROL — it drives an `apitem`-less build ON '
+    + 'PURPOSE, so agreeing with the lab is the one thing it must not do';
+const CONTROL_SPELLING = /process\.env\.SEEDLING_PAGE\s*\|\|\s*'(seedling_[a-z0-9_]+)'/;
+/**
+ * ⛓ ROW (f)'s VERDICT, PURE — the row runs this and so does `--self-test`, so
+ * the mutant is driven through the same code the gate uses. `caps` is the
+ * manifest's capability list for the build the control names, or null when the
+ * manifest has no such build.
+ */
+function apItemControlProblem(named, caps) {
+    if (named === null) {
+        return `${CONTROL_FILE} names no build in the SEEDLING_PAGE-default spelling — `
+            + `the ${AP_ITEM_CAPABILITY} control arm has no subject, and its rows would go `
+            + 'green by agreeing with themselves';
+    }
+    if (caps === null) return `${CONTROL_FILE} drives ${named}, which is not in the manifest`;
+    if (caps.includes(AP_ITEM_CAPABILITY)) {
+        return `${CONTROL_FILE} drives ${named}, which DECLARES ${AP_ITEM_CAPABILITY} — `
+            + 'the control arm must drive a build that LACKS it (the H7 rows read the AP '
+            + 'tile EMPTY, and P1-e\'s panel control asserts INELIGIBLE). Retiring the '
+            + `build it used to drive means MOVING this default to another ${AP_ITEM_CAPABILITY}-less `
+            + 'build, not deleting it';
+    }
+    return null;
+}
+/**
+ * ⛓ (h2)'s SUBJECT FILTER, in one place: this gate itself (the REFERENCED
+ * scan excludes it for the same reason) and row (f)'s control are not
+ * subjects. Everything else under `scripts/procgen/` that `isGateFile`
+ * admits is.
+ */
+const SELF_REL = `${SCRIPT_DIR}/check-seedling-wasm-pins.mjs`;
+const isH2Subject = (rel) => rel !== SELF_REL && rel !== CONTROL_FILE;
+
+/**
+ * ⛓⛓ THE W1 SELF-TEST FIXTURES — the amended law and the control, driven
+ * through the SAME functions the rows run. The build names exist nowhere else
+ * so a case cannot pass by accidentally matching the tree.
+ */
+const DEMO_README = 'Play the original: '
+    + '[seedling_probe_x/game.html](https://example.invalid/seedling_probe_x/game.html)';
+const SELF_TEST_ADMISSION = [
+    { why: '`demo: true` + the README links it — admitted on the demo reason',
+        entry: { name: 'seedling_probe_x', demo: true }, referenced: false,
+        readme: DEMO_README, want: 1, wantUnreachable: false },
+    { why: '`demo: true` and the README links NOTHING — NOT admitted, AND a named problem',
+        entry: { name: 'seedling_probe_x', demo: true }, referenced: false,
+        readme: 'a README that links nothing', want: 0, wantUnreachable: true },
+    { why: '`demo: true`, linked, AND the tree names it — both reasons, no problem',
+        entry: { name: 'seedling_probe_x', demo: true }, referenced: true,
+        readme: DEMO_README, want: 2, wantUnreachable: false },
+    { why: 'no demo flag, the tree names it — THE ORIGINAL LAW, unmoved',
+        entry: { name: 'seedling_probe_x' }, referenced: true,
+        readme: '', want: 1, wantUnreachable: false },
+    { why: 'the README links it but the entry declares no demo — a link alone is not a pin',
+        entry: { name: 'seedling_probe_x' }, referenced: false,
+        readme: DEMO_README, want: 0, wantUnreachable: false },
+    { why: 'nothing names it and nothing links it',
+        entry: { name: 'seedling_probe_x' }, referenced: false,
+        readme: '', want: 0, wantUnreachable: false },
+];
+const SELF_TEST_CONTROL = [
+    { why: 'the control drives an `apitem`-less build — the pair is still a pair',
+        named: 'seedling_probe_x', caps: [], wantOk: true },
+    { why: 'THE MUTANT — the control moved onto an `apitem`-DECLARING build (the lab\'s): '
+        + 'row (f) is what must catch it',
+        named: 'seedling_probe_y', caps: [AP_ITEM_CAPABILITY], wantOk: false },
+    { why: 'the control names no build at all', named: null, caps: null, wantOk: false },
+    { why: 'the control names a build the manifest does not have',
+        named: 'seedling_probe_z', caps: null, wantOk: false },
+];
+
 const SELF_TEST = [
     // spelling 1 — the forms that were ALL invisible until 2026-08-19
     ["const WASM_PAGE = '../flashPanel/wasm/seedling_probe_x/game.html';", 'seedling_probe_x'],
@@ -258,8 +405,38 @@ if (process.argv.includes('--self-test')) {
         console.log(`${hit ? 'FAIL' : 'PASS'}: NOT SEEN (${why}) — ${text.slice(0, 76)}`);
         if (hit) bad++;
     }
+    // ⚖ THE AMENDED LAW (W1) — which reason admits a build, and the demo that
+    // links nowhere. Driven through `admissionReasons`/`demoIsUnreachable`,
+    // the same two functions the views below call.
+    for (const c of SELF_TEST_ADMISSION) {
+        const got = admissionReasons(c.entry.name,
+            { referenced: c.referenced, entry: c.entry, readmeText: c.readme });
+        const unreachable = demoIsUnreachable(c.entry, c.readme);
+        const ok = got.length === c.want && unreachable === c.wantUnreachable;
+        console.log(`${ok ? 'PASS' : 'FAIL'}: ADMISSION — ${c.why} `
+            + `[${got.length} reason(s), want ${c.want}; unreachable ${unreachable}]`);
+        if (!ok) bad++;
+    }
+    // ⚖ ROW (f)'s CONTROL AND ITS MUTANT (W1) — and the proof that (h2) is
+    // NOT what catches the mutant, which is the whole point of the exemption.
+    for (const c of SELF_TEST_CONTROL) {
+        const problem = apItemControlProblem(c.named, c.caps);
+        const ok = (problem === null) === c.wantOk;
+        console.log(`${ok ? 'PASS' : 'FAIL'}: CONTROL — ${c.why} `
+            + `[row (f) ${problem === null ? 'clear' : 'REDS'}]`);
+        if (!ok) bad++;
+    }
+    const exemptOk = !isH2Subject(CONTROL_FILE) && !isH2Subject(SELF_REL)
+        && isH2Subject(`${SCRIPT_DIR}/check-seedling-wasm-pages.mjs`);
+    console.log(`${exemptOk ? 'PASS' : 'FAIL'}: CONTROL — (h2) exempts ${CONTROL_FILE} `
+        + 'and this gate, and nothing else, so the mutant above reds in ONE row');
+    if (!exemptOk) bad++;
+    const cases = SELF_TEST.length + SELF_TEST_NOT_SEEN.length
+        + SELF_TEST_ADMISSION.length + SELF_TEST_CONTROL.length + 1;
     console.log(bad === 0
-        ? `\nSELF-TEST ALL PASS — ${SELF_TEST.length} seen, ${SELF_TEST_NOT_SEEN.length} not seen`
+        ? `\nSELF-TEST ALL PASS — ${cases} cases: ${SELF_TEST.length} seen, `
+            + `${SELF_TEST_NOT_SEEN.length} not seen, ${SELF_TEST_ADMISSION.length} admission, `
+            + `${SELF_TEST_CONTROL.length + 1} control`
         : `\n${bad} SELF-TEST FAILURE(S)`);
     process.exit(bad === 0 ? 0 : 1);
 }
@@ -312,21 +489,59 @@ const TRACKED = set(subTracked.filter((p) => p.includes('/')).map((p) => p.split
 const manifest = JSON.parse(readFileSync(join(SUB, 'builds.json'), 'utf8'));
 const MANIFEST = set(manifest.builds.map((b) => b.name));
 
+// ── the ADMISSION view: REFERENCED ∪ DEMO-LINKED ────────────────────
+/**
+ * ⛓ THE FIRST VIEW IS NO LONGER "REFERENCED", IT IS "ADMITTED", and the
+ * difference is the amended law's second reason (W1, ⚖ ruling 4 — the block
+ * above `--self-test` carries the argument). REFERENCED is still computed and
+ * still printed: it is one of the two reasons, and a build admitted only as a
+ * DEMO must be visibly distinguishable from one an instrument drives.
+ *
+ * ⛔ THE SUBMODULE README IS READ FOR ITS CONTENT. It is not this gate's
+ * output and not this repo's file, which is what keeps the demo reason from
+ * being the manifest agreeing with itself.
+ */
+const readmeText = readFileSync(join(SUB, 'README.md'), 'utf8');
+const entryOf = (n) => manifest.builds.find((b) => b.name === n) ?? null;
+const reasonsOf = new Map();
+for (const name of sorted(set([...REFERENCED, ...WHITELIST, ...TRACKED, ...MANIFEST]))) {
+    reasonsOf.set(name, admissionReasons(name,
+        { referenced: REFERENCED.has(name), entry: entryOf(name), readmeText }));
+}
+const ADMITTED = set([...reasonsOf].filter(([, r]) => r.length).map(([n]) => n));
+const whyAdmitted = (n) => (reasonsOf.get(n) ?? []).join(' AND ') || '(nothing admits it)';
+
+// ⛔ a declared demo the README links nowhere: reported for what it IS, rather
+// than as "retire it", which is what view (a) alone would have called it.
+for (const b of manifest.builds) {
+    if (!demoIsUnreachable(b, readmeText)) continue;
+    fail(`${b.name}: the manifest declares \`demo: true\` but the submodule README does not `
+        + `link \`${b.name}/game.html\` — the LINK is the half that admits a demo build, `
+        + 'because `demo: true` alone would be the manifest admitting itself. Add the link '
+        + 'or drop the flag');
+}
+
 // ── (a) the four views must agree ───────────────────────────────────
-const VIEWS = [['REFERENCED', REFERENCED], ['WHITELIST', WHITELIST],
+const VIEWS = [['ADMITTED', ADMITTED], ['WHITELIST', WHITELIST],
     ['TRACKED', TRACKED], ['MANIFEST', MANIFEST]];
 console.log('# the four views');
 for (const [label, s] of VIEWS) console.log(`  ${label.padEnd(11)} ${sorted(s).join(', ') || '(empty)'}`);
+console.log(`  ${'(referenced)'.padEnd(11)} ${sorted(REFERENCED).join(', ') || '(empty)'}`);
+console.log('# and the reason each admitted build is here');
+for (const name of sorted(ADMITTED)) console.log(`  ${name.padEnd(24)} ${whyAdmitted(name)}`);
 
 for (const [aL, a] of VIEWS) {
     for (const [bL, b] of VIEWS) {
         if (aL === bL) continue;
         for (const name of diff(a, b)) {
-            if (aL === 'REFERENCED') {
-                fail(`${name}: named by the tree, absent from ${bL} — `
-                    + `${sorted(referenced.get(name)).join('; ')}`);
-            } else if (bL === 'REFERENCED') {
-                fail(`${name}: in ${aL}, but NO tracked file of this repo names it — retire it`);
+            if (aL === 'ADMITTED') {
+                const how = referenced.has(name)
+                    ? sorted(referenced.get(name)).join('; ') : whyAdmitted(name);
+                fail(`${name}: ADMITTED (${whyAdmitted(name)}), absent from ${bL} — ${how}`);
+            } else if (bL === 'ADMITTED') {
+                fail(`${name}: in ${aL}, but NOTHING ADMITS IT — no tracked file of this repo `
+                    + 'names it, and it is not a linked demo (`demo: true` in the manifest '
+                    + `AND the submodule README linking \`${name}/game.html\`) — retire it`);
             } else {
                 fail(`${name}: in ${aL}, absent from ${bL}`);
             }
@@ -391,7 +606,21 @@ for (const b of manifest.builds) {
         const got = readFileSync(p).length;
         if (got !== n) fail(`${b.name}/${f}: ${got} bytes != manifest ${n}`);
     }
-    if (!b.namedBy?.length) fail(`${b.name}: manifest entry names nobody in namedBy`);
+    /**
+     * ⛓ `namedBy` IS THE REFERENCED REASON WRITTEN DOWN, so a build admitted
+     * ONLY as a demo has nobody to list and `[]` is its honest answer (W1).
+     * The demo pays for that with `demoUrl`: the URL a reader is sent to is
+     * the one thing a demo entry cannot be silent about.
+     */
+    if (!Array.isArray(b.namedBy)) {
+        fail(`${b.name}: \`namedBy\` is not an array`);
+    } else if (!b.namedBy.length && b.demo !== true) {
+        fail(`${b.name}: manifest entry names nobody in namedBy`);
+    }
+    if (b.demo === true && !(typeof b.demoUrl === 'string' && b.demoUrl.startsWith('http'))) {
+        fail(`${b.name}: \`demo: true\` with no \`demoUrl\` http(s) string — a demo build is `
+            + 'here to be OPENED, and the manifest is where the address lives');
+    }
 
     /**
      * ── (e) ⚖ THE CAPABILITY DECLARATION (EDITOR INTEGRATION slice P1-a) ─
@@ -460,8 +689,12 @@ for (const b of manifest.builds) {
  * verifier's SOURCE and the submodule's MANIFEST. Neither reads the other, so
  * this is not a fixed point (trap 769).
  */
-const CONTROL_FILE = 'scripts/procgen/check-seedling-ap-placement.mjs';
-const CONTROL_SPELLING = /process\.env\.SEEDLING_PAGE\s*\|\|\s*'(seedling_[a-z0-9_]+)'/;
+/**
+ * ⛓ `CONTROL_FILE`, `CONTROL_SPELLING` and `apItemControlProblem` are declared
+ * ONCE, above `--self-test`, so the mutant is driven through the row's own
+ * verdict function and row (h2) reads the SAME declaration when it exempts
+ * this file. See that block for why the exemption exists.
+ */
 {
     let controlText = null;
     try { controlText = scannable(readFileSync(join(REPO, CONTROL_FILE), 'utf8')); } catch { /* below */ }
@@ -471,23 +704,17 @@ const CONTROL_SPELLING = /process\.env\.SEEDLING_PAGE\s*\|\|\s*'(seedling_[a-z0-
         fail(`${CONTROL_FILE} is not tracked — it is the ${AP_ITEM_CAPABILITY} CONTROL, `
             + 'and the H7 pair plus P1-e\'s panel control are the whole reason a build '
             + `declaring no ${AP_ITEM_CAPABILITY} stays pinned`);
-    } else if (named === null) {
-        fail(`${CONTROL_FILE} names no build in the SEEDLING_PAGE-default spelling — `
-            + `the ${AP_ITEM_CAPABILITY} control arm has no subject, and its rows would go `
-            + 'green by agreeing with themselves');
-    } else if (capsOf(named) === null) {
-        fail(`${CONTROL_FILE} drives ${named}, which is not in the manifest`);
-    } else if (capsOf(named).includes(AP_ITEM_CAPABILITY)) {
-        fail(`${CONTROL_FILE} drives ${named}, which DECLARES ${AP_ITEM_CAPABILITY} — `
-            + `the control arm must drive a build that LACKS it (the H7 rows read the AP `
-            + 'tile EMPTY, and P1-e\'s panel control asserts INELIGIBLE). Retiring the '
-            + `build it used to drive means MOVING this default to another ${AP_ITEM_CAPABILITY}-less `
-            + 'build, not deleting it');
     } else {
-        console.log(`\n# the ${AP_ITEM_CAPABILITY} control`);
-        console.log(`  ${CONTROL_FILE}`);
-        console.log(`  drives ${named}, capabilities=[${capsOf(named).join(', ')}] `
-            + `— no ${AP_ITEM_CAPABILITY}, so the ABSENT/PRESENT pair is still a pair`);
+        const problem = apItemControlProblem(named, named === null ? null : capsOf(named));
+        if (problem !== null) {
+            fail(problem);
+        } else {
+            console.log(`\n# the ${AP_ITEM_CAPABILITY} control`);
+            console.log(`  ${CONTROL_FILE}`);
+            console.log(`  drives ${named}, capabilities=[${capsOf(named).join(', ')}] `
+                + `— no ${AP_ITEM_CAPABILITY}, so the ABSENT/PRESENT pair is still a pair`);
+            console.log(`  ⇒ EXEMPT from row (h2) by name: ${CONTROL_EXEMPTION}`);
+        }
     }
 }
 
@@ -713,6 +940,10 @@ const NAMED_CERTIFIERS = [
     ['scripts/procgen/check-seedling-bot-differential.mjs',
         'it opens the build\'s game page itself and drives it tick for tick '
         + 'against the JS model'],
+    // ⚠ It was named because it was a `verify-` the membership rule could not
+    // see. V3b renamed it `check-…`, so the derived sweep sees it too and the
+    // entry is now a BELT on a pair of braces: it survives as the row that
+    // reds if the file stops being TRACKED. It is de-duplicated below.
 ];
 {
     console.log('\n# the lab\'s build');
@@ -751,20 +982,21 @@ const NAMED_CERTIFIERS = [
 
     // (h2) ── every certifier that spells a build of its own names THAT one.
     const GATE_DIR = `${SCRIPT_DIR}/`;
-    const SELF = `${GATE_DIR}check-seedling-wasm-pins.mjs`;
     const rosterGates = trackedFiles.filter((rel) => rel.startsWith(GATE_DIR)
         && !rel.slice(GATE_DIR.length).includes('/')
         && isGateFile(rel.slice(GATE_DIR.length))
-        && rel !== SELF);
+        && isH2Subject(rel));
     const buildsNamedIn = (rel) => {
         let text = null;
         try { text = codeOnly(readFileSync(join(REPO, rel), 'utf8')); } catch { return null; }
         return sorted(set([...MANIFEST].filter((n) => text.includes(n))));
     };
     const certifiers = [];
+    const derived = new Set();
     for (const rel of rosterGates) {
         const names = buildsNamedIn(rel);
-        if (names?.length) certifiers.push([rel, names, 'a gate that spells its own build']);
+        if (names?.length) { certifiers.push([rel, names, 'a gate that spells its own build']);
+            derived.add(rel); }
     }
     for (const [rel, why] of NAMED_CERTIFIERS) {
         if (!trackedFiles.includes(rel)) {
@@ -780,6 +1012,16 @@ const NAMED_CERTIFIERS = [
                 + 'stopped existing rather than a subject that agrees');
             continue;
         }
+        /**
+         * ⛓ NAMED *AND* DERIVED IS ONE SUBJECT, NOT TWO. V3b renamed this
+         * file `verify-` → `check-`, so `isGateFile` now sees it and the
+         * sweep above already picked it up; it was listed twice in every
+         * run's output between 2026-09-05 and this slice. The named
+         * declaration STAYS — it is what `fail()`s if the file stops being
+         * tracked, which the derived sweep would answer by silently
+         * shrinking — but it contributes no second row.
+         */
+        if (derived.has(rel)) continue;
         certifiers.push([rel, names, why]);
     }
     const agreeing = [];
