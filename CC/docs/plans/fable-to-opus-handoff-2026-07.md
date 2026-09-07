@@ -12405,24 +12405,16 @@ needs**: the "Who uses these builds" table's lead still says p4c is THE bot buil
 since P2 (2026-08-30) — the defaults are p4d's — and the p4d row still says *"not wired into any page yet"*.
 ⇒ **W1 IS CLOSED.** Next: the README CONVERSATION, then **W2**.
 
-**⚖ RULED (user, 2026-09-07): "Yes, I authorize the push."** **W1 VERIFIED by the planner 2026-09-07** (`168f9968b2` on
-origin/main: 3 commits by path — the gate `881076b540`, the gitlink `f75b0b6d47` (`e645f2e..2bbabb2`), the record;
-submodule pushed, 4 tracked build dirs, `seedling_original` `demo: true`, `capabilities: []`, wasm md5 `9a973e54…`;
-LIVE `https://peerinfinity.github.io/seedling-wasm/seedling_original/game.html` 200, wasm 33,633,924 B over the
-wire; `check-seedling-wasm-pins` ALL PASS — 4 pinned builds; **`seedling-wasm.yml` SUCCESS at `168f9968b2` — green
-for the first time since V3b (2026-09-05)**; CI vitest run 34147842766 **442/13384, 0 failed** (±0 — the gate has
-no vitest file; its `--self-test` 13 → 24 cases is not a suite row)). What W1 found, kept: the source build WORKED
-(the Newgrounds fallback not taken); `Shrum.as3proj` compiles the Newgrounds SPONSOR wrapper (`Preloader.as`) as the
-entry, which off a sponsor domain waits forever for an ad — `src/Main.as` is the game without the shell; the
-case-sensitive `WhirlPool.png` embed bit and a worktree symlink was enough (no source edit — ruling 2 holds); the
-four-file `game.html` boots WITHOUT a bridge (Windows Chrome, real GPU, 0 page errors, no callback ever registered);
-headless WSL SwiftShader reads 46 errors on the ORIGINAL and the same 46 on the shipped p4d control — the renderer,
-not the build. Named, not changed: `standing-values.json`'s pins row says 3 builds (sanctioned refresh `--write
---key='gate: seedling-wasm-pins'`, takes the box); `gates.mjs:218` prose says 1. **README FACTS for the W2
-conversation:** the "Who uses these builds" lead paragraph says p4c is THE bot build and every default — false since
-P2 (2026-08-30; p4d holds `WASM_PAGE` and the 53-file default set); the p4d row says "not wired into any page yet"
-— false; the table has no clickable demo links; the Pages site is now the repo's own. NEXT: the README conversation
-(the user + the planner), then W2.
+**⚖ RULED (user, 2026-09-07): "Yes, I authorize the push."** **W1 VERIFIED by the planner 2026-09-07** — re-derived
+independently of the block above, on disk and over the wire: `168f9968b2` on origin/main, 3 commits by path (gate
+`881076b540`, gitlink `f75b0b6d47` = `e645f2e..2bbabb2`, record); the submodule at `2bbabb2` with 4 tracked build
+dirs and `seedling_original` `demo: true` / `capabilities: []` / wasm md5 `9a973e54…`; the live page 200 with the
+wasm at 33,633,924 B by `content-length`; `check-seedling-wasm-pins` ALL PASS — 4 pinned builds; `seedling-wasm.yml`
+SUCCESS at that SHA; `ci-vitest-summary.mjs 168f9968b2` 442/13384, 0 failed, ±0 as derived (the gate has no vitest
+file). Rulings 1, 2, 4, 5, 7 honoured as the block above records; ruling 3's site is serving. ⚑ The two
+verification blocks in this section were written 22 s apart by the slice and the planner into ONE tree (no bytes
+lost — the slice's read landed after the planner's commit); the planner's block was cut to this paragraph.
+**NEXT: the README conversation (the user + the planner), then W2** — its inputs are item (d) above.
 
 ## 6. Everything else (unchanged queues)
 
