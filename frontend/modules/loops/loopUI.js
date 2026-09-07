@@ -823,9 +823,17 @@ export class LoopUI {
       // Reset loopState properties
       const gs = this.gameStateAPI?.getState?.();
       if (gs) gs.regionXP = new Map();
-      // Clear the action queue using gameState API
-      if (this.gameStateAPI?.trimPath) {
-        this.gameStateAPI.trimPath(1); // Keep only Menu
+      // Clear the path outright.
+      //
+      // ⛔ This was `trimPath(1)` — and `trimPath(regionName, instanceNumber)`
+      // takes a region NAME first, so the literal 1 was read as a region called
+      // "1", matched nothing, was not a start region, and the method warned
+      // "[GameState] Region 1 instance 1 not found in path" and returned with
+      // the path UNTOUCHED. Driven in node before the fix: a 2-entry path stayed
+      // 2 entries; `clearPath()` takes it to 0. A Hard Reset that left the whole
+      // queue standing is exactly what the button promises not to do.
+      if (this.gameStateAPI?.clearPath) {
+        this.gameStateAPI.clearPath();
       }
       loopState.currentAction = null;
       loopState.currentActionIndex = 0;
