@@ -12293,6 +12293,39 @@ the 7 presets whose start region has no usable exit; merging the two hop publish
 (sub-menus) waits for a use case (plan §6). **NEXT: the user's replan** — the queue-viewer replan (§5m) now has its
 input (what the menu is); the field otherwise as in §5p's R1 paragraph.
 
+## 5q. SEEDLING ORIGINAL WASM + the seedling-wasm README — W1 LAUNCHED 2026-09-07 (Fable session `next-priorities-planning-3`; plan `NewDocs/plans/seedling-original-wasm-plan.md`, gitignored)
+
+**The ask (user, 2026-09-07):** a pre-fork branch of the Seedling AS3 repo; build it to a SWF; recompile with the
+latest SWFRecomp-CC; add the wasm to `PeerInfinity/seedling-wasm` like the others, with a live page; verify on
+GitHub Pages; the README links the original's demo prominently near the top; the chart gains clickable demo links;
+the "where used" descriptions re-verified; unused builds removed; other README cleanup — *"I'll want to have a
+conversation first about how specifically to clean up the main readme."* The user asked whether to pass this to
+Opus directly or measure in Fable first; the planner measured first (plan §2), and three premises moved:
+**the pre-fork branch already exists** (`main` of the fork = upstream's only commit `826ba77`); **an "original"
+wasm already exists on disk but from the NEWGROUNDS release SWF** (md5-identical to `598977_Seedling.swf`), page-
+bundle layout, 57 MB, recompiler `1eb2a5d95`; **seedling-wasm had NO Pages site** (its live pages were
+Archipelago-CC's); and **`check-seedling-wasm-pins` has been RED in CI since V3b** (run at `76295b9aa3`,
+2026-09-05: row (h2) counts the renamed `check-seedling-ap-placement.mjs` as a certifier driving p4c while the lab
+loads p4d, and row (f) requires that control — the rename made two rows contradict). Also: the repo's law ("a
+build lives here iff a tracked Archipelago-CC file names it") forbids a demo-only build; none of the three tracked
+builds is unused (p4d default, p4c the `apitem` control, p4b the `arm` control); the README's table is STALE (says
+p4c is the default everywhere; p4d since P2).
+
+**⚖ RULED (user, 2026-09-07):** (1) *"Let's try the source build. If that doesn't work, then we can use the already
+recompiled Newgrounds build instead."* (2) *"No bridge, no injection. We specifically want the original version of
+the game for this."* (3) *"Yes, enable GitHub pages as you described."* — ENABLED by the planner (`gh api POST
+…/pages`, `main` at `/`): `https://peerinfinity.github.io/seedling-wasm/`. (4) amend the pin law with a second
+admissible reason (`demo: true` + a README link): *"Yes. I would have suggested a specific exception for this case,
+but your plan might be better."* (5) fix the pre-existing gate red in the same slice: *"Yes."* (6) *"Let's not
+retire them."* (7) name `seedling_original`: *"Yes."*
+**W1 LAUNCHED** as `seedling-original-W1` (Opus; kickoff `NewDocs/plans/seedling-original-W1-prompt.md`): worktree
+of `~/CC/seedling` at `826ba77` → mxmlc (no bot/AP flags, no inject; a filesystem workaround for the case-sensitive
+embed allowed, a source edit is NOT) → SWFRecomp at `master` → `FRESH=1` wasm → prove the page boots WITHOUT a bridge
+→ add as a DEMO build (`capabilities: []`, `demo: true`, `demoUrl`) + ONE prominent README link → the gate learns
+the demo reason and the (f)/(h) fix → submodule push (publishes; authorized by (3) + the ask) → Pages verify →
+**STOP before the outer push** (gate + gitlink = one ask-first unit). Then the README CONVERSATION, then **W2**
+(README/chart/descriptions). Reports come to `next-priorities-planning-3`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
