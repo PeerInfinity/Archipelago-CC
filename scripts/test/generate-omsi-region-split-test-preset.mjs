@@ -20,23 +20,26 @@
  * Re-running is idempotent. Register once with register-preset.py.
  *
  *   node scripts/test/generate-omsi-region-split-test-preset.mjs
+ *   node scripts/test/generate-omsi-region-split-test-preset.mjs --out-dir /tmp/scratch
+ *
+ * `--out-dir DIR` writes under DIR/<game_id>/<seed_id>/ instead of
+ * frontend/presets/. That is how a regeneration is MEASURED — diffed against
+ * the committed preset — without performing the re-record it is being measured
+ * for. See scripts/test/presetOutDir.mjs.
  */
 
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-// ⚖ 2026-09-06 — the block's root defaults are EXPORTED CONSTANTS, never
-// typed numbers. This writer stamps a deliberately EMPTY block (loop mode is
-// on because the block EXISTS), so the roots are the whole economy it states.
-import {
-    DEFAULT_REGION_COST,
-    DEFAULT_LOCATION_COST,
-} from '../../frontend/modules/shared/procgen/loopCostGenerator.js';
+import { resolvePresetOutDir } from './presetOutDir.mjs';
+import { stampLoopCosts } from './presetLoopCosts.mjs';
+
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '../..');
 
+const GENERATOR = 'scripts/test/generate-omsi-region-split-test-preset.mjs';
 const SEED = 1;
 const SEED_ID = 'AP_14089154938208861744';
 const GAME_ID = 'omsi_region_split_test';
@@ -79,7 +82,7 @@ async function main() {
     // omsi:2 quota, and extractZoneRules emits the omsiRegion descriptors.
     omsi.applyPipelineConfig({ regionSplit: REGION_SPLIT });
 
-    const outDir = path.join(repoRoot, 'frontend/presets', GAME_ID, SEED_ID);
+    const { outDir } = resolvePresetOutDir({ repoRoot, gameId: GAME_ID, seedId: SEED_ID });
     const outFile = path.join(outDir, `${SEED_ID}_rules.json`);
 
     const { grid, startCell } = engine.arrangeShuffledSpiral({
@@ -107,11 +110,14 @@ async function main() {
         completionConditionItem: victoryName,
     });
 
-    rules.loop_costs = {
-        regions: {}, locations: {},
-            defaultRegionCost: DEFAULT_REGION_COST,
-            defaultLocationCost: DEFAULT_LOCATION_COST,
-    };
+    // The loops module auto-enters loop mode when cost data is present. The
+    // omsi bridge (like jta's) ignores loop_costs — it drains the shared pool
+    // via its own per-tick budget, so write-by-class gives its region no entry
+    // at all — but the maze regions' per-tile charging DOES consult the region
+    // cost, so those get PLANNED prices off the sphere log this scaffold
+    // already carries. ⛔ Never a stated number: this is the same call
+    // procgenPipelineEngine makes for a pipeline world (presetLoopCosts.mjs).
+    stampLoopCosts(rules, { sourceFileName: GENERATOR });
 
     const playerId = Object.keys(rules.regions)[0];
     const sidecars = rules.preset_sidecars?.[playerId] ?? {};
