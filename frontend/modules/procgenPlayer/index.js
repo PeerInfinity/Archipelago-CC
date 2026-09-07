@@ -30,6 +30,8 @@
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { buildWarehouse, findStartRegion } from './procgenPlayerEngine.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { SKIP_MENU_DEFAULT } from '../menuPanel/menuPanelEngine.js';
 
 export const moduleInfo = {
     name: 'procgenPlayer',
@@ -41,6 +43,9 @@ let eventBus = null;
 let dispatcher = null;
 let logger = null;
 let gateSubstrateAction = null;
+// menuPanel.isSkipMenuEnabled — read at rules-load time, not cached as a
+// boolean, so the checkbox's value at the moment of the load is what counts.
+let getSkipMenuEnabled = null;
 let unsubRawJsonLoaded = null;
 let unsubRulesLoaded = null;
 let unsubIframeAppReady = null;
@@ -93,6 +98,22 @@ function publishLoadRegion(regionId, arrivedFrom) {
     return true;
 }
 
+/**
+ * The "skip the menu" setting, owned by `menuPanel`. Defaults to the schema
+ * default when that module is not loaded — which is this module's pre-M1
+ * behaviour (always hop), so a module set without menuPanel is unchanged.
+ */
+function isSkipMenuEnabled() {
+    const fn = getSkipMenuEnabled
+        ?? centralRegistry?.getPublicFunction?.('menuPanel', 'isSkipMenuEnabled');
+    if (typeof fn !== 'function') return SKIP_MENU_DEFAULT;
+    try {
+        return fn() === true;
+    } catch {
+        return SKIP_MENU_DEFAULT;
+    }
+}
+
 function handleRawJsonLoaded(data) {
     const rulesJson = data?.rawJsonData;
     if (!rulesJson) return;
@@ -128,6 +149,19 @@ function handleRawJsonLoaded(data) {
 
 function handleRulesLoaded() {
     if (!pendingStartTransition || !dispatcher?.publish) return;
+    // "Skip the menu" — ONE setting, TWO publishers. This module owns the hop
+    // for a warehoused world; `menuPanel` owns it for every other world and
+    // owns the SETTING. Absent menuPanel (a module set without it, a test
+    // harness) the answer is the schema default, which is this module's
+    // historical unconditional behaviour.
+    if (!isSkipMenuEnabled()) {
+        // Skip OFF: the player plays the start region. Drop the pending hop —
+        // `resolvedStartRegion` deliberately SURVIVES, because loop resets
+        // teleport to it whether or not the initial hop was taken.
+        pendingStartTransition = null;
+        logger?.info?.('[procgenPlayer] skip-the-menu is off; leaving the player at the declared start');
+        return;
+    }
     // Synthesize a user:regionMove for the "Menu -> first real
     // region" transition. This keeps gameState's path +
     // currentRegion in sync with what the maze is rendering, and
@@ -285,6 +319,12 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     // means no gating.
     gateSubstrateAction = initializationApi.getModuleFunction?.('loops', 'gateSubstrateAction') ?? null;
 
+    // menuPanel is a LOWER load priority than this module (it must see the
+    // rules-load events after we do), but every module's register() runs before
+    // any initialize(), and menuPanel registers this public function there — so
+    // the lookup resolves here.
+    getSkipMenuEnabled = initializationApi.getModuleFunction?.('menuPanel', 'isSkipMenuEnabled') ?? null;
+
     // Register as publisher for every substrate's loadRegion event.
     // The substrate registry is populated by all substrates' register()
     // hooks, which run before any module's initialize().
@@ -328,6 +368,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
         dispatcher = null;
         logger = null;
         gateSubstrateAction = null;
+        getSkipMenuEnabled = null;
     };
 }
 
@@ -343,6 +384,7 @@ export function _testOnly_resetModuleState() {
     eventBus = null;
     dispatcher = null;
     logger = null;
+    getSkipMenuEnabled = null;
 }
 
 export function _testOnly_getWarehouse() {

@@ -63,11 +63,15 @@ function makeMockRegistrationApi() {
     };
 }
 
-function makeMockInitApi(eventBus, dispatcher) {
+function makeMockInitApi(eventBus, dispatcher, moduleFunctions = {}) {
     return {
         getEventBus: () => eventBus,
         getDispatcher: () => dispatcher,
         getLogger: () => ({ warn: () => {}, info: () => {}, error: () => {} }),
+        // menuPanel.isSkipMenuEnabled is looked up here; an api WITHOUT this
+        // hook (the default in the block below) is the "menuPanel not loaded"
+        // shape, which must keep the pre-M1 unconditional hop.
+        getModuleFunction: (moduleId, fnName) => moduleFunctions[`${moduleId}.${fnName}`] ?? null,
     };
 }
 
@@ -358,5 +362,90 @@ describe('procgenPlayer index', () => {
             handler({ targetRegion: 'Menu', exitName: null, sourceRegion: 'region_0_1' });
             expect(getActiveSubstrate()).toBeNull();
         });
+    });
+});
+
+/**
+ * ⛓ "Skip the menu" — ONE SETTING, TWO PUBLISHERS.
+ *
+ * WHAT THESE ROWS PROVE. This module's synthesized start hop is gated on
+ * `menuPanel.isSkipMenuEnabled()`: OFF ⇒ no `user:regionMove` at all, and the
+ * player is left standing at the AP-declared start for the panel to play;
+ * ON (and ABSENT — a module set without menuPanel) ⇒ the pre-M1 hop, unchanged.
+ * `getResolvedStartRegion()` survives either way, because loop resets teleport
+ * to it whether or not the initial hop was taken.
+ *
+ * WHAT THEY REFUSE TO PROVE. Nothing about the OTHER publisher. That the menu
+ * panel does not ALSO hop on a warehoused world is menuPanel's own row
+ * (`procgenOwnsStartHop`), and the end-to-end "exactly one move per load" claim
+ * is the in-app battery's.
+ */
+describe('procgenPlayer — the skip-the-menu setting gates the start hop', () => {
+    function setup(skipMenu) {
+        _testOnly_resetModuleState();
+        substrateRegistry.clear();
+        substrateRegistry.register(FAKE_MAZE_ENTRY);
+        const bus = makeMockEventBus();
+        const dispatcher = makeMockDispatcher();
+        const reg = makeMockRegistrationApi();
+        register(reg);
+        const moduleFunctions = skipMenu === undefined
+            ? {}
+            : { 'menuPanel.isSkipMenuEnabled': () => skipMenu };
+        return { bus, dispatcher, reg, moduleFunctions };
+    }
+
+    async function load({ bus, dispatcher, reg, moduleFunctions }) {
+        await initialize('procgenPlayer', 0, makeMockInitApi(bus, dispatcher, moduleFunctions));
+        bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SAMPLE_RULES, selectedPlayerInfo: { playerId: '1' } });
+        bus.publish('stateManager:rulesLoaded', {});
+        return reg._calls.publicFunctions;
+    }
+
+    it('skip ON: publishes the hop (today\'s behaviour)', async () => {
+        const ctx = setup(true);
+        await load(ctx);
+        expect(ctx.dispatcher.published.map((p) => p.data.source)).toEqual(['procgenPlayer-start']);
+    });
+
+    it('skip OFF: publishes NOTHING, and the warehouse is still built', async () => {
+        const ctx = setup(false);
+        await load(ctx);
+        expect(ctx.dispatcher.published).toHaveLength(0);
+        expect(_testOnly_getWarehouse().size()).toBe(2);
+    });
+
+    it('skip OFF: getResolvedStartRegion still answers, so a loop reset can teleport', async () => {
+        const ctx = setup(false);
+        const publicFunctions = await load(ctx);
+        expect(publicFunctions.get('procgenPlayer.getResolvedStartRegion')()).toBe('region_0_0');
+    });
+
+    it('menuPanel absent: the hop fires, exactly as before M1', async () => {
+        const ctx = setup(undefined);
+        await load(ctx);
+        expect(ctx.dispatcher.published.map((p) => p.data.source)).toEqual(['procgenPlayer-start']);
+    });
+
+    it('skip OFF then a fresh load with skip ON hops — the value is read per load', async () => {
+        let skip = false;
+        _testOnly_resetModuleState();
+        substrateRegistry.clear();
+        substrateRegistry.register(FAKE_MAZE_ENTRY);
+        const bus = makeMockEventBus();
+        const dispatcher = makeMockDispatcher();
+        register(makeMockRegistrationApi());
+        await initialize('procgenPlayer', 0, makeMockInitApi(bus, dispatcher, {
+            'menuPanel.isSkipMenuEnabled': () => skip,
+        }));
+
+        bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SAMPLE_RULES, selectedPlayerInfo: { playerId: '1' } });
+        bus.publish('stateManager:rulesLoaded', {});
+        expect(dispatcher.published).toHaveLength(0);
+
+        skip = true;
+        bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SAMPLE_RULES, selectedPlayerInfo: { playerId: '1' } });
+        bus.publish('stateManager:rulesLoaded', {});
+        expect(dispatcher.published.map((p) => p.data.source)).toEqual(['procgenPlayer-start']);
     });
 });
