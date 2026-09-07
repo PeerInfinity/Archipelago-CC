@@ -61,6 +61,14 @@ import {
 import { regionAtlasReference } from '../../procgenPipeline/regionAtlasCompiler.js';
 /** ⛓ H5 — the registry the Document row and the Links row both read. */
 import { DOCUMENT_KEY_EDITORS } from '../../apworldEditor/documentKeys.js';
+/**
+ * ⛓ R-a — the two numbers the presence switch writes, compared against their
+ * SOURCE. Typing 50 and 10 into this row would make it agree with a second copy
+ * of the pair rather than with `loopCostDefaults.js`.
+ */
+import {
+    DEFAULT_LOCATION_COST, DEFAULT_REGION_COST,
+} from '../../shared/procgen/loopCostDefaults.js';
 
 const PANEL_ID = 'apworldEditorPanel';
 const PANEL_SELECTOR = '.apworld-editor-panel';
@@ -2676,6 +2684,127 @@ export async function apworldLoopCostsSendWritesThePlanAsOneOp(testController) {
 }
 
 /**
+ * ⛓⛓⛓ **R-a — THE PRESENCE SWITCH AS AN EDITOR ACTION** (residue 3; ⚖ user
+ * 2026-09-06). `loop_costs`'s PRESENCE is what turns loop mode on for a world,
+ * and until R-a the Document tab could only SAY so: adding or removing the block
+ * meant hand-editing raw JSON.
+ *
+ * ⛔ **DRIVEN ON `procgen_maze`, WHICH CARRIES NO BLOCK AT ALL**, because that is
+ * the state the "enable" half is about and the corpus's `loop_costs` carriers
+ * cannot show it. Its four regions are what the summary counts against, so the
+ * post-enable readout is a real "0 of 4" rather than "0 of 0".
+ *
+ * ⛓⛓ **THE UNDO IS THE HALF THAT MATTERS, AND IT IS TWO STEPS.** "No key at
+ * all" and "an empty block" are different document states that a single flag
+ * would collapse: the row enables, disables, then undoes TWICE and asserts the
+ * empty block comes back first and the absence second. A gesture that mutated
+ * `rulesDoc` in place would pass the first half of this row and fail here.
+ */
+export async function apworldLoopModeSwitchAddsAndRemovesTheBlock(testController) {
+    try {
+        const panel = await openHub(testController, PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        selectTab(panel, 'document');
+
+        const rowSel = `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="loop_costs"]`;
+        const btnOf = () => document.querySelector(`${rowSel} .apworld-loop-costs-switch-btn`);
+        const switchLine = await testController.pollForValue(
+            () => document.querySelector(`${rowSel} .apworld-loop-costs-switch`),
+            'the loop_costs row\'s loop-mode sentence', 8000, 50);
+        testController.reportCondition('the loop_costs row is drawn for a document '
+            + 'that has no block', !!switchLine);
+        if (!switchLine) return testController.getOverallResult();
+
+        // ⛔ The premise, read off the DOCUMENT rather than typed.
+        const worldRegions = Object.keys(panel.rulesDoc.regions[panel.playerId] ?? {}).length;
+        testController.assertEqual(
+            'the document carries no `loop_costs` block to begin with',
+            'false', String('loop_costs' in panel.rulesDoc));
+        testController.assertEqual(
+            'and the row says loop mode is OFF for the world, not that nothing is priced',
+            'true', String(switchLine.textContent.includes('loop mode is OFF')));
+        testController.assertEqual(
+            'the switch offers ENABLE', 'on', String(btnOf()?.dataset.switchTo));
+        testController.assertEqual(
+            'and its title names the Apply consequence rather than gating on it',
+            'true', String((btnOf()?.title || '').includes('turns loop mode ON')));
+
+        const opsBefore = panel.session.ops().length;
+        btnOf().click();
+
+        testController.assertEqual(
+            'ENABLE wrote the block', 'true', String(!!panel.rulesDoc.loop_costs));
+        // ⛓ The four keys the schema REQUIRES, and nothing hand-typed: the two
+        //   costs are the exported constants, so this compares the block against
+        //   the source rather than against a second copy of the numbers.
+        testController.assertEqual(
+            'it is exactly the four keys the schema requires',
+            'defaultLocationCost,defaultRegionCost,locations,regions',
+            Object.keys(panel.rulesDoc.loop_costs).sort().join(','));
+        testController.assertEqual(
+            'carrying the EXPORTED defaults, not typed numbers',
+            `${DEFAULT_REGION_COST}|${DEFAULT_LOCATION_COST}`,
+            `${panel.rulesDoc.loop_costs.defaultRegionCost}`
+            + `|${panel.rulesDoc.loop_costs.defaultLocationCost}`);
+        // ⛔ The veto ran and said nothing: an op the schema refused would have
+        //   left `_opMessage` naming a refusal and the document unmoved.
+        testController.assertEqual(
+            'the schema accepted it — the empty block is valid by construction',
+            'false', String(String(panel._opMessage ?? '').startsWith('Refused')));
+        testController.assertEqual(
+            'as exactly ONE op', String(opsBefore + 1), String(panel.session.ops().length));
+        const enableOp = panel.session.ops().at(-1) ?? {};
+        testController.assertEqual(
+            'and that op is a document-scope set-key on loop_costs',
+            'set-key|loop_costs|document',
+            [enableOp.op, enableOp.key, enableOp.scope].join('|'));
+
+        const summary = document.querySelector(`${rowSel} .apworld-loop-costs-summary`);
+        testController.assertEqual(
+            'the row now reads "0 of N regions priced", counted against the world',
+            'true',
+            String(!!summary
+                && summary.textContent.includes(`0 of ${worldRegions} region`)));
+        testController.assertEqual(
+            'and the switch has flipped to DISABLE', 'off', String(btnOf()?.dataset.switchTo));
+
+        btnOf().click();
+        testController.assertEqual(
+            'DISABLE removed the key rather than emptying it',
+            'false', String('loop_costs' in panel.rulesDoc));
+        testController.assertEqual(
+            'as one more op', String(opsBefore + 2), String(panel.session.ops().length));
+
+        /**
+         * ⛓⛓ **TWO UNDOS, AND THE ORDER IS THE CLAIM.** The fold over a shorter
+         * op list reproduces the previous state exactly, so the first undo must
+         * give back the EMPTY BLOCK — not the absence, and not a priced one.
+         */
+        const undoButton = document.querySelector(`${PANEL_SELECTOR} .apworld-undo`);
+        testController.reportCondition('the hub\'s Undo control is present', !!undoButton);
+        undoButton.click();
+        testController.assertEqual(
+            'one undo restores the EMPTY BLOCK, not the absence',
+            'true',
+            String(!!panel.rulesDoc.loop_costs
+                && Object.keys(panel.rulesDoc.loop_costs.regions ?? {}).length === 0));
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
+        testController.assertEqual(
+            'a second undo restores the ABSENCE — the two states are told apart',
+            'false', String('loop_costs' in panel.rulesDoc));
+        testController.assertEqual(
+            'and the op list is back where it started',
+            String(opsBefore), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('loop-mode switch test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
  * ⛓⛓⛓ **R-a — A PLAN CANNOT LAND IN A DOCUMENT THE HUB HAS SINCE REPLACED**
  * (residue 2; ⚖ user 2026-09-06). L4 named this and could not close it: `onSave`
  * applied into whatever session the hub had open NOW, so handing a document to
@@ -2926,6 +3055,21 @@ registerTest({
                + 'editor IS loaded (`sphere_log`) must stay openable and say which panel it '
                + 'raised, so the claim is not "the tab disabled everything".',
     testFunction: apworldLinksTabReachesAnEditorWithNoData,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-loop-mode-switch-adds-and-removes-the-block',
+    name: 'APWorld hub: the loop_costs row switches loop mode on and off as ONE undoable op',
+    description: 'On procgen_maze — which carries no `loop_costs` block at all — asserts the '
+               + 'Document row says loop mode is OFF, then presses "Enable loop mode" and '
+               + 'asserts the document gains exactly the four keys the schema requires, '
+               + 'carrying the EXPORTED defaults, as one document-scope `set-key loop_costs`; '
+               + 'that the summary then reads "0 of 4 regions priced"; that "Disable loop mode" '
+               + 'REMOVES the key rather than emptying it; and that two undos restore the empty '
+               + 'block and then the absence, in that order — the two states told apart.',
+    testFunction: apworldLoopModeSwitchAddsAndRemovesTheBlock,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

@@ -491,6 +491,12 @@
             "_comment": "Loop-costs L4. \u2696 (user, 2026-09-06) 'the debugger's plan comes back as ONE op'. Driven on omsi_substrate_test because that is the only shape where both halves are real: its committed block is EMPTY (all ten tracked carriers are), its two maze regions are coarse-classed so the block must gain their real prices (L3 measured 16 and 21 against a stored 50), and its omsi region is NATIVE so it must gain nothing. jta_schedule_test would have made 'it became priced' true of one zero. The row also drives the SCHEMA VETO at _acceptEditorOp \u2014 L4 measured it was not on the editor-op path at all (it lived in _applySetKey, the raw-JSON editor's method), so region_atlas's save had been bypassing it since H5. \u26a0 The loop_costs schema is TYPE-only: it refuses a location cost that is not a number, and accepts every semantic error write-by-class is about (a moveCost on a summary region, a missing defaultRegionXpEffect, an entry for a native region) \u2014 reported, not fixed here."
         },
         {
+            "id": "apworld-loop-mode-switch-adds-and-removes-the-block",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "Loop-costs R-a residue 3. \u2696 (user, 2026-09-06) 'take care of the residues'; L4 named the presence switch as an editor action and left it unbuilt. Driven on procgen_maze because it carries NO loop_costs block at all \u2014 the state the enable half is about, which none of the corpus's fourteen carriers can show \u2014 and its four regions make the post-enable readout a real '0 of 4' rather than '0 of 0'. The two undos are the claim: 'no key' and 'an empty block' are different document states, and a gesture that mutated rulesDoc in place would collapse them and still pass the first half."
+        },
+        {
             "id": "apworld-send-into-a-replaced-document-is-refused",
             "enabled": true,
             "category": "apworldEditor",

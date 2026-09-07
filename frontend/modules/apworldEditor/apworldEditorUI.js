@@ -47,6 +47,24 @@ import {
 } from './rulesDocOps.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+/**
+ * ⛓⛓ R-a — **THE EMPTY BLOCK'S TWO NUMBERS, EXPORTED** (⚖ k, user 2026-09-06:
+ * *"the code to use exported constants, not hardcoded numbers"*). The presence
+ * switch writes a block, and a `50` and a `10` typed here would be the sixth and
+ * seventh copies of the pair `loopCostDefaults.js` exists to have killed.
+ *
+ * ⚠ Imported from `loopCostDefaults.js` DIRECTLY, not through
+ * `loopCostGenerator.js`'s re-export, and that is a deliberate departure from
+ * that file's own ⚠. The re-export is the door for the RUNTIME readers, which
+ * already hold the generator; this panel plans nothing, and reaching it through
+ * the generator would pull `loopCostPlanner.js` (the whole cost SIMULATION) and
+ * `xpFormulas.js` onto the hub's graph for two fallback numbers. `loopCostDefaults.js`
+ * has no imports of its own by design — being importable from anywhere is what
+ * it is for.
+ */
+import {
+  DEFAULT_LOCATION_COST, DEFAULT_REGION_COST,
+} from '../shared/procgen/loopCostDefaults.js';
 import { getRegionEditor } from '../procgenPipeline/regionEditors.js';
 /**
  * ⛓ H4b — the per-region Edit door. `regionRoundTrip` names NO substrate: it
@@ -160,6 +178,22 @@ const RULES_SCHEMA_URL = './schema/rules.schema.json';
 const STALE_DOCUMENT_REFUSAL = 'this plan was made for a document the editor has since '
   + 'replaced — load it again and Send again.';
 
+/**
+ * ⛓⛓⛓ **THE BLOCK THE PRESENCE SWITCH ADDS** (R-a, residue 3). Exactly the four
+ * keys `rules.schema.json` requires of a `loop_costs` block and nothing else —
+ * so "turn loop mode on" writes the smallest document the schema calls valid,
+ * and every region falls back to the defaults until something prices them.
+ *
+ * ⛔ A FUNCTION, not a frozen constant: it is written into a document through an
+ * op, and a shared object would put one mutable block behind every world that
+ * ever pressed the button.
+ */
+const emptyLoopCostsBlock = () => ({
+  regions: {},
+  locations: {},
+  defaultRegionCost: DEFAULT_REGION_COST,
+  defaultLocationCost: DEFAULT_LOCATION_COST,
+});
 
 const ITEM_CLASSIFICATIONS = [
   'progression',
@@ -1704,10 +1738,14 @@ class ApworldEditorUI {
      */
     const switchLine = document.createElement('div');
     switchLine.className = 'apworld-loop-costs-switch';
-    switchLine.textContent = 'This block\'s presence enables loop mode for the world — a '
-      + 'document that carries one boots with loop mode ON, even when it prices nothing.';
+    switchLine.textContent = row.present
+      ? 'This block\'s presence enables loop mode for the world — a '
+        + 'document that carries one boots with loop mode ON, even when it prices nothing.'
+      : 'This document carries NO `loop_costs` block, so loop mode is OFF for the world. '
+        + 'A block\'s presence is the switch — even one that prices nothing.';
     Object.assign(switchLine.style, { color: '#8a8', fontSize: '10px', marginTop: '2px' });
     wrap.appendChild(switchLine);
+    wrap.appendChild(this._makeLoopModeSwitchButton(row));
 
     if (priced === 0) {
       const none = document.createElement('div');
@@ -1737,6 +1775,55 @@ class ApworldEditorUI {
     }
     wrap.appendChild(table);
     return wrap;
+  }
+
+  /**
+   * ⛓⛓⛓ **THE PRESENCE SWITCH AS AN EDITOR ACTION** (R-a, residue 3; ⚖ user
+   * 2026-09-06 — L4 named it as *"the smallest next thing this door could
+   * gain"* and left it unbuilt).
+   *
+   * ⛓ ONE `set-key loop_costs` either way, through `_applySetKey` — so it gets
+   * the schema veto, the undo step and the status line every other Document-tab
+   * edit gets, and it cannot disagree with them about what a valid block is.
+   * Removing is the SAME op with `undefined` as the value: `opSetKey` routes that
+   * to `setPath`'s delete arm (`rulesDocOps.js:199`) and describes it as
+   * *"loop_costs deleted"*, so there is no second op and no second spelling.
+   *
+   * ⛔ **AND IT IS UNDOABLE IN BOTH DIRECTIONS, WHICH IS WHY THE OP MATTERS.**
+   * Undo re-folds over a shorter list, so it reproduces the document's previous
+   * state EXACTLY — "no key at all" and "an empty block" are different states
+   * and the fold tells them apart. A gesture that mutated `rulesDoc` in place
+   * would collapse them.
+   *
+   * ⚠ **THE APPLY CONSEQUENCE IS IN THE TITLE, NOT IN A GATE** (⚖: presence =
+   * loop mode on, unchanged). Applying a document that has just gained a block
+   * turns loop mode on for the world at runtime. That is the ruled semantics, so
+   * the button SAYS it and does not ask.
+   */
+  _makeLoopModeSwitchButton(row) {
+    const line = document.createElement('div');
+    line.className = 'apworld-loop-costs-switch-action';
+    Object.assign(line.style, { margin: '4px 0 0' });
+    const enabling = !row.present;
+    const btn = this._makeButton(
+      enabling
+        ? 'Enable loop mode (adds an empty `loop_costs` block)'
+        : 'Disable loop mode (removes the block)',
+      enabling ? '#2e5f8a' : '#8a2a2a',
+      () => this._applySetKey(row, enabling ? emptyLoopCostsBlock() : undefined),
+    );
+    btn.className = 'apworld-loop-costs-switch-btn';
+    btn.dataset.switchTo = enabling ? 'on' : 'off';
+    btn.style.fontSize = '11px';
+    btn.title = enabling
+      ? 'Writes the four keys the schema requires — regions {}, locations {}, and the '
+        + `exported defaults (region ${DEFAULT_REGION_COST}, location ${DEFAULT_LOCATION_COST}). `
+        + 'Nothing is priced yet; the loops cost debugger fills it in. ⚠ Applying this '
+        + 'document afterwards turns loop mode ON for the world at runtime.'
+      : 'Deletes the whole block as one undoable edit — every price in it goes with it. '
+        + '⚠ Applying this document afterwards leaves loop mode OFF for the world.';
+    line.appendChild(btn);
+    return line;
   }
 
   /**
