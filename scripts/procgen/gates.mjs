@@ -215,11 +215,19 @@ const UNRUNNABLE = selection.filter((g) => argvFor(g, where, { host: HOST, pages
  *     OK
  *
  * ⛔ THE FIRST CUT HAD FOUR OF THEM and reported
- * `check-seedling-wasm-pins.mjs` — which prints `ALL PASS — 1 pinned build,
- * four views in agreement` and exits 0 — as *"NO TOTAL LINE"*. A verdict
- * reader whose vocabulary is guessed rather than read turns a green gate into
- * a red one, which is the same defect as the totals-grep it replaces, pointing
- * the other way.
+ * `check-seedling-wasm-pins.mjs` — which prints
+ * `ALL PASS — <N> pinned build(s), four views in agreement` and exits 0 — as
+ * *"NO TOTAL LINE"*. A verdict reader whose vocabulary is guessed rather than
+ * read turns a green gate into a red one, which is the same defect as the
+ * totals-grep it replaces, pointing the other way.
+ *
+ * ⛔ AND `<N>` IS WRITTEN AS `<N>` ON PURPOSE. This paragraph quoted a literal
+ * `1` — true when it was written, stale from the day the pin set reached 3,
+ * and doubly so at 4 — while nothing in it depends on the number: what the
+ * example shows is a TAIL after `ALL PASS`, which is exactly why `TOTAL_RE`
+ * below matches `ALL PASS\b.*` and not a fixed string. `N` is the count of
+ * entries in the submodule's `builds.json`; the gate's own last line is the
+ * only place it is authoritative (slice W2).
  */
 const TOTAL_RE = /^(?:ALL CHECKS PASSED|ALL PASS\b.*|OK|\d+ (?:CHECK\(S\) FAILED|FAILURE\(S\)))$/;
 const totalOf = (out) => out.split('\n').map((l) => l.trim()).reverse()
