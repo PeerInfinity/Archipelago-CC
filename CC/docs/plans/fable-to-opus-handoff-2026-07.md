@@ -11973,9 +11973,14 @@ editor"`. ⚠ **The row reported SEVEN mismatched conditions and none named the 
 document-scope set-key on loop_costs"* stayed GREEN because the last op was the row's own Enable — a
 one-line "the hub still holds this document" assertion after Send would make that red legible. NAMED, not
 built (the roster is green and the ruling's gate is that number).
+**⚖ 52 AT THE PUSHED CODE SHA `0af40232d7`** — run 34075079792 success: `suite: vitest (unfiltered)`
+**436/13316** (13308 passed | 8 skipped | **0 failed**), slow battery 12/217. Derived BEFORE the run as
+**+0 files / +0 rows** against R-a's `a1bf4d275f` (nothing this arc touched is a `*.test.js`, and the one
+suite that reads the preset corpus validates all of it as ONE row) — **MATCHED EXACTLY**. All SIX workflows
+green at that SHA, so the regenerated presets passed the Python schema and reachability suites on a RUNNER.
 **⚖ ruled with the authorization and honoured:** `generatedAt` stays OUT of a written block; the
 byte-inertness claims become a gate LATER (named, not built); the jta presets stay as they are and their
-Menu-50 goes to **M1**.
+Menu-50 goes to **M1**. **NEXT: M1 (design conversation first); R1 (marking tool) still owed.**
 
 ## 6. Everything else (unchanged queues)
 
