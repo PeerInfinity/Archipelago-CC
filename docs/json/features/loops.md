@@ -21,8 +21,35 @@ Inspired by idle games like [Idle Loops](https://stopsign.github.io/idleLoops/),
 | Action | Description | Base Cost |
 |--------|-------------|-----------|
 | **Move to Region** | Navigate to an adjacent region | Region's move cost (from cost data, or `DEFAULT_REGION_COST` = 50) |
+| **Move OUT OF A START REGION** | The Menu hop — leaving the region the game starts in | `START_REGION_MOVE_COST` = **0**, free BY RULE |
 | **Explore Region** | Discover locations and exits in a region | `DEFAULT_EXPLORE_MULTIPLIER` (2) × the region's move cost |
 | **Check Location** | Check a location for items | Per-location cost (from cost data, or `DEFAULT_LOCATION_COST` = 10) |
+
+⚖ **The start-region row is a RULE, not a price** (user ruling 2026-09-06,
+model (A): *"advancing from the Menu costs no mana"*). It wins over both of the
+other paths: over what a loaded `loop_costs` block says for the start region, and
+over the no-data fallback below. That is what retires the 50 the twelve
+hand-written EMPTY blocks were billing for the first move out of Menu — with no
+preset change, because the presets were never the thing that was wrong.
+
+The rule has TWO writers and FOUR readers, and every one of them names
+`START_REGION_MOVE_COST`, so the panel cannot show a price the queue does not
+charge:
+
+| | site | what it is |
+|---|---|---|
+| writes | `loopCostPlanner.js` `SimulatedState` | the simulation's own budget |
+| writes | `loopCostGenerator.js` `writeCostsByClass` | the `moveCost` stamped into the emitted block |
+| reads | `loopState._calculateActionCost` | the one that CHARGES |
+| reads | `shared/queueAnalysis.getBaseCost` | the Loops and Loop Stats panels' queue analysis |
+| reads | `loopUI._estimateActionCost` | the current-action display and the per-entry cost badge |
+| reads | `loopBlockBuilder._exitMoveCost` | the region block's per-exit cost label |
+
+⛔ It is a `regionMove` rule ONLY. An **explore** in a start region is priced as
+ever (the block builder hides Explore for start regions, so the corpus has no
+such action), and so is a **location check** (no start region in the corpus has
+a location). It does not reach the SUMMARY branch either: a summary substrate is
+priced by time and states its own costs explicitly.
 
 ⚖ **Every number in this table is an EXPORTED CONSTANT, not a literal** (user
 ruling 2026-09-06: *"I want the code to use exported constants, not hardcoded
@@ -286,6 +313,7 @@ When no cost data is loaded, the exported defaults apply
 | Action | Default Cost | Constant |
 |--------|-------------|---|
 | Region move | 50 | `DEFAULT_REGION_COST` |
+| Region move OUT OF A START REGION | 0 | `START_REGION_MOVE_COST` |
 | Explore | 50 | `DEFAULT_REGION_COST` |
 | Location check | 10 | `DEFAULT_LOCATION_COST` |
 

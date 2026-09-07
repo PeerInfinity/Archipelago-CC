@@ -92,8 +92,15 @@ both a recorder (`takeLastRecording`) and `sharing.mana` — the same two proper
 while reading the block for all three coarse actions — the *recorder* test is what excludes it. See
 `classifyRegion`, which states both cases where it decides them.
 
-⛓ The start region is `{moveCost: 0}` whatever its class (unless it is summary). That zero is a rule, not a
-price: the HOST's queue reads it for the first move out of the start region.
+⛓ The start region is `{moveCost: START_REGION_MOVE_COST}` whatever its class (unless it is summary). That
+zero is a rule, not a price — which is why it is a NAMED constant (`shared/procgen/loopCostDefaults.js`) shared
+by the two writers (`SimulatedState`, `writeCostsByClass`) and the four host sites that price a move.
+⚠ **Since M1b (2026-09-07) the HOST NO LONGER DEPENDS ON READING IT FROM THE BLOCK.** The premise here used to
+be "the HOST's queue reads it for the first move out of the start region" — it did, and that is exactly why a
+world with an EMPTY block (the twelve hand-written ones) was billed `defaultRegionCost` 50 for the Menu hop.
+`loopState._calculateActionCost` now applies the rule itself, before both of its branches, so the block's entry
+and the runtime's charge agree even where the block says nothing. The entry is still written, and it is still
+what `check-loop-costs-one-model` compares.
 
 ⚖ Two engines were retired on the way here. `frontend/modules/loops/costGenerator.js` (the "live" generator,
 which played the sphere log through the running loop engine) was **deleted 2026-09-06** — it had no caller. The
