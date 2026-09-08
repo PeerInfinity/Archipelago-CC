@@ -12950,6 +12950,22 @@ pins, now stale-by-design); `CC/scripts/prompt_lib/prompt_generators/worldgen.py
 ignore `world_classes`; and whether the `pytest test/` side effect deserves a line in CLAUDE.md so every H4a-obeying
 session knows to revert it.
 
+**D1 VERIFIED by the planner 2026-09-08** (`c52d7500fc` on origin/main = the primary tree's HEAD; ONE code commit
+`78623df53f`, 45 files +6/−345, the 30 tracked carriers −90 lines and 0 insertions; submodule `41e3f6e..b8e6c85`
+on `origin/main` of the shared repo and the gitlink at `b8e6c85` in HEAD; both trees clean, not ahead; the two maze
+fixtures still `??`). Re-derived here: 212 presets, **0** carry `world_classes`, **0** carry `settings`; the schema has
+**32** properties and neither key; `rg` finds neither in the schema, the builder, `extractors.py` or the remapper.
+**CI @ `78623df53f` run 34282863430 success: 442/13393 (13385 passed | 8 skipped | 0 failed), slow 12/217 — D1
+derived +0 / +0 BEFORE the run and matched; `unittests` (the schema gate over every preset) green at the SHA.** ⚖ 49:
+no rules.json byte pin moved (the one standing byte-identity row is maze, unmoved; the sphere/topdown md5s that moved
+are one-off oracles) — no re-record. What D1 overturned, kept: a `.snap` carried the key and §6's glob excluded
+`*.snap` (two blocks, pinning builder output); the alttp fixture carried BOTH keys; the schema README names neither;
+the docs page's "seventeen of thirty-four" → fifteen of thirty-two; "the four byte-identity dumps" are three `dump-`
+plus `check-spiral-byteidentity`; the whole `pytest test/` generates an APQuest seed into `presets/` (trap 1239,
+reverted). ⚖ NEW (§9.7): the queue-doc's own historical md5 quotes at `10335-10336` are stale-by-design (left);
+`prompt_generators/worldgen.py:629-639` still tells a prompt to ignore `world_classes` (inert); whether the pytest
+side effect deserves a CLAUDE.md line. NEXT: **W3** on D1's idle.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
