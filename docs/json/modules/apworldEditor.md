@@ -256,7 +256,7 @@ shape — the BLOCK, write-by-class applied, byte-identical to the one the procg
 pipeline embeds (`scripts/procgen/check-loop-costs-one-model.mjs`) — so the whole
 write-back is a single `set-key loop_costs`, undoable here in one step. The door
 passes `onSave` through the hand-off payload rather than holding it: the gesture
-that fires it (the debugger's **Send costs to the document**) happens long after
+that fires it (the debugger's **Send costs to APWorld Editor**) happens long after
 `open()` returned. The panel drops it the moment the working copy goes away.
 
 A block written into a document carries `generatedFrom: "the APWorld editor"` —

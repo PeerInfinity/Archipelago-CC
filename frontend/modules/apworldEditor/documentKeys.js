@@ -267,7 +267,7 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
         note: 'Plans this WORKING COPY\'s mana economy — the debugger reads the document you '
             + 'are editing, not the applied world (press "Use applied state" there to go back). '
             + 'It needs a sphere log: this document\'s own embedded one, or it says so. '
-            + 'Its "Send costs to the document" comes back here as ONE `set-key loop_costs` '
+            + 'Its "Send costs to APWorld Editor" comes back here as ONE `set-key loop_costs` '
             + 'carrying the whole planned block, which you can undo in one step. ⚠ A block\'s '
             + 'PRESENCE is what enables loop mode for the world, so sending costs to a document '
             + 'that had none turns loop mode on for it.',

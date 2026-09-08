@@ -56,7 +56,7 @@ function log(level, message, ...data) {
 }
 
 /**
- * ⛓⛓⛓ **L4 — WHY "Send costs to the document" CANNOT BE PRESSED, or `null`
+ * ⛓⛓⛓ **L4 — WHY "Send costs to APWorld Editor" CANNOT BE PRESSED, or `null`
  * when it can.** Pure, exported and unit-driven, because it is a rule with five
  * outcomes and a `disabled` flag can only say one of them.
  *
@@ -177,7 +177,7 @@ export class CostDebuggerUI {
         <button class="cd-btn-plan-all" disabled title="Plan all remaining steps">Plan All</button>
         <button class="cd-btn-reset" disabled title="Reset to initial state">Reset</button>
         <button class="cd-btn-applied" style="display: none;" title="Stop planning the handed-over working copy and go back to the world the app has loaded">Use applied state</button>
-        <button class="cd-btn-send" style="display: none;" title="Write this plan into the handed-over document as one undoable edit">Send costs to the document</button>
+        <button class="cd-btn-send" style="display: none;" title="Write this plan into the handed-over document as one undoable edit">Send costs to APWorld Editor</button>
       </div>
       <div class="cd-status-bar">
         <span class="cd-status">No sphere log loaded</span>

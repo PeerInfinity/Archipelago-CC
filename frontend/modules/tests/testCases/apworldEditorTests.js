@@ -2495,8 +2495,8 @@ export async function apworldLoopCostsPanelSaysWhichNumbersTheBlockCarries(testC
  *
  * ⚖ (user, 2026-09-06) *"the debugger's plan comes back as ONE op"*. This is the
  * whole gesture, end to end, through the controls a person presses: the hub's
- * `loop_costs` door → the debugger's Load and Plan All → its "Send costs to the
- * document" → the hub's own Undo.
+ * `loop_costs` door → the debugger's Load and Plan All → its "Send costs to
+ * APWorld Editor" → the hub's own Undo.
  *
  * ⛔ **THE DOCUMENT IS `omsi_substrate_test` AND THAT IS THE MEASUREMENT.** Its
  * two MAZE regions are coarse-classed, so the block must gain their real prices;
@@ -3085,7 +3085,7 @@ registerTest({
                + 'omsi region is NATIVE — empties the document\'s (since R-b, PLANNED) block with '
                + 'the loop-mode switch so the premise is MADE rather than borrowed from the '
                + 'fixture, then presses the loop_costs door, plans the handed-over working copy, '
-               + 'and presses "Send costs to the document". Asserts the row states the loop-mode '
+               + 'and presses "Send costs to APWorld Editor". Asserts the row states the loop-mode '
                + 'switch; that Disable removes the block and Enable rebuilds it empty; that Send is '
                + 'shown-and-disabled with a reason before a plan exists; that the HUB\'s '
                + 'document gains real prices for some but not all regions, as exactly ONE '
