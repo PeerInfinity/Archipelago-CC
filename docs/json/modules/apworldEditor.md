@@ -55,14 +55,16 @@ reset the session, so an undo after an Apply still works. It republishes the
 | **Items** | items, classifications, pool counts, starting counts |
 | **Meta** | the fields in `rulesDocOps.META_FIELDS`, plus the start region and the victory condition |
 | **Map** | the composite grid, for documents whose sidecars carry grid cells — see below |
+| **Sidecars** (S1) | the five keys that travel BESIDE a world rather than inside its regions — see below |
 | **Document** | **every** top-level key — see below |
 | **Links** | every other editor that owns part of a `rules.json` |
 | **Raw JSON** | the whole document in a CodeMirror 6 editor — see *The exits* below |
 
 ## The player selector
 
-A `rules.json` is keyed by **player slot** at eighteen of its thirty-four
-top-level keys, and 15 committed presets carry four players. The toolbar's
+A `rules.json` is keyed by **player slot** at seventeen of its thirty-four
+top-level keys (`patternProperties: {"^[0-9]+$"}`, re-derived from the schema),
+and 15 committed presets carry four players. The toolbar's
 selector is what every tab reads and what every op is stamped with. Its default
 is derived, in this order (`documentKeys.defaultPlayerOf`):
 
@@ -187,6 +189,20 @@ does it come back here as an undoable step?"* is the question a reader has:
   debugger, load a different preset in the hub, press Send, and the answer is
   `{accepted: false}` carrying *"this plan was made for a document the editor has
   since replaced — load it again and Send again."*
+  ⛓⛓ **S1 — and an ACCEPTED op brings the hub to the front and shows the row it
+  wrote** (⚖ user, 2026-09-08: *"this automatically activated the APWorld Editor
+  panel and scrolled to the relevant section, with a message that the data was
+  successfully loaded"*). `_acceptEditorOp` publishes `ui:activatePanel` for its
+  OWN panel (`APWORLD_EDITOR_PANEL_ID`, declared once in `index.js` and used by
+  the registration, `moduleInfo.componentType` and this publish alike), selects
+  the key's **home tab** — `ownedByTab ?? 'document'`, so `loop_costs` and
+  `region_atlas` land on **Sidecars** and a key no tab owns lands on the
+  everything-fallback — scrolls `[data-doc-key="<key>"]` into view and prints the
+  success sentence BESIDE that row as well as in the chrome. It is generic: every
+  `op` door gets it, `region_atlas` included, because the seam is
+  `_acceptEditorOp` and not any one door. ⛔ **A REFUSED op steals no focus** —
+  every refusal returns through `_acceptEditorOp`'s own `refuse()` before the
+  focus is reached, so the two outcomes never look alike on screen.
 - **`document`** — that editor's exit is a NEW document (the arc's rule that
   generation is not an edit); nothing comes back here.
 - **`none`** — that editor only READS the block.
@@ -259,6 +275,20 @@ passes `onSave` through the hand-off payload rather than holding it: the gesture
 that fires it (the debugger's **Send costs to APWorld Editor**) happens long after
 `open()` returned. The panel drops it the moment the working copy goes away.
 
+⛓⛓ **S1 — the button says where the costs GO, and the app then goes there.** It
+read *"Send costs to the document"* until S1; ⚖ (user, 2026-09-08) *"Maybe it
+would be clearer if the button said 'Send costs to APWorld Editor', and this
+automatically activated the APWorld Editor panel and scrolled to the relevant
+section, with a message that the data was successfully loaded."* The label is the
+debugger's only change — the raise, the tab selection, the scroll and the
+beside-the-row message are the HUB's, in `_acceptEditorOp`, and therefore belong
+to every `op` door rather than to this one. Measured end to end on
+`jta_schedule_test` (which carries `loop_costs` and its own embedded
+`sphere_log`): press the door from the Sidecars tab, Load, Plan All, Send — the
+APWorld editor is the active panel, the Sidecars tab is selected, the
+`loop_costs` row is in the viewport carrying the message, the op list grew by ONE
+`set-key loop_costs`, and one Undo takes the block back out.
+
 A block written into a document carries `generatedFrom: "the APWorld editor"` —
 the hand-off's own source label, not the `"loopsCostDebugger"` the planner stamps
 for the store and not a file path this unsaved document does not have.
@@ -309,6 +339,66 @@ write-by-class's rule, not a shape. Nor can a schema see that a NATIVE region ha
 an entry it should not. The standing proof that the block is RIGHT is still
 `check-loop-costs-one-model.mjs` and `loopCostGenerator.test.js`; the schema's
 job is to refuse a block that is not one.
+
+## The Sidecars tab (S1)
+
+⚖ *"a 'Sidecars' tab, for the data that's specifically in the sidecars. Currently
+that means the loop cost data and the procgen data"* (user, 2026-09-08), and then
+*"Let's put region_atlas, flash_panel, and provenance in the sidecars tab for
+now."* It sits between **Map** and **Document**: its five keys are all about the
+world the procgen side produced — the same subject as Map — and the Document tab
+is the everything-fallback, so it reads last of the per-subject tabs.
+
+**The membership is a table with a NAMED AUTHORITY**
+(`documentKeys.KEYS_OWNED_BY_TAB.sidecars`), not a derivation, because nothing in
+`rules.schema.json` says "this key is a sidecar". The two halves have two
+different authorities:
+
+| key | authority |
+|---|---|
+| `procgen_metadata` | the worldgen round trip: `world_generator/generator.py` writes `_worldgen_procgen_metadata.json`, `exporter/games/base/handler.py`'s `_inject_worldgen_procgen_metadata` merges it back |
+| `loop_costs` | the same round trip, through `_worldgen_loop_costs.json` / `_inject_worldgen_loop_costs` |
+| `region_atlas` | ⚖ user, 2026-09-08 — **"for now"**; it is the atlas compiler's output, not worldgen's |
+| `flash_panel` | ⚖ user, 2026-09-08 — for now |
+| `provenance` | ⚖ user, 2026-09-08 — for now |
+
+⛔ **The first half is CHECKED against that authority**, in `documentKeys.test.js`:
+the row reads the three `_inject_worldgen_*` methods out of `handler.py`, derives
+the top-level keys they merge into, and asserts each one is either owned by this
+tab or is `preset_sidecars`. A fourth sidecar added to the Python round trip reds
+that row until this tab hosts it. The ⚖ half has no derivation — a ruling is the
+authority — so it is written down as a row that names the date.
+
+**`preset_sidecars` is NOT one of the five.** It stays the **Regions** tab's: it
+is edited per region there (Edit ▸, one `replace-region-sidecar`), and a second
+whole-block editor would be a second place to edit one key. The Sidecars tab
+draws it as a one-line **summary** — per-slot region counts, derived per slot
+rather than summed, because every populated `preset_sidecars` in the corpus keys
+under slot `"1"` (four-player documents included) — plus a **Go to Regions**
+button.
+
+**One renderer, two hosts.** Every row on this tab is built by the same
+`_renderDocumentRow` the Document tab uses: the door button, the `returns` line
+and its note, the per-region loop-cost table, W0's JSON block. The tab FILTERS the
+registry rows (`documentKeyRows`, in the schema's own order) — it does not build a
+second row, because two renderers for one key are two vocabularies for one
+document.
+
+**Which doors are the working copy, and which are not.** Three of the five carry a
+door and all three open on the WORKING COPY — `loop_costs` (the loops cost
+debugger, `returns: op`), `region_atlas` (the region marking tool, `returns: op`,
+disabled in the default mode) and `procgen_metadata` (the procgen pipeline,
+`returns: document` — its exit is a NEW document, so nothing comes back).
+`flash_panel` and `provenance` have no dedicated editor at all: the JSON block on
+the row is how they are changed. The tab's intro line says which is which, derived
+from the rows rather than typed. ⚠ The APPLIED-state doors (`sphere_log`,
+`helpers`, `dungeons`) are on the **Document** tab, not here.
+
+Making a key a Sidecars key also changes its **Document** row: it now shows the
+*"Edited in the Sidecars tab"* pointer and its JSON block (W0's rule — the pointer
+AND the block). The **Links** tab is derived from `DOCUMENT_KEY_EDITORS` and is
+unaffected; measured before/after on `jta_schedule_test`, its 13 rows are the same
+13 rows.
 
 ## The Map tab
 
@@ -691,7 +781,7 @@ The import is free in both modes, measured:
 | subscribes | `apworldEditor:loadRules` | the focus-safe hand-off — the pipeline, the marking tool, and (H4c, via `procgenLabPanel`) both lab pages. `{jsonData, source?}`; `source` NAMES the door and the session's base tag says `hand-off · <door>`, while `origin` stays `null` because an in-memory compile has no preset path whose sphere log belongs to it |
 | subscribes | `apworldEditor:selectRegion` | H4c — `{region, player?}` from the bounce region editor; answered with `selectRegion(name, from)`, which says so when this document does not hold that region |
 | publishes | `files:jsonLoaded` | Apply — a full-document clone, under the **origin's** `sourceName` (`apworldEditorApply` only when there is no origin) |
-| publishes | `ui:activatePanel` | the Links tab's rows, the Document tab's block-editor doors, and the Map tab's one-way *Open region graph*. ⛔ H5 found this was **never registered** in the module's `register()`, and `eventBus.publish` refuses an unregistered publisher — warns and returns — so H1's Links tab Open and H3's *Open region graph* had been silently doing nothing since they shipped. A test row now scans the panel's own `publish('…')` sites against `register()` |
+| publishes | `ui:activatePanel` | the Links tab's rows, the Document tab's block-editor doors, and the Map tab's one-way *Open region graph*. ⛔ H5 found this was **never registered** in the module's `register()`, and `eventBus.publish` refuses an unregistered publisher — warns and returns — so H1's Links tab Open and H3's *Open region graph* had been silently doing nothing since they shipped. A test row now scans the panel's own `publish('…')` sites against `register()`. ⛓ S1 — the hub also raises **itself** with this event now (the accepted-op focus), so the component type is one constant, `APWORLD_EDITOR_PANEL_ID`, shared by the registration, `moduleInfo.componentType` and that publish |
 | publishes | `procgenPipeline:loadRules` | H5 — the `procgen_metadata` door; `{jsonData, source, player}` |
 | publishes | `loopsCostDebugger:loadRules` | H5 — the `loop_costs` door; same payload plus L4's `onSave` |
 
