@@ -12747,6 +12747,45 @@ implementation; the launch waits on the user's word.
 `apworld-coverage-W0` (Opus; kickoff `NewDocs/plans/apworld-coverage-W0-prompt.md`; primary tree). Reports come to
 `next-priorities-planning-4`; S1 launches on W0's idle notice, D1 on S1's, W3 on D1's; the replan after W3.
 
+**W0 SHIPPED 2026-09-08** (`apworld-coverage-W0`, main `804415b4b7` → `e84050a936`, pushed; six commits staged by
+path; as-built record = plan §7, which carries every number and the two mutants). Deltas only:
+
+- **Owned rows draw their block.** `apworldEditorUI.js`'s owned branch keeps the pointer and stops returning, for all
+  fourteen tab-owned keys uniformly. MEASURED on stardew, before → after: owned rows with an affordance **0 → 14**
+  (8 Show JSON toggles + 6 typed scalar inputs); owned rows with NEITHER **14 → 0**; the 20 unowned rows unchanged; 0
+  page errors either side. The textarea is still lazy — `regions` opens in **121 ms** for **1,689,831** pretty
+  characters (⛔ the brief said "600 KB"; that number was not the one on the page). A Save JSON on `world` there is
+  ONE `set-key world scope=player player=1`, leaves the Meta tab's `world_class_name` unmoved, and one Undo restores
+  the original `world_description`.
+- **Two viewer doors**, `helpers` → `helpersPanel` and `dungeons` → `dungeonsPanel`, `returns: 'none'`, APPLIED-STATE
+  note, `open` = `ui:activatePanel` (the `sphere_log` shape). Both modules are `"enabled": true` in the default
+  `modules.json` AND both panels are in the `default` layout preset — which is what makes a press observable — so the
+  in-app row asks `centralRegistry.getAllPanelComponents()` and then asserts `panelManager.isPanelActive`, never a
+  string. The Links tab gained its two rows for free (derived), parity held.
+- **Typed counts → derivations** in `documentKeys.js` and the docs page. ⛔ One of them was ALREADY STALE: *"Eighteen
+  of the thirty-four top-level properties are slot maps"* — re-derived, it is **17**, and nothing in the tree could
+  red the sentence.
+- **Rows:** `documentKeys.test.js` 31 → **33**; `documentLinks.test.js` 15 → **15** (its typed `key:*` list became a
+  read of the registry, order claim kept); `hubExits` 20 and `rulesDocOps` 68 unmoved; in-app category `apworldEditor`
+  **26 → 28**.
+- **Gates:** bounded vitest over the four suites **136 passed**; `lintGateLabels.test.js` **14 passed**;
+  generator (no generated file moved) + `check-procgen-docs.mjs` ALL CHECKS PASSED + `procgenDocs/` vitest **452
+  passed**; in-app `--batch=fast` **90/90**, `grep -ac "Error in event handler for"` = **0**; `compare-runs.js`
+  against the pre-W0 baseline (88/88) = `ADDED (2)` and nothing else. **Mutants:** (A) the early return restored →
+  the row reds naming the toggle; (B) the `helpers` door drops `panelId` → 3 documentKeys rows red — **2 at first**,
+  because the derived row selected its population with the very field the mutant removed and filtered itself out;
+  that guard was fixed before the push (`e84050a936`).
+- **⚖ 52:** baseline re-quoted at the slice's own start HEAD — `804415b4b7` and the four docs commits before it
+  trigger NO CI JS-unit run (path filter), the last triggering SHA is `d3edc84457` (ancestor ✓, and the diff to
+  `804415b4b7` is two non-vitest files), so `suite: vitest (unfiltered)` **442/13384** stands there. Derivation before
+  the run: no test file added or removed, +2 rows ⇒ expected **442/13386**. CI at `e84050a936`: run **34272123984 success**, `suite: vitest (unfiltered)`
+  **442/13386** (13378 passed | 8 skipped | 0 failed) — **the derivation, to the row**; slow battery 12/217 unmoved.
+- **⚖ OPEN for the user (plan §7.7):** six `META_FIELDS` scalars now have two vocabularies (Meta's `set-meta` and the
+  Document row's `set-key`) writing one path — S1's one-renderer work should know; `player_names` draws a JSON block
+  for a per-player STRING slice (round-trips, affordance mismatch only, named rather than "fixed" because the cheap
+  fix reintroduces the absent-object-key defect); and whether a viewer door leaving the hub for an APPLIED-state panel
+  is the relationship we want is S1/replan material.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
