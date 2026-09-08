@@ -12714,6 +12714,22 @@ the existing tools for generating that data. But we can do that after the other 
 raw/text row; nothing marked read-only; a DELETION slice for `settings` + `world_classes` joins the ladder; the
 implementation DETAILS are the next conversation (nothing launched).
 
+**⚖ RULED (user, 2026-09-08, second round), verbatim:** "You're right, loop_costs is already in the Document tab, with
+a button to load the cost debugger, which has a "Send costs to the document" button. Maybe it would be clearer if the
+button said "Send costs to APWorld Editor", and this automatically activated the APWorld Editor panel and scrolled to
+the relevant section, with a message that the data was successfully loaded." · "Is there anything that the
+pipeline's loop cost generator does that the cost debugger doesn't? If not, then we don't need to add the pipeline's
+generator." · "I was about to suggest adding a checkbox to hide elements from the Documents tab that already appear
+in other tabs. But I think it would be a better idea to add a "Sidecars" tab, for the data that's specifically in the
+sidecars. Currently that means the loop cost data and the procgen data. I think that for everything that currently
+only appears in the Document tab, I'll want to also have a more appropriate location for it." · "It's expected that
+data generated only by the Python code doesn't appear in the procgen worlds. That data doesn't appear until the
+procgen rules.json file is run through worldgen, and then through the generator." · "Yes, I want to add a canonical
+placements tool." · "The rest of your plan sounds good. Please don't start implementation yet."
+⇒ The reorder stands (W0 → D1 → W3 → replan; W1/W2 deferred behind loop costs). NEW: a **Sidecars tab** (loop_costs +
+procgen_metadata to start); the debugger's Send renamed + the hub activates, scrolls to the row and reports success;
+a DESIGN PRINCIPLE for the hub: every key gets a home tab, the Document tab is the everything-fallback.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
