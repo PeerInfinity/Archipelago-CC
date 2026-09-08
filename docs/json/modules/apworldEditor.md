@@ -53,6 +53,7 @@ reset the session, so an undo after an Apply still works. It republishes the
 |-----|---------------|
 | **Regions** | regions, exits, locations, access rules — and **Edit ▸**, the door into a region's own room |
 | **Items** | items, classifications, pool counts, starting counts |
+| **Placements** (W3) | `canonical_placements` — which item this world places at which location; the world generator's `--canonical-seed` input, see below |
 | **Meta** | the fields in `rulesDocOps.META_FIELDS`, plus the start region and the victory condition |
 | **Map** | the composite grid, for documents whose sidecars carry grid cells — see below |
 | **Sidecars** (S1) | the five keys that travel BESIDE a world rather than inside its regions — see below |
@@ -399,6 +400,101 @@ Making a key a Sidecars key also changes its **Document** row: it now shows the
 AND the block). The **Links** tab is derived from `DOCUMENT_KEY_EDITORS` and is
 unaffected; measured before/after on `jta_schedule_test`, its 13 rows are the same
 13 rows.
+
+## The Placements tab (W3)
+
+⚖ *"Yes, I want to add a canonical placements tool."* and *"Yes, canonical
+placements should have their own tab."* (user, 2026-09-08).
+
+It sits **between Items and Meta**: a canonical placement is a `location → item`
+pair, so its left half is the Regions tab's vocabulary and its right half is the
+Items tab's — it reads immediately after the two tabs whose words it joins, and
+before Meta, which is about the *document* rather than about the world.
+
+**What the key is, and who reads it.** `canonical_placements[player]` is a flat
+`location name → item name` map. Unlike every other per-world key on the Document
+tab it is an **INPUT, not a readout**: `world_generator/extractors.py` reads it as
+the placement source under `--canonical-seed`, so what you set here is what the
+next `Generate.py` places. The exporter writes it (`exporter.py`) and the procgen
+pipeline's compile writes it
+(`procgenPipeline/procgenPipelineEngine.js`) — but nothing before W3 could edit
+one entry of it.
+
+⛔ **`is_canonical` is a different key.** That is the exporter's *stamp* saying a
+document came out of a canonical run; it is a boolean the Document tab already
+draws, it stays unowned, and this tab does not touch it.
+
+**The op — the second vocabulary on this key.**
+
+```js
+{ op: 'set-canonical-placement', player, location, item }
+```
+
+An absent or empty `item` **deletes** the entry (`''` is what the blank
+"(unplaced)" option carries, exactly as in `set-start-region`). The op refuses,
+**by name**, a `location` the slot's regions do not hold and an `item` the slot's
+`items` do not hold — the schema cannot, because the slot is
+`additionalProperties: true` and `{"Nowhere": "Nothing"}` validates against it.
+The listing in a refusal is bounded by `REFUSAL_NAME_LIMIT`: one slot in the
+corpus holds 1,194 locations and 1,208 items, so an unbounded one would be a
+hundred-kilobyte alert.
+
+⛔ **A DELETE is not validated, and that is the point.** A hand-edited file can
+carry a placement naming a location or an item the document no longer holds. The
+tab **shows** those rather than dropping them, and the only gesture it can offer
+for one is removal — so refusing the delete because the name is unknown would
+leave the one entry a person needs to remove as the one entry they cannot. The
+refusals guard what is *written*, never what is removed. Deleting an entry that is
+not there returns the document unchanged (the session reports a no-op) rather than
+writing an empty block into a document that never carried the key.
+
+⛓⛓ **This is the SECOND vocabulary on `canonical_placements`, deliberately.** The
+Document tab's `set-key` still writes the whole block and its row still draws it —
+W0's rule, the pointer *and* the block — and the Document row now says *"Edited in
+the Placements tab"*. It is the same situation the six `META_FIELDS` scalars are
+in (W0's ⚖ OPEN 1): two ops on one path, both schema-vetoed, both one undo.
+
+**What the tab draws.** Every location the slot holds gets a row — placed or not —
+grouped by region, in **document order** (region insertion order, then each
+region's own `locations` array; never sorted, because that order is the one the
+generator wrote the world in). The rows come from `rulesDocOps.locationsOfPlayer`,
+**the same function the op refuses against**, so the tab can never offer a row
+whose every edit would be refused. A filter box matches location, item and region
+names, and the summary line — also the tab's chrome line — is derived:
+*"N of M locations placed"*, plus a count of any stale entries.
+
+⛓⛓ **The option list is built on FIRST OPEN, and that is a measurement.**
+`dark_souls_3` slot 1 holds 1,194 locations and 1,208 items and `depgraph` holds
+712 and 1,356 — a `<select>` per location carrying every item is **1,442,352
+option elements**, built before the tab can paint. So a closed select carries only
+the blank option and, if placed, its current value, and fills itself on
+`focus`/`mousedown`, which is what opening it *is*. Measured on `dark_souls_3`:
+the tab paints in **178 ms** with **1,194** option elements in total, opening one
+select costs **8 ms** and yields **1,209** options, and the filter costs **8 ms**.
+It is uniformly lazy with no size threshold, so the path the small presets in the
+in-app roster exercise is the path the big worlds take.
+
+⛔ **No schema preview here**, unlike `_applySetKey`. The slot is
+`additionalProperties: true`, so the schema accepts every string the select can
+produce and a preview would be a veto that can never fire. The guard is the op's
+own refusal.
+
+⛔ **A tab-local edit does not publish `ui:activatePanel`.** `_focusAcceptedOp` is
+for **doors** — an editor elsewhere handing an op back — and raising the panel a
+person is already typing in would be a readout about nothing.
+
+**Measured on `procgen_topdown/AP_1`** (25 locations in 9 region groups, 25
+placements, 14 items), before → after:
+
+| | before | after |
+|---|---|---|
+| tabs | Regions, Items, Meta, Map, Sidecars, Document, Links, Raw JSON | + **Placements**, between Items and Meta |
+| Document rows | 32 | 32 |
+| …with a home-tab pointer | 19 | **20** |
+| `canonical_placements` pointer | none | *"Edited in the Placements tab"* |
+| `canonical_placements` JSON block | yes | yes — unmoved (W0's rule) |
+| Links rows | 13 | 13 |
+| Sidecars rows | 5 | 5 |
 
 ## The Map tab
 
