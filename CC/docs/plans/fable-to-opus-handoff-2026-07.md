@@ -12730,6 +12730,13 @@ placements tool." · "The rest of your plan sounds good. Please don't start impl
 procgen_metadata to start); the debugger's Send renamed + the hub activates, scrolls to the row and reports success;
 a DESIGN PRINCIPLE for the hub: every key gets a home tab, the Document tab is the everything-fallback.
 
+**⚖ RULED (user, 2026-09-08, third round), verbatim:** "Yes, canonical placements should have their own tab." ·
+"Let's put region_atlas, flash_panel, and provenance in the sidecars tab for now." · "We can split W0 and S1 into
+separate slices. We can use as many slices as necessary." · "The rest of the plan sounds good."
+⇒ **THE LADDER IS APPROVED: W0 → S1 → D1 → W3 → replan** (plan `NewDocs/plans/apworld-editor-coverage-plan.md`).
+Sidecars tab = `loop_costs`, `procgen_metadata`, `region_atlas`, `flash_panel`, `provenance` (+ a `preset_sidecars`
+summary pointing at Regions); canonical placements get a **Placements** tab. Not launched at the time of this entry.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
