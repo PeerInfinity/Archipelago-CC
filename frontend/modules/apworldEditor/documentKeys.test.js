@@ -298,9 +298,17 @@ describe('the editor slot — FILLED by H5', () => {
     it('⛓⛓ W0 — every viewer door publishes exactly ONE `ui:activatePanel`, '
         + 'for the panel its own declaration names', async () => {
         const viewers = Object.entries(DOCUMENT_KEY_EDITORS)
-            .filter(([, editor]) => editor.returns === 'none' && editor.panelId);
+            .filter(([, editor]) => editor.returns === 'none');
         // ⛔ Non-vacuity: there really are viewer doors to check.
         expect(viewers.length).toBeGreaterThan(1);
+        /**
+         * ⛔ **A DOOR THAT RETURNS NOTHING HAS TO RAISE SOMETHING**, or pressing
+         * it does nothing at all — so the `panelId` is part of what makes this
+         * set drivable, and the filter above does NOT skip a door that lost it.
+         * (A door filtered out by its own missing field is a guard that goes
+         * quiet on the defect it exists for.)
+         */
+        for (const [key, editor] of viewers) expect(editor.panelId, key).toBeTruthy();
         for (const [key, editor] of viewers) {
             const published = [];
             await editor.open({
