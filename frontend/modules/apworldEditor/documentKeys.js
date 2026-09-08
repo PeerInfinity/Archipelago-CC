@@ -82,6 +82,48 @@ const PLAYER_SLOT_PATTERN = '^[0-9]+$';
  */
 const META_TAB_EXTRA_KEYS = Object.freeze(['start_regions', 'game_info']);
 
+/**
+ * ⛓⛓⛓ **THE SIDECARS TAB'S MEMBERSHIP IS A TABLE WITH A NAMED AUTHORITY,
+ * NOT A DERIVATION** (S1). There is no predicate over `rules.schema.json` that
+ * says "this key is a sidecar": the schema declares five and thirty top-level
+ * keys alike, and the thing that makes these five one tab's business lives
+ * outside the frontend entirely. So the membership is written down WITH the
+ * authority for each half, and `documentKeys.test.js` asserts the first half
+ * against that authority's own source files.
+ *
+ * ⛓ **The first two are the WORLDGEN ROUND TRIP's own sidecar files.**
+ * `world_generator/generator.py` writes `_worldgen_sidecars.json`,
+ * `_worldgen_procgen_metadata.json` and `_worldgen_loop_costs.json` beside a
+ * generated world, and `exporter/games/base/handler.py`'s three
+ * `_inject_worldgen_*` methods read them back at export time into
+ * `export_data['preset_sidecars'][player]`, `export_data['procgen_metadata']`
+ * and `export_data['loop_costs']`. Those three merge targets ARE the definition
+ * of "sidecar data" in this tree — and `preset_sidecars` is the one that stays
+ * the REGIONS tab's, because it is edited per region there (H4b's Edit ▸) and a
+ * second whole-block editor would be a second place to edit one key. The
+ * Sidecars tab summarises it and points at Regions instead.
+ *
+ * ⛓ **The other three are a ⚖ (user, 2026-09-08):** *"Let's put region_atlas,
+ * flash_panel, and provenance in the sidecars tab for now."* They are the region
+ * ATLAS compiler's outputs rather than worldgen's, and "for now" is on the
+ * record — their real home is a replan question (plan §5).
+ *
+ * ⛔ A key here is OWNED, which is what makes the Document tab draw its
+ * *"Edited in the Sidecars tab"* pointer for it (W0's rule: the pointer AND the
+ * block). The Sidecars tab draws these rows with the SAME renderer the Document
+ * tab uses — one renderer, two hosts — so nothing about the rows themselves is
+ * a second vocabulary.
+ */
+const SIDECAR_KEYS_FROM_WORLDGEN = Object.freeze(['procgen_metadata', 'loop_costs']);
+const SIDECAR_KEYS_FROM_RULING = Object.freeze(['region_atlas', 'flash_panel', 'provenance']);
+
+/**
+ * ⛓ The Regions tab keeps this key, and the Sidecars tab only SUMMARISES it.
+ * Exported because both the tab that draws the summary and the row that asserts
+ * the split need the same name for it.
+ */
+export const SIDECARS_TAB_SUMMARY_KEY = 'preset_sidecars';
+
 export const KEYS_OWNED_BY_TAB = Object.freeze({
     regions: Object.freeze(['regions']),
     items: Object.freeze(['items', 'itempool_counts', 'starting_items']),
@@ -89,6 +131,7 @@ export const KEYS_OWNED_BY_TAB = Object.freeze({
         ...Object.values(META_FIELDS).map((spec) => spec.path('1')[0]),
         ...META_TAB_EXTRA_KEYS,
     ])].sort()),
+    sidecars: Object.freeze([...SIDECAR_KEYS_FROM_WORLDGEN, ...SIDECAR_KEYS_FROM_RULING]),
 });
 
 /** ⛓ `key → tab id`, inverted from the table above once. */

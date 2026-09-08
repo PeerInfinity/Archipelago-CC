@@ -27,6 +27,7 @@ import {
     EDITOR_RETURN_KINDS,
     regionAtlasSetKeyOp,
     KEYS_OWNED_BY_TAB,
+    SIDECARS_TAB_SUMMARY_KEY,
     buildDocumentKeys,
     defaultPlayerOf,
     documentKeyRows,
@@ -155,6 +156,150 @@ describe('the tab-ownership table', () => {
         expect(byKey.items.ownedByTab).toBe('items');
         expect(byKey.game_name.ownedByTab).toBe('meta');
         expect(byKey.preset_sidecars.ownedByTab).toBeNull();
+    });
+});
+
+/**
+ * ⛓⛓⛓ **S1 — THE SIDECARS TAB'S MEMBERSHIP, AGAINST ITS AUTHORITY.**
+ *
+ * ⛔ **THESE ROWS EXIST BECAUSE THE TAB'S OWN ROW CANNOT SEE THIS.** The in-app
+ * row that draws the tab reads its expected key set from
+ * `KEYS_OWNED_BY_TAB.sidecars` — the same table the panel filters by — so it
+ * guards the RENDERER and is blind to the membership: drop a key from the table
+ * and the tab draws one row fewer against an expectation that shrank with it.
+ * (W0 measured exactly that shape in its own mutant B: a derived row whose
+ * POPULATION is selected by the field under test filters its own mutant out.)
+ * What makes the membership falsifiable is an authority OUTSIDE the table, and
+ * the two halves have two different ones.
+ */
+describe('S1 — the Sidecars tab knows which keys are sidecar data, and why', () => {
+    const REPO_FILE = (...parts) => readFileSync(join(REPO, ...parts), 'utf8');
+
+    /**
+     * ⛓⛓⛓ **THE FIRST HALF IS THE WORLDGEN ROUND TRIP, AND IT IS READ OFF THE
+     * PYTHON THAT PERFORMS IT.** `world_generator/generator.py` writes the
+     * `_worldgen_*.json` files beside a generated world; `exporter/games/base/
+     * handler.py`'s `_inject_worldgen_*` methods read them back and merge them
+     * into the export. The keys those methods write ARE the definition of
+     * "data that travels in a sidecar file" in this tree.
+     *
+     * ⛔ Derived from the two files, never listed: a fourth sidecar added to the
+     * round trip reds this row until the tab hosts it, which is the whole point
+     * of not typing the answer here.
+     */
+    const sidecarMergeTargets = () => {
+        const handler = REPO_FILE('exporter', 'games', 'base', 'handler.py');
+        // ⛔ BOUNDED at the next top-level `def`: a naked split runs each chunk
+        //    to the end of the file, so an unrelated `export_data['x']` written
+        //    anywhere below the last inject method would be read as a sidecar.
+        const methods = handler.split(/\n    def _inject_worldgen_/).slice(1)
+            .map((chunk) => chunk.split(/\n    def /)[0]);
+        const keys = new Set();
+        for (const body of methods) {
+            for (const m of body.matchAll(/export_data(?:\.setdefault)?[[(]'([a-z_]+)'/g)) {
+                keys.add(m[1]);
+            }
+        }
+        return [...keys].sort();
+    };
+
+    it('⛓⛓ the exporter really does merge a sidecar file back into more than one '
+        + 'top-level key — the premise these rows rest on', () => {
+        const targets = sidecarMergeTargets();
+        expect(targets.length).toBeGreaterThan(1);
+        // ⛓ And the writer's side names a file per target, so the pairing is
+        //   not an accident of this regex.
+        const generator = REPO_FILE('world_generator', 'generator.py');
+        for (const key of targets) {
+            const file = key === SIDECARS_TAB_SUMMARY_KEY ? 'sidecars' : key;
+            expect(generator, key).toContain(`_worldgen_${file}.json`);
+        }
+    });
+
+    /**
+     * ⛓⛓⛓ **THE LAW: every key the sidecar round trip merges is EITHER the
+     * Sidecars tab's, OR the one the Regions tab kept.** `preset_sidecars` is
+     * edited PER REGION over there (H4b's Edit ▸) and the ⚖ that created this
+     * tab did not move it — the tab summarises it and points at Regions. Every
+     * OTHER merge target is a Sidecars key.
+     *
+     * ⛔ This is the row mutant B reds: removing `loop_costs` (or
+     * `procgen_metadata`) from `KEYS_OWNED_BY_TAB.sidecars` fails here NAMING
+     * the key, because the expectation comes from the Python and not from the
+     * table under test.
+     */
+    it('⛓⛓⛓ every key the exporter merges out of a sidecar file is owned by the '
+        + 'Sidecars tab — except the one the Regions tab kept', () => {
+        for (const key of sidecarMergeTargets()) {
+            if (key === SIDECARS_TAB_SUMMARY_KEY) {
+                expect(KEYS_OWNED_BY_TAB.sidecars, key).not.toContain(key);
+                expect(KEYS_OWNED_BY_TAB.regions, `${key} stays a per-region edit`)
+                    .not.toContain(key);
+                continue;
+            }
+            expect(KEYS_OWNED_BY_TAB.sidecars, `${key} is merged from a sidecar file`)
+                .toContain(key);
+        }
+    });
+
+    /**
+     * ⛓⛓ **THE SECOND HALF IS A ⚖, AND A ⚖ HAS NO DERIVATION.** *"Let's put
+     * region_atlas, flash_panel, and provenance in the sidecars tab for now"*
+     * (user, 2026-09-08). Nothing in the tree makes those three sidecar data —
+     * they are the region ATLAS compiler's outputs — so the ruling is the
+     * authority and this row is where it is written down. "For now" is on the
+     * record too: their real home is a replan question (plan §5).
+     */
+    it('⛓⛓ and the three the ⚖ of 2026-09-08 put there are there', () => {
+        for (const key of ['region_atlas', 'flash_panel', 'provenance']) {
+            expect(KEYS_OWNED_BY_TAB.sidecars, `⚖ 2026-09-08 → ${key}`).toContain(key);
+        }
+    });
+
+    /**
+     * ⛔ A key owned by TWO tabs is a row whose pointer is decided by the
+     * inversion's iteration order — a second home nobody chose. Asserted over
+     * the whole table rather than about the new tab, because that is the law.
+     */
+    it('⛓ no key has two home tabs', () => {
+        const seen = new Map();
+        for (const [tab, keys] of Object.entries(KEYS_OWNED_BY_TAB)) {
+            for (const key of keys) {
+                expect(seen.has(key), `${key}: ${seen.get(key)} and ${tab}`).toBe(false);
+                seen.set(key, tab);
+            }
+        }
+    });
+
+    /**
+     * ⛓ The summary key is a REAL key of a REAL document, so the Sidecars tab's
+     * one-line summary is about something. Read off a committed preset rather
+     * than a fixture: the claim is that the corpus carries it.
+     */
+    it('⛓ the summary key is a schema key the corpus really carries', () => {
+        expect(Object.keys(SCHEMA.properties)).toContain(SIDECARS_TAB_SUMMARY_KEY);
+        expect(Object.prototype.hasOwnProperty.call(combined(), SIDECARS_TAB_SUMMARY_KEY))
+            .toBe(true);
+    });
+
+    /**
+     * ⛓⛓ **AND THE ROWS THE TAB DRAWS ARE THE DOCUMENT TAB'S ROWS** — the same
+     * `documentKeyRows` output, carrying the same `editor` doors and the same
+     * per-player slice. The panel filters; it does not build a second row.
+     */
+    it('⛓⛓ every sidecar key gets a full registry row, doors included', () => {
+        const rows = documentKeyRows(combined(), SCHEMA, { player: '1' });
+        const byKey = Object.fromEntries(rows.map((r) => [r.key, r]));
+        for (const key of KEYS_OWNED_BY_TAB.sidecars) {
+            expect(byKey[key], key).toBeTruthy();
+            expect(byKey[key].ownedByTab, key).toBe('sidecars');
+            expect(byKey[key].editor, key).toBe(DOCUMENT_KEY_EDITORS[key] ?? null);
+        }
+        // ⛓ Non-vacuity: some of them really do carry a door, and some do not —
+        //   which is what the tab's intro sentence tells a person apart.
+        const doors = KEYS_OWNED_BY_TAB.sidecars.filter((k) => byKey[k].editor);
+        expect(doors.length).toBeGreaterThan(0);
+        expect(doors.length).toBeLessThan(KEYS_OWNED_BY_TAB.sidecars.length);
     });
 });
 

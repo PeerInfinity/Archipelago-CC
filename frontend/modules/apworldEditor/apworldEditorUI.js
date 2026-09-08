@@ -92,6 +92,8 @@ import {
   playerSlotsOf,
   DOCUMENT_KEY_EDITORS,
   EDITOR_RETURN_KINDS,
+  KEYS_OWNED_BY_TAB,
+  SIDECARS_TAB_SUMMARY_KEY,
 } from './documentKeys.js';
 import { buildLinkRows, DOCUMENT_LINKS } from './documentLinks.js';
 /**
@@ -153,6 +155,16 @@ const APPLY_SOURCE = 'apworldEditorApply';
  * top-level key the schema names (plus anything the file carries that it does
  * not), and `links` is the door to every other editor. The first three are the
  * editor this panel already was.
+ *
+ * ⛓⛓ **S1 — AND `sidecars` SITS BETWEEN Map AND Document, DELIBERATELY.** The
+ * tab order is a product choice and this is the one made: the five keys it
+ * hosts are all *about the world the procgen side produced* — the same subject
+ * as Map, which draws that world's grid — and every one of them also appears on
+ * the Document tab, which is the everything-fallback and therefore reads best
+ * as the LAST of the per-subject tabs rather than as the middle of them. ⚖ user
+ * 2026-09-08: *"a 'Sidecars' tab, for the data that's specifically in the
+ * sidecars"*; the membership and its authority are `KEYS_OWNED_BY_TAB.sidecars`
+ * in `documentKeys.js`, not here.
  */
 
 const TABS = [
@@ -160,10 +172,12 @@ const TABS = [
   { id: 'items', label: 'Items' },
   { id: 'meta', label: 'Meta' },
   { id: 'map', label: 'Map' },
+  { id: 'sidecars', label: 'Sidecars' },
   { id: 'document', label: 'Document' },
   { id: 'links', label: 'Links' },
   { id: 'raw', label: 'Raw JSON' },
 ];
+
 
 /** ⛓ Where the page fetches the schema the Document tab is DERIVED from. */
 const RULES_SCHEMA_URL = './schema/rules.schema.json';
@@ -1233,6 +1247,8 @@ class ApworldEditorUI {
       this._renderItemsTab();
     } else if (this.activeTab === 'meta') {
       this._renderMetaTab();
+    } else if (this.activeTab === 'sidecars') {
+      this._renderSidecarsTab();
     } else if (this.activeTab === 'document') {
       this._renderDocumentTab();
     } else if (this.activeTab === 'links') {
@@ -1270,6 +1286,11 @@ class ApworldEditorUI {
       summary = `${gameName} — ${count} item${count === 1 ? '' : 's'}`;
     } else if (this.activeTab === 'meta') {
       summary = `${gameName} — metadata`;
+    } else if (this.activeTab === 'sidecars') {
+      const n = this._sidecarRows().length;
+      const carried = this._sidecarRows().filter((r) => r.topLevelPresent).length;
+      summary = `${gameName} — ${carried} of ${n} sidecar key`
+        + `${n === 1 ? '' : 's'} in this document`;
     } else if (this.activeTab === 'document') {
       const n = this._documentRows().length;
       summary = `${gameName} — ${n} top-level key${n === 1 ? '' : 's'}`;
@@ -1537,6 +1558,121 @@ class ApworldEditorUI {
       log('warn', `Could not build the document rows: ${err.message}`);
       return [];
     }
+  }
+
+  /**
+   * ⛓⛓⛓ **S1 — THE SIDECARS TAB'S ROWS ARE THE DOCUMENT TAB'S ROWS.** Same
+   * builder, same registry, same order (`documentKeyRows` is in the schema's
+   * own order), filtered to the keys `KEYS_OWNED_BY_TAB.sidecars` names.
+   *
+   * ⛔ **DERIVED, never a second list.** A key typed here would be a second
+   * membership table that agrees with the first until somebody edits one of
+   * them — and the table in `documentKeys.js` is the one that carries the
+   * AUTHORITY (the worldgen round trip's own files for two of the five, a ⚖ for
+   * the other three). Filtering the registry rows also means a key that stopped
+   * being a schema key simply stops having a row, rather than drawing an empty
+   * one about a key nothing produces.
+   */
+  _sidecarRows() {
+    const wanted = new Set(KEYS_OWNED_BY_TAB.sidecars);
+    return this._documentRows().filter((row) => wanted.has(row.key));
+  }
+
+  /**
+   * ⛓⛓⛓ **S1 — ONE RENDERER, TWO HOSTS** (⚖ user, 2026-09-08: *"a 'Sidecars'
+   * tab, for the data that's specifically in the sidecars"*). Every row here is
+   * built by `_renderDocumentRow` — the doors, the `returns` line, the
+   * loop-cost table, W0's JSON block — because a second row renderer for the
+   * same five keys is a second vocabulary for one document, and the two would
+   * agree only until one of them was changed.
+   *
+   * ⛓ `preset_sidecars` is SUMMARISED, not drawn: it is the Regions tab's key
+   * (edited per region there, H4b's Edit ▸), and the ⚖ that put the other five
+   * here did not move it. One line of per-slot counts and a button.
+   */
+  _renderSidecarsTab() {
+    const rows = this._sidecarRows();
+    const withDoors = rows.filter((r) => r.editor).map((r) => r.key);
+    const rawOnly = rows.filter((r) => !r.editor).map((r) => r.key);
+
+    const intro = document.createElement('div');
+    intro.className = 'apworld-sidecars-intro';
+    Object.assign(intro.style, { color: '#888', fontSize: '11px', padding: '2px 0 6px',
+      lineHeight: '1.4' });
+    intro.textContent = 'The data that travels BESIDE a world rather than inside its regions. '
+      + `${rows.length} key${rows.length === 1 ? '' : 's'}: the worldgen round trip writes `
+      + '`_worldgen_procgen_metadata.json` and `_worldgen_loop_costs.json` beside a generated '
+      + 'world and the exporter merges them back in; `region_atlas`, `flash_panel` and '
+      + '`provenance` are here by a ⚖ of 2026-09-08, for now. '
+      + (withDoors.length
+        ? `The door${withDoors.length === 1 ? '' : 's'} here (${withDoors.join(', ')}) `
+          + `open${withDoors.length === 1 ? 's' : ''} on the WORKING COPY — what you are `
+          + 'editing, not the world the app has loaded — and a save comes back as one '
+          + 'undoable op. '
+        : '')
+      + (rawOnly.length
+        ? `${rawOnly.join(' and ')} ${rawOnly.length === 1 ? 'has' : 'have'} no dedicated `
+          + 'editor: the JSON block on the row is how they are changed. '
+        : '')
+      + 'These are the same rows the Document tab draws, in the same renderer.';
+    this.scrollContainer.appendChild(intro);
+
+    this.scrollContainer.appendChild(this._makePresetSidecarsSummary());
+
+    if (rows.length === 0) {
+      const none = document.createElement('div');
+      none.style.color = '#888';
+      none.textContent = 'No sidecar keys are declared.';
+      this.scrollContainer.appendChild(none);
+      return;
+    }
+    for (const row of rows) this.scrollContainer.appendChild(this._renderDocumentRow(row));
+  }
+
+  /**
+   * ⛓ The one-line `preset_sidecars` summary: per-slot region counts, read off
+   * the document, and the door to where it is actually edited.
+   *
+   * ⛔ Counts are DERIVED per slot rather than summed: H0's ⚖ 3 measured that
+   * every populated `preset_sidecars` keys under slot "1", four-player
+   * documents included, so a single total would read as "this world has n" on a
+   * document where three of the four slots have nothing.
+   */
+  _makePresetSidecarsSummary() {
+    const line = document.createElement('div');
+    line.className = 'apworld-sidecars-summary';
+    line.dataset.docKey = SIDECARS_TAB_SUMMARY_KEY;
+    Object.assign(line.style, {
+      display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap',
+      border: '1px solid #333', borderRadius: '3px', margin: '0 0 6px', padding: '6px 8px',
+      backgroundColor: '#1f1f1f', color: '#aaa', fontSize: '11px',
+    });
+    const name = document.createElement('code');
+    name.textContent = SIDECARS_TAB_SUMMARY_KEY;
+    Object.assign(name.style, { color: '#cfe', fontWeight: 'bold', fontSize: '12px' });
+    line.appendChild(name);
+
+    const block = this.rulesDoc ? this.rulesDoc[SIDECARS_TAB_SUMMARY_KEY] : undefined;
+    const slots = block && typeof block === 'object' && !Array.isArray(block)
+      ? Object.entries(block).map(([slot, regions]) => [slot,
+        regions && typeof regions === 'object' ? Object.keys(regions).length : 0])
+      : [];
+    const text = document.createElement('span');
+    text.className = 'apworld-sidecars-summary-text';
+    text.textContent = slots.length === 0
+      ? (block === undefined
+        ? 'not in this document — the per-region payloads the procgen pipeline emits.'
+        : 'present but empty — no slot carries a region payload.')
+      : `${slots.map(([slot, n]) => `slot ${slot}: ${n} region${n === 1 ? '' : 's'}`).join(', ')}`
+        + ' — edited PER REGION in the Regions tab (Edit ▸), which is why it is a summary here.';
+    line.appendChild(text);
+
+    const btn = this._makeButton('Go to Regions', '#3a3a3a', () => this._selectTab('regions'));
+    btn.className = 'apworld-sidecars-go-regions';
+    btn.style.fontSize = '11px';
+    btn.style.marginLeft = 'auto';
+    line.appendChild(btn);
+    return line;
   }
 
   _renderDocumentTab() {
