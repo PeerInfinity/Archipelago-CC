@@ -21,7 +21,9 @@ import {
     DOCUMENT_LINKS, buildLinkRows, substrateEditorLinks, documentKeyEditorLinks,
 } from './documentLinks.js';
 import { DOCUMENT_KEY_EDITORS } from './documentKeys.js';
-import { register as registerApworldEditor } from './index.js';
+import {
+    register as registerApworldEditor, moduleInfo, APWORLD_EDITOR_PANEL_ID,
+} from './index.js';
 
 /** ⛓ A registry-shaped stand-in: `getAll()` and nothing else is read. */
 const fakeRegistry = (entries) => ({ getAll: () => entries });
@@ -241,5 +243,31 @@ describe('publisher registration covers every publish site', () => {
         }
         // The one that was missing, named so the regression is legible.
         expect(published.has('ui:activatePanel')).toBe(true);
+    });
+
+    /**
+     * ⛓⛓⛓ **S1 — AND THE PANEL THIS MODULE RAISES FOR ITSELF IS THE PANEL IT
+     * REGISTERED.** The hub publishes `ui:activatePanel` for its OWN component
+     * now (the accepted-op focus), which makes the component type a string with
+     * three uses: the registration, `moduleInfo.componentType`, and that
+     * publish. ⛔ A door whose declaration and publish disagree is the H5 defect
+     * (a control the hub reports as live that raises nothing) — the same defect
+     * one level in, so the three are ONE constant and this row is what says so.
+     */
+    it('⛓⛓ S1 — the registered component, `moduleInfo.componentType` and the '
+        + 'constant the panel publishes are one string', () => {
+        let registeredAs = null;
+        registerApworldEditor({
+            registerPanelComponent: (type) => { registeredAs = type; },
+            registerEventBusPublisher: () => {},
+            registerEventBusSubscriberIntent: () => {},
+            registerPublicFunction: () => {},
+        });
+        expect(registeredAs).toBe(APWORLD_EDITOR_PANEL_ID);
+        expect(moduleInfo.componentType).toBe(APWORLD_EDITOR_PANEL_ID);
+        // ⛔ …and the panel does not carry a fourth copy of the literal.
+        const panelSource = read('./apworldEditorUI.js');
+        expect(panelSource).toContain('APWORLD_EDITOR_PANEL_ID');
+        expect(panelSource).not.toContain(`'${APWORLD_EDITOR_PANEL_ID}'`);
     });
 });

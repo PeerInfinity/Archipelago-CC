@@ -29,8 +29,18 @@
  * the session reconstructs from.
  */
 
+/**
+ * ⛓⛓ S1 — **`APWORLD_EDITOR_PANEL_ID` IS THE PANEL'S OWN COMPONENT TYPE**, and
+ * this panel needs it because the accepted-op focus publishes `ui:activatePanel`
+ * FOR ITSELF. ⛔ It is declared in `index.js`, which is where the registration
+ * and `moduleInfo.componentType` use it AT MODULE LOAD, and only READ here —
+ * inside a method. This module and `index.js` are a cycle (has been since H1);
+ * a constant declared on this side and consumed at index.js's top level would
+ * be in the TDZ whenever this module is evaluated first.
+ */
 import {
   getModuleEventBus, APWORLD_EDITOR_LOAD_RULES, APWORLD_EDITOR_SELECT_REGION,
+  APWORLD_EDITOR_PANEL_ID,
   consumePendingEditorRules, consumePendingSelectRegion,
 } from './index.js';
 import { stateManagerProxySingleton as stateManager, getLastRawJsonData } from '../stateManager/index.js';
@@ -276,6 +286,14 @@ class ApworldEditorUI {
      * gets `undefined !== 1` and is refused rather than trusted.
      */
     this._documentToken = 0;
+    /**
+     * ⛓ S1 — the accepted-op message that is printed BESIDE the row it was
+     * written on, `{key, text}` or null. The chrome's `_opMessage` still
+     * carries the same sentence: a person who was looking at the status line
+     * should not have to hunt for the answer, and a person the hub has just
+     * scrolled to a row should not have to look back up at the chrome.
+     */
+    this._opRowMessage = null;
     /**
      * ⛓⛓ **THE ECHO OF OUR OWN APPLY, TOLD APART BY OBJECT IDENTITY.** It used
      * to be told apart by `sourceName === APPLY_SOURCE`, which stopped working
@@ -552,6 +570,9 @@ class ApworldEditorUI {
     // ⛓ RECORDED, never inferred later: a boundary is the only place the
     //   document's provenance is known, and Apply is downstream of every op.
     this._originSourceName = baseTag?.origin ?? null;
+    // ⛓ S1 — a message about a row of the OLD document says nothing about this
+    //   one, and the row it names may not even be present here.
+    this._opRowMessage = null;
     this._rawDraft = null;
     this._rawEdited = false;
     // ⛓ A boundary installs a different world: a region name from the old one
@@ -585,6 +606,10 @@ class ApworldEditorUI {
       alert('Load a rules.json first.');
       return { ok: false, applied: false, description: 'no session' };
     }
+    // ⛓ S1 — the beside-the-row message describes ONE op. The next edit
+    //   replaces it (`_focusAcceptedOp` sets it again straight after this
+    //   returns) rather than leaving a sentence about an older one standing.
+    this._opRowMessage = null;
     const res = this.session.apply(this._stampPlayer(op));
     // ⛓ H4b — an applied edit can change whether a region's room round-trips
     //   (its rules moved, its sidecar was replaced), so the remembered
@@ -712,8 +737,13 @@ class ApworldEditorUI {
     return op.player === undefined ? { ...op, player: this.playerId } : op;
   }
 
-  /** ⛓ UNDO — the fold over a shorter list, never a stack pop. */
+  /** ⛓ UNDO — the fold over a shorter list, never a stack pop.
+   *
+   * ⛓ S1 — and it takes the beside-the-row message with it: *"saved — applied
+   * as one `set-key` you can undo here"* standing beside a row whose op has
+   * just been undone is a readout about a document that no longer exists. */
   _undo() {
+    this._opRowMessage = null;
     if (!this.session || !this.session.undo()) {
       this._opMessage = 'Nothing to undo.';
       this._render();
@@ -1780,6 +1810,24 @@ class ApworldEditorUI {
     if (row.editor) box.appendChild(this._makeDocumentEditorLine(row));
     if (row.key === 'loop_costs') box.appendChild(this._makeLoopCostsTable(row));
     box.appendChild(this._makeDocumentValueEditor(row));
+    /**
+     * ⛓⛓ S1 — **AND THE ANSWER LANDS WHERE THE PERSON IS LOOKING.** An op a
+     * linked editor handed back scrolls this row into view, so the sentence
+     * saying what happened is printed here as well as in the chrome — ⚖ user
+     * 2026-09-08: *"a message that the data was successfully loaded"*. Drawn
+     * from the same state the scroll targets, so a row that carries the message
+     * is a row the hub really did focus.
+     */
+    if (this._opRowMessage && this._opRowMessage.key === row.key) {
+      const msg = document.createElement('div');
+      msg.className = 'apworld-doc-op-message';
+      msg.textContent = this._opRowMessage.text;
+      Object.assign(msg.style, {
+        color: '#8fd18f', fontSize: '11px', margin: '5px 0 0', padding: '3px 6px',
+        border: '1px solid #2e5f2e', borderRadius: '3px', backgroundColor: '#182218',
+      });
+      box.appendChild(msg);
+    }
     return box;
   }
 
@@ -2145,7 +2193,65 @@ class ApworldEditorUI {
       ? `${label} saved — applied as one \`${op.op}\` you can undo here.`
       : `${label}: ${res?.description ?? 'refused'}`;
     this._renderChrome();
+    // ⛔ ONLY on the way out of the ACCEPTED path. Every refusal above returns
+    //   through `refuse()`, which never reaches here — see `_focusAcceptedOp`.
+    if (accepted) this._focusAcceptedOp(key, this._opMessage);
     return { accepted, applied, errors: [], description: res?.description ?? '' };
+  }
+
+  /**
+   * ⛓⛓⛓ **S1 — THE HUB COMES TO THE FRONT AND SHOWS THE ROW IT JUST WROTE**
+   * (⚖ user, 2026-09-08: *"this automatically activated the APWorld Editor
+   * panel and scrolled to the relevant section, with a message that the data
+   * was successfully loaded"*).
+   *
+   * ⛓ **IT IS GENERIC, and that is the whole design.** The ⚖ was asked about
+   * the cost debugger's Send, but the gesture it describes is *"an editor
+   * elsewhere saved into this document"* — which is `_acceptEditorOp`, the one
+   * seam every `op` door's save comes through (`region_atlas`'s included). A
+   * focus wired into the cost debugger's door would be a second behaviour for
+   * the next door somebody adds.
+   *
+   * ⛔⛔ **AND A REFUSED OP MUST NOT STEAL FOCUS.** Raising the panel and
+   * scrolling to a row is what "it worked" looks like; doing it for a refusal
+   * would make the two outcomes look alike on screen while the status line said
+   * otherwise. Every refusal path returns through `_acceptEditorOp`'s `refuse()`
+   * before this is reached, so the property is structural rather than a flag.
+   *
+   * ⛓ The tab is the key's OWN home tab — `loop_costs` lands on Sidecars,
+   * `region_atlas` on Sidecars, and a key no tab owns on the Document tab, the
+   * everything-fallback. Read off the registry row rather than mapped here, so
+   * a key that changes homes changes this with it.
+   */
+  _focusAcceptedOp(key, text) {
+    this._opRowMessage = { key, text };
+    const row = this._documentRows().find((r) => r.key === key) ?? null;
+    const tab = row?.ownedByTab ?? 'document';
+    /**
+     * ⛓ The panel raises ITSELF, through the same `ui:activatePanel` every door
+     * uses to raise somebody else — `index.js` registers this module as that
+     * event's publisher (H5's defect: an unregistered publish is DROPPED).
+     */
+    try {
+      this.eventBus.publish('ui:activatePanel', { panelId: APWORLD_EDITOR_PANEL_ID });
+    } catch (err) {
+      log('warn', `could not raise this panel for ${key}: ${err.message}`);
+    }
+    /**
+     * ⛔ EXACTLY ONE render either way: `_selectTab` returns early when the tab
+     * is already active, and the message above is drawn by the TAB BODY — so a
+     * bare `_selectTab` on the tab we are already on would leave the row
+     * without its sentence.
+     */
+    if (this.activeTab === tab) this._render(); else this._selectTab(tab);
+    const box = this.scrollContainer
+      ? this.scrollContainer.querySelector(`.apworld-doc-row[data-doc-key="${key}"]`)
+      : null;
+    // ⛓ Guarded: `scrollIntoView` is a DOM method a detached container lacks,
+    //   and a hub that threw here would lose the op's own answer.
+    if (box && typeof box.scrollIntoView === 'function') {
+      box.scrollIntoView({ block: 'center' });
+    }
   }
 
   /**

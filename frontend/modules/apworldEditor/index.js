@@ -26,6 +26,17 @@ export const APWORLD_EDITOR_LOAD_RULES = 'apworldEditor:loadRules';
  */
 export const APWORLD_EDITOR_SELECT_REGION = 'apworldEditor:selectRegion';
 
+/**
+ * ⛓⛓⛓ S1 — **THE PANEL'S OWN COMPONENT TYPE, AS ONE STRING.** The hub raises
+ * ITSELF now: an op a linked editor hands back is applied here, and the ⚖
+ * (user, 2026-09-08) is that the editor panel comes to the front and scrolls to
+ * the row it wrote. That publish names a panel, so this module now both
+ * REGISTERS the component under this name and PUBLISHES `ui:activatePanel` for
+ * it — two uses that must not be two literals, because a rename that moved one
+ * of them would leave a button raising nothing (the H5 defect, in a new place).
+ */
+export const APWORLD_EDITOR_PANEL_ID = 'apworldEditorPanel';
+
 let _moduleEventBus = null;
 let _pendingEditorRules = null;
 let _pendingSelectRegion = null;
@@ -88,7 +99,7 @@ function log(level, message, ...data) {
 export const moduleInfo = {
   name: 'apworldEditor',
   title: 'APWorld Editor',
-  componentType: 'apworldEditorPanel',
+  componentType: APWORLD_EDITOR_PANEL_ID,
   icon: '🧩',
   column: 3,
   description: 'GUI editor for apworld rules.json (regions, exits, locations, access rules).',
@@ -97,7 +108,7 @@ export const moduleInfo = {
 
 export function register(registrationApi) {
   log('info', '[APWorld Editor Module] Registering...');
-  registrationApi.registerPanelComponent('apworldEditorPanel', ApworldEditorUI);
+  registrationApi.registerPanelComponent(APWORLD_EDITOR_PANEL_ID, ApworldEditorUI);
 
   registrationApi.registerEventBusPublisher('files:jsonLoaded');
   registrationApi.registerEventBusPublisher('apworldEditor:rulesEdited');
