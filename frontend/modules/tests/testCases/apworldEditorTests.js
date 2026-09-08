@@ -3186,21 +3186,30 @@ export async function apworldOwnedRowCarriesItsOwnJsonBlock(testController) {
             `no Meta field addresses ${KEY}.${FIELD} — so the block is the only way to it`,
             'false', String(metaPaths.includes(`${KEY}.${FIELD}`)));
 
-        const box = document.querySelector(
+        /**
+         * ⛔ **RE-QUERIED EVERY TIME, because expanding a block RE-RENDERS the
+         * tab.** `_makeDocumentBlockEditor`'s toggle calls `_render()`, so the
+         * row element captured before the click is detached from the document
+         * the moment it lands — and a `querySelector` on a detached node still
+         * answers, from the old tree. The first run of this row asserted the
+         * Save control against exactly that stale element and reported a
+         * missing button on a panel that was drawing one.
+         */
+        const boxOf = () => document.querySelector(
             `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${KEY}"]`);
-        testController.reportCondition('the Document tab draws that row', !!box);
-        if (!box) return testController.getOverallResult();
+        testController.reportCondition('the Document tab draws that row', !!boxOf());
+        if (!boxOf()) return testController.getOverallResult();
 
         // ⛓ THE POINTER STAYS — the home tab is still where the shape is known.
         testController.reportCondition(
             'the row still points at the tab that owns the key',
-            !!box.querySelector('.apworld-doc-owned'));
+            !!boxOf().querySelector('.apworld-doc-owned'));
 
         /**
          * ⛓⛓ **THE CLAIM, AND THE MUTANT TARGET.** Restoring the early return
          * in `_renderDocumentRow` leaves the pointer above and kills this.
          */
-        const toggle = box.querySelector('.apworld-doc-toggle');
+        const toggle = boxOf().querySelector('.apworld-doc-toggle');
         testController.reportCondition(
             'and it offers the same Show JSON toggle every other row gets', !!toggle);
         if (!toggle) return testController.getOverallResult();
@@ -3228,7 +3237,7 @@ export async function apworldOwnedRowCarriesItsOwnJsonBlock(testController) {
         edited[FIELD] = VALUE;
         textarea.value = JSON.stringify(edited, null, 2);
 
-        const save = box.querySelector('.apworld-doc-save');
+        const save = boxOf().querySelector('.apworld-doc-save');
         testController.reportCondition('the block carries a Save JSON control', !!save);
         if (!save) return testController.getOverallResult();
         save.click();
