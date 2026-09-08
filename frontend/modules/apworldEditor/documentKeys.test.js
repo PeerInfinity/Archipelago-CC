@@ -175,7 +175,8 @@ describe('the tab-ownership table', () => {
             /setPath\(doc, \['(\w+)', p, location\]/g)].map((m) => m[1]);
         expect(new Set(written), 'the op writes exactly one top-level key').toEqual(
             new Set([PLACEMENTS_TAB_KEY]));
-        expect(KEYS_OWNED_BY_TAB.placements).toContain(PLACEMENTS_TAB_KEY);
+        expect(KEYS_OWNED_BY_TAB.placements ?? [],
+            'the tab that owns the key the op writes').toContain(PLACEMENTS_TAB_KEY);
     });
 
     /**

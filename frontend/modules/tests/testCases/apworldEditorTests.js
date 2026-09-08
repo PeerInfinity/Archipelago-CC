@@ -3971,10 +3971,23 @@ export async function apworldPlacementsFollowTheSelectedSlot(testController) {
         const select = openPlacementSelect(row);
         const other = [...select.options].map((o) => o.value)
             .find((v) => v && v !== select.value);
+        const opsBefore = panel.session.ops().length;
         chooseItem(select, other);
 
+        /**
+         * ⛓⛓ **"AN OP WAS RECORDED" IS ITS OWN CONDITION, AND IT IS THE ONE THE
+         * SLOT MUTANT REACHES SECOND.** A tab that read the wrong slot shows this
+         * row as unplaced, so "the first option that is not the displayed value"
+         * is the item ALREADY stored — the session's `equal` then reports a
+         * no-op, no op is recorded, and every assertion downstream would read
+         * `undefined`. Asserted rather than assumed, so the row reports the
+         * defect instead of dying on it.
+         */
+        testController.assertEqual('the gesture was recorded as an op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        const last = panel.session.ops().at(-1) ?? {};
         testController.assertEqual('the op is stamped with the SELECTED slot',
-            '3', String(panel.session.ops().at(-1).player));
+            '3', String(last.player));
         testController.assertEqual('slot 3 took the edit',
             other, panel.rulesDoc.canonical_placements['3'][row.dataset.location]);
         testController.assertEqual(
