@@ -20,8 +20,9 @@ import {
 import { rulesEditAdapter } from './rulesEditAdapter.js';
 import { validateRules } from './rulesUtils.js';
 import {
-    EXIT_FIELDS, ITEM_FIELDS, META_FIELDS, RULES_OP_KINDS, SET_KEY_SCOPES,
-    applyRulesDocOp, deleteItemOps, deleteRegionOps, exitsPointingAt, nextName,
+    EXIT_FIELDS, ITEM_FIELDS, META_FIELDS, REFUSAL_NAME_LIMIT, RULES_OP_KINDS,
+    SET_KEY_SCOPES, applyRulesDocOp, deleteItemOps, deleteRegionOps, exitsPointingAt,
+    locationsOfPlayer, nextName,
 } from './rulesDocOps.js';
 
 const P = '1';
@@ -128,6 +129,9 @@ describe('the contract shape', () => {
             'replace-region-sidecar': {
                 op: 'replace-region-sidecar', region: 'Hall',
                 payload: { width: 4, height: 4, tiles: 'bbbb' }, rules: hallRules(doc),
+            },
+            'set-canonical-placement': {
+                op: 'set-canonical-placement', location: 'Vault Chest', item: 'Key',
             },
             'set-key': { op: 'set-key', key: 'preset_label', value: 'a label' },
             'replace-document': { op: 'replace-document', document: { game_name: 'Replaced' } },
@@ -861,6 +865,221 @@ describe('set-key — one top-level key of the document (H1)', () => {
         expect(s.record().preset_label).toBe('a');
         s.undo();
         expect('preset_label' in s.record()).toBe(false);
+    });
+});
+
+/**
+ * ⛓⛓⛓ **CANONICAL PLACEMENTS — the `--canonical-seed` INPUT** (W3).
+ *
+ * `canonical_placements[player]` is a flat `location → item` map that
+ * `world_generator/extractors.py` reads as the placement source, so this op
+ * writes what the NEXT `Generate.py` places. The schema cannot check it
+ * (`additionalProperties: true` on the slot), which is why the op refuses by
+ * NAME against the document's own regions and items.
+ */
+describe('canonical placements — the --canonical-seed input (W3)', () => {
+    /**
+     * ⛓ A SECOND SLOT, built the same way as the first, so the per-slot scope
+     * row has a slot to leave alone. ⛔ Slot 3 rather than slot 2, so a handler
+     * that reached for "the other slot" by index would still be wrong.
+     */
+    function twoSlots() {
+        const doc = fixture();
+        doc.regions['3'] = {
+            Attic: makeRegion('Attic', [], [makeLocation('Attic Chest', 7)]),
+        };
+        doc.items['3'] = {
+            Lantern: {
+                name: 'Lantern', id: 7, groups: [], classification: 'progression',
+                type: null, max_count: 1,
+            },
+        };
+        doc.canonical_placements = {
+            [P]: { 'Hall Chest': 'Key' },
+            3: { 'Attic Chest': 'Lantern' },
+        };
+        return doc;
+    }
+
+    const place = (doc, op) => applyRulesDocOp(doc, { op: 'set-canonical-placement', ...op });
+
+    /**
+     * ⛓ **`makeRulesJsonScaffold` ALREADY WRITES `canonical_placements: {'1': {}}`**
+     * — measured, not assumed (`shared/rulesJsonBuilder.js`). So the "creates
+     * the block" claim needs a document that really lacks the key, which is what
+     * a hand-built or pre-scaffold document looks like.
+     */
+    const noBlock = () => {
+        const doc = fixture();
+        delete doc.canonical_placements;
+        return doc;
+    };
+
+    it('⛓ places an item at a location the slot holds, creating the block when absent', () => {
+        const doc = noBlock();
+        const res = place(doc, { player: P, location: 'Vault Chest', item: 'Key' });
+        expect(res.ok).toBe(true);
+        expect(res.doc.canonical_placements[P]).toEqual({ 'Vault Chest': 'Key' });
+        expect(res.description).toContain('Vault Chest');
+        // ⛓ COPY-ON-WRITE: the fixture is untouched and the regions are SHARED.
+        expect(doc.canonical_placements).toBeUndefined();
+        expect(res.doc.regions).toBe(doc.regions);
+    });
+
+    it('⛓ replaces an existing entry in place, leaving every other entry alone', () => {
+        const doc = twoSlots();
+        const res = place(doc, { player: P, location: 'Hall Chest', item: 'Victory' });
+        expect(res.ok).toBe(true);
+        expect(res.doc.canonical_placements[P]['Hall Chest']).toBe('Victory');
+        expect(Object.keys(res.doc.canonical_placements[P]))
+            .toEqual(Object.keys(doc.canonical_placements[P]));
+    });
+
+    /**
+     * ⛓⛓ **AN ABSENT / EMPTY `item` DELETES.** `''` is what the tab's blank
+     * "(unplaced)" option carries, exactly as it does in `set-start-region`.
+     */
+    it('⛓⛓ an absent or empty item DELETES the entry', () => {
+        const doc = twoSlots();
+        for (const item of [undefined, '', null]) {
+            const res = place(doc, { player: P, location: 'Hall Chest', item });
+            expect(res.ok, JSON.stringify(item)).toBe(true);
+            expect(res.doc.canonical_placements[P], JSON.stringify(item)).toEqual({});
+            expect(res.description, JSON.stringify(item)).toContain('unplaced');
+        }
+    });
+
+    /**
+     * ⛔⛔ **AND A DELETE IS NOT VALIDATED — which is the only thing that makes
+     * a hand-edited file fixable.** A document can carry a placement naming a
+     * location or an item it no longer holds; the tab SHOWS those and the only
+     * gesture it can offer is removal, so refusing the delete would leave the
+     * one entry a person needs to remove as the one entry they cannot. The
+     * refusals below guard what is WRITTEN, never what is removed.
+     */
+    it('⛔ a STALE entry can be deleted even though its location is gone', () => {
+        const doc = twoSlots();
+        doc.canonical_placements[P]['Deleted Room Chest'] = 'Key';
+        // The write is refused…
+        expect(place(doc, { player: P, location: 'Deleted Room Chest', item: 'Key' }).ok)
+            .toBe(false);
+        // …and the delete is not.
+        const res = place(doc, { player: P, location: 'Deleted Room Chest' });
+        expect(res.ok).toBe(true);
+        expect(res.doc.canonical_placements[P]).toEqual({ 'Hall Chest': 'Key' });
+    });
+
+    /**
+     * ⛓ Deleting nothing returns the document UNCHANGED rather than refusing —
+     * the session's `equal` calls that a no-op, and writing an empty block into
+     * a document that never carried the key would be a byte change for a
+     * gesture that removed nothing.
+     */
+    it('⛓ deleting an entry that is not there is a NO-OP, not a refusal or a new block', () => {
+        const doc = noBlock();
+        const res = place(doc, { player: P, location: 'Vault Chest' });
+        expect(res.ok).toBe(true);
+        expect(res.doc).toBe(doc);
+        expect(res.doc.canonical_placements).toBeUndefined();
+        // ⛓ …and with the block PRESENT but empty, the document is still the
+        //   same object rather than a copy that merely agrees.
+        const scaffolded = fixture();
+        expect(place(scaffolded, { player: P, location: 'Vault Chest' }).doc).toBe(scaffolded);
+    });
+
+    it('⛓ refuses a location the slot does not hold, listing what it does', () => {
+        const res = place(twoSlots(), { player: P, location: 'Attic Chest', item: 'Key' });
+        expect(res.ok).toBe(false);
+        expect(res.error).toContain('Attic Chest');
+        // ⛓ `Attic Chest` is slot 3's location — held by the DOCUMENT, not by
+        //   this slot, which is the discrimination the refusal is about.
+        expect(res.error).toContain('Hall Chest');
+        expect(res.error).toContain('Vault Chest');
+    });
+
+    it('⛓ refuses an item the slot does not hold, listing what it does', () => {
+        const res = place(twoSlots(), { player: P, location: 'Hall Chest', item: 'Lantern' });
+        expect(res.ok).toBe(false);
+        expect(res.error).toContain('Lantern');
+        expect(res.error).toContain('Key');
+        expect(res.error).toContain('Victory');
+    });
+
+    /**
+     * ⛓⛓ **THE REFUSAL IS A SENTENCE, NOT A DUMP.** Measured over the committed
+     * corpus, one slot can hold 1,194 locations and 1,208 items, so the listing
+     * is bounded by `REFUSAL_NAME_LIMIT` and says how many it did not name.
+     */
+    it('⛓⛓ a refusal names at most REFUSAL_NAME_LIMIT of them, and says how many it did not', () => {
+        const doc = fixture();
+        const many = Array.from({ length: REFUSAL_NAME_LIMIT + 5 },
+            (_, i) => makeLocation(`Cell ${i}`, 100 + i));
+        doc.regions[P].Vault.locations = many;
+        const res = place(doc, { player: P, location: 'Nowhere', item: 'Key' });
+        expect(res.ok).toBe(false);
+        const named = many.filter((l) => res.error.includes(l.name)).length;
+        expect(named).toBeLessThanOrEqual(REFUSAL_NAME_LIMIT);
+        expect(res.error).toContain('more');
+    });
+
+    /**
+     * ⛓⛓ **PER-SLOT SCOPE, AGAINST THE OTHER SLOT'S BYTES.** An op stamped with
+     * one player may not touch another's block — the property the four-player
+     * in-app row drives in the browser, asserted here on built bytes.
+     */
+    it('⛓⛓ a slot-1 op leaves slot 3\'s block byte-identical', () => {
+        const doc = twoSlots();
+        const before = JSON.stringify(doc.canonical_placements[3]);
+        const res = place(doc, { player: P, location: 'Vault Chest', item: 'Key' });
+        expect(res.ok).toBe(true);
+        expect(JSON.stringify(res.doc.canonical_placements[3])).toBe(before);
+        // ⛓ …and the untouched slot is the SAME OBJECT, not a copy that agrees.
+        expect(res.doc.canonical_placements[3]).toBe(doc.canonical_placements[3]);
+    });
+
+    it('⛓ and a slot-3 op writes slot 3, leaving slot 1 alone', () => {
+        const doc = twoSlots();
+        const res = place(doc, { player: '3', location: 'Attic Chest', item: 'Lantern' });
+        expect(res.ok).toBe(true);
+        expect(res.doc.canonical_placements[3]).toEqual({ 'Attic Chest': 'Lantern' });
+        expect(res.doc.canonical_placements[P]).toBe(doc.canonical_placements[P]);
+    });
+
+    it('⛓ refuses a location that is not a non-empty string, by name', () => {
+        for (const location of [undefined, '', 42, null]) {
+            const res = place(fixture(), { player: P, location, item: 'Key' });
+            expect(res.ok, JSON.stringify(location)).toBe(false);
+            expect(res.error).toContain('set-canonical-placement');
+        }
+    });
+
+    /**
+     * ⛓⛓ `locationsOfPlayer` is EXPORTED because the op and the Placements tab
+     * must not disagree about what "a location this slot holds" means. Order is
+     * the DOCUMENT's — region insertion order, then each region's own array.
+     */
+    it('⛓⛓ locationsOfPlayer is the slot\'s locations, in document order, with their regions', () => {
+        const doc = twoSlots();
+        expect(locationsOfPlayer(doc, P)).toEqual([
+            { region: 'Hall', name: 'Hall Chest' },
+            { region: 'Vault', name: 'Vault Chest' },
+        ]);
+        expect(locationsOfPlayer(doc, '3')).toEqual([{ region: 'Attic', name: 'Attic Chest' }]);
+        expect(locationsOfPlayer(doc, '9')).toEqual([]);
+    });
+
+    /**
+     * ⛓ THE FOLD: the op list is the identity, so a placement and its removal
+     * re-fold to the document they produced the first time.
+     */
+    it('⛓ folds through the session and one undo takes it back out', () => {
+        const doc = noBlock();
+        const session = createEditSession(rulesEditAdapter, doc);
+        session.apply({ op: 'set-canonical-placement', player: P, location: 'Vault Chest', item: 'Key' });
+        expect(session.record().canonical_placements[P]).toEqual({ 'Vault Chest': 'Key' });
+        session.undo();
+        expect(session.record().canonical_placements).toBeUndefined();
+        expect(session.ops()).toHaveLength(0);
     });
 });
 

@@ -97,6 +97,7 @@ export const RULES_OP_KINDS = Object.freeze([
     'rename-item',
     'set-item-field',
     'set-starting-count',
+    'set-canonical-placement',
     'set-meta',
     'set-start-region',
     'set-completion-condition',
@@ -337,6 +338,7 @@ function dispatchRulesDocOp(doc, op) {
         case 'rename-item': return opRenameItem(doc, op);
         case 'set-item-field': return opSetItemField(doc, op);
         case 'set-starting-count': return opSetStartingCount(doc, op);
+        case 'set-canonical-placement': return opSetCanonicalPlacement(doc, op);
         case 'set-meta': return opSetMeta(doc, op);
         case 'set-start-region': return opSetStartRegion(doc, op);
         case 'set-completion-condition': return opSetCompletionCondition(doc, op);
@@ -744,6 +746,124 @@ function opSetStartingCount(doc, op) {
     const list = startingOf(doc, p).filter((n) => n !== op.item);
     for (let i = 0; i < c; i += 1) list.push(op.item);
     return ok(withStarting(doc, p, list), `starting ${op.item} × ${c}`);
+}
+
+/* ── canonical placements ────────────────────────────────────────────── */
+
+/**
+ * ⛓⛓ **HOW MANY NAMES A REFUSAL MAY LIST.** The neighbouring refusals
+ * (`regionOr`, `opSetMeta`) print the whole vocabulary because a document holds
+ * a few dozen regions and eight meta fields. LOCATIONS AND ITEMS ARE NOT THAT:
+ * measured over the committed corpus, `dark_souls_3` slot 1 holds **1,194**
+ * locations and **1,208** items, `depgraph` **712** and **1,356** — a refusal
+ * that named them all would be a hundred-kilobyte `alert()`. So the list is
+ * bounded and SAYS it is bounded; the sentence still names what the person
+ * typed and enough of what the document holds to see the spelling.
+ */
+export const REFUSAL_NAME_LIMIT = 12;
+
+/** ⛓ `[a, b, … and N more]`, so a refusal is a sentence rather than a dump. */
+function listNames(names) {
+    const shown = names.slice(0, REFUSAL_NAME_LIMIT);
+    const rest = names.length - shown.length;
+    return `${shown.join(', ')}${rest > 0 ? `, … and ${rest} more` : ''}`;
+}
+
+/**
+ * ⛓⛓⛓ **THE SLOT'S LOCATIONS, IN DOCUMENT ORDER, EACH WITH ITS REGION** — and
+ * it is EXPORTED because the op and the Placements tab must not disagree about
+ * what "a location this slot holds" means.
+ *
+ * ⛔ The op refuses a location the slot does not hold and the tab lists the
+ * locations it may place into; two spellings of that set would agree until the
+ * day one of them learned about a second container, and then the tab would
+ * offer a row whose every edit was refused. One function, both callers
+ * (trap 823's shape: the enumeration is the shared table).
+ *
+ * ⚠ Order is the DOCUMENT's — region insertion order, then each region's own
+ * `locations` array — never sorted, because the tab draws them in this order
+ * and a person reading a generated world reads it in the order the generator
+ * wrote it.
+ */
+export function locationsOfPlayer(doc, player = DEFAULT_PLAYER_ID) {
+    const out = [];
+    for (const [region, body] of Object.entries(regionsOf(doc, player))) {
+        const locations = Array.isArray(body?.locations) ? body.locations : [];
+        for (const loc of locations) {
+            if (typeof loc?.name === 'string') out.push({ region, name: loc.name });
+        }
+    }
+    return out;
+}
+
+/** ⛓ The slot's placements, READ-ONLY (the `regionsOf` rule: never lazily created). */
+const placementsOf = (doc, p) => doc?.canonical_placements?.[p] ?? {};
+
+/**
+ * ⛓⛓⛓ **ONE CANONICAL PLACEMENT — `{location, item}`, per player** (W3).
+ *
+ * `canonical_placements[player]` is a flat `location name → item name` map, and
+ * it is an INPUT rather than a readout: `world_generator/extractors.py` reads it
+ * as the `--canonical-seed` placement source, so what this op writes is what the
+ * next `Generate.py` places. That is why the refusals are by NAME against the
+ * document's own regions and items — a placement naming something the world does
+ * not hold is a seed that cannot be generated, and the schema cannot catch it
+ * (`additionalProperties: true` on the slot).
+ *
+ * ⛓⛓ **THE SECOND VOCABULARY ON THIS PATH, DELIBERATELY.** The Document tab's
+ * `set-key` already writes the whole `canonical_placements` block, and it keeps
+ * that (W0's rule: the pointer AND the block). This op is the small,
+ * per-entry one — the same situation W0's §7.7 (1) names for the six fields the
+ * Meta tab and the Document tab both write. Both are schema-vetoed, both are one
+ * undo, and the Document row says which tab knows the shape.
+ *
+ * ⛓⛓ **AN ABSENT / EMPTY `item` DELETES, AND A DELETE IS NOT VALIDATED.** This
+ * is not a loosening — it is the only thing that makes a hand-edited file
+ * fixable. A document can carry a placement naming a location or an item that is
+ * no longer in it; the tab SHOWS those rather than dropping them, and the only
+ * gesture it can offer is removal. Refusing the delete because the name it names
+ * is unknown would leave the one entry a person needs to remove as the one entry
+ * they cannot. ⇒ the refusals guard what is WRITTEN, never what is removed.
+ * (`''` clears, as it does in `set-start-region` — that is the blank
+ * "(unplaced)" option's value.)
+ *
+ * ⛔ Deleting an entry that is not there returns the document UNCHANGED rather
+ * than refusing: the session's `equal` reports it as a no-op, which is this
+ * module's standing rule, and writing `canonical_placements[p] = {}` into a
+ * document that never carried the key would be a byte change for a gesture that
+ * removed nothing.
+ */
+function opSetCanonicalPlacement(doc, op) {
+    const p = playerOf(op);
+    const location = op.location;
+    if (typeof location !== 'string' || !location) {
+        return refuse('apworld: set-canonical-placement needs a location NAME, got '
+            + `${JSON.stringify(location)}.`);
+    }
+    const placements = placementsOf(doc, p);
+    const clearing = op.item === undefined || op.item === null || op.item === '';
+    if (clearing) {
+        if (!Object.prototype.hasOwnProperty.call(placements, location)) {
+            return ok(doc, `no canonical placement at ${location}`);
+        }
+        return ok(setPath(doc, ['canonical_placements', p, location], undefined),
+            `unplaced ${location}`);
+    }
+    if (typeof op.item !== 'string') {
+        return refuse(`apworld: an item name is a string, got ${JSON.stringify(op.item)}.`);
+    }
+    const held = locationsOfPlayer(doc, p);
+    if (!held.some((l) => l.name === location)) {
+        return refuse(`apworld: no location "${location}" in slot ${p} — the document holds `
+            + `[${listNames(held.map((l) => l.name))}].`);
+    }
+    const items = itemsOf(doc, p);
+    if (!Object.prototype.hasOwnProperty.call(items, op.item)) {
+        return refuse(`apworld: no item "${op.item}" in slot ${p} — the document holds `
+            + `[${listNames(Object.keys(items))}].`);
+    }
+    return ok(setPath(doc, ['canonical_placements', p, location], op.item),
+        `placed ${op.item} at ${location}`);
 }
 
 /* ── meta ────────────────────────────────────────────────────────────── */
