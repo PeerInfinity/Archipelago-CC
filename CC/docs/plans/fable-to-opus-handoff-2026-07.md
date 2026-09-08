@@ -12809,6 +12809,77 @@ W0's idle): the Sidecars tab (five keys + the `preset_sidecars` summary, ONE row
 Editor", the hub's accepted-op focus/scroll/message in `_acceptEditorOp` (generic; a refused op steals no focus);
 three mutants; baseline 442/13386 at `e84050a936`. Reports come to `next-priorities-planning-4`; D1 on S1's idle notice.
 
+**S1 SHIPPED 2026-09-08** (`apworld-coverage-S1`, main `8c6d4a16a5` → `7ea5911838`, pushed; five commits staged by
+path — the planner's own docs commits do not appear in that range, so nobody else moved main between my start and my
+push; as-built record = plan §8, which carries every number and the four mutant armings). Deltas only:
+
+- **The Sidecars tab**, between Map and Document (a product choice, and the docblock says why: its five keys are
+  about the world the procgen side produced — Map's subject — and the Document tab is the everything-fallback).
+  `KEYS_OWNED_BY_TAB.sidecars` = `procgen_metadata`, `loop_costs` (the worldgen round trip's own `_worldgen_*.json`
+  files) + `region_atlas`, `flash_panel`, `provenance` (the ⚖ of 2026-09-08, "for now"). ⛔ ONE RENDERER, TWO HOSTS:
+  `_renderSidecarsTab` filters `documentKeyRows` and hands each row to `_renderDocumentRow`. MEASURED on
+  `jta_schedule_test`, before → after: five rows in registry order, three with doors and all five with a Show JSON
+  toggle; `preset_sidecars` a one-line per-slot summary with a **Go to Regions** button whose EFFECT is the tab
+  switch; Document rows **34 → 34** with **0 → 5** saying "Edited in the Sidecars tab" and all five keeping their own
+  affordance; the **Links tab 13 → the same 13 ids**; 0 page errors either side.
+- **"Send costs to APWorld Editor"** at all four sites (the button + its docblock, the `loop_costs` note in
+  `documentKeys.js`, the docs page, the in-app row's strings). Nothing else about the debugger moved.
+- **The accepted-op focus is the HUB's and it is GENERIC.** `_acceptEditorOp`, on `accepted`, raises the hub's own
+  panel, selects the key's `ownedByTab ?? 'document'`, scrolls that row into view and prints the success sentence
+  BESIDE it (the chrome `_opMessage` stays). Every `op` door gets it, `region_atlas` included. A REFUSED op steals no
+  focus — structurally, because every refusal returns through `refuse()` first. MEASURED end to end on
+  `jta_schedule_test` (Sidecars → the door → Load → Plan All → Send pressed from the **Document** tab): active panel
+  `loopsCostDebuggerPanel` → **`apworldEditorPanel`**, tab `document` → **`sidecars`**, the `loop_costs` row at
+  `319…691` inside the container's `292…719`, the message beside it == `_opMessage`, ops 0 → 1
+  (`set-key | loop_costs | document`), one Undo back to 0. And the refusal drive: hub not in front before OR after,
+  tab unmoved, no row message, the second document never gains the key.
+- **Rows:** `documentKeys.test.js` 33 → **39**; `documentLinks.test.js` 15 → **16**; `costDebuggerUI.test.js` 8,
+  `hubExits.test.js` 20, `rulesDocOps.test.js` 68 unmoved; in-app category `apworldEditor` 28 → **29**.
+- **Gates:** bounded vitest over six suites (the five above + `lintGateLabels.test.js` 14) **165 passed, 6 files**;
+  generator moved no generated file + `check-procgen-docs.mjs` ALL CHECKS PASSED + `procgenDocs/` vitest **452
+  passed**; in-app `--batch=fast` **91/91**, `grep -ac "Error in event handler for"` = **0**; `compare-runs` against
+  W0's run (90/90) = `ADDED (1): apworld-sidecars-tab-draws-the-registrys-sidecar-keys (passed)` and nothing else.
+- **⛔ WHAT THE BRIEF GOT WRONG (plan §8.1).** (1) The brief's own ⚑ describes the trap its **mutant B** walks into:
+  task 5(a) asks the in-app tab row to read its population from `KEYS_OWNED_BY_TAB.sidecars`, which is the table
+  mutant B mutates — MEASURED, with `loop_costs` dropped the row **PASSES** (solo run, 0.5 s), drawing four rows
+  against an expectation that shrank to four. ⇒ the membership is guarded in `documentKeys.test.js` against an
+  authority OUTSIDE the table: one row DERIVES the worldgen half from `exporter/games/base/handler.py`'s three
+  `_inject_worldgen_*` methods (`export_data['procgen_metadata'|'loop_costs']`, `setdefault('preset_sidecars')`) and
+  cross-checks each against `generator.py`'s `_worldgen_<x>.json` filenames; a second names the ⚖'s three, because a
+  ruling has no derivation. (2) **Mutant A reds TWO conditions, not one** — the active-panel claim AND the viewport
+  claim, because a panel that is not its stack's active tab has no layout and its rows measure a zero rectangle.
+  (3) `jta_schedule_test` DOES embed a `sphere_log`; what does not carry it is the `files:jsonLoaded` intake, which
+  hands the hub **20** of the file's **24** top-level keys — a scratch drive must publish
+  `stateManager:rawJsonDataLoaded` (what `testController.loadRulesFromFile` does) or it is measuring a different
+  document. (4) The docs page still said "eighteen of its thirty-four" slot maps — W0 fixed that count in
+  `documentKeys.js` and this copy was not moved with it; re-derived, **17**, fixed here.
+- **Mutants, armed / measured / reverted:** (A) focus publish dropped → the Send row FAILED, `failedConditionsCount:
+  2`, naming both conditions above. (B1) `loop_costs` dropped from the table → `documentKeys.test.js` **1 row red**,
+  *"every key the exporter merges out of a sidecar file is owned by the Sidecars tab"*, naming `loop_costs` — and the
+  in-app row green under the same arming. (B2) `region_atlas` dropped → **1 row red**, the ⚖ row, naming
+  `region_atlas`. (C) `refuse()` made to focus → the refusal row FAILED on exactly its three new conditions.
+- ⚠ **A `git checkout` while reverting mutant A discarded the whole uncommitted `apworldEditorUI.js`.** Rebuilt from
+  the same scripted edits, then pinned: every modified file was snapshotted, later mutants were reverted by `cp` from
+  the snapshot rather than by `git`, and `cmp` says all nine files at `7ea5911838` are byte-identical to the
+  snapshot that the quoted in-app run measured. The quoted run is the RE-RUN after the rebuild.
+- **⚖ 52:** the baseline holds at my start HEAD — `8c6d4a16a5` triggers no CI JS-unit run (docs-only),
+  `git merge-base --is-ancestor e84050a936 8c6d4a16a5` ✓ and the diff between them is one `CC/docs` file — so
+  **442/13386 @ `e84050a936`** stands. Derivation BEFORE the run (trap 1212: `git merge-base --is-ancestor
+  844e0603b4 e84050a936` → false ✓): no test file added or removed, +6 rows and +1 row ⇒ **expected 442/13393**.
+  ⟨CI at `7ea5911838` — filled in when run 34277771764 reports.⟩
+- **⚖ OPEN for the user (plan §8.6):** (1) the Sidecars rows ARE the Document rows element for element, so the
+  Document row's pointer sentence *"for whatever that tab does not draw"* points, for these five, at a tab that draws
+  the same thing — not wrong, but the one sentence a reader could over-read; left shared rather than forked, per the
+  brief's ⚑. (2) `region_atlas`'s save now bounces the reader out of the marking tool back to the hub — right for a
+  deliberate Send, arguable for a tool a person keeps working in; nothing measures it today (the tool is disabled in
+  the default mode). (3) `preset_sidecars` now appears twice — editable per region on Regions, a read-only summary on
+  Sidecars; whether the Sidecars tab should reach ONE region's sidecar is a replan question.
+
+**⚖ RULED (user, 2026-09-08): "I authorize the push."** — D1's outer push INCLUDING the gitlink bump (the only writer of
+`world_classes`, `rulesJsonBuilder.js`, lives in the shared submodule) is PRE-AUTHORIZED as one unit, ahead of D1's
+launch (kickoff `NewDocs/plans/apworld-coverage-D1-prompt.md` written and updated to say so). A moved rules.json byte
+pin is NOT covered — D1 stops there and the planner asks.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
