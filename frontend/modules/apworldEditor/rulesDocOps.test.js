@@ -1171,7 +1171,8 @@ describe('the panel and the ops read the SAME field tables', () => {
      * and a name NOT in a table is not sitting in it unnoticed.
      */
     it('the scan is not vacuous — it finds the panel\'s own op literals, and no stray field', () => {
-        for (const kind of ['set-item-field', 'set-meta', 'set-exit-field', 'set-rule-tree']) {
+        for (const kind of ['set-item-field', 'set-meta', 'set-exit-field', 'set-rule-tree',
+            'set-canonical-placement']) {
             expect(panelSource, kind).toContain(`op: '${kind}'`);
         }
         expect(scan(/setField\('(\w+)'/g).length).toBeGreaterThan(0);

@@ -27,6 +27,7 @@ import {
     EDITOR_RETURN_KINDS,
     regionAtlasSetKeyOp,
     KEYS_OWNED_BY_TAB,
+    PLACEMENTS_TAB_KEY,
     SIDECARS_TAB_SUMMARY_KEY,
     buildDocumentKeys,
     defaultPlayerOf,
@@ -156,6 +157,38 @@ describe('the tab-ownership table', () => {
         expect(byKey.items.ownedByTab).toBe('items');
         expect(byKey.game_name.ownedByTab).toBe('meta');
         expect(byKey.preset_sidecars.ownedByTab).toBeNull();
+    });
+
+    /**
+     * ⛓⛓⛓ **W3 — THE PLACEMENTS TAB'S MEMBERSHIP, AGAINST AN AUTHORITY OUTSIDE
+     * THE TABLE.** ⛔ The tab's own in-app row cannot see this: it reads the
+     * locations off the document, so dropping the key from the table would make
+     * the tab draw nothing while the row still measured the document (W0's and
+     * S1's mutant B, both times). The authority here is the OP's own source —
+     * `set-canonical-placement` writes one top-level key, and the tab that owns
+     * that key is the one whose pointer the Document row draws. A key the op
+     * writes with no home tab is a Document row pointing nowhere.
+     */
+    it('⛓⛓ the key set-canonical-placement writes is the key the Placements tab owns', () => {
+        const opSource = readFileSync(join(HERE, 'rulesDocOps.js'), 'utf8');
+        const written = [...opSource.matchAll(
+            /setPath\(doc, \['(\w+)', p, location\]/g)].map((m) => m[1]);
+        expect(new Set(written), 'the op writes exactly one top-level key').toEqual(
+            new Set([PLACEMENTS_TAB_KEY]));
+        expect(KEYS_OWNED_BY_TAB.placements).toContain(PLACEMENTS_TAB_KEY);
+    });
+
+    /**
+     * ⛓ And the Document row for it POINTS at that tab — the surface a person
+     * meets. ⛔ `is_canonical` is a different key (the exporter's stamp) and
+     * stays unowned, so "the placements key is owned" is a discrimination
+     * rather than a tab that claimed everything with `canonical` in its name.
+     */
+    it('⛓ the placements key names its home tab, and is_canonical does not', () => {
+        const rows = documentKeyRows(combined(), SCHEMA, { player: '1' });
+        const byKey = Object.fromEntries(rows.map((r) => [r.key, r]));
+        expect(byKey[PLACEMENTS_TAB_KEY].ownedByTab).toBe('placements');
+        expect(byKey.is_canonical.ownedByTab).toBeNull();
     });
 });
 

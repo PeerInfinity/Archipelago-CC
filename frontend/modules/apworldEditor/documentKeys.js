@@ -124,6 +124,28 @@ const SIDECAR_KEYS_FROM_RULING = Object.freeze(['region_atlas', 'flash_panel', '
  */
 export const SIDECARS_TAB_SUMMARY_KEY = 'preset_sidecars';
 
+/**
+ * ⛓⛓⛓ **THE PLACEMENTS TAB'S ONE KEY** (W3). ⚖ user, 2026-09-08: *"Yes, I want
+ * to add a canonical placements tool."* and *"Yes, canonical placements should
+ * have their own tab."*
+ *
+ * ⛓ **The tab exists because the key is an INPUT, not a readout.** Every other
+ * per-world key on the Document tab describes what a world IS;
+ * `canonical_placements` is what `world_generator/extractors.py` reads as the
+ * `--canonical-seed` placement source, so editing it decides what the next
+ * `Generate.py` PLACES. The schema cannot check any of it — the slot is
+ * `additionalProperties: true`, so `{"Nowhere": "Nothing"}` validates — and the
+ * only thing that can is the document's own regions and items, which is what
+ * `set-canonical-placement` reads.
+ *
+ * ⛔ **NOT `is_canonical`.** That is the EXPORTER's stamp saying a document came
+ * out of a canonical run; it is a boolean the Document tab already draws and
+ * nothing here touches it.
+ *
+ * ⛓ Exported so the tab, the op and the parity rows all name it once.
+ */
+export const PLACEMENTS_TAB_KEY = 'canonical_placements';
+
 export const KEYS_OWNED_BY_TAB = Object.freeze({
     regions: Object.freeze(['regions']),
     items: Object.freeze(['items', 'itempool_counts', 'starting_items']),
@@ -131,6 +153,7 @@ export const KEYS_OWNED_BY_TAB = Object.freeze({
         ...Object.values(META_FIELDS).map((spec) => spec.path('1')[0]),
         ...META_TAB_EXTRA_KEYS,
     ])].sort()),
+    placements: Object.freeze([PLACEMENTS_TAB_KEY]),
     sidecars: Object.freeze([...SIDECAR_KEYS_FROM_WORLDGEN, ...SIDECAR_KEYS_FROM_RULING]),
 });
 

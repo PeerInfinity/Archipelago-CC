@@ -54,6 +54,7 @@ import {
   META_FIELDS,
   deleteItemOps,
   deleteRegionOps,
+  locationsOfPlayer,
 } from './rulesDocOps.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -103,6 +104,7 @@ import {
   DOCUMENT_KEY_EDITORS,
   EDITOR_RETURN_KINDS,
   KEYS_OWNED_BY_TAB,
+  PLACEMENTS_TAB_KEY,
   SIDECARS_TAB_SUMMARY_KEY,
 } from './documentKeys.js';
 import { buildLinkRows, DOCUMENT_LINKS } from './documentLinks.js';
@@ -175,11 +177,20 @@ const APPLY_SOURCE = 'apworldEditorApply';
  * 2026-09-08: *"a 'Sidecars' tab, for the data that's specifically in the
  * sidecars"*; the membership and its authority are `KEYS_OWNED_BY_TAB.sidecars`
  * in `documentKeys.js`, not here.
+ *
+ * ⛓⛓ **W3 — AND `placements` SITS BETWEEN Items AND Meta.** A canonical
+ * placement is a `location → item` pair: its left half is the REGIONS tab's
+ * vocabulary and its right half is the ITEMS tab's, and it is the only tab that
+ * can draw nothing until both of those exist. So it reads immediately after the
+ * two tabs whose words it joins, and before Meta — which is about the DOCUMENT
+ * rather than about the world. ⚖ user 2026-09-08: *"Yes, canonical placements
+ * should have their own tab."*
  */
 
 const TABS = [
   { id: 'regions', label: 'Regions' },
   { id: 'items', label: 'Items' },
+  { id: 'placements', label: 'Placements' },
   { id: 'meta', label: 'Meta' },
   { id: 'map', label: 'Map' },
   { id: 'sidecars', label: 'Sidecars' },
@@ -1275,6 +1286,8 @@ class ApworldEditorUI {
 
     if (this.activeTab === 'items') {
       this._renderItemsTab();
+    } else if (this.activeTab === 'placements') {
+      this._renderPlacementsTab();
     } else if (this.activeTab === 'meta') {
       this._renderMetaTab();
     } else if (this.activeTab === 'sidecars') {
@@ -1314,6 +1327,9 @@ class ApworldEditorUI {
     if (this.activeTab === 'items') {
       const count = Object.keys(this._items()).length;
       summary = `${gameName} — ${count} item${count === 1 ? '' : 's'}`;
+    } else if (this.activeTab === 'placements') {
+      const { placed, total } = this._placementTally();
+      summary = `${gameName} — ${placed} of ${total} location${total === 1 ? '' : 's'} placed`;
     } else if (this.activeTab === 'meta') {
       summary = `${gameName} — metadata`;
     } else if (this.activeTab === 'sidecars') {
@@ -1504,6 +1520,384 @@ class ApworldEditorUI {
       startDesc.textContent = 'Edit per-item "Start" counts on the rows above to change starting items.';
       this.scrollContainer.appendChild(startDesc);
     }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+   * THE PLACEMENTS TAB — `canonical_placements`, the --canonical-seed input
+   * ══════════════════════════════════════════════════════════════════ */
+
+  /**
+   * ⛓ The selected slot's placement map, READ-ONLY (the accessors' standing
+   * rule: one that lazily CREATED its container would write through the
+   * session's folded record).
+   */
+  _placements() {
+    const block = this.rulesDoc ? this.rulesDoc[PLACEMENTS_TAB_KEY] : undefined;
+    const slot = block && typeof block === 'object' && !Array.isArray(block)
+      ? block[this.playerId] : undefined;
+    return slot && typeof slot === 'object' && !Array.isArray(slot) ? slot : {};
+  }
+
+  /**
+   * ⛓⛓ **THE TALLY, DERIVED — every number on this tab comes from here.**
+   *
+   * `total` is the locations the SLOT holds (`locationsOfPlayer`, the same
+   * function the op refuses against, so the tab can never offer a row whose
+   * every edit would be refused). `placed` is how many of those carry an entry —
+   * an entry naming an item the document no longer holds still counts as placed,
+   * because the file says it is placed and this tab's job is to show the file.
+   *
+   * ⛓ `orphanLocations` are entries whose LOCATION the slot does not hold and
+   * `orphanItems` are entries whose ITEM it does not hold — a hand-edited file's
+   * two ways of going stale. Neither is silently dropped; both are drawn, marked
+   * and offered a delete.
+   */
+  _placementTally() {
+    const placements = this._placements();
+    const locations = locationsOfPlayer(this.rulesDoc, this.playerId);
+    const held = new Set(locations.map((l) => l.name));
+    const items = this._items();
+    const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+    const placed = locations.filter((l) => has(placements, l.name)).length;
+    return {
+      locations,
+      placements,
+      placed,
+      total: locations.length,
+      orphanLocations: Object.keys(placements).filter((n) => !held.has(n)),
+      orphanItems: locations
+        .filter((l) => has(placements, l.name) && !has(items, placements[l.name]))
+        .map((l) => l.name),
+    };
+  }
+
+  /**
+   * ⛓⛓⛓ **EVERY LOCATION OF THE SLOT, GROUPED BY REGION, IN DOCUMENT ORDER** —
+   * because that is the order the generator wrote the world in, and a person
+   * reading a generated world reads it that way. ⛔ Not sorted: a sort would be
+   * this tab inventing an order the document does not have.
+   *
+   * ⛓ The whole tab is ONE op per gesture (`set-canonical-placement`), which is
+   * the SECOND vocabulary on this key — the Document tab's `set-key` still
+   * writes the whole block, and its row points here (W0's rule: the pointer AND
+   * the block; the same situation W0's §7.7 (1) names for the six fields the
+   * Meta and Document tabs both write).
+   *
+   * ⛔ **A tab-local edit does NOT publish `ui:activatePanel`.** `_focusAcceptedOp`
+   * is for DOORS — an editor ELSEWHERE handing an op back — and raising the
+   * panel a person is already typing in would be a readout about nothing.
+   */
+  _renderPlacementsTab() {
+    const tally = this._placementTally();
+    const items = Object.keys(this._items());
+
+    const intro = document.createElement('div');
+    intro.className = 'apworld-placements-intro';
+    Object.assign(intro.style, {
+      color: '#888', fontSize: '11px', padding: '2px 0 6px', lineHeight: '1.4',
+    });
+    intro.textContent = `\`${PLACEMENTS_TAB_KEY}\` for slot ${this.playerId}: which item this `
+      + 'world places at which location. It is an INPUT rather than a readout — the world '
+      + 'generator reads it as the `--canonical-seed` placement source, so what you set here '
+      + 'is what the next Generate.py places. Every location the slot holds has a row, whether '
+      + 'or not it is placed; the blank option removes a placement. '
+      + '⛔ `is_canonical` is a different key — the exporter\'s stamp — and this tab does not '
+      + 'touch it.';
+    this.scrollContainer.appendChild(intro);
+
+    const summary = document.createElement('div');
+    summary.className = 'apworld-placements-summary';
+    summary.dataset.placed = String(tally.placed);
+    summary.dataset.total = String(tally.total);
+    summary.dataset.orphanLocations = String(tally.orphanLocations.length);
+    summary.dataset.orphanItems = String(tally.orphanItems.length);
+    Object.assign(summary.style, {
+      color: '#cfe', fontSize: '12px', margin: '0 0 6px', padding: '5px 8px',
+      border: '1px solid #333', borderRadius: '3px', backgroundColor: '#1f1f1f',
+    });
+    summary.textContent = `${tally.placed} of ${tally.total} `
+      + `location${tally.total === 1 ? '' : 's'} placed`
+      + (tally.orphanLocations.length
+        ? ` — ${tally.orphanLocations.length} placement`
+          + `${tally.orphanLocations.length === 1 ? ' names' : 's name'} a location this `
+          + 'document does not hold'
+        : '')
+      + (tally.orphanItems.length
+        ? ` — ${tally.orphanItems.length}`
+          + `${tally.orphanItems.length === 1 ? ' names' : ' name'} an item it does not hold`
+        : '');
+    this.scrollContainer.appendChild(summary);
+
+    if (items.length === 0) {
+      const none = document.createElement('div');
+      none.style.color = '#e0a030';
+      none.style.fontSize = '11px';
+      none.textContent = 'This slot has no items, so there is nothing to place. Add items on '
+        + 'the Items tab first.';
+      this.scrollContainer.appendChild(none);
+    }
+
+    this.scrollContainer.appendChild(this._makePlacementFilterBox());
+
+    // ⛓ The stale entries FIRST: they are the ones a person came here to fix,
+    //   and they have no region to sit under.
+    if (tally.orphanLocations.length) {
+      this.scrollContainer.appendChild(this._makeOrphanPlacements(tally.orphanLocations, tally));
+    }
+
+    if (tally.total === 0) {
+      const none = document.createElement('div');
+      none.style.color = '#888';
+      none.textContent = 'This slot holds no locations.';
+      this.scrollContainer.appendChild(none);
+    }
+
+    let group = null;
+    let currentRegion = null;
+    for (const loc of tally.locations) {
+      if (loc.region !== currentRegion) {
+        currentRegion = loc.region;
+        group = document.createElement('div');
+        group.className = 'apworld-placements-region';
+        group.dataset.region = currentRegion;
+        group.style.margin = '0 0 8px';
+        const header = document.createElement('div');
+        header.className = 'apworld-placements-region-name';
+        header.textContent = currentRegion;
+        Object.assign(header.style, {
+          color: '#9ab', fontSize: '11px', fontWeight: 'bold', margin: '6px 0 3px',
+          borderBottom: '1px solid #333',
+        });
+        group.appendChild(header);
+        this.scrollContainer.appendChild(group);
+      }
+      group.appendChild(this._makePlacementRow(loc, tally));
+    }
+    this._applyPlacementFilter();
+  }
+
+  /**
+   * ⛓ The filter, over location / item / region NAMES — the three things
+   * written on a row. Its text lives on the panel rather than in the DOM,
+   * because every edit re-renders the whole tab and a filter that reset itself
+   * on each placement would make a long world unusable.
+   */
+  _makePlacementFilterBox() {
+    const line = document.createElement('div');
+    Object.assign(line.style, { display: 'flex', alignItems: 'center', gap: '6px',
+      margin: '0 0 6px' });
+    const label = document.createElement('span');
+    label.textContent = 'Filter';
+    Object.assign(label.style, { color: '#aaa', fontSize: '11px' });
+    line.appendChild(label);
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'apworld-placements-filter';
+    input.placeholder = 'location, item or region name';
+    input.value = this._placementFilter ?? '';
+    Object.assign(input.style, {
+      flex: '1 1 auto', backgroundColor: '#222', color: '#ddd',
+      border: '1px solid #444', borderRadius: '3px', padding: '3px 6px', fontSize: '11px',
+    });
+    // ⛓ `input`, not `change`: filtering is a READ and costs no op, so the
+    //   Meta tab's "commit on blur" rule (which is about not making one edit
+    //   five undos) does not apply.
+    input.addEventListener('input', () => {
+      this._placementFilter = input.value;
+      this._applyPlacementFilter();
+    });
+    line.appendChild(input);
+    return line;
+  }
+
+  /**
+   * ⛓ Hide what does not match, INCLUDING a region whose every row is hidden —
+   * a header standing over nothing reads as "this region has no locations".
+   */
+  _applyPlacementFilter() {
+    const needle = (this._placementFilter ?? '').trim().toLowerCase();
+    const rows = this.scrollContainer.querySelectorAll('.apworld-placements-row');
+    for (const row of rows) {
+      const hay = `${row.dataset.location ?? ''} ${row.dataset.region ?? ''} `
+        + `${row.dataset.item ?? ''}`;
+      row.hidden = needle !== '' && !hay.toLowerCase().includes(needle);
+    }
+    for (const group of this.scrollContainer.querySelectorAll('.apworld-placements-region')) {
+      const visible = [...group.querySelectorAll('.apworld-placements-row')]
+        .some((r) => !r.hidden);
+      group.hidden = !visible;
+    }
+    const orphans = this.scrollContainer.querySelector('.apworld-placements-orphans');
+    if (orphans) {
+      orphans.hidden = ![...orphans.querySelectorAll('.apworld-placements-row')]
+        .some((r) => !r.hidden);
+    }
+  }
+
+  /**
+   * ⛓⛓⛓ **A PLACEMENT NAMING A LOCATION THIS DOCUMENT NO LONGER HOLDS IS
+   * SHOWN, NOT DROPPED.** A hand-edited file (or a world whose regions were
+   * edited after the seed was recorded) can carry one, and it is invisible
+   * everywhere else in the app — the schema allows it
+   * (`additionalProperties: true`) and the generator would simply fail to place
+   * it. So it gets a row, marked, with the one gesture that can be offered:
+   * remove it. ⛔ Which is why `set-canonical-placement` does not validate a
+   * DELETE — see its docblock.
+   */
+  _makeOrphanPlacements(names, tally) {
+    const wrap = document.createElement('div');
+    wrap.className = 'apworld-placements-orphans';
+    Object.assign(wrap.style, {
+      border: '1px solid #5a4520', borderRadius: '3px', backgroundColor: '#2a2216',
+      padding: '6px 8px', margin: '0 0 8px',
+    });
+    const head = document.createElement('div');
+    head.className = 'apworld-placements-orphans-head';
+    head.textContent = `${names.length} placement`
+      + `${names.length === 1 ? ' names' : 's name'} a location this slot does not hold — the `
+      + 'generator cannot place them. They are shown here rather than dropped; removing one is '
+      + 'the only edit this tab can offer for it.';
+    Object.assign(head.style, { color: '#e0a030', fontSize: '11px', marginBottom: '4px',
+      lineHeight: '1.35' });
+    wrap.appendChild(head);
+    for (const name of names) {
+      // ⛓ No region: an orphan has none, and a placeholder string there would
+      //   be text the filter box could match on.
+      const row = this._makePlacementRowShell(name, '', tally.placements[name]);
+      row.dataset.orphan = 'location';
+      const mark = document.createElement('span');
+      mark.className = 'apworld-placements-mark';
+      mark.textContent = 'no such location';
+      Object.assign(mark.style, { color: '#e0a030', fontSize: '10px' });
+      row.appendChild(mark);
+      const value = document.createElement('code');
+      value.className = 'apworld-placements-orphan-item';
+      value.textContent = String(tally.placements[name]);
+      Object.assign(value.style, { color: '#ddd', fontSize: '11px' });
+      row.appendChild(value);
+      const del = this._makeButton('Remove', '#5a3030',
+        () => this._applyPlacement(name, ''));
+      del.className = 'apworld-placements-delete';
+      del.style.fontSize = '11px';
+      del.style.marginLeft = 'auto';
+      row.appendChild(del);
+      wrap.appendChild(row);
+    }
+    return wrap;
+  }
+
+  /** ⛓ The row's chrome — the same shell for a real location and an orphan, so
+   *  the filter reads one set of `data-` attributes. */
+  _makePlacementRowShell(location, region, item) {
+    const row = document.createElement('div');
+    row.className = 'apworld-placements-row';
+    row.dataset.location = location;
+    row.dataset.region = region;
+    if (item !== undefined) row.dataset.item = String(item);
+    Object.assign(row.style, {
+      display: 'flex', alignItems: 'center', gap: '8px', padding: '2px 0',
+    });
+    const name = document.createElement('code');
+    name.className = 'apworld-placements-location';
+    name.textContent = location;
+    Object.assign(name.style, { color: '#cfe', fontSize: '11px', flex: '1 1 40%',
+      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' });
+    row.appendChild(name);
+    return row;
+  }
+
+  _makePlacementRow(loc, tally) {
+    const has = Object.prototype.hasOwnProperty.call(tally.placements, loc.name);
+    const current = has ? tally.placements[loc.name] : '';
+    const row = this._makePlacementRowShell(loc.name, loc.region, has ? current : undefined);
+    const unknownItem = has && !Object.prototype.hasOwnProperty
+      .call(this._items(), current);
+    if (unknownItem) row.dataset.orphan = 'item';
+    row.appendChild(this._makePlacementSelect(loc.name, has ? String(current) : '', unknownItem));
+    if (unknownItem) {
+      const mark = document.createElement('span');
+      mark.className = 'apworld-placements-mark';
+      mark.textContent = 'no such item';
+      Object.assign(mark.style, { color: '#e0a030', fontSize: '10px' });
+      row.appendChild(mark);
+    }
+    return row;
+  }
+
+  /**
+   * ⛓⛓⛓ **THE OPTION LIST IS BUILT ON FIRST OPEN, AND THAT IS A MEASUREMENT.**
+   * Measured over the committed corpus: `dark_souls_3` slot 1 holds 1,194
+   * locations and 1,208 items, `depgraph` 712 and 1,356 — a `<select>` per
+   * location carrying every item is **1.4 million option elements**, built
+   * before the tab can paint. So a closed select carries only what it has to
+   * show (the blank option and, if placed, the current value) and fills itself
+   * on `focus`/`mousedown`, which is what opening it IS.
+   *
+   * ⛔ Uniformly lazy, with no size threshold. A "fill eagerly when the document
+   * is small" branch would mean the path every committed preset in the in-app
+   * roster exercises is not the path the big worlds take.
+   *
+   * ⛓ An item the document no longer holds keeps an option of its own, marked,
+   * so opening the select does not silently re-point the row at something else.
+   */
+  _makePlacementSelect(location, current, unknownItem) {
+    const select = document.createElement('select');
+    select.className = 'apworld-placements-select';
+    select.dataset.location = location;
+    Object.assign(select.style, {
+      flex: '1 1 40%', backgroundColor: '#222', color: '#ddd', border: '1px solid #444',
+      borderRadius: '3px', padding: '2px 4px', fontSize: '11px',
+    });
+    const option = (value, text) => {
+      const o = document.createElement('option');
+      o.value = value;
+      o.textContent = text;
+      return o;
+    };
+    const blank = () => option('', '(unplaced)');
+    select.appendChild(blank());
+    if (current) {
+      select.appendChild(option(current,
+        unknownItem ? `${current} — not in this document` : current));
+    }
+    select.value = current;
+
+    const fill = () => {
+      if (select.dataset.filled === 'true') return;
+      select.dataset.filled = 'true';
+      const keep = select.value;
+      select.textContent = '';
+      select.appendChild(blank());
+      if (current && unknownItem) {
+        select.appendChild(option(current, `${current} — not in this document`));
+      }
+      for (const name of Object.keys(this._items())) select.appendChild(option(name, name));
+      select.value = keep;
+    };
+    select.addEventListener('focus', fill);
+    select.addEventListener('mousedown', fill);
+    /**
+     * ⛓ `change`, not `input`: one gesture, one op, one undo — the Meta tab's
+     * rule. A `<select>` fires `change` once when the choice is made.
+     */
+    select.addEventListener('change', () => this._applyPlacement(location, select.value));
+    return select;
+  }
+
+  /**
+   * ⛓ ONE `set-canonical-placement` per gesture. ⛔ No schema preview here,
+   * unlike `_applySetKey`: the slot is `additionalProperties: true`, so the
+   * schema accepts every string the select can produce and a preview would be a
+   * veto that can never fire. The guard is the op's own refusal, against the
+   * document's regions and items — which is the check the schema cannot make.
+   */
+  _applyPlacement(location, item) {
+    this._applyOp({
+      op: 'set-canonical-placement',
+      location,
+      item,
+      player: this.playerId,
+    });
   }
 
   // ---------- Meta tab ----------
