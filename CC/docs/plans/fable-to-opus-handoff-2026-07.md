@@ -12902,6 +12902,13 @@ snapshotted, re-run; the quoted run is the re-run). ⚖ NEW (§8.6): the Sidecar
 renderer); `region_atlas`'s save now bounces the reader out of the marking tool (unmeasured, module disabled by
 default); `preset_sidecars` appears twice (editable on Regions, summary on Sidecars). NEXT: **D1** on S1's idle.
 
+**D1 LAUNCHED 2026-09-08** as `apworld-coverage-D1` (Opus; kickoff `NewDocs/plans/apworld-coverage-D1-prompt.md`; on
+S1's idle): DELETE `settings` + `world_classes` at every site of the plan's §6 census (re-run at its HEAD), the shared
+submodule's `rulesJsonBuilder.js:141` first (submodule pushed, gitlink bump in the outer commit — the outer push
+PRE-AUTHORIZED), the 30 tracked carriers stripped in the SAME commit as the schema, the 2 untracked fixtures stripped
+in place; the whole `pytest test/`; STOP on any moved rules.json byte pin. Baseline 442/13393 at `7ea5911838`.
+Reports come to `next-priorities-planning-4`; W3 on D1's idle notice.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
