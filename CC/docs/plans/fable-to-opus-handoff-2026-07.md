@@ -12696,6 +12696,24 @@ fallback read) and `world_classes` (written by one procgen builder that also wri
 5. Read-only rows (`provenance`, `flash_panel`, the three exporter-provenance scalars): mark them read-only, or keep
    them editable with the note?
 
+**⚖ RULED (user, 2026-09-08), the five answers verbatim:**
+1. *Ladder order:* "Yes, that order looks right. I think "dungeons" is only used by alttp. Adding edit support for that
+   is a very low priority. "Helpers" is an advanced feature that currently none of the procgen worlds use. I want to
+   focus on the features that are used by procgen. We can leave dungeons and helpers as only editable through raw json
+   for now. If it's easy to implement, we could link to the existing dungeons and helpers panels as viewers."
+2. *`settings` / `world_classes`:* "Let's delete these everywhere they appear in the code. There is no need for
+   legacy support."
+3. *`playerId` / slot creation:* ""playerId" should normally only be written by the Python code. We can leave this as
+   editable only through raw json."
+4. *`helpers`:* "Leave raw for now."
+5. *Read-only rows:* "Let's leave them editable for now."
+Then: "Please don't jump straight into implementation. I want to discuss the details of how to implement these
+changes some more. What I had been planning to do next is add the loop cost data to the APWorld Editor, and link to
+the existing tools for generating that data. But we can do that after the other things you listed."
+⇒ W4 (`dungeons`) and W5 (`helpers`) are OFF the ladder (raw only; a viewer door each if cheap); `playerId` stays a
+raw/text row; nothing marked read-only; a DELETION slice for `settings` + `world_classes` joins the ladder; the
+implementation DETAILS are the next conversation (nothing launched).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
