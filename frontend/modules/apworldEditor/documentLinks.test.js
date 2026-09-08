@@ -111,14 +111,18 @@ describe('the document half is DATA, and it is complete', () => {
             'editorPanel',
             'regionGraphPanel',
         ]);
-        expect(buildLinkRows(fakeRegistry([])).map((r) => r.id)).toEqual([
-            'key:region_atlas',
-            'key:procgen_metadata',
-            'key:loop_costs',
-            'key:sphere_log',
-            'key:preset_sidecars',
-            ...ids,
-        ]);
+        /**
+         * ⛓⛓ **W0 — THE KEY ROWS ARE READ OFF THE REGISTRY, IN ITS OWN ORDER**,
+         * not listed here. A typed list is a second copy of
+         * `DOCUMENT_KEY_EDITORS`, and W0 (which added the `helpers` and
+         * `dungeons` viewer doors) is exactly the change that would red it for
+         * no defect. What this row still asserts, and what the derived suite
+         * below does not, is the ORDER: every derived key row comes first and
+         * the hand-written table's rows come last.
+         */
+        const keyRows = Object.keys(DOCUMENT_KEY_EDITORS).map((k) => `key:${k}`);
+        expect(keyRows.length).toBeGreaterThan(1);
+        expect(buildLinkRows(fakeRegistry([])).map((r) => r.id)).toEqual([...keyRows, ...ids]);
         for (const row of DOCUMENT_LINKS) {
             expect(row.target, row.id).toMatchObject({ kind: 'panel' });
             expect(typeof row.target.panelId).toBe('string');

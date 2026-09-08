@@ -138,7 +138,17 @@ describe('the tab-ownership table', () => {
         }
     });
 
-    it('⛓ an owned key gets a POINTER row, never a second editor', () => {
+    /**
+     * ⛓⛓ **W0 — THE POINTER IS NO LONGER THE WHOLE ROW.** H1 drew the "edited
+     * in the X tab" line and RETURNED, so an owned key had no editor at all for
+     * whatever its home tab does not draw (the Meta tab edits ONE field of
+     * `world`). The registry's answer is unchanged — `ownedByTab` still NAMES
+     * the tab that knows the shape — and what changed is the panel, which now
+     * draws the pointer AND the same JSON block every other row gets. The DOM
+     * half is the in-app row `apworld-owned-row-carries-its-own-json-block`;
+     * this row is about the registry it reads.
+     */
+    it('⛓ an owned key NAMES its home tab, and an unowned one names none', () => {
         const rows = documentKeyRows(combined(), SCHEMA, { player: '1' });
         const byKey = Object.fromEntries(rows.map((r) => [r.key, r]));
         expect(byKey.regions.ownedByTab).toBe('regions');
@@ -251,6 +261,60 @@ describe('the editor slot — FILLED by H5', () => {
         + 'claim it', () => {
         expect(DOCUMENT_KEY_EDITORS.sphere_log.note).toContain('APPLIED STATE');
         expect(DOCUMENT_KEY_EDITORS.loop_costs.note).toContain('WORKING COPY');
+    });
+
+    /**
+     * ⛓⛓⛓ **W0 — THE TWO VIEWER DOORS** (⚖ user, 2026-09-08: *"If it's easy to
+     * implement, we could link to the existing dungeons and helpers panels as
+     * viewers."*). What makes them viewers rather than editors is not the label:
+     * it is `returns: 'none'` plus a note that says which state the panel shows,
+     * because a person who presses a door and sees an unchanged document has no
+     * way to tell "this reads applied state" from "this is broken".
+     */
+    it('⛓⛓ W0 — `helpers` and `dungeons` are VIEWER doors: they name their '
+        + 'panel, return nothing, and say they read APPLIED state', () => {
+        for (const key of ['helpers', 'dungeons']) {
+            const editor = DOCUMENT_KEY_EDITORS[key];
+            expect(editor, key).toBeTruthy();
+            expect(editor.returns, key).toBe('none');
+            expect(editor.note, key).toContain('APPLIED STATE');
+            // ⛔ …and it names the way this key IS changed, which is the ⚖'s
+            //    "editable through raw json for now" — the block on the row.
+            expect(editor.note, key).toContain('raw block');
+        }
+        expect(DOCUMENT_KEY_EDITORS.helpers.panelId).toBe('helpersPanel');
+        expect(DOCUMENT_KEY_EDITORS.dungeons.panelId).toBe('dungeonsPanel');
+    });
+
+    /**
+     * ⛓⛓⛓ **W0 — AND A VIEWER RAISES THE PANEL IT DECLARED, NOT A SECOND
+     * STRING.** The declaration is what the hub asks the component registry
+     * about (`_panelRefusal`) and the publish is what actually happens, so a
+     * door whose two halves disagree is a button the hub reports as live and
+     * that raises something else — or nothing. Derived over every viewer door
+     * rather than written per key, so a door added later is covered by being a
+     * viewer, not by somebody remembering this row.
+     */
+    it('⛓⛓ W0 — every viewer door publishes exactly ONE `ui:activatePanel`, '
+        + 'for the panel its own declaration names', async () => {
+        const viewers = Object.entries(DOCUMENT_KEY_EDITORS)
+            .filter(([, editor]) => editor.returns === 'none' && editor.panelId);
+        // ⛔ Non-vacuity: there really are viewer doors to check.
+        expect(viewers.length).toBeGreaterThan(1);
+        for (const [key, editor] of viewers) {
+            const published = [];
+            await editor.open({
+                key,
+                record: {},
+                player: '1',
+                value: undefined,
+                eventBus: { publish: (event, payload) => published.push({ event, payload }) },
+                onSave: () => { throw new Error(`${key}: a viewer door must not save`); },
+                goToTab: () => { throw new Error(`${key}: a viewer door raises a panel`); },
+            });
+            expect(published.map((p) => p.event), key).toEqual(['ui:activatePanel']);
+            expect(published[0].payload.panelId, key).toBe(editor.panelId);
+        }
     });
 
     /**

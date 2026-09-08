@@ -17,11 +17,14 @@
  *
  * ── ⛓ PER-PLAYER IS READ OFF THE SCHEMA, NEVER LISTED ─────────────────
  *
- * Eighteen of the thirty-four top-level properties are slot maps, and every one
- * of them says so the same way: `patternProperties` keyed `^[0-9]+$`. So
- * `perPlayer` is that test, run against the property's own subschema. ⛔ A hand
- * list of "the per-player keys" would have to be re-derived every time the
- * schema grows one, which is the failure H0 measured on the schema itself.
+ * MOST of the top-level properties are slot maps, and every one of them says so
+ * the same way: `patternProperties` keyed `^[0-9]+$`. So `perPlayer` is that
+ * test, run against the property's own subschema. ⛔ A hand list of "the
+ * per-player keys" would have to be re-derived every time the schema grows one,
+ * which is the failure H0 measured on the schema itself — and so would a COUNT of
+ * them in this sentence: the number that stood here ("eighteen of the
+ * thirty-four") DISAGREED with the schema when W0 re-derived it, and nothing in
+ * the tree could red a stale sentence.
  *
  * ── ⛓ THE `editor` SLOT, FILLED BY H5 ─────────────────────────────────
  *
@@ -30,15 +33,26 @@
  * `procgen_metadata` → the pipeline, `loop_costs` → the cost debugger (L4: its
  * plan comes back as ONE `set-key`),
  * `sphere_log` → the spoiler checklist, `preset_sidecars` → the Regions tab's
- * per-region Edit ▸. A filled row makes `entry.editor` non-null and the
- * Document tab draws its Open button. See the table's own docblock for the
- * contract and for what each door's `returns` means.
+ * per-region Edit ▸, and (W0) `helpers` / `dungeons` → their own panels as
+ * VIEWERS. A filled row makes `entry.editor` non-null and the Document tab
+ * draws its Open button. See the table's own docblock for the contract and for
+ * what each door's `returns` means. ⛔ The set is the table, not a number
+ * repeated here: read it off `Object.keys(DOCUMENT_KEY_EDITORS)`.
  *
- * ⛔ **THE OTHER TWENTY-NINE KEYS HAVE NO DEDICATED EDITOR, AND THE REGISTRY
- * SAYS SO BY THE ABSENCE OF A ROW, NOT BY OMISSION FROM THE TAB**: every schema
- * key still gets a Document row and a JSON block editor. `regions`, `items`,
+ * ⛔ **EVERY SCHEMA KEY WITHOUT A ROW HERE HAS NO DEDICATED EDITOR, AND THE
+ * REGISTRY SAYS SO BY THE ABSENCE OF A ROW, NOT BY OMISSION FROM THE TAB**:
+ * every schema key still gets a Document row and a JSON block editor. ⛔ The
+ * population is not typed here — it is `buildDocumentKeys(schema).filter((e) =>
+ * !e.editor)`, and a number in this sentence would be a second answer that
+ * nothing reds when the table grows a door (W0 grew it by two).
+ *
+ * ⛓⛓ **W0 — AND AN OWNED KEY GETS ITS BLOCK TOO.** `regions`, `items`,
  * `itempool_counts`, `starting_items` and the meta fields are OWNED BY TABS
- * (`KEYS_OWNED_BY_TAB`, below) and point at them instead.
+ * (`KEYS_OWNED_BY_TAB`, below) and their Document row points at the tab that
+ * knows the shape — and then draws the same JSON block every other row gets,
+ * because a home tab typically edits SOME fields of its key (the Meta tab
+ * edits one field of `world`) and the Document tab is the everything-fallback
+ * (⚖ user, 2026-09-08).
  *
  * ── ⛓ AND THE UNKNOWN-KEY ROW IS NOT OPTIONAL ─────────────────────────
  *
@@ -100,8 +114,8 @@ const TAB_FOR_KEY = Object.freeze(Object.fromEntries(
  * than offering a control that does nothing. `null` = this door raises no panel.
  *
  * `record` is the WORKING COPY (⚖ plan §1); `value` is this key's slice of it
- * (the selected player's, for a per-player key). `open` may be async — three of
- * the five doors import a panel module lazily.
+ * (the selected player's, for a per-player key). `open` may be async — the doors
+ * that reach another module import it lazily, inside `open`.
  *
  * ⛓ **`onSave` IS THE RETURN PATH, and `returns` says whether there is one.**
  * H1's docblock said `open` "returns ONE op"; it does not, and it cannot: every
@@ -254,6 +268,47 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
             + '(H4b) and its save comes back as ONE `replace-region-sidecar`. There is no '
             + 'whole-block editor, deliberately.',
         open: async ({ goToTab }) => { goToTab('regions'); },
+    }),
+
+    /**
+     * ⛓⛓⛓ **W0 — A VIEWER DOOR, AND THAT IS THE WHOLE CLAIM** (⚖ user,
+     * 2026-09-08: *"helpers … an advanced feature that currently none of the
+     * procgen worlds use … We can leave dungeons and helpers as only editable
+     * through raw json for now. If it's easy to implement, we could link to the
+     * existing dungeons and helpers panels as viewers."*).
+     *
+     * ⛔ It is `returns: 'none'` for the same reason `sphere_log` is: the panel
+     * reads APPLIED state (the world the app has loaded), not this working
+     * copy, so nothing it shows is an edit of the document open here and
+     * nothing comes back. The note says so rather than letting a person infer
+     * from an unchanged document that the door is broken — and the raw block
+     * on this very row stays the way to CHANGE the key, which is the ⚖'s
+     * "editable through raw json for now".
+     */
+    helpers: Object.freeze({
+        label: 'Open the helpers panel',
+        returns: 'none',
+        panelId: 'helpersPanel',
+        note: '⚠ APPLIED STATE: the helpers panel shows the world the app has LOADED, not this '
+            + 'working copy — press Apply first if you want it to see your edits. Nothing comes '
+            + 'back; the raw block below is how this key is changed.',
+        open: async ({ eventBus }) => {
+            eventBus.publish('ui:activatePanel', { panelId: 'helpersPanel' });
+        },
+    }),
+
+    /** ⛓ W0 — the same viewer door for `dungeons`, on the same ⚖ and the same
+     *  applied-state footing as `helpers` above. */
+    dungeons: Object.freeze({
+        label: 'Open the dungeons panel',
+        returns: 'none',
+        panelId: 'dungeonsPanel',
+        note: '⚠ APPLIED STATE: the dungeons panel shows the world the app has LOADED, not this '
+            + 'working copy — press Apply first if you want it to see your edits. Nothing comes '
+            + 'back; the raw block below is how this key is changed.',
+        open: async ({ eventBus }) => {
+            eventBus.publish('ui:activatePanel', { panelId: 'dungeonsPanel' });
+        },
     }),
 });
 
