@@ -12804,6 +12804,11 @@ own defect — fixed, 3 red); a post-gesture DOM lookup on a detached row (expan
 STRING slice (routing reads the declared TOP-LEVEL type; round-trips correctly); (3) the viewer doors leave the hub
 for an APPLIED-state panel. NEXT: **S1** on W0's idle notice.
 
+**S1 LAUNCHED 2026-09-08** as `apworld-coverage-S1` (Opus; kickoff `NewDocs/plans/apworld-coverage-S1-prompt.md`; on
+W0's idle): the Sidecars tab (five keys + the `preset_sidecars` summary, ONE row renderer), "Send costs to APWorld
+Editor", the hub's accepted-op focus/scroll/message in `_acceptEditorOp` (generic; a refused op steals no focus);
+three mutants; baseline 442/13386 at `e84050a936`. Reports come to `next-priorities-planning-4`; D1 on S1's idle notice.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
