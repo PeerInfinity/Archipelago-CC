@@ -12909,6 +12909,47 @@ PRE-AUTHORIZED), the 30 tracked carriers stripped in the SAME commit as the sche
 in place; the whole `pytest test/`; STOP on any moved rules.json byte pin. Baseline 442/13393 at `7ea5911838`.
 Reports come to `next-priorities-planning-4`; W3 on D1's idle notice.
 
+**D1 SHIPPED 2026-09-08** — shared submodule `41e3f6ef44` → **`b8e6c85`** (pushed to
+`PeerInfinity/archipelago-shared`), outer `0c7b72088d` → **`78623df53f`** (pushed; the left end is D1's own start
+HEAD, so nobody moved main under it). ONE outer commit, 45 files, **+6 / −345**: the schema declarations, the 30
+carriers and the gitlink together, because the top level is strict and a SHA with one and not the other reds CI
+`unittests`. `rules.json`'s top level is now **32 keys** (per-player 17 → 15) and `buildDocumentKeys` yields 32
+without an edit. **What the brief got wrong** (plan §9.1, all four found by re-running the census, not inheriting
+it): a `.snap` carries the key and the census glob excluded `*.snap` (2 pinned blocks in
+`procgenPipelineEngine.test.js.snap`); `scripts/vanilla-alttp/…_rules.json` carried **both** keys, not just
+`world_classes` (−37 lines); `frontend/schema/README.md` does NOT name either key (three hits, all the English word
+"settings"); and a count the brief never named went stale — `docs/json/modules/apworldEditor.md:65` "seventeen of
+thirty-four" → **fifteen of thirty-two**, re-derived (⛔ `documentKeys.js:26`'s "thirty-four" was LEFT: it is a
+quoted historical value inside the docblock explaining that a typed count went stale). Also: "the four
+`dump-*-byteidentity.mjs`" is three `dump-` plus `check-spiral-byteidentity.mjs` (the V3b rename). **Preset diff
+shape:** 30 files, **0 insertions, 90 deletions**, exactly 3 lines each, and every changed line across all 30 is one
+of six strings; a key STRIP, with `check-atlas-sphere-roundtrip` ("the committed seedling_atlas_sphere preset
+regenerates byte-identically") as the proof that the strip equals the re-emit. The legacy value was compared to
+`world[p].world_class_name` before stripping: **0 of 32 disagreed**. The 2 untracked maze fixtures were stripped in
+place and never staged (they had to be — the validation test globs off DISK). **Gates:** schema validation
+**2 passed / 212 subtests**; whole `pytest test/` **537 passed, 2 skipped, 20781 subtests, 0 failed**; bounded
+vitest **31 files / 1396 tests**; the ten carrier `check-*` all exit 0; `check-loop-costs-one-model` 5 documents
+byte-identical; `check-procgen-docs` ALL CHECKS PASSED; in-app `--batch=fast` **91/91** with `compare-runs` "No
+differences" and 0 thrown-handler hits in the browser log; `check-procgen-help --doors=all` NOT owed (measured — no
+`scripts/**` in the diff, and the five importers of `rulesJsonBuilder.js` take only the unchanged
+`stringifyRulesJson`). **⚖ 49: no rules.json byte pin moved** — `check-seedling-wasm-pins` hashes build files (and
+passed), `standing-values.json`'s one byte-identity row is maze, whose MD5 `8cc31554` is UNMOVED, and there is no
+row for sphere or topdown. The sphere and topdown ORACLE md5s did move, **by exactly the removed key** (9 and 12
+deletions = 3 and 4 documents × 3 lines, 0 insertions). **Mutants:** (A) the declaration restored with
+`additionalProperties:false` still on → **0 presets red** — the guard now holds by ABSENCE, which is a claim about
+the deletion being complete, NOT evidence the declaration is load-bearing; (B) the key re-added to
+`procgen_maze/AP_1` → **1 failed / 211 subtests passed**, naming that path and
+`"Additional properties are not allowed ('world_classes' was unexpected)"`. **⚖ 52 derived +0 files / +0 rows**
+(no suite added or removed; `procgenPipelineEngine.test.js` 203 → 203 rows, `regionAtlasCompiler.test.js` 63 → 63)
+⇒ predicted unmoved at 442/13393; **CI at `78623df53f` run 34282863430 success: 442/13393 (13385 passed | 8 skipped | 0 failed), slow 12/217 — the derivation MATCHED**, and every other job at the SHA is green, `unittests` included (the job the schema-plus-carriers atomicity was protecting). ⚑ **Whole-`pytest test/` has a side effect that dirties a TRACKED file**: it
+generates an APQuest seed, creating `frontend/presets/apquest/AP_07758176404715800194/` and inserting 16 lines into
+`frontend/presets/preset_files.json` (also stripping its trailing newline). D1 reverted both before the mutants.
+That artifact is EVIDENCE too — the fresh export, from a producer this slice never touched, carries neither key.
+**⚖ OPEN (3, plan §9.7):** whether to annotate this doc's own `10335-10336` md5 quotes (historical records, not
+pins, now stale-by-design); `CC/scripts/prompt_lib/prompt_generators/worldgen.py:629-639` still tells a prompt to
+ignore `world_classes`; and whether the `pytest test/` side effect deserves a line in CLAUDE.md so every H4a-obeying
+session knows to revert it.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
