@@ -12973,6 +12973,47 @@ item picker + filter, dangling placements shown not dropped; rows on `procgen_to
 4-player fixture; three mutants. Baseline 442/13393 at `78623df53f`. Reports come to `next-priorities-planning-4`;
 NOTHING launches on W3's idle — the replan with the user follows.
 
+**W3 SHIPPED 2026-09-08** (`f70a2fe32e` → **`4689b7067a`**, six commits, pushed to `origin/main`; plan §10).
+**The PLACEMENTS tab is live**, between Items and Meta — a canonical placement is a `location → item` pair, so it
+reads after the two tabs whose vocabularies it joins. ONE op `set-canonical-placement {player, location, item}`
+(`rulesDocOps.js`), `KEYS_OWNED_BY_TAB.placements` + `PLACEMENTS_TAB_KEY` (`documentKeys.js`), the tab and its six
+helpers (`apworldEditorUI.js`), the docs section, four in-app rows. Row counts: `rulesDocOps.test.js` **68 → 81**,
+`documentKeys.test.js` **39 → 41**, category `apworldEditor` **29 → 33**.
+**⛔ FOUR BRIEF ERRORS, all found by re-measuring** (§10.1): *"populated on 86 of 211"* reproduces under NONE of four
+definitions (211 carriers ✓, but **97** carry an entry — 95 tracked / 94 in slot 1 / 40 families; the byte figure
+14,155 B at `procgen_topdown/AP_8` DOES reproduce exactly); the 4-player fixture's slot 1 block is **present and
+empty (`{}`)**, not absent, so row (c) drives *byte-identical and still present*; `procgen_topdown/AP_1` has **no
+unplaced location**, so a REPLACE moves neither readout and only the blank "(unplaced)" option does — row (b) drives
+both halves; and task 1's refusals vs task 2's stale-entry requirement compose **only** if the refusals guard what is
+WRITTEN and never what is REMOVED, so a delete is not validated (that is the only thing that makes a hand-edited file
+fixable).
+**Gates:** bounded vitest **232 passed / 9 files** (the whole `apworldEditor` module + `lintGateLabels` 14); docs trio
+green (generator moved nothing, `check-procgen-docs --host=http://localhost:8000` ALL CHECKS PASSED — ⚠ `--host=:8000`
+throws on the header-link check, the host wants a scheme —, `procgenDocs/` 452); in-app `--batch=fast` **95/95**,
+`failedCount: 0`, handler-error grep **0** and the thrown-handler sweep **0**; `compare-runs` vs D1's
+`test-results-2026-09-08T21-45-57.json` (91/91) = **ADDED (4), all passed, and nothing else** — +4 rather than +3
+because the fourth guards the stale-entry requirement no other row can see.
+**⛓⛓ The lazy option list's margin, measured on BOTH builds** (a fourth mutant, `dark_souls_3` slot 1 = 1,194
+locations × 1,208 items, the corpus's worst case): eager **1,443,546 option elements / 13,983 ms paint / 516 ms per
+filter keystroke** vs lazy **1,194 / 178 ms / 8 ms** — 79× on the paint. The naive product (1,442,352) was wrong by
+the blank option; both the docblock and the docs page now quote the measured pair. **New trap 1300.**
+**Mutants:** (A) the item refusal removed → **exactly 1 row red**, the named one. (B) the tab reading slot `'1'`
+→ row (c) red on **three** named conditions — ⛔ its FIRST arming *crashed* instead of reporting, because a tab
+reading the wrong slot draws the row as unplaced, so "pick something different" chose the item already stored, the
+session called it a no-op, and `ops().at(-1)` was undefined (**new trap 1301**; the row now asserts *"the gesture was
+recorded as an op"* first). (C) `placements` dropped from the table → **2 rows red in `documentKeys.test.js`**, and —
+measured, not assumed — **all four in-app rows PASSED**, and **the tab-id parity row did NOT red** (it iterates the
+table, so the mutation shrinks its own population). That is W0's and S1's mutant B a third time, and it is why the
+membership is guarded against the OP's own source rather than against the table.
+**⚖ 52 derived +0 files / +15 rows** (no suite added or removed; `rulesDocOps.test.js` 68 → 81, `documentKeys.test.js`
+39 → 41; nothing in the tree reads the substrates config from a `.test.js`, so the +4 in-app rows add none)
+⇒ predicted **442 / 13408** from the baseline 442/13393 at `78623df53f`. CI at `4689b7067a`: run **34287938067 success**, `suite: vitest (unfiltered) 442/13408 (13400 passed | 8 skipped | 0 failed)`, slow 12/217 — **the derivation MATCHED**, and every job of the run is green (Vitest, the shard plan, and all three browser-gate shards). ⚠ `ci-vitest-summary.mjs` reports the RUN, not the JOB: it read `in_progress` for ~20 min after the Vitest job had completed, because a browser shard was still going — `gh run view <id> --json jobs` shows the job.
+**⚖ OPEN (3, plan §10.7):** the Document tab's whole-block `set-key` can write a placement the per-entry op would
+REFUSE (the schema declares the slot `additionalProperties: true`), so one tab's guard is reachable around — correct
+or not is a replan question; nothing outside the hub validates a placement at all (0 of 212 presets carry a stale one
+today, but the tab is the first thing that can create the condition it displays); and the summary counts an entry
+naming a missing ITEM as "placed", with the stale count appended rather than deducted.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
