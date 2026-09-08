@@ -12866,7 +12866,8 @@ push; as-built record = plan §8, which carries every number and the four mutant
   `git merge-base --is-ancestor e84050a936 8c6d4a16a5` ✓ and the diff between them is one `CC/docs` file — so
   **442/13386 @ `e84050a936`** stands. Derivation BEFORE the run (trap 1212: `git merge-base --is-ancestor
   844e0603b4 e84050a936` → false ✓): no test file added or removed, +6 rows and +1 row ⇒ **expected 442/13393**.
-  ⟨CI at `7ea5911838` — filled in when run 34277771764 reports.⟩
+  **CI at `7ea5911838`: run 34277771764 success, `suite: vitest (unfiltered)` 442/13393 (13385 passed | 8
+  skipped | 0 failed), slow battery 12/217 — the derivation, to the row.**
 - **⚖ OPEN for the user (plan §8.6):** (1) the Sidecars rows ARE the Document rows element for element, so the
   Document row's pointer sentence *"for whatever that tab does not draw"* points, for these five, at a tab that draws
   the same thing — not wrong, but the one sentence a reader could over-read; left shared rather than forked, per the
