@@ -507,6 +507,18 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "APWorld hub H5. The \u2696 the Links tab exists for: 'even if the current rules.json file doesn't contain any relevant data for them'. On a document with no region_atlas the row must still be there, carry the REGISTRY's own label (the same string the Document tab shows, because both read DOCUMENT_KEY_EDITORS), say the document has nothing for it, and open the editor anyway."
+        },
+        {
+            "id": "apworld-owned-row-carries-its-own-json-block",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage W0. Until W0 a tab-owned Document row drew 'edited in the X tab' and RETURNED, so every field of world except the one the Meta tab draws was reachable only through the whole-document Raw JSON editor \u2014 measured on stardew, where all fourteen owned rows offered neither a toggle nor an input. The subject is the RECORD, not the toggle: the row presses the block's own Save JSON and asserts ONE player-scope set-key on a sub-key no META_FIELDS spec addresses (derived from the Meta tab's own table), the Meta field beside it unmoved, and ONE undo taking the sub-key back out."
+        },
+        {
+            "id": "apworld-viewer-doors-raise-the-panels-they-declare",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage W0, \u2696 (user, 2026-09-08) 'we could link to the existing dungeons and helpers panels as viewers'. Both halves come from an authority rather than a string: whether the door is offered is asked of centralRegistry.getAllPanelComponents() \u2014 the same set the hub's own _panelRefusal consults \u2014 and whether the press worked is panelManager.isPanelActive, the panel actually in front. region_atlas is asserted ABSENT from that same set, so 'registered' discriminates instead of describing a mode where everything is on."
         }
     ]
 }

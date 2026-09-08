@@ -62,6 +62,22 @@ import { regionAtlasReference } from '../../procgenPipeline/regionAtlasCompiler.
 /** ⛓ H5 — the registry the Document row and the Links row both read. */
 import { DOCUMENT_KEY_EDITORS } from '../../apworldEditor/documentKeys.js';
 /**
+ * ⛓⛓ W0 — **THE TWO AUTHORITIES A VIEWER-DOOR ROW HAS TO ASK, and neither is a
+ * string in this file.** `centralRegistry` is what the hub itself consults to
+ * decide whether a door is pressable (`_panelRefusal`), so a row that asserted
+ * "the button is enabled" without it would be re-stating the button; and
+ * `panelManager.isPanelActive` is the EFFECT of the press — the panel that ended
+ * up in front — rather than the button's own text, which never moves.
+ */
+import { centralRegistry } from '../../../app/core/centralRegistry.js';
+import panelManager from '../../../app/core/panelManager.js';
+/**
+ * ⛓ W0 — the table the Meta tab's rows and the `set-meta` op both read, so the
+ * claim *"this sub-key is one the home tab does not draw"* is derived from the
+ * home tab's own field list instead of asserted by a comment.
+ */
+import { META_FIELDS } from '../../apworldEditor/rulesDocOps.js';
+/**
  * ⛓ R-a — the two numbers the presence switch writes, compared against their
  * SOURCE. Typing 50 and 10 into this row would make it agree with a second copy
  * of the pair rather than with `loopCostDefaults.js`.
@@ -3122,6 +3138,242 @@ registerTest({
                + 'naming both the replacement and the fix. Mutant: a hub that ignores the token '
                + 'writes the plan into the wrong document and the three claims red together.',
     testFunction: apworldSendIntoAReplacedDocumentIsRefused,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * W0 — THE COVERAGE ARC: an owned row's own JSON block, and the two viewer
+ * doors. (`NewDocs/plans/apworld-editor-coverage-plan.md` §4, rung W0.)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **AN OWNED ROW CARRIES ITS OWN BLOCK, AND THE BLOCK REACHES WHAT THE
+ * HOME TAB DOES NOT DRAW.** Until W0 the Document row for a tab-owned key drew
+ * *"edited in the X tab"* and stopped there, so every field of `world` except
+ * the one the Meta tab draws was reachable only through the whole-document Raw
+ * JSON editor.
+ *
+ * ⛔ The field this row writes is chosen BY DERIVATION, not by taste: it asserts
+ * that no `META_FIELDS` spec addresses it, so "the home tab does not draw this"
+ * is read off the home tab's own table. And the write goes through the
+ * product's own Save JSON button, so a Save wired to nothing reds here.
+ */
+export async function apworldOwnedRowCarriesItsOwnJsonBlock(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        selectTab(panel, 'document');
+
+        const KEY = 'world';
+        const FIELD = 'world_description';
+        const VALUE = 'W0: written from the Document tab\'s own block';
+
+        // ⛓ THE PREMISE, DERIVED: this key really is owned by another tab.
+        const registryRow = panel._documentRows().find((r) => r.key === KEY);
+        testController.reportCondition(`the ${KEY} row exists`, !!registryRow);
+        if (!registryRow) return testController.getOverallResult();
+        testController.reportCondition(
+            `${KEY} is owned by a tab — the case that drew no editor before W0`,
+            !!registryRow.ownedByTab);
+
+        // ⛓ …and the field below is one that tab does NOT draw, read off the
+        //   Meta tab's own field table rather than claimed here.
+        const metaPaths = Object.values(META_FIELDS).map((spec) => spec.path('1').join('.'));
+        testController.assertEqual(
+            `no Meta field addresses ${KEY}.${FIELD} — so the block is the only way to it`,
+            'false', String(metaPaths.includes(`${KEY}.${FIELD}`)));
+
+        const box = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${KEY}"]`);
+        testController.reportCondition('the Document tab draws that row', !!box);
+        if (!box) return testController.getOverallResult();
+
+        // ⛓ THE POINTER STAYS — the home tab is still where the shape is known.
+        testController.reportCondition(
+            'the row still points at the tab that owns the key',
+            !!box.querySelector('.apworld-doc-owned'));
+
+        /**
+         * ⛓⛓ **THE CLAIM, AND THE MUTANT TARGET.** Restoring the early return
+         * in `_renderDocumentRow` leaves the pointer above and kills this.
+         */
+        const toggle = box.querySelector('.apworld-doc-toggle');
+        testController.reportCondition(
+            'and it offers the same Show JSON toggle every other row gets', !!toggle);
+        if (!toggle) return testController.getOverallResult();
+
+        toggle.click();
+        const textarea = await testController.pollForValue(
+            () => document.querySelector(
+                `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${KEY}"] .apworld-doc-json`),
+            'the block textarea, built on expand',
+            8000,
+            50,
+        );
+        testController.reportCondition('expanding builds the textarea', !!textarea);
+        if (!textarea) return testController.getOverallResult();
+
+        const slot = panel.playerId;
+        testController.assertEqual(
+            'the textarea holds THIS slot\'s slice of the key, not the whole map',
+            JSON.stringify(panel.rulesDoc[KEY][slot]),
+            JSON.stringify(JSON.parse(textarea.value)));
+
+        const className = panel.rulesDoc[KEY][slot].world_class_name;
+        const opsBefore = panel.session.ops().length;
+        const edited = JSON.parse(textarea.value);
+        edited[FIELD] = VALUE;
+        textarea.value = JSON.stringify(edited, null, 2);
+
+        const save = box.querySelector('.apworld-doc-save');
+        testController.reportCondition('the block carries a Save JSON control', !!save);
+        if (!save) return testController.getOverallResult();
+        save.click();
+
+        testController.assertEqual(
+            `the edit reached the record at ${KEY}.${FIELD}`,
+            VALUE, panel.rulesDoc[KEY][slot][FIELD]);
+        testController.assertEqual(
+            'it was exactly ONE op', String(opsBefore + 1), String(panel.session.ops().length));
+        const op = panel.session.ops().at(-1);
+        testController.assertEqual('and that op is a set-key on this key',
+            `set-key ${KEY}`, `${op.op} ${op.key}`);
+        // ⛓ A per-player key is written PER PLAYER — a document-scope op here
+        //   would replace every slot's world with this one's.
+        testController.assertEqual('scoped to the selected player slot',
+            `player ${slot}`, `${op.scope} ${op.player}`);
+        // ⛔ …and the field the Meta tab DOES draw is untouched by it.
+        testController.assertEqual(
+            'the Meta tab\'s own field on the same key is unaffected',
+            String(className), String(panel.rulesDoc[KEY][slot].world_class_name));
+
+        const undoButton = document.querySelector(`${PANEL_SELECTOR} .apworld-undo`);
+        testController.reportCondition('the Undo control is present', !!undoButton);
+        undoButton.click();
+        testController.assertEqual(
+            'ONE undo takes the sub-key back out, rather than blanking it',
+            'false',
+            String(Object.prototype.hasOwnProperty.call(panel.rulesDoc[KEY][slot], FIELD)));
+        testController.assertEqual(
+            'and the op list is back where it started',
+            String(opsBefore), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('owned-row block test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **THE VIEWER DOORS ARE LIVE IN THIS MODE, AND PRESSING ONE RAISES THE
+ * PANEL IT DECLARED** (⚖ user, 2026-09-08: *"we could link to the existing
+ * dungeons and helpers panels as viewers"*).
+ *
+ * ⛔ Both halves are read from an authority rather than typed: whether the
+ * button is offered comes from `centralRegistry.getAllPanelComponents()` — the
+ * same set the hub's own `_panelRefusal` asks — and whether the press worked
+ * comes from `panelManager.isPanelActive`, the panel that is actually in front.
+ * A row asserting the button's label or its own `disabled` flag would agree
+ * with the panel about a door that raises nothing.
+ *
+ * ⛓ The row also checks a door whose module this mode does NOT load
+ * (`region_atlas`), so "enabled" is a discrimination rather than a mode in
+ * which everything is enabled.
+ */
+export async function apworldViewerDoorsRaiseThePanelsTheyDeclare(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const registered = centralRegistry.getAllPanelComponents();
+        /**
+         * ⛓ The doors under test, derived: the registry's VIEWER rows (nothing
+         * comes back) that name a panel. A door added later as a viewer is
+         * covered by being one.
+         */
+        const viewers = Object.entries(DOCUMENT_KEY_EDITORS)
+            .filter(([, editor]) => editor.returns === 'none' && editor.panelId);
+        testController.reportCondition(
+            'the registry declares viewer doors to press', viewers.length > 1);
+
+        // ⛓ THE DISCRIMINATION: this mode really does lack a panel some door
+        //   names, so "registered" is a fact about this app and not a constant.
+        testController.assertEqual(
+            'a door whose module this mode does not load is NOT registered',
+            'false', String(registered.has(DOCUMENT_KEY_EDITORS.region_atlas.panelId)));
+
+        for (const [key, editor] of viewers) {
+            selectTab(panel, 'document');
+            testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+            const button = await testController.pollForValue(
+                () => document.querySelector(
+                    `${PANEL_SELECTOR} .apworld-doc-editor-open[data-doc-key="${key}"]`),
+                `the ${key} door`,
+                8000,
+                50,
+            );
+            testController.reportCondition(`the ${key} row draws its door`, !!button);
+            if (!button) continue;
+
+            testController.assertEqual(
+                `this app registers \`${editor.panelId}\` — so the ${key} door is offered`,
+                'true', String(registered.has(editor.panelId)));
+            testController.assertEqual(
+                `and the ${key} door is therefore pressable`, 'false', String(button.disabled));
+            testController.assertEqual(
+                `it says nothing comes back from ${key}`, 'none', editor.returns);
+
+            button.click();
+            const raised = await testController.pollForCondition(
+                () => panelManager.isPanelActive(editor.panelId),
+                `${editor.panelId} became the active panel`,
+                8000,
+                50,
+            );
+            testController.reportCondition(
+                `pressing the ${key} door put \`${editor.panelId}\` in front`, raised);
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('viewer-door test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-owned-row-carries-its-own-json-block',
+    name: 'APWorld hub: a tab-owned Document row keeps its pointer AND draws its own JSON block',
+    description: 'On the `world` row — owned by the Meta tab, which draws exactly one of its '
+               + 'fields — asserts the pointer to the home tab is still there, that the row '
+               + 'now offers the same Show JSON toggle every unowned row gets, that expanding '
+               + 'it builds a textarea holding THIS slot\'s slice, and that pressing the '
+               + 'block\'s own Save JSON writes a sub-key no META_FIELDS spec addresses (the '
+               + 'claim derived from the Meta tab\'s own table) as exactly ONE player-scope '
+               + '`set-key`, leaving the Meta tab\'s field untouched and coming back out in '
+               + 'ONE undo. Mutant: restoring the early return in `_renderDocumentRow` reds '
+               + 'the toggle condition.',
+    testFunction: apworldOwnedRowCarriesItsOwnJsonBlock,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-viewer-doors-raise-the-panels-they-declare',
+    name: 'APWorld hub: the viewer doors are offered because the registry holds their panels, and pressing one raises it',
+    description: 'Over every VIEWER row of `DOCUMENT_KEY_EDITORS` (returns `none`, names a '
+               + 'panel), asserts this app really registers that component — asked of '
+               + '`centralRegistry.getAllPanelComponents()`, the same set the hub\'s own '
+               + 'refusal consults — that the door is therefore pressable, and that pressing '
+               + 'it makes that panel the ACTIVE one (`panelManager.isPanelActive`, not the '
+               + 'button\'s text). A door whose module this mode does not load '
+               + '(`region_atlas`) is asserted absent from the same set, so "registered" is a '
+               + 'discrimination rather than a mode where everything is on.',
+    testFunction: apworldViewerDoorsRaiseThePanelsTheyDeclare,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
