@@ -60,7 +60,19 @@ import {
  */
 import { regionAtlasReference } from '../../procgenPipeline/regionAtlasCompiler.js';
 /** ⛓ H5 — the registry the Document row and the Links row both read. */
-import { DOCUMENT_KEY_EDITORS } from '../../apworldEditor/documentKeys.js';
+/**
+ * ⛓⛓ S1 — **THE SIDECARS TAB'S POPULATION IS READ, NOT TYPED.** The tab
+ * filters the registry by this table, so the row that asserts what the tab
+ * draws reads the SAME table: it guards the RENDERER (does every member get a
+ * full row, in registry order, with the summary beside them). ⛔ It is
+ * therefore BLIND to the membership itself — drop a key from the table and the
+ * tab draws one row fewer against an expectation that shrank with it. What
+ * makes the membership falsifiable is `documentKeys.test.js`, whose population
+ * comes from the exporter's own `_inject_worldgen_*` methods and from the ⚖.
+ */
+import {
+    DOCUMENT_KEY_EDITORS, KEYS_OWNED_BY_TAB, SIDECARS_TAB_SUMMARY_KEY,
+} from '../../apworldEditor/documentKeys.js';
 /**
  * ⛓⛓ W0 — **THE TWO AUTHORITIES A VIEWER-DOOR ROW HAS TO ASK, and neither is a
  * string in this file.** `centralRegistry` is what the hub itself consults to
@@ -2634,6 +2646,10 @@ export async function apworldLoopCostsSendWritesThePlanAsOneOp(testController) {
             'Send becomes pressable once the plan is complete', 8000, 50);
 
         const opsBefore = panel.session.ops().length;
+        // ⛓ S1 — the state the focus claims below are a CHANGE from, read
+        //   immediately before the gesture rather than assumed.
+        const tabAtSend = panel.activeTab;
+        const hubActiveAtSend = panelManager.isPanelActive(PANEL_ID);
         testController.reportCondition('Send pressed', press('.cd-btn-send'));
 
         /**
@@ -2676,6 +2692,55 @@ export async function apworldLoopCostsSendWritesThePlanAsOneOp(testController) {
             'true',
             String(status.textContent.includes('Sent to the document')
                 && status.textContent.includes('loop mode')));
+
+        /**
+         * ⛓⛓⛓ **S1 — AND THE HUB COMES TO THE FRONT, ON THE ROW IT JUST WROTE**
+         * (⚖ user, 2026-09-08: *"this automatically activated the APWorld Editor
+         * panel and scrolled to the relevant section, with a message that the
+         * data was successfully loaded"*).
+         *
+         * ⛔ Every claim is an EFFECT, not a call: `panelManager.isPanelActive`
+         * is the panel actually in front (the door raised the DEBUGGER a moment
+         * ago, so the premise below is a real change of state), the destination
+         * tab is read off the key's OWN registry row rather than named here, and
+         * "in view" is the row's rectangle against the scroll container's.
+         *
+         * ⚠ The two are not independent: a panel that is not in front has no
+         * layout, so its rows measure zero and the viewport claim reds with the
+         * active-panel one. That is the hidden-parent measurement, named rather
+         * than pretended away.
+         */
+        const homeTab = panel._documentRows().find((r) => r.key === 'loop_costs')?.ownedByTab;
+        testController.assertEqual(
+            'loop_costs has a home tab, and it is NOT the tab Send was pressed from',
+            'true', String(!!homeTab && homeTab !== tabAtSend));
+        testController.assertEqual(
+            'the hub was NOT the panel in front when Send was pressed — the premise',
+            'false', String(hubActiveAtSend));
+        testController.assertEqual(
+            'after Send the APWorld editor IS the panel in front',
+            'true', String(panelManager.isPanelActive(PANEL_ID)));
+        testController.assertEqual(
+            'and the hub selected the key\'s own home tab',
+            String(homeTab), String(panel.activeTab));
+        const focused = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="loop_costs"]`);
+        testController.reportCondition('that tab draws the row Send wrote', !!focused);
+        if (focused) {
+            const rowRect = focused.getBoundingClientRect();
+            const viewRect = panel.scrollContainer.getBoundingClientRect();
+            testController.assertEqual(
+                'the row is in the viewport of the panel\'s scroll container',
+                'true',
+                String(rowRect.bottom > viewRect.top && rowRect.top < viewRect.bottom
+                    && viewRect.height > 0));
+            const beside = focused.querySelector('.apworld-doc-op-message');
+            testController.reportCondition(
+                'and the success message is printed BESIDE that row', !!beside);
+            testController.assertEqual(
+                'saying the same thing the chrome says, not a second sentence',
+                String(panel._opMessage), String(beside?.textContent));
+        }
 
         /**
          * ⛓⛓ **ONE UNDO TAKES THE WHOLE PLAN BACK OUT** — proven, not assumed:
@@ -2927,8 +2992,35 @@ export async function apworldSendIntoAReplacedDocumentIsRefused(testController) 
             'false', String('loop_costs' in panel.rulesDoc));
 
         const opsBefore = panel.session.ops().length;
+        // ⛓ S1 — the focus state BEFORE the refused gesture. The door raised the
+        //   debugger, so the hub is not the panel in front; that is what must
+        //   still be true afterwards.
+        const tabAtSend = panel.activeTab;
+        const hubActiveAtSend = panelManager.isPanelActive(PANEL_ID);
         testController.reportCondition('Send pressed against the replaced document',
             press('.cd-btn-send'));
+
+        /**
+         * ⛓⛓⛓ **S1 — AND A REFUSAL STEALS NO FOCUS.** Raising the hub and
+         * scrolling to a row is what "it worked" looks like; doing it for a
+         * refusal would make the two outcomes look alike on screen while the
+         * status line said otherwise. ⛔ The premise is asserted too: the hub
+         * really was NOT in front when Send was pressed, so "still not in front"
+         * is a claim rather than a coincidence.
+         */
+        testController.assertEqual(
+            'the hub was not the panel in front when the refused Send was pressed',
+            'false', String(hubActiveAtSend));
+        testController.assertEqual(
+            'and a REFUSED op did not bring it to the front',
+            'false', String(panelManager.isPanelActive(PANEL_ID)));
+        testController.assertEqual(
+            'nor did it move the hub off the tab the reader was on',
+            String(tabAtSend), String(panel.activeTab));
+        testController.assertEqual(
+            'and nothing printed a success message beside any row',
+            'false',
+            String(!!document.querySelector(`${PANEL_SELECTOR} .apworld-doc-op-message`)));
 
         // ⛔ THE CLAIM: the SECOND document, unmoved.
         testController.assertEqual(
@@ -3383,6 +3475,183 @@ registerTest({
                + '(`region_atlas`) is asserted absent from the same set, so "registered" is a '
                + 'discrimination rather than a mode where everything is on.',
     testFunction: apworldViewerDoorsRaiseThePanelsTheyDeclare,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * S1 — THE SIDECARS TAB. (`NewDocs/plans/apworld-editor-coverage-plan.md` §4,
+ * rung S1.)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **THE SIDECARS TAB DRAWS THE REGISTRY'S SIDECAR KEYS, WITH THE DOCUMENT
+ * TAB'S OWN RENDERER** (⚖ user, 2026-09-08).
+ *
+ * ⛔ **WHAT THIS ROW IS, AND WHAT IT IS NOT.** Its expectation is
+ * `KEYS_OWNED_BY_TAB.sidecars` — the same table the panel filters by — so it
+ * cannot see a key REMOVED from that table (the expectation would shrink with
+ * the tab). It is the RENDERER's guard: every member gets a full row, in
+ * registry order, built by `_renderDocumentRow` and not by a second one; the
+ * summary and its door are beside them; and the Document tab's rows for the same
+ * keys gained their pointer without losing their block. The MEMBERSHIP is
+ * guarded in `documentKeys.test.js`, against the exporter's own sidecar merge
+ * and against the ⚖ — an authority outside the table.
+ *
+ * ⛓ Driven on `procgen_maze`, which carries `procgen_metadata` and three
+ * `preset_sidecars` regions in slot 1, so both the "a member the document has"
+ * case and the summary's counts are real rather than empty.
+ */
+export async function apworldSidecarsTabDrawsTheRegistrysSidecarKeys(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        // ⛓ THE EXPECTATION, READ: registry order (the schema's), filtered by
+        //   the ownership table. Nothing about it is typed in this file.
+        const expected = panel._documentRows()
+            .filter((r) => KEYS_OWNED_BY_TAB.sidecars.includes(r.key))
+            .map((r) => r.key);
+        testController.assertEqual(
+            'the ownership table names a corpus of sidecar keys, and every one of '
+            + 'them is a registry key',
+            String(KEYS_OWNED_BY_TAB.sidecars.length), String(expected.length));
+        testController.reportCondition(
+            'and there is more than one of them', expected.length > 1);
+
+        selectTab(panel, 'sidecars');
+        const drawn = await testController.pollForValue(
+            () => {
+                const rows = document.querySelectorAll(
+                    `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key]`);
+                return rows.length > 0 ? [...rows].map((r) => r.dataset.docKey) : null;
+            },
+            'the Sidecars tab\'s rows',
+            8000,
+            50,
+        );
+        testController.reportCondition('the Sidecars tab draws rows', !!drawn);
+        if (!drawn) return testController.getOverallResult();
+        testController.assertEqual(
+            'it draws EXACTLY the registry\'s sidecar keys, in registry order',
+            expected.join(','), drawn.join(','));
+
+        /**
+         * ⛓⛓ **THE SUMMARY IS THE REGIONS TAB'S KEY, AND IT IS A SUMMARY.**
+         * `preset_sidecars` must NOT be one of the rows — a second whole-block
+         * editor for a key edited per region is the thing the ⚖ did not ask for
+         * — and the counts are the document's own, through the same helper the
+         * Map-tab rows use.
+         */
+        testController.assertEqual(
+            'preset_sidecars is summarised, not drawn as a sixth row',
+            'false', String(drawn.includes(SIDECARS_TAB_SUMMARY_KEY)));
+        const counts = sidecarCounts(panel.rulesDoc);
+        const slots = Object.keys(counts);
+        testController.reportCondition(
+            'this document really carries per-region sidecars — the premise for the counts',
+            slots.length > 0 && counts[slots[0]] > 0);
+        const summary = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-sidecars-summary-text`);
+        testController.reportCondition('the tab carries the summary line', !!summary);
+        for (const slot of slots) {
+            testController.assertEqual(
+                `the summary counts slot ${slot} off the document, not off a total`,
+                'true',
+                String(!!summary
+                    && summary.textContent.includes(`slot ${slot}: ${counts[slot]} region`)));
+        }
+
+        /**
+         * ⛓ **THE DOOR IS ASSERTED BY ITS EFFECT.** A button labelled "Go to
+         * Regions" that selected nothing would pass a label check.
+         */
+        const go = document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-go-regions`);
+        testController.reportCondition('and a button to where that key IS edited', !!go);
+        if (go) {
+            go.click();
+            testController.assertEqual(
+                'pressing it selects the Regions tab', 'regions', String(panel.activeTab));
+            selectTab(panel, 'sidecars');
+        }
+
+        /**
+         * ⛓⛓⛓ **ONE RENDERER, TWO HOSTS — MEASURED AS THE SAME ROW.** The
+         * claim is not "the Sidecars row has a door": it is that the element the
+         * Sidecars tab builds for a key is structurally the element the Document
+         * tab builds for it. So the row compares the CHILD CLASS LISTS of one
+         * key's box on both tabs. A forked renderer that happened to draw a door
+         * and a block would still differ here.
+         */
+        const shapeOf = (key) => {
+            const box = document.querySelector(
+                `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${key}"]`);
+            return box ? [...box.children].map((c) => c.className || c.tagName).join('|') : null;
+        };
+        const richest = drawn.find((k) => panel.rulesDoc[k] !== undefined) ?? drawn[0];
+        const onSidecars = shapeOf(richest);
+        testController.reportCondition(
+            `the Sidecars tab draws a full row for ${richest}`, !!onSidecars);
+        selectTab(panel, 'document');
+        await testController.pollForCondition(
+            () => !!shapeOf(richest), 'the Document tab\'s row for the same key', 8000, 50);
+        testController.assertEqual(
+            'and the Document tab\'s row for that key is the SAME row, element for element',
+            String(onSidecars), String(shapeOf(richest)));
+
+        /**
+         * ⛓⛓ **AND THE DOCUMENT TAB NOW POINTS AT THIS TAB, WITHOUT LOSING THE
+         * BLOCK** — W0's rule, applied to the five keys S1 made owned. The
+         * affordance is a Show JSON toggle or a typed scalar input, whichever
+         * the key's declared type routes to.
+         */
+        const tabLabel = 'Sidecars';
+        for (const key of expected) {
+            const box = document.querySelector(
+                `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${key}"]`);
+            testController.assertEqual(
+                `the Document row for ${key} points at the ${tabLabel} tab`,
+                'true',
+                String(!!box?.querySelector('.apworld-doc-owned')
+                    && box.querySelector('.apworld-doc-owned').textContent.includes(tabLabel)));
+            testController.assertEqual(
+                `…and it still carries its own editing affordance`,
+                'true',
+                String(!!box && (!!box.querySelector('.apworld-doc-toggle')
+                    || !!box.querySelector('input') || !!box.querySelector('select'))));
+        }
+
+        // ⛓ Non-vacuity: the Document tab is still the everything-fallback, so
+        //   it draws strictly more rows than the tab that hosts five of them.
+        const documentRows = document.querySelectorAll(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key]`).length;
+        testController.reportCondition(
+            'the Document tab still draws every key, not only the sidecar ones',
+            documentRows > drawn.length);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecars-tab test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-sidecars-tab-draws-the-registrys-sidecar-keys',
+    name: 'APWorld hub: the Sidecars tab draws the registry\'s sidecar keys with the Document tab\'s renderer',
+    description: 'On procgen_maze — which carries `procgen_metadata` and three per-region '
+               + 'sidecars in slot 1 — asserts the tab draws exactly the keys '
+               + '`KEYS_OWNED_BY_TAB.sidecars` names, in registry order; that '
+               + '`preset_sidecars` is a one-line per-slot SUMMARY counted off the document '
+               + 'with a button that really selects the Regions tab; that a key\'s box on '
+               + 'this tab is element-for-element the box the Document tab builds for it '
+               + '(one renderer, two hosts); and that the Document tab\'s rows for the same '
+               + 'keys gained the "Edited in the Sidecars tab" pointer WITHOUT losing their '
+               + 'own affordance. The membership itself is guarded in documentKeys.test.js, '
+               + 'against the exporter\'s sidecar merge and the ⚖ — this row reads the same '
+               + 'table the tab does and is deliberately blind to it.',
+    testFunction: apworldSidecarsTabDrawsTheRegistrysSidecarKeys,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
