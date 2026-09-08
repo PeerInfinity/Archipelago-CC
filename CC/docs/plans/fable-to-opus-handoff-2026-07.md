@@ -12737,6 +12737,12 @@ separate slices. We can use as many slices as necessary." · "The rest of the pl
 Sidecars tab = `loop_costs`, `procgen_metadata`, `region_atlas`, `flash_panel`, `provenance` (+ a `preset_sidecars`
 summary pointing at Regions); canonical placements get a **Placements** tab. Not launched at the time of this entry.
 
+**PLAN WRITTEN 2026-09-08:** `NewDocs/plans/apworld-editor-coverage-plan.md` (gitignored) — §0 verdict, §1 rulings, §2
+the tree as measured, §3 design decisions, §4 the ladder W0 → S1 → D1 → W3 → replan with gates and pins derived, §5 ⚖
+open (the atlas trio's real home; W1/W2 at the replan; the stardew tab-switch cost), §6 provenance. Kickoff
+`NewDocs/plans/apworld-coverage-W0-prompt.md` written. **NOT launched** — the user asked twice not to start
+implementation; the launch waits on the user's word.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
