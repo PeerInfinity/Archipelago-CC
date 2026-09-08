@@ -13014,6 +13014,35 @@ or not is a replan question; nothing outside the hub validates a placement at al
 today, but the tab is the first thing that can create the condition it displays); and the summary counts an entry
 naming a missing ITEM as "placed", with the stale count appended rather than deducted.
 
+**W3 VERIFIED by the planner 2026-09-08** (`d88792eac5` on origin/main = the primary tree's HEAD; 7 commits by path
+`f70a2fe32e..d88792eac5`; `git diff --stat` under `shared/` and `presets/` EMPTY; `rulesDocOps.test.js` 68 → **81**,
+`documentKeys.test.js` 39 → **41**, in-app `apworldEditor` 29 → **33**; `TABS` carries `placements` between Items and
+Meta; `KEYS_OWNED_BY_TAB.placements` reads `PLACEMENTS_TAB_KEY`; plan §10 on disk; traps 1300/1301 recorded).
+Pressed the product on `procgen_topdown/AP_1` from here: tabs Regions · Items · **Placements** · Meta · Map ·
+Sidecars · Document · Links · Raw JSON; 25 selects, "25 of 25 locations placed"; one change = ONE
+`set-canonical-placement {player: '1', location, item}` op; 0 page errors. **CI @ `4689b7067a` run 34287938067
+success: 442/13408 (13400 passed | 8 skipped | 0 failed), slow 12/217 — W3 derived +0 files / +15 rows against
+442/13393 BEFORE the run and matched.** What W3 overturned, kept: "86 of 211 populated" reproduces under no
+definition (97 carry an entry); the fixture's slot-1 block is PRESENT and `{}`; `procgen_topdown/AP_1` has no
+unplaced location; refusals guard what is WRITTEN, never what is REMOVED (the only way a hand-edited file is fixable);
+mutant C reddened the membership rows and NOT the tab-id parity row (a table-iterating row shrinks with the table —
+the third time this arc); the per-row `<select>` over the whole vocabulary is O(rows × items) — dark_souls_3 measured
+1,443,546 options / 13,983 ms eager vs 1,194 / 178 ms lazy (trap 1300); a mutant on a tab's READ makes a "pick
+something different" pick the stored item (trap 1301). ⚖ NEW (§10.7): the Document tab's whole-block `set-key` can
+write a placement the per-entry op would refuse (the slot is `additionalProperties: true`); nothing outside the hub
+validates a placement (a corpus `check-*` would be cheap); the summary counts an entry naming a missing ITEM as placed.
+Two tool notes: `check-procgen-docs.mjs --host=` wants a scheme (`http://localhost:8000`); `ci-vitest-summary.mjs`
+reports the RUN, so it reads `in_progress` while a browser shard runs after the Vitest job is done.
+
+**⛓ THE R3 LADDER IS CLOSED — 2026-09-08 (W0 + S1 + D1 + W3, four Opus sessions, one pre-authorized gitlink unit).**
+What it leaves: every tab-owned Document row draws its block; helpers/dungeons viewer doors; the SIDECARS tab (five
+keys + the `preset_sidecars` summary, one renderer two hosts); "Send costs to APWorld Editor" with the hub coming to
+the front on its row for every `op` door; `settings` and `world_classes` GONE (schema 34 → 32 keys; 0 carriers); the
+PLACEMENTS tab with `set-canonical-placement`. CI 442/13384 → 442/13408, every derivation matched. **NEXT: the replan
+with the user** — the loop-cost item (what beyond the rename?), the deferred W1/W2 (options form; exporter flags,
+`item_groups`, `progression_mapping`), the atlas trio's real home, the placements validation trio (§10.7), D1's three
+leftovers (§9.7), the stardew tab-switch cost, W0's two-vocabulary note, S1's `region_atlas` bounce.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
