@@ -98,8 +98,20 @@ row, marked. The schema's top level is strict (`additionalProperties: false`), s
 no committed preset can carry one — but a user-loaded file can carry anything, and
 an "every element" tab must not silently drop what is visibly in the file.
 
-Keys another tab already edits show a pointer to that tab instead of a second
-editor. Everything else is editable, and the whole edit vocabulary is one op:
+Keys another tab already edits show a **pointer** to that tab — it is the place
+that knows the shape, and a region map is not a JSON blob to its own editor. ⛓⛓
+**W0 — and then the row draws its JSON block anyway**, the same affordance every
+other row gets. Until W0 the pointer was the whole row: the branch drew it and
+returned, so `world`'s other fields and `game_info`'s extras (the Meta tab draws
+exactly one field of each) were reachable only through the whole-document Raw
+JSON editor. ⚖ *every key gets a home tab, and the Document tab is the
+everything-fallback* (user, 2026-09-08) — applied to all tab-owned keys
+uniformly rather than to a hand list of "the partially covered ones", which
+would be a second table that agrees with the tabs until a tab stops drawing a
+field. The textarea is built **on expand**, so an owned row costs nothing until
+somebody opens it.
+
+Everything on the tab is editable, and the whole edit vocabulary is one op:
 
 ```js
 { op: 'set-key', key, value, scope: 'document' | 'player', player }
@@ -119,22 +131,36 @@ never for somebody else's pre-existing violation.
 ### The `editor` slot (H5)
 
 `documentKeys.DOCUMENT_KEY_EDITORS` is a `key → {label, returns, note, open}`
-table naming, for the five top-level keys that have a dedicated editor, how to
-open it. A filled row makes the Document row draw an **Open** button beside the
-raw JSON — beside, not instead of: the block is still data, and the block editor
-is still the way to fix a value the dedicated editor cannot express.
+table naming, for each top-level key that has a dedicated editor, how to open
+it. A filled row makes the Document row draw an **Open** button beside the raw
+JSON — beside, not instead of: the block is still data, and the block editor is
+still the way to fix a value the dedicated editor cannot express.
 
-| key | editor | `returns` |
-|---|---|---|
-| `region_atlas` | the region marking tool | `op` |
-| `procgen_metadata` | the procgen pipeline | `document` |
-| `loop_costs` | the loops cost debugger | `op` |
-| `sphere_log` | the spoiler checklist | `none` |
-| `preset_sidecars` | the Regions tab's per-region **Edit ▸** | `op` |
+| key | editor | `returns` | panel |
+|---|---|---|---|
+| `region_atlas` | the region marking tool | `op` | `regionMarkingTool` |
+| `procgen_metadata` | the procgen pipeline | `document` | `procgenPipelinePanel` |
+| `loop_costs` | the loops cost debugger | `op` | `loopsCostDebuggerPanel` |
+| `sphere_log` | the spoiler checklist | `none` | `spoilerChecklistPanel` |
+| `preset_sidecars` | the Regions tab's per-region **Edit ▸** | `op` | (no panel) |
+| `helpers` (W0) | the helpers panel, as a **viewer** | `none` | `helpersPanel` |
+| `dungeons` (W0) | the dungeons panel, as a **viewer** | `none` | `dungeonsPanel` |
 
-The other twenty-nine schema keys have **no dedicated editor**, and the registry
+The last two are ⚖ *"we could link to the existing dungeons and helpers panels
+as viewers"* (user, 2026-09-08), on the same ruling that leaves both keys
+**editable through raw JSON for now**: they read APPLIED state (the world the app
+has loaded, not the working copy — press Apply first), nothing comes back, and
+the row's own JSON block is how the key is changed. Both modules are enabled in
+the default `modules.json`, so unlike `region_atlas` these doors are live in the
+default mode — but the row still asks the component registry rather than
+assuming it, which is what `panelId` is for.
+
+Every schema key **without** a row here has no dedicated editor, and the registry
 says so by *not having a row*, never by dropping the key from the tab: every
-schema key still gets a Document row and a JSON block editor.
+schema key still gets a Document row and a JSON block editor. ⛔ The population
+is not a number written down here — it is
+`buildDocumentKeys(schema).filter((e) => !e.editor)`, and W0 grew the table by
+two.
 
 **`open` does not return an op**, and H1's contract said it would. It cannot:
 every editor here is a panel a person works in for a while, so a save comes back
