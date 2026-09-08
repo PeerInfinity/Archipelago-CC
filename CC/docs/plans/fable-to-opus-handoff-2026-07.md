@@ -12966,6 +12966,13 @@ reverted). ⚖ NEW (§9.7): the queue-doc's own historical md5 quotes at `10335-
 `prompt_generators/worldgen.py:629-639` still tells a prompt to ignore `world_classes` (inert); whether the pytest
 side effect deserves a CLAUDE.md line. NEXT: **W3** on D1's idle.
 
+**W3 LAUNCHED 2026-09-08** as `apworld-coverage-W3` (Opus; kickoff `NewDocs/plans/apworld-coverage-W3-prompt.md`; on
+D1's idle): the PLACEMENTS tab (`TABS` + `KEYS_OWNED_BY_TAB.placements`), ONE op `set-canonical-placement {player,
+location, item}` (absent item deletes; unknown names refused by name), every location of the selected slot with an
+item picker + filter, dangling placements shown not dropped; rows on `procgen_topdown/AP_1` (25 placements) and the
+4-player fixture; three mutants. Baseline 442/13393 at `78623df53f`. Reports come to `next-priorities-planning-4`;
+NOTHING launches on W3's idle — the replan with the user follows.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
