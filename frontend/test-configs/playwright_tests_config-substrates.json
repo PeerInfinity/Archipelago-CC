@@ -525,6 +525,30 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "APWorld coverage W0, \u2696 (user, 2026-09-08) 'we could link to the existing dungeons and helpers panels as viewers'. Both halves come from an authority rather than a string: whether the door is offered is asked of centralRegistry.getAllPanelComponents() \u2014 the same set the hub's own _panelRefusal consults \u2014 and whether the press worked is panelManager.isPanelActive, the panel actually in front. region_atlas is asserted ABSENT from that same set, so 'registered' discriminates instead of describing a mode where everything is on."
+        },
+        {
+            "id": "apworld-placements-tab-draws-every-location-of-the-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage W3, \u2696 (user, 2026-09-08) 'Yes, canonical placements should have their own tab.' Every count is DERIVED from the fetched document rather than typed, so the row cannot pass by agreeing with the panel. It also asserts the option list is LAZY \u2014 a closed select carries only the blank option and its own value \u2014 because a select per location carrying every item is 1,442,352 elements on dark_souls_3, the largest committed world."
+        },
+        {
+            "id": "apworld-placement-edit-is-one-op-and-one-undo",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage W3. Both halves are driven because only one of them can make each claim: on procgen_topdown/AP_1 every location is already placed, so a REPLACE is one op that moves the value and moves NEITHER readout, and only the blank '(unplaced)' option moves the tab's summary and the Document row's { n keys }. The op's own refusals are guarded in rulesDocOps.test.js, not here."
+        },
+        {
+            "id": "apworld-placements-follow-the-selected-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage W3, on the four-player multiworld fixture. \u26d4 The brief said slot 1's block is ABSENT there; measured, it is PRESENT and empty ({}), and slots 3 and 4 carry six placements each \u2014 so the law driven is that a slot-3 op leaves slot 1's block byte-identical, whatever it holds. Mutant: reading placements from slot '1' instead of the selected slot reds this row."
+        },
+        {
+            "id": "apworld-stale-placements-are-shown-and-removable",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage W3 \u2014 the requirement no other row can see. The schema declares the placement slot additionalProperties: true, so a stale entry validates and no committed preset carries one; this row hands the hub a committed preset with two added on the way in through stateManager:rawJsonDataLoaded, which is what a hand-edited file is. It is also why set-canonical-placement does not validate a DELETE."
         }
     ]
 }

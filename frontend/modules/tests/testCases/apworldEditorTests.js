@@ -167,6 +167,17 @@ const SEEDLING_PRESET_PATH = './presets/seedling_atlas/AP_1/AP_1_rules.json';
  */
 const ATLAS_MAZE_PRESET_PATH = './presets/seedling_atlas_maze/AP_1/AP_1_rules.json';
 
+/**
+ * ⛓⛓ **W3 — THE PLACEMENTS ROWS' DOCUMENT.** Measured over the committed
+ * corpus at the slice's HEAD: 211 of the 212 preset files carry
+ * `canonical_placements` and 97 carry at least one entry. This one is FULL —
+ * every one of its 25 locations is placed, over 9 region groups, out of 14
+ * items — so "the tab draws the document's own placements" is a claim about a
+ * populated block rather than about an empty one, and "N of M placed" is
+ * asserted at both ends of its range by the delete.
+ */
+const PLACEMENTS_PRESET_PATH = './presets/procgen_topdown/AP_1/AP_1_rules.json';
+
 const SCHEMA_PATH = './schema/rules.schema.json';
 
 /**
@@ -3652,6 +3663,487 @@ registerTest({
                + 'against the exporter\'s sidecar merge and the ⚖ — this row reads the same '
                + 'table the tab does and is deliberately blind to it.',
     testFunction: apworldSidecarsTabDrawsTheRegistrysSidecarKeys,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * W3 — THE PLACEMENTS TAB. (`NewDocs/plans/apworld-editor-coverage-plan.md`
+ * §4, rung W3.)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ The slot's locations, in document order, with their region — the
+ *  expectation, read off the DOCUMENT rather than off the panel. */
+function locationsFromDocument(doc, slot) {
+    const out = [];
+    for (const [region, body] of Object.entries(doc?.regions?.[slot] ?? {})) {
+        for (const loc of (body?.locations ?? [])) {
+            if (typeof loc?.name === 'string') out.push({ region, name: loc.name });
+        }
+    }
+    return out;
+}
+
+/** ⛓ The rows the tab drew, as the same shape. */
+function placementRowsOnScreen() {
+    return [...document.querySelectorAll(
+        `${PANEL_SELECTOR} .apworld-placements-row:not([data-orphan="location"])`)]
+        .map((r) => ({ region: r.dataset.region, name: r.dataset.location }));
+}
+
+/** ⛓ A `<select>` is opened by a MOUSEDOWN, which is also what builds its
+ *  option list (the list is lazy — see `_makePlacementSelect`). */
+function openPlacementSelect(row) {
+    const select = row.querySelector('.apworld-placements-select');
+    select.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+    return select;
+}
+
+function chooseItem(select, value) {
+    select.value = value;
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+/**
+ * ⛓⛓⛓ **THE TAB DRAWS EVERY LOCATION OF THE SLOT, WITH THE DOCUMENT'S OWN
+ * PLACEMENTS SELECTED** (W3 (a)).
+ *
+ * ⛔ Every number here is DERIVED from the document at run time — the fetched
+ * bytes, not the panel's view of them — so the row cannot pass by agreeing with
+ * the thing it is testing. It is also why there is no count in its id or its
+ * name: a count there is an allowlist key that reds twice when the corpus moves.
+ */
+export async function apworldPlacementsTabDrawsEveryLocationOfTheSlot(testController) {
+    try {
+        const panel = await openHub(testController, PLACEMENTS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        // ⛓ The EXPECTATION, fetched independently of the panel's own intake.
+        const doc = await (await fetch(PLACEMENTS_PRESET_PATH)).json();
+        const slot = panel.playerId;
+        const expected = locationsFromDocument(doc, slot);
+        const placements = doc.canonical_placements?.[slot] ?? {};
+        const items = Object.keys(doc.items?.[slot] ?? {});
+        testController.reportCondition(
+            'the document really carries placements, so this is not a claim about an empty block',
+            Object.keys(placements).length > 0);
+
+        selectTab(panel, 'placements');
+
+        const drawn = placementRowsOnScreen();
+        testController.assertEqual(
+            'the tab draws one row per location the slot holds',
+            String(expected.length), String(drawn.length));
+        testController.assertEqual(
+            '…the same locations, in the document\'s own order, each under its own region',
+            JSON.stringify(expected), JSON.stringify(drawn));
+
+        // ⛓ The region GROUPS are the regions that hold a location — a region
+        //   with none draws no header standing over nothing.
+        const regionsWithLocations = [...new Set(expected.map((l) => l.region))];
+        const groups = [...document.querySelectorAll(
+            `${PANEL_SELECTOR} .apworld-placements-region`)].map((g) => g.dataset.region);
+        testController.assertEqual(
+            'grouped by region, and only the regions that hold a location get a header',
+            JSON.stringify(regionsWithLocations), JSON.stringify(groups));
+
+        // ⛓⛓ EVERY row's select shows the document's OWN placement for it.
+        const wrong = drawn.filter(({ name }) => {
+            const row = document.querySelector(
+                `${PANEL_SELECTOR} .apworld-placements-row[data-location="${CSS.escape(name)}"]`);
+            const select = row?.querySelector('.apworld-placements-select');
+            return !select || select.value !== (placements[name] ?? '');
+        });
+        testController.assertEqual(
+            'every row\'s select carries the item the document places there', '0',
+            String(wrong.length));
+
+        const summary = document.querySelector(`${PANEL_SELECTOR} .apworld-placements-summary`);
+        const placed = expected.filter((l) =>
+            Object.prototype.hasOwnProperty.call(placements, l.name)).length;
+        testController.assertEqual('the summary counts the document\'s own placements',
+            `${placed} of ${expected.length}`, `${summary.dataset.placed} of ${summary.dataset.total}`);
+        testController.assertEqual('…and the chrome line says the same thing',
+            'true',
+            String(panel.statusLabel.textContent.includes(
+                `${placed} of ${expected.length} location`)));
+
+        /**
+         * ⛓⛓ **THE OPTION LIST IS LAZY, AND THAT IS ASSERTED RATHER THAN
+         * ASSUMED.** `dark_souls_3` slot 1 would otherwise build 1,194 × 1,208
+         * option elements before the tab could paint. A closed select carries
+         * only the blank option and its current value; opening it builds the
+         * slot's items.
+         */
+        const probe = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-row .apworld-placements-select`);
+        testController.reportCondition(
+            'a CLOSED select carries no more options than the blank plus its own value',
+            probe.options.length <= 2);
+        openPlacementSelect(probe.closest('.apworld-placements-row'));
+        testController.assertEqual(
+            'opening it builds the blank option plus every item the slot holds',
+            String(items.length + 1), String(probe.options.length));
+        testController.assertEqual('…and the blank option is the DELETE',
+            '', probe.options[0].value);
+
+        // ⛓ The filter is over the three names a row carries.
+        const filter = document.querySelector(`${PANEL_SELECTOR} .apworld-placements-filter`);
+        const needle = expected[0].name;
+        filter.value = needle;
+        filter.dispatchEvent(new Event('input', { bubbles: true }));
+        const visible = [...document.querySelectorAll(
+            `${PANEL_SELECTOR} .apworld-placements-row`)].filter((r) => !r.hidden);
+        testController.reportCondition(
+            'filtering by a location name narrows the rows to ones that match',
+            visible.length > 0 && visible.length < expected.length
+                && visible.every((r) => `${r.dataset.location} ${r.dataset.region} `
+                    + `${r.dataset.item ?? ''}`.toLowerCase().includes(needle.toLowerCase())));
+        filter.value = '';
+        filter.dispatchEvent(new Event('input', { bubbles: true }));
+        testController.assertEqual('clearing the filter brings every row back',
+            String(expected.length),
+            String([...document.querySelectorAll(
+                `${PANEL_SELECTOR} .apworld-placements-row`)].filter((r) => !r.hidden).length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('placements-tab test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **ONE GESTURE, ONE OP, ONE UNDO — AND THE DOCUMENT ROW MOVES WITH IT**
+ * (W3 (b)).
+ *
+ * ⛔ **THE DELETE IS THE HALF THAT MOVES THE COUNT, AND THAT IS A MEASUREMENT
+ * ABOUT THIS DOCUMENT.** Every one of `procgen_topdown/AP_1`'s 25 locations is
+ * already placed, so there is no unplaced location to add one to: a REPLACE
+ * changes the value and leaves both the tab's summary and the Document row's
+ * `{ n keys }` where they were, and only choosing "(unplaced)" moves them. Both
+ * halves are driven, because "one op" and "the readout moves" are different
+ * claims and only one of them a replace can make.
+ */
+export async function apworldPlacementEditIsOneOpAndOneUndo(testController) {
+    try {
+        const panel = await openHub(testController, PLACEMENTS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const slot = panel.playerId;
+        const docSummary = () => {
+            // ⛔ RE-QUERIED: selecting a tab rebuilds it, so a captured element
+            //   is detached and `querySelector` on it answers out of the old
+            //   tree (W0 §7.5).
+            selectTab(panel, 'document');
+            const text = document.querySelector(
+                `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="canonical_placements"] `
+                + '.apworld-doc-summary')?.textContent;
+            selectTab(panel, 'placements');
+            return text;
+        };
+        const summaryData = () => ({ ...document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-summary`).dataset });
+        const rowFor = (name) => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-row[data-location="${CSS.escape(name)}"]`);
+
+        selectTab(panel, 'placements');
+
+        // ⛓ The subject, and the item to move it to — both read off the record.
+        const target = Object.keys(panel.rulesDoc.canonical_placements[slot])[0];
+        const was = panel.rulesDoc.canonical_placements[slot][target];
+        const other = Object.keys(panel.rulesDoc.items[slot]).find((n) => n !== was);
+        testController.reportCondition('the document offers a second item to move to', !!other);
+
+        const opsBefore = panel.session.ops().length;
+        const placedBefore = summaryData().placed;
+        const docBefore = docSummary();
+
+        // ── (1) REPLACE ──────────────────────────────────────────────────
+        chooseItem(openPlacementSelect(rowFor(target)), other);
+
+        testController.assertEqual('the edit reached the record',
+            other, panel.rulesDoc.canonical_placements[slot][target]);
+        testController.assertEqual('it was exactly ONE op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        testController.assertEqual('and it is a set-canonical-placement for that location',
+            `set-canonical-placement|${target}|${slot}`,
+            `${panel.session.ops().at(-1).op}|${panel.session.ops().at(-1).location}`
+            + `|${panel.session.ops().at(-1).player}`);
+        testController.assertEqual(
+            'a REPLACE does not move the count — the same locations are still placed',
+            placedBefore, summaryData().placed);
+        testController.assertEqual('…nor the Document row\'s summary', docBefore, docSummary());
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
+        testController.assertEqual('one undo puts the original item back',
+            was, panel.rulesDoc.canonical_placements[slot][target]);
+        testController.assertEqual('and the op list is back where it started',
+            String(opsBefore), String(panel.session.ops().length));
+
+        // ── (2) DELETE — the blank option, which is what moves the counts ──
+        chooseItem(openPlacementSelect(rowFor(target)), '');
+
+        testController.assertEqual('the blank option removed the entry', 'false',
+            String(Object.prototype.hasOwnProperty.call(
+                panel.rulesDoc.canonical_placements[slot], target)));
+        testController.assertEqual('it too was exactly ONE op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        testController.assertEqual('the tab\'s summary lost one placement',
+            String(Number(placedBefore) - 1), summaryData().placed);
+        testController.reportCondition(
+            'and the Document row\'s summary moved with it', docSummary() !== docBefore);
+        testController.reportCondition(
+            'the row is still drawn — a location without a placement still has one',
+            !!rowFor(target));
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
+        testController.assertEqual('one undo restores the placement',
+            was, panel.rulesDoc.canonical_placements[slot][target]);
+        testController.assertEqual('the tab\'s summary is back', placedBefore, summaryData().placed);
+        testController.assertEqual('and so is the Document row\'s', docBefore, docSummary());
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('placement-edit test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **THE TAB READS THE SELECTED SLOT, AND AN EDIT TOUCHES ONLY IT** (W3 (c)).
+ *
+ * ⛔ **THE BRIEF SAID SLOT 1'S BLOCK IS ABSENT ON THIS FIXTURE. IT IS NOT.**
+ * Measured: `canonical_placements` carries all four slots, and slots 1 and 2
+ * hold `{}` — present and empty. So the law this row drives is the one that is
+ * actually true and actually the point: a slot-3 op leaves slot 1's block
+ * BYTE-IDENTICAL, whatever it happens to be.
+ *
+ * ⛓ Slots 3 and 4 carry six placements each and slots 1 and 2 carry none, so
+ * "reads the selected slot" is a discrimination on one document rather than two.
+ */
+export async function apworldPlacementsFollowTheSelectedSlot(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const doc = await (await fetch(FOUR_PLAYER_PATH)).json();
+        const selector = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`),
+            'the player selector', 8000, 50);
+        testController.reportCondition('the toolbar offers a player selector', !!selector);
+        if (!selector) return testController.getOverallResult();
+
+        const summaryData = () => ({ ...document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-summary`).dataset });
+        const shapeOf = (slot) => {
+            const locations = locationsFromDocument(doc, slot);
+            const placed = locations.filter((l) => Object.prototype.hasOwnProperty
+                .call(doc.canonical_placements?.[slot] ?? {}, l.name)).length;
+            return `${placed} of ${locations.length}`;
+        };
+
+        selectPlayer(selector, '3');
+        selectTab(panel, 'placements');
+        testController.assertEqual('slot 3 shows the placements slot 3 carries',
+            shapeOf('3'), `${summaryData().placed} of ${summaryData().total}`);
+        testController.assertEqual('…and one row per location slot 3 holds',
+            String(locationsFromDocument(doc, '3').length),
+            String(placementRowsOnScreen().length));
+
+        selectPlayer(selector, '1');
+        selectTab(panel, 'placements');
+        testController.assertEqual('slot 1 shows slot 1\'s — which is none of them',
+            shapeOf('1'), `${summaryData().placed} of ${summaryData().total}`);
+        testController.reportCondition(
+            'the two slots really differ, so this is a discrimination',
+            shapeOf('1') !== shapeOf('3'));
+
+        // ⛓⛓ …and an edit on slot 3 leaves slot 1's block byte-identical.
+        const slot1Before = JSON.stringify(panel.rulesDoc.canonical_placements['1']);
+        selectPlayer(selector, '3');
+        selectTab(panel, 'placements');
+        const row = document.querySelector(`${PANEL_SELECTOR} .apworld-placements-row`);
+        const select = openPlacementSelect(row);
+        const other = [...select.options].map((o) => o.value)
+            .find((v) => v && v !== select.value);
+        chooseItem(select, other);
+
+        testController.assertEqual('the op is stamped with the SELECTED slot',
+            '3', String(panel.session.ops().at(-1).player));
+        testController.assertEqual('slot 3 took the edit',
+            other, panel.rulesDoc.canonical_placements['3'][row.dataset.location]);
+        testController.assertEqual(
+            'and slot 1\'s block is byte-identical — present and empty, as the file has it',
+            slot1Before, JSON.stringify(panel.rulesDoc.canonical_placements['1']));
+        testController.assertEqual('…and it is still PRESENT, not deleted', 'true',
+            String(Object.prototype.hasOwnProperty.call(
+                panel.rulesDoc.canonical_placements, '1')));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('placements-slot test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **A STALE PLACEMENT IS SHOWN, MARKED, AND REMOVABLE — NEVER SILENTLY
+ * DROPPED** (W3, the requirement task 2 sets and no other row can see).
+ *
+ * ⛔ The document is a committed preset with two entries added on the way in —
+ * which is exactly what a HAND-EDITED file is, and the only way to get one: the
+ * schema declares the slot `additionalProperties: true`, so a stale entry
+ * validates and no committed preset carries one. It arrives through
+ * `stateManager:rawJsonDataLoaded`, the same intake `loadRulesFromFile` uses
+ * (`files:jsonLoaded` would hand the hub a document the state manager has
+ * already narrowed).
+ */
+export async function apworldStalePlacementsAreShownAndRemovable(testController) {
+    try {
+        // ⛓ Open the hub on the preset first, so the panel is mounted and its
+        //   schema is in, then hand it the edited document.
+        const panel = await openHub(testController, PLACEMENTS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const slot = panel.playerId;
+        const doc = await (await fetch(PLACEMENTS_PRESET_PATH)).json();
+        const GONE_LOCATION = 'A Room That Was Deleted';
+        const GONE_ITEM = 'An Item That Was Renamed';
+        const keptLocation = Object.keys(doc.canonical_placements[slot])[0];
+        doc.canonical_placements[slot][GONE_LOCATION] = Object.keys(doc.items[slot])[0];
+        doc.canonical_placements[slot][keptLocation] = GONE_ITEM;
+        testController.eventBus.publishAs('stateManager:rawJsonDataLoaded', {
+            source: PLACEMENTS_PRESET_PATH,
+            rawJsonData: doc,
+            selectedPlayerInfo: null,
+        }, 'stateManager');
+        await testController.pollForCondition(
+            () => Object.prototype.hasOwnProperty.call(
+                panel.rulesDoc?.canonical_placements?.[slot] ?? {}, GONE_LOCATION),
+            'the hand-edited document reached the hub', 8000, 50);
+
+        selectTab(panel, 'placements');
+
+        const orphanRow = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-row[data-orphan="location"]`);
+        testController.reportCondition(
+            'a placement naming a location the world lost is DRAWN, not dropped', !!orphanRow);
+        testController.assertEqual('…it is that location', GONE_LOCATION,
+            orphanRow?.dataset.location ?? '(none)');
+        testController.reportCondition('…and it is MARKED as such',
+            !!orphanRow?.querySelector('.apworld-placements-mark'));
+
+        const itemRow = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-row[data-orphan="item"]`);
+        testController.reportCondition(
+            'a placement naming an item the world lost is drawn and marked too',
+            !!itemRow && !!itemRow.querySelector('.apworld-placements-mark'));
+        const staleSelect = itemRow && openPlacementSelect(itemRow);
+        testController.reportCondition(
+            '…and opening its select KEEPS the unknown item as an option, rather than '
+            + 'silently re-pointing the row',
+            !!staleSelect && staleSelect.value === GONE_ITEM
+                && [...staleSelect.options].some((o) => o.value === GONE_ITEM));
+
+        const summary = document.querySelector(`${PANEL_SELECTOR} .apworld-placements-summary`);
+        testController.assertEqual('the summary counts both kinds of stale entry',
+            '1|1', `${summary.dataset.orphanLocations}|${summary.dataset.orphanItems}`);
+
+        // ⛓⛓ The one gesture the tab can offer for a location it cannot place:
+        //    remove it. It is a DELETE, which the op does not validate — the
+        //    reason it does not is exactly this row.
+        const opsBefore = panel.session.ops().length;
+        document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-row[data-orphan="location"] `
+            + '.apworld-placements-delete').click();
+
+        testController.assertEqual('Remove took the stale entry out', 'false',
+            String(Object.prototype.hasOwnProperty.call(
+                panel.rulesDoc.canonical_placements[slot], GONE_LOCATION)));
+        testController.assertEqual('as exactly ONE op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        testController.reportCondition('and the marked block is gone with it',
+            !document.querySelector(`${PANEL_SELECTOR} .apworld-placements-orphans`));
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
+        testController.reportCondition('one undo brings it back',
+            Object.prototype.hasOwnProperty.call(
+                panel.rulesDoc.canonical_placements[slot], GONE_LOCATION));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('stale-placement test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-placements-tab-draws-every-location-of-the-slot',
+    name: 'APWorld hub: the Placements tab draws every location of the selected slot, with the document\'s own placements selected',
+    description: 'On procgen_topdown/AP_1 — every one of whose locations is placed — asserts '
+               + 'the tab draws one row per location the slot holds, in the document\'s own '
+               + 'order and grouped under the regions that hold them; that every row\'s '
+               + 'select carries the item the document places there; that the summary and '
+               + 'the chrome line both count the document\'s own placements; that a CLOSED '
+               + 'select carries only the blank option and its current value while opening '
+               + 'one builds the blank plus every item the slot holds (the option list is '
+               + 'lazy, because a select per location carrying every item is 1.4 million '
+               + 'elements on the largest committed world); and that the filter narrows and '
+               + 'restores the rows. Every count is derived from the fetched document.',
+    testFunction: apworldPlacementsTabDrawsEveryLocationOfTheSlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-placement-edit-is-one-op-and-one-undo',
+    name: 'APWorld hub: choosing an item on the Placements tab is ONE op, and one undo takes it back',
+    description: 'Drives both halves through the tab\'s own select: a REPLACE (one '
+               + '`set-canonical-placement` stamped with the selected slot; the value moves '
+               + 'and neither the tab\'s summary nor the Document row\'s `{ n keys }` does, '
+               + 'because this document has no unplaced location to add one to) and a DELETE '
+               + 'through the blank "(unplaced)" option (one op; both readouts move; the row '
+               + 'is still drawn). Each is undone, and each undo restores the value, the op '
+               + 'count and both readouts. Mutant: the op ceasing to refuse an unknown item '
+               + 'is caught in rulesDocOps.test.js, not here.',
+    testFunction: apworldPlacementEditIsOneOpAndOneUndo,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-placements-follow-the-selected-slot',
+    name: 'APWorld hub: the Placements tab reads the selected slot, and an edit touches only it',
+    description: 'On the four-player multiworld fixture, whose slots 3 and 4 carry six '
+               + 'placements each while slots 1 and 2 carry an EMPTY block: asserts the tab '
+               + 'shows slot 3\'s placements and row count when slot 3 is selected and slot '
+               + '1\'s when slot 1 is, that the two really differ, and that an edit made on '
+               + 'slot 3 is stamped with slot 3 and leaves slot 1\'s block byte-identical and '
+               + 'still present. Mutant: reading placements from slot \'1\' instead of the '
+               + 'selected slot reds this row.',
+    testFunction: apworldPlacementsFollowTheSelectedSlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-stale-placements-are-shown-and-removable',
+    name: 'APWorld hub: a placement naming a location or item the world no longer holds is shown, marked and removable',
+    description: 'The schema declares the placement slot `additionalProperties: true`, so a '
+               + 'stale entry validates and no committed preset carries one — this row hands '
+               + 'the hub a committed preset with two added on the way in, through '
+               + '`stateManager:rawJsonDataLoaded`, which is what a hand-edited file is. '
+               + 'Asserts both kinds are drawn and marked, that the summary counts them, that '
+               + 'opening the stale-item row\'s select keeps the unknown item as an option '
+               + 'rather than silently re-pointing the row, and that Remove takes the '
+               + 'unplaceable entry out as ONE undoable op — which is why '
+               + '`set-canonical-placement` does not validate a DELETE.',
+    testFunction: apworldStalePlacementsAreShownAndRemovable,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
