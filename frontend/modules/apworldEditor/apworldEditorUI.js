@@ -1619,10 +1619,25 @@ class ApworldEditorUI {
       box.appendChild(desc);
     }
 
-    if (row.ownedByTab) {
-      box.appendChild(this._makeOwnedByTabLine(row));
-      return box;
-    }
+    /**
+     * ⛓⛓⛓ **W0 — THE POINTER STAYS AND THE BLOCK COMES BACK.** Until W0 an
+     * owned row drew the *"edited in the X tab"* line and RETURNED, which made
+     * the Document tab an "every KEY" tab rather than the "every ELEMENT" one
+     * ⚖ asked for: the Meta tab edits ONE field of `world` and ONE of
+     * `game_info`, so the other fourteen sub-keys of `world` were reachable
+     * only through the whole-document Raw JSON editor. The home tab is still
+     * the place that KNOWS the shape (a region map is not a JSON blob to its
+     * own editor) — hence the pointer, first and unchanged — and the block
+     * below it is the fallback for everything that tab does not express.
+     *
+     * ⛔ It is the SAME affordance every other row gets, applied to all
+     * fourteen owned keys uniformly, rather than a hand list of "the ones the
+     * tabs only partially cover": such a list is a second table that agrees
+     * with the tabs until the day a tab stops editing a field, and nobody
+     * would red. The textarea is built ON EXPAND (`_makeDocumentBlockEditor`),
+     * so a 600 KB `regions` costs nothing until somebody opens it.
+     */
+    if (row.ownedByTab) box.appendChild(this._makeOwnedByTabLine(row));
     // ⛓ H5 — the DEDICATED editor's door, above the raw JSON rather than
     //   instead of it: the block is still data and the block editor is still
     //   the way to fix a value the dedicated editor cannot express.
@@ -1998,19 +2013,26 @@ class ApworldEditorUI {
   }
 
   /**
-   * ⛓ A key another tab already edits gets a POINTER, not a second editor. ⛔ Two
-   * editors over one key is two places a person can change it and one of them
-   * will be the stale one — and the tab that owns it knows the shape (a region
-   * map is not a JSON blob to its own editor).
+   * ⛓ A key another tab already edits gets a POINTER FIRST — the tab that owns
+   * it knows the shape (a region map is not a JSON blob to its own editor), so
+   * that is where a person should go for it.
+   *
+   * ⛓⛓ **W0 — and the pointer is no longer the WHOLE row.** H1 returned here
+   * so that one key had one editor; what that actually bought was a key with no
+   * editor at all for every field its home tab does not draw. The row now says
+   * both things: go there for the shape, and the raw block below is the rest.
    */
   _makeOwnedByTabLine(row) {
     const line = document.createElement('div');
+    line.className = 'apworld-doc-owned';
     Object.assign(line.style, {
       display: 'flex', alignItems: 'center', gap: '6px', margin: '5px 0 0',
       color: '#8a8', fontSize: '11px',
     });
     const tab = TABS.find((t) => t.id === row.ownedByTab);
-    line.appendChild(document.createTextNode(`Edited in the ${tab ? tab.label : row.ownedByTab} tab.`));
+    line.appendChild(document.createTextNode(
+      `Edited in the ${tab ? tab.label : row.ownedByTab} tab — which knows this key's shape. `
+      + 'The raw block below is the same key, for whatever that tab does not draw.'));
     const btn = this._makeButton(`Go to ${tab ? tab.label : row.ownedByTab}`, '#3a3a3a',
       () => this._selectTab(row.ownedByTab));
     btn.style.fontSize = '11px';
@@ -2096,6 +2118,7 @@ class ApworldEditorUI {
     });
     toggle.style.fontSize = '11px';
     toggle.className = 'apworld-doc-toggle';
+    toggle.dataset.docKey = row.key;
     wrap.appendChild(toggle);
     if (!expanded) return wrap;
 
@@ -2133,6 +2156,12 @@ class ApworldEditorUI {
       this._applySetKey(row, parsed);
     });
     save.style.marginTop = '4px';
+    // ⛓ W0 — CLASSED so a row can press the product's own button. Until W0 the
+    //   only addressable controls on a block row were the toggle and the
+    //   textarea, so a row asserting a save had to call `_applySetKey` and
+    //   would have passed over a Save wired to nothing.
+    save.className = 'apworld-doc-save';
+    save.dataset.docKey = row.key;
     wrap.appendChild(save);
     return wrap;
   }
