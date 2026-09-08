@@ -12881,6 +12881,27 @@ push; as-built record = plan §8, which carries every number and the four mutant
 launch (kickoff `NewDocs/plans/apworld-coverage-D1-prompt.md` written and updated to say so). A moved rules.json byte
 pin is NOT covered — D1 stops there and the planner asks.
 
+**S1 VERIFIED by the planner 2026-09-08** (`86c02f0bec` on origin/main = the primary tree's HEAD; 5 code/docs commits
+by path `8c6d4a16a5..7ea5911838` + the record, with the planner's `13b781051d` between them as S1 said; `git diff
+--stat` under `shared/` and `presets/` EMPTY; `documentKeys.test.js` 33 → **39**, `documentLinks.test.js` 15 → **16**,
+in-app `apworldEditor` 28 → **29**; `TABS` carries `sidecars`; `KEYS_OWNED_BY_TAB.sidecars` is BUILT from two named
+lists, `SIDECAR_KEYS_FROM_WORLDGEN` + `SIDECAR_KEYS_FROM_RULING`; the debugger's label is the new one (old string 0 in
+the two code files, 1 in the docs as history); plan §8 on disk; traps 1298/1299 recorded). Pressed the product on
+`jta_schedule_test` from here: tabs Regions · Items · Meta · Map · **Sidecars** · Document · Links · Raw JSON; the
+Sidecars rows are exactly `procgen_metadata`, `loop_costs`, `region_atlas`, `flash_panel`, `provenance` + the
+`preset_sidecars` summary ("slot 1: 3 regions — edited PER REGION in the Regions tab"); the five Document rows say
+"Edited in the Sidecars tab"; 0 page errors. **CI @ `7ea5911838` run 34277771764 success: 442/13393 (13385 passed |
+8 skipped | 0 failed), slow 12/217 — S1 derived +0 files / +7 rows against 442/13386 BEFORE the run and matched.**
+What S1 overturned, kept: mutant B as briefed was VACUOUS in-app (the row read its population from the table the
+mutant mutates — the brief's own ⚑) ⇒ membership is now guarded in node against an authority OUTSIDE the table
+(the exporter's three `_inject_worldgen_*` methods, cross-checked with `generator.py`'s file names) and the in-app
+row guards the RENDERER; mutant A reds TWO conditions (a panel not in front has no layout, so its rows measure zero);
+`files:jsonLoaded` hands the hub 20 of a document's 24 keys — a scratch drive must publish `rawJsonDataLoaded`
+(trap 1299); `git checkout <file>` to revert a mutant discards the whole uncommitted file (trap 1298 — rebuilt,
+snapshotted, re-run; the quoted run is the re-run). ⚖ NEW (§8.6): the Sidecars rows ARE the Document rows (one
+renderer); `region_atlas`'s save now bounces the reader out of the marking tool (unmeasured, module disabled by
+default); `preset_sidecars` appears twice (editable on Regions, summary on Sidecars). NEXT: **D1** on S1's idle.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
