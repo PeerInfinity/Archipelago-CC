@@ -392,8 +392,7 @@ function loadExits(sm, selectedPlayerId) {
  * @param {string} selectedPlayerId - The player ID
  */
 function initializeGameLogic(sm, jsonData, selectedPlayerId) {
-  // Check both 'world' (new structure) and 'settings' (legacy) for backwards compatibility
-  const gameWorldFromFile = jsonData.world?.[selectedPlayerId] || jsonData.settings?.[selectedPlayerId] || {};
+  const gameWorldFromFile = jsonData.world?.[selectedPlayerId] || {};
   const gameName = gameWorldFromFile.game || sm.rules?.game_name || 'UnknownGame';
 
   sm._logDebug(

@@ -348,9 +348,6 @@ exports[`mixed substrates — end to end > top-down > compiles a stable logic gr
       "world_class_name": "ProcgenMazeWorld",
     },
   },
-  "world_classes": {
-    "1": "ProcgenMazeWorld",
-  },
 }
 `;
 
@@ -701,9 +698,6 @@ exports[`mixed substrates — end to end > top-down > compiles a stable logic gr
       "options": {},
       "world_class_name": "ProcgenMazeWorld",
     },
-  },
-  "world_classes": {
-    "1": "ProcgenMazeWorld",
   },
 }
 `;

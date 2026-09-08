@@ -44,14 +44,6 @@
       },
       "additionalProperties": false
     },
-    "world_classes": {
-      "type": "object",
-      "description": "Mapping of player slot ID (string) to the world class name used.",
-      "patternProperties": {
-        "^[0-9]+$": { "type": "string" }
-      },
-      "additionalProperties": false
-    },
     "regions": {
       "type": "object",
       "description": "Region data, keyed by player slot ID (string).",
@@ -232,23 +224,6 @@
             "use_resolved_items": {
               "type": "boolean",
               "description": "Whether to use resolved items in event processing."
-            }
-          },
-          "additionalProperties": true
-        }
-      },
-      "additionalProperties": false
-    },
-    "settings": {
-      "type": "object",
-      "description": "DEPRECATED: Use 'world' instead. Kept for backwards compatibility.",
-      "patternProperties": {
-        "^[0-9]+$": {
-          "type": "object",
-          "properties": {
-            "game": {
-              "type": "string",
-              "description": "Name of the game these settings apply to."
             }
           },
           "additionalProperties": true

@@ -1917,10 +1917,6 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if path == 'world.1.world_class_name' and worldgen_value == '<missing>':
         return True
 
-    # world_classes section - WorldGen exports this separately
-    if path.startswith('world_classes'):
-        return True
-
     # WorldGen-specific game_info fields (state counters, accumulator rules, etc.)
     worldgen_game_info_fields = {'accumulator_rules', 'prog_items_init'}
     for field in worldgen_game_info_fields:
@@ -2135,11 +2131,6 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
 
     # start_location_hints: WorldGen doesn't auto-populate location hints, so counts may differ
     if 'options.start_location_hints' in path:
-        return True
-
-    # World class name differences: Original may use abbreviated names (DarkSouls3World)
-    # while WorldGen uses full names derived from game name (DarkSoulsIIIWorld)
-    if path.startswith('world_classes.'):
         return True
 
     # world_description: WorldGen always generates a default docstring for worlds

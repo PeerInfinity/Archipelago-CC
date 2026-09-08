@@ -12,9 +12,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "RobotKittyWorld"
-  },
   "regions": {
     "1": {
       "Menu": {

@@ -184,7 +184,7 @@ describe('compiling the Phase-1 fixture (subgraphs, internal exits, start sub-re
         expect(rules.region_atlas).toEqual({ atlas_id: FIXTURE.atlas_id, game: 'seedling' });
         expect(rules.game_name).toBe('seedling');
         expect(rules.world['1'].world_directory).toBe('seedling');
-        expect(rules.world_classes['1']).toBe('SeedlingWorld');
+        expect(rules.world['1'].world_class_name).toBe('SeedlingWorld');
     });
 
     it('emits NO preset_sidecars — Phase 3 is graph-only (ruled 2026-07-27)', () => {

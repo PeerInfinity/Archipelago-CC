@@ -15,7 +15,6 @@ export async function configLoadAndItemCheckTest(testController) {
       archipelago_version: '0.6.1',
       generation_seed: 12345,
       player_names: { 1: 'TestPlayer1' },
-      world_classes: { 1: 'ALTTPWorld' },
       plando_options: [],
       start_regions: {
         1: { default: ['Menu'], available: [{ name: 'Menu', type: 1 }] },

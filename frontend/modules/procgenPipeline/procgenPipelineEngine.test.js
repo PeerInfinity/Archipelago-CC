@@ -1730,7 +1730,7 @@ describe('buildRulesJson', () => {
         for (const key of [
             'game_name', 'game_directory', 'archipelago_version',
             'generation_seed', 'seed_name', 'player_names',
-            'world_classes', 'regions', 'start_regions', 'items',
+            'regions', 'start_regions', 'items',
             'itempool_counts', 'canonical_placements', 'world',
             'game_info', 'helpers', 'preset_sidecars',
         ]) {

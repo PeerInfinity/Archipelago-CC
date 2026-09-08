@@ -220,8 +220,7 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
     # Get world class name with priority:
     # 1. world.{player}.world_class_name (authoritative, new format)
     # 2. exporter.{player}.world_class_name (legacy)
-    # 3. world_classes (older legacy)
-    # 4. derive from game name (fallback)
+    # 3. derive from game name (fallback)
     #
     # Track original_world_class_name to preserve during game name override
     # This is set when the class name comes from the source export (not derived)
@@ -232,15 +231,6 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
         # Try exporter section (legacy)
         original_world_class_name = exporter_data.get('world_class_name')
         world_class_name = original_world_class_name
-
-    if not world_class_name:
-        # Try top-level world_classes (older legacy)
-        world_classes = json_data.get('world_classes', {})
-        if world_classes:
-            # Get the world class for the specified player, or fall back to first available
-            world_class_name = world_classes.get(player_id) or list(world_classes.values())[0]
-            # Also set original_world_class_name since this came from the source export
-            original_world_class_name = world_class_name
 
     if not world_class_name:
         # Derive from game name: "My Game" -> "MyGameWorld"

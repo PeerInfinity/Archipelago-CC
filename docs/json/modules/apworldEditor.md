@@ -62,7 +62,7 @@ reset the session, so an undo after an Apply still works. It republishes the
 
 ## The player selector
 
-A `rules.json` is keyed by **player slot** at seventeen of its thirty-four
+A `rules.json` is keyed by **player slot** at fifteen of its thirty-two
 top-level keys (`patternProperties: {"^[0-9]+$"}`, re-derived from the schema),
 and 15 committed presets carry four players. The toolbar's
 selector is what every tab reads and what every op is stamped with. Its default
