@@ -465,12 +465,17 @@ names, and the summary line — also the tab's chrome line — is derived:
 
 ⛓⛓ **The option list is built on FIRST OPEN, and that is a measurement.**
 `dark_souls_3` slot 1 holds 1,194 locations and 1,208 items and `depgraph` holds
-712 and 1,356 — a `<select>` per location carrying every item is **1,442,352
-option elements**, built before the tab can paint. So a closed select carries only
-the blank option and, if placed, its current value, and fills itself on
-`focus`/`mousedown`, which is what opening it *is*. Measured on `dark_souls_3`:
-the tab paints in **178 ms** with **1,194** option elements in total, opening one
-select costs **8 ms** and yields **1,209** options, and the filter costs **8 ms**.
+712 and 1,356. Both builds were **measured on that page**, not reasoned about:
+
+| `dark_souls_3` slot 1 | eager (`fill()` at construction) | lazy (shipped) |
+|---|---|---|
+| option elements on the tab | **1,443,546** | **1,194** |
+| tab paint | **13,983 ms** | **178 ms** |
+| filter keystroke | **516 ms** | **8 ms** |
+| opening one select | — (already built) | **8 ms**, 1,209 options |
+
+So a closed select carries only the blank option and, if placed, its current
+value, and fills itself on `focus`/`mousedown`, which is what opening it *is*.
 It is uniformly lazy with no size threshold, so the path the small presets in the
 in-app roster exercise is the path the big worlds take.
 
