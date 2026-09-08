@@ -12786,6 +12786,24 @@ path; as-built record = plan §7, which carries every number and the two mutants
   fix reintroduces the absent-object-key defect); and whether a viewer door leaving the hub for an APPLIED-state panel
   is the relationship we want is S1/replan material.
 
+**W0 VERIFIED by the planner 2026-09-08** (`88c34e83b4` on origin/main = the primary tree's HEAD; 7 commits by path in
+`804415b4b7..88c34e83b4`, the left end = W0's own start HEAD; `git diff --stat` under `shared/` and `presets/` EMPTY;
+`documentKeys.test.js` 31 → **33**, `documentLinks.test.js` 15 (a typed list became a registry read — the brief's
+"15 → n" was wrong), in-app category `apworldEditor` 26 → **28**; two viewer doors in `DOCUMENT_KEY_EDITORS`; the
+"twenty-nine" docblock counts gone; plan §7 on disk. Pressed the product on stardew from here: 34 rows, **15** rows
+with a "Go to" pointer (the 14 owned + the `preset_sidecars` door) and **15** of them now carry an affordance; the
+helpers/dungeons doors read "Open the helpers panel" / "Open the dungeons panel", ENABLED; 0 page errors.
+**CI @ `e84050a936` run 34272123984 success: `suite: vitest (unfiltered)` 442/13386 (13378 passed | 8 skipped | 0
+failed), slow battery 12/217 — W0 derived +0 files / +2 rows against 442/13384 BEFORE the run and matched.**
+What W0 overturned, kept: `regions` opens at 1,689,831 pretty chars in 121 ms (the brief's "600 KB" was compact
+bytes — trap family "pretty bytes ≠ file bytes"); mutant B's first arming reddened 2 rows not 3 because the derived
+row's population was keyed on the field under test (a guard that selects by the field it tests goes quiet on its
+own defect — fixed, 3 red); a post-gesture DOM lookup on a detached row (expanding a block re-renders the tab).
+⚖ NEW (W0 §7.7, for S1/the replan): (1) six `META_FIELDS` scalars now have TWO vocabularies writing one path
+(`set-meta` from Meta, `set-key` from the Document row); (2) `player_names` draws a JSON block for a per-player
+STRING slice (routing reads the declared TOP-LEVEL type; round-trips correctly); (3) the viewer doors leave the hub
+for an APPLIED-state panel. NEXT: **S1** on W0's idle notice.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
