@@ -12743,6 +12743,10 @@ open (the atlas trio's real home; W1/W2 at the replan; the stardew tab-switch co
 `NewDocs/plans/apworld-coverage-W0-prompt.md` written. **NOT launched** — the user asked twice not to start
 implementation; the launch waits on the user's word.
 
+**⚖ RULED (user, 2026-09-08): "The plan looks good. Please begin implementing it."** ⇒ **W0 LAUNCHED 2026-09-08** as
+`apworld-coverage-W0` (Opus; kickoff `NewDocs/plans/apworld-coverage-W0-prompt.md`; primary tree). Reports come to
+`next-priorities-planning-4`; S1 launches on W0's idle notice, D1 on S1's, W3 on D1's; the replan after W3.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
