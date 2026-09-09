@@ -133,21 +133,27 @@ never for somebody else's pre-existing violation.
 
 ### The `editor` slot (H5)
 
-`documentKeys.DOCUMENT_KEY_EDITORS` is a `key → {label, returns, note, open}`
-table naming, for each top-level key that has a dedicated editor, how to open
-it. A filled row makes the Document row draw an **Open** button beside the raw
+`documentKeys.DOCUMENT_KEY_EDITORS` is a
+`key → {label, returns, focusHubOnSave, note, open}` table naming, for each
+top-level key that has a dedicated editor, how to open it. A filled row makes the Document row draw an **Open** button beside the raw
 JSON — beside, not instead of: the block is still data, and the block editor is
 still the way to fix a value the dedicated editor cannot express.
 
-| key | editor | `returns` | panel |
-|---|---|---|---|
-| `region_atlas` | the region marking tool | `op` | `regionMarkingTool` |
-| `procgen_metadata` | the procgen pipeline | `document` | `procgenPipelinePanel` |
-| `loop_costs` | the loops cost debugger | `op` | `loopsCostDebuggerPanel` |
-| `sphere_log` | the spoiler checklist | `none` | `spoilerChecklistPanel` |
-| `preset_sidecars` | the Regions tab's per-region **Edit ▸** | `op` | (no panel) |
-| `helpers` (W0) | the helpers panel, as a **viewer** | `none` | `helpersPanel` |
-| `dungeons` (W0) | the dungeons panel, as a **viewer** | `none` | `dungeonsPanel` |
+| key | editor | `returns` | `focusHubOnSave` | panel |
+|---|---|---|---|---|
+| `region_atlas` | the region marking tool | `op` | **`false`** (R1) | `regionMarkingTool` |
+| `procgen_metadata` | the procgen pipeline | `document` | — | `procgenPipelinePanel` |
+| `loop_costs` | the loops cost debugger | `op` | **`true`** | `loopsCostDebuggerPanel` |
+| `sphere_log` | the spoiler checklist | `none` | — | `spoilerChecklistPanel` |
+| `preset_sidecars` | the Regions tab's per-region **Edit ▸** | `op` | **`false`** (unreachable) | (no panel) |
+| `helpers` (W0) | the helpers panel, as a **viewer** | `none` | — | `helpersPanel` |
+| `dungeons` (W0) | the dungeons panel, as a **viewer** | `none` | — | `dungeonsPanel` |
+
+⛓ **`focusHubOnSave` is declared by every `returns: 'op'` door and by no other**
+— a door whose save cannot come back here has nothing to focus, and the `—` rows
+above carry no field at all. A `documentKeys.test.js` row selects its population
+by the `returns === 'op'` LAW rather than by the flag, so a door that DROPS the
+declaration reds instead of filtering itself out of its own guard.
 
 The last two are ⚖ *"we could link to the existing dungeons and helpers panels
 as viewers"* (user, 2026-09-08), on the same ruling that leaves both keys
@@ -199,11 +205,21 @@ does it come back here as an undoable step?"* is the question a reader has:
   the key's **home tab** — `ownedByTab ?? 'document'`, so `loop_costs` and
   `region_atlas` land on **Sidecars** and a key no tab owns lands on the
   everything-fallback — scrolls `[data-doc-key="<key>"]` into view and prints the
-  success sentence BESIDE that row as well as in the chrome. It is generic: every
-  `op` door gets it, `region_atlas` included, because the seam is
-  `_acceptEditorOp` and not any one door. ⛔ **A REFUSED op steals no focus** —
-  every refusal returns through `_acceptEditorOp`'s own `refuse()` before the
-  focus is reached, so the two outcomes never look alike on screen.
+  success sentence BESIDE that row as well as in the chrome. ⛔ **A REFUSED op
+  steals no focus** — every refusal returns through `_acceptEditorOp`'s own
+  `refuse()` before the focus is reached, so the two outcomes never look alike
+  on screen.
+  ⛓⛓ **R1 — and whether it fires is the DOOR's declaration** (⚖ user,
+  2026-09-09; S1 §8.6 (2) named the gap). The seam stays generic — one place
+  every `op` door's save comes through — but S1 shipped the raise
+  UNCONDITIONAL, which is a claim about every editor at once: `loop_costs`'
+  Send ENDS the visit to the debugger, while the region marking tool is a
+  workspace whose Save is a checkpoint, so raising the hub there takes the
+  person's screen mid-task. `focusHubOnSave` (above) gates the
+  raise / tab-select / scroll and is read FAIL-CLOSED — a door that omits it
+  does not bounce. It does **not** gate the sentence: the beside-the-row
+  message is recorded either way, so an unfocused save has its answer waiting
+  where the key lives.
 - **`document`** — that editor's exit is a NEW document (the arc's rule that
   generation is not an edit); nothing comes back here.
 - **`none`** — that editor only READS the block.

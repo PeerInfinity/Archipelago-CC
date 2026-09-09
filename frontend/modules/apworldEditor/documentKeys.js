@@ -215,6 +215,28 @@ const TAB_FOR_KEY = Object.freeze(Object.fromEntries(
  *                   that generation is not an edit); nothing returns here.
  *     'none'      → the editor READS this block; nothing comes back at all.
  *
+ * ⛓⛓⛓ **`focusHubOnSave` — AND WHETHER THAT SAVE BOUNCES THE PERSON BACK
+ * HERE** (R1; S1 §8.6 (2) named the gap). S1 made `_acceptEditorOp` raise the
+ * hub, select the key's home tab and scroll to its row on EVERY accepted op,
+ * because the ⚖ that asked for it described the gesture generically. It is the
+ * right answer for the cost debugger, where Send IS a deliberate hand-back —
+ * and the wrong one for the region marking tool, which is a place a person
+ * keeps working after a save. So the door DECLARES it, per door:
+ *
+ *     true   → an accepted save raises this panel, selects the key's home tab
+ *              and scrolls the row into view.
+ *     false  → none of that happens. The success sentence is still recorded
+ *              beside the row (and in the chrome), so it is waiting there when
+ *              the person comes back — a save that says nothing anywhere would
+ *              be a different change.
+ *
+ * ⛔ **IT IS DECLARED BY EVERY `returns: 'op'` DOOR AND READ FAIL-CLOSED**: a
+ * door that omits it does not focus. A missing flag that BOUNCED would put the
+ * behaviour back on the door that forgot to think about it, which is how S1's
+ * default got there in the first place. `documentKeys.test.js` selects its
+ * population by the `returns === 'op'` LAW — never by the flag — so a door
+ * that drops the field reds instead of filtering itself out.
+ *
  * ⛔ **NO PANEL MODULE IS IMPORTED AT THE TOP OF THIS FILE.** `documentKeys.js`
  * is loaded by node rows, by the Links tab and by the Document tab; a static
  * `import` of `regionMarkingTool/index.js` would drag the Golden-Layout panel
@@ -241,6 +263,14 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
     region_atlas: Object.freeze({
         label: 'Open in the region marking tool',
         returns: 'op',
+        /**
+         * ⛓⛓ R1 — **THE MARKING TOOL IS A PLACE A PERSON KEEPS WORKING.** Its
+         * Save is a checkpoint, not a hand-back: bouncing them out of the tool
+         * and onto the Sidecars tab after every save is the defect S1 §8.6 (2)
+         * predicted. The op still applies, is still undoable here, and its
+         * sentence is still waiting beside the row when they come back.
+         */
+        focusHubOnSave: false,
         panelId: 'regionMarkingTool',
         note: 'This block is a REFERENCE to an atlas ({atlas_id, game, map_document}), not the '
             + 'atlas itself, and nothing resolves an atlas id back to its file — so the tool '
@@ -304,6 +334,15 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
     loop_costs: Object.freeze({
         label: 'Open in the loops cost debugger',
         returns: 'op',
+        /**
+         * ⛓⛓ R1 — **SEND IS A DELIBERATE HAND-BACK, so the hub comes to the
+         * front** (⚖ user, 2026-09-08: *"this automatically activated the
+         * APWorld Editor panel and scrolled to the relevant section, with a
+         * message that the data was successfully loaded"* — the gesture that
+         * ⚖ was asked about). The debugger's Send button ENDS the visit; there
+         * is nothing left to do there once the plan has been sent.
+         */
+        focusHubOnSave: true,
         panelId: 'loopsCostDebuggerPanel',
         note: 'Plans this WORKING COPY\'s mana economy — the debugger reads the document you '
             + 'are editing, not the applied world (press "Use applied state" there to go back). '
@@ -347,6 +386,22 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
     preset_sidecars: Object.freeze({
         label: 'Go to the Regions tab',
         returns: 'op',
+        /**
+         * ⛓⛓⛓ R1 — **DECLARED `false` BECAUSE IT IS UNREACHABLE, and that is
+         * measured rather than assumed.** This door's `open` takes only
+         * `goToTab` and never touches `onSave`, so nothing it does can reach
+         * `_acceptEditorOp` at all: the census of production `onSave(` call
+         * sites over `frontend/modules/apworldEditor/` finds exactly ONE, in
+         * `region_atlas`'s door, plus `loop_costs` handing its `onSave` to the
+         * debugger through the load payload. Its `returns: 'op'` describes the
+         * REGIONS tab's `replace-region-sidecar`, which comes back through the
+         * per-region editor's own seam (`_applyOp`) and never through this one.
+         *
+         * ⛔ So the honest value is the one that changes nothing if the door is
+         * ever wired to `onSave` by someone who has not thought about it —
+         * `false`, the same fail-closed reading a missing flag gets.
+         */
+        focusHubOnSave: false,
         panelId: null,
         note: 'Edited PER REGION in the Regions tab: Edit ▸ opens that region\'s own editor '
             + '(H4b) and its save comes back as ONE `replace-region-sidecar`. There is no '

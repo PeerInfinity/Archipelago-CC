@@ -416,6 +416,47 @@ describe('the editor slot — FILLED by H5', () => {
         }
     });
 
+    /**
+     * ⛓⛓⛓ **R1 — EVERY `op` DOOR SAYS WHETHER ITS SAVE BOUNCES THE PERSON BACK
+     * TO THE HUB** (S1 §8.6 (2); ⚖ user, 2026-09-09). S1's `_acceptEditorOp`
+     * raised the panel, selected the key's home tab and scrolled to the row on
+     * EVERY accepted op — right for the cost debugger's Send, wrong for the
+     * marking tool, which is a place a person keeps working.
+     *
+     * ⛔ **THE POPULATION IS THE LAW, NOT THE FLAG.** `returns === 'op'` is what
+     * makes a door capable of coming back through `_acceptEditorOp` at all, so
+     * that is what selects the rows here. Selecting by `focusHubOnSave !==
+     * undefined` — the field under test — would let a door that DROPPED the
+     * declaration filter itself out of its own guard, which is W0's mutant-B
+     * shape and S1's §8.1 (2) both over again.
+     *
+     * ⛓ The VALUES are pinned too, and they have no derivation: which doors
+     * bounce is a ⚖, so this row is where the ruling is written down.
+     */
+    it('⛓⛓⛓ every `op` door declares `focusHubOnSave`, and the ⚖ says which way',
+        () => {
+            const opDoors = Object.entries(DOCUMENT_KEY_EDITORS)
+                .filter(([, editor]) => editor.returns === 'op')
+                .map(([key]) => key);
+            // ⛔ Non-vacuity: the law has to select somebody.
+            expect(opDoors.length).toBeGreaterThan(0);
+            for (const key of opDoors) {
+                expect(typeof DOCUMENT_KEY_EDITORS[key].focusHubOnSave, key).toBe('boolean');
+            }
+            // ⚖ user 2026-09-08 — Send IS the hand-back, so the hub comes forward.
+            expect(DOCUMENT_KEY_EDITORS.loop_costs.focusHubOnSave).toBe(true);
+            // ⚖ user 2026-09-09 — the marking tool is a workspace, not a hand-back.
+            expect(DOCUMENT_KEY_EDITORS.region_atlas.focusHubOnSave).toBe(false);
+            /**
+             * ⛓ `preset_sidecars` declares `false` because the flag is
+             * UNREACHABLE for it: its `open` takes only `goToTab` and never
+             * touches `onSave`, so nothing it does reaches `_acceptEditorOp`.
+             * Measured here off the door's own source rather than asserted.
+             */
+            expect(DOCUMENT_KEY_EDITORS.preset_sidecars.focusHubOnSave).toBe(false);
+            expect(String(DOCUMENT_KEY_EDITORS.preset_sidecars.open)).not.toContain('onSave');
+        });
+
     it('⛔ NO DOOR IMPORTS ITS PANEL AT MODULE LOAD — this module is loaded by '
         + 'node rows and by both tabs', () => {
         // The measurement is textual because the alternative is to import the

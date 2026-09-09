@@ -527,6 +527,12 @@
             "_comment": "APWorld coverage R1, \u2696 (user, 2026-09-09) 'The sidecar entries in the sidecars tab have the Go to Sidecars button. Is there a simple way to fix that?' S1 gave the Sidecars tab the Document tab's row renderer and the 'Edited in the X tab' pointer came with it. The population is the LAW's \u2014 every key KEYS_OWNED_BY_TAB files under the Sidecars tab \u2014 and the CONTROL is the other host: absent on its own tab (while keeping its editing affordance, so a renderer that skipped the whole owned branch again would not pass), present on the Document tab with a button whose EFFECT is the Sidecars tab, and a key owned by a THIRD tab still pointing. That last row is what separates 'the host suppresses its own pointer' from 'the pointer is gone'."
         },
         {
+            "id": "apworld-a-door-can-decline-to-raise-the-hub",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage R1, S1 \u00a78.6 (2) \u2014 S1 shipped the accepted-op focus UNCONDITIONAL, which is a claim about every editor at once: the cost debugger's Send ENDS the visit, but the region marking tool is a workspace whose Save is a checkpoint. \u26d4 _acceptEditorOp is driven DIRECTLY because region_atlas's panel is disabled in the default mode, so no gesture here reaches the seam \u2014 the op's value comes from the schema's own `required` list, so the veto on the accepted path is real. The non-vacuity is inside the row: accepted + applied + the beside-the-row sentence recorded (the half focusHubOnSave does NOT gate) before the no-raise claims, because 'the hub did not come forward' is also true of a seam that refused or never ran. The `true` half is apworld-loop-costs-send-writes-the-plan-as-one-op, so a mutant that ignores the flag reds one row whichever way it is wired."
+        },
+        {
             "id": "apworld-viewer-doors-raise-the-panels-they-declare",
             "enabled": true,
             "category": "apworldEditor",

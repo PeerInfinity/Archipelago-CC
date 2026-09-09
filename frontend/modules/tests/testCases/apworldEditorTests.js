@@ -71,8 +71,8 @@ import { regionAtlasReference } from '../../procgenPipeline/regionAtlasCompiler.
  * comes from the exporter's own `_inject_worldgen_*` methods and from the ⚖.
  */
 import {
-    DOCUMENT_KEY_EDITORS, DOCUMENT_TAB_ID, KEYS_OWNED_BY_TAB, SIDECARS_TAB_ID,
-    SIDECARS_TAB_SUMMARY_KEY,
+    DOCUMENT_KEY_EDITORS, DOCUMENT_TAB_ID, KEYS_OWNED_BY_TAB, regionAtlasSetKeyOp,
+    SIDECARS_TAB_ID, SIDECARS_TAB_SUMMARY_KEY,
 } from '../../apworldEditor/documentKeys.js';
 /**
  * ⛓⛓ W0 — **THE TWO AUTHORITIES A VIEWER-DOOR ROW HAS TO ASK, and neither is a
@@ -3804,6 +3804,140 @@ registerTest({
                + 'tab, which is what tells "the host suppresses its own pointer" apart from '
                + '"the pointer is gone".',
     testFunction: apworldARowDoesNotPointAtTheTabItIsOn,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
+ * ⛓⛓⛓ **R1 — A DOOR THAT DECLARED `focusHubOnSave: false` DOES NOT TAKE THE
+ * PERSON'S SCREEN** (S1 §8.6 (2); ⚖ user, 2026-09-09).
+ *
+ * ⛔ **`_acceptEditorOp` IS DRIVEN DIRECTLY, and that is forced.** The subject
+ * is `region_atlas`, whose panel (`regionMarkingTool`) is DISABLED in the
+ * default `modules.json` — H5 §19.4, and the hub's own `_panelRefusal` is what
+ * makes the door unpressable here. So there is no gesture in this mode that
+ * reaches the seam, and a row that waited for one would assert nothing. The op
+ * is synthetic, but its VALUE is derived from `rules.schema.json`'s own
+ * `required` list for the key, so the schema veto on the accepted path is real
+ * rather than routed around.
+ *
+ * ⛓⛓ **THE NON-VACUITY IS INSIDE, not in a second row.** *"The hub did not come
+ * to the front"* is also true of a seam that refused the op, threw, or never
+ * reached the focus code at all. So the row asserts, in order: the op was
+ * ACCEPTED and APPLIED (the op list grew by one), the focus function DID run
+ * (its beside-the-row sentence is recorded, which is the half `focusHubOnSave`
+ * deliberately does NOT gate), and only THEN that nothing was raised and no tab
+ * moved.
+ *
+ * ⛓ **THE `true` HALF OF THE FLAG IS ANOTHER ROW'S** —
+ * `apworld-loop-costs-send-writes-the-plan-as-one-op` presses the real Send and
+ * asserts *"after Send the APWorld editor IS the panel in front"*. So a mutant
+ * that ignores the flag reds one of the two whichever way it is wired: always
+ * focus reds this row, never focus reds that one.
+ */
+export async function apworldADoorCanDeclineToRaiseTheHub(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const KEY = 'region_atlas';
+        const door = DOCUMENT_KEY_EDITORS[KEY];
+        // ⛓ THE PREMISE, read off the registry: this row is about a door that
+        //   declared `false`, and it says so rather than assuming it.
+        testController.assertEqual(
+            `the ${KEY} door declares focusHubOnSave: false`,
+            'false', String(door.focusHubOnSave));
+        // ⛓ …and the reason the seam has to be driven directly, measured rather
+        //   than asserted: the tool's component is not registered in this mode.
+        testController.assertEqual(
+            'and its panel really is unavailable here, which is why the seam is driven directly',
+            'true', String(!!panel._panelRefusal(door.panelId)));
+
+        /**
+         * ⛓ Put a DIFFERENT panel in front, so "the hub did not come forward"
+         * is a claim rather than a restatement of where it already was.
+         */
+        panel.eventBus.publish('ui:activatePanel', { panelId: 'helpersPanel' });
+        await testController.pollForCondition(
+            () => !panelManager.isPanelActive(PANEL_ID),
+            'another panel is in front of the hub', 8000, 50);
+        testController.assertEqual('the hub is NOT the panel in front before the save',
+            'false', String(panelManager.isPanelActive(PANEL_ID)));
+
+        /**
+         * ⛓ Every `ui:activatePanel` published from here on, counted at the
+         * BUS — the effect `panelManager` reports is downstream of it, and a
+         * raise of a panel that happened to be in front already would not move
+         * that readout.
+         */
+        const raised = [];
+        const stopWatching = appEventBus.subscribe(
+            'ui:activatePanel', (d) => raised.push(d?.panelId), 'tests');
+
+        const tabBefore = panel.activeTab;
+        const opsBefore = panel.session.ops().length;
+        /** ⛓ The value is the SCHEMA's own required field list, not a shape typed here. */
+        const required = panel._rulesSchema.properties[KEY].required ?? [];
+        testController.reportCondition(
+            'the schema names required fields for the key — the op\'s premise',
+            required.length > 0);
+        const value = Object.fromEntries(required.map((f) => [f, `r1-${f}`]));
+        // ⛓ Built by the DOOR's own op builder, so the op is the one the tool
+        //   would really hand back.
+        const verdict = panel._acceptEditorOp(
+            KEY, regionAtlasSetKeyOp(KEY, value), panel._documentToken);
+        stopWatching();
+
+        // ⛔ FIRST: the op really landed. Everything below is about a save that
+        //    happened, and none of it discriminates on a save that did not.
+        testController.assertEqual('the synthetic save was ACCEPTED',
+            'true', String(!!verdict.accepted));
+        testController.assertEqual('…and APPLIED — the op list grew by one',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        testController.assertEqual('…and the document really carries the block now',
+            'true', String(JSON.stringify(panel.rulesDoc[KEY]) === JSON.stringify(value)));
+
+        // ⛓ …and the seam's own answer was recorded — the half the flag does
+        //   NOT gate, and what tells "declined to raise" from "never ran".
+        testController.assertEqual(
+            'the success sentence was recorded beside the row anyway',
+            KEY, String(panel._opRowMessage?.key));
+
+        // ⛔ THE CLAIM.
+        testController.assertEqual('the hub did NOT publish ui:activatePanel for itself',
+            'false', String(raised.includes(PANEL_ID)));
+        testController.assertEqual('…so it is still not the panel in front',
+            'false', String(panelManager.isPanelActive(PANEL_ID)));
+        testController.assertEqual('…and it did not move off the tab the reader was on',
+            String(tabBefore), String(panel.activeTab));
+
+        // ⛓ One undo takes the whole thing back — the save was an ordinary op.
+        panel.undoButton.click();
+        testController.assertEqual('and one Undo folds the save away',
+            String(opsBefore), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('declined-focus test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-a-door-can-decline-to-raise-the-hub',
+    name: 'APWorld hub: a door that declared focusHubOnSave: false does not raise the panel',
+    description: 'Drives `_acceptEditorOp` directly for `region_atlas` — whose marking tool is '
+               + 'disabled in the default mode, so no gesture here reaches the seam — with an '
+               + 'op whose value comes from the schema\'s own `required` list. Asserts the save '
+               + 'was accepted and applied, that the beside-the-row sentence was recorded '
+               + '(the half the flag does NOT gate, and what separates "declined" from "never '
+               + 'ran"), and only then that no `ui:activatePanel` naming this panel was '
+               + 'published, that the hub is still not in front, and that its tab did not '
+               + 'move. The `true` half of the flag is '
+               + '`apworld-loop-costs-send-writes-the-plan-as-one-op`, which presses the real '
+               + 'Send and asserts the hub IS in front afterwards.',
+    testFunction: apworldADoorCanDeclineToRaiseTheHub,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

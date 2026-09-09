@@ -2628,9 +2628,19 @@ class ApworldEditorUI {
       ? `${label} saved — applied as one \`${op.op}\` you can undo here.`
       : `${label}: ${res?.description ?? 'refused'}`;
     this._renderChrome();
-    // ⛔ ONLY on the way out of the ACCEPTED path. Every refusal above returns
-    //   through `refuse()`, which never reaches here — see `_focusAcceptedOp`.
-    if (accepted) this._focusAcceptedOp(key, this._opMessage);
+    /**
+     * ⛔ ONLY on the way out of the ACCEPTED path. Every refusal above returns
+     * through `refuse()`, which never reaches here — see `_focusAcceptedOp`.
+     *
+     * ⛓⛓⛓ **R1 — AND WHETHER IT RAISES THE HUB IS THE DOOR'S OWN
+     * DECLARATION.** `focusHubOnSave` is read FAIL-CLOSED: a door that does not
+     * declare it does not bounce. The success sentence is recorded beside the
+     * row either way, so an unfocused save still has its answer waiting where
+     * the key lives (see `_focusAcceptedOp`'s `raise` option).
+     */
+    if (accepted) {
+      this._focusAcceptedOp(key, this._opMessage, { raise: !!editor?.focusHubOnSave });
+    }
     return { accepted, applied, errors: [], description: res?.description ?? '' };
   }
 
@@ -2640,12 +2650,21 @@ class ApworldEditorUI {
    * panel and scrolled to the relevant section, with a message that the data
    * was successfully loaded"*).
    *
-   * ⛓ **IT IS GENERIC, and that is the whole design.** The ⚖ was asked about
-   * the cost debugger's Send, but the gesture it describes is *"an editor
+   * ⛓ **THE SEAM IS GENERIC, and that is the whole design.** The ⚖ was asked
+   * about the cost debugger's Send, but the gesture it describes is *"an editor
    * elsewhere saved into this document"* — which is `_acceptEditorOp`, the one
    * seam every `op` door's save comes through (`region_atlas`'s included). A
    * focus wired into the cost debugger's door would be a second behaviour for
    * the next door somebody adds.
+   *
+   * ⛓⛓⛓ **R1 — BUT WHETHER IT FIRES IS THE DOOR'S DECLARATION, NOT THE SEAM'S
+   * DEFAULT** (S1 §8.6 (2); ⚖ user, 2026-09-09). S1 shipped it unconditional,
+   * and *"unconditional"* is a claim about every editor at once: the marking
+   * tool is a workspace a person stays in, so its Save raising the hub takes
+   * their screen for a checkpoint they did not finish on. `focusHubOnSave`
+   * lives beside `returns` in `DOCUMENT_KEY_EDITORS`, is read fail-closed, and
+   * gates ONLY the raise/tab/scroll — never the sentence, which is recorded
+   * beside the row either way so it is waiting when they come back.
    *
    * ⛔⛔ **AND A REFUSED OP MUST NOT STEAL FOCUS.** Raising the panel and
    * scrolling to a row is what "it worked" looks like; doing it for a refusal
@@ -2658,10 +2677,22 @@ class ApworldEditorUI {
    * everything-fallback. Read off the registry row rather than mapped here, so
    * a key that changes homes changes this with it.
    */
-  _focusAcceptedOp(key, text) {
+  _focusAcceptedOp(key, text, { raise = true } = {}) {
     this._opRowMessage = { key, text };
     const row = this._documentRows().find((r) => r.key === key) ?? null;
-    const tab = row?.ownedByTab ?? 'document';
+    const tab = row?.ownedByTab ?? DOCUMENT_TAB_ID;
+    /**
+     * ⛓⛓⛓ **R1 — THE MESSAGE IS NOT PART OF THE BOUNCE.** A door that declared
+     * `focusHubOnSave: false` still wrote the document, so the row still says
+     * what happened; what it does not do is take the person's screen. So the
+     * unraised arm re-renders the tab they are ALREADY on (the sentence is
+     * drawn by the tab body, so `_renderChrome` alone would not draw it) and
+     * stops: no `ui:activatePanel`, no tab change, no scroll.
+     */
+    if (!raise) {
+      this._render();
+      return;
+    }
     /**
      * ⛓ The panel raises ITSELF, through the same `ui:activatePanel` every door
      * uses to raise somebody else — `index.js` registers this module as that
