@@ -13088,6 +13088,65 @@ HANDOFF; I1 REFUSES removing a group an item still carries. **R1 LAUNCHED 2026-0
 (Opus; kickoff `NewDocs/plans/apworld-coverage-R1-prompt.md`). Baseline 442/13408 at `4689b7067a`. Reports come to
 `next-priorities-planning-4`; P1 on R1's idle notice.
 
+**⇒ R1 AS BUILT 2026-09-09** (plan §11; Opus session `apworld-coverage-R1`; main `95cbbe29dd` → this commit,
+NINE commits — eight of work plus this record; the planner's docs commits between my start and my push are
+expected and are not mine).
+Deltas only:
+
+**⛔ THE BRIEF'S TASK-3 PREMISE IS OVERTURNED.** §5.3 and the brief attribute stardew's *"13.5 s per `_selectTab`"*
+to the validate pass. MEASURED on the real document (`?game=stardew_valley&seed=1`, **209** regions / **1,073**
+items, the app let settle): `validateRules` alone **2.6–4.6 ms**, `_selectTab('regions')` **5.4–8.0 s**,
+`_selectTab('items')` **0.36–0.40 s**. The seconds are the **regions renderer**. The wrong number's provenance is a
+docs sentence with the wrong UNIT — *"the `validateRules` pass that already costs 4.6 **s**"* — corrected in place.
+The memo still ships and what it buys is `_renderChrome` **2.2–4.0 ms → 0.3–0.7 ms**, which every tab pays.
+⚖ §5.3's perf item should be re-pointed at `_renderRegionsTab`.
+
+**⛔ And the first three drives measured the WRONG DOCUMENT** — a wait on *"the panel has a document"* is satisfied
+by the app's own default (`Adventure`, 10 regions) and the 8.8–10.4 s it reported was the stardew ingest's
+contention. **NEW TRAP 1302**: wait on the document's IDENTITY, and never take a timing while another ingest runs.
+
+**⛔ The cache key the brief specified COLLIDES.** `(_documentToken, ops-applied count, playerId)`: measured, an
+issue-introducing op gives `ops=1, issues=1` and one Undo plus a different op gives `ops=1, issues=0`. Keyed on the
+RECORD's object identity plus the slot instead — which is what `_mapCache` ten lines up already does.
+
+**⛔ Residual (d) does not reproduce**: `--host=localhost:8000` at HEAD on the unmodified script is **128 PASS / 0
+FAIL / exit 0**. Playwright 1.56.0's `page.goto` normalises a scheme-less host itself (200, `page.url()` =
+`http://localhost:8000/…`); `new URL` does not, which is where the belief came from. The normalisation is kept and
+re-framed. **And the brief named the wrong wrapper**: `check-procgen-docs.mjs` IS the gate (`arg()` local, ONE
+`--host=` read, no spawn); the shim in this arc is `ci-vitest-summary.mjs`, residual (e)'s real site.
+
+**What landed.** (1) `_renderDocumentRow(row, hostTab)` skips a pointer naming its own host — Sidecars tab
+5 rows / **5 → 0** pointers, Document tab 32 rows / 20 pointers / 5 `Go to Sidecars` **unmoved**; the two ids are
+exported from `documentKeys.js`, the Sidecars one being `KEYS_OWNED_BY_TAB`'s own computed key. (2)
+`focusHubOnSave` on every `returns: 'op'` door — `loop_costs` `true`, `region_atlas` `false`, `preset_sidecars`
+`false` and UNREACHABLE (measured: exactly ONE production `onSave(` call site in the module, and it is
+`region_atlas`'s). Read fail-closed; gates only the raise/tab/scroll, never the beside-the-row sentence. (3) the
+validation memo. (4) the five residuals, each re-censused — (b) was TWO sites not one, (c) is 17 insertions /
+1 deletion in the tracked `preset_files.json` plus an untracked `apquest/AP_07758176404715800194/`, (e)'s pick
+already existed and only its STATUS was unread.
+
+**Rows.** `documentKeys.test.js` **41 → 43** (population = the `returns === 'op'` LAW, never the flag);
+`ciSummary.test.js` **12 → 16**; in-app `apworldEditor` **33 → 36**. Bounded vitest **12 files / 277 passed**.
+
+**Gates.** in-app `--mode=test-substrates --batch=fast` **98/98**, `failedCount: 0`, 4.3 m;
+`compare-runs.js` vs W3's `test-results-2026-09-08T22-48-46.json` (95/95) = **ADDED (3)**, the three new rows, and
+nothing else; `grep -ac "Error in event handler for"` = **0**. Docs trio: generator moved no file,
+`check-procgen-docs` **128 PASS / ALL CHECKS PASSED** (both `--host=` forms), `procgenDocs/` **452/452**.
+`lintGateLabels.test.js` **14**. `ci-vitest-summary.mjs 4689b7067a` still **442/13408**, exit 0.
+**⚖ 52 derived +0 files / +6 rows ⇒ predicted 442/13414** (13406 passed | 8 skipped | 0 failed), slow 12/217
+unmoved — trap 1212 checked (`git merge-base --is-ancestor c299389033 4689b7067a` = false).
+**Four mutants**, each naming the row it reds and the rows it does not: (A) host parameter ignored → the new
+self-pointer row, 5 conditions, sidecars/owned-row rows green; (B) cache never invalidates → the bar row, 1
+condition; (C) flag ignored `raise:true` → the decline row, 3 conditions, Send row green; (C-inverse)
+`raise:false` → the Send row, 3 conditions, decline row green.
+
+**⚖ OPEN (R1's four, plan §11.8).** (1) §5.3's perf item is aimed at the wrong function — re-point it at
+`_renderRegionsTab` (209 region blocks) before anybody takes it. (2) `focusHubOnSave` is fail-closed, so a future
+hand-back door looks like it works while doing nothing — the FIELD is compulsory (a door that omits it reds), the
+VALUE is not. (3) `preset_sidecars` declares `returns: 'op'` for a seam it never uses — a note for the reserved
+`preset_sidecars` session, not touched here. (4) the `--host=` normalisation is a guard with no defect behind it;
+deleting it costs nothing.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
