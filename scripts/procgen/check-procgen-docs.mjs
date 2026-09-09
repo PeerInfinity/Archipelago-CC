@@ -38,6 +38,8 @@
  *
  * Run: node scripts/procgen/check-procgen-docs.mjs
  *      node scripts/procgen/check-procgen-docs.mjs --host=http://localhost:8000
+ *      node scripts/procgen/check-procgen-docs.mjs --host=localhost:8000
+ *        (a scheme-less host is normalised to `http://` — both forms work)
  *      node scripts/procgen/check-procgen-docs.mjs --pages=https://peerinfinity.github.io/Archipelago-CC
  */
 
@@ -124,7 +126,36 @@ const onDisk = readdirSync(join(REPO, DOC_DIR)).filter((f) => f.endsWith('.md'))
 
 /* ══════════════════════════════════════════════════════════════════════ */
 
-const host = arg('host', '');
+/**
+ * ⛓⛓⛓ **R1 — A SCHEME-LESS `--host=` IS NORMALISED HERE, not left to the
+ * runner.** ⛔ **AND THE DEFECT THIS WAS FILED FOR DOES NOT REPRODUCE.** The
+ * report was that `--host=localhost:8000` dies with Playwright's *"Cannot
+ * navigate to invalid URL"*. MEASURED at Playwright **1.56.0**: it does not —
+ * `page.goto('localhost:8000/frontend/…')` returns **200** with `page.url()`
+ * `http://localhost:8000/…`, and the whole gate ran **128 PASS / exit 0** on
+ * the unmodified script. The belief is about `new URL`, which parses that
+ * string with protocol `localhost:` and pathname `8000/frontend/…`; Chromium's
+ * own navigation is more forgiving than `new URL` is.
+ *
+ * ⛓ So what this buys is not a fix for a crash: it is that `origin` stops
+ * depending on the runner's URL tolerance, and starts being the same string the
+ * loaded pages report as their own origin (without it, `origin` is
+ * `localhost:8000` while every href read out of those pages is
+ * `http://localhost:8000/…`).
+ *
+ * ⛓ `arg('host')` is defined a few lines up and read exactly ONCE — here — so
+ * this is the whole parser: `rg -a -- "--host"` over this file finds the usage
+ * lines, this read, and the `origin` it feeds. There is no wrapper and no
+ * spawned second script.
+ *
+ * ⛓ The test is for a SCHEME (`x://`), not for "starts with http": a caller
+ * passing `https://…` or a `file://` origin keeps what they typed, and only a
+ * bare `host[:port]` gains the default `http://`.
+ */
+const rawHost = arg('host', '');
+const host = rawHost && !/^[a-z][a-z0-9+.-]*:\/\//i.test(rawHost)
+    ? `http://${rawHost}`
+    : rawHost;
 const pages = arg('pages', '');
 const pagesBase = (pages || PAGES_BASE).replace(/\/$/, '');
 const pagePath = (path) => (pages ? path.replace(/^\/frontend(?=\/)/, '') : path);
