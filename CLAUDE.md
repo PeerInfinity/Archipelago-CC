@@ -146,6 +146,16 @@ python Generate.py --weights_file_path "Templates/[GameName].yaml" --multi 1 --s
 
 ## Testing
 
+- **⛔ A `pytest` run DIRTIES THE TREE, including a TRACKED file.** `python -m pytest test/` generates an APQuest
+  seed as a side effect. Measured 2026-09-09 at `a6dd8a0360` on the smallest run that does it,
+  `python -m pytest test/programs/test_generate.py` (6 passed, 1.5 s): it creates the untracked
+  `frontend/presets/apquest/AP_07758176404715800194/` (4 files) **and edits the tracked
+  `frontend/presets/preset_files.json`** — `git diff --numstat` = **17 insertions, 1 deletion**. The seed id is
+  deterministic (the same one D1 saw on 2026-09-08), so it is recognisable. **Revert BOTH before staging**
+  — `git checkout -- frontend/presets/preset_files.json` and `rm -rf` the new `apquest/AP_*` dir — and say in
+  the record that the dirt was the test run's: a slice that stages by path and then reads `git status` will
+  otherwise see changes it did not make, and the next reader will attribute them to the slice.
+
 ### Main Test Script
 `scripts/test/test-all-templates.py` - run with `--help` for all options.
 
