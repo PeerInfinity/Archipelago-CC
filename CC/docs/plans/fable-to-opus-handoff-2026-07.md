@@ -13152,6 +13152,25 @@ VALUE is not. (3) `preset_sidecars` declares `returns: 'op'` for a seam it never
 `preset_sidecars` session, not touched here. (4) the `--host=` normalisation is a guard with no defect behind it;
 deleting it costs nothing.
 
+**R1 VERIFIED by the planner 2026-09-09** (`1eccb463de` on origin/main = the primary tree's HEAD; 10 commits by path
+`95cbbe29dd..1eccb463de`; `git diff --stat` under `shared/` and `presets/` EMPTY; `documentKeys.test.js` 41 → **43**,
+`ciSummary.test.js` 12 → **16**, in-app `apworldEditor` 33 → **36**; `focusHubOnSave` declared on the three `op`
+doors; CLAUDE.md carries the pytest-dirt bullet; plan §11 on disk; trap 1302 recorded). Pressed the product from
+here: Sidecars rows carry **0** "Go to Sidecars" buttons, the Document tab's pointers unmoved; on stardew the SECOND
+Regions switch is still ~14 s and Items ~2.3 s — which is R1's overturn measured independently: the seconds are the
+REGIONS RENDERER (209 region blocks drawn eagerly), `validateRules` is 2.6–4.6 **ms**, and the docs page's "4.6 s"
+was one wrong unit inherited by the plan and the brief. **CI @ `674dd35653` (the pushed head — a ten-commit push
+runs once, at its head) run 34415114946 success: job "JavaScript Unit Tests (Vitest)" completed success; 442/13414
+(13406 passed | 8 skipped | 0 failed), slow 12/217 — R1 derived +0 files / +6 rows against 442/13408 and matched;
+residual (e)'s job-beside-run readout earned itself on this very quote.** What R1 overturned, kept: the cache key
+`(token, ops-count, player)` COLLIDES (an op + undo + a different op share a count) — keyed on the record's identity
++ slot like `_mapCache`; a drive that waits on "the panel has A document" reads the app's default `Adventure`
+(trap 1302); residual (d) did not reproduce (Playwright normalises a scheme-less host; `new URL` does not);
+`check-procgen-docs.mjs` IS the gate and the shim is `ci-vitest-summary` → `ci-summary`; `worldgen.py` had TWO
+sites. ⚖ NEW (§11.8): the perf item re-points at `_renderRegionsTab` (Items one order down); `focusHubOnSave` is
+fail-closed (the field compulsory, the value not); `preset_sidecars` declares `returns: 'op'` for a seam it never
+uses (for the reserved session); the `--host=` normalisation guards no defect. NEXT: **P1** on R1's idle.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
