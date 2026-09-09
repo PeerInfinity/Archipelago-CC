@@ -4526,6 +4526,175 @@ registerTest({
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
+/**
+ * ⛓⛓⛓ **THE WHOLE-BLOCK EDITOR CANNOT WRITE WHAT THE PER-ENTRY OP REFUSES**
+ * (P1; W3 §10.7 (1), ⚖ user 2026-09-09).
+ *
+ * ⛔ DRIVEN THROUGH THE PRODUCT'S OWN Save JSON BUTTON, not `_applySetKey`: the
+ * defect this row guards is that one tab's guard was reachable AROUND, and a row
+ * that called the method would pass over a Save wired past the veto.
+ *
+ * ⛓ Both directions, because a veto that refuses everything is not the veto
+ * asked for: an edit that ADDS an unplaceable entry is refused BY NAME, and an
+ * edit that REMOVES a pre-existing one is accepted — the diff-against-before
+ * rule, without which a hand-edited file could never be repaired here.
+ */
+export async function apworldTheBlockEditorRefusesAnUnplaceablePlacement(testController) {
+    const KEY = 'canonical_placements';
+    try {
+        const panel = await openHub(testController, PLACEMENTS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const slot = panel.playerId;
+        // ⛓ A document that ALREADY carries a stale entry — which is what a
+        //   hand-edited file is, and the only way to get one: the schema
+        //   declares this slot additionalProperties: true.
+        const doc = await (await fetch(PLACEMENTS_PRESET_PATH)).json();
+        const GONE_LOCATION = 'A Room That Was Deleted';
+        const REAL_ITEM = Object.keys(doc.items[slot])[0];
+        doc.canonical_placements[slot][GONE_LOCATION] = REAL_ITEM;
+        testController.eventBus.publishAs('stateManager:rawJsonDataLoaded', {
+            source: PLACEMENTS_PRESET_PATH, rawJsonData: doc, selectedPlayerInfo: null,
+        }, 'stateManager');
+        await testController.pollForCondition(
+            () => Object.prototype.hasOwnProperty.call(
+                panel.rulesDoc?.canonical_placements?.[slot] ?? {}, GONE_LOCATION),
+            'the hand-edited document reached the hub', 8000, 50);
+
+        selectTab(panel, 'document');
+
+        /** ⛔ RE-QUERIED every time: expanding a block re-renders the tab, so an
+         *  element captured before the click answers from a detached tree. */
+        const boxOf = () => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${KEY}"]`);
+        const expand = async () => {
+            if (!boxOf()?.querySelector('.apworld-doc-json')) {
+                boxOf().querySelector('.apworld-doc-toggle').click();
+            }
+            return testController.pollForValue(
+                () => boxOf()?.querySelector('.apworld-doc-json'),
+                'the block textarea, built on expand', 8000, 50);
+        };
+        const area = await expand();
+        testController.reportCondition('the block editor is open on this key', !!area);
+        if (!area) return testController.getOverallResult();
+
+        // ── (1) an edit that ADDS an unplaceable entry is REFUSED BY NAME ──
+        const UNHELD = 'Nowhere';
+        const opsBefore = panel.session.ops().length;
+        const edited = { ...JSON.parse(area.value), [UNHELD]: REAL_ITEM };
+        area.value = JSON.stringify(edited, null, 2);
+        boxOf().querySelector('.apworld-doc-save').click();
+
+        testController.assertEqual('the save was refused, and it was not one op',
+            String(opsBefore), String(panel.session.ops().length));
+        testController.reportCondition('the refusal NAMES the location it will not write',
+            (panel._opMessage ?? '').includes(UNHELD));
+        testController.assertEqual('…and the block does not carry it', 'false',
+            String(Object.prototype.hasOwnProperty.call(
+                panel.rulesDoc[KEY][slot], UNHELD)));
+        /**
+         * ⛔ THE DISCRIMINATION, AND WITHOUT IT THIS ROW PROVES NOTHING: the
+         * schema veto cannot see this. The slot is `additionalProperties: true`,
+         * so the same op ADDS ZERO schema errors — which is exactly why the
+         * whole-block editor could write it before P1.
+         */
+        testController.assertEqual(
+            'and the SCHEMA had nothing to say about it — the hole this closes', '0',
+            String(panel._schemaErrorsAddedBy({
+                op: 'set-key', key: KEY, value: edited, scope: 'player', player: slot,
+            }).length));
+
+        /**
+         * ── (2) an edit that REMOVES the pre-existing stale entry is ACCEPTED ──
+         *
+         * ⛔ THE VALUE IS BUILT FROM THE RECORD, NOT FROM THE TEXTAREA. A
+         * refusal re-renders the CHROME, not the tab, so the textarea still
+         * holds the draft that was just refused — reading it back would carry
+         * the unplaceable entry into the second save and this row would report
+         * the veto as broken when it was working.
+         */
+        const area2 = await expand();
+        const fixed = { ...panel.rulesDoc[KEY][slot] };
+        delete fixed[GONE_LOCATION];
+        area2.value = JSON.stringify(fixed, null, 2);
+        boxOf().querySelector('.apworld-doc-save').click();
+
+        testController.assertEqual('a save that REMOVES a stale entry is accepted, as one op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        testController.assertEqual('…and the stale entry is gone', 'false',
+            String(Object.prototype.hasOwnProperty.call(
+                panel.rulesDoc[KEY][slot], GONE_LOCATION)));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('block-editor placement veto test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **A PLACEMENT THE WORLD CANNOT MAKE IS NOT COUNTED AS MADE** (P1; W3
+ * §10.7 (3), which shipped counting one).
+ *
+ * ⛔ The numerator is the claim, and it is scored against the SAME document
+ * before and after one entry is staled — so the row cannot pass by agreeing
+ * with a tally that computes the numerator any way at all.
+ */
+export async function apworldAStalePlacementIsNotCountedAsPlaced(testController) {
+    try {
+        const panel = await openHub(testController, PLACEMENTS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const slot = panel.playerId;
+        const doc = await (await fetch(PLACEMENTS_PRESET_PATH)).json();
+        const summaryData = () => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-summary`).dataset;
+
+        selectTab(panel, 'placements');
+        const clean = { ...summaryData() };
+        testController.assertEqual(
+            'with nothing stale, the numerator is the entries the document carries',
+            String(Object.keys(doc.canonical_placements[slot]).length), clean.placed);
+        testController.assertEqual('and nothing is marked stale', '0|0',
+            `${clean.orphanLocations}|${clean.orphanItems}`);
+
+        // ⛓ ONE entry staled — its ITEM, which is the half W3 counted as placed.
+        const GONE_ITEM = 'An Item That Was Renamed';
+        const staledLocation = Object.keys(doc.canonical_placements[slot])[0];
+        doc.canonical_placements[slot][staledLocation] = GONE_ITEM;
+        doc.game_name = `${doc.game_name} (one placement staled)`;
+        testController.eventBus.publishAs('stateManager:rawJsonDataLoaded', {
+            source: PLACEMENTS_PRESET_PATH, rawJsonData: doc, selectedPlayerInfo: null,
+        }, 'stateManager');
+        await testController.pollForCondition(
+            () => panel.rulesDoc?.canonical_placements?.[slot]?.[staledLocation] === GONE_ITEM,
+            'the staled document reached the hub', 8000, 50);
+
+        selectTab(panel, 'placements');
+        const after = { ...summaryData() };
+        testController.assertEqual('the total is unmoved — the world still holds them all',
+            clean.total, after.total);
+        testController.assertEqual('but the numerator DROPS BY ONE, because that one is unplaceable',
+            String(Number(clean.placed) - 1), after.placed);
+        testController.assertEqual('and the entry is named as stale rather than lost', '1',
+            after.orphanItems);
+        const summary = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-summary`);
+        testController.reportCondition('the line a person reads carries the new numerator',
+            summary.textContent.startsWith(`${after.placed} of ${after.total}`));
+        testController.reportCondition('…and still says an item is missing',
+            /does not hold/.test(summary.textContent));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('stale-placement tally test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
 registerTest({
     id: 'apworld-stale-placements-are-shown-and-removable',
     name: 'APWorld hub: a placement naming a location or item the world no longer holds is shown, marked and removable',
@@ -4539,6 +4708,37 @@ registerTest({
                + 'unplaceable entry out as ONE undoable op — which is why '
                + '`set-canonical-placement` does not validate a DELETE.',
     testFunction: apworldStalePlacementsAreShownAndRemovable,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-block-editor-refuses-an-unplaceable-placement',
+    name: 'APWorld hub: the Document tab\'s Save JSON cannot write a placement the per-entry op refuses',
+    description: 'Presses the block editor\'s OWN Save JSON on `canonical_placements`. Adding '
+               + 'an entry at a location the slot does not hold is refused BY NAME, records no '
+               + 'op and leaves the block unchanged — and the same op is measured to add ZERO '
+               + 'schema errors, which is the hole this closes: the slot is '
+               + '`additionalProperties: true`, so the schema veto could never see it. The '
+               + 'other direction is driven too: a save that REMOVES a pre-existing stale entry '
+               + 'is accepted as one op, because the veto differences against what the document '
+               + 'already had and a hand-edited file has to be repairable here. Mutant: '
+               + 'bypassing the veto reds this row.',
+    testFunction: apworldTheBlockEditorRefusesAnUnplaceablePlacement,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-stale-placement-is-not-counted-as-placed',
+    name: 'APWorld hub: the Placements summary does not count a placement the world cannot make',
+    description: 'The same document twice: as committed, the numerator is the entries it '
+               + 'carries and nothing is marked; with ONE entry\'s item renamed out of the '
+               + 'world, the total is unmoved and the numerator drops by one, while the line '
+               + 'still names the stale entry. W3 shipped counting it as placed; '
+               + '`--canonical-seed` cannot place an item the world does not hold, so the '
+               + 'numerator was promising a placement no generation can make.',
+    testFunction: apworldAStalePlacementIsNotCountedAsPlaced,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

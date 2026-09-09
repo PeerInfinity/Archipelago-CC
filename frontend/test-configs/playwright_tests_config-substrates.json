@@ -567,6 +567,18 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "APWorld coverage W3 \u2014 the requirement no other row can see. The schema declares the placement slot additionalProperties: true, so a stale entry validates and no committed preset carries one; this row hands the hub a committed preset with two added on the way in through stateManager:rawJsonDataLoaded, which is what a hand-edited file is. It is also why set-canonical-placement does not validate a DELETE."
+        },
+        {
+            "id": "apworld-block-editor-refuses-an-unplaceable-placement",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage P1, closing W3's \u2696 OPEN 1. Driven through the block editor's OWN Save JSON, because the defect was that one tab's guard was reachable AROUND it. The row also measures that the same op adds ZERO schema errors \u2014 the slot is additionalProperties: true, so the schema veto could never see this. Both directions: an ADD is refused by name, a REMOVE of a pre-existing stale entry is accepted."
+        },
+        {
+            "id": "apworld-a-stale-placement-is-not-counted-as-placed",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage P1, closing W3's \u2696 OPEN 3. The same document twice \u2014 as committed, then with one entry's item renamed out of the world \u2014 so the numerator is scored against itself rather than against a typed number. W3 counted such an entry as placed; --canonical-seed cannot place an item the world does not hold."
         }
     ]
 }
