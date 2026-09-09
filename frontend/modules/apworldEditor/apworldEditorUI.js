@@ -345,6 +345,35 @@ class ApworldEditorUI {
     this._mapCache = null;
 
     /**
+     * ⛓⛓⛓ **R1 — AND THE VALIDATION PASS IS MEMOISED THE SAME WAY.**
+     * `_renderValidationBar` ran `validateRules` on EVERY render, and every
+     * `_selectTab` renders.
+     *
+     * ⛔ **AND THE SIZE OF THAT IS NOT WHAT THE TAB SWITCH COSTS.** MEASURED on
+     * the largest committed world (`?game=stardew_valley&seed=1`, 209 regions /
+     * 1,073 items, scratch Playwright, the app let settle first):
+     * `validateRules` itself is **2.6–4.6 ms**, while `_selectTab('regions')`
+     * is **5.4–8.0 s** and `_selectTab('items')` **0.36–0.40 s**. The Regions
+     * cost is the REGIONS TAB's own renderer, not this pass — a slice that
+     * wants that number has to go there. What this memo actually buys is
+     * `_renderChrome`, which every tab pays alike: **2.2–4.0 ms → 0.3–0.7 ms**.
+     *
+     * ⛓ Keyed exactly like `_mapCache` above: the RECORD's identity plus the
+     * slot. `editCore` hands out a NEW record object whenever the document
+     * moves (`apply` assigns `res.record`; `undo` re-folds) and returns the
+     * SAME one when an op changed nothing — so object identity is precisely
+     * *"could the answer have changed"*, with nothing to remember to bump.
+     *
+     * ⛔ **NOT the op COUNT.** `session.ops().length` is the obvious key and it
+     * COLLIDES: apply an op, undo it, apply a different one, and the count
+     * reads 1 for two different documents — the second would be shown the
+     * first's issues. Measured (see the R1 record). The `_documentToken` is not
+     * in the key either, and does not need to be: `_openSession` clones a fresh
+     * record, so a new document is a new object by construction.
+     */
+    this._validationCache = null;
+
+    /**
      * ⛓⛓⛓ H4b — **THE OPEN ROOM IS PARKED, NOT TORN DOWN ON A RE-RENDER.**
      * `rawEditorView` (H2b) is the precedent for state a tab holds across
      * renders, and its rule is the OPPOSITE of this one on purpose: the raw
@@ -595,6 +624,10 @@ class ApworldEditorUI {
     //   means nothing in the new, and neither does a cached grid.
     this._selectedRegion = null;
     this._mapCache = null;
+    // ⛓ R1 — nor a verdict about the old document's issues. Keyed on the record
+    //   object, so this is hygiene (it drops the reference) rather than
+    //   correctness: the new session's record is a different object.
+    this._validationCache = null;
     /**
      * ⛓ H4b — …and neither does a remembered room verdict. The key is
      * `slot|region`, and two documents can hold the same slot and the same
@@ -1373,11 +1406,27 @@ class ApworldEditorUI {
     return this._opMessage ? `${summary} · ${this._opMessage}` : summary;
   }
 
+  /**
+   * ⛓⛓⛓ **R1 — THE ISSUE LIST, MEMOISED ON THE RECORD.** ⛔ `validateRules`
+   * itself is untouched: this changes WHEN it runs, never WHAT it reports. See
+   * `_validationCache` in the constructor for the key and for why the op count
+   * is not it.
+   */
+  _validationIssues() {
+    const doc = this.rulesDoc;
+    if (!doc) return [];
+    const c = this._validationCache;
+    if (c && c.doc === doc && c.playerId === this.playerId) return c.issues;
+    const issues = validateRules(doc, this.playerId);
+    this._validationCache = { doc, playerId: this.playerId, issues };
+    return issues;
+  }
+
   _renderValidationBar() {
     this.validationBar.innerHTML = '';
     if (!this.rulesDoc) return;
 
-    const issues = validateRules(this.rulesDoc, this.playerId);
+    const issues = this._validationIssues();
     const errorCount = issues.filter(i => i.severity === 'error').length;
     const warnCount = issues.length - errorCount;
 

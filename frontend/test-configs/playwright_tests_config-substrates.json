@@ -533,6 +533,12 @@
             "_comment": "APWorld coverage R1, S1 \u00a78.6 (2) \u2014 S1 shipped the accepted-op focus UNCONDITIONAL, which is a claim about every editor at once: the cost debugger's Send ENDS the visit, but the region marking tool is a workspace whose Save is a checkpoint. \u26d4 _acceptEditorOp is driven DIRECTLY because region_atlas's panel is disabled in the default mode, so no gesture here reaches the seam \u2014 the op's value comes from the schema's own `required` list, so the veto on the accepted path is real. The non-vacuity is inside the row: accepted + applied + the beside-the-row sentence recorded (the half focusHubOnSave does NOT gate) before the no-raise claims, because 'the hub did not come forward' is also true of a seam that refused or never ran. The `true` half is apworld-loop-costs-send-writes-the-plan-as-one-op, so a mutant that ignores the flag reds one row whichever way it is wired."
         },
         {
+            "id": "apworld-the-validation-bar-follows-the-document",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage R1 \u2014 the guard for the memoised validateRules. _renderValidationBar ran the whole pass on every render and every _selectTab renders; _validationIssues() keys it on the record's object identity plus the slot. \u26d4 The subject is validationBar.textContent, not the memo: a row comparing _validationIssues() before and after would be asking the cache about itself. The op sets start_regions to a name BUILT from the document's own region names, so it cannot collide and it is a validateRules finding rather than a schema error \u2014 the only way to get an op that APPLIES and must move the bar. The op having landed is asserted first, Undo must bring the text back verbatim (undo REFOLDS the record), and two no-op tab switches must NOT move it."
+        },
+        {
             "id": "apworld-viewer-doors-raise-the-panels-they-declare",
             "enabled": true,
             "category": "apworldEditor",

@@ -131,6 +131,28 @@ document (`applyRulesDocOp` is pure), validates the preview with
 document already had. So an edit is refused by name for what *it* breaks, and
 never for somebody else's pre-existing violation.
 
+### The validation bar (R1: memoised)
+
+The bar above the tab body is `validateRules(record, slot)` — the semantic pass
+(broken references and the like), distinct from the schema veto above. It is
+drawn by `_renderChrome`, which runs on **every** render, and every `_selectTab`
+renders; until R1 the whole pass ran each time.
+
+`_validationIssues()` memoises it on **the record's object identity plus the
+slot** — exactly the key `_mapCache` uses. `editCore` hands out a NEW record
+object whenever the document moves (`apply` assigns `res.record`, `undo`
+re-folds) and the SAME one when an op changed nothing, so object identity is
+precisely *"could the answer have changed"* and there is nothing to remember to
+bump. ⛔ **Not the op count**: `session.ops().length` reads `1` both after an op
+and after `undo` + a different op, so the second document would be shown the
+first's issues — measured on `procgen_maze`, where the two states read 1 issue
+and 0 issues at the same count of 1. ⛔ `validateRules` itself is untouched: this
+changes WHEN it runs, never what it reports.
+
+Measured on stardew (209 regions, 1,073 items): `_renderChrome` **2.2–4.0 ms →
+0.3–0.7 ms**. See the correction under the Map tab for why that is milliseconds
+and not the seconds a tab switch costs.
+
 ### The `editor` slot (H5)
 
 `documentKeys.DOCUMENT_KEY_EDITORS` is a
@@ -568,8 +590,15 @@ APWorld editor."* The button raises `regionGraphPanel` through the same
 
 The rebuilt grid is memoised on the record's object identity plus the selected
 slot, because `_render` runs on every tab switch and a whole deserialize pass per
-render would sit beside the `validateRules` pass that already costs 4.6 s on the
-corpus's largest document.
+render would sit beside the `validateRules` pass that runs there too.
+
+⛔ **R1 CORRECTION: that pass is milliseconds, not seconds.** This sentence used
+to say `validateRules` *"already costs 4.6 s on the corpus's largest document"*.
+Re-measured on `?game=stardew_valley&seed=1` (209 regions, 1,073 items, scratch
+Playwright, the app let settle first): **2.6–4.6 ms**. The seconds belong to the
+**Regions tab's own renderer** — `_selectTab('regions')` is 5.4–8.0 s there,
+against 0.36–0.40 s for Items — and attributing them to the validate pass is
+what put a perf item on the wrong file.
 
 A region rebuilt from sidecars is placed **with its top-level `exits`** — the
 field the renderer's connection pass and its exit-selection highlight read, and

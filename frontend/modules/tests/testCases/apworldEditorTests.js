@@ -3942,6 +3942,113 @@ registerTest({
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
+/**
+ * ⛓⛓⛓ **R1 — THE VALIDATION BAR IS MEMOISED, AND THIS IS THE CACHE'S GUARD.**
+ * `_renderValidationBar` ran `validateRules` on every render and every
+ * `_selectTab` renders; `_validationIssues()` now keys the answer on the
+ * record's object identity plus the slot.
+ *
+ * ⛔ **THE SUBJECT IS THE BAR ON SCREEN, not the memo.** A row that compared
+ * `_validationIssues()` before and after would be asking the cache about
+ * itself. So it reads `validationBar.textContent` — the sentence a person sees
+ * — and drives the change through the panel's own `_applyOp` and its own Undo
+ * BUTTON.
+ *
+ * ⛓ **THE OP INTRODUCES AN ISSUE THAT IS NOT A SCHEMA ERROR**, deliberately:
+ * `start_regions` naming a region the world does not have is a `validateRules`
+ * finding and passes `rulesJsonSchemaErrors` (the type is a string either way),
+ * so the op is APPLIED rather than vetoed — which is the only way to get a
+ * document whose bar must move.
+ *
+ * ⚠ Every read after a gesture re-queries the bar's text; `_applyOp` re-renders
+ * and the nodes inside it are rebuilt (W0 §7.5).
+ */
+export async function apworldTheValidationBarFollowsTheDocument(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const barText = () => panel.validationBar.textContent.trim();
+        const opsNow = () => panel.session.ops().length;
+
+        const before = barText();
+        const opsBefore = opsNow();
+        testController.assertEqual(
+            'the document starts with a clean bar — the premise', 'No issues', before);
+
+        /**
+         * ⛓ A start region the world does not have. Derived: the name is built
+         * from the document's OWN region names so it cannot collide with one.
+         */
+        const slot = panel.playerId;
+        const names = Object.keys(panel.rulesDoc.regions[slot]);
+        testController.reportCondition('the slot has regions — the op\'s premise',
+            names.length > 0);
+        const GONE = `${names.join('|')} — none of these`;
+        panel._applyOp({ op: 'set-key', key: 'start_regions', value: GONE, scope: 'player' });
+
+        // ⛔ FIRST: the op was really applied. "The bar moved" is a claim about a
+        //    document that changed, and a vetoed op would leave both unmoved.
+        testController.assertEqual('the issue-introducing op was applied',
+            String(opsBefore + 1), String(opsNow()));
+        testController.assertEqual('…and the document really names the missing region',
+            GONE, String(panel.rulesDoc.start_regions?.[slot]));
+
+        // ⛓ THE CLAIM: the bar moved on the very next render.
+        const after = barText();
+        testController.assertEqual('the bar is no longer clean', 'false',
+            String(after === before));
+        testController.reportCondition('…and it reports the issue it found',
+            /issue|warning|error/i.test(after));
+
+        /**
+         * ⛓⛓ **AND UNDO MOVES IT BACK** — through the panel's own Undo button,
+         * because `undo` REFOLDS the record (it is not a stack pop) and the
+         * cache key has to follow that too.
+         */
+        panel.undoButton.click();
+        testController.assertEqual('one Undo folds the op away',
+            String(opsBefore), String(opsNow()));
+        testController.assertEqual('and the bar reads exactly what it read before',
+            String(before), String(barText()));
+        testController.assertEqual('…and the document no longer names it',
+            'false', String(String(panel.rulesDoc.start_regions?.[slot]) === GONE));
+
+        /**
+         * ⛓ Non-vacuity for the CACHE itself: a render that changes nothing
+         * must not change the bar either — otherwise "it moved" would be true
+         * of a panel that simply re-validated at random.
+         */
+        const steady = barText();
+        panel._selectTab('document');
+        panel._selectTab('regions');
+        testController.assertEqual('two tab switches leave the bar where it was',
+            String(steady), String(barText()));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('validation-bar test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-the-validation-bar-follows-the-document',
+    name: 'APWorld hub: the validation bar moves on an issue-introducing op and back on Undo',
+    description: 'The guard for R1\'s memoised `validateRules`. On procgen_maze: `start_regions` '
+               + 'set to a name built from the document\'s own region names (so it cannot '
+               + 'collide) is a `validateRules` finding and NOT a schema error, so the op '
+               + 'applies — and the bar\'s own text must move on the very next render and come '
+               + 'back verbatim after one Undo, which REFOLDS the record rather than popping a '
+               + 'stack. The subject is `validationBar.textContent`, not the memo, and the op '
+               + 'having landed is asserted first. A last pair of tab switches asserts the bar '
+               + 'does NOT move when nothing changed.',
+    testFunction: apworldTheValidationBarFollowsTheDocument,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
 /* ══════════════════════════════════════════════════════════════════════
  * W3 — THE PLACEMENTS TAB. (`NewDocs/plans/apworld-editor-coverage-plan.md`
  * §4, rung W3.)
