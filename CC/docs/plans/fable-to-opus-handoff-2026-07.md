@@ -13043,6 +13043,22 @@ with the user** — the loop-cost item (what beyond the rename?), the deferred W
 `item_groups`, `progression_mapping`), the atlas trio's real home, the placements validation trio (§10.7), D1's three
 leftovers (§9.7), the stardew tab-switch cost, W0's two-vocabulary note, S1's `region_atlas` bounce.
 
+**⚖ RULED (user, 2026-09-09, the replan), verbatim:** "Thanks. Most of the changes look good. I don't think there's any
+more work we need to do with the loop cost item. It's okay as it is. We can go ahead and implement placement
+validation if it's easy. I'm not aware of a better place for the atlas trio. We can keep it in the sidecars tab. Do we
+already have a clear plan for the W1 and W2 tasks? I'll want to add proper editors for item_groups and
+progression_mapping, so that we can support these features in procgen worlds, even though no procgen worlds
+currently use them. These belong in the Items tab. I'll want to fix at least some of the small residuals. We can
+continue to defer any of them that are too much work. The sidecar entries in the sidecars tab have the "Go to
+Sidecars" button. Is there a simple way to fix that? We'll need to reevaluate how preset_sidecars works. Currently the
+preset_sidecars entry of the sidecars panel has a button to Go to Regions, but the preset_sidecars isn't in the
+Regions tab. The preset_sidecars data is substrate dependent. We should at least have a way to view or edit the raw
+json. This is the data that the substrate-specific editors edit. We will need to take a closer look at this. Please
+don't start implementation yet."
+⇒ loop costs CLOSED as is; the atlas trio STAYS on Sidecars; placement validation if easy; item_groups +
+progression_mapping editors on the ITEMS tab (procgen-ready even though unused there today); some residuals; the
+self-pointer on the Sidecars rows; a closer look at `preset_sidecars`. Nothing launched.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
