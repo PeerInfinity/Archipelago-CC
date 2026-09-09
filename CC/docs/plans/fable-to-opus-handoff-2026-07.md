@@ -13072,6 +13072,12 @@ cascade on removing a group in use — not yet answered) → **I2** the Progress
 shapes, one op per mapping). `preset_sidecars` is NOT a slice: it is a NEW Fable planning session's investigation
 (readers/writers per substrate, the editors that exist). Planner's recommendation on sequencing recorded below.
 
+**⚖ RULED (user, 2026-09-09): "That makes sense. Let's go with refuse. Please begin implementing the plan."** ⇒ the
+four slices run first (R1 → P1 → I1 → I2), the `preset_sidecars` Fable planning session opens after them with a
+HANDOFF; I1 REFUSES removing a group an item still carries. **R1 LAUNCHED 2026-09-09** as `apworld-coverage-R1`
+(Opus; kickoff `NewDocs/plans/apworld-coverage-R1-prompt.md`). Baseline 442/13408 at `4689b7067a`. Reports come to
+`next-priorities-planning-4`; P1 on R1's idle notice.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
