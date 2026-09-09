@@ -20,9 +20,10 @@ import {
 import { rulesEditAdapter } from './rulesEditAdapter.js';
 import { validateRules } from './rulesUtils.js';
 import {
-    EXIT_FIELDS, ITEM_FIELDS, META_FIELDS, REFUSAL_NAME_LIMIT, RULES_OP_KINDS,
-    SET_KEY_SCOPES, applyRulesDocOp, deleteItemOps, deleteRegionOps, exitsPointingAt,
-    locationsOfPlayer, nextName,
+    EXIT_FIELDS, ITEM_FIELDS, META_FIELDS, PLACEMENT_ISSUE_REASONS, REFUSAL_NAME_LIMIT,
+    RULES_OP_KINDS, SET_KEY_SCOPES, applyRulesDocOp, canonicalPlacementIssues,
+    canonicalPlacementIssuesByPlayer, deleteItemOps, deleteRegionOps, describePlacementIssue,
+    exitsPointingAt, locationsOfPlayer, nextName,
 } from './rulesDocOps.js';
 
 const P = '1';
@@ -1080,6 +1081,98 @@ describe('canonical placements — the --canonical-seed input (W3)', () => {
         session.undo();
         expect(session.record().canonical_placements).toBeUndefined();
         expect(session.ops()).toHaveLength(0);
+    });
+
+    /* ── P1: the shared validator ─────────────────────────────────────── */
+
+    /**
+     * ⛓⛓⛓ **THE VALIDATOR IS THE OP'S OWN PREDICATE, AND THIS IS THE ROW THAT
+     * SAYS SO** (P1). For each of the three reasons: the entry is reported, and
+     * a WRITE of that same entry is refused. ⛔ Scored against the LAW —
+     * *"stale means the op would refuse it"* — rather than against the
+     * validator's own output, because a row that only re-read the validator
+     * would pass on any pair of functions that agreed with themselves.
+     */
+    it('⛓⛓⛓ every reason it reports is a write the op refuses, and the reverse', () => {
+        const cases = [
+            ['Deleted Room Chest', 'Key', PLACEMENT_ISSUE_REASONS.UNKNOWN_LOCATION],
+            ['Hall Chest', 42, PLACEMENT_ISSUE_REASONS.NON_STRING_VALUE],
+            ['Hall Chest', 'A Renamed Item', PLACEMENT_ISSUE_REASONS.UNKNOWN_ITEM],
+        ];
+        for (const [location, item, reason] of cases) {
+            const doc = twoSlots();
+            doc.canonical_placements[P] = { [location]: item };
+            const issues = canonicalPlacementIssues(doc, P);
+            expect(issues, `${location} / ${JSON.stringify(item)}`)
+                .toEqual([{ location, item, reason }]);
+            // …and the op refuses the very same write.
+            expect(place(doc, { player: P, location, item }).ok,
+                `${location} / ${JSON.stringify(item)}`).toBe(false);
+        }
+        // ⛓ The other half of the law: an entry the op WOULD write is no issue.
+        const good = twoSlots();
+        good.canonical_placements[P] = { 'Hall Chest': 'Key' };
+        expect(canonicalPlacementIssues(good, P)).toEqual([]);
+        expect(place(good, { player: P, location: 'Hall Chest', item: 'Key' }).ok).toBe(true);
+    });
+
+    /**
+     * ⛔ **AN UNHELD LOCATION IS REPORTED AS ONE WHATEVER ITS VALUE IS** — the
+     * ordering `placementIssueReason` fixes. An entry reported as a non-string
+     * value would leave the tab's orphan block, which is the only list that can
+     * offer it a delete.
+     */
+    it('⛔ an entry the slot does not hold reports its LOCATION, even with a junk value', () => {
+        const doc = twoSlots();
+        doc.canonical_placements[P] = { 'Deleted Room Chest': { not: 'a name' } };
+        expect(canonicalPlacementIssues(doc, P).map((i) => i.reason))
+            .toEqual([PLACEMENT_ISSUE_REASONS.UNKNOWN_LOCATION]);
+    });
+
+    it('⛓ reports the slot it was asked about and no other', () => {
+        const doc = twoSlots();
+        doc.canonical_placements[P]['Deleted Room Chest'] = 'Key';
+        doc.canonical_placements[3]['Also Deleted'] = 'Lantern';
+        expect(canonicalPlacementIssues(doc, P).map((i) => i.location))
+            .toEqual(['Deleted Room Chest']);
+        expect(canonicalPlacementIssues(doc, '3').map((i) => i.location)).toEqual(['Also Deleted']);
+        // ⛓ …and a slot the block does not carry has nothing to report.
+        expect(canonicalPlacementIssues(doc, '9')).toEqual([]);
+    });
+
+    it('⛓ a document with no block, and a slot that is not an object, report nothing', () => {
+        expect(canonicalPlacementIssues(noBlock(), P)).toEqual([]);
+        expect(canonicalPlacementIssues(undefined, P)).toEqual([]);
+        const odd = twoSlots();
+        odd.canonical_placements[P] = 'not an object';
+        expect(canonicalPlacementIssues(odd, P)).toEqual([]);
+    });
+
+    /**
+     * ⛓⛓ **THE WHOLE-DOCUMENT READER STAMPS THE PLAYER**, because the panel's
+     * veto differences two documents and a finding that lost its slot could be
+     * matched against the wrong one. ⛔ Its population is the slots the BLOCK
+     * carries — a slot with regions but no block has no entry to be stale.
+     */
+    it('⛓⛓ byPlayer walks every slot the block carries, stamping each finding', () => {
+        const doc = twoSlots();
+        doc.canonical_placements[P]['Deleted Room Chest'] = 'Key';
+        doc.canonical_placements[3]['Also Deleted'] = 'Lantern';
+        expect(canonicalPlacementIssuesByPlayer(doc).map((i) => [i.player, i.location]))
+            .toEqual([[P, 'Deleted Room Chest'], ['3', 'Also Deleted']]);
+        expect(canonicalPlacementIssuesByPlayer(noBlock())).toEqual([]);
+    });
+
+    it('⛓ describePlacementIssue names the location, the value and the reason', () => {
+        const doc = twoSlots();
+        doc.canonical_placements[P] = { 'Deleted Room Chest': 'Key' };
+        const [issue] = canonicalPlacementIssues(doc, P);
+        const line = describePlacementIssue(issue);
+        expect(line).toContain('Deleted Room Chest');
+        expect(line).toContain('Key');
+        expect(line).toContain(PLACEMENT_ISSUE_REASONS.UNKNOWN_LOCATION);
+        // ⛓ A non-string value is SHOWN rather than coerced into a bare word.
+        expect(describePlacementIssue({ location: 'X', item: 42, reason: 'r' })).toContain('42');
     });
 });
 

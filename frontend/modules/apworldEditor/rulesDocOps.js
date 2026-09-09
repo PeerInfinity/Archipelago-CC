@@ -817,6 +817,14 @@ const placementsOf = (doc, p) => doc?.canonical_placements?.[p] ?? {};
  * Meta tab and the Document tab both write. Both are schema-vetoed, both are one
  * undo, and the Document row says which tab knows the shape.
  *
+ * ⛓⛓ **P1 — AND THE REFUSALS ARE `canonicalPlacementIssues`' PREDICATE, ASKED
+ * ABOUT ONE ENTRY.** The three sentences below are this op's, because they name
+ * what the slot holds and a corpus report has no room for that; but WHICH of
+ * them fires is `placementIssueReason`, which the tab, the panel's whole-block
+ * veto and `check-canonical-placements.mjs` also read. So an entry the tab
+ * marks stale is exactly an entry this op refuses to write, by construction
+ * rather than by agreement.
+ *
  * ⛓⛓ **AN ABSENT / EMPTY `item` DELETES, AND A DELETE IS NOT VALIDATED.** This
  * is not a loosening — it is the only thing that makes a hand-edited file
  * fixable. A document can carry a placement naming a location or an item that is
@@ -833,6 +841,123 @@ const placementsOf = (doc, p) => doc?.canonical_placements?.[p] ?? {};
  * document that never carried the key would be a byte change for a gesture that
  * removed nothing.
  */
+/**
+ * ⛓⛓⛓ **THE THREE WAYS ONE ENTRY CAN BE STALE, BY NAME** (P1).
+ *
+ * They are the refusals `set-canonical-placement` already had, promoted to
+ * data so that the op, the Placements tab, the panel's whole-block veto and
+ * the corpus gate all ask ONE question. ⛔ A second spelling of *"is this
+ * entry writable"* would agree with the first until the day one of them
+ * learned about a new container, and then the tab would mark rows the op is
+ * happy to write — trap 823's shape, one layer up: the ENUMERATION is the
+ * shared table.
+ */
+export const PLACEMENT_ISSUE_REASONS = Object.freeze({
+    UNKNOWN_LOCATION: 'unknown location',
+    NON_STRING_VALUE: 'non-string value',
+    UNKNOWN_ITEM: 'unknown item',
+});
+
+/**
+ * ⛓⛓ **THE PREDICATE — `null` for an entry this op would WRITE, a reason
+ * otherwise.**
+ *
+ * ⚠ THE ORDER IS LOAD-BEARING, AND NOT THE ORDER THE REFUSALS USED TO RUN IN.
+ * Until P1 the op checked the item's TYPE before the location's membership;
+ * the validator cannot, because an entry whose location the slot does not hold
+ * has no row to sit on and the tab has to draw it in the orphan block whatever
+ * its value is. Reporting `non-string value` for such an entry would take it
+ * out of the one list that can offer it a delete — i.e. it would be the
+ * "silently dropped" outcome W3's tab exists to prevent. So membership first,
+ * and the op follows the validator rather than the other way round.
+ *
+ * @param {string} location
+ * @param {*} item                the stored value, which is why it is not typed
+ * @param {Set<string>} held      `locationsOfPlayer` names, as a set
+ * @param {object} items          the slot's item table
+ * @returns {string|null} one of `PLACEMENT_ISSUE_REASONS`, or `null`
+ */
+function placementIssueReason(location, item, held, items) {
+    if (!held.has(location)) return PLACEMENT_ISSUE_REASONS.UNKNOWN_LOCATION;
+    if (typeof item !== 'string') return PLACEMENT_ISSUE_REASONS.NON_STRING_VALUE;
+    if (!Object.prototype.hasOwnProperty.call(items, item)) {
+        return PLACEMENT_ISSUE_REASONS.UNKNOWN_ITEM;
+    }
+    return null;
+}
+
+/**
+ * ⛓⛓⛓ **EVERY STALE ENTRY IN ONE SLOT — the shared validator** (P1; ⚖ user
+ * 2026-09-09: *"We can go ahead and implement placement validation if it's
+ * easy."*; W3 §10.7 (1) and (2)).
+ *
+ * `canonical_placements[player]` is the `--canonical-seed` input
+ * (`world_generator/extractors.py`), and the JSON schema declares the slot
+ * `additionalProperties: true` — a cross-reference between two other blocks of
+ * the same document is not something a JSON schema can assert. So this is the
+ * assertion, and it is a REPORT rather than a throw, exactly as `validateRules`
+ * is: three callers want the list and one of them (the tab) wants to DRAW it.
+ *
+ * ⛔ **A DELETE IS STILL NOT VALIDATED** — see `opSetCanonicalPlacement`. This
+ * function says what is stale; the only gesture the tab can offer for a stale
+ * entry is removal, and refusing that would leave the one entry a person needs
+ * to remove as the one entry they cannot.
+ *
+ * ⚠ A slot whose value is not a plain object carries no ENTRIES, so it reports
+ * none: the schema's `patternProperties` is the authority on the slot's own
+ * type and a second complaint here would be this module inventing one.
+ *
+ * @param {object} doc
+ * @param {string} [player]
+ * @returns {Array<{location: string, item: *, reason: string}>} in the
+ *   document's own key order, because that is the order the tab and the gate
+ *   both print.
+ */
+export function canonicalPlacementIssues(doc, player = DEFAULT_PLAYER_ID) {
+    const p = player ?? DEFAULT_PLAYER_ID;
+    const placements = placementsOf(doc, p);
+    if (!placements || typeof placements !== 'object' || Array.isArray(placements)) return [];
+    const held = new Set(locationsOfPlayer(doc, p).map((l) => l.name));
+    const items = itemsOf(doc, p);
+    const out = [];
+    for (const [location, item] of Object.entries(placements)) {
+        const reason = placementIssueReason(location, item, held, items);
+        if (reason) out.push({ location, item, reason });
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓ **EVERY SLOT OF THE DOCUMENT, EACH ISSUE STAMPED WITH ITS PLAYER** — the
+ * shape a whole-document reader needs (the corpus gate; the panel's veto,
+ * which differences two documents and must not lose which slot an entry is
+ * in).
+ *
+ * ⛔ The population is the slots `canonical_placements` itself carries, not the
+ * slots the document has regions for: a slot with no block has no entry that
+ * could be stale, and iterating `regions` instead would make the answer depend
+ * on a key this function is not about.
+ */
+export function canonicalPlacementIssuesByPlayer(doc) {
+    const block = doc?.canonical_placements;
+    if (!block || typeof block !== 'object' || Array.isArray(block)) return [];
+    const out = [];
+    for (const player of Object.keys(block)) {
+        for (const issue of canonicalPlacementIssues(doc, player)) out.push({ player, ...issue });
+    }
+    return out;
+}
+
+/**
+ * ⛓ ONE ISSUE AS A SENTENCE — the panel's refusal, the gate's finding line and
+ * a test's expectation all read this, so a person who has seen the wording in
+ * one place has seen it in the others.
+ */
+export function describePlacementIssue(issue) {
+    const value = typeof issue.item === 'string' ? issue.item : JSON.stringify(issue.item);
+    return `${issue.location} → ${value} — ${issue.reason}`;
+}
+
 function opSetCanonicalPlacement(doc, op) {
     const p = playerOf(op);
     const location = op.location;
@@ -849,16 +974,23 @@ function opSetCanonicalPlacement(doc, op) {
         return ok(setPath(doc, ['canonical_placements', p, location], undefined),
             `unplaced ${location}`);
     }
-    if (typeof op.item !== 'string') {
-        return refuse(`apworld: an item name is a string, got ${JSON.stringify(op.item)}.`);
-    }
+    // ⛓⛓ THE REFUSALS ARE THE VALIDATOR, ASKED ABOUT ONE ENTRY. The sentences
+    //   are this op's — they name what the slot holds, which a report over a
+    //   whole corpus has no room for — but WHICH of them fires is
+    //   `placementIssueReason`, so a write the tab marks stale cannot be a
+    //   write this op accepts (P1).
     const held = locationsOfPlayer(doc, p);
-    if (!held.some((l) => l.name === location)) {
+    const items = itemsOf(doc, p);
+    const reason = placementIssueReason(location, op.item,
+        new Set(held.map((l) => l.name)), items);
+    if (reason === PLACEMENT_ISSUE_REASONS.UNKNOWN_LOCATION) {
         return refuse(`apworld: no location "${location}" in slot ${p} — the document holds `
             + `[${listNames(held.map((l) => l.name))}].`);
     }
-    const items = itemsOf(doc, p);
-    if (!Object.prototype.hasOwnProperty.call(items, op.item)) {
+    if (reason === PLACEMENT_ISSUE_REASONS.NON_STRING_VALUE) {
+        return refuse(`apworld: an item name is a string, got ${JSON.stringify(op.item)}.`);
+    }
+    if (reason === PLACEMENT_ISSUE_REASONS.UNKNOWN_ITEM) {
         return refuse(`apworld: no item "${op.item}" in slot ${p} — the document holds `
             + `[${listNames(Object.keys(items))}].`);
     }
