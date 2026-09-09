@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 51,
-            "count": 83,
+            "count": 84,
             "id": "check"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 256,
+        "blockStyle": 257,
         "browser": 77,
         "cited": 89,
-        "files": 267,
+        "files": 268,
         "lineStyle": 11,
-        "withDocblock": 267,
-        "withFlags": 175
+        "withDocblock": 268,
+        "withFlags": 176
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1201,6 +1201,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "@ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at a hardcoded `localhost:8000` and it takes no `--host=` at all, so the roster cannot point it elsewhere. ⇒ deleting this one line is how a later slice adopts it into CI.",
             "path": "scripts/procgen/check-bounce-touch.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json",
+                "tree"
+            ],
+            "file": "check-canonical-placements.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tree"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "check-canonical-placements — **NO COMMITTED PRESET NAMES A PLACEMENT ITS OWN WORLD CANNOT MAKE** (APWorld coverage slice P1; W3 §10.7 (2); ⚖ user 2026-09-09: *\"We can go ahead and implement placement validation if it's easy.\"*).",
+            "path": "scripts/procgen/check-canonical-placements.mjs"
         },
         {
             "argvHelpers": [],
