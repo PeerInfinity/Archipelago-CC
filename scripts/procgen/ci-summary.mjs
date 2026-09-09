@@ -79,7 +79,8 @@ import { execFileSync } from 'node:child_process';
 import { ciGateArms, ciRunnable, ciUnrunnableIdentityRows } from './ciGatePlan.js';
 import { REPO, gateRoster } from './gateRoster.js';
 import {
-    findRun, gateLogs, gateVerdicts, jobLog, parseGateLines, parseSummaries, runById,
+    findRun, gateLogs, gateVerdicts, jobLogById, parseGateLines, parseSummaries, runById,
+    vitestJob,
 } from './ciSummary.js';
 import { readStandingValues } from './standingValues.js';
 
@@ -216,20 +217,40 @@ if (!run) {
         + '(not pushed, or the path filter did not trigger it)');
     process.exit(2);
 }
+/**
+ * ⛓⛓⛓ **R1 — THE SUITE WAITS ON ITS OWN JOB, NOT ON THE RUN.**
+ * `unittests_frontend.yml` keeps the run `in_progress` while the browser gate
+ * shards finish (S3's matrix), so a reader asked for the suite's numbers got
+ * *"run … is in_progress — pass --wait"* minutes after the Vitest job had
+ * concluded and its log was final. A run's status is an answer about its
+ * SLOWEST job; the suite's numbers are an answer about ONE.
+ *
+ * ⛔ The GATE arms are not given this: their lines are spread ACROSS the shard
+ * jobs, so for them the run really is the unit of completeness.
+ */
+const suiteArm = !GATE && !ALL_GATES;
+let unitJob = suiteArm ? vitestJob(run) : null;
+const jobDone = () => unitJob && unitJob.status === 'completed';
 const deadline = Date.now() + 40 * 60 * 1000;
-while (run.status !== 'completed') {
-    if (!wait) { console.error(`run ${run.databaseId} for ${sha} is ${run.status} — pass --wait`); process.exit(3); }
+while (run.status !== 'completed' && !jobDone()) {
+    if (!wait) {
+        console.error(`run ${run.databaseId} for ${sha} is ${run.status}`
+            + (unitJob ? ` and its "${unitJob.name}" job is ${unitJob.status}` : '')
+            + ' — pass --wait');
+        process.exit(3);
+    }
     if (Date.now() > deadline) { console.error(`run ${run.databaseId} still ${run.status} after 40 min`); process.exit(3); }
     await new Promise((r) => setTimeout(r, 30_000));
     run = findRun(sha);
+    if (suiteArm) unitJob = vitestJob(run);
 }
 /**
  * ⛓ THE SUITE LIVES IN ONE JOB; THE GATE LINES ARE SPREAD ACROSS ALL OF THEM
  * (S3's shard matrix). Asking for every job's log when only the suite is
  * wanted would pay four extra API round trips for nothing.
  */
-const gathered = (GATE || ALL_GATES) ? gateLogs(run) : null;
-const log = gathered ? gathered.log : jobLog(run);
+const gathered = suiteArm ? null : gateLogs(run);
+const log = gathered ? gathered.log : jobLogById(unitJob.id);
 
 /* ── --gates: the whole verdict set, beside the bank's ───────────────── */
 
@@ -320,14 +341,36 @@ if (!unit) { console.error(`run ${run.databaseId} (${run.conclusion}) has no vit
 
 const out = {
     sha, run: run.databaseId, conclusion: run.conclusion, createdAt: run.createdAt,
+    /**
+     * ⛓ R1 — the JOB the numbers came out of, beside the run's own status. ⛔
+     * `conclusion` above stays the RUN's: `standing-values.json`'s `suite:` row
+     * reads that field (`standingValues.js:458`), and moving its meaning under
+     * an unchanged name is exactly the ⚖ 8 hazard the shim above exists for.
+     */
+    job: unitJob
+        ? { name: unitJob.name, status: unitJob.status, conclusion: unitJob.conclusion }
+        : null,
     standingRow: `${unit.files.total}/${unit.tests.total}`,
     unit, slow,
 };
 if (json) console.log(JSON.stringify(out, null, 2));
 else {
-    console.log(`CI vitest @ ${sha.slice(0, 9)} — run ${run.databaseId} ${run.conclusion} (${run.createdAt})`);
+    console.log(`CI vitest @ ${sha.slice(0, 9)} — run ${run.databaseId} `
+        + `${run.conclusion ?? run.status} (${run.createdAt})`);
+    if (unitJob) {
+        console.log(`  job "${unitJob.name}"  ${unitJob.status}`
+            + `${unitJob.conclusion ? ` ${unitJob.conclusion}` : ''}`);
+    }
     console.log(`  suite: vitest (unfiltered)  ${out.standingRow}   (${unit.tests.passed} passed | ${unit.tests.skipped} skipped | ${unit.tests.failed} failed)`);
     console.log(slow ? `  slow battery                ${slow.files.total}/${slow.tests.total}   (${slow.tests.passed} passed | ${slow.tests.failed} failed)` : '  slow battery                (no summary — step cancelled?)');
 }
-const red = unit.tests.failed > 0 || (slow && slow.tests.failed > 0) || run.conclusion !== 'success';
+/**
+ * ⛓ R1 — while the RUN is still open the verdict is the JOB's: `run.conclusion`
+ * is `null` there, and reading `null !== 'success'` as red would call a green
+ * suite red for the duration of a browser shard.
+ */
+const suiteConclusion = run.status === 'completed'
+    ? run.conclusion : (unitJob?.conclusion ?? run.conclusion);
+const red = unit.tests.failed > 0 || (slow && slow.tests.failed > 0)
+    || suiteConclusion !== 'success';
 process.exit(red ? 1 : 0);

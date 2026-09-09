@@ -14,7 +14,9 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { gateVerdicts, parseGateLines, parseGateMsLines, shardNoteIn } from './ciSummary.js';
+import {
+    gateVerdicts, parseGateLines, parseGateMsLines, pickVitestJob, shardNoteIn, VITEST_JOB,
+} from './ciSummary.js';
 
 /** ⛓ An arm shaped like `ciGateArms`' output, with only the fields the rule
  *  reads — and BOTH keys, which differ exactly for a declared face. */
@@ -173,5 +175,60 @@ describe('shardNoteIn — was this job a slice of a partition?', () => {
     it('answers null for a job that was never sharded', () => {
         expect(shardNoteIn('# ci-gates — the headless procgen gates, on this pushed head'))
             .toBe(null);
+    });
+});
+
+/**
+ * ⛓⛓⛓ **R1 — WHICH JOB THE SUITE'S NUMBERS COME OUT OF.** `ci-summary` used to
+ * refuse an in-progress RUN outright, and `unittests_frontend.yml` keeps the run
+ * open while the browser gate shards finish (S3's matrix) — so a reader was told
+ * *"pass --wait"* minutes after the Vitest job had concluded and its log was
+ * final. The pick is pure so it can be asked here, without a run.
+ *
+ * ⛔ The shapes below are REAL: measured off run 34287938067 (the ⚖ 52 baseline
+ * at `4689b7067a`), `gh api repos/…/actions/runs/<id>/jobs` returns five jobs
+ * named `JavaScript Unit Tests (Vitest)`, `Browser gates (shard plan)` and three
+ * `Browser gate shard — …`.
+ */
+describe('pickVitestJob — the SUITE lives in one job of a matrix run', () => {
+    const RUN_34287938067 = [
+        { id: 1, name: 'JavaScript Unit Tests (Vitest)', status: 'completed', conclusion: 'success' },
+        { id: 2, name: 'Browser gates (shard plan)', status: 'completed', conclusion: 'success' },
+        { id: 3, name: 'Browser gate shard — seedling-wasm-element', status: 'in_progress', conclusion: null },
+        { id: 4, name: 'Browser gate shard — maze-lab +14', status: 'queued', conclusion: null },
+        { id: 5, name: 'Browser gate shard — producer: plan-seedling-r7-ends-meet --check +8', status: 'queued', conclusion: null },
+    ];
+
+    it('picks the Vitest job out of the shard matrix, whatever order it is in', () => {
+        expect(pickVitestJob(RUN_34287938067).id).toBe(1);
+        expect(pickVitestJob([...RUN_34287938067].reverse()).id).toBe(1);
+    });
+
+    /**
+     * ⛔ **THE POINT OF THE WHOLE CHANGE**, as a row: the run is not completed
+     * (two shards are still queued) and the suite's job is. A reader keyed on
+     * the RUN would refuse here.
+     */
+    it('…and that job can be completed while the run is not', () => {
+        const job = pickVitestJob(RUN_34287938067);
+        expect(job.status).toBe('completed');
+        expect(job.conclusion).toBe('success');
+        expect(RUN_34287938067.every((j) => j.status === 'completed')).toBe(false);
+    });
+
+    /** ⛓ `null`, never `jobs[0]` — the fallback is the caller's decision, and a
+     *  silent first-job pick is how a renamed job stops being noticed. */
+    it('answers null when no job matches, rather than falling through', () => {
+        expect(pickVitestJob(RUN_34287938067.slice(1))).toBeNull();
+        expect(pickVitestJob([])).toBeNull();
+        expect(pickVitestJob(undefined)).toBeNull();
+        expect(pickVitestJob([{ name: undefined }])).toBeNull();
+    });
+
+    /** ⛓ The match is the stable PREFIX: the workflow's suffix is `(Vitest)`. */
+    it('matches on the prefix the workflow keeps', () => {
+        expect(VITEST_JOB.test('JavaScript Unit Tests (Vitest)')).toBe(true);
+        expect(VITEST_JOB.test('JavaScript Unit Tests')).toBe(true);
+        expect(VITEST_JOB.test('Browser gate shard — maze-lab +14')).toBe(false);
     });
 });

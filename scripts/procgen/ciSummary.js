@@ -64,12 +64,47 @@ export function runJobs(run) {
         `repos/${CI_REPO}/actions/runs/${run.databaseId}/jobs?per_page=100`)).jobs;
 }
 
-export function jobLog(run) {
+/**
+ * ⛓ ONE spelling of the job the SUITE's numbers come out of. The workflow calls
+ * it `JavaScript Unit Tests (Vitest)`; the match is on the stable prefix so a
+ * renamed suffix does not silently fall through to `jobs[0]`.
+ */
+export const VITEST_JOB = /JavaScript Unit Tests/;
+
+/** ⛓ Pure, so the pick can be asked without the network. `null` when no job
+ *  matches — the FALLBACK belongs to the caller, not here. */
+export function pickVitestJob(jobs) {
+    return (jobs ?? []).find((j) => VITEST_JOB.test(j.name ?? '')) ?? null;
+}
+
+/**
+ * ⛓⛓⛓ **R1 — THE SUITE'S JOB, AS ITS OWN STATUS.** `ci-summary` refused an
+ * in-progress RUN — *"pass --wait"* — even when the Vitest job had finished and
+ * its log was final, because `unittests_frontend.yml` keeps the run open while
+ * the browser gate shards finish (S3's matrix). A run status is an answer about
+ * the slowest job in it; the suite's numbers are an answer about ONE.
+ *
+ * @returns {{id:number, name:string, status:string, conclusion:string|null}|null}
+ */
+export function vitestJob(run) {
+    const jobs = runJobs(run);
+    const job = pickVitestJob(jobs) ?? jobs[0] ?? null;
+    return job
+        ? { id: job.id, name: job.name, status: job.status, conclusion: job.conclusion }
+        : null;
+}
+
+/** ⛓ One job's log, by id — so a caller that already listed the run's jobs does
+ *  not pay for the listing twice. */
+export function jobLogById(id) {
     // `gh run view --log` returns an EMPTY body for some concluded runs (measured
     // 2026-08-25 on run 32856555673); the jobs-log endpoint does not.
-    const jobs = runJobs(run);
-    const job = jobs.find((j) => /JavaScript Unit Tests/.test(j.name)) || jobs[0];
-    return ghApi(`repos/${CI_REPO}/actions/jobs/${job.id}/logs`);
+    return ghApi(`repos/${CI_REPO}/actions/jobs/${id}/logs`);
+}
+
+export function jobLog(run) {
+    const job = vitestJob(run);
+    return jobLogById(job.id);
 }
 
 /**
