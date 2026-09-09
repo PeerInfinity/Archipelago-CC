@@ -13059,6 +13059,19 @@ don't start implementation yet."
 progression_mapping editors on the ITEMS tab (procgen-ready even though unused there today); some residuals; the
 self-pointer on the Sidecars rows; a closer look at `preset_sidecars`. Nothing launched.
 
+**⚖ RULED (user, 2026-09-09), verbatim:** "That plan for everything except the preset sidecars looks good. For the
+preset sidecars, I want to do a thorough investigation of what code reads and writes that data, and what editors for
+it are already available. Different substrates store different data in the preset sidecars. I don't expect this to
+need just a simple change. I will want to start a new Fable planning session for this. Would you recommend starting a
+new Fable planning session now, or implementing the rest of what we already have planned first?"
+⇒ The second ladder is APPROVED: **R1** fix-ups (the Sidecars self-pointer via a host-tab parameter; the accepted-op
+focus as a per-door opt-in; the validation bar cached by document token + op count; the five cheap residuals) →
+**P1** placement validation (a corpus `check-*` + a shared validator the whole-block `set-key` consults; the
+missing-item summary) → **I1** the Items tab's Groups section (list registry + per-item multi-select; ⚖ refuse vs
+cascade on removing a group in use — not yet answered) → **I2** the Progression section (progressive + additive
+shapes, one op per mapping). `preset_sidecars` is NOT a slice: it is a NEW Fable planning session's investigation
+(readers/writers per substrate, the editors that exist). Planner's recommendation on sequencing recorded below.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
