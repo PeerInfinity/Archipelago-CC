@@ -10334,6 +10334,16 @@ from its own document — `procgen_metadata` carries no seed and no pools.
 
 **GATES.** Four `dump-*-byteidentity.mjs` oracles 0-moved (md5 identical before/after: maze `8cc31554`,
 sphere `0dbe57bd`, spiral `8f8996cd`, topdown `b844a297`; after-run ENDs 05:43:24Z / :27Z / :31Z / :32Z UTC).
+⚑ **ANNOTATION (R1, 2026-09-09): two of those four values are HISTORICAL from `78623df53f` onwards.** D1
+deleted the top-level `world_classes` key everywhere, including from its one producer `rulesJsonBuilder.js` —
+which is what `buildRulesJson` calls — so the SPHERE and TOPDOWN dumps, whose subjects are rules.json
+documents this harness builds rather than committed presets, moved by exactly the removed key (§5s: 9 and 12
+deletions, 0 insertions). MAZE `8cc31554` dumps a GRID and did not move; spiral is a `check-`, not a dump.
+⛔ Nothing here is a PIN and nothing needs re-recording. Measured over `standing-values.json`: exactly ONE
+row's `command` runs a `dump-*-byteidentity` script — `identity: maze byte-identity` — so no standing value
+depends on the sphere or topdown dump at all. These four are a RECORD of what that slice measured on the tree
+it had, and the line is left as written for that reason: a value quoted in a record is not a value the tree
+owes, and rewriting it would make the record disagree with the run that produced it.
 The moved body is byte-identical to the deleted block (`diff`: no output). In place of the impossible
 re-emit: **1,034 committed maze sidecar payloads re-serialized from the tree's own bytes, 0 serializer
 mismatches** over 22 documents (the three the brief named: 3/3, 235/235, 2/2); ten `seedling_atlas_maze`
