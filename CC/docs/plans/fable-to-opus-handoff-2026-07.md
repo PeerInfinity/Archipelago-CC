@@ -13135,6 +13135,11 @@ nothing else; `grep -ac "Error in event handler for"` = **0**. Docs trio: genera
 `lintGateLabels.test.js` **14**. `ci-vitest-summary.mjs 4689b7067a` still **442/13408**, exit 0.
 **⚖ 52 derived +0 files / +6 rows ⇒ predicted 442/13414** (13406 passed | 8 skipped | 0 failed), slow 12/217
 unmoved — trap 1212 checked (`git merge-base --is-ancestor c299389033 4689b7067a` = false).
+**CI at the pushed SHA, run 34415114946: `suite: vitest (unfiltered)  442/13414   (13406 passed | 8 skipped |
+0 failed)`, slow `12/217` — the derivation MATCHED.** ⛑ And that quote is residual (e) earning itself on its
+first real use: the RUN's own conclusion field is blank there (three browser shards still going) while the
+`job "JavaScript Unit Tests (Vitest)"` reads `completed success`. Before (e) this number would have been
+refused with *"pass --wait"* and made to wait on work it does not depend on.
 **Four mutants**, each naming the row it reds and the rows it does not: (A) host parameter ignored → the new
 self-pointer row, 5 conditions, sidecars/owned-row rows green; (B) cache never invalidates → the bar row, 1
 condition; (C) flag ignored `raise:true` → the decline row, 3 conditions, Send row green; (C-inverse)
