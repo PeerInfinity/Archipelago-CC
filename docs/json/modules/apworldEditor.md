@@ -491,6 +491,21 @@ The listing in a refusal is bounded by `REFUSAL_NAME_LIMIT`: one slot in the
 corpus holds 1,194 locations and 1,208 items, so an unbounded one would be a
 hundred-kilobyte alert.
 
+⛓⛓ **P1 — WHICH refusal fires is one shared predicate, and four things read
+it.** `canonicalPlacementIssues(doc, player)` in `rulesDocOps.js` returns
+`[{location, item, reason}]` over a slot, with the three reasons named as data
+(`PLACEMENT_ISSUE_REASONS`: `unknown location`, `non-string value`,
+`unknown item`). The op selects its sentence off it, the tab marks its rows off
+it, the Document tab's whole-block veto differences it, and
+`scripts/procgen/check-canonical-placements.mjs` runs it over every preset. So
+an entry the tab calls stale *is* an entry the op refuses to write — by
+construction rather than by four functions agreeing.
+
+⚠ The predicate asks about the LOCATION before the value's type, which is not
+the order the refusals originally ran in. An entry whose location the slot no
+longer holds has to reach the tab's orphan block whatever its value is, and that
+block is the only list that can offer it a delete.
+
 ⛔ **A DELETE is not validated, and that is the point.** A hand-edited file can
 carry a placement naming a location or an item the document no longer holds. The
 tab **shows** those rather than dropping them, and the only gesture it can offer
@@ -515,6 +530,15 @@ whose every edit would be refused. A filter box matches location, item and regio
 names, and the summary line — also the tab's chrome line — is derived:
 *"N of M locations placed"*, plus a count of any stale entries.
 
+⛓ **P1 — a stale entry is DEDUCTED from the numerator.** W3 counted an entry
+naming a missing item as placed, on the grounds that the file says it is placed.
+It is not: `--canonical-seed` cannot place an item the world does not hold, so
+the numerator was promising a placement no generation can make. The stale
+entries are still named on the same line — the count says how many, the
+numerator no longer includes them. Each marked row prints the validator's own
+reason, so a reader sees the same words `check-canonical-placements.mjs` prints
+for that entry.
+
 ⛓⛓ **The option list is built on FIRST OPEN, and that is a measurement.**
 `dark_souls_3` slot 1 holds 1,194 locations and 1,208 items and `depgraph` holds
 712 and 1,356. Both builds were **measured on that page**, not reasoned about:
@@ -535,6 +559,57 @@ in-app roster exercise is the path the big worlds take.
 `additionalProperties: true`, so the schema accepts every string the select can
 produce and a preview would be a veto that can never fire. The guard is the op's
 own refusal.
+
+### The whole-block veto (P1)
+
+⚖ *"We can go ahead and implement placement validation if it's easy."* (user,
+2026-09-09) — closing W3's ⚖ OPEN 1.
+
+Because the schema accepts anything on this slot, the Document tab's **Save
+JSON** used to write a placement the per-entry op refuses: one tab's guard was
+reachable around. `_placementIssuesAddedBy` closes it with the schema veto's own
+shape — the op is applied to a *preview*, the preview's placement issues are
+computed, and they are **differenced against the ones the document already had**.
+What is left is refused by name:
+
+> Refused: `canonical_placements` — 1 placement this edit would ADD that the
+> world cannot place: Nowhere → Freeincarnate — unknown location
+
+⛔ **Differenced, because a hand-edited file arrives with stale entries and the
+block editor is how a person fixes one.** A veto that refused any save still
+leaving an issue behind would make the one document that needs editing the one
+document that cannot be edited — the same law the op's unvalidated delete
+follows. Measured through the tab's own Save JSON button on
+`procgen_topdown/AP_1`: adding `Nowhere` is refused naming `Nowhere` with no op
+recorded and the block unchanged; an unknown item at a real location is refused
+naming both; a save that **removes** a pre-existing stale entry is accepted as
+one op; and so is a save that leaves one in place.
+
+The veto runs at both seams that accept a `set-key` — `_applySetKey` and
+`_acceptEditorOp` — so a door wired past the opener is not the way around it.
+Today no door writes this key, so the population it actually refuses is the
+block editor; the placement is where L4 found the *schema* veto missing for the
+opposite reason.
+
+### The corpus gate (P1)
+
+`scripts/procgen/check-canonical-placements.mjs` runs the same predicate over
+every `_rules.json` under `frontend/presets/<preset>/AP_<seed>/`, one slot at a
+time. Pure node — no dev server, no browser — one line per finding, a computed
+headline, exit 1 on any finding. It joins CI's headless gate set by NAME
+(`gateRoster`: a `check-*.mjs` in that directory is a gate).
+
+⚠ **The corpus is clean today and the gate is still worth having.** Nothing
+outside the hub validated a placement: a preset carrying a stale entry passes
+`test_schema_validation.py`, and — measured on a hand-staled copy in a
+scratchpad — `python -m world_generator … --canonical-seed 1` *accepts* it and
+copies it verbatim into the generated world's `canonical_placements` ClassVar.
+The failure lands at seed generation, in `_place_original_items`, where
+`multiworld.get_location(name, player)` is `regions.location_cache[player][name]`
+and `create_item(name)` is `item_table[name]` — two raw dict lookups, i.e. a
+`KeyError` a long way from the byte that caused it. And the tree can now *create*
+the condition: place an item on this tab, then delete its location on the
+Regions tab.
 
 ⛔ **A tab-local edit does not publish `ui:activatePanel`.** `_focusAcceptedOp` is
 for **doors** — an editor elsewhere handing an op back — and raising the panel a
