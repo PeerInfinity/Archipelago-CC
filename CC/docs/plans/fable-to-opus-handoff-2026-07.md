@@ -13171,6 +13171,12 @@ sites. ⚖ NEW (§11.8): the perf item re-points at `_renderRegionsTab` (Items o
 fail-closed (the field compulsory, the value not); `preset_sidecars` declares `returns: 'op'` for a seam it never
 uses (for the reserved session); the `--host=` normalisation guards no defect. NEXT: **P1** on R1's idle.
 
+**P1 LAUNCHED 2026-09-09** as `apworld-coverage-P1` (Opus; kickoff `NewDocs/plans/apworld-coverage-P1-prompt.md`; on
+R1's idle): ONE shared placement validator; the whole-block `set-key canonical_placements` veto (diff-against-before,
+refuse by name); the corpus gate `check-canonical-placements.mjs` (node-only; an ENROLMENT — `ci-gates --plan`
+quoted before/after, +1 headless arm expected); the summary deducts stale entries. Baseline 442/13414 at
+`674dd35653`. Reports come to `next-priorities-planning-4`; I1 on P1's idle notice.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
