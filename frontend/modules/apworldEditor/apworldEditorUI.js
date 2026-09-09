@@ -52,8 +52,12 @@ import {
   EXIT_FIELDS,
   ITEM_FIELDS,
   META_FIELDS,
+  PLACEMENT_ISSUE_REASONS,
+  canonicalPlacementIssues,
+  canonicalPlacementIssuesByPlayer,
   deleteItemOps,
   deleteRegionOps,
+  describePlacementIssue,
   locationsOfPlayer,
 } from './rulesDocOps.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
@@ -1597,31 +1601,50 @@ class ApworldEditorUI {
    *
    * `total` is the locations the SLOT holds (`locationsOfPlayer`, the same
    * function the op refuses against, so the tab can never offer a row whose
-   * every edit would be refused). `placed` is how many of those carry an entry —
-   * an entry naming an item the document no longer holds still counts as placed,
-   * because the file says it is placed and this tab's job is to show the file.
+   * every edit would be refused).
    *
-   * ⛓ `orphanLocations` are entries whose LOCATION the slot does not hold and
-   * `orphanItems` are entries whose ITEM it does not hold — a hand-edited file's
-   * two ways of going stale. Neither is silently dropped; both are drawn, marked
-   * and offered a delete.
+   * ⛓⛓⛓ **P1 — AND WHICH ENTRIES ARE STALE IS `canonicalPlacementIssues`,
+   * NOT THIS METHOD.** Until P1 the tab carried its own two scans, and they
+   * were a second spelling of the op's refusals; they are now one call, so the
+   * rows this tab marks are exactly the writes the op declines and exactly the
+   * findings `check-canonical-placements.mjs` reports over the corpus.
+   *
+   * ⛓⛓ **AND A STALE ENTRY IS DEDUCTED FROM `placed`** (W3 §10.7 (3), ⚖ user
+   * 2026-09-09). W3 counted an entry naming a missing ITEM as placed, on the
+   * grounds that the file says it is placed. It is not: `--canonical-seed`
+   * cannot place an item the world does not hold, so the numerator was
+   * promising a placement that no generation can make. The stale entries are
+   * still named on the same line — the count says how many, the numerator no
+   * longer includes them.
+   *
+   * ⛓ `orphanLocations` are the entries whose LOCATION the slot does not hold
+   * (they have no region to sit under, so the tab draws them in their own
+   * block) and `orphanItems` are the held locations whose stored VALUE the slot
+   * cannot supply — a missing item name, or a value that is not a name at all.
+   * Neither is silently dropped; both are drawn, marked and offered a delete.
    */
   _placementTally() {
     const placements = this._placements();
     const locations = locationsOfPlayer(this.rulesDoc, this.playerId);
-    const held = new Set(locations.map((l) => l.name));
-    const items = this._items();
+    const issues = canonicalPlacementIssues(this.rulesDoc, this.playerId);
+    const stale = new Set(issues.map((i) => i.location));
     const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
-    const placed = locations.filter((l) => has(placements, l.name)).length;
+    const placed = locations
+      .filter((l) => has(placements, l.name) && !stale.has(l.name)).length;
+    const reason = (r) => issues.filter((i) => i.reason === r).map((i) => i.location);
     return {
       locations,
       placements,
+      issues,
+      // ⛓ location → reason, so a ROW does not re-derive staleness a third time.
+      staleReason: new Map(issues.map((i) => [i.location, i.reason])),
       placed,
       total: locations.length,
-      orphanLocations: Object.keys(placements).filter((n) => !held.has(n)),
-      orphanItems: locations
-        .filter((l) => has(placements, l.name) && !has(items, placements[l.name]))
-        .map((l) => l.name),
+      orphanLocations: reason(PLACEMENT_ISSUE_REASONS.UNKNOWN_LOCATION),
+      orphanItems: [
+        ...reason(PLACEMENT_ISSUE_REASONS.NON_STRING_VALUE),
+        ...reason(PLACEMENT_ISSUE_REASONS.UNKNOWN_ITEM),
+      ],
     };
   }
 
@@ -1860,18 +1883,23 @@ class ApworldEditorUI {
     return row;
   }
 
+  /**
+   * ⛓ P1 — the row's mark is the TALLY's reason (i.e. the validator's), not a
+   * third scan of the item table: `staleReason` holds a location only when
+   * `canonicalPlacementIssues` named it, and the words on the mark are the
+   * words the gate prints for the same entry.
+   */
   _makePlacementRow(loc, tally) {
     const has = Object.prototype.hasOwnProperty.call(tally.placements, loc.name);
     const current = has ? tally.placements[loc.name] : '';
     const row = this._makePlacementRowShell(loc.name, loc.region, has ? current : undefined);
-    const unknownItem = has && !Object.prototype.hasOwnProperty
-      .call(this._items(), current);
-    if (unknownItem) row.dataset.orphan = 'item';
-    row.appendChild(this._makePlacementSelect(loc.name, has ? String(current) : '', unknownItem));
-    if (unknownItem) {
+    const staleItem = has ? (tally.staleReason.get(loc.name) ?? null) : null;
+    if (staleItem) row.dataset.orphan = 'item';
+    row.appendChild(this._makePlacementSelect(loc.name, has ? String(current) : '', !!staleItem));
+    if (staleItem) {
       const mark = document.createElement('span');
       mark.className = 'apworld-placements-mark';
-      mark.textContent = 'no such item';
+      mark.textContent = staleItem;
       Object.assign(mark.style, { color: '#e0a030', fontSize: '10px' });
       row.appendChild(mark);
     }
