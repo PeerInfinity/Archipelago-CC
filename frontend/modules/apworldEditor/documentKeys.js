@@ -146,6 +146,23 @@ export const SIDECARS_TAB_SUMMARY_KEY = 'preset_sidecars';
  */
 export const PLACEMENTS_TAB_KEY = 'canonical_placements';
 
+/**
+ * ⛓⛓⛓ **R1 — THE TWO TAB IDS THE ROW RENDERER HAS TO TELL APART**, named once
+ * here rather than spelled at each site. `_renderDocumentRow` draws a key's
+ * *"edited in the X tab"* pointer for every host EXCEPT X itself, so the id the
+ * Sidecars tab passes and the id `KEYS_OWNED_BY_TAB` files its keys under have
+ * to be the same string — and until they were one constant, nothing could red
+ * if one of them moved. ⚖ user, 2026-09-09: *"The sidecar entries in the
+ * sidecars tab have the 'Go to Sidecars' button."*
+ *
+ * ⛓ `DOCUMENT_TAB_ID` is NOT a key of `KEYS_OWNED_BY_TAB` and must not become
+ * one: the Document tab is the everything-fallback (`ownedByTab === null`), so
+ * a key "owned" by it would be a key with a pointer to the tab it is already on
+ * — which is the very defect this pair closes.
+ */
+export const SIDECARS_TAB_ID = 'sidecars';
+export const DOCUMENT_TAB_ID = 'document';
+
 export const KEYS_OWNED_BY_TAB = Object.freeze({
     regions: Object.freeze(['regions']),
     items: Object.freeze(['items', 'itempool_counts', 'starting_items']),
@@ -154,7 +171,8 @@ export const KEYS_OWNED_BY_TAB = Object.freeze({
         ...META_TAB_EXTRA_KEYS,
     ])].sort()),
     placements: Object.freeze([PLACEMENTS_TAB_KEY]),
-    sidecars: Object.freeze([...SIDECAR_KEYS_FROM_WORLDGEN, ...SIDECAR_KEYS_FROM_RULING]),
+    [SIDECARS_TAB_ID]: Object.freeze([...SIDECAR_KEYS_FROM_WORLDGEN,
+        ...SIDECAR_KEYS_FROM_RULING]),
 });
 
 /** ⛓ `key → tab id`, inverted from the table above once. */

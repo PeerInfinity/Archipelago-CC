@@ -24,10 +24,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import {
     DOCUMENT_KEY_EDITORS,
+    DOCUMENT_TAB_ID,
     EDITOR_RETURN_KINDS,
     regionAtlasSetKeyOp,
     KEYS_OWNED_BY_TAB,
     PLACEMENTS_TAB_KEY,
+    SIDECARS_TAB_ID,
     SIDECARS_TAB_SUMMARY_KEY,
     buildDocumentKeys,
     defaultPlayerOf,
@@ -108,6 +110,20 @@ describe('the registry IS the schema', () => {
 describe('the tab-ownership table', () => {
     const panelSource = readFileSync(join(HERE, 'apworldEditorUI.js'), 'utf8');
 
+    /**
+     * ⛓ The panel's own `TABS` ids, read from its source — the authority for
+     * *"a row may only point at a tab somebody can click"*.
+     *
+     * ⛓⛓ R1 — an entry may name its id with a CONSTANT rather than a literal,
+     * and then the constant has to be one this module publishes: an id spelled
+     * in a name only `apworldEditorUI.js` knows would put the panel's tab list
+     * and the ownership table back on two authorities. An unresolvable name
+     * lands here as `undefined` and the row below refuses it.
+     */
+    const TAB_ID_CONSTANTS = { SIDECARS_TAB_ID, DOCUMENT_TAB_ID };
+    const panelTabIds = () => [...panelSource.matchAll(/\{ id: (?:'(\w+)'|(\w+)), label: '/g)]
+        .map((m) => m[1] ?? TAB_ID_CONSTANTS[m[2]]);
+
     it('⛓ every owned key is a real schema key', () => {
         for (const [tab, keys] of Object.entries(KEYS_OWNED_BY_TAB)) {
             for (const key of keys) {
@@ -122,10 +138,33 @@ describe('the tab-ownership table', () => {
      * The panel's own `TABS` list is the authority, read from its source.
      */
     it('⛓ every tab named by the table is a tab the panel actually has', () => {
-        const ids = [...panelSource.matchAll(/\{ id: '(\w+)', label: '/g)].map((m) => m[1]);
-        expect(ids).toContain('document');
-        expect(ids).toContain('links');
-        for (const tab of Object.keys(KEYS_OWNED_BY_TAB)) expect(ids).toContain(tab);
+        expect(panelTabIds()).toContain(DOCUMENT_TAB_ID);
+        expect(panelTabIds()).toContain('links');
+        for (const tab of Object.keys(KEYS_OWNED_BY_TAB)) expect(panelTabIds()).toContain(tab);
+    });
+
+    /**
+     * ⛓⛓⛓ **R1 — THE HOST IDS THE ROW RENDERER COMPARES.**
+     * `_renderDocumentRow(row, hostTab)` skips a key's *"edited in the X tab"*
+     * pointer when `X === hostTab` (⚖ user, 2026-09-09), so the id the Sidecars
+     * tab passes and the key `KEYS_OWNED_BY_TAB` files its list under must be
+     * ONE string — they are (`[SIDECARS_TAB_ID]:` is the computed key), and this
+     * row is what says so.
+     *
+     * ⛔ **AND `DOCUMENT_TAB_ID` MUST NOT BECOME A TABLE KEY.** The Document tab
+     * is the everything-fallback: `ownedByTab` is `null` there, never
+     * `'document'`. Filing keys under it would give them a pointer to the tab
+     * they are already on — the defect R1 closes — and would do it on the tab
+     * that has no other home to offer.
+     */
+    it('⛓⛓⛓ the two host ids are the ownership table\'s own key, and its non-key', () => {
+        expect(Object.keys(KEYS_OWNED_BY_TAB)).toContain(SIDECARS_TAB_ID);
+        expect(Object.keys(KEYS_OWNED_BY_TAB)).not.toContain(DOCUMENT_TAB_ID);
+        expect(panelTabIds()).toContain(SIDECARS_TAB_ID);
+        expect(panelTabIds()).toContain(DOCUMENT_TAB_ID);
+        // ⛔ Non-vacuity: the scan resolved every id, so a `TABS` entry naming a
+        //   constant this file does NOT export cannot pass as an `undefined`.
+        expect(panelTabIds()).not.toContain(undefined);
     });
 
     /**

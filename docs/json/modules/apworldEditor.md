@@ -385,6 +385,20 @@ registry rows (`documentKeyRows`, in the schema's own order) — it does not bui
 second row, because two renderers for one key are two vocabularies for one
 document.
 
+⛓ **R1 — and the renderer knows WHICH host is drawing it.** ⚖ user, 2026-09-09:
+*"The sidecar entries in the sidecars tab have the 'Go to Sidecars' button. Is
+there a simple way to fix that?"* `_renderDocumentRow(row, hostTab)` takes the
+drawing tab's id and skips the *"Edited in the … tab"* pointer when it names that
+same tab, so these five rows carry no pointer here and the Document tab's rows for
+the same five are unmoved. The two ids are `SIDECARS_TAB_ID` / `DOCUMENT_TAB_ID`
+in `documentKeys.js` — the Sidecars one is the very key `KEYS_OWNED_BY_TAB` files
+its list under, so the host id and the ownership table cannot drift apart. ⛔ The
+host is a PARAMETER rather than `this.activeTab`: a row renderer that read the
+panel's mode would make its content depend on something no caller declared. An
+unnamed host (the default) draws every pointer — the pre-R1 behaviour, on the
+footing that a redundant pointer is a smaller defect than a key whose home tab a
+reader cannot find.
+
 **Which doors are the working copy, and which are not.** Three of the five carry a
 door and all three open on the WORKING COPY — `loop_costs` (the loops cost
 debugger, `returns: op`), `region_atlas` (the region marking tool, `returns: op`,

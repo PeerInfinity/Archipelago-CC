@@ -102,9 +102,11 @@ import {
   documentKeyRows,
   playerSlotsOf,
   DOCUMENT_KEY_EDITORS,
+  DOCUMENT_TAB_ID,
   EDITOR_RETURN_KINDS,
   KEYS_OWNED_BY_TAB,
   PLACEMENTS_TAB_KEY,
+  SIDECARS_TAB_ID,
   SIDECARS_TAB_SUMMARY_KEY,
 } from './documentKeys.js';
 import { buildLinkRows, DOCUMENT_LINKS } from './documentLinks.js';
@@ -193,8 +195,11 @@ const TABS = [
   { id: 'placements', label: 'Placements' },
   { id: 'meta', label: 'Meta' },
   { id: 'map', label: 'Map' },
-  { id: 'sidecars', label: 'Sidecars' },
-  { id: 'document', label: 'Document' },
+  // ⛓ R1 — these two ids are the ONE pair `_renderDocumentRow` compares a key's
+  //   `ownedByTab` against, so they come from `documentKeys.js` rather than
+  //   being spelled a second time here.
+  { id: SIDECARS_TAB_ID, label: 'Sidecars' },
+  { id: DOCUMENT_TAB_ID, label: 'Document' },
   { id: 'links', label: 'Links' },
   { id: 'raw', label: 'Raw JSON' },
 ];
@@ -2053,7 +2058,9 @@ class ApworldEditorUI {
       this.scrollContainer.appendChild(none);
       return;
     }
-    for (const row of rows) this.scrollContainer.appendChild(this._renderDocumentRow(row));
+    for (const row of rows) {
+      this.scrollContainer.appendChild(this._renderDocumentRow(row, SIDECARS_TAB_ID));
+    }
   }
 
   /**
@@ -2135,11 +2142,38 @@ class ApworldEditorUI {
       this.scrollContainer.appendChild(none);
       return;
     }
-    for (const row of rows) this.scrollContainer.appendChild(this._renderDocumentRow(row));
+    for (const row of rows) {
+      this.scrollContainer.appendChild(this._renderDocumentRow(row, DOCUMENT_TAB_ID));
+    }
   }
 
-  /** ⛓ ONE key: what it is, who writes it, what it holds, and how to change it. */
-  _renderDocumentRow(row) {
+  /**
+   * ⛓ ONE key: what it is, who writes it, what it holds, and how to change it.
+   *
+   * ⛓⛓⛓ **R1 — AND IT KNOWS WHICH TAB IS DRAWING IT** (⚖ user, 2026-09-09:
+   * *"The sidecar entries in the sidecars tab have the 'Go to Sidecars'
+   * button. Is there a simple way to fix that?"*). S1 gave the Sidecars tab
+   * the Document tab's renderer, and the pointer came with it — so all five
+   * sidecar rows drew *"Edited in the Sidecars tab"* and a **Go to Sidecars**
+   * button while the reader was standing on that tab.
+   *
+   * ⛔ THE HOST IS A PARAMETER, not `this.activeTab`. Both are the same value
+   * today (a tab body only renders when it is the active tab), but reading the
+   * panel's mode inside a row renderer makes the row's content depend on
+   * something no caller declared — and the next host (a preview, a dialog, a
+   * second pane) would inherit whichever tab happened to be selected. Each
+   * host names itself, once, at its own call site.
+   *
+   * ⚠ The default is `null` = *"no host"*, which draws every pointer — the
+   * pre-R1 behaviour. It is deliberately not fail-closed: a pointer that is
+   * merely redundant is a smaller defect than a key whose home tab a reader
+   * cannot find, so an unnamed host errs towards saying too much.
+   *
+   * @param {object} row a `documentKeyRows` entry
+   * @param {string|null} [hostTab] the id of the TAB drawing this row; a
+   *   pointer naming that same tab is skipped.
+   */
+  _renderDocumentRow(row, hostTab = null) {
     const box = document.createElement('div');
     box.className = 'apworld-doc-row';
     box.dataset.docKey = row.key;
@@ -2200,7 +2234,11 @@ class ApworldEditorUI {
      * would red. The textarea is built ON EXPAND (`_makeDocumentBlockEditor`),
      * so a 600 KB `regions` costs nothing until somebody opens it.
      */
-    if (row.ownedByTab) box.appendChild(this._makeOwnedByTabLine(row));
+    // ⛓ R1 — …unless the tab that owns it is the tab drawing it (see the
+    //   docblock): a row cannot usefully point at the tab it is on.
+    if (row.ownedByTab && row.ownedByTab !== hostTab) {
+      box.appendChild(this._makeOwnedByTabLine(row));
+    }
     // ⛓ H5 — the DEDICATED editor's door, above the raw JSON rather than
     //   instead of it: the block is still data and the block editor is still
     //   the way to fix a value the dedicated editor cannot express.

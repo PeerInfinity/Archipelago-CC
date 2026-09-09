@@ -71,7 +71,8 @@ import { regionAtlasReference } from '../../procgenPipeline/regionAtlasCompiler.
  * comes from the exporter's own `_inject_worldgen_*` methods and from the ⚖.
  */
 import {
-    DOCUMENT_KEY_EDITORS, KEYS_OWNED_BY_TAB, SIDECARS_TAB_SUMMARY_KEY,
+    DOCUMENT_KEY_EDITORS, DOCUMENT_TAB_ID, KEYS_OWNED_BY_TAB, SIDECARS_TAB_ID,
+    SIDECARS_TAB_SUMMARY_KEY,
 } from '../../apworldEditor/documentKeys.js';
 /**
  * ⛓⛓ W0 — **THE TWO AUTHORITIES A VIEWER-DOOR ROW HAS TO ASK, and neither is a
@@ -3596,10 +3597,26 @@ export async function apworldSidecarsTabDrawsTheRegistrysSidecarKeys(testControl
          * key's box on both tabs. A forked renderer that happened to draw a door
          * and a block would still differ here.
          */
+        /**
+         * ⛔⛓ **R1 — MINUS THE OWNED-BY-TAB POINTER, which is now the ONE
+         * element the two hosts legitimately differ by.** S1 compared the whole
+         * child list and passed, because the Sidecars tab drew every key a
+         * *"Go to Sidecars"* button while the reader was standing on Sidecars
+         * (⚖ user, 2026-09-09). Suppressing it makes the raw lists differ by
+         * exactly `.apworld-doc-owned`, so this claim — *"one renderer, two
+         * hosts"* — reads past it. The pointer's own law is a row of its own
+         * (`apworld-a-row-does-not-point-at-the-tab-it-is-on`); asserting it
+         * here too would make one defect red two rows and neither of them
+         * about the renderer.
+         */
         const shapeOf = (key) => {
             const box = document.querySelector(
                 `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${key}"]`);
-            return box ? [...box.children].map((c) => c.className || c.tagName).join('|') : null;
+            return box
+                ? [...box.children]
+                    .filter((c) => !c.classList.contains('apworld-doc-owned'))
+                    .map((c) => c.className || c.tagName).join('|')
+                : null;
         };
         const richest = drawn.find((k) => panel.rulesDoc[k] !== undefined) ?? drawn[0];
         const onSidecars = shapeOf(richest);
@@ -3663,6 +3680,130 @@ registerTest({
                + 'against the exporter\'s sidecar merge and the ⚖ — this row reads the same '
                + 'table the tab does and is deliberately blind to it.',
     testFunction: apworldSidecarsTabDrawsTheRegistrysSidecarKeys,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * R1 — A ROW DOES NOT POINT AT THE TAB IT IS ON.
+ * (`NewDocs/plans/apworld-editor-coverage-plan.md` §11, task 1.)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **THE SAME KEY, TWO HOSTS, AND ONLY ONE OF THEM GETS THE POINTER**
+ * (⚖ user, 2026-09-09: *"The sidecar entries in the sidecars tab have the 'Go
+ * to Sidecars' button. Is there a simple way to fix that?"*).
+ *
+ * ⛔ **THE CONTROL IS THE OTHER HOST, not the absence alone.** "No pointer on
+ * the Sidecars tab" is also true of a renderer that stopped drawing pointers
+ * altogether, and of a registry that lost `ownedByTab` — both of which would
+ * ALSO take the Document tab's fifteen pointers away. So every key is read on
+ * BOTH tabs in one drive: absent on its own tab, present on the Document tab,
+ * and a key owned by a THIRD tab keeps its pointer on the Document tab too.
+ *
+ * ⛓ **THE POINTER IS ASSERTED BY ITS EFFECT.** A button labelled *"Go to
+ * Sidecars"* that selected nothing would pass a label check; this row presses
+ * it and reads `panel.activeTab`.
+ *
+ * ⚠ Every post-gesture lookup re-queries (`boxOn`): selecting a tab rebuilds
+ * the tab body, so an element captured before the switch is detached — and a
+ * `querySelector` on a detached node answers happily out of the old tree
+ * (W0 §7.5).
+ */
+export async function apworldARowDoesNotPointAtTheTabItIsOn(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        /** ⛓ The box for one key on whichever tab is showing — re-queried every time. */
+        const boxOn = (key) => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${key}"]`);
+        const pointerOn = (key) => boxOn(key)?.querySelector('.apworld-doc-owned') ?? null;
+
+        /**
+         * ⛓ The population is the LAW's, not the flag's: every key the registry
+         * files under the Sidecars tab is a key that tab hosts, so every one of
+         * them is a case of the defect.
+         */
+        const hosted = [...KEYS_OWNED_BY_TAB[SIDECARS_TAB_ID]];
+        testController.reportCondition(
+            'the registry files keys under the Sidecars tab — the premise', hosted.length > 0);
+
+        selectTab(panel, SIDECARS_TAB_ID);
+        for (const key of hosted) {
+            testController.reportCondition(`the Sidecars tab draws ${key}`, !!boxOn(key));
+            testController.assertEqual(
+                `…and it does NOT point at the tab it is on`,
+                'null', String(pointerOn(key) === null ? 'null' : 'a pointer'));
+            /**
+             * ⛔ NON-VACUITY, per key: the row must have lost the POINTER and
+             * nothing else. A renderer that skipped the whole owned branch
+             * again (W0's defect) would pass the line above.
+             */
+            testController.assertEqual(
+                `…while keeping its own editing affordance`,
+                'true',
+                String(!!boxOn(key) && (!!boxOn(key).querySelector('.apworld-doc-toggle')
+                    || !!boxOn(key).querySelector('input')
+                    || !!boxOn(key).querySelector('select'))));
+        }
+
+        /**
+         * ⛓⛓ **THE CONTROL — the SAME keys, drawn by the Document tab, DO
+         * point here**, and the button's effect is the Sidecars tab.
+         */
+        selectTab(panel, DOCUMENT_TAB_ID);
+        for (const key of hosted) {
+            testController.assertEqual(
+                `the Document tab's row for ${key} DOES point at its home tab`,
+                'true', String(!!pointerOn(key)));
+        }
+        const goButton = pointerOn(hosted[0])?.querySelector('button') ?? null;
+        testController.reportCondition(
+            'that pointer carries a button', !!goButton);
+        if (goButton) {
+            goButton.click();
+            testController.assertEqual('and pressing it selects the Sidecars tab',
+                SIDECARS_TAB_ID, String(panel.activeTab));
+            selectTab(panel, DOCUMENT_TAB_ID);
+        }
+
+        /**
+         * ⛓⛓ **AND A KEY OWNED BY A THIRD TAB IS UNTOUCHED**, which is what
+         * separates "the host suppresses its own pointer" from "the pointer is
+         * gone". Derived: any owned key the Sidecars tab does NOT host.
+         */
+        const elsewhere = Object.entries(KEYS_OWNED_BY_TAB)
+            .filter(([tab]) => tab !== SIDECARS_TAB_ID)
+            .flatMap(([, keys]) => keys)
+            .filter((k) => !!boxOn(k));
+        testController.reportCondition(
+            'the Document tab also draws keys owned by other tabs — the control\'s premise',
+            elsewhere.length > 0);
+        for (const key of elsewhere) {
+            testController.assertEqual(
+                `${key} keeps its pointer on the Document tab`, 'true', String(!!pointerOn(key)));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('self-pointer test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-a-row-does-not-point-at-the-tab-it-is-on',
+    name: 'APWorld hub: a document row does not point at the tab that is drawing it',
+    description: 'On procgen_maze. Every key `KEYS_OWNED_BY_TAB` files under the Sidecars '
+               + 'tab is read on BOTH hosts in one drive: on the Sidecars tab it carries no '
+               + '"Edited in the … tab" pointer while keeping its own editing affordance, '
+               + 'and on the Document tab it carries one whose button really selects the '
+               + 'Sidecars tab. A key owned by a THIRD tab keeps its pointer on the Document '
+               + 'tab, which is what tells "the host suppresses its own pointer" apart from '
+               + '"the pointer is gone".',
+    testFunction: apworldARowDoesNotPointAtTheTabItIsOn,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
