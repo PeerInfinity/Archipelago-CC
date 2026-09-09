@@ -2691,12 +2691,23 @@ class ApworldEditorUI {
     }
     // ⛓ Previewed with the SAME op the session will see, stamp included: a
     //   preview of a different op is a veto over something nobody applies.
-    const errors = this._schemaErrorsAddedBy(this._stampPlayer(op));
+    const stamped = this._stampPlayer(op);
+    const errors = this._schemaErrorsAddedBy(stamped);
     if (errors.length > 0) {
       log('warn', `${key}: an editor's op was refused by the schema: ${errors.join(' | ')}`);
       return refuse(`refused by the schema — ${errors.length} `
         + `error${errors.length === 1 ? '' : 's'}: ${errors.slice(0, 3).join(' · ')}`
         + `${errors.length > 3 ? ' · …' : ''}`, errors);
+    }
+    // ⛓⛓ P1 — and the same veto the block editor's Save JSON runs, at the same
+    //   seam, for the same reason L4 moved the schema veto here: a door wired
+    //   past the opener must not be the way around a guard.
+    const placements = this._placementIssuesAddedBy(stamped);
+    if (placements.length > 0) {
+      const lines = placements.map(describePlacementIssue);
+      log('warn', `${key}: an editor's op would add ${placements.length} placement(s) the `
+        + `world cannot place: ${lines.join(' | ')}`);
+      return refuse(`refused - ${this._placementRefusal(key, placements)}`, lines);
     }
     const res = this._applyOp(op);
     const accepted = !!(res && res.ok);
@@ -2982,7 +2993,72 @@ class ApworldEditorUI {
       this._renderChrome();
       return;
     }
+    // ⛓⛓ P1 — the question the schema is not able to ask (see
+    //   `_placementIssuesAddedBy`): the slot is `additionalProperties: true`.
+    const placements = this._placementIssuesAddedBy(op);
+    if (placements.length > 0) {
+      this._opMessage = `Refused: ${this._placementRefusal(row.key, placements)}`;
+      log('warn', `set-key refused - ${placements.length} placement(s) the world cannot `
+        + `place: ${placements.map(describePlacementIssue).join(' | ')}`);
+      this._renderChrome();
+      return;
+    }
     this._applyOp(op);
+  }
+
+  /**
+   * ⛓⛓⛓ **P1 — THE PLACEMENT ISSUES THIS OP WOULD ADD, so the whole-block
+   * editor cannot write what the per-entry op refuses** (W3 §10.7 (1); ⚖ user
+   * 2026-09-09: *"We can go ahead and implement placement validation if it's
+   * easy."*).
+   *
+   * ⛔⛔ **THE SCHEMA CANNOT ASK THIS, AND THAT IS WHY THE HOLE EXISTED.** The
+   * placement slot is `additionalProperties: true` — a cross-reference between
+   * `canonical_placements` and the document's own `regions` and `items` is not
+   * something a JSON schema can assert — so `_schemaErrorsAddedBy` returned
+   * `[]` for `{"Nowhere": "Sword"}` and the Document tab's Save JSON wrote a
+   * placement `set-canonical-placement` refuses by name. This is the same veto
+   * in the same shape, asking the one question the schema cannot.
+   *
+   * ⛓⛓ **DIFFERENCED AGAINST BEFORE, exactly as the schema veto is** — an edit
+   * is refused for what IT introduces and never for a pre-existing stale entry.
+   * ⛔ That is not a softening: a hand-edited file arrives WITH stale entries,
+   * and the block editor is how a person fixes one. A veto that refused any
+   * save leaving an issue behind would make the one document that needs editing
+   * the one document that cannot be edited — the same law W3 wrote into the
+   * op's delete path.
+   *
+   * ⛓ The identity is `player + location + reason`, not the location alone: the
+   * slot is stamped because the veto compares two whole documents, and the
+   * reason is part of it because an edit turning one kind of stale entry into
+   * another has introduced the second.
+   *
+   * ⚠ It runs on EVERY op reaching these two seams, not only on a `set-key
+   * canonical_placements`. Today no door writes that key (`region_atlas` and
+   * `loop_costs` write their own), so the population it actually refuses is the
+   * block editor's Save JSON — but this seam is where L4 found the schema veto
+   * missing for exactly the opposite reason, and a guard that has to be
+   * remembered when a door is added is a guard that will not be.
+   */
+  _placementIssuesAddedBy(op) {
+    if (!this.rulesDoc) return [];
+    const preview = applyRulesDocOp(this.rulesDoc, op);
+    if (!preview.ok) return [];
+    const identity = (i) => `${i.player} ${i.location} ${i.reason}`;
+    const before = new Set(canonicalPlacementIssuesByPlayer(this.rulesDoc).map(identity));
+    return canonicalPlacementIssuesByPlayer(preview.doc).filter((i) => !before.has(identity(i)));
+  }
+
+  /**
+   * ⛓ The refusal sentence for what `_placementIssuesAddedBy` found — bounded
+   * like the schema veto's, because a pasted block can be stale in a thousand
+   * places and a refusal is a sentence rather than a dump.
+   */
+  _placementRefusal(key, issues) {
+    return `\`${key}\` — ${issues.length} placement`
+      + `${issues.length === 1 ? '' : 's'} this edit would ADD that the world cannot place: `
+      + `${issues.slice(0, 3).map(describePlacementIssue).join(' - ')}`
+      + `${issues.length > 3 ? ' - ...' : ''}`;
   }
 
   /**
