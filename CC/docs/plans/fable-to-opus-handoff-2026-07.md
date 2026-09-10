@@ -13753,6 +13753,27 @@ engine's default region size EXPORTED), the hub's no-map sentence re-derived, ro
 plan §7 ⚖ 3 on the user's word. Baseline 444/13457 @ `b69709c12a` (run 34434678104). Reports come to
 `preset-sidecars-planning`; S0 on M0's idle notice. ⛔ The planner commits nothing to the tree while M0 runs.
 
+**M0 SHIPPED + VERIFIED 2026-09-10** (`0fa53f7d06` → `e369d7a5ea`, three commits: the cell-size precedence in
+`reconstructResultFromSidecars` (payload tiles → a declared `compositeMap.cellSize` seam, declared on nobody → the
+engine's `DEFAULT_REGION_SIZE`, exported), the hub's no-map sentence, the docs). Planner re-census at HEAD: **38 grid
+/ 4 null over the 42 populated slots** (was 26/16; the four nulls = the four with no `grid_cell` on any entry:
+`jta_substrate_test`, the three seedling presets). **CI @ `e369d7a5ea`: run 34533964485 success, 444/13462 (13454
+passed | 8 skipped | 0 failed) = the derivation (+5 rows in `compositeMapDocument.test.js`).** What the brief got
+wrong (§10.1): `seedling_playthrough` has no `grid_cell` and stays null; TWELVE slots turned, not five;
+`omsi_substrate_test` is 8×6 = the default so it cannot be the precedence row (trap **1309** — a fallback constant
+chosen to match most data makes the fixtures vacuous); the per-slot in-app row selected its population by the field
+under test; `grid_dims` never exceeds the extents (branch not written). Also: the fixture docblock's "slots 3/4 carry
+no grid_cell" was wrong and is corrected. Traps **1308** (the docs generator re-classifies a PARENT when one dotted
+sub-field is documented) and 1309. ⚖ OPEN (§10.8): the producer writing `region_size` into `procgen_metadata`;
+`_handoffAnswer` reads slot `'1'` and names the route not the cost; no gate reads the pipeline's loaded-preset view;
+`record-slice.mjs --trap` re-minted an inline number (1268); MEMORY.md compaction wants its own slice.
+
+**S0 LAUNCHED 2026-09-10** as `apworld-sidecars-S0` (Opus; kickoff `NewDocs/plans/apworld-sidecars-S0-prompt.md`):
+the per-region sidecar block (badge, facts, `Edit ▸` + `Regenerate in the pipeline ▸`, read-only JSON on expand),
+ONE renderer on Regions and on the Sidecars tab's per-region list (collapsed by default), the door's `returns` →
+`none`, rows + four mutants, docs. Baseline 444/13462 @ `e369d7a5ea` (run 34533964485). Reports come to
+`preset-sidecars-planning`; S1 on S0's idle notice; the REPLAN after S1. ⛔ The planner commits nothing while S0 runs.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
