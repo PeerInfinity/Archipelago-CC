@@ -5150,3 +5150,544 @@ registerTest({
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * THE ITEMS TAB'S PROGRESSION SECTION — `progression_mapping` (I2)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ alttp — 5 PROGRESSIVE mappings, two of them (`Progressive Bow` and
+ * `Progressive Bow (Alt)`) pooling into one `base_item`, which is the only
+ * shape in which the pool is visible at all.
+ */
+const PROGRESSION_PRESET_PATH =
+    './presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+/**
+ * ⛓⛓ messenger — the corpus's ONE additive entry (`Shards`, six components at
+ * 1/10/50/100/300/500). It has to be a committed document rather than a
+ * fixture, because the claim is that the corpus's second kind draws as itself.
+ */
+const ADDITIVE_PRESET_PATH =
+    './presets/messenger/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+/**
+ * ⛓⛓ smz3 — the corpus's stale-member document, as committed: 12 of its
+ * members name resolved forms slot 1's `items` does not hold, and 13 carry
+ * `provides`. Nothing is hand-edited into it; this state is what the exporter
+ * wrote.
+ */
+const STALE_PROGRESSION_PRESET_PATH =
+    './presets/smz3/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+/**
+ * ⛓⛓ The four-player multiworld export whose slot 2 is the ALTTP world: slots
+ * 1, 3 and 4 carry NO mappings and slot 2 carries five. That 0-vs-5 is the
+ * discrimination — `FOUR_PLAYER_PATH`'s slots are all empty here, so it could
+ * not tell "the selected slot" from "the first one".
+ */
+const FOUR_PLAYER_PROGRESSION_PATH =
+    './presets/multiworld/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+
+/** ⛓ The panel's own selectors, spelled once. */
+const PROG_CARD = (name) => `${PANEL_SELECTOR} .apworld-progression-card[data-mapping="${
+        CSS.escape(name)}"]`;
+
+/** ⛓ The slot's mappings as the DOCUMENT holds them — every expectation is read
+ *  off the record, never typed (a count in a test is an allowlist key). */
+const mappingsOf = (panel) =>
+    panel.rulesDoc?.progression_mapping?.[panel.playerId] ?? {};
+
+/** ⛓ What the section HAS drawn, as `name:kind:members`, so a comparison is one
+ *  string and names which card moved. */
+const drawnCards = () => [...document.querySelectorAll(
+    `${PANEL_SELECTOR} .apworld-progression-card`)]
+    .map((c) => `${c.dataset.mapping}:${c.dataset.kind}:${c.dataset.members}`);
+
+/** ⛓ The same, expected — derived from the document by asking the RUNTIME's
+ *  question (`type === 'additive'`), not the section's. */
+const expectedCards = (panel) => Object.entries(mappingsOf(panel)).map(([name, m]) => {
+    const additive = m?.type === 'additive';
+    const n = additive
+        ? Object.keys(m.items ?? {}).length
+        : (Array.isArray(m?.items) ? m.items.length : 0);
+    return `${name}:${additive ? 'additive' : 'progressive'}:${n}`;
+});
+
+/**
+ * ⛓⛓⛓ **THE CARDS DRAW THE DOCUMENT'S PROGRESSIVE MAPPINGS, WITH THE POOL
+ * VISIBLE** (I2, task 4 (a) — the progressive half).
+ *
+ * ⛓ Scored against the document rather than against the section's own dataset:
+ * the expectation asks `type === 'additive'`, which is the question
+ * `inventoryManager` asks, so a section that classified by some other test
+ * would disagree with this row rather than with itself.
+ */
+export async function apworldProgressionCardsDrawTheDocument(testController) {
+    try {
+        const panel = await openHub(testController, PROGRESSION_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        const doc = mappingsOf(panel);
+        testController.reportCondition('the slot carries mappings the section can draw',
+            Object.keys(doc).length > 0);
+        testController.assertEqual('one card per mapping, in the document\'s order, with its kind',
+            JSON.stringify(expectedCards(panel)), JSON.stringify(drawnCards()));
+
+        // ⛓ Every member row carries the document's own item name and level.
+        const mismatched = Object.entries(doc).filter(([name, mapping]) => {
+            const rows = [...document.querySelectorAll(
+                `${PROG_CARD(name)} .apworld-progression-member`)];
+            return JSON.stringify(rows.map((r) => `${r.dataset.item}@${
+                r.querySelector('.apworld-progression-level')?.value}`))
+                !== JSON.stringify(mapping.items.map((m) => `${m.name}@${m.level}`));
+        });
+        testController.assertEqual('every level row carries the document\'s item and its level',
+            '[]', JSON.stringify(mismatched.map(([n]) => n)));
+
+        // ⛓⛓ THE POOL. Two mappings share one `base_item` on this document, and
+        //   that is the whole reason the field is not just the entry's own name.
+        const pooled = Object.entries(doc).filter(([name, m]) => m.base_item !== name);
+        testController.reportCondition('this document really pools two mappings into one base',
+            pooled.length > 0);
+        for (const [name, mapping] of pooled) {
+            const base = document.querySelector(`${PROG_CARD(name)} .apworld-progression-base`);
+            testController.assertEqual(`"${name}" draws its base as the document holds it`,
+                mapping.base_item, base?.value);
+            testController.reportCondition(`…and "${mapping.base_item}" is a mapping in this slot`,
+                base?.dataset.pooled === 'true'
+                    && Object.prototype.hasOwnProperty.call(doc, mapping.base_item));
+        }
+
+        // ⛓ The base picker's DOMAIN is the slot's mapping names — measured
+        //   137/137 over the corpus — and not the slot's items.
+        const anyBase = document.querySelector(`${PANEL_SELECTOR} .apworld-progression-base`);
+        anyBase.dispatchEvent(new Event('focus'));
+        testController.assertEqual('the base picker offers the slot\'s MAPPING names',
+            JSON.stringify(Object.keys(doc).slice().sort()),
+            JSON.stringify([...anyBase.options].map((o) => o.value).sort()));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('progression-cards test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **THE ADDITIVE KIND DRAWS AS ITSELF** (I2, task 4 (a) — the additive
+ * half; mutant (C)'s row).
+ *
+ * The two kinds are read by two different parts of the app, and the difference
+ * a person has to see is that an additive member carries a VALUE the inventory
+ * accumulates rather than a LEVEL the rule engine compares. So the row asserts
+ * the value boxes exist, the level boxes do not, the numbers are the
+ * document's, and the reorder controls — which belong to an ordered list — are
+ * absent.
+ */
+export async function apworldTheAdditiveKindDrawsAsItself(testController) {
+    try {
+        const panel = await openHub(testController, ADDITIVE_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        const doc = mappingsOf(panel);
+        const additiveNames = Object.keys(doc).filter((n) => doc[n]?.type === 'additive');
+        testController.reportCondition('this document carries an additive mapping to draw',
+            additiveNames.length > 0);
+        if (!additiveNames.length) return testController.getOverallResult();
+
+        testController.assertEqual('one card per mapping, with its kind',
+            JSON.stringify(expectedCards(panel)), JSON.stringify(drawnCards()));
+
+        for (const name of additiveNames) {
+            const card = document.querySelector(PROG_CARD(name));
+            testController.assertEqual(`"${name}" is drawn as the kind the inventory reads`,
+                'additive', card?.dataset.kind);
+            testController.assertEqual('…and its kind select says so',
+                'additive', card?.querySelector('.apworld-progression-kind')?.value);
+
+            const rows = [...card.querySelectorAll('.apworld-progression-member')];
+            testController.assertEqual(`…and one row per component of "${name}"`,
+                JSON.stringify(Object.entries(doc[name].items).map(([n, v]) => `${n}=${v}`)),
+                JSON.stringify(rows.map((r) => `${r.dataset.item}=${
+                    r.querySelector('.apworld-progression-value')?.value}`)));
+
+            // ⛔ The discrimination: a card rendered as PROGRESSIVE would carry
+            //   level boxes and ↑/↓, and its numbers would be levels.
+            testController.assertEqual('…drawn as VALUES, with no level box on the card', '0',
+                String(card.querySelectorAll('.apworld-progression-level').length));
+            testController.assertEqual('…and no reorder control, because it is not a list', '0',
+                String(card.querySelectorAll(
+                    '.apworld-progression-up, .apworld-progression-down').length));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('additive-kind test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **EDITING ONE LEVEL COMMITS ONE OP CARRYING THE WHOLE ENTRY, AND ONE
+ * UNDO RESTORES ALL OF IT** (I2, task 4 (b); mutant (B)'s row).
+ *
+ * ⛔ The undo condition compares the WHOLE entry, not the level that moved:
+ * a card that wrote only the changed row would still put that one level back,
+ * and the rest of the entry would be whatever the partial write left. That is
+ * the difference this row exists to see.
+ */
+export async function apworldAProgressionLevelEditIsOneOpAndOneUndo(testController) {
+    try {
+        const panel = await openHub(testController, PROGRESSION_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        // ⛓ The card with the MOST levels, so a partial write has the most room
+        //   to be visible — chosen from the document, never named here.
+        const name = Object.entries(mappingsOf(panel))
+            .sort((a, b) => b[1].items.length - a[1].items.length)[0][0];
+        const before = JSON.stringify(mappingsOf(panel)[name]);
+        testController.reportCondition('the card under test has more than one level',
+            mappingsOf(panel)[name].items.length > 1);
+
+        const opsBefore = panel.session.ops().length;
+        // ⛔ RE-QUERIED after the render, and the SECOND row, so "the whole
+        //   entry came back" is not satisfied by an entry with one member.
+        const box = () => document.querySelectorAll(
+            `${PROG_CARD(name)} .apworld-progression-level`)[1];
+        const target = Number(box().value) + 5;
+        box().value = String(target);
+        box().dispatchEvent(new Event('change', { bubbles: true }));
+
+        testController.assertEqual('the edit is ONE op', '1',
+            String(panel.session.ops().length - opsBefore));
+        testController.assertEqual('…and the level the person typed is in the document',
+            String(target), String(mappingsOf(panel)[name].items[1].level));
+        testController.assertEqual('…and it is drawn back',
+            String(target), box().value);
+
+        panel.session.undo();
+        panel._render();
+        testController.assertEqual('one undo restores the WHOLE entry, not just the level',
+            before, JSON.stringify(mappingsOf(panel)[name]));
+        testController.assertEqual('…and the op count goes back with it',
+            String(opsBefore), String(panel.session.ops().length));
+        testController.assertEqual('…and the card is drawn from the restored entry',
+            JSON.stringify(expectedCards(panel)), JSON.stringify(drawnCards()));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('progression-level-edit test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **A PROCGEN DOCUMENT STARTS EMPTY, AND THE SECTION IS HOW IT STOPS
+ * BEING** (I2, task 4 (c)).
+ *
+ * `makeRulesJsonScaffold` writes `progression_mapping: {'1': {}}` and the ⚖
+ * ruling is explicitly about worlds that do not use these yet — so the empty
+ * slot is the case the editor exists for, and the row drives the section's own
+ * box and button rather than `_applyOp`.
+ */
+export async function apworldAddingAProgressionMappingOnAnEmptySlot(testController) {
+    const NEW_NAME = 'Progressive Widget';
+    try {
+        const panel = await openHub(testController, PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        testController.assertEqual('the procgen document carries NO mappings to start', '0',
+            String(Object.keys(mappingsOf(panel)).length));
+        testController.assertEqual('…and the section draws no cards', '0',
+            String(document.querySelectorAll(`${PANEL_SELECTOR} .apworld-progression-card`).length));
+        testController.reportCondition('…and says so rather than drawing nothing',
+            !!document.querySelector(`${PANEL_SELECTOR} .apworld-progressions-empty`));
+
+        const opsBefore = panel.session.ops().length;
+        const held = Object.keys(panel.rulesDoc.items[panel.playerId]);
+        document.querySelector(`${PANEL_SELECTOR} .apworld-progression-new`).value = NEW_NAME;
+        document.querySelector(`${PANEL_SELECTOR} .apworld-progressions-add-button`).click();
+
+        testController.assertEqual('the mapping is in the document\'s slot', '1',
+            String(Object.keys(mappingsOf(panel)).length));
+        testController.assertEqual('…as ONE op', '1',
+            String(panel.session.ops().length - opsBefore));
+        const made = mappingsOf(panel)[NEW_NAME];
+        testController.reportCondition('…and its base is itself, which is what pools',
+            made?.base_item === NEW_NAME);
+        testController.reportCondition('…and its one level names an item this slot HOLDS',
+            Array.isArray(made?.items) && made.items.length === 1
+                && held.includes(made.items[0].name));
+        testController.assertEqual('…and the card is drawn for it',
+            JSON.stringify(expectedCards(panel)), JSON.stringify(drawnCards()));
+
+        panel.session.undo();
+        panel._render();
+        testController.assertEqual('one undo takes the slot back to empty', '0',
+            String(Object.keys(mappingsOf(panel)).length));
+        testController.assertEqual('…and the card with it', '0',
+            String(document.querySelectorAll(`${PANEL_SELECTOR} .apworld-progression-card`).length));
+
+        // ⛓⛓ The OTHER kind through the same row, because the add row's kind
+        //   select is the only place a person chooses it.
+        document.querySelector(`${PANEL_SELECTOR} .apworld-progression-new`).value = 'Widgets';
+        document.querySelector(`${PANEL_SELECTOR} .apworld-progression-new-kind`).value = 'additive';
+        document.querySelector(`${PANEL_SELECTOR} .apworld-progressions-add-button`).click();
+        testController.assertEqual('the add row\'s kind select reaches the document',
+            'additive', mappingsOf(panel).Widgets?.type);
+        testController.assertEqual('…and the card draws as that kind',
+            'additive', document.querySelector(PROG_CARD('Widgets'))?.dataset.kind);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('empty-slot add test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **A MEMBER NAMING AN ITEM THE SLOT DOES NOT HOLD IS SHOWN, MARKED AND
+ * REMOVABLE — AND THE OP IS THE GUARD** (I2, task 4 (d); mutant (A)'s row).
+ *
+ * ⛓ smz3 is in this state AS COMMITTED — nothing is hand-edited in — because
+ * `genericLogic.has` resolves a name THROUGH a mapping, so a level's name need
+ * not be an item anyone receives.
+ *
+ * ⛔⛔ **AND THE REFUSAL IS ASKED OF THE OP, NOT OF THE PICKER** (trap 1305).
+ * The item pickers omit names the entry already holds and offer only items the
+ * slot has, so no gesture on this section can produce an unknown name — a row
+ * that drove only the control would be entirely green with the op's refusal
+ * deleted. The op is asked directly, and separately from the drawing half.
+ */
+export async function apworldAStaleProgressionMemberIsShownAndRemovable(testController) {
+    try {
+        const panel = await openHub(testController, STALE_PROGRESSION_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        const slot = panel.playerId;
+        const held = panel.rulesDoc.items[slot];
+        // ⛓ The expectation is DERIVED from the document: every member name the
+        //   slot's item table does not hold.
+        const expected = Object.entries(mappingsOf(panel)).flatMap(([name, m]) => m.items
+            .filter((x) => !Object.prototype.hasOwnProperty.call(held, x.name))
+            .map((x) => `${name}/${x.name}`));
+        testController.reportCondition('this document carries stale members as committed',
+            expected.length > 0);
+        if (!expected.length) return testController.getOverallResult();
+
+        const marked = () => [...document.querySelectorAll(
+            `${PANEL_SELECTOR} .apworld-progression-member[data-stale="true"]`)]
+            .map((r) => `${r.closest('.apworld-progression-card').dataset.mapping}/${r.dataset.item}`);
+        testController.assertEqual('every stale member is drawn and marked',
+            JSON.stringify(expected), JSON.stringify(marked()));
+        testController.assertEqual('…and the section counts them',
+            String(expected.length),
+            document.querySelector(`${PANEL_SELECTOR} .apworld-progressions`).dataset.issues);
+        testController.reportCondition('…and the mark says WHY',
+            !!document.querySelector(
+                `${PANEL_SELECTOR} .apworld-progression-member[data-stale="true"] `
+                + '.apworld-progression-stale'));
+
+        // ⛓ REMOVABLE — from a card that has another member, since the op
+        //   refuses an empty container by shape.
+        const [name, member] = expected
+            .map((e) => [e.slice(0, e.lastIndexOf('/')), e.slice(e.lastIndexOf('/') + 1)])
+            .find(([n]) => mappingsOf(panel)[n].items.length > 1);
+        const before = JSON.stringify(mappingsOf(panel)[name]);
+        const opsBefore = panel.session.ops().length;
+        const row = () => document.querySelector(
+            `${PROG_CARD(name)} .apworld-progression-member[data-item="${CSS.escape(member)}"]`);
+        row().querySelector('.apworld-progression-member-remove').click();
+
+        testController.assertEqual('removing a stale member is ONE op', '1',
+            String(panel.session.ops().length - opsBefore));
+        testController.reportCondition('…and it is gone from the document',
+            !mappingsOf(panel)[name].items.some((x) => x.name === member));
+        testController.assertEqual('…and the section\'s count drops by exactly one',
+            String(expected.length - 1),
+            document.querySelector(`${PANEL_SELECTOR} .apworld-progressions`).dataset.issues);
+        panel.session.undo();
+        panel._render();
+        testController.assertEqual('…and one undo puts the whole entry back',
+            before, JSON.stringify(mappingsOf(panel)[name]));
+
+        // ⛓⛓ An edit that KEEPS the stale member is ACCEPTED — the difference is
+        //   the point: an absolute refusal would make these the entries nobody
+        //   can edit.
+        const opsKept = panel.session.ops().length;
+        const box = () => document.querySelectorAll(
+            `${PROG_CARD(name)} .apworld-progression-level`)[0];
+        box().value = String(Number(box().value) + 3);
+        box().dispatchEvent(new Event('change', { bubbles: true }));
+        testController.assertEqual('an edit that keeps a stale member is accepted, as one op', '1',
+            String(panel.session.ops().length - opsKept));
+        testController.reportCondition('…and the stale member is still there, still marked',
+            mappingsOf(panel)[name].items.some((x) => x.name === member)
+                && marked().includes(`${name}/${member}`));
+
+        // ⛔ THE OP IS THE GUARD — asked past every control, which is the path
+        //   the Document tab's whole-block Save JSON is on.
+        const opsRefused = panel.session.ops().length;
+        const refused = panel.session.apply({
+            op: 'set-progression-mapping', player: slot, name,
+            mapping: {
+                ...mappingsOf(panel)[name],
+                items: [{ name: 'An Item That Was Never Here', level: 1 }],
+            },
+        });
+        testController.reportCondition('the OP refuses a name this edit would ADD',
+            refused.ok === false);
+        testController.reportCondition('…and the refusal NAMES it',
+            String(refused.description ?? '').includes('An Item That Was Never Here'));
+        testController.assertEqual('…and nothing was recorded', '0',
+            String(panel.session.ops().length - opsRefused));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('stale-progression test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **THE SECTION READS THE SELECTED SLOT, NOT THE FIRST ONE** (I2).
+ *
+ * ⛔ I1 §13.5 (C) measured that the vitest module is BLIND to this: the section
+ * reads the DOCUMENT, so a wrong slot is not a table the node rows can see.
+ * The document is the four-player multiworld export whose slot 2 is the ALTTP
+ * world — slots 1, 3 and 4 carry NO mappings and slot 2 carries five, so the
+ * discrimination is a real 0-vs-5 rather than two lists that happen to differ.
+ */
+export async function apworldProgressionFollowsTheSelectedSlot(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PROGRESSION_PATH);
+        if (!panel) return testController.getOverallResult();
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        testController.reportCondition('the fixture offers a player selector', !!select);
+        if (!select) return testController.getOverallResult();
+
+        const read = () => {
+            selectTab(panel, 'items');
+            return {
+                slot: panel.playerId,
+                drawn: drawnCards(),
+                expected: expectedCards(panel),
+                head: document.querySelector(
+                    `${PANEL_SELECTOR} .apworld-progressions`).dataset.slot,
+            };
+        };
+
+        selectPlayer(select, 1);
+        const one = read();
+        testController.assertEqual('slot 1: the section draws slot 1\'s mappings',
+            JSON.stringify(one.expected), JSON.stringify(one.drawn));
+        testController.assertEqual('…and says which slot it is drawing', '1', one.head);
+
+        // ⛓ The slot that HAS mappings on this document — found, not typed.
+        const populated = Object.keys(panel.rulesDoc.progression_mapping)
+            .find((p) => Object.keys(panel.rulesDoc.progression_mapping[p] ?? {}).length > 0);
+        selectPlayer(select, populated);
+        const other = read();
+        testController.assertEqual(`slot ${populated}: the section draws that slot's mappings`,
+            JSON.stringify(other.expected), JSON.stringify(other.drawn));
+        testController.assertEqual('…and says which slot it is drawing', populated, other.head);
+
+        testController.reportCondition('the two slots really differ, so the row can discriminate',
+            JSON.stringify(one.drawn) !== JSON.stringify(other.drawn)
+                && one.drawn.length === 0 && other.drawn.length > 0);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('progression-slot test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-progression-cards-draw-the-document',
+    name: 'APWorld hub: the Progression section draws the document\'s mappings, with the pool visible',
+    description: 'On alttp, whose five mappings include two pooling into one `base_item` — the '
+               + 'only shape in which the pool is visible at all. Asserts one card per mapping in '
+               + 'the document\'s order with its kind (classified the way `inventoryManager` '
+               + 'classifies, `type === "additive"`, not the way the section does), every level '
+               + 'row carrying the document\'s own item and level, the pooled card drawing its '
+               + 'base as the document holds it, and that the base picker\'s domain is the slot\'s '
+               + 'MAPPING names — measured 137 of 137 over the corpus — rather than its items.',
+    testFunction: apworldProgressionCardsDrawTheDocument,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-the-additive-progression-kind-draws-as-itself',
+    name: 'APWorld hub: the additive progression kind draws as a counter, not as levels',
+    description: 'On messenger, which carries the corpus\'s ONE additive mapping (`Shards`, six '
+               + 'components at 1/10/50/100/300/500). The two kinds are read by two different '
+               + 'parts of the app, and the difference a person has to see is that an additive '
+               + 'member carries a VALUE the inventory accumulates rather than a LEVEL the rule '
+               + 'engine compares — so the row asserts the value boxes carry the document\'s own '
+               + 'numbers, that the card has NO level box, and that it has no reorder control, '
+               + 'because it is not an ordered list. Mutant: rendering the additive kind as '
+               + 'progressive reds this row.',
+    testFunction: apworldTheAdditiveKindDrawsAsItself,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-progression-level-edit-is-one-op-and-one-undo',
+    name: 'APWorld hub: editing one progression level is one op, and one undo restores the whole entry',
+    description: 'Types into a level box on the card with the most levels (chosen from the '
+               + 'document, never named) and commits on `change`, the Meta tab\'s rule. The undo '
+               + 'condition compares the WHOLE entry rather than the level that moved: a card '
+               + 'that wrote only the changed row would still put that one level back, and the '
+               + 'rest of the entry would be whatever the partial write left. Mutant: writing '
+               + 'only the changed row reds the undo condition.',
+    testFunction: apworldAProgressionLevelEditIsOneOpAndOneUndo,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-adding-a-progression-mapping-on-an-empty-slot',
+    name: 'APWorld hub: a procgen document\'s empty progression slot gains its first mapping',
+    description: 'On procgen_maze/AP_1, whose scaffold writes `progression_mapping: {"1": {}}` — '
+               + 'the state the ⚖ ruling is explicitly about ("no procgen worlds currently use '
+               + 'them"). Drives the section\'s own box and button: the entry lands in the '
+               + 'document as ONE op with its base pointing at itself and one level naming an '
+               + 'item this slot HOLDS, the card is drawn, and one undo takes the slot back to '
+               + 'empty. Then the same row\'s kind select, because that is the only place a '
+               + 'person chooses the additive kind.',
+    testFunction: apworldAddingAProgressionMappingOnAnEmptySlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-stale-progression-member-is-shown-and-removable',
+    name: 'APWorld hub: a progression member the slot no longer holds is shown, marked and removable',
+    description: 'smz3 is in this state AS COMMITTED — 12 of its members name resolved forms '
+               + 'slot 1\'s items do not hold, because `genericLogic.has` resolves a name THROUGH '
+               + 'the mapping. Asserts every one is drawn and marked against an expectation '
+               + 'DERIVED from the document, that removing one is one op and drops the section\'s '
+               + 'count by exactly one, that one undo puts the whole entry back, and that an edit '
+               + 'KEEPING a stale member is accepted — which is why the op\'s refusal is '
+               + 'differenced. ⛔ The refusal itself is asked of the OP, not of the picker (trap '
+               + '1305): no gesture on this section can produce an unknown name, so a row that '
+               + 'drove only the control would be green with the guard deleted. Mutant: dropping '
+               + 'the op\'s item refusal reds this row.',
+    testFunction: apworldAStaleProgressionMemberIsShownAndRemovable,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-progression-follows-the-selected-slot',
+    name: 'APWorld hub: the Progression section reads the selected slot, not the first one',
+    description: 'On the four-player multiworld export whose slot 2 is the ALTTP world: slots 1, '
+               + '3 and 4 carry NO mappings and slot 2 carries five, so the discrimination is a '
+               + 'real 0-vs-5. Driven through the real toolbar selector in both directions, with '
+               + 'the populated slot FOUND in the document rather than named. Exists because the '
+               + 'vitest module is blind to this — the section reads the DOCUMENT, so a wrong '
+               + 'slot is not a table the node rows can see (I1 §13.5 (C)).',
+    testFunction: apworldProgressionFollowsTheSelectedSlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});

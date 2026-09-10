@@ -609,6 +609,42 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "APWorld coverage I1. The four-player multiworld fixture names the SAME group in all four slots but carries it on different numbers of items, so only a count read off the selected slot can tell them apart. Driven through the real toolbar selector in both directions, and asserts the two slots really differ."
+        },
+        {
+            "id": "apworld-progression-cards-draw-the-document",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I2. alttp's five mappings include two pooling into one base_item, which is the only shape in which the pool is visible. The expectation classifies each entry the way inventoryManager does (type === 'additive'), so a section that classified some other way disagrees with this row rather than with itself; and the base picker's domain is asserted to be the slot's MAPPING names, measured 137 of 137 over the corpus."
+        },
+        {
+            "id": "apworld-the-additive-progression-kind-draws-as-itself",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I2. messenger carries the corpus's ONE additive mapping. An additive member is a VALUE the inventory accumulates, not a LEVEL the rule engine compares, so the card must have value boxes, no level box and no reorder control. Mutant: rendering the additive kind as progressive reds this row."
+        },
+        {
+            "id": "apworld-a-progression-level-edit-is-one-op-and-one-undo",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I2. The undo condition compares the WHOLE entry rather than the level that moved \u2014 a card that wrote only the changed row would still put that one level back. Mutant: writing only the changed row reds the undo condition."
+        },
+        {
+            "id": "apworld-adding-a-progression-mapping-on-an-empty-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I2. procgen_maze/AP_1's scaffold writes progression_mapping: {\"1\": {}} \u2014 the state the user's ruling is explicitly about. Drives the section's own box, kind select and button; asserts one op, a base pointing at itself, a level naming an item the slot holds, and an undo back to empty."
+        },
+        {
+            "id": "apworld-a-stale-progression-member-is-shown-and-removable",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I2. smz3 is in this state as committed: 12 members name resolved forms slot 1's items do not hold, because genericLogic.has resolves a name through the mapping. The refusal is asked of the OP, not of the picker (trap 1305) \u2014 no gesture on this section can produce an unknown name. Mutant: dropping the op's item refusal reds this row."
+        },
+        {
+            "id": "apworld-progression-follows-the-selected-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I2. The four-player multiworld export's slot 2 is the ALTTP world and carries five mappings while slots 1, 3 and 4 carry none, so the discrimination is a real 0-vs-5. Exists because the vitest module is blind to a wrong slot (I1 \u00a713.5 (C))."
         }
     ]
 }
