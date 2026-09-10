@@ -38,6 +38,7 @@ import {
     playerSlotsOf,
     summarizeValue,
 } from './documentKeys.js';
+import { ITEM_GROUPS_KEY } from './rulesDocOps.js';
 
 const SCHEMA = loadRulesSchema();
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -229,6 +230,44 @@ describe('the tab-ownership table', () => {
         const byKey = Object.fromEntries(rows.map((r) => [r.key, r]));
         expect(byKey[PLACEMENTS_TAB_KEY].ownedByTab).toBe('placements');
         expect(byKey.is_canonical.ownedByTab).toBeNull();
+    });
+
+    /**
+     * ⛓⛓⛓ **I1 — THE ITEMS TAB'S GROUP KEY, AGAINST AN AUTHORITY OUTSIDE THE
+     * TABLE**, the same way and for the same reason (W3's mutant C, W0's and
+     * S1's mutant B): the Groups section reads the registry off the DOCUMENT,
+     * so dropping the key from `KEYS_OWNED_BY_TAB` leaves the section drawing
+     * and only the Document row's pointer wrong — which no in-app row on the
+     * Items tab can see. The authority is the three ops' own source: they
+     * write exactly one top-level key each, and it is one key.
+     */
+    it('⛓⛓ the key the item-group ops write is the key the Items tab owns', () => {
+        const opSource = readFileSync(join(HERE, 'rulesDocOps.js'), 'utf8');
+        // ⛓ The IDENTIFIER-keyed form only: every other per-slot write in that
+        //   module spells its key as a string literal (`setPath(doc, ['regions',
+        //   p], …)`), so this picks out exactly the writes made through the
+        //   exported constant — which is the thing the table has to agree with.
+        const written = [...opSource.matchAll(
+            /setPath\(doc, \[([A-Za-z_]\w*), p\]/g)].map((m) => m[1]);
+        expect(written.length, 'the three ops each write one slot of one key').toBe(3);
+        expect(new Set(written)).toEqual(new Set(['ITEM_GROUPS_KEY']));
+        expect(ITEM_GROUPS_KEY).toBe('item_groups');
+        expect(KEYS_OWNED_BY_TAB.items, 'the tab that owns the key the ops write')
+            .toContain(ITEM_GROUPS_KEY);
+    });
+
+    /**
+     * ⛓ And the Document row POINTS at that tab. ⛔ `items` is a different key
+     * the same tab owns and `progression_mapping` — the neighbouring per-player
+     * block, I2's — is still unowned, so "the groups key is owned" is a
+     * discrimination rather than a tab that claimed every per-player map.
+     */
+    it('⛓ the item-groups key names the Items tab, and progression_mapping does not', () => {
+        const rows = documentKeyRows(combined(), SCHEMA, { player: '1' });
+        const byKey = Object.fromEntries(rows.map((r) => [r.key, r]));
+        expect(byKey[ITEM_GROUPS_KEY].ownedByTab).toBe('items');
+        expect(byKey.items.ownedByTab).toBe('items');
+        expect(byKey.progression_mapping.ownedByTab).toBeNull();
     });
 });
 
