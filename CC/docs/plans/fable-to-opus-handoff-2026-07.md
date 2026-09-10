@@ -13643,6 +13643,15 @@ only when `=== true` (`mazeRoomEngine.js:357` — an explicit `false` is dropped
 compiler writes slot `1`; no `longestShortestPath`-vs-`tiles` gate; runner/text_adventure/jta/omsi have no room
 editor; the Seedling pipeline `_editRegion` `record` gap. NOTHING LAUNCHED — the session stops at the ⚖.
 
+**⚖ (user, 2026-09-10), verbatim:** "Thanks. That plan sounds basically right. For the questions, can you describe the
+options in more detail? After this, the next planning session will be for finishing the Seedling editor, in a way
+that makes it compatible with the APWorld Editor, if possible. I will also want to check if it's possible to make
+editors for JtA and omsi-loops. I also want to integrate the existing editors for maze and bounce into the APWorld
+Editor." ⇒ the plan's shape is accepted in principle; the four ⚖ await answers after a fuller description (given in
+the tab and recorded below); the field AFTER this arc is named: (i) the Seedling editor, finished hub-compatible;
+(ii) feasibility of jta and omsi editors; (iii) maze/bounce editor integration — ⚠ what H4b already gives (Edit ▸
+per region, lab/panel hosted, one op back) vs what "integrate" should mean is a question for that session.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
