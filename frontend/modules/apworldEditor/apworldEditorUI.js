@@ -267,6 +267,23 @@ function log(level, message, ...data) {
   }
 }
 
+/**
+ * ⛓ M0 — the cell size the Map tab DREW, and where it came from, read off the
+ * reconstruction's own `regionSizeSource` rather than derived a second time.
+ * ⛔ A stats line that printed `8×6 tiles` for a zone world would be claiming a
+ * tile size the document does not have; the fallback's own name is the honest
+ * readout, and the panel must not re-decide which rule fired — a second
+ * spelling of the precedence is a second thing to keep in step.
+ */
+function mapCellNote(result) {
+    const { width, height } = result?.regionSize ?? {};
+    if (!Number.isFinite(width) || !Number.isFinite(height)) return '';
+    const size = `${width}×${height}`;
+    if (result.regionSizeSource === 'payload') return `cell ${size} tiles`;
+    if (result.regionSizeSource === 'declared') return `cell ${size} (declared by the substrate)`;
+    return `cell ${size} (the engine's default — this world stores no tile geometry)`;
+}
+
 class ApworldEditorUI {
   constructor(container, componentState) {
     Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
@@ -4005,9 +4022,19 @@ class ApworldEditorUI {
 
   /**
    * ⛓ WHY there is no map for the selected slot, in the document's own terms.
-   * The four answers are the four ways `reconstructResultFromSidecars` returns
-   * null, in the order it decides them — so a reader can act on the sentence
-   * rather than guess which one it means.
+   * The answers are the ways `reconstructResultFromSidecars` returns null, in
+   * the order it decides them — so a reader can act on the sentence rather than
+   * guess which one it means.
+   *
+   * ⛔ **M0 RETIRED THE FOURTH ONE.** It read *"N regions carry a grid cell, but
+   * `bounce` stores no tile-grid geometry in the payload"*, and it was the true
+   * sentence for a rule that has since gone: the reconstruction sized its cell
+   * only from tile geometry, so a zone slot with a `grid_cell` on every region
+   * drew nothing. It now falls back to the engine's default region size and
+   * DRAWS — measured over the committed corpus, 12 of the 16 null slots turned
+   * into grids — so the sentence would now be a reason for something that does
+   * not happen. The remaining three are the three ways the function still
+   * returns null.
    */
   _noMapReason() {
     const byPlayer = this.rulesDoc?.preset_sidecars;
@@ -4018,16 +4045,9 @@ class ApworldEditorUI {
     if (entries.length === 0) return `player slot ${this.playerId} carries no sidecars`;
     const withCells = entries.filter((sc) => !!sc?.grid_cell);
     if (withCells.length === 0) return 'no grid data in the sidecars';
-    const sized = withCells.filter((sc) => Number.isFinite(sc?.playable_payload?.width)
-      && Number.isFinite(sc?.playable_payload?.height));
-    if (sized.length === 0) {
-      const names = [...new Set(withCells.map((sc) => sc.substrate).filter(Boolean))];
-      return `${withCells.length} region${withCells.length === 1 ? '' : 's'} carry a grid cell, `
-        + `but ${names.length === 1 ? `\`${names[0]}\`` : 'their substrates'} stores no `
-        + 'tile-grid geometry in the payload';
-    }
     return 'no registered substrate here can rebuild a region from its payload';
   }
+
 
   _renderMapTab() {
     const result = this._mapResult();
@@ -4051,20 +4071,18 @@ class ApworldEditorUI {
        * "no grid data in the sidecars" are different claims, and only the
        * second tells the person whether a different document would work.
        *
-       * ⛓ H4a: there are THREE reasons, and the fixture proved it. Until the
-       * four-player preset landed, every no-map document in the corpus was the
-       * "no `grid_cell`" one (jta, Seedling), so one sentence covered the
-       * corpus by accident. A ZONE slot — `Bounce Demo WorldGen` here — carries
-       * a `grid_cell` on every region and STILL cannot be drawn, because its
-       * payload has no `width`/`height` in tiles: bounce geometry lives under
-       * `params.bounceLevel.size` in pixels. Telling a person "no grid data"
-       * about a document that visibly has grid cells is a wrong answer.
+       * ⛓ M0 rewrote the second sentence, which had become false. It read
+       * *"…write a `grid_cell` AND a tile-grid payload per region; Seedling, JtA
+       * and zone-only worlds do not"* — true of the old sizing rule, and now
+       * wrong twice over: a zone-only world DOES draw (its cells take the
+       * engine's default size), and the tile-grid payload is no longer part of
+       * what a map needs. What is left is the `grid_cell`, which is a claim
+       * about the LAYOUT and names no substrate.
        */
       intro.textContent = `No map for this world (${this._noMapReason()}). `
-        + 'Only grown worlds — the maze / top-down / spiral pipelines — write a `grid_cell` '
-        + 'AND a tile-grid payload per region; Seedling, JtA and zone-only worlds do not, so '
-        + 'there is no composite grid to draw. The region graph draws the topology for any '
-        + 'document.';
+        + 'A composite grid is laid out from the `grid_cell` each sidecar carries, so a slot '
+        + 'whose sidecars carry none has no layout to draw — however playable its regions are. '
+        + 'The region graph draws the topology for any document.';
       this.scrollContainer.appendChild(intro);
       bar.appendChild(graphBtn);
       this.scrollContainer.appendChild(bar);
@@ -4080,8 +4098,10 @@ class ApworldEditorUI {
 
     const slot = document.createElement('span');
     slot.className = 'apworld-map-slot';
+    slot.dataset.cellSource = String(result.regionSizeSource ?? '');
     slot.textContent = `player slot ${result.playerId} · `
-      + `${result.stats.regionsBuilt} region${result.stats.regionsBuilt === 1 ? '' : 's'}`;
+      + `${result.stats.regionsBuilt} region${result.stats.regionsBuilt === 1 ? '' : 's'} · `
+      + mapCellNote(result);
     Object.assign(slot.style, { color: '#9ab', fontSize: '11px' });
     bar.appendChild(slot);
     graphBtn.style.marginLeft = 'auto';

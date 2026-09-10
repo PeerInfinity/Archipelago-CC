@@ -434,7 +434,13 @@
             "id": "apworld-map-follows-the-selected-player-slot",
             "enabled": true,
             "category": "apworldEditor",
-            "_comment": "APWorld hub H4a. One document, four slots, two games: the maze slots draw a canvas holding THAT slot's region count, the bounce slots say 'no map for this world' and draw none (⚖ 3's v1 answer, now on the same document as a slot that draws). Switches back at the end — a map that never re-derived passes the walk in order."
+            "_comment": "APWorld hub H4a, retargeted by PRESET SIDECARS M0. One document, four slots, two games: every slot now draws a canvas holding THAT slot's grid_cell count and names the rule that sized its cell (its own payloads for the maze slots, the engine default for the bounce ones). The 'no map' arm this row used to carry is gone with ⚖ 3's reversal, and the row asserts that population is empty so it cannot skip a loop in silence. Switches back at the end — a map that never re-derived passes the walk in order, and that return now crosses a cell-size change."
+        },
+        {
+            "id": "apworld-map-draws-a-zone-world",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M0, reversing hub plan §7 ⚖ 3 on the user's observation that a Bounce demo loaded into the frontend showed no map. The zone-only slot is picked off the document (grid cells everywhere, tile geometry nowhere); the tab must draw one cell per grid_cell at the engine's exported default cell size and say that the DEFAULT is what sized it. The pixels of the first cell are scored against the renderer's own genericBg / textAdventureFg / emptyCell colours, because a canvas of the right dimensions with nothing painted on it satisfies every count."
         },
         {
             "id": "apworld-document-tab-slices-preset-sidecars-by-slot",
