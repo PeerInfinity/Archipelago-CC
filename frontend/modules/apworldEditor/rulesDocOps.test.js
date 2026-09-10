@@ -20,10 +20,11 @@ import {
 import { rulesEditAdapter } from './rulesEditAdapter.js';
 import { validateRules } from './rulesUtils.js';
 import {
-    EXIT_FIELDS, ITEM_FIELDS, META_FIELDS, PLACEMENT_ISSUE_REASONS, REFUSAL_NAME_LIMIT,
-    RULES_OP_KINDS, SET_KEY_SCOPES, applyRulesDocOp, canonicalPlacementIssues,
-    canonicalPlacementIssuesByPlayer, deleteItemOps, deleteRegionOps, describePlacementIssue,
-    exitsPointingAt, locationsOfPlayer, nextName,
+    EXIT_FIELDS, ITEM_FIELDS, ITEM_GROUPS_KEY, META_FIELDS, PLACEMENT_ISSUE_REASONS,
+    REFUSAL_NAME_LIMIT, RULES_OP_KINDS, SET_KEY_SCOPES, applyRulesDocOp,
+    canonicalPlacementIssues, canonicalPlacementIssuesByPlayer, deleteItemOps, deleteRegionOps,
+    describePlacementIssue, exitsPointingAt, itemGroupRegistry, itemsCarryingGroup,
+    locationsOfPlayer, nextName, unlistedItemGroups,
 } from './rulesDocOps.js';
 
 const P = '1';
@@ -105,6 +106,10 @@ describe('the contract shape', () => {
 
     it('⛔ NEVER MUTATES the document it is handed — every kind, over one fixture', () => {
         const doc = fixture();
+        // ⛓ `makeRulesJsonScaffold` writes an EMPTY registry, and the rename and
+        //   delete samples below need an entry that exists and that nothing
+        //   carries — which is what a slot looks like just after `add`.
+        doc[ITEM_GROUPS_KEY][P] = ['Everything'];
         const before = bytes(doc);
         const samples = {
             'add-region': { op: 'add-region' },
@@ -123,6 +128,9 @@ describe('the contract shape', () => {
             'rename-item': { op: 'rename-item', from: 'Key', to: 'Master Key' },
             'set-item-field': { op: 'set-item-field', item: 'Key', field: 'max_count', value: 3 },
             'set-starting-count': { op: 'set-starting-count', item: 'Key', count: 2 },
+            'add-item-group': { op: 'add-item-group', name: 'Tools' },
+            'rename-item-group': { op: 'rename-item-group', name: 'Everything', newName: 'All' },
+            'delete-item-group': { op: 'delete-item-group', name: 'Everything' },
             'set-meta': { op: 'set-meta', key: 'game_name', value: 'Other' },
             'set-start-region': { op: 'set-start-region', region: 'Vault' },
             'set-completion-condition': { op: 'set-completion-condition', condition: { type: 'constant', value: true } },
@@ -399,6 +407,227 @@ describe('items', () => {
         const two = applied(doc, { op: 'set-starting-count', item: 'Victory', count: 1 }).doc;
         expect(applied(two, { op: 'set-starting-count', item: 'Key', count: 1 }).doc.starting_items[P])
             .toEqual(['Victory', 'Key']);
+    });
+});
+
+/**
+ * ⛓⛓⛓ **THE ITEM-GROUP REGISTRY AND ITS MEMBERSHIP** (I1). ⚖ user, 2026-09-09:
+ * *"I'll want to add proper editors for item_groups and progression_mapping, so
+ * that we can support these features in procgen worlds"* and, on deleting a
+ * group an item still carries, *"Let's go with refuse."*
+ *
+ * ⛓ The law these rows encode, measured over the 212 committed documents:
+ * `item_groups[p]` is a LIST of names (all 224 slots) and membership lives on
+ * `items[p][name].groups`. The two diverge in 155 slots, always in the same
+ * direction — items carry a name the registry lacks — so an "unlisted" group is
+ * a real state the editor SHOWS rather than one it silently repairs.
+ */
+describe('item groups — the registry and its membership (I1)', () => {
+    /**
+     * ⛓ A SECOND SLOT, and slot 3 rather than slot 2, so an op that reached for
+     * "the other slot" by index would still be wrong (the placements rows'
+     * rule). ⛓ Slot 3's `Lantern` carries `Tools` — the same NAME slot 1 uses —
+     * so a per-slot row can tell "this slot's carriers" from "the document's".
+     */
+    function twoSlotGroups() {
+        const doc = fixture();
+        doc[ITEM_GROUPS_KEY] = { [P]: ['Tools', 'Trophies'], 3: ['Tools'] };
+        doc.items[P].Key.groups = ['Tools'];
+        doc.items[P].Victory.groups = ['Event'];        // ⛓ UNLISTED, as 154 slots have
+        doc.items['3'] = {
+            Lantern: {
+                name: 'Lantern', id: 7, groups: ['Tools'], classification: 'progression',
+                type: null, max_count: 1,
+            },
+        };
+        return doc;
+    }
+
+    const add = (doc, op) => applyRulesDocOp(doc, { op: 'add-item-group', ...op });
+    const rename = (doc, op) => applyRulesDocOp(doc, { op: 'rename-item-group', ...op });
+    const remove = (doc, op) => applyRulesDocOp(doc, { op: 'delete-item-group', ...op });
+
+    it('⛓ the three derivations read the document, and an UNLISTED group is reported, not added', () => {
+        const doc = twoSlotGroups();
+        expect(itemGroupRegistry(doc, P)).toEqual(['Tools', 'Trophies']);
+        expect(itemsCarryingGroup(doc, 'Tools', P)).toEqual(['Key']);
+        expect(itemsCarryingGroup(doc, 'Trophies', P)).toEqual([]);
+        // ⛓ `Event` is on an item and NOT in the registry — the corpus's own shape.
+        expect(unlistedItemGroups(doc, P)).toEqual(['Event']);
+        expect(itemGroupRegistry(doc, P)).not.toContain('Event');
+        // ⛓ …and slot 3 answers about slot 3.
+        expect(itemsCarryingGroup(doc, 'Tools', '3')).toEqual(['Lantern']);
+        expect(unlistedItemGroups(doc, '3')).toEqual([]);
+        // ⛓ A document with no block at all answers empty rather than throwing.
+        expect(itemGroupRegistry({}, P)).toEqual([]);
+        expect(unlistedItemGroups({}, P)).toEqual([]);
+    });
+
+    it('⛓ add appends to the registry, CREATING the block when the document has none', () => {
+        const doc = twoSlotGroups();
+        const res = add(doc, { player: P, name: '  Keys  ' });
+        expect(res.ok).toBe(true);
+        expect(res.doc[ITEM_GROUPS_KEY][P]).toEqual(['Tools', 'Trophies', 'Keys']);
+        // ⛓ The name is TRIMMED and the RECORD carries the trimmed one, so a
+        //   re-fold of the edit list reproduces the same document.
+        expect(res.op.name).toBe('Keys');
+        expect(res.doc[ITEM_GROUPS_KEY]['3']).toBe(doc[ITEM_GROUPS_KEY]['3']);
+        expect(res.doc.items).toBe(doc.items);
+        const bare = fixture();
+        delete bare[ITEM_GROUPS_KEY];
+        expect(applied(bare, { op: 'add-item-group', name: 'First' })
+            .doc[ITEM_GROUPS_KEY]).toEqual({ [P]: ['First'] });
+        expect(bare[ITEM_GROUPS_KEY]).toBeUndefined();
+    });
+
+    it('⛓ add refuses an empty name and a duplicate, naming what the registry holds', () => {
+        const doc = twoSlotGroups();
+        for (const name of [undefined, '', '   ', 7]) {
+            const res = add(doc, { player: P, name });
+            expect(res.ok, JSON.stringify(name)).toBe(false);
+            expect(res.error, JSON.stringify(name)).toContain('non-empty string');
+        }
+        const dup = add(doc, { player: P, name: 'Tools' });
+        expect(dup.ok).toBe(false);
+        expect(dup.error).toContain('already');
+        expect(dup.error).toContain('Trophies');
+        // ⛓⛓ …but an UNLISTED name is not a duplicate: adding it is the
+        //    *"add to registry"* gesture the Groups section offers for one.
+        const promoted = add(doc, { player: P, name: 'Event' });
+        expect(promoted.ok).toBe(true);
+        expect(promoted.doc[ITEM_GROUPS_KEY][P]).toEqual(['Tools', 'Trophies', 'Event']);
+        expect(unlistedItemGroups(promoted.doc, P)).toEqual([]);
+        // ⛔ and it did NOT touch the items it was already on.
+        expect(promoted.doc.items).toBe(doc.items);
+    });
+
+    it('⛓⛓ rename moves the registry entry IN PLACE and every item\'s membership, as ONE op', () => {
+        const doc = twoSlotGroups();
+        const res = rename(doc, { player: P, name: 'Tools', newName: ' Gear ' });
+        expect(res.ok).toBe(true);
+        // ⛓ In place: the list's ORDER is content (`withKey`'s rule, one level up).
+        expect(res.doc[ITEM_GROUPS_KEY][P]).toEqual(['Gear', 'Trophies']);
+        expect(res.doc.items[P].Key.groups).toEqual(['Gear']);
+        expect(res.doc.items[P].Victory.groups).toEqual(['Event']);   // ⛓ untouched
+        expect(res.description).toContain('1 item');
+        // ⛓ ONE op, so ONE undo puts BOTH sites back — the reason this is not
+        //   two ops. Folded through the real adapter, then unfolded.
+        const session = createEditSession(rulesEditAdapter, doc);
+        session.apply({ op: 'rename-item-group', player: P, name: 'Tools', newName: 'Gear' });
+        expect(session.ops().length).toBe(1);
+        session.undo();
+        expect(session.record()[ITEM_GROUPS_KEY][P]).toEqual(['Tools', 'Trophies']);
+        expect(session.record().items[P].Key.groups).toEqual(['Tools']);
+    });
+
+    it('⛓ rename refuses an unknown group, an empty new name and a name the registry already holds', () => {
+        const doc = twoSlotGroups();
+        const unknown = rename(doc, { player: P, name: 'Ghosts', newName: 'Gear' });
+        expect(unknown.ok).toBe(false);
+        expect(unknown.error).toContain('Ghosts');
+        expect(unknown.error).toContain('Trophies');
+        // ⛓ An UNLISTED name is not in the registry either — renaming one is
+        //   not a gesture the registry can make.
+        expect(rename(doc, { player: P, name: 'Event', newName: 'Events' }).ok).toBe(false);
+        for (const newName of [undefined, '', '  ']) {
+            expect(rename(doc, { player: P, name: 'Tools', newName }).ok,
+                JSON.stringify(newName)).toBe(false);
+        }
+        const taken = rename(doc, { player: P, name: 'Tools', newName: 'Trophies' });
+        expect(taken.ok).toBe(false);
+        expect(taken.error).toContain('already');
+    });
+
+    it('⛓ renaming onto a name an item already carries UNLISTED does not give that item two', () => {
+        const doc = twoSlotGroups();
+        doc.items[P].Key.groups = ['Tools', 'Event'];
+        const res = rename(doc, { player: P, name: 'Tools', newName: 'Event' });
+        expect(res.ok).toBe(true);
+        expect(res.doc[ITEM_GROUPS_KEY][P]).toEqual(['Event', 'Trophies']);
+        expect(res.doc.items[P].Key.groups).toEqual(['Event']);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE ⚖ RULING, SCORED AGAINST THE LAW RATHER THAN AGAINST THE
+     * FIELD UNDER TEST.** The population is every name the slot knows —
+     * registry entries AND unlisted ones — not "the names something carries":
+     * a row whose population is selected by the predicate under test filters
+     * its own mutant out (W0's mutant B, S1's, W3's §10.5 (C) — the same shape
+     * three rungs running). So the claim is a BICONDITIONAL: a name with a
+     * carrier is refused, a name without one is accepted, and nothing else.
+     */
+    it('⛓⛓⛓ ⚖ REFUSE: every group an item carries is a delete this op declines, and the reverse', () => {
+        const doc = twoSlotGroups();
+        const known = [...itemGroupRegistry(doc, P), ...unlistedItemGroups(doc, P)];
+        expect(known).toEqual(['Tools', 'Trophies', 'Event']);
+        for (const name of known) {
+            const carriers = itemsCarryingGroup(doc, name, P);
+            const res = remove(doc, { player: P, name });
+            if (!itemGroupRegistry(doc, P).includes(name)) {
+                // ⛓ An UNLISTED name is not in the registry, so there is
+                //   nothing there to delete — refused for THAT reason, and the
+                //   carriers are beside the point (`Event` has one).
+                expect(res.ok, name).toBe(false);
+                expect(res.error, name).toContain('no item group');
+                expect(res.error, name).not.toContain('still carr');
+            } else if (carriers.length) {
+                expect(res.ok, `${name} is carried by ${carriers}`).toBe(false);
+                expect(res.error, name).toContain('still carr');
+                for (const item of carriers) expect(res.error, name).toContain(item);
+            } else {
+                expect(res.ok, `${name} is carried by nothing`).toBe(true);
+                expect(res.doc[ITEM_GROUPS_KEY][P], name).not.toContain(name);
+            }
+        }
+        // ⛓ …and the three branches were all REACHED, so a fixture that lost
+        //   one of the cases cannot make this row vacuous.
+        expect(known.map((n) => [
+            itemGroupRegistry(doc, P).includes(n), itemsCarryingGroup(doc, n, P).length > 0,
+        ])).toEqual([[true, true], [true, false], [false, true]]);
+    });
+
+    it('⛓ the refusal LISTS the carriers, and it is bounded by REFUSAL_NAME_LIMIT', () => {
+        const doc = twoSlotGroups();
+        const many = REFUSAL_NAME_LIMIT + 3;
+        for (let i = 0; i < many; i += 1) {
+            doc.items[P][`Thing ${i}`] = { name: `Thing ${i}`, id: 100 + i, groups: ['Trophies'] };
+        }
+        const res = remove(doc, { player: P, name: 'Trophies' });
+        expect(res.ok).toBe(false);
+        expect(res.error).toContain(String(many));
+        expect(res.error).toContain('Thing 0');
+        expect(res.error).toContain(`and ${many - REFUSAL_NAME_LIMIT} more`);
+        // ⛔ The op does NOT offer to strip the group from them — ⚖ "refuse".
+        expect(res.error).toContain('will not take it off them for you');
+    });
+
+    it('⛓ deleting a group nothing carries keeps the rest of the registry, in order', () => {
+        const doc = twoSlotGroups();
+        const res = remove(doc, { player: P, name: 'Trophies' });
+        expect(res.ok).toBe(true);
+        expect(res.doc[ITEM_GROUPS_KEY][P]).toEqual(['Tools']);
+        expect(res.doc.items).toBe(doc.items);
+        expect(remove(doc, { player: P, name: 'Ghosts' }).error).toContain('no item group');
+    });
+
+    it('⛓ every one of the three is PER-SLOT: slot 3 is untouched, and answers for itself', () => {
+        const doc = twoSlotGroups();
+        const before = JSON.stringify(doc[ITEM_GROUPS_KEY]['3']);
+        const beforeItems = JSON.stringify(doc.items['3']);
+        const added = applied(doc, { op: 'add-item-group', player: '3', name: 'Lamps' }).doc;
+        expect(added[ITEM_GROUPS_KEY]['3']).toEqual(['Tools', 'Lamps']);
+        expect(added[ITEM_GROUPS_KEY][P]).toEqual(['Tools', 'Trophies']);
+        const renamed = applied(doc, { op: 'rename-item-group', player: '3', name: 'Tools', newName: 'Gear' }).doc;
+        expect(renamed[ITEM_GROUPS_KEY]['3']).toEqual(['Gear']);
+        expect(renamed[ITEM_GROUPS_KEY][P]).toEqual(['Tools', 'Trophies']);
+        expect(renamed.items[P].Key.groups).toEqual(['Tools']);        // ⛓ slot 1's item unmoved
+        expect(renamed.items['3'].Lantern.groups).toEqual(['Gear']);
+        // ⛓ Slot 1's `Tools` is carried by `Key`, slot 3's by `Lantern` — so
+        //   the SAME name deletes differently in the two slots.
+        expect(remove(doc, { player: '3', name: 'Tools' }).error).toContain('Lantern');
+        expect(remove(doc, { player: P, name: 'Tools' }).error).toContain('Key');
+        expect(JSON.stringify(doc[ITEM_GROUPS_KEY]['3'])).toBe(before);
+        expect(JSON.stringify(doc.items['3'])).toBe(beforeItems);
     });
 });
 

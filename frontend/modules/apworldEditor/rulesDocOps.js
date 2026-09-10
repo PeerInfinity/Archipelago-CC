@@ -97,6 +97,9 @@ export const RULES_OP_KINDS = Object.freeze([
     'rename-item',
     'set-item-field',
     'set-starting-count',
+    'add-item-group',
+    'rename-item-group',
+    'delete-item-group',
     'set-canonical-placement',
     'set-meta',
     'set-start-region',
@@ -338,6 +341,9 @@ function dispatchRulesDocOp(doc, op) {
         case 'rename-item': return opRenameItem(doc, op);
         case 'set-item-field': return opSetItemField(doc, op);
         case 'set-starting-count': return opSetStartingCount(doc, op);
+        case 'add-item-group': return opAddItemGroup(doc, op);
+        case 'rename-item-group': return opRenameItemGroup(doc, op);
+        case 'delete-item-group': return opDeleteItemGroup(doc, op);
         case 'set-canonical-placement': return opSetCanonicalPlacement(doc, op);
         case 'set-meta': return opSetMeta(doc, op);
         case 'set-start-region': return opSetStartRegion(doc, op);
@@ -748,15 +754,14 @@ function opSetStartingCount(doc, op) {
     return ok(withStarting(doc, p, list), `starting ${op.item} × ${c}`);
 }
 
-/* ── canonical placements ────────────────────────────────────────────── */
-
 /**
  * ⛓⛓ **HOW MANY NAMES A REFUSAL MAY LIST.** The neighbouring refusals
  * (`regionOr`, `opSetMeta`) print the whole vocabulary because a document holds
  * a few dozen regions and eight meta fields. LOCATIONS AND ITEMS ARE NOT THAT:
  * measured over the committed corpus, `dark_souls_3` slot 1 holds **1,194**
- * locations and **1,208** items, `depgraph` **712** and **1,356** — a refusal
- * that named them all would be a hundred-kilobyte `alert()`. So the list is
+ * locations and **1,208** items, `depgraph` **712** and **1,356**, and `sc2` slot 1
+ * holds **1,741** items under an **889**-name group registry — a refusal that named
+ * them all would be a hundred-kilobyte `alert()`. So the list is
  * bounded and SAYS it is bounded; the sentence still names what the person
  * typed and enough of what the document holds to see the spelling.
  */
@@ -768,6 +773,219 @@ function listNames(names) {
     const rest = names.length - shown.length;
     return `${shown.join(', ')}${rest > 0 ? `, … and ${rest} more` : ''}`;
 }
+
+/* ── item groups ─────────────────────────────────────────────────────── */
+
+/**
+ * ⛓⛓⛓ **THE ITEM-GROUP REGISTRY'S KEY**, named once so the ops, the registry
+ * table and the Items tab cannot disagree about it (I1).
+ */
+export const ITEM_GROUPS_KEY = 'item_groups';
+
+/**
+ * ⛓⛓⛓ **THE LAW THIS WHOLE SECTION RESTS ON: `item_groups[p]` IS A NAME
+ * REGISTRY, AND MEMBERSHIP LIVES ON `items[p][name].groups`.**
+ *
+ * MEASURED over the 212 committed documents (python over
+ * `frontend/presets/*∕AP_*∕AP_*_rules.json`): every one carries `item_groups`,
+ * all **224** slots hold an ARRAY of names, and the engine reads it that way —
+ * `shared/snapshotInterface.js:631-661`, where an array value makes
+ * `HasGroup` / `group_count` / `group_check` count membership through each
+ * ITEM's own `groups` field. (The other branch, `{group: [items]}`, is the
+ * object form and no committed document uses it.)
+ *
+ * ⛔ **THE TWO ARE NOT DERIVABLE FROM EACH OTHER, AND THE EDITOR MUST NOT
+ * "FIX" EITHER.** Measured: the registry equals the union of the items' own
+ * groups in **69** slots and differs in **155** — and the divergence is
+ * ONE-DIRECTIONAL. In all 155 the items carry a name the registry LACKS
+ * (`Event` in 154 of them); **0** slots carry a registry name no item uses.
+ * ⇒ an "unlisted" group is a real, common state and gets shown rather than
+ * silently added; a registry entry with no carriers is legal, rare enough that
+ * the corpus has none, and is exactly what `add-item-group` creates on the way
+ * to populating it.
+ *
+ * ⚠ The registry's CONTENT has no reader in this tree today:
+ * `world_generator/extractors.py:397` extracts it into `WorldData.item_groups`
+ * and no template consumes it (`grep '\.item_groups' world_generator/` = the
+ * assignment alone) — the generated world's `item_name_groups` is built from
+ * the ITEMS' `groups`. The engine reads the slot's value only to pick the
+ * array branch. So this registry is the world's declared vocabulary, and that
+ * is the thing this editor is for.
+ */
+
+/** ⛓ The slot's registry, READ-ONLY and always an array (`regionsOf`'s rule:
+ *  an accessor that lazily created its container would write through the
+ *  session's folded record). */
+export function itemGroupRegistry(doc, player = DEFAULT_PLAYER_ID) {
+    const v = doc?.[ITEM_GROUPS_KEY]?.[player ?? DEFAULT_PLAYER_ID];
+    return Array.isArray(v) ? v : [];
+}
+
+/** ⛓ One item's groups, READ-ONLY and always an array. */
+const groupsOfItem = (item) => (Array.isArray(item?.groups) ? item.groups : []);
+
+/**
+ * ⛓⛓⛓ **WHICH ITEMS CARRY A GROUP — THE ONE PREDICATE** (P1's shape, one key
+ * over). The delete refusal, the Groups section's per-name count, the disabled
+ * delete button's `title` and the in-app rows all ask THIS, so a name the
+ * section says nothing carries is exactly a name the op will delete.
+ *
+ * ⛔ A second spelling of "does anything carry this" would agree with the first
+ * until the day one of them learned about another container — and then the
+ * button would be enabled for a delete the op refuses.
+ *
+ * ⚠ Document order, never sorted: the tab draws items in the order the
+ * generator wrote them.
+ */
+export function itemsCarryingGroup(doc, name, player = DEFAULT_PLAYER_ID) {
+    const items = itemsOf(doc, player ?? DEFAULT_PLAYER_ID);
+    return Object.keys(items).filter((n) => groupsOfItem(items[n]).includes(name));
+}
+
+/**
+ * ⛓⛓ **THE GROUPS THE ITEMS CARRY THAT THE REGISTRY DOES NOT LIST**, in the
+ * order the items introduce them. 155 of the 224 committed slots have at least
+ * one; they are legal and the editor SHOWS them (with the one gesture it can
+ * offer: add this name to the registry) rather than writing them in behind the
+ * person's back.
+ */
+export function unlistedItemGroups(doc, player = DEFAULT_PLAYER_ID) {
+    const p = player ?? DEFAULT_PLAYER_ID;
+    const listed = new Set(itemGroupRegistry(doc, p));
+    const out = [];
+    const seen = new Set();
+    for (const item of Object.values(itemsOf(doc, p))) {
+        for (const g of groupsOfItem(item)) {
+            if (typeof g === 'string' && !listed.has(g) && !seen.has(g)) {
+                seen.add(g);
+                out.push(g);
+            }
+        }
+    }
+    return out;
+}
+
+/** ⛓ A group name is a non-empty string, trimmed — the rule `add-item-group`
+ *  and `rename-item-group` share so the two cannot differ about it. */
+const groupName = (value) => (typeof value === 'string' ? value.trim() : '');
+
+/**
+ * ⛓ `{name}` — appends a name to the slot's registry, CREATING the block when
+ * the document has none (a procgen document is where a person wants to add
+ * groups, and `makeRulesJsonScaffold` writes `item_groups: {'1': []}` — but a
+ * hand-built document need not carry the key at all).
+ *
+ * ⛓ It is also the *"add to registry"* gesture for an unlisted group: the name
+ * is already on the items, and this is what promotes it to the vocabulary.
+ */
+function opAddItemGroup(doc, op) {
+    const p = playerOf(op);
+    const name = groupName(op.name);
+    if (!name) {
+        return refuse('apworld: an item group name is a non-empty string, got '
+            + `${JSON.stringify(op.name)}.`);
+    }
+    const groups = itemGroupRegistry(doc, p);
+    if (groups.includes(name)) {
+        return refuse(`An item group named "${name}" is already in slot ${p}'s registry — `
+            + `[${listNames(groups)}].`);
+    }
+    return ok(setPath(doc, [ITEM_GROUPS_KEY, p], [...groups, name]),
+        `+ item group ${name}`, name, { ...op, name });
+}
+
+/**
+ * ⛓⛓ `{name, newName}` — ONE op carrying a TWO-site cascade: the registry
+ * entry (in place, so the list's order is content) and EVERY item's own
+ * `groups` membership. One op means one undo, which is the whole reason the
+ * two sites are not two ops: a rename that took two undos to put back would
+ * leave the document in a state where the registry and the items disagree.
+ *
+ * ⚠ An item that already carries `newName` does not get it twice — the map is
+ * de-duplicated per item, keeping the first position.
+ */
+function opRenameItemGroup(doc, op) {
+    const p = playerOf(op);
+    const from = op.name;
+    const to = groupName(op.newName);
+    const groups = itemGroupRegistry(doc, p);
+    if (typeof from !== 'string' || !groups.includes(from)) {
+        return refuse(`apworld: no item group "${from}" in slot ${p} — the registry holds `
+            + `[${listNames(groups)}].`);
+    }
+    if (!to) {
+        return refuse('apworld: an item group name is a non-empty string, got '
+            + `${JSON.stringify(op.newName)}.`);
+    }
+    if (to !== from && groups.includes(to)) {
+        return refuse(`An item group named "${to}" is already in slot ${p}'s registry — `
+            + `[${listNames(groups)}].`);
+    }
+    let next = setPath(doc, [ITEM_GROUPS_KEY, p], groups.map((g) => (g === from ? to : g)));
+    const carriers = itemsCarryingGroup(doc, from, p);
+    if (carriers.length) {
+        const items = itemsOf(next, p);
+        let nextItems = items;
+        for (const itemName of carriers) {
+            const item = items[itemName];
+            const renamed = [];
+            for (const g of groupsOfItem(item)) {
+                const g2 = g === from ? to : g;
+                if (!renamed.includes(g2)) renamed.push(g2);
+            }
+            nextItems = withKey(nextItems, itemName, withKey(item, 'groups', renamed));
+        }
+        next = withItems(next, p, nextItems);
+    }
+    return ok(next, `rename item group ${from} → ${to} (${carriers.length} item`
+        + `${carriers.length === 1 ? '' : 's'})`);
+}
+
+/**
+ * ⛓⛓⛓ `{name}` — **REFUSED BY NAME WHILE ANY ITEM STILL CARRIES THE GROUP.**
+ *
+ * ⚖ user, 2026-09-09, asked which of "refuse" / "cascade" / "orphan" this
+ * should be: *"Let's go with refuse."* So this is NOT a `deleteItemOps`-shaped
+ * cascade — there is no builder that clears the members first, deliberately.
+ * A group is a classification a person put on items on purpose, and removing
+ * it from a hundred of them because a registry row was deleted is not a
+ * gesture anyone asked for; the refusal LISTS the carriers so the next click
+ * is obvious.
+ *
+ * ⛔ And the refusal is the OP's, not the button's. The Groups section disables
+ * its delete button with the same sentence in the `title`, but that is a
+ * courtesy: the guard has to hold for a caller that never drew a button (the
+ * Document tab's whole-block `set-key` is a different vocabulary on the same
+ * key and is the everything-fallback — W0's rule).
+ *
+ * ⚠ **Deleting a registry entry does NOT ask about rule trees.** Measured over
+ * the corpus: **32** slots carry `HasGroup` / `group_count` / `group_check`
+ * nodes (**566** nodes in all) naming **81** distinct groups, and **3** of
+ * those references already name a group that is in neither the registry nor on
+ * any item — i.e. a dangling group reference is a state the committed corpus
+ * is already in, and the ⚖ ruling is about the ITEMS. Whether the refusal
+ * should also read the rules is on the record as an open question rather than
+ * decided here.
+ */
+function opDeleteItemGroup(doc, op) {
+    const p = playerOf(op);
+    const groups = itemGroupRegistry(doc, p);
+    if (typeof op.name !== 'string' || !groups.includes(op.name)) {
+        return refuse(`apworld: no item group "${op.name}" in slot ${p} to delete — the `
+            + `registry holds [${listNames(groups)}].`);
+    }
+    const carriers = itemsCarryingGroup(doc, op.name, p);
+    if (carriers.length) {
+        return refuse(`apworld: ${carriers.length} item${carriers.length === 1 ? '' : 's'} still `
+            + `carr${carriers.length === 1 ? 'ies' : 'y'} the group "${op.name}" — `
+            + `[${listNames(carriers)}]. ⛔ Take the group off those items first (the Groups `
+            + 'picker on each item row); this op will not take it off them for you.');
+    }
+    return ok(setPath(doc, [ITEM_GROUPS_KEY, p], groups.filter((g) => g !== op.name)),
+        `− item group ${op.name}`);
+}
+
+/* ── canonical placements ────────────────────────────────────────────── */
 
 /**
  * ⛓⛓⛓ **THE SLOT'S LOCATIONS, IN DOCUMENT ORDER, EACH WITH ITS REGION** — and
