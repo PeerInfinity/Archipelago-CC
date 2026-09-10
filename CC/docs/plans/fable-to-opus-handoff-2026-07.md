@@ -13746,6 +13746,13 @@ hub ops; regeneration (substrate change, re-roll, append) is the pipeline's by h
 investigation is now answered; nothing is launched ("Please don't begin implementation yet" stands until the user
 says otherwise). NEXT on the user's word: the M0 kickoff (`NewDocs/plans/`), one Opus session.
 
+**⚖ RULED (user, 2026-09-10): "The plan looks good. Please begin implementing it."** ⇒ **M0 LAUNCHED 2026-09-10** as
+`apworld-sidecars-M0` (Opus; kickoff `NewDocs/plans/apworld-sidecars-M0-prompt.md`): the cell-size fallback in
+`reconstructResultFromSidecars` (tile-grid max → a declared `compositeMap.cellSize` seam, declared on nobody → the
+engine's default region size EXPORTED), the hub's no-map sentence re-derived, rows + three mutants, docs; reverses hub
+plan §7 ⚖ 3 on the user's word. Baseline 444/13457 @ `b69709c12a` (run 34434678104). Reports come to
+`preset-sidecars-planning`; S0 on M0's idle notice. ⛔ The planner commits nothing to the tree while M0 runs.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
