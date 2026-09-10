@@ -107,6 +107,7 @@ export const REGISTRY = frz({
         {
             "rows": [
                 "compositeMap",
+                "compositeMap.drawRegion",
                 "sharing"
             ],
             "title": "Composite map"
@@ -937,6 +938,73 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Composite map",
             "name": "compositeMap"
+        },
+        {
+            "carriedBy": [
+                "maze",
+                "text_adventure"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Composite map",
+            "name": "compositeMap.drawRegion"
         },
         {
             "carriedBy": [

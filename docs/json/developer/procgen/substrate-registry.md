@@ -57,11 +57,14 @@ The composite map is the pipeline panel's grid-of-regions canvas — and, since 
 
 | Field | Type | Meaning |
 |-------|------|---------|
-| `compositeMap` | object (optional) | **Declares that this substrate can paint its own cell of the composite map.** One field today: `drawRegion(ctx, region, { offX, offY, regionSize, tilePx, colors })`, called once per placed region with the cell's origin in canvas pixels and the shared geometry. Declared by **maze** (`mazeRoom/mazeCompositeMap.js`) and **text_adventure** (`textAdventureSubstrateWrapper/textAdventureCompositeMap.js`), each carrying the imports that make its painter substrate-specific. ABSENT ⇒ the region gets the shared **generic box, labelled with the substrate's own id**, so an undrawn substrate is legible rather than silent. |
+| `compositeMap` | object (optional) | **Declares that this substrate can paint its own cell of the composite map.** Two fields: the painter below, and an optional `cellSize` (`{width, height}` in tiles) saying how big a cell of its regions should be when the DOCUMENT does not say — read only by `procgenPipeline/compositeMapDocument.js`, which rebuilds a composite view from a loaded `rules.json` and has no driver to ask. ABSENT ⇒ the region gets the shared **generic box, labelled with the substrate's own id**, so an undrawn substrate is legible rather than silent. |
+| `compositeMap.drawRegion` | `(ctx, region, { offX, offY, regionSize, tilePx, colors })` | **The painter**, called once per placed region with the cell's origin in canvas pixels and the shared geometry. Declared by **maze** (`mazeRoom/mazeCompositeMap.js`) and **text_adventure** (`textAdventureSubstrateWrapper/textAdventureCompositeMap.js`), each carrying the imports that make its painter substrate-specific. |
 
 The shared renderer is `procgenCore/compositeMapRenderer.js`: `drawCompositeMap(canvas, grid, regionSize, { selection, tilePx, colors, registry })` paints the empty cells, the stub cells (a region with no `playable_payload` — top-down's *1 Layout* before *2 Realise* — which never reaches a declared painter), the cell borders, the connection lines and the selection highlight, and resolves every other cell through `substrateRegistry.get(region.render_hint ?? region.substrate)?.compositeMap?.drawRegion`. It also exports the geometry three readers share — `resolveExitTilePositions`, `fitTextToWidth`, `canvasPointOf`, `cellAtPoint`, `TILE_PX`, `COLORS`.
 
 ⛔ **It is a declaration, not a registration** — the `roomEditor` law again: `substrateRegistry.register` validates only `id` and `sharing`, so a headless caller (this matrix, a `check-*.mjs` gate) can ask *"does this substrate paint itself"* with no browser. That is why a painter takes `ctx` as a PARAMETER and lives in its own module beside the library rather than inside it: both declarers stay node-importable.
+
+⛔ **NO SUBSTRATE DECLARES `compositeMap.cellSize`, on purpose** (PRESET SIDECARS M0, 2026-09-10). The reconstruction needed a cell size for a document whose payloads carry none — every bounce / runner / jta / omsi / Seedling payload — and the three candidate answers were: size from the tile-grid regions when the slot has any, let the substrate declare a size, or have the producer write one into `procgen_metadata`. It does the first, then the second, then the engine's exported `DEFAULT_REGION_SIZE` — and returns which step fired, so a reader can SAY the size is a fallback instead of printing it as a tile count; the second is BUILT AND EMPTY because nothing measured needs a size other than the default, and a declaration nobody needs is a hand list of substrate names wearing a registry hat. ⚠ It is therefore absent from the generated matrix below, which reports what entries CARRY — the matrix is how you will know a substrate has taken the seam up.
 
 ⛓ **The old `?? 'maze'` default is GONE.** `_drawRegion` ended its chain with it, so a region naming neither `render_hint` nor `substrate` drew as a maze. Measured before removing it: over the 205 committed presets, **0 of 1,360** `preset_sidecars` entries name neither (270 omit `render_hint` alone, 0 disagree with `substrate`), and `growMaze` / `topDownFromRulesJson` / `layoutTopDown` produce **0** payload-bearing regions that name neither. Such a region now resolves to no painter and gets the generic box — which is the point of the ⚖.
 
@@ -179,7 +182,7 @@ Everything outside the two markers — including the hand-kept annotations below
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**8 registered entries · 64 fields · 12 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**8 registered entries · 65 fields · 12 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported.
 
@@ -222,6 +225,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
 |---|---|---|---|---|---|---|---|---|
 | `compositeMap` | {drawRegion} | — | — | — | {drawRegion} | — | — | — |
+| `compositeMap.drawRegion` | fn | — | — | — | fn | — | — | — |
 | `sharing` | {mana} | — | — | — | {mana} | — | {items, mana} | {items, mana} |
 
 **Loop mode**

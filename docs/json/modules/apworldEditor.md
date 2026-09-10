@@ -876,12 +876,49 @@ slot ([substrate registry](../developer/procgen/substrate-registry.md) §
 *Composite map*), and a substrate that declares none gets a generic box
 **labelled with its id**.
 
-**Only grown worlds have a map**, by ⚖ (*"show the composite grid only for
-presets that have grid data"*). A `grid_cell` per region is written by the maze /
-top-down / spiral pipelines; Seedling, JtA and zone-only worlds write sidecars
-without one, so the tab prints *"No map for this world (no grid data in the
+**A world has a map when its sidecars carry a `grid_cell`**, by ⚖ (*"show the
+composite grid only for presets that have grid data"*). That is a claim about the
+LAYOUT and names no substrate: a slot whose sidecars carry no cell has nothing to
+lay out, so the tab prints *"No map for this world (no grid data in the
 sidecars)"* and the reason — and draws **nothing else**. There is deliberately no
 region-graph fallback here: the graph is its own panel.
+
+⛔ **M0 (2026-09-10) REVERSED the narrower reading of that ⚖.** Until then the
+cell's SIZE also had to come out of the document — `reconstructResultFromSidecars`
+took it from `playable_payload.width`/`height` in TILES and returned null when
+that max stayed 0, before placing a region — so a bounce / runner / jta slot with
+a `grid_cell` on every region drew nothing. The user met it as *"when I load the
+Bounce demo preset in the procgen pipeline panel, then generate it, then click
+Load into Frontend, its map doesn't display in the Map tab"*. The renderer was
+never the limit (see the generic box above); what was missing was a cell size for
+a document that carries none. It now has a precedence, and the reconstruction
+returns which step fired as `regionSizeSource`:
+
+| step | `regionSizeSource` | where the size comes from |
+|---|---|---|
+| 1 | `payload` | the max tile geometry over the slot's payloads — the rule that was already there, unchanged where it fires |
+| 2 | `declared` | a `compositeMap.cellSize` on the registry entry of a substrate placed in the slot. **No substrate declares one**: nothing measured needs a size other than the default, and a declaration nobody needs is a hand list of substrate names wearing a registry hat |
+| 3 | `default` | `DEFAULT_REGION_SIZE` — exported from `procgenPipelineEngine.js`, which held the only `{width: 8, height: 6}` literal (`rebuildEnvelopeFromRulesJson`) and now reads the same export |
+
+MEASURED over the 42 populated slots of the committed corpus, one call per slot:
+**26 grid / 16 null → 38 grid / 4 null**. Twelve slots turned; every slot that
+drew before draws the same grid, the same cell and the same `regionsBuilt`. The
+four that stay null are exactly the four whose sidecars carry no `grid_cell` on
+any entry — `jta_substrate_test`, `seedling_atlas`, `seedling_atlas_maze`,
+`seedling_playthrough`. `procgen_metadata.grid_dims` is deliberately NOT
+consulted: 25 of the 42 slots carry it and **0** exceed the `grid_cell` extents,
+so no committed document can tell that rule from the extents rule.
+
+The stats line beside the map says which rule sized the cell, off
+`regionSizeSource` rather than a second derivation (`data-cell-source` on
+`.apworld-map-slot` carries the same value for a row to read): *"cell 8×6 tiles"*
+for a grown world, *"cell 8×6 (the engine's default — this world stores no tile
+geometry)"* for a zone one. ⛔ A line that called the fallback a tile count would
+be claiming geometry the document does not have.
+
+The same function paints the **pipeline panel's** loaded-preset view and its
+`_adoptHandoffRules` hand-off, so the hub's `procgen_metadata` door now lands on a
+painted map for the same twelve slots instead of an empty canvas.
 
 **Clicking a cell selects that region in the Regions tab** (`panel.selectRegion(name)`,
 the panel's one selection entry point). The click→cell mapping is the renderer's
@@ -922,22 +959,24 @@ a PNG of exactly that view, which is how the before/after pair was taken.
 
 The tab names WHICH one, because "no map" and "no grid data" are different claims
 and only the second tells you whether another document would work
-(`panel._noMapReason()`):
+(`panel._noMapReason()`). They are the three ways
+`reconstructResultFromSidecars` returns null, in the order it decides them:
 
 | what the document has | the sentence |
 |---|---|
 | no `preset_sidecars` at all | *this document carries no `preset_sidecars`* |
 | sidecars, none for the selected slot | *player slot N carries no sidecars* |
-| sidecars, no `grid_cell` on any | *no grid data in the sidecars* — Seedling, JtA |
-| `grid_cell` on every region, no tile-grid payload | *N regions carry a grid cell, but `bounce` stores no tile-grid geometry in the payload* |
+| sidecars, no `grid_cell` on any | *no grid data in the sidecars* |
+| sidecars with cells, no registered substrate that can rebuild one | *no registered substrate here can rebuild a region from its payload* |
 
-⚠ The last row is a **zone** substrate, and it looked like the third one until
-H4a: every no-map document in the corpus carried no `grid_cell`, so one sentence
-covered the corpus by accident. A bounce level's geometry is
-`params.bounceLevel.size` **in pixels**; the composite view sizes its cells from
-`playable_payload.width`/`height` **in tiles**, which bounce has none of. It is
-the ⚖-ruled "no map for this world" answer for zone worlds (plan §7 ⚖ 3),
-reached for a reason the panel can now state.
+⚠ **There was a fourth, and M0 retired it.** It read *"N regions carry a grid
+cell, but `bounce` stores no tile-grid geometry in the payload"*, and it was the
+honest sentence for the sizing rule described above: a zone slot carried a
+`grid_cell` on every region and still could not be drawn. That case now draws, so
+a reason for it would be a reason for something that does not happen. H4a is worth
+keeping in view here — until the four-player fixture landed, every no-map document
+in the corpus carried no `grid_cell`, so ONE sentence covered the corpus by
+accident, and the fixture is what made the second cause visible at all.
 
 ### The four-player fixture
 
@@ -949,6 +988,15 @@ whole per-player half of this panel is tested against it. Slots 1–2 are
 per-player slice each have a document that can tell *"read the selected slot"*
 from *"read the first one"*. Before it, 158 of the 192 committed carriers held
 `{}` and every populated one keyed under slot `"1"`.
+
+⚠ **Every one of the four slots carries a `grid_cell` on every region**, and the
+H4a-era note that said otherwise of slots 3–4 was wrong when it was written: what
+those slots lack is a tile-grid PAYLOAD, a different field. Since M0 all four
+slots DRAW — 1–2 sized from their own payloads, 3–4 at the engine's default — so
+the fixture now discriminates the two SIZING rules on one document, which is what
+`apworld-map-follows-the-selected-player-slot` walks and what
+`apworld-map-draws-a-zone-world` drives on slot 3. The remaining "no map" answer
+is driven on `jta_substrate_test` (16 entries, 0 `grid_cell`).
 
 ## Edit ▸ — a region's room, in its own editor
 
