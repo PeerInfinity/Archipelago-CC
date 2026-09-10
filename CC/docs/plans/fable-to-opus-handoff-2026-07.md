@@ -13708,6 +13708,19 @@ substrate CHANGE per region is wanted in the hub, breaking by design, the reader
 REPORT what is invalid (measured next: what validation exists today); Q3 = moves may create teleporters and the op
 names each one; Q4 = M0 (the cell-size fix) first, then S0, S1, replan. ⛔ NOT launched.
 
+**Measured for Q2 (plan §7.5):** the hub has THREE validators and none looks inside `preset_sidecars` —
+`validateRules` (the bar: unknown exit targets, start region, victory item; 0 sidecar checks), the schema veto
+(`substrate` present, `grid_cell` shaped, payload OPAQUE) and P1's `canonicalPlacementIssues`. After a substrate
+change nothing says what is wrong until play or Edit ▸. ⇒ a NEW `sidecarIssues(doc, player)` in P1's shape (one
+pure function → the bar + the per-region block + a corpus `check-*`), two layers: SHAPE from the D0 declaration
+(registered substrate, required fields, enums, "this looks like a maze payload under `bounce`") and CROSS-CHECKS
+against the document (deserializes; payload exits ⇄ document exits; baked location names ⇄ document locations;
+`grid_cell` unique and in bounds; `jta_dataset_ref` resolves; the H4b baseline as a warning), the applicable checks
+DECLARED per substrate so nothing is hardcoded; errors block nothing (the reader repairs), the bar counts them.
+The substrate change = the `substrate` picker on the block through `set-region-sidecar`. Ladder re-cut (plan §8b):
+**M0 → S0 → S1 → REPLAN → D0 → V0 (validity + the picker) → D1 → S2 → M1 → M2 → M3 → T0/T1**; re-roll and
+regenerate-for-substrate deferred. ⛔ NOTHING launched — the user asked not to begin yet.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
