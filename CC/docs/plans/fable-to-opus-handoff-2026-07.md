@@ -13322,6 +13322,45 @@ model stands as "the placements key's own writes are vetoed; everything else can
 tab shows it with a delete; the CI gate catches a committed one." The consistent alternative — a document-wide
 invariant (six ops refuse or cascade) — is NAMED for a later slice, not queued.
 
+**I1 AS BUILT 2026-09-10** (`apworld-coverage-I1`, Opus; main `95921be041` → `9c21e79515`, pushed; five commits by
+path plus this record; plan §13). ⚑ Deltas only — the full record is §13.
+- **The brief's *"both directions exist"* does not reproduce.** 212 documents / **224** slots, every one an ARRAY:
+  registry == the items' union in **69**, different in **155** — and **all 155** are *items carry a name the
+  registry lacks* (`Event` in 154), **0** the other way. A listed-with-no-members group is legal and is what
+  `add` produces, but no committed document is in that state.
+- **⛑ Nothing in this tree reads the registry's CONTENTS.** `extractors.py:397` puts it in
+  `WorldData.item_groups` and `grep '\.item_groups' world_generator/` is that one assignment; the generated
+  world's `item_name_groups` comes from the ITEMS' `groups`, and the engine reads the slot only to pick the array
+  branch. So *"the world generator reads item_groups"* is true and weaker than it sounds.
+- **The per-item picker could not be a multi-select.** `sc2` slot 1 is 1,741 items under an **889**-name registry;
+  a `<select multiple>`/checkbox list is open at rest. Shipped: chips + a single-select that fills on open.
+  Measured on both builds — eager **1,540,414** option elements / **16,688 ms** paint, lazy **1,741** / **1,948 ms**
+  (885× / 8.6×), and the count is `Σᵢ(1 + |registry \ groupsᵢ|)`, not the naive product (trap 1300 applied).
+- **⚖ "refuse" shipped with no cascade builder** — deliberately, unlike `deleteRegionOps` / `deleteItemOps`; the
+  refusal lists the carriers. `itemsCarryingGroup` is the ONE predicate the op, the section's count, the disabled
+  button's title and the rows all read. `item_groups` joins `KEYS_OWNED_BY_TAB.items`.
+- **NEW TRAP 1305** — a DISABLED-button courtesy and the op's refusal are two guards. Under mutant (A) (the op's
+  carrier branch deleted) the in-app row's *"the button is DISABLED"* and *"its title names a carrier"* conditions
+  stayed **GREEN**, because the button reads the shared predicate and the deleted code was the op's; only the four
+  conditions that ask the OP went red. A row driving just the section's button — the obvious way to write it —
+  would have been entirely green with the guard gone.
+- **Mutants, each solo against all five rows:** (A) exactly `…delete-is-refused…` red, 4 conditions (+3 vitest
+  rows); (B) rename forgets the items → exactly `…rename-carries-the-items-membership` red, 3 conditions (+3
+  vitest rows); (C) the section reads slot `'1'` → exactly `…follow-the-selected-slot` red, 2 conditions, and the
+  **whole vitest module blind at 238 passed** — which is why the ownership rows are scored against the ops' own
+  source rather than against `KEYS_OWNED_BY_TAB` (W3 §10.5 (C)).
+- **Gates:** bounded vitest **11 files / 272 passed** (`rulesDocOps.test.js` 87 → **97**, `documentKeys.test.js`
+  43 → **45**); in-app `--batch=fast` **105/105**, `compare-runs` vs P1's 100/100 = `ADDED (5)` and nothing else,
+  exit 0; `grep -ac "Error in event handler for"` **0**; `lintGateLabels` 14, `rosterCategories` 13. Docs trio NOT
+  owed and measured so: `DOC_FILES.length` **18** (P1 said 17 — the census grew) and `apworldEditor.md` is not in
+  it. Trap 1304 not owed — no `scripts/procgen/` file changed.
+- **⚖ 52:** derived +0 files / **+12** rows over the `a9dff6320a` quote (443/13427) ⇒ expected **443/13439**.
+- **⚖ OPEN (I1's):** should the delete also refuse while a RULE references the group (566 group nodes over 32
+  slots; **3** references already dangle in the committed corpus)? · the *unlisted* row is permanent, not a
+  migration aid, now that the Raw JSON tab stays schema-only (⚖ 2026-09-10) · there is no corpus gate because an
+  unlisted group names nothing wrong · `snapshotInterface.js:413-415` SPREADS the array into the helpers'
+  `item_name_groups`, yielding index keys — pre-existing, not this slice's.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
