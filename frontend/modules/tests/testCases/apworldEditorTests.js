@@ -112,6 +112,12 @@ import { COLORS, TILE_PX } from '../../procgenCore/compositeMapRenderer.js';
  * and 6 here would make it agree with a copy of the constant.
  */
 import { DEFAULT_REGION_SIZE } from '../../procgenPipeline/procgenPipelineEngine.js';
+/**
+ * ⛓ S0 — the indent the hub's JSON widget pretty-prints with, so the row that
+ * asserts a sidecar block's text is byte-equal to its entry uses the widget's
+ * own spelling rather than a `2` typed here.
+ */
+import { JSON_BLOCK_INDENT } from '../../apworldEditor/regionRoundTrip.js';
 
 const PANEL_ID = 'apworldEditorPanel';
 const PANEL_SELECTOR = '.apworld-editor-panel';
@@ -5862,6 +5868,505 @@ registerTest({
                + 'vitest module is blind to this — the section reads the DOCUMENT, so a wrong '
                + 'slot is not a table the node rows can see (I1 §13.5 (C)).',
     testFunction: apworldProgressionFollowsTheSelectedSlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ PRESET SIDECARS S0 — THE PER-REGION SIDECAR VIEW
+ * (`NewDocs/plans/preset-sidecars-plan.md` §3 D2, §9.3 rung 2)
+ *
+ * One renderer (`_makeRegionSidecarBlock`), two hosts: under each region on
+ * the Regions tab, and the Sidecars tab's per-region list. Every expectation
+ * below is read off the DOCUMENT — the entry's own `substrate`, its own bytes —
+ * and every slot is chosen through the toolbar's own selector (H1's rows).
+ * ⚠ Every post-gesture lookup RE-QUERIES: a render rebuilds the tab body, and a
+ * node captured before it answers out of the detached old tree (W0 §7.5).
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ The sidecar blocks the Regions tab draws, keyed by region — re-queried. */
+function regionSidecarBlocks() {
+    return [...document.querySelectorAll(
+        `${PANEL_SELECTOR} .apworld-region-block .apworld-sidecar-block`)];
+}
+
+/** ⛓ One region's sidecar block on whichever tab is showing — re-queried. */
+function sidecarBlockFor(regionName) {
+    return document.querySelector(
+        `${PANEL_SELECTOR} .apworld-sidecar-block[data-region-name="${CSS.escape(regionName)}"]`);
+}
+
+/**
+ * ⛓⛓⛓ **(i) THE BLOCKS FOLLOW THE SELECTED SLOT, AND EACH BADGE IS THE
+ * DOCUMENT'S OWN `substrate`.** Walks every populated slot of the four-player
+ * fixture — the population is `preset_sidecars`' own keys — through the
+ * product's selector. Per slot: one block per sidecar entry, each inside the
+ * region block of the same name, its badge equal to THAT slot's entry's
+ * `substrate` (never a literal), exactly one Edit ▸ per sidecar region and it
+ * lives INSIDE the block (S0 moved it out of the header — the count is H4b's,
+ * unchanged), none on a region with no sidecar, and no JSON built.
+ *
+ * ⛔ Non-vacuity: two slots of the fixture hold DIFFERENT substrates (maze and
+ * bounce) — measured here off the document, since a block that read one slot
+ * for every slot would agree with a fixture whose slots all matched.
+ */
+export async function apworldSidecarBlocksFollowTheSelectedSlot(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        testController.reportCondition('the toolbar carries a player selector', !!select);
+        if (!select) return testController.getOverallResult();
+
+        const slots = Object.keys(doc.preset_sidecars ?? {});
+        const substratesOf = (slot) => [...new Set(Object.values(doc.preset_sidecars[slot])
+            .map((e) => e.substrate))].sort().join(',');
+        testController.reportCondition(
+            '⛓ premise: the fixture\'s slots do not all hold the same substrates',
+            new Set(slots.map(substratesOf)).size > 1);
+
+        for (const slot of slots) {
+            selectPlayer(select, slot);
+            selectTab(panel, 'regions');
+            const want = sidecarRegions(doc, slot);
+            const drawn = await testController.pollForValue(
+                () => {
+                    const blocks = regionSidecarBlocks();
+                    return String(panel.playerId) === slot && blocks.length > 0
+                        && blocks.every((b) => b.dataset.player === slot) ? blocks : null;
+                },
+                `slot ${slot}'s sidecar blocks on the Regions tab`, 8000, 50);
+            testController.assertEqual(
+                `slot ${slot}: one block per sidecar entry of THAT slot`,
+                String(want.length), String((drawn ?? []).length));
+            for (const block of regionSidecarBlocks()) {
+                const region = block.dataset.regionName;
+                const entry = doc.preset_sidecars[slot][region];
+                testController.assertEqual(
+                    `slot ${slot} "${region}": the badge is the document's substrate`,
+                    String(entry?.substrate),
+                    String(block.querySelector('.apworld-sidecar-badge')?.textContent));
+                testController.assertEqual(
+                    `…drawn under the region block of the same name`,
+                    region, String(block.closest('.apworld-region-block')?.dataset.regionName));
+                testController.assertEqual(
+                    '…and its Edit ▸ is inside the block, once',
+                    '1', String(block.querySelectorAll('.apworld-edit-room').length));
+            }
+            for (const regionBlock of document.querySelectorAll(
+                `${PANEL_SELECTOR} .apworld-region-block`)) {
+                const name = regionBlock.dataset.regionName;
+                testController.assertEqual(
+                    `slot ${slot} "${name}": Edit ▸ drawn ${want.includes(name) ? 'once' : 'nowhere'}`
+                    + ' (the H4b count, unmoved by S0)',
+                    want.includes(name) ? '1' : '0',
+                    String(regionBlock.querySelectorAll('.apworld-edit-room').length));
+            }
+            testController.assertEqual(
+                `slot ${slot}: no JSON is built until a block is opened`,
+                '0', String(document.querySelectorAll(
+                    `${PANEL_SELECTOR} .apworld-sidecar-json`).length));
+        }
+
+        /**
+         * ⛓⛓ **AND ON A DOCUMENT WHOSE ENTRIES CARRY NO `render_hint`.** On every
+         * committed entry that carries a hint it EQUALS the substrate (plan
+         * §2.1), so the four slots above cannot tell a badge reading the hint
+         * from one reading the substrate. The Seedling entries carry no hint at
+         * all — the only place in the corpus where the two readings differ.
+         */
+        const seedling = await openHub(testController, SEEDLING_PRESET_PATH);
+        if (seedling) {
+            selectTab(seedling, 'regions');
+            const sDoc = seedling.rulesDoc;
+            const sSlot = String(seedling.playerId);
+            const sWant = sidecarRegions(sDoc, sSlot);
+            testController.reportCondition(
+                '⛓ premise: this document\'s entries carry no render_hint',
+                sWant.length > 0 && sWant.every((r) => !('render_hint' in sDoc.preset_sidecars[sSlot][r])));
+            const sDrawn = await testController.pollForValue(
+                () => (regionSidecarBlocks().length === sWant.length ? regionSidecarBlocks() : null),
+                'the Seedling document\'s sidecar blocks', 8000, 50);
+            testController.reportCondition('one block per Seedling entry', !!sDrawn);
+            for (const block of regionSidecarBlocks()) {
+                const r = block.dataset.regionName;
+                testController.assertEqual(`"${r}": the badge is the entry's substrate`,
+                    String(sDoc.preset_sidecars[sSlot][r]?.substrate),
+                    String(block.querySelector('.apworld-sidecar-badge')?.textContent));
+            }
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecar-blocks-per-slot test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(ii) OPENING A BLOCK DRAWS THE ENTRY'S OWN BYTES, READ-ONLY, AND THE
+ * DOORS IN IT ARE THE REGION'S.** On a bounce slot (a zone payload — the family
+ * the Map tab and Edit ▸ treat differently from the maze slots), the region
+ * picked off the document. The textarea must equal
+ * `JSON.stringify(entry, null, JSON_BLOCK_INDENT)` byte for byte — the WHOLE
+ * entry, not the payload — be read-only with no Save (S1 turns saving on), and
+ * be the ONLY JSON built. The facts line's size is compared against the
+ * payload's own UTF-8 bytes measured here, and the hand-off door is pressed:
+ * a button wired to nothing would pass a presence check.
+ */
+export async function apworldASidecarBlockShowsItsEntrysJsonReadOnly(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        if (!select) {
+            testController.reportCondition('the toolbar carries a player selector', false);
+            return testController.getOverallResult();
+        }
+        // ⛓ the LAST populated slot, found in the document rather than named.
+        const slot = Object.keys(doc.preset_sidecars).at(-1);
+        selectPlayer(select, slot);
+        selectTab(panel, 'regions');
+        const region = sidecarRegions(doc, slot)[0];
+        const entry = doc.preset_sidecars[slot][region];
+        testController.log(`slot ${slot}, region ${region}, substrate ${entry.substrate}`);
+
+        const toggle = await testController.pollForValue(
+            () => (String(panel.playerId) === slot
+                ? sidecarBlockFor(region)?.querySelector('.apworld-sidecar-toggle') : null),
+            `the "${region}" block's Show JSON toggle`, 8000, 50);
+        testController.reportCondition('the block offers Show JSON', !!toggle);
+        if (!toggle) return testController.getOverallResult();
+        toggle.click();
+
+        const text = await testController.pollForValue(
+            () => sidecarBlockFor(region)?.querySelector('.apworld-sidecar-json') ?? null,
+            'the opened block\'s JSON', 8000, 50);
+        testController.reportCondition('opening the block built its JSON', !!text);
+        if (!text) return testController.getOverallResult();
+        testController.assertEqual(
+            '⛓⛓ the JSON is the WHOLE ENTRY, byte for byte, at the widget\'s indent',
+            JSON.stringify(entry, null, JSON_BLOCK_INDENT), text.value);
+        testController.reportCondition('it is READ-ONLY in this slice', text.readOnly === true);
+        testController.assertEqual('…with no Save', '0', String(sidecarBlockFor(region)
+            .querySelectorAll('.apworld-sidecar-save').length));
+        testController.assertEqual('and it is the only JSON built on the tab', '1',
+            String(document.querySelectorAll(`${PANEL_SELECTOR} .apworld-sidecar-json`).length));
+
+        const bytes = new TextEncoder().encode(
+            JSON.stringify(entry.playable_payload, null, JSON_BLOCK_INDENT)).length;
+        testController.reportCondition(
+            `the facts line gives the payload's pretty size (${bytes} B) and its keys`,
+            (sidecarBlockFor(region)?.querySelector('.apworld-sidecar-facts')?.textContent ?? '')
+                .includes(`${bytes.toLocaleString()} B`)
+            && Object.keys(entry.playable_payload).every((k) => sidecarBlockFor(region)
+                .querySelector('.apworld-sidecar-facts').textContent.includes(k)));
+
+        const edit = sidecarBlockFor(region)?.querySelector('.apworld-edit-room');
+        testController.reportCondition('the block carries Edit ▸', !!edit);
+        testController.assertEqual('…for THIS region\'s substrate',
+            String(entry.substrate), String(edit?.dataset.substrate));
+        testController.assertEqual('…inside THIS region\'s block',
+            region, String(edit?.closest('.apworld-region-block')?.dataset.regionName));
+
+        const regen = sidecarBlockFor(region)?.querySelector('.apworld-sidecar-regenerate');
+        const words = DOCUMENT_KEY_EDITORS.procgen_metadata.regionDoor;
+        testController.reportCondition('the block carries the hand-off door', !!regen);
+        testController.assertEqual('…labelled by the door\'s own declaration',
+            words.label, String(regen?.textContent));
+        testController.reportCondition('…pressable in this app', !!regen && !regen.disabled);
+        if (regen && !regen.disabled) {
+            regen.click();
+            testController.reportCondition(
+                '⛓ pressing it is the procgen_metadata door — the status line says so',
+                String(panel.statusLabel?.textContent ?? '')
+                    .includes(DOCUMENT_KEY_EDITORS.procgen_metadata.label));
+            /**
+             * ⛓ …and its EFFECT: the door's own panel comes to the front. ⛔ It
+             * is awaited before the hub is raised again — the door's `open`
+             * defers its module (a dynamic import), so a raise published
+             * straight after the click lands FIRST and the pipeline then takes
+             * the stack back (measured: the hub stayed hidden for the whole
+             * poll budget).
+             */
+            const pipelinePanel = DOCUMENT_KEY_EDITORS.procgen_metadata.panelId;
+            const raised = await testController.pollForCondition(
+                () => panelManager.isPanelActive(pipelinePanel),
+                'the pipeline panel came to the front', 8000, 50);
+            testController.reportCondition('⛓ …and the pipeline panel came to the front', raised);
+            testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+            const back = await testController.pollForCondition(
+                () => (panel.scrollContainer?.clientHeight ?? 0) > 0,
+                'the hub is back in front with a layout', 8000, 50);
+            testController.reportCondition('the hub is back in front, with a layout', back);
+        }
+
+        const hide = sidecarBlockFor(region)?.querySelector('.apworld-sidecar-toggle');
+        if (hide) hide.click();
+        testController.assertEqual('closing it drops the JSON again', '0',
+            String(document.querySelectorAll(`${PANEL_SELECTOR} .apworld-sidecar-json`).length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecar-block JSON test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iii) THE SIDECARS TAB'S LIST IS COLLAPSED BY DEFAULT, EXPANDS TO THE
+ * SLOT'S ENTRIES, AND `Go to region` LANDS ON THAT REGION** (⚖ user,
+ * 2026-09-10: *"expandable, and collapsed by default"*). On a slot other than
+ * the first, through the selector. Collapsed: 0 region rows in the DOM. Expanded:
+ * one row per entry of THAT slot, in the document's order, each carrying the
+ * SAME block (badge = the document's substrate) and no JSON. The state survives
+ * a tab round-trip and is gone after a reload (a new session).
+ *
+ * ⛓ `Go to region` is asserted by its EFFECT — the Regions tab, that region
+ * selected, and its header inside the scroll container's viewport. ⛔ The
+ * target is the LAST row, and the premise that its header starts OUTSIDE the
+ * viewport is measured first: a region already on screen is "in view" whether
+ * or not anything scrolled.
+ */
+export async function apworldSidecarsListIsCollapsedAndGoesToTheRegion(testController) {
+    try {
+        let panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        if (!select) {
+            testController.reportCondition('the toolbar carries a player selector', false);
+            return testController.getOverallResult();
+        }
+        const slots = Object.keys(doc.preset_sidecars);
+        const slot = slots.find((k) => k !== slots[0]
+            && Object.keys(doc.preset_sidecars[k]).length > 0);
+        const want = sidecarRegions(doc, slot);
+        const rows = () => [...document.querySelectorAll(
+            `${PANEL_SELECTOR} .apworld-sidecars-region-row`)];
+        const expander = () => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-expand`);
+
+        selectPlayer(select, slot);
+        // ⛓ the premise for the scroll: on the Regions tab, the LAST region's
+        //   header starts outside the viewport.
+        selectTab(panel, 'regions');
+        // ⛓ the sidecar region drawn LAST on the Regions tab (the tab draws
+        //   `regions[slot]` in its own order, not the sidecars' order).
+        const regionOrder = Object.keys(doc.regions[slot] ?? {});
+        const target = [...want].sort((a, b) => regionOrder.indexOf(a) - regionOrder.indexOf(b))
+            .at(-1);
+        const inView = (name) => {
+            const block = document.querySelector(`${PANEL_SELECTOR} .apworld-region-block`
+                + `[data-region-name="${CSS.escape(name)}"]`);
+            const header = block?.firstElementChild;
+            if (!header || !panel.scrollContainer) return null;
+            const c = panel.scrollContainer.getBoundingClientRect();
+            const h = header.getBoundingClientRect();
+            return h.top >= c.top - 1 && h.bottom <= c.bottom + 1;
+        };
+        /**
+         * ⛔ AND THE PANEL HAS A LAYOUT. A hub behind another panel of its stack
+         * (the row before this one presses the pipeline door) is `hidden`, and a
+         * hidden panel measures every rect at 0..0 — so "is the header in view"
+         * would be answered by a box with no size (memory:
+         * `feedback_hidden_parent_measures_zero_at_mount`). Measured: the first
+         * batch run read `viewport 0..0`.
+         */
+        await testController.pollForCondition(
+            () => (panel.scrollContainer?.clientHeight ?? 0) > 0 && inView(target) !== null,
+            `the Regions tab draws "${target}" in a panel that has a layout`, 8000, 50);
+        {
+            const c = panel.scrollContainer.getBoundingClientRect();
+            const h = document.querySelector(`${PANEL_SELECTOR} .apworld-region-block`
+                + `[data-region-name="${CSS.escape(target)}"]`)?.firstElementChild
+                ?.getBoundingClientRect();
+            testController.log(`viewport ${Math.round(c.top)}..${Math.round(c.bottom)}, `
+                + `"${target}" header ${Math.round(h?.top)}..${Math.round(h?.bottom)}, `
+                + `scrollHeight ${panel.scrollContainer.scrollHeight}`);
+        }
+        testController.reportCondition(
+            `⛓ premise: "${target}"'s header starts OUTSIDE the viewport`, inView(target) === false);
+
+        selectTab(panel, SIDECARS_TAB_ID);
+        await testController.pollForCondition(() => !!expander(), 'the list\'s expander', 8000, 50);
+        testController.assertEqual('⛔ COLLAPSED by default: no region row in the DOM',
+            '0', String(rows().length));
+        testController.assertEqual('…and the expander says so', 'false',
+            String(expander()?.dataset.open));
+
+        expander().click();
+        const drawn = await testController.pollForValue(
+            () => (rows().length > 0 ? rows() : null), 'the expanded list', 8000, 50);
+        testController.assertEqual(`expanded: one row per entry of slot ${slot}, in order`,
+            want.join(','), (drawn ?? []).map((r) => r.dataset.regionName).join(','));
+        for (const row of rows()) {
+            const name = row.dataset.regionName;
+            testController.assertEqual(`"${name}": the row carries the same block, badged by `
+                + 'the document', String(doc.preset_sidecars[slot][name].substrate),
+            String(row.querySelector('.apworld-sidecar-block .apworld-sidecar-badge')
+                ?.textContent));
+        }
+        testController.assertEqual('expanding builds NO JSON', '0', String(
+            document.querySelectorAll(`${PANEL_SELECTOR} .apworld-sidecar-json`).length));
+
+        selectTab(panel, DOCUMENT_TAB_ID);
+        selectTab(panel, SIDECARS_TAB_ID);
+        testController.assertEqual('the list stays expanded across a re-render',
+            String(want.length), String(rows().length));
+
+        const go = document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-region-row`
+            + `[data-region-name="${CSS.escape(target)}"] .apworld-sidecars-go-region`);
+        testController.reportCondition(`"${target}"'s row carries Go to region`, !!go);
+        if (go) go.click();
+        testController.assertEqual('Go to region selects the Regions tab', 'regions',
+            String(panel.activeTab));
+        testController.assertEqual('…with that region selected', target,
+            String(panel._selectedRegion));
+        testController.assertEqual('…on the same slot', slot, String(panel.playerId));
+        testController.reportCondition(`⛓ …and "${target}"'s header is inside the viewport`,
+            inView(target) === true);
+
+        // ⛓ a new document is a new session: the list starts collapsed again.
+        panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, SIDECARS_TAB_ID);
+        await testController.pollForCondition(() => !!expander(), 'the reloaded tab', 8000, 50);
+        testController.assertEqual('a reload resets the list to collapsed', '0',
+            String(rows().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecars-list test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iv) AN OPEN BLOCK SHOWS THE ENTRY THE DOCUMENT HOLDS AFTER AN OP.**
+ * A `replace-region-sidecar` — the op Edit ▸'s save comes back as — applied
+ * through the session's own seam, with a payload that differs by one marker
+ * key and the region's CURRENT rules as the (total) rules map. The assertion
+ * is on the DOCUMENT AFTER the op (trap 1306), never on the op count: the open
+ * block's text must equal the entry `panel.rulesDoc` now holds, carry the
+ * marker, differ from the text before — and one Undo puts the old text back.
+ */
+export async function apworldASidecarBlocksJsonFollowsAnAppliedOp(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        if (!select) {
+            testController.reportCondition('the toolbar carries a player selector', false);
+            return testController.getOverallResult();
+        }
+        const slot = Object.keys(panel.rulesDoc.preset_sidecars)[0];
+        selectPlayer(select, slot);
+        selectTab(panel, 'regions');
+        const region = sidecarRegions(panel.rulesDoc, slot)[0];
+        const toggle = await testController.pollForValue(
+            () => (String(panel.playerId) === slot
+                ? sidecarBlockFor(region)?.querySelector('.apworld-sidecar-toggle') : null),
+            `the "${region}" block's Show JSON toggle`, 8000, 50);
+        if (!toggle) {
+            testController.reportCondition('the block offers Show JSON', false);
+            return testController.getOverallResult();
+        }
+        toggle.click();
+        const textOf = () => sidecarBlockFor(region)?.querySelector('.apworld-sidecar-json')
+            ?.value ?? null;
+        const before = await testController.pollForValue(textOf, 'the opened JSON', 8000, 50);
+        testController.reportCondition('the block\'s JSON is open', before !== null);
+
+        const MARK = 's0_row_iv_marker';
+        const entry = panel.rulesDoc.preset_sidecars[slot][region];
+        const regionDoc = panel.rulesDoc.regions[slot][region];
+        const ruleMap = (list) => Object.fromEntries(
+            (list ?? []).map((e) => [e.name, e.access_rule ?? null]));
+        const res = panel._applyOp({
+            op: 'replace-region-sidecar', region,
+            payload: { ...entry.playable_payload, [MARK]: true },
+            rules: { exits: ruleMap(regionDoc.exits), locations: ruleMap(regionDoc.locations) },
+        });
+        testController.reportCondition('the op was applied', !!res?.ok && !!res?.applied);
+
+        const after = await testController.pollForValue(
+            () => { const t = textOf(); return t !== null && t !== before ? t : null; },
+            'the open block redrew', 8000, 50);
+        const held = panel.rulesDoc.preset_sidecars[slot][region];
+        testController.reportCondition('⛓ the DOCUMENT after the op carries the marker',
+            held?.playable_payload?.[MARK] === true);
+        testController.assertEqual(
+            '⛓⛓ the open block shows the entry the document holds NOW, byte for byte',
+            JSON.stringify(held, null, JSON_BLOCK_INDENT), String(after));
+
+        const undo = document.querySelector(`${PANEL_SELECTOR} .apworld-undo`);
+        testController.reportCondition('the Undo button is there', !!undo);
+        if (undo) undo.click();
+        const restored = await testController.pollForValue(
+            () => { const t = textOf(); return t === before ? t : null; },
+            'one undo put the old JSON back', 8000, 50);
+        testController.reportCondition('one Undo puts the open block back to the old entry',
+            restored === before);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecar-block op test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-sidecar-blocks-follow-the-selected-slot',
+    name: 'APWorld hub: each region\'s sidecar block follows the selected slot and names the document\'s substrate',
+    description: 'PRESET SIDECARS S0 (⚖ Q2 A: one renderer, two hosts). Walks every populated '
+               + 'slot of the four-player fixture through the toolbar selector: one block per '
+               + 'sidecar entry of THAT slot, each under the region block of the same name, its '
+               + 'badge equal to the document\'s own `substrate` for that slot, Edit ▸ once '
+               + 'inside it and nowhere on a region with no sidecar (the H4b count, unmoved), '
+               + 'and no JSON built; then the same badge law on a Seedling document, whose '
+               + 'entries carry no render_hint (the only corpus case where the hint and the '
+               + 'substrate differ). Mutant: a block reading slot "1" reds the bounce slots.',
+    testFunction: apworldSidecarBlocksFollowTheSelectedSlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-sidecar-block-shows-its-entrys-json-read-only',
+    name: 'APWorld hub: opening a sidecar block draws its entry\'s JSON, read-only, beside the region\'s own doors',
+    description: 'PRESET SIDECARS S0. On a bounce slot, the region picked off the document: the '
+               + 'block\'s Show JSON builds exactly one textarea whose text is the WHOLE entry '
+               + 'byte-equal at the widget\'s exported indent, read-only with no Save; the facts '
+               + 'line gives the payload\'s UTF-8 pretty size and every top-level key; Edit ▸ '
+               + 'in it is this region\'s; and its "Regenerate in the pipeline" door is pressed '
+               + 'and answers as the procgen_metadata door.',
+    testFunction: apworldASidecarBlockShowsItsEntrysJsonReadOnly,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-sidecars-list-is-collapsed-and-goes-to-the-region',
+    name: 'APWorld hub: the Sidecars tab\'s region list is collapsed by default and Go to region lands on the region',
+    description: 'PRESET SIDECARS S0 (⚖ user: "expandable, and collapsed by default"). On a '
+               + 'non-first slot through the selector: 0 region rows until expanded, then one '
+               + 'row per entry of that slot in document order with the same block and no JSON; '
+               + 'expanded state survives a tab round-trip and a reload resets it; Go to region '
+               + 'on the LAST row selects the Regions tab and that region, with its header '
+               + 'inside the viewport — after measuring that it started outside it. Mutant: '
+               + 'the list drawn expanded reds the collapsed assertion.',
+    testFunction: apworldSidecarsListIsCollapsedAndGoesToTheRegion,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-sidecar-blocks-json-follows-an-applied-op',
+    name: 'APWorld hub: an open sidecar block shows the entry the document holds after an op, and after its undo',
+    description: 'PRESET SIDECARS S0. A replace-region-sidecar (Edit ▸\'s op) applied through the '
+               + 'session with a one-key marker in the payload and the region\'s own rules as '
+               + 'the total rules map: the open block\'s text must equal the entry the DOCUMENT '
+               + 'holds after the op (trap 1306 — never the op count), and one Undo puts the old '
+               + 'text back. Mutant: JSON captured at expand rather than read at render reds it.',
+    testFunction: apworldASidecarBlocksJsonFollowsAnAppliedOp,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

@@ -651,6 +651,30 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "APWorld coverage I2. The four-player multiworld export's slot 2 is the ALTTP world and carries five mappings while slots 1, 3 and 4 carry none, so the discrimination is a real 0-vs-5. Exists because the vitest module is blind to a wrong slot (I1 \u00a713.5 (C))."
+        },
+        {
+            "id": "apworld-sidecar-blocks-follow-the-selected-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S0, \u2696 Q2 A (one renderer, two hosts). Walks every populated slot of the four-player fixture through the toolbar selector: one block per sidecar entry of THAT slot under the region of the same name, badge = the document's own substrate for that slot (never a literal), Edit \u25b8 once inside the block and nowhere on a region with no sidecar (H4b's count, unmoved), no JSON built; then the same badge law on seedling_atlas, whose entries carry NO render_hint (the only corpus case where hint and substrate can differ). Mutant A (the block reads slot '1') reds the bounce slots."
+        },
+        {
+            "id": "apworld-a-sidecar-block-shows-its-entrys-json-read-only",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S0. On a bounce slot, the region picked off the document: Show JSON builds exactly one textarea, byte-equal to JSON.stringify(entry, null, JSON_BLOCK_INDENT), read-only with no Save (S1 turns saving on in the same widget); the facts line carries the payload's UTF-8 pretty size and every top-level key; Edit \u25b8 is this region's; the Regenerate-in-the-pipeline door is pressed and answers as the procgen_metadata door."
+        },
+        {
+            "id": "apworld-sidecars-list-is-collapsed-and-goes-to-the-region",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S0, \u2696 user 2026-09-10 'expandable, and collapsed by default'. Non-first slot through the selector: 0 region rows collapsed, then one row per entry in document order with the same block and no JSON; survives a tab round-trip, reset by a reload; Go to region on the LAST row lands on Regions with that region selected and its header in the viewport, after measuring it started outside. Mutant B (list drawn expanded) reds it."
+        },
+        {
+            "id": "apworld-a-sidecar-blocks-json-follows-an-applied-op",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S0. A replace-region-sidecar applied through the session (payload + one marker key, the region's own rules as the total map): the open block's text equals the entry the DOCUMENT holds after the op (trap 1306), and one Undo restores the old text. Mutant C (JSON captured at expand) reds it."
         }
     ]
 }
