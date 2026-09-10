@@ -52,7 +52,7 @@ reset the session, so an undo after an Apply still works. It republishes the
 | Tab | What it edits |
 |-----|---------------|
 | **Regions** | regions, exits, locations, access rules — and **Edit ▸**, the door into a region's own room |
-| **Items** | items, classifications, pool counts, starting counts, and the slot's `item_groups` registry (I1) — see below |
+| **Items** | items, classifications, pool counts, starting counts, the slot's `item_groups` registry (I1) and its `progression_mapping` entries (I2) — see below |
 | **Placements** (W3) | `canonical_placements` — which item this world places at which location; the world generator's `--canonical-seed` input, see below |
 | **Meta** | the fields in `rulesDocOps.META_FIELDS`, plus the start region and the victory condition |
 | **Map** | the composite grid, for documents whose sidecars carry grid cells — see below |
@@ -556,6 +556,135 @@ the measurement is trap 1300, from W3's Placements select.
 *"Edited in the Items tab"* pointer **and** its JSON block — W0's rule, and the
 same second-vocabulary situation the Meta scalars and `canonical_placements` are
 in. The whole-block `set-key` is still the everything-fallback.
+
+## The Items tab's Progression section (I2)
+
+⚖ The same ruling as the Groups section above — *"proper editors for
+`item_groups` and `progression_mapping` … These belong in the Items tab."*
+(user, 2026-09-09).
+
+### The law: two kinds, two readers, and the key is NOT generally virtual
+
+`progression_mapping[p]` is `name → mapping`. There are two kinds in the
+committed corpus and **they are consumed by two different parts of the app**:
+
+| kind | shape | who reads it |
+|---|---|---|
+| **progressive** | `{base_item, items: [{name, level, provides?}]}` | the rule engine — `shared/gameLogic/generic/genericLogic.js`, `has` and `count` |
+| **additive** | `{type: 'additive', base_item, items: {itemName: value}}` | the inventory — `stateManager/core/inventoryManager.js` |
+
+**The additive kind's key is a virtual counter.** `_addItemToInventory` skips a
+direct add of the key, and when any component item is added it accumulates
+`mapping.items[component] * count` into `inventory[key]`. The Messenger's
+`Shards` is the corpus's one entry and is not an item of the slot.
+
+**The progressive kind's key is a real item the player receives.**
+`_addItemToInventory` deliberately does *not* skip it. `genericLogic.has(x)`
+finds `x` among some entry's `items[].name`, takes that member's `level`, sums
+`inventory[k]` over **every** entry `k` whose `base_item` equals this one's, and
+answers `total >= level`.
+
+⇒ **"the key is a virtual name that must not collide with a real item" is
+backwards.** Measured over the 212 committed documents: **135 of the 137**
+entries have a key that *is* an item of the same slot, by design. A refusal on
+that collision would refuse 98.5 % of the corpus.
+
+**`base_item` is a POOL LABEL, not an item reference.** `genericLogic` only ever
+compares one entry's `base_item` with another's. Measured: it equals the entry's
+own key in **127** of 137 and is a KEY OF THE SAME SLOT'S MAPPING in all
+**137**, while it names an item in only 135. The ten that differ are ALTTP's
+`Progressive Bow (Alt)` → `Progressive Bow`, which is what the field is for: two
+receivable items pooling into one level count. So the section's base picker
+offers **the slot's mapping names**, and a `base_item` that names no mapping is
+drawn amber rather than silently re-pointed.
+
+**A member name need not be an item either.** 12 members over SMZ3's four
+entries name resolved forms the slot's `items` does not hold — `has` resolves
+them *through* the mapping, so they are names rules ask for rather than items
+anyone receives.
+
+**`provides` is a third, schema-declared member field** (`rules.schema.json`,
+`$defs.progressiveItemLevel`) carried by 13 members, all SMZ3's. Nothing in the
+frontend reads it today. The section draws it read-only and the op carries it
+through, because an editor that writes the whole entry is exactly the thing that
+can drop a field it does not know about.
+
+### The op
+
+`set-progression-mapping {player, name, mapping}` — **one op per entry, carrying
+the whole entry**; an absent `mapping` deletes it. The card is the unit of undo:
+a level typed, a member added or removed, the order changed, the kind switched
+and the base retargeted are each one op, and one Undo puts the whole card back.
+
+Its validation is in two halves with two different laws, because they have two
+different populations:
+
+- **The SHAPE is refused outright, by kind** — a `base_item` string, a non-empty
+  container, `{name, level}` members with integer levels ≥ 1 and no duplicate
+  name, integer additive values, and no `type` other than `'additive'` (the
+  literal the inventory branches on). **0** committed entries fail any of these.
+- **A NAME the slot cannot resolve is DIFFERENCED** — the op previews itself,
+  asks `progressionMappingIssues` about both documents and refuses only what the
+  write would ADD. An absolute refusal would make SMZ3's four entries the four
+  nobody can edit, *including to take the stale member out* — the "silently
+  dropped" outcome one key over (W3, P1).
+
+**A delete is not validated**, for `set-canonical-placement`'s reason plus one of
+its own: removing the head of a pool (ALTTP's `Progressive Bow`, which
+`Progressive Bow (Alt)` names as its base) dangles a *different* entry's base, so
+a differenced refusal would make exactly the entries that pool the ones nobody
+can remove.
+
+The shared predicate `progressionMappingIssues(doc, player)` reports two reasons
+— `unknown item` and `base item is not a mapping in this slot` — and the op's
+refusal, the section's marks and the in-app rows all read it, so a row the
+section marks stale is exactly a name the op will not add.
+
+**Control over the corpus:** 212 documents, 137 entries, each written back
+through the op unchanged — 0 refused, 0 bytes moved, 12 issues reported (all
+SMZ3's `unknown item`), 0 `base item is not a mapping in this slot`.
+
+### The section
+
+One card per mapping, drawn in the document's own key order: the name, a **kind**
+select, a **base** picker over the slot's mapping names, a delete; then one row
+per member — an item picker, the stale mark when there is one, a `level` (or an
+additive `value`) box committing on `change`, the read-only `provides` note, ↑/↓
+for the progressive kind, and a remove. An "add mapping" row takes a name and a
+kind; an "add member" picker sits at the foot of each card.
+
+**Reordering swaps array positions and leaves each level with its own number.**
+The runtime resolves a member by name and reads that member's own `level`, so
+the array's order is presentation — renumbering on a move would silently change
+what the rules resolve.
+
+**A kind switch converts and says what it cannot carry.** An additive member is
+`name: number` and holds nothing else, so a progressive → additive switch that
+would drop `provides` asks first rather than losing it.
+
+The item pickers fill on `focus`/`mousedown` — I1's measurement one key over —
+and omit names the entry already holds. That omission is a **courtesy**; the op
+is the guard (trap 1305: a disabled control and the op's refusal are two guards
+reading one predicate, and a row that drives only the control is green with the
+guard deleted).
+
+Measured through the product's own controls:
+
+| document | what the section draws |
+|---|---|
+| `alttp` | 5 cards, `Progressive Bow (Alt)` pooling into `Progressive Bow`; one level edit = 1 op and one Undo restores the whole entry; a member picker 1 option closed → 160 open (163 items − 4 held + placeholder); Items-tab paint 212 ms |
+| `messenger` | 1 card, kind `additive`, six `value` inputs (1/10/50/100/300/500); a value edit keeps `type: 'additive'` |
+| `smz3` | 5 cards, 12 members marked `unknown item`, all 13 `provides` shown; removing one stale row takes the section's issue count 12 → 11 and Undo restores it |
+| `procgen_maze/AP_1` | 0 cards and the empty hint; adding through the box + button creates the slot's first mapping in either kind |
+| `multiworld` (4 slots) | slot 1 → 0 mappings, slot 2 → 5, slot 3 → 0, through the real toolbar selector |
+
+### The Document row
+
+`progression_mapping` is now `KEYS_OWNED_BY_TAB.items`, so its Document row shows
+the *"Edited in the Items tab"* pointer **and** its JSON block — W0's rule. The
+whole-block `set-key` is still the everything-fallback and is **not** vetoed
+against the progression predicate: like the Raw JSON tab (P1's open question 1),
+that is the deliberate everything-fallback, and the same reading covers both.
 
 ## The Placements tab (W3)
 
