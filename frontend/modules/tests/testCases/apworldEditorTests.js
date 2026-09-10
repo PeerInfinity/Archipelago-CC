@@ -179,6 +179,19 @@ const ATLAS_MAZE_PRESET_PATH = './presets/seedling_atlas_maze/AP_1/AP_1_rules.js
  */
 const PLACEMENTS_PRESET_PATH = './presets/procgen_topdown/AP_1/AP_1_rules.json';
 
+/**
+ * ⛓⛓ **I1 — THE GROUPS ROWS' REAL-REGISTRY DOCUMENT.** Measured over the
+ * committed corpus: all 212 documents carry `item_groups` and all 224 slots hold
+ * a LIST of names. This one holds **23** names over **163** items — and it is
+ * also in the corpus's common divergent state, with `Event` on seven items and
+ * in neither the registry nor anything derived from it (155 of the 224 slots
+ * carry at least one such unlisted group). `procgen_maze/AP_1` (`PRESET_PATH`)
+ * is the other end of the range, with one name over two items, which is what a
+ * procgen document looks like.
+ */
+const ITEM_GROUPS_PRESET_PATH =
+    './presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+
 const SCHEMA_PATH = './schema/rules.schema.json';
 
 /**
@@ -4739,6 +4752,401 @@ registerTest({
                + '`--canonical-seed` cannot place an item the world does not hold, so the '
                + 'numerator was promising a placement no generation can make.',
     testFunction: apworldAStalePlacementIsNotCountedAsPlaced,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * THE ITEMS TAB'S GROUPS SECTION — `item_groups` (I1)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ The panel's own selectors for the section, spelled once. */
+const GROUP_ROW = (name) => `${PANEL_SELECTOR} .apworld-item-group-row[data-group="${
+        CSS.escape(name)}"]`;
+
+/** ⛓ The registry as the DOCUMENT holds it — the expectation is read off the
+ *  record, never typed (a count in a test is an allowlist key). */
+const registryOf = (panel) => (panel.rulesDoc?.item_groups?.[panel.playerId] ?? []).slice();
+
+/** ⛓ Which items carry a group, derived from the panel's own document, so a row
+ *  cannot pass by naming an item the preset stopped having. */
+const carriersOf = (panel, group) => Object.entries(panel.rulesDoc?.items?.[panel.playerId] ?? {})
+    .filter(([, item]) => (item?.groups ?? []).includes(group)).map(([name]) => name);
+
+/**
+ * ⛓⛓⛓ **ADDING A GROUP REACHES THE REGISTRY, THE SECTION AND EVERY ITEM'S
+ * PICKER — AND ONE UNDO TAKES IT BACK** (I1, task 5 (a)).
+  *
+ * ⛔ Driven through the section's own text box and button, never `_applyOp`: the
+ * claim is that the control is wired, and a row that called the method would
+ * pass over a button wired to nothing.
+  *
+ * ⛓ On `procgen_maze/AP_1`, whose registry holds ONE name — the shape a procgen
+ * document is in, and the one the ⚖ ruling is about ("no procgen worlds
+ * currently use them").
+ */
+export async function apworldItemGroupAddReachesTheRegistryAndEveryPicker(testController) {
+    const NEW_GROUP = 'Trinkets';
+    try {
+        const panel = await openHub(testController, PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        const before = registryOf(panel);
+        testController.reportCondition('the slot carries a registry the section can draw',
+            Array.isArray(before));
+        testController.assertEqual('one section row per registry name, before',
+            String(before.length),
+            String(document.querySelectorAll(
+                `${PANEL_SELECTOR} .apworld-item-group-row[data-listed="true"]`).length));
+        testController.reportCondition('…and the name we are about to add is not one of them',
+            !before.includes(NEW_GROUP));
+
+        const opsBefore = panel.session.ops().length;
+        const box = document.querySelector(`${PANEL_SELECTOR} .apworld-item-group-new`);
+        box.value = NEW_GROUP;
+        document.querySelector(`${PANEL_SELECTOR} .apworld-item-groups-add-button`).click();
+
+        testController.reportCondition('the name is in the document\'s registry',
+            registryOf(panel).includes(NEW_GROUP));
+        testController.assertEqual('as exactly ONE op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        // ⛓ Every post-gesture lookup RE-QUERIES: the tab re-rendered.
+        const row = document.querySelector(GROUP_ROW(NEW_GROUP));
+        testController.reportCondition('the section draws a row for it', !!row);
+        testController.assertEqual('…saying nothing carries it yet', '0', row?.dataset.carriers ?? '?');
+        testController.reportCondition('…and its delete button is ENABLED, because nothing does',
+            row?.querySelector('.apworld-item-group-delete')?.disabled === false);
+
+        // ⛓⛓ And it reaches the ITEMS: every picker offers it, which is the half
+        //    that says the registry is the vocabulary the item rows draw from.
+        const pickers = [...document.querySelectorAll(
+            `${PANEL_SELECTOR} .apworld-item-group-picker`)];
+        for (const p of pickers) p.dispatchEvent(new Event('focus'));
+        const offering = pickers.filter((p) => [...p.options].some((o) => o.value === NEW_GROUP));
+        testController.assertEqual('every item\'s picker offers the new group',
+            `${pickers.length}|${pickers.length}`, `${pickers.length}|${offering.length}`);
+        testController.reportCondition('…and there is at least one item to offer it to',
+            pickers.length > 0);
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
+        testController.assertEqual('one undo restores the registry',
+            JSON.stringify(before), JSON.stringify(registryOf(panel)));
+        testController.assertEqual('…and the op count', String(opsBefore),
+            String(panel.session.ops().length));
+        testController.reportCondition('…and the section row is gone with it',
+            !document.querySelector(GROUP_ROW(NEW_GROUP)));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('item-group add test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **⚖ REFUSE — DELETING A GROUP AN ITEM STILL CARRIES IS DECLINED, BY
+ * NAME** (I1, task 5 (b)). ⚖ user, 2026-09-09: *"Let's go with refuse."*
+  *
+ * ⛓ BOTH halves, because the button and the op are not the same guard: the
+ * button is DISABLED with the reason in its `title` (a courtesy), and the OP
+ * refuses (the guard — it has to hold for the Document tab's whole-block
+ * `set-key`, which never draws a button). A row that only read the button would
+ * stay green with the op's refusal deleted.
+ */
+export async function apworldItemGroupDeleteIsRefusedWhileAnItemCarriesIt(testController) {
+    try {
+        const panel = await openHub(testController, PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        const carried = registryOf(panel).find((g) => carriersOf(panel, g).length > 0);
+        testController.reportCondition('this document has a group some item carries', !!carried);
+        if (!carried) return testController.getOverallResult();
+        const carriers = carriersOf(panel, carried);
+
+        const row = document.querySelector(GROUP_ROW(carried));
+        testController.assertEqual('the section counts the carriers off the document',
+            String(carriers.length), row?.dataset.carriers ?? '?');
+        const del = row.querySelector('.apworld-item-group-delete');
+        testController.reportCondition('the delete button is DISABLED while they carry it',
+            del?.disabled === true);
+        testController.reportCondition('…and its title names an item that does',
+            (del?.title ?? '').includes(carriers[0]));
+
+        // ⛓⛓ THE GUARD ITSELF, past the button: the op is asked directly, which is
+        //    the path the Document tab's whole-block editor is on.
+        const opsBefore = panel.session.ops().length;
+        const refusal = panel.session.apply({
+            op: 'delete-item-group', name: carried, player: panel.playerId,
+        });
+        testController.reportCondition('the OP refuses it, not just the button', refusal.ok === false);
+        testController.reportCondition('…and the refusal NAMES an item that carries it',
+            (refusal.description ?? '').includes(carriers[0]));
+        testController.assertEqual('…and nothing was recorded',
+            String(opsBefore), String(panel.session.ops().length));
+        testController.reportCondition('…and the group is still in the registry',
+            registryOf(panel).includes(carried));
+
+        // ⛓ The other direction, so "refuses" is a discrimination rather than a
+        //   guard that declines everything: a group nothing carries DELETES.
+        const box = document.querySelector(`${PANEL_SELECTOR} .apworld-item-group-new`);
+        box.value = 'Unused Group';
+        document.querySelector(`${PANEL_SELECTOR} .apworld-item-groups-add-button`).click();
+        const freshRow = document.querySelector(GROUP_ROW('Unused Group'));
+        freshRow?.querySelector('.apworld-item-group-delete').click();
+        testController.reportCondition('a group nothing carries deletes through the same button',
+            !registryOf(panel).includes('Unused Group'));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('item-group delete test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **A RENAME CARRIES THE ITEMS' MEMBERSHIP, AND ONE UNDO RESTORES BOTH
+ * SITES** (I1, task 5 (c)) — which is the whole reason it is one op rather than
+ * two.
+  *
+ * ⛓ On `alttp`, whose registry is a REAL one (23 names over 163 items), so the
+ * membership half is a claim about a group with many carriers rather than one.
+ */
+export async function apworldItemGroupRenameCarriesTheItemsMembership(testController) {
+    try {
+        const panel = await openHub(testController, ITEM_GROUPS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        const before = registryOf(panel);
+        const target = before.find((g) => carriersOf(panel, g).length > 1);
+        testController.reportCondition('a group with more than one carrier to rename', !!target);
+        if (!target) return testController.getOverallResult();
+        const carriers = carriersOf(panel, target);
+        const RENAMED = `${target} Renamed`;
+        const opsBefore = panel.session.ops().length;
+
+        // ⛓ Through the row's OWN input, committed on `change` — the Meta tab's
+        //   rule, and the reason a rename is one op rather than one per keystroke.
+        const input = document.querySelector(`${GROUP_ROW(target)} .apworld-item-group-name`);
+        input.value = RENAMED;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+
+        testController.assertEqual('the registry entry moved IN PLACE',
+            JSON.stringify(before.map((g) => (g === target ? RENAMED : g))),
+            JSON.stringify(registryOf(panel)));
+        testController.assertEqual('every carrier\'s membership followed',
+            `${carriers.length}|${JSON.stringify(carriers)}`,
+            `${carriersOf(panel, RENAMED).length}|${JSON.stringify(carriersOf(panel, RENAMED))}`);
+        testController.assertEqual('…and nothing still carries the old name', '0',
+            String(carriersOf(panel, target).length));
+        testController.assertEqual('as exactly ONE op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        testController.reportCondition('the section row is drawn under the new name',
+            !!document.querySelector(GROUP_ROW(RENAMED)));
+        testController.reportCondition('…and so is a chip on an item that carries it',
+            !!document.querySelector(`${PANEL_SELECTOR} .apworld-item-groups-cell[data-item="${
+                CSS.escape(carriers[0])}"] .apworld-item-group-chip[data-group="${CSS.escape(RENAMED)}"]`));
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
+        testController.assertEqual('ONE undo restores the registry',
+            JSON.stringify(before), JSON.stringify(registryOf(panel)));
+        testController.assertEqual('…and the items\' membership with it',
+            JSON.stringify(carriers), JSON.stringify(carriersOf(panel, target)));
+        testController.assertEqual('…in one step', String(opsBefore),
+            String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('item-group rename test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **A GROUP THE ITEMS CARRY THAT THE REGISTRY DOES NOT LIST IS SHOWN,
+ * NEVER SILENTLY ADDED** (I1, task 5 (d)).
+  *
+ * ⛓ On `alttp`, which is in that state as committed: 23 names in the registry,
+ * `Event` on seven items and in neither. Measured over the corpus, 155 of the
+ * 224 slots carry at least one unlisted group — so this is the common case, not
+ * an edge one, and the document is a committed preset rather than a fixture.
+ */
+export async function apworldAnUnlistedItemGroupIsShownAndCanBeListed(testController) {
+    try {
+        const panel = await openHub(testController, ITEM_GROUPS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        const listed = registryOf(panel);
+        const onItems = new Set();
+        for (const item of Object.values(panel.rulesDoc.items[panel.playerId])) {
+            for (const g of (item?.groups ?? [])) onItems.add(g);
+        }
+        const unlisted = [...onItems].filter((g) => !listed.includes(g));
+        testController.reportCondition('this committed document carries an unlisted group',
+            unlisted.length > 0);
+        if (!unlisted.length) return testController.getOverallResult();
+
+        const rows = [...document.querySelectorAll(
+            `${PANEL_SELECTOR} .apworld-item-group-row[data-listed="false"]`)];
+        testController.assertEqual('the section draws one greyed row per unlisted group',
+            JSON.stringify(unlisted.slice().sort()),
+            JSON.stringify(rows.map((r) => r.dataset.group).sort()));
+        const name = unlisted[0];
+        const row = document.querySelector(GROUP_ROW(name));
+        testController.assertEqual('…counting the items that carry it',
+            String(carriersOf(panel, name).length), row?.dataset.carriers ?? '?');
+        testController.reportCondition('…and the chip on such an item is marked unlisted',
+            document.querySelector(`${PANEL_SELECTOR} .apworld-item-group-chip[data-group="${
+                CSS.escape(name)}"]`)?.dataset.listed === 'false');
+        testController.reportCondition('the registry did NOT quietly grow to include it',
+            !registryOf(panel).includes(name));
+
+        const opsBefore = panel.session.ops().length;
+        const itemsBefore = JSON.stringify(panel.rulesDoc.items[panel.playerId]);
+        row.querySelector('.apworld-item-group-list').click();
+
+        testController.reportCondition('"Add to registry" lists it', registryOf(panel).includes(name));
+        testController.assertEqual('as exactly ONE op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        testController.assertEqual('…and the ITEMS are byte-identical — it was already on them',
+            itemsBefore, JSON.stringify(panel.rulesDoc.items[panel.playerId]));
+        testController.reportCondition('…and its row is now a registry row',
+            document.querySelector(GROUP_ROW(name))?.dataset.listed === 'true');
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('unlisted-group test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **THE SECTION READS THE SELECTED SLOT** (I1, task 5's mutant (C)).
+  *
+ * ⛔ On the four-player fixture, whose four slots all name the SAME group
+ * (`Everything`) but carry it on different numbers of items — 2 on slot 1, 6 on
+ * slot 3, measured off the document here rather than typed. So a section that
+ * read slot `'1'` would draw a row with the right NAME and the wrong count, and
+ * only a count read off the selected slot can tell the two apart.
+  *
+ * ⛓ The slot is chosen through the REAL toolbar control (H4a's rule), never by
+ * assigning `panel.playerId`.
+ */
+export async function apworldItemGroupsFollowTheSelectedSlot(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        testController.reportCondition('the fixture offers a player selector', !!select);
+        if (!select) return testController.getOverallResult();
+
+        const readSection = () => {
+            selectTab(panel, 'items');
+            const rows = [...document.querySelectorAll(`${PANEL_SELECTOR} .apworld-item-group-row`)];
+            return {
+                slot: panel.playerId,
+                drawn: rows.map((r) => `${r.dataset.group}:${r.dataset.carriers}`),
+                expected: registryOf(panel).map((g) => `${g}:${carriersOf(panel, g).length}`),
+                cells: document.querySelectorAll(`${PANEL_SELECTOR} .apworld-item-groups-cell`).length,
+                items: Object.keys(panel.rulesDoc.items[panel.playerId]).length,
+            };
+        };
+
+        selectPlayer(select, 1);
+        const one = readSection();
+        testController.assertEqual('slot 1: the section draws slot 1\'s registry and counts',
+            JSON.stringify(one.expected), JSON.stringify(one.drawn));
+        testController.assertEqual('…and one groups cell per item of slot 1',
+            String(one.items), String(one.cells));
+
+        selectPlayer(select, 3);
+        const three = readSection();
+        testController.assertEqual('slot 3: the section draws slot 3\'s registry and counts',
+            JSON.stringify(three.expected), JSON.stringify(three.drawn));
+        testController.assertEqual('…and one groups cell per item of slot 3',
+            String(three.items), String(three.cells));
+
+        // ⛓ The discrimination is REAL on this document — if the two slots agreed,
+        //   this row could not tell "the selected slot" from "the first one".
+        testController.reportCondition('the two slots really differ, so the row can discriminate',
+            JSON.stringify(one.drawn) !== JSON.stringify(three.drawn) && one.cells !== three.cells);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('item-groups slot test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-item-group-add-reaches-the-registry-and-every-picker',
+    name: 'APWorld hub: adding an item group reaches the registry, the section and every item\'s picker',
+    description: 'On procgen_maze/AP_1 — a procgen document, whose registry holds one name — '
+                          + 'types into the Groups section\'s own box and presses its own button: the name '
+                          + 'lands in `item_groups[slot]` as ONE op, the section draws a row for it saying '
+                          + 'nothing carries it yet with its delete button ENABLED, and every item row\'s '
+                          + 'picker offers it once opened (the option list is lazy). One undo takes the '
+                          + 'registry, the op count and the row back. Every expectation is read off the '
+                          + 'document.',
+    testFunction: apworldItemGroupAddReachesTheRegistryAndEveryPicker,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-item-group-delete-is-refused-while-an-item-carries-it',
+    name: 'APWorld hub: deleting an item group an item still carries is refused, naming the item',
+    description: '⚖ user 2026-09-09: "Let\'s go with refuse." Drives both guards, because they '
+                          + 'are not the same one: the section\'s delete button is DISABLED with the '
+                          + 'carriers named in its title (a courtesy), and the OP itself refuses when asked '
+                          + 'past the button — which is the path the Document tab\'s whole-block Save JSON '
+                          + 'is on. Asserts the refusal names a carrier, records no op and leaves the '
+                          + 'registry intact, and that a group NOTHING carries still deletes through the '
+                          + 'same button, so this is a discrimination rather than a guard that declines '
+                          + 'everything. Mutant: dropping the op\'s refusal reds this row.',
+    testFunction: apworldItemGroupDeleteIsRefusedWhileAnItemCarriesIt,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-item-group-rename-carries-the-items-membership',
+    name: 'APWorld hub: renaming an item group carries every item\'s membership, and one undo restores both',
+    description: 'On alttp, whose registry is a real one over 163 items: renames a group through '
+                          + 'the section row\'s own input (committed on `change`, the Meta tab\'s rule). The '
+                          + 'registry entry moves IN PLACE, every carrier\'s `groups` follows, nothing still '
+                          + 'carries the old name, the chip on an item is redrawn — and it is ONE op, so one '
+                          + 'undo restores the registry AND the membership in one step. Mutant: a rename '
+                          + 'that forgets the items reds the membership conditions.',
+    testFunction: apworldItemGroupRenameCarriesTheItemsMembership,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-an-unlisted-item-group-is-shown-and-can-be-listed',
+    name: 'APWorld hub: a group the items carry that the registry does not list is shown, not silently added',
+    description: 'alttp is in that state as committed — `Event` is on seven items and in neither '
+                          + 'the registry nor anything derived from it — and 155 of the 224 committed slots '
+                          + 'carry at least one such group, so this is the common divergence rather than an '
+                          + 'edge case. Asserts the section draws one greyed row per unlisted group with the '
+                          + 'carrier count, that the chip on such an item is marked, that the registry did '
+                          + 'NOT quietly grow, and that "Add to registry" lists it as ONE op while leaving '
+                          + 'the items byte-identical.',
+    testFunction: apworldAnUnlistedItemGroupIsShownAndCanBeListed,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-item-groups-follow-the-selected-slot',
+    name: 'APWorld hub: the Groups section reads the selected slot, not the first one',
+    description: 'On the four-player multiworld fixture, whose four slots all name the SAME group '
+                          + 'but carry it on different numbers of items: asserts the section\'s rows and '
+                          + 'their carrier counts match the SELECTED slot\'s document, in both directions '
+                          + 'through the real toolbar selector, that there is one groups cell per item of '
+                          + 'that slot, and that the two slots really differ — without which the row could '
+                          + 'not tell "the selected slot" from "the first one". Mutant: reading slot \'1\' '
+                          + 'reds this row.',
+    testFunction: apworldItemGroupsFollowTheSelectedSlot,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

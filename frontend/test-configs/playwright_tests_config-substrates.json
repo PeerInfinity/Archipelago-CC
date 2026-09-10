@@ -579,6 +579,36 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "APWorld coverage P1, closing W3's \u2696 OPEN 3. The same document twice \u2014 as committed, then with one entry's item renamed out of the world \u2014 so the numerator is scored against itself rather than against a typed number. W3 counted such an entry as placed; --canonical-seed cannot place an item the world does not hold."
+        },
+        {
+            "id": "apworld-item-group-add-reaches-the-registry-and-every-picker",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I1. On procgen_maze/AP_1, whose registry holds one name. Types into the Groups section's own box and presses its own button: the name lands in item_groups[slot] as ONE op, the section draws a row saying nothing carries it with its delete ENABLED, and every item's picker offers it once opened. One undo takes all three back."
+        },
+        {
+            "id": "apworld-item-group-delete-is-refused-while-an-item-carries-it",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I1, the \u2696 user ruling of 2026-09-09 (\"Let's go with refuse\"). Drives BOTH guards, which are not the same one: the section's delete button is disabled with the carriers in its title, and the OP refuses when asked past the button \u2014 the path the Document tab's whole-block Save JSON is on. A group nothing carries still deletes, so this is a discrimination."
+        },
+        {
+            "id": "apworld-item-group-rename-carries-the-items-membership",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I1. On alttp's real 23-name registry over 163 items: a rename through the row's own input moves the registry entry in place AND every carrier's groups field, as ONE op \u2014 so one undo restores both sites in one step."
+        },
+        {
+            "id": "apworld-an-unlisted-item-group-is-shown-and-can-be-listed",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I1. alttp is in the corpus's common divergent state as committed (Event on seven items, in no registry); 155 of the 224 committed slots carry at least one unlisted group. The section shows them greyed with their carrier count and never adds them silently; \"Add to registry\" lists one as ONE op and leaves the items byte-identical."
+        },
+        {
+            "id": "apworld-item-groups-follow-the-selected-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I1. The four-player multiworld fixture names the SAME group in all four slots but carries it on different numbers of items, so only a count read off the selected slot can tell them apart. Driven through the real toolbar selector in both directions, and asserts the two slots really differ."
         }
     ]
 }
