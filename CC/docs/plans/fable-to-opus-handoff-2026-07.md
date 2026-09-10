@@ -13488,6 +13488,13 @@ Raw JSON tab and `canonical_placements`: the key's own per-entry op is vetoed, o
 tab shows and removes) and there is NO rename op for a mapping. The `preset_sidecars` planning session launches after
 E1 closes.
 
+**E1 LAUNCHED 2026-09-10** as `apworld-coverage-E1` (Opus; kickoff `NewDocs/plans/apworld-coverage-E1-prompt.md`): the
+`Array.isArray` guard at `genericLogic.js:81/:152` (+ the census), a new `genericLogic.test.js`, the messenger
+spoiler test before/after, the additive row's thrown sweep 4,614 → 0, one mutant. `genericLogic.js` IS in the shared
+submodule ⇒ submodule pushed first, the outer push incl. the gitlink is ONE ask-first unit — E1 STOPS at "READY TO
+PUSH". Baseline 443/13448 at `eb10ad6c13`. Reports come to `next-priorities-planning-4`; the planner pushes nothing
+while E1 runs.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
