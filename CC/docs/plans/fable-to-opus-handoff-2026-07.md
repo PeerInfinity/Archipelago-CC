@@ -13694,6 +13694,8 @@ to bind for TA — a third binding, not a copy; the same shape fits jta/omsi/run
 D, T). ⚖ NEW for the user: the declaration's shape; re-roll/substrate-change in a filled document; whether a move may
 turn a link into a teleporter as the pipeline does; the arc order.
 
+**(user, 2026-09-10): "For the questions, can you describe the options in more detail?"** — described in the tab and recorded in plan §5c.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
