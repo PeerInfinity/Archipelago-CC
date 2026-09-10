@@ -107,6 +107,7 @@ export const RULES_OP_KINDS = Object.freeze([
     'set-completion-condition',
     'set-rule-tree',
     'replace-region-sidecar',
+    'set-region-sidecar',
     'set-key',
     'replace-document',
     'clear',
@@ -352,6 +353,7 @@ function dispatchRulesDocOp(doc, op) {
         case 'set-completion-condition': return opSetCompletionCondition(doc, op);
         case 'set-rule-tree': return opSetRuleTree(doc, op);
         case 'replace-region-sidecar': return opReplaceRegionSidecar(doc, op);
+        case 'set-region-sidecar': return opSetRegionSidecar(doc, op);
         case 'set-key': return opSetKey(doc, op);
         case 'replace-document': return opReplaceDocument(doc, op);
         case 'clear': return opClear(doc, op);
@@ -1798,6 +1800,99 @@ function opReplaceRegionSidecar(doc, op) {
 
 /** ⛓ A `{name: rule}` map — an object, and never an array. */
 const isNameMap = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+
+/**
+ * ⛓ What a raw sidecar save leaves exactly as it was — the clause
+ * `set-region-sidecar`'s description ends with, EXPORTED so the panel's rows
+ * assert the sentence the op wrote rather than a copy of it typed there.
+ */
+export const SIDECAR_NOT_REDERIVED =
+    'access rules, location names and derived payload fields NOT re-derived';
+
+/**
+ * ⛓⛓⛓ **THE RAW ENTRY SAVE** (PRESET SIDECARS slice S1). `{region, entry}` —
+ * replace `preset_sidecars[p][region]` with `entry`, the WHOLE entry (⚖ user,
+ * 2026-09-10, Q3 A: `substrate`, `render_hint`, `grid_cell`, `biome`, …, and
+ * `playable_payload`), and touch NOTHING else: not the region's access rules,
+ * not its locations, not `regions[p]`, not another slot's sidecars.
+ *
+ * ── ⛓⛓ WHY IT RE-DERIVES NOTHING ────────────────────────────────────
+ *
+ * ⚖ Q1 C: a raw save writes the entry alone; re-deriving rules from a payload
+ * is a SEPARATE button (the S2 rung). Re-derivation exists only where a
+ * substrate declares a `regionRoundTrip`, and there it is the baseline
+ * machinery `replace-region-sidecar` rides on, which moves only the rules it
+ * proved it authored. A raw save that silently ran it would move rules the
+ * reader never touched, and for five of the seven substrates there is nothing
+ * to run. So the op says what it did NOT do — the description ends with
+ * `SIDECAR_NOT_REDERIVED` — and the region's `Edit ▸` is re-asked against the
+ * new payload (the panel's verdict cache is keyed on the record, so any
+ * applied op invalidates it). A hand-edited payload the substrate's serializer
+ * no longer reproduces is then REFUSED by that door's baseline check, which is
+ * the honest outcome: the door would otherwise rewrite the region behind you.
+ *
+ * ── ⛔ IT REPLACES AN ENTRY; IT NEVER CREATES ONE ─────────────────────
+ *
+ * A region with no sidecar entry has no ROOM, and this op keeps it roomless:
+ * refused by name, listing the slot's entries. A room needs a substrate that
+ * generated it, and minting a bare `{substrate}` for a classic AP region would
+ * hand the play-time host a region it has no payload for. Whether a CREATE op
+ * is wanted at all is a ⚖ for the replan (plan §12).
+ *
+ * ── ⛓ WHAT IS REFUSED, AND WHAT IS DELIBERATELY NOT ───────────────────
+ *
+ * Refused by name: no region name; no entry for that region in this slot; an
+ * `entry` that is not an object; a missing or non-string `substrate` (the
+ * schema's own `required` — the host loads the room BY it); a
+ * `playable_payload` that is present and not an object. ⛔ The payload's INSIDE
+ * is not read: it is OPAQUE to `rules.schema.json` and belongs to the
+ * substrate, and ⚖ Q2 (round two) makes a breaking edit the reader's to repair
+ * — naming what no longer fits is a validity REPORT's job (the V0 rung), not a
+ * refusal here. The panel additionally runs the whole-document schema veto on
+ * the op before it reaches the session (`_schemaErrorsAddedBy`), exactly as
+ * the Document tab's whole-slot Save does, so `grid_cell`'s `{gx, gy}` and the
+ * rest of the entry's declared shape are vetted there, by path.
+ *
+ * ⛓ THE ENTRY IS COPIED AT THE DOOR — `applyRulesDocOp`'s `carried()` clones
+ * the whole op before dispatch, so a JSON widget that keeps mutating the object
+ * it parsed cannot write THROUGH the record (`set-rule-tree`'s defect).
+ */
+function opSetRegionSidecar(doc, op) {
+    const p = playerOf(op);
+    const name = op.region;
+    if (typeof name !== 'string' || !name.trim()) {
+        return refuse('apworld: set-region-sidecar needs a region NAME, got '
+            + `${JSON.stringify(op.region)}.`);
+    }
+    const slotSidecars = doc?.preset_sidecars?.[p];
+    const current = slotSidecars?.[name];
+    if (!current || typeof current !== 'object' || Array.isArray(current)) {
+        return refuse(`apworld: player ${p} has no sidecar entry for region "${name}". `
+            + '⛔ set-region-sidecar REPLACES an entry and never CREATES one — a region with '
+            + 'no room stays roomless, because a room needs the substrate that generated it. '
+            + `This slot's sidecars are [${Object.keys(slotSidecars ?? {}).join(', ') || 'none'}].`);
+    }
+    const entry = op.entry;
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) {
+        return refuse(`apworld: a sidecar entry is an object ({substrate, playable_payload, …}), `
+            + `got ${entry === undefined ? 'nothing' : describeValue(entry)}.`);
+    }
+    if (typeof entry.substrate !== 'string') {
+        return refuse('apworld: a sidecar entry needs `substrate` as a string — the schema\'s '
+            + 'own `required`, and the id the play-time host loads the room with — got '
+            + `${entry.substrate === undefined ? 'none' : describeValue(entry.substrate)}.`);
+    }
+    const hasPayload = Object.prototype.hasOwnProperty.call(entry, 'playable_payload');
+    const payload = entry.playable_payload;
+    if (hasPayload && (!payload || typeof payload !== 'object' || Array.isArray(payload))) {
+        return refuse('apworld: `playable_payload` is the substrate\'s own serialized world, an '
+            + `object — got ${describeValue(payload)}.`);
+    }
+    const n = hasPayload ? Object.keys(payload).length : 0;
+    return ok(setPath(doc, ['preset_sidecars', p, name], entry),
+        `region ${name}: sidecar entry replaced (${hasPayload
+            ? `${n} payload key${n === 1 ? '' : 's'}` : 'no payload'}) — ${SIDECAR_NOT_REDERIVED}`);
+}
 
 /* ── the whole document ───────────────────────────────────────────────── */
 

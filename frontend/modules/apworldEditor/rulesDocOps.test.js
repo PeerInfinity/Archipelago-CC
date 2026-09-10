@@ -22,7 +22,8 @@ import { validateRules } from './rulesUtils.js';
 import {
     ADDITIVE_TYPE, EXIT_FIELDS, ITEM_FIELDS, ITEM_GROUPS_KEY, META_FIELDS,
     PLACEMENT_ISSUE_REASONS, PROGRESSION_ISSUE_REASONS, PROGRESSION_KINDS,
-    PROGRESSION_MAPPING_KEY, REFUSAL_NAME_LIMIT, RULES_OP_KINDS, SET_KEY_SCOPES, applyRulesDocOp,
+    PROGRESSION_MAPPING_KEY, REFUSAL_NAME_LIMIT, RULES_OP_KINDS, SET_KEY_SCOPES,
+    SIDECAR_NOT_REDERIVED, applyRulesDocOp,
     canonicalPlacementIssues, canonicalPlacementIssuesByPlayer, deleteItemOps, deleteRegionOps,
     describePlacementIssue, describeProgressionIssue, exitsPointingAt, itemGroupRegistry,
     itemsCarryingGroup, locationsOfPlayer, nextName, progressionKindOf, progressionMappingIssues,
@@ -140,6 +141,10 @@ describe('the contract shape', () => {
             'replace-region-sidecar': {
                 op: 'replace-region-sidecar', region: 'Hall',
                 payload: { width: 4, height: 4, tiles: 'bbbb' }, rules: hallRules(doc),
+            },
+            'set-region-sidecar': {
+                op: 'set-region-sidecar', region: 'Hall',
+                entry: { substrate: 'maze', playable_payload: { width: 4, height: 4, tiles: 'bbbb' } },
             },
             'set-canonical-placement': {
                 op: 'set-canonical-placement', location: 'Vault Chest', item: 'Key',
@@ -960,6 +965,145 @@ describe('replace-region-sidecar — the room editor\'s one op back (H4b)', () =
         expect(res.doc.preset_sidecars[P].Hall.playable_payload.tiles).toBe('aaa');
         expect(res.doc.regions[P].Hall.locations[0].access_rule)
             .toEqual(doc.regions[P].Hall.locations[0].access_rule);
+    });
+});
+
+describe('set-region-sidecar — the raw entry save (PRESET SIDECARS S1)', () => {
+    /**
+     * ⛓ An entry that differs from the fixture's `Hall` in EVERY field it has,
+     * DROPS one (`render_hint`) and ADDS one (`biome`), so "the whole entry was
+     * written" and "the payload alone was written" / "the entry was merged" are
+     * different documents.
+     */
+    const edited = () => ({
+        substrate: 'text_adventure',
+        grid_cell: { gx: 3, gy: 1 },
+        biome: { id: 'cave' },
+        playable_payload: { width: 5, height: 2, tiles: 'ccccc', exits: [{ side: 'N' }] },
+    });
+
+    /** ⛓ The document the op must produce — built by hand, and the WHOLE of it is compared. */
+    const expectedAfter = (doc, slot, region, entry) => {
+        const want = JSON.parse(bytes(doc));
+        want.preset_sidecars[slot][region] = JSON.parse(JSON.stringify(entry));
+        return bytes(want);
+    };
+
+    it('⛓⛓ writes EXACTLY the entry — the whole document AFTER, byte for byte (trap 1306)', () => {
+        const doc = fixture();
+        const regionBefore = bytes(doc.regions[P].Hall);
+        const res = applied(doc, { op: 'set-region-sidecar', region: 'Hall', entry: edited() });
+        expect(bytes(res.doc), 'the op wrote something other than the entry, or not all of it')
+            .toBe(expectedAfter(doc, P, 'Hall', edited()));
+        // ⛓ said separately because it is the ⚖: the region's rules are not touched.
+        expect(bytes(res.doc.regions[P].Hall), 'the raw save moved the region').toBe(regionBefore);
+        expect(res.doc.preset_sidecars[P].Hall.render_hint, 'the entry was MERGED, not replaced')
+            .toBeUndefined();
+    });
+
+    it('⛓ the entry keeps its POSITION in the slot (a replace, not a delete-and-append)', () => {
+        const doc = fixture();
+        doc.preset_sidecars[P].Vault = { substrate: 'maze', playable_payload: {} };
+        const res = applied(doc, { op: 'set-region-sidecar', region: 'Hall', entry: edited() });
+        expect(Object.keys(res.doc.preset_sidecars[P])).toEqual(['Hall', 'Vault']);
+    });
+
+    it('⛓ THE SLOT IS THE OP\'S OWN FIELD — other slots\' sidecars are untouched', () => {
+        const doc = fixture();
+        doc.preset_sidecars['2'] = {
+            Hall: { substrate: 'bounce', playable_payload: { gameId: 'bounce' } },
+        };
+        const slot1 = bytes(doc.preset_sidecars[P]);
+        const res = applied(doc, { op: 'set-region-sidecar', region: 'Hall', entry: edited(), player: '2' });
+        expect(bytes(res.doc)).toBe(expectedAfter(doc, '2', 'Hall', edited()));
+        expect(bytes(res.doc.preset_sidecars[P]), 'slot 1\'s Hall — same NAME — moved').toBe(slot1);
+    });
+
+    it('⛓⛓ the description is a SENTENCE naming the region, the payload size and what was NOT re-derived', () => {
+        const doc = fixture();
+        const entry = edited();
+        const n = Object.keys(entry.playable_payload).length;
+        const res = applied(doc, { op: 'set-region-sidecar', region: 'Hall', entry });
+        expect(res.description).toBe(
+            `region Hall: sidecar entry replaced (${n} payload keys) — ${SIDECAR_NOT_REDERIVED}`);
+        for (const w of ['access rules', 'location names', 'derived payload fields']) {
+            expect(SIDECAR_NOT_REDERIVED).toContain(w);
+        }
+        // ⛔ never a dump of the entry: a 60 KB payload gets its key count.
+        expect(res.description).not.toContain('ccccc');
+        const bare = applied(doc, { op: 'set-region-sidecar', region: 'Hall', entry: { substrate: 'maze' } });
+        expect(bare.description).toContain('(no payload)');
+        expect(bare.doc.preset_sidecars[P].Hall).toEqual({ substrate: 'maze' });
+    });
+
+    it('⛔ REFUSES a region with no sidecar entry — it REPLACES, it never CREATES', () => {
+        const doc = fixture();
+        for (const region of ['Vault', 'Nowhere']) {
+            const res = apply(doc, { op: 'set-region-sidecar', region, entry: edited() });
+            expect(res.ok).toBe(false);
+            expect(res.error).toContain(`no sidecar entry for region "${region}"`);
+            expect(res.error).toContain('never CREATES');
+            expect(res.error, 'the refusal lists the entries this slot HAS').toContain('[Hall]');
+        }
+        // ⛔ …and in a slot that has none at all.
+        expect(apply(doc, { op: 'set-region-sidecar', region: 'Hall', entry: edited(), player: '7' })
+            .error).toContain('[none]');
+    });
+
+    it('⛔ REFUSES each malformed input BY NAME', () => {
+        const doc = fixture();
+        const base = { op: 'set-region-sidecar', region: 'Hall' };
+        expect(apply(doc, { ...base, region: '', entry: edited() }).error).toMatch(/needs a region NAME/);
+        expect(apply(doc, { ...base, region: '  ', entry: edited() }).error).toMatch(/needs a region NAME/);
+        for (const entry of [undefined, null, [edited()], 'maze', 7]) {
+            expect(apply(doc, { ...base, entry }).error, JSON.stringify(entry))
+                .toMatch(/a sidecar entry is an object/);
+        }
+        const { substrate: _s, ...noSubstrate } = edited();
+        expect(apply(doc, { ...base, entry: noSubstrate }).error).toMatch(/needs `substrate` as a string/);
+        expect(apply(doc, { ...base, entry: { ...edited(), substrate: 3 } }).error)
+            .toMatch(/needs `substrate` as a string/);
+        for (const payload of [null, [1, 2], 'tiles', 0]) {
+            expect(apply(doc, { ...base, entry: { ...edited(), playable_payload: payload } }).error,
+                JSON.stringify(payload)).toMatch(/`playable_payload` is the substrate's own serialized world/);
+        }
+    });
+
+    it('⛓ the payload\'s INSIDE is not read — the reader owns the repair (⚖ round two, Q2)', () => {
+        const doc = fixture();
+        const nonsense = { substrate: 'maze', playable_payload: { width: 'wide', tiles: 42, bogus: [null] } };
+        const res = applied(doc, { op: 'set-region-sidecar', region: 'Hall', entry: nonsense });
+        expect(res.doc.preset_sidecars[P].Hall).toEqual(nonsense);
+    });
+
+    it('⛓⛓ THE ENTRY IS COPIED AT THE DOOR — the caller may keep editing what it parsed', () => {
+        const doc = fixture();
+        const entry = edited();
+        const res = applied(doc, { op: 'set-region-sidecar', region: 'Hall', entry });
+        const before = bytes(res.doc);
+        const recorded = bytes(res.op);
+        entry.substrate = 'MUTATED';
+        entry.playable_payload.tiles = 'MUTATED';
+        entry.__mutatedAfterApply = true;
+        expect(bytes(res.doc), 'the record moved when the caller touched its own entry').toBe(before);
+        expect(bytes(res.op), 'the recorded op aliases the caller\'s entry').toBe(recorded);
+        expect(bytes(foldEdits(rulesEditAdapter, doc, [res.op]).record)).not.toContain('MUTATED');
+    });
+
+    it('⛓ ONE UNDO restores the entry; the entry it already holds is a NO-OP by `equal`', () => {
+        const doc = fixture();
+        const session = createEditSession(rulesEditAdapter, doc);
+        const before = bytes(session.record());
+        const same = session.apply({
+            op: 'set-region-sidecar', region: 'Hall', player: P, entry: doc.preset_sidecars[P].Hall,
+        });
+        expect(same.ok).toBe(true);
+        expect(same.applied, 'writing the entry back unchanged moved the document').toBe(false);
+        expect(session.apply({ op: 'set-region-sidecar', region: 'Hall', player: P, entry: edited() })
+            .applied).toBe(true);
+        expect(session.ops()).toHaveLength(1);
+        expect(session.undo()).toBe(true);
+        expect(bytes(session.record())).toBe(before);
     });
 });
 
