@@ -99,7 +99,8 @@ import { getRegionEditor } from '../procgenPipeline/regionEditors.js';
  * fields, and never here.
  */
 import {
-  inspectRegionRoom, openRegionRoom, regionRoundTripOf, sidecarOf,
+  inspectRegionRoom, JSON_BLOCK_INDENT, openRegionRoom, regionRoundTripOf, sidecarEntryFacts,
+  sidecarOf,
 } from './regionRoundTrip.js';
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 /**
@@ -431,6 +432,20 @@ class ApworldEditorUI {
     this._roomVerdicts = new Map();
 
     /**
+     * ⛓⛓ S0 — **THE SIDECAR VIEW'S TWO DISCLOSURES, PER SESSION.** Which
+     * per-region JSON blocks are open (`host|slot|region`, so opening an
+     * entry's JSON on the Sidecars tab does not open it under the region on
+     * Regions — each host's disclosure is its own), and whether the Sidecars
+     * tab's per-region list is expanded. Both survive a re-render — every op
+     * and every tab switch re-renders — and both are dropped at `_openSession`,
+     * the `_mapCache` / `_roomVerdicts` precedent: a new document is a
+     * different world, and its list starts COLLAPSED (⚖ user, 2026-09-10:
+     * *"expandable, and collapsed by default"*).
+     */
+    this._expandedSidecarJson = new Set();
+    this._sidecarListOpen = false;
+
+    /**
      * ⛓⛓ **THE SELECTED SLOT, AND THE ONE THE PERSON PICKED, KEPT APART.**
      * `playerId` is what every tab reads and every op is stamped with;
      * `_chosenPlayer` is non-null only after a deliberate pick, so a NEW
@@ -669,6 +684,10 @@ class ApworldEditorUI {
      */
     this._roomVerdicts.clear();
     this._closeRoomEditor();
+    // ⛓ S0 — and the sidecar view's disclosures: a new document's list starts
+    //   collapsed, and a `slot|region` key from the old one names nothing here.
+    this._expandedSidecarJson.clear();
+    this._sidecarListOpen = false;
     this._render();
   }
 
@@ -3751,26 +3770,66 @@ class ApworldEditorUI {
   }
 
   _makeDocumentBlockEditor(row) {
-    const wrap = document.createElement('div');
-    const expanded = this._expandedKeys.has(row.key);
-
-    const toggle = this._makeButton(expanded ? '▾ Hide JSON' : '▸ Show JSON', '#3a3a3a', () => {
-      if (this._expandedKeys.has(row.key)) this._expandedKeys.delete(row.key);
-      else this._expandedKeys.add(row.key);
-      this._render();
+    return this._makeJsonBlock({
+      classPrefix: 'apworld-doc',
+      dataset: { docKey: row.key },
+      name: row.key,
+      expanded: this._expandedKeys.has(row.key),
+      onToggle: () => {
+        if (this._expandedKeys.has(row.key)) this._expandedKeys.delete(row.key);
+        else this._expandedKeys.add(row.key);
+        this._render();
+      },
+      // ⛓ An absent container is seeded with its own EMPTY form, so "add the key"
+      //   and "edit the key" are the same gesture.
+      value: () => (row.value !== undefined ? row.value : (row.type === 'array' ? [] : {})),
+      sizeLabel: row.summary.inline,
+      onSave: (parsed) => this._applySetKey(row, parsed),
     });
+  }
+
+  /**
+   * ⛓⛓⛓ **S0 — ONE JSON WIDGET, AND THE DOCUMENT ROW IS ITS FIRST CALLER.**
+   * A disclosure, a pretty-printed textarea built ONLY ON EXPAND (W0's rule: a
+   * 600 KB `regions` — or 250 sidecar entries — costs nothing until somebody
+   * opens it), a size line, and a Save that PARSES first and refuses by name.
+   * The per-region sidecar block (`_makeRegionSidecarBlock`) is the second
+   * caller, READ-ONLY for now: it passes `onSave: null`, which draws the same
+   * widget with a read-only textarea and no Save — so the slice that makes the
+   * entry editable (S1) passes an `onSave` rather than building a second
+   * widget beside this one.
+   *
+   * ⛔ `value` is a THUNK, called only when the block is expanded — never a
+   *   value captured earlier. The tab re-renders on every op, so an expanded
+   *   block always shows the value the document holds NOW.
+   *
+   * @param {object} o
+   * @param {string} o.classPrefix  `apworld-doc` → `apworld-doc-toggle` / `-json` / `-save`
+   * @param {object} [o.dataset]    stamped on the toggle, the textarea and the Save
+   * @param {string} o.name         what the refusal sentence calls the value
+   * @param {boolean} o.expanded
+   * @param {Function} o.onToggle
+   * @param {Function} o.value      () → the value to pretty-print
+   * @param {string} o.sizeLabel    the text before the character count
+   * @param {Function|null} [o.onSave] (parsed) → void; null = read-only
+   */
+  _makeJsonBlock({ classPrefix, dataset = {}, name, expanded, onToggle, value, sizeLabel,
+    onSave = null }) {
+    const wrap = document.createElement('div');
+
+    const toggle = this._makeButton(expanded ? '▾ Hide JSON' : '▸ Show JSON', '#3a3a3a', onToggle);
     toggle.style.fontSize = '11px';
-    toggle.className = 'apworld-doc-toggle';
-    toggle.dataset.docKey = row.key;
+    toggle.className = `${classPrefix}-toggle`;
+    Object.assign(toggle.dataset, dataset);
     wrap.appendChild(toggle);
     if (!expanded) return wrap;
 
     const text = document.createElement('textarea');
-    text.className = 'apworld-doc-json';
-    // ⛓ An absent container is seeded with its own EMPTY form, so "add the key"
-    //   and "edit the key" are the same gesture.
-    const seed = row.value !== undefined ? row.value : (row.type === 'array' ? [] : {});
-    text.value = JSON.stringify(seed, null, 2);
+    text.className = `${classPrefix}-json`;
+    Object.assign(text.dataset, dataset);
+    text.value = JSON.stringify(value(), null, JSON_BLOCK_INDENT);
+    // ⛓ READ-ONLY, not disabled: the text can still be selected and copied.
+    if (!onSave) text.readOnly = true;
     Object.assign(text.style, {
       width: '100%', minHeight: '160px', marginTop: '5px', boxSizing: 'border-box',
       backgroundColor: '#111', color: '#ddd', border: '1px solid #444', borderRadius: '3px',
@@ -3781,30 +3840,31 @@ class ApworldEditorUI {
     const size = document.createElement('div');
     size.style.color = '#777';
     size.style.fontSize = '10px';
-    size.textContent = `${row.summary.inline} · ${text.value.length.toLocaleString()} characters `
-      + 'of pretty-printed JSON';
+    size.textContent = `${sizeLabel} · ${text.value.length.toLocaleString()} characters `
+      + `of pretty-printed JSON${onSave ? '' : ' · read-only here'}`;
     wrap.appendChild(size);
+    if (!onSave) return wrap;
 
     const save = this._makeButton('Save JSON', '#2e7d32', () => {
       let parsed;
       try {
         parsed = JSON.parse(text.value);
       } catch (err) {
-        this._opMessage = `Refused: \`${row.key}\` — ${err.message}. ⛔ The op carries the `
+        this._opMessage = `Refused: \`${name}\` — ${err.message}. ⛔ The op carries the `
           + 'PARSED value, never the text: an edit list whose payload is a recipe that can '
           + 'fail to re-parse is not a record.';
         this._renderChrome();
         return;
       }
-      this._applySetKey(row, parsed);
+      onSave(parsed);
     });
     save.style.marginTop = '4px';
     // ⛓ W0 — CLASSED so a row can press the product's own button. Until W0 the
     //   only addressable controls on a block row were the toggle and the
     //   textarea, so a row asserting a save had to call `_applySetKey` and
     //   would have passed over a Save wired to nothing.
-    save.className = 'apworld-doc-save';
-    save.dataset.docKey = row.key;
+    save.className = `${classPrefix}-save`;
+    Object.assign(save.dataset, dataset);
     wrap.appendChild(save);
     return wrap;
   }
@@ -4988,7 +5048,10 @@ class ApworldEditorUI {
 
 
   /**
-   * ⛓⛓⛓ H4b — **THE PER-REGION Edit DOOR**, in the Regions header.
+   * ⛓⛓⛓ H4b — **THE PER-REGION Edit DOOR**. ⛓ S0 moved it from the Regions
+   * header onto the region's sidecar block (`_makeRegionSidecarBlock`), which is
+   * drawn under that header AND on the Sidecars tab's per-region list — one
+   * button builder, so the verdict below has one home on both hosts.
    *
    * ⛔ **THREE OUTCOMES, AND "ABSENT" IS ONE OF THEM.** A classic AP region has
    * no `preset_sidecars` entry and therefore no ROOM: there is nothing to edit
@@ -5116,6 +5179,125 @@ class ApworldEditorUI {
     this.roomEditorSession = null;
   }
 
+  /**
+   * ⛓⛓⛓ **S0 — ONE REGION'S SIDECAR ENTRY, DRAWN BY ONE FUNCTION FOR TWO
+   * HOSTS** (⚖ user, 2026-09-10, Q2 A: *"one renderer, two hosts"* — the
+   * Regions tab under each region, and the Sidecars tab's per-region list).
+   * Two renderers for one key would be two vocabularies for one document,
+   * and they would agree only until one of them was changed (S1/R1's rule).
+   *
+   * What it draws, every word of it read off the ENTRY (`sidecarEntryFacts`)
+   * and never off a table keyed by substrate name (⚖ standing):
+   *
+   *   · the substrate BADGE — `entry.substrate`, what the play-time host
+   *     actually loads the room with;
+   *   · the entry-level facts — grid cell, the render hint when it differs,
+   *     the biome, the payload's top-level keys and its pretty size;
+   *   · the two roads (plan §9.2): **Edit ▸**, H4b's in-place door, built by
+   *     `_makeRoomEditorButton` so its verdict logic has one home, and
+   *     **Regenerate in the pipeline ▸**, the `procgen_metadata` door's own
+   *     `open` pressed through the one opener, with the regeneration COST in
+   *     its title;
+   *   · **▸ Show JSON** — the ENTRY, through `_makeJsonBlock` with saving off,
+   *     built only on expand.
+   *
+   * ⛔ The block is drawn for the SELECTED slot. `player` is the slot the
+   *   entry is READ from, and each host passes `this.playerId`; the Edit door
+   *   inside it reads the selected slot too, because the op its save returns
+   *   is stamped with that slot (`_stampPlayer`) — a block for another slot
+   *   would offer a door into a room the save could not land in.
+   *
+   * @param {string} player
+   * @param {string} regionName
+   * @param {{hostTab: string}} opts the tab drawing it — the key its JSON
+   *   disclosure is remembered under, so each host's is its own
+   * @returns {HTMLElement|null} null when the region has no sidecar entry
+   */
+  _makeRegionSidecarBlock(player, regionName, { hostTab }) {
+    const entry = sidecarOf(this.rulesDoc, player, regionName);
+    const facts = sidecarEntryFacts(entry);
+    if (!facts) return null;
+
+    const box = document.createElement('div');
+    box.className = 'apworld-sidecar-block';
+    box.dataset.regionName = regionName;
+    box.dataset.player = String(player);
+    box.dataset.hostTab = hostTab;
+    Object.assign(box.style, {
+      padding: '5px 8px', borderBottom: '1px solid #333', backgroundColor: '#20232a',
+      fontSize: '11px',
+    });
+
+    const line = document.createElement('div');
+    Object.assign(line.style, { display: 'flex', alignItems: 'center', gap: '8px',
+      flexWrap: 'wrap' });
+    const badge = document.createElement('span');
+    badge.className = 'apworld-sidecar-badge';
+    badge.textContent = facts.substrate ?? '(no substrate)';
+    badge.title = 'This region\'s sidecar entry: the substrate the play-time host loads its '
+      + 'room with (`preset_sidecars.<slot>.<region>.substrate`).';
+    Object.assign(badge.style, {
+      padding: '1px 7px', borderRadius: '9px', border: '1px solid #4a6a8a',
+      backgroundColor: '#1d3347', color: '#cfe', fontFamily: 'monospace',
+    });
+    line.appendChild(badge);
+
+    const bits = [];
+    if (facts.gridCell) bits.push(`cell (${facts.gridCell.gx}, ${facts.gridCell.gy})`);
+    if (facts.renderHint) bits.push(`render hint ${facts.renderHint}`);
+    if (facts.biome) bits.push(`biome ${facts.biome}`);
+    bits.push(facts.payloadKeys.length
+      ? `payload ${facts.payloadKeys.join(', ')} · ${facts.payloadBytes.toLocaleString()} B`
+      : 'payload (empty)');
+    const text = document.createElement('span');
+    text.className = 'apworld-sidecar-facts';
+    text.textContent = bits.join(' · ');
+    Object.assign(text.style, { color: '#999', flex: '1 1 20em', minWidth: 0 });
+    line.appendChild(text);
+
+    const edit = this._makeRoomEditorButton(regionName);
+    if (edit) line.appendChild(edit);
+
+    /**
+     * ⛓ The hand-off door. ⛔ Its words are the DOOR's (`regionDoor` on the
+     *   registry entry), and its press is the one opener every other door of
+     *   this panel goes through — so the panel-refusal, the document token and
+     *   the status line are the Document row's, not a second copy.
+     */
+    const pipeline = DOCUMENT_KEY_EDITORS.procgen_metadata;
+    if (pipeline?.regionDoor) {
+      const refusal = this._panelRefusal(pipeline.panelId);
+      const regen = this._makeButton(pipeline.regionDoor.label, refusal ? '#444' : '#3a3a3a',
+        () => this._openDocumentKeyEditor('procgen_metadata'));
+      regen.className = 'apworld-sidecar-regenerate';
+      regen.style.fontSize = '11px';
+      regen.disabled = !!refusal;
+      regen.style.opacity = refusal ? '0.45' : '1';
+      regen.title = refusal ?? pipeline.regionDoor.note;
+      line.appendChild(regen);
+    }
+    box.appendChild(line);
+
+    const key = `${hostTab}|${player}|${regionName}`;
+    box.appendChild(this._makeJsonBlock({
+      classPrefix: 'apworld-sidecar',
+      dataset: { regionName, player: String(player) },
+      name: `preset_sidecars.${player}.${regionName}`,
+      expanded: this._expandedSidecarJson.has(key),
+      onToggle: () => {
+        if (this._expandedSidecarJson.has(key)) this._expandedSidecarJson.delete(key);
+        else this._expandedSidecarJson.add(key);
+        this._render();
+      },
+      // ⛔ Re-read at expand, never the `entry` above held across renders: the
+      //   tab re-renders on every op, so this is the entry the document holds NOW.
+      value: () => sidecarOf(this.rulesDoc, player, regionName),
+      sizeLabel: `the whole entry of ${regionName} (slot ${player})`,
+      onSave: null,
+    }));
+    return box;
+  }
+
   _renderRegion(regionName, region) {
     const block = document.createElement('div');
     /**
@@ -5162,17 +5344,22 @@ class ApworldEditorUI {
     spacer.style.flex = '1 1 auto';
     header.appendChild(spacer);
 
-    /**
-     * ⛓ H4b — Edit ▸ sits between the name and Delete, and is ABSENT for a
-     * region with no sidecar (a classic AP region has no room).
-     */
-    const editBtn = this._makeRoomEditorButton(regionName);
-    if (editBtn) header.appendChild(editBtn);
-
     const delBtn = this._makeButton('× Delete', '#8a2a2a', () => this._handleDeleteRegion(regionName));
     header.appendChild(delBtn);
 
     block.appendChild(header);
+
+    /**
+     * ⛓⛓ S0 — **THE REGION'S SIDECAR, UNDER ITS HEADER.** H4b drew Edit ▸ in
+     * the header and nothing else about the room; the block carries it now,
+     * beside the substrate and the entry's facts, so the button is drawn ONCE
+     * per region either way (measured before/after: 1 per sidecar region, 0 on
+     * a region with none). ABSENT for a region with no sidecar — a classic AP
+     * region has no room, and the block says nothing rather than "none".
+     */
+    const sidecarBlock = this._makeRegionSidecarBlock(this.playerId, regionName,
+      { hostTab: 'regions' });
+    if (sidecarBlock) block.appendChild(sidecarBlock);
 
     const body = document.createElement('div');
     body.style.padding = '6px 12px 10px';

@@ -314,6 +314,22 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
             + 'append a sphere, realise it top-down, or neither, quoting the engine\'s own '
             + 'refusal. Nothing comes back as an op: the pipeline\'s exit is its own "Open in '
             + 'APWorld Editor", which is a NEW document.',
+        /**
+         * ⛓⛓ S0 — **THE SAME DOOR, DRAWN ON A REGION'S SIDECAR BLOCK** (plan
+         * §9.2: *"an edit that REGENERATES belongs to the pipeline"*, and the
+         * hand-off door is drawn on the block so the reader sees both roads).
+         * It is THIS entry's `open`, pressed through the one opener
+         * (`_openDocumentKeyEditor`) — not a second door — so only its words
+         * are declared here, and they say the COST the full note does not:
+         * on the top-down route the payloads are regenerated, not kept.
+         */
+        regionDoor: Object.freeze({
+            label: 'Regenerate in the pipeline ▸',
+            note: 'Hands this whole document to the procgen pipeline, which REGENERATES the '
+                + 'sidecar payloads on its top-down route (only a sphere-growth world can be '
+                + 'appended to with its payloads kept), and its exit is a NEW document rather '
+                + 'than an edit of this one.',
+        }),
         open: async ({ record, player, eventBus }) => {
             const { PROCGEN_PIPELINE_LOAD_RULES } = await import('../procgenPipeline/index.js');
             eventBus.publish(PROCGEN_PIPELINE_LOAD_RULES, {

@@ -107,6 +107,77 @@ export function regionRoundTripOf(substrate) {
 export const sidecarOf = (doc, player, name) => doc?.preset_sidecars?.[player]?.[name] ?? null;
 
 /**
+ * ⛓ The indent the hub's JSON block widget (`_makeJsonBlock`: the Document
+ * tab's rows and S0's sidecar block) pretty-prints with — and so the indent a
+ * sidecar entry's SIZE fact is measured at, which is why it lives beside the
+ * facts rather than as a literal inside the widget: the size a block announces
+ * and the text it then shows are one spelling.
+ */
+export const JSON_BLOCK_INDENT = 2;
+
+/**
+ * ⛓ UTF-8 bytes of the pretty payload, memoised on the payload OBJECT. The
+ * record is copy-on-write (an op hands out new objects only along the path it
+ * wrote), so identity is exactly "could the size have changed" — the same key
+ * the panel's `_mapCache` and `_validationCache` use — and a 235-region
+ * document pays the stringify once per payload, not once per render.
+ */
+const payloadBytesMemo = new WeakMap();
+const utf8 = new TextEncoder();
+function prettyBytes(payload) {
+    if (!payload || typeof payload !== 'object') return 0;
+    if (!payloadBytesMemo.has(payload)) {
+        payloadBytesMemo.set(payload,
+            utf8.encode(JSON.stringify(payload, null, JSON_BLOCK_INDENT)).length);
+    }
+    return payloadBytesMemo.get(payload);
+}
+
+/**
+ * ⛓⛓⛓ **S0 — WHAT A SIDECAR ENTRY SAYS ABOUT ITSELF, DERIVED, NEVER LISTED**
+ * (preset-sidecars plan §3 D2). The per-region block on the Regions and
+ * Sidecars tabs draws these facts and nothing else, so the block cannot hold a
+ * per-substrate table: every field here is read off the entry in hand.
+ *
+ *   substrate    the entry's own `substrate` — THE BADGE. ⛔ Never
+ *                `render_hint`: the play-time host (`buildWarehouse`) reads
+ *                `substrate` and ignores the hint, so the badge names what
+ *                actually plays the room. (Measured over the committed corpus:
+ *                the two never disagree, and 270 entries carry no hint at all.)
+ *   renderHint   only when it DIFFERS from the substrate — equal, it is a
+ *                repetition, not a fact
+ *   gridCell     `{gx, gy}` or null
+ *   biome        the biome's `name`, else its `id`, else null
+ *   payloadKeys  the payload's top-level keys, in the payload's own order
+ *   payloadBytes UTF-8 bytes of the payload at the Document block's indent
+ *
+ * @returns {object|null} null for a missing / non-object entry — a classic AP
+ *   region has no room, and "absent" is an answer (H4b).
+ */
+export function sidecarEntryFacts(entry) {
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) return null;
+    const substrate = typeof entry.substrate === 'string' && entry.substrate
+        ? entry.substrate : null;
+    const hint = typeof entry.render_hint === 'string' && entry.render_hint
+        ? entry.render_hint : null;
+    const cell = entry.grid_cell;
+    const biome = entry.biome && typeof entry.biome === 'object'
+        ? (entry.biome.name ?? entry.biome.id ?? null) : null;
+    const payload = entry.playable_payload && typeof entry.playable_payload === 'object'
+        && !Array.isArray(entry.playable_payload) ? entry.playable_payload : null;
+    return {
+        substrate,
+        renderHint: hint !== null && hint !== substrate ? hint : null,
+        gridCell: cell && typeof cell === 'object'
+            && Number.isFinite(cell.gx) && Number.isFinite(cell.gy)
+            ? { gx: cell.gx, gy: cell.gy } : null,
+        biome: typeof biome === 'string' && biome ? biome : null,
+        payloadKeys: payload ? Object.keys(payload) : [],
+        payloadBytes: prettyBytes(payload),
+    };
+}
+
+/**
  * ⛓⛓ **RULE EQUIVALENCE, OVER A NAMED FRAGMENT.** Two rule trees count as the
  * same rule when they are byte-equal, OR when `extractItemRequirementFromRule`
  * — the repo's own inverse compiler — reports the SAME item requirement for

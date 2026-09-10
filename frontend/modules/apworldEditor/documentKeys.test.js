@@ -503,6 +503,23 @@ describe('the editor slot — FILLED by H5', () => {
             expect(String(DOCUMENT_KEY_EDITORS.preset_sidecars.open)).not.toContain('onSave');
         });
 
+    /**
+     * ⛓⛓ S0 — **THE HAND-OFF DOOR'S WORDS ON A REGION'S BLOCK ARE THE DOOR'S
+     * OWN** (plan §9.2). The block presses `procgen_metadata`'s `open`; what it
+     * adds is one sentence naming the COST — the payloads are REGENERATED — so
+     * a reader choosing the pipeline road knows the payloads will not be theirs.
+     */
+    it('⛓⛓ S0 — `procgen_metadata` declares its region-block words, and they name '
+        + 'the regeneration', () => {
+        const words = DOCUMENT_KEY_EDITORS.procgen_metadata.regionDoor;
+        expect(typeof words.label).toBe('string');
+        expect(words.label.length).toBeGreaterThan(0);
+        expect(words.note).toContain('REGENERATES');
+        // ⛓ one sentence: a single terminal full stop.
+        expect(words.note.trim().split(/\.\s/).length).toBe(1);
+        expect(words.note.trim().endsWith('.')).toBe(true);
+    });
+
     it('⛔ NO DOOR IMPORTS ITS PANEL AT MODULE LOAD — this module is loaded by '
         + 'node rows and by both tabs', () => {
         // The measurement is textual because the alternative is to import the

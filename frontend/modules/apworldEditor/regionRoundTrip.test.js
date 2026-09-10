@@ -42,7 +42,8 @@ import { createEditSession } from '../procgenCore/editCore.js';
 import { rulesEditAdapter } from './rulesEditAdapter.js';
 import { applyRulesDocOp } from './rulesDocOps.js';
 import {
-    buildSidecarOp, inspectRegionRoom, regionRoundTripOf, sameRule, sidecarOf,
+    buildSidecarOp, inspectRegionRoom, JSON_BLOCK_INDENT, regionRoundTripOf, sameRule,
+    sidecarEntryFacts, sidecarOf,
 } from './regionRoundTrip.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -436,3 +437,84 @@ function jtaFixture() {
     const file = readdirSync(join(base, seed)).find((f) => f.endsWith('_rules.json'));
     return join(base, seed, file);
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ S0 — `sidecarEntryFacts`, what the per-region block draws
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('sidecarEntryFacts — the block\'s facts, read off the entry in hand', () => {
+    /**
+     * ⛓ Every entry of every slot of the committed fixture, and the population
+     * is the DOCUMENT's (`preset_sidecars[p]`), never a list of regions typed
+     * here. ⛔ Non-vacuity: the fixture's slots must hold more than one
+     * substrate, or a badge that read one slot for all of them would agree.
+     */
+    it('⛓ facts are the ENTRY\'s own, for every entry of every slot of the fixture', () => {
+        const seen = new Set();
+        let n = 0;
+        for (const [p, regions] of Object.entries(doc.preset_sidecars)) {
+            for (const [name, entry] of Object.entries(regions)) {
+                const f = sidecarEntryFacts(sidecarOf(doc, p, name));
+                expect(f.substrate, `${p}/${name}`).toBe(entry.substrate);
+                expect(f.payloadKeys, `${p}/${name}`).toEqual(Object.keys(entry.playable_payload));
+                expect(f.payloadBytes, `${p}/${name}`).toBe(Buffer.byteLength(
+                    JSON.stringify(entry.playable_payload, null, JSON_BLOCK_INDENT), 'utf8'));
+                expect(f.gridCell, `${p}/${name}`).toEqual(
+                    entry.grid_cell ? { gx: entry.grid_cell.gx, gy: entry.grid_cell.gy } : null);
+                expect(f.biome, `${p}/${name}`).toBe(entry.biome?.name ?? entry.biome?.id ?? null);
+                seen.add(entry.substrate);
+                n += 1;
+            }
+        }
+        expect(n).toBeGreaterThan(0);
+        expect(seen.size).toBeGreaterThan(1);
+    });
+
+    /**
+     * ⛓⛓ **THE BADGE IS `substrate`, NEVER `render_hint`** — the play-time host
+     * reads `substrate` and ignores the hint. ⛔ The corpus CANNOT tell the two
+     * apart where both are present: measured over every committed entry, the
+     * hint equals the substrate on all 1,122 that carry one (and 270 carry
+     * none). So the discriminating case is synthetic by necessity — a hint that
+     * DISAGREES — and it is the only row that reds a badge reading the hint.
+     */
+    it('⛔ the badge is `substrate`, never `render_hint`, and the hint is a fact only '
+        + 'where it DIFFERS', () => {
+        const base = clone(sidecarOf(doc, '1', 'region_1_0'));
+        const differs = sidecarEntryFacts({ ...base, render_hint: 'a_different_renderer' });
+        expect(differs.substrate).toBe(base.substrate);
+        expect(differs.renderHint).toBe('a_different_renderer');
+        expect(sidecarEntryFacts({ ...base, render_hint: base.substrate }).renderHint).toBeNull();
+        const { render_hint: _drop, ...noHint } = base;
+        const f = sidecarEntryFacts(noHint);
+        expect(f.substrate).toBe(base.substrate);
+        expect(f.renderHint).toBeNull();
+    });
+
+    it('⛔ no entry, no facts — a region with no sidecar has no room to describe', () => {
+        const regionsWithout = Object.keys(doc.regions['1'])
+            .filter((r) => !sidecarOf(doc, '1', r));
+        expect(regionsWithout.length).toBeGreaterThan(0);
+        for (const r of regionsWithout) {
+            expect(sidecarEntryFacts(sidecarOf(doc, '1', r)), r).toBeNull();
+        }
+        expect(sidecarEntryFacts([])).toBeNull();
+        expect(sidecarEntryFacts('maze')).toBeNull();
+    });
+
+    /**
+     * ⛓ The size is memoised on the payload OBJECT — the record is
+     * copy-on-write, so an op that writes a payload hands out a NEW object and
+     * the block must measure that one, not answer from the old.
+     */
+    it('⛓ an edited payload is re-measured — the size memo is keyed on identity', () => {
+        const entry = sidecarOf(doc, '3', 'region_1_0');
+        const before = sidecarEntryFacts(entry).payloadBytes;
+        const edited = { ...entry, playable_payload: { ...entry.playable_payload, s0: 'x' } };
+        const after = sidecarEntryFacts(edited).payloadBytes;
+        expect(after).toBe(Buffer.byteLength(
+            JSON.stringify(edited.playable_payload, null, JSON_BLOCK_INDENT), 'utf8'));
+        expect(after).toBeGreaterThan(before);
+        expect(sidecarEntryFacts(entry).payloadBytes).toBe(before);
+    });
+});
