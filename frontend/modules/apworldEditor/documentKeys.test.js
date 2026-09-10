@@ -38,7 +38,7 @@ import {
     playerSlotsOf,
     summarizeValue,
 } from './documentKeys.js';
-import { ITEM_GROUPS_KEY } from './rulesDocOps.js';
+import { ITEM_GROUPS_KEY, PROGRESSION_MAPPING_KEY } from './rulesDocOps.js';
 
 const SCHEMA = loadRulesSchema();
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -238,36 +238,43 @@ describe('the tab-ownership table', () => {
      * S1's mutant B): the Groups section reads the registry off the DOCUMENT,
      * so dropping the key from `KEYS_OWNED_BY_TAB` leaves the section drawing
      * and only the Document row's pointer wrong — which no in-app row on the
-     * Items tab can see. The authority is the three ops' own source: they
-     * write exactly one top-level key each, and it is one key.
+     * Items tab can see. The authority is the ops' own source: every per-slot
+     * write made through an EXPORTED constant, and the set of those constants.
+     *
+     * ⛓ I2 — and the same authority carries `progression_mapping`, whose op
+     * writes one level deeper (`[KEY, p, name]`), so the scan reads the slot
+     * position rather than requiring the path to END there.
      */
-    it('⛓⛓ the key the item-group ops write is the key the Items tab owns', () => {
+    it('⛓⛓ the keys the item ops write are the keys the Items tab owns', () => {
         const opSource = readFileSync(join(HERE, 'rulesDocOps.js'), 'utf8');
         // ⛓ The IDENTIFIER-keyed form only: every other per-slot write in that
         //   module spells its key as a string literal (`setPath(doc, ['regions',
-        //   p], …)`), so this picks out exactly the writes made through the
+        //   p], …)`), so this picks out exactly the writes made through an
         //   exported constant — which is the thing the table has to agree with.
         const written = [...opSource.matchAll(
-            /setPath\(doc, \[([A-Za-z_]\w*), p\]/g)].map((m) => m[1]);
-        expect(written.length, 'the three ops each write one slot of one key').toBe(3);
-        expect(new Set(written)).toEqual(new Set(['ITEM_GROUPS_KEY']));
+            /setPath\(doc, \[([A-Za-z_]\w*), p[,\]]/g)].map((m) => m[1]);
+        expect(new Set(written)).toEqual(new Set(['ITEM_GROUPS_KEY', 'PROGRESSION_MAPPING_KEY']));
         expect(ITEM_GROUPS_KEY).toBe('item_groups');
-        expect(KEYS_OWNED_BY_TAB.items, 'the tab that owns the key the ops write')
-            .toContain(ITEM_GROUPS_KEY);
+        expect(PROGRESSION_MAPPING_KEY).toBe('progression_mapping');
+        for (const key of [ITEM_GROUPS_KEY, PROGRESSION_MAPPING_KEY]) {
+            expect(KEYS_OWNED_BY_TAB.items, `the tab that owns ${key}`).toContain(key);
+        }
     });
 
     /**
-     * ⛓ And the Document row POINTS at that tab. ⛔ `items` is a different key
-     * the same tab owns and `progression_mapping` — the neighbouring per-player
-     * block, I2's — is still unowned, so "the groups key is owned" is a
-     * discrimination rather than a tab that claimed every per-player map.
+     * ⛓ And the Document row POINTS at that tab. ⛔ `itempool_counts` is a
+     * different key the same tab owns and `starting_items` a third, while
+     * `helpers` — the neighbouring per-player block nothing edits — is still
+     * unowned, so "the items keys are owned" is a discrimination rather than a
+     * tab that claimed every per-player map.
      */
-    it('⛓ the item-groups key names the Items tab, and progression_mapping does not', () => {
+    it('⛓ the two item vocabulary keys name the Items tab, and helpers does not', () => {
         const rows = documentKeyRows(combined(), SCHEMA, { player: '1' });
         const byKey = Object.fromEntries(rows.map((r) => [r.key, r]));
         expect(byKey[ITEM_GROUPS_KEY].ownedByTab).toBe('items');
+        expect(byKey[PROGRESSION_MAPPING_KEY].ownedByTab).toBe('items');
         expect(byKey.items.ownedByTab).toBe('items');
-        expect(byKey.progression_mapping.ownedByTab).toBeNull();
+        expect(byKey.helpers.ownedByTab).toBeNull();
     });
 });
 

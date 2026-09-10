@@ -63,7 +63,7 @@
  * get a raw-JSON row, marked as unknown by name.
  */
 
-import { ITEM_GROUPS_KEY, META_FIELDS } from './rulesDocOps.js';
+import { ITEM_GROUPS_KEY, META_FIELDS, PROGRESSION_MAPPING_KEY } from './rulesDocOps.js';
 
 /** ⛓ The slot-map test, as the schema itself spells it. */
 const PLAYER_SLOT_PATTERN = '^[0-9]+$';
@@ -171,8 +171,15 @@ export const KEYS_OWNED_BY_TAB = Object.freeze({
      * lives on `items[p][name].groups`, which is a field this tab already
      * edits. ⚖ user, 2026-09-09: *"I'll want to add proper editors for
      * item_groups and progression_mapping … These belong in the Items tab."*
+     *
+     * ⛓ I2 — and `progression_mapping` is the second half of that ruling. Its
+     * slot is `name → mapping`, and EVERY name a mapping mentions (the entry's
+     * own key, its `base_item`'s pool, each member) is read against this tab's
+     * `items` — so the tab that can answer "is that an item" is the tab that
+     * owns it.
      */
-    items: Object.freeze(['items', 'itempool_counts', 'starting_items', ITEM_GROUPS_KEY]),
+    items: Object.freeze(['items', 'itempool_counts', 'starting_items', ITEM_GROUPS_KEY,
+        PROGRESSION_MAPPING_KEY]),
     meta: Object.freeze([...new Set([
         ...Object.values(META_FIELDS).map((spec) => spec.path('1')[0]),
         ...META_TAB_EXTRA_KEYS,
