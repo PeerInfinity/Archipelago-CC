@@ -64,7 +64,7 @@ import { fileURLToPath } from 'node:url';
 import {
     canonicalPlacementIssuesByPlayer, describePlacementIssue,
 } from '../../frontend/modules/apworldEditor/rulesDocOps.js';
-import { argvHelp } from './argvHelp.js';
+import { argvHelp, isEntryPoint } from './argvHelp.js';
 
 argvHelp(import.meta.url);
 
@@ -127,43 +127,58 @@ function documents() {
     return out;
 }
 
-const files = documents();
-const findings = [];
-const unreadable = [];
-let slots = 0;
+/**
+ * ⛔⛔ **NOTHING RUNS ON IMPORT, AND THAT IS A GATE'S RULE HERE, NOT A STYLE.**
+ * `check-procgen-help.mjs` imports every instrument in this directory and
+ * measures whether the import DID anything; a corpus scan at module scope reads
+ * as `IMPORT SIDE EFFECT` and reds it. Measured the hard way: this file's first
+ * CI run took `gate: procgen-help` to `267/1, exit=1` while its own arm read
+ * `ALL PASS` — and the step is `continue-on-error`, so the job stayed green.
+ * (`argvHelp`'s own docblock states the hoisting bound this is the other half
+ * of.)
+ */
+function main() {
+    const files = documents();
+    const findings = [];
+    const unreadable = [];
+    let slots = 0;
 
-for (const file of files) {
-    let doc;
-    try {
-        doc = JSON.parse(readFileSync(file, 'utf8'));
-    } catch (err) {
-        unreadable.push({ file: relative(ROOT, file), error: err.message });
-        continue;
+    for (const file of files) {
+        let doc;
+        try {
+            doc = JSON.parse(readFileSync(file, 'utf8'));
+        } catch (err) {
+            unreadable.push({ file: relative(ROOT, file), error: err.message });
+            continue;
+        }
+        const block = doc?.canonical_placements;
+        if (block && typeof block === 'object' && !Array.isArray(block)) {
+            slots += Object.keys(block).length;
+        }
+        for (const issue of canonicalPlacementIssuesByPlayer(doc)) {
+            findings.push({ file: relative(ROOT, file), ...issue });
+        }
     }
-    const block = doc?.canonical_placements;
-    if (block && typeof block === 'object' && !Array.isArray(block)) {
-        slots += Object.keys(block).length;
+
+    if (JSON_OUT) {
+        console.log(JSON.stringify(
+            { documents: files.length, slots, findings, unreadable }, null, 2));
+    } else {
+        console.log('check-canonical-placements — every placement a preset names, against the '
+            + 'regions and items the same slot holds');
+        console.log(`  documents read   ${files.length}`);
+        console.log(`  placement slots  ${slots}`);
+        for (const f of unreadable) console.log(`  UNREADABLE  ${f.file} — ${f.error}`);
+        for (const f of findings) {
+            console.log(`  FINDING  ${f.file}  slot ${f.player}  ${describePlacementIssue(f)}`);
+        }
+        const bad = findings.length + unreadable.length;
+        console.log(bad === 0
+            ? '  ALL PASS'
+            : `  ${bad} FINDING${bad === 1 ? '' : 'S'}`);
     }
-    for (const issue of canonicalPlacementIssuesByPlayer(doc)) {
-        findings.push({ file: relative(ROOT, file), ...issue });
-    }
+
+    process.exit(findings.length + unreadable.length > 0 ? 1 : 0);
 }
 
-if (JSON_OUT) {
-    console.log(JSON.stringify({ documents: files.length, slots, findings, unreadable }, null, 2));
-} else {
-    console.log('check-canonical-placements — every placement a preset names, against the '
-        + 'regions and items the same slot holds');
-    console.log(`  documents read   ${files.length}`);
-    console.log(`  placement slots  ${slots}`);
-    for (const f of unreadable) console.log(`  UNREADABLE  ${f.file} — ${f.error}`);
-    for (const f of findings) {
-        console.log(`  FINDING  ${f.file}  slot ${f.player}  ${describePlacementIssue(f)}`);
-    }
-    const bad = findings.length + unreadable.length;
-    console.log(bad === 0
-        ? '  ALL PASS'
-        : `  ${bad} FINDING${bad === 1 ? '' : 'S'}`);
-}
-
-process.exit(findings.length + unreadable.length > 0 ? 1 : 0);
+if (isEntryPoint(import.meta.url)) main();
