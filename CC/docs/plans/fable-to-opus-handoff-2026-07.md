@@ -13740,6 +13740,12 @@ hand-off's painted map (same function). ⚖ OPEN: the map moves M2/M3 — native
 document with `grid_cell`s, one undo) vs hand-off (re-realises 30 of 42 first) vs both. Named: the hand-off's
 answer should say the payloads are regenerated on the TD route; `_handoffAnswer` reads slot `'1'`.
 
+**⚖ RULED (user, 2026-09-10): "Yes, I choose option A."** ⇒ the grid moves (M2 move/swap, M3 exit side) are NATIVE
+hub ops; regeneration (substrate change, re-roll, append) is the pipeline's by hand-off. The ladder stands as plan
+§9.3: **M0 → S0 → S1 → REPLAN → D0 → V0 (report only) → D1 → S2 → M1 → M2 → M3 → T0/T1.** Every ⚖ of this
+investigation is now answered; nothing is launched ("Please don't begin implementation yet" stands until the user
+says otherwise). NEXT on the user's word: the M0 kickoff (`NewDocs/plans/`), one Opus session.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
