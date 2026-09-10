@@ -13728,6 +13728,18 @@ we shouldn't try to duplicate." ⇒ measure the hand-off route (H5's `procgen_me
 → `sphereRebuildRefusal` / `rebuildEnvelopeFromRulesJson`): what the pipeline can ADOPT from the corpus and what
 a round trip LOSES, then re-sort the rungs into hand-off vs native.
 
+**Measured (plan §9):** the hand-off (H5's `procgen_metadata` door → `_adoptHandoffRules`) adopts a document into
+TOP-DOWN mode; sphere-append (payloads PRESERVED) is possible for **12 of 42** populated slots (the twelve
+`procgen_topdown`, all rebuilt without a throw); the other **30** (every Python-exported world, all `grid-growth`,
+`runner_sphere_worldgen`, `seedling_atlas_sphere`) are RE-REALISED from the `regions` block — new payloads, names
+kept, placements re-derived from located items — and the exit is a NEW document (the hub session is lost).
+Principle: an edit that REGENERATES (substrate change, re-roll) belongs to the pipeline by hand-off; an edit that
+REWRITES IN PLACE (raw entry, Edit ▸, validity, moves) belongs to the hub. ⇒ V0 loses the substrate picker (the
+block's `substrate` is read-only with a "Regenerate in the pipeline ▸" door beside it); M0 also fixes the
+hand-off's painted map (same function). ⚖ OPEN: the map moves M2/M3 — native ops (recommended: in place, every
+document with `grid_cell`s, one undo) vs hand-off (re-realises 30 of 42 first) vs both. Named: the hand-off's
+answer should say the payloads are regenerated on the TD route; `_handoffAnswer` reads slot `'1'`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
