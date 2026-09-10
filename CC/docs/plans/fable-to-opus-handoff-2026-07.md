@@ -13314,6 +13314,14 @@ groups cell becomes a picker over the registry with unlisted groups shown; rows 
 registry) and `alttp`; three mutants. Baseline 443/13427 at `0c3fef9a21`. Reports come to `next-priorities-planning-4`;
 I2 on I1's idle notice.
 
+**⚖ RULED (user, 2026-09-10): "Ok, let's leave it as it is for now."** — on P1's §12.9 (1), the Raw JSON tab's
+`replace-document` stays vetoed by the schema only. Planner's measurement behind the answer: deleting/renaming a
+location or item, deleting a region, and the Regions/Items block editors all touch nothing under
+`canonical_placements` and run no placement check, so a Raw-JSON veto alone would close one path of several; the
+model stands as "the placements key's own writes are vetoed; everything else can orphan a placement; the Placements
+tab shows it with a delete; the CI gate catches a committed one." The consistent alternative — a document-wide
+invariant (six ops refuse or cascade) — is NAMED for a later slice, not queued.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
