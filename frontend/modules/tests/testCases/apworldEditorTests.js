@@ -3749,17 +3749,20 @@ export async function apworldSidecarsTabDrawsTheRegistrysSidecarKeys(testControl
         }
 
         /**
-         * ⛓ **THE DOOR IS ASSERTED BY ITS EFFECT.** A button labelled "Go to
-         * Regions" that selected nothing would pass a label check.
+         * ⛓ S0 — **THE SUMMARY IS NOW THE COLLAPSED HEAD OF A PER-REGION LIST.**
+         * `Go to Regions` (the tab) is gone — it pointed at a tab that drew none
+         * of this data — and what stands in its place is the list's expander.
+         * The list itself (collapsed by default, one row per entry, `Go to
+         * region`) is its own row, `apworld-sidecars-list-is-collapsed-and-goes-
+         * to-the-region`; here only its presence, so this row still describes
+         * the whole tab.
          */
-        const go = document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-go-regions`);
-        testController.reportCondition('and a button to where that key IS edited', !!go);
-        if (go) {
-            go.click();
-            testController.assertEqual(
-                'pressing it selects the Regions tab', 'regions', String(panel.activeTab));
-            selectTab(panel, 'sidecars');
-        }
+        testController.reportCondition(
+            '⛓ S0 — the tab-level "Go to Regions" button is gone',
+            !document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-go-regions`));
+        testController.reportCondition(
+            '…and the per-region list\'s expander stands in its place',
+            !!document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-expand`));
 
         /**
          * ⛓⛓⛓ **ONE RENDERER, TWO HOSTS — MEASURED AS THE SAME ROW.** The
@@ -3843,8 +3846,9 @@ registerTest({
     description: 'On procgen_maze — which carries `procgen_metadata` and three per-region '
                + 'sidecars in slot 1 — asserts the tab draws exactly the keys '
                + '`KEYS_OWNED_BY_TAB.sidecars` names, in registry order; that '
-               + '`preset_sidecars` is a one-line per-slot SUMMARY counted off the document '
-               + 'with a button that really selects the Regions tab; that a key\'s box on '
+               + '`preset_sidecars` is a per-slot SUMMARY counted off the document, heading '
+               + 'S0\'s per-region list (its expander in place of the retired Go to Regions); '
+               + 'that a key\'s box on '
                + 'this tab is element-for-element the box the Document tab builds for it '
                + '(one renderer, two hosts); and that the Document tab\'s rows for the same '
                + 'keys gained the "Edited in the Sidecars tab" pointer WITHOUT losing their '

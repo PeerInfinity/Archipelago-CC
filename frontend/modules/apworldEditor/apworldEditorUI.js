@@ -2961,9 +2961,10 @@ class ApworldEditorUI {
    * same five keys is a second vocabulary for one document, and the two would
    * agree only until one of them was changed.
    *
-   * ⛓ `preset_sidecars` is SUMMARISED, not drawn: it is the Regions tab's key
-   * (edited per region there, H4b's Edit ▸), and the ⚖ that put the other five
-   * here did not move it. One line of per-slot counts and a button.
+   * ⛓ `preset_sidecars` is not one of those rows: it is a per-REGION key, so
+   * it is drawn per region — S0's expandable list for the selected slot, above
+   * the rows, through the same `_makeRegionSidecarBlock` the Regions tab draws
+   * under each region (⚖ user, 2026-09-10, Q2 A).
    */
   _renderSidecarsTab() {
     const rows = this._sidecarRows();
@@ -3007,23 +3008,39 @@ class ApworldEditorUI {
   }
 
   /**
-   * ⛓ The one-line `preset_sidecars` summary: per-slot region counts, read off
-   * the document, and the door to where it is actually edited.
+   * ⛓⛓⛓ **S0 — `preset_sidecars`, PER REGION, FOR THE SELECTED SLOT** (⚖ user,
+   * 2026-09-10: *"I want the region list in the sidecars tab to be expandable,
+   * and collapsed by default."*). The collapsed line is the summary it always
+   * was — per-slot counts — plus the expander; expanded, one row per region of
+   * the SELECTED slot: its name, the SAME `_makeRegionSidecarBlock` the Regions
+   * tab draws under that region, and **Go to region**, which lands on the
+   * Regions tab with that region selected and scrolled into view
+   * (`selectRegion`, the Map tab's and the bounce editor's focus helper — one
+   * helper, three callers). The old **Go to Regions** (the TAB) is gone: it
+   * pointed at a tab that drew none of this data (the user's own complaint,
+   * 2026-09-09).
    *
    * ⛔ Counts are DERIVED per slot rather than summed: H0's ⚖ 3 measured that
    * every populated `preset_sidecars` keys under slot "1", four-player
    * documents included, so a single total would read as "this world has n" on a
    * document where three of the four slots have nothing.
+   *
+   * ⛔ Expanding builds N blocks and NO JSON: each block's textarea is built on
+   * its own expand (W0's rule), so a 250-region Seedling slot pays for badges.
    */
   _makePresetSidecarsSummary() {
-    const line = document.createElement('div');
-    line.className = 'apworld-sidecars-summary';
-    line.dataset.docKey = SIDECARS_TAB_SUMMARY_KEY;
-    Object.assign(line.style, {
-      display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap',
+    const box = document.createElement('div');
+    box.className = 'apworld-sidecars-summary';
+    box.dataset.docKey = SIDECARS_TAB_SUMMARY_KEY;
+    Object.assign(box.style, {
       border: '1px solid #333', borderRadius: '3px', margin: '0 0 6px', padding: '6px 8px',
       backgroundColor: '#1f1f1f', color: '#aaa', fontSize: '11px',
     });
+    const line = document.createElement('div');
+    Object.assign(line.style, {
+      display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap',
+    });
+    box.appendChild(line);
     const name = document.createElement('code');
     name.textContent = SIDECARS_TAB_SUMMARY_KEY;
     Object.assign(name.style, { color: '#cfe', fontWeight: 'bold', fontSize: '12px' });
@@ -3041,15 +3058,69 @@ class ApworldEditorUI {
         ? 'not in this document — the per-region payloads the procgen pipeline emits.'
         : 'present but empty — no slot carries a region payload.')
       : `${slots.map(([slot, n]) => `slot ${slot}: ${n} region${n === 1 ? '' : 's'}`).join(', ')}`
-        + ' — edited PER REGION in the Regions tab (Edit ▸), which is why it is a summary here.';
+        + ' — one entry per region: its substrate, its facts and its JSON, drawn here for the '
+        + 'selected slot and under each region on the Regions tab.';
     line.appendChild(text);
 
-    const btn = this._makeButton('Go to Regions', '#3a3a3a', () => this._selectTab('regions'));
-    btn.className = 'apworld-sidecars-go-regions';
-    btn.style.fontSize = '11px';
-    btn.style.marginLeft = 'auto';
-    line.appendChild(btn);
-    return line;
+    const player = this.playerId;
+    const entries = block && typeof block === 'object' && block[player]
+      && typeof block[player] === 'object' ? Object.keys(block[player]) : [];
+    const open = this._sidecarListOpen && entries.length > 0;
+    const plural = entries.length === 1 ? '' : 's';
+    const expand = this._makeButton(
+      entries.length === 0
+        ? `slot ${player} carries none`
+        : (open ? `▾ Hide slot ${player}'s region${plural}`
+          : `▸ Show slot ${player}'s ${entries.length} region${plural}`),
+      '#3a3a3a',
+      () => { this._sidecarListOpen = !this._sidecarListOpen; this._render(); });
+    expand.className = 'apworld-sidecars-expand';
+    expand.dataset.open = open ? 'true' : 'false';
+    expand.style.fontSize = '11px';
+    expand.style.marginLeft = 'auto';
+    expand.disabled = entries.length === 0;
+    line.appendChild(expand);
+    if (!open) return box;
+
+    const list = document.createElement('div');
+    list.className = 'apworld-sidecars-region-list';
+    Object.assign(list.style, { marginTop: '6px', borderTop: '1px solid #333' });
+    const regenNote = DOCUMENT_KEY_EDITORS.procgen_metadata?.regionDoor;
+    if (regenNote) {
+      const note = document.createElement('div');
+      note.textContent = `${regenNote.label} — ${regenNote.note}`;
+      Object.assign(note.style, { color: '#777', fontSize: '10px', padding: '4px 0',
+        lineHeight: '1.35' });
+      list.appendChild(note);
+    }
+    for (const regionName of entries) {
+      const row = document.createElement('div');
+      row.className = 'apworld-sidecars-region-row';
+      row.dataset.regionName = regionName;
+      Object.assign(row.style, { border: '1px solid #2c2c2c', borderRadius: '3px',
+        margin: '4px 0 0', backgroundColor: '#1c1c1c' });
+      const head = document.createElement('div');
+      Object.assign(head.style, { display: 'flex', alignItems: 'center', gap: '8px',
+        padding: '4px 8px' });
+      const label = document.createElement('code');
+      label.textContent = regionName;
+      Object.assign(label.style, { color: '#ddd', fontSize: '12px' });
+      head.appendChild(label);
+      const go = this._makeButton('Go to region', '#3a3a3a',
+        () => this.selectRegion(regionName, 'the Sidecars tab'));
+      go.className = 'apworld-sidecars-go-region';
+      go.dataset.regionName = regionName;
+      go.style.fontSize = '11px';
+      go.style.marginLeft = 'auto';
+      head.appendChild(go);
+      row.appendChild(head);
+      const sidecar = this._makeRegionSidecarBlock(player, regionName,
+        { hostTab: SIDECARS_TAB_ID });
+      if (sidecar) row.appendChild(sidecar);
+      list.appendChild(row);
+    }
+    box.appendChild(list);
+    return box;
   }
 
   _renderDocumentTab() {
