@@ -32,8 +32,9 @@
  * LINKED editors hang off — `region_atlas` → the marking tool,
  * `procgen_metadata` → the pipeline, `loop_costs` → the cost debugger (L4: its
  * plan comes back as ONE `set-key`),
- * `sphere_log` → the spoiler checklist, `preset_sidecars` → the Regions tab's
- * per-region Edit ▸, and (W0) `helpers` / `dungeons` → their own panels as
+ * `sphere_log` → the spoiler checklist, `preset_sidecars` → the Regions tab
+ * (S0: a tab switch — the key is drawn per region there and on the Sidecars
+ * tab, and edited through each region's Edit ▸), and (W0) `helpers` / `dungeons` → their own panels as
  * VIEWERS. A filled row makes `entry.editor` non-null and the Document tab
  * draws its Open button. See the table's own docblock for the contract and for
  * what each door's `returns` means. ⛔ The set is the table, not a number
@@ -98,10 +99,11 @@ const META_TAB_EXTRA_KEYS = Object.freeze(['start_regions', 'game_info']);
  * `_inject_worldgen_*` methods read them back at export time into
  * `export_data['preset_sidecars'][player]`, `export_data['procgen_metadata']`
  * and `export_data['loop_costs']`. Those three merge targets ARE the definition
- * of "sidecar data" in this tree — and `preset_sidecars` is the one that stays
- * the REGIONS tab's, because it is edited per region there (H4b's Edit ▸) and a
- * second whole-block editor would be a second place to edit one key. The
- * Sidecars tab summarises it and points at Regions instead.
+ * of "sidecar data" in this tree — and `preset_sidecars` is the one that is not
+ * a ROW here, because it is a per-REGION key: S0 draws it per region, on the
+ * Regions tab under each region and on this tab as an expandable per-region
+ * list, through one renderer, and a second whole-block editor would be a second
+ * place to edit one key.
  *
  * ⛓ **The other three are a ⚖ (user, 2026-09-08):** *"Let's put region_atlas,
  * flash_panel, and provenance in the sidecars tab for now."* They are the region
@@ -118,9 +120,11 @@ const SIDECAR_KEYS_FROM_WORLDGEN = Object.freeze(['procgen_metadata', 'loop_cost
 const SIDECAR_KEYS_FROM_RULING = Object.freeze(['region_atlas', 'flash_panel', 'provenance']);
 
 /**
- * ⛓ The Regions tab keeps this key, and the Sidecars tab only SUMMARISES it.
- * Exported because both the tab that draws the summary and the row that asserts
- * the split need the same name for it.
+ * ⛓ The key the Sidecars tab draws PER REGION rather than as one of its rows —
+ * S0's expandable per-region list for the selected slot, above the rows. It is
+ * owned by NO tab (`ownedByTab: null`): the Regions tab draws the same entries
+ * under each region, through the same renderer. Exported because both the tab
+ * that draws the list and the row that asserts the split need the same name.
  */
 export const SIDECARS_TAB_SUMMARY_KEY = 'preset_sidecars';
 
@@ -409,33 +413,36 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
     }),
 
     /**
-     * ⛓ Already linked, PER REGION, from the Regions tab (H4b's Edit ▸ through
-     * the registry's `regionRoundTrip` slot). ⛔ A second whole-block door would
-     * be a second place to edit one key, and the per-region one knows the shape.
+     * ⛓⛓⛓ S0 — **A TAB SWITCH, AND `none` IS WHAT IT RETURNS.** The key is
+     * drawn PER REGION by one renderer on two hosts (`_makeRegionSidecarBlock`
+     * under each region on the Regions tab, and the Sidecars tab's per-region
+     * list), and a region's room is edited through that block's Edit ▸, whose
+     * save comes back as ONE `replace-region-sidecar` through the per-region
+     * editor's own seam (`_applyOp`) — never through this door. This door only
+     * takes the reader to the Regions tab. ⛔ A second whole-block door would be
+     * a second place to edit one key, and the per-region one knows the shape.
+     *
+     * ⛔ **R1 DECLARED IT `returns: 'op'` + `focusHubOnSave: false`, "false
+     * because unreachable"** — the census found `open` never touching `onSave`,
+     * so the flag could never be read. That paragraph is MOOT now for the very
+     * reason it named: a door that cannot save does not return an op, so it is
+     * `none` (R1 §11.8 (3); plan §2.4), and a `none` door declares no
+     * `focusHubOnSave` at all — the flag belongs to `op` doors only, and
+     * `documentKeys.test.js` holds both directions of that.
+     *
+     * ⛓ `panelId: null` — it raises no panel; it switches the hub's own tab,
+     * which is the one other thing a `none` door may do (the viewer-door row).
      */
     preset_sidecars: Object.freeze({
         label: 'Go to the Regions tab',
-        returns: 'op',
-        /**
-         * ⛓⛓⛓ R1 — **DECLARED `false` BECAUSE IT IS UNREACHABLE, and that is
-         * measured rather than assumed.** This door's `open` takes only
-         * `goToTab` and never touches `onSave`, so nothing it does can reach
-         * `_acceptEditorOp` at all: the census of production `onSave(` call
-         * sites over `frontend/modules/apworldEditor/` finds exactly ONE, in
-         * `region_atlas`'s door, plus `loop_costs` handing its `onSave` to the
-         * debugger through the load payload. Its `returns: 'op'` describes the
-         * REGIONS tab's `replace-region-sidecar`, which comes back through the
-         * per-region editor's own seam (`_applyOp`) and never through this one.
-         *
-         * ⛔ So the honest value is the one that changes nothing if the door is
-         * ever wired to `onSave` by someone who has not thought about it —
-         * `false`, the same fail-closed reading a missing flag gets.
-         */
-        focusHubOnSave: false,
+        returns: 'none',
         panelId: null,
-        note: 'Edited PER REGION in the Regions tab: Edit ▸ opens that region\'s own editor '
-            + '(H4b) and its save comes back as ONE `replace-region-sidecar`. There is no '
-            + 'whole-block editor, deliberately.',
+        note: 'Drawn PER REGION by one renderer in two places: under each region on the '
+            + 'Regions tab, and as the per-region list on the Sidecars tab — its substrate, '
+            + 'its facts, the entry\'s JSON, and its doors. A room is edited through that '
+            + 'block\'s Edit ▸, whose save comes back as ONE `replace-region-sidecar`; this '
+            + 'button only goes to the Regions tab. There is no whole-block editor, '
+            + 'deliberately.',
         open: async ({ goToTab }) => { goToTab('regions'); },
     }),
 

@@ -493,15 +493,43 @@ describe('the editor slot — FILLED by H5', () => {
             expect(DOCUMENT_KEY_EDITORS.loop_costs.focusHubOnSave).toBe(true);
             // ⚖ user 2026-09-09 — the marking tool is a workspace, not a hand-back.
             expect(DOCUMENT_KEY_EDITORS.region_atlas.focusHubOnSave).toBe(false);
-            /**
-             * ⛓ `preset_sidecars` declares `false` because the flag is
-             * UNREACHABLE for it: its `open` takes only `goToTab` and never
-             * touches `onSave`, so nothing it does reaches `_acceptEditorOp`.
-             * Measured here off the door's own source rather than asserted.
-             */
-            expect(DOCUMENT_KEY_EDITORS.preset_sidecars.focusHubOnSave).toBe(false);
-            expect(String(DOCUMENT_KEY_EDITORS.preset_sidecars.open)).not.toContain('onSave');
         });
+
+    /**
+     * ⛓⛓ S0 — **…AND NO OTHER DOOR DECLARES IT.** The flag answers *"does this
+     * door's save bounce the person back?"*, and a door that cannot save has no
+     * answer — so a `focusHubOnSave` on a `document` or `none` door is a claim
+     * about nothing, and it is the shape R1's `preset_sidecars` declaration had
+     * (`false` "because unreachable") until S0 made that door `none`. The
+     * population is every door whose `returns` is NOT `op` — the law again,
+     * never the flag.
+     */
+    it('⛔ S0 — no door that cannot return an op declares `focusHubOnSave`', () => {
+        const others = Object.entries(DOCUMENT_KEY_EDITORS)
+            .filter(([, editor]) => editor.returns !== 'op');
+        expect(others.length).toBeGreaterThan(0);
+        for (const [key, editor] of others) {
+            expect(Object.prototype.hasOwnProperty.call(editor, 'focusHubOnSave'), key)
+                .toBe(false);
+        }
+    });
+
+    /**
+     * ⛓⛓⛓ S0 — **`preset_sidecars` IS A TAB SWITCH, AND IT SAYS SO** (R1 §11.8
+     * (3); plan §2.4). Its `open` takes only `goToTab`, so nothing it does can
+     * reach `_acceptEditorOp` — measured off the door's own source — and the
+     * honest `returns` is `none`. Its note names BOTH hosts the key is drawn on,
+     * because the question a reader of the Document row has is "where is this
+     * key shown", and the answer is two tabs.
+     */
+    it('⛓⛓ S0 — the `preset_sidecars` door returns nothing, and its note names BOTH '
+        + 'hosts', () => {
+        const door = DOCUMENT_KEY_EDITORS.preset_sidecars;
+        expect(door.returns).toBe('none');
+        expect(String(door.open)).not.toContain('onSave');
+        expect(door.note).toContain('Regions tab');
+        expect(door.note).toContain('Sidecars tab');
+    });
 
     /**
      * ⛓⛓ S0 — **THE HAND-OFF DOOR'S WORDS ON A REGION'S BLOCK ARE THE DOOR'S
@@ -617,22 +645,35 @@ describe('the editor slot — FILLED by H5', () => {
      * rather than written per key, so a door added later is covered by being a
      * viewer, not by somebody remembering this row.
      */
-    it('⛓⛓ W0 — every viewer door publishes exactly ONE `ui:activatePanel`, '
-        + 'for the panel its own declaration names', async () => {
+    /**
+     * ⛓⛓ S0 — **AND A `none` DOOR WITH NO PANEL SWITCHES THE HUB'S TAB
+     * INSTEAD.** `preset_sidecars` became `none` in S0 (it only ever took
+     * `goToTab`), so the viewer population grew a door that raises nothing and
+     * moves the hub instead. The law is therefore "exactly ONE visible thing":
+     * a declared panel is raised, or — `panelId: null` — one tab is selected.
+     * ⛔ Still no filter on the field under test: a panel door that LOST its
+     * `panelId` would still publish its `ui:activatePanel`, and the null arm
+     * reds on exactly that publish.
+     */
+    it('⛓⛓ W0 — every viewer door does exactly ONE visible thing: raises the panel '
+        + 'its declaration names, or (declaring none) switches the hub\'s tab', async () => {
         const viewers = Object.entries(DOCUMENT_KEY_EDITORS)
             .filter(([, editor]) => editor.returns === 'none');
         // ⛔ Non-vacuity: there really are viewer doors to check.
         expect(viewers.length).toBeGreaterThan(1);
         /**
-         * ⛔ **A DOOR THAT RETURNS NOTHING HAS TO RAISE SOMETHING**, or pressing
-         * it does nothing at all — so the `panelId` is part of what makes this
-         * set drivable, and the filter above does NOT skip a door that lost it.
+         * ⛔ **A DOOR THAT RETURNS NOTHING HAS TO DO SOMETHING**, or pressing
+         * it does nothing at all — so every viewer DECLARES `panelId` (null
+         * included), and the filter above does NOT skip a door that lost it.
          * (A door filtered out by its own missing field is a guard that goes
          * quiet on the defect it exists for.)
          */
-        for (const [key, editor] of viewers) expect(editor.panelId, key).toBeTruthy();
+        for (const [key, editor] of viewers) {
+            expect(Object.prototype.hasOwnProperty.call(editor, 'panelId'), key).toBe(true);
+        }
         for (const [key, editor] of viewers) {
             const published = [];
+            const tabs = [];
             await editor.open({
                 key,
                 record: {},
@@ -640,11 +681,22 @@ describe('the editor slot — FILLED by H5', () => {
                 value: undefined,
                 eventBus: { publish: (event, payload) => published.push({ event, payload }) },
                 onSave: () => { throw new Error(`${key}: a viewer door must not save`); },
-                goToTab: () => { throw new Error(`${key}: a viewer door raises a panel`); },
+                goToTab: (tab) => tabs.push(tab),
             });
-            expect(published.map((p) => p.event), key).toEqual(['ui:activatePanel']);
-            expect(published[0].payload.panelId, key).toBe(editor.panelId);
+            if (editor.panelId) {
+                expect(published.map((p) => p.event), key).toEqual(['ui:activatePanel']);
+                expect(published[0].payload.panelId, key).toBe(editor.panelId);
+                expect(tabs, key).toEqual([]);
+            } else {
+                expect(published, key).toEqual([]);
+                expect(tabs.length, key).toBe(1);
+                expect(typeof tabs[0], key).toBe('string');
+            }
         }
+        // ⛓ …and the one tab-switch door goes where its label says.
+        const sidecarsTabs = [];
+        await DOCUMENT_KEY_EDITORS.preset_sidecars.open({ goToTab: (t) => sidecarsTabs.push(t) });
+        expect(sidecarsTabs).toEqual(['regions']);
     });
 
     /**
