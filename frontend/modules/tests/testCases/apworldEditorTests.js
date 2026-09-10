@@ -5351,6 +5351,9 @@ export async function apworldAProgressionLevelEditIsOneOpAndOneUndo(testControll
         const opsBefore = panel.session.ops().length;
         // ⛔ RE-QUERIED after the render, and the SECOND row, so "the whole
         //   entry came back" is not satisfied by an entry with one member.
+        //   ⛓ Null-safe on purpose: under the partial-write mutant the row is
+        //   GONE after the render, and a row that threw there would red without
+        //   naming what went wrong (the conditions below are the claim).
         const box = () => document.querySelectorAll(
             `${PROG_CARD(name)} .apworld-progression-level`)[1];
         const target = Number(box().value) + 5;
@@ -5360,9 +5363,17 @@ export async function apworldAProgressionLevelEditIsOneOpAndOneUndo(testControll
         testController.assertEqual('the edit is ONE op', '1',
             String(panel.session.ops().length - opsBefore));
         testController.assertEqual('…and the level the person typed is in the document',
-            String(target), String(mappingsOf(panel)[name].items[1].level));
+            String(target), String(mappingsOf(panel)[name].items?.[1]?.level));
+        // ⛓⛓ THE DIRECT CLAIM: the op carries the WHOLE entry, so every OTHER
+        //   level is exactly where it was. A card that wrote only the changed
+        //   row would take the rest of the entry with it, and this is the
+        //   condition that says so by name.
+        const others = (entry) => JSON.stringify((entry?.items ?? [])
+            .filter((_m, i) => i !== 1));
+        testController.assertEqual('…and every OTHER level of the entry is untouched',
+            others(JSON.parse(before)), others(mappingsOf(panel)[name]));
         testController.assertEqual('…and it is drawn back',
-            String(target), box().value);
+            String(target), String(box()?.value));
 
         panel.session.undo();
         panel._render();
