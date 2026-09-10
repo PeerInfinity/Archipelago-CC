@@ -13554,6 +13554,95 @@ vs rule references; the stardew Regions render; the two op vocabularies on the M
 (§5p); the seedling-wasm follow-ups (§5q); the queue viewer's fresh plan (§5m); V3b's two; the cleanup backlog; the
 maze-lab residues; the docs TODO.
 
+## 5u. PRESET SIDECARS — the INVESTIGATION, MEASURED 2026-09-10 (Fable session `preset-sidecars-planning` at main `de0700947a`; successor to §5t's HANDOFF; plan file `NewDocs/plans/preset-sidecars-plan.md`, gitignored; memory `project_preset_sidecars`)
+
+**The ask (user, 2026-09-09):** *"For the preset sidecars, I want to do a thorough investigation of what code reads
+and writes that data, and what editors for it are already available. Different substrates store different data in
+the preset sidecars. I don't expect this to need just a simple change."* Everything below was MEASURED at
+`de0700947a` (python over `git ls-files frontend/presets`; a node census importing the seven substrate libraries
+and calling `inspectRegionRoom` per entry; `reconstructResultFromSidecars` per fixture; a scratch Playwright drive
+of the live hub on :8000 through the `?rules=` intake with an identity wait; a `grep -a` census over `git ls-files`;
+five read-only agent sweeps, one per payload family, every claim file:line — the full tables are in the plan file).
+
+**The corpus:** 197 tracked presets carry the key (158 `{}`, 39 populated; +2 untracked fixture dirs); **1,392
+region entries** (1,398 with the fixtures): maze 1,046 · flash_seedling 260 · jta 31 · bounce 25 · text_adventure
+15 · runner 9 · omsi 6. ONE multi-slot document (`multiworld/AP_05594871498841892311`, 3/3/5/5). Whole-SLOT block
+pretty size: median 24 KB, max **2,155,409 B / 134,060 lines** (`procgen_topdown/AP_8`); per-ENTRY payload: maze
+median 3.9 KB / max 36 KB, jta max 60 KB (a `jta_dataset` carrier) — every entry fits a textarea, the slot does not.
+
+**⛔ SEVEN SUBSTRATES ARE THREE PAYLOAD FAMILIES.** Tile-grid (maze + text_adventure — `adapterPrimitives.js:51`
+aliases the TA serializer to `serializeMazeWorld`, so a TA region carries a full maze grid its engine never
+renders); flash-zone (bounce + runner — the same `buildZonePayload` keys `gameId params ap_locations
+flashCapabilities exits fogEnabled`, geometry inside `params`); and three one-offs — jta (`jtaZone` + a dataset
+carried ONCE and referenced by `jta_dataset_ref` from sibling entries, resolved in memory by `buildWarehouse`),
+omsi (`omsiTown` + script-authored `awardSchedule`/`unlockMeta`), Seedling (`atlas_ref atlas_region level tile_size
+exits` — an atlas REFERENCE; `atlas_ref` resolves to nothing at runtime; the entries are a compiled SNAPSHOT of the
+atlas the marking tool edits, regenerated only by the compiler CLI).
+
+**Writers:** `procgenPipelineEngine.buildPresetSidecars` (`:5974`) — the adapter's `serializeWorld` per region,
+engine-owned `exits`/`entrance` re-attached first, `manaEnabled`/`fogEnabled` stamped AFTER serialize, and the
+entry-level `substrate render_hint grid_cell biome grow_telemetry` from the driver; `regionAtlasCompiler.js:749`
+(Seedling + the 10 atlas-derived maze rooms, slot `1` hardcoded); the Python round trip
+(`generator.py:272` → `_worldgen_sidecars.json` → `handler.py:2102`) copies, never reads a field; the hub's
+`replace-region-sidecar` (H4b). **Readers at play:** `buildWarehouse` reads ONLY `substrate` + `playable_payload`
+and hands the payload to `deserializeWorld`; the entry-level fields are read by the region graph (`grid_cell`),
+the Map tab, the cost debugger's topology and `presetUI.computeProcgenStats` (`substrate`), the maze biome
+library (`biome`), and `playbackBotUI._resolveSubstrateId` (⚠ slot `'1'` hardcoded, `:900`). **The sphere-append
+rebuild (`rebuildEnvelopeFromRulesJson`) re-derives every region's rules FROM THE PAYLOAD and never reads
+`regions[p][r]`'s access rules** — on that path a hand-edited payload wins over the document.
+
+**Derived vs authored, and what a raw edit breaks (the plan's §2.2 table has all seven):** maze's
+`longestShortestPath` is computed at write and TRUSTED verbatim at play (`mazeRoomEngine.js:345` → loop-mode mana
+per tile), `items[].locationName` and `exits[].exitName/targetRegion` are baked AP names, and the region's access
+rules are a BFS over `tiles`+`obstacles` from `entrance` — so a raw tile edit leaves stale rules, stale mana, and
+(because the baseline re-serialize no longer byte-matches) a DISABLED Edit ▸. Bounce/runner: rules derive from
+`params.*Level` at generation, nothing re-derives on load. jta: an un-restamped `jta_dataset` makes the bridge
+REFUSE the region load. No gate anywhere validates a payload field against its own derivation (only the byte-identity
+dumps pin the generators; `check-jta-locations-roundtrip.mjs` and the Seedling `--check`s pin whole presets).
+
+**Editors that exist, Edit ▸ at HEAD (re-measured):** maze **1,036 / 1,046** (2,983 movable endpoints · 826 frozen;
+the 10 refusals are the atlas-derived rooms), bounce **25 / 25** (65 · 15), flash_seedling 0/260 (declared
+`refused` — its lab EDIT arm needs a whole SET document and cannot open a rules.json region; ⚠ the pipeline's own
+`_editRegion` passes no `record` either, moot only because the Map reconstruction returns null first), jta/omsi/
+runner/text_adventure 0 — no `roomEditor` at all. jta's dataset is editable only through the spiral ② content
+seam; `jtaBalance` writes the LIVE warehouse, never the document. **The Map tab draws nothing for a slot without
+tile-grid payloads** (measured `null` for the fixture's bounce slot, `bounce_worldgen`, `runner_worldgen`,
+`jta_schedule_test`, `seedling_playthrough`) — the documented zone-world answer, not this arc's.
+
+**The three surfaces, read off the live page (4-player fixture, slot 1, 0 page errors):** Regions = three `Edit ▸`
+buttons and NOTHING else (no substrate name in the tab's text, no payload); Sidecars = the one-line per-slot count +
+`Go to Regions`; Document = `preset_sidecars · player 1 · {3 keys}` with the whole-SLOT JSON block (Save = `set-key`
+scope `player`; the schema requires `substrate` per entry and declares `playable_payload` OPAQUE, so anything inside
+a payload passes the veto). The user's complaint is exact. R1's residual stands: the door declares `returns: 'op'`
+for a `goToTab`; `EDITOR_RETURN_KINDS.none` is the honest value.
+
+**Planner's assessment (plan §3).** (D1) **A raw save cannot re-derive rules in general** — re-derivation exists
+for 1,061 of 1,392 entries, is H4b's baseline machinery where it exists (it moves only rules it proved it
+authored), and the pipeline's append path already treats the payload as the authority — so a raw save is a NEW op
+`set-region-sidecar {player, region, entry}`: whole entry, schema-vetoed like `set-key`, rules UNTOUCHED, the
+message saying so, and the region's Edit ▸ verdict re-asked. (D2) **The unit is the ENTRY**: one renderer — a
+substrate badge, the entry-level facts, `▸ Show JSON` on expand — hosted on Regions (under each region, beside
+`Edit ▸`) AND on Sidecars (the summary becomes a per-region list for the selected slot with `Go to region`), the
+S1/R1 one-renderer-two-hosts precedent; `Go to Regions` goes. (D3) No substrate names in the hub; the "re-derives
+nothing" sentence is generic in V1, a per-substrate declaration is a later rung only if wanted. **Ladder:** V0 VIEW
+(read-only block + list + the door's `returns`) → V1 EDIT (the op, Save JSON, the corpus control 1,392 written back
+= 0 refused / 0 bytes moved, trap-1306 rows) → replan; optional V2 (a `Re-derive rules` button reusing
+`inspectRegionRoom`+`buildSidecarOp` for maze/bounce) and V3 (text_adventure declares maze's two fields → 15 doors).
+
+**⚖ OPEN for the user (asked 2026-09-10, with live links; answers recorded verbatim below when they arrive):**
+1. Raw save = the ENTRY alone, rules untouched (recommended) — or re-derive where a round trip exists?
+2. Home = per-region block on Regions + per-region list on Sidecars through ONE renderer (recommended) — or one only?
+3. The raw block edits the whole ENTRY (recommended; the Document row already allows it per slot) — or the payload only?
+4. Ladder V0 → V1 → replan (recommended); are V2 / V3 wanted at all?
+Links: `?rules=./presets/multiworld/AP_05594871498841892311/…` (per slot, both editable families) ·
+`procgen_maze/AP_1` · `jta_schedule_test/AP_14089154938208861744` (a 60 KB dataset payload) ·
+`seedling_playthrough/AP_1` (250 atlas references) — each with `&focusPanel=apworldEditorPanel`.
+
+**Named, not queued (the rest of this key's field):** the `playbackBotUI` slot-`'1'` read; maze copies `fogEnabled`
+only when `=== true` (`mazeRoomEngine.js:357` — an explicit `false` is dropped; unverified at runtime); the atlas
+compiler writes slot `1`; no `longestShortestPath`-vs-`tiles` gate; runner/text_adventure/jta/omsi have no room
+editor; the Seedling pipeline `_editRegion` `record` gap. NOTHING LAUNCHED — the session stops at the ⚖.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
