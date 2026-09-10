@@ -51,9 +51,13 @@ import { rulesEditAdapter } from './rulesEditAdapter.js';
 import {
   EXIT_FIELDS,
   ITEM_FIELDS,
+  ADDITIVE_TYPE,
   ITEM_GROUPS_KEY,
   META_FIELDS,
   PLACEMENT_ISSUE_REASONS,
+  PROGRESSION_ISSUE_REASONS,
+  PROGRESSION_KINDS,
+  PROGRESSION_MAPPING_KEY,
   canonicalPlacementIssues,
   canonicalPlacementIssuesByPlayer,
   deleteItemOps,
@@ -62,6 +66,9 @@ import {
   itemGroupRegistry,
   itemsCarryingGroup,
   locationsOfPlayer,
+  progressionKindOf,
+  progressionMappingIssues,
+  progressionMappings,
   unlistedItemGroups,
 } from './rulesDocOps.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
@@ -1536,6 +1543,9 @@ class ApworldEditorUI {
     //   a person adds a group before they can put anything in it, and the
     //   per-item picker below draws only names this section lists.
     this.scrollContainer.appendChild(this._renderItemGroupsSection());
+    // ⛓ I2 — then the mappings that turn those items into levels and counters.
+    //   Both sections are ABOUT the item rows below and are read before them.
+    this.scrollContainer.appendChild(this._renderProgressionSection());
 
     const addBtn = this._makeButton('+ Add item', '#444', () => this._handleAddItem());
     addBtn.style.marginBottom = '8px';
@@ -1898,6 +1908,506 @@ class ApworldEditorUI {
       : 'This slot\'s registry is empty — add a group in the Groups section above';
     cell.appendChild(pick);
     return cell;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+   * THE PROGRESSION SECTION — `progression_mapping`, the two kinds (I2)
+   * ══════════════════════════════════════════════════════════════════ */
+
+  /**
+   * ⛓⛓⛓ **ONE CARD PER MAPPING, AND THE CARD IS THE UNIT OF UNDO.**
+   *
+   * `progression_mapping[p]` is `name → mapping` in two kinds, and the section
+   * draws the kind the RUNTIME would read (`mapping.type === 'additive'`, the
+   * one question `inventoryManager` asks). Every gesture on a card — a level
+   * typed, a member added or removed, the order changed, the kind switched —
+   * commits ONE `set-progression-mapping` carrying the WHOLE entry, so one
+   * Undo puts the card a person was looking at back rather than one row of it.
+   *
+   * ⛓⛓ **THE BASE PICKER OFFERS THE SLOT'S MAPPING NAMES, NOT ITS ITEMS**, and
+   * that is a measurement rather than a preference: `genericLogic` compares one
+   * entry's `base_item` only against ANOTHER entry's, never looking it up in
+   * `items`, and over the 212 committed documents `base_item` is a mapping KEY
+   * of the same slot in **137 of 137** entries and an item in only 135. The
+   * ten that differ are alttp's `Progressive Bow (Alt)` → `Progressive Bow`,
+   * which is what the field is FOR: two receivable items pooling into one
+   * level count.
+   *
+   * ⛓ **A STALE MEMBER IS SHOWN, MARKED AND REMOVABLE — never dropped.** 12
+   * committed members (smz3's four entries) name resolved forms the slot's
+   * `items` does not hold; the op differences its refusal so an entry that
+   * arrived with one stays editable, and the mark reads the SAME predicate the
+   * refusal does (`progressionMappingIssues`).
+   */
+  _renderProgressionSection() {
+    const mappings = progressionMappings(this.rulesDoc, this.playerId);
+    const names = Object.keys(mappings);
+    const issues = progressionMappingIssues(this.rulesDoc, this.playerId);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'apworld-progressions';
+    wrap.dataset.slot = String(this.playerId);
+    wrap.dataset.mappings = String(names.length);
+    wrap.dataset.issues = String(issues.length);
+    Object.assign(wrap.style, {
+      border: '1px solid #333', borderRadius: '3px', backgroundColor: '#1f1f1f',
+      padding: '6px 8px', margin: '0 0 10px',
+    });
+
+    const head = document.createElement('div');
+    head.className = 'apworld-progressions-head';
+    head.textContent = `Progression — slot ${this.playerId}: ${names.length} mapping`
+      + `${names.length === 1 ? '' : 's'}`
+      + (issues.length ? `, ${issues.length} naming something this slot does not hold` : '');
+    Object.assign(head.style, { color: '#cfe', fontSize: '12px', fontWeight: 'bold',
+      marginBottom: '3px' });
+    wrap.appendChild(head);
+
+    const intro = document.createElement('div');
+    intro.className = 'apworld-progressions-intro';
+    Object.assign(intro.style, { color: '#888', fontSize: '11px', lineHeight: '1.4',
+      marginBottom: '6px' });
+    intro.textContent = `\`${PROGRESSION_MAPPING_KEY}\` maps a name to the items it resolves to, `
+      + 'in two kinds. A PROGRESSIVE mapping is read by the rule engine: a level\'s item counts '
+      + 'as held once the pooled count of every mapping sharing this one\'s base item reaches '
+      + 'that level, and the mapping\'s own name is normally a real item the player receives. An '
+      + 'ADDITIVE mapping is read by the inventory: its name is a VIRTUAL counter, a direct add '
+      + 'of it is skipped, and each component item adds its value to the counter instead. The '
+      + 'base item is the POOL every mapping sharing it counts into — it names a mapping in this '
+      + 'slot, not an item.';
+    wrap.appendChild(intro);
+
+    if (!names.length) {
+      const none = document.createElement('div');
+      none.className = 'apworld-progressions-empty';
+      none.style.cssText = 'color:#888;font-size:11px;margin-bottom:6px;';
+      none.textContent = 'No progression mappings yet. Add one below, then put this slot\'s '
+        + 'items in it as levels (progressive) or values (additive).';
+      wrap.appendChild(none);
+    }
+
+    for (const name of names) wrap.appendChild(this._makeProgressionCard(name, mappings[name]));
+    wrap.appendChild(this._makeProgressionAddRow());
+    return wrap;
+  }
+
+  /**
+   * ⛓ ONE `set-progression-mapping` carrying the whole entry — the only way
+   * this section writes. An absent `mapping` deletes the entry.
+   */
+  _commitProgression(name, mapping) {
+    return this._applyOp({
+      op: 'set-progression-mapping', name, mapping, player: this.playerId,
+    });
+  }
+
+  /**
+   * ⛓⛓ **THE ITEM PICKER, LAZY — I1's measurement, one key over.** The corpus's
+   * worst case is `sc2` slot 1 at 1,741 items; a `<select>` filled at
+   * construction is open at rest, and I1 measured 1,540,414 option elements
+   * and a 16,688 ms Items-tab paint against 1,741 and 1,948 ms for the lazy
+   * form. So the list is built on `focus`/`mousedown`.
+   *
+   * ⛓⛓ And the CURRENT value is always an option, even when the slot does not
+   * hold it (W3's rule): a select whose value is not in its list silently
+   * re-points the row to something else the moment it is opened, which for a
+   * stale member would be the "silently dropped" outcome this section exists
+   * to prevent.
+   */
+  _makeItemPicker(current, { className, placeholder, exclude, onPick }) {
+    // ⛓ Names the entry already holds are not offered: `set-progression-mapping`
+    //   refuses a duplicate member by shape, and a picker whose every option
+    //   ends in an alert is not a picker. ⛔ The OP is still the guard — the
+    //   omission is a courtesy (trap 1305), and the in-app refusal row asks
+    //   the op rather than the control.
+    const skip = exclude ?? new Set();
+    const items = Object.keys(this._items()).filter((n) => !skip.has(n));
+    const pick = document.createElement('select');
+    pick.className = className;
+    if (current != null) pick.dataset.item = current;
+    Object.assign(pick.style, {
+      backgroundColor: '#222', color: '#ddd', border: '1px solid #444',
+      borderRadius: '3px', padding: '1px 2px', fontSize: '11px', maxWidth: '100%',
+    });
+    const option = (value, text) => {
+      const o = document.createElement('option');
+      o.value = value;
+      o.textContent = text;
+      return o;
+    };
+    const rest = () => (current == null ? items : items.filter((n) => n !== current));
+    const first = () => (current == null
+      ? option('', items.length ? placeholder : '(no items)')
+      : option(current, current));
+    pick.appendChild(first());
+    const fill = () => {
+      if (pick.dataset.filled === 'true') return;
+      pick.dataset.filled = 'true';
+      pick.textContent = '';
+      pick.appendChild(first());
+      for (const n of rest()) pick.appendChild(option(n, n));
+    };
+    pick.addEventListener('focus', fill);
+    pick.addEventListener('mousedown', fill);
+    pick.addEventListener('change', () => {
+      const chosen = pick.value;
+      if (!chosen || chosen === current) return;
+      onPick(chosen);
+    });
+    pick.disabled = !items.length;
+    return pick;
+  }
+
+  /** ⛓ A small number box that commits on `change` — never per keystroke (the
+   *  Meta tab's rule), so one level typed is one op and one undo. */
+  _makeProgressionNumber(value, { className, title, onCommit }) {
+    const input = this._makeTextInput(String(value), '56px');
+    input.className = className;
+    input.title = title;
+    input.addEventListener('change', (e) => {
+      const n = parseInt(e.target.value, 10);
+      if (!Number.isFinite(n)) { e.target.value = String(value); return; }
+      if (n === value) return;
+      onCommit(n);
+    });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+    });
+    return input;
+  }
+
+  /**
+   * ⛓⛓ One card. ⛔ Every handler rebuilds the WHOLE entry from `mapping` and
+   * hands it to `_commitProgression`, so a mutant that wrote only the changed
+   * row would take the rest of the card with it — which is what row (b)'s undo
+   * condition measures.
+   */
+  _makeProgressionCard(name, mapping) {
+    const kind = progressionKindOf(mapping);
+    const additive = kind === PROGRESSION_KINDS.ADDITIVE;
+    const stale = new Set(progressionMappingIssues(this.rulesDoc, this.playerId)
+      .filter((i) => i.name === name && i.reason === PROGRESSION_ISSUE_REASONS.UNKNOWN_ITEM)
+      .map((i) => i.member));
+    const members = additive
+      ? Object.entries(mapping.items ?? {}).map(([n, v]) => ({ name: n, value: v }))
+      : (Array.isArray(mapping.items) ? mapping.items : []);
+
+    const card = document.createElement('div');
+    card.className = 'apworld-progression-card';
+    card.dataset.mapping = name;
+    card.dataset.kind = kind;
+    card.dataset.base = String(mapping?.base_item ?? '');
+    card.dataset.members = String(members.length);
+    card.dataset.stale = String(stale.size);
+    Object.assign(card.style, {
+      border: '1px solid #2e2e2e', borderRadius: '3px', backgroundColor: '#191919',
+      padding: '4px 6px', margin: '0 0 6px',
+    });
+
+    /** ⛓ Rebuild the entry's `items` container from a member LIST, in the kind
+     *  the card is currently in — the one place the two shapes are written. */
+    const rebuilt = (list, asAdditive = additive) => (asAdditive
+      ? {
+        ...mapping,
+        type: ADDITIVE_TYPE,
+        items: Object.fromEntries(list.map((m) => [m.name, m.value ?? m.level ?? 1])),
+      }
+      : (() => {
+        const { type: _dropped, ...rest } = mapping ?? {};
+        return {
+          ...rest,
+          items: list.map((m) => (m.value === undefined
+            ? m
+            : { name: m.name, level: m.value })),
+        };
+      })());
+
+    /* ── the head: name, kind, base, delete ───────────────────────── */
+    const head = document.createElement('div');
+    Object.assign(head.style, { display: 'flex', alignItems: 'center', gap: '6px',
+      flexWrap: 'wrap' });
+
+    const label = document.createElement('code');
+    label.className = 'apworld-progression-name';
+    label.textContent = name;
+    Object.assign(label.style, { color: '#cfe', fontSize: '12px', fontWeight: 'bold' });
+    label.title = additive
+      ? `"${name}" is a VIRTUAL counter: the inventory skips a direct add of it and each `
+        + 'component below adds its value instead.'
+      : `"${name}" is normally a real item this slot holds — the rule engine resolves a level's `
+        + 'item once the pooled count reaches that level.';
+    head.appendChild(label);
+
+    const kindPick = document.createElement('select');
+    kindPick.className = 'apworld-progression-kind';
+    Object.assign(kindPick.style, {
+      backgroundColor: '#222', color: '#ddd', border: '1px solid #444',
+      borderRadius: '3px', padding: '1px 2px', fontSize: '11px',
+    });
+    for (const k of Object.values(PROGRESSION_KINDS)) {
+      const o = document.createElement('option');
+      o.value = k;
+      o.textContent = k;
+      if (k === kind) o.selected = true;
+      kindPick.appendChild(o);
+    }
+    kindPick.title = 'progressive: levels the rule engine resolves through the pooled count. '
+      + 'additive: a virtual counter the inventory accumulates into.';
+    kindPick.addEventListener('change', () => {
+      const next = kindPick.value === PROGRESSION_KINDS.ADDITIVE;
+      if (next === additive) return;
+      // ⛓⛓ An additive member is `name: number` and carries NOTHING else, so a
+      //   conversion that would drop a field this editor does not draw
+      //   (`provides`, schema-declared and on 13 committed members) says so
+      //   first rather than losing it silently.
+      const losing = next ? members.filter((m) => m.provides !== undefined) : [];
+      if (losing.length && !confirm(`Converting "${name}" to additive drops \`provides\` from `
+        + `${losing.length} level${losing.length === 1 ? '' : 's'} `
+        + `(${losing.map((m) => m.name).join(', ')}). Continue?`)) {
+        kindPick.value = kind;
+        return;
+      }
+      this._commitProgression(name, rebuilt(
+        next ? members.map((m) => ({ name: m.name, value: m.level ?? m.value ?? 1 }))
+          : members.map((m, i) => ({ name: m.name, level: m.value ?? m.level ?? (i + 1) })),
+        next,
+      ));
+    });
+    head.appendChild(kindPick);
+
+    const baseWrap = document.createElement('span');
+    baseWrap.style.cssText = 'color:#888;font-size:11px;';
+    baseWrap.textContent = 'base ';
+    head.appendChild(baseWrap);
+    head.appendChild(this._makeProgressionBasePicker(name, mapping));
+
+    const del = this._makeButton('×', '#8a2a2a', () => {
+      if (!confirm(`Delete the progression mapping "${name}"?`)) return;
+      this._commitProgression(name, undefined);
+    });
+    del.className = 'apworld-progression-delete';
+    del.style.padding = '2px 8px';
+    del.style.marginLeft = 'auto';
+    del.title = `Remove "${name}" from slot ${this.playerId}'s \`${PROGRESSION_MAPPING_KEY}\``;
+    head.appendChild(del);
+    card.appendChild(head);
+
+    /* ── the members ──────────────────────────────────────────────── */
+    for (const [index, member] of members.entries()) {
+      card.appendChild(this._makeProgressionMemberRow({
+        name, member, index, members, additive, stale, rebuilt,
+      }));
+    }
+
+    /* ── add a member ─────────────────────────────────────────────── */
+    const addLine = document.createElement('div');
+    Object.assign(addLine.style, { display: 'flex', alignItems: 'center', gap: '6px',
+      marginTop: '3px', paddingLeft: '14px' });
+    const addPick = this._makeItemPicker(null, {
+      className: 'apworld-progression-add-member',
+      placeholder: additive ? '+ component item…' : '+ level item…',
+      exclude: new Set(members.map((m) => m.name)),
+      onPick: (chosen) => this._commitProgression(name, rebuilt(additive
+        ? [...members, { name: chosen, value: 1 }]
+        : [...members, { name: chosen, level: members.length + 1 }])),
+    });
+    addPick.title = additive
+      ? 'Add a component item, at value 1'
+      : 'Add a level, numbered after the last one';
+    addLine.appendChild(addPick);
+    card.appendChild(addLine);
+    return card;
+  }
+
+  /**
+   * ⛓⛓ The base picker — over the slot's MAPPING NAMES (see
+   * `_renderProgressionSection`'s docblock), with the entry's own name always
+   * offered and the current value kept even when it names nothing, so a
+   * dangling base is visible rather than silently re-pointed.
+   */
+  _makeProgressionBasePicker(name, mapping) {
+    const bases = Object.keys(progressionMappings(this.rulesDoc, this.playerId));
+    const current = typeof mapping?.base_item === 'string' ? mapping.base_item : '';
+    const pick = document.createElement('select');
+    pick.className = 'apworld-progression-base';
+    pick.dataset.base = current;
+    pick.dataset.pooled = String(bases.includes(current));
+    Object.assign(pick.style, {
+      backgroundColor: '#222', color: bases.includes(current) ? '#ddd' : '#e0a030',
+      border: `1px solid ${bases.includes(current) ? '#444' : '#5a4520'}`,
+      borderRadius: '3px', padding: '1px 2px', fontSize: '11px', maxWidth: '160px',
+    });
+    for (const b of [current, ...bases.filter((b) => b !== current)]) {
+      const o = document.createElement('option');
+      o.value = b;
+      o.textContent = b;
+      if (b === current) o.selected = true;
+      pick.appendChild(o);
+    }
+    pick.title = bases.includes(current)
+      ? `Every mapping whose base is "${current}" pools its inventory count into one level total`
+      : `"${current}" is not a mapping in this slot — nothing pools with it`;
+    pick.addEventListener('change', () => {
+      if (pick.value === current) return;
+      this._commitProgression(name, { ...mapping, base_item: pick.value });
+    });
+    return pick;
+  }
+
+  /**
+   * ⛓ One member row. ⛓⛓ Reordering swaps ARRAY POSITIONS and leaves each
+   * level with its own row: the runtime resolves a member by NAME and reads
+   * that member's own `level` (`genericLogic.has`), so the array's order is
+   * presentation — renumbering on a move would silently change what the rules
+   * resolve.
+   */
+  _makeProgressionMemberRow({ name, member, index, members, additive, stale, rebuilt }) {
+    const isStale = stale.has(member.name);
+    const row = document.createElement('div');
+    row.className = 'apworld-progression-member';
+    row.dataset.item = member.name;
+    row.dataset.stale = String(isStale);
+    row.dataset.index = String(index);
+    Object.assign(row.style, {
+      display: 'flex', alignItems: 'center', gap: '6px', padding: '1px 0 1px 14px',
+    });
+
+    const replaceAt = (next) => this._commitProgression(name,
+      rebuilt(members.map((m, i) => (i === index ? next : m))));
+
+    row.appendChild(this._makeItemPicker(member.name, {
+      className: 'apworld-progression-item',
+      placeholder: 'item…',
+      exclude: new Set(members.map((m) => m.name).filter((n) => n !== member.name)),
+      onPick: (chosen) => replaceAt({ ...member, name: chosen }),
+    }));
+
+    if (isStale) {
+      const mark = document.createElement('span');
+      mark.className = 'apworld-progression-stale';
+      mark.textContent = PROGRESSION_ISSUE_REASONS.UNKNOWN_ITEM;
+      Object.assign(mark.style, { color: '#e0a030', fontSize: '10px' });
+      mark.title = `"${member.name}" is not an item slot ${this.playerId} holds. It is kept `
+        + 'and still editable — the rule engine can resolve a name through a mapping even when '
+        + 'the item pool has no such item. Remove it with the × if it is a leftover.';
+      row.appendChild(mark);
+    }
+
+    const value = additive ? member.value : member.level;
+    row.appendChild(this._makeProgressionNumber(value, {
+      className: additive ? 'apworld-progression-value' : 'apworld-progression-level',
+      title: additive
+        ? `Each "${member.name}" received adds this much to "${name}"`
+        : `"${member.name}" resolves once the pool of "${name}" reaches this level`,
+      onCommit: (n) => replaceAt(additive
+        ? { ...member, value: n }
+        : { ...member, level: n }),
+    }));
+
+    if (Array.isArray(member.provides) && member.provides.length) {
+      const also = document.createElement('span');
+      also.className = 'apworld-progression-provides';
+      also.textContent = `also provides ${member.provides.join(', ')}`;
+      Object.assign(also.style, { color: '#7a8', fontSize: '10px' });
+      also.title = '`provides` is schema-declared and carried through by the op. Nothing in the '
+        + 'frontend reads it today, so this section shows it rather than editing it.';
+      row.appendChild(also);
+    }
+
+    if (!additive) {
+      const move = (delta) => {
+        const next = members.slice();
+        const [taken] = next.splice(index, 1);
+        next.splice(index + delta, 0, taken);
+        this._commitProgression(name, rebuilt(next));
+      };
+      const up = this._makeButton('↑', '#3a3a3a', () => move(-1));
+      up.className = 'apworld-progression-up';
+      up.style.padding = '0 5px';
+      up.disabled = index === 0;
+      up.title = 'Move this level up — the levels themselves do not renumber';
+      row.appendChild(up);
+      const down = this._makeButton('↓', '#3a3a3a', () => move(1));
+      down.className = 'apworld-progression-down';
+      down.style.padding = '0 5px';
+      down.disabled = index === members.length - 1;
+      down.title = 'Move this level down — the levels themselves do not renumber';
+      row.appendChild(down);
+    }
+
+    // ⛓⛓ The last member cannot go through this button, because the op refuses
+    //   an empty container by shape — deleting the whole card is the gesture,
+    //   and the button says so instead of ending in an alert (I1's courtesy
+    //   rule; the OP is still the guard).
+    const off = this._makeButton('×', members.length > 1 ? '#8a2a2a' : '#3a3a3a',
+      () => this._commitProgression(name,
+        rebuilt(members.filter((_m, i) => i !== index))));
+    off.className = 'apworld-progression-member-remove';
+    off.style.padding = '0 6px';
+    off.style.marginLeft = 'auto';
+    off.disabled = members.length <= 1;
+    off.title = members.length > 1
+      ? `Take "${member.name}" out of "${name}"`
+      : `"${member.name}" is the only entry — a mapping with none is refused, so delete the `
+        + 'whole mapping instead';
+    row.appendChild(off);
+    return row;
+  }
+
+  /** ⛓ The add row: a name and a kind. The op refuses an empty name and a
+   *  duplicate is simply an overwrite of that entry, so this only reads the
+   *  boxes and builds the smallest entry each kind allows — one member, which
+   *  the shape rule requires. */
+  _makeProgressionAddRow() {
+    const line = document.createElement('div');
+    line.className = 'apworld-progressions-add';
+    Object.assign(line.style, { display: 'flex', alignItems: 'center', gap: '6px',
+      marginTop: '6px', flexWrap: 'wrap' });
+
+    const input = this._makeTextInput('', '100%');
+    input.className = 'apworld-progression-new';
+    input.placeholder = 'new mapping name';
+    input.style.flex = '1 1 120px';
+    line.appendChild(input);
+
+    const kindPick = document.createElement('select');
+    kindPick.className = 'apworld-progression-new-kind';
+    Object.assign(kindPick.style, {
+      backgroundColor: '#222', color: '#ddd', border: '1px solid #444',
+      borderRadius: '3px', padding: '1px 2px', fontSize: '11px',
+    });
+    for (const k of Object.values(PROGRESSION_KINDS)) {
+      const o = document.createElement('option');
+      o.value = k;
+      o.textContent = k;
+      kindPick.appendChild(o);
+    }
+    line.appendChild(kindPick);
+
+    const firstItem = Object.keys(this._items())[0];
+    const commit = () => {
+      const name = input.value.trim();
+      if (!name) return;
+      // ⛓ The shape rule wants a non-empty container, so the new entry starts
+      //   with the slot's FIRST item at level/value 1 — the picker on the card
+      //   is how it becomes the right one. ⛔ A slot with no items cannot make
+      //   a legal mapping at all, and the op is what says so.
+      const member = firstItem ?? '';
+      this._commitProgression(name, kindPick.value === PROGRESSION_KINDS.ADDITIVE
+        ? { type: ADDITIVE_TYPE, base_item: name, items: { [member]: 1 } }
+        : { base_item: name, items: [{ name: member, level: 1 }] });
+      input.value = '';
+    };
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); commit(); }
+    });
+    const btn = this._makeButton('+ Add mapping', '#444', commit);
+    btn.className = 'apworld-progressions-add-button';
+    btn.title = firstItem
+      ? `Creates the mapping with "${firstItem}" at 1 — change it on the card`
+      : 'This slot has no items yet, so a mapping cannot name one';
+    line.appendChild(btn);
+    return line;
   }
 
   /* ══════════════════════════════════════════════════════════════════
