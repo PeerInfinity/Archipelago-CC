@@ -13721,6 +13721,13 @@ The substrate change = the `substrate` picker on the block through `set-region-s
 **M0 → S0 → S1 → REPLAN → D0 → V0 (validity + the picker) → D1 → S2 → M1 → M2 → M3 → T0/T1**; re-roll and
 regenerate-for-substrate deferred. ⛔ NOTHING launched — the user asked not to begin yet.
 
+**(user, 2026-09-10), verbatim:** "One more important detail: For some editing features, it might make more sense to
+load the data from the APWorld Editor into the Procgen Pipeline and have the user edit it there, rather than trying
+to duplicate existing functionality in the APWorld Editor. Changing substrate might be one of these features that
+we shouldn't try to duplicate." ⇒ measure the hand-off route (H5's `procgen_metadata` door → `_adoptHandoffRules`
+→ `sphereRebuildRefusal` / `rebuildEnvelopeFromRulesJson`): what the pipeline can ADOPT from the corpus and what
+a round trip LOSES, then re-sort the rungs into hand-off vs native.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
