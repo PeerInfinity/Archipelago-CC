@@ -13513,6 +13513,12 @@ moves; what the throw cost was the loop it abandoned, which is why a mixed slot 
 was the fixture. ⚖ §14.8 (1) CLOSED; three new open points in §15.8 (no other rows for the engine; `provides` still
 unread; nothing gates caught-throw VOLUME). The `preset_sidecars` planning session is next.
 
+**E1's ⚖ 52 row** — `node scripts/procgen/ci-vitest-summary.mjs b69709c12a`, run **34434678104** success:
+`suite: vitest (unfiltered) 444/13457 (13449 passed | 8 skipped | 0 failed)`, slow battery **12/217**. That IS the
+derivation (443 + 1 file, 13448 + 9 rows). ⚑ The gitlink commit `933ca81d96` has NO run of its own — GitHub runs the
+workflow at the PUSH HEAD, so a submodule test file is quoted at the head whose TREE carries the gitlink, not at the
+bump.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
