@@ -13480,6 +13480,14 @@ guard for the additive kind (a tiny slice, its own gates: `genericLogic` rows + 
 0 → 0 + `fast`), (b) the one veto ruling across three surfaces, (c) launching `preset-sidecars-planning`
 (kickoff drafted: `NewDocs/plans/preset-sidecars-planning-prompt.md`).
 
+**⚖ RULED (user, 2026-09-10), verbatim:** "Thanks. I'll want to fix the defect that I2 found next. And if the same
+reasoning applies to the open points that applied to the previous decision to leave the other code as it is, then
+I'll also want to leave these open points as the are." ⇒ **E1** (the rule-engine guard for the additive kind, trap
+1307) is the next slice; the whole-block `set-key` on `progression_mapping` STAYS un-vetoed (the same model as the
+Raw JSON tab and `canonical_placements`: the key's own per-entry op is vetoed, other paths can orphan an entry, the
+tab shows and removes) and there is NO rename op for a mapping. The `preset_sidecars` planning session launches after
+E1 closes.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
