@@ -13499,6 +13499,20 @@ while E1 runs.
 PRE-AUTHORIZED as one unit, ahead of its "READY TO PUSH" (relayed to `apworld-coverage-E1`). A ⚖ 49-class re-record
 is not covered.
 
+**E1 AS BUILT 2026-09-10** (plan §15; shared submodule `b8e6c851fc` → `573a3b23b9`, outer `62e7a1c90a` → the gitlink
+bump + records). The guard is the inventory's own spelling at both sites (`Array.isArray(mapping.items)`), and the
+census says it was the ONLY unguarded reader: `inventoryManager` guards twice, `apworldEditorUI`/`rulesDocOps` branch
+on the kind, and `world_generator/extractors.py` skips the additive type and then re-checks `isinstance(…, list)`.
+New `gameLogic/generic/genericLogic.test.js`, **9** rows, discovered by the OUTER vitest config (the submodule has
+none) — mutant: guard reverted ⇒ **7 of 9 red**, all `TypeError: items.findIndex is not a function`, the two green
+ones named in the file for why. Gates: fast batch **111/111**, sweep **4,614 → 0**, `compare-runs` *"No differences
+in status, roster, or duration"*; regression **31/31**; bounded vitest **160**; messenger spoiler **passed both
+times** — ⛔ that gate is BLIND to this defect (green at 16.2 s with **7,295** caught throws before, green at 4.6 s
+with **0** after). Corpus: 137 entries, **1** additive, **0** slots mixing kinds ⇒ no committed document's ANSWER
+moves; what the throw cost was the loop it abandoned, which is why a mixed slot (a shape I2's section can now write)
+was the fixture. ⚖ §14.8 (1) CLOSED; three new open points in §15.8 (no other rows for the engine; `provides` still
+unread; nothing gates caught-throw VOLUME). The `preset_sidecars` planning session is next.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
