@@ -13652,6 +13652,31 @@ the tab and recorded below); the field AFTER this arc is named: (i) the Seedling
 (ii) feasibility of jta and omsi editors; (iii) maze/bounce editor integration — ⚠ what H4b already gives (Edit ▸
 per region, lab/panel hosted, one op back) vs what "integrate" should mean is a question for that session.
 
+**⚖ RULED (user, 2026-09-10), verbatim, after the fuller description of the options (recorded in the plan file §5b):**
+"**Question 1.** I want option C, but we can disable the buttons for substrates where that feature is currently
+unavailable. **Question 2.** I want option A, but I want the region list in the sidecars tab to be expandable, and
+collapsed by default. **Question 3.** I want option A. And I want a button to load the existing editors for payloads
+that already have editors. I also want to check if it would make sense for the substrates to have a way to declare
+what the valid options are for that substrate, and have the editor load that as the set of options to choose from.
+**Question 4.** Yes, I want all of these. For text adventure, I would like to set up a simplified version of the maze
+editor that only edits data that is actually present in the text adventure substrate. I'll want to do this by
+factoring out existing code, not duplicating it. I'll probably want to do something similar for other substrates
+like JtA and omsi-loops, which don't currently have a way to edit their grid location. Also, please look at the
+procgen pipeline panel, and the editing features it has for the map. I'll want to implement these same editing
+features in the Map tab of the APWorld Editor. There might also be other features from the procgen pipeline panel
+that would be worth adding to the APWorld Editor. Also, I notice that when I load the Bounce demo preset in the
+procgen pipeline panel, then generate it, then click Load into Frontend, its map doesn't display in the Map tab of
+the APWorld Editor panel. Please don't begin implementing anything yet. I want to continue discussing the details of
+how to implement these features."
+⇒ Q1 = Save JSON writes the entry alone + a separate `Re-derive rules` button, DISABLED by name where no round trip
+exists; Q2 = one renderer, two hosts, the Sidecars per-region list COLLAPSED by default; Q3 = the whole entry, plus
+an `Edit ▸`-class button on the block for substrates with an editor, plus an investigation of a per-substrate
+DECLARATION of the payload's valid options that the raw editor consumes; Q4 = V0, V1, V2 AND V3 wanted — V3 as a
+FACTORED simplified maze editor for text_adventure (only the data the TA substrate reads), the same shape later for
+jta/omsi (which cannot edit their grid location today); NEW: (a) the pipeline panel's map-editing features are to be
+brought to the hub's Map tab, and its other features surveyed; (b) the Bounce demo generate → Load into Frontend →
+hub Map tab draws nothing — to be explained. ⛔ NO IMPLEMENTATION YET — the discussion continues.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
