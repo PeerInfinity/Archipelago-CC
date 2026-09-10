@@ -13519,6 +13519,41 @@ derivation (443 + 1 file, 13448 + 9 rows). ⚑ The gitlink commit `933ca81d96` h
 workflow at the PUSH HEAD, so a submodule test file is quoted at the head whose TREE carries the gitlink, not at the
 bump.
 
+**E1 VERIFIED by the planner 2026-09-10** (`b172a2a9dc` on origin/main = the primary tree's HEAD; outer
+`62e7a1c90a..b172a2a9dc` incl. the gitlink bump `933ca81d96` and the planner's carried `8053eb04ff`; submodule
+`b8e6c85..573a3b2` on `PeerInfinity/archipelago-shared` `origin/main`, gitlink at `573a3b2` in HEAD; both trees
+clean; the guard at `genericLogic.js:93/:167` on disk; `genericLogic.test.js` **9** rows; no preset moved; plan §15;
+trap 1307 carries its FIXED-in line). **CI @ `b69709c12a` run 34434678104: job "JavaScript Unit Tests (Vitest)"
+completed success; 444/13457 (13449 passed | 8 skipped | 0 failed), slow 12/217 — E1 derived +1 file / +9 rows
+against 443/13448 and matched.** What E1 overturned, kept: the messenger spoiler test is GREEN on both sides (7,295
+caught throws → 0; `evaluateRule` swallows, and messenger's slot carries the additive entry ALONE) — it measures the
+defect's VOLUME, not its presence; the throw ABANDONED the loop, so a slot mixing kinds lost every progressive
+resolution ordered after the additive entry (0 committed slots mix kinds ⇒ no committed answer moves); the python
+side (`extractors.py:676-687`) and the inventory already carried the law — only the JS engine trusted the shape;
+`ci-vitest-summary` at the GITLINK commit answers "no run" because GitHub runs the workflow at the push HEAD only —
+quote the head whose tree carries the gitlink. ⚖ OPEN (§15.8): the engine has no other rows of its own; `provides`
+has no reader; nothing gates caught-throw VOLUME (a grep a human remembers to run).
+
+**⛓ THE APWORLD EDITOR COVERAGE ARC IS CLOSED — 2026-09-10 (R3 → W0 · S1 · D1 · W3 · R1 · P1 · I1 · I2 · E1: nine
+Opus sessions, two pre-authorized gitlink units, one planner mistake owned).** CI 442/13384 → **444/13457**, every
+derivation matched; traps 1298–1307, all fixed in place. Rulings on the record: loop costs closed as is; the atlas
+trio stays on Sidecars; dungeons/helpers raw + viewer doors; `playerId` raw; nothing read-only; refuse on group
+removal; the Raw JSON tab, the `progression_mapping` block and the placement invariant stay as they are; no mapping
+rename op.
+
+## 5t. HANDOFF to `preset-sidecars-planning` — 2026-09-10 (`next-priorities-planning-4` closes its arc; successor opens the `preset_sidecars` investigation)
+
+`next-priorities-planning-4` (this Fable session) hands off at the user's word (*"I will want to start a new Fable
+planning session for this."*). Successor = `preset-sidecars-planning` (kickoff `NewDocs/plans/preset-sidecars-planning-prompt.md`),
+opening with the INVESTIGATION the user named: what reads and writes `preset_sidecars` per substrate, what editors
+exist, whether a raw per-region save re-derives rules (H4b's op) or writes the payload alone, and where the key
+lives in the hub. What the predecessor measured about it is in the kickoff (1,398 region entries, seven substrates,
+sizes, the three surfaces, the writers and readers found). The rest of the field is as §5s's tail names it: the
+placement invariant (named, not queued); W1 the options form and the exporter flags (deferred); `delete-item-group`
+vs rule references; the stardew Regions render; the two op vocabularies on the Meta scalars; the menu leftovers
+(§5p); the seedling-wasm follow-ups (§5q); the queue viewer's fresh plan (§5m); V3b's two; the cleanup backlog; the
+maze-lab residues; the docs TODO.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
