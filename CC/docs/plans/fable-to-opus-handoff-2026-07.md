@@ -13444,6 +13444,42 @@ has no frontend reader) are in plan §14.8.
 ⛓ **THE SECOND LADDER IS COMPLETE** — R1, P1, I1, I2 all shipped. Nothing launched on this idle; the planner writes
 the `preset_sidecars` HANDOFF next.
 
+**I2 VERIFIED by the planner 2026-09-10** (`1dedcdeae5` on origin/main = the primary tree's HEAD; 8 commits by path
+`cfeedcaaf8..1dedcdeae5`; `git diff --stat` under `shared/`, `stateManager/` and `presets/` EMPTY — no engine file
+moved; `rulesDocOps.test.js` 97 → **106**, `documentKeys.test.js` 45 (two rows rewritten against the op's own
+source), in-app `apworldEditor` 43 → **49**; plan §14; traps 1306/1307). Pressed the product on `alttp` from here:
+"Progression — slot 1: 5 mappings", both kinds documented in the section's own text; 0 page errors. **CI @
+`eb10ad6c13` run 34428671851 success: job "JavaScript Unit Tests (Vitest)" completed success; 443/13448 (13440 passed
+| 8 skipped | 0 failed), slow 12/217 — I2 derived +0 files / +9 rows against 443/13439 and matched; 33 `## CI-GATE`
+lines, 33 exit=0 by I2's reading.** What I2 overturned, kept: the mapping KEY is a REAL item in 135/137 committed
+entries (the brief's collision refusal would have refused 98.5 % of the corpus); `base_item` is a POOL LABEL compared
+only against sibling entries' `base_item` (`genericLogic.has/count`), a mapping name of the same slot in 137/137 —
+the picker's domain is the slot's mapping names; `provides` is a schema-declared third member field (13 smz3
+members) the brief did not name — carried; the item refusal is DIFFERENCED (12 committed members already name
+resolved forms the slot lacks); the population is 137 entries / 18 files, not "84 / 15". Trap 1306: an "one op, one
+undo" condition is structurally blind to a partial write (the session folds from the base). **⛔⛔ Trap 1307 — a
+PRE-EXISTING RULE-ENGINE DEFECT, confirmed by the planner on the source: `shared/gameLogic/generic/genericLogic.js`
+`has`/`count` do `const items = mapping.items || []; items.findIndex(…)` over every entry, and the ADDITIVE kind's
+`items` is an OBJECT — `messenger` (the corpus's only additive carrier, on disk `Shards: {type: 'additive', items:
+<dict>}`) THROWS `TypeError: items.findIndex is not a function`; `evaluateRule` catches and logs, so runs stay green
+and the thrown-handler sweep read 0 only because no in-app row had ever loaded messenger — I2's additive row now
+takes it 0 → 4,614 per `fast` run.** The fix is one guard (`Array.isArray(mapping.items) ? mapping.items : []`),
+correct by construction (the additive kind is resolved by the inventory, never by levels), in the RULE ENGINE —
+NOT taken inside a UI slice; ⚖ for the user. ⚖ OPEN (§14.8): the whole-block `set-key` on `progression_mapping`
+is un-vetoed — ONE ruling should settle `canonical_placements`, `progression_mapping` and the Raw JSON tab together
+(the user ruled "leave as is" for the Raw tab on 2026-09-10); no rename op (a rename = delete + add, and the key is
+a real item name); a slot with no items cannot hold a mapping; `provides` has no frontend reader.
+
+**⛓ THE SECOND LADDER IS CLOSED — 2026-09-10 (R1 + P1 + I1 + I2, four Opus sessions; eight in the arc).** What the
+arc leaves, R3 to here: every tab-owned row draws its block; helpers/dungeons viewer doors; the SIDECARS tab; "Send
+costs to APWorld Editor" with a per-door focus; `settings`/`world_classes` GONE (schema 32 keys); the PLACEMENTS tab
++ validator + veto + a CI gate; the fix-ups (self-pointer, memoised validation, five residuals); the Items tab's
+GROUPS (refuse on delete) and PROGRESSION (both kinds) sections. CI 442/13384 → **443/13448**, every derivation
+matched; nine traps 1298–1307 (all fixed in place except 1307). **NEXT:** the user's word on (a) the one-line engine
+guard for the additive kind (a tiny slice, its own gates: `genericLogic` rows + the messenger in-app row's sweep
+0 → 0 + `fast`), (b) the one veto ruling across three surfaces, (c) launching `preset-sidecars-planning`
+(kickoff drafted: `NewDocs/plans/preset-sidecars-planning-prompt.md`).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
