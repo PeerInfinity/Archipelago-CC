@@ -13774,6 +13774,31 @@ ONE renderer on Regions and on the Sidecars tab's per-region list (collapsed by 
 `none`, rows + four mutants, docs. Baseline 444/13462 @ `e369d7a5ea` (run 34533964485). Reports come to
 `preset-sidecars-planning`; S1 on S0's idle notice; the REPLAN after S1. ⛔ The planner commits nothing while S0 runs.
 
+**S0 SHIPPED + VERIFIED 2026-09-10** (`00ea0f6613` → `368bd59d65`, five commits: the block + the Regions host, the
+Sidecars per-region list collapsed by default, the door → `returns: none`, four in-app rows with mutants, docs).
+Planner's own drive on the four-player fixture: Regions sidecar blocks slot 1 = 3 (badge `maze`), slot 3 = 5
+(`bounce`), `Edit ▸` per region unchanged and now inside the block; Sidecars list collapsed = 0 rows with a
+"▸ Show slot N's M regions" toggle; the Document row reads `returns: none`; 0 page errors. **CI @ `368bd59d65`:
+run 34541425414 success, 444/13469 (13461 passed | 8 skipped | 0 failed) = the derivation (+3 documentKeys, +4
+regionRoundTrip).** Per the slice: `procgen_topdown/AP_8` (235 entries) pays 17.7 ms warm for the blocks + a one-time
+30 ms size pass, +1,645 DOM nodes, textareas 307 → 307 (no JSON built); `seedling_playthrough` expands 250 rows in
+32 ms with 0 JSON blocks; Links 13 → 13. What the brief got wrong (§11.1): the W0 viewer-door row required a
+`panelId` — the law widened to "exactly one visible thing" (a panel raised OR a tab switched); 270 entries carry no
+`render_hint` (all Seedling + the 10 atlas-maze rooms) so a bare-hint badge IS visible to a Seedling arm, and only
+`render_hint ?? substrate` stays invisible (recorded, not claimed); sidecar order ≠ Regions order; BEFORE taken on
+the untouched primary tree (the user had rejected a worktree command that bundled an rmdir — creation-only from now
+on). Trap **1310** (a counter-raise published after an async door lands first; the next row measures 0×0 rects).
+⚖ OPEN (§11.6, for the replan): a PER-REGION hand-off to the pipeline (the block's Regenerate door hands off the
+whole document); `_handoffAnswer` reads slot `'1'`; should the Document row's door go to Sidecars rather than
+Regions; D3 invisible to the corpus.
+
+**S1 LAUNCHED 2026-09-10** as `apworld-sidecars-S1` (Opus; kickoff `NewDocs/plans/apworld-sidecars-S1-prompt.md`):
+`set-region-sidecar {player, region, entry}` — the WHOLE entry, replace-only (a CREATE op is a ⚖ for the replan),
+schema-vetoed like `set-key`, rules UNTOUCHED and the description saying so; Save JSON on the block from both hosts;
+the Edit ▸ verdict re-asked; the corpus control (1,398 entries written back = 0 refused / 0 bytes moved); rows + five
+mutants; docs. Baseline 444/13469 @ `368bd59d65` (run 34541425414). Reports come to `preset-sidecars-planning`;
+**the REPLAN with the user follows S1 — nothing launches on its idle.** ⛔ The planner commits nothing while S1 runs.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
