@@ -13420,8 +13420,10 @@ passed** (`rulesDocOps.test.js` 97 → **106**, `documentKeys.test.js` 45 → 45
 authority OUTSIDE `KEYS_OWNED_BY_TAB`); in-app `fast` **111/111**, 0 failed, 0 not run, 4.9 m; `compare-runs` against
 I1's 105/105 = **ADDED (6) and nothing else**, exit 0; `Error in event handler for` **0**; docs trio NOT owed
 (`DOC_FILES` 18, `apworldEditor.md` absent — derived here); trap 1304 not owed (no `scripts/procgen/` file moved).
-⚖ 52: derived +0 files / +9 rows ⇒ **443/13448** expected against the re-quoted 443/13439 at `9c21e79515`
-(run 34425021401); CI at the pushed head in §14.9.
+⚖ 52: derived +0 files / +9 rows from the re-quoted 443/13439 at `9c21e79515` (run 34425021401) ⇒ expected
+443/13448 — and **CI at `eb10ad6c13` (run 34428671851) reads exactly `443/13448 (13440 passed | 8 skipped | 0
+failed)`**, slow battery 12/217 unmoved. The headless-gates step was read line by line (trap 1304's rule, and I2
+added no `scripts/procgen/` file so it is the control): **33** `## CI-GATE` lines, **33** of them `exit=0`.
 
 ⛔⛔ **AND I2 FOUND A PRE-EXISTING ENGINE DEFECT NOTHING HAD EVER RUN INTO.**
 `genericLogic.has` and `count` do `const items = mapping.items || []; items.findIndex(…)` over EVERY entry of a slot's
