@@ -13286,6 +13286,34 @@ stamp against the block, and whether that pairing is a rule belongs to the expor
 
 NEXT: **I1** on P1's idle notice.
 
+**P1 VERIFIED by the planner 2026-09-10** (`f4235cf4e9` on origin/main = the primary tree's HEAD; 9 commits by path
+`acff168e90..f4235cf4e9`; `git diff --stat` under `shared/` and `presets/` EMPTY; `rulesDocOps.test.js` 81 → **87**,
+new `checkCanonicalPlacements.test.js` **7**, in-app `apworldEditor` 36 → **38**; the gate file on disk; plan §12;
+traps 1303/1304 recorded). Run from here: `check-canonical-placements.mjs` → `placement slots 223 · ALL PASS`;
+`ci-gates --plan` → **33 headless arms in 3 shards** with `gate: canonical-placements` listed (32/2 before); and
+**`check-procgen-help.mjs --doors=all` at HEAD → ALL PASS, 268 instruments** — P1's import-side-effect fix verified
+independently (⚠ the step log of run 34421046800 could not be read from here through `gh run view --log`, so the
+`## CI-GATE` lines are P1's quote; the local run is the planner's own measurement). **CI @ `0c3fef9a21` run
+34418792126 success: job "JavaScript Unit Tests (Vitest)" completed success; 443/13427 (13419 passed | 8 skipped | 0
+failed), slow 12/217 — P1 derived +1 file / +13 rows against 442/13414 and matched; the five jobs at the record head
+34421046800 all success.** What P1 overturned, kept: `--root=` is a RESERVED spelling in `scripts/procgen/` (a Pages
+URL) and the roster's flag detector reads PROSE too — a docblock paragraph re-enrolled the flag (trap 1303); a new
+file in `scripts/procgen/` owes `check-procgen-help.mjs`, and the headless-gates step is `continue-on-error`, so a
+red gate hides behind a green job — read the step LOG (trap 1304; P1's own first push was that red, fixed in
+`d028f165c6`); a stale placement is NOT a worldgen error — it lands as a KeyError at seed generation; the validator
+lives beside the op (`rulesDocOps.js` is node-importable), so the gate reads the EDITOR's predicate. ⚖ NEW (§12.9):
+the Raw JSON tab's `replace-document` is not vetoed (the same reasoning as the block editor's; the user's reading
+decides); the gate never asserts its own document population (212 on a working tree, 210 in CI); the veto at
+`_acceptEditorOp` has an EMPTY population today; `is_canonical` says nothing about whether the placements are real.
+NEXT: **I1** on P1's idle.
+
+**I1 LAUNCHED 2026-09-10** as `apworld-coverage-I1` (Opus; kickoff `NewDocs/plans/apworld-coverage-I1-prompt.md`; on
+P1's idle): the Items tab's GROUPS section — `add-item-group` / `rename-item-group` (registry + every item's
+membership in one op) / `delete-item-group` REFUSED BY NAME while an item carries it (⚖ "refuse"); the per-item
+groups cell becomes a picker over the registry with unlisted groups shown; rows on `procgen_maze/AP_1` (empty
+registry) and `alttp`; three mutants. Baseline 443/13427 at `0c3fef9a21`. Reports come to `next-priorities-planning-4`;
+I2 on I1's idle notice.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
