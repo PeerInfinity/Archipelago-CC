@@ -13495,6 +13495,10 @@ submodule ⇒ submodule pushed first, the outer push incl. the gitlink is ONE as
 PUSH". Baseline 443/13448 at `eb10ad6c13`. Reports come to `next-priorities-planning-4`; the planner pushes nothing
 while E1 runs.
 
+**⚖ RULED (user, 2026-09-10): "Thanks. I authorize the push."** — E1's outer push INCLUDING the gitlink bump is
+PRE-AUTHORIZED as one unit, ahead of its "READY TO PUSH" (relayed to `apworld-coverage-E1`). A ⚖ 49-class re-record
+is not covered.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
