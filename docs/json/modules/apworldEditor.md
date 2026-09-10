@@ -22,7 +22,7 @@ document.
 | `ruleTreeEditor.js` | the access-rule tree widget |
 | `documentKeys.js` | the top-level **key registry**, derived from `rules.schema.json` |
 | `documentLinks.js` | the **Links** tab's rows |
-| `regionRoundTrip.js` | the per-region **Edit ▸** door — resolves the substrate's declarations, runs the baseline, folds a save into ONE op |
+| `regionRoundTrip.js` | the per-region **Edit ▸** door — resolves the substrate's declarations, runs the baseline, folds a save into ONE op; and (S0) `sidecarEntryFacts`, what a region's sidecar block says about its entry |
 | `../procgenCore/compositeMapRenderer.js` | the **Map** tab's painter — shared with the procgen pipeline panel, substrate-neutral |
 | `../procgenPipeline/compositeMapDocument.js` | `reconstructResultFromSidecars` — `preset_sidecars` → a `Grid` |
 | `rawView.js` | the **Raw JSON** tab's text and its parse (the size limit was RETIRED by measurement — H2b) |
@@ -51,12 +51,12 @@ reset the session, so an undo after an Apply still works. It republishes the
 
 | Tab | What it edits |
 |-----|---------------|
-| **Regions** | regions, exits, locations, access rules — and **Edit ▸**, the door into a region's own room |
+| **Regions** | regions, exits, locations, access rules — and, under each region that has a `preset_sidecars` entry, its **sidecar block** (S0): the substrate, the entry's facts, its JSON, and the two doors **Edit ▸** (the region's own room) and **Regenerate in the pipeline ▸** — see *`preset_sidecars`, per region* below |
 | **Items** | items, classifications, pool counts, starting counts, the slot's `item_groups` registry (I1) and its `progression_mapping` entries (I2) — see below |
 | **Placements** (W3) | `canonical_placements` — which item this world places at which location; the world generator's `--canonical-seed` input, see below |
 | **Meta** | the fields in `rulesDocOps.META_FIELDS`, plus the start region and the victory condition |
 | **Map** | the composite grid, for documents whose sidecars carry grid cells — see below |
-| **Sidecars** (S1) | the five keys that travel BESIDE a world rather than inside its regions — see below |
+| **Sidecars** (S1) | the five keys that travel BESIDE a world rather than inside its regions, and (S0) `preset_sidecars` as an expandable per-region list for the selected slot — see below |
 | **Document** | **every** top-level key — see below |
 | **Links** | every other editor that owns part of a `rules.json` |
 | **Raw JSON** | the whole document in a CodeMirror 6 editor — see *The exits* below |
@@ -167,7 +167,7 @@ still the way to fix a value the dedicated editor cannot express.
 | `procgen_metadata` | the procgen pipeline | `document` | — | `procgenPipelinePanel` |
 | `loop_costs` | the loops cost debugger | `op` | **`true`** | `loopsCostDebuggerPanel` |
 | `sphere_log` | the spoiler checklist | `none` | — | `spoilerChecklistPanel` |
-| `preset_sidecars` | the Regions tab's per-region **Edit ▸** | `op` | **`false`** (unreachable) | (no panel) |
+| `preset_sidecars` | a switch to the **Regions** tab (S0: the key is drawn per region there and on the Sidecars tab) | `none` | — | (no panel) |
 | `helpers` (W0) | the helpers panel, as a **viewer** | `none` | — | `helpersPanel` |
 | `dungeons` (W0) | the dungeons panel, as a **viewer** | `none` | — | `dungeonsPanel` |
 
@@ -175,7 +175,11 @@ still the way to fix a value the dedicated editor cannot express.
 — a door whose save cannot come back here has nothing to focus, and the `—` rows
 above carry no field at all. A `documentKeys.test.js` row selects its population
 by the `returns === 'op'` LAW rather than by the flag, so a door that DROPS the
-declaration reds instead of filtering itself out of its own guard.
+declaration reds instead of filtering itself out of its own guard — and (S0) a
+second row holds the other direction: no door whose `returns` is not `op`
+carries the field. R1 had declared `preset_sidecars` `op` + `focusHubOnSave:
+false`, *"false because unreachable"* — its `open` never touches `onSave`. S0
+made the door `none`, which retires that paragraph for the very reason it gave.
 
 The last two are ⚖ *"we could link to the existing dungeons and helpers panels
 as viewers"* (user, 2026-09-08), on the same ruling that leaves both keys
@@ -244,7 +248,10 @@ does it come back here as an undoable step?"* is the question a reader has:
   where the key lives.
 - **`document`** — that editor's exit is a NEW document (the arc's rule that
   generation is not an edit); nothing comes back here.
-- **`none`** — that editor only READS the block.
+- **`none`** — that editor only READS the block. A `none` door does exactly ONE
+  visible thing, and the viewer-door row in `documentKeys.test.js` holds it: it
+  raises the panel its `panelId` names, or — declaring `panelId: null`, which
+  only `preset_sidecars` does — it switches the hub's own tab (`goToTab`).
 
 No door imports its panel at module load. `documentKeys.js` is loaded by node
 rows and by both tabs, so every door defers its module with a dynamic `import()`
@@ -408,13 +415,13 @@ tab or is `preset_sidecars`. A fourth sidecar added to the Python round trip red
 that row until this tab hosts it. The ⚖ half has no derivation — a ruling is the
 authority — so it is written down as a row that names the date.
 
-**`preset_sidecars` is NOT one of the five.** It stays the **Regions** tab's: it
-is edited per region there (Edit ▸, one `replace-region-sidecar`), and a second
-whole-block editor would be a second place to edit one key. The Sidecars tab
-draws it as a one-line **summary** — per-slot region counts, derived per slot
-rather than summed, because every populated `preset_sidecars` in the corpus keys
-under slot `"1"` (four-player documents included) — plus a **Go to Regions**
-button.
+**`preset_sidecars` is not one of the five ROWS.** It is a per-REGION key, so it
+is drawn per region — S0's expandable list for the selected slot, above the rows
+(see *`preset_sidecars`, per region*, next). Its collapsed line is the per-slot
+summary it always was — region counts derived per slot rather than summed,
+because every populated `preset_sidecars` in the corpus keys under slot `"1"`
+except the four-player fixture's. The old **Go to Regions** button is gone: it
+pointed at a tab that, until S0, drew none of this key's data.
 
 **One renderer, two hosts.** Every row on this tab is built by the same
 `_renderDocumentRow` the Document tab uses: the door button, the `returns` line
@@ -452,6 +459,55 @@ Making a key a Sidecars key also changes its **Document** row: it now shows the
 AND the block). The **Links** tab is derived from `DOCUMENT_KEY_EDITORS` and is
 unaffected; measured before/after on `jta_schedule_test`, its 13 rows are the same
 13 rows.
+
+### `preset_sidecars`, per region (S0)
+
+⚖ user, 2026-09-09: *"the preset_sidecars entry of the sidecars panel has a button
+to Go to Regions, but the preset_sidecars isn't in the Regions tab … We should at
+least have a way to view or edit the raw json."* ⚖ 2026-09-10, Q2 A: *"one
+renderer, two hosts … but I want the region list in the sidecars tab to be
+expandable, and collapsed by default."*
+
+**One function draws a region's entry** — `_makeRegionSidecarBlock(player,
+region, {hostTab})` — and two tabs call it:
+
+| host | where |
+|---|---|
+| **Regions** | under each region's header, for every region that HAS an entry. A classic AP region draws nothing (H4b's *"absent is an answer"*). |
+| **Sidecars** | the `preset_sidecars` list: **collapsed by default**; expanded, one row per entry of the SELECTED slot, in the document's order — the region's name, the same block, and **Go to region**, which selects the Regions tab and that region and scrolls its header into view (`selectRegion`, the same focus helper the Map tab and the bounce editor's reverse link use). |
+
+What the block draws, all of it read off the ENTRY (`sidecarEntryFacts`, in
+`regionRoundTrip.js`) and none of it off a table keyed by substrate name:
+
+- a **badge** — `entry.substrate`, what the play-time host loads the room with.
+  ⛔ Never `render_hint`: on every committed entry that carries one it equals the
+  substrate, and the Seedling entries carry none, so the badge follows the field
+  the player actually reads;
+- the **facts** — the grid cell, the render hint *only when it differs* from the
+  substrate, the biome (`name`, else `id`), and the payload's top-level keys with
+  its pretty UTF-8 size at the widget's indent (`JSON_BLOCK_INDENT`);
+- the two roads (plan §9.2: an edit that REWRITES IN PLACE is the hub's, one that
+  REGENERATES is the pipeline's) — **Edit ▸**, H4b's door, built by the same
+  `_makeRoomEditorButton` (it moved from the header INTO the block, so it is
+  still drawn once per region), and **Regenerate in the pipeline ▸**, which is
+  the `procgen_metadata` door's own `open` pressed through the one opener, with
+  the cost in its title: the pipeline regenerates the payloads on its top-down
+  route (`DOCUMENT_KEY_EDITORS.procgen_metadata.regionDoor`);
+- **▸ Show JSON** — the WHOLE entry, through `_makeJsonBlock`, the widget the
+  Document rows use, with saving off: read-only textarea, no Save. It is built on
+  expand (W0's rule) and read from the document at every render, so after an op
+  the open block shows the entry the document holds now. The slice that makes
+  the entry editable passes an `onSave` to the same widget.
+
+The disclosures are per session: which blocks' JSON is open (keyed by host, slot
+and region, so each host's is its own) and whether the list is expanded both
+survive a re-render and are dropped when a new document opens.
+
+⛔ **What drawing them costs is badges, not JSON.** Measured live on the two
+largest sidecar slots (the numbers are in the S0 record, preset-sidecars plan
+§11): the Regions tab of `procgen_topdown/AP_8` draws a block for every entry and
+not one sidecar textarea, and the Sidecars list of `seedling_playthrough/AP_1`
+expands into one row per entry without building a single JSON block.
 
 ## The Items tab's Groups section (I1)
 
@@ -1001,7 +1057,9 @@ is driven on `jta_substrate_test` (16 entries, 0 `grid_cell`).
 ## Edit ▸ — a region's room, in its own editor
 
 A region with a `preset_sidecars` entry has a **room**, and the substrate that
-owns it usually has an editor for it. The Regions header's `Edit ▸` opens that
+owns it usually has an editor for it. The `Edit ▸` on the region's sidecar block
+— under its header on the Regions tab, and on its row of the Sidecars tab's list
+(S0 moved it out of the header, so it is still one button per region) — opens that
 editor on the hub's **working copy** (⚖ *"Let's implement working copy for now"*)
 and its save comes back as **ONE** `replace-region-sidecar` op — so a whole
 sub-edit made in the maze lab or the bounce editor is one entry in this panel's
@@ -1019,7 +1077,7 @@ and the same ⚖.
 
 | the region | the button |
 |---|---|
-| no `preset_sidecars` entry | **no button** — a classic AP region has no room, and a disabled control would imply it might have one |
+| no `preset_sidecars` entry | **no block and no button** — a classic AP region has no room, and a disabled control would imply it might have one |
 | a substrate with no `roomEditor` (jta, omsi, runner, text_adventure) | **disabled**, titled *"No region editor for X yet"* |
 | a substrate that declares `regionRoundTrip: {refused}` (Seedling) | **disabled**, titled with the substrate's own sentence — its payload is an atlas reference, not a room record |
 | a region whose payload does not round-trip | **enabled until pressed**, then disabled with the reason (see below) |
