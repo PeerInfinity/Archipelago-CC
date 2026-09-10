@@ -13677,6 +13677,23 @@ jta/omsi (which cannot edit their grid location today); NEW: (a) the pipeline pa
 brought to the hub's Map tab, and its other features surveyed; (b) the Bounce demo generate → Load into Frontend →
 hub Map tab draws nothing — to be explained. ⛔ NO IMPLEMENTATION YET — the discussion continues.
 
+**Measured for the discussion (2026-09-10; plan §7):** (1) the Bounce demo's empty Map tab = `reconstructResultFromSidecars`
+sizes cells from payload `width/height` in TILES and returns null at `maxW === 0`; the renderer already draws a
+generic zone box for substrates without `compositeMap.drawRegion` (that is what the pipeline panel shows, sized by
+the DRIVER's `regionSize`, which the document does not carry) — a cell-size fallback/declaration, not a painter; this
+reopens the hub plan's §7 ⚖ 3 ("accept no map for v1"). (2) The pipeline map has THREE modes — click-to-edit,
+move/swap region (recorded `layoutEdits`, `relayoutSphereGrid` re-teleports + re-stitches), move exit side (zone
+only) — plus per-region re-roll and substrate override; no drag, no `grid_cell` field; in a FILLED document
+move/swap port as ops writing `grid_cell` + changed payload exits, while re-roll/substrate-change RENAME locations
+(maze names carry the tile position) and are a rename-cascade class — ⚖. (3) Text adventure reads ONLY
+`exits[].side` + `exitName` at play (rooms/items/rules come from AP regions); its rules are a BFS over a real maze
+at BUILD; the maze SET arm (`mazeSetAdapter` + `setEditorView`, substrate-free, bound per substrate) is the thing
+to bind for TA — a third binding, not a copy; the same shape fits jta/omsi/runner; grid location = the move op.
+(4) No substrate declares a payload shape; options are a RENDER hook; the only validated declaration is `sharing`
+— a `sidecarFields` descriptor (type/enum/derived) + a corpus gate is proposed. Revised ladder = plan §8 (arcs S, M,
+D, T). ⚖ NEW for the user: the declaration's shape; re-roll/substrate-change in a filled document; whether a move may
+turn a link into a teleporter as the pipeline does; the arc order.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
