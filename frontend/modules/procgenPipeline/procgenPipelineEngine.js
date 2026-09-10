@@ -169,6 +169,28 @@ export function cellKey(cell) {
     return `${cell.gx},${cell.gy}`;
 }
 
+/**
+ * ⛓⛓ **THE REGION SIZE A REBUILD FALLS BACK TO**, in tiles.
+ *
+ * It was an inline `{ width: 8, height: 6 }` at one site
+ * (`rebuildEnvelopeFromRulesJson`'s config assembly) until M0 needed the SAME
+ * number in a second module: `compositeMapDocument.js` sizes a composite cell
+ * for a document whose payloads carry no tile geometry at all, and a second
+ * literal would have been a number that could drift from the one the envelope
+ * rebuild uses while both claimed to be "the engine's default".
+ *
+ * ⚠ It is NOT `layoutTopDown`'s `regionSizeBase` (`{width: 6, height: 6}`,
+ * `:~1490`). Those are different defaults for different questions — the base a
+ * top-down layout starts from before `uniformSize` widens it per axis, versus
+ * the size a rebuild uses when the document names none — and M0 deliberately
+ * did not fold them together: nothing measured says they should be one number,
+ * and making them one would change what `layoutTopDown` lays out.
+ *
+ * Frozen, so a consumer that means to vary it has to copy it first (every
+ * reader below spreads).
+ */
+export const DEFAULT_REGION_SIZE = Object.freeze({ width: 8, height: 6 });
+
 // --- Grid data model ---
 //
 // Cell-to-region storage for the grid-growth pipeline. Each cell
@@ -4061,7 +4083,7 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
     const maxItemsPerRegion = opts.maxItemsPerRegion ?? 2;
     const config = {
         seed,
-        regionSize: regionSize ?? { width: 8, height: 6 },
+        regionSize: regionSize ?? { ...DEFAULT_REGION_SIZE },
         itemLib,
         regionParams: opts.regionParams ?? {},
         hazardOpts: opts.hazardOpts ?? undefined,

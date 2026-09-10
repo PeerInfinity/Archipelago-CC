@@ -29,8 +29,80 @@
  * exactly what it always did, so the pipeline path is byte-inert.
  */
 
-import { Grid } from './procgenPipelineEngine.js';
+import { Grid, DEFAULT_REGION_SIZE } from './procgenPipelineEngine.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+
+/**
+ * ⛓⛓⛓ **THE CELL SIZE, AND WHERE IT COMES FROM** (PRESET SIDECARS M0).
+ *
+ * Until M0 there was one rule and no fallback: the cell was the max
+ * `playable_payload.width`/`height` in TILES over the slot's entries, and a slot
+ * where that max stayed 0 returned null *before placing a single region*. That
+ * is a rule about TILE-GRID substrates, applied to every substrate — so a
+ * bounce / runner / jta / omsi slot whose every region carried a `grid_cell`
+ * drew nothing, and the hub said "no map for this world" about a document that
+ * plainly has a layout.
+ *
+ * MEASURED at `0fa53f7d06` over the 42 populated slots of the committed corpus
+ * (`git ls-files frontend/presets | grep _rules.json$`, one call per slot):
+ * 26 grids, **16 nulls**, of which only **4** carry no `grid_cell` on any entry.
+ * The renderer was never the limit — `compositeMapRenderer.drawRegionCell`
+ * already paints a substrate that declares no `compositeMap.drawRegion` through
+ * `drawGenericRegion` (a labelled zone box with its exit squares), which is what
+ * the pipeline panel shows for the same regions, sized by the DRIVER's
+ * `config.regionSize`. A LOADED document has no driver, so it needs the
+ * precedence below.
+ *
+ * The three steps, in order, each returned as `regionSizeSource` so a reader can
+ * say which one fired instead of computing it a second time:
+ *
+ * 1. `'payload'` — the max `width`/`height` over the slot's payloads. Today's
+ *    rule, unchanged where it fires: all 26 slots that drew before still draw
+ *    the same cell (22×20 for the big `procgen_topdown` documents, 8×6 / 20×20
+ *    for the rest).
+ * 2. `'declared'` — a `compositeMap.cellSize` on the registry entry of a
+ *    substrate PLACED in this slot, per axis max where more than one declares.
+ *    ⛔ **No substrate declares one** as of M0, deliberately: nothing measured
+ *    needs a size other than the default, and a declaration nobody needs is a
+ *    hand list of substrate names wearing a registry hat. This is the seam for
+ *    the first substrate that does.
+ * 3. `'default'` — `DEFAULT_REGION_SIZE`, the engine's own, read from the module
+ *    that owns it so this file and `rebuildEnvelopeFromRulesJson` cannot drift.
+ *
+ * ⛔ The null rule moved with it: a slot returns null when **no region could be
+ * placed** — no `grid_cell` on any entry, or no registered substrate able to
+ * deserialize one — which is the check that was already there at the end of the
+ * placement loop. The `maxW === 0` gate in front of it is gone.
+ *
+ * ⚠ **`procgen_metadata.grid_dims` is NOT consulted**, and the measurement is
+ * why: the brief asked for it where it exceeds the `grid_cell` extents, so a
+ * sparse layout would keep its empty cells. Over the same 42 slots, **25 carry
+ * `grid_dims` and 0 of them exceed the extents** — no committed document can
+ * tell the two rules apart, so the extents rule stands and the branch nothing
+ * would exercise was not written.
+ */
+function cellSizeFor(entries) {
+    let maxW = 0;
+    let maxH = 0;
+    let declW = 0;
+    let declH = 0;
+    for (const [, sc] of entries) {
+        const payload = sc?.playable_payload || {};
+        if (payload.width > maxW) maxW = payload.width;
+        if (payload.height > maxH) maxH = payload.height;
+        if (!sc?.grid_cell) continue;
+        const declared = substrateRegistry.get(sc.substrate)?.compositeMap?.cellSize;
+        if (Number.isFinite(declared?.width) && declared.width > declW) declW = declared.width;
+        if (Number.isFinite(declared?.height) && declared.height > declH) declH = declared.height;
+    }
+    if (maxW > 0 && maxH > 0) {
+        return { regionSize: { width: maxW, height: maxH }, regionSizeSource: 'payload' };
+    }
+    if (declW > 0 && declH > 0) {
+        return { regionSize: { width: declW, height: declH }, regionSizeSource: 'declared' };
+    }
+    return { regionSize: { ...DEFAULT_REGION_SIZE }, regionSizeSource: 'default' };
+}
 
 /**
  * Reconstruct a Grid + composite-view payload from a rules.json that
@@ -39,8 +111,10 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
  * fields — poolRemaining is unknown post-hoc), so the existing
  * _renderGrid / _renderStats paths can paint it without further
  * branching. Returns null if the input has no procgen data, if the named
- * player slot has none, or if no registered substrate can deserialize any of
- * the regions.
+ * player slot has none, or if no region could be PLACED — no `grid_cell` on any
+ * entry, or no registered substrate able to deserialize one. It no longer
+ * returns null for a slot whose payloads carry no tile geometry; see
+ * `cellSizeFor` for the size such a slot's cells get.
  *
  * Pure function — exported for testing.
  *
@@ -66,19 +140,17 @@ export function reconstructResultFromSidecars(rulesJson, { playerId = null } = {
 
     let maxGx = 0;
     let maxGy = 0;
-    let maxW = 0;
-    let maxH = 0;
     for (const [, sc] of regionEntries) {
         const cell = sc?.grid_cell;
         if (cell) {
             if (cell.gx > maxGx) maxGx = cell.gx;
             if (cell.gy > maxGy) maxGy = cell.gy;
         }
-        const payload = sc?.playable_payload || {};
-        if (payload.width > maxW) maxW = payload.width;
-        if (payload.height > maxH) maxH = payload.height;
     }
-    if (maxW === 0 || maxH === 0) return null;
+    // ⛓ M0 — the cell's size, and which of the three rules gave it. See the
+    //   docblock on `cellSizeFor`; the `maxW === 0 ⇒ null` gate that used to
+    //   stand here is gone, and `placed === 0` below is the only null rule left.
+    const { regionSize, regionSizeSource } = cellSizeFor(regionEntries);
 
     const grid = new Grid({ width: maxGx + 1, height: maxGy + 1 });
     let placed = 0;
@@ -126,7 +198,13 @@ export function reconstructResultFromSidecars(rulesJson, { playerId = null } = {
     const meta = rulesJson.procgen_metadata ?? {};
     return {
         grid,
-        regionSize: { width: maxW, height: maxH },
+        regionSize,
+        // ⛓ M0 — WHICH of the three rules sized that cell ('payload' |
+        //   'declared' | 'default'). A reader that wants to say "the engine's
+        //   default, because this world stores no tile geometry" must not
+        //   re-derive it: a second spelling of the precedence is a second thing
+        //   to keep in step.
+        regionSizeSource,
         stats: {
             regionsBuilt: placed,
             regionsSkipped: 0,
