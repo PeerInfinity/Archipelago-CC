@@ -100,6 +100,7 @@ export const RULES_OP_KINDS = Object.freeze([
     'add-item-group',
     'rename-item-group',
     'delete-item-group',
+    'set-progression-mapping',
     'set-canonical-placement',
     'set-meta',
     'set-start-region',
@@ -344,6 +345,7 @@ function dispatchRulesDocOp(doc, op) {
         case 'add-item-group': return opAddItemGroup(doc, op);
         case 'rename-item-group': return opRenameItemGroup(doc, op);
         case 'delete-item-group': return opDeleteItemGroup(doc, op);
+        case 'set-progression-mapping': return opSetProgressionMapping(doc, op);
         case 'set-canonical-placement': return opSetCanonicalPlacement(doc, op);
         case 'set-meta': return opSetMeta(doc, op);
         case 'set-start-region': return opSetStartRegion(doc, op);
@@ -983,6 +985,326 @@ function opDeleteItemGroup(doc, op) {
     }
     return ok(setPath(doc, [ITEM_GROUPS_KEY, p], groups.filter((g) => g !== op.name)),
         `− item group ${op.name}`);
+}
+
+/* ── progression mappings ────────────────────────────────────────────── */
+
+/**
+ * ⛓⛓⛓ **THE PROGRESSION BLOCK'S KEY**, named once so the op, the Items tab's
+ * Progression section and the ownership table cannot disagree about it (I2).
+ */
+export const PROGRESSION_MAPPING_KEY = 'progression_mapping';
+
+/**
+ * ⛓⛓⛓ **THE TWO KINDS, AND THE `type` VALUE THAT SELECTS THE SECOND ONE.**
+ *
+ * The runtime asks exactly one question of an entry — `mapping.type ===
+ * 'additive'` (`stateManager/core/inventoryManager.js:262`, `:286`) — so
+ * "progressive" is not a tag a document carries, it is the ABSENCE of the
+ * additive one. Measured over the 212 committed documents: **136** entries
+ * carry no `type` at all and **1** carries `'additive'`; no other value
+ * appears.
+ */
+export const PROGRESSION_KINDS = Object.freeze({
+    PROGRESSIVE: 'progressive',
+    ADDITIVE: 'additive',
+});
+
+/** ⛓ The literal the runtime tests for — the only `type` any entry may carry. */
+export const ADDITIVE_TYPE = 'additive';
+
+/**
+ * ⛓⛓⛓ **THE LAW, AS MEASURED — AND IT IS NOT THE ONE "VIRTUAL ITEM" SUGGESTS.**
+ *
+ * `progression_mapping[p]` is `name → mapping`, and the two kinds are consumed
+ * by two different readers:
+ *
+ * · **ADDITIVE** (`{type: 'additive', base_item, items: {itemName: value}}`) —
+ *   `inventoryManager._addItemToInventory` (`:258-296`) skips a DIRECT add of
+ *   the key, and when any component item is added it accumulates
+ *   `mapping.items[component] * count` into `inventory[key]`. So here the key
+ *   really is a VIRTUAL counter: messenger's `Shards` is the corpus's one
+ *   entry and it is not an item of the slot.
+ *
+ * · **PROGRESSIVE** (`{base_item, items: [{name, level, provides?}]}`) — read
+ *   NOT by the inventory but by `shared/gameLogic/generic/genericLogic.js`
+ *   (`has` `:76-107`, `count` `:147-180`). `has(x)` finds `x` among some
+ *   entry's `items[].name`, takes that member's `level`, then sums
+ *   `inventory[k]` over EVERY entry `k` whose `base_item` equals this one's,
+ *   and answers `total >= level`. The inventory adds the key normally
+ *   (`:260-271` deliberately does NOT skip it) — so for this kind the key is a
+ *   REAL progressive item the player receives.
+ *
+ * ⛔⛔ **WHICH MEANS "THE KEY IS A VIRTUAL NAME THAT MUST NOT COLLIDE WITH A
+ * REAL ITEM" IS BACKWARDS.** Measured: **135 of the 137** committed entries
+ * have a key that IS an item of the same slot, by design (`Progressive Sword`
+ * is an item you pick up). A refusal on that collision would refuse 98.5 % of
+ * the corpus.
+ *
+ * ⛓⛓ **`base_item` IS A POOL LABEL, NOT AN ITEM REFERENCE.** `genericLogic`
+ * only ever compares one entry's `base_item` with another's — it never looks
+ * the string up in `items`. Measured: it equals the entry's own key in
+ * **127** of 137, and in all **137** it is a KEY OF THE SAME SLOT'S MAPPING.
+ * The 10 exceptions are alttp's `Progressive Bow (Alt)` → `Progressive Bow`,
+ * which is the whole point of the field: two receivable items pooling into one
+ * level count. ⇒ the editor's base picker offers the slot's MAPPING NAMES, and
+ * `base_item` naming an item the document does not hold is not an error
+ * (messenger's `Shards` and smz3's `ProgressiveBow` are both in that state).
+ *
+ * ⛓ **A MEMBER NAME NEED NOT BE AN ITEM EITHER, in the corpus as it stands.**
+ * 12 members over smz3's 4 entries name resolved forms the slot's `items` does
+ * not hold (`Fighter Sword`, `Master Sword`, …) — `has` resolves them THROUGH
+ * the mapping, so they are names RULES ask for rather than items anyone
+ * receives. That is why the unknown-item refusal is DIFFERENCED (P1's veto
+ * shape): a write may not ADD one, and an entry that arrived with one is still
+ * shown, still editable, and its stale row is still removable.
+ *
+ * ⛓ **`provides` IS A THIRD, SCHEMA-DECLARED MEMBER FIELD** (`rules.schema.json`
+ * `$defs.progressiveItemLevel`) carried by 13 members, all smz3's. Nothing in
+ * `frontend/` reads it today; the section DRAWS it read-only and the op carries
+ * it through, because an editor that writes the whole entry is exactly the
+ * thing that can silently drop a field it does not know about.
+ */
+
+/** ⛓ A plain object — the shape both kinds' containers and the entry itself
+ *  are, spelled once so the validator cannot ask it two ways. */
+const isPlainObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+
+/** ⛓ The slot's mapping table, READ-ONLY and always a plain object — an
+ *  accessor that lazily created its container would write through the
+ *  session's folded record (`regionsOf`'s rule). */
+export function progressionMappings(doc, player = DEFAULT_PLAYER_ID) {
+    const v = doc?.[PROGRESSION_MAPPING_KEY]?.[player ?? DEFAULT_PLAYER_ID];
+    return isPlainObject(v) ? v : {};
+}
+
+/**
+ * ⛓⛓ **WHICH KIND ONE ENTRY IS — the one question, asked the way the RUNTIME
+ * asks it.** ⛔ Not "does it have an array `items`": an entry mid-edit can have
+ * an empty one, and the tag is what `inventoryManager` branches on. A second
+ * spelling of this would let the section draw a card the inventory treats as
+ * the other kind.
+ */
+export function progressionKindOf(mapping) {
+    return mapping?.type === ADDITIVE_TYPE
+        ? PROGRESSION_KINDS.ADDITIVE
+        : PROGRESSION_KINDS.PROGRESSIVE;
+}
+
+/**
+ * ⛓ The names one entry's `items` container holds, in its own order —
+ * the array's `name`s for the progressive kind, the object's keys for the
+ * additive one. Both kinds, one accessor, so a caller that wants "the item
+ * names this mapping mentions" cannot get it right for one kind and wrong for
+ * the other.
+ */
+export function progressionMemberNames(mapping) {
+    const items = mapping?.items;
+    if (progressionKindOf(mapping) === PROGRESSION_KINDS.ADDITIVE) {
+        return isPlainObject(items) ? Object.keys(items) : [];
+    }
+    return Array.isArray(items)
+        ? items.map((m) => (isPlainObject(m) ? m.name : undefined))
+            .filter((n) => typeof n === 'string')
+        : [];
+}
+
+/**
+ * ⛓⛓⛓ **THE TWO WAYS ONE ENTRY CAN NAME SOMETHING THE DOCUMENT DOES NOT HOLD**
+ * — P1's `PLACEMENT_ISSUE_REASONS` shape, one key over. The op's refusal, the
+ * section's marks and the in-app rows all read the one predicate below, so a
+ * member the section marks stale is exactly a member the op will not ADD.
+ */
+export const PROGRESSION_ISSUE_REASONS = Object.freeze({
+    UNKNOWN_ITEM: 'unknown item',
+    UNPOOLED_BASE: 'base item is not a mapping in this slot',
+});
+
+/**
+ * ⛓⛓ **EVERY DANGLING NAME IN ONE SLOT — the shared validator.**
+ *
+ * ⚠ It reports only the two CROSS-REFERENCES a JSON schema cannot assert; the
+ * SHAPE (a `base_item` string, a non-empty container, integer levels) is the
+ * op's own hard refusal, because no committed entry is in a bad-shape state
+ * and a document that is has nothing for a section to draw. Measured over the
+ * 212 committed documents: **0** shape failures, **12** `UNKNOWN_ITEM` members
+ * (smz3's four entries) and **0** `UNPOOLED_BASE`.
+ *
+ * @param {object} doc
+ * @param {string} [player]
+ * @returns {Array<{name: string, member: string|null, reason: string}>} in the
+ *   document's own key order, which is the order the section draws.
+ */
+export function progressionMappingIssues(doc, player = DEFAULT_PLAYER_ID) {
+    const p = player ?? DEFAULT_PLAYER_ID;
+    const mappings = progressionMappings(doc, p);
+    const items = itemsOf(doc, p);
+    const bases = new Set(Object.keys(mappings));
+    const out = [];
+    for (const [name, mapping] of Object.entries(mappings)) {
+        if (!isPlainObject(mapping)) continue;
+        if (typeof mapping.base_item === 'string' && !bases.has(mapping.base_item)) {
+            out.push({
+                name, member: mapping.base_item,
+                reason: PROGRESSION_ISSUE_REASONS.UNPOOLED_BASE,
+            });
+        }
+        for (const member of progressionMemberNames(mapping)) {
+            if (!Object.prototype.hasOwnProperty.call(items, member)) {
+                out.push({ name, member, reason: PROGRESSION_ISSUE_REASONS.UNKNOWN_ITEM });
+            }
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓ ONE ISSUE AS A SENTENCE — the op's refusal, the section's mark title and a
+ * test's expectation all read this, so a person who has seen the wording in one
+ * place has seen it in the others.
+ *
+ * ⛓ `member` is THE NAME THAT DANGLES in both cases — the member item for
+ * `UNKNOWN_ITEM`, the `base_item` for `UNPOOLED_BASE` — which is what makes one
+ * sentence enough for two reasons, and what the difference is keyed on.
+ */
+export function describeProgressionIssue(issue) {
+    return `${issue.name} → ${issue.member} — ${issue.reason}`;
+}
+
+/** ⛓ A positive integer — the `level` rule and the additive `value` rule share
+ *  the integer half, and only `level` requires it to be ≥ 1. */
+const isInteger = (v) => typeof v === 'number' && Number.isInteger(v);
+
+/**
+ * ⛓⛓ **THE SHAPE, BY KIND — the hard half of the validation.** Returns a
+ * sentence or `null`. ⛔ It is separate from `progressionMappingIssues` because
+ * the two have different POPULATIONS and therefore different laws: a shape
+ * failure has no committed instance and is refused outright, while a dangling
+ * NAME has 12 and is differenced (a document arrives with them, and the one
+ * gesture a person needs is the one a blanket refusal would take away).
+ */
+function progressionShapeError(name, mapping) {
+    if (!isPlainObject(mapping)) {
+        return `apworld: a progression mapping is an object, got ${JSON.stringify(mapping)}.`;
+    }
+    if ('type' in mapping && mapping.type !== ADDITIVE_TYPE) {
+        return `apworld: the only \`type\` a progression mapping may carry is `
+            + `"${ADDITIVE_TYPE}" — the runtime branches on exactly that string `
+            + `(\`inventoryManager\`) — got ${JSON.stringify(mapping.type)}.`;
+    }
+    if (typeof mapping.base_item !== 'string' || !mapping.base_item) {
+        return `apworld: "${name}" needs a \`base_item\` NAME (the pool every entry sharing it `
+            + `counts into), got ${JSON.stringify(mapping.base_item)}.`;
+    }
+    if (progressionKindOf(mapping) === PROGRESSION_KINDS.ADDITIVE) {
+        if (!isPlainObject(mapping.items) || !Object.keys(mapping.items).length) {
+            return `apworld: an additive mapping's \`items\` is a non-empty {item: value} map, `
+                + `got ${JSON.stringify(mapping.items)}.`;
+        }
+        for (const [member, value] of Object.entries(mapping.items)) {
+            if (!member) return 'apworld: an additive mapping\'s item name is non-empty.';
+            if (!isInteger(value)) {
+                return `apworld: the additive value for "${member}" is a whole number, got `
+                    + `${JSON.stringify(value)}.`;
+            }
+        }
+        return null;
+    }
+    if (!Array.isArray(mapping.items) || !mapping.items.length) {
+        return `apworld: a progressive mapping's \`items\` is a non-empty list of {name, level}, `
+            + `got ${JSON.stringify(mapping.items)}.`;
+    }
+    const seen = new Set();
+    for (const member of mapping.items) {
+        if (!isPlainObject(member) || typeof member.name !== 'string' || !member.name) {
+            return `apworld: a progressive level is {name, level}, got ${JSON.stringify(member)}.`;
+        }
+        if (!isInteger(member.level) || member.level < 1) {
+            return `apworld: the level for "${member.name}" is a whole number 1 or greater, got `
+                + `${JSON.stringify(member.level)}. ⛔ \`genericLogic.has\` compares it against `
+                + 'the pooled count of the base item, so 0 would resolve for a player with none.';
+        }
+        if (seen.has(member.name)) {
+            return `apworld: "${member.name}" appears twice in "${name}" — \`genericLogic\` `
+                + 'resolves a name by the FIRST level that carries it, so the second is dead.';
+        }
+        seen.add(member.name);
+    }
+    return null;
+}
+
+/**
+ * ⛓⛓⛓ `{name, mapping}` — **ONE OP PER MAPPING, CARRYING THE WHOLE ENTRY; an
+ * absent `mapping` DELETES it.**
+ *
+ * ⛓ The whole entry is the unit because the card is the unit of undo: a level
+ * changed, a member removed and the kind switched are all one gesture on one
+ * card, and a person who presses Undo expects the card they were looking at to
+ * come back — not one row of it. (I1's `rename-item-group` for the same reason,
+ * one cascade instead of two ops.)
+ *
+ * ⛓⛓ **THE UNKNOWN-ITEM REFUSAL IS DIFFERENCED, NOT ABSOLUTE** — P1's veto
+ * shape, inside the op this time. `progressionMappingIssues` is asked about the
+ * document BEFORE and the document AFTER, and only an issue the write ADDS is
+ * refused. ⛔ An absolute refusal would make smz3's four entries — 12 members
+ * naming resolved forms the slot's `items` does not hold — the four entries
+ * nobody can edit, including to take the stale member OUT. That is the
+ * "silently dropped" outcome one key over (W3 §10.7, P1 §12.2).
+ *
+ * ⛓ **A DELETE IS NOT VALIDATED**, for the same reason `set-canonical-placement`'s
+ * is not, plus one of its own: deleting the head of a pool (alttp's
+ * `Progressive Bow`, which `Progressive Bow (Alt)` names as its `base_item`)
+ * ADDS an `UNPOOLED_BASE` issue to a DIFFERENT entry, so a differenced refusal
+ * would make exactly the entries that pool the ones that cannot be removed.
+ */
+function opSetProgressionMapping(doc, op) {
+    const p = playerOf(op);
+    const name = typeof op.name === 'string' ? op.name.trim() : '';
+    if (!name) {
+        return refuse('apworld: a progression mapping name is a non-empty string, got '
+            + `${JSON.stringify(op.name)}.`);
+    }
+    const mappings = progressionMappings(doc, p);
+    const clearing = op.mapping === undefined || op.mapping === null;
+    if (clearing) {
+        if (!Object.prototype.hasOwnProperty.call(mappings, name)) {
+            return ok(doc, `no progression mapping "${name}"`);
+        }
+        return ok(setPath(doc, [PROGRESSION_MAPPING_KEY, p, name], undefined),
+            `− progression mapping ${name}`);
+    }
+    const shape = progressionShapeError(name, op.mapping);
+    if (shape) return refuse(shape);
+
+    const next = setPath(doc, [PROGRESSION_MAPPING_KEY, p, name], op.mapping);
+    // ⛓⛓ THE DIFFERENCE IS THE REFUSAL. Both sides are the SHARED predicate, so
+    //   a member the section marks stale is a member this op declines to add —
+    //   and one it was already carrying stays editable.
+    const before = new Set(progressionMappingIssues(doc, p).map(describeProgressionIssue));
+    const added = progressionMappingIssues(next, p)
+        .filter((issue) => !before.has(describeProgressionIssue(issue)));
+    if (added.length) {
+        // ⛓ The hint names the list the READER needs, and the two reasons need
+        //   two different ones — the slot's items for a member, the slot's own
+        //   mapping names for a base. Printing "the slot's items are …" under a
+        //   base complaint would point at the wrong table.
+        const reasons = new Set(added.map((issue) => issue.reason));
+        const hints = [];
+        if (reasons.has(PROGRESSION_ISSUE_REASONS.UNKNOWN_ITEM)) {
+            hints.push(`slot ${p}'s items are [${listNames(Object.keys(itemsOf(doc, p)))}]`);
+        }
+        if (reasons.has(PROGRESSION_ISSUE_REASONS.UNPOOLED_BASE)) {
+            hints.push(`a \`base_item\` names one of this slot's mappings — `
+                + `[${listNames([...Object.keys(mappings), name])}]`);
+        }
+        return refuse(`apworld: ${added.length} name${added.length === 1 ? '' : 's'} this edit `
+            + `would ADD that slot ${p} cannot resolve — `
+            + `${listNames(added.map(describeProgressionIssue))}. ⛔ ${hints.join('; ')}.`);
+    }
+    const had = Object.prototype.hasOwnProperty.call(mappings, name);
+    return ok(next, `${had ? 'progression mapping' : '+ progression mapping'} ${name} `
+        + `(${progressionKindOf(op.mapping)}, ${progressionMemberNames(op.mapping).length} `
+        + `item${progressionMemberNames(op.mapping).length === 1 ? '' : 's'})`);
 }
 
 /* ── canonical placements ────────────────────────────────────────────── */

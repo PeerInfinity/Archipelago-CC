@@ -20,11 +20,13 @@ import {
 import { rulesEditAdapter } from './rulesEditAdapter.js';
 import { validateRules } from './rulesUtils.js';
 import {
-    EXIT_FIELDS, ITEM_FIELDS, ITEM_GROUPS_KEY, META_FIELDS, PLACEMENT_ISSUE_REASONS,
-    REFUSAL_NAME_LIMIT, RULES_OP_KINDS, SET_KEY_SCOPES, applyRulesDocOp,
+    ADDITIVE_TYPE, EXIT_FIELDS, ITEM_FIELDS, ITEM_GROUPS_KEY, META_FIELDS,
+    PLACEMENT_ISSUE_REASONS, PROGRESSION_ISSUE_REASONS, PROGRESSION_KINDS,
+    PROGRESSION_MAPPING_KEY, REFUSAL_NAME_LIMIT, RULES_OP_KINDS, SET_KEY_SCOPES, applyRulesDocOp,
     canonicalPlacementIssues, canonicalPlacementIssuesByPlayer, deleteItemOps, deleteRegionOps,
-    describePlacementIssue, exitsPointingAt, itemGroupRegistry, itemsCarryingGroup,
-    locationsOfPlayer, nextName, unlistedItemGroups,
+    describePlacementIssue, describeProgressionIssue, exitsPointingAt, itemGroupRegistry,
+    itemsCarryingGroup, locationsOfPlayer, nextName, progressionKindOf, progressionMappingIssues,
+    progressionMappings, progressionMemberNames, unlistedItemGroups,
 } from './rulesDocOps.js';
 
 const P = '1';
@@ -141,6 +143,10 @@ describe('the contract shape', () => {
             },
             'set-canonical-placement': {
                 op: 'set-canonical-placement', location: 'Vault Chest', item: 'Key',
+            },
+            'set-progression-mapping': {
+                op: 'set-progression-mapping', name: 'Progressive Key',
+                mapping: { base_item: 'Progressive Key', items: [{ name: 'Key', level: 1 }] },
             },
             'set-key': { op: 'set-key', key: 'preset_label', value: 'a label' },
             'replace-document': { op: 'replace-document', document: { game_name: 'Replaced' } },
@@ -1107,6 +1113,262 @@ describe('set-key — one top-level key of the document (H1)', () => {
  * (`additionalProperties: true` on the slot), which is why the op refuses by
  * NAME against the document's own regions and items.
  */
+/**
+ * ⛓⛓⛓ **PROGRESSION MAPPINGS (I2)** — `set-progression-mapping`, one op per
+ * entry, and the two kinds the corpus actually holds.
+ *
+ * ⛓ Every expectation here is scored against the LAW the runtime enforces
+ * (`inventoryManager` for the additive kind, `gameLogic/generic/genericLogic`
+ * for the progressive one) rather than against the op's own tables: a row that
+ * asked the validator what the validator thinks would agree with any mutant of
+ * it.
+ */
+describe('progression mappings — the two kinds and their one op (I2)', () => {
+    /**
+     * ⛓ A slot with BOTH kinds and a second slot (slot 3 again, so an op
+     * reaching for "the other slot" by index is still wrong), plus a member
+     * naming an item the slot does NOT hold — the smz3 shape, which is the one
+     * state 12 committed members are in and the reason the refusal differences.
+     */
+    function twoKinds() {
+        const doc = fixture();
+        doc.items[P].Blade = {
+            name: 'Blade', id: 3, groups: [], classification: 'progression', type: null,
+        };
+        doc.items[P].Shard = {
+            name: 'Shard', id: 4, groups: [], classification: 'filler', type: null,
+        };
+        doc[PROGRESSION_MAPPING_KEY] = {
+            [P]: {
+                'Progressive Blade': {
+                    base_item: 'Progressive Blade',
+                    items: [{ name: 'Blade', level: 1 }, { name: 'Retired Blade', level: 2 }],
+                },
+                Shards: { type: 'additive', base_item: 'Shards', items: { Shard: 5 } },
+            },
+            3: { 'Progressive Blade': { base_item: 'Progressive Blade', items: [{ name: 'Torch', level: 1 }] } },
+        };
+        doc.items['3'] = {
+            Torch: { name: 'Torch', id: 9, groups: [], classification: 'progression', type: null },
+        };
+        return doc;
+    }
+
+    const HERE = dirname(fileURLToPath(import.meta.url));
+    const set = (doc, op) => applyRulesDocOp(doc, { op: 'set-progression-mapping', ...op });
+    const progressive = (base, items) => ({ base_item: base, items });
+    const additive = (base, items) => ({ type: 'additive', base_item: base, items });
+
+    /**
+     * ⛓⛓ **THE KIND IS THE `type` TAG, ASKED THE WAY THE INVENTORY ASKS IT.**
+     * ⛔ Scored against `inventoryManager`'s own source rather than against
+     * `progressionKindOf`: the additive branch is selected by the literal
+     * string `'additive'` in a `===`, and a kind function that agreed with
+     * itself would pass under a mutant that changed the tag.
+     */
+    it('⛓⛓ the additive kind is the tag the inventory branches on, and nothing else is', () => {
+        const runtime = readFileSync(
+            join(HERE, '..', 'stateManager', 'core', 'inventoryManager.js'), 'utf8');
+        expect(runtime).toContain(`mapping.type === '${ADDITIVE_TYPE}'`);
+        expect(progressionKindOf({ type: ADDITIVE_TYPE })).toBe(PROGRESSION_KINDS.ADDITIVE);
+        for (const notAdditive of [undefined, null, {}, { type: 'progressive' }, { type: '' }]) {
+            expect(progressionKindOf(notAdditive), JSON.stringify(notAdditive))
+                .toBe(PROGRESSION_KINDS.PROGRESSIVE);
+        }
+        // ⛓ …and the members come out of the container each kind actually uses.
+        const doc = twoKinds();
+        const slot = doc[PROGRESSION_MAPPING_KEY][P];
+        expect(progressionMemberNames(slot['Progressive Blade']))
+            .toEqual(['Blade', 'Retired Blade']);
+        expect(progressionMemberNames(slot.Shards)).toEqual(['Shard']);
+        expect(progressionMemberNames({})).toEqual([]);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE ⚖ LAW: every name the validator reports is a name this edit
+     * would not ADD, and the reverse.** The two are driven against each other
+     * over a document that already carries one stale member, because that is
+     * the state the corpus is in and the state the difference exists for.
+     */
+    it('⛓⛓⛓ every reported name is one the op will not add, and the reverse', () => {
+        const doc = twoKinds();
+        const reported = progressionMappingIssues(doc, P);
+        expect(reported.map(describeProgressionIssue))
+            .toEqual(['Progressive Blade → Retired Blade — unknown item']);
+
+        // ⛓ ADDING the reported name to the OTHER entry is refused, naming it.
+        const addingIt = set(doc, {
+            player: P, name: 'Shards', mapping: additive('Shards', { Shard: 5, 'Retired Blade': 1 }),
+        });
+        expect(addingIt.ok).toBe(false);
+        expect(addingIt.error).toContain('Retired Blade');
+        expect(addingIt.error).toContain(PROGRESSION_ISSUE_REASONS.UNKNOWN_ITEM);
+
+        // ⛓ …and every name the validator does NOT report is one it accepts.
+        for (const held of Object.keys(doc.items[P])) {
+            const res = set(doc, {
+                player: P, name: 'Trial', mapping: progressive('Trial', [{ name: held, level: 1 }]),
+            });
+            expect(res.ok, `${held} is an item this slot holds`).toBe(true);
+        }
+    });
+
+    it('⛓⛓ a member the entry ALREADY had stays editable, and removing it is accepted', () => {
+        const doc = twoKinds();
+        // ⛓ The stale member kept, another level moved — the edit a person makes
+        //   on a card that arrived with a dangling name.
+        const kept = set(doc, {
+            player: P,
+            name: 'Progressive Blade',
+            mapping: progressive('Progressive Blade',
+                [{ name: 'Blade', level: 3 }, { name: 'Retired Blade', level: 4 }]),
+        });
+        expect(kept.ok).toBe(true);
+        expect(kept.doc[PROGRESSION_MAPPING_KEY][P]['Progressive Blade'].items[0].level).toBe(3);
+        expect(progressionMappingIssues(kept.doc, P)).toHaveLength(1);
+
+        // ⛓ …and taking it OUT is accepted too, which is the gesture an
+        //   absolute refusal would have removed.
+        const dropped = set(doc, {
+            player: P,
+            name: 'Progressive Blade',
+            mapping: progressive('Progressive Blade', [{ name: 'Blade', level: 1 }]),
+        });
+        expect(dropped.ok).toBe(true);
+        expect(progressionMappingIssues(dropped.doc, P)).toEqual([]);
+    });
+
+    it('⛓ `base_item` names one of the SLOT\'S MAPPINGS, not an item', () => {
+        const doc = twoKinds();
+        // ⛓ Pooling into a sibling entry — alttp's `Progressive Bow (Alt)`.
+        const pooled = set(doc, {
+            player: P, name: 'Progressive Blade (Alt)',
+            mapping: progressive('Progressive Blade', [{ name: 'Blade', level: 2 }]),
+        });
+        expect(pooled.ok).toBe(true);
+        // ⛓ A base naming an ITEM the slot holds but no mapping is REFUSED —
+        //   which is the direction the shape "base_item is an item" got wrong.
+        const asItem = set(doc, {
+            player: P, name: 'Trial', mapping: progressive('Blade', [{ name: 'Blade', level: 1 }]),
+        });
+        expect(asItem.ok).toBe(false);
+        expect(asItem.error).toContain(PROGRESSION_ISSUE_REASONS.UNPOOLED_BASE);
+        // ⛓ …and a base naming the entry ITSELF always resolves, on a document
+        //   whose block does not exist yet.
+        const fresh = set({ items: { [P]: { Blade: {} } } }, {
+            player: P, name: 'Progressive Blade',
+            mapping: progressive('Progressive Blade', [{ name: 'Blade', level: 1 }]),
+        });
+        expect(fresh.ok).toBe(true);
+        expect(fresh.doc[PROGRESSION_MAPPING_KEY][P]['Progressive Blade'].items).toHaveLength(1);
+    });
+
+    it('⛓⛓ the SHAPE is refused outright, by kind, and each sentence says which rule', () => {
+        const doc = twoKinds();
+        const bad = (mapping) => set(doc, { player: P, name: 'Trial', mapping }).error;
+        expect(bad('nope')).toContain('is an object');
+        expect(bad({ items: [{ name: 'Blade', level: 1 }] })).toContain('base_item');
+        expect(bad(progressive('Trial', []))).toContain('non-empty list');
+        expect(bad(progressive('Trial', { Blade: 1 }))).toContain('non-empty list');
+        expect(bad(progressive('Trial', [{ name: 'Blade' }]))).toContain('1 or greater');
+        expect(bad(progressive('Trial', [{ name: 'Blade', level: 0 }]))).toContain('1 or greater');
+        expect(bad(progressive('Trial', [{ name: 'Blade', level: 1.5 }]))).toContain('1 or greater');
+        expect(bad(progressive('Trial', [{ level: 1 }]))).toContain('{name, level}');
+        expect(bad(progressive('Trial',
+            [{ name: 'Blade', level: 1 }, { name: 'Blade', level: 2 }]))).toContain('twice');
+        expect(bad(additive('Trial', {}))).toContain('non-empty {item: value} map');
+        expect(bad(additive('Trial', [{ name: 'Shard' }]))).toContain('non-empty {item: value} map');
+        expect(bad(additive('Trial', { Shard: 'five' }))).toContain('whole number');
+        // ⛓ The tag the runtime does not know is refused rather than silently
+        //   treated as progressive.
+        expect(bad({ type: 'cumulative', base_item: 'Trial', items: { Shard: 1 } }))
+            .toContain(ADDITIVE_TYPE);
+        expect(bad({ base_item: '', items: [{ name: 'Blade', level: 1 }] })).toContain('base_item');
+        // ⛓ …and a nameless op is refused before any of it.
+        expect(set(doc, { player: P, name: '   ' }).error).toContain('non-empty string');
+    });
+
+    it('⛓ an absent `mapping` DELETES, and a delete is NOT validated', () => {
+        const doc = twoKinds();
+        // ⛓ The stale-member entry comes out whole, without repairing it first.
+        const gone = set(doc, { player: P, name: 'Progressive Blade' });
+        expect(gone.ok).toBe(true);
+        expect(Object.keys(gone.doc[PROGRESSION_MAPPING_KEY][P])).toEqual(['Shards']);
+        // ⛓⛓ Deleting the HEAD of a pool leaves the sibling's base dangling —
+        //   reported, never refused, because refusing it would make exactly the
+        //   entries that pool the ones nobody can remove.
+        const pooled = set(doc, {
+            player: P, name: 'Progressive Blade (Alt)',
+            mapping: progressive('Progressive Blade', [{ name: 'Blade', level: 2 }]),
+        }).doc;
+        const head = set(pooled, { player: P, name: 'Progressive Blade' });
+        expect(head.ok).toBe(true);
+        expect(progressionMappingIssues(head.doc, P).map((i) => i.reason))
+            .toContain(PROGRESSION_ISSUE_REASONS.UNPOOLED_BASE);
+        // ⛓ A name the slot does not carry is a NO-OP, not a refusal.
+        const absent = set(doc, { player: P, name: 'Never Was' });
+        expect(absent.ok).toBe(true);
+        expect(absent.doc).toBe(doc);
+    });
+
+    it('⛓ the op writes ONE slot, and the other slot is untouched', () => {
+        const doc = twoKinds();
+        const res = set(doc, {
+            player: '3', name: 'Progressive Torch',
+            mapping: progressive('Progressive Torch', [{ name: 'Torch', level: 1 }]),
+        });
+        expect(res.ok).toBe(true);
+        expect(Object.keys(res.doc[PROGRESSION_MAPPING_KEY]['3']))
+            .toEqual(['Progressive Blade', 'Progressive Torch']);
+        expect(res.doc[PROGRESSION_MAPPING_KEY][P]).toBe(doc[PROGRESSION_MAPPING_KEY][P]);
+        // ⛓⛓ …and the SLOT is what the refusal reads: slot 3 holds `Torch` and
+        //   not `Blade`, so the same edit that passes on slot 1 is refused here.
+        const wrongSlot = set(doc, {
+            player: '3', name: 'Trial', mapping: progressive('Trial', [{ name: 'Blade', level: 1 }]),
+        });
+        expect(wrongSlot.ok).toBe(false);
+        expect(wrongSlot.error).toContain('slot 3');
+        expect(progressionMappings(doc, '3')['Progressive Blade'].items[0].name).toBe('Torch');
+        expect(progressionMappings(doc, '9')).toEqual({});
+    });
+
+    /**
+     * ⛓⛓ **A MEMBER FIELD THIS EDITOR DOES NOT DRAW SURVIVES THE ROUND TRIP.**
+     * `provides` is schema-declared (`$defs.progressiveItemLevel`) and carried
+     * by 13 committed members, all smz3's — and an op that writes the WHOLE
+     * entry is exactly the shape that can drop one silently.
+     */
+    it('⛓⛓ `provides` is carried through, because the op writes the whole entry', () => {
+        const doc = twoKinds();
+        const withProvides = progressive('Progressive Blade', [
+            { name: 'Blade', level: 1, provides: ['Blade', 'SharpBlade'] },
+        ]);
+        const res = set(doc, { player: P, name: 'Progressive Blade', mapping: withProvides });
+        expect(res.ok).toBe(true);
+        expect(res.doc[PROGRESSION_MAPPING_KEY][P]['Progressive Blade'].items[0].provides)
+            .toEqual(['Blade', 'SharpBlade']);
+        // ⛓ …and the payload is COPIED, not aliased (the module's clone law).
+        withProvides.items[0].provides.push('Mutated');
+        expect(res.doc[PROGRESSION_MAPPING_KEY][P]['Progressive Blade'].items[0].provides)
+            .toEqual(['Blade', 'SharpBlade']);
+    });
+
+    it('⛓ one edit is one op and one undo, through the session', () => {
+        const doc = twoKinds();
+        const session = createEditSession(rulesEditAdapter, doc);
+        session.apply({
+            op: 'set-progression-mapping', player: P, name: 'Progressive Blade',
+            mapping: progressive('Progressive Blade', [{ name: 'Blade', level: 7 }]),
+        });
+        expect(session.ops()).toHaveLength(1);
+        expect(session.record()[PROGRESSION_MAPPING_KEY][P]['Progressive Blade'].items)
+            .toEqual([{ name: 'Blade', level: 7 }]);
+        session.undo();
+        expect(session.record()[PROGRESSION_MAPPING_KEY][P]['Progressive Blade'])
+            .toEqual(doc[PROGRESSION_MAPPING_KEY][P]['Progressive Blade']);
+    });
+});
+
 describe('canonical placements — the --canonical-seed input (W3)', () => {
     /**
      * ⛓ A SECOND SLOT, built the same way as the first, so the per-slot scope
