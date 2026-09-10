@@ -13177,6 +13177,112 @@ refuse by name); the corpus gate `check-canonical-placements.mjs` (node-only; an
 quoted before/after, +1 headless arm expected); the summary deducts stale entries. Baseline 442/13414 at
 `674dd35653`. Reports come to `next-priorities-planning-4`; I1 on P1's idle notice.
 
+### ⇒ P1 AS BUILT (Opus `apworld-coverage-P1`, 2026-09-09, `acff168e90` → `d028f165c6`, pushed) — plan §12
+
+**Deltas only.** ⚖ user 2026-09-09 (*"We can go ahead and implement placement validation if it's easy."*) closed
+W3's §10.7 (1) and (3) and answered (2).
+
+**⛔ What the brief got wrong, first.** (1) **`--root=` IS A RESERVED SPELLING in `scripts/procgen/` and the naked
+gate would have RED-ded CI on a clean corpus** — it means a PAGES-SHAPED URL, and `ciGateArms({set:'headless'})`
+printed `argv: ["--root=http://localhost:8000/frontend"]` for the new file, i.e. a FILESYSTEM gate pointed at an
+origin. The flag is `--tree=`; the roster now prints `flags [] argv []` for it. ⛑ And `gateRoster`'s flag detector
+does **not** mask comments, so the docblock paragraph explaining that re-enrolled the flag off its own warning
+(measured: `flags ["root"]`, from prose alone) — the header states *"THE DETECTOR IS THE ASSIGNMENT, NOT THE
+MENTION"* for its two OTHER detectors. **NEW TRAP 1303.** (2) **The op's refusal ORDER had to change**: as a
+whole-slot report, checking the item's type before the location's membership takes a junk-valued stale entry OUT of
+the tab's orphan block, which is the only list that can offer it a Remove. Location first; the op follows the
+predicate. (3) **World generation is HAPPY with a stale entry** — measured on a hand-staled copy in a scratchpad,
+`python -m world_generator … --canonical-seed 1` succeeds and copies it verbatim into the generated world's
+`canonical_placements` ClassVar; the failure lands at SEED generation in `_place_original_items`, where
+`get_location` is `regions.location_cache[player][name]` and the unknown-item fallback is `item_table[name]` — two
+raw dict lookups, a `KeyError` a long way from the byte. (4) The validator needs no `procgenCore/` move:
+`rulesDocOps.js` imports three pure modules and `node -e "import(…)"` resolves it, so the gate imports the
+EDITOR's own function.
+
+**What landed — seven commits, staged by path.** `af14f2d7dd` the validator (`PLACEMENT_ISSUE_REASONS`,
+`canonicalPlacementIssues`, `canonicalPlacementIssuesByPlayer`, `describePlacementIssue`; the op's three refusals
+now SELECT their sentence off the shared predicate); `dbb95de59f` the tab (two scans + a third in the row replaced
+by one call; a stale entry DEDUCTED from `placed` — §10.7 (3)); `6eb158489f` the veto (`_placementIssuesAddedBy`,
+diff-against-before, at `_applySetKey` AND `_acceptEditorOp` — §10.7 (1)); `850e0d48d5` the gate
+(`check-canonical-placements.mjs` + `checkCanonicalPlacements.test.js`, docs census 267 → 268); `fdf30fb8ba` docs;
+`0c3fef9a21` the two in-app rows; `d028f165c6` the `procgen-help` fix (below).
+
+**Measured through the product's own controls.** Tab: `24 of 25 locations placed — 1 names an item it does not
+hold` where W3 read `25 of 25`; the row's mark now prints the validator's reason (`unknown item`). Veto, through
+the Document tab's own **Save JSON** button: adding `{"Nowhere": …}` is REFUSED naming Nowhere with 0 ops recorded
+and the block unchanged; an unknown item at a real location is refused naming both; a save that REMOVES a
+pre-existing stale entry is ACCEPTED as one op, and so is one that leaves a different stale entry in place. The
+new in-app row also asserts that the SAME op adds **zero** schema errors — the hole this closes. Gate over the
+corpus: **212 documents, 223 placement slots, ALL PASS, exit 0**.
+
+**⚑ THE ENROLMENT, quoted before and after.** `ci-gates --plan`: **32 headless arms in 2 shards → 33 in 3**, the
+one new arm being `gate: canonical-placements`, landing in **shard 0** beside `slice-records`; a second unpriced
+arm cannot share a shard with the first, so `loop-costs-one-model` moves to one of its own. The browser partition
+does not move.
+
+**Rows.** `rulesDocOps.test.js` **81 → 87**; new `checkCanonicalPlacements.test.js` **7** (all against a temp
+tree, never `frontend/presets/`); in-app `apworldEditor` **36 → 38**. Bounded vitest over the eleven files this
+slice touches or leans on: **11 files / 260 passed**, each file derived by `grep -c -E '^\s*(it|test)\('`.
+
+**Gates.** in-app `--mode=test-substrates --batch=fast` **100/100**, `failedCount: 0`, `notRunCount: 0`, 4.2 m;
+`compare-runs.js` vs R1's `test-results-2026-09-09T23-00-58.json` (98/98) = **ADDED (2)**, both passed, and
+nothing else, exit 0; `grep -ac "Error in event handler for"` = **0** and the thrown-handler sweep **0**. Docs
+trio: the generator moved the instrument census by the one new file (267 → **268**) and that move is committed
+WITH the gate, re-running moves nothing; `check-procgen-docs --host=localhost:8000` **128 PASS / 0 FAIL / ALL
+CHECKS PASSED**; `procgenDocs/` **452/452**. `lintGateLabels.test.js` **14**, `rosterCategories.test.js` **13**.
+⛓ `docs/json/modules/apworldEditor.md` is NOT in the procgen docs census (17 documents, all under
+`docs/json/developer/procgen/`), so its edit owes no `docsIndex.js`.
+
+**⚖ 52.** Baseline re-quoted at this slice's own start HEAD (`acff168e90` is docs-only above `674dd35653`):
+**442/13414**, slow 12/217, run 34415114946. Trap 1212 checked
+(`git merge-base --is-ancestor af14f2d7dd 674dd35653` = false). Derived BEFORE the run: one `M` and one `A` over
+`*.test.js` (and `vitest.config.js` includes `scripts/**/*.test.js`), `rulesDocOps.test.js` 81 → 87 and the new
+file 0 → 7 ⇒ **+1 file, +13 rows ⇒ 443/13427** (13419 passed | 8 skipped | 0 failed). **CI at the pushed SHA
+`0c3fef9a21`, run 34418792126: `suite: vitest (unfiltered) 443/13427 (13419 passed | 8 skipped | 0 failed)`,
+slow `12/217` — the derivation MATCHED**, with the job line reading `completed success` while the RUN was still
+`in_progress` (R1's residual (e) earning itself a second time). The same job's gate step printed
+`## CI-GATE | gate: canonical-placements | 0/0 | exit=0 | ALL PASS` at **0.4 s**.
+
+**⛔ AND THAT SAME LOG CARRIED A RED THE PUSH INTRODUCED.**
+`## CI-GATE | gate: procgen-help | 267/1 | exit=1` ·
+`FAIL: check-canonical-placements.mjs — HELP ok (169 ms) · IMPORT SIDE EFFECT (436 ms)`. The corpus scan sat at
+MODULE SCOPE, so importing the file read 212 documents; `check-procgen-help.mjs` imports all 268 instruments and
+measures exactly that. **The job was GREEN with it inside — the headless-gates step is `continue-on-error: true`,
+so the ⚖ 52 quote came back clean and only the step's LOG says otherwise.** Reproduced locally at the pushed
+HEAD, fixed in `d028f165c6` by moving the work into `main()` behind `isEntryPoint(import.meta.url)` (what
+`check-slice-records.mjs` does), and re-measured at that HEAD: **`ALL PASS` — 268 instruments answer `--help`
+with no observable side effect** (397 s). ⛑ The slice's local battery could not have caught it: the new gate, its
+rows, `ci-gates --plan`, the docs trio and the in-app roster none of them ask this question, and nothing in the
+brief named the 256-second help gate. **NEW TRAP 1304: a slice that ADDS a file to `scripts/procgen/` owes
+`check-procgen-help.mjs`, not only `ci-gates --plan` — and a `continue-on-error` step is read out of its log,
+never off the job's colour.**
+
+**Three mutants, each naming the rows it reds AND the rows it does not** (snapshot + `cp`, trap 1298; every file
+`cmp`-equal afterwards). **(A)** the validator stops checking items → **exactly 3** node rows, 91 passed: the
+validator's law row, **the OP's own item-refusal row** (which is the proof the op reads the shared predicate
+rather than agreeing with it), and the gate's synthetic stale-item row. Re-armed against the BROWSER: the W3
+stale row FAILED 0.9 s on three conditions and the new deduction row FAILED 0.6 s on three, while the veto row
+stayed green — right, since its subject is an unknown LOCATION. **(B)** the veto bypassed → only
+`apworld-block-editor-refuses-an-unplaceable-placement`, FAILED 0.8 s on four named conditions; the other three
+placement rows green (none of them writes a block). **(C)** `frontend/presets/` copied whole into the scratchpad
+(120 MB, 212 documents; the copy alone reads ALL PASS as a control), one real preset staled → two FINDING lines
+naming `frontend/presets/procgen_topdown/AP_1/AP_1_rules.json`, `slot 1`, both entries and both reasons, exit 1;
+copy deleted, `frontend/presets/` never touched.
+
+**⚖ OPEN (P1's four, plan §12.9).** (1) **The Raw JSON tab is NOT vetoed** — `_handleRawSave`'s
+`replace-document` runs the schema veto only, and the brief scoped this slice to the `set-key` path; adding it is
+two lines, and the argument against is that that tab is the deliberate everything-fallback (which is what the
+Document block editor was until this slice). The same reasoning covers both, so the user should pick which
+reading wins. (2) **The gate's document count differs between a working tree and CI's checkout** (212 vs 210 —
+the two maze fixtures are untracked on purpose), which is why no count is pinned; it also means the gate never
+asserts its own population. (3) **The veto's population at `_acceptEditorOp` is EMPTY today** — no door writes
+this key, so that half is justified by the seam alone (L4 found the SCHEMA veto missing there for the opposite
+reason); deleting that one call costs nothing if the arc would rather carry no code no measurement asks for.
+(4) **`is_canonical` still says nothing about whether the placements are real** — nothing checks the exporter's
+stamp against the block, and whether that pairing is a rule belongs to the exporter's owner.
+
+NEXT: **I1** on P1's idle notice.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
