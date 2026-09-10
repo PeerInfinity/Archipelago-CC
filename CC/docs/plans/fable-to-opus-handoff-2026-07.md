@@ -13251,7 +13251,10 @@ measures exactly that. **The job was GREEN with it inside — the headless-gates
 so the ⚖ 52 quote came back clean and only the step's LOG says otherwise.** Reproduced locally at the pushed
 HEAD, fixed in `d028f165c6` by moving the work into `main()` behind `isEntryPoint(import.meta.url)` (what
 `check-slice-records.mjs` does), and re-measured at that HEAD: **`ALL PASS` — 268 instruments answer `--help`
-with no observable side effect** (397 s). ⛑ The slice's local battery could not have caught it: the new gate, its
+with no observable side effect** (397 s) — and in CI at the record's own head `a9dff6320a` (run 34421046800):
+`gate: procgen-help | 268/0 | exit=0` beside `gate: canonical-placements | 0/0 | exit=0 | ALL PASS`, with **all
+33 `## CI-GATE` lines in that step reading `exit=0`** and the ⚖ 52 row unmoved at `443/13427`.
+⛑ The slice's local battery could not have caught it: the new gate, its
 rows, `ci-gates --plan`, the docs trio and the in-app roster none of them ask this question, and nothing in the
 brief named the 256-second help gate. **NEW TRAP 1304: a slice that ADDS a file to `scripts/procgen/` owes
 `check-procgen-help.mjs`, not only `ci-gates --plan` — and a `continue-on-error` step is read out of its log,
