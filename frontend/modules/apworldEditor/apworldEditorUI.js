@@ -51,6 +51,7 @@ import { rulesEditAdapter } from './rulesEditAdapter.js';
 import {
   EXIT_FIELDS,
   ITEM_FIELDS,
+  ITEM_GROUPS_KEY,
   META_FIELDS,
   PLACEMENT_ISSUE_REASONS,
   canonicalPlacementIssues,
@@ -58,7 +59,10 @@ import {
   deleteItemOps,
   deleteRegionOps,
   describePlacementIssue,
+  itemGroupRegistry,
+  itemsCarryingGroup,
   locationsOfPlayer,
+  unlistedItemGroups,
 } from './rulesDocOps.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -1528,6 +1532,11 @@ class ApworldEditorUI {
   }
 
   _renderItemsTab() {
+    // ⛓ I1 — the slot's group VOCABULARY first, then the items that use it:
+    //   a person adds a group before they can put anything in it, and the
+    //   per-item picker below draws only names this section lists.
+    this.scrollContainer.appendChild(this._renderItemGroupsSection());
+
     const addBtn = this._makeButton('+ Add item', '#444', () => this._handleAddItem());
     addBtn.style.marginBottom = '8px';
     this.scrollContainer.appendChild(addBtn);
@@ -1578,6 +1587,317 @@ class ApworldEditorUI {
       startDesc.textContent = 'Edit per-item "Start" counts on the rows above to change starting items.';
       this.scrollContainer.appendChild(startDesc);
     }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+   * THE GROUPS SECTION — `item_groups`, the slot's group NAME REGISTRY
+   * ══════════════════════════════════════════════════════════════════ */
+
+  /**
+   * ⛓⛓⛓ **THE REGISTRY IS A NAME LIST; MEMBERSHIP IS ON THE ITEMS — AND THIS
+   * SECTION NEVER RECONCILES THE TWO BEHIND THE PERSON'S BACK** (I1).
+   *
+   * Measured over the 212 committed documents: all 224 slots hold an ARRAY of
+   * names, the registry EQUALS the union of the items' own `groups` in 69 slots
+   * and differs in 155 — always in the same direction (an item carries a name
+   * the registry lacks; `Event` in 154 of them). ⇒ two kinds of row:
+   *
+   *   · a REGISTRY row, with the count of items carrying it — derived, so it
+   *     cannot drift from what `delete-item-group` refuses;
+   *   · an UNLISTED row, greyed, for a name the items carry that the registry
+   *     does not list, with the one gesture that fits: add it to the registry.
+   *
+   * ⛔ Neither direction is "fixed" automatically. A registry entry nothing
+   * carries is legal (it is what `add` produces on the way to populating it)
+   * and an unlisted group is what 155 of the 224 committed slots look like.
+   *
+   * ⛓ Every count on this section is DERIVED from `itemsCarryingGroup`, the
+   * same predicate the op's refusal reads — so the disabled delete button and
+   * the refusal can never disagree.
+   */
+  _renderItemGroupsSection() {
+    const registry = itemGroupRegistry(this.rulesDoc, this.playerId);
+    const unlisted = unlistedItemGroups(this.rulesDoc, this.playerId);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'apworld-item-groups';
+    wrap.dataset.slot = String(this.playerId);
+    wrap.dataset.listed = String(registry.length);
+    wrap.dataset.unlisted = String(unlisted.length);
+    Object.assign(wrap.style, {
+      border: '1px solid #333', borderRadius: '3px', backgroundColor: '#1f1f1f',
+      padding: '6px 8px', margin: '0 0 10px',
+    });
+
+    const head = document.createElement('div');
+    head.className = 'apworld-item-groups-head';
+    head.textContent = `Item groups — slot ${this.playerId}: `
+      + `${registry.length} in the registry`
+      + (unlisted.length
+        ? `, ${unlisted.length} on items but unlisted`
+        : '');
+    Object.assign(head.style, { color: '#cfe', fontSize: '12px', fontWeight: 'bold',
+      marginBottom: '3px' });
+    wrap.appendChild(head);
+
+    const intro = document.createElement('div');
+    intro.className = 'apworld-item-groups-intro';
+    Object.assign(intro.style, { color: '#888', fontSize: '11px', lineHeight: '1.4',
+      marginBottom: '6px' });
+    intro.textContent = `\`${ITEM_GROUPS_KEY}\` is this slot's list of group NAMES; which items `
+      + 'are in a group is the `groups` field on each item row below. `HasGroup`, `group_count` '
+      + 'and `group_check` rules count through the items, so the two are edited separately and '
+      + 'neither is derived from the other. A group can be listed with no members, and an item '
+      + 'can carry a name the registry does not list — both are states committed worlds are in.';
+    wrap.appendChild(intro);
+
+    if (!registry.length && !unlisted.length) {
+      const none = document.createElement('div');
+      none.className = 'apworld-item-groups-empty';
+      none.style.cssText = 'color:#888;font-size:11px;margin-bottom:6px;';
+      none.textContent = 'No item groups yet. Add one below, then put items in it with the '
+        + 'Groups picker on each item row.';
+      wrap.appendChild(none);
+    }
+
+    for (const name of registry) wrap.appendChild(this._makeItemGroupRow(name, true));
+    for (const name of unlisted) wrap.appendChild(this._makeItemGroupRow(name, false));
+
+    wrap.appendChild(this._makeItemGroupAddRow());
+    return wrap;
+  }
+
+  /**
+   * ⛓ One registry (or unlisted) row. ⛓ The rename input commits on `change`
+   * — the Meta tab's rule, so one rename is one op and one undo rather than one
+   * per keystroke — and Enter blurs into that same commit.
+   *
+   * ⛓⛓ The delete button is DISABLED with the reason in its `title` while items
+   * carry the group. ⛔ That is a COURTESY, not the guard: the guard is
+   * `delete-item-group`'s own refusal, which holds for a caller that never drew
+   * a button (the Document tab's whole-block `set-key` is one).
+   */
+  _makeItemGroupRow(name, listed) {
+    const carriers = itemsCarryingGroup(this.rulesDoc, name, this.playerId);
+    const row = document.createElement('div');
+    row.className = 'apworld-item-group-row';
+    row.dataset.group = name;
+    row.dataset.listed = String(listed);
+    row.dataset.carriers = String(carriers.length);
+    Object.assign(row.style, {
+      display: 'flex', alignItems: 'center', gap: '8px', padding: '2px 0',
+      opacity: listed ? '1' : '0.75',
+    });
+
+    if (listed) {
+      const input = this._makeTextInput(name, '100%');
+      input.className = 'apworld-item-group-name';
+      input.style.flex = '1 1 40%';
+      input.title = 'Rename this group — every item carrying it follows, as one op';
+      input.addEventListener('change', (e) => {
+        const next = e.target.value.trim();
+        if (next === name) { e.target.value = name; return; }
+        this._applyOp({
+          op: 'rename-item-group', name, newName: next, player: this.playerId,
+        });
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+      });
+      row.appendChild(input);
+    } else {
+      const label = document.createElement('code');
+      label.className = 'apworld-item-group-name';
+      label.textContent = name;
+      Object.assign(label.style, { color: '#e0a030', fontSize: '11px', flex: '1 1 40%' });
+      label.title = 'On items, but not in this slot\'s registry';
+      row.appendChild(label);
+    }
+
+    const count = document.createElement('span');
+    count.className = 'apworld-item-group-count';
+    count.textContent = `${carriers.length} item${carriers.length === 1 ? '' : 's'}`;
+    Object.assign(count.style, { color: '#9ab', fontSize: '11px', flex: '0 0 auto' });
+    count.title = carriers.length
+      ? `Carried by ${carriers.slice(0, 12).join(', ')}`
+        + `${carriers.length > 12 ? `, … and ${carriers.length - 12} more` : ''}`
+      : 'No item in this slot carries this group';
+    row.appendChild(count);
+
+    if (listed) {
+      const del = this._makeButton('×', carriers.length ? '#3a3a3a' : '#8a2a2a',
+        () => this._applyOp({
+          op: 'delete-item-group', name, player: this.playerId,
+        }));
+      del.className = 'apworld-item-group-delete';
+      del.style.padding = '2px 8px';
+      del.style.marginLeft = 'auto';
+      // ⛓⛓ ⚖ user 2026-09-09: "Let's go with refuse." The button says why it
+      //   cannot, by name, rather than offering a click that ends in an alert.
+      del.disabled = carriers.length > 0;
+      del.title = carriers.length
+        ? `${carriers.length} item${carriers.length === 1 ? '' : 's'} still `
+          + `carr${carriers.length === 1 ? 'ies' : 'y'} "${name}" `
+          + `(${carriers.slice(0, 6).join(', ')}`
+          + `${carriers.length > 6 ? ', …' : ''}). Take the group off `
+          + `${carriers.length === 1 ? 'it' : 'them'} first — deleting the registry entry will `
+          + 'not do it for you.'
+        : `Delete the group "${name}" from this slot's registry`;
+      if (carriers.length) { del.style.cursor = 'not-allowed'; del.style.color = '#888'; }
+      row.appendChild(del);
+    } else {
+      const add = this._makeButton('Add to registry', '#3a5a3a', () => this._applyOp({
+        op: 'add-item-group', name, player: this.playerId,
+      }));
+      add.className = 'apworld-item-group-list';
+      add.style.fontSize = '11px';
+      add.style.marginLeft = 'auto';
+      add.title = `Put "${name}" in this slot's \`${ITEM_GROUPS_KEY}\` list — the items already `
+        + 'carrying it are not touched';
+      row.appendChild(add);
+    }
+    return row;
+  }
+
+  /** ⛓ The add row. Both the button and Enter commit the same way, and the op
+   *  is the one that refuses an empty or duplicate name — this only reads the
+   *  box. */
+  _makeItemGroupAddRow() {
+    const line = document.createElement('div');
+    line.className = 'apworld-item-groups-add';
+    Object.assign(line.style, { display: 'flex', alignItems: 'center', gap: '6px',
+      marginTop: '6px' });
+    const input = this._makeTextInput('', '100%');
+    input.className = 'apworld-item-group-new';
+    input.placeholder = 'new group name';
+    input.style.flex = '1 1 auto';
+    const commit = () => {
+      const name = input.value.trim();
+      if (!name) return;
+      this._applyOp({ op: 'add-item-group', name, player: this.playerId });
+    };
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); commit(); }
+    });
+    line.appendChild(input);
+    const btn = this._makeButton('+ Add group', '#444', commit);
+    btn.className = 'apworld-item-groups-add-button';
+    line.appendChild(btn);
+    return line;
+  }
+
+  /**
+   * ⛓⛓⛓ **THE ITEM'S GROUPS CELL — A PICKER OVER THE REGISTRY, AND ITS OPTION
+   * LIST IS LAZY BECAUSE OF WHAT THE CORPUS HOLDS** (I1).
+   *
+   * The cell was a comma-separated TEXT INPUT until I1: a person had to know a
+   * group's exact spelling, and a typo silently created a new unlisted group.
+   * Now the item's groups are CHIPS (each removable, an unlisted one marked)
+   * and adding one is a select over the registry names the item does not yet
+   * carry.
+   *
+   * ⛓⛓ **AND IT FILLS ON OPEN, MEASURED ON BOTH BUILDS RATHER THAN REASONED
+   * ABOUT.** The worst case in the committed corpus is `sc2` slot 1 — 1,741
+   * items under an 889-name registry. The same page, with `fill()` called at
+   * construction and then reverted:
+   *
+   *              option elements   Items-tab paint   opening one picker
+   *     eager        1,540,414          16,688 ms      0 ms (already built)
+   *     lazy             1,741           1,948 ms      7 ms, 877 options
+   *
+   * 8.6× on the paint and 885× on the elements. ⛑ The element count is NOT the
+   * naive `1,741 × (889 + 1) = 1,549,490`: a picker offers only the names its
+   * own item does not already carry, so the eager total is
+   * `Σᵢ (1 + |registry \ groupsᵢ|)` — which reproduces 1,540,414 exactly, and
+   * 3,498 on alttp. (Quoting the product instead of the measurement is
+   * trap 1300, from W3's Placements select — the same rule for the same
+   * reason, §10.4.)
+   *
+   * ⛓ ONE `set-item-field groups` per gesture, so one chip removed or one name
+   * added is one op and one undo.
+   */
+  _makeItemGroupsCell(name, item, setField) {
+    const carried = Array.isArray(item.groups) ? item.groups : [];
+    const registry = itemGroupRegistry(this.rulesDoc, this.playerId);
+    const listed = new Set(registry);
+
+    const cell = document.createElement('div');
+    cell.className = 'apworld-item-groups-cell';
+    cell.dataset.item = name;
+    cell.dataset.groups = String(carried.length);
+    Object.assign(cell.style, {
+      display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '3px',
+    });
+
+    for (const groupName of carried) {
+      const chip = document.createElement('span');
+      chip.className = 'apworld-item-group-chip';
+      chip.dataset.group = groupName;
+      chip.dataset.listed = String(listed.has(groupName));
+      Object.assign(chip.style, {
+        display: 'inline-flex', alignItems: 'center', gap: '2px', fontSize: '10px',
+        padding: '0 2px 0 4px', borderRadius: '8px',
+        border: `1px solid ${listed.has(groupName) ? '#3a5a7a' : '#5a4520'}`,
+        color: listed.has(groupName) ? '#cfe' : '#e0a030',
+        backgroundColor: '#1a1a1a',
+      });
+      const text = document.createElement('span');
+      text.textContent = groupName;
+      chip.appendChild(text);
+      chip.title = listed.has(groupName)
+        ? `"${groupName}" is in this slot's registry`
+        : `"${groupName}" is NOT in this slot's registry — the Groups section above can add it`;
+      const off = document.createElement('button');
+      off.className = 'apworld-item-group-chip-remove';
+      off.textContent = '×';
+      Object.assign(off.style, {
+        background: 'none', border: 'none', color: '#a88', cursor: 'pointer',
+        fontSize: '11px', padding: '0 2px', lineHeight: '1',
+      });
+      off.title = `Take "${groupName}" off ${name}`;
+      off.addEventListener('click', () => setField('groups',
+        carried.filter((g) => g !== groupName)));
+      chip.appendChild(off);
+      cell.appendChild(chip);
+    }
+
+    const pick = document.createElement('select');
+    pick.className = 'apworld-item-group-picker';
+    pick.dataset.item = name;
+    Object.assign(pick.style, {
+      backgroundColor: '#222', color: '#ddd', border: '1px solid #444',
+      borderRadius: '3px', padding: '1px 2px', fontSize: '10px', maxWidth: '100%',
+    });
+    const option = (value, text) => {
+      const o = document.createElement('option');
+      o.value = value;
+      o.textContent = text;
+      return o;
+    };
+    const available = () => registry.filter((g) => !carried.includes(g));
+    const placeholder = () => option('', available().length ? '+ group…' : '(all listed)');
+    pick.appendChild(placeholder());
+    // ⛓ The list is built on OPEN — see the docblock's measurement.
+    const fill = () => {
+      if (pick.dataset.filled === 'true') return;
+      pick.dataset.filled = 'true';
+      pick.textContent = '';
+      pick.appendChild(placeholder());
+      for (const g of available()) pick.appendChild(option(g, g));
+    };
+    pick.addEventListener('focus', fill);
+    pick.addEventListener('mousedown', fill);
+    pick.addEventListener('change', () => {
+      const chosen = pick.value;
+      if (!chosen) return;
+      setField('groups', [...carried, chosen]);
+    });
+    pick.disabled = registry.length === 0;
+    pick.title = registry.length
+      ? 'Add a group from this slot\'s registry'
+      : 'This slot\'s registry is empty — add a group in the Groups section above';
+    cell.appendChild(pick);
+    return cell;
   }
 
   /* ══════════════════════════════════════════════════════════════════
@@ -4040,17 +4360,10 @@ class ApworldEditorUI {
     });
     row.appendChild(poolInput);
 
-    // Groups (comma-separated)
-    const groupsInput = this._makeTextInput(
-      Array.isArray(item.groups) ? item.groups.join(', ') : '',
-      '100%',
-    );
-    groupsInput.placeholder = 'comma-separated';
-    groupsInput.addEventListener('change', (e) => setField('groups', e.target.value
-      .split(',')
-      .map(s => s.trim())
-      .filter(Boolean)));
-    row.appendChild(groupsInput);
+    // ⛓ I1 — Groups: chips over the item's own membership plus a lazy picker
+    //   over the slot's registry. It replaced a comma-separated TEXT INPUT, in
+    //   which a typo silently created an unlisted group nobody meant.
+    row.appendChild(this._makeItemGroupsCell(name, item, setField));
 
     // Delete
     const del = this._makeButton('×', '#8a2a2a', () => this._handleDeleteItem(name));
