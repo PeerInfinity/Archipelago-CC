@@ -13392,6 +13392,56 @@ items:{name: value}}`), cards with pickers, stale entries shown not dropped; row
 NOTHING launches on I2's idle — the planner writes the `preset_sidecars` HANDOFF next. ⛔ The planner pushes no
 docs commit until I2 reports.
 
+**I2 AS BUILT 2026-09-10** (`apworld-coverage-I2`, Opus; main `cfeedcaaf8` → `eb10ad6c13`, pushed; six commits by
+path). Deltas only; plan §14 has the whole record. ⛔⛔ **THE BRIEF'S CENTRAL PREMISE WAS BACKWARDS, and taking it
+would have refused 98.5 % of the corpus.** The two kinds have TWO READERS: `inventoryManager` skips a direct add only
+for `type: 'additive'`, and it is `gameLogic/generic/genericLogic.js` — not the inventory — that reads levels at all.
+⇒ a PROGRESSIVE mapping's key is a REAL item the player receives, and it collides with `items[p]` in **135 of the
+137** committed entries by design; no refusal on the key was written. Likewise `base_item` is a POOL LABEL —
+`genericLogic` only ever compares one entry's against another's — and it is a KEY OF THE SAME SLOT'S MAPPING in
+**137/137** while naming an item in only 135, so the base picker's domain is the slot's mapping names, not its items.
+And the member shape is not `{name, level}`: `provides` is schema-declared and carried by **13** members (all smz3's),
+which a whole-entry write drops silently unless it is carried through. Population re-measured too: **211** carriers,
+**223** slots, **18** populated files, **137** entries (136 progressive + 1 additive) against the brief's "15
+populated / 84 progressive". The op's validation is therefore in TWO HALVES with two laws — a SHAPE failure has **0**
+committed instances and is refused outright, a dangling NAME has **12** (smz3's, which `has` resolves THROUGH the
+mapping) and is DIFFERENCED (P1's veto shape, inside the op), because an absolute refusal would make those four
+entries the ones nobody can edit including to take the stale member OUT. A delete is not validated at all: removing a
+pool head dangles a SIBLING's base. Corpus control: 212 documents, 137 entries each written back through the op —
+**0 refused, 0 bytes moved**, 12 issues reported and all of them smz3's. Section: one card per mapping, kind select,
+base picker over the slot's mapping names, member rows with lazy item pickers, ↑/↓ that swap POSITIONS and leave the
+levels alone (the runtime resolves by name and reads that member's own level), stale members marked and removable,
+`provides` drawn read-only, an add row with a kind. Measured through the product's own controls on alttp (5 cards,
+the `Progressive Bow (Alt)` pool visible, one level edit = 1 op and one undo restores the WHOLE entry, picker 1 option
+closed → 160 open), messenger (the corpus's ONE additive card: six value boxes, no level box, no reorder),
+smz3 (12 marked, 13 `provides`, remove drops the count 12 → 11), `procgen_maze/AP_1` (empty → first mapping in either
+kind) and the 4-player `multiworld` (slot 1 → 0 mappings, slot 2 → 5). Gates: bounded vitest **11 files / 281
+passed** (`rulesDocOps.test.js` 97 → **106**, `documentKeys.test.js` 45 → 45, both ownership rows rewritten against an
+authority OUTSIDE `KEYS_OWNED_BY_TAB`); in-app `fast` **111/111**, 0 failed, 0 not run, 4.9 m; `compare-runs` against
+I1's 105/105 = **ADDED (6) and nothing else**, exit 0; `Error in event handler for` **0**; docs trio NOT owed
+(`DOC_FILES` 18, `apworldEditor.md` absent — derived here); trap 1304 not owed (no `scripts/procgen/` file moved).
+⚖ 52: derived +0 files / +9 rows ⇒ **443/13448** expected against the re-quoted 443/13439 at `9c21e79515`
+(run 34425021401); CI at the pushed head in §14.9.
+
+⛔⛔ **AND I2 FOUND A PRE-EXISTING ENGINE DEFECT NOTHING HAD EVER RUN INTO.**
+`genericLogic.has` and `count` do `const items = mapping.items || []; items.findIndex(…)` over EVERY entry of a slot's
+mapping — and the ADDITIVE kind's `items` is an OBJECT. Proven at HEAD by calling the helpers directly, with no editor
+involved: `messenger has THREW: TypeError: items.findIndex is not a function` (and `count`), against an `alttp`
+control that answers `false` / `0`. This slice touched no `gameLogic` file. `messenger` is the corpus's only additive
+carrier and **no in-app row had ever loaded it**, so the arc's thrown-handler sweep read 0 for a reason that was about
+the ROSTER's document set, not about the app; the new additive row takes it from **0 to 4,614** in one `fast` run.
+The errors are caught by `evaluateRule` and logged, so the run is GREEN. The fix is one line
+(`Array.isArray(mapping.items) ? mapping.items : []`) and is correct by construction — the additive kind is resolved
+by the INVENTORY, never by levels — but it is the RULE ENGINE, with its own consumers and gates, so it was
+deliberately not taken here. ⚖ **The user should say whether a follow-up slice takes it**, because until then every
+future `fast` run's sweep carries that floor. **NEW TRAP 1306** (an undo condition is structurally blind to a partial
+write) is the other thing to carry forward; the four other ⚖ opens (no rename op; the whole-block `set-key` on this
+key is un-vetoed, which is P1's open question 1 one key over; a slot with no items cannot hold a mapping; `provides`
+has no frontend reader) are in plan §14.8.
+
+⛓ **THE SECOND LADDER IS COMPLETE** — R1, P1, I1, I2 all shipped. Nothing launched on this idle; the planner writes
+the `preset_sidecars` HANDOFF next.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
