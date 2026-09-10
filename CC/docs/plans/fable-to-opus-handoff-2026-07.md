@@ -13361,6 +13361,37 @@ path plus this record; plan §13). ⚑ Deltas only — the full record is §13.
   unlisted group names nothing wrong · `snapshotInterface.js:413-415` SPREADS the array into the helpers'
   `item_name_groups`, yielding index keys — pre-existing, not this slice's.
 
+**I1 VERIFIED by the planner 2026-09-10** (`fd5d6c8cf8` on origin/main = the primary tree's HEAD; 6 commits by path
+`95921be041..fd5d6c8cf8`; `git diff --stat` under `shared/` and `presets/` EMPTY; `rulesDocOps.test.js` 87 → **97**,
+`documentKeys.test.js` 43 → **45**, in-app `apworldEditor` 38 → **43**; the three ops in `rulesDocOps.js`; plan §13;
+trap 1305 recorded). Pressed the product on `alttp` from here: the Items tab opens with "Item groups — slot 1: 23 in
+the registry, 1 on items but unlisted", **23** delete buttons DISABLED (every registry group has carriers), the
+unlisted `Event` row drawn; 0 page errors. **CI @ `9c21e79515` run 34425021401: job "JavaScript Unit Tests (Vitest)"
+completed success; 443/13439 (13431 passed | 8 skipped | 0 failed), slow 12/217 — I1 derived +0 files / +12 rows
+against 443/13427 and matched; every `## CI-GATE` line exit=0 by I1's reading of the step log (trap 1304).**
+⚠ **A planner's mistake, owned:** the planner's docs push `3f223ce45b` carried I1's FIRST code commit `cd8311ac7e`
+to origin BEFORE I1's battery had run — one shared tree, so a push of the planner's HEAD publishes whatever the
+slice has committed beneath it. Rule from here: while a slice is mid-flight the planner COMMITS nothing to the
+primary tree (or commits and does not push) until the slice's report; verification paragraphs are written after.
+What I1 overturned, kept: "both directions exist" does NOT reproduce — all 155 differing slots are items carrying an
+unlisted name (`Event` ×154), **0** the reverse; a `<select multiple>`/checkbox list cannot be lazy (sc2: 1,741 items
+× 889 names) ⇒ chips + a fill-on-focus single-select; nothing in the tree reads the registry's CONTENTS (the world
+generator's `item_name_groups` comes from the items' own `groups`); the 4-player fixture discriminates on carrier
+COUNTS, not names. Trap 1305: a DISABLED button and the op's refusal are two guards — under the delete-refusal mutant
+the button rows stayed GREEN and only the op rows went red. ⚖ NEW (§13): should `delete-item-group` also refuse
+while a RULE references the group (3 references in `procgen_topdown` already name a group in neither place —
+`Bottles`); the Document tab's `items` block and the Raw JSON tab can still mint an unlisted group (consistent with
+the ruling); no corpus gate on purpose (an unlisted group names nothing wrong); `snapshotInterface.js:413-415`
+spreads the ARRAY into `item_name_groups` as index keys (pre-existing, the helper bridge's). NEXT: **I2** on I1's idle.
+
+**I2 LAUNCHED 2026-09-10** as `apworld-coverage-I2` (Opus; kickoff `NewDocs/plans/apworld-coverage-I2-prompt.md`; on
+I1's idle): the Items tab's PROGRESSION section — `set-progression-mapping {player, name, mapping}` (one op per
+mapping, both kinds validated: progressive `{base_item, items:[{name, level}]}` and additive `{type, base_item,
+items:{name: value}}`), cards with pickers, stale entries shown not dropped; rows on `alttp`, `messenger`,
+`procgen_maze/AP_1`; three mutants. Baseline 443/13439 at `9c21e79515`. Reports come to `next-priorities-planning-4`;
+NOTHING launches on I2's idle — the planner writes the `preset_sidecars` HANDOFF next. ⛔ The planner pushes no
+docs commit until I2 reports.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
