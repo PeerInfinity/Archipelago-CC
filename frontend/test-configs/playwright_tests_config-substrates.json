@@ -659,10 +659,10 @@
             "_comment": "PRESET SIDECARS S0, \u2696 Q2 A (one renderer, two hosts). Walks every populated slot of the four-player fixture through the toolbar selector: one block per sidecar entry of THAT slot under the region of the same name, badge = the document's own substrate for that slot (never a literal), Edit \u25b8 once inside the block and nowhere on a region with no sidecar (H4b's count, unmoved), no JSON built; then the same badge law on seedling_atlas, whose entries carry NO render_hint (the only corpus case where hint and substrate can differ). Mutant A (the block reads slot '1') reds the bounce slots."
         },
         {
-            "id": "apworld-a-sidecar-block-shows-its-entrys-json-read-only",
+            "id": "apworld-a-sidecar-block-shows-its-entrys-json",
             "enabled": true,
             "category": "apworldEditor",
-            "_comment": "PRESET SIDECARS S0. On a bounce slot, the region picked off the document: Show JSON builds exactly one textarea, byte-equal to JSON.stringify(entry, null, JSON_BLOCK_INDENT), read-only with no Save (S1 turns saving on in the same widget); the facts line carries the payload's UTF-8 pretty size and every top-level key; Edit \u25b8 is this region's; the Regenerate-in-the-pipeline door is pressed and answers as the procgen_metadata door."
+            "_comment": "PRESET SIDECARS S0, amended by S1 (saving on; the id dropped '-read-only' with the claim). On a bounce slot, the region picked off the document: Show JSON builds exactly one textarea, byte-equal to JSON.stringify(entry, null, JSON_BLOCK_INDENT), editable with exactly one Save; the facts line carries the payload's UTF-8 pretty size and every top-level key; Edit \u25b8 is this region's; the Regenerate-in-the-pipeline door is pressed and answers as the procgen_metadata door."
         },
         {
             "id": "apworld-sidecars-list-is-collapsed-and-goes-to-the-region",

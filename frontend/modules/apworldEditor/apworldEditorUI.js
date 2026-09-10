@@ -337,7 +337,9 @@ class ApworldEditorUI {
     this._documentToken = 0;
     /**
      * ⛓ S1 — the accepted-op message that is printed BESIDE the row it was
-     * written on, `{key, text}` or null. The chrome's `_opMessage` still
+     * written on, `{key, text}` or null — or, for a region's sidecar block
+     * (PRESET SIDECARS S1), `{sidecar: 'slot|region', text, refused}`, which no
+     * Document row's `key` can match. The chrome's `_opMessage` still
      * carries the same sentence: a person who was looking at the status line
      * should not have to hunt for the answer, and a person the hub has just
      * scrolled to a row should not have to look back up at the chrome.
@@ -421,13 +423,23 @@ class ApworldEditorUI {
      */
     this.roomEditorSession = null;
     /**
-     * ⛓ Per-region verdicts the ASYNC inspection produced, `key → why`. The
-     * cheap half of the check (does this substrate have a room editor and a
-     * round trip at all?) is two registry lookups and runs on every render; the
-     * expensive half (does THIS region's payload round-trip?) deserializes a
-     * world, so it runs when the button is PRESSED and its refusal is
+     * ⛓ Per-region verdicts the ASYNC inspection produced, `key → {doc, why}`.
+     * The cheap half of the check (does this substrate have a room editor and
+     * a round trip at all?) is two registry lookups and runs on every render;
+     * the expensive half (does THIS region's payload round-trip?) deserializes
+     * a world, so it runs when the button is PRESSED and its refusal is
      * remembered here so the button can then say so without being pressed again.
-     * ⛔ Cleared by `_applyOp`: an edit can change the answer.
+     *
+     * ⛓⛓ **A VERDICT IS ABOUT ONE RECORD, AND IT IS KEYED ON THAT RECORD** (PRESET
+     * SIDECARS S1). It is read only while `doc === this.rulesDoc`. Until S1 it
+     * was CLEARED by `_applyOp`, and `_undo` does not go through `_applyOp` —
+     * measured live at `9bf3a0c583`: a hand-edited payload, Edit ▸ pressed
+     * (refused, remembered), one Undo (the document back to its bytes, 0 ops)
+     * and the button stayed DISABLED with the refusal of a payload that no
+     * longer existed. The raw sidecar save makes that a two-click path. The
+     * record is immutable (copy-on-write ops, undo is a re-fold), so identity is
+     * exactly "the document this was asked about": every applied op, undo and
+     * boundary moves it, and a no-op does not.
      */
     this._roomVerdicts = new Map();
 
@@ -678,9 +690,11 @@ class ApworldEditorUI {
     /**
      * ⛓ H4b — …and neither does a remembered room verdict. The key is
      * `slot|region`, and two documents can hold the same slot and the same
-     * region NAME while one of them round-trips and the other does not. ⛔ Also
-     * the open room: it was opened on the OLD record's working copy, so its save
-     * would land an op built against a document nobody is editing any more.
+     * region NAME while one of them round-trips and the other does not. (S1:
+     * each verdict is keyed on its record, so this is hygiene — it drops the
+     * old record's references — rather than correctness.) ⛔ Also the open
+     * room: it was opened on the OLD record's working copy, so its save would
+     * land an op built against a document nobody is editing any more.
      */
     this._roomVerdicts.clear();
     this._closeRoomEditor();
@@ -710,11 +724,11 @@ class ApworldEditorUI {
     //   replaces it (`_focusAcceptedOp` sets it again straight after this
     //   returns) rather than leaving a sentence about an older one standing.
     this._opRowMessage = null;
+    // ⛓ H4b — an applied edit can change whether a region's room round-trips;
+    //   S1 keyed each remembered verdict on the RECORD it was asked about
+    //   (see `_roomVerdicts`), which this op replaces — so no clear here, and
+    //   an undo, which never comes through here, is covered the same way.
     const res = this.session.apply(this._stampPlayer(op));
-    // ⛓ H4b — an applied edit can change whether a region's room round-trips
-    //   (its rules moved, its sidecar was replaced), so the remembered
-    //   refusals go with it rather than outliving the document they described.
-    if (res.ok && res.applied) this._roomVerdicts.clear();
     if (!res.ok) {
       this._opMessage = `Refused: ${res.description}`;
       log('warn', `op refused: ${res.description}`);
@@ -3114,8 +3128,10 @@ class ApworldEditorUI {
       go.style.marginLeft = 'auto';
       head.appendChild(go);
       row.appendChild(head);
-      const sidecar = this._makeRegionSidecarBlock(player, regionName,
-        { hostTab: SIDECARS_TAB_ID });
+      const sidecar = this._makeRegionSidecarBlock(player, regionName, {
+        hostTab: SIDECARS_TAB_ID,
+        onSave: (entry) => this._saveRegionSidecar(player, regionName, entry),
+      });
       if (sidecar) row.appendChild(sidecar);
       list.appendChild(row);
     }
@@ -3865,10 +3881,9 @@ class ApworldEditorUI {
    * 600 KB `regions` — or 250 sidecar entries — costs nothing until somebody
    * opens it), a size line, and a Save that PARSES first and refuses by name.
    * The per-region sidecar block (`_makeRegionSidecarBlock`) is the second
-   * caller, READ-ONLY for now: it passes `onSave: null`, which draws the same
-   * widget with a read-only textarea and no Save — so the slice that makes the
-   * entry editable (S1) passes an `onSave` rather than building a second
-   * widget beside this one.
+   * caller: its host's `onSave` (PRESET SIDECARS S1 — one `set-region-sidecar`)
+   * is passed through, and a host that passes none gets the same widget with a
+   * read-only textarea and no Save — one widget, not a second one beside it.
    *
    * ⛔ `value` is a THUNK, called only when the block is expanded — never a
    *   value captured earlier. The tab re-renders on every op, so an expanded
@@ -3962,26 +3977,96 @@ class ApworldEditorUI {
       scope: row.perPlayer ? 'player' : 'document',
       player: this.playerId,
     };
-    const errors = this._schemaErrorsAddedBy(op);
-    if (errors.length > 0) {
-      this._opMessage = `Refused: \`${row.key}\` — ${errors.length} schema `
-        + `error${errors.length === 1 ? '' : 's'}: ${errors.slice(0, 3).join(' · ')}`
-        + `${errors.length > 3 ? ' · …' : ''}`;
-      log('warn', `set-key refused by the schema: ${errors.join(' | ')}`);
+    const refusal = this._rawSaveRefusal(op, row.key);
+    if (refusal) {
+      this._opMessage = `Refused: ${refusal}`;
       this._renderChrome();
       return;
+    }
+    this._applyOp(op);
+  }
+
+  /**
+   * ⛓⛓⛓ **THE RAW SAVES' ONE VETO — the schema, then P1's placements** — or
+   * `null` when the op adds neither. Two raw JSON saves reach the session
+   * through it: the Document tab's whole-key block (`_applySetKey`) and, since
+   * PRESET SIDECARS S1, a region's sidecar entry (`_saveRegionSidecar`). ONE
+   * function, so the two cannot disagree about what the schema refuses.
+   *
+   * ⚠ The placement half can find nothing for a `set-region-sidecar` — it never
+   * touches `canonical_placements`, `regions` or `items` — and it runs anyway:
+   * P1's own rule (`_placementIssuesAddedBy`) is that a guard which has to be
+   * remembered per door is a guard that will not be. Measured on the largest
+   * document (`procgen_topdown/AP_8`, 934,463 compact bytes) in the S1 record.
+   *
+   * @param {object} op   the op the session will see (slot included)
+   * @param {string} name what the refusal sentence calls the value
+   * @returns {string|null}
+   */
+  _rawSaveRefusal(op, name) {
+    const errors = this._schemaErrorsAddedBy(op);
+    if (errors.length > 0) {
+      log('warn', `${op.op} refused by the schema: ${errors.join(' | ')}`);
+      return `\`${name}\` — ${errors.length} schema `
+        + `error${errors.length === 1 ? '' : 's'}: ${errors.slice(0, 3).join(' · ')}`
+        + `${errors.length > 3 ? ' · …' : ''}`;
     }
     // ⛓⛓ P1 — the question the schema is not able to ask (see
     //   `_placementIssuesAddedBy`): the slot is `additionalProperties: true`.
     const placements = this._placementIssuesAddedBy(op);
     if (placements.length > 0) {
-      this._opMessage = `Refused: ${this._placementRefusal(row.key, placements)}`;
-      log('warn', `set-key refused - ${placements.length} placement(s) the world cannot `
+      log('warn', `${op.op} refused - ${placements.length} placement(s) the world cannot `
         + `place: ${placements.map(describePlacementIssue).join(' | ')}`);
-      this._renderChrome();
+      return this._placementRefusal(name, placements);
+    }
+    return null;
+  }
+
+  /**
+   * ⛓⛓⛓ **PRESET SIDECARS S1 — A REGION'S SIDECAR ENTRY, SAVED AS ONE
+   * `set-region-sidecar`.** The Save JSON of `_makeRegionSidecarBlock`'s widget
+   * lands here with the PARSED entry (the widget refuses unparseable text by
+   * name before calling). Three gates, each answering in the op's or the
+   * schema's own words, and the answer is printed BESIDE the block as well as
+   * in the chrome (the S1 accepted-op precedent — the person is looking at the
+   * block they just saved):
+   *
+   *   1. the OP's own refusals, asked of a preview (the op is pure): no entry
+   *      for this region — it replaces, never creates — a non-object entry, no
+   *      `substrate`, a non-object payload. ⛔ Asked FIRST because the schema
+   *      veto cannot see them: `_schemaErrorsAddedBy` returns `[]` for an op
+   *      the preview refuses, so without this step the session's refusal would
+   *      be the only answer, and it is an `alert`;
+   *   2. `_rawSaveRefusal` — the SAME veto the whole-key block runs, so
+   *      `grid_cell`'s `{gx, gy}`, `biome`'s type and the rest of the entry's
+   *      declared shape are vetted by path (the payload stays OPAQUE);
+   *   3. the session — ONE op, ONE undo. Its description says the rules were
+   *      NOT re-derived (`SIDECAR_NOT_REDERIVED`), and the region's Edit ▸ is
+   *      re-asked on its next press because its verdict was keyed on the record
+   *      this op replaced (`_roomVerdicts`).
+   */
+  _saveRegionSidecar(player, regionName, entry) {
+    if (!this.session) {
+      alert('Load a rules.json first.');
       return;
     }
-    this._applyOp(op);
+    const op = { op: 'set-region-sidecar', region: regionName, entry, player };
+    const beside = (text, refused) => {
+      this._opRowMessage = { sidecar: `${player}|${regionName}`, text, refused };
+    };
+    const preview = applyRulesDocOp(this.rulesDoc, op);
+    const refusal = preview.ok
+      ? this._rawSaveRefusal(op, `preset_sidecars.${player}.${regionName}`)
+      : preview.error;
+    if (refusal) {
+      this._opMessage = `Refused: ${refusal}`;
+      beside(this._opMessage, true);
+      this._render();
+      return;
+    }
+    const res = this._applyOp(op, { rerender: false });
+    if (res.ok) beside(this._opMessage, false);
+    this._render();
   }
 
   /**
@@ -5154,7 +5239,11 @@ class ApworldEditorUI {
     } else {
       const decl = regionRoundTripOf(substrate);
       if (!decl.rt) why = decl.why;
-      else if (this._roomVerdicts.has(key)) why = this._roomVerdicts.get(key);
+      else {
+        // ⛓ S1 — a verdict counts only for the record it was asked about.
+        const verdict = this._roomVerdicts.get(key);
+        if (verdict && verdict.doc === this.rulesDoc) why = verdict.why;
+      }
     }
 
     const btn = this._makeButton('Edit ▸', why ? '#3a3a3a' : '#33506e',
@@ -5181,15 +5270,19 @@ class ApworldEditorUI {
    */
   async _handleEditRoom(regionName) {
     const key = `${this.playerId}|${regionName}`;
+    // ⛓ S1 — captured BEFORE the await: the verdict is about this record, and
+    //   an op landing while the inspection runs must not inherit it.
+    const doc = this.rulesDoc;
     let inspection;
     try {
-      inspection = await inspectRegionRoom(this.rulesDoc, this.playerId, regionName);
+      inspection = await inspectRegionRoom(doc, this.playerId, regionName);
     } catch (err) {
       inspection = { ok: false, why: `the inspection threw — ${err.message}` };
     }
     if (!inspection.ok) {
-      // ⛔ REMEMBERED, so the button now says it without being pressed again.
-      this._roomVerdicts.set(key, inspection.why);
+      // ⛔ REMEMBERED, so the button now says it without being pressed again —
+      //   for as long as the document is the one it was asked about.
+      this._roomVerdicts.set(key, { doc, why: inspection.why });
       this._opMessage = `Edit refused: ${inspection.why}`;
       this._render();
       return;
@@ -5269,8 +5362,16 @@ class ApworldEditorUI {
    *     **Regenerate in the pipeline ▸**, the `procgen_metadata` door's own
    *     `open` pressed through the one opener, with the regeneration COST in
    *     its title;
-   *   · **▸ Show JSON** — the ENTRY, through `_makeJsonBlock` with saving off,
-   *     built only on expand.
+   *   · **▸ Show JSON** — the ENTRY, through `_makeJsonBlock`, built only on
+   *     expand. ⛓ PRESET SIDECARS S1: editable when the HOST passes `onSave`,
+   *     and read-only otherwise — the widget's own default, so a host that
+   *     passes nothing cannot make the entry writable by accident. Both hosts
+   *     pass one (⚖ Q2 A: one renderer, editable wherever it is drawn), and the
+   *     answer to the save is printed under the block that was saved.
+   *
+   * ⛔ Every save — from either host — is the SAME `_saveRegionSidecar`, one
+   *   `set-region-sidecar` op; `onSave` is how a host opts in, not a second
+   *   save path.
    *
    * ⛔ The block is drawn for the SELECTED slot. `player` is the slot the
    *   entry is READ from, and each host passes `this.playerId`; the Edit door
@@ -5280,11 +5381,13 @@ class ApworldEditorUI {
    *
    * @param {string} player
    * @param {string} regionName
-   * @param {{hostTab: string}} opts the tab drawing it — the key its JSON
-   *   disclosure is remembered under, so each host's is its own
+   * @param {{hostTab: string, onSave?: Function|null}} opts `hostTab` — the tab
+   *   drawing it, the key its JSON disclosure is remembered under, so each
+   *   host's is its own; `onSave` — `(entry) → void`, the host's opt-in to an
+   *   editable entry (null = read-only)
    * @returns {HTMLElement|null} null when the region has no sidecar entry
    */
-  _makeRegionSidecarBlock(player, regionName, { hostTab }) {
+  _makeRegionSidecarBlock(player, regionName, { hostTab, onSave = null }) {
     const entry = sidecarOf(this.rulesDoc, player, regionName);
     const facts = sidecarEntryFacts(entry);
     if (!facts) return null;
@@ -5364,8 +5467,28 @@ class ApworldEditorUI {
       //   tab re-renders on every op, so this is the entry the document holds NOW.
       value: () => sidecarOf(this.rulesDoc, player, regionName),
       sizeLabel: `the whole entry of ${regionName} (slot ${player})`,
-      onSave: null,
+      onSave,
     }));
+    /**
+     * ⛓ S1 — the answer to this block's own save, drawn under it (the Document
+     * row's `apworld-doc-op-message` precedent): the op's description when it
+     * landed — which says what was NOT re-derived — or the refusal, by name.
+     * Keyed by slot and region, so it follows the entry to the other host.
+     */
+    const said = this._opRowMessage;
+    if (said && said.sidecar === `${player}|${regionName}`) {
+      const msg = document.createElement('div');
+      msg.className = 'apworld-sidecar-op-message';
+      msg.dataset.refused = said.refused ? 'true' : 'false';
+      msg.textContent = said.text;
+      Object.assign(msg.style, {
+        color: said.refused ? '#f0a0a0' : '#8fd18f', fontSize: '11px', margin: '5px 0 0',
+        padding: '3px 6px', borderRadius: '3px',
+        border: `1px solid ${said.refused ? '#6a2e2e' : '#2e5f2e'}`,
+        backgroundColor: said.refused ? '#2a1818' : '#182218',
+      });
+      box.appendChild(msg);
+    }
     return box;
   }
 
@@ -5428,8 +5551,10 @@ class ApworldEditorUI {
      * a region with none). ABSENT for a region with no sidecar — a classic AP
      * region has no room, and the block says nothing rather than "none".
      */
-    const sidecarBlock = this._makeRegionSidecarBlock(this.playerId, regionName,
-      { hostTab: 'regions' });
+    const sidecarBlock = this._makeRegionSidecarBlock(this.playerId, regionName, {
+      hostTab: 'regions',
+      onSave: (entry) => this._saveRegionSidecar(this.playerId, regionName, entry),
+    });
     if (sidecarBlock) block.appendChild(sidecarBlock);
 
     const body = document.createElement('div');

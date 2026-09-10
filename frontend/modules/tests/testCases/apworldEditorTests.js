@@ -88,8 +88,15 @@ import panelManager from '../../../app/core/panelManager.js';
  * ⛓ W0 — the table the Meta tab's rows and the `set-meta` op both read, so the
  * claim *"this sub-key is one the home tab does not draw"* is derived from the
  * home tab's own field list instead of asserted by a comment.
+ *
+ * ⛓ PRESET SIDECARS S1 — and the raw sidecar save's rows ask the OP directly as
+ * well as pressing Save (trap 1305: the op is the authority, the widget a
+ * courtesy), and assert the clause the op's description ends with rather than
+ * a copy of it.
  */
-import { META_FIELDS } from '../../apworldEditor/rulesDocOps.js';
+import {
+    META_FIELDS, SIDECAR_NOT_REDERIVED, applyRulesDocOp,
+} from '../../apworldEditor/rulesDocOps.js';
 /**
  * ⛓ R-a — the two numbers the presence switch writes, compared against their
  * SOURCE. Typing 50 and 10 into this row would make it agree with a second copy
@@ -115,9 +122,12 @@ import { DEFAULT_REGION_SIZE } from '../../procgenPipeline/procgenPipelineEngine
 /**
  * ⛓ S0 — the indent the hub's JSON widget pretty-prints with, so the row that
  * asserts a sidecar block's text is byte-equal to its entry uses the widget's
- * own spelling rather than a `2` typed here.
+ * own spelling rather than a `2` typed here. ⛓ S1 — and Edit ▸'s own
+ * inspection, so the row that asserts the button's verdict after a raw save
+ * compares it with what the door's function answers for the document NOW,
+ * rather than with a sentence typed here.
  */
-import { JSON_BLOCK_INDENT } from '../../apworldEditor/regionRoundTrip.js';
+import { JSON_BLOCK_INDENT, inspectRegionRoom } from '../../apworldEditor/regionRoundTrip.js';
 
 const PANEL_ID = 'apworldEditorPanel';
 const PANEL_SELECTOR = '.apworld-editor-panel';
@@ -6004,17 +6014,19 @@ export async function apworldSidecarBlocksFollowTheSelectedSlot(testController) 
 }
 
 /**
- * ⛓⛓⛓ **(ii) OPENING A BLOCK DRAWS THE ENTRY'S OWN BYTES, READ-ONLY, AND THE
- * DOORS IN IT ARE THE REGION'S.** On a bounce slot (a zone payload — the family
- * the Map tab and Edit ▸ treat differently from the maze slots), the region
- * picked off the document. The textarea must equal
- * `JSON.stringify(entry, null, JSON_BLOCK_INDENT)` byte for byte — the WHOLE
- * entry, not the payload — be read-only with no Save (S1 turns saving on), and
- * be the ONLY JSON built. The facts line's size is compared against the
- * payload's own UTF-8 bytes measured here, and the hand-off door is pressed:
- * a button wired to nothing would pass a presence check.
+ * ⛓⛓⛓ **(ii) OPENING A BLOCK DRAWS THE ENTRY'S OWN BYTES, AND THE DOORS IN IT
+ * ARE THE REGION'S.** On a bounce slot (a zone payload — the family the Map tab
+ * and Edit ▸ treat differently from the maze slots), the region picked off the
+ * document. The textarea must equal `JSON.stringify(entry, null,
+ * JSON_BLOCK_INDENT)` byte for byte — the WHOLE entry, not the payload — and
+ * be the ONLY JSON built. ⛓ PRESET SIDECARS S1 turned saving on: the textarea
+ * is editable and carries exactly one Save (the save itself is S1's rows,
+ * below; the id lost its `-read-only` suffix with the claim). The facts line's
+ * size is compared against the payload's own UTF-8 bytes measured here, and the
+ * hand-off door is pressed: a button wired to nothing would pass a presence
+ * check.
  */
-export async function apworldASidecarBlockShowsItsEntrysJsonReadOnly(testController) {
+export async function apworldASidecarBlockShowsItsEntrysJson(testController) {
     try {
         const panel = await openHub(testController, FOUR_PLAYER_PATH);
         if (!panel) return testController.getOverallResult();
@@ -6048,8 +6060,9 @@ export async function apworldASidecarBlockShowsItsEntrysJsonReadOnly(testControl
         testController.assertEqual(
             '⛓⛓ the JSON is the WHOLE ENTRY, byte for byte, at the widget\'s indent',
             JSON.stringify(entry, null, JSON_BLOCK_INDENT), text.value);
-        testController.reportCondition('it is READ-ONLY in this slice', text.readOnly === true);
-        testController.assertEqual('…with no Save', '0', String(sidecarBlockFor(region)
+        testController.reportCondition('it is EDITABLE (S1: the host passes an onSave)',
+            text.readOnly === false);
+        testController.assertEqual('…with exactly one Save', '1', String(sidecarBlockFor(region)
             .querySelectorAll('.apworld-sidecar-save').length));
         testController.assertEqual('and it is the only JSON built on the tab', '1',
             String(document.querySelectorAll(`${PANEL_SELECTOR} .apworld-sidecar-json`).length));
@@ -6330,15 +6343,16 @@ registerTest({
 });
 
 registerTest({
-    id: 'apworld-a-sidecar-block-shows-its-entrys-json-read-only',
-    name: 'APWorld hub: opening a sidecar block draws its entry\'s JSON, read-only, beside the region\'s own doors',
-    description: 'PRESET SIDECARS S0. On a bounce slot, the region picked off the document: the '
-               + 'block\'s Show JSON builds exactly one textarea whose text is the WHOLE entry '
-               + 'byte-equal at the widget\'s exported indent, read-only with no Save; the facts '
-               + 'line gives the payload\'s UTF-8 pretty size and every top-level key; Edit ▸ '
-               + 'in it is this region\'s; and its "Regenerate in the pipeline" door is pressed '
-               + 'and answers as the procgen_metadata door.',
-    testFunction: apworldASidecarBlockShowsItsEntrysJsonReadOnly,
+    id: 'apworld-a-sidecar-block-shows-its-entrys-json',
+    name: 'APWorld hub: opening a sidecar block draws its entry\'s JSON, with one Save, beside the region\'s own doors',
+    description: 'PRESET SIDECARS S0, amended by S1 (saving on; the id dropped "-read-only"). On '
+               + 'a bounce slot, the region picked off the document: the block\'s Show JSON '
+               + 'builds exactly one textarea whose text is the WHOLE entry byte-equal at the '
+               + 'widget\'s exported indent, editable with exactly one Save; the facts line '
+               + 'gives the payload\'s UTF-8 pretty size and every top-level key; Edit ▸ in it '
+               + 'is this region\'s; and its "Regenerate in the pipeline" door is pressed and '
+               + 'answers as the procgen_metadata door.',
+    testFunction: apworldASidecarBlockShowsItsEntrysJson,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
