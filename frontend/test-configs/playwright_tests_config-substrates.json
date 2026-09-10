@@ -675,6 +675,30 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "PRESET SIDECARS S0. A replace-region-sidecar applied through the session (payload + one marker key, the region's own rules as the total map): the open block's text equals the entry the DOCUMENT holds after the op (trap 1306), and one Undo restores the old text. Mutant C (JSON captured at expand) reds it."
+        },
+        {
+            "id": "apworld-a-sidecar-save-writes-the-entry-and-leaves-the-rules",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S1 (\u2696 Q1 C, Q3 A). One payload key edited in the block's textarea, the product's Save JSON pressed: one set-region-sidecar recorded; the DOCUMENT after = before with exactly that entry replaced (trap 1306); the region's access rules byte-equal; the answer under the block is the op's description naming what was NOT re-derived; the op asked directly writes the same bytes; one Undo restores. Mutants A (the op also writes rules) and B (payload-only write) red it."
+        },
+        {
+            "id": "apworld-a-sidecar-save-is-vetoed-by-name",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S1. (a) an entry dropping `substrate` - the op's own refusal; (b) a grid_cell without gy - which the op alone would take, so only the whole-document schema veto refuses it. Each: the refusal under the block names the field, no op recorded, the document unmoved. Mutant C (the veto removed) reds arm (b)."
+        },
+        {
+            "id": "apworld-a-sidecar-save-from-the-sidecars-list-is-the-same-op",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S1 (\u2696 Q2 A). The same one-key edit saved from the Regions tab and from the Sidecars list: byte-equal ops, the same document, the answer under the saved block; and a host passing no onSave gets the read-only widget with no Save."
+        },
+        {
+            "id": "apworld-edit-verdict-follows-a-raw-sidecar-save",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S1. Region + tile picked off Edit \u25b8's own inspection: a one-tile raw edit the round trip does not reproduce, saved through Save JSON; Edit \u25b8 pressed opens no room and its title is the inspection's sentence for the document NOW; the original saved back makes it pressable again; the same across Undo (which never goes through _applyOp). Mutant E (the verdict read regardless of its record) reds it."
         }
     ]
 }

@@ -6384,3 +6384,513 @@ registerTest({
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ PRESET SIDECARS S1 — THE RAW ENTRY SAVE
+ * (`NewDocs/plans/preset-sidecars-plan.md` §3 D1, §9.3 rung 3)
+ *
+ * The block's Save JSON → ONE `set-region-sidecar`, the whole entry, the
+ * region's rules untouched (⚖ Q1 C, Q3 A). Every row asserts the DOCUMENT
+ * after the gesture (trap 1306) and asks the OP directly as well as pressing
+ * the product's own Save (1305). Every lookup after a gesture RE-QUERIES (a
+ * render rebuilds the tab body).
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ Open one region's sidecar JSON on whichever tab is showing → its textarea, or null. */
+async function openSidecarJson(testController, regionName) {
+    const toggle = await testController.pollForValue(
+        () => sidecarBlockFor(regionName)?.querySelector('.apworld-sidecar-toggle') ?? null,
+        `the "${regionName}" block's Show JSON toggle`, 8000, 50);
+    if (!toggle) return null;
+    if (!sidecarBlockFor(regionName)?.querySelector('.apworld-sidecar-json')) toggle.click();
+    return testController.pollForValue(
+        () => sidecarBlockFor(regionName)?.querySelector('.apworld-sidecar-json') ?? null,
+        `the "${regionName}" block's JSON`, 8000, 50);
+}
+
+/** ⛓ Type an entry into the open block and press the product's own Save JSON.
+ *  → false when there was no textarea or no Save to press. */
+function typeAndSaveSidecar(regionName, entry) {
+    const text = sidecarBlockFor(regionName)?.querySelector('.apworld-sidecar-json');
+    const save = sidecarBlockFor(regionName)?.querySelector('.apworld-sidecar-save');
+    if (!text || !save) return false;
+    text.value = JSON.stringify(entry, null, JSON_BLOCK_INDENT);
+    save.click();
+    return true;
+}
+
+/** ⛓ The answer the hub printed under that region's block — re-queried. */
+const sidecarMessageFor = (regionName) => sidecarBlockFor(regionName)
+    ?.querySelector('.apworld-sidecar-op-message') ?? null;
+
+/** ⛓ Every exit's and location's access rule of one region, as bytes. */
+function accessRulesOf(doc, slot, region) {
+    const r = doc?.regions?.[slot]?.[region];
+    return JSON.stringify([
+        ...(r?.exits ?? []).map((e) => [e.name, e.access_rule ?? null]),
+        ...(r?.locations ?? []).map((l) => [l.name, l.access_rule ?? null]),
+    ]);
+}
+
+/**
+ * ⛓ Per distinct `substrate` in the document, the first sidecar region (in
+ * document order) whose region carries an access rule that is not the trivial
+ * `True_` — so a save that ALSO wrote the region's rules (mutant A writes
+ * `True_` everywhere, borrowing `replace-region-sidecar`'s rule write) cannot
+ * hide behind rules that were already the default, and each payload FAMILY the
+ * document holds is saved through the widget once. Read off the document; no
+ * substrate is named here.
+ */
+function sidecarRegionsWithARule(doc) {
+    const out = new Map();
+    for (const slot of Object.keys(doc?.preset_sidecars ?? {})) {
+        for (const region of sidecarRegions(doc, slot)) {
+            const substrate = doc.preset_sidecars[slot][region]?.substrate;
+            if (out.has(substrate)) continue;
+            const r = doc.regions?.[slot]?.[region];
+            if ([...(r?.exits ?? []), ...(r?.locations ?? [])]
+                .some((x) => x?.access_rule && x.access_rule.rule !== 'True_')) {
+                out.set(substrate, { slot, region, substrate });
+            }
+        }
+    }
+    return [...out.values()];
+}
+
+/** ⛓ The entry with ONE payload key changed: its first boolean, flipped (else a marker). */
+function withOnePayloadKeyEdited(entry) {
+    const next = JSON.parse(JSON.stringify(entry));
+    const payload = next.playable_payload ?? {};
+    const key = Object.keys(payload).find((k) => typeof payload[k] === 'boolean') ?? 's1_marker';
+    next.playable_payload = { ...payload, [key]: payload[key] === undefined ? true : !payload[key] };
+    return { entry: next, key };
+}
+
+/** ⛓ Pick a slot through the toolbar and land on the Regions tab, waiting for the slot. */
+async function onRegionsTabFor(testController, panel, slot) {
+    const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+    if (!select) return false;
+    selectPlayer(select, slot);
+    selectTab(panel, 'regions');
+    return testController.pollForCondition(() => String(panel.playerId) === String(slot),
+        `slot ${slot} selected`, 8000, 50);
+}
+
+/**
+ * ⛓⛓⛓ **(i) SAVE JSON WRITES THE ENTRY AND LEAVES THE RULES.** One payload key
+ * edited in the block's own textarea, the product's Save pressed. Then, on the
+ * session and the DOCUMENT: ONE op recorded (asserted before it is read — trap
+ * 1301), a `set-region-sidecar` for this slot and region; the document AFTER is
+ * the document BEFORE with exactly this entry replaced, byte for byte (1306 —
+ * so a partial write, mutant B, and a rules write, mutant A, both red it); the
+ * region's exits' and locations' access rules byte-equal to BEFORE, said on
+ * their own because they are the ⚖; the answer under the block is the op's own
+ * description and names what was NOT re-derived; the op asked directly writes
+ * the same bytes; one Undo restores the document. Once per payload family the
+ * fixture holds (`sidecarRegionsWithARule`), each on its own slot.
+ */
+export async function apworldASidecarSaveWritesTheEntryAndLeavesTheRules(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const targets = sidecarRegionsWithARule(panel.rulesDoc);
+        testController.reportCondition('⛓ premise: two payload families, each with a sidecar '
+            + 'region whose access rules are not all True_', targets.length >= 2);
+        for (const { slot, region, substrate } of targets) {
+            const at = `[slot ${slot} "${region}", ${substrate}]`;
+            testController.reportCondition(`${at} slot selected through the toolbar`,
+                await onRegionsTabFor(testController, panel, slot));
+            const text = await openSidecarJson(testController, region);
+            testController.reportCondition(`${at} the block's JSON is open, and EDITABLE`,
+                !!text && text.readOnly === false);
+            if (!text) continue;
+
+            const before = panel.rulesDoc;
+            const beforeBytes = JSON.stringify(before);
+            const rulesBefore = accessRulesOf(before, slot, region);
+            const opsBefore = panel.session.ops().length;
+            const { entry: typed, key } = withOnePayloadKeyEdited(before.preset_sidecars[slot][region]);
+            testController.log(`${at} editing ONE payload key: "${key}"`);
+            testController.reportCondition(`${at} Save JSON pressed`,
+                typeAndSaveSidecar(region, typed));
+
+            const recorded = await testController.pollForValue(
+                () => (panel.session.ops().length === opsBefore + 1 ? panel.session.ops().at(-1) : null),
+                `${at} the save recorded one op`, 8000, 50);
+            testController.reportCondition(`${at} ⛓ ONE op was recorded`, !!recorded);
+            if (!recorded) continue;
+            testController.assertEqual(`${at} …a set-region-sidecar`, 'set-region-sidecar',
+                String(recorded.op));
+            testController.assertEqual(`${at} …for this slot and region`, `${slot}|${region}`,
+                `${recorded.player}|${recorded.region}`);
+
+            const after = panel.rulesDoc;
+            const want = JSON.parse(beforeBytes);
+            want.preset_sidecars[slot][region] = typed;
+            testController.assertEqual(`${at} ⛓⛓ the DOCUMENT after = the document before with `
+                + 'THIS entry replaced, byte for byte', JSON.stringify(want), JSON.stringify(after));
+            testController.assertEqual(`${at} …so the entry it holds is what was typed`,
+                JSON.stringify(typed), JSON.stringify(after.preset_sidecars[slot][region]));
+            testController.assertEqual(`${at} ⛓⛓ the region's exits' and locations' access rules `
+                + 'are byte-equal to BEFORE', rulesBefore, accessRulesOf(after, slot, region));
+
+            const said = sidecarMessageFor(region);
+            testController.reportCondition(`${at} the answer is printed under the block`, !!said);
+            testController.assertEqual(`${at} …it is the op's description, as the status line `
+                + 'has it', String(panel._opMessage), String(said?.textContent));
+            testController.reportCondition(`${at} …and it says what was NOT re-derived`,
+                String(said?.textContent ?? '').includes(SIDECAR_NOT_REDERIVED));
+
+            const direct = applyRulesDocOp(before, recorded);
+            testController.reportCondition(`${at} ⛓ the op, asked directly, writes the same document`,
+                !!direct.ok && JSON.stringify(direct.doc) === JSON.stringify(after));
+
+            const undo = document.querySelector(`${PANEL_SELECTOR} .apworld-undo`);
+            testController.reportCondition(`${at} the Undo button is there`, !!undo);
+            if (undo) undo.click();
+            testController.assertEqual(`${at} ⛓ ONE Undo restores the document, byte for byte`,
+                beforeBytes, JSON.stringify(panel.rulesDoc));
+            testController.assertEqual(`${at} …and the op list`, String(opsBefore),
+                String(panel.session.ops().length));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecar-save test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(ii) A SAVE THE OP OR THE SCHEMA REFUSES IS REFUSED BY NAME, AND
+ * NOTHING MOVES.** Two arms, because they are two different gates:
+ *
+ *  (a) an entry that DROPS `substrate` — the OP's own refusal (the schema's
+ *      `required`, restated by the op). Asked of the op directly first.
+ *  (b) an entry whose `grid_cell` lacks `gy` — which the op, asked directly,
+ *      would TAKE: only the whole-document schema veto (`_rawSaveRefusal`)
+ *      stands between it and the document. ⛔ This is the arm mutant C (the
+ *      veto removed) reds; arm (a) cannot see the veto at all, because a
+ *      preview the op refuses gives the schema check nothing to compare.
+ *
+ * Each: the refusal is printed under the block and names the field, no op is
+ * recorded, the document is byte-unmoved.
+ */
+export async function apworldASidecarSaveIsVetoedByName(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc0 = panel.rulesDoc;
+        // ⛓ a region whose entry HAS a grid_cell — arm (b) has to break one.
+        let slot = null;
+        let region = null;
+        for (const s of Object.keys(doc0.preset_sidecars ?? {})) {
+            region = sidecarRegions(doc0, s).find((r) => !!doc0.preset_sidecars[s][r]?.grid_cell);
+            if (region) { slot = s; break; }
+        }
+        testController.reportCondition('⛓ premise: a sidecar entry carrying a grid_cell', !!slot);
+        if (!slot) return testController.getOverallResult();
+        testController.log(`slot ${slot}, region ${region}`);
+        await onRegionsTabFor(testController, panel, slot);
+        const text = await openSidecarJson(testController, region);
+        testController.reportCondition('the block\'s JSON is open', !!text);
+        if (!text) return testController.getOverallResult();
+
+        const entry = panel.rulesDoc.preset_sidecars[slot][region];
+        const beforeBytes = JSON.stringify(panel.rulesDoc);
+        const opsBefore = panel.session.ops().length;
+        const asOp = (e) => ({ op: 'set-region-sidecar', player: slot, region, entry: e });
+
+        /* (a) the op's own refusal */
+        const { substrate: _dropped, ...noSubstrate } = entry;
+        const opSays = applyRulesDocOp(panel.rulesDoc, asOp(noSubstrate));
+        testController.reportCondition(
+            '⛓ premise (a): the op, asked directly, refuses an entry with no substrate',
+            !opSays.ok && /`substrate`/.test(opSays.error ?? ''));
+        testController.reportCondition('(a) Save JSON pressed', typeAndSaveSidecar(region, noSubstrate));
+        const a = sidecarMessageFor(region);
+        testController.reportCondition('(a) the refusal is printed under the block, marked refused',
+            a?.dataset.refused === 'true');
+        testController.reportCondition('(a) …and names `substrate`',
+            String(a?.textContent ?? '').includes('`substrate`'));
+        testController.assertEqual('(a) no op was recorded', String(opsBefore),
+            String(panel.session.ops().length));
+        testController.assertEqual('(a) the document did not move', beforeBytes,
+            JSON.stringify(panel.rulesDoc));
+
+        /* (b) the schema's refusal, of an entry the op would take */
+        const { gy: _gy, ...halfCell } = entry.grid_cell;
+        const badCell = { ...entry, grid_cell: halfCell };
+        const opTakes = applyRulesDocOp(panel.rulesDoc, asOp(badCell));
+        testController.reportCondition(
+            '⛓ premise (b): the op ALONE would take this entry — only the schema veto refuses it',
+            !!opTakes.ok);
+        testController.reportCondition('(b) Save JSON pressed', typeAndSaveSidecar(region, badCell));
+        const b = sidecarMessageFor(region);
+        const bText = String(b?.textContent ?? '');
+        testController.reportCondition('(b) the refusal is printed under the block, marked refused',
+            b?.dataset.refused === 'true');
+        testController.reportCondition('(b) …as a SCHEMA error naming grid_cell and its missing gy',
+            bText.includes('schema') && bText.includes('grid_cell') && bText.includes('gy'));
+        testController.assertEqual('(b) no op was recorded', String(opsBefore),
+            String(panel.session.ops().length));
+        testController.assertEqual('(b) the document did not move', beforeBytes,
+            JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecar-veto test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iii) THE SIDECARS LIST'S BLOCK SAVES THE SAME OP** (⚖ Q2 A — one
+ * renderer, two hosts). The same one-key edit, saved once from the Regions
+ * tab and once from the Sidecars tab's expanded list: the two recorded ops are
+ * byte-equal, both leave the same document, and the answer is printed under
+ * the block that was saved. Then the widget's DEFAULT: a host that passes no
+ * `onSave` gets a read-only textarea and no Save, so a new host cannot make
+ * the entry writable by accident.
+ */
+export async function apworldASidecarSaveFromTheSidecarsListIsTheSameOp(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        // ⛓ the LAST family row (i) saves — a slot other than the selector's default.
+        const target = sidecarRegionsWithARule(panel.rulesDoc).at(-1);
+        testController.reportCondition('⛓ premise: a sidecar region to edit', !!target);
+        if (target) testController.log(`slot ${target.slot}, region ${target.region}`);
+        if (!target) return testController.getOverallResult();
+        const { slot, region } = target;
+        await onRegionsTabFor(testController, panel, slot);
+        const beforeBytes = JSON.stringify(panel.rulesDoc);
+        const opsBefore = panel.session.ops().length;
+        const { entry: typed } = withOnePayloadKeyEdited(panel.rulesDoc.preset_sidecars[slot][region]);
+
+        const saveFrom = async (host) => {
+            const text = await openSidecarJson(testController, region);
+            testController.reportCondition(`${host}: the block's JSON is open, editable`,
+                !!text && text.readOnly === false);
+            testController.reportCondition(`${host}: Save JSON pressed`,
+                typeAndSaveSidecar(region, typed));
+            const op = await testController.pollForValue(
+                () => (panel.session.ops().length === opsBefore + 1 ? panel.session.ops().at(-1) : null),
+                `${host}: one op recorded`, 8000, 50);
+            testController.reportCondition(`${host}: ⛓ ONE op was recorded`, !!op);
+            const result = { op: JSON.stringify(op), doc: JSON.stringify(panel.rulesDoc),
+                said: sidecarMessageFor(region)?.textContent ?? null };
+            document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+            testController.assertEqual(`${host}: one Undo restores the document`, beforeBytes,
+                JSON.stringify(panel.rulesDoc));
+            return result;
+        };
+
+        const fromRegions = await saveFrom('Regions');
+        selectTab(panel, SIDECARS_TAB_ID);
+        const expander = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-expand`),
+            'the Sidecars list\'s expander', 8000, 50);
+        if (expander?.dataset.open !== 'true') expander?.click();
+        const row = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-region-row`
+                + `[data-region-name="${CSS.escape(region)}"] .apworld-sidecar-block`),
+            `"${region}"'s block on the Sidecars list`, 8000, 50);
+        testController.reportCondition('⛓ the block now drawn is the Sidecars list\'s', !!row
+            && row.dataset.hostTab === SIDECARS_TAB_ID);
+        const fromList = await saveFrom('Sidecars');
+
+        testController.assertEqual('⛓⛓ the two hosts record the SAME op, byte for byte',
+            fromRegions.op, fromList.op);
+        testController.assertEqual('…and leave the same document', fromRegions.doc, fromList.doc);
+        testController.reportCondition('…and the answer is printed under the Sidecars list\'s block',
+            String(fromList.said ?? '').includes(SIDECAR_NOT_REDERIVED));
+
+        // ⛓ the widget's default, asked of the one renderer with no onSave.
+        const probeHost = 's1-probe';
+        const key = `${probeHost}|${slot}|${region}`;
+        panel._expandedSidecarJson.add(key);
+        const probe = panel._makeRegionSidecarBlock(slot, region, { hostTab: probeHost });
+        panel._expandedSidecarJson.delete(key);
+        const ta = probe?.querySelector('.apworld-sidecar-json');
+        testController.reportCondition('a host that passes NO onSave gets a READ-ONLY textarea',
+            !!ta && ta.readOnly === true);
+        testController.assertEqual('…and no Save', '0',
+            String(probe?.querySelectorAll('.apworld-sidecar-save').length ?? -1));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecar-save two-hosts test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iv) Edit ▸'s VERDICT FOLLOWS THE DOCUMENT ACROSS A RAW SAVE.** The
+ * region and the tile are picked by the LAW, off Edit ▸'s own inspection
+ * (`inspectRegionRoom`) rather than off the button under test: the first
+ * sidecar region whose inspection OPENS on the fixture, and the first single
+ * tile whose flip makes that inspection REFUSE. (Most single-tile flips do not
+ * — the serializer reproduces them — so "a hand-edited payload is refused"
+ * is not true of every hand edit; it is true of one the serializer does not
+ * reproduce.)
+ *
+ *  1. that edit through Save JSON; Edit ▸ is still pressable (the verdict is
+ *     asked on the PRESS); pressed (1305), it opens NO room and its `title`
+ *     becomes the inspection's own sentence for the document NOW;
+ *  2. the ORIGINAL entry saved back through Save JSON → the button is
+ *     pressable again: the refusal did not outlive the payload it was about;
+ *  3. Undo (back to the edited payload), pressed again → refused again; Undo
+ *     (back to the fixture) → pressable. ⛔ Step 3's last check is the defect
+ *     measured at `9bf3a0c583`: Undo never goes through `_applyOp`, and the
+ *     remembered refusal stayed on a restored document. Mutant E (the verdict
+ *     read regardless of the record it was asked about) reds steps 2 and 3.
+ */
+export async function apworldEditVerdictFollowsARawSidecarSave(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc0 = panel.rulesDoc;
+        let pick = null;
+        let flips = 0;
+        for (const slot of Object.keys(doc0.preset_sidecars ?? {})) {
+            for (const region of sidecarRegions(doc0, slot)) {
+                const tiles = doc0.preset_sidecars[slot][region]?.playable_payload?.tiles;
+                if (!Array.isArray(tiles)) continue;
+                if (!(await inspectRegionRoom(doc0, slot, region)).ok) continue;
+                for (let i = 0; i < tiles.length && !pick; i += 1) {
+                    const cand = JSON.parse(JSON.stringify(doc0));
+                    cand.preset_sidecars[slot][region].playable_payload.tiles[i] = tiles[i] ? 0 : 1;
+                    flips += 1;
+                    if (!(await inspectRegionRoom(cand, slot, region)).ok) pick = { slot, region, i };
+                }
+                if (pick) break;
+            }
+            if (pick) break;
+        }
+        testController.reportCondition('⛓ premise: a region Edit ▸ opens, and one tile flip it refuses',
+            !!pick);
+        if (!pick) return testController.getOverallResult();
+        const { slot, region, i } = pick;
+        testController.log(`slot ${slot}, region ${region}, tile ${i} (flip ${flips} tried)`);
+
+        await onRegionsTabFor(testController, panel, slot);
+        const btn0 = await testController.pollForValue(() => editButtonFor(region),
+            `"${region}"'s Edit ▸`, 8000, 50);
+        testController.reportCondition('⛓ premise: Edit ▸ is pressable on the fixture',
+            !!btn0 && !btn0.disabled);
+        const text = await openSidecarJson(testController, region);
+        if (!text) {
+            testController.reportCondition('the block\'s JSON is open', false);
+            return testController.getOverallResult();
+        }
+        const original = JSON.parse(text.value);
+        const edited = JSON.parse(text.value);
+        edited.playable_payload.tiles[i] = edited.playable_payload.tiles[i] ? 0 : 1;
+        const opsBefore = panel.session.ops().length;
+
+        const pressAndRead = async (label) => {
+            const b = editButtonFor(region);
+            testController.reportCondition(`${label}: Edit ▸ is pressable — the verdict is asked on `
+                + 'the PRESS', !!b && !b.disabled);
+            if (!b || b.disabled) return null;
+            const now = await inspectRegionRoom(panel.rulesDoc, slot, region);
+            testController.reportCondition(`${label}: ⛓ the door's own inspection refuses the `
+                + 'document NOW', !now.ok);
+            b.click();
+            const answered = await testController.pollForValue(
+                () => { const x = editButtonFor(region); return x?.disabled ? x : null; },
+                `${label}: Edit ▸ answered`, 8000, 50);
+            testController.assertEqual(`${label}: ⛓⛓ its title is the inspection's sentence for `
+                + 'the document NOW', String(now.why), String(answered?.title));
+            testController.reportCondition(`${label}: …and no room was opened`,
+                panel.roomEditorSession === null);
+            return now.why;
+        };
+        const pressable = (label, why) => {
+            const b = editButtonFor(region);
+            testController.reportCondition(`${label}: ⛓⛓ Edit ▸ is pressable again — the refusal `
+                + 'did not outlive the payload it was about', !!b && !b.disabled && b.title !== why);
+        };
+
+        /* 1 */
+        testController.reportCondition('1. Save JSON pressed', typeAndSaveSidecar(region, edited));
+        testController.assertEqual('1. one op recorded', String(opsBefore + 1),
+            String(panel.session.ops().length));
+        const why = await pressAndRead('1');
+
+        /* 2 */
+        testController.reportCondition('2. the original saved back',
+            typeAndSaveSidecar(region, original));
+        testController.assertEqual('2. …as a second op', String(opsBefore + 2),
+            String(panel.session.ops().length));
+        testController.assertEqual('2. the entry is the fixture\'s again', JSON.stringify(original),
+            JSON.stringify(panel.rulesDoc.preset_sidecars[slot][region]));
+        pressable('2', why);
+
+        /* 3 */
+        const undo = () => document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        undo();
+        await pressAndRead('3 (after one Undo, the edited payload again)');
+        undo();
+        testController.assertEqual('3. two Undos: the fixture\'s op list', String(opsBefore),
+            String(panel.session.ops().length));
+        pressable('3 (after the second Undo)', why);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('edit-verdict test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-a-sidecar-save-writes-the-entry-and-leaves-the-rules',
+    name: 'APWorld hub: a sidecar block\'s Save JSON writes the whole entry as one op and leaves the region\'s rules',
+    description: 'PRESET SIDECARS S1 (⚖ Q1 C, Q3 A). One payload key edited in the block\'s own '
+               + 'textarea, the product\'s Save pressed: one set-region-sidecar recorded for that '
+               + 'slot and region; the DOCUMENT after = before with exactly that entry replaced, '
+               + 'byte for byte (trap 1306); the region\'s access rules byte-equal; the answer '
+               + 'under the block is the op\'s description naming what was NOT re-derived; the op '
+               + 'asked directly writes the same bytes; one Undo restores. Mutants: the op also '
+               + 'writes rules (A) or writes only the payload (B).',
+    testFunction: apworldASidecarSaveWritesTheEntryAndLeavesTheRules,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-sidecar-save-is-vetoed-by-name',
+    name: 'APWorld hub: a sidecar save the op or the schema refuses is refused by name and moves nothing',
+    description: 'PRESET SIDECARS S1. (a) an entry dropping `substrate` — the op\'s own refusal, '
+               + 'asked of the op first; (b) an entry whose grid_cell lacks gy — which the op '
+               + 'alone would take, so only the whole-document schema veto refuses it. Each: '
+               + 'the refusal under the block names the field, no op recorded, the document '
+               + 'byte-unmoved. Mutant C (the veto removed) reds arm (b).',
+    testFunction: apworldASidecarSaveIsVetoedByName,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-sidecar-save-from-the-sidecars-list-is-the-same-op',
+    name: 'APWorld hub: the Sidecars list\'s block saves the same op as the Regions tab\'s',
+    description: 'PRESET SIDECARS S1 (⚖ Q2 A: one renderer, two hosts). The same one-key edit '
+               + 'saved from the Regions tab and from the Sidecars tab\'s expanded list: the two '
+               + 'recorded ops are byte-equal and leave the same document, the answer is printed '
+               + 'under the block that was saved; and a host that passes no onSave gets the '
+               + 'read-only widget with no Save.',
+    testFunction: apworldASidecarSaveFromTheSidecarsListIsTheSameOp,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-edit-verdict-follows-a-raw-sidecar-save',
+    name: 'APWorld hub: after a raw sidecar save, Edit ▸ is re-asked — refused by name, and pressable again once the payload is back',
+    description: 'PRESET SIDECARS S1. Region and tile picked off Edit ▸\'s own inspection: a '
+               + 'one-tile raw edit the round trip does not reproduce, saved through Save JSON; '
+               + 'Edit ▸ pressed opens no room and its title becomes the inspection\'s sentence '
+               + 'for the document NOW; the original saved back makes it pressable again; and '
+               + 'across Undo (which never goes through _applyOp) the same. Mutant E: the '
+               + 'verdict read regardless of the record it was asked about.',
+    testFunction: apworldEditVerdictFollowsARawSidecarSave,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
