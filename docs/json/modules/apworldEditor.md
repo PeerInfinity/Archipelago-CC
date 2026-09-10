@@ -52,7 +52,7 @@ reset the session, so an undo after an Apply still works. It republishes the
 | Tab | What it edits |
 |-----|---------------|
 | **Regions** | regions, exits, locations, access rules — and **Edit ▸**, the door into a region's own room |
-| **Items** | items, classifications, pool counts, starting counts |
+| **Items** | items, classifications, pool counts, starting counts, and the slot's `item_groups` registry (I1) — see below |
 | **Placements** (W3) | `canonical_placements` — which item this world places at which location; the world generator's `--canonical-seed` input, see below |
 | **Meta** | the fields in `rulesDocOps.META_FIELDS`, plus the start region and the victory condition |
 | **Map** | the composite grid, for documents whose sidecars carry grid cells — see below |
@@ -452,6 +452,110 @@ Making a key a Sidecars key also changes its **Document** row: it now shows the
 AND the block). The **Links** tab is derived from `DOCUMENT_KEY_EDITORS` and is
 unaffected; measured before/after on `jta_schedule_test`, its 13 rows are the same
 13 rows.
+
+## The Items tab's Groups section (I1)
+
+⚖ *"I'll want to add proper editors for item_groups and progression_mapping, so
+that we can support these features in procgen worlds, even though no procgen
+worlds currently use them. These belong in the Items tab."* and, on deleting a
+group an item still carries, *"Let's go with refuse."* (user, 2026-09-09).
+
+### The law: the registry is a NAME LIST, and membership lives on the items
+
+`item_groups[player]` is a **list of group names**. Which items are in a group is
+the `groups` field on each item — and that is not a convention, it is what the
+engine reads: `shared/snapshotInterface.js:631-661` takes the array branch when
+the slot's value is an array and counts `HasGroup` / `group_count` /
+`group_check` by walking each item's own `groups`. (The other branch,
+`{group: [items]}`, is the object form; no committed document uses it.)
+
+**The two are not derivable from each other, and this editor does not reconcile
+them.** Measured over the 212 committed documents (all 224 slots hold an array):
+
+| | slots |
+|---|---|
+| registry **equals** the union of the items' groups | 69 |
+| items carry a name the registry **lacks** | 155 (`Event` in 154 of them) |
+| registry lists a name **no item** carries | 0 |
+
+So an *unlisted* group — on the items, absent from the registry — is the common
+divergence and it is **shown**, greyed, with the one gesture that fits: *Add to
+registry*. A registry entry with no members is legal too (it is what **+ Add
+group** produces on the way to populating it), and the section says `0 items`
+rather than tidying it away.
+
+⚠ Nothing in this tree reads the registry's **contents** today.
+`world_generator/extractors.py:397` extracts it into `WorldData.item_groups` and
+no template consumes it — the generated world's `item_name_groups` is built from
+the items' own `groups` — and the engine reads the slot's value only to pick the
+array branch. The registry is the world's declared vocabulary, which is exactly
+what an editor is for.
+
+### The three ops
+
+| op | what it does |
+|---|---|
+| `add-item-group {player, name}` | appends a name; refuses an empty one and a duplicate; **creates the block** when the document has none. It is also the *Add to registry* gesture for an unlisted group |
+| `rename-item-group {player, name, newName}` | renames the registry entry **in place** AND every item's membership — **one op**, so one undo puts both back |
+| `delete-item-group {player, name}` | **refused by name while any item still carries the group**, listing the carriers |
+
+The delete refusal is the ⚖ ruling. There is deliberately **no
+`deleteItemOps`-shaped cascade builder** beside it: a group is a classification a
+person put on items on purpose, and stripping it from a hundred of them because a
+registry row was deleted is not a gesture anyone asked for. The refusal lists the
+carriers (bounded by `REFUSAL_NAME_LIMIT` — `sc2` slot 1 holds 1,741 items under
+an 889-name registry) so the next click is obvious.
+
+`itemsCarryingGroup(doc, name, player)` is the **one predicate**: the op's
+refusal, the section's per-name count and the disabled button's `title` all read
+it, so a name the section says nothing carries is exactly a name the op will
+delete. (P1's shape for `canonicalPlacementIssues`, one key over.)
+
+⚠ **Deleting a registry entry does not ask about rule trees.** Measured over the
+corpus: 32 slots carry `HasGroup` / `group_count` / `group_check` nodes (566 nodes
+in all) naming 81 distinct groups, and 3 of those references already name a group
+that is in neither the registry nor on any item — a dangling group reference is a
+state the committed corpus is already in. The ⚖ ruling is about the **items**;
+whether the refusal should also read the rules is an open question.
+
+### The section, and the per-item picker
+
+The tab opens with the registry: one row per name, the derived count of items
+carrying it, an inline rename that commits on `change` (the Meta tab's rule — one
+rename, one op, one undo; Enter blurs into the same commit), and a delete button
+**disabled with the reason in its `title`** while items carry the group. The
+button is a courtesy — the guard is the op's refusal, which holds for a caller
+that never drew a button (the Document tab's whole-block `set-key` is one, and it
+stays: W0's pointer-AND-block rule).
+
+The per-item **Groups** cell was a comma-separated text input until I1, in which a
+typo silently created an unlisted group. It is now the item's groups as **chips**
+(each removable, an unlisted one marked in the unlisted colour) plus a picker over
+the registry names the item does not yet carry. Every gesture is still ONE
+`set-item-field groups`.
+
+**The picker fills on open, and that is measured on both builds.** The corpus's
+worst case is `sc2` slot 1 — 1,741 items under an 889-name registry — driven on
+the same page with `fill()` called at construction and then reverted:
+
+| `sc2` slot 1 | eager | lazy (shipped) |
+|---|---|---|
+| option elements on the tab | **1,540,414** | **1,741** |
+| Items-tab paint | **16,688 ms** | **1,948 ms** |
+| opening one picker | — (already built) | **7 ms**, 877 options |
+
+8.6× on the paint, 885× on the elements. ⛑ The element count is **not** the naive
+`1,741 × (889 + 1) = 1,549,490`: a picker offers only the names its own item does
+not already carry, so the eager total is `Σᵢ (1 + |registry \ groupsᵢ|)`, which
+reproduces 1,540,414 exactly (and 3,498 on alttp). Quoting the product instead of
+the measurement is trap 1300, from W3's Placements select.
+
+### The Document row
+
+`item_groups` is now `KEYS_OWNED_BY_TAB.items`, so its Document row shows the
+*"Edited in the Items tab"* pointer **and** its JSON block — W0's rule, and the
+same second-vocabulary situation the Meta scalars and `canonical_placements` are
+in. The whole-block `set-key` is still the everything-fallback.
 
 ## The Placements tab (W3)
 
