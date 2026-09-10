@@ -13696,6 +13696,18 @@ turn a link into a teleporter as the pipeline does; the arc order.
 
 **(user, 2026-09-10): "For the questions, can you describe the options in more detail?"** — described in the tab and recorded in plan §5c.
 
+**⚖ RULED (user, 2026-09-10), verbatim:** "**Question 1.** I choose option C. **Question 2.** Re-rolling or changing
+substrate are expected to make existing data invalid. We can defer the re-rolling feature, but I want to have a way
+to change the substrate of a region from the APWorld Editor. If the user changes a substrate, or makes some other
+breaking change, then it's their responsibility to find a way to make the data valid again before they save the
+JSON data. If we don't already have a way to report what data is invalid, then I want to add one. **Question 3.** I
+choose option C. **Question 4.** I choose option B. We can change our plans later if we think of a better plan.
+Please don't begin implementation yet."
+⇒ Q1 = field descriptors with optional per-field schema fragments + the corpus gate; Q2 = re-roll DEFERRED; a
+substrate CHANGE per region is wanted in the hub, breaking by design, the reader owns the repair, and the hub must
+REPORT what is invalid (measured next: what validation exists today); Q3 = moves may create teleporters and the op
+names each one; Q4 = M0 (the cell-size fix) first, then S0, S1, replan. ⛔ NOT launched.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
