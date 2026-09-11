@@ -13999,6 +13999,20 @@ same path**; should a size persist without `grid_dims`; `grid_dims` is document-
 diagonal flags; the selection survives a tab switch while the armed move does not; no in-app shrink row (no committed
 slot without `grid_dims` can shrink under one move). **⛓ S2 + M1 + M2 DONE — REPLAN with the user; nothing launched.**
 
+**(user, 2026-09-11, the third REPLAN), verbatim:** "I think the proper fix for some of these issues might be that
+instead of making a simulated maze layout for substrates other than maze, we make a simpler representation that
+contains just the information we need. One reason not to do this is that the maze substrate currently relies on
+knowing what tile the exits are on in each region. Maybe there is something we can do to remove this dependency, or
+to make it work with the simplified representation. Other than that, I agree with your recommendations." ⇒ Q1–Q5
+as recommended (M3 = A when built; the relayout defect = its own pipeline slice, measured live first; the shrink
+left; β deferred; the omsi diagonals fixed when a slice touches omsi). **M3 is HELD** — an exit-side move edits a
+zone region's simulated geometry, which is what the user's direction would replace; the planner measures FIRST
+(read-only): (a) every reader of an exit's TILE position per substrate (the maze's own generator/BFS/arrival, the
+composite renderer, the engine's stitching, the play hosts), (b) whether a maze region depends on its NEIGHBOUR's
+exit tile (the cross-boundary alignment the user names), (c) what a simplified non-maze representation would carry
+and what it would cost (producers, the 15 TA + 34 zone + 31 jta + 6 omsi committed regions, the byte-identity
+dumps). Nothing launched.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
