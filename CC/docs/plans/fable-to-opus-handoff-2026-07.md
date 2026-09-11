@@ -14124,10 +14124,10 @@ no org); schedule the rebuild. Sequencing: disjoint paths from G0 (`scripts/proc
 the only shared resource and the lock serialises it — launched without waiting.
 
 **⚖ RULED (user, 2026-09-11, while H1's tier ran): "I want the new Seedling workflows to only be manually triggered,
-not automatically triggered."** Every NEW Seedling workflow this arc adds (H2's headless arm for the six `windows`
-gates, any headless full-tier job) is `workflow_dispatch:` only — no push / pull_request / schedule trigger. The
-pre-existing per-push browser shards (`unittests_frontend.yml`, running `seedling-wasm-pages`/`-element` since S3) are
-not new; whether they too go manual is asked before H2 is briefed. **H1 MID-REPORT (20:20Z, verified):** the runner
+not automatically triggered."** Clarified by the user in the next line: *"Specifically, I want the test that runs the full set of tapes
+to only be manually triggered."* ⇒ the headless FULL TIER (the 150-tape `--tier=full` run) in CI is
+`workflow_dispatch:` only — never push / pull_request / schedule; the short Seedling gates in the per-push browser
+shards stay as they are, and a short H2 gate may join them. **H1 MID-REPORT (20:20Z, verified):** the runner
 KEEPS the device alive — `seedling-wasm-element` 897.5 → ~19 s, `-pages` 161 → ~15 s on ubuntu-latest; the browser
 plan 3 shards → 1 (385 s); run 34639283778 @ `91092bb81e` green, vitest 453/13790; H1's four commits on origin.
 
