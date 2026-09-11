@@ -30,6 +30,7 @@ import {
     REGION_GROW_STEP,
 } from '../shared/procgen/spatialPrimitives.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
 import { isAtlasSourceId, atlasSourceGame, requirementDnf } from './regionAtlasPool.js';
 
@@ -164,6 +165,29 @@ export { ScenarioPool };
 // here keep working. New callers should import from
 // shared/procgen/spatialPrimitives.js directly.
 export { SIDE_N, SIDE_S, SIDE_E, SIDE_W, SIDES, OPPOSITE_SIDE };
+
+// ⛓⛓ PRESET SIDECARS G0 — THE REGION-GEOMETRY DECLARATION, read here. A
+// registry entry's `regionGeometry` (`procgenCore/regionGeometry.js`) says
+// whether its regions' exits stand on TILES or are only SIDES; absent = tiles.
+// Every engine branch below that mints an exit tile, or reads a neighbour's,
+// asks these two helpers — never a substrate name.
+export { REGION_GEOMETRY, geometryOf };
+
+// Does a region of this substrate carry exit TILES (`exits[].x/y`,
+// `exits_placed[].tile_position`, `extracted_rules.exits[].position`)? An
+// unregistered id (an atlas source's region, old data) reads as the default.
+function carriesExitTiles(substrateId) {
+    return geometryOf(substrateRegistry.get(substrateId)) === REGION_GEOMETRY.TILES;
+}
+
+// The tile a neighbour mirrors off one of this region's exits. A tile region
+// hands back the tile it stored; a SIDES-only region stores none, so the tile is
+// the perimeter midpoint of that side — exactly what a zone region carried
+// before G0, so a maze child's entrance (and a reciprocal back-exit) is the
+// same tile it always was.
+function exitTileForMirror(substrateId, storedTile, side, regionSize) {
+    return carriesExitTiles(substrateId) ? storedTile : perimeterMidpoint(side, regionSize);
+}
 
 export function cellKey(cell) {
     return `${cell.gx},${cell.gy}`;
@@ -705,11 +729,15 @@ export function reconcileBidirectionalExits(grid, regionSize, mode = 'add') {
 function addReciprocalBackExit(sourceRegion, sourceExit, sourceExitId, targetRegion, regionSize) {
     const backSide = OPPOSITE_SIDE[sourceExit.side];
     if (!backSide) return;  // null/unknown side — can't mirror
+    // ⛓ G0: a SIDES-only source stores no tile — mirror its side's midpoint.
     const backTile = mirrorTileAcrossSide(
-        { x: sourceExit.x, y: sourceExit.y },
+        exitTileForMirror(sourceRegion.substrate, { x: sourceExit.x, y: sourceExit.y },
+            sourceExit.side, regionSize),
         sourceExit.side,
         regionSize,
     );
+    // ⛓ G0: and a SIDES-only TARGET is given no tile at all.
+    const tiles = carriesExitTiles(targetRegion.substrate);
     const backExitId = sourceRegion.region_id;
     // Don't collide with an existing exit of the same id. Should be
     // rare — region ids are unique — but a defensive guard.
@@ -717,8 +745,7 @@ function addReciprocalBackExit(sourceRegion, sourceExit, sourceExitId, targetReg
     if (targetExits.has(backExitId)) return;
     targetExits.set(backExitId, {
         exit_id: backExitId,
-        x: backTile.x,
-        y: backTile.y,
+        ...(tiles ? { x: backTile.x, y: backTile.y } : {}),
         side: backSide,
         exitName: backExitId,
         targetRegion: sourceRegion.region_id,
@@ -729,7 +756,7 @@ function addReciprocalBackExit(sourceRegion, sourceExit, sourceExitId, targetReg
     if (Array.isArray(targetRegion.extracted_rules?.exits)) {
         targetRegion.extracted_rules.exits.push({
             id: backExitId,
-            position: { x: backTile.x, y: backTile.y },
+            ...(tiles ? { position: { x: backTile.x, y: backTile.y } } : {}),
             target_region: sourceRegion.region_id,
             paths: [{ path_id: 'p1', obstacles: [] }],
         });
@@ -949,10 +976,12 @@ function insertBackExit(grid, {
             .some((e) => e.targetRegion === targetRegion);
         if (regionExits.has(backExitId) || hasExplicitReverse) return false;
     }
+    // ⛓ G0: a SIDES-only region is given no tile on its back-exit (it has no
+    // entrance tile either — generateRegionZoneGen stamps none for it).
+    const tiles = carriesExitTiles(region.substrate);
     regionExits.set(backExitId, {
         exit_id: backExitId,
-        x: entranceTile.x,
-        y: entranceTile.y,
+        ...(tiles ? { x: entranceTile.x, y: entranceTile.y } : {}),
         side: entranceSide,
         exitName: backExitId,
         targetRegion,
@@ -966,7 +995,7 @@ function insertBackExit(grid, {
     // the forward exit's rule for bidirectional pairs.
     region.extracted_rules.exits.push({
         id: backExitId,
-        position: { x: entranceTile.x, y: entranceTile.y },
+        ...(tiles ? { position: { x: entranceTile.x, y: entranceTile.y } } : {}),
         target_region: targetRegion,
         paths: [{ path_id: 'p1', obstacles: [] }],
     });
@@ -1187,7 +1216,10 @@ export function* growMazeGen(config) {
         // we still mirror the parent's exit position to keep the
         // entrance tile well-defined on the child's perimeter.
         const entranceSide = OPPOSITE_SIDE[parentSide];
-        const entranceTile = mirrorTileAcrossSide(parentExitPlaced.tile_position, parentSide, regionSize);
+        const entranceTile = mirrorTileAcrossSide(
+            exitTileForMirror(parentRegion.substrate, parentExitPlaced.tile_position,
+                parentSide, regionSize),
+            parentSide, regionSize);
         const exitSides = pickChildExitSides(childCell, grid, entranceSide, rng, branchProbability);
         if (exitSides.length === 0) {
             // Dead-end cell with no outgoing direction — parent's exit
@@ -1718,8 +1750,11 @@ function buildTopDownRegionSpec(layout, name, exitSidesByExit) {
     if (parent) {
         const parentExit = exitSidesByExit.get(`${parent.name}:${parent.exit_id}`);
         if (parentExit) {
+            // ⛓ G0: a SIDES-only parent stores no tile — its side's midpoint.
             const entranceTile = mirrorTileAcrossSide(
-                parentExit.tile_position, parentExit.side, size,
+                exitTileForMirror(grid.getRegion(cellsByName.get(parent.name))?.substrate,
+                    parentExit.tile_position, parentExit.side, size),
+                parentExit.side, size,
             );
             entrances = [{ side: OPPOSITE_SIDE[parentExit.side], tile: entranceTile }];
         }
@@ -2008,6 +2043,8 @@ export function finalizeTopDown(layout) {
         const region = grid.getRegion(cell);
         const exits = getRegionExits(region);
         if (!exits) continue;
+        // ⛓ G0: a SIDES-only region has no entrance tile to align.
+        if (!carriesExitTiles(region.substrate)) continue;
         for (const e of exits.values()) {
             if (e.targetRegion === parent.name) {
                 setRegionEntrance(region, { x: e.x, y: e.y });
@@ -2482,6 +2519,9 @@ export function buildShuffledSubstrateSequence(quotas, startSubstrate, rng) {
 // feed procgenPlayer's entrance tracking; the substrate runtime ignores
 // them. (stitchGrid matches on exit ID, not position, so it no longer
 // depends on this convention.)
+// ⛓ G0: a zone substrate that DECLARES `regionGeometry: 'sides'` is minted
+// none; this function is then only the tile a neighbour mirrors off its side
+// (exitTileForMirror) — the same tile it would have carried.
 function perimeterMidpoint(side, size) {
     const w = size.width, h = size.height;
     if (side === 'N') return { x: Math.floor(w / 2), y: 0 };
@@ -2541,22 +2581,24 @@ export function assembleZoneRegion({
     const exitsMap = new Map();
     const exitsPlaced = [];
     const extractedExits = [];
+    // ⛓ G0: a SIDES-only substrate (regionGeometry) gets no fictional tile —
+    // no x/y, no tile_position, no position; its exits are their sides.
+    const tiles = carriesExitTiles(substrate);
     // One synthetic exit per in-bounds neighbor side. id format
     // 'exit_<side>' is unique per region and survives serialization.
     for (const side of exitSides) {
         const exit_id = `exit_${side}`;
-        const tile = perimeterMidpoint(side, regionSize);
+        const tile = tiles ? perimeterMidpoint(side, regionSize) : null;
         exitsMap.set(exit_id, {
             exit_id,
-            x: tile.x,
-            y: tile.y,
+            ...(tile ? { x: tile.x, y: tile.y } : {}),
             side,
             exitName: exit_id,
             targetRegion: null,   // resolved by stitchGrid
             isBackExit: false,
             isTeleporter: false,
         });
-        exitsPlaced.push({ exit_id, side, tile_position: { x: tile.x, y: tile.y } });
+        exitsPlaced.push({ exit_id, side, ...(tile ? { tile_position: { x: tile.x, y: tile.y } } : {}) });
         // Phase 4a: prefer the substrate's obstacle paths (bounce); fall
         // back to a verbatim access_rule for substrates not yet on the
         // obstacle emission (jta), and to the always-open placeholder when
@@ -2565,7 +2607,7 @@ export function assembleZoneRegion({
         const sideRule = zoneRules?.exitRules?.[side];
         extractedExits.push({
             id: exit_id,
-            position: { x: tile.x, y: tile.y },
+            ...(tile ? { position: { x: tile.x, y: tile.y } } : {}),
             target_region: null,
             paths: sidePaths ?? [{ path_id: 'p1', obstacles: [] }],
             ...(!sidePaths && sideRule ? { access_rule: sideRule } : {}),
@@ -2929,23 +2971,27 @@ function* generateRegionZoneGen(spec) {
     const exitsMap = new Map();
     const exitsPlaced = [];
     const extractedExits = [];
+    // ⛓ G0: a SIDES-only substrate gets no tile on its exits (nor an entrance
+    // tile, below) — the same law as assembleZoneRegion.
+    const tiles = carriesExitTiles(spec.substrate);
     for (const e of exitsResolved) {
-        const tile = e.tile ?? perimeterMidpoint(e.side, regionSize);
+        const tile = tiles ? (e.tile ?? perimeterMidpoint(e.side, regionSize)) : null;
         const exitId = e.exit_id ?? `exit_${e.side}`;
         // No targetExitId here — it's appended later by linkReverseExits /
         // the back-exit pass (matching assembleZoneRegion's key order so
         // serialized zone payloads stay byte-identical).
         exitsMap.set(exitId, {
             exit_id: exitId,
-            x: tile.x,
-            y: tile.y,
+            ...(tile ? { x: tile.x, y: tile.y } : {}),
             side: e.side,
             exitName: e.exitName ?? exitId,
             targetRegion: e.target_region ?? null,
             isBackExit: false,
             isTeleporter: false,
         });
-        exitsPlaced.push({ exit_id: exitId, side: e.side, tile_position: { x: tile.x, y: tile.y } });
+        exitsPlaced.push({
+            exit_id: exitId, side: e.side, ...(tile ? { tile_position: { x: tile.x, y: tile.y } } : {}),
+        });
         // Phase 3: the substrate emits its derived access as
         // paths-and-obstacles (the canonical form). Top-down OVERRIDES with
         // the source rule verbatim (rules realised, not authored), keying
@@ -2955,7 +3001,7 @@ function* generateRegionZoneGen(spec) {
         const paths = zoneRules?.exitPaths?.[e.side] ?? [{ path_id: 'p1', obstacles: [] }];
         extractedExits.push({
             id: exitId,
-            position: { x: tile.x, y: tile.y },
+            ...(tile ? { position: { x: tile.x, y: tile.y } } : {}),
             target_region: e.target_region ?? null,
             paths,
             ...(e.access_rule ? { access_rule: e.access_rule } : {}),
@@ -3007,7 +3053,7 @@ function* generateRegionZoneGen(spec) {
     // leaves .entrance undefined to keep its serialized payloads
     // byte-identical. As of Phase 4c the entrance rides the descriptor
     // (region.entrance), not the payload; buildPresetSidecars re-attaches it.
-    const regionEntrance = (spec.stampEntrance && ent)
+    const regionEntrance = (spec.stampEntrance && ent && tiles)
         ? (ent.tile ?? perimeterMidpoint(ent.side, regionSize))
         : undefined;
 
@@ -4927,8 +4973,12 @@ function buildNodeRealiserSpecs(node, tree, grid, regionSize, deps = {}) {
                 + `exit on side ${node.side} for '${region_id}'`);
         }
         entranceSide = OPPOSITE_SIDE[node.side];
+        // ⛓ G0: a SIDES-only parent keeps its `exits_placed` (so the throw
+        // above does not fire) but stores no tile — its side's midpoint.
         entranceTile = mirrorTileAcrossSide(
-            parentExitPlaced.tile_position, node.side, regionSize);
+            exitTileForMirror(parentRegion.substrate, parentExitPlaced.tile_position,
+                node.side, regionSize),
+            node.side, regionSize);
         entrances = [{ side: entranceSide, tile: entranceTile }];
     }
 
