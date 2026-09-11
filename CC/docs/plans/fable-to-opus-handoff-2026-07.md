@@ -13886,6 +13886,24 @@ SIDECARS (replan ruling 6), rows + five mutants, docs. Baseline 448/13597 @ `7e3
 come to `preset-sidecars-planning`; **the REPLAN with the user follows D1** (D0, V0, D1 = three since the last).
 ⛔ The planner commits nothing while D1 runs.
 
+**D1 SHIPPED + VERIFIED 2026-09-10** (`4bc907b9c8` → `c58cd1f6dc`, six commits: `apworldEditor/sidecarForm.js` (the
+fields view's model off the declaration), the block draws the entry as a FORM inside the one disclosure ("▸ Show
+fields & JSON" — a second toggle cost +2.3 ms over 235 blocks, trap **1318**: built-on-expand defers the body, not
+the toggle), every change ONE whole-entry op, the `substrate` picker over the registry's playable ids (8 = the
+corpus's 7 + the generic `flash`), the named re-derives-nothing clause under the JSON (top-level derived descriptors
+only — nested ones like `items[].locationName` have no path form in D0's vocabulary), the Document row's door →
+SIDECARS, five in-app rows, docs). Planner's own drive on the fixture slot 3: the form draws controls, a derived
+control is DISABLED with its writer in the title, the `substrate` select lists the registry's ids, the Document door
+lands on Sidecars; 0 page errors. **CI @ `c58cd1f6dc`: run 34563210789 success, 449/13695 (13687 passed | 8 skipped
+| 0 failed) = the derivation (+1 file, +98 rows).** ⚠ The slice's FIRST push (`29343b89af`) went red on ONE row —
+`lintGateLabels` name-over-a-roster: a count typed into a test name (the known trap; a bounded set cannot see a
+tree-wide lint row) — fixed by interpolation in `c58cd1f6dc`, no allowlist write. Render cost on `AP_8`: 17.1 →
+17.2–19.1 ms (within spread), DOM nodes unmoved. Found and fixed en route: the save appended V0's count to a
+"No change" answer. ⚖ OPEN (§15.8): nested derived fields cannot be greyed or named (a path form for D0's
+vocabulary); the form creates a field but never deletes one; no nested editing for object/array fields; the picker
+offers the generic `flash`, which has no preset; `render_hint` has no declared vocabulary. **⛓ D0 + V0 + D1 DONE —
+REPLAN with the user; nothing launched.**
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
