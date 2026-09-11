@@ -717,6 +717,36 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "PRESET SIDECARS V0. Each of two slots' first region takes the other slot's substrate (read off the document): one op lands, the block's SUBSTRATE_MISMATCH sentence names the substrate whose keys the payload has and the one it claims; Undo takes it away. Mutant D (the rule inverted) reds it."
+        },
+        {
+            "id": "apworld-a-sidecar-fields-view-lists-the-declaration",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS D1. Both substrates of the four-player fixture: the block's fields view lists the schema's entry fields and the merged declaration's, in order (absent ones included), derived rows badged with the writer; the note under the JSON names the derived fields carried. Mutant C (rows from the payload's keys) reds it."
+        },
+        {
+            "id": "apworld-a-sidecar-field-change-is-one-whole-entry-op",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS D1. The first non-derived boolean the declaration offers, flipped on both substrate slots: one set-region-sidecar; the entry differs at exactly that path (deep diff); an unchanged value records no op; Undo restores. Mutant A (payload-only write) reds it."
+        },
+        {
+            "id": "apworld-a-derived-sidecar-field-is-disabled-and-names-its-writer",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS D1. Every declared-derived scalar row's control is disabled, titled with its writer; every non-derived control enabled; the JSON stays editable. Mutant B (derived controls enabled) reds it."
+        },
+        {
+            "id": "apworld-the-substrate-picker-offers-the-playable-ids-and-names-the-mismatch",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS D1. The substrate picker lists the registry's playable ids (sorted) and says it changes the label only; choosing the other slot's substrate records one op, payload untouched, and V0's SUBSTRATE_MISMATCH appears; Undo clears it."
+        },
+        {
+            "id": "apworld-the-preset-sidecars-door-lands-on-the-sidecars-tab",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS D1 (replan ruling 6). The Document row's preset_sidecars door lands on the Sidecars tab. Mutant E (target back to Regions) reds it."
         }
     ]
 }

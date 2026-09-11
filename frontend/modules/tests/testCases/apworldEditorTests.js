@@ -136,6 +136,16 @@ import { JSON_BLOCK_INDENT, inspectRegionRoom } from '../../apworldEditor/region
  */
 import { SIDECAR_ISSUE_KINDS } from '../../apworldEditor/sidecarIssues.js';
 import { sidecarFieldsOf } from '../../procgenCore/sidecarFields.js';
+/**
+ * ⛓ D1 — the fields view's vocabulary: which control a row stamps, which level
+ * it is on, the two ENTRY keys the form names (the payload's, the substrate's),
+ * and the clause the picker's title carries — so a row asserts the product's
+ * own names. ⛔ Never the rows' EXPECTATION: which fields exist is read off the
+ * declaration, the schema and the registry (the law), not off this module.
+ */
+import {
+    PAYLOAD_KEY, SIDECAR_FORM_CONTROLS, SIDECAR_FORM_LEVELS, SUBSTRATE_KEY, SUBSTRATE_PICKER_CLAUSE,
+} from '../../apworldEditor/sidecarForm.js';
 
 const PANEL_ID = 'apworldEditorPanel';
 const PANEL_SELECTOR = '.apworld-editor-panel';
@@ -7212,6 +7222,453 @@ registerTest({
                + 'SUBSTRATE_MISMATCH sentence names the substrate the payload has the keys of and '
                + 'the one it claims, Undo takes it away. Mutant D (the rule inverted) reds it.',
     testFunction: apworldARawSubstrateChangeNamesTheMismatch,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * PRESET SIDECARS D1 — THE BLOCK CONSUMES THE DECLARATION
+ *
+ * The block's disclosure (▸ Show fields & JSON) draws the entry as a FORM
+ * above the JSON: one row per field of the entry subschema and of the
+ * substrate's declaration, a control by type, derived fields greyed. Every
+ * change is ONE whole-entry `set-region-sidecar`. Every expectation is read off
+ * the declaration (`sidecarFieldsOf`), the fetched schema and the live registry
+ * — the LAW — never typed; every slot through the toolbar's selector; every
+ * lookup after a gesture RE-QUERIES.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ One block's form rows — re-queried. */
+const sidecarFieldRows = (regionName) => [...(sidecarBlockFor(regionName)
+    ?.querySelectorAll('.apworld-sidecar-field') ?? [])];
+
+/** ⛓ One form row by field and level — re-queried. */
+const sidecarFieldRow = (regionName, field, level) => sidecarFieldRows(regionName)
+    .find((r) => r.dataset.field === field && r.dataset.level === level) ?? null;
+
+/** ⛓ That row's control — re-queried. */
+const sidecarFieldControl = (regionName, field, level) => sidecarFieldRow(regionName, field, level)
+    ?.querySelector('.apworld-sidecar-field-control') ?? null;
+
+/** ⛓ The paths two plain JSON values differ at (a deep diff — trap 1313). */
+function jsonDiffPaths(a, b, path = '$', out = []) {
+    const isObj = (v) => v !== null && typeof v === 'object';
+    if (!isObj(a) || !isObj(b) || Array.isArray(a) !== Array.isArray(b)) {
+        if (JSON.stringify(a) !== JSON.stringify(b)) out.push(path);
+        return out;
+    }
+    for (const k of new Set([...Object.keys(a), ...Object.keys(b)])) jsonDiffPaths(a[k], b[k], `${path}.${k}`, out);
+    return out;
+}
+
+/**
+ * ⛓ THE ENTRY-LEVEL FIELDS, off the schema the page itself fetches, reached
+ * the way the schema reaches them (`preset_sidecars` → its per-slot pattern →
+ * the per-region `additionalProperties` → `$ref`) — every property but the
+ * payload, whose fields the declaration speaks for.
+ */
+async function entryLevelFieldsFromSchema() {
+    const schema = await (await fetch('./schema/rules.schema.json')).json();
+    const slot = Object.values(schema.properties.preset_sidecars.patternProperties)[0];
+    const ref = slot.additionalProperties.$ref;
+    const entry = ref.slice(2).split('/').reduce((at, k) => at?.[k], schema);
+    return Object.keys(entry?.properties ?? {}).filter((k) => k !== PAYLOAD_KEY);
+}
+
+/** ⛓ THE PICKER'S LAW: every registered id whose entry has `deserializeWorld`, sorted. */
+const playableIdsFromRegistry = () => substrateRegistry.getAll()
+    .filter((e) => typeof e?.deserializeWorld === 'function').map((e) => e.id).sort();
+
+/**
+ * ⛓⛓⛓ **(i) THE FIELDS VIEW LISTS EXACTLY THE DECLARATION.** Both substrates
+ * of the four-player fixture (each slot through the toolbar), each slot's first
+ * region, its disclosure opened with the product's own toggle. The ENTRY rows
+ * are the schema's entry properties but the payload, in order; the PAYLOAD rows
+ * are `sidecarFieldsOf(registry.get(entry.substrate))`'s keys, in order — read
+ * off the declaration, not the payload. ⛔ Premise: some declared field is
+ * ABSENT from the entry, so a list built from the payload's keys (mutant C)
+ * cannot pass by coincidence. A declared-derived field carries the badge and a
+ * non-derived one does not (both picked off the declaration); the lead line
+ * names the JSON as the escape hatch; the note under the JSON names exactly the
+ * derived fields the entry carries.
+ */
+export async function apworldASidecarFieldsViewListsTheDeclaration(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(() => !!panel._rulesSchema,
+            'the panel loaded rules.schema.json', 8000, 50);
+        const two = twoSubstrateSlots(panel.rulesDoc);
+        testController.reportCondition('⛓ premise: two slots holding different substrates', !!two);
+        if (!two) return testController.getOverallResult();
+        const entryFields = await entryLevelFieldsFromSchema();
+        testController.reportCondition('⛓ the schema names entry-level fields', entryFields.length > 0);
+        for (const slot of [two.a, two.b]) {
+            testController.reportCondition(`slot ${slot} selected through the toolbar`,
+                await onRegionsTabFor(testController, panel, slot));
+            const region = Object.keys(panel.rulesDoc.preset_sidecars[slot])[0];
+            const entry = panel.rulesDoc.preset_sidecars[slot][region];
+            const at = `[slot ${slot} ${region} · ${entry.substrate}]`;
+            const fields = sidecarFieldsOf(substrateRegistry.get(entry.substrate));
+            const declared = Object.keys(fields);
+            const absent = declared.filter((k) => !(k in entry.playable_payload));
+            testController.reportCondition(`${at} ⛓ premise: a declared field the entry LACKS `
+                + `(${absent.slice(0, 3).join(', ')})`, absent.length > 0);
+            testController.reportCondition(`${at} the block is collapsed: no form drawn`,
+                sidecarFieldRows(region).length === 0);
+            testController.reportCondition(`${at} the disclosure opened`, !!await openSidecarJson(testController, region));
+
+            const rows = sidecarFieldRows(region);
+            const drawn = (level) => rows.filter((r) => r.dataset.level === level).map((r) => r.dataset.field);
+            testController.assertEqual(`${at} ⛓⛓ ENTRY rows = the schema's entry properties, in order`,
+                JSON.stringify(entryFields), JSON.stringify(drawn(SIDECAR_FORM_LEVELS.ENTRY)));
+            testController.assertEqual(`${at} ⛓⛓⛓ PAYLOAD rows = the merged declaration, in order`,
+                JSON.stringify(declared), JSON.stringify(drawn(SIDECAR_FORM_LEVELS.PAYLOAD)));
+            const absentRow = sidecarFieldRow(region, absent[0], SIDECAR_FORM_LEVELS.PAYLOAD);
+            testController.assertEqual(`${at} the absent \`${absent[0]}\` is a row, stamped absent`,
+                'false', String(absentRow?.dataset.present));
+
+            const derived = declared.find((k) => fields[k].derived);
+            const authored = declared.find((k) => !fields[k].derived);
+            testController.reportCondition(`${at} ⛓ premise: the declaration has a derived and an authored field`,
+                !!derived && !!authored);
+            const dRow = sidecarFieldRow(region, derived, SIDECAR_FORM_LEVELS.PAYLOAD);
+            const aRow = sidecarFieldRow(region, authored, SIDECAR_FORM_LEVELS.PAYLOAD);
+            testController.reportCondition(`${at} \`${derived}\` (declared derived) carries the derived badge`,
+                !!dRow?.querySelector('.apworld-sidecar-field-derived'));
+            testController.assertEqual(`${at} …whose title is the descriptor's description`,
+                fields[derived].description, String(dRow?.querySelector('.apworld-sidecar-field-derived')?.title));
+            testController.reportCondition(`${at} \`${authored}\` (not derived) carries none`,
+                !!aRow && !aRow.querySelector('.apworld-sidecar-field-derived'));
+            const requiredDrawn = rows.filter((r) => r.dataset.level === SIDECAR_FORM_LEVELS.PAYLOAD
+                && !!r.querySelector('.apworld-sidecar-field-required')).map((r) => r.dataset.field);
+            testController.assertEqual(`${at} the required marks are the declaration's`,
+                JSON.stringify(declared.filter((k) => fields[k].required)), JSON.stringify(requiredDrawn));
+
+            const lead = sidecarBlockFor(region)?.querySelector('.apworld-sidecar-fields-note');
+            testController.reportCondition(`${at} the lead line names the JSON as the escape hatch`,
+                /escape hatch/.test(String(lead?.textContent ?? '')));
+            const note = String(sidecarBlockFor(region)?.querySelector('.apworld-sidecar-rederive-note')?.textContent ?? '');
+            const carried = declared.filter((k) => fields[k].derived && k in entry.playable_payload);
+            testController.reportCondition(`${at} ⛓ the re-derives-nothing note names every derived field carried `
+                + `(${carried.join(', ')})`, carried.length > 0 && carried.every((k) => note.includes(`\`${k}\``)));
+            testController.reportCondition(`${at} …and no derived field the entry lacks`,
+                declared.filter((k) => fields[k].derived && !(k in entry.playable_payload))
+                    .every((k) => !note.includes(`\`${k}\``)));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('fields-view test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(ii) FLIPPING A BOOLEAN IS ONE WHOLE-ENTRY OP.** Both substrate slots,
+ * each first region: the first NON-derived boolean the declaration offers (the
+ * law — never a field typed here), its checkbox pressed. Then: ONE op recorded
+ * (asserted before anything is read — 1301), a `set-region-sidecar` for this
+ * slot and region; the DOCUMENT's entry differs from BEFORE at EXACTLY that
+ * field's path (a deep diff — trap 1313: a write that dropped any other entry
+ * field, mutant A, reds it) and the rest of the document is byte-equal; the
+ * answer under the block is the op's (S1's clause). A change EQUAL to the stored
+ * value records NO op and says "No change". One Undo restores the document.
+ */
+export async function apworldASidecarFieldChangeIsOneWholeEntryOp(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(() => !!panel._rulesSchema,
+            'the panel loaded rules.schema.json', 8000, 50);
+        const two = twoSubstrateSlots(panel.rulesDoc);
+        if (!two) { testController.reportCondition('⛓ premise: two substrates', false); return testController.getOverallResult(); }
+        for (const slot of [two.a, two.b]) {
+            testController.reportCondition(`slot ${slot} selected through the toolbar`,
+                await onRegionsTabFor(testController, panel, slot));
+            const region = Object.keys(panel.rulesDoc.preset_sidecars[slot])[0];
+            const before = JSON.parse(JSON.stringify(panel.rulesDoc.preset_sidecars[slot][region]));
+            const fields = sidecarFieldsOf(substrateRegistry.get(before.substrate));
+            const field = Object.keys(fields).find((k) => fields[k].type === 'boolean' && !fields[k].derived);
+            const at = `[slot ${slot} ${region} · ${before.substrate}.${field}]`;
+            testController.reportCondition(`${at} ⛓ premise: the declaration offers a non-derived boolean`, !!field);
+            if (!field) continue;
+            testController.reportCondition(`${at} ⛓ premise: the entry carries entry-level fields besides `
+                + 'substrate and payload (so a payload-only write is visible)',
+            Object.keys(before).some((k) => k !== SUBSTRATE_KEY && k !== PAYLOAD_KEY));
+            await openSidecarJson(testController, region);
+            const box = sidecarFieldControl(region, field, SIDECAR_FORM_LEVELS.PAYLOAD);
+            testController.assertEqual(`${at} its control is a checkbox`, SIDECAR_FORM_CONTROLS.CHECKBOX,
+                String(sidecarFieldRow(region, field, SIDECAR_FORM_LEVELS.PAYLOAD)?.dataset.control));
+            testController.reportCondition(`${at} …enabled`, !!box && !box.disabled);
+            if (!box) continue;
+
+            const docBefore = JSON.stringify(panel.rulesDoc);
+            const opsBefore = panel.session.ops().length;
+            box.click();
+            const recorded = await testController.pollForValue(
+                () => (panel.session.ops().length === opsBefore + 1 ? panel.session.ops().at(-1) : null),
+                `${at} the change recorded one op`, 8000, 50);
+            testController.reportCondition(`${at} ⛓ ONE op was recorded`, !!recorded);
+            if (!recorded) continue;
+            testController.assertEqual(`${at} …a set-region-sidecar`, 'set-region-sidecar', String(recorded.op));
+            testController.assertEqual(`${at} …for this region`, region, String(recorded.region));
+            testController.assertEqual(`${at} …stamped with this slot`, String(slot), String(recorded.player));
+
+            const after = panel.rulesDoc.preset_sidecars[slot][region];
+            testController.assertEqual(`${at} ⛓⛓⛓ the entry differs from BEFORE at exactly that field (deep diff)`,
+                JSON.stringify([`$.${PAYLOAD_KEY}.${field}`]), JSON.stringify(jsonDiffPaths(before, after)));
+            testController.assertEqual(`${at} …to the flipped value`, String(!(before.playable_payload[field] === true)),
+                String(after.playable_payload[field]));
+            const rest = JSON.parse(docBefore);
+            rest.preset_sidecars[slot][region] = after;
+            testController.assertEqual(`${at} …and the rest of the document is byte-equal`,
+                JSON.stringify(rest), JSON.stringify(panel.rulesDoc));
+            testController.reportCondition(`${at} the answer under the block is the op's`,
+                String(sidecarMessageFor(region)?.textContent ?? '').includes(SIDECAR_NOT_REDERIVED));
+
+            // ⛔ A change EQUAL to the stored value is not an edit (1301).
+            const same = sidecarFieldControl(region, field, SIDECAR_FORM_LEVELS.PAYLOAD);
+            const opsNow = panel.session.ops().length;
+            const docNow = JSON.stringify(panel.rulesDoc);
+            same?.dispatchEvent(new Event('change', { bubbles: true }));
+            testController.assertEqual(`${at} ⛓ an unchanged value records NO op`, String(opsNow),
+                String(panel.session.ops().length));
+            testController.assertEqual(`${at} …leaves the document alone`, docNow, JSON.stringify(panel.rulesDoc));
+            testController.reportCondition(`${at} …and says "No change"`, /^No change/.test(String(panel._opMessage)));
+
+            document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+            testController.assertEqual(`${at} ⛓ one Undo restores the document`, docBefore,
+                JSON.stringify(panel.rulesDoc));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('field-change test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iii) A DERIVED FIELD'S CONTROL IS DISABLED AND NAMES ITS WRITER.** Both
+ * substrate slots: every row the DECLARATION marks derived that draws a control
+ * (a scalar) is disabled, and its title is the descriptor's description — which
+ * names the writer in a code span (D0's rule). ⛔ Selected by the declaration's
+ * `derived`, never by the control's state (a population chosen by the field
+ * under test filters its own mutant out). Non-vacuity both ways: the slot has
+ * such a row, and every NON-derived control on it is enabled — so "disabled"
+ * is a discrimination, not a panel that disables everything. And the JSON stays
+ * editable: the escape hatch.
+ */
+export async function apworldADerivedSidecarFieldIsDisabledAndNamesItsWriter(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(() => !!panel._rulesSchema,
+            'the panel loaded rules.schema.json', 8000, 50);
+        const two = twoSubstrateSlots(panel.rulesDoc);
+        if (!two) { testController.reportCondition('⛓ premise: two substrates', false); return testController.getOverallResult(); }
+        const scalar = [SIDECAR_FORM_CONTROLS.CHECKBOX, SIDECAR_FORM_CONTROLS.SELECT,
+            SIDECAR_FORM_CONTROLS.TEXT, SIDECAR_FORM_CONTROLS.NUMBER];
+        for (const slot of [two.a, two.b]) {
+            testController.reportCondition(`slot ${slot} selected through the toolbar`,
+                await onRegionsTabFor(testController, panel, slot));
+            const region = Object.keys(panel.rulesDoc.preset_sidecars[slot])[0];
+            const entry = panel.rulesDoc.preset_sidecars[slot][region];
+            const at = `[slot ${slot} ${region} · ${entry.substrate}]`;
+            const fields = sidecarFieldsOf(substrateRegistry.get(entry.substrate));
+            await openSidecarJson(testController, region);
+            const derivedWithControl = Object.keys(fields).filter((k) => fields[k].derived
+                && scalar.includes(sidecarFieldRow(region, k, SIDECAR_FORM_LEVELS.PAYLOAD)?.dataset.control));
+            testController.reportCondition(`${at} ⛓ premise: derived fields that draw a control `
+                + `(${derivedWithControl.join(', ')})`, derivedWithControl.length > 0);
+            for (const k of derivedWithControl) {
+                const c = sidecarFieldControl(region, k, SIDECAR_FORM_LEVELS.PAYLOAD);
+                testController.reportCondition(`${at} ⛓⛓ \`${k}\`'s control is DISABLED`, !!c && c.disabled === true);
+                testController.assertEqual(`${at} …its title is the descriptor's description`,
+                    fields[k].description, String(c?.title));
+                testController.reportCondition(`${at} …which names a writer in a code span`,
+                    /`[^`]+`/.test(String(c?.title ?? '')));
+            }
+            const authoredWithControl = Object.keys(fields).filter((k) => !fields[k].derived
+                && scalar.includes(sidecarFieldRow(region, k, SIDECAR_FORM_LEVELS.PAYLOAD)?.dataset.control));
+            testController.reportCondition(`${at} ⛓ non-vacuity: non-derived controls exist`, authoredWithControl.length > 0);
+            testController.reportCondition(`${at} …and every one is ENABLED`, authoredWithControl.every((k) =>
+                sidecarFieldControl(region, k, SIDECAR_FORM_LEVELS.PAYLOAD)?.disabled === false));
+            const text = sidecarBlockFor(region)?.querySelector('.apworld-sidecar-json');
+            testController.reportCondition(`${at} the JSON (the escape hatch) stays editable`,
+                !!text && text.readOnly === false);
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('derived-field test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iv) THE `substrate` PICKER: THE REGISTRY'S PLAYABLE IDS, AND V0'S
+ * SENTENCE AFTER.** On the second substrate slot's first region (read off the
+ * document), the picker's options are every registered id with a
+ * `deserializeWorld`, sorted (the law, from the live registry); its title
+ * carries the label-only clause. Choosing the FIRST slot's substrate (read off
+ * the document) records ONE op; the entry's `substrate` is the new one and its
+ * payload byte-equal; the block's issues then carry V0's SUBSTRATE_MISMATCH
+ * (the replan's ruling: accepted, and reported). One Undo clears it.
+ */
+export async function apworldTheSubstratePickerOffersThePlayableIdsAndNamesTheMismatch(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(() => !!panel._rulesSchema,
+            'the panel loaded rules.schema.json', 8000, 50);
+        const two = twoSubstrateSlots(panel.rulesDoc);
+        testController.reportCondition('⛓ premise: two slots holding different substrates', !!two);
+        if (!two) return testController.getOverallResult();
+        const slot = two.b;
+        const now = two.aSub;
+        testController.reportCondition(`slot ${slot} selected through the toolbar`,
+            await onRegionsTabFor(testController, panel, slot));
+        const region = Object.keys(panel.rulesDoc.preset_sidecars[slot])[0];
+        const at = `[slot ${slot} ${region}: ${two.bSub} → ${now}]`;
+        await openSidecarJson(testController, region);
+        const picker = sidecarFieldControl(region, SUBSTRATE_KEY, SIDECAR_FORM_LEVELS.ENTRY);
+        testController.reportCondition(`${at} the entry's substrate row draws a select`,
+            !!picker && picker.tagName === 'SELECT');
+        if (!picker) return testController.getOverallResult();
+        const offered = [...picker.options].filter((o) => !o.disabled).map((o) => o.textContent);
+        const law = playableIdsFromRegistry();
+        testController.assertEqual(`${at} ⛓⛓⛓ it offers the registry's playable ids (${law.length}), sorted`,
+            JSON.stringify(law), JSON.stringify(offered));
+        testController.assertEqual(`${at} …with the entry's own substrate selected`, two.bSub,
+            String(picker.selectedOptions[0]?.textContent));
+        testController.reportCondition(`${at} its title says it changes the label only`,
+            picker.title.includes(SUBSTRATE_PICKER_CLAUSE));
+        testController.reportCondition(`${at} …beside the Regenerate door`,
+            !!sidecarBlockFor(region)?.querySelector('.apworld-sidecar-regenerate'));
+
+        const docBefore = JSON.stringify(panel.rulesDoc);
+        const payloadBefore = JSON.stringify(panel.rulesDoc.preset_sidecars[slot][region].playable_payload);
+        const opsBefore = panel.session.ops().length;
+        const index = [...picker.options].findIndex((o) => !o.disabled && o.textContent === now);
+        testController.reportCondition(`${at} ⛓ premise: \`${now}\` is one of the options`, index >= 0);
+        picker.value = picker.options[index]?.value;
+        picker.dispatchEvent(new Event('change', { bubbles: true }));
+        const landed = await testController.pollForCondition(
+            () => panel.session.ops().length === opsBefore + 1, `${at} one op`, 8000, 50);
+        testController.reportCondition(`${at} ⛓ ONE op was recorded — the changed substrate was ACCEPTED`, landed);
+        if (!landed) return testController.getOverallResult();
+        const after = panel.rulesDoc.preset_sidecars[slot][region];
+        testController.assertEqual(`${at} the document's entry now says \`${now}\``, now, String(after.substrate));
+        testController.assertEqual(`${at} …and its payload is untouched`, payloadBefore,
+            JSON.stringify(after.playable_payload));
+        const mismatch = sidecarIssueRows(region)
+            .filter((r) => r.dataset.kind === SIDECAR_ISSUE_KINDS.SUBSTRATE_MISMATCH);
+        testController.assertEqual(`${at} ⛓⛓ the block's issues carry V0's mismatch`, '1', String(mismatch.length));
+        testController.reportCondition(`${at} …naming \`${two.bSub}\` as the keys the payload has`,
+            String(mismatch[0]?.textContent ?? '').includes(`the keys of \`${two.bSub}\``));
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual(`${at} one Undo restores the document`, docBefore, JSON.stringify(panel.rulesDoc));
+        testController.assertEqual(`${at} …and the mismatch is gone`, '0', String(sidecarIssueRows(region)
+            .filter((r) => r.dataset.kind === SIDECAR_ISSUE_KINDS.SUBSTRATE_MISMATCH).length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('substrate-picker test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(v) THE DOCUMENT ROW'S `preset_sidecars` DOOR LANDS ON THE SIDECARS TAB**
+ * (the replan's ruling 6). The Document tab, the row's own button pressed: the
+ * hub's active tab is `SIDECARS_TAB_ID` (the tab's registered id, imported) and
+ * the tab's per-region summary is drawn. Premise: the press starts from the
+ * Document tab.
+ */
+export async function apworldThePresetSidecarsDoorLandsOnTheSidecarsTab(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(() => !!panel._rulesSchema,
+            'the panel loaded rules.schema.json', 8000, 50);
+        selectTab(panel, DOCUMENT_TAB_ID);
+        const button = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${
+                SIDECARS_TAB_SUMMARY_KEY}"] .apworld-doc-editor-open`),
+            'the preset_sidecars row\'s door', 8000, 50);
+        testController.reportCondition('the Document row draws its door', !!button);
+        testController.assertEqual('⛓ premise: the press starts on the Document tab', DOCUMENT_TAB_ID,
+            String(panel.activeTab));
+        if (!button) return testController.getOverallResult();
+        button.click();
+        testController.assertEqual('⛓⛓ the door lands on the Sidecars tab', SIDECARS_TAB_ID,
+            String(panel.activeTab));
+        const summary = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-summary`),
+            'the Sidecars tab\'s per-region summary', 8000, 50);
+        testController.reportCondition('…and the Sidecars tab\'s per-region list line is drawn', !!summary);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecars-door test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-a-sidecar-fields-view-lists-the-declaration',
+    name: 'APWorld hub: a sidecar block\'s fields view lists exactly the schema\'s entry fields and the substrate\'s declaration',
+    description: 'PRESET SIDECARS D1. Both substrates of the four-player fixture: opening a block '
+               + 'draws one row per entry-level schema property (the payload excepted) and per field '
+               + 'of the merged declaration, in order — absent fields included; derived rows carry '
+               + 'the badge titled with the writer; the note under the JSON names the derived fields '
+               + 'carried. Mutant C (rows from the payload\'s keys) reds it.',
+    testFunction: apworldASidecarFieldsViewListsTheDeclaration,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-sidecar-field-change-is-one-whole-entry-op',
+    name: 'APWorld hub: flipping a sidecar field\'s checkbox records one whole-entry set-region-sidecar',
+    description: 'PRESET SIDECARS D1. The first non-derived boolean the declaration offers, on both '
+               + 'substrate slots: one op; the entry differs from BEFORE at exactly that path (deep '
+               + 'diff), the rest of the document byte-equal; an unchanged value records no op; one '
+               + 'Undo restores. Mutant A (the control writes the payload only) reds it.',
+    testFunction: apworldASidecarFieldChangeIsOneWholeEntryOp,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-derived-sidecar-field-is-disabled-and-names-its-writer',
+    name: 'APWorld hub: a derived sidecar field\'s control is disabled and its title names the writer',
+    description: 'PRESET SIDECARS D1. Every declared-derived scalar row on both substrate slots: its '
+               + 'control is disabled and titled with the descriptor\'s description (a code span); '
+               + 'every non-derived control is enabled; the JSON stays editable. Mutant B (derived '
+               + 'controls enabled) reds it.',
+    testFunction: apworldADerivedSidecarFieldIsDisabledAndNamesItsWriter,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-the-substrate-picker-offers-the-playable-ids-and-names-the-mismatch',
+    name: 'APWorld hub: the substrate picker offers the registry\'s playable ids, and a change is reported as V0\'s mismatch',
+    description: 'PRESET SIDECARS D1. On the second substrate slot, the picker lists every registered '
+               + 'id with deserializeWorld (sorted, from the live registry) and says it changes the '
+               + 'label only; choosing the first slot\'s substrate records one op, leaves the payload '
+               + 'byte-equal, and the block lists SUBSTRATE_MISMATCH; Undo clears it. Mutant D (a hand '
+               + 'list) reds it only where the list differs.',
+    testFunction: apworldTheSubstratePickerOffersThePlayableIdsAndNamesTheMismatch,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-the-preset-sidecars-door-lands-on-the-sidecars-tab',
+    name: 'APWorld hub: the Document row\'s preset_sidecars door lands on the Sidecars tab',
+    description: 'PRESET SIDECARS D1 (the replan\'s ruling 6). From the Document tab, the row\'s own '
+               + 'button: the active tab is SIDECARS_TAB_ID and its per-region list line is drawn. '
+               + 'Mutant E (the door\'s target back to Regions) reds it.',
+    testFunction: apworldThePresetSidecarsDoorLandsOnTheSidecarsTab,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
