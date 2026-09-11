@@ -128,6 +128,14 @@ import { DEFAULT_REGION_SIZE } from '../../procgenPipeline/procgenPipelineEngine
  * rather than with a sentence typed here.
  */
 import { JSON_BLOCK_INDENT, inspectRegionRoom } from '../../apworldEditor/regionRoundTrip.js';
+/**
+ * ⛓ V0 — the validity report's kinds, so a row asserts the KIND the product
+ * stamped on its sentence rather than the sentence's wording; and the merged
+ * declaration, so the field a row drops is picked off the substrate's own
+ * declaration rather than typed.
+ */
+import { SIDECAR_ISSUE_KINDS } from '../../apworldEditor/sidecarIssues.js';
+import { sidecarFieldsOf } from '../../procgenCore/sidecarFields.js';
 
 const PANEL_ID = 'apworldEditorPanel';
 const PANEL_SELECTOR = '.apworld-editor-panel';
@@ -6922,6 +6930,288 @@ registerTest({
                + 'across Undo (which never goes through _applyOp) the same. Mutant E: the '
                + 'verdict read regardless of the record it was asked about.',
     testFunction: apworldEditVerdictFollowsARawSidecarSave,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ PRESET SIDECARS V0 — THE SIDECAR VALIDITY REPORT, THROUGH THE PRODUCT
+ *
+ * ⚖ user, 2026-09-10: *"If the user changes a substrate, or makes some other
+ * breaking change, then it's their responsibility to find a way to make the
+ * data valid again before they save the JSON data. If we don't already have a
+ * way to report what data is invalid, then I want to add one."* — so the save
+ * is NOT refused; the bar counts, the block says what, and Undo takes it back.
+ * Every slot is chosen through the toolbar's selector, every save is the
+ * block's own Save JSON, and the substrates and the field are read off the
+ * document and the registry, never typed.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ The bar's two readings: its own label's numbers, and the counts it stamps. */
+function barReading(panel) {
+    const bar = panel.validationBar;
+    const text = bar.textContent;
+    const n = (re) => Number((text.match(re) ?? [0, 0])[1]);
+    return {
+        labelTotal: /No issues/.test(text) ? 0 : n(/(\d+) errors?/) + n(/(\d+) warnings?/),
+        issues: Number(bar.dataset.issues ?? NaN),
+        sidecar: Number(bar.dataset.sidecarIssues ?? NaN),
+    };
+}
+
+/** ⛓ The two slots of the four-player fixture that hold DIFFERENT substrates — read off it. */
+function twoSubstrateSlots(doc) {
+    const slots = Object.keys(doc?.preset_sidecars ?? {});
+    const subOf = (s) => Object.values(doc.preset_sidecars[s])[0]?.substrate;
+    const a = slots[0];
+    const b = slots.find((s) => subOf(s) !== subOf(a));
+    return b ? { a, b, aSub: subOf(a), bSub: subOf(b) } : null;
+}
+
+/** ⛓ The sentences one region's block lists — re-queried. */
+const sidecarIssueRows = (regionName) => [...(sidecarBlockFor(regionName)
+    ?.querySelectorAll('.apworld-sidecar-issue') ?? [])];
+
+/**
+ * ⛓ THE LAW for "a required field" (the vitest rows' own): the first REQUIRED
+ * substrate-owned field of the entry's declaration whose removal the
+ * substrate's OWN `deserializeWorld` survives — so dropping it is exactly one
+ * fact. Asked of the declaration and the deserializer, never of the check under
+ * test.
+ */
+function droppableRequiredField(entry) {
+    const reg = substrateRegistry.get(entry?.substrate);
+    if (!reg) return null;
+    return Object.entries(sidecarFieldsOf(reg) ?? {})
+        .filter(([, d]) => d.required && d.owner === 'substrate').map(([k]) => k)
+        .find((k) => {
+            const p = { ...entry.playable_payload };
+            delete p[k];
+            try { reg.deserializeWorld(p); return true; } catch { return false; }
+        }) ?? null;
+}
+
+/**
+ * ⛓⛓⛓ **(i) A CLEAN DOCUMENT READS ZERO, ON BOTH SUBSTRATES.** The two slots
+ * of the four-player fixture that hold different substrates, each selected
+ * through the toolbar: the bar stamps 0 sidecar issues, and no block on the
+ * Regions tab carries a sentence.
+ */
+export async function apworldSidecarIssuesReadZeroOnACleanDocument(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const two = twoSubstrateSlots(panel.rulesDoc);
+        testController.reportCondition('⛓ premise: two slots holding different substrates', !!two);
+        if (!two) return testController.getOverallResult();
+        for (const slot of [two.a, two.b]) {
+            testController.reportCondition(`slot ${slot} selected through the toolbar`,
+                await onRegionsTabFor(testController, panel, slot));
+            const blocks = await testController.pollForValue(
+                () => (regionSidecarBlocks().length > 0
+                    && regionSidecarBlocks().every((b) => b.dataset.player === slot)
+                    ? regionSidecarBlocks() : null),
+                `slot ${slot}'s sidecar blocks`, 8000, 50);
+            testController.reportCondition(`slot ${slot}: its sidecar blocks are drawn`, !!blocks);
+            testController.assertEqual(`slot ${slot}: the bar stamps 0 sidecar issues`, '0',
+                String(barReading(panel).sidecar));
+            testController.assertEqual(`slot ${slot}: no block carries a sentence`, '0',
+                String(document.querySelectorAll(`${PANEL_SELECTOR} .apworld-sidecar-issue`).length));
+            testController.reportCondition(`slot ${slot}: every block stamps 0`,
+                regionSidecarBlocks().every((b) => b.dataset.sidecarIssues === '0'));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecar-issues-zero test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(ii) A RAW SAVE THAT DROPS A REQUIRED FIELD IS REPORTED, NOT
+ * REFUSED.** On the fixture's first slot, its first sidecar region: the field
+ * picked by the law above; the entry typed without it into the block and the
+ * product's Save pressed. Then: ONE op recorded (asserted before anything is
+ * read — 1301); the BAR's count rose by exactly one (its label AND its stamp);
+ * the BLOCK lists the sentence naming that field, of kind MISSING_REQUIRED; the
+ * save's answer ends with the count; the Sidecars list's row shows the badge;
+ * the bar's row, pressed, lands on the region; and one Undo puts every reading
+ * back. ⛔ The bar and the block are separate conditions ON PURPOSE: they are
+ * two readers of one function, and mutant B (the bar not consulting it) must
+ * red the one and leave the other green.
+ */
+export async function apworldARawSaveDroppingARequiredFieldIsReportedNotRefused(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const two = twoSubstrateSlots(panel.rulesDoc);
+        if (!two) { testController.reportCondition('⛓ premise: two substrates', false); return testController.getOverallResult(); }
+        const slot = two.a;
+        testController.reportCondition(`slot ${slot} selected through the toolbar`,
+            await onRegionsTabFor(testController, panel, slot));
+        const region = Object.keys(panel.rulesDoc.preset_sidecars[slot])[0];
+        const entry = panel.rulesDoc.preset_sidecars[slot][region];
+        const field = droppableRequiredField(entry);
+        testController.reportCondition(`⛓ premise: a required field of \`${entry.substrate}\` the `
+            + `deserializer survives losing (${field})`, !!field);
+        if (!field) return testController.getOverallResult();
+        const text = await openSidecarJson(testController, region);
+        testController.reportCondition('the block\'s JSON is open', !!text);
+        if (!text) return testController.getOverallResult();
+
+        const before = barReading(panel);
+        const beforeBytes = JSON.stringify(panel.rulesDoc);
+        const opsBefore = panel.session.ops().length;
+        const typed = JSON.parse(JSON.stringify(entry));
+        delete typed.playable_payload[field];
+        testController.reportCondition('Save JSON pressed', typeAndSaveSidecar(region, typed));
+
+        const recorded = await testController.pollForValue(
+            () => (panel.session.ops().length === opsBefore + 1 ? panel.session.ops().at(-1) : null),
+            'the save recorded one op', 8000, 50);
+        testController.reportCondition('⛓ ONE op was recorded — the save was NOT refused', !!recorded);
+        if (!recorded) return testController.getOverallResult();
+        testController.assertEqual('…a set-region-sidecar', 'set-region-sidecar', String(recorded.op));
+
+        const after = barReading(panel);
+        testController.assertEqual('⛓⛓ BAR: its label\'s count rose by exactly one',
+            String(before.labelTotal + 1), String(after.labelTotal));
+        testController.assertEqual('⛓⛓ BAR: its sidecar count rose by exactly one',
+            String(before.sidecar + 1), String(after.sidecar));
+
+        const rows = sidecarIssueRows(region);
+        testController.assertEqual('⛓⛓ BLOCK: it lists exactly one sentence', '1', String(rows.length));
+        testController.assertEqual('BLOCK: …of kind MISSING_REQUIRED',
+            SIDECAR_ISSUE_KINDS.MISSING_REQUIRED, String(rows[0]?.dataset.kind));
+        testController.reportCondition(`BLOCK: …naming \`${field}\``,
+            String(rows[0]?.textContent ?? '').includes(`\`${field}\``));
+        testController.reportCondition('the answer under the block ends with the count',
+            /— 1 sidecar issue, see the block$/.test(String(sidecarMessageFor(region)?.textContent ?? '')));
+
+        // the Sidecars tab's expanded list shows the badge on this region's row
+        panel._selectTab('sidecars');
+        if (document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-expand`)?.dataset.open !== 'true') {
+            document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-expand`)?.click();
+        }
+        const badge = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-region-row[data-region-name="${
+                CSS.escape(region)}"] .apworld-sidecars-issue-badge`),
+            'the Sidecars list row\'s issue badge', 8000, 50);
+        testController.assertEqual('SIDECARS LIST: the row\'s badge counts 1', '1', String(badge?.dataset.count));
+
+        // the bar's own row, pressed, lands on the region
+        if (!panel.issuesExpanded) panel.validationBar.firstChild?.click();
+        const barRow = document.querySelector(`${PANEL_SELECTOR} .apworld-validation-issue[data-source="sidecar"]`);
+        testController.reportCondition('BAR: the expanded list carries the sidecar row', !!barRow);
+        barRow?.click();
+        testController.assertEqual('BAR: pressing it selects the region', region, String(panel._selectedRegion));
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('⛓ one Undo restores the document', beforeBytes,
+            JSON.stringify(panel.rulesDoc));
+        testController.assertEqual('…and the bar reads what it read before', JSON.stringify(before),
+            JSON.stringify(barReading(panel)));
+        await onRegionsTabFor(testController, panel, slot);
+        testController.assertEqual('…and the block lists nothing', '0', String(sidecarIssueRows(region).length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecar-issue-reported test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iii) A RAW SAVE THAT CHANGES `substrate` NAMES THE MISMATCH** (the
+ * replan's ruling: the save accepts a changed substrate; the report names it).
+ * Each of the two slots' first region takes the OTHER slot's substrate — both
+ * read off the document — through the block's Save: the save lands (one op),
+ * the block's SUBSTRATE_MISMATCH sentence names the substrate the payload
+ * really belongs to and the one it now claims, and one Undo takes it away.
+ */
+export async function apworldARawSubstrateChangeNamesTheMismatch(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const two = twoSubstrateSlots(panel.rulesDoc);
+        testController.reportCondition('⛓ premise: two slots holding different substrates', !!two);
+        if (!two) return testController.getOverallResult();
+        for (const [slot, was, now] of [[two.a, two.aSub, two.bSub], [two.b, two.bSub, two.aSub]]) {
+            const at = `[slot ${slot}: ${was} → ${now}]`;
+            testController.reportCondition(`${at} slot selected through the toolbar`,
+                await onRegionsTabFor(testController, panel, slot));
+            const region = Object.keys(panel.rulesDoc.preset_sidecars[slot])[0];
+            const text = await openSidecarJson(testController, region);
+            testController.reportCondition(`${at} the block's JSON is open`, !!text);
+            if (!text) continue;
+            const beforeBytes = JSON.stringify(panel.rulesDoc);
+            const opsBefore = panel.session.ops().length;
+            const typed = { ...JSON.parse(JSON.stringify(panel.rulesDoc.preset_sidecars[slot][region])), substrate: now };
+            testController.reportCondition(`${at} Save JSON pressed`, typeAndSaveSidecar(region, typed));
+            const landed = await testController.pollForCondition(
+                () => panel.session.ops().length === opsBefore + 1, `${at} one op`, 8000, 50);
+            testController.reportCondition(`${at} ⛓ ONE op was recorded — the changed substrate was ACCEPTED`,
+                landed);
+            if (!landed) continue;
+            testController.assertEqual(`${at} …and the document holds it`, now,
+                String(panel.rulesDoc.preset_sidecars[slot][region].substrate));
+            const mismatch = sidecarIssueRows(region)
+                .filter((r) => r.dataset.kind === SIDECAR_ISSUE_KINDS.SUBSTRATE_MISMATCH);
+            testController.assertEqual(`${at} ⛓⛓ the block carries ONE mismatch sentence`, '1',
+                String(mismatch.length));
+            const said = String(mismatch[0]?.textContent ?? '');
+            testController.reportCondition(`${at} …naming \`${was}\` as the keys the payload has`,
+                said.includes(`the keys of \`${was}\``));
+            testController.reportCondition(`${at} …and \`${now}\` as what it is not`,
+                said.includes(`not \`${now}\``));
+            testController.reportCondition(`${at} the bar counts it`, barReading(panel).sidecar >= 1);
+            document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+            testController.assertEqual(`${at} one Undo restores the document`, beforeBytes,
+                JSON.stringify(panel.rulesDoc));
+            testController.assertEqual(`${at} …and the bar's sidecar count is 0 again`, '0',
+                String(barReading(panel).sidecar));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('substrate-mismatch test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-sidecar-issues-read-zero-on-a-clean-document',
+    name: 'APWorld hub: the sidecar validity report reads zero on a clean document, on both substrates',
+    description: 'PRESET SIDECARS V0. The four-player fixture\'s two slots holding different '
+               + 'substrates, each selected through the toolbar: the bar stamps 0 sidecar issues and '
+               + 'no sidecar block carries a sentence.',
+    testFunction: apworldSidecarIssuesReadZeroOnACleanDocument,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-raw-save-dropping-a-required-field-is-reported-not-refused',
+    name: 'APWorld hub: a raw sidecar save that drops a required field lands, and the bar and the block report it',
+    description: 'PRESET SIDECARS V0 (⚖ the reader owns the repair). A required field picked off '
+               + 'the declaration (the first the deserializer survives losing) dropped through the '
+               + 'block\'s Save: one op recorded (NOT refused); the bar\'s count rises by exactly one; '
+               + 'the block lists the MISSING_REQUIRED sentence naming the field; the answer ends '
+               + 'with the count; the Sidecars list row shows the badge; the bar\'s row lands on '
+               + 'the region; Undo puts it all back. Mutants: the required check dropped (A); the '
+               + 'bar not consulting the report (B: the bar red, the block green).',
+    testFunction: apworldARawSaveDroppingARequiredFieldIsReportedNotRefused,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-raw-substrate-change-names-the-mismatch',
+    name: 'APWorld hub: a raw sidecar save that changes substrate is accepted, and the block names the mismatch',
+    description: 'PRESET SIDECARS V0 (the replan: the raw save accepts a changed substrate; the '
+               + 'report names it). Each of two slots\' first region takes the other slot\'s '
+               + 'substrate (both read off the document): one op lands, the block\'s '
+               + 'SUBSTRATE_MISMATCH sentence names the substrate the payload has the keys of and '
+               + 'the one it claims, Undo takes it away. Mutant D (the rule inverted) reds it.',
+    testFunction: apworldARawSubstrateChangeNamesTheMismatch,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

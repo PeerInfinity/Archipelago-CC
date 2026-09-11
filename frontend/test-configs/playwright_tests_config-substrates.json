@@ -699,6 +699,24 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "PRESET SIDECARS S1. Region + tile picked off Edit \u25b8's own inspection: a one-tile raw edit the round trip does not reproduce, saved through Save JSON; Edit \u25b8 pressed opens no room and its title is the inspection's sentence for the document NOW; the original saved back makes it pressable again; the same across Undo (which never goes through _applyOp). Mutant E (the verdict read regardless of its record) reds it."
+        },
+        {
+            "id": "apworld-sidecar-issues-read-zero-on-a-clean-document",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS V0. The four-player fixture's two slots holding different substrates, each selected through the toolbar: the bar stamps 0 sidecar issues and no sidecar block carries a sentence."
+        },
+        {
+            "id": "apworld-a-raw-save-dropping-a-required-field-is-reported-not-refused",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS V0. A required field (picked off the declaration: the first the deserializer survives losing) dropped through the block's Save: one op (not refused), the bar's count +1, the block's MISSING_REQUIRED sentence names the field, the answer ends with the count, the Sidecars badge, the bar row lands on the region, Undo restores. Mutants A (required check dropped) and B (bar not consulting the report: bar red, block green)."
+        },
+        {
+            "id": "apworld-a-raw-substrate-change-names-the-mismatch",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS V0. Each of two slots' first region takes the other slot's substrate (read off the document): one op lands, the block's SUBSTRATE_MISMATCH sentence names the substrate whose keys the payload has and the one it claims; Undo takes it away. Mutant D (the rule inverted) reds it."
         }
     ]
 }
