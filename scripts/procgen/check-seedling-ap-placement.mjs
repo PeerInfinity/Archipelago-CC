@@ -76,7 +76,9 @@
  * `--win` runs EVERY arm — H7's ABSENT/PRESENT roster pair on the control
  * build, M1's on p4d, and P1-e's on the real app — through
  * `seedling-level-set-win.py` on real-GPU Windows Chrome (~24 fps) instead of
- * WSL's SwiftShader (~0.45 fps). (The roster arms moved here at slice P2;
+ * WSL's SwiftShader (~0.45 fps — ⛓ H1, 2026-09-11: a LOST WebGPU device, not
+ * the raster cost; `HEADLESS_WEBGPU_ARGS` runs headless at 25–28 frames/s and
+ * the headless deadline was re-derived to match). (The roster arms moved here at slice P2;
  * before that they were the one batch still on the slow channel.) `seedling-bot.md` says *"always pass
  * `--win`"*; M1 did not, and read a three-frame observation window as a dead
  * world. `--win-port=` names the repo-root static server Windows can reach —
@@ -173,7 +175,9 @@ if (SUBJECTS.length === 0) {
 
 /**
  * ⛔⛔ **A WALL-CLOCK SETTLE IS A FRAME BUDGET IN DISGUISE, AND THIS PAGE RUNS
- * AT ~0.45 FRAMES PER SECOND.** M1 reported the two runtime rows as OWED on the
+ * AT ~0.45 FRAMES PER SECOND.** (⛓ H1, 2026-09-11: it no longer does — that rate
+ * was a lost WebGPU device, see `headlessChromium.js`; the lesson below, a
+ * wall-clock settle is a frame budget, stands at any rate.) M1 reported the two runtime rows as OWED on the
  * strength of a ten-second probe that saw `botStatus.tick` stay 0, `finished`
  * stay false and `dead_frames` move by THREE, and read that as *"the world does
  * not turn under this instrument's tape"*. ⛓ M1b measured the same three arms
@@ -1319,7 +1323,9 @@ if (!existsSync(join(M1_ARTIFACT, 'game.html'))) {
  *
  * ⛔ `--win` ONLY. The app page mounts the wasm game in an iframe and then
  * waits for a world to build; on SwiftShader that is ~0.45 fps and the whole
- * sequence is a frame budget, not a wall clock (trap 970/971).
+ * sequence is a frame budget, not a wall clock (trap 970/971). (⛓ H1: the
+ * ~0.45 fps was a lost WebGPU device; whether P1-e gets a headless arm is H2,
+ * after the user's ⚖.)
  */
 const PANEL_ARMS_ENABLED = WIN && !process.argv.includes('--no-panel');
 

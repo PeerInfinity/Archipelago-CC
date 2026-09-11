@@ -56,9 +56,10 @@
  *     it stays reachable here as `SEEDLING_PAGE=seedling_bot_ap` on any box
  *     that still has the directory on disk.
  *
- * Runs headless: WebGPU comes up on swiftshader with the same flags as
- * check-seedling-wasm-bridge.mjs. The page needs a real user gesture to
- * start, which a Playwright click supplies.
+ * Runs headless: WebGPU comes up on swiftshader with `HEADLESS_WEBGPU_ARGS`
+ * (`headlessChromium.js`, the one spelling every headless Seedling launch
+ * shares). The page needs a real user gesture to start, which a Playwright
+ * click supplies.
  *
  * ⚠ TWO THINGS THIS IS SLOW AND FIDDLY ABOUT, both measured, not guessed:
  *
@@ -72,6 +73,12 @@
  *    runtime but `build_wasm_avm2.sh` does not expose it — building a
  *    graphics-less variant is the obvious speed-up if this becomes
  *    painful.)
+ *    ⛓⛓ H1 (2026-09-11): NOT software WebGPU — a LOST device. SwiftShader
+ *    lost the WebGPU device at the first present and the pinned runtime
+ *    parked every other frame for ~4.4 s; the Vulkan pair in
+ *    `headlessChromium.js` keeps it alive, and headless now replays a
+ *    1,556-tick map-walk tape in 110 s (`--win`: 168 s). The deadlines stay
+ *    SCALED from the tape length, re-derived at H1 — see `SECONDS_PER_FRAME`.
  *
  * 2. **Each tape gets a FRESH PAGE.** The bot's `botReset` forgets the
  *    tape, but it cannot rewind the GAME — the player stays wherever the
@@ -309,7 +316,10 @@ const ONLY = new Set(
  * `--win` drives real-GPU Windows Chrome from WSL instead of the local
  * SwiftShader Chromium. MEASURED 2026-07-30 on this box: 22.1 frames/sec
  * (Intel gen-9) versus ~0.5 on WSL software rendering — a ~44x speedup,
- * which turns a 20-minute fixture sweep into well under a minute. The
+ * which turns a 20-minute fixture sweep into well under a minute. (⛓ H1: the
+ * ~0.5 was a lost WebGPU device; with `HEADLESS_WEBGPU_ARGS` the headless
+ * channel is 25–28 frames/s and no longer the slow one — `--win` stays the
+ * default pending the user's ⚖ on whether headless may discharge its rows.) The
  * physics is identical either way (a deterministic tick loop does not care
  * what draws it); this only buys time. Recipe and the interop rules:
  * SWFRecomp-CC `tools/divergence/perf/WINDOWS_PLAYWRIGHT_FROM_WSL.md`.

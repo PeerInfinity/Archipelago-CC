@@ -18,7 +18,9 @@
  * already sitting at. ⛓ Slice 1 proved the reach: a SHORT generated tape is
  * inside a headless swiftshader budget (154 ticks in 719 s, with a 224-cell
  * census competing for the machine), which is the whole reason the subject
- * below is chosen for its TICK COUNT and not for its prettiness.
+ * below is chosen for its TICK COUNT and not for its prettiness. (⛓ H1,
+ * 2026-09-11: that budget was a LOST WebGPU device, not rasterising; with
+ * `HEADLESS_WEBGPU_ARGS` this whole gate — a 259-tick ship — runs in 22.5 s.)
  *
  * ⛔ **WHAT THIS ARM CAN SEE.** `?source=generate` ships the room the page
  * generated as a one-room level SET plus the certification tape that proved it
@@ -29,11 +31,15 @@
  *
  * ⛔ **AND WHAT IT CANNOT.** It is blind to any defect the two runtimes SHARE
  * (trap 389) — the instrument that compares the game against RECORDED oracles
- * is `check-seedling-bot-differential.mjs`. And swiftshader emits a few
+ * is `check-seedling-bot-differential.mjs`. And swiftshader emitted a few
  * hundred `A valid external Instance reference no longer exists` page errors
  * during any headless ship; slice 1 measured a DENSE control emitting the same
  * number, so they are the renderer's and this row does not assert zero of
- * them (the Windows row does, and passes).
+ * them (the Windows row does, and passes). ⛔ Corrected at H1 (2026-09-11):
+ * that text IS the WebGPU device-lost message — one unhandled work-done
+ * rejection per frame — and with `HEADLESS_WEBGPU_ARGS` the count is 0. The
+ * row still prints rather than asserts it (never key a check on the loss's
+ * message text, which differs across Chromium versions).
  *
  * ── ⛓⛓ THE SUBJECT IS MEASURED, NOT CHOSEN ───────────────────────────
  *
@@ -43,7 +49,9 @@
  * and 1 flag** (30 candidates; the runner-up is 273). So the level that ships
  * has the element in it AND a lock-and-key graph over the area it declared,
  * which is the whole of what slice 3 built — and it is short enough that
- * swiftshader's ~4.7 s/tick is twenty minutes rather than an afternoon. ⛔ The two preconditions are CLAIMS below and
+ * swiftshader's ~4.7 s/tick is twenty minutes rather than an afternoon
+ * (⛓ H1: ~4.7 s/tick was the lost-device park; the whole 259-tick gate now
+ * runs in 22.5 s). ⛔ The two preconditions are CLAIMS below and
  * not assumptions: a row that shipped a room whose element REFUSED would pass
  * while witnessing nothing (vacuity at the SUBJECT, slice 1 §9.6's lesson).
  *
@@ -315,8 +323,10 @@ if (wasm) {
         'the game ran the SAME number of ticks the certification produced',
         `game ${wasm.status?.tick} vs certification ${gen.ticks}`);
 }
-/** ⛓ NOT a claim — swiftshader's own noise (slice 1 measured a dense control
- *  emitting the same count). Printed so a reader is not surprised by it. */
+/** ⛓ NOT a claim — printed so a reader is not surprised by it. ⛔ H1: this
+ *  was read as swiftshader's own noise (slice 1 measured a dense control
+ *  emitting the same count); it is the device-lost message, and 0 under
+ *  `HEADLESS_WEBGPU_ARGS`. A non-zero count here means the device was lost. */
 say(`\n  [headless] ${pageErrors.length} page error(s) `
     + `— e.g. ${JSON.stringify(pageErrors[0] ?? 'none')}`);
 

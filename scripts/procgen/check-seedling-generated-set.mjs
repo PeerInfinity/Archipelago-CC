@@ -52,6 +52,10 @@
  * ⚠ REAL-GPU WINDOWS CHROME ONLY. WSL's own chromium is SwiftShader at ~0.5 fps
  * and anything that waits for a world to be built becomes a race against machine
  * load rather than a fact.
+ * ⛓ H1 (2026-09-11): that ~0.5 fps was a LOST WebGPU device, not SwiftShader's
+ * raster cost — `HEADLESS_WEBGPU_ARGS` (`headlessChromium.js`) runs headless at
+ * 25–28 frames/s. This row stays Windows-only until the user rules on a
+ * headless arm (H2).
  *
  * Prerequisites: a dev server on :8000, and `--seeds` reproducible on a QUIET
  * box — the generator is not deterministic under load (procgenOracle:503).

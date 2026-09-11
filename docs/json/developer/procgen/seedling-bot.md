@@ -987,6 +987,38 @@ notes from using it here:
 Each replay prints its WebGPU adapter, so a run that silently fell back to
 software rendering is visible rather than just mysteriously slow.
 
+⛓⛓ **H1 (2026-09-11): the ~0.5 frames/sec above was a LOST WEBGPU DEVICE, not
+SwiftShader's raster cost.** With `--use-angle=swiftshader` alone, the headless
+compositor runs on ANGLE-SwiftShader GL, which has no shared-image backing for
+the WebGPU swapchain, so Chromium loses the device at the page's first canvas
+present. The pinned Seedling runtime then parks every other frame for
+1000 × `emscripten_sleep(1)` ≈ 4.4 s, waiting for a work-done callback that never
+comes (root-caused by SWFRecomp-CC's `swfrecomp-cc-d8`; the runtime itself is
+fixed at SWFRecomp-CC `b0a6a487b`, not yet in a seedling-wasm build here). Two
+more flags keep the device alive: `--enable-features=Vulkan
+--use-vulkan=swiftshader`. They live in ONE place,
+`scripts/procgen/headlessChromium.js` (`HEADLESS_WEBGPU_ARGS`), which every
+headless Seedling launch imports; its docblock says what each flag is for and
+why the features must be ONE `--enable-features=` switch (Chromium keeps only
+the last, and a second one on the same line was deleting Vulkan). Measured on
+this box, pinned p4d, Chromium 1194:
+
+| headless flags | device | rate |
+|---|---|---|
+| the old five | lost at submit #2 | 0.40 frames/s |
+| `HEADLESS_WEBGPU_ARGS` | alive, 0 pageerrors | 25–28 frames/s on the boot screen; a whole 1,556-tick map-walk tape (11 loads) in 110 s, the L40 tape `r5-l40-join` in 121 s — both FASTER than its last `--win` run (168 s / 164 s) |
+
+⚠ The canvas stays BLACK headless on the pinned builds (a 283-layer bitmap
+array is over SwiftShader's 256-layer limit); no gate reads the wasm canvas's
+pixels, so the tick rate is what the flags buy. And a heavy room's LOAD is one
+frame of CPU work, 10–14 s headless (L12, L40) — the differential's deadline
+carries a per-load allowance for it.
+
+⚖ **`--win` STAYS THE DEFAULT** until the user rules whether a headless tier may
+discharge the `--win` rows; H1's as-built
+(`NewDocs/plans/seedling-headless-webgpu-plan.md` §7) records whether the
+headless full tier reproduces the Windows one.
+
 ⚠ **And it writes a LIVE PROGRESS SIDECAR**, `C:\playwright\progress-<tape>.json`,
 rewritten every second with the whole of `botStatus`. `execFileSync` with a
 pipe shows nothing until the process exits, so on a 14,963-tick tape "still
@@ -2508,8 +2540,15 @@ synthesized). Settled in passing: the statue's `setHitbox` comes from
   reads 0% non-black under headless WebGPU; it is the readback, not the
   game.
 - **`A valid external Instance reference no longer exists`**, repeated every
-  frame, is just an unconfigured `BridgeGeneric`. It appears in the teleport
-  build too and is unrelated to whether the game is ticking.
+  frame, ~~is just an unconfigured `BridgeGeneric`. It appears in the teleport
+  build too and is unrelated to whether the game is ticking.~~ ⛔ **Corrected
+  2026-09-11 (H1): it IS the WebGPU device-lost message** — Chromium 1194's
+  text for the loss (Chromium 145 says "Device was destroyed."), one unhandled
+  work-done rejection per frame. It appears in every build because every build
+  lost its device the same way, and it is exactly WHY headless ran at ~0.5 fps
+  (see *Always pass `--win`*). With `HEADLESS_WEBGPU_ARGS` it does not appear at
+  all. ⛔ Never key a check on that text — detect a live device by behaviour
+  (`__swfPerf`'s frame wall, or `device.lost` still pending).
 - **A fixed replay timeout looks exactly like a dead bot.** At ~0.5 fps the
   `blackCover` fade alone outlasts a 60s deadline, which is how the first
   run presented and where most of the diagnosis time went. Deadlines scale
@@ -4806,6 +4845,20 @@ worth naming because they are the shapes a slow-oracle failure takes:
 Read the harness's own measured constants before inferring a mechanism from
 its symptoms. Both readings above were available to check in the same file
 that produced the symptom.
+
+⛓⛓ **H1 (2026-09-11): the ~0.5 ticks/s headless was a lost WebGPU device, and
+the headless channel is now fast.** The compositor on ANGLE-SwiftShader GL had
+no shared-image backing for the WebGPU swapchain, so the device died at the
+first present and the pinned runtime parked every other frame for ~4.4 s.
+`HEADLESS_WEBGPU_ARGS` (`scripts/procgen/headlessChromium.js`) adds
+`--enable-features=Vulkan --use-vulkan=swiftshader` and the device lives:
+25–28 frames/s on the boot screen, a 1,556-tick map-walk tape in 110 s and the
+L40 tape in 121 s headless — against 168 s and 164 s on `--win`. The "30
+identical `[pageerror]` lines" above were that device loss. The deadline
+constants were re-derived from those measurements (`SECONDS_PER_FRAME` 2.5 →
+0.31 s, plus a per-load allowance for a heavy room's 10–14 s load frame; see
+the file). ⚖ `--win` stays the default channel pending the user's ruling on
+whether a headless tier may discharge the `--win` rows.
 
 ## R5 slice 20 — the wand room is a trap, and an alive ice turret was never a wall
 
@@ -11387,6 +11440,14 @@ not a reason to widen this.
 ⚠ The split is not tidiness. WSL's own chromium is SwiftShader at ~0.5 ticks/s,
 so a 255-tick solve is eight minutes of software rasterising and any deadline
 over it is a race against machine load rather than a fact.
+
+⛓ **H1 (2026-09-11): that ~0.5 ticks/s was a lost WebGPU device, not
+rasterising.** With `HEADLESS_WEBGPU_ARGS` (`scripts/procgen/headlessChromium.js`)
+the headless rows run the game at 25–28 frames/s on this box — a 259-tick
+generated ship reached its per-tick verdict inside a 22.5 s headless gate
+(`check-seedling-wasm-element.mjs`), and the whole `check-seedling-wasm-pages.mjs`
+row took 33.7 s (was 184.8 s). The table above is unchanged on purpose: giving the
+headless rows the `finished`/VERDICT reach is H2, after the user's ⚖.
 
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
