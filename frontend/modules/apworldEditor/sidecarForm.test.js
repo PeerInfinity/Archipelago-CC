@@ -71,7 +71,7 @@ substrateRegistry.register({
 });
 
 describe('⛓ the population', () => {
-    it('two committed documents, and their entries hold more than one substrate', () => {
+    it(`the population: ${ENTRIES.length} committed entries over ${substrates.size} substrates`, () => {
         expect(ENTRIES.length).toBeGreaterThan(0);
         expect(substrates.size).toBeGreaterThan(1);
     });
