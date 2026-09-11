@@ -22,6 +22,7 @@ document.
 | `ruleTreeEditor.js` | the access-rule tree widget |
 | `documentKeys.js` | the top-level **key registry**, derived from `rules.schema.json` |
 | `documentLinks.js` | the **Links** tab's rows |
+| `sidecarIssues.js` | (V0) the **sidecar validity report** — `sidecarIssues(doc, slot)`, the fourth validator: one pure function the validation bar, the per-region block and `check-sidecar-fields.mjs` all read |
 | `regionRoundTrip.js` | the per-region **Edit ▸** door — resolves the substrate's declarations, runs the baseline, folds a save into ONE op; and (S0) `sidecarEntryFacts`, what a region's sidecar block says about its entry |
 | `../procgenCore/compositeMapRenderer.js` | the **Map** tab's painter — shared with the procgen pipeline panel, substrate-neutral |
 | `../procgenPipeline/compositeMapDocument.js` | `reconstructResultFromSidecars` — `preset_sidecars` → a `Grid` |
@@ -152,6 +153,56 @@ changes WHEN it runs, never what it reports.
 Measured on stardew (209 regions, 1,073 items): `_renderChrome` **2.2–4.0 ms →
 0.3–0.7 ms**. See the correction under the Map tab for why that is milliseconds
 and not the seconds a tab switch costs.
+
+### The sidecar validity report (V0) — the bar's fourth validator
+
+⚖ user, 2026-09-10: *"If the user changes a substrate, or makes some other
+breaking change, then it's their responsibility to find a way to make the data
+valid again before they save the JSON data. If we don't already have a way to
+report what data is invalid, then I want to add one."* — and at the replan: the
+raw save keeps ACCEPTING a changed `substrate`, and this report names the
+mismatch.
+
+Three validators existed and none looked inside `preset_sidecars`:
+`validateRules` (the bar), `_schemaErrorsAddedBy` (the save veto — the payload is
+opaque to the schema) and `canonicalPlacementIssues` (P1). So after a raw save
+that changed `substrate`, or dropped a field the substrate needs, the document
+passed the schema, the bar read *No issues*, and the failure surfaced at PLAY.
+The fourth is **`sidecarIssues(doc, slot)`** (`sidecarIssues.js`), in P1's shape:
+one pure function, three readers — **the bar** (its issues join `validateRules`'
+list, counted and listed like the others, each row naming its region, and a
+press on the row lands on that region), **the per-region block** (see *Sidecars,
+per region* below) and **`scripts/procgen/check-sidecar-fields.mjs`** (its second
+layer). None of them spells a check of its own.
+
+Each issue is `{severity, region, field?, kind, message}`; `kind` is one of
+`SIDECAR_ISSUE_KINDS`, and `SIDECAR_ISSUE_SEVERITY` / `SIDECAR_ISSUE_LAYER` say
+how bad and which layer. Severity is `validateRules`' own definition: an
+**error** is a dangling reference or a value the reader is declared not to
+accept; a **warning** is suspicious-but-maybe-intentional state. Two layers:
+
+| layer | the kinds | what it asks |
+|---|---|---|
+| **shape** — D0's declaration (`sidecarFieldsOf`, `sidecarPayloadErrors`) | `NOT_AN_ENTRY` · `NOT_PLAYABLE` · `BAD_DECLARATION` · `NO_DECLARATION` · `MISSING_REQUIRED` · `UNDECLARED_FIELD` · `INVALID_VALUE` · `SUBSTRATE_MISMATCH` | the `substrate` is registered and has `deserializeWorld`; every payload key is declared, every `required` one present, every value inside its descriptor. ⚠ `required` means *every producer of this substrate writes it* — not *a reader needs it* — so a missing one is a WARNING and its sentence says exactly that. **The mismatch:** when the payload fits ANOTHER declaring substrate strictly better than its own (`sidecarFit` — the Jaccard index of the payload's substrate-owned keys and a declaration's, the envelope left out on both sides because the engine writes it under every substrate; ties broken by the fewest fields the shape check names), the block says *"this payload has the keys of `Y`, not `X`"* and folds the per-field sentences into that one |
+| **document** — the rest of the document | `DESERIALIZE_THROWS` · `NO_REGION` · `EXIT_UNKNOWN` · `EXIT_NOT_CARRIED` · `EXITS_UNCHECKED` · `LOCATION_UNKNOWN` · `LOCATION_NOT_CARRIED` · `LOCATIONS_UNCHECKED` · `GRID_CELL_DUPLICATE` · `GRID_CELL_OUTSIDE` · `REF_UNRESOLVED` | the payload deserializes through the entry's own `deserializeWorld`; every non-null `exits[].exitName` names an exit of the region (the prefixed `<region>__<exit>` spelling read through, `apExitNameCandidates`); `grid_cell` is unique in the slot and inside `procgen_metadata.grid_dims`; a field whose descriptor `references` a sibling resolves to one (jta's dataset ref). And, **DECLARED per substrate** on its registry entry (`apLocationNamesOf`, `apExitNamesOf` — see *substrate-registry.md*), the payload's AP location names and its complete exit list against the region's, both ways: a name the payload carries that the document lacks is an ERROR; a document endpoint the payload does not carry is a WARNING (a producer may drop one by name — the maze atlas projection's `exit_tile_collision`, which is in the committed corpus). A substrate that declares no carrier, or a payload whose reader finds none, is ONE warning per substrate per slot saying it was NOT CHECKED (`UNCHECKED_SIDECAR_KINDS`) — never a silent pass |
+
+⛔ **Errors block nothing.** The raw save is not vetoed by any of this — the
+reader owns the repair — and the schema veto is exactly as strict as it was.
+⛔ **The Edit ▸ baseline is not run here** (`inspectRegionRoom` is ~90 ms a
+region, async): the block already shows the door's own verdict for that.
+
+**The memo.** The bar's list is memoised on the record's identity plus the slot
+(R1's key), and the report has its OWN cache on the same key
+(`_sidecarIssueCache`) because the block reads it without going through the bar —
+two readers of one function, not a reader and a copy. ⛔ Never cleared on apply:
+an Undo re-folds the record without passing through `_applyOp` (trap 1311).
+Inside the function each ENTRY's issues are memoised on the entry object (with
+its region object, name, slot and registry entry as the rest of the key): the
+record is copy-on-write, so an op re-asks only the entries it touched. Measured
+on `procgen_topdown/AP_8` (235 entries, the V0 record): `_renderChrome` after one
+`set-region-sidecar` **3.3–6.5 ms** (before V0: 0.3–0.5 ms); a report on fresh
+objects — the load's first render, and after the three rename ops, which
+deep-clone the document — **42–64 ms**.
 
 ### The `editor` slot (H5)
 
@@ -496,7 +547,11 @@ What the block draws, all of it read off the ENTRY (`sidecarEntryFacts`, in
 - **▸ Show JSON** — the WHOLE entry, through `_makeJsonBlock`, the widget the
   Document rows use. It is built on expand (W0's rule) and read from the
   document at every render, so after an op the open block shows the entry the
-  document holds now. Since S1 it is editable, with **Save JSON** — see below.
+  document holds now. Since S1 it is editable, with **Save JSON** — see below;
+- (V0) **the entry's issues**, under the facts — one sentence each from
+  `sidecarIssues` (see *The sidecar validity report* above), coloured by
+  severity, and NOTHING when the entry is clean. On the Sidecars list, each
+  region's row also shows a count badge beside its name when it has any.
 
 The disclosures are per session: which blocks' JSON is open (keyed by host, slot
 and region, so each host's is its own) and whether the list is expanded both
@@ -536,14 +591,21 @@ the block that was saved.
    a missing or non-string `substrate`; a `playable_payload` that is present and
    not an object. ⛔ The payload's *inside* is never read — it is opaque to the
    schema and belongs to the substrate, and a breaking edit is the reader's to
-   repair (⚖ round two, Q2). Reporting what no longer fits is a validity report's
-   job (the V0 rung);
+   repair (⚖ round two, Q2). Reporting what no longer fits is the validity
+   report's job (V0, below);
 2. **the schema veto** — the same function the Document tab's whole-key Save runs
    (`_rawSaveRefusal`: `_schemaErrorsAddedBy`, then P1's placement check), so a
    `grid_cell` without `gy` or a `biome` that is not an object is refused by
    path, and only for what this save ADDS. On `procgen_topdown/AP_8`, the largest
    document (934,463 compact bytes), the veto costs about 31 ms per save (the S1
    record has the measurement).
+
+⛓ **What no longer fits is REPORTED, never refused** (V0). The validity report is
+not a third gate: a save whose entry it finds wrong still lands, the block lists
+the sentences, and the save's answer gains a trailing count — *"… NOT
+re-derived — 2 sidecar issues, see the block"*. A changed `substrate` is accepted
+the same way (⚖ the replan), and the block's `SUBSTRATE_MISMATCH` sentence names
+the substrate whose keys the payload actually has.
 
 ⛔ **It replaces an entry; it never creates one.** A region with no sidecar entry
 has no room, and this op keeps it roomless — refused by name with the slot's
@@ -1428,7 +1490,8 @@ The import is free in both modes, measured:
 
 | Suite | Where |
 |-------|-------|
-| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `reverseLinks.test.js` | vitest, `frontend/modules/apworldEditor/` |
+| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `reverseLinks.test.js`, `sidecarIssues.test.js` | vitest, `frontend/modules/apworldEditor/` |
+| `check-sidecar-fields.mjs` (+ `checkSidecarFields.test.js`) | `scripts/procgen/` — the corpus gate: every committed entry against its declaration, and (V0) `sidecarIssues` per slot as its second layer |
 | `../procgenCore/compositeMapRenderer.test.js` | vitest — the Map tab's renderer, driven by a TOY substrate |
 | `../procgenPipeline/compositeMapDocument.test.js` | vitest — `preset_sidecars` → `Grid`, including the player slot |
 | `presetUI.test.js` | vitest — the "Open in APWorld Editor" descriptor |

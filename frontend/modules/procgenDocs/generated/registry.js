@@ -24,31 +24,31 @@ export const REGISTRY = frz({
     "columnOrder": "the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported",
     "columns": [
         {
-            "fields": 26,
+            "fields": 28,
             "id": "maze",
             "label": "Maze",
             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"
         },
         {
-            "fields": 11,
+            "fields": 13,
             "id": "flash",
             "label": "Flash",
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 38,
+            "fields": 40,
             "id": "bounce",
             "label": "Bounce Demo",
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 33,
+            "fields": 35,
             "id": "runner",
             "label": "Runner Demo",
             "registeredBy": "frontend/modules/runnerDemo/runnerDemoLibrary.js"
         },
         {
-            "fields": 16,
+            "fields": 18,
             "id": "text_adventure",
             "label": "Text Adventure",
             "registeredBy": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js"
@@ -60,13 +60,13 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
         },
         {
-            "fields": 23,
+            "fields": 25,
             "id": "jta",
             "label": "JtA",
             "registeredBy": "frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js"
         },
         {
-            "fields": 19,
+            "fields": 21,
             "id": "omsi",
             "label": "Idle Loops",
             "registeredBy": "frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js"
@@ -83,6 +83,8 @@ export const REGISTRY = frz({
         },
         {
             "rows": [
+                "apExitNamesOf",
+                "apLocationNamesOf",
                 "deserializeWorld",
                 "iframeId",
                 "loadRegionEvent",
@@ -267,6 +269,150 @@ export const REGISTRY = frz({
         }
     ],
     "rows": [
+        {
+            "carriedBy": [
+                "maze",
+                "flash",
+                "bounce",
+                "runner",
+                "text_adventure",
+                "jta",
+                "omsi"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Runtime",
+            "name": "apExitNamesOf"
+        },
+        {
+            "carriedBy": [
+                "maze",
+                "flash",
+                "bounce",
+                "runner",
+                "text_adventure",
+                "jta",
+                "omsi"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Runtime",
+            "name": "apLocationNamesOf"
+        },
         {
             "carriedBy": [
                 "maze"

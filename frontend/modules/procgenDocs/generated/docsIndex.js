@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 17,
         "headings": 787,
         "indexHeadings": 2,
-        "lines": 20994,
+        "lines": 20998,
         "pages": 4,
-        "words": 256790
+        "words": 257135
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -54,7 +54,7 @@ export const DOCS_INDEX = frz({
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
             "headings": 19,
-            "lines": 222,
+            "lines": 226,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -63,7 +63,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 5940
+            "words": 6285
         },
         {
             "description": "Every demonstrable feature of the two procgen lab pages, one entry each, with the link that shows it, the CLI command that reproduces it in node, which control to press, and what you are looking at.",
