@@ -747,6 +747,30 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "PRESET SIDECARS D1 (replan ruling 6). The Document row's preset_sidecars door lands on the Sidecars tab. Mutant E (target back to Regions) reds it."
+        },
+        {
+            "id": "apworld-rederive-after-a-raw-save-moves-the-exit-it-changed",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S2 (Q1 C). Raw tile edit picked by derivation, then Re-derive rules: one replace-region-sidecar, only that exit's rule and the payload (serializer's form, named) move; one Undo removes only the re-derive. Mutants A (movability from the current payload) and E (payload left raw)."
+        },
+        {
+            "id": "apworld-rederive-is-enabled-where-the-substrate-has-a-round-trip",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S2. Enabled exactly where the entry's substrate declares regionRoundTrip, every slot of the four-player fixture; a press with an empty record moves nothing and names Edit."
+        },
+        {
+            "id": "apworld-rederive-is-disabled-by-name-without-a-round-trip",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S2 (Q1 C). jta_schedule_test: disabled, title = regionRoundTripOf(substrate).why. Mutant C (enabled without a round trip) reds it."
+        },
+        {
+            "id": "apworld-edit-is-not-weakened-by-a-rederive",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S2. Edit still refuses the raw-edited room by its baseline sentence; opens only after the re-derive; refuses again after one Undo. Mutant D (check 1 relaxed) reds it."
         }
     ]
 }

@@ -127,7 +127,12 @@ import { DEFAULT_REGION_SIZE } from '../../procgenPipeline/procgenPipelineEngine
  * compares it with what the door's function answers for the document NOW,
  * rather than with a sentence typed here.
  */
-import { JSON_BLOCK_INDENT, inspectRegionRoom } from '../../apworldEditor/regionRoundTrip.js';
+import {
+    JSON_BLOCK_INDENT, deriveRegionRules, inspectRegionRoom, regionRoundTripOf, sameRule,
+} from '../../apworldEditor/regionRoundTrip.js';
+import {
+    REDERIVE_NO_BASELINE, REDERIVE_PAYLOAD_KEPT, REDERIVE_PAYLOAD_NORMALISED, REDERIVE_POINTS_AT_EDIT,
+} from '../../apworldEditor/regionRederive.js';
 /**
  * ⛓ V0 — the validity report's kinds, so a row asserts the KIND the product
  * stamped on its sentence rather than the sentence's wording; and the merged
@@ -7669,6 +7674,409 @@ registerTest({
                + 'button: the active tab is SIDECARS_TAB_ID and its per-region list line is drawn. '
                + 'Mutant E (the door\'s target back to Regions) reds it.',
     testFunction: apworldThePresetSidecarsDoorLandsOnTheSidecarsTab,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ PRESET SIDECARS S2 — `Re-derive rules ▸`
+ * (`NewDocs/plans/preset-sidecars-plan.md` §5b Q1 C, §9.3 rung 7)
+ *
+ * A raw save writes the entry alone (S1); this button re-derives the region's
+ * rules from its payload, moving only the rules the payload BEFORE the raw
+ * edit produced — that pre-edit payload is recovered from the session's own
+ * record. ENABLED where the substrate declares a round trip, DISABLED with the
+ * registry lookup's sentence elsewhere (⚖ "disable the buttons for substrates
+ * where that feature is currently unavailable"). Every row presses the
+ * product's own buttons, asserts the DOCUMENT after, and re-queries after
+ * every gesture.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ One region block's `Re-derive rules ▸` — re-queried. */
+const rederiveButtonFor = (regionName) => sidecarBlockFor(regionName)
+    ?.querySelector('.apworld-rederive-rules') ?? null;
+
+/** ⛓ Every endpoint of a derivation or a region, `exit "n"` / `location "n"` → rule. */
+const derivedEndpoints = (d) => new Map([
+    ...[...d.exits].map(([n, r]) => [`exit "${n}"`, r]),
+    ...[...d.locations].map(([n, r]) => [`location "${n}"`, r]),
+]);
+const regionEndpoints = (doc, slot, region) => new Map([
+    ...(doc.regions[slot][region].exits ?? []).map((e) => [`exit "${e.name}"`, e.access_rule]),
+    ...(doc.regions[slot][region].locations ?? []).map((l) => [`location "${l.name}"`, l.access_rule]),
+]);
+
+/**
+ * ⛓⛓ **THE EDIT, PICKED BY THE LAW** — over the document's slots and their
+ * sidecar regions in document order: a region whose payload carries a `tiles`
+ * grid, whose substrate declares a round trip and whose Edit ▸ inspection
+ * opens; then the first single-tile flip after which the payload's own
+ * derivation (`deriveRegionRules`) disagrees with the document on EXACTLY ONE
+ * endpoint, and that endpoint is an EXIT. Nothing here names a substrate, a
+ * region or a tile. → `{slot, region, i, exit}` or null.
+ */
+async function aTileFlipThatMovesOneExit(doc) {
+    for (const slot of Object.keys(doc?.preset_sidecars ?? {})) {
+        for (const region of sidecarRegions(doc, slot)) {
+            const entry = doc.preset_sidecars[slot][region];
+            const tiles = entry?.playable_payload?.tiles;
+            if (!Array.isArray(tiles) || !regionRoundTripOf(entry.substrate).rt) continue;
+            if (!(await inspectRegionRoom(doc, slot, region)).ok) continue;
+            const has = regionEndpoints(doc, slot, region);
+            for (let i = 0; i < tiles.length; i += 1) {
+                const cand = JSON.parse(JSON.stringify(doc));
+                cand.preset_sidecars[slot][region].playable_payload.tiles[i] = tiles[i] ? 0 : 1;
+                const d = await deriveRegionRules(cand, slot, region);
+                if (!d.ok) continue;
+                const is = derivedEndpoints(d);
+                const changed = [...has.keys()].filter((k) => !sameRule(has.get(k), is.get(k)));
+                if (changed.length === 1 && changed[0].startsWith('exit ')) {
+                    return { slot, region, i, exit: changed[0].replace(/^exit "|"$/g, '') };
+                }
+            }
+        }
+    }
+    return null;
+}
+
+/** ⛓ Press a region's Re-derive and wait for its answer under the block. → the op, or null. */
+async function pressRederive(testController, panel, regionName, label) {
+    const n = panel.session.ops().length;
+    const before = sidecarMessageFor(regionName);
+    rederiveButtonFor(regionName)?.click();
+    await testController.pollForCondition(
+        () => { const m = sidecarMessageFor(regionName); return !!m && m !== before; },
+        `${label}: the Re-derive answer is printed under the block`, 8000, 50);
+    return panel.session.ops().length === n + 1 ? panel.session.ops().at(-1) : null;
+}
+
+/**
+ * ⛓⛓⛓ **(i) A RAW SAVE, THEN `Re-derive rules ▸` — THE EXIT THE EDIT CHANGED
+ * MOVES, NOTHING ELSE DOES.** The edit is picked by the law
+ * (`aTileFlipThatMovesOneExit`) and saved through the block's own Save JSON
+ * (one `set-region-sidecar`, rules untouched — S1). Then the product's button:
+ * ONE more op, a `replace-region-sidecar` for that slot and region; the exit's
+ * `access_rule` is the payload's derived rule; the DOCUMENT after is the
+ * raw-saved one with exactly that rule and the payload replaced (1306) — the
+ * payload by the serializer's form of the raw one, and the answer says whether
+ * that form differs (naming the rewritten fields) or not; the answer is under
+ * the block and in the status line; ONE Undo removes ONLY the re-derive.
+ * Mutant A (movability from the CURRENT payload) freezes the exit and reds it;
+ * mutant E (payload untouched) reds the document and the payload conditions.
+ */
+export async function apworldRederiveAfterARawSaveMovesTheExitItChanged(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const fixtureBytes = JSON.stringify(panel.rulesDoc);
+        const pick = await aTileFlipThatMovesOneExit(panel.rulesDoc);
+        testController.reportCondition('⛓ premise: a tile flip whose derivation moves exactly one exit',
+            !!pick);
+        if (!pick) return testController.getOverallResult();
+        const { slot, region, i, exit } = pick;
+        const at = `[slot ${slot} "${region}" tile ${i}]`;
+        testController.log(`${at} → exit "${exit}"`);
+        testController.reportCondition(`${at} slot selected through the toolbar`,
+            await onRegionsTabFor(testController, panel, slot));
+        const text = await openSidecarJson(testController, region);
+        testController.reportCondition(`${at} the block's JSON is open`, !!text);
+        if (!text) return testController.getOverallResult();
+
+        const edited = JSON.parse(text.value);
+        edited.playable_payload.tiles[i] = edited.playable_payload.tiles[i] ? 0 : 1;
+        const opsBefore = panel.session.ops().length;
+        testController.reportCondition(`${at} Save JSON pressed`, typeAndSaveSidecar(region, edited));
+        const raw = await testController.pollForValue(
+            () => (panel.session.ops().length === opsBefore + 1 ? panel.session.ops().at(-1) : null),
+            `${at} the raw save recorded one op`, 8000, 50);
+        testController.assertEqual(`${at} the raw save is a set-region-sidecar`, 'set-region-sidecar',
+            String(raw?.op));
+        const afterRaw = panel.rulesDoc;
+        const afterRawBytes = JSON.stringify(afterRaw);
+        const derived = await deriveRegionRules(afterRaw, slot, region);
+        testController.reportCondition(`${at} ⛓ premise: the raw save left the exit's rule, which `
+            + 'the payload no longer derives',
+        !sameRule(derived.exits.get(exit),
+            afterRaw.regions[slot][region].exits.find((e) => e.name === exit)?.access_rule));
+
+        const btn = rederiveButtonFor(region);
+        testController.reportCondition(`${at} Re-derive rules ▸ is on the block, ENABLED`,
+            !!btn && !btn.disabled);
+        const op = await pressRederive(testController, panel, region, at);
+        testController.reportCondition(`${at} ⛓ ONE more op was recorded`, !!op);
+        if (!op) return testController.getOverallResult();
+        testController.assertEqual(`${at} …a replace-region-sidecar for this slot and region`,
+            `replace-region-sidecar|${slot}|${region}`, `${op.op}|${op.player}|${op.region}`);
+
+        const after = panel.rulesDoc;
+        testController.assertEqual(`${at} ⛓⛓ the exit's access_rule IS the payload's derived rule`,
+            JSON.stringify(derived.exits.get(exit)),
+            JSON.stringify(after.regions[slot][region].exits.find((e) => e.name === exit)?.access_rule));
+        const want = JSON.parse(afterRawBytes);
+        want.regions[slot][region].exits.find((e) => e.name === exit).access_rule = derived.exits.get(exit);
+        want.preset_sidecars[slot][region].playable_payload = derived.payload;
+        testController.assertEqual(`${at} ⛓⛓ the DOCUMENT after = the raw-saved one with exactly `
+            + 'that rule and the payload replaced — every other rule byte-equal',
+        JSON.stringify(want), JSON.stringify(after));
+
+        const said = String(sidecarMessageFor(region)?.textContent ?? '');
+        testController.assertEqual(`${at} the answer under the block is the status line's`,
+            String(panel._opMessage), said);
+        testController.reportCondition(`${at} …and it names the exit it moved`,
+            said.includes(`exit "${exit}"`));
+        const rewritten = Object.keys(derived.payload).filter((k) => JSON.stringify(derived.payload[k])
+            !== JSON.stringify(edited.playable_payload[k]));
+        if (rewritten.length) {
+            testController.log(`${at} the serializer rewrote: ${rewritten.join(', ')}`);
+            testController.reportCondition(`${at} ⛓ the payload is the serializer's form, NOT the `
+                + 'raw one — and the answer says it was normalised, naming each field',
+            JSON.stringify(after.preset_sidecars[slot][region].playable_payload)
+                !== JSON.stringify(edited.playable_payload)
+                && said.includes(REDERIVE_PAYLOAD_NORMALISED)
+                && rewritten.every((k) => said.includes(`\`${k}\``)));
+        } else {
+            testController.reportCondition(`${at} ⛓ the payload is the raw-saved one, and the answer `
+                + 'says it was kept', JSON.stringify(after.preset_sidecars[slot][region].playable_payload)
+                === JSON.stringify(edited.playable_payload) && said.includes(REDERIVE_PAYLOAD_KEPT));
+        }
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual(`${at} ⛓ ONE Undo removes ONLY the re-derive — the raw edit stays`,
+            afterRawBytes, JSON.stringify(panel.rulesDoc));
+        testController.assertEqual(`${at} …the op list ends at the raw save`,
+            `${opsBefore + 1}|set-region-sidecar`,
+            `${panel.session.ops().length}|${panel.session.ops().at(-1)?.op}`);
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual(`${at} a second Undo restores the fixture`, fixtureBytes,
+            JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('re-derive-after-raw-save test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(ii) THE BUTTON IS ENABLED EXACTLY WHERE THE SUBSTRATE DECLARES A ROUND
+ * TRIP — read off each block's own entry**, on every slot of the four-player
+ * fixture through the toolbar (two payload families, both declaring one). Then
+ * one press on a slot of the OTHER family with no edit in the record: nothing
+ * moves (no op, the document byte-unmoved) and the answer says there was no
+ * earlier payload and points at Edit ▸.
+ */
+export async function apworldRederiveIsEnabledWhereTheSubstrateHasARoundTrip(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const seen = new Map();
+        for (const slot of Object.keys(doc.preset_sidecars ?? {})) {
+            await onRegionsTabFor(testController, panel, slot);
+            for (const region of sidecarRegions(doc, slot)) {
+                const substrate = doc.preset_sidecars[slot][region].substrate;
+                const btn = rederiveButtonFor(region);
+                const { rt, why } = regionRoundTripOf(substrate);
+                testController.reportCondition(`[slot ${slot} "${region}", ${substrate}] Re-derive `
+                    + `rules ▸ is ${rt ? 'ENABLED' : 'DISABLED'} as its substrate's declaration says`,
+                !!btn && btn.disabled === !rt && (rt || btn.title === why)
+                    && btn.dataset.substrate === substrate);
+                if (!seen.has(substrate)) seen.set(substrate, { slot, region, tiles:
+                    Array.isArray(doc.preset_sidecars[slot][region].playable_payload?.tiles) });
+            }
+        }
+        testController.reportCondition('⛓ premise: the fixture holds more than one substrate',
+            seen.size > 1);
+        // ⛓ the family with NO tile grid — the one row (i) does not edit.
+        const other = [...seen.entries()].find(([, v]) => !v.tiles);
+        testController.reportCondition('⛓ premise: a substrate whose payload carries no tile grid',
+            !!other);
+        if (!other) return testController.getOverallResult();
+        const [substrate, { slot, region }] = other;
+        const at = `[slot ${slot} "${region}", ${substrate}]`;
+        await onRegionsTabFor(testController, panel, slot);
+        const beforeBytes = JSON.stringify(panel.rulesDoc);
+        const opsBefore = panel.session.ops().length;
+        testController.reportCondition(`${at} ENABLED`, rederiveButtonFor(region)?.disabled === false);
+        const op = await pressRederive(testController, panel, region, at);
+        testController.reportCondition(`${at} pressed with no edit in the record: NO op`, op === null
+            && panel.session.ops().length === opsBefore);
+        testController.assertEqual(`${at} …the document byte-unmoved`, beforeBytes,
+            JSON.stringify(panel.rulesDoc));
+        const said = String(sidecarMessageFor(region)?.textContent ?? '');
+        testController.reportCondition(`${at} ⛓ the answer says there was no earlier payload and `
+            + 'points at Edit ▸', said.includes(REDERIVE_NO_BASELINE)
+            && said.includes(REDERIVE_POINTS_AT_EDIT));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('re-derive-enabled test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(iii) DISABLED, BY THE REGISTRY'S OWN SENTENCE, WHERE THE SUBSTRATE HAS
+ * NO ROUND TRIP** (⚖ Q1 C). On `jta_schedule_test`: every block's Re-derive is
+ * disabled and its `title` is `regionRoundTripOf(<the entry's substrate>).why`
+ * — the lookup's sentence, never a literal. Mutant C (enabled without a round
+ * trip) reds it.
+ */
+export async function apworldRederiveIsDisabledByNameWithoutARoundTrip(testController) {
+    try {
+        const panel = await openHub(testController, LOOP_COSTS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        const file = await (await fetch(LOOP_COSTS_PRESET_PATH)).json();
+        testController.reportCondition('⛓ the panel holds the document that was loaded',
+            panel.rulesDoc.game_name === file.game_name
+            && JSON.stringify(Object.keys(panel.rulesDoc.preset_sidecars ?? {}))
+                === JSON.stringify(Object.keys(file.preset_sidecars ?? {})));
+        selectTab(panel, 'regions');
+        let n = 0;
+        for (const slot of Object.keys(panel.rulesDoc.preset_sidecars ?? {})) {
+            await onRegionsTabFor(testController, panel, slot);
+            for (const region of sidecarRegions(panel.rulesDoc, slot)) {
+                const substrate = panel.rulesDoc.preset_sidecars[slot][region].substrate;
+                const { rt, why } = regionRoundTripOf(substrate);
+                testController.reportCondition(`[slot ${slot} "${region}"] ⛓ premise: "${substrate}" `
+                    + 'declares no round trip', !rt);
+                const btn = await testController.pollForValue(() => rederiveButtonFor(region),
+                    `"${region}"'s Re-derive rules ▸`, 8000, 50);
+                testController.reportCondition(`[slot ${slot} "${region}"] Re-derive rules ▸ is `
+                    + 'DISABLED', !!btn && btn.disabled === true);
+                testController.assertEqual(`[slot ${slot} "${region}"] ⛓⛓ …its title is the `
+                    + 'registry lookup\'s sentence for that substrate', String(why), String(btn?.title));
+                n += 1;
+            }
+        }
+        testController.reportCondition('⛓ premise: the document draws at least one sidecar block', n > 0);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('re-derive-disabled test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iv) Edit ▸ IS NOT WEAKENED.** The same raw edit as (i): Edit ▸ pressed
+ * answers the door's baseline refusal — its title is `inspectRegionRoom`'s own
+ * sentence for the document NOW, exactly as S1's row asserts. Then Re-derive:
+ * the payload is now the serializer's own form and every rule is the room's, so
+ * the door's inspection OPENS and the button is pressable (the re-derive is what
+ * makes the region editable again — the door did not relax to allow it). One
+ * Undo (back to the raw edit) and Edit ▸ pressed refuses again, same sentence.
+ * Mutant D (check 1 relaxed) reds the refusal conditions.
+ */
+export async function apworldEditIsNotWeakenedByARederive(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const pick = await aTileFlipThatMovesOneExit(panel.rulesDoc);
+        testController.reportCondition('⛓ premise: the tile flip (i) uses', !!pick);
+        if (!pick) return testController.getOverallResult();
+        const { slot, region, i } = pick;
+        await onRegionsTabFor(testController, panel, slot);
+        const text = await openSidecarJson(testController, region);
+        if (!text) {
+            testController.reportCondition('the block\'s JSON is open', false);
+            return testController.getOverallResult();
+        }
+        const edited = JSON.parse(text.value);
+        edited.playable_payload.tiles[i] = edited.playable_payload.tiles[i] ? 0 : 1;
+        const opsBefore = panel.session.ops().length;
+        testController.reportCondition('Save JSON pressed', typeAndSaveSidecar(region, edited));
+
+        const pressEdit = async (label) => {
+            const b = editButtonFor(region);
+            testController.reportCondition(`${label}: Edit ▸ is pressable — asked on the PRESS`,
+                !!b && !b.disabled);
+            if (!b || b.disabled) return null;
+            const now = await inspectRegionRoom(panel.rulesDoc, slot, region);
+            testController.reportCondition(`${label}: ⛓ the door's own inspection refuses the `
+                + 'document NOW', !now.ok);
+            b.click();
+            const answered = await testController.pollForValue(
+                () => { const x = editButtonFor(region); return x?.disabled ? x : null; },
+                `${label}: Edit ▸ answered`, 8000, 50);
+            testController.assertEqual(`${label}: ⛓⛓ its title is the inspection's sentence for the `
+                + 'document NOW', String(now.why), String(answered?.title));
+            testController.reportCondition(`${label}: …and no room was opened`,
+                panel.roomEditorSession === null);
+            return now.why;
+        };
+
+        const why = await pressEdit('after the raw save');
+        const op = await pressRederive(testController, panel, region, 're-derive');
+        testController.assertEqual('the re-derive is one replace-region-sidecar',
+            'replace-region-sidecar', String(op?.op));
+        const opened = await inspectRegionRoom(panel.rulesDoc, slot, region);
+        testController.reportCondition('⛓ after the re-derive the door\'s inspection OPENS the region '
+            + '(the serializer\'s payload, the room\'s rules)', opened.ok === true);
+        const b2 = editButtonFor(region);
+        testController.reportCondition('…and Edit ▸ is pressable, with its opening title',
+            !!b2 && !b2.disabled && b2.title !== why);
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('one Undo: back to the raw edit', String(opsBefore + 1),
+            String(panel.session.ops().length));
+        const again = await pressEdit('after the Undo');
+        testController.assertEqual('⛓ the same refusal as before the re-derive', String(why),
+            String(again));
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('a second Undo: the fixture\'s op list', String(opsBefore),
+            String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('edit-not-weakened test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-rederive-after-a-raw-save-moves-the-exit-it-changed',
+    name: 'APWorld hub: after a raw sidecar save, Re-derive rules moves the one exit the edit changed and nothing else',
+    description: 'PRESET SIDECARS S2 (⚖ Q1 C). A tile flip picked by derivation (exactly one exit\'s '
+               + 'rule changes), saved through Save JSON; then Re-derive rules ▸: one '
+               + 'replace-region-sidecar, the exit\'s rule = the payload\'s derived rule, the '
+               + 'DOCUMENT after = the raw-saved one with that rule and the payload (the '
+               + 'serializer\'s form, the answer naming what it rewrote) replaced; one Undo '
+               + 'removes only the re-derive. Mutants: movability from the current payload (A), '
+               + 'the payload left raw (E).',
+    testFunction: apworldRederiveAfterARawSaveMovesTheExitItChanged,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-rederive-is-enabled-where-the-substrate-has-a-round-trip',
+    name: 'APWorld hub: Re-derive rules is enabled exactly where the substrate declares a round trip, and moves nothing with no edit in the record',
+    description: 'PRESET SIDECARS S2. Every block of every slot of the four-player fixture, through '
+               + 'the toolbar: enabled = the entry\'s substrate declares regionRoundTrip. One press '
+               + 'on the family row (i) does not edit, with an empty record: no op, the document '
+               + 'unmoved, the answer says there was no earlier payload and points at Edit ▸.',
+    testFunction: apworldRederiveIsEnabledWhereTheSubstrateHasARoundTrip,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-rederive-is-disabled-by-name-without-a-round-trip',
+    name: 'APWorld hub: Re-derive rules is disabled, with the registry\'s sentence, where the substrate has no round trip',
+    description: 'PRESET SIDECARS S2 (⚖ Q1 C: "disable the buttons for substrates where that feature '
+               + 'is currently unavailable"). On jta_schedule_test every block\'s button is disabled '
+               + 'and its title is regionRoundTripOf(<the entry\'s substrate>).why. Mutant C (enabled '
+               + 'without a round trip) reds it.',
+    testFunction: apworldRederiveIsDisabledByNameWithoutARoundTrip,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-edit-is-not-weakened-by-a-rederive',
+    name: 'APWorld hub: Edit ▸ still refuses a raw-edited room by its baseline, and opens it only after a re-derive',
+    description: 'PRESET SIDECARS S2. The raw edit of row (i): Edit ▸ pressed answers the inspection\'s '
+               + 'own refusal (S1\'s assertion, unchanged); after Re-derive the inspection opens the '
+               + 'region and the button is pressable; one Undo and the same refusal again. Mutant D '
+               + '(check 1 relaxed) reds the refusal conditions.',
+    testFunction: apworldEditIsNotWeakenedByARederive,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
