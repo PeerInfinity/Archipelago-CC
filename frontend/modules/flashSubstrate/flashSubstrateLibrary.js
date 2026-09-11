@@ -30,7 +30,9 @@
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { SIDES } from '../shared/procgen/spatialPrimitives.js';
-import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
+import {
+    REQUIRED_ENVELOPE_FIELD, envelopeExitNames, nameMapValues,
+} from '../procgenCore/sidecarFields.js';
 
 // Shared across every flash game entry — the whole point of Shape 1 is
 // that all per-game ids resolve to the SAME panel + load event, so the
@@ -149,6 +151,13 @@ export const FLASH_SIDECAR_FIELDS = Object.freeze({
 });
 
 /**
+ * ⛓ PRESET SIDECARS V0 — the flash family's location carrier: `ap_locations`'
+ * values (the bridge maps a game's objective id to the AP location name through
+ * that one map). The default of `createFlashSubstrateEntry`'s `apLocationNamesOf`.
+ */
+export const FLASH_AP_LOCATION_NAMES = nameMapValues('ap_locations');
+
+/**
  * ⛓⛓ THE FLASH-ZONE PAYLOAD — the ONE shape bounce and runner share
  * (`buildZonePayload` in each: `{gameId, params: {<level key>, sidePortals,
  * physics?}, ap_locations, flashCapabilities}`, then `gate_rules` when a spec
@@ -233,6 +242,14 @@ export function flashZoneSidecarFields({ gameId, writer, levelKey, physics, para
  * @param {string[]}[opts.supportedFeatures] procgen-pipeline features (default: arbitrary_ap_locations)
  * @param {object}  [opts.sidecarFields]   the payload declaration (default: the
  *   generic Mode-1 `FLASH_SIDECAR_FIELDS`)
+ * @param {Function} [opts.apLocationNamesOf] PRESET SIDECARS V0 — where the
+ *   payload carries its AP location names (default: the VALUES of
+ *   `ap_locations`, which is the one map this family's bridge resolves a game's
+ *   objective to an AP location through — `bridge.js`)
+ * @param {Function} [opts.apExitNamesOf]   PRESET SIDECARS V0 — the payload's
+ *   AP exit names as the region's COMPLETE list (default: the engine's
+ *   envelope, which `buildPresetSidecars` writes whole). A game whose producer
+ *   writes only some of the region's exits removes it (Seedling).
  * @param {string}  [opts.iframeId]        the iframeAdapter id of the panel's iframe
  *   (default: 'flashSubstrate' — the shared flash panel's). procgenPlayer uses
  *   this to re-publish the active region's loadRegion when THIS iframe
@@ -246,6 +263,8 @@ export function createFlashSubstrateEntry({
     supportedFeatures = ['arbitrary_ap_locations'],
     iframeId = 'flashSubstrate',
     sidecarFields = FLASH_SIDECAR_FIELDS,
+    apLocationNamesOf = FLASH_AP_LOCATION_NAMES,
+    apExitNamesOf = envelopeExitNames,
 } = {}) {
     if (!id || typeof id !== 'string') {
         throw new Error('createFlashSubstrateEntry: id must be a non-empty string');
@@ -267,6 +286,8 @@ export function createFlashSubstrateEntry({
         deserializeWorld,
         serializeWorld,
         sidecarFields,
+        apLocationNamesOf,
+        apExitNamesOf,
 
         // Playback bot integration is deferred (Mode 1 / v1). Until then
         // getPlaybackController returns null and the bot no-ops on flash

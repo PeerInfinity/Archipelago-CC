@@ -176,6 +176,22 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
     }),
 });
 
+/**
+ * ⛓ PRESET SIDECARS V0 — **WHERE A TILE-GRID PAYLOAD CARRIES ITS AP LOCATION
+ * NAMES** (the registry's `apLocationNamesOf` slot): every `locationName`
+ * `serializeMazeWorld` baked into `items` (the atlas projection bakes them
+ * too), or `null` when the payload has no `items` array. The maze and the text
+ * adventure both register it, beside `TILE_GRID_SIDECAR_FIELDS`.
+ *
+ * @param {object} payload
+ * @returns {string[]|null}
+ */
+export function tileGridApLocationNames(payload) {
+    if (!Array.isArray(payload?.items)) return null;
+    return payload.items.map((i) => i?.locationName)
+        .filter((n) => typeof n === 'string' && n !== '');
+}
+
 // Serialize a maze world into the sidecar payload shape. Maps and
 // Int8Array aren't JSON-safe, so this flattens them. AP-canonical
 // names from the extracted_rules are baked in so the substrate panel

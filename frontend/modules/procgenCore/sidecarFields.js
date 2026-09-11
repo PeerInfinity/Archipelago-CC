@@ -9,7 +9,7 @@
  * the schema cannot say, the substrate's registry entry now does, in its
  * `sidecarFields` slot — one DESCRIPTOR per top-level payload key:
  *
- *   { type, required?, enum?, derived?, description, schema? }
+ *   { type, required?, enum?, derived?, description, schema?, references? }
  *
  *   `type`        one JSON type name (`SIDECAR_FIELD_TYPES`)
  *   `required`    true when EVERY producer of this substrate emits the key — a
@@ -26,6 +26,13 @@
  *                 inside `exits[]`, a physics profile inside `params`),
  *                 evaluated by `jsonSchemaCheck.js`. ⛔ It may not carry its own
  *                 top-level `type`/`enum`: those have ONE spelling, above.
+ *   `references`  `{field, key}` — the value POINTS AT A SIBLING ENTRY: its
+ *                 `key` must equal `payload[field][key]` on some entry of the
+ *                 same slot (PRESET SIDECARS V0). `field` is a field of the
+ *                 same declaration. jta's `jta_dataset_ref` is the one today —
+ *                 the play-time warehouse resolves it in memory
+ *                 (`buildWarehouse`) and REFUSES the region when it cannot, so
+ *                 a validity report asks the same question by reading this.
  *
  * ── ⛓⛓ THE ENVELOPE IS DECLARED ONCE, HERE ──────────────────────────
  *
@@ -65,7 +72,10 @@ export const SIDECAR_FIELD_TYPES = Object.freeze(
 
 /** The keys a descriptor may carry. Anything else is `UNKNOWN_KEY`. */
 export const SIDECAR_DESCRIPTOR_KEYS = Object.freeze(
-    ['type', 'required', 'enum', 'derived', 'description', 'schema']);
+    ['type', 'required', 'enum', 'derived', 'description', 'schema', 'references']);
+
+/** The keys a `references` object carries — both non-empty strings, nothing else. */
+export const SIDECAR_REFERENCE_KEYS = Object.freeze(['field', 'key']);
 
 /**
  * ⛓ Every way a declaration or a payload is refused, BY NAME. A row asserts
@@ -83,6 +93,7 @@ export const SIDECAR_FIELD_ERRORS = Object.freeze({
     DERIVED_WITHOUT_WRITER: 'DERIVED_WITHOUT_WRITER',
     BAD_ENUM: 'BAD_ENUM',
     BAD_SCHEMA: 'BAD_SCHEMA',
+    BAD_REFERENCES: 'BAD_REFERENCES',
     ENVELOPE_REDECLARED: 'ENVELOPE_REDECLARED',
     // payload-side
     NO_DECLARATION: 'NO_DECLARATION',
@@ -172,6 +183,44 @@ export const ENVELOPE_SIDECAR_FIELDS = Object.freeze({
 });
 
 const isPlainObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
+const isName = (n) => typeof n === 'string' && n !== '';
+
+/**
+ * ⛓⛓ PRESET SIDECARS V0 — **THE AP EXIT NAMES AN ENGINE-WRITTEN PAYLOAD
+ * CARRIES**: every non-null `exits[].exitName`, or `null` when the payload has
+ * no `exits` array at all (it carries no exit names, so nothing about them can
+ * be checked).
+ *
+ * ⛓ It is the value a substrate assigns to its registry entry's
+ * `apExitNamesOf` slot when its payloads' exit list IS the region's exit list —
+ * which is what `buildPresetSidecars` writes (it re-attaches the region
+ * descriptor's exits before `serializeWorld`). A substrate whose producer
+ * writes only SOME of the region's exits (the Seedling atlas compiler writes
+ * the teleporter doors; a walk crossing inside one level is geometry) declares
+ * no slot, and the validity report says it did not check.
+ *
+ * @param {object} payload
+ * @returns {string[]|null}
+ */
+export function envelopeExitNames(payload) {
+    if (!isPlainObject(payload) || !Array.isArray(payload.exits)) return null;
+    return payload.exits.map((e) => e?.exitName).filter(isName);
+}
+
+/**
+ * ⛓ A reader for the `apLocationNamesOf` slot, for a payload that carries its
+ * AP location names as the VALUES of one map field (`{localId: apName}` — the
+ * flash family's, jta's and omsi's `ap_locations`). The substrate names the
+ * field; this file still knows no substrate. `null` when the payload does not
+ * carry the map (jta's base scope writes none: its checks come from elsewhere).
+ *
+ * @param {string} field
+ * @returns {(payload: object) => (string[]|null)}
+ */
+export function nameMapValues(field) {
+    return (payload) => (isPlainObject(payload?.[field])
+        ? Object.values(payload[field]).filter(isName) : null);
+}
 
 function jsonTypeOf(value) {
     if (Array.isArray(value)) return 'array';
@@ -256,6 +305,16 @@ function descriptorErrors(field, d) {
             for (const m of fragmentKeywordErrors(d.schema, 'schema')) out.push(err(E.BAD_SCHEMA, m));
         }
     }
+    if ('references' in d) {
+        const r = d.references;
+        const ok = isPlainObject(r)
+            && Object.keys(r).length === SIDECAR_REFERENCE_KEYS.length
+            && SIDECAR_REFERENCE_KEYS.every((k) => typeof r[k] === 'string' && r[k] !== '');
+        if (!ok) {
+            out.push(err(E.BAD_REFERENCES, `references must be exactly {${SIDECAR_REFERENCE_KEYS.join(', ')}}, `
+                + 'each a non-empty string'));
+        }
+    }
     return out;
 }
 
@@ -290,6 +349,19 @@ export function validateSidecarFields(decl) {
             continue;
         }
         out.push(...descriptorErrors(field, d));
+        // ⛓ V0 — a reference names a field a SIBLING carries, and a sibling of
+        //   this substrate carries only what this declaration (or the envelope)
+        //   names; a target nobody declares is a reference to nothing.
+        const target = isPlainObject(d) && isPlainObject(d.references) ? d.references.field : null;
+        if (typeof target === 'string' && target !== ''
+            && !Object.prototype.hasOwnProperty.call(decl, target)
+            && !Object.prototype.hasOwnProperty.call(ENVELOPE_SIDECAR_FIELDS, target)) {
+            out.push({
+                field,
+                code: E.BAD_REFERENCES,
+                message: `'${field}': references.field '${target}' is not a field of this declaration`,
+            });
+        }
     }
     return out;
 }

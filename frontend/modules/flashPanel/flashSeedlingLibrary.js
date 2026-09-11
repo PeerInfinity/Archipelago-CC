@@ -118,7 +118,20 @@ const base = createFlashSubstrateEntry({
 // it never announces `iframe:appReady`, so the factory's default iframeId
 // (the shared flash panel's) would only ever mis-fire. Drop it rather than
 // leave a claim nothing honours.
-const { iframeId: _unusedIframeId, ...runtime } = base;
+//
+// ⛓ PRESET SIDECARS V0 — and the factory's two AP-name carriers go the same
+// way, for the same reason: neither is true of THIS payload. The atlas compiler
+// writes no `ap_locations` (a Seedling region's locations come from the atlas
+// graph's projection, not the payload), and its `exits` are the TELEPORTER doors
+// only — a walk crossing between two sub-regions of one level is geometry the
+// binding reads off the level, so the region's exit list is not the payload's.
+// Absent, the hub's validity report says it did not check them.
+const {
+    iframeId: _unusedIframeId,
+    apLocationNamesOf: _noLocationCarrier,
+    apExitNamesOf: _noCompleteExitList,
+    ...runtime
+} = base;
 
 export const substrateRegistryEntry = Object.freeze({
     ...runtime,

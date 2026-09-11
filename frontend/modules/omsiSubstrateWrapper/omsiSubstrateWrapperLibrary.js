@@ -26,7 +26,9 @@
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { normalizeEntry } from '../shared/actionQueue/actionTypes.js';
-import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
+import {
+    REQUIRED_ENVELOPE_FIELD, envelopeExitNames, nameMapValues,
+} from '../procgenCore/sidecarFields.js';
 import {
     buildUnlockPool,
     accessRuleFor,
@@ -449,6 +451,10 @@ export const substrateRegistryEntry = Object.freeze({
     },
     // ⛓ PRESET SIDECARS D0 — what that pass-through writes (above).
     sidecarFields: OMSI_SIDECAR_FIELDS,
+    // ⛓ PRESET SIDECARS V0 — where the payload carries its AP names (the
+    // bridge maps a task to its AP location through `ap_locations`).
+    apLocationNamesOf: nameMapValues('ap_locations'),
+    apExitNamesOf: envelopeExitNames,
 
     getPlaybackController: () => _playbackProxy,
 

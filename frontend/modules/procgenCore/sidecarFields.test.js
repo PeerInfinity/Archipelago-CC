@@ -14,8 +14,8 @@ import { describe, expect, it } from 'vitest';
 
 import {
     ENVELOPE_SIDECAR_FIELDS, REQUIRED_ENVELOPE_FIELD, SIDECAR_FIELD_ERRORS as E,
-    SidecarFieldsError, sidecarFieldsOf, sidecarFieldValueErrors, sidecarPayloadErrors,
-    validateSidecarFields,
+    SidecarFieldsError, envelopeExitNames, nameMapValues, sidecarFieldsOf, sidecarFieldValueErrors,
+    sidecarPayloadErrors, validateSidecarFields,
 } from './sidecarFields.js';
 import { SIDES } from '../shared/procgen/spatialPrimitives.js';
 
@@ -65,8 +65,24 @@ describe('validateSidecarFields — the descriptor SHAPE, each defect refused by
         ['a schema keyword jsonSchemaCheck does not implement, NESTED',
             { type: 'array', schema: { items: { type: 'integer', maximum: 3 } }, description: 'x' },
             E.BAD_SCHEMA],
+        // ⛓ V0 — `references`: exactly {field, key}, and a field this declaration has
+        ['references that is not an object', { type: 'object', references: 'lib', description: 'x' },
+            E.BAD_REFERENCES],
+        ['references with a key beyond {field, key}',
+            { type: 'object', references: { field: 'lib', key: 'id', via: 'x' }, description: 'x' },
+            E.BAD_REFERENCES],
+        ['references naming a field the declaration does not have',
+            { type: 'object', references: { field: 'nowhere', key: 'id' }, description: 'x' },
+            E.BAD_REFERENCES],
     ])('%s → %s', (_what, d, code) => {
         expect(codes(withField('bad', d))).toEqual([code]);
+    });
+
+    it('⛓ V0 — a reference to a field of the same declaration is accepted, and survives the merge', () => {
+        const decl = withField('ref', { type: 'object', references: { field: 'lib', key: 'id' }, description: 'x' });
+        expect(validateSidecarFields(decl)).toEqual([]);
+        expect(sidecarFieldsOf({ id: 't', sidecarFields: decl }).ref.references)
+            .toEqual({ field: 'lib', key: 'id' });
     });
 
     it('a derived field that DOES name its writer in a code span is accepted (the '
@@ -187,5 +203,23 @@ describe('sidecarPayloadErrors — the three rules the corpus gate asks, by name
 
     it('no declaration is NO_DECLARATION — never a pass', () => {
         expect(sidecarPayloadErrors(null, payload).map((e) => e.code)).toEqual([E.NO_DECLARATION]);
+    });
+});
+
+describe('⛓ V0 — the two AP-name readers a registry entry may assign to its slots', () => {
+    it('envelopeExitNames: every non-null exitName, in order; null without an exits array', () => {
+        expect(envelopeExitNames({ exits: [{ exit_id: 'a', exitName: 'A' }, { exit_id: 'b', exitName: null },
+            { exit_id: 'c', exitName: 'C' }] })).toEqual(['A', 'C']);
+        expect(envelopeExitNames({ exits: [] })).toEqual([]);
+        expect(envelopeExitNames({})).toBeNull();
+        expect(envelopeExitNames(null)).toBeNull();
+    });
+
+    it('nameMapValues(field): the map\'s string values; null when the payload carries no map', () => {
+        const read = nameMapValues('names');
+        expect(read({ names: { a: 'A', b: 'B', c: 3 } })).toEqual(['A', 'B']);
+        expect(read({ names: {} })).toEqual([]);
+        expect(read({ other: { a: 'A' } })).toBeNull();
+        expect(read({ names: ['A'] })).toBeNull();
     });
 });

@@ -29,6 +29,7 @@ import { activePerkItemNames } from './perkOrigin.js';
 import { createRng } from '../shared/rng.js';
 import { validateJtaDataset, stampDatasetIdentity } from './datasetValidator.js';
 import { normalizeEntry } from '../shared/actionQueue/actionTypes.js';
+import { envelopeExitNames, nameMapValues } from '../procgenCore/sidecarFields.js';
 
 // Host-side PlaybackProxy, injected by index.js's initialize() once the
 // eventBus exists (setter injection rather than importing index.js so
@@ -558,6 +559,10 @@ export const JTA_SIDECAR_FIELDS = Object.freeze({
         description: `\`{dataset_id, schema_version}\` of a loaded dataset, written by ${ZONE_CHANNEL} on `
             + 'every region. It points at a SIBLING ENTRY (the zone-0 carrier), not a file — the '
             + 'play-time warehouse resolves it in memory and REFUSES the region when it cannot.',
+        // ⛓ PRESET SIDECARS V0 — that pointer, declared: `buildWarehouse` matches
+        //   `dataset_id` against a sibling's `jta_dataset.dataset_id`, and so does
+        //   the hub's validity report, by reading this rather than knowing jta.
+        references: Object.freeze({ field: 'jta_dataset', key: 'dataset_id' }),
         schema: Object.freeze({
             required: Object.freeze(['dataset_id', 'schema_version']),
             properties: Object.freeze({
@@ -676,6 +681,12 @@ export const substrateRegistryEntry = Object.freeze({
     },
     // ⛓ PRESET SIDECARS D0 — what that pass-through writes (above).
     sidecarFields: JTA_SIDECAR_FIELDS,
+    // ⛓ PRESET SIDECARS V0 — where the payload carries its AP names. A payload
+    // with no `ap_locations` (base scope: the two Python fixtures) carries none,
+    // and the bridge's zone-location channel is then dormant — the reader
+    // answers null and the hub's validity report says it did not check.
+    apLocationNamesOf: nameMapValues('ap_locations'),
+    apExitNamesOf: envelopeExitNames,
 
     // Host-side proxy publishing jta:playbackControl events that the
     // in-iframe bridge executes (play/stop → resume/pause the game

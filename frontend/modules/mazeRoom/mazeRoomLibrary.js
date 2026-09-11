@@ -43,7 +43,8 @@ import { getPanelInstance } from './index.js';
 import { describeMazeAction } from './mazeKeys.js';
 import { drawMazeCompositeRegion } from './mazeCompositeMap.js';
 import { mazeRegionRoundTrip } from './mazeRegionRoundTrip.js';
-import { TILE_GRID_SIDECAR_FIELDS } from './mazeSerializer.js';
+import { TILE_GRID_SIDECAR_FIELDS, tileGridApLocationNames } from './mazeSerializer.js';
+import { envelopeExitNames } from '../procgenCore/sidecarFields.js';
 
 /**
  * Content-module pass (registry `applyContentModules` hook): stamp tile-grid
@@ -248,6 +249,13 @@ export const substrateRegistryEntry = Object.freeze({
     // serializer itself (`mazeSerializer.js`); `text_adventure` carries the
     // same object, and `check-sidecar-fields.mjs` holds the corpus to it.
     sidecarFields: TILE_GRID_SIDECAR_FIELDS,
+    // ⛓ PRESET SIDECARS V0 — where the payload carries its AP names, so the
+    // hub's validity report (`apworldEditor/sidecarIssues.js`) can hold them to
+    // the document's region without naming this substrate. The exit list is
+    // the engine's re-attached one; the atlas projection may DROP a colliding
+    // crossing by name (`exit_tile_collision`), which the report then shows.
+    apLocationNamesOf: tileGridApLocationNames,
+    apExitNamesOf: envelopeExitNames,
 
     // Content-module pass (hazards). The generic engine calls this after the
     // base region build at both build sites; substrates that don't declare it

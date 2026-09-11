@@ -97,3 +97,42 @@ describe('the families — one NON-default fact each, that a neighbour\'s copy w
         expect(f.atlas_ref.description).toContain('NOTHING at runtime');
     });
 });
+
+/**
+ * ⛓⛓ PRESET SIDECARS V0 — **THE TWO AP-NAME SLOTS**, over the same law's
+ * population. An entry either assigns a FUNCTION to a slot or leaves it absent
+ * (absent = the validity report says it did not check); nothing else is a
+ * declaration. The facts asserted are the ones a neighbour's copy would not
+ * carry: the Seedling entry — built by the flash factory, which assigns both —
+ * REMOVES both, and jta's dataset ref names its sibling carrier.
+ */
+describe('⛓ V0 — `apLocationNamesOf` / `apExitNamesOf`, and the jta reference', () => {
+    it.each(HOSTED.map((e) => [e.id, e]))('%s: each slot is a function or absent', (_id, entry) => {
+        for (const slot of ['apLocationNamesOf', 'apExitNamesOf']) {
+            expect(['function', 'undefined'], slot).toContain(typeof entry[slot]);
+        }
+    });
+
+    it('the population is not vacuous: most hosted entries declare both', () => {
+        const both = HOSTED.filter((e) => typeof e.apLocationNamesOf === 'function'
+            && typeof e.apExitNamesOf === 'function');
+        expect(both.length).toBeGreaterThan(HOSTED.length / 2);
+    });
+
+    it('flash_seedling removes BOTH of the factory\'s carriers (atlas-compiled: no ap_locations, '
+        + 'teleporter doors only)', () => {
+        const seedling = substrateRegistry.get('flash_seedling');
+        const factory = substrateRegistry.get('flash');
+        expect(typeof factory.apLocationNamesOf).toBe('function');
+        expect(typeof factory.apExitNamesOf).toBe('function');
+        expect(seedling.apLocationNamesOf).toBeUndefined();
+        expect(seedling.apExitNamesOf).toBeUndefined();
+    });
+
+    it('jta: `jta_dataset_ref` REFERENCES the sibling carrier `jta_dataset` by `dataset_id` — the '
+        + 'key `buildWarehouse` matches', () => {
+        expect(fieldsOf('jta').jta_dataset_ref.references).toEqual({ field: 'jta_dataset', key: 'dataset_id' });
+        const refs = HOSTED.filter((e) => Object.values(fieldsOf(e.id)).some((d) => d.references));
+        expect(refs.map((e) => e.id)).toEqual(['jta']);
+    });
+});
