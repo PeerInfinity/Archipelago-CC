@@ -13945,6 +13945,36 @@ stale Edit ▸ census line re-derived at HEAD; rows + five mutants; docs. Baseli
 34611506449). Reports come to `preset-sidecars-planning`; M2 on M1's idle notice; **the REPLAN after M2.** ⛔ The
 planner commits nothing while M1 runs.
 
+**M1 SHIPPED + VERIFIED 2026-09-11** (`fb45ad85ff` → `66d7da2684`, four commits: the Map tab's selection draws the
+region's block (ONE renderer, THIRD host), the second click presses its `Edit ▸`, the hand-off answer names the
+carried slot and the top-down route's cost, four in-app rows + the selection row amended, docs incl. the re-derived
+census). **Two of the brief's premises were MINE and WRONG, ruled mid-slice:** (1) the map click LEFT the Map
+(`selectRegion` switches to Regions; a row asserted it) → ruled **B**: the first click selects and STAYS (the
+pipeline's shape, and what M2/M3 need), `Go to region` is the Regions road; (2) `_handoffAnswer`'s `'1'` is not a
+stale read — BOTH pipeline routes realise slot 1 and the handler dropped `ev.player` → ruled **α**: the answer says
+first when the carried slot differs and keeps speaking of the slot the routes build (trap **1319**); **β = "the
+pipeline realises the carried slot"** (~6 sites incl. `topDownSteps.js`, shared with the CLI) is a follow-up rung,
+⚖ for the user. The slice also found and fixed, before commit: the selection is a region NAME and survived a slot
+pick, so a first click on slot 3's same-named region opened slot 3's room (trap **1320**; a slot pick now drops the
+selection; a cross-slot arm + mutant F). Census re-derived @ `fb45ad85ff`: maze 1,036/1,046, bounce 25/25 (the 10
+refusals = `seedling_atlas_maze`). **CI @ `66d7da2684`: run 34617630598 success, 450/13718 (13710 passed | 8 skipped
+| 0 failed) = the derivation (+7 rows).** Planner's verification: CI quoted; the product's own `_selectOnMap` on the
+fixture draws the block (`region_1_1`, badge `maze`, `Go to region`, no room opened); ⚠ a headless scratch page
+leaves the hub's Golden-Layout stack `display: none` (0×0 canvas), so the synthetic click was not reproduced here —
+the in-app rows (136/136) and the slice's live drive are the click's witnesses. ⚖ OPEN (§17.8): β; the sphere
+sentence's top-down alternative has no cost clause; the map's selection survives a TAB switch (a Regions-tab
+selection arms the map's door); the pipeline's P2–P4 paint their own slot; MEMORY.md is at the compaction hook's
+limit and needs an owner.
+
+**M2 LAUNCHED 2026-09-11** as `apworld-sidecars-M2` (Opus; kickoff `NewDocs/plans/apworld-sidecars-M2-prompt.md`):
+`move-region` / `swap-regions` as NATIVE ops (⚖ A): reconstruct the slot's Grid → the engine's own mutators +
+`relayoutSphereGrid` → write back `grid_cell` and the SERIALIZER's form of the touched payload exits, `regions[p]`
+untouched; the description names every link that became a teleporter (⚖ C); a corpus control (a no-op relayout over
+every committed slot moves 0 bytes); the gesture = `Move / swap ▸` on the map host's block, armed state dropped on a
+slot pick / tab switch / new document (1320); out-of-bounds refused (grid growth = a ⚖); rows + five mutants; docs.
+Baseline 450/13718 @ `66d7da2684` (run 34617630598). Reports come to `preset-sidecars-planning`; **the REPLAN with
+the user follows M2.** ⛔ The planner commits nothing while M2 runs.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
