@@ -13904,6 +13904,21 @@ vocabulary); the form creates a field but never deletes one; no nested editing f
 offers the generic `flash`, which has no preset; `render_hint` has no declared vocabulary. **⛓ D0 + V0 + D1 DONE —
 REPLAN with the user; nothing launched.**
 
+**⚖ RULED (user, 2026-09-11, the second REPLAN): "I agree with your recommendations. Please continue."** ⇒ nested
+derived fields DEFERRED (no path grammar until an editor needs it); create-but-not-delete and no nested editing stay
+the JSON's; the bar's notice/warning count split is a later one-liner; the generic `flash` stays in the picker (no
+hand list). The ladder continues: **S2 → M1 (+ the `_handoffAnswer` fix-ups) → M2 → M3 → T0/T1**; the next replan
+after M2.
+
+**S2 LAUNCHED 2026-09-11** as `apworld-sidecars-S2` (Opus; kickoff `NewDocs/plans/apworld-sidecars-S2-prompt.md`):
+`Re-derive rules ▸` on the block — H4b's machinery on demand after a raw save: the PRE-EDIT baseline recovered from
+the RECORD (`foldEdits` up to the last sidecar op for the region) so authorship is proven as Edit ▸ proves it, the
+derivation from the CURRENT payload, frozen rules (grid-composed gates) kept and counted, the totality refusals,
+ONE `replace-region-sidecar`; ENABLED only where the substrate declares a round trip (disabled by name elsewhere —
+the ⚖); Edit ▸ untouched (its rows prove it); rows + five mutants; docs. Baseline 449/13695 @ `c58cd1f6dc` (run
+34563210789). Reports come to `preset-sidecars-planning`; M1 on S2's idle notice. ⛔ The planner commits nothing
+while S2 runs.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
