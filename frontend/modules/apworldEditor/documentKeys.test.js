@@ -529,6 +529,10 @@ describe('the editor slot — FILLED by H5', () => {
         expect(String(door.open)).not.toContain('onSave');
         expect(door.note).toContain('Regions tab');
         expect(door.note).toContain('Sidecars tab');
+        // ⛓ D1 — and it says which is which: LISTED on Sidecars (where the door
+        //   goes), DRAWN on Regions.
+        expect(door.note).toMatch(/LISTED[^.]*Sidecars tab/);
+        expect(door.note).toMatch(/DRAWN[^.]*Regions tab/);
     });
 
     /**
@@ -693,10 +697,13 @@ describe('the editor slot — FILLED by H5', () => {
                 expect(typeof tabs[0], key).toBe('string');
             }
         }
-        // ⛓ …and the one tab-switch door goes where its label says.
+        // ⛓ …and the one tab-switch door goes where its label says: since D1
+        //   (the replan's ruling 6) the SIDECARS tab, where the key is listed —
+        //   the tab's own registered id, not a second spelling of it.
         const sidecarsTabs = [];
         await DOCUMENT_KEY_EDITORS.preset_sidecars.open({ goToTab: (t) => sidecarsTabs.push(t) });
-        expect(sidecarsTabs).toEqual(['regions']);
+        expect(sidecarsTabs).toEqual([SIDECARS_TAB_ID]);
+        expect(DOCUMENT_KEY_EDITORS.preset_sidecars.label).toContain('Sidecars tab');
     });
 
     /**

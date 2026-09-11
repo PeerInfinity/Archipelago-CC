@@ -32,9 +32,10 @@
  * LINKED editors hang off — `region_atlas` → the marking tool,
  * `procgen_metadata` → the pipeline, `loop_costs` → the cost debugger (L4: its
  * plan comes back as ONE `set-key`),
- * `sphere_log` → the spoiler checklist, `preset_sidecars` → the Regions tab
- * (S0: a tab switch — the key is drawn per region there and on the Sidecars
- * tab, and edited through each region's Edit ▸), and (W0) `helpers` / `dungeons` → their own panels as
+ * `sphere_log` → the spoiler checklist, `preset_sidecars` → the Sidecars tab
+ * (S0: a tab switch — the key is drawn per region there and on the Regions
+ * tab, and edited through each region's block; D1 moved the target from Regions
+ * to Sidecars, where it is LISTED), and (W0) `helpers` / `dungeons` → their own panels as
  * VIEWERS. A filled row makes `entry.editor` non-null and the Document tab
  * draws its Open button. See the table's own docblock for the contract and for
  * what each door's `returns` means. ⛔ The set is the table, not a number
@@ -416,11 +417,18 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
      * ⛓⛓⛓ S0 — **A TAB SWITCH, AND `none` IS WHAT IT RETURNS.** The key is
      * drawn PER REGION by one renderer on two hosts (`_makeRegionSidecarBlock`
      * under each region on the Regions tab, and the Sidecars tab's per-region
-     * list), and a region's room is edited through that block's Edit ▸, whose
-     * save comes back as ONE `replace-region-sidecar` through the per-region
-     * editor's own seam (`_applyOp`) — never through this door. This door only
-     * takes the reader to the Regions tab. ⛔ A second whole-block door would be
-     * a second place to edit one key, and the per-region one knows the shape.
+     * list), and an entry is edited through that block — its fields, its JSON
+     * (ONE `set-region-sidecar`) and its Edit ▸ (ONE `replace-region-sidecar`
+     * through the per-region editor's own seam) — never through this door.
+     * ⛔ A second whole-block door would be a second place to edit one key, and
+     * the per-region one knows the shape.
+     *
+     * ⛓⛓ PRESET SIDECARS D1 (the replan's ruling 6, user 2026-09-10) — **IT GOES
+     * TO THE SIDECARS TAB**, where the key is LISTED per region (S0's list), not
+     * to Regions, where it is DRAWN under each region beside the rest of that
+     * region. A reader on the Document row asking "where is this key" is asking
+     * for the list. The target is `SIDECARS_TAB_ID`, the constant the tab is
+     * registered under — never a second spelling of it.
      *
      * ⛔ **R1 DECLARED IT `returns: 'op'` + `focusHubOnSave: false`, "false
      * because unreachable"** — the census found `open` never touching `onSave`,
@@ -434,16 +442,16 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
      * which is the one other thing a `none` door may do (the viewer-door row).
      */
     preset_sidecars: Object.freeze({
-        label: 'Go to the Regions tab',
+        label: 'Go to the Sidecars tab',
         returns: 'none',
         panelId: null,
-        note: 'Drawn PER REGION by one renderer in two places: under each region on the '
-            + 'Regions tab, and as the per-region list on the Sidecars tab — its substrate, '
-            + 'its facts, the entry\'s JSON, and its doors. A room is edited through that '
-            + 'block\'s Edit ▸, whose save comes back as ONE `replace-region-sidecar`; this '
-            + 'button only goes to the Regions tab. There is no whole-block editor, '
-            + 'deliberately.',
-        open: async ({ goToTab }) => { goToTab('regions'); },
+        note: 'LISTED per region on the Sidecars tab (the slot\'s list, collapsed by default), '
+            + 'and DRAWN under each region on the Regions tab — one renderer in both places: its '
+            + 'substrate, its facts, its fields, the entry\'s JSON, and its doors. An entry is '
+            + 'edited through that block (a field or Save JSON = ONE `set-region-sidecar`; Edit ▸ '
+            + '= ONE `replace-region-sidecar`); this button only goes to the Sidecars tab. There '
+            + 'is no whole-block editor, deliberately.',
+        open: async ({ goToTab }) => { goToTab(SIDECARS_TAB_ID); },
     }),
 
     /**
