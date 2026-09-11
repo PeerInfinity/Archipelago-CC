@@ -14039,6 +14039,40 @@ slice STOPS and reports the list; committed presets not regenerated. Baseline 45
 Fable session** whose first conversation is M3 on the sides-only shape and the G1/G2 order. ⛔ The planner commits
 nothing while G0 runs.
 
+## 5w. SEEDLING HEADLESS WEBGPU — the "0.5 ticks/s headless" was a DEVICE LOSS, not SwiftShader — H1 LAUNCHED 2026-09-11 (Fable session `archipelago-cc-34` at main `90fd9f61b6`; plan file `NewDocs/plans/seedling-headless-webgpu-plan.md`, gitignored; memory `project_seedling_no_gpu_branch`; §5v is reserved for `preset-sidecars-planning`'s HANDOFF)
+
+**Where it came from.** The user asked (2026-09-11) whether the Seedling wasm tests could run in CI, then whether an
+AS3 branch could drop the GPU. Investigations `NewDocs/investigation/seedling-wasm-gates-in-ci.md` and
+`seedling-no-gpu-branch.md` (both gitignored). Measured on the box while answering the second: headless frames
+alternate ~20–45 ms / ~4.4 s; the 4.4 s is the runtime's frames-in-flight park (`render_webgpu.c:2436-2446`, 1000 ×
+`emscripten_sleep(1)` = 4236–4403 ms measured) because **the WebGPU device is LOST ~2 s after ▶ Start** and every
+`onSubmittedWorkDone()` rejects. Root-caused by SWFRecomp-CC session `swfrecomp-cc-d8`: headless Chromium on
+`--use-angle=swiftshader` loses the device at the first present of ANY page (no shared-image backing for the WebGPU
+swapchain on the ANGLE-SwiftShader GL compositor); runtime fixed there at `b0a6a487b`. ⛔ The per-frame
+"A valid external Instance reference no longer exists" pageerror that `seedling-bot.md` ~l.2512 calls an unconfigured
+BridgeGeneric IS the device-lost message.
+
+**The lever, measured (pinned p4d, Chromium 1194):** add `--enable-features=Vulkan --use-vulkan=swiftshader` →
+device alive, **28 frames/s, median frame 26 ms, 0 pageerrors** (was 0.40 frames/s, median 2271 ms). Canvas BLACK on
+the pinned builds (283-layer bitmap array > SwiftShader's 256 `maxTextureArrayLayers`; needs a rebuild after
+SWFRecomp-CC `c6681e744`) — and NO gate in this repo reads the wasm canvas's pixels (census: the 6 wasm-driving
+gates read 0 pixels; the 10 pixel-reading gates are editor/lab 2D canvases). The probes' own variant
+(`--use-vulkan=swiftshader` WITHOUT `--enable-features=Vulkan`) still loses the device — measured.
+
+**H1 LAUNCHED 2026-09-11** as `seedling-headless-H1` (Opus; kickoff `NewDocs/plans/seedling-headless-H1-prompt.md`):
+ONE exported constant `scripts/procgen/headlessChromium.js` replacing the 28 spellings (6 gates + 22 probes, two
+variants); the deadline constants (`SECONDS_PER_FRAME = 2.5` ×2, `SHIP_SEC = 2400`, four prose budgets) re-derived
+from a headless measurement with written multipliers, formulas kept; docs corrected (`--win` STAYS the default
+pending ⚖); **acceptance = the headless full tier reproduces `roster: --win --tier=full` tape by tape** (campaign
+616/0/3 · map-walk 449/0/0 · mechanic 2194/0/0), any difference a FINDING, never a re-record; CI re-priced from the
+push (`seedling-wasm-pages` 161 s / `-element` 897 s before — whether ubuntu-latest's Chromium keeps the device alive
+is UNMEASURED and the run answers). Roster/drivers/arm-list BEFORE == AFTER asserted. Baseline 451/13753 @
+`0101e25c42` (run 34626109503). NOT H1: the seedling-wasm rebuild, headless arms for the six `windows` gates (H2),
+retiring `--win`, the standing row, SWFRecomp-CC. **⚖ after H1:** may headless discharge the `--win` row; retire
+"never headless"; H2 → the CI question of `seedling-wasm-gates-in-ci.md` reopens on STANDARD runners (no GPU runner,
+no org); schedule the rebuild. Sequencing: disjoint paths from G0 (`scripts/procgen/**` vs `frontend/**`); the box is
+the only shared resource and the lock serialises it — launched without waiting.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
