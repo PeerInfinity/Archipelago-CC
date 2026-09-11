@@ -113,6 +113,16 @@ import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
  */
 import { describeSidecarIssue, sidecarIssues } from './sidecarIssues.js';
 /**
+ * ⛓⛓ PRESET SIDECARS D1 — the block's FIELDS view, read off the declaration
+ * (`sidecarFieldsOf`) and the entry subschema: which rows exist, which control
+ * each draws, which are derived and greyed, and the whole entry one control's
+ * change writes. No substrate is named here or there.
+ */
+import {
+  SIDECAR_FORM_CONTROLS, SIDECAR_FORM_LEVELS, SUBSTRATE_KEY, SUBSTRATE_PICKER_CLAUSE,
+  parseControlValue, rederivesNothingSentence, sidecarFormModel, withSidecarField,
+} from './sidecarForm.js';
+/**
  * ⛓⛓ H5 — **IS THAT PANEL EVEN IN THIS APP?** `ui:activatePanel` reaches a
  * `panelManager` that warns and returns when the component type is not in the
  * layout, so a link to a module `module-configs/modules.json` has DISABLED is a
@@ -3974,17 +3984,24 @@ class ApworldEditorUI {
    * @param {Function} o.value      () → the value to pretty-print
    * @param {string} o.sizeLabel    the text before the character count
    * @param {Function|null} [o.onSave] (parsed) → void; null = read-only
+   * @param {string} [o.noun]       what the toggle shows/hides (`JSON`)
+   * @param {Function|null} [o.lead] () → an element drawn above the textarea,
+   *   called only when expanded (PRESET SIDECARS D1: the entry's fields view)
    */
   _makeJsonBlock({ classPrefix, dataset = {}, name, expanded, onToggle, value, sizeLabel,
-    onSave = null }) {
+    onSave = null, noun = 'JSON', lead = null }) {
     const wrap = document.createElement('div');
 
-    const toggle = this._makeButton(expanded ? '▾ Hide JSON' : '▸ Show JSON', '#3a3a3a', onToggle);
+    const toggle = this._makeButton(expanded ? `▾ Hide ${noun}` : `▸ Show ${noun}`, '#3a3a3a',
+      onToggle);
     toggle.style.fontSize = '11px';
     toggle.className = `${classPrefix}-toggle`;
     Object.assign(toggle.dataset, dataset);
     wrap.appendChild(toggle);
     if (!expanded) return wrap;
+    // ⛓ D1 — a caller's own view, drawn above the textarea and built only here.
+    const above = lead ? lead() : null;
+    if (above) wrap.appendChild(above);
 
     const text = document.createElement('textarea');
     text.className = `${classPrefix}-json`;
@@ -4150,8 +4167,9 @@ class ApworldEditorUI {
     const res = this._applyOp(op, { rerender: false });
     if (res.ok) {
       // ⛓ V0 — errors block nothing, but the answer says there are some: the
-      //   count of the report's issues for the entry this save wrote.
-      const n = this._sidecarIssuesOf(regionName).length;
+      //   count of the report's issues for the entry this save wrote. ⛓ D1 —
+      //   only when it WROTE one: a no-op ("No change") wrote nothing to count.
+      const n = res.applied ? this._sidecarIssuesOf(regionName).length : 0;
       if (n > 0) {
         this._opMessage = `${this._opMessage} — ${n} sidecar issue${n === 1 ? '' : 's'}, see the block`;
       }
@@ -5458,11 +5476,17 @@ class ApworldEditorUI {
    *     and read-only otherwise — the widget's own default, so a host that
    *     passes nothing cannot make the entry writable by accident. Both hosts
    *     pass one (⚖ Q2 A: one renderer, editable wherever it is drawn), and the
-   *     answer to the save is printed under the block that was saved.
+   *     answer to the save is printed under the block that was saved;
+   *   · ⛓ PRESET SIDECARS D1 — the same disclosure (**▸ Show fields & JSON**)
+   *     draws the entry as a FORM above the JSON: one row per field of the
+   *     entry subschema and of the substrate's DECLARATION
+   *     (`_makeSidecarFieldsView`), derived fields greyed; and under the JSON,
+   *     the sentence naming the derived fields a raw save leaves as written
+   *     (`rederivesNothingSentence`).
    *
-   * ⛔ Every save — from either host — is the SAME `_saveRegionSidecar`, one
-   *   `set-region-sidecar` op; `onSave` is how a host opts in, not a second
-   *   save path.
+   * ⛔ Every save — from either host, from the JSON or from a field's control —
+   *   is the SAME `_saveRegionSidecar`, one `set-region-sidecar` op; `onSave`
+   *   is how a host opts in, not a second save path.
    *
    * ⛔ The block is drawn for the SELECTED slot. `player` is the slot the
    *   entry is READ from, and each host passes `this.playerId`; the Edit door
@@ -5574,11 +5598,12 @@ class ApworldEditorUI {
     }
 
     const key = `${hostTab}|${player}|${regionName}`;
+    const jsonOpen = this._expandedSidecarJson.has(key);
     box.appendChild(this._makeJsonBlock({
       classPrefix: 'apworld-sidecar',
       dataset: { regionName, player: String(player) },
       name: `preset_sidecars.${player}.${regionName}`,
-      expanded: this._expandedSidecarJson.has(key),
+      expanded: jsonOpen,
       onToggle: () => {
         if (this._expandedSidecarJson.has(key)) this._expandedSidecarJson.delete(key);
         else this._expandedSidecarJson.add(key);
@@ -5589,7 +5614,39 @@ class ApworldEditorUI {
       value: () => sidecarOf(this.rulesDoc, player, regionName),
       sizeLabel: `the whole entry of ${regionName} (slot ${player})`,
       onSave,
+      /**
+       * ⛓⛓ PRESET SIDECARS D1 — **THE FIELDS VIEW RIDES THE SAME DISCLOSURE**,
+       * drawn between the toggle and the JSON: the entry as a form
+       * (`_makeSidecarFieldsView`), then the JSON as its escape hatch. ⛔ ONE
+       * disclosure, not a second button beside it: collapsed, the block is
+       * exactly the block S0 measured (a second toggle per block measured
+       * +2.3 ms over `AP_8`'s 235 blocks — the per-render cost the ⚖ said must
+       * not move), and both views are built only on expand (W0's rule). The
+       * entry is re-read NOW, never the one captured at the top of the render.
+       */
+      noun: 'fields & JSON',
+      lead: () => this._makeSidecarFieldsView(player, regionName,
+        sidecarOf(this.rulesDoc, player, regionName), onSave),
     }));
+    /**
+     * ⛓ D1 — **WHAT A RAW SAVE LEAVES AS WRITTEN, BY NAME** — this entry's
+     * derived payload fields, joined from the declaration's `derived: true`
+     * descriptors the entry carries (`rederivesNothingSentence`), never a hand
+     * list; where the declaration marks none, or there is none, the sentence
+     * says so. Drawn under the JSON while the block is open — where a person
+     * edits from — and not at all otherwise, so a collapsed block costs nothing
+     * more. The op's own description keeps S1's generic clause
+     * (`SIDECAR_NOT_REDERIVED`); this names the fields.
+     */
+    if (jsonOpen) {
+      const note = document.createElement('div');
+      note.className = 'apworld-sidecar-rederive-note';
+      note.dataset.regionName = regionName;
+      note.textContent = rederivesNothingSentence(sidecarOf(this.rulesDoc, player, regionName));
+      Object.assign(note.style, { color: '#888', fontSize: '10px', margin: '3px 0 0',
+        lineHeight: '1.35' });
+      box.appendChild(note);
+    }
     /**
      * ⛓ S1 — the answer to this block's own save, drawn under it (the Document
      * row's `apworld-doc-op-message` precedent): the op's description when it
@@ -5611,6 +5668,239 @@ class ApworldEditorUI {
       box.appendChild(msg);
     }
     return box;
+  }
+
+  /**
+   * ⛓⛓⛓ PRESET SIDECARS D1 — **THE ENTRY AS A FORM, READ OFF THE DECLARATION**
+   * (⚖ user, 2026-09-10, Q3: *"have the editor load [the declared options] as
+   * the set of options to choose from"*). One row per field: the entry-level
+   * fields first (the SCHEMA's entry subschema — `substrate`'s vocabulary is the
+   * registry's playable ids), then the payload's (the merged declaration,
+   * `sidecarFieldsOf`, in its order). Every word of it comes from
+   * `sidecarFormModel`; this method only draws.
+   *
+   * ⛔ **THE FORM IS THE SAFE PATH, THE JSON THE ESCAPE HATCH** — a DERIVED
+   * field's control is disabled (its writer in the title), because a person
+   * changing it here would be changing a value the substrate computes; the JSON
+   * widget below stays fully editable (the ⚖ lets the reader edit anything
+   * there), and the lead line says so.
+   *
+   * ⛔ **EVERY CHANGE IS ONE WHOLE-ENTRY OP** — `_onSidecarFieldChange`.
+   *
+   * @param {string} player
+   * @param {string} regionName
+   * @param {object} entry   the CURRENT document's entry
+   * @param {Function|null} onSave the host's save (null = read-only)
+   */
+  _makeSidecarFieldsView(player, regionName, entry, onSave) {
+    const view = document.createElement('div');
+    view.className = 'apworld-sidecar-fields';
+    view.dataset.regionName = regionName;
+    view.dataset.player = String(player);
+    Object.assign(view.style, { margin: '4px 0 2px', padding: '4px 6px', border: '1px solid #2e3440',
+      borderRadius: '3px', backgroundColor: '#1a1d23' });
+
+    const lead = document.createElement('div');
+    lead.className = 'apworld-sidecar-fields-note';
+    lead.textContent = 'The form is the safe path: each change saves the WHOLE entry as ONE '
+      + 'undoable edit. Derived fields are greyed (their writer is in the title) — the JSON below '
+      + `is the escape hatch, where every field stays editable.${onSave ? '' : ' Read-only here.'}`;
+    Object.assign(lead.style, { color: '#888', fontSize: '10px', marginBottom: '4px',
+      lineHeight: '1.35' });
+    view.appendChild(lead);
+
+    const model = sidecarFormModel(entry, { rulesSchema: this._rulesSchema });
+    const heading = (text) => {
+      const h = document.createElement('div');
+      h.className = 'apworld-sidecar-fields-heading';
+      h.textContent = text;
+      Object.assign(h.style, { color: '#9ab', fontSize: '10px', margin: '4px 0 2px',
+        textTransform: 'none' });
+      view.appendChild(h);
+    };
+    const said = (className, text) => {
+      const s = document.createElement('div');
+      s.className = className;
+      s.textContent = text;
+      Object.assign(s.style, { color: '#999', fontSize: '10px', padding: '1px 0' });
+      view.appendChild(s);
+    };
+
+    heading('The entry (rules.schema.json)');
+    if (model.entryRows) {
+      for (const row of model.entryRows) {
+        view.appendChild(this._makeSidecarFieldRow(player, regionName, row, onSave));
+      }
+    } else {
+      said('apworld-sidecar-fields-missing', this._schemaError
+        ? `⚠ ${this._schemaError} — the entry-level fields are in the JSON below.`
+        : 'The rules schema has not loaded yet — the entry-level fields are in the JSON below.');
+    }
+
+    const sub = model.substrate ? `\`${model.substrate}\`` : '(no substrate)';
+    heading(`playable_payload — the fields ${sub} declares`);
+    if (model.payloadRows) {
+      for (const row of model.payloadRows) {
+        view.appendChild(this._makeSidecarFieldRow(player, regionName, row, onSave));
+      }
+    } else {
+      said('apworld-sidecar-fields-missing', model.declarationError
+        ? `⚠ ${sub}'s field declaration is malformed — ${model.declarationError}. The payload is `
+          + 'in the JSON below.'
+        : (model.registered
+          ? `${sub} declares no sidecarFields — its payload fields are in the JSON below.`
+          : `${sub} is not registered in this app — its payload fields are in the JSON below.`));
+    }
+    return view;
+  }
+
+  /**
+   * ⛓ ONE FIELD'S ROW: its name, `required` / `derived` marks, and the control
+   * its TYPE picks (`SIDECAR_FORM_CONTROLS`) — or a read-only value or summary.
+   * Stamped (`data-field`, `-level`, `-derived`, `-required`, `-present`,
+   * `-control`) so a row reads the model's answer, not the styling.
+   */
+  _makeSidecarFieldRow(player, regionName, row, onSave) {
+    const C = SIDECAR_FORM_CONTROLS;
+    const line = document.createElement('div');
+    line.className = 'apworld-sidecar-field';
+    Object.assign(line.dataset, {
+      field: row.field, level: row.level, derived: String(row.derived),
+      required: String(row.required), present: String(row.present), control: row.control,
+    });
+    Object.assign(line.style, { display: 'flex', alignItems: 'center', gap: '6px',
+      flexWrap: 'wrap', padding: '1px 0', fontSize: '11px' });
+
+    const name = document.createElement('code');
+    name.className = 'apworld-sidecar-field-name';
+    name.textContent = row.field;
+    name.title = row.description;
+    Object.assign(name.style, { color: row.derived ? '#889' : '#cde', minWidth: '11em' });
+    line.appendChild(name);
+
+    const mark = (className, text, title, color) => {
+      const m = document.createElement('span');
+      m.className = className;
+      m.textContent = text;
+      m.title = title;
+      Object.assign(m.style, { fontSize: '9px', padding: '0 5px', borderRadius: '7px',
+        border: `1px solid ${color}`, color });
+      line.appendChild(m);
+    };
+    if (row.required) {
+      mark('apworld-sidecar-field-required', 'required', row.level === SIDECAR_FORM_LEVELS.ENTRY
+        ? 'rules.schema.json requires it on every entry'
+        : 'the declaration\'s `required`: every producer of this substrate writes it', '#8a7a4a');
+    }
+    if (row.derived) {
+      // ⛓ The title IS the descriptor's description, which for a derived field
+      //   names its WRITER (D0 refuses a declaration that does not).
+      mark('apworld-sidecar-field-derived', 'derived', row.description, '#5a6a8a');
+    }
+
+    const value = (text) => {
+      const v = document.createElement('span');
+      v.className = 'apworld-sidecar-field-value';
+      v.textContent = text;
+      Object.assign(v.style, { color: '#999', fontFamily: 'monospace' });
+      line.appendChild(v);
+    };
+    if (!row.present) value('—');
+
+    const locked = row.derived || !onSave;
+    const write = (raw) => this._onSidecarFieldChange(player, regionName, row, raw, onSave);
+    let control = null;
+    if (row.control === C.CHECKBOX) {
+      control = document.createElement('input');
+      control.type = 'checkbox';
+      control.checked = row.value === true;
+      // ⛓ An ABSENT boolean is neither: pressing it CREATES the field as `true`.
+      if (!row.present) control.indeterminate = true;
+      control.addEventListener('change', () => write(control.checked));
+    } else if (row.control === C.SELECT) {
+      control = document.createElement('select');
+      const at = row.present ? row.enum.findIndex((v) => v === row.value) : -1;
+      if (at < 0) {
+        const o = document.createElement('option');
+        o.value = '';
+        o.textContent = row.present
+          ? `${JSON.stringify(row.value)} — not in the declared set`
+          : '— (absent: choosing one creates it)';
+        o.disabled = true;
+        o.selected = true;
+        control.appendChild(o);
+      }
+      row.enum.forEach((v, i) => {
+        const o = document.createElement('option');
+        o.value = String(i);
+        o.textContent = typeof v === 'string' ? v : JSON.stringify(v);
+        if (i === at) o.selected = true;
+        control.appendChild(o);
+      });
+      control.addEventListener('change', () => write(control.value));
+    } else if (row.control === C.TEXT || row.control === C.NUMBER) {
+      control = document.createElement('input');
+      control.type = row.control === C.TEXT ? 'text' : 'number';
+      if (row.control === C.NUMBER) control.step = row.type === 'integer' ? '1' : 'any';
+      control.value = row.present ? String(row.value) : '';
+      if (!row.present) control.placeholder = '— (absent: typing one creates it)';
+      control.addEventListener('change', () => write(control.value));
+      control.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); control.blur(); }
+      });
+    } else if (row.control === C.SUMMARY) {
+      value(`${row.summary} — edit in JSON below`);
+    } else if (row.present) {
+      value(row.typeMismatch
+        ? `${JSON.stringify(row.value)} — not a ${row.type}; fix it in the JSON below`
+        : JSON.stringify(row.value));
+    }
+    if (control) {
+      control.className = 'apworld-sidecar-field-control';
+      control.dataset.field = row.field;
+      control.dataset.level = row.level;
+      Object.assign(control.style, { fontSize: '11px', backgroundColor: '#111', color: '#ddd',
+        border: '1px solid #444', borderRadius: '3px' });
+      if (control.type === 'text' || control.type === 'number') control.style.width = '14em';
+      const picker = row.level === SIDECAR_FORM_LEVELS.ENTRY && row.field === SUBSTRATE_KEY;
+      control.title = picker ? `${row.description} — ${SUBSTRATE_PICKER_CLAUSE}` : row.description;
+      if (locked) {
+        control.disabled = true;
+        if ('readOnly' in control) control.readOnly = true;
+        Object.assign(control.style, { opacity: '0.45', cursor: 'not-allowed' });
+        if (!row.derived) control.title = 'Read-only here.';
+      }
+      line.appendChild(control);
+    }
+    return line;
+  }
+
+  /**
+   * ⛓⛓⛓ D1 — **ONE CONTROL'S CHANGE = ONE WHOLE-ENTRY OP.** The reading is
+   * parsed (`parseControlValue` — a number input that is not a number is refused
+   * by name and never becomes an op), then the WHOLE entry is built with that one
+   * value replaced (`withSidecarField`) from the entry the document holds AT THE
+   * MOMENT OF THE CHANGE (trap 1311 — never a copy captured at render), and
+   * handed to the host's save: the same `_saveRegionSidecar` S1's Save JSON
+   * reaches, so the same op preview, the same schema veto, ONE
+   * `set-region-sidecar`, and the same answer (S1's sentence + V0's count).
+   *
+   * ⛔ No debounce: two changes are two ops. ⛔ A change equal to the stored
+   *   value writes nothing — the session's own `equal` answers "No change", and
+   *   no op is recorded (trap 1301).
+   */
+  _onSidecarFieldChange(player, regionName, row, raw, onSave) {
+    const refuse = (why) => {
+      this._opMessage = `Refused: ${why}`;
+      this._opRowMessage = { sidecar: `${player}|${regionName}`, text: this._opMessage, refused: true };
+      this._render();
+    };
+    if (!onSave) { refuse(`\`${row.field}\` is read-only here`); return; }
+    const parsed = parseControlValue(row, raw);
+    if (!parsed.ok) { refuse(parsed.why); return; }
+    const current = sidecarOf(this.rulesDoc, player, regionName);
+    if (!current) { refuse(`slot ${player} has no sidecar entry for "${regionName}" any more`); return; }
+    onSave(withSidecarField(current, row.level, row.field, parsed.value));
   }
 
   _renderRegion(regionName, region) {
