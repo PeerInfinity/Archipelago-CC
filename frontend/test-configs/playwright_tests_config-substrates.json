@@ -680,7 +680,7 @@
             "id": "apworld-a-sidecar-save-writes-the-entry-and-leaves-the-rules",
             "enabled": true,
             "category": "apworldEditor",
-            "_comment": "PRESET SIDECARS S1 (\u2696 Q1 C, Q3 A). One payload key edited in the block's textarea, the product's Save JSON pressed: one set-region-sidecar recorded; the DOCUMENT after = before with exactly that entry replaced (trap 1306); the region's access rules byte-equal; the answer under the block is the op's description naming what was NOT re-derived; the op asked directly writes the same bytes; one Undo restores. Mutants A (the op also writes rules) and B (payload-only write) red it."
+            "_comment": "PRESET SIDECARS S1 (\u2696 Q1 C, Q3 A). One payload key edited in the block's textarea, the product's Save JSON pressed: one set-region-sidecar recorded; the DOCUMENT after = before with exactly that entry replaced (trap 1306); the region's access rules byte-equal; the answer under the block is the op's description naming what was NOT re-derived; the op asked directly writes the same bytes; one Undo restores; then the WHOLE entry (entry-level fields dropped, grid cell moved) lands as typed. Once per payload family. Mutants A (the op also writes rules) and B (payload-only write - seen only by the whole-entry arm) red it."
         },
         {
             "id": "apworld-a-sidecar-save-is-vetoed-by-name",

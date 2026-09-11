@@ -6552,6 +6552,35 @@ export async function apworldASidecarSaveWritesTheEntryAndLeavesTheRules(testCon
                 beforeBytes, JSON.stringify(panel.rulesDoc));
             testController.assertEqual(`${at} …and the op list`, String(opsBefore),
                 String(panel.session.ops().length));
+
+            /**
+             * ⛓⛓ **AND THE ENTRY-LEVEL FIELDS ARE THE SAVE'S TOO** (⚖ Q3 A: the
+             * whole entry). ⛔ Measured by the first mutant battery: a save of ONE
+             * payload key cannot tell "the whole entry was written" from "only
+             * the payload was" (mutant B) — the two documents are identical. So
+             * the same save again with the entry's own fields moved: every
+             * top-level key except the payload DROPPED but `substrate` (which
+             * the op requires), and `grid_cell` moved if the entry had one.
+             */
+            const whole = { substrate: typed.substrate, playable_payload: typed.playable_payload };
+            const cell = before.preset_sidecars[slot][region].grid_cell;
+            if (cell) whole.grid_cell = { gx: cell.gx + 1, gy: cell.gy };
+            const dropped = Object.keys(before.preset_sidecars[slot][region])
+                .filter((k) => !(k in whole));
+            testController.reportCondition(`${at} ⛓ premise: the entry carries a field beyond `
+                + `substrate and payload to drop (${dropped.join(', ')})`, dropped.length > 0);
+            testController.reportCondition(`${at} the entry-level save pressed`,
+                typeAndSaveSidecar(region, whole));
+            const want2 = JSON.parse(beforeBytes);
+            want2.preset_sidecars[slot][region] = whole;
+            testController.assertEqual(`${at} ⛓⛓ the DOCUMENT after = before with the WHOLE entry `
+                + 'replaced — the dropped fields gone, the moved cell moved', JSON.stringify(want2),
+            JSON.stringify(panel.rulesDoc));
+            testController.assertEqual(`${at} …the access rules still byte-equal to BEFORE`,
+                rulesBefore, accessRulesOf(panel.rulesDoc, slot, region));
+            document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+            testController.assertEqual(`${at} …and one Undo restores it`, beforeBytes,
+                JSON.stringify(panel.rulesDoc));
         }
     } catch (error) {
         testController.log(`ERROR: ${error.message}`);
@@ -6848,8 +6877,10 @@ registerTest({
                + 'slot and region; the DOCUMENT after = before with exactly that entry replaced, '
                + 'byte for byte (trap 1306); the region\'s access rules byte-equal; the answer '
                + 'under the block is the op\'s description naming what was NOT re-derived; the op '
-               + 'asked directly writes the same bytes; one Undo restores. Mutants: the op also '
-               + 'writes rules (A) or writes only the payload (B).',
+               + 'asked directly writes the same bytes; one Undo restores; then the WHOLE entry — '
+               + 'entry-level fields dropped and the grid cell moved — lands as typed. Once per '
+               + 'payload family. Mutants: the op also writes rules (A) or writes only the '
+               + 'payload (B, seen only by the whole-entry arm).',
     testFunction: apworldASidecarSaveWritesTheEntryAndLeavesTheRules,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
