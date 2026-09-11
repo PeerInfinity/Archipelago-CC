@@ -57,6 +57,7 @@
  * because it takes no live ticks. Needs a dev server at the repo root on :8000.
  */
 import { chromium } from 'playwright';
+import { HEADLESS_WEBGPU_ARGS } from './headlessChromium.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -121,8 +122,7 @@ const TAPES = {
 };
 
 const browser = await chromium.launch({
-    args: ['--enable-unsafe-webgpu', '--ignore-gpu-blocklist', '--enable-unsafe-swiftshader',
-        '--use-angle=swiftshader', '--no-sandbox'],
+    args: HEADLESS_WEBGPU_ARGS,
 });
 const page = await browser.newPage();
 page.on('pageerror', (e) => console.log(`  [pageerror] ${e.message}`));

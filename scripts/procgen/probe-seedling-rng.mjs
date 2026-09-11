@@ -41,6 +41,7 @@ import { chromium } from 'playwright';
 import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { headlessWebgpuArgs } from './headlessChromium.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -80,11 +81,7 @@ const SEEDS = [
 const COUNT = 64;
 
 const browser = await chromium.launch({
-    args: [
-        '--enable-unsafe-webgpu', '--enable-features=Vulkan',
-        '--use-angle=swiftshader', '--use-vulkan=swiftshader',
-        '--enable-features=WebAssemblyExperimentalJSPI',
-    ],
+    args: headlessWebgpuArgs({ enableFeatures: ['WebAssemblyExperimentalJSPI'] }),
 });
 
 const page = await browser.newPage();

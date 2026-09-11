@@ -46,6 +46,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { committedTick0, tick0ParseFields, despawnField, tick0Field }
     from './tick0Carry.js';
+import { HEADLESS_WEBGPU_ARGS } from './headlessChromium.js';
 import { emitSegments, SEGMENTS_FLAG } from './producerSegments.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
@@ -222,13 +223,7 @@ async function waitFor(page, desc, fn, timeoutMs = 3600000) {
 }
 
 const browser = await chromium.launch({
-    args: [
-        '--enable-unsafe-webgpu',
-        '--ignore-gpu-blocklist',
-        '--enable-unsafe-swiftshader',
-        '--use-angle=swiftshader',
-        '--no-sandbox',
-    ],
+    args: HEADLESS_WEBGPU_ARGS,
 });
 
 async function latchOf(label, tapeObj) {

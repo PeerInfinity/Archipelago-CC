@@ -121,6 +121,7 @@ import {
 } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { HEADLESS_WEBGPU_ARGS } from './headlessChromium.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -530,13 +531,7 @@ function check(name, ok, detail = '') {
 // Only the local (SwiftShader) path needs a browser here; --win drives
 // Windows Chrome out-of-process, per tape.
 const browser = WIN ? null : await chromium.launch({
-    args: [
-        '--enable-unsafe-webgpu',
-        '--ignore-gpu-blocklist',
-        '--enable-unsafe-swiftshader',
-        '--use-angle=swiftshader',
-        '--no-sandbox',
-    ],
+    args: HEADLESS_WEBGPU_ARGS,
 });
 
 /**

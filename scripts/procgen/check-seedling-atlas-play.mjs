@@ -48,6 +48,7 @@ import { chromium } from 'playwright';
 import { existsSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { HEADLESS_WEBGPU_ARGS } from './headlessChromium.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -115,13 +116,7 @@ const HOST = (process.argv.find((a) => a.startsWith('--host=')) ?? '--host=http:
 const URL = `${HOST}/frontend/?game=seedling_atlas&seed=1`;
 
 const browser = await chromium.launch({
-    args: [
-        '--enable-unsafe-webgpu',
-        '--ignore-gpu-blocklist',
-        '--enable-unsafe-swiftshader',
-        '--use-angle=swiftshader',
-        '--no-sandbox',
-    ],
+    args: HEADLESS_WEBGPU_ARGS,
 });
 const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
 const logs = [];

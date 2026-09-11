@@ -89,6 +89,7 @@
 import { readdirSync } from 'node:fs';
 
 import { chromium } from 'playwright';
+import { HEADLESS_WEBGPU_ARGS } from './headlessChromium.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -200,13 +201,7 @@ for (const [name, url] of [['game.html', GAME], [`${BUILD}.wasm`, WASM]]) {
  * arm. These are `check-seedling-wasm-bridge.mjs`'s own flags.
  */
 const browser = await chromium.launch({
-    args: [
-        '--enable-unsafe-webgpu',
-        '--ignore-gpu-blocklist',
-        '--enable-unsafe-swiftshader',
-        '--use-angle=swiftshader',
-        '--no-sandbox',
-    ],
+    args: HEADLESS_WEBGPU_ARGS,
 });
 const page = await browser.newPage();
 page.on('pageerror', (e) => console.log(`  [pageerror] ${e.message}`));

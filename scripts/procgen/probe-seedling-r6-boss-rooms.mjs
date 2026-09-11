@@ -55,6 +55,7 @@
 import { chromium } from 'playwright';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { headlessWebgpuArgs } from './headlessChromium.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -107,11 +108,7 @@ const bootTape = (name, level, x, y, extra = {}) => ({
 });
 
 const browser = await chromium.launch({
-    args: [
-        '--enable-unsafe-webgpu', '--enable-features=Vulkan',
-        '--use-angle=swiftshader', '--use-vulkan=swiftshader',
-        '--enable-features=WebAssemblyExperimentalJSPI',
-    ],
+    args: headlessWebgpuArgs({ enableFeatures: ['WebAssemblyExperimentalJSPI'] }),
 });
 
 /** One fresh page per boot — `botReset` cannot rewind the GAME. */

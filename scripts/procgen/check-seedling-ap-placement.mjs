@@ -88,6 +88,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { HEADLESS_WEBGPU_ARGS } from './headlessChromium.js';
 import { argvHelp } from './argvHelp.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
@@ -292,13 +293,7 @@ const PAGE_URL = `http://127.0.0.1:${PORT}/frontend/modules/flashPanel/wasm/${PA
 console.log(`  serving this worktree on 127.0.0.1:${PORT}`);
 
 const browser = await chromium.launch({
-    args: [
-        '--enable-unsafe-webgpu',
-        '--ignore-gpu-blocklist',
-        '--enable-unsafe-swiftshader',
-        '--use-angle=swiftshader',
-        '--no-sandbox',
-    ],
+    args: HEADLESS_WEBGPU_ARGS,
 });
 
 /**

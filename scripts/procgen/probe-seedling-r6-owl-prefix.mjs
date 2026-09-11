@@ -66,6 +66,7 @@ import { chromium } from 'playwright';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { headlessWebgpuArgs } from './headlessChromium.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -194,11 +195,7 @@ function modelPrefix(ticks, inputs) {
 }
 
 const browser = await chromium.launch({
-    args: [
-        '--enable-unsafe-webgpu', '--enable-features=Vulkan',
-        '--use-angle=swiftshader', '--use-vulkan=swiftshader',
-        '--enable-features=WebAssemblyExperimentalJSPI',
-    ],
+    args: headlessWebgpuArgs({ enableFeatures: ['WebAssemblyExperimentalJSPI'] }),
 });
 
 /** One run of one arm. */

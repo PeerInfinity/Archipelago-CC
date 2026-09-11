@@ -59,6 +59,7 @@
  */
 
 import { chromium } from 'playwright';
+import { HEADLESS_WEBGPU_ARGS } from './headlessChromium.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -153,8 +154,7 @@ say('');
  *  invokes `runSWF`, the renderer cannot initialise and `botStatus` never
  *  appears — a failure that looks like a tape problem and is not. */
 const browser = await chromium.launch({
-    args: ['--enable-unsafe-webgpu', '--ignore-gpu-blocklist', '--enable-unsafe-swiftshader',
-        '--use-angle=swiftshader', '--no-sandbox'],
+    args: HEADLESS_WEBGPU_ARGS,
 });
 const page = await browser.newPage();
 const pageErrors = [];

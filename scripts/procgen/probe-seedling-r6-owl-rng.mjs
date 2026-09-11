@@ -78,6 +78,7 @@ import { chromium } from 'playwright';
 import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { headlessWebgpuArgs } from './headlessChromium.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -206,11 +207,7 @@ function drawsToReach(seed, state, bound = 200000) {
 }
 
 const browser = await chromium.launch({
-    args: [
-        '--enable-unsafe-webgpu', '--enable-features=Vulkan',
-        '--use-angle=swiftshader', '--use-vulkan=swiftshader',
-        '--enable-features=WebAssemblyExperimentalJSPI',
-    ],
+    args: headlessWebgpuArgs({ enableFeatures: ['WebAssemblyExperimentalJSPI'] }),
 });
 
 const rows = [];

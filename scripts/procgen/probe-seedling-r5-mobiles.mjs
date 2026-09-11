@@ -31,6 +31,7 @@
 import { chromium } from 'playwright';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { headlessWebgpuArgs } from './headlessChromium.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -62,11 +63,7 @@ const check = (ok, name, detail) => {
 };
 
 const browser = await chromium.launch({
-    args: [
-        '--enable-unsafe-webgpu', '--enable-features=Vulkan',
-        '--use-angle=swiftshader', '--use-vulkan=swiftshader',
-        '--enable-features=WebAssemblyExperimentalJSPI',
-    ],
+    args: headlessWebgpuArgs({ enableFeatures: ['WebAssemblyExperimentalJSPI'] }),
 });
 const page = await browser.newPage();
 const bot = (name, a) => page.evaluate(
@@ -187,9 +184,21 @@ try {
     // runtime is ~0.5 fps, so a four-second sample is one or two frames and
     // "the tick did not move" is true of a frozen game AND of a game that
     // simply has not had a frame yet — the probe's own weak-arm trap.
+    // ⛓ H1 (2026-09-11): AND SO THE WINDOW IS COUNTED IN FRAMES, NOT SECONDS.
+    // The ~0.5 fps was a lost WebGPU device (`headlessChromium.js`); on the
+    // Vulkan pair this page runs ~25 fps, and the 60 s sleep that was ~30
+    // frames became ~1,500 — it outlived the ~99-frame fade it samples, so the
+    // tick moved because the fade had ENDED (measured: tick 1 -> 200). Wait
+    // for the fade's own unit, dead frames, with the wall clock only as a cap.
+    const FADE_WINDOW_DEAD_FRAMES = 20;
     const before = await botJson('botStatus');
-    await page.waitForTimeout(60000);
-    const after = await botJson('botStatus');
+    const capAt = Date.now() + 120000;
+    let after = before;
+    while (after.dead_frames < before.dead_frames + FADE_WINDOW_DEAD_FRAMES
+        && Date.now() < capAt) {
+        await page.waitForTimeout(250);
+        after = await botJson('botStatus');
+    }
     check(after.dead_frames > before.dead_frames + 4 && after.tick <= before.tick + 2,
         '⛔⛔ the WAND FADE is freezing the game — dead frames climb, the tick does not',
         `tick ${before.tick} -> ${after.tick}, dead_frames ${before.dead_frames} -> `

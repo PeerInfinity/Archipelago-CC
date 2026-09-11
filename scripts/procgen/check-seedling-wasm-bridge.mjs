@@ -29,9 +29,9 @@
  *     seedling-wasm.yml checks it out and runs this row NON-GATING, to find
  *     out whether the page boots on a runner with no GPU.
  *
- * Runs headless: WebGPU comes up on swiftshader with
- * --enable-unsafe-webgpu --enable-unsafe-swiftshader --use-angle=swiftshader
- * (verified locally; the game loop runs fine on the software adapter).
+ * Runs headless: WebGPU comes up on swiftshader with `HEADLESS_WEBGPU_ARGS`
+ * (`headlessChromium.js` — the one spelling, and the docblock that says why
+ * each flag is there; without its Vulkan pair the device is lost at frame 2).
  *
  * ⛓⛓ AND THE BUILD MOVED, 2026-08-19. The flash panel loaded
  * `seedling_teleport_ap` — a variant that skips the preloader and the title
@@ -53,6 +53,7 @@ import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { HEADLESS_WEBGPU_ARGS } from './headlessChromium.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -116,13 +117,7 @@ const URL = `${HOST}/frontend/?mode=flash`;
 const SEEDLING_RULES = './presets/seedling/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 
 const browser = await chromium.launch({
-    args: [
-        '--enable-unsafe-webgpu',
-        '--ignore-gpu-blocklist',
-        '--enable-unsafe-swiftshader',
-        '--use-angle=swiftshader',
-        '--no-sandbox',
-    ],
+    args: HEADLESS_WEBGPU_ARGS,
 });
 const page = await browser.newPage();
 const logs = [];
