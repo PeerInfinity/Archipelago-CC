@@ -13830,6 +13830,33 @@ serializer pin; enrolment measured before/after; `check-procgen-help`), rows + f
 not touched. Baseline 444/13478 @ `935e3cea19` (run 34545351760). Reports come to `preset-sidecars-planning`; V0 on
 D0's idle notice. ⛔ The planner commits nothing while D0 runs.
 
+**D0 SHIPPED + VERIFIED 2026-09-10** (`f03738ccda` → `ebde7dbea4`, four commits: `procgenCore/sidecarFields.js` (the
+descriptor vocabulary, the ENVELOPE fields declared once, the merge refusing redeclaration — with ONE allowed claim,
+`REQUIRED_ENVELOPE_FIELD`), the eight declarations (seven substrates + the generic `flash`; TA imports the maze
+object from `mazeRoom/mazeSerializer.js`; bounce/runner share the flash-zone object), the corpus gate
+`check-sidecar-fields.mjs`, docs + the schema's pointer). Planner's own run of the gate at HEAD: **ALL PASS — 1,392
+entries over 7 substrates, 1,258 ms**; `ci-gates --plan` shows the one new headless arm (33 → 34; CI runs the
+headless set in ONE step, so no new job; browser plan unmoved). **CI @ `ebde7dbea4`: run 34553666402 success,
+447/13531 (13523 passed | 8 skipped | 0 failed) = the derivation (+3 files, +53 rows).** `check-procgen-help
+--doors=all` 268 → 269 ALL PASS. What the brief got wrong (§13.1): EIGHT entries have `deserializeWorld`; jta must
+be allowed to say `manaEnabled` is required (the one envelope claim; trap **1314** — a row asserting an envelope
+value under a substrate's name cannot see that substrate); the envelope's `exits` fragment covers the common core
+only (the serializers shape the items; the atlas compiler writes Seedling's); `side` needs `null` (20 atlas
+exits); `physics.profile` enums come from the games' PROFILES, no bounce preset carries physics; the engine also
+writes `backExitSide`/`fallBehavior` INSIDE zone `params`; `documentKeys` reads nothing under `$defs`. Mutants
+A–E: 1,061 / 14 / 6+2 / 31 FAILs, and E-with-A GREEN proves the undeclared-key check is the pin. ⚖ OPEN (§13.7):
+per-substrate exits item shapes; pricing the headless arm; a neutral re-export and `register()` validation both
+live in the SUBMODULE (ask-first); `required` = "every producer writes it" (V0 words its sentences accordingly);
+`ap_items` has no writer; `fallBehavior` has no exported enum.
+
+**V0 LAUNCHED 2026-09-10** as `apworld-sidecars-V0` (Opus; kickoff `NewDocs/plans/apworld-sidecars-V0-prompt.md`):
+`apworldEditor/sidecarIssues.js` — shape (D0's declaration; the "keys of `Y`, not `X`" mismatch sentence) +
+cross-checks (deserializes; exits ⇄ document exits by name; `grid_cell` unique/in bounds; dataset refs; AP location
+names through ONE new declared slot `apLocationNamesOf`, absent = a warning); three readers (the memoised bar, the
+block + the list's badge, D0's gate grown to a second layer — no new arm); errors block nothing; rows + five
+mutants; docs. Baseline 447/13531 @ `ebde7dbea4` (run 34553666402). Reports come to `preset-sidecars-planning`; D1
+on V0's idle notice. ⛔ The planner commits nothing while V0 runs.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
