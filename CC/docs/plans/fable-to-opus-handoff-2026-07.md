@@ -14123,6 +14123,40 @@ retiring `--win`, the standing row, SWFRecomp-CC. **⚖ after H1:** may headless
 no org); schedule the rebuild. Sequencing: disjoint paths from G0 (`scripts/procgen/**` vs `frontend/**`); the box is
 the only shared resource and the lock serialises it — launched without waiting.
 
+## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
+
+**Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
+`677b7d9cae51023e82fa2e365a8095dc` unmoved; `check-sidecar-fields` ALL PASS 1392 over 7; `check-spiral-byteidentity`
+ALL PASS with the `jtaOnly` dump at 0 exit `x` fields; tracked jta/omsi exits with x/y = 2 (the omsi diagonals);
+sphere `44e8f3cc…` / top-down `19c4e31e…` dumps = plan §20.4; ⚖ 52 row 453/13790 (13782 | 8 | 0) at `5b676a233d`,
+`4840bf76fb`, `91092bb81e` (run 34639283778).
+
+**The fourth replan, as put** (plan §5f has the measurements): (1) M3 before G1 would dual-write exit tiles for the
+34 zone sidecars (bounce 25 + runner 9, six files, 68 exits with x/y; the renderer draws x/y when finite) that G1
+then deletes — recommend **G1 → M3 → G2 → T0**; (2) G1's re-record is smaller than §5v implied (neither dump digest
+is banked in `standing-values.json`, neither is in `ci-gates --plan`); fold `LIBRARY_V1_SUBSTRATES` at G1; (3) G2 in
+TWO slices — the TA representation (15 sidecars carrying the maze's eleven keys; six TA in-app rows, the mana leg,
+loop costs re-baseline) then T0, the set-editor binding (a hub refactor; `setEditorView` has two bindings today).
+**⚖ RULED — the user, verbatim: *"I agree with your recommendations."*** — G1 first; G2 as two slices; and since
+no recommendation was offered on the third question, the arc's ask-first law stands: G1 STOPS and shows the diff
+(dump structural diffs, the per-file strip table, a pixel-identity Map witness) before any digest or preset is
+written.
+
+**Shared tree:** agreed with `archipelago-cc-34` (20:10Z) — H1 pushed `4840bf76fb` + `91092bb81e` and commits
+nothing more; its box lock releases ~20:40–21:20Z; both arcs regenerate the procgenDocs outputs only in a clean
+throwaway worktree at their own committed head and copy in by path; `git log origin/main..HEAD` lists only the
+slice's own commits before a push. (⚑ runner keeps its entrance side in `params.backExitSide` on 2 entries — a
+declared per-substrate fact M3 must re-key; named for M3's kickoff.)
+
+**G1 LAUNCHED 2026-09-11** as `apworld-sidecars-G1` (Opus; kickoff `NewDocs/plans/apworld-sidecars-G1-prompt.md`):
+bounce + runner declare `regionGeometry: SIDES`; G0's tripwire row replaced and its A/B spy rows made real;
+`relabelExitSide` side-only for sides regions (the pipeline's Move Exit + `check-region-step-editing` BEFORE/AFTER);
+the sphere/top-down dumps diffed structurally (removals on bounce regions only; maze byte-identical); the 68 exit
+x/y stripped from the six preset files in a throwaway worktree (a key removal — no generator owns them; 0
+insertions); ONE ask-first stop; `LIBRARY_V1_SUBSTRATES` folded on its two axes (`region_size` ⇔ tiles geometry;
+the `carried_rules` axis derived or kept, named); docs trio; the fast in-app batch vs `2026-09-11T19-08-57`; CI at
+the pushed SHA. NOT G1: M3, text adventure, the relayout defect, the hub, the maze, the submodule.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
