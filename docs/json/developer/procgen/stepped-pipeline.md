@@ -38,7 +38,7 @@ Running the stepped pipeline — in-process or across serialized boundaries — 
 
 The composite-grid **layout editor** (the panel's Move Region / Move Exits modes) and the two scalar per-region gestures (Re-roll 🎲, the substrate `<select>`) do not mutate-and-forget. Each one is an **op appended to `env.edits[]`** — `frontend/modules/procgenPipeline/layoutEdits.js` — so a hand-edited world is `config + seed + edits`, and the panel, the CLI and a re-run all reproduce the same world from that recording.
 
-The vocabulary is six ops, one spec table: `move-region {from, to}`, `swap-regions {a, b}`, `move-exit-side {cell, exitId, side}`, `swap-exit-sides {cell, exitA, exitB}`, `re-roll {region_id, n}`, `set-substrate {region_id, substrate}`. The four layout ops call the existing engine mutators; the two scalars go through the mode's binding.
+The vocabulary is six ops, one spec table: `move-region {from, to}`, `swap-regions {a, b}`, `move-exit-side {cell, exitId, side}`, `swap-exit-sides {cell, exitA, exitB}`, `re-roll {region_id, n}`, `set-substrate {region_id, substrate}`. The four layout ops call the existing engine mutators; the two scalars go through the mode's binding. The two exit-side ops relabel an exit and re-key `params.sidePortals`; on a substrate that declares `regionGeometry: 'sides'` (bounce, runner) they write the new `side` and no tile, and drop a stale one ([Substrate Registry § *Build-time — region geometry*](./substrate-registry.md#build-time--region-geometry), PRESET SIDECARS G1).
 
 **Where each op replays.** The runner replays an edit immediately after the step that PRODUCES the artifact it mutates, and before the next step starts. The stages are not a convention — they are the panel's own write-back depths:
 
