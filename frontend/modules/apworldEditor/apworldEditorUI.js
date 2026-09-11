@@ -402,8 +402,9 @@ class ApworldEditorUI {
     this.activeTab = 'regions';
     /**
      * ⛓⛓ H3 — **THE REGION THE MAP PICKED**, and the memoised map behind it.
-     * A click on the Map tab's canvas selects a region in the Regions tab
-     * (plan §3 idea 4); the cache exists because `_render` runs on every tab
+     * A click on the Map tab's canvas selects a region (plan §3 idea 4; since
+     * PRESET SIDECARS M1 it stays on the map and draws the region's block
+     * under the canvas, and a player-slot pick clears it); the cache exists because `_render` runs on every tab
      * switch and rebuilding a whole `Grid` out of `preset_sidecars` per render
      * would put a deserialize pass beside the `validateRules` pass H2 measured
      * at 4.6 s on `stardew_valley`. Keyed on the RECORD's identity (the session
@@ -1026,6 +1027,18 @@ class ApworldEditorUI {
     });
     this.playerSelect.addEventListener('change', (e) => {
       this._chosenPlayer = e.target.value;
+      /**
+       * ⛓⛓ PRESET SIDECARS M1 — **A SLOT PICK DROPS THE SELECTION.** It is a
+       * region NAME, and slots share names (the four-player fixture's slot 1
+       * and slot 3 both hold `region_1_0`, a maze room and a bounce one). Kept,
+       * it outlined slot 1's pick on slot 3's map, and — measured on the M1
+       * drive — the FIRST click on that cell counted as the second and opened
+       * slot 3's room. The boundary's rule (`_openSession`: a region name from
+       * the old world means nothing in the new) applies to a slot too. A door
+       * that names its own slot (`_adoptRegionSelection`) switches it and then
+       * selects, so it does not come through here.
+       */
+      this._selectedRegion = null;
       this._opMessage = `Editing player ${this._chosenPlayer}.`;
       this._render();
     });
@@ -4430,10 +4443,18 @@ class ApworldEditorUI {
     }
 
     const { grid, regionSize } = result;
+    /**
+     * ⛓ PRESET SIDECARS M1 — the intro says what the TWO clicks do, because the
+     * second one opens another panel and a reader should not find that out by
+     * accident. The empty-cell sentence is the handler's own behaviour (it
+     * returns before touching the selection), not a new rule.
+     */
     intro.textContent = 'The composite grid, rebuilt from `preset_sidecars` — the WORKING '
       + 'COPY\'s. Each substrate paints its own cells (registry slot `compositeMap`); one that '
-      + 'declares no painter gets a box labelled with its id. Click a cell to select that '
-      + 'region in the Regions tab.';
+      + 'declares no painter gets a box labelled with its id. Click a cell to SELECT that '
+      + 'region: its sidecar block is drawn under the map (Go to region opens it in the Regions '
+      + 'tab). Click the selected cell AGAIN to open its room — that block\'s Edit ▸, enabled or '
+      + 'refused exactly as the button is. A click on an empty cell keeps the selection.';
     this.scrollContainer.appendChild(intro);
 
     const slot = document.createElement('span');
@@ -4461,7 +4482,7 @@ class ApworldEditorUI {
     canvas.dataset.regions = String(result.stats.regionsBuilt);
     canvas.style.cursor = 'pointer';
     canvas.style.maxWidth = '100%';
-    canvas.title = 'Click a region to select it in the Regions tab';
+    canvas.title = 'Click a region to select it; click the selected region again to open its room';
 
     // The selected region's cell, so the map shows what the Regions tab shows.
     let selection = null;
@@ -4471,13 +4492,115 @@ class ApworldEditorUI {
     }
     drawCompositeMap(canvas, grid, regionSize, { selection });
 
+    /**
+     * ⛓⛓ PRESET SIDECARS M1 — **TWO CLICKS, THE PIPELINE'S `edit` MODE'S SHAPE**
+     * (plan §7.2: its click selects and STAYS on the map; ⚖ planner, M1 option
+     * B — the map moves of M2/M3 need a click that does not leave the tab).
+     *   · a cell that is NOT the selection → select it, stay on the Map: the
+     *     outline moves and the block under the canvas follows (`_selectOnMap`);
+     *   · THE selected cell → press that region's block's Edit ▸
+     *     (`_pressMapEdit`) — the verdict is the button's;
+     *   · an empty cell (or a point off the grid) → nothing: the selection and
+     *     its block are kept, as the handler has always done.
+     * ⛔ The FIRST click never opens anything: a door that opened on a stray
+     * click would raise another panel over the map the reader was looking at.
+     */
     canvas.addEventListener('click', (evt) => {
       const cell = cellAtPoint(grid, regionSize, canvasPointOf(canvas, evt));
       const region = cell ? grid.getRegion(cell) : null;
       if (!region) return;
-      this.selectRegion(region.region_id);
+      if (region.region_id === this._selectedRegion) {
+        this._pressMapEdit(region.region_id);
+        return;
+      }
+      this._selectOnMap(region.region_id);
     });
     this.scrollContainer.appendChild(canvas);
+
+    /**
+     * ⛓⛓⛓ PRESET SIDECARS M1 — **THE SELECTION'S BLOCK, THE THIRD HOST.** Under
+     * the canvas (measured: on `procgen_topdown/AP_8` the canvas is CSS-scaled
+     * to the tab's whole width, so there is no "beside"), the SAME
+     * `_makeRegionSidecarBlock` the Regions tab and the Sidecars list draw — one
+     * renderer, `hostTab: 'map'` keeping its own JSON disclosure. The region is
+     * the map's own selection (`_selectedRegion`, the outline's source), drawn
+     * only when that region is placed on THIS slot's grid: a selection the map
+     * does not show has no business drawing a block under it.
+     */
+    if (selection) {
+      const regionName = this._selectedRegion;
+      const block = this._makeRegionSidecarBlock(this.playerId, regionName, {
+        hostTab: 'map',
+        onSave: (entry) => this._saveRegionSidecar(this.playerId, regionName, entry),
+      });
+      if (block) {
+        const host = document.createElement('div');
+        host.className = 'apworld-map-selection';
+        host.dataset.regionName = regionName;
+        Object.assign(host.style, { border: '1px solid #2c2c2c', borderRadius: '3px',
+          margin: '6px 0 0', backgroundColor: '#1c1c1c' });
+        const head = document.createElement('div');
+        Object.assign(head.style, { display: 'flex', alignItems: 'center', gap: '8px',
+          padding: '4px 8px' });
+        const label = document.createElement('code');
+        label.textContent = regionName;
+        Object.assign(label.style, { color: '#ddd', fontSize: '12px' });
+        head.appendChild(label);
+        // ⛓ The Sidecars list's precedent: the same focus helper, no new one.
+        const go = this._makeButton('Go to region', '#3a3a3a',
+          () => this.selectRegion(regionName, 'the Map tab'));
+        go.className = 'apworld-map-go-region';
+        go.dataset.regionName = regionName;
+        go.style.fontSize = '11px';
+        go.style.marginLeft = 'auto';
+        head.appendChild(go);
+        host.appendChild(head);
+        host.appendChild(block);
+        this.scrollContainer.appendChild(host);
+      }
+    }
+  }
+
+  /**
+   * ⛓ M1 — the map's FIRST click: select, and stay. The status line names the
+   * second click, so the reader learns it from the answer to the first.
+   */
+  _selectOnMap(regionName) {
+    this._selectedRegion = regionName;
+    this._opMessage = `Selected region ${regionName} on the map — click it again to open its `
+      + 'room (Edit ▸).';
+    this._render();
+    const host = this.scrollContainer.querySelector('.apworld-map-selection');
+    if (host && typeof host.scrollIntoView === 'function') host.scrollIntoView({ block: 'nearest' });
+  }
+
+  /**
+   * ⛓⛓ M1 — the map's SECOND click: **PRESS the selected region's Edit ▸.**
+   * ⛔ The verdict is the BUTTON's, read off the block the map just drew, never
+   * a second computation: a disabled button (no room editor, no round trip, or
+   * a refusal remembered for this record) opens nothing and its own `title` is
+   * printed beside the block; an enabled one runs the button's own handler,
+   * and a refusal that handler meets on the press is printed there too. No
+   * block, no button — a region with no sidecar has no room.
+   */
+  async _pressMapEdit(regionName) {
+    const player = this.playerId;
+    const btn = this.scrollContainer.querySelector(
+      `.apworld-map-selection .apworld-sidecar-block[data-region-name="${CSS.escape(regionName)}"] `
+      + '.apworld-edit-room');
+    if (!btn) return;
+    const beside = () => {
+      this._opRowMessage = { sidecar: `${player}|${regionName}`, text: this._opMessage, refused: true };
+      this._render();
+    };
+    if (btn.disabled) {
+      this._opMessage = `Edit refused: ${btn.title}`;
+      beside();
+      return;
+    }
+    // ⛔ The handler's own status line is what goes beside the block — not re-worded.
+    const said = await this._handleEditRoom(regionName);
+    if (said?.refused && this.activeTab === 'map' && String(this.playerId) === String(player)) beside();
   }
 
   _renderLinkRow(row) {
@@ -5391,6 +5514,10 @@ class ApworldEditorUI {
    * COPY (⚖ *"Let's implement working copy for now"*) — `this.rulesDoc` IS
    * `session.record()`, and the op the save returns is applied to that same
    * session. Nothing here reads applied state.
+   *
+   * ⛓ M1 — it ANSWERS `{opened: true}` or `{refused: why}`. The button ignores
+   * it; the Map tab's second click (`_pressMapEdit`) prints a press-time
+   * refusal beside the block the reader clicked from.
    */
   async _handleEditRoom(regionName) {
     const key = `${this.playerId}|${regionName}`;
@@ -5409,7 +5536,7 @@ class ApworldEditorUI {
       this._roomVerdicts.set(key, { doc, why: inspection.why });
       this._opMessage = `Edit refused: ${inspection.why}`;
       this._render();
-      return;
+      return { refused: inspection.why };
     }
     this._closeRoomEditor();
     let handle;
@@ -5418,7 +5545,7 @@ class ApworldEditorUI {
     } catch (err) {
       this._opMessage = `Edit failed: ${err.message}`;
       this._render();
-      return;
+      return { refused: err.message };
     }
     // ⛓ The LAB door answers `{ok, why, close}` synchronously; the PANEL door
     //   answers nothing (its ONE return path is `onSave`). A refusal is the
@@ -5427,7 +5554,7 @@ class ApworldEditorUI {
     if (handle && handle.ok === false) {
       this._opMessage = `Edit refused: ${handle.why}`;
       this._render();
-      return;
+      return { refused: handle.why };
     }
     this.roomEditorSession = { key, region: regionName, handle: handle ?? null };
     const frozen = inspection.frozen.length;
@@ -5437,6 +5564,7 @@ class ApworldEditorUI {
           + 'the room and will be left exactly as they are.'
         : ''}`;
     this._render();
+    return { opened: true };
   }
 
   /**
