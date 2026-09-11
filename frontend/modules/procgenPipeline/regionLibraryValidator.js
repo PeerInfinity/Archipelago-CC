@@ -27,6 +27,13 @@ export const REGION_LIBRARY_SCHEMA_VERSION = 1;
 //     which can never go stale against the geometry.
 //   - 'content' (bounce, runner): geometry cannot be re-derived, so an entry MUST
 //     carry its emitted rules verbatim in `carried_rules`.
+// ⛓ PRESET SIDECARS G1 — deliberately NOT folded onto the registry (⚖ planner, G1, option B):
+// this validator runs where nothing is registered — the maze lab's `?library=` door, the
+// validate CLI (no runner), its own tests — so a registry read would refuse the bounce and
+// runner packs there. Its guard is `procgenCore/sidecarFieldsRegistry.test.js` § *G1 —
+// LIBRARY_V1_SUBSTRATES agrees with the registry*: members ⇔ `instantiateLibraryEntry`,
+// 'procedural' ⇔ `generateRegionCore` ⇔ `regionGeometry` tiles (the kind that requires
+// `region_size`), over every registered entry.
 export const LIBRARY_V1_SUBSTRATES = Object.freeze({
     maze: 'procedural',
     bounce: 'content',

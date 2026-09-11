@@ -28,6 +28,7 @@ import { sidecarFieldsOf, validateSidecarFields } from './sidecarFields.js';
 import {
     DEFAULT_REGION_GEOMETRY, REGION_GEOMETRIES, REGION_GEOMETRY, geometryOf,
 } from './regionGeometry.js';
+import { LIBRARY_V1_SUBSTRATES } from '../procgenPipeline/regionLibraryValidator.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 for (const rel of REGISTRY_LIBRARIES) {
@@ -180,5 +181,46 @@ describe('⛓ G0 — the `regionGeometry` slot', () => {
         expect(zoneGames.length).toBeGreaterThan(0);
         expect(sides.sort()).toEqual(zoneGames.sort());
         expect(geometryOf(substrateRegistry.get('maze'))).toBe(REGION_GEOMETRY.TILES);
+    });
+});
+
+/**
+ * ⛓⛓ PRESET SIDECARS G1 — **THE REGION-LIBRARY HAND LIST AGREES WITH THE
+ * REGISTRY.** `regionLibraryValidator.LIBRARY_V1_SUBSTRATES` is NOT folded onto
+ * the registry (⚖ planner, G1, option B): the validator runs where nothing is
+ * registered — the maze lab's `?library=` door, the validate CLI (no runner),
+ * its own tests — and a registry read there would refuse the bounce and runner
+ * packs (measured). So the list stays, and THIS row makes the declarations its
+ * authority: over EVERY registered entry, the list names exactly the entries
+ * with the library hooks, its kind is `'procedural'` iff the entry has
+ * `generateRegionCore`, and `'procedural'` (the kind that REQUIRES
+ * `region_size`) iff the entry's geometry is tiles. Every population is
+ * derived from the entries; the only literal is the validator's own list.
+ */
+describe('⛓ G1 — `LIBRARY_V1_SUBSTRATES` agrees with the registry', () => {
+    const derivedKind = (entry) => {
+        if (typeof entry.instantiateLibraryEntry !== 'function') return undefined;
+        return typeof entry.generateRegionCore === 'function' ? 'procedural' : 'content';
+    };
+    const handKind = (id) => (Object.hasOwn(LIBRARY_V1_SUBSTRATES, id) ? LIBRARY_V1_SUBSTRATES[id] : undefined);
+
+    it('the population holds a procedural member, a content member and a non-member — the rows '
+        + 'below are not vacuous', () => {
+        const kinds = ENTRIES.map(derivedKind);
+        expect(kinds).toContain('procedural');
+        expect(kinds).toContain('content');
+        expect(kinds).toContain(undefined);
+    });
+
+    it('the list names exactly the entries that carry the library hooks — no more, no fewer', () => {
+        const members = ENTRIES.filter((e) => derivedKind(e) !== undefined).map((e) => e.id);
+        expect(Object.keys(LIBRARY_V1_SUBSTRATES).sort()).toEqual(members.sort());
+    });
+
+    it.each(ENTRIES.map((e) => [e.id, e]))('%s: the list\'s kind is the derived one, and `region_size` '
+        + 'is required (procedural) iff the geometry is tiles', (id, entry) => {
+        expect(handKind(id)).toBe(derivedKind(entry));
+        if (derivedKind(entry) === undefined) return;
+        expect(handKind(id) === 'procedural').toBe(geometryOf(entry) === REGION_GEOMETRY.TILES);
     });
 });
