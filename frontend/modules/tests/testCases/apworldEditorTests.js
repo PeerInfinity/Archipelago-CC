@@ -7996,8 +7996,11 @@ export async function apworldEditIsNotWeakenedByARederive(testController) {
             const answered = await testController.pollForValue(
                 () => { const x = editButtonFor(region); return x?.disabled ? x : null; },
                 `${label}: Edit ▸ answered`, 8000, 50);
+            // ⛔ `answered` null (the button never refused) must not compare
+            //   `undefined` with `undefined` and pass: say it outright.
             testController.assertEqual(`${label}: ⛓⛓ its title is the inspection's sentence for the `
-                + 'document NOW', String(now.why), String(answered?.title));
+                + 'document NOW', String(now.why ?? '(the inspection opened the room)'),
+            answered ? String(answered.title) : '(Edit ▸ never refused)');
             testController.reportCondition(`${label}: …and no room was opened`,
                 panel.roomEditorSession === null);
             return now.why;
