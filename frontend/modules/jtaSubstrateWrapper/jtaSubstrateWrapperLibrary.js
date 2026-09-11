@@ -508,6 +508,79 @@ function buildZoneLocations(zoneIdx, region_id) {
     return { locations, payload };
 }
 
+/** The zone-locations channel — the one pipeline writer of every field below. */
+const ZONE_CHANNEL = '`buildZoneLocations` (the zone-locations channel of `extractZoneRules`)';
+
+/**
+ * ⛓⛓ PRESET SIDECARS D0 — **THE JTA PAYLOAD, DECLARED** (the registry's
+ * `sidecarFields` slot; vocabulary in `procgenCore/sidecarFields.js`).
+ * Everything the substrate writes is DERIVED — a zone ordinal, the AP location
+ * map, the grant-suppression patches and the dataset carried by reference;
+ * the one AUTHORED field is the engine's `manaEnabled`, a run option, which is
+ * the envelope's to declare. `required` is read off the committed corpus: only
+ * `jtaZone` is on every entry — the two hand-authored Python fixtures
+ * (`generate-jta-substrate-test-preset.py`, `generate-jta-mixed-test-preset.py`)
+ * write `jtaZone` and `manaEnabled` (and `exits`, not always) and nothing else,
+ * and the zone-locations channel is opt-in. So no envelope field is claimed
+ * required here either.
+ */
+export const JTA_SIDECAR_FIELDS = Object.freeze({
+    jtaZone: Object.freeze({
+        type: 'integer', required: true, derived: true,
+        description: 'The zone ordinal the fork loads, emitted FIRST by `extractZoneRules` for every '
+            + 'zone (the hand-authored fixtures write it too). The bridge reads `world.jtaZone` '
+            + 'directly.',
+    }),
+    ap_locations: Object.freeze({
+        type: 'object', required: false, derived: true,
+        description: `Task id → AP location name (\`<region>__<task>\`), derived by ${ZONE_CHANNEL} `
+            + 'when zone locations are emitted. A mismatch means a check never fires.',
+        schema: Object.freeze({ additionalProperties: Object.freeze({ type: 'string' }) }),
+    }),
+    task_patches: Object.freeze({
+        type: 'array', required: false, derived: true,
+        description: `Grant-suppression patches \`{id, perk}\` derived by ${ZONE_CHANNEL}: a task `
+            + 'that natively grants a perk has its perk patched to the Count sentinel, so the perk '
+            + 'arrives only as an AP item.',
+        schema: Object.freeze({
+            items: Object.freeze({
+                type: 'object',
+                required: Object.freeze(['id', 'perk']),
+                properties: Object.freeze({
+                    id: Object.freeze({ type: 'integer' }),
+                    perk: Object.freeze({ type: 'integer' }),
+                }),
+            }),
+        }),
+    }),
+    jta_dataset_ref: Object.freeze({
+        type: 'object', required: false, derived: true,
+        description: `\`{dataset_id, schema_version}\` of a loaded dataset, written by ${ZONE_CHANNEL} on `
+            + 'every region. It points at a SIBLING ENTRY (the zone-0 carrier), not a file — the '
+            + 'play-time warehouse resolves it in memory and REFUSES the region when it cannot.',
+        schema: Object.freeze({
+            required: Object.freeze(['dataset_id', 'schema_version']),
+            properties: Object.freeze({
+                dataset_id: Object.freeze({ type: 'string' }),
+                schema_version: Object.freeze({ type: 'integer' }),
+            }),
+        }),
+    }),
+    jta_dataset: Object.freeze({
+        type: 'object', required: false, derived: true,
+        description: `The whole loaded dataset, carried ONCE — on zone 0 — by ${ZONE_CHANNEL}, validated `
+            + 'and identity-stamped (`stampDatasetIdentity`). A hand edit that is not re-stamped '
+            + 'mismatches the identity every ref carries.',
+        schema: Object.freeze({
+            required: Object.freeze(['dataset_id', 'schema_version']),
+            properties: Object.freeze({
+                dataset_id: Object.freeze({ type: 'string' }),
+                schema_version: Object.freeze({ type: 'integer' }),
+            }),
+        }),
+    }),
+});
+
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
     id: 'jta',
@@ -601,6 +674,8 @@ export const substrateRegistryEntry = Object.freeze({
             : (Array.isArray(w.exits) ? w.exits : []);
         return { ...w, exits: exitsArray };
     },
+    // ⛓ PRESET SIDECARS D0 — what that pass-through writes (above).
+    sidecarFields: JTA_SIDECAR_FIELDS,
 
     // Host-side proxy publishing jta:playbackControl events that the
     // in-iframe bridge executes (play/stop → resume/pause the game

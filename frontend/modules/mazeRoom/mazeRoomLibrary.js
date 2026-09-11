@@ -43,6 +43,7 @@ import { getPanelInstance } from './index.js';
 import { describeMazeAction } from './mazeKeys.js';
 import { drawMazeCompositeRegion } from './mazeCompositeMap.js';
 import { mazeRegionRoundTrip } from './mazeRegionRoundTrip.js';
+import { TILE_GRID_SIDECAR_FIELDS } from './mazeSerializer.js';
 
 /**
  * Content-module pass (registry `applyContentModules` hook): stamp tile-grid
@@ -243,6 +244,10 @@ export const substrateRegistryEntry = Object.freeze({
     placeFromRules: ruleGatePlacer,
     extractPathsAndObstacles: tileGridPathExtractor,
     serializeWorld: tileGridSerializer,
+    // ⛓ PRESET SIDECARS D0 — what `serializeWorld` writes, declared beside the
+    // serializer itself (`mazeSerializer.js`); `text_adventure` carries the
+    // same object, and `check-sidecar-fields.mjs` holds the corpus to it.
+    sidecarFields: TILE_GRID_SIDECAR_FIELDS,
 
     // Content-module pass (hazards). The generic engine calls this after the
     // base region build at both build sites; substrates that don't declare it

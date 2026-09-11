@@ -26,6 +26,7 @@ import {
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { getPlaybackProxy } from './index.js';
 import { drawTextAdventureCompositeRegion } from './textAdventureCompositeMap.js';
+import { TILE_GRID_SIDECAR_FIELDS } from '../mazeRoom/mazeSerializer.js';
 
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
@@ -109,6 +110,12 @@ export const substrateRegistryEntry = Object.freeze({
     placeFromRules: ruleGatePlacer,
     extractPathsAndObstacles: tileGridPathExtractor,
     serializeWorld: tileGridSerializer,
+    // ⛓ PRESET SIDECARS D0 — the payload IS the maze's (`tileGridSerializer`
+    // is `serializeMazeWorld`), so the declaration is the maze's own object,
+    // imported from beside that serializer. ⚠ The neutral re-export this file's
+    // other tile-grid imports use would belong in `shared/procgen/
+    // adapterPrimitives.js` — a submodule, so not this slice's to add.
+    sidecarFields: TILE_GRID_SIDECAR_FIELDS,
 });
 
 // Side-effect on import: register the substrate, matching mazeRoomLibrary.js,

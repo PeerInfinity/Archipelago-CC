@@ -26,6 +26,7 @@
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { normalizeEntry } from '../shared/actionQueue/actionTypes.js';
+import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
 import {
     buildUnlockPool,
     accessRuleFor,
@@ -293,6 +294,75 @@ export const OMSI_LIBRARY_ITEMS = Object.freeze({
     [OMSI_VICTORY_ITEM_NAME]: { classification: 'progression', is_victory: true },
 });
 
+/** The one pipeline writer of every substrate field below. */
+const ZONE_RULES = '`extractZoneRules` (`omsiSubstrateWrapperLibrary.js`)';
+
+/**
+ * ⛓⛓ PRESET SIDECARS D0 — **THE OMSI PAYLOAD, DECLARED** (the registry's
+ * `sidecarFields` slot; vocabulary in `procgenCore/sidecarFields.js`).
+ * Everything `extractZoneRules` writes is DERIVED from the town table and the
+ * pipeline config — except `awardSchedule`, which is AUTHORED (a schedule the
+ * generator script hands in through `applyPipelineConfig`, deep-copied onto
+ * zone 0). `required` is read off the committed corpus: every omsi entry there
+ * is written by `buildPresetSidecars` with loop mode on, so the engine's
+ * `exits`, `fogEnabled` and `manaEnabled` are claimed required.
+ */
+export const OMSI_SIDECAR_FIELDS = Object.freeze({
+    exits: REQUIRED_ENVELOPE_FIELD,
+    fogEnabled: REQUIRED_ENVELOPE_FIELD,
+    manaEnabled: REQUIRED_ENVELOPE_FIELD,
+    omsiTown: Object.freeze({
+        type: 'integer', required: true, derived: true,
+        description: `The town the fork loads, written by ${ZONE_RULES}: the zone ordinal, or — when `
+            + 'regions are split — the one town every zone overlays.',
+    }),
+    ap_locations: Object.freeze({
+        type: 'object', required: false, derived: true,
+        description: `Fork row id → AP location name (\`<region>__<id>\`), derived by ${ZONE_RULES}. Absent `
+            + 'on a split region that carries no location. A mismatch desyncs the checks.',
+        schema: Object.freeze({ additionalProperties: Object.freeze({ type: 'string' }) }),
+    }),
+    victoryTown: Object.freeze({
+        type: 'integer', required: false, derived: true,
+        description: `The town count the bridge's victory watch waits for, written by ${ZONE_RULES} on `
+            + 'the LAST town when unlock locations are emitted.',
+    }),
+    unlockMeta: Object.freeze({
+        type: 'object', required: false, derived: true,
+        description: `The unlock pool's item → variable map and per-variable counts, derived by `
+            + `\`unlockMetaForWorld\` in ${ZONE_RULES} when unlock locations are emitted. A hand edit `
+            + 'mis-scales the pool silently.',
+        schema: Object.freeze({
+            required: Object.freeze(['itemToVar', 'vars']),
+            properties: Object.freeze({
+                itemToVar: Object.freeze({ type: 'object' }),
+                vars: Object.freeze({ type: 'object' }),
+            }),
+        }),
+    }),
+    omsiRegion: Object.freeze({
+        type: 'object', required: false, derived: true,
+        description: `The Explore-gate descriptor of a split region, written by ${ZONE_RULES} when region `
+            + 'splitting is configured; the bridge installs it as the town\'s rescale while the region '
+            + 'is active.',
+        schema: Object.freeze({
+            required: Object.freeze(['townIndex', 'regionId', 'exploreThreshold', 'exploreMaxLevel']),
+            properties: Object.freeze({
+                townIndex: Object.freeze({ type: 'integer' }),
+                regionId: Object.freeze({ type: 'string' }),
+                exploreVar: Object.freeze({ type: 'string' }),
+                exploreThreshold: Object.freeze({ type: 'number' }),
+                exploreMaxLevel: Object.freeze({ type: 'integer' }),
+            }),
+        }),
+    }),
+    awardSchedule: Object.freeze({
+        type: 'object', required: false,
+        description: 'The award carrier\'s schedule — AUTHORED: the pipeline config hands it in and '
+            + 'zone 0 carries a deep copy. The fork validates it and plays vanilla when it fails.',
+    }),
+});
+
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
     id: 'omsi',
@@ -377,6 +447,8 @@ export const substrateRegistryEntry = Object.freeze({
             : (Array.isArray(w.exits) ? w.exits : []);
         return { ...w, exits: exitsArray };
     },
+    // ⛓ PRESET SIDECARS D0 — what that pass-through writes (above).
+    sidecarFields: OMSI_SIDECAR_FIELDS,
 
     getPlaybackController: () => _playbackProxy,
 

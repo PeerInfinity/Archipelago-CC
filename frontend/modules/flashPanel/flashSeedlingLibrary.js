@@ -50,14 +50,64 @@
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
+import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
 
 export const FLASH_SEEDLING_SUBSTRATE_ID = 'flash_seedling';
 export const FLASH_SEEDLING_PANEL_COMPONENT_TYPE = 'flashPanel';
 export const FLASH_SEEDLING_LOAD_REGION_EVENT = 'flashSeedling:loadRegion';
 
+/** The one writer of this payload — every field below is its output. */
+const COMPILER = '`buildFlashRegionSidecars` (`procgenPipeline/regionAtlasCompiler.js`)';
+
+/**
+ * ⛓⛓ PRESET SIDECARS D0 — **THE SEEDLING PAYLOAD, DECLARED** (the registry's
+ * `sidecarFields` slot; vocabulary in `procgenCore/sidecarFields.js`). The
+ * shape in this file's docblock, and ALL of it is DERIVED: the region atlas
+ * compiler is the only writer, and the payload is a compiled SNAPSHOT of the
+ * atlas — an atlas REFERENCE into a level, not a room record (the same fact
+ * `regionRoundTrip.refused` states below). `exits` is the engine envelope's
+ * field; its Seedling-only item keys (`kind`, `exit_tiles`, `entrance_tile`,
+ * `entrance_spawn`, `target_level`, `target_spawn`, `external`,
+ * `target_substrate`) ride through the envelope's open item schema.
+ * `required` is read off the committed corpus.
+ */
+export const FLASH_SEEDLING_SIDECAR_FIELDS = Object.freeze({
+    exits: REQUIRED_ENVELOPE_FIELD,
+    gameId: Object.freeze({
+        type: 'string', required: true, derived: true,
+        description: `The atlas's \`game\`, copied by ${COMPILER}. Ignored at play.`,
+    }),
+    atlas_ref: Object.freeze({
+        type: 'string', required: true, derived: true,
+        description: `The atlas's content-hashed \`atlas_id\`, copied by ${COMPILER}. It RESOLVES TO `
+            + 'NOTHING at runtime — no play-time reader looks an atlas up by it; it is provenance.',
+    }),
+    atlas_region: Object.freeze({
+        type: 'string', required: true, derived: true,
+        description: `The atlas region this AP region projects, copied by ${COMPILER}. Ignored at play.`,
+    }),
+    atlas_sub_region: Object.freeze({
+        type: 'string', required: false, derived: true,
+        description: `The sub-region this AP region binds to, written by ${COMPILER} only when the atlas `
+            + 'region has a subgraph. Ignored at play.',
+    }),
+    level: Object.freeze({
+        type: 'integer', required: true, derived: true,
+        description: `The Seedling level this region IS (the atlas region's \`map_ref\`), copied by `
+            + `${COMPILER}; \`seedlingRegionBinding.js\` loads it on arrival — a wrong one sends the `
+            + 'player to the wrong level and every crossing then warns.',
+    }),
+    tile_size: Object.freeze({
+        type: 'integer', required: true, derived: true,
+        description: `The atlas's tile size, copied by ${COMPILER} (it scales each exit's `
+            + '`entrance_spawn`). Ignored at play.',
+    }),
+});
+
 const base = createFlashSubstrateEntry({
     id: FLASH_SEEDLING_SUBSTRATE_ID,
     label: 'Seedling (region atlas)',
+    sidecarFields: FLASH_SEEDLING_SIDECAR_FIELDS,
     // v1 keeps the flash family's default (`arbitrary_ap_locations`). An atlas
     // region has real NESW boundary exits and intrinsic frontier rules, but
     // nothing consumes them at build time until Phase 6 teaches sphere growth

@@ -44,6 +44,9 @@ export function assignSidePortals(exitSides) {
     return sidePortals;
 }
 
+/** The game id every runner payload carries (`buildZonePayload`). */
+export const RUNNER_GAME_ID = 'runnerDemo';
+
 /**
  * Payload shaped for the flashSubstrate bridge's configure() contract
  * (runnerDemo/game/main.js): level geometry rides `params` (the
@@ -58,7 +61,7 @@ export function assignSidePortals(exitSides) {
 export function buildZonePayload(region_id, level, sidePortals, physics = DEFAULT_PROFILE_ID) {
     const { profileId, C } = resolveGenPhysics(physics);
     return {
-        gameId: 'runnerDemo',
+        gameId: RUNNER_GAME_ID,
         params: {
             runnerLevel: level,      // explicit geometry the game replays
             sidePortals,             // side -> portal id (the game inverts)

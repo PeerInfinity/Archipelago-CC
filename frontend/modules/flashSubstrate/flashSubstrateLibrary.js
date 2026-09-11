@@ -29,6 +29,8 @@
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { SIDES } from '../shared/procgen/spatialPrimitives.js';
+import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
 
 // Shared across every flash game entry — the whole point of Shape 1 is
 // that all per-game ids resolve to the SAME panel + load event, so the
@@ -92,6 +94,134 @@ function serializeWorld(world) {
 }
 
 /**
+ * ⛓⛓ PRESET SIDECARS D0 — **THE GENERIC FLASH PAYLOAD, DECLARED** (the
+ * registry's `sidecarFields` slot; vocabulary in `procgenCore/sidecarFields.js`).
+ * The Mode-1 shape above, as the in-iframe bridge's `configure()` reads it
+ * (`bridge.js`: `gameId params ap_items ap_locations` + the capabilities, and
+ * `gate_rules` for authored locks). ⚠ No committed preset has a region of the
+ * generic `flash` substrate, so nothing here is read off a corpus: `gameId` is
+ * required because the bridge cannot pick a game without it, and every other
+ * key is optional. `serializeWorld` is a pass-through (only `exits` is
+ * converted), so it emits whatever the payload held. ⚠ `ap_items` is read by
+ * the bridge and written by NO producer in the tree.
+ *
+ * Per-game entries pass their own declaration to `createFlashSubstrateEntry`;
+ * the two zone games build theirs with `flashZoneSidecarFields` below.
+ */
+export const FLASH_SIDECAR_FIELDS = Object.freeze({
+    gameId: Object.freeze({
+        type: 'string', required: true,
+        description: 'Which game the flash page loads for this region (the page picks the runtime).',
+    }),
+    params: Object.freeze({
+        type: 'object',
+        description: 'Per-region game parameters, forwarded verbatim to the game by the bridge\'s '
+            + '`configure()`.',
+    }),
+    ap_items: Object.freeze({
+        type: 'object',
+        description: 'AP item name → the game\'s own item name, forwarded by `configure()`. No '
+            + 'producer in the tree writes it.',
+        schema: Object.freeze({ additionalProperties: Object.freeze({ type: 'string' }) }),
+    }),
+    ap_locations: Object.freeze({
+        type: 'object',
+        description: 'The game\'s objective id → AP location name (the frontend state manager is '
+            + 'name-keyed).',
+        schema: Object.freeze({ additionalProperties: Object.freeze({ type: 'string' }) }),
+    }),
+    flashCapabilities: Object.freeze({
+        type: 'object',
+        description: 'HOW the game integrates (`locations`, `items`, `start` styles). Read only by the '
+            + 'in-iframe bridge; absent = cooperative + pull. An open vocabulary, so no enum.',
+    }),
+    gate_rules: Object.freeze({
+        type: 'object',
+        description: 'Authored locks `{portals: {id: rule}, pickups: {id: rule}}` the bridge evaluates '
+            + 'against live inventory (`setGateStates`).',
+        schema: Object.freeze({
+            properties: Object.freeze({
+                portals: Object.freeze({ type: 'object' }),
+                pickups: Object.freeze({ type: 'object' }),
+            }),
+        }),
+    }),
+});
+
+/**
+ * ⛓⛓ THE FLASH-ZONE PAYLOAD — the ONE shape bounce and runner share
+ * (`buildZonePayload` in each: `{gameId, params: {<level key>, sidePortals,
+ * physics?}, ap_locations, flashCapabilities}`, then `gate_rules` when a spec
+ * carries authored terms), declared here once; each game extends it with its
+ * own level key and physics stamp.
+ *
+ * `required` is read off the committed corpus — every bounce and runner entry
+ * there is written by `buildPresetSidecars`, so the engine's `exits` and
+ * `fogEnabled` are on all of them. `params` is closed
+ * (`additionalProperties: false`): its keys are the level, the portal map, the
+ * physics stamp, and the two the ENGINE adds for the back-portal route
+ * (`backExitSide`, `fallBehavior` — `procgenPipelineEngine.js`).
+ *
+ * @param {object} o
+ * @param {string} o.gameId       the game id `buildZonePayload` stamps
+ * @param {string} o.writer       where that `buildZonePayload` lives (a code span)
+ * @param {string} o.levelKey     the `params` key carrying the level geometry
+ * @param {object} o.physics      `{required, schema}` of `params.physics`
+ * @param {string} [o.paramsNote] a sentence on `params` only this game needs
+ */
+export function flashZoneSidecarFields({ gameId, writer, levelKey, physics, paramsNote = '' }) {
+    return Object.freeze({
+        exits: REQUIRED_ENVELOPE_FIELD,
+        fogEnabled: REQUIRED_ENVELOPE_FIELD,
+        gameId: Object.freeze({
+            ...FLASH_SIDECAR_FIELDS.gameId,
+            derived: true,
+            enum: Object.freeze([gameId]),
+            description: `The game id, a constant ${writer} stamps.`,
+        }),
+        params: Object.freeze({
+            type: 'object', required: true,
+            description: `The level the game replays: \`${levelKey}\` (the geometry AFTER the side-exit `
+                + 'transform — authored, and nothing re-derives the rules from it on load), '
+                + '`sidePortals` (side → portal id), the physics stamp, and the engine\'s back-portal '
+                + `route (\`backExitSide\`, \`fallBehavior\`). ${paramsNote}`.trim(),
+            schema: Object.freeze({
+                required: Object.freeze([levelKey, 'sidePortals', ...(physics.required ? ['physics'] : [])]),
+                additionalProperties: false,
+                properties: Object.freeze({
+                    [levelKey]: Object.freeze({ type: 'object' }),
+                    sidePortals: Object.freeze({
+                        type: 'object', additionalProperties: Object.freeze({ type: 'string' }),
+                    }),
+                    physics: physics.schema,
+                    backExitSide: Object.freeze({ enum: Object.freeze([...SIDES]) }),
+                    fallBehavior: Object.freeze({ type: 'string' }),
+                }),
+            }),
+        }),
+        ap_locations: Object.freeze({
+            ...FLASH_SIDECAR_FIELDS.ap_locations,
+            required: true, derived: true,
+            description: `Pickup id → AP location name, derived by ${writer} as \`<region>__<pickup>\`. `
+                + 'A mismatch drops the check silently (`bridge.js`).',
+        }),
+        flashCapabilities: Object.freeze({
+            ...FLASH_SIDECAR_FIELDS.flashCapabilities,
+            required: true, derived: true,
+            description: `A constant ${writer} stamps (\`cooperative\` locations, \`pull\` items, `
+                + '`auto` start). Read only by the in-iframe bridge.',
+        }),
+        gate_rules: Object.freeze({
+            ...FLASH_SIDECAR_FIELDS.gate_rules,
+            derived: true,
+            description: 'Authored locks the bridge evaluates at runtime, derived from the specs\' '
+                + `authored terms after ${writer}; OMITTED when no spec carries one — no committed `
+                + 'preset does.',
+        }),
+    });
+}
+
+/**
  * Build a Flash substrate registry entry. Per-game entries differ only in
  * identity (id/label) and capabilities (supportedFeatures); the shared
  * runtime fields (panel, load event, de/serialize, playback) are baked in
@@ -101,6 +231,8 @@ function serializeWorld(world) {
  * @param {string}   opts.id               unique substrate id (e.g. 'flash', 'flash_seedling')
  * @param {string}  [opts.label]           display name (defaults to id)
  * @param {string[]}[opts.supportedFeatures] procgen-pipeline features (default: arbitrary_ap_locations)
+ * @param {object}  [opts.sidecarFields]   the payload declaration (default: the
+ *   generic Mode-1 `FLASH_SIDECAR_FIELDS`)
  * @param {string}  [opts.iframeId]        the iframeAdapter id of the panel's iframe
  *   (default: 'flashSubstrate' — the shared flash panel's). procgenPlayer uses
  *   this to re-publish the active region's loadRegion when THIS iframe
@@ -113,6 +245,7 @@ export function createFlashSubstrateEntry({
     label,
     supportedFeatures = ['arbitrary_ap_locations'],
     iframeId = 'flashSubstrate',
+    sidecarFields = FLASH_SIDECAR_FIELDS,
 } = {}) {
     if (!id || typeof id !== 'string') {
         throw new Error('createFlashSubstrateEntry: id must be a non-empty string');
@@ -133,6 +266,7 @@ export function createFlashSubstrateEntry({
         iframeId,
         deserializeWorld,
         serializeWorld,
+        sidecarFields,
 
         // Playback bot integration is deferred (Mode 1 / v1). Until then
         // getPlaybackController returns null and the bot no-ops on flash

@@ -23,11 +23,15 @@
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
+import {
+    createFlashSubstrateEntry, flashZoneSidecarFields,
+} from '../flashSubstrate/flashSubstrateLibrary.js';
 import {
     generateZoneSet, generateLevelForSpecsGen, SWEEP_SATURATING_PROFILES,
 } from './generator.js';
-import { makeExtractZoneRules, assembleRunnerRegion, buildZonePayload } from './zoneRules.js';
+import {
+    makeExtractZoneRules, assembleRunnerRegion, buildZonePayload, RUNNER_GAME_ID,
+} from './zoneRules.js';
 import {
     captureRunnerLibraryEntry,
     instantiateRunnerLibraryEntry,
@@ -38,7 +42,7 @@ import {
     RUNNER_LIBRARY_ITEMS, RUNNER_LIBRARY_OBSTACLES,
     ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME,
 } from './apRules.js';
-import { DEFAULT_PROFILE_ID } from './physics.js';
+import { DEFAULT_PROFILE_ID, PROFILES } from './physics.js';
 import {
     DEFAULT_RUNNER_PROCGEN_PARAMS, buildRunnerRegionParams, renderRunnerProcgenParams,
 } from './runnerProcgenParams.js';
@@ -388,6 +392,38 @@ export function generateZoneForSpecs(specs = {}) {
 }
 
 /**
+ * ⛓⛓ PRESET SIDECARS D0 — **THE RUNNER PAYLOAD, DECLARED**: the shared
+ * flash-zone shape (`flashSubstrateLibrary.flashZoneSidecarFields`) with the
+ * runner's level key and a physics stamp that is ALWAYS embedded (the runner's
+ * stamp contract — bounce omits its experimental one). Its profile vocabulary
+ * is `PROFILES`' own keys.
+ *
+ * ⚠ `params.touchControls` is NOT declared, on purpose: this entry's
+ * `deserializeWorld` stamps it from the host setting at load and its
+ * `serializeWorld` strips it unconditionally, so a written sidecar never
+ * carries it — and the closed `params` refuses one that does.
+ */
+export const RUNNER_SIDECAR_FIELDS = flashZoneSidecarFields({
+    gameId: RUNNER_GAME_ID,
+    writer: '`buildZonePayload` (`runnerDemo/zoneRules.js`)',
+    levelKey: 'runnerLevel',
+    physics: Object.freeze({
+        required: true,
+        schema: Object.freeze({
+            type: 'object',
+            required: Object.freeze(['profile', 'constants']),
+            properties: Object.freeze({
+                profile: Object.freeze({ enum: Object.freeze(Object.keys(PROFILES)) }),
+                constants: Object.freeze({ type: 'object' }),
+            }),
+        }),
+    }),
+    paramsNote: '`params.physics` is DERIVED (`resolveGenPhysics`) and always embedded. '
+        + '`params.touchControls` is a host-session override this entry stamps on load and strips '
+        + 'on save, so it is never written.',
+});
+
+/**
  * Build a runner substrate registry entry — the same per-entry factory
  * pattern flashSubstrate uses per game, and literally built on it:
  * createFlashSubstrateEntry supplies the runtime plumbing (exits-Map
@@ -413,7 +449,9 @@ export function createRunnerSubstrateEntry({
     seed = RUNNER_ZONE_SEED,
     physics,
 } = {}) {
-    const base = createFlashSubstrateEntry({ id, label, iframeId: RUNNER_IFRAME_ID });
+    const base = createFlashSubstrateEntry({
+        id, label, iframeId: RUNNER_IFRAME_ID, sidecarFields: RUNNER_SIDECAR_FIELDS,
+    });
 
     // Lazy zone-table resolution (see header). An explicit `zones` table
     // is used as-is; the default is generated on first extractZoneRules

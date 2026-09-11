@@ -26,8 +26,155 @@
  */
 
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
+import { TILE_FLOOR, TILE_WALL } from '../shared/procgen/mazeAlgorithms/gridTiles.js';
 import { computeLongestShortestPath } from './mazeGeometry.js';
 import { makeLocationName } from '../procgenCore/apLocationNaming.js';
+import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
+
+const xy = Object.freeze({ x: Object.freeze({ type: 'integer' }), y: Object.freeze({ type: 'integer' }) });
+const atXY = (extra = {}, required = []) => Object.freeze({
+    type: 'object',
+    required: Object.freeze(['x', 'y', ...required]),
+    properties: Object.freeze({ ...xy, ...extra }),
+});
+/** Written only by the maze atlas projection — the provenance keys its ten committed rooms carry. */
+const ATLAS_PROJECTION = '`projectRegionToMaze` (`procgenPipeline/regionAtlasMazeProjection.js`)';
+
+/**
+ * ⛓⛓ PRESET SIDECARS D0 — **THE TILE-GRID PAYLOAD, DECLARED BESIDE ITS
+ * SERIALIZER** (the registry's `sidecarFields` slot; vocabulary in
+ * `procgenCore/sidecarFields.js`). Both `maze` and `text_adventure` register
+ * `serializeMazeWorld` (through `adapterPrimitives.tileGridSerializer`), so
+ * both entries carry THIS object — one payload shape, one declaration.
+ *
+ * `required` is read off the committed corpus: a key absent from any entry of
+ * either substrate is optional, and its description names the producer that
+ * omits it — always the maze ATLAS PROJECTION, the second writer of this
+ * shape, whose rooms carry no `itemLib`/`longestShortestPath` and four
+ * provenance keys instead. `check-sidecar-fields.mjs` holds every committed
+ * entry to it.
+ *
+ * ⚠ Three keys `serializeMazeWorld` CAN emit that no committed preset carries
+ * (`hazards`, `consumableTiles`, `manaTiles` — each omitted when empty) are
+ * declared, because the serializer writes them. ⛔ Four keys
+ * `deserializeMazeWorld` READS that no sidecar writer emits (`blocks`,
+ * `buttons`, `buttonLib` — the lab level record's, via
+ * `serializeMazeEntities` — and the legacy single `exit`) are NOT: the gate
+ * would refuse a sidecar that carried one.
+ */
+export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
+    exits: REQUIRED_ENVELOPE_FIELD,
+    entrance: REQUIRED_ENVELOPE_FIELD,
+    width: Object.freeze({
+        type: 'integer', required: true,
+        description: 'Grid width in tiles. `deserializeMazeWorld` refuses a payload whose `tiles` '
+            + 'length is not width × height.',
+    }),
+    height: Object.freeze({
+        type: 'integer', required: true,
+        description: 'Grid height in tiles (see `width`).',
+    }),
+    tiles: Object.freeze({
+        type: 'array', required: true,
+        description: 'Row-major tile grid, one entry per cell, in the one grid vocabulary '
+            + '(`gridTiles.js`: floor or wall). The exporter writes it on one line.',
+        schema: Object.freeze({ items: Object.freeze({ enum: Object.freeze([TILE_FLOOR, TILE_WALL]) }) }),
+    }),
+    obstacles: Object.freeze({
+        type: 'array', required: true,
+        description: 'Placed obstacles `{x, y, id}` — `id` keys `obstacleLib` or the base library.',
+        schema: Object.freeze({ items: atXY({ id: Object.freeze({ type: 'string' }) }, ['id']) }),
+    }),
+    items: Object.freeze({
+        type: 'array', required: true,
+        description: 'Placed pickups `{x, y, id, locationName}`. The placements are authored; each '
+            + '`locationName` is DERIVED — `serializeMazeWorld` bakes the AP location name from the '
+            + 'extracted rules (a top-down region\'s is the source game\'s own).',
+        schema: Object.freeze({
+            items: atXY({
+                id: Object.freeze({ type: 'string' }),
+                locationName: Object.freeze({ type: ['string', 'null'] }),
+            }, ['id']),
+        }),
+    }),
+    obstacleLib: Object.freeze({
+        type: 'object', required: true, derived: true,
+        description: 'Obstacle definitions NOT already in the base library — a diff-encoded palette '
+            + '`serializeMazeWorld` computes against `DEFAULT_OBSTACLES` (per-instance logic gates, '
+            + 'foreign obstacles).',
+    }),
+    itemLib: Object.freeze({
+        type: 'object', required: false, derived: true,
+        description: 'Item definitions NOT already in the base library — the diff `serializeMazeWorld` '
+            + `computes against \`DEFAULT_ITEMS\`. Omitted by ${ATLAS_PROJECTION}.`,
+    }),
+    longestShortestPath: Object.freeze({
+        type: 'integer', required: false, derived: true,
+        description: 'The longest of the pairwise shortest paths among the entrance and the exits, '
+            + 'computed at write by `computeLongestShortestPath` and TRUSTED at play: loop-mode mana '
+            + 'per tile = baseRegionCost / this, and nothing recomputes it after a hand edit of '
+            + `\`tiles\`. Omitted by ${ATLAS_PROJECTION}.`,
+    }),
+    hazards: Object.freeze({
+        type: 'array', required: false,
+        description: 'Timed hazards (content module `hazardPathGen`), immutable shape only — the '
+            + 'runtime seeds each phase. `serializeMazeWorld` OMITS the key when there are none; no '
+            + 'committed preset carries it.',
+        schema: Object.freeze({
+            items: Object.freeze({
+                type: 'object',
+                required: Object.freeze(['shape', 'length', 'tiles', 'cycleLength']),
+                properties: Object.freeze({
+                    tiles: Object.freeze({ type: 'array', items: atXY() }),
+                }),
+            }),
+        }),
+    }),
+    consumableTiles: Object.freeze({
+        type: 'array', required: false,
+        description: 'Cross-game consumable tiles `{x, y, substrate, type, count}` (X1). '
+            + '`serializeMazeWorld` OMITS the key when there are none; no committed preset carries it.',
+        schema: Object.freeze({
+            items: atXY({
+                substrate: Object.freeze({ type: 'string' }),
+                type: Object.freeze({ type: 'string' }),
+                count: Object.freeze({ type: 'integer' }),
+            }, ['substrate', 'type', 'count']),
+        }),
+    }),
+    manaTiles: Object.freeze({
+        type: 'array', required: false,
+        description: 'Mana refill tiles `{x, y, amount}` (X1). `serializeMazeWorld` OMITS the key when '
+            + 'there are none; no committed preset carries it.',
+        schema: Object.freeze({ items: atXY({ amount: Object.freeze({ type: 'number' }) }, ['amount']) }),
+    }),
+    atlas_region: Object.freeze({
+        type: 'string', required: false, derived: true,
+        description: `Atlas provenance written by ${ATLAS_PROJECTION}: the atlas region this room was `
+            + 'projected from. The maze runtime ignores it.',
+    }),
+    atlas_sub_region: Object.freeze({
+        type: 'string', required: false, derived: true,
+        description: `Atlas provenance written by ${ATLAS_PROJECTION} when the room is one sub-region `
+            + 'of its atlas region. The maze runtime ignores it.',
+    }),
+    level: Object.freeze({
+        type: 'integer', required: false, derived: true,
+        description: `Atlas provenance written by ${ATLAS_PROJECTION}: the atlas region's \`map_ref\`. `
+            + 'The maze runtime ignores it.',
+    }),
+    tile_size: Object.freeze({
+        type: 'integer', required: false, derived: true,
+        description: `Atlas provenance written by ${ATLAS_PROJECTION}: the atlas's tile size. The `
+            + 'maze runtime ignores it.',
+    }),
+    origin: Object.freeze({
+        type: 'object', required: false, derived: true,
+        description: `Atlas provenance written by ${ATLAS_PROJECTION}: the room's origin in the `
+            + 'atlas map. The maze runtime ignores it.',
+        schema: Object.freeze({ required: Object.freeze(['x', 'y']), properties: xy }),
+    }),
+});
 
 // Serialize a maze world into the sidecar payload shape. Maps and
 // Int8Array aren't JSON-safe, so this flattens them. AP-canonical

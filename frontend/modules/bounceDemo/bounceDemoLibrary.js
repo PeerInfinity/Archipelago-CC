@@ -20,8 +20,10 @@
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
-import { physicsStampFor, resolvePhysicsStamp } from './physics.js';
+import {
+    createFlashSubstrateEntry, flashZoneSidecarFields,
+} from '../flashSubstrate/flashSubstrateLibrary.js';
+import { PROFILES, physicsStampFor, resolvePhysicsStamp } from './physics.js';
 import { deriveAccessRules, deriveBraidAccessRules } from './deriveRules.js';
 import { attachSideExits, portalIdsBySide, SIDE_DIRECTIONS } from './sideExits.js';
 import { generateLevelFromSpecsGen } from './generator.js';
@@ -61,6 +63,9 @@ export const ZONES = Object.freeze([
     { level: fork, items: { loc_right: 'Blue platforms', loc_left: VICTORY_ITEM_NAME } },
 ]);
 
+/** The game id every bounce payload carries (`buildZonePayload`). */
+export const BOUNCE_GAME_ID = 'bounceDemo';
+
 /**
  * Payload shaped for the flashSubstrate bridge's configure() contract:
  * level geometry rides `params` (the bridge forwards only world.params,
@@ -76,7 +81,7 @@ export function buildZonePayload(region_id, level, sidePortals, physicsProfile =
     // C its rules were derived with, even if the profile is retuned.
     const physics = physicsStampFor(physicsProfile);
     return {
-        gameId: 'bounceDemo',
+        gameId: BOUNCE_GAME_ID,
         params: {
             bounceLevel: level, // transformed geometry the renderer draws
             sidePortals,        // side -> portal id (exit arrows)
@@ -821,6 +826,36 @@ let _playbackProxy = null;
 export function setPlaybackProxy(proxy) { _playbackProxy = proxy; }
 
 /**
+ * ⛓⛓ PRESET SIDECARS D0 — **THE BOUNCE PAYLOAD, DECLARED**: the shared
+ * flash-zone shape (`flashSubstrateLibrary.flashZoneSidecarFields`) with
+ * bounce's level key and its OPTIONAL physics stamp — `physicsStampFor`
+ * returns null for `experimental`, so an experimental world carries no
+ * `params.physics` at all. The
+ * profile vocabulary is asked of the stamper itself, so a profile added to
+ * `PROFILES` is declared without an edit here.
+ */
+export const BOUNCE_SIDECAR_FIELDS = flashZoneSidecarFields({
+    gameId: BOUNCE_GAME_ID,
+    writer: '`buildZonePayload` (`bounceDemoLibrary.js`)',
+    levelKey: 'bounceLevel',
+    physics: Object.freeze({
+        required: false,
+        schema: Object.freeze({
+            type: 'object',
+            required: Object.freeze(['profile', 'constants']),
+            properties: Object.freeze({
+                profile: Object.freeze({
+                    enum: Object.freeze(Object.keys(PROFILES).filter((id) => physicsStampFor(id))),
+                }),
+                constants: Object.freeze({ type: 'object' }),
+            }),
+        }),
+    }),
+    paramsNote: '`params.physics` is DERIVED from the profile (`physicsStampFor`) and OMITTED for '
+        + '`experimental`.',
+});
+
+/**
  * Build a bounce substrate registry entry for a zone set — the same
  * per-entry factory pattern flashSubstrate uses per game, and literally
  * built on it: createFlashSubstrateEntry supplies the runtime plumbing
@@ -837,7 +872,9 @@ export function createBounceSubstrateEntry({
     portalPlacement = 'directional',
 } = {}) {
     return Object.freeze({
-        ...createFlashSubstrateEntry({ id, label, iframeId: BOUNCE_IFRAME_ID }),
+        ...createFlashSubstrateEntry({
+            id, label, iframeId: BOUNCE_IFRAME_ID, sidecarFields: BOUNCE_SIDECAR_FIELDS,
+        }),
 
         // Bounce's single panel identity (one component / event / iframeId
         // for BOTH renderers). The renderer setting no longer switches the
