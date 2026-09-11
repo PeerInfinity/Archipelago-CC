@@ -14123,6 +14123,14 @@ retiring `--win`, the standing row, SWFRecomp-CC. **⚖ after H1:** may headless
 no org); schedule the rebuild. Sequencing: disjoint paths from G0 (`scripts/procgen/**` vs `frontend/**`); the box is
 the only shared resource and the lock serialises it — launched without waiting.
 
+**⚖ RULED (user, 2026-09-11, while H1's tier ran): "I want the new Seedling workflows to only be manually triggered,
+not automatically triggered."** Every NEW Seedling workflow this arc adds (H2's headless arm for the six `windows`
+gates, any headless full-tier job) is `workflow_dispatch:` only — no push / pull_request / schedule trigger. The
+pre-existing per-push browser shards (`unittests_frontend.yml`, running `seedling-wasm-pages`/`-element` since S3) are
+not new; whether they too go manual is asked before H2 is briefed. **H1 MID-REPORT (20:20Z, verified):** the runner
+KEEPS the device alive — `seedling-wasm-element` 897.5 → ~19 s, `-pages` 161 → ~15 s on ubuntu-latest; the browser
+plan 3 shards → 1 (385 s); run 34639283778 @ `91092bb81e` green, vitest 453/13790; H1's four commits on origin.
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
