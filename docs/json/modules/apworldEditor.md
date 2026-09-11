@@ -25,9 +25,10 @@ document.
 | `sidecarIssues.js` | (V0) the **sidecar validity report** — `sidecarIssues(doc, slot)`, the fourth validator: one pure function the validation bar, the per-region block and `check-sidecar-fields.mjs` all read |
 | `sidecarForm.js` | (D1) the sidecar block's **fields view** model — `sidecarFormModel(entry, {rulesSchema})`: the rows (the entry subschema's fields, then the substrate's declaration), the control each type draws, and `withSidecarField`, the whole entry one control's change writes |
 | `regionRoundTrip.js` | the per-region **Edit ▸** door — resolves the substrate's declarations, runs the baseline, folds a save into ONE op; (S0) `sidecarEntryFacts`, what a region's sidecar block says about its entry; and (S2) `deriveRegionRules`, the derivation half alone — a payload's own rules, named by the document |
+| `regionLayout.js` | (M2) the map moves' layout — `slotLayout` (a slot's cells on a `Grid` sized by `mapBoundsFor`), `layoutChange` (the engine's placement, and every exit whose side-law verdict the move changed), `rewriteExitFlags` (a payload's `exits` in its substrate's own serialized form); the ops and their refusal sentences are `rulesDocOps.js`'s `move-region` / `swap-regions` |
 | `regionRederive.js` | (S2) **Re-derive rules ▸** — `rederiveRegionRules({base, ops, doc}, slot, region)`: the pre-edit payload recovered from the session's record, and the ONE op that moves only the rules it produced |
 | `../procgenCore/compositeMapRenderer.js` | the **Map** tab's painter — shared with the procgen pipeline panel, substrate-neutral |
-| `../procgenPipeline/compositeMapDocument.js` | `reconstructResultFromSidecars` — `preset_sidecars` → a `Grid` |
+| `../procgenPipeline/compositeMapDocument.js` | `reconstructResultFromSidecars` — `preset_sidecars` → a `Grid`; (M2) `mapBoundsFor`, the grid's size in cells, shared with the map moves |
 | `rawView.js` | the **Raw JSON** tab's text and its parse (the size limit was RETIRED by measurement — H2b) |
 | `downloadJson.js` | the download exit — the file name and the bytes |
 
@@ -58,7 +59,7 @@ reset the session, so an undo after an Apply still works. It republishes the
 | **Items** | items, classifications, pool counts, starting counts, the slot's `item_groups` registry (I1) and its `progression_mapping` entries (I2) — see below |
 | **Placements** (W3) | `canonical_placements` — which item this world places at which location; the world generator's `--canonical-seed` input, see below |
 | **Meta** | the fields in `rulesDocOps.META_FIELDS`, plus the start region and the victory condition |
-| **Map** | the composite grid, for documents whose sidecars carry grid cells; a click selects a region and draws its sidecar block under the map, a second click on it opens its room (M1) — see below |
+| **Map** | the composite grid, for documents whose sidecars carry grid cells; a click selects a region and draws its sidecar block under the map, a second click on it opens its room (M1); **Move / swap ▸** on that block moves the region to an empty cell or swaps it with another (M2) — see below |
 | **Sidecars** (S1) | the five keys that travel BESIDE a world rather than inside its regions, and (S0) `preset_sidecars` as an expandable per-region list for the selected slot — see below |
 | **Document** | **every** top-level key — see below |
 | **Links** | every other editor that owns part of a `rules.json` |
@@ -555,7 +556,7 @@ region, {hostTab})` — and three tabs call it (the Map since M1):
 |---|---|
 | **Regions** | under each region's header, for every region that HAS an entry. A classic AP region draws nothing (H4b's *"absent is an answer"*). |
 | **Sidecars** | the `preset_sidecars` list: **collapsed by default**; expanded, one row per entry of the SELECTED slot, in the document's order — the region's name, the same block, and **Go to region**, which selects the Regions tab and that region and scrolls its header into view (`selectRegion`, the same focus helper the Map tab's Go to region and the bounce editor's reverse link use). |
-| **Map** | (M1) under the canvas, for the map's SELECTED region only (`hostTab: 'map'`): its name, **Go to region** (the same `selectRegion`), and the same block. A second click on the selected cell presses this block's Edit ▸ — see *The Map tab* below. |
+| **Map** | (M1) under the canvas, for the map's SELECTED region only (`hostTab: 'map'`): its name, **Go to region** (the same `selectRegion`), (M2) **Move / swap ▸**, which arms the map for a move or a swap, and the same block. A second click on the selected cell presses this block's Edit ▸ — see *The Map tab* below. |
 
 What the block draws, all of it read off the ENTRY (`sidecarEntryFacts`, in
 `regionRoundTrip.js`) and none of it off a table keyed by substrate name:
@@ -1260,9 +1261,16 @@ MEASURED over the 42 populated slots of the committed corpus, one call per slot:
 drew before draws the same grid, the same cell and the same `regionsBuilt`. The
 four that stay null are exactly the four whose sidecars carry no `grid_cell` on
 any entry — `jta_substrate_test`, `seedling_atlas`, `seedling_atlas_maze`,
-`seedling_playthrough`. `procgen_metadata.grid_dims` is deliberately NOT
-consulted: 25 of the 42 slots carry it and **0** exceed the `grid_cell` extents,
-so no committed document can tell that rule from the extents rule.
+`seedling_playthrough`. M0 left `procgen_metadata.grid_dims` unread, because 25
+of the 42 slots carry it and **0** exceed the `grid_cell` extents, so no
+committed document could tell the two rules apart. ⛓ **M2 made it consulted.** A
+map MOVE can empty the last row or column, which makes the extents smaller than
+the size the generator recorded. So the grid's size in cells is now
+`mapBoundsFor(doc, entries)`: the larger, per axis, of the extents and
+`grid_dims`. The reconstruction returns which one decided as `boundsSource`, and
+a move's bounds refusal reads the same function (see *Moving and swapping
+regions* below). Re-measured at M2 over the same 42 slots: **38 grid / 4 null,
+0 sized by `grid_dims`, every grid and every cell unmoved.**
 
 The stats line beside the map says which rule sized the cell, off
 `regionSizeSource` rather than a second derivation (`data-cell-source` on
@@ -1309,13 +1317,120 @@ a pixel cannot disagree about where a cell is.
   names its own slot (the reverse link) switches the slot and then selects, so
   it is unaffected.
 
-The intro line above the map says what both clicks do. In-app rows:
+The intro line above the map says what both clicks do, and (M2) what
+**Move / swap ▸** does. In-app rows:
 `apworld-map-click-selects-the-region` (amended at M1: the click stays on the
 Map, draws the block and opens nothing; its Regions-tab claims are reached
 through Go to region), `apworld-map-selection-draws-the-regions-block`,
 `apworld-map-second-click-opens-the-selected-regions-room`,
 `apworld-map-first-click-opens-nothing` (including the slot pick and a refused
 region), and `apworld-map-handoff-names-the-slot-and-the-cost`.
+
+### Moving and swapping regions (M2)
+
+⚖ user, 2026-09-10: *"Yes, I choose option A"*. The map moves are NATIVE hub
+ops, not a hand-off to the pipeline. ⚖ Q3 C: *"a move may turn a link into a
+teleporter, and the op names each one."*
+
+**The gesture.** The selected region's block on the Map carries
+**Move / swap ▸** (beside Go to region). Pressing it ARMS the map: the status line
+says *"Click an empty cell to move R there, or a region to swap with it; Esc
+cancels."*, the canvas's `data-move-armed` names the region, and the cursor is
+a crosshair. The next click on the canvas resolves the move:
+
+| the click lands on | what happens |
+|---|---|
+| an empty cell | ONE `move-region {region, to: {gx, gy}}` |
+| another region | ONE `swap-regions {a, b}` |
+| the armed region's own cell, or off the grid | nothing is recorded; *"Move cancelled: …"* |
+
+The op is asked of a preview first, so a refusal is printed beside the block in
+the op's own words and never reaches the session's alert. The map repaints from
+the record, and the selection follows the region to its new cell (the selection
+is its name). The pipeline's radio modes are not copied: the block is the hub's
+control surface.
+
+**The armed state is dropped** at every boundary a region name does not survive
+(trap 1320: slots share names). A **slot pick** and a **tab switch** each drop it
+and say so on the status line, and **Esc** drops it (*"Move cancelled (Esc)."*).
+A **new document**, and any other op or undo, are covered by keying the armed
+state on the record (trap 1311). Each boundary has one guard, so each one's
+mutant can red a row. Arming focuses the panel's root, because the render
+destroys the pressed button and Esc would otherwise reach `<body>` (measured on
+the M2 drive).
+
+**What a move writes, and what it never touches.** A region's LINKS are logical:
+`regions[p][r].exits[].connected_region`, and inside the payload each exit's
+`targetRegion` / `targetExitId`. A move changes none of them. It writes:
+
+- `preset_sidecars[p][r].grid_cell` of every region that changed cell;
+- `playable_payload.exits` of every payload with an exit whose link stopped (or
+  started) being adjacent on its side, forward and back exits alike. The list is
+  written in the substrate's OWN serialized form (deserialize → set the flags →
+  `serializeWorld` → `.exits`), never a hand-built record.
+
+Nothing else is written. ⛔ `regions[p]` is byte-equal after every move and every
+swap, and a row walks every move and every swap of two fixture slots, checking
+the deep diff.
+
+**The teleporter rule is the engine's side law**, `linkIsAdjacentOnSide(grid,
+cell, side, targetCell)`, exported from `procgenPipelineEngine.js` as its ONE
+spelling (`relayoutSphereGrid` uses it too). It says an exit is a teleporter
+unless its target sits in the neighbouring cell ON ITS SIDE. It reproduces every
+stored flag in the committed corpus but two: `omsi_region_split_test`'s
+hand-authored diagonal links (stored `false`). A flag is written only when the
+move changes the law's verdict for that exit, so a flag the law would dispute
+stays as the document holds it until one of its regions moves.
+
+The description names the move and every link whose kind it changed, paired
+into links by their reciprocal exits: *"Moved region_1_1 (1,1) → (0,0); 1 link
+became a teleporter: region_1_1 north ↔ region_1_0 south"*, *"… no link became a
+teleporter"* (`NO_LINK_BECAME_TELEPORTER`), and *"… 1 teleporter became a plain
+link again: …"* when a move brings a link's ends back together.
+
+⛔ **Why the engine's relayout does not write it** (measured at M2 over the 38
+committed slots with `grid_cell`s). `relayoutSphereGrid` is what the pipeline's
+own Move Region runs. On a LOADED document it writes nothing to a payload exit:
+`stitchGrid` walks `exits_placed` / `extracted_rules`, which a document does not
+carry. Given those fields, a NO-OP relayout re-targets **520 maze exits on 154
+regions**, because `Grid.teleporters` is keyed `cell:side` and holds one target
+per side, while 118 regions (the `procgen_topdown` worlds) carry two or more
+same-side teleporters. It also never updates a back-exit. So the hub runs the
+engine's `moveSphereRegion` / `swapSphereRegions` for the PLACEMENT only (on a
+grid of name-only stubs) and applies the side law per exit.
+
+**Bounds.** A target outside the map is refused: *"(gx,gy) is outside player p's
+map, which is W×H cells … ⛔ A move never grows the map."* The map's size is
+`mapBoundsFor`, the Map's own rule (above). With a `grid_dims`, a move that
+empties the last row or column keeps the map's size, and the move back is
+accepted. Without one, the map SHRINKS to its new extents; the description says
+so (*"… the map shrinks to 3×1 (it was 3×2 — its size is the extent of the
+`grid_cell`s)"*, `MAP_SIZE_IS_THE_EXTENT`), and Undo is the way back. Measured: no
+committed slot without `grid_dims` can shrink under a single move, because each
+one is too full (3 regions in 2×2, 5 or 6 in 3×2, 4 in 2×2). Slots are
+independent grids, so a cell another slot's region holds is not occupied here.
+
+**Refused by name** (`rulesDocOps.js`): no region name; no sidecar entry; no
+usable `grid_cell`; two regions sharing one cell; a malformed `to`; a `to`
+outside the map; an OCCUPIED `to` (*"… a move needs an EMPTY cell. To exchange
+the two, swap them (swap-regions)."*); a payload whose substrate cannot
+re-serialize the exits the move flips. A move to the region's own cell, or a swap
+with itself, is a no-op the session drops, never a refusal.
+
+**The corpus control** (`regionLayout.test.js`) runs the write-back with NO flags
+over every placed committed entry, and it must move 0 bytes of `exits`: the
+round trip is byte-stable for every substrate. The one entry with no `exits` key
+(`jta_mixed_test`'s `JtaZone1`) keeps having none (`NO_EXITS_KEY_KEPT_ABSENT`),
+because the pass-through serializers would add `exits: []`. A WHOLE-payload
+re-serialize would move bytes on every maze and text-adventure region (their
+`locationName`s come from `extracted_rules`), which is why only `exits` is
+written.
+
+In-app rows: `apworld-map-move-to-an-empty-cell-records-one-op`,
+`apworld-map-move-onto-a-region-swaps-the-two`,
+`apworld-map-an-armed-move-drops-at-every-boundary` and
+`apworld-map-a-separating-move-names-the-teleporter` (the connection pairs,
+counted off the reconstruction, are the same before and after).
 
 **"Open region graph" is ONE-WAY**, by ⚖: *"We could add a button to open the
 region graph, but I don't want a button in the region graph leading back to the
@@ -1710,10 +1825,10 @@ The import is free in both modes, measured:
 
 | Suite | Where |
 |-------|-------|
-| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `regionRederive.test.js`, `reverseLinks.test.js`, `sidecarIssues.test.js`, `sidecarForm.test.js` | vitest, `frontend/modules/apworldEditor/` |
+| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `regionRederive.test.js`, `regionLayout.test.js` (M2: every move and swap of two fixture slots, the refusals, the corpus control, the side law's census), `reverseLinks.test.js`, `sidecarIssues.test.js`, `sidecarForm.test.js` | vitest, `frontend/modules/apworldEditor/` |
 | `check-sidecar-fields.mjs` (+ `checkSidecarFields.test.js`) | `scripts/procgen/` — the corpus gate: every committed entry against its declaration, and (V0) `sidecarIssues` per slot as its second layer |
 | `../procgenCore/compositeMapRenderer.test.js` | vitest — the Map tab's renderer, driven by a TOY substrate |
-| `../procgenPipeline/compositeMapDocument.test.js` | vitest — `preset_sidecars` → `Grid`, including the player slot |
+| `../procgenPipeline/compositeMapDocument.test.js` | vitest — `preset_sidecars` → `Grid`, including the player slot; (M2) `mapBoundsFor` |
 | `../procgenPipeline/procgenPipelineUI.test.js` | vitest — (H5) the hand-off answer's three outcomes; (M1) the carried slot named when it is not the built one, the top-down cost clause, the sphere answer unchanged, and the block's Regenerate note held to `HANDOFF_REALISED_SLOT` |
 | `presetUI.test.js` | vitest — the "Open in APWorld Editor" descriptor |
 | `measure-apworld-raw-view.mjs` | `scripts/procgen/` — the browser measurement; `--all` opens the raw tab over every committed preset, which is what RETIRED `RAW_VIEW_LIMIT_BYTES` |
