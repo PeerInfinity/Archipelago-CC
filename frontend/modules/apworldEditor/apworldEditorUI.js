@@ -414,7 +414,7 @@ class ApworldEditorUI {
     this._selectedRegion = null;
     this._mapCache = null;
     /**
-     * ⛓⛓ PRESET SIDECARS M2 — **THE MAP'S ARMED MOVE**, `{doc, player, region}`
+     * ⛓⛓ PRESET SIDECARS M2 — **THE MAP'S ARMED MOVE**, `{doc, region}`
      * or null. `Move / swap ▸` on the selection's block arms it; the next canvas
      * click resolves it (ONE op) and disarms. ⛔ It is a region NAME, and names
      * cross scopes (trap 1320: slots share them), so it is DROPPED — not merely
@@ -4634,18 +4634,19 @@ class ApworldEditorUI {
   }
 
   /**
-   * ⛓ M2 — the armed move, or null: read only while it belongs to THIS record,
-   * this slot and the Map tab (see `_mapMove`).
+   * ⛓ M2 — the armed move, or null: read only while it belongs to THIS record
+   * (see `_mapMove`). ⛔ ONE guard per boundary, so each one's mutant can red a
+   * row: the RECORD key here (a new document, an op, an undo), the explicit
+   * drops at a slot pick, a tab switch and Esc. A second check of the slot or
+   * the tab here would make those drops unobservable.
    */
   _armedMove() {
     const m = this._mapMove;
-    if (!m || m.doc !== this.rulesDoc || m.player !== String(this.playerId)
-      || this.activeTab !== 'map') return null;
-    return m;
+    return m && m.doc === this.rulesDoc ? m : null;
   }
 
   _armMapMove(regionName) {
-    this._mapMove = { doc: this.rulesDoc, player: String(this.playerId), region: regionName };
+    this._mapMove = { doc: this.rulesDoc, region: regionName };
     this._opRowMessage = null;
     this._opMessage = `Click an empty cell to move ${regionName} there, or a region to swap `
       + 'with it; Esc cancels.';
