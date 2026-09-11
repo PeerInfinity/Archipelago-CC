@@ -172,6 +172,30 @@ const DEFAULT_SCENARIO = {
 };
 
 /**
+ * ⛓⛓ PRESET SIDECARS M1 — **THE PLAYER SLOT BOTH OF THIS PANEL'S ROUTES BUILD.**
+ * Neither route is told a slot, so each takes its own default: top-down's
+ * `_buildTDEnvelope` passes none to `layoutTopDown` (`playerId = '1'`) and
+ * `buildTopDownEnvelope` reads `starting_items['1']` / `items['1']`; the sphere
+ * import reaches `rebuildEnvelopeFromRulesJson` with none (`'1'`); and
+ * `_applyGridDimsFromSource` sizes the grid off `regions['1']`. So the
+ * hand-off answer speaks about THIS slot, whichever slot the hub sent — an
+ * answer about slot 3's regions would describe a world the buttons do not
+ * build. Named here, once, so the answer and its rows read one value; making
+ * the routes build the carried slot is a pipeline feature, not this constant.
+ */
+export const HANDOFF_REALISED_SLOT = '1';
+
+/**
+ * ⛓ M1 — **THE TOP-DOWN ROUTE'S COST**, the clause the hand-off answer adds to
+ * "TOP-DOWN FROM THIS": `layoutTopDown` rebuilds every region from the
+ * `regions` block and never reads a sidecar, so the payloads a reader hands
+ * over are not the ones the pipeline produces. The hub's door says the same
+ * (`DOCUMENT_KEY_EDITORS.procgen_metadata.regionDoor.note`).
+ */
+export const HANDOFF_TOPDOWN_COST = 'which REGENERATES every sidecar payload from the regions '
+    + 'block (new room geometry) — the payloads handed over are not kept';
+
+/**
  * Group library entries by which of the selected substrates declare
  * each entry's `feature`. Pure function — exported for testing.
  *
@@ -459,7 +483,10 @@ export class ProcgenPipelineUI {
          */
         const handoffHandler = (ev) => {
             if (!ev?.jsonData) return;
-            this._adoptHandoffRules(ev.jsonData, typeof ev.source === 'string' ? ev.source : null);
+            // ⛓ M1 — `player`, the slot the hub had selected, rides along so
+            //   the answer can say when it is NOT the slot the routes build.
+            this._adoptHandoffRules(ev.jsonData, typeof ev.source === 'string' ? ev.source : null,
+                ev.player ?? null);
         };
         eventBus.subscribe(PROCGEN_PIPELINE_LOAD_RULES, handoffHandler, 'procgenPipeline');
         this._unsubHandoff = () => eventBus.unsubscribe(
@@ -772,34 +799,64 @@ export class ProcgenPipelineUI {
      * into a picker the person cannot see would be reporting an intake nobody
      * could act on.
      */
-    _adoptHandoffRules(jsonData, source) {
+    _adoptHandoffRules(jsonData, source, carriedPlayer = null) {
         this.useLoadedRules = false;
         this.topDownSource = jsonData;
         this.topDownSourceLabel = source ? `hand-off (${source})` : 'hand-off';
         this._applyGridDimsFromSource(jsonData);
         this.mode = 'topDown';
+        // ⛓ M1 — the painted map is UNCHANGED: the document's first sidecar
+        //   slot, which is slot 1 wherever the document carries one. A
+        //   per-player export that carries only its own slot (the four-player
+        //   fixture's P2–P4) paints that slot, and there the answer says
+        //   nothing can be built for slot 1.
         const reconstructed = reconstructResultFromSidecars(jsonData);
         if (reconstructed) this.result = reconstructed;
-        this.message = this._handoffAnswer(jsonData);
+        this.message = this._handoffAnswer(jsonData, carriedPlayer);
         this.render();
     }
 
-    /** ⛓ The sentence `_adoptHandoffRules` prints — separated so a row can ask
-     *  for it without driving a render. */
-    _handoffAnswer(jsonData, playerId = '1') {
-        const regions = jsonData?.regions?.[playerId];
-        const regionCount = regions && typeof regions === 'object' ? Object.keys(regions).length : 0;
+    /**
+     * ⛓ The sentence `_adoptHandoffRules` prints — separated so a row can ask
+     * for it without driving a render.
+     *
+     * ⛓⛓ PRESET SIDECARS M1 — **IT SPEAKS ABOUT THE SLOT THE ROUTES BUILD**
+     * (`HANDOFF_REALISED_SLOT`), never the slot the hub had selected: that one
+     * (`carriedPlayer`, the hand-off payload's `player`) is NAMED first when it
+     * differs, with both region counts, so a reader who sent slot 3 learns the
+     * buttons build slot 1 before reading what they would build. No slot
+     * carried, or the same slot ⇒ the sentence H5 printed. And the top-down
+     * answer names its COST (`HANDOFF_TOPDOWN_COST`).
+     *
+     * @param {object} jsonData the handed-over document
+     * @param {string|number|null} [carriedPlayer] the slot the hand-off came from
+     */
+    _handoffAnswer(jsonData, carriedPlayer = null) {
+        const playerId = HANDOFF_REALISED_SLOT;
+        const countOf = (slot) => {
+            const regions = jsonData?.regions?.[slot];
+            return regions && typeof regions === 'object' ? Object.keys(regions).length : 0;
+        };
+        const regionCount = countOf(playerId);
         const refusal = sphereRebuildRefusal(jsonData, { playerId });
+        const carried = carriedPlayer == null ? null : String(carriedPlayer);
+        const adopted = `Adopted ${this.topDownSourceLabel}`;
+        const lead = carried !== null && carried !== playerId
+            ? `${adopted}, sent from player ${carried} (${countOf(carried)} source regions) — but `
+                + `both of this panel's routes build player slot ${playerId} only, so this is `
+                + `about player ${playerId}: `
+            : null;
         if (!refusal) {
-            return `Adopted ${this.topDownSourceLabel}: this is a sphere-grown world — `
+            return `${lead ?? `${adopted}: `}this is a sphere-grown world — `
                 + 'you can APPEND A SPHERE to it (Load envelope / rules.json in sphere mode), '
                 + `or realise it top-down (${regionCount} source regions).`;
         }
         if (regionCount > 0) {
-            return `Adopted ${this.topDownSourceLabel}: TOP-DOWN FROM THIS `
-                + `(${regionCount} source regions). It cannot be appended to — ${refusal}`;
+            return `${lead ?? `${adopted}: `}TOP-DOWN FROM THIS `
+                + `(${regionCount} source regions), ${HANDOFF_TOPDOWN_COST}. `
+                + `It cannot be appended to — ${refusal}`;
         }
-        return `Adopted ${this.topDownSourceLabel}, but NOTHING can be built from it: it names `
+        return `${lead ?? `${adopted}, but `}NOTHING can be built from it: it names `
             + `no regions for player ${playerId}, so top-down has no source, and it cannot be `
             + `appended to either — ${refusal}`;
     }

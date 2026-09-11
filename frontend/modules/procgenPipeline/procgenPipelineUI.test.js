@@ -10,8 +10,11 @@ import { fileURLToPath } from 'node:url';
 import '../mazeRoom/mazeRoomLibrary.js';
 import '../bounceDemo/bounceDemoLibrary.js';
 
-import { groupLibraryByFeature, ProcgenPipelineUI } from './procgenPipelineUI.js';
+import {
+    groupLibraryByFeature, ProcgenPipelineUI, HANDOFF_REALISED_SLOT, HANDOFF_TOPDOWN_COST,
+} from './procgenPipelineUI.js';
 import { sphereRebuildRefusal } from './procgenPipelineEngine.js';
+import { DOCUMENT_KEY_EDITORS } from '../apworldEditor/documentKeys.js';
 
 /**
  * ⛓ APWORLD EDITOR HUB H3 — three suites LEFT this file with the code they
@@ -138,8 +141,8 @@ describe('groupLibraryByFeature', () => {
 const preset = (rel) => JSON.parse(readFileSync(
     fileURLToPath(new URL(`../../presets/${rel}`, import.meta.url)), 'utf8'));
 
-const answerFor = (doc, label = 'hand-off (the APWorld editor)') =>
-    ProcgenPipelineUI.prototype._handoffAnswer.call({ topDownSourceLabel: label }, doc);
+const answerFor = (doc, label = 'hand-off (the APWorld editor)', carried = null) =>
+    ProcgenPipelineUI.prototype._handoffAnswer.call({ topDownSourceLabel: label }, doc, carried);
 
 /**
  * ⛓⛓ **THE ADOPTION ITSELF, ON THE REAL PROTOTYPE.** `Object.create` gives the
@@ -148,14 +151,14 @@ const answerFor = (doc, label = 'hand-off (the APWorld editor)') =>
  * paint. ⛔ A row that stubbed the helpers too would be asserting the row's own
  * arithmetic.
  */
-function adopt(doc, source = 'the APWorld editor') {
+function adopt(doc, source = 'the APWorld editor', carried = null) {
     const ctx = Object.create(ProcgenPipelineUI.prototype);
     ctx.useLoadedRules = true;
     ctx.mode = 'sphereGrowth';
     ctx.params = { gridWidth: 1, gridHeight: 1 };
     ctx.renders = 0;
     ctx.render = () => { ctx.renders += 1; };
-    ctx._adoptHandoffRules(doc, source);
+    ctx._adoptHandoffRules(doc, source, carried);
     return ctx;
 }
 
@@ -227,5 +230,101 @@ describe('_handoffAnswer — the three things a handed-over document can be', ()
         expect(refusal).toContain("no substrate registered for id 'atlas:seedling'");
         expect(refusal).not.toContain('zone substrate');
         expect(answerFor(doc)).toContain('TOP-DOWN FROM THIS');
+    });
+});
+
+/**
+ * ⛓⛓⛓ PRESET SIDECARS M1 — **THE ANSWER NAMES THE SLOT IT CAME FROM, AND
+ * SPEAKS ABOUT THE SLOT THE ROUTES BUILD.** The hub's door publishes the slot
+ * it had selected (`player`); both of this panel's routes build
+ * `HANDOFF_REALISED_SLOT` whatever it is. So a hand-off from another slot is
+ * NAMED first, with its own region count, and everything after it is about
+ * the built slot — an answer that counted slot 3's regions would describe a
+ * world the buttons do not build.
+ *
+ * ⛓ Every count is read off the fixture here, never typed; the slot that
+ * differs is PICKED off the document (the first slot whose region count is
+ * not the built slot's), so the row can tell the two counts apart.
+ */
+describe('_handoffAnswer — the carried slot (M1)', () => {
+    const FOUR = 'multiworld/AP_05594871498841892311/AP_05594871498841892311_rules.json';
+    const regionsIn = (doc, slot) => Object.keys(doc.regions?.[slot] ?? {}).length;
+    const otherSlot = (doc) => Object.keys(doc.regions).find(
+        (s) => s !== HANDOFF_REALISED_SLOT && regionsIn(doc, s) !== regionsIn(doc, HANDOFF_REALISED_SLOT));
+
+    it('⛓⛓ a hand-off from ANOTHER slot names that slot and its count first, then '
+        + 'answers about the built slot', () => {
+        const doc = preset(FOUR);
+        const slot = otherSlot(doc);
+        // premise: the fixture has a slot whose count differs from the built slot's
+        expect(slot).toBeTruthy();
+        const said = answerFor(doc, undefined, slot);
+        expect(said).toContain(`sent from player ${slot} (${regionsIn(doc, slot)} source regions)`);
+        expect(said).toContain(`build player slot ${HANDOFF_REALISED_SLOT} only`);
+        expect(said).toContain(`TOP-DOWN FROM THIS (${regionsIn(doc, HANDOFF_REALISED_SLOT)} source regions)`);
+        // ⛔ never the carried slot's count as the thing top-down builds
+        expect(said).not.toContain(`TOP-DOWN FROM THIS (${regionsIn(doc, slot)} source regions)`);
+        // the refusal is the BUILT slot's, quoted
+        expect(said).toContain(sphereRebuildRefusal(doc, { playerId: HANDOFF_REALISED_SLOT }));
+    });
+
+    it('⛓ no slot carried, or the built slot itself (string or number) ⇒ the sentence '
+        + 'without the lead', () => {
+        const doc = preset(FOUR);
+        const plain = answerFor(doc);
+        expect(plain.startsWith('Adopted hand-off (the APWorld editor): TOP-DOWN FROM THIS')).toBe(true);
+        expect(answerFor(doc, undefined, HANDOFF_REALISED_SLOT)).toBe(plain);
+        expect(answerFor(doc, undefined, Number(HANDOFF_REALISED_SLOT))).toBe(plain);
+        expect(plain).not.toContain('sent from player');
+    });
+
+    it('⛓ a per-player export that carries ONLY its own slot says nothing can be built '
+        + 'for the built slot — and still names where it came from', () => {
+        const doc = preset('multiworld/AP_05594871498841892311/AP_05594871498841892311_P3_rules.json');
+        const slot = String(doc.playerId);
+        expect(regionsIn(doc, HANDOFF_REALISED_SLOT)).toBe(0);
+        const said = answerFor(doc, undefined, slot);
+        expect(said).toContain(`sent from player ${slot} (${regionsIn(doc, slot)} source regions)`);
+        expect(said).toContain('NOTHING can be built');
+        expect(said).toContain(`no regions for player ${HANDOFF_REALISED_SLOT}`);
+    });
+
+    it('⛓ the adoption hands the carried slot to the answer', () => {
+        const doc = preset(FOUR);
+        const slot = otherSlot(doc);
+        const ctx = adopt(doc, 'the APWorld editor', slot);
+        expect(ctx.message).toBe(answerFor(doc, undefined, slot));
+        expect(ctx.message).toContain(`sent from player ${slot}`);
+    });
+});
+
+/**
+ * ⛓⛓ M1 — **THE TOP-DOWN ANSWER NAMES ITS COST**: `layoutTopDown` never reads a
+ * sidecar, so the payloads handed over are regenerated. ⛔ The sphere answer
+ * does not change (appending keeps the payloads), and the hub's door says the
+ * same two things — its note is typed in `documentKeys.js` (that module
+ * imports no panel), so it is held to this module's constants HERE.
+ */
+describe('_handoffAnswer — the cost of the top-down route (M1)', () => {
+    it('⛓⛓ TOP-DOWN FROM THIS carries the cost clause', () => {
+        const said = answerFor(preset('procgen_maze/AP_1/AP_1_rules.json'));
+        expect(said).toContain('TOP-DOWN FROM THIS');
+        expect(said).toContain(HANDOFF_TOPDOWN_COST);
+    });
+
+    it('⛔ the sphere answer carries no cost clause and no lead', () => {
+        const doc = preset('procgen_topdown/AP_1/AP_1_rules.json');
+        const said = answerFor(doc, undefined, HANDOFF_REALISED_SLOT);
+        expect(said).toContain('APPEND A SPHERE');
+        expect(said).not.toContain(HANDOFF_TOPDOWN_COST);
+        expect(said).not.toContain('sent from player');
+        expect(said).toBe(answerFor(doc));
+    });
+
+    it('⛓ the hub\'s Regenerate door agrees: it names the built slot and REGENERATES', () => {
+        const note = DOCUMENT_KEY_EDITORS.procgen_metadata.regionDoor.note;
+        expect(note).toContain(`player slot ${HANDOFF_REALISED_SLOT} only`);
+        expect(note).toContain('REGENERATES');
+        expect(HANDOFF_TOPDOWN_COST).toContain('REGENERATES');
     });
 });

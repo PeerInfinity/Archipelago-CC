@@ -327,13 +327,20 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
          * (`_openDocumentKeyEditor`) — not a second door — so only its words
          * are declared here, and they say the COST the full note does not:
          * on the top-down route the payloads are regenerated, not kept.
+         *
+         * ⛓ M1 — and WHICH SLOT: the pipeline's routes build player slot 1
+         * only (`procgenPipelineUI.HANDOFF_REALISED_SLOT`), whatever slot this
+         * block was drawn for, and the pipeline's answer now says so when the
+         * hand-off came from another. The words are typed here because this
+         * module imports no panel at load; `procgenPipelineUI.test.js` holds
+         * them to the constant and to the answer's cost clause.
          */
         regionDoor: Object.freeze({
             label: 'Regenerate in the pipeline ▸',
-            note: 'Hands this whole document to the procgen pipeline, which REGENERATES the '
-                + 'sidecar payloads on its top-down route (only a sphere-growth world can be '
-                + 'appended to with its payloads kept), and its exit is a NEW document rather '
-                + 'than an edit of this one.',
+            note: 'Hands this whole document to the procgen pipeline, which builds player slot 1 '
+                + 'only and REGENERATES that slot\'s sidecar payloads on its top-down route (only '
+                + 'a sphere-growth world can be appended to with its payloads kept), and its exit '
+                + 'is a NEW document rather than an edit of this one.',
         }),
         open: async ({ record, player, eventBus }) => {
             const { PROCGEN_PIPELINE_LOAD_RULES } = await import('../procgenPipeline/index.js');
