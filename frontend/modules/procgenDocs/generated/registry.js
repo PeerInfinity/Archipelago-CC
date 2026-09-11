@@ -24,49 +24,49 @@ export const REGISTRY = frz({
     "columnOrder": "the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported",
     "columns": [
         {
-            "fields": 25,
+            "fields": 26,
             "id": "maze",
             "label": "Maze",
             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"
         },
         {
-            "fields": 10,
+            "fields": 11,
             "id": "flash",
             "label": "Flash",
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 37,
+            "fields": 38,
             "id": "bounce",
             "label": "Bounce Demo",
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 32,
+            "fields": 33,
             "id": "runner",
             "label": "Runner Demo",
             "registeredBy": "frontend/modules/runnerDemo/runnerDemoLibrary.js"
         },
         {
-            "fields": 15,
+            "fields": 16,
             "id": "text_adventure",
             "label": "Text Adventure",
             "registeredBy": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js"
         },
         {
-            "fields": 11,
+            "fields": 12,
             "id": "flash_seedling",
             "label": "Seedling (region atlas)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
         },
         {
-            "fields": 22,
+            "fields": 23,
             "id": "jta",
             "label": "JtA",
             "registeredBy": "frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js"
         },
         {
-            "fields": 18,
+            "fields": 19,
             "id": "omsi",
             "label": "Idle Loops",
             "registeredBy": "frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js"
@@ -88,6 +88,8 @@ export const REGISTRY = frz({
                 "loadRegionEvent",
                 "panelComponentType",
                 "serializeWorld",
+                "sharing",
+                "sidecarFields",
                 "supportedFeatures"
             ],
             "title": "Runtime"
@@ -107,8 +109,7 @@ export const REGISTRY = frz({
         {
             "rows": [
                 "compositeMap",
-                "compositeMap.drawRegion",
-                "sharing"
+                "compositeMap.drawRegion"
             ],
             "title": "Composite map"
         },
@@ -4323,7 +4324,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "prose",
-            "group": "Composite map",
+            "group": "Runtime",
             "name": "sharing"
         },
         {
@@ -4533,6 +4534,164 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Cross-substrate sharing",
             "name": "sharing.mana.loopActionDelegation"
+        },
+        {
+            "carriedBy": [
+                "maze",
+                "flash",
+                "bounce",
+                "runner",
+                "text_adventure",
+                "flash_seedling",
+                "jta",
+                "omsi"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": true,
+                    "short": "18 keys",
+                    "type": "object",
+                    "value": [
+                        "atlas_region",
+                        "atlas_sub_region",
+                        "consumableTiles",
+                        "entrance",
+                        "exits",
+                        "hazards",
+                        "height",
+                        "itemLib",
+                        "items",
+                        "level",
+                        "longestShortestPath",
+                        "manaTiles",
+                        "obstacleLib",
+                        "obstacles",
+                        "origin",
+                        "tile_size",
+                        "tiles",
+                        "width"
+                    ]
+                },
+                {
+                    "id": "flash",
+                    "present": true,
+                    "short": "6 keys",
+                    "type": "object",
+                    "value": [
+                        "ap_items",
+                        "ap_locations",
+                        "flashCapabilities",
+                        "gameId",
+                        "gate_rules",
+                        "params"
+                    ]
+                },
+                {
+                    "id": "bounce",
+                    "present": true,
+                    "short": "7 keys",
+                    "type": "object",
+                    "value": [
+                        "ap_locations",
+                        "exits",
+                        "flashCapabilities",
+                        "fogEnabled",
+                        "gameId",
+                        "gate_rules",
+                        "params"
+                    ]
+                },
+                {
+                    "id": "runner",
+                    "present": true,
+                    "short": "7 keys",
+                    "type": "object",
+                    "value": [
+                        "ap_locations",
+                        "exits",
+                        "flashCapabilities",
+                        "fogEnabled",
+                        "gameId",
+                        "gate_rules",
+                        "params"
+                    ]
+                },
+                {
+                    "id": "text_adventure",
+                    "present": true,
+                    "short": "18 keys",
+                    "type": "object",
+                    "value": [
+                        "atlas_region",
+                        "atlas_sub_region",
+                        "consumableTiles",
+                        "entrance",
+                        "exits",
+                        "hazards",
+                        "height",
+                        "itemLib",
+                        "items",
+                        "level",
+                        "longestShortestPath",
+                        "manaTiles",
+                        "obstacleLib",
+                        "obstacles",
+                        "origin",
+                        "tile_size",
+                        "tiles",
+                        "width"
+                    ]
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": true,
+                    "short": "7 keys",
+                    "type": "object",
+                    "value": [
+                        "atlas_ref",
+                        "atlas_region",
+                        "atlas_sub_region",
+                        "exits",
+                        "gameId",
+                        "level",
+                        "tile_size"
+                    ]
+                },
+                {
+                    "id": "jta",
+                    "present": true,
+                    "short": "5 keys",
+                    "type": "object",
+                    "value": [
+                        "ap_locations",
+                        "jtaZone",
+                        "jta_dataset",
+                        "jta_dataset_ref",
+                        "task_patches"
+                    ]
+                },
+                {
+                    "id": "omsi",
+                    "present": true,
+                    "short": "9 keys",
+                    "type": "object",
+                    "value": [
+                        "ap_locations",
+                        "awardSchedule",
+                        "exits",
+                        "fogEnabled",
+                        "manaEnabled",
+                        "omsiRegion",
+                        "omsiTown",
+                        "unlockMeta",
+                        "victoryTown"
+                    ]
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Runtime",
+            "name": "sidecarFields"
         },
         {
             "carriedBy": [

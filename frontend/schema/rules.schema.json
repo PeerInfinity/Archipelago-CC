@@ -1025,7 +1025,7 @@
         },
         "playable_payload": {
           "type": "object",
-          "description": "OPAQUE — the substrate's own serialized world, produced by that substrate's adapter `serializeWorld`. This schema deliberately states no inner shape: the payload belongs to the substrate, not to rules.json."
+          "description": "OPAQUE — the substrate's own serialized world, produced by that substrate's adapter `serializeWorld`. This schema deliberately states no inner shape: the payload belongs to the substrate, not to rules.json. Each substrate DECLARES its payload's fields on its registry entry (`sidecarFields`, read through `sidecarFieldsOf` in frontend/modules/procgenCore/sidecarFields.js), and scripts/procgen/check-sidecar-fields.mjs holds every committed entry to that declaration."
         },
         "biome": {
           "type": "object",

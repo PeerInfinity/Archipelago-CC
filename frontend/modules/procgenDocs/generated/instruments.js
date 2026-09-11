@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 51,
-            "count": 84,
+            "count": 85,
             "id": "check"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 257,
+        "blockStyle": 258,
         "browser": 77,
-        "cited": 89,
-        "files": 268,
+        "cited": 90,
+        "files": 269,
         "lineStyle": 11,
-        "withDocblock": 268,
-        "withFlags": 176
+        "withDocblock": 269,
+        "withFlags": 177
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3381,6 +3381,51 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-wasm-ship — **THE ONLY ARM THAT CAN SEE A REAL SOLVE'S VERDICT.**",
             "path": "scripts/procgen/check-seedling-wasm-ship.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/substrate-registry.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "fixtures",
+                "json",
+                "tree"
+            ],
+            "file": "check-sidecar-fields.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "fixtures"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tree"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "check-sidecar-fields — **EVERY COMMITTED `preset_sidecars` ENTRY HOLDS ITS SUBSTRATE'S OWN PAYLOAD DECLARATION** (PRESET SIDECARS slice D0; plan §7.4, ⚖ Q1 C: *\"field descriptors with an optional per-field JSON-Schema fragment, plus a corpus gate\"*).",
+            "path": "scripts/procgen/check-sidecar-fields.mjs"
         },
         {
             "argvHelpers": [
