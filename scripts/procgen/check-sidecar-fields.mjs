@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 /**
  * check-sidecar-fields — **EVERY COMMITTED `preset_sidecars` ENTRY HOLDS ITS
- * SUBSTRATE'S OWN PAYLOAD DECLARATION** (PRESET SIDECARS slice D0; plan §7.4,
- * ⚖ Q1 C: *"field descriptors with an optional per-field JSON-Schema
- * fragment, plus a corpus gate"*).
+ * SUBSTRATE'S OWN PAYLOAD DECLARATION, AND EVERY SLOT PASSES THE HUB'S
+ * SIDECAR VALIDITY REPORT** (PRESET SIDECARS slice D0, grown by V0 into two
+ * layers: `sidecarPayloadErrors` per entry, then `sidecarIssues` per slot —
+ * see "THE SECOND LAYER" below; plan §7.4, ⚖ Q1 C: *"field descriptors with an
+ * optional per-field JSON-Schema fragment, plus a corpus gate"*).
  *
  * ── ⛓ WHY THIS GATE IS THE OTHER HALF OF THE DECLARATION ────────────
  *
