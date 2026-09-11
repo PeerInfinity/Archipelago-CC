@@ -13919,6 +13919,32 @@ the ⚖); Edit ▸ untouched (its rows prove it); rows + five mutants; docs. Bas
 34563210789). Reports come to `preset-sidecars-planning`; M1 on S2's idle notice. ⛔ The planner commits nothing
 while S2 runs.
 
+**S2 SHIPPED + VERIFIED 2026-09-11** (`849fab562b` → `e0db74f4ba`, five commits: `rederiveRegionRules` in a sibling
+module (`regionRederive`), the PRE-EDIT baseline recovered from the record by folding to the last op after which the
+region's PAYLOAD BYTES differ (the op-KIND list missed the Document tab's whole-slot `set-key` and counted a
+byte-identical re-derive as a boundary); a third class AGREES beside movable/frozen (without it a second press froze
+what the first moved); the answer names the rewritten payload fields (a byte count cannot — 809 → 809 B with
+`longestShortestPath` 9 → 1); `Re-derive rules ▸` on the block, disabled by name where no round trip; four in-app
+rows; docs). Planner's own drive: slot 3 (bounce) ENABLED with the round trip's sentence; `jta_schedule_test`
+DISABLED with the registry's sentence in the title; 0 page errors. **CI @ `e0db74f4ba`: run 34611506449 success,
+450/13711 (13703 passed | 8 skipped | 0 failed) = the derivation (+1 file, +16 rows).** The door's own rows
+(`regionRoundTrip.test.js` 31 → 31) green throughout; mutant D (Edit ▸ weakened) reds H4b's, S1's and S2's rows.
+What the brief got wrong (§16.1): no row asserts `regionRoundTrip.js`'s import list (a sibling with its own row
+instead); no `session.base` — the page keeps `_sessionBase` (the lab precedent); `regionRoundTripOf`'s
+no-declaration sentence claimed "has a room editor" (false for jta; reworded). ⚖ OPEN (§16.7): a no-baseline press
+still writes the serializer's payload; the two doors spell a moved `HasAll` differently; a rename after the raw
+edit reads as "no baseline"; the baseline reaches only as far back as the session; D1's note does not mention the
+button; the census line and `_handoffAnswer` slot `'1'` (→ M1).
+
+**M1 LAUNCHED 2026-09-11** as `apworld-sidecars-M1` (Opus; kickoff `NewDocs/plans/apworld-sidecars-M1-prompt.md`):
+the Map tab's selection draws the region's block (ONE renderer, THIRD host, `hostTab: 'map'`) with `Go to region`;
+click-to-edit parity with the pipeline's `edit` mode (a click on the already-selected cell presses the block's
+`Edit ▸`; the first click still only selects); the hand-off's two fix-ups in the pipeline panel and nothing else
+there (`_handoffAnswer` reads the carried slot; the top-down sentence names the cost — payloads REGENERATED); the
+stale Edit ▸ census line re-derived at HEAD; rows + five mutants; docs. Baseline 450/13711 @ `e0db74f4ba` (run
+34611506449). Reports come to `preset-sidecars-planning`; M2 on M1's idle notice; **the REPLAN after M2.** ⛔ The
+planner commits nothing while M1 runs.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
