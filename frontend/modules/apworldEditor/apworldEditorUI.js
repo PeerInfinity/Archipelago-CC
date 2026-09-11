@@ -4120,6 +4120,13 @@ class ApworldEditorUI {
    *      NOT re-derived (`SIDECAR_NOT_REDERIVED`), and the region's Edit ▸ is
    *      re-asked on its next press because its verdict was keyed on the record
    *      this op replaced (`_roomVerdicts`).
+   *
+   * ⛔ PRESET SIDECARS V0 — **`sidecarIssues` IS NOT A FOURTH GATE HERE.** A save
+   *   whose entry the validity report finds wrong still lands (⚖ user,
+   *   2026-09-10: the reader owns the repair — and at the replan, the raw save
+   *   keeps accepting a changed `substrate`); the answer gains a trailing count
+   *   and the block lists the sentences. The schema veto is exactly as strict
+   *   as it was.
    */
   _saveRegionSidecar(player, regionName, entry) {
     if (!this.session) {
@@ -4141,7 +4148,15 @@ class ApworldEditorUI {
       return;
     }
     const res = this._applyOp(op, { rerender: false });
-    if (res.ok) beside(this._opMessage, false);
+    if (res.ok) {
+      // ⛓ V0 — errors block nothing, but the answer says there are some: the
+      //   count of the report's issues for the entry this save wrote.
+      const n = this._sidecarIssuesOf(regionName).length;
+      if (n > 0) {
+        this._opMessage = `${this._opMessage} — ${n} sidecar issue${n === 1 ? '' : 's'}, see the block`;
+      }
+      beside(this._opMessage, false);
+    }
     this._render();
   }
 
