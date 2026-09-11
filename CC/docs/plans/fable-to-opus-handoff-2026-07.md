@@ -14039,6 +14039,56 @@ slice STOPS and reports the list; committed presets not regenerated. Baseline 45
 Fable session** whose first conversation is M3 on the sides-only shape and the G1/G2 order. ⛔ The planner commits
 nothing while G0 runs.
 
+**G0 SHIPPED + VERIFIED 2026-09-11** (`90fd9f61b6` → `5b676a233d`; G0's four commits `8a9637eb15` declaration /
+`b36f10eb4d` engine / `7c7dde417c` the ten presets (⚖ A1) / `5b676a233d` docs, pushed ON TOP of H1's two
+(`0a72009671`, `487fbc879a` — another arc's slice sharing the primary tree, §5w; both planners consented, both
+staged by path; H1 then landed `4840bf76fb`). `procgenCore/regionGeometry.js` (`REGION_GEOMETRY.TILES` default |
+`SIDES`); jta and omsi declare `SIDES`; the engine mints no exit tiles for a sides-only region and the maze-child
+mirror + `insertBackExit` + the top-down entrance alignment fall back to the side midpoint; the ten
+generator-owned jta/omsi presets regenerated through their own scripts — **planner's own diff: 10 files, +0 −56
+lines (28 exits' x/y), each generator a fixed point again**; the two hand-authored diagonal omsi exits (a literal
+`x: 0, y: 0`) left for §5e Q5 by the ruling. Planner re-ran at HEAD: `check-sidecar-fields` ALL PASS 1,392;
+`check-jta-dataset-pipeline-preset` ALL PASS (the one pin that moved — red before A1); the maze digest
+`677b7d9c…` equals the banked value. **CI @ `5b676a233d`: run 34637477316 success, 453/13790 (13782 passed | 8
+skipped | 0 failed) = G0's +1/+31 and H1's +1/+6 on 451/13753.** What the brief got wrong (§20.1): the spiral
+byte-identity is a self-consistency check (@ci-box, no CI arm); the moved pin was not on the brief's list; the maze
+digest cannot see the engine (mutant C cannot move it — the sphere/top-down dumps are the witnesses); no jta/omsi
+check is in the CI plan; jta/omsi reach only the spiral driver and the reciprocal fallback fires 0 times there
+(the sphere/top-down fallback rows are bounce-declared); the site list was one short; no location name is minted
+from an exit position; "0 committed bytes" held only until something regenerated the presets. ⚑ **Mid-slice,
+three rulings relayed:** A1 (user); option (1) for the shared-tree push with H1's planner's consent; H1's WIP parked
+before G0's docs regen. ⚑ G0's in-app batch ran INSIDE H1's box-lock window (`npm test` does not consult the
+lock) — trap **1324** (a box lock that freezes the tree is invisible to `npm test` and `git commit`). ⚖ OPEN
+(§20.7): `LIBRARY_V1_SUBSTRATES` to fold at or after G1; G1's residue (`relabelExitSide`, 34 sidecars, the dump
+re-record, a tripwire row); `register()` cannot validate the slot (submodule); the Q5 literals; no live panel drive.
+
+## 5v. HANDOFF to `preset-sidecars-planning-2` — 2026-09-11 (`preset-sidecars-planning` closes its arc; successor opens with M3, G1, G2/T0)
+
+`preset-sidecars-planning` (this Fable session) hands off at the user's word (*"At what point would you recommend
+starting a new Fable planning session?"* → after G0; *"Yes please."*). Successor = `preset-sidecars-planning-2`
+(kickoff `NewDocs/plans/preset-sidecars-planning-2-prompt.md`). **The arc as it closes:** the investigation (§5u
+head) and TEN Opus slices — M0 (the Map tab draws zone worlds, 38/42 slots) · S0 (the per-region sidecar block on
+three hosts) · S1 (`set-region-sidecar`, the whole entry, rules untouched) · D0 (`sidecarFields` on eight entries +
+the corpus gate) · V0 (`sidecarIssues`, 19 kinds, three readers, errors block nothing) · D1 (the block as a form
+from the declaration) · S2 (`Re-derive rules ▸` from the record's pre-edit baseline) · M1 (the Map selection stays
+and draws the block; the hand-off names its slot and cost) · M2 (native move/swap; ONE side law; bounds =
+max(extents, `grid_dims`)) · G0 (`regionGeometry`; jta + omsi sides-only) — CI 444/13457 → 453/13790, traps
+1308–1324, three replans with every ruling verbatim above. **Principles the user ruled:** regenerate → the
+pipeline by hand-off, rewrite-in-place → the hub; a raw save writes the entry alone and a separate button
+re-derives; every per-substrate fact is DECLARED on the registry entry; a simpler sides-only representation for
+non-maze substrates (plan §19: the maze needs only its own exit tiles; the one cross-boundary read is
+side-derivable). **The successor's ladder** (plan §19.5): M3 the exit-side move on the sides-only shape (⚖ A) →
+G1 bounce + runner sides-only (34 sidecars' exits lose x/y; sphere/top-down dumps + library round trips
+re-baseline — an ASK-FIRST re-record) → G2/T0 the text-adventure representation AND its set-editor binding (the
+user: *"a simplified version of the maze editor that only edits data that is actually present in the text adventure
+substrate … by factoring out existing code, not duplicating it"*) → the pipeline relayout defect as its own slice
+(measured LIVE first) → then the Seedling editor session and jta/omsi editor feasibility. **Every ⚖ still open is
+listed in the kickoff** (the producer's `region_size`; a size persisting without `grid_dims`; β; a per-region
+hand-off; the omsi diagonals; the Seedling bar's notice count; nested derived fields; a CREATE op; the two doors'
+`HasAll` spelling; the map selection across a tab switch; `LIBRARY_V1_SUBSTRATES`; MEMORY.md's compaction). ⚠ Another
+arc (`archipelago-cc-34`, §5w, slice H1) shares the primary tree as this closes; the two planners coordinated pushes
+by consent and path-staging — the successor inherits that channel.
+
 ## 5w. SEEDLING HEADLESS WEBGPU — the "0.5 ticks/s headless" was a DEVICE LOSS, not SwiftShader — H1 LAUNCHED 2026-09-11 (Fable session `archipelago-cc-34` at main `90fd9f61b6`; plan file `NewDocs/plans/seedling-headless-webgpu-plan.md`, gitignored; memory `project_seedling_no_gpu_branch`; §5v is reserved for `preset-sidecars-planning`'s HANDOFF)
 
 **Where it came from.** The user asked (2026-09-11) whether the Seedling wasm tests could run in CI, then whether an
