@@ -82,9 +82,13 @@ const bytes = (v) => JSON.stringify(v ?? null);
 export function regionRoundTripOf(substrate) {
     const decl = substrateRegistry.get(substrate)?.regionRoundTrip;
     if (!decl || typeof decl !== 'object') {
+        // ⛓ S2 — no "has a room editor" in this sentence: `Re-derive rules ▸`
+        //   asks it of substrates with NO room editor too (jta), and Edit ▸ asks
+        //   it only after `getRegionEditor` answered, so the words it lost were
+        //   true in one caller and false in the other.
         return {
             rt: null,
-            why: `the "${substrate}" substrate has a room editor but declares no `
+            why: `the "${substrate}" substrate declares no `
                 + '`regionRoundTrip`, so there is no way to hand it a room out of a '
                 + 'rules.json document or to read its save back into one.',
         };
@@ -124,7 +128,7 @@ export const JSON_BLOCK_INDENT = 2;
  */
 const payloadBytesMemo = new WeakMap();
 const utf8 = new TextEncoder();
-function prettyBytes(payload) {
+export function prettyBytes(payload) {
     if (!payload || typeof payload !== 'object') return 0;
     if (!payloadBytesMemo.has(payload)) {
         payloadBytesMemo.set(payload,
@@ -225,6 +229,23 @@ const exitCandidates = (regionName, e) => apExitNameCandidates(regionName, e.id)
 const locCandidates = (regionName, l) => apLocationNameCandidates(regionName, l.id, l.position);
 
 /**
+ * ⛓ What a round trip is handed for ONE region of ONE document — shared by the
+ * Edit door (`inspectRegionRoom`) and the re-derivation (`deriveRegionRules`),
+ * so the two cannot derive a room under different item pools.
+ */
+function roomContext(doc, player, name, region, payload) {
+    return {
+        regionId: name,
+        player,
+        payload,
+        region,
+        itemPool: Object.keys(doc?.items?.[player] ?? {}),
+        expectedItems: Array.isArray(doc?.starting_items?.[player])
+            ? doc.starting_items[player] : [],
+    };
+}
+
+/**
  * ⛓⛓⛓ **WHAT THE Edit DOOR KNOWS BEFORE IT IS PRESSED.** Runs the substrate's
  * round trip on the UNEDITED payload and answers whether this document's region
  * can be edited through it — and if not, WHY, in one sentence fit for a
@@ -261,15 +282,7 @@ export async function inspectRegionRoom(doc, player, name) {
     if (!rt) return { ok: false, substrate, why };
 
     const payload = sidecar.playable_payload;
-    const ctx = {
-        regionId: name,
-        player,
-        payload,
-        region,
-        itemPool: Object.keys(doc?.items?.[player] ?? {}),
-        expectedItems: Array.isArray(doc?.starting_items?.[player])
-            ? doc.starting_items[player] : [],
-    };
+    const ctx = roomContext(doc, player, name, region, payload);
     let opened;
     let baseline;
     try {
@@ -345,6 +358,78 @@ export async function inspectRegionRoom(doc, player, name) {
         movableExits,
         movableLocations,
         frozen,
+    };
+}
+
+/**
+ * ⛓⛓⛓ **PRESET SIDECARS S2 — WHAT A PAYLOAD'S OWN ROOM SAYS ITS RULES ARE,
+ * NAMED BY THE DOCUMENT.** The derivation half of the round trip and nothing
+ * else: open the region's CURRENT payload, save it unedited, map the compiled
+ * endpoints onto the document's names. `Re-derive rules ▸`
+ * (`regionRederive.js`) asks it twice — of the document now, and of the
+ * document as it stood before the payload's last edit.
+ *
+ * ⛔ **IT IS NOT `inspectRegionRoom` WITH A CHECK REMOVED, AND THAT IS WHY IT IS
+ * A SECOND FUNCTION.** The door's check (1) — an unedited save moves no byte —
+ * is what stops Edit ▸ rewriting a payload behind the reader, and it stays
+ * exactly as strict. Here there is no "behind": the re-derivation WRITES the
+ * serializer's form of the payload and its message says so, by field and by
+ * size. Nor is a room editor needed — only the declared round trip.
+ * ⛔ Nor does it decide movability: that is a comparison between TWO of these
+ * answers and the document, and it lives with the caller that has both.
+ *
+ * @returns {Promise<object>} `{ok:true, substrate, payload, exits, locations,
+ *   unnamed, unmatched}` — `payload` the serializer's form, `exits` /
+ *   `locations` Maps from a DOCUMENT name to the derived rule, `unnamed` the
+ *   room's endpoints the document does not name (`exit \`id\`` / `location
+ *   \`id\``), `unmatched` the document's the room no longer has — or `{ok:false,
+ *   substrate, why, hidden?}`, the door's own sentences for a missing sidecar,
+ *   a missing region, no round trip, and a payload the substrate refuses.
+ */
+export async function deriveRegionRules(doc, player, name) {
+    const sidecar = sidecarOf(doc, player, name);
+    if (!sidecar) return { ok: false, hidden: true, substrate: null, why: 'no sidecar' };
+    const substrate = sidecar.substrate ?? null;
+    const region = doc?.regions?.[player]?.[name] ?? null;
+    if (!region) {
+        return {
+            ok: false,
+            substrate,
+            why: `player ${player} has a sidecar for "${name}" but no region by that name in `
+                + '`regions`, so there are no rules to derive onto.',
+        };
+    }
+    const { rt, why } = regionRoundTripOf(substrate);
+    if (!rt) return { ok: false, substrate, why };
+    const ctx = roomContext(doc, player, name, region, sidecar.playable_payload);
+    let out;
+    try {
+        const opened = await rt.open(ctx);
+        out = await rt.save(opened.unedited, ctx);
+    } catch (e) {
+        return {
+            ok: false,
+            substrate,
+            why: `"${substrate}" refused this region's payload — ${e.message}`,
+        };
+    }
+    const ex = mapEndpoints(name, out.exits ?? [], region.exits ?? [], exitCandidates);
+    const lo = mapEndpoints(name, out.locations ?? [], region.locations ?? [], locCandidates);
+    const rulesOf = (mapped) => new Map([...mapped.byName].map(([n, end]) => [n, end.rule]));
+    return {
+        ok: true,
+        substrate,
+        payload: out.payload,
+        exits: rulesOf(ex),
+        locations: rulesOf(lo),
+        unnamed: [
+            ...ex.unnamed.map((e) => `exit \`${e.id}\``),
+            ...lo.unnamed.map((l) => `location \`${l.id}\``),
+        ],
+        unmatched: [
+            ...ex.unmatched.map((e) => `exit "${e?.name}"`),
+            ...lo.unmatched.map((l) => `location "${l?.name}"`),
+        ],
     };
 }
 
