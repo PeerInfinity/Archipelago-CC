@@ -37,7 +37,10 @@
  * `?side=wasm` headless, on any root, and sees one there. What is still only
  * visible HERE is a verdict over a tape THE PAGE PRODUCED ITSELF — 255 ticks
  * from a solve, 360 from a generated room's certification — which swiftshader
- * would spend eight and twelve minutes rasterising respectively.
+ * would spend eight and twelve minutes rasterising respectively. (⛓ H1,
+ * 2026-09-11: it would not — that rate was a LOST WebGPU device, and with
+ * `HEADLESS_WEBGPU_ARGS` a 259-tick generated ship reached its per-tick verdict
+ * inside a 22.5 s headless gate; see `headlessChromium.js`.)
  *
  * ── ⛔ WHY IT IS A SEPARATE ROW AND NOT A FLAG ON THE PAGES ROW ──────────────
  *
@@ -52,7 +55,9 @@
  * ⇒ THE SPLIT IS BY WHAT EACH CAN ANSWER:
  *   pages row (headless)   the ship REACHES `tape` and `running` — the stages
  *                          up to the first tick, which is all ~0.5 ticks/s can
- *                          honestly reach
+ *                          honestly reach (⛓ H1: the rate was a lost WebGPU
+ *                          device; headless is 25–28 frames/s now — the reach
+ *                          stays as written pending the ⚖)
  *   THIS row (real GPU)    the ship reaches `finished`, and the VERDICT is real
  *                          — for a SOLVE's tape and for a GENERATED room's
  *                          certification tape, both produced in the page
@@ -67,6 +72,9 @@
  * ⚠ REAL-GPU WINDOWS CHROME ONLY. WSL's own chromium is SwiftShader at ~0.5
  * ticks/s, so a 255-tick solve would take eight minutes of software rasterising
  * and any deadline becomes a race against machine load rather than a fact.
+ * ⛓ H1 (2026-09-11): the ~0.5 ticks/s was a lost WebGPU device, not SwiftShader
+ * — `HEADLESS_WEBGPU_ARGS` runs headless at 25–28 frames/s. This row stays
+ * Windows-only until the user rules on a headless arm (H2).
  *
  * Prerequisites: a dev server on :8000 at the REPO ROOT, and a Windows
  * playwright install (`C:\playwright`).

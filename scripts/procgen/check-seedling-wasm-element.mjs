@@ -87,9 +87,22 @@ const WIDTH = arg('width', '10');
 const HEIGHT = arg('height', '10');
 const AREAS = arg('areas', '1');
 const COUNT = Number(arg('count', '1'));
-/** ⛓ NAMED, AND THE REFUSAL SAYS IT: a headless swiftshader ship is ~0.5
- *  ticks/s, so this is a wall-clock bound on the whole run and not a guess. */
-const SHIP_SEC = Number(arg('shipsec', '2400'));
+/** ⛓ NAMED, AND THE REFUSAL SAYS IT: a wall-clock bound on the ship, and not a
+ *  guess.
+ *
+ *  ⛓⛓ H1 (2026-09-11) — RE-DERIVED. `2400` was sized for "~0.5 ticks/s", which
+ *  was the pinned runtime parking every other frame after SwiftShader LOST its
+ *  WebGPU device (`headlessChromium.js`). With the Vulkan pair this whole gate —
+ *  generate, boot, mount, the 259-tick ship, the drain — ran in **22.5 s** on
+ *  the box (0 page errors, 11/0), so 22.5 s is an UPPER bound on the ship alone.
+ *  ⇒ `300` ≈ 13 × that bound. ⚖ The multiplier, written down: the runner's
+ *  SwiftShader-on-Vulkan rate is UNMEASURED until CI runs this at H1's head,
+ *  and the only CPU-bound comparison on record says the runner is NOT slower
+ *  than the box (`seedling-editor-generate` 44.3 s in CI vs 134.9 s here,
+ *  `-arm` 44.5 vs 58.8) — so an order of magnitude keeps a live-device runner
+ *  far inside the cap, while a runner that still LOSES the device (the
+ *  pre-H1 897 s) times out BY NAME instead of passing slowly. */
+const SHIP_SEC = Number(arg('shipsec', '300'));
 
 const WATCH = `${HOST}/frontend/modules/seedlingDemo/watch.html`
     + `?source=generate&seed=${SEED}&biome=${BIOME}&skeleton=${SKELETON}`

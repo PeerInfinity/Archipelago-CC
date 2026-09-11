@@ -97,8 +97,9 @@
  * with its `{stream, status}` beside it, and `--resume` reuses a stored
  * PASS **only when its fingerprint still matches**. The fingerprint covers
  * the tape, its expectation, every `.js` under `seedlingDemo/`, the atlas,
- * and the wasm artifact's stamp — so any edit to the model invalidates the
- * checkpoint wholesale.
+ * the wasm artifact's stamp and (H1) the channel — `--win` or headless — so
+ * any edit to the model invalidates the checkpoint wholesale, and neither
+ * channel ever reuses the other's PASS.
  *
  * ⛔ THAT BLUNTNESS IS THE POINT, and it is this slice's own finding
  * turned into a mechanism: a sweep that imported its modules before an
@@ -314,6 +315,16 @@ const ONLY = new Set(
  * SWFRecomp-CC `tools/divergence/perf/WINDOWS_PLAYWRIGHT_FROM_WSL.md`.
  */
 const WIN = process.argv.includes('--win');
+/**
+ * ⛓⛓ H1 — THE CHANNEL IS PART OF THE FINGERPRINT. Before H1 a headless full
+ * tier was a 30-hour thought experiment, so a `--resume` never had to ask which
+ * browser produced a stored PASS. It does now: without this, a `--win --resume`
+ * at the same tree would REUSE a headless tier's PASSes and publish them as the
+ * `roster: --win --tier=full` row (and the reverse) — silently answering the
+ * open ⚖ "may a headless tier discharge the Windows row?". The physics is the
+ * same either way; the CLAIM is not, so the two never share a cache entry.
+ */
+const CHANNEL = WIN ? 'win' : 'headless';
 
 // ── ⛓⛓ THE CHECKPOINT, R5 slice 11 ───────────────────────────────────
 //
@@ -381,6 +392,7 @@ function modelFingerprint() {
     // with no extra safety, because the pipeline never writes the same
     // bytes with a different mtime.
     h.update(`page:${PAGE_NAME}`);
+    h.update(`channel:${CHANNEL}`);
     for (const f of ['game.html', `${PAGE_BASE}.wasm`]) {
         const p = join(ARTIFACT, f);
         if (!existsSync(p)) continue;
@@ -535,13 +547,49 @@ const browser = WIN ? null : await chromium.launch({
 });
 
 /**
- * Measured frame budget. The game runs at ~0.5 ticks/s here, and every
- * world load burns ~20 `blackCover` fade frames before tick 0. Scale the
- * deadline from the tape length with generous slack rather than guessing
- * a constant — under-waiting is indistinguishable from a dead bot.
+ * Measured frame budget. Scale the deadline from the tape length with
+ * generous slack rather than guessing a constant — under-waiting is
+ * indistinguishable from a dead bot. Every world load burns ~20 `blackCover`
+ * fade frames before tick 0.
+ *
+ * ⛓⛓ H1 (2026-09-11) — RE-DERIVED, because the old number measured a LOST
+ * DEVICE, not the game. `2.5` was sized for "~0.5 ticks/s here", and that
+ * rate was the pinned runtime parking every other frame for ~4.4 s after
+ * SwiftShader lost its WebGPU device (`headlessChromium.js` has the root cause
+ * and the two flags that cure it). Measured with those flags, pinned p4d, this
+ * box, by harvesting every frame of `__swfPerf` over two whole committed tapes
+ * (wall = `iv`, the frame PERIOD, not `cpu`, the frame's own work):
+ *
+ *   r2-walk-3-darksword-torch   1795 frames / 110.3 s   period p50 35.9 p95 76.3
+ *     (map-walk, 11 loads)                              p99 121.9 ms
+ *   r5-l40-join (the WORST      1252 frames / 120.8 s   period p50 83.8 p95 103.3
+ *     `--win` tape, big L40)                            p99 118.6 ms
+ *
+ * ⇒ `SECONDS_PER_FRAME` = 3 × the WORST p95 period (103.3 ms), rounded up to
+ * 0.31 s. ⚖ The 3× is the margin, written down: it covers the p95→p99 gap
+ * (×1.15), a busy shared box (the probe's median frame moved 20 → 27 ms
+ * between two runs 30 min apart) and a room heavier than L40. It also covers
+ * `--win`, which shares this budget: the slowest `--win` tape of the last full
+ * tier needed 0.082 s/frame under this same formula (`r5-l40-join`, 164 s for
+ * 1271 frames). ⛔ The FULL TIER is the real witness — every tape's `secs` in
+ * the checkpoint against its own budget — and H1's as-built records the
+ * largest fraction any tape used.
  */
-const SECONDS_PER_FRAME = 2.5;
+const SECONDS_PER_FRAME = 0.31;
 const FADE_FRAMES = 25;
+/**
+ * ⛓ H1 — A LEVEL LOAD IS NOT A FRAME COUNT, SO IT GETS ITS OWN ALLOWANCE.
+ * A heavy room's load is ONE frame of CPU work, and it is huge: 10.4 s and
+ * 9.8 s for the two loads into L12, 14.3 s for the boot into L40 (present
+ * 1 ms each — CPU, not GPU; the peer's 10–12 s overworld load, reproduced).
+ * The model's dead frames count the ~20 fade frames AFTER a load, never the
+ * load, and inflating the per-frame constant to cover a 14 s frame would
+ * multiply it by every frame of every tape. ⇒ one allowance per transition
+ * the MODEL predicts (`runTape(...).transitions`), = 2 × the worst load frame
+ * measured (14.3 s), rounded up. The tape's BOOT load sits in the fixed
+ * 60 s, which also covers the page's own boot.
+ */
+const LOAD_ALLOWANCE_SEC = 30;
 
 /**
  * ⚠ THE ROOM-LOAD FADE IS A BAND, NOT A CONSTANT — R5 slice 10 — AND ITS
@@ -575,12 +623,14 @@ const FADE_FRAMES = 25;
  * spends it too rather than inventing slack.
  * [[feedback_read_the_harness_own_constants]] — one instrument over.
  */
-const deadlineFor = (tickCount, deadFrames = 0) =>
-    Math.ceil((tickCount + deadFrames + FADE_FRAMES) * SECONDS_PER_FRAME * 1000) + 60000;
+const deadlineFor = (tickCount, deadFrames = 0, loads = 0) =>
+    Math.ceil((tickCount + deadFrames + FADE_FRAMES) * SECONDS_PER_FRAME * 1000)
+        + loads * LOAD_ALLOWANCE_SEC * 1000 + 60000;
 
 /**
- * The frozen frames the MODEL says this tape spends — memoised, because
- * `runTape` is milliseconds offline and the deadline is asked for twice.
+ * The frozen frames and the level loads the MODEL says this tape spends —
+ * memoised, because `runTape` is milliseconds offline and the deadline is
+ * asked for twice.
  *
  * ⚠ A MODEL NUMBER IN A HARNESS BUDGET, and that is sound in exactly one
  * direction: it can only make the harness WAIT LONGER. A model that
@@ -588,23 +638,27 @@ const deadlineFor = (tickCount, deadFrames = 0) =>
  * one that over-counts costs patience and nothing else. It is never an
  * assertion.
  */
-const deadFrameCache = new Map();
-const modelDeadFrames = (name, tapeObj) => {
-    if (deadFrameCache.has(name)) return deadFrameCache.get(name);
-    let owed = 0;
+const modelBudgetCache = new Map();
+const modelBudget = (name, tapeObj) => {
+    if (modelBudgetCache.has(name)) return modelBudgetCache.get(name);
+    let budget = { deadFrames: 0, loads: 0 };
     try {
         // ⛓ R8 slice 8: `deadFramesOwed`, not `frozenFramesOwed` — the clock's
         // whole ledger, so the budget stops being short by one room-load fade
         // per build and one phase A per ceremony. Still never an assertion:
         // a larger number can only make the harness wait longer.
-        owed = runTape(tapeObj, { levelSource: atlasLevelSource() }).deadFramesOwed ?? 0;
+        const run = runTape(tapeObj, { levelSource: atlasLevelSource() });
+        budget = { deadFrames: run.deadFramesOwed ?? 0, loads: run.transitions?.length ?? 0 };
     } catch {
         // A tape the model refuses is a tape the comparison will report on
         // properly in a moment; the budget just falls back to the old one.
-        owed = 0;
     }
-    deadFrameCache.set(name, owed);
-    return owed;
+    modelBudgetCache.set(name, budget);
+    return budget;
+};
+const tapeDeadlineMs = (name, tapeObj) => {
+    const { deadFrames, loads } = modelBudget(name, tapeObj);
+    return deadlineFor(tapeObj.tick_count, deadFrames, loads);
 };
 
 /** Boot a fresh page with the bot armed-ready. Each tape gets its own. */
@@ -720,7 +774,7 @@ function runWindowsDriver(name, tapeObj) {
         '--out', `${WIN_SCRATCH_DOS}\\stream-${name}.json`,
         '--progress', `${WIN_SCRATCH_DOS}\\progress-${name}.json`,
         '--deadline-sec',
-        String(Math.ceil(deadlineFor(tapeObj.tick_count, modelDeadFrames(name, tapeObj)) / 1000)),
+        String(Math.ceil(tapeDeadlineMs(name, tapeObj) / 1000)),
     ], { cwd: WIN_SCRATCH_WSL, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
 }
 
@@ -1870,7 +1924,7 @@ async function replay(name, tapeObj) {
         const status = await waitFor(page, `tape ${name} to finish`, async () => {
             const st = await botJsonOn(page, 'botStatus');
             return st.finished ? st : null;
-        }, deadlineFor(tapeObj.tick_count, modelDeadFrames(name, tapeObj)));
+        }, tapeDeadlineMs(name, tapeObj));
 
         const drained = await botJsonOn(page, 'botDrain');
         // ⛓ R7 slice 1: the seam latch, read ONCE after the tape finished —
@@ -2035,7 +2089,7 @@ try {
                 + 'every expectation it selects, so nothing is skipped.');
         } else {
             console.log(`RESUME: checkpoint at ${CHECKPOINT}, fingerprint ${FINGERPRINT} `
-                + `(model + atlas + wasm stamp), ${prior.size} prior result(s)`);
+                + `(model + atlas + wasm stamp + channel ${CHANNEL}), ${prior.size} prior result(s)`);
         }
     }
     for (const name of names) {
@@ -2344,8 +2398,13 @@ try {
         const checks = endTape();
         const ok = checks.every((c) => c.ok);
         if (ok) writePayload(name, stream, status, seam);
+        // ⛓ H1: the BUDGET rides beside the wall time, and the channel beside
+        // both, so "what fraction of its deadline did the slowest tape use" is
+        // read off the checkpoint rather than re-derived from a model that may
+        // have moved since.
         recordCheckpoint({
             tape: name, fp: tapeFingerprint(name), ok, checks, secs: Number(secs),
+            budgetSecs: Math.ceil(tapeDeadlineMs(name, tape) / 1000), channel: CHANNEL,
         });
     }
 

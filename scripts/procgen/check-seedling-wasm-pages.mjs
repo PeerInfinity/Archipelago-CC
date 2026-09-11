@@ -73,6 +73,13 @@
  * software rasterising, and a deadline over that measures machine load rather
  * than the game. `check-seedling-wasm-ship.mjs` is the real-GPU arm that
  * finishes the sentence.
+ * ⛓ H1 (2026-09-11): that ~0.5 ticks/s was not rasterising — it was the pinned
+ * runtime parking every other frame after SwiftShader LOST its WebGPU device
+ * (`headlessChromium.js`). With `HEADLESS_WEBGPU_ARGS` a 259-tick generated
+ * ship ran to a per-tick verdict inside a 22.5 s gate on the box
+ * (`check-seedling-wasm-element.mjs`), and this whole row took 33.7 s (was
+ * 184.8 s). The REACH below is unchanged on purpose: giving this row the
+ * verdict arms is H2, after the user's ⚖.
  *
  * ⛓ MANUAL IS THE ONE ARM THAT REACHES `finished` HERE, and that is why it is
  * here: its tape is ZERO-INPUT, so the only frames between `running` and
@@ -150,7 +157,8 @@ const TAPE = 'frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-chain-85.jso
  * ORACLE (`tapeRunner.test.js` pins the JS model against the recorded
  * expectation). Short enough that swiftshader's ~0.5 ticks/s is a minute
  * rather than the eight a 255-tick solve would cost, which is what makes a
- * PER-TICK verdict reachable on a machine with no GPU at all.
+ * PER-TICK verdict reachable on a machine with no GPU at all. (⛓ H1: that rate
+ * was a lost WebGPU device; with `HEADLESS_WEBGPU_ARGS` the whole row is 33.7 s.)
  */
 const REPLAY_TAPE = 'frontend/modules/seedlingDemo/fixtures/tapes/friction-stop.json';
 /**
@@ -345,7 +353,9 @@ if (!NO_PLAY && !EXPECT_MISSING) {
  * VERDICT — 255 ticks at ~0.5 ticks/s on swiftshader is eight minutes of
  * software rasterising, and a deadline over that is a race against machine load
  * rather than a fact. `check-seedling-wasm-ship.mjs` is the real-GPU arm that
- * finishes the sentence, and it says so.
+ * finishes the sentence, and it says so. (⛓ H1: the ~0.5 ticks/s was a lost
+ * WebGPU device, not rasterising — see the header's H1 note; the reach is
+ * unchanged pending the ⚖.)
  *
  * ⛔ ONE ARM = ONE FRESH PAGE. The wasm cannot rewind — `botReset` forgets the
  * tape, not the world — so a second ship in the same document would start from
@@ -547,7 +557,8 @@ if (!NO_SHIP && !EXPECT_MISSING) {
      * recorded expectation), so a divergence here is attributable without
      * generating or solving anything. Thirty ticks is also short enough that
      * swiftshader's ~0.5 ticks/s is a minute rather than the eight the SOLVE
-     * arm would cost.
+     * arm would cost. (⛓ H1: that rate was a lost WebGPU device; with
+     * `HEADLESS_WEBGPU_ARGS` the whole row is 33.7 s.)
      *
      * ⚠ `?side=wasm` SHIPS ON LOAD — no `#loadWasm` press. The stage machine
      * is the same one, which is why this arm is assertable on the same fields.

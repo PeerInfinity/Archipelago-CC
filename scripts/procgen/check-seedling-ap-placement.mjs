@@ -222,8 +222,15 @@ const tapeFor = (level, spawn, ticks = 0, { persistence = [], inputs = [] } = {}
  * a number that is too large costs patience, and the row that matters is
  * `finished`, which is the game's own latch. The generous floor is the wasm
  * page's own settling, which no tape length predicts.
+ *
+ * ⛓ H1 (2026-09-11): `SECONDS_PER_FRAME` follows the differential's
+ * re-derivation — 3 × the worst measured p95 frame period (103.3 ms, L40,
+ * headless with `headlessChromium.js`'s Vulkan pair) — because `2.5` was the
+ * lost-WebGPU-device park, not the game. This file needs no per-load term: an
+ * arm boots once and a door arm crosses at most one transition, and the 60 s
+ * floor covers both loads (≤ 14.3 s each, measured) with room to spare.
  */
-const SECONDS_PER_FRAME = 2.5;
+const SECONDS_PER_FRAME = 0.31;
 const FADE_FRAMES = 25;
 const deadlineForTicks = (ticks) =>
     Math.ceil((ticks + FADE_FRAMES) * SECONDS_PER_FRAME * 1000) + 60000;
