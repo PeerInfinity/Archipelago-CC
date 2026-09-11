@@ -14026,6 +14026,19 @@ trips re-run), G2 text adventure (a TA-native producer, AUTHORED gates instead o
 15 sidecars — the expensive one, and it IS T0). Proposed: **G0 → M3 (simpler on sides-only zones) → G1 → G2/T0**,
 replan after G0+M3. ⚖ for the user.
 
+**⚖ RULED (user, 2026-09-11): "That plan sounds good. At what point would you recommend starting a new Fable planning
+session?"** → planner: after G0 (drafted from the fresh sweeps; G1/G2 open a new arc that includes the TA editor;
+this session is long). **"Yes please."** ⇒ **G0 LAUNCHED 2026-09-11** as `apworld-sidecars-G0` (Opus; kickoff
+`NewDocs/plans/apworld-sidecars-G0-prompt.md`): ONE registry declaration `regionGeometry` (`'tiles'` default |
+`'sides'`; jta and omsi declare `'sides'`), the engine stops minting fictional tiles for sides-only regions
+(`assembleZoneRegion`, `generateZoneForSpecs`), the maze-child mirror falls back to the side midpoint for a
+sides-only parent (bytes unchanged — proven by a structural diff of the spiral `mixed` world), the maze UNTOUCHED
+(its digest is the witness), pins run BEFORE/AFTER; ⛔ a moved byte-identity digest is an ASK-FIRST re-record — the
+slice STOPS and reports the list; committed presets not regenerated. Baseline 451/13753 @ `0101e25c42` (run
+34626109503). Reports come to `preset-sidecars-planning`; **after G0: verification, then the HANDOFF (§5v) to a new
+Fable session** whose first conversation is M3 on the sides-only shape and the G1/G2 order. ⛔ The planner commits
+nothing while G0 runs.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
