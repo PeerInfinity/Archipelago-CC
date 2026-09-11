@@ -153,6 +153,18 @@ Today's content sources are the zone-based substrates (`jta`, `bounce`, `runner`
 
 **Out of scope (the eventual direction, not built).** Unifying the ordinal-driven `extractZoneRules` (substrate decides) with the spec-driven `generateZoneForSpecs` (engine decides) into one spec-driven content contract, and running jta on the sphere-growth driver, are the natural next steps once a second data-backed content source exists. They are deliberately deferred.
 
+### Build-time — region geometry
+
+| Field | Type | Meaning |
+|-------|------|---------|
+| `regionGeometry` | `'tiles'` \| `'sides'` (optional) | **Declares whether this substrate's regions stand on a tile grid or are only SIDES.** `'tiles'`: each exit stands on a tile, so the engine writes `exits[].x/y`, `exits_placed[].tile_position` and `extracted_rules.exits[].position` (the maze's spawn, BFS and serializer read them). `'sides'`: a zone whose exits are only their sides, so the engine writes **none of the three**, and no `entrance` tile either. ABSENT ⇒ `'tiles'`, which is what every entry got before the slot existed. Declared `'sides'` by **jta** and **omsi** (PRESET SIDECARS G0, 2026-09-11). |
+
+⛓ **Why the slot exists** (⚖ the user, 2026-09-11: *"instead of making a simulated maze layout for substrates other than maze, we make a simpler representation that contains just the information we need"*). Zone regions used to be given FICTIONAL tiles: `perimeterMidpoint(side, regionSize)`, a pure function of the side and the nominal size. That tile was minted by `assembleZoneRegion` and by the spec-driven zone branch, and no consumer of a zone ever read it back. flash routes by `side`, jta and omsi label an exit by `side`, `stitchGrid` keys on `exit_id` + `side`, and the composite map falls back to distributing exits by side when a region carries no `x`/`y` (`resolveExitTilePositions`). The vocabulary is `procgenCore/regionGeometry.js`: `REGION_GEOMETRY` (the two values, which a library declares with, never a literal), `DEFAULT_REGION_GEOMETRY`, and `geometryOf(entry)`. `geometryOf` is the one reader. An absent entry and an absent slot both read as the default, and a value outside the vocabulary is **refused by name**, never read as tiles. The engine re-exports it and asks it through two helpers, so no substrate name appears in the branches that mint or mirror a tile.
+
+⛓ **The one cross-boundary read, and its fallback.** A tile region's neighbour sometimes MIRRORS one of its exit tiles. A maze child's entrance is its parent's exit tile mirrored across the shared side (grid-growth, top-down and sphere each do this once), and a reciprocal back-exit is the source exit's tile mirrored (`reconcileBidirectionalExits`). A sides-only parent stores no tile, so the engine mirrors `perimeterMidpoint(side, regionSize)` instead. That is exactly the tile a zone region carried before this slot existed, so **a maze child's bytes do not move**. The sphere driver's throw at a parent with no `exits_placed` entry on the child's side cannot fire for a sides-only parent: the entry is still written, just without a `tile_position`. `procgenPipeline/regionGeometry.test.js` flips one entry's declaration through a registry spy and diffs the two worlds built from one seed (spiral jta, and sphere and top-down with bounce declared for the purpose). Every difference is the removal of one of those fields, on regions of the flipped substrate only.
+
+⚠ **What the slot does not cover yet.** jta and omsi reach the engine only through the spiral's content-source path (`assembleZoneRegion`). Neither has a zone realiser, so a sides-only parent cannot arise in the sphere or top-down driver today, and grid-growth refuses zone substrates outright. Those branches are driven by the spy rows above. Committed presets were written before the slot and may still carry `x`/`y` on a jta or omsi exit. That is harmless, because nothing reads them. `relabelExitSide` (a pipeline exit-side move) still writes a midpoint tile; that belongs to the exit-side move slice. ⚖ `regionLibraryValidator.js`'s `LIBRARY_V1_SUBSTRATES` is a HAND LIST of the same split (procedural vs content) that this declaration now carries as data. It is the list this slot could retire. Like `roomEditor`, the slot is a declaration and not a registration: `register()` validates only `id` and `sharing`. The validity check is `geometryOf`, asked of every entry by `procgenCore/sidecarFieldsRegistry.test.js`.
+
 ### Build-time — region library entries (capture / instantiate / validate)
 
 A **region library** stores a generated region as a reusable *entry* and re-instantiates it into a later world's slot. The three substrates that can be captured — maze, bounce and runner — expose the same four-hook contract, plus one more for the region atlas. (These six field rows were added on 2026-08-19: the generated matrix showed the entries carrying them while no procgen document named them at all.)
@@ -189,7 +201,7 @@ Everything outside the two markers — including the hand-kept annotations below
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**8 registered entries · 68 fields · 12 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**8 registered entries · 69 fields · 13 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported.
 
@@ -292,6 +304,12 @@ Groups are this document's own § headings, matched to a field by the section th
 | `victoryItem` | — | — | Victory | Victory | — | — | Victory | Victory |
 | `zoneCount` | — | — | 5 | 6 | — | — | 30 | 1 |
 
+**Build-time — region geometry**
+
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|
+| `regionGeometry` | — | — | — | — | — | — | sides | sides |
+
 **Build-time — region library entries (capture / instantiate / validate)**
 
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
@@ -364,7 +382,7 @@ The minimal checklist, derived from the smallest existing entry (jta):
 2. **Register from the module** — call `substrateRegistry.register(entry)` (guarded) in the module's `register()`/`initialize()` hook as well.
 3. **Wire the panel**: register the `panelComponentType` with the layout system and subscribe the panel to `loadRegionEvent`. (See the panel-integration steps in the module-system guide.)
 4. **Enable the module** in `frontend/module-configs/modules.json` (and any mode variants that should include it — `frontend/modes.json` maps launch modes to config files).
-5. If the substrate participates in generation, implement the build-time group that fits: procedural hooks for grown geometry, or the content-source group (`zoneCount` + `extractZoneRules`) for a fixed ordered pool.
+5. If the substrate participates in generation, implement the build-time group that fits: procedural hooks for grown geometry, or the content-source group (`zoneCount` + `extractZoneRules`) for a fixed ordered pool. A zone whose host reads an exit's `side` and never its tile declares `regionGeometry: REGION_GEOMETRY.SIDES` (§ *Build-time — region geometry*), so the engine mints it no fictional tiles.
 6. If regions should be playable in loop mode or by the playback bot, declare `loopSupport` and implement `getPlaybackController`.
 7. If the substrate shares resources or consumables across substrates (loop-mode mana, cross-game item grants), declare `sharing` and build on the `resourceChannels` helpers instead of bespoke gameState plumbing.
 

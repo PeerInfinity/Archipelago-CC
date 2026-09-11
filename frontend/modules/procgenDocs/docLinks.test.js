@@ -131,22 +131,26 @@ describe('the corpus census — printed, then pinned', () => {
          *              (34 → 35), not `doc`, for the same reason the
          *              apworldEditor pair are: that file is not one of the
          *              seventeen this VIEWER lists.
+         *   228 → 230  PRESET SIDECARS G0: `jta.md`'s opening § and `omsi.md`'s
+         *              derived-exits bullet each point at `substrate-registry.md`
+         *              § *Build-time — region geometry*, the slot both entries
+         *              now declare (`doc` 155 → 157).
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
          */
         expect(by).toEqual({
             'same-doc': 15,
-            doc: 155,
+            doc: 157,
             external: 23,
             repo: 35,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(228);
+        expect(CORPUS.length).toBe(230);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(155);
+        expect(docs).toHaveLength(157);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

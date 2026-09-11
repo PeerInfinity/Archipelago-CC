@@ -226,8 +226,9 @@ describe('⛓ the links the render emits', () => {
         //   `maze.md` and `architecture.md`; 225 → 227: LOOP COSTS L5's pair
         //   for the omsi Start/Pause rule — `gotchas.md` → `omsi.md`, and
         //   `omsi.md`'s held-boundary § → its own stopped-gate §
-        //   (see `docLinks.test.js`'s census).
-        expect(checked).toBe(228);
+        //   (see `docLinks.test.js`'s census); 228 → 230: PRESET SIDECARS G0's
+        //   pointers from `jta.md` and `omsi.md` at the registry's region-geometry §.
+        expect(checked).toBe(230);
     });
 
     it('tags each link with the kind that produced it', () => {

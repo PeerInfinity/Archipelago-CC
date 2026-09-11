@@ -60,13 +60,13 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
         },
         {
-            "fields": 25,
+            "fields": 26,
             "id": "jta",
             "label": "JtA",
             "registeredBy": "frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js"
         },
         {
-            "fields": 21,
+            "fields": 22,
             "id": "omsi",
             "label": "Idle Loops",
             "registeredBy": "frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js"
@@ -168,6 +168,12 @@ export const REGISTRY = frz({
                 "zoneCount"
             ],
             "title": "Build-time — content sources (zone-based substrates)"
+        },
+        {
+            "rows": [
+                "regionGeometry"
+            ],
+            "title": "Build-time — region geometry"
         },
         {
             "rows": [
@@ -4098,6 +4104,73 @@ export const REGISTRY = frz({
             "documentedHow": "bullet",
             "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
             "name": "prepareSphereGrowth"
+        },
+        {
+            "carriedBy": [
+                "jta",
+                "omsi"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": true,
+                    "short": "sides",
+                    "type": "string",
+                    "value": "sides"
+                },
+                {
+                    "id": "omsi",
+                    "present": true,
+                    "short": "sides",
+                    "type": "string",
+                    "value": "sides"
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — region geometry",
+            "name": "regionGeometry"
         },
         {
             "carriedBy": [

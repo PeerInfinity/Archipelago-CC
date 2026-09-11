@@ -1,6 +1,6 @@
 # JtA Substrate
 
-The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) hosts the Journey to Ascension fork — an incremental/idle game in the `frontend/modules/journey-to-ascension/` submodule — in a same-origin iframe as a loop-mode substrate. It is the **reference zone-based substrate** (one AP region = one JtA zone, instantiated by ordinal), with host-side shared-mana brokering.
+The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) hosts the Journey to Ascension fork — an incremental/idle game in the `frontend/modules/journey-to-ascension/` submodule — in a same-origin iframe as a loop-mode substrate. It is the **reference zone-based substrate** (one AP region = one JtA zone, instantiated by ordinal), with host-side shared-mana brokering. Its regions are SIDES-only: the entry declares `regionGeometry: 'sides'`, so the pipeline writes no exit tile for a jta zone ([Substrate Registry § *Build-time — region geometry*](./substrate-registry.md#build-time--region-geometry), PRESET SIDECARS G0).
 
 ## Zone-based mapping
 
