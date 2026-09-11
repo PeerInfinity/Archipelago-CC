@@ -310,7 +310,7 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
 |---|---|---|---|---|---|---|---|---|
-| `regionGeometry` | — | — | — | — | — | — | sides | sides |
+| `regionGeometry` | — | — | sides | sides | — | — | sides | sides |
 
 **Build-time — region library entries (capture / instantiate / validate)**
 

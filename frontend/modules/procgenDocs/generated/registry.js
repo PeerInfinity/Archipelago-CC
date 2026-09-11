@@ -36,13 +36,13 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 40,
+            "fields": 41,
             "id": "bounce",
             "label": "Bounce Demo",
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 35,
+            "fields": 36,
             "id": "runner",
             "label": "Runner Demo",
             "registeredBy": "frontend/modules/runnerDemo/runnerDemoLibrary.js"
@@ -4107,6 +4107,8 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "bounce",
+                "runner",
                 "jta",
                 "omsi"
             ],
@@ -4127,17 +4129,17 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "bounce",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "sides",
+                    "type": "string",
+                    "value": "sides"
                 },
                 {
                     "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "sides",
+                    "type": "string",
+                    "value": "sides"
                 },
                 {
                     "id": "text_adventure",

@@ -206,7 +206,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 258,
         "browser": 77,
-        "cited": 91,
+        "cited": 92,
         "files": 269,
         "lineStyle": 11,
         "withDocblock": 269,
@@ -8882,7 +8882,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "region",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/substrate-registry.md"
+            ],
             "docblockStyle": "line",
             "documentedFlags": [],
             "file": "region-library-validate.mjs",
