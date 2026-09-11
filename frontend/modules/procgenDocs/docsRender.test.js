@@ -227,8 +227,10 @@ describe('⛓ the links the render emits', () => {
         //   for the omsi Start/Pause rule — `gotchas.md` → `omsi.md`, and
         //   `omsi.md`'s held-boundary § → its own stopped-gate §
         //   (see `docLinks.test.js`'s census); 228 → 230: PRESET SIDECARS G0's
-        //   pointers from `jta.md` and `omsi.md` at the registry's region-geometry §.
-        expect(checked).toBe(230);
+        //   pointers from `jta.md` and `omsi.md` at the registry's region-geometry §;
+        //   230 → 233: PRESET SIDECARS G1's three more at that same § — from
+        //   `bounce.md`, `runner.md` and `stepped-pipeline.md`.
+        expect(checked).toBe(233);
     });
 
     it('tags each link with the kind that produced it', () => {
