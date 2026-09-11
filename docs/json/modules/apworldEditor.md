@@ -58,7 +58,7 @@ reset the session, so an undo after an Apply still works. It republishes the
 | **Items** | items, classifications, pool counts, starting counts, the slot's `item_groups` registry (I1) and its `progression_mapping` entries (I2) — see below |
 | **Placements** (W3) | `canonical_placements` — which item this world places at which location; the world generator's `--canonical-seed` input, see below |
 | **Meta** | the fields in `rulesDocOps.META_FIELDS`, plus the start region and the victory condition |
-| **Map** | the composite grid, for documents whose sidecars carry grid cells — see below |
+| **Map** | the composite grid, for documents whose sidecars carry grid cells; a click selects a region and draws its sidecar block under the map, a second click on it opens its room (M1) — see below |
 | **Sidecars** (S1) | the five keys that travel BESIDE a world rather than inside its regions, and (S0) `preset_sidecars` as an expandable per-region list for the selected slot — see below |
 | **Document** | **every** top-level key — see below |
 | **Links** | every other editor that owns part of a `rules.json` |
@@ -346,6 +346,33 @@ throws (`SPHERE_REBUILD_REFUSALS`), so what the panel shows is the engine's own
 sentence. An *unregistered* substrate returns `getAdapter`'s message verbatim
 rather than being translated into "zone substrate": those are different problems.
 
+⛓ **PRESET SIDECARS M1 — which slot, and what top-down costs.** Both of the
+pipeline's routes build **one** slot, `HANDOFF_REALISED_SLOT` (`'1'`, exported
+from `procgenPipelineUI.js`): top-down passes no slot to `layoutTopDown` and
+`buildTopDownEnvelope` reads slot 1's starting items and item defs, and the
+sphere import reaches `rebuildEnvelopeFromRulesJson` with none. So the answer
+always describes THAT slot. The hand-off's `player` (the slot the hub had
+selected) is now passed through `_adoptHandoffRules`, and when it is a different
+slot the answer **names it first**, with its own region count, before saying
+what the routes would build. With no slot carried, or the built slot, the
+sentence is H5's. The top-down answer also names its **cost**
+(`HANDOFF_TOPDOWN_COST`): `layoutTopDown` never reads a sidecar, so the payloads
+handed over are regenerated. The sphere answer is unchanged. On the four-player
+fixture, handed off from slot 3 (measured live, `drive-m1.mjs`):
+
+| | the pipeline's answer |
+|---|---|
+| before M1 | *Adopted hand-off (the APWorld editor): TOP-DOWN FROM THIS (4 source regions). It cannot be appended to — rebuildEnvelopeFromRulesJson: not a sphere-growth rules.json* |
+| M1 | *Adopted hand-off (the APWorld editor), sent from player 3 (6 source regions) — but both of this panel's routes build player slot 1 only, so this is about player 1: TOP-DOWN FROM THIS (4 source regions), which REGENERATES every sidecar payload from the regions block (new room geometry) — the payloads handed over are not kept. It cannot be appended to — rebuildEnvelopeFromRulesJson: not a sphere-growth rules.json* |
+
+`procgen_topdown/AP_1` (sphere-appendable, slot 1) prints the same sentence as
+before. Making the routes build the carried slot would be a pipeline feature,
+not a fix to this sentence, so the sentence says which slot gets built instead.
+The block's **Regenerate in the pipeline ▸** note says the same two things
+(slot 1 only, payloads regenerated on the top-down route). `procgenPipelineUI.test.js`
+holds the note to the pipeline's constants, because `documentKeys.js` imports no
+panel.
+
 #### `loop_costs` — a real working-copy intake
 
 Plan §4 priced this link as its named fallback, *"Apply, then open"*, because the
@@ -522,12 +549,13 @@ renderer, two hosts … but I want the region list in the sidecars tab to be
 expandable, and collapsed by default."*
 
 **One function draws a region's entry** — `_makeRegionSidecarBlock(player,
-region, {hostTab})` — and two tabs call it:
+region, {hostTab})` — and three tabs call it (the Map since M1):
 
 | host | where |
 |---|---|
 | **Regions** | under each region's header, for every region that HAS an entry. A classic AP region draws nothing (H4b's *"absent is an answer"*). |
-| **Sidecars** | the `preset_sidecars` list: **collapsed by default**; expanded, one row per entry of the SELECTED slot, in the document's order — the region's name, the same block, and **Go to region**, which selects the Regions tab and that region and scrolls its header into view (`selectRegion`, the same focus helper the Map tab and the bounce editor's reverse link use). |
+| **Sidecars** | the `preset_sidecars` list: **collapsed by default**; expanded, one row per entry of the SELECTED slot, in the document's order — the region's name, the same block, and **Go to region**, which selects the Regions tab and that region and scrolls its header into view (`selectRegion`, the same focus helper the Map tab's Go to region and the bounce editor's reverse link use). |
+| **Map** | (M1) under the canvas, for the map's SELECTED region only (`hostTab: 'map'`): its name, **Go to region** (the same `selectRegion`), and the same block. A second click on the selected cell presses this block's Edit ▸ — see *The Map tab* below. |
 
 What the block draws, all of it read off the ENTRY (`sidecarEntryFacts`, in
 `regionRoundTrip.js`) and none of it off a table keyed by substrate name:
@@ -544,8 +572,9 @@ What the block draws, all of it read off the ENTRY (`sidecarEntryFacts`, in
   `_makeRoomEditorButton` (it moved from the header INTO the block, so it is
   still drawn once per region), and **Regenerate in the pipeline ▸**, which is
   the `procgen_metadata` door's own `open` pressed through the one opener, with
-  the cost in its title: the pipeline regenerates the payloads on its top-down
-  route (`DOCUMENT_KEY_EDITORS.procgen_metadata.regionDoor`);
+  the cost in its title: the pipeline builds player slot 1 only (M1) and
+  regenerates the payloads on its top-down route
+  (`DOCUMENT_KEY_EDITORS.procgen_metadata.regionDoor`);
 - (S2) **Re-derive rules ▸**, beside Edit ▸ — the region's access rules
   re-derived from its payload after a raw save; enabled only where the substrate
   declares a round trip. See *Re-derive rules ▸ (S2)* below;
@@ -619,10 +648,10 @@ has no room, and this op keeps it roomless — refused by name with the slot's
 entries listed. Whether a CREATE op is wanted at all is an open ⚖ (preset-sidecars
 plan §12).
 
-**Both hosts save, through one function.** The block is editable because its
-HOST passes `onSave` — Regions and the Sidecars list both do (⚖ Q2 A: one
-renderer), and both land in `_saveRegionSidecar`, so the two record the same op
-for the same edit. A host that passes nothing gets the widget's read-only
+**Every host saves, through one function.** The block is editable because its
+HOST passes `onSave` — Regions, the Sidecars list and (M1) the Map all do (⚖ Q2 A:
+one renderer), and all three land in `_saveRegionSidecar`, so they record the
+same op for the same edit. A host that passes nothing gets the widget's read-only
 default (no Save), so a future host cannot make the entry writable by accident.
 
 **Edit ▸ afterwards.** The region's Edit ▸ verdict is re-asked: a remembered
@@ -1246,12 +1275,47 @@ The same function paints the **pipeline panel's** loaded-preset view and its
 `_adoptHandoffRules` hand-off, so the hub's `procgen_metadata` door now lands on a
 painted map for the same twelve slots instead of an empty canvas.
 
-**Clicking a cell selects that region in the Regions tab** (`panel.selectRegion(name)`,
-the panel's one selection entry point). The click→cell mapping is the renderer's
-exported geometry (`canvasPointOf` / `cellAtPoint`), the same functions the
-pipeline's hit-tester calls, so a click and a pixel cannot disagree about where a
-cell is. The map outlines the selected cell and the Regions tab marks the same
-region's block (`[data-region-name][data-selected]`).
+**Two clicks, the pipeline's `edit` mode's shape** (PRESET SIDECARS M1). The
+click→cell mapping is the renderer's exported geometry (`canvasPointOf` /
+`cellAtPoint`), the same functions the pipeline's hit-tester calls, so a click and
+a pixel cannot disagree about where a cell is.
+
+- **A click on a cell that is not the selection SELECTS it and stays on the Map**
+  (`_selectOnMap`). The map outlines the cell, and **under the canvas** the region's
+  sidecar block is drawn: the same `_makeRegionSidecarBlock`, as its third host,
+  with **Go to region** (`selectRegion`, which switches to the Regions tab and
+  marks the same region's block, `[data-region-name][data-selected]`). It goes
+  under the canvas, not beside it, because on `procgen_topdown/AP_8` the canvas
+  (7,084 × 6,440 px) is scaled to the tab's whole width (699 of 715 px, measured
+  live). A second selection swaps the block. Until M1 this click called
+  `selectRegion` directly and left the Map for the Regions tab. ⚖ The planner
+  ruled that it stays, because the map moves of M2/M3 need a click that does
+  not leave the tab.
+- **A click on the selected cell presses that block's Edit ▸** (`_pressMapEdit`).
+  The block's button decides whether the room opens; nothing re-computes that. A
+  disabled button (no room editor, no round trip, or a refusal remembered for
+  this record) opens nothing, and *"Edit refused: <its own title>"* is printed
+  beside the block and in the status line. An enabled button runs the button's
+  own handler (`_handleEditRoom`, which now answers `{opened}` / `{refused}`),
+  and a refusal met on the press is printed beside the block too. The room is
+  H4b's door, parked on `roomEditorSession` as from any other host.
+- **A click on an empty cell, or off the grid, does nothing**: the selection and
+  its block are kept, as the handler has always done.
+- **A player-slot pick drops the selection.** The selection is a region NAME,
+  and slots share names: the four-player fixture's slot 1 and slot 3 both have
+  a `region_1_0` (a maze room and a bounce room). Measured on the M1 drive before
+  the fix, a selection kept across the pick made the FIRST click on slot 3's
+  `region_1_0` count as the second, and it opened slot 3's room. A door that
+  names its own slot (the reverse link) switches the slot and then selects, so
+  it is unaffected.
+
+The intro line above the map says what both clicks do. In-app rows:
+`apworld-map-click-selects-the-region` (amended at M1: the click stays on the
+Map, draws the block and opens nothing; its Regions-tab claims are reached
+through Go to region), `apworld-map-selection-draws-the-regions-block`,
+`apworld-map-second-click-opens-the-selected-regions-room`,
+`apworld-map-first-click-opens-nothing` (including the slot pick and a refused
+region), and `apworld-map-handoff-names-the-slot-and-the-cost`.
 
 **"Open region graph" is ONE-WAY**, by ⚖: *"We could add a button to open the
 region graph, but I don't want a button in the region graph leading back to the
@@ -1381,11 +1445,16 @@ BEFORE the raw edit (recovered from the session's record), moves only the rules
 that payload produced, and writes the payload in the serializer's form — after
 which this door's baseline passes again.
 
-Measured over the committed corpus: **394 of 1,046** maze-payload sidecar
-regions and **15 of 25** bounce regions are editable, and every one of the rest
-gets a named reason. `procgen_topdown`'s maze regions are the biggest refusal
-class — their locations are named by the source game (`global_name`), which the
-payload does not carry.
+Measured over the committed corpus at `fb45ad85ff` (M1: `inspectRegionRoom` per
+sidecar entry of every tracked `_rules.json`, the libraries imported for
+registration): **1,036 of 1,046** maze-payload sidecar regions and **25 of 25**
+bounce regions are editable, and every one of the rest gets a named reason. All
+ten maze refusals are `seedling_atlas_maze`'s atlas-derived rooms, and they fail
+check 1: an unchanged save would already rewrite their payloads. Every region of
+the other substrates (jta, text_adventure, omsi, runner, flash_seedling) is
+refused before the press, by the registry. The *"394 of 1,046 … 15 of 25"* this
+paragraph used to quote is from before H4b/H6b, when `procgen_topdown`'s
+source-named locations were the biggest refusal class.
 
 ### What the op may and may not move
 
@@ -1645,6 +1714,7 @@ The import is free in both modes, measured:
 | `check-sidecar-fields.mjs` (+ `checkSidecarFields.test.js`) | `scripts/procgen/` — the corpus gate: every committed entry against its declaration, and (V0) `sidecarIssues` per slot as its second layer |
 | `../procgenCore/compositeMapRenderer.test.js` | vitest — the Map tab's renderer, driven by a TOY substrate |
 | `../procgenPipeline/compositeMapDocument.test.js` | vitest — `preset_sidecars` → `Grid`, including the player slot |
+| `../procgenPipeline/procgenPipelineUI.test.js` | vitest — (H5) the hand-off answer's three outcomes; (M1) the carried slot named when it is not the built one, the top-down cost clause, the sphere answer unchanged, and the block's Regenerate note held to `HANDOFF_REALISED_SLOT` |
 | `presetUI.test.js` | vitest — the "Open in APWorld Editor" descriptor |
 | `measure-apworld-raw-view.mjs` | `scripts/procgen/` — the browser measurement; `--all` opens the raw tab over every committed preset, which is what RETIRED `RAW_VIEW_LIMIT_BYTES` |
 | `apworldEditorTests.js` | the in-app runner, category `apworldEditor`, enabled in `playwright_tests_config-substrates.json` (`npm test -- --mode=test-substrates --batch=fast`) |
