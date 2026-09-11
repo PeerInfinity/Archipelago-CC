@@ -3159,8 +3159,6 @@
           "exits": [
             {
               "exit_id": "exit_E",
-              "x": 7,
-              "y": 3,
               "side": "E",
               "exitName": "exit_E",
               "targetRegion": "region_1_0",
@@ -3203,8 +3201,6 @@
           "exits": [
             {
               "exit_id": "exit_S",
-              "x": 4,
-              "y": 5,
               "side": "S",
               "exitName": "exit_S",
               "targetRegion": "region_1_1",
@@ -3213,8 +3209,6 @@
             },
             {
               "exit_id": "exit_W",
-              "x": 0,
-              "y": 3,
               "side": "W",
               "exitName": "exit_W",
               "targetRegion": "region_0_0",
@@ -3261,8 +3255,6 @@
           "exits": [
             {
               "exit_id": "exit_N",
-              "x": 4,
-              "y": 0,
               "side": "N",
               "exitName": "exit_N",
               "targetRegion": "region_1_0",

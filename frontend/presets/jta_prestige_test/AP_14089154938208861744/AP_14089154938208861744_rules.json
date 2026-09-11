@@ -443,8 +443,6 @@
           "exits": [
             {
               "exit_id": "exit_E",
-              "x": 7,
-              "y": 3,
               "side": "E",
               "exitName": "exit_E",
               "targetRegion": "region_1_0",
@@ -483,8 +481,6 @@
           "exits": [
             {
               "exit_id": "exit_W",
-              "x": 0,
-              "y": 3,
               "side": "W",
               "exitName": "exit_W",
               "targetRegion": "region_0_0",
