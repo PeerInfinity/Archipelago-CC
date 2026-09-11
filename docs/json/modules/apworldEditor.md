@@ -23,6 +23,7 @@ document.
 | `documentKeys.js` | the top-level **key registry**, derived from `rules.schema.json` |
 | `documentLinks.js` | the **Links** tab's rows |
 | `sidecarIssues.js` | (V0) the **sidecar validity report** — `sidecarIssues(doc, slot)`, the fourth validator: one pure function the validation bar, the per-region block and `check-sidecar-fields.mjs` all read |
+| `sidecarForm.js` | (D1) the sidecar block's **fields view** model — `sidecarFormModel(entry, {rulesSchema})`: the rows (the entry subschema's fields, then the substrate's declaration), the control each type draws, and `withSidecarField`, the whole entry one control's change writes |
 | `regionRoundTrip.js` | the per-region **Edit ▸** door — resolves the substrate's declarations, runs the baseline, folds a save into ONE op; and (S0) `sidecarEntryFacts`, what a region's sidecar block says about its entry |
 | `../procgenCore/compositeMapRenderer.js` | the **Map** tab's painter — shared with the procgen pipeline panel, substrate-neutral |
 | `../procgenPipeline/compositeMapDocument.js` | `reconstructResultFromSidecars` — `preset_sidecars` → a `Grid` |
@@ -52,7 +53,7 @@ reset the session, so an undo after an Apply still works. It republishes the
 
 | Tab | What it edits |
 |-----|---------------|
-| **Regions** | regions, exits, locations, access rules — and, under each region that has a `preset_sidecars` entry, its **sidecar block** (S0): the substrate, the entry's facts, its JSON (editable since S1: **Save JSON** writes the entry as one `set-region-sidecar`), and the two doors **Edit ▸** (the region's own room) and **Regenerate in the pipeline ▸** — see *`preset_sidecars`, per region* below |
+| **Regions** | regions, exits, locations, access rules — and, under each region that has a `preset_sidecars` entry, its **sidecar block** (S0): the substrate, the entry's facts, its fields as a form (D1: read off the substrate's declaration; each change is one `set-region-sidecar`) above its JSON (editable since S1: **Save JSON** writes the entry as one `set-region-sidecar`), and the two doors **Edit ▸** (the region's own room) and **Regenerate in the pipeline ▸** — see *`preset_sidecars`, per region* below |
 | **Items** | items, classifications, pool counts, starting counts, the slot's `item_groups` registry (I1) and its `progression_mapping` entries (I2) — see below |
 | **Placements** (W3) | `canonical_placements` — which item this world places at which location; the world generator's `--canonical-seed` input, see below |
 | **Meta** | the fields in `rulesDocOps.META_FIELDS`, plus the start region and the victory condition |
@@ -218,7 +219,7 @@ still the way to fix a value the dedicated editor cannot express.
 | `procgen_metadata` | the procgen pipeline | `document` | — | `procgenPipelinePanel` |
 | `loop_costs` | the loops cost debugger | `op` | **`true`** | `loopsCostDebuggerPanel` |
 | `sphere_log` | the spoiler checklist | `none` | — | `spoilerChecklistPanel` |
-| `preset_sidecars` | a switch to the **Regions** tab (S0: the key is drawn per region there and on the Sidecars tab) | `none` | — | (no panel) |
+| `preset_sidecars` | a switch to the **Sidecars** tab, where the key is LISTED per region (D1, the replan's ruling 6; it is also DRAWN under each region on the Regions tab) | `none` | — | (no panel) |
 | `helpers` (W0) | the helpers panel, as a **viewer** | `none` | — | `helpersPanel` |
 | `dungeons` (W0) | the dungeons panel, as a **viewer** | `none` | — | `dungeonsPanel` |
 
@@ -544,10 +545,12 @@ What the block draws, all of it read off the ENTRY (`sidecarEntryFacts`, in
   the `procgen_metadata` door's own `open` pressed through the one opener, with
   the cost in its title: the pipeline regenerates the payloads on its top-down
   route (`DOCUMENT_KEY_EDITORS.procgen_metadata.regionDoor`);
-- **▸ Show JSON** — the WHOLE entry, through `_makeJsonBlock`, the widget the
-  Document rows use. It is built on expand (W0's rule) and read from the
-  document at every render, so after an op the open block shows the entry the
-  document holds now. Since S1 it is editable, with **Save JSON** — see below;
+- **▸ Show fields & JSON** — the WHOLE entry, through `_makeJsonBlock`, the
+  widget the Document rows use, with (D1) the entry's **fields view** drawn
+  above the textarea — see *The fields view (D1)* below. Both are built on
+  expand (W0's rule) and read from the document at every render, so after an op
+  the open block shows the entry the document holds now. Since S1 the JSON is
+  editable, with **Save JSON** — see below;
 - (V0) **the entry's issues**, under the facts — one sentence each from
   `sidecarIssues` (see *The sidecar validity report* above), coloured by
   severity, and NOTHING when the entry is clean. On the Sidecars list, each
@@ -635,6 +638,75 @@ largest sidecar slots (the numbers are in the S0 record, preset-sidecars plan
 §11): the Regions tab of `procgen_topdown/AP_8` draws a block for every entry and
 not one sidecar textarea, and the Sidecars list of `seedling_playthrough/AP_1`
 expands into one row per entry without building a single JSON block.
+
+#### The fields view (D1)
+
+⚖ user, 2026-09-10, Q3: the block edits the whole entry, and *"I also want to
+check if it would make sense for the substrates to have a way to declare what the
+valid options are for that substrate, and have the editor load that as the set of
+options to choose from."* D0 made that declaration (`sidecarFields` on the
+registry entry, read through `sidecarFieldsOf` — see
+[`substrate-registry.md`](../developer/procgen/substrate-registry.md)); the block
+now reads it.
+
+Opening a block (**▸ Show fields & JSON** — one disclosure: a second toggle per
+block measured +2.3 ms over `procgen_topdown/AP_8`'s 235 blocks, and the
+collapsed block must cost what S0 measured) draws, above the JSON, one row per
+field, in two lists — every row from `sidecarForm.sidecarFormModel`, none from a
+table here:
+
+| list | where the rows come from |
+|---|---|
+| **the entry** | the schema's entry subschema (`rules.schema.json`, reached through `preset_sidecars`' own `$ref`), every property but `playable_payload`, in the schema's order; its `required` array marks the required ones. **`substrate`'s** vocabulary is the REGISTRY's: every registered id whose entry declares `deserializeWorld`, sorted — what the play-time host can load a room with. |
+| **the payload** | the substrate's merged declaration (`sidecarFieldsOf(registry.get(entry.substrate))` — its own fields and the engine's envelope), in the merge's order. ⛔ Never the payload's keys: a declared field the entry lacks is still a row, drawn absent (`—`); a key the declaration does not name is the validity report's `UNDECLARED_FIELD`, not a row. A substrate that declares nothing (or is not registered here, or declares badly) gets one sentence saying so, and its payload is in the JSON. |
+
+Each row: the name (titled with the description), a **required** mark, a
+**derived** badge whose title is the descriptor's description — which, for a
+derived field, names its WRITER (D0 refuses a declaration that does not) — and
+the control its TYPE picks:
+
+| type | control |
+|---|---|
+| `boolean` | checkbox (an absent one is indeterminate; pressing it creates the field as `true`) |
+| `string` / `number` / `integer` with an `enum` | a select over the enum (an absent field's first option says so; a value outside the enum is shown as the selected, disabled first option) |
+| `string` | text input |
+| `number` / `integer` | number input — text that is not a number is refused by name and never becomes an op; an integer field given `1.5` is written and REPORTED (V0), not refused |
+| `object` / `array` | a read-only summary — `{n keys}` / `[n items]` — *"edit in JSON below"*; no nested form |
+| `null`, or a value whose JSON type is not the declared one | the value, read-only (*"not a boolean; fix it in the JSON below"*) |
+
+**A derived field's control is DISABLED** — greyed, with its writer in the
+title. A person changing it here would be changing a value the substrate
+computes. **The JSON below stays fully editable**: the ⚖ lets the reader edit
+anything there, and the line above the form says so — the form is the safe path,
+the JSON the escape hatch.
+
+**Every change is ONE op.** A control's change builds the WHOLE entry with that
+one value replaced (`withSidecarField` over a copy of the entry the document holds
+AT THE MOMENT of the change — never a copy captured when the form was drawn) and
+goes through the host's save: the same `_saveRegionSidecar` Save JSON reaches, so
+the same op preview, the same schema veto, ONE `set-region-sidecar`, one undo, and
+the same answer under the block (the op's sentence, plus V0's count when the entry
+now has issues). ⛔ No debounce: two changes are two ops. A change equal to the
+stored value records nothing — the session's own equality answers *"No change"*.
+
+**The `substrate` picker** changes the entry's `substrate` and nothing else —
+the payload is not touched, and the raw save accepts it (⚖ the replan). Its title
+says so: *"changes the label only — regenerate in the pipeline to rebuild the
+payload"* (`sidecarForm.SUBSTRATE_PICKER_CLAUSE`), beside the block's
+**Regenerate in the pipeline ▸**. The block's issue list then carries V0's
+`SUBSTRATE_MISMATCH` sentence naming the substrate whose keys the payload
+actually has; one Undo takes both away.
+
+**What a raw save re-derives, by name.** Under the JSON, while the block is open,
+one sentence names THIS entry's derived fields — the declaration's `derived: true`
+descriptors the entry carries (`rederivesNothingSentence`), e.g. on a maze room
+*"A raw save re-derives nothing: `exits`, `obstacleLib`, `itemLib`,
+`longestShortestPath` stay as written — each is computed by the writer its greyed
+row names."* Where the declaration marks none, or there is no declaration, the
+sentence says that instead. The op's own description keeps S1's generic clause
+(`SIDECAR_NOT_REDERIVED`). ⚠ Only TOP-LEVEL fields can be named: a field derived
+INSIDE an authored one (the maze's `items[].locationName`) is described in that
+field's description, not declared as its own descriptor.
 
 ## The Items tab's Groups section (I1)
 
@@ -1490,7 +1562,7 @@ The import is free in both modes, measured:
 
 | Suite | Where |
 |-------|-------|
-| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `reverseLinks.test.js`, `sidecarIssues.test.js` | vitest, `frontend/modules/apworldEditor/` |
+| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `reverseLinks.test.js`, `sidecarIssues.test.js`, `sidecarForm.test.js` | vitest, `frontend/modules/apworldEditor/` |
 | `check-sidecar-fields.mjs` (+ `checkSidecarFields.test.js`) | `scripts/procgen/` — the corpus gate: every committed entry against its declaration, and (V0) `sidecarIssues` per slot as its second layer |
 | `../procgenCore/compositeMapRenderer.test.js` | vitest — the Map tab's renderer, driven by a TOY substrate |
 | `../procgenPipeline/compositeMapDocument.test.js` | vitest — `preset_sidecars` → `Grid`, including the player slot |
