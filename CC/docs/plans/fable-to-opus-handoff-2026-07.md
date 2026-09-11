@@ -13857,6 +13857,35 @@ block + the list's badge, D0's gate grown to a second layer — no new arm); err
 mutants; docs. Baseline 447/13531 @ `ebde7dbea4` (run 34553666402). Reports come to `preset-sidecars-planning`; D1
 on V0's idle notice. ⛔ The planner commits nothing while V0 runs.
 
+**V0 SHIPPED + VERIFIED 2026-09-10** (`5cdc09da6c` → `7e3c41808b`, six commits: `apworldEditor/sidecarIssues.js` — 19
+kinds (12 error · 7 warning; 8 shape · 11 document, 3 of them "not checked" notices); the three readers (the
+memoised bar, the block + the Sidecars badge, D0's gate grown to a second layer — `ci-gates --plan` byte-identical
+before/after); errors block nothing, the save's answer carries the count; TWO declared slots, `apLocationNamesOf`
+and `apExitNamesOf` (flash_seedling declares neither); a generic `references {field, key}` descriptor key for
+dataset refs; three in-app rows; docs). Planner's own run of the grown gate at HEAD: **ALL PASS — 1,392 entries · 0
+issues, 2 warnings (`seedling_atlas_maze`'s `exit_tile_collision`, true), 8 not-checked notices; 1,408 ms.** **CI @
+`7e3c41808b`: run 34559466942 success, 448/13597 (13589 passed | 8 skipped | 0 failed) = the derivation (+1 file,
++66 rows).** Bar cost on `AP_8`: 3.3–7.3 ms after an op (per-entry identity memo), cold 42–65 ms at load and after a
+rename op (D0's value check is most of it). What the brief got wrong (§14.1): the exit check is envelope-generic
+only payload → document (0 misses); document → payload misses 517 (515 Seedling teleporter doors + 2 atlas-maze), so
+it is DECLARED (trap **1315**: a cross-check on an engine-owned field is generic only over the engine's producers);
+jta's base scope has no `ap_locations`; Jaccard over REQUIRED keys misfires (jta scores closer to omsi) → Jaccard
+over substrate-owned keys, ties broken by the shape check; row (ii)'s law = the first required field the deserializer
+survives losing. Traps **1316** (a timing cheaper than one of its own parts is a cache hit), **1317** (a derived
+`--help` reads the docblock's first sentence). ⚖ OPEN (§14.8): the two committed warnings; not-checked notices in
+the BAR read as permanent warnings on Seedling documents; the mismatch FOLD hides per-field sentences; the cold cost;
+the generic `flash` entry declares both carriers by factory default; `register()` cannot validate the two slots
+(submodule); `_handoffAnswer` slot `'1'` and S1's stale Edit ▸ census line in the doc.
+
+**D1 LAUNCHED 2026-09-10** as `apworld-sidecars-D1` (Opus; kickoff `NewDocs/plans/apworld-sidecars-D1-prompt.md`):
+the FIELDS view on the block from the merged declaration (controls by type, enum pickers, derived controls DISABLED
+with the writer in the title, the JSON as escape hatch), every inline change ONE whole-entry `set-region-sidecar`,
+the `substrate` picker over the registry's playable ids (V0's mismatch sentence follows, per the ruling), the
+"re-derives nothing" clause naming the entry's derived fields from the declaration, the Document row's door →
+SIDECARS (replan ruling 6), rows + five mutants, docs. Baseline 448/13597 @ `7e3c41808b` (run 34559466942). Reports
+come to `preset-sidecars-planning`; **the REPLAN with the user follows D1** (D0, V0, D1 = three since the last).
+⛔ The planner commits nothing while D1 runs.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
