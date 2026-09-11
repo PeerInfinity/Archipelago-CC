@@ -14131,6 +14131,26 @@ shards stay as they are, and a short H2 gate may join them. **H1 MID-REPORT (20:
 KEEPS the device alive — `seedling-wasm-element` 897.5 → ~19 s, `-pages` 161 → ~15 s on ubuntu-latest; the browser
 plan 3 shards → 1 (385 s); run 34639283778 @ `91092bb81e` green, vitest 453/13790; H1's four commits on origin.
 
+**H1 COMPLETE + VERIFIED 2026-09-11 (planner's reads at the tree: census 0, plan §7 present, traps 1325–1327 on
+disk, four commits on origin/main).** Start `19a7e9dcf7` → pushed `91092bb81e`: `0a72009671` the ONE flags module
+(`scripts/procgen/headlessChromium.js`, a merged `--enable-features` switch — trap 1325: a repeated Chromium switch is
+last-wins), `487fbc879a` deadlines re-derived (3 × worst p95 103 ms; a 30 s per-load allowance), `4840bf76fb` docs,
+`91092bb81e` CI costs. Roster 85/52/6/47, drivers 97/75/22, the 59-arm plan byte-identical BEFORE == AFTER.
+**THE HEADLESS TIER REPRODUCES `--win`:** 9,127 s, 150/150 tapes same verdict AND same ordered check set,
+3635/0/46 vs the --win drive's 3633/0/46 (FAIL and SKIP identical; the +2 PASS is not attributable line by line — the
+--win log was not kept — and the row is owed in all three categories at this head anyway); mechanic 2194/0 and
+map-walk 449/0 equal the row's parts exactly; nothing written to the --win row. **CI keeps the device alive:**
+element 897.5 → 19.3 s, pages 161 → 16.0 s, r7-ends-meet 212 → 5.8 s; browser plan 3 shards → 1 (385 s);
+`--set=all` 6 → 2; summed arms 2028 → 812 s; vitest 453/13790 at 5b676a233d / 4840bf76fb / 91092bb81e (run
+34639283778, dispatched by hand — `ci-arm-costs.json` is outside the workflow's push paths, a ⚖). Brief wrong: "the
+runner is slower than this box" (false on CPU-bound rows); the tier's fingerprint hashed WIP bytes (trap 1327: a resume
+cache keyed without the channel lets one channel discharge the other — the checkpoint now carries the channel). ⚖ NEW:
+the deadline margin on a SHARED box (worst tape 0.749 of budget; one L40 load frame 37.9 s vs the 30 s allowance under
+load 15.3) — raising a constant invalidates the 150 banked PASSes (moot once the rebuild moves the fingerprint anyway).
+Every wall number is an upper bound from a shared box. SWFRecomp-CC side, same day: the layer-cap slice landed —
+**rebuild the pinned wasms from `254145a5b`** (`FRESH=1`; old flags = lost-and-survived logic-only ~30 ticks/s, the
+Vulkan pair = pixels at 4–12). **REPLAN with the user next** (§5 of the plan + the two new ⚖).
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
