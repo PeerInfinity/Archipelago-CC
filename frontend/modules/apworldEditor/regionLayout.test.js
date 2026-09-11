@@ -44,7 +44,8 @@ for (const rel of REGISTRY_LIBRARIES) {
 const read = (rel) => JSON.parse(readFileSync(join(PRESETS, rel), 'utf8'));
 const bytes = (o) => JSON.stringify(o);
 const clone = (o) => JSON.parse(JSON.stringify(o));
-const FOUR = read('multiworld/AP_05594871498841892311/AP_05594871498841892311_rules.json');
+const FOUR_PATH = 'multiworld/AP_05594871498841892311/AP_05594871498841892311_rules.json';
+const FOUR = read(FOUR_PATH);
 
 /** ⛓ The fixture's slot 1, and the first slot whose payload FAMILY differs. */
 const SLOTS = Object.keys(FOUR.preset_sidecars);
@@ -222,13 +223,17 @@ describe.each([['maze family', () => MAZE_SLOT], ['a second payload family', () 
 
         it('⛔ never mutates the document it is handed (the payload is cloned before its '
             + 'substrate deserializes it)', () => {
-            // ⛓ its OWN copy of the fixture: a write-through in an earlier row would
-            //   otherwise already sit in `before`, and this row could not see it.
+            // ⛓ a PRISTINE copy, read off the disk. ⛔ A copy of the shared fixture is
+            //   not enough (measured, mutant H): the rows above run the SAME moves
+            //   over it, and writing the same flags through twice is idempotent, so
+            //   a copy taken after them already holds every write this walk makes.
             const slot = slotOf();
-            const doc = clone(FOUR);
+            const doc = read(FOUR_PATH);
             const before = bytes(doc);
             for (const op of Object.values(everyChange(doc, slot)).flat()) applied(doc, op);
             expect(bytes(doc)).toBe(before);
+            // …and the shared fixture every row above read is still the file.
+            expect(bytes(FOUR)).toBe(bytes(read(FOUR_PATH)));
         });
     },
 );
