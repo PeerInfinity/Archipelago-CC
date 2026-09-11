@@ -14013,6 +14013,19 @@ exit tile (the cross-boundary alignment the user names), (c) what a simplified n
 and what it would cost (producers, the 15 TA + 34 zone + 31 jta + 6 omsi committed regions, the byte-identity
 dumps). Nothing launched.
 
+**MEASURED for the direction (plan §19; two read-only sweeps + a corpus census):** the maze reads only ITS OWN exit
+tiles at play (`mazeRoomUI.js:1541`, resolved by `targetExitId`); the ONE cross-boundary read is at GENERATION — a
+maze child's entrance = the parent's exit tile mirrored (`:1190`, `:1721`, `:4923`), and forward exit tiles are
+random; `stitchGrid`/`compileRegion`/relayout/`buildPresetSidecars` read no x/y; zone regions' tiles are
+`perimeterMidpoint(side, regionSize)` FICTIONS nobody reads (flash matches by `side`); the renderer already places
+exits by side when x/y are absent; 2,077 of 2,158 paired exits align across boundaries and NO consumer compares the
+two tiles. ⇒ **a sides-only representation is feasible without touching the maze**: the mirror falls back to the
+side midpoint for a sides-only parent (bytes unchanged). Cost by family: G0 jta+omsi (a declaration + ~3 engine
+sites, 0 committed bytes), G1 bounce+runner (34 sidecars' `exits` lose x/y; sphere/top-down dumps + library round
+trips re-run), G2 text adventure (a TA-native producer, AUTHORED gates instead of the BFS, a payload-free painter,
+15 sidecars — the expensive one, and it IS T0). Proposed: **G0 → M3 (simpler on sides-only zones) → G1 → G2/T0**,
+replan after G0+M3. ⚖ for the user.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
