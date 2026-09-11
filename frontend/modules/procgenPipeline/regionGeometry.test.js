@@ -37,8 +37,10 @@ import { mirrorTileAcrossSide } from '../shared/procgen/spatialPrimitives.js';
 import {
     DEFAULT_REGION_SIZE, Grid, REGION_GEOMETRY, SIDES, arrangeShuffledSpiral,
     assembleZoneRegion, buildRulesJson, generateRegion, geometryOf, getRegionEntrance,
-    getRegionExits, growSpheres, reconcileBidirectionalExits, topDownFromRulesJson,
+    getRegionExits, growSpheres, moveSphereExitSide, reconcileBidirectionalExits,
+    topDownFromRulesJson,
 } from './procgenPipelineEngine.js';
+import { resolveExitTilePositions } from '../procgenCore/compositeMapRenderer.js';
 import { planSpheres } from './spherePlanner.js';
 import { GATEABLE_ITEMS } from '../bounceDemo/bounceDemoLibrary.js';
 
@@ -376,6 +378,97 @@ describe('⛓⛓ the mirror fallback: a neighbour of a sides-only region mirrors
         expect(topBefore.grid.BounceZone.payload.entrance).toBeDefined();
         expect(diffs.some((d) => d.path.join('/') === 'grid/BounceZone/payload/entrance')).toBe(true);
         expect(topAfter.grid.End).toEqual(topBefore.grid.End);
+    });
+});
+
+/**
+ * ⛓⛓ G1 — **AN EXIT-SIDE MOVE ON A SIDES-ONLY REGION WRITES THE SIDE AND NO
+ * TILE.** `moveSphereExitSide` (the pipeline's Move Exit, `layoutEdits.js`)
+ * relabels through `relabelExitSide`, the last minting site G0 left. The world
+ * is the sphere world's bounce region (it has `params.sidePortals`, which the
+ * move requires) and one of its exits moved to an EMPTY side.
+ */
+describe('⛓⛓ G1 — an exit-side move writes the side, and a tile only on a tiles region', () => {
+    // The first bounce region with an exit and an empty side to move it to.
+    function aMove(grid) {
+        for (const region of grid.allRegions()) {
+            if (region.substrate !== 'bounce' || !region.playable_payload?.params?.sidePortals) continue;
+            const list = [...getRegionExits(region).values()];
+            const used = new Set(list.map((e) => e.side));
+            const side = SIDES.find((s) => !used.has(s));
+            const exit = list.find((e) => !e.isBackExit) ?? list[0];
+            if (side && exit) return { cell: region.cell, exitId: exit.exit_id, side };
+        }
+        return null;
+    }
+    // The moved exit's three records (world exit · exits_placed · extracted_rules).
+    function recordsOf(grid, { cell, exitId }) {
+        const region = grid.getRegion(cell);
+        return {
+            we: getRegionExits(region).get(exitId),
+            placed: region.exits_placed.find((p) => p.exit_id === exitId),
+            ex: region.extracted_rules.exits.find((e) => e.id === exitId),
+        };
+    }
+    const moved = (seedTile = false) => {
+        const { grid } = sphereGrid();
+        const move = aMove(grid);
+        expect(move, 'no bounce region with an empty side in the sphere world').not.toBeNull();
+        if (seedTile) {
+            // A document written before bounce declared sides: its exit still
+            // carries a tile, on the side it is about to leave.
+            const r = recordsOf(grid, move);
+            Object.assign(r.we, { x: 0, y: 0 });
+            if (r.placed) r.placed.tile_position = { x: 0, y: 0 };
+            r.ex.position = { x: 0, y: 0 };
+        }
+        moveSphereExitSide(grid, move.cell, move.exitId, move.side, SPHERE_REGION_SIZE);
+        return { grid, move };
+    };
+    const expectSideOnly = ({ grid, move }) => {
+        const { we, placed, ex } = recordsOf(grid, move);
+        expect(we.side).toBe(move.side);
+        expect('x' in we || 'y' in we).toBe(false);
+        if (placed) {
+            expect(placed.side).toBe(move.side);
+            expect('tile_position' in placed).toBe(false);
+        }
+        expect('position' in ex).toBe(false);
+        expect(grid.getRegion(move.cell).playable_payload.params.sidePortals[move.side]).toBeDefined();
+    };
+
+    it('sides (the real registry): the moved exit carries its new side — world exit and '
+        + 'exits_placed — and no x / y / tile_position / position', () => {
+        expectSideOnly(moved());
+    });
+
+    it('sides: a tile the exit still carried (a pre-G1 document) is REMOVED by the move, not '
+        + 'left on the side it left', () => {
+        expectSideOnly(moved(true));
+    });
+
+    // ⛔ THE CONTROL, not the guard: a tiles region mints the tile whether or not
+    // the gate exists, so this row cannot see the gate removed. Its job is to
+    // pin that the tiles path is today's — the tile the renderer's own
+    // one-exit-per-side slot would draw (what `sideMidpointTile` is defined to
+    // match), read off `resolveExitTilePositions`, never a literal.
+    it('tiles (bounce spied TILES, the BEFORE): the moved exit gets the side\'s single-exit '
+        + 'slot tile on all three records', () => {
+        const { grid, move } = withGeometry('bounce', REGION_GEOMETRY.TILES, () => moved());
+        const [slot] = resolveExitTilePositions([{ exit_id: move.exitId, side: move.side }],
+            SPHERE_REGION_SIZE);
+        const { we, placed, ex } = recordsOf(grid, move);
+        expect(we.side).toBe(move.side);
+        expect({ x: we.x, y: we.y }).toEqual({ x: slot.x, y: slot.y });
+        if (placed) expect(placed.tile_position).toEqual({ x: slot.x, y: slot.y });
+        expect(ex.position).toEqual({ x: slot.x, y: slot.y });
+    });
+
+    it('the same move, tiles → sides: the two worlds differ ONLY by tile fields dropped on '
+        + 'bounce regions (the re-key, the relayout and the arrows are the same)', () => {
+        const before = withGeometry('bounce', REGION_GEOMETRY.TILES, () => dumpGrid(moved().grid));
+        const after = dumpGrid(moved().grid);
+        expectOnlyTileFieldsDropped({ grid: before }, { grid: after }, 'bounce');
     });
 });
 

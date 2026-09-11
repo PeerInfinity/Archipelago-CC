@@ -5199,17 +5199,33 @@ function sideMidpointTile(side, regionSize) {
 // exits_placed entry (forward exits only), and its extracted_rules position so
 // stitchGrid still matches it. Returns the exit's previous side. Does NOT touch
 // sidePortals (the caller re-keys those) or re-stitch.
+//
+// ⛓ PRESET SIDECARS G1 — the same law as every other minting site: a
+// SIDES-only region (`carriesExitTiles` false) gets its SIDE and no tile. A tile
+// it still carries (a document written before its substrate declared sides) is
+// on the OLD side, so it is removed rather than left for the Map to draw there;
+// the renderer then places the exit by side. A tiles region is unchanged.
 function relabelExitSide(region, exitId, newSide, regionSize) {
-    const tile = sideMidpointTile(newSide, regionSize);
+    const tile = carriesExitTiles(region.substrate) ? sideMidpointTile(newSide, regionSize) : null;
     const exits = getRegionExits(region);
     const we = exits instanceof Map ? exits.get(exitId)
         : (exits ?? []).find((e) => e.exit_id === exitId);
     const oldSide = we?.side ?? null;
-    if (we) { we.side = newSide; we.x = tile.x; we.y = tile.y; }
+    if (we) {
+        we.side = newSide;
+        if (tile) { we.x = tile.x; we.y = tile.y; } else { delete we.x; delete we.y; }
+    }
     const placed = (region.exits_placed ?? []).find((p) => p.exit_id === exitId);
-    if (placed) { placed.side = newSide; placed.tile_position = { x: tile.x, y: tile.y }; }
+    if (placed) {
+        placed.side = newSide;
+        if (tile) placed.tile_position = { x: tile.x, y: tile.y };
+        else delete placed.tile_position;
+    }
     const ex = (region.extracted_rules?.exits ?? []).find((e) => e.id === exitId);
-    if (ex) ex.position = { x: tile.x, y: tile.y };
+    if (ex) {
+        if (tile) ex.position = { x: tile.x, y: tile.y };
+        else delete ex.position;
+    }
     return oldSide;
 }
 
