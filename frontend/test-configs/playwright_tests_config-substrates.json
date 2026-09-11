@@ -771,6 +771,30 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "PRESET SIDECARS S2. Edit still refuses the raw-edited room by its baseline sentence; opens only after the re-derive; refuses again after one Undo. Mutant D (check 1 relaxed) reds it."
+        },
+        {
+            "id": "apworld-map-selection-draws-the-regions-block",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M1. The Map tab's selection draws _makeRegionSidecarBlock (hostTab map) under the canvas; a second selection swaps it. Mutant A (slot '1') reds it."
+        },
+        {
+            "id": "apworld-map-second-click-opens-the-selected-regions-room",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M1. The second click on the selected cell presses the block's Edit ▸: roomEditorSession parked, the (stub) lab host raised. Mutant B (second click a no-op) reds it."
+        },
+        {
+            "id": "apworld-map-first-click-opens-nothing",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M1. A first click only selects (a door that would open stays shut); a refused region's second click prints the button's own refusal beside the block. Mutants C and B."
+        },
+        {
+            "id": "apworld-map-handoff-names-the-slot-and-the-cost",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M1. The hand-off from the map's block names the carried slot and the top-down cost; procgen_topdown/AP_1's sphere answer unchanged. Mutants D and E."
         }
     ]
 }

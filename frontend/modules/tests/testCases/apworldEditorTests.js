@@ -1259,7 +1259,33 @@ export async function apworldMapClickSelectsTheRegion(testController) {
 
         testController.assertEqual('the click selected the region under it',
             target.region_id, panel._selectedRegion);
-        testController.assertEqual('and switched to the Regions tab',
+        /**
+         * ⛓⛓ PRESET SIDECARS M1 (⚖ planner, option B) — **THE FIRST CLICK
+         * SELECTS AND STAYS.** Until M1 this arm read *"and switched to the
+         * Regions tab"*: the click called `selectRegion`, which leaves the map.
+         * It now draws the region's block under the canvas instead, and the
+         * Regions road is that block's `Go to region` — pressed below, so the
+         * Regions-tab claims this row always made are still made.
+         */
+        testController.assertEqual('…and STAYS on the Map', 'map', panel.activeTab);
+        testController.reportCondition('…and draws that region\'s block under the map',
+            !!document.querySelector(`${PANEL_SELECTOR} .apworld-map-selection`
+                + `[data-region-name="${CSS.escape(target.region_id)}"] `
+                + '.apworld-sidecar-block[data-host-tab="map"]'));
+        /**
+         * ⛔ **…AND IT OPENED NOTHING.** The door is async (the inspection, then
+         * the room), so "nothing" is a wait that must NOT be satisfied: no room
+         * session, and no Edit ▸ sentence in the status line (`Editing …`,
+         * `Edit refused …`, `Edit failed …` — the press's three answers, so the
+         * check does not depend on whether a lab host is mounted).
+         */
+        testController.reportCondition('⛔ …and the first click opened nothing',
+            !(await mapEditWasPressed(testController, panel, 'the first click pressed Edit ▸')));
+
+        const goRegion = document.querySelector(`${PANEL_SELECTOR} .apworld-map-go-region`);
+        testController.reportCondition('the map\'s block offers Go to region', !!goRegion);
+        if (goRegion) goRegion.click();
+        testController.assertEqual('Go to region switched to the Regions tab',
             'regions', panel.activeTab);
 
         const block = document.querySelector(
@@ -1796,11 +1822,13 @@ registerTest({
 
 registerTest({
     id: 'apworld-map-click-selects-the-region',
-    name: 'APWorld hub: a click on the map selects that region in the Regions tab',
+    name: 'APWorld hub: a click on the map selects that region, stays on the map, and opens nothing',
     description: 'Clicks the centre of the first placed cell — its coordinates read off the '
-               + 'live grid and the canvas\'s own geometry data-attrs — and asserts the panel '
-               + 'switched to the Regions tab with EXACTLY that region\'s block marked; then '
-               + 'clicks outside the grid and asserts nothing moved.',
+               + 'live grid and the canvas\'s own geometry data-attrs — and asserts the region '
+               + 'is selected, the panel STAYS on the Map with that region\'s block under the '
+               + 'canvas, and nothing was opened (M1: the second click is the door); the '
+               + 'block\'s Go to region then switches to the Regions tab with EXACTLY that '
+               + 'region\'s block marked; then clicks outside the grid and asserts nothing moved.',
     testFunction: apworldMapClickSelectsTheRegion,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
@@ -8080,6 +8108,504 @@ registerTest({
                + 'region and the button is pressable; one Undo and the same refusal again. Mutant D '
                + '(check 1 relaxed) reds the refusal conditions.',
     testFunction: apworldEditIsNotWeakenedByARederive,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ PRESET SIDECARS M1 — THE MAP TAB'S SELECTION IS A REGION: the block
+ * as its third host, click-to-edit, and the hand-off's two fix-ups
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ How long "the door did NOT open" is waited for. The door is async — the
+ * inspection deserializes the room, then the room is opened — so an absence
+ * must be given the time a presence would take. Measured on the M1 live drive
+ * (`drive-m1.mjs`, the four-player fixture, a real lab host): second click →
+ * parked room session in 86 ms (maze) and 186 ms (bounce); the window is
+ * several times the slower, and it is only ever spent by a GREEN row (a red
+ * one returns as soon as the door answers).
+ */
+const MAP_DOOR_SETTLE_MS = 1500;
+
+/**
+ * ⛓ Did an Edit ▸ press happen? A room session parked, or the status line
+ * carries one of the press's three answers. Waited for — and a TRUE answer is
+ * the red one — so the poll's own timeout is the green outcome.
+ */
+async function mapEditWasPressed(testController, panel, label, sessionBefore = null) {
+    return testController.pollForCondition(
+        () => panel.roomEditorSession !== sessionBefore
+            || /^Edit(ing| refused| failed)/.test(String(panel._opMessage ?? '')),
+        label, MAP_DOOR_SETTLE_MS, 50);
+}
+
+/** ⛓ The Map tab's selection block — the ONE block drawn with `hostTab: 'map'`. */
+function mapSelectionBlock() {
+    return document.querySelector(
+        `${PANEL_SELECTOR} .apworld-map-selection .apworld-sidecar-block[data-host-tab="map"]`);
+}
+
+/**
+ * ⛓ Pick a slot through the toolbar, land on the Map, and wait for a canvas
+ * that HAS A LAYOUT — a hidden Golden-Layout tab measures 0×0 and a click at a
+ * computed point would land nowhere (1310: the row before may have raised
+ * another panel).
+ */
+async function onMapTabFor(testController, panel, slot = null) {
+    if (slot !== null) {
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        if (select) selectPlayer(select, slot);
+        await testController.pollForCondition(() => String(panel.playerId) === String(slot),
+            `slot ${slot} selected`, 8000, 50);
+    }
+    selectTab(panel, 'map');
+    testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+    return testController.pollForValue(() => {
+        const c = document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`);
+        return c && c.getBoundingClientRect().width > 0 ? c : null;
+    }, `the Map tab's canvas, laid out${slot === null ? '' : ` (slot ${slot})`}`, 8000, 50);
+}
+
+/** ⛓ Click the centre of a grid cell, through the canvas's own geometry — re-queried. */
+function clickMapCell(cell) {
+    const canvas = document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`);
+    const rect = canvas.getBoundingClientRect();
+    const cw = Number(canvas.dataset.cellW);
+    const ch = Number(canvas.dataset.cellH);
+    canvas.dispatchEvent(new MouseEvent('click', {
+        bubbles: true,
+        clientX: rect.left + (cell.gx * cw + cw / 2) * (rect.width / canvas.width),
+        clientY: rect.top + (cell.gy * ch + ch / 2) * (rect.height / canvas.height),
+    }));
+}
+
+/**
+ * ⛓ The four-player fixture's slot whose substrate is NOT the first slot's —
+ * PICKED by the law (a different substrate), never typed: the row then
+ * discriminates a block that read the first slot for every slot.
+ */
+function slotWithAnotherSubstrate(doc) {
+    const slots = Object.keys(doc.preset_sidecars ?? {});
+    const substrates = (s) => new Set(Object.values(doc.preset_sidecars[s] ?? {}).map((e) => e?.substrate));
+    const first = substrates(slots[0]);
+    return slots.find((s) => s !== slots[0] && ![...substrates(s)].some((x) => first.has(x))) ?? null;
+}
+
+/**
+ * ⛓⛓⛓ **(i) THE SELECTION DRAWS THAT REGION'S BLOCK UNDER THE MAP, AND A
+ * SECOND SELECTION SWAPS IT** — on the fixture's other-substrate slot (bounce),
+ * through the toolbar. The expected region is read off an INDEPENDENT
+ * reconstruction (`reconstructResultFromSidecars(doc, {playerId})`), the
+ * expected badge off the document's own entry; neither is typed.
+ *
+ * ⛔ Mutant A (the map host passes slot `'1'`) reds it: on this slot a region
+ * the first slot does not carry draws no block, and one it does carries the
+ * first slot's substrate in its badge.
+ */
+export async function apworldMapSelectionDrawsTheRegionsBlock(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const slot = slotWithAnotherSubstrate(doc);
+        testController.reportCondition('⛓ premise: the fixture has a slot of another substrate', !!slot);
+        if (!slot) return testController.getOverallResult();
+        const { reconstructResultFromSidecars } = await import(
+            '../../procgenPipeline/compositeMapDocument.js');
+        const cells = reconstructResultFromSidecars(doc, { playerId: slot })?.grid?.allRegions() ?? [];
+        testController.reportCondition('⛓ premise: that slot places at least two regions',
+            cells.length >= 2);
+        if (cells.length < 2) return testController.getOverallResult();
+
+        const canvas = await onMapTabFor(testController, panel, slot);
+        testController.reportCondition('the Map tab draws a laid-out canvas', !!canvas);
+        if (!canvas) return testController.getOverallResult();
+        testController.reportCondition('no block is drawn before a selection', !mapSelectionBlock());
+
+        for (const [n, target] of [cells[0], cells[1]].entries()) {
+            const which = n === 0 ? 'select' : 'select ANOTHER';
+            clickMapCell(target.cell);
+            const block = await testController.pollForValue(() => {
+                const b = mapSelectionBlock();
+                return b && b.dataset.regionName === target.region_id ? b : null;
+            }, `${which}: the map's block is ${target.region_id}'s`, 8000, 50);
+            testController.reportCondition(`${which}: the block is the clicked cell's region`, !!block);
+            testController.assertEqual(`${which}: …and the panel stays on the Map`, 'map', panel.activeTab);
+            testController.assertEqual(`${which}: exactly one block on the Map`, '1',
+                String(document.querySelectorAll(`${PANEL_SELECTOR} .apworld-sidecar-block`).length));
+            if (!block) continue;
+            testController.assertEqual(`${which}: it reads the SELECTED slot`, String(slot),
+                String(block.dataset.player));
+            testController.assertEqual(`${which}: its badge is the document's own substrate`,
+                String(doc.preset_sidecars[slot][target.region_id].substrate),
+                String(block.querySelector('.apworld-sidecar-badge')?.textContent));
+            const edit = block.querySelector('.apworld-edit-room');
+            testController.reportCondition(`${which}: it carries Edit ▸, ENABLED (the substrate `
+                + 'has a room editor and a round trip)', !!edit && !edit.disabled);
+            testController.reportCondition(`${which}: …and Go to region`,
+                !!document.querySelector(`${PANEL_SELECTOR} .apworld-map-go-region`
+                    + `[data-region-name="${CSS.escape(target.region_id)}"]`));
+        }
+        testController.reportCondition('⛔ selecting opened nothing', panel.roomEditorSession === null);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-selection-block test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓ Stand the real maze lab hosts aside and register a panel-shaped stub (H4b's
+ * construction: `openLabRoomEditor` resolves its host through `findLabPanel`),
+ * so the door's load / raise are READ rather than waited on through an iframe.
+ * Returns `{sent, cleanup}`.
+ */
+function stubMazeLabHost(iframeId) {
+    const displaced = labPanelInstances().filter((p) => p.substrate === 'maze');
+    for (const p of displaced) unregisterLabPanelInstance(p);
+    const sent = { load: null, navigate: null, raised: 0 };
+    const host = {
+        substrate: 'maze',
+        iframeId,
+        load: (payload) => { sent.load = payload; return true; },
+        navigate: (search) => { sent.navigate = search; return true; },
+        raise: () => { sent.raised += 1; return true; },
+        _note: () => {},
+    };
+    registerLabPanelInstance(host);
+    return {
+        host,
+        sent,
+        cleanup: () => {
+            unregisterLabPanelInstance(host);
+            for (const p of displaced) registerLabPanelInstance(p);
+        },
+    };
+}
+
+/**
+ * ⛓⛓⛓ **(ii) THE SECOND CLICK ON THE SELECTED CELL OPENS THE ROOM** — on the
+ * fixture's first slot (maze), the SAME door Edit ▸ opens: a room session
+ * parked for THAT region, and the lab host handed the one-entry library and
+ * raised. The first click is asserted to open nothing before the second is
+ * made, so the row cannot be satisfied by a first click that opened it.
+ *
+ * ⛓ 1310: the stub's `raise` moves no Golden-Layout tab, so the hub keeps its
+ * layout; the row still waits on the door's EFFECT (the session) before it
+ * reads anything else. Mutant B (the second click a no-op) reds it.
+ */
+export async function apworldMapSecondClickOpensTheSelectedRegionsRoom(testController) {
+    let stub = null;
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const slot = Object.keys(doc.preset_sidecars)[0];
+        stub = stubMazeLabHost('apworld-m1-stub');
+        testController.reportCondition('the stub IS the host the door will find for the maze page',
+            findLabPanel('maze') === stub.host);
+        const { reconstructResultFromSidecars } = await import(
+            '../../procgenPipeline/compositeMapDocument.js');
+        // ⛓ the target: the first placed region whose substrate is maze — by the law.
+        const target = (reconstructResultFromSidecars(doc, { playerId: slot })?.grid?.allRegions() ?? [])
+            .find((r) => doc.preset_sidecars[slot][r.region_id]?.substrate === stub.host.substrate);
+        testController.reportCondition('⛓ premise: the first slot places a maze region', !!target);
+        if (!target) return testController.getOverallResult();
+
+        const canvas = await onMapTabFor(testController, panel, slot);
+        if (!canvas) {
+            testController.reportCondition('the Map tab draws a laid-out canvas', false);
+            return testController.getOverallResult();
+        }
+        clickMapCell(target.cell);
+        testController.assertEqual('the first click selected the region', target.region_id,
+            panel._selectedRegion);
+        testController.reportCondition('⛔ …and opened nothing',
+            !(await mapEditWasPressed(testController, panel, 'the first click pressed Edit ▸')));
+        testController.assertEqual('…and the stub was handed nothing', 'null', String(stub.sent.load));
+
+        const edit = mapSelectionBlock()?.querySelector('.apworld-edit-room');
+        testController.reportCondition('⛓ premise: the block\'s Edit ▸ is pressable', !!edit && !edit.disabled);
+        clickMapCell(target.cell);
+        const session = await testController.pollForValue(
+            () => (panel.roomEditorSession?.region === target.region_id ? panel.roomEditorSession : null),
+            'the second click parked a room session for the region', 8000, 50);
+        testController.reportCondition('⛓⛓ the second click opened THAT region\'s room', !!session);
+        testController.assertEqual('…keyed on the selected slot and the region',
+            `${slot}|${target.region_id}`, String(session?.key));
+        testController.reportCondition('the lab host was RAISED', stub.sent.raised > 0);
+        testController.assertEqual('…and handed THIS region\'s room',
+            `${target.region_id}|maze`, `${stub.sent.load?.entries?.[0]?.entry_id}|`
+                + `${stub.sent.load?.entries?.[0]?.substrate}`);
+        testController.reportCondition('the status line is the door\'s own',
+            String(panel._opMessage ?? '').startsWith(`Editing "${target.region_id}"`));
+        testController.assertEqual('nothing was recorded — the room is open, not saved', '0',
+            String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-second-click test error-free', false);
+    } finally {
+        const panel = document.querySelector(PANEL_SELECTOR)?.__panel;
+        try { panel?._closeRoomEditor(); } catch (_) { /* panel gone */ }
+        if (stub) stub.cleanup();
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iii) THE FIRST CLICK ON A FRESH CELL OPENS NOTHING — AND A REFUSED
+ * REGION'S SECOND CLICK OPENS NOTHING EITHER, SAYING WHY BESIDE THE BLOCK.**
+ * The existing selection row's claim, asserted on the fixture with a door that
+ * WOULD open (the stub host), then a fresh cell after a selection; then the
+ * refusal arm on `jta_schedule_test` (the jta substrate has no room editor, so
+ * its block's Edit ▸ is disabled): the second click prints exactly `Edit
+ * refused: <the button's own title>` beside the map's block and parks nothing.
+ * Between them, a slot pick: the selection is a region NAME and slots share
+ * names, so it is dropped — the same-named region on the other slot is a first
+ * click (mutant F, the selection kept across the pick, reds that arm).
+ * ⛔ The verdict is the BUTTON's — the expected sentence is read off it.
+ * Mutant C (the first click opens the door) reds the first half; mutant B (the
+ * second click a no-op) reds the refusal arm.
+ */
+export async function apworldMapFirstClickOpensNothing(testController) {
+    let stub = null;
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const slot = Object.keys(doc.preset_sidecars)[0];
+        stub = stubMazeLabHost('apworld-m1-stub-iii');
+        const { reconstructResultFromSidecars } = await import(
+            '../../procgenPipeline/compositeMapDocument.js');
+        const cells = reconstructResultFromSidecars(doc, { playerId: slot })?.grid?.allRegions() ?? [];
+        testController.reportCondition('⛓ premise: two placed regions', cells.length >= 2);
+        const canvas = await onMapTabFor(testController, panel, slot);
+        if (!canvas || cells.length < 2) {
+            testController.reportCondition('the Map tab draws a laid-out canvas', !!canvas);
+            return testController.getOverallResult();
+        }
+        for (const [n, target] of [cells[0], cells[1]].entries()) {
+            const which = n === 0 ? 'with no selection' : 'with another region selected';
+            clickMapCell(target.cell);
+            testController.assertEqual(`${which}: the click selected ${target.region_id}`,
+                target.region_id, panel._selectedRegion);
+            testController.reportCondition(`⛔ ${which}: …and opened nothing`,
+                !(await mapEditWasPressed(testController, panel, `${which}: a first click pressed Edit ▸`)));
+            testController.assertEqual(`${which}: the lab host was handed nothing`, 'null',
+                String(stub.sent.load));
+        }
+        stub.cleanup();
+        stub = null;
+
+        /**
+         * ⛓⛓ **A SELECTION DOES NOT CROSS A SLOT PICK.** Slots share region
+         * NAMES, so a region selected on this slot and then clicked on another
+         * slot that holds the same name is a FIRST click there. Measured on the
+         * M1 drive before the fix: it counted as the second and opened the other
+         * slot's room. The other slot and the shared name are picked off the
+         * document.
+         */
+        const selected = panel._selectedRegion;
+        const other = Object.keys(doc.preset_sidecars).find((s) => s !== slot
+            && (reconstructResultFromSidecars(doc, { playerId: s })?.grid?.allRegions() ?? [])
+                .some((r) => r.region_id === selected));
+        testController.reportCondition(`⛓ premise: another slot places "${selected}" too`, !!other);
+        if (other) {
+            const shared = reconstructResultFromSidecars(doc, { playerId: other }).grid.allRegions()
+                .find((r) => r.region_id === selected);
+            await onMapTabFor(testController, panel, other);
+            testController.reportCondition('the slot pick dropped the selection', panel._selectedRegion === null);
+            clickMapCell(shared.cell);
+            testController.assertEqual('across the slot pick: the click selected the same-named region',
+                selected, panel._selectedRegion);
+            testController.reportCondition('⛔ across the slot pick: …as a FIRST click — it opened nothing',
+                !(await mapEditWasPressed(testController, panel, 'across the slot pick: Edit ▸ pressed')));
+        }
+
+        /* ── the refusal arm: a region whose Edit ▸ is disabled ── */
+        const jta = await openHub(testController, LOOP_COSTS_PRESET_PATH);
+        if (!jta) return testController.getOverallResult();
+        const jDoc = jta.rulesDoc;
+        const jSlot = String(jta.playerId);
+        const jCell = (reconstructResultFromSidecars(jDoc, { playerId: jSlot })?.grid?.allRegions() ?? [])[0];
+        testController.reportCondition('⛓ premise: the refusal document places a region', !!jCell);
+        const jCanvas = await onMapTabFor(testController, jta);
+        if (!jCell || !jCanvas) return testController.getOverallResult();
+        clickMapCell(jCell.cell);
+        const btn = await testController.pollForValue(
+            () => mapSelectionBlock()?.querySelector('.apworld-edit-room') ?? null,
+            'the refused region\'s block and its Edit ▸', 8000, 50);
+        testController.reportCondition('⛓ premise: its Edit ▸ is DISABLED', !!btn && btn.disabled);
+        const title = btn?.title ?? '';
+        testController.reportCondition('⛓ …with its reason in the title', title.length > 0);
+        clickMapCell(jCell.cell);
+        const said = await testController.pollForValue(
+            () => mapSelectionBlock()?.querySelector('.apworld-sidecar-op-message[data-refused="true"]') ?? null,
+            'the second click answered beside the block', 8000, 50);
+        testController.assertEqual('⛓⛓ the second click printed the BUTTON\'s refusal beside the block',
+            `Edit refused: ${title}`, String(said?.textContent));
+        testController.assertEqual('…and in the status line', `Edit refused: ${title}`,
+            String(jta._opMessage));
+        testController.reportCondition('…and parked no room', jta.roomEditorSession === null);
+        testController.assertEqual('…and stayed on the Map', 'map', jta.activeTab);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-first-click test error-free', false);
+    } finally {
+        if (stub) stub.cleanup();
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iv) THE HAND-OFF FROM THE MAP'S BLOCK NAMES THE SLOT IT CAME FROM
+ * AND THE TOP-DOWN ROUTE'S COST; A SPHERE DOCUMENT'S ANSWER IS UNCHANGED.**
+ * The map's block's own `Regenerate in the pipeline ▸`, pressed on the
+ * fixture's other-substrate slot: the pipeline's message names that slot and
+ * ITS region count, says the routes build `HANDOFF_REALISED_SLOT` only, counts
+ * THAT slot's regions as what top-down builds, and carries
+ * `HANDOFF_TOPDOWN_COST`. Then `procgen_topdown/AP_1` (sphere-appendable,
+ * slot 1): the message is exactly the no-slot answer — no lead, no cost.
+ * Every expected word is the pipeline module's exported constant or a count
+ * read off the document.
+ *
+ * ⛓ 1310: the door's `open` defers its module, so the row awaits the door's
+ * EFFECT (`panelManager.isPanelActive`) before raising the hub, then the hub's
+ * layout. Mutants D (the handler drops the carried slot) and E (the cost
+ * clause dropped) red the first arm.
+ */
+export async function apworldMapHandoffNamesTheSlotAndTheCost(testController) {
+    const pipelinePanel = DOCUMENT_KEY_EDITORS.procgen_metadata.panelId;
+    const pressAndRead = async (label, wanted) => {
+        const regen = mapSelectionBlock()?.querySelector('.apworld-sidecar-regenerate');
+        testController.reportCondition(`${label}: the map's block carries the hand-off door`,
+            !!regen && !regen.disabled);
+        if (!regen || regen.disabled) return null;
+        regen.click();
+        const raised = await testController.pollForCondition(
+            () => panelManager.isPanelActive(pipelinePanel), `${label}: the pipeline came to the front`,
+            8000, 50);
+        testController.reportCondition(`${label}: the pipeline came to the front`, raised);
+        const msg = await testController.pollForValue(() => {
+            const el = document.querySelector('.procgen-pipeline-panel .procgen-pipeline-message');
+            return el && wanted(el.textContent) ? el.textContent : null;
+        }, `${label}: the pipeline's answer`, 8000, 50);
+        testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+        await testController.pollForCondition(
+            () => (document.querySelector(PANEL_SELECTOR)?.__panel?.scrollContainer?.clientHeight ?? 0) > 0,
+            `${label}: the hub is back in front with a layout`, 8000, 50);
+        return msg;
+    };
+    try {
+        const { ProcgenPipelineUI, HANDOFF_REALISED_SLOT, HANDOFF_TOPDOWN_COST } = await import(
+            '../../procgenPipeline/procgenPipelineUI.js');
+        const { reconstructResultFromSidecars } = await import(
+            '../../procgenPipeline/compositeMapDocument.js');
+        const regionsIn = (d, s) => Object.keys(d.regions?.[s] ?? {}).length;
+
+        /* ── the fixture, from the other-substrate slot ── */
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const slot = slotWithAnotherSubstrate(doc);
+        testController.reportCondition('⛓ premise: a slot other than the built one',
+            !!slot && slot !== HANDOFF_REALISED_SLOT);
+        testController.reportCondition('⛓ premise: its region count differs from the built slot\'s',
+            !!slot && regionsIn(doc, slot) !== regionsIn(doc, HANDOFF_REALISED_SLOT));
+        if (!slot) return testController.getOverallResult();
+        const cell = (reconstructResultFromSidecars(doc, { playerId: slot })?.grid?.allRegions() ?? [])[0];
+        if (!cell || !(await onMapTabFor(testController, panel, slot))) {
+            testController.reportCondition('the slot draws a laid-out map', false);
+            return testController.getOverallResult();
+        }
+        clickMapCell(cell.cell);
+        const lead = `sent from player ${slot} (${regionsIn(doc, slot)} source regions)`;
+        const said = await pressAndRead(`slot ${slot}`, (t) => t.startsWith('Adopted ') && t.includes('sent from player'));
+        testController.reportCondition(`slot ${slot}: the pipeline answered the hand-off`, !!said);
+        testController.reportCondition(`⛓⛓ it names the slot the hand-off came from and that slot's count`,
+            String(said).includes(lead));
+        testController.reportCondition('⛓⛓ …and says the routes build the realised slot only',
+            String(said).includes(`build player slot ${HANDOFF_REALISED_SLOT} only`));
+        testController.reportCondition('…and counts THAT slot\'s regions as what top-down builds',
+            String(said).includes(`TOP-DOWN FROM THIS (${regionsIn(doc, HANDOFF_REALISED_SLOT)} source regions)`));
+        testController.reportCondition('⛓⛓ …and names the top-down route\'s COST',
+            String(said).includes(HANDOFF_TOPDOWN_COST));
+
+        /* ── procgen_topdown/AP_1: sphere-appendable, slot 1 — unchanged ── */
+        const td = await openHub(testController, PLACEMENTS_PRESET_PATH);
+        if (!td) return testController.getOverallResult();
+        const expected = ProcgenPipelineUI.prototype._handoffAnswer.call(
+            { topDownSourceLabel: 'hand-off (the APWorld editor)' }, td.rulesDoc);
+        testController.reportCondition('⛓ premise: this document is sphere-appendable',
+            expected.includes('APPEND A SPHERE'));
+        const tdCell = (reconstructResultFromSidecars(td.rulesDoc, { playerId: String(td.playerId) })
+            ?.grid?.allRegions() ?? [])[0];
+        if (!tdCell || !(await onMapTabFor(testController, td))) {
+            testController.reportCondition('the sphere document draws a laid-out map', false);
+            return testController.getOverallResult();
+        }
+        clickMapCell(tdCell.cell);
+        const tdSaid = await pressAndRead('sphere', (t) => t === expected);
+        testController.assertEqual('⛓ the sphere answer is the no-slot answer, word for word',
+            expected, String(tdSaid));
+        testController.reportCondition('…with no cost clause and no lead',
+            !String(tdSaid).includes(HANDOFF_TOPDOWN_COST) && !String(tdSaid).includes('sent from player'));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-handoff test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-map-selection-draws-the-regions-block',
+    name: 'APWorld hub: selecting a map cell draws that region\'s sidecar block under the map, and another selection swaps it',
+    description: 'PRESET SIDECARS M1. The four-player fixture\'s other-substrate slot (bounce), through '
+               + 'the toolbar: a click on a cell draws ONE block (hostTab map) whose region is the '
+               + 'cell\'s in an independent reconstruction, whose badge is the entry\'s substrate, with '
+               + 'Edit ▸ enabled and Go to region; a second cell swaps it; the panel stays on the Map. '
+               + 'Mutant A (the map host reads slot 1) reds it.',
+    testFunction: apworldMapSelectionDrawsTheRegionsBlock,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-second-click-opens-the-selected-regions-room',
+    name: 'APWorld hub: a second click on the selected map cell opens that region\'s room through Edit ▸\'s door',
+    description: 'PRESET SIDECARS M1. The fixture\'s maze slot, a stub lab host (H4b\'s construction): '
+               + 'the first click selects and opens nothing; the second parks roomEditorSession for '
+               + 'that region, the host is raised and handed that region\'s one-entry library, no op '
+               + 'recorded. Mutant B (the second click a no-op) reds it.',
+    testFunction: apworldMapSecondClickOpensTheSelectedRegionsRoom,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-first-click-opens-nothing',
+    name: 'APWorld hub: a first click on a map cell opens nothing, and a refused region\'s second click says why beside its block',
+    description: 'PRESET SIDECARS M1. With a door that WOULD open (stub host), a click on a fresh cell '
+               + '— with no selection, then with another selected, then the same-named region on '
+               + 'another slot after a slot pick — selects and parks nothing. On '
+               + 'jta_schedule_test (no room editor) the second click prints "Edit refused: <the '
+               + 'button\'s title>" beside the map\'s block and in the status line, parks nothing, '
+               + 'stays on the Map. Mutants C (first click opens) and B (second click a no-op).',
+    testFunction: apworldMapFirstClickOpensNothing,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-handoff-names-the-slot-and-the-cost',
+    name: 'APWorld hub: the hand-off from the map\'s block names the slot it came from and the top-down cost',
+    description: 'PRESET SIDECARS M1. The map\'s block\'s Regenerate door on the fixture\'s other slot: '
+               + 'the pipeline\'s answer names that slot and its count, says the routes build '
+               + 'HANDOFF_REALISED_SLOT only, counts that slot\'s regions, and carries '
+               + 'HANDOFF_TOPDOWN_COST; on procgen_topdown/AP_1 (sphere) the answer is the no-slot '
+               + 'answer word for word. Mutants D (the carried slot dropped) and E (the cost dropped).',
+    testFunction: apworldMapHandoffNamesTheSlotAndTheCost,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
