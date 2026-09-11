@@ -24,7 +24,8 @@ document.
 | `documentLinks.js` | the **Links** tab's rows |
 | `sidecarIssues.js` | (V0) the **sidecar validity report** — `sidecarIssues(doc, slot)`, the fourth validator: one pure function the validation bar, the per-region block and `check-sidecar-fields.mjs` all read |
 | `sidecarForm.js` | (D1) the sidecar block's **fields view** model — `sidecarFormModel(entry, {rulesSchema})`: the rows (the entry subschema's fields, then the substrate's declaration), the control each type draws, and `withSidecarField`, the whole entry one control's change writes |
-| `regionRoundTrip.js` | the per-region **Edit ▸** door — resolves the substrate's declarations, runs the baseline, folds a save into ONE op; and (S0) `sidecarEntryFacts`, what a region's sidecar block says about its entry |
+| `regionRoundTrip.js` | the per-region **Edit ▸** door — resolves the substrate's declarations, runs the baseline, folds a save into ONE op; (S0) `sidecarEntryFacts`, what a region's sidecar block says about its entry; and (S2) `deriveRegionRules`, the derivation half alone — a payload's own rules, named by the document |
+| `regionRederive.js` | (S2) **Re-derive rules ▸** — `rederiveRegionRules({base, ops, doc}, slot, region)`: the pre-edit payload recovered from the session's record, and the ONE op that moves only the rules it produced |
 | `../procgenCore/compositeMapRenderer.js` | the **Map** tab's painter — shared with the procgen pipeline panel, substrate-neutral |
 | `../procgenPipeline/compositeMapDocument.js` | `reconstructResultFromSidecars` — `preset_sidecars` → a `Grid` |
 | `rawView.js` | the **Raw JSON** tab's text and its parse (the size limit was RETIRED by measurement — H2b) |
@@ -53,7 +54,7 @@ reset the session, so an undo after an Apply still works. It republishes the
 
 | Tab | What it edits |
 |-----|---------------|
-| **Regions** | regions, exits, locations, access rules — and, under each region that has a `preset_sidecars` entry, its **sidecar block** (S0): the substrate, the entry's facts, its fields as a form (D1: read off the substrate's declaration; each change is one `set-region-sidecar`) above its JSON (editable since S1: **Save JSON** writes the entry as one `set-region-sidecar`), and the two doors **Edit ▸** (the region's own room) and **Regenerate in the pipeline ▸** — see *`preset_sidecars`, per region* below |
+| **Regions** | regions, exits, locations, access rules — and, under each region that has a `preset_sidecars` entry, its **sidecar block** (S0): the substrate, the entry's facts, its fields as a form (D1: read off the substrate's declaration; each change is one `set-region-sidecar`) above its JSON (editable since S1: **Save JSON** writes the entry as one `set-region-sidecar`), the two doors **Edit ▸** (the region's own room) and **Regenerate in the pipeline ▸**, and (S2) **Re-derive rules ▸** (the region's rules from its payload, after a raw save) — see *`preset_sidecars`, per region* below |
 | **Items** | items, classifications, pool counts, starting counts, the slot's `item_groups` registry (I1) and its `progression_mapping` entries (I2) — see below |
 | **Placements** (W3) | `canonical_placements` — which item this world places at which location; the world generator's `--canonical-seed` input, see below |
 | **Meta** | the fields in `rulesDocOps.META_FIELDS`, plus the start region and the victory condition |
@@ -545,6 +546,9 @@ What the block draws, all of it read off the ENTRY (`sidecarEntryFacts`, in
   the `procgen_metadata` door's own `open` pressed through the one opener, with
   the cost in its title: the pipeline regenerates the payloads on its top-down
   route (`DOCUMENT_KEY_EDITORS.procgen_metadata.regionDoor`);
+- (S2) **Re-derive rules ▸**, beside Edit ▸ — the region's access rules
+  re-derived from its payload after a raw save; enabled only where the substrate
+  declares a round trip. See *Re-derive rules ▸ (S2)* below;
 - **▸ Show fields & JSON** — the WHOLE entry, through `_makeJsonBlock`, the
   widget the Document rows use, with (D1) the entry's **fields view** drawn
   above the textarea — see *The fields view (D1)* below. Both are built on
@@ -563,8 +567,8 @@ survive a re-render and are dropped when a new document opens.
 #### Saving an entry (S1)
 
 ⚖ user, 2026-09-10, Q1 C: *a raw save writes the entry alone; re-deriving rules
-from a payload is a separate button* (the S2 rung, not built). Q3 A: *the block
-edits the whole entry.*
+from a payload is a separate button* (S2 built it — *Re-derive rules ▸* below).
+Q3 A: *the block edits the whole entry.*
 
 The block's **Save JSON** parses the textarea (unparseable text is refused by
 name and never becomes an op) and records **one** op:
@@ -631,7 +635,9 @@ honest outcome: the room editor would otherwise rewrite the region behind you.
 ⚠ It is not true of every hand edit: most single-tile flips of the four-player
 fixture's maze rooms still round-trip, and on those the door opens on the edited
 room (the per-room counts, and the probe that produced them, are in the S1
-record, preset-sidecars plan §12).
+record, preset-sidecars plan §12). ⛓ **To bring the rules into line with a raw
+edit, press Re-derive rules ▸** (S2, below) — and after it the payload is the
+serializer's own form, so the door's baseline passes again.
 
 ⛔ **What drawing them costs is badges, not JSON.** Measured live on the two
 largest sidecar slots (the numbers are in the S0 record, preset-sidecars plan
@@ -707,6 +713,71 @@ sentence says that instead. The op's own description keeps S1's generic clause
 (`SIDECAR_NOT_REDERIVED`). ⚠ Only TOP-LEVEL fields can be named: a field derived
 INSIDE an authored one (the maze's `items[].locationName`) is described in that
 field's description, not declared as its own descriptor.
+
+#### Re-derive rules ▸ (S2)
+
+⚖ user, 2026-09-10, Q1 C: a raw save writes the entry alone, and a SEPARATE
+button re-derives — *"but we can disable the buttons for substrates where that
+feature is currently unavailable."*
+
+**What it re-derives.** The region's **access rules**, from the payload the
+document holds NOW, through the substrate's declared round trip — the derivation
+half of Edit ▸'s machinery (`regionRoundTrip.deriveRegionRules`: open the payload,
+save it unedited, map the compiled endpoints onto the document's names). It is
+recorded as ONE `replace-region-sidecar` (the op Edit ▸'s save records), so one
+Undo takes it away and leaves the raw edit standing.
+
+**Which rules move — the pre-edit baseline, recovered from the RECORD.** Edit ▸
+moves a rule only where the round trip of the payload REPRODUCES the document's
+rule; that is how it proves it authored the rule. After a raw save the payload is
+already the edited one, so the same check against it would freeze exactly the
+rules the button exists to move. So the baseline is the payload **before the raw
+edit**, recovered from this session's record (`regionRederive.priorRegionState`):
+the base document the session was opened on (kept by the panel as
+`_sessionBase`), folded forward op by op (`editCore.foldEdits` — the fold undo
+is), up to the most recent op that MOVED this region's payload. ⛓ "Moved" is read
+off the states, not off an op name: the block's Save JSON (`set-region-sidecar`)
+and the Document tab's whole-slot save (`set-key`) are both raw edits, and a
+re-derive that writes the payload back byte for byte moved nothing. Per endpoint,
+by the document's own name:
+
+| the rule the document holds | what happens |
+|---|---|
+| the CURRENT payload already derives it (`sameRule`) | **agrees** — left exactly as written (never re-spelled: a Python-exported `HasAll` stays `HasAll`) |
+| the PRE-EDIT payload derived it | **moves** to what the current payload derives — the room wrote it, so the room's new answer replaces it |
+| neither | **frozen**, left as it is, NAMED and COUNTED in the answer — a gate the grid composed (`procgen_maze/AP_2`'s `region_3_3` → `region_2_3` is `And(Has key_red, Has key_green)` and derives as `True_`), a rule written by hand after the raw edit, or one outside `sameRule`'s comparable fragment |
+
+**The payload it writes** is the serializer's form of the current one. Where that
+differs from what was saved, the answer says so, naming the top-level fields the
+serializer rewrote and the size before and after at the block's indent — on a maze
+room a wall that cuts an exit off rewrites `longestShortestPath`. Otherwise the
+answer says the payload was kept byte for byte. After a re-derive the payload is
+therefore the serializer's own form and every movable rule is the room's, so
+**Edit ▸'s baseline passes again** and the door opens.
+
+**With no pre-edit payload in the record** — the document arrived already
+hand-edited, or the raw edit was undone — nothing can be proven the room's, so
+**nothing moves**: the op carries the payload in its serializer's form and every
+rule as written, and the answer says there was no earlier payload and points at
+Edit ▸ (open the room there and save: that door re-derives from what you do in
+the room). The same happens if the session's history does not end at the document
+in hand, or the pre-edit payload cannot be derived; the answer names which.
+
+**Refused by name, nothing recorded:** a payload that now has an exit or location
+the document does not name (a filled document needs an AP id and a pool entry for
+it — the Regions tab's job), and one that LOST one the document names (the op's
+own totality refusal, asked of a preview so it is printed, not alerted). A press
+whose answer arrives after the document changed is discarded, and says so.
+
+**Enabled exactly where the substrate declares a `regionRoundTrip` with
+`open`/`save`** (`regionRoundTripOf` — the registry lookup Edit ▸ already makes;
+no world is deserialized per render). Elsewhere it is **disabled** and its title
+is that lookup's own sentence: a `refused` declaration's words (Seedling), or
+*"the X substrate declares no `regionRoundTrip` …"* (jta, omsi, runner,
+text_adventure today). ⛔ It needs no room editor — only the round trip. The work
+(two round trips, ~90 ms a maze region) runs on the PRESS; the answer is printed
+under the block and in the status line, and the re-render re-asks the issue list
+and the Edit ▸ verdict.
 
 ## The Items tab's Groups section (I1)
 
@@ -1302,6 +1373,14 @@ payload. What that answers is not cosmetic:
    the payload and leaves that rule exactly as it is, and the status line says
    how many.
 
+⛓ **After a RAW save, the door is unchanged — and the rules can still follow the
+payload.** Check 1 above refuses a raw edit the serializer does not reproduce, and
+it is not relaxed for that case. **Re-derive rules ▸** (S2, *`preset_sidecars`,
+per region* above) is the road there: it takes the baseline from the payload
+BEFORE the raw edit (recovered from the session's record), moves only the rules
+that payload produced, and writes the payload in the serializer's form — after
+which this door's baseline passes again.
+
 Measured over the committed corpus: **394 of 1,046** maze-payload sidecar
 regions and **15 of 25** bounce regions are editable, and every one of the rest
 gets a named reason. `procgen_topdown`'s maze regions are the biggest refusal
@@ -1562,7 +1641,7 @@ The import is free in both modes, measured:
 
 | Suite | Where |
 |-------|-------|
-| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `reverseLinks.test.js`, `sidecarIssues.test.js`, `sidecarForm.test.js` | vitest, `frontend/modules/apworldEditor/` |
+| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `regionRederive.test.js`, `reverseLinks.test.js`, `sidecarIssues.test.js`, `sidecarForm.test.js` | vitest, `frontend/modules/apworldEditor/` |
 | `check-sidecar-fields.mjs` (+ `checkSidecarFields.test.js`) | `scripts/procgen/` — the corpus gate: every committed entry against its declaration, and (V0) `sidecarIssues` per slot as its second layer |
 | `../procgenCore/compositeMapRenderer.test.js` | vitest — the Map tab's renderer, driven by a TOY substrate |
 | `../procgenPipeline/compositeMapDocument.test.js` | vitest — `preset_sidecars` → `Grid`, including the player slot |
