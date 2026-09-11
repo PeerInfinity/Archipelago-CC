@@ -51,7 +51,7 @@ reset the session, so an undo after an Apply still works. It republishes the
 
 | Tab | What it edits |
 |-----|---------------|
-| **Regions** | regions, exits, locations, access rules — and, under each region that has a `preset_sidecars` entry, its **sidecar block** (S0): the substrate, the entry's facts, its JSON, and the two doors **Edit ▸** (the region's own room) and **Regenerate in the pipeline ▸** — see *`preset_sidecars`, per region* below |
+| **Regions** | regions, exits, locations, access rules — and, under each region that has a `preset_sidecars` entry, its **sidecar block** (S0): the substrate, the entry's facts, its JSON (editable since S1: **Save JSON** writes the entry as one `set-region-sidecar`), and the two doors **Edit ▸** (the region's own room) and **Regenerate in the pipeline ▸** — see *`preset_sidecars`, per region* below |
 | **Items** | items, classifications, pool counts, starting counts, the slot's `item_groups` registry (I1) and its `progression_mapping` entries (I2) — see below |
 | **Placements** (W3) | `canonical_placements` — which item this world places at which location; the world generator's `--canonical-seed` input, see below |
 | **Meta** | the fields in `rulesDocOps.META_FIELDS`, plus the start region and the victory condition |
@@ -494,14 +494,79 @@ What the block draws, all of it read off the ENTRY (`sidecarEntryFacts`, in
   the cost in its title: the pipeline regenerates the payloads on its top-down
   route (`DOCUMENT_KEY_EDITORS.procgen_metadata.regionDoor`);
 - **▸ Show JSON** — the WHOLE entry, through `_makeJsonBlock`, the widget the
-  Document rows use, with saving off: read-only textarea, no Save. It is built on
-  expand (W0's rule) and read from the document at every render, so after an op
-  the open block shows the entry the document holds now. The slice that makes
-  the entry editable passes an `onSave` to the same widget.
+  Document rows use. It is built on expand (W0's rule) and read from the
+  document at every render, so after an op the open block shows the entry the
+  document holds now. Since S1 it is editable, with **Save JSON** — see below.
 
 The disclosures are per session: which blocks' JSON is open (keyed by host, slot
 and region, so each host's is its own) and whether the list is expanded both
 survive a re-render and are dropped when a new document opens.
+
+#### Saving an entry (S1)
+
+⚖ user, 2026-09-10, Q1 C: *a raw save writes the entry alone; re-deriving rules
+from a payload is a separate button* (the S2 rung, not built). Q3 A: *the block
+edits the whole entry.*
+
+The block's **Save JSON** parses the textarea (unparseable text is refused by
+name and never becomes an op) and records **one** op:
+
+```js
+{ op: 'set-region-sidecar', player, region, entry }
+```
+
+**What it writes:** `preset_sidecars[player][region] = entry` — the whole entry
+(`substrate`, `render_hint`, `grid_cell`, `biome`, `grow_telemetry`,
+`playable_payload`), in the same position among the slot's entries. A field
+the typed entry leaves out is gone afterwards: it is a replace, not a merge.
+
+**What it does NOT write:** the region's access rules, its locations and their
+names, anything in `regions`, another slot's sidecars — and nothing inside the
+payload that the substrate DERIVES from the rest (a maze's
+`longestShortestPath`, baked location names). The op's description says so every
+time: *"region X: sidecar entry replaced (N payload keys) — access rules,
+location names and derived payload fields NOT re-derived"* (the clause is
+`rulesDocOps.SIDECAR_NOT_REDERIVED`). It is printed in the status line and under
+the block that was saved.
+
+**What refuses it**, in this order:
+
+1. **the op itself** (`rulesDocOps.js`), asked of a preview first: no region
+   name; no entry for that region in this slot; an entry that is not an object;
+   a missing or non-string `substrate`; a `playable_payload` that is present and
+   not an object. ⛔ The payload's *inside* is never read — it is opaque to the
+   schema and belongs to the substrate, and a breaking edit is the reader's to
+   repair (⚖ round two, Q2). Reporting what no longer fits is a validity report's
+   job (the V0 rung);
+2. **the schema veto** — the same function the Document tab's whole-key Save runs
+   (`_rawSaveRefusal`: `_schemaErrorsAddedBy`, then P1's placement check), so a
+   `grid_cell` without `gy` or a `biome` that is not an object is refused by
+   path, and only for what this save ADDS. On `procgen_topdown/AP_8`, the largest
+   document (934,463 compact bytes), the veto costs about 31 ms per save (the S1
+   record has the measurement).
+
+⛔ **It replaces an entry; it never creates one.** A region with no sidecar entry
+has no room, and this op keeps it roomless — refused by name with the slot's
+entries listed. Whether a CREATE op is wanted at all is an open ⚖ (preset-sidecars
+plan §12).
+
+**Both hosts save, through one function.** The block is editable because its
+HOST passes `onSave` — Regions and the Sidecars list both do (⚖ Q2 A: one
+renderer), and both land in `_saveRegionSidecar`, so the two record the same op
+for the same edit. A host that passes nothing gets the widget's read-only
+default (no Save), so a future host cannot make the entry writable by accident.
+
+**Edit ▸ afterwards.** The region's Edit ▸ verdict is re-asked: a remembered
+refusal counts only for the document it was asked about (see *Edit ▸* below),
+and the save made a new one. Pressed after a raw edit, the door runs its baseline
+on the NEW payload — and if the substrate's round trip no longer reproduces it
+byte for byte, the door is refused with the baseline sentence (*"opening and
+saving … UNCHANGED would already rewrite its sidecar payload …"*). That is the
+honest outcome: the room editor would otherwise rewrite the region behind you.
+⚠ It is not true of every hand edit: most single-tile flips of the four-player
+fixture's maze rooms still round-trip, and on those the door opens on the edited
+room (the per-room counts, and the probe that produced them, are in the S1
+record, preset-sidecars plan §12).
 
 ⛔ **What drawing them costs is badges, not JSON.** Measured live on the two
 largest sidecar slots (the numbers are in the S0 record, preset-sidecars plan
@@ -1080,7 +1145,7 @@ and the same ⚖.
 | no `preset_sidecars` entry | **no block and no button** — a classic AP region has no room, and a disabled control would imply it might have one |
 | a substrate with no `roomEditor` (jta, omsi, runner, text_adventure) | **disabled**, titled *"No region editor for X yet"* |
 | a substrate that declares `regionRoundTrip: {refused}` (Seedling) | **disabled**, titled with the substrate's own sentence — its payload is an atlas reference, not a room record |
-| a region whose payload does not round-trip | **enabled until pressed**, then disabled with the reason (see below) |
+| a region whose payload does not round-trip | **enabled until pressed**, then disabled with the reason (see below) — for as long as the document is the one it was asked about: the verdict is remembered against the RECORD, so any applied op, an Undo or a new document re-asks it (S1; until S1 it was cleared only by an applied op, and an Undo left a refusal standing on a restored payload) |
 | anything else | **enabled** |
 
 ### The baseline, and why the door is ever refused
