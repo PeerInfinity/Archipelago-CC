@@ -413,6 +413,18 @@ class ApworldEditorUI {
      */
     this._selectedRegion = null;
     this._mapCache = null;
+    /**
+     * ⛓⛓ PRESET SIDECARS M2 — **THE MAP'S ARMED MOVE**, `{doc, player, region}`
+     * or null. `Move / swap ▸` on the selection's block arms it; the next canvas
+     * click resolves it (ONE op) and disarms. ⛔ It is a region NAME, and names
+     * cross scopes (trap 1320: slots share them), so it is DROPPED — not merely
+     * ignored — at every boundary a name does not survive: a slot pick, a tab
+     * switch, Esc. A NEW DOCUMENT and every applied op or undo are covered by
+     * the record key (`_armedMove` reads it only while `doc === this.rulesDoc`,
+     * the `_roomVerdicts` rule, trap 1311): a gesture armed on one record never
+     * fires on another.
+     */
+    this._mapMove = null;
 
     /**
      * ⛓⛓⛓ **R1 — AND THE VALIDATION PASS IS MEMOISED THE SAME WAY.**
@@ -729,6 +741,9 @@ class ApworldEditorUI {
     //   means nothing in the new, and neither does a cached grid.
     this._selectedRegion = null;
     this._mapCache = null;
+    // ⛓ M2 — hygiene: the record key already retires a move armed on the old
+    //   document (`_armedMove`); this drops the reference to it.
+    this._mapMove = null;
     // ⛓ R1 — nor a verdict about the old document's issues. Keyed on the record
     //   object, so this is hygiene (it drops the reference) rather than
     //   correctness: the new session's record is a different object.
@@ -924,6 +939,12 @@ class ApworldEditorUI {
    * not even looking at.
    */
   _onKeyDown(e) {
+    // ⛓ M2 — Esc cancels an armed map move (and does nothing else here).
+    if (e.key === 'Escape' && this._armedMove()) {
+      e.preventDefault();
+      this._disarmMapMove('Move cancelled (Esc).');
+      return;
+    }
     if (!(e.ctrlKey || e.metaKey) || e.altKey) return;
     if ((e.key ?? '').toLowerCase() !== 'z') return;
     const t = e.target;
@@ -1039,7 +1060,11 @@ class ApworldEditorUI {
        * selects, so it does not come through here.
        */
       this._selectedRegion = null;
-      this._opMessage = `Editing player ${this._chosenPlayer}.`;
+      // ⛓ M2 — and the armed move with it: the same name, the same crossing.
+      //   (`playerId` still names the OLD slot here — `_syncPlayer` moves it on
+      //   the render below — so `_armedMove` can still see the move it drops.)
+      const cancelled = this._dropMapMove('a slot pick');
+      this._opMessage = `Editing player ${this._chosenPlayer}.${cancelled}`;
       this._render();
     });
     playerWrap.appendChild(this.playerSelect);
@@ -1135,6 +1160,9 @@ class ApworldEditorUI {
   _selectTab(tabId) {
     if (!TABS.some(t => t.id === tabId)) return;
     if (this.activeTab === tabId) return;
+    // ⛓ M2 — a gesture armed on the Map does not wait on another tab.
+    const cancelled = this._dropMapMove('the Map tab was left');
+    if (cancelled) this._opMessage = cancelled.trim();
     this.activeTab = tabId;
     this._updateTabStyles();
     this._render();
@@ -4355,6 +4383,7 @@ class ApworldEditorUI {
     if (!name) return false;
     this._selectedRegion = name;
     const known = Object.prototype.hasOwnProperty.call(this._regions(), name);
+    this._mapMove = null;
     this.activeTab = 'regions';
     this._updateTabStyles();
     // ⛓ H4c — `from` NAMES THE CALLER, because there are two now: the Map tab's
@@ -4454,7 +4483,10 @@ class ApworldEditorUI {
       + 'declares no painter gets a box labelled with its id. Click a cell to SELECT that '
       + 'region: its sidecar block is drawn under the map (Go to region opens it in the Regions '
       + 'tab). Click the selected cell AGAIN to open its room — that block\'s Edit ▸, enabled or '
-      + 'refused exactly as the button is. A click on an empty cell keeps the selection.';
+      + 'refused exactly as the button is. A click on an empty cell keeps the selection. '
+      + 'Move / swap ▸ on that block ARMS a move: the next click on an empty cell moves the '
+      + 'region there, on another region swaps the two, and the answer names every link that '
+      + 'became a teleporter (Esc, a slot pick or another tab cancels).';
     this.scrollContainer.appendChild(intro);
 
     const slot = document.createElement('span');
@@ -4480,9 +4512,14 @@ class ApworldEditorUI {
     canvas.dataset.cellW = String(regionSize.width * TILE_PX);
     canvas.dataset.cellH = String(regionSize.height * TILE_PX);
     canvas.dataset.regions = String(result.stats.regionsBuilt);
-    canvas.style.cursor = 'pointer';
     canvas.style.maxWidth = '100%';
-    canvas.title = 'Click a region to select it; click the selected region again to open its room';
+    const armed = this._armedMove();
+    // ⛓ M2 — the armed move, readable off the canvas (the rows' witness).
+    canvas.dataset.moveArmed = armed ? armed.region : '';
+    canvas.style.cursor = armed ? 'crosshair' : 'pointer';
+    canvas.title = armed
+      ? `Click an empty cell to move ${armed.region} there, or a region to swap with it; Esc cancels`
+      : 'Click a region to select it; click the selected region again to open its room';
 
     // The selected region's cell, so the map shows what the Regions tab shows.
     let selection = null;
@@ -4508,6 +4545,11 @@ class ApworldEditorUI {
     canvas.addEventListener('click', (evt) => {
       const cell = cellAtPoint(grid, regionSize, canvasPointOf(canvas, evt));
       const region = cell ? grid.getRegion(cell) : null;
+      // ⛓ M2 — an ARMED move takes the click before the selection does.
+      if (this._armedMove()) {
+        this._resolveMapMove(cell, region);
+        return;
+      }
       if (!region) return;
       if (region.region_id === this._selectedRegion) {
         this._pressMapEdit(region.region_id);
@@ -4554,6 +4596,23 @@ class ApworldEditorUI {
         go.style.fontSize = '11px';
         go.style.marginLeft = 'auto';
         head.appendChild(go);
+        /**
+         * ⛓⛓ PRESET SIDECARS M2 — **`Move / swap ▸` ARMS THE MAP.** The block is
+         * the hub's control surface; the pipeline's radio modes are not copied.
+         * A second press while armed cancels.
+         */
+        const armedHere = armed?.region === regionName;
+        const move = this._makeButton(armedHere ? 'Move / swap ▸ (armed)' : 'Move / swap ▸',
+          armedHere ? '#8a6d2e' : '#3a3a3a',
+          () => (this._armedMove() ? this._disarmMapMove('Move cancelled.') : this._armMapMove(regionName)));
+        move.className = 'apworld-map-move-region';
+        move.dataset.regionName = regionName;
+        move.dataset.armed = armedHere ? 'true' : 'false';
+        move.style.fontSize = '11px';
+        move.title = 'Then click an empty cell to MOVE this region there, or another region to '
+          + 'SWAP the two. Links are kept; a link whose ends stop touching becomes a teleporter, '
+          + 'and the answer names it.';
+        head.appendChild(move);
         host.appendChild(head);
         host.appendChild(block);
         this.scrollContainer.appendChild(host);
@@ -4572,6 +4631,80 @@ class ApworldEditorUI {
     this._render();
     const host = this.scrollContainer.querySelector('.apworld-map-selection');
     if (host && typeof host.scrollIntoView === 'function') host.scrollIntoView({ block: 'nearest' });
+  }
+
+  /**
+   * ⛓ M2 — the armed move, or null: read only while it belongs to THIS record,
+   * this slot and the Map tab (see `_mapMove`).
+   */
+  _armedMove() {
+    const m = this._mapMove;
+    if (!m || m.doc !== this.rulesDoc || m.player !== String(this.playerId)
+      || this.activeTab !== 'map') return null;
+    return m;
+  }
+
+  _armMapMove(regionName) {
+    this._mapMove = { doc: this.rulesDoc, player: String(this.playerId), region: regionName };
+    this._opRowMessage = null;
+    this._opMessage = `Click an empty cell to move ${regionName} there, or a region to swap `
+      + 'with it; Esc cancels.';
+    this._render();
+    // ⛓ The render destroyed the button that was pressed, so focus fell to
+    //   `<body>` and Esc would never reach this panel's key handler (measured on
+    //   the M2 drive). The root holds it instead — `_focusHandler`'s own target.
+    this.rootElement.focus({ preventScroll: true });
+  }
+
+  /**
+   * ⛓ M2 — drop a LIVE armed move at a boundary (a slot pick, a tab switch) and
+   * answer the clause the caller's status line appends; '' when none was armed.
+   */
+  _dropMapMove(reason) {
+    const was = this._armedMove();
+    this._mapMove = null;
+    return was ? ` The armed move of ${was.region} was cancelled (${reason}).` : '';
+  }
+
+  _disarmMapMove(message) {
+    this._mapMove = null;
+    this._opMessage = message;
+    this._render();
+  }
+
+  /**
+   * ⛓⛓⛓ M2 — **THE ARMED MOVE'S ONE CLICK → ONE OP.** An empty cell is a
+   * `move-region`, another region a `swap-regions`, the armed region's own cell
+   * or a point off the grid cancels with a sentence. ⛔ The op is the authority:
+   * it is asked of a PREVIEW first, so a refusal is printed beside the block in
+   * the op's own words instead of reaching the session's alert. The selection is
+   * the region's NAME, so it follows the region to its new cell by itself.
+   */
+  _resolveMapMove(cell, region) {
+    const { region: name } = this._mapMove;
+    const player = String(this.playerId);
+    this._mapMove = null;
+    if (!cell) {
+      this._opMessage = `Move cancelled: that point is off player ${player}'s map.`;
+      this._render();
+      return null;
+    }
+    if (region?.region_id === name) {
+      this._opMessage = `Move cancelled: ${name} is already at (${cell.gx},${cell.gy}).`;
+      this._render();
+      return null;
+    }
+    const op = region
+      ? { op: 'swap-regions', a: name, b: region.region_id }
+      : { op: 'move-region', region: name, to: { gx: cell.gx, gy: cell.gy } };
+    const preview = applyRulesDocOp(this.rulesDoc, this._stampPlayer(op));
+    if (!preview.ok) {
+      this._opMessage = `Move refused: ${preview.error}`;
+      this._opRowMessage = { sidecar: `${player}|${name}`, text: this._opMessage, refused: true };
+      this._render();
+      return null;
+    }
+    return this._applyOp(op);
   }
 
   /**
