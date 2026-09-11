@@ -11,7 +11,9 @@
  *   - The zone region routes through top-down's bidirectional back-exit
  *     pass WITHOUT throwing — the entrance-leak fix (assembleZoneRegion
  *     used to omit playable_payload.entrance, so getRegionEntrance
- *     returned undefined and entranceTile.x threw).
+ *     returned undefined and entranceTile.x threw). Since PRESET SIDECARS
+ *     G1 bounce is SIDES-only: it carries no entrance tile, and the pass
+ *     asks `regionGeometry` instead of reading one.
  *   - Exits are keyed by the SOURCE exit_id (not synthesised exit_<side>),
  *     so cross-substrate stitching + back-exit copying resolve.
  *   - A physics ability gate ("Blue platforms") on a bounce exit is
@@ -26,8 +28,9 @@ import { describe, it, expect, vi } from 'vitest';
 // Side-effect: register the maze + bounce substrates.
 import '../mazeRoom/mazeRoomLibrary.js';
 import '../bounceDemo/bounceDemoLibrary.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
-    topDownFromRulesJson, buildRulesJson, getRegionEntrance,
+    REGION_GEOMETRY, topDownFromRulesJson, buildRulesJson, geometryOf, getRegionEntrance,
 } from './procgenPipelineEngine.js';
 import { computeItemSpheres } from './spherePlanner.js';
 
@@ -284,12 +287,18 @@ describe('top-down — mixed maze + bounce (unified generateRegion contract)', (
         const bounce = grid.allRegions().find((r) => r.region_id === 'BounceZone');
         expect(bounce).toBeTruthy();
         expect(bounce.substrate).toBe('bounce');
-        // The leak fix: zone regions now carry an entrance, so the
-        // bidirectional back-exit pass could read it instead of throwing.
+        // The leak fix: zone regions carried an entrance so the bidirectional
+        // back-exit pass could read it instead of throwing. ⛓ PRESET SIDECARS
+        // G1: bounce declares `regionGeometry: 'sides'`, so the region stamps an
+        // entrance tile iff its geometry is tiles — and the back-exit pass asks
+        // the same law rather than reading one (the no-throw above is the pin).
         const entrance = getRegionEntrance(bounce);
-        expect(entrance).toBeTruthy();
-        expect(typeof entrance.x).toBe('number');
-        expect(typeof entrance.y).toBe('number');
+        const tiles = geometryOf(substrateRegistry.get('bounce')) === REGION_GEOMETRY.TILES;
+        expect(entrance !== undefined).toBe(tiles);
+        if (tiles) {
+            expect(typeof entrance.x).toBe('number');
+            expect(typeof entrance.y).toBe('number');
+        }
     });
 
     it('keys bounce exits by the source exit_id and resolves every target', () => {

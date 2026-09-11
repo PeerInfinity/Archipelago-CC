@@ -26,6 +26,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
     createFlashSubstrateEntry, flashZoneSidecarFields,
 } from '../flashSubstrate/flashSubstrateLibrary.js';
+import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import {
     generateZoneSet, generateLevelForSpecsGen, SWEEP_SATURATING_PROFILES,
 } from './generator.js';
@@ -479,6 +480,13 @@ export function createRunnerSubstrateEntry({
         panelComponentType: RUNNER_PANEL_COMPONENT_TYPE,
         loadRegionEvent: RUNNER_LOAD_REGION_EVENT,
         iframeId: RUNNER_IFRAME_ID,
+
+        // ⛓ PRESET SIDECARS G1 — a runner zone is SIDES only, as bounce's is:
+        // the bridge routes an exit by its `side` and reads no tile, so the
+        // engine mints no `x`/`y` for it (`procgenCore/regionGeometry.js`).
+        // Declared on this entry, not as a flash-factory default
+        // (`flash_seedling` stays tiles).
+        regionGeometry: REGION_GEOMETRY.SIDES,
 
         // Flash's exits-Map deserializeWorld, plus the host
         // touch-controls stamp (see setTouchControlsOverride).

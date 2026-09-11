@@ -17,6 +17,10 @@
  * row asserts WHAT THE DECLARATION DOES, and "the maze bytes did not move" is
  * a structural diff, never a literal tile.
  *
+ * ⛓ G1 (bounce + runner declare sides): the sphere / top-down realiser rows run
+ * over the REAL registry. ONE spy row remains, declaring bounce TILES — the
+ * BEFORE — so the exact-drop diff against today's world still has a baseline.
+ *
  * ⛓ The libraries are `REGISTRY_LIBRARIES` (derived, never a literal list),
  * loaded at MODULE scope — a top-level `await` is module loading, which no hook
  * timeout applies to (`regionRoundTrip.test.js` measured the maze library
@@ -134,14 +138,91 @@ function expectOnlyTileFieldsDropped(before, after, id) {
         const region = regionsOf(d.path);
         if (region) expect(region.substrate, d.path.join('/')).toBe(id);
     }
-    for (const region of Object.values(after.grid).filter((r) => r.substrate === id)) {
+    expectNoTileFields(after, id);
+    return diffs;
+}
+
+// No region of substrate `id` in this dumped world carries a tile field, and
+// the population is not empty (a world with no such region would pass).
+function expectNoTileFields(world, id) {
+    const regions = Object.values(world.grid).filter((r) => r.substrate === id);
+    expect(regions.length, `no ${id} region in the world`).toBeGreaterThan(0);
+    for (const region of regions) {
         for (const e of region.payload.exits) expect('x' in e || 'y' in e).toBe(false);
         for (const p of region.exits_placed) expect('tile_position' in p).toBe(false);
         for (const x of region.extracted_rules.exits) expect('position' in x).toBe(false);
         expect(region.payload.entrance).toBeUndefined();
     }
-    return diffs;
 }
+
+/**
+ * ⛓ The two worlds the realiser rows drive, over the REAL registry (PRESET
+ * SIDECARS G1: bounce declares sides itself). Sphere: seed 4 grows a bounce
+ * PARENT of a maze child (the dump's own `mixed` config has none, measured at
+ * G0). Top-down: Hub (maze) → BounceZone (bounce) → End (maze).
+ */
+const SPHERE_REGION_SIZE = Object.freeze({ width: 8, height: 6 });
+
+function sphereGrid() {
+    const pool = {
+        'Right arrow': 1, 'Left arrow': 1, Springs: 1, key_red: 1, key_blue: 1, victory: 1,
+    };
+    const plan = planSpheres({
+        itemPool: pool, sphereCount: 3, pins: { 'Right arrow': 1, 'Left arrow': 1 },
+        victoryItem: 'victory', gateableItems: GATEABLE_ITEMS, seed: 4,
+    });
+    const { grid, startCell, tree } = growSpheres({
+        regionSize: SPHERE_REGION_SIZE, seed: 4,
+        growthParams: {
+            spherePlan: plan, substrateQuotas: { maze: 99, bounce: 1 },
+            startSubstrate: 'bounce', fillerCount: 1,
+        },
+    });
+    return { grid, startCell, tree };
+}
+
+function sphereWorld() {
+    const { grid, startCell, tree } = sphereGrid();
+    return {
+        grid: dumpGrid(grid),
+        rulesJson: buildRulesJson(grid, { startCell, seed: 4, embedSphereLog: false }),
+        mazeChildrenOfBounce: tree.nodes.filter((n) => n.parent != null
+            && n.substrate === 'maze' && tree.nodes[n.parent].substrate === 'bounce').length,
+    };
+}
+
+function topDownWorld() {
+    const source = {
+        start_regions: { 1: { default: ['Menu'] } },
+        assume_bidirectional_exits: true,
+        game_name: 'G0TopDown',
+        regions: {
+            1: {
+                Menu: { name: 'Menu', exits: [{ name: 'GameStart', connected_region: 'Hub', access_rule: { rule: 'True_' } }], locations: [] },
+                Hub: { name: 'Hub', exits: [{ name: 'enterBounce', connected_region: 'BounceZone', access_rule: { rule: 'True_' } }], locations: [] },
+                BounceZone: {
+                    name: 'BounceZone',
+                    exits: [{ name: 'toEnd', connected_region: 'End', access_rule: { rule: 'Has', args: { item_name: 'Blue platforms' } } }],
+                    locations: [{ name: 'Bounce_Pickup', item: { name: 'Blue platforms' }, access_rule: { rule: 'True_' } }],
+                },
+                End: { name: 'End', exits: [], locations: [{ name: 'End_Goal', item: { name: 'Victory' } }] },
+            },
+        },
+    };
+    const res = topDownFromRulesJson(source, {
+        gridDims: { width: 5, height: 5 }, seed: 1,
+        substrateByRegion: { Menu: 'maze', Hub: 'maze', BounceZone: 'bounce', End: 'maze' },
+        freeItems: ['Right arrow', 'Left arrow'],
+    });
+    return {
+        grid: dumpGrid(res.grid),
+        rulesJson: buildRulesJson(res.grid, {
+            startCell: res.startCell, seed: 1, embedSphereLog: false, assumeBidirectional: true,
+        }),
+    };
+}
+
+const isFiniteTile = (t) => Number.isFinite(t?.x) && Number.isFinite(t?.y);
 
 describe('⛓⛓ the declaration decides whether assembleZoneRegion mints exit tiles', () => {
     const assemble = (substrate) => assembleZoneRegion({
@@ -217,91 +298,84 @@ describe('⛓⛓ the mirror fallback: a neighbour of a sides-only region mirrors
         expect('x' in grid.getRegion({ gx: 0, gy: 0 }).exits.get('exit_E')).toBe(false);
     });
 
-    it.each(SIDES_ONLY.map((e) => [e.id]))('%s: the sphere / top-down realiser CANNOT be handed '
-        + 'this substrate today (no zone realiser) — the only live reach is the spiral', (id) => {
-        expect(() => generateRegion({
+    // ⛓⛓ G1 — REPLACES G0's tripwire (*"the sphere / top-down realiser CANNOT be
+    // handed this substrate today"*), which went red the day bounce declared
+    // sides, by design. The population is still every sides entry; what it
+    // expects is split by the LAW the realiser itself dispatches on — an entry
+    // with a region hook is realised, one with neither is refused by name.
+    const REALISABLE = (e) => typeof e.generateZoneForSpecs === 'function'
+        || typeof e.generateRegionCore === 'function';
+
+    it('the sides entries hold BOTH halves of that law — the row below is not vacuous', () => {
+        expect(SIDES_ONLY.some(REALISABLE)).toBe(true);
+        expect(SIDES_ONLY.some((e) => !REALISABLE(e))).toBe(true);
+    });
+
+    it.each(SIDES_ONLY.map((e) => [e.id, REALISABLE(e)]))('%s (realisable: %s): the sphere / '
+        + 'top-down realiser either realises it with NO tile field and NO entrance, or refuses it '
+        + 'by name', (id, realisable) => {
+        const realise = () => generateRegion({
             substrate: id, region_id: 'r', size: DEFAULT_REGION_SIZE, rng: { next: () => 0 },
             exits: [{ side: 'E' }], locations: [],
-        })).toThrow(/neither generateRegionCore nor generateZoneForSpecs/);
+        });
+        if (!realisable) {
+            expect(realise).toThrow(/neither generateRegionCore nor generateZoneForSpecs/);
+            return;
+        }
+        const r = realise();
+        const exits = getRegionExits(r);
+        const list = exits instanceof Map ? [...exits.values()] : exits;
+        expect(list.map((e) => e.side)).toEqual(['E']);
+        for (const e of list) expect('x' in e || 'y' in e).toBe(false);
+        for (const p of r.exits_placed) expect('tile_position' in p).toBe(false);
+        for (const x of r.extracted_rules.exits) expect('position' in x).toBe(false);
+        expect(getRegionEntrance(r)).toBeUndefined();
     });
 
-    // ⛓ So the SPHERE site (a maze child of a sides-only parent — and the throw
-    // at a parent with no `exits_placed` on that side) is driven through a zone
-    // substrate that HAS a realiser, declared sides by the spy. The world built
-    // undeclared is today's; the maze regions must not move by one byte.
-    it('sphere: bounce declared sides — no throw at a bounce PARENT of a maze child, and the world '
-        + 'differs from the undeclared one ONLY by the tile fields dropped on bounce regions', () => {
-        const pool = {
-            'Right arrow': 1, 'Left arrow': 1, Springs: 1, key_red: 1, key_blue: 1, victory: 1,
-        };
-        const build = () => {
-            const plan = planSpheres({
-                itemPool: pool, sphereCount: 3, pins: { 'Right arrow': 1, 'Left arrow': 1 },
-                victoryItem: 'victory', gateableItems: GATEABLE_ITEMS, seed: 4,
-            });
-            const { grid, startCell, tree } = growSpheres({
-                regionSize: { width: 8, height: 6 }, seed: 4,
-                growthParams: {
-                    spherePlan: plan, substrateQuotas: { maze: 99, bounce: 1 },
-                    startSubstrate: 'bounce', fillerCount: 1,
-                },
-            });
-            return {
-                grid: dumpGrid(grid),
-                rulesJson: buildRulesJson(grid, { startCell, seed: 4, embedSphereLog: false }),
-                mazeChildrenOfBounce: tree.nodes.filter((n) => n.parent != null
-                    && n.substrate === 'maze' && tree.nodes[n.parent].substrate === 'bounce').length,
-            };
-        };
-        const { mazeChildrenOfBounce: undeclaredPairs, ...before } = build();
-        const { mazeChildrenOfBounce: pairs, ...after } = withGeometry('bounce', REGION_GEOMETRY.SIDES, build);
-        // The case under test exists in this world: a maze child mirrors a bounce parent's exit.
-        expect(pairs).toBeGreaterThan(0);
-        expect(pairs).toBe(undeclaredPairs);
-        expectOnlyTileFieldsDropped(before, after, 'bounce');
+    // ⛓ The SPHERE site (a maze child of a sides-only parent — and the throw at
+    // a parent with no `exits_placed` on that side) over the REAL registry: no
+    // spy, bounce declares sides on its own entry.
+    it('sphere: a bounce PARENT of a maze child — no throw; no bounce region carries a tile; '
+        + 'every maze child of bounce has its entrance', () => {
+        const world = sphereWorld();
+        expect(world.mazeChildrenOfBounce).toBeGreaterThan(0);
+        expectNoTileFields(world, 'bounce');
+        const maze = Object.values(world.grid).filter((r) => r.substrate === 'maze');
+        expect(maze.length).toBeGreaterThan(0);
+        for (const r of maze) expect(isFiniteTile(r.payload.entrance), r.payload.entrance).toBe(true);
+    });
+
+    it('top-down: the bounce region stamps no entrance and no tile; its maze child End keeps '
+        + 'its entrance', () => {
+        const world = topDownWorld();
+        expectNoTileFields(world, 'bounce');
+        expect(world.grid.End.substrate).toBe('maze');
+        expect(isFiniteTile(world.grid.End.payload.entrance)).toBe(true);
+    });
+
+    // ⛓ THE ONE SPY ROW — the BEFORE. Bounce declared TILES (today's bytes until
+    // G1) against the real registry: every difference, in both worlds, is the
+    // REMOVAL of a tile field on a bounce region, and every maze region is
+    // byte-identical (the mirror fallback hands the child the tile it always had).
+    it('BEFORE (bounce spied TILES) → the real registry: both worlds differ ONLY by tile fields '
+        + 'dropped on bounce regions; the maze regions do not move', () => {
         const maze = (w) => Object.fromEntries(Object.entries(w.grid).filter(([, r]) => r.substrate === 'maze'));
-        expect(maze(after)).toEqual(maze(before));
-    });
 
-    it('top-down: bounce declared sides — the BounceZone → End maze child is unmoved; the bounce '
-        + 'region stamps no entrance and its back-exit no tile', () => {
-        const source = {
-            start_regions: { 1: { default: ['Menu'] } },
-            assume_bidirectional_exits: true,
-            game_name: 'G0TopDown',
-            regions: {
-                1: {
-                    Menu: { name: 'Menu', exits: [{ name: 'GameStart', connected_region: 'Hub', access_rule: { rule: 'True_' } }], locations: [] },
-                    Hub: { name: 'Hub', exits: [{ name: 'enterBounce', connected_region: 'BounceZone', access_rule: { rule: 'True_' } }], locations: [] },
-                    BounceZone: {
-                        name: 'BounceZone',
-                        exits: [{ name: 'toEnd', connected_region: 'End', access_rule: { rule: 'Has', args: { item_name: 'Blue platforms' } } }],
-                        locations: [{ name: 'Bounce_Pickup', item: { name: 'Blue platforms' }, access_rule: { rule: 'True_' } }],
-                    },
-                    End: { name: 'End', exits: [], locations: [{ name: 'End_Goal', item: { name: 'Victory' } }] },
-                },
-            },
-        };
-        const build = () => {
-            const res = topDownFromRulesJson(source, {
-                gridDims: { width: 5, height: 5 }, seed: 1,
-                substrateByRegion: { Menu: 'maze', Hub: 'maze', BounceZone: 'bounce', End: 'maze' },
-                freeItems: ['Right arrow', 'Left arrow'],
-            });
-            return {
-                grid: dumpGrid(res.grid),
-                rulesJson: buildRulesJson(res.grid, {
-                    startCell: res.startCell, seed: 1, embedSphereLog: false, assumeBidirectional: true,
-                }),
-            };
-        };
-        const before = build();
-        const after = withGeometry('bounce', REGION_GEOMETRY.SIDES, build);
-        const diffs = expectOnlyTileFieldsDropped(before, after, 'bounce');
-        // The bounce region stamped an entrance tile undeclared, and none declared.
-        expect(before.grid.BounceZone.payload.entrance).toBeDefined();
-        expect(diffs.some((d) => d.path.join('/') === 'grid/BounceZone/payload/entrance')).toBe(true)
-        expect(after.grid.End).toEqual(before.grid.End);
+        const { mazeChildrenOfBounce: pairsBefore, ...sphereBefore } = withGeometry('bounce',
+            REGION_GEOMETRY.TILES, sphereWorld);
+        const { mazeChildrenOfBounce: pairs, ...sphereAfter } = sphereWorld();
+        expect(pairs).toBeGreaterThan(0);
+        expect(pairs).toBe(pairsBefore);
+        expectOnlyTileFieldsDropped(sphereBefore, sphereAfter, 'bounce');
+        expect(maze(sphereAfter)).toEqual(maze(sphereBefore));
+
+        const topBefore = withGeometry('bounce', REGION_GEOMETRY.TILES, topDownWorld);
+        const topAfter = topDownWorld();
+        const diffs = expectOnlyTileFieldsDropped(topBefore, topAfter, 'bounce');
+        // The bounce region stamped an entrance tile as tiles, and none as sides.
+        expect(topBefore.grid.BounceZone.payload.entrance).toBeDefined();
+        expect(diffs.some((d) => d.path.join('/') === 'grid/BounceZone/payload/entrance')).toBe(true);
+        expect(topAfter.grid.End).toEqual(topBefore.grid.End);
     });
 });
 

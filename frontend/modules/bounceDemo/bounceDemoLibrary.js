@@ -23,6 +23,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
     createFlashSubstrateEntry, flashZoneSidecarFields,
 } from '../flashSubstrate/flashSubstrateLibrary.js';
+import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import { PROFILES, physicsStampFor, resolvePhysicsStamp } from './physics.js';
 import { deriveAccessRules, deriveBraidAccessRules } from './deriveRules.js';
 import { attachSideExits, portalIdsBySide, SIDE_DIRECTIONS } from './sideExits.js';
@@ -886,6 +887,14 @@ export function createBounceSubstrateEntry({
         panelComponentType: BOUNCE_PANEL_COMPONENT_TYPE,
         loadRegionEvent: BOUNCE_LOAD_REGION_EVENT,
         iframeId: BOUNCE_IFRAME_ID,
+
+        // ⛓ PRESET SIDECARS G1 — a bounce zone is SIDES only: the bridge routes an
+        // exit by its `side` (`params.sidePortals` keyed by side, inverted to
+        // portal → side at play) and reads no tile, so the engine mints no
+        // `x`/`y` for it (`procgenCore/regionGeometry.js`). Declared HERE, not
+        // as a `createFlashSubstrateEntry` default: `flash_seedling` is built by
+        // that factory too and is an atlas reference, which stays tiles.
+        regionGeometry: REGION_GEOMETRY.SIDES,
 
         /**
          * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE ROOM-EDITOR DECLARATION**

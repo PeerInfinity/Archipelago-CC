@@ -166,9 +166,19 @@ describe('⛓ G0 — the `regionGeometry` slot', () => {
         expect(geometryOf({ id: 'fake' })).toBe(DEFAULT_REGION_GEOMETRY);
     });
 
-    it('jta and omsi are the entries that declare sides; every other entry reads tiles', () => {
+    /**
+     * ⛓ G1 — the sides entries are the ZONE games: the entries whose rules come
+     * from `extractZoneRules` (a zone's own logic, never a BFS over a tile
+     * grid), so an exit tile on one is fictional. The expected set is DERIVED
+     * from that hook, never typed — and the law is not the field under test, so
+     * a mutant that drops or adds a declaration cannot filter itself out.
+     */
+    it('the entries that declare sides are exactly the zone games (`extractZoneRules`); every '
+        + 'other entry reads tiles', () => {
         const sides = ENTRIES.filter((e) => geometryOf(e) === REGION_GEOMETRY.SIDES).map((e) => e.id);
-        expect(sides.sort()).toEqual(['jta', 'omsi']);
+        const zoneGames = ENTRIES.filter((e) => typeof e.extractZoneRules === 'function').map((e) => e.id);
+        expect(zoneGames.length).toBeGreaterThan(0);
+        expect(sides.sort()).toEqual(zoneGames.sort());
         expect(geometryOf(substrateRegistry.get('maze'))).toBe(REGION_GEOMETRY.TILES);
     });
 });
