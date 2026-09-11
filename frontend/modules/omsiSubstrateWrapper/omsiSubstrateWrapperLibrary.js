@@ -29,6 +29,7 @@ import { normalizeEntry } from '../shared/actionQueue/actionTypes.js';
 import {
     REQUIRED_ENVELOPE_FIELD, envelopeExitNames, nameMapValues,
 } from '../procgenCore/sidecarFields.js';
+import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import {
     buildUnlockPool,
     accessRuleFor,
@@ -451,6 +452,10 @@ export const substrateRegistryEntry = Object.freeze({
     },
     // ⛓ PRESET SIDECARS D0 — what that pass-through writes (above).
     sidecarFields: OMSI_SIDECAR_FIELDS,
+    // ⛓ PRESET SIDECARS G0 — an omsi town is SIDES only: the host labels an exit
+    // by its `side` and reads no tile, so the engine mints no `x`/`y` for it
+    // (`procgenCore/regionGeometry.js`).
+    regionGeometry: REGION_GEOMETRY.SIDES,
     // ⛓ PRESET SIDECARS V0 — where the payload carries its AP names (the
     // bridge maps a task to its AP location through `ap_locations`).
     apLocationNamesOf: nameMapValues('ap_locations'),

@@ -25,6 +25,9 @@ import { describe, expect, it } from 'vitest';
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { sidecarFieldsOf, validateSidecarFields } from './sidecarFields.js';
+import {
+    DEFAULT_REGION_GEOMETRY, REGION_GEOMETRIES, REGION_GEOMETRY, geometryOf,
+} from './regionGeometry.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 for (const rel of REGISTRY_LIBRARIES) {
@@ -134,5 +137,38 @@ describe('⛓ V0 — `apLocationNamesOf` / `apExitNamesOf`, and the jta referenc
         expect(fieldsOf('jta').jta_dataset_ref.references).toEqual({ field: 'jta_dataset', key: 'dataset_id' });
         const refs = HOSTED.filter((e) => Object.values(fieldsOf(e.id)).some((d) => d.references));
         expect(refs.map((e) => e.id)).toEqual(['jta']);
+    });
+});
+
+/**
+ * ⛓⛓ PRESET SIDECARS G0 — **`regionGeometry`: TILES OR SIDES, OR REFUSED BY
+ * NAME.** Over EVERY registered entry (every one has a geometry; absent = the
+ * default). The non-default fact is which entries declare `'sides'` — the two
+ * zone games whose hosts label an exit by its side and read no tile.
+ */
+describe('⛓ G0 — the `regionGeometry` slot', () => {
+    it.each(ENTRIES.map((e) => [e.id, e]))('%s: the slot is absent or one of the vocabulary', (_id, entry) => {
+        expect(entry.regionGeometry === undefined || REGION_GEOMETRIES.includes(entry.regionGeometry))
+            .toBe(true);
+        expect(REGION_GEOMETRIES).toContain(geometryOf(entry));
+    });
+
+    it('an unknown value is REFUSED, naming the substrate and the value — never read as tiles', () => {
+        expect(() => geometryOf({ id: 'fake', regionGeometry: 'hexes' }))
+            .toThrow(/substrate 'fake' declares "hexes" — not one of 'tiles', 'sides'/);
+        expect(() => geometryOf({ id: 'fake', regionGeometry: null })).toThrow(/'fake' declares null/);
+        expect(() => geometryOf({ id: 'fake', regionGeometry: 'Sides' })).toThrow(/"Sides"/);
+    });
+
+    it('absent reads as the default — an unregistered id and an entry that does not speak alike', () => {
+        expect(DEFAULT_REGION_GEOMETRY).toBe(REGION_GEOMETRY.TILES);
+        expect(geometryOf(undefined)).toBe(DEFAULT_REGION_GEOMETRY);
+        expect(geometryOf({ id: 'fake' })).toBe(DEFAULT_REGION_GEOMETRY);
+    });
+
+    it('jta and omsi are the entries that declare sides; every other entry reads tiles', () => {
+        const sides = ENTRIES.filter((e) => geometryOf(e) === REGION_GEOMETRY.SIDES).map((e) => e.id);
+        expect(sides.sort()).toEqual(['jta', 'omsi']);
+        expect(geometryOf(substrateRegistry.get('maze'))).toBe(REGION_GEOMETRY.TILES);
     });
 });

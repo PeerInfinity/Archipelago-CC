@@ -30,6 +30,7 @@ import { createRng } from '../shared/rng.js';
 import { validateJtaDataset, stampDatasetIdentity } from './datasetValidator.js';
 import { normalizeEntry } from '../shared/actionQueue/actionTypes.js';
 import { envelopeExitNames, nameMapValues } from '../procgenCore/sidecarFields.js';
+import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 
 // Host-side PlaybackProxy, injected by index.js's initialize() once the
 // eventBus exists (setter injection rather than importing index.js so
@@ -681,6 +682,10 @@ export const substrateRegistryEntry = Object.freeze({
     },
     // ⛓ PRESET SIDECARS D0 — what that pass-through writes (above).
     sidecarFields: JTA_SIDECAR_FIELDS,
+    // ⛓ PRESET SIDECARS G0 — a jta zone is SIDES only: the fork labels an exit by
+    // its `side` and reads no tile, so the engine mints no `x`/`y` for it
+    // (`procgenCore/regionGeometry.js`).
+    regionGeometry: REGION_GEOMETRY.SIDES,
     // ⛓ PRESET SIDECARS V0 — where the payload carries its AP names. A payload
     // with no `ap_locations` (base scope: the two Python fixtures) carries none,
     // and the bridge's zone-location channel is then dormant — the reader
