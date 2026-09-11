@@ -13975,6 +13975,30 @@ slot pick / tab switch / new document (1320); out-of-bounds refused (grid growth
 Baseline 450/13718 @ `66d7da2684` (run 34617630598). Reports come to `preset-sidecars-planning`; **the REPLAN with
 the user follows M2.** ⛔ The planner commits nothing while M2 runs.
 
+**M2 SHIPPED + VERIFIED 2026-09-11** (`d66ba58e80` → `0101e25c42`, seven commits: `move-region` / `swap-regions` ops
+through a sibling `regionLayout.js` — placement by the engine's mutators, teleporter flags by ONE exported per-exit
+SIDE LAW, write-back = the serializer's `exits` only, `regions[p]` and every target field untouched; one bounds rule
+`mapBoundsFor` = max(`grid_cell` extents, `procgen_metadata.grid_dims`) shared by the Map and the op; `Move / swap ▸`
+on the map host's block with one guard per boundary (slot pick / tab switch / new document / Esc); four in-app rows;
+docs). **Two of the brief's mechanisms were MINE and WRONG, ruled mid-slice:** (1) `relayoutSphereGrid` on a loaded
+document writes NOTHING (it walks bookkeeping the reconstruction never sets), and with that bookkeeping synthesised a
+NO-OP relayout REWIRES links (maze 154 regions / 520 exits; `Grid.teleporters` keyed `cell:side` collapses two
+same-side teleporters; back-exits never updated) → the side law, which reproduces every stored flag in the corpus
+(maze 1,633 fwd + 756 back, bounce 50, jta 20, TA 25, runner 18) except 2 hand-authored omsi diagonals (trap
+**1321**); (2) a move that empties the last row/column SHRINKS the map and refuses the move back → bounds floored by
+`grid_dims` where present (trap **1322**). **Corpus control (planner re-ran the rows: 54/54 green):** a no-op
+write-back over 38 slots / 1,106 placed entries / 2,512 exit records moves **0 bytes**; the one absent `exits` key
+(`jta_mixed_test`) kept absent by a named rule; M0's census unmoved under the new bound (38/4, 0 sized by
+`grid_dims`). **CI @ `0101e25c42`: run 34626109503 success, 451/13753 (13745 passed | 8 skipped | 0 failed) = the
+derivation (+1 file/29, +6).** Found and fixed by the slice: Esc never reached the panel (arming's re-render destroyed
+the focused button); a doubled slot/tab drop that would have kept mutant E green; a never-mutates row over a shared
+fixture blind to an idempotent write-through (trap **1323**). Pre-existing flake named, not M2's:
+`reverseLinks.test.js` `beforeEach` STACK_TRACE_ERROR in 4 of 10 parallel bounded runs. ⚖ OPEN (§18.9): **the
+PIPELINE's own Move Region rewires links on top-down grids, and M3's planned `moveSphereExitSide` → relayout is the
+same path**; should a size persist without `grid_dims`; `grid_dims` is document-level, not per slot; the omsi
+diagonal flags; the selection survives a tab switch while the armed move does not; no in-app shrink row (no committed
+slot without `grid_dims` can shrink under one move). **⛓ S2 + M1 + M2 DONE — REPLAN with the user; nothing launched.**
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
