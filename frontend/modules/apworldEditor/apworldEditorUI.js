@@ -102,6 +102,12 @@ import {
   inspectRegionRoom, JSON_BLOCK_INDENT, openRegionRoom, regionRoundTripOf, sidecarEntryFacts,
   sidecarOf,
 } from './regionRoundTrip.js';
+/**
+ * ⛓ PRESET SIDECARS S2 — `Re-derive rules ▸`: the region's rules re-derived from
+ * its payload after a raw save, with the pre-edit baseline recovered from THIS
+ * session's record (`_sessionBase` + `session.ops()`).
+ */
+import { rederiveRegionRules } from './regionRederive.js';
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 /**
  * ⛓⛓ PRESET SIDECARS V0 — the FOURTH validator: what is wrong with the selected
@@ -323,6 +329,15 @@ class ApworldEditorUI {
       configurable: true,
     });
     this.session = null;
+    /**
+     * ⛓ S2 — THE RECORD THE SESSION WAS OPENED ON. `editCore`'s session folds
+     * from it but does not hand it out, so the page keeps it beside the session
+     * (the maze lab's and the watch viewer's precedent: `baseRecord` held by the
+     * page, `foldEdits(adapter, baseRecord, session.ops())`). Set at the ONE
+     * place a session is opened; `Re-derive rules ▸` folds it forward to find
+     * the payload a region's rules were written for.
+     */
+    this._sessionBase = null;
     this.isInitialized = false;
     /**
      * ⛓⛓⛓ **WHERE THIS DOCUMENT CAME FROM, CARRIED THROUGH APPLY** (H2 Task 3).
@@ -691,8 +706,8 @@ class ApworldEditorUI {
    * person, so an undo across it would reconstruct bytes nobody ever saw.
    */
   _openSession(jsonData, baseTag) {
-    this.session = createEditSession(rulesEditAdapter, cloneFullRulesDoc(jsonData),
-      { base: baseTag });
+    this._sessionBase = cloneFullRulesDoc(jsonData);
+    this.session = createEditSession(rulesEditAdapter, this._sessionBase, { base: baseTag });
     /**
      * ⛓⛓ R-a — **A NEW DOCUMENT IS A NEW IDENTITY**, stamped at the SAME place
      * the op list is discarded. ⛔ Bumped here and nowhere else: Apply does not
@@ -5444,6 +5459,84 @@ class ApworldEditorUI {
     });
   }
 
+  /**
+   * ⛓⛓⛓ PRESET SIDECARS S2 — **`Re-derive rules ▸`, BESIDE Edit ▸** (⚖ user,
+   * 2026-09-10, Q1 C: a separate button — *"we can disable the buttons for
+   * substrates where that feature is currently unavailable"*).
+   *
+   * ⛓ ENABLED exactly where the substrate declares a `regionRoundTrip` with
+   * `open` / `save` — the registry lookup Edit ▸ already makes
+   * (`regionRoundTripOf`), per render, no world deserialized. Otherwise DISABLED
+   * with that lookup's own sentence as its `title` (a `refused` declaration's
+   * words, or "declares no `regionRoundTrip`"), never a sentence typed here.
+   * ⛔ No room editor is required: re-deriving needs the round trip, not a room.
+   *
+   * ⛔ The one control this rung adds to the block (1318): the work, and every
+   * word of the answer, happen on the PRESS.
+   */
+  _makeRederiveButton(player, regionName, substrate) {
+    const { rt, why } = regionRoundTripOf(substrate);
+    const btn = this._makeButton('Re-derive rules ▸', rt ? '#3d4f33' : '#3a3a3a',
+      () => this._handleRederive(player, regionName));
+    btn.classList.add('apworld-rederive-rules');
+    btn.dataset.substrate = substrate ?? '';
+    if (!rt) {
+      btn.disabled = true;
+      btn.style.cursor = 'not-allowed';
+      btn.style.color = '#999';
+      btn.title = why;
+    } else {
+      btn.title = 'Re-derive this region\'s access rules from its sidecar payload, through the '
+        + `${substrate} round trip. A rule moves only where the payload before your last edit `
+        + 'produced it; the rest are named and left as they are. ONE edit, one Undo.';
+    }
+    return btn;
+  }
+
+  /**
+   * ⛓⛓ The press. The history is THIS session's — the base it was opened on,
+   * its ops, the record now — captured BEFORE the await: an op landing while the
+   * two round trips run would make the answer about a document that is gone, so
+   * it is discarded by name rather than applied (the Edit ▸ verdict's rule, S1).
+   * A refusal is PRINTED beside the block and in the status line, never thrown;
+   * the op goes through the panel's one seam (`_applyOp`), and the re-render
+   * re-asks the issue list and the Edit ▸ verdict (both keyed on the record).
+   */
+  async _handleRederive(player, regionName) {
+    if (!this.session) {
+      alert('Load a rules.json first.');
+      return;
+    }
+    const doc = this.rulesDoc;
+    const beside = (text, refused) => {
+      this._opRowMessage = { sidecar: `${player}|${regionName}`, text, refused };
+    };
+    let out;
+    try {
+      out = await rederiveRegionRules(
+        { base: this._sessionBase, ops: this.session.ops(), doc }, player, regionName);
+    } catch (err) {
+      out = { error: `the re-derivation threw — ${err.message}` };
+    }
+    if (this.rulesDoc !== doc) {
+      this._opMessage = `Re-derive of "${regionName}" discarded: the document changed while it `
+        + 'ran. Press it again.';
+      beside(this._opMessage, true);
+      this._render();
+      return;
+    }
+    if (out.error) {
+      this._opMessage = `Re-derive refused: ${out.error}`;
+      beside(this._opMessage, true);
+      this._render();
+      return;
+    }
+    const res = this._applyOp(out.op, { message: () => out.message, rerender: false });
+    if (res.ok && !res.applied) this._opMessage = `No change — ${out.message}`;
+    beside(this._opMessage, !res.ok);
+    this._render();
+  }
+
   /** ⛓ Give up on the parked room. ⛔ Its `onSave` never fires afterwards. */
   _closeRoomEditor() {
     try {
@@ -5546,6 +5639,7 @@ class ApworldEditorUI {
 
     const edit = this._makeRoomEditorButton(regionName);
     if (edit) line.appendChild(edit);
+    line.appendChild(this._makeRederiveButton(player, regionName, facts.substrate));
 
     /**
      * ⛓ The hand-off door. ⛔ Its words are the DOOR's (`regionDoor` on the
