@@ -795,6 +795,30 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "PRESET SIDECARS M1. The hand-off from the map's block names the carried slot and the top-down cost; procgen_topdown/AP_1's sphere answer unchanged. Mutants D and E."
+        },
+        {
+            "id": "apworld-map-move-to-an-empty-cell-records-one-op",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M2. Move / swap ▸ then an empty cell: one move-region, the document AFTER is the op's own answer, the block follows, Undo restores."
+        },
+        {
+            "id": "apworld-map-move-onto-a-region-swaps-the-two",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M2. Move / swap ▸ then another region: one swap-regions, cells exchanged, links kept."
+        },
+        {
+            "id": "apworld-map-an-armed-move-drops-at-every-boundary",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M2 (trap 1320). A slot pick, a tab switch, Esc and a new document each disarm; an empty-cell click after records nothing. Mutant E."
+        },
+        {
+            "id": "apworld-map-a-separating-move-names-the-teleporter",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M2 (Q3 C). A move that separates a link names the teleporter; every placed exit carries the side law's verdict; the connection pairs are kept. Mutant A."
         }
     ]
 }

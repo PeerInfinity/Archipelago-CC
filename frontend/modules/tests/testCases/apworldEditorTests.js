@@ -8609,3 +8609,408 @@ registerTest({
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ PRESET SIDECARS M2 — MOVE / SWAP A REGION ON THE MAP: native hub ops
+ * (⚖ option A), armed from the selection's block, one op per gesture
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ The modules the M2 rows read their expectations from — never typed. */
+async function m2Modules() {
+    const [ops, layout, engine, doc] = await Promise.all([
+        import('../../apworldEditor/rulesDocOps.js'),
+        import('../../apworldEditor/regionLayout.js'),
+        import('../../procgenPipeline/procgenPipelineEngine.js'),
+        import('../../procgenPipeline/compositeMapDocument.js'),
+    ]);
+    return { ...ops, ...layout, ...engine, ...doc };
+}
+
+/** ⛓ Every empty cell of a slot's map, row-major, off the op's own layout. */
+function m2EmptyCells(slotLayout, doc, slot) {
+    const { grid } = slotLayout(doc, slot);
+    const out = [];
+    for (let gy = 0; gy < grid.height; gy += 1) {
+        for (let gx = 0; gx < grid.width; gx += 1) {
+            if (!grid.hasRegion({ gx, gy })) out.push({ gx, gy });
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓ Select `region` on the map and press the block's own `Move / swap ▸`. ⛔ The
+ * click is made only when the region is NOT already selected: on the selected
+ * cell it would be M1's SECOND click, which opens the room.
+ */
+async function armMoveOnMap(testController, panel, region, cell, label) {
+    if (panel._selectedRegion !== region) clickMapCell(cell);
+    await testController.pollForCondition(() => panel._selectedRegion === region
+        && !!document.querySelector(`${PANEL_SELECTOR} .apworld-map-move-region`
+            + `[data-region-name="${CSS.escape(region)}"]`), `${label}: ${region} selected, its block drawn`, 8000, 50);
+    const btn = document.querySelector(`${PANEL_SELECTOR} .apworld-map-move-region`
+        + `[data-region-name="${CSS.escape(region)}"]`);
+    testController.reportCondition(`${label}: the block carries Move / swap ▸`, !!btn);
+    btn?.click();
+    return testController.pollForCondition(
+        () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`)?.dataset.moveArmed === region,
+        `${label}: the map is armed for ${region}`, 8000, 50);
+}
+
+/** ⛓ The move is DISARMED: the canvas says so and the block's button is not pressed. */
+const mapMoveDisarmed = () => (document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`)?.dataset.moveArmed ?? '') === ''
+    && document.querySelector(`${PANEL_SELECTOR} .apworld-map-move-region`)?.dataset.armed !== 'true';
+
+/**
+ * ⛓ The renderer's connection pass, counted off the RECONSTRUCTION (not pixels):
+ * one line per exit pair whose two ends both resolve — `targetRegion` +
+ * `targetExitId` naming an exit the target carries — deduplicated by the
+ * unordered pair, as `drawConnections` does. Answers the pairs.
+ */
+function m2ConnectionPairs(result) {
+    const regions = result?.grid?.allRegions() ?? [];
+    const exitsOf = (r) => (r.exits instanceof Map ? [...r.exits.values()] : (r.exits ?? []));
+    const byId = new Map(regions.map((r) => [r.region_id, r]));
+    const pairs = new Map();
+    for (const r of regions) {
+        for (const e of exitsOf(r)) {
+            if (!e?.targetRegion || !e?.targetExitId) continue;
+            const t = byId.get(e.targetRegion);
+            if (!t || !exitsOf(t).some((x) => x.exit_id === e.targetExitId)) continue;
+            const a = `${r.region_id} ${e.exit_id}`;
+            const b = `${e.targetRegion} ${e.targetExitId}`;
+            const key = a < b ? `${a}|${b}` : `${b}|${a}`;
+            if (!pairs.has(key)) pairs.set(key, { from: r, exit: e, to: t });
+        }
+    }
+    return [...pairs.values()];
+}
+
+/**
+ * ⛓⛓⛓ **(i) ARMED, THEN AN EMPTY CELL → ONE `move-region`.** On the four-player
+ * fixture's first slot: the first placed region selected on the map, its block's
+ * own `Move / swap ▸` pressed (the canvas says armed, the status line names the
+ * region), then a click on the first empty cell of the op's own layout. Exactly
+ * one op is recorded; the document AFTER is the op's own answer on the document
+ * BEFORE (1306), `regions` byte-equal; the map's reconstruction places the
+ * region at that cell and the block follows it; the status line is the op's
+ * description; the map is disarmed. One Undo restores the bytes.
+ */
+export async function apworldMapMoveToAnEmptyCellRecordsOneOp(testController) {
+    try {
+        const M = await m2Modules();
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const before = panel.rulesDoc;
+        const slot = Object.keys(before.preset_sidecars)[0];
+        const target = (M.reconstructResultFromSidecars(before, { playerId: slot })?.grid?.allRegions() ?? [])[0];
+        const to = m2EmptyCells(M.slotLayout, before, slot)[0];
+        testController.reportCondition('⛓ premise: a placed region and an empty cell', !!target && !!to);
+        if (!target || !to || !(await onMapTabFor(testController, panel, slot))) return testController.getOverallResult();
+
+        const armed = await armMoveOnMap(testController, panel, target.region_id, target.cell, 'arm');
+        testController.reportCondition('the block\'s button ARMED the map', armed);
+        testController.reportCondition('…and the status line says what the next click does',
+            String(panel._opMessage).startsWith(`Click an empty cell to move ${target.region_id} there`)
+            && String(panel._opMessage).includes('Esc cancels'));
+        testController.assertEqual('arming recorded nothing', '0', String(panel.session.ops().length));
+
+        const op = { op: 'move-region', player: slot, region: target.region_id, to };
+        const want = M.applyRulesDocOp(before, op);
+        testController.reportCondition('⛓ premise: the op itself takes that move', want.ok);
+        clickMapCell(to);
+        const recorded = await testController.pollForCondition(() => panel.session.ops().length === 1,
+            'the click recorded one op', 8000, 50);
+        testController.reportCondition('⛓⛓ ONE op for the gesture', recorded);
+        testController.assertEqual('…a move-region', 'move-region', String(panel.session.ops()[0]?.op));
+        testController.reportCondition('⛓⛓ the document AFTER is the op\'s own answer',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(want.doc));
+        testController.reportCondition('⛔ `regions` byte-equal',
+            JSON.stringify(panel.rulesDoc.regions) === JSON.stringify(before.regions));
+        testController.assertEqual('the entry\'s grid_cell is the clicked cell', JSON.stringify(to),
+            JSON.stringify(panel.rulesDoc.preset_sidecars[slot][target.region_id].grid_cell));
+        testController.assertEqual('the MAP places the region at that cell (its reconstruction)',
+            target.region_id, String(panel._mapResult()?.grid?.getRegion(to)?.region_id));
+        const block = await testController.pollForValue(() => {
+            const b = mapSelectionBlock();
+            return b && b.dataset.regionName === target.region_id ? b : null;
+        }, 'the block follows the moved region', 8000, 50);
+        testController.reportCondition('the selection and its block FOLLOW the region',
+            !!block && panel._selectedRegion === target.region_id);
+        testController.assertEqual('the status line is the op\'s description', want.description,
+            String(panel._opMessage));
+        testController.reportCondition('the map is disarmed', mapMoveDisarmed());
+
+        panel.undoButton.click();
+        testController.reportCondition('one Undo restores the document byte for byte',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(before));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-move test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(ii) ARMED, THEN ANOTHER REGION → ONE `swap-regions`.** The same slot:
+ * arm on the first placed region, click the second. One op, both cells
+ * exchanged, every payload exit's link fields unchanged, the document AFTER the
+ * op's own answer, the block still the armed region's.
+ */
+export async function apworldMapMoveOntoARegionSwapsTheTwo(testController) {
+    try {
+        const M = await m2Modules();
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const before = panel.rulesDoc;
+        const slot = Object.keys(before.preset_sidecars)[0];
+        const [a, b] = M.reconstructResultFromSidecars(before, { playerId: slot })?.grid?.allRegions() ?? [];
+        testController.reportCondition('⛓ premise: two placed regions', !!a && !!b);
+        if (!a || !b || !(await onMapTabFor(testController, panel, slot))) return testController.getOverallResult();
+        const armed = await armMoveOnMap(testController, panel, a.region_id, a.cell, 'arm');
+        testController.reportCondition('armed', armed);
+        const want = M.applyRulesDocOp(before, { op: 'swap-regions', player: slot, a: a.region_id, b: b.region_id });
+        clickMapCell(b.cell);
+        const recorded = await testController.pollForCondition(() => panel.session.ops().length === 1,
+            'the click recorded one op', 8000, 50);
+        testController.reportCondition('⛓⛓ ONE op for the gesture', recorded);
+        testController.assertEqual('…a swap-regions', 'swap-regions', String(panel.session.ops()[0]?.op));
+        testController.reportCondition('⛓⛓ the document AFTER is the op\'s own answer',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(want.doc));
+        const cellOf = (d, r) => JSON.stringify(d.preset_sidecars[slot][r].grid_cell);
+        testController.reportCondition('both cells exchanged',
+            cellOf(panel.rulesDoc, a.region_id) === cellOf(before, b.region_id)
+            && cellOf(panel.rulesDoc, b.region_id) === cellOf(before, a.region_id));
+        const links = (d) => JSON.stringify(Object.values(d.preset_sidecars[slot])
+            .map((e) => (e.playable_payload?.exits ?? []).map((x) => [x.exit_id, x.side, x.targetRegion, x.targetExitId])));
+        testController.reportCondition('⛔ every link kept (exit id, side, target)',
+            links(panel.rulesDoc) === links(before));
+        testController.reportCondition('⛔ `regions` byte-equal',
+            JSON.stringify(panel.rulesDoc.regions) === JSON.stringify(before.regions));
+        testController.assertEqual('the block is still the armed region\'s', a.region_id,
+            String(mapSelectionBlock()?.dataset.regionName));
+        testController.assertEqual('the status line is the op\'s description', want.description,
+            String(panel._opMessage));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-swap test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iii) AN ARMED MOVE DROPS AT EVERY BOUNDARY A NAME DOES NOT SURVIVE**
+ * (trap 1320). Armed on the first slot's region R, then:
+ *   · a SLOT PICK to a slot that also holds a region named R — the canvas is
+ *     disarmed, the status line says so, and a click on an EMPTY cell of the new
+ *     slot records nothing (an armed move would move THAT slot's R), while a
+ *     click on a region only SELECTS it (M1's claim);
+ *   · a TAB switch and back — disarmed; an empty-cell click records nothing;
+ *   · Esc on the panel — disarmed, "Move cancelled (Esc)."; nothing recorded;
+ *   · a NEW DOCUMENT (the same file loaded again) — disarmed; nothing recorded.
+ * Mutant E (the armed state survives a slot pick) reds the slot arm.
+ */
+export async function apworldMapAnArmedMoveDropsAtEveryBoundary(testController) {
+    try {
+        const M = await m2Modules();
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const slot = Object.keys(doc.preset_sidecars)[0];
+        const placed = (s, d = doc) => M.reconstructResultFromSidecars(d, { playerId: s })?.grid?.allRegions() ?? [];
+        // ⛓ R: a region of this slot that ANOTHER slot also places — by the law.
+        let other = null;
+        const target = placed(slot).find((r) => {
+            other = Object.keys(doc.preset_sidecars).find((s) => s !== slot
+                && placed(s).some((x) => x.region_id === r.region_id)) ?? null;
+            return !!other;
+        });
+        testController.reportCondition('⛓ premise: another slot places a region of the same name', !!target && !!other);
+        if (!target || !other || !(await onMapTabFor(testController, panel, slot))) return testController.getOverallResult();
+        const emptyOther = m2EmptyCells(M.slotLayout, doc, other)[0];
+        testController.reportCondition('⛓ premise: that slot has an empty cell', !!emptyOther);
+
+        /* ── a slot pick ── */
+        testController.reportCondition('slot pick: armed first',
+            await armMoveOnMap(testController, panel, target.region_id, target.cell, 'slot pick'));
+        await onMapTabFor(testController, panel, other);
+        testController.reportCondition('⛓⛓ slot pick: the map is DISARMED', mapMoveDisarmed());
+        testController.reportCondition('slot pick: …and the status line says so',
+            String(panel._opMessage).includes(`The armed move of ${target.region_id} was cancelled (a slot pick)`));
+        const otherBefore = JSON.stringify(panel.rulesDoc.preset_sidecars[other]);
+        if (emptyOther) clickMapCell(emptyOther);
+        testController.reportCondition('⛔ slot pick: an empty-cell click on the new slot recorded NOTHING',
+            !(await testController.pollForCondition(() => panel.session.ops().length > 0,
+                'slot pick: an op was recorded', MAP_DOOR_SETTLE_MS, 50)));
+        testController.reportCondition('slot pick: …and that slot\'s sidecars are unmoved',
+            JSON.stringify(panel.rulesDoc.preset_sidecars[other]) === otherBefore);
+        const shared = placed(other).find((r) => r.region_id === target.region_id);
+        clickMapCell(shared.cell);
+        testController.assertEqual('slot pick: a click on a region only SELECTS it (M1)', target.region_id,
+            String(panel._selectedRegion));
+        testController.assertEqual('slot pick: …and records nothing', '0', String(panel.session.ops().length));
+
+        /* ── a tab switch ── */
+        await onMapTabFor(testController, panel, slot);
+        const here = placed(slot).find((r) => r.region_id === target.region_id);
+        const empty = m2EmptyCells(M.slotLayout, doc, slot)[0];
+        testController.reportCondition('tab switch: armed first',
+            await armMoveOnMap(testController, panel, here.region_id, here.cell, 'tab switch'));
+        selectTab(panel, 'regions');
+        await onMapTabFor(testController, panel);
+        testController.reportCondition('⛓⛓ tab switch: the map is DISARMED', mapMoveDisarmed());
+        clickMapCell(empty);
+        testController.reportCondition('⛔ tab switch: an empty-cell click recorded NOTHING',
+            !(await testController.pollForCondition(() => panel.session.ops().length > 0,
+                'tab switch: an op was recorded', MAP_DOOR_SETTLE_MS, 50)));
+
+        /* ── Esc ── */
+        testController.reportCondition('Esc: armed first',
+            await armMoveOnMap(testController, panel, here.region_id, here.cell, 'Esc'));
+        panel.rootElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        testController.reportCondition('⛓⛓ Esc: the map is DISARMED', await testController.pollForCondition(
+            mapMoveDisarmed, 'Esc: disarmed', 8000, 50));
+        testController.assertEqual('Esc: …and the status line says so', 'Move cancelled (Esc).', String(panel._opMessage));
+        clickMapCell(empty);
+        testController.reportCondition('⛔ Esc: an empty-cell click recorded NOTHING',
+            !(await testController.pollForCondition(() => panel.session.ops().length > 0,
+                'Esc: an op was recorded', MAP_DOOR_SETTLE_MS, 50)));
+
+        /* ── a new document ── */
+        testController.reportCondition('new document: armed first',
+            await armMoveOnMap(testController, panel, here.region_id, here.cell, 'new document'));
+        const oldDoc = panel.rulesDoc;
+        await testController.loadRulesFromFile(FOUR_PLAYER_PATH);
+        const fresh = await testController.pollForCondition(() => panel.rulesDoc && panel.rulesDoc !== oldDoc,
+            'new document: the panel holds the NEW record', 8000, 50);
+        testController.reportCondition('new document: a new record arrived', fresh);
+        const canvas = await onMapTabFor(testController, panel, slot);
+        testController.reportCondition('⛓⛓ new document: the map is DISARMED', !!canvas && mapMoveDisarmed());
+        clickMapCell(empty);
+        testController.reportCondition('⛔ new document: an empty-cell click recorded NOTHING',
+            !(await testController.pollForCondition(() => panel.session.ops().length > 0,
+                'new document: an op was recorded', MAP_DOOR_SETTLE_MS, 50)));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-armed-boundaries test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iv) A MOVE THAT SEPARATES TWO LINKED REGIONS NAMES THE TELEPORTER, AND
+ * THE MAP STILL DRAWS THE LINK.** The first move of the first slot (placed
+ * region × empty cell, both in the op's own order) whose OWN answer flips an
+ * exit — chosen by the op, never typed — made through the gesture. The status
+ * line names a teleporter and every flipped exit by region and side word; every
+ * placed exit of the slot now carries the side law's verdict
+ * (`linkIsAdjacentOnSide`, the engine's export); the reconstruction's
+ * connection pairs are the same pairs as before, and the separated link's pair
+ * is one of them with its ends no longer adjacent on that side.
+ * Mutant A (the flags not recomputed) reds it.
+ */
+export async function apworldMapASeparatingMoveNamesTheTeleporter(testController) {
+    try {
+        const M = await m2Modules();
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const before = panel.rulesDoc;
+        const slot = Object.keys(before.preset_sidecars)[0];
+        const placedBefore = M.reconstructResultFromSidecars(before, { playerId: slot });
+        const flippedBy = (res) => Object.entries(res.doc.preset_sidecars[slot]).flatMap(([name, e]) =>
+            (e.playable_payload?.exits ?? []).map((x, i) => [name, x, i])
+                .filter(([, x, i]) => x.isTeleporter !== before.preset_sidecars[slot][name].playable_payload.exits[i].isTeleporter));
+        let choice = null;
+        for (const r of placedBefore?.grid?.allRegions() ?? []) {
+            for (const to of m2EmptyCells(M.slotLayout, before, slot)) {
+                const res = M.applyRulesDocOp(before, { op: 'move-region', player: slot, region: r.region_id, to });
+                if (!choice && res.ok && flippedBy(res).length > 0) choice = { r, to, res };
+            }
+        }
+        testController.reportCondition('⛓ premise: a move that separates a link exists', !!choice);
+        if (!choice || !(await onMapTabFor(testController, panel, slot))) return testController.getOverallResult();
+        const pairsBefore = m2ConnectionPairs(placedBefore);
+        testController.reportCondition('⛓ premise: the map draws connection lines', pairsBefore.length > 0);
+
+        testController.reportCondition('armed',
+            await armMoveOnMap(testController, panel, choice.r.region_id, choice.r.cell, 'arm'));
+        clickMapCell(choice.to);
+        testController.reportCondition('one op', await testController.pollForCondition(
+            () => panel.session.ops().length === 1, 'the click recorded one op', 8000, 50));
+        const said = String(panel._opMessage);
+        testController.reportCondition('⛓⛓ the message says a link BECAME A TELEPORTER',
+            /\d+ links? became (a teleporter|teleporters): /.test(said) && !said.includes(M.NO_LINK_BECAME_TELEPORTER));
+        for (const [name, x] of flippedBy(choice.res)) {
+            testController.reportCondition(`…and names ${name} ${M.SIDE_WORDS[x.side]}`,
+                said.includes(`${name} ${M.SIDE_WORDS[x.side]}`));
+        }
+        const { grid, cells } = M.slotLayout(panel.rulesDoc, slot);
+        const wrong = Object.entries(panel.rulesDoc.preset_sidecars[slot]).flatMap(([name, e]) =>
+            (e.playable_payload?.exits ?? []).filter((x) => cells.has(name) && cells.has(x.targetRegion))
+                .filter((x) => x.isTeleporter !== !M.linkIsAdjacentOnSide(grid, cells.get(name), x.side, cells.get(x.targetRegion)))
+                .map((x) => `${name} ${x.exit_id}`));
+        testController.assertEqual('⛓⛓ EVERY placed exit of the slot carries the side law\'s verdict', '[]',
+            JSON.stringify(wrong));
+        const pairsAfter = m2ConnectionPairs(panel._mapResult());
+        const keys = (ps) => ps.map((p) => `${p.from.region_id} ${p.exit.exit_id}`).sort().join(';');
+        testController.assertEqual('the map draws the SAME connection pairs (a line per link, kept)',
+            keys(pairsBefore), keys(pairsAfter));
+        const separated = pairsAfter.filter((p) => p.from.region_id === choice.r.region_id || p.to.region_id === choice.r.region_id)
+            .filter((p) => !M.linkIsAdjacentOnSide(grid, p.from.cell, p.exit.side, p.to.cell));
+        testController.reportCondition('⛓ …and the separated link is one of them, its ends apart on its side',
+            separated.length > 0);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-teleporter test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-map-move-to-an-empty-cell-records-one-op',
+    name: 'APWorld hub: Move / swap ▸ then an empty map cell records one move-region, and the block follows the region',
+    description: 'PRESET SIDECARS M2. The fixture\'s first slot: select a region on the map, press its '
+               + 'block\'s Move / swap ▸ (armed; the status line names the next click), click the first '
+               + 'empty cell: one op; the document AFTER is the op\'s own answer, regions byte-equal; '
+               + 'the map places the region there, the block follows; the status line is the op\'s '
+               + 'description; disarmed; one Undo restores the bytes.',
+    testFunction: apworldMapMoveToAnEmptyCellRecordsOneOp,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-move-onto-a-region-swaps-the-two',
+    name: 'APWorld hub: Move / swap ▸ then another region records one swap-regions, links kept',
+    description: 'PRESET SIDECARS M2. Armed on the first placed region, a click on the second: one '
+               + 'swap-regions; both cells exchanged; every exit\'s id, side and target unchanged; '
+               + 'regions byte-equal; the document AFTER is the op\'s own answer.',
+    testFunction: apworldMapMoveOntoARegionSwapsTheTwo,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-an-armed-move-drops-at-every-boundary',
+    name: 'APWorld hub: an armed map move is dropped by a slot pick, a tab switch, Esc and a new document',
+    description: 'PRESET SIDECARS M2 (trap 1320). Armed on a region another slot also names: after a '
+               + 'slot pick the map is disarmed and says so, an empty-cell click there records nothing '
+               + 'and a region click only selects; the same after a tab switch, Esc ("Move cancelled '
+               + '(Esc).") and a new document. Mutant E (survives a slot pick) reds it.',
+    testFunction: apworldMapAnArmedMoveDropsAtEveryBoundary,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-a-separating-move-names-the-teleporter',
+    name: 'APWorld hub: a map move that separates two linked regions names the teleporter, and the map keeps the link',
+    description: 'PRESET SIDECARS M2 (Q3 C). The first move the op itself answers with a flipped exit, '
+               + 'made through the gesture: the message names a teleporter and every flipped exit; every '
+               + 'placed exit carries linkIsAdjacentOnSide\'s verdict; the reconstruction\'s connection '
+               + 'pairs are unchanged and the separated one spans non-adjacent ends. Mutant A (flags not '
+               + 'recomputed) reds it.',
+    testFunction: apworldMapASeparatingMoveNamesTheTeleporter,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
