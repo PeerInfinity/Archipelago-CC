@@ -13814,6 +13814,22 @@ costs 31–40 ms per save on the 934 KB `AP_8`, left unscoped. ⚖ OPEN (§12.7)
 entry; the raw save ACCEPTS a changed `substrate` (vs §9.3's read-only field); a standing "hand-edited" note on the
 block. **⛓ THE FIRST THREE RUNGS ARE DONE (M0, S0, S1) — REPLAN with the user next; nothing launched.**
 
+**⚖ RULED (user, 2026-09-10, the REPLAN): "I agree with all of your recommendations. Please continue."** ⇒ (1) no
+CREATE op — deferred; (2) the raw save keeps accepting a changed `substrate`; V0's report names the mismatch; (3) no
+standing "hand-edited" note — Edit ▸'s verdict and V0 say what is wrong; (4) the Regenerate door stays
+whole-document; a per-region hand-off belongs to the Seedling/substrate-change session; (5) `_handoffAnswer`'s
+slot-`'1'` read and its missing cost sentence fold into M1; (6) the Document row's `preset_sidecars` door points at
+SIDECARS (a D1 or M1 fix-up, one line). The ladder continues: **D0 → V0 → D1 → S2 → M1 → M2 → M3 → T0/T1.**
+
+**D0 LAUNCHED 2026-09-10** as `apworld-sidecars-D0` (Opus; kickoff `NewDocs/plans/apworld-sidecars-D0-prompt.md`):
+`procgenCore/sidecarFields.js` (descriptor shape `{type, required?, enum?, derived?, description, schema?}`, the
+ENGINE-owned envelope fields `exits/entrance/fogEnabled/manaEnabled` declared once, a merge that refuses
+redeclaration), the seven declarations in the substrates' own files (tile-grid shared by maze/TA, flash-zone shared
+by bounce/runner), the corpus gate `check-sidecar-fields.mjs` (an undeclared key is a FAIL — the declaration ↔
+serializer pin; enrolment measured before/after; `check-procgen-help`), rows + five mutants, docs. ⛔ `shared/` is
+not touched. Baseline 444/13478 @ `935e3cea19` (run 34545351760). Reports come to `preset-sidecars-planning`; V0 on
+D0's idle notice. ⛔ The planner commits nothing while D0 runs.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
