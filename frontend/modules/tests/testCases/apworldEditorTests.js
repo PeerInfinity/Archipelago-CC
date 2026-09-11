@@ -8900,8 +8900,9 @@ export async function apworldMapAnArmedMoveDropsAtEveryBoundary(testController) 
 /**
  * ⛓⛓⛓ **(iv) A MOVE THAT SEPARATES TWO LINKED REGIONS NAMES THE TELEPORTER, AND
  * THE MAP STILL DRAWS THE LINK.** The first move of the first slot (placed
- * region × empty cell, both in the op's own order) whose OWN answer flips an
- * exit — chosen by the op, never typed — made through the gesture. The status
+ * region × empty cell) that the side LAW says flips an exit — chosen by
+ * `linkIsAdjacentOnSide` over the cells before and after, never by the op's
+ * answer and never typed — made through the gesture. The status
  * line names a teleporter and every flipped exit by region and side word; every
  * placed exit of the slot now carries the side law's verdict
  * (`linkIsAdjacentOnSide`, the engine's export); the reconstruction's
@@ -8917,14 +8918,25 @@ export async function apworldMapASeparatingMoveNamesTheTeleporter(testController
         const before = panel.rulesDoc;
         const slot = Object.keys(before.preset_sidecars)[0];
         const placedBefore = M.reconstructResultFromSidecars(before, { playerId: slot });
-        const flippedBy = (res) => Object.entries(res.doc.preset_sidecars[slot]).flatMap(([name, e]) =>
-            (e.playable_payload?.exits ?? []).map((x, i) => [name, x, i])
-                .filter(([, x, i]) => x.isTeleporter !== before.preset_sidecars[slot][name].playable_payload.exits[i].isTeleporter));
+        /**
+         * ⛓ The exits a move of `region` to `to` flips, BY THE LAW — the side law's
+         * verdict over the cells before and after, never the op's answer (the field
+         * under test: chosen by it, the row would lose its move under mutant A).
+         */
+        const lawFlips = (region, to) => {
+            const { grid, cells } = M.slotLayout(before, slot);
+            const after = new Map(cells).set(region, to);
+            return Object.entries(before.preset_sidecars[slot]).flatMap(([name, e]) =>
+                (e.playable_payload?.exits ?? []).filter((x) => cells.has(name) && cells.has(x.targetRegion))
+                    .filter((x) => M.linkIsAdjacentOnSide(grid, cells.get(name), x.side, cells.get(x.targetRegion))
+                        !== M.linkIsAdjacentOnSide(grid, after.get(name), x.side, after.get(x.targetRegion)))
+                    .map((x) => [name, x]));
+        };
         let choice = null;
         for (const r of placedBefore?.grid?.allRegions() ?? []) {
             for (const to of m2EmptyCells(M.slotLayout, before, slot)) {
-                const res = M.applyRulesDocOp(before, { op: 'move-region', player: slot, region: r.region_id, to });
-                if (!choice && res.ok && flippedBy(res).length > 0) choice = { r, to, res };
+                const flips = lawFlips(r.region_id, to);
+                if (!choice && flips.length > 0) choice = { r, to, flips };
             }
         }
         testController.reportCondition('⛓ premise: a move that separates a link exists', !!choice);
@@ -8940,7 +8952,7 @@ export async function apworldMapASeparatingMoveNamesTheTeleporter(testController
         const said = String(panel._opMessage);
         testController.reportCondition('⛓⛓ the message says a link BECAME A TELEPORTER',
             /\d+ links? became (a teleporter|teleporters): /.test(said) && !said.includes(M.NO_LINK_BECAME_TELEPORTER));
-        for (const [name, x] of flippedBy(choice.res)) {
+        for (const [name, x] of choice.flips) {
             testController.reportCondition(`…and names ${name} ${M.SIDE_WORDS[x.side]}`,
                 said.includes(`${name} ${M.SIDE_WORDS[x.side]}`));
         }
@@ -9005,8 +9017,8 @@ registerTest({
 registerTest({
     id: 'apworld-map-a-separating-move-names-the-teleporter',
     name: 'APWorld hub: a map move that separates two linked regions names the teleporter, and the map keeps the link',
-    description: 'PRESET SIDECARS M2 (Q3 C). The first move the op itself answers with a flipped exit, '
-               + 'made through the gesture: the message names a teleporter and every flipped exit; every '
+    description: 'PRESET SIDECARS M2 (Q3 C). The first move the side LAW says flips an exit (chosen '
+               + 'by linkIsAdjacentOnSide, not by the op), made through the gesture: the message names a teleporter and every flipped exit; every '
                + 'placed exit carries linkIsAdjacentOnSide\'s verdict; the reconstruction\'s connection '
                + 'pairs are unchanged and the separated one spans non-adjacent ends. Mutant A (flags not '
                + 'recomputed) reds it.',

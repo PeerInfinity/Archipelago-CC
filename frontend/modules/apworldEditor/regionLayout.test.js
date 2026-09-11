@@ -108,6 +108,30 @@ function lawVerdicts(doc, slot) {
     return out;
 }
 
+/**
+ * ⛓⛓ THE EXITS A CHANGE SHOULD FLIP, BY THE LAW — the side law's verdict for each
+ * placed exit over the cells BEFORE and the cells the change would leave, never
+ * the op's own answer (the field under test: a row that chose its move by what
+ * the op wrote would lose the move under the mutant that skips the write).
+ * → `[[region, exit]]`.
+ */
+function lawFlips(doc, slot, op) {
+    const { grid, cells } = slotLayout(doc, slot);
+    const after = new Map(cells);
+    if (op.op === 'move-region') after.set(op.region, op.to);
+    else { after.set(op.a, cells.get(op.b)); after.set(op.b, cells.get(op.a)); }
+    const out = [];
+    for (const [name, entry] of Object.entries(doc.preset_sidecars[slot])) {
+        for (const x of entry.playable_payload?.exits ?? []) {
+            if (!cells.has(name) || !cells.has(x.targetRegion) || !Object.hasOwn(SIDE_WORDS, x.side)) continue;
+            const was = linkIsAdjacentOnSide(grid, cells.get(name), x.side, cells.get(x.targetRegion));
+            const now = linkIsAdjacentOnSide(grid, after.get(name), x.side, after.get(x.targetRegion));
+            if (was !== now) out.push([name, x]);
+        }
+    }
+    return out;
+}
+
 /** ⛓ Every exit's LINK fields — what a move must never change. */
 const linksOf = (doc, slot) => Object.fromEntries(Object.entries(doc.preset_sidecars[slot])
     .map(([n, e]) => [n, (e.playable_payload?.exits ?? []).map((x) => ({
@@ -198,18 +222,21 @@ describe.each([['maze family', () => MAZE_SLOT], ['a second payload family', () 
 
         it('⛔ never mutates the document it is handed (the payload is cloned before its '
             + 'substrate deserializes it)', () => {
+            // ⛓ its OWN copy of the fixture: a write-through in an earlier row would
+            //   otherwise already sit in `before`, and this row could not see it.
             const slot = slotOf();
-            const before = bytes(FOUR);
-            for (const op of Object.values(everyChange(FOUR, slot)).flat()) applied(FOUR, op);
-            expect(bytes(FOUR)).toBe(before);
+            const doc = clone(FOUR);
+            const before = bytes(doc);
+            for (const op of Object.values(everyChange(doc, slot)).flat()) applied(doc, op);
+            expect(bytes(doc)).toBe(before);
         });
     },
 );
 
 describe('the description names the move and every link whose kind it changed', () => {
-    /** The first move of slot 1 (entry order × empty cells) that flips a flag. */
+    /** The first move of slot 1 (entry order × empty cells) the side LAW says flips an exit. */
     const firstSeparatingMove = () => everyChange(FOUR, MAZE_SLOT).moves
-        .find((op) => leafDiff(FOUR, applied(FOUR, op).doc).some((p) => p.endsWith('isTeleporter')));
+        .find((op) => lawFlips(FOUR, MAZE_SLOT, op).length > 0);
 
     it('a move that separates a link: "Moved R (a,b) → (c,d); N link(s) became …", naming '
         + 'both regions and both sides', () => {
@@ -221,9 +248,8 @@ describe('the description names the move and every link whose kind it changed', 
             .toBe(true);
         expect(res.description).toMatch(/\d+ links? became (a teleporter|teleporters): /);
         expect(res.description).not.toContain(NO_LINK_BECAME_TELEPORTER);
-        // Every exit the op flipped is named, by its region and its side's word.
-        const flippedExits = leafDiff(FOUR, res.doc).filter((p) => p.endsWith('isTeleporter'))
-            .map((p) => { const [, , r, , , i] = p.split('.'); return [r, FOUR.preset_sidecars[MAZE_SLOT][r].playable_payload.exits[i]]; });
+        // Every exit the LAW says the move flips is named, by its region and its side's word.
+        const flippedExits = lawFlips(FOUR, MAZE_SLOT, op);
         expect(flippedExits.length).toBeGreaterThan(0);
         for (const [r, x] of flippedExits) {
             expect(res.description, `${r} ${x.exit_id}`).toContain(`${r} ${SIDE_WORDS[x.side]}`);
@@ -240,7 +266,7 @@ describe('the description names the move and every link whose kind it changed', 
             .map((to) => ({ ...op, to }))
             .filter((o) => !(o.to.gx === from.gx && o.to.gy === from.gy))
             .map((o) => [o, applyRulesDocOp(once.doc, o)])
-            .find(([, r]) => r.ok && !leafDiff(once.doc, r.doc).some((p) => p.endsWith('isTeleporter')));
+            .find(([o, r]) => r.ok && lawFlips(once.doc, MAZE_SLOT, o).length === 0);
         expect(quiet, 'a quiet second move exists on the fixture').toBeTruthy();
         const [, quietRes] = quiet;
         expect(quietRes.description.endsWith(`; ${NO_LINK_BECAME_TELEPORTER}`)).toBe(true);
@@ -321,10 +347,8 @@ describe('refusals — asked of the op, each by name, the document untouched', (
     });
 
     it('⛔ a flag the substrate cannot re-serialize is refused, never hand-written', () => {
-        const op = everyChange(FOUR, slot).moves
-            .find((o) => leafDiff(FOUR, applied(FOUR, o).doc).some((p) => p.endsWith('isTeleporter')));
-        const flippedRegion = leafDiff(FOUR, applied(FOUR, op).doc)
-            .find((p) => p.endsWith('isTeleporter')).split('.')[2];
+        const op = everyChange(FOUR, slot).moves.find((o) => lawFlips(FOUR, slot, o).length > 0);
+        const [[flippedRegion]] = lawFlips(FOUR, slot, op);
         const orphan = clone(FOUR);
         const unregistered = `${substrateOf(slot)}-not-registered`;
         expect(substrateRegistry.get(unregistered)).toBeFalsy();
