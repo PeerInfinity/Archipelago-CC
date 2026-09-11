@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, it, expect } from 'vitest';
 
-import { reconstructResultFromSidecars } from './compositeMapDocument.js';
+import { mapBoundsFor, reconstructResultFromSidecars } from './compositeMapDocument.js';
 import { DEFAULT_REGION_SIZE } from './procgenPipelineEngine.js';
 import { drawCompositeMap, COLORS, TILE_PX } from '../procgenCore/compositeMapRenderer.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -476,5 +476,58 @@ describe('reconstructResultFromSidecars — the cell size (M0)', () => {
         delete b.grid_cell;
         expect(tilePayloadSizeOf({ a, b })).not.toBeNull();
         expect(reconstructResultFromSidecars({ preset_sidecars: { 1: { a, b } } })).toBeNull();
+    });
+});
+
+/**
+ * ⛓⛓ PRESET SIDECARS M2 — **THE GRID'S SIZE IN CELLS, ONE RULE.** The larger of
+ * the `grid_cell` extents and `procgen_metadata.grid_dims`, per axis. M0 left the
+ * `grid_dims` branch unwritten because no committed document could tell the two
+ * apart; a map MOVE can (a move that empties the last row makes the extents
+ * smaller than the recorded size), so the rule the Map draws with and the rule a
+ * move refuses with are this one function (`apworldEditor/regionLayout.js`).
+ */
+describe('mapBoundsFor', () => {
+    const entries = (...cells) => cells.map(([gx, gy], i) => [`r${i}`, minimalSidecar(gx, gy)]);
+
+    it('the extents, when the document records no size', () => {
+        expect(mapBoundsFor({}, entries([0, 0], [2, 1])))
+            .toEqual({ width: 3, height: 2, boundsSource: 'extents' });
+    });
+
+    it('`grid_dims` wins on an axis where it is LARGER — and only there', () => {
+        const doc = { procgen_metadata: { grid_dims: { width: 3, height: 5 } } };
+        expect(mapBoundsFor(doc, entries([0, 0], [4, 1])))
+            .toEqual({ width: 5, height: 5, boundsSource: 'grid_dims' });
+    });
+
+    it('a `grid_dims` no larger than the extents leaves them as they are', () => {
+        const doc = { procgen_metadata: { grid_dims: { width: 3, height: 2 } } };
+        expect(mapBoundsFor(doc, entries([0, 0], [2, 1])))
+            .toEqual({ width: 3, height: 2, boundsSource: 'extents' });
+    });
+
+    it('a malformed `grid_dims` is ignored', () => {
+        for (const grid_dims of [{ width: '9', height: 9.5 }, { width: -4, height: 0 }, [9, 9], null]) {
+            expect(mapBoundsFor({ procgen_metadata: { grid_dims } }, entries([1, 1])), JSON.stringify(grid_dims))
+                .toEqual({ width: 2, height: 2, boundsSource: 'extents' });
+        }
+    });
+
+    it('no `grid_cell` ⇒ null', () => {
+        const a = minimalSidecar(0, 0);
+        delete a.grid_cell;
+        expect(mapBoundsFor({ procgen_metadata: { grid_dims: { width: 4, height: 4 } } }, [['a', a]])).toBeNull();
+    });
+
+    it('⛓ the reconstruction draws a grid of that size and says which rule gave it', () => {
+        const sidecars = { 1: { a: minimalSidecar(0, 0), b: minimalSidecar(1, 0) } };
+        const bare = reconstructResultFromSidecars({ preset_sidecars: sidecars });
+        expect([bare.grid.width, bare.grid.height, bare.boundsSource]).toEqual([2, 1, 'extents']);
+        const sized = reconstructResultFromSidecars({
+            preset_sidecars: sidecars, procgen_metadata: { grid_dims: { width: 3, height: 2 } },
+        });
+        expect([sized.grid.width, sized.grid.height, sized.boundsSource]).toEqual([3, 2, 'grid_dims']);
+        expect(sized.stats.regionsBuilt).toBe(2);
     });
 });

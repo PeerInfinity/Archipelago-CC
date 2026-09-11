@@ -74,12 +74,8 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
  * deserialize one — which is the check that was already there at the end of the
  * placement loop. The `maxW === 0` gate in front of it is gone.
  *
- * ⚠ **`procgen_metadata.grid_dims` is NOT consulted**, and the measurement is
- * why: the brief asked for it where it exceeds the `grid_cell` extents, so a
- * sparse layout would keep its empty cells. Over the same 42 slots, **25 carry
- * `grid_dims` and 0 of them exceed the extents** — no committed document can
- * tell the two rules apart, so the extents rule stands and the branch nothing
- * would exercise was not written.
+ * ⚠ The GRID's size (how many cells, not how big each is) is `mapBoundsFor`'s
+ * business, below.
  */
 function cellSizeFor(entries) {
     let maxW = 0;
@@ -102,6 +98,58 @@ function cellSizeFor(entries) {
         return { regionSize: { width: declW, height: declH }, regionSizeSource: 'declared' };
     }
     return { regionSize: { ...DEFAULT_REGION_SIZE }, regionSizeSource: 'default' };
+}
+
+/**
+ * ⛓⛓⛓ **THE MAP'S SIZE IN CELLS — ONE RULE, FOR THE MAP AND FOR A MOVE.**
+ * The larger, per axis, of the slot's `grid_cell` EXTENTS and the document's
+ * `procgen_metadata.grid_dims`; `boundsSource` says which decided
+ * (`'extents'` when the two agree or there is no `grid_dims`).
+ *
+ * ⛓ M0 wrote the extents rule and left this branch unwritten: over the 42
+ * committed slots, 25 carried `grid_dims` and none exceeded the extents, so no
+ * document could tell the two apart. PRESET SIDECARS M2 (the map moves,
+ * `apworldEditor/regionLayout.js`) is the case that CAN: a move that empties the
+ * last row or column makes the extents smaller than the size the generator
+ * recorded. With `grid_dims` the map keeps its size (the move back is not
+ * refused); without it the map shrinks to its new extents and the move says so.
+ * ⚖ planner, M2: this function is the ONE place that rule lives — the Map draws
+ * from it and the move refuses from it, so the two cannot disagree about where
+ * the edge is.
+ *
+ * ⚠ `grid_dims` is DOCUMENT-level, so it bounds every slot. Measured at M2: the
+ * only committed multi-slot document (the four-player multiworld export) has
+ * the same 3×2 extents in all four slots as its `grid_dims`; every committed
+ * `grid_dims` equals its slot's extents exactly. A malformed `grid_dims` (not
+ * two positive whole numbers) is ignored.
+ *
+ * @param {object} rulesJson the whole document
+ * @param {Array<[string, object]>} entries the slot's sidecar entries
+ * @returns {{width: number, height: number, boundsSource: 'extents'|'grid_dims'}|null}
+ *   null when no entry carries a `grid_cell`.
+ */
+export function mapBoundsFor(rulesJson, entries) {
+    let maxGx = -1;
+    let maxGy = -1;
+    for (const [, sc] of entries) {
+        const cell = sc?.grid_cell;
+        if (cell) {
+            if (cell.gx > maxGx) maxGx = cell.gx;
+            if (cell.gy > maxGy) maxGy = cell.gy;
+        }
+    }
+    if (maxGx < 0) return null;
+    const dims = rulesJson?.procgen_metadata?.grid_dims;
+    const usable = (n) => Number.isInteger(n) && n > 0;
+    const dimsW = usable(dims?.width) ? dims.width : 0;
+    const dimsH = usable(dims?.height) ? dims.height : 0;
+    const width = Math.max(maxGx + 1, dimsW);
+    const height = Math.max(maxGy + 1, dimsH);
+    return {
+        width,
+        height,
+        boundsSource: width > maxGx + 1 || height > maxGy + 1 ? 'grid_dims' : 'extents',
+    };
 }
 
 /**
@@ -138,21 +186,16 @@ export function reconstructResultFromSidecars(rulesJson, { playerId = null } = {
     const regionEntries = Object.entries(playerSidecars ?? {});
     if (regionEntries.length === 0) return null;
 
-    let maxGx = 0;
-    let maxGy = 0;
-    for (const [, sc] of regionEntries) {
-        const cell = sc?.grid_cell;
-        if (cell) {
-            if (cell.gx > maxGx) maxGx = cell.gx;
-            if (cell.gy > maxGy) maxGy = cell.gy;
-        }
-    }
     // ⛓ M0 — the cell's size, and which of the three rules gave it. See the
     //   docblock on `cellSizeFor`; the `maxW === 0 ⇒ null` gate that used to
     //   stand here is gone, and `placed === 0` below is the only null rule left.
     const { regionSize, regionSizeSource } = cellSizeFor(regionEntries);
 
-    const grid = new Grid({ width: maxGx + 1, height: maxGy + 1 });
+    // ⛓ M2 — the grid's size in cells: `mapBoundsFor`, the rule a move shares.
+    //   (No `grid_cell` at all ⇒ nothing is placed below ⇒ null; the 1×1 grid
+    //   that branch builds is never returned.)
+    const bounds = mapBoundsFor(rulesJson, regionEntries) ?? { width: 1, height: 1, boundsSource: 'extents' };
+    const grid = new Grid({ width: bounds.width, height: bounds.height });
     let placed = 0;
     let teleporters = 0;
     for (const [region_id, sc] of regionEntries) {
@@ -205,6 +248,8 @@ export function reconstructResultFromSidecars(rulesJson, { playerId = null } = {
         //   re-derive it: a second spelling of the precedence is a second thing
         //   to keep in step.
         regionSizeSource,
+        // ⛓ M2 — WHICH rule sized the grid ('extents' | 'grid_dims').
+        boundsSource: bounds.boundsSource,
         stats: {
             regionsBuilt: placed,
             regionsSkipped: 0,

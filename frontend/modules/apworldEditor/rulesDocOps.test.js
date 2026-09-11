@@ -113,6 +113,13 @@ describe('the contract shape', () => {
         //   delete samples below need an entry that exists and that nothing
         //   carries — which is what a slot looks like just after `add`.
         doc[ITEM_GROUPS_KEY][P] = ['Everything'];
+        // ⛓ M2 — a second placed entry, so the map has an empty cell to move to
+        //   and a second region to swap with. Its payload carries no exits, so no
+        //   flag flips and no substrate serializer is asked (this file registers
+        //   none; the moves' own rows are `regionLayout.test.js`).
+        doc.preset_sidecars[P].Vault = {
+            substrate: 'maze', render_hint: 'maze', grid_cell: { gx: 1, gy: 1 }, playable_payload: {},
+        };
         const before = bytes(doc);
         const samples = {
             'add-region': { op: 'add-region' },
@@ -146,6 +153,8 @@ describe('the contract shape', () => {
                 op: 'set-region-sidecar', region: 'Hall',
                 entry: { substrate: 'maze', playable_payload: { width: 4, height: 4, tiles: 'bbbb' } },
             },
+            'move-region': { op: 'move-region', region: 'Hall', to: { gx: 1, gy: 0 } },
+            'swap-regions': { op: 'swap-regions', a: 'Hall', b: 'Vault' },
             'set-canonical-placement': {
                 op: 'set-canonical-placement', location: 'Vault Chest', item: 'Key',
             },

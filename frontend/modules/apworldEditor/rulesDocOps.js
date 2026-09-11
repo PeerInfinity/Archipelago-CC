@@ -80,6 +80,12 @@ import {
     renameRegionInRules,
     validateRules,
 } from './rulesUtils.js';
+// ⛓ PRESET SIDECARS M2 — the map moves' layout arithmetic. It is the one import
+//   here that reaches the pipeline ENGINE and the substrate REGISTRY (both
+//   behind `regionLayout.js`); every refusal sentence stays in this file.
+import {
+    SIDE_WORDS, layoutChange, occupantAt, pairLinkFlips, rewriteExitFlags, slotLayout,
+} from './regionLayout.js';
 
 /** ⛓ THE VOCABULARY, as data. */
 export const RULES_OP_KINDS = Object.freeze([
@@ -108,6 +114,8 @@ export const RULES_OP_KINDS = Object.freeze([
     'set-rule-tree',
     'replace-region-sidecar',
     'set-region-sidecar',
+    'move-region',
+    'swap-regions',
     'set-key',
     'replace-document',
     'clear',
@@ -354,6 +362,8 @@ function dispatchRulesDocOp(doc, op) {
         case 'set-rule-tree': return opSetRuleTree(doc, op);
         case 'replace-region-sidecar': return opReplaceRegionSidecar(doc, op);
         case 'set-region-sidecar': return opSetRegionSidecar(doc, op);
+        case 'move-region': return opMoveRegion(doc, op);
+        case 'swap-regions': return opSwapRegions(doc, op);
         case 'set-key': return opSetKey(doc, op);
         case 'replace-document': return opReplaceDocument(doc, op);
         case 'clear': return opClear(doc, op);
@@ -1892,6 +1902,182 @@ function opSetRegionSidecar(doc, op) {
     return ok(setPath(doc, ['preset_sidecars', p, name], entry),
         `region ${name}: sidecar entry replaced (${hasPayload
             ? `${n} payload key${n === 1 ? '' : 's'}` : 'no payload'}) — ${SIDECAR_NOT_REDERIVED}`);
+}
+
+/* ── the map moves (PRESET SIDECARS M2) ───────────────────────────────── */
+
+/**
+ * ⛓ The clause a move's description carries when no link turned into a
+ * teleporter — ⚖ Q3 C (*"a move may turn a link into a teleporter, and the op
+ * names each one"*) names the absence too. EXPORTED so the rows assert the
+ * sentence the op wrote.
+ */
+export const NO_LINK_BECAME_TELEPORTER = 'no link became a teleporter';
+
+/**
+ * ⛓ The clause a move's description ends with when it SHRANK the map. The map's
+ * size is the extent of the slot's `grid_cell`s (M0's rule — the one the Map
+ * draws with, and the one a move's bounds refusal reads), so a move that empties
+ * the last row or column takes that row or column off the map, and the move
+ * back is then refused as outside it; Undo is the way back. Said out loud rather
+ * than discovered. EXPORTED for the rows.
+ */
+export const MAP_SIZE_IS_THE_EXTENT = 'its size is the extent of the `grid_cell`s';
+
+const cellStr = (c) => `(${c.gx},${c.gy})`;
+
+/** ⛓ The links a move changed, as the description's clauses. */
+function linkClauses(flips) {
+    const word = (l) => (l.to.side
+        ? `${l.from.region} ${SIDE_WORDS[l.from.side]} ↔ ${l.to.region} ${SIDE_WORDS[l.to.side]}`
+        : `${l.from.region} ${SIDE_WORDS[l.from.side]} → ${l.to.region}`);
+    const links = pairLinkFlips(flips);
+    const tele = links.filter((l) => l.teleporter);
+    const plain = links.filter((l) => !l.teleporter);
+    const clauses = [tele.length === 0 ? NO_LINK_BECAME_TELEPORTER
+        : `${tele.length} link${tele.length === 1 ? '' : 's'} became `
+            + `${tele.length === 1 ? 'a teleporter' : 'teleporters'}: ${tele.map(word).join(', ')}`];
+    if (plain.length) {
+        clauses.push(`${plain.length} teleporter${plain.length === 1 ? '' : 's'} became `
+            + `${plain.length === 1 ? 'a plain link' : 'plain links'} again: ${plain.map(word).join(', ')}`);
+    }
+    return clauses.join('; ');
+}
+
+/**
+ * ⛓ The refusals both moves share: a region NAME that has a sidecar entry with
+ * a usable `grid_cell` in this slot. Answers the region's cell, or a refusal.
+ */
+function mapRegion(doc, p, layout, name, opName, role = 'a region') {
+    if (typeof name !== 'string' || !name.trim()) {
+        return refuse(`apworld: ${opName} needs ${role} NAME, got ${JSON.stringify(name)}.`);
+    }
+    const slotSidecars = doc?.preset_sidecars?.[p];
+    if (!slotSidecars?.[name] || typeof slotSidecars[name] !== 'object') {
+        return refuse(`apworld: player ${p} has no sidecar entry for region "${name}", so it has `
+            + 'no cell on the map to move. This slot\'s sidecars are '
+            + `[${Object.keys(slotSidecars ?? {}).join(', ') || 'none'}].`);
+    }
+    if (!layout.cells.has(name)) {
+        return refuse(`apworld: region "${name}" carries no usable \`grid_cell\` (got `
+            + `${slotSidecars[name].grid_cell === undefined ? 'none' : JSON.stringify(slotSidecars[name].grid_cell)}), so it is not on player ${p}'s map `
+            + 'and there is nothing to move.');
+    }
+    if (layout.clash) {
+        const { a, b, cell } = layout.clash;
+        return refuse(`apworld: regions "${a}" and "${b}" both sit at ${cellStr(cell)} in player `
+            + `${p}'s sidecars — a map with two regions in one cell cannot say which one a move `
+            + 'vacates. Give one of them its own `grid_cell` first.');
+    }
+    return { ok: true, cell: layout.cells.get(name) };
+}
+
+/**
+ * ⛓ The write-back of one move: `grid_cell` for every region that changed
+ * cell, the substrate-serialized `exits` for every payload with a flipped exit —
+ * and nothing else, each written in place so every entry keeps its key order.
+ */
+function layoutWriteBack(doc, p, layout, change) {
+    const { after, moved, flips } = layoutChange(doc, p, layout, change);
+    const flagsByRegion = new Map();
+    for (const f of flips) {
+        if (!flagsByRegion.has(f.region)) flagsByRegion.set(f.region, new Map());
+        flagsByRegion.get(f.region).set(f.exitId, f.teleporter);
+    }
+    let next = doc;
+    for (const name of moved) {
+        next = setPath(next, ['preset_sidecars', p, name, 'grid_cell'], { ...after.get(name) });
+    }
+    for (const [name, flags] of flagsByRegion) {
+        const entry = doc.preset_sidecars[p][name];
+        const res = rewriteExitFlags(entry, flags);
+        if (res.unwritable) {
+            return refuse(`apworld: the move changes ${flags.size} exit flag(s) of region `
+                + `"${name}", but its substrate "${entry.substrate}" cannot rewrite them here — `
+                + `${res.unwritable}. A payload's exits are written back in the substrate's OWN `
+                + 'serialized form or not at all; load the substrate\'s module first.');
+        }
+        next = setPath(next, ['preset_sidecars', p, name, 'playable_payload', 'exits'], res.exits);
+    }
+    const was = layout.grid;
+    const now = slotLayout(next, p).grid;
+    const shrank = now.width !== was.width || now.height !== was.height
+        ? `; the map shrinks to ${now.width}×${now.height} (it was ${was.width}×${was.height} — `
+            + `${MAP_SIZE_IS_THE_EXTENT})`
+        : '';
+    return { ok: true, next, flips, shrank };
+}
+
+/**
+ * ⛓⛓⛓ **MOVE A REGION TO AN EMPTY CELL** (PRESET SIDECARS M2 — ⚖ user,
+ * 2026-09-10: *"Yes, I choose option A"*, the map moves are NATIVE hub ops).
+ * `{player, region, to: {gx, gy}}` — the region by NAME, so the record survives
+ * a later move.
+ *
+ * ⛔ **WHAT IT NEVER TOUCHES:** `regions[p]` — the region keeps every exit, every
+ * `connected_region`, every rule — and every payload exit's `targetRegion` /
+ * `targetExitId`. A move changes where a region SITS, never what it connects
+ * to. What it writes, and why the engine's relayout is not what writes it:
+ * `regionLayout.js`.
+ *
+ * Refused by name: no region name; no sidecar entry; no usable `grid_cell`; two
+ * regions sharing a cell; a `to` that is not two whole numbers; a `to` OUTSIDE
+ * the map — ⛔ a move never grows the map, whose size is the extent of the
+ * slot's `grid_cell`s (M0's rule, the one the Map draws with); an OCCUPIED `to`
+ * (that is a swap, and says so); a payload whose substrate cannot re-serialize
+ * the exits the move flips. A move to the region's own cell is a no-op the
+ * session drops, never a refusal (⚠ the header's rule).
+ */
+function opMoveRegion(doc, op) {
+    const p = playerOf(op);
+    const layout = slotLayout(doc, p);
+    const at = mapRegion(doc, p, layout, op.region, 'move-region');
+    if (!at.ok) return at;
+    const to = op.to;
+    if (!to || typeof to !== 'object' || !Number.isInteger(to.gx) || !Number.isInteger(to.gy)) {
+        return refuse('apworld: move-region needs `to` as a cell {gx, gy} — two whole numbers — '
+            + `got ${to === undefined ? 'none' : JSON.stringify(to)}.`);
+    }
+    const target = { gx: to.gx, gy: to.gy };
+    const { grid } = layout;
+    if (!grid.isInBounds(target)) {
+        return refuse(`apworld: ${cellStr(target)} is outside player ${p}'s map, which is `
+            + `${grid.width}×${grid.height} cells — the extent of its \`grid_cell\`s. ⛔ A move never `
+            + 'grows the map.');
+    }
+    if (target.gx === at.cell.gx && target.gy === at.cell.gy) {
+        return ok(doc, `region ${op.region} is already at ${cellStr(target)}`);
+    }
+    const occupant = occupantAt(layout, target);
+    if (occupant) {
+        return refuse(`apworld: ${cellStr(target)} is occupied by region "${occupant}" — a move `
+            + `needs an EMPTY cell. To exchange the two, swap them (swap-regions).`);
+    }
+    const res = layoutWriteBack(doc, p, layout, { kind: 'move', region: op.region, to: target });
+    if (!res.ok) return res;
+    return ok(res.next, `Moved ${op.region} ${cellStr(at.cell)} → ${cellStr(target)}; `
+        + linkClauses(res.flips) + res.shrank);
+}
+
+/**
+ * ⛓⛓⛓ **SWAP TWO REGIONS' CELLS** (PRESET SIDECARS M2). `{player, a, b}` — two
+ * region NAMES. Both must be on the map; everything else is `move-region`'s
+ * contract: links preserved by construction, `regions[p]` untouched, the flags
+ * the swap changes written in each substrate's own form and named. Swapping a
+ * region with itself is a no-op, never a refusal.
+ */
+function opSwapRegions(doc, op) {
+    const p = playerOf(op);
+    const layout = slotLayout(doc, p);
+    const atA = mapRegion(doc, p, layout, op.a, 'swap-regions', '`a` as a region');
+    if (!atA.ok) return atA;
+    const atB = mapRegion(doc, p, layout, op.b, 'swap-regions', '`b` as a region');
+    if (!atB.ok) return atB;
+    if (op.a === op.b) return ok(doc, `region ${op.a} swapped with itself`);
+    const res = layoutWriteBack(doc, p, layout, { kind: 'swap', a: op.a, b: op.b });
+    if (!res.ok) return res;
+    return ok(res.next, `Swapped ${op.a} ${cellStr(atA.cell)} ↔ ${op.b} ${cellStr(atB.cell)}; `
+        + linkClauses(res.flips) + res.shrank);
 }
 
 /* ── the whole document ───────────────────────────────────────────────── */

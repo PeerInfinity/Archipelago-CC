@@ -5038,6 +5038,30 @@ function captureForwardLinks(grid) {
 }
 
 /**
+ * ⛓⛓ **THE SIDE LAW — ONE SPELLING.** A link leaving `fromCell` on `side` for a
+ * region at `toCell` is ADJACENT iff `toCell` is `fromCell`'s neighbour on that
+ * side; otherwise it is a TELEPORTER. `relayoutSphereGrid` below decides where
+ * to set a teleporter with it, and the APWorld editor's map moves (PRESET
+ * SIDECARS M2, `apworldEditor/regionLayout.js`) decide which payload exits flip
+ * with it — one function, so the two cannot drift.
+ *
+ * ⛓ MEASURED 2026-09-11 (M2, over the 38 committed slots with `grid_cell`s): it
+ * reproduces EVERY stored `isTeleporter` flag — maze forward 1,633/1,633 and
+ * back 756/756, bounce 50, jta 20, text_adventure 25, runner 18 — except
+ * `omsi_region_split_test`'s two hand-authored DIAGONAL exits, which are stored
+ * `false` (not adjacent on any side, so this law and the any-side
+ * `cellsAreAdjacent` both call them teleporters).
+ *
+ * ⚠ It is a law about ONE exit. `Grid.teleporters` is keyed `cell:side`, so the
+ * GRID can hold only one teleporter target per side — see the M2 note on
+ * `relayoutSphereGrid`.
+ */
+export function linkIsAdjacentOnSide(grid, fromCell, side, toCell) {
+    const nb = grid.neighborCell(fromCell, side);
+    return !!nb && nb.gx === toCell.gx && nb.gy === toCell.gy;
+}
+
+/**
  * Re-derive the grid's connections after a layout edit (move/swap). The logical
  * links (which region connects to which, on which side) are position-independent
  * (region_id + side), so we: capture them, drop all teleporters, then for each
@@ -5046,6 +5070,16 @@ function captureForwardLinks(grid) {
  * forward exit's target_region (teleporters take precedence over adjacency, so a
  * moved region's exit resolves to its intended target even if some other region
  * now sits next to it). Back-exits keep their stored targets untouched.
+ *
+ * ⚠ MEASURED (PRESET SIDECARS M2, 2026-09-11) — NOT changed here, recorded for
+ * the pipeline's owner: the teleporter map is keyed `cell:side`, so a region with
+ * TWO teleporter links leaving on one side keeps only the last target, and
+ * stitchGrid then points BOTH exits at it. Given the committed documents'
+ * forward exits as `exits_placed`, a NO-OP relayout re-targets 520 maze exits on
+ * 154 regions (118 regions carry 2+ same-side teleporters — the procgen_topdown
+ * worlds) and 2 omsi exits. Back-exits' `isTeleporter` is never updated either
+ * (stitchGrid skips them). The APWorld editor's moves therefore do NOT write
+ * through this function; they apply `linkIsAdjacentOnSide` per exit.
  */
 export function relayoutSphereGrid(grid) {
     const links = captureForwardLinks(grid);
@@ -5055,8 +5089,7 @@ export function relayoutSphereGrid(grid) {
         const from = cellOf.get(fromId);
         const to = cellOf.get(toId);
         if (!from || !to) continue;
-        const nb = grid.neighborCell(from, side);
-        if (nb && nb.gx === to.gx && nb.gy === to.gy) continue; // adjacency resolves it
+        if (linkIsAdjacentOnSide(grid, from, side, to)) continue; // adjacency resolves it
         grid.setTeleporter(from, side, to);
     }
     stitchGrid(grid);
