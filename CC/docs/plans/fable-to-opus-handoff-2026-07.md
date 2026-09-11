@@ -13799,6 +13799,21 @@ the Edit ▸ verdict re-asked; the corpus control (1,398 entries written back = 
 mutants; docs. Baseline 444/13469 @ `368bd59d65` (run 34541425414). Reports come to `preset-sidecars-planning`;
 **the REPLAN with the user follows S1 — nothing launches on its idle.** ⛔ The planner commits nothing while S1 runs.
 
+**S1 SHIPPED + VERIFIED 2026-09-10** (`9bf3a0c583` → `935e3cea19`, five commits: `set-region-sidecar` (the whole entry,
+replace-only, rules untouched, the description saying so), Save JSON on the block from both hosts, four in-app rows
+with mutants, the whole-entry arm, docs; the Edit ▸ verdict is now keyed on the RECORD identity because Undo bypasses
+`_applyOp` — trap **1311**). Planner's own corpus control through the op: **1,398 entries → 0 refused, 0 documents
+moved** (matches the slice). **CI @ `935e3cea19`: run 34545351760 success, 444/13478 (13470 passed | 8 skipped | 0
+failed) = the derivation (+9 `rulesDocOps.test.js`).** What the brief got wrong (§12.1): the drop-`substrate` arm
+cannot see the schema veto because the OP refuses first (**1312** — a veto behind the op cannot see what the op
+refuses; a `grid_cell`-without-`gy` arm can); a one-payload-key edit cannot see a payload-only write (**1313** — a
+document-after row is blind to a partial write inside the edit; the whole-entry arm can); single-tile flips are
+often reproduced by the serializer, so the "hand-edited maze reads the baseline refusal" claim holds only for edits
+it does not reproduce (row picks the tile off `inspectRegionRoom`); no Ctrl-Enter exists; the whole-document veto
+costs 31–40 ms per save on the 934 KB `AP_8`, left unscoped. ⚖ OPEN (§12.7): a CREATE op for a region with no
+entry; the raw save ACCEPTS a changed `substrate` (vs §9.3's read-only field); a standing "hand-edited" note on the
+block. **⛓ THE FIRST THREE RUNGS ARE DONE (M0, S0, S1) — REPLAN with the user next; nothing launched.**
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
