@@ -13,6 +13,12 @@
  * with untracked fixture presets. The entry each row plants is a REAL committed
  * one (the multiworld document's first maze region), so the pass row is about
  * the plumbing and not about a payload this file chose to fit.
+ *
+ * ⛓ PRESET SIDECARS V0 — the gate grew a SECOND layer (`sidecarIssues`, the
+ * hub's validity report), which holds each entry to its DOCUMENT as well: so a
+ * planted document carries the entry's REGION too (without it the report says,
+ * correctly, that nothing reaches the entry). The region is a committed one with
+ * a location, picked by that law, so the location rows below have one to break.
  */
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -26,7 +32,9 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const GATE = join(HERE, 'check-sidecar-fields.mjs');
 const REAL = JSON.parse(readFileSync(join(HERE, '..', '..', 'frontend', 'presets', 'multiworld',
     'AP_05594871498841892311', 'AP_05594871498841892311_P1_rules.json'), 'utf8'));
-const [REGION, ENTRY] = Object.entries(REAL.preset_sidecars['1'])[0];
+const [REGION, ENTRY] = Object.entries(REAL.preset_sidecars['1'])
+    .find(([r]) => (REAL.regions['1'][r]?.locations ?? []).length > 0);
+const DOC_REGION = REAL.regions['1'][REGION];
 
 describe('check-sidecar-fields — the corpus gate', () => {
     let root;
@@ -41,10 +49,13 @@ describe('check-sidecar-fields — the corpus gate', () => {
     });
 
     /** ⛓ Write a one-entry document at `frontend/presets/<preset>/AP_1/AP_1_rules.json`. */
-    const write = (preset, entry, { track = true } = {}) => {
+    const write = (preset, entry, { track = true, region = DOC_REGION } = {}) => {
         const rel = join('frontend', 'presets', preset, 'AP_1', 'AP_1_rules.json');
         mkdirSync(dirname(join(root, rel)), { recursive: true });
-        writeFileSync(join(root, rel), JSON.stringify({ preset_sidecars: { 1: { [REGION]: entry } } }));
+        writeFileSync(join(root, rel), JSON.stringify({
+            regions: { 1: { [REGION]: region } },
+            preset_sidecars: { 1: { [REGION]: entry } },
+        }));
         if (track) git('add', rel);
         return rel;
     };
@@ -64,6 +75,7 @@ describe('check-sidecar-fields — the corpus gate', () => {
         const { code, out } = run();
         expect(out).toContain('documents read   1 (1 with sidecars)');
         expect(out).toContain('ALL PASS — 1 entries over 1 substrates');
+        expect(out).toContain('0 issue(s), 0 warning(s), 0 not-checked notice(s)');
         expect(code).toBe(0);
     });
 
@@ -94,5 +106,32 @@ describe('check-sidecar-fields — the corpus gate', () => {
         const { code, out } = run();
         expect(out).toContain('UNREGISTERED');
         expect(code).toBe(1);
+    });
+
+    /* ── V0: the second layer ── */
+
+    it('⛓⛓ an issue ONLY the second layer can see FAILs: a document that lost a location the '
+        + 'payload still carries (the first layer passes it — the payload is untouched)', () => {
+        const lost = DOC_REGION.locations[0].name;
+        write('epsilon', ENTRY, { region: { ...DOC_REGION, locations: DOC_REGION.locations.slice(1) } });
+        const { code, out } = run();
+        expect(out).not.toContain('  FAIL  ');
+        expect(out).toContain('ISSUE');
+        expect(out).toContain('LOCATION_UNKNOWN');
+        expect(out).toContain(lost);
+        expect(out).toContain('1 issue(s)');
+        expect(code).toBe(1);
+    });
+
+    it('a WARNING prints and does not fail: a document exit the payload no longer carries', () => {
+        const [dropped, ...kept] = ENTRY.playable_payload.exits;
+        write('zeta', { ...ENTRY, playable_payload: { ...ENTRY.playable_payload, exits: kept } });
+        const { code, out } = run();
+        expect(out).toContain('WARN');
+        expect(out).toContain('EXIT_NOT_CARRIED');
+        expect(out).toContain(dropped.exitName);
+        expect(out).toContain('ALL PASS');
+        expect(out).toContain('0 issue(s), 1 warning(s)');
+        expect(code).toBe(0);
     });
 });

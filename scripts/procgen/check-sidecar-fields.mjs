@@ -25,6 +25,30 @@
  * report asks of an edit (the `check-canonical-placements` shape: one
  * predicate, two askers, so the gate and the editor cannot disagree).
  *
+ * ── ⛓⛓ THE SECOND LAYER — THE HUB'S VALIDITY REPORT (PRESET SIDECARS V0) ──
+ *
+ * The gate GREW rather than gaining a sibling (two gates with one opener are
+ * one gate; the roster arm is unchanged). Per populated SLOT it now also asks
+ * `sidecarIssues(doc, slot)` (`frontend/modules/apworldEditor/sidecarIssues.js`)
+ * — the one function the APWorld hub's validation bar and per-region block
+ * read — and reports what it says in three bins:
+ *
+ *   · ERRORS    — FAIL the gate (a payload the play-time host cannot read, an
+ *                 exit or location name the document lacks, a duplicate or
+ *                 out-of-grid cell, an unresolved sibling reference, a payload
+ *                 carrying another substrate's keys, …);
+ *   · WARNINGS  — PRINTED, never failing: maybe-intended state by the report's
+ *                 own definition (a document endpoint a producer dropped by
+ *                 name — the maze atlas projection's `exit_tile_collision` is
+ *                 in the committed corpus and the report is right about it);
+ *   · NOT CHECKED — `UNCHECKED_SIDECAR_KINDS`, one line per substrate and
+ *                 cause: a substrate that declares no carrier is said aloud,
+ *                 never counted as passing a check it did not get.
+ *
+ * ⚠ The report's shape layer re-asks `sidecarPayloadErrors`, so a payload the
+ * first layer FAILs also shows there (as the hub shows it): both askers, one
+ * predicate.
+ *
  * ── ⛓ THE POPULATION IS `git ls-files`, AND IT IS PRINTED ──────────
  *
  * Every TRACKED `_rules.json` under `frontend/presets/` — the multiworld
@@ -42,6 +66,10 @@
  * The libraries' own boot chatter is swallowed while they load; a library that
  * FAILS to load is reported by name, and every entry of a substrate it would
  * have registered then fails as unregistered.
+ *
+ * ⛓ `--tree=<path>` reads another checkout's presets (its `git ls-files`), with
+ * THIS checkout's registry and report — which is how a planted issue in a
+ * scratch copy of one preset is fed to the gate.
  *
  * Run:
  *   node scripts/procgen/check-sidecar-fields.mjs
@@ -127,13 +155,16 @@ async function loadRegistry() {
     }
     const core = await import(
         pathToFileURL(join(repo, 'frontend/modules/procgenCore/sidecarFields.js')).href);
-    return { substrateRegistry, failed, core };
+    const report = await import(
+        pathToFileURL(join(repo, 'frontend/modules/apworldEditor/sidecarIssues.js')).href);
+    return { substrateRegistry, failed, core, report };
 }
 
 async function main() {
     const t0 = Date.now();
-    const { substrateRegistry, failed, core } = await loadRegistry();
+    const { substrateRegistry, failed, core, report } = await loadRegistry();
     const { sidecarFieldsOf, sidecarPayloadErrors } = core;
+    const { sidecarIssues, describeSidecarIssue, UNCHECKED_SIDECAR_KINDS } = report;
 
     /** Per substrate id: `{fields}` or `{error}` — asked once, reused per entry. */
     const declarations = new Map();
@@ -155,6 +186,10 @@ async function main() {
 
     const files = documents();
     const fails = [];
+    /** ⛓ The second layer's three bins (see the docblock). */
+    const issueErrors = [];
+    const issueWarnings = [];
+    const notChecked = [];
     const bySubstrate = new Map();
     let withSidecars = 0;
     let entries = 0;
@@ -188,6 +223,13 @@ async function main() {
                     fails.push({ ...at, substrate: entry.substrate, ...e });
                 }
             }
+            // ⛓⛓ THE SECOND LAYER — the hub's report, per slot.
+            for (const i of sidecarIssues(doc, slot)) {
+                const row = { file, slot, ...i, line: describeSidecarIssue(i) };
+                if (UNCHECKED_SIDECAR_KINDS.includes(i.kind)) notChecked.push(row);
+                else if (i.severity === 'error') issueErrors.push(row);
+                else issueWarnings.push(row);
+            }
         }
     }
     const ms = Date.now() - t0;
@@ -197,7 +239,8 @@ async function main() {
         console.log(JSON.stringify({
             documents: files.length, withSidecars, entries, substrates: Object.fromEntries(
                 substrates.map((s) => [s, bySubstrate.get(s)])),
-            librariesFailed: failed, fails, ms,
+            librariesFailed: failed, fails,
+            issues: { errors: issueErrors, warnings: issueWarnings, notChecked }, ms,
         }, null, 2));
     } else {
         console.log('check-sidecar-fields — every preset_sidecars entry against its substrate\'s '
@@ -218,12 +261,23 @@ async function main() {
             }
             for (const [k, n] of [...groups].sort()) console.log(`    ${n}×  ${k}`);
         }
-        const bad = fails.length + failed.length;
+        // ⛓ The second layer: errors FAIL, warnings print, not-checked are said aloud.
+        const shown = [...issueErrors.map((r) => ['ISSUE', r]), ...issueWarnings.map((r) => ['WARN ', r])];
+        for (const [tag, r] of shown.slice(0, MAX_FAIL_LINES)) {
+            console.log(`  ${tag}  ${r.file}  slot ${r.slot}  ${r.kind} — ${r.line}`);
+        }
+        if (shown.length > MAX_FAIL_LINES) {
+            console.log(`  … ${shown.length - MAX_FAIL_LINES} more issue line(s); --json lists all.`);
+        }
+        for (const r of notChecked) console.log(`  NOT CHECKED  ${r.file}  slot ${r.slot}  ${r.line}`);
+        const tally = `${issueErrors.length} issue(s), ${issueWarnings.length} warning(s), `
+            + `${notChecked.length} not-checked notice(s)`;
+        const bad = fails.length + failed.length + issueErrors.length;
         console.log(bad === 0
-            ? `  ALL PASS — ${entries} entries over ${substrates.length} substrates (${ms} ms)`
-            : `  ${fails.length} FAIL(S) over ${entries} entries${failed.length ? `, ${failed.length} library load failure(s)` : ''} (${ms} ms)`);
+            ? `  ALL PASS — ${entries} entries over ${substrates.length} substrates · ${tally} (${ms} ms)`
+            : `  ${fails.length} FAIL(S) over ${entries} entries · ${tally}${failed.length ? `, ${failed.length} library load failure(s)` : ''} (${ms} ms)`);
     }
-    process.exit(fails.length + failed.length > 0 ? 1 : 0);
+    process.exit(fails.length + failed.length + issueErrors.length > 0 ? 1 : 0);
 }
 
 if (isEntryPoint(import.meta.url)) main();

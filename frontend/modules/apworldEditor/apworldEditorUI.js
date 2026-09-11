@@ -104,6 +104,15 @@ import {
 } from './regionRoundTrip.js';
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 /**
+ * ⛓⛓ PRESET SIDECARS V0 — the FOURTH validator: what is wrong with the selected
+ * slot's sidecar entries. One pure function with three readers — the bar
+ * (`_validationIssues`), the per-region block and its count badge
+ * (`_makeRegionSidecarBlock`), and `check-sidecar-fields.mjs` — so none of
+ * them spells a check of its own. It names no substrate: whatever differs per
+ * substrate is read off the registry entry.
+ */
+import { describeSidecarIssue, sidecarIssues } from './sidecarIssues.js';
+/**
  * ⛓⛓ H5 — **IS THAT PANEL EVEN IN THIS APP?** `ui:activatePanel` reaches a
  * `panelManager` that warns and returns when the component type is not in the
  * layout, so a link to a module `module-configs/modules.json` has DISABLED is a
@@ -407,6 +416,17 @@ class ApworldEditorUI {
      * record, so a new document is a new object by construction.
      */
     this._validationCache = null;
+    /**
+     * ⛓⛓ PRESET SIDECARS V0 — **AND THE SIDECAR REPORT IS MEMOISED ON THE SAME
+     * KEY**, the record's identity plus the slot, in its OWN cache: the block
+     * reads it without going through the bar, so the bar and the block are two
+     * readers of one function rather than one reader and a copy. ⛔ Keyed on the
+     * record and never cleared on apply — an Undo re-folds the record without
+     * passing through `_applyOp` (trap 1311). Inside the function, each entry's
+     * issues are memoised on the entry object, so an op re-asks only what it
+     * touched.
+     */
+    this._sidecarIssueCache = null;
 
     /**
      * ⛓⛓⛓ H4b — **THE OPEN ROOM IS PARKED, NOT TORN DOWN ON A RE-RENDER.**
@@ -687,6 +707,7 @@ class ApworldEditorUI {
     //   object, so this is hygiene (it drops the reference) rather than
     //   correctness: the new session's record is a different object.
     this._validationCache = null;
+    this._sidecarIssueCache = null;
     /**
      * ⛓ H4b — …and neither does a remembered room verdict. The key is
      * `slot|region`, and two documents can hold the same slot and the same
@@ -1482,9 +1503,34 @@ class ApworldEditorUI {
     if (!doc) return [];
     const c = this._validationCache;
     if (c && c.doc === doc && c.playerId === this.playerId) return c.issues;
-    const issues = validateRules(doc, this.playerId);
+    // ⛓ V0 — the sidecar report joins the list, each issue carrying the region it
+    //   is about (the row's click lands there) and the sentence the gate prints.
+    const sidecar = this._sidecarIssues().map((i) => ({
+      ...i, tab: 'regions', source: 'sidecar', message: describeSidecarIssue(i),
+    }));
+    const issues = [...validateRules(doc, this.playerId), ...sidecar];
     this._validationCache = { doc, playerId: this.playerId, issues };
     return issues;
+  }
+
+  /**
+   * ⛓⛓ PRESET SIDECARS V0 — **THE SELECTED SLOT'S SIDECAR ISSUES**, memoised on
+   * the record and the slot (see `_sidecarIssueCache`). ⛔ The block draws the
+   * SELECTED slot (its own docblock says why), so this is the only slot it asks.
+   */
+  _sidecarIssues() {
+    const doc = this.rulesDoc;
+    if (!doc) return [];
+    const c = this._sidecarIssueCache;
+    if (c && c.doc === doc && c.playerId === this.playerId) return c.issues;
+    const issues = sidecarIssues(doc, this.playerId);
+    this._sidecarIssueCache = { doc, playerId: this.playerId, issues };
+    return issues;
+  }
+
+  /** ⛓ V0 — one region's sidecar issues (the block's list, the Sidecars row's badge). */
+  _sidecarIssuesOf(regionName) {
+    return this._sidecarIssues().filter((i) => i.region === regionName);
   }
 
   _renderValidationBar() {
@@ -1494,6 +1540,11 @@ class ApworldEditorUI {
     const issues = this._validationIssues();
     const errorCount = issues.filter(i => i.severity === 'error').length;
     const warnCount = issues.length - errorCount;
+    // ⛓ V0 — the bar's counts, readable: the whole list, and how many of it the
+    //   sidecar report contributed.
+    this.validationBar.dataset.issues = String(issues.length);
+    this.validationBar.dataset.sidecarIssues = String(
+      issues.filter((i) => i.source === 'sidecar').length);
 
     const summary = document.createElement('div');
     Object.assign(summary.style, {
@@ -1547,13 +1598,19 @@ class ApworldEditorUI {
       });
       for (const issue of issues) {
         const row = document.createElement('div');
+        row.className = 'apworld-validation-issue';
+        row.dataset.severity = issue.severity;
+        if (issue.source) row.dataset.source = issue.source;
+        if (issue.kind) row.dataset.kind = issue.kind;
+        // ⛓ V0 — a sidecar issue names its region: the click lands ON it.
+        const toRegion = issue.source === 'sidecar' && issue.region;
         Object.assign(row.style, {
           display: 'flex',
           gap: '6px',
           padding: '2px 0',
           color: '#ccc',
           fontSize: '11px',
-          cursor: issue.tab && issue.tab !== this.activeTab ? 'pointer' : 'default',
+          cursor: toRegion || (issue.tab && issue.tab !== this.activeTab) ? 'pointer' : 'default',
         });
         const icon = document.createElement('span');
         icon.textContent = issue.severity === 'error' ? '⛔' : '⚠';
@@ -1569,7 +1626,9 @@ class ApworldEditorUI {
           tag.style.marginLeft = 'auto';
           tag.style.flex = '0 0 auto';
           row.appendChild(tag);
-          if (issue.tab !== this.activeTab) {
+          if (toRegion) {
+            row.addEventListener('click', () => this.selectRegion(issue.region, 'the validation bar'));
+          } else if (issue.tab !== this.activeTab) {
             row.addEventListener('click', () => this._selectTab(issue.tab));
           }
         }
@@ -3120,6 +3179,23 @@ class ApworldEditorUI {
       label.textContent = regionName;
       Object.assign(label.style, { color: '#ddd', fontSize: '12px' });
       head.appendChild(label);
+      // ⛓ V0 — the region's sidecar-issue count, beside its name, when there is one.
+      const regionIssues = this._sidecarIssuesOf(regionName);
+      if (regionIssues.length) {
+        const errors = regionIssues.some((i) => i.severity === 'error');
+        const badge = document.createElement('span');
+        badge.className = 'apworld-sidecars-issue-badge';
+        badge.dataset.count = String(regionIssues.length);
+        badge.textContent = `${errors ? '⛔' : '⚠'} ${regionIssues.length}`;
+        badge.title = `${regionIssues.length} sidecar issue${regionIssues.length === 1 ? '' : 's'} `
+          + '— listed in the block below';
+        Object.assign(badge.style, {
+          padding: '0 6px', borderRadius: '8px', fontSize: '10px',
+          color: errors ? '#e8a095' : '#d6a030',
+          border: `1px solid ${errors ? '#6a2e2e' : '#6a5a2e'}`,
+        });
+        head.appendChild(badge);
+      }
       const go = this._makeButton('Go to region', '#3a3a3a',
         () => this.selectRegion(regionName, 'the Sidecars tab'));
       go.className = 'apworld-sidecars-go-region';
@@ -5451,6 +5527,36 @@ class ApworldEditorUI {
       line.appendChild(regen);
     }
     box.appendChild(line);
+
+    /**
+     * ⛓⛓ PRESET SIDECARS V0 — **WHAT IS WRONG WITH THIS ENTRY, UNDER ITS FACTS**:
+     * a sentence each, coloured by severity, NOTHING when clean. The same
+     * `sidecarIssues` list the bar counts (this block reads it directly, not
+     * through the bar). ⛔ Errors block nothing — the raw save is not vetoed by
+     * them (⚖ user, 2026-09-10: the reader owns the repair); this is where the
+     * reader is told what to repair.
+     */
+    const issues = (String(player) === String(this.playerId)
+      ? this._sidecarIssues() : sidecarIssues(this.rulesDoc, player))
+      .filter((i) => i.region === regionName);
+    box.dataset.sidecarIssues = String(issues.length);
+    if (issues.length) {
+      const list = document.createElement('div');
+      list.className = 'apworld-sidecar-issues';
+      Object.assign(list.style, { margin: '4px 0 0', lineHeight: '1.4' });
+      for (const i of issues) {
+        const row = document.createElement('div');
+        row.className = 'apworld-sidecar-issue';
+        row.dataset.kind = i.kind;
+        row.dataset.severity = i.severity;
+        if (i.field) row.dataset.field = i.field;
+        const error = i.severity === 'error';
+        row.textContent = `${error ? '⛔' : '⚠'} ${i.message}`;
+        Object.assign(row.style, { color: error ? '#e8a095' : '#d6a030' });
+        list.appendChild(row);
+      }
+      box.appendChild(list);
+    }
 
     const key = `${hostTab}|${player}|${regionName}`;
     box.appendChild(this._makeJsonBlock({
