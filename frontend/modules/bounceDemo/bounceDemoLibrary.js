@@ -21,7 +21,7 @@
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
-    createFlashSubstrateEntry, flashZoneSidecarFields,
+    createFlashSubstrateEntry, flashZoneExitSides, flashZoneSidecarFields,
 } from '../flashSubstrate/flashSubstrateLibrary.js';
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import { PROFILES, physicsStampFor, resolvePhysicsStamp } from './physics.js';
@@ -856,6 +856,20 @@ export const BOUNCE_SIDECAR_FIELDS = flashZoneSidecarFields({
         + '`experimental`.',
 });
 
+/** ⛓ PRESET SIDECARS M3 — bounce's `exitSides` declaration (see the entry). */
+export const BOUNCE_EXIT_SIDES = flashZoneExitSides({
+    keys: ['params.bounceLevel.portals[].direction'],
+    also(payload, moves) {
+        const params = payload?.params;
+        const portals = params?.bounceLevel?.portals;
+        if (!Array.isArray(portals)) return;
+        for (const m of moves) {
+            const portal = portals.find((p) => p?.id === params.sidePortals?.[m.to]);
+            if (portal) portal.direction = SIDE_DIRECTIONS[m.to];
+        }
+    },
+});
+
 /**
  * Build a bounce substrate registry entry for a zone set — the same
  * per-entry factory pattern flashSubstrate uses per game, and literally
@@ -895,6 +909,15 @@ export function createBounceSubstrateEntry({
         // as a `createFlashSubstrateEntry` default: `flash_seedling` is built by
         // that factory too and is an atlas reference, which stays tiles.
         regionGeometry: REGION_GEOMETRY.SIDES,
+
+        // ⛓ PRESET SIDECARS M3 — what else a bounce payload keys by an exit's
+        // side (`procgenCore/exitSides.js`): the flash-zone family's portal map
+        // and back-exit side, plus bounce's own — the portal now serving a side
+        // points its `direction` arrow along that side (`SIDE_DIRECTIONS`; the
+        // arrow is read FIRST when a level portal's side is asked,
+        // `sideExits.portalIdsBySide`, and `bounceLibraryEntry` re-points it the
+        // same way on a relabel).
+        exitSides: BOUNCE_EXIT_SIDES,
 
         /**
          * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE ROOM-EDITOR DECLARATION**

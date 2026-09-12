@@ -1,0 +1,62 @@
+// frontend/modules/procgenCore/exitSides.js
+//
+// ⛓⛓ PRESET SIDECARS slice M3 — **WHAT ELSE IN A PAYLOAD IS KEYED BY AN EXIT'S
+// SIDE**, as a registry-entry declaration (`exitSides`), read by the APWorld
+// editor's `move-exit-side` / `swap-exit-sides` ops.
+//
+// An exit's `side` is not always a place. For a zone game it is a LINKING KEY:
+// play resolves `params.sidePortals[exit.side]` to a level portal whose geometry
+// does not depend on the side, so moving an exit to another side is a RELABEL —
+// the exit's `side`, and every other payload fact that is keyed by it. Which
+// facts those are is the substrate's to say (a portal map, a back-exit side, a
+// cosmetic arrow …), so the hub names none of them: it asks this slot.
+//
+//   exitSides: {
+//     keys:    ['params.sidePortals', …],  // what the relabel rewrites, as words
+//                                          // for a reader (docs, the op's answer)
+//     relabel: (payload, moves) => payload' // PURE: clone in, clone out
+//   }
+//
+// `moves` is `[{exitId, from, to}]`, applied SIMULTANEOUSLY — one entry for a
+// move, two for a swap (a swap is not two moves in a row: the first would land
+// on a side the second has not vacated yet). ⛔ `relabel` does NOT write
+// `payload.exits` — the op writes those through the substrate's own
+// deserialize → serialize pair, the path M2's flag writes already take, so the
+// exit records stay in the serializer's form.
+//
+// ⛔ ABSENT ⇒ REFUSED. An entry that does not declare the slot cannot have an
+// exit moved to another side by the hub, because the hub cannot say what else
+// in its payload the old side keys. The op words the refusal; this reader
+// answers WHY in facts (absent / malformed, by name) — never a default.
+//
+// ⛔ It lives in procgenCore and imports nothing (`bindingContract.test.js`), so a
+// substrate library declares without importing the editor.
+
+/** The registry-entry slot this module reads. */
+export const EXIT_SIDES_SLOT = 'exitSides';
+
+/**
+ * The `exitSides` declaration of a registry entry, or why there is none.
+ *
+ * @param {object|undefined} entry a substrate registry entry
+ * @returns {{decl: {keys: string[], relabel: Function}} | {absent: true} | {malformed: string}}
+ *   `malformed` names what is wrong, in words the op quotes after the substrate.
+ */
+export function exitSidesOf(entry) {
+    const decl = entry?.[EXIT_SIDES_SLOT];
+    if (decl === undefined) return { absent: true };
+    if (!decl || typeof decl !== 'object' || Array.isArray(decl)) {
+        return { malformed: `its \`${EXIT_SIDES_SLOT}\` is ${JSON.stringify(decl)}, not an object` };
+    }
+    if (typeof decl.relabel !== 'function') {
+        return { malformed: `its \`${EXIT_SIDES_SLOT}.relabel\` is ${typeof decl.relabel}, not a function` };
+    }
+    if (!Array.isArray(decl.keys) || decl.keys.length === 0
+        || decl.keys.some((k) => typeof k !== 'string' || !k)) {
+        return {
+            malformed: `its \`${EXIT_SIDES_SLOT}.keys\` is ${JSON.stringify(decl.keys)}, not a non-empty `
+                + 'list of the payload paths the relabel rewrites',
+        };
+    }
+    return { decl };
+}

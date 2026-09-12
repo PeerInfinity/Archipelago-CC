@@ -29,6 +29,7 @@ import {
     DEFAULT_REGION_GEOMETRY, REGION_GEOMETRIES, REGION_GEOMETRY, geometryOf,
 } from './regionGeometry.js';
 import { LIBRARY_V1_SUBSTRATES } from '../procgenPipeline/regionLibraryValidator.js';
+import { EXIT_SIDES_SLOT, exitSidesOf } from './exitSides.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 for (const rel of REGISTRY_LIBRARIES) {
@@ -222,5 +223,61 @@ describe('⛓ G1 — `LIBRARY_V1_SUBSTRATES` agrees with the registry', () => {
         expect(handKind(id)).toBe(derivedKind(entry));
         if (derivedKind(entry) === undefined) return;
         expect(handKind(id) === 'procedural').toBe(geometryOf(entry) === REGION_GEOMETRY.TILES);
+    });
+});
+
+/**
+ * ⛓⛓ PRESET SIDECARS M3 — **THE `exitSides` SLOT.** The entries that declare what
+ * else their payload keys by an exit's side must be exactly the entries whose
+ * payload DECLARATION carries a side-keyed portal map (`params.sidePortals` in
+ * `sidecarFields`) — derived from that declaration, never a list typed here, and
+ * the law is not the slot under test, so a mutant that drops or adds a
+ * declaration cannot filter itself out (trap 1314).
+ */
+describe('⛓ M3 — the `exitSides` slot', () => {
+    const declaresPortalMap = (entry) => {
+        const fields = sidecarFieldsOf(entry);
+        return !!fields?.params?.schema?.properties?.sidePortals;
+    };
+
+    it.each(ENTRIES.map((e) => [e.id, e]))('%s: the slot is absent or well formed', (_id, entry) => {
+        expect(exitSidesOf(entry).malformed).toBeUndefined();
+    });
+
+    it('the entries that declare `exitSides` are exactly those whose payload declares '
+        + '`params.sidePortals` — and there are some', () => {
+        const declaring = ENTRIES.filter((e) => exitSidesOf(e).decl).map((e) => e.id);
+        const portalMaps = ENTRIES.filter(declaresPortalMap).map((e) => e.id);
+        expect(portalMaps.length).toBeGreaterThan(0);
+        expect(declaring.sort()).toEqual(portalMaps.sort());
+    });
+
+    it('every declaring entry is SIDES geometry, and names the portal map among its keys — a side '
+        + 'that is a linking key carries no tile to move with it', () => {
+        for (const entry of ENTRIES.filter((e) => exitSidesOf(e).decl)) {
+            expect(geometryOf(entry), entry.id).toBe(REGION_GEOMETRY.SIDES);
+            expect(exitSidesOf(entry).decl.keys, entry.id).toContain('params.sidePortals');
+        }
+    });
+
+    it('absent reads as ABSENT — never a default relabel', () => {
+        expect(exitSidesOf(undefined)).toEqual({ absent: true });
+        expect(exitSidesOf({ id: 'fake' })).toEqual({ absent: true });
+        expect(exitSidesOf(substrateRegistry.get('maze'))).toEqual({ absent: true });
+    });
+
+    it('a malformed declaration is REFUSED BY NAME — the slot, the part, and what it was', () => {
+        const ok = { keys: ['params.sidePortals'], relabel: (p) => p };
+        expect(exitSidesOf({ [EXIT_SIDES_SLOT]: 'sidePortals' }).malformed)
+            .toBe('its `exitSides` is "sidePortals", not an object');
+        expect(exitSidesOf({ [EXIT_SIDES_SLOT]: null }).malformed).toMatch(/`exitSides` is null/);
+        expect(exitSidesOf({ [EXIT_SIDES_SLOT]: [ok] }).malformed).toMatch(/not an object/);
+        expect(exitSidesOf({ [EXIT_SIDES_SLOT]: { ...ok, relabel: 'rekey' } }).malformed)
+            .toBe('its `exitSides.relabel` is string, not a function');
+        expect(exitSidesOf({ [EXIT_SIDES_SLOT]: { ...ok, keys: [] } }).malformed)
+            .toMatch(/^its `exitSides.keys` is \[\], not a non-empty list/);
+        expect(exitSidesOf({ [EXIT_SIDES_SLOT]: { ...ok, keys: [''] } }).malformed)
+            .toMatch(/`exitSides.keys` is \[""\]/);
+        expect(exitSidesOf({ [EXIT_SIDES_SLOT]: ok }).decl).toBe(ok);
     });
 });

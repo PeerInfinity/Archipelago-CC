@@ -24,7 +24,7 @@
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
-    createFlashSubstrateEntry, flashZoneSidecarFields,
+    createFlashSubstrateEntry, flashZoneExitSides, flashZoneSidecarFields,
 } from '../flashSubstrate/flashSubstrateLibrary.js';
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import {
@@ -487,6 +487,12 @@ export function createRunnerSubstrateEntry({
         // Declared on this entry, not as a flash-factory default
         // (`flash_seedling` stays tiles).
         regionGeometry: REGION_GEOMETRY.SIDES,
+
+        // ⛓ PRESET SIDECARS M3 — what else a runner payload keys by an exit's
+        // side: the flash-zone family's portal map and back-exit side, nothing
+        // of runner's own (its level portals carry no side-dependent field).
+        // The APWorld editor's exit-side ops read this (`procgenCore/exitSides.js`).
+        exitSides: flashZoneExitSides(),
 
         // Flash's exits-Map deserializeWorld, plus the host
         // touch-controls stamp (see setTouchControlsOverride).

@@ -231,6 +231,65 @@ export function flashZoneSidecarFields({ gameId, writer, levelKey, physics, para
 }
 
 /**
+ * ⛓⛓ PRESET SIDECARS M3 — **THE FLASH-ZONE PAYLOAD'S SIDE-KEYED FACTS**, the
+ * shared half of the `exitSides` declaration (`procgenCore/exitSides.js`).
+ * For a flash zone an exit's `side` is a LINKING KEY — the bridge resolves
+ * `params.sidePortals[exit.side]` to the level portal (`bridge.js`) — so a side
+ * move re-keys two things the payload shape above declares:
+ *
+ *   · `params.sidePortals` — each moved side's key is renamed IN PLACE (its
+ *     position in the map kept, so a move and its move back are byte-identical;
+ *     the pipeline's own `moveSphereExitSide` deletes and re-appends instead);
+ *   · `params.backExitSide` — the entrance side the engine stamps for the
+ *     back-portal route (a fall resolves to it at play) — follows the moved exit
+ *     when that exit is the region's back exit (`isBackExit`), and is never
+ *     added where the payload carries none.
+ *
+ * ⛔ A game with more side-keyed facts adds them (`also`), in its own file.
+ * ⛔ Declared on each zone game's ENTRY, never as a `createFlashSubstrateEntry`
+ * default: `flash` / `flash_seedling` are built by that factory too and carry no
+ * portal map.
+ *
+ * @param {object} [o]
+ * @param {string[]} [o.keys]   the extra payload paths `also` rewrites
+ * @param {Function} [o.also]   `(payload', moves) → void`, run on the relabel's
+ *   own clone after the shared half
+ * @returns {{keys: string[], relabel: Function}}
+ */
+export function flashZoneExitSides({ keys = [], also = null } = {}) {
+    return Object.freeze({
+        keys: Object.freeze(['params.sidePortals', 'params.backExitSide', ...keys]),
+        relabel(payload, moves) {
+            const next = JSON.parse(JSON.stringify(payload));
+            const params = next?.params;
+            const portals = params?.sidePortals;
+            if (portals && typeof portals === 'object') {
+                const renamed = new Map(moves.map((m) => [m.from, m.to]));
+                const vacated = new Set(moves.map((m) => m.from));
+                for (const m of moves) {
+                    if (Object.hasOwn(portals, m.to) && !vacated.has(m.to)) {
+                        throw new Error(`params.sidePortals already maps side ${m.to} to portal `
+                            + `"${portals[m.to]}", and no moved exit vacates it`);
+                    }
+                }
+                params.sidePortals = Object.fromEntries(Object.entries(portals)
+                    .map(([side, id]) => [renamed.get(side) ?? side, id]));
+            }
+            if (params && Object.hasOwn(params, 'backExitSide')) {
+                const exits = Array.isArray(next.exits) ? next.exits : [];
+                for (const m of moves) {
+                    if (exits.find((x) => x?.exit_id === m.exitId)?.isBackExit === true) {
+                        params.backExitSide = m.to;
+                    }
+                }
+            }
+            if (also) also(next, moves);
+            return next;
+        },
+    });
+}
+
+/**
  * Build a Flash substrate registry entry. Per-game entries differ only in
  * identity (id/label) and capabilities (supportedFeatures); the shared
  * runtime fields (panel, load event, de/serialize, playback) are baked in
