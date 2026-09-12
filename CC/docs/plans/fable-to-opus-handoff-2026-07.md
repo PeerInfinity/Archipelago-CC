@@ -14199,6 +14199,36 @@ insertions); ONE ask-first stop; `LIBRARY_V1_SUBSTRATES` folded on its two axes 
 the `carried_rules` axis derived or kept, named); docs trio; the fast in-app batch vs `2026-09-11T19-08-57`; CI at
 the pushed SHA. NOT G1: M3, text adventure, the relayout defect, the hub, the maze, the submodule.
 
+**G1 mid-slice rulings.** (a) Task 6, the `LIBRARY_V1_SUBSTRATES` fold — G1 measured that a registry-derived
+validator changes answers where nothing is registered (the maze lab's `?library=` door registers only the flash
+entries; `region-library-validate.mjs` imports maze + bounce, no runner; the validator's own tests register nothing;
+`regionLibraryLoader.js:21-23` states the registry-free design; verified by the planner) — **planner's ruling: option
+B**, the hand list stays and ONE registry-wide row asserts hand list == derivation (members ⇔ library hooks,
+procedural ⇔ `generateRegionCore`, `region_size` required ⇔ `geometryOf` TILES), three mutants; the brief's "fold"
+premise is overturned (trap 1330). (b) The STOP — the planner reproduced G1's dumps (sphere `44e8f3cc…` →
+`2ba8a964e6e87294011bbeb2c763a71e`, top-down `19c4e31e…` → `bd80d986472d9c474ec62f3dc1aeba52`; zero changed leaves,
+only removed `x`/`y` on bounce regions; maze unmoved) and the strip worktree (34 entries, 0 residual x/y over 210
+files, `check-sidecar-fields` ALL PASS 1392) — **⚖ RULED, the user, verbatim (2026-09-12): *"Yes, I authorize the
+re-record, including the omsi diagonals."*** Relayed with one consequence: the omsi generator's literal `x: 0, y: 0`
+is edited so the script stays a fixed point and the preset is regenerated THROUGH it (⚖ A1's shape); the diagonals'
+flag dispute (§5e Q5) is not part of the word. (c) Box: H1's second lock (21:32Z, `frozen.head` = G1's UNPUSHED
+`5fc2dc2ef2`) overlapped G1's control in-app run (138/140, both reds pass solo, starvation gaps 4× / 13× the poll
+interval) — the CONTROL was tainted, the verdict ran on a free box; R1 (`seedling-headless-R1`) held its emcc links
+and probe until G1 pushed. Two foreign docs-only commits (`784be356a2`, `e2aba9c14a`, queue §5w) rode with G1's
+push by both planners' consent.
+
+**G1 VERIFIED 2026-09-12** (`09f3c20260` → pushed **`e2aba9c14a`**; planner re-measured: tree clean and level,
+worktrees gone, CI run 34705922646 success **453/13812 (13804 | 8 | 0)** = G1's ⚖ 52 prediction to the row, slow
+12/217; `3e13eec13c` six files 0/136, `a6cfeb95b7` 0/4 + one script line; maze digest `677b7d9c…` unmoved;
+verdict in-app **140/140** vs `2026-09-11T19-08-57` "No differences"; `check-sidecar-fields` ALL PASS 1392; the
+tracked corpus carries **0** exit tiles on any sides-substrate sidecar — 71 zone entries). Landed: bounce + runner
+declare `regionGeometry: SIDES`; G0's tripwire row replaced, the A/B spy rows made real; `relabelExitSide` writes
+the side and no tile for a sides region; the option-B agreement row; docs (docLinks census 230 → 233 and its
+TWIN in `docsRender.test.js` — trap 1329); the strip. Plan §21; traps **1328–1330**. ⚖ OPEN for M3: `relabelExitSide`'s
+callers (`layoutEdits.js:106/112`, `check-region-step-editing.mjs:298/317`); `params.backExitSide` (2 runner
+entries) moves with the side by DECLARATION; the hand list's second axis could fold once the validator has a
+registry it can rely on (§21.6); §5e Q5. **NEXT = M3 on the user's word.**
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
