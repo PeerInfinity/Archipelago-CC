@@ -182,9 +182,12 @@ function ensureExit(rules, playerId, sidecar, regionId, targetId, side) {
     payload.exits ??= [];
     if (payload.exits.some((e) => e.targetRegion === targetId)) return;
     const exitName = `exit_to_${targetId}`;
+    // ⛓ PRESET SIDECARS G1 — no exit TILE: omsi declares `regionGeometry: 'sides'`
+    // (`procgenCore/regionGeometry.js`), so an omsi exit is its side, and the
+    // literal `x: 0, y: 0` this used to write was the last hand-authored one in
+    // the corpus (⚖ the user, 2026-09-12, authorising the re-record).
     payload.exits.push({
         exit_id: exitName,
-        x: 0, y: 0,
         side,
         exitName,
         targetRegion: targetId,

@@ -343,8 +343,6 @@
             },
             {
               "exit_id": "exit_to_region_0_1",
-              "x": 0,
-              "y": 0,
               "side": "W",
               "exitName": "exit_to_region_0_1",
               "targetRegion": "region_0_1",
@@ -503,8 +501,6 @@
             },
             {
               "exit_id": "exit_to_region_1_0",
-              "x": 0,
-              "y": 0,
               "side": "E",
               "exitName": "exit_to_region_1_0",
               "targetRegion": "region_1_0",
