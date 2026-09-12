@@ -51,7 +51,14 @@
  *     run would deadlock against itself. The holder exports its token in the
  *     environment and a child carrying that token PASSES THROUGH, saying so.
  *  4. The lock is released on `exit` and on `SIGINT`/`SIGTERM`/`SIGHUP`, and
- *     only by the process that took it.
+ *     only by the process that took it. A taker still QUEUING holds nothing,
+ *     so a signal simply ends it (trap 1338: a listener cannot run inside the
+ *     synchronous queue loop, and while registered it kept a SIGTERM'd queued
+ *     taker alive to take the box later).
+ *
+ * ⛓ BEYOND THE INSTRUMENTS (BOX PROTOCOL P0): `npm test` takes this lock too
+ * (`scripts/test/testRunBox.js`), and `scripts/git-hooks/pre-commit` refuses a
+ * commit under another process's lock on the same tree.
  */
 
 import { execFileSync } from 'node:child_process';

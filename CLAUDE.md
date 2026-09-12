@@ -16,6 +16,9 @@ source .venv/bin/activate
 | Check if dev server is running | `ss -ltn \| grep ":8000"` (or `pgrep -af "[h]ttp.server"` — note the brackets) |
 | Start dev server | `python -m http.server 8000` (only if not already running) |
 | Test against ANOTHER server (a worktree) | `npm test -- --port=8123 …` or `TEST_PORT=8123` — one variable moves the page URL, Playwright's probe, the health check and the Python drivers (`scripts/test/testServer.js` / `test_utils.test_port()`); no port is hardcoded in the harness |
+| `npm test` TAKES THE BOX LOCK | `scripts/test/run-tests.js` takes `~/.cache/seedling-box/lock.json` (kind `browser`, name `npm test <mode>[ batch=][ test=]`) before Playwright starts. A held box → it refuses by name, exit 1; `npm test -- --wait-for-box=<sec> …` queues instead. Under a holder that exported its token it passes through. The results JSON records `frozen` (the head it ran at) and `treeMoved`; `compare-runs.js` warns on a moved tree |
+| Refuse commits under a FOREIGN box lock | `git config --worktree core.hooksPath scripts/git-hooks` in each clone/worktree (⚠ `--worktree`: plain `git config` in a worktree writes the SHARED config and installs it on every tree). The pre-commit hook refuses when a live lock names THIS tree and you are not its holder; a lock on another tree does not refuse. Override: `BOX_LOCK_COMMIT_ANYWAY=1 git commit …` |
+| New worktree for a slice | `scripts/dev/new-worktree.sh <name> [<base>=origin/main]` (`--dry-run`, `--with-wasm`, `--help`) — worktree + branch, submodules except the wasm builds, submodule identity, `npm ci`, the hook; prints `python -m http.server <port>` and `npm test -- --port=<port>` on a free port. Creation only |
 | Stop dev server | `ss -ltnp \| grep ":8000"` → read `pid=NNN` → `kill NNN`. ⛔ NOT `pkill` in any form: a PreToolUse hook refuses every pattern kill, brackets or no brackets |
 
 ## Important Gotchas
