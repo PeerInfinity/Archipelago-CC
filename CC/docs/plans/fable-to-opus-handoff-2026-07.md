@@ -14415,6 +14415,36 @@ design session `preset-sidecars-planning-3`; the pipeline Move Exit fold at the 
 wait. (5) M3's two scratch worktrees removed. Shared-tree state now: H2 (`seedling-headless-H2`, b6's) on the PRIMARY
 tree; this planner commits its docs from `~/CC/Archipelago-CC-wt-port` and pushes to main after messaging b6.
 
+**Session `preset-sidecars-planning-3` OPENED 2026-09-12 (Fable; kickoff `NewDocs/plans/preset-sidecars-planning-3-prompt.md`;
+main `8f14e77387`) — G2 DESIGNED, ⚖ SIX QUESTIONS PUT (plan §5h; measurements §23).** Opened measured: tree level, no lock at
+the handshake; `check-sidecar-fields` ALL PASS 1392 over 7; maze pin `677b7d9c…` (stdout digest) unmoved; CI at `cd1919d7e8`
+**454/13856 (13848 | 8 | 0)** = M3's prediction to the row (§22.8d carries it), at `4e2bc90e4a` **455/13902** (+1/+46, the port
+guard file); P0 NOT yet on `origin/main` (`wt-p0` has no commit above `4e2bc90e4a`). Planner worktree `~/CC/Archipelago-CC-wt-plan3`
+(branch `plan3`) for docs commits. **What the record got wrong (§23.1):** (1) §7.3's "play reads `exits[].side`+name" — the
+reader is PRESENT and never RUNS: `bridge.js:102` guards `Array.isArray(world.exits)` on a world whose `exits` is a `Map`
+(measured headless on AP_11 `Overworld`; structured clone keeps the Map) — the compass grid has never rendered in procgen mode,
+no test asserts it; at PLAY the text adventure reads ONE payload field, `manaEnabled`. (2) The composite-map painter reads
+`itemLocationNames`, a field of the DESERIALIZED world, not of the sidecar. (3) The 15 sidecars = 14 produced by
+`generate-topdown-preset.js --substrate-mix maze=1,text_adventure=1` (**a byte-identical fixed point at HEAD, measured: three
+regenerated worlds cmp-identical**) + 1 hand-typed in `generate-jta-mixed-test-preset.py`, which is NOT a fixed point (3 envelope
+fields from the 2026-06-26 hand edit `31d515e2c6` never reached it). (4) A TA region is the ROOT of the build in AP_11/AP_12
+(node 1 in AP_10), so a TA-native producer re-rolls every maze sibling — the re-record is three whole worlds regenerated
+through their script + one hand payload, not a 14-entry strip; no dump digest names TA (`dump-topdown-byteidentity` mixes maze +
+bounce). (5) `sidecarFieldsRegistry.test.js:59-67` pins the maze/TA declaration by OBJECT IDENTITY; the generated registry pins
+"18 keys"; `sidecarIssues` documents the fit tie. (6) The nine `tasw-*` in-app rows load NO committed preset — they generate
+spiral worlds (`substrateQuotas {text_adventure: 6, maze: 3}`), so the producer must serve the spiral branch too. (7) For a
+top-down TA region the document rule is the SOURCE rule stamped over the BFS (`procgenPipelineEngine.js:2803,2807` →
+`access_rule`-wins); the BFS answers only on the rebuild path — so a tile-free payload must carry its gates. (8) jta/omsi read
+`side` in ONE place each, the exit's label ("Go North (to X)"); nothing routes on it. **Design (§23.5):** G2a = Route P (the four
+procedural slots re-implemented tile-free + `regionGeometry: SIDES` + own serializer pair + own `sidecarFields` with authored
+per-exit/per-location `access_rule` + `apLocationNamesOf` over `locations[]` + `exitSides` identity; the bridge's 3-line fix;
+a payload-free painter; the identity row rewritten; a compass in-app row; the ask-first regen STOP; docs across seven files);
+G2b = a third `mountSetEditor` binding beside the wrapper (record contract already canvas-free; text stills by `drawRoomCard`'s
+precedent; TA library hooks + `LIBRARY_V1_SUBSTRATES` + the G1 agreement row's third axis re-cut; `regionRoundTrip` +
+`roomEditor {kind:'lab'}` — whether the maze lab's dispatching world binding hosts it is G2b's first ⚖). **⚖ PUT (§5h):** Route
+P/Z; the blast radius in principle (STOP kept); gates in the payload; `exitSides` identity for TA (+ jta/omsi?); one session
+with the STOP mid-way vs a split; the P0 launch gate. NOTHING launched.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
