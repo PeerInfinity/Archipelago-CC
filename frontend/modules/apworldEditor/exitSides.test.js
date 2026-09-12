@@ -24,7 +24,9 @@ import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { linkIsAdjacentOnSide } from '../procgenPipeline/procgenPipelineEngine.js';
 import { exitSidesOf } from '../procgenCore/exitSides.js';
-import { applyRulesDocOp } from './rulesDocOps.js';
+import { createEditSession } from '../procgenCore/editCore.js';
+import { rulesEditAdapter } from './rulesEditAdapter.js';
+import { EXIT_LINK_ONE_WAY, NO_EXIT_SIDES_DECLARED, applyRulesDocOp } from './rulesDocOps.js';
 import { SIDE_WORDS, slotLayout } from './regionLayout.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -167,5 +169,395 @@ describe('⛓⛓ THE CORPUS CONTROL — every committed entry that declares `exi
             && (name === 'region_1_0' || name === 'region_0_1'));
         expect(dissenters.length).toBeGreaterThan(0);
         for (const [, , , e] of dissenters) expect(declares(e), e.substrate).toBe(false);
+    });
+});
+
+/* ── the write-back, exhaustively ───────────────────────────────────────── */
+
+/** Leaf paths at which two JSON values differ (added / removed keys included). */
+function leafDiff(a, b, path = [], out = []) {
+    if (a && b && typeof a === 'object' && typeof b === 'object'
+        && Array.isArray(a) === Array.isArray(b)) {
+        for (const k of new Set([...Object.keys(a), ...Object.keys(b)])) {
+            leafDiff(a[k], b[k], [...path, k], out);
+        }
+    } else if (bytes(a) !== bytes(b)) {
+        out.push(path.join('.'));
+    }
+    return out;
+}
+
+/** A declared key (`a.b[].c`) as the leaf paths it covers. */
+const keyPattern = (key) => new RegExp(`^${key.split('.').map((part) => part.endsWith('[]')
+    ? `${part.slice(0, -2)}\\.\\d+` : part).join('\\.')}$`);
+
+/**
+ * ⛓ The side → arrow of the population's portals that carry one, READ OFF THE
+ * COMMITTED CORPUS (every portal a portal map serves on side s, whatever key
+ * the declaration names for it) — never a table typed here. The row below
+ * asserts the corpus agrees with itself first.
+ */
+function arrowsBySide() {
+    const seen = {};
+    for (const [, , , entry] of DECLARING) {
+        const { decl } = exitSidesOf(substrateRegistry.get(entry.substrate));
+        const arrowKey = decl.keys.find((k) => k.includes('[]'));
+        if (!arrowKey) continue;
+        const [listPath, field] = arrowKey.split('[].');
+        const list = listPath.split('.').reduce((o, k) => o?.[k], entry.playable_payload);
+        for (const [side, id] of Object.entries(entry.playable_payload.params.sidePortals)) {
+            const portal = (list ?? []).find((p) => p.id === id);
+            if (portal) (seen[side] ??= new Set()).add(portal[field]);
+        }
+    }
+    return seen;
+}
+
+/** Every move to a free side and every swap of the population, with its entry. */
+const EVERY_CHANGE = DECLARING.flatMap(([file, slot, name, entry, doc]) => [
+    ...everySideMove(slot, name, entry).filter((m) => m.free).map((m) => ({ file, slot, name, entry, doc, op: m.op })),
+    ...everySwap(slot, name, entry).map((op) => ({ file, slot, name, entry, doc, op })),
+]);
+
+/** The moves an op makes, as `[{exitId, from, to}]`, read off the ENTRY BEFORE. */
+function movesOf(entry, op) {
+    const sideOf = (id) => entry.playable_payload.exits.find((x) => x.exit_id === id).side;
+    if (op.op === 'move-exit-side') return [{ exitId: op.exitId, from: sideOf(op.exitId), to: op.side }];
+    return [{ exitId: op.exitA, from: sideOf(op.exitA), to: sideOf(op.exitB) },
+        { exitId: op.exitB, from: sideOf(op.exitB), to: sideOf(op.exitA) }];
+}
+
+describe('⛓⛓⛓ the write-back — every free move and every swap of the population, the document AFTER', () => {
+    it('the population\'s arrows agree with themselves: one arrow per side (the premise of the arrow '
+        + 'assertion below)', () => {
+        const arrows = arrowsBySide();
+        expect(Object.keys(arrows).length).toBeGreaterThan(0);
+        for (const [side, set] of Object.entries(arrows)) expect([...set], side).toHaveLength(1);
+    });
+
+    it('the deep diff holds ONLY the moved sides, the flags the side law changed, the renamed '
+        + 'portal-map keys, a back exit\'s `backExitSide` and a declared arrow — nothing else', () => {
+        const bad = [];
+        let flips = 0;
+        for (const { file, slot, name, entry, doc, op } of EVERY_CHANGE) {
+            const after = applied(doc, op).doc;
+            const moves = movesOf(entry, op);
+            const { decl } = exitSidesOf(substrateRegistry.get(entry.substrate));
+            const prefix = `preset_sidecars.${slot}.${name}.playable_payload.`;
+            const exitsBefore = entry.playable_payload.exits;
+            const allowed = new Set();
+            for (const m of moves) {
+                const i = exitsBefore.findIndex((x) => x.exit_id === m.exitId);
+                allowed.add(`exits.${i}.side`);
+                const was = lawTeleporter(doc, slot, name, exitsBefore[i], m.from);
+                const now = lawTeleporter(doc, slot, name, exitsBefore[i], m.to);
+                if (was !== null && was !== now) { allowed.add(`exits.${i}.isTeleporter`); flips += 1; }
+                allowed.add(`params.sidePortals.${m.from}`).add(`params.sidePortals.${m.to}`);
+                if (exitsBefore[i].isBackExit === true) allowed.add('params.backExitSide');
+            }
+            const extra = decl.keys.filter((k) => k.includes('[]')).map(keyPattern);
+            for (const leaf of leafDiff(doc, after)) {
+                const rel = leaf.startsWith(prefix) ? leaf.slice(prefix.length) : null;
+                if (rel !== null && (allowed.has(rel) || extra.some((re) => re.test(rel)))) continue;
+                bad.push(`${file} ${bytes(op)}: ${leaf}`);
+            }
+            // …and each allowed flag leaf IS written (a row that only bounds the diff
+            // cannot see a flag the op forgot).
+            for (const rel of allowed) {
+                if (!rel.endsWith('isTeleporter')) continue;
+                const i = Number(rel.split('.')[1]);
+                const m = moves.find((mv) => mv.exitId === exitsBefore[i].exit_id);
+                expect(after.preset_sidecars[slot][name].playable_payload.exits[i].isTeleporter,
+                    `${file} ${bytes(op)} ${rel}`).toBe(lawTeleporter(doc, slot, name, exitsBefore[i], m.to));
+            }
+        }
+        expect(EVERY_CHANGE.length).toBeGreaterThan(0);
+        expect(flips).toBeGreaterThan(0);
+        expect(bad).toEqual([]);
+    });
+
+    it('the moved exit carries its new side; the portal map\'s `to` key holds the portal `from` held, '
+        + 'in `from`\'s POSITION; every other key is unmoved', () => {
+        for (const { file, slot, name, entry, doc, op } of EVERY_CHANGE) {
+            const after = applied(doc, op).doc.preset_sidecars[slot][name].playable_payload;
+            const before = entry.playable_payload;
+            const rename = new Map(movesOf(entry, op).map((m) => [m.from, m.to]));
+            for (const m of movesOf(entry, op)) {
+                expect(after.exits.find((x) => x.exit_id === m.exitId).side, `${file} ${bytes(op)}`).toBe(m.to);
+            }
+            expect(Object.keys(after.params.sidePortals), `${file} ${bytes(op)}`)
+                .toEqual(Object.keys(before.params.sidePortals).map((s) => rename.get(s) ?? s));
+            for (const [s, id] of Object.entries(before.params.sidePortals)) {
+                expect(after.params.sidePortals[rename.get(s) ?? s], `${file} ${bytes(op)} ${s}`).toBe(id);
+            }
+        }
+    });
+
+    it('a declared arrow is RE-POINTED along the side its portal now serves; an entry that declares '
+        + 'none keeps every arrow', () => {
+        const arrows = arrowsBySide();
+        let pointed = 0;
+        let kept = 0;
+        for (const { file, slot, name, entry, doc, op } of EVERY_CHANGE) {
+            const { decl } = exitSidesOf(substrateRegistry.get(entry.substrate));
+            const arrowKey = decl.keys.find((k) => k.includes('[]'));
+            const after = applied(doc, op).doc.preset_sidecars[slot][name].playable_payload;
+            if (!arrowKey) {
+                kept += 1;
+                expect(bytes(after.params[Object.keys(after.params)[0]]), `${file} ${bytes(op)}`)
+                    .toBe(bytes(entry.playable_payload.params[Object.keys(after.params)[0]]));
+                continue;
+            }
+            const [listPath, field] = arrowKey.split('[].');
+            const list = listPath.split('.').reduce((o, k) => o?.[k], after);
+            for (const m of movesOf(entry, op)) {
+                const portal = list.find((p) => p.id === after.params.sidePortals[m.to]);
+                expect(portal?.[field], `${file} ${bytes(op)} ${m.exitId}`).toBe([...arrows[m.to]][0]);
+                pointed += 1;
+            }
+        }
+        expect(pointed).toBeGreaterThan(0);
+        expect(kept).toBeGreaterThan(0);
+    });
+});
+
+/* ── the back exit ───────────────────────────────────────────────────────── */
+
+/** ⛓ The entries whose payload CARRIES `params.backExitSide` — the law, not the declaration. */
+const CARRIERS = DECLARING.filter(([, , , e]) => Object.hasOwn(e.playable_payload.params ?? {}, 'backExitSide'));
+
+describe('⛓ `params.backExitSide` follows the BACK exit, and only it', () => {
+    it('over every free move and swap of every carrier: after = the back exit\'s new side when a back '
+        + 'exit moved, else unmoved; a payload without the key never gains it', () => {
+        let backMoves = 0;
+        let otherMoves = 0;
+        for (const { file, slot, name, entry, doc, op } of EVERY_CHANGE) {
+            const after = applied(doc, op).doc.preset_sidecars[slot][name].playable_payload.params;
+            const before = entry.playable_payload.params;
+            if (!Object.hasOwn(before, 'backExitSide')) {
+                expect(Object.hasOwn(after, 'backExitSide'), `${file} ${bytes(op)}`).toBe(false);
+                continue;
+            }
+            const back = movesOf(entry, op).find((m) => entry.playable_payload.exits
+                .find((x) => x.exit_id === m.exitId).isBackExit === true);
+            if (back) backMoves += 1; else otherMoves += 1;
+            expect(after.backExitSide, `${file} ${bytes(op)}`).toBe(back ? back.to : before.backExitSide);
+        }
+        expect(CARRIERS.length).toBeGreaterThan(0);
+        expect(backMoves).toBeGreaterThan(0);
+        expect(otherMoves).toBeGreaterThan(0);
+    });
+});
+
+/* ── refusals ────────────────────────────────────────────────────────────── */
+
+const clone = (o) => JSON.parse(JSON.stringify(o));
+
+/** ⛓ A declaring entry with an exit whose target side is taken by another — derived. */
+const [S_FILE, S_SLOT, S_NAME, S_ENTRY, S_DOC] = DECLARING.find(([, slot, name, e]) => everySideMove(slot, name, e)
+    .some((m) => !m.free) && everySideMove(slot, name, e).some((m) => m.free));
+/** ⛓ An entry whose substrate declares NO `exitSides` and whose payload carries sided exits — derived. */
+const [U_FILE, U_SLOT, U_NAME, U_ENTRY, U_DOC] = ENTRIES.find(([, , , e]) => !declares(e)
+    && substrateRegistry.get(e.substrate)
+    && (e.playable_payload?.exits ?? []).some((x) => Object.hasOwn(SIDE_WORDS, x.side)));
+
+/** ⛓ A synthetic registered substrate for the refusals only this file can build. */
+const FAKE = (id, extra) => {
+    if (!substrateRegistry.has(id)) {
+        substrateRegistry.register({
+            id, deserializeWorld: (p) => ({ ...p }), serializeWorld: (w) => ({ ...w }), ...extra,
+        });
+    }
+    return id;
+};
+const withSubstrate = (doc, slot, name, substrate) => {
+    const next = clone(doc);
+    next.preset_sidecars[slot][name].substrate = substrate;
+    return next;
+};
+
+describe('refusals — asked of the op, each by name, the document untouched', () => {
+    const refused = (doc, op) => {
+        const before = bytes(doc);
+        const res = applyRulesDocOp(doc, op);
+        expect(res.ok, bytes(op)).toBe(false);
+        expect(bytes(doc)).toBe(before);
+        return res.error;
+    };
+    const firstExit = S_ENTRY.playable_payload.exits[0];
+    const move = (extra) => ({ op: 'move-exit-side', player: S_SLOT, region: S_NAME, exitId: firstExit.exit_id, ...extra });
+    const freeSide = () => everySideMove(S_SLOT, S_NAME, S_ENTRY).find((m) => m.free && m.op.exitId === firstExit.exit_id)
+        ?.op.side ?? everySideMove(S_SLOT, S_NAME, S_ENTRY).find((m) => m.free).op.side;
+
+    it('the fixtures are the law\'s: a declaring entry with a free AND an occupied side, and a sided '
+        + 'entry whose substrate declares nothing', () => {
+        expect(S_FILE && U_FILE).toBeTruthy();
+        expect(exitSidesOf(substrateRegistry.get(U_ENTRY.substrate)).absent).toBe(true);
+    });
+
+    it('⛔ no region NAME; no sidecar entry; no `exits` list', () => {
+        for (const region of [undefined, '', '  ', 7]) {
+            expect(refused(S_DOC, move({ region, side: 'N' }))).toBe(`apworld: move-exit-side needs a region NAME, got ${JSON.stringify(region)}.`);
+        }
+        expect(refused(S_DOC, move({ region: 'Nowhere', side: 'N' })))
+            .toMatch(new RegExp(`^apworld: player ${S_SLOT} has no sidecar entry for region "Nowhere", so it has no exit to move\\. This slot's sidecars are \\[`));
+        const bare = clone(S_DOC);
+        delete bare.preset_sidecars[S_SLOT][S_NAME].playable_payload.exits;
+        expect(refused(bare, move({ side: 'N' })))
+            .toBe(`apworld: region "${S_NAME}"'s payload carries no \`exits\` list, so it has no exit to move.`);
+    });
+
+    it('⛔ no such exit — naming the exits the region has; for a swap, which of the two', () => {
+        const ids = S_ENTRY.playable_payload.exits.map((x) => x.exit_id).join(', ');
+        expect(refused(S_DOC, move({ exitId: 'nope', side: 'N' })))
+            .toBe(`apworld: region "${S_NAME}" has no exit "nope" — its exits are [${ids}].`);
+        const swap = { op: 'swap-exit-sides', player: S_SLOT, region: S_NAME, exitA: firstExit.exit_id, exitB: 'nope' };
+        expect(refused(S_DOC, swap)).toBe(`apworld: region "${S_NAME}" has no exit "nope" (\`exitB\`) — its exits are [${ids}].`);
+        expect(refused(S_DOC, { ...swap, exitA: 'nope', exitB: firstExit.exit_id }))
+            .toContain('has no exit "nope" (`exitA`)');
+    });
+
+    it('⛔ a side outside N/S/E/W', () => {
+        for (const side of [undefined, 'north', 'n', 'NE', 0, null]) {
+            expect(refused(S_DOC, move({ side })))
+                .toBe(`apworld: move-exit-side needs \`side\` as one of N/S/E/W, got ${side === undefined ? 'none' : JSON.stringify(side)}.`);
+        }
+    });
+
+    it('⛔ a substrate that declares no `exitSides` — in the declaration\'s words, for a move and a swap', () => {
+        const x = U_ENTRY.playable_payload.exits.find((e) => Object.hasOwn(SIDE_WORDS, e.side));
+        const other = Object.keys(SIDE_WORDS).find((s) => s !== x.side);
+        const want = `apworld: region "${U_NAME}"'s substrate "${U_ENTRY.substrate}" cannot have an exit moved to `
+            + `another side — ${NO_EXIT_SIDES_DECLARED}.`;
+        expect(refused(U_DOC, { op: 'move-exit-side', player: U_SLOT, region: U_NAME, exitId: x.exit_id, side: other })).toBe(want);
+        const y = U_ENTRY.playable_payload.exits.find((e) => e !== x && e.side !== x.side);
+        if (y) {
+            expect(refused(U_DOC, { op: 'swap-exit-sides', player: U_SLOT, region: U_NAME, exitA: x.exit_id, exitB: y.exit_id })).toBe(want);
+        }
+        expect(NO_EXIT_SIDES_DECLARED).toBe('its registry entry declares no `exitSides`, so the hub cannot say what '
+            + 'else in the payload is keyed by side');
+    });
+
+    it('⛔ an UNREGISTERED substrate, and a MALFORMED declaration — each by name, never a default', () => {
+        const unreg = withSubstrate(S_DOC, S_SLOT, S_NAME, 'm3-not-registered');
+        expect(refused(unreg, move({ side: freeSide() })))
+            .toBe(`apworld: region "${S_NAME}"'s substrate "m3-not-registered" cannot have an exit moved to another side — no module registers it here.`);
+        const bad = withSubstrate(S_DOC, S_SLOT, S_NAME, FAKE('m3-malformed', { exitSides: { keys: ['k'], relabel: 'x' } }));
+        expect(refused(bad, move({ side: freeSide() })))
+            .toBe(`apworld: region "${S_NAME}"'s substrate "m3-malformed" cannot have an exit moved to another side — its \`exitSides.relabel\` is string, not a function.`);
+    });
+
+    it('⛔ an OCCUPIED side — a swap, and says so, naming both exits and the op', () => {
+        const { op } = everySideMove(S_SLOT, S_NAME, S_ENTRY).find((m) => !m.free);
+        const taker = S_ENTRY.playable_payload.exits.find((x) => x.exit_id !== op.exitId && x.side === op.side);
+        expect(refused(S_DOC, op)).toBe(`apworld: side ${op.side} (${SIDE_WORDS[op.side]}) of region "${S_NAME}" already `
+            + `carries exit ${taker.exit_id} — moving ${op.exitId} there is a swap, and says so: `
+            + `swap-exit-sides {exitA: ${op.exitId}, exitB: ${taker.exit_id}}.`);
+    });
+
+    it('⛔ a relabel that THROWS (a portal map already keyed on the target side) and a substrate with no '
+        + 'serializer', () => {
+        const side = freeSide();
+        const orphan = clone(S_DOC);
+        orphan.preset_sidecars[S_SLOT][S_NAME].playable_payload.params.sidePortals[side] = 'orphan_portal';
+        const m = everySideMove(S_SLOT, S_NAME, S_ENTRY).find((mv) => mv.free && mv.op.side === side).op;
+        expect(refused(orphan, m)).toBe(`apworld: region "${S_NAME}"'s substrate "${S_ENTRY.substrate}" refused the side `
+            + `relabel — params.sidePortals already maps side ${side} to portal "orphan_portal", and no moved exit vacates it.`);
+        const noSer = FAKE('m3-no-serializer', { exitSides: { keys: ['k'], relabel: (p) => p }, serializeWorld: undefined });
+        expect(refused(withSubstrate(S_DOC, S_SLOT, S_NAME, noSer), m))
+            .toBe(`apworld: region "${S_NAME}"'s substrate "m3-no-serializer" cannot rewrite its exits here — its registry `
+                + 'entry declares no `deserializeWorld` / `serializeWorld` pair. A payload\'s exits are written back in the '
+                + 'substrate\'s OWN serialized form or not at all; load the substrate\'s module first.');
+    });
+
+    it('a move to the exit\'s OWN side and a swap with itself are NO-OPS (the same document), even where '
+        + 'nothing is declared', () => {
+        expect(applied(S_DOC, move({ side: firstExit.side })).doc).toBe(S_DOC);
+        expect(applied(S_DOC, { op: 'swap-exit-sides', player: S_SLOT, region: S_NAME, exitA: firstExit.exit_id, exitB: firstExit.exit_id }).doc).toBe(S_DOC);
+        const x = U_ENTRY.playable_payload.exits.find((e) => Object.hasOwn(SIDE_WORDS, e.side));
+        expect(applied(U_DOC, { op: 'move-exit-side', player: U_SLOT, region: U_NAME, exitId: x.exit_id, side: x.side }).doc).toBe(U_DOC);
+    });
+});
+
+/* ── the answer ──────────────────────────────────────────────────────────── */
+
+describe('the answer names the exit, the sides and the link — and a ONE-WAY link', () => {
+    /** The reciprocal's STORED flag vs the moved exit's law verdict after — picked by the law. */
+    const classify = ({ slot, name, entry, doc, op }) => {
+        if (op.op !== 'move-exit-side') return null;
+        const x = entry.playable_payload.exits.find((e) => e.exit_id === op.exitId);
+        const now = lawTeleporter(doc, slot, name, x, op.side);
+        if (now === null) return null;
+        const back = (doc.preset_sidecars[slot][x.targetRegion]?.playable_payload?.exits ?? [])
+            .filter((e) => e.targetRegion === name);
+        if (!back.length) return null;
+        const r = back.find((e) => e.exit_id === x.targetExitId || e.targetExitId === x.exit_id) ?? back[0];
+        return { x, r, now, oneWay: (r.isTeleporter === true) !== now };
+    };
+
+    it('a move that SEPARATES a link names it a teleporter and ONE-WAY, with the reciprocal exit and its side', () => {
+        const hits = EVERY_CHANGE.map((c) => ({ c, k: classify(c) })).filter(({ k }) => k?.oneWay);
+        expect(hits.length).toBeGreaterThan(0);
+        for (const { c, k } of hits) {
+            const { description } = applied(c.doc, c.op);
+            expect(description).toContain(`Moved exit ${c.op.exitId} of ${c.name} to side ${c.op.side} `
+                + `(${SIDE_WORDS[k.x.side]} → ${SIDE_WORDS[c.op.side]})`);
+            expect(description).toContain(`the link to ${k.x.targetRegion} is ${k.now ? 'now a teleporter' : ''}`.trim());
+            expect(description).toContain(`— ${EXIT_LINK_ONE_WAY}: ${k.x.targetRegion}'s exit ${k.r.exit_id} (${SIDE_WORDS[k.r.side]}) is `
+                + `${k.r.isTeleporter ? 'a teleporter' : 'adjacent'}`);
+        }
+    });
+
+    it('moving it BACK names the link a plain one again, both ends agreeing — no ONE-WAY', () => {
+        const hits = EVERY_CHANGE.map((c) => ({ c, k: classify(c) })).filter(({ k }) => k?.oneWay && k.now);
+        expect(hits.length).toBeGreaterThan(0);
+        for (const { c, k } of hits) {
+            const there = applied(c.doc, c.op).doc;
+            const { description } = applied(there, { ...c.op, side: k.x.side });
+            expect(description).toContain(`the link to ${k.x.targetRegion} is now adjacent (it was a teleporter)`);
+            expect(description).toContain(`${k.x.targetRegion}'s exit ${k.r.exit_id} (${SIDE_WORDS[k.r.side]}) leads back as adjacent too`);
+            expect(description).not.toContain(EXIT_LINK_ONE_WAY);
+        }
+    });
+
+    it('the relabel is named by the declaration\'s own keys; a swap names both exits', () => {
+        const swap = EVERY_CHANGE.find((c) => c.op.op === 'swap-exit-sides');
+        const { decl } = exitSidesOf(substrateRegistry.get(swap.entry.substrate));
+        const { description } = applied(swap.doc, swap.op);
+        expect(description).toMatch(new RegExp(`^Swapped exits ${swap.op.exitA} ↔ ${swap.op.exitB} of ${swap.name} \\(`));
+        expect(description).toContain(`${swap.op.exitA}: the link to`);
+        expect(description).toContain(`${swap.op.exitB}: the link to`);
+        expect(description.endsWith(`(the side-keyed fields it declares: ${decl.keys.join(', ')})`)).toBe(true);
+    });
+});
+
+/* ── the session ─────────────────────────────────────────────────────────── */
+
+describe('through a session', () => {
+    it('one op per gesture; each undo restores the bytes before it; a no-op is dropped', () => {
+        const session = createEditSession(rulesEditAdapter, clone(S_DOC));
+        const s0 = bytes(session.record());
+        const free = everySideMove(S_SLOT, S_NAME, S_ENTRY).find((m) => m.free).op;
+        expect(session.apply(free).applied).toBe(true);
+        const s1 = bytes(session.record());
+        const swap = everySwap(S_SLOT, S_NAME, applied(S_DOC, free).doc.preset_sidecars[S_SLOT][S_NAME])[0];
+        expect(session.apply(swap).applied).toBe(true);
+        expect(session.ops().map((o) => o.op)).toEqual(['move-exit-side', 'swap-exit-sides']);
+        const own = S_ENTRY.playable_payload.exits[0];
+        expect(session.apply({ op: 'swap-exit-sides', player: S_SLOT, region: S_NAME, exitA: own.exit_id, exitB: own.exit_id }).applied).toBe(false);
+        expect(session.ops()).toHaveLength(2);
+        session.undo();
+        expect(bytes(session.record())).toBe(s1);
+        session.undo();
+        expect(bytes(session.record())).toBe(s0);
+        expect(s0).toBe(bytes(S_DOC));
+    });
+
+    it('⛔ NEVER writes through: every document the rows above read still equals its FILE (trap 1323)', () => {
+        const files = new Map(DECLARING.map(([file, , , , doc]) => [file, doc]));
+        expect(files.size).toBeGreaterThan(0);
+        for (const [file, doc] of files) {
+            expect(bytes(doc), file).toBe(bytes(JSON.parse(readFileSync(join(PRESETS, file), 'utf8'))));
+        }
     });
 });
