@@ -14331,6 +14331,30 @@ locally by path and ride (b6's §5w commit above `24ca043da2` is the first). R2 
 and gates read the tree they run in). M3 told: foreign commits above and between its own are expected; no rebase,
 no cherry-pick; STOP only at push. ⚖ for the user when the time comes: the joint push as one unit.
 
+**M3 COMPLETE + VERIFIED 2026-09-12 (NOT PUSHED — waiting at the push step under the joint-push protocol).** M3's
+report: start `22a5fad533` → its last `b32564a16c`, ten commits (the `exitSides` slot; `move-exit-side` /
+`swap-exit-sides`; the corpus control; unit rows; the widget on three hosts; four in-app rows + `__bounceDebug.portalSides`;
+docs; generated docs in a clean tree; a swap-row fix); §22 written; traps **1333–1334**. Planner re-measured on disk,
+off the box (R2's tier held the lock): `origin/main..HEAD` = **15** (M3's 10, the two planners' docs commits, R2's
+four ABOVE M3's — `2211c39d10` is R2's gitlink bump and must not ride); the verdict fast batch on disk
+`2026-09-12T22-14-37` = **144/144**, `compare-runs` vs G1's `16-37-34` = ADDED 4 (M3's rows), exit 0; M3's 41-file
+bounded set re-run in the primary tree (none of M3's surface dirty) **41/1134**; `check-sidecar-fields` ALL PASS
+**1392**, `frontend/presets` unmoved `22a5fad533..b32564a16c`; maze pin **`677b7d9c…`** unmoved — measured as the
+STDOUT digest in the primary tree AND in a clean extracted tree at `b32564a16c` (the planner first md5'd the
+out-file and read `8cc31554…`: trap 1328 exactly, caught by reading §21.1 #1 — the pin's stream is named in
+`standing-values.json`). ⚖ 52 prediction (M3): 453/13820 → **454/13856**, quoted at the joint push. Brief-wrong
+list (§22.1, six items): relabel takes a simultaneous `moves[]` (a swap cannot be two single relabels); the own-side
+no-op precedes the declaration refusal; bounce `direction` is read, not cosmetic; the pipeline's `moveSphereExitSide`
+re-keys by delete+append and leaves a moved BACK exit's flag stale; the runner's portal `arrow` is not side-keyed;
+`portalSides` had to be exposed. ⚖ OPEN (§22.9): fold the pipeline's Move Exit onto `exitSides` + the per-exit law
+(the relayout slice); jta/omsi declare nothing — movable?; ONE-WAY reported, never repaired; no render-cost
+measurement on AP_8; two scratch worktrees registered (`rmdir` denied). Box incidents (both directions, all
+recorded): a triage run 5 s before R2's lock; a mutant armed before queuing (~2 min); R2 committed under M3's lock;
+a killed wrapper's queued child took the lock — **two protocol gaps for the replan: `npm test` takes no lock; nothing
+stops a commit under a foreign lock.** Side task on the user's ask (branch `test-port-env` @ `8c00f6f6f6`, pushed,
+NOT on main): the harness's port is `TEST_PORT` / `--port=` from ONE module, so a worktree run tests itself — the
+enabler for running the next concurrent slice in a worktree. **NEXT = the replan with the user (G2).**
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
