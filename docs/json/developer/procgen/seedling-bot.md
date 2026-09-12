@@ -932,8 +932,12 @@ out* — the builds ship in `PeerInfinity/seedling-wasm` at
 `frontend/modules/flashPanel/wasm/`, and CI does check them out
 (`.github/workflows/seedling-wasm.yml`).
 
-⛓ **The build it runs against is `seedling_bot_ap_p4b`, and that move is
-itself a measurement.** It defaulted to `seedling_bot_ap` — the R8 bot build
+⛓ **The build it runs against is the manifest's `default` — `seedling_bot_ap_p4d`
+since EDITOR INTEGRATION slice P2, and the ONLY bot build since the p4b/p4c
+controls retired (SEEDLING HEADLESS WEBGPU slice R2, 2026-09-12, ⚖ user: *"I
+think it just needs to behave correctly with the new build"*).** Its first move,
+onto `seedling_bot_ap_p4b`, was itself a measurement. It defaulted to
+`seedling_bot_ap` — the R8 bot build
 every expectation under `fixtures/expectations/` was recorded from — until
 the wasm-hygiene slice ran this very sweep on both, back to back, with
 nothing edited in between: **534 PASS / 0 FAIL / 67 SKIP, ALL CHECKS PASSED
@@ -1087,7 +1091,9 @@ default; EDITOR INTEGRATION slice P2 (2026-08-30, ⚖ user) made it THE
 default** — the watch page, `check-seedling-wasm-pages`' `BUILD` literal and
 every `SEEDLING_PAGE` default across 46 tracked files, on the licence of the
 150-tape byte-inert sweep (149 tapes, 3,607 rows, 0 FAIL on p4d, `--win`). p4c
-stays pinned as the `apitem` CONTROL — see `flashPanel/README.md`. It is the
+stayed pinned as the `apitem` CONTROL until SEEDLING HEADLESS WEBGPU slice R2
+retired it and p4b on 2026-09-12 (⚖ user), each absent-capability branch proved
+dead on p4d by a mutant first — see `flashPanel/README.md`. It is the
 first build to carry anything the host reads beyond the
 vanilla item flags: `Pickups/APItem.as`, `Game.pendingExit`/`pendingCheck` and
 the `keyMask`/`totemCount` getters (`flash.md` has the design). Two ordering
