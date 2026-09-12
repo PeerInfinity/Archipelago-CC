@@ -48,9 +48,7 @@
  * normaliser and a mutant left it green.
  *
  * ⚠ THE VOCABULARY IS BROADER THAN THIS PREDICATE. `arm` is in it and is read
- * by nothing here: it exists so that its ABSENCE on exactly one build can be
- * gated (pins row (g)), the way `apitem`'s absence on exactly one build is.
- * See `ARM_CAPABILITY` below.
+ * by nothing here — see `ARM_CAPABILITY` below.
  *
  * ⛔ AND THIS FILE NAMES NO BUILD. The build name is DERIVED from the
  * preset's own `flash_panel.wasm`; a literal here would both hardcode the
@@ -68,17 +66,17 @@ export const AP_ITEM_CAPABILITY = 'apitem';
  * `botStatus` therefore carries an `arm: {pending, armed_at}` block, and the
  * pre-swap frame is not counted dead.
  *
- * ⛔⛔ THIS ONE HAS NO CONSUMER IN THIS FILE, AND THAT IS THE POINT — IT IS
- * DECLARED SO THAT AN ABSENCE CAN BE GATED. The two live consumers are
- * dead-frame corrections that read the RUNTIME field, not the manifest:
- * `check-seedling-wasm-ship.mjs`'s CLAIM 6 (`armsAfterSwap ? 0 :
- * BOOT_PRESWAP_FRAMES`) and `seedlingDemo/r5Acceptance.js`'s
- * `preSwapCorrection`. Each is proved only by an arm on a build that LACKS the
- * capability — with no such build the false branch is unreachable and the
- * correction silently degrades to "always subtract one", which is the exact
- * inversion `preSwapCorrection`'s docblock records its own mutant going GREEN
- * on. ⇒ `check-seedling-wasm-pins.mjs` row (g) gates it, the same way row (f)
- * gates `apitem`'s control.
+ * ⛔⛔ THIS ONE HAS NO CONSUMER IN THIS FILE, AND SINCE 2026-09-12 NONE AT
+ * ALL — it stays DECLARED as the manifest's statement of what the default
+ * build can do. Its two consumers were dead-frame corrections that read the
+ * RUNTIME field (`check-seedling-wasm-ship.mjs`'s CLAIM 6 and
+ * `seedlingDemo/r5Acceptance.js`'s `preSwapCorrection`), proved by a build that
+ * LACKED it (p4b, gated by pins row (g)). SEEDLING HEADLESS WEBGPU slice R2
+ * retired p4b on the user's ruling (*"I think it just needs to behave correctly
+ * with the new build"*), folded both corrections to the arm-present value, and
+ * deleted row (g). ⛔ The cost, stated once: a host regression in a branch for
+ * a build without `arm` is undetectable from here on — no shipped bot build
+ * lacks it.
  *
  * ⛓ SO THE VOCABULARY IS BROADER THAN THIS PREDICATE'S OWN USE, deliberately.
  * `WASM_BUILD_CAPABILITIES` is the list a MANIFEST ENTRY may draw on; only

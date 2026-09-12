@@ -39,58 +39,36 @@ import { SHAFT_PAIR } from './r5Shaft.js';
 // the drive takes the exit teleporter and the control never leaves the room —
 // so the ceremony's subtraction carries a fade term and needs its band.
 import { describeFadeBand, fadeBand } from './deadFrameBand.js';
-// ⛓ R9 slice 12h: the pre-swap frame, from the one place that spells it.
-import { BOOT_PRESWAP_FRAMES } from './r7Acceptance.js';
+// ⛓ R9 slice 12h imported `BOOT_PRESWAP_FRAMES` here for `preSwapCorrection`;
+// slice R2 folded that correction into the constants (see above `L60_KILL`).
 
 /**
- * ⛓⛓⛓ R9 SLICE 12h — THE DEAD-FRAME CONSTANTS BELOW WERE MEASURED ON A BUILD
- * THAT SPENT THE PRE-SWAP FRAME, AND THE BUILD IS NOW ASKED RATHER THAN
- * ASSUMED.
+ * ⛓⛓⛓ THE DEAD-FRAME CONSTANTS BELOW ARE p4d MEASUREMENTS (SEEDLING HEADLESS
+ * WEBGPU slice R2, 2026-09-12) — A LICENSED RE-RECORD, NOT A RE-DERIVATION.
  *
- * `botStart` used to arm with the world swap still pending, so the frame that
- * elapsed before it landed was COUNTED as a dead one. `seedling_bot_ap_p4c`
- * arms on the first frame where `FP.world` IS the world it constructed
- * (⚖ ruling 58's (F)), so that frame is no longer counted — every DECLARED
- * boot pays exactly ONE FEWER dead frame than it did on `p4b` and earlier.
- * The constants in this file are `p4b` measurements and are KEPT as such;
- * what moves is the expectation derived from them.
+ * They were first measured on `seedling_bot_ap_p4b`, which armed beside the
+ * world swap it had only REQUESTED and so COUNTED the pre-swap frame as a dead
+ * one. `seedling_bot_ap_p4c` and every build after it arm on the first frame
+ * where `FP.world` IS the world `botStart` constructed (⚖ ruling 58's (F)), so
+ * every DECLARED boot pays exactly ONE FEWER dead frame. ⛔ ONE PER RUN, NOT ONE
+ * PER LOAD — measured: the two L38 fade probes read `boot 19` and `boot+door 38`
+ * against `20` and `39` on p4b, so a DOOR's own cost (19) never moved.
  *
- * ⛔ IT IS ONE PER RUN, NOT ONE PER LOAD — measured, not reasoned: the two
- * L38 fade probes read `boot 19` and `boot+door 38` on p4c against `20` and
- * `39` on p4b, so the DOOR's own cost (19) is unmoved and only the boot term
- * shifts. A per-load correction would have moved the door too and gone red.
- *
- * ⛔⛔ THE BUILD ANNOUNCES ITSELF, and keying on a build NAME would break at
- * the next rebuild. `status.arm` is `botStatus.arm`, surfaced by
- * `watchWasm.js` and present exactly on builds that arm after the swap.
- * Measured across three runs of `r5-feather`: p4c payload
- * `dead_frames 230, arm {armed_at, pending}`; p4b and pre-p4c payloads
- * `dead_frames 231, arm null`. This is `check-seedling-wasm-ship`'s CLAIM 6
- * correction (`12934b870`) applied to the population that gate's sweep could
- * not see — the THIRD instance of trap 827, and the one only a `--tier=full`
- * run can reach.
- *
- * ⛔⛔ THE DIRECTION IS THE WHOLE THING, AND THE FIRST VERSION OF THIS FUNCTION
- * HAD IT INVERTED — caught by its own mutant, which went GREEN because "always
- * subtract one" is accidentally correct on p4c. Written out so it cannot be
- * mis-read again:
- *
- *     the constant is a p4b MEASUREMENT           231
- *     p4b  game 231  ⇒ correction 0   (`arm == null`)
- *     p4c  game 230  ⇒ correction 1   (`arm != null`)
- *     expected = CONST − correction
- *
- * So the correction is the frame the p4b-measured constant INCLUDES and this
- * build does not spend — it is subtracted exactly when the build DOES arm
- * after the swap, which is the opposite of "the frames this build spends".
- *
- * @param {object} walk a replayed walk record
- * @returns {number} frames to SUBTRACT from a p4b-measured constant: 1 on a
- *   build that arms after the swap, 0 on one that does not
+ * ⛓ UNTIL R2 THE BUILD WAS ASKED. `preSwapCorrection(walk)` read the runtime
+ * `status.arm` block (present exactly on builds that arm after the swap) and
+ * subtracted `BOOT_PRESWAP_FRAMES` from the p4b constants when it was there.
+ * The user retired p4b and p4c (*"I'm not aware of any reason to care whether
+ * the code behaves correctly with the old wasm builds. I think it just needs to
+ * behave correctly with the new build."*), so no shipped build takes the other
+ * branch. Before it was deleted, a mutant folding the function to its
+ * arm-present value ran every R5 row that reads it on p4d and moved nothing,
+ * and a mutant forcing the absent value RED exactly those rows (plan §10). ⇒ the
+ * correction is gone and the constants are what the game reports on p4d:
+ * `r5-feather` 231 → **230** (boot 21 → **20**), the totem entrance 370 →
+ * **369** (L38 boot 20 → **19**), `r5-shaft` 367 → **366**. ⛔ The cost, stated
+ * once: these rows can no longer tell a build that arms beside the swap from a
+ * defect — no shipped build does.
  */
-export function preSwapCorrection(walk) {
-    return walk?.status?.arm != null ? BOOT_PRESWAP_FRAMES : 0;
-}
 
 export const L60_KILL = 'r5-l60-kill';
 export const L60_CONTROL = 'r5-l60-kill-control';
@@ -1186,10 +1164,12 @@ export function waterfallPairFindings(replayed) {
  * 3. WHERE IT STOPS: inside the feather's pocket, which is the tile the
  *    flip window holds UP from.
  * 4. ⛓⛓ THE DEAD-FRAME ARITHMETIC, which is the sound pin's independent
- *    confirmation. The game reports **231** fade frames for this tape:
- *    21 (the boot) + 3 x 20 (the doors) + 150 (`Pickup.specialTimer`). The
- *    first recording — the one whose ceremony never fired — reported **81**,
- *    which is the same sum without the ceremony. Those are the two constants
+ *    confirmation. The game reports **230** fade frames for this tape on
+ *    p4d: 20 (the boot) + 3 x 20 (the doors) + 150 (`Pickup.specialTimer`).
+ *    (231 and a boot of 21 on p4b, which counted the pre-swap frame — see the
+ *    block above `L60_KILL`.) The first recording, on the p4b lineage — the one
+ *    whose ceremony never fired — reported **81**, which is that build's sum
+ *    without the ceremony. Those are the two constants
  *    `swimSoundClock.LOAD_DEAD_FRAMES` and `CEREMONY_FREEZE_FRAMES` are
  *    derived from, measured back from the game rather than assumed, and the
  *    whole reason this walk's stream matches at all.
@@ -1201,7 +1181,7 @@ export const FEATHER_FLAG = Object.freeze({ level: 89, tag: 0 });
 export const ROCK_OUT_OF_BAND_FLAG = Object.freeze({ level: 91, tag: 29 });
 /** The fade-frame sum: boot + three doors + the pickup freeze. */
 export const FEATHER_DEAD_FRAMES = Object.freeze({
-    boot: 21, perDoor: 20, doors: 3, ceremony: 150,
+    boot: 20, perDoor: 20, doors: 3, ceremony: 150,
     get total() { return this.boot + this.perDoor * this.doors + this.ceremony; },
 });
 
@@ -1258,14 +1238,12 @@ export function featherFindings(replayed) {
 
     // ⛓⛓ THE PIN'S OWN ARITHMETIC, from the game's dead-frame counter.
     const df = st?.dead_frames;
-    const featherTotal = FEATHER_DEAD_FRAMES.total - preSwapCorrection(walk);
+    const featherTotal = FEATHER_DEAD_FRAMES.total;
     found.push({
         name: 'R5 feather: the fade frames add up to the two pinned constants',
         ok: df === featherTotal,
         detail: df === featherTotal
-            ? `${df} = ${FEATHER_DEAD_FRAMES.boot - preSwapCorrection(walk)} (boot`
-                + `${preSwapCorrection(walk) ? `, ${FEATHER_DEAD_FRAMES.boot} minus the `
-                    + 'pre-swap frame this build does not spend' : ''}) + `
+            ? `${df} = ${FEATHER_DEAD_FRAMES.boot} (boot) + `
                 + `${FEATHER_DEAD_FRAMES.doors} x `
                 + `${FEATHER_DEAD_FRAMES.perDoor} (doors) + ${FEATHER_DEAD_FRAMES.ceremony} `
                 + '(`Pickup.specialTimer`) — the frames the MIXER steps on and the tape '
@@ -1299,19 +1277,20 @@ export function featherFindings(replayed) {
  * 3. WHERE THE PRESS ARM STOPS — tile (9,25), which §21.6 measured as the
  *    only reachable stance that touches `rope@96,384`. The shaft leg
  *    starts where this one ends, and nobody arranged that.
- * 4. ⛓⛓ THE DEAD FRAMES, DECOMPOSED. The game reports **370** for both
- *    arms. `FEATHER_DEAD_FRAMES`'s constants would predict 21 + 20 + 150
- *    = 191 plus an unexplained 179, which is how this nearly became a
+ * 4. ⛓⛓ THE DEAD FRAMES, DECOMPOSED. The game reports **369** for both
+ *    arms on p4d (370 on p4b — the block above `L60_KILL`).
+ *    `FEATHER_DEAD_FRAMES`'s constants would predict 20 + 20 + 150
+ *    = 190 plus an unexplained 179, which is how this nearly became a
  *    correction to `sealControllerTicks()`. It is not one:
  *    `r5-l38-fade-boot` and `r5-l38-fade-door` measure this level's own
- *    load costs as **20 and 19**, so the ceremony's share is 370 - 39 =
+ *    load costs as **19 and 19**, so the ceremony's share is 369 - 38 =
  *    **331** — exactly `CEREMONY_DEAD_FRAMES.total`, 150 of
  *    `Pickup.specialTimer` and 181 of a `SealController` derived from its
  *    own loop and never before driven.
  *
  *    ⚠ **AND THAT MAKES A CONSTANT INTO A VARIABLE.** A load's dead-frame
- *    cost is not 20: `r5-feather` measured 21 for its boot and 20 per
- *    door, and L38 measures 20 and 19. `blackCover`'s countdown and the
+ *    cost is not 20: `r5-feather` measured 20 for its boot and 20 per
+ *    door on p4d, and L38 measures 19 and 19. `blackCover`'s countdown and the
  *    frame `Bot.update` samples it on are two clocks with a phase between
  *    them. Nothing on this rung depends on it — neither arm swims — but
  *    `swimSoundClock.LOAD_DEAD_FRAMES` advances the PINNED channel by
@@ -1324,9 +1303,9 @@ export const TOTEM_ENTRANCE_WALK = Object.freeze({
     press: 'r5-totem-entrance',
     control: 'r5-totem-entrance-control',
     /** Both arms, from the game. */
-    deadFrames: 370,
+    deadFrames: 369,
     /** …attributed, by the two fade probes rather than by another tape's constants. */
-    load: Object.freeze({ boot: 20, door: 19, get total() { return this.boot + this.door; } }),
+    load: Object.freeze({ boot: 19, door: 19, get total() { return this.boot + this.door; } }),
     ceremony: 331,
     pinnedTile: Object.freeze({ tx: 9, ty: 38 }),
     ropeStanceTile: Object.freeze({ tx: 9, ty: 25 }),
@@ -1416,8 +1395,8 @@ export function totemEntranceFindings(replayed) {
     const boot = replayed?.get('r5-l38-fade-boot');
     const door = replayed?.get('r5-l38-fade-door');
     for (const [label, arm] of [['press', press], ['control', control]]) {
-        const armTotal = TOTEM_ENTRANCE_WALK.deadFrames - preSwapCorrection(arm);
-        const armLoad = TOTEM_ENTRANCE_WALK.load.total - preSwapCorrection(arm);
+        const armTotal = TOTEM_ENTRANCE_WALK.deadFrames;
+        const armLoad = TOTEM_ENTRANCE_WALK.load.total;
         found.push({
             name: `R5 totem entrance: the ${label} arm reports ${armTotal} dead frames`,
             ok: arm.status?.dead_frames === armTotal,
@@ -1433,19 +1412,20 @@ export function totemEntranceFindings(replayed) {
     if (boot && door) {
         const b = boot.status?.dead_frames;
         const d = door.status?.dead_frames;
-        // ⛓ R9 slice 12h: ONE per run, at the boot — so the DOOR's own cost
-        // (`d - b`, 19) is invariant across builds and only the boot term moves.
-        const wantBoot = TOTEM_ENTRANCE_WALK.load.boot - preSwapCorrection(boot);
-        const wantTotal = TOTEM_ENTRANCE_WALK.load.total - preSwapCorrection(door);
+        // ⛓ R9 slice 12h: the pre-swap frame was ONE per run, at the boot — so
+        // the DOOR's own cost (`d - b`, 19) never moved between builds.
+        const wantBoot = TOTEM_ENTRANCE_WALK.load.boot;
+        const wantTotal = TOTEM_ENTRANCE_WALK.load.total;
         found.push({
             name: '⛓⛓ R5 totem entrance: the load cost is MEASURED, not inherited',
             ok: b === wantBoot && d === wantTotal,
             detail: b === wantBoot && d === wantTotal
                 ? `boot ${b}, boot+door ${d} ⇒ this door costs ${d - b}. ⚠ NEITHER matches `
-                    + "`r5-feather`'s 21 and 20, so a load's dead-frame cost is NOT a "
+                    + `\`r5-feather\`'s ${FEATHER_DEAD_FRAMES.boot} and ${FEATHER_DEAD_FRAMES.perDoor}, `
+                    + "so a load's dead-frame cost is NOT a "
                     + 'constant — `blackCover` and the frame `Bot.update` samples it on are '
                     + `two clocks. Without these two probes the ceremony would have looked `
-                    + `like ${TOTEM_ENTRANCE_WALK.deadFrames - 41} and `
+                    + `like ${TOTEM_ENTRANCE_WALK.deadFrames - FEATHER_DEAD_FRAMES.boot - FEATHER_DEAD_FRAMES.perDoor} and `
                     + '`sealControllerTicks()` would have been "corrected" from 181 to 179.'
                 : `boot ${b} (expected ${wantBoot}), boot+door ${d} `
                     + `(expected ${wantTotal})`,
@@ -1579,7 +1559,8 @@ export const SHAFT_WALK = Object.freeze({
     resolvedBy: 'spinner.js + `fire.thread` — 27 idle ticks before press 5',
     ticks: 2764,
     /**
-     * ⛓⛓⛓ 367, AND THE 150 IS THE CEREMONY — the first of the five.
+     * ⛓⛓⛓ 366 ON p4d (367 ON p4b — see above `L60_KILL`), AND THE 150 IS THE
+     * CEREMONY — the first of the five.
      *
      * 197 run freeze (the rope's rock, modelled since slice 10) + 150 pickup
      * (`totempart 2`) + one room-load fade. §24.9 recorded "NO CEREMONY WAS
@@ -1587,7 +1568,7 @@ export const SHAFT_WALK = Object.freeze({
      * and it is a stronger witness than the run's `collected` record because
      * it comes from the other side.
      */
-    deadFrames: 367,
+    deadFrames: 366,
     modelledDeadFrames: 347,
     ceremonyFrames: 150,
     /**
@@ -1846,7 +1827,7 @@ export function shaftFindings(replayed) {
      * 150 are in it. The part itself is NOT observable (`Bot.itemReadout`
      * has no `hasTotemPart` field, §20.8), so this is the claim.
      */
-    const shaftDead = SHAFT_WALK.deadFrames - preSwapCorrection(walk);
+    const shaftDead = SHAFT_WALK.deadFrames;
     found.push({
         name: '⛓⛓⛓ R5 shaft: the FIRST COLLECT CEREMONY is in the game\'s dead-frame count',
         ok: (walk.status?.dead_frames ?? 0) - SHAFT_WALK.ceremonyFrames >= 0

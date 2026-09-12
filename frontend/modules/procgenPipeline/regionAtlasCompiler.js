@@ -156,10 +156,11 @@ export const FLASH_PANEL_WIRING = Object.freeze({
      * refuses BY NAME. ⛓ AND SINCE SLICE P2 (⚖ user, 2026-08-30) THIS IS NO
      * LONGER THE ONLY DEFAULT ON p4d: `watchWasm.WASM_PAGE`,
      * `check-seedling-wasm-pages`' `BUILD` literal and every script's
-     * `SEEDLING_PAGE` default moved with it over 46 tracked files. What stays
-     * on p4c is exactly the CONTROL — `check-seedling-ap-placement.mjs`'s
-     * default, the only tracked build declaring no `apitem`, and
-     * `check-seedling-wasm-pins.mjs` row (f) is what keeps it there.
+     * `SEEDLING_PAGE` default moved with it over 46 tracked files. What stayed
+     * on p4c was exactly the CONTROL — `check-seedling-ap-placement.mjs`'s
+     * default, kept there by `check-seedling-wasm-pins.mjs` row (f) — until
+     * SEEDLING HEADLESS WEBGPU slice R2 retired p4c, the control and the row
+     * (⚖ user, 2026-09-12).
      *
      * ⛔ THIS TABLE IS THE ONLY CODE SOURCE OF A PRESET'S `flash_panel` BLOCK.
      * Every other block in `frontend/presets/` was typed by hand and a

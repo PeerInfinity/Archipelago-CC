@@ -26,8 +26,12 @@
  *         see. §47.11 (3) (c): *"nothing short of a full tier can see a
  *         dead-frame accounting literal."* The population is DERIVED by
  *         grepping for `BOOT_PRESWAP_FRAMES`, which is where the three seeds
- *         live (`r5Acceptance.preSwapCorrection`, `-ship` CLAIM 6's site,
- *         `derive-seedling-tick0.mjs`) — never hand-listed.
+ *         live (`r5Acceptance.js`'s dead-frame constants, `-ship` CLAIM 6's
+ *         site, `derive-seedling-tick0.mjs`) — never hand-listed. ⛓ Since
+ *         slice R2 (2026-09-12) `r5Acceptance.js` no longer IMPORTS the
+ *         constant (`preSwapCorrection` was folded into p4d-measured
+ *         constants); its docblock still names it, and `git grep` reads
+ *         comments, so the file stays in the population.
  *
  * ── ⛓⛓⛓ (iii) IS A PROJECTION COMPARE, NOT A BYTE COMPARE ────────────
  *
