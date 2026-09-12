@@ -14178,6 +14178,36 @@ to the lab's build and is re-derived; the full tier owed again (population (iv))
 non-md files name the controls; 33 MB each. Cost stated once: absent-capability regressions become undetectable, by
 design. NOT launched — R1 first.
 
+**R1 COMPLETE + VERIFIED 2026-09-12; OUTER UNIT PUSHED `6506ce6627..b3dc1307ba` (planner's reads at the tree before
+the push: `git log origin/main..HEAD` = exactly the three R1 commits; gitlink `7eef1727c7` = the submodule's pushed
+HEAD, 0 unpushed there; `check-seedling-full-tier-owed` ALL PASS and `check-seedling-wasm-pins` ALL PASS — 4 builds —
+at `b3dc1307ba`; plan §9 present; traps 1331–1332 on disk).** `a97204e243` the gitlink bump `071ac1c9ee → 7eef1727c7`
+(p4d + `seedling_original` rebuilt on SWFRecomp-CC `254145a5b`, submodule `071ac1c..7eef172`, live page 200 at
+33,640,375 B) · `489e0773d5` `HEADLESS_LOGIC_ONLY_ARGS` = the pixels set MINUS exactly the Vulkan pair (subtraction,
+not a second list; 3 mutants driven), the differential on it with `assertLogicOnlyChannel` REFUSING unless
+`__swfGpu.lost >= 1` (absence is a refusal naming both causes — trap 1332), a part-level `channel` on the composite row
+(omitted ≠ `win`), `LOAD_ALLOWANCE_SEC` 30 → 80 · `b3dc1307ba` the row. **THE REBUILD MOVES NO VERDICT:** the headless
+logic-only tier on the rebuilt p4d reads `ALL CHECKS PASSED` 3635/0/46 in 2h09m — IDENTICAL to H1's headless tier on
+the pinned build line for line (mechanic 2194/0 · map-walk 449/0 · campaign 598/0), against `--win`'s 3633/0/46; the
+row's `value` stays `150 tapes 3259/0/3` with `channel: headless` on all three parts; real GPU unchanged too
+(`check-seedling-wasm-ship` on Windows Chrome 263/0 = the standing value). First REAL PIXELS from a headless Seedling
+wasm (44 colours, OverWorld1; the demo's whole intro → title by screenshot; 3279 → 0 WebGPU error lines). Worst tape
+0.302 of its budget (H1 0.749 — mostly the BOX: 80 of 150 budgets did not grow and one L40 tape's wall fell 341 → 125 s
+at the same budget). Brief wrong (§9.1): SWFRecomp-CC master is NOT docs-only past `254145a5b` (36 commits, ~15 code;
+the RENDERER byte-identical); `__swfGpu` is never created on the pinned build in EITHER mode; the bridge gate cannot
+address a control; p4d has no intro; pixels 1.8–1.9× slower not 3–7×; the key's consumers are SEVEN
+(`rosterCategories.test.js` reads it through the imported symbol); the pins gate reads the submodule's index, not the
+gitlink — `full-tier-owed` does. mxmlc non-reproducibility MEASURED: two builds of `a0ec864` differ in 467,446 of
+9,743,894 injected bytes. ⛓ R1 correctly refused the relayed approval — the planner holding the user's word pushed.
+⚖ OPEN carried: rename the row key (seven consumers); which short gates move to logic-only (`pages` 37.9 → 57.4 s,
+`element` 22.3 → 44.9 s now that they rasterise — re-price `ci-arm-costs.json`); the `LOAD_ALLOWANCE_SEC` base is the
+PINNED build's 37.9 s; the seedling-wasm history shed after R2 (`.git` 106 MB + ~33 MB per wasm commit).
+⛓ **SESSION CHANGE:** WSL crashed after `archipelago-cc-34` wrote the successor's handoff
+(`NewDocs/plans/seedling-headless-planning-2-prompt.md`) and before the push/close/launch; `archipelago-cc-b6` (Fable)
+resumed on the user's word 2026-09-12 20:52Z, took the `seedling-headless-planning-2` role itself, pushed the unit,
+wrote this close, and brought R2's brief (`NewDocs/plans/seedling-headless-R2-prompt.md`, from plan §8b; census
+re-derived at `b3dc1307ba`: 14 non-md files + 5 md; ⚠ ap-placement's default is p4c, not §8b's p4b) to the user ONCE.
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
