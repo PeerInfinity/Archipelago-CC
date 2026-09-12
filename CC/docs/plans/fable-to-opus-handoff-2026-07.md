@@ -14260,7 +14260,7 @@ both planners' docs commits, R2's four incl. the gitlink bump `7eef172 → 68197
 2026-09-13 ~00:05Z** as `seedling-headless-H2` (Opus; brief `NewDocs/plans/seedling-headless-H2-prompt.md`; plan §11;
 §12 = its as-built slot; start HEAD `cd1919d7e8`, tree level, box free). Its task 0 = the runner probe (does
 `ubuntu-latest` lose the device under the logic-only flags?); its task 5 = the manual-only tier workflow whose first
-dispatched run discharges the red owed gate under ruling C. CI at `cd1919d7e8` quoted below when it lands.
+dispatched run discharges the red owed gate under ruling C. **CI @ `cd1919d7e8` (run 34724817403): vitest 454/13856 — 13848 passed, 8 skipped, 0 failed; slow battery 12/217.** The +1 file / +36 tests over `b3dc1307ba`'s 453/13820 are M3's stated rows; R2 is test-count neutral. **H2 task 0 = OUTCOME (a)** (run 34724984639 @ `8f14e77387`): `ubuntu-latest` has the SAME two channels as the box — logic-only 29.90 f/s `{lost:1,stalls:0}`, pixels 17.97 f/s; Python Playwright 1.56.0 shares node's chromium-1194 (pip 5 s, no browser install); `seedling-wasm.yml` STEP 3 today takes the box lock on the runner and dies `EACCES /mnt/c/playwright` — the defect H2 task 1 removes. Plan §11.4.
 
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
