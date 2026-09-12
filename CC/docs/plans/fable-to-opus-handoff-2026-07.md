@@ -14215,6 +14215,7 @@ survive the reboot): the last run = 150 distinct tapes, every entry `channel: he
 disk, so the crash took only its report message. **R2 LAUNCHED 2026-09-12 ~21:10Z** as `seedling-headless-R2` (Opus; brief
 `NewDocs/plans/seedling-headless-R2-prompt.md`; plan §8b; start HEAD `f17d3d171b`, tree LEVEL, box free, no other slice on the
 tree). Handshake exchanged. H2 is designed while it runs (plan §11); the ladder self-advances to H2 when R2 verifies.
+**CI @ `b3dc1307ba` (run 34718437648): vitest 453/13820 — 13812 passed, 8 skipped, 0 failed; slow battery 12/217.** The +8 over G1's 453/13812 = R1's rows exactly (`rosterCategories` 13 → 17, `headlessChromium` 6 → 10).
 
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
