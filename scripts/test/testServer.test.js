@@ -70,8 +70,11 @@ describe('every entry point derives the address from TEST_PORT', () => {
   it('run-tests.js: --port=NNNN reaches the spawned playwright as TEST_PORT (a shim on PATH stands in for it)', () => {
     const shimDir = mkdtempSync(path.join(tmpdir(), 'pw-shim-'));
     writeFileSync(path.join(shimDir, 'playwright'), '#!/bin/sh\necho "SHIM TEST_PORT=$TEST_PORT"\n', { mode: 0o755 });
+    // run-tests.js takes the box lock (testRunBox.js): a temp cache keeps this
+    // row off the REAL ~/.cache/seedling-box/lock.json, which another session
+    // may hold — and which this row must never take.
     const r = spawnSync(process.execPath, ['scripts/test/run-tests.js', `--port=${PROBE_PORT}`],
-      { cwd: ROOT, env: { ...process.env, TEST_PORT: '', PATH: `${shimDir}${path.delimiter}${process.env.PATH}` }, encoding: 'utf8' });
+      { cwd: ROOT, env: { ...process.env, TEST_PORT: '', XDG_CACHE_HOME: shimDir, SEEDLING_BOX_LOCK_TOKEN: '', PATH: `${shimDir}${path.delimiter}${process.env.PATH}` }, encoding: 'utf8' });
     expect(r.status).toBe(0);
     expect(r.stdout).toContain(`SHIM TEST_PORT=${PROBE_PORT}`);
   });

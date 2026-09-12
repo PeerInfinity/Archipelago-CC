@@ -189,11 +189,24 @@ export function takeBoxLock({ name, kind, repo = BOX_LOCK_REPO, waitSec = 0,
                     say(`# box lock: BUSY — ${cur.name} (pid ${cur.pid}, ${cur.kind}) since `
                         + `${cur.since}; queuing for up to ${waitSec}s`);
                     announcedWait = true;
+                    /**
+                     * ⛔⛔ A QUEUED TAKER MUST DIE ON A SIGNAL (trap 1334, and
+                     * trap 1338 for why). This loop is SYNCHRONOUS, so a JS
+                     * signal listener cannot run until it ends — and a listener
+                     * being registered suppresses the default action. Measured
+                     * 2026-09-12: a SIGTERM'd queued taker lived on, took the
+                     * box when the holder went, ran its payload, and only then
+                     * exited. Nothing is held while queuing, so the default
+                     * action (terminate) is exactly right; the release
+                     * listeners come back once the loop ends.
+                     */
+                    detachSignalRelease();
                 }
                 /* ⛓ a coarse poll: the resource is measured in minutes. */
                 execFileSync('sleep', ['2']);
                 continue;
             }
+            attachSignalRelease();
             const held = Math.round((Date.now() - Date.parse(cur.since)) / 1000);
             throw new Error(`⛔ THE BOX IS TAKEN — ${name} (${kind}) refuses rather than `
                 + `perturbing a live measurement.\n`
@@ -207,6 +220,8 @@ export function takeBoxLock({ name, kind, repo = BOX_LOCK_REPO, waitSec = 0,
                 + `   ⛓ if that pid is gone, the next taker reclaims the lock `
                 + 'automatically — nothing has to be deleted by hand.');
         }
+        /* ⛓ …and BEFORE anything is written, so a signal from here on releases. */
+        attachSignalRelease();
         if (cur) {
             /* ── rule 2: a dead holder is reclaimed, LOUDLY ── */
             say(`# box lock: RECLAIMED a stale lock from ${cur.name} (pid ${cur.pid}, `
@@ -263,9 +278,17 @@ export function boxLockHolder() {
 }
 
 process.on('exit', release);
-for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
-    process.on(sig, () => { release(); process.exit(130); });
+const RELEASE_SIGNALS = ['SIGINT', 'SIGTERM', 'SIGHUP'];
+const onReleaseSignal = () => { release(); process.exit(130); };
+function attachSignalRelease() {
+    for (const sig of RELEASE_SIGNALS) {
+        if (!process.listeners(sig).includes(onReleaseSignal)) process.on(sig, onReleaseSignal);
+    }
 }
+function detachSignalRelease() {
+    for (const sig of RELEASE_SIGNALS) process.removeListener(sig, onReleaseSignal);
+}
+attachSignalRelease();
 
 /* ══════════════════════════════════════════════════════════════════════
  * THE PREAMBLE THE INSTRUMENTS CARRY, AND WHO IS SUPPOSED TO CARRY IT
@@ -328,7 +351,22 @@ export const BOX_LOCK_HOLDERS = Object.freeze([
      * `SPENDS_BOX` rule `gates.mjs` carries.
      */
     'ci-gates.mjs',
+    /**
+     * ⛓ BOX PROTOCOL P0: `npm test`'s runner joins by the same criterion — it
+     * drives no page itself, it spawns Playwright, which runs the roster's own
+     * in-app arms. It lives outside this directory, so it is named by its
+     * REPO-RELATIVE path (a name with a `/`; a bare name is a file here), and
+     * its take sits in the helper it imports (`testRunBox.js`), which the row
+     * that checks this list follows one import deep. It matches no
+     * `machineDrivers` file, so `expected` is unchanged by its presence.
+     */
+    'scripts/test/run-tests.js',
 ]);
+
+/** ⛓ Where a `BOX_LOCK_HOLDERS` entry lives: repo-relative if it has a `/`. */
+export function boxLockHolderPath(entry, { repo = BOX_LOCK_REPO } = {}) {
+    return entry.includes('/') ? join(repo, entry) : join(repo, 'scripts', 'procgen', entry);
+}
 
 /**
  * ⛓ AND THE ONE DRIVER THAT TAKES NOTHING, BY NAME.

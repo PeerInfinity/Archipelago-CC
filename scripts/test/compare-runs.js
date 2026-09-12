@@ -48,6 +48,10 @@ function load(file) {
         mode: data.mode || null,
         batch: data.batch || null,
         testIds: data.testIds || null,
+        // Stamped by run-tests.js since it takes the box lock: the head the run
+        // froze, and whether the tree moved under it. Absent = not recorded.
+        frozen: data.frozen || null,
+        treeMoved: data.treeMoved ?? null,
         summary: data.summary || {},
         byId,
     };
@@ -72,7 +76,20 @@ function label(run) {
 function describe(run) {
     const s = run.summary;
     const mode = run.mode ? `[${identity(run)}] ` : '';
-    return `${mode}${path.basename(run.file)} — ${s.passedCount ?? '?'}/${s.totalRun ?? '?'} passed`;
+    const moved = run.treeMoved ? ' ⚠ TREE MOVED' : '';
+    return `${mode}${path.basename(run.file)} — ${s.passedCount ?? '?'}/${s.totalRun ?? '?'} passed${moved}`;
+}
+
+/**
+ * A run whose tree moved under it measured no single head: its reds and its
+ * greens may belong to either side of the move, so a diff against it is not
+ * attributable. Say so for each such run rather than letting it read as clean.
+ */
+function movedTreeWarnings(runs) {
+    return runs.filter((r) => r.treeMoved).map((r) =>
+        `WARNING: THE TREE MOVED UNDER ${path.basename(r.file)} (frozen head `
+        + `${r.frozen?.head?.slice(0, 10) ?? '?'}) — its results belong to no single head; `
+        + 're-run on a settled tree before attributing a difference to it.');
 }
 
 /**
@@ -157,6 +174,9 @@ function main() {
     console.log(`previous: ${describe(prev)}`);
     console.log(`current:  ${describe(curr)}`);
     console.log('');
+    const movedWarnings = movedTreeWarnings([prev, curr]);
+    for (const w of movedWarnings) console.log(w);
+    if (movedWarnings.length > 0) console.log('');
 
     const newFailures = [];
     const fixed = [];
