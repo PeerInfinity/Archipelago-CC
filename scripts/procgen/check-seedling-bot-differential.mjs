@@ -38,8 +38,9 @@
  *   - dev server on :8000 at the REPO ROOT (`python -m http.server 8000`)
  *   - the wasm artifact at
  *     frontend/modules/flashPanel/wasm/seedling_bot_ap_p4d/ — the DEFAULT
- *     since EDITOR INTEGRATION slice P2 (⚖ user, 2026-08-30); p4c is still
- *     one `SEEDLING_PAGE=` away, and the 149-tape byte-inert sweep
+ *     since EDITOR INTEGRATION slice P2 (⚖ user, 2026-08-30), and the ONLY
+ *     bot build since slice R2 retired p4b/p4c (⚖ user, 2026-09-12); the
+ *     149-tape byte-inert sweep
  *     (plan §17.4.6: 3,607 rows, 0 FAIL on p4d, `--win`) is what says the
  *     oracle recordings below — made on the p4b/p4c lineages — still hold.
  *     ⛓ No longer
