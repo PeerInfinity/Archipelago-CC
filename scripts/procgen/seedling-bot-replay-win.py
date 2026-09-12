@@ -279,6 +279,49 @@ def wait_for(desc, fn, deadline_sec, poll_sec=0.25):
         time.sleep(poll_sec)
 
 
+# ── ⛓⛓ H2 (2026-09-12): ONE DRIVER, TWO CHANNELS ─────────────────────────────
+#
+# `--win` is what this file always was: `py.exe -3.12` on the Windows desktop,
+# headed, real GPU. `--headless` is the SAME driver run by the repo venv's
+# Linux python against headless Chromium, so a Linux box or a CI runner can ask
+# the same question through the same observation protocol (a JS port of this
+# protocol would be a second implementation that drifts).
+#
+# ⛔ THE HEADLESS FLAGS ARE NEVER SPELLED HERE. They arrive as `--chromium-args`
+# (a JSON array) computed by `scripts/procgen/headlessChromium.js` on the Linux
+# side — H1's invariant, one spelling of the Chromium flags (census 28 -> 0). A
+# Python copy of that list would be the defect H1 removed coming back; the two
+# flags below are the REAL-GPU Windows launch, a different machine.
+WINDOWS_GPU_ARGS = ["--enable-unsafe-webgpu", "--ignore-gpu-blocklist"]
+
+
+def add_channel_args(ap):
+    ap.add_argument("--headless", action="store_true",
+                    help="run headless on THIS machine's Chromium (the Linux channel) "
+                         "instead of headed real-GPU Windows Chrome; requires "
+                         "--chromium-args")
+    ap.add_argument("--chromium-args",
+                    help="JSON array of Chromium switches for --headless, computed by "
+                         "scripts/procgen/headlessChromium.js — never typed here")
+
+
+def launch_kwargs(args):
+    """`chromium.launch(**…)` for the channel `args` names, refusing a mixed one."""
+    if args.headless:
+        if not args.chromium_args:
+            raise SystemExit("--headless needs --chromium-args (the JSON array "
+                             "headlessChromium.js computes); this driver spells no "
+                             "headless flags of its own")
+        switches = json.loads(args.chromium_args)
+        if not isinstance(switches, list) or not all(isinstance(s, str) for s in switches):
+            raise SystemExit("--chromium-args must be a JSON array of strings")
+        return {"headless": True, "args": switches}
+    if args.chromium_args:
+        raise SystemExit("--chromium-args is only read with --headless; the Windows "
+                         "channel launches with its own real-GPU switches")
+    return {"headless": False, "args": list(WINDOWS_GPU_ARGS)}
+
+
 def main():
     # Resolved by the WINDOWS interpreter (py.exe -3.12), not the Linux one —
     # a missing-import warning from a Linux type checker here is expected.
@@ -328,6 +371,7 @@ def main():
                          "among them. 0.0 is the historical behaviour and is "
                          "byte-inert.")
     ap.add_argument("--headed", action="store_true", default=True)
+    add_channel_args(ap)
     args = ap.parse_args()
 
     # ── R5: ONE PAGE, N TAPES ────────────────────────────────────────────
@@ -385,12 +429,10 @@ def main():
             tapes = [json.load(fh)]
 
     with sync_playwright() as p:
-        # Headed on the real Windows desktop: this is the whole point — a real
-        # GPU adapter rather than SwiftShader.
-        browser = p.chromium.launch(
-            headless=False,
-            args=["--enable-unsafe-webgpu", "--ignore-gpu-blocklist"],
-        )
+        # `--win` (the default): headed on the real Windows desktop, a real
+        # GPU adapter. `--headless`: this machine's Chromium, on the args the
+        # Linux side computed (H2).
+        browser = p.chromium.launch(**launch_kwargs(args))
         page = browser.new_page()
         logs = []
         page.on("console", lambda m: logs.append(f"[{m.type}] {m.text}"))

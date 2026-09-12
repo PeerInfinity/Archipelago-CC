@@ -210,7 +210,7 @@ export const INSTRUMENTS = frz({
         "files": 269,
         "lineStyle": 11,
         "withDocblock": 269,
-        "withFlags": 177
+        "withFlags": 179
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3024,6 +3024,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "seeds"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "win"
                 }
             ],
             "inheritedFlags": [
@@ -3092,7 +3098,14 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-seedling-save-stamp.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "win"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",
@@ -3114,7 +3127,14 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-seedling-vanilla-manifest.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "win"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",
@@ -3369,6 +3389,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "host"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "win"
                 }
             ],
             "inheritedFlags": [

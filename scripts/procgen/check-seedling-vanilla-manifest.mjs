@@ -56,11 +56,12 @@
  *   SEEDLING_PAGE=seedling_bot_ap_phase3 node scripts/procgen/…   # the PHASE 3
  *       build, which has no manifest at all and must FAIL every arm
  */
-import { execFileSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
-import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
+import { driverChannel } from './seedlingDriver.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7) — **THE BOX LOCK.** This gate drives the machine (windows),
@@ -73,7 +74,15 @@ import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp } from './argvHelp.js';
 
 argvHelp(import.meta.url);
-takeBoxLockOrExit({ name: 'check-seedling-vanilla-manifest.mjs', kind: 'windows' });
+/**
+ * ⛓⛓ H2 (2026-09-12) — **TWO CHANNELS, ONE DRIVER.** Headless by default: the
+ * same `seedling-level-set-win.py` runs on this machine's Chromium through the
+ * repo venv, on `HEADLESS_LOGIC_ONLY_ARGS` (`seedlingDriver.js`). `--win` is
+ * the real-GPU Windows Chrome run this gate always was. The box-lock kind
+ * follows the channel.
+ */
+const WIN = process.argv.includes('--win');
+takeBoxLockOrExit({ name: 'check-seedling-vanilla-manifest.mjs', kind: WIN ? 'windows' : 'browser' });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -89,8 +98,6 @@ const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 
-const WIN_WSL = '/mnt/c/playwright';
-const WIN_DOS = 'C:\\playwright';
 const WIN_PY = '/mnt/c/Windows/py.exe';
 const DRIVER = join(HERE, 'seedling-level-set-win.py');
 
@@ -177,23 +184,20 @@ const arms = [
     },
 ];
 
-mkdirSync(WIN_WSL, { recursive: true });
-writeFileSync(join(WIN_WSL, 'seedling-level-set-win.py'), readFileSync(DRIVER));
-const planWsl = join(WIN_WSL, 'manifest-plan.json');
-const outWsl = join(WIN_WSL, 'manifest-results.json');
-writeFileSync(planWsl, JSON.stringify({ url: PAGE_URL, arms }));
-try { unlinkSync(outWsl); } catch { /* first run */ }
+const channel = driverChannel({
+    win: WIN, winPy: WIN_PY, driver: DRIVER, chromiumArgs: HEADLESS_LOGIC_ONLY_ARGS });
+channel.write('manifest-plan.json', JSON.stringify({ url: PAGE_URL, arms }));
+channel.clear('manifest-results.json');
 
 console.log(`# the built-in vanilla manifest, read out of ${PAGE_NAME}`);
 console.log(`  twin: fixtures/seedling-vanilla-set.json (${VANILLA.rooms.length} rooms, ${VANILLA.set_id})\n`);
 
 let driverOut;
 try {
-    driverOut = execFileSync(WIN_PY, [
-        '-3.12', `${WIN_DOS}\\seedling-level-set-win.py`,
-        '--plan', `${WIN_DOS}\\manifest-plan.json`,
-        '--out', `${WIN_DOS}\\manifest-results.json`,
-    ], { cwd: WIN_WSL, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 64 * 1024 * 1024 });
+    driverOut = channel.run([
+        '--plan', channel.path('manifest-plan.json'),
+        '--out', channel.path('manifest-results.json'),
+    ], { stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 64 * 1024 * 1024 });
 } catch (e) {
     const said = [e.stdout, e.stderr].filter(Boolean).join('\n').trim();
     console.log(`DRIVER FAILED: ${e.message}\n${said}`);
@@ -203,7 +207,7 @@ driverOut.replace(/\r/g, '').split('\n')
     .filter((l) => l && !/wsl\.localhost|CMD\.EXE|UNC paths/i.test(l))
     .forEach((l) => console.log(`  ${l}`));
 
-const results = JSON.parse(readFileSync(outWsl, 'utf8'));
+const results = JSON.parse(channel.read('manifest-results.json'));
 const byName = new Map(results.arms.map((a) => [a.name, a]));
 const lastOf = (armName, callName) => {
     const a = byName.get(armName);

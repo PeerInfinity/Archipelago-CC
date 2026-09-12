@@ -96,7 +96,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
 import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
 
 argvHelp(import.meta.url);
-takeBoxLockOrExit({ name: 'check-seedling-ap-placement.mjs', kind: 'browser' });
+// ⛓ H2: the lock kind follows the channel — `--win` drives Windows Chrome, the
+// default is this machine's headless Chromium.
+takeBoxLockOrExit({ name: 'check-seedling-ap-placement.mjs',
+    kind: process.argv.includes('--win') ? 'windows' : 'browser' });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');

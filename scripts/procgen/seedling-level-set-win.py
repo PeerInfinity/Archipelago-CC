@@ -75,6 +75,49 @@ import time
 from playwright.sync_api import sync_playwright  # type: ignore[import-not-found]
 
 
+# ── ⛓⛓ H2 (2026-09-12): ONE DRIVER, TWO CHANNELS ─────────────────────────────
+#
+# `--win` is what this file always was: `py.exe -3.12` on the Windows desktop,
+# headed, real GPU. `--headless` is the SAME driver run by the repo venv's
+# Linux python against headless Chromium, so a Linux box or a CI runner can ask
+# the same question through the same observation protocol (a JS port of this
+# protocol would be a second implementation that drifts).
+#
+# ⛔ THE HEADLESS FLAGS ARE NEVER SPELLED HERE. They arrive as `--chromium-args`
+# (a JSON array) computed by `scripts/procgen/headlessChromium.js` on the Linux
+# side — H1's invariant, one spelling of the Chromium flags (census 28 -> 0). A
+# Python copy of that list would be the defect H1 removed coming back; the two
+# flags below are the REAL-GPU Windows launch, a different machine.
+WINDOWS_GPU_ARGS = ["--enable-unsafe-webgpu", "--ignore-gpu-blocklist"]
+
+
+def add_channel_args(ap):
+    ap.add_argument("--headless", action="store_true",
+                    help="run headless on THIS machine's Chromium (the Linux channel) "
+                         "instead of headed real-GPU Windows Chrome; requires "
+                         "--chromium-args")
+    ap.add_argument("--chromium-args",
+                    help="JSON array of Chromium switches for --headless, computed by "
+                         "scripts/procgen/headlessChromium.js — never typed here")
+
+
+def launch_kwargs(args):
+    """`chromium.launch(**…)` for the channel `args` names, refusing a mixed one."""
+    if args.headless:
+        if not args.chromium_args:
+            raise SystemExit("--headless needs --chromium-args (the JSON array "
+                             "headlessChromium.js computes); this driver spells no "
+                             "headless flags of its own")
+        switches = json.loads(args.chromium_args)
+        if not isinstance(switches, list) or not all(isinstance(s, str) for s in switches):
+            raise SystemExit("--chromium-args must be a JSON array of strings")
+        return {"headless": True, "args": switches}
+    if args.chromium_args:
+        raise SystemExit("--chromium-args is only read with --headless; the Windows "
+                         "channel launches with its own real-GPU switches")
+    return {"headless": False, "args": list(WINDOWS_GPU_ARGS)}
+
+
 def evaluate_bot(page, name, arg=None):
     """Call one of the game's ExternalInterface bot callbacks."""
     return page.evaluate(
@@ -241,18 +284,17 @@ def main():
     ap.add_argument("--plan", required=True, help="Windows path to the plan JSON")
     ap.add_argument("--out", required=True, help="Windows path for the results JSON")
     ap.add_argument("--boot-deadline-sec", type=float, default=180.0)
+    add_channel_args(ap)
     args = ap.parse_args()
 
     with open(args.plan, "r", encoding="utf-8") as fh:
         plan = json.load(fh)
 
     with sync_playwright() as p:
-        # Headed on the real Windows desktop: a real GPU adapter, not
-        # SwiftShader. This is the whole reason this file exists.
-        browser = p.chromium.launch(
-            headless=False,
-            args=["--enable-unsafe-webgpu", "--ignore-gpu-blocklist"],
-        )
+        # `--win` (the default): headed on the real Windows desktop, a real
+        # GPU adapter. `--headless`: this machine's Chromium, on the args the
+        # Linux side computed (H2).
+        browser = p.chromium.launch(**launch_kwargs(args))
         arms = []
         try:
             probe = browser.new_page()

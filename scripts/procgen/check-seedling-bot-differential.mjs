@@ -198,7 +198,10 @@ if (!CATEGORY_TIER && !Object.keys(TIERS).includes(TIER)) {
     process.exit(1);
 }
 
-takeBoxLockOrExit({ name: 'check-seedling-bot-differential.mjs', kind: 'windows' });
+// ⛓ H2: the lock kind follows the channel — `--win` drives Windows Chrome, the
+// default is this machine's headless Chromium.
+takeBoxLockOrExit({ name: 'check-seedling-bot-differential.mjs',
+    kind: process.argv.includes('--win') ? 'windows' : 'browser' });
 
 // ⛓ OVERRIDABLE SINCE PHASE 3b of the external-level-sets plan, on the
 // precedent `probe-seedling-level-set-transport.mjs` set: a slice that changes

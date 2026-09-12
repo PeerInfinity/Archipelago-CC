@@ -84,11 +84,12 @@
  *   node scripts/procgen/check-seedling-wasm-ship.mjs --host=http://localhost:8000
  */
 
-import { execFileSync } from 'node:child_process';
-import { mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { HEADLESS_WEBGPU_ARGS } from './headlessChromium.js';
+import { driverChannel } from './seedlingDriver.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7) — **THE BOX LOCK.** This gate drives the machine (windows),
@@ -101,7 +102,20 @@ import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp } from './argvHelp.js';
 
 argvHelp(import.meta.url);
-takeBoxLockOrExit({ name: 'check-seedling-wasm-ship.mjs', kind: 'windows' });
+/**
+ * ⛓⛓ H2 (2026-09-12) — **TWO CHANNELS, ONE DRIVER.** Headless by default: the
+ * same `seedling-watch-ship-win.py` runs on this machine's Chromium through the
+ * repo venv (`seedlingDriver.js`). `--win` is the real-GPU Windows Chrome run
+ * this gate always was. The box-lock kind follows the channel.
+ *
+ * ⛔ HEADLESS IS THE PIXELS SET, NOT LOGIC-ONLY (⚖ ruling A narrowed,
+ * 2026-09-12): the device-lost pageerror IS the logic-only channel's signature,
+ * so this gate's zero-pageerror claim cannot be asked on it — measured, logic-only
+ * 257/6 (the six `no uncaught page errors` rows, 406.6 s) vs pixels 263/0 (700.4 s,
+ * box load ~9) vs `--win` 263/0 (474 s).
+ */
+const WIN = process.argv.includes('--win');
+takeBoxLockOrExit({ name: 'check-seedling-wasm-ship.mjs', kind: WIN ? 'windows' : 'browser' });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -109,8 +123,6 @@ const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
 
 const HOST = arg('host', 'http://localhost:8000');
-const WIN_WSL = '/mnt/c/playwright';
-const WIN_DOS = 'C:\\playwright';
 const WIN_PY = '/mnt/c/Windows/py.exe';
 const DRIVER = join(HERE, 'seedling-watch-ship-win.py');
 
@@ -383,8 +395,8 @@ const ROOM_STEPS = [
     { read: "document.getElementById('wasmVerdict').textContent", as: 'verdictText' },
 ];
 
-mkdirSync(WIN_WSL, { recursive: true });
-writeFileSync(join(WIN_WSL, 'seedling-watch-ship-win.py'), readFileSync(DRIVER));
+const channel = driverChannel({
+    win: WIN, winPy: WIN_PY, driver: DRIVER, chromiumArgs: HEADLESS_WEBGPU_ARGS });
 
 /**
  * ⛔ ONE PLAN = ONE BROWSER = ONE SHIP. The wasm cannot rewind (`botReset`
@@ -396,21 +408,18 @@ writeFileSync(join(WIN_WSL, 'seedling-watch-ship-win.py'), readFileSync(DRIVER))
  *   before writing one — which is a RESULT and is claimed as such.
  */
 function drive(label, url, steps, stem) {
-    const planWsl = join(WIN_WSL, `${stem}-plan.json`);
-    const outWsl = join(WIN_WSL, `${stem}-results.json`);
-    writeFileSync(planWsl, JSON.stringify({ url, steps }));
-    try { unlinkSync(outWsl); } catch { /* first run */ }
+    channel.write(`${stem}-plan.json`, JSON.stringify({ url, steps }));
+    channel.clear(`${stem}-results.json`);
 
     console.log(`\n# ${label}`);
     console.log(`  ${url}\n`);
 
     let driverOut = '';
     try {
-        driverOut = execFileSync(WIN_PY, [
-            '-3.12', `${WIN_DOS}\\seedling-watch-ship-win.py`,
-            '--plan', `${WIN_DOS}\\${stem}-plan.json`,
-            '--out', `${WIN_DOS}\\${stem}-results.json`,
-        ], { cwd: WIN_WSL, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+        driverOut = channel.run([
+            '--plan', channel.path(`${stem}-plan.json`),
+            '--out', channel.path(`${stem}-results.json`),
+        ], { maxBuffer: 64 * 1024 * 1024 });
     } catch (e) {
         driverOut = [e.stdout, e.stderr].filter(Boolean).join('\n');
         console.log(`DRIVER FAILED: ${e.message}`);
@@ -419,7 +428,7 @@ function drive(label, url, steps, stem) {
         .filter((l) => l && !/wsl\.localhost|CMD\.EXE|UNC paths/i.test(l))
         .forEach((l) => console.log(`  ${l}`));
     console.log('');
-    try { return JSON.parse(readFileSync(outWsl, 'utf8')); } catch { return null; }
+    try { return JSON.parse(channel.read(`${stem}-results.json`)); } catch { return null; }
 }
 
 /**

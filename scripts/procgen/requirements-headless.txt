@@ -1,0 +1,12 @@
+# The Python half of the headless Seedling channel (slice seedling-headless-H2).
+#
+# The `seedling-*-win.py` drivers run under `--headless` on the repo venv's
+# Linux python. Their Playwright is pinned to EXACTLY the node `playwright` in
+# package-lock.json, because the two packages then want the same browser build
+# and share one Chromium under ~/.cache/ms-playwright — measured on ubuntu-latest
+# (run 34724984639): Python 1.56.0 launched node's chromium-1194 with no
+# `python -m playwright install` at all. `headlessChromium.test.js` reds when
+# the two pins disagree.
+#
+#   .venv/bin/pip install -r scripts/procgen/requirements-headless.txt
+playwright==1.56.0

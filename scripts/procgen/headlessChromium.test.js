@@ -116,9 +116,26 @@ describe("Playwright's own --enable-features= list survives the merge", () => {
 describe('the census — no second spelling under scripts/procgen/', () => {
     it('no other file spells the WebGPU/SwiftShader switches or its own --enable-features=', () => {
         const spellings = /--use-angle=swiftshader|--use-vulkan=|--enable-unsafe-swiftshader|--enable-features=/;
+        // ⛓ H2: the `.py` drivers are IN the census. Their `--headless` channel
+        // receives the switches over argv; a Python copy of the list is the
+        // second spelling this row exists to refuse.
         const offenders = readdirSync(HERE)
-            .filter((f) => /\.(m?js)$/.test(f) && !/^headlessChromium(\.test)?\.js$/.test(f))
+            .filter((f) => /\.(m?js|py)$/.test(f) && !/^headlessChromium(\.test)?\.js$/.test(f))
             .filter((f) => spellings.test(readFileSync(join(HERE, f), 'utf8')));
         expect(offenders).toEqual([]);
+    });
+});
+
+describe('H2 — the Python half is pinned to the node half', () => {
+    it('requirements-headless.txt pins EXACTLY the node playwright the lockfile resolves', () => {
+        // ⛓ Same version ⇒ same browser build ⇒ ONE Chromium under
+        // ~/.cache/ms-playwright for both packages (measured on ubuntu-latest,
+        // run 34724984639). A drifted pin downloads a second browser, or
+        // launches a build nobody installed.
+        const lock = JSON.parse(readFileSync(join(HERE, '..', '..', 'package-lock.json'), 'utf8'));
+        const node = lock.packages['node_modules/playwright'].version;
+        const reqs = readFileSync(join(HERE, 'requirements-headless.txt'), 'utf8')
+            .split('\n').map((l) => l.trim()).filter((l) => l && !l.startsWith('#'));
+        expect(reqs).toEqual([`playwright==${node}`]);
     });
 });

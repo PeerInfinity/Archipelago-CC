@@ -249,13 +249,23 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       # ── STEP 3 — NON-GATING: can a runner read data out of the wasm? ─
-      # ⚠ EXPECTED TO REFUSE, and that refusal is the finding rather than a
-      # surprise: check-seedling-vanilla-manifest.mjs drives REAL-GPU WINDOWS
-      # CHROME through /mnt/c/Windows/py.exe (⚖ a standing user rule for that
-      # row, recorded in its own docblock). A Linux runner has no py.exe, so
-      # the row cannot complete here at all. It is run anyway, because "try it
-      # and see how far we get" was the instruction and an untried assumption
-      # is worth less than a logged outcome.
+      # ⛓ H2 (2026-09-12): YES, headless. Until H2 this step was expected to
+      # refuse — check-seedling-vanilla-manifest.mjs only drove real-GPU
+      # Windows Chrome through /mnt/c/Windows/py.exe — and it did, measured on
+      # run 34724817377: it took the box lock and died on `EACCES: mkdir
+      # '/mnt/c/playwright'`. The gate now runs its SAME Python driver headless
+      # by default (`--win` keeps the Windows channel), which needs the venv
+      # below: Playwright pinned to node's version, sharing node's Chromium
+      # (measured on run 34724984639: no second browser download).
+      - name: 'Python Playwright for the headless driver channel'
+        if: always()
+        continue-on-error: true
+        run: |
+          S=$(date +%s)
+          python3 -m venv .venv
+          .venv/bin/pip install --quiet -r scripts/procgen/requirements-headless.txt
+          echo "MEASURED: venv + requirements-headless $(( $(date +%s) - S ))s"
+
       - name: 'STEP 3 (non-gating) — read data out of the wasm'
         id: readdata
         if: always()
@@ -283,9 +293,8 @@ jobs:
           {
             echo "## STEP 3 — read data out of the wasm (NON-GATING) — \`${{ steps.readdata.outcome }}\`"
             echo ""
-            echo "\`check-seedling-vanilla-manifest.mjs\` drives real-GPU Windows"
-            echo "Chrome via \`/mnt/c/Windows/py.exe\` by standing rule, so a Linux"
-            echo "runner is expected to refuse it. Logged rather than assumed:"
+            echo "\`check-seedling-vanilla-manifest.mjs\` on its headless channel"
+            echo "(the Python driver on the runner's Chromium, H2). Verbatim:"
             echo ""
             echo '```'
             tail -40 /tmp/readdata.log 2>/dev/null || echo '(the step produced no output)'
