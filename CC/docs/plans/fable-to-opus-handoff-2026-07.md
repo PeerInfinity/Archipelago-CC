@@ -14231,6 +14231,29 @@ launches when R2 verifies. Box: after the reboot :8000 served `$HOME` (every :80
 root by PID; M3 (`apworld-sidecars-M3`, planner `archipelago-cc-88`) runs alongside R2 on the tree, pushes ordered by
 message.
 
+**R2 COMPLETE + VERIFIED 2026-09-12 (planner's reads at the tree: R2's four commits present, gitlink `681973f` = the
+submodule's pushed HEAD, pins gate ALL PASS — 2 builds — p4b/p4c gone from tree and index, plan §10 present, traps
+1335–1337 on disk).** `2211c39d10` the retirement (gitlink `7eef172 → 681973f`, pins rows (f)/(g) + `CONTROL_FILE` +
+the (h2) exemption deleted, self-test 36 → 31 rows, `check-seedling-ap-placement` moves to p4d) · `67d49c6300` the
+arm-after-swap corrections fold to the one shipped build, four p4b-measured dead-frame constants re-measured on p4d
+(licensed re-record: 231 → 230, 370 → 369, 20 → 19, 367 → 366) · `218f4f8a61` the Windows replay driver's `--arm-bound`
+retires · `f2e849393e` docs. Every deleted branch proved dead by a mutant first (§10.3). Brief wrong (§10.1): bridge /
+atlas-play / generated-set / differential / both probes had NO control arm (history prose only); `pin-policy.md` had no
+control rows; the eligibility `.test.js` fixtures were gate-visible PINS (9 problems on the retired submodule with an
+unedited gate); the P1-e control runs only under `--win`; the census missed two docblocks. Findings: P1-e CONTROL row 3
+was vacuous (matched a tile, not a class — trap 1335); chests become observable on p4d (`APItem` is a Mobile).
+**⚖ THE USER STOPPED THE OWED TIER** in R2's session at 474/0 (*"We just ran the full set of tapes earlier today. What
+specifically do we need to retest?"*) → R2 re-drove only the moved-input rows, all green under the lock: the 7 R5 tapes
+the fold reaches 171/0/34, ship on Windows Chrome 263/0 (= the standing value), ap-placement headless 84/0 + `--win`
+128/0, pages 20/0, element 11/0; bounded vitest 25 files / 829; roster, drivers and the CI plan byte-identical.
+⛔ `check-seedling-full-tier-owed` is RED at R2's head on (i)/(ii)/(iv) — p4d's payload md5s are IDENTICAL across the
+gitlink (the manifest-prose carve-out does not apply by wording), the driver and the accounting moved for real; NO
+exemption code was added (§10.5 carries the input-by-input argument). Incidents: `2211c39d10` committed while M3's
+in-app mutants held the box lock (reading the lock is not honouring it — trap 1336; no M3 path touched); M3's
+flashSubstrateLibrary mutant during the 7-tape run was unreachable from `game.html`; the tier's PID file lost to
+`VAR=x && … &` (trap 1337). **⚖ RULED (user, 2026-09-12): "Yes, push now. What we're working towards is being able to run the tier in CI."** ⇒ the
+red rides; H2's dispatched CI tier (ruling C) is the discharge. ⚖ OPEN: the seedling-wasm history shed (`.git` 133 M, unchanged by the deletion); the row-key rename (H2, ruling B).
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
