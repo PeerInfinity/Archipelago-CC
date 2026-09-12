@@ -8,6 +8,10 @@
  *   2. Playwright's own `--enable-features=` list is carried — anchored on the
  *      INSTALLED `chromiumSwitches.js`, not on this module's own constant.
  *   3. No file under `scripts/procgen/` spells the flags for itself.
+ *
+ * ⛓ R1 (2026-09-12) adds a fourth: the LOGIC-ONLY set differs from the pixels
+ *   set in EXACTLY the Vulkan pair and in nothing else, so the two cannot drift
+ *   apart when somebody edits one of them.
  */
 import { readdirSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
@@ -17,8 +21,8 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
-    HEADLESS_WEBGPU_ARGS, HEADLESS_WEBGPU_FEATURES, PLAYWRIGHT_ENABLED_FEATURES,
-    headlessWebgpuArgs,
+    HEADLESS_LOGIC_ONLY_ARGS, HEADLESS_WEBGPU_ARGS, HEADLESS_WEBGPU_FEATURES,
+    PLAYWRIGHT_ENABLED_FEATURES, VULKAN_PAIR, headlessWebgpuArgs,
 } from './headlessChromium.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -51,6 +55,47 @@ describe('headlessWebgpuArgs — one --enable-features= switch', () => {
         const args = headlessWebgpuArgs({ extra: ['--autoplay-policy=no-user-gesture-required'] });
         expect(args.at(-1)).toBe('--autoplay-policy=no-user-gesture-required');
         expect(featureSwitches(args)).toHaveLength(1);
+    });
+});
+
+describe('HEADLESS_LOGIC_ONLY_ARGS — the pixels set MINUS exactly the Vulkan pair', () => {
+    // ⛔ THE CLAIM IS A DIFFERENCE, NOT A LIST. Asserting the logic-only set's
+    // contents against a hand-written list would pass forever while somebody
+    // added a switch to the pixels set and not to this one — the two would
+    // then differ in something nobody chose, and the tier's rate would move
+    // for a reason no row names.
+    it('drops the Vulkan SWITCH and keeps every other switch, in order', () => {
+        const nonFeature = (a) => a.filter((s) => !s.startsWith(FEATURES));
+        expect(nonFeature(HEADLESS_LOGIC_ONLY_ARGS))
+            .toEqual(nonFeature(HEADLESS_WEBGPU_ARGS).filter((s) => s !== VULKAN_PAIR.switch));
+        expect(HEADLESS_LOGIC_ONLY_ARGS).not.toContain(VULKAN_PAIR.switch);
+        expect(HEADLESS_LOGIC_ONLY_ARGS).toContain('--use-angle=swiftshader');
+    });
+
+    it('drops the Vulkan FEATURE and keeps every other feature, still in ONE switch', () => {
+        expect(featureSwitches(HEADLESS_LOGIC_ONLY_ARGS)).toHaveLength(1);
+        expect(featuresOf(HEADLESS_LOGIC_ONLY_ARGS)).not.toContain(VULKAN_PAIR.feature);
+        expect(featuresOf(HEADLESS_LOGIC_ONLY_ARGS))
+            .toEqual(expect.arrayContaining([...PLAYWRIGHT_ENABLED_FEATURES]));
+        expect(featuresOf(HEADLESS_LOGIC_ONLY_ARGS))
+            .toEqual(featuresOf(HEADLESS_WEBGPU_ARGS).filter((f) => f !== VULKAN_PAIR.feature));
+    });
+
+    it('the pair is BOTH halves — dropping only one of them is not this set', () => {
+        // ⛓ The switch alone, or the feature alone, still leaves the other
+        // half on the command line; the difference between the two sets is
+        // exactly two entries and the row says so as a number.
+        const diff = HEADLESS_WEBGPU_ARGS.filter((a) => !HEADLESS_LOGIC_ONLY_ARGS.includes(a));
+        expect(diff).toHaveLength(2);
+        expect(diff).toContain(VULKAN_PAIR.switch);
+        expect(diff.some((a) => a.startsWith(FEATURES) && a.includes(VULKAN_PAIR.feature))).toBe(true);
+    });
+
+    it('a site can still merge its own features into the logic-only set', () => {
+        const args = headlessWebgpuArgs({ pixels: false, enableFeatures: ['Foo'] });
+        expect(featureSwitches(args)).toHaveLength(1);
+        expect(featuresOf(args)).toContain('Foo');
+        expect(featuresOf(args)).not.toContain(VULKAN_PAIR.feature);
     });
 });
 

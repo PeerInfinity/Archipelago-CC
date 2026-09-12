@@ -115,12 +115,22 @@ export const PLAYWRIGHT_ENABLED_FEATURES = Object.freeze(['CDPScreenshotNewSurfa
 /** The features the WebGPU page needs; `Vulkan` is the device-loss cure. */
 export const HEADLESS_WEBGPU_FEATURES = Object.freeze(['Vulkan']);
 
+/**
+ * ⛓ The two halves of the device-loss cure, named so the logic-only set can
+ * be defined by SUBTRACTING exactly them rather than by a second hand-written
+ * list that would drift. `headlessChromium.test.js` pins the subtraction.
+ */
+export const VULKAN_PAIR = Object.freeze({
+    switch: '--use-vulkan=swiftshader',
+    feature: 'Vulkan',
+});
+
 const WEBGPU_SWITCHES = Object.freeze([
     '--enable-unsafe-webgpu',
     '--ignore-gpu-blocklist',
     '--enable-unsafe-swiftshader',
     '--use-angle=swiftshader',
-    '--use-vulkan=swiftshader',
+    VULKAN_PAIR.switch,
     '--no-sandbox',
 ]);
 
@@ -134,9 +144,12 @@ const FEATURES_SWITCH = '--enable-features=';
  *     needs (e.g. `WebAssemblyExperimentalJSPI`) — merged into the ONE switch.
  * @param {string[]} [opts.extra]           any other switches, appended; ⛔ an
  *     `--enable-features=` here is REFUSED, because it would delete the merged one.
+ * @param {boolean} [opts.pixels]           `true` (the default) keeps the Vulkan
+ *     pair, so the device survives presenting and the canvas has real pixels.
+ *     `false` drops exactly that pair — see `HEADLESS_LOGIC_ONLY_ARGS`.
  * @returns {string[]}
  */
-export function headlessWebgpuArgs({ enableFeatures = [], extra = [] } = {}) {
+export function headlessWebgpuArgs({ enableFeatures = [], extra = [], pixels = true } = {}) {
     const second = extra.find((a) => a.startsWith(FEATURES_SWITCH));
     if (second) {
         throw new Error(`headlessWebgpuArgs: ${JSON.stringify(second)} in \`extra\` would be a `
@@ -145,10 +158,55 @@ export function headlessWebgpuArgs({ enableFeatures = [], extra = [] } = {}) {
             + 'names as `enableFeatures` instead.');
     }
     const features = [...new Set([
-        ...HEADLESS_WEBGPU_FEATURES, ...PLAYWRIGHT_ENABLED_FEATURES, ...enableFeatures,
+        ...(pixels ? HEADLESS_WEBGPU_FEATURES : []),
+        ...PLAYWRIGHT_ENABLED_FEATURES, ...enableFeatures,
     ])];
-    return [...WEBGPU_SWITCHES, `${FEATURES_SWITCH}${features.join(',')}`, ...extra];
+    const switches = pixels
+        ? WEBGPU_SWITCHES
+        : WEBGPU_SWITCHES.filter((s) => s !== VULKAN_PAIR.switch);
+    return [...switches, `${FEATURES_SWITCH}${features.join(',')}`, ...extra];
 }
 
 /** The args every headless Seedling launch uses when it needs nothing extra. */
 export const HEADLESS_WEBGPU_ARGS = Object.freeze(headlessWebgpuArgs());
+
+/**
+ * ⛓⛓ R1 (2026-09-12) — **THE LOGIC-ONLY SET: the same launch with the Vulkan
+ * pair subtracted, so Chromium loses the WebGPU device on purpose.**
+ *
+ * ⛔⛔ "LOGIC-ONLY" IS NOT A RUNTIME MODE AND NOTHING IN THE WASM SELECTS IT.
+ * It is Chromium: under `--use-angle=swiftshader` alone the compositor has no
+ * shared-image backing for the WebGPU swapchain, so the device is lost at the
+ * page's FIRST present (the root cause above). What changed is the RUNTIME's
+ * answer to that. Up to SWFRecomp-CC `06f3d87` the loss parked every other
+ * frame for 1000 × `emscripten_sleep(1)` ≈ 4.4 s — the "~0.5 ticks/s" this
+ * repo was built around. From `b0a6a487b` (shipped here at `254145a5b`) the
+ * runtime SURVIVES the loss: every WebGPU call becomes a valid no-op, the AVM
+ * and the render walk run unchanged, and only the pixels are gone.
+ *
+ * ⇒ two headless modes, and which is FASTER flips with the build:
+ *
+ *   pixels (`HEADLESS_WEBGPU_ARGS`)   device alive, SwiftShader rasterises on
+ *                                     the CPU — 4–12 ticks/s on the rebuilt
+ *                                     build (the peer's measurement), and the
+ *                                     canvas is real
+ *   logic-only (THIS)                 device lost at the first present, no
+ *                                     pixels at all, ~30 ticks/s (Seedling's
+ *                                     own pacing cap)
+ *
+ * ⛔⛔ AND THAT IS WHY ITS ONE CONSUMER ASSERTS IT RATHER THAN ASSUMING IT.
+ * Nothing here can make Chromium lose a device. A Chromium that one day
+ * presents fine under ANGLE-SwiftShader turns this set into a slow PIXEL run —
+ * same verdicts, three to seven times the wall clock, against deadlines
+ * derived at ~30 ticks/s. That failure is silent unless somebody looks, so
+ * `check-seedling-bot-differential.mjs`'s headless channel reads
+ * `__swfGpu.lost` on the page before its first tape and REFUSES by name when
+ * the device is alive. ⛓ Detect the loss by the RUNTIME READOUT, never by the
+ * `device.lost` message text (see the note above).
+ *
+ * ⚠ ONLY the differential uses this today. Every other headless gate stays on
+ * `HEADLESS_WEBGPU_ARGS`: they are short, they do not care about the rate, and
+ * a gate that WANTS pixels needs the pair. Routing the rest — and the six
+ * `windows` gates — is H2's question, open in the plan's §5.
+ */
+export const HEADLESS_LOGIC_ONLY_ARGS = Object.freeze(headlessWebgpuArgs({ pixels: false }));

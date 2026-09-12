@@ -129,6 +129,31 @@ export const ROSTER_ROW_KEY = 'roster: --win --tier=full';
 const COUNTS_RE = /^(\d+)\/(\d+)(?:\/(\d+))?$/;
 
 /**
+ * ⛓⛓ R1 (2026-09-12) — **WHICH BROWSER PRODUCED THIS PART, AS DATA.**
+ *
+ * ⛔ THE KEY SAYS `--win` AND A PART MAY NOT HAVE BEEN DRIVEN THAT WAY. Until
+ * H1 that was unthinkable: headless replayed at ~0.5 ticks/s, so `roster: --win
+ * --tier=full` could only ever mean real-GPU Windows Chrome and the key WAS the
+ * channel. H1 cured the rate (a lost WebGPU device, not software rasterising)
+ * and measured that a headless tier reproduces the Windows tier tape for tape;
+ * R1 rebuilds the game and drives it headless. From here on "which channel" is
+ * a REAL question about a part, and a question a reader must not have to answer
+ * from the key — the key is now a misnomer (renaming it is a ⚖ for the user;
+ * `rosterCategories.test.js` reads the row through `ROSTER_ROW_KEY` and is
+ * invisible to a grep for the literal, so a rename has SEVEN consumers, not six).
+ *
+ * ⛔ AND IT MUST NOT BE PROSE. `coveredBy` would have carried it, and ⚖ 17 is
+ * exactly the ruling that says a field a gate has to read cannot be a sentence
+ * a human keeps true. So: an optional `channel` on the part, rendered into the
+ * derived `why`, absent on every part nobody has re-measured. ⛓ Absent means
+ * "not recorded", never "win": the four parts written before this field existed
+ * were `--win`, and saying so would be back-filling a fact from a default.
+ */
+export const CHANNELS = Object.freeze(['win', 'headless']);
+
+const channelSuffix = (p) => (p.channel ? ` [channel: ${p.channel}]` : '');
+
+/**
  * The parts of a composite row, in the categories' own order.
  *
  * ⛓ A row with no `categories` is NOT a composite and this returns `[]` —
@@ -189,7 +214,9 @@ export function compositeWhy(row, categories) {
     if (!parts.length) return row?.why ?? null;
     const lines = parts.map((p) => (COUNTS_RE.test(p.value ?? '')
         ? `${p.category} ${p.tapes} tape(s) ${p.value} MEASURED @${p.measuredAt}`
-        : `${p.category} ${p.tapes} tape(s) @${p.measuredAt}, not separately banked`));
+            + channelSuffix(p)
+        : `${p.category} ${p.tapes} tape(s) @${p.measuredAt}, not separately banked`
+            + channelSuffix(p)));
     const covers = [...new Set(parts.map((p) => p.coveredBy).filter(Boolean))];
     return `DERIVED from the parts (⚖ 70 (c)) — ${lines.join(' · ')}. Each part carries its `
         + 'OWN head: a category is owed a drive when the tree moved under IT, not when the '
@@ -204,7 +231,7 @@ export function compositeWhy(row, categories) {
  * is the ONLY way either of them can change and neither can disagree with the
  * parts.
  */
-export function withCategoryQuote(row, { category, tapes, value, measuredAt, coveredBy },
+export function withCategoryQuote(row, { category, tapes, value, measuredAt, coveredBy, channel },
     { categories, isAncestor } = {}) {
     if (!category) throw new Error('withCategoryQuote: --category= is required');
     const next = {
@@ -216,6 +243,10 @@ export function withCategoryQuote(row, { category, tapes, value, measuredAt, cov
                 value: value ?? null,
                 measuredAt,
                 ...(coveredBy ? { coveredBy } : {}),
+                // ⛓ R1 — omitted, not defaulted: see `channelSuffix`. A part
+                // written before the field existed stays silent about its
+                // channel rather than claiming one it was never asked.
+                ...(channel ? { channel } : {}),
             },
         },
     };

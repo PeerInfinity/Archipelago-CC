@@ -16,7 +16,7 @@
  */
 
 import { execFileSync } from 'node:child_process';
-import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -26,7 +26,7 @@ import { ROSTER_CATEGORIES, tapesInTier, tapesInTiers } from
     '../../frontend/modules/seedlingDemo/fixtures/tiers.js';
 import { fixtureNames } from '../../frontend/modules/seedlingDemo/fixtures/index.js';
 import {
-    ROSTER_ROW_KEY, compositeParts, compositeValue, compositeWhy, oldestPartHead,
+    FILE, ROSTER_ROW_KEY, compositeParts, compositeValue, compositeWhy, oldestPartHead,
     readStandingValues, withCategoryQuote,
 } from './standingValues.js';
 
@@ -176,6 +176,73 @@ describe('the COMPOSITE checkpoint row (⚖ 70 (c))', () => {
         }
         expect(row.value).toBe(compositeValue(row, ROSTER_CATEGORIES));
         expect(row.why).toBe(compositeWhy(row, ROSTER_CATEGORIES));
+    });
+});
+
+describe('a part says which CHANNEL drove it (R1)', () => {
+    const base = { categories: { campaign: { tapes: 26, value: '616/0/3', measuredAt: 'aaa' } } };
+
+    it('a recorded channel reaches the derived `why` and nothing else has to carry it', () => {
+        const next = withCategoryQuote(base, {
+            category: 'campaign', tapes: 26, value: '616/0/3', measuredAt: 'bbb',
+            channel: 'headless',
+        }, { categories: ROSTER_CATEGORIES });
+        expect(next.categories.campaign.channel).toBe('headless');
+        expect(next.why).toContain('[channel: headless]');
+        // ⛔ The VALUE is the counts and stays the counts: a channel is about
+        // who measured, never about what was measured.
+        expect(next.value).toBe('26 tapes 616/0/3');
+        expect(next.why).toBe(compositeWhy(next, ROSTER_CATEGORIES));
+    });
+
+    it('⛔ an omitted channel is ABSENT, never defaulted to `win`', () => {
+        // The four parts written before the field existed were `--win`, and
+        // back-filling that from a default would turn a guess into data. A
+        // reader must be able to tell "driven on Windows" from "nobody said".
+        const next = withCategoryQuote(base, {
+            category: 'map-walk', tapes: 21, value: '449/0/0', measuredAt: 'bbb',
+        }, { categories: ROSTER_CATEGORIES });
+        expect(next.categories['map-walk']).not.toHaveProperty('channel');
+        expect(next.why).not.toContain('[channel:');
+    });
+
+    it('parts with different channels each say their own', () => {
+        let row = withCategoryQuote(base, {
+            category: 'campaign', tapes: 26, value: '616/0/3', measuredAt: 'aaa',
+            channel: 'win',
+        }, { categories: ROSTER_CATEGORIES });
+        row = withCategoryQuote(row, {
+            category: 'mechanic', tapes: 103, value: '2194/0/0', measuredAt: 'bbb',
+            channel: 'headless',
+        }, { categories: ROSTER_CATEGORIES });
+        expect(row.why).toContain('campaign 26 tape(s) 616/0/3 MEASURED @aaa [channel: win]');
+        expect(row.why).toContain('mechanic 103 tape(s) 2194/0/0 MEASURED @bbb [channel: headless]');
+    });
+
+    it('record-standing-value REFUSES a channel outside the vocabulary, and writes NOTHING', () => {
+        // ⛔⛔ TRAP, PAID FOR: this row drives the REAL `record-standing-value.mjs`
+        // against the REAL `standing-values.json` — there is no `--file=` override —
+        // so the moment the guard under test stops refusing, the row's own command
+        // performs the write it exists to forbid. Driving the mutant (the guard
+        // deleted) DID write a bogus `campaign 1/0/0 @deadbeef [channel: wni]` part
+        // into the tracked file, where it survived the test run and reached
+        // `git status`. ⇒ the row banks the bytes, asserts they did not move, and
+        // puts them back if they did, so a future mutant reds here instead of
+        // committing a fiction.
+        const p = join(REPO, FILE);
+        const before = readFileSync(p);
+        const r = run(join(HERE, 'record-standing-value.mjs'), [
+            `--key=${ROSTER_ROW_KEY}`, '--quote=1/0/0', '--category=campaign',
+            '--measured-at=deadbeef', '--channel=wni',
+        ]);
+        const after = readFileSync(p);
+        if (!after.equals(before)) writeFileSync(p, before);
+        expect(after.equals(before), `${FILE} was WRITTEN by a call that must refuse`).toBe(true);
+        expect(r.code).not.toBe(0);
+        expect(r.out).toMatch(/--channel=wni is not a channel/);
+        // ⛓ and it says what omitting it means, so the refusal cannot be
+        // "fixed" by dropping the flag and assuming the old default.
+        expect(r.out).toMatch(/do not omit it to mean `win`/);
     });
 });
 

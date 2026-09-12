@@ -8651,6 +8651,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "channel"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "covered-by"
                 },
                 {

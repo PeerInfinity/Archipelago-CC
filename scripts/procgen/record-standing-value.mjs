@@ -20,7 +20,8 @@
  *   …--quote='<value>' --measured-at=<sha> --why='<one line>'
  *                                  record a value MEASURED SOMEWHERE ELSE.
  *   …--quote='<value>' --category=<campaign|map-walk|mechanic> --tapes=<n> \
- *        --measured-at=<sha>        quote ONE CATEGORY of the COMPOSITE
+ *        --measured-at=<sha> [--channel=win|headless]
+ *                                  quote ONE CATEGORY of the COMPOSITE
  *                                  checkpoint row (R9 slice CAT, ⚖ 70 (c)).
  *                                  The row's own `value` and `why` are then
  *                                  DERIVED from its parts and any hand edit to
@@ -43,7 +44,7 @@ import { join } from 'node:path';
 import { releaseBoxLock, takeBoxLock } from './boxLock.js';
 import { REPO } from './gateRoster.js';
 import {
-    CHEAP_MS, FILE, cheapFor, head, readStandingValues, runRow, withCategoryQuote,
+    CHANNELS, CHEAP_MS, FILE, cheapFor, head, readStandingValues, runRow, withCategoryQuote,
 } from './standingValues.js';
 import { ROSTER_CATEGORIES, rosterCategories } from
     '../../frontend/modules/seedlingDemo/fixtures/tiers.js';
@@ -67,6 +68,13 @@ const MEASURED_AT = arg('measured-at');
 const CATEGORY = arg('category');
 const TAPES = arg('tapes');
 const COVERED_BY = arg('covered-by');
+/**
+ * ⛓ R1 — which BROWSER drove this part (`win` | `headless`), recorded as data
+ * on the part rather than inferred from the key. Optional and never defaulted:
+ * see `channelSuffix` in `standingValues.js` for why absence must keep meaning
+ * "not recorded" rather than "win".
+ */
+const CHANNEL = arg('channel');
 
 if (!KEY || (!FROM && QUOTE === null)) {
     console.log('FAIL: --key= and one of --from=<command> / --quote=<value> are required');
@@ -110,6 +118,14 @@ if (QUOTE !== null && CATEGORY) {
             + 'category?');
         process.exit(1);
     }
+    // ⛓ R1 — a typo'd channel would become DATA and read as a third channel
+    // nobody drives, so the vocabulary is closed at the door rather than in
+    // the reader. Omitting it is still legal and still means "not recorded".
+    if (CHANNEL && !CHANNELS.includes(CHANNEL)) {
+        console.log(`FAIL: --channel=${CHANNEL} is not a channel (${CHANNELS.join(', ')}). `
+            + 'Omit it to record no channel; ⛔ do not omit it to mean `win`.');
+        process.exit(1);
+    }
     if (WHY) {
         console.log('FAIL: --why= is refused with --category=. The composite row\'s `why` is '
             + 'DERIVED from its parts (⚖ 17) — a hand-written one beside it would be a '
@@ -144,6 +160,7 @@ if (QUOTE !== null && CATEGORY) {
         value: QUOTE === '' ? null : QUOTE,
         measuredAt: MEASURED_AT,
         coveredBy: COVERED_BY,
+        channel: CHANNEL,
     }, { categories: ROSTER_CATEGORIES, isAncestor });
     file.rows[KEY] = next;
     writeFileSync(join(REPO, FILE), `${JSON.stringify(file, null, 2)}\n`);
