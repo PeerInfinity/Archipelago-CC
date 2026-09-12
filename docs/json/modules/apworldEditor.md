@@ -25,9 +25,10 @@ document.
 | `sidecarIssues.js` | (V0) the **sidecar validity report** — `sidecarIssues(doc, slot)`, the fourth validator: one pure function the validation bar, the per-region block and `check-sidecar-fields.mjs` all read |
 | `sidecarForm.js` | (D1) the sidecar block's **fields view** model — `sidecarFormModel(entry, {rulesSchema})`: the rows (the entry subschema's fields, then the substrate's declaration), the control each type draws, and `withSidecarField`, the whole entry one control's change writes |
 | `regionRoundTrip.js` | the per-region **Edit ▸** door — resolves the substrate's declarations, runs the baseline, folds a save into ONE op; (S0) `sidecarEntryFacts`, what a region's sidecar block says about its entry; and (S2) `deriveRegionRules`, the derivation half alone — a payload's own rules, named by the document |
-| `regionLayout.js` | (M2) the map moves' layout — `slotLayout` (a slot's cells on a `Grid` sized by `mapBoundsFor`), `layoutChange` (the engine's placement, and every exit whose side-law verdict the move changed), `rewriteExitFlags` (a payload's `exits` in its substrate's own serialized form); the ops and their refusal sentences are `rulesDocOps.js`'s `move-region` / `swap-regions` |
+| `regionLayout.js` | (M2) the map moves' layout — `slotLayout` (a slot's cells on a `Grid` sized by `mapBoundsFor`), `layoutChange` (the engine's placement, and every exit whose side-law verdict the move changed), `rewriteExitFlags` (a payload's `exits` in its substrate's own serialized form); (M3) `rewriteExits` (the one path a flag write and a side write share), `exitSideVerdicts` (the side law asked of a moved exit alone), `exitSidesOfSubstrate`; the ops and their refusal sentences are `rulesDocOps.js`'s `move-region` / `swap-regions` / `move-exit-side` / `swap-exit-sides` |
 | `regionRederive.js` | (S2) **Re-derive rules ▸** — `rederiveRegionRules({base, ops, doc}, slot, region)`: the pre-edit payload recovered from the session's record, and the ONE op that moves only the rules it produced |
 | `../procgenCore/compositeMapRenderer.js` | the **Map** tab's painter — shared with the procgen pipeline panel, substrate-neutral |
+| `../procgenCore/exitSides.js` | (M3) `exitSidesOf` — the registry-entry `exitSides` declaration (what else a payload keys by an exit's side), or why there is none; the one reader the ops and the block's side picker share |
 | `../procgenPipeline/compositeMapDocument.js` | `reconstructResultFromSidecars` — `preset_sidecars` → a `Grid`; (M2) `mapBoundsFor`, the grid's size in cells, shared with the map moves |
 | `rawView.js` | the **Raw JSON** tab's text and its parse (the size limit was RETIRED by measurement — H2b) |
 | `downloadJson.js` | the download exit — the file name and the bytes |
@@ -59,7 +60,7 @@ reset the session, so an undo after an Apply still works. It republishes the
 | **Items** | items, classifications, pool counts, starting counts, the slot's `item_groups` registry (I1) and its `progression_mapping` entries (I2) — see below |
 | **Placements** (W3) | `canonical_placements` — which item this world places at which location; the world generator's `--canonical-seed` input, see below |
 | **Meta** | the fields in `rulesDocOps.META_FIELDS`, plus the start region and the victory condition |
-| **Map** | the composite grid, for documents whose sidecars carry grid cells; a click selects a region and draws its sidecar block under the map, a second click on it opens its room (M1); **Move / swap ▸** on that block moves the region to an empty cell or swaps it with another (M2) — see below |
+| **Map** | the composite grid, for documents whose sidecars carry grid cells; a click selects a region and draws its sidecar block under the map, a second click on it opens its room (M1); **Move / swap ▸** on that block moves the region to an empty cell or swaps it with another (M2), and a side picker per exit moves an exit to another side (M3) — see below |
 | **Sidecars** (S1) | the five keys that travel BESIDE a world rather than inside its regions, and (S0) `preset_sidecars` as an expandable per-region list for the selected slot — see below |
 | **Document** | **every** top-level key — see below |
 | **Links** | every other editor that owns part of a `rules.json` |
@@ -1432,6 +1433,84 @@ In-app rows: `apworld-map-move-to-an-empty-cell-records-one-op`,
 `apworld-map-a-separating-move-names-the-teleporter` (the connection pairs,
 counted off the reconstruction, are the same before and after).
 
+### Moving an exit to another side (M3)
+
+⚖ §5e Q1 A: M2's shape — native hub ops, zone substrates only, no relayout. An
+exit of a flash zone does not stand anywhere: its `side` is a LINKING KEY, which
+play resolves through `params.sidePortals[side]` to a level portal whose geometry
+does not depend on the side. So moving it is a relabel.
+
+**The control.** On the sidecar block — all three hosts (Regions, Sidecars, the
+Map's selection) — a region whose substrate DECLARES `exitSides` draws
+**Exit sides:** with one picker per exit (`select.apworld-exit-side`). Its own
+side is marked *(this exit)*; a side another exit of the region holds is offered
+as **swap with that exit** (never disabled); a free side is a move. A pick is ONE
+op — `move-exit-side {region, exitId, side}` or
+`swap-exit-sides {region, exitA, exitB}` (the pipeline's own op names; the hub
+addresses the region by NAME, not by cell) — asked of a preview first, so a
+refusal prints beside the block in the op's words. A region whose substrate
+declares nothing draws no picker on the Regions and Sidecars tabs (a line per
+block would be drawn on every block of a 235-region document); on the Map, the
+selected region's one block says why, in the op's refusal: *"not editable here —
+… its registry entry declares no `exitSides`, so the hub cannot say what else in
+the payload is keyed by side."*
+
+**What it writes** — `preset_sidecars[p][r].playable_payload`, and nothing else:
+
+- the moved exit's `side`, and its `isTeleporter` only if the side law's verdict
+  on THAT exit changed (its region and its target stay where they are, so no
+  other verdict can change). Written through the substrate's own
+  `deserializeWorld` → `serializeWorld`, the path M2's flag writes take;
+- what the substrate's `exitSides.relabel` re-keys (registry reference §
+  *Editing*): for bounce and runner, `params.sidePortals` renamed in place and
+  `params.backExitSide` moved with a back exit; for bounce, also the arrow of the
+  portal now serving the side. The hub names none of these fields — the
+  declaration does, and the answer quotes its `keys`.
+
+⛔ **Never** `regions[p]`, `grid_cell`, or any `targetRegion` / `targetExitId`:
+the exit leads where it led. A tile a pre-G1 document still carries on the moved
+exit is removed, as the engine's `relabelExitSide` removes it for a sides region
+(the tracked corpus carries none). The Map then draws the exit on its new side by
+the renderer's side fallback (`resolveExitTilePositions`) with no other write.
+
+**A link can come out ONE-WAY.** The reciprocal exit on the target keeps its own
+stored flag, so moving `exit_S` of `region_1_0` off its side leaves the forward
+end a teleporter and the back end adjacent. The op reports it and repairs
+nothing: *"Moved exit exit_S of region_1_0 to side W (south → west); the link to
+region_1_1 is now a teleporter (it was adjacent) — ONE-WAY: region_1_1's exit
+exit_N (north) is adjacent (its flag is its own; this op does not re-judge it);
+relabelled by "bounce"'s `exitSides` (…)"* (`EXIT_LINK_ONE_WAY`). Moving it back
+says *"… is now adjacent (it was a teleporter); region_1_1's exit exit_N (north)
+leads back as adjacent too"*. The pipeline's own `moveSphereExitSide` agrees on a
+forward exit and disagrees on a BACK exit, whose flag its `stitchGrid` never
+updates (M2's back-exit finding, measured again in the exit-side shape).
+
+**Refused by name** (`rulesDocOps.js`): no region name; no sidecar entry; no
+`exits` list; no such exit (naming the region's exits, and for a swap which of
+`exitA` / `exitB`); a side outside N/S/E/W; a substrate that is unregistered,
+declares no `exitSides`, or declares a malformed one; a side another exit holds
+(*"… moving X there is a swap, and says so: swap-exit-sides {exitA: X, exitB:
+Y}."*); a relabel that throws (a portal map already keyed on the target side);
+a substrate with no serializer. A move to the exit's own side, or a swap of an
+exit with itself, is a no-op answered before any substrate is asked.
+
+**The corpus control** (`exitSides.test.js`), over every committed entry whose
+substrate declares `exitSides` (bounce and runner — M2's two omsi dissenters are
+outside it): a relabel to each exit's own side moves 0 bytes; every exit moved to
+every free side and back, and every swap swapped back, is byte-identical to the
+committed document; the side law reproduces every stored flag. An exhaustive
+deep diff over every move and swap allows only the moved sides, the flags the law
+changed, the renamed portal-map keys, a back exit's `backExitSide` and a
+DECLARED arrow.
+
+In-app rows: `apworld-exit-side-move-records-one-op-and-the-map-redraws` (the
+canvas digest after the pick equals the digest of a document authored by hand
+with the exit on that side), `apworld-exit-side-pick-of-a-taken-side-swaps`,
+`apworld-exit-side-undeclared-entry-offers-nothing-and-says-why`, and the play
+witness `apworld-exit-side-move-plays-in-the-bounce-panel` (the moved exit
+Applied: the bounce game's own portal → side map, `__bounceDebug().portalSides`,
+serves the old side's portal on the new side).
+
 **"Open region graph" is ONE-WAY**, by ⚖: *"We could add a button to open the
 region graph, but I don't want a button in the region graph leading back to the
 APWorld editor."* The button raises `regionGraphPanel` through the same
@@ -1825,7 +1904,7 @@ The import is free in both modes, measured:
 
 | Suite | Where |
 |-------|-------|
-| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `regionRederive.test.js`, `regionLayout.test.js` (M2: every move and swap of two fixture slots, the refusals, the corpus control, the side law's census), `reverseLinks.test.js`, `sidecarIssues.test.js`, `sidecarForm.test.js` | vitest, `frontend/modules/apworldEditor/` |
+| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `regionRederive.test.js`, `regionLayout.test.js` (M2: every move and swap of two fixture slots, the refusals, the corpus control, the side law's census), `exitSides.test.js` (M3: the exit-side corpus control, the exhaustive deep diff over every side move and swap, the back exit, every refusal, ONE-WAY, Undo), `reverseLinks.test.js`, `sidecarIssues.test.js`, `sidecarForm.test.js` | vitest, `frontend/modules/apworldEditor/` |
 | `check-sidecar-fields.mjs` (+ `checkSidecarFields.test.js`) | `scripts/procgen/` — the corpus gate: every committed entry against its declaration, and (V0) `sidecarIssues` per slot as its second layer |
 | `../procgenCore/compositeMapRenderer.test.js` | vitest — the Map tab's renderer, driven by a TOY substrate |
 | `../procgenPipeline/compositeMapDocument.test.js` | vitest — `preset_sidecars` → `Grid`, including the player slot; (M2) `mapBoundsFor` |
