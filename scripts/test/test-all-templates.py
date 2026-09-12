@@ -29,6 +29,8 @@ from lib.test_utils import (
     build_and_load_world_mapping,
     check_virtual_environment,
     check_http_server,
+    http_server_command,
+    test_port,
     load_template_exclude_list,
     cleanup_empty_worldgen_dirs,
 )
@@ -571,13 +573,13 @@ def main():
         print("[WARNING] HTTP development server not running!")
         print("")
         print("The spoiler tests require a local development server.")
-        print("Starting server automatically: python -m http.server 8000")
+        print(f"Starting server automatically: {' '.join(http_server_command())}")
         print("")
 
         # Start the server in the background
         try:
             server_process = subprocess.Popen(
-                [sys.executable, '-m', 'http.server', '8000'],
+                http_server_command(),
                 cwd=project_root,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL
@@ -589,7 +591,7 @@ def main():
                 time.sleep(0.5)
                 if check_http_server():
                     print(" Server started successfully!")
-                    print(f"Server running at: http://localhost:8000/frontend/")
+                    print(f"Server running at: http://localhost:{test_port()}/frontend/")
                     print(f"Server PID: {server_process.pid}")
                     print("")
                     break
@@ -600,7 +602,7 @@ def main():
                 print("")
                 print("[ERROR] Server failed to start within 10 seconds.")
                 print("Please start the server manually:")
-                print("  python -m http.server 8000")
+                print(f"  {' '.join(http_server_command())}")
                 print("")
                 print("Alternatively, use --export-only to skip spoiler tests.")
                 server_process.terminate()
@@ -609,7 +611,7 @@ def main():
             print(f"[ERROR] Failed to start server: {e}")
             print("")
             print("Please start the server manually:")
-            print("  python -m http.server 8000")
+            print(f"  {' '.join(http_server_command())}")
             print("")
             print("Alternatively, use --export-only to skip spoiler tests.")
             sys.exit(1)

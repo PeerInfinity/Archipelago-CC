@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { TEST_FRONTEND_URL } from '../../scripts/test/testServer.js';
 // ⚖ 2026-09-06 — the base-cost table is the exported default, never a typed
 // number. This spec is NOT selected by `npm test` (run-tests.js hardcodes
 // app.spec.js) but a bare `npx playwright test` collects it, because
@@ -14,7 +15,7 @@ import {
 test.describe('LoopStats Module Tests', () => {
   test('loopStats module loads correctly and exposes public API', async ({ page }) => {
     // Navigate to the app and wait for network idle
-    await page.goto('http://localhost:8000/frontend/', { waitUntil: 'networkidle', timeout: 60000 });
+    await page.goto(TEST_FRONTEND_URL, { waitUntil: 'networkidle', timeout: 60000 });
 
     // Wait for centralRegistry to be available (app initialized)
     await page.waitForFunction(() => {
@@ -53,7 +54,7 @@ test.describe('LoopStats Module Tests', () => {
   });
 
   test('queueAnalyzer has correct base costs', async ({ page }) => {
-    await page.goto('http://localhost:8000/frontend/', { waitUntil: 'networkidle', timeout: 60000 });
+    await page.goto(TEST_FRONTEND_URL, { waitUntil: 'networkidle', timeout: 60000 });
 
     await page.waitForFunction(() => {
       return window.centralRegistry && typeof window.centralRegistry.getPublicFunction === 'function';
@@ -81,7 +82,7 @@ test.describe('LoopStats Module Tests', () => {
   });
 
   test('analyzeQueue returns valid analysis for mock queue', async ({ page }) => {
-    await page.goto('http://localhost:8000/frontend/', { waitUntil: 'networkidle', timeout: 60000 });
+    await page.goto(TEST_FRONTEND_URL, { waitUntil: 'networkidle', timeout: 60000 });
 
     await page.waitForFunction(() => {
       return window.centralRegistry && typeof window.centralRegistry.getPublicFunction === 'function';

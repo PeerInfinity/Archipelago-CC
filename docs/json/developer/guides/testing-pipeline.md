@@ -66,6 +66,7 @@ The **Spoiler Test** panel in the web client is the user interface for this pipe
 The entire pipeline can be run automatically from the command line using Playwright, which is the primary method for ensuring code quality.
 
 -   **Test Mode:** Running `npm test` launches the web client with URL parameters. You can specify `--mode`, `--game`, `--seed`, and `--rules` parameters to customize the test configuration.
+-   **Another server / a worktree:** the port is not hardcoded anywhere in the harness. `npm test -- --port=8123 …` (or `TEST_PORT=8123` in the environment) points the whole run — the page URL, Playwright's web-server probe, the health check, and the Python drivers' own server — at `localhost:8123`. The single source is `scripts/test/testServer.js` (Python: `test_utils.test_port()`); a git worktree serving itself on its own port therefore tests ITSELF, not whatever the primary tree's server happens to serve.
 -   **Auto-Execution:** In "test" mode, the application automatically loads a predefined test configuration (`playwright_tests_config.json`).
 -   **Window Property Bridge:** Upon completion, the in-browser test writes a summary of the results to `window.__playwrightTestResults__`.
 -   **Validation:** The Playwright script (`test_json/e2e/app.spec.js`) waits for the `window.__playwrightTestsComplete__` flag, reads the results, and asserts that all tests passed, reporting the final outcome to the command line.
@@ -127,7 +128,7 @@ npx playwright test test_json/e2e/multiclient.spec.js -g "multiclient timer test
 
 **Prerequisites:**
 
-- A development server running on `localhost:8000` (start with `python -m http.server 8000`)
+- A development server running on `localhost:8000` (start with `python -m http.server 8000`; another port via `TEST_PORT`, see above)
 - The `MultiServer.py` script must be accessible in the project root
 - An Archipelago seed file in `frontend/presets/adventure/AP_14089154938208861744/`
 

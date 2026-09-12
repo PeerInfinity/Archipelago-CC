@@ -1,4 +1,5 @@
 import { defineConfig } from '@playwright/test';
+import { TEST_BASE_URL, SERVER_COMMAND } from './scripts/test/testServer.js';
 
 export default defineConfig({
   // Directory where your test files are located
@@ -45,7 +46,7 @@ export default defineConfig({
 
   use: {
     // Base URL to use in actions like `await page.goto('/')`
-    // baseURL: 'http://localhost:8000', // If you set this, your APP_URL in app.spec.js could be relative
+    // baseURL: TEST_BASE_URL, // If you set this, your APP_URL in app.spec.js could be relative
 
     // Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer
     trace: 'on-first-retry',
@@ -94,9 +95,11 @@ export default defineConfig({
   outputDir: 'test-results/playwright',
 
   /* Run your local dev server before starting the tests */
+  // The port comes from scripts/test/testServer.js (TEST_PORT), never from a
+  // literal here — see that module for why.
   webServer: {
-    command: 'python -m http.server 8000',
-    url: 'http://localhost:8000',
+    command: SERVER_COMMAND,
+    url: TEST_BASE_URL,
     reuseExistingServer: true, // Always reuse existing server (workflow starts it before tests)
     timeout: 120 * 1000, // Timeout for web server to start
   },

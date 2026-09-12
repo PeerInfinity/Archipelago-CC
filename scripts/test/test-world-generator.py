@@ -33,6 +33,8 @@ from lib.test_utils import (
     normalize_game_name,
     count_errors_and_warnings,
     check_http_server,
+    http_server_command,
+    test_port,
     build_and_load_world_mapping,
     extract_game_name_from_template,
     load_template_exclude_list,
@@ -46,7 +48,7 @@ _world_mapping: Dict[str, Dict] = {}
 def start_http_server(project_root: str) -> subprocess.Popen:
     """Start HTTP server in background and return the process."""
     process = subprocess.Popen(
-        [sys.executable, '-m', 'http.server', '8000'],
+        http_server_command(),
         cwd=project_root,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL
@@ -969,7 +971,7 @@ def main():
             print("Starting HTTP server...")
             http_server_process = start_http_server(project_root)
             if check_http_server():
-                print("  HTTP server started on port 8000")
+                print(f"  HTTP server started on port {test_port()}")
             else:
                 print("  WARNING: Failed to start HTTP server, spoiler tests may fail")
 

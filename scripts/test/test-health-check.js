@@ -8,6 +8,7 @@
 import fs from 'fs';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { TEST_BASE_URL, TEST_FRONTEND_URL, SERVER_COMMAND } from './testServer.js';
 
 const execAsync = promisify(exec);
 
@@ -55,22 +56,22 @@ async function runHealthCheck() {
 
 async function checkServerRunning() {
   try {
-    const response = await fetch('http://localhost:8000/frontend/');
+    const response = await fetch(TEST_FRONTEND_URL);
     // ⛔ DRAIN before reading `.ok` — trap 1057, S4b (3): an unread body kills
     // Node 22's undici from a socket callback no `try`/`catch` can see.
     await response.arrayBuffer();
     return {
       name: 'Development Server',
       passed: response.ok,
-      details: response.ok ? 'Server responding at http://localhost:8000' : `Server returned ${response.status}`,
-      remedy: !response.ok ? 'Run: python -m http.server 8000' : null
+      details: response.ok ? `Server responding at ${TEST_BASE_URL}` : `Server returned ${response.status}`,
+      remedy: !response.ok ? `Run: ${SERVER_COMMAND}` : null
     };
   } catch (error) {
     return {
       name: 'Development Server',
       passed: false,
-      details: 'Server not accessible',
-      remedy: 'Run: python -m http.server 8000'
+      details: `Server not accessible at ${TEST_BASE_URL}`,
+      remedy: `Run: ${SERVER_COMMAND}`
     };
   }
 }
