@@ -1,0 +1,137 @@
+name: Seedling runner channel probe (H2 task 0, throwaway)
+
+# ⛓ THROWAWAY — slice seedling-headless-H2 task 0 (plan
+# NewDocs/plans/seedling-headless-webgpu-plan.md §11.2 item 0). Deleted in a
+# later commit of the same slice.
+#
+# The one load-bearing unknown H2's design rests on: does a ubuntu-latest
+# runner's Chromium LOSE the WebGPU device under HEADLESS_LOGIC_ONLY_ARGS (the
+# box does — `__swfGpu.lost == 1`, ~26 f/s), or keep it alive? H1 measured the
+# runner keeps it alive under the PIXELS set. This loads the p4d page under
+# BOTH sets and prints the §9.2 table's columns; it asserts nothing.
+#
+# It also measures two task-1 questions on the same runner: what a pinned
+# Python Playwright costs to install, and whether it can launch the Chromium
+# the node package already installed (one browser for both packages).
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium for Playwright (node)
+        timeout-minutes: 12
+        run: |
+          S=$(date +%s)
+          node node_modules/playwright/cli.js install chromium
+          echo "MEASURED: node chromium install $(( $(date +%s) - S ))s"
+          ls -1 ~/.cache/ms-playwright
+
+      - name: 'Probe: both arg sets on p4d'
+        timeout-minutes: 10
+        run: |
+          python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:8000/frontend/index.html && break
+            sleep 1
+          done
+          cat > .runner-probe.mjs <<'EOF'
+          import { chromium } from 'playwright';
+          import { HEADLESS_LOGIC_ONLY_ARGS, HEADLESS_WEBGPU_ARGS } from './scripts/procgen/headlessChromium.js';
+          const URL = 'http://localhost:8000/frontend/modules/flashPanel/wasm/seedling_bot_ap_p4d/game.html';
+          const SAMPLE_S = 40;
+          for (const [mode, args] of [['logic-only', HEADLESS_LOGIC_ONLY_ARGS], ['pixels', HEADLESS_WEBGPU_ARGS]]) {
+            const t0 = Date.now();
+            const browser = await chromium.launch({ args });
+            const page = await browser.newPage();
+            let webgpuErrors = 0, pageErrors = 0; const firstErr = [];
+            page.on('console', (m) => { if (/WebGPU error/.test(m.text())) { webgpuErrors++; if (firstErr.length < 1) firstErr.push(m.text().slice(0, 200)); } });
+            page.on('pageerror', (e) => { pageErrors++; if (firstErr.length < 2) firstErr.push(`pageerror: ${String(e.message).slice(0, 200)}`); });
+            await page.goto(URL, { waitUntil: 'domcontentloaded' });
+            await page.waitForFunction(() => !!window.__runtimeReady, null, { timeout: 180000 });
+            await page.click('#btn-start');
+            await page.waitForFunction(() => !!(window.__swfBridge?.game?.botStatus), null, { timeout: 180000 });
+            const boot = (Date.now() - t0) / 1000;
+            const f0 = await page.evaluate(() => globalThis.__swfPerf?.frames ?? -1);
+            const s0 = Date.now();
+            await page.waitForTimeout(SAMPLE_S * 1000);
+            const r = await page.evaluate((f0) => {
+              const S = globalThis.__swfPerf;
+              const n = S ? Math.min(S.cpu.length, S.frames - f0) : 0;
+              const idx = []; for (let k = 0; k < n; k++) idx.push(((S.i - 1 - k) + S.cpu.length * 4) % S.cpu.length);
+              const iv = S && S.iv ? idx.map((i) => S.iv[i]).sort((a, b) => a - b) : [];
+              return {
+                frames: S ? S.frames - f0 : null,
+                gpu: globalThis.__swfGpu === undefined ? 'NEVER CREATED' : JSON.parse(JSON.stringify(globalThis.__swfGpu)),
+                ivP50: iv.length ? iv[iv.length >> 1] : null, ivMax: iv.length ? iv[iv.length - 1] : null,
+              };
+            }, f0);
+            const secs = (Date.now() - s0) / 1000;
+            const version = browser.version();
+            console.log(`PROBE-ROW | ${mode} | chromium ${version} | boot ${boot.toFixed(1)}s | __swfGpu ${JSON.stringify(r.gpu)} | ${(r.frames / secs).toFixed(2)} frames/s over ${secs.toFixed(1)}s | period p50 ${r.ivP50} max ${r.ivMax} ms | WebGPU error lines ${webgpuErrors} | pageerrors ${pageErrors}`);
+            if (firstErr.length) console.log(`PROBE-FIRST-ERRORS | ${mode} | ${firstErr.join(' || ')}`);
+            await browser.close();
+          }
+          EOF
+          node .runner-probe.mjs 2>&1 | tee /tmp/probe.log
+          nproc; grep -m1 "model name" /proc/cpuinfo
+
+      - name: 'Measure: pinned Python Playwright, sharing the node Chromium'
+        timeout-minutes: 10
+        continue-on-error: true
+        run: |
+          python3 --version
+          V=$(node -p "require('./package-lock.json').packages['node_modules/playwright'].version")
+          S=$(date +%s)
+          # ⛓ a venv, as the box has one: the image's system python is
+          # externally managed (PEP 668), so a bare pip install may refuse.
+          python3 -m venv /tmp/pyvenv
+          . /tmp/pyvenv/bin/activate
+          python3 -m pip install --quiet "playwright==$V"
+          echo "MEASURED: venv + pip install playwright==$V $(( $(date +%s) - S ))s"
+          python3 -m playwright --version
+          python3 -m playwright install --dry-run chromium
+          node node_modules/playwright/cli.js install --dry-run chromium
+          ARGS=$(node --input-type=module -e "import {HEADLESS_LOGIC_ONLY_ARGS as a} from './scripts/procgen/headlessChromium.js'; console.log(JSON.stringify(a))")
+          python3 -m http.server 8000 >/tmp/httpd2.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:8000/frontend/index.html && break
+            sleep 1
+          done
+          # ⛓ NO `python -m playwright install` before this launch: if it
+          # succeeds, the Python package found the node package's Chromium.
+          CHROMIUM_ARGS="$ARGS" python3 - <<'EOF'
+          import json, os, time
+          from playwright.sync_api import sync_playwright
+          args = json.loads(os.environ["CHROMIUM_ARGS"])
+          with sync_playwright() as p:
+              b = p.chromium.launch(headless=True, args=args)
+              pg = b.new_page()
+              pg.goto("http://localhost:8000/frontend/modules/flashPanel/wasm/seedling_bot_ap_p4d/game.html", wait_until="domcontentloaded")
+              pg.wait_for_function("() => !!window.__runtimeReady", timeout=180000)
+              pg.click("#btn-start")
+              pg.wait_for_function("() => !!(window.__swfBridge?.game?.botStatus)", timeout=180000)
+              f0 = pg.evaluate("() => globalThis.__swfPerf?.frames ?? -1")
+              t = time.time(); pg.wait_for_timeout(20000); dt = time.time() - t
+              f1 = pg.evaluate("() => globalThis.__swfPerf?.frames ?? -1")
+              gpu = pg.evaluate("() => globalThis.__swfGpu === undefined ? 'NEVER CREATED' : JSON.parse(JSON.stringify(globalThis.__swfGpu))")
+              print(f"PROBE-PY | chromium {b.version} | executable shared (no python install ran) | __swfGpu {json.dumps(gpu)} | {(f1 - f0) / dt:.2f} frames/s over {dt:.1f}s")
+              b.close()
+          EOF
