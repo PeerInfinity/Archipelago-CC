@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+// Refuse a commit under another process's box lock on THIS tree.
+// The rule and its exceptions: scripts/git-hooks/boxLockCommit.js.
+// Install per clone/worktree: git config core.hooksPath scripts/git-hooks
+import { main } from './boxLockCommit.js';
+
+process.exitCode = main();
