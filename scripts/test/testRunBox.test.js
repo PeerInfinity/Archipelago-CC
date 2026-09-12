@@ -253,6 +253,31 @@ console.log(r.stdout + r.stderr); console.log('RUNNER-EXIT=' + r.status);
   });
 
   /**
+   * ⛔⛔ TRAP 1334's SHAPE — killing `npm` leaves `node run-tests.js` queued and
+   * reparented (measured, npm 10.8.2). A queued run whose parent is gone stops
+   * queuing and takes nothing. The parent here is a shell that exits.
+   */
+  it('stops queuing when the process that started it is gone, and never runs', async () => {
+    const sb = sandbox();
+    const holder = fakeHolder(sb);
+    const log = join(sb.dir, 'orphan.log');
+    const pidFile = join(sb.dir, 'orphan.pid');
+    try {
+      spawnSync('bash', ['-c', `"${process.execPath}" "${RUNNER}" --mode=test-substrates `
+        + `${WAIT_FOR_BOX_FLAG}60 > "${log}" 2>&1 & echo $! > "${pidFile}"; `
+        + `for i in $(seq 1 50); do grep -q BUSY "${log}" && break; sleep 0.1; done; exit 0`],
+      { cwd: sb.cwd, env: sb.env });
+      const pid = Number(readFileSync(pidFile, 'utf8'));
+      const alive = () => { try { process.kill(pid, 0); return true; } catch { return false; } };
+      expect(await waitFor(() => !alive(), 8000)).toBe(true);
+      expect(readFileSync(log, 'utf8')).toMatch(/STOPS QUEUING — the process that started it is gone/);
+      holder.kill();
+      await new Promise((r) => setTimeout(r, 2500));
+      expect(sb.saw()).toBe(null);
+    } finally { holder.kill(); }
+  });
+
+  /**
    * ⛓ A killed run forwards the signal and releases only once Playwright is
    * gone — the fake reads the lock as it exits, 0.5 s after its SIGTERM.
    */

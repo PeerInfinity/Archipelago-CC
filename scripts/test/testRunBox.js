@@ -20,11 +20,8 @@
  *    the browsers are still shutting down is a box the next taker measures on.
  *
  * ⛔ The forwarding listeners are added only AFTER the lock is taken, and
- * PREPENDED. While queuing, no listener may exist at all: the queue loop is
- * synchronous, so a listener could not run — it would only suppress the
- * default action, and a SIGTERM'd queued run would live on to take the box
- * later (trap 1338; boxLock.js detaches its own for the same reason). Once
- * held, ours must run before boxLock.js's own, which releases and exits.
+ * PREPENDED: there is no child to forward to while queuing, and once the box
+ * is held ours must run before boxLock.js's own, which releases and exits.
  *
  * `boxLock.js` is imported lazily so that importing this module's pure
  * helpers (a vitest row) registers no signal listeners in the importer.
@@ -76,6 +73,17 @@ function running(pid) {
   return stat !== '' && !stat.startsWith('Z');
 }
 
+/**
+ * How often a queued run re-tries the box. ⛔ The runner queues HERE, in an
+ * async loop, rather than in `takeBoxLock`'s own synchronous one, for two
+ * reasons measured on 2026-09-12: between polls the event loop runs, so a
+ * signal is handled; and the runner can notice that its PARENT died. Killing
+ * `npm` (10.8.2) takes its `sh -c` with it but leaves `node run-tests.js`
+ * running, reparented — without this check that orphan queued on, and would
+ * have taken the box and run once the holder went (trap 1334's shape).
+ */
+export const QUEUE_POLL_MS = 2000;
+
 /** The signals forwarded to Playwright — boxLock.js's release set. */
 export const FORWARDED_SIGNALS = Object.freeze(['SIGINT', 'SIGTERM', 'SIGHUP']);
 
@@ -114,20 +122,42 @@ function forwardAndWait(sig) {
  * this is said out loud). On a held box it prints the holder and exits 1.
  */
 export async function takeRunBox({ name, waitSec, repo = RUNNER_REPO }) {
-  const { takeBoxLock, treeState } = await import('../procgen/boxLock.js');
+  const { boxLockHolder, takeBoxLock, treeState } = await import('../procgen/boxLock.js');
+  const deadline = Date.now() + waitSec * 1000;
+  const startParent = process.ppid;
   let box;
-  try {
-    const took = takeBoxLock({ name, kind: 'browser', repo, waitSec });
-    box = took.passthrough ? 'passthrough' : 'taken';
-  } catch (e) {
-    if (!e.code) {
-      /* the refusal: a sentence and an exit code, never a stack trace */
-      console.log(e.message);
-      process.exit(1);
+  let announced = false;
+  for (;;) {
+    try {
+      const took = takeBoxLock({ name, kind: 'browser', repo, waitSec: 0 });
+      box = took.passthrough ? 'passthrough' : 'taken';
+      break;
+    } catch (e) {
+      if (e.code) {
+        console.log(`# box lock: UNAVAILABLE (${e.code}: ${e.message}) — ${name} runs WITHOUT `
+          + 'the box lock');
+        box = 'unavailable';
+        break;
+      }
+      if (Date.now() >= deadline) {
+        /* the refusal: a sentence and an exit code, never a stack trace */
+        console.log(e.message);
+        process.exit(1);
+      }
+      if (!announced) {
+        const cur = boxLockHolder();
+        console.log(`# box lock: BUSY — ${cur?.name} (pid ${cur?.pid}, ${cur?.kind}) since `
+          + `${cur?.since}; queuing for up to ${waitSec}s`);
+        announced = true;
+      }
+      await new Promise((resolve) => setTimeout(resolve, QUEUE_POLL_MS));
+      if (process.ppid !== startParent) {
+        console.log(`⛔ ${name} STOPS QUEUING — the process that started it is gone (parent pid `
+          + `${startParent} -> ${process.ppid}). A queued run nobody is waiting for must not take `
+          + 'the box later (trap 1334); nothing was taken.');
+        process.exit(1);
+      }
     }
-    console.log(`# box lock: UNAVAILABLE (${e.code}: ${e.message}) — ${name} runs WITHOUT `
-      + 'the box lock');
-    box = 'unavailable';
   }
   for (const sig of FORWARDED_SIGNALS) process.prependListener(sig, () => forwardAndWait(sig));
   /* The run's OWN frozen state, even under a holder: the holder may have frozen
