@@ -11,6 +11,10 @@ import { spawn } from 'child_process';
 import { parseArgs } from 'node:util';
 import { listBatchNames } from '../../frontend/modules/tests/testBatches.js';
 import { resolveTestPort } from './testServer.js';
+import {
+  WAIT_FOR_BOX_FLAG, endTreeState, resultsFiles, runLockName, stampResults, takeRunBox,
+  trackChild, waitSecFrom
+} from './testRunBox.js';
 
 // Parse command-line arguments
 const { values } = parseArgs({
@@ -93,6 +97,23 @@ if (config.batch && !listBatchNames().includes(config.batch)) {
   process.exit(2);
 }
 
+// Take the box BEFORE Playwright starts (scripts/test/testRunBox.js): a run
+// must never start into another session's live measurement. Refuses by name
+// (exit 1) unless --wait-for-box=<sec> queues; a holder's own child passes
+// through on the token. Validation above runs first, so a typo costs no lock.
+let waitSec;
+try {
+  waitSec = waitSecFrom(process.argv.slice(2));
+} catch (err) {
+  console.error(err.message);
+  process.exit(2);
+}
+const { frozen } = await takeRunBox({
+  name: runLockName({ mode: config.mode, batch: config.batch, testIds: config.testIds }),
+  waitSec
+});
+const resultsBefore = resultsFiles();
+
 // Build Playwright command
 const playwrightArgs = ['test', 'test_json/e2e/app.spec.js'];
 
@@ -113,6 +134,7 @@ const additionalArgs = process.argv.slice(2).filter(arg =>
   !arg.startsWith('--batch=') &&
   !arg.startsWith('--test=') &&
   !arg.startsWith('--port=') &&
+  !arg.startsWith(WAIT_FOR_BOX_FLAG) &&
   arg !== '--headed' &&
   arg !== '--debug' &&
   arg !== '--ui'
@@ -126,6 +148,10 @@ const playwright = spawn('playwright', playwrightArgs, {
   shell: false
 });
 
-playwright.on('exit', (code) => {
+trackChild(playwright);
+
+playwright.on('exit', async (code) => {
+  // Record the head this run froze and whether the tree moved under it.
+  stampResults({ before: resultsBefore, frozen, now: await endTreeState() });
   process.exit(code || 0);
 });

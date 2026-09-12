@@ -143,6 +143,38 @@ console.log(\`PASSTHROUGH=\${again.passthrough}\`);
         expect(r.out).toMatch(/a-gate runs UNDER the-runner \(pid \d+\) — the holder's own child/);
     });
 
+    /**
+     * ⛔⛔ TRAP 1338 (the mechanism under trap 1334). The queue loop is
+     * synchronous, so a registered release listener could never run while
+     * queuing — it only suppressed the default action. Measured before the
+     * fix: a SIGTERM'd queued taker lived on, took the box once the holder
+     * went, and ran its payload. It must die at the signal and take nothing.
+     */
+    it('lets a QUEUED taker die on SIGTERM — it never takes the box later', async () => {
+        const { spawn } = await import('node:child_process');
+        const lockFile = join(CACHE, 'seedling-box', 'lock.json');
+        const sleeper = spawn('sleep', ['120'], { stdio: 'ignore' });
+        writeFileSync(lockFile, JSON.stringify({ token: 'foreign', pid: sleeper.pid,
+            name: 'a-live-holder', kind: 'measure', repo: REPO, hostname: 'x',
+            since: new Date().toISOString(), frozen: { head: 'f'.repeat(40) } }));
+        const file = join(CACHE, 'queued-taker.mjs');
+        writeFileSync(file, `${TAKE('queued', 'browser', ', waitSec: 60')}`);
+        const q = spawn(process.execPath, [file], { cwd: REPO, stdio: ['ignore', 'pipe', 'pipe'],
+            env: { ...process.env, XDG_CACHE_HOME: CACHE, SEEDLING_BOX_LOCK_TOKEN: '' } });
+        let out = '';
+        q.stdout.on('data', (d) => { out += d; });
+        const exited = new Promise((res) => q.on('exit', (code, sig) => res(sig)));
+        for (let i = 0; i < 150 && !out.includes('BUSY'); i++) await new Promise((r) => setTimeout(r, 100));
+        expect(out).toContain('BUSY');
+        q.kill('SIGTERM');
+        const end = await Promise.race([exited, new Promise((r) => setTimeout(() => r('ALIVE'), 5000))]);
+        sleeper.kill();
+        expect(end).toBe('SIGTERM');
+        await new Promise((r) => setTimeout(r, 2500));
+        expect(out).not.toContain('TOOK');
+        rmSync(lockFile, { force: true });
+    });
+
     it('refuses an unknown kind rather than recording a word nothing means', () => {
         const r = child(TAKE('odd', 'gpu-ish'), { expectFail: false });
         expect(r.exit).not.toBe(0);
@@ -353,11 +385,19 @@ describe('who takes the box', () => {
      * listed without a lock would be a finding, not documentation.
      */
     it('and each named holder really does take the lock', async () => {
-        const { boxLockTakers } = await import('./boxLock.js');
+        const { boxLockTakers, boxLockHolderPath } = await import('./boxLock.js');
         const { runners } = await boxLockTakers({ repo: REPO });
+        /* ⛓ BOX PROTOCOL P0: the `npm test` runner is one of them. */
+        expect(runners).toContain('scripts/test/run-tests.js');
         for (const file of runners) {
-            const src = readFileSync(join(HERE, file), 'utf8');
-            expect({ file, takes: /takeBoxLock\(/.test(src) }).toEqual({ file, takes: true });
+            const path = boxLockHolderPath(file, { repo: REPO });
+            const src = readFileSync(path, 'utf8');
+            /* ⛓ …its own text, or a `./` module it imports (one hop): the
+             *  `npm test` runner's take lives in `testRunBox.js`. */
+            const hop = [...src.matchAll(/from '(\.\/[^']+)'/g)]
+                .map((m) => readFileSync(join(dirname(path), m[1]), 'utf8'));
+            const takes = [src, ...hop].some((t) => /takeBoxLock\(/.test(t));
+            expect({ file, takes }).toEqual({ file, takes: true });
         }
     });
 
