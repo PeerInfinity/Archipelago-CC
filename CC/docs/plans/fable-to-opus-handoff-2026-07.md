@@ -14386,6 +14386,24 @@ stops a commit under a foreign lock.** Side task on the user's ask (branch `test
 NOT on main): the harness's port is `TEST_PORT` / `--port=` from ONE module, so a worktree run tests itself — the
 enabler for running the next concurrent slice in a worktree. **NEXT = the replan with the user (G2).**
 
+**FIFTH REPLAN RULED + JOINT PUSH DONE + P0 LAUNCHED 2026-09-12** (plan §5g). The user: *"I approve of the plan you
+described, and the push."* (1) The joint push: executed by `archipelago-cc-b6` on the user's word in its own session —
+`fce9cfc51d..cd1919d7e8`, fast-forward, carrying M3's ten, R2's four, the planners' docs commits; M3's push step a
+no-op; M3 told to quote CI at `cd1919d7e8` in §22.8d and idle. (2) `test-port-env` MERGED: rebased twice (b6's §5w
+commits landed between) and pushed as **`4e2bc90e4a`** — the harness's port is `TEST_PORT` / `npm test -- --port=`,
+spelled once (`scripts/test/testServer.js`; Python `test_utils.test_port()`); branch CI **454/13866** at `8c00f6f6f6`
+(+1 file / +46 rows = the guard file); browser proof from a worktree served on :8123 under an `own-port` lock: 1
+passed, the :8123 access log carries the page request, the results landed in the worktree (plan §5g). The stale remote
+branch `test-port-env` is left as is (a force-push is ask-first; nothing consumes it). (3) **P0 LAUNCHED** as
+`box-protocol-P0` (Opus; kickoff `NewDocs/plans/box-protocol-P0-prompt.md`) — **the first slice in a WORKTREE**:
+`~/CC/Archipelago-CC-wt-p0`, branch `box-protocol-p0` from `4e2bc90e4a`, five submodules + `npm ci` populated by the
+planner, its own server port; pushes only its branch; the planner merges. Shape: `npm test` takes the box lock
+(`--wait-for-box`, token pass-through, results record `frozen`/`treeMoved`); a versioned `pre-commit` hook refuses a
+commit under a foreign live lock naming THIS tree; `scripts/dev/new-worktree.sh`. (4) G2 next in worktrees via a fresh
+design session `preset-sidecars-planning-3`; the pipeline Move Exit fold at the relayout slice; jta/omsi + one-way
+wait. (5) M3's two scratch worktrees removed. Shared-tree state now: H2 (`seedling-headless-H2`, b6's) on the PRIMARY
+tree; this planner commits its docs from `~/CC/Archipelago-CC-wt-port` and pushes to main after messaging b6.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
