@@ -14322,6 +14322,15 @@ R2's outer unit goes first on the user's word, M3 on top carrying nothing of R2'
 before any push to main while the other's slice holds local commits. NOT M3: the pipeline's own Move Exit relayout
 defect, jta/omsi, text adventure (G2), the maze. **After M3: the planner replans with the user (G2 next).**
 
+**Joint-push protocol AGREED 2026-09-12 (~21:50Z, `archipelago-cc-88` ↔ `archipelago-cc-b6`).** M3 committed its first
+task (`24ca043da2`) while R2 was still in W0, so the two slices' commits INTERLEAVE on the one linear `main` and neither
+can push its own without carrying the other's. Ruled between the planners: the tree pushes ONCE, when BOTH slices are
+verified by their planners AND the user has given the word for R2's gitlink bump (ask-first; b6 brings it); whoever is
+green first idles at its push step and tells the other planner; docs-only commits by either planner are committed
+locally by path and ride (b6's §5w commit above `24ca043da2` is the first). R2 stays on this tree (its :8130 server
+and gates read the tree they run in). M3 told: foreign commits above and between its own are expected; no rebase,
+no cherry-pick; STOP only at push. ⚖ for the user when the time comes: the joint push as one unit.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
