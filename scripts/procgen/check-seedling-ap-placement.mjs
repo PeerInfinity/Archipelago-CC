@@ -7,35 +7,36 @@
  * ── ⛓⛓⛓ THE CLAIM, AND WHY IT IS A PAIR ─────────────────────────────────
  *
  * H7 rewrites the vanilla 116 so every AP location's pickup entity becomes an
- * `<apitem>`; H8 delivers that set through `botLoadLevels`/`botLevelSet`.
- * ⛔ **`Game.as`'s XML loop enumerates KNOWN element names** (`:2211-2279`), so
- * on **p4c** — the build declaring no `apitem` — an unknown `<apitem>` is
- * IGNORED. ⇒ a rewritten room shows **NO pickup at all** at an AP location,
- * and the `APItem` that stands there instead is M1's p4d.
+ * `<apitem>`; H8 delivers that set through `botLoadLevels`/`botLevelSet`. On
+ * the build that ships — the manifest's `default`, which declares `apitem` —
+ * the rewritten room holds a `Pickups::APItem` at each AP location where the
+ * vanilla room holds the vanilla pickup. This instrument runs the SAME page
+ * twice:
  *
- * ⛔⛔ **SO `PAGE_NAME` BELOW IS A CONTROL, NOT A DEFAULT, AND IT IS THE LAST
- * ONE LEFT ON p4c.** EDITOR INTEGRATION slice P2 (⚖ user, 2026-08-30) moved
- * every other default in this repository onto p4d; this file kept p4c because
- * the ABSENT half of the pair — and P1-e's `panel-control-p4c` arm — are
- * claims about a build that LACKS the capability. Point it at p4d and both
- * arms agree, the rows go green, and nothing is being tested.
- * ⛓ `check-seedling-wasm-pins.mjs` **row (f)** gates exactly that: this
- * file's `SEEDLING_PAGE` default must name a manifest build whose
- * `capabilities` do not include `apitem`. Retiring p4c means MOVING this
- * default to another such build, not deleting it.
+ *   ARM A  the REWRITTEN set   → an `APItem` stands on every AP location's tile
+ *   ARM B  the VANILLA set     → the vanilla pickup stands on the same tile
  *
- * That absence is only evidence next to its control, so this instrument runs
- * the SAME page twice:
+ * ⛔ **AND THE DISCRIMINATOR IS THE DIFFERENCE OF THE TWO ROSTERS, NOT EITHER
+ * ARM ALONE.** The rows compare the two arms' whole `botMobiles()` rosters and
+ * require the difference to be **exactly the rewritten entities swapped for
+ * `APItem`s at the same tiles, and nothing else** — which a broken delivery
+ * cannot produce, because it would move every enemy too, and a delivery that
+ * mounted nothing would leave the vanilla pickups in place.
  *
- *   ARM A  the REWRITTEN set   → the AP location's pickup is ABSENT
- *   ARM B  the VANILLA set     → the same pickup is PRESENT
- *
- * ⛔ **AND THE DISCRIMINATOR IS THE DIFFERENCE OF THE TWO ROSTERS, NOT THE
- * ABSENCE ALONE.** "The BossKey is gone" is also true of a delivery that
- * mounted nothing, of a room that never built and of a page that died. So the
- * rows compare the two arms' whole `botMobiles()` rosters and require the
- * difference to be **exactly the rewritten entities and nothing else** — which
- * a broken delivery cannot produce, because it would move every enemy too.
+ * ⛓⛓ UNTIL 2026-09-12 THIS FILE DROVE `seedling_bot_ap_p4c`, THE `apitem`
+ * CONTROL. p4c's XML loop had no `apitem` case, so ARM A read the tile EMPTY
+ * and the pair was ABSENT/PRESENT; `check-seedling-wasm-pins.mjs` row (f)
+ * required this default to stay on a build lacking `apitem`, and P1-e ran a
+ * `panel-control-p4c` arm on it. SEEDLING HEADLESS WEBGPU slice R2 retired p4c,
+ * row (f) and that arm on the user's ruling — *"I'm not aware of any reason to
+ * care whether the code behaves correctly with the old wasm builds. I think it
+ * just needs to behave correctly with the new build."* Before the move, the
+ * UNCHANGED file pointed at p4d red exactly the eight ABSENT/difference rows,
+ * each naming the `APItem` standing where p4c had nothing (plan §10); the
+ * claims were re-derived on p4d from that run. ⛓ **And the move made the
+ * CHESTS observable:** a vanilla `Chest` is Scenery and `botMobiles` cannot
+ * see it, but the `APItem` that replaces it IS a Mobile — measured, L40's
+ * `chest@L40` reads `Pickups::APItem@888,824` in the rewritten arm.
  *
  * ── ⛓ THE SUBJECT ROOMS ARE THE GAME'S OWN DEBUG WARPS ───────────────────
  *
@@ -73,8 +74,7 @@
  *   python3 -m http.server 8129            # repo root of THIS worktree
  *   node scripts/procgen/check-seedling-ap-placement.mjs --win [--win-port=N]
  *
- * `--win` runs EVERY arm — H7's ABSENT/PRESENT roster pair on the control
- * build, M1's on p4d, and P1-e's on the real app — through
+ * `--win` runs EVERY arm — H7's roster pair, M1's, and P1-e's on the real app — through
  * `seedling-level-set-win.py` on real-GPU Windows Chrome (~24 fps) instead of
  * WSL's SwiftShader (~0.45 fps — ⛓ H1, 2026-09-11: a LOST WebGPU device, not
  * the raster cost; `HEADLESS_WEBGPU_ARGS` runs headless at 25–28 frames/s and
@@ -100,7 +100,7 @@ takeBoxLockOrExit({ name: 'check-seedling-ap-placement.mjs', kind: 'browser' });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4c';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 if (!existsSync(join(ARTIFACT, 'game.html'))) {
     console.log(`SKIP: no wasm artifact at ${ARTIFACT} — `
@@ -279,9 +279,10 @@ console.log(`  subject room(s): ${SUBJECTS.map((s) => `${s.region} L${s.level} `
  * one browser — and the LOCAL channel stays reachable by simply not passing
  * `--win`, so a box with no Windows side still runs every row.
  *
- * ⛔ THE ROSTER ARMS DRIVE A DIFFERENT BUILD FROM THE M1 ARMS, and that is the
- * whole reason `armPlan` takes a `url`: `PAGE_NAME` (no `apitem`) for the
- * ABSENT/PRESENT pair, `M1_PAGE` (p4d) for the rows that need the class.
+ * ⛓ `armPlan` TAKES A `url` because the roster arms drive `PAGE_NAME` (the
+ * `SEEDLING_PAGE` default, overridable) while the M1 arms drive `M1_PAGE`'s
+ * literal path. Since slice R2 both name p4d; until then the roster arms drove
+ * the `apitem`-less control, p4c.
  *
  * ⛔ AND THE PAGE MUST BE SERVED WHERE WINDOWS CAN SEE IT. `serveRepoRoot()`
  * binds 127.0.0.1 on a free port for THIS process; Windows Chrome reaches WSL
@@ -324,7 +325,7 @@ const M1_URL = `http://127.0.0.1:${PORT}/frontend/modules/flashPanel/wasm/${M1_P
 const WIN_URL = `http://localhost:${WIN_PORT}/frontend/modules/flashPanel/wasm/${M1_PAGE}/game.html`;
 
 /**
- * ⛓⛓ THE CONTROL PAGE ON THE `--win` HOST. `PAGE_URL` above is the same
+ * ⛓⛓ THE ROSTER ARMS' PAGE ON THE `--win` HOST. `PAGE_URL` above is the same
  * build on the ephemeral local server this process binds; slice P2 moved
  * H7's roster arms onto the `--win` channel, and Windows Chrome reaches WSL
  * through `localhost:<--win-port>` on a server that is ALREADY UP — never
@@ -472,8 +473,8 @@ async function runArmsLocal(arms) {
             /* eslint-disable no-await-in-loop */
             /**
              * ⛓ THE ARM'S OWN PAGE, and it is not decoration: slice P2 moved
-             * H7's ABSENT/PRESENT roster arms onto this runner, and they drive
-             * the `apitem`-less CONTROL build while the M1 arms drive p4d.
+             * H7's roster arms onto this runner, and they drive `PAGE_NAME`
+             * while the M1 arms drive `M1_PAGE` (two builds until slice R2).
              * `runArmsWin` already forwarded a per-arm `url` (P1-e's panel
              * arms); this side did not, so a hoisted arm would have run on the
              * WRONG BUILD locally and agreed with itself on `--win`.
@@ -603,9 +604,8 @@ const shapeArm = (rec) => {
  * nothing left here to drift.
  *
  * ⛔⛔ AND THE BUILD IS THE ARM'S, NOT THE CHANNEL'S. These arms drive
- * `PAGE_NAME` — the build declaring no `apitem`, which is what makes ARM A's
- * emptiness a claim — while M1's drive p4d. Slice P2 moved every other default
- * onto p4d, so the two builds now genuinely differ in one run.
+ * `PAGE_NAME` while M1's drive `M1_PAGE`. (Until slice R2 that was p4c, the
+ * build declaring no `apitem`, against M1's p4d.)
  *
  * ⛓ NO `configure` STEP: these arms read what `Game`'s constructor BUILT, not
  * what the bridge reports, so the property declarations are not part of the
@@ -705,6 +705,8 @@ for (const [key, r] of readings) {
     + `botStatus.level=${JSON.stringify(r.room?.level)}`);
 }
 
+/** The class `botMobiles` reports for the placeholder (`getQualifiedClassName`). */
+const AP_ITEM_CLASS = 'Pickups::APItem';
 let observable = 0;
 const notObservable = [];
 for (const s of SUBJECTS) {
@@ -716,64 +718,64 @@ for (const s of SUBJECTS) {
         a.length > 0 && b.length > 0, `rewritten ${a.length} mobile(s), vanilla ${b.length}`);
 
     /**
-     * ⛔ WHAT `botMobiles` CAN SEE IS DECIDED BY THE CONTROL, NOT BY A TABLE
+     * ⛔ WHAT `botMobiles` CAN SEE IS DECIDED BY THE ROSTER, NOT BY A TABLE
      * HERE. It walks `Mobile`; `Pickup extends Mobile`, so the twelve pickups,
      * the five keys and the five totem parts are in it — but `Chest` is
-     * Scenery and is NOT, so a chest location is INVISIBLE to this instrument.
-     * ⛓ That is REPORTED BY NAME rather than skipped: an entry the vanilla arm
-     * cannot see is not evidence either way, and pretending otherwise would
-     * turn "this instrument cannot look here" into a passing row. Deciding it
-     * from the vanilla roster costs nothing, because four independent rows
-     * above already say that arm delivered, mounted and built its room.
+     * Scenery and is NOT. ⛓ The `APItem` that replaces a chest IS a Mobile, so
+     * since slice R2 every rewritten tile is asserted on the REWRITTEN side,
+     * and only the vanilla half of a chest location is reported NOT OBSERVABLE
+     * by name rather than skipped.
      */
     const seen = [];
+    const placed = [];
     for (const entry of s.entries) {
         const at = `${entry.entity.x + TILE_HALF},${entry.entity.y + TILE_HALF}`;
         const inB = atOf(b, at);
         const inA = atOf(a, at);
+        placed.push(`${AP_ITEM_CLASS}@${at}`);
+        // ⛔ THE PAIR, first half: the rewrite REACHED this tile on the build.
+        check(`${label}: ${entry.ledgerId} — rewritten holds an APItem`, inA?.cls === AP_ITEM_CLASS,
+            inA ? `${inA.cls} at ${at}` : `NOTHING at ${at} — the rewrite did not reach this room`);
         if (!inB) {
             notObservable.push(`${entry.ledgerId} (${entry.entity.type})`);
-            console.log(`  note  ${label}: ${entry.ledgerId} is NOT OBSERVABLE — `
+            console.log(`  note  ${label}: ${entry.ledgerId}'s VANILLA side is NOT OBSERVABLE — `
                 + `botMobiles walks Mobile and the vanilla arm reports nothing at ${at}, `
                 + `so the vanilla \`${entry.entity.type}\` is not a Mobile in this build`);
             continue;
         }
         observable += 1;
         seen.push(`${inB.cls}@${at}`);
-        // ⛔ THE PAIR. p4c's XML loop has no `apitem` case, so the tile must be
-        // EMPTY in the rewritten arm and hold the vanilla pickup in the control.
+        // ⛔ THE PAIR, second half: the control arm holds the vanilla pickup there.
         check(`${label}: ${entry.ledgerId} — vanilla PRESENT (${inB.cls})`, true, at);
-        check(`${label}: ${entry.ledgerId} — rewritten ABSENT`, inA === null,
-            inA ? `${inA.cls} is still at ${at} — the rewrite did not reach this room` : at);
     }
 
-    // ⛔ AND NOTHING ELSE MOVED. Without this the absence is also what a dead
-    // page, an empty world or a delivery that mounted nothing looks like.
-    if (seen.length > 0) {
+    // ⛔ AND NOTHING ELSE MOVED. Without this, an APItem is also what a set that
+    // rewrote the WRONG tiles looks like at the right one.
+    if (placed.length > 0) {
         const ka = keysOf(a);
         const kb = keysOf(b);
         const onlyInB = kb.filter((m) => !ka.includes(m)).sort();
         const onlyInA = ka.filter((m) => !kb.includes(m)).sort();
-        check(`${label}: the two rosters differ in EXACTLY the ${seen.length} rewritten entities`,
-            onlyInA.length === 0 && JSON.stringify(onlyInB) === JSON.stringify(seen.sort()),
-            `only-in-vanilla [${onlyInB.join(' ')}] vs expected [${seen.join(' ')}]`
-            + `; only-in-rewritten [${onlyInA.join(' ')}]`);
+        check(`${label}: the two rosters differ in EXACTLY the ${placed.length} rewritten entities`,
+            JSON.stringify(onlyInA) === JSON.stringify(placed.sort())
+                && JSON.stringify(onlyInB) === JSON.stringify(seen.sort()),
+            `only-in-rewritten [${onlyInA.join(' ')}] vs expected [${placed.join(' ')}]`
+            + `; only-in-vanilla [${onlyInB.join(' ')}] vs expected [${seen.join(' ')}]`);
     }
 }
 
-check(`the discriminator ran on at least one location (${observable} observable, `
-    + `${notObservable.length} not)`, observable > 0,
-notObservable.length > 0 ? `not observable: ${notObservable.join(', ')}` : '');
+check(`the discriminator ran on at least one location with BOTH sides observable `
+    + `(${observable} observable, ${notObservable.length} vanilla side not)`, observable > 0,
+notObservable.length > 0 ? `vanilla side not observable: ${notObservable.join(', ')}` : '');
 
 // ═══════════════════════════════════════════════════════════════════════════
 // ⛓⛓⛓ M1 — THE SAME PLACEMENT ON THE BUILD THAT HAS THE `APItem` CLASS
 // ═══════════════════════════════════════════════════════════════════════════
 //
-// Everything above is the p4c pair: an `<apitem>` element p4c's XML loop does
-// not know, so the tile is EMPTY. M1's build adds the class, the two report
-// seams and the two getters, and the rows below are the ones that could not be
-// written before it existed. They SKIP by name when the artifact is not on
-// disk, so this file stays green on a checkout that has only p4c.
+// Everything above is the roster pair. M1's build added the class, the two
+// report seams and the two getters, and the rows below are the ones that could
+// not be written before it existed. They SKIP by name when the artifact is not
+// on disk.
 //
 // ⛔ **THE `@look` IS OBSERVED WITHOUT A SINGLE PIXEL, AND THAT IS A BETTER
 // ROW THAN THE ONE THE PLAN ASKED FOR.** `Bot.mobileRow` reports `frame` as
@@ -975,9 +977,8 @@ if (!existsSync(join(M1_ARTIFACT, 'game.html'))) {
 
     const own = atTile(drawOwn, AT);
     const foreign = atTile(drawForeign, AT);
-    // ⛔ THE CLASS IS THE FIRST CLAIM. On p4c this tile is EMPTY (every row
-    // above says so); the whole point of the build is that it is not.
-    check(`M1: the ${M1_SUBJECT.ledgerId} tile holds an APItem — p4c leaves it EMPTY`,
+    // ⛔ THE CLASS IS THE FIRST CLAIM, on the draw arm's own page.
+    check(`M1: the ${M1_SUBJECT.ledgerId} tile holds an APItem`,
         own?.cls === 'Pickups::APItem', `${JSON.stringify(own?.cls ?? null)} at ${AT}`);
     check(`M1: the FOREIGN arm puts an APItem on the same tile too`,
         foreign?.cls === 'Pickups::APItem', `${JSON.stringify(foreign?.cls ?? null)} at ${AT}`);
@@ -1568,21 +1569,21 @@ if (PANEL_ARMS_ENABLED) {
      * assertion is not about the thing it names. So both the eligible subject
      * arm and the control WARP to the subject room's own vanilla debug spawn
      * first, and then the two rosters are the discriminator the whole M1 block
-     * is built on — `APItem` at that tile on p4d, the vanilla pickup at the
-     * same tile on p4c.
+     * is built on — `APItem` at that tile on p4d. (Until slice R2 the control
+     * arm read the vanilla pickup at the same tile on p4c.)
      */
     const SUBJECT_ROOM = { level: M1_SUBJECT.level, x: SPAWN.x, y: SPAWN.y };
     const PANEL_PLAN = [
         panelArm(`panel-${PRESETS[0].id}`, PRESETS[0].src, { warp: SUBJECT_ROOM }),
         ...PRESETS.slice(1).map((p) => panelArm(`panel-${p.id}`, p.src)),
         /**
-         * ⛔ THE CONTROL, AND IT IS THE MUTANT'S OWN ARM. The SAME preset with
-         * `flash_panel.wasm` moved back to the build that declares NO `apitem`:
-         * a lookup that ignored `capabilities` would read eligible here and
-         * every row below would move.
+         * ⛓ NO CONTROL ARM SINCE SLICE R2. `panel-control-p4c` ran this preset
+         * with `flash_panel.wasm` patched back to the `apitem`-less p4c and
+         * asserted INELIGIBLE; p4c retired (⚖ user, 2026-09-12). The
+         * eligibility predicate's capability refusal itself is kept — a preset
+         * may still name a build declaring no `apitem` (the demo declares
+         * none) — and is covered by `seedlingRandomizerEligibility.test.js`.
          */
-        panelArm('panel-control-p4c', PRESETS[0].src,
-            { patch: { wasm: `${PAGE_NAME}/game.html` }, warp: SUBJECT_ROOM }),
         /** The check leg: warp onto the placement, then a synthetic receive. */
         panelArm('panel-check', PRESETS[0].src, {
             warp: { level: M1_SUBJECT.level, x: M1_SUBJECT.entity.x, y: M1_SUBJECT.entity.y },
@@ -1757,27 +1758,6 @@ if (PANEL_ARMS_ENABLED) {
             check(`${tag}: the panel log NAMES the failing predicate`,
                 (obs.log ?? []).some((l) => /not applicable/.test(l) && /placement/.test(l)),
                 JSON.stringify((obs.log ?? []).filter((l) => /not applicable/.test(l))));
-        }
-    }
-
-    // ── the CONTROL: the same preset on the build that declares no apitem ────
-    {
-        const rec = panelOf('panel-control-p4c');
-        const obs = valueOf(rec, 'observe');
-        check('P1-e CONTROL: the arm ran', Boolean(obs),
-            rec?.error ?? `boot ${rec?.boot_sec ?? '?'}s, ${obs ? 'observed' : 'NO observation'}`);
-        if (obs) {
-            check('P1-e CONTROL: p4c declares no `apitem`, so NOTHING is delivered or bound',
-                obs.hasDelivery === false && obs.hasCheckBinding === false,
-                `delivery=${obs.hasDelivery} binding=${obs.hasCheckBinding}`);
-            check('P1-e CONTROL: and the refusal NAMES the capability check',
-                (obs.log ?? []).some((l) => /does not declare/.test(l)),
-                JSON.stringify((obs.log ?? []).filter((l) => /not applicable/.test(l))));
-            check('P1-e CONTROL: the VANILLA pickup is present at the same tile — the '
-                + 'discriminator, read in the room it is about',
-                (obs.roster ?? []).some((m) => m.endsWith(
-                    `@${M1_SUBJECT.entity.x + TILE_HALF},${M1_SUBJECT.entity.y + TILE_HALF}`)),
-                JSON.stringify((obs.roster ?? []).slice(0, 8)));
         }
     }
 

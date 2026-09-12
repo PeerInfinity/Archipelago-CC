@@ -183,96 +183,40 @@ names the first one that is false (plan §17.1, §17.5).
 
 > **A build is in the submodule iff a TRACKED file of this repo names it.**
 
-**THREE qualify today**, and the number is the gate's, not this table's — run
+The number that qualify is the gate's, not this table's — run
 `node scripts/procgen/check-seedling-wasm-pins.mjs` and it prints the count off
 four independent views.
 
 | build | named by |
 |---|---|
-| `seedling_bot_ap_p4c` | ⛔ **nothing names it as a DEFAULT any more — EDITOR INTEGRATION slice P2 moved the last one (⚖ user, 2026-08-30: *"I want to make p4d the default"*) — and it is now pinned in p4b's shape: by what it is a CONTROL for.** ⛓ **p4c is the only tracked build declaring NO `apitem`**, and two live discriminators rest on that absence, both in `scripts/procgen/check-seedling-ap-placement.mjs`: H7's ABSENT/PRESENT pair (`Game.as`'s XML loop ignores an unknown `<apitem>`, so the AP tile reads EMPTY — that emptiness IS the claim) and P1-e's `panel-control-p4c` arm (the same preset with `flash_panel.wasm` patched back to a build declaring nothing; a lookup that ignored `capabilities` would read *eligible* there). ⛔ **THE LOAD-BEARING SPELLING IS THAT FILE'S `SEEDLING_PAGE` DEFAULT, AND IT IS GATED** — `check-seedling-wasm-pins.mjs` row (f) requires the control file's default to name a manifest build whose `capabilities` LACK `apitem`. ⇒ **whoever retires p4c MOVES that default to another `apitem`-less build; deleting it reds the gate.** ⚠ The only OTHER tracked spelling is `seedlingRandomizerEligibility.test.js`'s `buildNameFromWasmPath` fixture, which is INCIDENTAL — any build name would satisfy what it asserts, and MEASURED, it alone keeps the four views in agreement while the control walks away (the mutant that moved the control to p4d read 0 problems before row (f) existed, which is why row (f) exists). **12 tracked files, 17 lines** (`:!*.md`); **14 / 23** counting `.md`. ⚠⚠ AND THAT IS A DIFFERENT POPULATION FROM THE ONE THE PARAGRAPH ABOVE COUNTS, which is the exact mistake this row has a standing warning about — **and that warning has now caught its own AUTHOR twice**: once when the cell read *53 / 69* for two slices, and again here. The FIRST draft of this cell said *2 / 3*, which is the number of files spelling p4c in a form `check-seedling-wasm-pins` can SEE, not the number of tracked files naming it. Three populations, three answers: **12 / 17** tracked non-`.md` files mention the name (mostly as-built prose about readings taken ON p4c, which is NOT rewritten); **2 files / 3 lines** spell it in one of the gate's four spellings (the control's `SEEDLING_PAGE` default, and the parsing fixture's two); **1 line** is load-bearing. ⛓ Since EDITOR INTEGRATION slice P4 it DECLARES `arm` (`capabilities: ["arm"]`) — measured from the shipped payload's AVM2 string pool, not from lineage: `strings` reads `armed_at` and `arm` in p4c and p4d and neither in p4b. RE-MEASURED 2026-08-30 at `d25a45b84` with `git grep -ln <name> -- ':!*.md'`, `git grep -n`, and the gate's own REFERENCED scan — never typed |
-| `seedling_bot_ap_p4d` | **EVERY DEFAULT, since EDITOR INTEGRATION slice P2** (⚖ user, 2026-08-30). The three seedling presets' `flash_panel.wasm` (moved by slice P1, because the panel's randomizer wiring detects eligibility from a build's own `capabilities`); `seedlingDemo/watchWasm.js`'s `WASM_PAGE` and `check-seedling-wasm-pages.mjs`'s `BUILD` literal, which are ONE fact spelled twice on purpose (that gate asserts the watch iframe's src against its own literal — importing it would be a fixed point); the `SEEDLING_PAGE` **default** of `check-seedling-bot-differential.mjs`, of `check-seedling-{generated-set,save-stamp,vanilla-manifest}.mjs`, of `probe-seedling-level-set-transport.mjs` and of ~35 more `scripts/procgen/{probe,plan,solve,run,derive,rerecord}-seedling-*.mjs`; the ARTIFACT and iframe-src literals of `check-seedling-{wasm-bridge,atlas-play}.mjs`, which follow the PRESET rather than a default of their own; `check-seedling-ap-placement.mjs`'s M1 rows; and the two TESTS that assert a name (`watchWasm.test.js`, `regionAtlasCompiler.test.js`). ⛓ **The only CODE source of the presets' wiring is `procgenPipeline/regionAtlasCompiler.js:161`** (`FLASH_PANEL_WIRING.seedling`) — every other preset block is hand-added, see the ⚠ below. **57 tracked files, 77 lines** (`:!*.md`); 61 / 85 counting `.md` — `git grep -ln`/`git grep -n`, the same population as p4c's first pair. RE-MEASURED 2026-08-30 at `d25a45b84`. ⚠ This cell said **6 / 6** dated 2026-08-29 and was already wrong by the time slice P2 cut its branch — `git grep` answered **9 / 18** at `511b271af`, one day and one merge later. A count is a measurement of a TREE STATE and it goes wrong by sitting still, so a cell like this is only as good as the SHA beside it. ⛓ The ONLY build declaring `apitem`, and since slice P4 it declares `arm` beside it (`capabilities: ["arm","apitem"]`) |
-| `seedling_bot_ap_p4b` | ⛔ **nothing names it as a DEFAULT any more, and this table cell is the only DELIBERATE thing holding its pin: `wasm/seedling_bot_ap_p4b/game.html`.** That path is written here on purpose, and saying so is the point — see below. ⛓ **R9 slice 12h: it is no longer a mere placeholder — p4b is the ONLY tracked build WITHOUT the `arm` capability, and two live corrections key on its absence.** ⛓⛓ **EDITOR INTEGRATION slice P4: `builds.json` now DECLARES `arm`** (p4c `["arm"]`, p4d `["arm","apitem"]`, p4b `[]` with a `$comment` saying the absence is the datum), so the claim in this cell is no longer prose alone — **`check-seedling-wasm-pins.mjs` row (g)** gates it, exactly as row (f) gates `apitem`'s control. ⚠⚠ **AND THIS CELL SAID *only thing* WHEN IT MEANT *only DELIBERATE thing* — measured, not argued.** `seedlingRandomizerEligibility.test.js`'s `buildNameFromWasmPath` fixture spells p4b too (`'…/wasm/seedling_bot_ap_p4b/game.html?v=2#x'`, line 58), in a form the gate SEES — the identical incidental second speller p4c's row above already names for p4c. Same population error, one row over, a third time. **2 files** by the gate's REFERENCED scan; **1 file / 1 line** by `git grep -ln … -- ':!*.md'` (this file is `.md` and that pathspec excludes it); **5 / 10** counting `.md`. RE-MEASURED 2026-08-30 at `5472ee0f7` |
+| `seedling_bot_ap_p4d` | **EVERY DEFAULT, since EDITOR INTEGRATION slice P2** (⚖ user, 2026-08-30). The three seedling presets' `flash_panel.wasm` (moved by slice P1, because the panel's randomizer wiring detects eligibility from a build's own `capabilities`); `seedlingDemo/watchWasm.js`'s `WASM_PAGE` and `check-seedling-wasm-pages.mjs`'s `BUILD` literal, which are ONE fact spelled twice on purpose (that gate asserts the watch iframe's src against its own literal — importing it would be a fixed point); the `SEEDLING_PAGE` **default** of `check-seedling-bot-differential.mjs`, of `check-seedling-{generated-set,save-stamp,vanilla-manifest}.mjs`, of `probe-seedling-level-set-transport.mjs` and of ~35 more `scripts/procgen/{probe,plan,solve,run,derive,rerecord}-seedling-*.mjs`; the ARTIFACT and iframe-src literals of `check-seedling-{wasm-bridge,atlas-play}.mjs`, which follow the PRESET rather than a default of their own; `check-seedling-ap-placement.mjs`'s `SEEDLING_PAGE` default (since SEEDLING HEADLESS WEBGPU slice R2, 2026-09-12 — it was the `apitem` control's, on p4c) and its M1 rows; and the two TESTS that assert a name (`watchWasm.test.js`, `regionAtlasCompiler.test.js`). ⛓ **The only CODE source of the presets' wiring is `procgenPipeline/regionAtlasCompiler.js:161`** (`FLASH_PANEL_WIRING.seedling`) — every other preset block is hand-added, see the ⚠ below. **57 tracked files, 77 lines** (`:!*.md`); 61 / 85 counting `.md` — `git grep -ln`/`git grep -n`, the same population as p4c's first pair. RE-MEASURED 2026-08-30 at `d25a45b84`. ⚠ This cell said **6 / 6** dated 2026-08-29 and was already wrong by the time slice P2 cut its branch — `git grep` answered **9 / 18** at `511b271af`, one day and one merge later. A count is a measurement of a TREE STATE and it goes wrong by sitting still, so a cell like this is only as good as the SHA beside it. ⛓ The ONLY build declaring `apitem`, and since slice P4 it declares `arm` beside it (`capabilities: ["arm","apitem"]`) |
 
-⛔⛔ **p4b's DELIBERATE PIN IS ONE LINE OF PROSE, ON PURPOSE, AND IT IS THE
-ONLY MANUFACTURED REFERENCE IN THIS REPOSITORY.** ⚠ *Deliberate*, not *sole*:
-the parsing fixture named in the cell above spells p4b incidentally, so tidying
-this path away would not red the four-way law immediately — it would red it the
-day somebody rewrote that fixture, which is the worst possible day to find out.
-That is precisely why row (g) does not lean on either speller. When slice 12g′ flipped the
-defaults it expected p4b to stay pinned "for free" through the two lines of
-`docs/json/developer/procgen/seedling-bot.md` that record which build §43's
-and §45's measurements ran against. **Measured: the gate does not see them.**
-Its reference scan reads five SPELLINGS — a `wasm/<name>/` path, a quoted
-`PAGE_NAME`, a `SEEDLING_PAGE` default, a preset's `flash_panel.wasm`, and
-split literals — and backticked prose is none of them. So the choice was to
-retire p4b immediately or to write a path the gate can see. The path above is
-that second choice, taken with its cost named: **~34 MB of tracked artifact
-held by one table cell.**
+⛓⛓⛓ **p4b AND p4c RETIRED ON 2026-09-12 (SEEDLING HEADLESS WEBGPU slice R2),
+AND THE CONTROLS WENT WITH THEM — ⚖ ruled by the user.** Until that day two
+builds were pinned as NEGATIVE CONTROLS rather than by use: `p4b` (no `arm`)
+for the two dead-frame corrections `check-seedling-wasm-ship.mjs` CLAIM 6 and
+`r5Acceptance.js`'s `preSwapCorrection`, held by a deliberate path in this
+table and gated by pins row (g); and `p4c` (no `apitem`) for
+`check-seedling-ap-placement.mjs`'s H7 ABSENT/PRESENT pair and P1-e's
+`panel-control-p4c` arm, held by that file's `SEEDLING_PAGE` default and gated
+by row (f). The ruling: *"I'm not aware of any reason to care whether the code
+behaves correctly with the old wasm builds. I think it just needs to behave
+correctly with the new build."* → *"Yes, let's add the retirement slice to the
+plan. And let's still keep seedling_original."*
 
-⛔⛔⛔ **THE SCHEDULED RETIREMENT IS CANCELLED, AND THE REASON IS MEASURED.**
-This cell used to read *"RETIRE IT AT SLICE 12h's CLOSE"*. Slice 12h looked and
-found that **p4b is the ONLY tracked build without the `arm` capability** — the
-whitelist admits exactly two directories, `p4b` and `p4c`, so on a fresh
-checkout there is no third build to stand in for it. Two live corrections are
-keyed on that capability's ABSENCE and are therefore proved only by p4b:
+⇒ the host supports ONE bot build — the manifest's `default`, p4d — plus the
+`demo`, `seedling_original`, which is not a test control. Each absent-capability
+branch was proved DEAD on the shipped build by a mutant before it was deleted,
+the two corrections were folded to p4d's value (the dead-frame constants
+re-measured on p4d), rows (f) and (g) and the (h2) exemption left the pins gate,
+and `check-seedling-ap-placement.mjs` now asks its question of the build that
+ships: the rewritten AP tile holds an `APItem`. ⛔ **The cost, stated once:** a
+host regression in an absent-capability branch is undetectable from here on —
+by design, because no shipped build reaches one. The as-built is
+`NewDocs/plans/seedling-headless-webgpu-plan.md` §10.
 
-- `check-seedling-wasm-ship.mjs`'s CLAIM 6 — `armsAfterSwap ? 0 :
-  BOOT_PRESWAP_FRAMES` (R9 12g′, `12934b870`);
-- `r5Acceptance.js`'s `preSwapCorrection` — the six R5 dead-frame rows the
-  first `--tier=full` run since the flip caught (R9 12h).
-
-A capability-keyed correction is proved only by the arm that LACKS the
-capability. Retiring p4b would delete the negative control for both of them on
-the same day the second one was written, and would also make 12g′'s own
-discriminator — *"p4b refused at arm frame 31 and p4c passed at arm frame 31"* —
-unreproducible. **So p4b stays pinned, and its ~34 MB is no longer the price of
-a placeholder: it is the price of a control.**
-
-⇒ The pin retires when the LAST consumer of `arm == null` does, not on a date.
-⚠ Do not "tidy" the path out of this cell: the gate will red on the next commit,
-correctly, saying p4b is tracked and unnamed.
-
-⛓⛓⛓ **p4c → p4d ON 2026-08-30 (EDITOR INTEGRATION slice P2, ⚖ user: *"I want
-to make p4d the default"*), AND A DEFAULT MOVE IS NOT A RETIREMENT.** Two
-builds now hold pins by CONTROL rather than by use, for two different absent
-capabilities, and each has its own enforcement:
-
-| control | keyed on | held by | enforced by |
-|---|---|---|---|
-| `p4b` | no `arm` | this table's `wasm/seedling_bot_ap_p4b/game.html` — one line of PROSE (the DELIBERATE pin; the parsing fixture is an incidental second) | `check-seedling-wasm-pins.mjs` **row (g)**, since EDITOR INTEGRATION slice P4 — **(g1)** both corrections still key on the runtime `arm` FIELD (matched with comments STRIPPED, so a docblock describing the read cannot keep a name-keyed rewrite green) and **(g2)** the manifest still declares a build WITHOUT `arm` and something references it |
-| `p4c` | no `apitem` | `check-seedling-ap-placement.mjs`'s `SEEDLING_PAGE` default | `check-seedling-wasm-pins.mjs` **row (f)** — the control file's default must name a build whose `capabilities` LACK `apitem` |
-
-⛔ **THE FOUR-WAY LAW ALONE COULD NOT HAVE PROTECTED p4c, AND THAT IS MEASURED
-RATHER THAN FEARED.** Move the control's default to p4d and views (a)-(e) stay
-in AGREEMENT — 0 problems — because
-`seedlingRandomizerEligibility.test.js`'s parsing fixture still spells p4c
-somewhere. A name-keyed law says *"somebody names it"*; it cannot say *"the
-right somebody names it"*. Row (f) says the second thing, and it is keyed on
-the CAPABILITY so that retiring p4c is still allowed — by MOVING the control,
-not by deleting it. ⚠ The lesson was taken to p4b's row in EDITOR INTEGRATION slice P4, and it
-took a MANIFEST CHANGE to do it: nothing could check that the two `arm == null`
-corrections still had a build to be proved on until `builds.json` declared
-`arm`. ⛔ MEASURED, and it is the same measurement one capability over: retire
-p4b whole — manifest entry, whitelist line, tracked directory and both
-referrers together — and the four views read **2 builds each, in perfect
-agreement, 0 problems from (a)–(f)**. Only row (g) reds. A name-keyed law
-cannot see a retirement that takes the names with it.
-
-⛓ **THE LICENCE FOR THE DEFAULTS TO MOVE IS A MEASUREMENT, AND IT IS NOT
-RE-RUN PER SLICE.** p4d is p4c plus `Pickups/APItem.as`, the two report seams
-and the two getters — additions the vanilla XML loop never reaches. The
-differential gate's ORACLE recordings were made on the p4b/p4c lineages, so the
-question a default move asks is *"does p4d still agree with them?"*. The
-150-tape byte-inert sweep answers it: **149 tapes, 3,607 rows, 0 FAIL on p4d,
-`--win`** (plan §17.4.6). ⇒ moving the pages, the probes and the solvers onto
-p4d moves not one recorded observation.
-
-⚠ **THE SUBMODULE'S `builds.json` `namedBy` PROSE IS STALE AS OF THIS SLICE**,
-and knowingly: p4c's list still names `watchWasm.js`, `regionAtlasCompiler.js`,
-the pages gate and ~30 probes, all of which moved to p4d here. The gate checks
-`namedBy` for NON-EMPTINESS only, so nothing reds. It lives in
-`PeerInfinity/seedling-wasm` and this slice makes no submodule commit — it
-rides the next gitlink bump.
+The history below is kept as history: every "p4b" and "p4c" in it is a reading
+taken ON those builds while they were pinned.
 
 ⛓ **p4b → p4c ON 2026-08-26 (R9 slice 12g′, ⚖ ruling 58's (F)).** One
 behavioural difference and it is an ARM TIME, not a game rule: `botStart` used

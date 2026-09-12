@@ -27,16 +27,21 @@
  * `checkReadme` that `seedling-wasm-readme.mjs --check` runs, imported rather
  * than restated, so CI's existing step 1 covers it with no second job. That
  * row also asks whether each entry's `role` LABEL is true of THIS tree, using
- * the readings rows (f) and (h1) already take. See its own block below for the
+ * the reading row (h1) already takes. See its own block below for the
  * two false sentences that stood on a published front page for eight days
  * because nothing could red on prose.
  *
- * ⛓⛓ AND TWO ROWS ARE KEYED ON A CAPABILITY'S *ABSENCE* — (f) for `apitem`
- * and (g) for `arm`. Both exist because the four-way law above answers *does
- * SOMEBODY name this build*, never *does the RIGHT somebody*. A control build
- * is pinned in order to be the negative half of a pair, and it stops being one
- * silently: every view stays in agreement, every row goes green, and the pair
- * has quietly become two copies of the same arm.
+ * ⛓⛓ ROWS (f) AND (g) ARE GONE, AND THE LETTERS ARE NOT RE-USED. Until
+ * 2026-09-12 two rows were keyed on a capability's ABSENCE — (f) required
+ * `check-seedling-ap-placement.mjs`'s default to name a build lacking `apitem`
+ * (p4c), (g) required a pinned build lacking `arm` (p4b) — because a control
+ * build stops being one silently. SEEDLING HEADLESS WEBGPU slice R2 retired
+ * both controls on the user's ruling (*"I'm not aware of any reason to care
+ * whether the code behaves correctly with the old wasm builds. I think it just
+ * needs to behave correctly with the new build."*), and the absent-capability
+ * branches they proved went with them. ⛔ The cost, stated once: a host
+ * regression in such a branch is undetectable from here on — by design, since
+ * no shipped build reaches one.
  *
  * They are four views because each can rot on its own: a whitelist line
  * with no directory adds nothing, a directory with no whitelist line is
@@ -141,7 +146,7 @@ import { SCRIPT_DIR, isGateFile } from './gateRoster.js';
  * gates tests itself; this file already learned that with `scannable()`,
  * whose duplicate inside `--self-test` left a mutant green.
  */
-import { AP_ITEM_CAPABILITY, ARM_CAPABILITY, WASM_BUILD_CAPABILITIES }
+import { WASM_BUILD_CAPABILITIES }
     from '../../frontend/modules/flashPanel/seedlingRandomizerEligibility.js';
 /**
  * ⛓ ROW (i)'s CHECK, IMPORTED — the SAME function `seedling-wasm-readme.mjs
@@ -293,67 +298,21 @@ const demoIsUnreachable = (entry, readmeText) =>
     entry?.demo === true && !readmeLinks(readmeText, entry.name);
 
 /**
- * ── ⛓ ROW (f)'s CONTROL FILE, DECLARED ONCE ──────────────────────────
- *   (SEEDLING ORIGINAL WASM slice W1, ⚖ user 2026-09-07 ruling 5)
+ * ⛓ (h2)'s SUBJECT FILTER, in one place: this gate itself is not a subject
+ * (the REFERENCED scan excludes it for the same reason). Everything else under
+ * `scripts/procgen/` that `isGateFile` admits is.
  *
- * ⛔ TWO ROWS CONTRADICTED EACH OTHER FOR TWO DAYS AND BOTH WERE RIGHT.
- * Row (f) REQUIRES this file's `SEEDLING_PAGE` default to name a build that
- * LACKS `apitem`: it is the negative half of the H7 pair. Row (h2) requires
- * every gate spelling a build of its own to spell the one the LAB loads, and
- * the lab loads `apitem`-declaring p4d. So (f) demands this file DISAGREE with
- * the lab while (h2) demands it AGREE. The contradiction was latent until V3b
- * renamed `verify-seedling-ap-placement.mjs` to `check-…`, because until then
- * the `check-*.mjs` membership rule could not SEE it; the rename made it real
- * and `seedling-wasm.yml` has been red on exactly this row since 2026-09-05 —
- * with (h2)'s own message naming the way out: *"or say here why this one is a
- * control"*.
- *
- * ⇒ THE CONTROL IS DECLARED HERE, ONCE, AND (h2) READS THAT DECLARATION
- * instead of re-deciding. It is EXEMPT BY NAME and the reason is PRINTED on
- * every run, so the exemption is a claim a reader can argue with rather than a
- * hole. ⛔ The exemption costs nothing (f) does not already buy: move this
- * default onto an `apitem`-declaring build and ROW (f) REDS. That is the
- * mutant, `--self-test` drives it below, and (h2) must NOT be what catches it
- * — a second row that fires on the same edit is one row wearing two labels
- * (`feedback_two_gates_one_opener`).
- */
-const CONTROL_FILE = 'scripts/procgen/check-seedling-ap-placement.mjs';
-const CONTROL_EXEMPTION = 'row (f)\'s `apitem` CONTROL — it drives an `apitem`-less build ON '
-    + 'PURPOSE, so agreeing with the lab is the one thing it must not do';
-const CONTROL_SPELLING = /process\.env\.SEEDLING_PAGE\s*\|\|\s*'(seedling_[a-z0-9_]+)'/;
-/**
- * ⛓ ROW (f)'s VERDICT, PURE — the row runs this and so does `--self-test`, so
- * the mutant is driven through the same code the gate uses. `caps` is the
- * manifest's capability list for the build the control names, or null when the
- * manifest has no such build.
- */
-function apItemControlProblem(named, caps) {
-    if (named === null) {
-        return `${CONTROL_FILE} names no build in the SEEDLING_PAGE-default spelling — `
-            + `the ${AP_ITEM_CAPABILITY} control arm has no subject, and its rows would go `
-            + 'green by agreeing with themselves';
-    }
-    if (caps === null) return `${CONTROL_FILE} drives ${named}, which is not in the manifest`;
-    if (caps.includes(AP_ITEM_CAPABILITY)) {
-        return `${CONTROL_FILE} drives ${named}, which DECLARES ${AP_ITEM_CAPABILITY} — `
-            + 'the control arm must drive a build that LACKS it (the H7 rows read the AP '
-            + 'tile EMPTY, and P1-e\'s panel control asserts INELIGIBLE). Retiring the '
-            + `build it used to drive means MOVING this default to another ${AP_ITEM_CAPABILITY}-less `
-            + 'build, not deleting it';
-    }
-    return null;
-}
-/**
- * ⛓ (h2)'s SUBJECT FILTER, in one place: this gate itself (the REFERENCED
- * scan excludes it for the same reason) and row (f)'s control are not
- * subjects. Everything else under `scripts/procgen/` that `isGateFile`
- * admits is.
+ * ⛓ IT USED TO EXEMPT A SECOND FILE BY NAME — row (f)'s `apitem` control,
+ * `check-seedling-ap-placement.mjs`, which drove an `apitem`-less build ON
+ * PURPOSE and so had to DISAGREE with the lab. That control retired with p4c
+ * (slice R2, 2026-09-12), the file now drives the lab's build, and (h2) simply
+ * requires it to agree like every other gate.
  */
 const SELF_REL = `${SCRIPT_DIR}/check-seedling-wasm-pins.mjs`;
-const isH2Subject = (rel) => rel !== SELF_REL && rel !== CONTROL_FILE;
+const isH2Subject = (rel) => rel !== SELF_REL;
 
 /**
- * ⛓⛓ THE W1 SELF-TEST FIXTURES — the amended law and the control, driven
+ * ⛓⛓ THE W1 SELF-TEST FIXTURES — the amended law, driven
  * through the SAME functions the rows run. The build names exist nowhere else
  * so a case cannot pass by accidentally matching the tree.
  */
@@ -378,16 +337,6 @@ const SELF_TEST_ADMISSION = [
     { why: 'nothing names it and nothing links it',
         entry: { name: 'seedling_probe_x' }, referenced: false,
         readme: '', want: 0, wantUnreachable: false },
-];
-const SELF_TEST_CONTROL = [
-    { why: 'the control drives an `apitem`-less build — the pair is still a pair',
-        named: 'seedling_probe_x', caps: [], wantOk: true },
-    { why: 'THE MUTANT — the control moved onto an `apitem`-DECLARING build (the lab\'s): '
-        + 'row (f) is what must catch it',
-        named: 'seedling_probe_y', caps: [AP_ITEM_CAPABILITY], wantOk: false },
-    { why: 'the control names no build at all', named: null, caps: null, wantOk: false },
-    { why: 'the control names a build the manifest does not have',
-        named: 'seedling_probe_z', caps: null, wantOk: false },
 ];
 
 /**
@@ -441,19 +390,16 @@ const withRole = (role, extra = {}) => ({
 });
 const SELF_TEST_ROLE = [
     { why: '`role: default` on the build `WASM_PAGE` NAMES — clear', m: withRole('default'),
-        read: { defaultBuild: 'seedling_probe_x', apItemControl: null }, wantProblems: 0 },
+        read: { defaultBuild: 'seedling_probe_x' }, wantProblems: 0 },
     { why: 'THE MUTANT — `role: default` on a build `WASM_PAGE` does NOT name',
         m: withRole('default'),
-        read: { defaultBuild: 'seedling_probe_y', apItemControl: null }, wantProblems: 1 },
-    { why: '`role: apitem-control` on the build row (f)\'s control DRIVES — clear',
-        m: withRole('apitem-control'),
-        read: { defaultBuild: null, apItemControl: 'seedling_probe_x' }, wantProblems: 0 },
+        read: { defaultBuild: 'seedling_probe_y' }, wantProblems: 1 },
     { why: '`role: demo` and `demo: false` disagree — the same fact, twice',
         m: withRole('demo', { demo: false }),
-        read: { defaultBuild: null, apItemControl: null }, wantProblems: 1 },
-    { why: '`role: arm-control` on a build that DECLARES `arm`',
-        m: withRole('arm-control', { capabilities: [ARM_CAPABILITY] }),
-        read: { defaultBuild: null, apItemControl: null }, wantProblems: 1 },
+        read: { defaultBuild: null }, wantProblems: 1 },
+    { why: 'a retired control role (`apitem-control`) is outside the vocabulary now',
+        m: withRole('apitem-control'),
+        read: { defaultBuild: null }, wantProblems: 0, wantFieldProblems: 1 },
 ];
 const SELF_TEST_FIELDS = [
     { why: 'all three fields present and shaped — clear', m: withRole('demo'), want: 0 },
@@ -524,15 +470,6 @@ if (process.argv.includes('--self-test')) {
             + `[${got.length} reason(s), want ${c.want}; unreachable ${unreachable}]`);
         if (!ok) bad++;
     }
-    // ⚖ ROW (f)'s CONTROL AND ITS MUTANT (W1) — and the proof that (h2) is
-    // NOT what catches the mutant, which is the whole point of the exemption.
-    for (const c of SELF_TEST_CONTROL) {
-        const problem = apItemControlProblem(c.named, c.caps);
-        const ok = (problem === null) === c.wantOk;
-        console.log(`${ok ? 'PASS' : 'FAIL'}: CONTROL — ${c.why} `
-            + `[row (f) ${problem === null ? 'clear' : 'REDS'}]`);
-        if (!ok) bad++;
-    }
     // ⚖ ROW (i) (W2) — the generated table, its mutant, the role labels and
     // the field shapes, through `checkReadmeText`/`roleProblems`/
     // `manifestFieldProblems`, which is what the row itself calls.
@@ -544,8 +481,10 @@ if (process.argv.includes('--self-test')) {
         if (!ok) bad++;
     }
     for (const c of SELF_TEST_ROLE) {
-        const got = roleProblems(c.m, { ...c.read, armCapability: ARM_CAPABILITY });
-        const ok = got.length === c.wantProblems;
+        const got = roleProblems(c.m, c.read);
+        const fieldGot = manifestFieldProblems(c.m).length;
+        const ok = got.length === c.wantProblems
+            && (c.wantFieldProblems === undefined || fieldGot === c.wantFieldProblems);
         console.log(`${ok ? 'PASS' : 'FAIL'}: ROLE — ${c.why} `
             + `[${got.length} problem(s), want ${c.wantProblems}]`);
         if (!ok) bad++;
@@ -569,19 +508,20 @@ if (process.argv.includes('--self-test')) {
         + 'is a link row (a)\'s demo clause can see');
     if (!linkOk) bad++;
 
-    const exemptOk = !isH2Subject(CONTROL_FILE) && !isH2Subject(SELF_REL)
-        && isH2Subject(`${SCRIPT_DIR}/check-seedling-wasm-pages.mjs`);
-    console.log(`${exemptOk ? 'PASS' : 'FAIL'}: CONTROL — (h2) exempts ${CONTROL_FILE} `
-        + 'and this gate, and nothing else, so the mutant above reds in ONE row');
+    const exemptOk = !isH2Subject(SELF_REL)
+        && isH2Subject(`${SCRIPT_DIR}/check-seedling-wasm-pages.mjs`)
+        && isH2Subject(`${SCRIPT_DIR}/check-seedling-ap-placement.mjs`);
+    console.log(`${exemptOk ? 'PASS' : 'FAIL'}: EXEMPTION — (h2) exempts this gate and nothing `
+        + 'else; the retired `apitem` control is a subject like every other gate');
     if (!exemptOk) bad++;
     const tableCases = SELF_TEST_README.length + SELF_TEST_ROLE.length
         + SELF_TEST_FIELDS.length + 1;
     const cases = SELF_TEST.length + SELF_TEST_NOT_SEEN.length
-        + SELF_TEST_ADMISSION.length + SELF_TEST_CONTROL.length + 1 + tableCases;
+        + SELF_TEST_ADMISSION.length + 1 + tableCases;
     console.log(bad === 0
         ? `\nSELF-TEST ALL PASS — ${cases} cases: ${SELF_TEST.length} seen, `
             + `${SELF_TEST_NOT_SEEN.length} not seen, ${SELF_TEST_ADMISSION.length} admission, `
-            + `${SELF_TEST_CONTROL.length + 1} control, ${tableCases} README table`
+            + '1 exemption, ' + `${tableCases} README table`
         : `\n${bad} SELF-TEST FAILURE(S)`);
     process.exit(bad === 0 ? 0 : 1);
 }
@@ -802,141 +742,21 @@ for (const b of manifest.builds) {
 }
 
 /**
- * ── (f) ⚖ THE `apitem` CONTROL ARM MUST DRIVE A BUILD THAT LACKS `apitem` ──
- *   (EDITOR INTEGRATION slice P2, ⚖ user 2026-08-30 — "make p4d the default")
- *
- * ⛔ A DEFAULT MOVE IS NOT A RETIREMENT, AND VIEW (a) CANNOT TELL THEM APART.
- * P2 moved every remaining default onto the build that DECLARES `apitem`. The
- * four views stay in agreement while that happens — some other tracked file
- * still spells the older build somewhere — so nothing above notices when the
- * one reference that MATTERS goes.
- *
- * And exactly one does matter. `check-seedling-ap-placement.mjs` is built on
- * a PAIR: `Game.as`'s XML loop enumerates known element names, so on a build
- * with no `APItem` class an `<apitem>` element is IGNORED and the AP tile
- * reads EMPTY — that absence is the H7 discriminator, and P1-e's
- * `panel-control-p4c` arm is the same trick at the panel (the identical preset
- * with `flash_panel.wasm` moved back to a build declaring nothing: a lookup
- * that ignored `capabilities` would read *eligible* there and every row below
- * it would move). ⇒ point that file's page at a build carrying `apitem` and
- * both claims invert silently: every arm agrees, and the rows go green
- * BECAUSE the control stopped being one.
- *
- * ⛓ SO THE LAW IS KEYED ON THE CAPABILITY, NOT ON A BUILD NAME. p4c satisfies
- * it today; whoever retires p4c satisfies it by moving this default to another
- * build that declares no `apitem`, and the row says so rather than pinning a
- * name that would then have to be edited in two places. Same rule p4b's README
- * cell states in prose for the `arm` capability, which `builds.json` does not
- * declare and this gate therefore cannot check.
- *
- * ⚠ READ OFF THE TRACKED BLOB in the same spelling view (a) uses, so the
- * `SEEDLING_PAGE` default is the subject and an `SEEDLING_PAGE=` override at
- * run time is not — the default is the pin. Two independent sources: the
- * verifier's SOURCE and the submodule's MANIFEST. Neither reads the other, so
- * this is not a fixed point (trap 769).
+ * ⛓ THE READING ROW (i) REUSES, hoisted out of the block that makes it.
+ * ⛔ Row (i) invents no second scan: `role: default` is checked against the
+ * build (h1) reads out of `WASM_PAGE`. It stays `null` when (h1) already
+ * failed, and row (i) then says nothing about that label rather than reporting
+ * the same defect twice under a second name.
  */
-/**
- * ⛓ `CONTROL_FILE`, `CONTROL_SPELLING` and `apItemControlProblem` are declared
- * ONCE, above `--self-test`, so the mutant is driven through the row's own
- * verdict function and row (h2) reads the SAME declaration when it exempts
- * this file. See that block for why the exemption exists.
- */
-/**
- * ⛓ THE TWO READINGS ROW (i) REUSES, hoisted out of the blocks that make them.
- * ⛔ Row (i) invents NO third scan: `role: default` is checked against the build
- * (h1) reads out of `WASM_PAGE`, and `role: apitem-control` against the build
- * (f) reads out of its control file. Both stay `null` when their own row
- * already failed, and row (i) then says nothing about that label rather than
- * reporting the same defect twice under a second name.
- */
-let apItemControlNamed = null;
 let labBuildName = null;
-{
-    let controlText = null;
-    try { controlText = scannable(readFileSync(join(REPO, CONTROL_FILE), 'utf8')); } catch { /* below */ }
-    const capsOf = (n) => manifest.builds.find((b) => b.name === n)?.capabilities ?? null;
-    const named = controlText?.match(CONTROL_SPELLING)?.[1] ?? null;
-    if (!trackedFiles.includes(CONTROL_FILE)) {
-        fail(`${CONTROL_FILE} is not tracked — it is the ${AP_ITEM_CAPABILITY} CONTROL, `
-            + 'and the H7 pair plus P1-e\'s panel control are the whole reason a build '
-            + `declaring no ${AP_ITEM_CAPABILITY} stays pinned`);
-    } else {
-        const problem = apItemControlProblem(named, named === null ? null : capsOf(named));
-        if (problem !== null) {
-            fail(problem);
-        } else {
-            apItemControlNamed = named;
-            console.log(`\n# the ${AP_ITEM_CAPABILITY} control`);
-            console.log(`  ${CONTROL_FILE}`);
-            console.log(`  drives ${named}, capabilities=[${capsOf(named).join(', ')}] `
-                + `— no ${AP_ITEM_CAPABILITY}, so the ABSENT/PRESENT pair is still a pair`);
-            console.log(`  ⇒ EXEMPT from row (h2) by name: ${CONTROL_EXEMPTION}`);
-        }
-    }
-}
 
 /**
- * ── (g) ⚖ THE `arm` CONTROL — A BUILD THAT LACKS `arm` MUST STAY PINNED ──
- *   (EDITOR INTEGRATION slice P4, closing the residue §17.6.8 names)
- *
- * ⛔ THIS IS ROW (f)'s SHAPE WITHOUT ROW (f)'s DATUM, AND THE DIFFERENCE IS
- * WHY IT IS SHAPED DIFFERENTLY. `apitem` has a CONTROL FILE whose
- * `SEEDLING_PAGE` default names the build the control arm drives, so (f) can
- * read a default out of SOURCE and ask what the MANIFEST says about it. `arm`
- * has no such file: its two consumers are dead-frame corrections that read the
- * RUNTIME field off whatever build they happen to be driving —
- *
- *   `check-seedling-wasm-ship.mjs`  CLAIM 6, `wins[0]?.arm != null`
- *   `seedlingDemo/r5Acceptance.js`  `preSwapCorrection`,
- *                                   `walk?.status?.arm != null`
- *
- * — which is deliberate and is the RIGHT design (keying on a build NAME breaks
- * at the next rebuild; ⛓ R9 12g′ learned that one file over, where a driver's
- * `--arm-bound` asserted in prose that it could not fire on p4c and then
- * refused it four times out of four, because the code had no way to see which
- * build it was driving). But it means the thing that can rot is not a
- * spelling — it is the EXISTENCE of a build to drive.
- *
- * ⛔⛔ AND THE ROT IS SILENT AND FAVOURS GREEN. Both corrections are ternaries
- * on that read. Take the last `arm`-less build away and the FALSE branch is
- * unreachable: `armsAfterSwap ? 0 : BOOT_PRESWAP_FRAMES` is `0` forever,
- * `preSwapCorrection` is `BOOT_PRESWAP_FRAMES` forever, and both degrade to
- * "always subtract one" — which is EXACTLY the inversion `preSwapCorrection`'s
- * own docblock records its mutant going GREEN on, *because "always subtract
- * one" is accidentally correct on p4c*. Nothing reds. The whitelist admits the
- * directory it always did; the four views agree; a correction that used to be
- * proved is now merely assumed.
- *
- * ⇒ TWO CHECKS, and they read two independent sources so this is not a fixed
- * point (trap 769):
- *
- *   (g1) THE SITES STILL KEY ON THE FIELD. Read off the tracked blobs. A
- *        rewrite onto a build name, or a deletion, reds here — the regression
- *        this family keeps producing.
- *   (g2) THE MANIFEST STILL DECLARES A BUILD WITHOUT `arm`, and at least one
- *        such build is REFERENCED, i.e. actually available to drive. ⛓ View
- *        (a) cannot answer this: retiring the last `arm`-less build entirely —
- *        manifest, whitelist and directory together — leaves all four views in
- *        perfect agreement.
- *
- * ⚠ (g2) DOES NOT PIN A NAME. p4b satisfies it today; whoever retires p4b
- * satisfies it by leaving some other build without `arm`, and the row says so.
- */
-const ARM_CORRECTIONS = [
-    ['scripts/procgen/check-seedling-wasm-ship.mjs',
-        /\?\.arm\s*!=\s*null/, 'CLAIM 6\'s `armsAfterSwap`'],
-    ['frontend/modules/seedlingDemo/r5Acceptance.js',
-        /\?\.arm\s*!=\s*null/, '`preSwapCorrection`'],
-];
-/**
- * ⛔ COMMENTS ARE STRIPPED BEFORE (g1) MATCHES, AND THAT IS THE DIFFERENCE
- * BETWEEN A REFERENCE AND A MENTION. Both files DOCUMENT the read at length —
- * `r5Acceptance.js` writes ``(`arm != null`)`` in the very docblock that
- * explains the direction — so a scan over raw text would go on passing after
- * the code under it was rewritten onto a build name, kept green by the prose
- * describing what the code used to do. MEASURED: with the read moved into a
- * docblock and the function keyed on a name, the raw-text form is GREEN and
- * this form REDS.
+ * ⛔ COMMENTS ARE STRIPPED BEFORE (h2) MATCHES, AND THAT IS THE DIFFERENCE
+ * BETWEEN A REFERENCE AND A MENTION. A gate's docblock can name a build in a
+ * sentence about a reading taken long ago, and historical prose is not a pin.
+ * (Measured when this function served the retired row (g): with a read moved
+ * into a docblock and the code keyed on a name, the raw-text form stayed GREEN
+ * and this form RED.)
  *
  * ⚠ Deliberately conservative — block comments, and lines whose first non-space
  * is `//` or `*`. Nothing that could eat a `//` inside a string or a regex
@@ -946,58 +766,13 @@ function codeOnly(text) {
     return text.replace(/\/\*[\s\S]*?\*\//g, '')
         .split('\n').filter((l) => !/^\s*(?:\/\/|\*)/.test(l)).join('\n');
 }
-{
-    console.log(`\n# the ${ARM_CAPABILITY} control`);
-    // (g1) the two correction sites still read the CAPABILITY, not a name.
-    for (const [rel, re, what] of ARM_CORRECTIONS) {
-        if (!trackedFiles.includes(rel)) {
-            fail(`${rel} is not tracked — it carries one of the two ${ARM_CAPABILITY} `
-                + 'corrections, whose negative arm is the whole reason a build declaring '
-                + `no ${ARM_CAPABILITY} stays pinned`);
-            continue;
-        }
-        let text = null;
-        try { text = codeOnly(readFileSync(join(REPO, rel), 'utf8')); } catch { /* below */ }
-        if (text === null || !re.test(text)) {
-            fail(`${rel}: ${what} no longer reads the runtime \`${ARM_CAPABILITY}\` field `
-                + `(${re}) — a correction keyed on a build NAME breaks at the next `
-                + 'rebuild, and one that reads nothing is not a correction at all');
-        } else {
-            console.log(`  ${rel}\n    ${what} keys on the runtime `
-                + `\`${ARM_CAPABILITY}\` field`);
-        }
-    }
-    // (g2) …and the manifest still offers a build for that arm to be driven on.
-    const without = manifest.builds
-        .filter((b) => Array.isArray(b.capabilities)
-            && !b.capabilities.includes(ARM_CAPABILITY))
-        .map((b) => b.name);
-    const drivable = without.filter((n) => REFERENCED.has(n));
-    if (without.length === 0) {
-        fail(`NO manifest build declares an absence of ${ARM_CAPABILITY} — the two `
-            + 'corrections above are ternaries on that read, so their FALSE branch is now '
-            + 'unreachable and both silently degrade to "always subtract one". That is the '
-            + 'inversion `preSwapCorrection`\'s own mutant went GREEN on. Keep one build '
-            + `without ${ARM_CAPABILITY}, or retire both corrections`);
-    } else if (drivable.length === 0) {
-        fail(`${without.join(', ')} declare${without.length === 1 ? 's' : ''} no `
-            + `${ARM_CAPABILITY} but no tracked file of this repo names `
-            + `${without.length === 1 ? 'it' : 'any of them'} — the negative arm exists in `
-            + 'the manifest and cannot be driven');
-    } else {
-        console.log(`  ${drivable.join(', ')} declare${drivable.length === 1 ? 's' : ''} no `
-            + `${ARM_CAPABILITY}, and ${drivable.length === 1 ? 'is' : 'are'} referenced `
-            + '— so both corrections still have a negative arm to be proved on');
-    }
-}
 
 /**
  * ── (h) ⚖ THE LAB'S BUILD LITERAL, MADE A *GATED* FIXED POINT ────────
  *   (maze-lab arms slice F-d, §17.1 row F8; ⚖ user 2026-09-02)
  *
  * ⛔ THE LITERAL STAYS A LITERAL. `watchWasm.js`'s `WASM_PAGE` is a hard-coded
- * path ON PURPOSE — its own docblock says why, and row (f)'s neighbourhood
- * says it again: a name composed from a variable is invisible to the
+ * path ON PURPOSE — its own docblock says why: a name composed from a variable is invisible to the
  * REFERENCED scan above and could clear a build for retirement while the lab
  * page still loaded it (trap 411). Importing it from `builds.json` would fix
  * the drift by deleting the pin. ⇒ this row does the other thing: it leaves
@@ -1010,9 +785,8 @@ function codeOnly(text) {
  * (`git grep -l <name> -- ':!frontend/modules/flashPanel/wasm' | wc -l`, at
  * 086391b53), they agree only because EDITOR INTEGRATION slice P2 hand-edited
  * them in one pass, and if the lab's literal and a certifying gate's default
- * drifted apart every view would stay in perfect agreement. Rows (f) and (g)
- * exist for that same shape of hole keyed on a CAPABILITY's absence; this one
- * is keyed on the AGREEMENT of two sources neither of which reads the other.
+ * drifted apart every view would stay in perfect agreement. This row is keyed
+ * on the AGREEMENT of two sources neither of which reads the other.
  *
  * ── (h1) THE LITERAL NAMES A MANIFEST BUILD ──────────────────────────
  * Parsed off the tracked file with the gate's OWN `SPELLINGS[0]` — reused,
@@ -1028,7 +802,7 @@ function codeOnly(text) {
  *
  *   DERIVED — every gate of this repo (`isGateFile`, imported: the ONE
  *   membership rule, `check-*.mjs` under `scripts/procgen/`) whose CODE spells
- *   a MANIFEST build name. Comments are stripped first, with (g1)'s
+ *   a MANIFEST build name. Comments are stripped first, with
  *   `codeOnly`, and that is load-bearing rather than tidy: the ONE build name
  *   in `check-seedling-wasm-ship.mjs` is a sentence in a docblock about a
  *   reading taken on another build years ago, and historical prose is not a
@@ -1039,8 +813,7 @@ function codeOnly(text) {
  *   NAMED — `check-seedling-bot-differential.mjs`. It is a `verify-`, so the
  *   membership rule cannot see it, and it is the one instrument that drives
  *   the lab's build tick for tick against the JS model. A named subject that
- *   stops being tracked `fail()`s here rather than vanishing, exactly as (f)'s
- *   control file and (g1)'s two correction sites do.
+ *   stops being tracked `fail()`s here rather than vanishing.
  *
  * ⛔ EXCLUDED, AND WHY — A GATE THAT GOES *THROUGH* THE LITERAL IS NOT A
  * SUBJECT. `check-seedling-wasm-ship.mjs` and `check-seedling-wasm-element.mjs`
@@ -1057,15 +830,14 @@ function codeOnly(text) {
  * wiring default is a preset's datum, not a claim about the lab.
  *
  * ⛔ THE DEFAULT IS THE PIN. `SEEDLING_PAGE=` at run time is an override and
- * is not the subject — row (f)'s rule, and the same reason it is spelled
- * there.
+ * is not the subject — the same rule the REFERENCED view's spelling 3 keeps.
  *
  * ── (h3) THE CAPABILITIES THE LAB'S BUILD MUST DECLARE — MEASURED ─────
  * ⛓ NONE, AND THAT IS A MEASUREMENT, NOT AN OMISSION. The lab's own source
  * keys on no capability BY NAME (`grep -n '\.arm\b\|armed_at\|apitem'
- * frontend/modules/seedlingDemo/*.js` minus tests: `r5Acceptance.js`'s
- * `preSwapCorrection` reads the RUNTIME `status.arm` field and tolerates its
- * absence — which is row (g1)'s subject, not this one). So whether the lab
+ * frontend/modules/seedlingDemo/*.js` minus tests; `r5Acceptance.js`'s
+ * `preSwapCorrection`, which read the RUNTIME `status.arm` field, was folded to
+ * the single build's value by slice R2 on 2026-09-12). So whether the lab
  * NEEDS a capability is a question about its GATES' rows, and F-d answered it
  * by running them: `WASM_PAGE` pointed at the manifest build declaring `[]`
  * and `check-seedling-wasm-pages.mjs --root=…/frontend` run once, against a
@@ -1092,7 +864,7 @@ function codeOnly(text) {
 const LAB_FILE = 'frontend/modules/seedlingDemo/watchWasm.js';
 const LAB_SPELLING = /export const WASM_PAGE\s*=\s*'([^']*)'/;
 /** ⛓ Certifiers the `check-*.mjs` membership rule cannot see. Named, with the
- *  reason, the way (f) names its control file. */
+ *  reason. */
 const NAMED_CERTIFIERS = [
     ['scripts/procgen/check-seedling-bot-differential.mjs',
         'it opens the build\'s game page itself and drives it tick for tick '
@@ -1192,7 +964,7 @@ const NAMED_CERTIFIERS = [
                 + 'These two are spelled separately ON PURPOSE (a `BUILD` imported from the '
                 + 'lab would compare the page against its own source and pass for any '
                 + 'value); the duplication is the discriminator, and this row is what makes '
-                + 'it one. Move BOTH, or say here why this one is a control');
+                + 'it one. Move BOTH');
         } else {
             agreeing.push(rel);
         }
@@ -1232,11 +1004,10 @@ const NAMED_CERTIFIERS = [
  *           LINKS the commit and an abbreviation is a link only its author can
  *           resolve; `builtFrom` abbreviated p4c's to seven).
  *   ROLES   each `role` LABEL IS TRUE OF THIS TREE — not merely in the
- *           vocabulary. `default` must be the build `WASM_PAGE` names,
- *           `apitem-control` the build row (f)'s control drives, `demo` the
- *           entry that declares `demo: true`, `arm-control` a build that does
- *           NOT declare `arm`. ⛓ Two independent sources: the manifest is the
- *           submodule's, the readings are this repository's, and neither is
+ *           vocabulary. `default` must be the build `WASM_PAGE` names, `demo`
+ *           the entry that declares `demo: true`. ⛓ Two independent sources:
+ *           the manifest is the submodule's, the reading is this repository's,
+ *           and neither is
  *           written from the other (trap 769).
  *   BLOCK   the rendered region in the README equals what the manifest says.
  *
@@ -1253,11 +1024,7 @@ const NAMED_CERTIFIERS = [
     console.log('\n# the README\'s generated build table');
     const fieldProblems = manifestFieldProblems(manifest);
     for (const p of fieldProblems) fail(p);
-    for (const p of roleProblems(manifest, {
-        defaultBuild: labBuildName,
-        apItemControl: apItemControlNamed,
-        armCapability: ARM_CAPABILITY,
-    })) fail(p);
+    for (const p of roleProblems(manifest, { defaultBuild: labBuildName })) fail(p);
     const readme = checkReadme(SUB);
     for (const p of readme.problems) fail(p);
     if (fieldProblems.length === 0 && readme.ok) {

@@ -52,10 +52,10 @@ describe('the build name is DERIVED from the preset, never spelled', () => {
     });
 
     it('survives a prefix, a query string and a full URL', () => {
-        expect(buildNameFromWasmPath('./modules/flashPanel/wasm/seedling_bot_ap_p4c/game.html'))
-            .toBe('seedling_bot_ap_p4c');
+        expect(buildNameFromWasmPath('./modules/flashPanel/wasm/seedling_bot_ap_p4d/game.html'))
+            .toBe('seedling_bot_ap_p4d');
         expect(buildNameFromWasmPath('http://127.0.0.1:8129/frontend/modules/flashPanel/wasm/'
-            + 'seedling_bot_ap_p4b/game.html?v=2#x')).toBe('seedling_bot_ap_p4b');
+            + 'seedling_bot_ap_p4d/game.html?v=2#x')).toBe('seedling_bot_ap_p4d');
     });
 
     it('refuses what is not a page path', () => {

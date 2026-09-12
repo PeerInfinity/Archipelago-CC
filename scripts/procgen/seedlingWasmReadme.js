@@ -31,16 +31,23 @@
  *   DECLARED  the ROLE VOCABULARY below, which is the one list a manifest
  *             entry's `role` must be in. ⛔ And it is not merely a spelling
  *             check: `roleProblems` asks the TREE whether each label is TRUE
- *             — `default` must be the build `WASM_PAGE` names, `apitem-control`
- *             must be the build row (f)'s control file drives, `demo` must be
- *             the entry that declares `demo: true`, `arm-control` must declare
- *             no `arm`. The manifest and the consuming tree are independent
- *             sources, so this is a check and not a fixed point (trap 769).
+ *             — `default` must be the build `WASM_PAGE` names, `demo` must be
+ *             the entry that declares `demo: true`. The manifest and the
+ *             consuming tree are independent sources, so this is a check and
+ *             not a fixed point (trap 769).
+ *
+ * ⛓ THE CONTROL ROLES RETIRED 2026-09-12 (SEEDLING HEADLESS WEBGPU slice R2). The
+ * vocabulary also carried `apitem-control` and `arm-control` — the p4c and p4b
+ * negative controls — until the user ruled them retired: *"I'm not aware of
+ * any reason to care whether the code behaves correctly with the old wasm
+ * builds. I think it just needs to behave correctly with the new build."* The
+ * absent-capability branches those two proved went with them, so a host
+ * regression in such a branch is undetectable from here on — by design, since
+ * no shipped build reaches one.
  *
  * ⛔ THE ROLE ORDER IS THE TABLE ORDER, and it is declared rather than
  * alphabetical: a visitor wants the playable original first and the build the
- * app actually loads second. The controls are last because nobody opens them
- * on purpose.
+ * app actually loads second.
  */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -74,10 +81,6 @@ export const BUILD_ROLES = {
     demo: 'here to be PLAYED, by a person, at a URL — no instrument drives it',
     default: 'what the app and the instruments load — `WASM_PAGE` and the '
         + '`SEEDLING_PAGE` defaults name it',
-    'apitem-control': 'the negative half of the `apitem` pair — pinned so a build '
-        + 'WITHOUT Archipelago’s placement pickup exists to compare against',
-    'arm-control': 'the negative half of the `arm` pair — pinned so the dead-frame '
-        + 'corrections have a build that does NOT arm after the swap',
 };
 const ROLE_ORDER = Object.keys(BUILD_ROLES);
 
@@ -232,13 +235,12 @@ export function manifestFieldProblems(manifest) {
 
 /**
  * ⛓⛓ IS EACH `role` LABEL TRUE OF THE TREE? The manifest says what a build IS
- * FOR; this asks the consuming repository whether that is so. ⛔ Both readings
- * are already computed by the pins gate's own rows — `defaultBuild` is what
- * `WASM_PAGE` names (h3), `apItemControl` is what row (f)'s control file
- * drives — so no third scan is invented here, and the two sources stay
- * independent of each other.
+ * FOR; this asks the consuming repository whether that is so. ⛔ The reading
+ * is already computed by the pins gate's own row — `defaultBuild` is what
+ * `WASM_PAGE` names (h1) — so no second scan is invented here, and the two
+ * sources stay independent of each other.
  */
-export function roleProblems(manifest, { defaultBuild, apItemControl, armCapability }) {
+export function roleProblems(manifest, { defaultBuild }) {
     const out = [];
     const withRole = (r) => manifest.builds.filter((b) => b.role === r).map((b) => b.name);
     const one = (role, actual, how) => {
@@ -250,15 +252,10 @@ export function roleProblems(manifest, { defaultBuild, apItemControl, armCapabil
             + 'the table publishes a claim nothing checks');
     };
     one('default', defaultBuild, '`WASM_PAGE`');
-    one('apitem-control', apItemControl, "row (f)'s control file");
     for (const b of manifest.builds) {
         if ((b.role === 'demo') !== (b.demo === true)) {
             out.push(`${b.name}: \`role: ${b.role}\` and \`demo: ${b.demo === true}\` disagree — `
                 + 'the demo role and the demo flag are the same fact');
-        }
-        if (b.role === 'arm-control' && (b.capabilities ?? []).includes(armCapability)) {
-            out.push(`${b.name}: \`role: arm-control\` but it DECLARES ${armCapability} — the `
-                + 'control arm is the build that lacks it');
         }
     }
     return out;
