@@ -66,7 +66,16 @@ describe('ciRunnable — what a runner can answer', () => {
         const refused = roster.filter((g) => !ciRunnable(g));
         expect(refused.length).toBeGreaterThan(0);
         expect(refused.every((g) => g.windows || g.ciBox)).toBe(true);
-        expect(roster.filter((g) => g.windows).length).toBeGreaterThan(0);
+        /** ⛓ H2 — the Windows half is EMPTY on the live tree: every gate that
+         *  holds the Windows driver path also has a headless channel, so it is
+         *  `dual`. The half is proved non-vacuous on a fixture instead
+         *  (`ciSourced … Windows row` below, and `gateRoster.test.js`'s scratch
+         *  classifier), and the live `dual` population is asserted ACCEPTED
+         *  here — a predicate that still refused them would red this row. */
+        const dual = roster.filter((g) => g.dual);
+        expect(dual.length).toBeGreaterThan(0);
+        expect(dual.filter((g) => !ciRunnable(g) && !g.ciBox)).toEqual([]);
+        expect(ciRunnable({ windows: true, ciBox: null })).toBe(false);
         expect(roster.filter((g) => g.ciBox).length).toBeGreaterThan(0);
         expect(roster.filter((g) => g.windows || g.ciBox).map((g) => g.file).sort())
             .toEqual(refused.map((g) => g.file).sort());
@@ -337,6 +346,26 @@ describe('planCiShards — the partition', () => {
     });
 });
 
+/**
+ * ⛔⛔ H2 — **THE MANUAL-ONLY RULING, AT THE PLAN LEVEL.** The full tier (the
+ * 150-tape differential roster) runs in CI only by `workflow_dispatch:`
+ * (`seedling-full-tier.yml`, asserted by its own row). The differential's
+ * DEFAULT tier is `full`, so ANY per-push arm of it that does not name a
+ * non-`full` tier would run the whole roster on every push. Its `@ci-face`
+ * is what prevents that; delete the face and this row reds.
+ */
+describe('H2 — no per-push arm runs the differential full tier', () => {
+    it('every CI arm of the differential names an explicit, non-full --tier=', () => {
+        const { arms } = ciGatePlanFor({ repo: REPO, set: 'all' });
+        const diff = arms.filter((a) => a.gate?.file === 'check-seedling-bot-differential.mjs');
+        expect(diff.length).toBeGreaterThan(0);
+        for (const a of diff) {
+            const tiers = a.argv.filter((x) => x.startsWith('--tier=')).map((x) => x.slice(7));
+            expect(`${a.key}: ${tiers.join(',') || '(default = full)'}`).toMatch(/: (?!full\b)[a-z-]+$/);
+        }
+    });
+});
+
 describe('ciGatePlanFor — the live tree', () => {
     /**
      * ⛓ THE ONE ROW THAT ASSERTS A SHAPE OF TODAY'S ANSWER rather than a rule.
@@ -601,13 +630,21 @@ describe('ci-summary.mjs — the refusal ladder, derived from the same predicate
         }
     };
 
-    it('REFUSES a Windows row by name, exit 5, without a network call', () => {
-        const win = roster.find((g) => g.windows);
-        expect(win).toBeTruthy();
-        const r = runCi(['deadbeef1', `--gate=gate: ${nameOf(win)}`]);
-        expect(r.code).toBe(5);
-        expect(r.out).toMatch(/REFUSED/);
-        expect(r.out).toMatch(/Windows/);
+    /**
+     * ⛓ H2 — **NO LIVE GATE IS WINDOWS-ONLY ANY MORE**, so the gate-level
+     * Windows rung of the ladder has no subject on this tree (its identity-row
+     * twin below still does). What CAN be asserted off the live roster is the
+     * other direction, and it is the one H2 could break: a `dual` gate is never
+     * refused as though it only ran on Windows.
+     */
+    it('does NOT refuse a DUAL gate as a Windows row — it has a headless channel', () => {
+        const dual = roster.filter((g) => g.dual);
+        expect(dual.length).toBeGreaterThan(0);
+        expect(roster.filter((g) => g.windows)).toEqual([]);
+        for (const gate of dual) {
+            const r = runCi(['deadbeef1', `--gate=gate: ${nameOf(gate)}`]);
+            expect(`${gate.file}: ${r.out}`).not.toMatch(/drives the Windows Python driver/);
+        }
     });
 
     it('REFUSES a gate that is not on the roster at all, exit 5', () => {

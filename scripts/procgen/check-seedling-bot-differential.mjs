@@ -131,6 +131,21 @@
  * is what the run exists to surface), anything under `--record` (a
  * recording run must write every expectation it selects), and a verdict
  * whose cached evidence is missing.
+ *
+ * ── ⛓⛓ THE CI FACE (H2, ⚖ planner ruling 2026-09-12) ─────────────────
+ *
+ * Headless is the default channel, so this gate is `dual` and CI runs it — but
+ * its DEFAULT TIER IS `full`, the 150-tape roster, which in CI is
+ * `workflow_dispatch:` ONLY (`.github/workflows/seedling-full-tier.yml`), and
+ * `--tier=fast` is 100 tapes, far over one shard. Per push CI therefore asks a
+ * DIFFERENT, bounded question under its own key: does the runner boot p4d on
+ * the logic-only channel (the `CHANNEL:` line, or a refusal) and replay one
+ * real tape, with every roster-wide check around it:
+ *
+ * @ci-face smoke: --tier=fast --only=friction-stop
+ *
+ * ⛔ A face, never `@ci-argv`: this is a narrowed run, and a narrowed run
+ * published under the standing key is the hazard `gateRoster.js` names.
  */
 
 import { chromium } from 'playwright';

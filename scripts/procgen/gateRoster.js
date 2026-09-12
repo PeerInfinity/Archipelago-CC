@@ -62,6 +62,21 @@ const PLAYWRIGHT_RE = /from '(?:@playwright\/test|playwright)'/;
  */
 const WINDOWS_RE = /=\s*'\/mnt\/c\/Windows\/py\.exe'/;
 /**
+ * ⛓⛓ H2 (2026-09-12) — **A `dual` INSTRUMENT: it holds the Windows driver path
+ * AND imports the repo's headless launch spelling**, so it runs on either
+ * channel — this machine's headless Chromium by default, real-GPU Windows
+ * Chrome under `--win`. The import is the detector for the same reason the
+ * assignment is for `WINDOWS_RE`: `headlessChromium.js` is the ONE module that
+ * spells the headless Chromium switches (H1), so a file that imports it
+ * launches headless Chromium with them, and a file that only MENTIONS it in a
+ * docblock does not match (the specifier is spelled as an import).
+ *
+ * ⇒ `windows` now means Windows-ONLY. A `dual` instrument is a browser row (its
+ * default channel drives a browser, in-process or through the Python driver)
+ * and a CI arm; a Windows-only one is neither.
+ */
+const HEADLESS_IMPORT_RE = /from '\.\/headlessChromium\.js'/;
+/**
  * ⛓⛓⛓ A SIBLING INSTRUMENT THIS FILE ACTUALLY REFERENCES — spelled as a
  * MODULE PATH, which is the only spelling a spawn or an import can use.
  *
@@ -433,10 +448,12 @@ function instrumentDir(repo) {
     const browserVia = (f) => (PLAYWRIGHT_RE.test(read(f))
         ? null
         : siblings(f).find((s) => PLAYWRIGHT_RE.test(read(s))) ?? null);
-    const browser = (f) => PLAYWRIGHT_RE.test(read(f)) || browserVia(f) !== null;
-    const windows = (f) => WINDOWS_RE.test(read(f));
+    const dual = (f) => WINDOWS_RE.test(read(f)) && HEADLESS_IMPORT_RE.test(read(f));
+    const browser = (f) => PLAYWRIGHT_RE.test(read(f)) || browserVia(f) !== null || dual(f);
+    const windows = (f) => WINDOWS_RE.test(read(f)) && !dual(f);
+    const kind = (f) => (dual(f) ? 'dual' : (windows(f) ? 'windows' : 'browser'));
     const all = () => readdirSync(dir).filter((f) => /\.mjs$/.test(f)).sort();
-    return { read, all, browser, browserVia, windows };
+    return { read, all, browser, browserVia, windows, dual, kind };
 }
 
 /**
@@ -451,9 +468,10 @@ function instrumentDir(repo) {
  * population is "the files somebody named `check-`" is a lock over a naming
  * convention, not over a box.
  *
- * ⛓ `kind` is `windows` when the file holds the Windows driver path,
- * `browser` otherwise — the same two-kind answer the gates have always
- * carried, over the wider population.
+ * ⛓ `kind` is `windows` when the file holds the Windows driver path and has no
+ * headless channel, `dual` when it has both (H2), `browser` otherwise — the
+ * same answer the gates carry, over the wider population. Both `windows` and
+ * `dual` take the lock; which KIND a run records follows the channel it drove.
  *
  * @returns {{file: string, path: string, kind: string, browserVia: string|null}[]}
  */
@@ -464,7 +482,7 @@ export function machineDrivers({ repo = REPO } = {}) {
         .map((f) => ({
             file: f,
             path: `${SCRIPT_DIR}/${f}`,
-            kind: D.windows(f) ? 'windows' : 'browser',
+            kind: D.kind(f),
             browserVia: D.browserVia(f),
         }));
 }
@@ -514,7 +532,10 @@ export function gateRoster({ repo = REPO } = {}) {
             path: `${SCRIPT_DIR}/${file}`,
             flags,
             browser: D.browser(file),
+            /** ⛓ Windows-ONLY since H2 — a `dual` gate is `false` here. */
             windows: D.windows(file),
+            /** ⛓ H2 — both channels: headless by default, `--win` on request. */
+            dual: D.dual(file),
             /** ⛓ …and the SECOND ARMS this gate declares — `[]` for every gate
              *  that declares none, which is all of them but one. */
             variants: variantsIn(text, { file }),

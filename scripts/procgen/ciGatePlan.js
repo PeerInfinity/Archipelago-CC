@@ -166,6 +166,10 @@ export function readCiArmCosts({ repo = REPO } = {}) {
  * could not resolve its driver on a runner if it tried), while `gate.ciBox` is
  * a JUDGEMENT the gate's author made and wrote down. The first cannot be wrong;
  * the second is one line to delete when it stops being true.
+ *
+ * ⛓ H2 (2026-09-12): `gate.windows` means Windows-ONLY. A gate that also has a
+ * headless channel is `dual` (`gateRoster.js`), not `windows`, so it IS
+ * runnable — on its default channel, which never reaches `py.exe`.
  */
 export function ciRunnable(gate) { return !gate.windows && !gate.ciBox; }
 
@@ -363,8 +367,10 @@ export function ciIdentityArms({ repo = REPO } = {}) {
         /** ⛔ ⚖ 72 (a) — a runner has no `/mnt/c/Windows/py.exe`, so this row
          *  has no answer at any SHA and gets no arm to imply one. */
         .filter((r) => r.drives !== 'windows')
+        /** ⛓ H2 — a `dual` instrument runs headless by default, so its row
+         *  gets an arm, and that arm needs a browser. */
         .map(({ row, drives }) => ({ gate: null, row, label: null, argv: null,
-            browser: drives === 'browser', bankKey: row.key, key: row.key }));
+            browser: drives === 'browser' || drives === 'dual', bankKey: row.key, key: row.key }));
 }
 
 /**

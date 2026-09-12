@@ -12,14 +12,15 @@
  * what a derived roster is for, and `lint-gate-labels` says so by name.
  */
 
-import { mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
 import {
-    REPO, SCRIPT_DIR, ciArgvIn, ciBoxIn, ciShallowIn, gateRoster, isGateFile, variantsIn,
+    REPO, SCRIPT_DIR, ciArgvIn, ciBoxIn, ciShallowIn, gateRoster, isGateFile, machineDrivers,
+    variantsIn,
 } from './gateRoster.js';
 
 /**
@@ -335,3 +336,54 @@ describe('@ci-argv — the same claim, run the way CI can run it', () => {
             }
         });
 });
+
+/**
+ * ⛓⛓ H2 — **THE `dual` KIND, on a scratch tree whose four files differ in
+ * exactly the two properties the classifier reads.** A windows-only file, a
+ * dual one, a file that only MENTIONS the headless module in a docblock, and a
+ * plain browser file. Two mutants the row must red, both driven: a classifier
+ * that calls every Windows file `dual` (the mention file and the windows-only
+ * file would flip), and one that never yields `dual`.
+ */
+describe('H2 — the dual kind', () => {
+    const WIN = "const WIN_PY = '/mnt/c/Windows/py.exe';\n";
+    const HEADLESS = "import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';\n";
+    const files = {
+        'check-win-only.mjs': WIN,
+        'check-both.mjs': HEADLESS + WIN,
+        'check-mention.mjs': "/** see './headlessChromium.js' */\n" + WIN,
+        'check-browser.mjs': "import { chromium } from 'playwright';\n",
+    };
+    const scratch = () => {
+        const dir = mkdtempSync(join(tmpdir(), 'gate-roster-dual-'));
+        mkdirSync(join(dir, SCRIPT_DIR), { recursive: true });
+        for (const [f, text] of Object.entries(files)) writeFileSync(join(dir, SCRIPT_DIR, f), text);
+        return dir;
+    };
+
+    it('classifies by BOTH properties, and dual is a browser row that is not windows', () => {
+        const dir = scratch();
+        try {
+            const by = Object.fromEntries(gateRoster({ repo: dir }).map((g) => [g.file, g]));
+            expect([by['check-win-only.mjs'].windows, by['check-win-only.mjs'].dual]).toEqual([true, false]);
+            expect([by['check-both.mjs'].windows, by['check-both.mjs'].dual]).toEqual([false, true]);
+            expect(by['check-both.mjs'].browser).toBe(true);
+            expect([by['check-mention.mjs'].windows, by['check-mention.mjs'].dual]).toEqual([true, false]);
+            expect([by['check-browser.mjs'].windows, by['check-browser.mjs'].dual]).toEqual([false, false]);
+            const kinds = Object.fromEntries(machineDrivers({ repo: dir }).map((d) => [d.file, d.kind]));
+            expect(kinds).toEqual({ 'check-both.mjs': 'dual', 'check-browser.mjs': 'browser',
+                'check-mention.mjs': 'windows', 'check-win-only.mjs': 'windows' });
+        } finally { rmSync(dir, { recursive: true, force: true }); }
+    });
+
+    it('on the live tree, dual is exactly "holds the driver path AND imports the headless module"', () => {
+        const roster = gateRoster({ repo: REPO });
+        const read = (f) => readFileSync(join(REPO, SCRIPT_DIR, f), 'utf8');
+        const derived = roster.filter((g) => /=\s*'\/mnt\/c\/Windows\/py\.exe'/.test(read(g.file))
+            && /from '\.\/headlessChromium\.js'/.test(read(g.file))).map((g) => g.file);
+        expect(derived.length).toBeGreaterThan(0);
+        expect(roster.filter((g) => g.dual).map((g) => g.file)).toEqual(derived);
+        expect(roster.filter((g) => g.dual && (g.windows || !g.browser))).toEqual([]);
+    });
+});
+

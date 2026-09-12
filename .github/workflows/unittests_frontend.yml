@@ -313,6 +313,21 @@ jobs:
           node node_modules/playwright/cli.js install chromium
           echo "MEASURED-CACHE: cache-hit=${{ steps.pwcache.outputs.cache-hit }}"
 
+      # ⛓ H2 (2026-09-12) — THE PYTHON HALF OF THE HEADLESS CHANNEL. Four
+      # `dual` gates (generated-set, save-stamp, vanilla-manifest, wasm-ship)
+      # observe the game through a `seedling-*-win.py` driver, which on a
+      # runner runs `--headless` under `.venv/bin/python`
+      # (`scripts/procgen/seedlingDriver.js`). Playwright is pinned to node's
+      # version so the two packages share the Chromium installed above —
+      # measured on run 34724984639: no second download, pip 5 s.
+      - name: Python Playwright for the headless driver channel
+        timeout-minutes: 5
+        run: |
+          S=$(date +%s)
+          python3 -m venv .venv
+          .venv/bin/pip install --quiet -r scripts/procgen/requirements-headless.txt
+          echo "MEASURED: venv + requirements-headless $(( $(date +%s) - S ))s"
+
       # ⛔⛔ `continue-on-error` IS DELIBERATE, AND IT IS NOT HIDING A RED —
       # the same reason the headless step above carries it. These jobs are
       # STANDING-VALUE READERS, not merge gates: a gate that goes red here is
