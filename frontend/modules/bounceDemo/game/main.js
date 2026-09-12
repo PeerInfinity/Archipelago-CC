@@ -202,6 +202,9 @@ window.__bounceDebug = () => ({
     collected: session ? [...session.collected] : null,
     gateStates: session ? session.gateStates : null,
     levelId: session?.level?.id ?? null,
+    // ⛓ PRESET SIDECARS M3 — the portal → side map this page inverted from
+    //   `params.sidePortals`: the play witness of an exit moved to another side.
+    portalSides: { ...portalSides },
     backExitSide,
     fallBehavior,
     physicsProfile: physicsProfileId,

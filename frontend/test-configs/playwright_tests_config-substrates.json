@@ -819,6 +819,30 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "PRESET SIDECARS M2 (Q3 C). A move that separates a link names the teleporter; every placed exit carries the side law's verdict; the connection pairs are kept. Mutant A."
+        },
+        {
+            "id": "apworld-exit-side-move-records-one-op-and-the-map-redraws",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M3. A free side picked on the map's block: one move-exit-side, the document AFTER the op's answer, the drawn tile on the new edge, the canvas digest = a hand-authored document's (G1's witness); Undo restores bytes and digest."
+        },
+        {
+            "id": "apworld-exit-side-pick-of-a-taken-side-swaps",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M3. A side another exit holds is offered as a swap (enabled): one swap-exit-sides, both sides and both portal-map keys exchanged; Undo."
+        },
+        {
+            "id": "apworld-exit-side-undeclared-entry-offers-nothing-and-says-why",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M3. A substrate that declares no exitSides: no picker on the Regions tab; the map's block says why in the op's own refusal; no op."
+        },
+        {
+            "id": "apworld-exit-side-move-plays-in-the-bounce-panel",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M3 play witness. bounce_worldgen: the active region's exit moved to a free side and Applied; the bounce game's own portal -> side map (__bounceDebug.portalSides) serves the old side's portal on the new side, the warehouse keys it there, no error event."
         }
     ]
 }

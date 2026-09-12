@@ -9026,3 +9026,410 @@ registerTest({
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ PRESET SIDECARS M3 — AN EXIT MOVED TO ANOTHER SIDE: native hub ops
+ * (`move-exit-side` / `swap-exit-sides`), a side picker per exit on the sidecar
+ * block, for the substrates whose registry entry declares `exitSides`
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const BOUNCE_WORLDGEN_PATH =
+    './presets/bounce_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+
+/** ⛓ The modules the M3 rows read their expectations from — never typed. */
+async function m3Modules() {
+    const [ops, layout, exitSides, doc, renderer, engine] = await Promise.all([
+        import('../../apworldEditor/rulesDocOps.js'),
+        import('../../apworldEditor/regionLayout.js'),
+        import('../../procgenCore/exitSides.js'),
+        import('../../procgenPipeline/compositeMapDocument.js'),
+        import('../../procgenCore/compositeMapRenderer.js'),
+        import('../../procgenPipeline/procgenPipelineEngine.js'),
+    ]);
+    return { ...ops, ...layout, ...exitSides, ...doc, ...renderer, ...engine };
+}
+
+const m3Declares = (M, entry) => !!M.exitSidesOf(substrateRegistry.get(entry?.substrate)).decl;
+
+/**
+ * ⛓ The first (slot, region, exit, side) of a document whose substrate DECLARES
+ * `exitSides`, placed on the map, with a side of `kind` — 'move' (no exit there)
+ * or 'swap' (another exit of the region there). Picked off the document in its
+ * own order, never typed.
+ */
+function m3Pick(M, doc, kind, slots = Object.keys(doc?.preset_sidecars ?? {})) {
+    for (const slot of slots) {
+        for (const [region, entry] of Object.entries(doc.preset_sidecars[slot] ?? {})) {
+            if (!m3Declares(M, entry) || !M.isGridCell(entry.grid_cell)) continue;
+            const exits = entry.playable_payload?.exits ?? [];
+            for (const x of exits) {
+                for (const side of Object.keys(M.SIDE_WORDS)) {
+                    if (side === x.side) continue;
+                    const holder = exits.find((o) => o !== x && o.side === side);
+                    if ((kind === 'swap') === !!holder) return { slot, region, entry, exit: x, side, holder };
+                }
+            }
+        }
+    }
+    return null;
+}
+
+/** ⛓ The side picker for one exit inside a host's block. */
+const m3Picker = (host, region, exitId) => document.querySelector(
+    `${PANEL_SELECTOR} .apworld-sidecar-block[data-host-tab="${host}"][data-region-name="${CSS.escape(region)}"] `
+    + `select.apworld-exit-side[data-exit-id="${CSS.escape(exitId)}"]`);
+
+/** ⛓ Pick a side through the REAL control: set the value, fire its change. */
+function m3PickSide(select, side) {
+    select.value = side;
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+/** ⛓ SHA-256 of a canvas's pixels, hex. */
+async function m3CanvasDigest(canvas) {
+    const px = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
+    const hash = await crypto.subtle.digest('SHA-256', px);
+    return [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+/**
+ * ⛓⛓⛓ **(i) A SIDE PICKED ON THE MAP'S BLOCK → ONE `move-exit-side`, AND THE MAP
+ * DRAWS THE EXIT ON ITS NEW SIDE.** The four-player fixture's first slot whose
+ * substrate declares `exitSides`; the first placed region with an exit and a
+ * FREE side, selected on the map; that exit's picker set to the side. One op; the
+ * document AFTER is the op's own answer (1306), `regions` and `grid_cell` byte-
+ * equal; the exit's drawn tile (`resolveExitTilePositions`, the renderer's side
+ * fallback) moved onto the new side's edge; the canvas's pixel digest moved, and
+ * EQUALS the digest of the same map drawn from a document AUTHORED by hand with
+ * that exit on that side (G1's pixel-identity witness); the status line and the
+ * block's answer are the op's description. One Undo restores the bytes and the
+ * digest.
+ */
+export async function apworldExitSideMoveRecordsOneOpAndTheMapRedraws(testController) {
+    try {
+        const M = await m3Modules();
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const before = panel.rulesDoc;
+        const pick = m3Pick(M, before, 'move');
+        testController.reportCondition('⛓ premise: a declaring, placed region with an exit and a free side', !!pick);
+        if (!pick || !(await onMapTabFor(testController, panel, pick.slot))) return testController.getOverallResult();
+        const { slot, region, exit, side } = pick;
+
+        if (panel._selectedRegion !== region) clickMapCell(pick.entry.grid_cell);
+        const picker = await testController.pollForValue(() => m3Picker('map', region, exit.exit_id),
+            'the map\'s block draws the exit\'s side picker', 8000, 50);
+        testController.reportCondition('the map\'s selection block carries a side picker for the exit', !!picker);
+        if (!picker) return testController.getOverallResult();
+        testController.assertEqual('…showing the exit\'s own side', exit.side, picker.value);
+        const kinds = Object.fromEntries([...picker.options].map((o) => [o.value, o.dataset.kind]));
+        testController.assertEqual('…its own side marked, the free side a move', `own move`,
+            `${kinds[exit.side]} ${kinds[side]}`);
+        const canvasBefore = document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`);
+        const digestBefore = await m3CanvasDigest(canvasBefore);
+
+        const op = { op: 'move-exit-side', player: slot, region, exitId: exit.exit_id, side };
+        const want = M.applyRulesDocOp(before, op);
+        testController.reportCondition('⛓ premise: the op itself takes that move', want.ok);
+        m3PickSide(picker, side);
+        testController.reportCondition('⛓⛓ ONE op for the pick', await testController.pollForCondition(
+            () => panel.session.ops().length === 1, 'the pick recorded one op', 8000, 50));
+        testController.assertEqual('…a move-exit-side', 'move-exit-side', String(panel.session.ops()[0]?.op));
+        testController.reportCondition('⛓⛓ the document AFTER is the op\'s own answer',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(want.doc));
+        testController.reportCondition('⛔ `regions` byte-equal',
+            JSON.stringify(panel.rulesDoc.regions) === JSON.stringify(before.regions));
+        testController.reportCondition('⛔ `grid_cell` byte-equal',
+            JSON.stringify(panel.rulesDoc.preset_sidecars[slot][region].grid_cell) === JSON.stringify(pick.entry.grid_cell));
+        testController.assertEqual('the status line is the op\'s description', want.description, String(panel._opMessage));
+        const answer = document.querySelector(`${PANEL_SELECTOR} .apworld-map-selection .apworld-sidecar-op-message`);
+        testController.assertEqual('…and so is the answer beside the block', want.description, String(answer?.textContent));
+
+        const { regionSize } = panel._mapResult();
+        const tileOf = (d) => {
+            const exits = d.preset_sidecars[slot][region].playable_payload.exits;
+            return M.resolveExitTilePositions(exits, regionSize)[exits.findIndex((x) => x.exit_id === exit.exit_id)];
+        };
+        const [t0, t1] = [tileOf(before), tileOf(panel.rulesDoc)];
+        const onEdge = (t, s) => ({ N: t.y === 0, S: t.y === regionSize.height - 1,
+            W: t.x === 0, E: t.x === regionSize.width - 1 })[s];
+        testController.reportCondition(`the exit's drawn tile MOVED (${JSON.stringify([t0?.x, t0?.y])} → ${JSON.stringify([t1?.x, t1?.y])})`,
+            !!t0 && !!t1 && (t0.x !== t1.x || t0.y !== t1.y));
+        testController.reportCondition('…onto the new side\'s edge', !!t1 && onEdge(t1, side));
+
+        const canvas = document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`);
+        const digestAfter = await m3CanvasDigest(canvas);
+        testController.reportCondition('⛓ the map\'s pixels moved', digestAfter !== digestBefore);
+        const authored = JSON.parse(JSON.stringify(before));
+        const ax = authored.preset_sidecars[slot][region].playable_payload.exits.find((x) => x.exit_id === exit.exit_id);
+        ax.side = side;
+        const { grid, cells } = M.slotLayout(authored, slot);
+        if (cells.has(ax.targetRegion)) {
+            ax.isTeleporter = !M.linkIsAdjacentOnSide(grid, cells.get(region), side, cells.get(ax.targetRegion));
+        }
+        const result = M.reconstructResultFromSidecars(authored, { playerId: slot });
+        const offscreen = document.createElement('canvas');
+        offscreen.width = canvas.width;
+        offscreen.height = canvas.height;
+        M.drawCompositeMap(offscreen, result.grid, result.regionSize,
+            { selection: { kind: 'region', cell: pick.entry.grid_cell } });
+        testController.assertEqual('⛓⛓ the map\'s digest EQUALS the digest of a document authored with the exit on that side',
+            await m3CanvasDigest(offscreen), digestAfter);
+
+        panel.undoButton.click();
+        testController.reportCondition('one Undo restores the document byte for byte',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(before));
+        const back = await testController.pollForValue(() => m3Picker('map', region, exit.exit_id),
+            'the picker is redrawn after Undo', 8000, 50);
+        testController.assertEqual('…the picker shows the side the record holds again', exit.side, String(back?.value));
+        testController.assertEqual('…and the map\'s digest is the BEFORE digest',
+            digestBefore, await m3CanvasDigest(document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`)));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('exit-side move test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(ii) A SIDE ANOTHER EXIT HOLDS → ONE `swap-exit-sides`, FROM THE
+ * SIDECARS TAB.** The first declaring region with two exits on different sides;
+ * the first exit's picker offers the second's side as a SWAP (not disabled) and
+ * the pick records one swap: both sides exchanged, the portal map's two keys
+ * holding each other's portal, the document AFTER the op's own answer. Undo.
+ */
+export async function apworldExitSidePickOfATakenSideSwaps(testController) {
+    try {
+        const M = await m3Modules();
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const before = panel.rulesDoc;
+        const pick = m3Pick(M, before, 'swap');
+        testController.reportCondition('⛓ premise: a declaring region with two exits on two sides', !!pick);
+        if (!pick) return testController.getOverallResult();
+        const { slot, region, exit, side, holder } = pick;
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        if (select) selectPlayer(select, slot);
+        await testController.pollForCondition(() => String(panel.playerId) === String(slot), `slot ${slot} selected`, 8000, 50);
+        selectTab(panel, SIDECARS_TAB_ID);
+        const picker = await testController.pollForValue(() => m3Picker(SIDECARS_TAB_ID, region, exit.exit_id),
+            'the Sidecars tab\'s block draws the picker', 8000, 50);
+        testController.reportCondition('the Sidecars tab\'s block carries the exit\'s picker', !!picker);
+        if (!picker) return testController.getOverallResult();
+        const opt = [...picker.options].find((o) => o.value === side);
+        testController.assertEqual('the taken side is offered as a SWAP with its exit, enabled',
+            `swap true ${holder.exit_id}`, `${opt?.dataset.kind} ${!opt?.disabled} ${holder.exit_id}`);
+        testController.reportCondition('…and says so in its label', String(opt?.textContent).includes(`swap with ${holder.exit_id}`));
+
+        const op = { op: 'swap-exit-sides', player: slot, region, exitA: exit.exit_id, exitB: holder.exit_id };
+        const want = M.applyRulesDocOp(before, op);
+        m3PickSide(picker, side);
+        testController.reportCondition('⛓⛓ ONE op for the pick', await testController.pollForCondition(
+            () => panel.session.ops().length === 1, 'the pick recorded one op', 8000, 50));
+        testController.assertEqual('…a swap-exit-sides', 'swap-exit-sides', String(panel.session.ops()[0]?.op));
+        testController.reportCondition('⛓⛓ the document AFTER is the op\'s own answer',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(want.doc));
+        const after = panel.rulesDoc.preset_sidecars[slot][region].playable_payload;
+        const sideOf = (id) => after.exits.find((x) => x.exit_id === id)?.side;
+        testController.assertEqual('both sides exchanged', `${side} ${exit.side}`, `${sideOf(exit.exit_id)} ${sideOf(holder.exit_id)}`);
+        const was = pick.entry.playable_payload.params.sidePortals;
+        testController.assertEqual('the portal map\'s two keys hold each other\'s portal',
+            `${was[exit.side]} ${was[side]}`, `${after.params.sidePortals[side]} ${after.params.sidePortals[exit.side]}`);
+        testController.reportCondition('⛔ `regions` byte-equal',
+            JSON.stringify(panel.rulesDoc.regions) === JSON.stringify(before.regions));
+        panel.undoButton.click();
+        testController.reportCondition('one Undo restores the document byte for byte',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(before));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('exit-side swap test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(iii) A REGION WHOSE SUBSTRATE DECLARES NO `exitSides` OFFERS NOTHING, AND
+ * THE MAP'S BLOCK SAYS WHY IN THE OP'S WORDS.** The four-player fixture's first
+ * slot whose sidecars carry sided exits and declare nothing: on the Regions tab no
+ * picker is drawn for any of its blocks; on the Map, the selected region's block
+ * draws `.apworld-exit-sides[data-editable=false]` whose sentence is the op's own
+ * refusal (asked of the op here, independently), and no op is recorded.
+ */
+export async function apworldExitSideUndeclaredEntryOffersNothingAndSaysWhy(testController) {
+    try {
+        const M = await m3Modules();
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        let pick = null;
+        for (const slot of Object.keys(doc.preset_sidecars)) {
+            for (const [region, entry] of Object.entries(doc.preset_sidecars[slot])) {
+                const x = (entry.playable_payload?.exits ?? []).find((e) => Object.hasOwn(M.SIDE_WORDS, e.side));
+                if (!pick && x && !m3Declares(M, entry) && M.isGridCell(entry.grid_cell)) pick = { slot, region, entry, x };
+            }
+        }
+        testController.reportCondition('⛓ premise: a placed region with sided exits whose substrate declares nothing', !!pick);
+        if (!pick) return testController.getOverallResult();
+        const { slot, region, entry, x } = pick;
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        if (select) selectPlayer(select, slot);
+        await testController.pollForCondition(() => String(panel.playerId) === String(slot), `slot ${slot} selected`, 8000, 50);
+        selectTab(panel, 'regions');
+        const blocks = await testController.pollForValue(() => {
+            const b = document.querySelectorAll(`${PANEL_SELECTOR} .apworld-sidecar-block[data-host-tab="regions"]`);
+            return b.length > 0 ? b : null;
+        }, 'the Regions tab draws its sidecar blocks', 8000, 50);
+        testController.reportCondition('the Regions tab drew sidecar blocks', !!blocks);
+        testController.assertEqual('⛔ …and not ONE side picker (the slot declares nothing)', '0',
+            String(document.querySelectorAll(`${PANEL_SELECTOR} .apworld-sidecar-block[data-host-tab="regions"] .apworld-exit-sides`).length));
+
+        if (!(await onMapTabFor(testController, panel, slot))) return testController.getOverallResult();
+        if (panel._selectedRegion !== region) clickMapCell(entry.grid_cell);
+        const row = await testController.pollForValue(() => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-map-selection .apworld-sidecar-block[data-region-name="${CSS.escape(region)}"] .apworld-exit-sides`),
+        'the map\'s block draws the exit-sides line', 8000, 50);
+        testController.assertEqual('the line is NOT editable', 'false', String(row?.dataset.editable));
+        testController.assertEqual('…and draws no picker', '0', String(row?.querySelectorAll('select').length ?? -1));
+        const other = Object.keys(M.SIDE_WORDS).find((s) => s !== x.side);
+        const refusal = M.applyRulesDocOp(doc, { op: 'move-exit-side', player: slot, region, exitId: x.exit_id, side: other });
+        testController.reportCondition('⛓ premise: the op refuses it', refusal.ok === false);
+        testController.reportCondition('…in the declaration\'s words', String(refusal.error).includes(M.NO_EXIT_SIDES_DECLARED));
+        testController.assertEqual('⛓⛓ the line says WHY — the op\'s own refusal',
+            `not editable here — ${refusal.error}`, String(row?.querySelector('.apworld-exit-sides-why')?.textContent));
+        testController.assertEqual('nothing was recorded', '0', String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('exit-side undeclared test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/** ⛓ The bounce JS game's iframe (the panel's default renderer). */
+const m3BounceIframe = () => document.querySelector('iframe[src*="bounceDemo/game/index.html"]');
+
+/**
+ * ⛓⛓⛓ **(iv) THE PLAY WITNESS — A MOVED EXIT, APPLIED, PLAYS IN THE BOUNCE PANEL
+ * ON ITS NEW SIDE.** `bounce_worldgen` opened in the hub; the region procgenPlayer
+ * made active (read off its own public function); the Bounce panel raised and its
+ * game confirmed on that region's portal map. Then the product's own route: that
+ * region's first exit with a free side picked on the Regions tab, the hub's Apply
+ * pressed — procgenPlayer rebuilds its warehouse from the published document and
+ * re-loads the region. The game's own portal → side map (`__bounceDebug`) must
+ * put the portal that served the OLD side on the NEW one, the warehouse's world
+ * must key it there, the level is still loaded, and no error event fired on the
+ * page or in the game.
+ */
+export async function apworldExitSideMovePlaysInTheBouncePanel(testController) {
+    const errors = [];
+    const onError = (e) => errors.push(String(e?.message ?? e));
+    let gameWindow = null;
+    window.addEventListener('error', onError);
+    try {
+        const M = await m3Modules();
+        const panel = await openHub(testController, BOUNCE_WORLDGEN_PATH);
+        if (!panel) return testController.getOverallResult();
+        const activeOf = centralRegistry.getPublicFunction('procgenPlayer', 'getActiveSubstrate');
+        const warehouseOf = centralRegistry.getPublicFunction('procgenPlayer', 'getWarehouse');
+        const active = await testController.pollForValue(() => {
+            const a = activeOf?.();
+            return a?.regionId && m3Declares(M, panel.rulesDoc.preset_sidecars?.[String(panel.playerId)]?.[a.regionId])
+                ? a : null;
+        }, 'procgenPlayer made a declaring region active', 10000, 100);
+        testController.reportCondition('⛓ premise: the active region\'s substrate declares exitSides', !!active);
+        if (!active) return testController.getOverallResult();
+        const slot = String(panel.playerId);
+        const region = active.regionId;
+        const pick = m3Pick(M, { preset_sidecars: { [slot]: { [region]: panel.rulesDoc.preset_sidecars[slot][region] } } }, 'move');
+        testController.reportCondition('⛓ premise: the active region has an exit with a free side', !!pick);
+        if (!pick) return testController.getOverallResult();
+        const { exit, side } = pick;
+        const portal = pick.entry.playable_payload.params.sidePortals[exit.side];
+        testController.reportCondition(`⛓ premise: the exit's side ${exit.side} keys a portal`, typeof portal === 'string');
+
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'bounceDemoPanel' });
+        const baseline = await testController.pollForValue(() => {
+            const d = m3BounceIframe()?.contentWindow?.__bounceDebug?.();
+            return d?.levelId && d.portalSides?.[portal] === exit.side ? d : null;
+        }, `the bounce game loaded ${region} with ${portal} on ${exit.side}`, 20000, 200);
+        testController.reportCondition('BEFORE: the game serves the portal on the exit\'s OLD side', !!baseline);
+        if (!baseline) return testController.getOverallResult();
+        gameWindow = m3BounceIframe().contentWindow;
+        gameWindow.addEventListener('error', onError);
+
+        testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+        selectTab(panel, 'regions');
+        const picker = await testController.pollForValue(() => m3Picker('regions', region, exit.exit_id),
+            'the Regions tab draws the exit\'s picker', 8000, 50);
+        testController.reportCondition('the Regions tab\'s block carries the picker', !!picker);
+        if (!picker) return testController.getOverallResult();
+        m3PickSide(picker, side);
+        testController.reportCondition('ONE op for the pick', await testController.pollForCondition(
+            () => panel.session.ops().length === 1, 'the pick recorded one op', 8000, 50));
+        panel.applyButton.click();
+
+        const played = await testController.pollForValue(() => {
+            const d = m3BounceIframe()?.contentWindow?.__bounceDebug?.();
+            return d?.levelId && d.portalSides?.[portal] === side ? d : null;
+        }, `the bounce game re-loaded ${region} with ${portal} on ${side}`, 20000, 200);
+        testController.reportCondition(`⛓⛓ AFTER: the game serves ${portal} on the NEW side ${side}`, !!played);
+        testController.assertEqual('…and on no other side', `${side}`,
+            Object.entries(played?.portalSides ?? {}).filter(([id]) => id === portal).map(([, s]) => s).join(','));
+        testController.assertEqual('the level is the same level, still loaded', String(baseline.levelId), String(played?.levelId));
+        const world = warehouseOf?.()?.get(region)?.world;
+        testController.assertEqual('the warehouse\'s world keys the portal on the new side', portal,
+            String(world?.params?.sidePortals?.[side]));
+        const wexits = world?.exits instanceof Map ? [...world.exits.values()] : (world?.exits ?? []);
+        testController.assertEqual('…and its exit on it', side, String(wexits.find((x) => x.exit_id === exit.exit_id)?.side));
+        testController.assertEqual('⛔ no error event on the page or in the game', '[]', JSON.stringify(errors));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('exit-side play witness error-free', false);
+    } finally {
+        window.removeEventListener('error', onError);
+        gameWindow?.removeEventListener('error', onError);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-exit-side-move-records-one-op-and-the-map-redraws',
+    name: 'APWorld hub: a side picked for an exit on the map\'s block records one move-exit-side, and the map draws it there',
+    description: 'PRESET SIDECARS M3. The fixture\'s first declaring slot, the first placed region with an exit '
+               + 'and a free side: one op; the document AFTER is the op\'s own answer; regions and grid_cell '
+               + 'byte-equal; the exit\'s drawn tile moved onto the new edge; the canvas digest equals a hand-'
+               + 'authored document\'s; Undo restores the bytes and the digest.',
+    testFunction: apworldExitSideMoveRecordsOneOpAndTheMapRedraws,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-exit-side-pick-of-a-taken-side-swaps',
+    name: 'APWorld hub: picking a side another exit holds swaps the two exits (Sidecars tab)',
+    description: 'PRESET SIDECARS M3. The taken side is offered as a swap with its exit, enabled; the pick '
+               + 'records one swap-exit-sides; both sides and the two portal-map keys exchanged; Undo.',
+    testFunction: apworldExitSidePickOfATakenSideSwaps,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-exit-side-undeclared-entry-offers-nothing-and-says-why',
+    name: 'APWorld hub: a region whose substrate declares no exitSides offers no side picker, and the map\'s block says why',
+    description: 'PRESET SIDECARS M3. No picker on the Regions tab for the slot; the map\'s block draws a '
+               + 'non-editable line whose sentence is the op\'s own refusal (NO_EXIT_SIDES_DECLARED); no op.',
+    testFunction: apworldExitSideUndeclaredEntryOffersNothingAndSaysWhy,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-exit-side-move-plays-in-the-bounce-panel',
+    name: 'APWorld hub: an exit moved to another side and applied plays in the Bounce panel on its new side',
+    description: 'PRESET SIDECARS M3 play witness. bounce_worldgen: the active region\'s exit picked onto a free '
+               + 'side, Apply pressed; the game\'s portal → side map puts the old side\'s portal on the new side, '
+               + 'the warehouse keys it there, the level stays loaded, no error event.',
+    testFunction: apworldExitSideMovePlaysInTheBouncePanel,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
