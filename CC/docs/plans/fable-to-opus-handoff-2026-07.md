@@ -14262,6 +14262,17 @@ both planners' docs commits, R2's four incl. the gitlink bump `7eef172 → 68197
 `ubuntu-latest` lose the device under the logic-only flags?); its task 5 = the manual-only tier workflow whose first
 dispatched run discharges the red owed gate under ruling C. **CI @ `cd1919d7e8` (run 34724817403): vitest 454/13856 — 13848 passed, 8 skipped, 0 failed; slow battery 12/217.** The +1 file / +36 tests over `b3dc1307ba`'s 453/13820 are M3's stated rows; R2 is test-count neutral. **H2 task 0 = OUTCOME (a)** (run 34724984639 @ `8f14e77387`): `ubuntu-latest` has the SAME two channels as the box — logic-only 29.90 f/s `{lost:1,stalls:0}`, pixels 17.97 f/s; Python Playwright 1.56.0 shares node's chromium-1194 (pip 5 s, no browser install); `seedling-wasm.yml` STEP 3 today takes the box lock on the runner and dies `EACCES /mnt/c/playwright` — the defect H2 task 1 removes. Plan §11.4.
 
+**⚖ RULING A NARROWED 2026-09-13 (planner, on H2's task-1 finding; the user may override):** headless on
+`HEADLESS_LOGIC_ONLY_ARGS`, `check-seedling-wasm-ship` reads **257/6** — every FAIL is the ONE claim "no uncaught page
+errors during the ship", fed by the two device-lost pageerrors per page that ARE the logic-only channel's signature
+(the runner probe shows the same two); every other claim green, wall 406.6 s vs `--win` 474 s; `wasm-pages` has the
+same structural collision. ⇒ **logic-only UNLESS the gate asserts zero pageerrors; ship + pages stay on the PIXELS
+set headless** (device alive, 0 pageerrors, the claim unchanged), pinned by a derivation row that reads each gate for
+its arg set AND whether it asserts on pageerrors. Rejected: subtracting a control boot's pageerror multiset (hides a
+real exception that matches it); reading pageerrors only up to the loss (no timestamp). Nothing keys on the message
+text. The three driver gates are green logic-only at their standing values (vanilla-manifest 24/0, save-stamp 21/0,
+generated-set 32/0). Plan §11.5.
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
