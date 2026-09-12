@@ -9212,6 +9212,11 @@ export async function apworldExitSidePickOfATakenSideSwaps(testController) {
         if (select) selectPlayer(select, slot);
         await testController.pollForCondition(() => String(panel.playerId) === String(slot), `slot ${slot} selected`, 8000, 50);
         selectTab(panel, SIDECARS_TAB_ID);
+        // ⛓ The region list is collapsed by default (⚖ S0) — open it through its own button.
+        const expand = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-expand`),
+            'the Sidecars tab\'s region-list expander', 8000, 50);
+        if (expand?.dataset.open !== 'true') expand?.click();
         const picker = await testController.pollForValue(() => m3Picker(SIDECARS_TAB_ID, region, exit.exit_id),
             'the Sidecars tab\'s block draws the picker', 8000, 50);
         testController.reportCondition('the Sidecars tab\'s block carries the exit\'s picker', !!picker);
