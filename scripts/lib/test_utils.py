@@ -333,11 +333,46 @@ def check_virtual_environment() -> bool:
         return False
 
 
-def check_http_server(url: str = "http://localhost:8000", timeout: int = 5) -> bool:
+DEFAULT_TEST_PORT = 8000
+
+
+def test_port() -> int:
+    """
+    The dev server's port — the SAME `TEST_PORT` the JS side reads
+    (scripts/test/testServer.js), so one variable in the environment reaches
+    the Python drivers, the server they start, and the `npm test` they spawn.
+    Unset or empty means the default; anything else must be an integer port.
+    """
+    raw = os.environ.get("TEST_PORT", "")
+    if raw == "":
+        return DEFAULT_TEST_PORT
+    try:
+        port = int(raw)
+    except ValueError:
+        port = 0
+    if not 1 <= port <= 65535:
+        raise SystemExit(f"TEST_PORT must be an integer in 1..65535, got {raw!r}")
+    return port
+
+
+def test_base_url() -> str:
+    """`http://localhost:<TEST_PORT>` — the host stays localhost (bundled-mode keying)."""
+    return f"http://localhost:{test_port()}"
+
+
+def http_server_command() -> List[str]:
+    """The argv that serves the repo root on TEST_PORT (what the drivers spawn and print)."""
+    return [sys.executable, "-m", "http.server", str(test_port())]
+
+
+def check_http_server(url: Optional[str] = None, timeout: int = 5) -> bool:
     """
     Check if the HTTP server is running by attempting to connect.
-    Returns True if server is reachable, False otherwise.
+    Returns True if server is reachable, False otherwise. `url` defaults to
+    the TEST_PORT server's root.
     """
+    if url is None:
+        url = test_base_url()
     try:
         with urllib.request.urlopen(url, timeout=timeout) as response:
             return response.getcode() == 200

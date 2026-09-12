@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { TEST_FRONTEND_URL } from '../../scripts/test/testServer.js';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
@@ -28,7 +29,7 @@ test.describe('Application End-to-End Tests', () => {
   const testIds = process.env.TEST_IDS; // Optional explicit id list (--test=), for solo flake triage
 
   // Build URL with all optional parameters
-  let APP_URL = `http://localhost:8000/frontend/?mode=${testMode}`;
+  let APP_URL = `${TEST_FRONTEND_URL}?mode=${testMode}`;
   if (testGame) {
     APP_URL += `&game=${encodeURIComponent(testGame)}`;
   }

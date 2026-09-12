@@ -15,6 +15,7 @@ source .venv/bin/activate
 | Regression test | `npm test --mode=test-regression` |
 | Check if dev server is running | `ss -ltn \| grep ":8000"` (or `pgrep -af "[h]ttp.server"` — note the brackets) |
 | Start dev server | `python -m http.server 8000` (only if not already running) |
+| Test against ANOTHER server (a worktree) | `npm test -- --port=8123 …` or `TEST_PORT=8123` — one variable moves the page URL, Playwright's probe, the health check and the Python drivers (`scripts/test/testServer.js` / `test_utils.test_port()`); no port is hardcoded in the harness |
 | Stop dev server | `ss -ltnp \| grep ":8000"` → read `pid=NNN` → `kill NNN`. ⛔ NOT `pkill` in any form: a PreToolUse hook refuses every pattern kill, brackets or no brackets |
 
 ## Important Gotchas

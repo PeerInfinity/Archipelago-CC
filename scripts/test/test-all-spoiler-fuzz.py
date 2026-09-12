@@ -49,7 +49,8 @@ from lib.test_utils import (
     load_template_exclude_list,
     get_world_directory_name_from_game_name,
     build_and_load_world_mapping,
-    check_http_server
+    check_http_server,
+    http_server_command
 )
 from lib.seed_utils import get_seed_id as compute_seed_id
 
@@ -437,7 +438,7 @@ def ensure_http_server(project_root: Path) -> Optional[subprocess.Popen]:
 
     print("Starting HTTP server...")
     server = subprocess.Popen(
-        [sys.executable, '-m', 'http.server', '8000'],
+        http_server_command(),
         cwd=str(project_root),
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL

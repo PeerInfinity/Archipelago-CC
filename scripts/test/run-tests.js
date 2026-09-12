@@ -10,6 +10,7 @@
 import { spawn } from 'child_process';
 import { parseArgs } from 'node:util';
 import { listBatchNames } from '../../frontend/modules/tests/testBatches.js';
+import { resolveTestPort } from './testServer.js';
 
 // Parse command-line arguments
 const { values } = parseArgs({
@@ -23,6 +24,7 @@ const { values } = parseArgs({
     testOrderSeed: { type: 'string' },
     batch: { type: 'string' },
     test: { type: 'string' },
+    port: { type: 'string' },
     headed: { type: 'boolean' },
     debug: { type: 'boolean' },
     ui: { type: 'boolean' }
@@ -46,8 +48,23 @@ const config = {
   // One or more test ids (comma-separated) to run INSTEAD of the rest of the
   // roster — the "run it alone 8x and count" protocol for triaging a flake.
   // Empty = no narrowing, so every existing invocation is unchanged.
-  testIds: values.test || process.env.npm_config_test || ''
+  testIds: values.test || process.env.npm_config_test || '',
+  // The dev server's port (scripts/test/testServer.js). Empty = whatever
+  // TEST_PORT already says, or the module's default — so every existing
+  // invocation is unchanged. A worktree serving itself on another port passes
+  // `--port=NNNN` and the whole run, page URL and web-server probe alike,
+  // drives THAT tree.
+  port: values.port || process.env.npm_config_port || ''
 };
+
+if (config.port) {
+  try {
+    resolveTestPort({ TEST_PORT: config.port });
+  } catch (err) {
+    console.error(err.message);
+    process.exit(2);
+  }
+}
 
 // Build environment variables
 const env = {
@@ -60,7 +77,8 @@ const env = {
   TEST_LAYOUT: config.layout,
   TEST_ORDER_SEED: config.testOrderSeed,
   TEST_BATCH: config.batch,
-  TEST_IDS: config.testIds
+  TEST_IDS: config.testIds,
+  ...(config.port ? { TEST_PORT: config.port } : {})
 };
 
 // Validate the batch name HERE rather than letting the in-app filter throw.
@@ -94,6 +112,7 @@ const additionalArgs = process.argv.slice(2).filter(arg =>
   !arg.startsWith('--testOrderSeed=') &&
   !arg.startsWith('--batch=') &&
   !arg.startsWith('--test=') &&
+  !arg.startsWith('--port=') &&
   arg !== '--headed' &&
   arg !== '--debug' &&
   arg !== '--ui'
