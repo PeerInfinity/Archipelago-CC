@@ -14165,6 +14165,19 @@ slice ends `[ahead N]`), the owed full tier headless logic-only asserting `__swf
 `channel` on its parts (the key's `--win` proposed as a rename ⚖). The tree carries G1's unpushed commits; both
 slices stage by path.
 
+**⚖ RULED 2026-09-12 — R2, THE CONTROLS RETIRE; `seedling_original` STAYS.** The user, on the negative arms: *"it
+sounds like the purpose of testing with the old wasm builds is to verify that the code behaves correctly with the old
+wasm builds. But I'm not aware of any reason to care whether the code behaves correctly with the old wasm builds. I
+think it just needs to behave correctly with the new build."* → *"Yes, let's add the retirement slice to the plan. And
+let's still keep seedling_original."* ⇒ R2 (after R1, before H2; plan §8b): delete `seedling_bot_ap_p4b`/`p4c` from
+the submodule (whitelist, manifest, README, `docs/history.md`), pins rows (f)/(g) + `CONTROL_FILE` + the (h2)
+exemption, the absent-capability branches (`preSwapCorrection`, CLAIM 6's `armsAfterSwap`, any `apitem`-less arm) —
+each proved dead by a mutant BEFORE deletion; `BOOT_PRESWAP_FRAMES` the LAW stays (19 readers); p4b-measured
+constants re-measured on the rebuilt p4d = a licensed re-record named per file; `check-seedling-ap-placement` moves
+to the lab's build and is re-derived; the full tier owed again (population (iv)). Census at e2aba9c14a: 14 tracked
+non-md files name the controls; 33 MB each. Cost stated once: absent-capability regressions become undetectable, by
+design. NOT launched — R1 first.
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
