@@ -14281,6 +14281,33 @@ callers (`layoutEdits.js:106/112`, `check-region-step-editing.mjs:298/317`); `pa
 entries) moves with the side by DECLARATION; the hand list's second axis could fold once the validator has a
 registry it can rely on (§21.6); §5e Q5. **NEXT = M3 on the user's word.**
 
+**Session change 2026-09-12 (WSL crash).** `preset-sidecars-planning-2` died at ~17:13Z with G1 verified and recorded
+(`32b3ffd5e1`), M3's kickoff written, and M3 NOT launched ("on your word"). Successor: Fable session
+`archipelago-cc-88` (transcript `e0e0c770…`; the crashed one `de34e40e…`), resumed on the user's ask. Measured at
+resume: tree level with origin at `f17d3d171b` (`origin/main..HEAD` empty), no box lock, load 1.8; `git diff --stat
+6506ce6627..f17d3d171b` touches only `scripts/procgen/` + the wasm gitlink (R1's push `b3dc1307ba`) — none of the
+files M3's brief names moved; in-app run `2026-09-12T16-37-34` on disk; traps last number now **1332** (1331/1332
+are the headless arc's). The shared-tree partner is now **R2** (`seedling-headless-R2`, planner `archipelago-cc-b6`,
+launched 14:02 local): it pushes the wasm SUBMODULE but makes LOCAL outer commits it does not push (gitlink bump,
+ask-first) and runs a multi-hour tier under the box lock.
+
+**M3 LAUNCHED 2026-09-12** (user: "Launch M3 now") as `apworld-sidecars-M3` (Opus, pid 18057, cwd verified,
+handshake sent; kickoff `NewDocs/plans/apworld-sidecars-M3-prompt.md`, refreshed for the successor planner, R2's
+surface, the `b3dc1307ba` CI baseline (run 34718437648, in progress at launch — M3 derives R1's two-file delta
+before trusting it), and crash resilience: one commit per task AS IT LANDS, §22 written incrementally). Shape: ONE
+new registry slot (working name `exitSides`: a pure `relabel` re-keying `params.sidePortals`, moving
+`params.backExitSide` for the back exit, re-pointing bounce's portal `direction`; absent ⇒ refused in the
+declaration's words; population row = the entries whose `sidecarFields` declare `params.sidePortals`); ops
+`move-exit-side {player, region, exitId, side}` / `swap-exit-sides {player, region, exitA, exitB}` in
+`rulesDocOps.js` (side + flag per the side law iff changed + the declaration's relabel; `regions[p]`, `grid_cell`,
+targets untouched; the ONE-WAY link named); the corpus control over the declaring population (34 expected; omsi
+outside it); the side picker on the block (three hosts, preview first, record-keyed); a Bounce play witness
+(`sidePortals[newSide]` = the old portal id, 0 page errors); mutants A–D; in-app rows; docs; gates; §22. **Push
+ordering agreed with `archipelago-cc-b6`:** M3 STOPS at push if R2's local commits sit below its own and idles;
+R2's outer unit goes first on the user's word, M3 on top carrying nothing of R2's; each planner messages the other
+before any push to main while the other's slice holds local commits. NOT M3: the pipeline's own Move Exit relayout
+defect, jta/omsi, text adventure (G2), the maze. **After M3: the planner replans with the user (G2 next).**
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
