@@ -14216,6 +14216,20 @@ disk, so the crash took only its report message. **R2 LAUNCHED 2026-09-12 ~21:10
 `NewDocs/plans/seedling-headless-R2-prompt.md`; plan §8b; start HEAD `f17d3d171b`, tree LEVEL, box free, no other slice on the
 tree). Handshake exchanged. H2 is designed while it runs (plan §11); the ladder self-advances to H2 when R2 verifies.
 **CI @ `b3dc1307ba` (run 34718437648): vitest 453/13820 — 13812 passed, 8 skipped, 0 failed; slow battery 12/217.** The +8 over G1's 453/13812 = R1's rows exactly (`rosterCategories` 13 → 17, `headlessChromium` 6 → 10).
+**H2 DESIGNED 2026-09-12 (plan §11; §10 reserved for R2's as-built) — ⚖ THREE RULED (user: *"I agree with your
+recommendations."*):** (A) every wasm-driving gate moves to `HEADLESS_LOGIC_ONLY_ARGS` (none reads pixels; pixels 1.8–1.9×
+slower; the tier already runs logic-only with no verdict moved); (B) `roster: --win --tier=full` is RENAMED to
+`roster: --tier=full` inside H2 (seven consumers, one commit, the old key refused by name); (C) a `workflow_dispatch`
+tier run in CI MAY DISCHARGE the row, quoted from the run (run id + runner SHA in `coveredBy`, `channel: headless`).
+Design facts (survey at `22a5fad533`): `windows` is a TEXT classification (`gateRoster.js:63` on the `py.exe` literal);
+two of the six already have a headless channel; four have only headed Python-Playwright drivers and the venv has NO
+Python Playwright; none of the six reads pixels; `ci-arm-costs.json` is outside both `paths:` lists; whether a CI
+runner LOSES the device under the logic-only flags is UNMEASURED (H2 task 0, both outcomes pre-designed). H2 = one
+driver two modes (`--headless --chromium-args` from the JS constant), a `dual` roster kind, seven new CI arms priced by
+one dispatched run, `seedling-full-tier.yml` `workflow_dispatch:`-only with a test asserting no push trigger. H2
+launches when R2 verifies. Box: after the reboot :8000 served `$HOME` (every :8000 gate 404) — restarted from the repo
+root by PID; M3 (`apworld-sidecars-M3`, planner `archipelago-cc-88`) runs alongside R2 on the tree, pushes ordered by
+message.
 
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
