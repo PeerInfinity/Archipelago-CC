@@ -14254,6 +14254,14 @@ flashSubstrateLibrary mutant during the 7-tape run was unreachable from `game.ht
 `VAR=x && … &` (trap 1337). **⚖ RULED (user, 2026-09-12): "Yes, push now. What we're working towards is being able to run the tier in CI."** ⇒ the
 red rides; H2's dispatched CI tier (ruling C) is the discharge. ⚖ OPEN: the seedling-wasm history shed (`.git` 133 M, unchanged by the deletion); the row-key rename (H2, ruling B).
 
+**JOINT PUSH DONE 2026-09-12 (user in this session: *"I approve of the push."* → *"Yes, push now. What we're working
+towards is being able to run the tier in CI."*): `fce9cfc51d..cd1919d7e8`, 17 commits as one fast-forward unit (M3's,
+both planners' docs commits, R2's four incl. the gitlink bump `7eef172 → 681973f`, R2's close). **H2 LAUNCHED
+2026-09-13 ~00:05Z** as `seedling-headless-H2` (Opus; brief `NewDocs/plans/seedling-headless-H2-prompt.md`; plan §11;
+§12 = its as-built slot; start HEAD `cd1919d7e8`, tree level, box free). Its task 0 = the runner probe (does
+`ubuntu-latest` lose the device under the logic-only flags?); its task 5 = the manual-only tier workflow whose first
+dispatched run discharges the red owed gate under ruling C. CI at `cd1919d7e8` quoted below when it lands.
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
