@@ -84,7 +84,8 @@ import {
 //   here that reaches the pipeline ENGINE and the substrate REGISTRY (both
 //   behind `regionLayout.js`); every refusal sentence stays in this file.
 import {
-    SIDE_WORDS, layoutChange, occupantAt, pairLinkFlips, rewriteExitFlags, slotLayout,
+    SIDE_WORDS, exitSideVerdicts, exitSidesOfSubstrate, layoutChange, occupantAt, pairLinkFlips,
+    rewriteExitFlags, rewriteExits, slotLayout,
 } from './regionLayout.js';
 
 /** ⛓ THE VOCABULARY, as data. */
@@ -116,6 +117,8 @@ export const RULES_OP_KINDS = Object.freeze([
     'set-region-sidecar',
     'move-region',
     'swap-regions',
+    'move-exit-side',
+    'swap-exit-sides',
     'set-key',
     'replace-document',
     'clear',
@@ -364,6 +367,8 @@ function dispatchRulesDocOp(doc, op) {
         case 'set-region-sidecar': return opSetRegionSidecar(doc, op);
         case 'move-region': return opMoveRegion(doc, op);
         case 'swap-regions': return opSwapRegions(doc, op);
+        case 'move-exit-side': return opMoveExitSide(doc, op);
+        case 'swap-exit-sides': return opSwapExitSides(doc, op);
         case 'set-key': return opSetKey(doc, op);
         case 'replace-document': return opReplaceDocument(doc, op);
         case 'clear': return opClear(doc, op);
@@ -2078,6 +2083,219 @@ function opSwapRegions(doc, op) {
     if (!res.ok) return res;
     return ok(res.next, `Swapped ${op.a} ${cellStr(atA.cell)} ↔ ${op.b} ${cellStr(atB.cell)}; `
         + linkClauses(res.flips) + res.shrank);
+}
+
+/* ── the exit-side moves (PRESET SIDECARS M3) ─────────────────────────── */
+
+/**
+ * ⛓ The word a link's end carries in an exit-side answer, and the marker of a
+ * link whose two ends disagree. EXPORTED so the rows assert the sentence the op
+ * wrote.
+ */
+export const EXIT_LINK_ONE_WAY = 'ONE-WAY';
+
+/**
+ * ⛓ The refusal clause for a substrate that declares no `exitSides` — the
+ * declaration's own words (`procgenCore/exitSides.js`). EXPORTED for the rows
+ * and the widget's "why".
+ */
+export const NO_EXIT_SIDES_DECLARED = 'its registry entry declares no `exitSides`, so the hub cannot '
+    + 'say what else in the payload is keyed by side';
+
+const sideWord = (s) => `${s} (${SIDE_WORDS[s]})`;
+
+/**
+ * ⛓ The refusals both exit-side ops share, in order: a region NAME with a
+ * sidecar entry, a payload `exits` list, and a substrate whose `exitSides` the
+ * registry answers. Answers `{ok, entry, exits, decl}` or a refusal.
+ */
+function exitSideRegion(doc, p, name, opName) {
+    if (typeof name !== 'string' || !name.trim()) {
+        return refuse(`apworld: ${opName} needs a region NAME, got ${JSON.stringify(name)}.`);
+    }
+    const slotSidecars = doc?.preset_sidecars?.[p];
+    const entry = slotSidecars?.[name];
+    if (!entry || typeof entry !== 'object') {
+        return refuse(`apworld: player ${p} has no sidecar entry for region "${name}", so it has `
+            + 'no exit to move. This slot\'s sidecars are '
+            + `[${Object.keys(slotSidecars ?? {}).join(', ') || 'none'}].`);
+    }
+    const exits = entry.playable_payload?.exits;
+    if (!Array.isArray(exits)) {
+        return refuse(`apworld: region "${name}"'s payload carries no \`exits\` list, so it has no exit `
+            + 'to move.');
+    }
+    return { ok: true, entry, exits };
+}
+
+/** ⛓ One exit of the region by id, or the refusal naming the ones it has. */
+function exitById(exits, name, id, role) {
+    const x = exits.find((e) => e?.exit_id === id);
+    if (x) return { ok: true, exit: x };
+    return refuse(`apworld: region "${name}" has no exit ${JSON.stringify(id)}${role} — its exits are `
+        + `[${exits.map((e) => e?.exit_id).join(', ') || 'none'}].`);
+}
+
+/** ⛓ The declaration, or the refusal in its own words. */
+function exitSidesDecl(entry, name) {
+    const got = exitSidesOfSubstrate(entry.substrate);
+    if (got.decl) return { ok: true, decl: got.decl };
+    const why = got.unregistered ? 'no module registers it here'
+        : (got.malformed ?? NO_EXIT_SIDES_DECLARED);
+    return refuse(`apworld: region "${name}"'s substrate "${entry.substrate}" cannot have an exit moved `
+        + `to another side — ${why}.`);
+}
+
+/**
+ * ⛓⛓ The write-back of an exit-side change: the declaration's relabel of the
+ * payload, then the payload's `exits` through its own serializer with the
+ * moved exits' sides (and each flag whose side-law verdict changed) set on the
+ * world — written as ONE `playable_payload`, in place.
+ */
+function exitSideWriteBack(doc, p, name, entry, decl, moves, verdicts) {
+    let relabelled;
+    try {
+        relabelled = decl.relabel(entry.playable_payload, moves);
+    } catch (err) {
+        return refuse(`apworld: region "${name}"'s substrate "${entry.substrate}" refused the side `
+            + `relabel — ${err.message}.`);
+    }
+    if (!relabelled || typeof relabelled !== 'object' || Array.isArray(relabelled)) {
+        return refuse(`apworld: region "${name}"'s substrate "${entry.substrate}" answered the side `
+            + `relabel with ${JSON.stringify(relabelled)}, not a payload.`);
+    }
+    const sideOf = new Map(moves.map((m) => [m.exitId, m.to]));
+    const flagOf = new Map(verdicts.filter((v) => v.flip).map((v) => [v.exitId, !v.now]));
+    const res = rewriteExits(entry, (e) => {
+        if (!sideOf.has(e?.exit_id)) return;
+        e.side = sideOf.get(e.exit_id);
+        // ⛓ G1's law, as the engine's `relabelExitSide` applies it: a tile a
+        //   pre-G1 document still carries is on the OLD side; the renderer then
+        //   draws the exit by its side. (The tracked corpus carries none.)
+        delete e.x;
+        delete e.y;
+        if (flagOf.has(e.exit_id)) e.isTeleporter = flagOf.get(e.exit_id);
+    }, relabelled);
+    if (res.unwritable) {
+        return refuse(`apworld: region "${name}"'s substrate "${entry.substrate}" cannot rewrite its `
+            + `exits here — ${res.unwritable}. A payload's exits are written back in the substrate's `
+            + 'OWN serialized form or not at all; load the substrate\'s module first.');
+    }
+    const payload = withKey(relabelled, 'exits', res.exits);
+    return { ok: true, next: setPath(doc, ['preset_sidecars', p, name, 'playable_payload'], payload) };
+}
+
+/** ⛓ The link clause of one moved exit: its state after, and whether it is one-way. */
+function exitLinkClause(name, v) {
+    if (!v.target) return `exit ${v.exitId} leads nowhere (no \`targetRegion\`), so no link was judged`;
+    if (!v.judged) {
+        return `the link to ${v.target} was not judged — region ${v.unplaced} has no cell on the map, so `
+            + 'its flag is kept';
+    }
+    const state = (adjacent) => (adjacent ? 'adjacent' : 'a teleporter');
+    let clause = `the link to ${v.target} is ${v.flip ? 'now ' : 'still '}${state(v.now)}`;
+    if (v.flip) clause += ` (it was ${state(v.was)})`;
+    if (!v.reciprocal) return `${clause}; ${v.target} has no exit leading back`;
+    const r = v.reciprocal;
+    const end = `${r.region}'s exit ${r.exitId}${SIDE_WORDS[r.side] ? ` (${SIDE_WORDS[r.side]})` : ''}`;
+    if (r.teleporter === !v.now) return `${clause}; ${end} leads back as ${state(!r.teleporter)} too`;
+    return `${clause} — ${EXIT_LINK_ONE_WAY}: ${end} is ${state(!r.teleporter)} (its flag is its own; `
+        + 'this op does not re-judge it)';
+}
+
+const reKeyedClause = (entry, decl) => `relabelled by "${entry.substrate}"'s \`exitSides\` (the `
+    + `side-keyed fields it declares: ${decl.keys.join(', ')})`;
+
+/**
+ * ⛓⛓⛓ **MOVE AN EXIT TO ANOTHER SIDE** (PRESET SIDECARS M3 — ⚖ §5e Q1 A: M2's
+ * shape, zone substrates only, no relayout). `{player, region, exitId, side}` —
+ * the region by NAME (the pipeline's `move-exit-side` addresses a CELL; a hub
+ * record must survive a later region move).
+ *
+ * WRITES `preset_sidecars[p][region].playable_payload` only: the moved exit's
+ * `side` (and its `isTeleporter` iff the side law's verdict on it changed), plus
+ * what the substrate's `exitSides.relabel` re-keys (`procgenCore/exitSides.js`).
+ * ⛔ NEVER `regions[p]`, `grid_cell`, or any `targetRegion` / `targetExitId`: the
+ * exit leads where it led; only the side it leaves by changed.
+ *
+ * Refused by name: no region name; no sidecar entry; no `exits` list; no such
+ * exit; a side outside N/S/E/W; then — after the no-op, a move to the exit's
+ * own side, which the session drops and which asks nothing of the substrate — a
+ * substrate that is unregistered, declares no `exitSides` or declares a
+ * malformed one; a side already carrying another exit of this region (that is a
+ * swap, and says so); a relabel that throws; a substrate that cannot
+ * re-serialize.
+ */
+function opMoveExitSide(doc, op) {
+    const p = playerOf(op);
+    const name = op.region;
+    const at = exitSideRegion(doc, p, name, 'move-exit-side');
+    if (!at.ok) return at;
+    const ex = exitById(at.exits, name, op.exitId, '');
+    if (!ex.ok) return ex;
+    if (!Object.hasOwn(SIDE_WORDS, op.side)) {
+        return refuse(`apworld: move-exit-side needs \`side\` as one of ${Object.keys(SIDE_WORDS).join('/')}, `
+            + `got ${op.side === undefined ? 'none' : JSON.stringify(op.side)}.`);
+    }
+    const from = ex.exit.side;
+    if (from === op.side) return ok(doc, `exit ${op.exitId} of ${name} is already on side ${sideWord(from)}`);
+    const d = exitSidesDecl(at.entry, name);
+    if (!d.ok) return d;
+    const other = at.exits.find((e) => e !== ex.exit && e?.side === op.side);
+    if (other) {
+        return refuse(`apworld: side ${sideWord(op.side)} of region "${name}" already carries exit `
+            + `${other.exit_id} — moving ${op.exitId} there is a swap, and says so: `
+            + `swap-exit-sides {exitA: ${op.exitId}, exitB: ${other.exit_id}}.`);
+    }
+    if (!Object.hasOwn(SIDE_WORDS, from)) {
+        return refuse(`apworld: exit ${op.exitId} of region "${name}" carries side ${JSON.stringify(from)}, `
+            + 'not one of N/S/E/W — there is no side key to move it from.');
+    }
+    const moves = [{ exitId: op.exitId, from, to: op.side }];
+    const verdicts = exitSideVerdicts(doc, p, slotLayout(doc, p), name, moves);
+    const res = exitSideWriteBack(doc, p, name, at.entry, d.decl, moves, verdicts);
+    if (!res.ok) return res;
+    return ok(res.next, `Moved exit ${op.exitId} of ${name} to side ${op.side} (${SIDE_WORDS[from]} → `
+        + `${SIDE_WORDS[op.side]}); ${exitLinkClause(name, verdicts[0])}; ${reKeyedClause(at.entry, d.decl)}`);
+}
+
+/**
+ * ⛓⛓⛓ **SWAP THE SIDES OF TWO EXITS OF ONE REGION** (PRESET SIDECARS M3).
+ * `{player, region, exitA, exitB}`. `move-exit-side`'s contract, for two exits
+ * at once: the relabel is ONE simultaneous re-key (never two moves in a row),
+ * each exit re-judged by the side law on its own, each answer named. Swapping
+ * an exit with itself, or two exits on one side, is a no-op.
+ */
+function opSwapExitSides(doc, op) {
+    const p = playerOf(op);
+    const name = op.region;
+    const at = exitSideRegion(doc, p, name, 'swap-exit-sides');
+    if (!at.ok) return at;
+    const a = exitById(at.exits, name, op.exitA, ' (`exitA`)');
+    if (!a.ok) return a;
+    const b = exitById(at.exits, name, op.exitB, ' (`exitB`)');
+    if (!b.ok) return b;
+    const sA = a.exit.side;
+    const sB = b.exit.side;
+    if (op.exitA === op.exitB || sA === sB) {
+        return ok(doc, `exits ${op.exitA} and ${op.exitB} of ${name} are on one side — nothing to swap`);
+    }
+    const d = exitSidesDecl(at.entry, name);
+    if (!d.ok) return d;
+    for (const [id, s] of [[op.exitA, sA], [op.exitB, sB]]) {
+        if (!Object.hasOwn(SIDE_WORDS, s)) {
+            return refuse(`apworld: exit ${id} of region "${name}" carries side ${JSON.stringify(s)}, not one `
+                + 'of N/S/E/W — there is no side key to swap.');
+        }
+    }
+    const moves = [{ exitId: op.exitA, from: sA, to: sB }, { exitId: op.exitB, from: sB, to: sA }];
+    const verdicts = exitSideVerdicts(doc, p, slotLayout(doc, p), name, moves);
+    const res = exitSideWriteBack(doc, p, name, at.entry, d.decl, moves, verdicts);
+    if (!res.ok) return res;
+    return ok(res.next, `Swapped exits ${op.exitA} ↔ ${op.exitB} of ${name} (${op.exitA} ${SIDE_WORDS[sA]} → `
+        + `${SIDE_WORDS[sB]}, ${op.exitB} ${SIDE_WORDS[sB]} → ${SIDE_WORDS[sA]}); `
+        + `${op.exitA}: ${exitLinkClause(name, verdicts[0])}; ${op.exitB}: ${exitLinkClause(name, verdicts[1])}; `
+        + reKeyedClause(at.entry, d.decl));
 }
 
 /* ── the whole document ───────────────────────────────────────────────── */

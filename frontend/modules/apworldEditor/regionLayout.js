@@ -57,6 +57,16 @@
  * control (`regionLayout.test.js`) runs this path with NO flags over every
  * committed entry and must move 0 bytes — the proof the round trip of `exits`
  * is byte-stable, per substrate.
+ *
+ * ── ⛓⛓⛓ M3 — AN EXIT MOVED TO ANOTHER SIDE ──────────────────────────────
+ *
+ * `move-exit-side` / `swap-exit-sides` change no cell. They write the moved
+ * exit's `side` (and its `isTeleporter` iff the side law's verdict on THAT exit
+ * changed — `exitSideVerdicts`) through the same `rewriteExits` path, plus
+ * whatever else the substrate's `exitSides` declaration says its payload keys by
+ * side (`procgenCore/exitSides.js`, read here by `exitSidesOfSubstrate`). ⛔ No
+ * relayout, and no substrate name: the declaration is the only source of what a
+ * side keys.
  */
 
 import {
@@ -64,6 +74,7 @@ import {
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { mapBoundsFor } from '../procgenPipeline/compositeMapDocument.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { exitSidesOf } from '../procgenCore/exitSides.js';
 
 /** ⛓ The sides a payload exit can carry, as the words a description uses. The
  *  keys are the engine's `SIDE_DELTAS`' (measured: every committed exit's side
@@ -117,6 +128,16 @@ export function slotLayout(doc, player) {
     return { cells, grid, clash: null };
 }
 
+/**
+ * ⛓ The `exitSides` declaration of a substrate as the op needs it: the
+ * reader's answer, or `{unregistered: true}` when no module registers the id
+ * here (a different fact from "registered and declares none").
+ */
+export function exitSidesOfSubstrate(substrate) {
+    const reg = substrateRegistry.get(substrate);
+    return reg ? exitSidesOf(reg) : { unregistered: true };
+}
+
 /** ⛓ The region at `cell` in a layout, or null. */
 export function occupantAt(layout, cell) {
     return layout.grid?.getRegion(cell)?.region_id ?? null;
@@ -166,20 +187,38 @@ export function layoutChange(doc, player, layout, change) {
 }
 
 /**
- * ⛓⛓⛓ **ONE PAYLOAD'S `exits`, REWRITTEN BY ITS OWN SUBSTRATE.** `flags` maps
- * an exit id to the `isTeleporter` it must carry; an empty map is the corpus
- * control's no-op.
- *
- * ⛔ The payload is CLONED before it is deserialized: the pass-through
- * deserializers keep the payload's own exit objects in their Map, so setting a
- * flag on the world would write THROUGH the document being edited.
+ * ⛓⛓⛓ **ONE PAYLOAD'S `exits`, WITH THEIR FLAGS SET BY ITS OWN SUBSTRATE.**
+ * `flags` maps an exit id to the `isTeleporter` it must carry; an empty map is
+ * the corpus control's no-op. A flag write through `rewriteExits` (below), the
+ * path M3's side write takes too.
  *
  * @returns {{exits: object[]} | {absent: true} | {unwritable: string}}
  *   `unwritable` names what is missing (no registered substrate, no
  *   serializer) — the op words the refusal.
  */
 export function rewriteExitFlags(entry, flags) {
-    const payload = entry?.playable_payload;
+    return rewriteExits(entry, (e) => {
+        if (flags.has(e?.exit_id)) e.isTeleporter = flags.get(e.exit_id);
+    });
+}
+
+/**
+ * ⛓⛓⛓ **ONE PAYLOAD'S `exits`, MUTATED ON THE WORLD AND SERIALIZED BY ITS OWN
+ * SUBSTRATE** — the one path a flag write (M2) and a side write (M3) share.
+ * `mutate(exit)` runs on every exit object of the deserialized world; an
+ * identity `mutate` is the corpus control's no-op.
+ *
+ * ⛔ The payload is CLONED before it is deserialized: the pass-through
+ * deserializers keep the payload's own exit objects in their Map, so a mutation
+ * on the world would write THROUGH the document being edited (M2's mutant H).
+ *
+ * @param {object} entry     a sidecar entry
+ * @param {Function} mutate  `(exit) → void`
+ * @param {object} [payload] the payload to deserialize instead of the entry's
+ *   own (M3: the side-keyed relabel's output) — cloned all the same
+ * @returns {{exits: object[]} | {absent: true} | {unwritable: string}}
+ */
+export function rewriteExits(entry, mutate, payload = entry?.playable_payload) {
     if (!payload || typeof payload !== 'object' || !Object.hasOwn(payload, 'exits')) {
         return { absent: true };
     }
@@ -190,10 +229,52 @@ export function rewriteExitFlags(entry, flags) {
     }
     const world = reg.deserializeWorld(JSON.parse(JSON.stringify(payload)));
     const list = world?.exits instanceof Map ? [...world.exits.values()] : (world?.exits ?? []);
-    for (const e of list) {
-        if (flags.has(e?.exit_id)) e.isTeleporter = flags.get(e.exit_id);
-    }
+    for (const e of list) mutate(e);
     return { exits: reg.serializeWorld(world).exits };
+}
+
+/**
+ * ⛓⛓⛓ **AN EXIT MOVED TO ANOTHER SIDE: THE SIDE LAW, RE-ASKED OF THAT EXIT
+ * ALONE** (PRESET SIDECARS M3). Its region and its target stay where they are,
+ * so the only verdict that can change is the moved exit's own — `isTeleporter`
+ * = NOT adjacent on its side (`linkIsAdjacentOnSide`, M2's law). The reciprocal
+ * exit on the target keeps its own stored flag, so a link can come out ONE-WAY
+ * (one end a teleporter, the other adjacent); that is reported, never repaired.
+ *
+ * @param {object} doc
+ * @param {string} player
+ * @param {object} layout   `slotLayout(doc, player)`
+ * @param {string} region
+ * @param {Array<{exitId, from, to}>} moves
+ * @returns {Array<{exitId, from, to, target, judged: boolean, unplaced: string|null,
+ *            was: boolean|null, now: boolean|null, flip: boolean,
+ *            reciprocal: {region, exitId, side, teleporter: boolean}|null}>}
+ *   `was` / `now` are ADJACENCY before and after; `unplaced` names the region
+ *   with no cell when the law cannot be asked.
+ */
+export function exitSideVerdicts(doc, player, layout, region, moves) {
+    const sidecars = doc?.preset_sidecars?.[player] ?? {};
+    const exits = sidecars[region]?.playable_payload?.exits ?? [];
+    return moves.map(({ exitId, from, to }) => {
+        const x = exits.find((e) => e?.exit_id === exitId);
+        const target = typeof x?.targetRegion === 'string' ? x.targetRegion : null;
+        const back = (sidecars[target]?.playable_payload?.exits ?? [])
+            .filter((e) => e?.targetRegion === region);
+        const r = back.find((e) => e.exit_id === x?.targetExitId || e.targetExitId === exitId) ?? back[0];
+        const reciprocal = r ? {
+            region: target, exitId: r.exit_id, side: r.side ?? null, teleporter: r.isTeleporter === true,
+        } : null;
+        const unplaced = !layout.cells.has(region) ? region
+            : (!target || !layout.cells.has(target) ? (target ?? '(no target)') : null);
+        if (unplaced) {
+            return { exitId, from, to, target, judged: false, unplaced, was: null, now: null, flip: false, reciprocal };
+        }
+        const here = layout.cells.get(region);
+        const there = layout.cells.get(target);
+        const was = linkIsAdjacentOnSide(layout.grid, here, from, there);
+        const now = linkIsAdjacentOnSide(layout.grid, here, to, there);
+        return { exitId, from, to, target, judged: true, unplaced: null, was, now, flip: was !== now, reciprocal };
+    });
 }
 
 /**

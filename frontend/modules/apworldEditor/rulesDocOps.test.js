@@ -120,6 +120,10 @@ describe('the contract shape', () => {
         doc.preset_sidecars[P].Vault = {
             substrate: 'maze', render_hint: 'maze', grid_cell: { gx: 1, gy: 1 }, playable_payload: {},
         };
+        // ⛓ M3 — an exit with a side, for the exit-side samples: each is the
+        //   op's NO-OP (its own side / itself), which is answered before any
+        //   substrate is asked — the moves' own rows are `exitSides.test.js`.
+        doc.preset_sidecars[P].Vault.playable_payload.exits = [{ exit_id: 'e1', side: 'N' }];
         const before = bytes(doc);
         const samples = {
             'add-region': { op: 'add-region' },
@@ -155,6 +159,8 @@ describe('the contract shape', () => {
             },
             'move-region': { op: 'move-region', region: 'Hall', to: { gx: 1, gy: 0 } },
             'swap-regions': { op: 'swap-regions', a: 'Hall', b: 'Vault' },
+            'move-exit-side': { op: 'move-exit-side', region: 'Vault', exitId: 'e1', side: 'N' },
+            'swap-exit-sides': { op: 'swap-exit-sides', region: 'Vault', exitA: 'e1', exitB: 'e1' },
             'set-canonical-placement': {
                 op: 'set-canonical-placement', location: 'Vault Chest', item: 'Key',
             },
