@@ -14208,6 +14208,14 @@ resumed on the user's word 2026-09-12 20:52Z, took the `seedling-headless-planni
 wrote this close, and brought R2's brief (`NewDocs/plans/seedling-headless-R2-prompt.md`, from plan §8b; census
 re-derived at `b3dc1307ba`: 14 non-md files + 5 md; ⚠ ap-placement's default is p4c, not §8b's p4b) to the user ONCE.
 
+**⚖ USER 2026-09-12 ("Yes, please continue with the plan you described. But first please check the results of the test that
+R1 was running."):** the tier re-read from `test-results/seedling-differential/checkpoint.jsonl` (the log itself did not
+survive the reboot): the last run = 150 distinct tapes, every entry `channel: headless`, 150 ok / 0 fail, per-tape checks
+3241 pass / 0 fail — equal to §9.7. R1's transcript ends 20:11Z at "Now memory." with §9 and the memory note both on
+disk, so the crash took only its report message. **R2 LAUNCHED 2026-09-12 ~21:10Z** as `seedling-headless-R2` (Opus; brief
+`NewDocs/plans/seedling-headless-R2-prompt.md`; plan §8b; start HEAD `f17d3d171b`, tree LEVEL, box free, no other slice on the
+tree). Handshake exchanged. H2 is designed while it runs (plan §11); the ladder self-advances to H2 when R2 verifies.
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
