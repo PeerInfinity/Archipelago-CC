@@ -22,9 +22,24 @@ const SUBMODULES = git(['config', '--file', '.gitmodules', '--get-regexp', '^sub
 const WASM = readFileSync(SCRIPT, 'utf8').match(/^WASM_SUBMODULE="([^"]+)"/m)[1];
 
 let PARENT;
-const run = (args) => {
+/**
+ * ⛔ The plan must not depend on THIS clone's config. The script refuses unless
+ * `extensions.worktreeConfig` is on (without it `core.hooksPath` cannot be set
+ * for one worktree) — the box's clone has it and CI's checkout does not, which
+ * is how these rows first went red in CI and nowhere else. So a row states the
+ * config it runs under, through git's own GIT_CONFIG_* environment.
+ */
+const ROW_EMAIL = 'p0-row@example.invalid';
+const withWorktreeConfig = (value) => ({
+  GIT_CONFIG_COUNT: '3',
+  GIT_CONFIG_KEY_0: 'extensions.worktreeConfig', GIT_CONFIG_VALUE_0: value,
+  /* …and the identity the plan copies into submodules: CI's checkout has none */
+  GIT_CONFIG_KEY_1: 'user.name', GIT_CONFIG_VALUE_1: 'p0-row',
+  GIT_CONFIG_KEY_2: 'user.email', GIT_CONFIG_VALUE_2: ROW_EMAIL,
+});
+const run = (args, env = withWorktreeConfig('true')) => {
   const r = spawnSync('bash', [SCRIPT, ...args], {
-    cwd: REPO, encoding: 'utf8', env: { ...process.env, NEW_WORKTREE_PARENT: PARENT },
+    cwd: REPO, encoding: 'utf8', env: { ...process.env, NEW_WORKTREE_PARENT: PARENT, ...env },
   });
   return { exit: r.status, out: r.stdout, err: r.stderr };
 };
@@ -43,9 +58,8 @@ describe('new-worktree.sh --dry-run', () => {
     expect(init.split(' -- ')[1].split(' ')).toEqual(SUBMODULES.filter((s) => s !== WASM));
     expect(r.out).toContain(`# skipped (pass --with-wasm to include): ${WASM}`);
     /* each initialised submodule clone gets the outer identity */
-    const who = git(['config', '--get', 'user.email']);
     expect(planLine(r.out, /config user\.email/))
-      .toEqual(SUBMODULES.filter((s) => s !== WASM).map((s) => `+ git -C ${dest}/${s} config user.email ${who}`));
+      .toEqual(SUBMODULES.filter((s) => s !== WASM).map((s) => `+ git -C ${dest}/${s} config user.email ${ROW_EMAIL}`));
     expect(planLine(r.out, /npm ci/)).toEqual([`+ npm ci --prefix ${dest}`]);
     expect(planLine(r.out, /hooksPath/)).toEqual([`+ git -C ${dest} config --worktree core.hooksPath scripts/git-hooks`]);
     /* no fetch for a local base */
@@ -59,8 +73,10 @@ describe('new-worktree.sh --dry-run', () => {
   });
 
   it('includes the wasm submodule only with --with-wasm, and fetches for an origin/ base', () => {
-    const r = run(['--dry-run', '--with-wasm', 'p0-row-probe', 'origin/main']);
+    /* a ref no clone has, so the box and a CI checkout take the same path */
+    const r = run(['--dry-run', '--with-wasm', 'p0-row-probe', 'origin/p0-row-never-fetched']);
     expect(r.exit).toBe(0);
+    expect(r.out).toContain('is not fetched here (a dry run does not fetch)');
     const [init] = planLine(r.out, /submodule update --init/);
     expect(init.split(' -- ')[1].split(' ')).toEqual(SUBMODULES);
     expect(planLine(r.out, /fetch origin/)).toEqual([`+ git -C ${REPO} fetch origin`]);
@@ -75,6 +91,12 @@ describe('new-worktree.sh --dry-run', () => {
     expect(bad.exit).toBe(1);
     expect(bad.err).toMatch(/not a valid branch name/);
     expect(run(['--nope', 'x']).exit).toBe(2);
+    const noExt = run(['--dry-run', 'p0-row-probe', 'HEAD'], withWorktreeConfig('false'));
+    expect(noExt.exit).toBe(1);
+    expect(noExt.err).toMatch(/extensions\.worktreeConfig is not enabled/);
+    const local = run(['--dry-run', 'p0-row-probe', 'no-such-local-ref']);
+    expect(local.exit).toBe(1);
+    expect(local.err).toMatch(/is not a commit/);
   });
 
   it('has a --help, and no removal path anywhere in the script', () => {

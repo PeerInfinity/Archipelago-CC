@@ -98,8 +98,17 @@ if [ "$FETCH" = 1 ] && [ "$DRY_RUN" = 0 ]; then
   echo "+ git -C $REPO fetch origin"
   git -C "$REPO" fetch origin
 fi
-git -C "$REPO" rev-parse --verify --quiet "$BASE^{commit}" >/dev/null \
-  || refuse "base '$BASE' is not a commit in $REPO"
+GITMODULES_FROM="$BASE"
+if ! git -C "$REPO" rev-parse --verify --quiet "$BASE^{commit}" >/dev/null; then
+  # A dry run does not fetch, so an origin/ base it has never seen is not a refusal:
+  # the real run fetches first. The plan reads the submodules from HEAD and says so.
+  if [ "$FETCH" = 1 ] && [ "$DRY_RUN" = 1 ]; then
+    GITMODULES_FROM="HEAD"
+    echo "# $BASE is not fetched here (a dry run does not fetch): submodules read from HEAD's .gitmodules"
+  else
+    refuse "base '$BASE' is not a commit in $REPO"
+  fi
+fi
 while read -r _key path; do
   [ -n "$path" ] || continue
   if [ "$path" = "$WASM_SUBMODULE" ] && [ "$WITH_WASM" = 0 ]; then
@@ -107,7 +116,7 @@ while read -r _key path; do
   else
     SUBMODULES+=("$path")
   fi
-done < <(git -C "$REPO" config --blob "$BASE:.gitmodules" --get-regexp '^submodule\..*\.path$' 2>/dev/null || true)
+done < <(git -C "$REPO" config --blob "$GITMODULES_FROM:.gitmodules" --get-regexp '^submodule\..*\.path$' 2>/dev/null || true)
 
 USER_NAME="$(git -C "$REPO" config --get user.name || true)"
 USER_EMAIL="$(git -C "$REPO" config --get user.email || true)"
