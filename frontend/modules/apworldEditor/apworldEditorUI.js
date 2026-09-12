@@ -137,6 +137,9 @@ import {
  */
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { applyRulesDocOp } from './rulesDocOps.js';
+// ⛓ PRESET SIDECARS M3 — the exit-side control reads the declaration the op reads.
+import { exitSidesOf } from '../procgenCore/exitSides.js';
+import { SIDE_WORDS } from './regionLayout.js';
 import {
   buildDocumentKeys,
   defaultPlayerOf,
@@ -5923,6 +5926,10 @@ class ApworldEditorUI {
     }
     box.appendChild(line);
 
+    // ⛓ PRESET SIDECARS M3 — the exit-side control (all three hosts).
+    const exitSides = this._makeExitSidesRow(player, regionName, entry, hostTab);
+    if (exitSides) box.appendChild(exitSides);
+
     /**
      * ⛓⛓ PRESET SIDECARS V0 — **WHAT IS WRONG WITH THIS ENTRY, UNDER ITS FACTS**:
      * a sentence each, coloured by severity, NOTHING when clean. The same
@@ -6024,6 +6031,121 @@ class ApworldEditorUI {
       box.appendChild(msg);
     }
     return box;
+  }
+
+  /**
+   * ⛓⛓⛓ PRESET SIDECARS M3 — **AN EXIT MOVED TO ANOTHER SIDE, FROM THE BLOCK.**
+   * Per exit of the entry's payload, a side picker: its own side marked, a side
+   * another exit holds offered as a SWAP with that exit (never disabled), a
+   * free side as a move. A pick is ONE op — `move-exit-side` or
+   * `swap-exit-sides` — asked of a PREVIEW first, so a refusal prints beside the
+   * block in the op's own words (`_resolveExitSide`).
+   *
+   * ⛔ Drawn only where the substrate DECLARES `exitSides` — the same reader the
+   *   op asks, so the control and the op cannot disagree about who is editable.
+   *   Elsewhere nothing is drawn on the Regions and Sidecars hosts (a line per
+   *   block would be drawn 235 times on `procgen_topdown/AP_8`, whose blocks S0's
+   *   render budget measured); the Map's selection — ONE block — says WHY, in the
+   *   op's refusal, asked of a preview.
+   * ⛔ No cache: the pickers are read off the record this render draws, so an
+   *   undo that restores a side redraws it (trap 1311 has nothing to go stale).
+   *
+   * @returns {HTMLElement|null}
+   */
+  _makeExitSidesRow(player, regionName, entry, hostTab) {
+    const exits = entry?.playable_payload?.exits;
+    if (!Array.isArray(exits)) return null;
+    const sided = exits.filter((x) => Object.hasOwn(SIDE_WORDS, x?.side));
+    if (!sided.length) return null;
+    const declared = !!exitSidesOf(substrateRegistry.get(entry.substrate)).decl;
+    if (!declared && hostTab !== 'map') return null;
+    const row = document.createElement('div');
+    row.className = 'apworld-exit-sides';
+    row.dataset.regionName = regionName;
+    Object.assign(row.style, { display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap',
+      margin: '4px 0 0', color: '#999' });
+    const lead = document.createElement('span');
+    lead.textContent = 'Exit sides:';
+    row.appendChild(lead);
+
+    if (!declared) {
+      const x = sided[0];
+      const other = Object.keys(SIDE_WORDS).find((sd) => sd !== x.side);
+      const preview = applyRulesDocOp(this.rulesDoc, this._stampPlayer({
+        op: 'move-exit-side', region: regionName, exitId: x.exit_id, side: other,
+      }));
+      row.dataset.editable = 'false';
+      const why = document.createElement('span');
+      why.className = 'apworld-exit-sides-why';
+      why.textContent = preview.ok ? '' : `not editable here — ${preview.error}`;
+      row.appendChild(why);
+      return row;
+    }
+
+    row.dataset.editable = 'true';
+    row.title = 'Pick a side to MOVE the exit there, or a side another exit holds to SWAP the two. The '
+      + 'exit keeps leading where it led; a link whose ends stop touching becomes a teleporter, and '
+      + 'the answer names a ONE-WAY link.';
+    for (const x of sided) {
+      const label = document.createElement('label');
+      Object.assign(label.style, { display: 'inline-flex', alignItems: 'center', gap: '3px' });
+      const name = document.createElement('code');
+      name.textContent = x.exit_id;
+      label.appendChild(name);
+      const select = document.createElement('select');
+      select.className = 'apworld-exit-side';
+      select.dataset.regionName = regionName;
+      select.dataset.exitId = x.exit_id;
+      select.dataset.side = x.side;
+      Object.assign(select.style, { fontSize: '11px', backgroundColor: '#1a1d23', color: '#ddd' });
+      for (const [side, word] of Object.entries(SIDE_WORDS)) {
+        const holder = exits.find((o) => o !== x && o?.side === side);
+        const opt = document.createElement('option');
+        opt.value = side;
+        opt.dataset.kind = side === x.side ? 'own' : (holder ? 'swap' : 'move');
+        opt.textContent = side === x.side ? `${side} — ${word} (this exit)`
+          : (holder ? `${side} — swap with ${holder.exit_id}` : `${side} — ${word}`);
+        if (side === x.side) opt.selected = true;
+        select.appendChild(opt);
+      }
+      select.addEventListener('change', () => this._resolveExitSide(player, regionName, x.exit_id, select.value));
+      label.appendChild(select);
+      row.appendChild(label);
+    }
+    return row;
+  }
+
+  /**
+   * ⛓⛓ M3 — **ONE PICK → ONE OP**, the preview first (M2's `_resolveMapMove`
+   * shape): a side another exit holds is `swap-exit-sides`, a free one
+   * `move-exit-side`, the exit's own side nothing at all. The answer — the op's
+   * description or its refusal — is printed beside the block it was picked in.
+   */
+  _resolveExitSide(player, regionName, exitId, side) {
+    const exits = sidecarOf(this.rulesDoc, player, regionName)?.playable_payload?.exits ?? [];
+    const x = exits.find((e) => e?.exit_id === exitId);
+    const beside = (text, refused) => {
+      this._opRowMessage = { sidecar: `${player}|${regionName}`, text, refused };
+    };
+    if (!x || x.side === side) {
+      this._render();
+      return null;
+    }
+    const holder = exits.find((e) => e !== x && e?.side === side);
+    const op = holder
+      ? { op: 'swap-exit-sides', region: regionName, exitA: exitId, exitB: holder.exit_id }
+      : { op: 'move-exit-side', region: regionName, exitId, side };
+    const preview = applyRulesDocOp(this.rulesDoc, this._stampPlayer(op));
+    if (!preview.ok) {
+      this._opMessage = `Exit side refused: ${preview.error}`;
+      beside(this._opMessage, true);
+      this._render();
+      return null;
+    }
+    const res = this._applyOp(op, { rerender: false });
+    beside(this._opMessage, !res.ok);
+    this._render();
+    return res;
   }
 
   /**
