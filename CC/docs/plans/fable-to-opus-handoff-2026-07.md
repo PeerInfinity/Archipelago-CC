@@ -14151,6 +14151,20 @@ Every wall number is an upper bound from a shared box. SWFRecomp-CC side, same d
 **rebuild the pinned wasms from `254145a5b`** (`FRESH=1`; old flags = lost-and-survived logic-only ~30 ticks/s, the
 Vulkan pair = pixels at 4–12). **REPLAN with the user next** (§5 of the plan + the two new ⚖).
 
+**⚖ RULED 2026-09-12 (user: "I agree with all of your recommendations"):** (1) R1 = rebuild the pinned p4d and
+seedling_original from SWFRecomp-CC `254145a5b` next; (2) the headless tier discharges the `--win` row from that
+rebuild on, channel recorded; (3) "never headless" RETIRED — headless logic-only by default, Windows Chrome only for
+real-GPU pixel rows; (4) H2 after R1 — tier workflow manual-only, short gates per-push, `ci-arm-costs.json` into the
+workflow paths. **And the user's own item:** *"at some point I was planning to review whether the tests that use the
+older wasms are important enough to be worth keeping multiple versions of the Seedling wasm files"* ⇒ p4b
+(`arm-control`) and p4c (`apitem-control`) are NOT rebuilt in R1; they stay pinned on the old runtime as the negative
+controls of pins row (g) / ship CLAIM 6 / row (f) until that review. **R1 LAUNCHED 2026-09-12** as
+`seedling-headless-R1` (Opus; kickoff `NewDocs/plans/seedling-headless-R1-prompt.md`; plan §8): control build first,
+`FRESH=1`, both-mode verification by screenshot, the submodule push allowed, the OUTER gitlink push ASK-FIRST (the
+slice ends `[ahead N]`), the owed full tier headless logic-only asserting `__swfGpu.lost == 1`, the row written with
+`channel` on its parts (the key's `--win` proposed as a rename ⚖). The tree carries G1's unpushed commits; both
+slices stage by path.
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
