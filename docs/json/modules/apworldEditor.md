@@ -1426,12 +1426,14 @@ link again: …"* when a move brings a link's ends back together.
 committed slots with `grid_cell`s). `relayoutSphereGrid` is what the pipeline's
 own Move Region runs. On a LOADED document it writes nothing to a payload exit:
 `stitchGrid` walks `exits_placed` / `extracted_rules`, which a document does not
-carry. Given those fields, a NO-OP relayout re-targets **520 maze exits on 154
-regions**, because `Grid.teleporters` is keyed `cell:side` and holds one target
-per side, while 118 regions (the `procgen_topdown` worlds) carry two or more
-same-side teleporters. It also never updates a back-exit. So the hub runs the
+carry. At M2 it was also wrong given those fields: `Grid.teleporters` was keyed
+`cell:side`, so a NO-OP relayout re-targeted **520 maze exits on 154 regions**,
+and it never updated a back-exit. PIPELINE RELAYOUT R1 keyed the table by exit
+(`cell:exit_id`) and made the relayout set every exit's flag, back exits
+included, by the side law, so only the first reason still holds. The hub runs the
 engine's `moveSphereRegion` / `swapSphereRegions` for the PLACEMENT only (on a
-grid of name-only stubs) and applies the side law per exit.
+grid of name-only stubs, where the relayout has no exit to touch) and applies
+the side law per exit.
 
 **Bounds.** A target outside the map is refused: *"(gx,gy) is outside player p's
 map, which is W×H cells … ⛔ A move never grows the map."* The map's size is

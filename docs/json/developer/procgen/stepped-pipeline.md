@@ -50,6 +50,8 @@ The vocabulary is six ops, one spec table: `move-region {from, to}`, `swap-regio
 
 Top-down's layout ops replay *after* ③ because `finalizeTopDown` derives back-exits through `layout.cellsByName`: run the move first and the moved region gets no back-exit at all. That is also the one place where the replay stage and the **undo** step diverge — the grid top-down moves regions on is built by ①, so undoing a top-down layout edit rewinds to ①, while sphere's ③ builds its own grid and the two coincide.
 
+**A layout op re-derives every link from the exits.** All four layout ops end in `relayoutSphereGrid`: it captures each forward exit's region, exit id, side and target, rebuilds `Grid.teleporters` with one entry per teleporter **exit** (keyed `cell:exit_id`) for every link whose ends are no longer neighbours on its side, re-stitches, and then sets every exit's `isTeleporter`, back exits included, by the side law `linkIsAdjacentOnSide`. Until PIPELINE RELAYOUT R1 the table was keyed `cell:side` and kept one target per side. On the top-down APCalc world (seed 4, 10×10, 81 regions, 51 forward teleporter exits held in 26 entries), Move Region (4,5)→(2,0) and back left 28 forward exits on 16 regions pointing at the wrong region. Keyed by exit, that round trip and a swap and swap back change no exit and no compiled `regions` byte. The one thing a move does move is the key ORDER of `preset_sidecars`, because the moved region is re-inserted last; every record is unchanged.
+
 **Undo is a pop.** Drop the last edit, `invalidateFromStep` the step it rewinds to, resume: determinism does the rest. The claim, pinned on both drivers, is *N edits → undo ×N → the never-edited world, byte for byte*.
 
 **Identity differs by mode.** Top-down regions keep their source names. Sphere edits name `#<node index>`, because the canonical `region_<gx>_<gy>` is derived from a cell that only exists after ③ while `set-substrate` must apply before ③. A `re-roll`'s `n` is derived from the recording (how many re-rolls of that region precede it), never from a session counter — which is what makes undo rewind the count.
@@ -58,7 +60,7 @@ Top-down's layout ops replay *after* ③ because `finalizeTopDown` derives back-
 
 **Export and reproduction.** `serializeEnvelope` carries the recording for free (it is plain JSON), so a CLI chain and a panel export both round-trip it; `procgen_metadata.edits` carries it into the compiled `rules.json` as **provenance** (additive — omitted when nothing was edited). ⚠ An edit applies exactly once per production of its artifact, so a `run -i env.json` that auto-resumes *past* an edit's stage will not re-apply it — which is correct (a panel export's edits are already applied), but means a hand-added edit needs `--from <its stage>`. Both CLIs print the recorded edits and name any their start point is already past.
 
-Guards: `layoutEdits.test.js`, the recorded-edit blocks in `sphereSteps.test.js` and `topDownSteps.test.js`.
+Guards: `layoutEdits.test.js`, the recorded-edit blocks in `sphereSteps.test.js` and `topDownSteps.test.js`; `topDownRelayoutIdentity.test.js` for the move-and-back identity, which `check-topdown-steps-ui.mjs` Phase D also asserts through the panel's own clicks.
 
 ## Region editors (③ Edit ▸)
 

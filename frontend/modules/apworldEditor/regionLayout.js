@@ -30,9 +30,11 @@
  *   · on the reconstruction as the Map builds it the relayout writes NOTHING to
  *     a payload exit — `stitchGrid` walks `exits_placed` / `extracted_rules`,
  *     which a document does not carry — so a move would change no flag;
- *   · given those fields, a NO-OP relayout RE-TARGETS 520 maze exits on 154
- *     regions (`Grid.teleporters` is keyed `cell:side`, one target per side) and
- *     never updates a back-exit.
+ *   · given those fields, a NO-OP relayout RE-TARGETED 520 maze exits on 154
+ *     regions (`Grid.teleporters` was keyed `cell:side`, one target per side)
+ *     and never updated a back-exit — both fixed by PIPELINE RELAYOUT R1 (the
+ *     table is keyed by exit; the relayout judges every exit's flag), so the
+ *     first point is the reason that still holds.
  * ⇒ the engine's `moveSphereRegion` / `swapSphereRegions` do the PLACEMENT (on a
  * grid of name-only stubs, where their relayout has no exit to touch), and each
  * exit's flag follows `linkIsAdjacentOnSide` — the engine's own side law, the one
