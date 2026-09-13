@@ -9,13 +9,15 @@
  * module. ⛓ The probe rows run REAL executables (tiny shell scripts), so the
  * default `canImport` is exercised and not only an injected fake.
  */
+import { spawnSync } from 'node:child_process';
 import { chmodSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { canImport, pythonLadder, resolvePython } from './repoPython.js';
+import { GENERATE_PY_REQUIRES, canImport, pythonLadder, resolvePython } from './repoPython.js';
 
 /** A fake tree, optionally with `.venv/bin/python`, and a fake active venv. */
 function fakeTree({ treeVenv = false, activeVenv = false } = {}) {
@@ -104,5 +106,56 @@ describe('resolvePython — the chosen interpreter is ASKED', () => {
         const t = fakeTree();
         expect(() => resolvePython({ requires: ['ok', 'nope'], why: 'w', env: {}, repo: t.repo,
             probe: (_py, m) => m === 'ok' })).toThrow(/`import nope`/);
+    });
+});
+
+/**
+ * ⛓ F2 task 4 — the roundtrip gates' spelling, on a REAL child process: a
+ * venv whose python cannot import `Utils` is refused by name with exit 2 and
+ * NO PASS line, never a silent `python3` that dies after 8 of them.
+ */
+describe('generatePythonOrExit — the Generate.py gates', () => {
+    const HELPER = pathToFileURL(join(import.meta.dirname, 'repoPython.js')).href;
+    const child = (env) => {
+        const dir = mkdtempSync(join(tmpdir(), 'gen-python-'));
+        const f = join(dir, 'check-fixture-roundtrip.mjs');
+        writeFileSync(f, `import { generatePythonOrExit } from '${HELPER}';\n`
+            + "const py = generatePythonOrExit('check-fixture-roundtrip.mjs');\n"
+            + "console.log(`PASS: resolved ${py}`);\n");
+        return spawnSync(process.execPath, [f], { encoding: 'utf8', env: { PATH: process.env.PATH, ...env } });
+    };
+
+    it('probes the module Generate.py itself needs first', () => {
+        expect(GENERATE_PY_REQUIRES).toEqual(['Utils']);
+    });
+
+    it('an active venv that cannot import Utils: REFUSED by name, exit 2, no PASS line', () => {
+        const t = fakeTree();
+        const bad = t.exe(join(t.venv, 'bin'), 1);
+        const r = child({ VIRTUAL_ENV: t.venv });
+        expect(r.status).toBe(2);
+        expect(r.stdout).toMatch(/^REFUSED: check-fixture-roundtrip\.mjs: Generate\.py \/ world_generator needs a Python that can `import Utils`/);
+        expect(r.stdout).toContain(bad);
+        expect(r.stdout).not.toMatch(/^PASS:/m);
+    });
+
+    it('an active venv that can: the gate runs on it', () => {
+        const t = fakeTree({ activeVenv: true });
+        const r = child({ VIRTUAL_ENV: t.venv });
+        expect(r.status).toBe(0);
+        expect(r.stdout.trim()).toBe(`PASS: resolved ${t.venvPy}`);
+    });
+});
+
+describe('one spelling — no gate carries its own venv-or-python3 fallback', () => {
+    it('no check-*.mjs resolves `.venv/bin/python` by hand', async () => {
+        const { readdirSync, readFileSync } = await import('node:fs');
+        const here = import.meta.dirname;
+        const own = readdirSync(here).filter((f) => /^check-.*\.mjs$/.test(f))
+            .filter((f) => /existsSync\([^)]*\.venv\/bin\/python/.test(readFileSync(join(here, f), 'utf8')));
+        expect(own).toEqual([]);
+        const users = readdirSync(here).filter((f) => /^check-.*\.mjs$/.test(f))
+            .filter((f) => readFileSync(join(here, f), 'utf8').includes('generatePythonOrExit('));
+        expect(users.length).toBeGreaterThan(0);
     });
 });

@@ -48,6 +48,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { argvHelp } from './argvHelp.js';
 import { failOnCrash, totalLine } from './gateTotal.js';
+import { generatePythonOrExit } from './repoPython.js';
 
 argvHelp(import.meta.url);
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -71,9 +72,8 @@ const QUOTA = Number(process.env.JTA_RT_QUOTA || 3);
 const tmpRules = path.join(repoRoot, 'scripts/procgen/.jta-roundtrip-rules.json');
 const tmpTemplates = path.join(repoRoot, 'scripts/procgen/.jta-roundtrip-templates');
 
-const py = fs.existsSync(path.join(repoRoot, '.venv/bin/python'))
-    ? path.join(repoRoot, '.venv/bin/python')
-    : 'python3';
+/** ⛓ F2 task 4 — the interpreter ladder, refused by name (no silent python3). */
+const py = generatePythonOrExit('check-jta-locations-roundtrip.mjs');
 
 let failures = 0;
 failOnCrash(() => failures);

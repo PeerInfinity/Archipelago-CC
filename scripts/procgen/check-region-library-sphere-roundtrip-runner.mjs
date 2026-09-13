@@ -36,6 +36,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { argvHelp } from './argvHelp.js';
 import { failOnCrash, totalLine } from './gateTotal.js';
+import { generatePythonOrExit } from './repoPython.js';
 
 argvHelp(import.meta.url);
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -50,9 +51,8 @@ const SEED = Number(process.env.RL_SPH_SEED || 3);
 const tmpRules = path.join(repoRoot, 'scripts/procgen/.rl-sphere-runner-rules.json');
 const tmpTemplates = path.join(repoRoot, 'scripts/procgen/.rl-sphere-runner-templates');
 
-const py = fs.existsSync(path.join(repoRoot, '.venv/bin/python'))
-    ? path.join(repoRoot, '.venv/bin/python')
-    : 'python3';
+/** ⛓ F2 task 4 — the interpreter ladder, refused by name (no silent python3). */
+const py = generatePythonOrExit('check-region-library-sphere-roundtrip-runner.mjs');
 
 let failures = 0;
 failOnCrash(() => failures);

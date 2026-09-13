@@ -84,3 +84,27 @@ export function resolvePython({ requires, why, install = null, env = process.env
         + `${ladder}\n`
         + `   ${install ?? 'activate a venv carrying it, or set SEEDLING_PYTHON'}`);
 }
+
+/**
+ * ⛓ F2 task 4 — **THE PYTHON A `Generate.py` / `world_generator` GATE RUNS**,
+ * or a refusal printed by name and exit 2 (the roster's refusal code: nothing
+ * was measured) — BEFORE the gate prints its first PASS line.
+ *
+ * ⛓ `Utils` is the probe because it is `Generate.py`'s own first import that
+ * needs `requirements.txt` (`Utils.py` imports `pathspec`, the exact module the
+ * venv-less worktree died on, F1 §16.1.3). One spelling for the six roundtrip
+ * gates; before F2 each carried `.venv/bin/python if present, else python3`.
+ */
+export const GENERATE_PY_REQUIRES = Object.freeze(['Utils']);
+
+export function generatePythonOrExit(gate, { env = process.env, repo = REPO, probe = canImport } = {}) {
+    try {
+        return resolvePython({ requires: [...GENERATE_PY_REQUIRES], env, repo, probe,
+            why: `${gate}: Generate.py / world_generator`,
+            install: 'activate the tree\'s venv (`source .venv/bin/activate`, from `requirements.txt`), '
+                + 'or set SEEDLING_PYTHON to a Python that carries Archipelago\'s requirements' });
+    } catch (e) {
+        console.log(e.message);
+        process.exit(2);
+    }
+}

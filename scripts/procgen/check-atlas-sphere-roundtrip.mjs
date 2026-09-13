@@ -37,6 +37,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { argvHelp } from './argvHelp.js';
 import { failOnCrash, totalLine } from './gateTotal.js';
+import { generatePythonOrExit } from './repoPython.js';
 
 argvHelp(import.meta.url);
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -51,9 +52,8 @@ const SEED = Number(process.env.ATLAS_SPH_SEED || 1);
 const tmpRules = path.join(repoRoot, 'scripts/procgen/.atlas-sphere-rules.json');
 const tmpTemplates = path.join(repoRoot, 'scripts/procgen/.atlas-sphere-templates');
 
-const py = fs.existsSync(path.join(repoRoot, '.venv/bin/python'))
-    ? path.join(repoRoot, '.venv/bin/python')
-    : 'python3';
+/** ⛓ F2 task 4 — the interpreter ladder, refused by name (no silent python3). */
+const py = generatePythonOrExit('check-atlas-sphere-roundtrip.mjs');
 
 let failures = 0;
 failOnCrash(() => failures);
