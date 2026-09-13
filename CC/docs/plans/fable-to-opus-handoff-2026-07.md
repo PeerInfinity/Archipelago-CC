@@ -14753,7 +14753,7 @@ defects) → G2b; the spiral realises no door in a room; the `shared/` submodule
 text adventure as a composer; the legacy `playwright_tests_config-tasw.json` roster is stale; should `buildWarehouse` / the
 pipeline's load handler / `compositeMapDocument` CATCH a throwing `deserializeWorld` and surface the sentence (a cross-substrate
 ruling); the refusal names KEYS, not `maze` (best-fit naming lives in `apworldEditor`, a layering line). Also still open: jta/omsi
-`exitSides` (no word). **NEXT = G2b's design** (the third set-editor binding; ⚖ which lab page hosts it — the maze lab's
+`exitSides` (no word). **CI at the merge head `b336247681`: run 34750026531 success — 465/14047 (14039 | 8 | 0), slow 12/217 green.** `wt-g2a` and its local branch removed after the quote (the remote `g2a` left as is). **NEXT = G2b's design** (the third set-editor binding; ⚖ which lab page hosts it — the maze lab's
 dispatching world binding may be the whole answer; the gated row) in a fresh planning session by the one-task rule, on the
 user's word.
 
