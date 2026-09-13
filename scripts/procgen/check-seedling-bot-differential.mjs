@@ -165,12 +165,12 @@ import { chromium } from 'playwright';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import {
-    appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync,
+    appendFileSync, existsSync, mkdirSync, readFileSync,
     unlinkSync, writeFileSync,
 } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { updateWithArtifactFiles } from './artifactContentHash.js';
+import { updateWithArtifactFiles, updateWithModuleDir } from './artifactContentHash.js';
 import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
@@ -518,10 +518,11 @@ function modelFingerprint() {
     const winDriver = join(HERE, 'seedling-bot-replay-win.py');
     if (existsSync(winDriver)) h.update(readFileSync(winDriver));
     const moduleDir = join(REPO, 'frontend', 'modules', 'seedlingDemo');
-    for (const f of readdirSync(moduleDir).filter((n) => n.endsWith('.js')).sort()) {
-        h.update(f);
-        h.update(readFileSync(join(moduleDir, f)));
-    }
+    updateWithModuleDir(h, moduleDir);
+    // ⛓ F1 — …and `fixtures/*.js`: the tier and roster definitions and the
+    // expectation loader decide WHICH tapes a tier holds and what each is
+    // compared against, so a byte there must invalidate like one above.
+    updateWithModuleDir(h, join(moduleDir, 'fixtures'), { prefix: 'fixtures/' });
     const atlas = join(REPO, 'frontend', 'modules', 'flashPanel', 'atlases', 'seedling-map.json');
     if (existsSync(atlas)) h.update(readFileSync(atlas));
     // ⛓⛓ H3 — THE GAME SIDE, BY CONTENT, NOT BY STAMP. A rebuilt wasm is a

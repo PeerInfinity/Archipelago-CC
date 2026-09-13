@@ -7,14 +7,14 @@
  * move nothing, and ONE FLIPPED BYTE must move it.
  */
 import { createHash } from 'node:crypto';
-import { mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { updateWithArtifactFiles } from './artifactContentHash.js';
+import { updateWithArtifactFiles, updateWithModuleDir } from './artifactContentHash.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FILES = ['game.html', 'payload.wasm'];
@@ -59,3 +59,58 @@ describe('updateWithArtifactFiles hashes CONTENT, never the stamp', () => {
         expect(src).not.toMatch(/\.mtimeMs\b|statSync\(/);
     });
 });
+
+/**
+ * ⛓⛓ F1 — **`seedlingDemo/fixtures/*.js` JOIN THE FINGERPRINT.** The tier and
+ * roster definitions decide which tapes a tier holds; a byte there must
+ * invalidate a stored PASS, and a touch must not.
+ */
+describe('updateWithModuleDir — the model half, by name and content', () => {
+    let dir;
+    const fp = (d) => {
+        const h = createHash('sha256');
+        updateWithModuleDir(h, d);
+        updateWithModuleDir(h, join(d, 'fixtures'), { prefix: 'fixtures/' });
+        return h.digest('hex');
+    };
+    beforeEach(() => {
+        dir = mkdtempSync(join(tmpdir(), 'module-dir-hash-'));
+        mkdirSync(join(dir, 'fixtures'));
+        writeFileSync(join(dir, 'index.js'), 'export const a = 1;\n');
+        writeFileSync(join(dir, 'fixtures', 'index.js'), 'export const b = 2;\n');
+        writeFileSync(join(dir, 'fixtures', 'tiers.js'), 'export const TIERS = [];\n');
+        writeFileSync(join(dir, 'fixtures', 'tape.json'), '{}');
+    });
+    afterEach(() => rmSync(dir, { recursive: true, force: true }));
+
+    it('one byte in fixtures/tiers.js moves it; a touch does not; a non-.js file is not read', () => {
+        const before = fp(dir);
+        const later = new Date(Date.now() + 86_400_000);
+        utimesSync(join(dir, 'fixtures', 'tiers.js'), later, later);
+        writeFileSync(join(dir, 'fixtures', 'tape.json'), '{"moved": true}');
+        expect(fp(dir)).toBe(before);
+        writeFileSync(join(dir, 'fixtures', 'tiers.js'), 'export const TIERS = [1];\n');
+        expect(fp(dir)).not.toBe(before);
+    });
+
+    it('the prefix keeps a same-named file in the two directories from aliasing', () => {
+        const swapped = fp(dir);
+        writeFileSync(join(dir, 'index.js'), 'export const b = 2;\n');
+        writeFileSync(join(dir, 'fixtures', 'index.js'), 'export const a = 1;\n');
+        expect(fp(dir)).not.toBe(swapped);
+    });
+
+    it('the unprefixed pass feeds exactly what the pre-F1 loop fed (name, then bytes)', () => {
+        const old = createHash('sha256');
+        old.update('index.js');
+        old.update(readFileSync(join(dir, 'index.js')));
+        expect(updateWithModuleDir(createHash('sha256'), dir).digest('hex')).toBe(old.digest('hex'));
+    });
+
+    it('the differential hashes BOTH directories through this helper', () => {
+        const src = readFileSync(join(HERE, 'check-seedling-bot-differential.mjs'), 'utf8');
+        expect(src).toMatch(/updateWithModuleDir\(h, moduleDir\);/);
+        expect(src).toMatch(/updateWithModuleDir\(h, join\(moduleDir, 'fixtures'\), \{ prefix: 'fixtures\/' \}\);/);
+    });
+});
+

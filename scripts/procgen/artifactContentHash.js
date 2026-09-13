@@ -14,7 +14,7 @@
  * invalidates. `artifactContentHash.test.js` drives both directions (a touch
  * moves nothing; one flipped byte moves the hash).
  */
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 /**
@@ -28,6 +28,23 @@ export function updateWithArtifactFiles(hash, dir, files) {
         if (!existsSync(p)) continue;
         hash.update(`${f}:`);
         hash.update(readFileSync(p));
+    }
+    return hash;
+}
+
+/**
+ * ⛓ F1 (2026-09-13) — **A MODULE DIRECTORY, BY NAME AND CONTENT.** Every
+ * `.js` directly in `dir`, sorted, each fed as `<prefix><name>` then its bytes
+ * — the differential's model half. The top-level `seedlingDemo/` pass uses no
+ * prefix, so its bytes into the hash are what they were; `fixtures/` (tier and
+ * roster definitions, the expectation loader) was outside the fingerprint
+ * until F1 and joins it under the `fixtures/` prefix, so a same-named file in
+ * the two directories can never alias.
+ */
+export function updateWithModuleDir(hash, dir, { prefix = '' } = {}) {
+    for (const f of readdirSync(dir).filter((n) => n.endsWith('.js')).sort()) {
+        hash.update(`${prefix}${f}`);
+        hash.update(readFileSync(join(dir, f)));
     }
     return hash;
 }
