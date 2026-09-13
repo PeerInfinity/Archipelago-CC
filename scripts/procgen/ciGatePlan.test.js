@@ -15,11 +15,13 @@
  */
 
 import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
+    CI_ARM_COSTS_FILE,
     CI_SHARD_BUDGET_MS,
     armName,
     auditRunShards,
@@ -354,6 +356,36 @@ describe('planCiShards — the partition', () => {
  * non-`full` tier would run the whole roster on every push. Its `@ci-face`
  * is what prevents that; delete the face and this row reds.
  */
+/**
+ * ⛓ H2 — **THE TWO `paths:` LISTS ARE ONE LIST, AND THE COSTS FILE IS ON IT.**
+ * `unittests_frontend.yml` spells its push and pull_request `paths:` twice, by
+ * hand; they were byte-identical and nothing said so. A re-priced
+ * `ci-arm-costs.json` re-shards the browser plan, so a costs-only commit must
+ * run the workflow (H1 found it ran nothing and dispatched one by hand).
+ */
+describe('H2 — unittests_frontend.yml paths', () => {
+    const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
+    const pathsUnder = (trigger) => {
+        const lines = wf.split('\n');
+        const at = lines.findIndex((l) => l === `  ${trigger}:`);
+        expect(at).toBeGreaterThan(-1);
+        const out = [];
+        for (const l of lines.slice(at + 1)) {
+            if (/^ {2}\S/.test(l) || /^\S/.test(l)) break;
+            const m = /^ {6}- '([^']+)'/.exec(l);
+            if (m) out.push(m[1]);
+        }
+        return out;
+    };
+    it('push and pull_request list the same paths, in the same order', () => {
+        expect(pathsUnder('push').length).toBeGreaterThan(5);
+        expect(pathsUnder('pull_request')).toEqual(pathsUnder('push'));
+    });
+    it('the CI arm costs file is on both', () => {
+        expect(pathsUnder('push')).toContain(CI_ARM_COSTS_FILE);
+    });
+});
+
 describe('H2 — no per-push arm runs the differential full tier', () => {
     it('every CI arm of the differential names an explicit, non-full --tier=', () => {
         const { arms } = ciGatePlanFor({ repo: REPO, set: 'all' });

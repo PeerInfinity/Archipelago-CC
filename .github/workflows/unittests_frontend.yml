@@ -47,6 +47,9 @@ on:
       - 'vitest.slow.config.js'
       - 'package.json'
       - 'package-lock.json'
+      # ⛓ H2: the CI arm costs re-shard the browser plan, so a costs-only
+      # commit must run this workflow (H1 had to dispatch one by hand).
+      - 'scripts/procgen/ci-arm-costs.json'
       - '.github/workflows/unittests_frontend.yml'
   pull_request:
     paths:
@@ -94,6 +97,9 @@ on:
       - 'vitest.slow.config.js'
       - 'package.json'
       - 'package-lock.json'
+      # ⛓ H2: the CI arm costs re-shard the browser plan, so a costs-only
+      # commit must run this workflow (H1 had to dispatch one by hand).
+      - 'scripts/procgen/ci-arm-costs.json'
       - '.github/workflows/unittests_frontend.yml'
   workflow_dispatch:
 
