@@ -21,8 +21,15 @@
  * hang shows up as a failure instead of wedging the test run.
  *
  *   node scripts/procgen/check-jta-managed-zone-skip.mjs
- * @ci-box V3b adopted this script's NAME, not its RUN: it has never been priced on a runner, and `planCiShards` gives an unpriced arm a whole 600 s shard — adopting it is a costed decision, not a rename's side effect.
- *   ⇒ deleting this one line is how a later slice adopts it into CI.
+ *
+ * ⛓ **ADOPTED INTO CI — PRESET SIDECARS C1 (2026-09-13).** The box-only
+ *    declaration that stood here said this gate had never been priced on a
+ *    runner and that an unpriced arm is given a whole 600 s shard. The price
+ *    was measured first: pure node, no server, no browser, no box lock —
+ *    0.71 / 0.67 / 0.69 s wall over three runs on the box. It therefore joins
+ *    the HEADLESS set (the vitest job, which checks the jta submodule out
+ *    recursively), where there is no shard matrix for an unpriced arm to
+ *    widen; the runner's real arm time is read back off the first CI run.
  */
 
 import { execFileSync } from 'node:child_process';
