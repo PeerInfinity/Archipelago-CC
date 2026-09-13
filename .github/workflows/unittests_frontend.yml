@@ -50,6 +50,11 @@ on:
       # ⛓ H2: the CI arm costs re-shard the browser plan, so a costs-only
       # commit must run this workflow (H1 had to dispatch one by hand).
       - 'scripts/procgen/ci-arm-costs.json'
+      # ⛓ 2026-09-13 (the sixth time, for the BANK): `standingValues.test.js`
+      # and the bank-reading gate rows READ standing-values.json, so a
+      # bank-only commit owes this suite a run — a bank push at d4f7a31e43
+      # ran no unit tests until this line existed.
+      - 'scripts/procgen/standing-values.json'
       - '.github/workflows/unittests_frontend.yml'
   pull_request:
     paths:
@@ -100,6 +105,11 @@ on:
       # ⛓ H2: the CI arm costs re-shard the browser plan, so a costs-only
       # commit must run this workflow (H1 had to dispatch one by hand).
       - 'scripts/procgen/ci-arm-costs.json'
+      # ⛓ 2026-09-13 (the sixth time, for the BANK): `standingValues.test.js`
+      # and the bank-reading gate rows READ standing-values.json, so a
+      # bank-only commit owes this suite a run — a bank push at d4f7a31e43
+      # ran no unit tests until this line existed.
+      - 'scripts/procgen/standing-values.json'
       - '.github/workflows/unittests_frontend.yml'
   workflow_dispatch:
 
