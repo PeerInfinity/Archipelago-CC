@@ -15137,6 +15137,20 @@ BOTH mechanical preconditions are measured — the submodule commit is an ancest
 push itself met the push-by-default tests; the bump commit says what moved and why. ONE exception stays ask-first: the
 `flashPanel/wasm` submodule (Seedling binaries, pinned by the headless CI gate — a bump is a pins re-record).
 
+**HANDOFF 2026-09-13 → `pipeline-relayout-planning` (Fable; kickoff `NewDocs/plans/pipeline-relayout-planning-prompt.md`).** The
+user, verbatim, after the predecessor explained the relayout slice: *"I think the fix should involve not limiting the regions to
+just one teleporter slot each. Maybe we should also change the exit slots for the other directions to not be limited to one each.
+I'll want to work on this next. Would you recommend starting a new planning session first?"* → (recommended yes: a representation
+question, not the fold; a census of every one-per-side assumption first; the text adventure's two-exits-per-side is the existing
+counterexample) → *"Yes, please launch the session."* The successor holds the pipeline-relayout arc whole: measure the defect LIVE
+first (only ever measured headless: 520 exits / 154 regions), the one-per-side census (engine `Grid.teleporters` keyed `cell:side`,
+zone `sidePortals[side]`, drivers' `exits_placed`, `stitchGrid`, the renderer's slot per side, the compass, `exitSides`), then the
+design questions to the user with a recommendation each, the re-record priced, slices in worktrees. Planner worktree `wt-plan3`
+handed over. `preset-sidecars-planning-4` ends itself after the successor's handshake (user ruling). **Arc 2 of PRESET SIDECARS is
+CLOSED**: G1/M3/P0/K0/G2a/G2b-1/G2a-fix/cleanup shipped; G2b-2 PARKED; the gitlink bumped; the bank written; ⚖ carried: a fourth
+uncaught `deserializeWorld` site (`regionLayout.rewriteExits`), `check-maze-loop-mana`'s uncommitted fixture, jta/omsi `exitSides`,
+bounce's 15 DERIVED rules.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
