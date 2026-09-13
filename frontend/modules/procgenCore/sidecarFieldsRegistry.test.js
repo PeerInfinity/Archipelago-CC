@@ -17,6 +17,8 @@
  * not survive a copy from a neighbour (trap 1309) — `derived: true`, a claimed
  * envelope field, the level key the other zone game lacks.
  */
+import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -338,5 +340,73 @@ describe('⛓ M3 — the `exitSides` slot', () => {
         expect(exitSidesOf({ [EXIT_SIDES_SLOT]: { ...ok, keys: [''] } }).malformed)
             .toMatch(/`exitSides.keys` is \[""\]/);
         expect(exitSidesOf({ [EXIT_SIDES_SLOT]: ok }).decl).toBe(ok);
+    });
+});
+
+/**
+ * ⛓ G2a-fix — **THE ENVELOPE'S `manaEnabled` RIDES ONTO THE WORLD, FOR EVERY
+ * SUBSTRATE THE HOST CAN LOAD.** Play reads the flag off the world the
+ * registry's `deserializeWorld` builds (`procgenPlayer.getRegionInfo` answers
+ * `entry.world.manaEnabled`), never off the payload — G2a's room deserializer
+ * dropped it and the text adventure's direct-play mana leg charged nothing.
+ *
+ * ⛔ The population is the law's (`HOSTED`, derived), and each entry's witness
+ * is DERIVED from the committed corpus (`git ls-files frontend/presets`): its
+ * first committed payload carrying `manaEnabled: true`; failing that, a copy of
+ * its first committed payload with the flag set — only if its own declaration
+ * accepts the copy; failing that (no committed payload at all), the entry is
+ * NAMED unexercised by its own row, never skipped in silence. Lives here
+ * because this file's imports already load the real registry.
+ */
+describe('⛓ G2a-fix — every hosted entry carries `manaEnabled: true` onto the world it deserializes', () => {
+    const MANA_TRUE = /"manaEnabled":\s*true/;
+    const files = execFileSync('git', ['-C', ROOT, 'ls-files', '--', 'frontend/presets'], { encoding: 'utf8' })
+        .split('\n').filter((f) => f.endsWith('_rules.json'));
+    /** `{id → {where, payload}}` — the first committed payload per substrate, by `pick`. */
+    const firstPayloads = (texts, pick, want) => {
+        const found = new Map();
+        for (const [file, text] of texts) {
+            if (want.every((id) => found.has(id))) break;
+            const doc = JSON.parse(text);
+            for (const [pid, regions] of Object.entries(doc.preset_sidecars ?? {})) {
+                for (const [rid, e] of Object.entries(regions ?? {})) {
+                    if (!want.includes(e?.substrate) || found.has(e.substrate) || !pick(e.playable_payload)) continue;
+                    found.set(e.substrate, { where: `${file} ${pid}/${rid}`, payload: e.playable_payload });
+                }
+            }
+        }
+        return found;
+    };
+    const ids = HOSTED.map((e) => e.id);
+    const texts = files.map((f) => [f, readFileSync(join(ROOT, f), 'utf8')]);
+    const mana = firstPayloads(texts.filter(([, t]) => MANA_TRUE.test(t)), (p) => p?.manaEnabled === true, ids);
+    const unmana = ids.filter((id) => !mana.has(id));
+    const any = firstPayloads(texts, (p) => p && typeof p === 'object', unmana);
+    const witnessOf = (id) => {
+        if (mana.has(id)) return { how: 'committed', ...mana.get(id) };
+        if (any.has(id)) {
+            const { where, payload } = any.get(id);
+            return { how: 'synthetic copy', where, payload: { ...structuredClone(payload), manaEnabled: true } };
+        }
+        return { how: 'UNEXERCISED — no committed payload' };
+    };
+
+    it('the population is not vacuous: at least two hosted substrates carry a COMMITTED mana-enabled payload', () => {
+        expect(files.length).toBeGreaterThan(0);
+        expect(mana.size).toBeGreaterThanOrEqual(2);
+    });
+
+    it.each(HOSTED.map((e) => [e.id, witnessOf(e.id).how, e]))('%s (%s): `deserializeWorld(payload).manaEnabled` '
+        + 'is true — or the corpus holds no payload of it to copy', (id, how, entry) => {
+        const w = witnessOf(id);
+        if (!w.payload) {
+            // named, not skipped: the corpus holds nothing of this substrate to copy
+            // (an independent read: no committed document names it as a sidecar's substrate)
+            const named = new RegExp(`"substrate":\\s*"${id}"`);
+            expect(texts.filter(([, t]) => named.test(t)).map(([f]) => f), `${id}: ${how}`).toEqual([]);
+            return;
+        }
+        expect(sidecarPayloadErrors(fieldsOf(id), w.payload), `${id} (${w.where})`).toEqual([]);
+        expect(entry.deserializeWorld(w.payload).manaEnabled, `${id} (${how}: ${w.where})`).toBe(true);
     });
 });
