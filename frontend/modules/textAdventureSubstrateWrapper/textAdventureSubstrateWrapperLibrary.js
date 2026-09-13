@@ -16,13 +16,14 @@
  */
 
 import {
-    spatialCore,
-    itemBasedPlacer,
-    ruleGatePlacer,
-    tileGridPathExtractor,
-    tileGridSerializer,
-    tileGridDeserializer,
-} from '../shared/procgen/adapterPrimitives.js';
+    generateTextAdventureRoom,
+    placeTextAdventureItems,
+    placeTextAdventureRules,
+    extractTextAdventureRules,
+    serializeTextAdventureRoom,
+    deserializeTextAdventureRoom,
+} from './textAdventureRoom.js';
+import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { getPlaybackProxy } from './index.js';
 import { drawTextAdventureCompositeRegion } from './textAdventureCompositeMap.js';
@@ -49,11 +50,11 @@ export const substrateRegistryEntry = Object.freeze({
     ]),
 
     // Host-side hook called by procgenPlayer to turn a sidecar into
-    // a `world` object. Reused from the host primitives; we don't
-    // actually need the tile-grid data in the engine (the bridge
-    // ignores it and uses staticData.regions for the full map), but
-    // the procgen pipeline still expects deserializeWorld to succeed.
-    deserializeWorld: tileGridDeserializer,
+    // a `world` object — the text adventure's own ROOM (⛓ G2a,
+    // `textAdventureRoom.js`): its sided exits, their gates and its
+    // locations. The bridge still builds the rooms it renders from
+    // staticData.regions.
+    deserializeWorld: deserializeTextAdventureRoom,
 
     // Returns the host-side PlaybackProxy when initialize() has run.
     // The proxy publishes textAdventureSubstrateWrapper:control events
@@ -104,13 +105,17 @@ export const substrateRegistryEntry = Object.freeze({
         mana: Object.freeze({}),
     }),
 
-    // Build-time adapters — same as existing. These run host-side
-    // during procgen seed generation.
-    generateRegionCore: spatialCore,
-    placeFromItems: itemBasedPlacer,
-    placeFromRules: ruleGatePlacer,
-    extractPathsAndObstacles: tileGridPathExtractor,
-    serializeWorld: tileGridSerializer,
+    // ⛓⛓ PRESET SIDECARS G2a (Route P, ⚖ user 2026-09-13) — the build-time
+    // adapters are the text adventure's OWN (`textAdventureRoom.js`): a room
+    // of exits on their SIDES and locations, every rule AUTHORED, no tiles and
+    // no rng draw. They run host-side during procgen seed generation, on every
+    // driver's procedural branch (top-down, sphere, spiral, grid-growth).
+    regionGeometry: REGION_GEOMETRY.SIDES,
+    generateRegionCore: generateTextAdventureRoom,
+    placeFromItems: placeTextAdventureItems,
+    placeFromRules: placeTextAdventureRules,
+    extractPathsAndObstacles: extractTextAdventureRules,
+    serializeWorld: serializeTextAdventureRoom,
     // ⛓ PRESET SIDECARS D0 — the payload IS the maze's (`tileGridSerializer`
     // is `serializeMazeWorld`), so the declaration is the maze's own object,
     // imported from beside that serializer. ⚠ The neutral re-export this file's

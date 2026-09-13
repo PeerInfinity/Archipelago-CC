@@ -3266,10 +3266,9 @@ describe('mixed substrates — end to end', () => {
             }
         });
 
-        it("emits 'biome' on text-adventure regions too — both substrates share generateRegionCore today, so the underlying spatial structure carries a biome regardless", () => {
-            // If/when ta gets its own spatial core or opts out of
-            // biomes, this test should flip to expecting the field
-            // to be omitted; revisit at that time.
+        it("omits 'biome' on text-adventure regions — a text adventure room (G2a) has no spatial structure to carry one", () => {
+            // ⛓ G2a flipped this row, as its old comment asked: until then the
+            // text adventure grew the maze's spatial core and carried its biome.
             const { grid, startCell } = growMaze({
                 gridDims: { width: 2, height: 2 },
                 regionSize: { width: 6, height: 6 },
@@ -3285,7 +3284,7 @@ describe('mixed substrates — end to end', () => {
             const taRegions = Object.values(sidecars).filter((r) => r.substrate === 'text_adventure');
             expect(taRegions.length).toBeGreaterThan(0);
             for (const r of taRegions) {
-                expect(r.biome?.id).toBe('classic');
+                expect(r).not.toHaveProperty('biome');
             }
         });
     });
