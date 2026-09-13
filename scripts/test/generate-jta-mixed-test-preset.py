@@ -83,16 +83,17 @@ def build_rules() -> dict:
     # ── Substrate sidecars ───────────────────────────────────────
     # Menu has no sidecar (synthetic). AdventureZone runs under the
     # text_adventure substrate; JtaZone1 runs under jta with zone 1.
+    #
+    # A text-adventure region is a ROOM, not a tile grid (G2a): its
+    # payload is what `serializeTextAdventureRoom` writes — the exits on
+    # their compass sides (no x/y), the gated exits' rules in `exitGates`
+    # (none here: ToJtaZone1 is True_), and the region's locations (none).
+    # `fogEnabled` / `manaEnabled` are the engine's envelope flags; the
+    # mana leg needs `manaEnabled` on this region.
     ta_payload = {
-        "width": 8,
-        "height": 6,
-        "tiles": [0] * 48,
-        "entrance": {"x": 4, "y": 3},
         "exits": [
             {
                 "exit_id": "ToJtaZone1",
-                "x": 7,
-                "y": 3,
                 "side": "E",
                 "exitName": "ToJtaZone1",
                 "targetRegion": "JtaZone1",
@@ -101,11 +102,8 @@ def build_rules() -> dict:
                 "isTeleporter": False,
             },
         ],
-        "obstacles": [],
-        "items": [],
-        "obstacleLib": {},
-        "itemLib": {},
-        "longestShortestPath": 1,
+        "exitGates": {},
+        "locations": [],
         "fogEnabled": False,
         "manaEnabled": True,
     }

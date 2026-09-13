@@ -1055,18 +1055,9 @@
           "gy": 2
         },
         "playable_payload": {
-          "width": 8,
-          "height": 6,
-          "tiles": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          "entrance": {
-            "x": 0,
-            "y": 2
-          },
           "exits": [
             {
               "exit_id": "YellowCastleExit",
-              "x": 0,
-              "y": 2,
               "side": "W",
               "exitName": "YellowCastleExit",
               "targetRegion": "Overworld",
@@ -1075,33 +1066,16 @@
               "isTeleporter": false
             }
           ],
-          "obstacles": [
+          "exitGates": {},
+          "locations": [
             {
-              "x": 6,
-              "y": 5,
-              "id": "logic_gate_0"
-            }
-          ],
-          "items": [
-            {
-              "x": 2,
-              "y": 4,
-              "id": "Magnet",
-              "locationName": "Inside Yellow Castle"
+              "name": "Inside Yellow Castle",
+              "item": "Magnet"
             },
             {
-              "x": 6,
-              "y": 5,
-              "id": "Victory",
-              "locationName": "Chalice Home"
-            }
-          ],
-          "obstacleLib": {
-            "logic_gate_0": {
-              "name": "Logic Gate",
-              "id": "logic_gate_0",
-              "clear_set_type": "rule",
-              "clear_rule": {
+              "name": "Chalice Home",
+              "item": "Victory",
+              "access_rule": {
                 "rule": "HasAll",
                 "args": {
                   "item_names": [
@@ -1109,31 +1083,10 @@
                     "Yellow Key"
                   ]
                 }
-              },
-              "color": "#b06eb8",
-              "display": {
-                "mode": "tree"
-              },
-              "feature": "logic_gate"
+              }
             }
-          },
-          "itemLib": {},
-          "longestShortestPath": 1,
+          ],
           "fogEnabled": true
-        },
-        "biome": {
-          "id": "classic"
-        },
-        "grow_telemetry": {
-          "requested_size": {
-            "width": 8,
-            "height": 6
-          },
-          "final_size": {
-            "width": 8,
-            "height": 6
-          },
-          "grow_attempts": 0
         }
       },
       "WhiteCastle": {
@@ -1144,18 +1097,9 @@
           "gy": 2
         },
         "playable_payload": {
-          "width": 8,
-          "height": 6,
-          "tiles": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          "entrance": {
-            "x": 7,
-            "y": 1
-          },
           "exits": [
             {
               "exit_id": "WhiteCastleExit",
-              "x": 7,
-              "y": 1,
               "side": "E",
               "exitName": "WhiteCastleExit",
               "targetRegion": "Overworld",
@@ -1165,8 +1109,6 @@
             },
             {
               "exit_id": "WhiteCastleSecretPassage",
-              "x": 1,
-              "y": 5,
               "side": "S",
               "exitName": "WhiteCastleSecretPassage",
               "targetRegion": "WhiteCastleVault",
@@ -1176,8 +1118,6 @@
             },
             {
               "exit_id": "WhiteCastlePeekPassage",
-              "x": 1,
-              "y": 0,
               "side": "N",
               "exitName": "WhiteCastlePeekPassage",
               "targetRegion": "WhiteCastlePreVaultPeek",
@@ -1186,86 +1126,34 @@
               "isTeleporter": false
             }
           ],
-          "obstacles": [
-            {
-              "x": 1,
-              "y": 5,
-              "id": "logic_gate_0"
+          "exitGates": {
+            "WhiteCastleSecretPassage": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Bridge"
+              }
             },
-            {
-              "x": 1,
-              "y": 0,
-              "id": "logic_gate_1"
-            }
-          ],
-          "items": [
-            {
-              "x": 3,
-              "y": 1,
-              "id": "Freeincarnate",
-              "locationName": "RedMaze0"
-            },
-            {
-              "x": 5,
-              "y": 3,
-              "id": "Freeincarnate",
-              "locationName": "RedMaze1"
-            }
-          ],
-          "obstacleLib": {
-            "logic_gate_0": {
-              "name": "Logic Gate",
-              "id": "logic_gate_0",
-              "clear_set_type": "rule",
-              "clear_rule": {
-                "rule": "Has",
-                "args": {
-                  "item_name": "Bridge"
-                }
-              },
-              "color": "#b06eb8",
-              "display": {
-                "mode": "tree"
-              },
-              "feature": "logic_gate"
-            },
-            "logic_gate_1": {
-              "name": "Logic Gate",
-              "id": "logic_gate_1",
-              "clear_set_type": "rule",
-              "clear_rule": {
-                "rule": "HasAny",
-                "args": {
-                  "item_names": [
-                    "Bridge",
-                    "Magnet"
-                  ]
-                }
-              },
-              "color": "#b06eb8",
-              "display": {
-                "mode": "tree"
-              },
-              "feature": "logic_gate"
+            "WhiteCastlePeekPassage": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Bridge",
+                  "Magnet"
+                ]
+              }
             }
           },
-          "itemLib": {},
-          "longestShortestPath": 10,
+          "locations": [
+            {
+              "name": "RedMaze0",
+              "item": "Freeincarnate"
+            },
+            {
+              "name": "RedMaze1",
+              "item": "Freeincarnate"
+            }
+          ],
           "fogEnabled": true
-        },
-        "biome": {
-          "id": "classic"
-        },
-        "grow_telemetry": {
-          "requested_size": {
-            "width": 8,
-            "height": 6
-          },
-          "final_size": {
-            "width": 8,
-            "height": 6
-          },
-          "grow_attempts": 0
         }
       },
       "BlackCastle": {
@@ -1507,13 +1395,13 @@
           "height": 6,
           "tiles": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
           "entrance": {
-            "x": 1,
+            "x": 4,
             "y": 0
           },
           "exits": [
             {
               "exit_id": "WhiteCastleReturnPassage",
-              "x": 1,
+              "x": 4,
               "y": 0,
               "side": "N",
               "exitName": "WhiteCastleReturnPassage",
@@ -1525,21 +1413,21 @@
           ],
           "obstacles": [
             {
-              "x": 5,
-              "y": 1,
+              "x": 3,
+              "y": 5,
               "id": "logic_gate_0"
             }
           ],
           "items": [
             {
-              "x": 0,
-              "y": 4,
+              "x": 7,
+              "y": 1,
               "id": "Freeincarnate",
               "locationName": "Red Maze Vault"
             },
             {
-              "x": 5,
-              "y": 1,
+              "x": 3,
+              "y": 5,
               "id": "Yellow Key",
               "locationName": "Slay Grundle"
             }
@@ -1596,13 +1484,13 @@
           "height": 6,
           "tiles": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
           "entrance": {
-            "x": 1,
+            "x": 4,
             "y": 5
           },
           "exits": [
             {
               "exit_id": "WhiteCastleFromPeek",
-              "x": 1,
+              "x": 4,
               "y": 5,
               "side": "S",
               "exitName": "WhiteCastleFromPeek",
@@ -1615,8 +1503,8 @@
           "obstacles": [],
           "items": [
             {
-              "x": 7,
-              "y": 5,
+              "x": 5,
+              "y": 0,
               "id": "Freeincarnate",
               "locationName": "Red Maze Vault Entrance"
             }
@@ -1649,18 +1537,9 @@
           "gy": 3
         },
         "playable_payload": {
-          "width": 8,
-          "height": 6,
-          "tiles": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          "entrance": {
-            "x": 0,
-            "y": 4
-          },
           "exits": [
             {
               "exit_id": "BlackCastleReturnPassage",
-              "x": 0,
-              "y": 4,
               "side": "W",
               "exitName": "BlackCastleReturnPassage",
               "targetRegion": "BlackCastle",
@@ -1669,33 +1548,14 @@
               "isTeleporter": false
             }
           ],
-          "obstacles": [],
-          "items": [
+          "exitGates": {},
+          "locations": [
             {
-              "x": 3,
-              "y": 2,
-              "id": "White Key",
-              "locationName": "Dungeon Vault"
+              "name": "Dungeon Vault",
+              "item": "White Key"
             }
           ],
-          "obstacleLib": {},
-          "itemLib": {},
-          "longestShortestPath": 1,
           "fogEnabled": true
-        },
-        "biome": {
-          "id": "classic"
-        },
-        "grow_telemetry": {
-          "requested_size": {
-            "width": 8,
-            "height": 6
-          },
-          "final_size": {
-            "width": 8,
-            "height": 6
-          },
-          "grow_attempts": 0
         }
       },
       "CreditsRoomFarSide": {
