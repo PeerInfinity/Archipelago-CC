@@ -14835,6 +14835,39 @@ roster; jta/omsi `exitSides`); (6) the ladder after G2b (the pipeline relayout s
 session; MEMORY.md compaction). Inherited ledger: the worktree venv gap; the 37 unpriced gates (headless F1 §16.1, b6's); F2's
 writer clauses (b6's). `preset-sidecars-planning-3` ends itself after this record is pushed.
 
+**Session `preset-sidecars-planning-4` OPENED 2026-09-13 (Fable; kickoff `NewDocs/plans/preset-sidecars-planning-4-prompt.md`;
+origin/main `672099beff`) — G2b MEASURED (plan §25), SEVENTH REPLAN RULED (§5i), G2b-1 LAUNCHED.** Handshake: primary tree
+`5e29f811e8` `[behind 6]` (docs/bank/yml only), three foreign untracked paths, no lock; planning-3's handoff commit was
+committed-not-pushed at the handshake (`406beb760d` in `wt-plan3`) and landed as `672099beff` minutes later; b6 handed the
+primary tree to `seedling-headless-planning-3` (the session to ask before a push to main). Re-measured: `check-sidecar-fields`
+ALL PASS 1392 over 7; maze pin `677b7d9c…` unmoved; 15 TA entries (14 top-down + jta_mixed), room format only; CI nearest
+run `29f7aa830f` 465/14064 green. **What the brief got wrong (§25.1):** (1) the maze lab's world binding dispatches on DOCUMENT
+kinds (`level-set` | `region-library`, one each, a third refused) — a TA room is an ENTRY of the maze part, whose UI, atlas
+derivation (`READS_SUBSTRATE = 'maze'`), validator (`LIBRARY_V1_SUBSTRATES`) and ops (`deserializeMazeWorld`) are the maze's:
+host (a) does not exist; (2) the directional law's BINDING regex names three directories — a `procgenCore/` import of the
+wrapper passes today; (3) the set editor's rule form gets exit targets from a derived ATLAS whose schema requires tiles, so a
+tile-free binding cannot gate a door without fictional tiles or a new mount seam; (4) the `lab` kind's page list is CLOSED
+(`labProtocol.SUBSTRATES`), a panel host = the mount's 24 element ids in a GL panel; (5) a hub Edit ▸ moves only payload +
+access rules — for a TA region that is the rule form and nothing else (sides already move via M3). **Measured (§25.2, the
+planner's own instrument `ta-roundtrip-census.mjs`):** `inspectRegionRoom` at HEAD 15/15 refused "no roomEditor"; under a ~25-line
+PROTOTYPE `regionRoundTrip` (deserialize → serialize+extract+`compileRegion`, envelope keys re-appended) **15/15 ok, 0
+frozen**, key order == committed 15/15; `deriveRegionRules` **70/70** endpoints re-emit the document's rule. Gap found: no
+issue kind compares a payload's authored gates with the document's rules (a `set-rule-tree` edit is reverted by a rebuild).
+**⚖ RULED — the user, verbatim: *"Yes, I approve of this plan."*** (after *"Can you summarize what the effects of your
+recommended changes would be? Also, can you check if the M3 session that preset-sidecars-planning-2 was planning to launch ever
+got launched?"* — answered: M3 was launched by `archipelago-cc-88` after planning-2's WSL crash, merged `cd1919d7e8`, ended
+under the lifetime ruling). Read as: **G2b-1** = `regionRoundTrip` on the entry (Re-derive rules ▸ for 15 regions; Edit ▸ stays
+"no roomEditor") + the gate-agreement corpus control as a standing gate + the gated play-level row on AP_11 + the
+directional-law widening (derived from `REGISTRY_LIBRARIES`) + docs; **G2b-2 (the set-editor binding) DEFERRED ⚖** (if wanted:
+a `panel`-kind GL host over a room-list adapter with a mount seam for rule targets, its own design session);
+`LIBRARY_V1_SUBSTRATES` untouched; the three uncaught `deserializeWorld` sites (warehouse, composite map document, sphere
+rebuild) a later slice; `adapterPrimitives.js:1-5` (submodule) with the next approved bump; `test-tasw` (5 rows stale, mode in
+`modes.json:60`) ⚖; jta/omsi `exitSides` open. **LAUNCHED** `apworld-sidecars-G2b` (Opus, pid 675830, cwd verified
+`~/CC/Archipelago-CC-wt-g2b`, branch `g2b` from **`0c1a8f0a61`** = origin/main at the cut (F2's writer clause), port 8130, created by
+`new-worktree.sh g2b`; kickoff `NewDocs/plans/apworld-sidecars-G2b-prompt.md`; handshake exchanged, cwd/name verified by
+`/proc/<pid>/cwd` + `ps -o cmd=`). Baseline CI at `0c1a8f0a61`: **466/14078 (14070 | 8 | 0), slow 12/217**. As-built → plan §26;
+ONE merge by the planner at the end.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
