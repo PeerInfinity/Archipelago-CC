@@ -149,6 +149,16 @@
  *
  * ⛔ A face, never `@ci-argv`: this is a narrowed run, and a narrowed run
  * published under the standing key is the hazard `gateRoster.js` names.
+ *
+ * ── ⛓⛓ THE STANDING ROW IS THE COMPOSITE (F1 task 0, planner ruling 2026-09-13)
+ *
+ * Being CI-runnable also enrolled this gate in `standing-values --write`, as a
+ * `gate:` row whose command is the DEFAULT arm — the full tier — and an
+ * unselected write started that tier on the box. This gate's standing value
+ * was never a `gate:` row; it is the composite, written per category from a
+ * dispatched tier run (ruling C) by `record-standing-value.mjs --category=`:
+ *
+ * @standing-row roster: --tier=full: the value is the 150-tape composite, quoted per category from a tier run; the default arm is that whole tier and never a battery row
  */
 
 import { chromium } from 'playwright';

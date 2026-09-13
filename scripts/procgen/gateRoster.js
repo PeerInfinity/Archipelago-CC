@@ -277,6 +277,31 @@ const CI_ARGV_LINE_RE = /^[ \t]*\*[ \t]*@ci-argv\b(.*)$/gm;
 const CI_BOX_LINE_RE = /^[ \t]*\*[ \t]*@ci-box\b(.*)$/gm;
 
 /**
+ * ⛓⛓⛓ F1 task 0 (planner ruling, 2026-09-13) — **A GATE WHOSE STANDING VALUE
+ * LIVES UNDER ANOTHER KEY, AND SAYS SO ITSELF.**
+ *
+ *     * @standing-row <key>: <why this gate's standing value is that row>
+ *
+ * ⛔⛔ THE DEFECT IT NAMES, MEASURED BEFORE IT EXISTED. H2 made the Seedling
+ * differential `dual`, which made it CI-runnable, which also made
+ * `standingValues.standingRows` derive a `gate: seedling-bot-differential` row
+ * for it — whose command is the gate's DEFAULT arm, `--tier=full`. Nothing had
+ * banked that row, so the sidecars planner's unselected `standing-values
+ * --write` (2026-09-13) started the 150-tape full tier on the box inside the
+ * write (63 checkpoint lines in 80 min, killed by PID). The gate's standing
+ * value was never that row: it is the composite `roster: --tier=full`, written
+ * part by part by `record-standing-value.mjs --category=`. ⛓ Enrolment has
+ * more than one consumer — a gate made CI-runnable also enrols in the WRITER.
+ *
+ * ⛓ `<key>` is `<kind>: <text without a colon>` — the key form every bank row
+ * has — and everything after its closing `: ` is the reason. `standingRows`
+ * derives NO `gate:` row for a gate carrying one; its CI arms (a `@ci-face`)
+ * are untouched, because they publish under their own key.
+ */
+const STANDING_ROW_LINE_RE = /^[ \t]*\*[ \t]*@standing-row\b(.*)$/gm;
+const STANDING_ROW_BODY_RE = /^\s*([a-z]+: [^:]+?):\s+(\S.*)$/;
+
+/**
  * The variants a gate's docblock declares, refusing a malformed line BY NAME —
  * ⛔ never skipping it. A declaration nobody parsed is a standing row that
  * silently does not exist, which is the failure this whole mechanism is for.
@@ -376,6 +401,34 @@ export function ciBoxIn(text, { file = '(text)' } = {}) {
             + `${JSON.stringify(hits[0][0].trim())}`);
     }
     return { reason };
+}
+
+/**
+ * The standing row a gate declares its value lives under, or `null`. ⛔ A
+ * malformed line, an empty reason and a second declaration are refusals BY
+ * NAME: a declaration nobody parsed would put the gate's unbounded default arm
+ * back into the writer's roster in silence — the exact hazard it exists for.
+ */
+export function standingRowIn(text, { file = '(text)' } = {}) {
+    const hits = [...text.matchAll(STANDING_ROW_LINE_RE)];
+    if (!hits.length) return null;
+    if (hits.length > 1) {
+        throw new Error(`gateRoster: ${file} declares ${hits.length} @standing-row lines — a `
+            + 'gate\'s standing value lives under ONE key');
+    }
+    const body = STANDING_ROW_BODY_RE.exec(hits[0][1]);
+    if (!body) {
+        throw new Error(`gateRoster: ${file} has a malformed @standing-row line — expected `
+            + '`@standing-row <kind>: <key text>: <why that row is this gate\'s standing value>`, '
+            + `got ${JSON.stringify(hits[0][0].trim())}`);
+    }
+    const [, key, why] = body;
+    const own = `gate: ${file.replace(/^check-/, '').replace(/\.mjs$/, '')}`;
+    if (key === own) {
+        throw new Error(`gateRoster: ${file} declares @standing-row ${JSON.stringify(key)}, which `
+            + 'is the row it would get anyway — the declaration names a DIFFERENT row');
+    }
+    return { key, why: why.trim() };
 }
 
 /**
@@ -496,6 +549,17 @@ export function gateRoster({ repo = REPO } = {}) {
         const ciFace = ciFaceIn(text, { file });
         const ciArgv = ciArgvIn(text, { file });
         const ciBox = ciBoxIn(text, { file });
+        const standingRow = standingRowIn(text, { file });
+        const variants = variantsIn(text, { file });
+        /**
+         * ⛔ F1 task 0 — a gate whose standing value is ANOTHER row has no
+         * `gate:` base row, so it has nothing for a second arm to be beside.
+         */
+        if (standingRow && variants.length) {
+            throw new Error(`gateRoster: ${file} declares \`@standing-row ${standingRow.key}\` AND `
+                + `${variants.length} @standing-variant line(s) — a variant is a second arm of the `
+                + 'gate\'s own row, and this gate declares it has none.');
+        }
         /**
          * ⛔⛔ S5 — **THE TWO CI DECLARATIONS DO NOT COMPOSE, AND THE ROSTER
          * SAYS SO BY NAME.** A face already carries the argv CI runs it with
@@ -538,7 +602,7 @@ export function gateRoster({ repo = REPO } = {}) {
             dual: D.dual(file),
             /** ⛓ …and the SECOND ARMS this gate declares — `[]` for every gate
              *  that declares none, which is all of them but one. */
-            variants: variantsIn(text, { file }),
+            variants,
             /** ⛓ …and the CI face it declares, or `null` (R9 P3b (g)). */
             ciFace,
             /** ⛓ …and the CI-ONLY FLAGS it declares, or `null` (S5, ⚖ 72) —
@@ -549,6 +613,9 @@ export function gateRoster({ repo = REPO } = {}) {
             /** ⛓ …and the BOX-ONLY refusal it declares, or `null` (V3b) —
              *  `ciRunnable` reads this, so a gate with one gets no CI arm. */
             ciBox,
+            /** ⛓ …and the OTHER row its standing value lives under, or `null`
+             *  (F1 task 0) — `standingRows` derives no `gate:` row for it. */
+            standingRow,
             /** ⛓ …and by which sibling, when it is not by itself. */
             browserVia: D.browserVia(file),
         };

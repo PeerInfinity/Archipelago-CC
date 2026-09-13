@@ -91,7 +91,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { assertTreeUnmoved, releaseBoxLock, takeBoxLock } from './boxLock.js';
-import { CI_SHARD_BUDGET_MS, ciSourced, lastRunShardAudit } from './ciGatePlan.js';
+import { CI_SHARD_BUDGET_MS, ciSourced, lastRunShardAudit, readCiArmCosts } from './ciGatePlan.js';
 import { recentRuns, runShardCosts } from './ciSummary.js';
 import { LOCAL_HOST, REPO, gateRoster } from './gateRoster.js';
 import {
@@ -101,6 +101,7 @@ import {
 import {
     CHEAP_MS, FILE, ciGateCommand, cheapFor, compositeValue, compositeWhy, head,
     missingScript, readStandingValues, retiredKeyProblem, runRow, scriptIn, standingRows,
+    writerRoster,
 } from './standingValues.js';
 
 
@@ -344,13 +345,25 @@ if (flag('write')) {
     out.measuredAt = HEAD;
     out.rows = out.rows ?? {};
     console.log(`# standing-values --write — ${ROWS.length} row(s) at ${HEAD}\n`);
+    /**
+     * ⛔⛔ F1 task 0 — **A NEW ROW IS CREATED ONLY FOR A BOUNDED, ARGUMENT-FREE,
+     * TRACKED-INPUT ARM** (`standingValues.newRowRefusal` carries the rule and
+     * the measured hazard: this write once started the Seedling full tier).
+     * Every refusal is printed by name with its reason, and the write goes on.
+     */
+    const { runnable: WRITE_ROWS, refused: REFUSED } = writerRoster({
+        rows: ROWS, bank: out.rows, gates: GATES, costs: readCiArmCosts({ repo: REPO }),
+        exactKeys: [KEY, FORCE_ROW].filter(Boolean),
+    });
+    for (const { row, why } of REFUSED) console.log(`NEW row REFUSED: ${row.key} — ${why}`);
+    if (REFUSED.length) console.log('');
     const held = [];
     const ciRows = [];
     /** ⚖ 71 (a) — the three tallies the summary owes a reader. */
     const carried = [];
     const unkeyed = [];
     const findings = [];
-    for (const row of ROWS) {
+    for (const row of WRITE_ROWS) {
         /**
          * ⛔ AT EVERY ROW, NOT ONCE AT THE TOP. R9 slice P3's tracked-doc edit
          * landed while its own write was measuring and the generated-regions
@@ -554,7 +567,9 @@ if (flag('write')) {
      * a summary that reported only the rows that DID run would be a log about
      * the cheap half of the decision.
      */
-    console.log(`\nkey-carried: ${carried.length} row(s)`
+    console.log(`\nnew-row-refused: ${REFUSED.length} row(s)`
+        + `${REFUSED.length ? ` — ${REFUSED.map((r) => r.row.key).join(', ')}` : ''}`);
+    console.log(`key-carried: ${carried.length} row(s)`
         + `${carried.length ? ` — ${carried.map((c) => `${c.key} @${c.at}`).join(', ')}` : ''}`);
     console.log(`unkeyed: ${unkeyed.length} row(s)`
         + `${unkeyed.length ? `\n  ${unkeyed.join('\n  ')}` : ' (every selected row is keyed)'}`);

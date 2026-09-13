@@ -396,6 +396,85 @@ export function gateStandingRows(gate, argv) {
 }
 
 /**
+ * ⛓⛓⛓ F1 task 0 (planner ruling, 2026-09-13) — **WHY `--write` MAY NOT CREATE
+ * THIS ROW, or `null` when it may.**
+ *
+ * ⛔⛔ THE HAZARD, MEASURED. An unselected `standing-values --write` runs every
+ * derived row the bank does not carry yet, and a NEW row has never been run,
+ * so nothing about it is known: its `cheap` is a measurement it does not have.
+ * The sidecars planner's write (2026-09-13) spawned the Seedling full tier
+ * (the differential's default arm) and nine more NEW gate rows that went red
+ * for reasons no bank should record — `jta-balance-pass` EXIT 2 in 0.1 s (it
+ * takes a positional rules.json), `maze-consumable-tiles` / `maze-loop-mana`
+ * EXIT 1 (their fixtures are the untracked preset dirs, outside the frozen
+ * tree), and five `*-roundtrip` gates EXIT 1 after 8–60 PASS lines with NO
+ * total line (reproduced: a worktree with no `.venv` falls back to a system
+ * `python3` and `Generate.py` dies on `pathspec`; the `N/0` was the PASS
+ * tally, never a total).
+ *
+ * ⛓ THE RULE. A NEW `gate:` row is created only when its default arm is
+ * (i) argument-free, (ii) bounded and (iii) reads only tracked inputs — and
+ * the one measurement that attests all three before a box run is a CI PRICE:
+ * `ci-arm-costs.json` holds the runner wall of that exact key
+ * (`ci-gates.mjs --write-costs`), and a runner runs the roster argv from a
+ * checkout that holds only tracked bytes. ⚠ A price is not a PASS — an arm can
+ * be priced red (wasm-ship was, 262/1, at H2) — so what it attests is that the
+ * arm RUNS to a verdict in bounded time from tracked bytes; a red there is the
+ * red every push already shows. A priced arm under the file's own `budgetMs`
+ * may be created; every other NEW gate row is REFUSED BY NAME and the write
+ * continues.
+ *
+ * ⛓ `exact` — the row was named with `--key=` / `--force-row=`. That is a
+ * person asking for this one measurement (how the box-only rows ap-placement,
+ * vanilla-manifest and save-stamp got their first rows in H2), not a
+ * battery enrolling it; it is not refused.
+ * ⛓ Identity / producer / suite rows are not gate arms and are not judged
+ * here: their commands are digests and CI reads, never a gate's default arm.
+ *
+ * @param {object} o
+ * @param {object} o.row     a `standingRows()` row
+ * @param {object} [o.prev]  its banked row, if any
+ * @param {object} [o.gate]  its roster gate (for the declared reason)
+ * @param {object} [o.costs] `ci-arm-costs.json`, parsed
+ * @param {boolean} [o.exact]
+ */
+export function newRowRefusal({ row, prev, gate = null, costs = null, exact = false }) {
+    if (prev || exact || row.kind !== 'gate') return null;
+    const price = costs?.arms?.[row.key] ?? null;
+    const budgetMs = costs?.budgetMs ?? null;
+    if (price && budgetMs !== null && price.ms <= budgetMs) return null;
+    const why = price
+        ? `priced ${(price.ms / 1000).toFixed(1)} s by CI, over the ${(budgetMs / 1000).toFixed(0)} s budget`
+        : `unpriced — ci-arm-costs.json has no price under ${JSON.stringify(row.key)}`
+            + `${gate?.ciBox ? ` (@ci-box: ${gate.ciBox.reason})` : ''}`
+            + `${gate?.ciFace ? ` (its @ci-face ${gate.ciFace.prefix} prices a DIFFERENT command)` : ''}`
+            + `${gate?.windows ? ' (Windows-only: no runner can price it)' : ''}`;
+    return `${why} — declare its standing row (@standing-row), price it `
+        + '(ci-gates.mjs --write-costs), or name it with --key=';
+}
+
+/**
+ * ⛓ THE WRITER'S ROSTER — the selected rows split into the ones `--write` may
+ * run and the NEW rows it refuses (`newRowRefusal`), in derivation order. ⛓ A
+ * function rather than a clause inside the 700-line writer so a test can hand
+ * it a fixture gate and a FAKE runner and assert what would have been spawned.
+ *
+ * @returns {{ runnable: object[], refused: { row: object, why: string }[] }}
+ */
+export function writerRoster({ rows, bank = {}, gates = [], costs = null, exactKeys = [] }) {
+    const gateOf = (command) => gates.find((g) => command.includes(g.path)) ?? null;
+    const runnable = [];
+    const refused = [];
+    for (const row of rows) {
+        const why = newRowRefusal({ row, prev: bank[row.key], gate: gateOf(row.command), costs,
+            exact: exactKeys.includes(row.key) });
+        if (why) refused.push({ row, why });
+        else runnable.push(row);
+    }
+    return { runnable, refused };
+}
+
+/**
  * Every standing row, with the command that measures it. ⛔ The KEY is stable
  * and human-quotable, because it is what a seal will name.
  */
@@ -427,6 +506,13 @@ export function standingRows({ repo = REPO, host = LOCAL_HOST, pages = PAGES_ORI
     }
 
     for (const g of gateRoster({ repo })) {
+        /**
+         * ⛔ F1 task 0 — a gate that DECLARES its standing value is another
+         * row (`@standing-row`) gets no `gate:` row: deriving one would put
+         * its default arm — for the differential, the 150-tape full tier — in
+         * the writer's roster. The row it names is written by its own recipe.
+         */
+        if (g.standingRow) continue;
         const argv = argvFor(g, 'local', { host, pages });
         if (argv === null) continue;
         for (const row of gateStandingRows(g, argv)) push(row);

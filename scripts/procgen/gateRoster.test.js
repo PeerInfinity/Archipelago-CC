@@ -20,7 +20,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
     REPO, SCRIPT_DIR, ciArgvIn, ciBoxIn, ciShallowIn, gateRoster, isGateFile, machineDrivers,
-    variantsIn,
+    standingRowIn, variantsIn,
 } from './gateRoster.js';
 
 /**
@@ -207,6 +207,58 @@ describe('@ci-box — declared, never detected', () => {
         const declaring = roster.filter((g) => g.ciBox);
         expect(declaring.length).toBeGreaterThan(0);
         for (const g of declaring) expect(g.ciBox.reason.length).toBeGreaterThan(15);
+    });
+});
+
+/**
+ * ⛓⛓⛓ F1 task 0 — **`@standing-row`: A GATE WHOSE STANDING VALUE IS ANOTHER
+ * ROW.** The Seedling differential's `gate:` row was its default arm, the
+ * 150-tape full tier, and an unselected `standing-values --write` started it.
+ */
+describe('@standing-row — declared, never detected', () => {
+    it('reads a key that itself contains a colon, then the reason', () => {
+        const text = '/**\n * @standing-row roster: --tier=full: the composite: quoted per part\n */\n';
+        expect(standingRowIn(text, { file: 'check-scratch.mjs' }))
+            .toEqual({ key: 'roster: --tier=full', why: 'the composite: quoted per part' });
+    });
+
+    it('a gate that declares none answers null, and prose is not a declaration', () => {
+        expect(standingRowIn('/**\n * an ordinary docblock\n */\n')).toBe(null);
+        expect(standingRowIn('/**\n * spelled  @standing-row <kind>: <key>: <why>\n */\n')).toBe(null);
+    });
+
+    it('⛔ a line with no reason, or no key form, is refused BY NAME', () => {
+        expect(() => standingRowIn('/**\n * @standing-row roster: --tier=full\n */\n',
+            { file: 'check-scratch.mjs' })).toThrow(/check-scratch\.mjs.*malformed @standing-row/s);
+        expect(() => standingRowIn('/**\n * @standing-row just words\n */\n',
+            { file: 'check-scratch.mjs' })).toThrow(/malformed @standing-row/);
+    });
+
+    it('⛔ two declarations, and a declaration of the row it would get anyway, are refused', () => {
+        const two = '/**\n * @standing-row roster: a: why\n * @standing-row roster: b: why\n */\n';
+        expect(() => standingRowIn(two, { file: 'check-scratch.mjs' }))
+            .toThrow(/declares 2 @standing-row lines/);
+        expect(() => standingRowIn('/**\n * @standing-row gate: scratch: why\n */\n',
+            { file: 'check-scratch.mjs' })).toThrow(/the row it would get anyway/);
+    });
+
+    /** ⛓ Non-vacuity first (trap 824), then the one declarer by name. */
+    it('the roster reads it off the differential, naming the composite row', () => {
+        const declaring = gateRoster({ repo: REPO }).filter((g) => g.standingRow);
+        expect(declaring.map((g) => g.file)).toEqual(['check-seedling-bot-differential.mjs']);
+        expect(declaring[0].standingRow.key).toBe('roster: --tier=full');
+    });
+
+    /** ⛔ A variant is an arm of the gate's own row; a gate with no row has none. */
+    it('⛔ @standing-row paired with @standing-variant is refused as a PAIR', () => {
+        const root = mkdtempSync(join(tmpdir(), 'f1-standing-row-'));
+        try {
+            mkdirSync(join(root, SCRIPT_DIR), { recursive: true });
+            writeFileSync(join(root, SCRIPT_DIR, 'check-scratch-pair.mjs'),
+                '/**\n * @standing-row roster: x: why\n * @standing-variant arm: --y\n */\n'
+                + "console.log('ALL CHECKS PASSED');\nprocess.exit(0);\n");
+            expect(() => gateRoster({ repo: root })).toThrow(/check-scratch-pair\.mjs declares `@standing-row roster: x` AND 1 @standing-variant/);
+        } finally { rmSync(root, { recursive: true, force: true }); }
     });
 });
 
