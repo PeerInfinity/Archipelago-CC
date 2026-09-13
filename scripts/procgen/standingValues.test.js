@@ -14,13 +14,16 @@
  * CHARACTER FOR CHARACTER rather than by shape.
  */
 
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
-import { readCiArmCosts } from './ciGatePlan.js';
+import { CI_SHARD_BUDGET_MS, readCiArmCosts } from './ciGatePlan.js';
 import { gateRoster } from './gateRoster.js';
 import {
-    RETIRED_ROSTER_ROW_KEYS, ROSTER_ROW_KEY, gateChannel, gateStandingRows, newRowRefusal,
-    readStandingValues, retiredKeyProblem, standingRows, writerRoster,
+    RETIRED_ROSTER_ROW_KEYS, ROSTER_ROW_KEY, gateChannel, gateStandingRows, newRowAdmission,
+    newRowClass, readStandingValues, retiredKeyProblem, runRow, standingRows, writerRoster,
 } from './standingValues.js';
 
 const ROWS = standingRows();
@@ -162,23 +165,23 @@ describe('H2 — the channel on gate rows', () => {
 });
 
 /**
- * ⛓⛓⛓ F1 task 0 (planner ruling, 2026-09-13) — **THE WRITER CREATES A NEW ROW
- * ONLY FOR A PRICED ARM.** An unselected `standing-values --write` started the
- * Seedling full tier on the box (the differential's derived `gate:` row) and
- * ran nine more NEW gate rows red. Every row below reads the REAL roster, bank
- * and costs file, and a FAKE runner stands in for the spawn.
+ * ⛓⛓⛓ F1 task 0 / 0b (planner rulings, 2026-09-13) — **THE WRITER NEVER
+ * CREATES AN UNBOUNDED NEW ROW.** An unselected `standing-values --write`
+ * started the Seedling full tier on the box (the differential's derived
+ * `gate:` row) and ran nine more NEW gate rows red. The roster rows read the
+ * REAL roster, bank and costs file with a FAKE runner; the deadline rows spawn
+ * real fixture processes in a temp repo.
  */
-describe('F1 task 0 — the writer never creates an unbounded NEW row', () => {
+describe('F1 task 0 / 0b — the writer never creates an unbounded NEW row', () => {
     const roster = gateRoster();
     const bank = readStandingValues()?.rows ?? {};
     const costs = readCiArmCosts();
-    /** ⛓ What `--write` would spawn, recorded instead of run. */
+    /** ⛓ What `--write` would spawn, and how, recorded instead of run. */
     const spawned = (rows, opts = {}) => {
         const calls = [];
-        const fakeRun = (row) => calls.push(row.key);
-        for (const row of writerRoster({ rows, bank, gates: roster, costs, ...opts }).runnable) {
-            fakeRun(row);
-        }
+        const plan = writerRoster({ rows, bank, gates: roster, costs, ...opts });
+        const fakeRun = (row) => calls.push(plan.probed.has(row.key) ? `probe ${row.key}` : row.key);
+        for (const row of plan.runnable) fakeRun(row);
         return calls;
     };
 
@@ -197,47 +200,102 @@ describe('F1 task 0 — the writer never creates an unbounded NEW row', () => {
     });
 
     /**
-     * ⛔ THE NINE the sidecars write ran red, each with its measured shape.
-     * None is priced, so none is spawned; each refusal names the gate's own
-     * declared reason.
+     * ⛔ THE NINE the sidecars write ran red, each with its MEASURED result.
+     * All nine are unpriced `@ci-box` gates, so 0b PROBES them (a deadline
+     * run) — and the admission refuses every one of those results by name.
      */
     it.each([
-        ['gate: jta-balance-pass', 'EXIT 2 in 0.1 s — takes a positional <exported rules.json>'],
-        ['gate: maze-consumable-tiles', 'EXIT 1 — its fixture is an UNTRACKED preset dir'],
-        ['gate: maze-loop-mana', 'EXIT 1 — its fixture is an UNTRACKED preset dir'],
-        ['gate: atlas-sphere-roundtrip', 'EXIT 1 after PASS lines, no total — no .venv'],
-        ['gate: jta-locations-roundtrip', 'EXIT 1 after PASS lines, no total — no .venv'],
-        ['gate: region-library-roundtrip', 'EXIT 1 after 8 PASS, no total — no .venv (reproduced)'],
-        ['gate: region-library-sphere-roundtrip', 'EXIT 1 after PASS lines, no total — no .venv'],
-        ['gate: region-library-sphere-roundtrip-maze', 'EXIT 1 after PASS lines, no total — no .venv'],
-        ['gate: region-library-sphere-roundtrip-runner', 'EXIT 1 after PASS lines, no total — no .venv'],
-    ])('%s is REFUSED, never spawned (%s)', (key) => {
+        ['gate: jta-balance-pass', { exit: 2, ms: 100, value: '0/0', total: null }, /exited 2/],
+        ['gate: maze-consumable-tiles', { exit: 1, ms: 600, value: '0/0', total: null }, /exited 1/],
+        ['gate: maze-loop-mana', { exit: 1, ms: 600, value: '0/0', total: null }, /exited 1/],
+        ['gate: atlas-sphere-roundtrip', { exit: 1, ms: 29000, value: '60/0', total: null }, /green by PASS tally only \(PASS tally 60\/0\), NO total/],
+        ['gate: jta-locations-roundtrip', { exit: 1, ms: 20000, value: '17/0', total: null }, /green by PASS tally only/],
+        ['gate: region-library-roundtrip', { exit: 1, ms: 9000, value: '8/0', total: null }, /green by PASS tally only \(PASS tally 8\/0\)/],
+        ['gate: region-library-sphere-roundtrip', { exit: 1, ms: 20000, value: '11/0', total: null }, /green by PASS tally only/],
+        ['gate: region-library-sphere-roundtrip-maze', { exit: 1, ms: 20000, value: '9/0', total: null }, /green by PASS tally only/],
+        ['gate: region-library-sphere-roundtrip-runner', { exit: 1, ms: 20000, value: '10/0', total: null }, /green by PASS tally only/],
+    ])('%s is probed under the deadline, and its measured run is REFUSED', (key, measured, why) => {
         const row = ROWS.find((r) => r.key === key);
         expect(row).toBeDefined();
         expect(bank[key]).toBeUndefined();
-        expect(spawned([row])).toEqual([]);
-        const { refused } = writerRoster({ rows: [row], bank, gates: roster, costs });
-        expect(refused[0].why).toMatch(/^unpriced — /);
-        expect(refused[0].why).toContain('@ci-box:');
+        expect(spawned([row])).toEqual([`probe ${key}`]);
+        expect(newRowAdmission({ ...measured, killed: false }, { deadlineMs: CI_SHARD_BUDGET_MS }))
+            .toMatch(why);
     });
 
-    it('⛔ a fixture NEW unbounded gate is not spawned; named by --key= it is', () => {
+    it('⛔ an unpriced NEW gate that is NOT @ci-box is refused before running; --key= runs it', () => {
         const gate = { file: 'check-scratch-tier.mjs', path: 'scripts/procgen/check-scratch-tier.mjs' };
         const row = { key: 'gate: scratch-tier', kind: 'gate', command: `node ${gate.path}` };
         const opts = { gates: [gate] };
-        expect(writerRoster({ rows: [row], bank: {}, costs, ...opts }).runnable).toEqual([]);
+        expect(writerRoster({ rows: [row], bank: {}, costs, ...opts }).refused[0].why).toMatch(/^unpriced — /);
         expect(spawned([row], opts)).toEqual([]);
         expect(spawned([row], { ...opts, exactKeys: [row.key] })).toEqual([row.key]);
     });
 
-    it('a PRICED NEW row, a banked row and a non-gate row are spawned; over budget is not', () => {
+    it('a PRICED NEW row, a banked row and a non-gate row run plainly; over budget is refused', () => {
         const priced = ROWS.find((r) => r.kind === 'gate' && !bank[r.key] && costs.arms[r.key]);
         expect(priced).toBeDefined();
         const banked = ROWS.find((r) => r.kind === 'gate' && bank[r.key]);
         const identity = ROWS.find((r) => r.kind === 'identity');
         expect(spawned([priced, banked, identity])).toEqual([priced.key, banked.key, identity.key]);
         const tight = { ...costs, budgetMs: costs.arms[priced.key].ms - 1 };
-        expect(newRowRefusal({ row: priced, costs: tight })).toMatch(/over the .* budget/);
+        expect(newRowClass({ row: priced, costs: tight })).toMatchObject({ class: 'refuse' });
+        expect(newRowClass({ row: priced, costs: tight }).why).toMatch(/over the .* budget/);
+    });
+
+    /**
+     * ⛓⛓ THE DEADLINE, ON REAL PROCESSES. Three fixture gates in a temp repo,
+     * run through `runRow`'s deadline path — the path the writer takes for a
+     * probed row — and judged by `newRowAdmission`.
+     */
+    describe('the kill deadline and the admission, on fixture processes', () => {
+        let root;
+        const write = (name, body) => {
+            mkdirSync(join(root, 'scripts/procgen'), { recursive: true });
+            writeFileSync(join(root, 'scripts/procgen', name), body);
+            return { key: `gate: ${name}`, kind: 'gate', command: `node scripts/procgen/${name}` };
+        };
+        const alive = (pid) => { try { process.kill(pid, 0); return true; } catch { return false; } };
+        beforeAll(() => { root = mkdtempSync(join(tmpdir(), 'f1-0b-')); });
+        afterAll(() => { rmSync(root, { recursive: true, force: true }); });
+
+        it('⛔ a gate that sleeps past the deadline is KILLED — its group, by the captured pid — and refused', async () => {
+            const row = write('check-sleeper.mjs',
+                "import { spawn } from 'node:child_process';\n"
+                + "const c = spawn('sleep', ['30'], { stdio: 'ignore' });\n"
+                + "console.log(`GRANDCHILD ${c.pid}`);\nsetTimeout(() => {}, 30000);\n");
+            const r = await runRow(row, { repo: root, deadlineMs: 1500 });
+            expect(r.killed).toBe(true);
+            expect(r.ms).toBeLessThan(10000);
+            const grandchild = Number(/GRANDCHILD (\d+)/.exec(r.out)?.[1]);
+            await new Promise((ok) => { setTimeout(ok, 200); });
+            expect(alive(r.pid)).toBe(false);
+            expect(grandchild).toBeGreaterThan(0);
+            expect(alive(grandchild)).toBe(false);
+            expect(newRowAdmission(r, { deadlineMs: 1500 })).toMatch(new RegExp(`KILLED at the 1\\.5 s deadline .*pid ${r.pid}`));
+        }, 20000);
+
+        it('⛔ 8 PASS lines then exit 1 is refused as green by PASS tally only', async () => {
+            const row = write('check-tally.mjs',
+                "for (let i = 0; i < 8; i++) console.log(`PASS: row ${i}`);\nprocess.exit(1);\n");
+            const r = await runRow(row, { repo: root, deadlineMs: 10000 });
+            expect(r).toMatchObject({ killed: false, exit: 1, value: '8/0', total: null });
+            expect(newRowAdmission(r, { deadlineMs: 10000 })).toMatch(/exited 1 .*green by PASS tally only \(PASS tally 8\/0\), NO total line/);
+        }, 20000);
+
+        it('⛔ exit 0 with PASS lines but NO total is refused', async () => {
+            const row = write('check-nototal.mjs',
+                "console.log('PASS: a');\nconsole.log('All assertions passed.');\n");
+            const r = await runRow(row, { repo: root, deadlineMs: 10000 });
+            expect(newRowAdmission(r, { deadlineMs: 10000 })).toMatch(/exited 0 .*NO total line/);
+        }, 20000);
+
+        it('a gate that exits 0 with a TOTAL line under the deadline is admitted', async () => {
+            const row = write('check-green.mjs',
+                "console.log('PASS: a');\nconsole.log('PASS: b');\nconsole.log('ALL CHECKS PASSED');\n");
+            const r = await runRow(row, { repo: root, deadlineMs: 10000 });
+            expect(r).toMatchObject({ killed: false, exit: 0, value: '2/0', total: 'ALL CHECKS PASSED' });
+            expect(newRowAdmission(r, { deadlineMs: 10000 })).toBeNull();
+        }, 20000);
     });
 });
-

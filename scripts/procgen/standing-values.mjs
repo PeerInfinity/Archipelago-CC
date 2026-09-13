@@ -100,8 +100,8 @@ import {
 } from './rowInputKey.js';
 import {
     CHEAP_MS, FILE, ciGateCommand, cheapFor, compositeValue, compositeWhy, head,
-    missingScript, readStandingValues, retiredKeyProblem, runRow, scriptIn, standingRows,
-    writerRoster,
+    missingScript, newRowAdmission, readStandingValues, retiredKeyProblem, runRow, scriptIn,
+    standingRows, writerRoster,
 } from './standingValues.js';
 
 
@@ -347,11 +347,14 @@ if (flag('write')) {
     console.log(`# standing-values --write — ${ROWS.length} row(s) at ${HEAD}\n`);
     /**
      * ⛔⛔ F1 task 0 — **A NEW ROW IS CREATED ONLY FOR A BOUNDED, ARGUMENT-FREE,
-     * TRACKED-INPUT ARM** (`standingValues.newRowRefusal` carries the rule and
+     * TRACKED-INPUT ARM** (`standingValues.newRowClass` carries the rule and
      * the measured hazard: this write once started the Seedling full tier).
      * Every refusal is printed by name with its reason, and the write goes on.
+     * ⛓ 0b — an unpriced `@ci-box` NEW row is PROBED: run under a kill deadline
+     * of `CI_SHARD_BUDGET_MS` (the CI plan's own budget) and banked only if
+     * `newRowAdmission` admits the run.
      */
-    const { runnable: WRITE_ROWS, refused: REFUSED } = writerRoster({
+    const { runnable: WRITE_ROWS, probed: PROBED, refused: REFUSED } = writerRoster({
         rows: ROWS, bank: out.rows, gates: GATES, costs: readCiArmCosts({ repo: REPO }),
         exactKeys: [KEY, FORCE_ROW].filter(Boolean),
     });
@@ -363,6 +366,8 @@ if (flag('write')) {
     const carried = [];
     const unkeyed = [];
     const findings = [];
+    /** ⛓ 0b — the probed NEW rows the deadline and the verdict admitted. */
+    const probedIn = [];
     for (const row of WRITE_ROWS) {
         /**
          * ⛔ AT EVERY ROW, NOT ONCE AT THE TOP. R9 slice P3's tracked-doc edit
@@ -463,10 +468,20 @@ if (flag('write')) {
          * `ranCommand` either way, so ⚖ 8's published string is unmoved: this
          * changes what RUNS, and nothing that is written.
          */
+        const probe = PROBED.has(row.key) && !fromCI;
         const r = fromCI
             ? await runRow({ key: row.key, kind: 'ci-gate', command: ranCommand })
-            : await runRow(row);
+            : await runRow(row, probe ? { deadlineMs: CI_SHARD_BUDGET_MS } : {});
         if (fromCI) ciRows.push(row.key);
+        if (probe) {
+            const refusal = newRowAdmission(r, { deadlineMs: CI_SHARD_BUDGET_MS });
+            if (refusal) {
+                REFUSED.push({ row, why: refusal });
+                console.log(`NEW row REFUSED: ${row.key} — ${refusal}`);
+                continue;
+            }
+            probedIn.push(row.key);
+        }
         /**
          * ⛓⛓⛓ **THE DETECTOR** (trap 866: a byte-keyed cache is a
          * nondeterminism detector you already own). A re-run at an UNCHANGED
@@ -569,6 +584,8 @@ if (flag('write')) {
      */
     console.log(`\nnew-row-refused: ${REFUSED.length} row(s)`
         + `${REFUSED.length ? ` — ${REFUSED.map((r) => r.row.key).join(', ')}` : ''}`);
+    console.log(`new-row-probed: ${PROBED.size} row(s) under the ${CI_SHARD_BUDGET_MS / 1000} s `
+        + `deadline, ${probedIn.length} admitted${probedIn.length ? ` — ${probedIn.join(', ')}` : ''}`);
     console.log(`key-carried: ${carried.length} row(s)`
         + `${carried.length ? ` — ${carried.map((c) => `${c.key} @${c.at}`).join(', ')}` : ''}`);
     console.log(`unkeyed: ${unkeyed.length} row(s)`

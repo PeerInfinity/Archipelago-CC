@@ -35,7 +35,7 @@
  * same defect as a hand-kept value: right until somebody makes a gate slower.
  */
 
-import { execFile, execFileSync } from 'node:child_process';
+import { execFile, execFileSync, spawn } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
@@ -396,8 +396,8 @@ export function gateStandingRows(gate, argv) {
 }
 
 /**
- * ⛓⛓⛓ F1 task 0 (planner ruling, 2026-09-13) — **WHY `--write` MAY NOT CREATE
- * THIS ROW, or `null` when it may.**
+ * ⛓⛓⛓ F1 task 0 / 0b (planner rulings, 2026-09-13) — **HOW `--write` MAY
+ * CREATE THIS ROW: run it, probe it under a deadline, or refuse it.**
  *
  * ⛔⛔ THE HAZARD, MEASURED. An unselected `standing-values --write` runs every
  * derived row the bank does not carry yet, and a NEW row has never been run,
@@ -413,23 +413,25 @@ export function gateStandingRows(gate, argv) {
  * tally, never a total).
  *
  * ⛓ THE RULE. A NEW `gate:` row is created only when its default arm is
- * (i) argument-free, (ii) bounded and (iii) reads only tracked inputs — and
- * the one measurement that attests all three before a box run is a CI PRICE:
- * `ci-arm-costs.json` holds the runner wall of that exact key
- * (`ci-gates.mjs --write-costs`), and a runner runs the roster argv from a
- * checkout that holds only tracked bytes. ⚠ A price is not a PASS — an arm can
- * be priced red (wasm-ship was, 262/1, at H2) — so what it attests is that the
- * arm RUNS to a verdict in bounded time from tracked bytes; a red there is the
- * red every push already shows. A priced arm under the file's own `budgetMs`
- * may be created; every other NEW gate row is REFUSED BY NAME and the write
- * continues.
+ * (i) argument-free, (ii) bounded and (iii) reads only tracked inputs.
+ *   `run`    — CI has PRICED that exact key under `ci-arm-costs.json`'s own
+ *              `budgetMs`: a runner ran the roster argv from a checkout of
+ *              tracked bytes in bounded time. ⚠ A price is not a PASS (an arm
+ *              can be priced red — wasm-ship was, at H2); its red is the red
+ *              every push already shows.
+ *   `probe`  — 0b: an UNPRICED `@ci-box` gate, which CI excludes by definition
+ *              and so can never price (task 0 refused 47 of them, ~40 of which
+ *              had run green — a guard refusing real data). The writer runs it
+ *              under a KILL DEADLINE (the CI shard budget, passed in by the
+ *              caller) and banks it only if `newRowAdmission` admits the run.
+ *   `refuse` — anything else unpriced (a CI-runnable gate nobody has priced
+ *              yet, a Windows-only one): refused by name, and the write goes on.
  *
  * ⛓ `exact` — the row was named with `--key=` / `--force-row=`. That is a
  * person asking for this one measurement (how the box-only rows ap-placement,
- * vanilla-manifest and save-stamp got their first rows in H2), not a
- * battery enrolling it; it is not refused.
- * ⛓ Identity / producer / suite rows are not gate arms and are not judged
- * here: their commands are digests and CI reads, never a gate's default arm.
+ * vanilla-manifest and save-stamp got their first rows in H2), not a battery
+ * enrolling it: `run`. ⛓ Identity / producer / suite rows are not gate arms
+ * and are not judged here: their commands are digests and CI reads.
  *
  * @param {object} o
  * @param {object} o.row     a `standingRows()` row
@@ -437,41 +439,79 @@ export function gateStandingRows(gate, argv) {
  * @param {object} [o.gate]  its roster gate (for the declared reason)
  * @param {object} [o.costs] `ci-arm-costs.json`, parsed
  * @param {boolean} [o.exact]
+ * @returns {{ class: 'run' | 'probe' | 'refuse', why?: string }}
  */
-export function newRowRefusal({ row, prev, gate = null, costs = null, exact = false }) {
-    if (prev || exact || row.kind !== 'gate') return null;
+export function newRowClass({ row, prev, gate = null, costs = null, exact = false }) {
+    if (prev || exact || row.kind !== 'gate') return { class: 'run' };
     const price = costs?.arms?.[row.key] ?? null;
     const budgetMs = costs?.budgetMs ?? null;
-    if (price && budgetMs !== null && price.ms <= budgetMs) return null;
+    if (price && budgetMs !== null && price.ms <= budgetMs) return { class: 'run' };
+    if (!price && gate?.ciBox) {
+        return { class: 'probe',
+            why: `unpriced @ci-box gate (${gate.ciBox.reason}) — run under the kill deadline, `
+                + 'banked only on exit 0 with a TOTAL line' };
+    }
     const why = price
         ? `priced ${(price.ms / 1000).toFixed(1)} s by CI, over the ${(budgetMs / 1000).toFixed(0)} s budget`
         : `unpriced — ci-arm-costs.json has no price under ${JSON.stringify(row.key)}`
-            + `${gate?.ciBox ? ` (@ci-box: ${gate.ciBox.reason})` : ''}`
             + `${gate?.ciFace ? ` (its @ci-face ${gate.ciFace.prefix} prices a DIFFERENT command)` : ''}`
             + `${gate?.windows ? ' (Windows-only: no runner can price it)' : ''}`;
-    return `${why} — declare its standing row (@standing-row), price it `
-        + '(ci-gates.mjs --write-costs), or name it with --key=';
+    return { class: 'refuse',
+        why: `${why} — declare its standing row (@standing-row), price it `
+            + '(ci-gates.mjs --write-costs), or name it with --key=' };
 }
 
 /**
- * ⛓ THE WRITER'S ROSTER — the selected rows split into the ones `--write` may
- * run and the NEW rows it refuses (`newRowRefusal`), in derivation order. ⛓ A
- * function rather than a clause inside the 700-line writer so a test can hand
- * it a fixture gate and a FAKE runner and assert what would have been spawned.
+ * ⛓⛓ F1 task 0b — **A PROBED NEW ROW IS BANKED ONLY ON A VERDICT A READER
+ * CAN PARSE**, or `null` when the run is admitted. Each refusal names which
+ * of the three it was:
+ *   · killed at the deadline — unbounded by measurement, elapsed printed;
+ *   · a non-zero exit — and, when it printed PASS lines but no total, that it
+ *     was "green" only by the PASS tally (the writer-display gap the roundtrip
+ *     gates showed: `8/0` at EXIT 1);
+ *   · exit 0 with NO total line — a PASS tally is never banked without a total.
+ */
+export function newRowAdmission(result, { deadlineMs }) {
+    const secs = (ms) => `${(ms / 1000).toFixed(1)} s`;
+    if (result.killed) {
+        return `KILLED at the ${secs(deadlineMs)} deadline after ${secs(result.ms)} (pid `
+            + `${result.pid}) — unbounded by measurement`;
+    }
+    const tally = result.value && /^\d+\/\d+/.test(result.value) ? ` (PASS tally ${result.value})` : '';
+    if (result.exit !== 0) {
+        return `exited ${result.exit} after ${secs(result.ms)}`
+            + (result.total ? ` — total ${JSON.stringify(result.total)}`
+                : `${tally ? ` — green by PASS tally only${tally}, NO total line` : ', no total line'}`);
+    }
+    if (!result.total) {
+        return `exited 0 after ${secs(result.ms)} with NO total line${tally} — a PASS tally is `
+            + 'never banked without a total';
+    }
+    return null;
+}
+
+/**
+ * ⛓ THE WRITER'S ROSTER — the selected rows split, in derivation order, into
+ * the ones `--write` may run (`probed` names the subset it runs under the
+ * deadline) and the NEW rows it refuses before running anything. ⛓ A function
+ * rather than a clause inside the 700-line writer so a test can hand it a
+ * fixture gate and a FAKE runner and assert what would have been spawned.
  *
- * @returns {{ runnable: object[], refused: { row: object, why: string }[] }}
+ * @returns {{ runnable: object[], probed: Set<string>, refused: { row: object, why: string }[] }}
  */
 export function writerRoster({ rows, bank = {}, gates = [], costs = null, exactKeys = [] }) {
     const gateOf = (command) => gates.find((g) => command.includes(g.path)) ?? null;
     const runnable = [];
+    const probed = new Set();
     const refused = [];
     for (const row of rows) {
-        const why = newRowRefusal({ row, prev: bank[row.key], gate: gateOf(row.command), costs,
+        const c = newRowClass({ row, prev: bank[row.key], gate: gateOf(row.command), costs,
             exact: exactKeys.includes(row.key) });
-        if (why) refused.push({ row, why });
-        else runnable.push(row);
+        if (c.class === 'refuse') { refused.push({ row, why: c.why }); continue; }
+        if (c.class === 'probe') probed.add(row.key);
+        runnable.push(row);
     }
-    return { runnable, refused };
+    return { runnable, probed, refused };
 }
 
 /**
@@ -621,13 +661,14 @@ export function headlineOf(kind, out) {
  * ⛓ `${PIPESTATUS[0]}`, never `$?`: every identity row is a PIPELINE, so `$?`
  * is `md5sum`'s exit and would report success for a producer that threw.
  */
-export async function runRow(row, { repo = REPO } = {}) {
+export async function runRow(row, { repo = REPO, deadlineMs = null } = {}) {
     const t0 = process.hrtime.bigint();
     let out = '';
     let code = 0;
     const script = row.shell
         ? `${identityShellHelpers({ repo })}\n${row.command}\nexit "\${PIPESTATUS[0]}"`
         : row.command;
+    if (deadlineMs !== null) return runUnderDeadline(row, script, { repo, deadlineMs, t0 });
     try {
         const r = await run('bash', ['-c', script], { cwd: repo, maxBuffer: 1 << 27 });
         out = `${r.stdout}${r.stderr}`;
@@ -646,6 +687,35 @@ export async function runRow(row, { repo = REPO } = {}) {
      * bank row field by field, so the extra field reaches no artifact.
      */
     return { value, total, exit: code, ms, out };
+}
+
+/**
+ * ⛓⛓ F1 task 0b — **THE KILL DEADLINE.** The row runs in its OWN process
+ * group (`detached`), and the deadline kills the GROUP (`-pid`): `bash -c`
+ * is a wrapper, and killing a wrapper leaves its `node` (and that node's
+ * browser) running. The pid is returned so a caller — and the test row — can
+ * confirm the kill landed. ⛔ Only a probed NEW row takes this path; every
+ * other row keeps `runRow`'s unbounded `execFile`, byte for byte.
+ */
+function runUnderDeadline(row, script, { repo, deadlineMs, t0 }) {
+    return new Promise((resolve) => {
+        const child = spawn('bash', ['-c', script], { cwd: repo, detached: true,
+            stdio: ['ignore', 'pipe', 'pipe'] });
+        let out = '';
+        let killed = false;
+        child.stdout.on('data', (d) => { out += d; });
+        child.stderr.on('data', (d) => { out += d; });
+        const timer = setTimeout(() => {
+            killed = true;
+            try { process.kill(-child.pid, 'SIGKILL'); } catch { /* already gone */ }
+        }, deadlineMs);
+        child.on('close', (code, signal) => {
+            clearTimeout(timer);
+            const ms = Number((process.hrtime.bigint() - t0) / 1000000n);
+            const { value, total } = headlineOf(row.kind, out);
+            resolve({ value, total, exit: code ?? (signal ? 137 : 1), ms, out, pid: child.pid, killed });
+        });
+    });
 }
 
 /** The script a command names, so `--check` can refuse a RETIRED instrument. */
