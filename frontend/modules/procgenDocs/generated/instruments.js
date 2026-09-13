@@ -210,7 +210,7 @@ export const INSTRUMENTS = frz({
         "files": 269,
         "lineStyle": 11,
         "withDocblock": 269,
-        "withFlags": 179
+        "withFlags": 181
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1603,7 +1603,9 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-maze-loop-mana.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "arg"
+            ],
             "browser": true,
             "category": "check",
             "citedBy": [],
@@ -1612,7 +1614,14 @@ export const INSTRUMENTS = frz({
                 "host"
             ],
             "file": "check-omsi-mana-leg.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",
@@ -3678,7 +3687,9 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-spiral-steps-ui.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "arg"
+            ],
             "browser": true,
             "category": "check",
             "citedBy": [
@@ -3689,7 +3700,14 @@ export const INSTRUMENTS = frz({
                 "host"
             ],
             "file": "check-ta-mana-leg.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",
