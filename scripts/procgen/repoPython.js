@@ -30,7 +30,7 @@
  */
 
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, realpathSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -146,6 +146,45 @@ export function resolvePython({ requires, pins = [], why, install = null, env = 
 }
 
 /**
+ * ⛓ C1 task 2 — **THE VENV A REFUSAL TELLS YOU TO ACTIVATE IS ONE THAT
+ * EXISTS.** A worktree has no `.venv` of its own (one per worktree is 649 MB
+ * and not wanted, plan §19.1); it shares the PRIMARY tree's by activation. So
+ * on the primary the hint is `source .venv/bin/activate`, and in a worktree it
+ * is `source <primary>/.venv/bin/activate`.
+ *
+ * ⛓ The primary is the parent of `git rev-parse --git-common-dir` — the same
+ * derivation `scripts/dev/new-worktree.sh` uses. Measured: from the primary
+ * AND from a worktree that is `<primary>/.git` (`--git-dir` is the one that
+ * differs: `<primary>/.git/worktrees/<name>`); absolute by
+ * `--path-format=absolute`, since from a subdirectory the default is relative.
+ * A tree git cannot answer for gets the primary's text.
+ *
+ * ⛔ ONE SPELLING: both refusal hints (`generatePythonOrExit`,
+ * `seedlingDriver.headlessPython`) come from here; a census row refuses any
+ * other `source …/.venv/bin/activate` in either file.
+ *
+ * @param {string} [repo]
+ * @param {object} [o]
+ * @param {string} [o.commonDir]  the common git dir, as git would print it (tests)
+ */
+export function venvActivationHint(repo = REPO, { commonDir } = {}) {
+    // ⛓ git's answer is [toplevel, common dir]: a SUBDIRECTORY of the primary
+    // is still the primary (measured red when `repo` itself was compared).
+    const [top, dir] = commonDir !== undefined ? [repo, commonDir] : (() => {
+        const r = spawnSync('git', ['rev-parse', '--path-format=absolute', '--show-toplevel', '--git-common-dir'],
+            { cwd: repo, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+        const lines = r.status === 0 ? r.stdout.trim().split('\n') : [];
+        return lines.length === 2 ? lines : [repo, null];
+    })();
+    const real = (p) => { try { return realpathSync(p); } catch { return resolve(p); } };
+    const primary = dir ? dirname(real(dir)) : null;
+    const venv = primary === null || primary === real(top)
+        ? 'the tree\'s venv (`source .venv/bin/activate`)'
+        : `the primary tree's venv (\`source ${primary}/.venv/bin/activate\` — a worktree has no .venv of its own)`;
+    return `activate ${venv}, or set SEEDLING_PYTHON`;
+}
+
+/**
  * ⛓ F2 task 4 — **THE PYTHON A `Generate.py` / `world_generator` GATE RUNS**,
  * or a refusal printed by name and exit 2 (the roster's refusal code: nothing
  * was measured) — BEFORE the gate prints its first PASS line.
@@ -157,12 +196,13 @@ export function resolvePython({ requires, pins = [], why, install = null, env = 
  */
 export const GENERATE_PY_REQUIRES = Object.freeze(['Utils']);
 
-export function generatePythonOrExit(gate, { env = process.env, repo = REPO, probe = canImport } = {}) {
+export function generatePythonOrExit(gate, { env = process.env, repo = REPO, probe = canImport,
+    commonDir } = {}) {
     try {
         return resolvePython({ requires: [...GENERATE_PY_REQUIRES], env, repo, probe,
             why: `${gate}: Generate.py / world_generator`,
-            install: 'activate the tree\'s venv (`source .venv/bin/activate`, from `requirements.txt`), '
-                + 'or set SEEDLING_PYTHON to a Python that carries Archipelago\'s requirements' });
+            install: `${venvActivationHint(repo, { commonDir })} to a Python that carries Archipelago's `
+                + 'requirements (`requirements.txt`)' });
     } catch (e) {
         console.log(e.message);
         process.exit(2);

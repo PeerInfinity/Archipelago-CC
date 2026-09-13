@@ -44,7 +44,7 @@ import { tmpdir } from 'node:os';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { resolvePython } from './repoPython.js';
+import { resolvePython, venvActivationHint } from './repoPython.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
@@ -56,12 +56,12 @@ export const WIN_STAGE_DOS = 'C:\\playwright';
 export const HEADLESS_REQUIREMENTS = 'scripts/procgen/requirements-headless.txt';
 
 /** The Linux interpreter the headless channel runs a driver with. */
-export function headlessPython({ env = process.env, repo = REPO, probe, version } = {}) {
+export function headlessPython({ env = process.env, repo = REPO, probe, version, commonDir } = {}) {
     return resolvePython({ requires: ['playwright'], env, repo, probe, version,
         pins: [{ dist: 'playwright', file: HEADLESS_REQUIREMENTS }],
         why: 'seedlingDriver: the headless channel',
-        install: `install \`<python> -m pip install -r ${HEADLESS_REQUIREMENTS}\` into it `
-            + '(or create one: python3 -m venv .venv), or set SEEDLING_PYTHON. '
+        install: `install \`<python> -m pip install -r ${HEADLESS_REQUIREMENTS}\` into it; `
+            + `or ${venvActivationHint(repo, { commonDir })} to one that carries it. `
             + '(`--win` drives real-GPU Windows Chrome instead.)' });
 }
 

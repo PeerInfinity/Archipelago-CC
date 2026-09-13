@@ -9,16 +9,17 @@
  * module. ⛓ The probe rows run REAL executables (tiny shell scripts), so the
  * default `canImport` is exercised and not only an injected fake.
  */
-import { spawnSync } from 'node:child_process';
-import { chmodSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { execFileSync, spawnSync } from 'node:child_process';
+import { chmodSync, mkdirSync, mkdtempSync, readFileSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { GENERATE_PY_REQUIRES, canImport, pinnedVersion, pythonLadder, requirementLines, resolvePython,
-    versionOf } from './repoPython.js';
+import { GENERATE_PY_REQUIRES, canImport, generatePythonOrExit, pinnedVersion, pythonLadder, requirementLines,
+    resolvePython, venvActivationHint, versionOf } from './repoPython.js';
+import { headlessPython } from './seedlingDriver.js';
 
 /** A fake tree, optionally with `.venv/bin/python`, and a fake active venv. */
 function fakeTree({ treeVenv = false, activeVenv = false } = {}) {
@@ -267,6 +268,71 @@ describe('repoPython.js --generate — the ladder from a shell', () => {
     });
 });
 
+/**
+ * ⛓ C1 task 2 — **THE HINT NAMES THE VENV THAT EXISTS.** A worktree has no
+ * `.venv`; its refusal must name the PRIMARY's. The layout rows inject the
+ * common git dir; one row builds a real repo and a real `git worktree add`, so
+ * the default spawn is exercised and the `--git-common-dir` spelling (not
+ * `--git-dir`, which differs in a worktree) is what is asked.
+ */
+describe('venvActivationHint — the primary\'s venv, named from a worktree', () => {
+    const PRIMARY_TEXT = 'activate the tree\'s venv (`source .venv/bin/activate`), or set SEEDLING_PYTHON';
+
+    it('primary layout (the common dir is <tree>/.git): the tree\'s own venv', () => {
+        const t = fakeTree();
+        expect(venvActivationHint(t.repo, { commonDir: join(t.repo, '.git') })).toBe(PRIMARY_TEXT);
+        /* a symlinked spelling of the same tree is still the primary */
+        const link = join(t.root, 'link');
+        symlinkSync(t.repo, link);
+        expect(venvActivationHint(link, { commonDir: join(t.repo, '.git') })).toBe(PRIMARY_TEXT);
+    });
+
+    it('worktree layout (the common dir is <primary>/.git): source <primary>/.venv/bin/activate', () => {
+        const t = fakeTree();
+        const primary = join(t.root, 'primary');
+        mkdirSync(join(primary, '.git'), { recursive: true });
+        const hint = venvActivationHint(t.repo, { commonDir: join(primary, '.git') });
+        expect(hint).toContain(`source ${primary}/.venv/bin/activate`);
+        expect(hint).not.toContain('source .venv/bin/activate');
+        expect(hint).toMatch(/or set SEEDLING_PYTHON$/);
+    });
+
+    it('asked of git: a real primary and a real worktree (and a tree git cannot answer for)', () => {
+        const root = mkdtempSync(join(tmpdir(), 'venv-hint-'));
+        const primary = join(root, 'primary');
+        const wt = join(root, 'wt');
+        const g = (cwd, ...args) => execFileSync('git', ['-c', 'user.name=r', '-c', 'user.email=r@example.invalid',
+            ...args], { cwd, stdio: 'ignore' });
+        mkdirSync(primary);
+        g(primary, 'init', '-q');
+        g(primary, 'commit', '-q', '--allow-empty', '-m', 'r');
+        g(primary, 'worktree', 'add', '-q', wt);
+        mkdirSync(join(wt, 'sub'));
+        mkdirSync(join(primary, 'sub'));
+        expect(venvActivationHint(primary)).toBe(PRIMARY_TEXT);
+        /* from a subdirectory git's default spelling is RELATIVE (`../.git`) */
+        expect(venvActivationHint(join(primary, 'sub'))).toBe(PRIMARY_TEXT);
+        expect(venvActivationHint(join(wt, 'sub'))).toContain(`source ${primary}/.venv/bin/activate`);
+        expect(venvActivationHint(wt)).toContain(`source ${primary}/.venv/bin/activate`);
+        expect(venvActivationHint(join(root, 'nowhere'))).toBe(PRIMARY_TEXT);
+    });
+
+    it('both refusals carry it: generatePythonOrExit and headlessPython, in a worktree layout', () => {
+        const t = fakeTree();
+        const primary = join(t.root, 'primary');
+        const commonDir = join(primary, '.git');
+        const want = `source ${primary}/.venv/bin/activate`;
+        const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+        const exit = vi.spyOn(process, 'exit').mockImplementation((c) => { throw new Error(`exit ${c}`); });
+        try {
+            expect(() => generatePythonOrExit('g.mjs', { env: {}, repo: t.repo, probe: () => false, commonDir }))
+                .toThrow('exit 2');
+            expect(log.mock.calls.flat().join('\n')).toContain(want);
+        } finally { log.mockRestore(); exit.mockRestore(); }
+        expect(() => headlessPython({ env: {}, repo: t.repo, probe: () => false, commonDir })).toThrow(want);
+    });
+});
+
 describe('one spelling — no gate carries its own venv-or-python3 fallback', () => {
     it('no check-*.mjs resolves `.venv/bin/python` by hand', async () => {
         const { readdirSync, readFileSync } = await import('node:fs');
@@ -277,5 +343,21 @@ describe('one spelling — no gate carries its own venv-or-python3 fallback', ()
         const users = readdirSync(here).filter((f) => /^check-.*\.mjs$/.test(f))
             .filter((f) => readFileSync(join(here, f), 'utf8').includes('generatePythonOrExit('));
         expect(users.length).toBeGreaterThan(0);
+    });
+
+    it('C1: the venv activation text is spelled ONCE — venvActivationHint — in repoPython.js and seedlingDriver.js', () => {
+        const here = import.meta.dirname;
+        const spelling = /source [^\s`]*\.venv\/bin\/activate|venv \.venv/g;
+        const lib = readFileSync(join(here, 'repoPython.js'), 'utf8');
+        const fn = lib.indexOf('export function venvActivationHint(');
+        const end = lib.indexOf('\n}\n', fn);
+        /* the helper's two branches spell it; its own docblock may quote them */
+        expect(lib.slice(fn, end).match(spelling)?.length).toBe(2);
+        const start = lib.lastIndexOf('/**', fn);
+        const outside = {
+            'repoPython.js': (lib.slice(0, start) + lib.slice(end)).match(spelling) ?? [],
+            'seedlingDriver.js': readFileSync(join(here, 'seedlingDriver.js'), 'utf8').match(spelling) ?? [],
+        };
+        expect(outside).toEqual({ 'repoPython.js': [], 'seedlingDriver.js': [] });
     });
 });
