@@ -14591,6 +14591,27 @@ port 8140 still served by session 1's server; kickoff `NewDocs/plans/apworld-sid
 compass read fixed in the wrapper (a Map or an array), the payload-free painter, the compass in-app row, the mutant battery
 (+ the nine `tasw-*` rows session 1 did not run), the docs trio. Session 3 (the STOP + regen + gates) after it; ONE merge at the end.
 
+**G2a SESSION 2 VERIFIED + SESSION 3 LAUNCHED 2026-09-13.** Session 2 (`apworld-sidecars-G2a-2`) pushed `e6a0a5aed3` (task 3:
+the bridge reads the exit Map — the compass grid renders in procgen play for the FIRST time, in-app row
+`tasw-compass-grid-renders-procgen-sides` BEFORE red / AFTER 8 conditions green; the payload-free painter, 5 unit rows) and
+`6bd361def8` (task 5: docs — the "tile grid wearing a text skin" thesis retired in SEVEN homes, one left in the `shared/`
+submodule's `adapterPrimitives.js` header; docs trio ALL MATCH; the two generated-docs reds gone). Task 4 moved no code: the
+mutant battery under its own lock — B1/P1/X1/T1/R1/C1 each red on the unit rows, ⚠ **all ten `tasw-*` in-app rows GREEN under
+every producer mutant** (the in-app net generates spiral worlds with `True_` rules — blind to gates; ⚖ a gated play-level row,
+G2b or a later slice). Planner re-measured in the worktree: 4 commits, 14 files vs the base (+430/−154 on session 2's two);
+the roster carries the new row (config + test file); maze pin `677b7d9c…` unmoved; `generate-procgen-reference --check` ALL 6
+MODULES + 4 REGIONS MATCH; bounded vitest 15 files 840 passed / 3 failed = the three corpus rows; CI at `6bd361def8` run
+34733477679 **463/13983 (13972 | 8 | 3)** = the derivation, the 3 reds by name = those rows (the slow battery still reports
+nothing on this branch — the step is cancelled after the suite fails). ⚠ The COMMITTED map draws "0 locations" on the 15 TA cells
+from `5b15762386` on — the re-record is REQUIRED before the merge. **LAUNCHED** `apworld-sidecars-G2a-3` (Opus, pid 326373, cwd
+verified, the same worktree; kickoff `NewDocs/plans/apworld-sidecars-G2a-3-prompt.md`): 6a the jta_mixed script made a fixed
+point (its own commit, 0 payload bytes); 6b the re-record PREPARED in a throwaway tree (script payload + AP_10–12 through the
+generator + register lines, twice, `cmp`) with the STOP's tables (top keys moved; TA entries reshaped; the maze children of a TA
+parent moved — count, keys, why; the corpus gate ALL PASS there; `NODE_SPLICED`; the lineage counts; the AP_11 Map witness with
+a discrimination control) — ⛔ **STOP for the user's word**; 6c copy-in on the word; 7 the gates (fast batch roster +1, the ⚖
+52 quote — predicted 463/13983 (13975 | 8 | 0) + 6a's rows). Then the planner rebases `g2a` onto `origin/main` and pushes
+`HEAD:main` — ONE merge for the slice.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
