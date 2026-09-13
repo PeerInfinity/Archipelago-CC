@@ -108,3 +108,21 @@ export function generatePythonOrExit(gate, { env = process.env, repo = REPO, pro
         process.exit(2);
     }
 }
+
+/**
+ * ⛓ WT1 task 1 — **THE LADDER, ASKED FROM A SHELL**: `node scripts/procgen/
+ * repoPython.js --generate` prints the Python `generatePythonOrExit` chooses
+ * for THIS file's tree (exit 0), or its refusal with the ladder (exit 2).
+ * `new-worktree.sh` asks here instead of re-spelling the ladder in bash — a
+ * second spelling was the defect F2 replaced.
+ */
+export const CLI_USAGE = 'usage: node scripts/procgen/repoPython.js --generate';
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+    const args = process.argv.slice(2);
+    if (args.length !== 1 || args[0] !== '--generate') {
+        console.error(CLI_USAGE);
+        process.exit(1);
+    }
+    console.log(generatePythonOrExit('repoPython.js --generate'));
+}

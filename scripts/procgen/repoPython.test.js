@@ -147,6 +147,41 @@ describe('generatePythonOrExit — the Generate.py gates', () => {
     });
 });
 
+/**
+ * ⛓ WT1 task 1 — the CLI face `new-worktree.sh` asks. The refusal row sets
+ * rung 1 to `/bin/false`: present, cannot import, and never skipped — a
+ * deterministic refusal that touches no real venv.
+ */
+describe('repoPython.js --generate — the ladder from a shell', () => {
+    const CLI = join(import.meta.dirname, 'repoPython.js');
+    const cli = (args, env) => spawnSync(process.execPath, [CLI, ...args],
+        { encoding: 'utf8', env: { PATH: process.env.PATH, ...env } });
+
+    it('prints the chosen path and nothing else, exit 0', () => {
+        const t = fakeTree({ activeVenv: true });
+        const r = cli(['--generate'], { SEEDLING_PYTHON: t.venvPy });
+        expect(r.status).toBe(0);
+        expect(r.stdout).toBe(`${t.venvPy}\n`);
+    });
+
+    it('SEEDLING_PYTHON=/bin/false: exit 2, the refusal with the whole ladder', () => {
+        const r = cli(['--generate'], { SEEDLING_PYTHON: '/bin/false' });
+        expect(r.status).toBe(2);
+        expect(r.stdout).toMatch(/^REFUSED: repoPython\.js --generate: Generate\.py \/ world_generator needs a Python that can `import Utils`.*: \/bin\/false$/m);
+        for (const rung of ['SEEDLING_PYTHON', '$VIRTUAL_ENV/bin/python', '<tree>/.venv/bin/python',
+            'PATH python3']) expect(r.stdout).toContain(rung);
+    });
+
+    it('anything but --generate: usage on stderr, exit 1, no path printed', () => {
+        for (const args of [[], ['--nope'], ['--generate', 'extra']]) {
+            const r = cli(args, {});
+            expect(r.status).toBe(1);
+            expect(r.stdout).toBe('');
+            expect(r.stderr).toMatch(/usage: node scripts\/procgen\/repoPython\.js --generate/);
+        }
+    });
+});
+
 describe('one spelling — no gate carries its own venv-or-python3 fallback', () => {
     it('no check-*.mjs resolves `.venv/bin/python` by hand', async () => {
         const { readdirSync, readFileSync } = await import('node:fs');
