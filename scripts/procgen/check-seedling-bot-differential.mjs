@@ -117,7 +117,7 @@
  * with its `{stream, status}` beside it, and `--resume` reuses a stored
  * PASS **only when its fingerprint still matches**. The fingerprint covers
  * the tape, its expectation, every `.js` under `seedlingDemo/`, the atlas,
- * the wasm artifact's stamp and (H1) the channel — `--win` or headless — so
+ * the wasm artifact's bytes (H3; a size+mtime stamp until then) and (H1) the channel — `--win` or headless — so
  * any edit to the model invalidates the checkpoint wholesale, and neither
  * channel ever reuses the other's PASS.
  *
@@ -152,11 +152,12 @@ import { chromium } from 'playwright';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import {
-    appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync,
+    appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync,
     unlinkSync, writeFileSync,
 } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { updateWithArtifactFiles } from './artifactContentHash.js';
 import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
@@ -394,8 +395,8 @@ const CHANNEL = WIN ? 'win' : 'headless';
 //     of it, because "which module does this check depend on" is not
 //     answerable statically and a wrong answer here is a false green;
 //   · the committed atlas the model reads levels from;
-//   · the wasm artifact's size+mtime — the GAME side. Hashing 30 MB per
-//     run buys nothing a stamp does not.
+//   · the wasm artifact's bytes (and `game.html`'s) — the GAME side. By
+//     content since H3: a stamp is host-dependent (see below).
 //
 // ⇒ any edit under `seedlingDemo/` invalidates the whole checkpoint. That
 // is deliberately blunt: a resume that is wrong once is worse than a
@@ -429,18 +430,18 @@ function modelFingerprint() {
     }
     const atlas = join(REPO, 'frontend', 'modules', 'flashPanel', 'atlases', 'seedling-map.json');
     if (existsSync(atlas)) h.update(readFileSync(atlas));
-    // ⚠ THE GAME SIDE, BY STAMP RATHER THAN BY CONTENT. A rebuilt wasm is
-    // a different game and must invalidate; hashing it every run is a cost
-    // with no extra safety, because the pipeline never writes the same
-    // bytes with a different mtime.
+    // ⛓⛓ H3 — THE GAME SIDE, BY CONTENT, NOT BY STAMP. A rebuilt wasm is a
+    // different game and must invalidate. Until H3 this hashed `size:mtimeMs`,
+    // on the argument that hashing 34 MB bought nothing a stamp did not. The
+    // sharded CI tier is what that argument missed: `actions/checkout` sets
+    // every file's mtime to the CHECKOUT time, so ten shard jobs at one SHA
+    // would bank ten different fingerprints and the merge's `--resume` would
+    // reuse none of them — replaying the whole roster while looking like a
+    // slow success. The same BYTES are the same game on any host; the hash
+    // costs ~145 ms once per process (measured on the p4d payload).
     h.update(`page:${PAGE_NAME}`);
     h.update(`channel:${CHANNEL}`);
-    for (const f of ['game.html', `${PAGE_BASE}.wasm`]) {
-        const p = join(ARTIFACT, f);
-        if (!existsSync(p)) continue;
-        const s = statSync(p);
-        h.update(`${f}:${s.size}:${s.mtimeMs}`);
-    }
+    updateWithArtifactFiles(h, ARTIFACT, ['game.html', `${PAGE_BASE}.wasm`]);
     return h.digest('hex').slice(0, 16);
 }
 const FINGERPRINT = modelFingerprint();
@@ -2164,7 +2165,7 @@ try {
                 + 'every expectation it selects, so nothing is skipped.');
         } else {
             console.log(`RESUME: checkpoint at ${CHECKPOINT}, fingerprint ${FINGERPRINT} `
-                + `(model + atlas + wasm stamp + channel ${CHANNEL}), ${prior.size} prior result(s)`);
+                + `(model + atlas + wasm bytes + channel ${CHANNEL}), ${prior.size} prior result(s)`);
         }
     }
     for (const name of names) {
