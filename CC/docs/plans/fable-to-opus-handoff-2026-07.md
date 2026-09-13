@@ -15238,6 +15238,20 @@ library packs + 3 worldgen sidecars re-recorded ask-first, level geometry for a 
 one child per side) are ⚖ — recommended NOT in this arc (a feature and a generation-design change; no defect behind either).
 CI quoted: `d89a055900` 471/14162 (14154 | 8 | 0), slow 12/217 (no run at the docs-only heads above it).
 
+**⚖ RULED + R1 LAUNCHED 2026-09-13 — the user, verbatim: *"I agree with your recommendations."*** (put with the A-vs-C picture and the
+live recipe link; plan §5): Q1 **A** — `Grid.teleporters` re-keyed per EXIT; Q2 **yes** — the editors accept a second exit on a side
+iff the substrate declares `exitSides` with empty keys, zones keep the refusal, the pipeline's Move Exit folds onto the declared
+relabel (R2); Q3 **yes, in R2** — jta/omsi identity declarations, omsi's synthetic action keyed by `exitName`; Q4 **not in this
+arc** (bounce/runner two-doors-per-wall = a feature, R3 parked); Q5 **no** (sphere planner untouched); Q6 extend
+`check-topdown-steps-ui.mjs` Phase D with a DISCRIMINATING source. Ladder **R1 → R2 → REPLAN**. **R1 LAUNCHED**: Opus
+`pipeline-relayout-R1`, pid 1095863 (cwd verified), worktree `~/CC/Archipelago-CC-wt-relayout-r1` made by `new-worktree.sh`
+(branch `relayout-r1` from `9e9676d014`, port 8130), kickoff `NewDocs/plans/pipeline-relayout-R1-prompt.md`: the table keyed
+`cell:exit_id` (nine sites + `truncateSphereWorld` + the envelope codec), the relayout judges every exit's flag by
+`linkIsAdjacentOnSide` after the re-stitch, a headless identity row on the seed-4 APCalc world (mutant = the old key, expected red
+at 28), Phase D of the UI gate given a source with same-side teleporters, docs + trio, the dumps and the maze pin as CONTROLS
+(0 preset bytes). Baseline CI `d89a055900` 471/14162. Shared box with the seedling arc's R3 (primary tree, lock
+`seedling-headless-R3`); R1 queues on it with `--wait-for-box`. As-built → plan §7; ONE merge by the planner.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
