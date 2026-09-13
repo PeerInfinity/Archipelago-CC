@@ -14821,6 +14821,20 @@ incompleteness; 27/27 at main) — b6 made the fixture synthetic (`b373cc35a7`);
 103/103 bank-reader rows, `check-seedling-full-tier-owed` + `check-slice-records` ALL PASS. Worktree follow-up (→
 planning-3's ledger): `new-worktree.sh` should provide a venv, or the driver stop assuming one.
 
+**HANDOFF to `preset-sidecars-planning-4` — 2026-09-13** (`preset-sidecars-planning-3` closes: G2 designed, six ⚖ ruled, G2a built
+in three worktree sessions and MERGED at `b336247681`, CI 465/14047 green; sessions ended by literal PID under the user's lifetime
+ruling; `archipelago-cc-88` ended the same day and handed arc 2 whole to this planner, whose worktrees `wt-p0`/`wt-key-strip-k0`
+are removed and `wt-port` kept). The user: *"Yes, please launch that session."* → `preset-sidecars-planning-4` LAUNCHED (Fable,
+pid 609482, cwd the primary tree; kickoff `NewDocs/plans/preset-sidecars-planning-4-prompt.md`; handshake sent). Its brief: G2b —
+the text-adventure SET-EDITOR BINDING — with the conversation the user owes it: (1) which host (the maze lab's dispatching world
+binding as a text-adventure PART, a TA lab page, or the hub); (2) the library kind (`carried_rules` authored, no `region_size`;
+`LIBRARY_V1_SUBSTRATES` + the G1 agreement row's third axis re-cut); (3) `regionRoundTrip` open/save + the baseline census over
+the 15 room entries; (4) the gated play-level row (the ten `tasw-*` rows are blind to gates); (5) §24.7's remaining ⚖ (a
+cross-substrate catch for a throwing `deserializeWorld`; keys-not-`maze` in the refusal; the `shared/` header; the stale tasw
+roster; jta/omsi `exitSides`); (6) the ladder after G2b (the pipeline relayout slice measured live first; the Seedling editor
+session; MEMORY.md compaction). Inherited ledger: the worktree venv gap; the 37 unpriced gates (headless F1 §16.1, b6's); F2's
+writer clauses (b6's). `preset-sidecars-planning-3` ends itself after this record is pushed.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
