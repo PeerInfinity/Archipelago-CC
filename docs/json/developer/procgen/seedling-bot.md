@@ -1010,6 +1010,39 @@ ubuntu-latest, where the same two channels were measured (runner probe, run
 `roster: --tier=full` (`roster: --win --tier=full` until H2), the channel recorded
 on each part. `--win` remains the channel for real-GPU pixel questions.
 
+⛓⛓ **H3 (2026-09-13): THE TIER IN CI IS SHARDED — plan → shard matrix → merge.**
+Dispatch it from the Actions tab (*Seedling full tier (manual)*) or
+`gh workflow run seedling-full-tier.yml -f tier=full -f shards=10`; both inputs
+default to those values, and `workflow_dispatch:` stays the only trigger
+(`seedlingFullTierWorkflow.test.js`).
+- **plan** runs `check-seedling-bot-differential.mjs --tier=<t> --shard-plan=<n>
+  --json` (no browser, no lock, no wasm). The differential prices each tape with
+  `fullTierEstimate.js`'s constants (8 s + 57 s × ticks/1000) and packs its own
+  roster longest-first into exactly `n` shards (`fullTierShards.js`), so the `n`
+  most expensive tapes land in `n` different shards; the three full walks sit in
+  shards 1–3 at n = 10. The shard job's timeout is derived from the dearest
+  shard's price. `--shard-plan=<n>` without `--json` prints the same partition on
+  the box.
+- **shard** (one job per shard, fail-fast off) runs `--tier=<t> --shard=i/n`,
+  asserts the `CHANNEL: headless logic-only` line, and uploads its checkpoint as
+  `tier-shard-<i>`. A shard prints its tapes first and DEFERS the cross-tape
+  acceptance findings and the live bot-driver task to the merge.
+- **merge** concatenates every shard's checkpoint and runs `--tier=<t> --resume`.
+  Every tape must be reused — the fingerprint hashes the wasm's BYTES since H3,
+  not its mtime, which `actions/checkout` sets per job — so the merge replays
+  nothing and runs only the deferred checks; it goes red unless it prints
+  `RESUME: reusing <all> tape(s)` and `RESUME: 0 tape(s) to replay`, and it names
+  any shard that banked no checkpoint instead of replaying it. The one verdict
+  line is the merge's; `tier-merged` keeps the merged checkpoint and every log.
+
+The first sharded run (34734861224 @ `2715a0c86c`) took ≈ 12 min end to end
+against the single job's 1h38m, read ALL CHECKS PASSED 3635/0/46 with 150 of 150
+tapes reused, and matched the unsharded run's check lines as a set. **The row is
+quoted from the merge** under ruling C, by hand from the box
+(`record-standing-value.mjs --key='roster: --tier=full' --category=… --quote=…
+--measured-at=<run SHA> --channel=headless --covered-by=<run id, SHA, shard
+count>`), one call per category — CI never commits the row.
+
 ⛓⛓ **H1 (2026-09-11): the ~0.5 frames/sec above was a LOST WEBGPU DEVICE, not
 SwiftShader's raster cost.** With `--use-angle=swiftshader` alone, the headless
 compositor runs on ANGLE-SwiftShader GL, which has no shared-image backing for

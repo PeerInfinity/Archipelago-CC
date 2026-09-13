@@ -1233,7 +1233,10 @@ by `__swfGpu.lost` in `seedlingChannel.js`) for every wasm gate, and **pixels**
 (`wasm-pages`, `wasm-ship`). `--win` stays for real-GPU questions. The
 differential's per-push CI arm is a `@ci-face smoke: --tier=fast
 --only=friction-stop`; its full tier runs only by `workflow_dispatch:`
-(`.github/workflows/seedling-full-tier.yml`). The table below is the 2026-09-05
+(`.github/workflows/seedling-full-tier.yml`) — since H3 (2026-09-13) as a plan job
+(`--shard-plan=<n> --json`), `n` shard jobs (`--shard=i/n`, default 10) and a merge
+job whose `--resume` must reuse every tape and replay none (`seedling-bot.md`, "H3").
+The table below is the 2026-09-05
 survey and is left as measured then.
 
 ## The derived table — 62 rows, one per script
