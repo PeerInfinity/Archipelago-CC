@@ -5,7 +5,7 @@
  * asked for a plan.
  */
 import { execFileSync, spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -15,6 +15,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const SCRIPT = join(HERE, 'new-worktree.sh');
+const REPO_TOP = execFileSync('git', ['rev-parse', '--show-toplevel'], { cwd: HERE, encoding: 'utf8' }).trim();
 const git = (args) => execFileSync('git', args, { cwd: REPO, encoding: 'utf8' }).trim();
 const FAMILY = basename(dirname(git(['rev-parse', '--path-format=absolute', '--git-common-dir'])));
 const SUBMODULES = git(['config', '--file', '.gitmodules', '--get-regexp', '^submodule\\..*\\.path$'])
@@ -126,6 +127,18 @@ describe('new-worktree.sh --dry-run', () => {
     expect(r.out).toMatch(/^# serve it: {2}\(cd .* && python -m http\.server \d+\)$/m);
     expect(r.out).toMatch(/^# test it: {3}\(cd .* && npm test -- --port=\d+ …\)$/m);
     expect(r.out).toMatch(new RegExp(`^# python: {4}source ${primary}/\\.venv/bin/activate `, 'm'));
+  });
+
+  it('step 6 in a dry run: the answer is LABELLED as asked of the script\'s tree, not the new one (C1)', () => {
+    /* a fake interpreter that admits every import: the ask answers deterministically, box or CI */
+    const fake = join(PARENT, 'fake-python');
+    writeFileSync(fake, '#!/bin/sh\nexit 0\n');
+    chmodSync(fake, 0o755);
+    const r = run(['--dry-run', 'p0-row-probe', 'HEAD'], { ...withWorktreeConfig('true'), SEEDLING_PYTHON: fake });
+    expect(r.exit).toBe(0);
+    const esc = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    expect(r.out).toMatch(new RegExp(`^# PY=${esc(fake)} \\(asked of ${esc(REPO_TOP)}; the new tree answers `
+      + 'differently only at rung 3, its own \\.venv, absent at creation\\)$', 'm'));
   });
 
   it('step 6 refused (SEEDLING_PYTHON=/bin/false): the ladder, the by-hand commands, exit 0, the worktree still planned', () => {

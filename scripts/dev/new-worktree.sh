@@ -190,16 +190,17 @@ by_hand() {
 }
 
 # Step 6 itself: ask TREE for the Python, then run the three there (EXECUTE=1) or only
-# name the answer (a dry run). ⛔ A refusal is NOT a failure: the worktree stays valid
-# for frontend-only work, so the script goes on and exits 0 (like the identity warning).
+# name the answer (a dry run; NOTE labels it). ⛔ A refusal is NOT a failure: the worktree
+# stays valid for frontend-only work, so the script goes on and exits 0 (like the identity
+# warning).
 step6() {
-  local tree="$1" execute="$2" s
+  local tree="$1" execute="$2" note="${3:-}" s
   if ! PY="$(ask_python "$tree")"; then
     echo "$PY"
     by_hand
     return 0
   fi
-  echo "# PY=$PY"
+  echo "# PY=$PY${note:+ $note}"
   [ "$execute" = 1 ] || return 0
   for s in "${STEP6[@]}"; do
     local -n step_argv="$s"
@@ -213,9 +214,9 @@ step6() {
 if [ "$DRY_RUN" = 1 ]; then
   echo "# new-worktree --dry-run: nothing is changed"
   for step in "${PLAN[@]}"; do echo "+ $step"; done
-  # The new tree does not exist in a dry run, so step 6's ladder is asked of THIS tree.
-  echo "# step 6's Python, asked of $REPO (the real run asks the new tree):"
-  step6 "$REPO" 0
+  # The new tree does not exist in a dry run, so step 6's ladder is asked of THIS tree —
+  # kept, not skipped: the dry run is how a refusal is seen without creating anything.
+  step6 "$REPO" 0 "(asked of $REPO; the new tree answers differently only at rung 3, its own .venv, absent at creation)"
 else
   run() { echo "+ $*"; "$@"; }
   run git -C "$REPO" worktree add -b "$NAME" "$DEST" "$BASE"
