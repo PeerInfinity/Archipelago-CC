@@ -14540,6 +14540,27 @@ reference rows' declared population is 726 members of bytes, cheap (17 s banked)
 string or a `//` line in a template); a JSON-value edit does not see the strip-DATA mutant; esbuild also folds
 constants and normalises quotes — runtime-equivalent, stated.
 
+**G2a SESSION 1 VERIFIED + SESSION 2 LAUNCHED 2026-09-13.** Session 1 (`apworld-sidecars-G2a-1`) pushed `b41ef6ae9e` (the
+producer) + `5b15762386` (the payload + declarations) to `origin/g2a`; plan §24.0–§24.3. Planner re-measured in the worktree:
+12 files vs the base (+925/−99; nothing outside the wrapper but two SUBSTRATE-BLIND engine sites it named — a position-less
+location matched by id, the rebuild's size guard — and M3's `exitSidesOf` accepting `keys: []` as a declaration);
+`check-sidecar-fields` **150 FAIL on exactly the 15 TA entries** (`SUBSTRATE_MISMATCH` "has the keys of `maze`"), every other
+substrate 0 — EXPECTED until session 3's regen; maze pin `677b7d9c…` unmoved; bounded vitest 8 files 459 passed / 3 failed = the
+three corpus-control rows that must stay red (regionLayout's control, `exitSides` (b) + deep diff); CI at `5b15762386` run
+34732227558 **462/13978 (13965 | 8 | 5 failed)** = base 461/13958 @ `71e1b687d4` (green — H2 had reconciled its red before the
+cut) + 1 file / +20 rows, the 5 reds confirmed BY NAME from job 103657002686's log (those three + `procgenDocs/generated.test.js`
+`--check` and matrix-cell — the stale capability matrix, session 2's docs trio). **Session 1 overturned thirteen premises**
+(§24.0–§24.2), two of them the planner's: the base SHA had no CI run (and no inherited red), and **the re-record is NOT an rng
+re-roll** — top-down realises each region from its own sub-seed, so only the maze CHILDREN of a text-adventure parent move (their
+`entrance` mirrors the side midpoint by G0's law; 8 maze regions over AP_10–12, `tiles` on none, every top key but
+`preset_sidecars` unchanged in a scratch regen). Payload as landed: `{exits[…no x/y], exitGates{exit_id: rule}, locations[{name,
+item?, access_rule?}], fogEnabled[, manaEnabled]}` — the gates ride in a SIBLING map because the envelope's `exits` cannot be
+redeclared and its item schema is permissive (a declaration nobody could own). `manaEnabled` stays optional; `entrance` cannot be
+refused by a substrate (envelope). **LAUNCHED** `apworld-sidecars-G2a-2` (Opus, pid 288805, cwd verified, the SAME worktree/branch,
+port 8140 still served by session 1's server; kickoff `NewDocs/plans/apworld-sidecars-G2a-2-prompt.md`): tasks 3–5 — the bridge's
+compass read fixed in the wrapper (a Map or an array), the payload-free painter, the compass in-app row, the mutant battery
+(+ the nine `tasw-*` rows session 1 did not run), the docs trio. Session 3 (the STOP + regen + gates) after it; ONE merge at the end.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
