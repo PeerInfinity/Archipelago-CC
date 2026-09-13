@@ -22,6 +22,7 @@ import {
     reconcileBidirectionalExits,
     spiralCells, buildShuffledSubstrateSequence, arrangeShuffledSpiral,
     computeSourceCounts,
+    moveSphereRegion, relayoutSphereGrid,
 } from './procgenPipelineEngine.js';
 import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
 
@@ -512,6 +513,49 @@ describe('stitchGrid (teleporters)', () => {
         expect(a.exits.get('toB').targetRegion).toBe('B');
         expect(a.exits.get('toC').targetRegion).toBe('C');
         expect(grid.teleporters.size).toBe(2);
+    });
+});
+
+// PIPELINE RELAYOUT R1 task 2: after a layout edit the relayout judges EVERY
+// exit's flag by the side law — back exits included, which stitchGrid skips.
+describe('relayoutSphereGrid (flags by the side law)', () => {
+    // Parent P at (0,0) leaves E for child C at (1,0); C's back exit leaves W for P.
+    const pair = () => {
+        const grid = new Grid({ width: 4, height: 2 });
+        grid.placeRegion({ gx: 0, gy: 0 }, {
+            region_id: 'P',
+            exits: new Map([['toC', { exit_id: 'toC', side: 'E', targetRegion: 'C', isTeleporter: false }]]),
+            extracted_rules: { exits: [{ id: 'toC', target_region: 'C' }] },
+            exits_placed: [{ exit_id: 'toC', side: 'E' }],
+        });
+        grid.placeRegion({ gx: 1, gy: 0 }, {
+            region_id: 'C',
+            exits: new Map([['P', { exit_id: 'P', side: 'W', targetRegion: 'P', isTeleporter: false, isBackExit: true }]]),
+            extracted_rules: { exits: [{ id: 'P', target_region: 'P' }] },
+            exits_placed: [],
+        });
+        return grid;
+    };
+
+    it("a moved region's BACK exit becomes a teleporter when its parent is no longer adjacent", () => {
+        const grid = pair();
+        moveSphereRegion(grid, { gx: 1, gy: 0 }, { gx: 3, gy: 1 });
+        const c = grid.getRegion({ gx: 3, gy: 1 });
+        expect(c.exits.get('P').isTeleporter).toBe(true);
+        expect(c.exits.get('P').targetRegion).toBe('P');
+        expect(grid.getRegion({ gx: 0, gy: 0 }).exits.get('toC').isTeleporter).toBe(true);
+        // ...and back again: both links adjacent, both flags false.
+        moveSphereRegion(grid, { gx: 3, gy: 1 }, { gx: 1, gy: 0 });
+        expect(grid.getRegion({ gx: 1, gy: 0 }).exits.get('P').isTeleporter).toBe(false);
+        expect(grid.getRegion({ gx: 0, gy: 0 }).exits.get('toC').isTeleporter).toBe(false);
+    });
+
+    it('names an exit whose target is not placed instead of judging it', () => {
+        const grid = pair();
+        grid.getRegion({ gx: 1, gy: 0 }).exits.get('P').targetRegion = 'Nowhere';
+        const { unplacedTargets } = relayoutSphereGrid(grid);
+        expect(unplacedTargets).toEqual([{ region: 'C', exitId: 'P', target: 'Nowhere' }]);
+        expect(grid.getRegion({ gx: 1, gy: 0 }).exits.get('P').isTeleporter).toBe(false);
     });
 
     it('does not flag normal adjacent exits as teleporters', () => {

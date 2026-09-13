@@ -5194,7 +5194,10 @@ export function linkIsAdjacentOnSide(grid, fromCell, side, toCell) {
  * itself), and finally stitchGrid re-derives every forward exit's target_region
  * (a teleporter takes precedence over adjacency, so a moved region's exit
  * resolves to its intended target even if some other region now sits next to
- * it). Back-exits keep their stored targets untouched.
+ * it). Back-exits keep their stored targets untouched; then every exit's
+ * `isTeleporter`, back exits included, is judged by the side law
+ * (`judgeExitFlagsBySideLaw`). Returns `{grid, unplacedTargets}` — the exits
+ * whose target region is not on the grid, left unjudged.
  *
  * ⛓ PIPELINE RELAYOUT R1 (2026-09-13) — THE RECORD OF THE FIX. The teleporter
  * map used to be keyed `cell:side`, so a region with two links leaving one side
@@ -5219,7 +5222,38 @@ export function relayoutSphereGrid(grid) {
         grid.setTeleporter(from, exitId, to);
     }
     stitchGrid(grid);
-    return grid;
+    const unplacedTargets = judgeExitFlagsBySideLaw(grid, cellOf);
+    return { grid, unplacedTargets };
+}
+
+/**
+ * After a relayout's re-stitch, set EVERY exit's `isTeleporter` (back exits
+ * included) by the side law — the same `linkIsAdjacentOnSide` arithmetic the
+ * teleporter rebuild above used for the forward exits, so a forward exit's flag
+ * is the one stitchGrid just wrote, and a BACK exit (which stitchGrid skips)
+ * stops carrying the flag of its region's old cell. An exit with no side, or no
+ * target, has no link to judge. An exit whose target region is not placed on
+ * the grid is left as it is and named in the returned list, not thrown.
+ *
+ * @returns {Array<{region: string, exitId: string, target: string}>}
+ */
+function judgeExitFlagsBySideLaw(grid, cellOf) {
+    const unplaced = [];
+    for (const region of grid.allRegions()) {
+        const exits = getRegionExits(region);
+        const entries = exits instanceof Map ? [...exits.entries()]
+            : (exits ?? []).map((e) => [e.exit_id, e]);
+        for (const [exitId, e] of entries) {
+            if (!e?.side || !e.targetRegion) continue;
+            const to = cellOf.get(e.targetRegion);
+            if (!to) {
+                unplaced.push({ region: region.region_id, exitId, target: e.targetRegion });
+                continue;
+            }
+            e.isTeleporter = !linkIsAdjacentOnSide(grid, region.cell, e.side, to);
+        }
+    }
+    return unplaced;
 }
 
 /**
