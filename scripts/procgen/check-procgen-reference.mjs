@@ -40,6 +40,16 @@
  * Run: node scripts/procgen/check-procgen-reference.mjs
  *      node scripts/procgen/check-procgen-reference.mjs --host=http://localhost:8000
  *      node scripts/procgen/check-procgen-reference.mjs --pages=https://peerinfinity.github.io/Archipelago-CC
+ *
+ * ⛓⛓ ITS INPUT KEY IS OVER THE TEXT, NOT THE TOKENS (key-strip K0). Claim 1
+ * runs the generator, and `reference/instruments.mjs` publishes every
+ * instrument's DOCBLOCK — its one-liner and its `Run:` flags — into the tables
+ * `--check` compares. A comment here is an input the runtime reads, so the
+ * CODE population is DECLARED, which digests it as bytes (`rowInputKey.
+ * hasherFor`); without this a one-liner edit would move no key while
+ * reddening claim 1. `rowInputKey.test.js`'s docblock-reader census holds it.
+ *
+ * @key-inputs code: scripts/procgen/*.mjs
  */
 
 import { execFileSync } from 'node:child_process';

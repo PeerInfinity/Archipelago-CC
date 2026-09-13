@@ -59,6 +59,14 @@
  *   node scripts/procgen/generate-procgen-reference.mjs            # write
  *   node scripts/procgen/generate-procgen-reference.mjs --check    # gate
  *   node scripts/procgen/generate-procgen-reference.mjs --out=/tmp/x
+ *
+ * ⛓⛓ ITS INPUT KEY IS OVER THE TEXT, NOT THE TOKENS (key-strip K0). The
+ * instruments table IS every `scripts/procgen/*.mjs` docblock, and the `scan`
+ * provenance reads source regions as text — so its identity row declares the
+ * CODE population, which digests it as bytes. A gate-less row's declaration is
+ * read from its entry script (`rowInputKey.declarationFileFor`).
+ *
+ * @key-inputs code: scripts/procgen/*.mjs
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';

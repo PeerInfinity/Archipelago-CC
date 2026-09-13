@@ -249,6 +249,25 @@ export function keyInputsIn(text, { file = '(text)' } = {}) {
 }
 
 /**
+ * ⛓⛓ WHICH FILE A ROW'S DECLARATION IS READ FROM (slice K0). The GATE the
+ * command names, as before — and when it names none, the ENTRY script itself.
+ *
+ * ⛔ Before K0 a gate-less row (an identity row running a producer) could not
+ * declare at all, and nothing needed it to: every CODE member was bytes. Once
+ * CODE digests tokens, a producer whose OUTPUT is prose it reads —
+ * `generate-procgen-reference.mjs` publishes every instrument's docblock —
+ * must be able to say so, or its identity row is quoted across every one-liner
+ * edit it would have printed.
+ *
+ * @param {string} command the row's command
+ * @param {{path: string}[]} gates the roster
+ * @returns {string|null} repo-relative path, or `null` for a scriptless command
+ */
+export function declarationFileFor(command, gates) {
+    return gates.find((g) => command.includes(g.path))?.path ?? scriptIn(command);
+}
+
+/**
  * A repo-relative glob: `*` spans one path segment, `**` spans any. Nothing
  * else is a metacharacter, because nothing else is needed and every extra one
  * is a way for a declaration to silently match less than its author meant.
