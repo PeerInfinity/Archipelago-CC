@@ -178,6 +178,66 @@ export const TIME_RATE = Object.freeze({
     src: 'Game.as:498 (the initialiser), :918 (the decay), :959 (the reset)',
 });
 
+/** `Main.as:27` — `FPS = 60`, which `Engine` writes to `stage.frameRate`. */
+export const GAME_FPS = 60;
+/** `Game.as:460` — `dayLength:uint = 160 * Main.FPS`. */
+export const DAY_LENGTH_FRAMES = 160 * GAME_FPS;
+/**
+ * ⛓ THE FRESH PAGE'S `Main.time` — `Main.as:158`,
+ * `get time() { if (!SAVE_FILE.data.time) return Game.dayLength / 2; … }`. A
+ * fresh browser profile has no save, so the page's own boot world
+ * (`Main.as:51`, `new Game(0, 80, 128)`) starts its clock here and its first
+ * `Game.update()` reads `game_time` PAGE_BOOT_TIME + 1. Derived, never typed:
+ * `procgenOracle.GENERATED_BOOT_TIME` is this same number.
+ */
+export const PAGE_BOOT_TIME = DAY_LENGTH_FRAMES / 2;
+
+/**
+ * ⛓⛓⛓ SEEDLING HEADLESS S1 (2026-09-13) — **A TRUE START'S WINDOW-1 DEAD
+ * FRAMES, FROM THE GAME'S OWN CLOCK, PER RUN.**
+ *
+ * A TRUE START names no stream and no clock, so `botStart` takes its SKIP path
+ * (`Bot.as:1757`, no `new Game`) and ARMS AT ONCE — inside the page's own boot
+ * world's room fade, which began on that world's first `Game.update()` and is
+ * anchored to the game clock: its first live frame is `PAGE_BOOT_TIME + 1 +
+ * LOAD_FADE_FRAMES` on every machine measured (4821 on the box ×2 and on
+ * `ubuntu-latest` ×2, run 34746119822). So the window pays the model's share
+ * MINUS the `k = armedAt − PAGE_BOOT_TIME` fade frames that had already
+ * elapsed when `botStart` landed — and `k` is a HARNESS timing, not a game
+ * law: `watchWasm`'s `until(gameUp)` is a 200 ms poll, runSWF's init on this
+ * box exceeds that period so the poll is already due at the first frame gap
+ * (k = 1), while the runner's faster init lets a second frame run first
+ * (k = 2 — `game 38 vs model 40 − 1`, four CI runs).
+ *
+ * ⛔ THE −1 THIS REPLACES WAS `BOOT_PRESWAP_FRAMES`, WHICH IS A DIFFERENT
+ * QUANTITY — the swap path's clock transform (R7 slice 2b) — that happens to
+ * equal k on one machine. A constant equal to a mechanism's value by
+ * coincidence on ONE machine reads as a law until a second machine runs it.
+ *
+ * ⛔ THE BOUND REFUSES BY NAME: `k < 1` is an arm the page's boot world never
+ * reached, and `k >= LOAD_FADE_FRAMES` is an arm AFTER the fade ended — live
+ * frames with nothing driving, which no share can describe.
+ *
+ * @returns {{ok: boolean, k: number|null, want: number|null, why: string}}
+ */
+export function trueStartWindowDeadFrames({ share, armedAt, deadFrames }) {
+    if (!Number.isFinite(share) || !Number.isFinite(armedAt)) {
+        return { ok: false, k: null, want: null,
+            why: `needs a numeric model share and armed_at, got ${JSON.stringify({ share, armedAt })}` };
+    }
+    const k = armedAt - PAGE_BOOT_TIME;
+    if (!(k >= 1 && k < LOAD_FADE_FRAMES)) {
+        return { ok: false, k, want: null,
+            why: `k = armed_at ${armedAt} − PAGE_BOOT_TIME ${PAGE_BOOT_TIME} = ${k} is outside `
+                + `1 ≤ k < LOAD_FADE_FRAMES (${LOAD_FADE_FRAMES}) — `
+                + (k < 1 ? 'an arm before the page\'s boot world ran a frame'
+                    : 'an arm AFTER the boot fade ended: live frames with nothing driving') };
+    }
+    const want = share - k;
+    return { ok: deadFrames === want, k, want,
+        why: `game ${deadFrames} vs model ${share} − k ${k} = ${want}` };
+}
+
 /**
  * The `Game.time` a segment's first world sees at `Game.begin()` ENTRY, from
  * the value its tape DECLARES.

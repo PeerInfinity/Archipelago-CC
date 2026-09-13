@@ -84,6 +84,10 @@
  *   node scripts/procgen/check-seedling-wasm-ship.mjs
  *   node scripts/procgen/check-seedling-wasm-ship.mjs --host=http://localhost:8000
  *   node scripts/procgen/check-seedling-wasm-ship.mjs --boot-trace
+ *
+ * ⛓ `--boot-trace` (S1, 2026-09-13) is a bounded READOUT, never a claim: both
+ * chain arms print window 1's boot frame by frame (`BOOT-TRACE <ARM>` lines + a
+ * SUMMARY) up to its third live tick. It found the true start's k (CLAIM 6).
  */
 
 import { readFileSync } from 'node:fs';
@@ -876,7 +880,7 @@ const { atlasLevelSource: shipLevelSource } = await import(
  * constants that must agree are one constant; a literal here would be a number
  * nobody could re-derive when either moved.
  */
-const { LOAD_FADE_FRAMES } = await import(
+const { LOAD_FADE_FRAMES, trueStartWindowDeadFrames } = await import(
     join(REPO, 'frontend/modules/seedlingDemo/gameClock.js'));
 const { BOOT_PRESWAP_FRAMES } = await import(
     join(REPO, 'frontend/modules/seedlingDemo/r7Acceptance.js'));
@@ -1668,6 +1672,40 @@ function runChainArm(ARM, CHAIN_ID, WINDOWS, REFUSES_AT = null) {
          * fit: the two arms disagree in OPPOSITE directions and both are
          * asserted exactly.
          */
+        /**
+         * ⛔⛔⛔ SEEDLING HEADLESS S1 (2026-09-13) — **THE REASON ABOVE WAS WRONG
+         * ABOUT THE MECHANISM, AND A SECOND MACHINE IS WHAT SAID SO.**
+         *
+         * `ubuntu-latest` read `game 38 vs model 40 − 1` on four CI runs while
+         * this box reads 39. `--boot-trace` on both (box ×2, runner ×2 in run
+         * 34746119822, the same Chromium 141.0.7390.37) shows the GAME side
+         * identical: the bot surface is first visible at `game_time` 4801 and
+         * window 1's first live tick is 4821 everywhere. The only difference is
+         * WHEN `botStart` lands: `armed_at` 4801 here, 4802 on the runner.
+         *
+         * A TRUE START takes `botStart`'s SKIP path and arms AT ONCE, inside
+         * the page's own boot world's fade, which began on that world's first
+         * update. So the window pays the share MINUS the k fade frames that had
+         * already elapsed — k = `armedAt − PAGE_BOOT_TIME`, where `PAGE_BOOT_TIME`
+         * is the fresh page's `Main.time` (`dayLength / 2`). k is the HARNESS's
+         * timing: `watchWasm`'s `until(gameUp)` polls every 200 ms, runSWF's
+         * init on this box exceeds that period so the poll is already due at the
+         * first frame gap (k = 1), and the runner's faster init lets a second
+         * frame run first (k = 2). ⛔ `BOOT_PRESWAP_FRAMES` is a DIFFERENT
+         * quantity — the swap path's clock transform (R7 slice 2b, with its
+         * reuse-path negative control) — that happens to equal k on this box.
+         *
+         * ⇒ ⚖ planner ruling B: the true-start branch is computed PER RUN from
+         * the game's own clock (`gameClock.trueStartWindowDeadFrames`), with the
+         * bound `1 ≤ k < LOAD_FADE_FRAMES` refusing by name. It still
+         * discriminates game-side: `armedAt` is read independently of
+         * `dead_frames`, a re-boot still adds blackCover's fade, and a share that
+         * moved by one still reds. The DECLARED branch is unchanged. Rejected
+         * (A), a faster harness poll so every machine catches the 4801 gap:
+         * determinism by scheduling, it assumes one update per yield (R5 measured
+         * render/update decoupling in this runtime), and it would change the
+         * lab's shared `until`.
+         */
         const firstIsTrueStart = (() => {
             const t = loadTape(WINDOWS[0]);
             return (t.rng?.seed ?? 0) === 0 && (t.seam === null || t.seam === undefined);
@@ -1679,9 +1717,10 @@ function runChainArm(ARM, CHAIN_ID, WINDOWS, REFUSES_AT = null) {
          * `seedling_bot_ap_p4c` and every build after it arm on the first frame
          * where `FP.world` IS the world `botStart` constructed (⚖ 58's (F)), so
          * the pre-swap frame is not counted dead and a DECLARED boot pays the
-         * model's share EXACTLY. ⛔ THE TRUE-START ARM IS ONE FEWER: a true start
-         * boots where the page already is, `botStart` takes its SKIP path
-         * (`Bot.as:1731`), and there is no outgoing world to spend the frame in.
+         * model's share EXACTLY. ⛔ THE TRUE-START ARM IS FEWER: a true start
+         * boots where the page already is and `botStart` takes its SKIP path
+         * (`Bot.as:1731`) — ⛓ S1: by k frames of the page's boot fade, not by a
+         * pre-swap frame (see the S1 block above).
          *
          * ⛓ UNTIL 2026-09-12 THE DECLARED ARM ASKED THE BUILD: `wins[0]?.arm`
          * (the `botStatus.arm` block, present exactly on builds that arm after
@@ -1694,15 +1733,25 @@ function runChainArm(ARM, CHAIN_ID, WINDOWS, REFUSES_AT = null) {
          * longer tell a build that arms beside the swap from a defect — no
          * shipped build does.
          */
-        const bootCorrection = firstIsTrueStart ? -BOOT_PRESWAP_FRAMES : 0;
-        check(wins[0]?.deadFrames === SHARES[0] + bootCorrection,
-            `${ARM}: ⛔⛔ CLAIM 6 — window 1 is a FRESH BOOT and pays the model's share `
-                + `${firstIsTrueStart
-                    ? 'MINUS the pre-swap frame it never spends (a TRUE START swaps out '
-                        + `of no outgoing world) — ${SHARES[0]} − ${BOOT_PRESWAP_FRAMES}`
-                    : 'EXACTLY — the build arms AFTER the world swap lands, so the '
-                        + `pre-swap frame is not counted dead — ${SHARES[0]}`}`,
-            `game ${wins[0]?.deadFrames} vs model ${SHARES[0]}`);
+        const trueStart = firstIsTrueStart
+            ? trueStartWindowDeadFrames({ share: SHARES[0], armedAt: wins[0]?.armedAt,
+                deadFrames: wins[0]?.deadFrames })
+            : null;
+        const window1Want = trueStart ? trueStart.want : SHARES[0];
+        if (trueStart) {
+            check(trueStart.ok,
+                `${ARM}: ⛔⛔ CLAIM 6 — window 1 is a TRUE START and pays the model's share MINUS `
+                    + 'the k boot-fade frames already elapsed when `botStart` landed (k = '
+                    + '`armed_at` − PAGE_BOOT_TIME, 1 ≤ k < LOAD_FADE_FRAMES) — '
+                    + `${SHARES[0]} − k`,
+                trueStart.why);
+        } else {
+            check(wins[0]?.deadFrames === SHARES[0],
+                `${ARM}: ⛔⛔ CLAIM 6 — window 1 is a FRESH BOOT and pays the model's share `
+                    + 'EXACTLY — the build arms AFTER the world swap lands, so the '
+                    + `pre-swap frame is not counted dead — ${SHARES[0]}`,
+                `game ${wins[0]?.deadFrames} vs model ${SHARES[0]}`);
+        }
         for (let k = 1; k < N; k += 1) {
             check(wins[k]?.deadFrames === SHARES[k],
                 `${ARM}: ⛔⛔ …and window ${k + 1} pays the MODEL'S SHARE EXACTLY — a `
@@ -1726,13 +1775,15 @@ function runChainArm(ARM, CHAIN_ID, WINDOWS, REFUSES_AT = null) {
          * have to reconstruct it out of forty PASS lines.
          */
         console.log(`\n  ${ARM} — per window (${N}):`);
-        console.log('  #   window            ticks  deadFrames  model  moved  tick0 time');
+        console.log('  #   window            ticks  deadFrames  model  k  moved  tick0 time');
         for (let k = 0; k < N; k += 1) {
             const wk = wins[k] ?? {};
-            const want = k === 0 ? SHARES[0] + bootCorrection : SHARES[k];
+            const want = k === 0 ? window1Want : SHARES[k];
+            const kCol = k === 0 && trueStart ? String(trueStart.k) : '—';
             console.log(`  ${String(k + 1).padStart(2)}  ${WINDOWS[k].padEnd(16)}`
                 + `${String(TICKS[k]).padStart(6)}  ${String(wk.deadFrames ?? '—').padStart(10)}`
-                + `  ${String(want).padStart(5)}  ${String(wk.movedAtBoundary ?? '—').padStart(5)}`
+                + `  ${String(want).padStart(5)}  ${kCol.padStart(2)}`
+                + `  ${String(wk.movedAtBoundary ?? '—').padStart(5)}`
                 + `  ${wk.tick0Applied
                     ? `${wk.tick0Applied.declared.time} -> ${wk.tick0Applied.time}`
                     : '— (fresh)'}`);

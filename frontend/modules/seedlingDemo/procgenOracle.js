@@ -98,6 +98,7 @@ import {
     HAMMER_SAFETY, STRIKE_BOUND_EXHAUSTED, SolverBotError, SolverRefusal,
 } from './solverBot.js';
 import { atlasOf } from './procgenLevel.js';
+import { PAGE_BOOT_TIME } from './gameClock.js';
 import { solveForPage } from './watchSolve.js';
 
 export class ProcgenOracleError extends Error {
@@ -233,10 +234,12 @@ export function assertBudget(budget = DEFAULT_BUDGET) {
  * this is a clock the roster already boots under and not a number invented
  * here.
  *
- * ⚠ WHY THE CONSTANT LIVES IN THIS FILE and not in `gameClock`, said out loud:
+ * ⚠ THE DECLARATION STAYS IN THIS FILE; THE NUMBER DOES NOT (S1, 2026-09-13).
  * `gameClock` owns the COUNTING and this is a DECLARATION — the PoC's own
- * choice of boot state, in the same file as the rest of the boot block. Moving
- * it into the engine would be an engine edit this slice is not entitled to.
+ * choice of boot state, beside the rest of the boot block. But the value is
+ * the fresh page's `Main.time`, which `gameClock.PAGE_BOOT_TIME` now derives
+ * for the ship gate's true-start claim — two constants that must agree are one
+ * constant, so this name reads that one.
  *
  * ⛓ THE LINEAGE — [[feedback_declared_bound_excludes_generated_ids]], the
  * SECOND arrival in this arc. Slice 4b (§13.4) found `tapeFormat` bounding
@@ -246,7 +249,7 @@ export function assertBudget(budget = DEFAULT_BUDGET) {
  * value space excluding the value a generator would naturally pick. There the
  * bound blocked the arm; here it only renames it.
  */
-export const GENERATED_BOOT_TIME = (160 * 60) / 2;
+export const GENERATED_BOOT_TIME = PAGE_BOOT_TIME;
 
 /**
  * THE PoC's STAGING BLOCK — a biome boot, in the tape vocabulary.

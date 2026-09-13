@@ -1533,7 +1533,15 @@ export async function shipToWasm(payload, host) {
          * *"I think it just needs to behave correctly with the new build"*);
          * a mutant nulling this field red exactly CLAIM 6 before the fold, and
          * nothing else read it.
+         *
+         * ⛓⛓ SEEDLING HEADLESS S1 (2026-09-13): ONE NUMBER OF IT COMES BACK,
+         * FOR A DIFFERENT QUESTION. `armedAt` is `Game.time` on the frame the
+         * tape armed. A TRUE START arms inside the page's own boot fade, and
+         * how many fade frames had elapsed (`armedAt − PAGE_BOOT_TIME`) is this
+         * page's poll timing, not a game law — so CLAIM 6's true-start branch
+         * computes its share from it per run (`gameClock.trueStartWindowDeadFrames`).
          */
+        rec.armedAt = st.arm?.armed_at ?? null;
 
 
         /**

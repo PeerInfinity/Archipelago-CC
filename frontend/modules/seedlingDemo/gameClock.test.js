@@ -14,9 +14,11 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
-    BLACK_COVER, createGameClock, declaredSeamTimeAfter, GameClockError,
-    LOAD_FADE_FRAMES, PICKUP_HELP_DEAD_FRAMES, TIME_RATE, beginEntryTimeFromDeclared,
+    BLACK_COVER, createGameClock, DAY_LENGTH_FRAMES, declaredSeamTimeAfter, GAME_FPS,
+    GameClockError, LOAD_FADE_FRAMES, PAGE_BOOT_TIME, PICKUP_HELP_DEAD_FRAMES, TIME_RATE,
+    beginEntryTimeFromDeclared, trueStartWindowDeadFrames,
 } from './gameClock.js';
+import { GENERATED_BOOT_TIME } from './procgenOracle.js';
 import { LOAD_DEAD_FRAMES } from './swimSoundClock.js';
 import { BOOT_PRESWAP_FRAMES, SEAM_BOOT_SPEC } from './r7Acceptance.js';
 import { PLAYTHROUGH_CHAINS } from './playthroughWalk.js';
@@ -390,5 +392,58 @@ describe('the seam spec row the machinery earned', () => {
         const run = runTape(loadTape('collide-up-rock'), { levelSource });
         expect(run.gameTime).toBeNull();
         expect(run.gameTimeRefusal).toContain('save.time');
+    });
+});
+
+/**
+ * ⛓⛓⛓ SEEDLING HEADLESS S1 — A TRUE START'S WINDOW-1 SHARE, PER RUN.
+ *
+ * The fixtures are the four `--boot-trace` readings of CAMPAIGN window 1
+ * (`r8-solve-1`, model share 40): the box ×2 armed at 4801 and read 39, the
+ * runner ×2 (run 34746119822) armed at 4802 and read 38.
+ */
+describe('trueStartWindowDeadFrames — k is read off the game clock, never typed', () => {
+    const SHARE = 40;
+
+    it('PAGE_BOOT_TIME is dayLength / 2, anchored on data the roster already carries', () => {
+        expect(DAY_LENGTH_FRAMES).toBe(160 * GAME_FPS);
+        expect(PAGE_BOOT_TIME).toBe(DAY_LENGTH_FRAMES / 2);
+        // a committed tape booting under the fresh page's clock, and the
+        // generator's declaration of the same number — one constant
+        expect(loadTape('r8-hammer-arm').seam.time).toBe(PAGE_BOOT_TIME);
+        expect(GENERATED_BOOT_TIME).toBe(PAGE_BOOT_TIME);
+    });
+
+    it('the box reading (armed_at 4801, 39) is k = 1', () => {
+        const r = trueStartWindowDeadFrames({ share: SHARE, armedAt: PAGE_BOOT_TIME + 1, deadFrames: 39 });
+        expect(r).toMatchObject({ ok: true, k: 1, want: 39 });
+    });
+
+    it('the runner reading (armed_at 4802, 38) is k = 2 — a k folded to 1 reds here', () => {
+        const r = trueStartWindowDeadFrames({ share: SHARE, armedAt: PAGE_BOOT_TIME + 2, deadFrames: 38 });
+        expect(r).toMatchObject({ ok: true, k: 2, want: 38 });
+    });
+
+    it('a fade regression (share read as 41) still reds on the box reading', () => {
+        const r = trueStartWindowDeadFrames({ share: SHARE + 1, armedAt: PAGE_BOOT_TIME + 1, deadFrames: 39 });
+        expect(r.ok).toBe(false);
+        expect(r.want).toBe(40);
+    });
+
+    it('an arm AFTER the boot fade ended is refused by name, whatever the count', () => {
+        const late = PAGE_BOOT_TIME + 22;
+        const r = trueStartWindowDeadFrames({ share: SHARE, armedAt: late, deadFrames: SHARE - 22 });
+        expect(r.ok).toBe(false);
+        expect(r.why).toContain('AFTER the boot fade ended');
+        expect(trueStartWindowDeadFrames({ share: SHARE, armedAt: PAGE_BOOT_TIME + LOAD_FADE_FRAMES,
+            deadFrames: SHARE - LOAD_FADE_FRAMES }).ok).toBe(false);
+        expect(trueStartWindowDeadFrames({ share: SHARE, armedAt: PAGE_BOOT_TIME + LOAD_FADE_FRAMES - 1,
+            deadFrames: SHARE - LOAD_FADE_FRAMES + 1 }).ok).toBe(true);
+    });
+
+    it('an arm before the boot world ran a frame, or no armed_at at all, is refused', () => {
+        expect(trueStartWindowDeadFrames({ share: SHARE, armedAt: PAGE_BOOT_TIME, deadFrames: SHARE }))
+            .toMatchObject({ ok: false, k: 0 });
+        expect(trueStartWindowDeadFrames({ share: SHARE, armedAt: null, deadFrames: 39 }).ok).toBe(false);
     });
 });
