@@ -783,6 +783,71 @@ function resolveLiteral(lit, fromFile, tracked) {
 }
 
 /**
+ * ⛓⛓ WHAT ONE FILE CONTRIBUTES TO ANY ROW, scanned ONCE PER CONTEXT (slice K0).
+ * Every rule below is a function of the file's text, its path and the tracked
+ * set — never of the row — so a battery of 117 rows sharing ~250-member
+ * closures used to re-scan the same file for every row that reached it
+ * (measured: `inputPopulations` over 110 distinct entries 19.0 s). The row's
+ * own filters (`!code.has(p)`, the derived-data exclusion) are applied by the
+ * caller, so nothing a row decides is cached.
+ *
+ * ⛓ Keyed on the CONTEXT OBJECT: a test that spreads a context into a new one
+ * gets a fresh cache, and a context is one tree state by construction.
+ */
+const SCAN_CACHE = new WeakMap();
+function fileScan(ctx, rel) {
+    if (!SCAN_CACHE.has(ctx)) SCAN_CACHE.set(ctx, new Map());
+    const cache = SCAN_CACHE.get(ctx);
+    if (cache.has(rel)) return cache.get(rel);
+    const text = ctx.read(rel);
+    const scan = text ? { stems: [], paths: [], docs: [], dirs: [], spawn: [],
+        bare: stripComments(text) } : null;
+    if (scan) {
+        if (ctx.stemRe) {
+            ctx.stemRe.lastIndex = 0;
+            let m = ctx.stemRe.exec(text);
+            while (m !== null) {
+                scan.stems.push(...(ctx.stems.get(m[1]) ?? []));
+                m = ctx.stemRe.exec(text);
+            }
+        }
+        PATH_LITERAL_RE.lastIndex = 0;
+        let lit = PATH_LITERAL_RE.exec(text);
+        while (lit !== null) {
+            scan.paths.push(...resolveLiteral(lit[1], rel, ctx.tracked));
+            lit = PATH_LITERAL_RE.exec(text);
+        }
+        /**
+         * ⛔ …AND ONLY AN INSTRUMENT ENUMERATES A DIRECTORY. Measured: applied
+         * to the whole closure, one frontend module naming the docs directory
+         * pulled all 30 `*.md` into TWENTY-SEVEN rows, so a docs-only commit
+         * re-ran 1709 s of wasm playback that cannot read a word of it — the
+         * economy destroyed by a rule meant to fix a stale green. A
+         * `readdirSync` at run time happens in `scripts/procgen/`; a frontend
+         * module is SERVED, not run, and its mention of a doc path is a
+         * citation.
+         */
+        if (rel.startsWith(`${SCRIPT_DIR}/`)) {
+            MD_LITERAL_RE.lastIndex = 0;
+            let md = MD_LITERAL_RE.exec(scan.bare);
+            while (md !== null) {
+                scan.docs.push(...resolveLiteral(md[1], rel, ctx.tracked));
+                md = MD_LITERAL_RE.exec(scan.bare);
+            }
+            DIR_LITERAL_RE.lastIndex = 0;
+            let dl = DIR_LITERAL_RE.exec(scan.bare);
+            while (dl !== null) {
+                scan.dirs.push(...ctx.filesDirectlyUnder(dl[1]));
+                dl = DIR_LITERAL_RE.exec(scan.bare);
+            }
+        }
+        scan.spawn.push(...spawnTargetsIn(text, { tracked: ctx.tracked, fromFile: rel }));
+    }
+    cache.set(rel, scan);
+    return scan;
+}
+
+/**
  * The four input populations of ONE row, each as a sorted member list.
  *
  * @param {{entry: string, declared: object, ctx: object}} o
@@ -809,52 +874,13 @@ export function inputPopulations({ entry, declared = null, ctx }) {
         { file: entry, population: 'spawn' }));
 
     for (const rel of code) {
-        const text = ctx.read(rel);
-        if (!text) continue;
-        if (ctx.stemRe) {
-            ctx.stemRe.lastIndex = 0;
-            let m = ctx.stemRe.exec(text);
-            while (m !== null) {
-                for (const p of ctx.stems.get(m[1]) ?? []) addData(p);
-                m = ctx.stemRe.exec(text);
-            }
-        }
-        PATH_LITERAL_RE.lastIndex = 0;
-        let lit = PATH_LITERAL_RE.exec(text);
-        while (lit !== null) {
-            for (const p of resolveLiteral(lit[1], rel, ctx.tracked)) {
-                if (!code.has(p)) addData(p);
-            }
-            lit = PATH_LITERAL_RE.exec(text);
-        }
-        /**
-         * ⛔ …AND ONLY AN INSTRUMENT ENUMERATES A DIRECTORY. Measured: applied
-         * to the whole closure, one frontend module naming the docs directory
-         * pulled all 30 `*.md` into TWENTY-SEVEN rows, so a docs-only commit
-         * re-ran 1709 s of wasm playback that cannot read a word of it — the
-         * economy destroyed by a rule meant to fix a stale green. A
-         * `readdirSync` at run time happens in `scripts/procgen/`; a frontend
-         * module is SERVED, not run, and its mention of a doc path is a
-         * citation.
-         */
-        if (rel.startsWith(`${SCRIPT_DIR}/`)) {
-            const bare = stripComments(text);
-            MD_LITERAL_RE.lastIndex = 0;
-            let md = MD_LITERAL_RE.exec(bare);
-            while (md !== null) {
-                for (const p of resolveLiteral(md[1], rel, ctx.tracked)) addData(p);
-                md = MD_LITERAL_RE.exec(bare);
-            }
-            DIR_LITERAL_RE.lastIndex = 0;
-            let dl = DIR_LITERAL_RE.exec(bare);
-            while (dl !== null) {
-                for (const p of ctx.filesDirectlyUnder(dl[1])) if (!code.has(p)) addData(p);
-                dl = DIR_LITERAL_RE.exec(bare);
-            }
-        }
-        for (const t of spawnTargetsIn(text, { tracked: ctx.tracked, fromFile: rel })) {
-            spawnTargets.add(t);
-        }
+        const scan = fileScan(ctx, rel);
+        if (!scan) continue;
+        for (const p of scan.stems) addData(p);
+        for (const p of scan.paths) if (!code.has(p)) addData(p);
+        for (const p of scan.docs) addData(p);
+        for (const p of scan.dirs) if (!code.has(p)) addData(p);
+        for (const t of scan.spawn) spawnTargets.add(t);
     }
 
     /** ⛔ AND THEIR CLOSURES. A spawned gate's own imports are inputs of THIS
@@ -887,7 +913,7 @@ export function inputPopulations({ entry, declared = null, ctx }) {
      *  and comments stripped. "Loads a file from this submodule" is the claim;
      *  a prose sentence about a sibling submodule is not it, and the loose
      *  form measurably pulled `journey-to-ascension` into the wasm rows. */
-    const namesIt = (s) => [...code].some((f) => stripComments(ctx.read(f)).includes(`${s}/`));
+    const namesIt = (s) => [...code].some((f) => fileScan(ctx, f)?.bare.includes(`${s}/`));
     const build = ctx.submodules.filter((s) =>
         reached.some((p) => p.startsWith(`${s}/`)) || namesIt(s));
     for (const s of decl.build) if (!build.includes(s)) build.push(s);
