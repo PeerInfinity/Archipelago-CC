@@ -872,9 +872,29 @@ runs. A gate whose standing value lives under another key declares
 
 ⚠ **A probe banks only a parsable verdict.** A gate that ends with
 `All … assertions passed.` or `VERIFY …: ALL OK` prints no line
-`headlineOf` reads as a total. Such a gate stays out of the bank until it
-prints `ALL CHECKS PASSED` / `N CHECK(S) FAILED` — the same vocabulary gap
-F1 closed in five `  ok  ` printers.
+`headlineOf` reads as a total. F1 fixed five `  ok  ` printers by hand; F2
+moved the other 37 `@ci-box` gates onto `gateTotal.js` (`checkLine`,
+`totalLine`, `failOnCrash`). A new gate should use it too, or it will be
+refused by name the same way.
+
+F2 added four more clauses around the writer:
+- **An EXISTING row is guarded too.** If a MOVED row's re-measure is killed,
+  exits non-zero, or prints no total, the writer prints
+  `MOVED row REFUSED: <key> — … is KEPT` and leaves the banked row
+  (`movedRowRefusal`). This runs before the nondeterminism detector. Measured:
+  a venv-less worktree banked `3/0` and `0/0` over 21/0 and 24/0.
+- **A gate that writes tracked files is never probed.** It declares
+  `@tree-writes <paths>: <why>`. A probe killed at the deadline skips the
+  gate's `finally`, which leaves `preset_files.json` modified, and the next
+  row's `assertTreeUnmoved` then ends the whole write. `--key=` still runs such
+  a gate.
+- **A gate that needs an argument gets no row.** Its `@ci-box` reason declares
+  ``positional `<x>` ``, `argvFor` answers `null`, and no `gate:` row is
+  derived.
+- **Python is chosen by one ladder.** `repoPython.js` tries
+  `SEEDLING_PYTHON` → `$VIRTUAL_ENV` → `<tree>/.venv` → `python3`. The chosen
+  interpreter must `import` what the gate needs, or the gate refuses by name
+  before its first PASS line.
 
 ## Related documentation
 
