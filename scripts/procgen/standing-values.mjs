@@ -26,7 +26,9 @@
  *   node scripts/procgen/standing-values.mjs --keys         every keyed row's
  *                                                           INPUT KEY and its
  *                                                           four populations,
- *                                                           against the bank
+ *                                                           against the bank,
+ *                                                           each with the
+ *                                                           hasher it used
  *                                                           (box-free)
  *   node scripts/procgen/standing-values.mjs --write --rekey
  *   node scripts/procgen/standing-values.mjs --write --force-row='gate: x'

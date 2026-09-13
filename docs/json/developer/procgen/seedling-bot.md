@@ -13935,6 +13935,26 @@ rather than improved). **2305.7 s → 1917.9 s, −17 %.**
 are not checked out computes a different key — which makes the row RE-RUN,
 never quote.
 
+⛓ **Since key-strip K0 (2026-09-13), a CODE or SPAWN member is keyed on its
+TOKENS, not its bytes — a comment is not an input the runtime reads.** The hub
+modules every instrument imports are 61–88 % prose, and before K0 one sentence
+added to `boxLock.js` moved the key of every row whose closure held it. Now a
+member esbuild parses (its own default loader decides: `.js`, `.mjs`, `.cjs`)
+digests esbuild's comment-free, unminified reprint (`legalComments: 'none'`;
+unminified so no mangler's renaming enters the digest); `.html`, `.py` and
+`.sh` members stay bytes, and a JS source that fails to parse falls back to
+bytes and is NAMED in the `--keys` report. DATA stays bytes, BUILD stays the
+gitlink. ⛔ A population a gate DECLARES with `@key-inputs` stays bytes whole,
+because a declarer's subject is the text: `check-procgen-help` compares
+docblocks, and `check-procgen-reference` / `generate-procgen-reference` publish
+them, so both declare `code: scripts/procgen/*.mjs` (a gate-less row reads the
+declaration from its entry script). `rowInputKey.test.js` holds that as a law —
+every keyed row reaching a docblock reader must declare. The reprint is pinned
+to the installed esbuild (0.27.2 at K0): a bump whose printer changes re-forms
+every token digest at once, so every keyed row reads MOVED once and re-runs —
+the conservative direction; `--keys` prints the version beside each tokens
+population so that mass move is attributable.
+
 ### R9 slice CAT: THE ROSTER GETS THREE DERIVED CATEGORIES — 143 minutes of owed GPU become 11
 
 **The full `--win` tier is 143 minutes, and until this slice every tape move
