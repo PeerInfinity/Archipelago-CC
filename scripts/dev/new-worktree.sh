@@ -192,7 +192,8 @@ by_hand() {
 # Step 6 itself: ask TREE for the Python, then run the three there (EXECUTE=1) or only
 # name the answer (a dry run; NOTE labels it). ⛔ A refusal is NOT a failure: the worktree
 # stays valid for frontend-only work, so the script goes on and exits 0 (like the identity
-# warning).
+# warning). A provisioning command that FAILS is (exit 1, ⚖ ruled by the planner, plan
+# §20.1): a half-provisioned worktree is an error, and the refusal names the steps left.
 step6() {
   local tree="$1" execute="$2" note="${3:-}" s
   if ! PY="$(ask_python "$tree")"; then
