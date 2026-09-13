@@ -26,13 +26,22 @@
  *      depletes the pool → loop reset fires (count +1, mana refilled)
  *      and the player is teleported to the resolved start region.
  *
- * Prereq: dev server on :8000 (python -m http.server 8000).
- * Run: node scripts/procgen/check-ta-mana-leg.mjs
- * @ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at a hardcoded `localhost:8000` and it takes no `--host=` at all, so the roster cannot point it elsewhere.
- *   ⇒ deleting this one line is how a later slice adopts it into CI.
+ * Prereq: a dev server serving the repo root (python -m http.server 8000).
+ * Run: node scripts/procgen/check-ta-mana-leg.mjs [--host=<repo-root origin>]
+ *
+ * ⛓ **ADOPTED INTO CI — PRESET SIDECARS C1 (2026-09-13).** The box-only
+ *    declaration that stood here said this gate drove a hardcoded dev-server
+ *    origin and took no host argument, so the roster could not point it
+ *    anywhere else. It now reads the origin through the directory's one
+ *    spelling (below), defaulting to the roster's own `LOCAL_HOST`, so
+ *    `argvFor(gate, 'local')` hands it the origin and CI's browser shards run
+ *    it against the tree they serve. Why it matters: G2a dropped the room's
+ *    `manaEnabled` for twelve hours on main and this leg — the only thing
+ *    that asks the WORLD for the flag in the real app — ran nowhere (plan §27).
  */
 import { chromium } from 'playwright';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { LOCAL_HOST } from './gateRoster.js';
 // ⚖ 2026-09-06 — the move cost this leg charges is the block's ROOT default,
 // and that is an exported constant, not a number to type here. The fixture's
 // `loop_costs` is a deliberately EMPTY block (presence = loop mode on), so
@@ -54,7 +63,9 @@ import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-ta-mana-leg.mjs', kind: 'browser' });
 
-const URL = 'http://localhost:8000/frontend/?game=jta_mixed_test&seed=1';
+const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
+    ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
+const URL = `${arg('host', LOCAL_HOST)}/frontend/?game=jta_mixed_test&seed=1`;
 const TIMEOUT_MS = 120000;
 
 const browser = await chromium.launch();
