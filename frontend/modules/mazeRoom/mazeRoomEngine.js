@@ -348,12 +348,14 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     if (sidecar.manaEnabled === true) {
         world.manaEnabled = true;
     }
-    // Phase 6h: fogEnabled rides through verbatim. The maze panel's
-    // _adoptLoadedRegion overrides this.fogEnabled from this field;
-    // the TA substrate's _adoptLoadedRegion gates _discoverEverythingInRegion
-    // on it. Without this preservation, the runtime sees `undefined`
-    // and falls back to legacy behavior (auto-discover everything),
-    // bypassing the per-region fog model entirely.
+    // Phase 6h: fogEnabled rides through when the sidecar carries `true`
+    // (the engine stamps it on the envelope). Its one WORLD reader is the
+    // maze panel's _adoptLoadedRegion (mazeRoomUI.js), which lets a boolean
+    // on the world override the persisted fog checkbox, so the region's fog
+    // is a property of the world rather than a UI preference; without the
+    // flag the panel keeps the checkbox's value. (PRESET SIDECARS C1: this
+    // comment used to name a text-adventure `_adoptLoadedRegion` reader —
+    // none exists; that substrate's room does not carry the flag at all.)
     if (sidecar.fogEnabled === true) {
         world.fogEnabled = true;
     }

@@ -194,8 +194,12 @@ accept; a **warning** is suspicious-but-maybe-intentional state. Two layers:
 
 ⛔ **Errors block nothing.** The raw save is not vetoed by any of this — the
 reader owns the repair — and the schema veto is exactly as strict as it was.
-⛔ **The Edit ▸ baseline is not run here** (`inspectRegionRoom` is ~90 ms a
-region, async): the block already shows the door's own verdict for that.
+⛔ **The Edit ▸ baseline is not run here** (`inspectRegionRoom` is async and
+per region — measured in headless Chromium at PRESET SIDECARS C1, `7f83de86d4`,
+5 reps after a warm-up: 0.4–1.1 ms on `procgen_maze/AP_1`'s 48-tile region, 3.9–5.5 ms
+on `procgen_topdown/AP_8`'s largest maze region (440 tiles, one of 235), so a
+whole-document pass would be about a second there): the block already shows the
+door's own verdict for that.
 
 **The memo.** The bar's list is memoised on the record's identity plus the slot
 (R1's key), and the report has its OWN cache on the same key
@@ -809,7 +813,9 @@ is that lookup's own sentence: a `refused` declaration's words (Seedling), or
 *"the X substrate declares no `regionRoundTrip` …"* (jta, omsi, runner today —
 `text_adventure` declares one since PRESET SIDECARS G2b-1, with no room editor).
 ⛔ It needs no room editor — only the round trip. The work
-(two round trips, ~90 ms a maze region) runs on the PRESS; the answer is printed
+(two round trips — measured at C1, `7f83de86d4`, in headless Chromium: 0.4–0.8 ms
+on a 48-tile maze region after a 2.5–3.4 ms first call, 4.2–6.8 ms on a 440-tile one; the
+figure this line used to quote, ~90 ms, was not reproduced) runs on the PRESS; the answer is printed
 under the block and in the status line, and the re-render re-asks the issue list
 and the Edit ▸ verdict.
 
