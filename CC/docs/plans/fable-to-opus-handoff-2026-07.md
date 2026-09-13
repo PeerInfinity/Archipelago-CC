@@ -14647,6 +14647,23 @@ a discrimination control) — ⛔ **STOP for the user's word**; 6c copy-in on th
 52 quote — predicted 463/13983 (13975 | 8 | 0) + 6a's rows). Then the planner rebases `g2a` onto `origin/main` and pushes
 `HEAD:main` — ONE merge for the slice.
 
+**G2a STOP RULED 2026-09-13 — the user, verbatim: *"I don't want to maintain support for the old format. I want to fully
+replace it with the new format."*** Session 3 (`apworld-sidecars-G2a-3`) had PREPARED the re-record in a throwaway tree
+(`~/CC/Archipelago-CC-wt-g2a-regen`) and stopped (plan §24.7 T1–T7); 6a pushed first (`20b70671ed`: the jta_mixed script a
+fixed point again + `--out`, pytest rows in `test/test_jta_mixed_test_preset.py`). **Planner-verified with its own instruments:**
+only `preset_sidecars` moves in each of the four files (regions/items/placements/sphere log/metadata/`preset_files.json`
+byte-identical); TA entries reshaped 1/1, 3/3, 4/4, 7/7; maze siblings 0, 2/6, 4/5, 2/2 — every moved one the CHILD of a
+text-adventure parent in the sphere tree, no unmoved one (`entrance`/`exits`/`items` + `obstacles` on 2, `longestShortestPath`
+on 3; `tiles` on none); bytes 3,778→2,774 · 56,842→53,221 · 56,608→49,474 · 56,716→46,938; the corpus gate ALL PASS 1392 over 7
+in the prepared tree; the planner's own regen of AP_11 and jta `cmp`-identical to the prepared bytes; maze pin `677b7d9c…`
+unmoved. Session 3's Map witness (locked, `page.route`): committed AP_11 "0 locations" on every TA cell → prepared: Overworld 4
+ESWN / 4 closed / 11, BlackCastle 2 EN / 1 / 4, Vault 1 E / 0 / 2, Peek 1 W / 0 / 1 (session 2's predictions to the digit), a
+moved-exit control moves the digest, 0 page errors. **Read as:** the re-record AUTHORISED (one commit); T7 #1 INVERTED — no
+legacy tolerance: `deserializeTextAdventureRoom` REFUSES a maze-shaped payload by name, the "pre-G2a" rows become REFUSAL rows
+with a mutant, every other legacy branch in the wrapper swept out and named; T7 #2/#3 yes; ⚖ a gated play-level row NOT in G2a
+(G2b). Relayed to session 3 verbatim; it proceeds copy-in → refusal → gates → CI → §24.7 → report; then the planner rebases
+`g2a` onto `origin/main` in the worktree and pushes `HEAD:main` (ONE merge).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
