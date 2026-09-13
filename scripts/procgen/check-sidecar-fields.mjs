@@ -51,6 +51,28 @@
  * first layer FAILs also shows there (as the hub shows it): both askers, one
  * predicate.
  *
+ * ── ⛓⛓ THE THIRD LAYER — RULE AGREEMENT (PRESET SIDECARS G2b-1) ──────
+ *
+ * Per sidecar REGION whose substrate declares a `regionRoundTrip`, the gate
+ * asks `regionRuleAgreement` (`frontend/modules/apworldEditor/
+ * sidecarRuleAgreement.js`) — the payload's rules re-derived exactly as the
+ * hub's `Re-derive rules ▸` derives them, compared endpoint by endpoint with
+ * the document's. What a disagreement MEANS is the round trip's own
+ * declaration (`regionRoundTrip.rules`, `procgenCore/roundTripRules.js`):
+ *
+ *   · AUTHORED — the payload carries the rules, so a disagreement is a STALE
+ *                gate: a FAIL line naming the endpoint and BOTH rules;
+ *   · DERIVED  — the rules come from geometry, so a rule not reproduced is one
+ *                the hub freezes: COUNTED on one line per substrate, never FAIL;
+ *   · a refusal (the round trip refused the payload) — NOT CHECKED, per region,
+ *                printed; a malformed `rules` member — FAIL, per substrate.
+ *
+ * ⛓ A layer, not a sibling gate, for the V0 reason: the same documents, the
+ * same registry, the same `--tree`, and no substrate named — two gates with one
+ * opener are one gate. ⛓ Its cost is PRINTED on its own line (MEASURED at
+ * G2b-1 over the tracked corpus: the whole layer is seconds, not the ~95 s the
+ * brief priced from a per-region guess).
+ *
  * ── ⛓ THE POPULATION IS `git ls-files`, AND IT IS PRINTED ──────────
  *
  * Every TRACKED `_rules.json` under `frontend/presets/` — the multiworld
@@ -159,14 +181,17 @@ async function loadRegistry() {
         pathToFileURL(join(repo, 'frontend/modules/procgenCore/sidecarFields.js')).href);
     const report = await import(
         pathToFileURL(join(repo, 'frontend/modules/apworldEditor/sidecarIssues.js')).href);
-    return { substrateRegistry, failed, core, report };
+    const agreement = await import(
+        pathToFileURL(join(repo, 'frontend/modules/apworldEditor/sidecarRuleAgreement.js')).href);
+    return { substrateRegistry, failed, core, report, agreement };
 }
 
 async function main() {
     const t0 = Date.now();
-    const { substrateRegistry, failed, core, report } = await loadRegistry();
+    const { substrateRegistry, failed, core, report, agreement } = await loadRegistry();
     const { sidecarFieldsOf, sidecarPayloadErrors } = core;
     const { sidecarIssues, describeSidecarIssue, UNCHECKED_SIDECAR_KINDS } = report;
+    const { regionRuleAgreement, ruleAgreementFails, describeDisagreement, RULE_AGREEMENT } = agreement;
 
     /** Per substrate id: `{fields}` or `{error}` — asked once, reused per entry. */
     const declarations = new Map();
@@ -195,6 +220,11 @@ async function main() {
     const bySubstrate = new Map();
     let withSidecars = 0;
     let entries = 0;
+    /** ⛓ The third layer: FAIL rows, NOT CHECKED rows, and per-substrate tallies. */
+    const ruleFails = [];
+    const ruleNotChecked = [];
+    const ruleTally = new Map();
+    let ruleMs = 0;
 
     for (const file of files) {
         let doc;
@@ -225,6 +255,35 @@ async function main() {
                     fails.push({ ...at, substrate: entry.substrate, ...e });
                 }
             }
+            // ⛓⛓ THE THIRD LAYER — rule agreement, per region with a round trip.
+            const r0 = Date.now();
+            for (const region of Object.keys(regions ?? {})) {
+                if (typeof regions[region]?.substrate !== 'string') continue;
+                // eslint-disable-next-line no-await-in-loop
+                const a = await regionRuleAgreement(doc, slot, region);
+                if (a.status === RULE_AGREEMENT.NO_ROUND_TRIP) continue;
+                const at = { file, slot, region, substrate: a.substrate };
+                if (a.declarationError) {
+                    ruleFails.push({ ...at, line: a.why });
+                    continue;
+                }
+                if (a.status === RULE_AGREEMENT.NOT_CHECKED) {
+                    ruleNotChecked.push({ ...at, line: a.why });
+                    continue;
+                }
+                const t = ruleTally.get(a.substrate) ?? {
+                    rules: a.rules, regions: 0, endpoints: 0, gated: 0, disagree: 0,
+                };
+                t.regions += 1;
+                t.endpoints += a.endpoints;
+                t.gated += a.gated;
+                t.disagree += a.disagreements.length;
+                ruleTally.set(a.substrate, t);
+                if (ruleAgreementFails(a)) {
+                    for (const d of a.disagreements) ruleFails.push({ ...at, line: describeDisagreement(d) });
+                }
+            }
+            ruleMs += Date.now() - r0;
             // ⛓⛓ THE SECOND LAYER — the hub's report, per slot.
             for (const i of sidecarIssues(doc, slot)) {
                 const row = { file, slot, ...i, line: describeSidecarIssue(i) };
@@ -242,7 +301,12 @@ async function main() {
             documents: files.length, withSidecars, entries, substrates: Object.fromEntries(
                 substrates.map((s) => [s, bySubstrate.get(s)])),
             librariesFailed: failed, fails,
-            issues: { errors: issueErrors, warnings: issueWarnings, notChecked }, ms,
+            issues: { errors: issueErrors, warnings: issueWarnings, notChecked },
+            rules: {
+                fails: ruleFails, notChecked: ruleNotChecked,
+                bySubstrate: Object.fromEntries([...ruleTally].sort()), ms: ruleMs,
+            },
+            ms,
         }, null, 2));
     } else {
         console.log('check-sidecar-fields — every preset_sidecars entry against its substrate\'s '
@@ -272,14 +336,32 @@ async function main() {
             console.log(`  … ${shown.length - MAX_FAIL_LINES} more issue line(s); --json lists all.`);
         }
         for (const r of notChecked) console.log(`  NOT CHECKED  ${r.file}  slot ${r.slot}  ${r.line}`);
+        // ⛓ The third layer: one tally line per substrate, then FAILs and refusals.
+        for (const [s, t] of [...ruleTally].sort()) {
+            const verdict = t.rules === 'authored'
+                ? `${t.endpoints - t.disagree}/${t.endpoints} endpoint(s) agree`
+                : `${t.endpoints - t.disagree}/${t.endpoints} endpoint(s) reproduced · ${t.disagree} not `
+                    + 'reproduced (frozen at the hub, counted, never a FAIL)';
+            console.log(`  RULES  ${s}  ${t.rules.toUpperCase()}  ${t.regions} region(s) · ${t.gated} gated · ${verdict}`);
+        }
+        for (const r of ruleFails.slice(0, MAX_FAIL_LINES)) {
+            console.log(`  FAIL  ${r.file}  slot ${r.slot}  region ${JSON.stringify(r.region)}  rule-agreement — ${r.line}`);
+        }
+        if (ruleFails.length > MAX_FAIL_LINES) {
+            console.log(`  … ${ruleFails.length - MAX_FAIL_LINES} more rule-agreement FAIL line(s); --json lists all.`);
+        }
+        for (const r of ruleNotChecked) {
+            console.log(`  NOT CHECKED  ${r.file}  slot ${r.slot}  region ${JSON.stringify(r.region)}  rules — ${r.line}`);
+        }
+        console.log(`  rule agreement   ${ruleFails.length} FAIL(S) · ${ruleNotChecked.length} region(s) not checked (${ruleMs} ms)`);
         const tally = `${issueErrors.length} issue(s), ${issueWarnings.length} warning(s), `
             + `${notChecked.length} not-checked notice(s)`;
-        const bad = fails.length + failed.length + issueErrors.length;
+        const bad = fails.length + failed.length + issueErrors.length + ruleFails.length;
         console.log(bad === 0
             ? `  ALL PASS — ${entries} entries over ${substrates.length} substrates · ${tally} (${ms} ms)`
-            : `  ${fails.length} FAIL(S) over ${entries} entries · ${tally}${failed.length ? `, ${failed.length} library load failure(s)` : ''} (${ms} ms)`);
+            : `  ${fails.length + ruleFails.length} FAIL(S) over ${entries} entries · ${tally}${failed.length ? `, ${failed.length} library load failure(s)` : ''} (${ms} ms)`);
     }
-    process.exit(fails.length + failed.length + issueErrors.length > 0 ? 1 : 0);
+    process.exit(fails.length + failed.length + issueErrors.length + ruleFails.length > 0 ? 1 : 0);
 }
 
 if (isEntryPoint(import.meta.url)) main();

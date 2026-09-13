@@ -4298,10 +4298,11 @@ export const REGISTRY = frz({
                 {
                     "id": "text_adventure",
                     "present": true,
-                    "short": "{open, save}",
+                    "short": "{open, rules, save}",
                     "type": "object",
                     "value": [
                         "open",
+                        "rules",
                         "save"
                     ]
                 },

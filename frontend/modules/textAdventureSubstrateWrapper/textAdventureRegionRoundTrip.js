@@ -47,6 +47,7 @@
  * static import keeps the declaration DATA and the hub awaits either shape.
  */
 
+import { ROUND_TRIP_RULES } from '../procgenCore/roundTripRules.js';
 import { DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import {
@@ -101,7 +102,16 @@ function save(saved, { regionId, payload }) {
     return { payload: next, exits: compiled.exits, locations };
 }
 
-/** ⛓ The declaration the registry entry carries. ⛔ DATA, like `exitSides`. */
-export const textAdventureRegionRoundTrip = Object.freeze({ open, save });
+/**
+ * ⛓ The declaration the registry entry carries. ⛔ DATA, like `exitSides`.
+ *
+ * ⛓⛓ `rules: AUTHORED` (`procgenCore/roundTripRules.js`) — every rule `save`
+ * answers is one the room CARRIES (`placeFromRules` records the document's own
+ * tree; the extractor emits it verbatim; `compileRegion`'s `access_rule`-wins
+ * branch passes it through). So a document rule this does not reproduce is a
+ * STALE gate, and the corpus gate-agreement control
+ * (`apworldEditor/sidecarRuleAgreement.js`) FAILS on it.
+ */
+export const textAdventureRegionRoundTrip = Object.freeze({ open, save, rules: ROUND_TRIP_RULES.AUTHORED });
 
 export default textAdventureRegionRoundTrip;

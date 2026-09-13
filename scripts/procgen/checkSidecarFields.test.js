@@ -134,4 +134,63 @@ describe('check-sidecar-fields — the corpus gate', () => {
         expect(out).toContain('0 issue(s), 1 warning(s)');
         expect(code).toBe(0);
     });
+
+    /* ── G2b-1: the third layer — rule agreement ── */
+
+    /**
+     * ⛓ The gated text-adventure fixture (plan §24.7), planted WHOLE, and its
+     * first sidecar region whose round trip is AUTHORED with a gated exit plus
+     * a sibling exit ruled differently — picked by that law off the document,
+     * never by a typed region or exit name.
+     */
+    const GATED = JSON.parse(readFileSync(join(HERE, '..', '..', 'frontend', 'presets', 'procgen_topdown',
+        'AP_11', 'AP_11_rules.json'), 'utf8'));
+    const writeDoc = (preset, doc) => {
+        const rel = join('frontend', 'presets', preset, 'AP_1', 'AP_1_rules.json');
+        mkdirSync(dirname(join(root, rel)), { recursive: true });
+        writeFileSync(join(root, rel), JSON.stringify(doc));
+        git('add', rel);
+    };
+    const gatedPick = (doc) => {
+        for (const [slot, regions] of Object.entries(doc.preset_sidecars)) {
+            for (const [name, entry] of Object.entries(regions)) {
+                if (entry.substrate !== 'text_adventure') continue;
+                const exits = doc.regions[slot][name].exits ?? [];
+                const i = exits.findIndex((e) => e.access_rule?.rule !== 'True_');
+                const j = exits.findIndex((e, k) => k !== i
+                    && JSON.stringify(e.access_rule) !== JSON.stringify(exits[i]?.access_rule));
+                if (i >= 0 && j >= 0) return { slot, name, i, j };
+            }
+        }
+        return null;
+    };
+
+    it('⛓⛓ a committed gated document passes the third layer, and prints one RULES line per substrate', () => {
+        writeDoc('eta', GATED);
+        const { code, out } = run();
+        expect(out).toMatch(/RULES {2}text_adventure {2}AUTHORED {2}\d+ region\(s\) · [1-9]\d* gated · (\d+)\/\1 endpoint\(s\) agree/);
+        expect(out).toContain('rule agreement   0 FAIL(S)');
+        expect(out).toContain('ALL PASS');
+        expect(code).toBe(0);
+    });
+
+    it('⛓⛓⛓ a document rule the AUTHORED payload never saw FAILs, naming the endpoint and BOTH rules', () => {
+        const doc = JSON.parse(JSON.stringify(GATED));
+        const pick = gatedPick(doc);
+        expect(pick, 'premise: a text-adventure region with a gated exit and a differently-ruled sibling').not.toBe(null);
+        const exits = doc.regions[pick.slot][pick.name].exits;
+        const was = exits[pick.i].access_rule;
+        exits[pick.i].access_rule = exits[pick.j].access_rule;
+        writeDoc('theta', doc);
+        const { code, out } = run();
+        const line = out.split('\n').find((l) => l.includes('rule-agreement —'));
+        expect(line).toBeTruthy();
+        expect(line).toContain(`region ${JSON.stringify(pick.name)}`);
+        expect(line).toContain(`exit "${exits[pick.i].name}"`);
+        expect(line).toContain(`the document says ${JSON.stringify(exits[pick.j].access_rule)}`);
+        expect(line).toContain(`the payload re-emits ${JSON.stringify(was)}`);
+        expect(out).toContain('rule agreement   1 FAIL(S)');
+        expect(out).not.toContain('ALL PASS');
+        expect(code).toBe(1);
+    });
 });
