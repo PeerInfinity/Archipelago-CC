@@ -206,7 +206,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 258,
         "browser": 77,
-        "cited": 94,
+        "cited": 95,
         "files": 269,
         "lineStyle": 11,
         "withDocblock": 269,
@@ -3681,7 +3681,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": true,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/text-adventure.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "host"
