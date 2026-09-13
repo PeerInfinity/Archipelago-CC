@@ -246,8 +246,14 @@ const deadlineForTicks = (ticks) =>
 // ── reporting ────────────────────────────────────────────────────────────────
 
 let failures = 0;
+/**
+ * ⛓ H2 (2026-09-12) — `PASS: ` / `FAIL: `, the spelling `standingValues.headlineOf`
+ * counts. The old `  ok  ` / `FAIL  ` rows (no colon) read as `0/0/1` in CI
+ * whatever failed, so this gate's first standing row would have been unable to
+ * go red. Census before the change: nothing parsed the old format.
+ */
 const check = (name, ok, detail = '') => {
-    console.log(`${ok ? '  ok  ' : 'FAIL  '}${name}${detail ? ` — ${detail}` : ''}`);
+    console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
     if (!ok) failures += 1;
 };
 
@@ -1809,4 +1815,6 @@ await browser.close();
 await closeServer(server);
 console.log(`\n${failures === 0 ? 'ALL ROWS PASSED' : `${failures} ROW(S) FAILED`} — `
     + `${PAGE_NAME}, END ${new Date().toISOString()}`);
+// ⛓ H2 — the TOTAL line `headlineOf` recognises, last.
+console.log(failures === 0 ? 'ALL CHECKS PASSED' : `${failures} CHECK(S) FAILED`);
 process.exit(failures === 0 ? 0 : 1);
