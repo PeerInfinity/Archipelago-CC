@@ -277,6 +277,26 @@ const CI_ARGV_LINE_RE = /^[ \t]*\*[ \t]*@ci-argv\b(.*)$/gm;
 const CI_BOX_LINE_RE = /^[ \t]*\*[ \t]*@ci-box\b(.*)$/gm;
 
 /**
+ * ⛓⛓ F2 task 7 — **A GATE THAT WRITES TRACKED FILES WHILE IT RUNS, AND SAYS
+ * SO ITSELF.**
+ *
+ *     * @tree-writes <path>[, <path>…]: <why, and how the gate restores them>
+ *
+ * ⛔ THE HAZARD, MEASURED. The six `Generate.py` roundtrip gates register their
+ * export in the TRACKED `frontend/presets/preset_files.json` and restore it in a
+ * `finally`. A green run leaves the tree as it found it (37/37 probe candidates
+ * unmoved, F2's BEFORE pass). A run SIGKILLed inside that window — which is what
+ * the writer's probe deadline does — skips the `finally`: measured on
+ * `region-library-roundtrip` killed at 17.6 s, `M preset_files.json`, and the
+ * next row's `assertTreeUnmoved` threw, ending the whole write.
+ * ⛓ `standingValues.newRowClass` refuses to PROBE a gate carrying this (a
+ * `--key=` run is a person's, unbounded, and keeps the `finally`).
+ * ⛓ DECLARED, NOT DETECTED: which files a gate touches is its author's
+ * knowledge, and a scan for `writeFileSync` would be a guess about paths.
+ */
+const TREE_WRITES_LINE_RE = /^[ \t]*\*[ \t]*@tree-writes\b(.*)$/gm;
+
+/**
  * ⛓⛓⛓ F1 task 0 (planner ruling, 2026-09-13) — **A GATE WHOSE STANDING VALUE
  * LIVES UNDER ANOTHER KEY, AND SAYS SO ITSELF.**
  *
@@ -441,6 +461,29 @@ export function standingRowIn(text, { file = '(text)' } = {}) {
 }
 
 /**
+ * The tracked paths a gate declares it writes while running, or `null`. ⛔ A
+ * malformed line (no path, no reason) and a second declaration are refusals BY
+ * NAME, as every declaration in this file: an unparsed one would put a
+ * tree-writing gate back under the probe's kill deadline in silence.
+ */
+export function treeWritesIn(text, { file = '(text)' } = {}) {
+    const hits = [...text.matchAll(TREE_WRITES_LINE_RE)];
+    if (!hits.length) return null;
+    if (hits.length > 1) {
+        throw new Error(`gateRoster: ${file} declares ${hits.length} @tree-writes lines — list `
+            + 'every path on ONE line');
+    }
+    const body = VARIANT_BODY_RE.exec(hits[0][1]);
+    const paths = body ? body[1].split(',').map((p) => p.trim()).filter(Boolean) : [];
+    if (!body || !paths.length) {
+        throw new Error(`gateRoster: ${file} has a malformed @tree-writes line — expected `
+            + '`@tree-writes <path>[, <path>…]: <why, and how the gate restores them>`, got '
+            + `${JSON.stringify(hits[0][0].trim())}`);
+    }
+    return { paths, reason: body[2] };
+}
+
+/**
  * The CI-only flags a gate declares, or `null`. ⛔ A malformed line, an empty
  * reason and a second declaration are all refusals BY NAME, for the reason
  * `ciShallowIn` states one function up: a declaration nobody parsed is a CI
@@ -559,6 +602,7 @@ export function gateRoster({ repo = REPO } = {}) {
         const ciArgv = ciArgvIn(text, { file });
         const ciBox = ciBoxIn(text, { file });
         const standingRow = standingRowIn(text, { file });
+        const treeWrites = treeWritesIn(text, { file });
         const variants = variantsIn(text, { file });
         /**
          * ⛔ F1 task 0 — a gate whose standing value is ANOTHER row has no
@@ -625,6 +669,9 @@ export function gateRoster({ repo = REPO } = {}) {
             /** ⛓ …and the OTHER row its standing value lives under, or `null`
              *  (F1 task 0) — `standingRows` derives no `gate:` row for it. */
             standingRow,
+            /** ⛓ …and the TRACKED files it writes while running, or `null`
+             *  (F2 task 7) — `newRowClass` never probes a gate carrying one. */
+            treeWrites,
             /** ⛓ …and by which sibling, when it is not by itself. */
             browserVia: D.browserVia(file),
         };

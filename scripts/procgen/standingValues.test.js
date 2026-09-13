@@ -214,11 +214,13 @@ describe('F1 task 0 / 0b — the writer never creates an unbounded NEW row', () 
         ['gate: region-library-sphere-roundtrip', { exit: 1, ms: 20000, value: '11/0', total: null }, /green by PASS tally only/],
         ['gate: region-library-sphere-roundtrip-maze', { exit: 1, ms: 20000, value: '9/0', total: null }, /green by PASS tally only/],
         ['gate: region-library-sphere-roundtrip-runner', { exit: 1, ms: 20000, value: '10/0', total: null }, /green by PASS tally only/],
-    ])('%s is probed under the deadline, and its measured run is REFUSED', (key, measured, why) => {
+    ])('%s is probed under the deadline (or refused first, if it writes tracked files), and its measured run is REFUSED', (key, measured, why) => {
         const row = ROWS.find((r) => r.key === key);
         expect(row).toBeDefined();
         expect(bank[key]).toBeUndefined();
-        expect(spawned([row])).toEqual([`probe ${key}`]);
+        /** ⛓ F2 task 7 — the six roundtrip gates declare `@tree-writes`: refused BEFORE running. */
+        const writes = roster.find((g) => row.command.includes(g.path))?.treeWrites;
+        expect(spawned([row])).toEqual(writes ? [] : [`probe ${key}`]);
         expect(newRowAdmission({ ...measured, killed: false }, { deadlineMs: CI_SHARD_BUDGET_MS }))
             .toMatch(why);
     });
@@ -233,6 +235,29 @@ describe('F1 task 0 / 0b — the writer never creates an unbounded NEW row', () 
         const g = gateRoster().find((x) => x.file === 'check-jta-balance-pass.mjs');
         expect(g.ciBox.positional).toBe('<exported rules.json>');
         expect(ROWS.find((r) => r.key === 'gate: jta-balance-pass')).toBeUndefined();
+    });
+
+    /**
+     * ⛔⛔ F2 task 7 — a probe SIGKILLed inside a tracked-write window leaves the
+     * file modified (measured: `region-library-roundtrip` at 17.6 s → `M
+     * preset_files.json`, and the next row's `assertTreeUnmoved` threw). A gate
+     * that DECLARES `@tree-writes` is refused before it runs; `--key=` runs it.
+     */
+    it('⛔ an unpriced @ci-box gate that declares @tree-writes is refused, not probed; --key= runs it', () => {
+        const base = { file: 'check-scratch-writes.mjs', path: 'scripts/procgen/check-scratch-writes.mjs',
+            ciBox: { reason: 'box only' } };
+        const row = { key: 'gate: scratch-writes', kind: 'gate', command: `node ${base.path}` };
+        const writes = { ...base, treeWrites: { paths: ['frontend/presets/preset_files.json'], reason: 'r' } };
+        const plan = writerRoster({ rows: [row], bank: {}, costs, gates: [writes] });
+        expect(plan.refused.map((r) => r.why)).toEqual([expect.stringMatching(
+            /writes tracked frontend\/presets\/preset_files\.json .*assertTreeUnmoved.*--key=/)]);
+        expect(spawned([row], { gates: [writes] })).toEqual([]);
+        expect(spawned([row], { gates: [writes], exactKeys: [row.key] })).toEqual([row.key]);
+        // ⛓ the control: the same gate without the declaration is probed
+        expect(spawned([row], { gates: [base] })).toEqual([`probe ${row.key}`]);
+        // ⛓ and the live roster carries it on exactly the Generate.py roundtrip gates
+        expect(roster.filter((g) => g.treeWrites).map((g) => g.file).sort()).toEqual(roster
+            .filter((g) => /Generate\.py/.test(g.ciBox?.reason ?? '')).map((g) => g.file).sort());
     });
 
     it('⛔ an unpriced NEW gate that is NOT @ci-box is refused before running; --key= runs it', () => {

@@ -20,7 +20,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
     REPO, SCRIPT_DIR, argvFor, ciArgvIn, ciBoxIn, ciShallowIn, gateRoster, isGateFile, machineDrivers,
-    standingRowIn, variantsIn,
+    standingRowIn, treeWritesIn, variantsIn,
 } from './gateRoster.js';
 
 /**
@@ -165,6 +165,23 @@ describe('@ci-shallow — declared, never detected', () => {
  * describe up — an exclusion armed by an empty line is an exclusion nobody can
  * audit, and this one keeps 49 gates out of CI.
  */
+describe('@tree-writes — declared, never detected (F2 task 7)', () => {
+    it('reads the paths and the reason', () => {
+        expect(treeWritesIn('/**\n * @tree-writes a/b.json, c.txt: restored in finally\n */\n'))
+            .toEqual({ paths: ['a/b.json', 'c.txt'], reason: 'restored in finally' });
+        expect(treeWritesIn('/**\n * ordinary\n */\n')).toBe(null);
+    });
+
+    it('⛔ refuses a line with no path or no reason, and a second line, BY NAME', () => {
+        expect(() => treeWritesIn('/**\n * @tree-writes\n */\n', { file: 'check-x.mjs' }))
+            .toThrow(/check-x\.mjs has a malformed @tree-writes/);
+        expect(() => treeWritesIn('/**\n * @tree-writes a.json\n */\n', { file: 'check-x.mjs' }))
+            .toThrow(/malformed @tree-writes/);
+        expect(() => treeWritesIn('/**\n * @tree-writes a: r\n * @tree-writes b: r\n */\n', { file: 'check-x.mjs' }))
+            .toThrow(/declares 2 @tree-writes lines/);
+    });
+});
+
 describe('@ci-box — declared, never detected', () => {
     it('reads the reason off the line, as free text', () => {
         const text = '/**\n * @ci-box its fixture is regenerated, not committed\n */\n';

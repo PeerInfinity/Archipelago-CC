@@ -29,6 +29,7 @@
  * Requires the repo Python env. Run:
  *   node scripts/procgen/check-region-library-sphere-roundtrip-maze.mjs
  * @ci-box V3b adopted this script's NAME, not its RUN: it shells out to this tree's Python venv and `Generate.py`, which a runner's checkout does not provision.
+ * @tree-writes frontend/presets/preset_files.json: `Generate.py` registers this gate's export there, and the gate restores the file's bytes in its `finally` — which a SIGKILL skips.
  *   ⇒ deleting this one line is how a later slice adopts it into CI.
  */
 

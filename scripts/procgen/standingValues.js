@@ -446,6 +446,18 @@ export function newRowClass({ row, prev, gate = null, costs = null, exact = fals
     const price = costs?.arms?.[row.key] ?? null;
     const budgetMs = costs?.budgetMs ?? null;
     if (price && budgetMs !== null && price.ms <= budgetMs) return { class: 'run' };
+    /**
+     * ⛔ F2 task 7 — a gate that DECLARES tracked writes is never probed: the
+     * deadline's SIGKILL skips its restore, and the next row's
+     * `assertTreeUnmoved` ends the whole write (measured, `gateRoster`'s
+     * `@tree-writes` docblock). `--key=` still runs it, unbounded.
+     */
+    if (!price && gate?.ciBox && gate.treeWrites) {
+        return { class: 'refuse',
+            why: `unpriced @ci-box gate that writes tracked ${gate.treeWrites.paths.join(', ')} while it `
+                + 'runs — a probe killed at the deadline would leave them and abort the write '
+                + '(assertTreeUnmoved); name it with --key= to measure it' };
+    }
     if (!price && gate?.ciBox) {
         return { class: 'probe',
             why: `unpriced @ci-box gate (${gate.ciBox.reason}) — run under the kill deadline, `
