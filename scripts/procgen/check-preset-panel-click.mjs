@@ -50,8 +50,15 @@ const TARGETS = [
 ];
 
 let failures = 0;
+/**
+ * ⛓ F1 (2026-09-13) — `PASS: ` / `FAIL: `, the spelling `standingValues.headlineOf`
+ * and `gates.mjs` count, and a last `ALL CHECKS PASSED` / `N CHECK(S) FAILED`.
+ * The old `  ok  ` / `FAIL  ` rows (no colon) read as `0/0` with NO TOTAL LINE
+ * whatever failed (trap 1288's vocabulary gap; ap-placement's H2 fix). Census
+ * before the change: nothing parsed the old format.
+ */
 const check = (label, ok, detail = '') => {
-  console.log(`${ok ? '  ok  ' : 'FAIL  '}${label}${detail ? ` — ${detail}` : ''}`);
+  console.log(`${ok ? 'PASS' : 'FAIL'}: ${label}${detail ? ` — ${detail}` : ''}`);
   if (!ok) failures += 1;
 };
 
@@ -102,5 +109,6 @@ if (pageErrors.length > refErrors.length) {
 }
 
 await browser.close();
-console.log(failures === 0 ? 'ALL OK' : `${failures} FAILURE(S)`);
+// ⛓ F1 — the TOTAL line `headlineOf` recognises (was `ALL OK`, which it does not).
+console.log(failures === 0 ? 'ALL CHECKS PASSED' : `${failures} CHECK(S) FAILED`);
 process.exit(failures === 0 ? 0 : 1);

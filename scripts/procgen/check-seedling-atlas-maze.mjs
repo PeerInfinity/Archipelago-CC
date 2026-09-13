@@ -57,8 +57,15 @@ const { deserializeMazeWorld, floorReachableSet, TILE_FLOOR } = await load('fron
 const { MAZE_SUBSTRATE } = await load('frontend/modules/procgenPipeline/regionAtlasMazeProjection.js');
 
 let failures = 0;
+/**
+ * ⛓ F1 (2026-09-13) — `PASS: ` / `FAIL: `, the spelling `standingValues.headlineOf`
+ * and `gates.mjs` count, and a last `ALL CHECKS PASSED` / `N CHECK(S) FAILED`.
+ * The old `  ok  ` / `FAIL  ` rows (no colon) read as `0/0` with NO TOTAL LINE
+ * whatever failed (trap 1288's vocabulary gap; ap-placement's H2 fix). Census
+ * before the change: nothing parsed the old format.
+ */
 const check = (label, ok, detail = '') => {
-    console.log(`${ok ? '  ok  ' : 'FAIL  '}${label}${detail ? ` — ${detail}` : ''}`);
+    console.log(`${ok ? 'PASS' : 'FAIL'}: ${label}${detail ? ` — ${detail}` : ''}`);
     if (!ok) failures += 1;
 };
 
@@ -173,7 +180,7 @@ for (const line of formatCompileReport(report)) console.log(`      ${line}`);
 
 // ── Phase D — it loads in the default mode ───────────────────────────────────
 if (noBrowser) {
-    console.log('\nPhase D — SKIPPED (--no-browser)');
+    console.log('\nSKIP: Phase D (--no-browser)');
 } else {
     console.log('\nPhase D — the preset loads in the default (procgen) mode');
     const { chromium } = await import('playwright');
@@ -240,4 +247,6 @@ if (noBrowser) {
 console.log(failures === 0
     ? `\nOK: ${names.length} atlas sub-regions are playable maze worlds (${exitCount} exits, ${gateCount} gates)`
     : `\nFAILED: ${failures} check(s)`);
+// ⛓ F1 — the TOTAL line `headlineOf` recognises, last.
+console.log(failures === 0 ? 'ALL CHECKS PASSED' : `${failures} CHECK(S) FAILED`);
 process.exit(failures === 0 ? 0 : 1);

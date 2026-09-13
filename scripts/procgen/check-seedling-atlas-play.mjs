@@ -127,8 +127,15 @@ page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
 page.on('pageerror', (err) => logs.push(`[pageerror] ${err.message}`));
 
 let failures = 0;
+/**
+ * ⛓ F1 (2026-09-13) — `PASS: ` / `FAIL: `, the spelling `standingValues.headlineOf`
+ * and `gates.mjs` count, and a last `ALL CHECKS PASSED` / `N CHECK(S) FAILED`.
+ * The old `  ok  ` / `FAIL  ` rows (no colon) read as `0/0` with NO TOTAL LINE
+ * whatever failed (trap 1288's vocabulary gap; ap-placement's H2 fix). Census
+ * before the change: nothing parsed the old format.
+ */
 function check(name, ok, detail = '') {
-    console.log(`${ok ? '  ok  ' : 'FAIL  '}${name}${detail ? ` — ${detail}` : ''}`);
+    console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
     if (!ok) failures += 1;
 }
 
@@ -315,7 +322,7 @@ try {
     check('Phase E: the glue agrees with the independent watcher',
         statsEnd.regionMoves === movesE.length, JSON.stringify(statsEnd));
 } catch (err) {
-    console.log(`FAIL  fatal: ${err.message}`);
+    console.log(`FAIL: fatal: ${err.message}`);
     console.log(`PAGE LOGS (last 60):\n${logs.slice(-60).join('\n')}`);
     failures += 1;
 } finally {
@@ -325,4 +332,6 @@ try {
 console.log(failures === 0
     ? '\nOK: the real Seedling game walks between atlas regions, and the arrival teleport does not echo'
     : `\nFAILED: ${failures} check(s)`);
+// ⛓ F1 — the TOTAL line `headlineOf` recognises, last.
+console.log(failures === 0 ? 'ALL CHECKS PASSED' : `${failures} CHECK(S) FAILED`);
 process.exit(failures === 0 ? 0 : 1);

@@ -68,8 +68,15 @@ const expectedLocations = Object.values(expected.regions['1'])
     .flatMap((r) => r.locations.map((l) => l.name)).sort();
 
 let failures = 0;
+/**
+ * ⛓ F1 (2026-09-13) — `PASS: ` / `FAIL: `, the spelling `standingValues.headlineOf`
+ * and `gates.mjs` count, and a last `ALL CHECKS PASSED` / `N CHECK(S) FAILED`.
+ * The old `  ok  ` / `FAIL  ` rows (no colon) read as `0/0` with NO TOTAL LINE
+ * whatever failed (trap 1288's vocabulary gap; ap-placement's H2 fix). Census
+ * before the change: nothing parsed the old format.
+ */
 const check = (label, ok, detail = '') => {
-    console.log(`${ok ? '  ok  ' : 'FAIL  '}${label}${detail ? ` — ${detail}` : ''}`);
+    console.log(`${ok ? 'PASS' : 'FAIL'}: ${label}${detail ? ` — ${detail}` : ''}`);
     if (!ok) failures += 1;
 };
 
@@ -181,4 +188,6 @@ try {
 console.log(failures === 0
     ? `\nOK: seedling_atlas preset loads with ${expectedRegions.length} regions and ${expectedEdges.length} exits`
     : `\nFAILED: ${failures} check(s)`);
+// ⛓ F1 — the TOTAL line `headlineOf` recognises, last.
+console.log(failures === 0 ? 'ALL CHECKS PASSED' : `${failures} CHECK(S) FAILED`);
 process.exit(failures === 0 ? 0 : 1);
