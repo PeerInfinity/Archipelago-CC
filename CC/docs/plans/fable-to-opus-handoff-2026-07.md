@@ -14422,6 +14422,16 @@ bank — the sixth "trigger narrower than what the suite reads"). **CI @ `29f7aa
 re-written after the fix); the writer BANKS a MOVED row's red (F1's guard covers NEW rows only). The primary tree's
 submodule checkout repacked 133 → 31 MB (`git gc`, no history change); R2's stray :8130 server stopped.
 
+**⚖ USER 2026-09-13: *"I want to finish the remaining tasks. Would you recommend starting a new planning session?"* —
+recommended YES (the 2026-09-05 ruling: stop after ~3 slices and hand off after the replan; this session ran R2, H2,
+H3, S1, F1). HANDOFF to `seedling-headless-planning-3`** (Fable; prompt `NewDocs/plans/seedling-headless-planning-3-
+prompt.md`): its first act is to launch **F2** (brief `seedling-headless-F2-prompt.md`, plan §18 — the driver's
+interpreter for worktrees + H2's two rows re-written; the writer's MOVED-row clause; the 37 no-total printers; the
+roundtrip gates; the packer's headroom from measured spread; two text fixes; the tree-dirtying probe). State at the
+handoff: `main` = `origin/main` at `16eb824ade` + this entry, clean, no slice, no lock; CI green (465/14064 @
+`29f7aa830f`); the tier runs in CI sharded; the shed delayed on the pins. `archipelago-cc-b6` ends itself after the
+successor's handshake (⚖ 2026-09-13 lifetime ruling).
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
