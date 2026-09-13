@@ -14571,6 +14571,31 @@ handoff: `main` = `origin/main` at `7444c22b79` + this entry, clean, no slice, n
 the owed write (five units — past the ~3-slice mark, hence the handoff). `seedling-headless-planning-3` ends itself after
 the successor's handshake (⚖ 2026-09-13 lifetime ruling).
 
+**THE PINS SURVEY — MEASURED by `seedling-headless-planning-4` 2026-09-13 (plan §21.1; primary at `6d5c57b403`, level).**
+(2) The AS3 did not move: fork `origin/ap-m1` = `a0ec864`, `origin/main` = `826ba77`, upstream `main` = `826ba77`, zero
+commits past each (three remotes fetched). (1) SWFRecomp-CC `254145a5b..bdf734c46`: 37 commits, **21 code** (16 are
+ruffle-test-result merges), 21 build-input files +3807/−406, renderer byte-identical. Per commit against Seedling's AS3:
+8 `avm1:` commits touch `action.c` (linked as dead weight in the AVM2 wasm) and two shared `swf_core.c` slots that consult
+AVM1 state an AVM2 movie never sets; Stage3D/Matrix3D/`.z`/SimpleButton/LoaderInfo/EditText probes — 0 references;
+`521a53782` (bitmap `blend_over` LSB + `copyPixels` clamp) is FlashPunk's whole draw path — PIXELS only, nothing
+logic-bearing reads `FP.buffer` (collision is `BitmapData.hitTest` on masks, `Tilemap.getPixel` on its own map);
+`bd5027f69` (JSON.parse no longer int32-coerces integral doubles) is the ONE logic-path commit — `Bot.as` l.1175/2773
+already guard exactly those values with a refusal, the tapes' max `seed` is 2147483647, and the only integer ≥ 2^31 in
+344 fixture JSONs sits in a prose `why` (the AP ids are 20000000-based; stringify was already right); `2a63dccc5`'s
+ByteArray predicate treats DefineBinaryData (kind OTHER) as binary, so the `[Embed]` levels load as before. ⇒ **no commit
+reaches a tier observation by prediction**; the CI dispatch is the measurement; ⚖ 49 is not triggered in advance, and a
+moved tape is a STOP. (3) Design: rebuild from **R1's kept SWFs** (`Seedling_bot_ap_r1.swf` `da451bfb…` 9,743,894 B;
+`Seedling_original_r1.swf` `a543c03a…` 7,835,438 B — on disk, md5s verified) in a fresh detached worktree at `bdf734c46`
+— no mxmlc (467,446 B of drift at R1), no inject, no control build; every moved byte is the toolchain's. (4) R1's
+verification list on today's channels + the tier **by CI dispatch on a throwaway branch `pins-r3`** (the shard jobs
+check out `submodules: recursive` at the dispatched ref), the row quoted at the bump SHA, `main` fast-forwarded later.
+The bank at `6d5c57b403` (box-free `--keys`): 115 rows, **42 MOVED — all 42 name the `shared` gitlink** (`d89a055900`
+landed after the owed write at `6c9f59973d`); 26 rows key on the wasm gitlink, every one inside the 42 ⇒ one `--write`
+after R3's bump pays both debts. (5) Cost ≈ 22 min CPU of builds + ~10 headless gates + 12 min dispatch + the write; one
+Opus session ~2–3 h. Brief written: `NewDocs/plans/seedling-headless-R3-prompt.md` (9 tasks; `main` never pushed by the
+slice). **NOT LAUNCHED — the planner brings the user three asks in order: (a) launch R3; (b) after its report, the
+gitlink bump onto `main` (the wasm exception, ask-first); (c) W3 re-cut from the new HEAD + the force-push (ask-first).**
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
