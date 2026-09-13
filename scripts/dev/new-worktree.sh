@@ -24,6 +24,20 @@ WASM_SUBMODULE="frontend/modules/flashPanel/wasm"
 PORT_BASE=8130
 PORT_STEP=10
 HOOKS_PATH="scripts/git-hooks"
+# Step 6. The ladder is ASKED, never re-spelled here: repoPython.js is its one spelling.
+REPO_PYTHON="scripts/procgen/repoPython.js"
+# A key of PRESETS in scripts/setup/update_host_settings.py. full, not minimal: the
+# primary's host.yaml json_tools equals it exactly, and a preset regenerated under
+# other settings differs from the committed one (plan §19.1 rung D).
+HOST_PRESET="full-spoilers"
+# The guide's step 3, verbatim (docs/json/developer/getting-started.md); 'Players' is
+# settings.py's generator.player_files_path default, which Generate.py scans.
+TEMPLATES_PY="from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+# The three, in the guide's order: one list, read by the plan, the run and the by-hand text.
+STEP6_1=(-c "$TEMPLATES_PY")
+STEP6_2=(Launcher.py --update_settings)
+STEP6_3=(scripts/setup/update_host_settings.py "$HOST_PRESET")
+STEP6=(STEP6_1 STEP6_2 STEP6_3)
 
 usage() {
   local wasm_size="not checked out in $PRIMARY, so not measured"
@@ -45,8 +59,14 @@ Creates $PARENT/$FAMILY-wt-<name> on a NEW branch <name> from <base>
   4. npm ci
   5. git config --worktree core.hooksPath $HOOKS_PATH
      (the pre-commit hook that refuses a commit under a foreign box lock)
+  6. the getting-started guide's steps 3 and 4, run IN the worktree with the
+     Python $REPO_PYTHON --generate chooses (the primary's venv is
+     activated, not copied): Players/Templates, Launcher.py --update_settings,
+     update_host_settings.py $HOST_PRESET — so the Generate.py gates run there.
+     With no such Python the worktree is still made, and the refusal and the
+     three commands are printed to run by hand.
 and prints the dev-server command on a free port (scanned from $PORT_BASE in
-steps of $PORT_STEP) and the matching npm test form.
+steps of $PORT_STEP), the matching npm test form, and the venv to activate.
 
   --dry-run    print the plan, change nothing
   --with-wasm  also initialise $WASM_SUBMODULE
@@ -141,9 +161,40 @@ fi
 PLAN+=("npm ci --prefix $DEST")
 PLAN+=("git -C $DEST config --worktree core.hooksPath $HOOKS_PATH")
 
+# One argv as a copy-pasteable line (an argument with a space is double-quoted).
+show() {
+  local out="" a
+  for a in "$@"; do case "$a" in *' '*) out+=" \"$a\"" ;; *) out+=" $a" ;; esac; done
+  echo "${out# }"
+}
+step6_line() { local -n argv="$1"; echo "(cd $DEST && $2 $(show "${argv[@]}"))"; }
+PLAN+=("PY=\$(cd $DEST && node $REPO_PYTHON --generate)")
+for s in "${STEP6[@]}"; do PLAN+=("$(step6_line "$s" '$PY')"); done
+
+# Step 6's Python, asked of TREE's own repoPython.js. Prints the path, or the refusal and returns 1.
+ask_python() {
+  local tree="$1" out rc=0
+  out="$(cd "$tree" && node "$REPO_PYTHON" --generate)" || rc=$?
+  if [ "$rc" = 0 ] && [ -n "$out" ] && command -v -- "$out" >/dev/null; then
+    echo "$out"
+    return 0
+  fi
+  [ -n "$out" ] || out="$tree/$REPO_PYTHON --generate answered nothing (exit $rc) — a base older than that CLI"
+  echo "$out"
+  return 1
+}
+by_hand() {
+  echo "# ⚠ step 6 NOT run — the worktree is made, but Generate.py cannot run in it yet. The refusal above;"
+  echo "#   with a Python that carries Archipelago's requirements active, run by hand:"
+  for s in "${STEP6[@]}"; do echo "#   $(step6_line "$s" python)"; done
+}
+
 if [ "$DRY_RUN" = 1 ]; then
   echo "# new-worktree --dry-run: nothing is changed"
   for step in "${PLAN[@]}"; do echo "+ $step"; done
+  # The new tree does not exist in a dry run, so step 6's ladder is asked of THIS tree.
+  echo "# step 6's Python, asked of $REPO (the real run asks the new tree):"
+  if PY="$(ask_python "$REPO")"; then echo "#   $PY"; else echo "$PY"; by_hand; fi
 else
   run() { echo "+ $*"; "$@"; }
   run git -C "$REPO" worktree add -b "$NAME" "$DEST" "$BASE"
@@ -158,6 +209,20 @@ else
   fi
   run npm ci --prefix "$DEST"
   run git -C "$DEST" config --worktree core.hooksPath "$HOOKS_PATH"
+  echo "+ PY=\$(cd $DEST && node $REPO_PYTHON --generate)"
+  if PY="$(ask_python "$DEST")"; then
+    echo "# PY=$PY"
+    for s in "${STEP6[@]}"; do
+      declare -n step_argv="$s"
+      echo "+ $(step6_line "$s" "$PY")"
+      (cd "$DEST" && "$PY" "${step_argv[@]}" </dev/null) \
+        || refuse "step 6 failed at: $(step6_line "$s" "$PY") — the worktree exists at $DEST; finish the step and the ones after it by hand"
+      unset -n step_argv
+    done
+  else
+    echo "$PY"
+    by_hand
+  fi
 fi
 [ "${#SKIPPED[@]}" -eq 0 ] || echo "# skipped (pass --with-wasm to include): ${SKIPPED[*]}"
 [ -n "$USER_NAME" ] && [ -n "$USER_EMAIL" ] \
@@ -165,3 +230,4 @@ fi
 
 echo "# serve it:  (cd $DEST && python -m http.server $PORT)"
 echo "# test it:   (cd $DEST && npm test -- --port=$PORT …)"
+echo "# python:    source $PRIMARY/.venv/bin/activate   (the primary's venv, shared by activation, never copied)"
