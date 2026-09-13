@@ -14273,6 +14273,21 @@ real exception that matches it); reading pageerrors only up to the loss (no time
 text. The three driver gates are green logic-only at their standing values (vanilla-manifest 24/0, save-stamp 21/0,
 generated-set 32/0). Plan §11.5.
 
+**⚖ USER 2026-09-13 — SHARD THE TIER IN CI BEFORE RUNNING IT (verbatim):** *"Before we run the full set of tapes, I'll
+want to set up CI to split the tapes between multiple shards. 10 seems like a good default. There are other workflows
+we can refer to as examples. Also, if possible I'll want the long tapes to not all be on the same shard."* H2's
+single-job dispatch (run 34729518557 @ `bcea3b5fb5`) was already in flight and is kept as the calibration datum. ⇒
+**H3 = the tier sharded in CI** (plan §13; after H2 closes): `--shard=i/n` on the differential with a deterministic
+longest-first cost partition (the estimate's `8 + 57 × ticks/1000` per tape, or runner-measured tape costs if the model
+deviates by class), asserted to spread the top-n tapes across bins; the workflow becomes plan → matrix (n input,
+default 10) → merge, where the merge job concatenates the shards' checkpoints and runs `--resume` so it replays
+nothing and runs only the roster-wide checks — the fingerprint's identity across runners is the load-bearing assumption
+and is PROVED (150/150 reused) before anything is quoted. Still `workflow_dispatch:` only. H2 state at this ruling:
+tasks 0–6 pushed (`f9284273cb`, `a588ca987e`, `bcea3b5fb5`), CI green at `d424c86946` (459/13937); ship on the runner
+262/1 (CLAIM 6 window-1 off by one; re-run 34729295102 in flight; ship row stays 263/0 by ruling); ⚖ for the user at
+H2's close: ⚖ 72's ciSourced rule has no "box-sourced" clause (a future `--write` would quote the runner's ship
+reading).
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
