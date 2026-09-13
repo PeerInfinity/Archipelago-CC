@@ -35,7 +35,9 @@
 
 import { SIDES } from '../shared/procgen/spatialPrimitives.js';
 import { makeLocationName } from '../procgenCore/apLocationNaming.js';
-import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
+import {
+    REQUIRED_ENVELOPE_FIELD, SIDECAR_FIELD_ERRORS, sidecarFieldsOf, sidecarPayloadErrors,
+} from '../procgenCore/sidecarFields.js';
 
 /** The rule every ungated exit / location compiles to. */
 const TRUE_RULE = Object.freeze({ rule: 'True_' });
@@ -224,19 +226,28 @@ export function serializeTextAdventureRoom(world, extractedRules) {
  * the key the engine's own descriptor uses (`insertBackExit`, the bidirectional
  * post-pass's `get(exit.name)`); every committed text-adventure exit has
  * `exitName === exit_id`. Each exit takes its gate back from `exitGates`; each
- * location's AP `name` is also its id. Keys the room does not know (a maze-
- * shaped payload's `tiles`, `items`…) are ignored, so a payload written before
- * G2a deserializes to its exits and no locations rather than throwing.
+ * location's AP `name` is also its id.
+ *
+ * ⛔ **ONE FORMAT, NO LEGACY READ** (⚖ the user, 2026-09-13: *"I don't want to
+ * maintain support for the old format. I want to fully replace it with the new
+ * format."*). A payload that does not have the room's shape — a key the room's
+ * own declaration does not know (the tile grid's `tiles`, `items`, …), or a
+ * required key absent (`exitGates`, `locations`) — is REFUSED with a sentence
+ * naming those keys (`textAdventureRoomRefusal`), never read as "its exits and
+ * no locations". The shape is read off `TEXT_ADVENTURE_SIDECAR_FIELDS` (merged
+ * with the envelope), so the refusal and the corpus gate cannot disagree.
  */
-export function deserializeTextAdventureRoom(payload = {}) {
-    const gates = payload.exitGates ?? {};
+export function deserializeTextAdventureRoom(payload) {
+    const refusal = textAdventureRoomRefusal(payload);
+    if (refusal) throw new Error(refusal);
+    const gates = payload.exitGates;
     const exits = new Map();
-    for (const e of Array.isArray(payload.exits) ? payload.exits : []) {
+    for (const e of payload.exits) {
         const record = structuredClone(e);
         if (gates[e.exit_id]) record.access_rule = cloneRule(gates[e.exit_id]);
         exits.set(e.exit_id, record);
     }
-    const locations = (Array.isArray(payload.locations) ? payload.locations : []).map((l) => ({
+    const locations = payload.locations.map((l) => ({
         id: l.name,
         name: l.name,
         ...(l.item != null ? { item: l.item } : {}),
@@ -297,9 +308,43 @@ export const TEXT_ADVENTURE_SIDECAR_FIELDS = Object.freeze({
     }),
 });
 
+/** The declaration merged with the envelope — the shape a room payload has. */
+let mergedRoomFields = null;
+
+/**
+ * ⛔ The refusal sentence for a payload that is not a text-adventure room, or
+ * `null` when it is one. Shape only (`UNDECLARED_FIELD` / `MISSING_REQUIRED`, and
+ * a non-object): value errors are the corpus gate's to report, and so is an absent
+ * ENVELOPE field (`fogEnabled` is the engine's to stamp after `serializeWorld`, so
+ * the serializer's own output — which `deserializeWorld` must read back — has none).
+ *
+ * @param {unknown} payload
+ * @returns {string|null}
+ */
+export function textAdventureRoomRefusal(payload) {
+    mergedRoomFields ??= sidecarFieldsOf({ id: 'text_adventure', sidecarFields: TEXT_ADVENTURE_SIDECAR_FIELDS });
+    const errors = sidecarPayloadErrors(mergedRoomFields, payload);
+    if (errors.some((e) => e.field === null)) {
+        return 'this is not a text-adventure room payload — playable_payload is not an object';
+    }
+    const E = SIDECAR_FIELD_ERRORS;
+    const carried = errors.filter((e) => e.code === E.UNDECLARED_FIELD).map((e) => `\`${e.field}\``);
+    const absent = errors.filter((e) => e.code === E.MISSING_REQUIRED
+        && mergedRoomFields[e.field].owner === 'substrate').map((e) => `\`${e.field}\``);
+    if (!carried.length && !absent.length) return null;
+    const parts = [];
+    if (carried.length) parts.push(`it carries ${carried.join(', ')}, which a room does not have`);
+    if (absent.length) parts.push(`it lacks ${absent.join(', ')}, which every room payload carries`);
+    return `this payload is not a text-adventure room — ${parts.join('; ')}. `
+        + 'Only the room format is read (a tile-grid payload written before G2a is not): '
+        + 'regenerate the region through the text adventure\'s own producer.';
+}
+
 /**
  * ⛓ The registry's `apLocationNamesOf` slot: every `locations[].name`, or `null`
- * when the payload carries no `locations` array (a payload written before G2a).
+ * when the payload carries no `locations` array — the slot's contract for "no
+ * location carrier" (such a payload is not a room: the declaration and
+ * `textAdventureRoomRefusal` refuse it).
  *
  * @param {object} payload
  * @returns {string[]|null}

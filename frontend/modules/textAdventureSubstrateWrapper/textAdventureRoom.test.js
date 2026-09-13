@@ -23,6 +23,7 @@ import { substrateRegistryEntry } from './textAdventureSubstrateWrapperLibrary.j
 import {
     TEXT_ADVENTURE_ROOM_REFUSALS,
     deserializeTextAdventureRoom,
+    textAdventureRoomRefusal,
     extractTextAdventureRules,
     generateTextAdventureRoom,
     placeTextAdventureItems,
@@ -206,12 +207,37 @@ describe('the payload (`serializeWorld` ⇄ `deserializeWorld`)', () => {
         expect(again.exits.get('North').access_rule).toEqual(GATE_A);
     });
 
-    it('deserializes a payload written BEFORE G2a (the maze shape) to its exits and no locations, without throwing', () => {
+    /**
+     * ⛔ ONE FORMAT (⚖ the user, 2026-09-13: no support for the old format). The
+     * fixture is INLINE — the tile-grid payload `generate-jta-mixed-test-preset.py`
+     * wrote before the re-record, verbatim — because every committed payload is a
+     * room now: a row that read its "legacy" fixture off the corpus went VACUOUS at
+     * the re-record (plan §24.7 #29, proven by a mutant).
+     */
+    it('⛔ REFUSES a tile-grid payload (the format written before G2a) with a sentence naming its keys', () => {
+        const legacy = {
+            width: 8, height: 6, tiles: new Array(48).fill(0), entrance: { x: 4, y: 3 },
+            exits: [{ exit_id: 'ToJtaZone1', x: 7, y: 3, side: 'E', exitName: 'ToJtaZone1', targetRegion: 'JtaZone1',
+                targetExitId: 'FromAdventure', isBackExit: false, isTeleporter: false }],
+            obstacles: [], items: [], obstacleLib: {}, itemLib: {}, longestShortestPath: 1,
+            fogEnabled: false, manaEnabled: true,
+        };
+        const refusal = textAdventureRoomRefusal(legacy);
+        expect(refusal).toMatch(/^this payload is not a text-adventure room — /);
+        for (const key of ['width', 'height', 'tiles', 'obstacles', 'items', 'obstacleLib', 'itemLib', 'longestShortestPath',
+            'exitGates', 'locations']) {
+            expect(refusal).toContain(`\`${key}\``);
+        }
+        // `entrance` / `manaEnabled` / `fogEnabled` are ENVELOPE fields: carried, not refused
+        expect(refusal).not.toContain('`entrance`');
+        expect(() => deserializeTextAdventureRoom(legacy)).toThrow(refusal);
+        expect(() => substrateRegistryEntry.deserializeWorld(legacy)).toThrow(refusal);
+        expect(() => deserializeTextAdventureRoom(undefined)).toThrow(/not an object/);
+        // …and the room the script writes NOW is read, not refused
         const committed = JSON.parse(fs.readFileSync(join(ROOT, 'frontend/presets/jta_mixed_test/AP_1/AP_1_rules.json'), 'utf-8'));
         const payload = committed.preset_sidecars['1'].AdventureZone.playable_payload;
-        const world = deserializeTextAdventureRoom(payload);
-        expect([...world.exits.keys()]).toEqual(payload.exits.map((e) => e.exit_id));
-        expect(world.locations).toEqual([]);
+        expect(textAdventureRoomRefusal(payload)).toBeNull();
+        expect([...deserializeTextAdventureRoom(payload).exits.keys()]).toEqual(['ToJtaZone1']);
     });
 });
 

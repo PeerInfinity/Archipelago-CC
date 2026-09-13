@@ -134,16 +134,16 @@ describe('the text adventure\'s composite-map cell is painted from the ROOM', ()
         expect(stray).toEqual(clean);
     });
 
-    it('a pre-G2a (maze-shaped) payload deserializes and paints without throwing: its exits, 0 locations', () => {
+    it('⛔ a tile-grid payload (the format written before G2a) is REFUSED before anything is painted', () => {
         const legacy = {
             width: 8, height: 6, tiles: [], entrance: { x: 4, y: 3 },
             exits: [{ exit_id: 'e', x: 7, y: 1, side: 'E', exitName: 'e', targetRegion: 'X', targetExitId: null, isBackExit: false, isTeleporter: false }],
             items: [{ x: 2, y: 2, id: 'k', locationName: 'Legacy Location' }],
             fogEnabled: true,
         };
-        const ops = paint(substrateRegistryEntry.deserializeWorld(legacy));
-        expect(exitMarkers(ops)).toHaveLength(1);
-        expect(texts(ops)).toContain('0 locations');
-        expect(texts(ops)).not.toContain('• Legacy Location');
+        let ops = null;
+        expect(() => { ops = paint(substrateRegistryEntry.deserializeWorld(legacy)); })
+            .toThrow(/^this payload is not a text-adventure room — it carries `width`, `height`, `tiles`, `items`, which a room does not have; it lacks `exitGates`, `locations`/);
+        expect(ops).toBeNull();
     });
 });
