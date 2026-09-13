@@ -14365,6 +14365,29 @@ note) sits in `~/CC/seedling-wasm-shed` on branch `shed`, NOTHING pushed; it goe
 and is re-cut from the then-HEAD when the shed is done. Local remedy needing no rewrite: `git gc` in the primary
 tree's submodule checkout (~95 MB freed) — a planner follow-up once S1 leaves the tree. Plan §17.1.
 
+**S1 COMPLETE + VERIFIED 2026-09-13 (planner's reads: eight commits `42cfd39dc7 … 69ca5f7ac0` on origin, plan §15.2 with
+eight subsections, the ship row 263/0 `channel: headless` quoted from CI shard run 34746967112 @ `edaafbc916`, the fix
+in the gate, the probe workflow gone, traps 1347, tree level).** **THE MECHANISM (a harness artifact, the design's
+outcome (a), fixed the (b) way by ruling B):** the red row was CAMPAIGN CLAIM 6 window 1 (`r8-solve-1`, a TRUE START),
+a ONE-frame gap (want 39, runner 38) — the brief was wrong on both. `watchWasm.js`'s `until(gameUp)` is a 200 ms poll;
+a true start arms inside the page's boot fade that is already running (anchored to the game clock, `Main.time` fresh
+default = dayLength/2); on the box `runSWF` init exceeds the poll period so the arm lands after fade frame 1 (k=1); on
+the faster runner after frame 2 (k=2). The model's "−1" was k=1 by coincidence, NOT `BOOT_PRESWAP_FRAMES` (a different
+quantity, the swap-path clock transform, that also equals 1 — R9 slice 9's stated reason corrected in the docblock and
+`seedling-bot.md`). Chromium identical on both (141.0.7390.37 / chromium-1194); CHAIN's declared boot immune (40 = 40).
+**Built:** `--boot-trace` on the ship gate (kept, bounded); `gameClock` gains GAME_FPS / DAY_LENGTH_FRAMES /
+PAGE_BOOT_TIME (derived; GENERATED_BOOT_TIME reads the same constant) and `trueStartWindowDeadFrames` = share − k with
+the bound 1 ≤ k < LOAD_FADE_FRAMES refusing by name; k printed per window; mutants (k→1: 3 red; bound dropped: 2;
+dayLength 160→161: 1; share ignored: 1); `record-standing-value --quote` now records `--channel` on every path with a
+refusal row. **Proof both places:** runner run 34746966782 untraced 263/0 + traced 263/0 (k=2); per-push shard run
+34746967112 `gate: seedling-wasm-ship | 263/0 | ALL PASS`; box traced ×2 263/0 (k=1) pre-fix as the control. CI 0 failed
+at every head (`ad8c0d77ac` 463/14003). **§12.10 (1) and (2) CLOSED BY THE FIX — the writer's box-sourced clause is NOT
+built** (an unused mechanism is a hardcoded assumption); ⚖ 72 may quote CI for the ship row and CI now matches the
+box. Option A (a faster poll) rejected: determinism by scheduling, assumes one update per yield, touches the lab's
+shared `until`. Trap 1347 (a constant that equals a mechanism's value by coincidence on ONE machine reads as a law
+until a second machine runs it). S1's session ENDED by pid under the 2026-09-13 ruling. **F1 LAUNCHED 2026-09-13** as
+`seedling-headless-F1` (brief `seedling-headless-F1-prompt.md`; plan §16; §16.1 = its as-built slot).
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
