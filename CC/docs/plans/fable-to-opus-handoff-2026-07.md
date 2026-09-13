@@ -14676,6 +14676,17 @@ with a mutant, every other legacy branch in the wrapper swept out and named; T7 
 (G2b). Relayed to session 3 verbatim; it proceeds copy-in → refusal → gates → CI → §24.7 → report; then the planner rebases
 `g2a` onto `origin/main` in the worktree and pushes `HEAD:main` (ONE merge).
 
+**⚖ RULING (user, 2026-09-13) — SESSION LIFETIME.** Verbatim: *"The session that launches a new session has authority
+to kill that session when it's finished. Also, when a session hands off to a successor session, the first session has
+authority to kill itself."* Applied: the launcher ends a slice session by its LITERAL pid (= its socket name) after the
+report is verified and recorded, never by pattern, never another planner's session; a planner that has launched its
+successor may end itself once nothing is pending on it. Recorded in memory (`reference_wsl_launch_claude`,
+`feedback_session_prompts_report_back`) and in the current kickoff template; both live planners told. Executed at once:
+`apworld-sidecars-M3`, `box-protocol-P0`, `key-strip-K0` ended (all launched from `archipelago-cc-88`, all reported,
+verified, merged). Why: seven idle claude processes held ~3 GB and the harness's memory watchdog killed two background
+CI waits. **CI at K0's merged head `6df6120f36`** (run 34732394486): **461/13970 (13962 | 8 | 0)** — identical to the
+branch row; main carried no test change between.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
