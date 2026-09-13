@@ -15131,6 +15131,12 @@ preconditions — the submodule commit is on its remote's default branch, and th
 tests — with ONE standing exception, the wasm-binary submodule, whose bump is a pins re-record); the ruling, when given, goes to
 CLAUDE.md's PUSH BY DEFAULT bullet and `feedback_push_by_default`.
 
+**⚖ RULED 2026-09-13 — GITLINK BUMPS JOIN PUSH BY DEFAULT.** The user, verbatim, on the planner's recommendation: *"I agree. Please
+make that update."* Written into CLAUDE.md's PUSH BY DEFAULT bullet and `feedback_push_by_default`: a bump needs no word once
+BOTH mechanical preconditions are measured — the submodule commit is an ancestor of its remote's default branch, and the submodule
+push itself met the push-by-default tests; the bump commit says what moved and why. ONE exception stays ask-first: the
+`flashPanel/wasm` submodule (Seedling binaries, pinned by the headless CI gate — a bump is a pins re-record).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
