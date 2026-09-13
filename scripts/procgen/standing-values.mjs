@@ -93,8 +93,8 @@ import { CI_SHARD_BUDGET_MS, ciSourced, lastRunShardAudit } from './ciGatePlan.j
 import { recentRuns, runShardCosts } from './ciSummary.js';
 import { LOCAL_HOST, REPO, gateRoster } from './gateRoster.js';
 import {
-    bankedPopulations, keyContext, keyInputsIn, keyReportLines, nondeterminismFinding,
-    rowInputKey, rowRunDecision, unkeyableReason,
+    bankedPopulations, declarationFileFor, keyContext, keyInputsIn, keyReportLines,
+    nondeterminismFinding, rowInputKey, rowRunDecision, unkeyableReason,
 } from './rowInputKey.js';
 import {
     CHEAP_MS, FILE, ciGateCommand, cheapFor, compositeValue, compositeWhy, head,
@@ -248,10 +248,11 @@ const keyCtx = () => (KEY_CTX ??= keyContext({ repo: REPO }));
  * unit test can hand it a declaration no file on disk carries.
  */
 function keyReportFor(row, { fromCI = false } = {}) {
-    const gate = gateOf(row.command);
+    /** ⛓ K0 — the gate's docblock, or the ENTRY's when no gate matches. */
+    const declFile = declarationFileFor(row.command, GATES);
     let declared = null;
-    if (gate) {
-        declared = keyInputsIn(readFileSync(join(REPO, gate.path), 'utf8'), { file: gate.path });
+    if (declFile) {
+        declared = keyInputsIn(readFileSync(join(REPO, declFile), 'utf8'), { file: declFile });
     }
     const why = unkeyableReason(row, { declared, fromCI });
     if (why) return { key: null, unkeyable: why, populations: [], entry: scriptIn(row.command) };
