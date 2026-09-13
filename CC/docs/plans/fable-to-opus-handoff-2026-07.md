@@ -14339,6 +14339,20 @@ failed. ⚖ OPEN (§14.7): the owed gate still prints the box's "≈143 min" est
 (could print the dispatch); `seedlingDemo/fixtures/*.js` sits outside the fingerprint. **⛓ THREE SLICES SINCE THIS
 SESSION OPENED (R2, H2, H3) — the ladder STOPS here for a replan with the user** (ruling 2026-09-05).
 
+**⚖ USER 2026-09-13 (the replan): *"I want to do all of the things you listed, except for the P0 task."*** ⇒ three
+slices, designed in plan §15–§17: **S1** = the ship gate's runner off-by-one (mechanism FIRST — a boot trace on both
+machines; three pre-designed outcomes: harness artifact / game-side timing dependency / Chromium build; ⛔ never a
+runner constant or a tolerance) and, only if the runner's reading stays legitimately different, the writer's
+`@ci-row-source box:` clause (declared, never detected; `ciSourced ∧ ¬boxSourced`); **F1** = the five `  ok  `
+printers, the owed gate's advice (the CI dispatch, a `CI_TIER_CALIBRATION` with provenance), the swim-sound lock kind,
+the fixtures into the fingerprint, the shard margin re-priced — after S1 on the primary tree; **W3** = the
+seedling-wasm history shed per the repo's own stated policy (orphan commit, byte-identical tree, `docs/history.md`
+records it), prepared in a SEPARATE clone and STOPPED before the force-push and again before the gitlink bump — both
+ask-first, brought to the user ONCE with the exact commands and BEFORE → AFTER sizes; ⚖ PRE-RULED by the planner: an
+EMPTY submodule tree diff owes no tier drive (population (i) is about a different GAME). The P0 55-row digest
+re-record is the sidecars arc's ask, not this one's. **S1 + W3 LAUNCHED 2026-09-13** (briefs
+`seedling-headless-S1-prompt.md`, `-W3-prompt.md`; F1's brief written, launched after S1).
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
