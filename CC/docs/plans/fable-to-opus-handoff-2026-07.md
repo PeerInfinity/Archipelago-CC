@@ -14482,7 +14482,8 @@ that calls `npm test`; killing npm leaves the runner reparented. Live-probe left
 `check-seedling-bot-differential.mjs` declaring a face beside producer-boundaries; H2's row to reconcile, told to b6;
 P0's merged head inherits it (CI at `4c1eaddec1` pending). **Debt, named not paid:** any byte of `boxLock.js` moves
 55 of 103 keyed standing rows' code digests and 27 spawn digests (as-built §3) — ⚖ FOR THE USER: a 55-row
-`standing-values --write` at the merged head (box-hours) or move the lock's prose out of the hashed file. ⚖ OPEN
+`standing-values --write` at the merged head (⚠ first written "box-hours" — MEASURED WRONG: the keyed bank's `ms` total
+1288 s, the 46 moved rows 518 s; the 2 h tiers are not in this bank) or move the lock's prose out of the hashed file. ⚖ OPEN
 (P0 §6): `treeMoved` is end-vs-start (a reverted mid-run edit is invisible); the ppid check into `boxLock.js` for all
 takers; the orphan-refusal semantics under `&` vs `setsid`. M3's CI quote at `cd1919d7e8` (run 34724817403):
 **454/13856**, its prediction to the row (R2 +0). **NEXT:** G2a launches from `preset-sidecars-planning-3` on the
@@ -14505,6 +14506,39 @@ CI-face row, inherited, so G2a's baseline is quoted with that attribution. **LAU
 recorded on exits/locations, an extractor emitting `access_rule`), the serializer pair, the own `sidecarFields` /
 `apLocationNamesOf` / `exitSides` identity, the identity row rewritten, the `exitSides` population law re-derived, M3's corpus
 control over the new population; ⛔ not `boxLock.js`, not jta/omsi, not the bridge/painter/regen/docs (sessions 2–3).
+
+**CI at P0's merged head `4c1eaddec1`** (run 34727443286): **459/13937 (13927 | 8 | 2 failed)** = `d804521eac`'s 456/13910
++ P0's +3 files / +27 tests row for row; the two reds are H2's (`boxLock.test.js › the CI face`, `seedlingDriver.test.js
+› driverChannel`, both in run 34726812799's failed log at `d804521eac`) — P0 added no red. **M3's CI quote** at
+`cd1919d7e8` (run 34724817403): **454/13856**, its prediction to the row (R2 +0).
+
+**K0 RULED + VERIFIED + MERGED 2026-09-13** (user, on the planner's recommendation over moving the prose out of
+`boxLock.js`: *"Let's go with your recommended fix."* then *"Ok, let's continue with the current plan."*; kickoff
+`NewDocs/plans/key-strip-K0-prompt.md`; worktree `-wt-key-strip-k0` made by `new-worktree.sh` in 20 s; Opus
+`key-strip-K0`; branch @ `0d94d5c935`, five commits rebased onto `c4e5e3e7fc` and pushed as **`6df6120f36`**;
+as-built in the worktree's `NewDocs/plans/key-strip-K0-asbuilt.md`; trap **1340**). The change: `rowInputKey.js`'s
+CODE and SPAWN populations digest esbuild 0.27.2's comment-free reprint (the parser set DERIVED by probing esbuild's
+default loader per extension; a file it cannot parse falls back to bytes and is NAMED per member); DATA stays bytes;
+a population a gate DECLARES stays bytes; a gate-less row reads its entry script's own declaration. **Mid-slice
+finding + ruling:** the brief's premise "comments are never read" was FALSE for the reference generator
+(`reference/instruments.mjs` reads every `scripts/procgen/*.mjs` docblock by readdir into the generated regions
+`--check` compares) — `check-procgen-reference.mjs`, `generate-procgen-reference.mjs` and (via SPAWN)
+`check-seedling-rerecord-rehearsal.mjs` now declare `@key-inputs code:` bytes, and ONE census row (planner's addition)
+asserts every entry whose closure imports a docblock-parser export has declared-bytes CODE or is unkeyed by name
+(mutants E/F drop a declaration → red). Declarers = 4 not 1 (three declare DATA). Planner re-measured in K0's
+worktree: 86 → 110 rows green after the rebase (rowInputKey 64 → 76); **the live proof reproduced by the planner's
+own edits** — a comment-only edit to `boxLock.js` moves **3** keys (exactly the three declared-bytes rows, 0 of the
+undeclared) and a one-token edit moves **59**; `--keys` wall 18 → 7 s (a per-file scan cache); CI at the branch head
+**461/13970 (13962 | 8 | 0)** = `a38749d011`'s 461/13958 + 12 rows; K0's leftover throwaway worktree removed.
+**One-time cost, measured:** every keyed row's key changes FORM at this merge, and K0 measured that this adds NO row
+to the write already owed — under both forms the bank reads 48 MOVED + 52 NEW = **100 keyed rows owed**, 17
+unkeyable; the bank's own `ms` fields put that write at ~21 min of box (whole bank 1288 s), not hours. ⚖ FOR THE USER:
+the word for that ONE `--write` when the box is quiet (H2 writes its own rows after it, per b6). ⚖ OPEN (K0): the
+rehearsal declaration is conservative (an override-aware exclusion would need a census that sees the override); the
+reference rows' declared population is 726 members of bytes, cheap (17 s banked) but re-run on any prose edit in
+`scripts/procgen/`. Brief-wrong (K0 §0): the `"x // y"` row does not discriminate the regex form (needs `/* */` in a
+string or a `//` line in a template); a JSON-value edit does not see the strip-DATA mutant; esbuild also folds
+constants and normalises quotes — runtime-equivalent, stated.
 
 ## 6. Everything else (unchanged queues)
 
