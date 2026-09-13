@@ -33,7 +33,7 @@
  */
 
 import { readFileSync, readdirSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, posix } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
@@ -46,6 +46,7 @@ import {
     MAZE_PALETTE, mazeModel, mazeOracle, serializeMazeLevel,
 } from '../mazeRoom/procgenMaze.js';
 import { rngFor as mazeRngFor } from '../mazeRoom/procgenRng.js';
+import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 
 /**
  * A FIXTURE is the four things a binding is: a model, an oracle over it, a
@@ -358,8 +359,29 @@ describe('⛔ procgenCore imports nothing substrate-side', () => {
      * exact next mistake available, and it would make the core know which
      * substrate it is on just as surely as a `seedlingDemo/` import would.
      * Measured before widening: ZERO procgenCore files imported flashPanel/.
+     *
+     * ⛓⛓ PRESET SIDECARS G2b-1 WIDENED IT AGAIN — and stopped TYPING it. The
+     * three literals left every other substrate's directory outside the law:
+     * MEASURED at G2b-1's W0, a throwaway `procgenCore/` module importing
+     * `../textAdventureSubstrateWrapper/textAdventureRoom.js` passed its own
+     * "reaches for no BINDING" row. The binding directories are now DERIVED
+     * from `REGISTRY_LIBRARIES` (`scripts/procgen/reference/registry.mjs`, the
+     * registry reference's own "Entry sources" list): the directory of every
+     * substrate library, so a substrate that registers joins the law the day
+     * its library is listed. ⛔ `seedlingDemo/` holds NO registry library (it
+     * is the constructive loop's Seedling BINDING, not a registry entry), so it
+     * stays a literal beside the derived set, and the non-vacuity row below
+     * names all of them. Measured before widening: ZERO shipping procgenCore
+     * files imported any of the derived directories.
+     *
+     * ⚠ This file importing the reference module is not under the law it
+     * states: the scan is over SHIPPING modules, and `*.test.js` is excluded.
      */
-    const BINDING = /(^|\/)(mazeRoom|seedlingDemo|flashPanel)\//;
+    const LIBRARY_DIRS = [...new Set(REGISTRY_LIBRARIES
+        .map((rel) => posix.dirname(rel).replace(/^frontend\/modules\//, '')))].sort();
+    const BINDING_DIRS = [...new Set([...LIBRARY_DIRS, 'mazeRoom', 'seedlingDemo', 'flashPanel'])].sort();
+    const escapeRe = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const BINDING = new RegExp(`(^|/)(${BINDING_DIRS.map(escapeRe).join('|')})/`);
     const SHARED = /(^|\/)shared\//;
     const GRID_TILES = 'shared/procgen/mazeAlgorithms/gridTiles.js';
 
@@ -402,6 +424,22 @@ describe('⛔ procgenCore imports nothing substrate-side', () => {
         expect(SHIPPING.length).toBeGreaterThan(20);
         expect(BINDING.test('../mazeRoom/mazeRoomEngine.js')).toBe(true);
         expect(BINDING.test('../seedlingDemo/procgenPalette.js')).toBe(true);
+        // ⛓⛓ G2b-1: the DERIVED set holds a directory per registry library —
+        //   the three literals' own AND the ones they had quietly left out —
+        //   and every derived directory is really one level under modules/.
+        expect(LIBRARY_DIRS.length).toBeGreaterThan(0);
+        expect(LIBRARY_DIRS.every((d) => /^[A-Za-z0-9_-]+$/.test(d))).toBe(true);
+        for (const d of ['mazeRoom', 'flashPanel', 'textAdventureSubstrateWrapper', 'bounceDemo']) {
+            expect(LIBRARY_DIRS).toContain(d);
+        }
+        for (const d of ['mazeRoom', 'seedlingDemo', 'flashPanel', ...LIBRARY_DIRS]) {
+            expect(BINDING.test(`../${d}/anything.js`), d).toBe(true);
+        }
+        expect(BINDING.test('../textAdventureSubstrateWrapper/textAdventureRoom.js')).toBe(true);
+        expect(BINDING.test('../bounceDemo/bounceDemoLibrary.js')).toBe(true);
+        // ⛔ …and it does not bite on what is NOT a binding
+        expect(BINDING.test('../shared/procgen/substrateRegistry.js')).toBe(false);
+        expect(BINDING.test('./roundTripRules.js')).toBe(false);
         expect(SHARED.test(`../${GRID_TILES}`)).toBe(true);
     });
 });
