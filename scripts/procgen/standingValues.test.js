@@ -233,11 +233,21 @@ describe('F1 task 0 / 0b — the writer never creates an unbounded NEW row', () 
     });
 
     it('a PRICED NEW row, a banked row and a non-gate row run plainly; over budget is refused', () => {
-        const priced = ROWS.find((r) => r.kind === 'gate' && !bank[r.key] && costs.arms[r.key]);
+        // ⛓ The "priced NEW" fixture is SYNTHETIC: a priced gate row with its
+        // key deleted from a COPY of the bank. Reading it off the live bank
+        // (`!bank[r.key]`) held only BETWEEN writes — after a full
+        // `standing-values --write` every priced gate is banked and the row
+        // went red on the sidecars planner's bank commit (2026-09-13). A
+        // fixture that depends on the live data's phase is not a fixture.
+        const priced = ROWS.find((r) => r.kind === 'gate' && costs.arms[r.key]);
         expect(priced).toBeDefined();
-        const banked = ROWS.find((r) => r.kind === 'gate' && bank[r.key]);
+        const bankWithout = { ...bank };
+        delete bankWithout[priced.key];
+        const banked = ROWS.find((r) => r.kind === 'gate' && r.key !== priced.key && bankWithout[r.key]);
+        expect(banked).toBeDefined();
         const identity = ROWS.find((r) => r.kind === 'identity');
-        expect(spawned([priced, banked, identity])).toEqual([priced.key, banked.key, identity.key]);
+        expect(spawned([priced, banked, identity], { bank: bankWithout }))
+            .toEqual([priced.key, banked.key, identity.key]);
         const tight = { ...costs, budgetMs: costs.arms[priced.key].ms - 1 };
         expect(newRowClass({ row: priced, costs: tight })).toMatchObject({ class: 'refuse' });
         expect(newRowClass({ row: priced, costs: tight }).why).toMatch(/over the .* budget/);
