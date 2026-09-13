@@ -17,16 +17,23 @@
  */
 
 import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
 import {
-    DERIVED_DATA_EXCLUDED, POPULATIONS, digestOf, expandDeclared, globToRe, inputPopulations,
-    keyInputsIn, keyReportLines, nondeterminismFinding, rowInputKey, rowRunDecision,
-    spawnTargetsIn, stripComments, tokensOf, unkeyableReason,
+    DERIVED_DATA_EXCLUDED, HASHERS, POPULATIONS, declarationFileFor, digestOf, expandDeclared,
+    globToRe, inputPopulations, keyContext, keyInputsIn, keyReportLines, nondeterminismFinding,
+    parsesAsJs, rowInputKey, rowRunDecision, spawnTargetsIn, stripComments, tokensOf,
+    unkeyableReason,
 } from './rowInputKey.js';
-import { CI_ARM_COSTS_FILE } from './ciGatePlan.js';
-import { FILE as STANDING_VALUES, scriptIn, standingRows } from './standingValues.js';
+import { docblockOf, documentedFlagsIn, headerOf } from './argvScan.js';
+import { CI_ARM_COSTS_FILE, ciSourced } from './ciGatePlan.js';
+import { SCRIPT_DIR, ciFaceIn, ciShallowIn, gateRoster, variantsIn } from './gateRoster.js';
+import { firstSentence } from './reference/lib.mjs';
+import {
+    FILE as STANDING_VALUES, readStandingValues, scriptIn, standingRows,
+} from './standingValues.js';
 
 /** A context whose every input is a literal — the only kind a rule can be
  *  tested against without testing the tree as well. */
@@ -721,5 +728,225 @@ describe('the roster S2 actually keys', () => {
         const a = rowInputKey({ entry: 'scripts/procgen/dump-x.mjs', ctx });
         const b = rowInputKey({ entry: 'scripts/procgen/dump-x.mjs', ctx });
         expect(a.key).toBe(b.key);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * THE TOKENS, NOT THE BYTES — slice K0 (user ruling 2026-09-13)
+ *
+ * ⛔⛔ EVERY ROW BELOW WAS DRIVEN AGAINST A MUTANT FIRST, and the mutant each
+ * one reds is named in the row. A key that stopped moving on prose is the
+ * economy; a key that stopped moving on a TOKEN is the stale green — so the
+ * rows come in pairs, and the negative half is never asserted from a context
+ * that could not move.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('K0 — a CODE member digests its TOKENS; data, declared and non-JS members their BYTES', () => {
+    const ENTRY_K = 'scripts/procgen/check-k.mjs';
+    const HUB = 'scripts/procgen/hub.js';
+    const DRIVER = 'scripts/procgen/drive.py';
+    const HUB_SRC = [
+        '/** the hub says a great deal about itself */',
+        "export const a = 'x /* b */ y';",
+        'export const t = `',
+        '// not a comment',
+        '`;',
+        'export const s = "x // y";',
+        ''].join('\n');
+    const worldK = (hub = HUB_SRC, py = '# a comment\nprint(1)\n') => ({
+        files: {
+            [ENTRY_K]: "import './hub.js';\nconst D = join(HERE, 'drive.py');\n",
+            [HUB]: hub,
+            [DRIVER]: py,
+        },
+        edges: { [ENTRY_K]: [HUB] },
+        fixtures: [],
+    });
+    const reportOf = (world, declared = null) =>
+        rowInputKey({ entry: ENTRY_K, declared, ctx: stubCtx(world) });
+    const pop = (report, name) => report.populations.find((p) => p.name === name);
+    const edited = (from, to) => worldK(HUB_SRC.replace(from, to));
+
+    /** (a) ⛔ mutant A (strip nothing) reds this row. */
+    it('(a) a COMMENT-ONLY edit leaves the code digest and the row key unmoved', () => {
+        const before = reportOf(worldK());
+        const after = reportOf(worldK(HUB_SRC.replace('says a great deal', 'says rather less')
+            .replace("export const a", '// a new line comment\nexport const a')));
+        expect(pop(after, 'code').digest).toBe(pop(before, 'code').digest);
+        expect(after.key).toBe(before.key);
+    });
+
+    /** (b) the other half of (a): the same context DOES move on a token. */
+    it('(b) a ONE-TOKEN edit moves the code digest and the row key', () => {
+        const before = reportOf(worldK());
+        const after = reportOf(edited('export const a', 'export const b'));
+        expect(pop(after, 'code').digest).not.toBe(pop(before, 'code').digest);
+        expect(after.key).not.toBe(before.key);
+    });
+
+    /**
+     * (c) ⛔⛔ THE PARSER, NOT THE REGEX. `stripComments` deletes a `/* … *\/`
+     * span inside a STRING and a `//`-leading line inside a TEMPLATE LITERAL;
+     * the runtime reads both. ⛔ mutant "tokensOf over stripComments" reds
+     * both of these. ⚠ The brief's example — `"x // y"` → `"x // z"` — is kept
+     * as the third assertion but does NOT discriminate: the regex keeps a line
+     * that does not START with `//`, so that edit moves under both forms.
+     */
+    it('(c) an edit INSIDE a literal that looks like a comment moves the digest', () => {
+        const base = pop(reportOf(worldK()), 'code').digest;
+        expect(pop(reportOf(edited("'x /* b */ y'", "'x /* z */ y'")), 'code').digest).not.toBe(base);
+        expect(pop(reportOf(edited('// not a comment', '// not a remark')), 'code').digest)
+            .not.toBe(base);
+        expect(pop(reportOf(edited('"x // y"', '"x // z"')), 'code').digest).not.toBe(base);
+    });
+
+    /** (d) a `.py` member is BYTES by the rule, and the report says how many. */
+    it('(d) a `.py` spawn member MOVES on a comment edit, and the report says bytes', () => {
+        const before = reportOf(worldK());
+        const after = reportOf(worldK(HUB_SRC, '# another comment\nprint(1)\n'));
+        expect(pop(before, 'spawn').members).toContain(DRIVER);
+        expect(pop(after, 'spawn').digest).not.toBe(pop(before, 'spawn').digest);
+        const line = keyReportLines(before).find((l) => l.trimStart().startsWith('spawn'));
+        expect(line).toContain(`[${HASHERS.TOKENS} `);
+        expect(line).toContain('0 parsed, 1 bytes by extension, 0 FALLBACK');
+    });
+
+    /**
+     * (e) ⛔⛔ A DECLARED POPULATION IS BYTES — the declarer's subject is the
+     * text. The same docblock edit moves the DECLARING row's key and leaves
+     * an undeclared row's unmoved. ⛔ mutant "declared stripped" reds the
+     * first half; mutant A reds the second.
+     */
+    it('(e) a docblock edit moves a DECLARED code population and not an undeclared one', () => {
+        const declared = { code: [HUB], data: [], spawn: [], build: [], unkeyable: null };
+        const prose = worldK(HUB_SRC.replace('says a great deal', 'says rather less'));
+        const d0 = reportOf(worldK(), declared);
+        const d1 = reportOf(prose, declared);
+        expect(pop(d0, 'code').hasher).toBe(HASHERS.BYTES);
+        expect(d1.key).not.toBe(d0.key);
+        expect(reportOf(prose).key).toBe(reportOf(worldK()).key);
+    });
+
+    /** (f) ⛔ a parse failure is bytes AND named. mutant "silent fallback" reds. */
+    it('(f) an UNPARSEABLE `.js` falls back to bytes and is NAMED in the report', () => {
+        const jsx = 'export const v = <div/>; // jsx\n';
+        const r0 = reportOf(worldK(jsx));
+        const r1 = reportOf(worldK(jsx.replace('// jsx', '// still jsx')));
+        expect(pop(r0, 'code').fallbacks.map((f) => f.member)).toEqual([HUB]);
+        expect(keyReportLines(r0).some((l) => l.includes('FALLBACK to bytes') && l.includes(HUB)))
+            .toBe(true);
+        expect(pop(r1, 'code').digest).not.toBe(pop(r0, 'code').digest);
+    });
+
+    /** (g) the PATH stays in a TOKEN digest — the existing `digestOf` row
+     *  already runs with `kind: 'code'`, which is the tokens hasher now; this
+     *  pins that it is. */
+    it('(g) the path is in a TOKEN digest too', () => {
+        const ctx = stubCtx({ files: { 'a.js': 'X', 'b.js': 'X' } });
+        expect(tokensOf('X', 'a.js').tokens).not.toBeNull();
+        expect(digestOf(['a.js'], { ctx, kind: 'code' }))
+            .not.toBe(digestOf(['b.js'], { ctx, kind: 'code' }));
+    });
+
+    /**
+     * (h) ⛔⛔ DATA IS BYTES, EVEN A MEMBER A PARSER WOULD STRIP. ⛔ mutant B
+     * ("strip DATA too") reds the first assertion. ⚠ The JSON value row is a
+     * CONTROL, not a discriminator: `.json` is not a parser extension, so it
+     * is bytes under mutant B as well — the brief's construction for B does
+     * not see B. (No DERIVED data rule admits a parser extension today; the
+     * only such data member is a DECLARED one, `check-seedling-wasm-pins`.)
+     */
+    it('(h) a DATA member moves on a comment edit, and a JSON fixture on a value edit', () => {
+        const a = stubCtx({ files: { 'x/notes.js': '/* one */ export const n = 1;\n' } });
+        const b = stubCtx({ files: { 'x/notes.js': '/* two */ export const n = 1;\n' } });
+        expect(digestOf(['x/notes.js'], { ctx: b, kind: 'data' }))
+            .not.toBe(digestOf(['x/notes.js'], { ctx: a, kind: 'data' }));
+        const j1 = stubCtx({ files: { 'fx/fixtures/f.json': '{"v": 1}\n' } });
+        const j2 = stubCtx({ files: { 'fx/fixtures/f.json': '{"v": 2}\n' } });
+        expect(digestOf(['fx/fixtures/f.json'], { ctx: j2, kind: 'data' }))
+            .not.toBe(digestOf(['fx/fixtures/f.json'], { ctx: j1, kind: 'data' }));
+    });
+
+    /** ⛓ The parser set is ESBUILD'S answer, anchored on real extensions. */
+    it('asks esbuild which extensions parse — JS sources yes, the rest no', () => {
+        for (const ext of ['.js', '.mjs', '.cjs']) expect(parsesAsJs(ext)).toBe(true);
+        for (const ext of ['.py', '.sh', '.html', '.json', '.txt']) expect(parsesAsJs(ext)).toBe(false);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * THE DOCBLOCK-READER CENSUS — the law behind every hand declaration K0 added
+ *
+ * ⛔⛔ K0'S PREMISE WAS FALSE FOR ONE FAMILY: a module that READS source text
+ * as its input. `reference/instruments.mjs` publishes every instrument's
+ * docblock, so `generate-procgen-reference --check` reds on a one-liner edit
+ * (measured at K0 W0: "instruments.js DIFFERS"). A row reaching such a reader
+ * must key its code on BYTES, which it does by DECLARING — and this row is
+ * what keeps a new reader, or a dropped declaration, from being a stale green.
+ *
+ * ⛓ THE PARSERS are imported, not spelled: a rename breaks the import. A
+ * CONSUMER is a non-test graph node, other than the parser's definer, whose
+ * TOKENS name a parser AND which imports the definer.
+ *
+ * ⛔ STATED EXCLUSIONS, each with the claim that keeps it honest:
+ *   · `argvHelp.js` — it parses only its CALLER'S OWN docblock, and only
+ *     under `--help`; every instrument imports it. Held by: no standing row's
+ *     command passes `--help` (the help gate spawns that, and declares).
+ *   · a definer's INTERNAL use — `gateRoster.js` reads `@ci-face` /
+ *     `@variant` / `@ci-shallow` out of gate files it reaches by `readdirSync`,
+ *     never through a row's closure, so those files were never in any row's
+ *     key and K0 changes nothing about them.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('K0 — every row that reaches a docblock READER keys its CODE on bytes', () => {
+    const PARSERS = [docblockOf, headerOf, documentedFlagsIn, firstSentence, ciFaceIn, variantsIn,
+        ciShallowIn, keyInputsIn];
+    const ARGV_HELP = `${SCRIPT_DIR}/argvHelp.js`;
+    const ctx = keyContext();
+    const tokensAt = (f) => tokensOf(ctx.read(f), f).tokens ?? '';
+    const definers = new Map(PARSERS.map((fn) => [fn.name, [...ctx.graph.nodes]
+        .find((f) => new RegExp(`export\\s+(?:function|const)\\s+${fn.name}\\b`).test(tokensAt(f)))]));
+    const consumers = [...ctx.graph.nodes].filter((f) => {
+        if (/\.test\.m?js$/.test(f) || !parsesAsJs(f.slice(f.lastIndexOf('.')))) return false;
+        const deps = ctx.graph.forward.get(f) ?? new Set();
+        return PARSERS.some((fn) => definers.get(fn.name) !== f && deps.has(definers.get(fn.name))
+            && new RegExp(`\\b${fn.name}\\b`).test(tokensAt(f)));
+    });
+    const gates = gateRoster({ repo: ctx.repo });
+    const bank = readStandingValues();
+
+    it('finds every parser definer and at least the reference reader (not vacuous)', () => {
+        for (const fn of PARSERS) expect(definers.get(fn.name), fn.name).toBeTruthy();
+        expect(consumers).toContain(`${SCRIPT_DIR}/reference/instruments.mjs`);
+        expect(consumers).toContain(ARGV_HELP);
+    });
+
+    it('holds the argvHelp exclusion: no standing row passes --help', () => {
+        expect(standingRows().filter((r) => /(?:^|\s)--help\b/.test(r.command)).map((r) => r.key))
+            .toEqual([]);
+    });
+
+    it('every KEYED row whose code or spawn reaches a reader DECLARES a code population holding it', () => {
+        const readers = consumers.filter((c) => c !== ARGV_HELP);
+        const offenders = [];
+        let reached = 0;
+        for (const row of standingRows()) {
+            const entry = scriptIn(row.command);
+            if (!entry) continue;
+            const file = declarationFileFor(row.command, gates);
+            const declared = keyInputsIn(readFileSync(join(ctx.repo, file), 'utf8'), { file });
+            const gate = row.kind === 'gate' ? gates.find((g) => row.command.includes(g.path)) ?? null
+                : null;
+            const fromCI = ciSourced({ gate, row, cheap: bank?.rows?.[row.key]?.cheap });
+            const pops = inputPopulations({ entry, declared, ctx });
+            const hit = readers.filter((r) => pops.code.includes(r) || pops.spawn.includes(r));
+            if (!hit.length) continue;
+            reached += 1;
+            if (unkeyableReason(row, { declared, fromCI })) continue;
+            const bare = hit.filter((r) => !(pops.declared.code && pops.code.includes(r)));
+            if (bare.length) offenders.push(`${row.key} ← ${bare.join(', ')}`);
+        }
+        expect(reached).toBeGreaterThan(0);
+        expect(offenders).toEqual([]);
     });
 });
