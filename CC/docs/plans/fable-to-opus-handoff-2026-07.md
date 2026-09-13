@@ -14596,6 +14596,12 @@ Opus session ~2–3 h. Brief written: `NewDocs/plans/seedling-headless-R3-prompt
 slice). **NOT LAUNCHED — the planner brings the user three asks in order: (a) launch R3; (b) after its report, the
 gitlink bump onto `main` (the wasm exception, ask-first); (c) W3 re-cut from the new HEAD + the force-push (ask-first).**
 
+**⚖ USER 2026-09-13: *"Yes, please continue with this plan."* (after a summary of R3: the pins rebuild from R1's kept SWFs
+at `bdf734c46`, the tier by CI dispatch on `pins-r3`, `main` never pushed by the slice) — R3 LAUNCHED 2026-09-13 by
+`seedling-headless-planning-4`** (Opus, primary tree, `-t seedling-headless-R3`, pid 1093548, cwd verified, handshake +
+idle subscription; main = origin/main = `9e9676d014` at launch; no lock). The relayout arc's planner was told the box
+use to come. Asks (b) the gitlink bump onto `main` and (c) the W3 re-cut + force-push stay ASK-FIRST after R3 reports.
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
