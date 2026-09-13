@@ -1416,32 +1416,11 @@
       "value": "263/0",
       "command": "node scripts/procgen/check-seedling-wasm-ship.mjs --host=http://localhost:8000",
       "kind": "gate",
-      "exit": 0,
-      "ms": 474144,
       "cheap": false,
-      "measuredAt": "e172d631f1408ab498ce826554840e35eca9108e",
-      "inputKey": "ea909ba1f4812cccaecd5cd01e523759",
-      "keyAt": "e172d631f1408ab498ce826554840e35eca9108e",
-      "keyPopulations": {
-        "code": {
-          "count": 164,
-          "digest": "b07e5ddbed5ed07283e9b90ddbc639a7"
-        },
-        "data": {
-          "count": 271,
-          "digest": "c04ec859b465c86db515bd921fa94731"
-        },
-        "spawn": {
-          "count": 224,
-          "digest": "047912d48b8d79ca616d6277fba6fbea"
-        },
-        "build": {
-          "count": 3,
-          "digest": "5d1284686d9554b2e4eb8e7df6523ccb"
-        }
-      },
-      "windows": true,
-      "total": "ALL PASS"
+      "quoted": true,
+      "why": "⚖ 72 CI-sourced (S1 ruling): quoted from the per-push browser shard, JavaScript Unit Tests run 34746967112 @edaafbc916 (## CI-GATE gate: seedling-wasm-ship 263/0 ALL PASS); dispatched proof run 34746966782 @edaafbc916 untraced 263/0 and traced 263/0 (CAMPAIGN window 1 k=2, 38/38); cross-machine control: box headless-pixels --boot-trace x2 263/0 (k=1) at 42cfd39dc7",
+      "measuredAt": "edaafbc9163c8a4a874bf8ab02e6a4b3bba9dc4d",
+      "channel": "headless"
     },
     "suite: vitest (unfiltered)": {
       "value": "416/12629",
