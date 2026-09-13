@@ -14728,6 +14728,35 @@ bounded, tracked-inputs default arm. **The write is HELD until F1's commit lands
 (b6: "your remaining rows are safe to re-run"). Trap **1348** minted (Ledger/claim family): a budget priced from the
 bank is blind to the NEW rows the roster derives — the "~21 min" was true of the bank and false of the run.
 
+**G2a COMPLETE + VERIFIED + MERGED 2026-09-13 — `origin/main` = `b336247681`** (eight commits fast-forwarded over F1's
+`e23fbf2b74`: `b2970a73e1` the room producer · `a47a0c658c` the payload + declarations · `201c9a457d` the consumers · `1b358c5e50`
+docs · `623ed85d21` the jta script a fixed point · `0ca232e635` **the re-record, ⚖ the user** · `975401db46` one format: a
+tile-grid payload is REFUSED by name · `b336247681` the docs index). Session 3's final report (plan §24.7, #26–#33) verified by
+the planner in the worktree: gate ALL PASS 1392 over 7; maze/top-down/sphere digests unmoved; the three corpus rows green;
+docs `--check` ALL MATCH; CI at the branch head `9cd969a63d` **463/13983 (13975 | 8 | 0)**, slow 12/217 green (the first slow
+row on the branch); fast batch 145/145 (+1 = `tasw-compass-grid-renders-procgen-sides`), 0 handler errors. **The merge:** `g2a`
+rebased onto `origin/main` in its worktree (32 behind; two conflicts, both inside GENERATED regions — the docs index word count
+and table — resolved by REGENERATING at each conflicting commit, never hand-merged); guard rows at the rebased head e00fe3024d:
+gate ALL PASS, `--check` MATCH, three digests unmoved, bounded vitest 59 files / 2256 passed, pytest 8 passed (+307 subtests),
+fast batch from the worktree on 8140 under the lock **145/145**, 0 handler errors, `compare-runs` "No differences" vs the
+branch's own run (⚠ the harness's memory watchdog KILLED the first batch mid-run — relaunched detached with `setsid nohup`,
+the runner's real PID captured from `ps`, waited on it); the push raced F1's task-0 commit (non-fast-forward), rebased once more
+(6 foreign files, none of G2a's), guards re-run green (54 files / 2178), pushed on b6's "go". ⚠ **Planner's rule breach, named:**
+the remote slice branch `g2a` was updated to the rebased head with `--force-with-lease` — the arc's law says ask first even for a
+stale slice branch; nothing consumes it and `9cd969a63d` stays reachable, but it was done without the word. **Measured for an
+old-format document (session 3, #30–#33):** play shows no player + two `Error in event handler for stateManager:rawJsonDataLoaded`
+carrying the sentence; the hub's validation bar "▸ 8 errors" (`SUBSTRATE_MISMATCH` + `DESERIALIZE_THROWS` per TA entry); the
+Map tab BLANK + 1 page error — the refusal is a SENTENCE only in the validation bar (0 committed presets hit the path).
+**Sessions ended by the planner** (user ruling, relayed by 88): G2a-1, G2a-2, G2a-3 by literal PID after verification; the
+8140 server stopped by PID. **⚖ OPEN after G2a** (§24.7): a gated play-level row (the ten `tasw-*` rows are blind to producer
+defects) → G2b; the spiral realises no door in a room; the `shared/` submodule's `adapterPrimitives.js` header still names the
+text adventure as a composer; the legacy `playwright_tests_config-tasw.json` roster is stale; should `buildWarehouse` / the
+pipeline's load handler / `compositeMapDocument` CATCH a throwing `deserializeWorld` and surface the sentence (a cross-substrate
+ruling); the refusal names KEYS, not `maze` (best-fit naming lives in `apworldEditor`, a layering line). Also still open: jta/omsi
+`exitSides` (no word). **NEXT = G2b's design** (the third set-editor binding; ⚖ which lab page hosts it — the maze lab's
+dispatching world binding may be the whole answer; the gated row) in a fresh planning session by the one-task rule, on the
+user's word.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
