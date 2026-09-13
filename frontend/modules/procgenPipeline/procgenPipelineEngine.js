@@ -2789,13 +2789,17 @@ function generateRegionProcedural(spec) {
     // ids + access rules (path-walk pollution must not leak into access
     // rules; the spec rule IS the rule). global_name is stamped only when
     // the caller asks (top-down preserves AP-canonical source names).
+    // ⛓ G2a: a placed location that stands on no TILE (a SIDES room's — the
+    // text adventure's) is matched by its id instead; the key spaces cannot
+    // collide ("x,y" vs "id:…"), and a tile location keys exactly as before.
+    const placedKey = (position, id) => (position ? `${position.x},${position.y}` : `id:${id}`);
     const locationIdByPos = new Map();
     for (const placed of placement.placed_locations ?? []) {
-        locationIdByPos.set(`${placed.position.x},${placed.position.y}`, placed.location_id);
+        locationIdByPos.set(placedKey(placed.position, placed.location_id), placed.location_id);
     }
     const specById = new Map((spec.locations ?? []).map((l) => [l.id, l]));
     for (const loc of extracted_rules.locations) {
-        const specLocId = locationIdByPos.get(`${loc.position.x},${loc.position.y}`);
+        const specLocId = locationIdByPos.get(placedKey(loc.position, loc.id));
         if (!specLocId) continue;
         loc.id = specLocId;
         if (spec.useSourceLocationName) loc.global_name = specLocId;
@@ -4098,7 +4102,12 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
             baseItemLib: itemLib, baseObstacleLib: obstacleLib,
         });
         const extracted_rules = adapter.extractPathsAndObstacles(world, { regionId: region_id });
-        if (!regionSize) regionSize = { width: world.width, height: world.height };
+        // ⛓ G2a: the size comes off the first world that HAS one — a SIDES room
+        // (the text adventure's) has no width/height, and a rebuild rooted at
+        // one would otherwise carry `{width: undefined, height: undefined}`.
+        if (!regionSize && Number.isInteger(world.width) && Number.isInteger(world.height)) {
+            regionSize = { width: world.width, height: world.height };
+        }
         grid.placeRegion(node.cell, {
             region_id, substrate: node.substrate, cell: { gx: node.cell.gx, gy: node.cell.gy },
             playable_payload: world, extracted_rules,

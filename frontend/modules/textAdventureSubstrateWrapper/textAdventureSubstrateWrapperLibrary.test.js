@@ -15,13 +15,14 @@ import { describe, it, expect } from 'vitest';
 
 import { substrateRegistryEntry } from './textAdventureSubstrateWrapperLibrary.js';
 import {
-    spatialCore,
-    itemBasedPlacer,
-    ruleGatePlacer,
-    tileGridPathExtractor,
-    tileGridSerializer,
-    tileGridDeserializer,
-} from '../shared/procgen/adapterPrimitives.js';
+    generateTextAdventureRoom,
+    placeTextAdventureItems,
+    placeTextAdventureRules,
+    extractTextAdventureRules,
+    serializeTextAdventureRoom,
+    deserializeTextAdventureRoom,
+} from './textAdventureRoom.js';
+import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
 
 describe('textAdventureSubstrateWrapperLibrary substrateRegistryEntry', () => {
     it('claims the text-adventure identity and load event, with the WRAPPER panel', () => {
@@ -78,16 +79,20 @@ describe('textAdventureSubstrateWrapperLibrary substrateRegistryEntry', () => {
         expect(substrateRegistryEntry.sharing?.mana).toBeDefined();
     });
 
-    it('exposes the build-time adapter slots, bound to shared primitives', () => {
-        expect(substrateRegistryEntry.generateRegionCore).toBe(spatialCore);
-        expect(substrateRegistryEntry.placeFromItems).toBe(itemBasedPlacer);
-        expect(substrateRegistryEntry.placeFromRules).toBe(ruleGatePlacer);
-        expect(substrateRegistryEntry.extractPathsAndObstacles).toBe(tileGridPathExtractor);
-        expect(substrateRegistryEntry.serializeWorld).toBe(tileGridSerializer);
+    // ⛓ G2a — the build-time slots are the text adventure's OWN room hooks
+    // (`textAdventureRoom.js`, whose rows drive them), and its regions stand
+    // on their sides. Until G2a these were the maze's tile-grid primitives.
+    it('exposes the build-time adapter slots, bound to its own room hooks, on SIDES geometry', () => {
+        expect(substrateRegistryEntry.generateRegionCore).toBe(generateTextAdventureRoom);
+        expect(substrateRegistryEntry.placeFromItems).toBe(placeTextAdventureItems);
+        expect(substrateRegistryEntry.placeFromRules).toBe(placeTextAdventureRules);
+        expect(substrateRegistryEntry.extractPathsAndObstacles).toBe(extractTextAdventureRules);
+        expect(substrateRegistryEntry.serializeWorld).toBe(serializeTextAdventureRoom);
+        expect(geometryOf(substrateRegistryEntry)).toBe(REGION_GEOMETRY.SIDES);
     });
 
-    it('exposes deserializeWorld bound to the shared tile-grid deserializer', () => {
-        expect(substrateRegistryEntry.deserializeWorld).toBe(tileGridDeserializer);
+    it('exposes deserializeWorld bound to its own room deserializer', () => {
+        expect(substrateRegistryEntry.deserializeWorld).toBe(deserializeTextAdventureRoom);
     });
 
     it('exposes getPlaybackController for the bot to dispatch into', () => {

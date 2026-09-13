@@ -30,6 +30,7 @@ import {
 } from './regionGeometry.js';
 import { LIBRARY_V1_SUBSTRATES } from '../procgenPipeline/regionLibraryValidator.js';
 import { EXIT_SIDES_SLOT, exitSidesOf } from './exitSides.js';
+import { createRng } from '../shared/rng.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 for (const rel of REGISTRY_LIBRARIES) {
@@ -169,18 +170,30 @@ describe('⛓ G0 — the `regionGeometry` slot', () => {
     });
 
     /**
-     * ⛓ G1 — the sides entries are the ZONE games: the entries whose rules come
-     * from `extractZoneRules` (a zone's own logic, never a BFS over a tile
-     * grid), so an exit tile on one is fictional. The expected set is DERIVED
-     * from that hook, never typed — and the law is not the field under test, so
-     * a mutant that drops or adds a declaration cannot filter itself out.
+     * ⛓ G1 — the sides entries are the entries whose regions stand on NO tile:
+     * the ZONE games (rules from `extractZoneRules` — a zone's own logic, never a
+     * BFS over a tile grid, so an exit tile on one is fictional) and, ⛓ G2a, the
+     * procedural cores that place their exits on no tile (the text adventure's
+     * room: `exits_placed` carry no `tile_position`). Both sets are DERIVED —
+     * the second by DRIVING every entry's own `generateRegionCore` once — never
+     * typed; the law is not the field under test, so a mutant that drops or
+     * adds a declaration cannot filter itself out.
      */
-    it('the entries that declare sides are exactly the zone games (`extractZoneRules`); every '
-        + 'other entry reads tiles', () => {
+    it('the entries that declare sides are exactly the zone games (`extractZoneRules`) and the '
+        + 'procedural cores that place no exit on a tile; every other entry reads tiles', () => {
         const sides = ENTRIES.filter((e) => geometryOf(e) === REGION_GEOMETRY.SIDES).map((e) => e.id);
         const zoneGames = ENTRIES.filter((e) => typeof e.extractZoneRules === 'function').map((e) => e.id);
+        const tileFreeCores = ENTRIES.filter((e) => typeof e.generateRegionCore === 'function').filter((e) => {
+            const core = e.generateRegionCore({
+                region_id: 'probe', size: { width: 8, height: 6 }, entrances: [],
+                exits: [{ exit_id: 'a', side: 'N', targetRegion: 'x' }, { exit_id: 'b', side: 'E', targetRegion: 'y' }],
+                rng: createRng(1), params: {},
+            });
+            return core.exits_placed.length === 2 && core.exits_placed.every((p) => !p.tile_position);
+        }).map((e) => e.id);
         expect(zoneGames.length).toBeGreaterThan(0);
-        expect(sides.sort()).toEqual(zoneGames.sort());
+        expect(tileFreeCores.length).toBeGreaterThan(0);
+        expect(sides.sort()).toEqual([...zoneGames, ...tileFreeCores].sort());
         expect(geometryOf(substrateRegistry.get('maze'))).toBe(REGION_GEOMETRY.TILES);
     });
 });
