@@ -1,31 +1,38 @@
 name: Seedling full tier (manual)
 
-# ⛓ THE 150-TAPE SEEDLING DIFFERENTIAL, ON A RUNNER, ON DEMAND ONLY
-# (slice seedling-headless-H2, 2026-09-12; plan
-# NewDocs/plans/seedling-headless-webgpu-plan.md §11/§12).
+# ⛓ THE 150-TAPE SEEDLING DIFFERENTIAL, ON RUNNERS, ON DEMAND ONLY
+# (slice seedling-headless-H2, 2026-09-12; SHARDED by slice seedling-headless-H3,
+# 2026-09-13; plan NewDocs/plans/seedling-headless-webgpu-plan.md §11–§14).
 #
 # ⚖ USER RULING (2026-09-11): "I want the test that runs the full set of tapes
 # to only be manually triggered." ⇒ `workflow_dispatch:` and NOTHING ELSE —
-# never push, pull_request or schedule. `seedlingFullTierWorkflow.test.js`
-# asserts that trigger set, so adding one reds a row rather than quietly
-# spending six runner-hours per push.
+# never push, pull_request or schedule, for any of the three jobs below.
+# `seedlingFullTierWorkflow.test.js` asserts that trigger set, so adding one
+# reds a row rather than quietly spending runner-hours per push.
 #
-# ⚖ RULING C (2026-09-12): a dispatched run of this workflow may DISCHARGE the
-# standing row `roster: --tier=full`, quoted from the run — `quoted: true`,
-# `coveredBy` naming this run's id and SHA, `channel: headless`, `measuredAt`
-# = that SHA. The checkpoint jsonl is uploaded so every per-tape verdict the
-# quote rests on is kept (90 days).
+# ⚖ USER RULING (2026-09-13): "set up CI to split the tapes between multiple
+# shards. 10 seems like a good default … if possible I'll want the long tapes
+# to not all be on the same shard." ⇒ PLAN → SHARD MATRIX → MERGE:
+#   plan   `--tier=<t> --shard-plan=<n> --json` — the differential partitions its
+#          own roster by price, longest-first into exactly n shards (the n most
+#          expensive tapes in n different shards, by construction). No browser.
+#   shard  `--tier=<t> --shard=i/n` per matrix entry; uploads its checkpoint.
+#   merge  concatenates every shard's checkpoint and runs `--tier=<t> --resume`:
+#          every tape is REUSED (the fingerprint hashes bytes, not host stamps —
+#          H3 task 0), so it replays no tape and runs only what the shards
+#          deferred: the cross-tape acceptance findings and the live bot-driver
+#          task. ⛔ A merge that reuses fewer tapes than the plan holds is a
+#          FINDING about the fingerprint, and this job goes red saying so.
+#
+# ⚖ RULING C (2026-09-12): a dispatched run may DISCHARGE the standing row
+# `roster: --tier=full`, quoted from the run — `quoted: true`, `coveredBy` naming
+# this run's id, SHA and shard count, `channel: headless`, `measuredAt` = that
+# SHA. The row write stays a box-side act (no CI commit to main); the merged
+# checkpoint is kept 90 days as the evidence it quotes.
 #
 # ⛓ HEADLESS LOGIC-ONLY. The differential launches on HEADLESS_LOGIC_ONLY_ARGS
-# and REFUSES by name unless the page's `__swfGpu.lost >= 1` — measured on
-# ubuntu-latest before this file existed (run 34724984639: logic-only
-# `{lost:1,stalls:0}` 29.9 f/s). It needs no Python: the headless tier drives
-# the page from node; the Python driver is the `--win` channel's.
-#
-# ⛓ WHY 360 MINUTES. The box took 2h09m for the whole roster at ~26 f/s (R1),
-# and the runner was not slower than the box on CPU-bound browser rows (H1).
-# 360 is GitHub's own maximum for a hosted job; a run that hits it has answered
-# "does the runner finish" with a no, which is the fallback-to-the-box signal.
+# and REFUSES by name unless the page's `__swfGpu.lost >= 1` — the runner has
+# the box's two channels (run 34724984639). Each shard asserts the CHANNEL line.
 
 on:
   workflow_dispatch:
@@ -36,12 +43,63 @@ on:
           category (campaign, map-walk, mechanic) / fast / gate.
         type: string
         default: full
+      shards:
+        description: The number of shard jobs the tier is split across.
+        type: number
+        default: 10
 
 jobs:
-  full-tier:
-    name: Seedling differential — tier ${{ inputs.tier }}
+  plan:
+    name: Seedling tier ${{ inputs.tier }} — shard plan (${{ inputs.shards }})
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      timeout: ${{ steps.plan.outputs.timeout }}
+      tapes: ${{ steps.plan.outputs.tapes }}
+    steps:
+      # ⛓ NO submodules: the partition reads the committed tapes, not the wasm.
+      # `npm ci` because the differential imports `playwright` at its top.
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Derive the partition (the differential's own, priced per tape)
+        id: plan
+        env:
+          TIER: ${{ inputs.tier }}
+          SHARDS: ${{ inputs.shards }}
+        run: |
+          set -o pipefail
+          D=scripts/procgen/check-seedling-bot-differential.mjs
+          # ⛓ the human table goes in the log and the summary; the JSON to the matrix.
+          node "$D" --tier="$TIER" --shard-plan="$SHARDS" | tee plan.txt
+          node "$D" --tier="$TIER" --shard-plan="$SHARDS" --json > plan.json
+          echo "matrix=$(node -p "JSON.stringify(require('./plan.json').matrix)")" >> "$GITHUB_OUTPUT"
+          # ⛓ THE SHARD TIMEOUT IS DERIVED — the biggest shard's price × the
+          # multiplier written in fullTierShards.js, plus its setup allowance.
+          echo "timeout=$(node -p "require('./plan.json').timeoutMinutes")" >> "$GITHUB_OUTPUT"
+          echo "tapes=$(node -p "require('./plan.json').tapes")" >> "$GITHUB_OUTPUT"
+          { echo '```'; cat plan.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+  shard:
+    name: Seedling tier ${{ inputs.tier }} — shard ${{ matrix.shard }}/${{ inputs.shards }}
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(needs.plan.outputs.timeout) }}
+    strategy:
+      # ⛓ every shard reports; one red shard must not cancel the others' evidence.
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.plan.outputs.matrix) }}
     steps:
       # ── the SAME setup as unittests_frontend.yml's browser-gates job ─────
       - name: Checkout repository
@@ -80,10 +138,11 @@ jobs:
 
       # ⛓ The page comes from the repo root on :8000 — the differential's
       # default SEEDLING_PORT. It reads no --host= flag.
-      - name: 'Run the differential (--tier=${{ inputs.tier }})'
+      - name: 'Run shard ${{ matrix.shard }}/${{ inputs.shards }} (--tier=${{ inputs.tier }})'
         id: tier
         env:
           TIER: ${{ inputs.tier }}
+          SHARD: ${{ matrix.shard }}/${{ inputs.shards }}
         run: |
           set -o pipefail
           python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
@@ -93,36 +152,175 @@ jobs:
             sleep 1
           done
           mkdir -p test-results/seedling-differential
+          L=test-results/seedling-differential/shard.log
           S=$(date +%s)
           set +e
-          node scripts/procgen/check-seedling-bot-differential.mjs --tier="$TIER" 2>&1 \
-            | tee test-results/seedling-differential/tier.log
+          node scripts/procgen/check-seedling-bot-differential.mjs --tier="$TIER" --shard="$SHARD" 2>&1 | tee "$L"
           RC=$?
           set -e
-          echo "MEASURED: tier $TIER rc=$RC wall $(( $(date +%s) - S ))s at ${GITHUB_SHA}"
+          echo "MEASURED: tier $TIER shard $SHARD rc=$RC wall $(( $(date +%s) - S ))s at ${GITHUB_SHA}"
           kill "$(cat /tmp/httpd.pid)" 2>/dev/null || true
+          # ⛔ THE CHANNEL, ASSERTED: a shard that replayed tapes without proving
+          # the logic-only channel is not a shard of this tier. (An EMPTY shard —
+          # more shards than tapes — replays nothing and boots no page.)
+          if ! grep -aq "^SHARD $SHARD: replaying 0 tape(s)" "$L" \
+              && ! grep -aq '^CHANNEL: headless logic-only' "$L"; then
+            echo "::error::shard $SHARD printed no 'CHANNEL: headless logic-only' line"
+            exit 1
+          fi
+          exit $RC
+
+      - name: Summary
+        if: always()
+        env:
+          SHARD: ${{ matrix.shard }}/${{ inputs.shards }}
+        run: |
+          L=test-results/seedling-differential/shard.log
+          {
+            echo "## Seedling tier \`${{ inputs.tier }}\` — shard ${SHARD} — \`${{ steps.tier.outcome }}\`"
+            echo '```'
+            grep -aE '^SHARD |^CHANNEL:' "$L" 2>/dev/null | cut -c1-400 || true
+            echo "PASS $(grep -ac '^PASS' "$L" 2>/dev/null) / FAIL $(grep -ac '^FAIL' "$L" 2>/dev/null) / SKIP $(grep -ac '^SKIP' "$L" 2>/dev/null)"
+            tail -1 "$L" 2>/dev/null || echo '(no log)'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the shard's checkpoint and log
+        if: always()
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: tier-shard-${{ matrix.shard }}
+          path: test-results/seedling-differential/
+          retention-days: 90
+
+  merge:
+    name: Seedling tier ${{ inputs.tier }} — merge (${{ inputs.shards }} shards)
+    needs: [plan, shard]
+    # ⛓ ALWAYS, so a failed or missing shard is NAMED here rather than the run
+    # ending with a skipped merge that says nothing.
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    # ⛓ Derived like a shard's: a merge that must replay a failed shard's tapes
+    # is bounded by one shard's price.
+    timeout-minutes: ${{ fromJSON(needs.plan.outputs.timeout) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Resolve the pinned Playwright version (the cache key)
+        id: pwver
+        run: |
+          V=$(node -p "require('./package-lock.json').packages['node_modules/playwright'].version")
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+
+      - name: Cache the Playwright browser
+        uses: actions/cache@v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: ms-playwright-${{ runner.os }}-${{ steps.pwver.outputs.version }}
+
+      - name: Install Chromium for Playwright
+        timeout-minutes: 12
+        run: node node_modules/playwright/cli.js install chromium
+
+      - name: Download every shard's checkpoint
+        uses: actions/download-artifact@v8.0.1
+        with:
+          pattern: tier-shard-*
+          path: shards
+
+      - name: Name each shard, then concatenate the checkpoints
+        env:
+          MATRIX: ${{ needs.plan.outputs.matrix }}
+          SHARDS: ${{ inputs.shards }}
+        run: |
+          mkdir -p test-results/seedling-differential/payloads
+          OUT=test-results/seedling-differential
+          MISSING=""
+          for i in $(node -p "JSON.parse(process.env.MATRIX).join(' ')"); do
+            D="shards/tier-shard-$i"
+            if [ ! -f "$D/checkpoint.jsonl" ] && ! grep -aq "^SHARD $i/$SHARDS: replaying 0 tape(s)" "$D/shard.log" 2>/dev/null; then
+              echo "SHARD $i/$SHARDS: NO CHECKPOINT — the shard job did not bank its tapes"
+              MISSING="$MISSING $i"
+              continue
+            fi
+            echo "SHARD $i/$SHARDS: $(wc -l < "$D/checkpoint.jsonl" 2>/dev/null || echo 0) checkpoint line(s); $(grep -ac '^FAIL' "$D/shard.log" 2>/dev/null) FAIL; $(tail -1 "$D/shard.log" 2>/dev/null)"
+            [ -f "$D/checkpoint.jsonl" ] && cat "$D/checkpoint.jsonl" >> "$OUT/checkpoint.jsonl"
+            [ -d "$D/payloads" ] && cp -r "$D/payloads/." "$OUT/payloads/"
+          done
+          if [ -n "$MISSING" ]; then
+            # ⛔ REFUSED, not replayed: re-driving a lost shard here would make
+            # the merge a slow second shard and hide which one failed.
+            echo "::error::shard(s)$MISSING banked no checkpoint — the merge does not replay a shard"
+            exit 1
+          fi
+
+      - name: 'Merge: --tier=${{ inputs.tier }} --resume over every shard'
+        id: merge
+        env:
+          TIER: ${{ inputs.tier }}
+          TAPES: ${{ needs.plan.outputs.tapes }}
+        run: |
+          set -o pipefail
+          python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
+          echo $! > /tmp/httpd.pid
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:8000/frontend/index.html && break
+            sleep 1
+          done
+          L=test-results/seedling-differential/merge.log
+          S=$(date +%s)
+          set +e
+          node scripts/procgen/check-seedling-bot-differential.mjs --tier="$TIER" --resume 2>&1 | tee "$L"
+          RC=$?
+          set -e
+          echo "MEASURED: tier $TIER merge rc=$RC wall $(( $(date +%s) - S ))s at ${GITHUB_SHA}"
+          kill "$(cat /tmp/httpd.pid)" 2>/dev/null || true
+          # ⛔ THE MERGE REPLAYS NOTHING. Fewer reused tapes than the plan holds
+          # is a finding about the fingerprint (or a shard's FAIL, which is never
+          # reused) — red, by name, whatever the verdict line says.
+          REUSED=$(grep -aoE '^RESUME: reusing [0-9]+ tape' "$L" | grep -oE '[0-9]+' || echo 0)
+          echo "MEASURED: merge reused ${REUSED:-0} of $TAPES tape(s)"
+          if [ "${REUSED:-0}" != "$TAPES" ] || ! grep -aq '^RESUME: 0 tape(s) to replay' "$L"; then
+            echo "::error::the merge reused ${REUSED:-0} of $TAPES tape(s) — it must replay none"
+            exit 1
+          fi
           exit $RC
 
       - name: Summary
         if: always()
         run: |
-          L=test-results/seedling-differential/tier.log
+          L=test-results/seedling-differential/merge.log
           {
-            echo "## Seedling differential — tier \`${{ inputs.tier }}\` — \`${{ steps.tier.outcome }}\`"
+            echo "## Seedling tier \`${{ inputs.tier }}\` — merge of ${{ inputs.shards }} shard(s) — \`${{ steps.merge.outcome }}\`"
             echo ""
-            echo "SHA \`${GITHUB_SHA}\`, run \`${GITHUB_RUN_ID}\`."
+            echo "SHA \`${GITHUB_SHA}\`, run \`${GITHUB_RUN_ID}\`; shard jobs: \`${{ needs.shard.result }}\`."
             echo ""
             echo '```'
-            grep -aE '^CHANNEL:|^TIER |^RESUME' "$L" 2>/dev/null | head -5 || true
+            grep -aE '^CHANNEL:|^TIER |^ROSTER-WIDE' "$L" 2>/dev/null | head -5 || true
+            grep -aE '^RESUME' "$L" 2>/dev/null | cut -c1-200 || true
             echo "PASS $(grep -ac '^PASS' "$L" 2>/dev/null) / FAIL $(grep -ac '^FAIL' "$L" 2>/dev/null) / SKIP $(grep -ac '^SKIP' "$L" 2>/dev/null)"
-            tail -3 "$L" 2>/dev/null || echo '(no log)'
+            tail -1 "$L" 2>/dev/null || echo '(no log)'
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload the checkpoint and the log
+      - name: Upload the merged checkpoint and the logs
         if: always()
         uses: actions/upload-artifact@v7.0.0
         with:
-          name: seedling-differential-${{ inputs.tier }}-${{ github.run_id }}
-          path: test-results/seedling-differential/
+          name: tier-merged
+          path: |
+            test-results/seedling-differential/
+            shards/*/shard.log
           retention-days: 90
