@@ -15051,6 +15051,32 @@ word, asked by the planner). Baseline CI = `94144623fc` 470/14140. As-built → 
 the user's word: worktrees `wt-g2b` / `wt-ta-mana` (+ their throwaway `wt-regen` trees), local and REMOTE branches `g2b` /
 `ta-mana` (every commit on main; the one patch-id difference was G2b-1's docs commit, regenerated at its rebase).
 
+**SIDECARS-CLEANUP (`apworld-sidecars-cleanup`) COMPLETE + VERIFIED + MERGED 2026-09-13 — `origin/main` = `5b2c3f3878`** (seven
+commits rebased over the seedling arc's C1 close `b4119cb1ca`; as-built plan §28; trap 1358). Landed: (1) `check-ta-mana-leg` and
+`check-omsi-mana-leg` read the origin through `arg('host', LOCAL_HOST)` and retire `@ci-box` — they now RUN IN CI's browser shards
+(CI-GATE lines at the branch head: ta 3/0 3.8 s, omsi 13/0 17.9 s); `check-jta-managed-zone-skip` measured PURE NODE (0.7 s) and
+adopted into the HEADLESS set (6/0, 0.2 s) — the blind spot that hid G2a's mana regression for 12 hours is closed for three of the
+four gates (`check-maze-loop-mana` stays box-only: its fixture is uncommitted by design, ⚖); (2) a payload its substrate refuses
+costs ONE region: `procgenCore/deserializeRefusal.js` (name-free, the one door) — the warehouse skips it and logs it
+(`warehouse.refused`), the composite map skips it with a note on the hub's Map tab and the pipeline message, the sphere rebuild
+refuses by the NEW `SPHERE_REBUILD_REFUSALS.unreadablePayload`; in-app row `apworld-map-draws-the-other-regions-and-names-the-
+refused-one` (BEFORE: 8 conditions failed, two handler errors, the Map tab threw; AFTER: green, 0 errors); (3) the `test-tasw` mode
+and its 6-rows-stale config retired (0 consumers); (4) `mazeRoomEngine.js`'s fog comment rewritten; `apworldEditor.md`'s "~90 ms a
+region" NOT reproduced — in-browser `inspectRegionRoom` 0.4–1.1 ms (48 tiles) / 3.9–5.5 ms (440 tiles, AP_8), re-derive 0.4–0.8 /
+4.2–6.8 ms, written with the head; (5) the `shared/` submodule's `adapterPrimitives.js` header fixed INSIDE the submodule and
+pushed to its remote `main` (**`2ebeaf8`**); ⛔ the outer gitlink NOT bumped (573a3b2 stays) — the user's word. **Brief-wrong
+(§28.1, six):** `regionLayout.js:230` does NOT catch — a FOURTH uncaught `deserializeWorld` site (the hub's flag/side write via
+`rulesDocOps`), ⚖ named; omsi read no host at all (the by-hand reader was `check-topdown-steps-ui`); `shared/` is a detached HEAD
+(push was `HEAD:main`); the jta gate is pure node (no host); the retired `@ci-box` prose had already ENROLLED `host` in
+`documentedFlags`; the tasw roster was 6 behind, not 5. **Planner-verified with its own runs:** both mana gates ALL PASS through
+the roster's `--host` argv against the tree served on `:8130`, 0 handler errors; gate ALL PASS 1392 + TA 70/70; pin unmoved; docs
+trio ALL MATCH; bounded vitest 9 / 288; CI at `6dd5e195a3` 471/14146; `--plan`: browser 34 arms / 4 shards (two UNPRICED alone),
+headless 35 / 2 (one UNPRICED). Merge: submodule pointer reset to `573a3b2`, rebased onto `b4119cb1ca` (one GENERATED conflict,
+regenerated), guards re-run, pushed on the headless planner's GO. **CI at the merge head `5b2c3f3878`: 471/14161 (14153 | 8 | 0),
+slow 12/217.** Session ended by its literal PID. **OWED by the planner:** `--write-costs --runs=3` + the three NEW standing rows once
+three green runs carry the arms (announced first); the gitlink ask (put to the user). ⚖ OPEN: the fourth `deserializeWorld` site;
+`check-maze-loop-mana`'s fixture. Arc 2 state: G1/M3/P0/K0/G2a/G2b-1/G2a-fix/cleanup SHIPPED; G2b-2 PARKED (user).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
