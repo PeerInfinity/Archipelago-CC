@@ -15005,6 +15005,25 @@ Worktrees `wt-g2b` and `wt-ta-mana` merged and removable (left on disk; removal 
 K0, G2a, G2b-1, G2a-fix SHIPPED; G2b-2 DEFERRED ⚖. **NEXT = a what-next with the user** (the ladder after G2b: the pipeline relayout
 slice measured live first, the Seedling editor session, MEMORY.md compaction — and the box-only-gates gap above).
 
+**⚖ RULED + MEMORY COMPACTED + C1 (cleanup) LAUNCHED 2026-09-13.** The user, verbatim: *"Next, please do the memory
+compaction."* → done by the planner (MEMORY.md 115 lines / 24.8 KB → 83 / 19.1 KB, all 205 links kept by set diff, the old index
+archived verbatim in `reference_memory_index_snapshot_2026-09-13.md`; the floor is ~9.5 KB of link targets; a deeper cut behind
+the families index offered, not taken; the headless planner held its index edits during the whole-file write). Then, verbatim:
+*"The visual text adventure editor is a low priority. I might want to delay it until after we start adding more features to the
+text adventure substrate, if we ever get around to doing that. Let's take care of the cleanup tasks next."* → **G2b-2 PARKED**
+behind future text-adventure features (not queued); **LAUNCHED** `apworld-sidecars-cleanup` (Opus, pid 907243, cwd verified
+`~/CC/Archipelago-CC-wt-cleanup`, branch `cleanup` from `77fa67a600`, port 8130; kickoff
+`NewDocs/plans/apworld-sidecars-C1-cleanup-prompt.md`; handshake exchanged). Scope (plan §25.6/§26.8/§27.8's menu, measured
+first): the box-only mana gates made CI-runnable (`check-ta-mana-leg` / `check-omsi-mana-leg` read the origin via `arg('host')`
+— the roster's one spelling, `gateRoster.js:111/:697` — and drop `@ci-box`; `check-jta-managed-zone-skip` adopted iff bounded
+and priced; `check-maze-loop-mana` NOT — its fixture is uncommitted by design, ⚖ named); the three uncaught `deserializeWorld`
+sites (warehouse `:89`, composite map document `:214`, sphere rebuild `:4101`) catch, skip the region by name and surface the
+entry's sentence; the stale `test-tasw` mode + config retired (0 consumers measured); stale prose (`mazeRoomEngine.js:351`, the
+"~90 ms" figure); the `shared/` submodule's `adapterPrimitives.js` header fixed INSIDE the submodule (gitlink bump = the user's
+word, asked by the planner). Baseline CI = `94144623fc` 470/14140. As-built → plan §28; ONE merge by the planner. Also deleted on
+the user's word: worktrees `wt-g2b` / `wt-ta-mana` (+ their throwaway `wt-regen` trees), local and REMOTE branches `g2b` /
+`ta-mana` (every commit on main; the one patch-id difference was G2b-1's docs commit, regenerated at its rebase).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
