@@ -67,6 +67,23 @@ export function headlessPython({ env = process.env, repo = REPO, probe, version,
 }
 
 /**
+ * ⛓ C2 — **THE GATES' FACE OF THAT REFUSAL: printed by name, exit 2** (the
+ * roster's refusal code: nothing was measured), the same convention as
+ * `repoPython.generatePythonOrExit`. Before C2 `driverChannel` let
+ * `headlessPython`'s throw escape the gate: a Node stack trace and exit 1, the
+ * code for "measured and failed". `headlessPython` itself still THROWS, for
+ * its own rows.
+ */
+function headlessPythonOrExit() {
+    try {
+        return headlessPython();
+    } catch (e) {
+        console.log(e.message);
+        process.exit(2);
+    }
+}
+
+/**
  * The channel a driver runs on.
  *
  * @param {object} o
@@ -75,7 +92,8 @@ export function headlessPython({ env = process.env, repo = REPO, probe, version,
  * @param {string}  o.driver         absolute path of the `.py` driver
  * @param {string[]} o.chromiumArgs  the headless switches (`headlessChromium.js`)
  * @param {string}  [o.python]      the headless interpreter, already resolved
- *                                   (default: `headlessPython()`, which refuses)
+ *                                   (default: `headlessPython()`; a refusal is
+ *                                   printed and exits 2, C2)
  * @returns {{ name: 'win'|'headless', path: (f: string) => string,
  *   local: (f: string) => string, write: (f: string, s: string) => string,
  *   clear: (f: string) => void, read: (f: string) => string,
@@ -89,7 +107,7 @@ export function driverChannel({ win, winPy, driver, chromiumArgs, python = null 
             + 'exports — the headless channel spells no switches of its own');
     }
     /** ⛓ resolved BEFORE anything is staged: a refusal leaves no temp dir. */
-    const py = win ? null : (python ?? headlessPython());
+    const py = win ? null : (python ?? headlessPythonOrExit());
     const stage = win ? WIN_STAGE_WSL : mkdtempSync(join(tmpdir(), 'seedling-driver-'));
     const local = (f) => join(stage, f);
     const common = {

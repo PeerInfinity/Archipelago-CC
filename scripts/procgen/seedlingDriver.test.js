@@ -7,11 +7,15 @@
  *      handed in, as one `--chromium-args=` JSON array — never a list of its own;
  *   2. an empty switch list is refused, not launched with the driver's defaults;
  *   3. an interpreter that cannot import Playwright is a refusal that names the
- *      requirements file (the ladder itself: `repoPython.test.js`).
+ *      requirements file (the ladder itself: `repoPython.test.js`);
+ *   4. (C2) that refusal, met by a gate's `driverChannel`, exits 2 with the
+ *      message and no stack — `generatePythonOrExit`'s convention.
  */
-import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
@@ -80,5 +84,31 @@ describe('driverChannel — the headless channel', () => {
         expect(e).toBeInstanceOf(Error);
         expect(e.message).toContain(`/p has playwright 1.0.0, the pin is 9.9.9`);
         expect(e.message).toContain(`/p -m pip install -r ${join(at.repo, HEADLESS_REQUIREMENTS)}`);
+    });
+
+    /**
+     * ⛓ C2 — the four gates' default resolution, on a REAL child process (the
+     * mechanism `repoPython.test.js` proves `generatePythonOrExit` with). Rung 1
+     * is `/bin/false`: present, cannot import, never skipped — a deterministic
+     * refusal that touches no real venv. Before C2 this was an uncaught throw:
+     * a Node stack trace and exit 1, the code for "measured and failed".
+     */
+    it('C2: a refusal in the default resolution prints the message and exits 2 — no stack, no PASS, no temp dir', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'driver-exit-'));
+        const tmp = join(dir, 'tmp');
+        mkdirSync(tmp);
+        const f = join(dir, 'check-fixture-driver.mjs');
+        const helper = pathToFileURL(join(import.meta.dirname, 'seedlingDriver.js')).href;
+        writeFileSync(f, `import { driverChannel } from '${helper}';\n`
+            + "driverChannel({ win: false, winPy: 'x', driver: '/x/d.py', chromiumArgs: ['--x'] });\n"
+            + "console.log('PASS: channel built');\n");
+        const r = spawnSync(process.execPath, [f], { encoding: 'utf8',
+            env: { PATH: process.env.PATH, SEEDLING_PYTHON: '/bin/false', TMPDIR: tmp } });
+        expect(r.status).toBe(2);
+        expect(r.stdout).toMatch(/^REFUSED: seedlingDriver: the headless channel needs a Python that can `import playwright`.*: \/bin\/false$/m);
+        expect(r.stdout).toContain(HEADLESS_REQUIREMENTS);
+        expect(r.stdout).not.toMatch(/^PASS:/m);
+        expect(`${r.stdout}\n${r.stderr}`).not.toMatch(/^\s+at /m);
+        expect(readdirSync(tmp)).toEqual([]);
     });
 });
