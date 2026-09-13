@@ -14781,6 +14781,26 @@ ruling); the refusal names KEYS, not `maze` (best-fit naming lives in `apworldEd
 dispatching world binding may be the whole answer; the gated row) in a fresh planning session by the one-task rule, on the
 user's word.
 
+**THE OWED WRITE — DONE + PUSHED 2026-09-13** (`d4f7a31e43`, one commit: `scripts/procgen/standing-values.json`). Re-run
+after F1's guard (`e23fbf2b74` + `9ed6adf977`) from the planner's worktree at `2d128db7b5` (own :8123 server; box lock
+10:26–10:48Z, 22 min; announced to both planners first): **80 rows written — 61 re-measured (cheap), 19 quoted, 0 held;
+13 NEW rows banked by F1's probe** (canonical-placements, jta-cost-hooks, jta-dataset-pipeline-preset,
+loop-costs-one-model, preset-panel-click, region-marking-tool, seedling-atlas-maze/-play/-preset, seedling-wasm-bridge,
+sidecar-fields, spiral-byteidentity, +1); **every unpriced gate with no TOTAL line refused by name** (F1's static
+census: 37); the differential never derived. One value moved: `procgen-lab-hosting` 66/0 → 78/0. **NOT banked:**
+`gate: seedling-save-stamp` and `gate: seedling-vanilla-manifest` (H2's) exited 1 in 0.1 s here — `seedlingDriver.js:58`
+resolves the headless Python at `<tree>/.venv/bin/python` and a worktree has none — restored verbatim from main
+(21/0, 24/0; bytes-form keys; MOVED until re-written from a tree with a venv). Two findings → b6, folded into F2
+(pending the user's word): the driver honours `SEEDLING_PYTHON` / `$VIRTUAL_ENV` / PATH; **the writer banked a MOVED
+row's red result without refusing** (F1's guard covered NEW rows only) — caught by reading `exit` per row before
+committing; the guard gains the clause. After the write `--keys` reads 4 MOVED (the two restored rows + `full-tier-owed`
+and `slice-records`, which declare the bank as DATA — a key that covers its own bank self-invalidates, expected; both
+ALL PASS) / 37 NEW (the refused, unpriced gates — a gate-side follow-up, F1 §16.1) / 18 UNKEYED. **The push was HELD
+once, measured:** with the bank, F1's `standingValues.test.js › a PRICED NEW row…` red (its fixture read the live bank's
+incompleteness; 27/27 at main) — b6 made the fixture synthetic (`b373cc35a7`); the bank commit rebased onto it:
+103/103 bank-reader rows, `check-seedling-full-tier-owed` + `check-slice-records` ALL PASS. Worktree follow-up (→
+planning-3's ledger): `new-worktree.sh` should provide a venv, or the driver stop assuming one.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
