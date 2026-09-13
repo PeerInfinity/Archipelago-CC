@@ -6,14 +6,18 @@
  * its serializer: every text-adventure region grew a real maze (tiles, walls,
  * an entrance, a logic-gate obstacle per rule) that nothing at play ever read —
  * the wrapper builds its rooms from `staticData.regions` and the compiled
- * `access_rule` side-table, and reads ONE payload field (`manaEnabled`). This
- * module is what a text adventure region actually is:
+ * `access_rule` side-table, and reads ONE flag (`manaEnabled`). ⚠ Play reads
+ * it off the WORLD `deserializeWorld` builds (`procgenPlayer.getRegionInfo`
+ * answers `entry.world.manaEnabled` → `mana.js`), never off the payload — so
+ * the deserializer must carry it (G2a-fix). This module is what a text
+ * adventure region actually is:
  *
  *   world = {
  *     region_id,
  *     exits:     Map<exit_id, {exit_id, side, exitName, targetRegion,
  *                              isBackExit, isTeleporter, access_rule?}>,
  *     locations: [{id, item?, access_rule?, name?}],
+ *     manaEnabled?: true,   // deserialized worlds only, iff the payload's is `true`
  *   }
  *
  * — no tiles, no entrance, no obstacles, and ⛔ **NO RNG DRAW anywhere**: a room
@@ -236,6 +240,14 @@ export function serializeTextAdventureRoom(world, extractedRules) {
  * naming those keys (`textAdventureRoomRefusal`), never read as "its exits and
  * no locations". The shape is read off `TEXT_ADVENTURE_SIDECAR_FIELDS` (merged
  * with the envelope), so the refusal and the corpus gate cannot disagree.
+ *
+ * ⛓ G2a-fix — **the play-time flag rides onto the world**: `manaEnabled ===
+ * true` → `world.manaEnabled = true` (the maze's `deserializeMazeWorld` law;
+ * absent otherwise, never `false`). Until the fix the room dropped it and the
+ * wrapper's direct-play mana leg charged nothing (`check-ta-mana-leg`).
+ * `fogEnabled` is NOT carried: no text-adventure reader takes it off a world
+ * (the maze panel's is a maze world's). The serializer writes neither — the
+ * engine stamps both on the envelope after `serializeWorld`.
  */
 export function deserializeTextAdventureRoom(payload) {
     const refusal = textAdventureRoomRefusal(payload);
@@ -253,7 +265,9 @@ export function deserializeTextAdventureRoom(payload) {
         ...(l.item != null ? { item: l.item } : {}),
         ...(l.access_rule ? { access_rule: cloneRule(l.access_rule) } : {}),
     }));
-    return { exits, locations };
+    const world = { exits, locations };
+    if (payload.manaEnabled === true) world.manaEnabled = true;
+    return world;
 }
 
 /** One Rule Builder rule tree, as far as a payload check can say: an object naming its `rule`. */

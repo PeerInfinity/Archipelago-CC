@@ -208,6 +208,31 @@ describe('the payload (`serializeWorld` ⇄ `deserializeWorld`)', () => {
     });
 
     /**
+     * ⛓ G2a-fix — play reads `manaEnabled` off the WORLD (`procgenPlayer.
+     * getRegionInfo` → `mana.js`), so the deserializer carries it: the maze's
+     * law, `true` → `true`, anything else → ABSENT (never `false`). The
+     * committed witness is read off the file, never typed.
+     */
+    it('⛓ carries the payload\'s `manaEnabled: true` onto the world — absent (not `false`) without it; the '
+        + 'committed jta_mixed_test AdventureZone deserializes mana-enabled', () => {
+        const { core } = gatedRoom();
+        const payload = serializeTextAdventureRoom(core.world, extractTextAdventureRules(core.world, { regionId: 'Hall' }));
+        expect('manaEnabled' in deserializeTextAdventureRoom(payload)).toBe(false);
+        expect('manaEnabled' in deserializeTextAdventureRoom({ ...payload, manaEnabled: false })).toBe(false);
+        expect(deserializeTextAdventureRoom({ ...payload, manaEnabled: true }).manaEnabled).toBe(true);
+        // the serializer is unchanged: the flag is the engine's to stamp on the envelope
+        const world = deserializeTextAdventureRoom({ ...payload, manaEnabled: true });
+        expect(Object.keys(serializeTextAdventureRoom(world, extractTextAdventureRules(world, { regionId: 'Hall' }))))
+            .toEqual(['exits', 'exitGates', 'locations']);
+
+        const committed = JSON.parse(fs.readFileSync(join(ROOT, 'frontend/presets/jta_mixed_test/AP_1/AP_1_rules.json'), 'utf-8'));
+        const az = committed.preset_sidecars['1'].AdventureZone;
+        expect(az.substrate).toBe(substrateRegistryEntry.id);
+        expect(az.playable_payload.manaEnabled).toBe(true);
+        expect(substrateRegistryEntry.deserializeWorld(az.playable_payload).manaEnabled).toBe(true);
+    });
+
+    /**
      * ⛔ ONE FORMAT (⚖ the user, 2026-09-13: no support for the old format). The
      * fixture is INLINE — the tile-grid payload `generate-jta-mixed-test-preset.py`
      * wrote before the re-record, verbatim — because every committed payload is a
