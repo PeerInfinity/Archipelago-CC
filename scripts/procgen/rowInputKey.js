@@ -64,6 +64,13 @@
  *               verdict is an answer about, and the superproject's recorded
  *               gitlink SHA is its byte proxy.
  *
+ * ⛓ WHAT A MEMBER'S DIGEST IS TAKEN OVER (slice K0) — CODE and SPAWN digest
+ * the TOKENS, not the bytes: esbuild's comment-free reprint of every member it
+ * parses, because a comment is not an input the runtime reads. DATA digests the
+ * bytes, BUILD the gitlink, and a population a gate DECLARES digests the bytes
+ * because the declarer's subject is the text. `TOKEN_POPULATIONS` / `hasherFor`
+ * state the rule once; `tokensOf` carries the parser, the pin and the fallback.
+ *
  * ⛔ MINIMIZE HARDCODING (⚖ 17). Every population above is DERIVED. What
  * derivation cannot see, a gate DECLARES in its own docblock, read exactly the
  * way `gateRoster` reads `@ci-face`:
@@ -100,8 +107,11 @@
 
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { extname, join } from 'node:path';
+
+import { buildSync, transformSync, version as ESBUILD_VERSION } from 'esbuild';
 
 import { REPO, buildGraph } from './reachClosure.js';
 import { cliTargetsIn } from './gateDedup.js';
@@ -376,6 +386,123 @@ export function stripComments(text) {
         .join('\n');
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+ * THE TOKENS — what a CODE member's digest is taken over (slice K0)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **A COMMENT IS NOT AN INPUT THE RUNTIME READS** (user ruling
+ * 2026-09-13, queue §5x, plan §5g). The hub modules every instrument imports
+ * are 61–88 % prose by measurement (esbuild reprint vs raw bytes at
+ * `49d016a63a`: `boxLock.js` 61 %, `gateRoster.js` 69 %, this file 71 %,
+ * `headlessChromium.js` 88 %), and a byte digest made every sentence added to
+ * one of them re-arm every standing row whose closure holds it — P0 measured
+ * 55 of 103 keyed rows for `boxLock.js` alone. A cache keyed on bytes its
+ * consumer never receives is not conservative: it discards measurements
+ * already paid for.
+ *
+ * ⇒ the populations whose members are EXECUTED digest the tokens; the rest
+ * digest bytes. The rule is stated ONCE, here, as the populations it applies
+ * to — never as a list of files:
+ *
+ *   · `code`, `spawn` — a member esbuild parses digests its comment-free
+ *     reprint; any other member (`.html`, `.py`, `.sh`) digests its bytes.
+ *   · `data` — always bytes. A fixture's every byte is what its reader reads.
+ *   · `build` — the gitlink, as before.
+ *   · ⛔ a population a gate DECLARES into (`@key-inputs code: …`) is digested
+ *     as BYTES whole. A declarer's subject is the TEXT — `check-procgen-help`
+ *     compares docblocks, `check-procgen-reference` publishes them — so its
+ *     key must move on the prose everyone else's ignores.
+ */
+export const TOKEN_POPULATIONS = Object.freeze(['code', 'spawn']);
+
+/** ⛓ The three digest forms, by the name the `--keys` report prints. */
+export const HASHERS = Object.freeze({ TOKENS: 'tokens', BYTES: 'bytes', GITLINK: 'gitlink' });
+
+/** Which hasher one population is digested with — the ONE spelling of the rule
+ *  above, read by `digestOf` and by the report alike. */
+export function hasherFor(kind, { declared = false } = {}) {
+    if (kind === 'build') return HASHERS.GITLINK;
+    return TOKEN_POPULATIONS.includes(kind) && !declared ? HASHERS.TOKENS : HASHERS.BYTES;
+}
+
+/**
+ * ⛓⛓ THE PIN. The reprint is esbuild's, so an esbuild version whose printer
+ * differs re-forms every token digest at once — every keyed row reads MOVED
+ * once and re-runs, the conservative direction. The version is NOT hashed in:
+ * a bump whose printer did not change would then re-run the whole battery for
+ * no byte of difference. It is PRINTED by `--keys` instead, so a mass MOVED
+ * after a bump is attributable from the log.
+ */
+export { ESBUILD_VERSION };
+
+const PROBE_SRC = '/* rowInputKey probe */ 0';
+const parserExtCache = new Map();
+
+/**
+ * ⛓⛓ WHETHER ESBUILD'S OWN DEFAULT LOADER FOR AN EXTENSION IS THE JS PARSER —
+ * derived by asking it, never a list typed here (⚖ 17). esbuild exports no
+ * extension→loader map (it lives in the Go binary), so this builds one probe
+ * file per extension, once, and compares the output with the JS transform of
+ * the same source. Measured on 0.27.2: `.js .mjs .cjs .jsx .ts` answer yes;
+ * `.json` refuses the comment, `.txt`/`.css` reprint it as data, `.html .py
+ * .sh` have no loader at all.
+ */
+export function parsesAsJs(ext) {
+    if (!parserExtCache.has(ext)) {
+        let yes = false;
+        const dir = mkdtempSync(join(tmpdir(), 'rowInputKey-'));
+        try {
+            const probe = join(dir, `probe${ext}`);
+            writeFileSync(probe, PROBE_SRC);
+            const built = buildSync({ entryPoints: [probe], write: false, logLevel: 'silent',
+                legalComments: 'none' }).outputFiles[0].text;
+            yes = built === transformSync(PROBE_SRC, { loader: 'js', legalComments: 'none' }).code;
+        } catch { yes = false; } finally { rmSync(dir, { recursive: true, force: true }); }
+        parserExtCache.set(ext, yes);
+    }
+    return parserExtCache.get(ext);
+}
+
+/**
+ * ⛓⛓⛓ ONE MEMBER'S TOKENS — esbuild's comment-free reprint, or `null` with the
+ * reason it is digested as bytes.
+ *
+ * ⛔⛔ A PARSER, NOT `stripComments`. That regex is good enough for the SPAWN
+ * scan, where a miss costs a spurious re-measure; it is not good enough for a
+ * digest, where a miss is a stale green. It deletes a `/* … *\/` span INSIDE
+ * A STRING and a `//`-leading line INSIDE A TEMPLATE LITERAL — both of which the
+ * runtime reads — so an edit there would move no key.
+ *
+ * ⛔ NOT MINIFIED. A minifier renames locals and its renaming is its own
+ * choice; the digest must depend on the source's tokens, not on a mangler's
+ * decisions. The unminified printer still folds a few runtime-identical
+ * spellings (`'a' + 'b'` → `"ab"`, `1_000` → `1e3`, quote style, indentation):
+ * the same program keys the same, which is the point. It KEEPS `@__PURE__`
+ * annotations and magic comments inside `import()` — the conservative side.
+ *
+ * ⛔⛔ A PARSE FAILURE IS NAMED, NEVER SILENT. A `.js` holding JSX (or a
+ * `.ts` with types, since the transform is the JS loader) falls back to BYTES
+ * and says so; the report prints every such member. A silent fallback is a
+ * member whose hasher nobody knows, which is where a stale green hides.
+ *
+ * @returns {{tokens: string|null, fallback: string|null}} `fallback` is set
+ *   only for a PARSER extension that failed to parse; a non-parser extension
+ *   is bytes by the rule and carries no fallback.
+ */
+export function tokensOf(text, rel) {
+    if (!parsesAsJs(extname(rel))) return { tokens: null, fallback: null };
+    try {
+        return { tokens: transformSync(String(text), { loader: 'js', legalComments: 'none' }).code,
+            fallback: null };
+    } catch (e) {
+        const first = e?.errors?.[0];
+        return { tokens: null,
+            fallback: `esbuild ${ESBUILD_VERSION} could not parse it`
+                + `${first ? ` (${first.location ? `l.${first.location.line}: ` : ''}${first.text})` : ''}` };
+    }
+}
+
 /** ⛓ A shell-out target lives INSIDE the instrument directory — the same
  *  narrowness `SIBLING_RE` states. `Generate.py`, `worlds/seedling/Rules.py`
  *  and `test/…` are named in procgen docblocks by the dozen and spawned by
@@ -529,7 +656,9 @@ export function keyContext({ repo = REPO, graph } = {}) {
     const hashCache = new Map();
     /** ⛓ The BYTES, not the mtime. A key that moved because a checkout
      *  restamped a file would re-run every slow row for nothing, and one that
-     *  did not move on a rewritten byte is the stale green. */
+     *  did not move on a rewritten byte is the stale green. ⛓ That sentence
+     *  was written against MTIME, not against comments — and for DATA (and for
+     *  a population a gate declares) it is still the whole rule. */
     const hash = (rel) => {
         if (!hashCache.has(rel)) {
             try { hashCache.set(rel, md5(readFileSync(join(repo, rel)))); }
@@ -537,6 +666,32 @@ export function keyContext({ repo = REPO, graph } = {}) {
         }
         return hashCache.get(rel);
     };
+
+    /**
+     * ⛓⛓ The TOKENS, not the bytes — a comment is not an input the runtime
+     * reads (slice K0; `tokensOf` carries the parser, the pin and the named
+     * fallback). A member esbuild does not parse falls through to `hash`, so
+     * the two agree on everything that is not a JS source.
+     */
+    const codeCache = new Map();
+    const tokenOutcome = (rel) => {
+        if (!codeCache.has(rel)) {
+            let bytes = null;
+            try { bytes = readFileSync(join(repo, rel)); } catch { /* ABSENT, via `hash` */ }
+            const text = bytes === null ? null : bytes.toString('utf8');
+            /** ⛔ A source that is not valid UTF-8 would parse from a LOSSY decode
+             *  (every bad byte one U+FFFD), and an edit between two bad bytes
+             *  would move no token. Bytes, named. */
+            const t = text === null ? { tokens: null, fallback: null }
+                : (parsesAsJs(extname(rel)) && !Buffer.from(text, 'utf8').equals(bytes))
+                    ? { tokens: null, fallback: 'not valid UTF-8' }
+                    : tokensOf(text, rel);
+            codeCache.set(rel, { ...t, digest: t.tokens === null ? hash(rel) : md5(t.tokens) });
+        }
+        return codeCache.get(rel);
+    };
+    const codeHash = (rel) => tokenOutcome(rel).digest;
+    const codeFallback = (rel) => tokenOutcome(rel).fallback;
 
     /** ⛓ The gitlink the SUPERPROJECT records, which is the byte proxy for a
      *  submodule's whole tree — 40 MB of compiled wasm included. */
@@ -589,8 +744,8 @@ export function keyContext({ repo = REPO, graph } = {}) {
     }
     const filesDirectlyUnder = (dir) => byDir.get(dir) ?? [];
 
-    return { repo, graph: g, tracked, stems, stemRe, submodules, read, hash, gitlink,
-        forwardFrom, filesDirectlyUnder };
+    return { repo, graph: g, tracked, stems, stemRe, submodules, read, hash, codeHash,
+        codeFallback, gitlink, forwardFrom, filesDirectlyUnder };
 }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -723,18 +878,25 @@ export function inputPopulations({ entry, declared = null, ctx }) {
         data: [...data].sort(),
         spawn: [...spawn].sort(),
         build: build.sort(),
+        /** ⛓ K0 — which populations the GATE declared into. `hasherFor` reads
+         *  it: a declarer's subject is the text, so its population keys on bytes. */
+        declared: Object.fromEntries(POPULATIONS.map((p) => [p, decl[p].length > 0])),
     };
 }
 
 /**
- * One population's digest — over `path\0<content md5>` lines, sorted.
+ * One population's digest — over `path\0<member digest>` lines, sorted.
  *
  * ⛔ THE PATH IS IN THE DIGEST, not only the content. Without it a RENAME that
  * moved no byte would leave the digest unmoved, and a rename is exactly the
  * kind of move that changes what a gate enumerates.
+ *
+ * ⛓ K0 — the member digest is the one `hasherFor(kind, { declared })` names:
+ * tokens for an undeclared `code`/`spawn` population, bytes otherwise.
  */
-export function digestOf(members, { ctx, kind }) {
-    const value = kind === 'build' ? ctx.gitlink : ctx.hash;
+export function digestOf(members, { ctx, kind, declared = false }) {
+    const value = { [HASHERS.GITLINK]: ctx.gitlink, [HASHERS.TOKENS]: ctx.codeHash,
+        [HASHERS.BYTES]: ctx.hash }[hasherFor(kind, { declared })];
     return md5(members.map((p) => `${p}\0${value(p)}`).join('\n'));
 }
 
@@ -747,12 +909,25 @@ export function digestOf(members, { ctx, kind }) {
 export function rowInputKey({ entry, declared = null, ctx }) {
     const unkeyable = declared?.unkeyable ?? null;
     const pops = inputPopulations({ entry, declared, ctx });
-    const populations = POPULATIONS.map((name) => ({
-        name,
-        count: pops[name].length,
-        digest: digestOf(pops[name], { ctx, kind: name }),
-        members: pops[name],
-    }));
+    const populations = POPULATIONS.map((name) => {
+        const hasher = hasherFor(name, { declared: pops.declared[name] });
+        return {
+            name,
+            count: pops[name].length,
+            digest: digestOf(pops[name], { ctx, kind: name, declared: pops.declared[name] }),
+            members: pops[name],
+            hasher,
+            /** ⛓ How many members the tokens rule actually parsed, and every one
+             *  that fell back to bytes WITH its reason — the report prints both. */
+            parsed: hasher === HASHERS.TOKENS
+                ? pops[name].filter((p) => parsesAsJs(extname(p)) && !ctx.codeFallback(p)).length
+                : 0,
+            fallbacks: hasher === HASHERS.TOKENS
+                ? pops[name].filter((p) => ctx.codeFallback(p))
+                    .map((p) => ({ member: p, reason: ctx.codeFallback(p) }))
+                : [],
+        };
+    });
     const key = md5(populations.map((p) => `${p.name}:${p.count}:${p.digest}`).join('\n'));
     return { key, unkeyable, populations, entry };
 }
@@ -905,13 +1080,22 @@ export const bankedPopulations = (report) => Object.fromEntries(report.populatio
  * count is the only form of that answer a reader can act on.
  */
 export function keyReportLines(report) {
-    return report.populations.map((p) => {
+    return report.populations.flatMap((p) => {
         const extra = p.name === 'code'
             ? ` (${p.members.filter((f) => f.endsWith('.html')).length} driven page(s))`
             : '';
         const build = p.name === 'build' && p.count
             ? ` — ${p.members.join(', ')}` : '';
-        return `    ${p.name.padEnd(6)} ${String(p.count).padStart(5)} member(s)  `
-            + `${p.digest}${extra}${build}`;
+        /** ⛓ K0 — WHICH HASHER, per population, and for tokens how many members
+         *  the parser read versus took as bytes (by extension, or by FALLBACK). */
+        const how = p.hasher === HASHERS.TOKENS
+            ? ` [tokens · esbuild ${ESBUILD_VERSION}: ${p.parsed} parsed, `
+                + `${p.count - p.parsed - p.fallbacks.length} bytes by extension, `
+                + `${p.fallbacks.length} FALLBACK]`
+            : ` [${p.hasher}]`;
+        return [`    ${p.name.padEnd(6)} ${String(p.count).padStart(5)} member(s)  `
+            + `${p.digest}${how}${extra}${build}`,
+        /** ⛔ every fallback BY NAME — a silent one is a stale-green door. */
+        ...p.fallbacks.map((f) => `           ⚠ FALLBACK to bytes: ${f.member} — ${f.reason}`)];
     });
 }

@@ -23,7 +23,7 @@ import { describe, expect, it } from 'vitest';
 import {
     DERIVED_DATA_EXCLUDED, POPULATIONS, digestOf, expandDeclared, globToRe, inputPopulations,
     keyInputsIn, keyReportLines, nondeterminismFinding, rowInputKey, rowRunDecision,
-    spawnTargetsIn, stripComments, unkeyableReason,
+    spawnTargetsIn, stripComments, tokensOf, unkeyableReason,
 } from './rowInputKey.js';
 import { CI_ARM_COSTS_FILE } from './ciGatePlan.js';
 import { FILE as STANDING_VALUES, scriptIn, standingRows } from './standingValues.js';
@@ -48,6 +48,11 @@ function stubCtx({ files = {}, edges = {}, fixtures = [], submodules = [], gitli
         submodules,
         read: (rel) => files[rel] ?? '',
         hash: (rel) => `h(${files[rel] ?? 'ABSENT'})`,
+        /** ⛓ K0 — the REAL `tokensOf` over the literal text, so a row about the
+         *  parser tests the parser and not a second stub of it. */
+        codeHash: (rel) => (rel in files && tokensOf(files[rel], rel).tokens !== null
+            ? `t(${tokensOf(files[rel], rel).tokens})` : `h(${files[rel] ?? 'ABSENT'})`),
+        codeFallback: (rel) => (rel in files ? tokensOf(files[rel], rel).fallback : null),
         gitlink: (path) => gitlinks[path] ?? 'ABSENT',
         filesDirectlyUnder: (dir) => [...tracked].filter((p) =>
             p.startsWith(`${dir}/`) && !p.slice(dir.length + 1).includes('/')
