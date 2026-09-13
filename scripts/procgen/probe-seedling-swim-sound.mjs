@@ -75,17 +75,22 @@ import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
- * the machine (windows), so it takes the box before it starts and refuses BY
- * NAME if another instrument holds it — replacing a hand-relayed "BOX BUSY".
- * A run UNDER a holder (`gates.mjs`, `standing-values`,
+ * the machine, so it takes the box before it starts and refuses BY NAME if
+ * another instrument holds it — replacing a hand-relayed "BOX BUSY". A run
+ * UNDER a holder (`gates.mjs`, `standing-values`,
  * `rerecord-seedling-campaign`) recognises the holder's token and passes
  * through. `--wait-for-box=<sec>` queues instead of refusing.
+ *
+ * ⛓ F1 (2026-09-13) — the KIND follows the channel, as H2 made it in the six
+ * gates: the default run is headless (`browser`), `--win` drives the Windows
+ * path (`windows`). It said `windows` for both until now.
  */
 
 import { argvHelp } from './argvHelp.js';
 
 argvHelp(import.meta.url);
-takeBoxLockOrExit({ name: 'probe-seedling-swim-sound.mjs', kind: 'windows' });
+takeBoxLockOrExit({ name: 'probe-seedling-swim-sound.mjs',
+    kind: process.argv.includes('--win') ? 'windows' : 'browser' });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
