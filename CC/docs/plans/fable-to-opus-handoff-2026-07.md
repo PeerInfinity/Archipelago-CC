@@ -14296,6 +14296,28 @@ only), run **34729518557** @ `bcea3b5fb5`, `ubuntu-latest`, one job: `CHANNEL: h
 reproduces the box's 150-tape verdict on the logic-only channel; no GPU runner, no org. H2 writes the composite row
 quoted from this run under ruling C. Next: H3 shards it (⚖ above, 10 shards, long tapes spread).
 
+**H2 COMPLETE + VERIFIED 2026-09-13 (planner's reads: tree level at `de7e976104`, plan §12 present, owed gate ALL PASS
+at `bcea3b5fb5`, `roster: --tier=full` quoted from run 34729518557 with the old key GONE, five gate rows as reported,
+`seedling-full-tier.yml` present, traps 1341–1342).** As built (§12): the three Python drivers run headless or `--win`
+from ONE code path with the flags handed in from `headlessChromium.js`; the six gates are `dual` (roster 85 / browser 56
+/ windows 0 / dual 6 / ciBox 47; drivers 75/15/7); the CI plan 59 → 66 arms in 2 browser shards (599.6 / 516.1 s — a
+0.4 s margin, ⚖); the differential's per-push arm is the smoke face (its default tier is FULL — brief wrong; `fast` =
+1398 s on the box); ruling A narrowed (ship + pages on the pixels set, the derivation row pins it); `channel` on gate
+rows; `ci-arm-costs.json` on both `paths:` lists with an identical-lists row; `seedling-full-tier.yml`
+`workflow_dispatch:`-only with a trigger row (schedule mutant red); the throwaway probe workflow deleted. **Ruling C's
+first exercise: the composite row is quoted from CI** — 150/150 same verdict AND ordered check set as R1, details differ
+only in wall seconds and the free-running game_time. Runner facts: the runner has the box's two channels (§11.4);
+Python Playwright shares node's chromium-1194; `seedling-wasm.yml` STEP 3 EACCES → 24 PASS. Defects its own tests
+found: the helper's node string-evaluate (4 gates refused, the unit fake hid it — trap 1341); main red at `d804521eac`
+(the face enrolment pin + no `.venv` in CI), fixed at `d424c86946`. CI at `71e1b687d4` 461/13958, 0 failed.
+**⚖ OPEN for the user (§12.10):** (1) **`check-seedling-wasm-ship` CLAIM 6 reads 262/1 on the runner in FOUR runs**
+(window 1 fresh-boot dead frames: game 38 vs model 40) while box pixels and `--win` read 263/0 — reproducible, not
+re-recorded, the row held at 263/0 @`e172d631`; (2) ⚖ 72's ciSourced rule has NO box-sourced clause (trap 1342) — a
+future `--write` would quote the runner's 262/1 into the ship row; (3) five other gates still use the `  ok  ` printer
+the CI reader cannot parse; (4) the swim-sound probe's static 'windows' lock kind; (5) the owed gate's re-drive advice
+still says `--win`; (6) the shard-0 margin (0.4 s). **H3 LAUNCHED 2026-09-13 ~03:05Z** as `seedling-headless-H3` (Opus;
+brief `NewDocs/plans/seedling-headless-H3-prompt.md`; plan §13; §14 = its as-built slot; start `de7e976104`).
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
