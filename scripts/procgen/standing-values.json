@@ -1487,7 +1487,7 @@
       "measuredAt": "e172d631f1408ab498ce826554840e35eca9108e",
       "total": "success"
     },
-    "roster: --win --tier=full": {
+    "roster: --tier=full": {
       "value": "150 tapes 3259/0/3",
       "command": null,
       "kind": "identity",

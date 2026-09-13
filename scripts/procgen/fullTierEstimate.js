@@ -34,7 +34,8 @@ export const SEC_PER_KILOTICK = 57;
 /**
  * ⛓ THE MEASUREMENT THE TWO CONSTANTS ARE CALIBRATED AGAINST — quoted, with
  * the head it was driven at, so the calibration can be re-checked rather than
- * believed. R9 slice 12h, §47.1 / the `roster: --win --tier=full` standing row.
+ * believed. R9 slice 12h, §47.1 / the `roster: --tier=full` standing row (named
+ * `roster: --win --tier=full` until H2).
  */
 export const FULL_TIER_CALIBRATION = Object.freeze({
     tapes: 149,

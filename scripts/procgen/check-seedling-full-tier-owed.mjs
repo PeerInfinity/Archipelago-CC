@@ -5,7 +5,7 @@
  *
  * ── ⛔⛔ WHAT THIS EXISTS FOR ──────────────────────────────────────────
  *
- * `roster: --win --tier=full` is a ⚖ 40 CHECKPOINT row: 149 tapes driven
+ * `roster: --tier=full` (`roster: --win --tier=full` until H2) is a ⚖ 40 CHECKPOINT row: 149 tapes driven
  * through the real game on a Windows GPU, 143 minutes, and a headless `--check`
  * can never re-run it. So it sits in `standing-values.json` carrying the head
  * it was measured at — and NOTHING notices when the tree moves out from under
@@ -168,7 +168,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describeFullTierEstimate, rosterLabels, tickSumOf } from './fullTierEstimate.js';
 import {
-    FILE, compositeParts, compositeValue, compositeWhy, readStandingValues,
+    FILE, ROSTER_ROW_KEY, compositeParts, compositeValue, compositeWhy, readStandingValues,
 } from './standingValues.js';
 import { ROSTER_CATEGORIES, assertTiersComplete } from
     '../../frontend/modules/seedlingDemo/fixtures/tiers.js';
@@ -184,7 +184,8 @@ const TAPES_REL = 'frontend/modules/seedlingDemo/fixtures/tapes';
 const TAPES = join(REPO, TAPES_REL);
 const WASM_SUBMODULE = 'frontend/modules/flashPanel/wasm';
 const DRIVER = 'scripts/procgen/seedling-bot-replay-win.py';
-const ROSTER_KEY = 'roster: --win --tier=full';
+/** ⛓ H2 — the key is IMPORTED, so a rename has one spelling to move. */
+const ROSTER_KEY = ROSTER_ROW_KEY;
 /** ⛓ The token the dead-frame accounting is spelled with, in one place. */
 const DEAD_FRAME_TOKEN = 'BOOT_PRESWAP_FRAMES';
 

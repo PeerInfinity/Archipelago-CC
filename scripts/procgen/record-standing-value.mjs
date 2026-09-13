@@ -10,7 +10,7 @@
  *
  * ── Run ───────────────────────────────────────────────────────────────
  *
- *   node scripts/procgen/record-standing-value.mjs --key='roster: --win --tier=full' \
+ *   node scripts/procgen/record-standing-value.mjs --key='roster: --tier=full' \
  *        --from='node scripts/procgen/check-seedling-bot-differential.mjs --win --tier=full'
  *
  *   …--kind=gate|identity|suite    how to read the headline (default: guessed
@@ -44,7 +44,8 @@ import { join } from 'node:path';
 import { releaseBoxLock, takeBoxLock } from './boxLock.js';
 import { REPO } from './gateRoster.js';
 import {
-    CHANNELS, CHEAP_MS, FILE, cheapFor, head, readStandingValues, runRow, withCategoryQuote,
+    CHANNELS, CHEAP_MS, FILE, cheapFor, head, readStandingValues, retiredKeyProblem, runRow,
+    withCategoryQuote,
 } from './standingValues.js';
 import { ROSTER_CATEGORIES, rosterCategories } from
     '../../frontend/modules/seedlingDemo/fixtures/tiers.js';
@@ -76,6 +77,10 @@ const COVERED_BY = arg('covered-by');
  */
 const CHANNEL = arg('channel');
 
+if (retiredKeyProblem(KEY)) {
+    console.log(retiredKeyProblem(KEY));
+    process.exit(1);
+}
 if (!KEY || (!FROM && QUOTE === null)) {
     console.log('FAIL: --key= and one of --from=<command> / --quote=<value> are required');
     process.exit(1);

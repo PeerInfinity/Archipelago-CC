@@ -17,7 +17,10 @@
 import { describe, expect, it } from 'vitest';
 
 import { gateRoster } from './gateRoster.js';
-import { gateStandingRows, standingRows } from './standingValues.js';
+import {
+    RETIRED_ROSTER_ROW_KEYS, ROSTER_ROW_KEY, gateChannel, gateStandingRows, readStandingValues,
+    retiredKeyProblem, standingRows,
+} from './standingValues.js';
 
 const ROWS = standingRows();
 const GATE_ROWS = ROWS.filter((r) => r.kind === 'gate');
@@ -113,3 +116,45 @@ describe('⛔ an arm whose command EQUALS the base row is REFUSED BY NAME', () =
  * at `cheap: false`, over the live roster, with the non-vacuity assertion in
  * front of it.
  */
+
+/**
+ * ⛓⛓ H2 — **THE ROSTER ROW'S KEY LOST ITS `--win`, AND THE OLD ONE IS REFUSED.**
+ * A stale `--key=` pasted from an old record must fail by name rather than
+ * create a second composite row beside the real one.
+ */
+describe('H2 — the renamed roster row key', () => {
+    it('the bank carries the new key and no retired one', () => {
+        const rows = readStandingValues()?.rows ?? {};
+        expect(rows[ROSTER_ROW_KEY]).toBeTruthy();
+        expect(RETIRED_ROSTER_ROW_KEYS.length).toBeGreaterThan(0);
+        expect(RETIRED_ROSTER_ROW_KEYS.filter((k) => k in rows)).toEqual([]);
+    });
+    it('a retired key is refused by name, pointing at the live one; the live key is not', () => {
+        for (const k of RETIRED_ROSTER_ROW_KEYS) {
+            expect(retiredKeyProblem(k)).toMatch(/RETIRED/);
+            expect(retiredKeyProblem(k)).toContain(ROSTER_ROW_KEY);
+        }
+        expect(retiredKeyProblem(ROSTER_ROW_KEY)).toBeNull();
+    });
+});
+
+/**
+ * ⛓⛓ H2 — **`channel` ON A PLAIN GATE ROW REPLACES `windows: true`.** A dual
+ * gate's bare command is its headless channel; a Windows-only gate's is `win`;
+ * a gate with no Windows arm carries none.
+ */
+describe('H2 — the channel on gate rows', () => {
+    it('derived gate rows carry the channel their bare command drives, never `windows`', () => {
+        const roster = gateRoster();
+        expect(GATE_ROWS.filter((r) => 'windows' in r)).toEqual([]);
+        const dual = roster.filter((g) => g.dual);
+        expect(dual.length).toBeGreaterThan(0);
+        for (const g of dual) {
+            const name = g.file.replace(/^check-/, '').replace(/\.mjs$/, '');
+            expect(ROWS.find((r) => r.key === `gate: ${name}`)?.channel).toBe('headless');
+        }
+        expect(gateChannel({ windows: true })).toBe('win');
+        expect(gateChannel({ windows: false, dual: false })).toBeNull();
+    });
+});
+

@@ -98,7 +98,7 @@ import {
 } from './rowInputKey.js';
 import {
     CHEAP_MS, FILE, ciGateCommand, cheapFor, compositeValue, compositeWhy, head,
-    missingScript, readStandingValues, runRow, scriptIn, standingRows,
+    missingScript, readStandingValues, retiredKeyProblem, runRow, scriptIn, standingRows,
 } from './standingValues.js';
 
 
@@ -113,6 +113,11 @@ const arg = (name, fallback) => (argv.find((a) => a.startsWith(`--${name}=`))
 const HOST = arg('host', LOCAL_HOST);
 const ONLY = arg('only', '');
 const KEY = arg('key', '');
+/** ⛓ H2 — a retired key is refused BY NAME before anything is derived. */
+if (retiredKeyProblem(KEY)) {
+    console.log(retiredKeyProblem(KEY));
+    process.exit(1);
+}
 const JSON_OUT = flag('json');
 /**
  * ⛓⛓⛓ R9 P3b, ⚖ 54 (7) — **THIS FILE IS A BOX ROW, AND NOW IT SAYS SO.**
@@ -515,7 +520,7 @@ if (flag('write')) {
             ...(keyRep.key ? { inputKey: keyRep.key, keyAt: HEAD,
                 keyPopulations: bankedPopulations(keyRep) } : {}),
             ...(row.browser ? { browser: true } : {}),
-            ...(row.windows ? { windows: true } : {}),
+            ...(row.channel ? { channel: row.channel } : {}),
             ...(r.total ? { total: r.total } : {}),
         };
         console.log(`${(r.exit === 0 ? 'ok  ' : `EXIT${r.exit}`)}  ${row.key.padEnd(46)} `

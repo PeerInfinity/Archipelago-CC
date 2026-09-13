@@ -362,7 +362,7 @@ const WIN = process.argv.includes('--win');
  * tier was a 30-hour thought experiment, so a `--resume` never had to ask which
  * browser produced a stored PASS. It does now: without this, a `--win --resume`
  * at the same tree would REUSE a headless tier's PASSes and publish them as the
- * `roster: --win --tier=full` row (and the reverse) — silently answering the
+ * `roster: --tier=full` row (then `roster: --win --tier=full`; and the reverse) — silently answering the
  * open ⚖ "may a headless tier discharge the Windows row?". The physics is the
  * same either way; the CLAIM is not, so the two never share a cache entry.
  */

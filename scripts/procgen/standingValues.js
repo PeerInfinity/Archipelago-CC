@@ -94,8 +94,8 @@ export function cheapFor(ms, previousCheap) {
 /**
  * ── ⛓⛓⛓ THE COMPOSITE CHECKPOINT ROW (R9 slice CAT, ⚖ 69 (c) / ⚖ 70 (c)) ──
  *
- * `roster: --win --tier=full` is the one row no headless session can ever
- * re-run: 150 tapes driven through the real game on a Windows GPU. ⚖ 69 (a)
+ * `roster: --tier=full` (named `roster: --win --tier=full` until H2) was the
+ * one row no headless session could ever re-run: 150 tapes driven through the real game on a Windows GPU. ⚖ 69 (a)
  * made it a COMPOSITE for the first time — part measured at L15's head, the
  * 120-tape complement quoted from an earlier same-build run — and stated that
  * composition in PROSE, in the row's own `why`. ⚖ 17 forbids reading prose as
@@ -123,7 +123,22 @@ export function cheapFor(ms, previousCheap) {
  */
 
 /** The one key the checkpoint row lives under, spelled once. */
-export const ROSTER_ROW_KEY = 'roster: --win --tier=full';
+export const ROSTER_ROW_KEY = 'roster: --tier=full';
+
+/**
+ * ⛓⛓ H2 (2026-09-12, ⚖ ruling B) — **THE KEY LOST ITS `--win`.** R1 made every
+ * part `channel: headless`, so the old key named a channel the row no longer
+ * came from; the channel is DATA on each part now, not a word in the key. The
+ * old spelling is REFUSED BY NAME by both writers, so a stale command pasted
+ * from a record cannot re-create a second row beside this one.
+ */
+export const RETIRED_ROSTER_ROW_KEYS = Object.freeze(['roster: --win --tier=full']);
+
+/** The refusal for a retired key, or `null`. */
+export const retiredKeyProblem = (key) => (RETIRED_ROSTER_ROW_KEYS.includes(key)
+    ? `FAIL: --key=${JSON.stringify(key)} is RETIRED (H2, ⚖ ruling B) — the row is `
+      + `${JSON.stringify(ROSTER_ROW_KEY)}; the channel lives on each part, not in the key.`
+    : null);
 
 /** `P/F/S` (skips optional), the form every differential value is quoted in. */
 const COUNTS_RE = /^(\d+)\/(\d+)(?:\/(\d+))?$/;
@@ -152,6 +167,21 @@ const COUNTS_RE = /^(\d+)\/(\d+)(?:\/(\d+))?$/;
 export const CHANNELS = Object.freeze(['win', 'headless']);
 
 const channelSuffix = (p) => (p.channel ? ` [channel: ${p.channel}]` : '');
+
+/**
+ * ⛓⛓ H2 (2026-09-12) — **A PLAIN GATE ROW CARRIES `channel` TOO, AND IT
+ * REPLACES `windows: true`.** Until H2 four gate rows said `windows: true`
+ * because the gate could only run on Windows Chrome; H2 gave those gates a
+ * headless default (`dual`, `gateRoster.js`), so the bare command a row runs is
+ * the HEADLESS one and the field that says so is the channel, in the same
+ * vocabulary the composite row's parts use. A Windows-only gate's row says
+ * `win`; a dual gate's says `headless`; a gate with no Windows arm at all
+ * carries none (it has only ever had one channel, and naming it adds nothing).
+ * ⛔ ONE MIGRATION, in the writer: a row is rewritten whole by `--write`, which
+ * emits `channel` and never `windows`, and `standingValues.test.js` refuses a
+ * banked row that still carries `windows`.
+ */
+export const gateChannel = (gate) => (gate.windows ? 'win' : (gate.dual ? 'headless' : null));
 
 /**
  * The parts of a composite row, in the categories' own order.
@@ -347,7 +377,8 @@ export function gateStandingRows(gate, argv) {
     const name = gate.file.replace(/^check-/, '').replace(/\.mjs$/, '');
     const commandOf = (a) => `node ${gate.path}${a.length ? ` ${a.join(' ')}` : ''}`;
     const of = (key, a) => ({
-        key, kind: 'gate', command: commandOf(a), browser: gate.browser, windows: gate.windows,
+        key, kind: 'gate', command: commandOf(a), browser: gate.browser,
+        ...(gateChannel(gate) ? { channel: gateChannel(gate) } : {}),
     });
     const base = of(`gate: ${name}`, argv);
     const rows = [base];
