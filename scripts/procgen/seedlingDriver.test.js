@@ -6,7 +6,8 @@
  *   1. the headless argv carries `--headless` and EXACTLY the switches the gate
  *      handed in, as one `--chromium-args=` JSON array — never a list of its own;
  *   2. an empty switch list is refused, not launched with the driver's defaults;
- *   3. a missing interpreter is a refusal that names the requirements file.
+ *   3. an interpreter that cannot import Playwright is a refusal that names the
+ *      requirements file (the ladder itself: `repoPython.test.js`).
  */
 import { existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -19,19 +20,11 @@ import { HEADLESS_REQUIREMENTS, driverChannel, headlessPython } from './seedling
 
 describe('driverChannel — the headless channel', () => {
     it('stages in a temp dir and spells the driver path, not a Windows one', () => {
-        // ⛓ An explicit interpreter: the channel resolves it at construction
-        // (a missing venv refuses before anything is staged), and a CI vitest
-        // job has no `.venv` — measured red at b10503b90f without this.
-        const prev = process.env.SEEDLING_PYTHON;
-        process.env.SEEDLING_PYTHON = 'python3';
-        let ch;
-        try {
-            ch = driverChannel({ win: false, winPy: '/nonexistent/py.exe',
-                driver: '/x/d.py', chromiumArgs: HEADLESS_LOGIC_ONLY_ARGS });
-        } finally {
-            if (prev === undefined) delete process.env.SEEDLING_PYTHON;
-            else process.env.SEEDLING_PYTHON = prev;
-        }
+        // ⛓ An explicit interpreter: the channel resolves (and PROBES) it at
+        // construction, and a CI vitest job has no Python with Playwright —
+        // measured red at b10503b90f without this.
+        const ch = driverChannel({ win: false, winPy: '/nonexistent/py.exe',
+            driver: '/x/d.py', chromiumArgs: HEADLESS_LOGIC_ONLY_ARGS, python: 'python3' });
         expect(ch.name).toBe('headless');
         expect(ch.path('plan.json').startsWith(tmpdir())).toBe(true);
         expect(ch.path('plan.json')).toBe(ch.local('plan.json'));
@@ -44,19 +37,12 @@ describe('driverChannel — the headless channel', () => {
     it('runs the driver with --headless and EXACTLY the switches it was handed', () => {
         // ⛓ `echo` as the interpreter: the argv comes back as the output, so
         // the row reads what would have been launched without a browser.
-        const prev = process.env.SEEDLING_PYTHON;
-        process.env.SEEDLING_PYTHON = 'echo';
-        try {
-            const ch = driverChannel({ win: false, winPy: 'unused',
-                driver: '/x/d.py', chromiumArgs: HEADLESS_LOGIC_ONLY_ARGS });
-            const out = ch.run(['--plan', 'p.json']).trim();
-            expect(out).toBe(['/x/d.py', '--headless',
-                `--chromium-args=${JSON.stringify(HEADLESS_LOGIC_ONLY_ARGS)}`,
-                '--plan', 'p.json'].join(' '));
-        } finally {
-            if (prev === undefined) delete process.env.SEEDLING_PYTHON;
-            else process.env.SEEDLING_PYTHON = prev;
-        }
+        const ch = driverChannel({ win: false, winPy: 'unused',
+            driver: '/x/d.py', chromiumArgs: HEADLESS_LOGIC_ONLY_ARGS, python: 'echo' });
+        const out = ch.run(['--plan', 'p.json']).trim();
+        expect(out).toBe(['/x/d.py', '--headless',
+            `--chromium-args=${JSON.stringify(HEADLESS_LOGIC_ONLY_ARGS)}`,
+            '--plan', 'p.json'].join(' '));
     });
 
     it('refuses an empty switch list rather than launching on defaults', () => {
@@ -64,9 +50,12 @@ describe('driverChannel — the headless channel', () => {
             .toThrow(/headlessChromium\.js/);
     });
 
-    it('a missing interpreter is a refusal that names the requirements file', () => {
-        expect(() => headlessPython({ env: {}, repo: join(tmpdir(), 'no-such-repo') }))
+    it('an interpreter that cannot import playwright is a refusal that names the requirements file', () => {
+        const repo = join(tmpdir(), 'no-such-repo');
+        expect(() => headlessPython({ env: {}, repo, probe: () => false }))
             .toThrow(new RegExp(HEADLESS_REQUIREMENTS.replace(/[.]/g, '\\.')));
-        expect(headlessPython({ env: { SEEDLING_PYTHON: '/p' } })).toBe('/p');
+        expect(() => headlessPython({ env: {}, repo, probe: () => false }))
+            .toThrow(/import playwright/);
+        expect(headlessPython({ env: { SEEDLING_PYTHON: '/p' }, probe: () => true })).toBe('/p');
     });
 });

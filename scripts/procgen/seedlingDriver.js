@@ -15,7 +15,7 @@
  *
  *   --win      staged under `C:\playwright\` and run by the Windows launcher
  *              the gate names — byte-for-byte what these gates always did
- *   headless   run in place by the repo venv's Linux python with `--headless
+ *   headless   run in place by the resolved Linux python with `--headless
  *              --chromium-args=<json>`, staging its plan in a temp dir
  *
  * ⛔ THE HEADLESS SWITCHES COME FROM `headlessChromium.js` THROUGH ARGV, never
@@ -28,18 +28,23 @@
  * reclassify every consumer. And this is a `.js`, outside the roster's `.mjs`
  * populations, like `boxLock.js` and `headlessChromium.js`.
  *
- * ⛓ THE PYTHON: `SEEDLING_PYTHON` when set, else `<repo>/.venv/bin/python`,
- * which must carry `scripts/procgen/requirements-headless.txt` (Playwright
- * pinned to node's version, so both packages share one Chromium). A missing
- * interpreter is a refusal that names the install line, not a crash three
- * frames deep.
+ * ⛓ THE PYTHON (F2): `repoPython.resolvePython`'s ladder — `SEEDLING_PYTHON`
+ * → `$VIRTUAL_ENV/bin/python` → `<tree>/.venv/bin/python` → PATH `python3` —
+ * and the chosen one must `import playwright` (installed from
+ * `scripts/procgen/requirements-headless.txt`: Playwright pinned to node's
+ * version, so both packages share one Chromium). One that cannot is a refusal
+ * naming the tree, the ladder and the install line, not a crash three frames
+ * deep — and not H2's "no `<tree>/.venv`" refusal in a worktree whose shell
+ * had an active venv all along.
  */
 
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { resolvePython } from './repoPython.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
@@ -51,16 +56,12 @@ export const WIN_STAGE_DOS = 'C:\\playwright';
 export const HEADLESS_REQUIREMENTS = 'scripts/procgen/requirements-headless.txt';
 
 /** The Linux interpreter the headless channel runs a driver with. */
-export function headlessPython({ env = process.env, repo = REPO } = {}) {
-    if (env.SEEDLING_PYTHON) return env.SEEDLING_PYTHON;
-    const venv = join(repo, '.venv', 'bin', 'python');
-    if (!existsSync(venv)) {
-        throw new Error(`seedlingDriver: the headless channel needs a Python with Playwright, and `
-            + `${venv} does not exist. Create it (python3 -m venv .venv) and install `
-            + `\`.venv/bin/pip install -r ${HEADLESS_REQUIREMENTS}\`, or set SEEDLING_PYTHON. `
-            + '(`--win` drives real-GPU Windows Chrome instead.)');
-    }
-    return venv;
+export function headlessPython({ env = process.env, repo = REPO, probe } = {}) {
+    return resolvePython({ requires: ['playwright'], env, repo, probe,
+        why: 'seedlingDriver: the headless channel',
+        install: `install \`<python> -m pip install -r ${HEADLESS_REQUIREMENTS}\` into it `
+            + '(or create one: python3 -m venv .venv), or set SEEDLING_PYTHON. '
+            + '(`--win` drives real-GPU Windows Chrome instead.)' });
 }
 
 /**
@@ -71,6 +72,8 @@ export function headlessPython({ env = process.env, repo = REPO } = {}) {
  * @param {string}  o.winPy          the Windows launcher, as the GATE spells it
  * @param {string}  o.driver         absolute path of the `.py` driver
  * @param {string[]} o.chromiumArgs  the headless switches (`headlessChromium.js`)
+ * @param {string}  [o.python]      the headless interpreter, already resolved
+ *                                   (default: `headlessPython()`, which refuses)
  * @returns {{ name: 'win'|'headless', path: (f: string) => string,
  *   local: (f: string) => string, write: (f: string, s: string) => string,
  *   clear: (f: string) => void, read: (f: string) => string,
@@ -78,11 +81,13 @@ export function headlessPython({ env = process.env, repo = REPO } = {}) {
  *   `path` is how the DRIVER spells a staged file; `local` is how this process
  *   reads it.
  */
-export function driverChannel({ win, winPy, driver, chromiumArgs }) {
+export function driverChannel({ win, winPy, driver, chromiumArgs, python = null }) {
     if (!Array.isArray(chromiumArgs) || chromiumArgs.length === 0) {
         throw new Error('seedlingDriver: chromiumArgs must be the array headlessChromium.js '
             + 'exports — the headless channel spells no switches of its own');
     }
+    /** ⛓ resolved BEFORE anything is staged: a refusal leaves no temp dir. */
+    const py = win ? null : (python ?? headlessPython());
     const stage = win ? WIN_STAGE_WSL : mkdtempSync(join(tmpdir(), 'seedling-driver-'));
     const local = (f) => join(stage, f);
     const common = {
@@ -103,11 +108,10 @@ export function driverChannel({ win, winPy, driver, chromiumArgs }) {
                 { cwd: WIN_STAGE_WSL, encoding: 'utf8', ...opts }),
         };
     }
-    const python = headlessPython();
     return {
         ...common,
         path: local,
-        run: (argv, opts = {}) => execFileSync(python,
+        run: (argv, opts = {}) => execFileSync(py,
             [driver, '--headless', `--chromium-args=${JSON.stringify(chromiumArgs)}`, ...argv],
             { cwd: stage, encoding: 'utf8', ...opts }),
     };
