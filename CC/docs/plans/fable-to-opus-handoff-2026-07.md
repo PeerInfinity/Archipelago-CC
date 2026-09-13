@@ -14288,6 +14288,14 @@ tasks 0–6 pushed (`f9284273cb`, `a588ca987e`, `bcea3b5fb5`), CI green at `d424
 H2's close: ⚖ 72's ciSourced rule has no "box-sourced" clause (a future `--write` would quote the runner's ship
 reading).
 
+**⛓⛓ THE FULL TIER RAN IN CI 2026-09-13 — THE ARC'S GOAL, MEASURED.** `seedling-full-tier.yml` (`workflow_dispatch:`
+only), run **34729518557** @ `bcea3b5fb5`, `ubuntu-latest`, one job: `CHANNEL: headless logic-only — __swfGpu =
+{"lost":1,"stalls":0}` as its first line, `TIER full: 150 tape(s)`, **`ALL CHECKS PASSED` — PASS 3635 / FAIL 0 / SKIP
+46** (counted by the planner from the run log: `grep -c '^PASS: '` etc.), 0 "Error in event handler" lines, wall
+01:02:30Z → 02:40:29Z (≈ 1h38m) — **IDENTICAL to R1's box tier (3635/0/46) and H1's**. ⇒ a standard GitHub runner
+reproduces the box's 150-tape verdict on the logic-only channel; no GPU runner, no org. H2 writes the composite row
+quoted from this run under ruling C. Next: H3 shards it (⚖ above, 10 shards, long tapes spread).
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
