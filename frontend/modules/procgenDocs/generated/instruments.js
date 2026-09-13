@@ -3398,10 +3398,17 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [
+                "boot-trace",
                 "host"
             ],
             "file": "check-seedling-wasm-ship.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "boot-trace"
+                },
                 {
                     "how": [
                         "arg"

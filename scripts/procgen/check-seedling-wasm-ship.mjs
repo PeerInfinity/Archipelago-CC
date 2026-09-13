@@ -83,6 +83,7 @@
  * Run:
  *   node scripts/procgen/check-seedling-wasm-ship.mjs
  *   node scripts/procgen/check-seedling-wasm-ship.mjs --host=http://localhost:8000
+ *   node scripts/procgen/check-seedling-wasm-ship.mjs --boot-trace
  */
 
 import { readFileSync } from 'node:fs';
@@ -116,6 +117,28 @@ argvHelp(import.meta.url);
  * box load ~9) vs `--win` 263/0 (474 s).
  */
 const WIN = process.argv.includes('--win');
+/**
+ * ⛓ SEEDLING HEADLESS S1 (2026-09-13) — **`--boot-trace`: WINDOW 1's BOOT, FRAME
+ * BY FRAME, ON BOTH CHAIN ARMS.** A READOUT, never a claim: every check below
+ * is unchanged and the verdict is the same run's.
+ *
+ * Why it exists: CAMPAIGN CLAIM 6 read `game 38 vs model 40 − 1` on four
+ * `ubuntu-latest` runs while this machine reads 39. A dead-frame COUNT cannot
+ * say where it lost a frame; a per-frame trace of the boot can. Before ▶ Start
+ * the plan installs a poll in the PAGE (same-origin, so the game frame's
+ * `botStatus` is callable from it) that records a row each time any traced
+ * field changes, from the first poll until window 1 has run a few live ticks:
+ * wall ms · poll # · `game_time` · `armed` · `arm.pending` (the `FP.world`
+ * identity test `Bot.update` makes — the only view of that identity the game
+ * exposes) · `arm.armed_at` · `dead_frames` · `tick` · level · x,y · the
+ * `dead_frames` pin · the page's last `reached` stage. After the verdict the
+ * trace is read back and printed as `BOOT-TRACE <ARM>` lines plus one SUMMARY.
+ *
+ * ⚠ The poll is `setTimeout(0)` on the page's own thread, so it competes with
+ * the frame loop; a traced run's CLAIM 6 is printed beside an untraced one's
+ * before a trace is used as evidence.
+ */
+const BOOT_TRACE = process.argv.includes('--boot-trace');
 takeBoxLockOrExit({ name: 'check-seedling-wasm-ship.mjs', kind: WIN ? 'windows' : 'browser' });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -1332,6 +1355,68 @@ function assertChainRefuses(ARM, WINDOWS, res, wasm, wins, at, TICKS) {
     }
 }
 
+/**
+ * ⛓ `--boot-trace`'s page side (see `BOOT_TRACE`). An EXPRESSION, because the
+ * driver evaluates `() => (<read>)`; it installs the poll and returns at once.
+ */
+const BOOT_TRACE_COLUMNS = ['ms', 'poll', 'game_time', 'armed', 'pending', 'armed_at',
+    'dead_frames', 'tick', 'level', 'x', 'y', 'pin_dead', 'stage'];
+const BOOT_TRACE_INSTALL = `(() => {
+    const f = [...document.querySelectorAll('iframe')].find((x) => /\\/game\\.html/.test(x.src));
+    const fw = f ? f.contentWindow : null;
+    if (!fw) return 'no game frame';
+    const T = window.__bootTrace = { rows: [], polls: 0, stop: null };
+    const t0 = performance.now();
+    let last = '';
+    const step = () => {
+        T.polls += 1;
+        const ms = Math.round(performance.now() - t0);
+        const g = fw.__swfBridge && fw.__swfBridge.game;
+        let s = null;
+        if (g && typeof g.botStatus === 'function') {
+            try { s = JSON.parse(g.botStatus()); } catch (e) { s = null; }
+        }
+        const reached = (window.__watch && window.__watch.wasm && window.__watch.wasm.reached) || [];
+        const stage = reached.length ? reached[reached.length - 1] : null;
+        const row = s ? [s.game_time, s.armed, s.arm ? s.arm.pending : null,
+            s.arm ? s.arm.armed_at : null, s.dead_frames, s.tick, s.level,
+            Math.round(s.x * 100) / 100, Math.round(s.y * 100) / 100,
+            s.pins ? s.pins.dead_frames : null, stage]
+            : [null, null, null, null, null, null, null, null, null, null, stage];
+        const key = JSON.stringify(row);
+        if (key !== last) { T.rows.push([ms, T.polls, ...row]); last = key; }
+        if (s && s.armed && s.tick > 3) { T.stop = 'window 1 live for 3 ticks'; return; }
+        if (T.rows.length >= 4000) { T.stop = 'row cap'; return; }
+        if (ms > 900000) { T.stop = 'time cap'; return; }
+        setTimeout(step, 0);
+    };
+    step();
+    return 'installed';
+})()`;
+
+function printBootTrace(ARM, res, wins) {
+    const T = res?.reads?.bootTrace ?? null;
+    console.log(`\n  BOOT-TRACE ${ARM} install: ${JSON.stringify(res?.reads?.bootTraceInstall ?? null)}`);
+    if (!T || !Array.isArray(T.rows)) {
+        console.log(`  BOOT-TRACE ${ARM} SUMMARY: no trace read back`);
+        return;
+    }
+    console.log(`  BOOT-TRACE ${ARM} | ${BOOT_TRACE_COLUMNS.join(' | ')}`);
+    for (const r of T.rows) console.log(`  BOOT-TRACE ${ARM} | ${r.join(' | ')}`);
+    const col = (r, name) => r[BOOT_TRACE_COLUMNS.indexOf(name)];
+    const visible = T.rows.find((r) => col(r, 'game_time') !== null) ?? null;
+    const armed = T.rows.find((r) => col(r, 'armed') === true) ?? null;
+    const live = T.rows.find((r) => col(r, 'tick') > 0) ?? null;
+    console.log(`  BOOT-TRACE ${ARM} SUMMARY: first bot-visible game_time `
+        + `${visible ? `${col(visible, 'game_time')} at ${col(visible, 'ms')} ms (poll ${col(visible, 'poll')})` : '—'}`
+        + ` · armed_at ${armed ? col(armed, 'armed_at') : '—'}`
+        + ` · first armed row game_time ${armed ? col(armed, 'game_time') : '—'}`
+        + ` · dead_frames at the first live tick ${live ? col(live, 'dead_frames') : '—'}`
+        + ` (game_time ${live ? col(live, 'game_time') : '—'})`
+        + ` · window 1 deadFrames ${wins?.[0]?.deadFrames ?? '—'}`
+        + ` · ${T.rows.length} row(s) / ${T.polls} poll(s), stopped: ${T.stop}`);
+}
+
 function runChainArm(ARM, CHAIN_ID, WINDOWS, REFUSES_AT = null) {
     const N = WINDOWS.length;
     const SHARES = deadFrameSharesOf(WINDOWS);
@@ -1353,6 +1438,7 @@ function runChainArm(ARM, CHAIN_ID, WINDOWS, REFUSES_AT = null) {
                     + " && window.__watch?.wasm?.reached?.includes('runtime')",
                 sec: 300,
             },
+            ...(BOOT_TRACE ? [{ read: BOOT_TRACE_INSTALL, as: 'bootTraceInstall' }] : []),
             { frame_click: '#btn-start', frame: '/game.html',
                 what: 'press ▶ Start INSIDE the frame' },
             {
@@ -1384,7 +1470,9 @@ function runChainArm(ARM, CHAIN_ID, WINDOWS, REFUSES_AT = null) {
             },
             { read: 'window.__watch.wasm', as: 'wasm' },
             { read: 'window.__editorSequence.windows.map((w) => w.label)', as: 'seqLabels' },
+            ...(BOOT_TRACE ? [{ read: 'window.__bootTrace ?? null', as: 'bootTrace' }] : []),
         ], `watch-ship-${CHAIN_ID}`);
+    if (BOOT_TRACE) printBootTrace(ARM, res, res?.reads?.wasm?.windows);
     /**
      * ⛓ R9 slice 7b: `aborted` is a THIRD outcome beside completed and crashed.
      * The driver stopped waiting because the page raised a refusal, ran the
