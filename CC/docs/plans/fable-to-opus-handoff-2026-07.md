@@ -15122,6 +15122,15 @@ generate-procgen-reference.mjs` re-keyed (moved with the regenerated instruments
 `seedling-headless-planning-3` (~7 min of box by the bank's own `ms`). Still pending the user: the `shared/` gitlink bump
 `573a3b2 → 2ebeaf8`.
 
+**⚖ RULED + GITLINK BUMPED 2026-09-13 — the user, verbatim: *"Yes, please do the gitlink bump. I don't remember encountering a
+situation where I don't want the gitlink bump. Do you know of any reason not to change the policy to not require asking for
+permission before doing the bump?"*** Bumped: **`d89a055900`** (`frontend/modules/shared` 573a3b2 → 2ebeaf8; measured before the
+bump: the commit is on the shared remote's `main`, the diff is 7+/3− comment lines in `procgen/adapterPrimitives.js`, no code).
+The policy question is answered in the tab (planner's recommendation: bumps join PUSH BY DEFAULT under two mechanical
+preconditions — the submodule commit is on its remote's default branch, and the submodule push itself met the push-by-default
+tests — with ONE standing exception, the wasm-binary submodule, whose bump is a pins re-record); the ruling, when given, goes to
+CLAUDE.md's PUSH BY DEFAULT bullet and `feedback_push_by_default`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
