@@ -15005,7 +15005,7 @@ Worktrees `wt-g2b` and `wt-ta-mana` merged and removable (left on disk; removal 
 K0, G2a, G2b-1, G2a-fix SHIPPED; G2b-2 DEFERRED ⚖. **NEXT = a what-next with the user** (the ladder after G2b: the pipeline relayout
 slice measured live first, the Seedling editor session, MEMORY.md compaction — and the box-only-gates gap above).
 
-**⚖ RULED + MEMORY COMPACTED + C1 (cleanup) LAUNCHED 2026-09-13.** The user, verbatim: *"Next, please do the memory
+**⚖ RULED + MEMORY COMPACTED + SIDECARS-CLEANUP (`apworld-sidecars-cleanup`; ⚠ NOT the seedling arc's `seedling-headless-C1`, which works on the PRIMARY tree) LAUNCHED 2026-09-13.** The user, verbatim: *"Next, please do the memory
 compaction."* → done by the planner (MEMORY.md 115 lines / 24.8 KB → 83 / 19.1 KB, all 205 links kept by set diff, the old index
 archived verbatim in `reference_memory_index_snapshot_2026-09-13.md`; the floor is ~9.5 KB of link targets; a deeper cut behind
 the families index offered, not taken; the headless planner held its index edits during the whole-file write). Then, verbatim:
