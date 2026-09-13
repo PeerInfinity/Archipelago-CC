@@ -194,6 +194,13 @@ export function cellKey(cell) {
     return `${cell.gx},${cell.gy}`;
 }
 
+// The ONE spelling of a Grid.teleporters key: the exit's cell + its exit id.
+// Never parsed back (the map is only ever looked up by the same pair), so an
+// exit id carrying ':' cannot confuse it.
+function teleporterKey(cell, exitId) {
+    return `${cellKey(cell)}:${exitId}`;
+}
+
 /**
  * ⛓⛓ **THE REGION SIZE A REBUILD FALLS BACK TO**, in tiles.
  *
@@ -230,12 +237,15 @@ export class Grid {
         this.width = width;
         this.height = height;
         this.cells = new Map();
-        // Teleporter mappings keyed by `${fromCellKey}:${side}` →
-        // toCellKey. Used when an exit's geographic neighbor is
-        // invalid (out of bounds, or already built by another branch
-        // of growth); the driver places the new region in a cell
-        // disconnected from the geometric layout, and stitchGrid
-        // honors this mapping in place of grid.neighborCell.
+        // Teleporter mappings keyed by EXIT — `${fromCellKey}:${exitId}`
+        // (built by teleporterKey, the one spelling) → toCellKey. Used
+        // when an exit's geographic neighbor is not its target (out of
+        // bounds, or built by another branch of growth); stitchGrid
+        // honors this mapping in place of grid.neighborCell. Keyed by
+        // exit, not by side, so a region may carry any number of
+        // teleporters on one side — the top-down driver does (two or
+        // more on a side on 16 of the 81 regions of the APCalc seed-4
+        // world), and a side key kept only the last one written.
         this.teleporters = new Map();
     }
 
@@ -313,16 +323,21 @@ export class Grid {
         return this.isInBounds(next) ? next : null;
     }
 
-    setTeleporter(fromCell, fromSide, toCell) {
-        this.teleporters.set(`${cellKey(fromCell)}:${fromSide}`, cellKey(toCell));
+    setTeleporter(fromCell, exitId, toCell) {
+        this.teleporters.set(teleporterKey(fromCell, exitId), cellKey(toCell));
     }
 
-    /** Returns the target cell for a teleporter exit, or null. */
-    getTeleporter(fromCell, fromSide) {
-        const v = this.teleporters.get(`${cellKey(fromCell)}:${fromSide}`);
+    /** Returns the target cell for the teleporter exit `exitId` of `fromCell`, or null. */
+    getTeleporter(fromCell, exitId) {
+        const v = this.teleporters.get(teleporterKey(fromCell, exitId));
         if (!v) return null;
         const [gx, gy] = v.split(',').map(Number);
         return { gx, gy };
+    }
+
+    /** Drop the teleporter mapping of ONE exit (its same-side siblings keep theirs). */
+    deleteTeleporter(fromCell, exitId) {
+        return this.teleporters.delete(teleporterKey(fromCell, exitId));
     }
 
     allRegions() {
@@ -404,7 +419,10 @@ function _decodeGridValue(v) {
 /**
  * Serialize a live Grid to a plain JSON-safe object (see codec note above).
  * Region payloads keep their structure verbatim via tagged Map/typed-array
- * encoding; teleporter values are already plain cellKey strings.
+ * encoding; `teleporters` is the Map's entries verbatim — keys
+ * `"gx,gy:<exit id>"` (one per teleporter EXIT), values plain cellKey strings.
+ * No committed file carries a serialized grid (the envelope is transport
+ * between pipeline steps), so the key form has no migration.
  */
 export function serializeGrid(grid) {
     if (!grid || !(grid instanceof Grid)) {
@@ -569,9 +587,9 @@ export function stitchGrid(grid) {
             }
 
             // Teleporter exits resolve to an explicit target cell
-            // recorded by the growth driver; ordinary exits resolve
-            // via geographic adjacency.
-            const teleTarget = grid.getTeleporter(region.cell, side);
+            // recorded PER EXIT by the growth driver; ordinary exits
+            // resolve via geographic adjacency.
+            const teleTarget = grid.getTeleporter(region.cell, exit.id);
             const targetCell = teleTarget ?? grid.neighborCell(region.cell, side);
             const neighbor = targetCell ? grid.getRegion(targetCell) : null;
             exit.target_region = neighbor ? neighbor.region_id : null;
@@ -1261,7 +1279,7 @@ export function* growMazeGen(config) {
 
         grid.placeRegion(childCell, region);
         if (isTeleporter) {
-            grid.setTeleporter(parentCell, parentSide, childCell);
+            grid.setTeleporter(parentCell, parentExitPlaced.exit_id, childCell);
             stats.teleportersPlaced += 1;
         }
         if (assumeBidirectional) {
@@ -1959,7 +1977,8 @@ export function finalizeTopDown(layout) {
 
     // ----- Phase 3: teleporters and back-exits -----
     // Setting teleporter mappings was waiting on the substrate-assigned
-    // sides from phase 2; now we can stitch them in. Reset the per-run counter
+    // sides from phase 2 (an edge whose exit got no side is not placed); the
+    // mapping itself is keyed by the exit id. Reset the per-run counter
     // so re-running ③ (after a re-roll / layout edit re-realises ②) re-derives
     // it rather than accumulating; the back-exit add below is already guarded
     // against duplication, and setTeleporter overwrites, so ③ is idempotent.
@@ -1975,7 +1994,7 @@ export function finalizeTopDown(layout) {
         )?.connected_region;
         const targetCell = targetName ? cellsByName.get(targetName) : null;
         if (fromCell && exitInfo && targetCell) {
-            grid.setTeleporter(fromCell, exitInfo.side, targetCell);
+            grid.setTeleporter(fromCell, tele.exit_id, targetCell);
             stats.teleportersPlaced += 1;
         }
     }
@@ -4020,7 +4039,31 @@ const SPHERE_REBUILD_REFUSALS = Object.freeze({
      * it offers may still be refused here — at the press, by this sentence.
      */
     unreadablePayload: (sentence) => `rebuildEnvelopeFromRulesJson: ${sentence}`,
+    /**
+     * A teleporter node whose parent's payload carries no forward exit on the
+     * node's side pointing at it. The teleporter table is keyed by EXIT, so the
+     * rebuild has to name the exit; guessing one would re-point a sibling.
+     */
+    noParentExit: (parentId, side, childId) => `rebuildEnvelopeFromRulesJson: region `
+        + `${parentId} has no exit on side ${side} leading to ${childId}, so its `
+        + 'teleporter cannot be rebuilt',
 });
+
+/**
+ * The forward exit of a placed parent region that leaves on `node.side` for
+ * `node`'s region — the exit id that node's teleporter is keyed by (the sphere
+ * rebuild sets it, `truncateSphereWorld` deletes it). Matched on side AND
+ * target, so two teleporters on one side stay two. null when none.
+ */
+export function parentExitIdTowardChild(parentRegion, node) {
+    const exits = getRegionExits(parentRegion);
+    const entries = exits instanceof Map ? [...exits.entries()]
+        : (exits ?? []).map((e) => [e.exit_id, e]);
+    const childId = nodeRegionId(node);
+    const hit = entries.find(([, e]) => !e.isBackExit && e.side === node.side
+        && e.targetRegion === childId);
+    return hit ? hit[0] : null;
+}
 
 /**
  * ⛓⛓ **WHY THIS DOCUMENT CANNOT BE APPENDED TO, OR `null` WHEN IT CAN.** Pure,
@@ -4132,7 +4175,13 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
     for (const node of nodes) {
         if (node.isTeleporter && node.parent != null && node.cell) {
             const parent = nodes[node.parent];
-            if (parent?.cell) grid.setTeleporter(parent.cell, node.side, node.cell);
+            if (!parent?.cell) continue;
+            const exitId = parentExitIdTowardChild(grid.getRegion(parent.cell), node);
+            if (exitId == null) {
+                throw new Error(SPHERE_REBUILD_REFUSALS.noParentExit(
+                    nodeRegionId(parent), node.side, nodeRegionId(node)));
+            }
+            grid.setTeleporter(parent.cell, exitId, node.cell);
         }
     }
     const root = nodes.find((n) => n.parent == null);
@@ -5092,18 +5141,21 @@ export function reRollSphereRegion(grid, node, tree, {
     return grid.getRegion(specs.cell);
 }
 
-// Capture the grid's STITCHED forward links as position-independent triples
-// {fromId, side, toId} (region_id + side + target region_id). Back-exits are
-// skipped — they store their target directly and aren't re-stitched. Used to
-// rebuild teleporters after a layout move/swap.
+// Capture the grid's STITCHED forward links as position-independent records
+// {fromId, exitId, side, toId} (region_id + the exit's id + its side + target
+// region_id). Back-exits are skipped — they store their target directly and
+// aren't re-stitched. Used to rebuild teleporters after a layout move/swap; the
+// exit id is what keys the rebuilt teleporter, so two links leaving one side
+// stay two.
 function captureForwardLinks(grid) {
     const links = [];
     for (const region of grid.allRegions()) {
         const exits = getRegionExits(region);
-        const list = exits instanceof Map ? [...exits.values()] : (exits ?? []);
-        for (const e of list) {
+        const entries = exits instanceof Map ? [...exits.entries()]
+            : (exits ?? []).map((e) => [e.exit_id, e]);
+        for (const [exitId, e] of entries) {
             if (e.isBackExit || !e.targetRegion || !e.side) continue;
-            links.push({ fromId: region.region_id, side: e.side, toId: e.targetRegion });
+            links.push({ fromId: region.region_id, exitId, side: e.side, toId: e.targetRegion });
         }
     }
     return links;
@@ -5124,9 +5176,9 @@ function captureForwardLinks(grid) {
  * `false` (not adjacent on any side, so this law and the any-side
  * `cellsAreAdjacent` both call them teleporters).
  *
- * ⚠ It is a law about ONE exit. `Grid.teleporters` is keyed `cell:side`, so the
- * GRID can hold only one teleporter target per side — see the M2 note on
- * `relayoutSphereGrid`.
+ * It is a law about ONE exit, and `Grid.teleporters` is keyed by exit
+ * (`cell:exit_id`) to match: a region may hold any number of teleporters on one
+ * side — see the PIPELINE RELAYOUT R1 note on `relayoutSphereGrid`.
  */
 export function linkIsAdjacentOnSide(grid, fromCell, side, toCell) {
     const nb = grid.neighborCell(fromCell, side);
@@ -5135,34 +5187,36 @@ export function linkIsAdjacentOnSide(grid, fromCell, side, toCell) {
 
 /**
  * Re-derive the grid's connections after a layout edit (move/swap). The logical
- * links (which region connects to which, on which side) are position-independent
- * (region_id + side), so we: capture them, drop all teleporters, then for each
- * link set a teleporter when the endpoints AREN'T geographically adjacent on
- * that side (adjacency resolves itself), and finally stitchGrid re-derives every
- * forward exit's target_region (teleporters take precedence over adjacency, so a
- * moved region's exit resolves to its intended target even if some other region
- * now sits next to it). Back-exits keep their stored targets untouched.
+ * links (which exit of which region connects to which region, on which side) are
+ * position-independent (region_id + exit id + side), so we: capture them, drop
+ * all teleporters, then for each link set a teleporter ON THAT EXIT when the
+ * endpoints AREN'T geographically adjacent on its side (adjacency resolves
+ * itself), and finally stitchGrid re-derives every forward exit's target_region
+ * (a teleporter takes precedence over adjacency, so a moved region's exit
+ * resolves to its intended target even if some other region now sits next to
+ * it). Back-exits keep their stored targets untouched.
  *
- * ⚠ MEASURED (PRESET SIDECARS M2, 2026-09-11) — NOT changed here, recorded for
- * the pipeline's owner: the teleporter map is keyed `cell:side`, so a region with
- * TWO teleporter links leaving on one side keeps only the last target, and
- * stitchGrid then points BOTH exits at it. Given the committed documents'
- * forward exits as `exits_placed`, a NO-OP relayout re-targets 520 maze exits on
- * 154 regions (118 regions carry 2+ same-side teleporters — the procgen_topdown
- * worlds) and 2 omsi exits. Back-exits' `isTeleporter` is never updated either
- * (stitchGrid skips them). The APWorld editor's moves therefore do NOT write
- * through this function; they apply `linkIsAdjacentOnSide` per exit.
+ * ⛓ PIPELINE RELAYOUT R1 (2026-09-13) — THE RECORD OF THE FIX. The teleporter
+ * map used to be keyed `cell:side`, so a region with two links leaving one side
+ * kept only the last-written target, and stitchGrid pointed every exit on that
+ * side (a teleporter's adjacent sibling included) at it. Measured on the
+ * product's own gesture — the Procgen Pipeline's Move Region on the top-down
+ * APCalc world (seed 4, 10×10, 81 regions, 51 forward teleporter exits held in
+ * 26 map entries), moved (4,5)→(2,0) and back — it left 28 forward exits on 16
+ * regions pointing at the wrong region, 21 of them on regions the move never
+ * touched. Keyed by exit, the same round trip changes nothing
+ * (`topDownRelayoutIdentity.test.js`).
  */
 export function relayoutSphereGrid(grid) {
     const links = captureForwardLinks(grid);
     grid.clearTeleporters();
     const cellOf = new Map(grid.allRegions().map((r) => [r.region_id, r.cell]));
-    for (const { fromId, side, toId } of links) {
+    for (const { fromId, exitId, side, toId } of links) {
         const from = cellOf.get(fromId);
         const to = cellOf.get(toId);
         if (!from || !to) continue;
         if (linkIsAdjacentOnSide(grid, from, side, to)) continue; // adjacency resolves it
-        grid.setTeleporter(from, side, to);
+        grid.setTeleporter(from, exitId, to);
     }
     stitchGrid(grid);
     return grid;
@@ -5636,7 +5690,9 @@ function* realiseOneSphereNode(grid, node, tree, rng, {
     if (replace) grid.replaceRegion(cell, region);
     else grid.placeRegion(cell, region);
     if (isTeleporter) {
-        grid.setTeleporter(parentNode.cell, node.side, cell);
+        // buildNodeRealiserSpecs already refused (by name) a parent with no
+        // exit on node.side, so the placed exit is here whenever a parent is.
+        grid.setTeleporter(parentNode.cell, specs.parentExitPlaced.exit_id, cell);
         if (!replace) stats.teleportersPlaced += 1;
     }
 

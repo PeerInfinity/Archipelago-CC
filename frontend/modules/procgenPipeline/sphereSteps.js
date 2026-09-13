@@ -57,6 +57,7 @@ import {
     rebuildEnvelopeFromRulesJson,
     reRollSphereRegion,
     getRegionExits,
+    parentExitIdTowardChild,
 } from './procgenPipelineEngine.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import {
@@ -934,9 +935,11 @@ export function truncateSphereWorld(env, keepWaves) {
         if (grid && nd.cell && grid.hasRegion(nd.cell)) grid.removeRegion(nd.cell);
         if (grid && nd.isTeleporter && nd.parent != null) {
             const parent = nodes[nd.parent];
-            if (parent?.cell) {
-                grid.teleporters.delete(`${parent.cell.gx},${parent.cell.gy}:${nd.side}`);
-            }
+            const parentRegion = parent?.cell ? grid.getRegion(parent.cell) : null;
+            // Keyed by EXIT: drop only the parent exit that led to THIS node, so
+            // a surviving same-side sibling keeps its teleporter.
+            const exitId = parentRegion ? parentExitIdTowardChild(parentRegion, nd) : null;
+            if (exitId != null) grid.deleteTeleporter(parent.cell, exitId);
         }
     }
     env.nodes = nodes.slice(0, cut);

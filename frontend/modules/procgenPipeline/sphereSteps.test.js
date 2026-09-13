@@ -6,7 +6,7 @@ import '../bounceDemo/bounceDemoLibrary.js';
 import {
     growSpheres, growSpheresBatchedGen, buildRulesJson, compactSphereTree,
     rebuildEnvelopeFromRulesJson, growMaze, topDownFromRulesJson, getRegionExits,
-    sphereRebuildRefusal,
+    sphereRebuildRefusal, Grid,
 } from './procgenPipelineEngine.js';
 import { planSpheres } from './spherePlanner.js';
 import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
@@ -641,6 +641,35 @@ describe('appendSphere (envelope path)', () => {
             expect(n.wave).toBeLessThan(2);
             if (n.cell) expect(env.grow.grid.hasRegion(n.cell)).toBe(true);
         }
+    });
+
+    // PIPELINE RELAYOUT R1: the teleporter table is keyed by EXIT, so dropping a
+    // later-wave teleporter child deletes the parent exit that led to IT — a
+    // same-side sibling in a kept wave keeps its mapping (the old hand-built
+    // `cell:side` key deleted both).
+    it('truncateSphereWorld deletes a dropped teleporter child and keeps its same-side sibling', () => {
+        const grid = new Grid({ width: 5, height: 3 });
+        const fwd = (id, target) => [id, { exit_id: id, side: 'E', targetRegion: target, isTeleporter: true }];
+        grid.placeRegion({ gx: 0, gy: 0 }, {
+            region_id: 'Root', exits: new Map([fwd('toKept', 'Kept'), fwd('toDropped', 'Dropped')]),
+            exits_placed: [{ exit_id: 'toKept', side: 'E' }, { exit_id: 'toDropped', side: 'E' }],
+        });
+        grid.placeRegion({ gx: 4, gy: 0 }, { region_id: 'Kept', exits: new Map() });
+        grid.placeRegion({ gx: 4, gy: 2 }, { region_id: 'Dropped', exits: new Map() });
+        grid.setTeleporter({ gx: 0, gy: 0 }, 'toKept', { gx: 4, gy: 0 });
+        grid.setTeleporter({ gx: 0, gy: 0 }, 'toDropped', { gx: 4, gy: 2 });
+        const env = {
+            nodes: [
+                { index: 0, wave: 0, parent: null, cell: { gx: 0, gy: 0 }, region_id: 'Root' },
+                { index: 1, wave: 0, parent: 0, side: 'E', isTeleporter: true, cell: { gx: 4, gy: 0 }, region_id: 'Kept' },
+                { index: 2, wave: 1, parent: 0, side: 'E', isTeleporter: true, cell: { gx: 4, gy: 2 }, region_id: 'Dropped' },
+            ],
+            grow: { grid },
+        };
+        truncateSphereWorld(env, 1);
+        expect(grid.getTeleporter({ gx: 0, gy: 0 }, 'toDropped')).toBeNull();
+        expect(grid.getTeleporter({ gx: 0, gy: 0 }, 'toKept')).toEqual({ gx: 4, gy: 0 });
+        expect(grid.teleporters.size).toBe(1);
     });
 });
 

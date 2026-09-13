@@ -403,11 +403,20 @@ describe('wallOffUnusedExits', () => {
 });
 
 describe('Grid teleporters', () => {
-    it('records and resolves a teleporter mapping', () => {
+    it('records and resolves a teleporter mapping by exit id', () => {
         const g = new Grid({ width: 3, height: 3 });
-        g.setTeleporter({ gx: 0, gy: 0 }, 'E', { gx: 2, gy: 2 });
-        expect(g.getTeleporter({ gx: 0, gy: 0 }, 'E')).toEqual({ gx: 2, gy: 2 });
-        expect(g.getTeleporter({ gx: 0, gy: 0 }, 'N')).toBeNull();
+        g.setTeleporter({ gx: 0, gy: 0 }, 'toFar', { gx: 2, gy: 2 });
+        expect(g.getTeleporter({ gx: 0, gy: 0 }, 'toFar')).toEqual({ gx: 2, gy: 2 });
+        expect(g.getTeleporter({ gx: 0, gy: 0 }, 'toNear')).toBeNull();
+    });
+
+    it('deleteTeleporter drops ONE exit and keeps its sibling', () => {
+        const g = new Grid({ width: 3, height: 3 });
+        g.setTeleporter({ gx: 0, gy: 0 }, 'x1', { gx: 2, gy: 2 });
+        g.setTeleporter({ gx: 0, gy: 0 }, 'x2', { gx: 2, gy: 0 });
+        expect(g.deleteTeleporter({ gx: 0, gy: 0 }, 'x1')).toBe(true);
+        expect(g.getTeleporter({ gx: 0, gy: 0 }, 'x1')).toBeNull();
+        expect(g.getTeleporter({ gx: 0, gy: 0 }, 'x2')).toEqual({ gx: 2, gy: 0 });
     });
 });
 
@@ -459,7 +468,7 @@ describe('stitchGrid (teleporters)', () => {
             extracted_rules: { exits: [] },
             exits_placed: [],
         });
-        grid.setTeleporter({ gx: 0, gy: 0 }, 'E', { gx: 4, gy: 0 });
+        grid.setTeleporter({ gx: 0, gy: 0 }, 'exit', { gx: 4, gy: 0 });
 
         stitchGrid(grid);
 
@@ -467,6 +476,42 @@ describe('stitchGrid (teleporters)', () => {
         expect(a.extracted_rules.exits[0].target_region).toBe('B');
         // isTeleporter flag rides on the world.exits entry too.
         expect(a.exits.get('exit').isTeleporter).toBe(true);
+    });
+
+    // PIPELINE RELAYOUT R1: the table is keyed by EXIT. Two teleporters leaving
+    // one side of one cell for two different regions — the top-down driver's
+    // shape — must each resolve to their own target (a side key kept only the
+    // last one written and pointed both exits at it).
+    it('resolves TWO same-side teleporters from one cell to their own targets', () => {
+        const grid = new Grid({ width: 5, height: 3 });
+        const exit = (id, y) => [id, { exit_id: id, x: 5, y, side: 'E', targetRegion: null }];
+        grid.placeRegion({ gx: 0, gy: 0 }, {
+            region_id: 'A',
+            exits: new Map([exit('toB', 1), exit('toC', 3)]),
+            playable_payload: {},
+            extracted_rules: { exits: [
+                { id: 'toB', position: { x: 5, y: 1 }, target_region: null },
+                { id: 'toC', position: { x: 5, y: 3 }, target_region: null },
+            ] },
+            exits_placed: [
+                { exit_id: 'toB', side: 'E', tile_position: { x: 5, y: 1 } },
+                { exit_id: 'toC', side: 'E', tile_position: { x: 5, y: 3 } },
+            ],
+        });
+        const stub = (id) => ({ region_id: id, exits: new Map(), playable_payload: {},
+            extracted_rules: { exits: [] }, exits_placed: [] });
+        grid.placeRegion({ gx: 4, gy: 0 }, stub('B'));
+        grid.placeRegion({ gx: 4, gy: 2 }, stub('C'));
+        grid.setTeleporter({ gx: 0, gy: 0 }, 'toB', { gx: 4, gy: 0 });
+        grid.setTeleporter({ gx: 0, gy: 0 }, 'toC', { gx: 4, gy: 2 });
+
+        stitchGrid(grid);
+
+        const a = grid.getRegion({ gx: 0, gy: 0 });
+        expect(a.extracted_rules.exits.map((e) => e.target_region)).toEqual(['B', 'C']);
+        expect(a.exits.get('toB').targetRegion).toBe('B');
+        expect(a.exits.get('toC').targetRegion).toBe('C');
+        expect(grid.teleporters.size).toBe(2);
     });
 
     it('does not flag normal adjacent exits as teleporters', () => {
