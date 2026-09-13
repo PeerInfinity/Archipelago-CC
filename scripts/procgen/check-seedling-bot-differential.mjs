@@ -18,6 +18,9 @@
  *   default        replay + compare against the committed streams
  *   --record       write the streams as ORACLE recordings (expectations/<name>.json)
  *   --only=a,b     restrict the sweep to these fixture names
+ *   --shard=i/n    replay shard i (1-based) of the tier's n-way partition (H3)
+ *   --shard-plan=n print the tier's n-way partition and exit (no browser, no
+ *                  lock); add --json for the CI plan job
  *
  * `--record` is the only thing in the repo allowed to write a
  * non-provisional expectation. `fixtures/regenerate.mjs` writes only
@@ -215,6 +218,90 @@ if (!CATEGORY_TIER && !Object.keys(TIERS).includes(TIER)) {
     process.exit(1);
 }
 
+const {
+    EXPECTATIONS_DIR, fixtureNames, loadExpectation, loadTape,
+} = await import(join(REPO, 'frontend/modules/seedlingDemo/fixtures/index.js'));
+const {
+    describePartition, describeShard, parseShardArg, parseShardCount, partitionTapes,
+} = await import(join(HERE, 'fullTierShards.js'));
+
+/**
+ * FAST is every tape at or below this many ticks — see `--tier=fast|full`
+ * below. ⚠ Declared up here because `tierRoster` reads it before the lock.
+ */
+const FAST_TIER_MAX_TICKS = 600;
+
+/**
+ * ⛓ THE TIER'S ROSTER — ONE SPELLING, read by the run below AND by the shard
+ * plan above the lock. Two spellings would let the plan job partition one
+ * roster while each shard job replays another.
+ */
+function tierRoster(allNames) {
+    if (TIER === 'fast') return allNames.filter((n) => loadTape(n).tick_count <= FAST_TIER_MAX_TICKS);
+    if (CATEGORY_TIER) return tapesInTiers(TIER_LIST, allNames);
+    if (TIER === 'gate' || TIER === 'legacy') return tapesInTier(TIER, allNames);
+    return allNames;
+}
+
+/**
+ * ⛓⛓ H3 — `--shard=i/n` AND `--shard-plan=<n> [--json]` (⚖ user 2026-09-13:
+ * split the tier across shards, 10 by default, the long tapes not all on one).
+ *
+ * The tier's roster is priced per tape and packed longest-first into EXACTLY
+ * `n` shards (`fullTierShards.js`); `--shard=i/n` replays shard `i` only, and
+ * `--shard-plan=<n>` prints the whole partition and exits — no browser, no
+ * lock, no wasm — which is what the CI plan job runs. Parsed and refused HERE,
+ * above the lock, for the reason `--tier=` is.
+ *
+ * ⛔ REFUSED WITH `--only=`: that is a second partition of the same roster, and
+ * a shard that quietly intersected the two would replay neither.
+ * ⛓ A shard DEFERS the cross-tape acceptance findings and the live bot-driver
+ * task to the merge (`--resume` over every shard's checkpoint): they need the
+ * whole roster's replays, and must run once.
+ */
+const SHARD_ARG = process.argv.filter((a) => a.startsWith('--shard='))
+    .map((a) => a.slice('--shard='.length)).pop();
+const SHARD_PLAN_ARG = process.argv.filter((a) => a.startsWith('--shard-plan='))
+    .map((a) => a.slice('--shard-plan='.length)).pop();
+const SHARD_JSON = process.argv.includes('--json');
+let SHARD = null;
+if (SHARD_ARG !== undefined || SHARD_PLAN_ARG !== undefined) {
+    let shardError = null;
+    let count;
+    if (process.argv.some((a) => a.startsWith('--only='))) {
+        shardError = `--${SHARD_ARG !== undefined ? 'shard' : 'shard-plan'} is refused together with --only=: `
+            + 'two partitions of one roster. Shard the tier, or name the tapes — not both.';
+    } else if (SHARD_ARG !== undefined && SHARD_PLAN_ARG !== undefined) {
+        shardError = '--shard= and --shard-plan= are refused together: one runs a shard, the other '
+            + 'prints the plan and exits.';
+    } else {
+        try {
+            if (SHARD_ARG !== undefined) SHARD = parseShardArg(SHARD_ARG);
+            count = SHARD ? SHARD.count : parseShardCount(SHARD_PLAN_ARG);
+        } catch (e) {
+            shardError = e.message;
+        }
+    }
+    if (shardError) {
+        console.error(shardError);
+        process.exit(1);
+    }
+    const roster = tierRoster(fixtureNames());
+    const plan = partitionTapes(roster.map((name) => ({ name, ticks: loadTape(name).tick_count })), count);
+    if (SHARD_PLAN_ARG !== undefined) {
+        if (SHARD_JSON) {
+            console.log(JSON.stringify({
+                tier: TIER, ...plan, matrix: plan.shards.map((s) => s.shard),
+            }));
+        } else {
+            for (const line of describePartition(plan, { tier: TIER })) console.log(line);
+        }
+        process.exit(0);
+    }
+    SHARD.tapes = new Set(plan.shards[SHARD.index - 1].tapes);
+    for (const line of describeShard(plan, SHARD.index, { tier: TIER })) console.log(line);
+}
+
 // ⛓ H2: the lock kind follows the channel — `--win` drives Windows Chrome, the
 // default is this machine's headless Chromium.
 takeBoxLockOrExit({ name: 'check-seedling-bot-differential.mjs',
@@ -263,11 +350,8 @@ const {
     diffObservationStreams, gameStreamFromDrain, gameVisibleTape,
     serializeObservationStream,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
-const {
-    EXPECTATIONS_DIR, fixtureNames, loadExpectation, loadTape,
-} = await import(join(REPO, 'frontend/modules/seedlingDemo/fixtures/index.js'));
-// ⛓ `fixtures/tiers.js` is imported ABOVE the box lock — `--tier=` is
-// validated before anything queues for the GPU.
+// ⛓ `fixtures/tiers.js` and `fixtures/index.js` are imported ABOVE the box
+// lock — `--tier=` and `--shard=` are validated before anything queues for the GPU.
 // ⛓ R7 slice 1: the seam latch's consumer, DERIVED by mapping the signature
 // over the game's `botSeam()` envelope. The findings function lives beside
 // the signature it maps, so a row added there cannot go unreported here.
@@ -547,9 +631,9 @@ function readPayload(name) {
  * a fast tier that silently stops covering the thing you just wrote.
  * `feedback_coincidental_predicate_rots`, avoided by construction.
  */
-// ⛓ `--tier=` is parsed and validated above the box lock (R9 slice CAT).
-/** A tape longer than this is FULL-tier only. The R1 segments start at 910. */
-const FAST_TIER_MAX_TICKS = 600;
+// ⛓ `--tier=` is parsed and validated above the box lock (R9 slice CAT), and
+// `FAST_TIER_MAX_TICKS` (a tape longer than it is FULL-tier only; the R1
+// segments started at 910) is declared there since H3 — `tierRoster` reads it.
 const WIN_SCRATCH_WSL = '/mnt/c/playwright';
 const WIN_SCRATCH_DOS = 'C:\\playwright';
 const WIN_PY = '/mnt/c/Windows/py.exe';
@@ -2106,8 +2190,8 @@ try {
 
     let names = ONLY.size > 0 ? allNames.filter((n) => ONLY.has(n)) : allNames;
     if (TIER === 'fast' && ONLY.size === 0) {
-        const deferred = names.filter((n) => loadTape(n).tick_count > FAST_TIER_MAX_TICKS);
-        names = names.filter((n) => loadTape(n).tick_count <= FAST_TIER_MAX_TICKS);
+        names = tierRoster(allNames);
+        const deferred = allNames.filter((n) => !names.includes(n));
         // ⚠ NAMED, NOT SILENT. A tier that quietly dropped tapes would read
         // as "everything passed" — the same shape as a truncated roster
         // reporting green. Say what was not run and how to run it.
@@ -2120,7 +2204,7 @@ try {
          * "everything passed", which is the same shape as a truncated roster
          * reporting green.
          */
-        names = tapesInTiers(TIER_LIST, allNames);
+        names = tierRoster(allNames);
         const cats = assertTiersComplete(allNames).categories;
         const notRun = ROSTER_CATEGORIES.filter((c) => !TIER_LIST.includes(c));
         console.log(`TIER ${TIER_LIST.join(' + ')}: ${names.length} tape(s) of `
@@ -2128,7 +2212,7 @@ try {
             + `${notRun.map((c) => `${c} (${cats[c].length})`).join(', ') || 'nothing'}`
             + `. Run them with --tier=${notRun.join(',') || 'full'} or --tier=full.`);
     } else if ((TIER === 'gate' || TIER === 'legacy') && ONLY.size === 0) {
-        names = tapesInTier(TIER, allNames);
+        names = tierRoster(allNames);
         const skipped = allNames.filter((n) => !names.includes(n));
         console.log(`TIER ${TIER}: ${names.length} tape(s); NOT RUN HERE `
             + `(run them with --tier=${TIER === 'gate' ? 'legacy' : 'gate'} or `
@@ -2148,6 +2232,19 @@ try {
         }
     } else if (ONLY.size === 0) {
         console.log(`TIER full: ${names.length} tape(s), every one of them`);
+    }
+    if (SHARD) {
+        // ⛓ H3 — the shard's slice of the tier, in roster order. The plan
+        // above the lock partitioned `tierRoster(fixtureNames())`, the same
+        // roster as `names` here; a tape it placed that this run does not
+        // hold would be a tape no shard replays, so it is a harness error.
+        const missing = [...SHARD.tapes].filter((n) => !names.includes(n));
+        if (missing.length) throw new Error(`shard ${SHARD.index}/${SHARD.count} names tapes outside the tier: ${missing.join(', ')}`);
+        names = names.filter((n) => SHARD.tapes.has(n));
+        console.log(`SHARD ${SHARD.index}/${SHARD.count}: replaying ${names.length} tape(s) of the tier; `
+            + 'DEFERRED to the merge (--resume over every shard\'s checkpoint): the cross-tape '
+            + 'acceptance findings (R2, R3, R4, R5, playthrough chains) and the live bot-driver '
+            + 'task — they need every tape\'s replay in one process, and run once.');
     }
     /** Every tape this run replayed, for the cross-tape R1 checks. */
     const replayed = new Map();
@@ -2484,9 +2581,15 @@ try {
         });
     }
 
-    checkAcceptance(replayed);
+    if (!SHARD) {
+        // ⛓ H3 — named, so a merge's log says it ran what its shards deferred.
+        console.log(`ROSTER-WIDE: the cross-tape acceptance findings over ${replayed.size} `
+            + `replayed tape(s)${RESUME ? ` (${reused.length} from the checkpoint)` : ''}`);
+        checkAcceptance(replayed);
+    }
 
-    if (!RECORD && ONLY.size === 0) {
+    if (!RECORD && ONLY.size === 0 && !SHARD) {
+        console.log('ROSTER-WIDE: the live bot-driver task');
         // ── The live bot-driver task (v2 slice 4) ────────────────────────
         // Targets in, tape synthesized by `botDriverV2` AT RUN TIME, and
         // every claim asserted from the GAME's own drained observations —

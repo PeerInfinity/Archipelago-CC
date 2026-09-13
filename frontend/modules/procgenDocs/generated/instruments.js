@@ -2363,6 +2363,12 @@ export const INSTRUMENTS = frz({
             "flags": [
                 {
                     "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
                         "startsWith"
                     ],
                     "name": "only"
@@ -2378,6 +2384,18 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "resume"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "shard"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "shard-plan"
                 },
                 {
                     "how": [
