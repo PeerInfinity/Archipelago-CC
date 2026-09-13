@@ -97,11 +97,16 @@ export function getCustomData() { return _customData; }
  * payload shape varies slightly between substrates; check both
  * exitName and exit_id key names so this works with both engine-
  * native and bridge-native exit ids.
+ *
+ * ⛓ PRESET SIDECARS G2a: `world` is the DESERIALIZED world (procgenPlayer's
+ * warehouse), whose `exits` is a Map — the array-only guard that stood here
+ * returned early on every region, so no procgen exit ever reached the compass.
  */
 function captureExitSidesFromSidecar(regionName, world) {
-    if (!regionName || !world || !Array.isArray(world.exits)) return;
+    const exits = world?.exits instanceof Map ? [...world.exits.values()] : world?.exits;
+    if (!regionName || !Array.isArray(exits)) return;
     const map = new Map();
-    for (const exit of world.exits) {
+    for (const exit of exits) {
         const name = exit?.exitName ?? exit?.exit_id;
         const side = exit?.side;
         if (name && (side === 'N' || side === 'E' || side === 'S' || side === 'W')) {

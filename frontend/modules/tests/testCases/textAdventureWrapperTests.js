@@ -33,6 +33,44 @@ import {
 const PROCGEN_RULES_PATH = './presets/procgen_maze/AP_1/AP_1_rules.json';
 
 /**
+ * The fresh shuffled-spiral scenario (6 text_adventure + 3 maze, text_adventure
+ * start) — shared by the fresh-procgen location row and the compass row, so the
+ * two drive the same generated world.
+ */
+const TASW_SPIRAL = Object.freeze({
+    itemPool: Object.freeze({ victory: 1, key_red: 1, key_green: 1, key_blue: 1 }),
+    obstaclePool: Object.freeze({ door_red: 1, door_green: 1, door_blue: 1 }),
+    substrateQuotas: Object.freeze({ text_adventure: 6, maze: 3 }),
+    seed: 'tasw-test-1',
+});
+
+/** Generate + build the TASW_SPIRAL world: `{grid, startCell, stats, rulesJson}`. */
+function buildTaswSpiralRules(driver) {
+    const { grid, startCell, stats } = arrangeShuffledSpiral({
+        regionSize: { width: 7, height: 7 },
+        itemPool: { ...TASW_SPIRAL.itemPool },
+        obstaclePool: { ...TASW_SPIRAL.obstaclePool },
+        seed: TASW_SPIRAL.seed,
+        regionParams: {},
+        growthParams: {
+            substrateQuotas: { ...TASW_SPIRAL.substrateQuotas },
+            maxItemsPerRegion: 2,
+            startSubstrate: 'text_adventure',
+        },
+        hazardOpts: {},
+    });
+    const rulesJson = buildRulesJson(grid, {
+        startCell,
+        seed: TASW_SPIRAL.seed,
+        enableLoopMode: false,
+        regionXpEffect: 'cost',
+        completionConditionItem: 'victory',
+        procgenMetadata: { driver, stop_reason: stats.stopReason },
+    });
+    return { grid, startCell, stats, rulesJson };
+}
+
+/**
  * Find any uncollected location in the loaded rules and return
  * { locationName, regionName } so the test doesn't hard-code names
  * that might change between presets.
@@ -398,37 +436,9 @@ registerTest({
 async function locationCheckFreshProcgen(testController) {
     testController.log('Generating fresh shuffled-spiral rules…');
 
-    const itemPool = {
-        victory: 1,
-        key_red: 1,
-        key_green: 1,
-        key_blue: 1,
-    };
-    const obstaclePool = {
-        door_red: 1,
-        door_green: 1,
-        door_blue: 1,
-    };
-    const substrateQuotas = { text_adventure: 6, maze: 3 };
-    const seed = 'tasw-test-1';
-
-    let grid, startCell, stats, pool;
+    let stats, rulesJson;
     try {
-        const result = arrangeShuffledSpiral({
-            regionSize: { width: 7, height: 7 },
-            itemPool: { ...itemPool },
-            obstaclePool: { ...obstaclePool },
-            seed,
-            regionParams: {},
-            growthParams: {
-                substrateQuotas,
-                maxItemsPerRegion: 2,
-                startSubstrate: 'text_adventure',
-            },
-            hazardOpts: {},
-        });
-        grid = result.grid; startCell = result.startCell;
-        stats = result.stats; pool = result.pool;
+        ({ stats, rulesJson } = buildTaswSpiralRules('shuffled-spiral-test'));
     } catch (e) {
         testController.log(`arrangeShuffledSpiral threw: ${e.message}`, 'error');
         testController.reportCondition('generated shuffled-spiral grid', false);
@@ -437,14 +447,6 @@ async function locationCheckFreshProcgen(testController) {
     testController.log(`Generated grid: ${stats.regionsPlaced} regions, stop=${stats.stopReason}`);
     testController.reportCondition('generated shuffled-spiral grid', true);
 
-    const rulesJson = buildRulesJson(grid, {
-        startCell,
-        seed,
-        enableLoopMode: false,
-        regionXpEffect: 'cost',
-        completionConditionItem: 'victory',
-        procgenMetadata: { driver: 'shuffled-spiral-test', stop_reason: stats.stopReason },
-    });
     testController.reportCondition('built rules.json', !!rulesJson);
 
     // Mirror the Load-into-frontend button flow.
@@ -786,6 +788,131 @@ registerTest({
                + 'pre-M3b pass-through regression, which asserted the retired '
                + 'free-play default.',
     testFunction: locationCheckLoopModePassThrough,
+    category: 'textAdventureSubstrateWrapper',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+/**
+ * ⛓ PRESET SIDECARS G2a — **THE COMPASS GRID RENDERS A PROCGEN ROOM'S SIDES.**
+ *
+ * The bridge's primary world is built from `staticData.regions`, which carries
+ * no side; a procgen room's sides live only in its sidecar payload, and the
+ * bridge re-applies them on `textAdventure:loadRegion`. That event carries the
+ * DESERIALIZED world (`exits: Map`) — and until G2a the bridge's read guarded
+ * `Array.isArray(world.exits)`, so it returned early on every region, no exit
+ * carried a side, and the engine fell back to its flat list (`useCompass`
+ * false). This row generates the TASW_SPIRAL world, mounts the wrapper, and
+ * asserts, against the payload the document itself carries:
+ *   1. the engine rendered the compass grid (`.tae-exits-grid`);
+ *   2. every exit link of the current room sits in the cell of its payload
+ *      `side` — none in the centre cell, none missing;
+ *   3. a click on a sided, accessible exit moves the player to that exit's
+ *      `targetRegion`.
+ */
+async function compassGridRendersProcgenSides(testController) {
+    let rulesJson;
+    try {
+        ({ rulesJson } = buildTaswSpiralRules('shuffled-spiral-compass-test'));
+    } catch (e) {
+        testController.log(`building the spiral threw: ${e.message}`, 'error');
+        testController.reportCondition('generated shuffled-spiral rules', false);
+        return testController.getOverallResult();
+    }
+    testController.reportCondition('generated shuffled-spiral rules', true);
+    const sidecars = rulesJson.preset_sidecars?.['1'] ?? {};
+
+    const { getGameStateSingleton } = await import('../../gameState/singleton.js');
+    const gs = getGameStateSingleton();
+    // A prior row may have left loop mode on, which intercepts region moves.
+    if (gs?.isLoopModeActive) gs.setLoopModeActive(false);
+
+    const rulesLoadedPromise = testController.waitForEvent('stateManager:rulesLoaded', 8000);
+    testController.eventBus.publish('files:jsonLoaded', {
+        jsonData: rulesJson,
+        selectedPlayerId: '1',
+        sourceName: 'procgenPipeline-test',
+    });
+    await rulesLoadedPromise;
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+    testController.reportCondition('rules loaded into frontend', true);
+
+    testController.eventBus.publish('ui:activatePanel', {
+        panelId: 'textAdventureSubstrateWrapperPanel',
+    });
+
+    const iframeDoc = () => document.querySelector('iframe.tasw-iframe')?.contentDocument ?? null;
+    const currentRoom = () => {
+        const region = gs.getCurrentRegion();
+        return sidecars[region]?.substrate === 'text_adventure' ? region : null;
+    };
+    const inRoom = await testController.pollForCondition(
+        () => currentRoom() !== null && iframeDoc()?.querySelector('.tae-actions') !== null,
+        'the wrapper rendered a text-adventure room of the generated world',
+        15000, 300,
+    );
+    testController.reportCondition('the wrapper rendered a text-adventure room of the generated world', !!inRoom);
+    if (!inRoom) return testController.getOverallResult();
+    const region = currentRoom();
+    const payloadExits = sidecars[region].playable_payload.exits;
+    const sideOf = new Map(payloadExits.map((e) => [e.exitName ?? e.exit_id, e.side]));
+    testController.log(`room ${region}: payload sides ${JSON.stringify([...sideOf])}`);
+
+    const grid = await testController.pollForCondition(
+        () => iframeDoc()?.querySelector('.tae-exits-grid') !== null,
+        'the engine rendered the compass grid (useCompass)',
+        8000, 200,
+    );
+    testController.reportCondition('the engine rendered the compass grid (useCompass)', !!grid);
+    if (!grid) return testController.getOverallResult();
+
+    // Discovery mode hides an exit until explored; explore until every exit
+    // of the room is a real link.
+    const exitLinks = () => [...iframeDoc().querySelectorAll('.tae-exits-grid [data-exit-id]')];
+    for (let i = 0; i < 20 && exitLinks().length < payloadExits.length; i++) {
+        const explore = iframeDoc().querySelector('[data-action="explore"]');
+        if (!explore) break;
+        explore.dispatchEvent(new explore.ownerDocument.defaultView.MouseEvent('click', { bubbles: true, cancelable: true }));
+        await new Promise((r) => setTimeout(r, 200));
+    }
+    const links = exitLinks();
+    testController.assertEqual(`every exit of ${region} is a link in the grid`, payloadExits.length, links.length);
+
+    const misplaced = [];
+    for (const link of links) {
+        const cell = link.closest('.tae-exits-cell');
+        const cellSide = [...(cell?.classList ?? [])]
+            .map((c) => c.match(/^tae-exits-cell-([a-z])$/)?.[1]?.toUpperCase())
+            .find(Boolean);
+        const want = sideOf.get(link.dataset.exitId);
+        if (!want || cellSide !== want) misplaced.push(`${link.dataset.exitId}: cell ${cellSide} ≠ payload ${want}`);
+    }
+    testController.assertEqual(`every exit link of ${region} sits in its payload side's cell`, '', misplaced.join('; '));
+
+    const target = links.find((l) => l.classList.contains('tae-link-accessible')
+        && sidecars[region].playable_payload.exits.some((e) => (e.exitName ?? e.exit_id) === l.dataset.exitId));
+    testController.reportCondition('a sided accessible exit to click', !!target);
+    if (!target) return testController.getOverallResult();
+    const targetRegion = payloadExits.find((e) => (e.exitName ?? e.exit_id) === target.dataset.exitId).targetRegion;
+    testController.log(`clicking ${target.dataset.exitId} (${sideOf.get(target.dataset.exitId)}) → ${targetRegion}`);
+    target.dispatchEvent(new target.ownerDocument.defaultView.MouseEvent('click', { bubbles: true, cancelable: true }));
+    const moved = await testController.pollForCondition(
+        () => gs.getCurrentRegion() === targetRegion,
+        `the click moved the player to ${targetRegion}`,
+        8000, 200,
+    );
+    testController.assertEqual(`the click on a sided exit moved the player to ${targetRegion}`, true, !!moved);
+
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'tasw-compass-grid-renders-procgen-sides',
+    name: 'Wrapper: a generated text-adventure room renders its exits on the compass grid by side',
+    description: 'Generates the shuffled-spiral world, mounts the wrapper, and asserts the engine '
+               + 'rendered the compass grid with every exit of the current room in the cell of its '
+               + 'sidecar payload side, then clicks a sided exit and asserts the move. Proves the '
+               + 'bridge reads the deserialized world\'s exit Map (G2a).',
+    testFunction: compassGridRendersProcgenSides,
     category: 'textAdventureSubstrateWrapper',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
