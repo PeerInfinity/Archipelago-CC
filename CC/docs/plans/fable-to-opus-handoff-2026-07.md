@@ -14412,6 +14412,16 @@ probe that dirties the tree aborts the write via assertTreeUnmoved; `rerecord-se
 `--win`. F1's session ENDED by pid. The primary tree's submodule checkout repacked (`git gc`, no history change).
 **⛓ The arc's ladder is EMPTY again: R2, H2, H3, S1, F1 shipped; W3 delayed on the pins. REPLAN with the user.**
 
+**Planner fix-ups after F1 (2026-09-13, from `wt-b6`):** `b373cc35a7` — F1's `standingValues.test.js` row found its
+"priced NEW" fixture off the LIVE bank (`!bank[key]`, true only BETWEEN writes; red on the sidecars planner's bank
+commit) → a synthetic bank copy minus one priced key, 27/27. `29f7aa830f` — `unittests_frontend.yml` triggers on
+`scripts/procgen/standing-values.json` (a bank-only push, `d4f7a31e43`, ran NO unit tests though the suite reads the
+bank — the sixth "trigger narrower than what the suite reads"). **CI @ `29f7aa830f` (run 34753168027): vitest
+465/14064, 0 failed** — covers the bank. Two F2 items found by that bank write: `seedlingDriver.js` resolves Python at
+`<tree>/.venv/bin/python` (worktrees have no venv; H2's save-stamp / vanilla-manifest rows restored verbatim, to be
+re-written after the fix); the writer BANKS a MOVED row's red (F1's guard covers NEW rows only). The primary tree's
+submodule checkout repacked 133 → 31 MB (`git gc`, no history change); R2's stray :8130 server stopped.
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
