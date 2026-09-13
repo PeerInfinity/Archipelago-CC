@@ -14524,6 +14524,25 @@ corrected by its planner (arc-local labels collide — sessions are named by the
 **⛓ Nothing queued: R2, H2, H3, S1, F1, F2, WT1, C1 shipped; W3 delayed on the pins. Next = the user (the pins
 update that unblocks the shed is the one candidate left in this arc).**
 
+**⚖ USER 2026-09-13: *"Ok, let's make the change."* (C1's ⚖ OPEN 2) — C2 LAUNCHED + COMPLETE + VERIFIED 2026-09-13 (planner
+`seedling-headless-planning-3`'s reads: one commit `e306539a38` on origin (rebased onto the sidecars cleanup merge
+`5b2c3f3878`), plan §20.4.1, the pin file byte-identical, driver rows 5 → 6, CI at `e306539a38` run 34782446061 vitest
+471/14162 0 failed + slow 217/217, owed gate ALL PASS, tree level, no lock, no server).** **Built:** a module-private
+`headlessPythonOrExit()` in `seedlingDriver.js` — `generatePythonOrExit`'s shape verbatim (catch → print → exit 2, the
+roster's "refused, nothing measured" code) — as `driverChannel`'s default (`python ?? headlessPythonOrExit()`), still
+above `mkdtempSync` so a refusal leaves no temp dir; `headlessPython` keeps throwing for its rows; ONE site covers the
+four driver-backed gates. Row: a real child `.mjs` under `SEEDLING_PYTHON=/bin/false` with a fresh TMPDIR → exit 2, the
+refusal names the requirements file, no PASS, no stack frame, TMPDIR empty (mutant first: red `expected 1 to be 2`).
+Live: pin → 1.55.0, BEFORE exit 1 + a 5-frame stack, AFTER exit 2 no stack no browser; pin reverted (md5 checked) →
+save-stamp 21/0. **Brief wrong:** the refusal takes 0.41 s, not 1.5; green save-stamp is 28 s, not ≈68; the refusal
+prints after the gate's lock take and its three cheap set-check PASS lines (gate text, unchanged). **⚖ OPEN (§20.4.1):**
+the channel is built after those cheap PASS lines; the headless channel never removes its `/tmp/seedling-driver-*` dir
+on success — 151 accumulated since H2 (a small cleanup if wanted). No trap minted. C2's session ENDED by pid. Box
+traffic: the sidecars cleanup merge (7 commits) and its docs close cleared while C2 held nothing; C2 rebased over them.
+⚠ Two slices in a row (WT1, C2) went IDLE on a CI wait despite the brief saying `--wait` — the planner watched CI and
+relayed the verdict both times; the next brief template says "the wait is a RUNNING command, never a paused turn".
+**⛓ Nothing queued: R2, H2, H3, S1, F1, F2, WT1, C1, C2 shipped; W3 delayed on the pins. Next = the user.**
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
