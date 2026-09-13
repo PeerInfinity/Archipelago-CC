@@ -26,7 +26,7 @@
  *   ⇒ deleting this one line is how a later slice adopts it into CI.
  */
 import { chromium } from 'playwright';
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -50,10 +50,28 @@ const HOST = (process.argv.find((a) => a.startsWith('--host='))?.slice(7)
     ?? 'http://localhost:8000').replace(/\/$/, '');
 
 const SRC_PATH = '/tmp/td-verify-source.json';
-// A small cyclic source: Menu → Hub → {RoomA ⇄ RoomB}. Every NON-Menu region has
-// at least one forward exit so the bounce (braid) substrate — which requires ≥1
-// exit spec — can realise ANY region. (A leaf with no exits would make a random
-// bounce assignment throw "braid: at least one exit spec required".)
+// A small cyclic source: Menu → Hub → {RoomA ⇄ RoomB}, and RoomB → Spoke1..4.
+// Every NON-Menu region has at least one forward exit so the bounce
+// (braid) substrate — which requires ≥1 exit spec — can realise ANY region. (A
+// leaf with no exits would make a random bounce assignment throw "braid: at
+// least one exit spec required".)
+//
+// ⛓ PIPELINE RELAYOUT R1 — THE FOUR SPOKES ARE WHAT MAKES PHASE D's IDENTITY
+// ASSERTION ABLE TO FAIL. Without them no region carries a teleporter and
+// another exit on one side, and a move + move back re-targets nothing even
+// when `Grid.teleporters` is keyed `cell:side` (measured in this browser gate:
+// the four-region source stayed green under that mutant). With them — seed 1,
+// this mix, the grid the panel sizes off the source (4×4), after Phase C's flip
+// — RoomB holds TWO teleporters (to RoomA, to Spoke4) and an adjacent exit (to
+// Spoke1) on side E, and the side key re-points two of them. Phase D asserts
+// that premise before it moves anything, so a layout change that loses it reds
+// by name instead of going vacuous. The shape was searched headless (the same
+// panel inputs) over RoomA/RoomB × 1..6 spokes: every smaller one stays green
+// under the mutant, and the grid the panel sizes grows with the region count, so
+// a spoke count measured on another grid size does not carry over.
+// ⚠ The spokes do not hang off the Hub: Phase C flips the FIRST realised
+// region's substrate (the Hub) to bounce or back, and a bounce room cannot take
+// the extra exits ("bounce zone 'Hub': unknown exit side").
 const SOURCE = {
     start_regions: { '1': { default: ['Menu'] } },
     assume_bidirectional_exits: true,
@@ -70,7 +88,19 @@ const SOURCE = {
                 locations: [{ name: 'Hub_Chest', item: { name: 'key_red' } }],
             },
             RoomA: { name: 'RoomA', exits: [{ name: 'A_toB', connected_region: 'RoomB', access_rule: { rule: 'True_' } }], locations: [{ name: 'A_Victory', item: { name: 'Victory' } }] },
-            RoomB: { name: 'RoomB', exits: [{ name: 'B_toA', connected_region: 'RoomA', access_rule: { rule: 'Has', args: { item_name: 'key_red' } } }], locations: [{ name: 'B_chest', item: { name: 'key_blue' } }] },
+            RoomB: {
+                name: 'RoomB',
+                exits: [
+                    { name: 'B_toA', connected_region: 'RoomA', access_rule: { rule: 'Has', args: { item_name: 'key_red' } } },
+                    ...[1, 2, 3, 4].map((i) => ({ name: `toSpoke${i}`, connected_region: `Spoke${i}`, access_rule: { rule: 'True_' } })),
+                ],
+                locations: [{ name: 'B_chest', item: { name: 'key_blue' } }],
+            },
+            ...Object.fromEntries([1, 2, 3, 4].map((i) => [`Spoke${i}`, {
+                name: `Spoke${i}`,
+                exits: [{ name: `Spoke${i}_back`, connected_region: 'RoomB', access_rule: { rule: 'True_' } }],
+                locations: [],
+            }])),
         },
     },
 };
@@ -296,6 +326,39 @@ const clickCell = (gx, gy) => page.evaluate(({ gx, gy }) => {
     c.dispatchEvent(new MouseEvent('click', { clientX, clientY, bubbles: true }));
 }, { gx, gy });
 
+// The compiled rules.json through the panel's own "Download rules.json" button:
+// each region's exits as `name→connected_region`, sorted.
+const compiledLinks = async () => {
+    const [download] = await Promise.all([
+        page.waitForEvent('download', { timeout: 10000 }),
+        clickByText('Download rules.json'),
+    ]);
+    const path = await download.path();
+    const doc = JSON.parse(readFileSync(path, 'utf8'));
+    const links = {};
+    for (const [name, region] of Object.entries(doc.regions?.['1'] ?? {})) {
+        links[name] = (region.exits ?? []).map((e) => `${e.name}→${e.connected_region}`).sort();
+    }
+    return { links, doc };
+};
+const { links: beforeMoveLinks, doc: beforeMoveDoc } = await compiledLinks();
+assert(Object.keys(beforeMoveLinks).length > 0,
+    `Phase D: read the compiled rules.json before the move (${Object.keys(beforeMoveLinks).length} regions)`);
+// The premise the identity assertion needs: some region holds a teleporter and
+// another forward exit on ONE side (read off the compiled sidecars).
+const sharedSides = [];
+for (const [name, sc] of Object.entries(beforeMoveDoc.preset_sidecars?.['1'] ?? {})) {
+    const bySide = {};
+    for (const e of sc.playable_payload?.exits ?? []) {
+        if (!e.isBackExit && e.side) (bySide[e.side] ??= []).push(e);
+    }
+    for (const [side, list] of Object.entries(bySide)) {
+        if (list.length >= 2 && list.some((e) => e.isTeleporter)) sharedSides.push(`${name}:${side}`);
+    }
+}
+assert(sharedSides.length > 0,
+    `Phase D: the world has a side holding a teleporter and another forward exit (${sharedSides.join(', ') || 'none'})`);
+
 const src = cells.occupied[0];
 const dst = cells.empties[0];
 await clickCell(src.gx, src.gy);
@@ -311,6 +374,30 @@ await page.waitForTimeout(2500);
 const afterMove = await panelText();
 assert(/driver top-down/.test(afterMove), 'Phase D: 4 recompiled after the move');
 assert(/\d+ regions/.test(afterMove), 'Phase D: compiled rules.json still reports a region count');
+
+// ⛓ PIPELINE RELAYOUT R1 — move it BACK and every link must be what it was. A
+// move changes where a region sits, never what it connects to; before the fix a
+// same-side teleporter's target collapsed onto its siblings on the round trip.
+await page.evaluate(() => {
+    const root = document.querySelector('.procgen-pipeline-mode')?.closest('.lm_content') ?? document;
+    [...root.querySelectorAll('.procgen-pipeline-map-modes input[type=radio]')]
+        .find((x) => x.value === 'moveRegion')?.click();
+});
+await page.waitForTimeout(300);
+await clickCell(dst.gx, dst.gy);
+await page.waitForTimeout(300);
+await clickCell(src.gx, src.gy);
+await page.waitForTimeout(400);
+assert(/Moved the region/.test(await panelText()), 'Phase D: moved the region back');
+assert(await clickByText('Run 4 Compile'), 'Phase D: clicked "Run 4 Compile" after the move back');
+await page.waitForTimeout(2500);
+assert(/driver top-down/.test(await panelText()), 'Phase D: 4 recompiled after the move back');
+const { links: afterBackLinks } = await compiledLinks();
+const changedLinks = Object.keys({ ...beforeMoveLinks, ...afterBackLinks })
+    .filter((name) => JSON.stringify(beforeMoveLinks[name]) !== JSON.stringify(afterBackLinks[name]));
+assert(changedLinks.length === 0,
+    `Phase D: move + move back left every compiled connected_region as it was (${changedLinks.length} region(s) changed`
+    + `${changedLinks.map((n) => `; ${n}: [${beforeMoveLinks[n]}] → [${afterBackLinks[n]}]`).join('')})`);
 
 // Phases E/F run on a FRESH pipeline (Phase D left cellsByName intentionally
 // stale after a layout move — Phase 5's design), so reset + regenerate first.
