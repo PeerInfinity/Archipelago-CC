@@ -346,6 +346,46 @@ describe('planCiShards — the partition', () => {
         const shards = planCiShards({ arms, costs: costsOf({ a: 10, b: 80 }), budgetMs: 100 });
         expect(shards[0].name).toBe('b +1');
     });
+
+    /**
+     * ⛔⛔ F2 task 5 — **THE HEADROOM IS THE ARMS' OWN MEASURED SPREAD.** The
+     * fixture is F1's spill in miniature: a heavy arm whose max fills the bin
+     * with a light one exactly to the budget (F1's 600.0 s shard), while its
+     * min is far below — the next run's seconds land anywhere in between.
+     */
+    it('a bin holds budget − the widest spread among its arms, so a volatile heavy arm stops filling to the budget', () => {
+        const arms = [arm('ship'), arm('light'), arm('steady')];
+        const costs = { ship: { ms: 80, minMs: 60 }, light: { ms: 20, minMs: 19 }, steady: { ms: 10, minMs: 10 } };
+        const shards = planCiShards({ arms, costs, budgetMs: 100 });
+        const withShip = shards.find((s) => s.keys.includes('ship'));
+        expect(withShip.headroomMs).toBe(20);
+        expect(withShip.ms).toBeLessThanOrEqual(100 - 20);
+        expect(withShip.keys).toEqual(['ship']);
+        expect(shards.find((s) => s.keys.includes('light')).keys).toEqual(['light', 'steady']);
+        // ⛓ the control: WITHOUT the min (a pre-F2 costs file) the old packing, to the budget
+        const old = planCiShards({ arms, costs: costsOf({ ship: 80, light: 20, steady: 10 }), budgetMs: 100 });
+        expect(old[0].keys).toEqual(['ship', 'light']);
+        expect(old[0].ms).toBe(100);
+        expect(old[0].headroomMs).toBe(0);
+    });
+
+    it('the headroom is the MAX spread in the bin, not the sum — two steady arms still share', () => {
+        const arms = [arm('a'), arm('b'), arm('c')];
+        const costs = { a: { ms: 40, minMs: 35 }, b: { ms: 40, minMs: 35 }, c: { ms: 15, minMs: 10 } };
+        const shards = planCiShards({ arms, costs, budgetMs: 100 });
+        // 40 + 40 + 15 = 95 ≤ 100 − max(5,5,5); a SUM (15) would refuse c
+        expect(shards.map((s) => s.keys)).toEqual([['a', 'b', 'c']]);
+        expect(shards[0].headroomMs).toBe(5);
+    });
+
+    it('stays deterministic with spreads, ties broken by name', () => {
+        const arms = [arm('z'), arm('y'), arm('x')];
+        const costs = { x: { ms: 45, minMs: 40 }, y: { ms: 45, minMs: 40 }, z: { ms: 45, minMs: 40 } };
+        const a = planCiShards({ arms, costs, budgetMs: 100 });
+        const b = planCiShards({ arms: arms.slice().reverse(), costs, budgetMs: 100 });
+        expect(a).toEqual(b);
+        expect(a[0].keys).toEqual(['x', 'y']);
+    });
 });
 
 /**

@@ -129,7 +129,8 @@ if (flag('plan')) {
         + `${measuredAt ? measuredAt.slice(0, 10) : '(NO COSTS FILE — every arm lands alone)'}`);
     for (const s of shards) {
         console.log(`\n## shard ${s.id} — ${(s.ms / 1000).toFixed(1)}s measured in CI, `
-            + `${s.keys.length} arm(s)${s.unpriced ? `, ${s.unpriced} UNPRICED (an arm no runner `
+            + `${s.keys.length} arm(s), margin ${((budgetMs - s.ms) / 1000).toFixed(1)}s `
+            + `(headroom reserved ${(s.headroomMs / 1000).toFixed(1)}s)${s.unpriced ? `, ${s.unpriced} UNPRICED (an arm no runner `
                 + 'has priced is priced at the whole budget, so it lands alone)' : ''}`);
         for (const k of s.keys) console.log(`     ${k}`);
     }
@@ -169,6 +170,8 @@ if (flag('write-costs')) {
                 const prev = armsOut[a.key];
                 armsOut[a.key] = {
                     ms: Math.max(prev?.ms ?? 0, a.ms),
+                    /** ⛓ F2 — the MIN too: `planCiShards` reserves `ms − minMs`. */
+                    minMs: Math.min(prev?.minMs ?? Infinity, a.ms),
                     samples: (prev?.samples ?? 0) + 1,
                     maxFrom: (prev && prev.ms >= a.ms) ? prev.maxFrom : r.databaseId,
                 };
@@ -181,7 +184,9 @@ if (flag('write-costs')) {
             + 'never off a standing row\'s `ms`, which is what it cost to ANSWER that row — '
             + 'for a CI-sourced row, a network call (trap 1068). `ms` is the MAX across the '
             + 'runs below, because a bin-packer fed the fastest sample packs a bin that does '
-            + 'not fit. Written by `node scripts/procgen/ci-gates.mjs --write-costs`.',
+            + 'not fit; `minMs` is the MIN, and a shard is packed to the budget minus the widest '
+            + '`ms − minMs` among its arms (F2). Written by `node scripts/procgen/ci-gates.mjs '
+            + '--write-costs`.',
         measuredAt: new Date().toISOString(),
         budgetMs,
         runs: seen,
@@ -193,8 +198,8 @@ if (flag('write-costs')) {
         console.log(`## run ${r.id} @${r.headSha.slice(0, 9)} — ${r.arms} arm line(s)`);
     }
     for (const [k, v] of Object.entries(doc.arms)) {
-        console.log(`     ${(v.ms / 1000).toFixed(1).padStart(7)}s  ${String(v.samples)
-            .padStart(2)} sample(s)  ${k}`);
+        console.log(`     ${(v.ms / 1000).toFixed(1).padStart(7)}s  spread ${((v.ms - v.minMs) / 1000)
+            .toFixed(1).padStart(6)}s  ${String(v.samples).padStart(2)} sample(s)  ${k}`);
     }
     console.log(`\n${Object.keys(doc.arms).length} arm(s) priced from ${seen.length} run(s), `
         + `${(total / 1000).toFixed(1)}s total ⇒ ${CI_ARM_COSTS_FILE}`);

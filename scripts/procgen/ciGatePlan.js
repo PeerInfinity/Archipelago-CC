@@ -495,20 +495,40 @@ export const armName = (arm) => (arm.gate
  * fallback to the bank: a fallback reinstates the defect for exactly the rows
  * that had it (`feedback_fallback_reinstates_the_defect`).
  *
+ * ⛔⛔ F2 task 5 — **A SHARD IS PACKED TO THE BUDGET MINUS THE WIDEST SPREAD IN
+ * IT, never to the budget.** `ms` is each arm's MAX over the priced runs, and
+ * a packer filling to the budget left ≈ 0 s the day after any re-price (F1:
+ * 0.4 → 0.0 s, trap 1350) — while the SAME arm spread 356–561 s across ten
+ * runs at unchanged code (`seedling-wasm-ship`, runner speed, not the gate).
+ * So `--write-costs` also records each arm's `minMs`, and a bin may hold
+ * `budget − max(ms − minMs)` over its members.
+ *
+ * ⛓ WHY THE MAX SPREAD IN THE BIN AND NOT THE SUM (pricing each arm at max +
+ * spread), chosen by a holdout over 17 runs (plan §18.1): price from the 3
+ * older runs, replay the plan on the NEXT run's own seconds. Budget-only
+ * packing spilled twice (613 s, 605 s); max-spread-in-bin spilled 0 times and
+ * always kept 2 shards; max + spread also spilled 0 times but cost a THIRD
+ * shard in 13 of 17 plans. The spread is one heavy arm's, not a sum of small
+ * ones. ⛓ An arm with no `minMs` (a pre-F2 costs file) has spread 0: the
+ * old partition, byte for byte. ⛔ NOT a budget raise and NOT a tolerance —
+ * the headroom is the arms' own measured spread.
+ *
  * @param {object} o
  * @param {object[]} o.arms      from `ciGateArms`
- * @param {object} [o.costs]     `readCiArmCosts()`'s `arms` map, CI key -> `{ms}`
+ * @param {object} [o.costs]     `readCiArmCosts()`'s `arms` map, CI key -> `{ms, minMs?}`
  * @param {number} [o.budgetMs]
- * @returns {{id:number,name:string,ms:number,unpriced:number,keys:string[]}[]}
+ * @returns {{id:number,name:string,ms:number,headroomMs:number,unpriced:number,keys:string[]}[]}
  */
 export function planCiShards({ arms, costs = {}, budgetMs = CI_SHARD_BUDGET_MS }) {
     const priced = arms.map((arm) => {
         const ms = costs?.[arm.key]?.ms;
+        const minMs = costs?.[arm.key]?.minMs;
         return {
             arm,
             name: armName(arm),
             /** ⛔ never priced by a runner ⇒ the whole budget (see the docblock). */
             ms: Number.isFinite(ms) ? ms : budgetMs,
+            spreadMs: Number.isFinite(ms) && Number.isFinite(minMs) ? Math.max(0, ms - minMs) : 0,
             unpriced: !Number.isFinite(ms),
         };
     }).sort((a, b) => (b.ms - a.ms) || a.name.localeCompare(b.name));
@@ -517,9 +537,11 @@ export function planCiShards({ arms, costs = {}, budgetMs = CI_SHARD_BUDGET_MS }
     for (const row of priced) {
         const fits = row.ms >= budgetMs
             ? null
-            : bins.find((b) => b.ms + row.ms <= budgetMs);
-        if (fits) { fits.rows.push(row); fits.ms += row.ms; } else {
-            bins.push({ rows: [row], ms: row.ms });
+            : bins.find((b) => b.ms + row.ms <= budgetMs - Math.max(b.spreadMs, row.spreadMs));
+        if (fits) {
+            fits.rows.push(row); fits.ms += row.ms; fits.spreadMs = Math.max(fits.spreadMs, row.spreadMs);
+        } else {
+            bins.push({ rows: [row], ms: row.ms, spreadMs: row.spreadMs });
         }
     }
     return bins.map((b, id) => ({
@@ -527,6 +549,8 @@ export function planCiShards({ arms, costs = {}, budgetMs = CI_SHARD_BUDGET_MS }
         /** ⛓ named for its heaviest member — the one a reader will ask about. */
         name: `${b.rows[0].name}${b.rows.length > 1 ? ` +${b.rows.length - 1}` : ''}`,
         ms: b.ms,
+        /** ⛓ the widest measured spread among its arms — what the packing reserved. */
+        headroomMs: b.spreadMs,
         unpriced: b.rows.filter((r) => r.unpriced).length,
         keys: b.rows.map((r) => r.arm.key),
     }));
