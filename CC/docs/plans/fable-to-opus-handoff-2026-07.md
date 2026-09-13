@@ -14432,6 +14432,42 @@ handoff: `main` = `origin/main` at `16eb824ade` + this entry, clean, no slice, n
 `29f7aa830f`); the tier runs in CI sharded; the shed delayed on the pins. `archipelago-cc-b6` ends itself after the
 successor's handshake (⚖ 2026-09-13 lifetime ruling).
 
+**F2 COMPLETE + VERIFIED 2026-09-13 (planner `seedling-headless-planning-3`'s reads: nine commits `d81de809cb … 72a8147fcc`
+on origin, plan §18.1 with five subsections, traps 1352–1354 on disk, the two H2 rows `21/0` / `24/0` `channel: headless`
+in the bank at `72a8147fcc`, CI at `72a8147fcc` run 34772130006 vitest 467/14098 0 failed + slow 217/217,
+`check-seedling-full-tier-owed` ALL PASS at that head, tree level, no lock, no server).** **What the brief got wrong
+(§18.1.1):** the "37 no-total gates" are the NEW `@ci-box` rows `--keys` lists — F1's census had counted three as
+total-printing, but `✅ ALL PASS` / `check-x: ALL PASS` fail the anchored `TOTAL_RE`; the roundtrip gates are SIX (three
+region-library-sphere), not five; "keep the audited spill run inside budget" cannot discriminate when that run is one of
+the pricing runs (trap 1353 — a holdout was needed); task 7's hazard is a KILLED probe inside the tracked-write window
+(0/37 candidates move the tree on a normal run — reproduced by a SIGKILL inside Generate's `preset_files.json` window,
+ending the write); `rerecord-seedling-campaign` also RUNS `--win` (S4's verdict drives now headless; S3's `--win
+--record` is a ⚖ 49 recording-channel matter, left); traps start at 1352 (G2b-1 took 1351). **Built:** (1) the
+driver's Python is a LADDER — `SEEDLING_PYTHON` → `$VIRTUAL_ENV` → `<tree>/.venv` → PATH `python3` — and the chosen one
+is ASKED (`import playwright`), refusing by name; H2's two rows re-written from the primary tree headless. (2) the
+writer's MOVED-row clause — a red / killed / no-total re-measure is REFUSED and the bank keeps its value (it must run
+BEFORE the nondeterminism detector, measured: trap 1352). (3) `gateTotal.js` — one helper for all 37, box BEFORE no
+total → AFTER `ALL CHECKS PASSED`, the forced-failure mutant moves `headlineOf` 37/37. (4) `generatePythonOrExit` on the
+six roundtrip gates (probe `Utils`); a venv-less worktree goes from "8 PASS then exit 1" to REFUSED exit 2. (5) the
+packer packs each shard to `budget − the widest measured spread in it` — chosen on a 17-run HOLDOUT (budget-only: 2
+spills; chosen: 0 spills / 2 shards; max+spread: 0 spills / 3 shards); margins 0.0 / 71.9 → 50.4 / 33.6 s; the first CI
+run under it 561.6 / 439.9 s, audit PASS. (6) `jta-balance-pass` declares `positional \`<x>\`` in its `@ci-box` text and
+the roster derives no row for it (116 → 115); the re-drive advice is shared; rehearsal 41/41 → 42/42. (7) the six
+roundtrip gates declare `@tree-writes` and are never PROBED (30 probed / 6 refused by name); they bank only via
+`--key=`. **⚖ OPEN (§18.1.5):** `ta-mana-leg` RED at HEAD ("expected 50 mana charged departing AdventureZone, got 0",
+reproducible; the sidecars arc's file — relayed to `preset-sidecars-planning-4`, untouched here); worktrees still cannot
+run the Generate gates (`Players/` is gitignored and absent — `new-worktree.sh` or `--player_files_path`); the import
+probe is blind to a VERSION mismatch (trap 1354); the `@tree-writes` gates are un-probe-able (a writer that restores
+declared paths after a killed probe is the larger alternative, not built); identity/producer rows are outside the
+MOVED clause; the ship row's `--win` total. **Traps:** 1352 (a nondeterminism detector fed a run no reader can parse
+files the environment as a finding), 1353 (an audit whose pricing window contains the spill passes by construction),
+1354 (an import probe is not a usable install). F2's worktree `wt-f2venvless` removed by the planner (submodule
+checkouts: `rm -rf` + `git worktree prune`); F2's session ENDED by pid. Box traffic during F2: the sidecars planner
+asked twice — once GO (F2 level), once WAIT (one unpushed docs commit) then GO; G2b-1 merged at `ffba92b0a5` on top of
+F2's docs commit. **⛓ THE ARC'S LADDER IS EMPTY: R2, H2, H3, S1, F1, F2 shipped; W3 delayed on the pins; nothing
+queued. REPLAN with the user** — candidates, none launched: the worktree `Players/` provisioning; the version-aware
+import probe; the pins update that unblocks the shed; `ta-mana-leg` (sidecars').
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
