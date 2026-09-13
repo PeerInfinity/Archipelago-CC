@@ -991,6 +991,25 @@ notes from using it here:
 Each replay prints its WebGPU adapter, so a run that silently fell back to
 software rendering is visible rather than just mysteriously slow.
 
+⛓⛓ **H2 (2026-09-12): TWO CHANNELS, AND HEADLESS IS THE DEFAULT.** Every Seedling
+gate that drove Windows Chrome now runs headless by default and takes `--win`
+for the real-GPU run — the gate's own Python driver, run by the repo venv's
+python (`scripts/procgen/seedlingDriver.js`, Playwright pinned in
+`scripts/procgen/requirements-headless.txt`), so both channels observe through
+ONE protocol. Headless means **logic-only** (`HEADLESS_LOGIC_ONLY_ARGS`: the
+device is lost on purpose, ~26–30 ticks/s, no pixels), PROVED on every run by the
+runtime's `__swfGpu.lost` (`scripts/procgen/seedlingChannel.js`; a live device
+or an absent readout is a refusal by name) — except the two gates whose claims
+assert zero pageerrors (`check-seedling-wasm-pages`, `check-seedling-wasm-ship`),
+which keep the pixels set because the device-lost message IS the logic-only
+channel's signature. `headlessChromium.test.js` derives that split from the gates'
+text. The roster calls such a gate `dual` (`gateRoster.js`) and CI runs it on
+ubuntu-latest, where the same two channels were measured (runner probe, run
+34724984639). The 150-tape full tier runs in CI only by `workflow_dispatch:`
+(`.github/workflows/seedling-full-tier.yml`); its standing row is
+`roster: --tier=full` (`roster: --win --tier=full` until H2), the channel recorded
+on each part. `--win` remains the channel for real-GPU pixel questions.
+
 ⛓⛓ **H1 (2026-09-11): the ~0.5 frames/sec above was a LOST WEBGPU DEVICE, not
 SwiftShader's raster cost.** With `--use-angle=swiftshader` alone, the headless
 compositor runs on ANGLE-SwiftShader GL, which has no shared-image backing for
@@ -11453,7 +11472,9 @@ the headless rows run the game at 25–28 frames/s on this box — a 259-tick
 generated ship reached its per-tick verdict inside a 22.5 s headless gate
 (`check-seedling-wasm-element.mjs`), and the whole `check-seedling-wasm-pages.mjs`
 row took 33.7 s (was 184.8 s). The table above is unchanged on purpose: giving the
-headless rows the `finished`/VERDICT reach is H2, after the user's ⚖.
+headless rows the `finished`/VERDICT reach is H2, after the user's ⚖. ⛓ H2
+(2026-09-12) gave `check-seedling-wasm-ship.mjs` a headless default (pixels set,
+263/0 on this box) — see *Always pass `--win`* for the two channels.
 
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 

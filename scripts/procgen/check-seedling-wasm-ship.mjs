@@ -73,8 +73,9 @@
  * ticks/s, so a 255-tick solve would take eight minutes of software rasterising
  * and any deadline becomes a race against machine load rather than a fact.
  * ⛓ H1 (2026-09-11): the ~0.5 ticks/s was a lost WebGPU device, not SwiftShader
- * — `HEADLESS_WEBGPU_ARGS` runs headless at 25–28 frames/s. This row stays
- * Windows-only until the user rules on a headless arm (H2).
+ * — `HEADLESS_WEBGPU_ARGS` runs headless at 25–28 frames/s. ⛓ H2 (2026-09-12):
+ * headless is now this gate's DEFAULT (on the PIXELS set — see the channel note
+ * below) and `--win` keeps the real-GPU run.
  *
  * Prerequisites: a dev server on :8000 at the REPO ROOT, and a Windows
  * playwright install (`C:\playwright`).

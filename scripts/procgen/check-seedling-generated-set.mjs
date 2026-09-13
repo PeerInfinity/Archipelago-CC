@@ -54,8 +54,9 @@
  * load rather than a fact.
  * ⛓ H1 (2026-09-11): that ~0.5 fps was a LOST WebGPU device, not SwiftShader's
  * raster cost — `HEADLESS_WEBGPU_ARGS` (`headlessChromium.js`) runs headless at
- * 25–28 frames/s. This row stays Windows-only until the user rules on a
- * headless arm (H2).
+ * 25–28 frames/s. ⛓ H2 (2026-09-12): headless is now this gate's DEFAULT — the
+ * same driver on this machine's Chromium, logic-only, the channel proved by the
+ * runtime's readout — and `--win` keeps the real-GPU run.
  *
  * Prerequisites: a dev server on :8000, and `--seeds` reproducible on a QUIET
  * box — the generator is not deterministic under load (procgenOracle:503).

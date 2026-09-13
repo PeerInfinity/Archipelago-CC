@@ -1222,6 +1222,20 @@ in this slice**: its full drive is a measured 142-minute GPU run (`gateRoster.js
 the one script of 62 the survey left without a verdict, and it is named here so that is visible
 rather than silently absent.
 
+⛓⛓ **H2 (2026-09-12) — the `--win` tier became a CHANNEL, not a class.** Every
+gate that held the Windows driver path now also imports `headlessChromium.js`
+and runs headless by default, so `gateRoster` classifies it `dual` (`windows`
+now means Windows-ONLY, and no gate is), `ciRunnable` admits it, and CI runs it
+on ubuntu-latest. Two headless channels exist on both the box and the runner:
+**logic-only** (`HEADLESS_LOGIC_ONLY_ARGS`, the device lost on purpose and proved
+by `__swfGpu.lost` in `seedlingChannel.js`) for every wasm gate, and **pixels**
+(`HEADLESS_WEBGPU_ARGS`) for the two whose claims assert zero pageerrors
+(`wasm-pages`, `wasm-ship`). `--win` stays for real-GPU questions. The
+differential's per-push CI arm is a `@ci-face smoke: --tier=fast
+--only=friction-stop`; its full tier runs only by `workflow_dispatch:`
+(`.github/workflows/seedling-full-tier.yml`). The table below is the 2026-09-05
+survey and is left as measured then.
+
 ## The derived table — 62 rows, one per script
 
 **Class counts: 49 GATE · 11 REPORT · 2 STALE.** GATE by driver: 27 browser · 20 node · 2 windows.
