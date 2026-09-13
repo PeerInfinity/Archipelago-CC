@@ -453,6 +453,12 @@
             "_comment": "PRESET SIDECARS M0, reversing hub plan §7 ⚖ 3 on the user's observation that a Bounce demo loaded into the frontend showed no map. The zone-only slot is picked off the document (grid cells everywhere, tile geometry nowhere); the tab must draw one cell per grid_cell at the engine's exported default cell size and say that the DEFAULT is what sized it. The pixels of the first cell are scored against the renderer's own genericBg / textAdventureFg / emptyCell colours, because a canvas of the right dimensions with nothing painted on it satisfies every count."
         },
         {
+            "id": "apworld-map-draws-the-other-regions-and-names-the-refused-one",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS C1. A region whose payload its own substrate refuses (AP_11 with one undeclared key added in memory) is skipped by name at play and on the Map: the warehouse keeps the entry's sentence, the Map draws the other gridded regions and a note carries the sentence, 0 handler errors, 0 page errors. Before C1 the same document blanked the Map with a page error (plan §24.7)."
+        },
+        {
             "id": "apworld-document-tab-slices-preset-sidecars-by-slot",
             "enabled": true,
             "category": "apworldEditor",

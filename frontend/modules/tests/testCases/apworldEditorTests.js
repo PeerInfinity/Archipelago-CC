@@ -24,6 +24,7 @@
 
 import { registerTest } from '../testRegistry.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
+import { deserializeRefusalSentence } from '../../procgenCore/deserializeRefusal.js';
 /** ⛓ H4b — the LAB door's host registry and the SET arm's envelope, so the row
  *  drives the real three-phase contract instead of waiting on an iframe. */
 import {
@@ -9435,6 +9436,121 @@ registerTest({
                + 'side, Apply pressed; the game\'s portal → side map puts the old side\'s portal on the new side, '
                + 'the warehouse keys it there, the level stays loaded, no error event.',
     testFunction: apworldExitSideMovePlaysInTheBouncePanel,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * PRESET SIDECARS C1 — A REGION ITS SUBSTRATE REFUSES DOES NOT BLANK THE MAP
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ The gated TA fixture, with ONE undeclared key added to ONE region's payload
+ * on the way in (never a committed byte) — the tile grid's `tiles`, which that
+ * region's room declaration does not know (plan §25.6). Plan §24.7 measured
+ * this shape of document: at play two `Error in event handler for
+ * stateManager:rawJsonDataLoaded` (procgenPipeline, procgenPlayer), and on the
+ * hub's Map tab a BLANK surface with one page error.
+ */
+const REFUSED_MAP_PRESET_PATH = './presets/procgen_topdown/AP_11/AP_11_rules.json';
+const REFUSED_MAP_REGION = 'BlackCastle';
+
+export async function apworldMapDrawsTheOtherRegionsAndNamesTheRefusedOne(testController) {
+    const handlerErrors = [];
+    const pageErrors = [];
+    const origError = console.error;
+    const onError = (e) => pageErrors.push(e?.message ?? String(e));
+    const onRejection = (e) => pageErrors.push(e?.reason?.message ?? String(e?.reason));
+    try {
+        const panel = await openHub(testController, REFUSED_MAP_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+
+        const doc = await (await fetch(REFUSED_MAP_PRESET_PATH)).json();
+        const slot = String(panel.playerId);
+        const entry = doc.preset_sidecars?.[slot]?.[REFUSED_MAP_REGION];
+        testController.reportCondition('the fixture carries the region the row breaks', !!entry);
+        if (!entry) return testController.getOverallResult();
+        entry.playable_payload.tiles = [];
+        // ⛓ The expected sentence is the entry's OWN throw, never typed.
+        let thrown = null;
+        try {
+            substrateRegistry.get(entry.substrate).deserializeWorld(entry.playable_payload);
+        } catch (err) {
+            thrown = err;
+        }
+        testController.reportCondition('the edited payload is refused by its own substrate', !!thrown);
+        if (!thrown) return testController.getOverallResult();
+        const sentence = deserializeRefusalSentence(REFUSED_MAP_REGION, entry.substrate, thrown);
+        const drawable = Object.entries(doc.preset_sidecars[slot])
+            .filter(([name, sc]) => sc?.grid_cell && name !== REFUSED_MAP_REGION).length;
+
+        console.error = (...args) => {
+            if (typeof args[0] === 'string' && args[0].includes('Error in event handler for')) {
+                handlerErrors.push(args[0]);
+            }
+            return origError.apply(console, args);
+        };
+        window.addEventListener('error', onError);
+        window.addEventListener('unhandledrejection', onRejection);
+
+        const rulesLoaded = testController.waitForEvent('stateManager:rulesLoaded', 8000);
+        testController.eventBus.publish('files:jsonLoaded', {
+            jsonData: doc,
+            selectedPlayerId: slot,
+            sourceName: 'apworld-map-refused-region',
+        });
+        await rulesLoaded;
+        await testController.stateManager.pingWorker('after-rules-load', 3000);
+        const intake = await testController.pollForValue(
+            () => (panel.rulesDoc?.preset_sidecars?.[slot]?.[REFUSED_MAP_REGION]
+                ?.playable_payload?.tiles ? panel : null),
+            'the hub holds the edited document', 8000, 50);
+        testController.reportCondition('the hub holds the edited document', !!intake);
+
+        // play — the warehouse loads the others and keeps the refused one's sentence
+        const warehouse = centralRegistry.getPublicFunction?.('procgenPlayer', 'getWarehouse')?.();
+        testController.assertEqual('play: the refused region is kept with its sentence',
+            sentence, warehouse?.refused?.get(REFUSED_MAP_REGION) ?? '(none)');
+        testController.reportCondition('play: the refused region is not in the warehouse',
+            !!warehouse && !warehouse.has(REFUSED_MAP_REGION));
+
+        try {
+            selectTab(panel, 'map');
+        } catch (err) {
+            pageErrors.push(`the Map tab threw: ${err.message}`);
+        }
+        const canvas = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`),
+            'the Map tab\'s canvas', 8000, 50);
+        testController.reportCondition('the Map tab draws a canvas', !!canvas);
+        testController.assertEqual('the map draws every OTHER region with a grid cell',
+            String(drawable), canvas?.dataset.regions ?? '(no canvas)');
+        const note = document.querySelector(`${PANEL_SELECTOR} .apworld-map-refused`);
+        testController.reportCondition('the map carries a note for the region it did not draw', !!note);
+        testController.reportCondition('the note is the entry\'s own sentence, naming the region',
+            !!note && note.textContent.includes(sentence) && note.dataset.refused === '1');
+        testController.assertEqual('no event-bus handler error', '0', String(handlerErrors.length));
+        testController.assertEqual('no page error', '0', String(pageErrors.length));
+        for (const e of [...handlerErrors, ...pageErrors]) testController.log(`error seen: ${e}`, 'error');
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('refused-region map test error-free', false);
+    } finally {
+        console.error = origError;
+        window.removeEventListener('error', onError);
+        window.removeEventListener('unhandledrejection', onRejection);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-map-draws-the-other-regions-and-names-the-refused-one',
+    name: 'APWorld hub: a region whose payload its substrate refuses is not drawn, the map names it, and nothing throws',
+    description: 'PRESET SIDECARS C1. procgen_topdown/AP_11 with one region\'s payload given an undeclared key, '
+               + 'loaded through files:jsonLoaded: the warehouse keeps the entry\'s own refusal sentence, the Map '
+               + 'tab draws every other gridded region, a note carries that sentence, and there is no handler or '
+               + 'page error (before C1: a blank Map and a page error).',
+    testFunction: apworldMapDrawsTheOtherRegionsAndNamesTheRefusedOne,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

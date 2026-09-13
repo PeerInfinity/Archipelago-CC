@@ -163,7 +163,7 @@ import { buildLinkRows, DOCUMENT_LINKS } from './documentLinks.js';
 import {
   TILE_PX, drawCompositeMap, canvasPointOf, cellAtPoint,
 } from '../procgenCore/compositeMapRenderer.js';
-import { reconstructResultFromSidecars } from '../procgenPipeline/compositeMapDocument.js';
+import { reconstructResultFromSidecars, refusedRegionsNote } from '../procgenPipeline/compositeMapDocument.js';
 import { downloadJson, rulesDownloadName } from './downloadJson.js';
 /**
  * ⛓⛓ H2b — the raw tab is a CodeMirror 6 view, not a `<textarea>`. The barrel
@@ -4491,6 +4491,22 @@ class ApworldEditorUI {
       + 'region there, on another region swaps the two, and the answer names every link that '
       + 'became a teleporter (Esc, a slot pick or another tab cancels).';
     this.scrollContainer.appendChild(intro);
+
+    /**
+     * ⛓ PRESET SIDECARS C1 — a region whose payload its own substrate refused
+     * is NOT drawn, and the map says which and why in the entry's own words
+     * (until C1 one such region threw out of the reconstruction and the whole
+     * tab came up blank with a page error).
+     */
+    const refusedNote = refusedRegionsNote(result);
+    if (refusedNote) {
+      const note = document.createElement('div');
+      note.className = 'apworld-map-refused';
+      note.dataset.refused = String(result.refused.length);
+      Object.assign(note.style, { color: '#e0a040', fontSize: '11px', padding: '0 0 6px' });
+      note.textContent = refusedNote;
+      this.scrollContainer.appendChild(note);
+    }
 
     const slot = document.createElement('span');
     slot.className = 'apworld-map-slot';

@@ -1299,6 +1299,18 @@ The same function paints the **pipeline panel's** loaded-preset view and its
 `_adoptHandoffRules` hand-off, so the hub's `procgen_metadata` door now lands on a
 painted map for the same twelve slots instead of an empty canvas.
 
+⛓ **PRESET SIDECARS C1 — a region its substrate refuses is not drawn, and the
+map says so.** A payload whose own `deserializeWorld` throws (a text-adventure
+entry carrying a tile key, say) used to throw out of the reconstruction: the tab
+came up blank with a page error (plan §24.7). The reconstruction now skips that
+region and returns it on `refused` (`{region_id, substrate, sentence}`, with
+`stats.regionsSkipped`); the tab draws every other region and prints
+`refusedRegionsNote(result)` under the intro (`.apworld-map-refused`,
+`data-refused` = the count) — the entry's own sentence, naming the region. The
+pipeline panel puts the same note in its message line. In-app row
+`apworld-map-draws-the-other-regions-and-names-the-refused-one`. ⚠ A slot whose
+EVERY gridded region is refused still returns null and gets the no-map sentence.
+
 **Two clicks, the pipeline's `edit` mode's shape** (PRESET SIDECARS M1). The
 click→cell mapping is the renderer's exported geometry (`canvasPointOf` /
 `cellAtPoint`), the same functions the pipeline's hit-tester calls, so a click and

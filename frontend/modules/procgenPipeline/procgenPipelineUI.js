@@ -57,7 +57,7 @@ import {
     TILE_PX, drawCompositeMap, resolveExitTilePositions,
     canvasPointOf, cellAtPoint,
 } from '../procgenCore/compositeMapRenderer.js';
-import { reconstructResultFromSidecars } from './compositeMapDocument.js';
+import { reconstructResultFromSidecars, refusedRegionsNote } from './compositeMapDocument.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
@@ -449,6 +449,9 @@ export class ProcgenPipelineUI {
             // local generation result on top.
             const reconstructed = reconstructResultFromSidecars(data.rawJsonData);
             if (reconstructed) this.result = reconstructed;
+            // ⛓ C1 — a region its substrate refused is not drawn; say which.
+            const refusedNote = refusedRegionsNote(reconstructed);
+            if (refusedNote) this.message = refusedNote;
             this.render();
         };
         eventBus.subscribe('stateManager:rawJsonDataLoaded', handler, 'procgenPipeline');
