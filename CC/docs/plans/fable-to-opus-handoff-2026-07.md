@@ -14497,6 +14497,33 @@ can differ from the new tree only at rung 3. WT1's session ENDED by pid. Box tra
 G2a-fix (ta-mana, `94144623fc`) held once behind WT1's docs commit, then merged on top of it.
 **⛓ Nothing queued in this arc: R2, H2, H3, S1, F1, F2, WT1 shipped; W3 delayed on the pins. Next = the user.**
 
+**⚖ USER 2026-09-13: *"Let's start with the cleanup tasks."* — C1 LAUNCHED + COMPLETE + VERIFIED 2026-09-13 (planner
+`seedling-headless-planning-3`'s reads: five commits `2bf7e73b89 … 873c50813f` on origin, plan §20.3, trap 1357, the pin
+file unchanged at `playwright==1.56.0`, CI at `873c50813f` run 34780762453 vitest 470/14155 0 failed + slow 217/217,
+full-tier-owed ALL PASS, tree level, no lock, no worktree made).** Design §20 (planner-measured: the pin F2 named EXISTS
+at `scripts/procgen/requirements-headless.txt`, installed by two workflows and tied to the node lockfile by
+`headlessChromium.test.js` — the ONE declared Python pin). **Built:** (1) `resolvePython({ pins })` — the chosen
+interpreter's `importlib.metadata.version` must equal the version READ from the requirements file (`requirementLines` /
+`pinnedVersion`, the parse lifted from `headlessChromium.test.js`); only `headlessPython` pins; refusal names the
+interpreter, its version, the pin, the file, the install line; 9 mutants red; the version probe costs 0.11–0.14 s
+(import 0.02 s). Live proof: pin edited to 1.55.0 → `check-seedling-save-stamp` refuses at `driverChannel` before any
+browser (exit 1, 1.5 s — after its three set-check PASS lines, which run first; brief wrong on "before any PASS line");
+reverted → 21/0. (2) `venvActivationHint` — `git rev-parse --path-format=absolute --show-toplevel --git-common-dir`; a
+worktree's hint is `source <primary>/.venv/bin/activate`; both refusals use it; census row. Brief wrong: from a worktree
+`--git-common-dir` IS `<primary>/.git` (`.git/worktrees/<name>` is `--git-dir`), and from a primary SUBDIR the default
+form is RELATIVE — the first cut compared the handed path and read a primary subdirectory as a worktree; the real
+git-worktree row caught it (trap 1357: a which-tree check against the handed path misreads a subdirectory); mutants
+re-run on the fixed build 8/8 red. (3) the dry run's ask stays, LABELLED (`asked of <tree>; … rung 3 …`) — dropping it
+would leave the refusal coverable only by a real run with `npm ci`. (4) the exit-1 ruling written into the step-6
+comment. (5) docblocks + a gotchas ladder clause; docs trio green. Rows: repoPython 15 → 27, driver 4 → 5, newWorktree
+6 → 7 (brief wrong: 15 rows, not 14). **⚖ OPEN (§20.3):** "only at rung 3" holds for the ladder, but a distant base's
+own `repoPython`/`Utils` could answer differently (wording kept); the headless refusal is an uncaught throw (exit 1)
+where the Generate face prints and exits 2 — pre-existing, one-line if wanted. C1's session ENDED by pid. Box traffic:
+one sidecars docs push cleared while C1 held nothing; a §5x label "C1" that meant the SIDECARS cleanup slice was
+corrected by its planner (arc-local labels collide — sessions are named by their session name from here).
+**⛓ Nothing queued: R2, H2, H3, S1, F1, F2, WT1, C1 shipped; W3 delayed on the pins. Next = the user (the pins
+update that unblocks the shed is the one candidate left in this arc).**
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
