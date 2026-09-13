@@ -181,8 +181,9 @@ const ownKeys = (payload) => Object.keys(isPlainObject(payload) ? payload : {})
  * Measured over the corpus's eight declarations, the rule separates every
  * family (a maze payload scores 0 against every non-tile-grid declaration; a
  * jta one ~0.1 against omsi), and ties exactly where two declarations ARE one
- * shape at the top level (maze ≡ text_adventure; bounce ≈ runner) — which
- * `bestFittingSubstrates` breaks by the shape check.
+ * shape at the top level (bounce ≈ runner) — which `bestFittingSubstrates`
+ * breaks by the shape check. (⛓ G2a: the maze ≡ text_adventure tie is gone —
+ * the text adventure declares its own payload.)
  *
  * @param {Record<string, object>|null} fields  `sidecarFieldsOf(entry)`
  * @param {object} payload
@@ -202,8 +203,8 @@ export function sidecarFit(fields, payload) {
  * ⛓⛓ **WHICH DECLARATIONS FIT A PAYLOAD BEST** — the highest `sidecarFit`,
  * ties broken by the fewest distinct fields `sidecarPayloadErrors` names (so a
  * bounce payload fits `bounce` rather than `runner`, whose top-level keys it
- * shares), and still-tied ids ALL returned (maze and text_adventure carry one
- * declaration object: neither is the better answer).
+ * shares), and still-tied ids ALL returned (two substrates carrying one
+ * declaration object would be neither the better answer).
  *
  * @param {object} payload
  * @param {Array<{id: string, fields: object}>} candidates

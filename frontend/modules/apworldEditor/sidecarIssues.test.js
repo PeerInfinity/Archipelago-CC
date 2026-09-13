@@ -240,6 +240,12 @@ describe('⛓⛓⛓ the MISMATCH — the substrate-change case (⚖)', () => {
         expect(bestFittingSubstrates(payload, candidates).ids).toEqual([ZONE]);
     });
 
+    it('⛓ G2a — the tile-grid TIE is gone: a tile-grid payload best-fits its OWN substrate ALONE (until '
+        + 'G2a the text adventure carried the same declaration object and tied)', () => {
+        const tilePayload = FOUR.preset_sidecars[TILE_SLOT][firstRegion(FOUR, TILE_SLOT)].playable_payload;
+        expect(bestFittingSubstrates(tilePayload, candidates).ids).toEqual([TILE]);
+    });
+
     it('⛓ a zone payload under the tile-grid substrate says whose keys it has, ONCE, folding '
         + 'the per-field sentences into it', () => {
         const issues = sidecarIssues(PRODUCERS[K.SUBSTRATE_MISMATCH](), ZONE_SLOT);

@@ -35,6 +35,7 @@
 
 import { SIDES } from '../shared/procgen/spatialPrimitives.js';
 import { makeLocationName } from '../procgenCore/apLocationNaming.js';
+import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
 
 /** The rule every ungated exit / location compiles to. */
 const TRUE_RULE = Object.freeze({ rule: 'True_' });
@@ -243,3 +244,79 @@ export function deserializeTextAdventureRoom(payload = {}) {
     }));
     return { exits, locations };
 }
+
+/** One Rule Builder rule tree, as far as a payload check can say: an object naming its `rule`. */
+const RULE_TREE = Object.freeze({
+    type: 'object',
+    required: Object.freeze(['rule']),
+    properties: Object.freeze({ rule: Object.freeze({ type: 'string', minLength: 1 }) }),
+});
+
+/**
+ * ⛓⛓ PRESET SIDECARS G2a — **THE TEXT ADVENTURE'S OWN PAYLOAD, DECLARED BESIDE
+ * ITS SERIALIZER** (the registry's `sidecarFields` slot; vocabulary in
+ * `procgenCore/sidecarFields.js`). Until G2a the entry carried the maze's
+ * `TILE_GRID_SIDECAR_FIELDS` object (one payload shape for two substrates);
+ * ⛔ none of the tile keys (`tiles`, `width`, `height`, `entrance`, `obstacles`,
+ * `items`, the two libraries, `longestShortestPath`) is declared, so a payload
+ * that still carries one is refused by name (`UNDECLARED_FIELD`).
+ *
+ * Envelope claims: `exits` and `fogEnabled` (`buildPresetSidecars` writes both on
+ * every region). ⚠ `manaEnabled` is NOT claimed: the engine stamps it only when
+ * the run opted into loop mode, and the committed top-down worlds carry none —
+ * it stays the envelope's optional field.
+ */
+export const TEXT_ADVENTURE_SIDECAR_FIELDS = Object.freeze({
+    exits: REQUIRED_ENVELOPE_FIELD,
+    fogEnabled: REQUIRED_ENVELOPE_FIELD,
+    exitGates: Object.freeze({
+        type: 'object', required: true,
+        description: 'The room\'s AUTHORED exit gates, `{exit_id: rule}` — the document\'s own rule tree for '
+            + 'every gated exit (an ungated exit is absent; a back exit takes its forward exit\'s rule at '
+            + 'compile). A sibling of the envelope\'s `exits`, because a substrate may not add a field to '
+            + 'that record. Written by `serializeTextAdventureRoom`; a rebuild re-emits the exit rules from it.',
+        schema: Object.freeze({ additionalProperties: RULE_TREE }),
+    }),
+    locations: Object.freeze({
+        type: 'array', required: true,
+        description: 'The room\'s locations `{name, item?, access_rule?}`: `name` is the AP location name '
+            + '(baked from the extracted rules by `serializeTextAdventureRoom`), `item` the placed item, '
+            + '`access_rule` the AUTHORED gate (absent = `True_`).',
+        schema: Object.freeze({
+            items: Object.freeze({
+                type: 'object',
+                required: Object.freeze(['name']),
+                additionalProperties: false,
+                properties: Object.freeze({
+                    name: Object.freeze({ type: 'string', minLength: 1 }),
+                    item: Object.freeze({ type: 'string' }),
+                    access_rule: RULE_TREE,
+                }),
+            }),
+        }),
+    }),
+});
+
+/**
+ * ⛓ The registry's `apLocationNamesOf` slot: every `locations[].name`, or `null`
+ * when the payload carries no `locations` array (a payload written before G2a).
+ *
+ * @param {object} payload
+ * @returns {string[]|null}
+ */
+export function textAdventureApLocationNames(payload) {
+    if (!Array.isArray(payload?.locations)) return null;
+    return payload.locations.map((l) => l?.name).filter((n) => typeof n === 'string' && n !== '');
+}
+
+/**
+ * ⛓ The registry's `exitSides` slot (`procgenCore/exitSides.js`): a text
+ * adventure's side is WHERE ITS EXIT IS LISTED (the 3×3 compass) and nothing
+ * else in its payload is keyed by a side — `exitGates` is keyed by `exit_id`. So
+ * `keys` is EMPTY and the relabel is the identity (a clone: the op writes the
+ * exits through this substrate's own serializer).
+ */
+export const TEXT_ADVENTURE_EXIT_SIDES = Object.freeze({
+    keys: Object.freeze([]),
+    relabel: (payload) => structuredClone(payload),
+});

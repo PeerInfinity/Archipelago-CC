@@ -2203,8 +2203,9 @@ function exitLinkClause(name, v) {
         + 'this op does not re-judge it)';
 }
 
-const reKeyedClause = (entry, decl) => `relabelled by "${entry.substrate}"'s \`exitSides\` (the `
-    + `side-keyed fields it declares: ${decl.keys.join(', ')})`;
+const reKeyedClause = (entry, decl) => (decl.keys.length
+    ? `relabelled by "${entry.substrate}"'s \`exitSides\` (the side-keyed fields it declares: ${decl.keys.join(', ')})`
+    : `relabelled by "${entry.substrate}"'s \`exitSides\` (it declares no side-keyed field besides the exit's own side)`);
 
 /**
  * ⛓⛓⛓ **MOVE AN EXIT TO ANOTHER SIDE** (PRESET SIDECARS M3 — ⚖ §5e Q1 A: M2's

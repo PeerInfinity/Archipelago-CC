@@ -22,12 +22,14 @@ import {
     extractTextAdventureRules,
     serializeTextAdventureRoom,
     deserializeTextAdventureRoom,
+    TEXT_ADVENTURE_SIDECAR_FIELDS,
+    TEXT_ADVENTURE_EXIT_SIDES,
+    textAdventureApLocationNames,
 } from './textAdventureRoom.js';
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { getPlaybackProxy } from './index.js';
 import { drawTextAdventureCompositeRegion } from './textAdventureCompositeMap.js';
-import { TILE_GRID_SIDECAR_FIELDS, tileGridApLocationNames } from '../mazeRoom/mazeSerializer.js';
 import { envelopeExitNames } from '../procgenCore/sidecarFields.js';
 
 export const substrateRegistryEntry = Object.freeze({
@@ -116,14 +118,13 @@ export const substrateRegistryEntry = Object.freeze({
     placeFromRules: placeTextAdventureRules,
     extractPathsAndObstacles: extractTextAdventureRules,
     serializeWorld: serializeTextAdventureRoom,
-    // ⛓ PRESET SIDECARS D0 — the payload IS the maze's (`tileGridSerializer`
-    // is `serializeMazeWorld`), so the declaration is the maze's own object,
-    // imported from beside that serializer. ⚠ The neutral re-export this file's
-    // other tile-grid imports use would belong in `shared/procgen/
-    // adapterPrimitives.js` — a submodule, so not this slice's to add.
-    sidecarFields: TILE_GRID_SIDECAR_FIELDS,
-    // ⛓ PRESET SIDECARS V0 — the maze's payload, so the maze's AP-name readers.
-    apLocationNamesOf: tileGridApLocationNames,
+    // ⛓⛓ PRESET SIDECARS G2a — the payload is the text adventure's OWN
+    // (`textAdventureRoom.js`): its declaration, its AP location names, and
+    // what else it keys by a side (nothing: `keys: []`, the identity relabel).
+    // Until G2a all three were the maze's.
+    sidecarFields: TEXT_ADVENTURE_SIDECAR_FIELDS,
+    apLocationNamesOf: textAdventureApLocationNames,
+    exitSides: TEXT_ADVENTURE_EXIT_SIDES,
     apExitNamesOf: envelopeExitNames,
 });
 
