@@ -14556,6 +14556,21 @@ sidecars' three rows (sidecar-fields, procgen-reference, the reference identity)
 they declare the bank as DATA (the self-invalidation family) — left alone by agreement with `preset-sidecars-planning-4`.
 **⛓ Nothing queued: R2, H2, H3, S1, F1, F2, WT1, C1, C2 shipped, the owed write banked; W3 delayed on the pins.**
 
+**⚖ USER 2026-09-13: *"please finish any cleanup that would make sense to do in this session, and then launch a new
+planning session for the pins survey."* — HANDOFF to `seedling-headless-planning-4`** (Fable; prompt
+`NewDocs/plans/seedling-headless-planning-4-prompt.md`; plan §21 = the survey's design). Cleanup done by
+`seedling-headless-planning-3`: the headless channel's `/tmp/seedling-driver-*` residue removed (153 dirs, 3 MB; the
+code-side fix stays open by choice); the idle-on-CI lesson written into `feedback_session_prompts_report_back` (WT1 and
+C2 both idled on a CI wait — the wait is a RUNNING command); the primary's `shared/` checkout moved to the bumped gitlink
+`2ebeaf8` (d89a055900, on the user's word); the gitlink ruling (`2aca84090e`: bumps join push-by-default, the wasm
+submodule excepted) verified on disk and recorded. **The pins survey's premise, measured:** SWFRecomp-CC `origin/master`
+`bdf734c46` is 37 commits past the pinned runtime `254145a5b`; 18 `SWFModernRuntime` + 3 `SWFRecomp` files changed (build
+inputs), the rest `ruffle-tests`/docs — a rebuild at master changes bytes; AS3 sources recorded unmoved. State at the
+handoff: `main` = `origin/main` at `7444c22b79` + this entry, clean, no slice, no lock; the sidecars arc's planner is now
+`pipeline-relayout-planning` (its arc 2 closed; `preset-sidecars-planning-4` ended). This session ran F2, WT1, C1, C2 and
+the owed write (five units — past the ~3-slice mark, hence the handoff). `seedling-headless-planning-3` ends itself after
+the successor's handshake (⚖ 2026-09-13 lifetime ruling).
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
