@@ -14,82 +14,70 @@
  * ⛓ A text-adventure region has no tile geometry to draw — it has LOCATIONS.
  * So the cell is a parchment card: the region id, a location count, then the
  * location names until the cell runs out of room, with locked ones marked. The
- * exits still land on their resolved tiles so the connection lines (drawn by
- * the shared renderer) meet something.
+ * exits land on their SIDES (`resolveExitTilePositions`' side fallback) so the
+ * connection lines (drawn by the shared renderer) meet something.
+ *
+ * ⛓⛓ PRESET SIDECARS G2a — **PAYLOAD-FREE**: the cell is painted from the ROOM
+ * (`textAdventureRoom.js`: `{exits: Map, locations[]}`), which is what both the
+ * pipeline's live build (`playable_payload: core.world`) and a loaded document
+ * (`compositeMapDocument` → the entry's own `deserializeWorld`) hand it. Until
+ * G2a it read the maze's tile payload (`items` / `itemLocationNames` /
+ * `obstacles` / `obstacleLib` / `entrance`) — none of which a room has, so a
+ * regenerated text-adventure cell drew "0 locations". A gate is the AUTHORED
+ * `access_rule` on the exit / location, drawn closed when it does not hold on
+ * an empty inventory — the same evaluator a maze logic gate's `clear_rule`
+ * went through, so the picture's vocabulary is unchanged. No entrance mark: a
+ * room has no entrance tile.
  *
  * ⛔ No DOM at module load — the library that declares this stays
  * node-importable for the capability-matrix generator.
  */
 
-import {
-    DEFAULT_OBSTACLES, isObstacleCleared,
-} from '../shared/procgen/library.js';
+import { evaluateRuleAgainstInventory } from '../shared/procgen/library.js';
 import {
     TILE_PX, COLORS, resolveExitTilePositions, fitTextToWidth,
 } from '../procgenCore/compositeMapRenderer.js';
+
+/** The inventory a composite map is drawn against: nothing collected. */
+const EMPTY_INVENTORY = new Set();
+
+/** A gate is closed when its authored rule does not hold on nothing. Absent = open. */
+const gateClosed = (rule) => !!rule && !evaluateRuleAgainstInventory(rule, EMPTY_INVENTORY);
 
 /**
  * Paint one text-adventure region into its composite-map cell.
  *
  * @param {CanvasRenderingContext2D} ctx
- * @param {object} region the grid region (its `playable_payload` carries
- *   `exits` / `items` / `itemLocationNames` / `obstacles`).
+ * @param {object} region the grid region (its `playable_payload` is the ROOM:
+ *   `exits` (Map or array of sided records, `access_rule?`) and `locations`
+ *   (`{id, name?, access_rule?}`)).
  * @param {{offX:number, offY:number, regionSize:{width,height},
  *   tilePx?:number, colors?:object}} geom
  */
 export function drawTextAdventureCompositeRegion(ctx, region, {
     offX, offY, regionSize, tilePx = TILE_PX, colors = COLORS,
 } = {}) {
-    const payload = region?.playable_payload ?? {};
+    const room = region?.playable_payload ?? {};
     const cellW = regionSize.width * tilePx;
     const cellH = regionSize.height * tilePx;
-    const obsLib = payload.obstacleLib ?? DEFAULT_OBSTACLES;
-    const inventory = new Set();
 
     ctx.fillStyle = colors.textAdventureBg;
     ctx.fillRect(offX, offY, cellW, cellH);
 
-    const placedExits = resolveExitTilePositions(payload.exits, regionSize);
-    for (const { x, y } of placedExits) {
-        const obstacleId = payload.obstacles?.get?.(`${x},${y}`);
-        const obstacle = obstacleId ? obsLib[obstacleId] : null;
-        const isLogicGate = obstacle?.clear_set_type === 'rule';
-        const gateClosed = isLogicGate
-            && !isObstacleCleared(obstacleId, inventory, obsLib);
-        ctx.fillStyle = gateClosed ? colors.exitBlocked : colors.exit;
+    for (const { exit, x, y } of resolveExitTilePositions(room.exits, regionSize).filter(Boolean)) {
+        ctx.fillStyle = gateClosed(exit.access_rule) ? colors.exitBlocked : colors.exit;
         ctx.fillRect(offX + x * tilePx, offY + y * tilePx, tilePx, tilePx);
     }
 
-    if (payload.entrance && Number.isFinite(payload.entrance.x) && Number.isFinite(payload.entrance.y)) {
-        const ex = payload.entrance.x;
-        const ey = payload.entrance.y;
-        const onExit = placedExits.some(({ x, y }) => x === ex && y === ey);
-        if (!onExit) {
-            ctx.strokeStyle = colors.entrance;
-            ctx.lineWidth = 2;
-            ctx.strokeRect(offX + ex * tilePx + 1, offY + ey * tilePx + 1, tilePx - 2, tilePx - 2);
-        }
-    }
-
-    // Items live in two parallel Maps keyed by "x,y": payload.items
-    // (Map → itemId) and payload.itemLocationNames (Map → AP name).
-    // Skip items whose location name didn't make it through serialization.
+    // A deserialized room's location carries its AP `name`; the live build's
+    // carries only its `id` (the AP name is baked at serialize).
     const locationNames = [];
     const lockedLocations = new Set();
-    const items = payload.items;
-    const itemLocationNames = payload.itemLocationNames;
-    if (items && typeof items.entries === 'function') {
-        for (const [posKey] of items) {
-            const locationName = itemLocationNames?.get?.(posKey);
-            if (!locationName) continue;
-            locationNames.push(locationName);
-            const obstacleId = payload.obstacles?.get?.(posKey);
-            const obstacle = obstacleId ? obsLib[obstacleId] : null;
-            const isLogicGate = obstacle?.clear_set_type === 'rule';
-            const gateClosed = isLogicGate
-                && !isObstacleCleared(obstacleId, inventory, obsLib);
-            if (gateClosed) lockedLocations.add(locationName);
-        }
+    for (const location of Array.isArray(room.locations) ? room.locations : []) {
+        const locationName = location?.name ?? location?.id;
+        if (!locationName) continue;
+        locationNames.push(locationName);
+        if (gateClosed(location.access_rule)) lockedLocations.add(locationName);
     }
 
     const padX = 6;
