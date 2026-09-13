@@ -61,14 +61,22 @@
  * may be on a different branch than the outer gitlink — the script
  * logs the live branch/commit up front so results are attributable.
  *
- * Prereq: dev server on :8000 (python -m http.server 8000).
- * Run: node scripts/procgen/check-omsi-mana-leg.mjs
- * @ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at a hardcoded `localhost:8000` and it takes no `--host=` at all, so the roster cannot point it elsewhere.
- *   ⇒ deleting this one line is how a later slice adopts it into CI.
+ * Prereq: a dev server serving the repo root (python -m http.server 8000).
+ * Run: node scripts/procgen/check-omsi-mana-leg.mjs [--host=<repo-root origin>]
+ *
+ * ⛓ **ADOPTED INTO CI — PRESET SIDECARS C1 (2026-09-13).** The box-only
+ *    declaration that stood here said this gate drove a hardcoded dev-server
+ *    origin and took no host argument, so the roster could not point it
+ *    anywhere else. It now reads the origin through the directory's one
+ *    spelling (below), defaulting to the roster's own `LOCAL_HOST`, so
+ *    `argvFor(gate, 'local')` hands it the origin and CI's browser shards run
+ *    it against the tree they serve (the omsi-loops submodule included — the
+ *    shard checks out recursively).
  */
 import { chromium } from 'playwright';
 import { execSync } from 'node:child_process';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { LOCAL_HOST } from './gateRoster.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
@@ -86,7 +94,9 @@ argvHelp(import.meta.url);
 failOnCrash();
 takeBoxLockOrExit({ name: 'check-omsi-mana-leg.mjs', kind: 'browser' });
 
-const URL = 'http://localhost:8000/frontend/?game=omsi_substrate_test&seed=1';
+const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
+    ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
+const URL = `${arg('host', LOCAL_HOST)}/frontend/?game=omsi_substrate_test&seed=1`;
 const OMSI_REGION = 'region_1_1';
 /**
  * The omsi region's one graph exit and where it leads — the hop the parked
