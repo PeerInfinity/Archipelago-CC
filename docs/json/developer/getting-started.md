@@ -349,6 +349,22 @@ general_options:
 - `extend_sphere_log_to_all_locations: false` (minimal) – Only logs progression-critical spheres for faster testing
 - `extend_sphere_log_to_all_locations: true` (full) – Logs all locations including non-progression items for comprehensive validation
 
+### Working in a git worktree
+
+Concurrent work runs in separate git worktrees. Create one with the script, not with a bare `git worktree add`:
+
+```bash
+# From the primary tree, with its virtual environment active
+source .venv/bin/activate
+scripts/dev/new-worktree.sh <name>        # --dry-run prints the plan; --help lists the steps
+```
+
+A worktree **shares** the primary tree's Python environment: you activate the primary's `.venv` (`source <primary>/.venv/bin/activate`, printed at the end of the script's output) rather than creating or copying one in each worktree.
+
+A worktree gets its **own** copies of the two gitignored files that steps 3 and 4 above create, because the script runs those steps inside it: `Players/Templates/` and a `host.yaml` set to `full-spoilers`, which matches the export settings the committed presets were generated with. With them, `Generate.py` and the roundtrip gates that call it run in the worktree. If the script finds no Python that can run `Generate.py` (for example, no virtual environment is active), it still creates the worktree and prints the three commands to run by hand.
+
+A preset regenerated in a worktree changes in exactly the same way it would on the primary tree. For example, the quick-reference `Generate.py --weights_file_path "Templates/Adventure.yaml" --multi 1 --seed 1` modifies the committed Adventure preset in both places, because that preset is out of date with the current world. That change is not caused by the worktree; revert it with `git checkout -- frontend/presets` unless you mean to update the preset.
+
 ## Next Steps
 
 You are now ready to start developing. Refer to the following documents for more detailed information:
