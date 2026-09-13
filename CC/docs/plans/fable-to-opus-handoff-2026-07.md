@@ -14353,6 +14353,18 @@ EMPTY submodule tree diff owes no tier drive (population (i) is about a differen
 re-record is the sidecars arc's ask, not this one's. **S1 + W3 LAUNCHED 2026-09-13** (briefs
 `seedling-headless-S1-prompt.md`, `-W3-prompt.md`; F1's brief written, launched after S1).
 
+**W3 STOPPED + ⚖ DELAYED 2026-09-13 (user, verbatim: *"Let's delay the shed until all of the pins are updated to the
+latest version."*).** W3's W0 overturned the premise (trap 1345): the "133 MB" was 112 LOOSE objects in the primary
+tree's submodule checkout; a FRESH clone of the full 16-commit history is **38 MB** (the wasms delta-compress), and the
+shed would make it **15 MB** — a 23 MB saving per fresh clone, against a PERMANENT cost: every older outer commit's
+gitlink becomes unfetchable once GitHub drops the unreachable objects (old heads, bisects, CI reruns and new worktrees
+at old commits fail at `submodule update`); four local checkouts pin old SHAs; and the pre-ruled "empty tree diff owes
+nothing" clause cannot run in CI after a shed (trap 1346 — the old object is gone there, and the diff is not empty
+anyway because `docs/history.md` records the shed). The orphan `1f765d0b8e55` (byte-identical tree + the history
+note) sits in `~/CC/seedling-wasm-shed` on branch `shed`, NOTHING pushed; it goes stale at the next submodule commit
+and is re-cut from the then-HEAD when the shed is done. Local remedy needing no rewrite: `git gc` in the primary
+tree's submodule checkout (~95 MB freed) — a planner follow-up once S1 leaves the tree. Plan §17.1.
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
