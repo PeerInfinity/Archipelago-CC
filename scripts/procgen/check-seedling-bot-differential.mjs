@@ -159,6 +159,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { assertLogicOnlyChannel } from './seedlingChannel.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
@@ -723,71 +724,14 @@ const tapeDeadlineMs = (name, tapeObj) => {
 
 /**
  * ⛓⛓ R1 — **PROVE THE HEADLESS CHANNEL IS THE LOGIC-ONLY ONE, ONCE, BEFORE
- * THE FIRST TAPE.**
- *
- * ⛔⛔ WHY THIS IS A REFUSAL AND NOT A WARNING. `HEADLESS_LOGIC_ONLY_ARGS`
- * ASKS Chromium to lose the WebGPU device (no Vulkan pair ⇒ the compositor has
- * no shared-image backing for the swapchain). It cannot MAKE it. A Chromium
- * bump, a driver, a container that presents fine turns this run into the
- * PIXELS mode: same verdicts, SwiftShader rasterising on the CPU, 4–12 ticks/s
- * against deadlines derived at ~30 — every tape three to seven times slower,
- * a roster-wide timeout storm, and a diagnosis that looks like "the game got
- * slow". That is the failure this refusal converts into one named sentence.
- *
- * ⛓ THE READOUT, NOT THE MESSAGE. `window.__swfGpu.lost` is the runtime's own
- * counter (SWFRecomp-CC `b0a6a487b`+). ⛔ Never key on `device.lost`'s TEXT:
- * Chromium 1194 says `reason=unknown`, "A valid external Instance reference no
- * longer exists."; Chromium 145 says `destroyed`, "Device was destroyed."
- *
- * ⛔⛔ ABSENCE IS A REFUSAL TOO, AND IT NAMES BOTH CAUSES — measured 2026-09-12
- * on the PINNED p4d, where `__swfGpu` is NEVER CREATED in EITHER mode because
- * the `06f3d87` runtime predates the readout entirely. So "no `__swfGpu`" does
- * not mean "no loss": it means either a pre-`b0a6a487b` build (the gitlink
- * went backwards) or a rebuilt build whose device stayed alive (the flags
- * stopped working). Both are stop conditions, and a conditional that skipped
- * the check when the object was missing would pass on both of them.
- *
- * `texFail` / `stalls` ride along because they are the OTHER two ways the
- * render side can be sick while the bridge still answers: a texture the device
- * refused (the 283-layer array, which is exactly what the rebuild fixes) and a
- * frames-in-flight park. Neither should ever be non-zero on a lost device.
+ * THE FIRST TAPE.** The refusal and its reasons live in `seedlingChannel.js`
+ * since H2, shared by every logic-only Seedling gate (the readout, never the
+ * `device.lost` text; absence refused too; `texFail`/`stalls` a second refusal).
  */
-const gpuReadout = (page) => page.evaluate(() => (globalThis.__swfGpu === undefined
-    ? null
-    : JSON.parse(JSON.stringify(globalThis.__swfGpu))));
-
 let logicOnlyProved = false;
-async function assertLogicOnlyChannel(page) {
+async function proveLogicOnlyChannel(page) {
     if (WIN || logicOnlyProved) return;
-    // The loss lands at the FIRST present, which is a frame or two after the
-    // start click — poll rather than sample once, so a slow boot is not read
-    // as a live device.
-    const gpu = await waitFor(page, 'the headless channel to lose its WebGPU device '
-        + '(__swfGpu.lost ≥ 1)', async () => {
-        const g = await gpuReadout(page);
-        return g && g.lost >= 1 ? g : null;
-    }, 90000).catch(async () => {
-        const g = await gpuReadout(page);
-        const seen = g === null ? 'window.__swfGpu was NEVER CREATED' : JSON.stringify(g);
-        throw new Error('REFUSED: this is not the logic-only channel. '
-            + `Expected \`__swfGpu.lost >= 1\` within 90 s of the start click; ${seen}. `
-            + 'Two causes, and the run must stop for either: (a) the wasm predates '
-            + 'SWFRecomp-CC b0a6a487b and has no readout at all — check the '
-            + 'frontend/modules/flashPanel/wasm gitlink; or (b) the device STAYED ALIVE, '
-            + 'so this is the PIXELS mode (SwiftShader rasterising at 4–12 ticks/s) '
-            + 'against deadlines derived at ~30 — check HEADLESS_LOGIC_ONLY_ARGS against '
-            + 'this Chromium. ⛔ Not a slow tier: a wrong channel.');
-    });
-    const sick = ['texFail', 'stalls'].filter((k) => Number(gpu[k]) > 0);
-    if (sick.length) {
-        throw new Error('REFUSED: the headless channel lost its device as expected, but the '
-            + `render side reports ${sick.map((k) => `${k}=${gpu[k]}`).join(', ')} `
-            + `(__swfGpu = ${JSON.stringify(gpu)}). On a lost device every WebGPU call is a `
-            + 'valid no-op, so neither can be non-zero — a texture the device refused or a '
-            + 'frames-in-flight park is a real defect in THIS build, not a channel question.');
-    }
-    console.log(`CHANNEL: headless logic-only — __swfGpu = ${JSON.stringify(gpu)} `
-        + '(device lost at the first present, as asked; no pixels, no texFail, no stalls)');
+    await assertLogicOnlyChannel(page);
     logicOnlyProved = true;
 }
 
@@ -804,7 +748,7 @@ async function freshPage() {
     await page.click('#btn-start');
     await waitFor(page, 'bot callbacks registered',
         () => page.evaluate(() => !!(window.__swfBridge?.game?.botStatus)));
-    await assertLogicOnlyChannel(page);
+    await proveLogicOnlyChannel(page);
     return page;
 }
 

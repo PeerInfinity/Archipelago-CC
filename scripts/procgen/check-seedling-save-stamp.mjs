@@ -43,6 +43,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
+import { proveDriverChannel, withLogicOnlySteps } from './seedlingChannel.js';
 import { driverChannel } from './seedlingDriver.js';
 
 /**
@@ -209,7 +210,8 @@ const arms = [
 
 const channel = driverChannel({
     win: WIN, winPy: WIN_PY, driver: DRIVER, chromiumArgs: HEADLESS_LOGIC_ONLY_ARGS });
-channel.write('savestamp-plan.json', JSON.stringify({ url: PAGE_URL, arms }));
+channel.write('savestamp-plan.json', JSON.stringify({ url: PAGE_URL,
+    arms: WIN ? arms : withLogicOnlySteps(arms) }));
 channel.clear('savestamp-results.json');
 
 console.log(`\n# the save stamp and the persistence table, in ${PAGE_NAME}`);
@@ -232,6 +234,8 @@ driverOut.replace(/\r/g, '').split('\n')
     .forEach((l) => console.log(`  ${l}`));
 
 const results = JSON.parse(channel.read('savestamp-results.json'));
+// ⛓ H2 — the logic-only channel is PROVED by each arm's readout, or refused.
+if (!WIN && !proveDriverChannel(results.arms)) process.exit(1);
 const byName = new Map(results.arms.map((a) => [a.name, a]));
 /** The Nth (0-based) botLevelSet readout of an arm, parsed. */
 const readout = (armName, nth = -1) => {

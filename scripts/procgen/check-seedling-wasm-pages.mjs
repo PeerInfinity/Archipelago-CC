@@ -80,6 +80,11 @@
  * (`check-seedling-wasm-element.mjs`), and this whole row took 33.7 s (was
  * 184.8 s). The REACH below is unchanged on purpose: giving this row the
  * verdict arms is H2, after the user's ⚖.
+ * ⛔ H2 (2026-09-12, ⚖ ruling A narrowed): this gate STAYS on
+ * `HEADLESS_WEBGPU_ARGS` — its claims take the page-error list, and the
+ * device-lost message IS the logic-only channel's own signature, so a
+ * zero-pageerror claim cannot be asked on that channel
+ * (`headlessChromium.test.js` derives the split from this file's text).
  *
  * ⛓ MANUAL IS THE ONE ARM THAT REACHES `finished` HERE, and that is why it is
  * here: its tape is ZERO-INPUT, so the only frames between `running` and

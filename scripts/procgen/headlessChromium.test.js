@@ -139,3 +139,58 @@ describe('H2 — the Python half is pinned to the node half', () => {
         expect(reqs).toEqual([`playwright==${node}`]);
     });
 });
+
+/**
+ * ⛓⛓ H2 — **WHICH ARG SET EACH WASM-DRIVING GATE LAUNCHES ON, DERIVED FROM
+ * THE GATE'S OWN TEXT** (⚖ ruling A, narrowed 2026-09-12). A gate that imports
+ * this module drives the recompiled game headless. It runs on
+ * `HEADLESS_LOGIC_ONLY_ARGS` UNLESS its claims assert on the page-error list:
+ * the device-lost message IS the logic-only channel's signature, so a
+ * zero-pageerror claim cannot be asked there and such a gate keeps
+ * `HEADLESS_WEBGPU_ARGS`. ⛔ Nothing here keys on the message text — the
+ * derivation reads how a gate COLLECTS page errors (a `pageerror` handler that
+ * pushes into a binding, or a `/pageerror/` filter assigned to one) and whether
+ * that binding reaches a `check(`/`want(` call.
+ */
+describe('H2 — each wasm gate is on the arg set its claims allow', () => {
+    const callArgs = (src, at) => {
+        let depth = 0; let i = src.indexOf('(', at); const s = i;
+        for (; i < src.length; i += 1) {
+            if (src[i] === '(') depth += 1;
+            else if (src[i] === ')') { depth -= 1; if (!depth) break; }
+        }
+        return src.slice(s, i + 1);
+    };
+    const assertsPageerrors = (src) => {
+        const collectors = new Set();
+        for (const m of src.matchAll(/on\(\s*['"]pageerror['"]\s*,\s*\(?\w*\)?\s*=>\s*\{?\s*([A-Za-z_$][\w$.]*)\.push\(/g)) collectors.add(m[1]);
+        for (const m of src.matchAll(/(?:const|let)\s+(\w+)\s*=[^;]*\/pageerror\//g)) collectors.add(m[1]);
+        return [...src.matchAll(/\b(?:check|want)\(/g)].some((m) => {
+            const a = callArgs(src, m.index);
+            return [...collectors].some((c) => new RegExp(`(^|[^\\w$.])${c.replace('.', '\\.')}\\b`).test(a));
+        });
+    };
+    const importedSet = (src) => {
+        const m = /import\s*\{([^}]*)\}\s*from\s*'\.\/headlessChromium\.js'/.exec(src);
+        return m ? m[1].split(',').map((x) => x.trim()).filter(Boolean) : null;
+    };
+    const gates = readdirSync(HERE).filter((f) => /^check-.*\.mjs$/.test(f))
+        .map((f) => ({ f, src: readFileSync(join(HERE, f), 'utf8') }))
+        .filter((g) => importedSet(g.src) !== null);
+
+    it('the population and both halves are non-empty', () => {
+        expect(gates.length).toBeGreaterThan(5);
+        expect(gates.some((g) => assertsPageerrors(g.src))).toBe(true);
+        expect(gates.some((g) => !assertsPageerrors(g.src))).toBe(true);
+    });
+
+    it('a gate that asserts page errors keeps the pixels set; every other is logic-only', () => {
+        const wrong = gates.map((g) => {
+            const set = importedSet(g.src);
+            const want = assertsPageerrors(g.src) ? 'HEADLESS_WEBGPU_ARGS' : 'HEADLESS_LOGIC_ONLY_ARGS';
+            const other = want === 'HEADLESS_WEBGPU_ARGS' ? 'HEADLESS_LOGIC_ONLY_ARGS' : 'HEADLESS_WEBGPU_ARGS';
+            return set.includes(want) && !set.includes(other) ? null : `${g.f}: imports ${set.join(', ')}; wants ${want}`;
+        }).filter(Boolean);
+        expect(wrong).toEqual([]);
+    });
+});

@@ -48,7 +48,8 @@ import { chromium } from 'playwright';
 import { existsSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { HEADLESS_WEBGPU_ARGS } from './headlessChromium.js';
+import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
+import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -116,7 +117,9 @@ const HOST = (process.argv.find((a) => a.startsWith('--host=')) ?? '--host=http:
 const URL = `${HOST}/frontend/?game=seedling_atlas&seed=1`;
 
 const browser = await chromium.launch({
-    args: HEADLESS_WEBGPU_ARGS,
+    /** ⛓ H2 (⚖ ruling A): logic-only — this gate reads no pixels and asserts
+     *  no pageerror list, so the device loss costs it nothing but wall clock. */
+    args: HEADLESS_LOGIC_ONLY_ARGS,
 });
 const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
 const logs = [];
@@ -223,6 +226,7 @@ try {
         return !!b && !b.disabled;
     }));
     await gameFrame().click('#btn-start');
+    await assertLogicOnlyChannel(gameFrame());
     const status = await waitFor("panel status 'ready'", async () =>
         ((await panelStatus()) === 'ready' ? 'ready' : null), 120000);
     check('Phase A: the wasm bridge handshake reaches ready', status === 'ready');

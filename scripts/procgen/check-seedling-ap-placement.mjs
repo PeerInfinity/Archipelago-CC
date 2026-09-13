@@ -90,7 +90,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { HEADLESS_WEBGPU_ARGS } from './headlessChromium.js';
+import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
+import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { argvHelp } from './argvHelp.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
@@ -307,8 +308,11 @@ const PORT = server.address().port;
 const PAGE_URL = `http://127.0.0.1:${PORT}/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 console.log(`  serving this worktree on 127.0.0.1:${PORT}`);
 
+let channelSaid = false;
 const browser = await chromium.launch({
-    args: HEADLESS_WEBGPU_ARGS,
+    /** ⛓ H2 (⚖ ruling A): logic-only — this gate reads no pixels and asserts
+     *  no pageerror list, so the device loss costs it nothing but wall clock. */
+    args: HEADLESS_LOGIC_ONLY_ARGS,
 });
 
 /**
@@ -489,6 +493,9 @@ async function runArmsLocal(arms) {
             await page.waitForFunction(
                 () => typeof window.__swfBridge?.game?.botStatus === 'function',
                 null, { timeout: 240000 });
+            // ⛓ H2 — every arm's page proves the channel; the line prints once.
+            await assertLogicOnlyChannel(page,
+                { say: channelSaid ? () => {} : (l) => { channelSaid = true; console.log(l); } });
             for (const step of arm.steps) {
                 /**
                  * ⛔⛔ **THE TWO PLAYWRIGHT APIs DISAGREE ABOUT WHAT A

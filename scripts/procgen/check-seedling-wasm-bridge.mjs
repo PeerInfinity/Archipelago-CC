@@ -29,9 +29,11 @@
  *     seedling-wasm.yml checks it out and runs this row NON-GATING, to find
  *     out whether the page boots on a runner with no GPU.
  *
- * Runs headless: WebGPU comes up on swiftshader with `HEADLESS_WEBGPU_ARGS`
- * (`headlessChromium.js` — the one spelling, and the docblock that says why
- * each flag is there; without its Vulkan pair the device is lost at frame 2).
+ * Runs headless on `HEADLESS_LOGIC_ONLY_ARGS` (`headlessChromium.js` — the one
+ * spelling, and the docblock that says why each flag is there). ⛓ H2 (⚖ ruling
+ * A): without the Vulkan pair the device is lost at the first present ON
+ * PURPOSE — this gate reads no pixels — and `seedlingChannel.js` proves it by
+ * the runtime's `__swfGpu.lost` before any claim is made.
  *
  * ⛓⛓ AND THE BUILD MOVED, 2026-08-19. The flash panel loaded
  * `seedling_teleport_ap` — a variant that skips the preloader and the title
@@ -53,7 +55,8 @@ import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { HEADLESS_WEBGPU_ARGS } from './headlessChromium.js';
+import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
+import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -117,7 +120,9 @@ const URL = `${HOST}/frontend/?mode=flash`;
 const SEEDLING_RULES = './presets/seedling/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 
 const browser = await chromium.launch({
-    args: HEADLESS_WEBGPU_ARGS,
+    /** ⛓ H2 (⚖ ruling A): logic-only — this gate reads no pixels and asserts
+     *  no pageerror list, so the device loss costs it nothing but wall clock. */
+    args: HEADLESS_LOGIC_ONLY_ARGS,
 });
 const page = await browser.newPage();
 const logs = [];
@@ -252,6 +257,7 @@ await waitFor('start button enabled', () =>
 check('panel prompts for Start', (await panelStatus()).includes('Start'),
     `status="${await panelStatus()}"`);
 await gameFrame().click('#btn-start');
+await assertLogicOnlyChannel(gameFrame());
 
 const status = await waitFor("panel status 'ready'", async () =>
     ((await panelStatus()) === 'ready' ? 'ready' : null), 60000);

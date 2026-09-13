@@ -70,6 +70,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
+import { proveDriverChannel, withLogicOnlySteps } from './seedlingChannel.js';
 import { driverChannel } from './seedlingDriver.js';
 
 /**
@@ -304,7 +305,7 @@ const arms = [
 
 const channel = driverChannel({
     win: WIN, winPy: WIN_PY, driver: DRIVER, chromiumArgs: HEADLESS_LOGIC_ONLY_ARGS });
-const planJson = JSON.stringify({ url: PAGE_URL, arms });
+const planJson = JSON.stringify({ url: PAGE_URL, arms: WIN ? arms : withLogicOnlySteps(arms) });
 channel.write('generated-set-plan.json', planJson);
 channel.clear('generated-set-results.json');
 
@@ -330,6 +331,8 @@ driverOut.replace(/\r/g, '').split('\n')
     .forEach((l) => console.log(`  ${l}`));
 
 const results = JSON.parse(channel.read('generated-set-results.json'));
+// ⛓ H2 — the logic-only channel is PROVED by each arm's readout, or refused.
+if (!WIN && !proveDriverChannel(results.arms)) process.exit(1);
 const byName = new Map(results.arms.map((a) => [a.name, a]));
 const arm = (name) => {
     const a = byName.get(name);

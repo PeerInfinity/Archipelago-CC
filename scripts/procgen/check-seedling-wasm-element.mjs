@@ -40,6 +40,10 @@
  * rejection per frame — and with `HEADLESS_WEBGPU_ARGS` the count is 0. The
  * row still prints rather than asserts it (never key a check on the loss's
  * message text, which differs across Chromium versions).
+ * ⛓ H2 (2026-09-12, ⚖ ruling A): the gate now runs on `HEADLESS_LOGIC_ONLY_ARGS`
+ * — it reads no pixels and asserts no pageerror list — and PROVES that channel
+ * by the runtime's readout (`seedlingChannel.js`), so the count printed below is
+ * the channel's own device-lost signature, not a defect.
  *
  * ── ⛓⛓ THE SUBJECT IS MEASURED, NOT CHOSEN ───────────────────────────
  *
@@ -67,7 +71,8 @@
  */
 
 import { chromium } from 'playwright';
-import { HEADLESS_WEBGPU_ARGS } from './headlessChromium.js';
+import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
+import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -175,7 +180,9 @@ say('');
  *  invokes `runSWF`, the renderer cannot initialise and `botStatus` never
  *  appears — a failure that looks like a tape problem and is not. */
 const browser = await chromium.launch({
-    args: HEADLESS_WEBGPU_ARGS,
+    /** ⛓ H2 (⚖ ruling A): logic-only — this gate reads no pixels and asserts
+     *  no pageerror list, so the device loss costs it nothing but wall clock. */
+    args: HEADLESS_LOGIC_ONLY_ARGS,
 });
 const page = await browser.newPage();
 const pageErrors = [];
@@ -273,6 +280,7 @@ const frame = page.frames().find((f) => /\/game\.html/.test(f.url()));
 check(Boolean(frame), 'the game frame is mounted', frame?.url() ?? 'no /game.html frame');
 if (!frame) { await browser.close(); say(`\n${failed} FAILURE(S)`); process.exit(1); }
 await frame.click('#btn-start');
+await assertLogicOnlyChannel(frame, { say });
 
 await until("window.__watch?.wasm?.reached?.includes('levels') || window.__watch?.wasm?.refusal",
     600, '⛓ the ONE-ROOM level set MOUNTED and was read back out of the artifact');
@@ -326,7 +334,8 @@ if (wasm) {
 /** ⛓ NOT a claim — printed so a reader is not surprised by it. ⛔ H1: this
  *  was read as swiftshader's own noise (slice 1 measured a dense control
  *  emitting the same count); it is the device-lost message, and 0 under
- *  `HEADLESS_WEBGPU_ARGS`. A non-zero count here means the device was lost. */
+ *  `HEADLESS_WEBGPU_ARGS`. ⛓ H2: this gate runs logic-only, where the loss is
+ *  ASKED FOR and proved by `__swfGpu.lost` — so a non-zero count is expected. */
 say(`\n  [headless] ${pageErrors.length} page error(s) `
     + `— e.g. ${JSON.stringify(pageErrors[0] ?? 'none')}`);
 
