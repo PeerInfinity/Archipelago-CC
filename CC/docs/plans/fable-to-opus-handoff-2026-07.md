@@ -14939,6 +14939,18 @@ to CI because the mana leg is an `@ci-box` gate that drives `localhost:8000` and
 slice (the room deserializer carries the envelope's play-time flags onto the world, the maze's precedent; a cross-substrate law row
 over the registry: every `deserializeWorld` carries `manaEnabled` when the payload has it; the mana leg green; a trap).
 
+**⚖ RULED + G2a-fix LAUNCHED 2026-09-13 — the user, verbatim: *"Yes, please run the fix-up slice."*** (put as a ladder re-cut: an
+unplanned insertion after G2b-1, so the planner stopped launching and asked). **LAUNCHED** `apworld-sidecars-ta-mana` (Opus, pid
+857337, cwd verified `~/CC/Archipelago-CC-wt-ta-mana`, branch `ta-mana` from `c8a32f7117` = origin/main at the cut, port 8130,
+created by `new-worktree.sh ta-mana`; kickoff `NewDocs/plans/apworld-sidecars-G2a-fix-prompt.md`; handshake exchanged — traps at
+1354). Scope: `deserializeTextAdventureRoom` carries `manaEnabled` (and `fogEnabled` iff a WORLD reader exists — census first) onto
+the world, the maze's law (`mazeRoomEngine.js:348`); a registry-derived law row (every `deserializeWorld` keeps the flag when its
+payload carries it — text_adventure red / maze green BEFORE, the discrimination); `check-ta-mana-leg.mjs` green against the slice's
+own tree (a `--host=` flag if ≤ ~15 lines and the roster is unmoved, else a measured scratch drive — the gate hardcodes
+`localhost:8000`, the primary's server); docs; the trap (a docblock that says "reads the payload" when the reader reads the
+WORLD). Baseline CI = `08adb6e356` **470/14125 (14117 | 8 | 0), slow 12/217** (`c8a32f7117` is docs-only). As-built → plan §27;
+ONE merge by the planner. ⛔ No preset byte moves.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
