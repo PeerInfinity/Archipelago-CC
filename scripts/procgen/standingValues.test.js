@@ -62,8 +62,9 @@ describe('⛓⛓ the second arm is a row of its own', () => {
 
 describe('⛓ every row is derived — the gate rows ARE the roster and its arms', () => {
     it('each gate contributes its base row and one row per declared arm', () => {
-        /** ⛓ F1 task 0 — a gate declaring `@standing-row` contributes none. */
-        const expected = gateRoster().filter((g) => !g.standingRow).flatMap((g) => {
+        /** ⛓ F1 task 0 — a gate declaring `@standing-row` contributes none;
+         *  ⛓ F2 task 6 — nor does one whose `@ci-box` declares a positional. */
+        const expected = gateRoster().filter((g) => !g.standingRow && !g.ciBox?.positional).flatMap((g) => {
             const name = g.file.replace(/^check-/, '').replace(/\.mjs$/, '');
             return [`gate: ${name}`, ...g.variants.map((v) => `gate: ${name} (${v.label})`)];
         });
@@ -200,12 +201,11 @@ describe('F1 task 0 / 0b — the writer never creates an unbounded NEW row', () 
     });
 
     /**
-     * ⛔ THE NINE the sidecars write ran red, each with its MEASURED result.
-     * All nine are unpriced `@ci-box` gates, so 0b PROBES them (a deadline
+     * ⛔ EIGHT OF THE NINE the sidecars write ran red, each with its MEASURED
+     * result (the ninth, jta-balance-pass, is no longer derived — F2 task 6). All unpriced `@ci-box` gates, so 0b PROBES them (a deadline
      * run) — and the admission refuses every one of those results by name.
      */
     it.each([
-        ['gate: jta-balance-pass', { exit: 2, ms: 100, value: '0/0', total: null }, /exited 2/],
         ['gate: maze-consumable-tiles', { exit: 1, ms: 600, value: '0/0', total: null }, /exited 1/],
         ['gate: maze-loop-mana', { exit: 1, ms: 600, value: '0/0', total: null }, /exited 1/],
         ['gate: atlas-sphere-roundtrip', { exit: 1, ms: 29000, value: '60/0', total: null }, /green by PASS tally only \(PASS tally 60\/0\), NO total/],
@@ -221,6 +221,18 @@ describe('F1 task 0 / 0b — the writer never creates an unbounded NEW row', () 
         expect(spawned([row])).toEqual([`probe ${key}`]);
         expect(newRowAdmission({ ...measured, killed: false }, { deadlineMs: CI_SHARD_BUDGET_MS }))
             .toMatch(why);
+    });
+
+    /**
+     * ⛔ F2 task 6 — the TENTH red was `jta-balance-pass`: EXIT 2 in 0.1 s,
+     * its usage line, because it takes a positional `rules.json` and the
+     * roster handed it an empty argv. Its `@ci-box` now declares the
+     * positional, so no row is derived and the writer never spawns it.
+     */
+    it('gate: jta-balance-pass declares its positional, so no row is derived to probe', () => {
+        const g = gateRoster().find((x) => x.file === 'check-jta-balance-pass.mjs');
+        expect(g.ciBox.positional).toBe('<exported rules.json>');
+        expect(ROWS.find((r) => r.key === 'gate: jta-balance-pass')).toBeUndefined();
     });
 
     it('⛔ an unpriced NEW gate that is NOT @ci-box is refused before running; --key= runs it', () => {

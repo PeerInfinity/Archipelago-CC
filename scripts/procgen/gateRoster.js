@@ -400,7 +400,16 @@ export function ciBoxIn(text, { file = '(text)' } = {}) {
             + '`@ci-box <why the box must answer this gate>`, got '
             + `${JSON.stringify(hits[0][0].trim())}`);
     }
-    return { reason };
+    /**
+     * ⛔ F2 task 6 — **A REASON THAT DECLARES A POSITIONAL** (`positional
+     * \`<what it takes>\``, the backquoted token, never prose read for intent)
+     * names a gate with no argument-free run: `argvFor` answers `null` for it,
+     * so no `gate:` row is derived and `gates.mjs` names it unrunnable. Measured:
+     * `jta-balance-pass`'s derived row ran `EXIT 2 in 0.1 s` (usage) inside
+     * every unselected write; `argvFor` had returned a runnable EMPTY argv.
+     */
+    const positional = /\bpositional `([^`]+)`/.exec(reason)?.[1] ?? null;
+    return positional ? { reason, positional } : { reason };
 }
 
 /**
@@ -634,6 +643,8 @@ export function gateRoster({ repo = REPO } = {}) {
  * can say so BY NAME instead of silently running it against the wrong thing.
  */
 export function argvFor(gate, where, { host = LOCAL_HOST, pages = PAGES_ORIGIN } = {}) {
+    /** ⛔ F2 task 6 — a declared positional: no argv this roster can write. */
+    if (gate.ciBox?.positional) return null;
     const out = [];
     if (where === 'local') {
         if (gate.flags.includes('host')) out.push(`--host=${host}`);

@@ -166,11 +166,8 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import {
-    FULL_TIER_WORKFLOW_DEFAULT_SHARDS, describeTierCosts, githubRepoOf, reDriveCommands,
-    rosterLabels, tapeTicksOf,
-} from './fullTierEstimate.js';
-import { partitionTapes } from './fullTierShards.js';
+import { githubRepoOf, rosterLabels } from './fullTierEstimate.js';
+import { reDriveAdvice as sharedReDriveAdvice, tierCostsOf } from './fullTierShards.js';
 import {
     FILE, ROSTER_ROW_KEY, compositeParts, compositeValue, compositeWhy, readStandingValues,
 } from './standingValues.js';
@@ -231,19 +228,9 @@ const git = (...args) => execFileSync('git', args,
 const ORIGIN_REPO = (() => {
     try { return githubRepoOf(git('remote', 'get-url', 'origin')); } catch { return null; }
 })();
-const costsOf = (labels) => {
-    const tapes = tapeTicksOf(labels, { tapesDir: TAPES });
-    const shards = FULL_TIER_WORKFLOW_DEFAULT_SHARDS;
-    return describeTierCosts({
-        tapes: tapes.length, ticks: tapes.reduce((n, t) => n + t.ticks, 0),
-        bins: partitionTapes(tapes, shards).shards, shards,
-    });
-};
-const reDriveAdvice = (category, labels) => {
-    const cmd = reDriveCommands({ tier: category, repo: ORIGIN_REPO });
-    return `⛓ RE-DRIVE IT — CI: ${cmd.ci}\n      ⛓            box: ${cmd.box}`
-        + `\n      ⛓ ${costsOf(labels)}`;
-};
+const costsOf = (labels) => tierCostsOf(labels, { tapesDir: TAPES });
+const reDriveAdvice = (category, labels) => sharedReDriveAdvice({
+    tier: category, labels, tapesDir: TAPES, repo: ORIGIN_REPO });
 
 /* ── the baseline: the head the standing row was measured at ─────────── */
 

@@ -26,7 +26,7 @@
  * Exits non-zero when the pass fails its own convergence bar: any stalled or
  * never-started entry, any saturated solve, or a walk that doesn't cover the
  * full location universe.
- * @ci-box V3b adopted this script's NAME, not its RUN: it has never been priced on a runner, and `planCiShards` gives an unpriced arm a whole 600 s shard — adopting it is a costed decision, not a rename's side effect.
+ * @ci-box V3b adopted this script's NAME, not its RUN: it takes a positional `<exported rules.json>` (a post-fill seed, e.g. from `JTA_RT_KEEP=1 check-jta-locations-roundtrip.mjs`) and exits 2 without it, and it has never been priced on a runner — `planCiShards` gives an unpriced arm a whole 600 s shard, so adopting it is a costed decision, not a rename's side effect.
  *   ⇒ deleting this one line is how a later slice adopts it into CI.
  */
 

@@ -26,7 +26,10 @@
  * `ciGatePlan.planCiShards` is the same idea packed to a BUDGET; the tier
  * wants a COUNT, so it is not reused.
  */
-import { FIXED_SEC_PER_TAPE, SEC_PER_KILOTICK } from './fullTierEstimate.js';
+import {
+    FIXED_SEC_PER_TAPE, FULL_TIER_WORKFLOW_DEFAULT_SHARDS, SEC_PER_KILOTICK, describeTierCosts,
+    reDriveCommands, tapeTicksOf,
+} from './fullTierEstimate.js';
 
 /** The price of one tape, in seconds, from its tick count. */
 export function tapePriceSec(ticks) {
@@ -181,3 +184,26 @@ export function multisetDifference(a, b) {
     for (const [k, n] of b) { const d = n - (a.get(k) ?? 0); if (d > 0) onlyB.push([k, d]); }
     return { onlyA, onlyB };
 }
+
+/**
+ * ⛓ F2 task 6 — **THE PRICE OF A SET OF TAPES AND THE WAY TO PAY IT, ONE
+ * SPELLING** for every instrument that owes or offers a tier drive (F1 built it
+ * inside `check-seedling-full-tier-owed.mjs`; `rerecord-seedling-campaign.mjs`
+ * still advised `--win --tier=` with the box-only estimate). Here because it
+ * needs both the estimate (`fullTierEstimate.js`) and the partition (this file).
+ */
+export function tierCostsOf(labels, { tapesDir, shards = FULL_TIER_WORKFLOW_DEFAULT_SHARDS }) {
+    const tapes = tapeTicksOf(labels, { tapesDir });
+    return describeTierCosts({
+        tapes: tapes.length, ticks: tapes.reduce((n, t) => n + t.ticks, 0),
+        bins: partitionTapes(tapes, shards).shards, shards,
+    });
+}
+
+/** The three lines a debt or an offer prints: the CI dispatch, the box drive, the prices. */
+export function reDriveAdvice({ tier, labels, tapesDir, repo }) {
+    const cmd = reDriveCommands({ tier, repo });
+    return `⛓ RE-DRIVE IT — CI: ${cmd.ci}\n      ⛓            box: ${cmd.box}`
+        + `\n      ⛓ ${tierCostsOf(labels, { tapesDir })}`;
+}
+

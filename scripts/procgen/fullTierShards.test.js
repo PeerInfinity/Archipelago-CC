@@ -14,9 +14,13 @@ import { describe, expect, it } from 'vitest';
 import { fixtureNames, loadTape } from '../../frontend/modules/seedlingDemo/fixtures/index.js';
 import {
     checkLineMultiset, multisetDifference, parseShardArg, parseShardCount, partitionTapes,
-    shardTimeoutMinutes, tapePriceSec, SHARD_SETUP_MINUTES, SHARD_TIMEOUT_MULTIPLIER,
+    reDriveAdvice, shardTimeoutMinutes, tapePriceSec, tierCostsOf, SHARD_SETUP_MINUTES,
+    SHARD_TIMEOUT_MULTIPLIER,
 } from './fullTierShards.js';
-import { FIXED_SEC_PER_TAPE, SEC_PER_KILOTICK } from './fullTierEstimate.js';
+import {
+    FIXED_SEC_PER_TAPE, FULL_TIER_WORKFLOW_DEFAULT_SHARDS, SEC_PER_KILOTICK, describeTierCosts,
+    reDriveCommands, tapeTicksOf,
+} from './fullTierEstimate.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DIFFERENTIAL = join(HERE, 'check-seedling-bot-differential.mjs');
@@ -195,5 +199,32 @@ describe('checkLineMultiset — the set identity of a merge against an unsharded
         const d = multisetDifference(checkLineMultiset(serial), checkLineMultiset(merged));
         expect(d.onlyA).toEqual([['PASS: b: live game matches', 1]]);
         expect(d.onlyB).toEqual([['PASS: a: live game matches', 1]]);
+    });
+});
+
+/**
+ * ⛓ F2 task 6 — THE ADVICE, ONE SPELLING for the owed gate and the re-record
+ * pipeline: the CI dispatch, the box drive without `--win`, and the three
+ * prices off the tapes' own ticks, partitioned the way the workflow will.
+ */
+describe('reDriveAdvice / tierCostsOf — the shared advice', () => {
+    const TAPES = join(HERE, '../../frontend/modules/seedlingDemo/fixtures/tapes');
+    const labels = ROSTER.slice(0, 12).map((t) => t.name);
+
+    it('tierCostsOf is describeTierCosts over the default partition of those tapes', () => {
+        const tapes = tapeTicksOf(labels, { tapesDir: TAPES });
+        const shards = FULL_TIER_WORKFLOW_DEFAULT_SHARDS;
+        expect(tierCostsOf(labels, { tapesDir: TAPES })).toBe(describeTierCosts({
+            tapes: tapes.length, ticks: tapes.reduce((n, t) => n + t.ticks, 0),
+            bins: partitionTapes(tapes, shards).shards, shards }));
+    });
+
+    it('prints the CI dispatch, then the box drive with no --win, then the prices', () => {
+        const said = reDriveAdvice({ tier: 'campaign', labels, tapesDir: TAPES, repo: 'o/r' }).split('\n');
+        const cmd = reDriveCommands({ tier: 'campaign', repo: 'o/r' });
+        expect(said[0]).toBe(`⛓ RE-DRIVE IT — CI: ${cmd.ci}`);
+        expect(said[1].trim()).toBe(`⛓            box: ${cmd.box}`);
+        expect(said[1]).not.toContain('--win');
+        expect(said[2].trim()).toBe(`⛓ ${tierCostsOf(labels, { tapesDir: TAPES })}`);
     });
 });

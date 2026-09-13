@@ -128,7 +128,8 @@ import {
     certifyAgainstLatch, certificationCell, latchCacheCandidates, latchCell,
     renderTableMarkdown,
 } from './provisionalLatch.js';
-import { describeFullTierEstimate, tickSumOf } from './fullTierEstimate.js';
+import { githubRepoOf } from './fullTierEstimate.js';
+import { reDriveAdvice, tierCostsOf } from './fullTierShards.js';
 import { ROSTER_CATEGORIES, rosterCategories } from
     '../../frontend/modules/seedlingDemo/fixtures/tiers.js';
 import { buildInstruments } from './reference/instruments.mjs';
@@ -1735,7 +1736,7 @@ function prove(ctx) {
     console.log(`## the solver roster: ${solver.length} tape(s), derived from the producers' `
         + 'own `--segments` (⚖ 17) plus the four hand witnesses');
     rows.push(['the solver-roster differential', shell(ctx, 'the solver-roster differential',
-        'node', [ctx.scriptPath('check-seedling-bot-differential.mjs'), '--win',
+        'node', [ctx.scriptPath('check-seedling-bot-differential.mjs'),
             `--only=${solver.join(',')}`]).ok]);
     /**
      * ⛓⛓⛓ R9 P3 (C) — **THE THREE ⚖ 40 WITNESSES S4 NEVER COVERED** (§42.7 ii).
@@ -1755,7 +1756,7 @@ function prove(ctx) {
     console.log(`## the ⚖ 40 dash witnesses: ${DASH_WITNESSES.length} tape(s) — outside the `
         + 'solver roster by construction, and covered here rather than assumed');
     rows.push(['the ⚖ 40 dash witnesses', shell(ctx, 'the ⚖ 40 dash witnesses', 'node',
-        [ctx.scriptPath('check-seedling-bot-differential.mjs'), '--win',
+        [ctx.scriptPath('check-seedling-bot-differential.mjs'),
             `--only=${DASH_WITNESSES.join(',')}`]).ok]);
     /**
      * ⛓⛓⛓ R9 P3b, §47.6 — **THE COMPLEMENT, DERIVED AND PRINTED, AND THE
@@ -1763,7 +1764,7 @@ function prove(ctx) {
      *
      * ⛔⛔ WHY THE ROW IS NOT UNCONDITIONAL. Measured at this tree the
      * complement is 120 tapes / 117,914 ticks — ninety per cent of a full
-     * tier. Driving it on every re-record would put a ~128-minute `--win`
+     * tier. Driving it on every re-record would put a ~128-minute box
      * sweep behind every tape move, which is EXACTLY ruling 33's per-move tape
      * tax that **⚖ 40 retired** on the user's word — and ⚖ 40 already says why
      * it is unnecessary: replaying tape X never reads tape Y, so a tape move
@@ -1786,12 +1787,12 @@ function prove(ctx) {
     for (const category of CATEGORIES) {
         const tapes = categoriesOf(ctx)?.[category];
         console.log(`## ⛓ --categories — the \`${category}\` category: ${tapes
-            ? `${tapes.length} tape(s), ${describeFullTierEstimate({ tapes: tapes.length,
-                ticks: tickSumOf(tapes, { tapesDir: ctx.tapesDir }) })}`
+            ? `${tapes.length} tape(s)\n   ${reDriveAdvice({ tier: category, labels: tapes,
+                tapesDir: ctx.tapesDir, repo: originRepoOf(ctx) })}`
             : 'size not derived in a rehearsal (see below)'}`);
         rows.push([`the \`${category}\` category${tapes ? ` (${tapes.length} tape(s))` : ''}`,
             shell(ctx, `the \`${category}\` category`, 'node',
-                [ctx.scriptPath('check-seedling-bot-differential.mjs'), '--win',
+                [ctx.scriptPath('check-seedling-bot-differential.mjs'),
                     `--tier=${category}`]).ok]);
     }
     const { roster, complement, duplicates } = proveCoverage(ctx);
@@ -1803,8 +1804,7 @@ function prove(ctx) {
         : `${HAND_WITNESSES.length + DASH_WITNESSES.length} witness(es), none of them `
             + 'reachable from the producers\' own `--segments`');
     const cost = complement.length
-        ? describeFullTierEstimate({ tapes: complement.length,
-            ticks: tickSumOf(complement, { tapesDir: ctx.tapesDir }) })
+        ? tierCostsOf(complement, { tapesDir: ctx.tapesDir })
         : null;
     console.log(`## ROSTER ∖ S4 = ${complement.length} of ${roster.length} tape(s)`
         + `${complement.length ? ` — ${cost}` : ''}`);
@@ -1840,7 +1840,7 @@ function prove(ctx) {
             + 'their OWN differential row, so S4 covers the roster BY CONSTRUCTION');
         rows.push([`the roster complement (${complement.length} tape(s))`,
             shell(ctx, `the roster complement (${complement.length} tape(s))`, 'node',
-                [ctx.scriptPath('check-seedling-bot-differential.mjs'), '--win',
+                [ctx.scriptPath('check-seedling-bot-differential.mjs'),
                     `--only=${complement.join(',')}`]).ok]);
         console.log('## ⛓ ⚖ 32 E — **S4 IS THE GATE RUN**, over the whole roster.');
     } else {
@@ -2370,6 +2370,19 @@ function appendSegment(plan) {
  * walks and makes no model claim — which is exactly what a pre-flip branch
  * tape prints here, by name.
  */
+/**
+ * ⛓ F2 task 6 — `owner/name` of the tree's origin, for the CI dispatch the
+ * category rows print (`fullTierShards.reDriveAdvice`, F1's owed-gate shape),
+ * or null in a tree with no GitHub origin (a rehearsal).
+ */
+function originRepoOf(ctx) {
+    try {
+        // ⛓ not `ctx.exec`: a read of the remote is not a pipeline stage to record
+        return githubRepoOf(execFileSync('git', ['remote', 'get-url', 'origin'],
+            { cwd: ctx.root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }));
+    } catch { return null; }
+}
+
 function gitShow(ctx, ref, path) {
     try {
         return ctx.exec('git', ['show', `${ref}:${path}`],
@@ -2974,7 +2987,8 @@ function rehearsalScenarios() {
                         && /^ {3}rh-orphan$/m.test(out), 'S4'],
                 ['⛓ (p3b-b-cost) …with what driving it would COST, from the TICK SUM and '
                     + 'never a tape count (§47.11 (3) (d))',
-                    /ROSTER ∖ S4 = 1 of 7 tape\(s\) — ≈ \d+ min for 1 tape\(s\) \/ [\d,]+ tick\(s\)/
+                    // ⛓ F2 task 6: the three prices (box · CI single · CI sharded), still off the ticks
+                    /ROSTER ∖ S4 = 1 of 7 tape\(s\) — box ≈ \d+ min · CI single ≈ \d+ min · CI sharded\(n=\d+\) ≈ \d+ min for 1 tape\(s\) \/ [\d,]+ tick\(s\)/
                         .test(out), 'S4'],
                 ['⛔ (p3b-b-refused) …and ⚖ 32 E\'s "S4 IS THE GATE RUN" is REFUSED by name '
                     + 'while the complement is undriven — the claim, not the run, is what '
@@ -3005,6 +3019,11 @@ function rehearsalScenarios() {
             rows: (out) => [
                 ['⛓ (cat-rows) each named category gets its OWN `--tier=` row',
                     out.includes('--tier=campaign') && out.includes('--tier=map-walk'), 'S4'],
+                ['⛓ (cat-headless) …driven on the differential\'s default channel — no S4 drive '
+                    + 'passes `--win` (F2 task 6; `--win` is for real-GPU pixel rows)',
+                    /^\$ node \S*check-seedling-bot-differential\.mjs --tier=campaign$/m.test(out)
+                        && !/^\$ node \S*check-seedling-bot-differential\.mjs --win (?!--record)/m
+                            .test(out), 'S4'],
                 ['⛓ (cat-named) …and the row is in S4\'s table under the category\'s name',
                     /the `campaign` category/.test(out) && /the `map-walk` category/.test(out),
                     'S4'],

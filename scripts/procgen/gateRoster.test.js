@@ -19,7 +19,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import {
-    REPO, SCRIPT_DIR, ciArgvIn, ciBoxIn, ciShallowIn, gateRoster, isGateFile, machineDrivers,
+    REPO, SCRIPT_DIR, argvFor, ciArgvIn, ciBoxIn, ciShallowIn, gateRoster, isGateFile, machineDrivers,
     standingRowIn, variantsIn,
 } from './gateRoster.js';
 
@@ -173,6 +173,21 @@ describe('@ci-box — declared, never detected', () => {
 
     it('a gate that declares none answers null', () => {
         expect(ciBoxIn('/**\n * an ordinary docblock\n */\n')).toBe(null);
+    });
+
+    /** ⛔ F2 task 6 — a reason may DECLARE a positional, as a backquoted token. */
+    it('a reason that declares a positional `<x>` carries it, and argvFor answers null for both worlds', () => {
+        const text = '/**\n * @ci-box it takes a positional `<exported rules.json>` and exits 2 without it\n */\n';
+        const ciBox = ciBoxIn(text);
+        expect(ciBox).toEqual({ reason: 'it takes a positional `<exported rules.json>` and exits 2 without it',
+            positional: '<exported rules.json>' });
+        const gate = { file: 'check-scratch.mjs', flags: ['host'], ciBox };
+        expect(argvFor(gate, 'local')).toBe(null);
+        expect(argvFor(gate, 'live')).toBe(null);
+        // ⛓ the control: the word in prose, unquoted, is not a declaration
+        const prose = ciBoxIn('/**\n * @ci-box a positional argument is never needed here\n */\n');
+        expect(prose.positional).toBeUndefined();
+        expect(argvFor({ ...gate, ciBox: prose }, 'local')).toEqual(['--host=http://localhost:8000']);
     });
 
     /** ⛔ The same narrowness every declaration in this file has: `gateRoster`'s
