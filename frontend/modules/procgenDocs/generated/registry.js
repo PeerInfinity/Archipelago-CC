@@ -48,7 +48,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/runnerDemo/runnerDemoLibrary.js"
         },
         {
-            "fields": 18,
+            "fields": 20,
             "id": "text_adventure",
             "label": "Text Adventure",
             "registeredBy": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js"
@@ -1593,7 +1593,8 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
-                "runner"
+                "runner",
+                "text_adventure"
             ],
             "cells": [
                 {
@@ -1632,10 +1633,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "text_adventure",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "{keys, relabel}",
+                    "type": "object",
+                    "value": [
+                        "keys",
+                        "relabel"
+                    ]
                 },
                 {
                     "id": "flash_seedling",
@@ -4183,6 +4187,7 @@ export const REGISTRY = frz({
             "carriedBy": [
                 "bounce",
                 "runner",
+                "text_adventure",
                 "jta",
                 "omsi"
             ],
@@ -4217,10 +4222,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "text_adventure",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "sides",
+                    "type": "string",
+                    "value": "sides"
                 },
                 {
                     "id": "flash_seedling",
@@ -4915,27 +4920,13 @@ export const REGISTRY = frz({
                 {
                     "id": "text_adventure",
                     "present": true,
-                    "short": "18 keys",
+                    "short": "{exitGates, exits, fogEnabled, locations}",
                     "type": "object",
                     "value": [
-                        "atlas_region",
-                        "atlas_sub_region",
-                        "consumableTiles",
-                        "entrance",
+                        "exitGates",
                         "exits",
-                        "hazards",
-                        "height",
-                        "itemLib",
-                        "items",
-                        "level",
-                        "longestShortestPath",
-                        "manaTiles",
-                        "obstacleLib",
-                        "obstacles",
-                        "origin",
-                        "tile_size",
-                        "tiles",
-                        "width"
+                        "fogEnabled",
+                        "locations"
                     ]
                 },
                 {

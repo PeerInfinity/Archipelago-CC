@@ -771,12 +771,12 @@ export const TERMS = Object.freeze([
         term: 'the text adventure substrate',
         aliases: ['`text_adventure`'],
         area: 'substrates',
-        plain: 'The one you play by reading: the same grid of tiles, rendered as prose '
-            + 'instead of pictures.',
-        detail: 'A tile-grid engine whose output is prose, hosted in an iframe by '
-            + '`textAdventureSubstrateWrapper` — that wrapper is the ENABLED path. A '
-            + 'direct-panel module registers the same substrate id and is disabled in the '
-            + 'default module config. ⛓ Being cheap to generate, it is the substrate an '
+        plain: 'The one you play by reading: each region is a room, with its exits on '
+            + 'compass sides and its locations listed as prose.',
+        detail: 'A room-and-exits engine whose output is prose, hosted in an iframe by '
+            + '`textAdventureSubstrateWrapper`. A region is a room — sided exits, locations '
+            + 'and their authored gates, no tiles (PRESET SIDECARS G2a; until then it grew '
+            + 'a maze nothing at play read). ⛓ Being cheap to generate, it is the substrate an '
             + 'in-app test builds a synthetic world out of; expensive ones must load a '
             + 'committed preset instead.',
         where: [
