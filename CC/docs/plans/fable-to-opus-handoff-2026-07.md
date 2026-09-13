@@ -14980,6 +14980,31 @@ own tree (a `--host=` flag if ≤ ~15 lines and the roster is unmoved, else a me
 WORLD). Baseline CI = `08adb6e356` **470/14125 (14117 | 8 | 0), slow 12/217** (`c8a32f7117` is docs-only). As-built → plan §27;
 ONE merge by the planner. ⛔ No preset byte moves.
 
+**G2a-fix (`ta-mana`) COMPLETE + VERIFIED + MERGED 2026-09-13 — `origin/main` = `94144623fc`** (three commits rebased over WT1's
+`bd0365b6e5`: the room deserializer carries `manaEnabled` onto the world (the maze's law, absent stays ABSENT) · the registry-wide
+law row in `sidecarFieldsRegistry.test.js` (every hosted entry keeps `manaEnabled: true` onto its world — committed payloads for
+maze/jta/omsi/text_adventure, synthetic copies for bounce/runner/flash_seedling, `flash` NAMED unexercised; text_adventure RED
+before the fix, green after, no other substrate red) · docs + generated; as-built plan §27; trap **1355** (a docblock saying play
+"reads the payload" when the reader reads the deserialized WORLD). `fogEnabled` NOT carried: the census found no text-adventure
+world reader (the only world reader is `mazeRoomUI`, on maze worlds). No preset byte moved; serializer unchanged.
+**Planner-verified with its own runs:** the headless witness (`jta_mixed_test` AdventureZone `payload.manaEnabled = true → world
+.manaEnabled = true`); maze pin unmoved; `check-sidecar-fields` ALL PASS 1392 + TA 70/70; docs trio ALL MATCH; bounded vitest
+7 files / 170; CI at the branch head `5f1b09367e` **470/14135 (14127 | 8 | 0)** = 470/14125 + 0 files / +10 rows; **the mana-leg
+gate re-driven by the planner** against the fix-up tree served on `:8130` (a scratch copy of `check-ta-mana-leg.mjs` with only the
+URL line changed — the gate hardcodes `localhost:8000`): **ALL PASS** (depart charge 50 + 1:1 XP · no charge on a non-mana region
+· depletion reset + refill + teleport), 0 handler errors; against the primary's `:8000` at `ffba92b0a5` it was RED ("got 0").
+Merge: rebased twice (onto `8a75a7853a`, then HELD on the headless planner's word and onto `bd0365b6e5`; no overlap, no conflict);
+guards re-run at each head; pushed on GO. Session `apworld-sidecars-ta-mana` (pid 857337) ended by its literal PID after the report
+was verified (user ruling). **CI at the merge head `94144623fc`: 470/14140 (14132 | 8 | 0), slow 12/217** (= WT1's rows + the fix's
+10). Brief-wrong (§27.1, six): traps at 1354 not 1351; the mana-leg bank row is ABSENT not stale (key `f919d1a0…`); flash has no
+committed payload; `JtaZone1` carries the flag too; `--host=` on the gate is not one constant (it would move `generated/instruments.js`
+and falsify the gate's `@ci-box` reason — option (b) taken); `mazeRoomEngine.js:351` names a TA fog reader that does not exist.
+⚖ OPEN (§27.8): no banked row for `ta-mana-leg` / `maze-loop-mana` / `omsi-mana-leg` / `jta-managed-zone-skip` (box-only gates
+nothing in CI or the bank watches — this regression lived 12 hours on main unseen); `--host=` on those gates; a flash fixture.
+Worktrees `wt-g2b` and `wt-ta-mana` merged and removable (left on disk; removal is not creation-only). **Arc 2 state:** G1, M3, P0,
+K0, G2a, G2b-1, G2a-fix SHIPPED; G2b-2 DEFERRED ⚖. **NEXT = a what-next with the user** (the ladder after G2b: the pipeline relayout
+slice measured live first, the Seedling editor session, MEMORY.md compaction — and the box-only-gates gap above).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
