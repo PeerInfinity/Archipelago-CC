@@ -14488,6 +14488,24 @@ takers; the orphan-refusal semantics under `&` vs `setsid`. M3's CI quote at `cd
 **454/13856**, its prediction to the row (R2 +0). **NEXT:** G2a launches from `preset-sidecars-planning-3` on the
 user's word, in a worktree via `new-worktree.sh`.
 
+**SIXTH REPLAN RULED + G2a SESSION 1 LAUNCHED 2026-09-13 (plan §5h).** The user, verbatim: *"I agree with your recommendations,
+except we can use as many sessions as we need."* Read as: Route **P** (the text adventure's four procedural slots re-implemented
+tile-free + `regionGeometry: SIDES`); the whole-world re-record of `procgen_topdown/AP_10–12` + `jta_mixed_test` accepted IN
+PRINCIPLE with the ask-first STOP kept; **the payload carries its gates** (authored `access_rule` per exit / per location);
+`exitSides` identity for the text adventure (jta/omsi got no word — they stay REFUSED, ⚖ open); G2 stays two slices, and G2a is
+ONE branch + ONE worktree worked by CONSECUTIVE SESSIONS (1: W0 + producer + payload/declarations; 2: consumers + battery +
+docs; 3: the STOP, the regen, the gates), merged ONCE at the end because the corpus gate is red on the committed 15 between the
+declaration and the regen. P0 verified merged (`4c1eaddec1`: `new-worktree.sh` + the hook on `origin/main`;
+`extensions.worktreeConfig` true); CI there **459/13937 (13927 | 8 | 2 failed)** — the two reds are H2's `boxLock.test.js`
+CI-face row, inherited, so G2a's baseline is quoted with that attribution. **LAUNCHED** `apworld-sidecars-G2a-1` (Opus, pid
+240738, cwd verified `~/CC/Archipelago-CC-wt-g2a`, branch `g2a` from `47560d282a` (origin/main at creation — 11 of H2's commits past `4c1eaddec1`; the script fetches first), port 8140, created by
+`scripts/dev/new-worktree.sh g2a` — the second worktree slice and the first through the script; kickoff
+`NewDocs/plans/apworld-sidecars-G2a-prompt.md`; handshake sent). Scope of session 1: the W0 procedural-branch probe (does
+`generateRegionProcedural` read a tile off the core's world?), the tile-free hooks (a room world, no rng, authored gates
+recorded on exits/locations, an extractor emitting `access_rule`), the serializer pair, the own `sidecarFields` /
+`apLocationNamesOf` / `exitSides` identity, the identity row rewritten, the `exitSides` population law re-derived, M3's corpus
+control over the new population; ⛔ not `boxLock.js`, not jta/omsi, not the bridge/painter/regen/docs (sessions 2–3).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
