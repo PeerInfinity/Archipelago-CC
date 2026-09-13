@@ -15191,6 +15191,47 @@ CLOSED**: G1/M3/P0/K0/G2a/G2b-1/G2a-fix/cleanup shipped; G2b-2 PARKED; the gitli
 uncaught `deserializeWorld` site (`regionLayout.rewriteExits`), `check-maze-loop-mana`'s uncommitted fixture, jta/omsi `exitSides`,
 bounce's 15 DERIVED rules.
 
+## 5y. PIPELINE RELAYOUT — the Move Region / Move Exit defect and the "one exit per side" representation — MEASURED 2026-09-13 (Fable session `pipeline-relayout-planning` at main `6d5c57b403`, successor to §5x's HANDOFF; plan file `NewDocs/plans/pipeline-relayout-plan.md`, gitignored; memory `project_pipeline_relayout`)
+
+**Opened by the user, verbatim:** *"I think the fix should involve not limiting the regions to just one teleporter slot each. Maybe we
+should also change the exit slots for the other directions to not be limited to one each. I'll want to work on this next."* →
+*"Yes, please launch the session."* NOTHING LAUNCHED — stopped at the ⚖ (plan §5).
+
+**Measured LIVE (the product's own gesture; `scratchpad/drive-relayout-live.mjs`, four identical runs under the box lock, the
+primary's `:8000`):** Procgen Pipeline → Top-down → the APCalc preset + its sphere log as source → seed 4, grid 10×10 (81
+regions, 204 exits, **51 forward teleporter exits, 26 `Grid.teleporters` entries**) → Generate → Move Region `Region 1` (4,5)→(2,0)
+→ Run 4 Compile → Move Region back → Run 4 Compile: **28 forward exits on 16 regions still point at the wrong region** (21 of them on
+regions the move never touched — e.g. `Region 5`'s four E-side exits all read `→ Region 15`), the compiled `rules.json` carries
+**16 regions with wrong `connected_region`s**, three stale `isTeleporter` flags; back exits never change. **Undo ↶ ×2 restores the
+world byte for byte** (canvas bitmap A == D; it replays from ① Layout). Cause: `Grid.teleporters` is keyed `${cell}:${side}` —
+the top-down driver writes it per side in Phase 3 (26 for 51) and never reads it (`finalizeTopDownExits` is per exit), while
+every layout edit runs `relayoutSphereGrid` → `stitchGrid`, which reads it. Exposure: top-down only (the sphere planner reserves
+one side per child; grid-growth/spiral are one-per-side by construction; the hub's M2/M3 ops never call the relayout).
+Picture: `scratchpad/relayout-live/A-vs-C.png`. Brief-wrong (plan §1.2): no 154-region document exists (M2's 520/154 was a
+corpus SUM); 118 → 121 top-down regions with 2+ same-side teleporters (123 with `seedling_atlas_maze`); the back-exit skip
+HIDES damage on this world rather than adding to it.
+
+**Census (three read-only sweeps, plan §2):** "one exit per side" is NOT a law of the tree — the committed corpus holds **194 maze
+regions with 2+ exits on one side (max 20)**, the text adventure does it by design (compass `n1`/`n2`, `exitSides {keys: []}`),
+Seedling is side-free (0 of 624 exits carry a side), jta/omsi use the side as a label (omsi: 2 committed regions), every
+renderer already distributes N per side (`resolveExitTilePositions`), Python has zero readers. It IS a law of: the ZONE family
+(bounce/runner — `params.sidePortals {side→portalId}`, `exit_${side}` ids, `exitRules[side]`, scalar `backExitSide`, the flash
+bridge routing by side first, runner's `duplicate exit side` throw), the sphere planner (`usedSides`, the 4-child cap), grid-growth
+(`SIDES.filter`), and the editors (`opMoveExitSide` refuses an occupied side, `moveSphereExitSide` throws, the region library's
+`exit_sides uniqueItems`, the pickers `find(e => e.side === side)`). Only bounce, runner and the text adventure declare `exitSides`.
+
+**Design + ladder (recommendations; plan §3–§4):** **R1** re-keys the table `cell:exit_id` (nine engine sites + `truncateSphereWorld`
++ the envelope codec; **0 committed bytes** — no preset carries the table or `exits_placed`), the relayout judges EVERY exit's flag
+with `linkIsAdjacentOnSide` after the re-stitch (back exits too — closes M3 §22.5's one-way row for the pipeline), a vitest
+identity row on the seed-4 world (+ the `cell:side` mutant) and the identity assertion in `check-topdown-steps-ui.mjs` Phase D.
+**R2**: an occupied side is a legal target iff the substrate DECLARES `exitSides` with empty keys (TA today; maze stays refused by
+absence — its exit is a tile; zones keep "… is a swap"); the hub picker and the pipeline's second click name the EXIT, not the side;
+the pipeline's Move Exit runs through the declared relabel (M3 §22.9 #1's fold — move-and-back byte-identical, `backExitSide`
+moved). Then **REPLAN**. **R3** (zones: a portal-id linking key, the flash bridge by portal id, 34 sidecar entries / 6 files + 2
+library packs + 3 worldgen sidecars re-recorded ask-first, level geometry for a second platform) and **R4** (the sphere planner's
+one child per side) are ⚖ — recommended NOT in this arc (a feature and a generation-design change; no defect behind either).
+CI quoted: `d89a055900` 471/14162 (14154 | 8 | 0), slow 12/217 (no run at the docs-only heads above it).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
