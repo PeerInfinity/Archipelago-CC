@@ -14904,6 +14904,41 @@ rebuild) a later slice; `adapterPrimitives.js:1-5` (submodule) with the next app
 `/proc/<pid>/cwd` + `ps -o cmd=`). Baseline CI at `0c1a8f0a61`: **466/14078 (14070 | 8 | 0), slow 12/217**. As-built → plan §26;
 ONE merge by the planner at the end.
 
+**G2b-1 COMPLETE + VERIFIED + MERGED 2026-09-13 — `origin/main` = `ffba92b0a5`** (five commits rebased over F2's `72a8147fcc`:
+`dab733e675` the text adventure's `regionRoundTrip` · `a48adc2fe1` the gate-agreement layer · `f2d76eea7b` the directional law
+derived from `REGISTRY_LIBRARIES` · `90f7e260e9` the play row `tasw-gate-holds-in-play` · `ffba92b0a5` docs + generated; as-built
+plan §26; trap 1351). **Mid-slice ruling (planner, inside the approved scope):** the brief's gate law ("every re-derived rule ==
+the document's") held for the text adventure only (70/70) and would have redded 842 maze/bounce endpoints — the hub's own FROZEN
+set (maze 3005/3832, bounce 65/80; M1's "editable" ≠ "movable"; ~7 ms/region headless, not ~90) → `regionRoundTrip.rules` ∈
+`procgenCore/roundTripRules.js` (AUTHORED | DERIVED, absent = DERIVED, unknown REFUSED by name); FAIL only where AUTHORED,
+DERIVED counted per substrate, refusals NOT CHECKED, non-vacuity rows both ways; bounce stays DERIVED (⚖). **Planner-verified with
+its own runs** in the worktree: `check-sidecar-fields` ALL PASS 1392 over 7 + the third layer (TA AUTHORED 15 regions / 20 gated
+/ 70/70; maze DERIVED 827 counted; bounce 15; 0 FAIL; 8.2 s vs 2.6 s before); maze pin `677b7d9c…` unmoved; docs trio ALL MATCH;
+bounded vitest 9 files / 224 → 10 / 273 at the rebased head; CI at the branch head `5b0269eecb` **469/14105 (14097 | 8 | 0)** =
+base 466/14078 + 3 files / +27 rows; the play row on the substrates roster; no substrate literal in the three name-free files;
+`inspectRegionRoom` on the entry still 15/15 "no roomEditor" (by design). **The merge:** rebased once onto `4359ad428d` (no
+overlap, no conflict), HELD on `seedling-headless-planning-3`'s word for F2's docs commit, rebased again onto `72a8147fcc` — ONE
+conflict, both files GENERATED (`procgen/README.md` index + `docsIndex.js`), resolved by `generate-procgen-reference.mjs --write`,
+never hand-merged; guards re-run at the head; pushed on GO. `origin/g2b` left at `5b0269eecb` (no force-push). **CI at the merge
+head `ffba92b0a5`: run 34772208691 success — 470/14125 (14117 | 8 | 0), slow 12/217** = F2's 467/14098 + G2b-1's row. Session
+`apworld-sidecars-G2b` (pid 675830) ended by its literal PID after the report was verified and recorded (user ruling); its
+`:8130` server it had stopped itself. Brief-wrong (§26.1, five): the gate law; the cost; inspect "ok" cannot be asked of the entry
+(placeholder launcher via the test-only `registerRegionEditor`); `seedlingDemo/` holds no registry library (kept as a literal beside
+the 8 derived dirs); the app enters Overworld itself on load. **The owed write DONE + PUSHED — `08adb6e356`** (from the worktree at
+`14e4946500`, announced to the headless planner, bank quiet): `gate: sidecar-fields` re-keyed + re-measured (1610 → 7779 ms, value
+0/0 unchanged); `ci-gates.mjs --write-costs --runs=3` re-priced 66 arms from runs 34771208971/34772130006/34772208691 — only
+`gate: sidecar-fields` moved >2x (700 → 3100 ms); bank readers 7 files / 258 green; `check-slice-records` + `check-seedling-full-
+tier-owed` ALL PASS. **⚠ FOUND at the merge head (F2's report named it; planner measured it against the primary's :8000 at
+`ffba92b0a5`): `check-ta-mana-leg.mjs` is RED — "expected 50 mana charged departing AdventureZone, got 0".** Cause located headless:
+`procgenPlayer.getRegionInfo` reads `entry.world?.manaEnabled` (the WORLD, `procgenPlayer/index.js:280`); the maze's
+`deserializeMazeWorld` stamps `world.manaEnabled = true` from the sidecar (`mazeRoomEngine.js:348`); G2a's
+`deserializeTextAdventureRoom` returns `{exits, locations}` and DROPS it — `jta_mixed_test` AdventureZone: `payload.manaEnabled
+= true`, `world.manaEnabled = undefined`. A G2a regression (since `b336247681`), not G2b-1's (test-only + declarations); invisible
+to CI because the mana leg is an `@ci-box` gate that drives `localhost:8000` and takes no `--host=`, and G2a's brief let session 1
+"prove the mana leg by the unit suites" — which never asked the WORLD for the flag. ⚖ FOR THE USER (put in the tab): a fix-up
+slice (the room deserializer carries the envelope's play-time flags onto the world, the maze's precedent; a cross-substrate law row
+over the registry: every `deserializeWorld` carries `manaEnabled` when the payload has it; the mana leg green; a trap).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
