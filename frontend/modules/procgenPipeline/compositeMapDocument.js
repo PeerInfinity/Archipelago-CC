@@ -31,6 +31,7 @@
 
 import { Grid, DEFAULT_REGION_SIZE } from './procgenPipelineEngine.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { deserializeOrRefuse } from '../procgenCore/deserializeRefusal.js';
 
 /**
  * ⛓⛓⛓ **THE CELL SIZE, AND WHERE IT COMES FROM** (PRESET SIDECARS M0).
@@ -198,6 +199,10 @@ export function reconstructResultFromSidecars(rulesJson, { playerId = null } = {
     const grid = new Grid({ width: bounds.width, height: bounds.height });
     let placed = 0;
     let teleporters = 0;
+    // ⛓ C1 — the regions whose payload their own substrate REFUSED, each with
+    //   the entry's sentence: skipped, so the other regions still draw, and
+    //   returned so the surface that draws the map can say which and why.
+    const refused = [];
     for (const [region_id, sc] of regionEntries) {
         if (!sc?.grid_cell) continue;
         // ⛓ H3b: the `?? 'maze'` that used to end this line is GONE.
@@ -211,7 +216,12 @@ export function reconstructResultFromSidecars(rulesJson, { playerId = null } = {
         const substrateId = sc.substrate;
         const adapter = substrateRegistry.get(substrateId);
         if (!adapter || typeof adapter.deserializeWorld !== 'function') continue;
-        const world = adapter.deserializeWorld(sc.playable_payload);
+        const read = deserializeOrRefuse(adapter, sc.playable_payload, { regionId: region_id, substrate: substrateId });
+        if (read.refusal) {
+            refused.push({ region_id, substrate: substrateId, sentence: read.refusal });
+            continue;
+        }
+        const world = read.world;
         if (world?.exits) {
             for (const e of world.exits.values()) {
                 if (e.isTeleporter) teleporters += 1;
@@ -252,7 +262,7 @@ export function reconstructResultFromSidecars(rulesJson, { playerId = null } = {
         boundsSource: bounds.boundsSource,
         stats: {
             regionsBuilt: placed,
-            regionsSkipped: 0,
+            regionsSkipped: refused.length,
             stopReason: meta.stop_reason ?? null,
             teleportersPlaced: teleporters,
         },
@@ -265,5 +275,24 @@ export function reconstructResultFromSidecars(rulesJson, { playerId = null } = {
         // and a caller that asked for a slot the document does not have can
         // see that it got a different one.
         playerId: playerKey,
+        // ⛓ C1 — `[{region_id, substrate, sentence}]`, one per region skipped
+        //   because its substrate refused its payload (`[]` when none was).
+        refused,
     };
+}
+
+/**
+ * ⛓ C1 — **THE NOTE A MAP PRINTS FOR THE REGIONS IT COULD NOT DRAW**, or `null`
+ * when it drew every region it placed. One spelling for every surface that
+ * draws a reconstructed map (the hub's Map tab, the pipeline panel's message):
+ * each refused region's own sentence, in document order.
+ *
+ * @param {{refused?: {sentence: string}[]}|null} result
+ * @returns {string|null}
+ */
+export function refusedRegionsNote(result) {
+    const refused = result?.refused ?? [];
+    if (refused.length === 0) return null;
+    return `${refused.length} region${refused.length === 1 ? '' : 's'} not drawn — `
+        + refused.map((r) => r.sentence).join('; ');
 }

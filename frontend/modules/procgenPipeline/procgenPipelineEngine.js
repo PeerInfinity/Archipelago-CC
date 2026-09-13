@@ -31,6 +31,7 @@ import {
 } from '../shared/procgen/spatialPrimitives.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
+import { deserializeOrRefuse } from '../procgenCore/deserializeRefusal.js';
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
 import { isAtlasSourceId, atlasSourceGame, requirementDnf } from './regionAtlasPool.js';
 
@@ -4010,6 +4011,15 @@ const SPHERE_REBUILD_REFUSALS = Object.freeze({
     zoneSubstrate: (substrate) => `rebuildEnvelopeFromRulesJson: substrate '${substrate}' `
         + "can't be reconstructed from compiled rules.json (zone substrate — no path "
         + 'extractor). Append from the saved envelope instead.',
+    /**
+     * ⛓ C1 — the region's own substrate REFUSED its payload (its
+     * `deserializeWorld` threw; the sentence is the entry's, through
+     * `deserializeRefusalSentence`). A rebuild cannot skip a node of the
+     * sphere tree, so the document is refused by name. ⚠ `sphereRebuildRefusal`
+     * does NOT ask this one: it deserializes nothing by design, so a document
+     * it offers may still be refused here — at the press, by this sentence.
+     */
+    unreadablePayload: (sentence) => `rebuildEnvelopeFromRulesJson: ${sentence}`,
 });
 
 /**
@@ -4098,9 +4108,12 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
                 || typeof adapter.extractPathsAndObstacles !== 'function') {
             throw new Error(SPHERE_REBUILD_REFUSALS.zoneSubstrate(node.substrate));
         }
-        const world = adapter.deserializeWorld(sc.playable_payload, {
-            baseItemLib: itemLib, baseObstacleLib: obstacleLib,
+        const read = deserializeOrRefuse(adapter, sc.playable_payload, {
+            regionId: region_id, substrate: node.substrate,
+            opts: { baseItemLib: itemLib, baseObstacleLib: obstacleLib },
         });
+        if (read.refusal) throw new Error(SPHERE_REBUILD_REFUSALS.unreadablePayload(read.refusal));
+        const world = read.world;
         const extracted_rules = adapter.extractPathsAndObstacles(world, { regionId: region_id });
         // ⛓ G2a: the size comes off the first world that HAS one — a SIDES room
         // (the text adventure's) has no width/height, and a rebuild rooted at

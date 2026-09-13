@@ -8,6 +8,7 @@
  */
 
 import { startRegionsOf } from '../procgenCore/rulesGraph.js';
+import { deserializeOrRefuse } from '../procgenCore/deserializeRefusal.js';
 
 /**
  * In-memory store of deserialized regions for the currently-loaded
@@ -21,6 +22,10 @@ import { startRegionsOf } from '../procgenCore/rulesGraph.js';
 export class WorldWarehouse {
     constructor() {
         this.regions = new Map();
+        /** ⛓ C1 — region id → the refusal sentence, for each region whose
+         *  payload its substrate refused (`deserializeOrRefuse`). Not in
+         *  `regions`, so a move into one is a move into no substrate. */
+        this.refused = new Map();
         this.playerId = null;
     }
 
@@ -29,7 +34,7 @@ export class WorldWarehouse {
     keys() { return [...this.regions.keys()]; }
     size() { return this.regions.size; }
     isEmpty() { return this.regions.size === 0; }
-    clear() { this.regions.clear(); this.playerId = null; }
+    clear() { this.regions.clear(); this.refused.clear(); this.playerId = null; }
 }
 
 /**
@@ -41,7 +46,10 @@ export class WorldWarehouse {
  * Skips (with a warning) sidecar entries whose substrate isn't in the
  * registry or whose registry entry is missing `deserializeWorld`.
  * That's a defensive log rather than an error so a partial warehouse
- * can still drive the regions whose substrates are wired up.
+ * can still drive the regions whose substrates are wired up. A payload
+ * whose substrate REFUSES it (its `deserializeWorld` throws) is skipped
+ * the same way, with the entry's own sentence, and recorded on
+ * `warehouse.refused` (C1).
  */
 export function buildWarehouse(rulesJson, playerId, registry, opts = {}) {
     const logger = opts.logger ?? console;
@@ -84,9 +92,19 @@ export function buildWarehouse(rulesJson, playerId, registry, opts = {}) {
                     + `'${ref.dataset_id}' but no sidecar carries it`);
             }
         }
+        // ⛓ C1 — a payload the entry refuses SKIPS that region with the
+        //   entry's own sentence (logged, and kept on `warehouse.refused`)
+        //   instead of throwing out of the rules-load handler and taking every
+        //   other region's play down with it.
+        const read = deserializeOrRefuse(adapter, payload, { regionId, substrate: entry.substrate });
+        if (read.refusal) {
+            logger.warn?.(`procgenPlayer: ${read.refusal}`);
+            warehouse.refused.set(regionId, read.refusal);
+            continue;
+        }
         warehouse.regions.set(regionId, {
             substrate: entry.substrate,
-            world: adapter.deserializeWorld(payload),
+            world: read.world,
             loadRegionEvent: adapter.loadRegionEvent,
         });
     }
