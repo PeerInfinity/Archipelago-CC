@@ -894,7 +894,11 @@ F2 added four more clauses around the writer:
 - **Python is chosen by one ladder.** `repoPython.js` tries
   `SEEDLING_PYTHON` → `$VIRTUAL_ENV` → `<tree>/.venv` → `python3`. The chosen
   interpreter must `import` what the gate needs, or the gate refuses by name
-  before its first PASS line.
+  before it drives anything. An import is not a version: the headless Seedling
+  channel also requires the exact Playwright that
+  `scripts/procgen/requirements-headless.txt` pins, read from that file. A
+  refusal run from a worktree tells you to activate the primary tree's venv,
+  because a worktree has none of its own.
 
 ## Related documentation
 

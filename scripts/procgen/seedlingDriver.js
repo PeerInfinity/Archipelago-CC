@@ -30,10 +30,11 @@
  *
  * ⛓ THE PYTHON (F2): `repoPython.resolvePython`'s ladder — `SEEDLING_PYTHON`
  * → `$VIRTUAL_ENV/bin/python` → `<tree>/.venv/bin/python` → PATH `python3` —
- * and the chosen one must `import playwright` (installed from
- * `scripts/procgen/requirements-headless.txt`: Playwright pinned to node's
- * version, so both packages share one Chromium). One that cannot is a refusal
- * naming the tree, the ladder and the install line, not a crash three frames
+ * and the chosen one must `import playwright` AND carry exactly the version
+ * `scripts/procgen/requirements-headless.txt` pins (C1: Playwright pinned to
+ * node's version, so both packages share one Chromium; the pin is READ from
+ * the file, never typed here). One that cannot is a refusal naming the tree,
+ * the ladder, both versions and the install line, not a crash three frames
  * deep — and not H2's "no `<tree>/.venv`" refusal in a worktree whose shell
  * had an active venv all along.
  */

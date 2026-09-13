@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 17,
         "headings": 790,
         "indexHeadings": 2,
-        "lines": 21260,
+        "lines": 21264,
         "pages": 4,
-        "words": 262014
+        "words": 262057
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -80,7 +80,7 @@ export const DOCS_INDEX = frz({
             "file": "gotchas.md",
             "h1": "Procgen Gotchas and Disambiguations",
             "headings": 64,
-            "lines": 1171,
+            "lines": 1175,
             "links": [
                 "architecture.md",
                 "jta.md",
@@ -90,7 +90,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/gotchas.md",
-            "words": 13712
+            "words": 13755
         },
         {
             "description": "Bounce (\"Bounce Demo\", substrate id `bounce`) is a Doodle-Jump-style vertical platformer substrate in `frontend/modules/bounceDemo/`.",

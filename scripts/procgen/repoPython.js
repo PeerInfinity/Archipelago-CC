@@ -19,11 +19,16 @@
  * ⛓ ONE LADDER, FIRST PRESENT WINS:
  *   `SEEDLING_PYTHON` → `$VIRTUAL_ENV/bin/python` → `<tree>/.venv/bin/python`
  *   → `python3` on PATH.
- * ⛔ THE CHOSEN INTERPRETER IS THEN ASKED, NOT ASSUMED. It must `import` the
- * module the caller needs, or the resolution REFUSES by name: the tree, every
- * rung tried and what each held. ⛔ NO FALL-THROUGH past a present rung that
- * cannot import — an explicit `SEEDLING_PYTHON` or an active venv that is wrong
- * is a fact the reader must see, not a rung to skip quietly.
+ * ⛔ THE CHOSEN INTERPRETER IS THEN ASKED, NOT ASSUMED — for its IMPORT and,
+ * where the caller pins one, its VERSION (C1). It must `import` the module the
+ * caller needs, and each pinned distribution's `importlib.metadata.version`
+ * must EQUAL the `name==version` its requirements file declares (an import
+ * alone cannot see a user-site package of another build, trap 1354), or the
+ * resolution REFUSES by name: the tree, every rung tried and what each held,
+ * and the line that fixes it — naming the venv that EXISTS (in a worktree, the
+ * primary's: `venvActivationHint`). ⛔ NO FALL-THROUGH past a present rung that
+ * fails — an explicit `SEEDLING_PYTHON` or an active venv that is wrong is a
+ * fact the reader must see, not a rung to skip quietly.
  *
  * ⛓ `.js`, not `.mjs`: outside the gate roster's populations, like
  * `seedlingDriver.js` and `headlessChromium.js`.
