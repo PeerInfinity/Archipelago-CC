@@ -22,8 +22,9 @@ import { describe, expect, it } from 'vitest';
 
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { linkIsAdjacentOnSide } from '../procgenPipeline/procgenPipelineEngine.js';
+import { buildRulesJson, linkIsAdjacentOnSide, topDownFromRulesJson } from '../procgenPipeline/procgenPipelineEngine.js';
 import { exitSidesOf } from '../procgenCore/exitSides.js';
+import { sidecarFieldsOf } from '../procgenCore/sidecarFields.js';
 import { createEditSession } from '../procgenCore/editCore.js';
 import { rulesEditAdapter } from './rulesEditAdapter.js';
 import { EXIT_LINK_ONE_WAY, NO_EXIT_SIDES_DECLARED, applyRulesDocOp } from './rulesDocOps.js';
@@ -61,8 +62,64 @@ const ENTRIES = everyRulesPath().flatMap((file) => {
 
 const declares = (entry) => !!exitSidesOf(substrateRegistry.get(entry?.substrate)).decl;
 
-/** ⛓ THE POPULATION: every entry whose substrate declares `exitSides`. */
-const DECLARING = ENTRIES.filter(([, , , entry]) => declares(entry));
+/**
+ * ⛓ G2a — **THE REGENERATED POPULATION.** The committed text-adventure entries
+ * (`procgen_topdown` AP_10–12) are still the pre-G2a maze shape until their
+ * ask-first re-record, so over them the corpus rows below are RED by design (the
+ * write-back re-serializes their exits through the room serializer). These three
+ * worlds are the same documents built NOW, in memory, with
+ * `generate-topdown-preset.js`'s own arguments (`scripts/utils/generated_commands.sh`)
+ * — so the rows also run over the shape the re-record will commit. A row below
+ * pins that each build reproduces its committed file in every top key but
+ * `preset_sidecars`.
+ */
+const REGEN_WORLDS = [10, 11, 12].map((seed) => {
+    const committedFile = join(PRESETS, 'procgen_topdown', `AP_${seed}`, `AP_${seed}_rules.json`);
+    const committed = JSON.parse(readFileSync(committedFile, 'utf8'));
+    const sourceRel = readFileSync(join(ROOT, 'scripts', 'utils', 'generated_commands.sh'), 'utf8').split('\n')
+        .find((l) => l.includes(`--seed ${seed} --out frontend/downloads/AP_${seed}_rules.json`));
+    const sourcePath = sourceRel.match(/--source-rules (\S+)/)[1];
+    const mix = Object.fromEntries(sourceRel.match(/--substrate-mix (\S+)/)[1].split(',')
+        .map((kv) => kv.split('=')).map(([k, v]) => [k, Number(v)]));
+    const source = JSON.parse(readFileSync(join(ROOT, sourcePath), 'utf8'));
+    const sphereLog = readFileSync(join(ROOT, sourcePath.replace(/_rules\.json$/, '_sphere_log.jsonl')), 'utf8')
+        .split('\n').map((l) => l.trim()).filter(Boolean).map((l) => JSON.parse(l));
+    // the script's defaults: 8×6 regions, grid ≥ 3 grown by 2 on a partial layout, 5 retries
+    const n = Object.keys(source.regions['1']).length;
+    let dim = Math.max(3, Math.ceil(Math.sqrt(n * 1.5)));
+    let built;
+    for (let attempt = 0, prev = -1; ; attempt++, dim += 2) {
+        built = topDownFromRulesJson(source, {
+            gridDims: { width: dim, height: dim }, regionSizeBase: { width: 8, height: 6 }, seed, substrateMix: mix, sphereLog,
+        });
+        const placed = built.stats.regionsBuilt;
+        if (placed >= built.stats.regionsTotal || placed === prev || attempt >= 5) break;
+        prev = placed;
+    }
+    const doc = buildRulesJson(built.grid, {
+        startCell: built.startCell, seed, assumeBidirectional: source.assume_bidirectional_exits !== false,
+        startingItems: source.starting_items?.['1'] ?? [], sourceItems: source.items?.['1'] ?? null, sphereLog,
+        procgenMetadata: {
+            driver: 'top-down-sphere', source_game: source.game_name ?? null,
+            source_counts: committed.procgen_metadata.source_counts, stop_reason: built.stats.stopReason,
+            sphere_tree: built.sphereTree, sphere_plan: built.spherePlan,
+        },
+    });
+    const text = JSON.stringify(doc);
+    return { file: `regenerated:procgen_topdown/AP_${seed}`, committed, text, doc: JSON.parse(text) };
+});
+const REGEN_ENTRIES = REGEN_WORLDS.flatMap(({ file, doc }) => Object.entries(doc.preset_sidecars)
+    .flatMap(([slot, regs]) => Object.entries(regs).map(([name, entry]) => [file, slot, name, entry, doc])));
+
+/**
+ * ⛓ THE POPULATION: every entry whose substrate declares `exitSides` — committed,
+ * plus the regenerated worlds' (G2a).
+ */
+const DECLARING = [...ENTRIES, ...REGEN_ENTRIES].filter(([, , , entry]) => declares(entry));
+
+/** ⛓ Does the entry's substrate's payload DECLARATION carry a side-keyed portal map? (the declaration, not the payload) */
+const declaresPortalMap = (entry) => !!sidecarFieldsOf(substrateRegistry.get(entry?.substrate))
+    ?.params?.schema?.properties?.sidePortals;
 
 /** Every exit × every OTHER side of one entry, as `{op, free}` — `free` = no other exit there. */
 function everySideMove(slot, name, entry) {
@@ -108,6 +165,17 @@ describe('⛓⛓ THE CORPUS CONTROL — every committed entry that declares `exi
             expect(exitSidesOf(substrateRegistry.get(id)).absent, id).toBe(true);
         }
         expect(outside.size).toBeGreaterThan(0);
+    });
+
+    it('⛓ G2a — each regenerated world reproduces its committed file in every top key but '
+        + '`preset_sidecars`, and holds declaring entries WITHOUT a portal map', () => {
+        for (const { file, committed, doc } of REGEN_WORLDS) {
+            const keys = new Set([...Object.keys(committed), ...Object.keys(doc)]);
+            const moved = [...keys].filter((k) => bytes(committed[k]) !== bytes(doc[k]));
+            expect(moved.filter((k) => k !== 'preset_sidecars'), file).toEqual([]);
+        }
+        const mapless = DECLARING.filter(([file, , , e]) => file.startsWith('regenerated:') && !declaresPortalMap(e));
+        expect(mapless.length).toBeGreaterThan(0);
     });
 
     it('(a) a relabel to every exit\'s OWN side moves 0 bytes — and the op answers it as a no-op', () => {
@@ -199,7 +267,7 @@ const keyPattern = (key) => new RegExp(`^${key.split('.').map((part) => part.end
  */
 function arrowsBySide() {
     const seen = {};
-    for (const [, , , entry] of DECLARING) {
+    for (const [, , , entry] of DECLARING.filter(([, , , e]) => declaresPortalMap(e))) {
         const { decl } = exitSidesOf(substrateRegistry.get(entry.substrate));
         const arrowKey = decl.keys.find((k) => k.includes('[]'));
         if (!arrowKey) continue;
@@ -218,6 +286,8 @@ const EVERY_CHANGE = DECLARING.flatMap(([file, slot, name, entry, doc]) => [
     ...everySideMove(slot, name, entry).filter((m) => m.free).map((m) => ({ file, slot, name, entry, doc, op: m.op })),
     ...everySwap(slot, name, entry).map((op) => ({ file, slot, name, entry, doc, op })),
 ]);
+/** ⛓ G2a — the changes of the entries whose payload declaration carries a portal map (the portal rows' population). */
+const PORTAL_MAP_CHANGES = EVERY_CHANGE.filter(({ entry }) => declaresPortalMap(entry));
 
 /** The moves an op makes, as `[{exitId, from, to}]`, read off the ENTRY BEFORE. */
 function movesOf(entry, op) {
@@ -280,6 +350,13 @@ describe('⛓⛓⛓ the write-back — every free move and every swap of the pop
         + 'in `from`\'s POSITION; every other key is unmoved', () => {
         for (const { file, slot, name, entry, doc, op } of EVERY_CHANGE) {
             const after = applied(doc, op).doc.preset_sidecars[slot][name].playable_payload;
+            for (const m of movesOf(entry, op)) {
+                expect(after.exits.find((x) => x.exit_id === m.exitId).side, `${file} ${bytes(op)}`).toBe(m.to);
+            }
+        }
+        expect(PORTAL_MAP_CHANGES.length).toBeGreaterThan(0);
+        for (const { file, slot, name, entry, doc, op } of PORTAL_MAP_CHANGES) {
+            const after = applied(doc, op).doc.preset_sidecars[slot][name].playable_payload;
             const before = entry.playable_payload;
             const rename = new Map(movesOf(entry, op).map((m) => [m.from, m.to]));
             for (const m of movesOf(entry, op)) {
@@ -298,7 +375,7 @@ describe('⛓⛓⛓ the write-back — every free move and every swap of the pop
         const arrows = arrowsBySide();
         let pointed = 0;
         let kept = 0;
-        for (const { file, slot, name, entry, doc, op } of EVERY_CHANGE) {
+        for (const { file, slot, name, entry, doc, op } of PORTAL_MAP_CHANGES) {
             const { decl } = exitSidesOf(substrateRegistry.get(entry.substrate));
             const arrowKey = decl.keys.find((k) => k.includes('[]'));
             const after = applied(doc, op).doc.preset_sidecars[slot][name].playable_payload;
@@ -332,8 +409,8 @@ describe('⛓ `params.backExitSide` follows the BACK exit, and only it', () => {
         let backMoves = 0;
         let otherMoves = 0;
         for (const { file, slot, name, entry, doc, op } of EVERY_CHANGE) {
-            const after = applied(doc, op).doc.preset_sidecars[slot][name].playable_payload.params;
-            const before = entry.playable_payload.params;
+            const after = applied(doc, op).doc.preset_sidecars[slot][name].playable_payload.params ?? {};
+            const before = entry.playable_payload.params ?? {};
             if (!Object.hasOwn(before, 'backExitSide')) {
                 expect(Object.hasOwn(after, 'backExitSide'), `${file} ${bytes(op)}`).toBe(false);
                 continue;
@@ -556,8 +633,11 @@ describe('through a session', () => {
     it('⛔ NEVER writes through: every document the rows above read still equals its FILE (trap 1323)', () => {
         const files = new Map(DECLARING.map(([file, , , , doc]) => [file, doc]));
         expect(files.size).toBeGreaterThan(0);
+        const regenerated = new Map(REGEN_WORLDS.map((w) => [w.file, w.text]));
         for (const [file, doc] of files) {
-            expect(bytes(doc), file).toBe(bytes(JSON.parse(readFileSync(join(PRESETS, file), 'utf8'))));
+            // a regenerated world has no file: its bytes as BUILT are the file
+            const want = regenerated.get(file) ?? bytes(JSON.parse(readFileSync(join(PRESETS, file), 'utf8')));
+            expect(bytes(doc), file).toBe(want);
         }
     });
 });

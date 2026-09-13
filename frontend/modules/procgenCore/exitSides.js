@@ -17,6 +17,11 @@
 //     relabel: (payload, moves) => payload' // PURE: clone in, clone out
 //   }
 //
+// ⛓ G2a — `keys` MAY BE EMPTY: a substrate whose side is only where its exit is
+// listed (the text adventure's compass) keys nothing else by it, and says so
+// with `keys: []` and an identity relabel. An empty list is a DECLARATION
+// ("nothing else"); only an absent slot is a refusal.
+//
 // `moves` is `[{exitId, from, to}]`, applied SIMULTANEOUSLY — one entry for a
 // move, two for a swap (a swap is not two moves in a row: the first would land
 // on a side the second has not vacated yet). ⛔ `relabel` does NOT write
@@ -51,11 +56,10 @@ export function exitSidesOf(entry) {
     if (typeof decl.relabel !== 'function') {
         return { malformed: `its \`${EXIT_SIDES_SLOT}.relabel\` is ${typeof decl.relabel}, not a function` };
     }
-    if (!Array.isArray(decl.keys) || decl.keys.length === 0
-        || decl.keys.some((k) => typeof k !== 'string' || !k)) {
+    if (!Array.isArray(decl.keys) || decl.keys.some((k) => typeof k !== 'string' || !k)) {
         return {
-            malformed: `its \`${EXIT_SIDES_SLOT}.keys\` is ${JSON.stringify(decl.keys)}, not a non-empty `
-                + 'list of the payload paths the relabel rewrites',
+            malformed: `its \`${EXIT_SIDES_SLOT}.keys\` is ${JSON.stringify(decl.keys)}, not a list of the `
+                + 'payload paths the relabel rewrites (empty when it rewrites none)',
         };
     }
     return { decl };

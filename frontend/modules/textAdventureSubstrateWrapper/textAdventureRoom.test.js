@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import '../mazeRoom/mazeRoomLibrary.js';
-import './textAdventureSubstrateWrapperLibrary.js';
+import { substrateRegistryEntry } from './textAdventureSubstrateWrapperLibrary.js';
 import {
     TEXT_ADVENTURE_ROOM_REFUSALS,
     deserializeTextAdventureRoom,
@@ -37,6 +37,7 @@ import {
     topDownFromRulesJson,
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { SIDES } from '../shared/procgen/spatialPrimitives.js';
+import { sidecarFieldsOf, sidecarPayloadErrors } from '../procgenCore/sidecarFields.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 const TRUE = { rule: 'True_' };
@@ -265,6 +266,18 @@ describe('through the engine — top-down, the rebuild path, the spiral', () => 
             const gated = Object.fromEntries(Object.entries(got.exits).filter(([name, rule]) => rule.rule !== 'True_'
                 && payload.exits.some((e) => e.exit_id === name && !e.isBackExit)));
             expect(payload.exitGates, r).toEqual(gated);
+        }
+    });
+
+    it('⛓ task 2 — every text-adventure payload of the build holds its declaration, and its declared AP-name '
+        + 'readers answer the DOCUMENT\'s own location and exit names', () => {
+        const fields = sidecarFieldsOf(substrateRegistryEntry);
+        for (const r of taRegions) {
+            const payload = sidecars[r].playable_payload;
+            expect(sidecarPayloadErrors(fields, payload), r).toEqual([]);
+            const region = doc.regions['1'][r];
+            expect(substrateRegistryEntry.apLocationNamesOf(payload), r).toEqual(region.locations.map((l) => l.name));
+            expect([...substrateRegistryEntry.apExitNamesOf(payload)].sort(), r).toEqual(region.exits.map((e) => e.name).sort());
         }
     });
 
