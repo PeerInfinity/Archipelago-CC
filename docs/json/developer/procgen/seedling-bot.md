@@ -12983,6 +12983,19 @@ plus the pre-swap frame. A TRUE START swaps out of no outgoing world and pays
 one fewer. The row now derives its correction from the tape, the two arms assert
 in opposite directions in the same run, and the mutant was run both ways.
 
+⛓ **Corrected 2026-09-13 (SEEDLING HEADLESS S1): that reason was wrong about the
+mechanism.** A TRUE START takes `botStart`'s skip path and arms inside the page's
+own boot fade, which is anchored to the game clock (first live tick at
+`game_time` 4821 on every machine traced). So window 1 pays the share minus
+**k = `armed_at` − `PAGE_BOOT_TIME`** fade frames already elapsed. k comes from
+the harness's timing, not from the game: `watchWasm`'s 200 ms `gameUp` poll gave
+k = 1 on the box and k = 2 on `ubuntu-latest`, which is why CI read
+`game 38 vs model 40 − 1`. `BOOT_PRESWAP_FRAMES` is a different quantity that
+happens to equal 1. CLAIM 6's true-start branch now computes k per run
+(`gameClock.trueStartWindowDeadFrames`, refusing by name unless
+1 ≤ k < `LOAD_FADE_FRAMES`); `check-seedling-wasm-ship.mjs --boot-trace` prints
+the per-frame boot that showed it.
+
 ### R9 slice 9b: the fork's boot reset becomes unconditional, and the roster's last v1/v2 tape leaves
 
 Two `botStart` guards decided, for the whole arc, whether a tape got a fresh
