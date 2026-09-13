@@ -206,7 +206,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 258,
         "browser": 77,
-        "cited": 93,
+        "cited": 94,
         "files": 269,
         "lineStyle": 11,
         "withDocblock": 269,
@@ -3004,7 +3004,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-seedling-full-tier-owed.mjs",

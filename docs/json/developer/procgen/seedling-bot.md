@@ -1043,6 +1043,24 @@ quoted from the merge** under ruling C, by hand from the box
 --measured-at=<run SHA> --channel=headless --covered-by=<run id, SHA, shard
 count>`), one call per category — CI never commits the row.
 
+⛓ **F1 (2026-09-13): where to drive a tier, priced both ways.**
+- `check-seedling-full-tier-owed.mjs` prints each debt's cure as two commands —
+  the CI dispatch (`gh workflow run seedling-full-tier.yml -f tier=<category>
+  -f shards=10 --repo <origin>`) and the box drive (no `--win`) — and every
+  estimate as `box ≈ X · CI single ≈ Y · CI sharded(n=10) ≈ Z`. The CI prices
+  come from `fullTierEstimate.CI_TIER_CALIBRATION`: the runner fit
+  3.69 s × tapes + 40.4 s × ticks/1000 (run 34729518557's checkpoint) and the
+  sharded run's components (run 34734861224's job timestamps). Its docblock
+  names the commands that re-derive both.
+- The fingerprint now also hashes `seedlingDemo/fixtures/*.js` (name and bytes,
+  under a `fixtures/` prefix), because the tier and roster definitions live
+  there. Every checkpoint banked before F1 was invalidated once.
+- The differential's standing value is the composite row, and the gate says so:
+  `@standing-row roster: --tier=full: …` (`gateRoster.js`). `standing-values`
+  therefore derives no `gate: seedling-bot-differential` row. Before F1 an
+  unselected `--write` created that row, and its command — the default arm, the
+  whole tier — ran on the box. The per-push `smoke:` face is unchanged.
+
 ⛓⛓ **H1 (2026-09-11): the ~0.5 frames/sec above was a LOST WEBGPU DEVICE, not
 SwiftShader's raster cost.** With `--use-angle=swiftshader` alone, the headless
 compositor runs on ANGLE-SwiftShader GL, which has no shared-image backing for

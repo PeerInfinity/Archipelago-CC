@@ -842,6 +842,40 @@ selects BOTH, the second being a ~2-minute browser row. Name a row with
 `--key=` — exact, and a `--key=` matching nothing FAILS with the nearest keys
 rather than measuring zero rows and exiting 0.
 
+## `standing-values --write` ran the Seedling full tier — a NEW gate row is no longer run blind (F1)
+
+An unselected `standing-values.mjs --write` runs every derived row the bank
+does not carry yet. A NEW row has never run, so its cost and its failure modes
+are unknown. On 2026-09-13 one write reached `gate: seedling-bot-differential`.
+H2's `dual` had just made that gate CI-runnable, which also enrolled it in the
+writer's roster, and the row's command was its default arm: the 150-tape tier.
+Nine more NEW rows went red for reasons a bank must not record:
+- a gate that takes a positional argument (EXIT 2);
+- two gates whose fixtures are untracked preset directories;
+- five `*-roundtrip` gates that crashed after 8–60 `PASS:` lines with no total
+  line. With no `.venv` they fall back to a system `python3`, and `Generate.py`
+  dies on a missing module. The `8/0` was the PASS tally, never a verdict.
+
+⇒ `standingValues.newRowClass` sorts every NEW `gate:` row into one of three
+classes:
+- **run**: CI has priced that exact key under `ci-arm-costs.json`'s budget.
+- **probe**: an unpriced `@ci-box` gate, which CI can never price. The writer
+  runs it under a kill deadline of `CI_SHARD_BUDGET_MS`, and the deadline
+  kills the whole process group. The row is banked only if the run exits 0
+  and prints a TOTAL line (`newRowAdmission`).
+- **refuse**: every other unpriced row. The writer prints
+  `NEW row REFUSED: <key> — <reason>` and carries on.
+
+A row named with `--key=` or `--force-row=` is a person's request and always
+runs. A gate whose standing value lives under another key declares
+`@standing-row <kind>: <key>: <why>` and gets no `gate:` row at all.
+
+⚠ **A probe banks only a parsable verdict.** A gate that ends with
+`All … assertions passed.` or `VERIFY …: ALL OK` prints no line
+`headlineOf` reads as a total. Such a gate stays out of the bank until it
+prints `ALL CHECKS PASSED` / `N CHECK(S) FAILED` — the same vocabulary gap
+F1 closed in five `  ok  ` printers.
+
 ## Related documentation
 
 - [Architecture](./architecture.md)
