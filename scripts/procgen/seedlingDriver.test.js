@@ -19,8 +19,19 @@ import { HEADLESS_REQUIREMENTS, driverChannel, headlessPython } from './seedling
 
 describe('driverChannel — the headless channel', () => {
     it('stages in a temp dir and spells the driver path, not a Windows one', () => {
-        const ch = driverChannel({ win: false, winPy: '/nonexistent/py.exe',
-            driver: '/x/d.py', chromiumArgs: HEADLESS_LOGIC_ONLY_ARGS });
+        // ⛓ An explicit interpreter: the channel resolves it at construction
+        // (a missing venv refuses before anything is staged), and a CI vitest
+        // job has no `.venv` — measured red at b10503b90f without this.
+        const prev = process.env.SEEDLING_PYTHON;
+        process.env.SEEDLING_PYTHON = 'python3';
+        let ch;
+        try {
+            ch = driverChannel({ win: false, winPy: '/nonexistent/py.exe',
+                driver: '/x/d.py', chromiumArgs: HEADLESS_LOGIC_ONLY_ARGS });
+        } finally {
+            if (prev === undefined) delete process.env.SEEDLING_PYTHON;
+            else process.env.SEEDLING_PYTHON = prev;
+        }
         expect(ch.name).toBe('headless');
         expect(ch.path('plan.json').startsWith(tmpdir())).toBe(true);
         expect(ch.path('plan.json')).toBe(ch.local('plan.json'));

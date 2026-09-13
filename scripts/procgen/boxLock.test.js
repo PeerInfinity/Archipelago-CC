@@ -515,9 +515,15 @@ describe('the CI face', () => {
     it('is DECLARED by the gate, not detected from its text', async () => {
         const { gateRoster, ciFaceIn } = await import('./gateRoster.js');
         const declaring = gateRoster({ repo: REPO }).filter((g) => g.ciFace);
+        /** ⛓ H2 (2026-09-12) enrols the differential, deliberately: it became a
+         *  `dual` gate, its DEFAULT tier is the 150-tape `full` roster (CI:
+         *  `workflow_dispatch:` only), so per push it answers a bounded SMOKE
+         *  question under its own key (planner ruling, plan §12). */
         expect(declaring.map((g) => g.file).sort())
-            .toEqual(['check-seedling-producer-boundaries.mjs']);
+            .toEqual(['check-seedling-bot-differential.mjs', 'check-seedling-producer-boundaries.mjs']);
         expect(Object.fromEntries(declaring.map((g) => [g.file, g.ciFace]))).toEqual({
+            'check-seedling-bot-differential.mjs':
+                { prefix: 'smoke', argv: ['--tier=fast', '--only=friction-stop'] },
             'check-seedling-producer-boundaries.mjs': { prefix: 'structure', argv: ['--structure'] },
         });
         /** ⛔ …and the retired one is not merely absent: the gate that used to
