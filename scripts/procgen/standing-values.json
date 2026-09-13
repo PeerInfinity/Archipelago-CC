@@ -1459,28 +1459,28 @@
       "kind": "identity",
       "cheap": false,
       "quoted": true,
-      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 26 tape(s) 616/0/3 MEASURED @489e0773d5e898377b3aec0022d919adf5b10433 [channel: headless] · map-walk 21 tape(s) 449/0/0 MEASURED @489e0773d5e898377b3aec0022d919adf5b10433 [channel: headless] · mechanic 103 tape(s) 2194/0/0 MEASURED @489e0773d5e898377b3aec0022d919adf5b10433 [channel: headless]. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all. ⛓ Carried by: R1 headless full tier on the REBUILD at 254145a5b. ⛔ THE PER-TAPE ROWS ARE MEASURED AND THE ATTRIBUTION IS NOT RE-DERIVED: the 26 campaign tapes read 598 PASS / 0 FAIL here, exactly as at the last drive; the extra 18 PASS + 3 SKIP are the campaign-attributed ROSTER-WIDE and CHAIN lines of the partition R9 slice CAT fixed, which this drive did not re-derive. The whole run read 3635/0/46 with 3241/0/0 in per-tape rows and 394/0/46 roster-wide ; MEASURED by the R1 headless full tier on the seedling-wasm REBUILD at SWFRecomp-CC 254145a5b: 21 tapes, 449 PASS / 0 FAIL over the per-tape rows, identical to the part this replaces ; MEASURED by the R1 headless full tier (check-seedling-bot-differential.mjs --tier=full, no --win, logic-only channel asserted on the page) on the seedling-wasm REBUILD at SWFRecomp-CC 254145a5b: 103 tapes, 2194 PASS / 0 FAIL over the per-tape rows, identical to the part this replaces.",
-      "measuredAt": "489e0773d5e898377b3aec0022d919adf5b10433",
+      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 26 tape(s) 616/0/3 MEASURED @bcea3b5fb5d3151de634474cd1dbb5f7cfdeaff0 [channel: headless] · map-walk 21 tape(s) 449/0/0 MEASURED @bcea3b5fb5d3151de634474cd1dbb5f7cfdeaff0 [channel: headless] · mechanic 103 tape(s) 2194/0/0 MEASURED @bcea3b5fb5d3151de634474cd1dbb5f7cfdeaff0 [channel: headless]. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all. ⛓ Carried by: QUOTED (ruling C) from the dispatched CI full tier, .github/workflows/seedling-full-tier.yml run 34729518557 @bcea3b5fb5 on ubuntu-latest, headless logic-only (CHANNEL line printed): ALL CHECKS PASSED 3635/0/46, 150/150 tapes the same verdict and ordered check set as R1's box tier (details differ only in wall seconds and the free-running game_time readout); checkpoint.jsonl kept as the run's artifact (90 days). ⛔ THE PER-TAPE ROWS ARE MEASURED AND THE ATTRIBUTION IS NOT RE-DERIVED: the 26 campaign tapes read 598 PASS / 0 FAIL, exactly as at R1; the extra 18 PASS + 3 SKIP are the campaign-attributed ROSTER-WIDE and CHAIN lines of the partition R9 slice CAT fixed, which this run did not re-derive ; QUOTED (ruling C) from the dispatched CI full tier, .github/workflows/seedling-full-tier.yml run 34729518557 @bcea3b5fb5 on ubuntu-latest, headless logic-only (CHANNEL line printed): ALL CHECKS PASSED 3635/0/46, 150/150 tapes the same verdict and ordered check set as R1's box tier (details differ only in wall seconds and the free-running game_time readout); checkpoint.jsonl kept as the run's artifact (90 days): 21 tapes, 449 PASS / 0 FAIL over the per-tape rows ; QUOTED (ruling C) from the dispatched CI full tier, .github/workflows/seedling-full-tier.yml run 34729518557 @bcea3b5fb5 on ubuntu-latest, headless logic-only (CHANNEL line printed): ALL CHECKS PASSED 3635/0/46, 150/150 tapes the same verdict and ordered check set as R1's box tier (details differ only in wall seconds and the free-running game_time readout); checkpoint.jsonl kept as the run's artifact (90 days): 103 tapes, 2194 PASS / 0 FAIL over the per-tape rows.",
+      "measuredAt": "bcea3b5fb5d3151de634474cd1dbb5f7cfdeaff0",
       "categories": {
         "campaign": {
           "tapes": 26,
           "value": "616/0/3",
-          "measuredAt": "489e0773d5e898377b3aec0022d919adf5b10433",
-          "coveredBy": "R1 headless full tier on the REBUILD at 254145a5b. ⛔ THE PER-TAPE ROWS ARE MEASURED AND THE ATTRIBUTION IS NOT RE-DERIVED: the 26 campaign tapes read 598 PASS / 0 FAIL here, exactly as at the last drive; the extra 18 PASS + 3 SKIP are the campaign-attributed ROSTER-WIDE and CHAIN lines of the partition R9 slice CAT fixed, which this drive did not re-derive. The whole run read 3635/0/46 with 3241/0/0 in per-tape rows and 394/0/46 roster-wide",
+          "measuredAt": "bcea3b5fb5d3151de634474cd1dbb5f7cfdeaff0",
+          "coveredBy": "QUOTED (ruling C) from the dispatched CI full tier, .github/workflows/seedling-full-tier.yml run 34729518557 @bcea3b5fb5 on ubuntu-latest, headless logic-only (CHANNEL line printed): ALL CHECKS PASSED 3635/0/46, 150/150 tapes the same verdict and ordered check set as R1's box tier (details differ only in wall seconds and the free-running game_time readout); checkpoint.jsonl kept as the run's artifact (90 days). ⛔ THE PER-TAPE ROWS ARE MEASURED AND THE ATTRIBUTION IS NOT RE-DERIVED: the 26 campaign tapes read 598 PASS / 0 FAIL, exactly as at R1; the extra 18 PASS + 3 SKIP are the campaign-attributed ROSTER-WIDE and CHAIN lines of the partition R9 slice CAT fixed, which this run did not re-derive",
           "channel": "headless"
         },
         "map-walk": {
           "tapes": 21,
           "value": "449/0/0",
-          "measuredAt": "489e0773d5e898377b3aec0022d919adf5b10433",
-          "coveredBy": "MEASURED by the R1 headless full tier on the seedling-wasm REBUILD at SWFRecomp-CC 254145a5b: 21 tapes, 449 PASS / 0 FAIL over the per-tape rows, identical to the part this replaces",
+          "measuredAt": "bcea3b5fb5d3151de634474cd1dbb5f7cfdeaff0",
+          "coveredBy": "QUOTED (ruling C) from the dispatched CI full tier, .github/workflows/seedling-full-tier.yml run 34729518557 @bcea3b5fb5 on ubuntu-latest, headless logic-only (CHANNEL line printed): ALL CHECKS PASSED 3635/0/46, 150/150 tapes the same verdict and ordered check set as R1's box tier (details differ only in wall seconds and the free-running game_time readout); checkpoint.jsonl kept as the run's artifact (90 days): 21 tapes, 449 PASS / 0 FAIL over the per-tape rows",
           "channel": "headless"
         },
         "mechanic": {
           "tapes": 103,
           "value": "2194/0/0",
-          "measuredAt": "489e0773d5e898377b3aec0022d919adf5b10433",
-          "coveredBy": "MEASURED by the R1 headless full tier (check-seedling-bot-differential.mjs --tier=full, no --win, logic-only channel asserted on the page) on the seedling-wasm REBUILD at SWFRecomp-CC 254145a5b: 103 tapes, 2194 PASS / 0 FAIL over the per-tape rows, identical to the part this replaces",
+          "measuredAt": "bcea3b5fb5d3151de634474cd1dbb5f7cfdeaff0",
+          "coveredBy": "QUOTED (ruling C) from the dispatched CI full tier, .github/workflows/seedling-full-tier.yml run 34729518557 @bcea3b5fb5 on ubuntu-latest, headless logic-only (CHANNEL line printed): ALL CHECKS PASSED 3635/0/46, 150/150 tapes the same verdict and ordered check set as R1's box tier (details differ only in wall seconds and the free-running game_time readout); checkpoint.jsonl kept as the run's artifact (90 days): 103 tapes, 2194 PASS / 0 FAIL over the per-tape rows",
           "channel": "headless"
         }
       }
