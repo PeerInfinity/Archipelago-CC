@@ -14543,6 +14543,19 @@ traffic: the sidecars cleanup merge (7 commits) and its docs close cleared while
 relayed the verdict both times; the next brief template says "the wait is a RUNNING command, never a paused turn".
 **⛓ Nothing queued: R2, H2, H3, S1, F1, F2, WT1, C1, C2 shipped; W3 delayed on the pins. Next = the user.**
 
+**THE OWED SEEDLING WRITE — DONE by the planner 2026-09-13 (`6c9f59973d`; CI at that head run 34784271448 vitest
+471/14162 0 failed + slow 217/217).** Found by the sidecars planner's `--keys` at `094b3cf72b`: 41 MOVED rows, 35+ this
+arc's — F2's `gateTotal.js` helper touched 37 gate sources, and a standing row's key hashes its gate's own code, so every
+row of those gates read as MOVED at an unchanged verdict. Run from the primary tree under the box lock (21:23–21:34Z),
+THIRTEEN scoped runs: `--only=` ×4 where no NEW row shares the substring, `--key=` ×9 (`gate: procgen-presets` is NEW and
+shares `gate: procgen-`, so the three procgen rows went by exact key — a substring would have swept a probe in); all
+exit 0, no refusals. Bank diff: 50 rows re-keyed, 49 at the SAME value, ONE value change (`gate: loop-costs-one-model`
+4/0/1 → 5/0, the new vocabulary counting what the old printer listed as a third figure). Rows that stayed `0/0`
+(canonical-placements and kin) print one summary line and no per-check lines — honest, and never among F2's 37. The
+sidecars' three rows (sidecar-fields, procgen-reference, the reference identity) read MOVED again after ANY bank commit —
+they declare the bank as DATA (the self-invalidation family) — left alone by agreement with `preset-sidecars-planning-4`.
+**⛓ Nothing queued: R2, H2, H3, S1, F1, F2, WT1, C1, C2 shipped, the owed write banked; W3 delayed on the pins.**
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
