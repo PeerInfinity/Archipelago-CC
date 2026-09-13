@@ -1,0 +1,128 @@
+name: Seedling full tier (manual)
+
+# ⛓ THE 150-TAPE SEEDLING DIFFERENTIAL, ON A RUNNER, ON DEMAND ONLY
+# (slice seedling-headless-H2, 2026-09-12; plan
+# NewDocs/plans/seedling-headless-webgpu-plan.md §11/§12).
+#
+# ⚖ USER RULING (2026-09-11): "I want the test that runs the full set of tapes
+# to only be manually triggered." ⇒ `workflow_dispatch:` and NOTHING ELSE —
+# never push, pull_request or schedule. `seedlingFullTierWorkflow.test.js`
+# asserts that trigger set, so adding one reds a row rather than quietly
+# spending six runner-hours per push.
+#
+# ⚖ RULING C (2026-09-12): a dispatched run of this workflow may DISCHARGE the
+# standing row `roster: --tier=full`, quoted from the run — `quoted: true`,
+# `coveredBy` naming this run's id and SHA, `channel: headless`, `measuredAt`
+# = that SHA. The checkpoint jsonl is uploaded so every per-tape verdict the
+# quote rests on is kept (90 days).
+#
+# ⛓ HEADLESS LOGIC-ONLY. The differential launches on HEADLESS_LOGIC_ONLY_ARGS
+# and REFUSES by name unless the page's `__swfGpu.lost >= 1` — measured on
+# ubuntu-latest before this file existed (run 34724984639: logic-only
+# `{lost:1,stalls:0}` 29.9 f/s). It needs no Python: the headless tier drives
+# the page from node; the Python driver is the `--win` channel's.
+#
+# ⛓ WHY 360 MINUTES. The box took 2h09m for the whole roster at ~26 f/s (R1),
+# and the runner was not slower than the box on CPU-bound browser rows (H1).
+# 360 is GitHub's own maximum for a hosted job; a run that hits it has answered
+# "does the runner finish" with a no, which is the fallback-to-the-box signal.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tier:
+        description: >-
+          The --tier= to run: full (the 150-tape roster, the standing row) or a
+          category (campaign, map-walk, mechanic) / fast / gate.
+        type: string
+        default: full
+
+jobs:
+  full-tier:
+    name: Seedling differential — tier ${{ inputs.tier }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      # ── the SAME setup as unittests_frontend.yml's browser-gates job ─────
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Resolve the pinned Playwright version (the cache key)
+        id: pwver
+        run: |
+          V=$(node -p "require('./package-lock.json').packages['node_modules/playwright'].version")
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "MEASURED: playwright pin $V"
+
+      - name: Cache the Playwright browser
+        id: pwcache
+        uses: actions/cache@v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: ms-playwright-${{ runner.os }}-${{ steps.pwver.outputs.version }}
+
+      - name: Install Chromium for Playwright
+        timeout-minutes: 12
+        run: |
+          node node_modules/playwright/cli.js install chromium
+          echo "MEASURED-CACHE: cache-hit=${{ steps.pwcache.outputs.cache-hit }}"
+
+      # ⛓ The page comes from the repo root on :8000 — the differential's
+      # default SEEDLING_PORT. It reads no --host= flag.
+      - name: 'Run the differential (--tier=${{ inputs.tier }})'
+        id: tier
+        env:
+          TIER: ${{ inputs.tier }}
+        run: |
+          set -o pipefail
+          python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
+          echo $! > /tmp/httpd.pid
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:8000/frontend/index.html && break
+            sleep 1
+          done
+          mkdir -p test-results/seedling-differential
+          S=$(date +%s)
+          set +e
+          node scripts/procgen/check-seedling-bot-differential.mjs --tier="$TIER" 2>&1 \
+            | tee test-results/seedling-differential/tier.log
+          RC=$?
+          set -e
+          echo "MEASURED: tier $TIER rc=$RC wall $(( $(date +%s) - S ))s at ${GITHUB_SHA}"
+          kill "$(cat /tmp/httpd.pid)" 2>/dev/null || true
+          exit $RC
+
+      - name: Summary
+        if: always()
+        run: |
+          L=test-results/seedling-differential/tier.log
+          {
+            echo "## Seedling differential — tier \`${{ inputs.tier }}\` — \`${{ steps.tier.outcome }}\`"
+            echo ""
+            echo "SHA \`${GITHUB_SHA}\`, run \`${GITHUB_RUN_ID}\`."
+            echo ""
+            echo '```'
+            grep -aE '^CHANNEL:|^TIER |^RESUME' "$L" 2>/dev/null | head -5 || true
+            echo "PASS $(grep -ac '^PASS' "$L" 2>/dev/null) / FAIL $(grep -ac '^FAIL' "$L" 2>/dev/null) / SKIP $(grep -ac '^SKIP' "$L" 2>/dev/null)"
+            tail -3 "$L" 2>/dev/null || echo '(no log)'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the checkpoint and the log
+        if: always()
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: seedling-differential-${{ inputs.tier }}-${{ github.run_id }}
+          path: test-results/seedling-differential/
+          retention-days: 90
