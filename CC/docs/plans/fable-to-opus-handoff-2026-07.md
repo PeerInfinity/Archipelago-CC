@@ -14388,6 +14388,30 @@ shared `until`. Trap 1347 (a constant that equals a mechanism's value by coincid
 until a second machine runs it). S1's session ENDED by pid under the 2026-09-13 ruling. **F1 LAUNCHED 2026-09-13** as
 `seedling-headless-F1` (brief `seedling-headless-F1-prompt.md`; plan §16; §16.1 = its as-built slot).
 
+**F1 COMPLETE + VERIFIED 2026-09-13 (planner's reads: eight commits `e23fbf2b74 … 5e29f811e8` on origin, plan §16.1,
+owed gate ALL PASS at `d07901e0fa`, the row re-quoted from sharded run 34750970611 (3635/0/46, 150/150 reused,
+per-tape identical to 34734861224), `@standing-row` on the differential, `CI_TIER_CALIBRATION` in code, traps
+1349–1350, tree level).** Task 0/0b — THE WRITER'S NEW-ROW GUARD (a live hazard found by the sidecars planner's
+`standing-values --write`: the writer derived a NEW `gate: seedling-bot-differential` row and ran the FULL TIER on the
+box inside the write — H2's `dual` had enrolled the gate in the WRITER's roster too): a NEW row is created only for a
+key priced in `ci-arm-costs.json`, or for an unpriced `@ci-box` gate by a PROBE under a kill deadline =
+`CI_SHARD_BUDGET_MS` that banks only on exit 0 with a parsed TOTAL line (killed / non-zero / PASS-tally-without-total
+refused by name); the differential declares `@standing-row roster: --tier=full` and is never derived; mutants
+(group-kill, no-total, non-zero, no-probe-class). Static census: 47 @ci-box candidates, only 10 print a TOTAL line today.
+Task 1: the five `  ok  ` printers → PASS:/FAIL: + TOTAL (all five are @ci-box — brief wrong: no CI line to move; box
+headlineOf 0/0 → 11/9/14/50/14). Task 2: the owed gate prints the CI dispatch beside a `--win`-less box drive;
+`CI_TIER_CALIBRATION` (fit 3.688 s/tape + 40.417 s/kilotick; sharded 721 s at n=10, both with run ids) — "box ≈ 143 ·
+CI single ≈ 98 · CI sharded ≈ 12 min". Task 3: swim-sound's lock kind follows the channel. Task 4: the fingerprint
+hashes `seedlingDemo/fixtures/*.js` (a byte in tiers.js moves it, a touch does not; one-time invalidation). Task 5:
+costs re-priced — brief wrong: the packer FILLS to the budget (shard 0 margin 0.4 → 0.0 s; audit run 34747630046 shard
+0 613 s FAIL; the new partition holds at 388.6 s) — ⚖ OPEN packer headroom (trap 1350). Task 7: S1's owed drive
+discharged by the dispatched sharded tier. CI 465/14064, 0 failed (a macOS python flake at one head, not F1's).
+**⚖ OPEN (§16.1):** packer headroom; the roundtrip gates' silent `python3` fallback without `.venv` and no TOTAL line
+when green; the 37 no-total @ci-box gates; `check-jta-balance-pass`'s positional argument invisible to the roster; a
+probe that dirties the tree aborts the write via assertTreeUnmoved; `rerecord-seedling-campaign` still advises
+`--win`. F1's session ENDED by pid. The primary tree's submodule checkout repacked (`git gc`, no history change).
+**⛓ The arc's ladder is EMPTY again: R2, H2, H3, S1, F1 shipped; W3 delayed on the pins. REPLAN with the user.**
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
