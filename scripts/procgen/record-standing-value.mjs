@@ -17,7 +17,7 @@
  *                                  from the command — a `check-*` is a gate, a
  *                                  `vitest` is a suite, anything else is an
  *                                  identity digest)
- *   …--quote='<value>' --measured-at=<sha> --why='<one line>'
+ *   …--quote='<value>' --measured-at=<sha> --why='<one line>' [--channel=win|headless]
  *                                  record a value MEASURED SOMEWHERE ELSE.
  *   …--quote='<value>' --category=<campaign|map-walk|mechanic> --tapes=<n> \
  *        --measured-at=<sha> [--channel=win|headless]
@@ -111,6 +111,18 @@ file.rows = file.rows ?? {};
  * derived one is a second source of truth about the same fact, which is what
  * ⚖ 17 is about; the derivation states every part, its counts and its head.
  */
+/**
+ * ⛓ R1 — a typo'd channel would become DATA and read as a third channel nobody
+ * drives, so the vocabulary is closed at the door rather than in the reader.
+ * Omitting it is still legal and still means "not recorded". ⛓ S1 (2026-09-13):
+ * checked for EVERY path that writes it — a plain `--quote` gate row now carries
+ * `channel` too (the ship row, box headless-pixels).
+ */
+if (CHANNEL && !CHANNELS.includes(CHANNEL)) {
+    console.log(`FAIL: --channel=${CHANNEL} is not a channel (${CHANNELS.join(', ')}). `
+        + 'Omit it to record no channel; ⛔ do not omit it to mean `win`.');
+    process.exit(1);
+}
 if (QUOTE !== null && CATEGORY) {
     if (!ROSTER_CATEGORIES.includes(CATEGORY)) {
         console.log(`FAIL: --category=${CATEGORY} is not a derived category `
@@ -121,14 +133,6 @@ if (QUOTE !== null && CATEGORY) {
         console.log('FAIL: --category= needs --measured-at=<sha>. A part without its own head '
             + 'cannot answer the only question it exists for: has the tree moved under THIS '
             + 'category?');
-        process.exit(1);
-    }
-    // ⛓ R1 — a typo'd channel would become DATA and read as a third channel
-    // nobody drives, so the vocabulary is closed at the door rather than in
-    // the reader. Omitting it is still legal and still means "not recorded".
-    if (CHANNEL && !CHANNELS.includes(CHANNEL)) {
-        console.log(`FAIL: --channel=${CHANNEL} is not a channel (${CHANNELS.join(', ')}). `
-            + 'Omit it to record no channel; ⛔ do not omit it to mean `win`.');
         process.exit(1);
     }
     if (WHY) {
@@ -191,6 +195,7 @@ if (QUOTE !== null) {
         quoted: true,
         why: WHY,
         measuredAt: MEASURED_AT,
+        ...(CHANNEL ? { channel: CHANNEL } : {}),
     };
     writeFileSync(join(REPO, FILE), `${JSON.stringify(file, null, 2)}\n`);
     console.log(`QUOTED ${KEY} = ${QUOTE}  @${MEASURED_AT}\n  ⛓ ${WHY}`);

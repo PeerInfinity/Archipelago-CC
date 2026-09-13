@@ -246,6 +246,24 @@ describe('a part says which CHANNEL drove it (R1)', () => {
     });
 });
 
+describe('record-standing-value — a plain --quote row carries channel (S1)', () => {
+    it('REFUSES a channel outside the vocabulary on the PLAIN quote path too, and writes NOTHING', () => {
+        // ⛓ the same banked-bytes protection as the category row above: the
+        // command writes the real file, so a mutant must red here, not commit.
+        const p = join(REPO, FILE);
+        const before = readFileSync(p);
+        const r = run(join(HERE, 'record-standing-value.mjs'), [
+            '--key=gate: seedling-wasm-ship', '--quote=1/0', '--measured-at=deadbeef',
+            '--why=a refusal row', '--channel=wni',
+        ]);
+        const after = readFileSync(p);
+        if (!after.equals(before)) writeFileSync(p, before);
+        expect(after.equals(before), `${FILE} was WRITTEN by a call that must refuse`).toBe(true);
+        expect(r.code).not.toBe(0);
+        expect(r.out).toMatch(/--channel=wni is not a channel/);
+    });
+});
+
 describe('the owed gate, per category (⚖ 70 (d))', () => {
     it('judges EACH category against its OWN head, and prices only what is owed', () => {
         // ⛓ The gate is headless and takes NO box lock — which is why this row
