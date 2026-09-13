@@ -63,11 +63,12 @@ const ENTRIES = everyRulesPath().flatMap((file) => {
 const declares = (entry) => !!exitSidesOf(substrateRegistry.get(entry?.substrate)).decl;
 
 /**
- * ⛓ G2a — **THE REGENERATED POPULATION.** The committed text-adventure entries
- * (`procgen_topdown` AP_10–12) are still the pre-G2a maze shape until their
- * ask-first re-record, so over them the corpus rows below are RED by design (the
- * write-back re-serializes their exits through the room serializer). These three
- * worlds are the same documents built NOW, in memory, with
+ * ⛓ G2a — **THE REGENERATED POPULATION.** Until the ask-first re-record
+ * (`156c49f9cd`, ⚖ the user) the committed text-adventure entries
+ * (`procgen_topdown` AP_10–12) were the pre-G2a maze shape, and over them the
+ * corpus rows below were RED (the write-back re-serialized their exits through
+ * the room serializer); since it, they are rooms and the rows hold over the
+ * committed corpus too. These three worlds are the same documents built NOW, in memory, with
  * `generate-topdown-preset.js`'s own arguments (`scripts/utils/generated_commands.sh`)
  * — so the rows also run over the shape the re-record will commit. A row below
  * pins that each build reproduces its committed file in every top key but

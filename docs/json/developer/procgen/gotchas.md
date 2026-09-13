@@ -652,6 +652,15 @@ Two separate facts, both measured, both about `exporter.py`'s
    | no tiles | `playable_payload` with no `tiles` array | 11 | e.g. every `jta_*_test`, `seedling_playthrough/AP_1`, `seedling_atlas/AP_1` |
    | **Python-spliced** | `"tiles": [0,0,…]` — *the same signature* | **0 → 3** | `exporter.py` after W1; the first three are APWorld hub H4a's four-player fixture (2026-09-05) |
 
+   ⛓ **The table is `956af2029`'s snapshot, and G2a moved one file out of a
+   row.** The text-adventure re-record (`156c49f9cd`) left `jta_mixed_test/AP_1`
+   with no `tiles` anywhere — its text-adventure region was that file's only tile
+   carrier — so it is no longer an "exploded" example. Re-derived with one
+   classifier over the 39 tracked `AP_*_rules.json` that carry a
+   `playable_payload`: before the re-record spliced-signature **19** · exploded
+   **7** · no tiles **13**; after it **19 · 6 · 14**. `procgen_topdown/AP_10–12`
+   stay spliced (their maze regions keep `tiles`).
+
    ⛓ The trailing newline is the WRITE SITE's, not the writer's: neither
    `stringifyRulesJson` nor `_dump_with_compact_sidecar_tiles` emits one, the
    node write sites append it (`scripts/utils/generate-procgen-rules.js`:
