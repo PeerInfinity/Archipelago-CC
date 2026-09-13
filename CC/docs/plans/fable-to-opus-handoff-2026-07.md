@@ -14318,6 +14318,27 @@ the CI reader cannot parse; (4) the swim-sound probe's static 'windows' lock kin
 still says `--win`; (6) the shard-0 margin (0.4 s). **H3 LAUNCHED 2026-09-13 ~03:05Z** as `seedling-headless-H3` (Opus;
 brief `NewDocs/plans/seedling-headless-H3-prompt.md`; plan §13; §14 = its as-built slot; start `de7e976104`).
 
+**H3 COMPLETE + VERIFIED 2026-09-13 — THE TIER IN CI IS plan → 10 SHARDS → merge (planner's reads: five commits
+`1e6fe55ba6 … 932106c12f` on origin, plan §14 present, run 34734861224 `success` with 12 jobs, the row quoted at
+`2715a0c86c`, owed gate ALL PASS, traps 1343–1344, tree level).** Proof run **34734861224 @ `2715a0c86c`: 03:11:17Z →
+03:23:18Z ≈ 12 min (vs 1h38m single-job); the merge `RESUME: reusing 150` tapes, replayed 0; `ALL CHECKS PASSED`
+3635/0/46**, the check lines equal to the unsharded run AS A SET; per category = R1 (2194/0 · 449/0 · 598/0); shard
+walls 524–611 s (max/mean 1.061); runner job-seconds 6,127 vs 5,874 single-job (+4 %). As built: `--shard=i/n` +
+`--shard-plan=<n> [--json]` on the differential — LPT into exactly n bins by the price model (`8 + 57 × ticks/1000`;
+no `ci-tape-costs.json`: model-LPT vs measured-LPT bins differ by 31 s); the n dearest tapes provably land in n
+different shards (the L40 assumption in §13 was wrong: there are 7 L40 tapes and none is in the top 10 by price);
+a SHARP LPT-invariant row (no shard ends above the lightest by more than its own cheapest tape) because the brief's
+first-fit mutant balanced to 1.051 under the loose bound (trap 1344); cross-tape `checkAcceptance` + the live-driver
+task DEFER to the merge, printed by name both sides. **Task 0 (the W0 finding): the fingerprint hashed game.html/.wasm
+as size:mtimeMs — checkout sets mtime per job, so every shard would have banked under a different fingerprint and the
+merge replayed all 150 (trap 1343); now sha256 of the CONTENT (145 ms), two mutant rows (mtime-only touch → unchanged;
+one byte → changed); one-time invalidation of box checkpoints** (residue `test-results/seedling-differential.pre-h3-dry/`).
+Calibration: runner/model ratio 0.28–1.33 overall, ≥1000-tick tapes 0.58–0.78. Still `workflow_dispatch:` only (the
+trigger row covers all three jobs). CI: `1e6fe55ba6` 462/13974 · `2715a0c86c` 463/13996 · `932106c12f` 463/13996, 0
+failed. ⚖ OPEN (§14.7): the owed gate still prints the box's "≈143 min" estimate and the `--win` re-drive advice
+(could print the dispatch); `seedlingDemo/fixtures/*.js` sits outside the fingerprint. **⛓ THREE SLICES SINCE THIS
+SESSION OPENED (R2, H2, H3) — the ladder STOPS here for a replan with the user** (ruling 2026-09-05).
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
