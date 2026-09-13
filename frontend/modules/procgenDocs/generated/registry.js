@@ -48,7 +48,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/runnerDemo/runnerDemoLibrary.js"
         },
         {
-            "fields": 20,
+            "fields": 21,
             "id": "text_adventure",
             "label": "Text Adventure",
             "registeredBy": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js"
@@ -4257,6 +4257,7 @@ export const REGISTRY = frz({
             "carriedBy": [
                 "maze",
                 "bounce",
+                "text_adventure",
                 "flash_seedling"
             ],
             "cells": [
@@ -4296,10 +4297,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "text_adventure",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "{open, save}",
+                    "type": "object",
+                    "value": [
+                        "open",
+                        "save"
+                    ]
                 },
                 {
                     "id": "flash_seedling",

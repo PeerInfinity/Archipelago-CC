@@ -284,7 +284,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
 |---|---|---|---|---|---|---|---|---|
 | `exitSides` | — | — | {keys, relabel} | {keys, relabel} | {keys, relabel} | — | — | — |
-| `regionRoundTrip` | {open, save} | — | {open, save} | — | — | {refused} | — | — |
+| `regionRoundTrip` | {open, save} | — | {open, save} | — | {open, save} | {refused} | — | — |
 | `roomEditor` | {arm, kind, page} | — | {kind, open} | — | — | {arm, kind, page} | — | — |
 
 **Build-time — procedural substrates**

@@ -30,6 +30,7 @@ import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { getPlaybackProxy } from './index.js';
 import { drawTextAdventureCompositeRegion } from './textAdventureCompositeMap.js';
+import { textAdventureRegionRoundTrip } from './textAdventureRegionRoundTrip.js';
 import { envelopeExitNames } from '../procgenCore/sidecarFields.js';
 
 export const substrateRegistryEntry = Object.freeze({
@@ -125,6 +126,11 @@ export const substrateRegistryEntry = Object.freeze({
     sidecarFields: TEXT_ADVENTURE_SIDECAR_FIELDS,
     apLocationNamesOf: textAdventureApLocationNames,
     exitSides: TEXT_ADVENTURE_EXIT_SIDES,
+    // ⛓⛓ PRESET SIDECARS G2b-1 — the document ⇄ room round trip the hub's
+    // `Re-derive rules ▸` needs (`textAdventureRegionRoundTrip.js`). ⛔ Edit ▸
+    // also needs a `roomEditor`, which this entry does not declare: that door
+    // stays disabled by name.
+    regionRoundTrip: textAdventureRegionRoundTrip,
     apExitNamesOf: envelopeExitNames,
 });
 
