@@ -14445,6 +14445,34 @@ precedent; TA library hooks + `LIBRARY_V1_SUBSTRATES` + the G1 agreement row's t
 P/Z; the blast radius in principle (STOP kept); gates in the payload; `exitSides` identity for TA (+ jta/omsi?); one session
 with the STOP mid-way vs a split; the P0 launch gate. NOTHING launched.
 
+**P0 VERIFIED + MERGED 2026-09-13** (`box-protocol-P0`; branch `box-protocol-p0` @ `2695b4586c`, seven commits, rebased
+onto `d804521eac` and pushed as **`4c1eaddec1`**; as-built `Archipelago-CC-wt-p0/NewDocs/plans/box-protocol-P0-asbuilt.md`;
+traps 1338–1339). Planner re-measured in P0's worktree: 7 files / 144 rows green before the rebase and 145/146 after
+(the one red is H2's, below); the hook driven directly against fake locks — refused with the sentence when the lock
+names THIS tree, allowed for a lock naming the primary tree, allowed under the holder's own token; `new-worktree.sh
+--dry-run` prints the plan; the fast batch on disk `2026-09-12T23-51-22` = **144/144**, `compare-runs` "No
+differences", stamped `frozen.head 77d280de02` / `treeMoved false`; branch CI **458/13929** at `2695b4586c` (+3
+files / +27 rows over 455/13902 @ `4e2bc90e4a`, = P0's derivation); `boxLockTakers.expected` 97 == 97, runners 5 →
+6 (`scripts/test/run-tests.js`). Landed: `npm test` takes the box (refuses a held box by name in 0.3 s; queues with
+`--wait-for-box`; the results JSON carries `frozen` + `treeMoved`; a queued runner whose parent died stops queuing;
+⚑ trap 1338: a queued taker SIGTERMed directly still took the box — fixed in `boxLock.js` for ALL takers); the
+versioned `scripts/git-hooks/pre-commit` (refuses a commit under a foreign live lock naming THIS tree — **planner
+ruling** on b6's wider ask: tree-scoped stays, a commit elsewhere cannot move the frozen tree; R2's `2211c39d10` is
+the worked example; "read the lock before every commit" retired where `core.hooksPath` is set — `--worktree` form in
+a worktree, plain in the primary); `scripts/dev/new-worktree.sh` (creation-only; five submodules; identity; `npm ci`;
+hooksPath; a free port). Brief-wrong: traps were at 1337; 23 lock rows not 31; `test-templates.yml` is the workflow
+that calls `npm test`; killing npm leaves the runner reparented. Live-probe leftovers removed by the planner.
+**Inherited RED, attributed:** main at `d804521eac` (H2's task 2, the `dual` roster kind) reads CI 456/13910 with
+**2 failed** — locally `boxLock.test.js › the CI face › is DECLARED by the gate` now finds
+`check-seedling-bot-differential.mjs` declaring a face beside producer-boundaries; H2's row to reconcile, told to b6;
+P0's merged head inherits it (CI at `4c1eaddec1` pending). **Debt, named not paid:** any byte of `boxLock.js` moves
+55 of 103 keyed standing rows' code digests and 27 spawn digests (as-built §3) — ⚖ FOR THE USER: a 55-row
+`standing-values --write` at the merged head (box-hours) or move the lock's prose out of the hashed file. ⚖ OPEN
+(P0 §6): `treeMoved` is end-vs-start (a reverted mid-run edit is invisible); the ppid check into `boxLock.js` for all
+takers; the orphan-refusal semantics under `&` vs `setsid`. M3's CI quote at `cd1919d7e8` (run 34724817403):
+**454/13856**, its prediction to the row (R2 +0). **NEXT:** G2a launches from `preset-sidecars-planning-3` on the
+user's word, in a worktree via `new-worktree.sh`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
