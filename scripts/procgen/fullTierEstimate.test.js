@@ -8,13 +8,18 @@
  * the SAME tape count and different tick sums must not price the same.
  */
 import { describe, expect, it } from 'vitest';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    FIXED_SEC_PER_TAPE, FULL_TIER_CALIBRATION, SEC_PER_KILOTICK,
-    describeFullTierEstimate, estimateFullTierSeconds, rosterLabels, tickSumOf,
+    CI_TIER_CALIBRATION, FIXED_SEC_PER_TAPE, FULL_TIER_CALIBRATION, FULL_TIER_WORKFLOW,
+    FULL_TIER_WORKFLOW_DEFAULT_SHARDS, SEC_PER_KILOTICK, describeFullTierEstimate,
+    describeTierCosts, estimateCiReplaySeconds, estimateCiShardedSeconds,
+    estimateCiSingleSeconds, estimateFullTierSeconds, fitTapeCost, githubRepoOf,
+    reDriveCommands, rosterLabels, tapeTicksOf, tickSumOf,
 } from './fullTierEstimate.js';
+import { partitionTapes } from './fullTierShards.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const TAPES = join(REPO, 'frontend/modules/seedlingDemo/fixtures/tapes');
@@ -77,4 +82,95 @@ describe('fullTierEstimate', () => {
         expect(roster.length).toBeGreaterThan(100);
         expect(tickSumOf(roster, { tapesDir: TAPES })).toBeGreaterThan(0);
     });
+
+    it('tapeTicksOf and tickSumOf agree on the committed roster', () => {
+        const roster = rosterLabels({ tapesDir: TAPES });
+        const per = tapeTicksOf(roster, { tapesDir: TAPES });
+        expect(per.map((t) => t.name)).toEqual(roster);
+        expect(per.reduce((n, t) => n + t.ticks, 0)).toBe(tickSumOf(roster, { tapesDir: TAPES }));
+    });
 });
+
+describe('CI_TIER_CALIBRATION — the runner prices, each against its own run (F1)', () => {
+    const { single, sharded } = CI_TIER_CALIBRATION;
+
+    /**
+     * ⛓⛓ THE FIT IS CHECKED AGAINST ITS RUN'S TOTALS, the way the box pair is
+     * checked against 12h: replay secs from the fit, and the job wall = fit +
+     * the job's own overhead.
+     */
+    it('reproduces run 34729518557 (one job): replay and job wall within 1 %', () => {
+        const replay = estimateCiReplaySeconds(single);
+        expect(Math.abs(replay - single.replaySec) / single.replaySec).toBeLessThan(0.01);
+        const job = estimateCiSingleSeconds(single);
+        expect(Math.abs(job - single.jobSec) / single.jobSec).toBeLessThan(0.01);
+        expect(single.jobOverheadSec).toBe(single.jobSec - single.replaySec);
+    });
+
+    /**
+     * ⛓⛓ NOT CIRCULAR: the components (before-shards, per-shard overhead, merge)
+     * are job timestamps; the whole wall is the RUN's creation → update. The
+     * slowest bin comes from partitioning TODAY's committed roster, so a roster
+     * that drifted far from the calibration's reds this row too.
+     */
+    it('reproduces run 34734861224 (10 shards) from its components within 5 %', () => {
+        const tapes = tapeTicksOf(rosterLabels({ tapesDir: TAPES }), { tapesDir: TAPES });
+        const bins = partitionTapes(tapes, sharded.shards).shards;
+        const wall = estimateCiShardedSeconds(bins);
+        expect(Math.abs(wall - sharded.wallSec) / sharded.wallSec).toBeLessThan(0.05);
+    });
+
+    it('prices a shard plan by its SLOWEST shard, not by the sum', () => {
+        const one = estimateCiShardedSeconds([{ tapes: 10, ticks: 10000 }]);
+        const two = estimateCiShardedSeconds([{ tapes: 10, ticks: 10000 }, { tapes: 1, ticks: 10 }]);
+        expect(two).toBeCloseTo(one, 6);
+        expect(estimateCiShardedSeconds([{ tapes: ['a', 'b'], ticks: 500 }]))
+            .toBeCloseTo(estimateCiShardedSeconds([{ tapes: 2, ticks: 500 }]), 6);
+    });
+
+    it('fitTapeCost recovers a known line', () => {
+        const pts = [100, 900, 2500, 12000].map((ticks) => ({ ticks, secs: 3 + (40 * ticks) / 1000 }));
+        const fit = fitTapeCost(pts);
+        expect(fit.secPerTape).toBeCloseTo(3, 6);
+        expect(fit.secPerKilotick).toBeCloseTo(40, 6);
+    });
+
+    it('describes box · CI single · CI sharded with both runs and SHAs', () => {
+        const said = describeTierCosts({
+            tapes: 2, ticks: 3000, bins: [{ tapes: 2, ticks: 3000 }], shards: 10,
+        });
+        expect(said).toMatch(/^box ≈ \d+ min · CI single ≈ \d+ min · CI sharded\(n=10\) ≈ \d+ min /);
+        for (const s of [single.run, single.measuredAt, sharded.run, sharded.measuredAt,
+            FULL_TIER_CALIBRATION.measuredAt]) expect(said).toContain(s);
+    });
+});
+
+describe('reDriveCommands — the advice names things that exist (F1)', () => {
+    const WF = join(REPO, '.github/workflows', FULL_TIER_WORKFLOW);
+
+    /** ⛔ A renamed workflow or input reds here, not in a pasted command that 404s. */
+    it('the CI dispatch names a workflow file on disk with `tier` and `shards` inputs', () => {
+        expect(existsSync(WF)).toBe(true);
+        const yml = readFileSync(WF, 'utf8');
+        const cmd = reDriveCommands({ tier: 'campaign', repo: 'o/r' });
+        expect(cmd.ci).toBe(`gh workflow run ${FULL_TIER_WORKFLOW} -f tier=campaign `
+            + `-f shards=${FULL_TIER_WORKFLOW_DEFAULT_SHARDS} --repo o/r`);
+        expect(yml).toMatch(/workflow_dispatch:\s*\n\s*inputs:\s*\n\s*tier:/);
+        const shards = /\n(\s*)shards:\s*\n(?:\1\s+.*\n)*?\1\s+default:\s*(\d+)/.exec(yml);
+        expect(shards?.[2]).toBe(String(FULL_TIER_WORKFLOW_DEFAULT_SHARDS));
+    });
+
+    it('the box drive has no --win and names the differential that exists', () => {
+        const { box } = reDriveCommands({ tier: 'mechanic' });
+        expect(box).not.toContain('--win');
+        expect(existsSync(join(REPO, box.split(' ')[1]))).toBe(true);
+        expect(box).toContain('--tier=mechanic');
+    });
+
+    it('githubRepoOf reads https and ssh remotes, and refuses others', () => {
+        expect(githubRepoOf('https://github.com/PeerInfinity/Archipelago-CC.git')).toBe('PeerInfinity/Archipelago-CC');
+        expect(githubRepoOf('git@github.com:o/r.git')).toBe('o/r');
+        expect(githubRepoOf('https://example.com/o/r')).toBeNull();
+    });
+});
+

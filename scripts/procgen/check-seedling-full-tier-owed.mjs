@@ -166,7 +166,11 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { describeFullTierEstimate, rosterLabels, tickSumOf } from './fullTierEstimate.js';
+import {
+    FULL_TIER_WORKFLOW_DEFAULT_SHARDS, describeTierCosts, githubRepoOf, reDriveCommands,
+    rosterLabels, tapeTicksOf,
+} from './fullTierEstimate.js';
+import { partitionTapes } from './fullTierShards.js';
 import {
     FILE, ROSTER_ROW_KEY, compositeParts, compositeValue, compositeWhy, readStandingValues,
 } from './standingValues.js';
@@ -218,6 +222,28 @@ const refuse = (name, detail) => {
 
 const git = (...args) => execFileSync('git', args,
     { cwd: REPO, encoding: 'utf8', maxBuffer: 1 << 27 }).trim();
+
+/**
+ * ⛓ F1 — THE PRICE AND THE WAY TO PAY IT, together. A debt names the CI
+ * dispatch beside the box drive, and every estimate prints box · CI single ·
+ * CI sharded (`fullTierEstimate.describeTierCosts`, each calibrated on a run).
+ */
+const ORIGIN_REPO = (() => {
+    try { return githubRepoOf(git('remote', 'get-url', 'origin')); } catch { return null; }
+})();
+const costsOf = (labels) => {
+    const tapes = tapeTicksOf(labels, { tapesDir: TAPES });
+    const shards = FULL_TIER_WORKFLOW_DEFAULT_SHARDS;
+    return describeTierCosts({
+        tapes: tapes.length, ticks: tapes.reduce((n, t) => n + t.ticks, 0),
+        bins: partitionTapes(tapes, shards).shards, shards,
+    });
+};
+const reDriveAdvice = (category, labels) => {
+    const cmd = reDriveCommands({ tier: category, repo: ORIGIN_REPO });
+    return `⛓ RE-DRIVE IT — CI: ${cmd.ci}\n      ⛓            box: ${cmd.box}`
+        + `\n      ⛓ ${costsOf(labels)}`;
+};
 
 /* ── the baseline: the head the standing row was measured at ─────────── */
 
@@ -486,17 +512,13 @@ for (const judged of JUDGED) {
         debts.push(`⛔ (iv) THE DEAD-FRAME ACCOUNTING moved — ${withCommits(acc.hit)}`);
     } else cleared.push('(iv) dead-frame accounting');
 
-    const ticks = tickSumOf(judged.tapes, { tapesDir: TAPES });
     check(debts.length === 0,
         `⛓ the \`${judged.category}\` category is still about THIS tree — `
             + `judged against its OWN head @${base.slice(0, 9)}`,
         debts.length
-            ? `${debts.join('\n      ')}\n      ⛓ RE-DRIVE IT: `
-                + `node scripts/procgen/check-seedling-bot-differential.mjs --win `
-                + `--tier=${judged.category} — ${describeFullTierEstimate(
-                    { tapes: judged.tapes.length, ticks })}`
+            ? `${debts.join('\n      ')}\n      ${reDriveAdvice(judged.category, judged.tapes)}`
             : `${cleared.join(', ')} — nothing this category is measured under has moved`);
-    if (debts.length) owedCategories.push({ ...judged, base, ticks });
+    if (debts.length) owedCategories.push({ ...judged, base });
     if (acc.all.files.length) {
         console.log(`   ⛓ CONTEXT, not a verdict: ${acc.all.files.length} of `
             + `${deadFrameFiles.length} dead-frame file(s) moved AT ALL since `
@@ -525,13 +547,10 @@ if (invisibleAll.length) {
 
 /* ── the estimate, so the cost is beside the decision ────────────────── */
 
-console.log(`\n## THE WHOLE ROSTER, IF IT IS EVER OWED: ${describeFullTierEstimate(
-    { tapes: roster.length, ticks: tickSumOf(roster, { tapesDir: TAPES }) })}`);
+console.log(`\n## THE WHOLE ROSTER, IF IT IS EVER OWED: ${costsOf(roster)}`);
 if (owedCategories.length) {
-    const tapes = owedCategories.reduce((n, c) => n + c.tapes.length, 0);
-    const ticks = owedCategories.reduce((n, c) => n + c.ticks, 0);
     console.log(`## WHAT IS ACTUALLY OWED HERE: ${owedCategories.map((c) => c.category)
-        .join(' + ')} — ${describeFullTierEstimate({ tapes, ticks })}`);
+        .join(' + ')} — ${costsOf(owedCategories.flatMap((c) => c.tapes))}`);
 }
 console.log('## ⛔ AN ESTIMATE IS NEVER THE MEASUREMENT. A standing value is what a run '
     + 'PRODUCED; this number exists only to price the decision to run one.');
