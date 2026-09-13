@@ -14468,6 +14468,35 @@ F2's docs commit. **⛓ THE ARC'S LADDER IS EMPTY: R2, H2, H3, S1, F1, F2 shippe
 queued. REPLAN with the user** — candidates, none launched: the worktree `Players/` provisioning; the version-aware
 import probe; the pins update that unblocks the shed; `ta-mana-leg` (sidecars').
 
+**⚖ USER 2026-09-13 (the replan after F2): *"As for setting up the worktrees, please find and read the 'getting started'
+guide in docs/json/developer"* / *"One of the steps in the setup guide should generate a host.yaml."*** The planner
+MEASURED first (plan §19.1, throwaway `wt-prov`): after F2's Python ladder a worktree's remaining gap is exactly TWO
+gitignored files that the guide's steps 3 and 4 create — `Players/` (Generate.py's `os.scandir`; empty suffices for the
+gates) and `host.yaml` at the `full-spoilers` preset (= the primary's `json_tools` EXACTLY; the default the settings
+loader auto-writes has the JSON export OFF, so an empty `Players/` alone exports nothing). All six roundtrip gates green
+there; the guide's template step 9 s / 112 templates; a Generate.py re-run of the Adventure seed-1 preset drifts tracked
+files IDENTICALLY on the primary (a control: stale preset, not a worktree artifact). Design §19.2: `new-worktree.sh`
+step 6 runs the guide's steps 3–4 in the worktree via `repoPython.js` (ONE spelling), no venv per worktree. **WT1
+LAUNCHED + COMPLETE + VERIFIED 2026-09-13 (planner's reads: four commits `fb87aabfad … bd0365b6e5` on origin, plan
+§19.3, trap 1356, CI at `bd0365b6e5` run 34776867529 vitest 470/14130 0 failed + slow 217/217, full-tier-owed ALL PASS,
+`wt1before`/`wt1proof` gone, no lock, no server).** Built: `node scripts/procgen/repoPython.js --generate` (path exit 0 /
+refusal exit 2 / usage exit 1); `new-worktree.sh` step 6 — ONE `step6` function shared by the dry and real runs (the
+first cut duplicated the refusal branch and the exit-code mutant guarded only one copy) — a ladder REFUSAL exits 0 with
+the by-hand commands printed, a FAILING provisioning command exits 1 with the worktree left in place; the serve/test
+lines unchanged (a live consumer quotes them), a `# python: source <primary>/.venv/bin/activate` line added; rows for
+the plan's order, the tail, the refusal; mutants (drop `full-spoilers`, reorder, refusal non-zero) each red. Proof in a
+worktree made by the NEW script: `json_tools` identical to the primary's, 112 templates, the six gates 68/27/13/16/15/17
+green, tree clean after each. Docs: CLAUDE.md row, `getting-started.md` "Working in a git worktree",
+`testing-pipeline.md`. **Brief wrong:** `env -u VIRTUAL_ENV` is not a bare shell — the activated PATH still supplies the
+venv's `python3`; strip PATH too (trap 1356); `Launcher.py --update_settings` is redundant with `update_host_settings.py`'s
+own default generation (kept: the guide's step, 6 s, json_tools unchanged); the Adventure drift counted four tracked
+files in WT1's run vs five in the planner's (the `.archipelago` zip's byte-identity varies) — a count, not a finding.
+**⚖ OPEN (§19.3):** `repoPython.js`'s refusal hint says "activate the tree's venv" (wrong in a worktree — F2's text);
+whether a failing step-6 command should warn instead of exit 1; the dry run asks the ladder of the SCRIPT's tree, which
+can differ from the new tree only at rung 3. WT1's session ENDED by pid. Box traffic during WT1: the sidecars planner's
+G2a-fix (ta-mana, `94144623fc`) held once behind WT1's docs commit, then merged on top of it.
+**⛓ Nothing queued in this arc: R2, H2, H3, S1, F1, F2, WT1 shipped; W3 delayed on the pins. Next = the user.**
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
