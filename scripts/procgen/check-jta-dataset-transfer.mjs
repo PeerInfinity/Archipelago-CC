@@ -24,6 +24,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 
 import { argvHelp } from './argvHelp.js';
+import { failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
@@ -33,6 +34,7 @@ const { importDatasetText, exportDatasetText } = await import(pathToFileURL(path
 const { generateJtaDataset } = await import(pathToFileURL(path.join(wrapDir, "generateDataset.js")));
 
 let failures = 0;
+failOnCrash(() => failures);
 const ok = (cond, msg) => {
   console.log(`${cond ? "PASS" : "FAIL"}: ${msg}`);
   if (!cond) failures++;
@@ -99,6 +101,8 @@ roundTrip("synthetic doc", exportDatasetText(synthetic));
 
 if (failures > 0) {
   console.error(`\n${failures} assertion(s) FAILED.`);
+  console.log(totalLine(failures));
   process.exit(1);
 }
 console.log("\nAll dataset-transfer assertions passed.");
+console.log(totalLine(0));

@@ -39,6 +39,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-spiral-steps-ui.mjs', kind: 'browser' });
@@ -120,7 +121,7 @@ const activated = await page.evaluate(() => {
     tab.click();
     return true;
 });
-if (!activated) { console.log('❌ could not activate Procgen Pipeline panel'); console.log(logs.join('\n')); await browser.close(); process.exit(1); }
+if (!activated) { console.log(checkLine(false, 'could not activate Procgen Pipeline panel')); console.log(logs.join('\n')); await browser.close(); console.log(totalLine(1)); process.exit(1); }
 await page.waitForTimeout(1500);
 
 const panelText = () => page.evaluate(() => document.querySelector('.procgen-pipeline')?.textContent ?? document.body.textContent ?? '');
@@ -162,7 +163,8 @@ const extractRulesJson = async () => {
 };
 
 const failures = [];
-const assert = (cond, msg) => { if (!cond) failures.push(msg); console.log(`${cond ? '✅' : '❌'} ${msg}`); };
+failOnCrash(() => failures.length);
+const assert = (cond, msg) => { if (!cond) failures.push(msg); console.log(checkLine(cond, msg)); };
 
 // The panel loads in shuffledSpiral mode with a fresh (unstarted) pipeline: the
 // primary reads "Generate" and the next-step button reads "Run 1 Arrange".
@@ -222,5 +224,5 @@ const sphereWarn = logs.filter((l) => l.includes('Singleton not yet created'));
 assert(sphereWarn.length === 0, `no "[sphereState] Singleton not yet created" warning (${sphereWarn.length})`);
 
 await browser.close();
-console.log(failures.length ? `\n❌ ${failures.length} FAILURE(S)` : '\n✅ ALL PASS');
+console.log(`\n${totalLine(failures.length)}`);
 process.exit(failures.length ? 1 : 0);

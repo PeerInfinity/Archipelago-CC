@@ -21,8 +21,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
 // through. `--wait-for-box=<sec>` queues instead of refusing.
 
 import { argvHelp } from './argvHelp.js';
+import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
+failOnCrash();
 takeBoxLockOrExit({ name: 'check-bounce-embed.mjs', kind: 'browser' });
 
 const browser = await chromium.launch();
@@ -175,7 +177,8 @@ for (const e of errors.slice(0, 15)) console.log(' ', e.slice(0, 300));
  * in here. What reaching this line does mean is exact: every `waitFor` resolved
  * and both revisit assertions held.
  */
-console.log(`\nPASS — bounce embed: both phases walked, both revisits held `
+console.log(`\n${checkLine(true, 'bounce embed: both phases walked, both revisits held')} `
     + `(${errors.length} console error(s) listed above, not asserted)`);
 
 await browser.close();
+console.log(totalLine(0));

@@ -42,8 +42,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
+failOnCrash();
 takeBoxLockOrExit({ name: 'check-world-persistence-reload.mjs', kind: 'browser' });
 
 const BASE = 'http://localhost:8000/frontend/';
@@ -62,10 +64,10 @@ let checks = 0;
 function check(desc, ok, detail = '') {
   if (!ok) {
     console.log('LOGS (last 40):', logs.slice(-40).join('\n'));
-    throw new Error(`FAIL: ${desc}${detail ? ` — ${detail}` : ''}`);
+    throw new Error(`${desc}${detail ? ` — ${detail}` : ''}`);
   }
   checks += 1;
-  console.log(`ok ${checks}: ${desc}`);
+  console.log(checkLine(true, `${checks}. ${desc}`));
 }
 
 async function waitFor(desc, fn, timeoutMs = 30000) {
@@ -310,7 +312,8 @@ try {
     (await readRecord()) === null);
   await ctxB.close();
 
-  console.log(`\nPASS — ${checks} checks`);
+  console.log(`\n${checks} checks`);
 } finally {
   await browser.close();
 }
+console.log(totalLine(0));

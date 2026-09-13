@@ -63,8 +63,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
+failOnCrash();
 takeBoxLockOrExit({ name: 'check-maze-loop-mana.mjs', kind: 'browser' });
 
 const RULES = 'frontend/presets/maze_loop_worldgen/AP_1/AP_1_rules.json';
@@ -119,6 +121,7 @@ const PER_TILE_CAP = (() => {
     if (perTile.length === 0) {
         console.log('FAIL: could not derive a per-tile cap from the fixture — '
             + 'no maze sidecar carries longestShortestPath with a costed region');
+        console.log(totalLine(1));
         process.exit(1);
     }
     console.log('  per-tile charges derived from the block: '
@@ -195,7 +198,7 @@ async function main() {
 
     // (1) loop_costs loaded → the auto-enable signal; wait for the flag.
     await waitFor('loop mode auto-enabled', async () => (await state())?.loopModeActive, 30000);
-    console.log('  ✓ loop mode auto-enabled (loop_costs loaded)');
+    console.log('PASS: loop mode auto-enabled (loop_costs loaded)');
 
     // Instrument: record every manaChanged value + substrate completion
     // signals, so per-tile charging and the reset's completed:false are
@@ -360,7 +363,7 @@ async function main() {
         fail(`setAllBlockModes('bot') changed ${modes.changed} block(s), expected at least `
             + `${plan.chain.length} (one per chain region)`);
     }
-    console.log(`  ✓ every maze block set to Bot (${modes.changed} changed; read back `
+    console.log(`PASS: every maze block set to Bot (${modes.changed} changed; read back `
         + `${JSON.stringify(modes.readBack)})`);
 
     await page.evaluate(async () => {
@@ -384,8 +387,8 @@ async function main() {
         const xpTotal = Object.values(s.xp).reduce((a, v) => a + v.xp + v.level * 100, 0);
         return (smallDrops.length >= 3 && xpTotal > 0) ? { s, smallDrops } : null;
     });
-    console.log(`  ✓ delegated walker charging per tile (${midRun.smallDrops.length} small decrements observed)`);
-    console.log('  ✓ region XP accruing:', JSON.stringify(midRun.s.xp));
+    console.log(`PASS: delegated walker charging per tile (${midRun.smallDrops.length} small decrements observed)`);
+    console.log('PASS: region XP accruing:', JSON.stringify(midRun.s.xp));
 
     // (4) The chain's total cost far exceeds max mana → the walker's
     // OOM reset fires: count +1, refill, teleport to the resolved
@@ -421,7 +424,7 @@ async function main() {
         + ` resets ${e.resets}${e.fromReset ? ' [fromReset]' : ''}`;
     console.log('  region log:\n    '
         + ((await state()).regionLog ?? []).map(fmt).join('\n    '));
-    console.log(`  ✓ reset teleport: ${fmt(teleport)}`);
+    console.log(`PASS: reset teleport: ${fmt(teleport)}`);
     // Bounded rather than read off `after`: `loopResetCount` and the
     // interrupted walk's `substrateActionCompleted` are two publishes, and
     // the snapshot that first saw the reset need not carry the second yet.
@@ -430,12 +433,12 @@ async function main() {
             const s = await state();
             return s?.substrateCompleted?.includes(false) ? s.substrateCompleted : null;
         }, 30000);
-    console.log(`  ✓ substrateActionCompleted: [${completed.join(', ')}]`);
+    console.log(`PASS: substrateActionCompleted: [${completed.join(', ')}]`);
     await waitFor('queue processing stopped after reset', async () => {
         const s = await state();
         return s.isProcessing === false;
     }, 30000);
-    console.log(`  ✓ OOM reset: count ${after.loopResetCount}, refilled, teleported to ${resetTarget}, completed:false delivered, queue stopped`);
+    console.log(`PASS: OOM reset: count ${after.loopResetCount}, refilled, teleported to ${resetTarget}, completed:false delivered, queue stopped`);
 
     // (5) The whole chain was walked. Read from the CUMULATIVE region-entry
     // log, so this is order-independent: the reset teleports mid-chain and
@@ -452,7 +455,7 @@ async function main() {
         }, 60000);
     const missed = plan.chain.filter((r) => !walked.regionsEntered.includes(r));
     if (missed.length > 0) fail(`chain regions never entered: ${missed.join(', ')}`);
-    console.log(`  ✓ chain walked: ${plan.chain.join(' -> ')} (entries: ${walked.regionsEntered.join(', ')})`);
+    console.log(`PASS: chain walked: ${plan.chain.join(' -> ')} (entries: ${walked.regionsEntered.join(', ')})`);
 
     const errors = logs.filter((l) => l.startsWith('[pageerror]'));
     if (errors.length > 0) fail('page errors:\n  ' + errors.join('\n  '));
@@ -463,10 +466,13 @@ async function main() {
 try {
     await main();
     await browser.close();
+    console.log(totalLine(0));
     process.exit(0);
 } catch (e) {
+    console.log(checkLine(false, e.message));
     console.log('\n‼ FAILURE:', e.message);
     console.log('PAGE LOGS (last 40):\n  ' + logs.slice(-40).join('\n  '));
     await browser.close();
+    console.log(totalLine(1));
     process.exit(1);
 }

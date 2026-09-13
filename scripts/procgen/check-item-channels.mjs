@@ -57,8 +57,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
+failOnCrash();
 takeBoxLockOrExit({ name: 'check-item-channels.mjs', kind: 'browser' });
 
 const JTA_URL = 'http://localhost:8000/frontend/?game=jta_substrate_test&seed=1';
@@ -140,7 +142,7 @@ async function verifyJtaLeg() {
     const jtaWin = () => page.evaluate(() =>
         typeof document.querySelector('iframe.jtasw-iframe')?.contentWindow?.grantItem === 'function');
     await waitFor(page, logs, 'jta iframe booted with the grantItem hook', jtaWin, 45000);
-    console.log('  ✓ fork booted; window.grantItem present (Fork 1.12)');
+    console.log('PASS: fork booted; window.grantItem present (Fork 1.12)');
 
     const startRegion = await page.evaluate(async () => {
         const { getGameStateSingleton } = await import('./modules/gameState/singleton.js');
@@ -149,7 +151,7 @@ async function verifyJtaLeg() {
     await moveTo(page, JTA_REGION, startRegion);
     await waitFor(page, logs, 'jta region active (game clock running)', () => page.evaluate(() =>
         document.querySelector('iframe.jtasw-iframe')?.contentWindow?.isGameLoopPaused?.() === false), 30000);
-    console.log(`  ✓ entered ${JTA_REGION}`);
+    console.log(`PASS: entered ${JTA_REGION}`);
 
     // (1) declaration ↔ live catalog.
     const { declared, liveShareable, artifactName } = await page.evaluate(async () => {
@@ -165,7 +167,7 @@ async function verifyJtaLeg() {
     if (JSON.stringify([...declared].sort()) !== JSON.stringify([...liveShareable].sort())) {
         fail(`declared types drift from live catalog:\n  declared=${JSON.stringify(declared)}\n  live=${JSON.stringify(liveShareable)}`);
     }
-    console.log(`  ✓ declaration matches the live catalog minus artifacts (${declared.length} types)`);
+    console.log(`PASS: declaration matches the live catalog minus artifacts (${declared.length} types)`);
 
     const itemName = declared.includes('Food') ? 'Food' : declared[0];
     const countOf = () => page.evaluate((name) => {
@@ -186,7 +188,7 @@ async function verifyJtaLeg() {
     }
     await waitFor(page, logs, `'${itemName}' count ${before + 3} after omsi grant`, async () =>
         await countOf() === before + 3, 10000);
-    console.log(`  ✓ grants landed: '${itemName}' ${before} → ${before + 3} (from host + from omsi)`);
+    console.log(`PASS: grants landed: '${itemName}' ${before} → ${before + 3} (from host + from omsi)`);
 
     // (3) rejections.
     if (await grant(page, { to: 'jta', from: 'host', itemType: artifactName, count: 1 }) !== false) {
@@ -196,7 +198,7 @@ async function verifyJtaLeg() {
         fail('unknown-type grant was not rejected');
     }
     if (await countOf() !== before + 3) fail('rejected grants changed the inventory');
-    console.log('  ✓ artifact + unknown-type grants rejected at the bus');
+    console.log('PASS: artifact + unknown-type grants rejected at the bus');
 
     // (4) D4: the game's own energy reset wipes granted items (fresh
     // browser context ⇒ fresh save ⇒ no keep-modifying perks).
@@ -204,12 +206,12 @@ async function verifyJtaLeg() {
         document.querySelector('iframe.jtasw-iframe').contentWindow.doEnergyReset());
     await waitFor(page, logs, 'granted items wiped by the native energy reset', async () =>
         await countOf() === 0, 15000);
-    console.log('  ✓ native energy reset wiped the granted items (keep formula, D4)');
+    console.log('PASS: native energy reset wiped the granted items (keep formula, D4)');
 
     const errors = logs.filter((l) => l.startsWith('[pageerror]'));
     if (errors.length > 0) fail('page errors:\n  ' + errors.join('\n  '));
     await page.close();
-    console.log('  JTA LEG: OK');
+    console.log('PASS: JTA LEG: OK');
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -237,7 +239,7 @@ async function verifyOmsiLeg() {
             return win.eval('typeof addResource === "function" && typeof resources === "object"');
         } catch { return false; }
     }), 45000);
-    console.log('  ✓ engine booted; bridge connected (no region entry — eager delivery)');
+    console.log('PASS: engine booted; bridge connected (no region entry — eager delivery)');
 
     // (1) declaration ↔ engine numerics.
     const declared = await page.evaluate(async () => {
@@ -249,7 +251,7 @@ async function verifyOmsiLeg() {
     if (JSON.stringify([...declared].sort()) !== JSON.stringify([...liveNumerics].sort())) {
         fail(`declared types drift from the engine's numeric bag:\n  declared=${JSON.stringify(declared)}\n  live=${JSON.stringify(liveNumerics)}`);
     }
-    console.log(`  ✓ declaration matches the engine's numeric resources bag (${declared.length} types)`);
+    console.log(`PASS: declaration matches the engine's numeric resources bag (${declared.length} types)`);
 
     // (2) grants from host and from a fellow substrate.
     const goldBefore = await omsiEval('resources.gold');
@@ -263,7 +265,7 @@ async function verifyOmsiLeg() {
     }
     await waitFor(page, logs, `resources.gold ${goldBefore + 7} after jta grant`, async () =>
         await omsiEval('resources.gold') === goldBefore + 7, 10000);
-    console.log(`  ✓ grants landed: gold ${goldBefore} → ${goldBefore + 7} (from host + from jta)`);
+    console.log(`PASS: grants landed: gold ${goldBefore} → ${goldBefore + 7} (from host + from jta)`);
 
     // (3) rejections.
     if (await grant(page, { to: 'omsi', from: 'host', itemType: 'glasses', count: 1 }) !== false) {
@@ -274,18 +276,18 @@ async function verifyOmsiLeg() {
     }
     if (await omsiEval('resources.gold') !== goldBefore + 7) fail('rejected grants changed the bag');
     if (await omsiEval('resources.glasses') !== false) fail('boolean flag was touched');
-    console.log('  ✓ boolean-flag + unknown-type grants rejected at the bus');
+    console.log('PASS: boolean-flag + unknown-type grants rejected at the bus');
 
     // (4) D4: the game's own loop restart wipes the per-loop bag.
     await omsiEval('IdleLoopsManaged.restartLoop()');
     await waitFor(page, logs, 'granted gold wiped by the native loop reset', async () =>
         await omsiEval('resources.gold') === 0, 15000);
-    console.log('  ✓ native loop reset wiped the granted resources (resetResources, D4)');
+    console.log('PASS: native loop reset wiped the granted resources (resetResources, D4)');
 
     const errors = logs.filter((l) => l.startsWith('[pageerror]'));
     if (errors.length > 0) fail('page errors:\n  ' + errors.join('\n  '));
     await page.close();
-    console.log('  OMSI LEG: OK');
+    console.log('PASS: OMSI LEG: OK');
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -315,7 +317,7 @@ async function verifyJtaOutboundLeg() {
         return typeof win?.setForeignAwardCallback === 'function'
             && typeof win?.performTask === 'function';
     }), 45000);
-    console.log('  ✓ fork booted; setForeignAwardCallback present (Fork 1.13)');
+    console.log('PASS: fork booted; setForeignAwardCallback present (Fork 1.13)');
 
     // Fresh game: clear the dataset-keyed substrate save slots BEFORE the
     // region entry re-initializes against them (idempotent reruns — a stale
@@ -333,7 +335,7 @@ async function verifyJtaOutboundLeg() {
     await moveTo(page, region0, startRegion);
     await waitFor(page, logs, 'jta region active (game clock running)', () => page.evaluate(() =>
         document.querySelector('iframe.jtasw-iframe')?.contentWindow?.isGameLoopPaused?.() === false), 30000);
-    console.log(`  ✓ entered ${region0} (zone 0) with a fresh save`);
+    console.log(`PASS: entered ${region0} (zone 0) with a fresh save`);
 
     const jtaEval = (fn, arg) => page.evaluate(([body, a]) => {
         const win = document.querySelector('iframe.jtasw-iframe').contentWindow;
@@ -426,7 +428,7 @@ async function verifyJtaOutboundLeg() {
                 + `-> ${JSON.stringify(afterRep0.gold)} at reps=1 — rep 1 has NOT run, so this `
                 + 'crossed early');
         }
-        console.log('  ✓ rep 0: original item deposited locally, nothing crossed');
+        console.log('PASS: rep 0: original item deposited locally, nothing crossed');
     }
 
     // Rep 1: foreign — nothing locally, omsi/gold x2 over the full bus.
@@ -464,11 +466,11 @@ async function verifyJtaOutboundLeg() {
         if (localAfter !== localBefore + 1) {
             fail(`foreign rep also deposited locally: ${localBefore + 1} -> ${localAfter}`);
         }
-        console.log('  ✓ rep 1: nothing local, omsi bag +2 gold (bridge → router → omsi arrival)');
+        console.log('PASS: rep 1: nothing local, omsi bag +2 gold (bridge → router → omsi arrival)');
     }
 
     await page.close();
-    console.log('  JTA OUTBOUND LEG: OK');
+    console.log('PASS: JTA OUTBOUND LEG: OK');
 }
 
 try {
@@ -477,9 +479,12 @@ try {
     await verifyJtaOutboundLeg();
     await browser.close();
     console.log('\nVERIFY ITEM CHANNELS: OK');
+    console.log(totalLine(0));
     process.exit(0);
 } catch (e) {
+    console.log(checkLine(false, e.message));
     console.log('\n‼ FAILURE:', e.message);
     await browser.close();
+    console.log(totalLine(1));
     process.exit(1);
 }

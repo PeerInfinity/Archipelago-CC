@@ -67,8 +67,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
+failOnCrash();
 takeBoxLockOrExit({ name: 'check-rule-gated-portals.mjs', kind: 'browser' });
 
 /**
@@ -333,8 +335,12 @@ console.log('PORTAL UNLOCKED: gate_rules re-evaluated on the snapshot update',
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {
     console.log('PAGE ERRORS:', errors.join('\n'));
+    console.log(checkLine(false, `no page errors (${errors.length})`));
+    console.log(totalLine(1));
     process.exit(1);
 }
+console.log(checkLine(true, 'no page errors'));
 console.log('VERIFY RULE-GATED PORTALS: ALL OK');
+console.log(totalLine(0));
 await browser.close();
 process.exit(0);

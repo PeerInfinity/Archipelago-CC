@@ -28,8 +28,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
+failOnCrash();
 takeBoxLockOrExit({ name: 'check-sphere-batch-stepping.mjs', kind: 'browser' });
 
 const SEED = 1;
@@ -139,7 +141,7 @@ const msgA = await message();
 if (!msgA.includes('Sphere plan realised')) {
     throw new Error(`stepped batch<all did not realise the plan: ${msgA}`);
 }
-console.log('PHASE A OK: stepping loops 3 → 2a per sphere; tag counts; oracle holds');
+console.log('PASS: PHASE A OK: stepping loops 3 → 2a per sphere; tag counts; oracle holds');
 console.log('  label sequence:', labelSeq.join(' | '));
 
 // ── Phase B: "Run all" finishes a batch<all world ───────────────────
@@ -151,7 +153,7 @@ const msgB = await message();
 if (!msgB.includes('Sphere plan realised')) {
     throw new Error(`"Run all" did not realise the batch<all plan: ${msgB}`);
 }
-console.log('PHASE B OK: "Run all" finishes the batch<all pipeline —', msgB);
+console.log('PASS: PHASE B OK: "Run all" finishes the batch<all pipeline —', msgB);
 
 // ── Phase C: edit the plan, then re-run in batch<all (no double-wire) ─
 // Move a Sphere-1 item down (▼) → _onSpherePlanEdited invalidates from 1.
@@ -174,7 +176,7 @@ if (movedC) {
     if (!msgC.includes('Sphere plan realised')) {
         throw new Error(`batch<all re-run after a plan edit failed: ${msgC}`);
     }
-    console.log('PHASE C OK: plan edit + re-run regenerates the batch<all world —', msgC);
+    console.log('PASS: PHASE C OK: plan edit + re-run regenerates the batch<all world —', msgC);
 } else {
     console.log('PHASE C SKIP: no movable Sphere-1 item found (plan shape)');
 }
@@ -206,7 +208,7 @@ const layout = await page.evaluate(() => {
 if (!layout.ok || !layout.hasRunAll || !layout.hasPrev) {
     throw new Error(`button-row layout wrong: ${JSON.stringify(layout)}`);
 }
-console.log('PHASE D1 OK: Run buttons are a row after the indicators —', layout.labels.join(' | '));
+console.log('PASS: PHASE D1 OK: Run buttons are a row after the indicators —', layout.labels.join(' | '));
 
 // Note the built-spheres count from the batch tag, step back, confirm it dropped.
 const builtBefore = await page.evaluate(() => {
@@ -226,7 +228,7 @@ const builtAfter = await page.evaluate(() => {
 if (builtBefore != null && builtAfter != null && !(builtAfter < builtBefore)) {
     throw new Error(`Previous sphere did not reduce built count: ${builtBefore} → ${builtAfter}`);
 }
-console.log(`PHASE D2 OK: Previous sphere dropped one (${builtBefore} → ${builtAfter}) — ${msgD}`);
+console.log(`PASS: PHASE D2 OK: Previous sphere dropped one (${builtBefore} → ${builtAfter}) — ${msgD}`);
 
 // Rebuild + finish.
 await clickBtn('Run all (finish)');
@@ -235,7 +237,7 @@ const msgD3 = await message();
 if (!msgD3.includes('Sphere plan realised')) {
     throw new Error(`rebuild after Previous sphere failed: ${msgD3}`);
 }
-console.log('PHASE D3 OK: rebuilt to completion after stepping back —', msgD3);
+console.log('PASS: PHASE D3 OK: rebuilt to completion after stepping back —', msgD3);
 
 // ── Phase E: "Previous sphere" disabled with no sphere + Append sphere ──
 // E1: after Reset (nothing built), "◀ Previous sphere" must be DISABLED.
@@ -249,7 +251,7 @@ const prevDisabledAtReset = await page.evaluate(() => {
 if (prevDisabledAtReset !== true) {
     throw new Error(`"Previous sphere" should be disabled with no built sphere (got ${prevDisabledAtReset})`);
 }
-console.log('PHASE E1 OK: "Previous sphere" disabled when no sphere is built');
+console.log('PASS: PHASE E1 OK: "Previous sphere" disabled when no sphere is built');
 
 // Build a full world, then Append a sphere via the UI.
 await clickBtn('Run all');
@@ -279,13 +281,17 @@ const finalSphere = msgE.match(/S(\d+)=\[([^\]]*)\][^S]*$/);
 if (!/extra_gem/.test(msgE) || !finalSphere || !finalSphere[2].includes('victory')) {
     throw new Error(`append didn't place the item in the final sphere: ${msgE}`);
 }
-console.log(`PHASE E2 OK: UI Append sphere placed the item in the goal sphere — ${msgE}`);
+console.log(`PASS: PHASE E2 OK: UI Append sphere placed the item in the goal sphere — ${msgE}`);
 
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {
     console.log('PAGE ERRORS:\n' + errors.join('\n'));
+    console.log(checkLine(false, `no page errors (${errors.length})`));
+    console.log(totalLine(1));
     process.exit(1);
 }
+console.log(checkLine(true, 'no page errors'));
 console.log('VERIFY SPHERE BATCH STEPPING: ALL OK');
+console.log(totalLine(0));
 await browser.close();
 process.exit(0);

@@ -27,6 +27,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 
 import { argvHelp } from './argvHelp.js';
+import { failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
@@ -74,6 +75,7 @@ const { chromium } = await import("playwright");
 const browser = await chromium.launch();
 
 let failures = 0;
+failOnCrash(() => failures);
 const ok = (cond, msg) => {
   console.log(`${cond ? "PASS" : "FAIL"}: ${msg}`);
   if (!cond) failures++;
@@ -135,6 +137,8 @@ fs.rmSync(dsDir, { recursive: true, force: true });
 
 if (failures > 0) {
   console.error(`\n${failures} assertion(s) FAILED.`);
+  console.log(totalLine(failures));
   process.exit(1);
 }
 console.log("\nAll ?dataset= boot assertions passed.");
+console.log(totalLine(0));

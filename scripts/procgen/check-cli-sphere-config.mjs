@@ -38,11 +38,13 @@ import {
 
 
 import { argvHelp } from './argvHelp.js';
+import { failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
+failOnCrash();
 const here = dirname(fileURLToPath(import.meta.url));
 const tmp = mkdtempSync(join(tmpdir(), 'cli-sphere-config-'));
-function fail(msg) { console.error('FAIL:', msg); process.exit(1); }
+function fail(msg) { console.error('FAIL:', msg); console.log(totalLine(1)); process.exit(1); }
 const eq = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 function runCli(script, args) {
@@ -90,7 +92,7 @@ const expectedRegionParams = assembleRegionParams({
         if (!(k in rp)) fail(`sphere-step regionParams missing braid key '${k}' (got ${JSON.stringify(rp)})`);
     }
     if (rp.bounceMode !== 'braid') fail(`expected braid mode, got ${rp.bounceMode}`);
-    console.log('1. sphere-step regionParams == panel hooks, full braid layout — OK');
+    console.log('PASS: 1. sphere-step regionParams == panel hooks, full braid layout — OK');
 
     if (!eq(env.config.startingItems, prep.startingItems) || env.config.startingItems.length !== 1) {
         fail(`expected one free-arrow starting item, got ${JSON.stringify(env.config.startingItems)}`);
@@ -100,7 +102,7 @@ const expectedRegionParams = assembleRegionParams({
     if (Object.keys(env.config.exclusiveSpheres).length !== 0) {
         fail(`expected no exclusiveSpheres (start-stack gone), got ${JSON.stringify(env.config.exclusiveSpheres)}`);
     }
-    console.log(`2. free arrow (${arrow}) is a starting item, pool-removed, no exclusiveSpheres — OK`);
+    console.log(`PASS: 2. free arrow (${arrow}) is a starting item, pool-removed, no exclusiveSpheres — OK`);
 }
 
 // ── 3. dump-sphere-growth.js byte-identical rules.json ──────────────────
@@ -118,7 +120,7 @@ const expectedRegionParams = assembleRegionParams({
     if (!eq(ss.compile.rulesJson, dump.rulesJson)) {
         fail('sphere-step and dump rules.json differ for the same bounce world');
     }
-    console.log('3. sphere-step and dump produce byte-identical bounce rules.json — OK');
+    console.log('PASS: 3. sphere-step and dump produce byte-identical bounce rules.json — OK');
 }
 
 // ── 4. maze world: no bounce keys leak into regionParams ────────────────
@@ -134,7 +136,8 @@ const expectedRegionParams = assembleRegionParams({
     if (!eq(env.config.regionParams, {})) {
         fail(`maze regionParams should be {}, got ${JSON.stringify(env.config.regionParams)}`);
     }
-    console.log('4. maze regionParams is {} (no bounce keys leak) — OK');
+    console.log('PASS: 4. maze regionParams is {} (no bounce keys leak) — OK');
 }
 
 console.log('VERIFY CLI SPHERE CONFIG: ALL OK');
+console.log(totalLine(0));

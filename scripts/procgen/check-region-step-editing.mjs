@@ -58,9 +58,11 @@ import { buildEditedRegion } from '../../frontend/modules/bounceRegionEditor/bui
 
 
 import { argvHelp } from './argvHelp.js';
+import { failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
-function fail(msg) { console.error('FAIL:', msg); process.exit(1); }
+failOnCrash();
+function fail(msg) { console.error('FAIL:', msg); console.log(totalLine(1)); process.exit(1); }
 
 const itemPool = {
     'Right arrow': 1, 'Left arrow': 1, Springs: 1, Jetpacks: 1,
@@ -152,7 +154,7 @@ function withPickupItems(level, contract) {
     const errs = oracle(grid, startCell, stats, plan, prep, startingItems);
     if (errs.length) fail(`oracle after re-rolling all: ${errs[0]}`);
     if (!anyGeometryChanged) fail('re-roll never changed geometry for any region');
-    console.log('A. re-roll: geometry varied, exits fixed, oracle holds — OK');
+    console.log('PASS: A. re-roll: geometry varied, exits fixed, oracle holds — OK');
 }
 
 // ── B/C/D/E. Editor save: unchanged / nudge / contract-break / item pick ─
@@ -170,7 +172,7 @@ function withPickupItems(level, contract) {
         grid.replaceRegion(node.cell, buildEdited(region, contract, cloneLevel()));
         const errs = oracle(grid, startCell, stats, plan, prep, startingItems);
         if (errs.length) fail(`unchanged-save oracle: ${errs[0]}`);
-        console.log('B. unchanged editor save keeps oracle — OK');
+        console.log('PASS: B. unchanged editor save keeps oracle — OK');
     }
     // C. nudge a platform
     {
@@ -182,7 +184,7 @@ function withPickupItems(level, contract) {
         grid.replaceRegion(node.cell, buildEdited(region, contract, level));
         const errs = oracle(grid, startCell, stats, plan, prep, startingItems);
         if (errs.length) fail(`nudge-edit oracle: ${errs[0]}`);
-        console.log('C. contract-preserving nudge keeps oracle — OK');
+        console.log('PASS: C. contract-preserving nudge keeps oracle — OK');
     }
     // E. change a pickup's item (world-pool pick) → the saved location's item
     // reflects it (oracle flags an off-plan pick — warn-but-allow; here we just
@@ -196,7 +198,7 @@ function withPickupItems(level, contract) {
         const edited = buildEdited(region, contract, level);
         const loc = edited.extracted_rules.locations.find((l) => l.id === pk.id);
         if (loc?.item !== newItem) fail(`E: pickup item did not flow through (got ${loc?.item})`);
-        console.log(`E. pickup item pick flows through save (${pk.id} → ${newItem}) — OK`);
+        console.log(`PASS: E. pickup item pick flows through save (${pk.id} → ${newItem}) — OK`);
     }
     // D. delete a forward portal (contract break) → oracle must FAIL
     {
@@ -207,7 +209,7 @@ function withPickupItems(level, contract) {
         grid.replaceRegion(node.cell, buildEdited(region, contract, level));
         const errs = oracle(grid, startCell, stats, plan, prep, startingItems);
         if (!errs.length) fail('contract-break did NOT surface as an oracle mismatch');
-        console.log(`D. contract-break surfaces (oracle: ${errs[0]}) — OK`);
+        console.log(`PASS: D. contract-break surfaces (oracle: ${errs[0]}) — OK`);
     }
 }
 
@@ -240,7 +242,7 @@ function withPickupItems(level, contract) {
     if (platSig(after) === sig0) fail('F: regenerate did not change geometry');
     const errs = oracle(grid, startCell, stats, plan, prep, startingItems);
     if (errs.length) fail(`F: oracle after regenerate: ${errs[0]}`);
-    console.log('F. Regenerate (keep) varied geometry + kept oracle — OK');
+    console.log('PASS: F. Regenerate (keep) varied geometry + kept oracle — OK');
 }
 
 // ── G/H. Composite-map layout edits: move a region to an empty cell, and swap
@@ -265,7 +267,7 @@ function withPickupItems(level, contract) {
     {
         const errs = oracle(grid, cellOf(startId), stats, plan, prep, startingItems);
         if (errs.length) fail(`G: oracle after move: ${errs[0]}`);
-        console.log('G. move region → empty cell keeps oracle — OK');
+        console.log('PASS: G. move region → empty cell keeps oracle — OK');
     }
 
     // H. swap two regions, one of which is the START (exercises the startCell
@@ -276,7 +278,7 @@ function withPickupItems(level, contract) {
     {
         const errs = oracle(grid, cellOf(startId), stats, plan, prep, startingItems);
         if (errs.length) fail(`H: oracle after swap (incl. start): ${errs[0]}`);
-        console.log('H. swap regions (incl. start) keeps oracle — OK');
+        console.log('PASS: H. swap regions (incl. start) keeps oracle — OK');
     }
 }
 
@@ -308,7 +310,7 @@ function withPickupItems(level, contract) {
         }
         const errs = oracle(grid, startCell, stats, plan, prep, startingItems);
         if (errs.length) fail(`I: oracle after move-exit-side: ${errs[0]}`);
-        console.log('I. move exit → empty side keeps oracle (sidePortals + arrow re-keyed) — OK');
+        console.log('PASS: I. move exit → empty side keeps oracle (sidePortals + arrow re-keyed) — OK');
     }
     // J. swap the two exits' sides.
     {
@@ -320,7 +322,7 @@ function withPickupItems(level, contract) {
         if (a2.side !== sb || b2.side !== sa) fail('J: exit sides did not swap');
         const errs = oracle(grid, startCell, stats, plan, prep, startingItems);
         if (errs.length) fail(`J: oracle after swap-exit-sides: ${errs[0]}`);
-        console.log('J. swap exit sides keeps oracle — OK');
+        console.log('PASS: J. swap exit sides keeps oracle — OK');
     }
 }
 
@@ -437,9 +439,9 @@ function emptyCellOf(grid) {
                 op: 're-roll', region_id: sphereNodeKey(rerollNode), n: 2,
             }, SPHERE_EDIT_BINDING);
             if (again.ok) {
-                console.log('M. swap-exit-sides then re-roll: ACCEPTED (representable here) — OK');
+                console.log('PASS: M. swap-exit-sides then re-roll: ACCEPTED (representable here) — OK');
             } else {
-                console.log(`M. swap-exit-sides then re-roll REFUSES loudly (${again.error}) `
+                console.log(`PASS: M. swap-exit-sides then re-roll REFUSES loudly (${again.error}) `
                     + 'and records nothing — OK');
                 if (env.edits.length !== editCount + 1) {
                     fail(`M: refusal recorded an edit (${env.edits.length} vs ${editCount + 1})`);
@@ -469,7 +471,7 @@ function emptyCellOf(grid) {
     if (replayed.compile.oracleErrors.length) {
         fail(`K: replayed oracle: ${replayed.compile.oracleErrors[0]}`);
     }
-    console.log(`K. ${env.edits.length} recorded edits replay from config + seed + edits `
+    console.log(`PASS: K. ${env.edits.length} recorded edits replay from config + seed + edits `
         + `(oracle clean) — ${env.edits.map(describeLayoutEdit).join(' · ')} — OK`);
 
     // L. Undo them all.
@@ -486,7 +488,7 @@ function emptyCellOf(grid) {
     if (env.completed !== SPHERE_STEPS.length - 1) {
         fail(`L: completed is ${env.completed}, expected ${SPHERE_STEPS.length - 1}`);
     }
-    console.log(`L. undo ×${undone} → the never-edited grid, oracle clean, completed=${env.completed} — OK`);
+    console.log(`PASS: L. undo ×${undone} → the never-edited grid, oracle clean, completed=${env.completed} — OK`);
 }
 
 // ── N. The bounce EDIT SESSION (editor-integration B-b) ────────────────
@@ -550,8 +552,9 @@ function emptyCellOf(grid) {
         region, contract, level: sess.record(),
     }));
     if (after !== unedited) fail('N: a save from the undone record differs from the unedited save');
-    console.log(`N. ${applied} session ops → undo ×${undone} → the base level byte for byte, `
+    console.log(`PASS: N. ${applied} session ops → undo ×${undone} → the base level byte for byte, `
         + 'and the save it builds equals the unedited save — OK');
 }
 
 console.log('VERIFY REGION-STEP EDITING: ALL OK');
+console.log(totalLine(0));

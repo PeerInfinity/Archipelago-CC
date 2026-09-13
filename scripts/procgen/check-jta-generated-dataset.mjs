@@ -31,6 +31,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -49,6 +50,7 @@ const vanilla = JSON.parse(fs.readFileSync(
     path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/datasets/vanilla.json'), 'utf8'));
 
 let failures = 0;
+failOnCrash(() => failures);
 const ok = (cond, msg) => {
     console.log(`${cond ? 'PASS' : 'FAIL'}: ${msg}`);
     if (!cond) failures++;
@@ -350,4 +352,5 @@ loadAndPlay(skillCountWorld.dataset); // skillCount 13 (grown roster + repaired 
 console.log(failures === 0
     ? '\nAll generated-dataset assertions passed.'
     : `\n${failures} assertion(s) FAILED.`);
+console.log(totalLine(failures));
 process.exit(failures === 0 ? 0 : 1);

@@ -31,6 +31,7 @@ import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -65,6 +66,7 @@ if (process.argv[2] === '--case') {
 }
 
 let failures = 0;
+failOnCrash(() => failures);
 const ok = (cond, msg) => {
     console.log(`${cond ? 'PASS' : 'FAIL'}: ${msg}`);
     if (!cond) failures++;
@@ -109,4 +111,5 @@ ok(noPerk !== null && noPerk.zone === 0 && noPerk.fullyDone === 0,
 console.log(failures === 0
     ? '\nAll managed-mode zone-skip assertions passed.'
     : `\n${failures} assertion(s) FAILED.`);
+console.log(totalLine(failures));
 process.exit(failures === 0 ? 0 : 1);

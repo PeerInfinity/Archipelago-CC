@@ -36,6 +36,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -46,6 +47,7 @@ if (!rulesPath) {
     console.error('usage: check-jta-balance-pass.mjs <exported rules.json>');
     process.exit(2);
 }
+failOnCrash();
 
 const { loadJtaEnv } = await import(pathToFileURL(path.join(repoRoot, 'CC/scripts/jta-stats/node-env.mjs')));
 const { runBalancePass } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaBalance/balancePass.js')));
@@ -210,7 +212,10 @@ if (report.saturated) failures.push(`${report.saturated} saturated solves`);
 // A perk milestone automation refuses to run at any cost would strand progression.
 if (report.unengagedMilestones) failures.push(`${report.unengagedMilestones} unengaged MILESTONES`);
 if (failures.length) {
-    console.log(`\nFAILED: ${failures.join(' · ')}`);
+    console.log('');
+    for (const f of failures) console.log(checkLine(false, f));
+    console.log(totalLine(failures.length));
     process.exit(1);
 }
 console.log('\nPASS: full coverage, no stalls, no saturation');
+console.log(totalLine(0));

@@ -41,6 +41,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-runner-embed.mjs', kind: 'browser' });
@@ -57,6 +58,7 @@ page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
 page.on('pageerror', (err) => logs.push(`[pageerror] ${err.message}`));
 
 let failures = 0;
+failOnCrash(() => failures);
 const ok = (cond, label) => {
     console.log(`${cond ? 'PASS' : 'FAIL'}: ${label}`);
     if (!cond) failures++;
@@ -170,6 +172,8 @@ ok(errors.length === 0, `no page errors${errors[0] ? ` — first: ${errors[0].sl
 await browser.close();
 if (failures) {
     console.error(`\n${failures} check(s) FAILED`);
+    console.log(totalLine(failures));
     process.exit(1);
 }
 console.log('\nAll runner embed checks passed (sphere-grown world, bot-driven).');
+console.log(totalLine(0));

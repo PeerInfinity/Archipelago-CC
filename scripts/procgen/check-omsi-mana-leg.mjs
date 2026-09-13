@@ -80,8 +80,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
+failOnCrash();
 takeBoxLockOrExit({ name: 'check-omsi-mana-leg.mjs', kind: 'browser' });
 
 const URL = 'http://localhost:8000/frontend/?game=omsi_substrate_test&seed=1';
@@ -412,7 +414,7 @@ async function main() {
     // (1) loop_costs loaded → loop mode auto-enables (lands seconds
     // after boot); the omsi iframe boots managed + bridge connects.
     await waitFor('loop mode auto-enabled', async () => (await state())?.loopModeActive, 30000);
-    console.log('  ✓ loop mode auto-enabled (loop_costs loaded)');
+    console.log('PASS: loop mode auto-enabled (loop_costs loaded)');
 
     await page.evaluate(async () => {
         const { default: eventBus } = await import('./app/core/eventBus.js');
@@ -452,21 +454,21 @@ async function main() {
     await moveTo(OMSI_REGION, before.currentRegion);
     await waitFor('bridge clock running after omsi region entry', async () =>
         (await state())?.clockRunning === true, 30000);
-    console.log('  ✓ omsi region entered; bridge clock running');
+    console.log('PASS: omsi region entered; bridge clock running');
 
     // Native budget bonus reported → per-substrate accumulator + maxMana.
     await waitFor(`omsi budget bonus ${NATIVE_BUDGET} lands in the accumulator`, async () => {
         const s = await state();
         return s?.omsiBonus === NATIVE_BUDGET && s?.maxMana >= maxBefore + NATIVE_BUDGET;
     }, 15000);
-    console.log(`  ✓ native budget bonus ${NATIVE_BUDGET} raised maxMana (${maxBefore} → ${(await state()).maxMana})`);
+    console.log(`PASS: native budget bonus ${NATIVE_BUDGET} raised maxMana (${maxBefore} → ${(await state()).maxMana})`);
 
     // Budget pinned to pool.
     const pinned = await waitFor('budget pinned to pool', async () => {
         const s = await state();
         return (s?.manaLeft != null && Math.abs(s.manaLeft - s.currentMana) < 0.5) ? s : null;
     }, 15000);
-    console.log(`  ✓ game budget pinned to pool (${pinned.manaLeft} ≈ ${pinned.currentMana})`);
+    console.log(`PASS: game budget pinned to pool (${pinned.manaLeft} ≈ ${pinned.currentMana})`);
 
     // (1b) PARK a loops queue on a Manual block in the omsi region.
     await settleRegionEvents();
@@ -491,7 +493,7 @@ async function main() {
         fail(`the bridge never logged an OPEN step gate for livePlay=${OMSI_REGION}`
             + (closed.length ? `; last step-gate lines:\n    ${closed.join('\n    ')}` : ''));
     }
-    console.log(`  ✓ parked Manual block (instance ${park.instance}, mode ${park.mode});`
+    console.log(`PASS: parked Manual block (instance ${park.instance}, mode ${park.mode});`
         + ` step gate OPEN — ${gateLine.replace(/^\[\w+\]\s*/, '')} [${elapsed()}]`);
     const stepsBefore = gated.clockStats?.ticksStepped ?? 0;
 
@@ -540,7 +542,7 @@ async function main() {
             return has && Number(snap.inventory?.Victory ?? 0) > 0;
         }, [OMSI_REGION]);
     }, 15000);
-    console.log(`  ✓ victory: Start Journey checked the location; Victory item in inventory [${elapsed()}]`);
+    console.log(`PASS: victory: Start Journey checked the location; Victory item in inventory [${elapsed()}]`);
 
 
     // (3) A real queued run under the host-driven clock.
@@ -559,7 +561,7 @@ async function main() {
             fail('Play did not clear the held boundary: '
                 + `${JSON.stringify(cold.before)} -> ${JSON.stringify(cold.after)}`);
         }
-        console.log(`  ✓ Play pressed: game started and boundary released `
+        console.log(`PASS: Play pressed: game started and boundary released `
             + `${JSON.stringify(cold.before)} -> ${JSON.stringify(cold.after)} [${elapsed()}]`);
     }
 
@@ -591,7 +593,7 @@ async function main() {
     // V2 measured `ticksStepped: 0, skippedGated: 304` on the unparked run,
     // and every drain below is a tick the gate let through.
     const cs = midRun.s.clockStats ?? {};
-    console.log(`  ✓ pool drains in small mirrored steps (${midRun.smallDrops.length} decrements; `
+    console.log(`PASS: pool drains in small mirrored steps (${midRun.smallDrops.length} decrements; `
         + `pool tracks budget) — ticksStepped ${stepsBefore} → ${cs.ticksStepped}, `
         + `skippedGated ${cs.skippedGated} [${elapsed()}]`);
     if (!(cs.ticksStepped > stepsBefore)) {
@@ -638,7 +640,7 @@ async function main() {
     if (pausedTo.loopResetCount !== pausedFrom.loopResetCount) {
         fail(`pausing cost a loop reset: ${pausedFrom.loopResetCount} -> ${pausedTo.loopResetCount}`);
     }
-    console.log(`  ✓ Pause froze the host clock: ticksStepped ${pausedAt.clockStats?.ticksStepped}`
+    console.log(`PASS: Pause froze the host clock: ticksStepped ${pausedAt.clockStats?.ticksStepped}`
         + ` flat over 0.8 s, pool ${pausedAt.currentMana.toFixed(1)} flat, skippedStopped `
         + `${pausedFrom.clockStats?.skippedStopped ?? 0} -> ${csPaused.skippedStopped} [${elapsed()}]`);
 
@@ -648,7 +650,7 @@ async function main() {
         const s2 = await state();
         return (s2?.clockStats?.ticksStepped ?? 0) > csPaused.ticksStepped ? s2 : null;
     }, 15000);
-    console.log(`  ✓ Play resumed the host clock: ticksStepped ${csPaused.ticksStepped} -> `
+    console.log(`PASS: Play resumed the host clock: ticksStepped ${csPaused.ticksStepped} -> `
         + `${resumed.clockStats.ticksStepped}, pool ${resumed.currentMana.toFixed(1)} [${elapsed()}]`);
 
     // (4) Exhaustion: exactly one loop reset, refill, teleport, clock off.
@@ -662,7 +664,7 @@ async function main() {
     if (settled.loopResetCount !== resetsBefore + 1) {
         fail(`expected exactly one loop reset, got ${settled.loopResetCount - resetsBefore}`);
     }
-    console.log(`  ✓ exactly one loop reset at exhaustion (race guard held) [${elapsed()}]`);
+    console.log(`PASS: exactly one loop reset at exhaustion (race guard held) [${elapsed()}]`);
     if (settled.currentMana <= 0) fail(`pool not refilled: ${settled.currentMana}`);
 
     const resetTarget = await page.evaluate(async () => {
@@ -674,9 +676,9 @@ async function main() {
     if (resetTarget !== OMSI_REGION) {
         await waitFor('bridge clock stopped after leaving', async () =>
             (await state())?.clockRunning === false, 10000);
-        console.log(`  ✓ teleported to ${resetTarget}; bridge clock stopped`);
+        console.log(`PASS: teleported to ${resetTarget}; bridge clock stopped`);
     } else {
-        console.log(`  ✓ reset landed in the omsi region itself; clock stays running`);
+        console.log(`PASS: reset landed in the omsi region itself; clock stays running`);
     }
 
     // (5) Re-entry: clock resumes, budget re-pinned to the pool.
@@ -690,7 +692,7 @@ async function main() {
         return s?.manaLeft != null && Math.abs(s.manaLeft - s.currentMana) < 15;
     }, 15000);
     const reentered = await state();
-    console.log(`  ✓ re-entry: clock resumed, budget re-pinned [${elapsed()}]`);
+    console.log(`PASS: re-entry: clock resumed, budget re-pinned [${elapsed()}]`);
     /**
      * ⛔ RE-ENTRY DOES **NOT** RE-OPEN THE STEP GATE, AND THIS INSTRUMENT NO
      * LONGER PRETENDS OTHERWISE. `isClockRunning()` is the bridge's INTERVAL,
@@ -711,10 +713,13 @@ async function main() {
 try {
     await main();
     await browser.close();
+    console.log(totalLine(0));
     process.exit(0);
 } catch (e) {
+    console.log(checkLine(false, e.message));
     console.log('\n‼ FAILURE:', e.message);
     console.log('PAGE LOGS (last 40):\n  ' + logs.slice(-40).join('\n  '));
     await browser.close();
+    console.log(totalLine(1));
     process.exit(1);
 }

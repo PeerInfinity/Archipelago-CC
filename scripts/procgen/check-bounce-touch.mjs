@@ -20,6 +20,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
 // through. `--wait-for-box=<sec>` queues instead of refusing.
 
 import { argvHelp } from './argvHelp.js';
+import { failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-bounce-touch.mjs', kind: 'browser' });
@@ -27,6 +28,7 @@ takeBoxLockOrExit({ name: 'check-bounce-touch.mjs', kind: 'browser' });
 const URL = 'http://localhost:8000/frontend/modules/bounceDemo/game/index.html?touch=1';
 const browser = await chromium.launch();
 let failures = 0;
+failOnCrash(() => failures);
 const ok = (cond, label) => {
     console.log(`${cond ? 'PASS' : 'FAIL'}: ${label}`);
     if (!cond) failures++;
@@ -91,6 +93,8 @@ ok(errors.length === 0, `no page errors overall ${errors[0] ?? ''}`);
 await browser.close();
 if (failures) {
     console.error(`\n${failures} check(s) FAILED`);
+    console.log(totalLine(failures));
     process.exit(1);
 }
 console.log('\nAll bounce touch checks passed.');
+console.log(totalLine(0));

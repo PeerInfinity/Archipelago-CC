@@ -44,8 +44,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
+failOnCrash();
 takeBoxLockOrExit({ name: 'check-sphere-steps-ui.mjs', kind: 'browser' });
 
 // Derived host: --host=<url> wins, then PROCGEN_UI_HOST, then the :8000 default.
@@ -192,7 +194,7 @@ console.log('STEP 4 MESSAGE:', msg);
 if (!msg.includes('Sphere plan realised')) {
     throw new Error(`expected oracle success after step 4, got: ${msg}`);
 }
-console.log('PHASE A OK: stepped 1→2a→2b→2c→3→4 to a realised plan');
+console.log('PASS: PHASE A OK: stepped 1→2a→2b→2c→3→4 to a realised plan');
 
 // ── Phase B: edit a Sphere-1 item, then run all ─────────────────────
 await clickBtn('Reset');
@@ -238,9 +240,9 @@ if (msg.includes('Sphere plan realised')) {
     if (s1.split(', ').map((s) => s.trim()).includes(moved.replace(' ★', ''))) {
         throw new Error(`edited item "${moved}" still in S1 — edit did not flow through`);
     }
-    console.log('PHASE B OK: edited plan realised, moved item left S1');
+    console.log('PASS: PHASE B OK: edited plan realised, moved item left S1');
 } else {
-    console.log('PHASE B OK: edited plan produced a terminal warn/error (warn-but-allow):', msg);
+    console.log('PASS: PHASE B OK: edited plan produced a terminal warn/error (warn-but-allow):', msg);
 }
 
 // ── Phase C: edit 2c item placement (move an item to another region) ─
@@ -283,7 +285,7 @@ const terminalC = msg.includes('Sphere plan realised')
     || msg.includes('ORACLE MISMATCH') || msg.toLowerCase().includes('no host')
     || msg.startsWith('ERROR');
 if (!terminalC) throw new Error(`2c edit Run all produced no terminal result: ${msg}`);
-console.log('PHASE C OK: 2c item move flowed through to a terminal result');
+console.log('PASS: PHASE C OK: 2c item move flowed through to a terminal result');
 
 // ── Phase D: edit 2a allocation (add a filler region) ───────────────
 await clickBtn('Reset');
@@ -321,7 +323,7 @@ const terminalD = msg.includes('Sphere plan realised')
     || msg.includes('ORACLE MISMATCH') || msg.toLowerCase().includes('no host')
     || msg.startsWith('ERROR');
 if (!terminalD) throw new Error(`2a edit Run all produced no terminal result: ${msg}`);
-console.log('PHASE D OK: 2a allocation edit flowed through to a terminal result');
+console.log('PASS: PHASE D OK: 2a allocation edit flowed through to a terminal result');
 
 // ── Phase E: edit 2b topology (re-gate a region off-wave) ───────────
 await clickBtn('Reset');
@@ -370,7 +372,7 @@ const terminalE = msg.includes('Sphere plan realised')
     || msg.includes('ORACLE MISMATCH') || msg.toLowerCase().includes('no host')
     || msg.startsWith('ERROR');
 if (!terminalE) throw new Error(`2b edit Run all produced no terminal result: ${msg}`);
-console.log('PHASE E OK: 2b topology edit flowed through to a terminal result');
+console.log('PASS: PHASE E OK: 2b topology edit flowed through to a terminal result');
 
 // ── helpers for the 3 editing phases ────────────────────────────────
 // The map's signature, read the only way the page offers one: a hash of the
@@ -427,7 +429,7 @@ let fMsg = await message();
 if (!fMsg.includes('Sphere plan realised')) {
     throw new Error(`F: oracle failed after re-roll + 4: ${fMsg}`);
 }
-console.log('PHASE F OK: re-roll kept the oracle (exits/plan preserved)');
+console.log('PASS: PHASE F OK: re-roll kept the oracle (exits/plan preserved)');
 
 // ── Phase G: 3 Edit ▸ → pipeline editor → Save → re-run 4 (oracle holds) ─
 const openedEditor = await page.evaluate(() => {
@@ -467,7 +469,7 @@ const gMsg = await message();
 if (!gMsg.includes('Sphere plan realised')) {
     throw new Error(`G: oracle failed after editor save + 4: ${gMsg}`);
 }
-console.log('PHASE G OK: Edit ▸ → pipeline save → 4 kept the oracle');
+console.log('PASS: PHASE G OK: Edit ▸ → pipeline save → 4 kept the oracle');
 
 // ── Phase G′: the editor's own UNDO (editor-integration B-b) ────────────
 //
@@ -612,7 +614,7 @@ const sigAfterUndo = await mapSig();
 if (sigBeforeEdit && sigAfterUndo && sigBeforeEdit !== sigAfterUndo) {
     throw new Error("G': the region that reached the grid is NOT the pre-edit region");
 }
-console.log("PHASE G' OK: 2 ops → undo ×2 → save → the pre-edit region reached the grid, "
+console.log("PASS: PHASE G' OK: 2 ops → undo ×2 → save → the pre-edit region reached the grid, "
     + 'oracle clean');
 
 // ── Phase H: 3 Edit ▸ → editor Regenerate (keep) → Save → 4 (oracle holds) ─
@@ -734,7 +736,7 @@ const hMsg = await message();
 if (!hMsg.includes('Sphere plan realised')) {
     throw new Error(`H: oracle failed after regenerate + save + 4: ${hMsg}`);
 }
-console.log('PHASE H OK: editor Regenerate (keep) → save → 4 kept the oracle '
+console.log('PASS: PHASE H OK: editor Regenerate (keep) → save → 4 kept the oracle '
     + '(the VARYING regenerate is check-region-step-editing Phase F)');
 
 // ── Phase I: composite-map mode radio renders + switches without error ──
@@ -755,7 +757,7 @@ const switched = await page.evaluate(() => {
     return document.querySelector('input[name="procgen-pipeline-map-mode"]:checked')?.value === 'moveRegion';
 });
 if (!switched) throw new Error('I: could not switch map mode to moveRegion');
-console.log('PHASE I OK: composite-map mode radio (Edit/Move Region/Move Exits) renders + switches');
+console.log('PASS: PHASE I OK: composite-map mode radio (Edit/Move Region/Move Exits) renders + switches');
 
 // ── Phase J: 3 per-region substrate override (not limited by the quota mix) ──
 // Quotas are bounce-only (substrateQuotas { bounce: 99 }), so the 3 override
@@ -791,7 +793,7 @@ const jMsg = await message();
 if (!jMsg.includes('Sphere plan realised')) {
     throw new Error(`J: oracle failed after substrate override + re-run: ${jMsg}`);
 }
-console.log('PHASE J OK: per-region substrate override (bounce→maze) re-realised + kept the oracle');
+console.log('PASS: PHASE J OK: per-region substrate override (bounce→maze) re-realised + kept the oracle');
 
 // ── Phase K: the recorded edit history + Undo (editor-integration B-d) ──────
 // Every gesture above is now an OP on the envelope, not a mutate-and-forget.
@@ -851,14 +853,18 @@ const sigBack = await mapSig();
 if (sigClean && sigBack && sigClean !== sigBack) {
     throw new Error('K: undo did not return the never-edited map');
 }
-console.log('PHASE K OK: record → undo → re-run returns the never-edited world, oracle clean');
+console.log('PASS: PHASE K OK: record → undo → re-run returns the never-edited world, oracle clean');
 
 
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {
     console.log('PAGE ERRORS:', errors.join('\n'));
+    console.log(checkLine(false, `no page errors (${errors.length})`));
+    console.log(totalLine(1));
     process.exit(1);
 }
+console.log(checkLine(true, 'no page errors'));
 console.log('VERIFY SPHERE STEPS UI: ALL OK');
+console.log(totalLine(0));
 await browser.close();
 process.exit(0);

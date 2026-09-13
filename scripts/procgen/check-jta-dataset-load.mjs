@@ -37,6 +37,7 @@ import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -50,8 +51,9 @@ const { loadJtaEnv } = await import(
     `file://${path.join(repoRoot, 'CC/scripts/jta-stats/node-env.mjs')}`);
 
 let failures = 0;
+failOnCrash(() => failures);
 const fail = (msg) => { failures += 1; console.error(`FAIL: ${msg}`); };
-const ok = (msg) => console.log(`ok: ${msg}`);
+const ok = (msg) => console.log(`PASS: ${msg}`);
 const assert = (cond, msg) => { if (!cond) fail(msg); };
 
 const env = await loadJtaEnv();
@@ -316,7 +318,9 @@ const rawDataset = JSON.parse(fs.readFileSync(rawFixturePath, 'utf8'));
 
 if (failures > 0) {
     console.error(`\n${failures} failure(s)`);
+    console.log(totalLine(failures));
     process.exit(1);
 }
 console.log('\nAll dataset-load smoke checks passed.');
+console.log(totalLine(0));
 process.exit(0);

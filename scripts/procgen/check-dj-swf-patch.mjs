@@ -23,8 +23,10 @@ import { injectSwf } from '../../frontend/modules/bounceDemo/djReal/swf_inject.m
 
 
 import { argvHelp } from './argvHelp.js';
+import { failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
+failOnCrash();
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const SWFRECOMP = process.env.SWFRECOMP_CC ?? join(process.env.HOME, 'CC', 'SWFRecomp-CC');
@@ -52,14 +54,17 @@ const ours = await injectSwf(original, bytecode, { stageWidth: 600 });
 
 if (ours.length !== ref.length) {
     console.error(`FAIL: length mismatch ours=${ours.length} ref=${ref.length}`);
+    console.log(totalLine(1));
     process.exit(1);
 }
 for (let i = 0; i < ref.length; i++) {
     if (ours[i] !== ref[i]) {
         console.error(`FAIL: first byte difference at offset ${i} `
             + `(ours=0x${ours[i].toString(16)} ref=0x${ref[i].toString(16)})`);
+        console.log(totalLine(1));
         process.exit(1);
     }
 }
 console.log(`PASS: swf_inject.mjs output byte-identical to inject_tracer.py `
     + `--stage-width 600 (${ref.length} bytes)`);
+console.log(totalLine(0));

@@ -31,8 +31,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
+failOnCrash();
 takeBoxLockOrExit({ name: 'check-sphere-envelope-resume.mjs', kind: 'browser' });
 
 const SEED = 1;
@@ -123,7 +125,7 @@ if (!env1.config || !env1.compile?.rulesJson) {
 }
 if (env1.completed !== 5) throw new Error(`exported completed=${env1.completed}, want 5`);
 const baseRules = JSON.stringify(env1.compile.rulesJson);
-console.log('EXPORT OK: envelope has config + all step outputs, completed=5');
+console.log('PASS: EXPORT OK: envelope has config + all step outputs, completed=5');
 
 await clickBtn('Reset');
 await page.waitForTimeout(300);
@@ -141,7 +143,7 @@ const env2 = await exportEnvelope();
 if (JSON.stringify(env2.compile.rulesJson) !== baseRules) {
     throw new Error('re-exported rules.json differs from the original (adapter lossy)');
 }
-console.log('PHASE 1 OK: full export → reset → load → re-export is byte-identical');
+console.log('PASS: PHASE 1 OK: full export → reset → load → re-export is byte-identical');
 
 // ── Phase 2: auto-detect partial resume ─────────────────────────────
 const partial = JSON.parse(JSON.stringify(env1));
@@ -161,7 +163,7 @@ console.log('LOAD (partial):', partMsg);
 if (!partMsg.includes('resume from regions')) {
     throw new Error(`partial-load did not auto-detect resume from regions: ${partMsg}`);
 }
-console.log('PHASE 2a OK: auto-detected resume point = regions (first missing output)');
+console.log('PASS: PHASE 2a OK: auto-detected resume point = regions (first missing output)');
 
 await clickBtn('Run all (finish)');
 await page.waitForTimeout(4000);
@@ -174,13 +176,17 @@ const env3 = await exportEnvelope();
 if (JSON.stringify(env3.compile.rulesJson) !== baseRules) {
     throw new Error('resumed-from-partial rules.json differs from the original');
 }
-console.log('PHASE 2b OK: resumed from partial → identical rules.json');
+console.log('PASS: PHASE 2b OK: resumed from partial → identical rules.json');
 
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {
     console.log('PAGE ERRORS:\n' + errors.join('\n'));
+    console.log(checkLine(false, `no page errors (${errors.length})`));
+    console.log(totalLine(1));
     process.exit(1);
 }
+console.log(checkLine(true, 'no page errors'));
 console.log('VERIFY SPHERE ENVELOPE RESUME: ALL OK');
+console.log(totalLine(0));
 await browser.close();
 process.exit(0);

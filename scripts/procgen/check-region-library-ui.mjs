@@ -47,6 +47,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-region-library-ui.mjs', kind: 'browser' });
@@ -147,7 +148,8 @@ await page.addInitScript(({ seed, region, maxItems, mazeQuota }) => {
 }, { seed: SEED, region: REGION, maxItems: MAX_ITEMS, mazeQuota: MAZE_QUOTA });
 
 const failures = [];
-const assert = (cond, msg) => { if (!cond) failures.push(msg); console.log(`${cond ? 'PASS' : 'FAIL'} ${msg}`); };
+failOnCrash(() => failures.length);
+const assert = (cond, msg) => { if (!cond) failures.push(msg); console.log(`${cond ? 'PASS' : 'FAIL'}: ${msg}`); };
 
 const panelRoot = () => 'document.querySelector(".procgen-pipeline-mode")?.closest(".lm_content") ?? document';
 const panelText = () => page.evaluate(() => document.querySelector('.procgen-pipeline-panel')?.textContent ?? document.body.textContent ?? '');
@@ -522,5 +524,6 @@ assert(spErrors.length === 0, `Phase D: no page errors (${spErrors.length})`);
 if (spErrors.length) console.log(spErrors.join('\n'));
 
 await browser.close();
-console.log(failures.length ? `\nFAIL: ${failures.length} failure(s)` : '\nAll region-library UI assertions passed.');
+console.log(failures.length ? `\n${failures.length} failure(s)` : '\nAll region-library UI assertions passed.');
+console.log(totalLine(failures.length));
 process.exit(failures.length ? 1 : 0);

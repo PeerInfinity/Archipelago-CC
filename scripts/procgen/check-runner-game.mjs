@@ -26,6 +26,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
 // through. `--wait-for-box=<sec>` queues instead of refusing.
 
 import { argvHelp } from './argvHelp.js';
+import { failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-runner-game.mjs', kind: 'browser' });
@@ -33,6 +34,7 @@ takeBoxLockOrExit({ name: 'check-runner-game.mjs', kind: 'browser' });
 const BASE = 'http://localhost:8000/frontend/modules/runnerDemo/game/index.html';
 const browser = await chromium.launch();
 let failures = 0;
+failOnCrash(() => failures);
 const ok = (cond, label) => {
     console.log(`${cond ? 'PASS' : 'FAIL'}: ${label}`);
     if (!cond) failures++;
@@ -168,6 +170,8 @@ const calls = (page) => page.evaluate(() => window.__devCalls ?? []);
 await browser.close();
 if (failures) {
     console.error(`\n${failures} check(s) FAILED`);
+    console.log(totalLine(failures));
     process.exit(1);
 }
 console.log('\nAll runner game-page checks passed.');
+console.log(totalLine(0));

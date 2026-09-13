@@ -36,8 +36,10 @@ import { DEFAULT_ITEMS } from '../../frontend/modules/shared/procgen/library.js'
 
 
 import { argvHelp } from './argvHelp.js';
+import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
+failOnCrash();
 const SEED = 1;
 const ITEM_POOL = {
     'Right arrow': 1, 'Left arrow': 1, Springs: 1, Jetpacks: 1,
@@ -244,7 +246,7 @@ await waitFor(`driven move to ${firstChild.region_id}`, async () => {
     // gates — any non-start region proves the move chain works
     return node && node.parent != null ? node : null;
 });
-console.log('DRIVEN MOVE OK: left the start region');
+console.log('PASS: DRIVEN MOVE OK: left the start region');
 
 // 3. The guaranteed back portal: every non-start region's level
 //    carries a return portal whose side resolves to the driver's
@@ -267,13 +269,17 @@ await waitFor('back-portal regionMove (child -> parent)', async () => {
         && [...validBackEdges].some((e) => l.includes(e)));
     return hit ?? null;
 }, 60000);
-console.log('BACK PORTAL OK (child -> parent move verified)');
+console.log('PASS: BACK PORTAL OK (child -> parent move verified)');
 
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {
     console.log('PAGE ERRORS:', errors.join('\n'));
+    console.log(checkLine(false, `no page errors (${errors.length})`));
+    console.log(totalLine(1));
     process.exit(1);
 }
+console.log(checkLine(true, 'no page errors'));
 console.log('VERIFY SPHERE GROWTH UI: ALL OK');
+console.log(totalLine(0));
 await browser.close();
 process.exit(0);

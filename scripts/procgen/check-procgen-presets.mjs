@@ -37,8 +37,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
+failOnCrash();
 takeBoxLockOrExit({ name: 'check-procgen-presets.mjs', kind: 'browser' });
 
 const RUNNER_PRESET_ID = 'shipped:runner-sphere-demo';
@@ -61,10 +63,10 @@ let checks = 0;
 function check(desc, ok, detail = '') {
     if (!ok) {
         console.log('LOGS (last 30):', logs.slice(-30).join('\n'));
-        throw new Error(`FAIL: ${desc}${detail ? ` — ${detail}` : ''}`);
+        throw new Error(`${desc}${detail ? ` — ${detail}` : ''}`);
     }
     checks += 1;
-    console.log(`ok ${checks}: ${desc}`);
+    console.log(checkLine(true, `${checks}. ${desc}`));
 }
 
 async function waitFor(desc, fn, timeoutMs = 30000) {
@@ -272,3 +274,4 @@ check('deleted preset no longer listed',
 
 console.log(`\nAll ${checks} preset drop-down checks passed.`);
 await browser.close();
+console.log(totalLine(0));

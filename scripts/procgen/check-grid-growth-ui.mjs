@@ -33,8 +33,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
+failOnCrash();
 takeBoxLockOrExit({ name: 'check-grid-growth-ui.mjs', kind: 'browser' });
 
 const browser = await chromium.launch();
@@ -126,8 +128,11 @@ if (!exportVisible) problems.push('no export actions / result after generation')
 
 await browser.close();
 if (problems.length) {
-    console.log('\nFAIL:\n - ' + problems.join('\n - '));
+    console.log('');
+    for (const p of problems) console.log(checkLine(false, p));
+    console.log(totalLine(problems.length));
     process.exit(1);
 }
-console.log('\nPASS — grid-growth streams denominator-less live progress and produces a result');
+console.log(`\n${checkLine(true, 'grid-growth streams denominator-less live progress and produces a result')}`);
+console.log(totalLine(0));
 process.exit(0);

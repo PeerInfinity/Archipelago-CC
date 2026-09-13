@@ -30,6 +30,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -49,6 +50,7 @@ const py = fs.existsSync(path.join(repoRoot, '.venv/bin/python'))
     : 'python3';
 
 let failures = 0;
+failOnCrash(() => failures);
 const ok = (cond, msg) => {
     console.log(`${cond ? 'PASS' : 'FAIL'}: ${msg}`);
     if (!cond) failures++;
@@ -195,4 +197,5 @@ try {
 console.log(failures === 0
     ? '\nAll region-library round-trip assertions passed.'
     : `\n${failures} assertion(s) FAILED.`);
+console.log(totalLine(failures));
 process.exit(failures === 0 ? 0 : 1);

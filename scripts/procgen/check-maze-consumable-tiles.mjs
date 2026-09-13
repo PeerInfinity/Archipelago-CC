@@ -60,8 +60,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
+failOnCrash();
 takeBoxLockOrExit({ name: 'check-maze-consumable-tiles.mjs', kind: 'browser' });
 
 const RULES = 'frontend/presets/maze_consumable_test/AP_1/AP_1_rules.json';
@@ -165,11 +167,11 @@ function moveTo(target, source) {
 try {
     // ── boot ────────────────────────────────────────────────────
     await waitFor(page, logs, 'app booted with a maze panel + world', mazePanel, 45000);
-    console.log('  ✓ app booted; maze panel has a world');
+    console.log('PASS: app booted; maze panel has a world');
 
     await waitFor(page, logs, 'omsi engine booted (resources bag readable)',
         async () => typeof (await omsiEval('resources.gold')) === 'number', 45000);
-    console.log('  ✓ omsi engine booted; resources bag readable');
+    console.log('PASS: omsi engine booted; resources bag readable');
 
     // ⛑ A SECOND boot barrier, and the reason this script was red for
     // months. `resources.gold` readable proves the omsi GAME loaded
@@ -194,7 +196,7 @@ try {
             const subs = m.adapterCore?.eventBusSubscriptions?.get('omsiSubstrateWrapper');
             return !!subs?.has('crossSubstrate:itemGranted');
         }), 45000);
-    console.log('  ✓ omsi bridge subscribed to crossSubstrate:itemGranted');
+    console.log('PASS: omsi bridge subscribed to crossSubstrate:itemGranted');
 
     // ── (6) collect policy default, checked BEFORE anything is
     // collected so there are genuinely tiles available to detour to ──
@@ -209,7 +211,7 @@ try {
         return m.getPanelInstance()?.listUncollectedConsumables?.() ?? [];
     });
     if (uncollected.length === 0) fail('region reports no uncollected consumable tiles');
-    console.log(`  ✓ ${consRegion} reports ${uncollected.length} uncollected tile(s)`);
+    console.log(`PASS: ${consRegion} reports ${uncollected.length} uncollected tile(s)`);
 
     const bot = () => page.evaluate(async () => {
         const m = await import('./modules/playbackBot/index.js');
@@ -220,7 +222,7 @@ try {
     if (botState && botState.policy !== 'never') {
         fail(`bot collect policy defaults to '${botState.policy}', expected 'never' (X1-R3)`);
     }
-    console.log(`  ✓ bot collect policy defaults to 'never' (X1-R3)`);
+    console.log(`PASS: bot collect policy defaults to 'never' (X1-R3)`);
 
     // The default must be a real no-op, and the opt-in must really
     // engage — assert both against the LIVE controller, with genuine
@@ -240,7 +242,7 @@ try {
             fail(`policy 'never' offered a detour ${JSON.stringify(detours.off)} — must be a no-op`);
         }
         if (!detours.on) fail("policy 'always' offered no detour despite uncollected tiles");
-        console.log(`  ✓ 'never' offers no detour; 'always' offers `
+        console.log(`PASS: 'never' offers no detour; 'always' offers `
             + `(${detours.on.x},${detours.on.y}) against the live controller`);
     }
 
@@ -269,7 +271,7 @@ try {
         `omsi resources.${goldKey} reaches ${before + consTile.count}`,
         async () => (await omsiEval(`resources.${goldKey}`)) === before + consTile.count, 30000);
     if (!landed) fail('grant never landed');
-    console.log(`  ✓ bot walked the foreign tile; omsi ${goldKey} ${before} → `
+    console.log(`PASS: bot walked the foreign tile; omsi ${goldKey} ${before} → `
         + `${before + consTile.count} (generator-placed grant, full bus)`);
 
     const checkedAfter = await page.evaluate(async () => {
@@ -285,7 +287,7 @@ try {
     if (checkedAfter !== checkedBefore) {
         fail(`pickup checked an AP location (${checkedBefore} → ${checkedAfter}) — D10 says it must not`);
     }
-    console.log('  ✓ no AP location was checked by the pickup (D10)');
+    console.log('PASS: no AP location was checked by the pickup (D10)');
 
     // ── (4) one-shot within a loop, respawns on reset ───────────
     const home = await page.evaluate(async () => {
@@ -311,7 +313,7 @@ try {
     if (afterRewalk !== before + consTile.count) {
         fail(`re-walking the tile re-granted (${goldKey}=${afterRewalk}) — should be one-shot per loop`);
     }
-    console.log('  ✓ re-walking the collected tile does NOT re-grant (one-shot per loop)');
+    console.log('PASS: re-walking the collected tile does NOT re-grant (one-shot per loop)');
 
     await page.evaluate(async () => {
         const { centralRegistry } = await import('./app/core/centralRegistry.js');
@@ -323,7 +325,7 @@ try {
         `omsi resources.${goldKey} reaches ${before + consTile.count * 2} after the reset`,
         async () => (await omsiEval(`resources.${goldKey}`)) === before + consTile.count * 2, 20000);
     if (!afterReset) fail('the tile did not respawn after a loop reset');
-    console.log('  ✓ collected tiles respawn after a loop reset (X1-R1)');
+    console.log('PASS: collected tiles respawn after a loop reset (X1-R1)');
 
     // ── (5) mana tile raises the pool ───────────────────────────
     await moveTo(manaRegion, consRegion);
@@ -345,16 +347,19 @@ try {
             return centralRegistry.getPublicFunction('gameState', 'getCurrentMana')();
         })) > poolBefore, 30000);
     if (!refilled) fail('the mana tile did not raise the pool');
-    console.log(`  ✓ generator-placed mana tile raised the pool above ${poolBefore} (X1-R4)`);
+    console.log(`PASS: generator-placed mana tile raised the pool above ${poolBefore} (X1-R4)`);
 
     const errors = logs.filter((l) => l.startsWith('[pageerror]'));
     if (errors.length > 0) fail('page errors:\n  ' + errors.join('\n  '));
 
     await browser.close();
     console.log('\nVERIFY MAZE CONSUMABLE TILES: OK');
+    console.log(totalLine(0));
     process.exit(0);
 } catch (e) {
+    console.log(checkLine(false, e.message));
     console.log('\n‼ FAILURE:', e.message);
     await browser.close();
+    console.log(totalLine(1));
     process.exit(1);
 }

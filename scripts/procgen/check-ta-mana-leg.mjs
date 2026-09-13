@@ -49,6 +49,7 @@ import { DEFAULT_REGION_COST } from '../../frontend/modules/shared/procgen/loopC
  */
 
 import { argvHelp } from './argvHelp.js';
+import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-ta-mana-leg.mjs', kind: 'browser' });
@@ -62,6 +63,7 @@ const logs = [];
 page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
 page.on('pageerror', (err) => logs.push(`[pageerror] ${err.message}`));
 
+failOnCrash();
 class VerifyFailure extends Error {}
 function fail(msg) {
     throw new VerifyFailure(msg);
@@ -155,7 +157,7 @@ try {
         fail(`expected ${DEFAULT_REGION_COST} XP on AdventureZone, `
             + `got ${JSON.stringify(s.adventureXP)}`);
     }
-    console.log(`PASS 1: depart charge ${DEFAULT_REGION_COST} + 1:1 XP`);
+    console.log(checkLine(true, `1. depart charge ${DEFAULT_REGION_COST} + 1:1 XP`));
 
     // 2. Menu → AdventureZone: departing a NON-mana region charges nothing.
     const manaAtMenu = s.currentMana;
@@ -165,7 +167,7 @@ try {
     if (s.currentMana !== manaAtMenu) {
         fail(`departing Menu charged mana: ${manaAtMenu} -> ${s.currentMana}`);
     }
-    console.log('PASS 2: no charge departing non-mana region');
+    console.log(checkLine(true, '2. no charge departing non-mana region'));
 
     // 3. Depletion: mana now sits at DEFAULT_REGION_COST — exactly the next depart's
     //    cost (still XP level 0). Departing AdventureZone drains to 0
@@ -189,15 +191,18 @@ try {
         const cur = await gameState();
         return cur.currentRegion === resolvedStart;
     });
-    console.log(`PASS 3: depletion reset + refill + teleport to '${resolvedStart}'`);
+    console.log(checkLine(true, `3. depletion reset + refill + teleport to '${resolvedStart}'`));
 
     console.log('\ncheck-ta-mana-leg: ALL PASS');
+    console.log(totalLine(0));
     await browser.close();
     process.exit(0);
 } catch (err) {
+    console.log(checkLine(false, err.message));
     console.error(`\ncheck-ta-mana-leg: FAIL — ${err.message}`);
     console.error('last console logs:');
     for (const l of logs.slice(-25)) console.error(' ', l);
     await browser.close();
+    console.log(totalLine(1));
     process.exit(1);
 }
