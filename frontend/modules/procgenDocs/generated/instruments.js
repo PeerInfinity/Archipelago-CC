@@ -3444,7 +3444,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/substrate-registry.md"
+                "docs/json/developer/procgen/substrate-registry.md",
+                "docs/json/developer/procgen/text-adventure.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -3479,7 +3480,7 @@ export const INSTRUMENTS = frz({
                     "name": "help"
                 }
             ],
-            "oneLiner": "check-sidecar-fields — **EVERY COMMITTED `preset_sidecars` ENTRY HOLDS ITS SUBSTRATE'S OWN PAYLOAD DECLARATION, AND EVERY SLOT PASSES THE HUB'S SIDECAR VALIDITY REPORT** (PRESET SIDECARS slice D0, grown by V0 into two layers: `sidecarPayloadErrors` per entry, then `sidecarIssues` per slot — see \"THE SECOND LAYER\" be…",
+            "oneLiner": "check-sidecar-fields — **EVERY COMMITTED `preset_sidecars` ENTRY HOLDS ITS SUBSTRATE'S OWN PAYLOAD DECLARATION, EVERY SLOT PASSES THE HUB'S SIDECAR VALIDITY REPORT, AND EVERY AUTHORED PAYLOAD'S RULES EQUAL ITS DOCUMENT'S** (PRESET SIDECARS slice D0, grown by V0 and G2b-1 into three layers: `sidecarPayloadErrors` per…",
             "path": "scripts/procgen/check-sidecar-fields.mjs"
         },
         {

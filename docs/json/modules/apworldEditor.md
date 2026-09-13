@@ -23,6 +23,7 @@ document.
 | `documentKeys.js` | the top-level **key registry**, derived from `rules.schema.json` |
 | `documentLinks.js` | the **Links** tab's rows |
 | `sidecarIssues.js` | (V0) the **sidecar validity report** — `sidecarIssues(doc, slot)`, the fourth validator: one pure function the validation bar, the per-region block and `check-sidecar-fields.mjs` all read |
+| `sidecarRuleAgreement.js` | (G2b-1) `regionRuleAgreement(doc, slot, region)` — the payload's re-derived rules against the document's, per endpoint; `authored` disagreements fail, `derived` ones are counted. `check-sidecar-fields.mjs`' third layer |
 | `sidecarForm.js` | (D1) the sidecar block's **fields view** model — `sidecarFormModel(entry, {rulesSchema})`: the rows (the entry subschema's fields, then the substrate's declaration), the control each type draws, and `withSidecarField`, the whole entry one control's change writes |
 | `regionRoundTrip.js` | the per-region **Edit ▸** door — resolves the substrate's declarations, runs the baseline, folds a save into ONE op; (S0) `sidecarEntryFacts`, what a region's sidecar block says about its entry; and (S2) `deriveRegionRules`, the derivation half alone — a payload's own rules, named by the document |
 | `regionLayout.js` | (M2) the map moves' layout — `slotLayout` (a slot's cells on a `Grid` sized by `mapBoundsFor`), `layoutChange` (the engine's placement, and every exit whose side-law verdict the move changed), `rewriteExitFlags` (a payload's `exits` in its substrate's own serialized form); (M3) `rewriteExits` (the one path a flag write and a side write share), `exitSideVerdicts` (the side law asked of a moved exit alone), `exitSidesOfSubstrate`; the ops and their refusal sentences are `rulesDocOps.js`'s `move-region` / `swap-regions` / `move-exit-side` / `swap-exit-sides` |
@@ -177,7 +178,8 @@ one pure function, three readers — **the bar** (its issues join `validateRules
 list, counted and listed like the others, each row naming its region, and a
 press on the row lands on that region), **the per-region block** (see *Sidecars,
 per region* below) and **`scripts/procgen/check-sidecar-fields.mjs`** (its second
-layer). None of them spells a check of its own.
+layer; its third, rule agreement, is *Re-derive rules ▸*'s derivation — see that
+section). None of them spells a check of its own.
 
 Each issue is `{severity, region, field?, kind, message}`; `kind` is one of
 `SIDECAR_ISSUE_KINDS`, and `SIDECAR_ISSUE_SEVERITY` / `SIDECAR_ISSUE_LAYER` say
@@ -804,11 +806,24 @@ whose answer arrives after the document changed is discarded, and says so.
 `open`/`save`** (`regionRoundTripOf` — the registry lookup Edit ▸ already makes;
 no world is deserialized per render). Elsewhere it is **disabled** and its title
 is that lookup's own sentence: a `refused` declaration's words (Seedling), or
-*"the X substrate declares no `regionRoundTrip` …"* (jta, omsi, runner,
-text_adventure today). ⛔ It needs no room editor — only the round trip. The work
+*"the X substrate declares no `regionRoundTrip` …"* (jta, omsi, runner today —
+`text_adventure` declares one since PRESET SIDECARS G2b-1, with no room editor).
+⛔ It needs no room editor — only the round trip. The work
 (two round trips, ~90 ms a maze region) runs on the PRESS; the answer is printed
 under the block and in the status line, and the re-render re-asks the issue list
 and the Edit ▸ verdict.
+
+**The same derivation is a corpus gate** (G2b-1). `sidecarRuleAgreement.js`
+(`regionRuleAgreement`) asks `deriveRegionRules` of one region and compares every
+document endpoint with `sameRule` — so "the gate agrees" and "a press would move
+nothing" are one fact — and `check-sidecar-fields.mjs` asks it of every tracked
+sidecar region as its third layer. What a disagreement means is the round trip's
+own `rules` member (`procgenCore/roundTripRules.js`): **authored** (the payload
+carries the rules — `text_adventure`) makes it a FAIL naming the endpoint and both
+rules, because it is a document rule edited behind a payload that a rebuild would
+put back; **derived** (absent — maze, bounce: rules from geometry) counts it on
+one line per substrate and never fails, because those are the endpoints Edit ▸
+already freezes.
 
 ## The Items tab's Groups section (I1)
 
@@ -1647,7 +1662,9 @@ bounce regions are editable, and every one of the rest gets a named reason. All
 ten maze refusals are `seedling_atlas_maze`'s atlas-derived rooms, and they fail
 check 1: an unchanged save would already rewrite their payloads. Every region of
 the other substrates (jta, text_adventure, omsi, runner, flash_seedling) is
-refused before the press, by the registry. The *"394 of 1,046 … 15 of 25"* this
+refused before the press, by the registry — `text_adventure` declares a round trip
+since G2b-1 (so *Re-derive rules ▸* reaches its 15 regions) but no `roomEditor`, so
+Edit ▸ still says *"No region editor"*. The *"394 of 1,046 … 15 of 25"* this
 paragraph used to quote is from before H4b/H6b, when `procgen_topdown`'s
 source-named locations were the biggest refusal class.
 
@@ -1906,7 +1923,7 @@ The import is free in both modes, measured:
 | Suite | Where |
 |-------|-------|
 | `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `regionRederive.test.js`, `regionLayout.test.js` (M2: every move and swap of two fixture slots, the refusals, the corpus control, the side law's census), `exitSides.test.js` (M3: the exit-side corpus control, the exhaustive deep diff over every side move and swap, the back exit, every refusal, ONE-WAY, Undo), `reverseLinks.test.js`, `sidecarIssues.test.js`, `sidecarForm.test.js` | vitest, `frontend/modules/apworldEditor/` |
-| `check-sidecar-fields.mjs` (+ `checkSidecarFields.test.js`) | `scripts/procgen/` — the corpus gate: every committed entry against its declaration, and (V0) `sidecarIssues` per slot as its second layer |
+| `check-sidecar-fields.mjs` (+ `checkSidecarFields.test.js`) | `scripts/procgen/` — the corpus gate: every committed entry against its declaration, (V0) `sidecarIssues` per slot as its second layer, and (G2b-1) `regionRuleAgreement` per region as its third |
 | `../procgenCore/compositeMapRenderer.test.js` | vitest — the Map tab's renderer, driven by a TOY substrate |
 | `../procgenPipeline/compositeMapDocument.test.js` | vitest — `preset_sidecars` → `Grid`, including the player slot; (M2) `mapBoundsFor` |
 | `../procgenPipeline/procgenPipelineUI.test.js` | vitest — (H5) the hand-off answer's three outcomes; (M1) the carried slot named when it is not the built one, the top-down cost clause, the sphere answer unchanged, and the block's Regenerate note held to `HANDOFF_REALISED_SLOT` |
