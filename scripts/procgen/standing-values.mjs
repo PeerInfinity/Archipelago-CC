@@ -100,7 +100,8 @@ import {
 } from './rowInputKey.js';
 import {
     CHEAP_MS, FILE, ciGateCommand, cheapFor, compositeValue, compositeWhy, head,
-    missingScript, newRowAdmission, readStandingValues, retiredKeyProblem, runRow, scriptIn,
+    missingScript, movedRowRefusal, newRowAdmission, readStandingValues, retiredKeyProblem, runRow,
+    scriptIn,
     standingRows, writerRoster,
 } from './standingValues.js';
 
@@ -368,6 +369,8 @@ if (flag('write')) {
     const findings = [];
     /** ⛓ 0b — the probed NEW rows the deadline and the verdict admitted. */
     const probedIn = [];
+    /** ⛓ F2 task 2 — the existing rows whose red re-measure was refused. */
+    const movedRefused = [];
     for (const row of WRITE_ROWS) {
         /**
          * ⛔ AT EVERY ROW, NOT ONCE AT THE TOP. R9 slice P3's tracked-doc edit
@@ -483,6 +486,21 @@ if (flag('write')) {
             probedIn.push(row.key);
         }
         /**
+         * ⛔⛔ F2 task 2 — **A RED RE-MEASURE OF AN EXISTING ROW IS REFUSED AND
+         * THE BANKED ROW STAYS**, byte for byte (`standingValues.movedRowRefusal`
+         * carries the measured case: two rows banked as EXIT 1 in 0.1 s).
+         * ⛔ BEFORE THE DETECTOR, measured: forced at an unmoved key, the same
+         * EXIT-1-no-total run was first reported as a NONDETERMINISM finding
+         * and written into the row. A run no reader can parse says nothing
+         * about whether the gate is a function of its inputs.
+         */
+        const movedRefusal = movedRowRefusal({ row, prev, result: r, fromCI });
+        if (movedRefusal) {
+            movedRefused.push({ key: row.key, why: movedRefusal });
+            console.log(`MOVED row REFUSED: ${row.key} — ${movedRefusal}`);
+            continue;
+        }
+        /**
          * ⛓⛓⛓ **THE DETECTOR** (trap 866: a byte-keyed cache is a
          * nondeterminism detector you already own). A re-run at an UNCHANGED
          * key whose verdict moved says one of two things and both are
@@ -584,6 +602,8 @@ if (flag('write')) {
      */
     console.log(`\nnew-row-refused: ${REFUSED.length} row(s)`
         + `${REFUSED.length ? ` — ${REFUSED.map((r) => r.row.key).join(', ')}` : ''}`);
+    console.log(`moved-row-refused: ${movedRefused.length} row(s) kept at their banked value`
+        + `${movedRefused.length ? `\n  ${movedRefused.map((m) => `${m.key} — ${m.why}`).join('\n  ')}` : ''}`);
     console.log(`new-row-probed: ${PROBED.size} row(s) under the ${CI_SHARD_BUDGET_MS / 1000} s `
         + `deadline, ${probedIn.length} admitted${probedIn.length ? ` — ${probedIn.join(', ')}` : ''}`);
     console.log(`key-carried: ${carried.length} row(s)`

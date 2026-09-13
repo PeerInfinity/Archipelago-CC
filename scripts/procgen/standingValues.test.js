@@ -15,15 +15,15 @@
  */
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import { CI_SHARD_BUDGET_MS, readCiArmCosts } from './ciGatePlan.js';
 import { gateRoster } from './gateRoster.js';
 import {
-    RETIRED_ROSTER_ROW_KEYS, ROSTER_ROW_KEY, gateChannel, gateStandingRows, newRowAdmission,
-    newRowClass, readStandingValues, retiredKeyProblem, runRow, standingRows, writerRoster,
+    RETIRED_ROSTER_ROW_KEYS, ROSTER_ROW_KEY, gateChannel, gateStandingRows, movedRowRefusal,
+    newRowAdmission, newRowClass, readStandingValues, retiredKeyProblem, runRow, standingRows, writerRoster,
 } from './standingValues.js';
 
 const ROWS = standingRows();
@@ -307,5 +307,60 @@ describe('F1 task 0 / 0b — the writer never creates an unbounded NEW row', () 
             expect(r).toMatchObject({ killed: false, exit: 0, value: '2/0', total: 'ALL CHECKS PASSED' });
             expect(newRowAdmission(r, { deadlineMs: 10000 })).toBeNull();
         }, 20000);
+    });
+});
+
+/**
+ * ⛔⛔ F2 task 2 — AN EXISTING ROW'S RED RE-MEASURE IS REFUSED AND THE BANK KEEPS
+ * ITS VALUE. The fixtures are the two rows the sidecars write BANKED red (from
+ * a venv-less worktree, 2026-09-13), typed here as SYNTHETIC prev rows — never
+ * read off the live bank, whose phase moves (the F1 fixture lesson).
+ */
+describe('F2 task 2 — the MOVED-row clause', () => {
+    const prevOf = (value) => ({ value, kind: 'gate', exit: 0, total: 'OK',
+        measuredAt: '0d8e61b4a07aea506ac53a85c5d00eccdb8b3679', inputKey: 'k-old' });
+    const gateRow = (key) => ({ key, kind: 'gate', command: 'node scripts/procgen/x.mjs' });
+
+    it.each([
+        ['gate: seedling-save-stamp', '21/0', { exit: 1, ms: 100, value: '3/0', total: null }],
+        ['gate: seedling-vanilla-manifest', '24/0', { exit: 1, ms: 100, value: '0/0', total: null }],
+    ])('%s: EXIT 1 in 0.1 s with no total is REFUSED and the banked %s is named as kept', (key, was, measured) => {
+        const why = movedRowRefusal({ row: gateRow(key), prev: prevOf(was),
+            result: { ...measured, killed: false } });
+        expect(why).toMatch(/^exited 1 after 0\.1 s/);
+        expect(why).toContain(`the banked "${was}" @0d8e61b4a0 is KEPT`);
+    });
+
+    it('exit 0 with no total is refused; a non-zero exit WITH a total is refused', () => {
+        const prev = prevOf('5/0');
+        expect(movedRowRefusal({ row: gateRow('gate: a'), prev,
+            result: { exit: 0, ms: 900, value: '5/0', total: null } })).toMatch(/NO total line/);
+        expect(movedRowRefusal({ row: gateRow('gate: a'), prev,
+            result: { exit: 1, ms: 900, value: '4/1', total: '1 CHECK(S) FAILED' } }))
+            .toMatch(/exited 1 .*total "1 CHECK\(S\) FAILED"/);
+    });
+
+    it('a green re-measure with a total is admitted — even when the value MOVED', () => {
+        expect(movedRowRefusal({ row: gateRow('gate: a'), prev: prevOf('5/0'),
+            result: { exit: 0, ms: 900, value: '6/0', total: 'ALL CHECKS PASSED' } })).toBeNull();
+    });
+
+    it('NOT judged: a NEW row (newRowAdmission\'s), a CI-sourced read, a non-gate row', () => {
+        const red = { exit: 1, ms: 100, value: '0/0', total: null };
+        expect(movedRowRefusal({ row: gateRow('gate: a'), prev: undefined, result: red })).toBeNull();
+        expect(movedRowRefusal({ row: gateRow('gate: a'), prev: prevOf('1/0'), result: red,
+            fromCI: true })).toBeNull();
+        expect(movedRowRefusal({ row: { key: 'identity: x', kind: 'identity', command: 'x' },
+            prev: prevOf('abc'), result: red })).toBeNull();
+    });
+
+    it('⛓ the writer consults the clause BEFORE the nondeterminism detector and the banked row', () => {
+        // ⛔ measured: after the detector, a forced EXIT-1-no-total run at an
+        // unmoved key was written into the row as a NONDETERMINISM finding.
+        const src = readFileSync(join(import.meta.dirname, 'standing-values.mjs'), 'utf8');
+        const at = src.indexOf('movedRowRefusal({ row, prev, result: r, fromCI })');
+        expect(at).toBeGreaterThan(0);
+        expect(at).toBeLessThan(src.indexOf('nondeterminismFinding({ unmoved, prev, result: r'));
+        expect(at).toBeLessThan(src.indexOf('out.rows[row.key] = {\n            value: r.value,'));
     });
 });

@@ -491,6 +491,32 @@ export function newRowAdmission(result, { deadlineMs }) {
 }
 
 /**
+ * ⛔⛔ F2 task 2 — **AN EXISTING ROW IS NOT OVERWRITTEN BY A VERDICT A READER
+ * CANNOT PARSE**, or `null` when the re-measure may be banked. F1's admission
+ * (`newRowAdmission`) guarded NEW rows only, and the write after it BANKED
+ * two existing rows' reds: from a venv-less worktree `gate: seedling-save-stamp`
+ * read `3/0` and `gate: seedling-vanilla-manifest` `0/0`, each EXIT 1 in 0.1 s
+ * with no total line, over banked 21/0 and 24/0 (restored by hand, verbatim).
+ *
+ * ⛓ THE SAME THREE REFUSALS, applied to a BOX-MEASURED `gate:` row that already
+ * has a banked value: killed, a non-zero exit, or no TOTAL line. The caller
+ * KEEPS the banked row byte for byte (its old `inputKey` included, so `--keys`
+ * goes on reading it MOVED — the row says itself that it was not re-measured)
+ * and prints the refusal by name.
+ *
+ * ⛓ NOT JUDGED HERE, and why: a CI-sourced row (`fromCI`) is a READ of a line
+ * CI already printed — its null answer is `KEEP`'s ruling-52 clause; a NEW row
+ * is `newRowAdmission`'s; identity / producer / suite rows print no TOTAL
+ * vocabulary at all, so "no total" cannot be asked of them.
+ */
+export function movedRowRefusal({ row, prev, result, fromCI = false }) {
+    if (!prev || fromCI || row.kind !== 'gate') return null;
+    const refusal = newRowAdmission(result, { deadlineMs: null });
+    return refusal ? `${refusal} — the banked ${JSON.stringify(prev.value)} `
+        + `@${String(prev.measuredAt ?? '?').slice(0, 10)} is KEPT` : null;
+}
+
+/**
  * ⛓ THE WRITER'S ROSTER — the selected rows split, in derivation order, into
  * the ones `--write` may run (`probed` names the subset it runs under the
  * deadline) and the NEW rows it refuses before running anything. ⛓ A function
