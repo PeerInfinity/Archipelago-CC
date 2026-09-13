@@ -24,6 +24,7 @@ import {
     HEADLESS_LOGIC_ONLY_ARGS, HEADLESS_WEBGPU_ARGS, HEADLESS_WEBGPU_FEATURES,
     PLAYWRIGHT_ENABLED_FEATURES, VULKAN_PAIR, headlessWebgpuArgs,
 } from './headlessChromium.js';
+import { requirementLines } from './repoPython.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FEATURES = '--enable-features=';
@@ -134,8 +135,8 @@ describe('H2 — the Python half is pinned to the node half', () => {
         // launches a build nobody installed.
         const lock = JSON.parse(readFileSync(join(HERE, '..', '..', 'package-lock.json'), 'utf8'));
         const node = lock.packages['node_modules/playwright'].version;
-        const reqs = readFileSync(join(HERE, 'requirements-headless.txt'), 'utf8')
-            .split('\n').map((l) => l.trim()).filter((l) => l && !l.startsWith('#'));
+        // ⛓ C1: the one parse `repoPython.resolvePython` checks the interpreter against.
+        const reqs = requirementLines(readFileSync(join(HERE, 'requirements-headless.txt'), 'utf8'));
         expect(reqs).toEqual([`playwright==${node}`]);
     });
 });

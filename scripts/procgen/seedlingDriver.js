@@ -56,8 +56,9 @@ export const WIN_STAGE_DOS = 'C:\\playwright';
 export const HEADLESS_REQUIREMENTS = 'scripts/procgen/requirements-headless.txt';
 
 /** The Linux interpreter the headless channel runs a driver with. */
-export function headlessPython({ env = process.env, repo = REPO, probe } = {}) {
-    return resolvePython({ requires: ['playwright'], env, repo, probe,
+export function headlessPython({ env = process.env, repo = REPO, probe, version } = {}) {
+    return resolvePython({ requires: ['playwright'], env, repo, probe, version,
+        pins: [{ dist: 'playwright', file: HEADLESS_REQUIREMENTS }],
         why: 'seedlingDriver: the headless channel',
         install: `install \`<python> -m pip install -r ${HEADLESS_REQUIREMENTS}\` into it `
             + '(or create one: python3 -m venv .venv), or set SEEDLING_PYTHON. '

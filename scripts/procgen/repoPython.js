@@ -30,8 +30,8 @@
  */
 
 import { spawnSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -40,6 +40,32 @@ const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 export function canImport(python, module, { cwd = REPO } = {}) {
     const r = spawnSync(python, ['-c', `import ${module}`], { cwd, stdio: 'ignore' });
     return r.status === 0;
+}
+
+/**
+ * `importlib.metadata.version(<dist>)` as the interpreter reports it, or
+ * `null` when it cannot (`PackageNotFoundError`: importable, no distribution).
+ */
+export function versionOf(python, dist, { cwd = REPO } = {}) {
+    const r = spawnSync(python, ['-c',
+        'import importlib.metadata as m, sys; print(m.version(sys.argv[1]))', dist],
+    { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+    return r.status === 0 && r.stdout.trim() ? r.stdout.trim() : null;
+}
+
+/**
+ * ⛓ C1 — **THE ONE PARSE OF A REQUIREMENTS FILE**: its requirement lines,
+ * trimmed, blank lines and `#` comments dropped. `headlessChromium.test.js`
+ * pins the node half with this same parse.
+ */
+export function requirementLines(text) {
+    return text.split('\n').map((l) => l.trim()).filter((l) => l && !l.startsWith('#'));
+}
+
+/** The version `<dist>==<version>` declares in `lines`, or `null` when none does. */
+export function pinnedVersion(lines, dist) {
+    const line = lines.find((l) => l.startsWith(`${dist}==`));
+    return line ? line.slice(dist.length + 2).trim() || null : null;
 }
 
 /**
@@ -61,28 +87,62 @@ export function pythonLadder({ env = process.env, repo = REPO } = {}) {
 }
 
 /**
- * The Python that can `import` every one of `requires`, or a thrown refusal
- * naming the tree, the ladder and the module that failed.
+ * The Python that can `import` every one of `requires` AND carries exactly
+ * the version each of `pins` declares, or a thrown refusal naming the tree,
+ * the ladder and what failed.
+ *
+ * ⛔ An import probe alone cannot see a version: a user-site package of
+ * another build imports fine (trap 1354). So a pin is checked AFTER the
+ * import, against the version its requirements FILE declares — never a
+ * literal here. A file that cannot be read, or that does not pin the name, is
+ * itself a refusal: an unchecked pin is not a passed one.
  *
  * @param {object} o
  * @param {string[]} o.requires   modules the caller's work imports
+ * @param {{dist: string, file: string}[]} [o.pins]  distributions whose
+ *                                version must EQUAL `file`'s `dist==version`
+ *                                (`file` relative to the tree)
  * @param {string}   o.why        what the caller needs them for (one clause)
  * @param {string}   [o.install]  the line that fixes it
  * @param {Function} [o.probe]    `(python, module, {cwd}) => boolean` (tests)
+ * @param {Function} [o.version]  `(python, dist, {cwd}) => string|null` (tests)
  */
-export function resolvePython({ requires, why, install = null, env = process.env, repo = REPO,
-    probe = canImport }) {
+export function resolvePython({ requires, pins = [], why, install = null, env = process.env, repo = REPO,
+    probe = canImport, version = versionOf }) {
     const { chosen, tried } = pythonLadder({ env, repo });
-    const missing = requires.find((m) => !probe(chosen, m, { cwd: repo }));
-    if (missing === undefined) return chosen;
     const at = tried.findIndex((t) => t.present);
     const ladder = tried.map((t, i) => `      ${t.present ? (i === at ? '→' : '·') : '✗'} `
         + `${t.rung.padEnd(24)} ${t.python ?? '(unset)'}${t.present ? '' : ' — absent'}`).join('\n');
-    throw new Error(`REFUSED: ${why} needs a Python that can \`import ${missing}\`, and the one `
+    const refuse = (needs, fix) => new Error(`REFUSED: ${why} needs a Python that ${needs}, and the one `
         + `chosen for tree ${repo} cannot: ${chosen}\n`
-        + `   the ladder (first present wins; a present rung that cannot import is NOT skipped):\n`
+        + `   the ladder (first present wins; a present rung that fails is NOT skipped):\n`
         + `${ladder}\n`
-        + `   ${install ?? 'activate a venv carrying it, or set SEEDLING_PYTHON'}`);
+        + `   ${fix}`);
+    const missing = requires.find((m) => !probe(chosen, m, { cwd: repo }));
+    if (missing !== undefined) {
+        throw refuse(`can \`import ${missing}\``, install ?? 'activate a venv carrying it, or set SEEDLING_PYTHON');
+    }
+    for (const { dist, file } of pins) {
+        const path = resolve(repo, file);
+        const reinstall = `\`${chosen} -m pip install -r ${path}\``;
+        let lines;
+        try { lines = requirementLines(readFileSync(path, 'utf8')); } catch (e) {
+            throw refuse(`carries the ${dist} pinned in ${path}`,
+                `the pin file cannot be read (${e.code ?? e.message}) — nothing was compared`);
+        }
+        const pin = pinnedVersion(lines, dist);
+        if (pin === null) {
+            throw refuse(`carries the ${dist} pinned in ${path}`,
+                `${path} does not pin \`${dist}==<version>\` — nothing was compared`);
+        }
+        const have = version(chosen, dist, { cwd: repo });
+        if (have !== pin) {
+            throw refuse(`carries ${dist}==${pin} (pinned in ${path})`,
+                `${chosen} has ${dist} ${have === null ? '<no distribution metadata>' : have}, `
+                + `the pin is ${pin}: ${reinstall}`);
+        }
+    }
+    return chosen;
 }
 
 /**

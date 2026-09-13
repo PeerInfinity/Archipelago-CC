@@ -17,7 +17,8 @@ import { pathToFileURL } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { GENERATE_PY_REQUIRES, canImport, pythonLadder, resolvePython } from './repoPython.js';
+import { GENERATE_PY_REQUIRES, canImport, pinnedVersion, pythonLadder, requirementLines, resolvePython,
+    versionOf } from './repoPython.js';
 
 /** A fake tree, optionally with `.venv/bin/python`, and a fake active venv. */
 function fakeTree({ treeVenv = false, activeVenv = false } = {}) {
@@ -106,6 +107,90 @@ describe('resolvePython — the chosen interpreter is ASKED', () => {
         const t = fakeTree();
         expect(() => resolvePython({ requires: ['ok', 'nope'], why: 'w', env: {}, repo: t.repo,
             probe: (_py, m) => m === 'ok' })).toThrow(/`import nope`/);
+    });
+});
+
+/**
+ * ⛓ C1 task 1 — **A PIN IS ASKED TOO** (trap 1354: an import probe cannot see
+ * a version). Each row writes its own requirements file into a fake tree and
+ * injects the interpreter's answer, so no row reads this machine's venv or
+ * the real pin: EQUAL admits; older, newer, no distribution metadata, a file
+ * that does not pin the name, and a file that cannot be read each refuse by
+ * name.
+ */
+describe('resolvePython — pins: the chosen interpreter\'s version must EQUAL the file\'s', () => {
+    const pinned = (text) => {
+        const t = fakeTree({ activeVenv: true });
+        mkdirSync(join(t.repo, 'reqs'));
+        if (text !== null) writeFileSync(join(t.repo, 'reqs', 'r.txt'), text);
+        return t;
+    };
+    const FILE = 'reqs/r.txt';
+    const ask = (t, have) => {
+        try {
+            return resolvePython({ requires: ['pkg'], pins: [{ dist: 'pkg', file: FILE }], why: 'the pin row',
+                env: { VIRTUAL_ENV: t.venv }, repo: t.repo, probe: yes, version: () => have });
+        } catch (e) { return e; }
+    };
+    const REQS = '# a docblock\n\nother==9.0\npkg==1.56.0\n';
+
+    it('equal: the interpreter is chosen', () => {
+        const t = pinned(REQS);
+        expect(ask(t, '1.56.0')).toBe(t.venvPy);
+    });
+
+    for (const [label, have] of [['older', '1.55.0'], ['newer', '1.57.0']]) {
+        it(`${label}: REFUSED, naming the interpreter, both versions, the file and the install line`, () => {
+            const t = pinned(REQS);
+            const e = ask(t, have);
+            expect(e).toBeInstanceOf(Error);
+            const path = join(t.repo, FILE);
+            expect(e.message).toMatch(/^REFUSED: the pin row needs a Python that carries pkg==1\.56\.0/);
+            expect(e.message).toContain(`${t.venvPy} has pkg ${have}, the pin is 1.56.0`);
+            expect(e.message).toContain(`\`${t.venvPy} -m pip install -r ${path}\``);
+        });
+    }
+
+    it('importable but no distribution metadata: REFUSED by name', () => {
+        const e = ask(pinned(REQS), null);
+        expect(e).toBeInstanceOf(Error);
+        expect(e.message).toContain('has pkg <no distribution metadata>, the pin is 1.56.0');
+    });
+
+    it('a file that does not pin the name, or cannot be read: REFUSED — nothing was compared', () => {
+        const unpinned = ask(pinned('other==9.0\npkg>=1.0\n'), '1.56.0');
+        expect(unpinned).toBeInstanceOf(Error);
+        expect(unpinned.message).toMatch(/does not pin `pkg==<version>` — nothing was compared/);
+        const absent = ask(pinned(null), '1.56.0');
+        expect(absent).toBeInstanceOf(Error);
+        expect(absent.message).toMatch(/the pin file cannot be read \(ENOENT\) — nothing was compared/);
+    });
+
+    it('the import is asked FIRST: an interpreter that cannot import is refused for the import, not the pin', () => {
+        const t = pinned(REQS);
+        const seen = [];
+        expect(() => resolvePython({ requires: ['pkg'], pins: [{ dist: 'pkg', file: FILE }], why: 'w',
+            env: { VIRTUAL_ENV: t.venv }, repo: t.repo, probe: () => false,
+            version: () => { seen.push('version'); return '1.56.0'; } })).toThrow(/`import pkg`/);
+        expect(seen).toEqual([]);
+    });
+
+    it('the default versionOf runs the interpreter: its printed version, or null when it exits non-zero', () => {
+        const t = fakeTree();
+        mkdirSync(join(t.root, 'v'));
+        const py = join(t.root, 'v', 'python');
+        writeFileSync(py, '#!/bin/sh\necho "$3-from-$2"\n');
+        chmodSync(py, 0o755);
+        expect(versionOf(py, 'pkg', { cwd: t.repo })).toMatch(/^pkg-from-import importlib\.metadata/);
+        expect(versionOf(t.exe(join(t.root, 'bad'), 1), 'pkg', { cwd: t.repo })).toBe(null);
+    });
+
+    it('the one parse: requirement lines, and the version a name pins', () => {
+        const lines = requirementLines(REQS);
+        expect(lines).toEqual(['other==9.0', 'pkg==1.56.0']);
+        expect(pinnedVersion(lines, 'pkg')).toBe('1.56.0');
+        expect(pinnedVersion(lines, 'pk')).toBe(null);
+        expect(pinnedVersion(['pkg>=1'], 'pkg')).toBe(null);
     });
 });
 

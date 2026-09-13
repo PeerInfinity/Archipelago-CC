@@ -9,14 +9,22 @@
  *   3. an interpreter that cannot import Playwright is a refusal that names the
  *      requirements file (the ladder itself: `repoPython.test.js`).
  */
-import { existsSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
 import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { HEADLESS_REQUIREMENTS, driverChannel, headlessPython } from './seedlingDriver.js';
+
+/** A fake tree carrying `HEADLESS_REQUIREMENTS` with `playwright==<version>`. */
+function pinRepo(version) {
+    const repo = mkdtempSync(join(tmpdir(), 'driver-pin-'));
+    mkdirSync(dirname(join(repo, HEADLESS_REQUIREMENTS)), { recursive: true });
+    writeFileSync(join(repo, HEADLESS_REQUIREMENTS), `# fake\nplaywright==${version}\n`);
+    return { repo };
+}
 
 describe('driverChannel — the headless channel', () => {
     it('stages in a temp dir and spells the driver path, not a Windows one', () => {
@@ -56,6 +64,21 @@ describe('driverChannel — the headless channel', () => {
             .toThrow(new RegExp(HEADLESS_REQUIREMENTS.replace(/[.]/g, '\\.')));
         expect(() => headlessPython({ env: {}, repo, probe: () => false }))
             .toThrow(/import playwright/);
-        expect(headlessPython({ env: { SEEDLING_PYTHON: '/p' }, probe: () => true })).toBe('/p');
+        // ⛓ C1: the admitted case now also asks the pin, so it runs on a fake
+        // tree's requirements file with the version injected.
+        expect(headlessPython({ env: { SEEDLING_PYTHON: '/p' }, ...pinRepo('9.9.9'), probe: () => true,
+            version: () => '9.9.9' })).toBe('/p');
+    });
+
+    it('C1: the interpreter must carry EXACTLY the playwright the requirements file pins (a fake tree, never the real pin)', () => {
+        const at = pinRepo('9.9.9');
+        const env = { SEEDLING_PYTHON: '/p' };
+        expect(headlessPython({ env, ...at, probe: () => true, version: () => '9.9.9' })).toBe('/p');
+        const e = (() => {
+            try { return headlessPython({ env, ...at, probe: () => true, version: () => '1.0.0' }); } catch (x) { return x; }
+        })();
+        expect(e).toBeInstanceOf(Error);
+        expect(e.message).toContain(`/p has playwright 1.0.0, the pin is 9.9.9`);
+        expect(e.message).toContain(`/p -m pip install -r ${join(at.repo, HEADLESS_REQUIREMENTS)}`);
     });
 });
