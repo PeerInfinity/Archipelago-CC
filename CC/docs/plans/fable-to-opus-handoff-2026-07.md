@@ -15096,6 +15096,19 @@ slow 12/217.** Session ended by its literal PID. **OWED by the planner:** `--wri
 three green runs carry the arms (announced first); the gitlink ask (put to the user). ⚖ OPEN: the fourth `deserializeWorld` site;
 `check-maze-loop-mana`'s fixture. Arc 2 state: G1/M3/P0/K0/G2a/G2b-1/G2a-fix/cleanup SHIPPED; G2b-2 PARKED (user).
 
+**THE CLEANUP SLICE'S OWED WRITE DONE + PUSHED 2026-09-13 — `44ab135705`** (from `wt-cleanup` at `094b3cf72b`, bank quiet, announced
+to the headless planner first; the tree served on `:8130` for the browser row): `ci-gates.mjs --write-costs --runs=3` priced 69 arms
+from runs at `6dd5e195a3` / `5b2c3f3878` / `e306539a38` — the three new arms **ta-mana-leg 4.4 s · omsi-mana-leg 19.0 s ·
+jta-managed-zone-skip 0.3 s**, no other arm moved >2x; the browser plan re-packs **34 arms / 2 shards** (was 4 with the unpriced
+arms alone), headless **35 / 1**. `standing-values.mjs --write --key=…` SCOPED to six rows: the three NEW gate rows banked
+(**3/0, 13/0, 6/0**), `gate: sidecar-fields` (0/0, 7980 ms), `gate: procgen-reference` (21/0) and `identity:
+generate-procgen-reference.mjs` re-keyed (moved with the regenerated instruments index); bank readers 7 files / 258 green;
+`check-slice-records` + `check-seedling-full-tier-owed` ALL PASS. ⚠ `--keys` at `094b3cf72b` read **41 MOVED** rows — the other
+35 are the seedling arc's (`seedling-editor-*`, `seedling-save-stamp`, `seedling-wasm-*`, `slice-records`, `preset-*`,
+`procgen-docs`, …; the likely mover is F2's `gateTotal.js` printer edit across 37 gate sources), NOT written here and named to
+`seedling-headless-planning-3` (~7 min of box by the bank's own `ms`). Still pending the user: the `shared/` gitlink bump
+`573a3b2 → 2ebeaf8`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
