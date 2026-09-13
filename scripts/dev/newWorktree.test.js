@@ -99,10 +99,54 @@ describe('new-worktree.sh --dry-run', () => {
     expect(local.err).toMatch(/is not a commit/);
   });
 
+  /**
+   * ⛓ WT1 — step 6, the getting-started guide's steps 3 and 4 in the worktree,
+   * so the Generate.py gates run there (plan §19). ⛔ The preset is read back
+   * out of `update_host_settings.py`'s PRESETS, so a renamed preset reds here.
+   */
+  const STEP6 = (dest) => [
+    `+ PY=$(cd ${dest} && node scripts/procgen/repoPython.js --generate)`,
+    `+ (cd ${dest} && $PY -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')")`,
+    `+ (cd ${dest} && $PY Launcher.py --update_settings)`,
+    `+ (cd ${dest} && $PY scripts/setup/update_host_settings.py full-spoilers)`,
+  ];
+
+  it('step 6: the ladder asked, then the three provisioning commands, in order, after npm ci', () => {
+    const r = run(['--dry-run', 'p0-row-probe', 'HEAD']);
+    expect(r.exit).toBe(0);
+    const dest = join(PARENT, `${FAMILY}-wt-p0-row-probe`);
+    const plan = r.out.split('\n').filter((l) => l.startsWith('+ '));
+    const npm = plan.findIndex((l) => /npm ci/.test(l));
+    /* step 6 closes the plan: nothing from steps 1–5 comes after it */
+    expect(plan.slice(npm + 2)).toEqual(STEP6(dest));
+    const presets = readFileSync(join(REPO, 'scripts', 'setup', 'update_host_settings.py'), 'utf8');
+    expect(presets).toMatch(/^PRESETS = \{[\s\S]*^ {4}'full-spoilers': \{/m);
+    /* the tail: serve/test unchanged in shape, and the venv a worktree shares */
+    const primary = dirname(git(['rev-parse', '--path-format=absolute', '--git-common-dir']));
+    expect(r.out).toMatch(/^# serve it: {2}\(cd .* && python -m http\.server \d+\)$/m);
+    expect(r.out).toMatch(/^# test it: {3}\(cd .* && npm test -- --port=\d+ …\)$/m);
+    expect(r.out).toMatch(new RegExp(`^# python: {4}source ${primary}/\\.venv/bin/activate `, 'm'));
+  });
+
+  it('step 6 refused (SEEDLING_PYTHON=/bin/false): the ladder, the by-hand commands, exit 0, the worktree still planned', () => {
+    const r = run(['--dry-run', 'p0-row-probe', 'HEAD'], { ...withWorktreeConfig('true'), SEEDLING_PYTHON: '/bin/false' });
+    expect(r.exit).toBe(0);
+    const dest = join(PARENT, `${FAMILY}-wt-p0-row-probe`);
+    expect(planLine(r.out, /worktree add/)).toHaveLength(1);
+    expect(r.out).toMatch(/^REFUSED: repoPython\.js --generate: .*`import Utils`.*: \/bin\/false$/m);
+    for (const rung of ['SEEDLING_PYTHON', '$VIRTUAL_ENV/bin/python', '<tree>/.venv/bin/python', 'PATH python3']) {
+      expect(r.out).toContain(rung);
+    }
+    const byHand = r.out.split('\n').filter((l) => l.startsWith(`#   (cd ${dest} && python `)).map((l) => `+ ${l.slice(4)}`);
+    expect(byHand).toEqual(STEP6(dest).slice(1).map((l) => l.replace('$PY', 'python')));
+    expect(r.out).toMatch(/^# serve it:/m);
+  });
+
   it('has a --help, and no removal path anywhere in the script', () => {
     const r = run(['--help']);
     expect(r.exit).toBe(0);
     expect(r.out).toContain('--with-wasm');
+    expect(r.out).toMatch(/^ {2}6\. the getting-started guide's steps 3 and 4/m);
     const src = readFileSync(SCRIPT, 'utf8');
     expect(src).not.toMatch(/\brm\b|worktree remove|rmdir|worktree prune/);
   });

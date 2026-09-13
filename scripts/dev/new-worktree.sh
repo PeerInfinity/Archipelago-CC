@@ -189,12 +189,33 @@ by_hand() {
   for s in "${STEP6[@]}"; do echo "#   $(step6_line "$s" python)"; done
 }
 
+# Step 6 itself: ask TREE for the Python, then run the three there (EXECUTE=1) or only
+# name the answer (a dry run). ⛔ A refusal is NOT a failure: the worktree stays valid
+# for frontend-only work, so the script goes on and exits 0 (like the identity warning).
+step6() {
+  local tree="$1" execute="$2" s
+  if ! PY="$(ask_python "$tree")"; then
+    echo "$PY"
+    by_hand
+    return 0
+  fi
+  echo "# PY=$PY"
+  [ "$execute" = 1 ] || return 0
+  for s in "${STEP6[@]}"; do
+    local -n step_argv="$s"
+    echo "+ $(step6_line "$s" "$PY")"
+    (cd "$tree" && "$PY" "${step_argv[@]}" </dev/null) \
+      || refuse "step 6 failed at: $(step6_line "$s" "$PY") — the worktree exists at $DEST; finish that step and the ones after it by hand"
+    unset -n step_argv
+  done
+}
+
 if [ "$DRY_RUN" = 1 ]; then
   echo "# new-worktree --dry-run: nothing is changed"
   for step in "${PLAN[@]}"; do echo "+ $step"; done
   # The new tree does not exist in a dry run, so step 6's ladder is asked of THIS tree.
   echo "# step 6's Python, asked of $REPO (the real run asks the new tree):"
-  if PY="$(ask_python "$REPO")"; then echo "#   $PY"; else echo "$PY"; by_hand; fi
+  step6 "$REPO" 0
 else
   run() { echo "+ $*"; "$@"; }
   run git -C "$REPO" worktree add -b "$NAME" "$DEST" "$BASE"
@@ -210,19 +231,7 @@ else
   run npm ci --prefix "$DEST"
   run git -C "$DEST" config --worktree core.hooksPath "$HOOKS_PATH"
   echo "+ PY=\$(cd $DEST && node $REPO_PYTHON --generate)"
-  if PY="$(ask_python "$DEST")"; then
-    echo "# PY=$PY"
-    for s in "${STEP6[@]}"; do
-      declare -n step_argv="$s"
-      echo "+ $(step6_line "$s" "$PY")"
-      (cd "$DEST" && "$PY" "${step_argv[@]}" </dev/null) \
-        || refuse "step 6 failed at: $(step6_line "$s" "$PY") — the worktree exists at $DEST; finish the step and the ones after it by hand"
-      unset -n step_argv
-    done
-  else
-    echo "$PY"
-    by_hand
-  fi
+  step6 "$DEST" 1
 fi
 [ "${#SKIPPED[@]}" -eq 0 ] || echo "# skipped (pass --with-wasm to include): ${SKIPPED[*]}"
 [ -n "$USER_NAME" ] && [ -n "$USER_EMAIL" ] \
