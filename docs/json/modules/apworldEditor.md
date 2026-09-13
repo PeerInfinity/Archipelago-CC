@@ -1423,9 +1423,10 @@ over every placed committed entry, and it must move 0 bytes of `exits`: the
 round trip is byte-stable for every substrate. The one entry with no `exits` key
 (`jta_mixed_test`'s `JtaZone1`) keeps having none (`NO_EXITS_KEY_KEPT_ABSENT`),
 because the pass-through serializers would add `exits: []`. A WHOLE-payload
-re-serialize would move bytes on every maze and text-adventure region (their
-`locationName`s come from `extracted_rules`), which is why only `exits` is
-written.
+re-serialize would move bytes on every maze region (their `locationName`s come
+from `extracted_rules`), which is why only `exits` is written. (A text-adventure
+region was the same until PRESET SIDECARS G2a; its room payload now carries its
+AP names itself, `locations[].name`, and round-trips byte-identically.)
 
 In-app rows: `apworld-map-move-to-an-empty-cell-records-one-op`,
 `apworld-map-move-onto-a-region-swaps-the-two`,

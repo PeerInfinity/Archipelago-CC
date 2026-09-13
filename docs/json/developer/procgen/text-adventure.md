@@ -1,6 +1,6 @@
 # Text Adventure Substrate
 
-The text-adventure substrate (id `text_adventure`) renders a procgen region as prose: a textual description with compass-labelled clickable exits and clickable locations. Under the hood it is a *tile-grid world wearing a text skin* — its build-time hooks reuse the shared tile-grid adapter primitives verbatim, so its sidecar shape is identical to the maze's; only the panel differs.
+The text-adventure substrate (id `text_adventure`) renders a procgen region as prose: a textual description with compass-labelled clickable exits and clickable locations. Under the hood a region is a *room*, not a tile grid: its exits stand on their compass sides, and its locations and gates are the document's own rules — no tiles, no entrance, no rng draw. Since PRESET SIDECARS G2a (2026-09-13) it has its own build-time hooks and its own sidecar payload; until then it reused the maze's hooks and serializer, and every text-adventure region grew a maze that nothing at play read.
 
 One module implements it: **`textAdventureSubstrateWrapper`**, an iframe-hosted engine with a host↔iframe bridge.
 
@@ -29,12 +29,20 @@ The wrapper mounts the engine in a same-origin iframe and owns everything Archip
 - **`mana.js`** wires loop-mode mana display into the engine's header (and out-of-loop-mode deduction; loop-mode live play is charged host-side by loops).
 - Module settings: scrollback limit, input auto-focus, and a custom-data URL override (empty = auto-detect by game name).
 
+## The room and its payload
+
+`textAdventureSubstrateWrapper/textAdventureRoom.js` is what a text-adventure region is at build time. `generateRegionCore` makes one exit record per requested exit on its requested side (a side-less exit — a teleporter — takes the still-free sides clockwise, then cycles), and no location; `placeFromRules` records each exit's and location's AUTHORED rule on it (`True_` as absent); `placeFromItems` (the spiral's placer) turns each item into a location holding it and places no obstacle, because a key/door pair has no geometry to stand between in a room; `extractPathsAndObstacles` hands the rules back verbatim, with `True_` written explicitly (the compiler turns an absent rule with no paths into `False_`).
+
+The payload is `{exits, exitGates, locations}` plus the engine's `fogEnabled` (and `manaEnabled` in loop mode). `exits` is the envelope's sided exit list; `exitGates` maps each GATED exit's `exit_id` to its rule, a sibling of `exits` because a substrate may not add a field to the envelope's exit record; `locations` is `{name, item?, access_rule?}` with the AP location name baked in at serialize. `deserializeWorld` returns `{exits: Map, locations}` (a clone; a payload written before G2a deserializes to its exits and no locations, without throwing), and a rebuild re-emits the document's rules from it. The entry declares all of this — its own `sidecarFields`, `apLocationNamesOf` over `locations[].name`, and `exitSides` with an empty `keys` list: the side is where an exit is listed and nothing else in the payload is keyed by one.
+
+Two consumers read the room. The bridge re-applies each exit's side (from the deserialized world's exit Map, sent on `textAdventure:loadRegion`) to the rooms it builds from `staticData`, which carry no side; that is what makes the engine draw its 3×3 compass grid for a procgen world — in-app row `tasw-compass-grid-renders-procgen-sides`. The composite-map painter (`textAdventureCompositeMap.js`) paints the room with no payload key of its own: exits on their sides, the location count and names, and a gate drawn closed when its authored rule does not hold on an empty inventory.
+
 ## Registry entry
 
-Both modules' entries share the same shape (`textAdventure:loadRegion`, tile-grid `deserializeWorld`, full procedural build-time hooks from `adapterPrimitives.js`). Loop support: `regionMove`/`locationCheck`/`explore` queue actions, manual play, and `record`/`playback`/`instant`, but **no custom queues** — a deliberate decision, since the engine's actions are exactly the basic loop-queue actions, so a recorded queue would duplicate what the loops queue already expresses. Full contract: [Substrate Registry Reference](./substrate-registry.md).
+The entry declares `textAdventure:loadRegion`, `regionGeometry: 'sides'`, the room's hooks and serializer pair above, its payload declarations, and the composite-map painter. Loop support: `regionMove`/`locationCheck`/`explore` queue actions, manual play, and `record`/`playback`/`instant`, but **no custom queues** — a deliberate decision, since the engine's actions are exactly the basic loop-queue actions, so a recorded queue would duplicate what the loops queue already expresses. Full contract: [Substrate Registry Reference](./substrate-registry.md).
 
 That same reasoning extends to recording: the text adventure is the reference **coarse-only** substrate under the [loop-recording capture contract](./loop-recording.md#the-capture-contract-coarse-only-vs-fine-grained-vs-summary-substrates) — every action it has is queue-grade, so a recorded visit carries no information the block's own queue interior doesn't. The M3b refactor (2026-07-22) therefore removed the M2-era wrapper recorder (`recorder.js`, the `textAdventure:commandRecorded` side-channel, and the replay half of `playbackBridge.js`/`playbackProxy.js`): loops owns coarse capture during parked Record blocks and runs Playback interiors through its generic executor host-side ([`CC/docs/plans/loops-coarse-capture-plan.md`](../../../../CC/docs/plans/loops-coarse-capture-plan.md)). The `walkTo`/bot half of `playbackBridge.js` and `playbackProxy.js` remains — the playback bot rides it independently of recordings.
 
 ## Related documentation
 
-- [Architecture](./architecture.md) · [Substrate Registry Reference](./substrate-registry.md) · [Maze Substrate](./maze.md) (the tile-grid semantics this substrate reuses)
+- [Architecture](./architecture.md) · [Substrate Registry Reference](./substrate-registry.md) · [Maze Substrate](./maze.md) (the tile-grid substrate this one used to reuse)

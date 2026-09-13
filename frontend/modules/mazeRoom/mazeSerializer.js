@@ -43,9 +43,11 @@ const ATLAS_PROJECTION = '`projectRegionToMaze` (`procgenPipeline/regionAtlasMaz
 /**
  * ⛓⛓ PRESET SIDECARS D0 — **THE TILE-GRID PAYLOAD, DECLARED BESIDE ITS
  * SERIALIZER** (the registry's `sidecarFields` slot; vocabulary in
- * `procgenCore/sidecarFields.js`). Both `maze` and `text_adventure` register
- * `serializeMazeWorld` (through `adapterPrimitives.tileGridSerializer`), so
- * both entries carry THIS object — one payload shape, one declaration.
+ * `procgenCore/sidecarFields.js`). `maze` registers `serializeMazeWorld`
+ * (through `adapterPrimitives.tileGridSerializer`) and carries THIS object.
+ * ⛓ G2a: `text_adventure` registered it too until PRESET SIDECARS G2a, which
+ * gave it its own room serializer and declaration
+ * (`textAdventureSubstrateWrapper/textAdventureRoom.js`).
  *
  * `required` is read off the committed corpus: a key absent from any entry of
  * either substrate is optional, and its description names the producer that
