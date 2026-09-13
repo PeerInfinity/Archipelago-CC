@@ -14710,6 +14710,24 @@ verified, merged). Why: seven idle claude processes held ~3 GB and the harness's
 CI waits. **CI at K0's merged head `6df6120f36`** (run 34732394486): **461/13970 (13962 | 8 | 0)** — identical to the
 branch row; main carried no test change between.
 
+**THE OWED WRITE — AUTHORIZED, STARTED, STOPPED 2026-09-13** (user: *"Yes, I authorize the write, if it doesn't
+interfere with what the other session are doing."*). Run from the planner's worktree at `677e7781f6` (`--host=:8123`,
+`--wait-for-box`, queued behind S1's ship run; `gate: seedling-wasm-ship` confirmed UNKEYED/CI-sourced beforehand — b6's
+hard condition — by killing a first queued writer and re-reading `--keys`). Took the box 07:46Z; 56 rows ok in ~10 min;
+then reached **`gate: seedling-bot-differential` — a NEW row the writer DERIVED, no banked command, default arm = the
+full differential with no tier flag** — and ran the tier for 80 min (63/150 tapes) while G2a's fast batch waited
+(its first taker gave up at 3600 s). The planner stopped writer + child by PID at 09:19Z; NOTHING was banked (the
+writer writes at the end; `measuredAt` at this head = 0). Nine other NEW rows had exited non-zero: `jta-balance-pass`
+EXIT2 (usage: a mandatory argument), `maze-consumable-tiles` / `maze-loop-mana` EXIT1 (inputs = the two UNTRACKED
+preset fixture dirs, absent in a worktree and outside the frozen tree state by design), six roundtrip gates EXIT1
+with a green total (undiagnosed). **⚖ RULED by b6 → F1 task 0** (before F1 commits anything): (a) `--write` never
+creates a NEW row for a gate whose default arm is unbounded (cheap or priced under a budget only; else a printed
+refusal naming the gate); (b) the differential declares its standing value is the composite `roster: --tier=full`, so
+no `gate:` row is derived for it; the planner asked for one more clause — a NEW row only for an argument-free,
+bounded, tracked-inputs default arm. **The write is HELD until F1's commit lands**, then re-run announced first
+(b6: "your remaining rows are safe to re-run"). Trap **1348** minted (Ledger/claim family): a budget priced from the
+bank is blind to the NEW rows the roster derives — the "~21 min" was true of the bank and false of the run.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
