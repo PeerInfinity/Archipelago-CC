@@ -52,6 +52,18 @@
  *
  * Run:
  *   node scripts/procgen/check-seedling-rerecord-rehearsal.mjs
+ *
+ * ⛓ ITS CODE POPULATION KEYS ON BYTES, NOT TOKENS (key-strip K0). The spawned
+ * `rerecord-seedling-campaign.mjs` imports `reference/instruments.mjs`, a
+ * DOCBLOCK READER; a rehearsal overrides it with the marker's own rows, so this
+ * verdict should not read a real docblock — but that override is invisible to
+ * `rowInputKey.test.js`'s docblock-reader census, and the row is cheap. It
+ * declares the spawned producer as a CODE seed — its closure is already in the
+ * SPAWN population, so nothing new is keyed — which puts the reader in a
+ * declared population digested as bytes, rather than carry an exception the
+ * census cannot check.
+ *
+ * @key-inputs code: scripts/procgen/rerecord-seedling-campaign.mjs
  */
 
 import { execFileSync } from 'node:child_process';
