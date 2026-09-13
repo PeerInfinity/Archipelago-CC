@@ -36,6 +36,11 @@
             "category": "textAdventureSubstrateWrapper"
         },
         {
+            "id": "tasw-gate-holds-in-play",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
             "id": "tasw-playback-no-double-append",
             "enabled": true,
             "category": "TA block modes"

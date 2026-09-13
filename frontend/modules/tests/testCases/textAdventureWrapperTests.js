@@ -916,3 +916,243 @@ registerTest({
     category: 'textAdventureSubstrateWrapper',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
+
+/**
+ * ⛓⛓ PRESET SIDECARS G2b-1 — **A DOCUMENT'S GATE HOLDS AT PLAY.**
+ *
+ * The ten rows above generate the shuffled SPIRAL, whose text-adventure rooms
+ * are ungated (`True_` everywhere — a room places no obstacle), so none of them
+ * can see a gate. This row loads the committed gated top-down fixture
+ * (`procgen_topdown/AP_11`) and asserts, with every name READ OFF THE DOCUMENT:
+ *   1. in the first text-adventure room reached from the start region, every
+ *      gated exit link is `tae-link-inaccessible` and a click on each does NOT
+ *      move the player (the negative is held for `GATE_SETTLE_MS`, and that
+ *      budget is then compared with the measured latency of a real move);
+ *   2. granting the items the first gated `Has` exit names makes it
+ *      accessible, and a click moves the player to its target;
+ *   3. back in that room, a gated location is inaccessible and a click checks
+ *      nothing, until every item its rule names is granted — then a click
+ *      checks it.
+ * ⚠ It proves the DOCUMENT's rule holds at play; the payload's gates equal the
+ * document's by the corpus control (`check-sidecar-fields`' rule-agreement
+ * layer), not by this row.
+ */
+const GATED_TA_PRESET_PATH = './presets/procgen_topdown/AP_11/AP_11_rules.json';
+/**
+ * ⛓ How long a click on an inaccessible link is watched for a move that must
+ * not happen. ⛔ A margin is MEASURED: the row times the real move of step 2
+ * and reports the ratio, so a budget shorter than the app's own move latency
+ * reds instead of passing vacuously.
+ */
+const GATE_SETTLE_MS = 2000;
+const GATE_SETTLE_MIN_RATIO = 4;
+
+/** The item names a `Has` / `HasAll` rule requires, read off the rule; null for any other shape. */
+function itemsOfRule(rule) {
+    if (rule?.rule === 'Has' && typeof rule.args?.item_name === 'string') return [rule.args.item_name];
+    if (rule?.rule === 'HasAll' && Array.isArray(rule.args?.item_names)) return [...rule.args.item_names];
+    return null;
+}
+
+async function gateHoldsInPlay(testController) {
+    const doc = await (await fetch(GATED_TA_PRESET_PATH)).json();
+    const slot = '1';
+    const regions = doc.regions[slot];
+    const sidecars = doc.preset_sidecars?.[slot] ?? {};
+    const isRoom = (name) => sidecars[name]?.substrate === 'text_adventure';
+    const gated = (r) => !!r && r.rule !== 'True_';
+
+    const { getGameStateSingleton } = await import('../../gameState/singleton.js');
+    const gs = getGameStateSingleton();
+    if (gs?.isLoopModeActive) gs.setLoopModeActive(false);
+
+    const rulesLoaded = testController.waitForEvent('stateManager:rulesLoaded', 10000);
+    testController.eventBus.publish('files:jsonLoaded', {
+        jsonData: doc, selectedPlayerId: slot, sourceName: 'tasw-gate-holds-in-play',
+    });
+    await rulesLoaded;
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+    // ⛔ IDENTITY, not existence (trap 1302): the app may be loading its own default.
+    const docRegions = JSON.stringify(Object.keys(regions).sort());
+    const loaded = await testController.pollForCondition(() => {
+        const sd = testController.stateManager.getStaticData?.();
+        return testController.stateManager.getGameName?.() === doc.game_name
+            && !!sd?.regions && JSON.stringify([...sd.regions.keys()].sort()) === docRegions;
+    }, `the loaded document is ${GATED_TA_PRESET_PATH} (game + region set)`, 10000, 100);
+    testController.reportCondition(`the loaded document is ${GATED_TA_PRESET_PATH} (game "${doc.game_name}", `
+        + `${Object.keys(regions).length} regions)`, !!loaded);
+    if (!loaded) return testController.getOverallResult();
+
+    // ⛓ The room: the first text-adventure region an UNGATED exit of a start region reaches,
+    //   holding a gated exit and a gated location.
+    const starts = doc.start_regions?.[slot]?.default ?? doc.start_regions?.[slot] ?? [];
+    let start = null;
+    let entry = null;
+    for (const s of [...(Array.isArray(starts) ? starts : []), ...Object.keys(regions)]) {
+        const e = (regions[s]?.exits ?? []).find((x) => !gated(x.access_rule) && isRoom(x.connected_region)
+            && (regions[x.connected_region].exits ?? []).some((y) => itemsOfRule(y.access_rule)?.length)
+            && (regions[x.connected_region].locations ?? []).some((l) => itemsOfRule(l.access_rule)?.length));
+        if (e) { start = s; entry = e; break; }
+    }
+    testController.reportCondition('⛓ premise: the document has a gated text-adventure room behind an open exit',
+        !!entry);
+    if (!entry) return testController.getOverallResult();
+    const room = entry.connected_region;
+    const roomExits = regions[room].exits;
+    const gatedExits = roomExits.filter((x) => gated(x.access_rule));
+    const opener = gatedExits.find((x) => itemsOfRule(x.access_rule)?.length);
+    const gatedLocation = regions[room].locations.find((l) => itemsOfRule(l.access_rule)?.length);
+    const held = () => {
+        const inv = testController.stateManager.getSnapshot()?.inventory ?? {};
+        return (name) => (inv[name] ?? 0) > 0;
+    };
+    const needed = [...new Set([...itemsOfRule(opener.access_rule), ...itemsOfRule(gatedLocation.access_rule)])];
+    testController.reportCondition(`⛓ premise: none of the gate items is held at load (${needed.join(', ')})`,
+        needed.every((n) => !held()(n)));
+    testController.log(`start ${start} --${entry.name}--> ${room}; gated exits ${gatedExits.map((x) => x.name)}; `
+        + `opener ${opener.name} → ${opener.connected_region}; gated location "${gatedLocation.name}"`);
+
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'textAdventureSubstrateWrapperPanel' });
+    const iframeDoc = () => document.querySelector('iframe.tasw-iframe')?.contentDocument ?? null;
+    const click = (el) => el.dispatchEvent(new el.ownerDocument.defaultView.MouseEvent('click',
+        { bubbles: true, cancelable: true }));
+    const linkFor = (attr, id) => [...(iframeDoc()?.querySelectorAll(`[${attr}]`) ?? [])]
+        .find((l) => l.getAttribute(attr) === id) ?? null;
+    const exploreUntil = async (done) => {
+        for (let i = 0; i < 20 && !done(); i++) {
+            const explore = iframeDoc()?.querySelector('[data-action="explore"]');
+            if (!explore) break;
+            click(explore);
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise((r) => setTimeout(r, 200));
+        }
+        return done();
+    };
+    /** Hold a NEGATIVE: the region must still be `region` at every poll for `GATE_SETTLE_MS`. */
+    const staysIn = async (region) => {
+        const until = Date.now() + GATE_SETTLE_MS;
+        while (Date.now() < until) {
+            if (gs.getCurrentRegion() !== region) return false;
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise((r) => setTimeout(r, 100));
+        }
+        return gs.getCurrentRegion() === region;
+    };
+
+    // ⛓ Into the room. MEASURED (G2b-1): on load the app itself moves the player
+    //   through the start region's lone open exit, so the wrapper may already be
+    //   in the room; when it is still at the start, the exit is clicked as a player would.
+    const mounted = await testController.pollForCondition(
+        () => [start, room].includes(gs.getCurrentRegion()) && iframeDoc()?.querySelector('.tae-actions') !== null,
+        `the wrapper rendered ${start} or ${room}`, 15000, 300);
+    testController.reportCondition(`the wrapper rendered ${start} or ${room}`, !!mounted);
+    if (!mounted) {
+        testController.log(`current region ${JSON.stringify(gs.getCurrentRegion())}; iframe `
+            + `${document.querySelector('iframe.tasw-iframe') ? 'present' : 'absent'}`, 'error');
+        return testController.getOverallResult();
+    }
+    if (gs.getCurrentRegion() === start) {
+        const atStart = await exploreUntil(() => !!linkFor('data-exit-id', entry.name));
+        testController.reportCondition(`the wrapper rendered ${start}'s exit ${entry.name}`, !!atStart);
+        if (!atStart) return testController.getOverallResult();
+        click(linkFor('data-exit-id', entry.name));
+    } else {
+        testController.log(`the app entered ${room} from ${start} on load (${entry.name} is open)`);
+    }
+    const inRoom = await testController.pollForCondition(() => gs.getCurrentRegion() === room,
+        `the player is in ${room}`, 8000, 100);
+    testController.reportCondition(`the player is in ${room}`, !!inRoom);
+    if (!inRoom) return testController.getOverallResult();
+
+    const allRendered = () => roomExits.every((x) => !!linkFor('data-exit-id', x.name))
+        && !!linkFor('data-item-id', gatedLocation.name);
+    testController.reportCondition(`every exit of ${room} and "${gatedLocation.name}" rendered as a link`,
+        await exploreUntil(allRendered));
+
+    // (1) every gated exit: inaccessible, and a click does not move.
+    for (const x of gatedExits) {
+        const link = linkFor('data-exit-id', x.name);
+        testController.reportCondition(`${room}: gated exit ${x.name} is tae-link-inaccessible`,
+            !!link && link.classList.contains('tae-link-inaccessible'));
+        if (link) click(link);
+        testController.reportCondition(`${room}: a click on gated ${x.name} leaves the player in ${room} `
+            + `for ${GATE_SETTLE_MS} ms`, await staysIn(room));
+    }
+
+    // (2) grant the opener's items → accessible → a click moves.
+    for (const n of itemsOfRule(opener.access_rule)) {
+        // eslint-disable-next-line no-await-in-loop
+        await testController.stateManager.addItemToInventory(n, 1);
+    }
+    await testController.stateManager.pingWorker('after-opener-items', 3000);
+    const opened = await testController.pollForCondition(
+        () => linkFor('data-exit-id', opener.name)?.classList.contains('tae-link-accessible'),
+        `${opener.name} becomes accessible once ${itemsOfRule(opener.access_rule).join(', ')} is held`, 8000, 100);
+    testController.reportCondition(`${opener.name} becomes tae-link-accessible once `
+        + `${itemsOfRule(opener.access_rule).join(', ')} is held`, !!opened);
+    if (!opened) return testController.getOverallResult();
+    const t0 = Date.now();
+    click(linkFor('data-exit-id', opener.name));
+    const moved = await testController.pollForCondition(() => gs.getCurrentRegion() === opener.connected_region,
+        `the click on ${opener.name} moved the player to ${opener.connected_region}`, 8000, 50);
+    const moveMs = Date.now() - t0;
+    testController.reportCondition(`the click on ${opener.name} moved the player to ${opener.connected_region}`,
+        !!moved);
+    testController.reportCondition(`⛓ the negative settle (${GATE_SETTLE_MS} ms) is ≥ ${GATE_SETTLE_MIN_RATIO}× `
+        + `the measured move latency (${moveMs} ms)`, !!moved && GATE_SETTLE_MS >= GATE_SETTLE_MIN_RATIO * moveMs);
+    if (!moved) return testController.getOverallResult();
+
+    // (3) back in the room: the gated location refuses, until its items are held.
+    window.eventDispatcher?.publish('test', 'user:regionMove', {
+        sourceRegion: opener.connected_region, targetRegion: room, exitName: null,
+    }, { initialTarget: 'bottom' });
+    const back = await testController.pollForCondition(() => gs.getCurrentRegion() === room
+        && !!linkFor('data-item-id', gatedLocation.name), `back in ${room} with "${gatedLocation.name}" rendered`,
+    8000, 100) || await exploreUntil(() => gs.getCurrentRegion() === room && !!linkFor('data-item-id', gatedLocation.name));
+    testController.reportCondition(`back in ${room} with "${gatedLocation.name}" rendered`, !!back);
+    if (!back) return testController.getOverallResult();
+    const checked = () => {
+        const set = testController.stateManager.getSnapshot()?.checkedLocations;
+        return set instanceof Set ? set.has(gatedLocation.name) : (Array.isArray(set) && set.includes(gatedLocation.name));
+    };
+    const locItems = itemsOfRule(gatedLocation.access_rule);
+    const missing = locItems.filter((n) => !held()(n));
+    testController.reportCondition(`⛓ premise: "${gatedLocation.name}" still lacks ${missing.join(', ')}`,
+        missing.length > 0);
+    const locLink = linkFor('data-item-id', gatedLocation.name);
+    testController.reportCondition(`"${gatedLocation.name}" is tae-link-inaccessible without ${missing.join(', ')}`,
+        !!locLink && locLink.classList.contains('tae-link-inaccessible'));
+    if (locLink) click(locLink);
+    await new Promise((r) => setTimeout(r, GATE_SETTLE_MS));
+    await testController.stateManager.pingWorker('after-blocked-check', 3000);
+    testController.reportCondition(`a click on inaccessible "${gatedLocation.name}" checks nothing for `
+        + `${GATE_SETTLE_MS} ms`, !checked());
+    for (const n of missing) {
+        // eslint-disable-next-line no-await-in-loop
+        await testController.stateManager.addItemToInventory(n, 1);
+    }
+    await testController.stateManager.pingWorker('after-location-items', 3000);
+    const locOpen = await testController.pollForCondition(
+        () => linkFor('data-item-id', gatedLocation.name)?.classList.contains('tae-link-accessible'),
+        `"${gatedLocation.name}" becomes accessible once ${locItems.join(', ')} are held`, 8000, 100);
+    testController.reportCondition(`"${gatedLocation.name}" becomes tae-link-accessible once `
+        + `${locItems.join(', ')} are held`, !!locOpen);
+    if (!locOpen) return testController.getOverallResult();
+    click(linkFor('data-item-id', gatedLocation.name));
+    const didCheck = await testController.pollForCondition(checked,
+        `the click checks "${gatedLocation.name}"`, 8000, 100);
+    testController.reportCondition(`the click checks "${gatedLocation.name}"`, !!didCheck);
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'tasw-gate-holds-in-play',
+    name: 'Wrapper: a committed document\'s exit and location gates hold at play in a text-adventure room',
+    description: 'Loads procgen_topdown/AP_11 (identity wait), enters its gated text-adventure room by a click, '
+               + 'asserts every gated exit is inaccessible and a click does not move, grants the items the '
+               + 'first gated exit names and asserts it opens and moves, then asserts a gated location '
+               + 'refuses until its items are held. Every name is read off the document (G2b-1).',
+    testFunction: gateHoldsInPlay,
+    category: 'textAdventureSubstrateWrapper',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
