@@ -14628,6 +14628,22 @@ pushed three docs commits while R3 ran — all GO (R3's work lives on `pins-r3`;
 quoted bump SHA stays reachable). **⛓ THE PINS ARE ON `bdf734c46` IN THE SUBMODULE. NEXT = the user's word: (b) land
 `pins-r3` on `main` by a merge commit (the wasm gitlink — ask-first); then (c) W3 re-cut from `7ae2d5a` + the force-push.**
 
+**⚖ USER 2026-09-14: *"Yes, please land it."* — THE PINS LANDED ON `main`: `bf739e9df9`** (a MERGE commit of `pins-r3`
+`8f24e7dfe7` onto `3a55d70e22`, so the bump SHA the tier row quotes stays reachable; the merge moved the gitlink
+`681973f → 7ae2d5a` and the bank only, no conflicts; pushed; primary level; pins gate ALL PASS, owed gate ALL PASS at
+the merged head; `pins-r3` deleted on origin; CI at `bf739e9df9` quoted below when it lands). **W3 RE-CUT (plan §21.3):**
+orphan `shed2` = `8c20769ea288` in `~/CC/seedling-wasm-shed`, cut from `7ae2d5a` (17 commits, 14 files) with
+"## The shed of 2026-09-14" appended to `docs/history.md`; diff-excluding-history EMPTY, md5s differ on that file alone.
+**A fresh SINGLE-BRANCH clone of the orphan: 15 M / size-pack 14.30 MiB / 18 objects, against 52 M / 51.49 MiB today**
+(GitHub size 42,088 KB) — the shed buys ~37 M per clone now, not W3's 23. ⚠ A plain `git clone --branch shed2` of the
+shed clone read 44 M / 126 objects because the stale 2026-09-13 orphan `shed` (never pushed, still local) rode along as
+a second branch — the first reading was discarded and re-made with `--single-branch`. Pages: legacy from `main`,
+unprotected; the force-push triggers one rebuild of a byte-identical tree. **STOP — the user's word owed on (c): the
+force-push** `git -C ~/CC/seedling-wasm-shed push --force-with-lease=main:7ae2d5a9ebdd90432e8570ce298f9430f60ef557 origin
+shed2:main`, then the outer gitlink `7ae2d5a → 8c20769` (the owed gate will red on its SHA compare — the pre-ruled
+"empty tree diff" clause is not implementable as written, §17.1 (2); proposed: re-quote the three row parts at the bump
+with a `--covered-by` naming the byte-identity, since the same bytes were driven).
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
