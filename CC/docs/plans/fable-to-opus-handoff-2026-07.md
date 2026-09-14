@@ -15358,6 +15358,19 @@ so a red K cannot reach main unseen again; the `preset_sidecars` KEY ORDER after
 omsi's label showing the exit id (a fork change + gitlink bump for a display name); R1's unread `{grid, unplacedTargets}` return
 and `truncateSphereWorld`'s untested no-match case; `wt-relayout-r1` / `wt-relayout-r2` removable on the user's word.
 
+**CI at R2's merged head `676e8712da`: run 34795075275, 475/14192 (14184 | 8 | 0), slow 12/217.**
+
+**⚖ REPLAN RULED + C1 LAUNCHED 2026-09-14 — the user, verbatim: *"I agree with your recommendations."*** (plan §9): (1) the pure-Node
+`check-region-step-editing` gate joins the headless CI set (priced first; R1's regression is the reason); (2) the `preset_sidecars`
+KEY ORDER after a region move is fixed at the Grid (the moved region keeps its position; the three digests prove the never-edited
+compile does not move); (3) omsi's action label (`[exit_W]`) LEFT — a fork change + gitlink bump, not wanted now; (4) R1's unread
+`{grid, unplacedTargets}` return and `truncateSphereWorld`'s untested no-match branch folded in; (5) `wt-relayout-r1` / `wt-relayout-r2`
+REMOVED on the word (measured first: 0 dirty, 0 patch-ids off main; `rm -rf` + prune; local branches deleted; the remote branches
+left); (6) after C1 the arc CLOSES — R3 (zones) / R4 (sphere planner) stay parked. **C1 LAUNCHED**: Opus `pipeline-relayout-C1`,
+pid 1226110 (cwd verified), worktree `~/CC/Archipelago-CC-wt-relayout-c1` (`new-worktree.sh`; branch `relayout-c1` from
+`bf739e9df9` — the seedling arc's pins merge over R2; port 8130), kickoff `NewDocs/plans/pipeline-relayout-C1-prompt.md`. Baseline CI
+`676e8712da` 475/14192. As-built → plan §10; ONE merge by the planner.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
