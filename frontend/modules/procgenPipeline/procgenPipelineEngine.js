@@ -32,6 +32,7 @@ import {
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
 import { deserializeOrRefuse } from '../procgenCore/deserializeRefusal.js';
+import { exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
 import { isAtlasSourceId, atlasSourceGame, requirementDnf } from './regionAtlasPool.js';
 
@@ -5326,7 +5327,8 @@ function sideMidpointTile(side, regionSize) {
 // Relabel ONE exit to a new side: update its world-exit side + tile coords, its
 // exits_placed entry (forward exits only), and its extracted_rules position so
 // stitchGrid still matches it. Returns the exit's previous side. Does NOT touch
-// sidePortals (the caller re-keys those) or re-stitch.
+// the payload (the caller runs the substrate's declared `exitSides.relabel`) or
+// re-stitch.
 //
 // ⛓ PRESET SIDECARS G1 — the same law as every other minting site: a
 // SIDES-only region (`carriesExitTiles` false) gets its SIDE and no tile. A tile
@@ -5357,77 +5359,104 @@ function relabelExitSide(region, exitId, newSide, regionSize) {
     return oldSide;
 }
 
-function regionSidePortals(region) {
-    const sp = region?.playable_payload?.params?.sidePortals;
-    if (!sp) {
-        throw new Error('exit-side editing is only supported for zone substrates '
-            + '(the region has no playable_payload.params.sidePortals)');
-    }
-    return sp;
-}
-
-// Grid side → on-screen portal arrow direction (mirrors bounceDemo's
-// SIDE_DIRECTIONS). The arrow is cosmetic, but it should follow the side a
-// portal now serves after an exit-side move/swap.
-const SIDE_TO_DIRECTION = { N: 'up', S: 'down', E: 'right', W: 'left' };
-
-// Point the bounce level portal now serving `side` in the matching direction.
-// No-op for zone substrates without a bounceLevel/portals (e.g. JtA).
-function applyPortalDirection(region, side) {
-    const params = region?.playable_payload?.params;
-    const portalId = params?.sidePortals?.[side];
-    const portals = params?.bounceLevel?.portals;
-    if (!portalId || !Array.isArray(portals)) return;
-    const portal = portals.find((p) => p.id === portalId);
-    if (portal) portal.direction = SIDE_TO_DIRECTION[side];
+/**
+ * ⛓⛓ PIPELINE RELAYOUT R2 — **THE REGION'S `exitSides` DECLARATION, OR WHY THE
+ * PIPELINE CANNOT MOVE ITS EXITS.** The same reader the APWorld editor's ops ask
+ * (`procgenCore/exitSides.js`), resolved through the substrate registry the way
+ * every other per-substrate hook here is — no substrate name. A substrate that
+ * declares nothing (the maze: its exit is a TILE, so a side move is a geometry
+ * edit) or declares it malformed is refused by that absence, in words.
+ *
+ * @returns {{decl: {keys: string[], relabel: Function}, sharing: object} | {refusal: string}}
+ */
+export function regionExitSides(region) {
+    const got = exitSidesOf(substrateRegistry.get(region?.substrate));
+    if (got.decl) return { decl: got.decl, sharing: sideMayHoldAnotherExit(substrateRegistry.get(region.substrate)) };
+    const why = got.malformed ?? 'its registry entry declares no `exitSides`, so the pipeline cannot say what '
+        + 'else in the payload is keyed by side';
+    return {
+        refusal: `region "${region?.region_id}"'s substrate "${region?.substrate}" cannot have an exit moved `
+            + `to another side — ${why}`,
+    };
 }
 
 /**
- * Move one of a region's exits/entrances to an EMPTY side. For zone (bounce)
- * regions the exit's side is just the linking key (sidePortals[side] → the level
- * portal; the portal's geometry is independent), so this is a relabel: move the
- * exit + re-key sidePortals, then relayout (rebuild teleporters + re-stitch).
- * Geometry is untouched. Throws if the target side already has an exit.
+ * ⛓⛓ The declared relabel of a region's payload, as the grid holds it. A grid
+ * region keeps its exits on the WORLD (`region.exits`), not in
+ * `playable_payload.exits`, while a relabel reads the payload's exit records
+ * (the flash-zone family's `backExitSide` follows an exit whose record says
+ * `isBackExit`). So the world's exits are lent to the payload for the call and
+ * taken back after — a payload that carries its own `exits` keeps them. Throws
+ * whatever the relabel throws, BEFORE anything is written.
+ */
+function relabelRegionPayload(region, decl, moves) {
+    const payload = region.playable_payload ?? {};
+    const lent = !Object.hasOwn(payload, 'exits');
+    const exits = getRegionExits(region);
+    const list = exits instanceof Map ? [...exits.values()] : (exits ?? []);
+    const input = lent ? { ...payload, exits: list.map((e) => ({ ...e })) } : payload;
+    const next = decl.relabel(input, moves);
+    if (!next || typeof next !== 'object' || Array.isArray(next)) {
+        throw new Error(`region "${region.region_id}"'s substrate "${region.substrate}" answered the side `
+            + `relabel with ${JSON.stringify(next)}, not a payload`);
+    }
+    if (lent) delete next.exits;
+    return next;
+}
+
+/**
+ * Move one of a region's exits/entrances to another side — a RELABEL: the exit
+ * (world exit, `exits_placed`, `extracted_rules`) plus whatever the substrate's
+ * `exitSides` declaration says its payload keys by side (⛓ PIPELINE RELAYOUT R2:
+ * the flash-zone family renames `params.sidePortals` IN PLACE, moves
+ * `backExitSide` with a back exit, and bounce re-points the portal arrow; the
+ * text adventure keys nothing), then relayout. Geometry is untouched.
+ *
+ * Throws, before writing: a region whose substrate declares no `exitSides`
+ * (`regionExitSides`' refusal); a target side that already carries an exit
+ * when the declaration keys a payload fact by side (`sideMayHoldAnotherExit`
+ * — "side … already has an exit"); a relabel that throws.
  */
 export function moveSphereExitSide(grid, regionCell, exitId, newSide, regionSize) {
     const region = grid.getRegion(regionCell);
     if (!region) throw new Error('moveSphereExitSide: no region at cell');
-    const sidePortals = regionSidePortals(region);
+    const sides = regionExitSides(region);
+    if (sides.refusal) throw new Error(`moveSphereExitSide: ${sides.refusal}`);
     const exits = getRegionExits(region);
     const list = exits instanceof Map ? [...exits.values()] : (exits ?? []);
-    if (list.some((e) => e.exit_id !== exitId && e.side === newSide)) {
+    const moving = list.find((e) => e.exit_id === exitId);
+    if (!moving) throw new Error('moveSphereExitSide: exit not found');
+    if (!sides.sharing.may && list.some((e) => e.exit_id !== exitId && e.side === newSide)) {
         throw new Error(`moveSphereExitSide: side ${newSide} already has an exit`);
     }
-    const oldSide = relabelExitSide(region, exitId, newSide, regionSize);
-    if (oldSide && sidePortals[oldSide] !== undefined) {
-        sidePortals[newSide] = sidePortals[oldSide];
-        delete sidePortals[oldSide];
-    }
-    applyPortalDirection(region, newSide);
+    const from = moving.side ?? null;
+    const payload = relabelRegionPayload(region, sides.decl, [{ exitId, from, to: newSide }]);
+    relabelExitSide(region, exitId, newSide, regionSize);
+    if (region.playable_payload !== undefined) region.playable_payload = payload;
     return relayoutSphereGrid(grid);
 }
 
 /**
- * Swap the sides of two exits/entrances within one region (relabel both +
- * swap their sidePortals), then relayout. Geometry untouched.
+ * Swap the sides of two exits/entrances within one region — ONE simultaneous
+ * declared relabel (never two moves in a row), then relayout. Geometry
+ * untouched. Refused, before writing, as `moveSphereExitSide` is.
  */
 export function swapSphereExitSides(grid, regionCell, exitIdA, exitIdB, regionSize) {
     const region = grid.getRegion(regionCell);
     if (!region) throw new Error('swapSphereExitSides: no region at cell');
-    const sidePortals = regionSidePortals(region);
+    const sides = regionExitSides(region);
+    if (sides.refusal) throw new Error(`swapSphereExitSides: ${sides.refusal}`);
     const exits = getRegionExits(region);
     const get = (id) => (exits instanceof Map ? exits.get(id)
         : (exits ?? []).find((e) => e.exit_id === id));
     const sideA = get(exitIdA)?.side;
     const sideB = get(exitIdB)?.side;
     if (!sideA || !sideB) throw new Error('swapSphereExitSides: exit not found');
+    const payload = relabelRegionPayload(region, sides.decl,
+        [{ exitId: exitIdA, from: sideA, to: sideB }, { exitId: exitIdB, from: sideB, to: sideA }]);
     relabelExitSide(region, exitIdA, sideB, regionSize);
     relabelExitSide(region, exitIdB, sideA, regionSize);
-    const t = sidePortals[sideA];
-    sidePortals[sideA] = sidePortals[sideB];
-    sidePortals[sideB] = t;
-    applyPortalDirection(region, sideA);
-    applyPortalDirection(region, sideB);
+    if (region.playable_payload !== undefined) region.playable_payload = payload;
     return relayoutSphereGrid(grid);
 }
 

@@ -331,7 +331,7 @@ describe('topDownSteps — recorded layout edits', () => {
         expect(gridSha(round.finalize.grid)).toBe(gridSha(env.finalize.grid));
     });
 
-    it('an exit-side op on a maze region refuses BY NAME (zone substrates only)', async () => {
+    it('an exit-side op on a maze region refuses BY THE DECLARATION (its substrate declares no exitSides)', async () => {
         const env = makeEnv();
         await runTopDownToStep(env, 'finalize');
         const before = gridSha(env.finalize.grid);
@@ -339,7 +339,9 @@ describe('topDownSteps — recorded layout edits', () => {
             op: 'move-exit-side', cell: liveCell(env.finalize.grid, 'Hub'), exitId: 'toN', side: 'S',
         }, TD_EDIT_BINDING);
         expect(r.ok).toBe(false);
-        expect(r.error).toMatch(/zone substrates/);
+        expect(r.error).toBe('moveSphereExitSide: region "Hub"\'s substrate "maze" cannot have an exit moved to '
+            + 'another side — its registry entry declares no `exitSides`, so the pipeline cannot say what else in the '
+            + 'payload is keyed by side');
         expect(env.edits ?? []).toHaveLength(0);
         expect(gridSha(env.finalize.grid)).toBe(before);
     });

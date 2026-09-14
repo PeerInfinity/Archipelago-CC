@@ -12,6 +12,7 @@ import {
     buildRulesJson,
     stringifyRulesJson,
     getRegionExits,
+    regionExitSides,
     buildRegionContract,
     buildTopDownRegionContract,
     sphereRebuildRefusal,
@@ -3531,9 +3532,12 @@ export class ProcgenPipelineUI {
         return Object.keys(d).reduce((a, b) => (d[b] < d[a] ? b : a));
     }
 
-    // Move Exits: first click selects an exit/entrance green square; second
-    // click (a side of the same region) moves it to that side, or swaps it with
-    // the exit already there. Zone (bounce) regions only.
+    // Move Exits: first click selects an exit/entrance green square; the second
+    // click ON ANOTHER EXIT'S SQUARE swaps the two, and a click anywhere else in
+    // the region moves the exit to the nearest side — the op then says whether an
+    // occupied side takes it (⛓ PIPELINE RELAYOUT R2: nothing is resolved by side
+    // here, so a second exit on a side is never silently turned into a swap).
+    // Only a region whose substrate declares `exitSides` (`regionExitSides`).
     _mapClickMoveExit(canvas, grid, regionSize, evt, cell) {
         const px = this._canvasPx(canvas, evt);
         if (!px) return;
@@ -3545,8 +3549,9 @@ export class ProcgenPipelineUI {
         if (!this._mapSel || this._mapSel.kind !== 'exit') {
             const region = grid.getRegion(cell);
             if (!region) return;
-            if (!region.playable_payload?.params?.sidePortals) {
-                this.message = 'Move Exits: bounce/zone regions only (this region has no side portals).';
+            const sides = regionExitSides(region);
+            if (sides.refusal) {
+                this.message = `Move Exits: ${sides.refusal}.`;
                 this.render();
                 return;
             }
@@ -3570,21 +3575,18 @@ export class ProcgenPipelineUI {
             this.render();
             return;
         }
+        const clicked = this._exitAtPx(grid.getRegion(cell), regionSize, wx, wy);
+        if (clicked && clicked.exit_id !== sel.exitId) {
+            this._recordEdit({ op: 'swap-exit-sides', cell, exitA: sel.exitId, exitB: clicked.exit_id });
+            return;
+        }
         const newSide = this._nearestSide(wx, wy, regionSize);
-        if (newSide === sel.side) {
+        if (clicked || newSide === sel.side) {
             this.message = 'Move Exits: same side — cancelled.';
             this.render();
             return;
         }
-        const region = grid.getRegion(cell);
-        const exits = getRegionExits(region);
-        const list = exits instanceof Map ? [...exits.values()] : (exits ?? []);
-        const occupant = list.find((e) => e.exit_id !== sel.exitId && e.side === newSide);
-        this._recordEdit(occupant
-            ? {
-                op: 'swap-exit-sides', cell, exitA: sel.exitId, exitB: occupant.exit_id,
-            }
-            : { op: 'move-exit-side', cell, exitId: sel.exitId, side: newSide });
+        this._recordEdit({ op: 'move-exit-side', cell, exitId: sel.exitId, side: newSide });
     }
 
     // Record a layout edit and apply it. The gesture's effect is immediate
