@@ -15391,6 +15391,35 @@ pid 1226110 (cwd verified), worktree `~/CC/Archipelago-CC-wt-relayout-c1` (`new-
 `bf739e9df9` — the seedling arc's pins merge over R2; port 8130), kickoff `NewDocs/plans/pipeline-relayout-C1-prompt.md`. Baseline CI
 `676e8712da` 475/14192. As-built → plan §10; ONE merge by the planner.
 
+**C1 COMPLETE + VERIFIED + MERGED 2026-09-14 — `origin/main` = `1b31939fa1` — ARC CLOSED** (five commits rebased over the seedling
+arc's `ee1c8e8ad3`; as-built plan §10, planner's verification §10.x, close §11; trap 1362). Landed: (1) `check-region-step-editing`
+priced (7.63 / 7.33 / 7.81 s on the box, pure Node) and adopted into the headless CI set — `--plan --set=headless` 35/1 → **36 arms /
+2 shards** (the new arm UNPRICED sits alone in shard 0 until three green runs carry it; **`--write-costs` OWED by the planner**);
+its first CI face `## CI-GATE | gate: region-step-editing | 14/0 | exit=0 | ALL CHECKS PASSED`; (2) `Grid.relocateRegions` — a region
+move / swap keeps the region's place in the grid's cell Map, so the compiled document (less `procgen_metadata.edits`) is
+STRING-identical after move + back and swap + back (BEFORE: 80/81 sidecar keys shifted after move + back, 81/81 after swap + back;
+the never-edited order = `placementOrder` 81/81, `regions['1']` was already sorted by cell); the three digests (maze `677b7d9c…`,
+sphere `2ba8a964…`, top-down `bd80d986…`) unmoved; (3) `relayoutSphereGrid` returns `grid` again — `unplacedTargets` was dead API
+(0 unplaced targets in 2,512 corpus exits, 72 top-down worlds and 36 truncated + moved sphere worlds); (4) **R1's SECOND regression
+found and fixed**: `truncateSphereWorld` left a dropped parent's per-exit teleporter entries when the parent was dropped with its
+child (30 stale entries in 45 dropped teleporter children over 16 dense maze sphere worlds × every keep; 1 of 22 regrows LOST an
+exit — maze seed 2 / 6 spheres / 12 fillers / keep 1, `region_6_5` E → `region_7_5`) — `Grid.deleteTeleportersOf(cell)` before each
+dropped region is removed, the harm case is the row, R1's code the mutant (red); the kept-parent no-match branch commented as
+unreached (0 of 15). **Brief-wrong (§10.0, five):** the second regression; sparse sphere configs build no teleporter nodes (census
+widened); no procgen doc enumerates the headless set and no row pins its count; only `preset_sidecars` moved order. **Planner-verified
+with its own runs:** the four touched test files 286/286, the step-editing and top-down gates green, the maze pin unmoved, the
+headless plan 36/2 read off `ci-gates --plan`; rebased cleanly over the shed bump + bank write + docs, guard rows 44 files
+**1073/1073** + `check-procgen-reference` + `check-region-step-editing` green; pushed on the headless planner's GO. **CI at the
+merged head `1b31939fa1`: run 34801064017, 475/14194 (14186 | 8 | 0), slow 12/217** (= `bf739e9df9`'s 475/14192 + 2 rows). C1's
+session ended by its literal pid. `wt-relayout-c1` finished — removable on the user's word.
+**PIPELINE RELAYOUT — ARC CLOSED:** R1 `62d359ec1a` (the teleporter table keyed per exit; every exit's flag by the side law) · R2
+`676e8712da` (a held side legal by the `exitSides` declaration; the picker names exits; the pipeline's Move Exit through the
+declared relabel; jta/omsi declared; R1's re-roll regression closed) · C1 `1b31939fa1` (above). Parked by the user's rulings: R3
+(bounce/runner two doors per wall — a portal-id linking key + a 34-entry re-record + level geometry), R4 (the sphere planner's one
+child per side); omsi's `[exit_W]` action label left. Two R1 regressions reached main on paths no CI arm watched; one path is an
+arm now. NEXT = the user's what-next (the queue's standing items: the Seedling editor session, the queue viewer arc, the
+kittyengine CLI slice).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
