@@ -22,8 +22,11 @@ import { describe, expect, it } from 'vitest';
 
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { buildRulesJson, linkIsAdjacentOnSide, topDownFromRulesJson } from '../procgenPipeline/procgenPipelineEngine.js';
-import { exitSidesOf } from '../procgenCore/exitSides.js';
+import {
+    DEFAULT_REGION_SIZE, buildRulesJson, linkIsAdjacentOnSide, topDownFromRulesJson,
+} from '../procgenPipeline/procgenPipelineEngine.js';
+import { SIDE_SHARING, exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
+import { resolveExitTilePositions } from '../procgenCore/compositeMapRenderer.js';
 import { sidecarFieldsOf } from '../procgenCore/sidecarFields.js';
 import { createEditSession } from '../procgenCore/editCore.js';
 import { rulesEditAdapter } from './rulesEditAdapter.js';
@@ -61,6 +64,11 @@ const ENTRIES = everyRulesPath().flatMap((file) => {
 });
 
 const declares = (entry) => !!exitSidesOf(substrateRegistry.get(entry?.substrate)).decl;
+/** ⛓ R2 — the keys an entry's declaration names (the DECLARATION — fixtures are selected by it, never by
+ *  the rule under test, so a broken rule reds a row instead of emptying a population). */
+const declaredKeys = (entry) => exitSidesOf(substrateRegistry.get(entry?.substrate)).decl?.keys ?? [];
+/** ⛓ R2 — may a side of this entry's regions hold another exit? (`sideMayHoldAnotherExit`, the declaration) */
+const sideShared = (entry) => sideMayHoldAnotherExit(substrateRegistry.get(entry?.substrate)).may;
 
 /**
  * ⛓ G2a — **THE REGENERATED POPULATION.** Until the ask-first re-record
@@ -194,16 +202,19 @@ describe('⛓⛓ THE CORPUS CONTROL — every committed entry that declares `exi
         expect(asked).toBeGreaterThan(0);
     });
 
-    it('(b) every exit moved to every FREE side and back, and every swap swapped back, is '
-        + 'byte-identical to the committed document', () => {
+    it('(b) every exit moved to every FREE side and back — and, ⛓ R2, to every OCCUPIED side where the '
+        + 'declaration keys nothing by side — and every swap swapped back, is byte-identical to the committed '
+        + 'document', () => {
         const drifted = [];
         let moves = 0;
+        let occupied = 0;
         let swaps = 0;
         for (const [file, slot, name, entry, doc] of DECLARING) {
             const before = bytes(doc);
             for (const { op, from, free } of everySideMove(slot, name, entry)) {
-                if (!free) continue;
+                if (!free && !sideShared(entry)) continue;
                 moves += 1;
+                if (!free) occupied += 1;
                 const there = applied(doc, op).doc;
                 const back = applied(there, { ...op, side: from }).doc;
                 if (bytes(back) !== before) drifted.push(`${file} ${slot} ${name} ${op.exitId} ${from}→${op.side}`);
@@ -216,6 +227,7 @@ describe('⛓⛓ THE CORPUS CONTROL — every committed entry that declares `exi
             expect(bytes(doc), `${file}: an op wrote THROUGH the document`).toBe(before);
         }
         expect(moves).toBeGreaterThan(0);
+        expect(occupied).toBeGreaterThan(0);
         expect(swaps).toBeGreaterThan(0);
         expect(drifted).toEqual([]);
     });
@@ -431,9 +443,10 @@ describe('⛓ `params.backExitSide` follows the BACK exit, and only it', () => {
 
 const clone = (o) => JSON.parse(JSON.stringify(o));
 
-/** ⛓ A declaring entry with an exit whose target side is taken by another — derived. */
-const [S_FILE, S_SLOT, S_NAME, S_ENTRY, S_DOC] = DECLARING.find(([, slot, name, e]) => everySideMove(slot, name, e)
-    .some((m) => !m.free) && everySideMove(slot, name, e).some((m) => m.free));
+/** ⛓ A declaring entry with an exit whose target side is taken by another — derived. ⛓ R2: a KEYED
+ *  declaration (an occupied side refuses there; where nothing is keyed it is a legal move). */
+const [S_FILE, S_SLOT, S_NAME, S_ENTRY, S_DOC] = DECLARING.find(([, slot, name, e]) => declaredKeys(e).length > 0
+    && everySideMove(slot, name, e).some((m) => !m.free) && everySideMove(slot, name, e).some((m) => m.free));
 /** ⛓ An entry whose substrate declares NO `exitSides` and whose payload carries sided exits — derived. */
 const [U_FILE, U_SLOT, U_NAME, U_ENTRY, U_DOC] = ENTRIES.find(([, , , e]) => !declares(e)
     && substrateRegistry.get(e.substrate)
@@ -554,6 +567,74 @@ describe('refusals — asked of the op, each by name, the document untouched', (
         expect(applied(S_DOC, { op: 'swap-exit-sides', player: S_SLOT, region: S_NAME, exitA: firstExit.exit_id, exitB: firstExit.exit_id }).doc).toBe(S_DOC);
         const x = U_ENTRY.playable_payload.exits.find((e) => Object.hasOwn(SIDE_WORDS, e.side));
         expect(applied(U_DOC, { op: 'move-exit-side', player: U_SLOT, region: U_NAME, exitId: x.exit_id, side: x.side }).doc).toBe(U_DOC);
+    });
+});
+
+/* ── ⛓ PIPELINE RELAYOUT R2 — an occupied side, by declaration ────────────── */
+
+/** ⛓ Every occupied-side move of an entry whose declaration keys nothing by side — the law's population. */
+const SHARED_OCCUPIED = DECLARING.filter(([, , , e]) => declaredKeys(e).length === 0).flatMap(([file, slot, name, entry, doc]) =>
+    everySideMove(slot, name, entry).filter((m) => !m.free).map((m) => ({ file, slot, name, entry, doc, ...m })));
+
+/**
+ * ⛓ The BEFORE sentence, measured at `62d359ec1a` (R2 W0.3) on the committed bounce entry
+ * `bounce_worldgen` slot 1 `region_1_0`, `exit_S` → side E (held by `exit_E`). A keyed declaration's
+ * refusal must stay this sentence, word for word.
+ */
+const BOUNCE_OCCUPIED_BEFORE = 'apworld: side E (east) of region "region_1_0" already carries exit exit_E — moving '
+    + 'exit_S there is a swap, and says so: swap-exit-sides {exitA: exit_S, exitB: exit_E}.';
+
+describe('⛓⛓ R2 — a side that already carries an exit takes another IFF the declaration keys nothing by side', () => {
+    it('the population is the law\'s: occupied-side moves of side-agnostic declarers exist, and every '
+        + 'side-agnostic declarer declares EMPTY keys', () => {
+        expect(SHARED_OCCUPIED.length).toBeGreaterThan(0);
+        for (const { file, entry } of SHARED_OCCUPIED) {
+            expect(exitSidesOf(substrateRegistry.get(entry.substrate)).decl.keys, file).toEqual([]);
+        }
+    });
+
+    it('every such move SUCCEEDS: the exit joins the side, nothing else changes side, the answer counts '
+        + 'the side\'s exits by name, and the renderer draws every exit of that side on its edge, apart', () => {
+        const onEdge = (t, s) => ({ N: t.y === 0, S: t.y === DEFAULT_REGION_SIZE.height - 1,
+            W: t.x === 0, E: t.x === DEFAULT_REGION_SIZE.width - 1 })[s];
+        for (const { file, slot, name, entry, doc, op } of SHARED_OCCUPIED) {
+            const res = applied(doc, op);
+            const exits = res.doc.preset_sidecars[slot][name].playable_payload.exits;
+            for (const x of exits) {
+                const was = entry.playable_payload.exits.find((e) => e.exit_id === x.exit_id).side;
+                expect(x.side, `${file} ${bytes(op)} ${x.exit_id}`).toBe(x.exit_id === op.exitId ? op.side : was);
+            }
+            const holders = exits.filter((x) => x.side === op.side);
+            expect(holders.length, `${file} ${bytes(op)}`).toBeGreaterThan(1);
+            const others = holders.filter((x) => x.exit_id !== op.exitId).map((x) => x.exit_id);
+            expect(res.description, `${file} ${bytes(op)}`).toContain(`; side ${op.side} now holds ${holders.length} `
+                + `exits (${[op.exitId, ...others].join(', ')})`);
+            const tiles = resolveExitTilePositions(exits, DEFAULT_REGION_SIZE)
+                .filter((t, i) => exits[i].side === op.side);
+            expect(tiles.length, `${file} ${bytes(op)}`).toBe(holders.length);
+            for (const t of tiles) expect(onEdge(t, op.side), `${file} ${bytes(op)}`).toBe(true);
+            expect(new Set(tiles.map((t) => `${t.x},${t.y}`)).size, `${file} ${bytes(op)}`).toBe(holders.length);
+        }
+    });
+
+    it('⛔ a KEYED declaration keeps M3\'s refusal WORD FOR WORD — the bounce sentence measured before R2', () => {
+        const hit = ENTRIES.find(([file, slot, name]) => file.startsWith('bounce_worldgen/') && slot === '1'
+            && name === 'region_1_0');
+        expect(hit).toBeTruthy();
+        const [, slot, name, entry, doc] = hit;
+        expect(sideMayHoldAnotherExit(substrateRegistry.get(entry.substrate)).reason).toBe(SIDE_SHARING.KEYED);
+        const res = applyRulesDocOp(doc, { op: 'move-exit-side', player: slot, region: name, exitId: 'exit_S', side: 'E' });
+        expect(res.ok).toBe(false);
+        expect(res.error).toBe(BOUNCE_OCCUPIED_BEFORE);
+    });
+
+    it('a swap of two exits on ONE side stays a no-op with its sentence', () => {
+        const { slot, name, entry, doc, op } = SHARED_OCCUPIED[0];
+        const there = applied(doc, op).doc;
+        const other = entry.playable_payload.exits.find((x) => x.exit_id !== op.exitId && x.side === op.side);
+        const res = applied(there, { op: 'swap-exit-sides', player: slot, region: name, exitA: op.exitId, exitB: other.exit_id });
+        expect(res.doc).toBe(there);
+        expect(res.description).toBe(`exits ${op.exitId} and ${other.exit_id} of ${name} are on one side — nothing to swap`);
     });
 });
 

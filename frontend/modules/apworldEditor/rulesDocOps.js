@@ -85,7 +85,7 @@ import {
 //   behind `regionLayout.js`); every refusal sentence stays in this file.
 import {
     SIDE_WORDS, exitSideVerdicts, exitSidesOfSubstrate, layoutChange, occupantAt, pairLinkFlips,
-    rewriteExitFlags, rewriteExits, slotLayout,
+    rewriteExitFlags, rewriteExits, sideSharingOfSubstrate, slotLayout,
 } from './regionLayout.js';
 
 /** ⛓ THE VOCABULARY, as data. */
@@ -2203,6 +2203,16 @@ function exitLinkClause(name, v) {
         + 'this op does not re-judge it)';
 }
 
+/**
+ * ⛓ R2 — a move onto a side other exits already hold says how many that side now
+ * holds, by name (the moved exit first). Empty when the side was free.
+ */
+const sharedSideClause = (exits, moved, side) => {
+    const others = exits.filter((e) => e !== moved && e?.side === side).map((e) => e.exit_id);
+    if (others.length === 0) return '';
+    return `; side ${side} now holds ${others.length + 1} exits (${[moved.exit_id, ...others].join(', ')})`;
+};
+
 const reKeyedClause = (entry, decl) => (decl.keys.length
     ? `relabelled by "${entry.substrate}"'s \`exitSides\` (the side-keyed fields it declares: ${decl.keys.join(', ')})`
     : `relabelled by "${entry.substrate}"'s \`exitSides\` (it declares no side-keyed field besides the exit's own side)`);
@@ -2223,9 +2233,11 @@ const reKeyedClause = (entry, decl) => (decl.keys.length
  * exit; a side outside N/S/E/W; then — after the no-op, a move to the exit's
  * own side, which the session drops and which asks nothing of the substrate — a
  * substrate that is unregistered, declares no `exitSides` or declares a
- * malformed one; a side already carrying another exit of this region (that is a
- * swap, and says so); a relabel that throws; a substrate that cannot
- * re-serialize.
+ * malformed one; a side already carrying another exit of this region WHEN the
+ * substrate's declaration keys a payload fact by side (that is a swap, and says
+ * so — ⛓ PIPELINE RELAYOUT R2: where it keys nothing, `sideMayHoldAnotherExit`,
+ * the exit JOINS that side and the answer counts the side's exits); a relabel
+ * that throws; a substrate that cannot re-serialize.
  */
 function opMoveExitSide(doc, op) {
     const p = playerOf(op);
@@ -2243,7 +2255,10 @@ function opMoveExitSide(doc, op) {
     const d = exitSidesDecl(at.entry, name);
     if (!d.ok) return d;
     const other = at.exits.find((e) => e !== ex.exit && e?.side === op.side);
-    if (other) {
+    // ⛓ PIPELINE RELAYOUT R2 — an occupied side is legal where the declaration
+    //   keys nothing by side (`sideMayHoldAnotherExit`); a keyed one keeps M3's
+    //   refusal, word for word.
+    if (other && !sideSharingOfSubstrate(at.entry.substrate).may) {
         return refuse(`apworld: side ${sideWord(op.side)} of region "${name}" already carries exit `
             + `${other.exit_id} — moving ${op.exitId} there is a swap, and says so: `
             + `swap-exit-sides {exitA: ${op.exitId}, exitB: ${other.exit_id}}.`);
@@ -2257,7 +2272,8 @@ function opMoveExitSide(doc, op) {
     const res = exitSideWriteBack(doc, p, name, at.entry, d.decl, moves, verdicts);
     if (!res.ok) return res;
     return ok(res.next, `Moved exit ${op.exitId} of ${name} to side ${op.side} (${SIDE_WORDS[from]} → `
-        + `${SIDE_WORDS[op.side]}); ${exitLinkClause(name, verdicts[0])}; ${reKeyedClause(at.entry, d.decl)}`);
+        + `${SIDE_WORDS[op.side]})${sharedSideClause(at.exits, ex.exit, op.side)}; `
+        + `${exitLinkClause(name, verdicts[0])}; ${reKeyedClause(at.entry, d.decl)}`);
 }
 
 /**

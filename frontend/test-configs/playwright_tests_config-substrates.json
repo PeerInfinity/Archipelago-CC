@@ -855,6 +855,12 @@
             "_comment": "PRESET SIDECARS M3. A substrate that declares no exitSides: no picker on the Regions tab; the map's block says why in the op's own refusal; no op."
         },
         {
+            "id": "apworld-exit-side-move-onto-a-held-side-joins-it",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PIPELINE RELAYOUT R2. procgen_topdown/AP_11, a text-adventure region (exitSides keys empty): the picker offers a held side as a move AND a swap with the holder by id; the move records one move-exit-side; the redrawn block shows both exits on that side; Undo restores."
+        },
+        {
             "id": "apworld-exit-side-move-plays-in-the-bounce-panel",
             "enabled": true,
             "category": "apworldEditor",

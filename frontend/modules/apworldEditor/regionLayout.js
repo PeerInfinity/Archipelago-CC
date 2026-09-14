@@ -76,7 +76,7 @@ import {
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { mapBoundsFor } from '../procgenPipeline/compositeMapDocument.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { exitSidesOf } from '../procgenCore/exitSides.js';
+import { exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
 
 /** ⛓ The sides a payload exit can carry, as the words a description uses. The
  *  keys are the engine's `SIDE_DELTAS`' (measured: every committed exit's side
@@ -138,6 +138,16 @@ export function slotLayout(doc, player) {
 export function exitSidesOfSubstrate(substrate) {
     const reg = substrateRegistry.get(substrate);
     return reg ? exitSidesOf(reg) : { unregistered: true };
+}
+
+/**
+ * ⛓ PIPELINE RELAYOUT R2 — whether a side of a region of this substrate may
+ * hold a second exit (`sideMayHoldAnotherExit`, the one rule), or
+ * `{unregistered: true}`.
+ */
+export function sideSharingOfSubstrate(substrate) {
+    const reg = substrateRegistry.get(substrate);
+    return reg ? sideMayHoldAnotherExit(reg) : { unregistered: true };
 }
 
 /** ⛓ The region at `cell` in a layout, or null. */

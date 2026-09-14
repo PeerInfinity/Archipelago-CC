@@ -9054,20 +9054,24 @@ const m3Declares = (M, entry) => !!M.exitSidesOf(substrateRegistry.get(entry?.su
 
 /**
  * ⛓ The first (slot, region, exit, side) of a document whose substrate DECLARES
- * `exitSides`, placed on the map, with a side of `kind` — 'move' (no exit there)
- * or 'swap' (another exit of the region there). Picked off the document in its
- * own order, never typed.
+ * `exitSides`, placed on the map, with a side of `kind` — 'move' (no exit there),
+ * 'swap' (another exit of the region there — `holder` is THAT exit, by id), or
+ * ⛓ R2 'join' (another exit there, and the declaration keys NOTHING by side, so a
+ * move there is legal — read off the declaration's `keys`, not the rule under
+ * test). Picked off the document in its own order, never typed.
  */
 function m3Pick(M, doc, kind, slots = Object.keys(doc?.preset_sidecars ?? {})) {
     for (const slot of slots) {
         for (const [region, entry] of Object.entries(doc.preset_sidecars[slot] ?? {})) {
             if (!m3Declares(M, entry) || !M.isGridCell(entry.grid_cell)) continue;
+            const keyless = M.exitSidesOf(substrateRegistry.get(entry.substrate)).decl.keys.length === 0;
+            if (kind === 'join' && !keyless) continue;
             const exits = entry.playable_payload?.exits ?? [];
             for (const x of exits) {
                 for (const side of Object.keys(M.SIDE_WORDS)) {
                     if (side === x.side) continue;
                     const holder = exits.find((o) => o !== x && o.side === side);
-                    if ((kind === 'swap') === !!holder) return { slot, region, entry, exit: x, side, holder };
+                    if ((kind !== 'move') === !!holder) return { slot, region, entry, exit: x, side, holder };
                 }
             }
         }
@@ -9085,6 +9089,10 @@ function m3PickSide(select, side) {
     select.value = side;
     select.dispatchEvent(new Event('change', { bubbles: true }));
 }
+
+/** ⛓ R2 — the picker's option that SWAPS with one exit, by that exit's id (never by side). */
+const m3SwapOption = (select, exitId) => [...(select?.options ?? [])]
+    .find((o) => o.dataset.kind === 'swap' && o.dataset.swapWith === exitId) ?? null;
 
 /** ⛓ SHA-256 of a canvas's pixels, hex. */
 async function m3CanvasDigest(canvas) {
@@ -9222,14 +9230,14 @@ export async function apworldExitSidePickOfATakenSideSwaps(testController) {
             'the Sidecars tab\'s block draws the picker', 8000, 50);
         testController.reportCondition('the Sidecars tab\'s block carries the exit\'s picker', !!picker);
         if (!picker) return testController.getOverallResult();
-        const opt = [...picker.options].find((o) => o.value === side);
-        testController.assertEqual('the taken side is offered as a SWAP with its exit, enabled',
-            `swap true ${holder.exit_id}`, `${opt?.dataset.kind} ${!opt?.disabled} ${holder.exit_id}`);
+        const opt = m3SwapOption(picker, holder.exit_id);
+        testController.assertEqual('the taken side is offered as a SWAP with its exit (by id), enabled',
+            `swap true ${side}`, `${opt?.dataset.kind} ${!opt?.disabled} ${opt?.dataset.side}`);
         testController.reportCondition('…and says so in its label', String(opt?.textContent).includes(`swap with ${holder.exit_id}`));
 
         const op = { op: 'swap-exit-sides', player: slot, region, exitA: exit.exit_id, exitB: holder.exit_id };
         const want = M.applyRulesDocOp(before, op);
-        m3PickSide(picker, side);
+        m3PickSide(picker, String(opt?.value));
         testController.reportCondition('⛓⛓ ONE op for the pick', await testController.pollForCondition(
             () => panel.session.ops().length === 1, 'the pick recorded one op', 8000, 50));
         testController.assertEqual('…a swap-exit-sides', 'swap-exit-sides', String(panel.session.ops()[0]?.op));
@@ -9306,6 +9314,72 @@ export async function apworldExitSideUndeclaredEntryOffersNothingAndSaysWhy(test
     } catch (error) {
         testController.log(`ERROR: ${error.message}`);
         testController.reportCondition('exit-side undeclared test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(v) PIPELINE RELAYOUT R2 — AN EXIT MOVED ONTO A SIDE ANOTHER EXIT HOLDS,
+ * WHERE THE DECLARATION KEYS NOTHING BY SIDE, JOINS THAT SIDE.** `procgen_topdown/AP_11`
+ * (text-adventure regions): the first placed region whose declaration's `keys` is
+ * empty with an exit whose other side is held (`m3Pick` 'join'), selected on the
+ * Map. Its picker offers that side as a MOVE and as a SWAP with the holder (by id);
+ * the move is picked through the control; ONE op, the document AFTER is the op's own
+ * answer; the redrawn block's pickers show BOTH exits on that side; one Undo
+ * restores the bytes and the picker.
+ */
+const TA_TOPDOWN_PRESET_PATH = './presets/procgen_topdown/AP_11/AP_11_rules.json';
+
+export async function apworldExitSideMoveOntoAHeldSideJoinsIt(testController) {
+    try {
+        const M = await m3Modules();
+        const panel = await openHub(testController, TA_TOPDOWN_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        const before = panel.rulesDoc;
+        const pick = m3Pick(M, before, 'join');
+        testController.reportCondition('⛓ premise: a placed region declaring no side-keyed field, with an exit whose other side is held', !!pick);
+        if (!pick || !(await onMapTabFor(testController, panel, pick.slot))) return testController.getOverallResult();
+        const { slot, region, exit, side, holder } = pick;
+        if (panel._selectedRegion !== region) clickMapCell(pick.entry.grid_cell);
+        const picker = await testController.pollForValue(() => m3Picker('map', region, exit.exit_id),
+            'the map\'s block draws the exit\'s side picker', 8000, 50);
+        testController.reportCondition('the map\'s selection block carries a side picker for the exit', !!picker);
+        if (!picker) return testController.getOverallResult();
+        const moveOpt = [...picker.options].find((o) => o.dataset.kind === 'move' && o.dataset.side === side);
+        testController.reportCondition(`the held side ${side} is offered as a MOVE`, !!moveOpt);
+        testController.reportCondition(`…and as a SWAP with ${holder.exit_id}, by id`, m3SwapOption(picker, holder.exit_id)?.dataset.side === side);
+
+        const op = { op: 'move-exit-side', player: slot, region, exitId: exit.exit_id, side };
+        const want = M.applyRulesDocOp(before, op);
+        testController.reportCondition('⛓ premise: the op itself takes that move', want.ok);
+        m3PickSide(picker, String(moveOpt?.value));
+        testController.reportCondition('⛓⛓ ONE op for the pick', await testController.pollForCondition(
+            () => panel.session.ops().length === 1, 'the pick recorded one op', 8000, 50));
+        testController.assertEqual('…a move-exit-side', 'move-exit-side', String(panel.session.ops()[0]?.op));
+        testController.reportCondition('⛓⛓ the document AFTER is the op\'s own answer',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(want.doc));
+        testController.assertEqual('the status line is the op\'s description', String(want.description), String(panel._opMessage));
+        const holders = panel.rulesDoc.preset_sidecars[slot][region].playable_payload.exits
+            .filter((x) => x.side === side).map((x) => x.exit_id).sort();
+        testController.reportCondition(`the record holds ${holders.join(', ')} on ${side}`, holders.length > 1);
+        const drawn = await testController.pollForValue(() => {
+            const got = [...document.querySelectorAll(`${PANEL_SELECTOR} .apworld-map-selection .apworld-sidecar-block[data-region-name="${CSS.escape(region)}"] select.apworld-exit-side`)]
+                .filter((sel) => sel.value === side).map((sel) => sel.dataset.exitId).sort();
+            return got.length === holders.length ? got : null;
+        }, 'the redrawn block shows every exit of that side', 8000, 50);
+        testController.assertEqual('⛓⛓ the block re-rendered with the exits the record holds on that side',
+            holders.join(','), String(drawn?.join(',')));
+        panel.undoButton.click();
+        testController.reportCondition('one Undo restores the document byte for byte',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(before));
+        const back = await testController.pollForValue(() => {
+            const sel = m3Picker('map', region, exit.exit_id);
+            return sel && sel.value === exit.side ? sel : null;
+        }, 'the picker is redrawn after Undo', 8000, 50);
+        testController.assertEqual('…the picker shows the side the record holds again', exit.side, String(back?.value));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('exit-side join test error-free', false);
     }
     return testController.getOverallResult();
 }
@@ -9425,6 +9499,18 @@ registerTest({
     description: 'PRESET SIDECARS M3. No picker on the Regions tab for the slot; the map\'s block draws a '
                + 'non-editable line whose sentence is the op\'s own refusal (NO_EXIT_SIDES_DECLARED); no op.',
     testFunction: apworldExitSideUndeclaredEntryOffersNothingAndSaysWhy,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-exit-side-move-onto-a-held-side-joins-it',
+    name: 'APWorld hub: a text-adventure exit moved onto a side another exit holds joins that side (Map block)',
+    description: 'PIPELINE RELAYOUT R2. procgen_topdown/AP_11: the first placed region whose substrate declares '
+               + 'exitSides with no keys and has an exit whose other side is held; the product\'s picker offers a '
+               + 'move there AND a swap with the holder; the move records one move-exit-side; the document AFTER '
+               + 'is the op\'s answer; the redrawn block shows both exits on that side; Undo restores.',
+    testFunction: apworldExitSideMoveOntoAHeldSideJoinsIt,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

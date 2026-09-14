@@ -138,7 +138,7 @@ import {
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { applyRulesDocOp } from './rulesDocOps.js';
 // ⛓ PRESET SIDECARS M3 — the exit-side control reads the declaration the op reads.
-import { exitSidesOf } from '../procgenCore/exitSides.js';
+import { exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
 import { SIDE_WORDS } from './regionLayout.js';
 import {
   buildDocumentKeys,
@@ -6051,11 +6051,15 @@ class ApworldEditorUI {
 
   /**
    * ⛓⛓⛓ PRESET SIDECARS M3 — **AN EXIT MOVED TO ANOTHER SIDE, FROM THE BLOCK.**
-   * Per exit of the entry's payload, a side picker: its own side marked, a side
-   * another exit holds offered as a SWAP with that exit (never disabled), a
-   * free side as a move. A pick is ONE op — `move-exit-side` or
-   * `swap-exit-sides` — asked of a PREVIEW first, so a refusal prints beside the
-   * block in the op's own words (`_resolveExitSide`).
+   * Per exit of the entry's payload, a side picker: its own side marked, a
+   * free side as a move, and a side other exits hold as ONE SWAP ENTRY PER
+   * HOLDER, naming that exit (never disabled) — ⛓ PIPELINE RELAYOUT R2: plus a
+   * *move here* entry on that side when the substrate's declaration keys nothing
+   * by side (`sideMayHoldAnotherExit`, the rule the op asks). The picker names
+   * EXITS: a swap option carries the holder's id, so two holders are two
+   * distinct swaps and nothing is resolved by side later. A pick is ONE op —
+   * `move-exit-side` or `swap-exit-sides` — asked of a PREVIEW first, so a
+   * refusal prints beside the block in the op's own words (`_resolveExitSide`).
    *
    * ⛔ Drawn only where the substrate DECLARES `exitSides` — the same reader the
    *   op asks, so the control and the op cannot disagree about who is editable.
@@ -6099,7 +6103,9 @@ class ApworldEditorUI {
     }
 
     row.dataset.editable = 'true';
-    row.title = 'Pick a side to MOVE the exit there, or a side another exit holds to SWAP the two. The '
+    const shared = sideMayHoldAnotherExit(substrateRegistry.get(entry.substrate)).may;
+    row.title = 'Pick a side to MOVE the exit there, or another exit to SWAP the two'
+      + (shared ? ' (a side that already holds exits takes this one too)' : '') + '. The '
       + 'exit keeps leading where it led; a link whose ends stop touching becomes a teleporter, and '
       + 'the answer names a ONE-WAY link.';
     for (const x of sided) {
@@ -6114,17 +6120,31 @@ class ApworldEditorUI {
       select.dataset.exitId = x.exit_id;
       select.dataset.side = x.side;
       Object.assign(select.style, { fontSize: '11px', backgroundColor: '#1a1d23', color: '#ddd' });
-      for (const [side, word] of Object.entries(SIDE_WORDS)) {
-        const holder = exits.find((o) => o !== x && o?.side === side);
+      const addOption = (value, kind, side, text, swapWith = null) => {
         const opt = document.createElement('option');
-        opt.value = side;
-        opt.dataset.kind = side === x.side ? 'own' : (holder ? 'swap' : 'move');
-        opt.textContent = side === x.side ? `${side} — ${word} (this exit)`
-          : (holder ? `${side} — swap with ${holder.exit_id}` : `${side} — ${word}`);
-        if (side === x.side) opt.selected = true;
+        opt.value = value;
+        opt.dataset.kind = kind;
+        opt.dataset.side = side;
+        if (swapWith !== null) opt.dataset.swapWith = swapWith;
+        opt.textContent = text;
+        if (kind === 'own') opt.selected = true;
         select.appendChild(opt);
+      };
+      for (const [side, word] of Object.entries(SIDE_WORDS)) {
+        if (side === x.side) {
+          addOption(side, 'own', side, `${side} — ${word} (this exit)`);
+          continue;
+        }
+        const holders = exits.filter((o) => o !== x && o?.side === side);
+        if (!holders.length) addOption(side, 'move', side, `${side} — ${word}`);
+        else if (shared) addOption(side, 'move', side, `${side} — move here (with ${holders.map((h) => h.exit_id).join(', ')})`);
+        for (const h of holders) addOption(`swap:${h.exit_id}`, 'swap', side, `${side} — swap with ${h.exit_id}`, h.exit_id);
       }
-      select.addEventListener('change', () => this._resolveExitSide(player, regionName, x.exit_id, select.value));
+      select.addEventListener('change', () => {
+        const opt = select.selectedOptions[0];
+        this._resolveExitSide(player, regionName, x.exit_id,
+          { side: opt?.dataset.side, swapWith: opt?.dataset.swapWith ?? null });
+      });
       label.appendChild(select);
       row.appendChild(label);
     }
@@ -6133,23 +6153,25 @@ class ApworldEditorUI {
 
   /**
    * ⛓⛓ M3 — **ONE PICK → ONE OP**, the preview first (M2's `_resolveMapMove`
-   * shape): a side another exit holds is `swap-exit-sides`, a free one
-   * `move-exit-side`, the exit's own side nothing at all. The answer — the op's
-   * description or its refusal — is printed beside the block it was picked in.
+   * shape): a picked EXIT is `swap-exit-sides` with that exit, a picked side
+   * `move-exit-side` (⛓ R2: the op decides whether an occupied side takes it),
+   * the exit's own side nothing at all. The answer — the op's description or its
+   * refusal — is printed beside the block it was picked in.
+   *
+   * @param {{side: string, swapWith: string|null}} pick  read off the option
    */
-  _resolveExitSide(player, regionName, exitId, side) {
+  _resolveExitSide(player, regionName, exitId, { side, swapWith = null } = {}) {
     const exits = sidecarOf(this.rulesDoc, player, regionName)?.playable_payload?.exits ?? [];
     const x = exits.find((e) => e?.exit_id === exitId);
     const beside = (text, refused) => {
       this._opRowMessage = { sidecar: `${player}|${regionName}`, text, refused };
     };
-    if (!x || x.side === side) {
+    if (!x || (swapWith === null && x.side === side)) {
       this._render();
       return null;
     }
-    const holder = exits.find((e) => e !== x && e?.side === side);
-    const op = holder
-      ? { op: 'swap-exit-sides', region: regionName, exitA: exitId, exitB: holder.exit_id }
+    const op = swapWith !== null
+      ? { op: 'swap-exit-sides', region: regionName, exitA: exitId, exitB: swapWith }
       : { op: 'move-exit-side', region: regionName, exitId, side };
     const preview = applyRulesDocOp(this.rulesDoc, this._stampPlayer(op));
     if (!preview.ok) {
