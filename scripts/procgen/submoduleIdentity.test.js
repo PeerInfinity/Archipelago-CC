@@ -9,7 +9,8 @@
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { afterEach, describe, expect, it } from 'vitest';
 
@@ -89,5 +90,21 @@ describe('submoduleTreeIdentity — the owed gate\'s (i) learns tree identity', 
         const v = submoduleTreeIdentity({ dir: empty, before: r.first, now: r.first });
         expect(v.same).toBe(false);
         expect(v.line).toMatch(/^cannot compare \(no submodule checkout at .*uninit\) — owed$/);
+    });
+});
+
+describe('check-seedling-full-tier-owed --base= — the category line names the what-if (C4)', () => {
+    it('under --base=HEAD every category line says it was judged against --base=, never "its OWN head"', () => {
+        // ⛓ `--base=HEAD` so the verdict cannot move with the standing row: every
+        // diff is HEAD..HEAD, and a depth-1 CI clone resolves HEAD.
+        const gate = join(dirname(fileURLToPath(import.meta.url)), 'check-seedling-full-tier-owed.mjs');
+        const out = execFileSync('node', [gate, '--base=HEAD'], { encoding: 'utf8' });
+        const head = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+        const lines = out.split('\n').filter((l) => /category is still about THIS tree/.test(l));
+        expect(lines.length).toBeGreaterThan(0);
+        for (const l of lines) {
+            expect(l).toContain(`judged against --base=HEAD (what-if) @${head.slice(0, 9)}`);
+            expect(l).not.toContain('OWN head');
+        }
     });
 });

@@ -534,7 +534,8 @@ for (const judged of JUDGED) {
 
     check(debts.length === 0,
         `⛓ the \`${judged.category}\` category is still about THIS tree — `
-            + `judged against its OWN head @${base.slice(0, 9)}`,
+            + (BASE_OVERRIDE ? `judged against --base=${BASE_OVERRIDE} (what-if) @${base.slice(0, 9)}`
+                : `judged against its OWN head @${base.slice(0, 9)}`),
         debts.length
             ? `${debts.join('\n      ')}\n      ${reDriveAdvice(judged.category, judged.tapes)}`
             : `${cleared.join(', ')} — nothing this category is measured under has moved`);
