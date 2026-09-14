@@ -5127,7 +5127,25 @@ export function reRollSphereRegion(grid, node, tree, {
     while (!r.done) r = gen.next();
     const region = r.value;
     applySphereBackExit(grid, node, specs, region, { assumeBidirectional });
+    const replaced = getRegionExits(grid.getRegion(specs.cell));
+    for (const e of (replaced instanceof Map ? [...replaced.values()] : (replaced ?? []))) {
+        if (!e.isBackExit) grid.deleteTeleporter(specs.cell, e.exit_id);
+    }
     grid.replaceRegion(specs.cell, region);
+    // ⛓ PIPELINE RELAYOUT R2 — the re-realised region's forward exits are NEW
+    //   exits (their ids encode the side they are born on), and `Grid.teleporters`
+    //   is keyed by exit (R1): an entry kept under the replaced exit's id would
+    //   point nowhere, so a child linked by teleporter — after an exit-side move,
+    //   then a layout move — lost its link and the oracle broke. Each child's
+    //   teleporter is re-derived by the side law on the exit that now serves its
+    //   side (the planner keeps one child per side, so that exit is exact).
+    for (const child of tree.nodes) {
+        if (child.parent !== node.index || !child.cell) continue;
+        const placed = (region.exits_placed ?? []).find((p) => p.side === child.side);
+        if (placed && !linkIsAdjacentOnSide(grid, specs.cell, child.side, child.cell)) {
+            grid.setTeleporter(specs.cell, placed.exit_id, child.cell);
+        }
+    }
     // The re-realised region has FRESH exits with no grid-level wiring yet
     // (target_region is resolved by stitchGrid, not the realiser). Re-run the
     // same stitch + walls tail growSpheresGen runs so the new forward exits

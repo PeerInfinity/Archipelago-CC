@@ -934,6 +934,43 @@ describe('sphereSteps — recorded layout edits', () => {
             .some((e) => e.side === child.side)).toBe(true);
     });
 
+    // ⛓ PIPELINE RELAYOUT R2 — measured on `check-region-step-editing.mjs` phase K
+    // (red at `62d359ec1a`, green before R1): an exit-side edit that turns a
+    // parent → child link into a TELEPORTER, then a re-roll of that parent. The
+    // re-realised region mints NEW exit ids, and `Grid.teleporters` is keyed by
+    // exit (R1), so the entry kept under the replaced id pointed nowhere, the
+    // child's link was walled off, and the oracle reported "sphere count
+    // mismatch". The re-roll now re-derives each child's teleporter by the law.
+    it('a re-roll after an exit-side edit keeps the parent\'s teleporter to its child (oracle clean)', async () => {
+        const env = await grownEnv();
+        const grid = env.grow.grid;
+        const exitsOf = (cell) => [...getRegionExits(grid.getRegion(cell)).values()];
+        let target = null;
+        for (const child of env.nodes) {
+            if (child.parent == null || !child.region_id) continue;
+            const parent = env.nodes[child.parent];
+            if (!parent?.cell || !grid.getRegion(parent.cell)) continue;
+            const list = exitsOf(parent.cell);
+            const fwd = list.find((e) => !e.isBackExit && e.targetRegion === child.region_id);
+            const used = new Set(list.map((e) => e.side));
+            const free = ['N', 'S', 'E', 'W'].find((x) => !used.has(x));
+            if (fwd && free) { target = { child, parent, fwd, free }; break; }
+        }
+        expect(target, 'need a parent with a forward exit and a free side').toBeTruthy();
+        const { child, parent, fwd, free } = target;
+        expect(pushLayoutEdit(env, {
+            op: 'move-exit-side', cell: { ...parent.cell }, exitId: fwd.exit_id, side: free,
+        }, SPHERE_EDIT_BINDING).ok).toBe(true);
+        const moved = exitsOf(parent.cell).find((e) => e.targetRegion === child.region_id);
+        expect(moved.isTeleporter, 'the premise: the edit made the link a teleporter').toBe(true);
+        const r = pushLayoutEdit(env, { op: 're-roll', region_id: sphereNodeKey(parent), n: 1 }, SPHERE_EDIT_BINDING);
+        expect(r.ok, r.error).toBe(true);
+        const after = exitsOf(parent.cell).find((e) => !e.isBackExit && e.side === free);
+        expect(after?.targetRegion).toBe(child.region_id);
+        await runToStep(env, 'compile');
+        expect(env.compile.oracleErrors).toEqual([]);
+    });
+
     it('the codec carries the recording across a serialise/deserialise boundary', async () => {
         const env = await grownEnv();
         const mover = env.grow.grid.allRegions()[1];
