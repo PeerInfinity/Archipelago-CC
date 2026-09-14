@@ -14680,6 +14680,35 @@ screenshots around it, the same on p4d), no fix. **HANDOFF to `seedling-headless
 `origin/main` at `a5822657e9` + this entry, clean, no slice, no lock; the relayout arc CLOSED at `a5822657e9`.
 `seedling-headless-planning-4` ends itself after the successor's handshake (⚖ 2026-09-13 lifetime ruling).
 
+**C3 COMPLETE + VERIFIED 2026-09-14 (planner `seedling-headless-planning-5`, its first act; Opus session `seedling-headless-C3`
+on the primary, start `bba2ea5411`, pushed `32cbebd323..b59589ce25` rebased over the relayout arc's two closing commits:
+`d499609217` task 1 · `1e2f374f4e` task 2 · `b59589ce25` task 3; task 4 investigation only; plan §22.1; trap 1363; CI run
+34806922110 @`b59589ce25` vitest 476/14203 0 failed, slow 217/217).** Planner's reads: origin/main = primary, clean, no lock, 0
+driver dirs; owed gate ALL PASS at HEAD and, via the new `--base=b5b5446446` what-if flag, on the REAL shed pair — "7ae2d5a9ebdd
+-> 8c20769ea288 identical outside docs/history.md — the same game (C3)"; bounded vitest 3 files / 22 (submoduleIdentity 5,
+seedlingDriver 10, workflow 7). **(1)** the owed gate's (i) clears a gitlink move only when the dir is its own checkout, BOTH
+objects exist and the diff outside `docs/history.md` is EMPTY — else "cannot compare (object <sha> absent) — owed"; the
+clause lives in a new `scripts/procgen/submoduleIdentity.js` (the gate had no rows file to extend); 5 synthetic-repo rows, the
+exclusion mutant reds the real pair, the object-check mutant throws. **(2)** ap-placement QUEUES — measured behind a real
+foreign holder (the relayout planner's scoped write), "queuing for up to 900s", took the box after ~41 s, ALL CHECKS PASSED 222
+s: R3 simply never passed the flag (§21.2.1 (6) corrected); the change is a `Run:` docblock line. **(3)** `driverChannel()`
+gains `close({ keep })` and one `closeChannelOnExit(channel)` hook (exit 0 removes the headless stage, anything else keeps it
+and prints the path; the Windows stage is never removed — a `winStage` param lets a row prove it on Linux); rows 6 → 10; the
+no-`rmSync` mutant reds 2 rows; the four driver-backed gates green under the box (wasm-ship 965 s incl. 305 s queued,
+save-stamp 27 s, vanilla-manifest 10 s, generated-set 48 s), dirs 29 → 29 across them, then all 29 stale dirs removed by hand
+→ 0. ⚠ The dir count was never stable: `seedlingDriver.test.js`'s own first two rows leaked 2 dirs PER RUN (21 → 25 → 27 → 29
+during C3) — closed by the same change. **(4) The demo's > 1 s frame is the MENU LEVEL LOAD, not `Main`'s asset construction:**
+k=544, ~9.9 s logic / 9.2 s pixels, the same index on both builds, between the "Music by rekcahdam" card and the title —
+`Splash.startMenu → new Game()` (its `printItems` dump lands in frame 543) `→ Game.begin → loadlevel(L12 region1.oel, 125 KB)`,
+the same load the differential's docblock already priced at 9.8–10.4 s. Not profiled inside `loadlevel`; GC not ruled out.
+p4d DOES have one > 1 s frame, k=1 at 1.03 / 1.30 s (its L0 boot load) — R3's after-frame-30 sampling hid it; R1's "max
+147.7 ms" was the tail of `__swfPerf`'s 120-frame ring (trap 1363). Nothing drives the demo; no gate or row reads the frame.
+C3 ended by pid 1296156. **The owed bank write is the planner's:** `--keys` at `b59589ce25` = 30 MOVED (the relayout arc's C1
+merge moved the 14 `seedling-editor-*` rows and others, measured on the primary — not a worktree artefact; C3 moved
+full-tier-owed, save-stamp, vanilla-manifest, wasm-pins and five procgenDocs rows again) → a scoped `--write --key=` ×30 under
+the box 04:54–05:06Z: 30/30 exit 0, 0 refusals, 0 value lines changed, `--keys` after = 2 MOVED (the declarers) — banked as **`67fc86f623`**, pushed. **⛓ THE ARC'S LADDER IS EMPTY AGAIN — C3 was the last designed
+item. REPLAN with the user; nothing launched.**
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
