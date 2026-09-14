@@ -95,7 +95,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { HEADLESS_WEBGPU_ARGS } from './headlessChromium.js';
-import { driverChannel } from './seedlingDriver.js';
+import { closeChannelOnExit, driverChannel } from './seedlingDriver.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7) — **THE BOX LOCK.** This gate drives the machine (windows),
@@ -425,6 +425,8 @@ const ROOM_STEPS = [
 
 const channel = driverChannel({
     win: WIN, winPy: WIN_PY, driver: DRIVER, chromiumArgs: HEADLESS_WEBGPU_ARGS });
+// ⛓ C3: a green exit removes the headless stage dir; a red one keeps it and prints where.
+closeChannelOnExit(channel);
 
 /**
  * ⛔ ONE PLAN = ONE BROWSER = ONE SHIP. The wasm cannot rewind (`botReset`

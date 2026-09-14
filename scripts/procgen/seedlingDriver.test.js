@@ -9,15 +9,18 @@
  *   3. an interpreter that cannot import Playwright is a refusal that names the
  *      requirements file (the ladder itself: `repoPython.test.js`);
  *   4. (C2) that refusal, met by a gate's `driverChannel`, exits 2 with the
- *      message and no stack — `generatePythonOrExit`'s convention.
+ *      message and no stack — `generatePythonOrExit`'s convention;
+ *   5. (C3) the headless stage dir is removed by `close()` and on a green exit,
+ *      kept by `close({ keep: true })` and on a red one — and `--win`'s shared
+ *      stage is never removed.
  */
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import { describe, expect, it } from 'vitest';
+import { afterAll, describe, expect, it } from 'vitest';
 
 import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { HEADLESS_REQUIREMENTS, driverChannel, headlessPython } from './seedlingDriver.js';
@@ -44,6 +47,7 @@ describe('driverChannel — the headless channel', () => {
         expect(ch.read('plan.json')).toBe('{}');
         ch.clear('plan.json');
         expect(existsSync(ch.local('plan.json'))).toBe(false);
+        ch.close();
     });
 
     it('runs the driver with --headless and EXACTLY the switches it was handed', () => {
@@ -55,6 +59,7 @@ describe('driverChannel — the headless channel', () => {
         expect(out).toBe(['/x/d.py', '--headless',
             `--chromium-args=${JSON.stringify(HEADLESS_LOGIC_ONLY_ARGS)}`,
             '--plan', 'p.json'].join(' '));
+        ch.close();
     });
 
     it('refuses an empty switch list rather than launching on defaults', () => {
@@ -110,5 +115,80 @@ describe('driverChannel — the headless channel', () => {
         expect(r.stdout).not.toMatch(/^PASS:/m);
         expect(`${r.stdout}\n${r.stderr}`).not.toMatch(/^\s+at /m);
         expect(readdirSync(tmp)).toEqual([]);
+    });
+
+    /**
+     * ⛓ C3 — THE STAGE DIR'S LIFETIME, on a REAL child process with a fresh
+     * TMPDIR (C2's mechanism), so the row reads the directory the channel
+     * actually made rather than a path it was told. `echo` is the interpreter:
+     * nothing is launched. Before C3 nothing removed the dir (21 on disk at W0,
+     * two more per run of this file's first two rows).
+     */
+    const made = [];
+    afterAll(() => { for (const d of made) rmSync(d, { recursive: true, force: true }); });
+    const child = (body) => {
+        const dir = mkdtempSync(join(tmpdir(), 'driver-close-'));
+        made.push(dir);
+        const tmp = join(dir, 'tmp');
+        mkdirSync(tmp);
+        const f = join(dir, 'check-fixture-close.mjs');
+        const helper = pathToFileURL(join(import.meta.dirname, 'seedlingDriver.js')).href;
+        writeFileSync(f, `import { existsSync } from 'node:fs';\n`
+            + `import { closeChannelOnExit, driverChannel } from '${helper}';\n`
+            + "const ch = driverChannel({ win: false, winPy: 'x', driver: '/x/d.py', chromiumArgs: ['--x'], python: 'echo' });\n"
+            + "ch.write('plan.json', '{}');\n"
+            + "console.log('STAGE ' + ch.local('') + ' ' + existsSync(ch.local('plan.json')));\n"
+            + body);
+        const r = spawnSync(process.execPath, [f], { encoding: 'utf8',
+            env: { PATH: process.env.PATH, TMPDIR: tmp } });
+        const stage = /^STAGE (\S+) true$/m.exec(r.stdout)?.[1];
+        return { r, tmp, stage };
+    };
+
+    it('C3: close() removes the headless stage dir that existed during the run', () => {
+        const { r, tmp, stage } = child("console.log('CLOSED ' + ch.close());\n");
+        expect(r.status).toBe(0);
+        expect(stage?.startsWith(tmp)).toBe(true);
+        expect(r.stdout).toMatch(/^CLOSED null$/m);
+        expect(existsSync(stage)).toBe(false);
+        expect(readdirSync(tmp)).toEqual([]);
+    });
+
+    it('C3: close({ keep: true }) leaves the stage and its files, and returns the path', () => {
+        const { r, tmp, stage } = child("console.log('KEPT ' + ch.close({ keep: true }));\n");
+        expect(r.status).toBe(0);
+        expect(r.stdout).toContain(`KEPT ${stage}`);
+        expect(readFileSync(join(stage, 'plan.json'), 'utf8')).toBe('{}');
+        expect(readdirSync(tmp)).toHaveLength(1);
+    });
+
+    it('C3: closeChannelOnExit — a green exit removes the stage; a red exit keeps it and says where', () => {
+        const green = child('closeChannelOnExit(ch);\nprocess.exit(0);\n');
+        expect(green.r.status).toBe(0);
+        expect(existsSync(green.stage)).toBe(false);
+        const red = child('closeChannelOnExit(ch);\nprocess.exit(1);\n');
+        expect(red.r.status).toBe(1);
+        expect(existsSync(join(red.stage, 'plan.json'))).toBe(true);
+        expect(red.r.stdout).toContain(`⛓ the driver stage is KEPT for diagnosis (exit 1): ${red.stage}`);
+        // ⛓ an uncaught throw exits 1 through the same handler.
+        const thrown = child("closeChannelOnExit(ch);\nthrow new Error('boom');\n");
+        expect(thrown.r.status).toBe(1);
+        expect(existsSync(thrown.stage)).toBe(true);
+    });
+
+    it('C3: the --win channel never removes its SHARED stage (a temp dir stands in for C:\\playwright)', () => {
+        const winStage = mkdtempSync(join(tmpdir(), 'driver-winstage-'));
+        made.push(winStage);
+        const drv = join(winStage, 'src-d.py');
+        writeFileSync(drv, '# driver\n');
+        const ch = driverChannel({ win: true, winPy: '/nonexistent/py.exe', driver: drv,
+            chromiumArgs: HEADLESS_LOGIC_ONLY_ARGS, winStage });
+        expect(ch.name).toBe('win');
+        expect(ch.path('plan.json')).toBe('C:\\playwright\\plan.json');
+        ch.write('plan.json', '{}');
+        expect(ch.close()).toBe(null);
+        expect(ch.close({ keep: true })).toBe(null);
+        expect(existsSync(join(winStage, 'plan.json'))).toBe(true);
+        expect(existsSync(join(winStage, 'src-d.py'))).toBe(true);
     });
 });

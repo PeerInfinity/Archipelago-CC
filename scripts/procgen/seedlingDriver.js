@@ -40,7 +40,7 @@
  */
 
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -94,21 +94,34 @@ function headlessPythonOrExit() {
  * @param {string}  [o.python]      the headless interpreter, already resolved
  *                                   (default: `headlessPython()`; a refusal is
  *                                   printed and exits 2, C2)
+ * @param {string}  [o.winStage]    where `--win` stages, as this process
+ *                                   spells it (default `WIN_STAGE_WSL`; a row
+ *                                   passes a temp dir to prove `close` leaves
+ *                                   the shared stage alone without a Windows box)
  * @returns {{ name: 'win'|'headless', path: (f: string) => string,
  *   local: (f: string) => string, write: (f: string, s: string) => string,
  *   clear: (f: string) => void, read: (f: string) => string,
- *   run: (argv: string[], opts?: object) => string }}
+ *   run: (argv: string[], opts?: object) => string,
+ *   close: (o?: { keep?: boolean }) => string|null }}
  *   `path` is how the DRIVER spells a staged file; `local` is how this process
  *   reads it.
+ *
+ * ⛓ C3 — **`close` REMOVES THE HEADLESS STAGE DIR** (plan §22 item 3). Before
+ * C3 every headless channel left a `seedling-driver-*` dir in the temp dir
+ * forever (21 on disk at C3's W0). `close()` removes it; `close({ keep: true })`
+ * leaves it and returns its path — a gate passes `keep` on a RED verdict, where
+ * the plan and results files are the diagnosis. ⛔ On `--win` it is a no-op
+ * returning null: the stage is `WIN_STAGE_WSL`, shared by every Windows run.
  */
-export function driverChannel({ win, winPy, driver, chromiumArgs, python = null }) {
+export function driverChannel({ win, winPy, driver, chromiumArgs, python = null,
+    winStage = WIN_STAGE_WSL }) {
     if (!Array.isArray(chromiumArgs) || chromiumArgs.length === 0) {
         throw new Error('seedlingDriver: chromiumArgs must be the array headlessChromium.js '
             + 'exports — the headless channel spells no switches of its own');
     }
     /** ⛓ resolved BEFORE anything is staged: a refusal leaves no temp dir. */
     const py = win ? null : (python ?? headlessPythonOrExit());
-    const stage = win ? WIN_STAGE_WSL : mkdtempSync(join(tmpdir(), 'seedling-driver-'));
+    const stage = win ? winStage : mkdtempSync(join(tmpdir(), 'seedling-driver-'));
     const local = (f) => join(stage, f);
     const common = {
         name: win ? 'win' : 'headless',
@@ -118,14 +131,15 @@ export function driverChannel({ win, winPy, driver, chromiumArgs, python = null 
         read: (f) => readFileSync(local(f), 'utf8'),
     };
     if (win) {
-        mkdirSync(WIN_STAGE_WSL, { recursive: true });
-        writeFileSync(join(WIN_STAGE_WSL, basename(driver)), readFileSync(driver));
+        mkdirSync(winStage, { recursive: true });
+        writeFileSync(join(winStage, basename(driver)), readFileSync(driver));
         return {
             ...common,
             path: (f) => `${WIN_STAGE_DOS}\\${f}`,
             run: (argv, opts = {}) => execFileSync(winPy,
                 ['-3.12', `${WIN_STAGE_DOS}\\${basename(driver)}`, ...argv],
-                { cwd: WIN_STAGE_WSL, encoding: 'utf8', ...opts }),
+                { cwd: winStage, encoding: 'utf8', ...opts }),
+            close: () => null,
         };
     }
     return {
@@ -134,5 +148,22 @@ export function driverChannel({ win, winPy, driver, chromiumArgs, python = null 
         run: (argv, opts = {}) => execFileSync(py,
             [driver, '--headless', `--chromium-args=${JSON.stringify(chromiumArgs)}`, ...argv],
             { cwd: stage, encoding: 'utf8', ...opts }),
+        close: ({ keep = false } = {}) => {
+            if (keep) return stage;
+            rmSync(stage, { recursive: true, force: true });
+            return null;
+        },
     };
+}
+
+/**
+ * ⛓ C3 — the four gates' one line: on exit, a GREEN verdict (code 0) removes
+ * the headless stage and a RED one keeps it and prints where. `exit` fires on
+ * every `process.exit` and on an uncaught throw, so no exit path is missed.
+ */
+export function closeChannelOnExit(channel, { log = console.log } = {}) {
+    process.on('exit', (code) => {
+        const kept = channel.close({ keep: code !== 0 });
+        if (kept) log(`⛓ the driver stage is KEPT for diagnosis (exit ${code}): ${kept}`);
+    });
 }
