@@ -14644,6 +14644,26 @@ shed2:main`, then the outer gitlink `7ae2d5a → 8c20769` (the owed gate will re
 "empty tree diff" clause is not implementable as written, §17.1 (2); proposed: re-quote the three row parts at the bump
 with a `--covered-by` naming the byte-identity, since the same bytes were driven).
 
+**⚖ USER 2026-09-14: *"Yes, please do the force push."* — THE SHED IS DONE (planner `seedling-headless-planning-4`; plan
+§21.3).** `git -C ~/CC/seedling-wasm-shed push --force-with-lease=main:7ae2d5a… origin shed2:main` → `+ 7ae2d5a...8c20769
+(forced update)`; seedling-wasm `main` = the orphan **`8c20769ea288`** (one commit, 14 files, byte-identical to `7ae2d5a`
+apart from `docs/history.md`'s dated section). Pages rebuilt from it in ~40 s; live `game.html` 200 and the wasms 200 at
+33,712,711 / 34,039,926 B — unchanged bytes. **A fresh clone from GitHub: 15 M, 18 objects, size-pack 14.30 MiB** (was
+52 M / 51.49 MiB). The outer gitlink bump **`9ba9b4918e`** (`7ae2d5a → 8c20769`; pins gate ALL PASS by identity); the owed
+gate read 3 CHECKS FAILED on its SHA compare (§17.1 (2), predicted) → the tier's three parts RE-QUOTED at the bump with a
+`--covered-by` naming the byte-identity and CI run 34791653160 (`914e930901`, value unmoved) → ALL PASS. `--keys` at that
+head: 38 MOVED (33 wasm-keyed + `canonical-placements`, `jta-dataset-pipeline-preset`, `loop-costs-one-model`,
+`spiral-byteidentity`, `topdown-steps` from the relayout merges + the two bank declarers) → a scoped `--write --key=` ×38
+on the primary under the box (02:37–02:52Z, **38/38 exit 0, 0 refusals, 0 values moved**, numstat 259/259) →
+**`776cbe827e`**, pushed; `--keys` after = 2 MOVED (the declarers); owed gate ALL PASS. ⚠ Measurement traps: a plain
+`git clone --branch` of the shed clone copies its OTHER local branch (the stale 2026-09-13 orphan) and read 44 M — the
+number is the `--single-branch` clone; `setsid nohup script & echo $!` returned the wrapper's pid, gone at once — the
+script's pid is the box lock holder's parent. Other initialised holders of the submodule on this machine (`wt-cold`,
+`wt-e3b` @e645f2e, `wt-editor` @1bc0003, `wt-port` @681973f — closed arcs) were NOT moved; their outer commits pin heads
+GitHub will stop serving once unreachable. CI at `776cbe827e` quoted in memory when it lands. **⛓ THE ARC'S LADDER IS
+EMPTY: the survey, R3, the landing and the shed all done on the user's word; W3 CLOSED. This session has run four
+units — REPLAN with the user (⚖ 2026-09-05); nothing launched.**
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
