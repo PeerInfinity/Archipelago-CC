@@ -68,6 +68,12 @@
  * day leaves behind; the port is printed so a run can be attributed.
  *
  * Run: node scripts/procgen/check-seedling-ap-placement.mjs [--keep-open]
+ *   node scripts/procgen/check-seedling-ap-placement.mjs --wait-for-box=<sec>
+ *     ⛓ QUEUES behind a held box instead of refusing (`boxLock.takeBoxLockOrExit`
+ *     reads it from this argv). MEASURED C3 2026-09-14: held by another tree's
+ *     `standing-values --write`, `--wait-for-box=900` printed "queuing for up to
+ *     900s", took the box 41 s later and passed — R3's refusal was a run that did
+ *     not pass the flag, not a gate that lacks it.
  *
  * ── ⛓⛓ `--win` — THE M1 ARMS ON REAL-GPU WINDOWS CHROME ─────────────────────
  *

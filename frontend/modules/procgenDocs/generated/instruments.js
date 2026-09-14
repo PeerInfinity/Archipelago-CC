@@ -2242,7 +2242,9 @@ export const INSTRUMENTS = frz({
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "wait-for-box"
+            ],
             "file": "check-seedling-ap-placement.mjs",
             "flags": [
                 {
