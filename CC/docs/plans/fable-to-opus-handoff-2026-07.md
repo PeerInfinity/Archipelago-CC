@@ -15436,6 +15436,19 @@ child per side); omsi's `[exit_W]` action label left. Two R1 regressions reached
 arm now. NEXT = the user's what-next (the queue's standing items: the Seedling editor session, the queue viewer arc, the
 kittyengine CLI slice).
 
+**CLEANUP DONE 2026-09-14 — the user, verbatim: *"Thanks. Please finish the remaining cleanup tasks."*** The owed writes pushed as
+**`fce71245ce`** (from `wt-relayout-c1` on :8130, each under its own box lock behind the seedling arc's C3): `ci-gates --write-costs
+--runs=3` — 70 arms, the new `gate: region-step-editing` arm 2.6 s from 2 samples ⇒ the headless plan packs **36 arms / 1 shard** again;
+`standing-values --write --key=<row>` ×8 (⚠ `--key` is exactly ONE row per run — an eight-key invocation took only the first) — the
+seven rows this arc's merges moved re-keyed at UNCHANGED values (canonical-placements, jta-dataset-pipeline-preset,
+preset-bundle-load, procgen-docs, procgen-lab-hosting, procgen-reference, identity: generate-procgen-reference.mjs) and the NEW
+`gate: region-step-editing` row banked at **14/0**; 0 refusals; `--keys` all eight `same`; reader rows 787/787; `--check` NOT quoted
+(timed out under C3's lock — a Terminated, not a verdict). The 22 seedling rows still MOVED are the headless arc's (C1's code moved
+keys that sweep procgen code; `seedling-headless-planning-5` writes them after C3). Worktrees `wt-relayout-r1/r2/c1` and their local +
+remote branches REMOVED (0 dirty / 0 patch-ids off main each, measured first). CI at `fce71245ce`: run 34805450972 for fce71245ce is in_progress and its "JavaScript Unit Tests (Vitest)" job is in_progress — pass --wait.
+**Nothing remains from the PIPELINE RELAYOUT arc.** Plan §11.1. NEXT = the user's what-next (the queue's standing items: the Seedling
+editor session, the queue viewer arc, the kittyengine CLI slice).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
