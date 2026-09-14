@@ -10,10 +10,13 @@
 // does. When `Grid.teleporters` was keyed `cell:side`, moving `Region 1`
 // (4,5)→(2,0) and back re-targeted 28 forward exits on 16 regions.
 //
-// ⚠ `preset_sidecars` is compared RECORD BY RECORD, not as one string: a move
-// re-inserts the moved region at the end of the grid's cell Map, so the key
-// ORDER of `preset_sidecars[1]` moves with it (measured; every record is still
-// byte-identical). That order is not a teleporter fact.
+// ⛓ PIPELINE RELAYOUT C1 — the compiled rules.json is compared as ONE STRING
+// (less `procgen_metadata.edits`, which records the two edits by design). R1
+// compared `preset_sidecars` record by record because a move re-inserted the
+// moved region at the end of the grid's cell Map, so the key ORDER of
+// `preset_sidecars[1]` moved (measured at `bf739e9df9`: move and back put
+// `Region 1` last, 80 of 81 positions shifted; swap and back put `Region 1`, `C`
+// last, 81 of 81). The Grid now keeps each region's place in that Map.
 import { describe, it, expect, beforeAll } from 'vitest';
 import { readFileSync } from 'node:fs';
 import '../mazeRoom/mazeRoomLibrary.js';
@@ -67,6 +70,12 @@ async function editAndRecompile(env, edit) {
     await runTopDownStep('compile', env);
 }
 
+// The whole compiled document as one string, less the edit record itself.
+function documentString(rulesJson) {
+    const { edits: _edits, ...metadata } = rulesJson.procgen_metadata ?? {};
+    return JSON.stringify({ ...rulesJson, procgen_metadata: metadata });
+}
+
 function expectSameWorld(before, env) {
     const after = exitTable(env);
     const changed = [...before.exits].filter(([k, v]) => after.get(k) !== v)
@@ -74,11 +83,8 @@ function expectSameWorld(before, env) {
     expect(changed.length, `exits changed:\n${changed.join('\n')}`).toBe(0);
     const rj = env.compile.rulesJson;
     expect(JSON.stringify(rj.regions)).toBe(before.regions);
-    const sidecars = rj.preset_sidecars['1'];
-    expect(Object.keys(sidecars).sort()).toEqual(Object.keys(before.sidecars).sort());
-    for (const [name, rec] of Object.entries(sidecars)) {
-        expect(JSON.stringify(rec.playable_payload?.exits), name).toBe(before.sidecars[name]);
-    }
+    expect(Object.keys(rj.preset_sidecars['1'])).toEqual(before.sidecarOrder);
+    expect(documentString(rj)).toBe(before.document);
     expect(env.finalize.grid.teleporters.size).toBe(forwardTeleporterExits(env));
 }
 
@@ -90,8 +96,8 @@ describe('top-down relayout: an edit and its inverse are the identity', () => {
         before = {
             exits: exitTable(env),
             regions: JSON.stringify(rj.regions),
-            sidecars: Object.fromEntries(Object.entries(rj.preset_sidecars['1'])
-                .map(([name, rec]) => [name, JSON.stringify(rec.playable_payload?.exits)])),
+            sidecarOrder: Object.keys(rj.preset_sidecars['1']),
+            document: documentString(rj),
             forwardTeleporters: forwardTeleporterExits(env),
             tableSize: env.finalize.grid.teleporters.size,
         };

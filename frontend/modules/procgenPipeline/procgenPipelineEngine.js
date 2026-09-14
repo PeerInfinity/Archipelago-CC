@@ -304,11 +304,57 @@ export class Grid {
         this.cells.set(cellKey(cell), { ...region, cell: { gx: cell.gx, gy: cell.gy } });
     }
 
-    // Remove and return the region at `cell` (layout editing: move/swap).
+    // Remove and return the region at `cell` (sphere truncation; a layout move
+    // keeps the region's place in `cells` — see relocateRegions).
     removeRegion(cell) {
         const region = this.cells.get(cellKey(cell));
         this.cells.delete(cellKey(cell));
         return region ?? null;
+    }
+
+    /**
+     * Move regions to other cells (layout editing: move/swap) KEEPING each
+     * one's place in `cells`. `moves` is `[{from, to}]`; every `from` must hold
+     * a region and every `to` must be in bounds and either empty or another
+     * move's `from` (a swap). The Map is refilled in its own order with each
+     * moved entry re-keyed where it stands.
+     *
+     * ⛓ PIPELINE RELAYOUT C1 (2026-09-14) — WHY NOT removeRegion + placeRegion.
+     * `cells`' insertion order is the order `allRegions()` hands the compile,
+     * which is the key order of the compiled `preset_sidecars[p]`. A remove +
+     * place re-inserted the moved region LAST, so a move and its inverse left
+     * every record identical but the document not: measured on the top-down
+     * APCalc world (seed 4, 81 regions), move (4,5)→(2,0) and back put
+     * `Region 1` last; a swap and back put `Region 1`, `C` last. A grid that is
+     * never edited never comes here, so its order — the growth order — is
+     * untouched.
+     */
+    relocateRegions(moves) {
+        const dest = new Map();
+        for (const { from, to } of moves) {
+            if (!this.hasRegion(from)) {
+                throw new Error(`Grid.relocateRegions: no region at (${from.gx},${from.gy})`);
+            }
+            if (!this.isInBounds(to)) {
+                throw new Error(`Grid.relocateRegions: cell (${to.gx},${to.gy}) out of bounds`);
+            }
+            dest.set(cellKey(from), to);
+        }
+        const toKeys = new Set();
+        for (const to of dest.values()) {
+            const key = cellKey(to);
+            if (toKeys.has(key) || (this.hasRegion(to) && !dest.has(key))) {
+                throw new Error(`Grid.relocateRegions: cell (${to.gx},${to.gy}) already occupied`);
+            }
+            toKeys.add(key);
+        }
+        const entries = [...this.cells];
+        this.cells.clear();
+        for (const [key, region] of entries) {
+            const to = dest.get(key);
+            if (!to) this.cells.set(key, region);
+            else this.cells.set(cellKey(to), { ...region, cell: { gx: to.gx, gy: to.gy } });
+        }
     }
 
     // Drop all teleporter mappings (layout editing rebuilds them from the
@@ -5291,8 +5337,7 @@ export function moveSphereRegion(grid, fromCell, toCell) {
     if (!grid.isInBounds(toCell)) {
         throw new Error(`moveSphereRegion: target (${toCell.gx},${toCell.gy}) out of bounds`);
     }
-    const region = grid.removeRegion(fromCell);
-    grid.placeRegion(toCell, region);
+    grid.relocateRegions([{ from: fromCell, to: toCell }]);
     return relayoutSphereGrid(grid);
 }
 
@@ -5305,10 +5350,7 @@ export function swapSphereRegions(grid, cellA, cellB) {
     if (!grid.hasRegion(cellA) || !grid.hasRegion(cellB)) {
         throw new Error('swapSphereRegions: both cells must hold a region');
     }
-    const a = grid.removeRegion(cellA);
-    const b = grid.removeRegion(cellB);
-    grid.placeRegion(cellA, b);
-    grid.placeRegion(cellB, a);
+    grid.relocateRegions([{ from: cellA, to: cellB }, { from: cellB, to: cellA }]);
     return relayoutSphereGrid(grid);
 }
 

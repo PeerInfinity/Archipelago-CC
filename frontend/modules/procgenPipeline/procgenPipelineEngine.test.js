@@ -22,7 +22,7 @@ import {
     reconcileBidirectionalExits,
     spiralCells, buildShuffledSubstrateSequence, arrangeShuffledSpiral,
     computeSourceCounts,
-    moveSphereRegion, relayoutSphereGrid,
+    moveSphereRegion, swapSphereRegions, relayoutSphereGrid,
 } from './procgenPipelineEngine.js';
 import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
 
@@ -548,6 +548,29 @@ describe('relayoutSphereGrid (flags by the side law)', () => {
         moveSphereRegion(grid, { gx: 3, gy: 1 }, { gx: 1, gy: 0 });
         expect(grid.getRegion({ gx: 1, gy: 0 }).exits.get('P').isTeleporter).toBe(false);
         expect(grid.getRegion({ gx: 0, gy: 0 }).exits.get('toC').isTeleporter).toBe(false);
+    });
+
+    // PIPELINE RELAYOUT C1: a move / swap keeps every region's place in the
+    // grid's cell Map — the order `allRegions()` hands the compile, which is the
+    // key order of `preset_sidecars[p]`. The regions moved are NOT the Map's last
+    // entries (trap 1360: moving the last key cannot see delete + append).
+    it('a move or swap, and its inverse, keep the order allRegions() returns', () => {
+        const grid = new Grid({ width: 3, height: 2 });
+        for (const [gx, gy, id] of [[0, 0, 'A'], [1, 0, 'B'], [2, 0, 'C'], [0, 1, 'D']]) {
+            grid.placeRegion({ gx, gy }, { region_id: id, exits: new Map() });
+        }
+        const order = () => grid.allRegions().map((r) => r.region_id);
+        moveSphereRegion(grid, { gx: 1, gy: 0 }, { gx: 2, gy: 1 });
+        expect(order()).toEqual(['A', 'B', 'C', 'D']);
+        expect(grid.getRegion({ gx: 2, gy: 1 }).region_id).toBe('B');
+        moveSphereRegion(grid, { gx: 2, gy: 1 }, { gx: 1, gy: 0 });
+        expect(order()).toEqual(['A', 'B', 'C', 'D']);
+        swapSphereRegions(grid, { gx: 0, gy: 0 }, { gx: 2, gy: 0 });
+        expect(order()).toEqual(['A', 'B', 'C', 'D']);
+        expect(grid.getRegion({ gx: 0, gy: 0 }).region_id).toBe('C');
+        swapSphereRegions(grid, { gx: 0, gy: 0 }, { gx: 2, gy: 0 });
+        expect(order()).toEqual(['A', 'B', 'C', 'D']);
+        expect(grid.allRegions().map((r) => cellKey(r.cell))).toEqual(['0,0', '1,0', '2,0', '0,1']);
     });
 
     it('names an exit whose target is not placed instead of judging it', () => {
