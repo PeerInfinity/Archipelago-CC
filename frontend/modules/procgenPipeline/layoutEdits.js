@@ -177,8 +177,9 @@ export function layoutEditStage(edit, binding) {
 /**
  * Apply ONE edit to the live envelope. Returns `{ok: true, description}` or
  * `{ok: false, error}` — a refusal (an occupied target cell, a side that already
- * has an exit, a maze region that can't be re-rolled) leaves the envelope
- * untouched, because every mutator validates before it writes.
+ * has an exit on a substrate whose `exitSides` keys a payload fact by side, a
+ * substrate that declares no `exitSides`, a maze region that can't be re-rolled)
+ * leaves the envelope untouched, because every mutator validates before it writes.
  */
 export function applyLayoutEdit(env, edit, binding) {
     let norm;

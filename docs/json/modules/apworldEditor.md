@@ -1471,16 +1471,25 @@ counted off the reconstruction, are the same before and after).
 
 ### Moving an exit to another side (M3)
 
-⚖ §5e Q1 A: M2's shape — native hub ops, zone substrates only, no relayout. An
-exit of a flash zone does not stand anywhere: its `side` is a LINKING KEY, which
-play resolves through `params.sidePortals[side]` to a level portal whose geometry
-does not depend on the side. So moving it is a relabel.
+⚖ §5e Q1 A: M2's shape — native hub ops, no relayout, for every substrate that
+declares `exitSides` (bounce and runner at M3; the text adventure since G2a; jta
+and omsi since PIPELINE RELAYOUT R2). An exit of a flash zone does not stand
+anywhere: its `side` is a LINKING KEY, which play resolves through
+`params.sidePortals[side]` to a level portal whose geometry does not depend on the
+side. A text-adventure, jta or omsi exit's side is where it is listed or how it is
+labelled. Either way moving it is a relabel. The maze declares nothing — its exit
+is a tile, and a side move there is the room editor's geometry edit — so it stays
+refused.
 
 **The control.** On the sidecar block — all three hosts (Regions, Sidecars, the
 Map's selection) — a region whose substrate DECLARES `exitSides` draws
 **Exit sides:** with one picker per exit (`select.apworld-exit-side`). Its own
-side is marked *(this exit)*; a side another exit of the region holds is offered
-as **swap with that exit** (never disabled); a free side is a move. A pick is ONE
+side is marked *(this exit)*; a free side is a move. The picker names EXITS, not
+sides (PIPELINE RELAYOUT R2): a side other exits hold is offered as one **swap
+with <exit id>** entry PER HOLDER (never disabled; the option carries the holder's
+id in `data-swap-with`, so two holders are two swaps and nothing is resolved by
+side afterwards), plus **move here (with …)** when the declaration keys nothing by
+side (`sideMayHoldAnotherExit`). A pick is ONE
 op — `move-exit-side {region, exitId, side}` or
 `swap-exit-sides {region, exitA, exitB}` (the pipeline's own op names; the hub
 addresses the region by NAME, not by cell) — asked of a preview first, so a
@@ -1517,24 +1526,37 @@ region_1_1 is now a teleporter (it was adjacent) — ONE-WAY: region_1_1's exit
 exit_N (north) is adjacent (its flag is its own; this op does not re-judge it);
 relabelled by "bounce"'s `exitSides` (…)"* (`EXIT_LINK_ONE_WAY`). Moving it back
 says *"… is now adjacent (it was a teleporter); region_1_1's exit exit_N (north)
-leads back as adjacent too"*. The pipeline's own `moveSphereExitSide` agrees on a
-forward exit and disagrees on a BACK exit, whose flag its `stitchGrid` never
-updates (M2's back-exit finding, measured again in the exit-side shape).
+leads back as adjacent too"*. The pipeline's own `moveSphereExitSide` runs the
+same declared relabel (PIPELINE RELAYOUT R2) and, since R1, judges every exit's
+flag by the side law after its relayout — back exits included — so it agrees on
+both ends' own flags.
 
 **Refused by name** (`rulesDocOps.js`): no region name; no sidecar entry; no
 `exits` list; no such exit (naming the region's exits, and for a swap which of
 `exitA` / `exitB`); a side outside N/S/E/W; a substrate that is unregistered,
 declares no `exitSides`, or declares a malformed one; a side another exit holds
-(*"… moving X there is a swap, and says so: swap-exit-sides {exitA: X, exitB:
-Y}."*); a relabel that throws (a portal map already keyed on the target side);
+WHEN the declaration keys a payload fact by side (*"… moving X there is a swap,
+and says so: swap-exit-sides {exitA: X, exitB: Y}."* — the zone family, word for
+word as at M3); a relabel that throws (a portal map already keyed on the target side);
 a substrate with no serializer. A move to the exit's own side, or a swap of an
-exit with itself, is a no-op answered before any substrate is asked.
+exit with itself, is a no-op answered before any substrate is asked; a swap of two
+exits on one side is a no-op too (*"… are on one side — nothing to swap"*).
+
+**A second exit on a side** (PIPELINE RELAYOUT R2). Where the declaration's `keys`
+is empty — the text adventure, jta, omsi — a move onto a side another exit holds
+is taken: the exit joins the side, nothing swaps, and the answer counts the side's
+exits by name (*"Moved exit X of R to side S (east → south); side S now holds 2
+exits (X, Y); …"*). The Map draws them apart along the wall (the renderer's
+`resolveExitTilePositions` spreads a side's exits).
 
 **The corpus control** (`exitSides.test.js`), over every committed entry whose
-substrate declares `exitSides` (bounce and runner — M2's two omsi dissenters are
-outside it): a relabel to each exit's own side moves 0 bytes; every exit moved to
-every free side and back, and every swap swapped back, is byte-identical to the
-committed document; the side law reproduces every stored flag. An exhaustive
+substrate declares `exitSides` and whose payload carries an `exits` list: a
+relabel to each exit's own side moves 0 bytes; every exit moved to every free
+side and back — and, where the declaration keys nothing by side, to every
+OCCUPIED side and back — and every swap swapped back, is byte-identical to the
+committed document; the side law reproduces every stored flag but M2's two
+hand-authored omsi DIAGONALS (inside the population since omsi declares), which
+the row derives and names. An exhaustive
 deep diff over every move and swap allows only the moved sides, the flags the law
 changed, the renamed portal-map keys, a back exit's `backExitSide` and a
 DECLARED arrow.
@@ -1542,7 +1564,10 @@ DECLARED arrow.
 In-app rows: `apworld-exit-side-move-records-one-op-and-the-map-redraws` (the
 canvas digest after the pick equals the digest of a document authored by hand
 with the exit on that side), `apworld-exit-side-pick-of-a-taken-side-swaps`,
-`apworld-exit-side-undeclared-entry-offers-nothing-and-says-why`, and the play
+`apworld-exit-side-undeclared-entry-offers-nothing-and-says-why`,
+`apworld-exit-side-move-onto-a-held-side-joins-it` (R2: `procgen_topdown/AP_11`, a
+text-adventure exit picked onto a held side through the picker's move entry — the
+redrawn block shows both exits there; Undo restores), and the play
 witness `apworld-exit-side-move-plays-in-the-bounce-panel` (the moved exit
 Applied: the bounce game's own portal → side map, `__bounceDebug().portalSides`,
 serves the old side's portal on the new side).
