@@ -14664,6 +14664,22 @@ GitHub will stop serving once unreachable. CI at `776cbe827e` quoted in memory w
 EMPTY: the survey, R3, the landing and the shed all done on the user's word; W3 CLOSED. This session has run four
 units — REPLAN with the user (⚖ 2026-09-05); nothing launched.**
 
+**⚖ USER 2026-09-14: *"I want to finish all four of these items. At what point would you recommend starting a new planning
+session?"* — recommended NOW, before the first launches (this session ran four units: the survey, R3, the landing, the
+shed — past the ~3-unit mark). Designed **C3** (plan §22; brief `NewDocs/plans/seedling-headless-C3-prompt.md`), ONE Opus
+slice, four tasks: (1) `check-seedling-full-tier-owed`'s (i) gains TREE IDENTITY — a gitlink move whose submodule tree is
+byte-identical outside `docs/history.md` is cleared with a printed line, but only where BOTH objects exist (else "cannot
+compare — owed", today's behaviour); rows on a synthetic pair + the real pair `7ae2d5a`/`8c20769`; (2) ap-placement's
+`--wait-for-box` MEASURED under a held lock — its derived `--help` already lists the flag as inherited from `boxLock.js`
+(l.318–320 reads argv), so R3's "has no `--wait-for-box`" is most likely "was not passed one"; docblock line + the
+correction, or the fix if it refuses; (3) `driverChannel()` gains `close({ keep })` — `rmSync` of the headless stage dir on
+a green verdict, kept on red, never on the Windows stage; the four callers; rows + mutant; the 19 stale dirs removed;
+(4) the demo's ONE > 1 s logic-only frame (both builds, §21.2.1 (5)) EXPLAINED by a bounded probe (frame index, wall time,
+screenshots around it, the same on p4d), no fix. **HANDOFF to `seedling-headless-planning-5`** (Fable; prompt
+`NewDocs/plans/seedling-headless-planning-5-prompt.md`): its first act is to launch C3. State at the handoff: `main` =
+`origin/main` at `a5822657e9` + this entry, clean, no slice, no lock; the relayout arc CLOSED at `a5822657e9`.
+`seedling-headless-planning-4` ends itself after the successor's handshake (⚖ 2026-09-13 lifetime ruling).
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
