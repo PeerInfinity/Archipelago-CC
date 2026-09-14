@@ -31,7 +31,9 @@ import {
     DEFAULT_REGION_GEOMETRY, REGION_GEOMETRIES, REGION_GEOMETRY, geometryOf,
 } from './regionGeometry.js';
 import { LIBRARY_V1_SUBSTRATES } from '../procgenPipeline/regionLibraryValidator.js';
-import { EXIT_SIDES_SLOT, exitSidesOf } from './exitSides.js';
+import {
+    EXIT_SIDES_SLOT, SIDE_SHARING, exitSidesOf, sideMayHoldAnotherExit,
+} from './exitSides.js';
 import { createRng } from '../shared/rng.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
@@ -316,6 +318,23 @@ describe('⛓ M3 — the `exitSides` slot', () => {
             expect(out, entry.id).not.toBe(payload);
             expect(out.nested, entry.id).not.toBe(payload.nested);
         }
+    });
+
+    it('⛓ R2 — the occupied-side rule agrees with every entry\'s own declaration: a side may hold another '
+        + 'exit IFF the entry declares `exitSides` with no keys — both branches populated', () => {
+        const may = [];
+        const mayNot = [];
+        for (const entry of ENTRIES) {
+            const got = exitSidesOf(entry);
+            const verdict = sideMayHoldAnotherExit(entry);
+            const want = !!got.decl && got.decl.keys.length === 0;
+            expect(verdict.may, entry.id).toBe(want);
+            if (got.decl && got.decl.keys.length > 0) expect(verdict.keys, entry.id).toEqual(got.decl.keys);
+            if (!got.decl) expect(verdict.reason, entry.id).toBe(got.absent ? SIDE_SHARING.ABSENT : SIDE_SHARING.MALFORMED);
+            (verdict.may ? may : mayNot).push(entry.id);
+        }
+        expect(may.length).toBeGreaterThan(0);
+        expect(mayNot.length).toBeGreaterThan(0);
     });
 
     it('absent reads as ABSENT — never a default relabel', () => {

@@ -34,6 +34,10 @@
 // in its payload the old side keys. The op words the refusal; this reader
 // answers WHY in facts (absent / malformed, by name) — never a default.
 //
+// ⛓ PIPELINE RELAYOUT R2 — whether a side that already carries an exit may take
+// another is answered HERE, from the declaration, for every editor
+// (`sideMayHoldAnotherExit`).
+//
 // ⛔ It lives in procgenCore and imports nothing (`bindingContract.test.js`), so a
 // substrate library declares without importing the editor.
 
@@ -63,4 +67,49 @@ export function exitSidesOf(entry) {
         };
     }
     return { decl };
+}
+
+/**
+ * ⛓⛓ PIPELINE RELAYOUT R2 — the verdicts of `sideMayHoldAnotherExit`, as words
+ * a caller branches on (never a string it types).
+ */
+export const SIDE_SHARING = Object.freeze({
+    /** declares `exitSides` with EMPTY `keys`: nothing in the payload is keyed by a side */
+    SIDE_AGNOSTIC: 'side-agnostic',
+    /** declares `exitSides` with keys: those payload facts hold ONE value per side */
+    KEYED: 'keyed',
+    /** declares no `exitSides`: nobody has said what a side keys */
+    ABSENT: 'absent',
+    /** declares a malformed `exitSides` */
+    MALFORMED: 'malformed',
+});
+
+/**
+ * ⛓⛓⛓ **MAY A SIDE THAT ALREADY CARRIES AN EXIT TAKE ANOTHER ONE?** (PIPELINE
+ * RELAYOUT R2 — the ONE rule every exit-side editor asks.)
+ *
+ * The law, in words: a region's side may hold a second exit **iff its
+ * substrate declares `exitSides` with an EMPTY `keys` list** — the declaration
+ * that nothing in its payload is keyed by a side, so two exits on one side
+ * collide nowhere (the text adventure's compass lists both). A declaration WITH
+ * keys says some payload fact holds one value per side (the zone family's
+ * `params.sidePortals`), so a second exit there would overwrite the first: the
+ * answer is no. A substrate that declares nothing, or declares it malformed,
+ * has not said what a side keys, so the answer is no for a DIFFERENT reason —
+ * the caller refuses it by that absence, not by a side collision.
+ *
+ * ⛔ No substrate name and no list: the declaration is the only input.
+ *
+ * @param {object|undefined} entry a substrate registry entry
+ * @returns {{may: true, reason: 'side-agnostic'}
+ *   | {may: false, reason: 'keyed', keys: string[]}
+ *   | {may: false, reason: 'absent'}
+ *   | {may: false, reason: 'malformed', malformed: string}}
+ */
+export function sideMayHoldAnotherExit(entry) {
+    const got = exitSidesOf(entry);
+    if (got.absent) return { may: false, reason: SIDE_SHARING.ABSENT };
+    if (got.malformed) return { may: false, reason: SIDE_SHARING.MALFORMED, malformed: got.malformed };
+    if (got.decl.keys.length > 0) return { may: false, reason: SIDE_SHARING.KEYED, keys: [...got.decl.keys] };
+    return { may: true, reason: SIDE_SHARING.SIDE_AGNOSTIC };
 }
