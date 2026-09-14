@@ -671,6 +671,33 @@ describe('appendSphere (envelope path)', () => {
         expect(grid.getTeleporter({ gx: 0, gy: 0 }, 'toKept')).toEqual({ gx: 4, gy: 0 });
         expect(grid.teleporters.size).toBe(1);
     });
+
+    // PIPELINE RELAYOUT C1: a dropped teleporter child whose PARENT is dropped
+    // too — the parent has already left the grid when the child is reached, so
+    // its exit toward the child could not be read and the entry outlived both.
+    // The world is the measured harm case (maze, seed 2, six spheres, keep 1):
+    // the stale `6,5:exit → 0,0` stole the regrown region_6_5's forward exit.
+    it('truncateSphereWorld drops a dropped parent\'s teleporter entries, so a regrow keeps its exits', async () => {
+        const env = await runToStep(newEnvelope(makeConfig({
+            seed: 2, sphereCount: 6, maxItemsPerRegion: 1, fillerCount: 12,
+            substrateQuotas: { maze: 80 },
+            itemPool: { key_red: 3, key_blue: 3, key_green: 3, key_yellow: 3, victory: 1 },
+        })));
+        const cut = env.nodes.findIndex((n) => n.wave >= 1);
+        // Premise: the fixture holds the case — a dropped teleporter child of a dropped parent.
+        expect(env.nodes.some((n, i) => i >= cut && n.isTeleporter && n.parent >= cut)).toBe(true);
+        truncateSphereWorld(env, 1);
+        const grid = env.grow.grid;
+        const orphaned = [...grid.teleporters]
+            .filter(([k, to]) => !grid.cells.has(k.split(':')[0]) || !grid.cells.has(to));
+        expect(orphaned).toEqual([]);
+        await appendSphere(env, { items: ['key_red'], truncateToWave: 1 });
+        const region = env.grow.grid.getRegion({ gx: 6, gy: 5 });
+        expect(region?.region_id).toBe('region_6_5');
+        const exit = getRegionExits(region).get('exit');
+        expect(exit && { side: exit.side, target: exit.targetRegion })
+            .toEqual({ side: 'E', target: 'region_7_5' });
+    });
 });
 
 // --- recorded layout edits (B-d) ---------------------------------------

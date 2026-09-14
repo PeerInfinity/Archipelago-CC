@@ -387,6 +387,38 @@ export class Grid {
         return this.teleporters.delete(teleporterKey(fromCell, exitId));
     }
 
+    /**
+     * Drop the teleporter mapping of EVERY exit of the region at `cell` — the
+     * entries keyed by that region's own exit ids (`deleteTeleporter`, one key
+     * spelling). Call it BEFORE the region leaves the grid: once it has, its
+     * exits cannot be read and nothing else names those keys.
+     *
+     * ⛓ PIPELINE RELAYOUT C1 (2026-09-14) — WHY A DROPPED PARENT'S ENTRIES
+     * WOULD OTHERWISE OUTLIVE IT. `truncateSphereWorld` deletes a dropped
+     * teleporter child's entry by reading its PARENT's exit toward it. When the
+     * parent is dropped in the same truncation it has already left the grid
+     * (nodes are wave-ordered, so a parent is removed first), the read finds
+     * nothing, and the entry `parentCell:exitId` stayed. R1's exit re-key made
+     * that so (the side key it replaced was deleted without reading the
+     * parent). Measured over 16 dense maze sphere worlds × every kept-wave
+     * count: 30 of 45 dropped teleporter children had a dropped parent, leaving
+     * 30 entries; a regrow over them (`appendSphere` with `truncateToWave`)
+     * differed in 1 of 22 — seed 2, 6 spheres, keep 1: the stale `6,5:exit →
+     * 0,0` stole the regrown `region_6_5`'s forward exit E → `region_7_5`.
+     *
+     * @returns {number} how many entries were deleted
+     */
+    deleteTeleportersOf(cell) {
+        const region = this.getRegion(cell);
+        if (!region) return 0;
+        const exits = getRegionExits(region);
+        const ids = exits instanceof Map ? [...exits.keys()]
+            : (exits ?? []).map((e) => e.exit_id);
+        let n = 0;
+        for (const id of ids) if (this.deleteTeleporter(cell, id)) n++;
+        return n;
+    }
+
     allRegions() {
         return [...this.cells.values()];
     }

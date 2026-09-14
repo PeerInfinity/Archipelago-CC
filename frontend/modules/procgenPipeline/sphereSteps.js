@@ -932,13 +932,24 @@ export function truncateSphereWorld(env, keepWaves) {
     const grid = env.grow?.grid;
     for (let i = cut; i < nodes.length; i++) {
         const nd = nodes[i];
-        if (grid && nd.cell && grid.hasRegion(nd.cell)) grid.removeRegion(nd.cell);
-        if (grid && nd.isTeleporter && nd.parent != null) {
+        if (grid && nd.cell && grid.hasRegion(nd.cell)) {
+            // A dropped region takes its own exits' teleporter entries with it
+            // (read BEFORE it leaves the grid — Grid.deleteTeleportersOf says why).
+            grid.deleteTeleportersOf(nd.cell);
+            grid.removeRegion(nd.cell);
+        }
+        if (grid && nd.isTeleporter && nd.parent != null && nd.parent < cut) {
+            // A KEPT parent: keyed by EXIT, drop only the parent exit that led to
+            // THIS node, so a surviving same-side sibling keeps its teleporter.
+            // (A dropped parent's entries went with its region above.)
             const parent = nodes[nd.parent];
             const parentRegion = parent?.cell ? grid.getRegion(parent.cell) : null;
-            // Keyed by EXIT: drop only the parent exit that led to THIS node, so
-            // a surviving same-side sibling keeps its teleporter.
             const exitId = parentRegion ? parentExitIdTowardChild(parentRegion, nd) : null;
+            // ⛓ C1 (2026-09-14): `exitId` null with a kept parent is UNREACHED by
+            // the driver — 0 of 15 kept-parent teleporter children over 16 dense
+            // maze sphere worlds × every kept-wave count (the parent is realised
+            // with one forward exit per child, on the child's side, at it). It
+            // deletes nothing rather than guess an exit on that side.
             if (exitId != null) grid.deleteTeleporter(parent.cell, exitId);
         }
     }
