@@ -14744,6 +14744,23 @@ starting) + 25 % the same collide pass on L0. Instrument: a `--profiling-funcs` 
 (the property-get helpers) and on p4d's synchronous mp3 decode. **⛓ THE ARC'S LADDER IS EMPTY — the residue was the last
 item. REPLAN with the user; nothing launched.**
 
+**⚖ USER 2026-09-14: *"Please find the backlog document in the SWFRecomp-CC repository and add a note about the performance
+issue there. Then please finish the remaining cleanup."* — DONE by the planner.** SWFRecomp-CC `master` `7a3358858` (pushed;
+its deploy workflows are `workflow_dispatch`-only): `SWFRecompDocs/BACKLOG.md` gains "## AVM2 — performance" — the collide
+pass's helpers at ~800 ns per AABB test against ~7.5 ns on V8 (property-get IC `avm2_ops.c:798` 38.5 %, boxed add/coerce
+`avm2_value.c:970` 15.9 %, `avm2_value_is_of_type` `avm2_class.c:1733` 12.8 %; allocator+GC 1.5 %, E4X 0 %) with unmeasured
+candidates, and `sound_play` `avm2_media.c:663`'s synchronous mp3 decode (0.5–0.75 s); C4's two `.cpuprofile`s, results and
+scripts copied to `tools/divergence/perf/seedling_c4_2026-09-14/` beside the repo's existing seedling profiles. Cleanup:
+`wt-cold2`, `wt-q6`, `wt-areagraph`, `wt-cleanup`, `wt-plan3` and the scratch `wt-regen` REMOVED (1.9 G; all clean, no live
+session inside, heads on origin/main or origin/cleanup; `--force` needed for every one with an initialised submodule — C4's
+finding held); local branches `plan3`, `procgen-areagraph-slice1`, `cleanup` deleted (`cleanup` by `-D`: merged into
+origin/main but origin/cleanup had diverged; `d8eca8aba3` stays on origin/cleanup). `git worktree list` = the primary +
+`wt-b6`. Named, not acted on: 1,682 local branches in the primary; and `pipeline-relayout-planning`'s read-only measurement
+that FOUR rows (`identity: generate-procgen-reference.mjs`, `gate: procgen-reference`, `gate: seedling-full-tier-owed`,
+`gate: slice-records`) moved between `3061d84eeb` and `cb6c313c94` — a docs-only queue commit — so their DATA population
+covers this queue doc and every record push re-moves them (the self-invalidating-key family; the fix is a declared
+exclusion + presence/absence rows + one write, a slice for the replan). **⛓ LADDER EMPTY — REPLAN with the user.**
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
