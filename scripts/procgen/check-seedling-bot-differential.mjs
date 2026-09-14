@@ -745,6 +745,15 @@ const FADE_FRAMES = 25;
  * ⛓ Raising it can only make the harness WAIT LONGER (the docblock below says
  * why that direction is sound), which is why this is a safe correction to make
  * on an argument and a stale base rather than on a fresh 37.9 s of its own.
+ * ⛓ C4 (2026-09-14) — WHAT THE BIG FRAME IS, PROFILED (the demo's menu load
+ * into L12, a `--profiling-funcs` relink that strips to the pinned bytes): NOT
+ * the XML parse. `loadlevel` runs the frame BEFORE (470 ms, E4X 4 %); the
+ * 10.5 s frame is the first `Game.update`'s one-shot `check()` pass, where every
+ * `Tile.check` makes four `Entity.collide("Tile")` calls, each a linear walk of
+ * the Tile list — ~11.7 M box tests on L12's ~2,400 tiles (89 % of the frame;
+ * allocator + GC 1.5 %). The QUADRATIC is the game's (the same loop on V8's JIT:
+ * ~90 ms); the ~800 ns per test is the recompiled runtime's property-get,
+ * numeric and type-check helpers. p4d's L12 was not profiled.
  */
 const LOAD_ALLOWANCE_SEC = 80;
 
