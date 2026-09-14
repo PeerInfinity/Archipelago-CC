@@ -320,6 +320,21 @@ describe('⛓ M3 — the `exitSides` slot', () => {
         }
     });
 
+    // ⛓ PIPELINE RELAYOUT R2 (⚖ §5 Q3) — the declarer law, both directions. An exit on a SIDES region is
+    //   placed by its side alone (no tile), so the side is where it is listed or a key the substrate names;
+    //   either way the substrate can say which. A TILES region's exit is a tile — a side move there is a
+    //   geometry edit, not a relabel — and it declares none (the maze; `flash_seedling`, whose payload is an
+    //   atlas reference, is TILES geometry, so no separate atlas clause is needed — measured at R2).
+    it('⛓ R2 — every SIDES-geometry entry declares `exitSides`, and no TILES-geometry entry does — both '
+        + 'populated', () => {
+        const sides = ENTRIES.filter((e) => geometryOf(e) === REGION_GEOMETRY.SIDES);
+        const tiles = ENTRIES.filter((e) => geometryOf(e) !== REGION_GEOMETRY.SIDES);
+        expect(sides.length).toBeGreaterThan(0);
+        expect(tiles.length).toBeGreaterThan(0);
+        for (const entry of sides) expect(exitSidesOf(entry).decl, entry.id).toBeDefined();
+        for (const entry of tiles) expect(exitSidesOf(entry).absent, entry.id).toBe(true);
+    });
+
     it('⛓ R2 — the occupied-side rule agrees with every entry\'s own declaration: a side may hold another '
         + 'exit IFF the entry declares `exitSides` with no keys — both branches populated', () => {
         const may = [];

@@ -122,9 +122,12 @@ const REGEN_ENTRIES = REGEN_WORLDS.flatMap(({ file, doc }) => Object.entries(doc
 
 /**
  * ⛓ THE POPULATION: every entry whose substrate declares `exitSides` — committed,
- * plus the regenerated worlds' (G2a).
+ * plus the regenerated worlds' (G2a) — and whose payload carries an `exits` list
+ * (⛓ R2: jta declares now, and a jta zone with no exits key has no exit to move —
+ * `NO_EXITS_KEY_KEPT_ABSENT`).
  */
-const DECLARING = [...ENTRIES, ...REGEN_ENTRIES].filter(([, , , entry]) => declares(entry));
+const DECLARING = [...ENTRIES, ...REGEN_ENTRIES].filter(([, , , entry]) => declares(entry)
+    && Array.isArray(entry.playable_payload?.exits));
 
 /** ⛓ Does the entry's substrate's payload DECLARATION carry a side-keyed portal map? (the declaration, not the payload) */
 const declaresPortalMap = (entry) => !!sidecarFieldsOf(substrateRegistry.get(entry?.substrate))
@@ -232,8 +235,9 @@ describe('⛓⛓ THE CORPUS CONTROL — every committed entry that declares `exi
         expect(drifted).toEqual([]);
     });
 
-    it('(c) the side law reproduces every stored flag of the population — M2\'s two dissenters are '
-        + 'omsi, whose substrate declares no `exitSides`, so they are outside it', () => {
+    it('(c) the side law reproduces every stored flag of the population but M2\'s two hand-authored '
+        + 'DIAGONALS — ⛓ R2: omsi declares `exitSides` now, so they are inside it, and they are the only '
+        + 'dissent', () => {
         const dissent = [];
         let judged = 0;
         for (const [file, slot, name, entry, doc] of DECLARING) {
@@ -245,11 +249,16 @@ describe('⛓⛓ THE CORPUS CONTROL — every committed entry that declares `exi
             }
         }
         expect(judged).toBeGreaterThan(0);
-        expect(dissent).toEqual([]);
-        const dissenters = ENTRIES.filter(([file, , name]) => file.startsWith('omsi_region_split_test/')
-            && (name === 'region_1_0' || name === 'region_0_1'));
-        expect(dissenters.length).toBeGreaterThan(0);
-        for (const [, , , e] of dissenters) expect(declares(e), e.substrate).toBe(false);
+        // ⛓ a diagonal: its target is a DIAGONAL neighbour (both coordinates differ by one) and the stored
+        //   flag says adjacent — derived over the whole population, never an id list
+        const want = DECLARING.flatMap(([file, slot, name, entry, doc]) => entry.playable_payload.exits
+            .filter((x) => {
+                const a = doc.preset_sidecars[slot][name]?.grid_cell;
+                const b = doc.preset_sidecars[slot][x.targetRegion]?.grid_cell;
+                return a && b && Math.abs(a.gx - b.gx) === 1 && Math.abs(a.gy - b.gy) === 1 && x.isTeleporter !== true;
+            }).map((x) => `${file} ${slot} ${name} ${x.exit_id}`));
+        expect(want.length).toBeGreaterThan(0);
+        expect(dissent.sort()).toEqual(want.sort());
     });
 });
 
@@ -647,6 +656,8 @@ describe('the answer names the exit, the sides and the link — and a ONE-WAY li
         const x = entry.playable_payload.exits.find((e) => e.exit_id === op.exitId);
         const now = lawTeleporter(doc, slot, name, x, op.side);
         if (now === null) return null;
+        // ⛓ R2: an exit whose STORED flag the law disputes (the omsi diagonals, (c)) is not this row's shape
+        if (lawTeleporter(doc, slot, name, x, x.side) !== (x.isTeleporter === true)) return null;
         const back = (doc.preset_sidecars[slot][x.targetRegion]?.playable_payload?.exits ?? [])
             .filter((e) => e.targetRegion === name);
         if (!back.length) return null;

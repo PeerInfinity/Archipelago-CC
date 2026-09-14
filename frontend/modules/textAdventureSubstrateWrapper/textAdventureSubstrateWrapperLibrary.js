@@ -23,10 +23,10 @@ import {
     serializeTextAdventureRoom,
     deserializeTextAdventureRoom,
     TEXT_ADVENTURE_SIDECAR_FIELDS,
-    TEXT_ADVENTURE_EXIT_SIDES,
     textAdventureApLocationNames,
 } from './textAdventureRoom.js';
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
+import { SIDE_AGNOSTIC_EXIT_SIDES } from '../procgenCore/exitSides.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { getPlaybackProxy } from './index.js';
 import { drawTextAdventureCompositeRegion } from './textAdventureCompositeMap.js';
@@ -125,7 +125,11 @@ export const substrateRegistryEntry = Object.freeze({
     // Until G2a all three were the maze's.
     sidecarFields: TEXT_ADVENTURE_SIDECAR_FIELDS,
     apLocationNamesOf: textAdventureApLocationNames,
-    exitSides: TEXT_ADVENTURE_EXIT_SIDES,
+    // ⛓ The registry's `exitSides` slot: a text adventure's side is WHERE ITS
+    // EXIT IS LISTED (the 3×3 compass) and nothing else in its payload is keyed
+    // by a side — `exitGates` is keyed by `exit_id` — so it declares the ONE
+    // side-agnostic declaration (`procgenCore/exitSides.js`).
+    exitSides: SIDE_AGNOSTIC_EXIT_SIDES,
     // ⛓⛓ PRESET SIDECARS G2b-1 — the document ⇄ room round trip the hub's
     // `Re-derive rules ▸` needs (`textAdventureRegionRoundTrip.js`). ⛔ Edit ▸
     // also needs a `roomEditor`, which this entry does not declare: that door

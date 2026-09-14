@@ -31,6 +31,7 @@ import { validateJtaDataset, stampDatasetIdentity } from './datasetValidator.js'
 import { normalizeEntry } from '../shared/actionQueue/actionTypes.js';
 import { envelopeExitNames, nameMapValues } from '../procgenCore/sidecarFields.js';
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
+import { SIDE_AGNOSTIC_EXIT_SIDES } from '../procgenCore/exitSides.js';
 
 // Host-side PlaybackProxy, injected by index.js's initialize() once the
 // eventBus exists (setter injection rather than importing index.js so
@@ -686,6 +687,13 @@ export const substrateRegistryEntry = Object.freeze({
     // its `side` and reads no tile, so the engine mints no `x`/`y` for it
     // (`procgenCore/regionGeometry.js`).
     regionGeometry: REGION_GEOMETRY.SIDES,
+    // ⛓ PIPELINE RELAYOUT R2 (⚖ the user, relayout plan §5 Q3) — a jta exit's side
+    // is its exit-choice task's LABEL ("Go North (to X)"); the task id comes from
+    // the exit's index and nothing else in the payload is keyed by a side
+    // (measured over the committed sidecars, M3 §22.9 #2). So it declares the
+    // ONE side-agnostic declaration, and its exits move by side like the text
+    // adventure's — a side may hold two.
+    exitSides: SIDE_AGNOSTIC_EXIT_SIDES,
     // ⛓ PRESET SIDECARS V0 — where the payload carries its AP names. A payload
     // with no `ap_locations` (base scope: the two Python fixtures) carries none,
     // and the bridge's zone-location channel is then dormant — the reader

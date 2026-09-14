@@ -30,6 +30,7 @@ import {
     REQUIRED_ENVELOPE_FIELD, envelopeExitNames, nameMapValues,
 } from '../procgenCore/sidecarFields.js';
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
+import { SIDE_AGNOSTIC_EXIT_SIDES } from '../procgenCore/exitSides.js';
 import {
     buildUnlockPool,
     accessRuleFor,
@@ -456,6 +457,12 @@ export const substrateRegistryEntry = Object.freeze({
     // by its `side` and reads no tile, so the engine mints no `x`/`y` for it
     // (`procgenCore/regionGeometry.js`).
     regionGeometry: REGION_GEOMETRY.SIDES,
+    // ⛓ PIPELINE RELAYOUT R2 (⚖ the user, relayout plan §5 Q3) — an omsi exit's
+    // side is its synthetic exit action's LABEL; the action is KEYED by the exit's
+    // `exitName` (`exitActions.js`), and nothing else in the payload is keyed by a
+    // side (measured over the committed sidecars, M3 §22.9 #2). So it declares
+    // the ONE side-agnostic declaration — a side may hold two exits.
+    exitSides: SIDE_AGNOSTIC_EXIT_SIDES,
     // ⛓ PRESET SIDECARS V0 — where the payload carries its AP names (the
     // bridge maps a task to its AP location through `ap_locations`).
     apLocationNamesOf: nameMapValues('ap_locations'),

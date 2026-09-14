@@ -126,6 +126,7 @@ import { IframeClient } from '../iframe-base/iframeClient.js';
 import { OMSI_FILLER_ITEM_NAME, qBatchesForCount } from './unlockPool.js';
 import { planClockStep, planPumpBatch } from './clockGate.js';
 import { dedupeViewRequests } from './viewRequests.js';
+import { syntheticExitActions } from './exitActions.js';
 
 function log(level, ...args) {
     const fn = console[level] || console.log;
@@ -1332,8 +1333,6 @@ function _handleGameRestart() {
 // Region splitting (arc C) — overlay swap + synthetic exit actions
 // ────────────────────────────────────────────────────────────────
 
-const _SIDE_LABEL = { N: 'North', E: 'East', S: 'South', W: 'West' };
-
 /**
  * The active region's graph exits, from `world.exits` (the same
  * spiral-adjacency exits procgenPlayer routes on). deserializeWorld hands
@@ -1344,16 +1343,6 @@ function _getRegionExits(world) {
     if (exits instanceof Map) return [...exits.values()];
     if (Array.isArray(exits)) return exits;
     return [];
-}
-
-/** Human label for a synthetic exit action (jta _exitLabel port). */
-function _exitLabel(exit) {
-    const target = exit?.targetRegion;
-    const side = exit?.side;
-    if (side && _SIDE_LABEL[side] && target) return `Go ${_SIDE_LABEL[side]} (to ${target})`;
-    if (side && _SIDE_LABEL[side]) return `Go ${_SIDE_LABEL[side]}`;
-    if (target) return `Take exit: ${exit?.exitName ?? '?'} (to ${target})`;
-    return `Take exit: ${exit?.exitName ?? '?'}`;
 }
 
 /**
@@ -1549,20 +1538,20 @@ function _installRegionExits(world) {
     _activeSyntheticExits = [];
     if (!next) return;
     const townIndex = next.townIndex ?? 0;
-    for (const exit of _getRegionExits(world)) {
-        if (!exit?.targetRegion) continue;   // a dangling exit routes nowhere — skip it
-        const name = _exitLabel(exit);
-        const exitName = exit.exitName ?? name;
+    // ⛓ PIPELINE RELAYOUT R2 — the action NAME (the fork's key) carries the
+    //   exit's `exitName`, so two exits on one side never collide
+    //   (`exitActions.js`); a dangling exit is skipped there.
+    for (const { name, exitName, targetRegion } of syntheticExitActions(_getRegionExits(world))) {
         const r = m.injectSyntheticAction({ name, townNum: townIndex }, () => {
             // Slice 4: the visit recording goes out BEFORE the departing move
             // (the stash-before-regionMove contract) — see _publishVisitRecording.
             _publishVisitRecording(exitName);
-            _dispatchRegionMove(exit.targetRegion, exitName);
+            _dispatchRegionMove(targetRegion, exitName);
         });
         // `exitName` is the GRAPH exit id the move carries (and therefore the
         // `departureExitId` a recording stores); `name` is the action label the
         // fork's queue knows it by. The replay install needs the mapping.
-        if (r?.ok) _activeSyntheticExits.push({ name, exitName, targetRegion: exit.targetRegion });
+        if (r?.ok) _activeSyntheticExits.push({ name, exitName, targetRegion });
         else log('warn', `injectSyntheticAction('${name}') refused: ${r?.error}`);
     }
 }

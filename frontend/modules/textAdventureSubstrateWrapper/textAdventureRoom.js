@@ -368,14 +368,3 @@ export function textAdventureApLocationNames(payload) {
     return payload.locations.map((l) => l?.name).filter((n) => typeof n === 'string' && n !== '');
 }
 
-/**
- * ⛓ The registry's `exitSides` slot (`procgenCore/exitSides.js`): a text
- * adventure's side is WHERE ITS EXIT IS LISTED (the 3×3 compass) and nothing
- * else in its payload is keyed by a side — `exitGates` is keyed by `exit_id`. So
- * `keys` is EMPTY and the relabel is the identity (a clone: the op writes the
- * exits through this substrate's own serializer).
- */
-export const TEXT_ADVENTURE_EXIT_SIDES = Object.freeze({
-    keys: Object.freeze([]),
-    relabel: (payload) => structuredClone(payload),
-});

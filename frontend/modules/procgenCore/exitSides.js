@@ -45,6 +45,20 @@
 export const EXIT_SIDES_SLOT = 'exitSides';
 
 /**
+ * ⛓⛓ PIPELINE RELAYOUT R2 — **THE ONE SIDE-AGNOSTIC DECLARATION.** A substrate
+ * whose exit side is only WHERE the exit is listed or labelled — nothing else in
+ * its payload keyed by it — declares this object, never a copy of it: `keys` is
+ * empty and the relabel is the identity (a clone: the op writes the exits through
+ * the substrate's own serializer). Declared by the text adventure (the 3×3
+ * compass), jta (the exit-choice task's label) and omsi (the synthetic exit
+ * action's label) — ⚖ the user, 2026-09-13 (relayout plan §5 Q3).
+ */
+export const SIDE_AGNOSTIC_EXIT_SIDES = Object.freeze({
+    keys: Object.freeze([]),
+    relabel: (payload) => structuredClone(payload),
+});
+
+/**
  * The `exitSides` declaration of a registry entry, or why there is none.
  *
  * @param {object|undefined} entry a substrate registry entry
