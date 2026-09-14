@@ -24,8 +24,19 @@
  * siblings), so it has no dev-server host to shift and runs under a busy box.
  *
  * Run: node scripts/procgen/check-region-step-editing.mjs
- * @ci-box V3b adopted this script's NAME, not its RUN: it has never been priced on a runner, and `planCiShards` gives an unpriced arm a whole 600 s shard — adopting it is a costed decision, not a rename's side effect.
- *   ⇒ deleting this one line is how a later slice adopts it into CI.
+ *
+ * ⛓ **ADOPTED INTO CI — PIPELINE RELAYOUT C1 (2026-09-14).** The box-only
+ *    declaration that stood here said this gate had never been priced on a
+ *    runner and that an unpriced arm is given a whole 600 s shard. The price
+ *    was measured first: pure node, no server, no browser, no box lock —
+ *    7.63 / 7.33 / 7.81 s wall over three runs on the box. The reason it is
+ *    adopted is a regression it would have caught: PIPELINE RELAYOUT R1's
+ *    teleporter re-key turned phase K red (a sphere re-roll after an exit-side
+ *    move walled a child off), and it stayed red on main from `62d359ec1a` to
+ *    `676e8712da`, unseen, because the box answered this gate and no slice
+ *    asked it. It joins the HEADLESS set (the vitest job), where there is no
+ *    shard matrix for an unpriced arm to widen; the runner's real arm time is
+ *    read back off the first CI run.
  */
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
 import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
