@@ -60,13 +60,13 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
         },
         {
-            "fields": 26,
+            "fields": 27,
             "id": "jta",
             "label": "JtA",
             "registeredBy": "frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js"
         },
         {
-            "fields": 22,
+            "fields": 23,
             "id": "omsi",
             "label": "Idle Loops",
             "registeredBy": "frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js"
@@ -1594,7 +1594,9 @@ export const REGISTRY = frz({
             "carriedBy": [
                 "bounce",
                 "runner",
-                "text_adventure"
+                "text_adventure",
+                "jta",
+                "omsi"
             ],
             "cells": [
                 {
@@ -1650,17 +1652,23 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "jta",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "{keys, relabel}",
+                    "type": "object",
+                    "value": [
+                        "keys",
+                        "relabel"
+                    ]
                 },
                 {
                     "id": "omsi",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "{keys, relabel}",
+                    "type": "object",
+                    "value": [
+                        "keys",
+                        "relabel"
+                    ]
                 }
             ],
             "documentedHow": "table",

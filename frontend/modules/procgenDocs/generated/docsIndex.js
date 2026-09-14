@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 17,
         "headings": 790,
         "indexHeadings": 2,
-        "lines": 21266,
+        "lines": 21268,
         "pages": 4,
-        "words": 262322
+        "words": 262720
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -54,7 +54,7 @@ export const DOCS_INDEX = frz({
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
             "headings": 20,
-            "lines": 243,
+            "lines": 245,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -63,7 +63,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 8111
+            "words": 8416
         },
         {
             "description": "Every demonstrable feature of the two procgen lab pages, one entry each, with the link that shows it, the CLI command that reproduces it in node, which control to press, and what you are looking at.",
@@ -218,7 +218,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/stepped-pipeline.md",
-            "words": 2470
+            "words": 2563
         },
         {
             "description": "The text-adventure substrate (id `text_adventure`) renders a procgen region as prose: a textual description with compass-labelled clickable exits and clickable locations.",

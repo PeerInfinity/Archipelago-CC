@@ -6,7 +6,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 
 <!-- GENERATED:procgen-docs-index BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**17 documents · 4 pages · 262,322 words.**
+**17 documents · 4 pages · 262,720 words.**
 
 Order: `README_ORDER` in `scripts/procgen/reference/docsIndex.mjs` — today's reading order, declared. A file in the directory that is not in that list is a HARD ERROR, so a new document cannot arrive unindexed.
 
@@ -15,7 +15,7 @@ Descriptions: the document's OWN first paragraph, collapsed onto one line; past 
 | Document | Description | Words |
 |---|---|---|
 | [Procedural Generation Architecture](./architecture.md) | This is the orientation document for the procedural-generation ("procgen") system: the pipeline, the four layout drivers, **level generation's two passes** (elements and the certified area graph, then the site-typed keep-or-revert loop), the substrates, what a world compiles to, and how it is played back. Read this first; the rest of this section goes deeper on individual pieces. | 21934 |
-| [Substrate Registry Reference](./substrate-registry.md) | `frontend/modules/shared/procgen/substrateRegistry.js` is the dispatch hub between the pipeline, the runtime player and the substrates: each registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This is the reference for that entry contract — field by field, a capability matrix GENERATED from the eight entries, and a checklist for adding one. | 8111 |
+| [Substrate Registry Reference](./substrate-registry.md) | `frontend/modules/shared/procgen/substrateRegistry.js` is the dispatch hub between the pipeline, the runtime player and the substrates: each registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This is the reference for that entry contract — field by field, a capability matrix GENERATED from the eight entries, and a checklist for adding one. | 8416 |
 | [Procgen demonstrations — a catalogue](./demos.md) | Every demonstrable feature of the two procgen lab pages, one entry each, with the link that shows it, the CLI command that reproduces it in node, which control to press, and what you are looking at. | 859 |
 | [Procgen Gotchas and Disambiguations](./gotchas.md) | Short entries for the things most likely to mislead someone orienting in the procgen code. Each is a present-state fact with file pointers, not a bug report. | 13755 |
 | [Bounce Substrate](./bounce.md) | Bounce ("Bounce Demo", substrate id `bounce`) is a Doodle-Jump-style vertical platformer substrate in `frontend/modules/bounceDemo/`. | 2588 |
@@ -25,7 +25,7 @@ Descriptions: the document's OWN first paragraph, collapsed onto one line; past 
 | [Maze Substrate](./maze.md) | The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders regions as grid-of-tiles maze rooms: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles on the perimeter. | 12858 |
 | [Sphere-Driven Growth](./sphere-growth.md) | Sphere growth is the primary procgen driver: instead of growing a world and then discovering its progression structure, it **plans the progression first** — which items belong to which sphere — and then grows a world guaranteed to realise that plan. The plan doubles as a verification oracle, so every generated world ships with a proof that its progression matches the intent. | 1456 |
 | [Paths and Obstacles](./paths-and-obstacles.md) | Paths-and-obstacles is the intermediate representation procgen uses for access rules. | 914 |
-| [The Stepped Pipeline](./stepped-pipeline.md) | Sphere growth, top-down, and shuffled-spiral can run as monolithic calls or as a sequence of discrete, inspectable, editable steps. | 2470 |
+| [The Stepped Pipeline](./stepped-pipeline.md) | Sphere growth, top-down, and shuffled-spiral can run as monolithic calls or as a sequence of discrete, inspectable, editable steps. | 2563 |
 | [Text Adventure Substrate](./text-adventure.md) | The text-adventure substrate (id `text_adventure`) renders a procgen region as prose: a textual description with compass-labelled clickable exits and clickable locations. | 1257 |
 | [The Seedling Real-Game Bot, and the tracked record of the procgen arcs on `watch.html`](./seedling-bot.md) | How we drive the **real recompiled Seedling** with a scripted input tape and check a JavaScript model of its physics against what the game actually did — movement, collision, room transitions and A\* pathing. This file is also the tracked record of the procgen arcs built on `watch.html`, § *The procgen ELEMENTS design* being the current one. | 165181 |
 | [Flash Substrate](./flash.md) | The flash substrate (`frontend/modules/flashSubstrate/`, id `flash`) hosts recompiled Flash games — SWF → C → WASM via SWFRecomp-CC — in a same-origin iframe as procgen regions. The module ships a placeholder game page, so it is testable independently of any real recompiled game; its real significance is as the **shared iframe-substrate machinery** other substrates build on. | 4578 |
