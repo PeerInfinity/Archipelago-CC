@@ -210,7 +210,7 @@ export const INSTRUMENTS = frz({
         "files": 269,
         "lineStyle": 11,
         "withDocblock": 269,
-        "withFlags": 181
+        "withFlags": 182
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3017,9 +3017,18 @@ export const INSTRUMENTS = frz({
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "base"
+            ],
             "file": "check-seedling-full-tier-owed.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "base"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",

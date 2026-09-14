@@ -93,6 +93,28 @@
  * costs a human ten seconds of reading; a missed one costs a standing value
  * that is quietly wrong for a campaign.
  *
+ * ── ⛓⛓ (i)'s ONE CLEAR: THE SAME TREE OUTSIDE `docs/history.md` (C3) ──
+ *
+ * ⚖ user 2026-09-14, *"I want to finish all four of these items."* (plan §22
+ * item 1). A seedling-wasm history SHED moves the gitlink onto an orphan whose
+ * tree is byte-identical apart from the dated section the shed policy APPENDS
+ * to `docs/history.md` — §21.3's `7ae2d5a -> 8c20769`, discharged by a hand
+ * re-quote of three parts. So when the SHAs differ, (i) asks
+ * `submoduleIdentity.submoduleTreeIdentity` a second question and CLEARS only
+ * when BOTH commits are in the submodule checkout AND `git diff <before> <now>
+ * -- . ':!docs/history.md'` is empty, printing both SHAs and "the same game".
+ * ⛔ That is NOT the manifest-prose exemption above: `builds.json`, the README
+ * or any other path is still a build change and still reds. And where the old
+ * object is absent — a CI fresh clone after a shed — the line says "cannot
+ * compare (object <sha> absent)" and the category stays owed, today's answer.
+ *
+ * Run: node scripts/procgen/check-seedling-full-tier-owed.mjs
+ *   node scripts/procgen/check-seedling-full-tier-owed.mjs --base=<commit>
+ *     ⛓ `--base=` judges EVERY category against <commit> instead of its part's
+ *     own `measuredAt` — a what-if for proving a clause on a real pair (C3: the
+ *     parent of the shed bump `9ba9b4918e^`, gitlink `7ae2d5a`). It reads the
+ *     same row and writes nothing; a verdict under it is NOT the row's verdict.
+ *
  * ── ⚠ IT IS DELIBERATELY OVER-INCLUSIVE ON (i), (ii) AND (iv) ────────
  *
  * Those three are BYTE compares, because a projection is only defined for a
@@ -171,6 +193,7 @@ import { reDriveAdvice as sharedReDriveAdvice, tierCostsOf } from './fullTierSha
 import {
     FILE, ROSTER_ROW_KEY, compositeParts, compositeValue, compositeWhy, readStandingValues,
 } from './standingValues.js';
+import { submoduleTreeIdentity } from './submoduleIdentity.js';
 import { ROSTER_CATEGORIES, assertTiersComplete } from
     '../../frontend/modules/seedlingDemo/fixtures/tiers.js';
 import { fixtureNames } from '../../frontend/modules/seedlingDemo/fixtures/index.js';
@@ -322,11 +345,17 @@ if (parts.length) {
  * whose file predates it must get a verdict rather than a crash, and the line
  * says which shape it read.
  */
-const JUDGED = parts.length
+const BASE_OVERRIDE = process.argv.find((a) => a.startsWith('--base='))?.slice('--base='.length) ?? null;
+const JUDGED = (parts.length
     ? parts.map((p) => ({ category: p.category, base: p.measuredAt, tapes: CATEGORIES[p.category],
         part: p }))
     : [{ category: 'full', base: row.measuredAt, tapes: roster, part: null,
-        legacyShape: true }];
+        legacyShape: true }])
+    .map((j) => (BASE_OVERRIDE ? { ...j, base: BASE_OVERRIDE } : j));
+if (BASE_OVERRIDE) {
+    console.log(`⛓ --base=${BASE_OVERRIDE}: EVERY category is judged against that commit, not its `
+        + 'part\'s own head — a what-if; this verdict is NOT the standing row\'s.\n');
+}
 if (!parts.length) {
     console.log('⛓ THE ROW CARRIES NO CATEGORY PARTS — it predates R9 slice CAT, so it is '
         + 'judged as ONE category called `full` against its own head. The verdict is the '
@@ -448,11 +477,15 @@ for (const judged of JUDGED) {
     /* (i) THE GAME BUILD — a different game; only the full tier can see it. */
     const wasmBefore = gitlinkAt(base);
     const wasmNow = gitlinkAt(HEAD);
-    if (wasmBefore !== wasmNow) {
+    const identity = wasmBefore === wasmNow ? null
+        : submoduleTreeIdentity({ dir: join(REPO, WASM_SUBMODULE), before: wasmBefore, now: wasmNow });
+    if (identity && !identity.same) {
         debts.push(`⛔ (i) THE GAME BUILD moved — ${WASM_SUBMODULE} `
             + `${wasmBefore.slice(0, 12)} -> ${wasmNow.slice(0, 12)}: a different game was `
             + 'built, so every tape\'s verdict is about the old one. This is what only the '
-            + 'FULL tier can test (⚖ 70 (f))');
+            + `FULL tier can test (⚖ 70 (f)) — ${identity.line}`);
+    } else if (identity) {
+        cleared.push(`(i) build: ${identity.line} (C3)`);
     } else cleared.push(`(i) build @${wasmBefore.slice(0, 12)}`);
 
     /* (ii) THE DRIVER — how the tapes reach the game at all. */
