@@ -27,7 +27,7 @@ export const DOCS_INDEX = frz({
         "indexHeadings": 2,
         "lines": 21268,
         "pages": 4,
-        "words": 262720
+        "words": 262791
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -218,7 +218,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/stepped-pipeline.md",
-            "words": 2563
+            "words": 2634
         },
         {
             "description": "The text-adventure substrate (id `text_adventure`) renders a procgen region as prose: a textual description with compass-labelled clickable exits and clickable locations.",
