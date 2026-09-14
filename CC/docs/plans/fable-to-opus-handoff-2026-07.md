@@ -15312,6 +15312,36 @@ declarations from ONE exported identity, omsi's synthetic action keyed by `exitN
 sides (0 bytes); docs + trio. Baseline CI `62d359ec1a` 472/14170. Handshake exchanged. Shares the box with R3's `--write`
 (queues via `--wait-for-box`). As-built → plan §8; ONE merge by the planner; then the REPLAN with the user.
 
+**R2 COMPLETE + VERIFIED + MERGED 2026-09-14 — `origin/main` = `676e8712da`** (seven commits rebased over `6e40c6a44d`; as-built plan
+§8, planner's verification §8.7; trap 1360). Landed: `sideMayHoldAnotherExit(entry)` (`procgenCore/exitSides.js`) — a held side
+is a legal target iff the entry declares `exitSides` with empty `keys`; the hub moves an exit onto a held side for TA/jta/omsi
+(BEFORE *"side S (south) of region "Overworld" already carries exit WhiteCastlePort — moving YellowCastlePort there is a swap"*
+→ AFTER *"Moved exit YellowCastlePort of Overworld to side S (east → south); side S now holds 2 exits …"*), the zone refusal
+string-equal before and after (pinned), the picker names EXITS (move here / swap with <id> per holder), the corpus control
+widened to held sides and back (TA 34 / jta 12 / omsi 6 moves, 0 bytes), in-app row
+`apworld-exit-side-move-onto-a-held-side-joins-it`; the pipeline's `moveSphereExitSide`/`swapSphereExitSides` run the DECLARED
+relabel (`relabelRegionPayload` lends the world's exits to a grid payload) — zone move-and-back byte-identical INCLUDING key
+order (M3 §22.9 #1 closed), `backExitSide` follows a moved back exit, `applyPortalDirection` removed (bounce's `also` owns the
+arrow), a click on another exit's square = swap with THAT exit, the first click gated on `regionExitSides` not on
+`params.sidePortals`; jta and omsi declare ONE exported `SIDE_AGNOSTIC_EXIT_SIDES` (the law: SIDES geometry ⇔ declares); omsi's
+synthetic action keyed by `exitName` (the fork keys on the name with spaces removed — measured — so the label reads
+`Go West (to region_0_1) [exit_W]`, ⚖ cosmetic); docs + trio. **R1's REGRESSION found and fixed (`31aad987e0`):** a sphere re-roll
+after an exit-side move mints new exit ids and the per-exit teleporter under the old id pointed nowhere → `check-region-step-editing`
+phase K (*"sphere count mismatch: computed 2, planned 3"*) RED on main from `62d359ec1a` until this merge; the gate is `@ci-box`
+pure Node and nobody ran it — planner reproduced the red at R1's head in `wt-relayout-r1`. **Brief-wrong (§8.0, eleven):** the
+gate takes no `--host`; a grid region's payload has no `exits`; the pipeline UI's FIRST click also gated on `sidePortals`; the
+"not an atlas reference" clause was vacuous (`flash_seedling` is TILES); `groupExitsBySide` is unit-unreachable (submodule,
+DOM); `jta_mixed_test`'s JtaZone1 has no `exits` key; omsi's diagonals now sit inside the hub population (rows re-cut); the first
+key-order fixture moved the map's LAST key and was green under the mutant (trap 1360). **Planner-verified with its own runs:**
+seven touched test files 295/295, the step-editing gate ALL CHECKS PASSED, the maze pin unmoved; rebased cleanly, guard rows
+471/471 + `check-procgen-reference` + `check-region-step-editing` green; pushed on the headless planner's GO. CI at the branch
+head `33b0794b21` **475/14192 (14184 | 8 | 0)**, slow 12/217 (= 472/14170 + 3 files / 22 rows); the row at `676e8712da` is
+polling at this writing. R2's session ended by its literal pid. **Arc state: R1 + R2 SHIPPED; R3 (zones) / R4 (sphere planner)
+parked by the user's ruling. ⚖ for the REPLAN:** adopt `check-region-step-editing` into the headless CI set (pure Node, priced)
+so a red K cannot reach main unseen again; the `preset_sidecars` KEY ORDER after a REGION move (named by R1, untouched by R2);
+omsi's label showing the exit id (a fork change + gitlink bump for a display name); R1's unread `{grid, unplacedTargets}` return
+and `truncateSphereWorld`'s untested no-match case; `wt-relayout-r1` / `wt-relayout-r2` removable on the user's word.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
