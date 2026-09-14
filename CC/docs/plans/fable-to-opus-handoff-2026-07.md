@@ -14709,6 +14709,19 @@ full-tier-owed, save-stamp, vanilla-manifest, wasm-pins and five procgenDocs row
 the box 04:54–05:06Z: 30/30 exit 0, 0 refusals, 0 value lines changed, `--keys` after = 2 MOVED (the declarers) — banked as **`67fc86f623`**, pushed. **⛓ THE ARC'S LADDER IS EMPTY AGAIN — C3 was the last designed
 item. REPLAN with the user; nothing launched.**
 
+**⚖ USER 2026-09-14: *"Ok, please start a slice for all of the residue items, including that one."* (the demo's level-load
+profile, after the planner explained what "profiling inside the level load" means) — C4 DESIGNED (plan §23) + LAUNCHED by
+`seedling-headless-planning-5`** (Opus, primary tree, `-t seedling-headless-C4`, pid 1374180, cwd verified, handshake + idle
+subscription; main = origin/main = `19bbea17a0` at launch; no lock; brief `seedling-headless-C4-prompt.md`). Planner-measured
+first: the pinned demo wasm has NO name section (a CDP profile of it reads `wasm-function[N]` only), so the phase attribution
+comes from a `--profiling-funcs` relink of the same recompiled C in `~/CC/SWFRecomp-CC-r3` — a probe build, never a pin (⚖
+49); the four old-submodule worktrees are all detached at ancestors of origin/main and clean (wt-editor's only dirt is its
+submodule pointer); six other merged worktrees hold no initialised submodule and are LISTED, not removed; the shed clone holds
+nothing unique (`shed2` = origin/main, `shed` the stale unpushed orphan); R1's kept SWFs live in `~/CC/seedling_*_build/`, not
+in the r1/r3 recompiler worktrees, so r1 goes at once and r3 after the profile; the primary's submodule store is 58 M (112
+in-pack 30.35 MiB + 16 loose 26.59 MiB) with `7ae2d5a` reachable from the reflog alone — a plain `git gc` keeps it, which the
+owed gate's real-pair proof needs (⛔ never `--prune=now`). Six tasks; the bank write after (task 2 moves the owed gate's key).
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
