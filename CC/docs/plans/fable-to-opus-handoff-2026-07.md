@@ -14722,6 +14722,28 @@ in the r1/r3 recompiler worktrees, so r1 goes at once and r3 after the profile; 
 in-pack 30.35 MiB + 16 loose 26.59 MiB) with `7ae2d5a` reachable from the reflog alone — a plain `git gc` keeps it, which the
 owed gate's real-pair proof needs (⛔ never `--prune=now`). Six tasks; the bank write after (task 2 moves the owed gate's key).
 
+**C4 COMPLETE + VERIFIED 2026-09-14 (planner `seedling-headless-planning-5`'s reads; Opus session `seedling-headless-C4`,
+start `19bbea17a0`, pushed `21a4e74643..37be40ce6d`: `3a42c45c51` the `--base=` wording + a child-process row, `37be40ce6d` one
+docblock paragraph in the differential; tasks 3–6 touched no tracked path; plan §23.1; trap 1364; CI run 34822208112
+@`37be40ce6d` vitest 476/14204 0 failed, slow 217/217; the bank write after: 5 rows, 0 values moved, `3061d84eeb`).** On disk:
+`wt-cold`/`wt-e3b`/`wt-editor`/`wt-port` GONE (1.94 GB; `--force` was needed on all four — `git worktree remove` refuses ANY
+worktree with an initialised submodule), `~/CC/seedling-wasm-shed` GONE (135 MB; the stale orphan `shed` WAS unique as a 31-line
+history draft — saved as a scratchpad patch first), `SWFRecomp-CC-r1`/`-r3` GONE (2.12 GB; the primary recompiler = `master`
+@`bdf734c46`; R1's SWFs intact under `~/CC/seedling_*_build/`; r1's never-committed r1ctl control build went with it,
+rebuildable); the primary's submodule store 58 M → 37 M (0 loose, 128 in-pack; `7ae2d5a` kept — its store's local `main`
+holds it, not only the reflog); pins gate and owed gate ALL PASS after, the what-if line now "judged against
+--base=<sha> (what-if)". **THE PROFILE OVERTURNS C3 AND §23's phase model:** the demo's 10.5 s frame k=544 is the FIRST
+`Game.update()`'s one-shot `check()` pass — every `Tile.check()` makes four `Entity.collide("Tile")` linear walks, ~11.7 M box
+tests, 89 % of the frame (property-get helpers 38.5 %, compiled body 21.9 %, numeric add/coerce 15.9 %, type checks 12.8 %;
+allocator+GC 1.5 %, XML 0 %); `loadlevel` is frame 543 (470 ms, E4X 4 %). The quadratic is the game's; the ~800 ns per box
+test is the recompiler's (the same loop on V8's JIT ≈ 90 ms). p4d's k=1 boot frame = 58 % synchronous mp3 decode (the music
+starting) + 25 % the same collide pass on L0. Instrument: a `--profiling-funcs` relink of R3's objects (name section stripped
+= the pinned bytes, both builds) + CDP Profiler at ~205 µs; `.cpuprofile`s under C4's scratchpad. C4 ended by pid 1374180.
+**⚖ OPEN (the user's):** `wt-regen` @d8eca8aba3 is NOT merged (on origin/cleanup only); the five merged worktrees `wt-cold2`,
+`wt-q6`, `wt-areagraph`, `wt-cleanup`, `wt-plan3` (listed, not removed); a possible slice on the recompiler's hot-loop cost
+(the property-get helpers) and on p4d's synchronous mp3 decode. **⛓ THE ARC'S LADDER IS EMPTY — the residue was the last
+item. REPLAN with the user; nothing launched.**
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
