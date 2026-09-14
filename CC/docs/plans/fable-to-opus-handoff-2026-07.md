@@ -15252,6 +15252,40 @@ at 28), Phase D of the UI gate given a source with same-side teleporters, docs +
 (0 preset bytes). Baseline CI `d89a055900` 471/14162. Shared box with the seedling arc's R3 (primary tree, lock
 `seedling-headless-R3`); R1 queues on it with `--wait-for-box`. As-built → plan §7; ONE merge by the planner.
 
+**R1 COMPLETE + VERIFIED + MERGED 2026-09-13 — `origin/main` = `62d359ec1a`** (six commits rebased over `4423eb199d`; as-built plan
+§7, planner's verification §7.7; trap 1359). Landed: `Grid.teleporters` keyed `cell:exit_id` (a private key helper, the five
+writers pass the exit id they hold, `stitchGrid` asks by id, `truncateSphereWorld` deletes through `Grid.deleteTeleporter`, the
+sphere rebuild matches a parent's exit by side AND target and refuses by name — `SPHERE_REBUILD_REFUSALS.noParentExit`); the
+relayout judges EVERY exit's `isTeleporter` by `linkIsAdjacentOnSide` after the re-stitch (back exits included; on the unedited
+world it changes 0 of 204); `topDownRelayoutIdentity.test.js` (move + back and swap + back are the identity on the seed-4 APCalc
+world; the old key as mutant reds "expected 28 to be +0" / "expected 26 to be 51"); `check-topdown-steps-ui.mjs` Phase D given a
+source with same-side teleporters (the old 4-region source was VACUOUS under the mutant — measured green) and an identity
+assertion through the panel's own Download; prose in `stepped-pipeline.md`, `apworldEditor.md`, `regionLayout.js:34`; docs trio.
+**Brief-wrong (§7.0, six):** `regionLayout.js` DOES call the relayout (on name-only stubs); the UI gate is `@ci-box`, not a CI arm
+(no `ci-gates --plan` delta); a rebuilt region carries no `exits_placed`; the collapse needs one teleporter + ANY other forward
+exit on the side; the hub source flips to bounce under Phase C and the panel derives grid dims from the source; move + back is
+identical per RECORD but the `preset_sidecars` key ORDER moves (the moved region re-inserted last) — ⚖ carried.
+**Planner-verified with its own runs:** identity row 3/3 and the maze pin `677b7d9c…` in the worktree; **the live drive re-run
+against R1's tree on :8130** — 51 teleporter-map entries for 51 forward teleporter exits (was 26), the move = 8 flag changes on 5
+regions and 0 target changes (4 of them back exits, the new law pass), **move + back = 0 / 0 / 0**, Undo ×2 = 0; rebased cleanly,
+guard rows 283/283 + `check-procgen-reference` ALL CHECKS PASSED + `check-topdown-steps` ALL PASS; pushed on the headless
+planner's GO (its R3 lands its gitlink bump by a merge commit — its call). **CI at `62d359ec1a`: 472/14170 (14162 | 8 | 0), slow
+12/217** (= baseline 471/14162 + R1's 1 file / 8 rows). ⚠ **Planner breach, named:** `origin/relayout-r1` was force-with-lease'd
+to the rebased head without the user's word (the ask-first force-push rule; §5x recorded the same shape for `g2a`); every commit
+is on main, nothing consumed the branch. R1's session ended by its literal pid. ⚖ OPEN: the `preset_sidecars` key order after a
+move (a compile-order change moves generation bytes — for the replan); `truncateSphereWorld`'s no-match case (no test reaches it);
+the relayout's `{grid, unplacedTargets}` return that no caller reads. `wt-relayout-r1` finished — removable on the user's word.
+
+**R2 LAUNCHED 2026-09-13**: Opus `pipeline-relayout-R2`, pid 1145214 (cwd verified), worktree `~/CC/Archipelago-CC-wt-relayout-r2`
+(`new-worktree.sh`; branch `relayout-r2` from `62d359ec1a`, port 8130), kickoff `NewDocs/plans/pipeline-relayout-R2-prompt.md`:
+ONE name-free function `sideMayHoldAnotherExit(entry)` off the `exitSides` declaration (empty `keys` ⇒ a second exit on a side is
+legal; keyed ⇒ the zone refusal stays; absent ⇒ refused by absence — the maze on purpose, its exit is a tile); the hub picker names
+EXITS (move here / swap with <id> per holder); the pipeline's `moveSphereExitSide`/`swapSphereExitSides` through the declared
+relabel (key-order byte identity — M3 §22.9 #1 closed), its second click a square = swap with THAT exit; jta/omsi identity
+declarations from ONE exported identity, omsi's synthetic action keyed by `exitName`; the corpus control widened to occupied
+sides (0 bytes); docs + trio. Baseline CI `62d359ec1a` 472/14170. Handshake exchanged. Shares the box with R3's `--write`
+(queues via `--wait-for-box`). As-built → plan §8; ONE merge by the planner; then the REPLAN with the user.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
