@@ -14602,6 +14602,32 @@ at `bdf734c46`, the tier by CI dispatch on `pins-r3`, `main` never pushed by the
 idle subscription; main = origin/main = `9e9676d014` at launch; no lock). The relayout arc's planner was told the box
 use to come. Asks (b) the gitlink bump onto `main` and (c) the W3 re-cut + force-push stay ASK-FIRST after R3 reports.
 
+**R3 COMPLETE + VERIFIED 2026-09-14 (planner `seedling-headless-planning-4`'s reads: primary `main` `[ahead 3]` = origin
+`pins-r3` @ `8f24e7dfe7` — `73d36a0c32` the gitlink bump `681973f → 7ae2d5a`, `6d8b2b0eaf` the row quote, `8f24e7dfe7`
+the owed write; `7ae2d5a` an ancestor of seedling-wasm's remote `main`; pins gate ALL PASS (2 builds); owed gate ALL PASS
+@`73d36a0c3`; `--keys` 2 MOVED (bank-data only); CI @`8f24e7dfe7` run vitest 471/14162 0 failed + slow 217/217; live Pages
+200 serving 33,712,711 / 34,039,926 B; plan §21.2; trap 1361).** **Built:** the recompiler at `bdf734c46` in
+`~/CC/SWFRecomp-CC-r3`; both builds recompiled from R1's kept SWFs (read counts EQUAL R1's; the recompiled-C footprint:
+EdgeBounds fields in `abc_timeline.c` on both, 30 stroke lines in `draws.c` on p4d only); wasm p4d +68,013 B, demo
++72,336 B, both `.js` same length (EM_ASM offsets), html/bridge identical; links 15m57s / 5m06s; headless probes both modes
+match BEFORE on every build. **The tier by CI dispatch on `pins-r3`: run 34791653160 ALL CHECKS PASSED 3635/0/46, 150/150
+the same verdict and ordered checks as run 34750970611** (campaign 598/0 · map-walk 449/0 · mechanic 2194/0) — the
+21-commit runtime delta moved NO tape, as §21.1 predicted; row quoted at the bump (value unmoved). The owed write: 49
+`--key=` runs, 1092 s, 0 refusals, **0 values moved**; `--keys` after = 2 MOVED (full-tier-owed + slice-records, bank
+data). Gates BEFORE/AFTER identical (ship 263/0, save-stamp 21/0, generated-set 32/0, vanilla-manifest 24/0, ap-placement
+84/0/1, …), 0 event-handler errors. **Brief wrong (§21.2.1):** 49 rows owed, not 42 — SEVEN key on the wasm gitlink ALONE
+and were unmoved at W0 (the planner's listing kept only the status prefixes it had enumerated: trap 1361); `--why` is
+refused with `--category` (`--covered-by`); after the write the two still-MOVED rows are the bank's own declarers, not the
+sidecars' three; **the fresh-clone pack grew 38 M → 52 M (+14.28 MiB for two wasms)**, not W3's 1.9–3.7 MB per wasm — the
+shed now buys ~37 M per clone; the demo shows one > 1 s logic-only frame on BOTH builds (a probe artefact, not the
+rebuild); `check-seedling-ap-placement.mjs` has no `--wait-for-box` (its AFTER run refused under the other arc's lock and
+was re-run). CI's ap-placement shard printed a 609 s > 600 s budget warning at the bump — main's same shard is about the
+same, not attributed. R3's session ENDED by pid 1093548. Left in place: `~/CC/SWFRecomp-CC-r3`, `recompiled_r3`,
+`recompiled_orig_r3` (r1's untouched). Box traffic: the relayout arc merged R1 (`62d359ec1a`) and R2 (`676e8712da`) and
+pushed three docs commits while R3 ran — all GO (R3's work lives on `pins-r3`; the landing will be a MERGE commit, so the
+quoted bump SHA stays reachable). **⛓ THE PINS ARE ON `bdf734c46` IN THE SUBMODULE. NEXT = the user's word: (b) land
+`pins-r3` on `main` by a merge commit (the wasm gitlink — ask-first); then (c) W3 re-cut from `7ae2d5a` + the force-push.**
+
 ## 5x. PRESET SIDECARS arc 2 — the sides-only representation, M3 and the text-adventure editor — OPENED 2026-09-11 (Fable session `preset-sidecars-planning-2` at main `8a81534522`, successor to §5v; plan file `NewDocs/plans/preset-sidecars-plan.md` §5f onward, gitignored; memory `project_preset_sidecars`)
 
 **Opened MEASURED** (at `8a81534522`, then `91092bb81e` after H1's two commits landed): maze digest
