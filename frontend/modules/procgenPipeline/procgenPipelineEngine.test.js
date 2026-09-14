@@ -573,12 +573,13 @@ describe('relayoutSphereGrid (flags by the side law)', () => {
         expect(grid.allRegions().map((r) => cellKey(r.cell))).toEqual(['0,0', '1,0', '2,0', '0,1']);
     });
 
-    it('names an exit whose target is not placed instead of judging it', () => {
+    it('leaves an exit whose target is not placed as it is instead of judging it', () => {
         const grid = pair();
         grid.getRegion({ gx: 1, gy: 0 }).exits.get('P').targetRegion = 'Nowhere';
-        const { unplacedTargets } = relayoutSphereGrid(grid);
-        expect(unplacedTargets).toEqual([{ region: 'C', exitId: 'P', target: 'Nowhere' }]);
-        expect(grid.getRegion({ gx: 1, gy: 0 }).exits.get('P').isTeleporter).toBe(false);
+        grid.getRegion({ gx: 1, gy: 0 }).exits.get('P').isTeleporter = true;
+        expect(relayoutSphereGrid(grid)).toBe(grid);
+        expect(grid.getRegion({ gx: 1, gy: 0 }).exits.get('P').targetRegion).toBe('Nowhere');
+        expect(grid.getRegion({ gx: 1, gy: 0 }).exits.get('P').isTeleporter).toBe(true);
     });
 
     it('does not flag normal adjacent exits as teleporters', () => {

@@ -5261,8 +5261,7 @@ export function linkIsAdjacentOnSide(grid, fromCell, side, toCell) {
  * resolves to its intended target even if some other region now sits next to
  * it). Back-exits keep their stored targets untouched; then every exit's
  * `isTeleporter`, back exits included, is judged by the side law
- * (`judgeExitFlagsBySideLaw`). Returns `{grid, unplacedTargets}` — the exits
- * whose target region is not on the grid, left unjudged.
+ * (`judgeExitFlagsBySideLaw`). Returns `grid`.
  *
  * ⛓ PIPELINE RELAYOUT R1 (2026-09-13) — THE RECORD OF THE FIX. The teleporter
  * map used to be keyed `cell:side`, so a region with two links leaving one side
@@ -5287,8 +5286,8 @@ export function relayoutSphereGrid(grid) {
         grid.setTeleporter(from, exitId, to);
     }
     stitchGrid(grid);
-    const unplacedTargets = judgeExitFlagsBySideLaw(grid, cellOf);
-    return { grid, unplacedTargets };
+    judgeExitFlagsBySideLaw(grid, cellOf);
+    return grid;
 }
 
 /**
@@ -5298,12 +5297,17 @@ export function relayoutSphereGrid(grid) {
  * is the one stitchGrid just wrote, and a BACK exit (which stitchGrid skips)
  * stops carrying the flag of its region's old cell. An exit with no side, or no
  * target, has no link to judge. An exit whose target region is not placed on
- * the grid is left as it is and named in the returned list, not thrown.
+ * the grid is left as it is, not thrown.
  *
- * @returns {Array<{region: string, exitId: string, target: string}>}
+ * ⛓ PIPELINE RELAYOUT C1 (2026-09-14) — NO LIST OF THOSE EXITS IS RETURNED.
+ * R1 returned one (`{grid, unplacedTargets}`) and no caller read it. Measured
+ * before dropping it: 0 such exits over the 38 committed slots with grid cells
+ * (2,512 sided exits with a target), over 72 generated top-down worlds (12
+ * games × 3 grid sizes × 2 seeds) and over 36 sphere worlds truncated by
+ * `truncateSphereWorld` and then moved through the recorded op — nothing the
+ * product builds reaches this branch, so a summary of it was dead API.
  */
 function judgeExitFlagsBySideLaw(grid, cellOf) {
-    const unplaced = [];
     for (const region of grid.allRegions()) {
         const exits = getRegionExits(region);
         const entries = exits instanceof Map ? [...exits.entries()]
@@ -5311,14 +5315,10 @@ function judgeExitFlagsBySideLaw(grid, cellOf) {
         for (const [exitId, e] of entries) {
             if (!e?.side || !e.targetRegion) continue;
             const to = cellOf.get(e.targetRegion);
-            if (!to) {
-                unplaced.push({ region: region.region_id, exitId, target: e.targetRegion });
-                continue;
-            }
+            if (!to) continue;
             e.isTeleporter = !linkIsAdjacentOnSide(grid, region.cell, e.side, to);
         }
     }
-    return unplaced;
 }
 
 /**
