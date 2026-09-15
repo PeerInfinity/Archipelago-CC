@@ -9,8 +9,8 @@ per exit, a Restart that works outside loop mode, and the **skip the menu**
 setting.
 
 - User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
-- Arc plan: `NewDocs/plans/menu-panel-plan.md` (gitignored, on disk); tracked
-  record in `CC/docs/plans/fable-to-opus-handoff-2026-07.md` §5p.
+- Arc plan: `NewDocs/plans/menu-panel-plan.md` (gitignored, on disk); record
+  in the cross-arc queue (an untracked record kept outside the repository since 2026-09-14) §5p.
 
 ## Why it exists
 

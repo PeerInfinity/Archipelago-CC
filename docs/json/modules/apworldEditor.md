@@ -9,7 +9,7 @@ document.
 
 - User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
 - Arc plan: `NewDocs/plans/apworld-editor-hub-plan.md` (gitignored, on disk);
-  tracked record in `CC/docs/plans/fable-to-opus-handoff-2026-07.md` §5n.
+  record in the cross-arc queue (an untracked record kept outside the repository since 2026-09-14) §5n.
 
 ## Key files
 

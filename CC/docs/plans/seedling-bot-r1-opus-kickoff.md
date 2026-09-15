@@ -1128,6 +1128,6 @@ mechanic on a hand-authored tape; this proves the ROUTE depends on it.
   latch row CLOSED and two new bounded entries of R1's own.
 - `CC/docs/plans/seedling-bot-subtractive-plan.md`: R1 marked ✅ COMPLETE
   with the real claim and the four unpredicted findings.
-- `CC/docs/plans/fable-to-opus-handoff-2026-07.md` §5c: R1 closed, R2 queued
+- the cross-arc queue doc (`fable-to-opus-handoff-2026-07.md`, an untracked record since 2026-09-14) §5c: R1 closed, R2 queued
   with its bill.
 - Memory topic `project_seedling_bot_r1.md` rewritten as the closed record.

@@ -9291,7 +9291,7 @@ over the carved skeleton) and its **second substrate** (the maze,
 mode-level decision is designed and tested first). Design record:
 `NewDocs/plans/seedling-constructive-mode-kickoff.md` (⚠ `NewDocs/` is
 gitignored — working machine only); queue entry
-`CC/docs/plans/fable-to-opus-handoff-2026-07.md` §5f.
+in the cross-arc queue (an untracked record kept outside the repository since 2026-09-14) §5f.
 
 **Slice 1** moved the pure wall backends and the tile vocabulary into the shared
 submodule — see `maze.md`, "Where the backends live, and the grid contract".
@@ -9780,8 +9780,8 @@ system might require some big changes"). It re-read the Cloudberry Kingdom
 interview and MetaZelda (`~/CC/metazelda`, BSD-3) with the user and settled a
 DESIGN spanning several arcs — the design doc and the arc-1 kickoff live in
 `NewDocs/plans/procgen-elements-design.md` and `…-arc1-kickoff.md` (working
-machine); the queue entry is `CC/docs/plans/fable-to-opus-handoff-2026-07.md`
-§5g. What it settled, so a reader of this file is not surprised later:
+machine); the queue entry is in the cross-arc queue (an untracked record since
+2026-09-14) §5g. What it settled, so a reader of this file is not surprised later:
 
 - **Pass 1 is ELEMENTS + CONNECTORS**, the interview's own algorithm: a
   constructor builds a feature WITH the geometry it needs (a block, the switch

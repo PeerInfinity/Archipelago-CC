@@ -270,7 +270,7 @@ benefit from a clean context. Read order for the executor:
    (the phase split + rng discipline rationale).
 
 Follow-ups after this doc lands (this session, if the user asks): note the queue
-re-sequencing in `CC/docs/plans/fable-to-opus-handoff-2026-07.md` §3 (spiral
+re-sequencing in the cross-arc queue doc (`fable-to-opus-handoff-2026-07.md`, untracked since 2026-09-14) §3 (spiral
 parity precedes JtA Phase B) + a one-line "reevaluate zones" parking-lot item;
 update the `project_jta_zone_randomization` memory pointer ("NEXT = Phase B" →
 "NEXT = stepped-spiral parity, then reshaped Phase B on the spiral pipeline").
