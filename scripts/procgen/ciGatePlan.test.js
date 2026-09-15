@@ -426,6 +426,32 @@ describe('H2 — unittests_frontend.yml paths', () => {
     });
 });
 
+/**
+ * ⛓ G1 (seedling-headless) — **THE SEEDLING SOURCE IS UNSHALLOWED BEFORE
+ * ANYTHING READS ITS HISTORY.** The job's checkout is depth 1, submodules
+ * included; `check-seedling-source-pin` (iii) and the ogmo `--check` row need
+ * the fork's ancestry. A step that ran AFTER vitest or the gates would be
+ * green in its own log and fix nothing — so the row pins the ORDER, and the
+ * guard that keeps a full checkout from a failing `--unshallow`.
+ */
+describe('G1 — the vitest job unshallows vendor/seedling first', () => {
+    const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
+    const job = wf.slice(wf.indexOf('  javascript-tests:'), wf.indexOf('\n  browser-gate-plan:'));
+    const at = (name) => job.indexOf(`- name: ${name}`);
+    it('the step sits after the checkout and before vitest, the slow battery and the gates', () => {
+        const step = at('Unshallow the Seedling source submodule');
+        expect(step).toBeGreaterThan(at('Checkout repository'));
+        for (const later of ['Run Vitest tests', 'Run slow Vitest tests', 'Run headless procgen gates']) {
+            expect(at(later), later).toBeGreaterThan(step);
+        }
+    });
+    it('it is guarded on --is-shallow-repository and fetches --unshallow', () => {
+        const body = job.slice(at('Unshallow the Seedling source submodule'), at('Set up Node.js'));
+        expect(body).toContain('git -C vendor/seedling rev-parse --is-shallow-repository');
+        expect(body).toContain('git -C vendor/seedling fetch --unshallow');
+    });
+});
+
 describe('H2 — no per-push arm runs the differential full tier', () => {
     it('every CI arm of the differential names an explicit, non-full --tier=', () => {
         const { arms } = ciGatePlanFor({ repo: REPO, set: 'all' });

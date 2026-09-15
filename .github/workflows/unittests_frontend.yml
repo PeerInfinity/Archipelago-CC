@@ -124,6 +124,25 @@ jobs:
         with:
           submodules: recursive
 
+      # ⛓ G1 (seedling-headless) — THE SEEDLING SOURCE WITH ITS HISTORY. The
+      # checkout above is depth 1, submodules included, so `vendor/seedling`
+      # arrives as ONE commit: `check-seedling-source-pin`'s row (iii) (the
+      # demo build's source commit is an ANCESTOR of the pin) read
+      # UNVERIFIABLE (`2/0/1`), and the ogmo `--check` vitest row (its
+      # provenance is the last commit touching `Shrum.oep`) SKIPPED. One fetch
+      # of the fork's history, BEFORE vitest and the gates; guarded, so a
+      # checkout that is already full fetches nothing, and timed like the
+      # other measured steps.
+      - name: Unshallow the Seedling source submodule
+        run: |
+          S=$(date +%s)
+          if [ "$(git -C vendor/seedling rev-parse --is-shallow-repository)" = "true" ]; then
+            git -C vendor/seedling fetch --unshallow --quiet
+            echo "MEASURED: vendor/seedling unshallowed to $(git -C vendor/seedling rev-list --count HEAD) commit(s) in $(( $(date +%s) - S ))s"
+          else
+            echo "MEASURED: vendor/seedling already full ($(git -C vendor/seedling rev-list --count HEAD) commit(s)) — nothing fetched"
+          fi
+
       - name: Set up Node.js
         uses: actions/setup-node@v6.4.0
         with:
