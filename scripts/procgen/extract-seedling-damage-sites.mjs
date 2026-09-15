@@ -88,8 +88,12 @@ const optOf = (name, fallback = null) => {
     return eq === undefined ? fallback : eq.slice(name.length + 3);
 };
 const CHECK = args.includes('--check');
-const SOURCE = resolve((optOf('source') ?? join(process.env.HOME ?? '/home/robert', 'CC/seedling'))
-    .replace(/^~/, process.env.HOME ?? '/home/robert'));
+const SOURCE_ARG = optOf('source') ?? '~/CC/seedling';
+if (SOURCE_ARG.startsWith('~') && !process.env.HOME) {
+    console.error(`HOME is not set, so ${SOURCE_ARG} cannot be resolved — pass --source <checkout>`);
+    process.exit(2);
+}
+const SOURCE = resolve(SOURCE_ARG.replace(/^~/, process.env.HOME));
 const OUT = resolve(optOf('out') ?? DEFAULT_OUT);
 
 function walk(dir, out = []) {

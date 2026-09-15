@@ -8425,7 +8425,6 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
-                "censusOf",
                 "flag",
                 "opt",
                 "rawTileAt"

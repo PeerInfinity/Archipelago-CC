@@ -95,7 +95,13 @@ const placementOf = combatPlacementOf;
 const censusOf = (rec) => combat.combatCensus(rec, { placementOf });
 
 /** The fork the tables were transcribed from, for the recon's own header. */
-const SEEDLING_SRC = join(process.env.HOME ?? '/home/robert', 'CC', 'seedling', 'src');
+function seedlingSrc() {
+    if (!process.env.HOME) {
+        console.error('HOME is not set, so the seedling fork (CC/seedling under HOME) cannot be found');
+        process.exit(2);
+    }
+    return join(process.env.HOME, 'CC', 'seedling', 'src');
+}
 
 const args = process.argv.slice(2);
 const flag = (name) => args.includes(`--${name}`);
@@ -179,7 +185,7 @@ function runKillLocks() {
     console.log('## the ten kill locks, and the bill each opens on\n');
 
     // The whitelist partitions the class directory — asserted, not claimed.
-    const dirClasses = readdirSync(join(SEEDLING_SRC, 'Enemies'))
+    const dirClasses = readdirSync(join(seedlingSrc(), 'Enemies'))
         .filter((f) => f.endsWith('.as')).map((f) => f.replace(/\.as$/, ''));
     const partition = combat.assertTotalEnemiesTable(dirClasses);
     if (partition.length > 0) {
