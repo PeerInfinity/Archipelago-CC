@@ -133,13 +133,23 @@
  * the exact property this gate measures, silently shrinking the effectful set.
  * So `submodule status` is read back and an uninitialised line is a REFUSAL.
  *
+ * ⛓⛓ AND THE INIT IS A LOCAL CLONE OF THE PRIMARY'S OWN STORES, NOT A NETWORK
+ * FETCH (slice seedling-headless-G1). A linked worktree shares the
+ * superproject's objects but not its submodules', so a plain `submodule
+ * update --init` there re-cloned all seven over https per run (at
+ * `cf0cd3fdb9`: dies on `transport 'https' not allowed` offline; 420.7 s wall).
+ * `submoduleStores.js` derives one `url.<store>.insteadOf=<url>` per
+ * submodule the primary has initialised; one it has NOT is named in the tree
+ * line and still fetched (there is no store to borrow).
+ *
  * ⛓⛓ AND CI STAYS `--in-place`, DECIDED FROM WHAT CI'S CLONE SUPPORTS.
  * `unittests_frontend.yml` checks out `submodules: recursive` at the default
  * depth-1. A worktree there does NOT inherit those checkouts, so it would pay
  * a network re-clone of every submodule `.gitmodules` names, on every push —
  * for no containment, since the CI checkout is already a throwaway that dies
  * with the runner — and an init that failed would hand back the false green
- * above.
+ * above. (Since G1 a worktree would borrow the runner's stores instead of
+ * re-cloning; the containment argument alone still decides it.)
  *
  * ⛓⛓⛓ S5 (⚖ 72) — **AND THAT IS THE WHOLE OF WHAT CI DOES DIFFERENTLY, WHICH
  * IS WHY IT IS A `@ci-argv` AND NOT A `@ci-face`.** The flag moves WHERE the
@@ -188,6 +198,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { argvHelp, helpText, isEntryPoint } from './argvHelp.js';
+import { borrowArgs, submoduleStores } from './submoduleStores.js';
 
 argvHelp(import.meta.url);
 
@@ -342,6 +353,8 @@ const HEAD = git(REPO, ['rev-parse', 'HEAD']);
 let TREE = REPO;
 let WORKTREE = null;
 let SUBMODULES = 0;
+let BORROWED = 0;
+let UNBORROWED = [];
 
 /** ⛓ Removed on exit AND on signal — a killed run must not leave a worktree
  *  (nor the primary repo's registration of one) behind. Idempotent. */
@@ -471,8 +484,12 @@ if (!IN_PLACE && IS_ENTRY_POINT) {
      * `-`, and that is a REFUSAL. ⛓ The set is DERIVED from the repo, never
      * named here: a submodule added tomorrow is covered without an edit.
      */
+    /** ⛓ from the primary's stores, offline — see `submoduleStores.js`. */
+    const stores = submoduleStores(REPO);
+    BORROWED = stores.borrowed.length;
+    UNBORROWED = stores.missing.map((m) => m.path);
     try {
-        git(WORKTREE, ['submodule', 'update', '--init', '-q']);
+        git(WORKTREE, [...borrowArgs(stores.borrowed), 'submodule', 'update', '--init', '-q']);
     } catch (e) {
         console.log(`⛔ check-procgen-help: \`submodule update --init\` failed in the `
             + `throwaway worktree — ${String(e.message ?? e).split('\n')[0]}`);
@@ -891,7 +908,9 @@ async function runBatch(tasks) {
  */
 const treeLine = WORKTREE
     ? `## tree: THROWAWAY WORKTREE ${WORKTREE} at HEAD ${HEAD.slice(0, 9)} — the children run `
-      + `there, both disk observers are scoped to it, ${SUBMODULES} submodule(s) initialised, `
+      + `there, both disk observers are scoped to it, ${SUBMODULES} submodule(s) initialised `
+      + `(${BORROWED} cloned from the primary's own stores${UNBORROWED.length
+          ? `; ⚠ FETCHED over the network, the primary has no store: ${UNBORROWED.join(', ')}` : ''}), `
       + 'and it is removed on exit and on signal (a killed child\'s git locks live under its '
       + 'own private gitdir and die with it).'
     : `## tree: IN PLACE (${IS_ENTRY_POINT ? '--in-place' : 'IMPORTED, not launched'}) `
