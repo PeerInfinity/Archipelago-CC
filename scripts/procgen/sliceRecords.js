@@ -394,8 +394,8 @@ export function landedIn(lines, section) {
                  * ⛓⛓⛓ **THE ROW ALREADY DECLARES WHEN IT IS NOT THIS REPO'S
                  * COMMIT, AND THE GATE MUST READ THAT RATHER THAN FAIL ON IT.**
                  * Measured over the kickoff: §46.7 names the seedling fork's
-                 * `d4f1f37` as a home-relative checkout path (`` `~/…` ``) and `` submodule `7aaaa0a` `` — two commits in
-                 * two OTHER repositories, each labelled in its own cell — and
+                 * `d4f1f37` behind a home-relative checkout path, and
+                 * `` submodule `7aaaa0a` `` — two commits in two OTHER repositories, each labelled in its own cell — and
                  * §49 marks five SHAs `*` under a footnote reading *"pre-rebase
                  * SHAs; the rebase onto `394ced764` was clean"*. A gate that
                  * failed on those would be reporting, as defects, two things
