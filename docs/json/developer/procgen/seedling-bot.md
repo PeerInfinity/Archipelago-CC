@@ -83,9 +83,9 @@ local verify script only has to answer "are the recordings still current?".
 | Tapes + oracle recordings | `frontend/modules/seedlingDemo/fixtures/` |
 | The differential harness | `scripts/procgen/check-seedling-bot-differential.mjs` |
 | Real-GPU browser driver | `scripts/procgen/seedling-bot-replay-win.py` |
-| The in-game bot (tape interpreter, flags, grants, readout) | `~/CC/seedling` branch `bot`, `src/Bot.as` |
-| The five one-line flag guards | `~/CC/seedling` branch `bot`, `src/Player.as` |
-| Build script + pipeline recipe | `~/CC/seedling_bot_build/build_bot.sh` |
+| The in-game bot (tape interpreter, flags, grants, readout) | the `seedling` fork, branch `bot`, `src/Bot.as` |
+| The five one-line flag guards | the `seedling` fork, branch `bot`, `src/Player.as` |
+| Build script + pipeline recipe | `build_bot.sh` in the seedling bot build directory (outside this repo) |
 
 The module is engine-only — no panel, no substrate registration, therefore
 no `__BUNDLED_MODULES__` entry. `runnerDemo` is the structural precedent.
@@ -1090,7 +1090,7 @@ carries a per-load allowance for it.
 
 ⚖ **`--win` STAYS THE DEFAULT** until the user rules whether a headless tier may
 discharge the `--win` rows; H1's as-built
-(`NewDocs/plans/seedling-headless-webgpu-plan.md` §7) records whether the
+(§7 of the arc's untracked planning record) records whether the
 headless full tier reproduces the Windows one.
 
 ⚠ **And it writes a LIVE PROGRESS SIDECAR**, `C:\playwright\progress-<tape>.json`,
@@ -1127,7 +1127,7 @@ says so.
 
 ## Rebuilding the game after an AS3 change
 
-`~/CC/seedling_bot_build/build_bot.sh` builds the SWF; its header documents
+`build_bot.sh` (in the seedling bot build directory, outside this repo) builds the SWF; its header documents
 the rest (inject → SWFRecomp → `build_wasm_avm2.sh` → `deploy_wasm_avm2.sh`
 → copy into `frontend/modules/flashPanel/wasm/`). ⛓ 2026-08-19: that
 directory is no longer gitignored — it is the submodule
@@ -5557,9 +5557,8 @@ onto it eleven ticks late.
 ## R5: enemies come back, as built (CLOSED 2026-08-07)
 
 R5's brief and full as-built record are
-`NewDocs/plans/seedling-bot-r5-opus-kickoff.md` (§§8–37 the slices, §38 the
-close — NewDocs is gitignored, so the file exists only on the working
-machine; this section is the tracked summary).
+the rung's untracked kickoff (§§8–37 the slices, §38 the close); this
+section is the tracked summary.
 
 **The claim, re-derived at slice 22 and closed at slice 23** (§0's "14/14
 over one full playthrough" never ran — the honest statement is the
@@ -5786,9 +5785,8 @@ flags SET with two of the three lava self-hits driven.
 ## R6: bosses and the ending, as built (CLOSED 2026-08-08)
 
 R6's brief and full as-built record are
-`NewDocs/plans/seedling-bot-r6-opus-kickoff.md` (§§8–22 the slices, §23 the
-close — NewDocs is gitignored, so the file exists only on the working
-machine; this section is the tracked summary).
+the rung's untracked kickoff (§§8–22 the slices, §23 the close); this
+section is the tracked summary.
 
 **The claim, as the live readouts state it.** `r6ExitFindings()` over the
 committed roster, quoted rather than paraphrased:
@@ -5992,9 +5990,8 @@ are scoped work rather than loose ends:
 > description of the roster today. See the R9 slice 7 section for what moved.
 
 R7's brief and full as-built record are
-`NewDocs/plans/seedling-bot-r7-opus-kickoff.md` (§§8–20 the slices, §21 the
-close — NewDocs is gitignored, so the file exists only on the working
-machine; this section is the tracked summary).
+the rung's untracked kickoff (§§8–20 the slices, §21 the close); this
+section is the tracked summary.
 
 ⚖ **The rung's scope was PIVOTED once and its boundary RE-RULED once**, both
 by the user, and both are load-bearing on how to read what follows. The pivot
@@ -6429,7 +6426,7 @@ and never crossed — and the census-on model reproduces the game's whole
 disaster **digit for digit**, both deaths included (the sandtrap contact,
 death/reboot and stepped-chaser models all CONFIRMED by a tape none had
 been driven through). The withdrawn row is banked as a free oracle
-(`NewDocs/plans/r8-slice2-l6-blind-probe/`, with a `--mobiles` body
+(kept with the rung's untracked planning record, with a `--mobiles` body
 witness); `solveSegment` now **refuses a combat-blind run by name**; the
 corridor danger probe is segment-SAMPLED (waypoint-only probing measured
 its own hole on the same room).
@@ -6607,9 +6604,8 @@ re-solve), because `createLevelRun` takes `persistence` at construction.
 
 ## R8 slice 4: the two-pass authoring loop, and the walk the game shot
 
-Full record: `NewDocs/plans/seedling-bot-r8-opus-kickoff.md` §13 (NewDocs is
-gitignored, so that file exists only on the working machine; this section is
-the tracked summary). Commits `6e9e1ac6c` (step 0, the prediction),
+Full record: §13 of R8's untracked kickoff; this section is the tracked
+summary. Commits `6e9e1ac6c` (step 0, the prediction),
 `2b603d6a0` (the loop and the `kill` executor). Fork untouched.
 
 ### The loop, built once
@@ -7076,9 +7072,8 @@ rather than lowering it.
 ## R8: the live solver bot, as built (CLOSED 2026-08-11)
 
 R8's brief and full as-built record are
-`NewDocs/plans/seedling-bot-r8-opus-kickoff.md` (§§0–7 the brief, §§8–17 the ten
-as-builts (slices 0–8, with a 3b), §18 the close — NewDocs is gitignored, so the file exists only on
-the working machine; this section is the tracked summary).
+the rung's untracked kickoff (§§0–7 the brief, §§8–17 the ten
+as-builts (slices 0–8, with a 3b), §18 the close); this section is the tracked summary.
 
 ⚖ **The rung's scope was PIVOTED before it began** (user, 2026-08-10, recorded
 at the tail of "What R7 hands on" above): the M1→M2→M3 ladder's ordering is
@@ -7967,8 +7962,7 @@ oversight:
 
 ### Where the arc's own findings live
 
-The full record is the arc kickoff `NewDocs/plans/seedling-editor-opus-kickoff.md`
-(⚠ `NewDocs/` is deliberately gitignored — working machine only): §8 SOURCE=
+The full record is the arc's untracked kickoff: §8 SOURCE=
 SOLVE and the four transitive `node:fs` imports that had made the page
 unloadable in a browser since R7 slice 1; §9 the overlays, and the engine
 change that turned out not to be needed; §10 manual mode, the tape I/O, and
@@ -7998,8 +7992,8 @@ stack rows, the chest differential, and the V2 close).
 > § *The procgen ELEMENTS design* below. ⛔ Kept unrewritten: its measurements are the record of what was true.
 
 ⚖ Ruled by the user after the editor arc and BEFORE R9: a **proof of concept
-of the Cloudberry Kingdom algorithm** (source: the interview in
-`NewDocs/plans/procedural-platformer/`), built in `watch.html`, limited to the
+of the Cloudberry Kingdom algorithm** (source: the interview kept with
+the arc's untracked planning record), built in `watch.html`, limited to the
 features from before collecting the shield, across **two biomes** (pre-sword
 and post-sword). Not the full generator — a first draft, honestly bounded.
 
@@ -8142,8 +8136,7 @@ structured-field residue worth taking the next time `solverBot` is open anyway.
 
 ### Where the procgen arc's own findings live
 
-The full record is `NewDocs/plans/seedling-procgen-poc-kickoff.md` (⚠ `NewDocs/`
-is deliberately gitignored — working machine only): §1 the user's settled
+The full record is the arc's untracked kickoff: §1 the user's settled
 rulings, §3 the design, §7 the exit criteria; then one as-built per slice —
 §8 the level model and seam proof, §9 the generator core and pre-sword palette
 (and the two rulings that do not compose), §10 the collect-path solver fix
@@ -9253,8 +9246,7 @@ construction — it names the LADDER alone; the PAYLOAD is"*.
 
 ### Where the arc's own findings live
 
-The full record is `NewDocs/plans/seedling-generate-ui-kickoff.md` (⚠ `NewDocs/`
-is deliberately gitignored — working machine only): §1 the user's settled
+The full record is the arc's untracked kickoff: §1 the user's settled
 rulings, §3 the design, §7 the exit criteria; then one as-built per slice — §8
 the URL round trip, §9 the parameterized-template seam and wave 1, §10 the pin
 union / the anchor search / the kill-lock tag blast radius, §11 the catalogue
@@ -9289,8 +9281,7 @@ room of WALL, carve a path to the goal, then run the existing keep-or-revert loo
 over the carved skeleton) and its **second substrate** (the maze,
 `frontend/modules/mazeRoom/`, whose exact BFS oracle makes it the place every
 mode-level decision is designed and tested first). Design record:
-`NewDocs/plans/seedling-constructive-mode-kickoff.md` (⚠ `NewDocs/` is
-gitignored — working machine only); queue entry
+the mode's untracked kickoff; queue entry
 in the cross-arc queue (an untracked record kept outside the repository since 2026-09-14) §5f.
 
 **Slice 1** moved the pure wall backends and the tile vocabulary into the shared
@@ -9772,15 +9763,14 @@ is what `procgenCore/labProtocol.assertStateChanged` has documented all along.
 
 ⇒ ⛓ **AND THE ROOM THIS DESIGN GENERATES NOW REACHES THE REAL GAME.** [▶ LOAD IN WASM](#-load-in-wasm--what-this-page-holds-run-in-the-real-recompiled-game-tooling--user-2026-08-19) at the end of this document is the button: a certified room mounts in the recompiled Seedling as a one-room level SET and its certification solve replays into it, with an END-STATE verdict AND a PER-TICK differential beside the JS one. ⛔ Read that §'s *the two limits it names* before quoting an `agrees`.
 
-⇒ **Orientation** for a reader arriving here cold: [Architecture](./architecture.md#level-generation-two-passes-over-one-loop-core) § *Level generation: two passes over one loop core* is the half-page version; [the demo catalogue](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html) has a link for every piece of this that can be shown in a browser (14 entries; the data is `frontend/modules/procgenDocs/demos.js`, all of it loaded by `scripts/procgen/check-procgen-demos.mjs`, which imports the same module — [`demos.md`](./demos.md) is the pointer); and the working machine — the design doc, the four arc kickoffs and every slice's as-built — is under `NewDocs/plans/` (gitignored), with arc 3's gate-by-gate close and its whole residue list in `procgen-elements-arc3-kickoff.md` §18.
+⇒ **Orientation** for a reader arriving here cold: [Architecture](./architecture.md#level-generation-two-passes-over-one-loop-core) § *Level generation: two passes over one loop core* is the half-page version; [the demo catalogue](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html) has a link for every piece of this that can be shown in a browser (14 entries; the data is `frontend/modules/procgenDocs/demos.js`, all of it loaded by `scripts/procgen/check-procgen-demos.mjs`, which imports the same module — [`demos.md`](./demos.md) is the pointer); and the design doc, the four arc kickoffs and every slice's as-built are untracked planning records, with arc 3's gate-by-gate close and its whole residue list in the arc-3 kickoff's §18.
 
 The Fable planning session that constructive-mode ruling 11 called for
 ("updating the level generation to make proper use of the new two pass
 system might require some big changes"). It re-read the Cloudberry Kingdom
-interview and MetaZelda (`~/CC/metazelda`, BSD-3) with the user and settled a
-DESIGN spanning several arcs — the design doc and the arc-1 kickoff live in
-`NewDocs/plans/procgen-elements-design.md` and `…-arc1-kickoff.md` (working
-machine); the queue entry is in the cross-arc queue (an untracked record since
+interview and MetaZelda (BSD-3) with the user and settled a
+DESIGN spanning several arcs — the design doc and the arc-1 kickoff are
+untracked planning records; the queue entry is in the cross-arc queue (an untracked record since
 2026-09-14) §5g. What it settled, so a reader of this file is not surprised later:
 
 - **Pass 1 is ELEMENTS + CONNECTORS**, the interview's own algorithm: a
@@ -10094,7 +10084,7 @@ the honest measurement of the arc's dependency. S1 is the ⚖ user-authorised
 SOLVER slice that closes it. **The same placement now certifies**:
 `--elements='guard;len=2'` on `winding` seed 7 prints `CERTIFIED: true — SOLVED`
 with records `['weigh','hold','collect']` and the lifted claim **true**. As-built:
-`NewDocs/plans/procgen-elements-arc3-kickoff.md` §11.
+§11 of the arc-3 kickoff (an untracked planning record).
 
 - **A STANCE DERIVATION MAY RETURN A PREREQUISITE.** `deriveHoldStance` could
   ask *does a corridor reach this stance* and *does one reach it under the
@@ -10617,8 +10607,8 @@ ledger does not duplicate the pass-2 half.
 Fourteen slices — 1 · 2 · 2b · 2c · 2d · 3 · S1 · 4a · 4c · 4b · 4d · 5a · 5b ·
 5c — over `4e0ac0690`..`main`. §7's eight acceptance gates are answered one by
 one in arc-3 kickoff **§18**, which also carries the arc's whole RESIDUE in one
-deduplicated list (for R9, for arc 4, for arc 5 and for the user). ⚠ NewDocs is
-gitignored; this § is the tracked record.
+deduplicated list (for R9, for arc 4, for arc 5 and for the user); this § is the
+tracked record.
 
 **What the Seedling generator IS now**, in one paragraph. Pass 1 draws the GOAL
 at Manhattan ≥ 3 from the start, then an ELEMENT head from the biome default
@@ -11236,7 +11226,7 @@ named error rather than claiming about a one-directive replay.
 Eight slices — 0 · 1 · 2 · 3 · 4 · 5 · 6a · 6b. §7's nine acceptance gates are
 answered one by one in arc-5 kickoff **§15**, which also carries the arc's whole
 RESIDUE in one deduplicated list (for R9, for arc 4, for future arcs, for the
-user, and code-only). ⚠ NewDocs is gitignored; this § is the tracked record.
+user, and code-only); this § is the tracked record.
 
 **What the Seedling generator IS now**, against what arc 3 closed with. The ROOM
 is no longer one small box: width and height are separate knobs up to the vanilla
