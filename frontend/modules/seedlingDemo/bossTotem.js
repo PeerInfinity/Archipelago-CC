@@ -2,7 +2,7 @@
  * seedlingDemo/bossTotem — THE WAKE, AND THE CLAMP THAT IS AN ASSIGNMENT.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 23, step 2. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §37; the tick table it is
+ * the R5 kickoff §37; the tick table it is
  * asserted against is §34.3, banked as `r5Totem.L43_BOSS_WAKE.ticks` by
  * `probe-seedling-r5-l43-boss-wake.mjs` at slice 20.
  *

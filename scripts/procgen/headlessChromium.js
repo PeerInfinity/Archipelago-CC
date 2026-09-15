@@ -2,7 +2,7 @@
  * headlessChromium — **THE ONE SPELLING of the flags a headless Chromium needs
  * to run a WebGPU page (the recompiled Seedling) on SwiftShader, and of the
  * ONE `--enable-features=` switch they ride on** (slice seedling-headless-H1,
- * 2026-09-11; plan `NewDocs/plans/seedling-headless-webgpu-plan.md`).
+ * 2026-09-11; the headless arc's plan).
  *
  * ── ⛔⛔ WHY THIS FILE EXISTS ────────────────────────────────────────────
  *
@@ -48,7 +48,7 @@
  *
  * ── ⛓ MEASURED (2026-09-11, this box, Chromium 1194 / Playwright 1.56,
  *    `seedling_bot_ap_p4d/game.html` on :8000,
- *    `NewDocs/investigation/seedling-headless-probe.mjs`) ─────────────────
+ *    `seedling-headless-probe.mjs`, an untracked probe) ──────────────────
  *
  *   the gates' old five flags             device LOST at submit #2;
  *                                         0.40 frames/s, median 2064 ms

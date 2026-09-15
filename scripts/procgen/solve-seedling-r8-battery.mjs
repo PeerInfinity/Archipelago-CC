@@ -35,7 +35,7 @@
  * died twice without ever crossing — and the census-on model reproduces
  * the game's whole stream DIGIT FOR DIGIT, both deaths included. The
  * withdrawn tape/expectation/trace and the `--mobiles` body witness are
- * banked in `NewDocs/plans/r8-slice2-l6-blind-probe/` (a withdrawn
+ * banked in R8's untracked planning record (a withdrawn
  * recording is a free oracle); L6 stays slice 3's room. Kickoff §10 has
  * the full account.
  *

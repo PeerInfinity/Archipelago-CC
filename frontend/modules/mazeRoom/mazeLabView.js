@@ -2,8 +2,8 @@
  * mazeRoom/mazeLabView — **THE MAZE LAB PAGE'S DOM ARM.** `lab.html` calls
  * `main()` and this file is everything between a URL and a canvas.
  *
- * CONSTRUCTIVE-MODE arc, slice 3 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.5). The counterpart of `seedlingDemo/watchViewer.js`, and it
+ * CONSTRUCTIVE-MODE arc, slice 3 (the constructive-mode kickoff
+ * §3.5). The counterpart of `seedlingDemo/watchViewer.js`, and it
  * is deliberately much smaller: every claim-making thing it touches lives
  * elsewhere — the loop in `procgenCore/`, the bindings in `procgenMaze.js`, the
  * headless page logic in `mazeLab.js`, the DRAW in `mazeRoomRender.js`.

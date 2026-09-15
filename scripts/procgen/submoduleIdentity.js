@@ -1,7 +1,7 @@
 /**
  * submoduleIdentity — **A GITLINK THAT MOVED ONTO THE SAME GAME** (slice
- * seedling-headless-C3, 2026-09-14; plan
- * `NewDocs/plans/seedling-headless-webgpu-plan.md` §22 item 1).
+ * seedling-headless-C3, 2026-09-14;
+ * the headless arc's plan §22 item 1).
  *
  * ── ⛔⛔ WHY (i) NEEDED A SECOND QUESTION ──────────────────────────────
  *

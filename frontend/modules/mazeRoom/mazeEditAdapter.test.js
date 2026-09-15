@@ -1,7 +1,7 @@
 /**
  * ⛓⛓⛓ **THE MAZE ADAPTER — the core's six words, spoken by a real substrate.**
  *
- * EDITOR v3 arc, slice A1 (`NewDocs/plans/seedling-editor-v3.md` §7.2, §8.1).
+ * EDITOR v3 arc, slice A1 (the EDITOR v3 plan §7.2, §8.1).
  * `editCore.test.js` proves the core is agnostic against a TOY; this file
  * proves the adapter is thin — that every claim the core makes still holds when
  * the record is a maze world the generator actually produced, with an oracle

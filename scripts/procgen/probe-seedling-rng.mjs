@@ -2,7 +2,7 @@
 /**
  * probe-seedling-rng — take the generator's own stream FROM THE GAME.
  *
- * R6 slice 6a. Brief: `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §14.12.
+ * R6 slice 6a. Brief: the R6 kickoff §14.12.
  *
  * ── WHY A PROBE AND NOT A TABLE OF NUMBERS ────────────────────────────
  *

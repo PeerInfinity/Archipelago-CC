@@ -1,7 +1,7 @@
 /**
  * gateTotal — **THE VERDICT VOCABULARY A GATE PRINTS, SPELLED ONCE** (slice
- * seedling-headless-F2 task 3, 2026-09-13; plan
- * `NewDocs/plans/seedling-headless-webgpu-plan.md` §18).
+ * seedling-headless-F2 task 3, 2026-09-13;
+ * the headless arc's plan §18).
  *
  * ── ⛔⛔ WHY THIS EXISTS ─────────────────────────────────────────────────
  *

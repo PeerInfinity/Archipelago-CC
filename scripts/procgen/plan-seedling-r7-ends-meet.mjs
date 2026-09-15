@@ -3,7 +3,7 @@
  * plan-seedling-r7-ends-meet — AUTHOR the toy chain's tapes, from the walk
  * and from the GAME's own latch. R7 slice 2.
  *
- * Brief: `NewDocs/plans/seedling-bot-r7-opus-kickoff.md` §3.1/§3.2, §4
+ * Brief: the R7 kickoff §3.1/§3.2, §4
  * slice 2 ("the ENDS-MEET upgrade proven on a two-segment toy chain").
  * Chain data: `frontend/modules/seedlingDemo/playthroughWalk.js`.
  *

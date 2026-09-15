@@ -1,7 +1,7 @@
 /**
  * apworldEditor/regionRederive — **`Re-derive rules ▸`: A REGION'S ACCESS RULES,
  * RE-DERIVED FROM ITS PAYLOAD AFTER A RAW EDIT** (PRESET SIDECARS S2;
- * `NewDocs/plans/preset-sidecars-plan.md` §3 D1, §5b Q1 C, §9.3 rung 7).
+ * the preset-sidecars plan §3 D1, §5b Q1 C, §9.3 rung 7).
  *
  * ⚖ user, 2026-09-10, Q1 C: a raw save writes the entry alone, and a SEPARATE
  * button re-derives — *"but we can disable the buttons for substrates where

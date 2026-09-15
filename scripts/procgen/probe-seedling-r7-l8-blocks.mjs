@@ -3,7 +3,7 @@
  * probe-seedling-r7-l8-blocks — L8: THE BLOCK IS THE DOOR, AND THE CEILING
  * IS THE WEAPON. R7 slice 6f.
  *
- * Brief: `NewDocs/plans/seedling-bot-r7-opus-kickoff.md` §18.6 (the USER's
+ * Brief: the R7 kickoff §18.6 (the USER's
  * own route for L8, supplied from play) and §19.7 (the room measured
  * offline, the map this starts from). Chain data:
  * `frontend/modules/seedlingDemo/playthroughWalk.js`, chain `act2-to-l10`.

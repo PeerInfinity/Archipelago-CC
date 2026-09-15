@@ -3,7 +3,7 @@
  * SECOND CEREMONY CHAINED BEHIND IT.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 9, step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §21.5; §22 is the
+ * the R5 kickoff §21.5; §22 is the
  * as-built.
  *
  * ── ⛔⛔ WHY THE R3 CEREMONY MODEL CANNOT CARRY THIS ONE ───────────────

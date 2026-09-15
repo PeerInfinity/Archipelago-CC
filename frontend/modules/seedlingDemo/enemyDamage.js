@@ -7,7 +7,7 @@
  * result off the observation stream (R5 slice 3's L60 pair), or refused the
  * press outright (`presses.PRESS_ARM_POLICY.Enemy`, `refused` since R4).
  *
- * Brief: `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §34.9/§34.10 —
+ * Brief: the R5 kickoff §34.9/§34.10 —
  * *"what makes it a SLICE rather than a paragraph is the refusal's own
  * reason: a death moves `totalEnemies()`, which opens every `tset == -1`
  * lock in the room, so the first enemy this model kills has to bring the

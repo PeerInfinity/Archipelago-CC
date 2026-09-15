@@ -6,7 +6,7 @@
  * seals its own exit) and a `useItem` arm `levelRun` REFUSED by name. This
  * is the verb.
  *
- * Brief: `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §4 slice 2,
+ * Brief: the R6 kickoff §4 slice 2,
  * §2.3 (superseded in three places — see below), §8.2 (the anim clock
  * table, CANONICAL) and §8.16 (the corrections).
  * Source, all read at first hand on fork `bot` @ `a9f84ab`:

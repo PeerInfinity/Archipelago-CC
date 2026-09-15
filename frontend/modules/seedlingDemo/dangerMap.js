@@ -1,8 +1,8 @@
 /**
  * dangerMap — the UNION of the four hazard APIs, over LIVE run state.
  *
- * Region-atlas Phase 8, rung R8 (the live solver bot), slice 1. Kickoff
- * `NewDocs/plans/seedling-bot-r8-opus-kickoff.md` §3.3.
+ * Region-atlas Phase 8, rung R8 (the live solver bot), slice 1. Kickoff:
+ * the R8 kickoff §3.3.
  *
  * ⛔⛔⛔ A SEARCH HEURISTIC, NEVER AN ORACLE — and that sentence is
  * `spinnerForecast`'s doctrine repeated on purpose rather than paraphrased.

@@ -3,7 +3,7 @@
  * probe-seedling-r6-owl-rng — THE OWL ROOM'S DRAW SCHEDULE, FROM THE GAME.
  *
  * R6 slice 6e, the opening bill. Brief:
- * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §16.8.
+ * the R6 kickoff §16.8.
  *
  * ── WHAT A KNOWN ANSWER LOOKS LIKE FOR A SCHEDULE ─────────────────────
  *

@@ -4,7 +4,7 @@
  * APPROACH.
  *
  * Region-atlas Phase 8, subtractive ladder rung R6, slice 6c. Brief:
- * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §16.7 item 2, with §14.9's
+ * the R6 kickoff §16.7 item 2, with §14.9's
  * clock and §8.7's mechanism, modelled in `endingChain.stepFinalDoor`.
  *
  * ── WHAT THE WINDOW DOES ──────────────────────────────────────────────

@@ -4,7 +4,7 @@
  * FIRST LEDGER ROW A ROUTE CAN EARN BY WALKING AWAY.
  *
  * Region-atlas Phase 8, subtractive ladder rung R6, slice 6c. Brief:
- * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §16.7 item 1, with the
+ * the R6 kickoff §16.7 item 1, with the
  * mechanics transcribed at §16.6/§16.6a and modelled in `endingChain.js`.
  *
  * ── WHAT THE WINDOW DOES ──────────────────────────────────────────────

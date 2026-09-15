@@ -5728,7 +5728,7 @@ export function createLevelRun({
          *
          * ⛓ MEASURED, NOT ARGUED, and the measurement is the recording that
          * refuted `r8-solve-5` (§13.1, banked in
-         * `NewDocs/plans/r8-slice4-l5-refuted/`). On frame 206 the GAME's
+         * R8's untracked planning record). On frame 206 the GAME's
          * `arrowtrap@64,48#14.0` was at (68, 58) and knocked the player from
          * x=65.05 to x=62.35484072151636; this model had it at (68, 63),
          * missing the player's box by 0.40 px. The game's digit falls out of

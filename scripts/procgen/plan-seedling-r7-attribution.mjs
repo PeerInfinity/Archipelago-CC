@@ -4,7 +4,7 @@
  * classification, DERIVED, and committed BEFORE the batch runs.
  *
  * Region-atlas Phase 8, rung R7, slice 0. Brief:
- * `NewDocs/plans/seedling-bot-r7-opus-kickoff.md` §3.4.
+ * the R7 kickoff §3.4.
  *
  * ── WHY A SCRIPT AND NOT A LIST ───────────────────────────────────────
  *

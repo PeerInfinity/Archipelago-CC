@@ -1,7 +1,7 @@
 /**
  * ⛓⛓⛓ **THE EDITOR VIEW, AGAINST A TOY SUBSTRATE AND A HAND-BUILT DOM.**
  *
- * EDITOR v3 arc, slice A2 (`NewDocs/plans/seedling-editor-v3.md` §10). Two
+ * EDITOR v3 arc, slice A2 (the EDITOR v3 plan §10). Two
  * things are hand-built here and each for its own reason:
  *
  *  · **the toy substrate** — the same discipline `editCore.test.js` follows: a

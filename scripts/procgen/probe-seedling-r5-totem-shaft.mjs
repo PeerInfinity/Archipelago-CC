@@ -4,7 +4,7 @@
  * weapon this arc has never fired.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 5, step 2. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §17.7 (the recon this
+ * the R5 kickoff §17.7 (the recon this
  * continues) and §18 (what it found).
  *
  * ── WHERE §17.7 STOPPED ───────────────────────────────────────────────

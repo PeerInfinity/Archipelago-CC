@@ -28,8 +28,8 @@ process.exit(2);
  * probe-seedling-killlock-span1 — **THE OUTCOME × COST × GEOMETRY TABLE** for
  * the span-1 corridor kill lock (`wall-gap-spinner-killlock`, `span=1`).
  *
- * PROCGEN ELEMENTS arc 3, PROBE 2b (`NewDocs/plans/procgen-elements-arc3-
- * kickoff.md` §9b). Slice 2 shipped the corridor form and its yield table
+ * PROCGEN ELEMENTS arc 3, PROBE 2b (the arc-3 kickoff
+ * §9b). Slice 2 shipped the corridor form and its yield table
  * carried two numbers nobody could attribute: `winding`/`branchy`/`rooms`
  * REVERT more often than they KEEP, and one solve took **28,010 ms**. The
  * wave-1 sweep (`sweep-seedling-wave1-domains.mjs --kinds=`) counts outcomes

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * probe-seedling-r6-boss-rooms — R6 slice 0, asked of the REAL GAME.
- * Brief: `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §4 slice 0.
+ * Brief: the R6 kickoff §4 slice 0.
  *
  * Headless on the local Chromium (the `probe-seedling-r5-mobiles` precedent)
  * so it does NOT contend with the `--win` roster gate, which owns the

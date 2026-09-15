@@ -4,7 +4,7 @@
  * CLEANEST SHUT-BEFORE CONTROL ON THE ARC.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 23 step 2. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §37; the plan is §36.9's
+ * the R5 kickoff §37; the plan is §36.9's
  * (`r5Totem.L43_WAND_WINDOW`) and the tick table is §34.3's
  * (`r5Totem.L43_BOSS_WAKE.ticks`).
  *

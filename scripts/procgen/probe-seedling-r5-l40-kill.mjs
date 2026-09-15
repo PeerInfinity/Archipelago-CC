@@ -4,7 +4,7 @@
  * THE CHAIN NOW STOPS AT LINK 6 FOR A DIFFERENT REASON.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 21 step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §34.10 item 2 — "then the
+ * the R5 kickoff §34.10 item 2 — "then the
  * leg, in one window". `r5Totem.L40_ARRIVAL_BREAK` is what slice 17
  * measured; this is what the kill changes about it.
  *

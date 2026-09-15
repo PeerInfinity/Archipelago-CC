@@ -2,7 +2,7 @@
  * combatVerbs — `swing` and `kill`, transcribed from `Player.as`.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 3. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §3.3.
+ * the R5 kickoff §3.3.
  *
  * `combat.js` answers "what is standing here and what would killing it
  * cost". This module answers "what does a press actually HIT", which is a

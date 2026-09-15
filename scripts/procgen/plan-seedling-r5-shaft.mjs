@@ -3,7 +3,7 @@
  * plan-seedling-r5-shaft — THE EIGHTEEN PRESSES MEET THE GAME.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 9, step 2. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §22.
+ * the R5 kickoff §22.
  *
  * ── WHY THIS SCRIPT IS THE ONE THAT MATTERS ───────────────────────────
  *

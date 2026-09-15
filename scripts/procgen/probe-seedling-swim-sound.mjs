@@ -3,7 +3,7 @@
  * probe-seedling-swim-sound — is the swim speed a function of WALL CLOCK?
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 0. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §3.4 and §6.5.
+ * the R5 kickoff §3.4 and §6.5.
  *
  * ── THE QUESTION, AND WHY IT IS NOT ACADEMIC ──────────────────────────
  *

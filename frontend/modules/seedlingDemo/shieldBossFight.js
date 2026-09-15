@@ -3,7 +3,7 @@
  * OWN KEY, AND A WINDOW YOU OPEN BY STANDING STILL.
  *
  * Region-atlas Phase 8, subtractive ladder rung R6, slice 5. Brief:
- * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §4.5, with §2.4 amended by
+ * the R6 kickoff §4.5, with §2.4 amended by
  * §8.14 (the measured rects and the ungated band counter) and §8.2 (the anim
  * table, derived at the clamped `FP.elapsed = 0.0333`). Source:
  * `Enemies/ShieldBoss.as`, `Enemies/Enemy.as`, `Mobile.as`, `Player.as`,

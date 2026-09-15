@@ -2,8 +2,8 @@
  * procgenCore/elementSpec — **THE ONE SPELLING OF "WHICH ELEMENT", FOR EVERY
  * CHANNEL.**
  *
- * PROCGEN ELEMENTS arc 2, slice 3 (`NewDocs/plans/procgen-elements-arc2-
- * kickoff.md` §3.3). The maze binding takes an `elements:` spec; the maze CLI
+ * PROCGEN ELEMENTS arc 2, slice 3 (the arc-2 kickoff
+ * §3.3). The maze binding takes an `elements:` spec; the maze CLI
  * takes `--elements=<string>`; the sweep takes `--elements=<string>`; and slice
  * 4's lab page will take `?elements=<string>`. ⛔ ONE CODEC, mirroring
  * `areaSpec.js` — which itself mirrors `skeletonKinds`' `parse`/`format`/

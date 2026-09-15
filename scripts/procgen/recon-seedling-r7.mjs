@@ -3,7 +3,7 @@
  * recon-seedling-r7 — slice-0 instruments for THE HONEST PLAYTHROUGH.
  *
  * Region-atlas Phase 8, subtractive ladder rung R7, slice 0. Brief:
- * `NewDocs/plans/seedling-bot-r7-opus-kickoff.md` §4 slice 0, §6.1.
+ * the R7 kickoff §4 slice 0, §6.1.
  *
  * ── THE QUESTION ──────────────────────────────────────────────────────
  *

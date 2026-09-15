@@ -141,7 +141,7 @@ export const substrateRegistryEntry = Object.freeze({
 
     /**
      * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE ROOM-EDITOR DECLARATION**
-     * (`NewDocs/plans/editor-integration.md` §3.2). The maze's room editor is
+     * (the editor-integration plan §3.2). The maze's room editor is
      * not a panel: it is `lab.html`'s SET arm, hosted in `procgenLabPanel`.
      * `regionEditors.getRegionEditor('maze')` binds
      * `procgenLabPanel/labRoomEditor` to this page and arm, and the whole

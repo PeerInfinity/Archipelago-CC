@@ -3,7 +3,7 @@
  * probe-seedling-r5-spinner — THE BILLIARD, AND THE TWO ARMS THAT COME BACK.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 13 step 0. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §25.3 / §26.
+ * the R5 kickoff §25.3 / §26.
  *
  * ── WHAT SLICE 12 LEFT ────────────────────────────────────────────────
  *

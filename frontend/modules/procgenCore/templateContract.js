@@ -2,8 +2,8 @@
  * procgenCore/templateContract — WHAT A PALETTE TEMPLATE **IS**, for every
  * substrate on the loop.
  *
- * CONSTRUCTIVE-MODE arc, slice 2 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.2). These four functions used to live in
+ * CONSTRUCTIVE-MODE arc, slice 2 (the constructive-mode kickoff
+ * §3.2). These four functions used to live in
  * `seedlingDemo/procgenPalette.js`, which was correct while Seedling was the
  * only substrate and became a coupling the day a second one needed to declare
  * a template. `mazeRoom/procgenMaze.js` is that substrate; it may not import

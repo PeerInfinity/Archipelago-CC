@@ -4,7 +4,7 @@
  * reading of WHY it is hard was wrong in the direction that matters.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 6 step 2. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §18.5-18.6 (the seal) and
+ * the R5 kickoff §18.5-18.6 (the seal) and
  * §18.9 item 4 ("only then L39's six presses as a plan").
  *
  * ── ⛔⛔ WHAT §18.5 GOT WRONG ─────────────────────────────────────────

@@ -4,7 +4,7 @@
  * RNG-contiguous, and if not, by exactly how much, in which field?
  *
  * Region-atlas Phase 8, rung R7, slice 2. Brief:
- * `NewDocs/plans/seedling-bot-r7-opus-kickoff.md` §3.2 (the seam probe),
+ * the R7 kickoff §3.2 (the seam probe),
  * §6.2 (the open ruling), §9.6 items 1 and 4 (what slice 2 inherits).
  *
  * ── THE EXPERIMENT ────────────────────────────────────────────────────

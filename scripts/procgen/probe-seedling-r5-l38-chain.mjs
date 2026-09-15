@@ -3,7 +3,7 @@
  * probe-seedling-r5-l38-chain — THE FIVE-LINK CHAIN, DRIVEN.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 9, step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §22.
+ * the R5 kickoff §22.
  *
  * ── WHAT THIS IS FOR ──────────────────────────────────────────────────
  *

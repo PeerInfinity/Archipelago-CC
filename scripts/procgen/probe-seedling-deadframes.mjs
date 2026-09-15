@@ -4,7 +4,7 @@
  * care about wall-clock?
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 0. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §2.1 and §3.2.
+ * the R5 kickoff §2.1 and §3.2.
  *
  * ── WHY R5 NEEDS A NUMBER HERE ────────────────────────────────────────
  *

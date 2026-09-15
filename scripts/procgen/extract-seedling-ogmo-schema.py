@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Extract Seedling's OGMO PROJECT SCHEMA — what the level editor OFFERS.
 
-EDITOR v3, slice B (`NewDocs/plans/seedling-editor-v3.md` §3.3 Tier A). The
+EDITOR v3, slice B (the EDITOR v3 plan §3.3 Tier A). The
 editor arm has to know, for every entity the game's rooms can hold, what
 attributes it carries, of what TYPE, with what default and what bounds. That
 table exists already and it is not in this repo: `~/CC/seedling/Shrum.oep` is

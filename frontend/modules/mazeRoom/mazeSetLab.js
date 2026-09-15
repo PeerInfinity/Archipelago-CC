@@ -1,7 +1,7 @@
 /**
  * mazeRoom/mazeSetLab — **THE LAB PAGE'S SET-ARM BINDINGS, WITHOUT THE DOM.**
  *
- * EDITOR v3 arc, slice E2c (`NewDocs/plans/seedling-editor-v3.md` §27.4, §30).
+ * EDITOR v3 arc, slice E2c (the EDITOR v3 plan §27.4, §30).
  * E2b lifted `mountSetEditor` into `procgenCore/setEditorView.js` and proved a
  * SECOND binding over `mazeSetAdapter` in node, with no page — and it left the
  * binding list as a literal inside `setEditorView.test.js` (§28.9: *"the

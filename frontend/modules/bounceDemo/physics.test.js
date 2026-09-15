@@ -329,9 +329,8 @@ describe('flat air control (AIR_CONTROL: "flat")', () => {
 
 // ── DJ calibration tests ─────────────────────────────────────────────
 // Ground truth: the SWFRecomp-CC measurements of real Doodle Jump
-// (2026-06-11) — summary + per-tick traces in
-// NewDocs/plans/procedural-generation/dj-measurements/ (gitignored;
-// expectations inlined here with run-id provenance). All values are
+// (2026-06-11) — summary + per-tick traces kept with the untracked planning
+// records (expectations inlined here with run-id provenance). All values are
 // DJ-native px/ticks at 20Hz; the dj profile uses them verbatim.
 describe('dj profile calibration (measured 2026-06-11)', () => {
     const DJ = PROFILES.dj.constants;

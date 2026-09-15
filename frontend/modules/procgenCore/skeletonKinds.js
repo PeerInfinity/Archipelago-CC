@@ -2,8 +2,8 @@
  * procgenCore/skeletonKinds — **THE ONE SKELETON VOCABULARY, FOR BOTH
  * SUBSTRATES.**
  *
- * CONSTRUCTIVE-MODE arc, slice 5 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.3, ⚖ ruling 2: *"reuse the maze algorithms, and keep the
+ * CONSTRUCTIVE-MODE arc, slice 5 (the constructive-mode kickoff
+ * §3.3, ⚖ ruling 2: *"reuse the maze algorithms, and keep the
  * naming consistent — the constructive skeleton kinds ARE the maze biome
  * names, one vocabulary across substrates"*).
  *

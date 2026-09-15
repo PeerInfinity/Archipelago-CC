@@ -3,8 +3,8 @@
  * open floor blob, declared as an AREA, with a mouth a connector can attach to
  * and NOTHING ELSE: no block, no button, no door, no symbol, no tag.
  *
- * PROCGEN ELEMENTS arc 5, slice 3 (`NewDocs/plans/procgen-elements-arc5-
- * kickoff.md` §3.3), and it exists because of a MEASUREMENT rather than an
+ * PROCGEN ELEMENTS arc 5, slice 3 (the arc-5 kickoff
+ * §3.3), and it exists because of a MEASUREMENT rather than an
  * argument. ⚖ Design ruling 24 says *area is pass 1's job*; slice 1's area
  * census then measured what pass 1 could actually build:
  *

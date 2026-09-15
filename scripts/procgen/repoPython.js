@@ -1,7 +1,7 @@
 /**
  * repoPython — **WHICH PYTHON A GATE RUNS, AND THE REFUSAL WHEN IT CANNOT DO
- * THE JOB** (slice seedling-headless-F2, 2026-09-13; plan
- * `NewDocs/plans/seedling-headless-webgpu-plan.md` §18).
+ * THE JOB** (slice seedling-headless-F2, 2026-09-13;
+ * the headless arc's plan §18).
  *
  * ── ⛔⛔ THE TWO DEFECTS THIS REPLACES ─────────────────────────────────────
  *

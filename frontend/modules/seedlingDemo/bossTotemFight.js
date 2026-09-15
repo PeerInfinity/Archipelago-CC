@@ -3,7 +3,7 @@
  * IN `render()`, AND A BODY YOU CANNOT SHOOT FAST ENOUGH TO SILENCE.
  *
  * Region-atlas Phase 8, subtractive ladder rung R6, slice 4. Brief:
- * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §4.4, with §2.2 amended by
+ * the R6 kickoff §4.4, with §2.2 amended by
  * §8.11 (the sweeping floor, the un-restored `collidable`), §8.16 (the
  * one-tick `v.y` lag) and §8.10 (the death blast).
  *

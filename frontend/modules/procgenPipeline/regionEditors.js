@@ -5,8 +5,8 @@
  * ── ⛓⛓⛓ EDITOR INTEGRATION W3 — THE ANSWER IS THE REGISTRY'S NOW ─────
  *
  * This file used to BE the registry: a module-level table that every editor
- * wrote itself into at `initialize()` time. ⚖ `NewDocs/plans/editor-integration.md`
- * §3.2 replaced that with a DECLARATION the substrate entry already carries —
+ * wrote itself into at `initialize()` time. ⚖ the editor-integration plan
+ *§3.2 replaced that with a DECLARATION the substrate entry already carries —
  *
  *     entry.roomEditor = { kind: 'panel', open }              // bounce
  *     entry.roomEditor = { kind: 'lab', page, arm }           // maze, Seedling

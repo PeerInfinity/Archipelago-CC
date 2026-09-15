@@ -1,5 +1,5 @@
 /**
- * Step 1 of braid Regime 2 (NewDocs/plans/procedural-generation/braid-regime2.md),
+ * Step 1 of braid Regime 2 (the braid Regime 2 plan),
  * the thorough regression guard: across many RANDOMISED fork-free chains and
  * EVERY ability subset, the default (blue-SUPPRESSING) deriveBraidAccessRules
  * must produce the SAME per-goal minimal sets (and defects) as the FERRY-AWARE

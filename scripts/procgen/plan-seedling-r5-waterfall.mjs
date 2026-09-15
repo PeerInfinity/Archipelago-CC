@@ -3,7 +3,7 @@
  * plan-seedling-r5-waterfall — `climbsArmedWaterfall`'s LIVE WITNESS.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 4, step 5. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §15.10, which lists this
+ * the R5 kickoff §15.10, which lists this
  * as the one planner rule with no live witness at all.
  *
  * ── WHY BOTH ARMS ─────────────────────────────────────────────────────

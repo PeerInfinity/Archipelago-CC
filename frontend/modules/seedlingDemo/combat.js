@@ -3,7 +3,7 @@
  * arithmetic of a kill-lock.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 0. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §2.3/§2.4/§2.5.
+ * the R5 kickoff §2.3/§2.4/§2.5.
  *
  * R5 retires `noDamage`, and that un-guards more than "the enemies". Every
  * table here answers one of the three questions the rung actually asks:

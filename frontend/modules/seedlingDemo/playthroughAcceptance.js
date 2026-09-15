@@ -2,7 +2,7 @@
  * seedlingDemo/playthroughAcceptance — ENDS-MEET v2: the chain, checked.
  * R7 slice 2.
  *
- * Brief: `NewDocs/plans/seedling-bot-r7-opus-kickoff.md` §3.1/§3.2, §7 G1.
+ * Brief: the R7 kickoff §3.1/§3.2, §7 G1.
  * Data: `playthroughWalk.js`. Signature and per-field derivation:
  * `r7Acceptance.js`.
  *

@@ -1,7 +1,7 @@
 /**
  * procgenCore/elements — WHAT AN **ELEMENT** IS, for every substrate on the
  * loop. ⚑ The shape below is the design session's (PROCGEN ELEMENTS arc 2,
- * `NewDocs/plans/procgen-elements-arc2-kickoff.md` §3.2, ⚖ ruling 3): it is
+ * the arc-2 kickoff §3.2, ⚖ ruling 3): it is
  * FIXED here and every later element inherits it, Seedling's included.
  *
  * ── AN ELEMENT IS A TEMPLATE THAT EXISTS **BEFORE** THE CARVE ─────────

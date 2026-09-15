@@ -4,7 +4,7 @@
  * THERE. ⛔⛔ AND THE REASON SLICE 17 MISSED IT WAS NOT THE GRANULARITY.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 18 step 0. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §31.6 (the bounded
+ * the R5 kickoff §31.6 (the bounded
  * negative this closes) and §31.9 item 1 (what it asked for).
  * `r5Totem.L42_SOLVE.chain1` is the refuted chain; `.escape` is this.
  *

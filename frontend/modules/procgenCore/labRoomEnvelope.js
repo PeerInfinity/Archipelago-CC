@@ -1,7 +1,7 @@
 /**
  * procgenCore/labRoomEnvelope — **WHAT A LAB PAGE'S SET ARM ANNOUNCES, ONCE.**
  *
- * EDITOR INTEGRATION arc, slice W3 (`NewDocs/plans/editor-integration.md` §3.2,
+ * EDITOR INTEGRATION arc, slice W3 (the editor-integration plan §3.2,
  * §9). The room-editor contract's OUT path: when a lab page's SET arm is
  * holding a document, its `page.payload()` stops being the ladder's level
  * payload and becomes this envelope instead, so `labBridge.announce`'s own diff

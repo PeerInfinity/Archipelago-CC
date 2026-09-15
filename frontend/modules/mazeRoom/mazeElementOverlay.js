@@ -1,8 +1,8 @@
 /**
  * mazeRoom/mazeElementOverlay — **THE GADGET, DRAWN OVER THE GRID.**
  *
- * PROCGEN ELEMENTS arc 2, slice 4 (`NewDocs/plans/procgen-elements-arc2-
- * kickoff.md` §3.4 / §10.11.1, §10.11.6): the site outlined, the TUNNEL shaded
+ * PROCGEN ELEMENTS arc 2, slice 4 (the arc-2 kickoff
+ * §3.4 / §10.11.1, §10.11.6): the site outlined, the TUNNEL shaded
  * distinctly from the carve, the block, the button, the guard door, the flag
  * and the two ports — and, while a SOLVE is being replayed, **the block where
  * `state.blocks` says it is**, not where the level started it.

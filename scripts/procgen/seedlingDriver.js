@@ -1,8 +1,8 @@
 /**
  * seedlingDriver — **WHERE A `seedling-*-win.py` DRIVER RUNS: real-GPU Windows
  * Chrome (`--win`) or this machine's headless Chromium (the default)** (slice
- * seedling-headless-H2, 2026-09-12; plan
- * `NewDocs/plans/seedling-headless-webgpu-plan.md` §11).
+ * seedling-headless-H2, 2026-09-12;
+ * the headless arc's plan §11).
  *
  * ── ⛔⛔ WHY THE DRIVER IS SHARED AND NOT PORTED ──────────────────────────
  *

@@ -2,8 +2,8 @@
 /**
  * generate-maze-level — THE MAZE'S CLI TWIN of `generate-seedling-level.mjs`.
  *
- * CONSTRUCTIVE-MODE arc, slice 2 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.2). Seed + bounds in; a generated maze level and its FULL
+ * CONSTRUCTIVE-MODE arc, slice 2 (the constructive-mode kickoff
+ * §3.2). Seed + bounds in; a generated maze level and its FULL
  * generation trace out. One loop, one model, one oracle — this script owns no
  * generation logic at all: it parses arguments, calls
  * `mazeRoom/procgenMaze.generateMazeLevel`, and prints.

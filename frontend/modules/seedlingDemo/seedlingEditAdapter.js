@@ -2,7 +2,7 @@
  * seedlingDemo/seedlingEditAdapter — **SEEDLING, AS AN `editCore` ADAPTER, AND
  * THE FIRST SUBSTRATE THAT RESOLVES ITS OWN `base`.**
  *
- * EDITOR v3, slice B (`NewDocs/plans/seedling-editor-v3.md` §7.2, §3.2). A1
+ * EDITOR v3, slice B (the EDITOR v3 plan §7.2, §3.2). A1
  * shipped the core with the maze as its only adapter and left Seedling's
  * `watchEdit.js` untouched (§9.8 residue). This is the wrapper, and it is as
  * thin as the maze's for the same reason: the core already carries both of

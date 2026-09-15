@@ -2,7 +2,7 @@
  * seedlingDemo/director — one page, N windows, zero re-boots after the first.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §3.1, ruled at §9.1.
+ * the R5 kickoff §3.1, ruled at §9.1.
  *
  * ── WHAT CHANGED, AND WHAT DID NOT ────────────────────────────────────
  *

@@ -3,7 +3,7 @@
  * actually runs the game.
  *
  * Region-atlas Phase 8, subtractive ladder rung R6, slice 6a. Brief:
- * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §14.1, §14.12.
+ * the R6 kickoff §14.1, §14.12.
  *
  * ── WHY A MODEL OF THE RANDOM NUMBER GENERATOR ────────────────────────
  *

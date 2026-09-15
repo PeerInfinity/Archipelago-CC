@@ -4,7 +4,7 @@
  * THERE. ⛔⛔ THE ARM THAT DIED AND THE ARM THAT FOUND IT DIFFER IN ONE TERM.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 19 step 0. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §32.5 (the death this
+ * the R5 kickoff §32.5 (the death this
  * closes) and §32.8 item 1 (what it asked for). `r5Totem.L42_SOLVE.chain3`
  * is the chain; `.chain3Arms` is the pair of searches.
  *

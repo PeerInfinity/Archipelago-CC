@@ -1,6 +1,6 @@
 /**
  * seedlingDemo/twoPassSolve — THE TWO-PASS AUTHORING LOOP. R8 slice 4,
- * kickoff `NewDocs/plans/seedling-bot-r8-opus-kickoff.md` §12.10.3 (the
+ * the R8 kickoff §12.10.3 (the
  * machinery slice 3b named and refused to half-build) and §12.10.2 (the same
  * shape one oracle over).
  *

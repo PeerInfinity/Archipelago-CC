@@ -1,6 +1,6 @@
 /**
  * seedlingDemo/r6Acceptance — R6's exit criteria, DERIVED, as pure
- * functions. Brief: `NewDocs/plans/seedling-bot-r6-opus-kickoff.md`
+ * functions. Brief: the R6 kickoff
  * (§3.1 the ledger, §7 the gates, §8 slice 0's as-built).
  *
  * R5 counted CEREMONIES. **R6 counts BOSS KILLS BY PERSISTENCE TAG**, read

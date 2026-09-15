@@ -2,7 +2,7 @@
 /**
  * ⛓⛓⛓ **THE COMPOSITE SET ADAPTER — ONE SESSION OVER SEVERAL SET DOCUMENTS.**
  *
- * EDITOR INTEGRATION slice W2 (`NewDocs/plans/editor-integration.md` §2.2 #4).
+ * EDITOR INTEGRATION slice W2 (the editor-integration plan §2.2 #4).
  *
  * A world's rooms are the parts' rooms CONCATENATED in part order:
  * `bounds = {w: Σ each part's w, h: 1}`, and a global index resolves to

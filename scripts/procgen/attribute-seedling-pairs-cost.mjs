@@ -3,8 +3,8 @@
  * attribute-seedling-pairs-cost — **WHERE THE CARVED-PAIRS DUMP'S WALL TIME
  * GOES, PER SOLVE**, attributed to the CANDIDATE INSTANCE that asked for it.
  *
- * PROCGEN ELEMENTS arc 3, PROBE 2b Q5 (`NewDocs/plans/procgen-elements-arc3-
- * kickoff.md` §9b). Slice 2 recorded that `dump-seedling-kind-pairs.mjs
+ * PROCGEN ELEMENTS arc 3, PROBE 2b Q5 (the arc-3 kickoff
+ * §9b). Slice 2 recorded that `dump-seedling-kind-pairs.mjs
  * --kinds=<the six carved kinds> --seeds=1-12 --count=4` went from ~2 min to
  * ~82 min, and attributed it in prose to *"a kill solve walks the combat
  * ladder"*. ⛔ `reference_seedling_arc_traps` 275: a RUN-level number cannot

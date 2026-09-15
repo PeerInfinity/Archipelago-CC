@@ -3,7 +3,7 @@
  * probe-seedling-r5-feather — WHERE THE FEATHER'S ROUTE ACTUALLY IS.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 5, step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §16.10, which is the
+ * the R5 kickoff §16.10, which is the
  * measurement this probe re-asks at the granularity the player moves at.
  *
  * ── WHAT §16.10 SAID, AND WHY IT HAD TO BE RE-ASKED ───────────────────

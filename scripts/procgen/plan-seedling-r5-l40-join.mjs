@@ -3,7 +3,7 @@
  * plan-seedling-r5-l40-join — LINKS 1 AND 2, AND THEY ARE ONE GATE.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 14 step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §24.5 / §27.10.
+ * the R5 kickoff §24.5 / §27.10.
  *
  * ── THE GATE ──────────────────────────────────────────────────────────
  *

@@ -3,7 +3,7 @@
  * probe-seedling-r5-press-axes — WHICH PRESS DID THE GAME REFUSE, AND WHY?
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 12 step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §24.8 / §24.9.
+ * the R5 kickoff §24.8 / §24.9.
  *
  * ── WHAT §24.8 LEFT, AND WHAT IT ALREADY DECIDES ──────────────────────
  *

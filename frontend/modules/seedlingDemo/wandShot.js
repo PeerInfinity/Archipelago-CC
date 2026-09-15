@@ -6,7 +6,7 @@
  * the first one the PLAYER makes — so it is also the first per-visit body
  * whose existence a tape is responsible for.
  *
- * Brief: `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §4 slice 2 item 2,
+ * Brief: the R6 kickoff §4 slice 2 item 2,
  * §2.3 and §8.16. Source, read at first hand on fork `bot` @ `a9f84ab`:
  * `Projectiles/WandShot.as` (whole class), `Mobile.as:17,31-45,60-72,84-115`,
  * `Enemies/Enemy.as:141-209` (`hit`, `startDeath`, `dieEffects`),

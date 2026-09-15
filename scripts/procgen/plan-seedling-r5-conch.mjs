@@ -3,7 +3,7 @@
  * plan-seedling-r5-conch — THE D5 WALK, and the item that arms the water.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 4, step 4. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §2.6.2 and §15.10.
+ * the R5 kickoff §2.6.2 and §15.10.
  *
  * ── WHAT THIS WALK IS FOR ─────────────────────────────────────────────
  * `canSwim` is the conch and the conch is at the bottom of Dungeon 5, five

@@ -4,7 +4,7 @@
  * branches and two reboots.
  *
  * Region-atlas Phase 8, subtractive ladder rung R6, slice 6b. Brief:
- * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §§14.5–14.9, with §15.14
+ * the R6 kickoff §§14.5–14.9, with §15.14
  * as the correction list.
  *
  * ── WHY THIS IS NOT `dialogue.js` ─────────────────────────────────────

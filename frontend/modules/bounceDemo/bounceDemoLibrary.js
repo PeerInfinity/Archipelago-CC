@@ -921,7 +921,7 @@ export function createBounceSubstrateEntry({
 
         /**
          * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE ROOM-EDITOR DECLARATION**
-         * (`NewDocs/plans/editor-integration.md` §3.2). `procgenPipeline/
+         * (the editor-integration plan §3.2). `procgenPipeline/
          * regionEditors.getRegionEditor('bounce')` resolves Edit ▸ through
          * THIS field; `bounceRegionEditor/index.js` no longer registers
          * itself, so the panel knows bounce has an editor whether or not that

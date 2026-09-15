@@ -3,8 +3,8 @@
  * Connect to the host over the existing iframe adapter, route the three
  * host→page events by `iframeId`, publish the page→host ones.
  *
- * CONSTRUCTIVE-MODE arc, slice 4 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.5). The vocabulary is `labProtocol.js`; this is the transport
+ * CONSTRUCTIVE-MODE arc, slice 4 (the constructive-mode kickoff
+ * §3.5). The vocabulary is `labProtocol.js`; this is the transport
  * and the routing, and it is a THIRD file because the two bridges'
  * connect/route/publish bodies were byte-identical apart from four function
  * references. ⚖ §5's ONE OF EVERYTHING: two copies of "which events do I

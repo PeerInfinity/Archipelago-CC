@@ -1,7 +1,7 @@
 /**
  * seedlingDemo/watchEditor — **THE SEEDLING EDITOR'S DOM GLUE**, over
  * `procgenCore/editorView.js` (substrate-agnostic) and `watchEdit.js` (pure).
- * Plan `NewDocs/plans/seedling-editor-v3.md` §3.1, slices C1 and C2.
+ * The EDITOR v3 plan §3.1, slices C1 and C2.
  *
  * ⛔ **WHAT IS HERE AND WHAT IS NOT.** Here: the CONTROLS — the entity
  * palette, the typed attribute form, the layer and 45-column tile picker, the

@@ -3,7 +3,7 @@
  * probe-seedling-r6-owl-prefix — ⛔⛔⛔ ATTRIBUTE THE TICK-23 DIVERGENCE.
  *
  * R6 slice 6g, the slice's first job. Brief:
- * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §20.7 and §20.11.
+ * the R6 kickoff §20.7 and §20.11.
  *
  * ── WHAT THIS IS FOR ──────────────────────────────────────────────────
  *

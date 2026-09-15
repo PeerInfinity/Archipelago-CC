@@ -1,5 +1,5 @@
 /**
- * Step 6 of braid Regime 2 (NewDocs/plans/procedural-generation/braid-regime2.md):
+ * Step 6 of braid Regime 2 (the braid Regime 2 plan):
  * SPHERE GROWTH emits gated braids, and the playback bot finishes them with no
  * soft-locks.
  *

@@ -2,7 +2,7 @@
  * seedlingDemo/fallRock — THE ROCK THE ROPE DROPS.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 10, step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §23.
+ * the R5 kickoff §23.
  *
  * ── WHY THIS EXISTS: A MODEL SAID "no-op" AND THE GAME WROTE THE FLAG ──
  *

@@ -1,6 +1,6 @@
 /**
  * seedlingDemo/r7Acceptance — R7's ledgers, DERIVED, as pure functions.
- * Brief: `NewDocs/plans/seedling-bot-r7-opus-kickoff.md` (§3.2 the seam,
+ * Brief: the R7 kickoff (§3.2 the seam,
  * §3.3 the goal ledger, §3.4 the batch, §7 the gates, §8 slice 0's
  * as-built).
  *

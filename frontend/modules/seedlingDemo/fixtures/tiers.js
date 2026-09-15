@@ -2,8 +2,8 @@
  * seedlingDemo/fixtures/tiers — the roster's TIER assignment, pinned by
  * name, with a completeness assertion so it cannot rot.
  *
- * Ruled by the user at R6 slice 0 (`NewDocs/plans/seedling-bot-r6-opus-kickoff.md`
- * §6.3, and `note_roster_trim_evaluation`'s five criteria). The parked
+ * Ruled by the user at R6 slice 0 (the R6 kickoff
+ *§6.3, and `note_roster_trim_evaluation`'s five criteria). The parked
  * request was "evaluate which tests from previous rungs aren't worth
  * including in the full test run"; the answer had to be MEASURED, and it
  * was — `scripts/procgen/mine-seedling-roster-history.mjs` is the evidence.

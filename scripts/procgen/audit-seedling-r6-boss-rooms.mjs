@@ -2,7 +2,7 @@
 /**
  * audit-seedling-r6-boss-rooms — R6 slice 0's geometry half: the three
  * boss rooms priced with the SHIPPED planner geometry, before any window
- * is planned. Brief: `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §4
+ * is planned. Brief: the R6 kickoff §4
  * slice 0 ("boss-room floods and stance audits with the shipped
  * geometry"), §2.2/§2.4/§2.5 for the mechanics it is pricing.
  *

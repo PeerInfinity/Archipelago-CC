@@ -2,7 +2,7 @@
  * seedlingDemo/chest — THE VERB WITH NO BUTTON, AND THE PASSAGE IT IS.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 9, step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §21.4-21.5, and §22 is
+ * the R5 kickoff §21.4-21.5, and §22 is
  * this slice's as-built.
  *
  * ── WHY THIS EXISTS ───────────────────────────────────────────────────

@@ -6,7 +6,7 @@
  * `iceTurretBlast.js`), and the first projectile in this model that damages
  * an **ENEMY** rather than the player.
  *
- * Brief: `NewDocs/plans/seedling-bot-r7-opus-kickoff.md` §15.7 — *"⚠ WHAT
+ * Brief: the R7 kickoff §15.7 — *"⚠ WHAT
  * SPHERE 0 STILL NEEDS — the Arrow×Enemy family"*, ruled in by the design
  * session mid-slice-6 and spec'd there with its lane table, its damage
  * arithmetic and a driven three-arm witness already on disk

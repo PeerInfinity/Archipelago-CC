@@ -3,7 +3,7 @@
  * plan-seedling-r5-l60-kill — the rung's FIRST LIVE KILL, and its control.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 3. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §4 slice 3.
+ * the R5 kickoff §4 slice 3.
  *
  * ── WHY L60 ───────────────────────────────────────────────────────────
  * It is the cheapest witness on the map and the slice-0 recon named it as

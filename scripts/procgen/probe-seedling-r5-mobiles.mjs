@@ -4,7 +4,7 @@
  * ASKED OF THE REAL GAME.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 23. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §37.3.
+ * the R5 kickoff §37.3.
  *
  * Two questions the flags-off roster gate cannot answer, because both are
  * about capabilities no committed fixture uses:

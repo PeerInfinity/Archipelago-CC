@@ -1,6 +1,6 @@
 /**
  * In-app end-to-end verify for "World persistence across reloads".
- * Design: NewDocs/plans/world-persistence-reload-design.md.
+ * Design: the world-persistence design.
  *
  * The feature is OPT-IN (generalSettings.restoreLastWorld, default OFF), so the
  * verify runs two contexts:

@@ -2,7 +2,7 @@
  * seedlingDemo/pulser — THE FIRST WORLD-DRIVEN HIT ON THE ARC.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 8, step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §21.5.
+ * the R5 kickoff §21.5.
  *
  * ── WHY THIS EXISTS ───────────────────────────────────────────────────
  *

@@ -3,7 +3,7 @@
  * and `die()`, transcribed. The half of `noDamage` that is a MODEL.
  *
  * Region-atlas Phase 8, subtractive ladder rung R6, slice 3. Brief:
- * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §3.4 part 1, §8.8, §8.9.
+ * the R6 kickoff §3.4 part 1, §8.8, §8.9.
  *
  * ── WHAT THIS RETIRES ─────────────────────────────────────────────────
  *

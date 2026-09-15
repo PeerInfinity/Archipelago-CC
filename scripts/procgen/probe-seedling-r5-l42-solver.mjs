@@ -4,7 +4,7 @@
  * ORDERING SLICE 16 BANKED IS NOT THE SOLUTION.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 17 step 0. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §30.8 (what the room is)
+ * the R5 kickoff §30.8 (what the room is)
  * and §30.10 item 1 (what to do about it). `r5Totem.L42_PART4` is what slice
  * 16 measured; `r5Totem.L42_SOLVE` is what this found.
  *

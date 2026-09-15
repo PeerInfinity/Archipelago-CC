@@ -3,7 +3,7 @@
  * vocabulary.
  *
  * Seedling PROCGEN PoC arc, slice 1 (kickoff §3.2's "level model" injection,
- * `NewDocs/plans/seedling-procgen-poc-kickoff.md`). A generated level is an
+ * the PoC kickoff). A generated level is an
  * **atlas level RECORD** — the same plain JSON `levelSourceFromAtlas` already
  * hands `buildLevelWorld` — and nothing else. ⚖ Kickoff §2: a second spelling
  * (an `.oel`, a "simpler" grid format) would be a second level language for

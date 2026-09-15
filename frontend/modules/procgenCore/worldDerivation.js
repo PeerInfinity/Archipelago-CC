@@ -3,7 +3,7 @@
  * ⛓⛓⛓ **THE WORLD'S ATLAS — TWO PARTS' OWN ATLASES, NAMESPACED, MERGED, AND
  * THE CROSSINGS BETWEEN THEM WIRED.**
  *
- * EDITOR INTEGRATION slice W2 (`NewDocs/plans/editor-integration.md` §2.2 #3).
+ * EDITOR INTEGRATION slice W2 (the editor-integration plan §2.2 #3).
  * W1 taught the atlas a per-region `substrate` and `compileRegionAtlas` a
  * per-region dispatch; this is what puts regions of two substrates into ONE
  * atlas for it to dispatch over.

@@ -1,5 +1,5 @@
 /**
- * In-app tests for the APWORLD EDITOR HUB (`NewDocs/plans/apworld-editor-hub-plan.md`,
+ * In-app tests for the APWORLD EDITOR HUB (the hub plan,
  * rung H1). **These are the panel's FIRST in-app rows** — it had zero before
  * this slice, and the three node suites beside it (`rulesDocOps`,
  * `rulesEditAdapter`, `rulesUtils`) never mount it.
@@ -3488,7 +3488,7 @@ registerTest({
 
 /* ══════════════════════════════════════════════════════════════════════
  * W0 — THE COVERAGE ARC: an owned row's own JSON block, and the two viewer
- * doors. (`NewDocs/plans/apworld-editor-coverage-plan.md` §4, rung W0.)
+ * doors. (the coverage plan §4, rung W0.)
  * ══════════════════════════════════════════════════════════════════════ */
 
 /**
@@ -3732,7 +3732,7 @@ registerTest({
 });
 
 /* ══════════════════════════════════════════════════════════════════════
- * S1 — THE SIDECARS TAB. (`NewDocs/plans/apworld-editor-coverage-plan.md` §4,
+ * S1 — THE SIDECARS TAB. (the coverage plan §4,
  * rung S1.)
  * ══════════════════════════════════════════════════════════════════════ */
 
@@ -3930,7 +3930,7 @@ registerTest({
 
 /* ══════════════════════════════════════════════════════════════════════
  * R1 — A ROW DOES NOT POINT AT THE TAB IT IS ON.
- * (`NewDocs/plans/apworld-editor-coverage-plan.md` §11, task 1.)
+ * (the coverage plan §11, task 1.)
  * ══════════════════════════════════════════════════════════════════════ */
 
 /**
@@ -4294,8 +4294,8 @@ registerTest({
 });
 
 /* ══════════════════════════════════════════════════════════════════════
- * W3 — THE PLACEMENTS TAB. (`NewDocs/plans/apworld-editor-coverage-plan.md`
- * §4, rung W3.)
+ * W3 — THE PLACEMENTS TAB. (the coverage plan
+ *§4, rung W3.)
  * ══════════════════════════════════════════════════════════════════════ */
 
 /** ⛓ The slot's locations, in document order, with their region — the
@@ -5936,7 +5936,7 @@ registerTest({
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓⛓ PRESET SIDECARS S0 — THE PER-REGION SIDECAR VIEW
- * (`NewDocs/plans/preset-sidecars-plan.md` §3 D2, §9.3 rung 2)
+ * (the preset-sidecars plan §3 D2, §9.3 rung 2)
  *
  * One renderer (`_makeRegionSidecarBlock`), two hosts: under each region on
  * the Regions tab, and the Sidecars tab's per-region list. Every expectation
@@ -6439,7 +6439,7 @@ registerTest({
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓⛓ PRESET SIDECARS S1 — THE RAW ENTRY SAVE
- * (`NewDocs/plans/preset-sidecars-plan.md` §3 D1, §9.3 rung 3)
+ * (the preset-sidecars plan §3 D1, §9.3 rung 3)
  *
  * The block's Save JSON → ONE `set-region-sidecar`, the whole entry, the
  * region's rules untouched (⚖ Q1 C, Q3 A). Every row asserts the DOCUMENT
@@ -7709,7 +7709,7 @@ registerTest({
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓⛓ PRESET SIDECARS S2 — `Re-derive rules ▸`
- * (`NewDocs/plans/preset-sidecars-plan.md` §5b Q1 C, §9.3 rung 7)
+ * (the preset-sidecars plan §5b Q1 C, §9.3 rung 7)
  *
  * A raw save writes the entry alone (S1); this button re-derives the region's
  * rules from its payload, moving only the rules the payload BEFORE the raw

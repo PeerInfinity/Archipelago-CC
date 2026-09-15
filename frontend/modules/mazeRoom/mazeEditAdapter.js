@@ -1,7 +1,7 @@
 /**
  * mazeRoom/mazeEditAdapter — **THE MAZE, AS AN `editCore` ADAPTER.**
  *
- * EDITOR v3 arc, slice A1 (`NewDocs/plans/seedling-editor-v3.md` §7.2, §8.1).
+ * EDITOR v3 arc, slice A1 (the EDITOR v3 plan §7.2, §8.1).
  * ⛔ A THIN WRAPPER AND NOTHING MORE: every rule about what a maze edit MEANS
  * already lives in `mazeRoomEditor.applyEditOp` (the ONE application path a
  * press and a replay both take), every rule about what a maze world IS lives in

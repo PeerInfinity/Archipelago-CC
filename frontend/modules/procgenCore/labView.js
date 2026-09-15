@@ -3,8 +3,8 @@
  * substrate owns: the generation pane's rows, the keep-kind sentence, the cost
  * a press authorises, and the pixel→tile conversion a click needs.
  *
- * CONSTRUCTIVE-MODE arc, slice 3 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.5). Every function here was `seedlingDemo/watchGenerate.js`'s
+ * CONSTRUCTIVE-MODE arc, slice 3 (the constructive-mode kickoff
+ * §3.5). Every function here was `seedlingDemo/watchGenerate.js`'s
  * and every one of them reads only what `procgenCore/levelGenerator.js`
  * produces — a TRACE ROW, a `KEPT_KIND`, a `DEFAULT_BOUNDS` — or nothing at all
  * (`tileAtPoint` is arithmetic over a canvas rectangle). ⛔ The maze lab page

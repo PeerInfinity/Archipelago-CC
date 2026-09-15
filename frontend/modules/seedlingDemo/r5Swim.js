@@ -2,7 +2,7 @@
  * seedlingDemo/r5Swim — R5 slice 5's route constants: THE WATER.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 4 steps 4-5.
- * Brief: `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §15.10, which is
+ * Brief: the R5 kickoff §15.10, which is
  * the list of what slice 4 did NOT do and this module is the first half of
  * the answer to.
  *

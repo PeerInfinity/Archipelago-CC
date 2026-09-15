@@ -4,7 +4,7 @@
  * spinners.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 5, step 2. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §17.
+ * the R5 kickoff §17.
  *
  * ── WHAT THE BRIEF SAYS, AND WHY IT CANNOT BE RIGHT ───────────────────
  *

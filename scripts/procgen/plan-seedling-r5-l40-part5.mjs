@@ -4,8 +4,8 @@
  * AND THE LINK IT OPENS.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 21 step 1, RE-ARMED
- * at slice 22 step 0b. Brief: `NewDocs/plans/seedling-bot-r5-opus-kickoff.md`
- * §34.10 items 1 and 2, then §35.11 item 1.
+ * at slice 22 step 0b. Brief: the R5 kickoff
+ *§34.10 items 1 and 2, then §35.11 item 1.
  *
  * ── WHAT THE WINDOW DOES ──────────────────────────────────────────────
  *

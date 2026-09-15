@@ -2,8 +2,8 @@
  * mazeRoom/mazeLab — **THE MAZE LAB PAGE, WITHOUT THE DOM.** Generate, edit,
  * solve; the URL grammar; the payload.
  *
- * CONSTRUCTIVE-MODE arc, slice 3 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.5 / ⚖ ruling 7). This is `seedlingDemo/watchGenerate.js`'s
+ * CONSTRUCTIVE-MODE arc, slice 3 (the constructive-mode kickoff
+ * §3.5 / ⚖ ruling 7). This is `seedlingDemo/watchGenerate.js`'s
  * counterpart and it is deliberately NOT a copy of it: everything about the two
  * pages that is GRAMMAR now lives in `procgenCore/urlParams.js` and
  * `procgenCore/labView.js` (see `urlParams.js`'s docblock for the measurement
@@ -269,8 +269,8 @@ export const DIRECTED_ANCHOR_TRIES = 12;
 /**
  * ⛓⛓⛓ EDITOR INTEGRATION W3 — **`?room=` OPENS ONE ENTRY OF THE HELD LIBRARY.**
  *
- * The room-editor contract's middle move (`NewDocs/plans/editor-integration.md`
- * §3.2): a host hands this page a REGION LIBRARY over `procgenLab:load` and
+ * The room-editor contract's middle move (the editor-integration plan
+ *§3.2): a host hands this page a REGION LIBRARY over `procgenLab:load` and
  * then asks for room *n* of it over `procgenLab:navigate`. ⛔ It is a
  * NAVIGATION parameter, not a load channel — `?library=` names the document and
  * this names which of its entries the SET arm opens a room session on, through

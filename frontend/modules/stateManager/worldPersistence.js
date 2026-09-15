@@ -7,7 +7,7 @@
  * A full host-page reload (or a mobile-Chrome tab discard, which reboots
  * the page from scratch with sessionStorage preserved) otherwise drops the
  * user back to the default preset. Design:
- * `NewDocs/plans/world-persistence-reload-design.md`.
+ * the world-persistence design.
  *
  * Scope is the RULES PAYLOAD only, not play state — after a restore the world
  * is at sphere 0 exactly as if it had been re-loaded manually. Progress

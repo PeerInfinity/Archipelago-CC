@@ -4,7 +4,7 @@
  * ONE THE PLAYER NEVER DEALS.
  *
  * Region-atlas Phase 8, subtractive ladder rung R6, slices 6f and 6g. Brief:
- * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §8.5, §8.6, §14.4, §16.5,
+ * the R6 kickoff §8.5, §8.6, §14.4, §16.5,
  * §16.8, §19 (the pinned draw schedule and fight model this drives), §20 (the
  * first search) and §21 (the attribution that moved it).
  *

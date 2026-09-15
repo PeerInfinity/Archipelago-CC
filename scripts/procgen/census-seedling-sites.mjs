@@ -3,8 +3,8 @@
  * census-seedling-sites — **THE SITE CENSUS**: how many of each SITE class a
  * Seedling skeleton offers, per kind, per knob, per seed.
  *
- * PROCGEN ELEMENTS arc 3, slice 1 (`NewDocs/plans/procgen-elements-arc3-
- * kickoff.md` §3.1, deliverable 3). ⚖ Arc 1 §9.1's discipline, applied to the
+ * PROCGEN ELEMENTS arc 3, slice 1 (the arc-3 kickoff
+ * §3.1, deliverable 3). ⚖ Arc 1 §9.1's discipline, applied to the
  * other substrate: **measure the subject before sizing a knob against it**
  * (trap 254). Slices 2-4 size a door's `span`, an element's `len` and an area
  * count against these numbers; a slice that picked a bound first and measured

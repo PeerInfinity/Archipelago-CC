@@ -5,7 +5,7 @@
  * caught?
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 12 step 0.
- * Brief: `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §24.85 / §24.9.
+ * Brief: the R5 kickoff §24.85 / §24.9.
  *
  * ── WHY THIS EXISTS ───────────────────────────────────────────────────
  *

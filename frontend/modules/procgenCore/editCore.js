@@ -1,7 +1,7 @@
 /**
  * procgenCore/editCore — **THE SUBSTRATE-AGNOSTIC EDIT CORE.**
  *
- * EDITOR v3 arc, slice A1 (`NewDocs/plans/seedling-editor-v3.md` §7.2, §8.1).
+ * EDITOR v3 arc, slice A1 (the EDITOR v3 plan §7.2, §8.1).
  * ⛔ PURE: no DOM, no node, and — like every shipping module of this directory
  * — **no substrate import at all** (`bindingContract.test.js`'s own scan is what
  * holds that, and this file is in its subject). Its own test drives a TOY

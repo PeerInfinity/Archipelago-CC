@@ -4,7 +4,7 @@
  * CHAIN, SO THE CHAIN FROM THE L40 ARRIVAL IS BROKEN.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 17 step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §30.9 / §30.10 item 2 and
+ * the R5 kickoff §30.9 / §30.10 item 2 and
  * the STEP 1 rule ("identify link 4's actual consumer before pricing").
  * `r5Totem.L40_LINK4` is what slice 16 measured; `r5Totem.L40_ARRIVAL_BREAK`
  * is what this measured.

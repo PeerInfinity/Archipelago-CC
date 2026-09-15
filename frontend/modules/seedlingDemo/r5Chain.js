@@ -2,7 +2,7 @@
  * seedlingDemo/r5Chain — R5 slice 4's route constants: THE CHAIN.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 4. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §4 slice 4.
+ * the R5 kickoff §4 slice 4.
  *
  * Same job as `r4Walk.js` does for R4's headline: the declared half of the
  * route lives here as data, the planner scripts CONFIRM it against the

@@ -3,7 +3,7 @@
  * plan-seedling-r5-l40-part0 — THE THIRD COLLECT CEREMONY, AND IT IS LINK 11.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 14 step 1b. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §24.5 link 11.
+ * the R5 kickoff §24.5 link 11.
  *
  * ── ⛓⛓ WHY THIS RUNS WITHOUT THE BOSS KEY ────────────────────────────
  *

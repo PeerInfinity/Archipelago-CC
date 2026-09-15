@@ -3,7 +3,7 @@
  * recon-seedling-r5 — slice-0 instruments for the ENEMIES rung.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 0. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §4.0.
+ * the R5 kickoff §4.0.
  *
  * ── THE QUESTIONS ─────────────────────────────────────────────────────
  *

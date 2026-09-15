@@ -1,8 +1,8 @@
 /**
  * procgenCore/gridFlood — **ONE 4-NEIGHBOUR FLOOD, FOR BOTH SUBSTRATES.**
  *
- * CONSTRUCTIVE-MODE arc, slice 6 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.6 item 2). The connectivity pre-check is a MODEL-side legality
+ * CONSTRUCTIVE-MODE arc, slice 6 (the constructive-mode kickoff
+ * §3.6 item 2). The connectivity pre-check is a MODEL-side legality
  * rule in each binding's `refusalAt`, and the two bindings disagree about
  * everything except the question: *is there still a walkable path from the
  * start to the goal once this candidate's terrain writes are painted?* Seedling

@@ -3,7 +3,7 @@
  * game's own order.
  *
  * Region-atlas Phase 8, subtractive ladder rung R6, slice 6e. Brief:
- * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §16.8 (the opening bill),
+ * the R6 kickoff §16.8 (the opening bill),
  * §14.4, §8.5.
  *
  * ── WHY A SECOND RNG MODULE ───────────────────────────────────────────

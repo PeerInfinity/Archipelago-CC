@@ -4,7 +4,7 @@
  * SPAWNS ON THE PLAYER, AND A REBOOT THE TAPE DID NOT ORDER.
  *
  * Region-atlas Phase 8, subtractive ladder rung R6, slice 6d. Brief:
- * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §16.7 item 3 and §17.10
+ * the R6 kickoff §16.7 item 3 and §17.10
  * item 1, with the mechanics at §14.6/§14.8 and modelled in
  * `endingChain.js`.
  *

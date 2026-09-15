@@ -3,7 +3,7 @@
  * plan-seedling-r5-feather — THE WALK THAT EARNS THE FEATHER.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 5, step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §16.10 (the measurement
+ * the R5 kickoff §16.10 (the measurement
  * this retires) and §17.
  *
  * ── WHAT THIS WALK IS FOR ─────────────────────────────────────────────

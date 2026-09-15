@@ -2,7 +2,7 @@
  * seedlingDemo/r5Feather — R5 slice 5's first route: THE FEATHER.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 5, step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §16.10 and §17.
+ * the R5 kickoff §16.10 and §17.
  *
  * Same doctrine as `r5Swim.js` and `r5Chain.js`: the declared half of the
  * route lives here as data, `plan-seedling-r5-feather.mjs` CONFIRMS it

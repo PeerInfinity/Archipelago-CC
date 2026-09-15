@@ -4,7 +4,7 @@
  * RATHER THAN ASSUMED — AND THE CORPSE CANNOT MAKE THE CROSSING EITHER.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 22 step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §35.11 item 2 and the
+ * the R5 kickoff §35.11 item 2 and the
  * STEP 1 rule — *"enumerate every holder-capable entity against Button's
  * press list (Player/Enemy/Solid): the lurable bob-family, spinner
  * billiards, the spear block's reachable set, the corpse's ALTERNATIVE

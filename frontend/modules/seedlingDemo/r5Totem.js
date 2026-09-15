@@ -3,7 +3,7 @@
  * that the brief did not know about.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 5 step 2.
- * Brief: `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §17.7 (the recon
+ * Brief: the R5 kickoff §17.7 (the recon
  * this builds) and §18 (what it found).
  *
  * ── WHAT THIS IS ──────────────────────────────────────────────────────

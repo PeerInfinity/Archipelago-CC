@@ -5,8 +5,8 @@
  * ITS OWN INSTRUMENT GOT WRONG.
  *
  * Region-atlas Phase 8, subtractive ladder rung R7, slice 3 (THE L40
- * RECON, ⚖ checkpoint). Brief: `NewDocs/plans/seedling-bot-r7-opus-kickoff.md`
- * §4 slice 3 — *"(a) second-holder search under the FULL R7 verb set,
+ * RECON, ⚖ checkpoint). Brief: the R7 kickoff
+ *§4 slice 3 — *"(a) second-holder search under the FULL R7 verb set,
  * bounded and named; (b) multi-visit routing over the route graph with real
  * entrances + pits; (c) the report."*
  *

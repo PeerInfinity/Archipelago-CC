@@ -2,8 +2,8 @@
  * seedlingDemo/watchBridge — **`watch.html`'s OPTIONAL HOST BRIDGE.** The page
  * inside a `procgenLabPanel` iframe; nothing else.
  *
- * CONSTRUCTIVE-MODE arc, slice 4 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.5). `mazeRoom/mazeLabBridge.js`'s twin: the transport and the
+ * CONSTRUCTIVE-MODE arc, slice 4 (the constructive-mode kickoff
+ * §3.5). `mazeRoom/mazeLabBridge.js`'s twin: the transport and the
  * routing are `procgenCore/labBridge.js`, the vocabulary is
  * `procgenCore/labProtocol.js`, the summary is `watchSummary.js`, and this
  * file is only the wiring between them.

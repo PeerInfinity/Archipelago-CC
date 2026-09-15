@@ -1,6 +1,6 @@
 /**
  * mazeRoomRender — ⛓⛓⛓ THE PIXEL GATE for CONSTRUCTIVE-MODE slice 3's
- * extraction (`NewDocs/plans/seedling-constructive-mode-kickoff.md` §3.5).
+ * extraction (the constructive-mode kickoff §3.5).
  *
  * ── WHY THE GATE IS A DRAW-OP LOG AND NOT `getImageData` ──────────────
  *

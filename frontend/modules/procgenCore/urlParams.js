@@ -1,8 +1,8 @@
 /**
  * procgenCore/urlParams — **THE URL GRAMMAR BOTH LAB PAGES SPEAK.**
  *
- * CONSTRUCTIVE-MODE arc, slice 3 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.4, and ⚖ open question 7). The rule the kickoff set was
+ * CONSTRUCTIVE-MODE arc, slice 3 (the constructive-mode kickoff
+ * §3.4, and ⚖ open question 7). The rule the kickoff set was
  * conditional and it was MEASURED before it was obeyed: *"a shared
  * `procgenCore/urlParams.js` ONLY if the two readers/writers would otherwise be
  * copies … if >70% is grammar-generic, lift the generic part."*
@@ -178,8 +178,8 @@ export const URL_PARAM_REFUSALS = Object.freeze([
 /**
  * ⛓⛓⛓ EDITOR INTEGRATION W3 — **`?room=`, THE ONE READER BOTH PAGES SHARE.**
  *
- * The room-editor contract's middle move (`NewDocs/plans/editor-integration.md`
- * §3.2): a host hands a lab page a SET DOCUMENT over `procgenLab:load` and then
+ * The room-editor contract's middle move (the editor-integration plan
+ *§3.2): a host hands a lab page a SET DOCUMENT over `procgenLab:load` and then
  * asks for room *n* of it over `procgenLab:navigate`. Both pages spell the
  * parameter the same way and both refuse the same values — ⛔ which is why the
  * PARSE lives here and not on either page: two copies of *"is this a room

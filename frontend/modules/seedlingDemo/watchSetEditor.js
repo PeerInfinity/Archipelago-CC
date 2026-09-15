@@ -1,7 +1,7 @@
 /**
  * seedlingDemo/watchSetEditor — **THE SET SESSION, ON THE PAGE — AS BINDINGS.**
  *
- * EDITOR v3 arc, slice D2 (`NewDocs/plans/seedling-editor-v3.md` §16.4, §20.11);
+ * EDITOR v3 arc, slice D2 (the EDITOR v3 plan §16.4, §20.11);
  * ⛓⛓ **SLICE E2b MOVED THE DOM ITSELF** (§27, §28). D1 shipped
  * `seedlingSetAdapter.js` — twelve ops over `{set, overlay}`, the derivation,
  * `rulesJsonOf`, `downloadSet`, `closeRoomSession` — with no DOM at all; D2

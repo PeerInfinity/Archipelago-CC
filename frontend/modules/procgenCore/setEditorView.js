@@ -1,7 +1,7 @@
 /**
  * procgenCore/setEditorView — **THE SET EDITOR'S DOM, FOR ANY SET SUBSTRATE.**
  *
- * EDITOR v3 arc, slice E2b (`NewDocs/plans/seedling-editor-v3.md` §27, §28).
+ * EDITOR v3 arc, slice E2b (the EDITOR v3 plan §27, §28).
  * D2 built this mount inside `seedlingDemo/watchSetEditor.js`; E2a moved the
  * substrate-free CALCULATIONS out into `setEditorCore.js` and measured what was
  * left. The measurement is why this file exists: of the mount's 1,051 lines,

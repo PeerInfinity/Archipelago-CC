@@ -1,7 +1,7 @@
 /**
  * apworldEditor/regionLayout — **A REGION MOVED OR SWAPPED ON THE MAP: WHAT THE
  * DOCUMENT HAS TO SAY AFTERWARDS** (PRESET SIDECARS M2;
- * `NewDocs/plans/preset-sidecars-plan.md` §7.2, §9.2 ⚖ option A, §18).
+ * the preset-sidecars plan §7.2, §9.2 ⚖ option A, §18).
  *
  * The ops are `move-region` / `swap-regions` in `rulesDocOps.js` — the op is the
  * authority, and every refusal SENTENCE lives there. This module is the part of

@@ -2,8 +2,8 @@
  * mazeRoom/mazeLabBridge — **THE MAZE LAB PAGE'S OPTIONAL HOST BRIDGE.**
  * `lab.html` inside a `procgenLabPanel` iframe; nothing else.
  *
- * CONSTRUCTIVE-MODE arc, slice 4 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.5). The transport and the routing are `procgenCore/
+ * CONSTRUCTIVE-MODE arc, slice 4 (the constructive-mode kickoff
+ * §3.5). The transport and the routing are `procgenCore/
  * labBridge.js`; the vocabulary is `procgenCore/labProtocol.js`; this file is
  * ONLY the projection from THIS page's own readout onto that vocabulary, plus
  * the two page functions the host may call.

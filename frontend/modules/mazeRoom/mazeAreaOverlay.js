@@ -1,8 +1,8 @@
 /**
  * mazeRoom/mazeAreaOverlay — **THE AREA GRAPH, DRAWN OVER THE GRID.**
  *
- * PROCGEN ELEMENTS arc 1, slice 3 (`NewDocs/plans/procgen-elements-arc1-
- * kickoff.md` §3.6): *"area shading by key level, doors and keys labelled,
+ * PROCGEN ELEMENTS arc 1, slice 3 (the arc-1 kickoff
+ * §3.6): *"area shading by key level, doors and keys labelled,
  * graphify edges dashed, the solution path; STEP through the layers."*
  *
  * ── ⛓⛓⛓ WHY THIS IS A **SIBLING** OF `drawWorld` AND NOT NEW `view` FIELDS

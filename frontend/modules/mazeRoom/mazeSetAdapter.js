@@ -1,7 +1,7 @@
 /**
  * mazeRoom/mazeSetAdapter — **D1's SET ADAPTER, OVER A REGION LIBRARY.**
  *
- * EDITOR v3 arc, slice E2a (`NewDocs/plans/seedling-editor-v3.md` §20.4, §22.3;
+ * EDITOR v3 arc, slice E2a (the EDITOR v3 plan §20.4, §22.3;
  * as-built §26). D1 shipped `seedlingSetAdapter.js` — twelve ops over
  * `{set, overlay}`, a derivation, `rulesJsonOf`, a download and a room session
  * — and D2 built a page on it. This file is the SECOND one, over

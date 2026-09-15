@@ -3,8 +3,8 @@
  * sweep-yield-table — **THE YIELD TABLE**: what pass 2 actually yields over a
  * carved room, per skeleton kind, per room size, per seed, on BOTH substrates.
  *
- * CONSTRUCTIVE-MODE arc, slice 6 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.6 item 1). It is Probe 2 (§2.4) formalized and widened: the
+ * CONSTRUCTIVE-MODE arc, slice 6 (the constructive-mode kickoff
+ * §3.6 item 1). It is Probe 2 (§2.4) formalized and widened: the
  * probe measured ONE substrate, ONE kind, EIGHT seeds and reported *"6 of 8
  * saturate with zero kept, and seed 5's saturated run took 106 s"*. This asks
  * the same question of every kind each binding offers, and — ⛓ §9.6's

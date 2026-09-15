@@ -2,7 +2,7 @@
  * seedlingDemo/r5Shaft — L39's shaft, as a choreography a TAPE can drive.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 7. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §19 (the plan this
+ * the R5 kickoff §19 (the plan this
  * corrects) and §20 (what pricing it found).
  *
  * ── WHAT THIS IS ──────────────────────────────────────────────────────

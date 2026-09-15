@@ -3,7 +3,7 @@
  * FAMILY rather than as two coincidences.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 5 step 0.
- * Brief: `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §17, §18.
+ * Brief: the R5 kickoff §17, §18.
  *
  * ── WHY THIS EXISTS ───────────────────────────────────────────────────
  *

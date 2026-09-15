@@ -2,8 +2,8 @@
  * procgenCore/sites — **WHAT KIND OF PLACE A CELL IS**, in one vocabulary, for
  * every substrate on the loop.
  *
- * PROCGEN ELEMENTS arc 3, slice 1 (`NewDocs/plans/procgen-elements-arc3-
- * kickoff.md` §3.1; design §4.3 *"pass 2 = today's `generateLevel`,
+ * PROCGEN ELEMENTS arc 3, slice 1 (the arc-3 kickoff
+ * §3.1; design §4.3 *"pass 2 = today's `generateLevel`,
  * SITE-TYPED"*). Pass 2 has always proposed anchors from ONE list — every
  * interior cell — which is right on an open room and wrong on a carved one: a
  * template that wants a corner of a chamber is offered the middle of a 1-wide

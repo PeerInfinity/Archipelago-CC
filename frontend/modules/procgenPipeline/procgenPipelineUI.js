@@ -1911,8 +1911,7 @@ export class ProcgenPipelineUI {
 
         // Left: library (click to add). Entries are grouped by which
         // selected substrates declare each entry's `feature`. See
-        // NewDocs/plans/procedural-generation/library-feature-filtering.md
-        // for the design.
+        // the library feature-filtering design.
         const left = document.createElement('div');
         left.className = 'procgen-pipeline-scenario-library';
         const leftHeader = document.createElement('div');
@@ -3222,7 +3221,7 @@ export class ProcgenPipelineUI {
         // — items at this region's own wave are gated behind reaching it, so
         // they're not yet held). Computed independently of the substrate contract
         // below so it survives even if buildRegionContract throws. See §5 of
-        // NewDocs/plans/procedural-generation/sphere-growth-apworld-integration.md.
+        // the sphere-growth apworld-integration design.
         if (node && st?.plan) {
             base.expectedItems = (st.plan.spheres ?? [])
                 .slice(0, node.wave ?? 0)

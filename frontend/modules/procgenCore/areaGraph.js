@@ -2,8 +2,8 @@
  * procgenCore/areaGraph — **THE LOCK-AND-KEY LAYER, SUBSTRATE-FREE.** A JS
  * re-implementation of MetaZelda's dungeon logic over an ABSTRACT space.
  *
- * PROCGEN ELEMENTS arc 1, slice 1 (`NewDocs/plans/procgen-elements-arc1-
- * kickoff.md` §3.1; design `procgen-elements-design.md` §3.2, §4.1). Areas and
+ * PROCGEN ELEMENTS arc 1, slice 1 (the arc-1 kickoff
+ * §3.1; design `procgen-elements-design.md` §3.2, §4.1). Areas and
  * their adjacency come IN; a tree of key levels, locked edges, keys, intensity
  * and `graphify`'s extra edges come OUT, as plain JSON. It knows nothing about
  * grids, tiles, corridors, doors, items or either substrate: the maze binding

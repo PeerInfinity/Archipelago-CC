@@ -3,7 +3,7 @@
  * contact-freedom negative R5 makes.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 2. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §3.2, §4 slice 2.
+ * the R5 kickoff §3.2, §4 slice 2.
  *
  * ── WHY IT EXISTS ─────────────────────────────────────────────────────
  *

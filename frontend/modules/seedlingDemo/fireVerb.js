@@ -2,7 +2,7 @@
  * seedlingDemo/fireVerb — the SECOND weapon, transcribed from `Player.as`.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 6 step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §18.6 (the seal that made
+ * the R5 kickoff §18.6 (the seal that made
  * this necessary) and §18.9 (the order it asked for).
  *
  * `combatVerbs.js` is the sword: a directed rect in front of the player that

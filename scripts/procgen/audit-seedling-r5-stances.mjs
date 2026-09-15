@@ -4,7 +4,7 @@
  * each a NAMED VERDICT.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 2. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §8.10 ("the stance audits
+ * the R5 kickoff §8.10 ("the stance audits
  * move to slice 2, where the per-instance combat role lands and the geometry
  * they need exists") and §4 slice 2.
  *

@@ -3,8 +3,8 @@
  * census-seedling-doors — **THE DOOR CENSUS**: where on a Seedling skeleton is a
  * wall-with-a-gap actually a CUT, per kind, per orientation, per span, per gap?
  *
- * PROCGEN ELEMENTS arc 3, slice 2 (`NewDocs/plans/procgen-elements-arc3-
- * kickoff.md` §3.2, D2). ⚖ Trap 254, the same discipline slice 1's site census
+ * PROCGEN ELEMENTS arc 3, slice 2 (the arc-3 kickoff
+ * §3.2, D2). ⚖ Trap 254, the same discipline slice 1's site census
  * ran and this file's shape is copied from: **measure the subject before sizing
  * a knob against it.** Slice 2 gives the door families a `span` PARAMETER, and
  * a domain is a claim that every value in it is one the generator can use. This

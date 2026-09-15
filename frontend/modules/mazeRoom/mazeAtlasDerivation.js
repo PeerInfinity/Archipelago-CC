@@ -2,7 +2,7 @@
  * mazeRoom/mazeAtlasDerivation — **A REGION ATLAS, DERIVED FROM A REGION
  * LIBRARY PLUS AN AUTHORED OVERLAY — and the FIRST maze-owned compile.**
  *
- * EDITOR v3 arc, slice E2a (`NewDocs/plans/seedling-editor-v3.md` §22.1 #6,
+ * EDITOR v3 arc, slice E2a (the EDITOR v3 plan §22.1 #6,
  * §22.3, §22.6 Q2 — RULED; as-built §26).
  *
  * ── ⛓⛓⛓ WHY THE LINKS ARE AUTHORED AND EVERYTHING ELSE IS DERIVED ────────

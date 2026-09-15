@@ -3,7 +3,7 @@
  * plan-seedling-r5-karlore — THE RUNG'S HEADLINE PAIR.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 4, step 3. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §2.6.2 and §4 slice 4.
+ * the R5 kickoff §2.6.2 and §4 slice 4.
  *
  * ── WHY THIS IS THE HEADLINE AND THE BOSS FIGHT IS NOT ────────────────
  * `fire` is the first COMBAT-EARNED boolean on the whole arc, and step 2

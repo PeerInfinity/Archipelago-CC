@@ -2,8 +2,8 @@
  * procgenCore/bindingContract.test — THE SEAM'S OWN CLAIMS, ASKED OF **BOTH**
  * BINDINGS.
  *
- * CONSTRUCTIVE-MODE arc, slice 2 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.2 and §4 slice 2: *"the loop's existing test suite runs
+ * CONSTRUCTIVE-MODE arc, slice 2 (the constructive-mode kickoff
+ * §3.2 and §4 slice 2: *"the loop's existing test suite runs
  * against BOTH bindings where the contract is shared (one describe, two
  * fixtures)"*).
  *

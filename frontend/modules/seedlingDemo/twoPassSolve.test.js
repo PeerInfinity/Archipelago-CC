@@ -82,7 +82,7 @@ describe('the MODEL-sourced arm — L5, derived and then WALLED', () => {
      * `arrowtrap@64,48`'s column with 22 arrows still falling (`hits` 1
      * against the model's 0; first divergence at 207; 41 dead frames out of
      * band). The recording is banked in
-     * `NewDocs/plans/r8-slice4-l5-refuted/` and the tape was NOT committed.
+     * R8's untracked planning record and the tape was NOT committed.
      *
      * Slice 4's conservative fix — exclude the lane only while the column is
      * EMPTY — walled the room: the player cannot leave the button while the

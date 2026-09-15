@@ -3,7 +3,7 @@
  * probe-seedling-rect-inputs — THE BOUNDED RECT-INPUT SWEEP.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 8, step 0. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §21.
+ * the R5 kickoff §21.
  *
  * ── WHY THIS EXISTS ───────────────────────────────────────────────────
  *

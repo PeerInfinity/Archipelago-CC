@@ -3,7 +3,7 @@
  * first tape on this ladder that DIES.
  *
  * Region-atlas Phase 8, subtractive ladder rung R6, slice 3. Brief:
- * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §3.4 parts 1+2, §8.8.
+ * the R6 kickoff §3.4 parts 1+2, §8.8.
  *
  * ── WHY A SECOND PAIR, WHEN R5 ALREADY HAD ONE ────────────────────────
  *

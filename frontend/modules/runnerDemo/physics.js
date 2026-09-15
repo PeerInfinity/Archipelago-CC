@@ -1,7 +1,7 @@
 /**
  * Runner `step` — continuous run-and-jump platformer physics, the
  * source of truth for the runner substrate
- * (NewDocs/plans/procedural-platformer/platformer-substrate-v1.md §4.1).
+ * (the platformer substrate v1 plan §4.1).
  *
  * Port of the GMTK Platformer Toolkit character controller (MIT, GMTK
  * 2022) via its vanilla-JS port (vendored verbatim at

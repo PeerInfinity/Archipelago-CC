@@ -4,7 +4,7 @@
  * makes it evidence.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 4, step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §4 slice 4.
+ * the R5 kickoff §4 slice 4.
  *
  * ── WHAT THE LEG IS FOR ───────────────────────────────────────────────
  * `fire` is behind BobBoss, BobBoss is behind L30's `bosslock@224,208`, and

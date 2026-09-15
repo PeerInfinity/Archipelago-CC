@@ -2,8 +2,8 @@
  * procgenCore/procgenRng — THE GENERATOR'S DRAWS: one vocabulary, one source
  * per substrate.
  *
- * CONSTRUCTIVE-MODE arc, slice 2 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.2). ⚖ The PoC kickoff §5: *no unseeded RNG anywhere in the
+ * CONSTRUCTIVE-MODE arc, slice 2 (the constructive-mode kickoff
+ * §3.2). ⚖ The PoC kickoff §5: *no unseeded RNG anywhere in the
  * generator; the seed is part of the level's identity and its trace.* So: no
  * `Math.random`, no `Date.now`, no time, no ambient state — a seed in, the same
  * level out, byte for byte, on any machine and in any runtime.

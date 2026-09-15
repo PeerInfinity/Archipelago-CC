@@ -1,7 +1,7 @@
 /**
  * procgenCore/compositeMapRenderer — **THE COMPOSITE MAP, DRAWN FOR ANYBODY**
- * (APWORLD EDITOR HUB slice H3; plan `NewDocs/plans/apworld-editor-hub-plan.md`
- * §4 *"Map rendering is DECLARED per substrate"*).
+ * (APWORLD EDITOR HUB slice H3; the hub plan
+ *§4 *"Map rendering is DECLARED per substrate"*).
  *
  * ── ⚖ THE RULING THIS FILE EXISTS FOR ────────────────────────────────
  *

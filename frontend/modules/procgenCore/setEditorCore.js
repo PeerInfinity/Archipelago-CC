@@ -1,7 +1,7 @@
 /**
  * procgenCore/setEditorCore — **THE SET EDITOR'S SUBSTRATE-FREE HALF.**
  *
- * EDITOR v3 arc, slice E2a (`NewDocs/plans/seedling-editor-v3.md` §22.3, §26).
+ * EDITOR v3 arc, slice E2a (the EDITOR v3 plan §22.3, §26).
  * D2 built the whole set editor inside `seedlingDemo/watchSetEditor.js`, and
  * §22.1 #7 then MEASURED how much of it was Seedling-shaped: the rooms strip,
  * the reorder permutation, the renumbering ruling, the arrow shapes, the

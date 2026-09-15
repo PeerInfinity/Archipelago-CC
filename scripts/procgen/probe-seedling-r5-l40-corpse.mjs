@@ -5,7 +5,7 @@
  * CORRECTION IS WRONG: THE MOTION *IS* FREEZE-GATED.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 19 step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §32.6 (the source read
+ * the R5 kickoff §32.6 (the source read
  * this asserts) and the STEP 1 itinerary. Source: `Enemies/IceTurret.as`,
  * `Enemies/Enemy.as`, `Mobile.as` in the fork.
  *

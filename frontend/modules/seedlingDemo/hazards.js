@@ -3,7 +3,7 @@
  * clocks they run on.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 2. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §2.4, §3.2.
+ * the R5 kickoff §2.4, §3.2.
  *
  * ── ⛔ THE FINDING THIS MODULE EXISTS TO RECORD ───────────────────────
  *

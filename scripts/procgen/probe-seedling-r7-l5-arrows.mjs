@@ -2,7 +2,7 @@
 /**
  * probe-seedling-r7-l5-arrows — CAN THE SWORD BE REACHED AT ALL? R7 slice 6.
  *
- * Brief: `NewDocs/plans/seedling-bot-r7-opus-kickoff.md` §4 slice 6 (the
+ * Brief: the R7 kickoff §4 slice 6 (the
  * first honest segments, sphere 0). Order:
  * `frontend/modules/flashPanel/atlases/seedling-sphere-order.json` (0.1 is
  * `Level 010 - Sword`).

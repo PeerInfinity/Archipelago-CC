@@ -2,7 +2,7 @@ name: Seedling full tier (manual)
 
 # ⛓ THE 150-TAPE SEEDLING DIFFERENTIAL, ON RUNNERS, ON DEMAND ONLY
 # (slice seedling-headless-H2, 2026-09-12; SHARDED by slice seedling-headless-H3,
-# 2026-09-13; plan NewDocs/plans/seedling-headless-webgpu-plan.md §11–§14).
+# 2026-09-13; the headless arc's plan §11–§14).
 #
 # ⚖ USER RULING (2026-09-11): "I want the test that runs the full set of tapes
 # to only be manually triggered." ⇒ `workflow_dispatch:` and NOTHING ELSE —

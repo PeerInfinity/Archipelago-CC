@@ -4,7 +4,7 @@
  * BOSS KILL, AND THE FIRST KEY THAT WAS INSIDE THE BODY THAT HELD IT.
  *
  * Region-atlas Phase 8, subtractive ladder rung R6, slice 5. Brief:
- * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §4.5, with §2.4 amended by
+ * the R6 kickoff §4.5, with §2.4 amended by
  * §8.14 and the tick counts derived from §8.2's anim table by
  * `shieldBossFight.js`.
  *

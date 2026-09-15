@@ -3,7 +3,7 @@
  * plan-seedling-r5-l40-part1 — THE SECOND CEREMONY, AND IT IS FREE.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 13 step 2. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §24.5 / §26.
+ * the R5 kickoff §24.5 / §26.
  *
  * ── WHY THIS ONE FIRST ────────────────────────────────────────────────
  *

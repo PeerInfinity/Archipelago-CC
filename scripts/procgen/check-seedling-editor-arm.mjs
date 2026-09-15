@@ -2,7 +2,7 @@
 /**
  * check-seedling-editor-arm — **THE FIFTH SOURCE, `?source=edit`.**
  *
- * EDITOR v3 slice C1 (`NewDocs/plans/seedling-editor-v3.md` §3.1, §3.2, §3.4,
+ * EDITOR v3 slice C1 (the EDITOR v3 plan §3.1, §3.2, §3.4,
  * §3.5). Free editing used to be a `<details>` nested inside `#generatePanel`
  * with every handler a closure in `runGenerate`; it is a panel of its own now,
  * shown for BOTH arms, over `procgenCore/editorView.js` and one adapter. This

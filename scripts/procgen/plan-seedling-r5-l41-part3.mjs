@@ -4,7 +4,7 @@
  * FOURTH COLLECT CEREMONY.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 16 step 0. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §29 (slice 15's as-built),
+ * the R5 kickoff §29 (slice 15's as-built),
  * and `r5Totem.L41_PART3` for the room.
  *
  * ── ⛓⛓⛓ WHY THIS ROOM RETIRES `hazardVolume`'s HARD-AVOID ────────────

@@ -1,7 +1,7 @@
 /**
  * seedlingDemo/watchEdit — **FREE TILE / OBJECT EDITING, AS A CLOSED SET OF
  * PURE OPS.** ⚖ Kickoff §3.8, ruling 8; CONSTRUCTIVE-MODE arc slice 11
- * (`NewDocs/plans/seedling-constructive-mode-kickoff.md`).
+ * (the constructive-mode kickoff).
  *
  * Four ops — `paint`, `place`, `attrs`, `remove` — each a `record → record`
  * function on top of `procgenLevel`'s writers, plus the ONE fold

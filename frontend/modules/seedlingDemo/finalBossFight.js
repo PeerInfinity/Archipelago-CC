@@ -4,7 +4,7 @@
  * that kill him.
  *
  * Region-atlas Phase 8, subtractive ladder rung R6, slice 6e. Brief:
- * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §8.5, §8.6, §14.4, §16.5,
+ * the R6 kickoff §8.5, §8.6, §14.4, §16.5,
  * §16.8. The draw schedule this module consumes is `finalBossRng.js`.
  *
  * ── THE SHAPE OF THE FIGHT ────────────────────────────────────────────

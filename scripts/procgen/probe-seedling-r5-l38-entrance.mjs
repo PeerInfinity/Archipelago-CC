@@ -3,7 +3,7 @@
  * probe-seedling-r5-l38-entrance — ⛔⛔ THE ENTRANCE LEG IS NOT A WALK.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 8, step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §20.8 (the price this
+ * the R5 kickoff §20.8 (the price this
  * refutes) and §21.
  *
  * ── WHAT THE BRIEF SAYS ───────────────────────────────────────────────

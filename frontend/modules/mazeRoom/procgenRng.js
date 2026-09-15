@@ -1,8 +1,8 @@
 /**
  * mazeRoom/procgenRng — THE MAZE SOURCE for `procgenCore/procgenRng`.
  *
- * CONSTRUCTIVE-MODE arc, slice 2 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.2). The generator vocabulary (`pick`, `shuffle`, `nextInt`,
+ * CONSTRUCTIVE-MODE arc, slice 2 (the constructive-mode kickoff
+ * §3.2). The generator vocabulary (`pick`, `shuffle`, `nextInt`,
  * `draws`, `state`) is `procgenCore/procgenRng.js`'s and is shared with
  * Seedling; the only thing that is a MAZE fact is which arithmetic the numbers
  * come out of, and that is `shared/rng.js`'s mulberry32 — the generator

@@ -3,7 +3,7 @@
  * whose effect is a wall going away.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 5. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §17.
+ * the R5 kickoff §17.
  *
  * ── WHY THIS EXISTS NOW ───────────────────────────────────────────────
  *

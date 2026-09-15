@@ -3,7 +3,7 @@
  * plan-seedling-r5-swim — ARMED WATER: the pair, and the swim term's stratum.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 4, step 4. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §15.10.
+ * the R5 kickoff §15.10.
  *
  * Three tapes, two claims:
  *

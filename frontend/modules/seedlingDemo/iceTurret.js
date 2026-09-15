@@ -7,7 +7,7 @@
  * crusher moves because it can SEE the player, a corpse moves because it
  * was SHOVED, and then keeps moving for 32 ticks on its own.
  *
- * Brief: `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §33.5 and §33.8
+ * Brief: the R5 kickoff §33.5 and §33.8
  * item 1 — "the build needs the two-cycle reproduced exactly, and
  * `fire.bumps` needs to be able to say WHICH TICK it fires on". Source:
  * `Enemies/IceTurret.as`, `Enemies/Enemy.as`, `Mobile.as`, `Player.as`'s

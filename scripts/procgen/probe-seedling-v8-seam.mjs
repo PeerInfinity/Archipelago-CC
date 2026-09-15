@@ -4,7 +4,7 @@
  * does its latch report back what the block declared?
  *
  * Region-atlas Phase 8, rung R7, slice 1. Brief:
- * `NewDocs/plans/seedling-bot-r7-opus-kickoff.md` §3.2 / §8.5 item 3.
+ * the R7 kickoff §3.2 / §8.5 item 3.
  *
  * ── WHY A PROBE AND NOT A FIXTURE ─────────────────────────────────────
  *

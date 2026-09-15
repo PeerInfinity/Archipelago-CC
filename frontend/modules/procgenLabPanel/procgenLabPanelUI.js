@@ -3,8 +3,8 @@
  * that mounts ONE substrate's lab page in an iframe and speaks
  * `procgenCore/labProtocol.js` to it.
  *
- * CONSTRUCTIVE-MODE arc, slice 4 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.5, ⚖ rulings 6 + 7). ⛔ The WRAPPER-PANEL pattern
+ * CONSTRUCTIVE-MODE arc, slice 4 (the constructive-mode kickoff
+ * §3.5, ⚖ rulings 6 + 7). ⛔ The WRAPPER-PANEL pattern
  * (`textAdventureSubstrateWrapperPanel.js` / `jtaSubstrateWrapperPanel.js`) and
  * NOT the generic `iframePanel` URL loader: that panel's job is "load any URL a
  * reader types", and this one's is "this page, this substrate, this

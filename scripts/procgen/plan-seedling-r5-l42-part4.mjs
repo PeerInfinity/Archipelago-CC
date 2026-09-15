@@ -4,7 +4,7 @@
  * THE PART, AND THE EXIT TAKEN.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 19 step 0. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §32.8 (this slice's own
+ * the R5 kickoff §32.8 (this slice's own
  * first job), §31 (the round trip priced) and §30.8 (the room read as a
  * pursuit). `r5Totem.L42_SOLVE` is the ordering and the three chains.
  *

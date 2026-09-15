@@ -4,7 +4,7 @@
  * THE MODEL THAT PRICED ONE PRICED THE WRONG THING.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 20 step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §33.5 and §33.8 item 1 —
+ * the R5 kickoff §33.5 and §33.8 item 1 —
  * `fire.bumps` "needs to be able to say WHICH TICK it fires on". This is
  * what the verb has to be told and what it has to promise.
  *

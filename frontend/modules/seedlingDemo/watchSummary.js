@@ -3,8 +3,8 @@
  * ALREADY SAYS.** One summary of watch.html's state, in the shape
  * `procgenCore/labProtocol.js` asks for.
  *
- * CONSTRUCTIVE-MODE arc, slice 4 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.5). The maze lab page has had `window.__mazeLab` since slice
+ * CONSTRUCTIVE-MODE arc, slice 4 (the constructive-mode kickoff
+ * §3.5). The maze lab page has had `window.__mazeLab` since slice
  * 3 — *"already the whole state a host would want to read"* (§10.10 item 6) —
  * and watch.html has nothing comparable: it has FIVE readouts, one per arm
  * (`__editorGenerate`, `__editorSolve`, `__editorManual`, `__editorArm`,

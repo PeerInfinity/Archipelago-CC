@@ -1,7 +1,7 @@
 /**
  * ⛓⛓⛓ **THE EDIT CORE, AGAINST A TOY SUBSTRATE THAT DOES NOT EXIST.**
  *
- * EDITOR v3 arc, slice A1 (`NewDocs/plans/seedling-editor-v3.md` §7.2). ⛔ THE
+ * EDITOR v3 arc, slice A1 (the EDITOR v3 plan §7.2). ⛔ THE
  * TOY IS THE POINT: a core proven only against the maze would be a maze editor
  * with an extra indirection, and the day Seedling's adapter arrived (slice B)
  * the parts that had quietly grown maze vocabulary would be found one by one.

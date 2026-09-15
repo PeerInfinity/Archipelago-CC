@@ -4,7 +4,7 @@
 // the ONE committed module `seedlingDemo/seedlingDamageSites.js`.
 //
 // Region-atlas Phase 8, subtractive ladder rung R5, slice 2. Brief:
-// `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §2.4, §4 slice 2.
+// the R5 kickoff §2.4, §4 slice 2.
 //
 // ── ⚠⚠ WHY THIS EXISTS AT ALL: THE §14 LESSON, PAID FORWARD ───────────
 //

@@ -3,7 +3,7 @@
  * what it can reach, classified.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 5 step 0(b).
- * Brief: `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §18.
+ * Brief: the R5 kickoff §18.
  *
  * ── WHY ───────────────────────────────────────────────────────────────
  *

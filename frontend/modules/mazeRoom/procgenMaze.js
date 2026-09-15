@@ -2,8 +2,8 @@
  * mazeRoom/procgenMaze — THE MAZE BINDINGS: the second substrate on the
  * procgen loop.
  *
- * CONSTRUCTIVE-MODE arc, slice 2 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.2). ⚖ Ruling 3: *"maze first, as the SECOND SUBSTRATE ON THE
+ * CONSTRUCTIVE-MODE arc, slice 2 (the constructive-mode kickoff
+ * §3.2). ⚖ Ruling 3: *"maze first, as the SECOND SUBSTRATE ON THE
  * ONE LOOP"* — ⛔ not a maze-local re-implementation of it. This file is the
  * mirror of `seedlingDemo/procgenSeedling.js`: `procgenCore/levelGenerator.js`
  * imports nothing, and this file imports everything the maze needs and hands

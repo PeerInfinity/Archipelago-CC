@@ -3,7 +3,7 @@
  * probe-seedling-r7-l4-block — THE BLOCK IS THE DOOR, AND THE BOB IS HOLDING
  * IT SHUT. R7 slice 6c.
  *
- * Brief: `NewDocs/plans/seedling-bot-r7-opus-kickoff.md` §16.6 (where the
+ * Brief: the R7 kickoff §16.6 (where the
  * honest chain stops, measured) and §4 slice 6c. Verb under test:
  * `botDriverV2.runShove`.
  *

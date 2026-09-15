@@ -11,7 +11,7 @@
  *
  * ⚠ That citation used to be `CC/docs/plans/seedling-bot-watch-page.md`,
  * which has not existed on disk since the docs migration moved it under the
- * gitignored `NewDocs/` — i.e. the page's only stated design reference was
+ * gitignored planning tree — i.e. the page's only stated design reference was
  * unreachable to every reader who did not have this working machine. It now
  * points at the TRACKED section.
  *
@@ -844,7 +844,7 @@ function resetPageChrome() {
  * ══════════════════════════════════════════════════════════════════════
  *
  * Three module-level names, and every one of them is inert standalone.
- * `NewDocs/plans/seedling-constructive-mode-kickoff.md` §3.5.
+ * the constructive-mode kickoff §3.5.
  */
 
 /**
@@ -3913,7 +3913,7 @@ const takeEditHandover = () => {
  * ⛓⛓⛓ EDITOR INTEGRATION W3 — **A SET DOCUMENT A HOST HANDED OVER**, and it is
  * HELD rather than TAKEN.
  *
- * The room-editor contract (`NewDocs/plans/editor-integration.md` §3.2) is two
+ * The room-editor contract (the editor-integration plan §3.2) is two
  * messages: `procgenLab:load` carries the LEVEL SET (or an OVERLAY), and
  * `procgenLab:navigate` with `?source=edit&room=n` asks for ONE room of it. ⛔
  * `navigateTo` REMOUNTS THE ARM UNCONDITIONALLY — measured — and this page's

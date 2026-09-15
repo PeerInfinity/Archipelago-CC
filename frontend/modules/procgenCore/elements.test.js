@@ -1,8 +1,8 @@
 /**
  * procgenCore/elements.test — THE ELEMENT CONTRACT'S OWN CLAIMS.
  *
- * PROCGEN ELEMENTS arc 2, slice 2 (`NewDocs/plans/procgen-elements-arc2-
- * kickoff.md` §3.2). Two subjects, on purpose:
+ * PROCGEN ELEMENTS arc 2, slice 2 (the arc-2 kickoff
+ * §3.2). Two subjects, on purpose:
  *
  *   a TOY element, built here, whose whole job is to be BROKEN in one specific
  *   way per row — a contract asserted only against a correct element is a

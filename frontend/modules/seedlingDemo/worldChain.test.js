@@ -2,7 +2,7 @@
 /**
  * ⛓⛓⛓ **THE CHAIN — A MIXED WORLD, END TO END, OVER BOTH REAL ADAPTERS.**
  *
- * EDITOR INTEGRATION slice W2 (`NewDocs/plans/editor-integration.md` §2.2, item 5
+ * EDITOR INTEGRATION slice W2 (the editor-integration plan §2.2, item 5
  * of the slice's work list).
  *
  * ⛔ **THIS FILE LIVES UNDER `seedlingDemo/` BECAUSE IT IMPORTS BOTH SUBSTRATES,

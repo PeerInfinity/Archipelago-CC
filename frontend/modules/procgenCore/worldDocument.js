@@ -3,7 +3,7 @@
  * ⛓⛓⛓ **THE WORLD — ONE DOCUMENT THAT HOLDS SEVERAL SET DOCUMENTS, THEIR
  * OVERLAYS, AND THE CROSSINGS BETWEEN THEM.**
  *
- * EDITOR INTEGRATION slice W2 (`NewDocs/plans/editor-integration.md` §2.2 #3–#4;
+ * EDITOR INTEGRATION slice W2 (the editor-integration plan §2.2 #3–#4;
  * ⚖ the user's A2 ruling, §6 Q1). W1 taught the ATLAS a per-region `substrate`
  * and the compiler a per-region dispatch; this is the AUTHORING half — the
  * document a person edits when the rooms of one world are not all the same kind.

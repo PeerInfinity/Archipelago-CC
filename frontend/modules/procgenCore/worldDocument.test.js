@@ -2,7 +2,7 @@
 /**
  * procgenCore/worldDocument — **THE WORLD DOCUMENT'S OWN ROWS.**
  *
- * EDITOR INTEGRATION slice W2 (`NewDocs/plans/editor-integration.md` §2.2 #3).
+ * EDITOR INTEGRATION slice W2 (the editor-integration plan §2.2 #3).
  *
  * ⛔ THE OVERLAYS HERE ARE THE REAL SUBSTRATES' — `seedlingSetOverlay`'s
  * `emptyOverlay()` and the maze's `emptyMazeOverlay()`, both imported from the

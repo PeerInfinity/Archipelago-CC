@@ -2,8 +2,8 @@
  * procgenCore/areaSpec — **THE ONE SPELLING OF "WHICH AREA GRAPH", FOR EVERY
  * CHANNEL.**
  *
- * PROCGEN ELEMENTS arc 1, slice 2 (`NewDocs/plans/procgen-elements-arc1-
- * kickoff.md` §3.2, §3.6 and design §4.8). The maze binding takes an `areas:`
+ * PROCGEN ELEMENTS arc 1, slice 2 (the arc-1 kickoff
+ * §3.2, §3.6 and design §4.8). The maze binding takes an `areas:`
  * spec; the CLI takes `--areas=<string>`; the sweep takes `--areas=<string>`;
  * and slice 3's lab page will take `?areas=<string>`. ⛔ ONE CODEC, so no
  * `?areas=` grammar is invented later beside this one — `skeletonKinds`'

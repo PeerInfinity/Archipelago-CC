@@ -3,7 +3,7 @@
  * plan-seedling-r5-l37-burn — THE BURN'S FIRST DRIVE, AND ITS OWN 2x2.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 14 step 0. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §27.10.
+ * the R5 kickoff §27.10.
  *
  * ── WHY L37 AND NOT L40 ───────────────────────────────────────────────
  *

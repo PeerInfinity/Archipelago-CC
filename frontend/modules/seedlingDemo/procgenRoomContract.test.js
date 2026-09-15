@@ -3,8 +3,8 @@
  * channel, the sparse SHELL format and the closure law, measured on rooms the
  * generator really builds.
  *
- * PROCGEN ELEMENTS arc 5, slice 1 (`NewDocs/plans/procgen-elements-arc5-
- * kickoff.md` §3.1; ⚖ rulings 1 and 2). ⛔ `procgenLevel.test.js` holds the
+ * PROCGEN ELEMENTS arc 5, slice 1 (the arc-5 kickoff
+ * §3.1; ⚖ rulings 1 and 2). ⛔ `procgenLevel.test.js` holds the
  * FORMAT half — what `shellOf` keeps, what `assertClosed` refuses, what a built
  * world does with an absent cell. This file holds the half that needs a MODEL:
  * that the strip changes nothing the solver can see, that the element's demand

@@ -3,7 +3,7 @@
  * probe-seedling-ctor-args — THE CONSTRUCTOR ARGUMENT-TABLE AUDIT.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 11, step 2.
- * Brief: `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §24.
+ * Brief: the R5 kickoff §24.
  *
  * ── WHY A TABLE AND NOT ANOTHER INSTANCE ──────────────────────────────
  *

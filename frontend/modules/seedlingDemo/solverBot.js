@@ -1,6 +1,6 @@
 /**
- * seedlingDemo/solverBot — the LIVE SOLVER POLICY. R8 slice 2, kickoff
- * `NewDocs/plans/seedling-bot-r8-opus-kickoff.md` §3.1 / §4 slice 2 (⚖ §6.2
+ * seedlingDemo/solverBot — the LIVE SOLVER POLICY. R8 slice 2,
+ * the R8 kickoff §3.1 / §4 slice 2 (⚖ §6.2
  * ruled the name and the placement: a peer of the planner, beside
  * `botDriverV2`).
  *
@@ -1514,7 +1514,7 @@ function lanesUnpublishedByLeaving(run) {
      * 22 arrows still falling, and the GAME knocked the player back at
      * t≈206 (`hits` 1 against the model's 0, first divergence at 207, 41 dead
      * frames out of band). ⛔ THE TAPE WAS NOT COMMITTED — it is banked in
-     * `NewDocs/plans/r8-slice4-l5-refuted/` as the free oracle it is.
+     * R8's untracked planning record as the free oracle it is.
      *
      * Slice 4's answer was to gate the exclusion on the column being EMPTY.
      * That is right, and it WALLS the room: the player cannot leave the button

@@ -2,7 +2,7 @@
  * procgenLabPanel/labRoomEditor — **THE HOST SIDE OF THE ROOM-EDITOR CONTRACT
  * FOR SUBSTRATES WHOSE EDITOR IS A LAB PAGE.**
  *
- * EDITOR INTEGRATION arc, slice W3 (`NewDocs/plans/editor-integration.md` §3.2,
+ * EDITOR INTEGRATION arc, slice W3 (the editor-integration plan §3.2,
  * §9). `regionEditors.getRegionEditor(id)` resolves a registry entry whose
  * `roomEditor.kind` is `'lab'` to this module's `openLabRoomEditor`, bound to
  * the entry's own `page` and `arm`. The maze and Seedling substrates therefore

@@ -4,8 +4,8 @@
  * `bodies` enemies standing in it — and a KILL LOCK the binding puts on the
  * room's main path, so clearing the room is what opens the way on.
  *
- * PROCGEN ELEMENTS arc 5, slice 4 (`NewDocs/plans/procgen-elements-arc5-
- * kickoff.md` §3.4; design catalogue #4/#6, ⚖ §7c's `bodies = n`).
+ * PROCGEN ELEMENTS arc 5, slice 4 (the arc-5 kickoff
+ * §3.4; design catalogue #4/#6, ⚖ §7c's `bodies = n`).
  *
  * ── ⛔ IT DOES NOT FORK THE CHAMBER, AND THE IMPORT LIST IS THE PROOF ──
  *

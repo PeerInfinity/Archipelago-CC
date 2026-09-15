@@ -1,7 +1,7 @@
 /**
  * seedlingDemo/watchSetEditor — **THE SET EDITOR'S PURE HALF, AS DATA.**
  *
- * EDITOR v3 slice D2 (`NewDocs/plans/seedling-editor-v3.md` §16.4, §21). The
+ * EDITOR v3 slice D2 (the EDITOR v3 plan §16.4, §21). The
  * mount itself needs a DOM and this repo's vitest is `environment: 'node'`, so
  * the split is `watchEditor.test.js`': the rows below drive everything that is a
  * FUNCTION OF THE RECORD — the rooms list, the reorder permutation, the

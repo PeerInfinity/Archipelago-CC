@@ -1,8 +1,8 @@
 /**
  * mazeRoom/mazeRoomRender — **THE ONE CANVAS DRAW** for a maze world.
  *
- * CONSTRUCTIVE-MODE arc, slice 3 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.5). ⚖ Ruling 7: the maze lab page is NEW and built from the
+ * CONSTRUCTIVE-MODE arc, slice 3 (the constructive-mode kickoff
+ * §3.5). ⚖ Ruling 7: the maze lab page is NEW and built from the
  * headless modules, *"with the canvas draw extracted from `mazeRoomUI`"* — not
  * a refactor of the 4,145-line panel into a page. This file is that extraction,
  * and it is the whole of it: `MazeRoomUI._drawWorld` is now a five-line adapter

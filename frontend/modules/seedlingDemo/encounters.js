@@ -3,7 +3,7 @@
  * wall.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 2. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §3.2 **as amended
+ * the R5 kickoff §3.2 **as amended
  * 2026-08-03** — "aggro discs are PRICING objects, not walls. The bot must
  * HANDLE encounters — defeat or avoid as appropriate."
  *

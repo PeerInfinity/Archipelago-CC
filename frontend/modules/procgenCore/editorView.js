@@ -1,7 +1,7 @@
 /**
  * procgenCore/editorView — **THE DOM HALF OF THE SHARED EDIT CORE.**
  *
- * EDITOR v3 arc, slice A2 (`NewDocs/plans/seedling-editor-v3.md` §7.2, §10).
+ * EDITOR v3 arc, slice A2 (the EDITOR v3 plan §7.2, §10).
  * A1 shipped `editCore.js` — the op log, the fold, `group`, rect copy/paste and
  * flood — as PURE functions over an adapter. This file is the other half: the
  * one owner of *what a press on the canvas does*, mounted by a page with its

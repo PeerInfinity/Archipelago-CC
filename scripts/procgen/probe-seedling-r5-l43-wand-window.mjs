@@ -4,7 +4,7 @@
  * DRIVEN IN THE MODEL BEFORE A RECORDING IS SPENT.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 23 step 2. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §37. The plan it drives is
+ * the R5 kickoff §37. The plan it drives is
  * §36.9's (`r5Totem.L43_WAND_WINDOW`); the tick table it lands on is §34.3's
  * (`r5Totem.L43_BOSS_WAKE.ticks`), banked by
  * `probe-seedling-r5-l43-boss-wake.mjs` three slices earlier.

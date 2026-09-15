@@ -3,7 +3,7 @@
  * probe-seedling-r7-l6-bait — CAN L6 BE CROSSED AT ALL, AND BY WHOM? R7
  * slice 6e.
  *
- * Brief: `NewDocs/plans/seedling-bot-r7-opus-kickoff.md` §18.6 (the USER's own
+ * Brief: the R7 kickoff §18.6 (the USER's own
  * route for L6, supplied from play) and §4 slice 6. Chain data:
  * `frontend/modules/seedlingDemo/playthroughWalk.js`, chain `act2-to-l8`.
  *

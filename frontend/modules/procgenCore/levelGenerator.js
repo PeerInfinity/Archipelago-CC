@@ -3,14 +3,14 @@
  * inverted, with the solver as its oracle.
  *
  * Seedling PROCGEN PoC arc, slice 2 (kickoff §3.1 the loop, §3.2 the seam,
- * `NewDocs/plans/seedling-procgen-poc-kickoff.md`). One sentence: **start
+ * the PoC kickoff). One sentence: **start
  * from a room that solves, add one template at a time, re-solve, keep it if
  * the room still completes and throw the candidate away if it does not.**
  *
  * ── ⛓⛓⛓ IT LIVES OUTSIDE `seedlingDemo/` SINCE 2026-08-15 ────────────
  *
- * CONSTRUCTIVE-MODE arc, slice 2 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.2), and the move is the PoC arc's own §1.7 provision being
+ * CONSTRUCTIVE-MODE arc, slice 2 (the constructive-mode kickoff
+ * §3.2), and the move is the PoC arc's own §1.7 provision being
  * spent: *"when a second substrate exists and can argue about the interface,
  * the core moves and the bindings stay."* The second substrate is the maze
  * (`mazeRoom/procgenMaze.js`), so the loop now sits in a neutral directory

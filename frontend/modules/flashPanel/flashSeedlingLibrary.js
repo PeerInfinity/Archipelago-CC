@@ -139,7 +139,7 @@ export const substrateRegistryEntry = Object.freeze({
     loadRegionEvent: FLASH_SEEDLING_LOAD_REGION_EVENT,
     /**
      * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE ROOM-EDITOR DECLARATION**
-     * (`NewDocs/plans/editor-integration.md` §3.2). Seedling's room editor is
+     * (the editor-integration plan §3.2). Seedling's room editor is
      * `watch.html`'s EDIT arm holding a LEVEL SET, hosted in `procgenLabPanel`;
      * `regionEditors.getRegionEditor('flash_seedling')` binds
      * `procgenLabPanel/labRoomEditor` to it.

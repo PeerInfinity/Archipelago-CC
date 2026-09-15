@@ -4,7 +4,7 @@
  * AND THE ESCAPE SOUTH DOES NOT EXIST.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 20 step 0. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §33.8 item 3 — the
+ * the R5 kickoff §33.8 item 3 — the
  * `BossTotem` wake audit, deferred since §29.10 and four slices running.
  * Sources read at first hand: `Enemies/BossTotem.as`, `Pickups/Wand.as`,
  * `Pickups/Pickup.as`, `Scenery/FallRock.as`, `Puzzlements/MagicalLock.as`,

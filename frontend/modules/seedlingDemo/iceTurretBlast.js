@@ -6,7 +6,7 @@
  * had** — the first body that is not placed by an `.oel`, does not belong
  * to the level, and is created and destroyed inside a window.
  *
- * Brief: `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §35.11 item 1.
+ * Brief: the R5 kickoff §35.11 item 1.
  * Source: `Projectiles/IceTurretBlast.as` (whole class), `Mobile.as:17,
  * 31-45,84-115`, `Player.as:586-603` (`freeze`/`freezeStep`), `:1372-1399`
  * (`hit`), `:1519` (`input`'s gate), `Enemies/IceTurret.as:152-167`

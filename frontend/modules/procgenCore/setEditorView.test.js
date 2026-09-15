@@ -1,7 +1,7 @@
 /**
  * procgenCore/setEditorView — **THE SET EDITOR'S DOM HALF, PINNED AND BOUND TWICE.**
  *
- * EDITOR v3 arc, slice E2b (`NewDocs/plans/seedling-editor-v3.md` §27, §28).
+ * EDITOR v3 arc, slice E2b (the EDITOR v3 plan §27, §28).
  * `mountWatchSetEditor` moved out of `seedlingDemo/watchSetEditor.js` and into
  * `setEditorView.js` as `mountSetEditor(opts)`; what stayed behind is a BINDING
  * that hands Seedling's readers, ops and sentences in. Two things are proved

@@ -20,7 +20,7 @@
  *     realised as winnable geometry: the realised graph's item spheres
  *     match the source's.
  *
- * See NewDocs/plans/procedural-generation/topdown-bounce-obstacle-refactor.md.
+ * See the obstacles-along-paths refactor plan.
  */
 
 import { describe, it, expect, vi } from 'vitest';

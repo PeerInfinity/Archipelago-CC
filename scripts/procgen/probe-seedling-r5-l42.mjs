@@ -3,7 +3,7 @@
  * probe-seedling-r5-l42 — THE PURE CASE, AND WHY IT IS NOT A TAPE.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 16 step 1. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §29.9 / §29.10 item 2, and
+ * the R5 kickoff §29.9 / §29.10 item 2, and
  * `r5Totem.L42_PART4` for what this measured.
  *
  * ── ⛔⛔ L41 IS "MOVE THE OBSTACLE"; L42 IS A PURSUIT ─────────────────

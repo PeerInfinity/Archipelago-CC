@@ -3,7 +3,7 @@
  * plan-seedling-r5-bobboss — the densest encounter script on the ladder.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 4, step 2. Brief:
- * `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §2.6.1 and §4 slice 4.
+ * the R5 kickoff §2.6.1 and §4 slice 4.
  *
  * ── ⛔ THE ARM SCHEDULE IS PROBED, NOT DERIVED ────────────────────────
  * The arithmetic in `bobBoss.js` says the rock takes 174 frames from the

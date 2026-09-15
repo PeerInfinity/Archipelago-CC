@@ -3,7 +3,7 @@
  * probe-seedling-r5-l40 — WHAT OPENS L40's NORTH HALF.
  *
  * Region-atlas Phase 8, subtractive ladder rung R5, slice 11, step 3.
- * Brief: `NewDocs/plans/seedling-bot-r5-opus-kickoff.md` §24.
+ * Brief: the R5 kickoff §24.
  *
  * ── THE QUESTION SLICE 10 LEFT, STATED RATHER THAN GUESSED ────────────
  *

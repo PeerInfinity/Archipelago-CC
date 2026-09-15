@@ -3,8 +3,8 @@
  * names, their payload shapes as frozen field lists, and one `assert*`
  * validator each.
  *
- * CONSTRUCTIVE-MODE arc, slice 4 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.5, ⚖ ruling 6). Imported by BOTH in-page bridges
+ * CONSTRUCTIVE-MODE arc, slice 4 (the constructive-mode kickoff
+ * §3.5, ⚖ ruling 6). Imported by BOTH in-page bridges
  * (`mazeRoom/mazeLabBridge.js`, `seedlingDemo/watchBridge.js`) AND by the host
  * panel (`procgenLabPanel/`), which is the whole reason it is a file: the
  * failure mode this arc keeps paying for is TWO SPELLINGS OF ONE SETTING, and

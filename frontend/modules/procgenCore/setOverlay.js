@@ -1,7 +1,7 @@
 /**
  * procgenCore/setOverlay — **THE AUTHORED HALF OF A SET, FOR ANY SUBSTRATE.**
  *
- * EDITOR v3 arc, slice E2a (`NewDocs/plans/seedling-editor-v3.md` §22.3, §26).
+ * EDITOR v3 arc, slice E2a (the EDITOR v3 plan §22.3, §26).
  * §16.3 ruled that a set session's document is `{set, overlay}` and that the
  * region atlas is DERIVED from the set plus an AUTHORED overlay. D1 built that
  * overlay inside `seedlingDemo/seedlingSetOverlay.js`; E2a measured how much of

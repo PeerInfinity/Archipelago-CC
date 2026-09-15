@@ -3,8 +3,8 @@
  * panel per substrate, each mounting that substrate's standalone lab page in
  * an iframe and talking to it over the existing adapter bridge.
  *
- * CONSTRUCTIVE-MODE arc, slice 4 (`NewDocs/plans/seedling-constructive-mode-
- * kickoff.md` §3.5, ⚖ ruling 6). See `README.md` beside this file.
+ * CONSTRUCTIVE-MODE arc, slice 4 (the constructive-mode kickoff
+ * §3.5, ⚖ ruling 6). See `README.md` beside this file.
  *
  * ⛔ THIS MODULE OWNS NO PAGE. `mazeRoom/lab.html` and `seedlingDemo/watch.html`
  * are standalone documents that work with no host at all; this module opens

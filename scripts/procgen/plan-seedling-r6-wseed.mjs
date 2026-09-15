@@ -4,7 +4,7 @@
  * AND THE LADDER'S FIRST "THE GAME SAYS IT WAS BEATEN".
  *
  * Region-atlas Phase 8, subtractive ladder rung R6, slice 6d. Brief:
- * `NewDocs/plans/seedling-bot-r6-opus-kickoff.md` §16.7 item 4 and §17.10
+ * the R6 kickoff §16.7 item 4 and §17.10
  * item 2, with the mechanics at §14.5 and modelled in `endingChain.js`.
  *
  * ── WHAT THE WINDOW DOES ──────────────────────────────────────────────

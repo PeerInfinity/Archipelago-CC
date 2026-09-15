@@ -1,5 +1,5 @@
 /**
- * Step 1 of braid Regime 2 (NewDocs/plans/procedural-generation/braid-regime2.md):
+ * Step 1 of braid Regime 2 (the braid Regime 2 plan):
  * deriveBraidAccessRules — the per-subset minimal-set table over the cheap
  * row-aware flood — must AGREE with the full-graph deriveAccessRules on
  * FORK-FREE gated chains (Regime-2 geometry), under every ability subset.

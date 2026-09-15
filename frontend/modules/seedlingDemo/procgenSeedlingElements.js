@@ -5,8 +5,8 @@
  * FIRST with the composite carve, GUARDING a `buttonroom` FLAG whose lock is a
  * CUT of the main path.
  *
- * PROCGEN ELEMENTS arc 3, slice 3 (`NewDocs/plans/procgen-elements-arc3-
- * kickoff.md` §3.4, D2-D4). The maze's binding (`mazeRoom/procgenMaze.js` §10)
+ * PROCGEN ELEMENTS arc 3, slice 3 (the arc-3 kickoff
+ * §3.4, D2-D4). The maze's binding (`mazeRoom/procgenMaze.js` §10)
  * is the PATTERN — read, not imported: the two substrates share the ELEMENT and
  * the CONTRACT, and nothing else. Everything here is Seedling's own vocabulary
  * (`{tx,ty}` anchors, terrain records, `tset`/`tag` attributes,
