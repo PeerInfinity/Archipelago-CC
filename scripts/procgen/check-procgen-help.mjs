@@ -188,7 +188,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { argvHelp, helpText, isEntryPoint } from './argvHelp.js';
-import { SEEDLING_SRC_ENV } from './seedlingSource.js';
+import { SEEDLING_POINTER_ENV, SEEDLING_SRC_ENV } from './seedlingSource.js';
 
 argvHelp(import.meta.url);
 
@@ -639,9 +639,11 @@ const MARKER = join(scratch, 'marker');
  * inherited `SEEDLING_SRC` would record a door CI never sees (a real checkout
  * makes the damage-sites extractor WRITE its module on a bare import; a missing
  * one words a different refusal). Found as a stale `why` in the baseline
- * (slice seedling-headless-F1).
+ * (slice seedling-headless-F1). The per-machine `.seedling-src` pointer file is
+ * the same leak by another road, so the children read a pointer file that does
+ * not exist.
  */
-const CHILD_ENV = { ...process.env, NO_COLOR: '1' };
+const CHILD_ENV = { ...process.env, NO_COLOR: '1', [SEEDLING_POINTER_ENV]: '/nonexistent/.seedling-src' };
 delete CHILD_ENV[SEEDLING_SRC_ENV];
 
 /**

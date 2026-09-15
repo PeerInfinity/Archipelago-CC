@@ -349,3 +349,6 @@ frontend/presets/jta_loctest_roundtrip_worldgen/
 # site-root-relative path, and only `frontend/` is published). ⛔ Build output,
 # never a source: the documents live in docs/json/developer/procgen/.
 frontend/docs/
+
+# The per-machine pointer to a PeerInfinity/Seedling checkout (scripts/procgen/seedlingSource.js).
+.seedling-src

@@ -39,6 +39,7 @@ import {
 import { describe, it, expect } from 'vitest';
 
 import { parseOelLevel } from '../../../scripts/procgen/seedlingOgmo.js';
+import { seedlingSource } from '../../../scripts/procgen/seedlingSource.js';
 import { recordToOel, escapeXmlAttr, ProcgenOelError } from './procgenLevelOel.js';
 
 const VANILLA_REFS = JSON.parse(readFileSync(
@@ -201,14 +202,14 @@ describe('recordToOel REFUSES rather than emitting something the game discards',
  *   (c) BYTE identity against the disk file. A **MEASUREMENT**, never an
  *       assertion, and its three difference classes are named below.
  *
- * (b) and (c) need the AS3 checkout (named by SEEDLING_SRC), so they skip when it
+ * (b) and (c) need the AS3 checkout (named by SEEDLING_SRC or `.seedling-src`), so they skip when it
  * is absent — the row NAMES that, because a silently-skipped arm is an unmade
  * claim wearing a green tick.
  * ══════════════════════════════════════════════════════════════════════ */
 
 const ATLAS = loadAtlas();
-/** ⛔ SEEDLING_SRC names the fork checkout; there is no default location, so unset means SKIP. */
-const SEEDLING = process.env.SEEDLING_SRC || null;
+/** ⛔ SEEDLING_SRC or `.seedling-src` names the fork checkout; there is no default location, so neither means SKIP. */
+const SEEDLING = seedlingSource(null);
 const HAVE_CHECKOUT = SEEDLING !== null && existsSync(join(SEEDLING, 'assets', 'levels'));
 
 /**

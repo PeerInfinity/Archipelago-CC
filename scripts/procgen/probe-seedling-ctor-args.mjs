@@ -52,7 +52,7 @@
  *   SEEDLING_SRC=<seedling-checkout> node scripts/procgen/probe-seedling-ctor-args.mjs
  *   SEEDLING_SRC=<seedling-checkout> node scripts/procgen/probe-seedling-ctor-args.mjs --all   # full table
  *
- * Without SEEDLING_SRC it SKIPs by name, exit 0 — there is no default location.
+ * Without SEEDLING_SRC or `.seedling-src` it SKIPs by name, exit 0 — there is no default location.
  */
 
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
@@ -69,7 +69,7 @@ const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 const SEEDLING = seedlingSource(null);
 if (!SEEDLING) {
-    console.log('SKIP: SEEDLING_SRC is not set — this probe reads the seedling fork '
+    console.log('SKIP: SEEDLING_SRC is not set and no .seedling-src names a checkout — this probe reads the seedling fork '
         + `(${SEEDLING_REPO}, MIT), which is out of repo; point SEEDLING_SRC at a checkout.`);
     process.exit(0);
 }

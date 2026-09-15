@@ -34,7 +34,8 @@ Outputs (paths relative to the repo root):
 Usage:  python3 scripts/procgen/extract-seedling-vanilla-set.py --seedling DIR
 
 DIR is a checkout of the PeerInfinity/Seedling fork; SEEDLING_SRC stands in for
---seedling, and with neither the script refuses by name (exit 2).
+--seedling, then the per-machine pointer file .seedling-src at the repository
+root; with none of them the script refuses by name (exit 2).
 """
 import argparse
 import json
@@ -135,14 +136,25 @@ def need(pattern, text, what):
 
 
 def seedling_checkout(given, tool):
-    """The fork checkout: --seedling, then SEEDLING_SRC, else REFUSE by name,
-    exit 2 — the words `scripts/procgen/seedlingSource.js` spells, and
-    `seedlingSource.test.js` holds this copy to them. No layout default."""
+    """The fork checkout: --seedling, then SEEDLING_SRC, then the per-machine
+    pointer file `<repo>/.seedling-src` (SEEDLING_SRC_POINTER names another),
+    else REFUSE by name, exit 2 — the order and words
+    `scripts/procgen/seedlingSource.js` spells, and `seedlingSource.test.js`
+    holds this copy to them. No layout default."""
     named = given or os.environ.get("SEEDLING_SRC")
     if named:
         return os.path.abspath(named)
-    sys.stderr.write(f"{tool}: no seedling checkout named — pass --seedling <checkout> or set "
-                     "SEEDLING_SRC (a clone of the PeerInfinity/Seedling fork)\n")
+    pointer = os.environ.get("SEEDLING_SRC_POINTER") or os.path.join(REPO, ".seedling-src")
+    try:
+        with open(pointer, encoding="utf-8") as f:
+            line = (f.read().split("\n")[0]).strip()
+    except OSError:
+        line = ""
+    if line:
+        return os.path.normpath(os.path.join(REPO, os.path.expanduser(line)))
+    sys.stderr.write(f"{tool}: no seedling checkout named — pass --seedling <checkout>, set "
+                     "SEEDLING_SRC, or write the checkout's path into .seedling-src at the "
+                     "repository root (a clone of the PeerInfinity/Seedling fork)\n")
     sys.exit(2)
 
 

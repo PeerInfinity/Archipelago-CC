@@ -49,6 +49,7 @@ import {
 } from './levelSetValidator.js';
 import { TAGS_PER_LEVEL } from './breakableRocks.js';
 import { recordToOel, parseOelLevel } from './procgenLevelOel.js';
+import { seedlingSource } from '../../../scripts/procgen/seedlingSource.js';
 
 const fixture = (name) => JSON.parse(readFileSync(
     fileURLToPath(new URL(`./fixtures/${name}`, import.meta.url)), 'utf8',
@@ -1002,14 +1003,14 @@ describe('EDITOR v3 E1b — `source: {record}` as a third kind', () => {
 
     /**
      * ⛓⛓ **ARM (b2) — THE DISK FILES, and it SKIPS without the AS3 checkout**
-     * (named by SEEDLING_SRC; there is no default location).
+     * (named by SEEDLING_SRC or `.seedling-src`; there is no default location).
      * The strongest arm: the OEL text as Ogmo wrote it, with the tile grid, the
      * `<node>` children and the one raw `>` inside an attribute value that
      * `procgenLevelOel`'s docblock has named since Phase 5 — none of which the
      * committed reduced fixture can reach. ⛔ The skip is NAMED, because a
      * silently-skipped arm is an unmade claim wearing a green tick (§11.8).
      */
-    const SEEDLING = process.env.SEEDLING_SRC || null;
+    const SEEDLING = seedlingSource(null);
     const HAVE_CHECKOUT = SEEDLING !== null && existsSync(join(SEEDLING, 'assets', 'levels'));
     it.skipIf(!HAVE_CHECKOUT)(
         'ARM (b2): parseRoomXml(the DISK OEL) === indexRoom(parseOelLevel(the DISK OEL)), all 116',

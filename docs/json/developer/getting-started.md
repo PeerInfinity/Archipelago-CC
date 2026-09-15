@@ -349,6 +349,21 @@ general_options:
 - `extend_sphere_log_to_all_locations: false` (minimal) – Only logs progression-critical spheres for faster testing
 - `extend_sphere_log_to_all_locations: true` (full) – Logs all locations including non-progression items for comprehensive validation
 
+### 5. (Optional) Point the Seedling Instruments at a Fork Checkout
+
+Some Seedling tests and extractors under `scripts/procgen/` read the game's AS3 source, which lives in a separate repository (a clone of the `PeerInfinity/Seedling` fork, branch `bot`). Without one they refuse or skip by name. To run them, tell them where your clone is, in one of three ways (earlier wins):
+
+1. the tool's own flag (`--source <checkout>`, or `--seedling <checkout>` for the Python extractors);
+2. the `SEEDLING_SRC` environment variable;
+3. a one-line pointer file named `.seedling-src` at the repository root:
+
+```bash
+# From the repository root. The file is gitignored and belongs to this tree only.
+echo <path-to-your-seedling-checkout> > .seedling-src
+```
+
+The pointer file is read by every shell that runs the tools, including ones that do not load your shell profile, which an exported variable does not reach. A leading `~` expands to your home directory, and a relative path is relative to the repository root. A worktree has no pointer file until you write one there.
+
 ### Working in a git worktree
 
 Concurrent work runs in separate git worktrees. Create one with the script, not with a bare `git worktree add`:
