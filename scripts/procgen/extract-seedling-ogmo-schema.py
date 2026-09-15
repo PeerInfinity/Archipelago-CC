@@ -4,7 +4,7 @@
 EDITOR v3, slice B (the EDITOR v3 plan §3.3 Tier A). The
 editor arm has to know, for every entity the game's rooms can hold, what
 attributes it carries, of what TYPE, with what default and what bounds. That
-table exists already and it is not in this repo: `~/CC/seedling/Shrum.oep` is
+table exists already and it is not in this repo: `Shrum.oep` in the seedling fork is
 the Ogmo 1 project file the game's own levels were authored against, and the
 144 `<object>` declarations in it ARE the vocabulary.
 
@@ -17,7 +17,7 @@ range the game accepts, with nothing red anywhere.
 ── ⚠ WHAT THE `.oep` IS AND IS NOT AN ORACLE FOR ─────────────────────────
 
 The `.oep` declares what the EDITOR OFFERS. `Game.loadLevelXML`
-(`~/CC/seedling/src/Game.as:1942-2313`) declares what the GAME READS. They are
+(the fork's `src/Game.as:1942-2313`) declares what the GAME READS. They are
 two statements about one format and this file transcribes only the first.
 ⛓ Their AGREEMENT is pinned on the JS side, not asserted here: the fixture is
 checked against the 116 shipped rooms of the committed atlas — every entity
@@ -35,9 +35,12 @@ a mismatch there is the fixture telling you the source file changed, and a
 match with a body difference is a change in this script.
 
 Usage:
-  python3 scripts/procgen/extract-seedling-ogmo-schema.py [--seedling DIR]
-  python3 scripts/procgen/extract-seedling-ogmo-schema.py --check
-  python3 scripts/procgen/extract-seedling-ogmo-schema.py --stdout
+  python3 scripts/procgen/extract-seedling-ogmo-schema.py --seedling DIR
+  python3 scripts/procgen/extract-seedling-ogmo-schema.py --seedling DIR --check
+  python3 scripts/procgen/extract-seedling-ogmo-schema.py --seedling DIR --stdout
+
+DIR is a checkout of the PeerInfinity/Seedling fork; SEEDLING_SRC stands in for
+--seedling, and with neither the script refuses by name (exit 2).
 """
 import argparse
 import hashlib
@@ -73,6 +76,18 @@ LAYER_KINDS = ("tiles", "objects", "grid")
 # "attrs are scalars, and the engine coerces them" law), so the default is
 # carried as the exact text a writer would emit.
 NUMERIC_VALUE_ATTRS = ("min", "max", "maxChars")
+
+
+def seedling_checkout(given, tool):
+    """The fork checkout: --seedling, then SEEDLING_SRC, else REFUSE by name,
+    exit 2 — the words `scripts/procgen/seedlingSource.js` spells, and
+    `seedlingSource.test.js` holds this copy to them. No layout default."""
+    named = given or os.environ.get("SEEDLING_SRC")
+    if named:
+        return os.path.abspath(named)
+    sys.stderr.write(f"{tool}: no seedling checkout named — pass --seedling <checkout> or set "
+                     "SEEDLING_SRC (a clone of the PeerInfinity/Seedling fork)\n")
+    sys.exit(2)
 
 
 def die(what):
@@ -204,7 +219,7 @@ def extract(seedling):
             "oep_path": OEP_NAME,
             "oep_sha256": hashlib.sha256(raw).hexdigest(),
             "git": {
-                "repo": "~/CC/seedling",
+                "repo": "PeerInfinity/Seedling",
                 "commit": commit or None,
                 "dirty": bool(status),
             },
@@ -222,14 +237,14 @@ def rendered(schema):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--seedling", default=os.path.expanduser("~/CC/seedling"),
-                    help="the AS3 fork holding Shrum.oep")
+    ap.add_argument("--seedling", default=None,
+                    help="the AS3 fork holding Shrum.oep (else SEEDLING_SRC)")
     ap.add_argument("--check", action="store_true",
                     help="compare the committed fixture to a fresh extract, byte for byte")
     ap.add_argument("--stdout", action="store_true", help="print instead of writing")
     args = ap.parse_args()
 
-    schema = extract(args.seedling)
+    schema = extract(seedling_checkout(args.seedling, "extract-seedling-ogmo-schema.py"))
     text = rendered(schema)
     counts = (f"{len(schema['entities'])} entities, "
               f"{sum(len(e['values']) for e in schema['entities'].values())} values, "

@@ -20,8 +20,11 @@
 // file — cheap for an artifact nobody can otherwise check.
 //
 // Usage:
-//   node scripts/procgen/extract-seedling-masks.mjs --source ~/CC/seedling
-//   node scripts/procgen/extract-seedling-masks.mjs --source <path> --check
+//   node scripts/procgen/extract-seedling-masks.mjs --source <seedling-checkout>
+//   node scripts/procgen/extract-seedling-masks.mjs --source <seedling-checkout> --check
+//
+// The checkout is the flag or SEEDLING_SRC; with neither the tool refuses by
+// name (`seedlingSource.js`) — there is no default location.
 //
 // --check re-extracts and compares against the committed module WITHOUT
 // writing, exiting 1 on any difference — the same gate every other committed
@@ -34,6 +37,7 @@ import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { seedlingSourceOrExit } from './seedlingSource.js';
 
 argvHelp(import.meta.url);
 const REPO_ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
@@ -181,7 +185,7 @@ export function buildModule(sourceDir) {
         + '    },').join('\n');
     return `/**
  * GENERATED — do not edit. Regenerate with:
- *   node scripts/procgen/extract-seedling-masks.mjs --source ~/CC/seedling
+ *   node scripts/procgen/extract-seedling-masks.mjs --source <seedling-checkout>
  * and verify with the same command plus --check (which is what CI runs).
  *
  * The FlashPunk \`Pixelmask\` bitmaps for every Seedling class whose collider
@@ -213,7 +217,7 @@ function main() {
         const i = argv.indexOf(name);
         return i >= 0 && argv[i + 1] ? argv[i + 1] : fallback;
     };
-    const source = resolve(arg('--source', join(process.env.HOME ?? '', 'CC/seedling')));
+    const source = seedlingSourceOrExit(arg('--source'), { tool: 'extract-seedling-masks.mjs' });
     const out = resolve(arg('--out', DEFAULT_OUT));
     const check = argv.includes('--check');
     const text = buildModule(source);

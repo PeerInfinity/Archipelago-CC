@@ -55,6 +55,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 
 
 import { argvHelp } from './argvHelp.js';
+import { seedlingSourceOrExit } from './seedlingSource.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -94,13 +95,14 @@ const LEVEL_COUNT = 116;
 const placementOf = combatPlacementOf;
 const censusOf = (rec) => combat.combatCensus(rec, { placementOf });
 
-/** The fork the tables were transcribed from, for the recon's own header. */
+/**
+ * The fork the tables were transcribed from, for the recon's own header. The
+ * checkout is SEEDLING_SRC (`seedlingSource.js`), and the refusal is LAZY: only
+ * `--kill-locks` reads the fork, so a bare import and every other mode run
+ * with no checkout named.
+ */
 function seedlingSrc() {
-    if (!process.env.HOME) {
-        console.error('HOME is not set, so the seedling fork (CC/seedling under HOME) cannot be found');
-        process.exit(2);
-    }
-    return join(process.env.HOME, 'CC', 'seedling', 'src');
+    return join(seedlingSourceOrExit(null, { tool: 'recon-seedling-r5.mjs' }), 'src');
 }
 
 const args = process.argv.slice(2);

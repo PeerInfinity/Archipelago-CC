@@ -27,7 +27,6 @@
 // and so cannot be a test here.
 import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { homedir } from 'node:os';
 import { join } from 'node:path';
 
 import { loadAtlas } from './levelSource.js';
@@ -202,14 +201,15 @@ describe('recordToOel REFUSES rather than emitting something the game discards',
  *   (c) BYTE identity against the disk file. A **MEASUREMENT**, never an
  *       assertion, and its three difference classes are named below.
  *
- * (b) and (c) need the AS3 checkout, so they skip when it is absent — the row
- * NAMES that, because a silently-skipped arm is an unmade claim wearing a green
- * tick.
+ * (b) and (c) need the AS3 checkout (named by SEEDLING_SRC), so they skip when it
+ * is absent — the row NAMES that, because a silently-skipped arm is an unmade
+ * claim wearing a green tick.
  * ══════════════════════════════════════════════════════════════════════ */
 
 const ATLAS = loadAtlas();
-const SEEDLING = process.env.SEEDLING_SRC ?? join(homedir(), 'CC', 'seedling');
-const HAVE_CHECKOUT = existsSync(join(SEEDLING, 'assets', 'levels'));
+/** ⛔ SEEDLING_SRC names the fork checkout; there is no default location, so unset means SKIP. */
+const SEEDLING = process.env.SEEDLING_SRC || null;
+const HAVE_CHECKOUT = SEEDLING !== null && existsSync(join(SEEDLING, 'assets', 'levels'));
 
 /**
  * ⛓ THE COMPARABLE HALF OF A RECORD. ⛔ `tiles_outside_level` is EXCLUDED and
@@ -246,7 +246,7 @@ describe('⛓⛓⛓ THE VANILLA ROUND TRIP — all 116 rooms', () => {
     });
 
     it.skipIf(!HAVE_CHECKOUT)('(b) THE INDEPENDENT PARSER: parsing the DISK OEL reproduces '
-        + 'the committed atlas record, 116/116 — needs ~/CC/seedling', () => {
+        + 'the committed atlas record, 116/116 — needs SEEDLING_SRC', () => {
         let ok = 0;
         const bad = [];
         for (const level of ATLAS.levels) {

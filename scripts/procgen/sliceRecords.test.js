@@ -183,13 +183,13 @@ describe('⛓ §N is READ, and every field says where it came from', () => {
     /**
      * ⛔⛔ THE ROW DECLARES WHEN IT IS NOT THIS REPOSITORY'S COMMIT, and the
      * gate reads that instead of failing on it — §46.7 names a commit in
-     * `~/CC/seedling` and one in a submodule; §49 marks five SHAs `*` under a
+     * the seedling fork (as a home-relative checkout path) and one in a submodule; §49 marks five SHAs `*` under a
      * `\* pre-rebase SHAs` footnote.
      */
     it('a FOREIGN row and a PRE-REBASE row are declared, not stranded', () => {
         const t = FIXTURE
             .replace(`| \`${GHOST}\` | a row about a commit that is not on this head |`,
-                [`| \`~/CC/elsewhere\` \`${GHOST}\` | in another repository |`,
+                [`| \`~/elsewhere\` \`${GHOST}\` | in another repository |`,
                     `| submodule \`${GHOST}\` | in a submodule |`,
                     `| \`${GHOST}\`* | a pre-rebase sha |`,
                     '', '\\* pre-rebase SHAs; the rebase was clean.'].join('\n'));

@@ -46,7 +46,7 @@
  * avmplus' XOR-mask table, TRANSCRIBED WHOLE rather than reduced to the one
  * entry this build uses.
  *
- * Provenance: `~/CC/SWFRecomp-CC/SWFModernRuntime/src/avm2/avm2_number.c:468`
+ * Provenance: SWFRecomp-CC's `SWFModernRuntime/src/avm2/avm2_number.c:468`
  * (`avm2_random_xor_masks[31]`), which is itself avmplus-compatible. It lives
  * in another repository, so it cannot be imported; keeping the table and the
  * INDEXING EXPRESSION means the derivation `masks[n - 2]` is spelled here the

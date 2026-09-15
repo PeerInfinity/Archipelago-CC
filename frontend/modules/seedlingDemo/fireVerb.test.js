@@ -9,8 +9,9 @@
  * model, because a model asserting its own silence asserts nothing.
  *
  * ⚠ THE SOURCE-TEXT CHECKS ARE A BOUNDED STRATUM AND THEY NAME THEIR BOUND.
- * The AS3 lives in a SEPARATE repository (the fork at `~/CC/seedling`), which
- * CI does not check out, so those checks are `skipIf`-gated on its presence
+ * The AS3 lives in a SEPARATE repository (the seedling fork, checkout named by
+ * SEEDLING_SRC), which CI does not check out, so those checks are `skipIf`-gated
+ * on its presence
  * and vitest reports them as SKIPPED rather than passing. A green run with
  * five skips is a different result from a green run with none, and
  * `SOURCE_CLAIMS` below is the always-running half: it asserts that every
@@ -53,10 +54,10 @@ import { HITABLE_TYPES } from './combatVerbs.js';
 import { FP_MAX_ELAPSED } from './breakableRocks.js';
 import { rect, rectsOverlap } from './levelWorld.js';
 
-const FORK = `${process.env.HOME}/CC/seedling/src`;
-const haveFork = existsSync(`${FORK}/Player.as`);
+const FORK = process.env.SEEDLING_SRC ? `${process.env.SEEDLING_SRC}/src` : null;
+const haveFork = FORK !== null && existsSync(`${FORK}/Player.as`);
 const src = (rel) => readFileSync(`${FORK}/${rel}`, 'utf8');
-/** Skipped, loudly, when the fork is not beside this repo. */
+/** Skipped, loudly, when SEEDLING_SRC does not name a fork checkout. */
 const forkIt = it.skipIf(!haveFork);
 
 /** A `fireHits` target row, with the fields the AS3 distance actually reads. */
@@ -422,6 +423,6 @@ describe('the citation stratum (runs with or without the fork)', () => {
         // refactor that dropped it (turning eleven skips into eleven silent
         // passes) goes red.
         expect(typeof haveFork).toBe('boolean');
-        expect(FORK).toContain('seedling');
+        expect(haveFork && FORK === null).toBe(false);
     });
 });

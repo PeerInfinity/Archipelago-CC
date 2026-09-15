@@ -21,7 +21,6 @@
 // and the reference counts below are asserted against the extractor's own
 // independently measured totals.
 import { existsSync, readFileSync } from 'node:fs';
-import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -1002,15 +1001,16 @@ describe('EDITOR v3 E1b — `source: {record}` as a third kind', () => {
     });
 
     /**
-     * ⛓⛓ **ARM (b2) — THE DISK FILES, and it SKIPS without the AS3 checkout.**
+     * ⛓⛓ **ARM (b2) — THE DISK FILES, and it SKIPS without the AS3 checkout**
+     * (named by SEEDLING_SRC; there is no default location).
      * The strongest arm: the OEL text as Ogmo wrote it, with the tile grid, the
      * `<node>` children and the one raw `>` inside an attribute value that
      * `procgenLevelOel`'s docblock has named since Phase 5 — none of which the
      * committed reduced fixture can reach. ⛔ The skip is NAMED, because a
      * silently-skipped arm is an unmade claim wearing a green tick (§11.8).
      */
-    const SEEDLING = process.env.SEEDLING_SRC ?? join(homedir(), 'CC', 'seedling');
-    const HAVE_CHECKOUT = existsSync(join(SEEDLING, 'assets', 'levels'));
+    const SEEDLING = process.env.SEEDLING_SRC || null;
+    const HAVE_CHECKOUT = SEEDLING !== null && existsSync(join(SEEDLING, 'assets', 'levels'));
     it.skipIf(!HAVE_CHECKOUT)(
         'ARM (b2): parseRoomXml(the DISK OEL) === indexRoom(parseOelLevel(the DISK OEL)), all 116',
         () => {

@@ -181,7 +181,7 @@ doc = {
         "sender assembles a batch it already holds "
         "(assembleLevelSetChunks in levelSetValidator.js); the receiver must "
         "assemble a STREAM, one ExternalInterface call at a time "
-        "(LevelSet.acceptChunk in ~/CC/seedling/src/LevelSet.as), so there is "
+        "(LevelSet.acceptChunk in the seedling fork's src/LevelSet.as), so there is "
         "no way to have only one implementation. This file is what they are "
         "both tested against.\n\n"
         "THE VERDICT COMPARED IS `mounts`: does a set end up mounted? Reasons "

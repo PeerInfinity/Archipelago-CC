@@ -777,7 +777,7 @@ const notSolid = (as3, src, type, why) => Object.freeze({
  * has one field for and the game answers per mover.
  *
  * Every entry cites the source it was transcribed from. The source is out
- * of repo (MIT, `~/CC/seedling`), so drift cannot be caught by a diff —
+ * of repo (the `PeerInfinity/Seedling` fork, MIT), so drift cannot be caught by a diff —
  * the alarm is the census test, which forces every entity tag in the
  * committed extract for a fixture level to appear here.
  */

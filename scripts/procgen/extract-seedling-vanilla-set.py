@@ -31,7 +31,10 @@ Outputs (paths relative to the repo root):
       validator reads and of nothing else. It proves the real cross-reference
       graph validates; it does not prove a room loads, and it is not a level.
 
-Usage:  python3 scripts/procgen/extract-seedling-vanilla-set.py [--seedling DIR]
+Usage:  python3 scripts/procgen/extract-seedling-vanilla-set.py --seedling DIR
+
+DIR is a checkout of the PeerInfinity/Seedling fork; SEEDLING_SRC stands in for
+--seedling, and with neither the script refuses by name (exit 2).
 """
 import argparse
 import json
@@ -45,7 +48,7 @@ REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 FIXTURES = os.path.join(REPO, "frontend", "modules", "seedlingDemo", "fixtures")
 
 # ⛔ THE VANILLA CONSTANTS ARE READ AT THE COMMIT BEFORE THIS ARC TOUCHED THEM.
-# `7514b96` is the pre-arc base of ~/CC/seedling's `bot` branch: phase 3b then
+# `7514b96` is the pre-arc base of the seedling fork's `bot` branch: phase 3b then
 # DELETED every literal this script parses out of Game.as (the 116-entry
 # levelMusics at :199, menuLevels at :449, `level == 45`, `level != 10`, the
 # start level) and moved them into src/VanillaSet.as — the AS3 manifest that
@@ -131,6 +134,18 @@ def need(pattern, text, what):
     return m
 
 
+def seedling_checkout(given, tool):
+    """The fork checkout: --seedling, then SEEDLING_SRC, else REFUSE by name,
+    exit 2 — the words `scripts/procgen/seedlingSource.js` spells, and
+    `seedlingSource.test.js` holds this copy to them. No layout default."""
+    named = given or os.environ.get("SEEDLING_SRC")
+    if named:
+        return os.path.abspath(named)
+    sys.stderr.write(f"{tool}: no seedling checkout named — pass --seedling <checkout> or set "
+                     "SEEDLING_SRC (a clone of the PeerInfinity/Seedling fork)\n")
+    sys.exit(2)
+
+
 def git_show(repo, ref, path):
     """One file as of one commit. Raises the reason, never returns a guess."""
     r = subprocess.run(["git", "-C", repo, "show", f"{ref}:{path}"],
@@ -143,12 +158,13 @@ def git_show(repo, ref, path):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--seedling", default=os.path.expanduser("~/CC/seedling"),
-                    help="the AS3 fork (branch 'bot')")
+    ap.add_argument("--seedling", default=None,
+                    help="the AS3 fork (branch 'bot'; else SEEDLING_SRC)")
     ap.add_argument("--pristine", default=PRISTINE_REF,
                     help="commit to read the vanilla constants from (see the module docstring)")
     ap.add_argument("--stdout", action="store_true", help="print instead of writing")
     args = ap.parse_args()
+    args.seedling = seedling_checkout(args.seedling, "extract-seedling-vanilla-set.py")
 
     src = os.path.join(args.seedling, "src")
     assets = os.path.join(args.seedling, "assets")

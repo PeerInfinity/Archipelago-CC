@@ -42,8 +42,11 @@
 // (`feedback_browser_safe_export_node_module`).
 //
 // Usage:
-//   node scripts/procgen/extract-seedling-damage-sites.mjs --source ~/CC/seedling
-//   node scripts/procgen/extract-seedling-damage-sites.mjs --source <path> --check
+//   node scripts/procgen/extract-seedling-damage-sites.mjs --source <seedling-checkout>
+//   node scripts/procgen/extract-seedling-damage-sites.mjs --source <seedling-checkout> --check
+//
+// The checkout is the flag or SEEDLING_SRC; with neither the tool refuses by
+// name (`seedlingSource.js`) — there is no default location.
 //
 // --check re-extracts and compares against the committed module WITHOUT
 // writing, exiting 1 on any difference. The module holds no timestamp so the
@@ -54,6 +57,7 @@ import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { seedlingSourceOrExit } from './seedlingSource.js';
 
 argvHelp(import.meta.url);
 const REPO_ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
@@ -88,12 +92,7 @@ const optOf = (name, fallback = null) => {
     return eq === undefined ? fallback : eq.slice(name.length + 3);
 };
 const CHECK = args.includes('--check');
-const SOURCE_ARG = optOf('source') ?? '~/CC/seedling';
-if (SOURCE_ARG.startsWith('~') && !process.env.HOME) {
-    console.error(`HOME is not set, so ${SOURCE_ARG} cannot be resolved — pass --source <checkout>`);
-    process.exit(2);
-}
-const SOURCE = resolve(SOURCE_ARG.replace(/^~/, process.env.HOME));
+const SOURCE = seedlingSourceOrExit(optOf('source'), { tool: 'extract-seedling-damage-sites.mjs' });
 const OUT = resolve(optOf('out') ?? DEFAULT_OUT);
 
 function walk(dir, out = []) {
@@ -213,8 +212,8 @@ function render(byClass) {
  * agree, and every disagreement is a missing row or a declared exclusion.
  *
  * Regenerate + verify:
- *   node scripts/procgen/extract-seedling-damage-sites.mjs --source ~/CC/seedling
- *   node scripts/procgen/extract-seedling-damage-sites.mjs --source ~/CC/seedling --check
+ *   node scripts/procgen/extract-seedling-damage-sites.mjs --source <seedling-checkout>
+ *   node scripts/procgen/extract-seedling-damage-sites.mjs --source <seedling-checkout> --check
  *
  * \`net/flashpunk\` (the runtime's own move sweep) and \`Player.as\` (the
  * player's own body — lava, drowning, the fall) are declared exclusions, not

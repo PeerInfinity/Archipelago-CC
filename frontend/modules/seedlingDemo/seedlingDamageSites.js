@@ -14,8 +14,8 @@
  * agree, and every disagreement is a missing row or a declared exclusion.
  *
  * Regenerate + verify:
- *   node scripts/procgen/extract-seedling-damage-sites.mjs --source ~/CC/seedling
- *   node scripts/procgen/extract-seedling-damage-sites.mjs --source ~/CC/seedling --check
+ *   node scripts/procgen/extract-seedling-damage-sites.mjs --source <seedling-checkout>
+ *   node scripts/procgen/extract-seedling-damage-sites.mjs --source <seedling-checkout> --check
  *
  * `net/flashpunk` (the runtime's own move sweep) and `Player.as` (the
  * player's own body — lava, drowning, the fall) are declared exclusions, not

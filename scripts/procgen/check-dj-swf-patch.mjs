@@ -8,11 +8,12 @@
 // byte-identical to SWFRecomp-CC's reference tool:
 //   inject_tracer.py <original DJ swf> --bytecode loader_bytecode.bin --stage-width 600
 //
-// Needs the original Doodle Jump SWF + the SWFRecomp-CC checkout (paths
-// overridable via env). Skips with exit 0 + a notice when either is
-// missing, so it can run in CI checkouts that lack the sibling repo.
+// Needs the original Doodle Jump SWF + a SWFRecomp-CC checkout, named by env:
+// SWFRECOMP_CC (the checkout; there is no default location) and optionally
+// DJ_ORIGINAL_SWF. Skips with exit 0 + a notice naming what is missing, so it
+// can run in CI checkouts that lack the sibling repo.
 //
-// Usage: node scripts/procgen/check-dj-swf-patch.mjs
+// Usage: SWFRECOMP_CC=<swfrecomp-checkout> node scripts/procgen/check-dj-swf-patch.mjs
 
 import { readFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -29,7 +30,12 @@ argvHelp(import.meta.url);
 failOnCrash();
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
-const SWFRECOMP = process.env.SWFRECOMP_CC ?? join(process.env.HOME, 'CC', 'SWFRecomp-CC');
+const SWFRECOMP = process.env.SWFRECOMP_CC;
+if (!SWFRECOMP) {
+    console.log('SKIP: SWFRECOMP_CC is not set — this check needs a SWFRecomp-CC checkout '
+        + '(its inject_tracer.py, and the Doodle Jump SWF unless DJ_ORIGINAL_SWF names one)');
+    process.exit(0);
+}
 const ORIGINAL = process.env.DJ_ORIGINAL_SWF
     ?? join(SWFRECOMP, 'SWFRecomp', 'tests', 'flasharchive', 'Doodle_Jump', 'test.swf');
 const INJECTOR = join(SWFRECOMP, 'tools', 'divergence', 'inject_tracer.py');

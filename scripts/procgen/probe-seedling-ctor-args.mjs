@@ -49,8 +49,10 @@
  * prevent is silence, so anything unclassified throws.
  *
  * Usage:
- *   node scripts/procgen/probe-seedling-ctor-args.mjs
- *   node scripts/procgen/probe-seedling-ctor-args.mjs --all   # full table
+ *   SEEDLING_SRC=<seedling-checkout> node scripts/procgen/probe-seedling-ctor-args.mjs
+ *   SEEDLING_SRC=<seedling-checkout> node scripts/procgen/probe-seedling-ctor-args.mjs --all   # full table
+ *
+ * Without SEEDLING_SRC it SKIPs by name, exit 0 — there is no default location.
  */
 
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
@@ -59,12 +61,19 @@ import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { SEEDLING_REPO, seedlingSource } from './seedlingSource.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
-const SRC = join(process.env.HOME, 'CC', 'seedling', 'src');
+const SEEDLING = seedlingSource(null);
+if (!SEEDLING) {
+    console.log('SKIP: SEEDLING_SRC is not set — this probe reads the seedling fork '
+        + `(${SEEDLING_REPO}, MIT), which is out of repo; point SEEDLING_SRC at a checkout.`);
+    process.exit(0);
+}
+const SRC = join(SEEDLING, 'src');
 
 const ALL = process.argv.includes('--all');
 
@@ -73,7 +82,7 @@ const { FIRE_ARM_POLICY, FIRE_HITABLE_TYPE_BY_ARM } = await import(join(MODULE, 
 
 if (!existsSync(SRC)) {
     console.log(`SKIP: no AS3 source at ${SRC} — this probe reads the fork, which is `
-        + 'out of repo (MIT, ~/CC/seedling).');
+        + `out of repo (${SEEDLING_REPO}, MIT).`);
     process.exit(0);
 }
 

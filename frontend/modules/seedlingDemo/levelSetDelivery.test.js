@@ -3,7 +3,7 @@
 //
 // ⛓ WHY A SHARED FIXTURE EXISTS AT ALL. `levelSetValidator.js` is JavaScript
 // and cannot run inside the wasm, so the receiver — `LevelSet.acceptChunk` in
-// ~/CC/seedling/src/LevelSet.as — has to assemble deliveries itself. That is
+// the seedling fork's src/LevelSet.as — has to assemble deliveries itself. That is
 // two implementations of one rule set, which is the failure mode this arc keeps
 // catching. The cure is not to pretend one of them away: the sender assembles a
 // batch it already holds and the receiver assembles a STREAM, one

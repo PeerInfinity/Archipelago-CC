@@ -1,7 +1,7 @@
 /**
  * Parity harness: pins runnerDemo/physics.js to the UNMODIFIED
  * upstream toolkit port (vendor/toolkit-physics-original.js, copied
- * verbatim from ~/CC/platformer-toolkit/web/physics.js).
+ * verbatim from the platformer-toolkit repository's web/physics.js).
  *
  * The vendored file is a DOM-bound page script, not a module; we
  * evaluate it inside a function scope with stub window/document/rAF

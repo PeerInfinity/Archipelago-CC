@@ -10,7 +10,7 @@
 // fail to be tracked.
 //
 // Usage:
-//   node scripts/procgen/extract-seedling-map.mjs --source ~/CC/seedling
+//   node scripts/procgen/extract-seedling-map.mjs --source <seedling-checkout>
 //   node scripts/procgen/extract-seedling-map.mjs --source <path> --check
 //   node scripts/procgen/extract-seedling-map.mjs --source <path> --out other.json
 //

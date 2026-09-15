@@ -5,7 +5,7 @@
   "oep_path": "Shrum.oep",
   "oep_sha256": "3cbe353fdf278dab807d64d8bbe36fbfe37080e8e404cff6ed99783b6d60ef88",
   "git": {
-   "repo": "~/CC/seedling",
+   "repo": "PeerInfinity/Seedling",
    "commit": "826ba77d67a4e6cc826204faa8948ecfaa1c00fa",
    "dirty": false
   }

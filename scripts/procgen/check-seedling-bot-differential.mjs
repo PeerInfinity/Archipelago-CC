@@ -351,7 +351,7 @@ const PAGE_BASE = payloadBase();
 if (!existsSync(join(ARTIFACT, 'game.html'))
     || !existsSync(join(ARTIFACT, `${PAGE_BASE}.wasm`))) {
     console.log(`SKIP: seedling bot wasm artifact not staged at ${ARTIFACT}`
-        + ' — build it with ~/CC/seedling_bot_build/build_bot.sh and the'
+        + ' — build it with build_bot.sh in the seedling bot build directory and the'
         + ' pipeline documented in that script, then copy the deployed page here');
     process.exit(0);
 }

@@ -12,7 +12,7 @@
  *
  * ── ATTRIBUTION ───────────────────────────────────────────────────────
  *
- * **MetaZelda** — Tom Coxon, BSD-3-clause, cloned to `~/CC/metazelda` (⚖ design
+ * **MetaZelda** — Tom Coxon, BSD-3-clause (⚖ design
  * ruling 14: re-implement, do not depend on — it is Java + Eclipse + the
  * author's `gameutil`, and we need our seeded rng, JSON out, and ~6 functions).
  * The logic below is a port of `src/net/bytten/metazelda/generators/

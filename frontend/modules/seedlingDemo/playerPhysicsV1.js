@@ -10,7 +10,7 @@
  * why. Two of those oddities are load-bearing and were mis-described in
  * the original design brief — see `input()` and `moveAxis()` below.
  *
- * Sources (fork `PeerInfinity/Seedling`, `~/CC/seedling`):
+ * Sources (fork `PeerInfinity/Seedling`):
  *   `src/Mobile.as`  — friction(), mobileUpdate() order, the constants
  *   `src/Player.as`  — input(), update() order, moveX/moveY OVERRIDES,
  *                      the speed table, the world clamp

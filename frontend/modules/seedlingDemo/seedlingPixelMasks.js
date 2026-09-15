@@ -1,6 +1,6 @@
 /**
  * GENERATED — do not edit. Regenerate with:
- *   node scripts/procgen/extract-seedling-masks.mjs --source ~/CC/seedling
+ *   node scripts/procgen/extract-seedling-masks.mjs --source <seedling-checkout>
  * and verify with the same command plus --check (which is what CI runs).
  *
  * The FlashPunk `Pixelmask` bitmaps for every Seedling class whose collider

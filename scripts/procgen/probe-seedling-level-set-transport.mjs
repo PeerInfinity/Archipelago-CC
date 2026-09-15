@@ -6,7 +6,7 @@
  *
  * ── WHAT THIS IS FOR ──────────────────────────────────────────────────
  *
- * Phase 3 put four seams into the AS3 (~/CC/seedling, branch `bot`): the parse
+ * Phase 3 put four seams into the AS3 (the seedling fork, branch `bot`): the parse
  * split, the level table behind a MOUNTED SET, `botLoadLevels`, and four
  * level-id bounds checks. None of it can be believed from the source — the
  * artifact is a SWFRecomp AVM2 recompile, and every claim about it has to be
@@ -104,6 +104,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { seedlingSource } from './seedlingSource.js';
 
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'probe-seedling-level-set-transport.mjs', kind: 'windows' });
@@ -111,7 +112,8 @@ takeBoxLockOrExit({ name: 'probe-seedling-level-set-transport.mjs', kind: 'windo
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d';
-const SEEDLING = process.env.SEEDLING_SRC || join(process.env.HOME, 'CC', 'seedling');
+/** Arms 4-5 read the fork's OEL tree; SEEDLING_SRC names the checkout, and unset they SKIP by name. */
+const SEEDLING = seedlingSource(null);
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 
@@ -184,6 +186,7 @@ const rosterSteps = (level) => ([
 
 /** The real vanilla 116, with each room's OEL read from the AS3 tree as TEXT. */
 function realVanillaSetAsXml() {
+    if (!SEEDLING) return null;
     const assets = join(SEEDLING, 'assets');
     if (!existsSync(assets)) return null;
     let bytes = 0;
@@ -396,7 +399,7 @@ for (const c of CONFORMANCE.cases) {
 
 // ── 4 + 5. the real 116 rooms, and the swap ──────────────────────────────────
 if (real == null) {
-    console.log(`\nSKIP arms 4-5: no OEL tree at ${join(SEEDLING, 'assets')}`);
+    console.log(`\nSKIP arms 4-5: ${SEEDLING ? `no OEL tree at ${join(SEEDLING, 'assets')}` : 'SEEDLING_SRC is not set'}`);
 } else {
     console.log(`\n  the real set: 116 rooms, ${real.bytes} B of OEL, `
         + `${realPlan.chunks.length} chunks (<=${MAX_ROOMS_PER_CHUNK} rooms/chunk), `
