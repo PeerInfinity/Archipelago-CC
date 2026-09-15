@@ -1003,7 +1003,7 @@ describe('EDITOR v3 E1b — `source: {record}` as a third kind', () => {
 
     /**
      * ⛓⛓ **ARM (b2) — THE DISK FILES, and it SKIPS without the AS3 checkout**
-     * (named by SEEDLING_SRC or `.seedling-src`; there is no default location).
+     * (the `vendor/seedling` submodule; it skips when that is not initialised).
      * The strongest arm: the OEL text as Ogmo wrote it, with the tile grid, the
      * `<node>` children and the one raw `>` inside an attribute value that
      * `procgenLevelOel`'s docblock has named since Phase 5 — none of which the

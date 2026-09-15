@@ -188,7 +188,6 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { argvHelp, helpText, isEntryPoint } from './argvHelp.js';
-import { SEEDLING_POINTER_ENV, SEEDLING_SRC_ENV } from './seedlingSource.js';
 
 argvHelp(import.meta.url);
 
@@ -634,17 +633,13 @@ const scratch = mkdtempSync(join(tmpdir(), 'procgen-help-'));
 const MARKER = join(scratch, 'marker');
 
 /**
- * ⛔ AND IT RUNS WITHOUT THIS MACHINE'S SEEDLING CHECKOUT. The baseline is
- * written on a box and judged in CI, where nothing names one: a child that
- * inherited `SEEDLING_SRC` would record a door CI never sees (a real checkout
- * makes the damage-sites extractor WRITE its module on a bare import; a missing
- * one words a different refusal). Found as a stale `why` in the baseline
- * (slice seedling-headless-F1). The per-machine `.seedling-src` pointer file is
- * the same leak by another road, so the children read a pointer file that does
- * not exist.
+ * ⛓ THE SEEDLING SOURCE IS A SUBMODULE (`vendor/seedling`, slice
+ * seedling-headless-V1), so the children read it like every other reader: the
+ * throwaway worktree initialises it with the rest (asserted above) and CI's
+ * checkout is `submodules: recursive`. There is no machine-local source to
+ * scrub — the variable and the pointer file F1 isolated here were removed.
  */
-const CHILD_ENV = { ...process.env, NO_COLOR: '1', [SEEDLING_POINTER_ENV]: '/nonexistent/.seedling-src' };
-delete CHILD_ENV[SEEDLING_SRC_ENV];
+const CHILD_ENV = { ...process.env, NO_COLOR: '1' };
 
 /**
  * ⛔ THE CHILD IS ITS OWN PROCESS GROUP AND IS KILLED AS ONE. An instrument

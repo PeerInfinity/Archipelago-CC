@@ -112,7 +112,7 @@ takeBoxLockOrExit({ name: 'probe-seedling-level-set-transport.mjs', kind: 'windo
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d';
-/** Arms 4-5 read the fork's OEL tree; SEEDLING_SRC or `.seedling-src` names the checkout, and with neither they SKIP by name. */
+/** Arms 4-5 read the fork's OEL tree in the `vendor/seedling` submodule, and SKIP by name when it is not initialised. */
 const SEEDLING = seedlingSource(null);
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
@@ -399,7 +399,7 @@ for (const c of CONFORMANCE.cases) {
 
 // ── 4 + 5. the real 116 rooms, and the swap ──────────────────────────────────
 if (real == null) {
-    console.log(`\nSKIP arms 4-5: ${SEEDLING ? `no OEL tree at ${join(SEEDLING, 'assets')}` : 'SEEDLING_SRC is not set and no .seedling-src names a checkout'}`);
+    console.log(`\nSKIP arms 4-5: ${SEEDLING ? `no OEL tree at ${join(SEEDLING, 'assets')}` : 'the vendor/seedling submodule is not initialised'}`);
 } else {
     console.log(`\n  the real set: 116 rooms, ${real.bytes} B of OEL, `
         + `${realPlan.chunks.length} chunks (<=${MAX_ROOMS_PER_CHUNK} rooms/chunk), `

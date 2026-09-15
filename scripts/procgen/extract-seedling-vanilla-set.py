@@ -33,9 +33,9 @@ Outputs (paths relative to the repo root):
 
 Usage:  python3 scripts/procgen/extract-seedling-vanilla-set.py --seedling DIR
 
-DIR is a checkout of the PeerInfinity/Seedling fork; SEEDLING_SRC stands in for
---seedling, then the per-machine pointer file .seedling-src at the repository
-root; with none of them the script refuses by name (exit 2).
+DIR is a checkout of the PeerInfinity/Seedling fork; without --seedling the script
+reads the vendor/seedling submodule, and refuses by name (exit 2) when that is not
+initialised (git submodule update --init vendor/seedling).
 """
 import argparse
 import json
@@ -136,25 +136,17 @@ def need(pattern, text, what):
 
 
 def seedling_checkout(given, tool):
-    """The fork checkout: --seedling, then SEEDLING_SRC, then the per-machine
-    pointer file `<repo>/.seedling-src` (SEEDLING_SRC_POINTER names another),
-    else REFUSE by name, exit 2 — the order and words
-    `scripts/procgen/seedlingSource.js` spells, and `seedlingSource.test.js`
-    holds this copy to them. No layout default."""
-    named = given or os.environ.get("SEEDLING_SRC")
-    if named:
-        return os.path.abspath(named)
-    pointer = os.environ.get("SEEDLING_SRC_POINTER") or os.path.join(REPO, ".seedling-src")
-    try:
-        with open(pointer, encoding="utf-8") as f:
-            line = (f.read().split("\n")[0]).strip()
-    except OSError:
-        line = ""
-    if line:
-        return os.path.normpath(os.path.join(REPO, os.path.expanduser(line)))
-    sys.stderr.write(f"{tool}: no seedling checkout named — pass --seedling <checkout>, set "
-                     "SEEDLING_SRC, or write the checkout's path into .seedling-src at the "
-                     "repository root (a clone of the PeerInfinity/Seedling fork)\n")
+    """The fork checkout: --seedling, then the `vendor/seedling` submodule when it
+    is initialised (it holds a `.git` entry), else REFUSE by name, exit 2 — the
+    order and words `scripts/procgen/seedlingSource.js` spells, and
+    `seedlingSource.test.js` holds this copy to them. No layout default."""
+    if given:
+        return os.path.abspath(given)
+    submodule = os.path.join(REPO, "vendor", "seedling")
+    if os.path.exists(os.path.join(submodule, ".git")):
+        return submodule
+    sys.stderr.write(f"{tool}: the Seedling submodule is not initialised — "
+                     "git submodule update --init vendor/seedling\n")
     sys.exit(2)
 
 
@@ -171,7 +163,7 @@ def git_show(repo, ref, path):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seedling", default=None,
-                    help="the AS3 fork (branch 'bot'; else SEEDLING_SRC)")
+                    help="a Seedling fork checkout (default: the vendor/seedling submodule)")
     ap.add_argument("--pristine", default=PRISTINE_REF,
                     help="commit to read the vanilla constants from (see the module docstring)")
     ap.add_argument("--stdout", action="store_true", help="print instead of writing")

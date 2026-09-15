@@ -42,11 +42,12 @@
 // (`feedback_browser_safe_export_node_module`).
 //
 // Usage:
-//   node scripts/procgen/extract-seedling-damage-sites.mjs --source <seedling-checkout>
-//   node scripts/procgen/extract-seedling-damage-sites.mjs --source <seedling-checkout> --check
+//   node scripts/procgen/extract-seedling-damage-sites.mjs
+//   node scripts/procgen/extract-seedling-damage-sites.mjs --check
+//   node scripts/procgen/extract-seedling-damage-sites.mjs --source <seedling-checkout> [--check]
 //
-// The checkout is the flag, SEEDLING_SRC or the `.seedling-src` pointer file;
-// with none the tool refuses by name (`seedlingSource.js`) — there is no default location.
+// The source is the `vendor/seedling` submodule unless `--source` names another
+// checkout; an uninitialised submodule is a refusal by name (`seedlingSource.js`).
 //
 // --check re-extracts and compares against the committed module WITHOUT
 // writing, exiting 1 on any difference. The module holds no timestamp so the

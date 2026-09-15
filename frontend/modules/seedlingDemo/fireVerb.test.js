@@ -9,9 +9,9 @@
  * model, because a model asserting its own silence asserts nothing.
  *
  * ⚠ THE SOURCE-TEXT CHECKS ARE A BOUNDED STRATUM AND THEY NAME THEIR BOUND.
- * The AS3 lives in a SEPARATE repository (the seedling fork, checkout named by
- * SEEDLING_SRC or `.seedling-src`), which CI does not check out, so those checks are `skipIf`-gated
- * on its presence
+ * The AS3 lives in a SEPARATE repository (the seedling fork), checked out as the
+ * `vendor/seedling` submodule; a clone made without submodules has none, so those checks are
+ * `skipIf`-gated on its presence
  * and vitest reports them as SKIPPED rather than passing. A green run with
  * five skips is a different result from a green run with none, and
  * `SOURCE_CLAIMS` below is the always-running half: it asserts that every
@@ -59,7 +59,7 @@ const SEEDLING = seedlingSource(null);
 const FORK = SEEDLING ? `${SEEDLING}/src` : null;
 const haveFork = FORK !== null && existsSync(`${FORK}/Player.as`);
 const src = (rel) => readFileSync(`${FORK}/${rel}`, 'utf8');
-/** Skipped, loudly, when neither SEEDLING_SRC nor `.seedling-src` names a fork checkout. */
+/** Skipped, loudly, when the `vendor/seedling` submodule is not initialised. */
 const forkIt = it.skipIf(!haveFork);
 
 /** A `fireHits` target row, with the fields the AS3 distance actually reads. */

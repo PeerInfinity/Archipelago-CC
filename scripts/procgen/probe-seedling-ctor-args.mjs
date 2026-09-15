@@ -49,10 +49,10 @@
  * prevent is silence, so anything unclassified throws.
  *
  * Usage:
- *   SEEDLING_SRC=<seedling-checkout> node scripts/procgen/probe-seedling-ctor-args.mjs
- *   SEEDLING_SRC=<seedling-checkout> node scripts/procgen/probe-seedling-ctor-args.mjs --all   # full table
+ *   node scripts/procgen/probe-seedling-ctor-args.mjs
+ *   node scripts/procgen/probe-seedling-ctor-args.mjs --all   # full table
  *
- * Without SEEDLING_SRC or `.seedling-src` it SKIPs by name, exit 0 — there is no default location.
+ * It reads the `vendor/seedling` submodule; when that is not initialised it SKIPs by name, exit 0.
  */
 
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
@@ -61,7 +61,7 @@ import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
-import { SEEDLING_REPO, seedlingSource } from './seedlingSource.js';
+import { SEEDLING_REPO, SEEDLING_SUBMODULE, seedlingSource } from './seedlingSource.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -69,8 +69,8 @@ const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 const SEEDLING = seedlingSource(null);
 if (!SEEDLING) {
-    console.log('SKIP: SEEDLING_SRC is not set and no .seedling-src names a checkout — this probe reads the seedling fork '
-        + `(${SEEDLING_REPO}, MIT), which is out of repo; point SEEDLING_SRC at a checkout.`);
+    console.log(`SKIP: the ${SEEDLING_SUBMODULE} submodule is not initialised — this probe reads the Seedling fork `
+        + `(${SEEDLING_REPO}); git submodule update --init ${SEEDLING_SUBMODULE}`);
     process.exit(0);
 }
 const SRC = join(SEEDLING, 'src');

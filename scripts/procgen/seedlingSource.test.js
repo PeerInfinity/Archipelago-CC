@@ -1,167 +1,163 @@
 /**
- * seedlingSource — **THE ROWS: A SEEDLING-READING INSTRUMENT IS TOLD WHERE THE
- * FORK IS, OR IT SAYS SO BY NAME** (slice seedling-headless-E1).
+ * seedlingSource — **THE ROWS: A SEEDLING-READING INSTRUMENT READS THE FLAG OR
+ * THE `vendor/seedling` SUBMODULE, OR IT SAYS BY NAME THAT THE SUBMODULE IS NOT
+ * INITIALISED** (slices seedling-headless-E1, V1).
  *
- * ⛔ The spawned rows run with the real HOME on purpose: on a machine where a
- * clone sits at the old layout default, an instrument that still guessed it
- * would FIND it and exit 0 — so these rows red on exactly the machine where a
- * layout fallback would otherwise hide.
+ * ⛓ The spawned rows run the tools from a FIXTURE REPOSITORY — a copy of
+ * `scripts/procgen/` and `package.json` in a scratch directory, with `frontend/`
+ * and `node_modules/` linked in — because the tools find the submodule beside
+ * their own file. This tree's `vendor/seedling` is initialised (CI's too), so a
+ * refusal row run in place could never refuse; the fixture decides whether a
+ * `vendor/seedling` exists and whether it is initialised.
  */
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { homedir, tmpdir } from 'node:os';
+import {
+    cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync,
+} from 'node:fs';
+import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import {
-    SEEDLING_POINTER_ENV, SEEDLING_REPO, SEEDLING_SRC_ENV, seedlingSource, seedlingSourceRefusal,
+    SEEDLING_REPO, SEEDLING_SUBMODULE, seedlingSource, seedlingSourceRefusal, seedlingSubmodule,
 } from './seedlingSource.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 
-/** A pointer file that does not exist: the machine's own `.seedling-src` must not decide a row. */
-const NO_POINTER = '/nonexistent/.seedling-src';
-
-/** The environment with every source-naming variable removed, the pointer file included. */
-function unnamedEnv() {
-    const env = { ...process.env, [SEEDLING_POINTER_ENV]: NO_POINTER };
-    delete env[SEEDLING_SRC_ENV];
-    delete env.SWFRECOMP_CC;
-    delete env.DJ_ORIGINAL_SWF;
-    return env;
+/** A scratch repository root; `submodule` is 'absent', 'empty' (uninitialised) or 'initialised'. */
+function scratchRepo(submodule) {
+    const root = mkdtempSync(join(tmpdir(), 'seedling-source-repo-'));
+    if (submodule !== 'absent') mkdirSync(join(root, SEEDLING_SUBMODULE), { recursive: true });
+    if (submodule === 'initialised') {
+        writeFileSync(join(root, SEEDLING_SUBMODULE, '.git'), 'gitdir: ../../.git/modules/vendor/seedling\n');
+    }
+    return root;
 }
 
-function run(cmd, args) {
-    const r = spawnSync(cmd, args, { cwd: REPO, env: unnamedEnv(), encoding: 'utf8', timeout: 60000 });
+/** …plus the tools: a copy of `scripts/procgen/`, with `frontend/` and `node_modules/` linked. */
+function fixtureRepo(submodule) {
+    const root = scratchRepo(submodule);
+    cpSync(HERE, join(root, 'scripts', 'procgen'), { recursive: true });
+    cpSync(join(REPO, 'package.json'), join(root, 'package.json'));
+    for (const dir of ['frontend', 'node_modules']) {
+        if (existsSync(join(REPO, dir))) symlinkSync(join(REPO, dir), join(root, dir), 'dir');
+    }
+    return root;
+}
+
+function runIn(root, cmd, tool, args) {
+    const r = spawnSync(cmd, [join(root, 'scripts', 'procgen', tool), ...args],
+        { cwd: root, encoding: 'utf8', timeout: 60000 });
     return { status: r.status, stdout: r.stdout ?? '', stderr: r.stderr ?? '' };
 }
 
-describe('seedlingSource: the flag, then SEEDLING_SRC, then nothing', () => {
-    it('the flag wins over the variable, and the variable is used without one', () => {
-        expect(seedlingSource('/a', { [SEEDLING_SRC_ENV]: '/b' })).toBe(resolve('/a'));
-        expect(seedlingSource(null, { [SEEDLING_SRC_ENV]: '/b' })).toBe(resolve('/b'));
+describe('seedlingSource: the flag, then the INITIALISED submodule, then nothing', () => {
+    const roots = [];
+    const repo = (submodule) => { const r = scratchRepo(submodule); roots.push(r); return r; };
+    afterAll(() => { for (const r of roots) rmSync(r, { recursive: true, force: true }); });
+
+    it('the submodule path is the one .gitmodules declares — a tracked pin, not a layout guess', () => {
+        expect(SEEDLING_SUBMODULE).toBe('vendor/seedling');
+        expect(readFileSync(join(REPO, '.gitmodules'), 'utf8')).toMatch(/^\s*path = vendor\/seedling$/m);
     });
 
-    it('neither named is null — there is no layout fallback', () => {
-        expect(seedlingSource(null, { [SEEDLING_POINTER_ENV]: NO_POINTER })).toBeNull();
-        expect(seedlingSource('', { [SEEDLING_SRC_ENV]: '', [SEEDLING_POINTER_ENV]: NO_POINTER })).toBeNull();
+    it('initialised: nothing named resolves to <repo>/vendor/seedling', () => {
+        const root = repo('initialised');
+        expect(seedlingSubmodule(root)).toBe(resolve(root, SEEDLING_SUBMODULE));
+        expect(seedlingSource(null, { repo: root })).toBe(resolve(root, SEEDLING_SUBMODULE));
+    });
+
+    it('UNinitialised (the empty directory a clone without submodules leaves) or absent: null', () => {
+        const empty = repo('empty');
+        mkdirSync(join(empty, SEEDLING_SUBMODULE, 'src'));
+        expect(seedlingSource(null, { repo: empty })).toBeNull();
+        expect(seedlingSource('', { repo: repo('absent') })).toBeNull();
+    });
+
+    it('the flag beats the submodule', () => {
+        expect(seedlingSource('/from-flag', { repo: repo('initialised') })).toBe(resolve('/from-flag'));
+        expect(seedlingSource('/from-flag', { repo: repo('absent') })).toBe(resolve('/from-flag'));
+    });
+
+    const INITIALISED = existsSync(join(REPO, SEEDLING_SUBMODULE, '.git'));
+    it.skipIf(!INITIALISED)('THIS tree (initialised): the default is its own vendor/seedling', () => {
+        expect(seedlingSource(null)).toBe(resolve(REPO, SEEDLING_SUBMODULE));
     });
 });
 
-describe('the per-machine pointer file is the LAST resort (flag → SEEDLING_SRC → .seedling-src)', () => {
-    /** A scratch pointer file holding `text`, removed after `fn`. */
-    function withPointer(text, fn) {
-        const dir = mkdtempSync(join(tmpdir(), 'seedling-pointer-'));
-        const file = join(dir, '.seedling-src');
-        writeFileSync(file, text);
-        try { return fn(file); } finally { rmSync(dir, { recursive: true, force: true }); }
-    }
+describe('the tools, run from a fixture repository', () => {
+    let uninit;
+    let init;
+    beforeAll(() => { uninit = fixtureRepo('empty'); init = fixtureRepo('initialised'); });
+    afterAll(() => { for (const r of [uninit, init]) rmSync(r, { recursive: true, force: true }); });
 
-    it('present: the one line names the checkout (`~` expanded, trailing newline tolerated)', () => {
-        withPointer('~/fork-checkout\n', (file) => {
-            expect(seedlingSource(null, { [SEEDLING_POINTER_ENV]: file })).toBe(join(homedir(), 'fork-checkout'));
-        });
-        withPointer('/abs/fork', (file) => {
-            expect(seedlingSource(null, { [SEEDLING_POINTER_ENV]: file })).toBe(resolve('/abs/fork'));
-        });
+    describe('⛔ an instrument with the submodule uninitialised REFUSES by name, exit 2', () => {
+        const NODE_TOOLS = [
+            ['extract-seedling-masks.mjs', ['--check']],
+            ['extract-seedling-damage-sites.mjs', ['--check']],
+            ['recon-seedling-r5.mjs', ['--kill-locks']],
+        ];
+        for (const [tool, args] of NODE_TOOLS) {
+            it(`${tool} ${args.join(' ')}`, () => {
+                const r = runIn(uninit, process.execPath, tool, args);
+                expect(r.stderr.trim()).toBe(seedlingSourceRefusal(tool));
+                expect(r.status).toBe(2);
+            });
+        }
+
+        const PY_TOOLS = ['extract-seedling-ogmo-schema.py', 'extract-seedling-vanilla-set.py'];
+        for (const tool of PY_TOOLS) {
+            it(`${tool} --stdout (the same words, spelled in Python)`, () => {
+                const r = runIn(uninit, 'python3', tool, ['--stdout']);
+                expect(r.stderr.trim()).toBe(seedlingSourceRefusal(tool));
+                expect(r.status).toBe(2);
+            });
+        }
     });
 
-    it('absent or empty: null, so the tool refuses', () => {
-        expect(seedlingSource(null, { [SEEDLING_POINTER_ENV]: NO_POINTER })).toBeNull();
-        withPointer('\n', (file) => {
-            expect(seedlingSource(null, { [SEEDLING_POINTER_ENV]: file })).toBeNull();
+    describe('an INITIALISED submodule is where the tools read', () => {
+        it('damage-sites --check reads <repo>/vendor/seedling/src', () => {
+            const r = runIn(init, process.execPath, 'extract-seedling-damage-sites.mjs', ['--check']);
+            expect(r.stderr).toContain(join(init, SEEDLING_SUBMODULE, 'src'));
+            expect(r.status).not.toBe(0);
         });
-    });
 
-    it('SEEDLING_SRC beats the file, and the flag beats both', () => {
-        withPointer('/from-file\n', (file) => {
-            const env = { [SEEDLING_SRC_ENV]: '/from-env', [SEEDLING_POINTER_ENV]: file };
-            expect(seedlingSource(null, env)).toBe(resolve('/from-env'));
-            expect(seedlingSource('/from-flag', env)).toBe(resolve('/from-flag'));
+        it('a PYTHON tool reads it too (the copy keeps the order)', () => {
+            const r = runIn(init, 'python3', 'extract-seedling-vanilla-set.py', ['--stdout']);
+            expect(r.stderr).toContain(join(init, SEEDLING_SUBMODULE, 'src'));
+            expect(r.status).not.toBe(0);
         });
-    });
 
-    it('a TOOL reaches the file step: damage-sites --check reads the checkout the file names', () => {
-        withPointer('/nonexistent-pointer-checkout\n', (file) => {
-            const r = spawnSync(process.execPath, [join(HERE, 'extract-seedling-damage-sites.mjs'), '--check'],
-                { cwd: REPO, env: { ...unnamedEnv(), [SEEDLING_POINTER_ENV]: file }, encoding: 'utf8', timeout: 60000 });
-            expect(r.stderr).toContain('/nonexistent-pointer-checkout/src');
+        it('the flag still names another checkout (the Python copy honours it first)', () => {
+            const r = runIn(init, 'python3', 'extract-seedling-vanilla-set.py',
+                ['--seedling', '/nonexistent-flag-checkout', '--stdout']);
+            expect(r.stderr).toContain('/nonexistent-flag-checkout/src');
             expect(r.status).not.toBe(0);
         });
     });
 
-    it('a PYTHON tool reaches the file step too (the copy keeps the order)', () => {
-        withPointer('/nonexistent-pointer-checkout\n', (file) => {
-            const r = spawnSync('python3', [join(HERE, 'extract-seedling-vanilla-set.py'), '--stdout'],
-                { cwd: REPO, env: { ...unnamedEnv(), [SEEDLING_POINTER_ENV]: file }, encoding: 'utf8', timeout: 60000 });
-            expect(r.stderr).toContain('/nonexistent-pointer-checkout/src');
-            expect(r.status).not.toBe(0);
+    describe('a probe whose checkout is OPTIONAL skips, and the skip names the submodule', () => {
+        it('probe-seedling-ctor-args.mjs', () => {
+            const r = runIn(uninit, process.execPath, 'probe-seedling-ctor-args.mjs', []);
+            expect(r.stdout).toMatch(/^SKIP: the vendor\/seedling submodule is not initialised/);
+            expect(r.status).toBe(0);
         });
     });
 });
 
-describe('⛔ an instrument with no checkout named REFUSES by name, exit 2', () => {
-    const NODE_TOOLS = [
-        ['extract-seedling-masks.mjs', ['--check']],
-        ['extract-seedling-damage-sites.mjs', ['--check']],
-        ['recon-seedling-r5.mjs', ['--kill-locks']],
-    ];
-    for (const [tool, args] of NODE_TOOLS) {
-        it(`${tool} ${args.join(' ')}`, () => {
-            const r = run(process.execPath, [join(HERE, tool), ...args]);
-            expect(r.stderr.trim()).toBe(seedlingSourceRefusal(tool));
-            expect(r.status).toBe(2);
-        });
-    }
-
-    const PY_TOOLS = ['extract-seedling-ogmo-schema.py', 'extract-seedling-vanilla-set.py'];
-    for (const tool of PY_TOOLS) {
-        it(`${tool} --stdout (the same words, spelled in Python)`, () => {
-            const r = run('python3', [join(HERE, tool), '--stdout']);
-            expect(r.stderr.trim()).toBe(seedlingSourceRefusal(tool, '--seedling'));
-            expect(r.status).toBe(2);
-        });
-    }
-});
-
-describe('a probe whose checkout is OPTIONAL skips, and the skip names the variable', () => {
-    it('probe-seedling-ctor-args.mjs', () => {
-        const r = run(process.execPath, [join(HERE, 'probe-seedling-ctor-args.mjs')]);
-        expect(r.stdout).toMatch(/^SKIP: SEEDLING_SRC is not set/);
-        expect(r.status).toBe(0);
-    });
-
+describe('a probe whose recompiler checkout is OPTIONAL skips by name', () => {
     it('check-dj-swf-patch.mjs (SWFRECOMP_CC, the recompiler checkout)', () => {
-        const r = run(process.execPath, [join(HERE, 'check-dj-swf-patch.mjs')]);
+        const env = { ...process.env };
+        delete env.SWFRECOMP_CC;
+        delete env.DJ_ORIGINAL_SWF;
+        const r = spawnSync(process.execPath, [join(HERE, 'check-dj-swf-patch.mjs')],
+            { cwd: REPO, env, encoding: 'utf8', timeout: 60000 });
         expect(r.stdout).toMatch(/^SKIP: SWFRECOMP_CC is not set/);
         expect(r.status).toBe(0);
     });
-});
-
-describe('check-procgen-help measures its instruments WITHOUT the machine\'s checkout', () => {
-    /**
-     * ⛔ The baseline is written on a box and read in CI. A child that inherited
-     * this shell's SEEDLING_SRC would record a different import door (a real
-     * checkout: the extractor WRITES its module; a missing one: a different
-     * refusal) than CI's unnamed one. `/nonexistent` stands in for "a checkout
-     * is named" so the row runs where no checkout exists.
-     */
-    it('extract-seedling-damage-sites.mjs: the import door with SEEDLING_SRC set reads as unset', () => {
-        const env = { ...unnamedEnv(), [SEEDLING_SRC_ENV]: '/nonexistent' };
-        delete env[SEEDLING_POINTER_ENV];
-        const r = spawnSync(process.execPath, [join(HERE, 'check-procgen-help.mjs'),
-            '--only=extract-seedling-damage-sites.mjs', '--json', '--in-place'],
-        { cwd: REPO, env, encoding: 'utf8', timeout: 120000 });
-        const rows = JSON.parse(r.stdout.slice(r.stdout.indexOf('\n[') + 1));
-        expect(rows.map((row) => row.file)).toEqual(['extract-seedling-damage-sites.mjs']);
-        expect(rows[0].import.why).toEqual([
-            'exit 2',
-            `printed to stderr: ${seedlingSourceRefusal('extract-seedling-damage-sites.mjs').slice(0, 120)}`,
-        ]);
-    }, 120000);
 });
 
 describe('provenance names the repository and the commit, never a path', () => {

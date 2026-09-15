@@ -97,9 +97,9 @@ const censusOf = (rec) => combat.combatCensus(rec, { placementOf });
 
 /**
  * The fork the tables were transcribed from, for the recon's own header. The
- * checkout is SEEDLING_SRC or `.seedling-src` (`seedlingSource.js`), and the refusal is LAZY: only
+ * source is the `vendor/seedling` submodule (`seedlingSource.js`), and the refusal is LAZY: only
  * `--kill-locks` reads the fork, so a bare import and every other mode run
- * with no checkout named.
+ * with the submodule uninitialised.
  */
 function seedlingSrc() {
     return join(seedlingSourceOrExit(null, { tool: 'recon-seedling-r5.mjs' }), 'src');

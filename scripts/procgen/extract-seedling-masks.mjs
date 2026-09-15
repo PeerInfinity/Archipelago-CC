@@ -20,11 +20,12 @@
 // file — cheap for an artifact nobody can otherwise check.
 //
 // Usage:
-//   node scripts/procgen/extract-seedling-masks.mjs --source <seedling-checkout>
-//   node scripts/procgen/extract-seedling-masks.mjs --source <seedling-checkout> --check
+//   node scripts/procgen/extract-seedling-masks.mjs
+//   node scripts/procgen/extract-seedling-masks.mjs --check
+//   node scripts/procgen/extract-seedling-masks.mjs --source <seedling-checkout> [--check]
 //
-// The checkout is the flag, SEEDLING_SRC or the `.seedling-src` pointer file;
-// with none the tool refuses by name (`seedlingSource.js`) — there is no default location.
+// The source is the `vendor/seedling` submodule unless `--source` names another
+// checkout; an uninitialised submodule is a refusal by name (`seedlingSource.js`).
 //
 // --check re-extracts and compares against the committed module WITHOUT
 // writing, exiting 1 on any difference — the same gate every other committed
