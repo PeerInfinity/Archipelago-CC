@@ -32,6 +32,15 @@
  * out at depth 1, where no ancestor of the gitlink exists, so (iii) is
  * `SKIP:` by name there and (i)–(ii) still answer.
  *
+ * ⛓ ITS SUBJECT IS THE `vendor/seedling` GITLINK, which the derived BUILD
+ * population cannot see: it reaches a submodule by containment or by a CODE
+ * member spelling a path INTO it (`vendor/seedling/…`), and this gate reads the
+ * gitlink with `git ls-tree` under the bare name. Measured at V1: the derived
+ * key held the wasm gitlink and not this one, so a bumped pin would have left
+ * this row's key unmoved. Declared:
+ *
+ * @key-inputs build: vendor/seedling
+ *
  * @ci-shallow row (iii) asks `merge-base --is-ancestor` of the submodule, and a depth-1 submodule checkout carries no ancestor of its own head
  *
  * ⛓ ADOPTED INTO THE HEADLESS CI SET AT BIRTH (the vitest job's `ci-gates.mjs`
