@@ -25,6 +25,12 @@
  *     on 2 entries anyway — a writer killed at its ceiling wrote nothing on
  *     one run, and a `__pycache__/` appeared on one run only. What a door
  *     writes today is in `--only=<file> --json`.
+ *   · `helpResidue` is the KIND of each help-door failure, never its text
+ *     (`residueKinds`): the reasons `check-procgen-help.mjs` composes quote
+ *     the throwaway tree's random name, stderr excerpts, line and file
+ *     counts — the same load-dependent prose `why` was dropped for. 0 of 250
+ *     entries carry one today; the row in the test file constructs one so the
+ *     field cannot start moving the day an instrument's `--help` breaks.
  * ⛔ A new field here must be run-invariant; the row in the test file says so
  * by constructing two runs that differ only in load.
  */
@@ -51,13 +57,35 @@ export const inheritedOf = (r) => {
         .filter((l) => imp.has(l)).sort();
 };
 
+/**
+ * ⛓ THE KIND of a help-door reason, off the FIXED PREFIX each producer in
+ * `check-procgen-help.mjs` writes (`localWhy` and the disk observers) — the
+ * run-specific tail (tree name, excerpt, counts) is what this discards.
+ * Sorted and deduplicated, so order of discovery moves nothing either.
+ */
+const RESIDUE_KINDS = [
+    /** ⛓ a ceiling kill IS a non-zero exit: under load the same door is killed
+     *  where unloaded it exits — one kind, or the field moves with the box. */
+    [/^ran past /, 'exit'],
+    [/^exit /, 'exit'],
+    [/^left .* cache/, 'cache'],
+    [/^printed to stderr/, 'stderr'],
+    [/^printed .* stdout/, 'stdout'],
+    /** ⛓ what a killed door WROTE is load-dependent (measured: 11 files, 12,
+     *  nothing) and so is the porcelain move it causes — neither is a kind. */
+    [/^wrote /, null],
+    [/porcelain|MOVED|RESTORED/, null],
+];
+export const residueKinds = (why) => [...new Set((why ?? []).map((w) =>
+    (RESIDUE_KINDS.find(([re]) => re.test(w)) ?? [null, 'other'])[1]).filter(Boolean))].sort();
+
 /** The baseline file's text for `rows` (the gate's judged rows) measured at `head`. */
 export function baselineDocument(rows, head) {
     const effectful = Object.fromEntries(rows.filter((r) => !r.import.ok)
         .sort((a, b) => a.file.localeCompare(b.file))
         .map((r) => [r.file, {
             inheritedOutput: inheritedOf(r),
-            helpResidue: r.help.ok ? null : r.help.why,
+            helpResidue: r.help.ok ? null : residueKinds(r.help.why),
         }]));
     return `${JSON.stringify({
         note: NOTE,

@@ -12,7 +12,7 @@
  */
 import { describe, expect, it } from 'vitest';
 
-import { baselineDocument } from './procgenHelpBaseline.js';
+import { baselineDocument, residueKinds } from './procgenHelpBaseline.js';
 
 const door = (o = {}) => ({ ok: true, why: [], wrote: [], stdout: '', stderr: '', ms: 100, ...o });
 const row = (file, imp = {}, help = {}) => ({ file, import: door(imp), help: door(help) });
@@ -67,5 +67,53 @@ describe('baselineDocument — two runs at one head write the same bytes', () =>
         const quiet = base.map((r) => (r.file === 'killed-writer.mjs'
             ? { ...r, help: door({ stdout: 'usage' }) } : r));
         expect(baselineDocument(quiet, 'cafe')).not.toBe(a);
+    });
+});
+
+/**
+ * ⛓ G1's second small item: `helpResidue` is the KIND of each help-door
+ * failure, never its text. 0 of 250 entries carry one at `36d20e65a4`, so the
+ * only way to hold the field to its rule is to construct a failing help door
+ * here — with the same load-dependent prose the `why` field was dropped for.
+ */
+function runWithBrokenHelp({ tree, load }) {
+    return [
+        row('broken-help.mjs', { ok: false, why: ['exit 2'] }, {
+            ok: false,
+            ms: 5000 + load,
+            why: [
+                ...(load ? ['ran past the 5000 ms ceiling and was killed (SIGKILL)'] : ['exit 1']),
+                `printed to stderr: cannot open /tmp/procgen-help-tree-${tree}/x.swf`,
+                `printed ${3 + load * 40} line(s) to stdout on a bare --help: usage`,
+                `wrote ${1 + load} file(s) under the repo: NewDocs/x.json`,
+                'the repo\'s `git status --porcelain` MOVED — RESTORED NewDocs/x.json',
+            ],
+        }),
+    ];
+}
+
+describe('helpResidue — the KIND of a failing help door, never its text', () => {
+    it('two runs whose help doors fail the same way for different prose write the same bytes', () => {
+        const a = baselineDocument(runWithBrokenHelp({ tree: 'AAAAAA', load: 0 }), 'deadbeef');
+        const b = baselineDocument(runWithBrokenHelp({ tree: 'ZZZZZZ', load: 1 }), 'deadbeef');
+        expect(a).toBe(b);
+        const residue = JSON.parse(a).importDoorEffectful['broken-help.mjs'].helpResidue;
+        expect(residue).toEqual(['exit', 'stderr', 'stdout']);
+    });
+    it('⛔ NOT VACUOUS: a different KIND of failure does move the bytes', () => {
+        const a = baselineDocument(runWithBrokenHelp({ tree: 'AAAAAA', load: 0 }), 'deadbeef');
+        const rows = runWithBrokenHelp({ tree: 'AAAAAA', load: 0 });
+        rows[0].help.why = ['exit 1', 'left 1 entry(ies) in its own cache: x'];
+        expect(baselineDocument(rows, 'deadbeef')).not.toBe(a);
+    });
+    it('residueKinds classifies every producer prefix and sorts', () => {
+        expect(residueKinds([
+            'wrote 3 file(s) under the repo: a, b, c', 'exit 2 (SIGTERM)',
+            'left 2 entry(ies) in its own cache: x', 'printed to stderr: boom',
+            'printed 9 line(s) to stdout on a bare import: y', 'ran past the 5000 ms ceiling and was killed',
+            'something nobody wrote a prefix for',
+        ])).toEqual(['cache', 'exit', 'other', 'stderr', 'stdout']);
+        expect(residueKinds([])).toEqual([]);
+        expect(residueKinds(undefined)).toEqual([]);
     });
 });
