@@ -7,8 +7,8 @@ into the game, and the game config's teleport block powers the
 region/location teleport UI.
 
 This is the direct client layer (Seedling Stage 1) — distinct from
-`flashSubstrate`, the procgen-substrate lineage. Both stay; see
-`NewDocs/plans/seedling-swfrecomp-task-split.md`.
+`flashSubstrate`, the procgen-substrate lineage. Both stay (the
+SWFRecomp task-split plan's decision).
 
 ## Two transports
 
@@ -213,7 +213,7 @@ and `check-seedling-ap-placement.mjs` now asks its question of the build that
 ships: the rewritten AP tile holds an `APItem`. ⛔ **The cost, stated once:** a
 host regression in an absent-capability branch is undetectable from here on —
 by design, because no shipped build reaches one. The as-built is
-`NewDocs/plans/seedling-headless-webgpu-plan.md` §10.
+the headless arc's plan §10.
 
 The history below is kept as history: every "p4b" and "p4c" in it is a reading
 taken ON those builds while they were pinned.
@@ -281,7 +281,7 @@ manifest entry, once nothing tracked here names it. Either way
 Builds come from SWFRecomp-CC (`docs2/examples/avm2/<name>/`); the regeneration
 steps (inject → build → deploy) live in the SWFRecomp avm2 suite's
 `CURRENT_STATUS.md`, and the concrete one-shot recipe for the bot build is in
-`NewDocs/plans/seedling-bot-r9-kickoff.md` §19.11.
+the R9 kickoff §19.11.
 
 ⛔ **A REBUILD ON A CHANGED TOOLCHAIN NEEDS A CONTROL BUILD FIRST** (R9 slice 9b,
 2026-08-22). `build_wasm_avm2.sh`'s `.o` cache keys on MTIME, mxmlc is not

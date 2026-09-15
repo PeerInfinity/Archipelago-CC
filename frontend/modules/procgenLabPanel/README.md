@@ -16,7 +16,7 @@ standalone load never fetches it. That is measured, not asserted:
 `scripts/procgen/check-procgen-lab-hosting.mjs` claim 9 watches the network.
 
 ⚖ Constructive-mode arc, slice 4 —
-`NewDocs/plans/seedling-constructive-mode-kickoff.md` §3.5, ruling 6 (*"the
+the constructive-mode kickoff §3.5, ruling 6 (*"the
 iframe is the way to keep the layout consistent between the two modes"*).
 Layout consistency between hosted and standalone is free here because it is
 **the same document**.
@@ -87,7 +87,7 @@ last `levelChanged`).
 ## The ROOM-EDITOR DOOR (editor integration, W3)
 
 `labRoomEditor.js` beside this file is the host half of the **room-editor
-contract** (`NewDocs/plans/editor-integration.md` §3.2, §9): a substrate whose
+contract** (the editor-integration plan §3.2, §9): a substrate whose
 registry entry declares `roomEditor: {kind: 'lab', page, arm}` gets an
 `Edit ▸`-shaped door with **no second editor written**, because the door is the
 lab page this panel already hosts. Three moves, and **not one new

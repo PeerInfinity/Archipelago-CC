@@ -29,5 +29,5 @@ each also supplies its own rng source (`seedlingDemo/procgenRng.js`,
 Intent: promoted to `frontend/modules/shared/` when it settles (⚖ CONSTRUCTIVE
 -MODE kickoff ruling 4 — *"we can leave the loop core in the outer repo until
 we decide to move it into shared"*). Design record:
-`NewDocs/plans/seedling-constructive-mode-kickoff.md` §3.2 and §9.
+the constructive-mode kickoff §3.2 and §9.
 Tracked docs: `docs/json/developer/procgen/seedling-bot.md`, `maze.md`.
