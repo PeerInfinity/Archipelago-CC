@@ -1,7 +1,7 @@
 /**
  * seedlingDemo/playthroughWalk — THE CHAIN, as data. R7 slice 2.
  *
- * Brief: `NewDocs/plans/seedling-bot-r7-opus-kickoff.md` §3.1 (the segment,
+ * Brief: the R7 kickoff §3.1 (the segment,
  * defined), §3.2 (the seam), §4 slice 2. Precedent: `r1Walk.js`'s six
  * ENDS-MEET segments (`docs/json/developer/procgen/seedling-bot.md`, "The
  * six segments, and why ENDS-MEET is the load-bearing part").
@@ -199,7 +199,7 @@ export const L5_ARROW_BAIT = Object.freeze({
         arm: 'bait',
         controls: Object.freeze(['off — HOLDS: nothing pressed, nothing armed',
             'stand — HOLDS: the third bob parks in the one column no trap covers']),
-        record: 'NewDocs/plans/seedling-bot-r7-opus-kickoff.md §15.3',
+        record: 'docs/json/developer/procgen/seedling-bot.md § "R7: the honest playthrough, as built" (the R7 kickoff §15.3)',
     }),
     /** ⚠ BOOT-FORM (the `Game` ctor adds a half-tile), asserted against the
      *  preceding legs' own final arrival. */
@@ -340,7 +340,7 @@ export const L6_BOB_DROWN = Object.freeze({
             'south — HOLDS: one row down, the same bob\'s line crosses row 2 WEST of '
                 + 'the water and it lives',
         ]),
-        record: 'NewDocs/plans/seedling-bot-r7-opus-kickoff.md §19',
+        record: 'docs/json/developer/procgen/seedling-bot.md § "R7: the honest playthrough, as built" (the R7 kickoff §19)',
     }),
     /** BOOT-FORM: `teleporter@48,112` in L5 declares `playerx 32, playery 16`. */
     startsAt: Object.freeze({ level: 6, x: 32, y: 16 }),
@@ -442,7 +442,7 @@ export const L8_ARROWS_SANDTRAP_1 = Object.freeze({
             'block-onto-button — ⛔ REFUTES §18.6\'s first move: the planner\'s settle '
                 + 'wait stands the player in the lane and the GAME charges `hits 1`',
         ]),
-        record: 'NewDocs/plans/seedling-bot-r7-opus-kickoff.md §20',
+        record: 'docs/json/developer/procgen/seedling-bot.md § "R7: the honest playthrough, as built" (the R7 kickoff §20)',
     }),
     /**
      * ⛔ BOOT-FORM, AND IT IS A FLOAT BECAUSE IT IS A MEASUREMENT. The two
@@ -522,7 +522,7 @@ export const L8_ARROWS_SANDTRAP_2 = Object.freeze({
                 + 'and leave {8,1} SET, which is what makes the sink load-bearing',
             'kill1-short — HOLDS: a 40-tick hold clears nothing at all',
         ]),
-        record: 'NewDocs/plans/seedling-bot-r7-opus-kickoff.md §20',
+        record: 'docs/json/developer/procgen/seedling-bot.md § "R7: the honest playthrough, as built" (the R7 kickoff §20)',
     }),
     /** BOOT-FORM, where the sink leg leaves the player — a float, for the
      *  reason `L8_ARROWS_SANDTRAP_1.startsAt` gives. Tile (7,7). */
@@ -909,7 +909,7 @@ const CHAIN_DECLARATIONS = Object.freeze([
      * fought the row-1 sandtrap and died twice, and the census-on model
      * reproduced that whole disaster digit for digit. The withdrawn pair is
      * still banked as a free oracle in
-     * `NewDocs/plans/r8-slice2-l6-blind-probe/`.
+     * R8's untracked planning record.
      *
      * ⛔ THE ROW THAT REPLACES IT IS A DIFFERENT WALK, not a re-record. It
      * is authored by a census-ON solver whose ladder REFUSES the blind

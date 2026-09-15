@@ -1,7 +1,7 @@
 /**
  * ── R8 ACCEPTANCE — the rung's own gates, as DATA ─────────────────────
  *
- * R8 is THE LIVE SOLVER BOT (kickoff `NewDocs/plans/seedling-bot-r8-opus-kickoff.md`).
+ * R8 is THE LIVE SOLVER BOT (the R8 kickoff).
  * This module carries the rung's predictions and ledgers in the shape R6/R7
  * established: a prediction is committed BEFORE the change it gates, its
  * outcome is recorded BESIDE it and never over it, and every ledger in here
@@ -2117,9 +2117,9 @@ export const R8_ETA_PROBE = Object.freeze({
     gates: Object.freeze({
         negative: Object.freeze({
             fixture: 'fixtures/refuted/r8-solve-5.{tape,expectation}.json — TRACKED, '
-                + 'because `NewDocs` is gitignored and a gate that reads a path a fresh '
+                + 'because the planning records are gitignored and a gate that reads a path a fresh '
                 + 'clone does not have is a gate that disappears. The full bank (trace, '
-                + '`--win` log) stays in NewDocs/plans/r8-slice4-l5-refuted/.',
+                + '`--win` log) stays with R8\'s untracked planning record.',
             claim: 'the probe FORBIDS the refuted walk\'s own (cell, tick): the player box '
                 + 'at x=65.05,y=56.4 on absolute tick 206, against '
                 + '`arrowtrap@64,48#14.0` at (68,58) — the arrow that took the hit the '

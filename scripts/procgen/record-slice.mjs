@@ -10,9 +10,10 @@
  * places the three it can place.
  *
  * ⛔⛔ **THE KICKOFF PATH IS AN ARGUMENT AND NEVER A CONSTANT.** `NewDocs/` is
- * gitignored by design and is not in a linked worktree at all; a repository
- * file that named it would be a repository file about something the repository
- * cannot see.
+ * gitignored by design and is not in a linked worktree at all, so a kickoff is
+ * the caller's to name. Tracked docs never cite `NewDocs/`; the repository names
+ * it only where a tool reads or writes there — a scratch output's default, the
+ * untracked cross-arc queue (`sliceRecords.QUEUE_DOC`) — never as a citation.
  *
  * ⛔ **THIS TOOL NEVER EDITS THE RECORD.** It reads §N, derives, and reports
  * disagreements as FINDINGS (`generate-procgen-reference`'s rule, same reason).
@@ -321,7 +322,8 @@ export function main() {
     const section = arg('section');
     if (!kickoff || !section) {
         console.log('record-slice: --kickoff=<path> and --section=<N> are required '
-            + '(the kickoff path is an ARGUMENT — this repository never names `NewDocs/`)');
+            + '(the kickoff path is an ARGUMENT — a kickoff is an untracked planning record, '
+            + 'so tracked docs never cite it and no tool holds its path as a constant)');
         process.exit(1);
     }
     if (!existsSync(kickoff)) {

@@ -816,7 +816,7 @@ describe('R8_ETA_PROBE — slice 5\'s prediction, stated before the arrow arm mo
     });
 
     it('⛔ both gates name a fixture that is ALREADY ON DISK', () => {
-        expect(R8_ETA_PROBE.gates.negative.fixture).toMatch(/r8-slice4-l5-refuted/);
+        expect(R8_ETA_PROBE.gates.negative.fixture).toMatch(/^fixtures\/refuted\/r8-solve-5\./);
         expect(R8_ETA_PROBE.gates.positive.fixture).toMatch(/r7-act2-5/);
         expect(R8_ETA_PROBE.gates.mutations.length).toBeGreaterThanOrEqual(3);
     });
