@@ -22,7 +22,7 @@
 The test requires a vanilla Archipelago installation with `worlds/ut_pickle/` installed and `dill` in the Python environment.
 
 ```bash
-cd ~/CC/Archipelago-vanilla
+cd <vanilla-clone>   # a clean clone of upstream Archipelago at commit e6e0bc30
 source .venv/bin/activate
 pip install dill>=0.3.8
 ```

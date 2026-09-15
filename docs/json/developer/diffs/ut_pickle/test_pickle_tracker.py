@@ -9,7 +9,7 @@ Tests the full pickle export/load cycle:
 4. Do a basic logic check (collect items, verify reachability changes)
 
 Usage:
-    cd ~/CC/Archipelago-vanilla
+    cd <vanilla-clone>   # a clean clone of upstream Archipelago at commit e6e0bc30
     source .venv/bin/activate
     python scripts/test_pickle_tracker.py
 """

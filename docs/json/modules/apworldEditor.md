@@ -8,8 +8,7 @@ document carries; and it is the door to every other editor that owns part of tha
 document.
 
 - User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
-- Arc plan: `NewDocs/plans/apworld-editor-hub-plan.md` (gitignored, on disk);
-  record in the cross-arc queue (an untracked record kept outside the repository since 2026-09-14) §5n.
+- Record in the cross-arc queue (an untracked record kept outside the repository since 2026-09-14) §5n.
 
 ## Key files
 

@@ -111,7 +111,7 @@ The optional `sharing` field declares which resource-channel categories the subs
 
 ### Editing
 
-Three fields. The first is the whole *room-editor contract* (`NewDocs/plans/editor-integration.md` §3.2): **"open room i of document D in this substrate's editor and receive ONE saved room back."** Two spellings of that existed before it — the pipeline panel's `Edit ▸` (`procgenPipeline/regionEditors.js`, bounce only) and the set editors' `openRoomAt` → room session → one `replace-room` op (maze on `lab.html`, Seedling on `watch.html`) — and the second one is on a LAB PAGE, which a module self-registration in the app could never have reached, because a page never calls `initialize()`.
+Three fields. The first is the whole *room-editor contract*: **"open room i of document D in this substrate's editor and receive ONE saved room back."** Two spellings of that existed before it — the pipeline panel's `Edit ▸` (`procgenPipeline/regionEditors.js`, bounce only) and the set editors' `openRoomAt` → room session → one `replace-room` op (maze on `lab.html`, Seedling on `watch.html`) — and the second one is on a LAB PAGE, which a module self-registration in the app could never have reached, because a page never calls `initialize()`.
 
 | Field | Type | Meaning |
 |-------|------|---------|

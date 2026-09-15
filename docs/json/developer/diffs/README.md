@@ -198,9 +198,9 @@ For full documentation, see [worlds/json_tools_installer/README.md](../../../../
 
 The `.diff` files in `diff-files/` were created using:
 ```bash
-diff -u --label a/[file] --label b/[file] ~/CC/Archipelago-vanilla/[file] [file] > [output.diff]
+diff -u --label a/[file] --label b/[file] <vanilla-clone>/[file] [file] > [output.diff]
 ```
-Where `~/CC/Archipelago-vanilla/` is a clean clone of upstream at commit `e6e0bc30`. The `--label` flags produce clean `a/`/`b/` relative paths (standard git diff format) instead of absolute paths.
+Where `<vanilla-clone>` is the directory of a clean clone of upstream at commit `e6e0bc30`. The `--label` flags produce clean `a/`/`b/` relative paths (standard git diff format) instead of absolute paths.
 
 ### File Lists
 
