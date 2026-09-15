@@ -19,3 +19,7 @@
 [submodule "frontend/modules/flashPanel/wasm"]
 	path = frontend/modules/flashPanel/wasm
 	url = https://github.com/PeerInfinity/seedling-wasm.git
+[submodule "vendor/seedling"]
+	path = vendor/seedling
+	url = https://github.com/PeerInfinity/Seedling.git
+	branch = ap-m1

@@ -115,10 +115,12 @@ const NEVER_WRITTEN_RE = /\((?:never written|retired)\)/;
 const NEVER_WRITTEN_WINDOW = 120;
 
 /** ⛓ Every path in the repo with this basename — `node_modules`, `.git` and
- *  the build output are not part of the tree a doc could mean. */
+ *  the build output are not part of the tree a doc could mean, and neither is
+ *  `vendor/` (a third-party checkout — the Seedling fork's source since V1 —
+ *  whose file names are that project's, not a procgen doc's citations). */
 function findEverywhere(root, basename, rel = '', out = []) {
     const SKIP = new Set(['node_modules', '.git', 'dist', 'coverage', 'test-results',
-        'playwright-report', '.venv', '__pycache__', 'NewDocs']);
+        'playwright-report', '.venv', '__pycache__', 'NewDocs', 'vendor']);
     for (const e of readdirSync(join(root, rel), { withFileTypes: true })) {
         if (SKIP.has(e.name)) continue;
         const next = rel ? `${rel}/${e.name}` : e.name;
