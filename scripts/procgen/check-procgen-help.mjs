@@ -188,6 +188,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { argvHelp, helpText, isEntryPoint } from './argvHelp.js';
+import { SEEDLING_SRC_ENV } from './seedlingSource.js';
 
 argvHelp(import.meta.url);
 
@@ -633,6 +634,17 @@ const scratch = mkdtempSync(join(tmpdir(), 'procgen-help-'));
 const MARKER = join(scratch, 'marker');
 
 /**
+ * ⛔ AND IT RUNS WITHOUT THIS MACHINE'S SEEDLING CHECKOUT. The baseline is
+ * written on a box and judged in CI, where nothing names one: a child that
+ * inherited `SEEDLING_SRC` would record a door CI never sees (a real checkout
+ * makes the damage-sites extractor WRITE its module on a bare import; a missing
+ * one words a different refusal). Found as a stale `why` in the baseline
+ * (slice seedling-headless-F1).
+ */
+const CHILD_ENV = { ...process.env, NO_COLOR: '1' };
+delete CHILD_ENV[SEEDLING_SRC_ENV];
+
+/**
  * ⛔ THE CHILD IS ITS OWN PROCESS GROUP AND IS KILLED AS ONE. An instrument
  * that launches a browser leaves it behind if only the node process is
  * signalled, and a stray chromium is exactly the side effect this gate is
@@ -644,7 +656,7 @@ function spawnChild(args, cache, ceiling) {
         const child = spawn(process.execPath, args, {
             cwd: TREE,
             detached: true,
-            env: { ...process.env, XDG_CACHE_HOME: cache, NO_COLOR: '1' },
+            env: { ...CHILD_ENV, XDG_CACHE_HOME: cache },
             stdio: ['ignore', 'pipe', 'pipe'],
         });
         let out = '';

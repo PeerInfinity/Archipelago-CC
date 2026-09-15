@@ -85,6 +85,28 @@ describe('a probe whose checkout is OPTIONAL skips, and the skip names the varia
     });
 });
 
+describe('check-procgen-help measures its instruments WITHOUT the machine\'s checkout', () => {
+    /**
+     * ⛔ The baseline is written on a box and read in CI. A child that inherited
+     * this shell's SEEDLING_SRC would record a different import door (a real
+     * checkout: the extractor WRITES its module; a missing one: a different
+     * refusal) than CI's unnamed one. `/nonexistent` stands in for "a checkout
+     * is named" so the row runs where no checkout exists.
+     */
+    it('extract-seedling-damage-sites.mjs: the import door with SEEDLING_SRC set reads as unset', () => {
+        const env = { ...unnamedEnv(), [SEEDLING_SRC_ENV]: '/nonexistent' };
+        const r = spawnSync(process.execPath, [join(HERE, 'check-procgen-help.mjs'),
+            '--only=extract-seedling-damage-sites.mjs', '--json', '--in-place'],
+        { cwd: REPO, env, encoding: 'utf8', timeout: 120000 });
+        const rows = JSON.parse(r.stdout.slice(r.stdout.indexOf('\n[') + 1));
+        expect(rows.map((row) => row.file)).toEqual(['extract-seedling-damage-sites.mjs']);
+        expect(rows[0].import.why).toEqual([
+            'exit 2',
+            `printed to stderr: ${seedlingSourceRefusal('extract-seedling-damage-sites.mjs').slice(0, 120)}`,
+        ]);
+    }, 120000);
+});
+
 describe('provenance names the repository and the commit, never a path', () => {
     it('fixtures/seedling-ogmo-schema.json', () => {
         const fx = JSON.parse(readFileSync(
