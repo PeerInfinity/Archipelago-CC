@@ -41,7 +41,14 @@
  *
  * @key-inputs build: vendor/seedling
  *
- * @ci-shallow row (iii) asks `merge-base --is-ancestor` of the submodule, and a depth-1 submodule checkout carries no ancestor of its own head
+ * ⛓ NO `@ci-shallow` DECLARATION, SINCE G1 (`8ce80b7819`): row (iii) asks
+ *    `merge-base --is-ancestor` of the submodule, which a depth-1 submodule
+ *    checkout cannot answer — so the vitest job UNSHALLOWS `vendor/seedling`
+ *    before vitest and the gates (measured: 1 → 33 commits in 1 s), and CI
+ *    reads the same `3/0` the box does (run 35011021071). The declaration was
+ *    born with the gate at V1 and read UNVERIFIABLE for one run; it came off
+ *    after G1 because a declaration that names a limit CI no longer has would
+ *    keep `ci-summary --gates` reporting this arm as `shallow` forever.
  *
  * ⛓ ADOPTED INTO THE HEADLESS CI SET AT BIRTH (the vitest job's `ci-gates.mjs`
  *    step): pure node, no server, no browser, no box lock. Its price on the box
