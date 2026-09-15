@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 51,
-            "count": 85,
+            "count": 86,
             "id": "check"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 258,
+        "blockStyle": 259,
         "browser": 77,
         "cited": 96,
-        "files": 269,
+        "files": 270,
         "lineStyle": 11,
-        "withDocblock": 269,
-        "withFlags": 182
+        "withDocblock": 270,
+        "withFlags": 183
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3158,6 +3158,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-save-stamp — the SAVE, read back out of the BUILT ARTIFACT, against the set that is mounted.",
             "path": "scripts/procgen/check-seedling-save-stamp.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "repo"
+            ],
+            "file": "check-seedling-source-pin.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "repo"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "check-seedling-source-pin — **THE SEEDLING SOURCE SUBMODULE IS THE SOURCE THE SHIPPED BUILDS WERE COMPILED FROM** (slice seedling-headless-V1).",
+            "path": "scripts/procgen/check-seedling-source-pin.mjs"
         },
         {
             "argvHelpers": [],
