@@ -181,20 +181,6 @@ def main():
     # from it by phase 3b.
     game = git_show(args.seedling, args.pristine, "src/Game.as")
 
-    # …and the rooms themselves are read from the working tree, so this must
-    # hold or the manifest would describe rooms the pristine source never saw.
-    drift = subprocess.run(
-        ["git", "-C", args.seedling, "diff", "--name-only", args.pristine, "HEAD", "--", "assets/"],
-        capture_output=True, text=True)
-    if drift.returncode != 0:
-        sys.exit(f"EXTRACTION FAILED: git diff against {args.pristine} — {drift.stderr.strip()}")
-    if drift.stdout.strip():
-        sys.exit(f"EXTRACTION FAILED: assets/ has changed since {args.pristine}:\n"
-                 + drift.stdout
-                 + "The constants are read at that commit and the rooms from the "
-                   "working tree; if the rooms have moved on, the two halves of "
-                   "this fixture describe different games.")
-
     embeds = {}
     for m in re.finditer(
         r"\[Embed\(\s*source\s*=\s*'([^']+)'[^\]]*\]\s*public static var (\w+):Class", game
@@ -204,6 +190,28 @@ def main():
     names = [s.strip() for s in need(
         r"public static const levels:Array = new Array\((.*?)\);", game, "levels array"
     ).group(1).split(",") if s.strip()]
+
+    # …and the rooms themselves are read from the working tree, so the ROOM FILES
+    # this fixture reads must be the pristine commit's, or the manifest would
+    # describe rooms the pristine source never saw. ⛓ Only those files (slice
+    # seedling-headless-V1): the guard used to diff all of assets/ between the
+    # pristine commit and HEAD, and the AP mod's new ArchipelagoLogo.png — an
+    # asset no room reads — refused every extraction at the pinned source. It
+    # compares against the WORKING TREE, so an uncommitted room edit is drift too.
+    room_paths = sorted({
+        os.path.relpath(os.path.normpath(os.path.join(src, embeds[n])), args.seedling)
+        for n in names if n in embeds})
+    drift = subprocess.run(
+        ["git", "-C", args.seedling, "diff", "--name-only", args.pristine, "--", *room_paths],
+        capture_output=True, text=True)
+    if drift.returncode != 0:
+        sys.exit(f"EXTRACTION FAILED: git diff against {args.pristine} — {drift.stderr.strip()}")
+    if drift.stdout.strip():
+        sys.exit(f"EXTRACTION FAILED: a room file has changed since {args.pristine}:\n"
+                 + drift.stdout
+                 + "The constants are read at that commit and the rooms from the "
+                   "working tree; if the rooms have moved on, the two halves of "
+                   "this fixture describe different games.")
     musics = [int(s.strip()) for s in need(
         r"public static var levelMusics:Array = new Array\((.*?)\);", game, "levelMusics"
     ).group(1).split(",") if s.strip()]

@@ -1,7 +1,7 @@
 /**
- * GENERATED — do not edit. Regenerate with:
- *   node scripts/procgen/extract-seedling-masks.mjs --source <seedling-checkout>
- * and verify with the same command plus --check (which is what CI runs).
+ * GENERATED — do not edit. Regenerate from the vendor/seedling submodule with:
+ *   node scripts/procgen/extract-seedling-masks.mjs
+ * and verify with the same command plus --check.
  *
  * The FlashPunk `Pixelmask` bitmaps for every Seedling class whose collider
  * is a mask rather than a hitbox. One `#`/`.` string per row, x increasing

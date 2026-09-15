@@ -160,6 +160,44 @@ describe('a probe whose recompiler checkout is OPTIONAL skips by name', () => {
     });
 });
 
+describe('the committed extracts are what the PINNED submodule extracts (V1)', () => {
+    /**
+     * ⛓ Before V1 nothing ran these `--check`s — no machine was guaranteed a
+     * checkout — and `seedlingDamageSites.js` sat three line numbers stale
+     * against every fork branch, unseen. With the source a submodule, CI has it.
+     * ⛔ The ogmo schema's provenance is the commit that last touched `Shrum.oep`,
+     * which a DEPTH-1 clone (CI's submodule checkout) cannot know: there its
+     * `git log -1` answers the pin itself and `--check` reds for a reason that is
+     * not a change. That row skips by name in a shallow clone.
+     * `extract-seedling-vanilla-set.py` has no `--check` (and reads history back
+     * to its pristine commit), so it is not a row here.
+     */
+    const SUB = join(REPO, SEEDLING_SUBMODULE);
+    const INITIALISED = existsSync(join(SUB, '.git'));
+    const SHALLOW = INITIALISED && spawnSync('git', ['-C', SUB, 'rev-parse', '--is-shallow-repository'],
+        { encoding: 'utf8' }).stdout.trim() === 'true';
+    const check = (cmd, tool) => spawnSync(cmd, [join(HERE, tool), '--check'],
+        { cwd: REPO, encoding: 'utf8', timeout: 120000 });
+
+    it.skipIf(!INITIALISED)('extract-seedling-masks.mjs --check', () => {
+        const r = check(process.execPath, 'extract-seedling-masks.mjs');
+        expect(`${r.stdout}${r.stderr}`).toContain('--check OK');
+        expect(r.status).toBe(0);
+    }, 120000);
+
+    it.skipIf(!INITIALISED)('extract-seedling-damage-sites.mjs --check', () => {
+        const r = check(process.execPath, 'extract-seedling-damage-sites.mjs');
+        expect(`${r.stdout}${r.stderr}`).toContain('byte-identical');
+        expect(r.status).toBe(0);
+    }, 120000);
+
+    it.skipIf(!INITIALISED || SHALLOW)('extract-seedling-ogmo-schema.py --check (skipped in a shallow clone)', () => {
+        const r = check('python3', 'extract-seedling-ogmo-schema.py');
+        expect(r.stdout).toMatch(/^PASS: /);
+        expect(r.status).toBe(0);
+    }, 120000);
+});
+
 describe('provenance names the repository and the commit, never a path', () => {
     it('fixtures/seedling-ogmo-schema.json', () => {
         const fx = JSON.parse(readFileSync(

@@ -212,9 +212,9 @@ function render(byClass) {
  * \`combat.assertDamageFamilyCovered\` requires this list and those tables to
  * agree, and every disagreement is a missing row or a declared exclusion.
  *
- * Regenerate + verify:
- *   node scripts/procgen/extract-seedling-damage-sites.mjs --source <seedling-checkout>
- *   node scripts/procgen/extract-seedling-damage-sites.mjs --source <seedling-checkout> --check
+ * Regenerate + verify (from the vendor/seedling submodule):
+ *   node scripts/procgen/extract-seedling-damage-sites.mjs
+ *   node scripts/procgen/extract-seedling-damage-sites.mjs --check
  *
  * \`net/flashpunk\` (the runtime's own move sweep) and \`Player.as\` (the
  * player's own body — lava, drowning, the fall) are declared exclusions, not
