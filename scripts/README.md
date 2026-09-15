@@ -493,19 +493,19 @@ Headless CLI drivers and verification harnesses for the procedural-generation su
 
   ```bash
   # Basic installation (monkey patching, tests with Adventure)
-  python scripts/install_json_tools.py --dev --target-dir ~/Archipelago-vanilla
+  python scripts/install_json_tools.py --dev --target-dir <target-dir>
 
   # ROM-less + ALTTP test
-  python scripts/install_json_tools.py --dev --romless --target-dir ~/Archipelago-vanilla
+  python scripts/install_json_tools.py --dev --romless --target-dir <target-dir>
 
   # Fresh install (delete existing target first)
-  python scripts/install_json_tools.py --dev --fresh --target-dir ~/Archipelago-vanilla
+  python scripts/install_json_tools.py --dev --fresh --target-dir <target-dir>
 
   # Dev version with all components, skip tests
-  python scripts/install_json_tools.py --dev --all --skip-tests --target-dir ~/Archipelago-vanilla
+  python scripts/install_json_tools.py --dev --all --skip-tests --target-dir <target-dir>
 
   # Dry run (preview what would be done)
-  python scripts/install_json_tools.py --dev --dry-run --target-dir ~/Archipelago-vanilla
+  python scripts/install_json_tools.py --dev --dry-run --target-dir <target-dir>
   ```
 
   **Key options:**

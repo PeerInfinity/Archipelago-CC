@@ -5,17 +5,17 @@ Drop pre-injected SWFs here. The panel defaults to loading
 
 ## Creating `seedling_injected.swf`
 
-From the `flash-ap-api` project:
+From a checkout of the `flash-ap-api` project:
 
 ```bash
-cd ~/CC/flash-ap-api
-python3 inject.py ~/CC/newgrounds/598977_Seedling.swf \
-    ~/CC/Archipelago-CC/frontend/modules/flashPanel/swf/seedling_injected.swf
+cd <flash-ap-api-checkout>
+python3 inject.py <path-to>/598977_Seedling.swf \
+    <this-repo>/frontend/modules/flashPanel/swf/seedling_injected.swf
 ```
 
 The original unmodified SWF (`598977_Seedling.swf`) is not committed;
-fetch it from Newgrounds or use the symlink at
-`~/CC/flash-ap-api/Seedling.swf`.
+fetch it from Newgrounds or use the `Seedling.swf` symlink in the
+`flash-ap-api` checkout.
 
 ## Browser requirements
 

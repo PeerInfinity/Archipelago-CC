@@ -73,8 +73,8 @@ atlas, the CLI loads it and resolves every `map_ref` against a real level.
   full entity layer. Regenerate and verify with:
 
   ```sh
-  node scripts/procgen/extract-seedling-map.mjs --source ~/CC/seedling
-  node scripts/procgen/extract-seedling-map.mjs --source ~/CC/seedling --check
+  node scripts/procgen/extract-seedling-map.mjs --source <seedling-checkout>
+  node scripts/procgen/extract-seedling-map.mjs --source <seedling-checkout> --check
   ```
 
   It carries no timestamp, so `--check` is exact: the same checkout produces
