@@ -77,17 +77,30 @@
  * what makes it dangerous: the number is not a regression, it is an answer to
  * a different question.
  *
- * ⛓⛓ **S4b (2) SHIPPED THE REPAIR AND THE DECLARATION STAYS — TWO LAYERS,
- * BOTH CORRECT.** The gate now REFUSES BY NAME before it composes one row
+ * ⛓⛓ **S4b (2) SHIPPED THE REPAIR; THE DECLARATION BELOW IS THE SECOND
+ * LAYER.** The gate REFUSES BY NAME before it composes one row
  * (`sliceRecords.shallowRefusal`, and the rung is right below the row
  * helpers), so the `42/24` above is history: a depth-1 clone reads
  * `SKIP: this is a SHALLOW CLONE …` and `ALL PASS — REFUSED`, exit 0. ⛔ The
- * `@ci-shallow` line is NOT redundant and must not be deleted with it: the
- * declaration governs what the BANK may quote, the refusal governs what the
- * GATE may say, and a row quoting a refusal as this tree's value would be the
- * same defect wearing the other costume.
+ * declaration is NOT redundant with the refusal: it governs what the BANK may
+ * quote, the refusal governs what the GATE may say, and a row quoting a
+ * refusal as this tree's value would be the same defect wearing the other
+ * costume.
  *
- * @ci-shallow the convention's start commit is derived from `git log`, and a depth-1 checkout's earliest commit is HEAD itself
+ * ⚖ **USER 2026-09-15: THIS GATE IS THE BOX'S, NOT CI'S** (after the
+ * seedling-headless planner put the choice: a full-history CI arm would fetch
+ * the repository's ~500 MB pack on every push to re-check the planners' OWN
+ * slice records — which the planner runs this gate against locally at every
+ * slice close, the only moment a violation can be introduced — against an arm
+ * that had refused instantly at every head since S4b and sat in `ci-summary
+ * --gates` as `shallow` forever). So the declaration is `@ci-box`, not
+ * `@ci-shallow`: `ciRunnable` is false, the arm leaves the CI set (`ci-gates`
+ * prints it as `CI-SKIPPED` by name, `ci-summary --gate=` refuses with this
+ * reason), and the bank keeps quoting the box — the same protection one
+ * declaration up. `check-seedling-full-tier-owed` keeps `@ci-shallow`: it
+ * still VERIFIES its other categories in CI.
+ *
+ * @ci-box its subject is HISTORY (the convention's start and every heading's introducing commit come from `git log`) and CI's checkout is depth-1; the planner runs it locally at every slice close, and a full-history arm would fetch ~500 MB per push to re-check the planners' own records
  *
  * Run:
  *   node scripts/procgen/check-slice-records.mjs
