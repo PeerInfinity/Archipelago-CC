@@ -3516,7 +3516,8 @@ export const INSTRUMENTS = frz({
                 "json",
                 "kickoff",
                 "local",
-                "memory"
+                "memory",
+                "repo"
             ],
             "file": "check-slice-records.mjs",
             "flags": [
@@ -3543,6 +3544,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "memory"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repo"
                 }
             ],
             "inheritedFlags": [
