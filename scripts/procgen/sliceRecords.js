@@ -80,9 +80,17 @@ export const REPO = join(HERE, '..', '..');
  * queue is the one cross-arc handoff file. Both are single, both are named in
  * the rulings that created them, and `docsIndex.README_ORDER` independently
  * lists the tracked doc — which is the check.
+ *
+ * ⛓⛓ **THE QUEUE IS UNTRACKED SINCE Q1** (⚖ user 2026-09-14): it lives in the
+ * gitignored docs tree, so a CI checkout or a linked worktree does not carry
+ * it. Every reader tolerates its absence by name — `deriveFromGit` only
+ * reports a missing block when the file exists, `check-slice-records` SKIPs
+ * check (1), `record-slice` SKIPs its queue write — and asserts as before
+ * where it is present. ⛓ Untracked also means `rowInputKey`'s path-literal
+ * rule (tracked files only) no longer keys any row on the queue's bytes.
  */
 export const TRACKED_DOC = 'docs/json/developer/procgen/seedling-bot.md';
-export const QUEUE_DOC = 'CC/docs/plans/fable-to-opus-handoff-2026-07.md';
+export const QUEUE_DOC = 'NewDocs/plans/fable-to-opus-handoff-2026-07.md';
 /** ⛓ The artifact ⚖ 22 requires in the SAME commit as a procgen-doc edit. */
 export const DOCS_INDEX = 'frontend/modules/procgenDocs/generated/docsIndex.js';
 /** ⛓ The tape directory ⚖ 40's "NO TAPE MOVED" is a diff over. */

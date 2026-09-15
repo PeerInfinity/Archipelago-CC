@@ -424,6 +424,10 @@ export function main() {
         /* ⛓ the queue header — inserted ONLY if absent; the body stays a human's. */
         if (!doQueue) {
             console.log('SKIP  the queue (--only=memory)');
+        } else if (!existsSync(join(REPO, QUEUE_DOC))) {
+            /* ⛓ Q1: the queue is an untracked record; a tree without it gets no write (and
+             * `writes` is only counted — nothing here stages, so no ignored path is ever staged). */
+            console.log(`SKIP  the queue doc is not on this machine (\`${QUEUE_DOC}\`, untracked)`);
         } else if (derived.queue.line) {
             console.log(`SKIP  ${QUEUE_DOC} already has a block at :${derived.queue.line}`);
         } else {

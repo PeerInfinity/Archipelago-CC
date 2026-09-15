@@ -32,6 +32,14 @@
  *       one fold. Every later fold still reds, which is the direction a live
  *       campaign fails in, and mutant (m1) drives it.
  *
+ *       ⛓⛓ **THE QUEUE IS AN UNTRACKED RECORD SINCE Q1** (⚖ user 2026-09-14:
+ *       the cross-arc queue moved out of the repository, into the gitignored
+ *       docs tree). A tree that does not carry it — CI, a linked worktree, a
+ *       fresh clone — cannot ask (1), so every slice's (1) is a SKIP naming
+ *       that reason, never a FAIL: "the record is not on this machine" is not
+ *       "the record has no block". Where the file IS present, (1) is asserted
+ *       exactly as before. The header says which (`queue present|ABSENT`).
+ *
  *   (2) ⚖ 22 IS AN ASSERTION, NOT A SENTENCE. The commit that INTRODUCED the
  *       heading (`git log -S`, the LAST one, i.e. the first in time) must also
  *       carry `frontend/modules/procgenDocs/generated/docsIndex.js`. The
@@ -87,6 +95,7 @@
  *   node scripts/procgen/check-slice-records.mjs --local --kickoff=<path>
  *   node scripts/procgen/check-slice-records.mjs --memory=<dir>
  *   node scripts/procgen/check-slice-records.mjs --json
+ *   node scripts/procgen/check-slice-records.mjs --repo=<dir>   (a fixture repository; the unit rows' door)
  *
  * ⛓⛓⛓ **THE BANK IS THIS ROW'S SUBJECT, SO THIS ROW DECLARES IT** (⚖ 72 (c),
  * R9 slice S1). `standing-values.json` was in the DERIVED `data` population of
@@ -127,12 +136,14 @@ const flag = (n) => argv.includes(`--${n}`);
 const LOCAL = flag('local');
 const JSON_OUT = flag('json');
 const KICKOFF = arg('kickoff');
-const MEMORY = arg('memory', memoryDir({ repo: REPO }));
+/** ⛓ `--repo=` is the unit rows' door: a throwaway repository with or without the queue. */
+const ROOT = arg('repo', REPO);
+const MEMORY = arg('memory', memoryDir({ repo: ROOT }));
 
 const git = (args) => {
     try {
         return execFileSync('git', args,
-            { cwd: REPO, encoding: 'utf8', maxBuffer: 1 << 26, stdio: ['ignore', 'pipe', 'pipe'] })
+            { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 26, stdio: ['ignore', 'pipe', 'pipe'] })
             .trim();
     } catch { return null; }
 };
@@ -167,7 +178,7 @@ const skip = (m) => rows.push({ kind: 'SKIP', m });
  * is not a failing check, and a red here would be a claim about the tree that
  * this clone is in no position to make.
  */
-const REFUSAL = shallowRefusal({ repo: REPO });
+const REFUSAL = shallowRefusal({ repo: ROOT });
 if (REFUSAL) {
     const m = `${REFUSAL.name} — ${REFUSAL.detail}`;
     if (JSON_OUT) {
@@ -187,7 +198,7 @@ if (REFUSAL) {
 
 /* ── the roster ──────────────────────────────────────────────────────── */
 
-const docPath = join(REPO, TRACKED_DOC);
+const docPath = join(ROOT, TRACKED_DOC);
 if (!existsSync(docPath)) {
     console.log(`FAIL: ${TRACKED_DOC} is not on disk — this gate has no roster`);
     console.log('1 CHECK(S) FAILED');
@@ -199,8 +210,9 @@ const slices = docLines.flatMap((l, i) => {
     return m ? [{ id: m[1], line: i + 1, heading: l }] : [];
 });
 
-const queueLines = existsSync(join(REPO, QUEUE_DOC))
-    ? readFileSync(join(REPO, QUEUE_DOC), 'utf8').split('\n') : [];
+/** ⛓ Q1: the queue is untracked — ABSENT is a fact this gate reports, not an empty queue. */
+const queuePresent = existsSync(join(ROOT, QUEUE_DOC));
+const queueLines = queuePresent ? readFileSync(join(ROOT, QUEUE_DOC), 'utf8').split('\n') : [];
 
 /** ⛓ The trap numbers a `traps/` file holds — `null` when we cannot look. */
 const localTraps = LOCAL
@@ -249,7 +261,10 @@ const conventionSlice = withBlock.find((s) => s.when === conventionFrom) ?? null
 
 for (const s of slices) {
     /* ── (1) the queue block ─────────────────────────────────────────── */
-    if (s.at >= 0) {
+    if (!queuePresent) {
+        skip(`${s.id}: the queue is an untracked record (\`${QUEUE_DOC}\` is not on this machine) — `
+            + 'asserted only where it exists; not claimed green');
+    } else if (s.at >= 0) {
         pass(`${s.id}: queue block at ${QUEUE_DOC}:${s.at + 1}`);
         if (!queueLines[s.at].startsWith(DERIVED_OPENER(s.id))) {
             note(`${s.id}: the queue opener is not the derived one `
@@ -289,7 +304,16 @@ for (const s of slices) {
         const repair = (git(['log', '--format=%h', '--reverse', '--ancestry-path',
             `${sha}..HEAD`, '--', DOCS_INDEX]) ?? '').split('\n').filter(Boolean)[0] ?? null;
         const historical = conventionFrom !== null && s.when !== null && s.when < conventionFrom;
-        if (repair && historical) {
+        /**
+         * ⛓⛓ Q1: THE BOUNDARY IS DERIVED FROM THE QUEUE, so without it a
+         * REPAIRED regen cannot be told historical from live. That is a SKIP
+         * naming the cause; an UNREPAIRED one still FAILS — no boundary forgives it.
+         */
+        if (repair && !queuePresent) {
+            skip(`${s.id}: ⚖ 22 — \`${sha}\` does NOT carry ${DOCS_INDEX}; repaired by \`${repair}\`. `
+                + 'Whether it predates the convention is derived from the queue, which is not on this '
+                + 'machine — not claimed green');
+        } else if (repair && historical) {
             note(`${s.id}: ⚖ 22 — \`${sha}\` does NOT carry ${DOCS_INDEX}; repaired by `
                 + `\`${repair}\`. This heading PREDATES the convention boundary, and slice 8's `
                 + '`c4f7b21e4` is the very event ⚖ 22 was written from — reported, not claimed green');
@@ -334,7 +358,7 @@ if (LOCAL && KICKOFF) {
                 continue;
             }
             const parsed = parseSection(text, n);
-            const derived = deriveFromGit(parsed, { repo: REPO });
+            const derived = deriveFromGit(parsed, { repo: ROOT });
             /** ⛔ `derived.stranded` — the rows the record does NOT declare foreign
              *  or pre-rebase. `commits.filter(!onHead)` is the whole set and
              *  would report the declarations as defects. */
@@ -362,14 +386,15 @@ if (LOCAL && KICKOFF) {
 const n = (k) => rows.filter((r) => r.kind === k).length;
 if (JSON_OUT) {
     console.log(JSON.stringify({
-        slices: slices.map((s) => s.id), local: LOCAL, rows,
+        slices: slices.map((s) => s.id), local: LOCAL, queuePresent, rows,
         counts: { pass: n('PASS'), fail: n('FAIL'), skip: n('SKIP'), note: n('NOTE') },
     }, null, 2));
     process.exit(n('FAIL') ? 1 : 0);
 }
 for (const r of rows) console.log(`${r.kind}: ${r.m}`);
 console.log('');
-console.log(`## ${slices.length} slice(s) on the tracked-doc roster; the CI face is the queue `
+console.log(`## ${slices.length} slice(s) on the tracked-doc roster; queue ${queuePresent ? 'present'
+    : 'ABSENT (untracked record — check (1) SKIPPED)'}; the CI face is the queue `
     + `block, ⚖ 22 and the below-freeze citations. ${LOCAL ? '`--local`: `traps/` read from '
         + `\`${MEMORY}\`.` : 'The kickoff and the memory directory are NOT readable here.'}`);
 console.log('');

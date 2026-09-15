@@ -20,7 +20,7 @@ import { execFileSync } from 'node:child_process';
 import { afterAll, describe, expect, it } from 'vitest';
 
 import {
-    HEADER_RE, LADDER_FROZEN_AT, bareTitle, deriveFromGit, factLines, landedIn, memoryDir,
+    DOCS_INDEX, HEADER_RE, LADDER_FROZEN_AT, QUEUE_DOC, TRACKED_DOC, bareTitle, deriveFromGit, factLines, landedIn, memoryDir,
     parseSection, rulingsIn, sectionText, shallowRefusal, REPO,
 } from './sliceRecords.js';
 import { insertionPoint, replaceRegion } from './record-slice.mjs';
@@ -369,5 +369,87 @@ describe('⛔ the trap ladder is FROZEN, and the boundary is declared with its p
     it('the frozen boundary is a number the docblock explains', () => {
         expect(LADDER_FROZEN_AT).toBeTypeOf('number');
         expect(LADDER_FROZEN_AT).toBeGreaterThan(0);
+    });
+});
+
+/**
+ * ⛓⛓⛓ **Q1: THE QUEUE IS AN UNTRACKED RECORD — ITS ABSENCE IS A SKIP, NEVER A
+ * RED** (⚖ user 2026-09-14). The gate is DRIVEN on a throwaway repository
+ * (`--repo=`) holding two headings: `Z0`, whose regen a later commit repaired,
+ * and `Z1`, carrying its own. Without the queue, (1) and Z0's ⚖ 22 both read
+ * SKIP and the gate exits 0; with it, (1) is asserted as before — including a
+ * red when the block is missing, which is the control that the present run
+ * still discriminates.
+ */
+describe('⛓ Q1: the gate on a tree WITHOUT the untracked queue SKIPs, and asserts WITH it', () => {
+    const QREPO = join(DIR, 'queue-repo');
+    const GATE = join(dirname(new URL(import.meta.url).pathname), 'check-slice-records.mjs');
+    let tick = 1_700_000_000;
+    const qgit = (...args) => {
+        tick += 100;
+        return execFileSync('git', args, {
+            cwd: QREPO, encoding: 'utf8', env: {
+                ...process.env, GIT_AUTHOR_NAME: 't', GIT_AUTHOR_EMAIL: 't@t',
+                GIT_COMMITTER_NAME: 't', GIT_COMMITTER_EMAIL: 't@t',
+                GIT_AUTHOR_DATE: `@${tick} +0000`, GIT_COMMITTER_DATE: `@${tick} +0000`,
+            },
+        }).trim();
+    };
+    const put = (rel, body) => {
+        mkdirSync(join(QREPO, dirname(rel)), { recursive: true });
+        writeFileSync(join(QREPO, rel), body);
+        qgit('add', '-f', rel);
+    };
+    mkdirSync(QREPO);
+    qgit('init', '-q', '-b', 'main');
+    put(TRACKED_DOC, '# doc\n\n### R9 slice Z0: an older fold\n');
+    qgit('commit', '-q', '-m', 'Z0 without its regen');
+    put(DOCS_INDEX, 'export const x = 0;\n');
+    qgit('commit', '-q', '-m', 'the repair');
+    put(TRACKED_DOC, '# doc\n\n### R9 slice Z0: an older fold\n\n### R9 slice Z1: a later fold\n');
+    put(DOCS_INDEX, 'export const x = 1;\n');
+    qgit('commit', '-q', '-m', 'Z1 with its regen');
+    const MEM = join(DIR, 'queue-memory');
+    mkdirSync(MEM);
+
+    const drive = () => {
+        try {
+            const out = execFileSync('node', [GATE, `--repo=${QREPO}`, `--memory=${MEM}`, '--json'],
+                { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+            return { exit: 0, ...JSON.parse(out) };
+        } catch (e) {
+            return { exit: e.status, ...JSON.parse(e.stdout) };
+        }
+    };
+    const rowsFor = (r, id) => r.rows.filter((x) => x.m.startsWith(`${id}: `));
+    const queuePath = join(QREPO, QUEUE_DOC);
+
+    it('ABSENT: (1) is a SKIP naming the untracked record, Z0\'s repaired regen is a SKIP, exit 0', () => {
+        rmSync(queuePath, { force: true });
+        const r = drive();
+        expect(r.queuePresent).toBe(false);
+        expect(r.counts.fail).toBe(0);
+        expect(r.exit).toBe(0);
+        for (const id of ['Z0', 'Z1']) {
+            expect(rowsFor(r, id).some((x) => x.kind === 'SKIP' && /untracked record/.test(x.m))).toBe(true);
+        }
+        expect(rowsFor(r, 'Z0').some((x) => x.kind === 'SKIP' && /repaired by/.test(x.m))).toBe(true);
+    });
+    it('PRESENT with the block: (1) PASSES at its line and Z0 is the historical NOTE, exit 0', () => {
+        mkdirSync(dirname(queuePath), { recursive: true });
+        writeFileSync(queuePath, '# queue\n\n**⇒ Z1 CLOSED (a fixture)**\n');
+        const r = drive();
+        expect(r.queuePresent).toBe(true);
+        expect(rowsFor(r, 'Z1').some((x) => x.kind === 'PASS' && /queue block at/.test(x.m))).toBe(true);
+        expect(rowsFor(r, 'Z0').some((x) => x.kind === 'NOTE' && /repaired by/.test(x.m))).toBe(true);
+        expect(r.exit).toBe(0);
+    });
+    it('⛔ PRESENT without the block: (1) still FAILS — the present branch discriminates', () => {
+        writeFileSync(queuePath, '# queue\n\nno blocks here\n');
+        const r = drive();
+        expect(r.queuePresent).toBe(true);
+        expect(r.counts.fail).toBeGreaterThan(0);
+        expect(r.exit).toBe(1);
+        rmSync(queuePath, { force: true });
     });
 });
