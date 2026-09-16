@@ -210,7 +210,7 @@ export const INSTRUMENTS = frz({
         "files": 270,
         "lineStyle": 11,
         "withDocblock": 270,
-        "withFlags": 183
+        "withFlags": 184
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1901,16 +1901,27 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-procgen-lab-hosting.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "arg"
+            ],
             "browser": true,
             "category": "check",
             "citedBy": [
                 "docs/json/developer/procgen/pipeline-presets.md"
             ],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "host"
+            ],
             "file": "check-procgen-presets.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",
@@ -1921,7 +1932,7 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
-            "oneLiner": "In-app smoke test for the Procgen Pipeline panel's preset drop-down (presetDefs.js + _renderPresetBar). check-sphere-growth-ui.mjs is the template.",
+            "oneLiner": "In-app gate for the Procgen Pipeline panel's preset drop-down (presetDefs.js + _renderPresetBar + _applyPreset): EVERY shipped preset is applied through the drop-down and generated through the panel's own Generate, and the world the panel builds is the world the headless row asserts on.",
             "path": "scripts/procgen/check-procgen-presets.mjs"
         },
         {
