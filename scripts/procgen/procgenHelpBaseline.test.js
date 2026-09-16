@@ -153,8 +153,9 @@ describe('helpResidue — the KIND of a failing help door, never its text', () =
             'wrote 3 file(s) under the repo: a, b, c', 'exit 2 (SIGTERM)',
             'left 2 entry(ies) in its own cache: x', 'printed to stderr: boom',
             'printed 9 line(s) to stdout on a bare import: y', 'ran past the 5000 ms ceiling and was killed',
+            'stdout is NOT the derived help text — the instrument RAN instead of printing', 'printed NOTHING',
             'something nobody wrote a prefix for',
-        ])).toEqual(['cache', 'exit', 'other', 'stderr', 'stdout']);
+        ])).toEqual(['cache', 'exit', 'help-text', 'other', 'stderr', 'stdout']);
         expect(residueKinds([])).toEqual([]);
         expect(residueKinds(undefined)).toEqual([]);
     });

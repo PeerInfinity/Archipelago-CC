@@ -99,6 +99,10 @@ const RESIDUE_KINDS = [
     [/^left .* cache/, 'cache'],
     [/^printed to stderr/, 'stderr'],
     [/^printed .* stdout/, 'stdout'],
+    /** ⛓ the help door's own identity check (H1 ⚖ OPEN (c)): the instrument
+     *  ran instead of printing the derived help, or printed nothing at all. */
+    [/^stdout is NOT the derived help text/, 'help-text'],
+    [/^printed NOTHING/, 'help-text'],
     /** ⛓ what a killed door WROTE is load-dependent (measured: 11 files, 12,
      *  nothing) and so is the porcelain move it causes — neither is a kind. */
     [/^wrote /, null],
