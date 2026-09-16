@@ -159,14 +159,21 @@ function fixtureRepo({ patch = [], inherited = [BANNER] } = {}) {
  * The gate, run in its own copy, against the fixture instrument alone.
  *
  * ⛓ THE CEILINGS ARE THE MARGIN, AND IT IS MEASURED RATHER THAN ASSUMED: the
- * banner is printed 2000 ms into the import and the short ceiling is 500 ms, so
- * the parent's kill timer would have to fire 1500 ms LATE for the killed prefix
- * to contain the banner. Load can only push the banner later.
+ * banner is printed ${BANNER_DELAY_MS} ms into the import, the short ceiling is
+ * ${SHORT_CEILING_MS} ms, so the parent's kill timer would have to fire
+ * ${BANNER_DELAY_MS - SHORT_CEILING_MS} ms LATE for the killed prefix to contain
+ * the banner. Load can only push the banner later.
  */
-const runGate = (dir, args) => spawnSync(process.execPath,
-    [join(dir, 'scripts/procgen', GATE), '--in-place', `--only=${INSTRUMENT}`, '--jobs=1',
-        `--known-ceiling=${SHORT_CEILING_MS}`, `--ceiling=${LONG_CEILING_MS}`, ...args],
-    { cwd: dir, env: ENV, encoding: 'utf8' });
+const runGate = (dir, args, { short = SHORT_CEILING_MS, long = LONG_CEILING_MS } = {}) =>
+    spawnSync(process.execPath,
+        [join(dir, 'scripts/procgen', GATE), '--in-place', `--only=${INSTRUMENT}`, '--jobs=1',
+            `--known-ceiling=${short}`, `--ceiling=${long}`, ...args],
+        { cwd: dir, env: ENV, encoding: 'utf8' });
+/** The entry the writer recorded for the fixture instrument. */
+const entryOf = (dir) => JSON.parse(baselineOf(dir)).importDoorEffectful[INSTRUMENT];
+/** ⛓ The mutant of task 2: the writer that does NOT complete the control. */
+const NO_RERUN = [GATE, "const killed = instruments.filter((f) => byDoor.get(`import:${f}`)?.timedOut);",
+    'const killed = [];'];
 const baselineOf = (dir) => readFileSync(
     join(dir, 'scripts/procgen/check-procgen-help.baseline.json'), 'utf8');
 const rowsOf = (r) => JSON.parse(r.stdout);
@@ -193,5 +200,72 @@ describe('the door result carries the KILL as a fact', () => {
         const dir = fixtureRepo({ patch: [[GATE, '        timedOut: r.timedOut,\n', '']] });
         const [row] = rowsOf(runGate(dir, ['--json']));
         expect(row.import.timedOut).toBeUndefined();
+    }, 60000);
+});
+
+describe('the writer completes a killed import door\'s control', () => {
+    it('two `--write-baseline` runs record the late banner and write the SAME BYTES', () => {
+        const dir = fixtureRepo();
+        const first = runGate(dir, ['--write-baseline']);
+        expect(first.status).toBe(0);
+        const a = baselineOf(dir);
+        expect(entryOf(dir).inheritedOutput).toEqual([BANNER]);
+        /** ⛓ the writer says what it re-ran, so the cost is in the log. */
+        expect(first.stdout).toContain('re-ran 1 killed import door(s) under the '
+            + `${LONG_CEILING_MS} ms ceiling to complete the control (0 still truncated)`);
+        const second = runGate(dir, ['--write-baseline']);
+        expect(second.status).toBe(0);
+        expect(md5(baselineOf(dir))).toBe(md5(a));
+    }, 60000);
+
+    it('⛔ NOT THE SEED: with `inheritedOutput` seeded EMPTY the FIRST write records the banner anyway', () => {
+        /**
+         * ⛓ The vacuity objection this row exists for: the written field could
+         * have been copied from the baseline already on disk. It is not read —
+         * `inheritedOf` intersects the two doors of the CURRENT run — and with
+         * the seed empty the banner can only have come from the control re-run,
+         * because the judged import door was killed 1.5 s before it printed.
+         */
+        const dir = fixtureRepo({ inherited: [] });
+        expect(runGate(dir, ['--write-baseline']).status).toBe(0);
+        expect(entryOf(dir).inheritedOutput).toEqual([BANNER]);
+    }, 60000);
+
+    it('⛔ MUTANT + THE FALSE RED: the un-completed control records nothing, and `--doors=ci` reds the help door for it', () => {
+        const mutant = fixtureRepo({ patch: [NO_RERUN] });
+        const w = runGate(mutant, ['--write-baseline']);
+        expect(w.status).toBe(0);
+        /** ⛔ DETERMINISTIC, not "on a loaded box": the prefix cannot hold a
+         *  line printed 1.5 s after the kill, on any box, at any load. */
+        expect(entryOf(mutant).inheritedOutput).toEqual([]);
+        expect(w.stdout).not.toContain('re-ran');
+        /**
+         * ⛔⛔ AND THIS IS THE COST OF THE MISSING CONTROL, IN CI'S OWN FACE.
+         * `--doors=ci` does not run a baselined file's import door, so the
+         * recorded set is the ONLY control: with the banner missing from it the
+         * help door's own stdout no longer equals the derived help text and the
+         * row reds — for a line no guard in the importer can preempt.
+         */
+        const red = runGate(mutant, ['--doors=ci']);
+        expect(red.status).toBe(1);
+        expect(red.stdout).toContain('stdout is NOT the derived help text');
+        /** ⛓ THE SAME HELP DOOR, judged against the completed control: green. */
+        const fixed = fixtureRepo();
+        expect(runGate(fixed, ['--write-baseline']).status).toBe(0);
+        const green = runGate(fixed, ['--doors=ci']);
+        expect(green.status).toBe(0);
+        expect(green.stdout).toContain('ALL PASS');
+    }, 60000);
+
+    it('a control killed at the LONG ceiling too is named as truncated, not silently recorded', () => {
+        /** ⛓ 15 s of work is not load, so the writer says which file it could
+         *  not complete rather than writing an intersection against a prefix
+         *  under a rule that claims otherwise. */
+        const dir = fixtureRepo();
+        const r = runGate(dir, ['--write-baseline'], { short: 300, long: 1000 });
+        expect(r.status).toBe(0);
+        expect(r.stdout).toContain(`## ⚠ control truncated at 1000 ms — ${INSTRUMENT}:`);
+        expect(r.stdout).toContain('(1 still truncated)');
+        expect(entryOf(dir).inheritedOutput).toEqual([]);
     }, 60000);
 });

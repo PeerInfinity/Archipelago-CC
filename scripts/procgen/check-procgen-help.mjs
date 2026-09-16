@@ -843,7 +843,9 @@ async function runDoor(task) {
     const cache = join(scratch, `${task.kind}-${task.file}`);
     rmSync(cache, { recursive: true, force: true });
     mkdirSync(cache, { recursive: true });
-    const ceiling = ceilingFor(task.file, task.kind);
+    /** ⛓ `task.ceiling` is the CONTROL re-run's override (H1) — the only
+     *  caller that asks for a ceiling other than this file's own. */
+    const ceiling = task.ceiling ?? ceilingFor(task.file, task.kind);
     const r = await spawnChild(argsFor(task.kind, task.abs), cache, ceiling);
     const cacheFiles = readdirSync(cache, { recursive: true });
     rmSync(cache, { recursive: true, force: true });
@@ -875,13 +877,24 @@ async function runDoor(task) {
 
 /** ⛓ A BATCH, WITH ONE PAIR OF DISK OBSERVERS AROUND IT — and a serial re-run
  *  when, and only when, that pair says something moved. */
-async function runBatch(tasks) {
+async function runBatch(tasks, { attribute = true } = {}) {
     writeFileSync(MARKER, '');
     const before = porcelain();
     const out = await Promise.all(tasks.map(runDoor));
     const touched = newerThan(MARKER);
     const after = porcelain();
     if (after === before && touched.length === 0) return out;
+    /**
+     * ⛔ **A CONTROL RE-RUN IS NOT JUDGED, SO IT DOES NOT PAY FOR
+     * ATTRIBUTION** (H1). The serial pass below exists to say WHICH door in a
+     * dirty batch moved the tree — a sentence that only matters for a row's
+     * `why`, and the control has no `why`: its verdict is the judged run's,
+     * taken already. What the observers are still needed for is the REPAIR, so
+     * that the next batch does not start from a tree this one dirtied. Running
+     * the serial pass anyway would re-drive every killed writer a THIRD time,
+     * at the long ceiling, for prose nothing reads.
+     */
+    if (!attribute) { repairPorcelain(before, after, touched); return out; }
     if (tasks.length === 1) {
         if (touched.length) {
             out[0].wrote = touched;
@@ -988,6 +1001,61 @@ for (const kind of ['import', 'help']) {
         batch.forEach((t, k) => byDoor.set(`${t.kind}:${t.file}`, out[k]));
     }
 }
+/**
+ * ⛓⛓⛓ **AND AT `--write-baseline` ONLY: A KILLED IMPORT DOOR'S CONTROL IS
+ * RE-CAPTURED UNDER THE LONG CEILING** (slice H1, G1 ⚖ OPEN 3).
+ *
+ * ⛔⛔ THE DEFECT, AND IT IS LOAD WEARING A FINDING. A baselined file's import
+ * door is KILLED at `KNOWN_CEILING_MS` by design, so what it captured is a
+ * PREFIX cut wherever the box was — and that prefix is what
+ * `inheritedOutput` is computed from, i.e. the ONLY control the help door has
+ * under `--doors=ci`, where the import door is not run at all. A box loaded
+ * enough to kill the door BEFORE the banner a hoisted module prints at LOAD
+ * therefore records a SMALLER control, and the next CI run attributes that
+ * module's banner to the help door: a false red, with nothing in the baseline
+ * to attribute it with. The recorded control has to be the output of a door
+ * that FINISHED, or the field is a measurement of the box.
+ *
+ * ⛔ THE JUDGED RUN'S VERDICT IS UNTOUCHED, and that is not a detail. The
+ * short ceiling IS the question for a baselined import door — "is it still
+ * non-inert, and it demonstrates that at once" — so re-running it under the
+ * long ceiling and believing THAT verdict would quietly move the gate's
+ * subject. The re-run exists to capture OUTPUT; `why`, `ms` and `timedOut`
+ * stay the short run's, and the completed output lands beside them as
+ * `control`.
+ *
+ * ⛔ AND IT IS THE WRITE FACE'S COST ALONE. CI never writes the baseline, so
+ * the wall a push waits on does not move; `--write-baseline` pays for the
+ * re-runs, which is where a measurement that has to be complete belongs.
+ */
+const controlTruncated = [];
+let controlsReRun = 0;
+if (WRITE_BASELINE && DOORS !== 'help') {
+    const killed = instruments.filter((f) => byDoor.get(`import:${f}`)?.timedOut);
+    const batches = Math.ceil(killed.length / JOBS);
+    for (let i = 0; i < killed.length; i += JOBS) {
+        const batch = killed.slice(i, i + JOBS).map((file) => ({
+            file, kind: 'import', abs: join(DIR, file), ceiling: CEILING_MS,
+        }));
+        console.error(`## control batch ${i / JOBS + 1}/${batches} — ${i}/${killed.length} `
+            + `killed import door(s) re-run, ${((Date.now() - t0) / 1000).toFixed(0)} s: `
+            + `${batch.map((t) => t.file).join(', ')}`);
+        /* eslint-disable-next-line no-await-in-loop */
+        const out = await runBatch(batch, { attribute: false });
+        batch.forEach((t, k) => {
+            byDoor.get(`import:${t.file}`).control = {
+                stdout: out[k].stdout,
+                stderr: out[k].stderr,
+                ms: out[k].ms,
+                ceiling: CEILING_MS,
+                timedOut: out[k].timedOut,
+            };
+            controlsReRun += 1;
+            if (out[k].timedOut) controlTruncated.push(t.file);
+        });
+    }
+}
+
 const WALL_MS = Date.now() - t0;
 rmSync(scratch, { recursive: true, force: true });
 
@@ -1044,6 +1112,24 @@ if (WRITE_BASELINE) {
      * its help door inherits — and NOTHING that moves run to run (G1: `ms`,
      * `why` and `wrote` dropped; the measurement is in `procgenHelpBaseline.js`).
      */
+    /**
+     * ⛔ **A CONTROL THAT WAS KILLED TOO IS SAID OUT LOUD, BY NAME.** A door
+     * that ran past the LONG ceiling is a different instrument from one that
+     * ran past the short one — 15 s of work is not load — and its
+     * `inheritedOutput` is still an intersection against a PREFIX. Silence
+     * there would hand the next reader a field whose rule ("against a door
+     * that finished") is true of every entry but the ones it is not.
+     */
+    for (const f of controlTruncated) {
+        console.log(`## ⚠ control truncated at ${CEILING_MS} ms — ${f}: its import door was `
+            + 'killed at the short ceiling AND at the long one, so its `inheritedOutput` is '
+            + 'the intersection against a PREFIX, not against a door that finished.');
+    }
+    if (controlsReRun) {
+        console.log(`## re-ran ${controlsReRun} killed import door(s) under the ${CEILING_MS} ms `
+            + `ceiling to complete the control (${controlTruncated.length} still truncated) — `
+            + 'the judged short run\'s verdict is unchanged; only its OUTPUT was completed.');
+    }
     const doc = baselineDocument(rows, head);
     writeFileSync(BASELINE_FILE, doc);
     const effectfulCount = JSON.parse(doc).counts.importDoorEffectful;
