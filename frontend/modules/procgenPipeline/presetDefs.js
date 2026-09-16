@@ -419,6 +419,113 @@ export const SHIPPED_PRESETS = Object.freeze([
         },
     },
     {
+        id: 'shipped:content-spiral-mix',
+        label: 'Content sources (shuffled spiral)',
+        group: PRESET_GROUPS.shuffledSpiral,
+        description: 'Three kinds of content laid out from the centre in one '
+            + 'shuffled-spiral world: quota maze 2 (procedural), JtA 3 (a zone '
+            + 'table) and bounce 2 (physics zones), starting in a maze, with two '
+            + 'keys, their doors and the victory item in the pool. Look at the '
+            + 'composite map, where the three substrates sit around the start '
+            + 'cell, at the maze exits the keys gate, and play each kind after Load.',
+        state: {
+            mode: 'shuffledSpiral',
+            params: {
+                seed: 1,
+                startSubstrate: 'maze',
+            },
+            scenario: {
+                items: { key_red: 1, key_blue: 1, victory: 1 },
+                obstacles: { door_red: 1, door_blue: 1 },
+            },
+            substrateQuotas: { maze: 2, jta: 3, bounce: 2 },
+            substrateMix: {},
+            substrateMode: 'quotas',
+        },
+    },
+    {
+        id: 'shipped:omsi-loop-demo',
+        label: 'Idle Loops + JtA, loop mode (shuffled spiral)',
+        group: PRESET_GROUPS.shuffledSpiral,
+        description: 'Two idle games sharing one loop-mode mana pool: quota JtA 2 '
+            + '+ Idle Loops (omsi) 1, starting in JtA, loop mode on. Idle Loops '
+            + 'requires loop mode, and its region is the whole town (a region '
+            + 'split is not something a preset can carry). Look at the loop_costs '
+            + 'sidecar in the compiled world — JtA and Idle Loops bring their own '
+            + 'economy, so their regions carry no cost entry — then Load: the '
+            + 'Loops panel enters loop mode and both games spend the same mana.',
+        state: {
+            mode: 'shuffledSpiral',
+            params: {
+                seed: 1,
+                startSubstrate: 'jta',
+                enableLoopMode: true,
+            },
+            scenario: {
+                items: {},
+                obstacles: {},
+            },
+            substrateQuotas: { jta: 2, omsi: 1 },
+            substrateMix: {},
+            substrateMode: 'quotas',
+        },
+    },
+    {
+        id: 'shipped:library-spiral-demo',
+        label: 'Region libraries (shuffled spiral)',
+        group: PRESET_GROUPS.shuffledSpiral,
+        description: 'Pre-built regions as the only content source: the served '
+            + 'Demo Maze Pack ×3 and Demo Bounce Pack ×2, no substrate quota. '
+            + 'Look at the Region libraries subsection (both packs ticked, with '
+            + 'their counts) and at the library rooms on the composite map; the '
+            + 'selection is carried by file, so a pack that changes on disk is '
+            + 'reported when the preset is applied.',
+        state: {
+            mode: 'shuffledSpiral',
+            params: {
+                seed: 1,
+            },
+            scenario: {
+                items: {},
+                obstacles: {},
+            },
+            substrateQuotas: {},
+            substrateMix: {},
+            substrateMode: 'quotas',
+            libraries: [
+                { source: 'served', file: 'demo-maze-pack.json', library_id: 'demo-maze-pack-3dd25239', count: 3 },
+                { source: 'served', file: 'demo-bounce-pack.json', library_id: 'demo-bounce-pack-0b3f5b39', count: 2 },
+            ],
+        },
+    },
+    {
+        id: 'shipped:runner-library-spiral-demo',
+        label: 'Runner rooms from the library (shuffled spiral)',
+        group: PRESET_GROUPS.shuffledSpiral,
+        description: 'Runner regions instantiated from the served Demo Runner Pack '
+            + '×2 beside Demo Maze Pack ×2 — library entries, not generated, so this '
+            + 'runner world builds in well under a second where a generated runner '
+            + 'zone table takes minutes. Look at the Region libraries subsection '
+            + 'and play a runner room after Load.',
+        state: {
+            mode: 'shuffledSpiral',
+            params: {
+                seed: 1,
+            },
+            scenario: {
+                items: {},
+                obstacles: {},
+            },
+            substrateQuotas: {},
+            substrateMix: {},
+            substrateMode: 'quotas',
+            libraries: [
+                { source: 'served', file: 'demo-maze-pack.json', library_id: 'demo-maze-pack-3dd25239', count: 2 },
+                { source: 'served', file: 'demo-runner-pack.json', library_id: 'demo-runner-pack-ea1041cc', count: 2 },
+            ],
+        },
+    },
+    {
         id: 'shipped:grid-growth-demo',
         label: 'Maze + text adventure (grid growth, legacy)',
         group: PRESET_GROUPS.gridGrowth,
@@ -440,6 +547,58 @@ export const SHIPPED_PRESETS = Object.freeze([
             },
             substrateQuotas: {},
             substrateMix: { maze: 1, text_adventure: 1 },
+            substrateMode: 'mix',
+        },
+    },
+    {
+        id: 'shipped:topdown-maze-ta-demo',
+        label: "Top-down: maze + text adventure (from the loaded world — load any game's preset first)",
+        group: PRESET_GROUPS.topDown,
+        description: "An existing game's region graph realised as procgen regions: "
+            + 'every region of the world the app has loaded becomes a maze or '
+            + 'text-adventure room, weighted maze 2 : text adventure 1, keeping the '
+            + "source's access rules. The source is the LOADED world — load any "
+            + "game's preset first (a plain page load has Adventure loaded, where "
+            + 'seed 3 gives 6 maze and 3 text-adventure rooms). Look at 1 Layout\'s '
+            + 'per-region substrate drop-downs, Move Region and Undo on the '
+            + 'composite map, and the 4 Compile block.',
+        state: {
+            mode: 'topDown',
+            params: {
+                seed: 3,
+            },
+            scenario: {
+                items: {},
+                obstacles: {},
+            },
+            substrateQuotas: {},
+            substrateMix: { maze: 2, text_adventure: 1 },
+            substrateMode: 'mix',
+        },
+    },
+    {
+        id: 'shipped:topdown-zones-demo',
+        label: "Top-down: maze + bounce (from the loaded world — load any game's preset first)",
+        group: PRESET_GROUPS.topDown,
+        description: 'Physics zones realising source regions: every region of the '
+            + 'loaded world becomes a maze room or a bounce zone, weighted 1 : 1, '
+            + "with the source's access rules on the exits and the bounce "
+            + "abilities granted as starting items. The source is the LOADED world "
+            + "— load any game's preset first (a plain page load has Adventure "
+            + 'loaded, where seed 3 gives 5 maze rooms and 4 bounce zones). Look at '
+            + '1 Layout, the bounce cells on the composite map, and play a bounce '
+            + 'zone after Load.',
+        state: {
+            mode: 'topDown',
+            params: {
+                seed: 3,
+            },
+            scenario: {
+                items: {},
+                obstacles: {},
+            },
+            substrateQuotas: {},
+            substrateMix: { maze: 1, bounce: 1 },
             substrateMode: 'mix',
         },
     },

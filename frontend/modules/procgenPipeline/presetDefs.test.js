@@ -124,6 +124,66 @@ describe('SHIPPED_PRESETS', () => {
         expect(p.state.scenario.obstacles).toEqual({ door_red: 1, door_blue: 1 });
     });
 
+    it('content spiral mix pins maze 2 + jta 3 + bounce 2 by quota, started in a maze', () => {
+        const p = getPresetById('shipped:content-spiral-mix');
+        expect(p.state.mode).toBe('shuffledSpiral');
+        expect(p.state.substrateQuotas).toEqual({ maze: 2, jta: 3, bounce: 2 });
+        expect(p.state.params.startSubstrate).toBe('maze');
+    });
+
+    it('omsi loop demo pins loop mode on a jta + omsi spiral', () => {
+        const p = getPresetById('shipped:omsi-loop-demo');
+        expect(p.state.mode).toBe('shuffledSpiral');
+        expect(p.state.substrateQuotas).toEqual({ jta: 2, omsi: 1 });
+        expect(p.state.params).toMatchObject({ startSubstrate: 'jta', enableLoopMode: true });
+    });
+
+    it('library spiral demo takes served maze + bounce packs as its only content source', () => {
+        const p = getPresetById('shipped:library-spiral-demo');
+        expect(p.state.mode).toBe('shuffledSpiral');
+        expect(p.state.substrateQuotas).toEqual({});
+        expect(p.state.libraries.map(({ source, file, count }) => [source, file, count])).toEqual([
+            ['served', 'demo-maze-pack.json', 3],
+            ['served', 'demo-bounce-pack.json', 2],
+        ]);
+    });
+
+    it('runner library spiral demo takes the served runner pack beside the maze pack, no runner quota', () => {
+        const p = getPresetById('shipped:runner-library-spiral-demo');
+        expect(p.state.mode).toBe('shuffledSpiral');
+        expect(p.state.substrateQuotas).toEqual({});
+        expect(p.state.libraries.map(({ source, file, count }) => [source, file, count])).toEqual([
+            ['served', 'demo-maze-pack.json', 2],
+            ['served', 'demo-runner-pack.json', 2],
+        ]);
+    });
+
+    it('top-down maze + text adventure demo pins the mix maze 2 : text_adventure 1', () => {
+        const p = getPresetById('shipped:topdown-maze-ta-demo');
+        expect(p.state.mode).toBe('topDown');
+        expect(p.state.substrateMix).toEqual({ maze: 2, text_adventure: 1 });
+    });
+
+    it('top-down zones demo pins the mix maze 1 : bounce 1', () => {
+        const p = getPresetById('shipped:topdown-zones-demo');
+        expect(p.state.mode).toBe('topDown');
+        expect(p.state.substrateMix).toEqual({ maze: 1, bounce: 1 });
+    });
+
+    it('a top-down preset carries a non-empty mix, in mix mode, and says its source is the loaded world', () => {
+        // Top-down reads the MIX only: measured (P2 mutant B) — an empty mix, or
+        // quotas in its place, realises an all-maze world with no error.
+        const topDown = SHIPPED_PRESETS.filter((q) => q.state.mode === 'topDown');
+        expect(topDown.length).toBeGreaterThan(0);
+        for (const p of topDown) {
+            expect(p.state.substrateMode, p.id).toBe('mix');
+            expect(Object.values(p.state.substrateMix).filter((w) => w > 0).length, p.id).toBeGreaterThan(0);
+            expect(p.state.substrateQuotas, p.id).toEqual({});
+            expect(p.label, p.id).toContain('from the loaded world');
+            expect(p.description, p.id).toContain('LOADED world');
+        }
+    });
+
     it('runner sphere demo pins the runner_sphere_worldgen config + Springs', () => {
         const p = getPresetById('shipped:runner-sphere-demo');
         expect(p.state.params.seed).toBe(1);
