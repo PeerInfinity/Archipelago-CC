@@ -10,6 +10,9 @@
  * (defaultProcgenParams), so a preset pins only what it means to pin
  * and picks up new substrate default keys automatically.
  *
+ * The presets, what each demonstrates and what they cost, are documented in
+ * docs/json/developer/procgen/pipeline-presets.md.
+ *
  * Shipped presets live in SHIPPED_PRESETS below (this file is imported
  * by the panel — it is NOT a separate frontend module, so no
  * init-bundled registration). Its readers beyond the panel's drop-down:

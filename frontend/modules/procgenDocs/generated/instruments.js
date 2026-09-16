@@ -206,7 +206,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 259,
         "browser": 77,
-        "cited": 96,
+        "cited": 97,
         "files": 270,
         "lineStyle": 11,
         "withDocblock": 270,
@@ -1781,7 +1781,7 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
-            "oneLiner": "check-procgen-docs — **THE SEVENTEEN TRACKED DOCUMENTS RENDER ON THE PAGE, WITH THE ANCHORS THEIR OWN LINKS POINT AT** (PROCGEN DOCS · P4, D4).",
+            "oneLiner": "check-procgen-docs — **THE TRACKED DOCUMENTS RENDER ON THE PAGE, WITH THE ANCHORS THEIR OWN LINKS POINT AT** (PROCGEN DOCS · P4, D4).",
             "path": "scripts/procgen/check-procgen-docs.mjs"
         },
         {
@@ -1904,7 +1904,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": true,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/pipeline-presets.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-procgen-presets.mjs",

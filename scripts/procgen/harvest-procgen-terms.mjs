@@ -19,7 +19,7 @@
  *
  * ── WHAT IT SCANS ──────────────────────────────────────────────────────
  *
- *   docs/json/developer/procgen/*.md   the 17 tracked procgen docs
+ *   docs/json/developer/procgen/*.md   the tracked procgen docs
  *   frontend/modules/procgenDocs/demos.js       the catalogue's PROSE fields
  *   frontend/modules/seedlingDemo/watch.html    the Seedling lab page's strings
  *   frontend/modules/mazeRoom/lab.html          the maze lab page's strings

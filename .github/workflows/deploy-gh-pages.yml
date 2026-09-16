@@ -45,7 +45,7 @@ jobs:
       # path — `<siteRoot>/docs/json/developer/procgen/<file>`. Locally that
       # resolves because the dev server serves the REPO ROOT. Here only
       # `./frontend` is uploaded, so without this copy the same path 404s and
-      # every one of the eighteen documents fails to load.
+      # every one of the tracked documents fails to load.
       #
       # ⛔ `frontend/docs/` is in .gitignore, so this copy exists only in the
       # artifact and a local one can never be committed by accident.

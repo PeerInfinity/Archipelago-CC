@@ -845,7 +845,7 @@ describe('the docs index is one row per .md in the procgen docs directory', () =
      * duplicating it here would be the second reader that makes neither
      * trustworthy. What is checked here is the SHAPE the pins depend on: every
      * row has one, they are positive, and the corpus total is the rows PLUS the
-     * index file — because `counts.docs` (17) and `counts.headings` (18 files)
+     * index file — because `counts.docs` (the rows) and `counts.headings` (the rows plus README)
      * do not share a denominator, and a reader who assumed they did would build
      * a pin that is quietly short by README's headings.
      */

@@ -10,7 +10,7 @@
  *                          fails `--check`, which is the non-vacuity gate
  *   the leading DOCBLOCK   the one-liner
  *   a DECLARED argv scan   the flags it accepts
- *   a scan of the 18 docs  which document cites it (and which cites a script
+ *   a scan of the docs     which document cites it (and which cites a script
  *                          that is NOT on disk — a finding)
  *
  * ── ⛔ THE TWO SCANS THAT COULD HAVE LIED ──────────────────────────────

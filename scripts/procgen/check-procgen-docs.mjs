@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
- * check-procgen-docs — **THE SEVENTEEN TRACKED DOCUMENTS RENDER ON THE PAGE,
+ * check-procgen-docs — **THE TRACKED DOCUMENTS RENDER ON THE PAGE,
  * WITH THE ANCHORS THEIR OWN LINKS POINT AT** (PROCGEN DOCS · P4, D4).
  *
  * ⛔⛔ **WHY THIS IS ITS OWN ROW.** `check-procgen-reference.mjs`'s subject is
  * a GENERATED table and its first act is to run a code generator;
  * `check-procgen-demos.mjs`'s subject is the two AUTHORED catalogues. This
- * row's subject is a FETCH: eighteen files that are not in `frontend/` at all,
+ * row's subject is a FETCH: the index's files that are not in `frontend/` at all,
  * reached over HTTP from a site-root-relative path that only resolves because
  * something copied them there. Nothing the other two do would notice if that
  * copy stopped happening. ⛓ They share the server helper, the `--pages=`
@@ -26,7 +26,7 @@
  *     the page has to answer them.
  *  4. Every `<a href>` the render produced is an href `resolveDocLink` would
  *     produce — read off the DOM as a SET, not clicked one at a time.
- *  5. The nav lists all eighteen, and marks the current one.
+ *  5. The nav lists every one, and marks the current one.
  *  6. `?doc=` refuses a path outside the index BY NAME, and the page SAYS so —
  *     a refused article and an empty one must not read the same (trap 403).
  *  7. `docs.html`'s own header links resolve on this host, and the three

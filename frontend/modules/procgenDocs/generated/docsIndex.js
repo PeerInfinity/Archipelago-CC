@@ -22,12 +22,12 @@ const frz = (v) => {
 
 export const DOCS_INDEX = frz({
     "counts": {
-        "docs": 17,
-        "headings": 791,
+        "docs": 18,
+        "headings": 800,
         "indexHeadings": 2,
-        "lines": 21266,
+        "lines": 21327,
         "pages": 4,
-        "words": 263163
+        "words": 264510
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -221,6 +221,16 @@ export const DOCS_INDEX = frz({
             "words": 2825
         },
         {
+            "description": "The Procgen Pipeline panel's **Preset** drop-down applies a shipped configuration — a mode, a seed, substrate quotas or a mix, the mode's knobs and an item pool — so that Generate builds a world that demonstrates one feature, and every shipped preset whose substrates are not declared heavy is generated headless on each CI run, twice and byte-identically, within a 30-second budget.",
+            "file": "pipeline-presets.md",
+            "h1": "Pipeline Presets",
+            "headings": 9,
+            "lines": 61,
+            "links": [],
+            "path": "docs/json/developer/procgen/pipeline-presets.md",
+            "words": 1347
+        },
+        {
             "description": "The text-adventure substrate (id `text_adventure`) renders a procgen region as prose: a textual description with compass-labelled clickable exits and clickable locations.",
             "file": "text-adventure.md",
             "h1": "Text Adventure Substrate",
@@ -310,7 +320,7 @@ export const DOCS_INDEX = frz({
             "url": "https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/demos.html"
         },
         {
-            "description": "procgenDocs/docs.html — **THE PROCGEN NARRATIVE DOCUMENTS, ON PAGES.** One viewer for the seventeen tracked `.md` files under `docs/json/developer/procgen/` plus the README that indexes them: GitHub's heading anchors, a nav in README's declared reading order, a table of contents off the render, and every relative li…",
+            "description": "procgenDocs/docs.html — **THE PROCGEN NARRATIVE DOCUMENTS, ON PAGES.** One viewer for the tracked `.md` files under `docs/json/developer/procgen/` plus the README that indexes them: GitHub's heading anchors, a nav in README's declared reading order, a table of contents off the render, and every relative link resolvi…",
             "file": "docs.html",
             "h1": "Procgen documents — the tracked records, rendered",
             "path": "frontend/modules/procgenDocs/docs.html",

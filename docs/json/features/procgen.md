@@ -20,6 +20,8 @@ The **Procgen Pipeline** panel (🧭) drives generation. Pick a layout mode — 
 
 When you play a generated world, region transitions automatically bring up the right substrate panel: walk through a maze exit and the next region might open as a platformer. A few generated example worlds ship as presets (e.g. `procgen_maze`), so you can try one from the **Presets** panel without generating anything.
 
+To generate something rather than load it, the pipeline panel has its own **Preset** drop-down at the top: ready-made configurations grouped by layout mode — a maze-only sphere world, maze and text adventure together, maze and bounce together, maze hazards with loop mode, a grid-growth mix, and more. Pick one, press Generate, and hover an entry to read what it demonstrates and where to look.
+
 Extras that build on this:
 
 - **Watch it play itself** — the **Playback Bot** panel replays the world's recorded solution path, driving each substrate's real gameplay (in bounce, it plays the actual physics).

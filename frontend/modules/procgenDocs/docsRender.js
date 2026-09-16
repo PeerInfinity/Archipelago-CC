@@ -2,7 +2,7 @@
  * procgenDocs/docsRender.js — **THE ONE `marked` CONFIGURATION** (PROCGEN DOCS
  * · P4, D1).
  *
- * ⛓ `docs.html` renders the seventeen tracked documents under
+ * ⛓ `docs.html` renders the tracked documents under
  * `docs/json/developer/procgen/`, and `docsRender.test.js` renders the same
  * files in node to check the anchors and the links. ⛔ They import THIS
  * module rather than each configuring `marked` themselves — a row that passes

@@ -62,6 +62,7 @@ export const README_ORDER = Object.freeze([
     'sphere-growth.md',
     'paths-and-obstacles.md',
     'stepped-pipeline.md',
+    'pipeline-presets.md',
     'text-adventure.md',
     'seedling-bot.md',
     'flash.md',
@@ -200,15 +201,15 @@ export function buildDocsIndex() {
              * ⛓⛓ THE INDEX FILE'S OWN HEADINGS — README is not a ROW of this
              * table (it is the file the table goes IN), but it IS one of the
              * documents the page renders, so a corpus total that left it out
-             * would be a total of seventeen eighteenths of the corpus.
+             * would be short by exactly README's headings.
              */
             indexHeadings: M.ghSlug.headingsOf(src(INDEX_DOC)).length,
             /**
-             * ⛓⛓⛓ EVERY HEADING THE DOCS PAGE RENDERS, ACROSS ALL EIGHTEEN
-             * FILES — the seventeen rows PLUS the index.
+             * ⛓⛓⛓ EVERY HEADING THE DOCS PAGE RENDERS, ACROSS EVERY
+             * FILE — the rows PLUS the index.
              *
-             * ⚠ THE DENOMINATORS IN THIS OBJECT ARE NOT THE SAME. `docs` is 17
-             * and `headings` spans 18, because they answer different
+             * ⚠ THE DENOMINATORS IN THIS OBJECT ARE NOT THE SAME. `docs` counts
+             * the rows and `headings` spans one file more, because they answer different
              * questions: how many documents this table has a row for, and how
              * many headings `docs.html` will show. `docLinks.js` builds
              * `DOC_FILES` as `[INDEX_FILE, ...docs]` for the same reason.

@@ -5,7 +5,7 @@
  * ⛓ This file imports the SAME module `docs.html` does, so it cannot pass with
  * a configuration the page does not have. What a browser row adds on top is
  * that the page actually mounts and that the anchors exist in a real DOM;
- * what this file adds is that all seventeen documents render at all, which no
+ * what this file adds is that every tracked document renders at all, which no
  * row wants to pay for one page load at a time.
  *
  * ⛔⛔ **THE CENTRAL CLAIM IS TWO INDEPENDENT READERS AGREEING.** `ghSlug.js`
@@ -44,8 +44,8 @@ describe('every tracked document renders', () => {
         expect(r.html.length).toBeGreaterThan(200);
     });
 
-    it('renders all 18 files the index allows, and the corpus IS those files', () => {
-        expect(DOC_FILES).toHaveLength(18);
+    it('renders every file the index allows, and the corpus IS those files', () => {
+        expect(DOC_FILES).toHaveLength(FILES.length);
         expect([...DOC_FILES].sort()).toEqual(FILES);
     });
 });
@@ -168,8 +168,8 @@ describe('⛓⛓ the anchors — two readers, one answer (the count is in the pi
         //   files on disk; `counts.headings` when the generator last ran. Edit a
         //   heading and skip the regeneration and this row goes RED by name —
         //   which is the staleness a literal could only catch by accident.
-        // ⚠ 695 spans EIGHTEEN files (`DOC_FILES` — README included, because
-        //   the page renders it), while `counts.docs` is 17. The reference
+        // ⚠ the heading total spans every file in `DOC_FILES` (README included,
+        //   because the page renders it), while `counts.docs` counts the rows. The reference
         //   carries both and says why.
         expect(total).toBe(DOCS_INDEX.counts.headings);
     });
@@ -229,8 +229,9 @@ describe('⛓ the links the render emits', () => {
         //   (see `docLinks.test.js`'s census); 228 → 230: PRESET SIDECARS G0's
         //   pointers from `jta.md` and `omsi.md` at the registry's region-geometry §;
         //   230 → 233: PRESET SIDECARS G1's three more at that same § — from
-        //   `bounce.md`, `runner.md` and `stepped-pipeline.md`.
-        expect(checked).toBe(233);
+        //   `bounce.md`, `runner.md` and `stepped-pipeline.md`; 233 → 234: PROCGEN
+        //   PIPELINE PRESETS P1's README index row for `pipeline-presets.md`.
+        expect(checked).toBe(234);
     });
 
     it('tags each link with the kind that produced it', () => {

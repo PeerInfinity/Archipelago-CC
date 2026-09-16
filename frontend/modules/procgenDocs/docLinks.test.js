@@ -3,7 +3,7 @@
  * PINNED** (PROCGEN DOCS · P4, D3).
  *
  * ⛓ `resolveDocLink` is pure, so it can be run over all 223 links the
- * seventeen tracked documents contain without a browser and without a server.
+ * tracked documents contain without a browser and without a server.
  * That is the whole reason it is a separate function from the page: the page
  * can only ever show one document at a time, and a resolver nobody ran over
  * the WHOLE corpus is a resolver whose worst case nobody has seen.
@@ -113,7 +113,7 @@ describe('the corpus census — printed, then pinned', () => {
          *              `docs/json/modules/apworldEditor.md` § *The Links tab*,
          *              which holds the table of all six controls. ⛓ Both count
          *              as **`repo`**, not `doc` (32 → 34): that file is not one
-         *              of the seventeen this VIEWER lists, so the resolver
+         *              of the documents this VIEWER lists, so the resolver
          *              sends it to GitHub — which is the resolver working, and
          *              the reason the two kinds are counted apart.
          *   225 → 227  LOOP COSTS L5 (⚖ 2026-09-06, the omsi Start/Pause rule):
@@ -140,22 +140,26 @@ describe('the corpus census — printed, then pinned', () => {
          *              layout-op vocabulary each point at `substrate-registry.md`
          *              § *Build-time — region geometry*, which bounce and runner
          *              now declare and the exit-side ops now ask (`doc` 157 → 160).
+         *   233 → 234  PROCGEN PIPELINE PRESETS P1: `pipeline-presets.md` joined
+         *              README_ORDER, so README's GENERATED index gained its row
+         *              and that row's link (`doc` 160 → 161). The document itself
+         *              carries no links.
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
          */
         expect(by).toEqual({
             'same-doc': 15,
-            doc: 160,
+            doc: 161,
             external: 23,
             repo: 35,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(233);
+        expect(CORPUS.length).toBe(234);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(160);
+        expect(docs).toHaveLength(161);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);
@@ -269,8 +273,10 @@ describe('the resolver itself', () => {
 });
 
 describe('the `?doc=` allow list', () => {
-    it('is the generated index — README plus the seventeen, in reading order', () => {
-        expect(DOC_FILES).toHaveLength(18);
+    it('is the generated index — README plus every document on disk, in reading order', () => {
+        // ⛓ The length is the directory's, read off disk — not a literal: a new
+        // document joins README_ORDER and this row follows (P1, pipeline-presets.md).
+        expect(DOC_FILES).toHaveLength(FILES.length);
         expect(DOC_FILES[0]).toBe(INDEX_FILE);
         expect(INDEX_FILE).toBe('README.md');
         expect([...DOC_FILES].sort()).toEqual([...FILES].sort());

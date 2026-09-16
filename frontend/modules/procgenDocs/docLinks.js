@@ -2,7 +2,7 @@
  * procgenDocs/docLinks.js — **WHERE EVERY LINK IN THE TRACKED PROCGEN DOCS
  * GOES WHEN A BROWSER RENDERS THEM** (PROCGEN DOCS · P4, D3).
  *
- * ⛓ The seventeen documents under `docs/json/developer/procgen/` were written
+ * ⛓ The tracked documents under `docs/json/developer/procgen/` were written
  * to be read on GitHub, so their links are repo-relative: `./maze.md`,
  * `../../features/loops.md`, `../../../../scripts/procgen/README.md`. On
  * `docs.html` none of those mean anything — the reader is on a web page whose
@@ -29,7 +29,7 @@
  *
  * ⛔ **`?doc=` IS ALLOW-LISTED BY THE GENERATED INDEX**, so the page can never
  * be pointed at an arbitrary path. `DOC_FILES` below is derived from
- * `DOCS_INDEX` — the seventeen documents plus the README the index lives in —
+ * `DOCS_INDEX` — the tracked documents plus the README the index lives in —
  * and `docFileFor()` refuses anything else by name (`doc-not-in-index`).
  *
  * ⛔ No DOM and no node imports: this runs on a page and in a unit runner.
@@ -50,7 +50,7 @@ export const INDEX_FILE = String(DOCS_INDEX.indexIn).slice(`${DOC_DIR}/`.length)
 
 /**
  * ⛓⛓ **THE ALLOW LIST**: README first (it is the front page and the default),
- * then the seventeen in README's declared reading order. ⛔ Derived, not
+ * then the rest in README's declared reading order. ⛔ Derived, not
  * typed: a document added to `README_ORDER` and regenerated appears here, and
  * one that is not in the index cannot be opened at all.
  */
