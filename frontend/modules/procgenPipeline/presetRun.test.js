@@ -239,6 +239,16 @@ describe('the normalisation and the shared helpers', () => {
             .toEqual({ enabled: true, count: 2, maxConsecutiveFails: 1, wallOverlapAllowed: false });
     });
 
+    it('no registry entry declares libraryObstacles: no builder hands the engine an obstacle library beyond DEFAULT_OBSTACLES, so such a vocabulary has no reader', () => {
+        // ⛓ PROCGEN PIPELINE PRESETS C1. bounce and runner used to declare one;
+        // nothing read it (P2 measured a declared id dropped silently, trap 1388).
+        // A zone substrate's gate defs reach the compiler as the region's own
+        // obstacle_defs. A vocabulary that comes back needs its reader first.
+        const declaring = substrateRegistry.getAll()
+            .filter((e) => Object.prototype.hasOwnProperty.call(e, 'libraryObstacles')).map((e) => e.id);
+        expect(declaring).toEqual([]);
+    });
+
     it('the active dict is the state\'s OWN quotas or mix object (the panel mutates it)', () => {
         const state = { substrateQuotas: {}, substrateMix: {} };
         expect(activeSubstrateDict({ ...state, mode: 'sphereGrowth' })).toBe(state.substrateQuotas);

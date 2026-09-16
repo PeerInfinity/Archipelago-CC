@@ -29,7 +29,7 @@ import {
     buildRunnerRegionContract,
 } from './runnerDemoLibrary.js';
 import {
-    RUNNER_LIBRARY_ITEMS, RUNNER_LIBRARY_OBSTACLES, VICTORY_ITEM_NAME,
+    RUNNER_LIBRARY_ITEMS, VICTORY_ITEM_NAME,
 } from './apRules.js';
 import {
     DEFAULT_RUNNER_PROCGEN_PARAMS, buildRunnerRegionParams,
@@ -145,13 +145,12 @@ describe('runner entry — playback + loop support', () => {
 });
 
 describe('runner entry — zone-based build-time hooks', () => {
-    it('exposes victoryItem, a constant zoneCount, and the vocabulary libraries', () => {
+    it('exposes victoryItem, a constant zoneCount, and the item vocabulary library', () => {
         expect(substrateRegistryEntry.victoryItem).toBe(VICTORY_ITEM_NAME);
         expect(substrateRegistryEntry.zoneCount).toBe(RUNNER_ZONE_COUNT);
-        // The libraries are the apRules.js tables by IDENTITY — the entry
-        // must not fork its own copies (import site: apRules.js).
+        // The library is the apRules.js table by IDENTITY — the entry
+        // must not fork its own copy (import site: apRules.js).
         expect(substrateRegistryEntry.libraryItems).toBe(RUNNER_LIBRARY_ITEMS);
-        expect(substrateRegistryEntry.libraryObstacles).toBe(RUNNER_LIBRARY_OBSTACLES);
     });
 
     it('extractZoneRules rides zoneRules.js (explicit fixture zone table)', () => {

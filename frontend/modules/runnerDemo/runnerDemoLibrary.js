@@ -40,7 +40,7 @@ import {
     validateRunnerLibraryEntry,
 } from './runnerLibraryEntry.js';
 import {
-    RUNNER_LIBRARY_ITEMS, RUNNER_LIBRARY_OBSTACLES,
+    RUNNER_LIBRARY_ITEMS,
     ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME,
 } from './apRules.js';
 import { DEFAULT_PROFILE_ID, PROFILES } from './physics.js';
@@ -586,11 +586,12 @@ export function createRunnerSubstrateEntry({
             instantiateLibraryEntryForSpecs(entry, ctx, { buildZonePayload }),
         validateLibraryEntry: validateRunnerLibraryEntry,
 
-        // Panel-facing item/obstacle vocabulary (declared in apRules.js,
-        // the rule-emission home — unlike bounce, whose defs sit here).
-        // Merged with DEFAULT_ITEMS / DEFAULT_OBSTACLES by consumers.
+        // Panel-facing item vocabulary (declared in apRules.js, the
+        // rule-emission home — unlike bounce, whose defs sit here). Merged
+        // with DEFAULT_ITEMS by consumers. No `libraryObstacles`: the physics
+        // gate defs reach the compiler as each zone region's own
+        // `obstacle_defs` (zoneRules.js), never through a registry-level pool.
         libraryItems: RUNNER_LIBRARY_ITEMS,
-        libraryObstacles: RUNNER_LIBRARY_OBSTACLES,
         supportedFeatures: Object.freeze(['arbitrary_ap_locations', 'runner_abilities']),
 
         // Sphere-driven growth (plan §4.9): requirement-targeted

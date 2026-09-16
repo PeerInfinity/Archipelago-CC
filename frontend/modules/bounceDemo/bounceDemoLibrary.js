@@ -1069,10 +1069,9 @@ export function createBounceSubstrateEntry({
         // the realised logic is unchanged — see generateRegionZoneGen.
         driftItems: [ABILITY_ITEM_NAMES.left, ABILITY_ITEM_NAMES.right],
         libraryItems: BOUNCE_LIBRARY_ITEMS,
-        // Physics obstacle vocabulary (obstacles-along-paths refactor,
-        // Phase 1). Merged with DEFAULT_OBSTACLES by the consumer, like
-        // libraryItems. The producer + engine merge land in Phase 2.
-        libraryObstacles: BOUNCE_LIBRARY_OBSTACLES,
+        // No `libraryObstacles`: the physics gate defs (BOUNCE_LIBRARY_OBSTACLES)
+        // reach the compiler as each zone region's own `obstacle_defs` (see
+        // extractZoneRules), never through a registry-level pool.
         supportedFeatures: Object.freeze(['arbitrary_ap_locations', 'bounce_abilities']),
 
         // Procgen Pipeline integration (bounceProcgenParams.js): the

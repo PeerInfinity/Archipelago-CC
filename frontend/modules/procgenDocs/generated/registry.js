@@ -36,13 +36,13 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 42,
+            "fields": 41,
             "id": "bounce",
             "label": "Bounce Demo",
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 38,
+            "fields": 37,
             "id": "runner",
             "label": "Runner Demo",
             "registeredBy": "frontend/modules/runnerDemo/runnerDemoLibrary.js"
@@ -209,7 +209,6 @@ export const REGISTRY = frz({
                 "generateZoneForSpecsGen",
                 "hostsSurplusExitsNatively",
                 "libraryItems",
-                "libraryObstacles",
                 "prepareSphereGrowth",
                 "renderProcgenParams"
             ],
@@ -2982,86 +2981,6 @@ export const REGISTRY = frz({
             "documentedHow": "bullet",
             "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
             "name": "libraryItems"
-        },
-        {
-            "carriedBy": [
-                "bounce",
-                "runner"
-            ],
-            "cells": [
-                {
-                    "id": "maze",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "flash",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "bounce",
-                    "present": true,
-                    "short": "6 keys",
-                    "type": "object",
-                    "value": [
-                        "bounce_gate_blue",
-                        "bounce_gate_brown",
-                        "bounce_gate_jetpacks",
-                        "bounce_gate_left",
-                        "bounce_gate_right",
-                        "bounce_gate_springs"
-                    ]
-                },
-                {
-                    "id": "runner",
-                    "present": true,
-                    "short": "5 keys",
-                    "type": "object",
-                    "value": [
-                        "runner_gate_blue",
-                        "runner_gate_doubleJump",
-                        "runner_gate_glide",
-                        "runner_gate_shield",
-                        "runner_gate_spring"
-                    ]
-                },
-                {
-                    "id": "text_adventure",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "jta",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "omsi",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                }
-            ],
-            "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
-            "name": "libraryObstacles"
         },
         {
             "carriedBy": [

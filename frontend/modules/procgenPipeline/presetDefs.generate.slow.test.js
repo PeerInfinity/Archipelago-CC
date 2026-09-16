@@ -26,7 +26,8 @@
  *     obstacleLib). Measured (P2): 'dor_red' in the grid-growth pool AND a
  *     registry-declared bounce `libraryObstacles` id both generated green with
  *     the obstacle silently dropped (the same world, md5-equal) — so a check
- *     against DEFAULT_OBSTACLES ∪ libraryObstacles would pass a dropped one;
+ *     against DEFAULT_OBSTACLES ∪ libraryObstacles would have passed a dropped
+ *     one (C1 then retired that unread registry field);
  *   - its served region libraries resolve from `frontend/region-libraries/` on
  *     disk (a missing or invalid file is a thrown sentence naming both), and
  *     each reference's `library_id` is the served pack's CURRENT id — measured
