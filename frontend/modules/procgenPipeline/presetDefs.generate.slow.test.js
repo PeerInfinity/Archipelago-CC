@@ -17,6 +17,10 @@
  *     drops an unregistered one silently, and a sphere preset whose only quota
  *     is unregistered was MEASURED to generate a 4-region maze world, which
  *     would pass every other assertion here;
+ *   - every scenario item id resolves in the item library its substrates
+ *     declare (`mergedItemLib`) — a misspelt item was MEASURED (P1, mutant B:
+ *     'Rite arrow' in the maze + bounce mix) to be planned into a sphere as a
+ *     gate item no substrate knows, with the oracle clean and the world green;
  *   - its served region libraries resolve from `frontend/region-libraries/` on
  *     disk (a missing or invalid file is a thrown sentence naming both);
  *   - a top-down preset realises the committed Adventure world
@@ -46,7 +50,7 @@ import {
     SHIPPED_PRESETS, PRESET_HEADLESS_BUDGET_MS, PRESETS_SKIPPED_AS_HEAVY,
 } from './presetDefs.js';
 import {
-    buildRunFromState, runPresetHeadless, presetSubstrateIds, heavySubstrateIds,
+    buildRunFromState, runPresetHeadless, presetSubstrateIds, heavySubstrateIds, mergedItemLib,
 } from './presetRun.js';
 import { resolveLibrarySelection } from './regionLibraryLoader.js';
 
@@ -112,6 +116,11 @@ describe('every shipped preset generates headless', () => {
             const unregistered = presetSubstrateIds(preset.state).filter((id) => !substrateRegistry.has(id));
             expect(unregistered, `preset ${preset.id} names substrate id(s) no registry entry declares `
                 + `— applyPresetState would drop them and the world would generate without them`).toEqual([]);
+
+            const itemLib = mergedItemLib(preset.state);
+            const unknownItems = Object.keys(preset.state.scenario?.items ?? {}).filter((id) => !(id in itemLib));
+            expect(unknownItems, `preset ${preset.id} names scenario item(s) no item library of its substrates `
+                + 'declares — the sphere planner places such an id as a gate item anyway, and the world stays green').toEqual([]);
 
             const resolvedLibraries = await resolvedLibrariesOf(preset);
             const runs = [];

@@ -35,6 +35,19 @@ export const LS_PRESETS_KEY = 'procgenPipeline_presets';
 export const VALID_MODES = ['gridGrowth', 'sphereGrowth', 'shuffledSpiral', 'topDown'];
 
 /**
+ * The drop-down group each pipeline mode's shipped presets sit under (⚖ user
+ * 2026-09-16, Q3: grouped by MODE, then User). Keyed by VALID_MODES; a shipped
+ * preset's `group` is PRESET_GROUPS[its state.mode], and groupShippedPresets
+ * orders the groups by VALID_MODES.
+ */
+export const PRESET_GROUPS = Object.freeze({
+    gridGrowth: 'Grid growth',
+    sphereGrowth: 'Sphere growth',
+    shuffledSpiral: 'Shuffled spiral',
+    topDown: 'Top-down',
+});
+
+/**
  * The most a shipped preset may take to generate headless, per run (⚖ user
  * 2026-09-16, Q1: "Yes, let's set the limit to 30s headless."). The browser is
  * the same V8. `presetDefs.generate.slow.test.js` holds every preset it
@@ -85,6 +98,14 @@ export const PRESETS_SKIPPED_AS_HEAVY = Object.freeze([
  *   was dropped at the 30 s headless ceiling (⚖ user 2026-09-16, "Yes, let's
  *   set the limit to 30s headless.") — it measured 394.6 s headless.
  *
+ * - The maze, text-adventure, maze + text-adventure and maze + bounce
+ *   sphere presets and the grid-growth preset (PROCGEN PIPELINE PRESETS P1)
+ *   pin only their demo: quotas/mix, start substrate, the sphere or grid
+ *   knobs and the pool. maze-hazards-loop-demo is the one hazards preset (⚖
+ *   user 2026-09-16, Q5: "hazards are only relevant to the maze substrate");
+ *   its filler region is there so every maze region carries hazards at the
+ *   default hazard knobs (without it, 1 of 3 regions did).
+ *
  * - bounce-sphere-demo is the config check-sphere-growth-ui.mjs /
  *   check-sphere-steps-ui.mjs pre-seed the panel with. Bounce knobs
  *   are deliberately NOT pinned: those gates run on the live bounce
@@ -92,8 +113,197 @@ export const PRESETS_SKIPPED_AS_HEAVY = Object.freeze([
  */
 export const SHIPPED_PRESETS = Object.freeze([
     {
+        id: 'shipped:maze-sphere-demo',
+        label: 'Maze demo (sphere growth)',
+        group: PRESET_GROUPS.sphereGrowth,
+        description: 'Maze-only sphere world: four keys and the victory item '
+            + 'planned over 5 spheres, 2 itemless filler regions, 25% revisits. '
+            + 'Shows the plan-then-grow driver on the primary substrate — look at '
+            + 'step 1 Plan, the "Sphere plan realised" line when growth finishes, '
+            + 'the waves on the composite map, and Edit ▸ on a maze region (the '
+            + 'maze lab).',
+        state: {
+            mode: 'sphereGrowth',
+            params: {
+                seed: 1,
+                startSubstrate: 'maze',
+                sphereCount: 5,
+                fillerCount: 2,
+                revisitPercent: 25,
+            },
+            scenario: {
+                items: {
+                    key_red: 1, key_blue: 1, key_green: 1, key_yellow: 1, victory: 1,
+                },
+                obstacles: {},
+            },
+            substrateQuotas: { maze: 99 },
+            substrateMix: {},
+            substrateMode: 'quotas',
+        },
+    },
+    {
+        id: 'shipped:text-adventure-sphere-demo',
+        label: 'Text adventure demo (sphere growth)',
+        group: PRESET_GROUPS.sphereGrowth,
+        description: 'Text-adventure-only sphere world: three keys and the '
+            + 'victory item over 4 spheres, 1 filler region. Shows the '
+            + 'sides-only substrate — compass exits instead of wall openings; '
+            + 'look at the text-adventure cells on the composite map and play a '
+            + 'region after Load.',
+        state: {
+            mode: 'sphereGrowth',
+            params: {
+                seed: 1,
+                startSubstrate: 'text_adventure',
+                sphereCount: 4,
+                fillerCount: 1,
+            },
+            scenario: {
+                items: {
+                    key_red: 1, key_blue: 1, key_green: 1, victory: 1,
+                },
+                obstacles: {},
+            },
+            substrateQuotas: { text_adventure: 99 },
+            substrateMix: {},
+            substrateMode: 'quotas',
+        },
+    },
+    {
+        id: 'shipped:maze-ta-sphere-mix',
+        label: 'Maze + text adventure (sphere growth)',
+        group: PRESET_GROUPS.sphereGrowth,
+        description: 'Two procedural substrates in one sphere world: quota '
+            + 'maze 3 + text adventure 3, starting in a maze, four keys and the '
+            + 'victory item over 5 spheres, 2 fillers. Shows key gates crossing '
+            + 'from one substrate into the other — look at the composite map, '
+            + 'where maze and text-adventure cells sit side by side, and at '
+            + 'which region holds each key in the 2b Topology tree.',
+        state: {
+            mode: 'sphereGrowth',
+            params: {
+                seed: 1,
+                startSubstrate: 'maze',
+                sphereCount: 5,
+                fillerCount: 2,
+            },
+            scenario: {
+                items: {
+                    key_red: 1, key_blue: 1, key_green: 1, key_yellow: 1, victory: 1,
+                },
+                obstacles: {},
+            },
+            substrateQuotas: { maze: 3, text_adventure: 3 },
+            substrateMix: {},
+            substrateMode: 'quotas',
+        },
+    },
+    {
+        id: 'shipped:maze-bounce-sphere-mix',
+        label: 'Maze + bounce (sphere growth)',
+        group: PRESET_GROUPS.sphereGrowth,
+        description: 'A procedural substrate and a physics zone substrate in one '
+            + 'sphere world: quota maze 3 + bounce 3, starting in a maze, two maze '
+            + 'keys plus the bounce items Right arrow, Springs, Blue platforms and '
+            + 'Victory over 5 spheres, 2 fillers. Shows foreign items gating bounce '
+            + 'exits and bounce abilities gating maze regions — look at the '
+            + 'composite map, and at Edit ▸ on a bounce region (the bounce editor).',
+        state: {
+            mode: 'sphereGrowth',
+            params: {
+                seed: 1,
+                startSubstrate: 'maze',
+                sphereCount: 5,
+                fillerCount: 2,
+            },
+            scenario: {
+                items: {
+                    key_red: 1,
+                    key_blue: 1,
+                    'Right arrow': 1,
+                    Springs: 1,
+                    'Blue platforms': 1,
+                    Victory: 1,
+                },
+                obstacles: {},
+            },
+            substrateQuotas: { maze: 3, bounce: 3 },
+            substrateMix: {},
+            substrateMode: 'quotas',
+        },
+    },
+    {
+        id: 'shipped:maze-hazards-loop-demo',
+        label: 'Maze hazards + loop mode (sphere growth)',
+        group: PRESET_GROUPS.sphereGrowth,
+        description: 'Maze-only sphere world with the hazard content module on '
+            + '(3 hazards per region) and loop mode on (region XP effect: cost), '
+            + '3 spheres and 1 filler. Hazards are a maze feature, so this is the '
+            + 'one hazards preset. Look at the hazard paths in the maze cells of '
+            + 'the composite map, then Load: the world carries a loop_costs '
+            + 'sidecar and the Loops panel enters loop mode.',
+        state: {
+            mode: 'sphereGrowth',
+            params: {
+                seed: 1,
+                startSubstrate: 'maze',
+                sphereCount: 3,
+                fillerCount: 1,
+                enableHazards: true,
+                hazardCount: 3,
+                enableLoopMode: true,
+                regionXpEffect: 'cost',
+            },
+            scenario: {
+                items: { key_red: 1, key_blue: 1, victory: 1 },
+                obstacles: {},
+            },
+            substrateQuotas: { maze: 99 },
+            substrateMix: {},
+            substrateMode: 'quotas',
+        },
+    },
+    {
+        id: 'shipped:bounce-sphere-demo',
+        label: 'Bounce demo (sphere growth)',
+        group: PRESET_GROUPS.sphereGrowth,
+        description: 'Bounce-only 3-sphere world — the '
+            + 'check-sphere-growth-ui config: seed 1, the 7-item bounce '
+            + 'pool, quota bounce=99.',
+        state: {
+            mode: 'sphereGrowth',
+            params: {
+                seed: 1,
+                regionWidth: 8,
+                regionHeight: 6,
+                maxItemsPerRegion: 2,
+                sphereCount: 3,
+                fillerCount: 0,
+                revisitPercent: 25,
+                startSubstrate: 'auto',
+            },
+            scenario: {
+                items: {
+                    'Right arrow': 1,
+                    'Left arrow': 1,
+                    Springs: 1,
+                    Jetpacks: 1,
+                    'Blue platforms': 1,
+                    'Brown platforms': 1,
+                    Victory: 1,
+                },
+                obstacles: {},
+            },
+            substrateQuotas: { bounce: 99 },
+            substrateMix: {},
+            substrateMode: 'quotas',
+        },
+    },
+    {
         id: 'shipped:runner-sphere-demo',
         label: 'Runner demo (sphere growth)',
+        group: PRESET_GROUPS.sphereGrowth,
         description: 'Runner-only 3-sphere world — the committed '
             + 'runner_sphere_worldgen config plus the Springs item: '
             + 'seed 1, Double Jump / Blue Platforms / Springs / Victory, '
@@ -129,6 +339,7 @@ export const SHIPPED_PRESETS = Object.freeze([
     {
         id: 'shipped:runner-placement-demo',
         label: 'Runner demo (jitter + splits + ceilings)',
+        group: PRESET_GROUPS.sphereGrowth,
         description: 'The sphere demo config with the placement and '
             + 'texture knobs turned up: jitter 0.75 (plain floors rise '
             + 'up to ~0.9), splits 0.6 (ramps forking into one-way top '
@@ -172,6 +383,7 @@ export const SHIPPED_PRESETS = Object.freeze([
     {
         id: 'shipped:jta-zone-demo',
         label: 'JtA demo (zone tables)',
+        group: PRESET_GROUPS.shuffledSpiral,
         description: 'JtA-only 15-zone shuffled-spiral world — one AP '
             + 'region per Journey to Ascension zone (The Village onward), '
             + 'played in the JtA substrate panel with the shared loop-mode '
@@ -195,38 +407,28 @@ export const SHIPPED_PRESETS = Object.freeze([
         },
     },
     {
-        id: 'shipped:bounce-sphere-demo',
-        label: 'Bounce demo (sphere growth)',
-        description: 'Bounce-only 3-sphere world — the '
-            + 'check-sphere-growth-ui config: seed 1, the 7-item bounce '
-            + 'pool, quota bounce=99.',
+        id: 'shipped:grid-growth-demo',
+        label: 'Maze + text adventure (grid growth, legacy)',
+        group: PRESET_GROUPS.gridGrowth,
+        description: 'The legacy pool-driven grower on a 3×3 grid: a 1 : 1 mix '
+            + 'of maze and text adventure, two keys, their two doors and the '
+            + 'victory item. The region count is emergent (growth stops when the '
+            + 'frontier is empty), so progress has no denominator — look at the '
+            + 'grid on the composite map and the stop reason in the result.',
         state: {
-            mode: 'sphereGrowth',
+            mode: 'gridGrowth',
             params: {
                 seed: 1,
-                regionWidth: 8,
-                regionHeight: 6,
-                maxItemsPerRegion: 2,
-                sphereCount: 3,
-                fillerCount: 0,
-                revisitPercent: 25,
-                startSubstrate: 'auto',
+                gridWidth: 3,
+                gridHeight: 3,
             },
             scenario: {
-                items: {
-                    'Right arrow': 1,
-                    'Left arrow': 1,
-                    Springs: 1,
-                    Jetpacks: 1,
-                    'Blue platforms': 1,
-                    'Brown platforms': 1,
-                    Victory: 1,
-                },
-                obstacles: {},
+                items: { key_red: 1, key_blue: 1, victory: 1 },
+                obstacles: { door_red: 1, door_blue: 1 },
             },
-            substrateQuotas: { bounce: 99 },
-            substrateMix: {},
-            substrateMode: 'quotas',
+            substrateQuotas: {},
+            substrateMix: { maze: 1, text_adventure: 1 },
+            substrateMode: 'mix',
         },
     },
 ]);

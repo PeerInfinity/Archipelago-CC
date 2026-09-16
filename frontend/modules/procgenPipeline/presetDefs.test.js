@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 
 import {
-    SHIPPED_PRESETS, VALID_MODES, LS_PRESETS_KEY,
+    SHIPPED_PRESETS, VALID_MODES, PRESET_GROUPS, LS_PRESETS_KEY,
     PRESET_HEADLESS_BUDGET_MS, PRESETS_SKIPPED_AS_HEAVY,
     capturePresetState, applyPresetState, getPresetById, restoredActivePresetId,
     userPresetId, loadUserPresets, saveUserPreset, deleteUserPreset,
@@ -41,6 +41,80 @@ describe('SHIPPED_PRESETS', () => {
             // ids must be unique
             expect(SHIPPED_PRESETS.filter((q) => q.id === p.id)).toHaveLength(1);
         }
+    });
+
+    it('PRESET_GROUPS names one drop-down group per pipeline mode', () => {
+        expect(Object.keys(PRESET_GROUPS)).toEqual(VALID_MODES);
+        expect(new Set(Object.values(PRESET_GROUPS)).size).toBe(VALID_MODES.length);
+    });
+
+    it('every shipped preset sits in its own mode\'s group', () => {
+        for (const p of SHIPPED_PRESETS) {
+            expect(p.group, `${p.id} is a ${p.state.mode} preset`).toBe(PRESET_GROUPS[p.state.mode]);
+        }
+    });
+
+    it('maze sphere demo pins maze alone over five spheres with fillers and revisits', () => {
+        const p = getPresetById('shipped:maze-sphere-demo');
+        expect(p.state.mode).toBe('sphereGrowth');
+        expect(p.state.substrateQuotas).toEqual({ maze: 99 });
+        expect(p.state.params).toMatchObject({
+            startSubstrate: 'maze', sphereCount: 5, fillerCount: 2, revisitPercent: 25,
+        });
+        expect(p.state.scenario.items).toEqual({
+            key_red: 1, key_blue: 1, key_green: 1, key_yellow: 1, victory: 1,
+        });
+    });
+
+    it('text adventure sphere demo pins text_adventure alone, started in one', () => {
+        const p = getPresetById('shipped:text-adventure-sphere-demo');
+        expect(p.state.mode).toBe('sphereGrowth');
+        expect(p.state.substrateQuotas).toEqual({ text_adventure: 99 });
+        expect(p.state.params).toMatchObject({
+            startSubstrate: 'text_adventure', sphereCount: 4, fillerCount: 1,
+        });
+    });
+
+    it('maze + text adventure sphere mix pins BOTH procedural substrates by quota', () => {
+        const p = getPresetById('shipped:maze-ta-sphere-mix');
+        expect(p.state.mode).toBe('sphereGrowth');
+        expect(p.state.substrateMode).toBe('quotas');
+        expect(p.state.substrateQuotas).toEqual({ maze: 3, text_adventure: 3 });
+        expect(p.state.params.startSubstrate).toBe('maze');
+    });
+
+    it('maze + bounce sphere mix pins maze + bounce quotas and the bounce items in the pool', () => {
+        const p = getPresetById('shipped:maze-bounce-sphere-mix');
+        expect(p.state.mode).toBe('sphereGrowth');
+        expect(p.state.substrateQuotas).toEqual({ maze: 3, bounce: 3 });
+        expect(p.state.scenario.items).toEqual({
+            key_red: 1, key_blue: 1, 'Right arrow': 1, Springs: 1, 'Blue platforms': 1, Victory: 1,
+        });
+    });
+
+    it('maze hazards + loop demo pins hazards AND loop mode on a maze-only world', () => {
+        const p = getPresetById('shipped:maze-hazards-loop-demo');
+        expect(p.state.mode).toBe('sphereGrowth');
+        expect(p.state.substrateQuotas).toEqual({ maze: 99 });
+        expect(p.state.params).toMatchObject({
+            enableHazards: true, hazardCount: 3, enableLoopMode: true, regionXpEffect: 'cost',
+        });
+    });
+
+    it('hazards ride only a maze-only preset (⚖ user 2026-09-16, Q5: "hazards are only relevant to the maze substrate")', () => {
+        for (const p of SHIPPED_PRESETS.filter((q) => q.state.params?.enableHazards)) {
+            const named = Object.keys({ ...p.state.substrateQuotas, ...p.state.substrateMix });
+            expect(named, `${p.id} turns hazards on`).toEqual(['maze']);
+        }
+    });
+
+    it('grid growth demo pins the MIX form: maze 1 : text_adventure 1 on a 3×3 grid, keys and doors', () => {
+        const p = getPresetById('shipped:grid-growth-demo');
+        expect(p.state.mode).toBe('gridGrowth');
+        expect(p.state.substrateMode).toBe('mix');
+        expect(p.state.substrateMix).toEqual({ maze: 1, text_adventure: 1 });
+        expect(p.state.params).toMatchObject({ gridWidth: 3, gridHeight: 3 });
+        expect(p.state.scenario.obstacles).toEqual({ door_red: 1, door_blue: 1 });
     });
 
     it('runner sphere demo pins the runner_sphere_worldgen config + Springs', () => {
