@@ -6682,6 +6682,17 @@ export function buildRulesJson(grid, opts = {}) {
     // Loop-mode cost generation — Phase 2 of loop-mode-substrate-integration.
     // Pure simulation against the freshly-generated sphere log; runtime
     // costDataManager picks up `loop_costs` directly from rules.json on load.
+    //
+    // ⛔ NO `generatedAt` — PROCGEN PIPELINE PRESETS P0 (⚖ user, 2026-09-16).
+    // `generateLoopCosts` stamps `new Date().toISOString()`, which made a
+    // loop-mode world differ between two compiles in that one field and nothing
+    // else, so no generated world could be held byte-identical across runs. It
+    // is deleted after the call — the precedent is scripts/test/presetLoopCosts.mjs,
+    // which drops it from every committed loop-mode preset for the same reason
+    // (its header). The SOURCE writer stays: loopCostGenerator.js lives in the
+    // `shared/` submodule, and other writers (the Loops panel's defaults, the
+    // JtA cost planner) still stamp one, which is why the schema keeps the field
+    // optional. `version` and `generatedFrom` are deterministic and kept.
     if (enableLoopMode && embedSphereLog && Array.isArray(scaffold.sphere_log)) {
         try {
             scaffold.loop_costs = generateLoopCosts({
@@ -6691,12 +6702,12 @@ export function buildRulesJson(grid, opts = {}) {
                 regionXpEffect,
                 sourceFileName: seedName || `seed_${seed}`,
             });
+            delete scaffold.loop_costs.generatedAt;
         } catch (e) {
             // Match the sphere-log error pattern: don't fail the build,
-            // emit a marker the loader will warn about.
+            // emit a marker the loader will warn about. No generatedAt (above).
             scaffold.loop_costs = {
                 version: '1.0',
-                generatedAt: new Date().toISOString(),
                 error: `loopCostGenerator failed: ${e?.message ?? String(e)}`,
                 regions: {},
                 locations: {},
