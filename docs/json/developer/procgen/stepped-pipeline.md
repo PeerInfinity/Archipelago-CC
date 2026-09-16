@@ -83,6 +83,8 @@ Three substrates declare one today. **bounceRegionEditor** (`frontend/modules/bo
 
 See [scripts/procgen/README.md](../../../../scripts/procgen/README.md).
 
+**The panel's run assembly is a module, and the presets are generated per CI run.** What the panel hands each step runner — the sphere `cfg` + pre-plan `prep` + flat `config`, the spiral `{ config, compileIn }`, the top-down envelope input, grid growth's grow + compile inputs — is assembled by `frontend/modules/procgenPipeline/presetRun.js` (`buildRunFromState`), a pure function of the panel's state; the panel's Generate calls it over `this`, and `runPresetHeadless` drives the same run to its `rules.json` with no browser. ⚠ The CLIs above do **not** go through it: they build their config from flags over the same hooks (`sphereConfigHooks.js`) and step runners, so they are a second caller of the runners, not of the assembly — measured at P0 against `presetRun.js`, `dump-sphere-growth.js` reproduces `bounce-sphere-demo` and both runner sphere presets byte-for-byte, and `dump-shuffled-spiral.js` reproduces `jta-zone-demo` except `procgen_metadata`, which that CLI does not write. `presetDefs.generate.slow.test.js` (slow tier) generates every entry of `SHIPPED_PRESETS` twice per CI run — byte-identical, a world beyond Menu, each run within `PRESET_HEADLESS_BUDGET_MS` — except the presets naming a substrate that declares `generationCost: 'heavy'` (`substrate-registry.md` § *Build-time — generation cost*), which it skips by name against the `PRESETS_SKIPPED_AS_HEAVY` allowlist.
+
 ## Related documentation
 
 - [Architecture](./architecture.md) — the stepped pipeline in context
