@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 18,
         "headings": 801,
         "indexHeadings": 2,
-        "lines": 21342,
+        "lines": 21344,
         "pages": 4,
-        "words": 265367
+        "words": 265540
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -60,10 +60,11 @@ export const DOCS_INDEX = frz({
                 "flash.md",
                 "gotchas.md",
                 "loop-recording.md",
+                "maze.md",
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 8734
+            "words": 8752
         },
         {
             "description": "Every demonstrable feature of the two procgen lab pages, one entry each, with the link that shows it, the CLI command that reproduces it in node, which control to press, and what you are looking at.",
@@ -165,7 +166,7 @@ export const DOCS_INDEX = frz({
             "file": "maze.md",
             "h1": "Maze Substrate",
             "headings": 35,
-            "lines": 1105,
+            "lines": 1107,
             "links": [
                 "architecture.md",
                 "loop-recording.md",
@@ -174,7 +175,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/maze.md",
-            "words": 12858
+            "words": 13013
         },
         {
             "description": "Sphere growth is the primary procgen driver: instead of growing a world and then discovering its progression structure, it **plans the progression first** — which items belong to which sphere — and then grows a world guaranteed to realise that plan. The plan doubles as a verification oracle, so every generated world ships with a proof that its progression matches the intent.",

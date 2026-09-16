@@ -192,9 +192,9 @@ The implementations live in each substrate's `*LibraryEntry.js` (`mazeLibraryEnt
 
 ⚖ **The validator's substrate list stays a hand list, guarded by the registry.** `regionLibraryValidator.js`'s `LIBRARY_V1_SUBSTRATES` names which substrates a library may carry and each one's kind: `'procedural'` entries must carry `region_size` and a null `carried_rules`; `'content'` entries must carry `carried_rules`. The registry now says the same thing as data: an entry with `instantiateLibraryEntry` is a library substrate, `generateRegionCore` makes it procedural, and a procedural one is exactly one whose `regionGeometry` is tiles. The list is NOT folded onto those declarations (⚖ planner, PRESET SIDECARS G1, option B), because the validator is registry-free by design (`regionLibraryLoader.js`: *"Absent adapters ⇒ structural-only"*) and runs where nothing is registered: the maze lab's `?library=` door, `region-library-validate.mjs` (which registers no runner), and its own tests. Measured, a registry read there refuses both entries of the bounce pack and both of the runner pack. The declarations are the list's authority instead: `procgenCore/sidecarFieldsRegistry.test.js` § *G1 — `LIBRARY_V1_SUBSTRATES` agrees with the registry* asserts, over every registered entry, that the list names exactly the hooked entries with the derived kind, so a declaration or a list edit that disagrees reds CI.
 
-### Build-time — driver-facing adapter hooks (bounce and runner)
+### Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)
 
-The sphere-growth driver and the Procgen Pipeline panel read a further set of optional hooks so the generic engine never names a substrate directly. **Bounce and runner both implement them** — runner carries 14 of the 17, all but `canHostExitGatesBraid`, `driftItems` and `prepareSphereGrowth` — and the generated matrix below is the authority on which entry carries which. (This sentence said *"today only bounce implements them"* until 2026-08-18, when generating the matrix from the entries showed otherwise; the hand-kept matrix it replaced said the same thing on its "Sphere-growth adapter hooks" row.) The semantics are documented at their consumers in `procgenPipelineEngine.js` / `sphereConfigHooks.js`:
+The sphere-growth driver and the Procgen Pipeline panel read a further set of optional hooks so the generic engine never names a substrate directly. **Bounce and runner implement the zone-generation and gate hooks** (runner all but `canHostExitGatesBraid`, `driftItems` and `prepareSphereGrowth`); **the maze implements only panel-integration hooks** — `defaultProcgenParams`, `renderProcgenParams` and the library-scoped pair below, no `buildRegionParams` (see [Maze Substrate](./maze.md#registry-entry)). The generated matrix below is the authority on which entry carries which. (This sentence said *"today only bounce implements them"* until 2026-08-18, when generating the matrix from the entries showed otherwise; the hand-kept matrix it replaced said the same thing on its "Sphere-growth adapter hooks" row.) The semantics are documented at their consumers in `procgenPipelineEngine.js` / `sphereConfigHooks.js`:
 
 - **Requirement-targeted zone generation:** `generateZoneForSpecs` / `generateZoneForSpecsGen`, `buildZoneSpecs`, `gateableItems` (null ⇒ full vocabulary; non-geometry gate terms become bridge-evaluated locks).
 - **Gate-structure vetoes and hints:** `canHostExitGates`, `canHostExitGatesBraid`, `exitGateVeto`, `backPortalGated`, `hostsSurplusExitsNatively`, `gateHostingHint`.
@@ -340,7 +340,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `instantiateLibraryEntryForSpecs` | fn | — | fn | fn | — | — | — | — |
 | `validateLibraryEntry` | fn | — | fn | fn | — | — | — | — |
 
-**Build-time — driver-facing adapter hooks (bounce and runner)**
+**Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)**
 
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
 |---|---|---|---|---|---|---|---|---|

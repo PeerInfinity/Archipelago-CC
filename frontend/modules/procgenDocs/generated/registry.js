@@ -214,7 +214,7 @@ export const REGISTRY = frz({
                 "renderLibraryProcgenParams",
                 "renderProcgenParams"
             ],
-            "title": "Build-time — driver-facing adapter hooks (bounce and runner)"
+            "title": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)"
         }
     ],
     "libraries": [
@@ -624,7 +624,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "backPortalGated"
         },
         {
@@ -690,7 +690,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "buildLibraryRegionParams"
         },
         {
@@ -757,7 +757,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "buildRegionContract"
         },
         {
@@ -824,7 +824,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "buildRegionParams"
         },
         {
@@ -891,7 +891,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "buildZoneSpecs"
         },
         {
@@ -958,7 +958,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "canHostExitGates"
         },
         {
@@ -1024,7 +1024,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "canHostExitGatesBraid"
         },
         {
@@ -1325,7 +1325,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "defaultProcgenParams"
         },
         {
@@ -1535,7 +1535,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "driftItems"
         },
         {
@@ -1668,7 +1668,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "exitGateVeto"
         },
         {
@@ -1956,7 +1956,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "gateHostingHint"
         },
         {
@@ -2029,7 +2029,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "gateableItems"
         },
         {
@@ -2163,7 +2163,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "generateZoneForSpecs"
         },
         {
@@ -2230,7 +2230,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "generateZoneForSpecsGen"
         },
         {
@@ -2502,7 +2502,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "hostsSurplusExitsNatively"
         },
         {
@@ -3055,7 +3055,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "libraryItems"
         },
         {
@@ -4255,7 +4255,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "prepareSphereGrowth"
         },
         {
@@ -4472,7 +4472,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "renderLibraryProcgenParams"
         },
         {
@@ -4540,7 +4540,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "renderProcgenParams"
         },
         {
