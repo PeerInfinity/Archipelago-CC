@@ -849,6 +849,21 @@ async function runDoor(task) {
     rmSync(cache, { recursive: true, force: true });
     return {
         ms: r.ms,
+        /**
+         * ⛓⛓ **WHETHER THE DOOR WAS KILLED IS A FACT ON THE RESULT, NOT
+         * PROSE IN `why`** (slice H1, G1 ⚖ OPEN 3). A killed door's captured
+         * output is a PREFIX cut wherever the box was, so anything that reads
+         * that output — the baseline's `inheritedOutput` control — has to know
+         * it is holding half a measurement. Until this slice the only trace was
+         * the sentence `localWhy` composes, i.e. the field G1 dropped from the
+         * baseline for being load-dependent prose: a reader that had to
+         * `/^ran past /`-match a message to learn a mechanical fact.
+         *
+         * ⛓ `ceiling` travels with it because "killed" is only meaningful
+         * against the deadline that killed it, and this gate has two.
+         */
+        timedOut: r.timedOut,
+        ceiling,
         wrote: [],
         stderr: r.err,
         stdout: r.out,
