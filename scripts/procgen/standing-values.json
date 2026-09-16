@@ -2583,68 +2583,6 @@
       },
       "total": "ALL CHECKS PASSED"
     },
-    "gate: maze-consumable-tiles": {
-      "value": "11/0",
-      "command": "node scripts/procgen/check-maze-consumable-tiles.mjs",
-      "kind": "gate",
-      "exit": 0,
-      "ms": 21978,
-      "cheap": true,
-      "measuredAt": "ef5ac9ba3e15b04e58fe8fc285cd8eb6628f6d4e",
-      "inputKey": "99a48ca38b138e7a3d59f5a4ec389222",
-      "keyAt": "ef5ac9ba3e15b04e58fe8fc285cd8eb6628f6d4e",
-      "keyPopulations": {
-        "code": {
-          "count": 8,
-          "digest": "5a84252027aad633cc572942f3263c21"
-        },
-        "data": {
-          "count": 5,
-          "digest": "eb616f0e61b7cfb70e60426b62f95561"
-        },
-        "spawn": {
-          "count": 0,
-          "digest": "d41d8cd98f00b204e9800998ecf8427e"
-        },
-        "build": {
-          "count": 0,
-          "digest": "d41d8cd98f00b204e9800998ecf8427e"
-        }
-      },
-      "browser": true,
-      "total": "ALL CHECKS PASSED"
-    },
-    "gate: maze-loop-mana": {
-      "value": "8/0",
-      "command": "node scripts/procgen/check-maze-loop-mana.mjs",
-      "kind": "gate",
-      "exit": 0,
-      "ms": 14151,
-      "cheap": true,
-      "measuredAt": "ef5ac9ba3e15b04e58fe8fc285cd8eb6628f6d4e",
-      "inputKey": "559cc833775cb2f8d90b2bd0df133607",
-      "keyAt": "ef5ac9ba3e15b04e58fe8fc285cd8eb6628f6d4e",
-      "keyPopulations": {
-        "code": {
-          "count": 8,
-          "digest": "64e5c9393bc0c49b6448c6cee8a7b0bb"
-        },
-        "data": {
-          "count": 5,
-          "digest": "eb616f0e61b7cfb70e60426b62f95561"
-        },
-        "spawn": {
-          "count": 0,
-          "digest": "d41d8cd98f00b204e9800998ecf8427e"
-        },
-        "build": {
-          "count": 0,
-          "digest": "d41d8cd98f00b204e9800998ecf8427e"
-        }
-      },
-      "browser": true,
-      "total": "ALL CHECKS PASSED"
-    },
     "gate: procgen-presets": {
       "value": "24/0",
       "command": "node scripts/procgen/check-procgen-presets.mjs",
