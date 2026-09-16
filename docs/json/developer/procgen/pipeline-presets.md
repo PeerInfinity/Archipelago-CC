@@ -6,7 +6,7 @@ Code: `frontend/modules/procgenPipeline/presetDefs.js` (the definitions, `PRESET
 
 ## The drop-down
 
-`Custom` first; then one group per pipeline mode that has a shipped preset — **Grid growth**, **Sphere growth**, **Shuffled spiral**, **Top-down**, in `VALID_MODES` order, a mode with none omitted; then **User** (presets saved with *Save as…*, kept in `localStorage` only). Hovering an option shows its description: what it demonstrates and where to look. Selecting one overwrites the panel setup and clears any stepped-pipeline state; the next edit flips the selection back to `Custom`. A restored session whose preset no longer exists comes back as `Custom`.
+`Custom` first; then one group per pipeline mode that has a shipped preset — **Sphere growth**, **Shuffled spiral**, **Grid growth**, **Top-down**, in `PRESET_GROUP_ORDER` (the order the user ruled, not `VALID_MODES`', which leads with the legacy grid grower), a mode with none omitted; then **User** (presets saved with *Save as…*, kept in `localStorage` only). Hovering an option shows its description: what it demonstrates and where to look. Selecting one overwrites the panel setup and clears any stepped-pipeline state; the next edit flips the selection back to `Custom`. A restored session whose preset no longer exists comes back as `Custom`.
 
 ## The shipped presets
 

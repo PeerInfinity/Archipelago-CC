@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 
 import {
-    SHIPPED_PRESETS, VALID_MODES, PRESET_GROUPS, LS_PRESETS_KEY,
+    SHIPPED_PRESETS, VALID_MODES, PRESET_GROUPS, PRESET_GROUP_ORDER, LS_PRESETS_KEY,
     PRESET_HEADLESS_BUDGET_MS, PRESETS_SKIPPED_AS_HEAVY,
     capturePresetState, applyPresetState, getPresetById, restoredActivePresetId, groupShippedPresets,
     userPresetId, loadUserPresets, saveUserPreset, deleteUserPreset,
@@ -46,6 +46,13 @@ describe('SHIPPED_PRESETS', () => {
     it('PRESET_GROUPS names one drop-down group per pipeline mode', () => {
         expect(Object.keys(PRESET_GROUPS)).toEqual(VALID_MODES);
         expect(new Set(Object.values(PRESET_GROUPS)).size).toBe(VALID_MODES.length);
+    });
+
+    it('PRESET_GROUP_ORDER is a permutation of VALID_MODES, in the ruled order (⚖ user 2026-09-16, Q3)', () => {
+        expect([...PRESET_GROUP_ORDER].sort()).toEqual([...VALID_MODES].sort());
+        expect(PRESET_GROUP_ORDER).toHaveLength(new Set(PRESET_GROUP_ORDER).size);
+        expect(PRESET_GROUP_ORDER.map((mode) => PRESET_GROUPS[mode]))
+            .toEqual(['Sphere growth', 'Shuffled spiral', 'Grid growth', 'Top-down']);
     });
 
     it('every shipped preset sits in its own mode\'s group', () => {
@@ -149,7 +156,7 @@ describe('SHIPPED_PRESETS', () => {
 describe('groupShippedPresets (the drop-down\'s optgroups)', () => {
     const preset = (id, mode) => ({ id, group: PRESET_GROUPS[mode], state: { mode } });
 
-    it('orders the groups by VALID_MODES, not by where their first preset sits in the list', () => {
+    it('orders the groups by PRESET_GROUP_ORDER, not by where their first preset sits in the list', () => {
         const list = [
             preset('shipped:t', 'topDown'),
             preset('shipped:s1', 'sphereGrowth'),
@@ -158,9 +165,9 @@ describe('groupShippedPresets (the drop-down\'s optgroups)', () => {
             preset('shipped:s2', 'sphereGrowth'),
         ];
         expect(groupShippedPresets(list).map(([label, members]) => [label, members.map((p) => p.id)])).toEqual([
-            [PRESET_GROUPS.gridGrowth, ['shipped:g']],
             [PRESET_GROUPS.sphereGrowth, ['shipped:s1', 'shipped:s2']],
             [PRESET_GROUPS.shuffledSpiral, ['shipped:p']],
+            [PRESET_GROUPS.gridGrowth, ['shipped:g']],
             [PRESET_GROUPS.topDown, ['shipped:t']],
         ]);
     });

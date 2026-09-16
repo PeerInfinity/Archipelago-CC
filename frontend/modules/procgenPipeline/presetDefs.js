@@ -41,7 +41,7 @@ export const VALID_MODES = ['gridGrowth', 'sphereGrowth', 'shuffledSpiral', 'top
  * The drop-down group each pipeline mode's shipped presets sit under (⚖ user
  * 2026-09-16, Q3: grouped by MODE, then User). Keyed by VALID_MODES; a shipped
  * preset's `group` is PRESET_GROUPS[its state.mode], and groupShippedPresets
- * orders the groups by VALID_MODES.
+ * orders the groups by PRESET_GROUP_ORDER.
  */
 export const PRESET_GROUPS = Object.freeze({
     gridGrowth: 'Grid growth',
@@ -49,6 +49,15 @@ export const PRESET_GROUPS = Object.freeze({
     shuffledSpiral: 'Shuffled spiral',
     topDown: 'Top-down',
 });
+
+/**
+ * The order the drop-down shows the mode groups in (⚖ user 2026-09-16, Q3's
+ * answer to the plan's listing: *Sphere growth · Shuffled spiral · Grid growth ·
+ * Top-down*). NOT VALID_MODES' order, which leads with grid growth: the legacy
+ * grower is not the first thing to offer. A permutation of VALID_MODES —
+ * presetDefs.test.js requires it, so a mode added there cannot go ungrouped.
+ */
+export const PRESET_GROUP_ORDER = Object.freeze(['sphereGrowth', 'shuffledSpiral', 'gridGrowth', 'topDown']);
 
 /**
  * The most a shipped preset may take to generate headless, per run (⚖ user
@@ -507,14 +516,14 @@ export function applyPresetState(state, { defaults, hasSubstrate, current }) {
 
 /**
  * The drop-down's shipped groups, in order: `[label, presets[]]` per
- * PRESET_GROUPS entry, in VALID_MODES order, each holding the presets whose
+ * PRESET_GROUPS entry, in PRESET_GROUP_ORDER, each holding the presets whose
  * `group` is that label in their list order; a group with no preset is
  * omitted. (A preset whose `group` is not a PRESET_GROUPS label lands in no
  * group — presetDefs.test.js requires every shipped preset's group to be its
  * mode's.)
  */
 export function groupShippedPresets(presets) {
-    return VALID_MODES
+    return PRESET_GROUP_ORDER
         .map((mode) => [PRESET_GROUPS[mode], presets.filter((p) => p.group === PRESET_GROUPS[mode])])
         .filter(([, members]) => members.length > 0);
 }
