@@ -14,16 +14,63 @@ import {
 import { createRng } from '../shared/rng.js';
 import { serializeMazeWorld } from './mazeSerializer.js';
 
+/**
+ * The few DOM calls a pipeline-param hook makes, without jsdom (the tree has
+ * none): elements keep children, listeners and a parent, and `remove()` detaches.
+ */
+function withFakeDocument(fn) {
+    const make = (tag) => {
+        const el = {
+            tagName: tag.toUpperCase(), children: [], parent: null, listeners: {}, style: {},
+            className: '', textContent: '', title: '',
+            appendChild(child) { child.parent = el; el.children.push(child); return child; },
+            remove() { if (el.parent) el.parent.children.splice(el.parent.children.indexOf(el), 1); el.parent = null; },
+            addEventListener(type, handler) { (el.listeners[type] ??= []).push(handler); },
+            fire(type) { for (const h of el.listeners[type] ?? []) h(); },
+        };
+        return el;
+    };
+    const saved = globalThis.document;
+    globalThis.document = { createElement: make, createTextNode: (text) => ({ textContent: text }) };
+    try { return fn(); } finally { globalThis.document = saved; }
+}
+const descendants = (el) => (el.children ?? []).flatMap((c) => [c, ...descendants(c)]);
+
 describe('mazeRoomLibrary substrateRegistryEntry', () => {
-    it('declares its pipeline params: the library connection flags default off, and their regionParams in sphere mode only', () => {
+    it('renderProcgenParams renders the hazard toggle, and its three sub-fields only while hazards are on', () => {
+        withFakeDocument(() => {
+            const params = { enableHazards: true, hazardCount: 2, hazardMaxConsecutiveFails: 10, hazardWallOverlapAllowed: false };
+            let saves = 0;
+            const node = substrateRegistryEntry.renderProcgenParams({ params, onChange: () => { saves += 1; } });
+            const inputs = () => descendants(node).filter((el) => el.tagName === 'INPUT');
+            const subFields = () => descendants(node).filter((el) => el.className === 'procgen-pipeline-hazard-fields');
+            expect(inputs()[0].checked).toBe(true);
+            expect(subFields()).toHaveLength(1);
+            expect(inputs().map((el) => el.type)).toEqual(['checkbox', 'number', 'number', 'checkbox']);
+            expect(inputs()[1].value).toBe('2');
+
+            inputs()[0].checked = false;
+            inputs()[0].fire('change');
+            expect(params.enableHazards).toBe(false);
+            expect(subFields()).toHaveLength(0);
+            expect(saves).toBe(1);
+
+            const off = substrateRegistryEntry.renderProcgenParams({ params: { enableHazards: false } });
+            expect(descendants(off).filter((el) => el.className === 'procgen-pipeline-hazard-fields')).toHaveLength(0);
+        });
+    });
+
+    it('declares its pipeline params: hazard and library-connection defaults, the library regionParams in sphere mode only, the two render hooks', () => {
         expect(substrateRegistryEntry.defaultProcgenParams).toMatchObject({
             mazeRequireSameWall: false, mazeRequireTileAlign: false,
+            enableHazards: false, hazardCount: 3, hazardMaxConsecutiveFails: 10, hazardWallOverlapAllowed: false,
         });
         const build = substrateRegistryEntry.buildLibraryRegionParams;
         expect(build({ params: { mazeRequireSameWall: 1 }, mode: 'sphere' }))
             .toEqual({ mazeRequireSameWall: true, mazeRequireTileAlign: false });
         expect(build({ params: { mazeRequireSameWall: true }, mode: 'topDown' })).toEqual({});
         expect(typeof substrateRegistryEntry.renderLibraryProcgenParams).toBe('function');
+        expect(typeof substrateRegistryEntry.renderProcgenParams).toBe('function');
         // The flags are read only by a LIBRARY entry's instantiate, so the maze
         // contributes nothing to a quota-driven world's regionParams.
         expect(substrateRegistryEntry.buildRegionParams).toBeUndefined();

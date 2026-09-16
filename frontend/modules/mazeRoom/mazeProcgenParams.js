@@ -6,11 +6,17 @@
  * assembled centrally by sphereConfigHooks.js).
  *
  * ⛓ PROCGEN PIPELINE PRESETS C1. These pieces used to live in the pipeline:
- * the two connection flags in presetRun.js's DEFAULT_PARAMS, gated there by
- * a helper that asked `e.substrate === 'maze'`, and their toggles in the
- * panel. The maze declares:
+ * the connection flags and the hazard params in presetRun.js's
+ * DEFAULT_PARAMS, the flags gated there by a helper that asked
+ * `e.substrate === 'maze'`, and every control in the panel (the hazards
+ * behind a `localRenderers = { maze: … }` table). The maze declares:
  *
  *   - defaultProcgenParams       — the panel merges this into its defaults.
+ *   - renderProcgenParams        — the hazard controls (maze content modules
+ *     Phase 2e), in the panel's per-substrate "maze parameters" subsection.
+ *     The hazard params build ENGINE vocabulary (presetRun's
+ *     effectiveHazardOpts → hazardOpts, which only a substrate declaring
+ *     `applyContentModules` acts on), so the maze has no buildRegionParams.
  *   - buildLibraryRegionParams   — the regionParams a SELECTED maze library
  *     entry reads. Consulted for the substrates of the selected sphere
  *     libraries, not the active quotas: a maze pack realises maze regions
@@ -33,7 +39,98 @@ export const DEFAULT_MAZE_PROCGEN_PARAMS = Object.freeze({
     // satisfy tile-align without a carve, so it throws).
     mazeRequireSameWall: false,
     mazeRequireTileAlign: false,
+    // Hazard module (maze content modules Phase 2). When enabled, every maze
+    // region gets `hazardCount` hazards placed by hazardPathGen through the
+    // entry's applyContentModules. Disabled by default — existing presets stay
+    // hazard-free unless the caller opts in.
+    enableHazards: false,
+    hazardCount: 3,
+    hazardMaxConsecutiveFails: 10,
+    hazardWallOverlapAllowed: false,
 });
+
+/** One labelled `procgen-pipeline-field` row around `input`. */
+function fieldRow(text, title, input) {
+    const row = document.createElement('div');
+    row.className = 'procgen-pipeline-field';
+    const label = document.createElement('label');
+    label.textContent = text;
+    label.title = title;
+    row.appendChild(label);
+    row.appendChild(input);
+    return row;
+}
+
+/**
+ * The hazard sub-fields shown while hazards are enabled: count per region, max
+ * consecutive placement failures before stopping, and the wall-overlap toggle —
+ * one container, so the toggle can show / hide them as a unit.
+ */
+function renderHazardSubFields(params, onChange) {
+    const wrap = document.createElement('div');
+    wrap.className = 'procgen-pipeline-hazard-fields';
+
+    const countInput = document.createElement('input');
+    countInput.type = 'number';
+    countInput.min = '0';
+    countInput.step = '1';
+    countInput.value = String(params.hazardCount ?? 0);
+    countInput.addEventListener('change', () => {
+        params.hazardCount = Math.max(0, Math.floor(Number(countInput.value) || 0));
+        onChange();
+    });
+    wrap.appendChild(fieldRow('Hazards per region',
+        'Target hazard count for each region (0 disables)', countInput));
+
+    const failInput = document.createElement('input');
+    failInput.type = 'number';
+    failInput.min = '1';
+    failInput.step = '1';
+    failInput.value = String(params.hazardMaxConsecutiveFails ?? 10);
+    failInput.addEventListener('change', () => {
+        params.hazardMaxConsecutiveFails = Math.max(1, Math.floor(Number(failInput.value) || 1));
+        onChange();
+    });
+    wrap.appendChild(fieldRow('Max consecutive fails',
+        'Stop early after this many failed placement attempts in a row', failInput));
+
+    const overlapInput = document.createElement('input');
+    overlapInput.type = 'checkbox';
+    overlapInput.checked = !!params.hazardWallOverlapAllowed;
+    overlapInput.addEventListener('change', () => {
+        params.hazardWallOverlapAllowed = !!overlapInput.checked;
+        onChange();
+    });
+    wrap.appendChild(fieldRow('Allow wall overlap',
+        'Hazard paths may include wall tiles (still must contain ≥1 floor tile)', overlapInput));
+    return wrap;
+}
+
+/**
+ * The maze's per-substrate panel controls: the hazard toggle, and its sub-fields
+ * while it is on (shown / hidden in place on toggle).
+ */
+export function renderMazeProcgenParams({ params, onChange = () => {} } = {}) {
+    const wrap = document.createElement('div');
+    const hazardInput = document.createElement('input');
+    hazardInput.type = 'checkbox';
+    hazardInput.checked = !!params.enableHazards;
+    wrap.appendChild(fieldRow('Enable hazards',
+        'Procgen places hazards (2/3/5-tile linear paths or 4/8-tile loops) on every region',
+        hazardInput));
+    let subFields = params.enableHazards ? wrap.appendChild(renderHazardSubFields(params, onChange)) : null;
+    hazardInput.addEventListener('change', () => {
+        params.enableHazards = !!hazardInput.checked;
+        if (params.enableHazards && !subFields) {
+            subFields = wrap.appendChild(renderHazardSubFields(params, onChange));
+        } else if (!params.enableHazards && subFields) {
+            subFields.remove();
+            subFields = null;
+        }
+        onChange();
+    });
+    return wrap;
+}
 
 /**
  * The regionParams a selected maze library entry reads. Sphere mode only —

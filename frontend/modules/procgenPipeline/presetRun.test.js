@@ -250,12 +250,14 @@ describe('the normalisation and the shared helpers', () => {
         const defaults = panelDefaultParams();
         for (const [k, v] of Object.entries(DEFAULT_PARAMS)) expect(defaults[k]).toEqual(v);
         expect(Object.keys(defaults).length).toBeGreaterThan(Object.keys(DEFAULT_PARAMS).length);
-        // The maze library's connection flags come from the maze entry's own
-        // declaration now (C1), not from DEFAULT_PARAMS.
-        for (const key of ['mazeRequireSameWall', 'mazeRequireTileAlign']) {
+        // The maze's hazard params and its library's connection flags come from
+        // the maze entry's own declaration now (C1), not from DEFAULT_PARAMS.
+        const mazeDeclared = substrateRegistry.get('maze').defaultProcgenParams;
+        for (const key of ['mazeRequireSameWall', 'mazeRequireTileAlign', 'enableHazards',
+            'hazardCount', 'hazardMaxConsecutiveFails', 'hazardWallOverlapAllowed']) {
             expect(DEFAULT_PARAMS).not.toHaveProperty(key);
-            expect(substrateRegistry.get('maze').defaultProcgenParams).toHaveProperty(key, false);
-            expect(defaults).toHaveProperty(key, false);
+            expect(mazeDeclared).toHaveProperty(key);
+            expect(defaults[key]).toEqual(mazeDeclared[key]);
         }
         const { run } = buildRunFromState({
             mode: 'gridGrowth', params: { seed: 9 }, scenario: { items: {}, obstacles: {} },

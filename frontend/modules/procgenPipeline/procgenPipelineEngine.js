@@ -49,6 +49,13 @@ function getAdapter(substrateId) {
 
 // --- Substrate selection ---
 //
+// The engine's hard default substrate: what every selection path below falls
+// back to when nothing (no override, source tag, picker, quota or mix) names
+// one, and the substrate a region without a `substrate` field is read as.
+// Exported so a caller that must mirror the fallback (the panel's parameter
+// subsections with nothing selected) asks the engine instead of naming it.
+export const DEFAULT_SUBSTRATE_ID = 'maze';
+//
 // Per-region substrate id resolution. Used by both top-down and
 // grid-growth drivers. Resolution order, highest priority first:
 //
@@ -93,7 +100,7 @@ export function pickSubstrate(regionName, sourceRegion, opts, rng) {
     if (opts?.substrateMix) {
         return rollSubstrateMix(opts.substrateMix, rng);
     }
-    return 'maze';
+    return DEFAULT_SUBSTRATE_ID;
 }
 
 /**
@@ -108,7 +115,7 @@ export function pickSubstrate(regionName, sourceRegion, opts, rng) {
  */
 export function rollSubstrateMix(mix, rng) {
     const entries = Object.entries(mix).filter(([, w]) => w > 0);
-    if (entries.length === 0) return 'maze';
+    if (entries.length === 0) return DEFAULT_SUBSTRATE_ID;
     const total = entries.reduce((s, [, w]) => s + w, 0);
     let r = rng.next() * total;
     for (const [id, weight] of entries) {
@@ -953,7 +960,7 @@ function pickSidesWithBranching(candidates, rng, branchProbability) {
 // will add per-region substrate selection to the callers above.
 
 function buildSubstrateRegion({
-    substrate = 'maze',
+    substrate = DEFAULT_SUBSTRATE_ID,
     region_id,
     size,
     entrances,
@@ -1960,7 +1967,7 @@ export function* realiseTopDownGen(layout, opts) {
         // Substrate + sub-seed were resolved per region in ①; ② just reads them
         // (editing layout.substrateByRegion + re-running ② is the substrate-edit
         // path). A fresh rng per region keeps regions geometrically independent.
-        const substrateId = substrateByRegion[name] ?? 'maze';
+        const substrateId = substrateByRegion[name] ?? DEFAULT_SUBSTRATE_ID;
         const regionRng = createRng(subSeedByRegion[name] ?? deriveRegionSeed(layoutSeed, name));
         // Biome resolution mirrors substrate dispatch: per-region from
         // input wins, otherwise inherit from rules.json source region
@@ -2280,7 +2287,7 @@ function buildTopDownSphereMetadata({
     for (let i = 0; i < placementOrder.length; i++) {
         const p = placementOrder[i];
         const region = grid.getRegion(p.cell);
-        const substrate = region?.substrate ?? 'maze';
+        const substrate = region?.substrate ?? DEFAULT_SUBSTRATE_ID;
         substrateCounts[substrate] = (substrateCounts[substrate] || 0) + 1;
         const parent = p.parent ? (nameToIndex.get(p.parent.name) ?? null) : null;
         const isTeleporter = !!(p.parent
@@ -3748,7 +3755,7 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
             sub = pickSubstrateWithQuota(pickQuotas, substrateCounts, rng);
             if (!sub) quotaFallbacks += 1;
         }
-        if (!sub) sub = 'maze';
+        if (!sub) sub = DEFAULT_SUBSTRATE_ID;
         substrateCounts[sub] = (substrateCounts[sub] || 0) + 1;
         return sub;
     };
@@ -6347,7 +6354,7 @@ export function buildPresetSidecars(grid, {
 } = {}) {
     const regionMap = {};
     for (const region of grid.allRegions()) {
-        const substrateId = region.substrate ?? 'maze';
+        const substrateId = region.substrate ?? DEFAULT_SUBSTRATE_ID;
         const adapter = getAdapter(substrateId);
         // Re-attach the engine-owned structural fields (exits + entrance)
         // onto the payload just before serialize (Phase 4c). The descriptor

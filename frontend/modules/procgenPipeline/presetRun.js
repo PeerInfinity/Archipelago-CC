@@ -74,14 +74,6 @@ export const DEFAULT_PARAMS = {
     // proportionally to XP level; 'speed' / 'both' are reserved for v2;
     // 'none' disables the XP discount. See Phase 7.
     regionXpEffect: 'cost',
-    // Hazard module (maze content modules Phase 2). When enabled,
-    // every region gets `count` hazards placed by hazardPathGen +
-    // applyHazardModule in the procgen pipeline. Disabled by default
-    // — existing presets stay hazard-free unless the caller opts in.
-    enableHazards: false,
-    hazardCount: 3,
-    hazardMaxConsecutiveFails: 10,
-    hazardWallOverlapAllowed: false,
     // Sphere-growth mode parameters (sphere-driven-growth.md). The
     // planner assigns the scenario items to `sphereCount` spheres;
     // fillerCount adds itemless regions; revisitPercent is the chance
@@ -95,7 +87,8 @@ export const DEFAULT_PARAMS = {
     // (Phase 2). Phase 1 only carries the knob; no visible control yet.
     spheresPerBatch: null,
     // Substrate-specific params (e.g. bounce's fall behavior / physics
-    // profile / braid layout, the maze library's connection strictness) are
+    // profile / braid layout, the maze's hazards and its library's connection
+    // strictness) are
     // NOT here — each substrate declares its own defaults via the registry
     // `defaultProcgenParams` hook, merged in by panelDefaultParams(). See
     // bounceProcgenParams.js, mazeProcgenParams.js.

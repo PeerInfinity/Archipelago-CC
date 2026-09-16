@@ -47,6 +47,7 @@ import { TILE_GRID_SIDECAR_FIELDS, tileGridApLocationNames } from './mazeSeriali
 import { envelopeExitNames } from '../procgenCore/sidecarFields.js';
 import {
     DEFAULT_MAZE_PROCGEN_PARAMS,
+    renderMazeProcgenParams,
     buildMazeLibraryRegionParams,
     renderMazeLibraryProcgenParams,
 } from './mazeProcgenParams.js';
@@ -302,9 +303,11 @@ export const substrateRegistryEntry = Object.freeze({
     }),
 
     // --- Procgen Pipeline integration (mazeProcgenParams.js) ---
-    // The panel defaults, and the regionParams + controls a SELECTED maze
-    // library entry reads (the two connection-strictness flags above).
+    // The panel defaults, the hazard controls, and the regionParams + controls
+    // a SELECTED maze library entry reads (the two connection-strictness flags
+    // above).
     defaultProcgenParams: DEFAULT_MAZE_PROCGEN_PARAMS,
+    renderProcgenParams: renderMazeProcgenParams,
     buildLibraryRegionParams: buildMazeLibraryRegionParams,
     renderLibraryProcgenParams: renderMazeLibraryProcgenParams,
 

@@ -351,7 +351,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `buildZoneSpecs` | — | — | fn | fn | — | — | — | — |
 | `canHostExitGates` | — | — | fn | fn | — | — | — | — |
 | `canHostExitGatesBraid` | — | — | fn | — | — | — | — | — |
-| `defaultProcgenParams` | {mazeRequireSameWall, mazeRequireTileAlign} | — | 10 keys | 8 keys | — | — | — | — |
+| `defaultProcgenParams` | 6 keys | — | 10 keys | 8 keys | — | — | — | — |
 | `driftItems` | — | — | Left arrow, Right arrow | — | — | — | — | — |
 | `exitGateVeto` | — | — | fn | fn | — | — | — | — |
 | `gateHostingHint` | — | — | fn | fn | — | — | — | — |
@@ -362,7 +362,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `libraryItems` | — | — | 7 keys | 6 keys | — | — | 48 keys | {Victory} |
 | `prepareSphereGrowth` | — | — | fn | — | — | — | — | — |
 | `renderLibraryProcgenParams` | fn | — | — | — | — | — | — | — |
-| `renderProcgenParams` | — | — | fn | fn | — | — | — | — |
+| `renderProcgenParams` | fn | — | fn | fn | — | — | — | — |
 
 **Which library registered which entry** — entries self-register on library import, and this is the order the generator imports them in.
 
