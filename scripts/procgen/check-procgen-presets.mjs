@@ -5,8 +5,8 @@
  *
  *   1. Pre-seed the panel with a DIRTY setup (gridGrowth, seed 5, no
  *      quotas) so applying a preset visibly changes everything.
- *   2. Assert the drop-down renders at the top with Custom + the two
- *      shipped presets, booting on Custom.
+ *   2. Assert the drop-down renders at the top with Custom followed by
+ *      every shipped preset the list carries, booting on Custom.
  *   3. Select the runner demo preset and assert the panel state it
  *      populates — mode, seed input, and the persisted bundle
  *      (params incl. the runner* keys, quotas, scenario pool,
@@ -26,6 +26,7 @@
 
 import { chromium } from 'playwright';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { SHIPPED_PRESETS } from '../../frontend/modules/procgenPipeline/presetDefs.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
@@ -123,13 +124,12 @@ check('drop-down sits at the top of the panel',
     await panel.evaluate((el) => el.firstElementChild
         ?.classList.contains('procgen-pipeline-presets')));
 const optionLabels = await select.locator('option').allTextContents();
-check('Custom + shipped presets listed',
+// Every label SHIPPED_PRESETS carries — read off the list, so a preset added or
+// dropped there is what this row expects without an edit here.
+check('Custom + every shipped preset listed',
     optionLabels[0] === 'Custom'
-        && optionLabels.includes('Runner demo (sphere growth)')
-        && optionLabels.includes('Runner demo (zone tables)')
-        && optionLabels.includes('JtA demo (zone tables)')
-        && optionLabels.includes('Bounce demo (sphere growth)'),
-    JSON.stringify(optionLabels));
+        && SHIPPED_PRESETS.every((p) => optionLabels.includes(p.label)),
+    JSON.stringify({ optionLabels, shipped: SHIPPED_PRESETS.map((p) => p.label) }));
 check('boots on Custom (dirty pre-seeded state, no preset)',
     await select.inputValue() === '');
 
@@ -175,37 +175,6 @@ const genMessage = await waitFor('sphere oracle success message', async () => {
 }, 240000);
 check('generation from preset succeeds (oracle)', true, genMessage);
 console.log('GEN MESSAGE:', genMessage);
-
-// ── 4b. The zone-table demo: apply + Generate (shuffled spiral) ─────
-await select.selectOption('shipped:runner-zone-demo');
-await page.waitForTimeout(300);
-check('shuffledSpiral mode radio checked after apply',
-    await panel.locator('input[name="procgen-pipeline-mode"][value="shuffledSpiral"]').isChecked());
-const zoneBundle = await readBundle();
-check('bundle: zone demo quota runner=6, empty pool',
-    zoneBundle.substrateQuotas.runner === 6
-        && Object.keys(zoneBundle.scenario.items).length === 0);
-// the default zone table builds LAZILY inside this click's handler and
-// costs a minute-plus of synchronous solver time since the Shield
-// (5 feature zones + Victory, §4.10) — the page's main thread is
-// blocked, so the click needs a budget well past Playwright's 30s
-// default. Measured 299.7s under a sibling session pinning 3 of 8
-// cores (2026-07-11) — multi-session load is the norm, so budget for
-// it rather than coin-flip at 300s.
-await panel.locator('button:has-text("Generate")').first()
-    .click({ timeout: 450000 });
-const zoneStats = await waitFor('spiral completion stats', async () => {
-    // spiral success sets NO message (the message element only renders
-    // when non-empty) — errors do; probe it as optional
-    const msgEl = panel.locator('.procgen-pipeline-message');
-    if (await msgEl.count() > 0) {
-        const m = await msgEl.textContent();
-        if (m.startsWith('ERROR')) throw new Error(`spiral generation failed: ${m}`);
-    }
-    const t = await panel.textContent();
-    return t.includes('stop: spiral_complete') ? 'stop: spiral_complete' : null;
-}, 240000);
-check('zone-demo generation completes (6-zone spiral)', true, zoneStats);
 
 // ── 4c. The JtA demo: apply + Generate (15-zone shuffled spiral) ────
 await select.selectOption('shipped:jta-zone-demo');

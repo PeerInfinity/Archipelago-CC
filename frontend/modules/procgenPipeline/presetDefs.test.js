@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 
 import {
     SHIPPED_PRESETS, VALID_MODES, LS_PRESETS_KEY,
-    capturePresetState, applyPresetState, getPresetById,
+    capturePresetState, applyPresetState, getPresetById, restoredActivePresetId,
     userPresetId, loadUserPresets, saveUserPreset, deleteUserPreset,
 } from './presetDefs.js';
 
@@ -65,17 +65,9 @@ describe('SHIPPED_PRESETS', () => {
         });
     });
 
-    it('runner zone demo pins the runner_worldgen shuffled-spiral config', () => {
-        const p = getPresetById('shipped:runner-zone-demo');
-        expect(p.state.mode).toBe('shuffledSpiral');
-        expect(p.state.params.seed).toBe(1);
-        expect(p.state.params.startSubstrate).toBe('runner');
-        expect(p.state.substrateQuotas).toEqual({ runner: 6 });
-        // the zone table mints its own items — the scenario pool is empty
-        expect(p.state.scenario.items).toEqual({});
-        // and no spec-path difficulty knobs are pinned (spiral serves the
-        // library's fixed default zone table)
-        expect(Object.keys(p.state.params).some((k) => k.startsWith('runner'))).toBe(false);
+    it('the dropped runner zone-table demo no longer resolves (⚖ 30 s headless ceiling)', () => {
+        expect(getPresetById('shipped:runner-zone-demo')).toBeNull();
+        expect(SHIPPED_PRESETS.some((p) => p.id === 'shipped:runner-zone-demo')).toBe(false);
     });
 });
 
@@ -190,6 +182,21 @@ describe('applyPresetState', () => {
         expect(state.scenario.items.Victory).toBe(1);
         expect(state.substrateQuotas.runner).toBe(99);
         expect(defaults).toEqual(DEFAULTS);
+    });
+});
+
+describe('restoredActivePresetId (the session restore\'s drop-down selection)', () => {
+    it('keeps an id that still resolves, shipped or user', () => {
+        expect(restoredActivePresetId('shipped:bounce-sphere-demo')).toBe('shipped:bounce-sphere-demo');
+        const users = [{ id: 'user:mine', label: 'mine', state: {} }];
+        expect(restoredActivePresetId('user:mine', users)).toBe('user:mine');
+    });
+
+    it('falls back to Custom (null) for a dropped shipped preset, a deleted user preset, or none', () => {
+        expect(restoredActivePresetId('shipped:runner-zone-demo')).toBeNull();
+        expect(restoredActivePresetId('user:gone', [])).toBeNull();
+        expect(restoredActivePresetId(null)).toBeNull();
+        expect(restoredActivePresetId(undefined)).toBeNull();
     });
 });
 

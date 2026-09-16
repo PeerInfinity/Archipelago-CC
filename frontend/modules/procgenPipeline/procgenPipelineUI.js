@@ -79,6 +79,7 @@ import { peekSphereStateSingleton } from '../sphereState/singleton.js';
 import {
     SHIPPED_PRESETS, capturePresetState, applyPresetState,
     getPresetById, loadUserPresets, saveUserPreset, deleteUserPreset,
+    restoredActivePresetId,
 } from './presetDefs.js';
 // Region-library (F3/F5) — the headless loader core (fetch/parse/validate served
 // + ad-hoc libraries; selection → spiral config) plus the identity stamper the
@@ -5227,9 +5228,9 @@ export class ProcgenPipelineUI {
             this._setPersistedLibraries(next.libraries);
             // Keep the preset selection across refreshes — but only if
             // the id still resolves (the preset may have been deleted).
-            this.activePresetId = getPresetById(
+            this.activePresetId = restoredActivePresetId(
                 parsed.activePresetId, this.userPresets,
-            ) ? parsed.activePresetId : null;
+            );
         } catch (e) {
             // ignore
         }

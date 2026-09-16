@@ -41,7 +41,7 @@ export const VALID_MODES = ['gridGrowth', 'sphereGrowth', 'shuffledSpiral', 'top
  *   runner defaults ever move. Note sphere worlds contain no reward
  *   shelves: the engine's pickups are requirement-free (gates ride
  *   region entries), so no spec window ever elects one — shelves are
- *   the zone-table demo's business.
+ *   the zone table's business (the committed runner_worldgen).
  *
  * - runner-placement-demo is the sphere demo config with the
  *   placement + texture knobs on (runnerJitter 0.75, runnerSplitChance
@@ -51,13 +51,10 @@ export const VALID_MODES = ['gridGrowth', 'sphereGrowth', 'shuffledSpiral', 'top
  *   ceiling hazards (§8.7 step 3: kill slabs that punish full-height
  *   jumps). CLI-verified oracle-clean at this exact config.
  *
- * - runner-zone-demo mirrors the committed runner_worldgen preset:
- *   dump-shuffled-spiral.js --seed 1 --quota runner=6 --start runner.
- *   The 6-zone table (5 feature zones + Victory since the Shield,
- *   §4.10) shows the full current runner vocabulary: dj / stone /
- *   spring gates, the glide pad + drop chasm, the shield spike bed,
- *   and reward shelves with saws where the seed elects them
- *   (§8.7 steps 2-5).
+ * - The runner ZONE-TABLE demo (shuffled spiral, runner=6) is no longer
+ *   shipped: its world stays committed as runner_worldgen, and the preset
+ *   was dropped at the 30 s headless ceiling (⚖ user 2026-09-16, "Yes, let's
+ *   set the limit to 30s headless.") — it measured 394.6 s headless.
  *
  * - bounce-sphere-demo is the config check-sphere-growth-ui.mjs /
  *   check-sphere-steps-ui.mjs pre-seed the panel with. Bounce knobs
@@ -139,35 +136,6 @@ export const SHIPPED_PRESETS = Object.freeze([
                 obstacles: {},
             },
             substrateQuotas: { runner: 99 },
-            substrateMix: {},
-            substrateMode: 'quotas',
-        },
-    },
-    {
-        id: 'shipped:runner-zone-demo',
-        label: 'Runner demo (zone tables)',
-        description: 'Runner-only 6-zone shuffled-spiral world — the '
-            + 'committed runner_worldgen config: seed 1, quota runner=6, '
-            + 'start runner. The zone table mints its own items and '
-            + 'shows the full runner vocabulary: dj / stone / spring / glide '
-            + 'gates, the shield spike bed (hit budget), and reward '
-            + 'shelves with saws under them.',
-        state: {
-            mode: 'shuffledSpiral',
-            params: {
-                seed: 1,
-                regionWidth: 8,
-                regionHeight: 6,
-                startSubstrate: 'runner',
-                // no runner* difficulty pins: the spiral path serves the
-                // library's fixed default zone table (RUNNER_ZONE_SEED,
-                // default physics) — those knobs are spec-path-only
-            },
-            scenario: {
-                items: {},
-                obstacles: {},
-            },
-            substrateQuotas: { runner: 6 },
             substrateMix: {},
             substrateMode: 'quotas',
         },
@@ -308,6 +276,16 @@ export function getPresetById(id, userPresets = []) {
     return SHIPPED_PRESETS.find((p) => p.id === id)
         ?? userPresets.find((p) => p.id === id)
         ?? null;
+}
+
+/**
+ * The drop-down selection a restored session may keep: its persisted
+ * `activePresetId` when that id still resolves, otherwise null (Custom). A
+ * shipped preset that has since been dropped, or a deleted user preset, must
+ * not leave the drop-down naming an option it no longer has.
+ */
+export function restoredActivePresetId(persistedId, userPresets = []) {
+    return getPresetById(persistedId, userPresets) ? persistedId : null;
 }
 
 /** Stable id for a user preset name (same name ⇒ same id ⇒ overwrite). */
