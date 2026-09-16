@@ -61,10 +61,19 @@ import {
 import { reconstructResultFromSidecars, refusedRegionsNote } from './compositeMapDocument.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { activeSubstrateIds } from './sphereConfigHooks.js';
+// ⛓ PROCGEN PIPELINE PRESETS P0 — every mode's run is ASSEMBLED in presetRun.js
+// (pure functions of a panel-shaped state); the methods below that used to build
+// a config in place are one-line callers over `this`, and the headless preset
+// row calls the same functions.
 import {
-    defaultProcgenParams, activeSubstrateIds,
-    collectSphereGrowthPrep, assembleRegionParams,
-} from './sphereConfigHooks.js';
+    DEFAULT_PARAMS, panelDefaultParams,
+    effectiveSubstrateMix, effectiveSubstrateQuotas, effectiveHazardOpts,
+    activeSubstrateDict, mergedItemLib, resolveVictoryItemId,
+    substrateSphereCapable, librarySphereCapable, sphereRegionLibraries,
+    sphereMazeLibrarySelected, buildSphereConfig, buildSphereRun,
+    buildSpiralRun, buildTopDownRun, buildGridRun, compileGridRun,
+} from './presetRun.js';
 import { getRegionEditor } from './regionEditors.js';
 import { peekSphereStateSingleton } from '../sphereState/singleton.js';
 import {
@@ -77,7 +86,6 @@ import {
 import {
     loadServedIndex, loadServedLibrary, parseRegionLibrary,
     serializeLibrarySelection, resolveLibrarySelection,
-    buildLibrarySpiralConfig,
 } from './regionLibraryLoader.js';
 import { stampLibraryIdentity, REGION_LIBRARY_SCHEMA_VERSION } from './regionLibraryValidator.js';
 
@@ -88,72 +96,7 @@ const LS_VIEW_KEY = 'procgenPipeline_view';
 // F5 "working library" (regions captured from the ③ view, pending export) —
 // its own key so a capture doesn't churn the main params bundle.
 const LS_WORKING_LIBRARY_KEY = 'procgenPipeline_workingLibrary';
-const DEFAULT_PARAMS = {
-    seed: 1,
-    gridWidth: 3,
-    gridHeight: 3,
-    regionWidth: 8,
-    regionHeight: 6,
-    maxItemsPerRegion: 2,
-    maxRegions: null,
-    // Quota-mode start-region override. 'auto' (or empty) lets
-    // pickSubstrate choose via the active quota / mix chain. Setting
-    // it to a specific substrate id pins the start region's
-    // substrate; in quota mode that pick still counts against the
-    // substrate's quota.
-    startSubstrate: 'auto',
-    // When true, growMaze ends the moment the item pool is empty.
-    // When false (default), growth continues and later regions are
-    // built with empty item plans — useful in quota mode where the
-    // user wants a fixed region count regardless of items left.
-    stopOnPoolEmpty: false,
-    // How the bidirectional post-pass reconciles cross-branch
-    // asymmetric exit pairs. 'add' (default) inserts a reciprocal
-    // back-exit on the target region; 'remove' drops the one-way
-    // forward exit.
-    asymmetricExits: 'add',
-    // Loop-mode toggle (Phase 2/3 of loop-mode-substrate-integration).
-    // When on, buildRulesJson computes a loop_costs sidecar AND every
-    // region's playable_payload gets manaEnabled=true so substrates
-    // deduct mana on movement / location checks at runtime.
-    enableLoopMode: false,
-    // Region XP effect mode stamped on every loop_costs region entry
-    // when enableLoopMode is on. 'cost' (default) discounts mana cost
-    // proportionally to XP level; 'speed' / 'both' are reserved for v2;
-    // 'none' disables the XP discount. See Phase 7.
-    regionXpEffect: 'cost',
-    // Hazard module (maze content modules Phase 2). When enabled,
-    // every region gets `count` hazards placed by hazardPathGen +
-    // applyHazardModule in the procgen pipeline. Disabled by default
-    // — existing presets stay hazard-free unless the caller opts in.
-    enableHazards: false,
-    hazardCount: 3,
-    hazardMaxConsecutiveFails: 10,
-    hazardWallOverlapAllowed: false,
-    // Sphere-growth mode parameters (sphere-driven-growth.md). The
-    // planner assigns the scenario items to `sphereCount` spheres;
-    // fillerCount adds itemless regions; revisitPercent is the chance
-    // a wave's attachment lands on an older region instead of the
-    // frontier (the "come back with the new item" texture).
-    sphereCount: 3,
-    fillerCount: 0,
-    revisitPercent: 25,
-    // null = "all spheres in one batch" (byte-identical default). A positive
-    // integer < sphereCount grows the middle phases sphere-major in batches
-    // (Phase 2). Phase 1 only carries the knob; no visible control yet.
-    spheresPerBatch: null,
-    // Maze region-library connection strictness (region-library F6c), surfaced in
-    // sphere mode when a maze pack is selected. Both DEFAULT false = best-effort:
-    // a captured maze opening is aligned to the needed wall when possible and
-    // relabelled onto a side-based connection otherwise. true = require alignment
-    // (a captured maze can't satisfy tile-align without a carve, so it throws).
-    mazeRequireSameWall: false,
-    mazeRequireTileAlign: false,
-    // Substrate-specific params (e.g. bounce's fall behavior / physics
-    // profile / braid layout) are NOT here — each substrate declares its
-    // own defaults via the registry `defaultProcgenParams` hook, merged
-    // in by _defaultParams(). See bounceProcgenParams.js.
-};
+// DEFAULT_PARAMS moved to presetRun.js (the headless row merges presets over it too).
 
 const REGION_XP_EFFECT_OPTIONS = [
     { value: 'cost', label: 'Cost', disabled: false },
@@ -1744,17 +1687,7 @@ export class ProcgenPipelineUI {
      * edits a numeric input.
      */
     _activeSubstrateDict() {
-        // Shuffled-spiral and sphere-growth always use fixed
-        // per-substrate counts; the mix dict is meaningless there.
-        // Grid-growth honors the mode toggle. Top-down (no toggle)
-        // keeps the legacy mix dict.
-        if (this.mode === 'shuffledSpiral' || this.mode === 'sphereGrowth') {
-            return this.substrateQuotas;
-        }
-        if (this.mode === 'gridGrowth' && this.substrateMode === 'quotas') {
-            return this.substrateQuotas;
-        }
-        return this.substrateMix;
+        return activeSubstrateDict(this);
     }
 
     // Completion-condition item for the emitted rules.json. Scenario
@@ -1765,16 +1698,7 @@ export class ProcgenPipelineUI {
     // invisible to the scenario pool). Null when neither contributes —
     // buildRulesJson then keeps the scaffold's constant-true default.
     _resolveVictoryItemId() {
-        const lib = this._mergedItemLib();
-        const fromScenario = Object.entries(this.scenario.items)
-            .find(([id, count]) => count > 0 && lib[id]?.is_victory)?.[0];
-        if (fromScenario) return fromScenario;
-        for (const [id, count] of Object.entries(this._activeSubstrateDict())) {
-            if (!(Number(count) > 0)) continue;
-            const victoryItem = substrateRegistry.get(id)?.victoryItem;
-            if (victoryItem) return victoryItem;
-        }
-        return null;
+        return resolveVictoryItemId(this);
     }
 
     /**
@@ -1785,14 +1709,7 @@ export class ProcgenPipelineUI {
      * itemLib handed to the sphere grower / rules.json compiler.
      */
     _mergedItemLib() {
-        const merged = { ...DEFAULT_ITEMS };
-        const dict = this._activeSubstrateDict();
-        for (const [id, count] of Object.entries(dict)) {
-            if (!(Number(count) > 0)) continue;
-            const extra = substrateRegistry.get(id)?.libraryItems;
-            if (extra) Object.assign(merged, extra);
-        }
-        return merged;
+        return mergedItemLib(this);
     }
 
     /**
@@ -1802,7 +1719,7 @@ export class ProcgenPipelineUI {
      * defaults via the registry so the panel stays substrate-agnostic.
      */
     _defaultParams() {
-        return defaultProcgenParams(DEFAULT_PARAMS);
+        return panelDefaultParams();
     }
 
     /**
@@ -1812,29 +1729,6 @@ export class ProcgenPipelineUI {
      */
     _activeSubstrateIds(quotas, startSub) {
         return activeSubstrateIds(quotas, startSub);
-    }
-
-    /**
-     * Gather each active substrate's pre-plan contributions via its
-     * optional `prepareSphereGrowth` hook: starting items, sphere-1
-     * reservations (exclusiveSpheres), canonical-placement locks, item
-     * pool removals (itemPoolDelta, applied in place to `itemPool`),
-     * regionParams additions, and a UI note. Substrates without the
-     * hook contribute nothing.
-     */
-    _collectSphereGrowthPrep({ activeIds, itemPool, quotas, startSubstrate, seed }) {
-        return collectSphereGrowthPrep({
-            activeIds, itemPool, quotas, startSubstrate, seed, params: this.params,
-        });
-    }
-
-    /**
-     * Merge each active substrate's `buildRegionParams` hook output into
-     * one regionParams object. `mode` is 'sphere' | 'topDown'. `extra`
-     * (e.g. the pre-plan hook's regionParams contribution) wins last.
-     */
-    _assembleRegionParams(activeIds, mode, extra = {}) {
-        return assembleRegionParams({ activeIds, mode, params: this.params, extra });
     }
 
     _renderSubstrateLibraryRow(entry) {
@@ -3965,12 +3859,8 @@ export class ProcgenPipelineUI {
     }
 
     async _runGridGrowth() {
-        const { seed, gridWidth, gridHeight, regionWidth, regionHeight,
-            maxItemsPerRegion, maxRegions, startSubstrate,
-            stopOnPoolEmpty, asymmetricExits } = this.params;
-        const useQuotas = this.substrateMode === 'quotas';
-        const quotas = useQuotas ? this._effectiveSubstrateQuotas() : null;
-        const mix = !useQuotas ? this._effectiveSubstrateMix() : null;
+        const { regionWidth, regionHeight } = this.params;
+        const run = buildGridRun(this);
         // Live progress: grid-growth streams a region/regionDone event per built
         // region (drained by growMazeAsync with a setTimeout(0) yield so the
         // indicator repaints as the maze grows). The region count is emergent,
@@ -3981,39 +3871,12 @@ export class ProcgenPipelineUI {
             doneRegions: 0, region: null, attempt: null, phase: null,
             timings: [], lastEvent: null, lastAt: 0,
         };
-        const { grid, pool, stats, startCell } = await growMazeAsync({
-            gridDims: { width: gridWidth, height: gridHeight },
-            regionSize: { width: regionWidth, height: regionHeight },
-            itemPool: { ...this.scenario.items },
-            obstaclePool: { ...this.scenario.obstacles },
-            seed,
-            regionParams: {},
-            growthParams: {
-                maxItemsPerRegion,
-                maxRegions: maxRegions ?? null,
-                stopOnPoolEmpty: !!stopOnPoolEmpty,
-                asymmetricExits: asymmetricExits === 'remove' ? 'remove' : 'add',
-                ...(quotas ? { substrateQuotas: quotas } : {}),
-                ...(mix ? { substrateMix: mix } : {}),
-                ...(startSubstrate && startSubstrate !== 'auto'
-                    ? { startSubstrate } : {}),
-            },
-            hazardOpts: this._effectiveHazardOpts(),
-        }, (ev) => this._onGenerationProgress(ev));
-        // Auto-completion-condition item — scenario is_victory item or
-        // a selected substrate's declared victoryItem (see
-        // _resolveVictoryItemId). Opt-out: drop all such items.
-        const victoryItemId = this._resolveVictoryItemId();
-        const rulesJson = buildRulesJson(grid, {
-            startCell, seed,
-            enableLoopMode: !!this.params.enableLoopMode,
-            regionXpEffect: this.params.regionXpEffect ?? 'cost',
-            completionConditionItem: victoryItemId,
-            procgenMetadata: {
-                driver: 'grid-growth',
-                stop_reason: stats.stopReason,
-            },
-        });
+        const grown = await growMazeAsync(run.grow, (ev) => this._onGenerationProgress(ev));
+        const { grid, pool, stats } = grown;
+        // Auto-completion-condition item — scenario is_victory item or a
+        // selected substrate's declared victoryItem (resolveVictoryItemId,
+        // folded into run.compile). Opt-out: drop all such items.
+        const rulesJson = compileGridRun(run, grown);
         this.result = {
             grid,
             regionSize: { width: regionWidth, height: regionHeight },
@@ -4037,45 +3900,7 @@ export class ProcgenPipelineUI {
     // config yet; JtA's dataset config lands on ② content in Part 3), so
     // byte-identity holds.
     _buildSpiralEnvelope() {
-        const { seed, regionWidth, regionHeight, maxItemsPerRegion,
-            startSubstrate } = this.params;
-        // Merge substrate quotas with the selected region-library content sources
-        // (each contributes a `library:<id>` quota + its libraryDoc on
-        // substrateConfig). Libraries are held RESOLVED in this.regionLibraries,
-        // so this is synchronous — the async re-fetch happens once, at load /
-        // preset-apply, into that list.
-        const { substrateQuotas, substrateConfig } = buildLibrarySpiralConfig(
-            this.regionLibraries,
-            { substrateQuotas: this._effectiveSubstrateQuotas() ?? {}, substrateConfig: {} },
-        );
-        if (Object.keys(substrateQuotas).length === 0) {
-            throw new Error('shuffled-spiral requires at least one substrate '
-                + 'with a positive quota (set Substrate allocation to Quotas) '
-                + 'or a selected region library');
-        }
-        const config = {
-            regionSize: { width: regionWidth, height: regionHeight },
-            itemPool: { ...this.scenario.items },
-            obstaclePool: { ...this.scenario.obstacles },
-            seed,
-            regionParams: {},
-            growthParams: {
-                substrateQuotas,
-                maxItemsPerRegion,
-                ...(startSubstrate && startSubstrate !== 'auto'
-                    ? { startSubstrate } : {}),
-                ...(Object.keys(substrateConfig).length
-                    ? { substrateConfig } : {}),
-            },
-            hazardOpts: this._effectiveHazardOpts(),
-        };
-        const compileIn = {
-            seed,
-            enableLoopMode: !!this.params.enableLoopMode,
-            regionXpEffect: this.params.regionXpEffect ?? 'cost',
-            completionConditionItem: this._resolveVictoryItemId(),
-        };
-        return newSpiralEnvelope({ config, compileIn });
+        return newSpiralEnvelope(buildSpiralRun(this, { resolvedLibraries: this.regionLibraries }));
     }
 
     // --- spiral step runners (delegate to spiralSteps) ---
@@ -4248,14 +4073,14 @@ export class ProcgenPipelineUI {
     // (bounce F6a, runner + maze F6c). This is the exact predicate the engine's
     // resolveSphereLibrarySources uses, so the panel filter and the engine agree.
     _substrateSphereCapable(name) {
-        return typeof substrateRegistry.get(name)?.instantiateLibraryEntryForSpecs === 'function';
+        return substrateSphereCapable(name);
     }
 
     // Does a resolved library document carry at least one sphere-capable entry?
     // (F6c broadened this from bounce-only to any zone/tile substrate wired for
     // sphere placement.) A pack with none contributes nothing to a sphere world.
     _librarySphereCapable(library) {
-        return (library?.entries ?? []).some((e) => this._substrateSphereCapable(e.substrate));
+        return librarySphereCapable(library);
     }
 
     // The selected libraries usable as SPHERE content sources: the sphere-capable
@@ -4264,49 +4089,11 @@ export class ProcgenPipelineUI {
     // disabled in the served list). Returns [] when nothing sphere-capable is
     // selected, so library-less sphere worlds take no new code path (byte-inert).
     _sphereRegionLibraries() {
-        return this.regionLibraries.filter((w) => this._librarySphereCapable(w.library));
+        return sphereRegionLibraries(this.regionLibraries);
     }
 
     _buildSphereConfig() {
-        const { seed, regionWidth, regionHeight, maxItemsPerRegion,
-            sphereCount, fillerCount, revisitPercent, spheresPerBatch,
-            startSubstrate } = this.params;
-        const startSub = (startSubstrate && startSubstrate !== 'auto') ? startSubstrate : null;
-        // Merge the selected sphere-capable region-libraries into the substrate
-        // quotas as `library:<id>` content sources (each carrying its libraryDoc on
-        // substrateConfig), mirroring _buildSpiralEnvelope's spiral merge. Only when
-        // at least one sphere-capable library is selected — otherwise quotas stays
-        // the exact _effectiveSubstrateQuotas() value (null when empty) and
-        // substrateConfig is null, so a library-less world is byte-identical.
-        const baseQuotas = this._effectiveSubstrateQuotas();
-        const sphereLibs = this._sphereRegionLibraries();
-        let quotas = baseQuotas;
-        let substrateConfig = null;
-        if (sphereLibs.length > 0) {
-            const merged = buildLibrarySpiralConfig(
-                sphereLibs, { substrateQuotas: baseQuotas ?? {}, substrateConfig: {} });
-            quotas = merged.substrateQuotas;
-            substrateConfig = merged.substrateConfig;
-        }
-        return {
-            seed,
-            regionWidth, regionHeight,
-            maxItemsPerRegion,
-            sphereCount: sphereCount ?? 3,
-            fillerCount: fillerCount ?? 0,
-            revisitPercent: revisitPercent ?? 25,
-            spheresPerBatch: spheresPerBatch ?? null,
-            startSub,
-            quotas,
-            substrateConfig,
-            activeIds: this._activeSubstrateIds(quotas, startSub),
-            itemLib: this._mergedItemLib(),
-            itemPool: { ...this.scenario.items },
-            victoryItemId: this._resolveVictoryItemId(),
-            enableLoopMode: !!this.params.enableLoopMode,
-            regionXpEffect: this.params.regionXpEffect ?? 'cost',
-            hazardOpts: this._effectiveHazardOpts(),
-        };
+        return buildSphereConfig(this, this.regionLibraries);
     }
 
     // Step 1 — pre-plan contributions, then delegate the planSpheres + draft
@@ -4315,22 +4102,19 @@ export class ProcgenPipelineUI {
     // resolved `config` onward is the runner's, so the panel and the headless
     // CLI share ONE implementation of the pipeline wiring.
     async _stepPlan() {
-        const cfg = this._buildSphereConfig();
-        const itemPool = { ...cfg.itemPool };
-        // Each active substrate may grant starting items, reserve
-        // sphere-1 pickups, lock placements, remove pool items, or add
-        // regionParams BEFORE planning (bounce's free arrow — the hook
-        // mutates itemPool via its delta). The driver stays agnostic.
-        const prep = this._collectSphereGrowthPrep({
-            activeIds: cfg.activeIds, itemPool, quotas: cfg.quotas,
-            startSubstrate: cfg.startSub, seed: cfg.seed,
-        });
+        // cfg, the substrates' pre-plan contributions (each active substrate may
+        // grant starting items, reserve sphere-1 pickups, lock placements, remove
+        // pool items, or add regionParams BEFORE planning — the hook mutates
+        // itemPool via its delta), the post-prep pool and the runner's flat config:
+        // ONE assembly, shared with the headless preset row (presetRun.js).
+        const { cfg, prep, itemPool, config } = buildSphereRun(
+            this, { resolvedLibraries: this.regionLibraries });
         this._stepState = {
             completed: -1, cfg, prep,
             // The resolved, flat config the runner consumes (built from cfg +
             // prep; itemPool is POST-prep). regionParams is assembled now so
             // it's stable across edits.
-            config: this._configFromCfgPrep(cfg, prep, itemPool),
+            config,
             poolSize: Object.keys(itemPool).length,
             // Pipeline outputs (filled by the runner step-by-step). growConfig
             // is panel-only — derived from config+plan for the 3-editing
@@ -4351,48 +4135,7 @@ export class ProcgenPipelineUI {
     // flags are threaded into regionParams (below) — so a maze-less world stays
     // byte-identical (no new regionParams keys).
     _sphereMazeLibrarySelected() {
-        return this._sphereRegionLibraries().some(
-            (w) => (w.library?.entries ?? []).some((e) => e.substrate === 'maze'));
-    }
-
-    // cfg + prep → the runner's flat resolved config. `itemPool` is the
-    // POST-prep pool the plan is built from (prep may have removed items).
-    _configFromCfgPrep(cfg, prep, itemPool) {
-        // Thread the maze connection strictness flags into regionParams ONLY when a
-        // maze library is selected (region-library F6c) — otherwise the world takes
-        // no new regionParams keys and stays byte-identical.
-        const regionParamsExtra = this._sphereMazeLibrarySelected()
-            ? {
-                ...prep.regionParams,
-                mazeRequireSameWall: !!this.params.mazeRequireSameWall,
-                mazeRequireTileAlign: !!this.params.mazeRequireTileAlign,
-            }
-            : prep.regionParams;
-        return {
-            seed: cfg.seed,
-            regionSize: { width: cfg.regionWidth, height: cfg.regionHeight },
-            itemLib: cfg.itemLib,
-            regionParams: this._assembleRegionParams(cfg.activeIds, 'sphere', regionParamsExtra),
-            hazardOpts: cfg.hazardOpts,
-            maxItemsPerRegion: cfg.maxItemsPerRegion,
-            fillerCount: cfg.fillerCount,
-            revisitRatio: cfg.revisitPercent / 100,
-            substrateQuotas: cfg.quotas ?? null,
-            // Region-library content sources (F6d) — present only when a bounce
-            // library is selected; growConfigFrom carries it into
-            // growthParams.substrateConfig for resolveSphereLibrarySources.
-            ...(cfg.substrateConfig ? { substrateConfig: cfg.substrateConfig } : {}),
-            startSubstrate: cfg.startSub ?? null,
-            sphereCount: cfg.sphereCount,
-            spheresPerBatch: cfg.spheresPerBatch ?? null,
-            victoryItem: cfg.victoryItemId ?? null,
-            exclusiveSpheres: prep.exclusiveSpheres ?? {},
-            startingItems: prep.startingItems ?? [],
-            lockedCanonicalItems: prep.lockedCanonicalItems ?? [],
-            enableLoopMode: cfg.enableLoopMode,
-            regionXpEffect: cfg.regionXpEffect ?? 'cost',
-            itemPool,
-        };
+        return sphereMazeLibrarySelected(this.regionLibraries);
     }
 
     // Step 2a — Allocate (delegated). Also populates the panel-only
@@ -4853,23 +4596,10 @@ export class ProcgenPipelineUI {
     // engine opts + compile inputs); the panel just resolves the UI-state inputs
     // (mix, regionParams via the substrate hooks, hazardOpts, sphere log).
     _buildTDEnvelope() {
-        const { seed, gridWidth, gridHeight, regionWidth, regionHeight } = this.params;
-        const mix = this._effectiveSubstrateMix();
-        const { entries: sphereLog } = this._resolveTopDownSphereLog();
-        const activeIds = Object.entries(mix ?? {})
-            .filter(([, w]) => Number(w) > 0).map(([id]) => id);
-        return buildTopDownEnvelope({
-            source: this.topDownSource,
-            seed,
-            gridDims: { width: gridWidth, height: gridHeight },
-            regionSizeBase: { width: regionWidth, height: regionHeight },
-            substrateMix: mix,
-            regionParams: this._assembleRegionParams(activeIds, 'topDown'),
-            hazardOpts: this._effectiveHazardOpts(),
-            sphereLog,
-            enableLoopMode: !!this.params.enableLoopMode,
-            regionXpEffect: this.params.regionXpEffect ?? 'cost',
-        });
+        return buildTopDownEnvelope(buildTopDownRun(this, {
+            topDownSource: this.topDownSource,
+            sphereLog: this._resolveTopDownSphereLog().entries,
+        }));
     }
 
     // --- top-down step runners (delegate to topDownSteps) ---
@@ -5280,9 +5010,7 @@ export class ProcgenPipelineUI {
      * here is a belt-and-suspenders guard for stale localStorage.
      */
     _effectiveSubstrateMix() {
-        const positive = Object.entries(this.substrateMix).filter(([, w]) => w > 0);
-        if (positive.length === 0) return null;
-        return Object.fromEntries(positive);
+        return effectiveSubstrateMix(this.substrateMix);
     }
 
     /**
@@ -5291,9 +5019,7 @@ export class ProcgenPipelineUI {
      * Used only in grid-growth quotas mode.
      */
     _effectiveSubstrateQuotas() {
-        const positive = Object.entries(this.substrateQuotas).filter(([, q]) => q > 0);
-        if (positive.length === 0) return null;
-        return Object.fromEntries(positive);
+        return effectiveSubstrateQuotas(this.substrateQuotas);
     }
 
     /**
@@ -5302,15 +5028,7 @@ export class ProcgenPipelineUI {
      * disabled — both engine entries treat null as "no hazards."
      */
     _effectiveHazardOpts() {
-        if (!this.params.enableHazards) return null;
-        const count = Math.max(0, Math.floor(this.params.hazardCount ?? 0));
-        if (count === 0) return null;
-        return {
-            enabled: true,
-            count,
-            maxConsecutiveFails: Math.max(1, Math.floor(this.params.hazardMaxConsecutiveFails ?? 10)),
-            wallOverlapAllowed: !!this.params.hazardWallOverlapAllowed,
-        };
+        return effectiveHazardOpts(this.params);
     }
 
     /**

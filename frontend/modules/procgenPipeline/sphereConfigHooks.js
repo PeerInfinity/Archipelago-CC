@@ -8,9 +8,9 @@
 // diverging from the panel — they previously hard-coded a bounce arrow-entry
 // block and a MINIMAL regionParams ({fallBehavior, physicsProfile}) that
 // omitted the braid layout keys the panel produces (bounceMode, braidWidth,
-// bounceJitter, platformRows, decoration). The panel delegates its
-// _defaultParams / _activeSubstrateIds / _collectSphereGrowthPrep /
-// _assembleRegionParams to these functions, so there is ONE assembly path.
+// bounceJitter, platformRows, decoration). The panel's run assembly
+// (presetRun.js — shared with the headless preset row) calls these functions,
+// so there is ONE assembly path.
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
