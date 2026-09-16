@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 
 import {
     SHIPPED_PRESETS, VALID_MODES, LS_PRESETS_KEY,
+    PRESET_HEADLESS_BUDGET_MS, PRESETS_SKIPPED_AS_HEAVY,
     capturePresetState, applyPresetState, getPresetById, restoredActivePresetId,
     userPresetId, loadUserPresets, saveUserPreset, deleteUserPreset,
 } from './presetDefs.js';
@@ -68,6 +69,16 @@ describe('SHIPPED_PRESETS', () => {
     it('the dropped runner zone-table demo no longer resolves (⚖ 30 s headless ceiling)', () => {
         expect(getPresetById('shipped:runner-zone-demo')).toBeNull();
         expect(SHIPPED_PRESETS.some((p) => p.id === 'shipped:runner-zone-demo')).toBe(false);
+    });
+});
+
+describe('the headless budget and the heavy allowlist', () => {
+    it('the budget is the ruled 30 s (⚖ user 2026-09-16, "Yes, let\'s set the limit to 30s headless.")', () => {
+        expect(PRESET_HEADLESS_BUDGET_MS).toBe(30_000);
+    });
+
+    it('every id on the heavy allowlist is a shipped preset', () => {
+        for (const id of PRESETS_SKIPPED_AS_HEAVY) expect(getPresetById(id)).not.toBeNull();
     });
 });
 

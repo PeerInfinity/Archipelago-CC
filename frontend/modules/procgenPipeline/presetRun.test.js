@@ -19,9 +19,11 @@ import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
 
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
     buildRunFromState, panelDefaultParams, DEFAULT_PARAMS,
     effectiveHazardOpts, activeSubstrateDict,
+    GENERATION_COST, substrateGenerationCost, presetSubstrateIds, heavySubstrateIds,
 } from './presetRun.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
@@ -244,5 +246,38 @@ describe('the normalisation and the shared helpers', () => {
         expect(activeSubstrateDict({ ...state, mode: 'gridGrowth', substrateMode: 'quotas' })).toBe(state.substrateQuotas);
         expect(activeSubstrateDict({ ...state, mode: 'gridGrowth', substrateMode: 'mix' })).toBe(state.substrateMix);
         expect(activeSubstrateDict({ ...state, mode: 'topDown' })).toBe(state.substrateMix);
+    });
+});
+
+describe('what a preset definition names, and its declared generation cost', () => {
+    it('names every positive quota and mix key and an explicit start substrate, before any registry filter', () => {
+        expect(presetSubstrateIds({
+            substrateQuotas: { maze: 2, 'not-registered': 1, text_adventure: 0 },
+            substrateMix: { bounce: 1 },
+            params: { startSubstrate: 'jta' },
+        })).toEqual(['maze', 'not-registered', 'bounce', 'jta']);
+        expect(presetSubstrateIds({ params: { startSubstrate: 'auto' } })).toEqual([]);
+        expect(presetSubstrateIds({ libraries: [{ source: 'served', file: 'x.json', count: 2 }] })).toEqual([]);
+    });
+
+    it('reads generationCost off the registry: absent is light, a declared heavy is heavy', () => {
+        const declared = substrateRegistry.getAll()
+            .filter((e) => e.generationCost != null).map((e) => [e.id, e.generationCost]);
+        expect(declared.length).toBeGreaterThan(0);
+        for (const [id, cost] of declared) expect(substrateGenerationCost(id)).toBe(cost);
+        const undeclared = substrateRegistry.getAll().find((e) => e.generationCost == null);
+        expect(substrateGenerationCost(undeclared.id)).toBe(GENERATION_COST.LIGHT);
+        const heavyId = declared.find(([, c]) => c === GENERATION_COST.HEAVY)[0];
+        expect(heavySubstrateIds({ substrateQuotas: { [heavyId]: 1, [undeclared.id]: 1 } })).toEqual([heavyId]);
+    });
+
+    it('refuses a declared generationCost outside the vocabulary, in words', () => {
+        substrateRegistry.register({ id: 'probe-cost', generationCost: 'enormous' });
+        try {
+            expect(() => substrateGenerationCost('probe-cost'))
+                .toThrow("substrate 'probe-cost' declares generationCost \"enormous\", which is not one of light, heavy");
+        } finally {
+            substrateRegistry.entries.delete('probe-cost');
+        }
     });
 });

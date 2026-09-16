@@ -615,6 +615,15 @@ export function createRunnerSubstrateEntry({
         // dispatcher calls this with the engine-computed realiser specs).
         buildRegionContract: buildRunnerRegionContract,
 
+        // Headless generation cost (PROCGEN PIPELINE PRESETS P0; ⚖ user
+        // 2026-09-16: "Skip runner presets in CI, by a declared field"). A
+        // runner region is found by generate-and-test (the two 3-region runner
+        // presets measured 6.1–26.7 s headless, 1-min load 1.3–11.8), so a preset naming runner is
+        // kept out of the CI slow battery the 2026-08-20 ruling already took
+        // runner out of.
+        // The vocabulary and its one reader: procgenPipeline/presetRun.js.
+        generationCost: 'heavy',
+
         // Procgen Pipeline integration (runnerProcgenParams.js): panel
         // defaults, regionParams assembly, per-substrate param controls.
         // No prepareSphereGrowth — runner contributes nothing pre-plan.
