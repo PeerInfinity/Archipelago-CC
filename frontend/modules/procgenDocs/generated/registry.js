@@ -42,7 +42,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 37,
+            "fields": 38,
             "id": "runner",
             "label": "Runner Demo",
             "registeredBy": "frontend/modules/runnerDemo/runnerDemoLibrary.js"
@@ -175,6 +175,12 @@ export const REGISTRY = frz({
                 "regionGeometry"
             ],
             "title": "Build-time — region geometry"
+        },
+        {
+            "rows": [
+                "generationCost"
+            ],
+            "title": "Build-time — generation cost"
         },
         {
             "rows": [
@@ -2151,6 +2157,72 @@ export const REGISTRY = frz({
             "documentedHow": "bullet",
             "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
             "name": "generateZoneForSpecsGen"
+        },
+        {
+            "carriedBy": [
+                "runner"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": true,
+                    "short": "heavy",
+                    "type": "string",
+                    "value": "heavy"
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — generation cost",
+            "name": "generationCost"
         },
         {
             "carriedBy": [

@@ -214,7 +214,7 @@ Everything outside the two markers — including the hand-kept annotations below
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**8 registered entries · 70 fields · 13 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**8 registered entries · 71 fields · 14 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported.
 
@@ -323,6 +323,12 @@ Groups are this document's own § headings, matched to a field by the section th
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
 |---|---|---|---|---|---|---|---|---|
 | `regionGeometry` | — | — | sides | sides | sides | — | sides | sides |
+
+**Build-time — generation cost**
+
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|
+| `generationCost` | — | — | — | heavy | — | — | — | — |
 
 **Build-time — region library entries (capture / instantiate / validate)**
 
