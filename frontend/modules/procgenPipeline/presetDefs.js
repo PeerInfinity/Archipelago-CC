@@ -22,7 +22,8 @@
  * run within PRESET_HEADLESS_BUDGET_MS (a preset naming a substrate
  * declared generationCost 'heavy' is skipped by name against
  * PRESETS_SKIPPED_AS_HEAVY); and the box gate check-procgen-presets.mjs
- * reads the labels it expects in the drop-down off SHIPPED_PRESETS. User presets persist via
+ * applies and generates every SHIPPED_PRESETS entry through the panel and
+ * requires the panel's world to equal the headless one. User presets persist via
  * loadUserPresets/saveUserPreset/deleteUserPreset under LS_PRESETS_KEY,
  * deliberately separate from the panel's auto-save key so applying or
  * editing never mutates the preset library itself.
@@ -117,6 +118,18 @@ export const PRESETS_SKIPPED_AS_HEAVY = Object.freeze([
  *   user 2026-09-16, Q5: "hazards are only relevant to the maze substrate");
  *   its filler region is there so every maze region carries hazards at the
  *   default hazard knobs (without it, 1 of 3 regions did).
+ *
+ * - The shuffled-spiral and top-down presets (PROCGEN PIPELINE PRESETS P2):
+ *   content-spiral-mix and omsi-loop-demo pin quotas (omsi-loop-demo loop
+ *   mode too — omsi requires it); library-spiral-demo and
+ *   runner-library-spiral-demo take SERVED region-library packs as their only
+ *   content source, each reference carrying the pack's current library_id from
+ *   frontend/region-libraries/region_library_files.json (a stale id only warns
+ *   and builds from the current file, so the headless row requires the current
+ *   one). The two top-down presets carry a mix and no source: they realise the
+ *   world the app has LOADED (⚖ user 2026-09-16, Q4), which their labels say;
+ *   seed 3, because at seed 1 Adventure's regions drew 8 maze : 1 other for
+ *   either mix.
  *
  * - bounce-sphere-demo is the config check-sphere-growth-ui.mjs /
  *   check-sphere-steps-ui.mjs pre-seed the panel with. Bounce knobs

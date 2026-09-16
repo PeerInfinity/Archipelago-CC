@@ -2,7 +2,7 @@
 
 The Procgen Pipeline panel's **Preset** drop-down applies a shipped configuration — a mode, a seed, substrate quotas or a mix, the mode's knobs and an item pool — so that Generate builds a world that demonstrates one feature, and every shipped preset whose substrates are not declared heavy is generated headless on each CI run, twice and byte-identically, within a 30-second budget.
 
-Code: `frontend/modules/procgenPipeline/presetDefs.js` (the definitions, `PRESET_GROUPS`, `groupShippedPresets`, the user-preset store), `presetRun.js` (a preset → the run a mode's runner consumes → a compiled `rules.json`; the panel's Generate and the headless row both call it), `procgenPipelineUI.js` `_renderPresetBar` / `_applyPreset` (the drop-down). Guards: `presetDefs.test.js` (shape, groups, one pin per preset), `presetDefs.generate.slow.test.js` (the headless row), `scripts/procgen/check-procgen-presets.mjs` (the box browser gate).
+Code: `frontend/modules/procgenPipeline/presetDefs.js` (the definitions, `PRESET_GROUPS`, `groupShippedPresets`, the user-preset store), `presetRun.js` (a preset → the run a mode's runner consumes → a compiled `rules.json`; the panel's Generate and the headless row both call it), `procgenPipelineUI.js` `_renderPresetBar` / `_applyPreset` (the drop-down). Guards: `presetDefs.test.js` (shape, groups, one pin per preset), `presetDefs.generate.slow.test.js` (the headless row), `scripts/procgen/check-procgen-presets.mjs` (the box browser gate: every shipped preset applied and generated through the panel, its world compared with the headless one).
 
 ## The drop-down
 
@@ -30,12 +30,27 @@ Measured 2026-09-16 on a WSL2 box at 1-minute load ~7.7, through `buildRunFromSt
 | id | label | substrates | demonstrates | where to look | regions · ms |
 |---|---|---|---|---|---|
 | `shipped:jta-zone-demo` | JtA demo (zone tables) | jta 15, start jta | one region per Journey to Ascension zone, laid out from the centre | the JtA substrate panel after *Load*; the loop-mode energy pool | 16 · 4 / 2 |
+| `shipped:content-spiral-mix` | Content sources (shuffled spiral) | maze 2 + jta 3 + bounce 2, start maze; two keys, their doors + victory | three kinds of content in one world: procedural rooms, a zone table and physics zones | the composite map around the start cell; the maze exits the keys gate; play each kind after *Load* | 8 · 616 / 502 |
+| `shipped:omsi-loop-demo` | Idle Loops + JtA, loop mode (shuffled spiral) | jta 2 + omsi 1, start jta; loop mode | two idle games on one loop-mode mana pool; omsi requires loop mode and is one region, the whole town | the `loop_costs` block in the compiled output (only `Menu` has an entry: jta and omsi bring their own economy); after *Load*, the Loops panel enters loop mode | 4 · 3 / 2 |
+| `shipped:library-spiral-demo` | Region libraries (shuffled spiral) | served Demo Maze Pack ×3 + Demo Bounce Pack ×2; no substrate quota | pre-built regions as the only content source, carried by file | the *Region libraries* subsection (both packs ticked, with counts); the library rooms on the composite map | 6 · 11 / 6 |
+| `shipped:runner-library-spiral-demo` | Runner rooms from the library (shuffled spiral) | served Demo Maze Pack ×2 + Demo Runner Pack ×2 | runner regions instantiated from library entries — no generate-and-test, so a runner world in milliseconds | the *Region libraries* subsection; play a runner room after *Load* | 5 · 14 / 3 |
 
 ### Grid growth
 
 | id | label | substrates | demonstrates | where to look | regions · ms |
 |---|---|---|---|---|---|
 | `shipped:grid-growth-demo` | Maze + text adventure (grid growth, legacy) | mix maze 1 : text_adventure 1; 3×3 grid; two keys, their doors + victory | the legacy pool-driven grower: the region count is emergent, so progress has no denominator | the grid on the composite map; the stop reason in the result line | 8 · 64 / 39 |
+
+### Top-down
+
+A top-down preset realises **the world the app has loaded** — it cannot name a source. Load any game's preset first (the Presets panel, or a `?game=` URL); a plain page load already has Adventure loaded, and the numbers below are for Adventure (10 regions) with its sphere log, which the panel's *Use currently-loaded rules.json* and *Use currently-loaded sphere log* boxes (both on by default) hand to the pipeline. With another world loaded the region count and the substrate split change. Both presets use seed 3: at seed 1 Adventure's nine regions drew eight maze rooms and one of the other substrate for either mix.
+
+| id | label | substrates | demonstrates | where to look | regions · ms |
+|---|---|---|---|---|---|
+| `shipped:topdown-maze-ta-demo` | Top-down: maze + text adventure (from the loaded world — load any game's preset first) | mix maze 2 : text_adventure 1; seed 3 | an existing game's region graph realised as procgen regions, keeping its access rules (Adventure: 6 maze, 3 text adventure) | *1 Layout*'s per-region substrate drop-downs; *Move Region* and *Undo* on the composite map; the *4 Compile* block | 10 · 233 / 170 |
+| `shipped:topdown-zones-demo` | Top-down: maze + bounce (from the loaded world — load any game's preset first) | mix maze 1 : bounce 1; seed 3 | physics zones realising source regions, the bounce abilities granted as starting items (Adventure: 5 maze, 4 bounce) | *1 Layout*; the bounce cells on the composite map; play a bounce zone after *Load* | 10 · 507 / 627 |
+
+The shuffled-spiral rows from `content-spiral-mix` on and the top-down rows were measured 2026-09-16 at 1-minute load ~4, through the same path. Through the browser gate (own server, load ~6–9) every shipped preset took under 0.9 s to generate except the two runner sphere presets (4.1–4.9 s and 11.1–24.2 s), and every one produced exactly the headless world.
 
 ## What a preset carries
 
@@ -47,14 +62,14 @@ What a preset does not carry is session state: the composite map's interaction m
 
 1. Add an entry to `SHIPPED_PRESETS` in `presetDefs.js`: an id under `shipped:`, a label that names the substrates, a `group` of `PRESET_GROUPS[<its mode>]`, a description that says in words what it demonstrates and where to look, and a sparse `state`.
 2. Add one row to `presetDefs.test.js` that pins the knob that *is* the demonstration — the row that goes red if the preset stops showing it.
-3. Nothing else enrols it: the headless row iterates `SHIPPED_PRESETS`, so the preset is generated twice per CI run and must be byte-identical, hold a region beyond `Menu`, stay within `PRESET_HEADLESS_BUDGET_MS`, pass sphere growth's oracle, name only registered substrates, and name only items the shared item library or one of its substrates declares.
+3. Nothing else enrols it: the headless row iterates `SHIPPED_PRESETS`, so the preset is generated twice per CI run and must be byte-identical, hold a region beyond `Menu`, stay within `PRESET_HEADLESS_BUDGET_MS`, pass sphere growth's oracle, name only registered substrates, name only items the shared item library or one of its substrates declares, name only obstacles in `DEFAULT_OBSTACLES` (the one obstacle library the pipeline hands the engine; an unknown obstacle is dropped silently), realise at least one region of every substrate it names, and carry each served library's current `library_id` from `region_library_files.json` (a stale one only warns, and the world is built from the current file). A top-down preset needs a non-empty mix: an empty one, or quotas in its place, realises an all-maze world without an error.
 4. A preset naming a substrate whose registry entry declares `generationCost: 'heavy'` is skipped by that row with a printed sentence, and it must be listed in `PRESETS_SKIPPED_AS_HEAVY` — the row requires the skipped set to equal that list, so a preset cannot join the skip silently. Such a preset is generated by hand instead (and `runner-sphere-demo` through the browser by the box gate).
-5. `check-procgen-presets.mjs` reads every label it expects in the drop-down off `SHIPPED_PRESETS`, so the new label is asserted there too.
+5. `check-procgen-presets.mjs` reads every preset off `SHIPPED_PRESETS`, so the box gate applies and generates the new preset through the panel too, and requires the panel's world to equal the headless one.
 6. Add its row to the table above, with numbers measured the same way.
 
 ## What no preset can show yet
 
-- **A top-down source by name.** Top-down realises whatever world is currently loaded (the panel's *Use currently-loaded rules.json* is on by default); a preset cannot name one.
-- **A jta or omsi `substrateConfig`** — a JtA dataset, emitted zone locations, an omsi region split. The engine's seam exists; the panel builds no such config, so a preset has nothing to carry it in.
-- **An atlas pool.** Seedling reaches a world only as an atlas content source of sphere growth, and the panel has no atlas picker.
+- **A named top-down source.** A top-down preset realises whatever world is loaded; carrying a source by name, the way a served region library is carried, is not built.
+- **The Seedling atlas pool.** Seedling reaches a world only as an atlas content source of sphere growth, and the panel has no atlas picker, so no preset can select a pool.
+- **A jta or omsi `substrateConfig`** — a JtA dataset, emitted zone locations, an omsi region split (which is why the omsi preset's region is the whole town). The engine's seam exists; the panel builds no such config, so a preset has nothing to carry it in.
 - **`flash`** has no generation route in any mode: neither Flash substrate declares a build-time hook.
