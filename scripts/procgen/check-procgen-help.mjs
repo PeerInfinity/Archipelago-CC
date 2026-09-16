@@ -1042,6 +1042,28 @@ for (const kind of ['import', 'help']) {
  * ⛔ AND IT IS THE WRITE FACE'S COST ALONE. CI never writes the baseline, so
  * the wall a push waits on does not move; `--write-baseline` pays for the
  * re-runs, which is where a measurement that has to be complete belongs.
+ *
+ * ⛓⛓ **AND THE CONTROLS THIS RE-RUN LEAVES TRUNCATED WERE THEMSELVES MEASURED
+ * TO COMPLETION — no control changed** (slice G2, at `8f6ca637e8`). The 64
+ * files the `control truncated` line below named were re-driven SERIALLY under
+ * a **600 s** ceiling in a throwaway worktree at HEAD and their
+ * `inheritedOutput` recomputed against their own help door: **62 completed**
+ * (median 21.0 s, longest 498.1 s) and **2 did not** — `census-seedling-
+ * density.mjs` and `ci-gates.mjs`, still running at 600 s. **0 of the 64
+ * intersections moved.** 63 are empty at 600 s exactly as recorded, and the
+ * one file in that set carrying a value (`check-region-step-editing.mjs`) came
+ * back with the same three lines.
+ *
+ * ⛓ SO THE 15 s CEILING COSTS THE BASELINE NOTHING, and a per-file
+ * `controlCeilingMs` would buy nothing. The reason is the field's SHAPE, not
+ * the box: `inheritedOutput` is an INTERSECTION with the help door, and what a
+ * long import prints past the ceiling is its WORK — the lines `--help` also
+ * prints are the load-time banners of hoisted modules, which are already in
+ * the first seconds. ⛓ The measurement is not vacuous: all 64 doors captured
+ * output (188 B – 52 KB, 470 KB in all), **40 of the 62 completions really did
+ * need more than 15 s** (so the truncation was real, not load), and the one
+ * non-empty entry is the positive control showing a completed door CAN produce
+ * one.
  */
 const controlTruncated = [];
 let controlsReRun = 0;
