@@ -502,6 +502,20 @@ export function applyPresetState(state, { defaults, hasSubstrate, current }) {
     };
 }
 
+/**
+ * The drop-down's shipped groups, in order: `[label, presets[]]` per
+ * PRESET_GROUPS entry, in VALID_MODES order, each holding the presets whose
+ * `group` is that label in their list order; a group with no preset is
+ * omitted. (A preset whose `group` is not a PRESET_GROUPS label lands in no
+ * group — presetDefs.test.js requires every shipped preset's group to be its
+ * mode's.)
+ */
+export function groupShippedPresets(presets) {
+    return VALID_MODES
+        .map((mode) => [PRESET_GROUPS[mode], presets.filter((p) => p.group === PRESET_GROUPS[mode])])
+        .filter(([, members]) => members.length > 0);
+}
+
 /** Resolve a preset id against the shipped list + a user preset array. */
 export function getPresetById(id, userPresets = []) {
     return SHIPPED_PRESETS.find((p) => p.id === id)

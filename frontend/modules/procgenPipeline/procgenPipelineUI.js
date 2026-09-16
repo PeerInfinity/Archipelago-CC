@@ -79,7 +79,7 @@ import { peekSphereStateSingleton } from '../sphereState/singleton.js';
 import {
     SHIPPED_PRESETS, capturePresetState, applyPresetState,
     getPresetById, loadUserPresets, saveUserPreset, deleteUserPreset,
-    restoredActivePresetId,
+    restoredActivePresetId, groupShippedPresets,
 } from './presetDefs.js';
 // Region-library (F3/F5) — the headless loader core (fetch/parse/validate served
 // + ad-hoc libraries; selection → spiral config) plus the identity stamper the
@@ -591,7 +591,8 @@ export class ProcgenPipelineUI {
             }
             select.appendChild(group);
         };
-        addGroup('Shipped', [...SHIPPED_PRESETS]);
+        // Shipped presets grouped by pipeline mode (⚖ user 2026-09-16, Q3).
+        for (const [label, presets] of groupShippedPresets(SHIPPED_PRESETS)) addGroup(label, presets);
         addGroup('User', this.userPresets);
         select.value = this.activePresetId ?? '';
         // A stale persisted id (e.g. the preset was deleted) falls back

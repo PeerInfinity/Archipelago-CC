@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import {
     SHIPPED_PRESETS, VALID_MODES, PRESET_GROUPS, LS_PRESETS_KEY,
     PRESET_HEADLESS_BUDGET_MS, PRESETS_SKIPPED_AS_HEAVY,
-    capturePresetState, applyPresetState, getPresetById, restoredActivePresetId,
+    capturePresetState, applyPresetState, getPresetById, restoredActivePresetId, groupShippedPresets,
     userPresetId, loadUserPresets, saveUserPreset, deleteUserPreset,
 } from './presetDefs.js';
 
@@ -143,6 +143,37 @@ describe('SHIPPED_PRESETS', () => {
     it('the dropped runner zone-table demo no longer resolves (⚖ 30 s headless ceiling)', () => {
         expect(getPresetById('shipped:runner-zone-demo')).toBeNull();
         expect(SHIPPED_PRESETS.some((p) => p.id === 'shipped:runner-zone-demo')).toBe(false);
+    });
+});
+
+describe('groupShippedPresets (the drop-down\'s optgroups)', () => {
+    const preset = (id, mode) => ({ id, group: PRESET_GROUPS[mode], state: { mode } });
+
+    it('orders the groups by VALID_MODES, not by where their first preset sits in the list', () => {
+        const list = [
+            preset('shipped:t', 'topDown'),
+            preset('shipped:s1', 'sphereGrowth'),
+            preset('shipped:g', 'gridGrowth'),
+            preset('shipped:p', 'shuffledSpiral'),
+            preset('shipped:s2', 'sphereGrowth'),
+        ];
+        expect(groupShippedPresets(list).map(([label, members]) => [label, members.map((p) => p.id)])).toEqual([
+            [PRESET_GROUPS.gridGrowth, ['shipped:g']],
+            [PRESET_GROUPS.sphereGrowth, ['shipped:s1', 'shipped:s2']],
+            [PRESET_GROUPS.shuffledSpiral, ['shipped:p']],
+            [PRESET_GROUPS.topDown, ['shipped:t']],
+        ]);
+    });
+
+    it('omits a group no preset is in', () => {
+        const list = [preset('shipped:p', 'shuffledSpiral'), preset('shipped:s', 'sphereGrowth')];
+        expect(groupShippedPresets(list).map(([label]) => label))
+            .toEqual([PRESET_GROUPS.sphereGrowth, PRESET_GROUPS.shuffledSpiral]);
+    });
+
+    it('places every shipped preset in exactly one group', () => {
+        const grouped = groupShippedPresets([...SHIPPED_PRESETS]).flatMap(([, members]) => members.map((p) => p.id));
+        expect([...grouped].sort()).toEqual(SHIPPED_PRESETS.map((p) => p.id).sort());
     });
 });
 
