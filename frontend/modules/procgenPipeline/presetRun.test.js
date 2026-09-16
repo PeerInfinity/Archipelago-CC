@@ -13,6 +13,7 @@
  * registry would drop quota entries the panel keeps.
  */
 
+import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -21,7 +22,7 @@ import { describe, it, expect } from 'vitest';
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
-    buildRunFromState, panelDefaultParams, DEFAULT_PARAMS,
+    buildRunFromState, runPresetHeadless, panelDefaultParams, DEFAULT_PARAMS,
     effectiveHazardOpts, activeSubstrateDict,
     GENERATION_COST, substrateGenerationCost, presetSubstrateIds, heavySubstrateIds,
 } from './presetRun.js';
@@ -131,6 +132,43 @@ describe('buildRunFromState — sphere growth', () => {
     });
 });
 
+describe('buildRunFromState — a selected library\'s substrates contribute the regionParams their entries read', () => {
+    // ⛓ C1. The maze library's connection flags used to ride regionParams behind a
+    // helper that asked `e.substrate === 'maze'`; the maze entry now declares them
+    // (`defaultProcgenParams` + `buildLibraryRegionParams`), consulted for the
+    // substrates the selected sphere libraries realise — NOT the quotas, which in
+    // this bundle name none.
+    const MAZE_LIB = Object.freeze({
+        library: { library_id: 'probe-maze-lib', entries: [{ entry_id: 'm1', substrate: 'maze' }] }, count: 1,
+    });
+    const bundle = {
+        mode: 'sphereGrowth',
+        params: { seed: 1, sphereCount: 2, mazeRequireTileAlign: true },
+        scenario: { items: { key_red: 1, key_blue: 1 }, obstacles: {} },
+        substrateQuotas: {},
+        substrateMix: {},
+        substrateMode: 'quotas',
+    };
+
+    it('a selected maze library puts both flags in the assembled regionParams, with no maze quota', () => {
+        const { run } = buildRunFromState(bundle, { resolvedLibraries: [MAZE_LIB] });
+        expect(run.cfg.activeIds).toEqual(['library:probe-maze-lib']);
+        expect(run.config.regionParams).toEqual({ mazeRequireSameWall: false, mazeRequireTileAlign: true });
+    });
+
+    it('no library, or one with no sphere-capable entry, adds no regionParams key', () => {
+        expect(buildRunFromState(bundle).run.config.regionParams).toEqual({});
+        expect(buildRunFromState(bundle, { resolvedLibraries: [LIB] }).run.config.regionParams).toEqual({});
+    });
+
+    it('the flag reaches the served maze pack\'s instantiate: mazeRequireTileAlign refuses generation in its words', async () => {
+        const pack = JSON.parse(readFileSync(join(ROOT, 'frontend/region-libraries/demo-maze-pack.json'), 'utf8'));
+        const built = buildRunFromState(bundle, { resolvedLibraries: [{ library: pack, count: 3 }] });
+        await expect(runPresetHeadless(built)).rejects
+            .toThrow(/a captured tile region cannot satisfy mazeRequireTileAlign/);
+    });
+});
+
 describe('buildRunFromState — top-down', () => {
     const SOURCE = Object.freeze({ game_name: 'Probe', regions: { 1: {} } });
     const bundle = {
@@ -212,6 +250,13 @@ describe('the normalisation and the shared helpers', () => {
         const defaults = panelDefaultParams();
         for (const [k, v] of Object.entries(DEFAULT_PARAMS)) expect(defaults[k]).toEqual(v);
         expect(Object.keys(defaults).length).toBeGreaterThan(Object.keys(DEFAULT_PARAMS).length);
+        // The maze library's connection flags come from the maze entry's own
+        // declaration now (C1), not from DEFAULT_PARAMS.
+        for (const key of ['mazeRequireSameWall', 'mazeRequireTileAlign']) {
+            expect(DEFAULT_PARAMS).not.toHaveProperty(key);
+            expect(substrateRegistry.get('maze').defaultProcgenParams).toHaveProperty(key, false);
+            expect(defaults).toHaveProperty(key, false);
+        }
         const { run } = buildRunFromState({
             mode: 'gridGrowth', params: { seed: 9 }, scenario: { items: {}, obstacles: {} },
         });

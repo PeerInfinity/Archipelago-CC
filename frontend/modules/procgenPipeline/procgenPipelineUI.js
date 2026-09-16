@@ -71,7 +71,7 @@ import {
     effectiveSubstrateMix, effectiveSubstrateQuotas, effectiveHazardOpts,
     activeSubstrateDict, mergedItemLib, resolveVictoryItemId,
     substrateSphereCapable, librarySphereCapable, sphereRegionLibraries,
-    sphereMazeLibrarySelected, buildSphereConfig, buildSphereRun,
+    sphereLibrarySubstrateIds, buildSphereConfig, buildSphereRun,
     buildSpiralRun, buildTopDownRun, buildGridRun, compileGridRun,
 } from './presetRun.js';
 import { getRegionEditor } from './regionEditors.js';
@@ -1179,59 +1179,22 @@ export class ProcgenPipelineUI {
         grid.appendChild(right);
         wrap.appendChild(grid);
 
-        // Maze connection strictness (region-library F6c) — only relevant in sphere
-        // mode with a maze pack selected. Default best-effort; the toggles opt into
-        // strict alignment.
-        if (this.mode === 'sphereGrowth' && this._sphereMazeLibrarySelected()) {
-            wrap.appendChild(this._renderMazeConnectionToggles());
+        // Library-scoped substrate params (e.g. the maze pack's connection
+        // strictness, region-library F6c) — sphere mode only: each substrate a
+        // selected sphere library realises renders its own controls via the
+        // registry `renderLibraryProcgenParams` hook (mazeProcgenParams.js).
+        if (this.mode === 'sphereGrowth') {
+            for (const id of sphereLibrarySubstrateIds(this.regionLibraries)) {
+                const hook = substrateRegistry.get(id)?.renderLibraryProcgenParams;
+                if (typeof hook !== 'function') continue;
+                const node = hook({ params: this.params, onChange: () => this._saveToLocalStorage() });
+                if (node) wrap.appendChild(node);
+            }
         }
 
         // F5 — capture regions from the last generation into a working library,
         // downloadable as a committable library JSON file.
         wrap.appendChild(this._renderLibraryCaptureArea());
-        return wrap;
-    }
-
-    // The two maze connection-strictness toggles (region-library F6c), shown in
-    // sphere mode when a maze library is selected. Default OFF = best-effort:
-    // captured openings align to the needed wall when possible, else fall back to a
-    // side-based connection at their captured tiles. Turning a flag ON requires
-    // alignment (tile-align can't be satisfied by a captured maze, so it will fail
-    // generation loudly — surfaced as an opt-in for a future carve capability).
-    _renderMazeConnectionToggles() {
-        const wrap = document.createElement('div');
-        wrap.className = 'procgen-pipeline-maze-connection';
-        const header = document.createElement('div');
-        header.className = 'procgen-pipeline-scenario-subheader';
-        header.textContent = 'Maze connection (sphere mode)';
-        header.title = 'How a captured maze pack connects into a sphere slot. Default '
-            + 'best-effort: align to the wall when possible, else connect by side.';
-        wrap.appendChild(header);
-
-        const toggle = (key, text, title) => {
-            const label = document.createElement('label');
-            label.style.cssText = 'display:flex;align-items:center;gap:4px;cursor:pointer;';
-            const cb = document.createElement('input');
-            cb.type = 'checkbox';
-            cb.checked = !!this.params[key];
-            cb.className = `procgen-pipeline-${key === 'mazeRequireSameWall' ? 'maze-samewall' : 'maze-tilealign'}-cb`;
-            cb.addEventListener('change', () => {
-                this.params[key] = cb.checked;
-                this._saveToLocalStorage();
-                this.render();
-            });
-            label.appendChild(cb);
-            label.appendChild(document.createTextNode(text));
-            label.title = title;
-            wrap.appendChild(label);
-        };
-        toggle('mazeRequireSameWall', 'Require same wall',
-            'ON: a child exit must reuse a captured opening on that exact wall (else '
-            + 'generation fails). OFF (default): relabel any opening onto the side.');
-        toggle('mazeRequireTileAlign', 'Require tile alignment',
-            'ON: openings must sit at the grid-mirror tile — a captured maze cannot '
-            + 'satisfy this without a carve, so generation fails. OFF (default): keep '
-            + 'the captured tile (side-based connection).');
         return wrap;
     }
 
@@ -4131,13 +4094,6 @@ export class ProcgenPipelineUI {
         this.message = '';
         this.warning = '';
         await runStep('plan', this._stepState); // builds draft, completed = 0
-    }
-
-    // Selected libraries carry a maze entry? Drives whether the maze connection
-    // flags are threaded into regionParams (below) — so a maze-less world stays
-    // byte-identical (no new regionParams keys).
-    _sphereMazeLibrarySelected() {
-        return sphereMazeLibrarySelected(this.regionLibraries);
     }
 
     // Step 2a — Allocate (delegated). Also populates the panel-only

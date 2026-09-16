@@ -45,6 +45,11 @@ import { drawMazeCompositeRegion } from './mazeCompositeMap.js';
 import { mazeRegionRoundTrip } from './mazeRegionRoundTrip.js';
 import { TILE_GRID_SIDECAR_FIELDS, tileGridApLocationNames } from './mazeSerializer.js';
 import { envelopeExitNames } from '../procgenCore/sidecarFields.js';
+import {
+    DEFAULT_MAZE_PROCGEN_PARAMS,
+    buildMazeLibraryRegionParams,
+    renderMazeLibraryProcgenParams,
+} from './mazeProcgenParams.js';
 
 /**
  * Content-module pass (registry `applyContentModules` hook): stamp tile-grid
@@ -295,6 +300,13 @@ export const substrateRegistryEntry = Object.freeze({
     validateLibraryEntry: (entry) => validateTileGridLibraryEntry(entry, {
         deserialize: tileGridDeserializer,
     }),
+
+    // --- Procgen Pipeline integration (mazeProcgenParams.js) ---
+    // The panel defaults, and the regionParams + controls a SELECTED maze
+    // library entry reads (the two connection-strictness flags above).
+    defaultProcgenParams: DEFAULT_MAZE_PROCGEN_PARAMS,
+    buildLibraryRegionParams: buildMazeLibraryRegionParams,
+    renderLibraryProcgenParams: renderMazeLibraryProcgenParams,
 
     // --- Region-atlas content-source hook (region-atlas Phase 6) ---
     // The THIRD capture contract: an atlas entry is a piece of a real game map,

@@ -24,7 +24,7 @@ export const REGISTRY = frz({
     "columnOrder": "the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported",
     "columns": [
         {
-            "fields": 28,
+            "fields": 31,
             "id": "maze",
             "label": "Maze",
             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"
@@ -195,6 +195,7 @@ export const REGISTRY = frz({
         {
             "rows": [
                 "backPortalGated",
+                "buildLibraryRegionParams",
                 "buildRegionContract",
                 "buildRegionParams",
                 "buildZoneSpecs",
@@ -210,6 +211,7 @@ export const REGISTRY = frz({
                 "hostsSurplusExitsNatively",
                 "libraryItems",
                 "prepareSphereGrowth",
+                "renderLibraryProcgenParams",
                 "renderProcgenParams"
             ],
             "title": "Build-time — driver-facing adapter hooks (bounce and runner)"
@@ -624,6 +626,72 @@ export const REGISTRY = frz({
             "documentedHow": "bullet",
             "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
             "name": "backPortalGated"
+        },
+        {
+            "carriedBy": [
+                "maze"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "bullet",
+            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "name": "buildLibraryRegionParams"
         },
         {
             "carriedBy": [
@@ -1167,16 +1235,20 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "maze",
                 "bounce",
                 "runner"
             ],
             "cells": [
                 {
                     "id": "maze",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "{mazeRequireSameWall, mazeRequireTileAlign}",
+                    "type": "object",
+                    "value": [
+                        "mazeRequireSameWall",
+                        "mazeRequireTileAlign"
+                    ]
                 },
                 {
                     "id": "flash",
@@ -4332,6 +4404,72 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Editing",
             "name": "regionRoundTrip"
+        },
+        {
+            "carriedBy": [
+                "maze"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "bullet",
+            "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
+            "name": "renderLibraryProcgenParams"
         },
         {
             "carriedBy": [

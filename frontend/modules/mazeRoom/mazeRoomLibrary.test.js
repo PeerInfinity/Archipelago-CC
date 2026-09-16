@@ -15,6 +15,20 @@ import { createRng } from '../shared/rng.js';
 import { serializeMazeWorld } from './mazeSerializer.js';
 
 describe('mazeRoomLibrary substrateRegistryEntry', () => {
+    it('declares its pipeline params: the library connection flags default off, and their regionParams in sphere mode only', () => {
+        expect(substrateRegistryEntry.defaultProcgenParams).toMatchObject({
+            mazeRequireSameWall: false, mazeRequireTileAlign: false,
+        });
+        const build = substrateRegistryEntry.buildLibraryRegionParams;
+        expect(build({ params: { mazeRequireSameWall: 1 }, mode: 'sphere' }))
+            .toEqual({ mazeRequireSameWall: true, mazeRequireTileAlign: false });
+        expect(build({ params: { mazeRequireSameWall: true }, mode: 'topDown' })).toEqual({});
+        expect(typeof substrateRegistryEntry.renderLibraryProcgenParams).toBe('function');
+        // The flags are read only by a LIBRARY entry's instantiate, so the maze
+        // contributes nothing to a quota-driven world's regionParams.
+        expect(substrateRegistryEntry.buildRegionParams).toBeUndefined();
+    });
+
     it('declares the maze identity, panel type, and load event', () => {
         expect(substrateRegistryEntry.id).toBe('maze');
         expect(substrateRegistryEntry.panelComponentType).toBe('mazeRoomPanel');

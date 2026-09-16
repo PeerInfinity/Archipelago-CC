@@ -31,7 +31,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
 import {
     defaultProcgenParams, activeSubstrateIds,
-    collectSphereGrowthPrep, assembleRegionParams,
+    collectSphereGrowthPrep, assembleRegionParams, assembleLibraryRegionParams,
 } from './sphereConfigHooks.js';
 import { buildLibrarySpiralConfig } from './regionLibraryLoader.js';
 import { applyPresetState, VALID_MODES } from './presetDefs.js';
@@ -94,17 +94,11 @@ export const DEFAULT_PARAMS = {
     // integer < sphereCount grows the middle phases sphere-major in batches
     // (Phase 2). Phase 1 only carries the knob; no visible control yet.
     spheresPerBatch: null,
-    // Maze region-library connection strictness (region-library F6c), surfaced in
-    // sphere mode when a maze pack is selected. Both DEFAULT false = best-effort:
-    // a captured maze opening is aligned to the needed wall when possible and
-    // relabelled onto a side-based connection otherwise. true = require alignment
-    // (a captured maze can't satisfy tile-align without a carve, so it throws).
-    mazeRequireSameWall: false,
-    mazeRequireTileAlign: false,
     // Substrate-specific params (e.g. bounce's fall behavior / physics
-    // profile / braid layout) are NOT here — each substrate declares its
-    // own defaults via the registry `defaultProcgenParams` hook, merged
-    // in by panelDefaultParams(). See bounceProcgenParams.js.
+    // profile / braid layout, the maze library's connection strictness) are
+    // NOT here — each substrate declares its own defaults via the registry
+    // `defaultProcgenParams` hook, merged in by panelDefaultParams(). See
+    // bounceProcgenParams.js, mazeProcgenParams.js.
 };
 
 /**
@@ -225,15 +219,19 @@ export function sphereRegionLibraries(resolvedLibraries) {
 }
 
 /**
- * Selected sphere libraries carry a maze entry? Drives whether the maze
- * connection flags are threaded into regionParams — so a world without one
- * takes no new regionParams keys (byte-identical). ⚠ Moved verbatim from the
- * panel, substrate id and all: the flags are the maze library entry's own
- * vocabulary and no registry field declares them yet.
+ * The substrates the selected SPHERE libraries' entries realise, each once, in
+ * the order they first appear. Their `buildLibraryRegionParams` /
+ * `renderLibraryProcgenParams` hooks are the ones a library selection consults
+ * (C1: this replaced a helper that asked for the maze by name).
  */
-export function sphereMazeLibrarySelected(resolvedLibraries) {
-    return sphereRegionLibraries(resolvedLibraries).some(
-        (w) => (w.library?.entries ?? []).some((e) => e.substrate === 'maze'));
+export function sphereLibrarySubstrateIds(resolvedLibraries) {
+    const ids = new Set();
+    for (const w of sphereRegionLibraries(resolvedLibraries)) {
+        for (const e of w.library?.entries ?? []) {
+            if (substrateSphereCapable(e.substrate)) ids.add(e.substrate);
+        }
+    }
+    return [...ids];
 }
 
 // ── Sphere growth ──────────────────────────────────────────────────────────
@@ -287,14 +285,15 @@ export function buildSphereConfig(state, resolvedLibraries = []) {
  * POST-prep pool the plan is built from (prep may have removed items).
  */
 export function sphereRunConfig(cfg, prep, itemPool, { params, resolvedLibraries = [] }) {
-    // The maze connection strictness flags ride regionParams ONLY when a maze
-    // library is selected (region-library F6c).
-    const regionParamsExtra = sphereMazeLibrarySelected(resolvedLibraries)
-        ? {
-            ...prep.regionParams,
-            mazeRequireSameWall: !!params.mazeRequireSameWall,
-            mazeRequireTileAlign: !!params.mazeRequireTileAlign,
-        }
+    // A selected library's substrates contribute the regionParams their library
+    // entries read (the maze's connection strictness flags, region-library F6c)
+    // — ONLY when such a library is selected, so a world without one takes no
+    // new regionParams keys (byte-identical).
+    const libraryParams = assembleLibraryRegionParams({
+        substrateIds: sphereLibrarySubstrateIds(resolvedLibraries), mode: 'sphere', params,
+    });
+    const regionParamsExtra = Object.keys(libraryParams).length > 0
+        ? { ...prep.regionParams, ...libraryParams }
         : prep.regionParams;
     return {
         seed: cfg.seed,

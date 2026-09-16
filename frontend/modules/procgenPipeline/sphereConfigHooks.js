@@ -97,6 +97,22 @@ export function assembleRegionParams({ activeIds, mode = 'sphere', params, extra
 }
 
 /**
+ * Merge the `buildLibraryRegionParams` hook output of each substrate a SELECTED
+ * region library realises (`substrateIds` — the entries' substrates, not the
+ * quotas: a library entry realises its substrate with no quota of its own) into
+ * one regionParams object. `mode` is 'sphere' | 'topDown'. {} when no such
+ * substrate declares the hook.
+ */
+export function assembleLibraryRegionParams({ substrateIds, mode = 'sphere', params }) {
+    const out = {};
+    for (const id of substrateIds) {
+        const fn = substrateRegistry.get(id)?.buildLibraryRegionParams;
+        if (typeof fn === 'function') Object.assign(out, fn({ params, mode }));
+    }
+    return out;
+}
+
+/**
  * Item library merge: `baseLib` plus each selected substrate's `libraryItems`.
  * Mirrors the panel's _mergedItemLib(). `selectedIds` is the quota + start set.
  */
