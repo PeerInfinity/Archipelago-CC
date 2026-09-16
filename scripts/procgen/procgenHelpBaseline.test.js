@@ -1,12 +1,14 @@
 /**
- * procgenHelpBaseline — **THE ROWS** (slice seedling-headless-G1).
+ * procgenHelpBaseline — **THE ROWS** (slice seedling-headless-G1; the killed
+ * import door's completed control, H1).
  *
  * ⛔ The measured defect: two consecutive `--write-baseline` runs at one head
  * wrote different bytes (247 of 250 entries: `ms`, `why`, `wrote`; and `wrote`
  * reduced to directories still moved on 2), so every
  * regeneration was a diff nobody could review. The rows construct two runs
  * that differ ONLY in what load moves — wall clock, the throwaway tree's
- * random name, a ceiling kill, the file count a killed writer reached — and
+ * random name, a ceiling kill, the file count a killed writer reached, and
+ * (H1) the place a killed door's captured PREFIX was cut — and
  * require the same bytes; and, so that is not vacuous, two runs that differ in
  * what the gate READS (membership, inherited output) must NOT.
  */
@@ -21,6 +23,28 @@ const row = (file, imp = {}, help = {}) => ({ file, import: door(imp), help: doo
 function run({ tree, load }) {
     return [
         row('inert.mjs', { ms: 90 + load }),
+        /**
+         * ⛓ H1's case — a KILLED import door, whose own capture is a PREFIX that
+         * load cuts in a different place every run (nothing here, the banner
+         * there). The field is computed against the CONTROL re-run under the
+         * long ceiling, which finished, so neither cut moves the bytes; the
+         * `⛔ NOT VACUOUS` row below drops the control and watches them move.
+         */
+        row('killed-banner.mjs', {
+            ok: false,
+            ms: 5000 + load,
+            timedOut: true,
+            ceiling: 5000,
+            why: ['ran past the 5000 ms ceiling and was killed'],
+            stdout: load ? '[centralRegistry] CentralRegistry initialized' : '',
+            control: {
+                ceiling: 15000,
+                timedOut: false,
+                ms: 6100 + load,
+                stdout: '[centralRegistry] CentralRegistry initialized\n# DONE',
+                stderr: '',
+            },
+        }, { stdout: '[centralRegistry] CentralRegistry initialized\nusage' }),
         row('killed-writer.mjs', {
             ok: false,
             ms: 5000 + load,
@@ -51,12 +75,19 @@ describe('baselineDocument — two runs at one head write the same bytes', () =>
 
     it('what closing an entry must preserve is still recorded', () => {
         const doc = JSON.parse(baselineDocument(run({ tree: 'x', load: 0 }), 'cafe'));
-        expect(Object.keys(doc.importDoorEffectful)).toEqual(['killed-writer.mjs', 'refuser.mjs']);
+        expect(Object.keys(doc.importDoorEffectful)).toEqual(['killed-banner.mjs',
+            'killed-writer.mjs', 'refuser.mjs']);
         expect(doc.importDoorEffectful['killed-writer.mjs']).toEqual({
             inheritedOutput: ['[stateManagerProxy] Worker is not defined'],
             helpResidue: null,
         });
-        expect(doc.counts).toEqual({ instruments: 3, importDoorEffectful: 2 });
+        /** ⛓ the killed door's control is what the banner was read off — its own
+         *  capture at `load: 0` was empty. `# DONE` is the import door's alone. */
+        expect(doc.importDoorEffectful['killed-banner.mjs']).toEqual({
+            inheritedOutput: ['[centralRegistry] CentralRegistry initialized'],
+            helpResidue: null,
+        });
+        expect(doc.counts).toEqual({ instruments: 4, importDoorEffectful: 3 });
     });
 
     it('⛔ NOT VACUOUS: membership and inherited output DO move the bytes', () => {
@@ -67,6 +98,17 @@ describe('baselineDocument — two runs at one head write the same bytes', () =>
         const quiet = base.map((r) => (r.file === 'killed-writer.mjs'
             ? { ...r, help: door({ stdout: 'usage' }) } : r));
         expect(baselineDocument(quiet, 'cafe')).not.toBe(a);
+        /**
+         * ⛔ AND THE KILLED DOOR'S CONTROL IS LOAD-BEARING (H1): without it the
+         * field falls back to the PREFIX — empty at `load: 0` — and the entry
+         * loses the banner its help door will print on every run. That is the
+         * false red, at the level of the bytes.
+         */
+        const uncompleted = base.map((r) => (r.file === 'killed-banner.mjs'
+            ? { ...r, import: { ...r.import, control: undefined } } : r));
+        const doc = JSON.parse(baselineDocument(uncompleted, 'cafe'));
+        expect(doc.importDoorEffectful['killed-banner.mjs'].inheritedOutput).toEqual([]);
+        expect(baselineDocument(uncompleted, 'cafe')).not.toBe(a);
     });
 });
 

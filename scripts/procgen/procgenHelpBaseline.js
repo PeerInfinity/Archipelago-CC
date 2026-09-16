@@ -25,6 +25,17 @@
  *     on 2 entries anyway — a writer killed at its ceiling wrote nothing on
  *     one run, and a `__pycache__/` appeared on one run only. What a door
  *     writes today is in `--only=<file> --json`.
+ *   · `inheritedOutput` is the intersection against a COMPLETED import door
+ *     (slice H1, G1 ⚖ OPEN 3), and that is a rule about a KILL. A baselined
+ *     file's import door is killed at the short ceiling by design, so its own
+ *     capture is a PREFIX cut wherever the box was — and a box that killed it
+ *     BEFORE a hoisted module's load-time banner would record a SMALLER
+ *     control, which in CI's bounded face is a FALSE RED against the help
+ *     door. `check-procgen-help.mjs` therefore re-runs a killed import door
+ *     once under the long ceiling at `--write-baseline` and leaves the
+ *     completed output in `control`; the field is the intersection against
+ *     that, UNIONED with the judged prefix (`inheritedOf` says why), or the
+ *     writer names the file as `control truncated`.
  *   · `helpResidue` is the KIND of each help-door failure, never its text
  *     (`residueKinds`): the reasons `check-procgen-help.mjs` composes quote
  *     the throwaway tree's random name, stderr excerpts, line and file
