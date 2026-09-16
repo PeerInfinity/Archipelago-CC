@@ -31,7 +31,7 @@
  * about the real tree's own run, which measures a worktree at HEAD).
  */
 import { execFileSync, spawnSync } from 'node:child_process';
-import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve } from 'node:path';
@@ -268,4 +268,39 @@ describe('the writer completes a killed import door\'s control', () => {
         expect(r.stdout).toContain('(1 still truncated)');
         expect(entryOf(dir).inheritedOutput).toEqual([]);
     }, 60000);
+});
+
+/**
+ * ⛓ THE SCRATCH LEAK (found by H1, closed here). This gate is on its own
+ * import-door baseline, so a full run imports itself in a child that runs the
+ * whole gate — a chain SIGKILLed at the ceiling, each link's scratch leaked
+ * (~5 per full run). A child that finds `PROCGEN_HELP_SCRATCH_PARENT` takes
+ * its scratch INSIDE that directory, which the top-level run removes. The row
+ * kills a gate child itself, since a finished gate removes its scratch either
+ * way and would make the mutant look green.
+ */
+describe('a gate child killed mid-run leaves its scratch under the PARENT scratch, never under TMPDIR', () => {
+    const killedGate = (dir, env) => spawnSync(process.execPath,
+        [join(dir, 'scripts/procgen', GATE), '--in-place', `--only=${INSTRUMENT}`, '--jobs=1',
+            '--known-ceiling=4000', '--ceiling=6000', '--json'],
+        { cwd: dir, env: { ...ENV, ...env }, encoding: 'utf8', timeout: 1500, killSignal: 'SIGKILL' });
+    const scratchDirs = (d) => (existsSync(d) ? readdirSync(d) : []).filter((n) => n.startsWith('procgen-help-'));
+    const fresh = () => { const d = mkdtempSync(join(tmpdir(), 'leak-row-')); roots.push(d); return d; };
+
+    it('the child honours the parent env: TMPDIR stays clean, the parent dir holds the scratch', () => {
+        const dir = fixtureRepo();
+        const tmp = fresh(); const parent = fresh();
+        const r = killedGate(dir, { TMPDIR: tmp, PROCGEN_HELP_SCRATCH_PARENT: parent });
+        expect(r.signal).toBe('SIGKILL');
+        expect(scratchDirs(tmp)).toEqual([]);
+        expect(scratchDirs(parent).length).toBe(1);
+    }, 30000);
+
+    it('⛔ NOT VACUOUS: without the env the killed child leaks under TMPDIR (the pre-fix shape)', () => {
+        const dir = fixtureRepo();
+        const tmp = fresh();
+        const r = killedGate(dir, { TMPDIR: tmp });
+        expect(r.signal).toBe('SIGKILL');
+        expect(scratchDirs(tmp).length).toBe(1);
+    }, 30000);
 });

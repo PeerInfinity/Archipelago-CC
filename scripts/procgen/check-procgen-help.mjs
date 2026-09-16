@@ -647,7 +647,22 @@ const newerThan = (marker) => {
     } catch { return []; }
 };
 
-const scratch = mkdtempSync(join(tmpdir(), 'procgen-help-'));
+/**
+ * ⛓⛓ THE SCRATCH LIVES UNDER THE PARENT GATE'S SCRATCH WHEN THIS RUN IS A
+ * PARENT'S DOOR. This gate is on its own import-door baseline: importing it
+ * runs the whole gate, so every full run spawns a child gate that spawns a
+ * grandchild gate … until the 5 s ceiling SIGKILLs the chain — and SIGKILL
+ * runs no `exit` handler, so each link's `mkdtemp` leaked (H1 measured ~5
+ * `/tmp/procgen-help-*` per full run; 50 on the box). A child that finds
+ * `PROCGEN_HELP_SCRATCH_PARENT` in its env takes its scratch INSIDE that
+ * directory; the top-level run removes its own scratch at the end (l.~1060)
+ * and the whole chain dies with it. Every door child gets the variable —
+ * only this gate reads it.
+ */
+const SCRATCH_PARENT_ENV = 'PROCGEN_HELP_SCRATCH_PARENT';
+const scratchParent = process.env[SCRATCH_PARENT_ENV];
+const scratch = mkdtempSync(join(scratchParent && existsSync(scratchParent) ? scratchParent : tmpdir(),
+    'procgen-help-'));
 const MARKER = join(scratch, 'marker');
 
 /**
@@ -657,7 +672,7 @@ const MARKER = join(scratch, 'marker');
  * checkout is `submodules: recursive`. There is no machine-local source to
  * scrub — the variable and the pointer file F1 isolated here were removed.
  */
-const CHILD_ENV = { ...process.env, NO_COLOR: '1' };
+const CHILD_ENV = { ...process.env, NO_COLOR: '1', [SCRATCH_PARENT_ENV]: scratch };
 
 /**
  * ⛔ THE CHILD IS ITS OWN PROCESS GROUP AND IS KILLED AS ONE. An instrument
