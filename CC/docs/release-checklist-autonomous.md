@@ -8,7 +8,7 @@ fix-up scripts — with the human approving each outward-facing step.
 > **Status: work in progress.** The original [release-checklist.md](release-checklist.md)
 > remains the authoritative document. This file is being written phase by
 > phase as each is run for real. **Migrated so far: Phases 2, 3, 4, 5, 6, 7,
-> and Phase 1's cadence policy (§1.0) and notification (§1.4).** Phase 1's
+> and Phase 1's cadence policy (§1.0) and release check (§1.4).** Phase 1's
 > merge steps and Phase 8 are stubs that point back at the original.
 
 ---
@@ -112,7 +112,7 @@ repo's last sync (2026-03-27) is not at a release tag either (upstream `main`
 then was between 0.6.7-rc1 and -rc2). **The first release-aligned sync is
 `0.6.8`.**
 
-**Detection:** a new upstream release is detected by polling
+**Detection:** a new upstream release is found by checking
 `gh release list --repo ArchipelagoMW/Archipelago` (the newest entry that is
 neither a prerelease nor a draft) and comparing it with the last release this
 fork synced to. See §1.4.
@@ -126,11 +126,12 @@ fork synced to. See §1.4.
 > `git merge <X.Y.Z>` under the §1.0 policy, and the `<NEW_COMMIT>` used for the
 > post-merge diffs is the tag's commit (`git rev-parse <X.Y.Z>^{commit}`).
 
-### 1.4 Release notification
+### 1.4 Checking for a new release
 
-A scheduled check notifies when upstream publishes a release newer than the one
-the fork last synced to. The last-synced version is the latest upstream tag that
-is an ancestor of `main`:
+There is **no automated notification** (the user declined one on 2026-09-22).
+Check by hand whether upstream has published a release newer than the one the
+fork last synced to. The last-synced version is the latest upstream tag that is
+an ancestor of `main`:
 
 ```bash
 git fetch upstream --tags
@@ -138,8 +139,8 @@ git describe --tags --abbrev=0 --match '[0-9]*.[0-9]*.[0-9]*' --exclude '*-rc*' 
 gh release list --repo ArchipelagoMW/Archipelago --exclude-pre-releases --exclude-drafts --limit 1
 ```
 
-If the two differ, a new release is ready to sync. The notification is only a
-signal: the merge itself remains a human-approved start of a release cycle.
+If the two differ, a new release is ready to sync. The merge itself remains a
+human-approved start of a release cycle.
 
 ### 1.5 Contract with later phases
 
