@@ -7,8 +7,9 @@ fix-up scripts — with the human approving each outward-facing step.
 
 > **Status: work in progress.** The original [release-checklist.md](release-checklist.md)
 > remains the authoritative document. This file is being written phase by
-> phase as each is run for real. **Migrated so far: Phases 2, 3, 4, 5, 6, 7.**
-> Phases 1 and 8 below are stubs that point back at the original.
+> phase as each is run for real. **Migrated so far: Phases 2, 3, 4, 5, 6, 7,
+> and Phase 1's cadence policy (§1.0) and notification (§1.4).** Phase 1's
+> merge steps and Phase 8 are stubs that point back at the original.
 
 ---
 
@@ -72,11 +73,75 @@ watch`. Prefer watching to fixed-delay polling.
 
 ## Phase 1: Upstream Sync
 
-> **Stub — not yet migrated.** Follow Phase 1 of
+### 1.0 Release cadence: one sync per upstream release, at the tag
+
+**Policy (adopted 2026-09-22):** the fork syncs with upstream **once per
+upstream Archipelago release**, and it merges the **release tag**, not
+`upstream/main`. A release of this fork is then "Archipelago-CC on AP `X.Y.Z`":
+the fork's upstream base is exactly a shipped upstream version, and the stable
+repo (Phase 8) carries that same base.
+
+```bash
+git fetch upstream --tags
+gh release list --repo ArchipelagoMW/Archipelago --limit 5   # the newest non-prerelease is the target
+git merge <X.Y.Z>                                            # the TAG — not upstream/main
+```
+
+Rules that follow from it:
+
+- **No merges from `upstream/main` between releases.** Merging `main` puts the
+  fork *past* the release it would next sync to, and the release point can then
+  only be restored by reverting, which is not practical with fork commits on top.
+  If an upstream fix is needed sooner, **cherry-pick** it and record it in
+  `docs/json/developer/diffs/` so the next tag merge expects the duplicate.
+- **Release candidates (`-rcN`) are not sync targets.** Wait for the final tag.
+- **One upstream release, one fork release cycle.** The merge starts Phases 1–8.
+  Name the cycle after the upstream version (preset tag annotation, commit
+  messages, the stable sync message), not after `Utils.__version__` on a
+  development `main`. That value is the *next* version and has not shipped.
+- **Check first that the tag is ahead of the last merge:**
+  `git merge-base --is-ancestor <X.Y.Z> HEAD` must **fail**. If it passes, the
+  fork already contains that release, so there is nothing to sync at the tag.
+
+**Why the cadence starts at 0.6.8, not 0.6.7:** before this policy the fork
+merged `upstream/main` whenever it chose. The last such merge (`4b9ec83721`,
+2026-06-25, upstream `e6e0bc3042` of 2026-06-20) is already about 2.5 months
+past the `0.6.7` tag (`debe4cf035`, 2026-04-01), so matching 0.6.7 exactly would
+mean reverting upstream work under three months of fork commits. The stable
+repo's last sync (2026-03-27) is not at a release tag either (upstream `main`
+then was between 0.6.7-rc1 and -rc2). **The first release-aligned sync is
+`0.6.8`.**
+
+**Detection:** a new upstream release is detected by polling
+`gh release list --repo ArchipelagoMW/Archipelago` (the newest entry that is
+neither a prerelease nor a draft) and comparing it with the last release this
+fork synced to. See §1.4.
+
+### 1.1–1.3 Diffs baseline, merge, diffs refresh
+
+> **Not yet migrated.** Follow Phase 1 of
 > [release-checklist.md](release-checklist.md) (diff baseline → merge upstream →
 > regenerate diffs → merge Universal Tracker → merge fuzzer → regenerate diffs).
-> This phase is largely manual/local and unchanged by the autonomous model; it
-> will be migrated here once Phase 2 settles.
+> **One change applies:** its §1.2 `git merge upstream/main` becomes
+> `git merge <X.Y.Z>` under the §1.0 policy, and the `<NEW_COMMIT>` used for the
+> post-merge diffs is the tag's commit (`git rev-parse <X.Y.Z>^{commit}`).
+
+### 1.4 Release notification
+
+A scheduled check notifies when upstream publishes a release newer than the one
+the fork last synced to. The last-synced version is the latest upstream tag that
+is an ancestor of `main`:
+
+```bash
+git fetch upstream --tags
+git describe --tags --abbrev=0 --match '[0-9]*.[0-9]*.[0-9]*' --exclude '*-rc*' main   # e.g. 0.6.7
+gh release list --repo ArchipelagoMW/Archipelago --exclude-pre-releases --exclude-drafts --limit 1
+```
+
+If the two differ, a new release is ready to sync. The notification is only a
+signal: the merge itself remains a human-approved start of a release cycle.
+
+### 1.5 Contract with later phases
 
 Phase 1's only hard contract for the rest of this document: when it finishes,
 **all code changes are committed and pushed to `origin/main`**, and

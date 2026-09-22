@@ -133,8 +133,12 @@ cp rule_builder/__init__.py rule_builder/__init__.py.fork-backup
 
 ### Step 3: Attempt the merge
 
+Merge the upstream **release tag**, not `upstream/main` (the fork syncs once per
+upstream release; see [release-checklist-autonomous.md §1.0](release-checklist-autonomous.md#10-release-cadence-one-sync-per-upstream-release-at-the-tag)):
+
 ```bash
-git merge upstream/main
+git fetch upstream --tags
+git merge <X.Y.Z>        # e.g. 0.6.8
 ```
 
 ### Step 4: Resolve conflicts

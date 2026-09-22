@@ -32,11 +32,13 @@ Review the output in `docs/json/developer/diffs/` — verify the file lists and 
 
 ### 1.2 Merge from upstream
 
-Merge the latest upstream Archipelago changes into the dev repository. See the **[Upstream Merge Guide](upstream-merge-guide.md)** for the detailed process, including per-file merge strategies and diff file references.
+Merge the latest upstream Archipelago **release** into the dev repository. See the **[Upstream Merge Guide](upstream-merge-guide.md)** for the detailed process, including per-file merge strategies and diff file references.
+
+**Merge the release tag, not `upstream/main`** (policy adopted 2026-09-22; see [release-checklist-autonomous.md §1.0](release-checklist-autonomous.md#10-release-cadence-one-sync-per-upstream-release-at-the-tag)): the fork syncs once per upstream release, and there are no `upstream/main` merges in between. The first release-aligned sync is `0.6.8`.
 
 ```bash
-git fetch upstream
-git merge upstream/main
+git fetch upstream --tags
+git merge <X.Y.Z>        # the upstream release tag, e.g. 0.6.8
 ```
 
 The merge guide categorizes each fork-modified file and explains how to handle conflicts. Key points:
