@@ -48,8 +48,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 52,
-            "count": 88,
+            "browser": 53,
+            "count": 89,
             "id": "check"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 262,
-        "browser": 78,
+        "blockStyle": 263,
+        "browser": 79,
         "cited": 99,
-        "files": 273,
+        "files": 274,
         "lineStyle": 11,
-        "withDocblock": 273,
-        "withFlags": 187
+        "withDocblock": 274,
+        "withFlags": 188
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3269,6 +3269,46 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "game",
+                "host"
+            ],
+            "file": "check-seedling-sphere-room-play.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "game"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling in the pipeline, T3: the ONE real Seedling room that SPHERE GROWTH placed as a LEAF behind a maze gate PLAYS in the Seedling wasm.",
+            "path": "scripts/procgen/check-seedling-sphere-room-play.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
             "citedBy": [
                 "docs/json/developer/procgen/flash.md",
                 "docs/json/developer/procgen/pipeline-presets.md"
@@ -5398,14 +5438,18 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/make-seedling-sphere-order.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "imp"
+            ],
             "browser": false,
             "category": "make",
             "citedBy": [
                 "docs/json/developer/procgen/flash.md"
             ],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "state"
+            ],
             "file": "make-seedling-spiral-room-preset.mjs",
             "flags": [
                 {
@@ -5413,6 +5457,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "state"
                 }
             ],
             "inheritedFlags": [
@@ -5421,7 +5471,7 @@ export const INSTRUMENTS = frz({
                     "name": "help"
                 }
             ],
-            "oneLiner": "Write the `seedling_spiral_room` preset: the shuffled-spiral world with ONE real Seedling room (seedling-in-the-pipeline T2), built headless from `SEEDLING_SPIRAL_ROOM_STATE` in `procgenPipeline/presetDefs.js`.",
+            "oneLiner": "Write a one-room Seedling preset, built headless from its state in `procgenPipeline/presetDefs.js` (`--state=`, default `spiral`):",
             "path": "scripts/procgen/make-seedling-spiral-room-preset.mjs"
         },
         {

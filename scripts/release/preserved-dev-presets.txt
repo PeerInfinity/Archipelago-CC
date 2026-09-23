@@ -40,4 +40,5 @@ seedling_atlas
 seedling_atlas_maze
 seedling_atlas_sphere
 seedling_playthrough
+seedling_sphere_room
 seedling_spiral_room

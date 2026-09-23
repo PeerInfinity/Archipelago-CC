@@ -7055,6 +7055,25 @@
       }
     }
   },
+  "seedling_sphere_room": {
+    "name": "Procgen Maze",
+    "folders": {
+      "AP_1": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Procgen Maze"
+          }
+        ],
+        "files": [
+          "AP_1_rules.json"
+        ],
+        "has_procgen_data": true
+      }
+    }
+  },
   "metadata": {
     "test_data_updated": "2026-08-30T17:04:46.715612+00:00",
     "games_with_test_data": 83,
