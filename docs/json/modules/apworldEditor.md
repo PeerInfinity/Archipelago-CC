@@ -27,6 +27,9 @@ document.
 | `regionRoundTrip.js` | the per-region **Edit ▸** door — resolves the substrate's declarations, runs the baseline, folds a save into ONE op; (S0) `sidecarEntryFacts`, what a region's sidecar block says about its entry; and (S2) `deriveRegionRules`, the derivation half alone — a payload's own rules, named by the document |
 | `regionLayout.js` | (M2) the map moves' layout — `slotLayout` (a slot's cells on a `Grid` sized by `mapBoundsFor`), `layoutChange` (the engine's placement, and every exit whose side-law verdict the move changed), `rewriteExitFlags` (a payload's `exits` in its substrate's own serialized form); (M3) `rewriteExits` (the one path a flag write and a side write share), `exitSideVerdicts` (the side law asked of a moved exit alone), `exitSidesOfSubstrate`; the ops and their refusal sentences are `rulesDocOps.js`'s `move-region` / `swap-regions` / `move-exit-side` / `swap-exit-sides` |
 | `regionRegenerate.js` | (substrate change R0) one region's payload **rebuilt for a substrate from the document alone** — `buildDocumentRegionSpec` (the realiser's spec off `regions[p][R]` + the slot's sidecars), `regionRealiserKind`, `freeItemsFor`, `regionSizeFor`, `strandedReferences`, `regenerateRegionEntry` (the engine's `generateRegion`, the one-region re-link, the engine's `serializeRegionEntry`); the op and its refusal sentences are `rulesDocOps.js`'s `regenerate-region-sidecar` |
+| `regionGenerationFlow.js` | (substrate change R2) what the block's **Region generation** form opens on and sends — `regionGenerationPlan` (the target's registry defaults, the seed, ⚖ Q4's size for a tiles target, the region's own recorded knobs when its payload is the target's own, or the op's pre-realiser refusal), `composeRegenerateArgs` (the bag → the op's arguments, as top-down composes them), `freeItemsSentence`, `regenerationProvenance`, `regenerationAnswer` |
+| `regionGenerationRun.js` | (R2) the **time-limit setting** (`regionGenerationTimeoutSeconds`, `REGION_GENERATION_TIMEOUT_DEFAULT_S`) and the **worker** protocol: `runRegenerateJob` (the worker's side) and `runRegenerateInWorker` (the page's: the budget, Cancel, `terminate()`), the timeout and Cancel sentences |
+| `regionRegenerateWorker.js` | (R2) the MODULE WORKER one Generate runs in — imports the eight registry libraries into its own registry, then `regionRegenerate.js`. ⛔ A worker cannot be bundled into `bundle.js`: `scripts/build/bundle-frontend.js` copies it into `dist/` (beside `stateManagerWorker.js` and `balanceWorker.js`), and in bundled mode the page resolves it at its SOURCE location, `stateManagerProxy`'s rule |
 | `regionRederive.js` | (S2) **Re-derive rules ▸** — `rederiveRegionRules({base, ops, doc}, slot, region)`: the pre-edit payload recovered from the session's record, and the ONE op that moves only the rules it produced |
 | `../procgenCore/compositeMapRenderer.js` | the **Map** tab's painter — shared with the procgen pipeline panel, substrate-neutral |
 | `../procgenCore/exitSides.js` | (M3) `exitSidesOf` — the registry-entry `exitSides` declaration (what else a payload keys by an exit's side), or why there is none; the one reader the ops and the block's side picker share |
@@ -682,12 +685,11 @@ largest sidecar slots (the numbers are in the S0 record, preset-sidecars plan
 not one sidecar textarea, and the Sidecars list of `seedling_playthrough/AP_1`
 expands into one row per entry without building a single JSON block.
 
-#### Regenerating a payload (substrate change R0) — an op, not yet a button
+#### Regenerating a payload (substrate change R0) — the op
 
-The D1 picker changes the `substrate` LABEL only. The op that rebuilds the
-PAYLOAD for a substrate is in place; the per-region generation form and its
-**Generate ▸** button that will record it are the substrate-change ladder's R1/R2
-(the Fable plan `apworld-substrate-change-plan.md`).
+The D1 picker changes the `substrate` LABEL only. The op below rebuilds the
+PAYLOAD for a substrate; the block's **Region generation** form (R2, next
+section) runs it in a worker and records its RESULT.
 
 ```js
 { op: 'regenerate-region-sidecar', player, region, substrate?, seed,
@@ -758,6 +760,92 @@ tracked entry regenerated as `maze` and as `text_adventure` came out clean excep
 the `jta` dataset hosts, whose strandings the op names (the numbers are in the
 R0 record, plan §7).
 
+**The free-item clause follows the target** (R2, §7.7 ⚖ #5): a target whose
+`hostsSurplusExitsNatively(regionParams)` answers true (bounce's `braid`, runner)
+never drifts an exit onto a free item, so the description and the realiser's
+refusal DROP *"M items rode free"* there (`res.hostsSurplus`); `column` keeps it.
+The op's pre-realiser refusals are one exported function, `regenerateOpRefusal`,
+and its description one more, `describeRegeneration` — the form below asks the
+first without running a realiser and answers with the second.
+
+#### Region generation ▾ — Generate in a worker, under a time limit (substrate change R2)
+
+⚖ User, 2026-09-23: *"selecting a new substrate opens the UI with the region
+generation settings and the button to run the generation"*; a time limit that is
+*"a configurable setting … a default of one minute per region"*; *"display time
+elapsed while the region is generating"*.
+
+**The gesture (⚖ Q1 A).** A pick in the block's `substrate` picker still writes
+the label (D1's op, untouched) and — only when that op LANDED — opens
+**▾ Region generation — `<target>`** under the block, on all three hosts (it is
+part of `_makeRegionSidecarBlock`; ONE form is open at a time, keyed by slot and
+region). Generate is a separate press. ⚠ On the **Map** the form is visible only
+once the region is drawable again: between the label pick and Generate the map
+refuses the region (its payload does not fit its label, C1's rule) and draws no
+block for it.
+
+**What the form opens on** (`regionGenerationPlan`):
+- the shared per-region form (`procgenCore/regionGenerationForm.js`, R1) on a bag
+  of the target's REGISTRY DEFAULTS (`defaultProcgenParams`) — its
+  `renderProcgenParams` knobs — plus a **Seed** row (a per-region counter on the
+  panel: +1 per Generate, reset on a new document) and, for a TILES target, the
+  region width/height rows at `regionSizeFor`'s size. Max items per region is
+  NOT drawn (the form's `fields` filter): the op carries the document's own
+  locations, so the control would write nothing;
+- *"this region was built with: …"* + **use these** / **use the defaults**, when
+  the region's payload is the target's OWN (`payloadBuiltBy`, the report's fit
+  rule) and its `procgenParamsFromPayload` read differs from the defaults (trap
+  1399: the recorded knobs can be the harder ones, so the defaults come first);
+- the free-item sentence, unless the target hosts surplus exits natively;
+- **Generate ▸** — or, for a target the op refuses before its realiser runs (no
+  realiser — jta, omsi, flash_seedling — or more exits than sides), the op's OWN
+  refusal sentence (`regenerateOpRefusal`) and no Generate.
+
+**Generate.** The bag becomes the op's arguments exactly as the pipeline's
+top-down run composes them (`assembleRegionParams({activeIds: [target], mode:
+'topDown', params})`, `effectiveHazardOpts`, the size for a tiles target, the
+free items made explicit). The op's pre-realiser refusal is asked first (a seed
+typed as nothing is refused by name). Then the region runs in the **worker**
+under the setting, the block showing *Loading the substrate libraries… 0.4 s*,
+then *Generating as `bounce`… 12.3 s / 60 s* (a `setInterval` on the panel)
+beside **Cancel**. A result lands as ONE **`set-region-sidecar`** carrying the
+computed entry and a **`provenance`** — `{op: 'regenerate-region-sidecar',
+substrate, seed, regionParams, hazardOpts, size?, freeItems, ms}` — through
+`_saveRegionSidecar`'s own path (the op preview → the schema/placement veto →
+ONE op, one undo); the answer is the regenerate op's own description plus V0's
+count. ⛔ The RESULT is recorded, not the pure op: the session re-folds every
+recorded op on each undo, so a recorded realiser would re-run (for up to the
+whole budget) on every later undo (plan §9.3). `set-region-sidecar` refuses a
+`provenance` that is not an object and names it in its description
+(*"… — regenerated as `bounce` (seed 3, 1.2 s)"*); nothing of it is written into
+the document. A refusal, a timeout, a Cancel, or a document that changed while
+the region generated is a sentence beside the block, and nothing is recorded.
+
+**The time limit** is `moduleSettings.apworldEditor.regionGenerationTimeoutSeconds`
+(integer ≥ 1, default `REGION_GENERATION_TIMEOUT_DEFAULT_S` = 60 — the schema
+`index.js` registers and the reader share the one constant; Options › All
+Settings), read at each press. It bounds the REALISER: the budget restarts when
+the worker says its libraries are loaded. The load has its own bound,
+`max(budget, REGION_GENERATION_LOAD_BOUND_MS = 30 s)` — measured, the eight
+libraries load in ≈1.2 s cold, so a 1 s budget applied to the load timed out every
+generation before its realiser started. A timeout answers *"the `bounce` realiser
+gave up after 60 s on region "C" — `regionGenerationTimeoutSeconds` = 60 (Options ›
+All Settings › apworldEditor). The worker was stopped; nothing was recorded."* The
+worker is `terminate()`d on a timeout, on Cancel and after every answer, and a
+message that arrives after the outcome is ignored.
+
+**Teardown.** The worker run and the elapsed ticker live on the panel instance
+and are stopped on `onPanelDestroy`, a new document, a slot pick, Cancel, the
+form's ✕, and a pick that opens another form — a remounted panel keeps old
+listeners, and a stale ticker would paint a dead run.
+
+**The worker** (`regionRegenerateWorker.js`) starts with an EMPTY registry and
+imports the eight libraries `scripts/procgen/reference/registry.mjs` declares as
+`REGISTRY_LIBRARIES` (`REGENERATE_WORKER_LIBRARIES`, held equal by a row); all
+eight load in a browser worker. A library that refused to load would be reported,
+and a target none of the loaded ones registers is refused by name — derived, not
+typed.
+
 #### The fields view (D1)
 
 ⚖ user, 2026-09-10, Q3: the block edits the whole entry, and *"I also want to
@@ -810,9 +898,10 @@ stored value records nothing — the session's own equality answers *"No change"
 
 **The `substrate` picker** changes the entry's `substrate` and nothing else —
 the payload is not touched, and the raw save accepts it (⚖ the replan). Its title
-says so: *"changes the label only — regenerate in the pipeline to rebuild the
-payload"* (`sidecarForm.SUBSTRATE_PICKER_CLAUSE`), beside the block's
-**Regenerate in the pipeline ▸**. The block's issue list then carries V0's
+says so: *"changes the label only — Generate below rebuilds the payload here, or
+regenerate in the pipeline"* (`sidecarForm.SUBSTRATE_PICKER_CLAUSE`), beside the
+block's **Regenerate in the pipeline ▸**; the pick also opens the block's
+**Region generation** form (R2, above). The block's issue list then carries V0's
 `SUBSTRATE_MISMATCH` sentence naming the substrate whose keys the payload
 actually has; one Undo takes both away.
 
@@ -2043,7 +2132,7 @@ The import is free in both modes, measured:
 
 | Suite | Where |
 |-------|-------|
-| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `regionRederive.test.js`, `regionLayout.test.js` (M2: every move and swap of two fixture slots, the refusals, the corpus control, the side law's census), `exitSides.test.js` (M3: the exit-side corpus control, the exhaustive deep diff over every side move and swap, the back exit, every refusal, ONE-WAY, Undo), `reverseLinks.test.js`, `sidecarIssues.test.js`, `sidecarForm.test.js` | vitest, `frontend/modules/apworldEditor/` |
+| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `regionRederive.test.js`, `regionLayout.test.js` (M2: every move and swap of two fixture slots, the refusals, the corpus control, the side law's census), `exitSides.test.js` (M3: the exit-side corpus control, the exhaustive deep diff over every side move and swap, the back exit, every refusal, ONE-WAY, Undo), `reverseLinks.test.js`, `sidecarIssues.test.js`, `sidecarForm.test.js`, `regionRegenerate.test.js`, `regionGenerationRun.test.js` (R2: the setting, the worker protocol with a fake worker — budget, load bound, Cancel, `terminate()`), `regionGenerationFlow.test.js` (R2: the plan, the args, the worker ≡ the op, the free-item clause, the panel's teardown) | vitest, `frontend/modules/apworldEditor/` |
 | `check-sidecar-fields.mjs` (+ `checkSidecarFields.test.js`) | `scripts/procgen/` — the corpus gate: every committed entry against its declaration, (V0) `sidecarIssues` per slot as its second layer, and (G2b-1) `regionRuleAgreement` per region as its third |
 | `../procgenCore/compositeMapRenderer.test.js` | vitest — the Map tab's renderer, driven by a TOY substrate |
 | `../procgenPipeline/compositeMapDocument.test.js` | vitest — `preset_sidecars` → `Grid`, including the player slot; (M2) `mapBoundsFor` |
