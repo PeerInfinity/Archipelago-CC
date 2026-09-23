@@ -26,12 +26,12 @@ import { createRng } from '../shared/rng.js';
 import {
     DEFAULT_REGION_SIZE, generateRegion, getRegionExits, linkIsAdjacentOnSide,
 } from '../procgenPipeline/procgenPipelineEngine.js';
-import { REGENERATE_RULES_UNCHANGED, applyRulesDocOp } from './rulesDocOps.js';
+import { REGENERATE_RULES_UNCHANGED, REGENERATE_STRANDED, applyRulesDocOp } from './rulesDocOps.js';
 import { sidecarIssues } from './sidecarIssues.js';
 import { slotLayout } from './regionLayout.js';
 import {
     REGION_SIZE_SOURCES, bfsParents, buildDocumentRegionSpec, defaultRegionParamsFor, exitShortName,
-    freeItemsFor, regionRealiserKind, regionSizeFor,
+    freeItemsFor, regionRealiserKind, regionSizeFor, strandedReferences,
 } from './regionRegenerate.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -246,6 +246,33 @@ describe('the re-link — ③ for one region', () => {
                 expect(x.isTeleporter, at).toBe(!linkIsAdjacentOnSide(layout.grid,
                     layout.cells.get(region), x.side, layout.cells.get(x.targetRegion)));
             }
+        }
+    });
+});
+
+describe('a payload that HOSTS what its siblings reference (found by the R0 corpus control)', () => {
+    const HOST_PATH = 'jta_dataset_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+
+    it('⛓⛓ the op NAMES every sibling it strands — exactly the report\'s new REF_UNRESOLVED errors', () => {
+        const doc = read(HOST_PATH);
+        const p = '1';
+        const [host] = Object.keys(doc.preset_sidecars[p]);
+        const res = applyRulesDocOp(doc, regenOp(p, host, 'maze'));
+        expect(res.ok, res.error).toBe(true);
+        const before = new Set(sidecarIssues(doc, p).filter((i) => i.kind === 'REF_UNRESOLVED').map((i) => i.region));
+        const now = sidecarIssues(res.doc, p).filter((i) => i.kind === 'REF_UNRESOLVED' && !before.has(i.region))
+            .map((i) => i.region).sort();
+        const named = strandedReferences(doc, p, host, res.doc.preset_sidecars[p][host]).map((x) => x.region).sort();
+        expect(now.length, 'the premise: this host strands siblings').toBeGreaterThan(0);
+        expect(named).toEqual(now);
+        expect(res.description).toContain(REGENERATE_STRANDED);
+        for (const r of now) expect(res.description).toContain(`${r}'s`);
+    });
+
+    it('⛓ a region that hosts nothing strands nothing (every probed pair)', () => {
+        for (const [key, p, region, target] of PAIRS) {
+            const res = applyRulesDocOp(DOCS[key], regenOp(p, region, target));
+            expect(res.description, `${key}/${region}`).not.toContain(REGENERATE_STRANDED);
         }
     });
 });

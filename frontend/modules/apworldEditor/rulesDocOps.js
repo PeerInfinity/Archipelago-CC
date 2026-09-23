@@ -1930,6 +1930,13 @@ export const REGENERATE_NEVER_CREATES = '⛔ regenerate-region-sidecar REPLACES 
     + 'CREATES one — a region with no room stays roomless, because a room needs the substrate '
     + 'that generated it.';
 
+/**
+ * ⛓ The clause a regeneration adds when it strands siblings that pointed at a
+ * value the OLD payload hosted (`regionRegenerate.strandedReferences`): named,
+ * never repaired. EXPORTED for the rows.
+ */
+export const REGENERATE_STRANDED = 'now point at a value no entry in the slot carries';
+
 /** ⛓ The seed refusal's reason. EXPORTED for the rows. */
 export const REGENERATE_SEED_REQUIRED = 'the op is replayable only because its seed is IN the op';
 
@@ -1959,6 +1966,11 @@ function noRealiserSentence(id, facts) {
  * only when the randomness is in the op. The rest default as
  * `regionRegenerate.js` says (the target's params hooks, top-down's free-item
  * rule, ⚖ Q4's size rule).
+ *
+ * ⚠ A payload may HOST a value its siblings reference (a descriptor's
+ * `references`); the new one hosts nothing, so those siblings are stranded and
+ * the description NAMES them after the unchanged-clause — reported, never
+ * repaired (M3's law; the report's `REF_UNRESOLVED` says the same).
  *
  * ⛔ **WHAT IT WRITES:** `preset_sidecars[p][region]` and NOTHING else — the
  * access rules are the spec's, the location names ride into the payload
@@ -2038,11 +2050,17 @@ function opRegenerateRegionSidecar(doc, op) {
     }
     const k = res.spec.exitSpecs.length;
     const l = res.spec.locationSpecs.length;
+    const stranded = res.stranded.length
+        ? `; ⚠ ${res.stranded.map((x) => `${x.region}'s \`${x.field}\``).join(', ')} `
+            + `${REGENERATE_STRANDED} (\`${[...new Set(res.stranded.map((x) => x.target))].join('`, `')}\` `
+            + `was hosted by ${name}'s old payload)`
+        : '';
     return ok(setPath(doc, ['preset_sidecars', p, name], res.entry),
         `region ${name}: payload regenerated as \`${substrate}\` (seed ${op.seed}; `
         + `${plural(k, 'exit')}, ${plural(l, 'location')} carried; `
         + `${plural(res.freeItems.length, 'item')} rode free; `
-        + `${plural(res.exitsRelinked, 'exit')} ${REGENERATE_RELINKED}) — ${REGENERATE_RULES_UNCHANGED}`);
+        + `${plural(res.exitsRelinked, 'exit')} ${REGENERATE_RELINKED}) — ${REGENERATE_RULES_UNCHANGED}`
+        + stranded);
 }
 
 /* ── the map moves (PRESET SIDECARS M2) ───────────────────────────────── */
