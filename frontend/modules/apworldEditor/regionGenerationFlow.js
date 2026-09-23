@@ -25,10 +25,11 @@
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
 import { bagFromPayload } from '../procgenCore/regionGenerationForm.js';
-import { assembleRegionParams } from '../procgenPipeline/sphereConfigHooks.js';
+import { assembleLibraryRegionParams, assembleRegionParams } from '../procgenPipeline/sphereConfigHooks.js';
 import { effectiveHazardOpts } from '../procgenPipeline/presetRun.js';
 import {
-    REGENERATE_BASE_REGION_PARAMS, freeItemsFor, hostsSurplusExitsNatively, regionSizeFor,
+    REGENERATE_BASE_REGION_PARAMS, REGION_SOURCE_KINDS, freeItemsFor, hostsSurplusExitsNatively,
+    librarySourceSummary, offersLibrarySource, regionSizeFor,
 } from './regionRegenerate.js';
 import { describeRegeneration, regenerateOpRefusal, regenerateRealiserRefusal } from './rulesDocOps.js';
 import { payloadBuiltBy } from './sidecarIssues.js';
@@ -82,7 +83,23 @@ export function regionGenerationPlan(doc, player, region, target, { seed = REGIO
         recordedDiff = Object.entries(read).filter(([k, v]) => JSON.stringify(v) !== JSON.stringify(own[k]));
         if (recordedDiff.length) recorded = { ...read, ...generic };
     }
-    return { target, refusal, tiles, size, defaults, recorded, recordedDiff };
+    return {
+        target, refusal, tiles, size, defaults, recorded, recordedDiff, offersLibrary: offersLibrarySource(entry),
+    };
+}
+
+/**
+ * ⛓ The form's SOURCE row (R5a, plan §12): *Generate* always; *Library entry*
+ * only when the target declares `instantiateLibraryEntryForSpecs`
+ * (`plan.offersLibrary`, the sphere path's own test).
+ */
+export const REGION_GENERATION_SOURCES = Object.freeze([
+    { id: REGION_SOURCE_KINDS.GENERATE, label: 'Generate' },
+    { id: REGION_SOURCE_KINDS.LIBRARY, label: 'Library entry' },
+]);
+
+export function regionGenerationSourcesFor(plan) {
+    return REGION_GENERATION_SOURCES.filter((s) => s.id !== REGION_SOURCE_KINDS.LIBRARY || plan.offersLibrary);
 }
 
 /**
@@ -92,7 +109,21 @@ export function regionGenerationPlan(doc, player, region, target, { seed = REGIO
  * target and top-down's free-item rule, made EXPLICIT so the provenance records
  * what the realiser was handed.
  */
-export function composeRegenerateArgs(doc, player, region, target, bag) {
+export function composeRegenerateArgs(doc, player, region, target, bag, { source } = {}) {
+    // ⛓ R5a — a LIBRARY source: no seed (the entry draws none; the op refuses
+    //   one), no size (the captured room's own), no free items (nothing
+    //   drifts); `regionParams` = the target's LIBRARY knobs
+    //   (`buildLibraryRegionParams`, in the sphere mode the hook is written for).
+    if (source?.kind === REGION_SOURCE_KINDS.LIBRARY) {
+        return {
+            doc,
+            player,
+            region,
+            substrate: target,
+            regionParams: assembleLibraryRegionParams({ substrateIds: [target], mode: 'sphere', params: bag }),
+            source,
+        };
+    }
     const entry = substrateRegistry.get(target);
     const tiles = !!entry && geometryOf(entry) === REGION_GEOMETRY.TILES;
     return {
@@ -137,6 +168,18 @@ export function freeItemsSentence(target, args) {
  * op's arguments, so the record says how the entry came to be.
  */
 export function regenerationProvenance(args, res) {
+    // ⛓ R5a — the id pair and the entry's name, never its payload: the pure op
+    //   carries the whole entry; the record's reader needs the pair.
+    if (args.source?.kind === REGION_SOURCE_KINDS.LIBRARY) {
+        return {
+            op: 'regenerate-region-sidecar',
+            substrate: args.substrate,
+            source: librarySourceSummary(args.source),
+            seed: null,
+            regionParams: args.regionParams,
+            ms: Math.round(res.ms ?? 0),
+        };
+    }
     return {
         op: 'regenerate-region-sidecar',
         substrate: args.substrate,
