@@ -151,10 +151,12 @@ describe('flash_seedling — serializeWorld joins the bound doors onto the stitc
     const extracted = entry.extractZoneRules(k, { region_id: 'r0', exitSides: ['S', 'E'] });
     const engineExits = new Map([
         ['exit_S', { exit_id: 'exit_S', side: 'S', exitName: 'exit_S', targetRegion: 'm1', targetExitId: null }],
-        ['exit_E', { exit_id: 'exit_E', side: 'E', exitName: 'exit_E', targetRegion: 'm2', targetExitId: 'exit_1' }],
+        ['exit_E', { exit_id: 'exit_E', side: 'E', exitName: 'exit_E', targetRegion: 'm2', targetExitId: 'exit_1', isTeleporter: true }],
     ]);
     const context = { substrateOfRegion: (id) => ({ m1: 'maze', m2: 'bounce' })[id] ?? null };
 
+    // ⛓ T2: `isTeleporter` is the ENGINE's (the side law's), carried as a boolean — exit_E's is set
+    //   above and exit_S's is absent, so both halves are asked.
     it('every exit is the bound door, external, target_level/target_spawn NULL, far side from the context', () => {
         const out = entry.serializeWorld({ ...extracted.payload, exits: engineExits }, null, null, null, context);
         expect(out.bound_doors).toBeUndefined();
@@ -162,11 +164,11 @@ describe('flash_seedling — serializeWorld joins the bound doors onto the stitc
         expect(out.exits).toEqual([
             {
                 ...doors[0], side: 'S', external: true, exitName: 'exit_S', targetRegion: 'm1', targetExitId: null,
-                target_level: null, target_spawn: null, target_substrate: 'maze',
+                isTeleporter: false, target_level: null, target_spawn: null, target_substrate: 'maze',
             },
             {
                 ...doors[1], side: 'E', external: true, exitName: 'exit_E', targetRegion: 'm2', targetExitId: 'exit_1',
-                target_level: null, target_spawn: null, target_substrate: 'bounce',
+                isTeleporter: true, target_level: null, target_spawn: null, target_substrate: 'bounce',
             },
         ]);
     });
