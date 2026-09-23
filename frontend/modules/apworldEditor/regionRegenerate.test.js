@@ -21,17 +21,19 @@ import { describe, expect, it } from 'vitest';
 
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { OPPOSITE_SIDE } from '../shared/procgen/spatialPrimitives.js';
+import { OPPOSITE_SIDE, SIDES } from '../shared/procgen/spatialPrimitives.js';
 import { createRng } from '../shared/rng.js';
 import {
     DEFAULT_REGION_SIZE, generateRegion, getRegionExits, linkIsAdjacentOnSide,
 } from '../procgenPipeline/procgenPipelineEngine.js';
-import { REGENERATE_RULES_UNCHANGED, REGENERATE_STRANDED, applyRulesDocOp } from './rulesDocOps.js';
+import {
+    REGENERATE_RULES_UNCHANGED, REGENERATE_SIDES_REASSIGNED, REGENERATE_STRANDED, applyRulesDocOp,
+} from './rulesDocOps.js';
 import { sidecarIssues } from './sidecarIssues.js';
 import { slotLayout } from './regionLayout.js';
 import {
     REGION_SIZE_SOURCES, bfsParents, buildDocumentRegionSpec, defaultRegionParamsFor, exitShortName,
-    freeItemsFor, regionRealiserKind, regionSizeFor, strandedReferences,
+    freeItemsFor, oneExitPerSide, regionRealiserKind, regionSizeFor, strandedReferences,
 } from './regionRegenerate.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -274,6 +276,61 @@ describe('a payload that HOSTS what its siblings reference (found by the R0 corp
             const res = applyRulesDocOp(DOCS[key], regenOp(p, region, target));
             expect(res.description, `${key}/${region}`).not.toContain(REGENERATE_STRANDED);
         }
+    });
+});
+
+describe('one exit per side for a KEYED target (found by the R0 corpus control)', () => {
+    const SPLIT_PATH = 'omsi_region_split_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+    const keyed = () => substrateRegistry.getAll().filter((e) => regionRealiserKind(e) && oneExitPerSide(e));
+    const sharing = () => substrateRegistry.getAll().filter((e) => regionRealiserKind(e) && !oneExitPerSide(e));
+
+    it('⛓⛓ two exits on one side: the ADJACENT link keeps it, the other is reassigned, and the op builds', () => {
+        const doc = read(SPLIT_PATH);
+        const p = '1';
+        const { grid, cells } = slotLayout(doc, p);
+        // the region whose old sides collide, found rather than named
+        const region = Object.keys(doc.preset_sidecars[p]).find((r) => {
+            const sides = (doc.preset_sidecars[p][r].playable_payload.exits ?? []).map((x) => x.side);
+            return new Set(sides).size < sides.length;
+        });
+        expect(region, 'the premise: a region with two exits on one side').toBeTruthy();
+        expect(keyed().length).toBeGreaterThan(0);
+        for (const e of keyed()) {
+            const spec = buildDocumentRegionSpec(doc, p, region, { substrate: e.id });
+            const sides = spec.exitSpecs.map((x) => x.side).filter(Boolean);
+            expect(new Set(sides).size, e.id).toBe(sides.length);
+            expect(spec.sidesReassigned.length, e.id).toBeGreaterThan(0);
+            for (const x of spec.exitSpecs.filter((y) => y.side)) {
+                const collided = doc.preset_sidecars[p][region].playable_payload.exits
+                    .filter((o) => o.side === x.side).length > 1;
+                if (collided) {
+                    expect(linkIsAdjacentOnSide(grid, cells.get(region), x.side, cells.get(x.target_region)),
+                        `${e.id}: ${x.exit_id} kept ${x.side} but is not the adjacent link`).toBe(true);
+                }
+            }
+            const res = applyRulesDocOp(doc, regenOp(p, region, e.id));
+            expect(res.ok, `${e.id}: ${res.error}`).toBe(true);
+            expect(res.description).toContain(`${REGENERATE_SIDES_REASSIGNED} ${spec.sidesReassigned.join(', ')}`);
+        }
+        for (const e of sharing()) {
+            expect(buildDocumentRegionSpec(doc, p, region, { substrate: e.id }).sidesReassigned, e.id).toEqual([]);
+        }
+    });
+
+    it('⛔ a region with more exits than sides is refused BY NAME for a keyed target, built for the others', () => {
+        const doc = read('procgen_topdown/AP_4/AP_4_rules.json');
+        const p = '1';
+        const n = SIDES.length;
+        const region = Object.keys(doc.preset_sidecars[p]).find((r) => (doc.regions[p][r]?.exits ?? []).length > n);
+        expect(region, 'the premise: a region with more exits than sides').toBeTruthy();
+        const exits = doc.regions[p][region].exits.length;
+        for (const e of keyed()) {
+            const res = applyRulesDocOp(doc, regenOp(p, region, e.id));
+            expect(res.ok, e.id).toBe(false);
+            expect(res.error).toContain(`has ${exits} exits, and \`${e.id}\` holds ONE exit per side`);
+        }
+        const tiles = sharing().find((e) => e.id === 'maze') ?? sharing()[0];
+        expect(applyRulesDocOp(doc, regenOp(p, region, tiles.id)).ok).toBe(true);
     });
 });
 
