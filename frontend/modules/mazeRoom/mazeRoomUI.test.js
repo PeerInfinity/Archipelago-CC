@@ -192,6 +192,33 @@ describe('MazeRoomUI — arrival position on region load', () => {
         }
     });
 
+    /**
+     * ⛓ T2b F2 — a keypress whose step crosses into another region loads it
+     * SYNCHRONOUSLY (procgenPlayer → maze:loadRegion → applyLoadedRegion,
+     * which clears the queue) inside the queue's own stepOne. The next
+     * keypress threw "atIndex 0 is inside the done region (cursor 1)" on the
+     * box. Driven here by an executor that performs the load itself.
+     */
+    it('T2b F2 — a keypress that crosses regions leaves the queue {0,0}, and the NEXT keypress does not throw', () => {
+        const panel = new MazeRoomUI(null, {});
+        const worldOf = () => makeWorld({
+            entrance: { x: 4, y: 3 },
+            exits: [{ exit_id: 'east', x: 7, y: 3, side: 'E', targetRegion: 'B' }],
+        });
+        panel.applyLoadedRegion({ region_id: 'A', world: worldOf(), arrivedFrom: null });
+        let crossings = 0;
+        panel._runEntry = () => {
+            crossings += 1;
+            panel.applyLoadedRegion({ region_id: 'B', world: worldOf(), arrivedFrom: null });
+        };
+        const key = (k) => panel._handleKeydown({ key: k, preventDefault: () => {} });
+        key('ArrowRight');
+        expect(crossings).toBe(1);
+        expect({ cursor: panel._mazeQueue.cursor, length: panel._mazeQueue.length }).toEqual({ cursor: 0, length: 0 });
+        expect(() => key('ArrowLeft')).not.toThrow();
+        expect(crossings).toBe(2);
+    });
+
     it('spawns at the entrance when arrivedFrom is null', () => {
         const panel = new MazeRoomUI(null, {});
         panel.applyLoadedRegion({

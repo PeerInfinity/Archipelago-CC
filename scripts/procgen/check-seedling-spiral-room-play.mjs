@@ -529,6 +529,69 @@ async function main() {
     }, target);
 
     /**
+     * ⛓ T2b F2 — ONE maze→maze crossing by REAL KEYPRESSES (the maze panel's
+     * own `_handleKeydown`, which holds the page's keyboard after F4): the keys
+     * of a shortest path from the player to the exit into `target`, pressed one
+     * by one. Exits are walls to the flood except the goal. `{keys, region,
+     * queue}` after the crossing, or `{error}`.
+     */
+    const mazeKeyCross = async (target) => {
+        const plan = await page.evaluate(async (want) => {
+            const p = (await import('./modules/mazeRoom/index.js')).getPanelInstance();
+            const world = p.world;
+            const key = (x, y) => `${x},${y}`;
+            const exitAt = new Map([...world.exits.values()].map((e) => [key(e.x, e.y), e]));
+            const from = { ...p.state.player_pos };
+            // Standing ON the exit into `want` (an arrival lands on its paired
+            // exit): step off onto a floor neighbour and back on.
+            const here = exitAt.get(key(from.x, from.y));
+            if (here?.targetRegion === want) {
+                const dirs = [[0, -1, 'ArrowUp', 'ArrowDown'], [1, 0, 'ArrowRight', 'ArrowLeft'],
+                    [0, 1, 'ArrowDown', 'ArrowUp'], [-1, 0, 'ArrowLeft', 'ArrowRight']];
+                const off = dirs.find(([dx, dy]) => {
+                    const nx = from.x + dx; const ny = from.y + dy;
+                    return nx >= 0 && ny >= 0 && nx < world.width && ny < world.height && !exitAt.has(key(nx, ny))
+                        && !world.obstacles.has(key(nx, ny)) && world.tiles[ny * world.width + nx] === 0;
+                });
+                if (off) return { keys: [off[2], off[3]], from: p.currentRegionId };
+            }
+            const prev = new Map([[key(from.x, from.y), null]]);
+            const queue = [from];
+            let goal = null;
+            while (queue.length && !goal) {
+                const c = queue.shift();
+                for (const [dx, dy, k] of [[0, -1, 'ArrowUp'], [1, 0, 'ArrowRight'], [0, 1, 'ArrowDown'], [-1, 0, 'ArrowLeft']]) {
+                    const nx = c.x + dx; const ny = c.y + dy; const kk = key(nx, ny);
+                    if (prev.has(kk) || nx < 0 || ny < 0 || nx >= world.width || ny >= world.height) continue;
+                    const ex = exitAt.get(kk);
+                    if (ex) { if (ex.targetRegion === want) { prev.set(kk, { c, k }); goal = kk; break; } continue; }
+                    if (world.obstacles.has(kk) || world.tiles[ny * world.width + nx] !== 0) continue;
+                    prev.set(kk, { c, k });
+                    queue.push({ x: nx, y: ny });
+                }
+            }
+            if (!goal) return { error: `no key path from ${JSON.stringify(from)} in ${p.currentRegionId} to ${want}` };
+            const keys = [];
+            let at = goal;
+            while (prev.get(at)) { const { c, k } = prev.get(at); keys.unshift(k); at = key(c.x, c.y); }
+            return { keys, from: p.currentRegionId };
+        }, target);
+        if (plan.error) return plan;
+        for (const k of plan.keys) {
+            // eslint-disable-next-line no-await-in-loop
+            await page.keyboard.press(k);
+            // eslint-disable-next-line no-await-in-loop
+            await page.waitForTimeout(80);
+        }
+        const after = await waitFor(`the keypresses crossed into ${target}`, () => page.evaluate(async (want) => {
+            const p = (await import('./modules/mazeRoom/index.js')).getPanelInstance();
+            return p?.currentRegionId === want
+                ? { region: want, queue: { cursor: p._mazeQueue?.cursor, length: p._mazeQueue?.length } } : null;
+        }, target), 8000).catch(() => null);
+        return after ? { ...after, keys: plan.keys.length, from: plan.from } : { error: `the ${plan.keys.length} keys did not cross into ${target}` };
+    };
+
+    /**
      * Back into the room from `mazeRegion`, the region the departure left us in,
      * and ONLY from it: the arrival arm under test is the one that reads
      * `source_region`.
@@ -549,7 +612,8 @@ async function main() {
      * region's `clear()` emptied the queue, and the cursor then advanced past it.
      * Each hop prints the queue's `{cursor, length}` before it moves.
      */
-    async function returnFrom(label, mazeRegion, door, expectLoads, { stillAfterReturn = false, keyAfterReturn = null } = {}) {
+    async function returnFrom(label, mazeRegion, door, expectLoads,
+        { stillAfterReturn = false, keyAfterReturn = null, keyCrossVia = null } = {}) {
         await page.evaluate(async () => {
             const bus = (await import('./app/core/eventBus.js')).default;
             bus.publish('ui:activatePanel', { panelId: 'mazeRoomPanel' }, 'check-seedling-spiral-room-play');
@@ -560,6 +624,23 @@ async function main() {
         });
         const panelRegion = await waitFor(`the maze panel holds ${mazeRegion}`, mazeRegionNow, 20000);
         check(`${label}: the maze panel is playing ${mazeRegion}`, panelRegion === mazeRegion, panelRegion);
+        if (keyCrossVia) {
+            /**
+             * ⛓ T2b F2 — out to `keyCrossVia` and back BY KEYPRESSES. Before the
+             * fix, the first crossing left the queue at {cursor 1, length 0} and
+             * the FIRST key of the second threw "ActionQueue.add: atIndex 0 is
+             * inside the done region" (reproduced at W0 on try 1).
+             */
+            const errorsBefore = pageErrors.length;
+            const out = await mazeKeyCross(keyCrossVia);
+            const back = out.error ? out : await mazeKeyCross(mazeRegion);
+            const thrown = pageErrors.slice(errorsBefore).filter((e) => /ActionQueue|done region/.test(e));
+            check(`${label}: two maze crossings by REAL KEYPRESSES (${mazeRegion} -> ${keyCrossVia} -> ${mazeRegion}), `
+                + 'no ActionQueue throw, the queue empty after each',
+            !out.error && !back.error && thrown.length === 0
+                && out.queue.cursor === 0 && out.queue.length === 0 && back.queue.cursor === 0 && back.queue.length === 0,
+            `${JSON.stringify(out)} ; ${JSON.stringify(back)} ; thrown ${JSON.stringify(thrown)}`);
+        }
         const hops = [];
         let walk = null;
         for (let hop = 0; hop < 4; hop += 1) {
@@ -771,7 +852,12 @@ async function main() {
         check(`Phase C2: the second door is NOT exits[0] (${first.exit_id}), so D2 can tell the arms apart`,
             second.exit_id !== first.exit_id
             && (second.entrance_spawn.x !== first.entrance_spawn.x || second.entrance_spawn.y !== first.entrance_spawn.y));
-        await returnFrom('Phase D2', second.targetRegion, second, 3);
+        // F2's detour: the maze neighbour of the stairs' region that is not the
+        // room, read off the preset (region_1_1 in the committed one).
+        const detour = (SIDECARS[second.targetRegion]?.playable_payload?.exits ?? [])
+            .map((e) => e.targetRegion).find((r) => r && r !== START && SIDECARS[r]?.substrate === 'maze') ?? null;
+        check('Phase D2: the stairs\' maze region has a maze neighbour for the F2 keypress detour', !!detour, String(detour));
+        await returnFrom('Phase D2', second.targetRegion, second, 3, { keyCrossVia: detour });
         check('Phase D2: the return published no crossing', (await glueMoves()).length === 2,
             `${(await glueMoves()).length} glue moves`);
 
