@@ -200,7 +200,7 @@ The sphere-growth driver and the Procgen Pipeline panel read a further set of op
 - **Requirement-targeted zone generation:** `generateZoneForSpecs` / `generateZoneForSpecsGen`, `buildZoneSpecs`, `gateableItems` (null ⇒ full vocabulary; non-geometry gate terms become bridge-evaluated locks).
 - **Gate-structure vetoes and hints:** `canHostExitGates`, `canHostExitGatesBraid`, `exitGateVeto`, `backPortalGated`, `hostsSurplusExitsNatively`, `gateHostingHint`.
 - **Region contract:** `buildRegionContract` — called by the engine's generic dispatcher; the panel's "Edit ▸" flow and the verify scripts consume the result.
-- **Pipeline panel integration:** `defaultProcgenParams`, `prepareSphereGrowth`, `buildRegionParams`, `renderProcgenParams` (per-substrate parameter defaults/controls, consulted for the substrates the run's quotas or mix select). Two more are scoped to a region-library SELECTION instead: `buildLibraryRegionParams` (the regionParams a selected library entry of this substrate reads) and `renderLibraryProcgenParams` (their controls, in the panel's Region libraries subsection), consulted for the substrates the selected sphere libraries' entries realise — which need no quota of their own. The maze declares that pair for its packs' connection-strictness flags (`mazeProcgenParams.js`).
+- **Pipeline panel integration:** `defaultProcgenParams`, `prepareSphereGrowth`, `buildRegionParams`, `renderProcgenParams` (per-substrate parameter defaults/controls, consulted for the substrates the run's quotas or mix select). Two more are scoped to a region-library SELECTION instead: `buildLibraryRegionParams` (the regionParams a selected library entry of this substrate reads) and `renderLibraryProcgenParams` (their controls, in the panel's Region libraries subsection), consulted for the substrates the selected sphere libraries' entries realise — which need no quota of their own. The maze declares that pair for its packs' connection-strictness flags (`mazeProcgenParams.js`). `procgenParamsFromPayload(payload)` is the inverse direction: the partial params bag an EXISTING payload records about how it was generated, so a per-region generation form opens on the region's own knobs instead of the defaults (`procgenCore/regionGenerationForm.js` `bagFromPayload` overlays it on `defaultProcgenParams`). Bounce and runner declare it, each reading only the physics profile its payload stamps (`params.physics.profile`; an absent bounce stamp means `experimental`, which stamps nothing); nothing else they generate with leaves a readable trace in the payload, and the maze's payload records none of its knobs.
 - **Placement vocabulary:** `driftItems` (items a driver may attach to a surplus arrowless exit when granted free) and `libraryItems` (merged with the shared `DEFAULT_ITEMS` by the pipeline's `mergedItemLib`). There is no obstacle counterpart: a zone substrate's gate defs reach the compiler as each region's own `obstacle_defs`, and the pipeline hands the engine `DEFAULT_OBSTACLES` alone. (Bounce and runner declared a `libraryObstacles` field until 2026-09-16; nothing read it, and a `presetRun.test.js` row now refuses one coming back without a reader.)
 
 ## Capability matrix
@@ -217,7 +217,7 @@ Both of those are the checked-in snapshot, taken headless by the generator. The 
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**8 registered entries · 73 fields · 14 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**8 registered entries · 74 fields · 14 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported.
 
@@ -365,6 +365,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `hostsSurplusExitsNatively` | — | — | fn | fn | — | — | — | — |
 | `libraryItems` | — | — | 7 keys | 6 keys | — | — | 48 keys | {Victory} |
 | `prepareSphereGrowth` | — | — | fn | — | — | — | — | — |
+| `procgenParamsFromPayload` | — | — | fn | fn | — | — | — | — |
 | `renderLibraryProcgenParams` | fn | — | — | — | — | — | — | — |
 | `renderProcgenParams` | fn | — | fn | fn | — | — | — | — |
 

@@ -46,6 +46,7 @@ import {
 import { DEFAULT_PROFILE_ID, PROFILES } from './physics.js';
 import {
     DEFAULT_RUNNER_PROCGEN_PARAMS, buildRunnerRegionParams, renderRunnerProcgenParams,
+    runnerProcgenParamsFromPayload,
 } from './runnerProcgenParams.js';
 
 export { SWEEP_SATURATING_PROFILES };
@@ -631,6 +632,9 @@ export function createRunnerSubstrateEntry({
         defaultProcgenParams: DEFAULT_RUNNER_PROCGEN_PARAMS,
         buildRegionParams: buildRunnerRegionParams,
         renderProcgenParams: renderRunnerProcgenParams,
+        // What an existing payload records of those params (the per-region
+        // generation form opens on it — apworld substrate R1).
+        procgenParamsFromPayload: runnerProcgenParamsFromPayload,
     });
 }
 

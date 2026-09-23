@@ -36,13 +36,13 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 41,
+            "fields": 42,
             "id": "bounce",
             "label": "Bounce Demo",
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 37,
+            "fields": 38,
             "id": "runner",
             "label": "Runner Demo",
             "registeredBy": "frontend/modules/runnerDemo/runnerDemoLibrary.js"
@@ -212,6 +212,7 @@ export const REGISTRY = frz({
                 "hostsSurplusExitsNatively",
                 "libraryItems",
                 "prepareSphereGrowth",
+                "procgenParamsFromPayload",
                 "renderLibraryProcgenParams",
                 "renderProcgenParams"
             ],
@@ -4264,6 +4265,73 @@ export const REGISTRY = frz({
             "documentedHow": "bullet",
             "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "prepareSphereGrowth"
+        },
+        {
+            "carriedBy": [
+                "bounce",
+                "runner"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "bullet",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "name": "procgenParamsFromPayload"
         },
         {
             "carriedBy": [

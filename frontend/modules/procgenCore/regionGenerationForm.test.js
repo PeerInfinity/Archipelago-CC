@@ -13,6 +13,7 @@
  * (the same one `procgenPipelineUI.test.js` uses for the Parameters section).
  */
 
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -22,7 +23,7 @@ import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { geometryOf, REGION_GEOMETRY } from './regionGeometry.js';
 import {
-    REGION_GENERATION_FIELDS, PROCGEN_PARAMS_ATTR, fieldRow, numberField,
+    REGION_GENERATION_FIELDS, PROCGEN_PARAMS_ATTR, bagFromPayload, fieldRow, numberField,
     regionGenerationFieldsFor, renderRegionGenerationForm,
 } from './regionGenerationForm.js';
 
@@ -212,5 +213,71 @@ describe('the seed row is drawn iff the host asks for one', () => {
     it('⛔ without `seed` there is no Seed row (the pipeline\'s seed is a world row)', () => {
         const form = withFakeDocument(() => renderRegionGenerationForm({ substrateId: SYN.sides, params: {} }));
         expect(labels(form)).not.toContain('Seed');
+    });
+});
+
+/* ── ⚖ Q2 C-then-A: a per-region bag from an existing payload ──────────── */
+
+/** Every sidecar entry in the committed presets, with its registry entry. */
+function corpusEntries() {
+    const out = [];
+    const dir = join(ROOT, 'frontend', 'presets');
+    for (const game of readdirSync(dir, { withFileTypes: true })) {
+        if (!game.isDirectory()) continue;
+        for (const seed of readdirSync(join(dir, game.name), { withFileTypes: true })) {
+            const f = join(dir, game.name, seed.name, `${seed.name}_rules.json`);
+            if (!seed.isDirectory() || !existsSync(f)) continue;
+            const doc = JSON.parse(readFileSync(f, 'utf8'));
+            for (const regions of Object.values(doc.preset_sidecars ?? {})) {
+                for (const sc of Object.values(regions ?? {})) {
+                    if (sc?.playable_payload && substrateRegistry.get(sc.substrate)) out.push(sc);
+                }
+            }
+        }
+    }
+    return out;
+}
+
+describe('bagFromPayload — the form opens on what the region was built with, where knowable', () => {
+    const declaring = shipped.filter((e) => typeof e.procgenParamsFromPayload === 'function');
+    const corpus = corpusEntries().filter((sc) => declaring.some((e) => e.id === sc.substrate));
+
+    it('⛓ non-vacuity: some entry declares the hook, and the corpus holds payloads it reads', () => {
+        expect(declaring.length).toBeGreaterThan(0);
+        expect(corpus.length).toBeGreaterThan(0);
+    });
+
+    it('⛓ no payload (or no hook) → the entry\'s defaults alone, as a fresh object', () => {
+        for (const entry of shipped) {
+            const bag = bagFromPayload(entry, null);
+            expect(bag).toEqual(entry.defaultProcgenParams ?? {});
+            if (entry.defaultProcgenParams) expect(bag).not.toBe(entry.defaultProcgenParams);
+        }
+    });
+
+    it('⛓ a real payload\'s knobs override the defaults, and the drawn form SHOWS them', () => {
+        let differs = 0;
+        for (const sc of corpus) {
+            const entry = substrateRegistry.get(sc.substrate);
+            const read = entry.procgenParamsFromPayload(sc.playable_payload);
+            const bag = bagFromPayload(entry, sc.playable_payload);
+            expect(bag).toEqual({ ...entry.defaultProcgenParams, ...read });
+            const form = withFakeDocument(() => renderRegionGenerationForm(
+                { substrateId: sc.substrate, params: bag, generic: false }));
+            const values = controls(form).map((c) => c.value);
+            for (const [k, v] of Object.entries(read)) {
+                // the control bound to k shows v
+                const probeBag = { ...bag };
+                const probe = withFakeDocument(() => renderRegionGenerationForm(
+                    { substrateId: sc.substrate, params: probeBag, generic: false }));
+                const idx = boundKeys(probe, probeBag).findIndex((keys) => keys.includes(k));
+                expect(idx, `${sc.substrate}: no control writes ${k}`).toBeGreaterThanOrEqual(0);
+                expect(values[idx]).toBe(String(v));
+                if (v !== entry.defaultProcgenParams?.[k]) differs += 1;
+            }
+        }
+        // ⚖ Q2's point: somewhere in the corpus the payload says something the
+        // defaults would have got wrong (§7.7 ⚖ #4).
+        expect(differs).toBeGreaterThan(0);
     });
 });
