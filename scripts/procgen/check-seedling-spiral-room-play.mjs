@@ -15,11 +15,13 @@
  *     engages from the rules' own `flash_panel` block, and the wasm reaches
  *     'ready'.
  *   Phase B — ARRIVAL. The start region is the Seedling room, and the initial
- *     load teleports the player to its first bound door's `entrance_spawn` as a
- *     `new Game(level, x, y)`. The arrival publishes no crossing. Standing ON
- *     the door and pressing into it does NOT fire it (the game's check() latch).
+ *     load teleports the player to its first bound door as a
+ *     `new Game(level, x, y)`: to the game's OWN return spawn for that door (the
+ *     reverse link's playerx/playery, one tile off it; T2b U2b), the door tile
+ *     only when the map has none. The arrival publishes no crossing, and the
+ *     player is where the game draws it.
  *   Phase C — DEPARTURE, fired BY THE GAME. Real keys on the focused canvas step
- *     off the door and back on, so the game's own Teleporter writes
+ *     onto the door (off it first when standing on it), so the game's own Teleporter writes
  *     `pendingExit`. That report reaches the binding's door-TILE arm (the door
  *     has a hand name, so the `out_<type>_<x>_<y>` id arm cannot match it), and
  *     ONE `user:regionMove` goes to the maze neighbour on the real channel.
@@ -30,7 +32,7 @@
  *     exit back, and a keypress takes it. procgenPlayer hands over
  *     `arrivedFrom.source_region`, the binding's THIRD arrival arm (the maze's
  *     own `exit_id` names no door), and the arrival teleport lands on that
- *     door's spawn. No crossing is published.
+ *     door's return spawn. No crossing is published.
  *   Phase C2/D2 — the same out and back through the SECOND bound door. This is
  *     the discriminator: the first door is also `exits[0]`, the no-match
  *     fallback, so only a return that lands on the second door's spawn proves
@@ -77,6 +79,7 @@ import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
+import { returnKey, returnSpawnTable } from '../../frontend/modules/flashPanel/seedlingReturnSpawns.js';
 
 argvHelp(import.meta.url);
 
@@ -148,6 +151,18 @@ async function main() {
     const LINK_TYPES = ['teleporter', 'stairsdown', 'stairsup'];
     const entityOn = ([tx, ty]) => LEVEL?.entities.find((e) => LINK_TYPES.includes(e.type)
         && Math.floor(e.x / MAP.tile_size) === tx && Math.floor(e.y / MAP.tile_size) === ty);
+    /**
+     * ⛓ T2b U2b — WHERE AN ARRIVAL THROUGH `door` LANDS: the game's own return
+     * spawn off the SAME table the panel builds from the same map document, the
+     * door tile only when the map has none. Read, never re-typed.
+     */
+    const RETURNS = returnSpawnTable(MAP);
+    const arrivalOf = (door) => {
+        const [tx, ty] = door.entrance_tile ?? door.exit_tiles[0];
+        const back = RETURNS.get(returnKey(ROOM.level, tx, ty));
+        return back ? { x: back.x, y: back.y, landing: 'return-spawn' }
+            : { ...door.entrance_spawn, landing: 'entrance-spawn' };
+    };
     const UNDECLARED = (atlasRegion?.exits ?? [])
         .filter((e) => e.kind !== 'edge' && (e.sub_region ?? null) === (ROOM?.atlas_sub_region ?? null)
             && !bound.has(e.exit_id))
@@ -223,7 +238,8 @@ async function main() {
         const glue = (await import('./modules/flashPanel/index.js')).getSeedlingRegionGlue();
         const { resolveArrivalSpawn } = await import('./modules/flashPanel/seedlingRegionBinding.js');
         const b = glue.binding;
-        return { region: b.region, arrivedFrom: b.arrivedFrom, spawn: resolveArrivalSpawn(b.world, b.arrivedFrom) };
+        return { region: b.region, arrivedFrom: b.arrivedFrom,
+            spawn: resolveArrivalSpawn(b.world, b.arrivedFrom, b.returnSpawns) };
     });
 
     /** A `new Game(level, x, y)` the glue did not ask for: the template's native jump. */
@@ -236,13 +252,6 @@ async function main() {
                 assignTo: { class: 'net.flashpunk.FP', property: 'world' },
             });
         }, { l: level, px: x, py: y });
-    }
-
-    async function hold(key, ms) {
-        await gameFrame().evaluate(() => document.getElementById('canvas')?.focus());
-        await page.keyboard.down(key);
-        await page.waitForTimeout(ms);
-        await page.keyboard.up(key);
     }
 
     /**
@@ -340,15 +349,23 @@ async function main() {
         await focusGame();
         const centre = { x: door.entrance_spawn.x + TILE / 2, y: door.entrance_spawn.y + TILE / 2 };
         const before = await livePlayer();
-        check(`${label}: the LIVE player stands on ${door.exit_id} before stepping off`,
-            !!before && Math.hypot(before.x - centre.x, before.y - centre.y) <= TILE / 2,
+        /**
+         * ⛓ ON the door (a jump put it there) → step off first: the game's
+         * check() latch fires a door only when the player walks ONTO it. At the
+         * door's return spawn (an arrival, T2b U2b) the player is already off it.
+         */
+        const onDoor = !!before && Math.hypot(before.x - centre.x, before.y - centre.y) <= TILE / 2;
+        check(`${label}: the LIVE player stands ${onDoor ? 'ON' : 'within a tile or two of'} ${door.exit_id} before stepping on`,
+            !!before && Math.hypot(before.x - centre.x, before.y - centre.y) <= 2 * TILE,
             `live ${JSON.stringify(before)}, door centre ${JSON.stringify(centre)}`);
-        const off = await holdUntil(keys.off, async () => {
-            const p = await livePlayer();
-            return p && Math.hypot(p.x - centre.x, p.y - centre.y) >= STEP_OFF_PX ? p : null;
-        });
-        check(`${label}: ${keys.off} held until the LIVE player stood a tile off ${door.exit_id}`,
-            !!off.value, `${JSON.stringify(before)} -> ${JSON.stringify(off.value ?? await livePlayer())} in ${off.ms} ms`);
+        if (onDoor) {
+            const off = await holdUntil(keys.off, async () => {
+                const p = await livePlayer();
+                return p && Math.hypot(p.x - centre.x, p.y - centre.y) >= STEP_OFF_PX ? p : null;
+            });
+            check(`${label}: ${keys.off} held until the LIVE player stood a tile off ${door.exit_id}`,
+                !!off.value, `${JSON.stringify(before)} -> ${JSON.stringify(off.value ?? await livePlayer())} in ${off.ms} ms`);
+        }
         const pendingBefore = (await readGameState()).pendingExit;
         const firedYet = async () => {
             const s = await readGameState();
@@ -541,12 +558,13 @@ async function main() {
             `${hops.join(' ; ')}${walk?.error ? ` ; ${JSON.stringify(walk)}` : ''}`);
         const region = await waitFor(`gameState back in ${START}`, async () =>
             ((await currentRegion()) === START ? START : null), 15000);
-        const call = invoked(ROOM.level, door.entrance_spawn);
+        const want = arrivalOf(door);
+        const call = invoked(ROOM.level, want);
         await waitFor(`arrival invocation ${call}`, () => logs.some((l) => l.includes(call)) || null, 20000);
         const st = await waitFor('the game reports the arrival spawn', async () => {
             const s = await readGameState();
-            return s.level === ROOM.level && s.playerPositionX === door.entrance_spawn.x
-                && s.playerPositionY === door.entrance_spawn.y ? s : null;
+            return s.level === ROOM.level && s.playerPositionX === want.x
+                && s.playerPositionY === want.y ? s : null;
         }, 15000);
         if (stillAfterReturn) {
             /**
@@ -568,7 +586,7 @@ async function main() {
         }
         const a = await arrival();
         const armsOneTwo = DOORS.some((d) => d.exit_id === a.arrivedFrom?.exit_id || d.exitName === a.arrivedFrom?.exit_id);
-        check(`${label}: back in ${START}, and the arrival teleport landed on ${door.exit_id}'s spawn`,
+        check(`${label}: back in ${START}, and the arrival teleport landed on ${door.exit_id}'s ${want.landing}`,
             region === START && st.level === ROOM.level, `${call}; checkpoint (${st.playerPositionX},${st.playerPositionY})`);
         check(`${label}: the binding chose ${door.exit_id} by the THIRD arm — source_region ${mazeRegion}, `
             + 'and an exit_id that names no door',
@@ -663,14 +681,19 @@ async function main() {
 
         // ── Phase B — arrival ───────────────────────────────────────────────────
         const first = DOORS[0];
-        const arrivalCall = invoked(ROOM.level, first.entrance_spawn);
+        const arriveB = arrivalOf(first);
+        check(`Phase B: the map gives ${first.exit_id} a return spawn of the game's own, OFF the door tile`,
+            arriveB.landing === 'return-spawn'
+            && (arriveB.x !== first.entrance_spawn.x || arriveB.y !== first.entrance_spawn.y),
+            `${JSON.stringify(arriveB)} vs the door tile ${JSON.stringify(first.entrance_spawn)}`);
+        const arrivalCall = invoked(ROOM.level, arriveB);
         await waitFor(`arrival invocation ${arrivalCall}`, () => logs.some((l) => l.includes(arrivalCall)) || null, 120000);
         const stB = await waitFor('the game reports the arrival spawn', async () => {
             const st = await readGameState();
-            return st.level === ROOM.level && st.playerPositionX === first.entrance_spawn.x ? st : null;
+            return st.level === ROOM.level && st.playerPositionX === arriveB.x ? st : null;
         });
-        check(`Phase B: the arrival is a new Game at ${first.exit_id}'s entrance_spawn, level ${ROOM.level}`,
-            stB.playerPositionY === first.entrance_spawn.y, arrivalCall);
+        check(`Phase B: the arrival is a new Game at ${first.exit_id}'s return spawn, level ${ROOM.level}`,
+            stB.playerPositionY === arriveB.y, arrivalCall);
         check('Phase B: the arrival published no crossing', (await glueMoves()).length === 0);
         /**
          * ⛓ T2b U2a — ▶ Start. The page's own click listener focuses the canvas
@@ -684,16 +707,18 @@ async function main() {
         const chainB = await focusChain();
         check('Phase B: after ▶ Start, and after the arrival settled, the game\'s CANVAS has the page\'s keyboard (no canvas click)',
             gameHasKeys(chainB), JSON.stringify(chainB));
-        await page.waitForTimeout(1000);
-        await focusGame();
-        const onDoor = await livePlayer();
-        await hold(STEP_KEYS[first.exit_id].on, 500);
-        await page.waitForTimeout(800);
-        const stLatch = await readGameState();
-        check(`Phase B: pressing INTO ${first.exit_id} while standing on it does not fire it (the check() latch)`,
-            stLatch.pendingExit === '' && stLatch.level === ROOM.level && (await glueMoves()).length === 0,
-            `live ${JSON.stringify(onDoor)} -> ${JSON.stringify(await livePlayer())}, pendingExit `
-            + JSON.stringify(stLatch.pendingExit));
+        /**
+         * ⛓ T2b U2b — THE PLAYER IS WHERE THE GAME DRAWS IT. On the house
+         * door's own tile the game does not draw the player (measured, plan
+         * §15.0); the live entity stands at the return spawn's centre, and no
+         * door has fired.
+         */
+        const liveB = await livePlayer();
+        const stIdle = await readGameState();
+        check(`Phase B: the LIVE player stands at the return spawn, off ${first.exit_id}, and no door fired`,
+            !!liveB && Math.hypot(liveB.x - (arriveB.x + TILE / 2), liveB.y - (arriveB.y + TILE / 2)) <= 2
+            && stIdle.pendingExit === '' && (await glueMoves()).length === 0,
+            `live ${JSON.stringify(liveB)}, pendingExit ${JSON.stringify(stIdle.pendingExit)}`);
 
         // ── Phase C / D — out and back through the first door ───────────────────
         await departThrough('Phase C', first, 1, 1, { holdAcross: true });

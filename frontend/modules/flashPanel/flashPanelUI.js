@@ -11,6 +11,8 @@ import { createApFoundReadout } from './seedlingRandomizerReadout.js';
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
 import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
 import { createHeldKeyRelease, focusGameCanvas } from './gameInput.js';
+import { mapDocumentPath } from './mapDocumentPath.js';
+import { returnSpawnTable } from './seedlingReturnSpawns.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -811,6 +813,34 @@ export class FlashPanelUI {
       getSeedlingRegionGlue()?.attachAdapter(adapter);
     } catch (err) {
       this._panelLog(`region-atlas glue attach failed: ${err.message}`, 'error');
+    }
+    this._loadReturnSpawns(adapter);
+  }
+
+  /**
+   * ⛓ T2b U2b — the game's own return spawns, for a preset that carries a
+   * `region_atlas` (a world whose regions are real Seedling rooms). The map is
+   * the one the preset NAMES (`mapDocumentPath`); a preset without an atlas
+   * fetches nothing. Until it is in, and if it fails, an arrival lands on the
+   * door tile as before, and the log says so.
+   */
+  async _loadReturnSpawns(adapter) {
+    // ⛔ The catch-up payload is the EVENT's (`{source, rawJsonData, …}`);
+    // the rules are its `rawJsonData` (measured: `region_atlas` is not on the
+    // wrapper).
+    const raw = getLastRawJsonData?.()?.rawJsonData ?? null;
+    if (!raw?.region_atlas) return;
+    const { path, source } = mapDocumentPath(raw);
+    try {
+      const res = await fetch(new URL(path, document.baseURI).href);
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      const table = returnSpawnTable(await res.json());
+      if (this.adapter !== adapter) return;
+      getSeedlingRegionGlue()?.binding?.setReturnSpawns(table);
+      this._panelLog(`[region atlas] return spawns: ${table.size} door(s) from ${path} (${source})`);
+    } catch (err) {
+      this._panelLog(`[region atlas] return spawns NOT loaded from ${path} — arrivals land on the door tile: `
+        + err.message, 'error');
     }
   }
 

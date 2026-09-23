@@ -24,6 +24,7 @@ import {
     ARRIVAL_ECHO_TIMEOUT_MS,
 } from './seedlingRegionBinding.js';
 import { LINK_TAGS, outExitId } from '../seedlingDemo/seedlingAtlasDerivation.js';
+import { returnSpawnTable } from './seedlingReturnSpawns.js';
 
 const PRESET = JSON.parse(readFileSync(
     fileURLToPath(new URL('../../presets/seedling_atlas/AP_1/AP_1_rules.json', import.meta.url)), 'utf8'));
@@ -819,5 +820,51 @@ describe('T1 — arrival and departure in a room the pipeline placed', () => {
     it('a door report on no exit tile matches nothing — the partial-atlas silence stands', () => {
         const world = placedWorld();
         expect(departureExitOf(world, { type: 'teleporter', x: 0, y: 0 })).toBeNull();
+    });
+});
+
+/**
+ * ⛓ T2b U2b — an arrival lands on the GAME'S OWN return spawn when the map has
+ * one (the reverse link's playerx/playery, one tile off the door), and on the
+ * door tile otherwise. The table is the real one, off the real map.
+ */
+describe('T2b — the game\'s own return spawn', () => {
+    const MAP = JSON.parse(readFileSync(
+        fileURLToPath(new URL('./atlases/seedling-map.json', import.meta.url)), 'utf8'));
+    const TABLE = returnSpawnTable(MAP);
+
+    it('a table entry for the arrival door → its return spawn (the house door: 160,288, one tile below)', () => {
+        expect(resolveArrivalSpawn(worldFor(OVERWORLD), null, TABLE)).toMatchObject({
+            level: 0, x: 160, y: 288, exitId: 'house_door', landing: 'return-spawn',
+        });
+        expect(resolveArrivalSpawn(worldFor(OVERWORLD), { exit_id: 'owls_nest_stairs' }, TABLE)).toMatchObject({
+            level: 0, x: 256, y: 256, exitId: 'owls_nest_stairs', matchedArrivedFrom: true, landing: 'return-spawn',
+        });
+    });
+
+    it('no entry for the door (or no table) → the door tile, as before, and it says so', () => {
+        const empty = new Map();
+        expect(resolveArrivalSpawn(worldFor(OVERWORLD), null, empty))
+            .toMatchObject({ x: 160, y: 272, landing: 'entrance-spawn' });
+        expect(resolveArrivalSpawn(worldFor(OVERWORLD), null))
+            .toMatchObject({ x: 160, y: 272, landing: 'entrance-spawn' });
+    });
+
+    it('the binding teleports to the return spawn once it has the table', () => {
+        const b = binding();
+        b.setReturnSpawns(TABLE);
+        load(b, OVERWORLD, { exit_id: 'owls_nest_stairs' });
+        const out = b.onStateReport('level', 0); // baseline releases the queued arrival
+        expect(out).toEqual([expect.objectContaining({ type: 'teleport', level: 0, x: 256, y: 256 })]);
+    });
+
+    it('a table that arrives AFTER an arrival was queued re-resolves the queued one', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);               // queued (not booted), on the door tile
+        expect(b.pendingSpawn).toMatchObject({ x: 160, y: 272, landing: 'entrance-spawn' });
+        b.setReturnSpawns(TABLE);
+        expect(b.pendingSpawn).toMatchObject({ x: 160, y: 288, landing: 'return-spawn' });
+        expect(b.onStateReport('level', 0))
+            .toEqual([expect.objectContaining({ type: 'teleport', x: 160, y: 288 })]);
     });
 });

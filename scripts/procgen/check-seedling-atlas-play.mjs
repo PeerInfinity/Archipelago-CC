@@ -9,7 +9,9 @@
  *   Phase A — boot the DEFAULT mode straight onto ?game=seedling_atlas&seed=1
  *     (flashPanel is enabled there now), start the wasm game, reach 'ready'.
  *   Phase B — ARRIVAL. The initial region load teleports the player to the
- *     start region's marked entrance spawn: BridgeGeneric logs the invocation
+ *     start region's first door, at the game's OWN return spawn for it (the
+ *     reverse link's playerx/playery, one tile off the door; seedling-pipeline
+ *     T2b U2b), the marked entrance spawn only when the map has none: BridgeGeneric logs the invocation
  *     and an independent readState off the game's own callback surface shows
  *     the level and coordinates it produced.
  *   Phase C — CROSSING. Queue a `new Game(...)` invocation straight into the
@@ -62,6 +64,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { returnKey, returnSpawnTable } from '../../frontend/modules/flashPanel/seedlingReturnSpawns.js';
 
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-seedling-atlas-play.mjs', kind: 'browser' });
@@ -98,6 +101,19 @@ const START_SPAWN = payload(START_REGION).exits[0];
 const TO_NEST = exitOf(START_REGION, 'owls_nest_stairs');
 const FROM_NEST = exitOf('owls_nest_entrance', 'stairs_up');
 const TO_HOUSE = exitOf(START_REGION, 'house_door');
+/**
+ * ⛓ T2b U2b — WHERE AN ARRIVAL THROUGH `exit` OF `region` LANDS: the game's own
+ * return spawn off the same table the panel builds from the same map document
+ * (`region_atlas.map_document`), the exit's `entrance_spawn` only without one.
+ */
+const RETURNS = returnSpawnTable(JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases',
+    PRESET.region_atlas?.map_document ?? 'seedling-map.json'), 'utf8')));
+const arrivalAt = (region, exit) => {
+    const [tx, ty] = exit.entrance_tile ?? exit.exit_tiles[0];
+    const back = RETURNS.get(returnKey(payload(region).level, tx, ty));
+    return back ? { x: back.x, y: back.y } : { ...exit.entrance_spawn };
+};
+const START_ARRIVAL = arrivalAt(START_REGION, START_SPAWN);
 
 /**
  * ⛓ `--host=` — WHICH SERVER, AND WHY IT IS A FLAG NOW. The default is
@@ -240,7 +256,7 @@ try {
 
     // ── Phase B — the arrival teleport ──────────────────────────────────────
     const arrivalCall = `[BridgeGeneric] Invoked: new Game(${payload(START_REGION).level},`
-        + `${START_SPAWN.entrance_spawn.x},${START_SPAWN.entrance_spawn.y})`;
+        + `${START_ARRIVAL.x},${START_ARRIVAL.y})`;
     await waitFor(`arrival invocation ${arrivalCall}`, () =>
         logs.some((l) => l.includes(arrivalCall)) || null, 120000);
     check('Phase B: the arrival teleport reached the game as a new Game invocation', true,
@@ -248,12 +264,12 @@ try {
     const stB = await waitFor('the game reports the arrival spawn', async () => {
         const st = await readGameState();
         return st.level === payload(START_REGION).level
-            && st.playerPositionX === START_SPAWN.entrance_spawn.x ? st : null;
+            && st.playerPositionX === START_ARRIVAL.x ? st : null;
     });
-    check('Phase B: the game state IS the marked entrance spawn',
+    check('Phase B: the game state IS the arrival spawn (the game\'s own return spawn for the first door)',
         stB.level === payload(START_REGION).level
-        && stB.playerPositionX === START_SPAWN.entrance_spawn.x
-        && stB.playerPositionY === START_SPAWN.entrance_spawn.y,
+        && stB.playerPositionX === START_ARRIVAL.x
+        && stB.playerPositionY === START_ARRIVAL.y,
         `level=${stB.level} x=${stB.playerPositionX} y=${stB.playerPositionY}`);
 
     const movesBefore = (await watched()).filter((m) => m.source === 'seedlingRegionGlue').length;
@@ -300,8 +316,10 @@ try {
         exitName: TO_HOUSE.exitName,
         source: 'check-seedling-atlas-play',
     });
+    const houseArrival = arrivalAt(TO_HOUSE.targetRegion,
+        payload(TO_HOUSE.targetRegion).exits.find((e) => e.exit_id === TO_HOUSE.targetExitId));
     const echoCall = `[BridgeGeneric] Invoked: new Game(${TO_HOUSE.target_level},`
-        + `${TO_HOUSE.target_spawn.x},${TO_HOUSE.target_spawn.y})`;
+        + `${houseArrival.x},${houseArrival.y})`;
     await waitFor(`echo-case arrival invocation ${echoCall}`, () =>
         logs.some((l) => l.includes(echoCall)) || null);
     const stE = await waitFor('the game reports the new level', async () => {
