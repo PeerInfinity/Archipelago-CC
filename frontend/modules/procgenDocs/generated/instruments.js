@@ -206,7 +206,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 261,
         "browser": 78,
-        "cited": 98,
+        "cited": 99,
         "files": 272,
         "lineStyle": 11,
         "withDocblock": 272,
@@ -3206,6 +3206,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
+                "docs/json/developer/procgen/flash.md",
                 "docs/json/developer/procgen/pipeline-presets.md"
             ],
             "docblockStyle": "block",
@@ -5336,7 +5337,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "make",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "make-seedling-spiral-room-preset.mjs",
