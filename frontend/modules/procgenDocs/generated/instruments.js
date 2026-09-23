@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 51,
-            "count": 86,
+            "count": 87,
             "id": "check"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 259,
+        "blockStyle": 260,
         "browser": 77,
         "cited": 97,
-        "files": 270,
+        "files": 271,
         "lineStyle": 11,
-        "withDocblock": 270,
-        "withFlags": 184
+        "withDocblock": 271,
+        "withFlags": 185
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1976,6 +1976,63 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-procgen-reference — **THE REFERENCE PAGE RENDERS WHAT THE GENERATED MODULES HOLD, AND THE MODULES ARE WHAT THE CODE SAYS** (PROCGEN DOCS · P3a, D5).",
             "path": "scripts/procgen/check-procgen-reference.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "fixtures",
+                "json",
+                "limit",
+                "seed",
+                "targets"
+            ],
+            "file": "check-regenerate-region-control.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "fixtures"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "limit"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "seed"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "targets"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "check-regenerate-region-control — **EVERY TRACKED SIDECAR ENTRY, REGENERATED FOR EVERY REALISER TARGET, ON A COPY: HOW MANY COME OUT CLEAN** (APWORLD SUBSTRATE CHANGE R0; the substrate-change plan §1.6).",
+            "path": "scripts/procgen/check-regenerate-region-control.mjs"
         },
         {
             "argvHelpers": [],
