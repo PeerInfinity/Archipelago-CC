@@ -345,6 +345,15 @@ export const substrateRegistryEntry = Object.freeze({
         return installedSource.atlasDoc;
     },
     /**
+     * The two top-level blocks the flash panel needs in the rules.json of a
+     * world that placed a room — `region_atlas` (`mapDocumentPath.js` resolves
+     * the map document through it) and `flash_panel` (the panel engages on it,
+     * `flashPanelUI.js`) — exactly as the installed atlas's own compile writes
+     * them. `buildRulesJson` asks only when ≥1 region of this substrate was
+     * realised.
+     */
+    rulesJsonBlocks: () => structuredClone(contentSource().blocks),
+    /**
      * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE ROOM-EDITOR DECLARATION**
      * (the editor-integration plan §3.2). Seedling's room editor is
      * `watch.html`'s EDIT arm holding a LEVEL SET, hosted in `procgenLabPanel`;
