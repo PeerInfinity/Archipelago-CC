@@ -26,6 +26,7 @@ document.
 | `sidecarForm.js` | (D1) the sidecar block's **fields view** model — `sidecarFormModel(entry, {rulesSchema})`: the rows (the entry subschema's fields, then the substrate's declaration), the control each type draws, and `withSidecarField`, the whole entry one control's change writes |
 | `regionRoundTrip.js` | the per-region **Edit ▸** door — resolves the substrate's declarations, runs the baseline, folds a save into ONE op; (S0) `sidecarEntryFacts`, what a region's sidecar block says about its entry; and (S2) `deriveRegionRules`, the derivation half alone — a payload's own rules, named by the document |
 | `regionLayout.js` | (M2) the map moves' layout — `slotLayout` (a slot's cells on a `Grid` sized by `mapBoundsFor`), `layoutChange` (the engine's placement, and every exit whose side-law verdict the move changed), `rewriteExitFlags` (a payload's `exits` in its substrate's own serialized form); (M3) `rewriteExits` (the one path a flag write and a side write share), `exitSideVerdicts` (the side law asked of a moved exit alone), `exitSidesOfSubstrate`; the ops and their refusal sentences are `rulesDocOps.js`'s `move-region` / `swap-regions` / `move-exit-side` / `swap-exit-sides` |
+| `regionRegenerate.js` | (substrate change R0) one region's payload **rebuilt for a substrate from the document alone** — `buildDocumentRegionSpec` (the realiser's spec off `regions[p][R]` + the slot's sidecars), `regionRealiserKind`, `freeItemsFor`, `regionSizeFor`, `strandedReferences`, `regenerateRegionEntry` (the engine's `generateRegion`, the one-region re-link, the engine's `serializeRegionEntry`); the op and its refusal sentences are `rulesDocOps.js`'s `regenerate-region-sidecar` |
 | `regionRederive.js` | (S2) **Re-derive rules ▸** — `rederiveRegionRules({base, ops, doc}, slot, region)`: the pre-edit payload recovered from the session's record, and the ONE op that moves only the rules it produced |
 | `../procgenCore/compositeMapRenderer.js` | the **Map** tab's painter — shared with the procgen pipeline panel, substrate-neutral |
 | `../procgenCore/exitSides.js` | (M3) `exitSidesOf` — the registry-entry `exitSides` declaration (what else a payload keys by an exit's side), or why there is none; the one reader the ops and the block's side picker share |
@@ -680,6 +681,69 @@ largest sidecar slots (the numbers are in the S0 record, preset-sidecars plan
 §11): the Regions tab of `procgen_topdown/AP_8` draws a block for every entry and
 not one sidecar textarea, and the Sidecars list of `seedling_playthrough/AP_1`
 expands into one row per entry without building a single JSON block.
+
+#### Regenerating a payload (substrate change R0) — an op, not yet a button
+
+The D1 picker changes the `substrate` LABEL only. The op that rebuilds the
+PAYLOAD for a substrate is in place; the per-region generation form and its
+**Generate ▸** button that will record it are the substrate-change ladder's R1/R2
+(the Fable plan `apworld-substrate-change-plan.md`).
+
+```js
+{ op: 'regenerate-region-sidecar', player, region, substrate?, seed,
+  regionParams?, hazardOpts?, size?, freeItems? }
+```
+
+`substrate` absent is the **re-roll** (the entry's own substrate, a new payload);
+`seed` is required, because the op is replayable only with its randomness in it.
+The rest default off the TARGET's registry entry: `regionParams` = its
+`buildRegionParams` over its `defaultProcgenParams` (top-down mode) merged over
+top-down's `{maxIterations: 0}`; `freeItems` = top-down's rule (the slot's
+`starting_items`, then the target's `libraryItems` that are not victory items and
+that the document does not define); `size` = `procgen_metadata.region_size`, else
+the slot's modal tile-payload size, else the engine's `DEFAULT_REGION_SIZE`
+(`REGION_SIZE_SOURCES`, in that order).
+
+**What it keeps.** The spec is built from the document: exit ids are the
+document's exit short names, location ids are its location names, and the
+realiser runs with `useSourceLocationName`, so the new payload carries the
+document's names verbatim. `canonical_placements`, `sphere_log`, `loop_costs`
+and every access rule are untouched (the op writes `preset_sidecars[p][region]`
+and nothing else), and a neighbour's `targetExitId` still names an exit this
+region has. The envelope keeps `grid_cell`; exit sides come from the old
+payload, and the exit back to the region's BFS parent is pinned to the entrance,
+whose tile is the parent's exit tile mirrored across the wall.
+
+**What it re-links.** A fresh payload's exits carry no counterpart. Before
+serialising, each exit's `targetExitId` is set from the TARGET region's payload
+(the exit leading back, preferring the one that already names this exit),
+`isBackExit` is copied from the old exit with the same id, and `isTeleporter` is
+judged by the side law over the slot's cells (the map moves' law, M2).
+
+**The description** — *"region R: payload regenerated as `S` (seed N; K exits, L
+locations carried; M items rode free; J exits re-linked) — access rules and
+location names unchanged"*. ⚠ A payload can HOST a value its siblings point at
+(a sidecar field descriptor's `references` — a `jta` region carrying the slot's
+`jta_dataset`); a regenerated payload hosts nothing, so the description names
+each stranded sibling (*"⚠ region_1_0's `jta_dataset_ref` now point at a value
+no entry in the slot carries …"*) — reported, never repaired, and the validity
+report says `REF_UNRESOLVED` for the same regions.
+
+**What refuses it:** no region name; no entry (it replaces, never creates — S1's
+law); a region missing from `regions[p]`; a seed that is not a whole number; a
+target that is not registered, cannot be played (`deserializeWorld` /
+`serializeWorld`), or has no per-region realiser (the sentence is built from the
+entry's `zoneCount` / `extractZoneRules`: a zone-index substrate is pre-built by
+reference through the spiral); malformed optional fields; and the realiser
+throwing — its message verbatim, with the items that rode free. ⚠ A bounce
+region with two plain exits in `column` mode needs the free arrows; the default
+`braid` mode hosts surplus exits natively.
+
+The corpus control is `node scripts/procgen/check-regenerate-region-control.mjs`
+(never writes; `--targets=all`, `--limit=<n per slot>`, `--json`): at R0, every
+tracked entry regenerated as `maze` and as `text_adventure` came out clean except
+the `jta` dataset hosts, whose strandings the op names (the numbers are in the
+R0 record, plan §7).
 
 #### The fields view (D1)
 
