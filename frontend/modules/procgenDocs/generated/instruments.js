@@ -1993,6 +1993,7 @@ export const INSTRUMENTS = frz({
                 "limit",
                 "op-timeout",
                 "seed",
+                "source",
                 "starting",
                 "targets"
             ],
@@ -2033,6 +2034,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "seed"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "source"
                 },
                 {
                     "how": [
