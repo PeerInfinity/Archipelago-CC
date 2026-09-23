@@ -194,7 +194,7 @@ function carriesExitTiles(substrateId) {
 // the perimeter midpoint of that side — exactly what a zone region carried
 // before G0, so a maze child's entrance (and a reciprocal back-exit) is the
 // same tile it always was.
-function exitTileForMirror(substrateId, storedTile, side, regionSize) {
+export function exitTileForMirror(substrateId, storedTile, side, regionSize) {
     return carriesExitTiles(substrateId) ? storedTile : perimeterMidpoint(side, regionSize);
 }
 
@@ -2628,7 +2628,7 @@ export function buildShuffledSubstrateSequence(quotas, startSubstrate, rng) {
 // ⛓ G0: a zone substrate that DECLARES `regionGeometry: 'sides'` is minted
 // none; this function is then only the tile a neighbour mirrors off its side
 // (exitTileForMirror) — the same tile it would have carried.
-function perimeterMidpoint(side, size) {
+export function perimeterMidpoint(side, size) {
     const w = size.width, h = size.height;
     if (side === 'N') return { x: Math.floor(w / 2), y: 0 };
     if (side === 'S') return { x: Math.floor(w / 2), y: h - 1 };
@@ -6382,63 +6382,89 @@ export function buildPresetSidecars(grid, {
         substrateOfRegion: (regionId) => substrateById.get(regionId) ?? null,
     });
     for (const region of grid.allRegions()) {
-        const substrateId = region.substrate ?? DEFAULT_SUBSTRATE_ID;
-        const adapter = getAdapter(substrateId);
-        // Re-attach the engine-owned structural fields (exits + entrance)
-        // onto the payload just before serialize (Phase 4c). The descriptor
-        // (region.exits / region.entrance) is canonical for ALL substrates;
-        // serializeWorld still reads world.exits / world.entrance, so
-        // merging here keeps the substrate signatures unchanged and the
-        // emitted sidecar byte-identical (maze aliases its world; zone
-        // payloads append exits then entrance in the same positions the
-        // faked Map / stamped entrance used to occupy). Entrance is omitted
-        // when undefined (sphere-growth zone regions) to match the prior
-        // "never stamped" payload.
-        const entrance = getRegionEntrance(region);
-        const payloadForSerialize = {
-            ...region.playable_payload,
-            exits: getRegionExits(region),
-            ...(entrance ? { entrance } : {}),
-        };
-        const playablePayload = adapter.serializeWorld(
-            payloadForSerialize,
-            region.extracted_rules,
-            baseObstacleLib,
-            baseItemLib,
-            serializeContext,
-        );
-        if (manaEnabled) {
-            playablePayload.manaEnabled = true;
-        }
-        // Emit fogEnabled explicitly so consumers can disambiguate
-        // "absent → default true" from "explicit false → opt-out".
-        playablePayload.fogEnabled = fogEnabled !== false;
-        regionMap[region.region_id] = {
-            substrate: substrateId,
-            render_hint: region.render_hint ?? substrateId,
-            // Driver-level layout coordinate. Lets the Region Graph
-            // panel reproduce the maze's spatial layout (one Cytoscape
-            // node per region, positioned by grid cell) instead of
-            // running its own force-directed pass — and lets any
-            // other consumer that wants to reason about adjacency
-            // (e.g. distinguishing teleporter from grid-adjacent
-            // edges) read the same coordinate space the maze uses.
-            grid_cell: { gx: region.cell.gx, gy: region.cell.gy },
-            playable_payload: playablePayload,
-            // Resolved biome (substrate-supplied — null when the
-            // substrate doesn't have a biome concept). Round-trips so
-            // a regenerate-this-region action can reuse the same
-            // biome configuration. Omitted when null to keep the
-            // sidecar output minimal for substrates that ignore it.
-            ...(region.biome ? { biome: region.biome } : {}),
-            // Substrate-side auto-grow telemetry from generateRegionCore.
-            // Read by computeProcgenStats to surface formula
-            // under-provisioning in the procgen stats panel. Omitted
-            // (rather than null) when the adapter didn't report it.
-            ...(region.grow_telemetry ? { grow_telemetry: region.grow_telemetry } : {}),
-        };
+        regionMap[region.region_id] = serializeRegionEntry(region, {
+            manaEnabled, fogEnabled, baseObstacleLib, baseItemLib, serializeContext,
+        });
     }
     return { [playerId]: regionMap };
+}
+
+/**
+ * ⛓⛓ **ONE REGION'S SIDECAR ENTRY** — the per-region body of
+ * `buildPresetSidecars`, factored out (APWORLD SUBSTRATE CHANGE R0) so the hub's
+ * `regenerate-region-sidecar` op (`apworldEditor/regionRegenerate.js`) serialises a
+ * regenerated region through the SAME code the pipeline writes a sidecar with, and
+ * the two cannot drift. `region` is a realised descriptor (`generateRegion`'s answer,
+ * after ③'s exit linking) carrying `cell`. Byte-inert by construction: the three
+ * `dump-*-byteidentity.mjs` oracles are its gate.
+ */
+export function serializeRegionEntry(region, {
+    manaEnabled = false,
+    fogEnabled = true,
+    baseObstacleLib = DEFAULT_OBSTACLES,
+    baseItemLib = DEFAULT_ITEMS,
+    // ⛓ seedling-pipeline T1's 5th `serializeWorld` argument — which substrate
+    //   plays the region an exit leads to (`{substrateOfRegion(regionId)}`).
+    //   `buildPresetSidecars` builds it over the whole grid; a caller that has
+    //   no grid (the hub's op) passes what it knows, or nothing — a
+    //   four-argument serializer never sees it.
+    serializeContext = undefined,
+} = {}) {
+    const substrateId = region.substrate ?? DEFAULT_SUBSTRATE_ID;
+    const adapter = getAdapter(substrateId);
+    // Re-attach the engine-owned structural fields (exits + entrance)
+    // onto the payload just before serialize (Phase 4c). The descriptor
+    // (region.exits / region.entrance) is canonical for ALL substrates;
+    // serializeWorld still reads world.exits / world.entrance, so
+    // merging here keeps the substrate signatures unchanged and the
+    // emitted sidecar byte-identical (maze aliases its world; zone
+    // payloads append exits then entrance in the same positions the
+    // faked Map / stamped entrance used to occupy). Entrance is omitted
+    // when undefined (sphere-growth zone regions) to match the prior
+    // "never stamped" payload.
+    const entrance = getRegionEntrance(region);
+    const payloadForSerialize = {
+        ...region.playable_payload,
+        exits: getRegionExits(region),
+        ...(entrance ? { entrance } : {}),
+    };
+    const playablePayload = adapter.serializeWorld(
+        payloadForSerialize,
+        region.extracted_rules,
+        baseObstacleLib,
+        baseItemLib,
+        serializeContext,
+    );
+    if (manaEnabled) {
+        playablePayload.manaEnabled = true;
+    }
+    // Emit fogEnabled explicitly so consumers can disambiguate
+    // "absent → default true" from "explicit false → opt-out".
+    playablePayload.fogEnabled = fogEnabled !== false;
+    return {
+        substrate: substrateId,
+        render_hint: region.render_hint ?? substrateId,
+        // Driver-level layout coordinate. Lets the Region Graph
+        // panel reproduce the maze's spatial layout (one Cytoscape
+        // node per region, positioned by grid cell) instead of
+        // running its own force-directed pass — and lets any
+        // other consumer that wants to reason about adjacency
+        // (e.g. distinguishing teleporter from grid-adjacent
+        // edges) read the same coordinate space the maze uses.
+        grid_cell: { gx: region.cell.gx, gy: region.cell.gy },
+        playable_payload: playablePayload,
+        // Resolved biome (substrate-supplied — null when the
+        // substrate doesn't have a biome concept). Round-trips so
+        // a regenerate-this-region action can reuse the same
+        // biome configuration. Omitted when null to keep the
+        // sidecar output minimal for substrates that ignore it.
+        ...(region.biome ? { biome: region.biome } : {}),
+        // Substrate-side auto-grow telemetry from generateRegionCore.
+        // Read by computeProcgenStats to surface formula
+        // under-provisioning in the procgen stats panel. Omitted
+        // (rather than null) when the adapter didn't report it.
+        ...(region.grow_telemetry ? { grow_telemetry: region.grow_telemetry } : {}),
+    };
 }
 
 // stringifyRulesJson lives in shared/rulesJsonBuilder.js so the
