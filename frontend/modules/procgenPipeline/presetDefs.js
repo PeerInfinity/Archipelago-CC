@@ -451,6 +451,18 @@ export const SHIPPED_PRESETS = Object.freeze([
         },
     },
     {
+        id: 'shipped:seedling-sphere-room-demo',
+        label: 'Seedling room as a sphere leaf',
+        group: PRESET_GROUPS.sphereGrowth,
+        description: 'One room of the REAL Seedling map grown into a maze sphere world as a '
+            + 'LEAF: three maze rooms and a Seedling dungeon room behind a maze exit gated on '
+            + 'key_blue. A real door cannot enforce an AP gate, so the room hosts no children and '
+            + 'its stairs back are ungated; the gate is the maze\'s. Look at the composite map (the '
+            + 'Seedling cell hangs off the start cell) and at the flash_seedling sidecar; the same '
+            + 'world is committed as the seedling_sphere_room preset, which plays in the Seedling wasm.',
+        state: SEEDLING_SPHERE_ROOM_STATE,
+    },
+    {
         id: 'shipped:jta-zone-demo',
         label: 'JtA demo (zone tables)',
         group: PRESET_GROUPS.shuffledSpiral,
