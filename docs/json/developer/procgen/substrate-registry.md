@@ -150,6 +150,7 @@ Today's content sources are the zone-based substrates (`jta`, `bounce`, `runner`
 | `getSpiralContent()` | **The installed content document**, for the stepped pipeline's ② content step to materialise onto the envelope as the editable artifact. Returns `null` when no document is active — a content source that declares `emitsSpiralContent` unconditionally (jta does) is still a *no-content* world until one is installed. Declared by jta. |
 | `applyPipelineConfig(cfg)` | **Install this source's pipeline config** — the ① arrange step calls it through `applySubstrateConfig` so the quota-vs-`zoneCount` check sees a configured dataset's real zone count. Every field defers to its setter's own default, so `applyPipelineConfig({})` resets the vanilla path exactly. Declared by jta and omsi. ⛓ Documented in full one door down, at its consumer: [The Stepped Pipeline § *Spiral mode — four steps*](./stepped-pipeline.md#spiral-mode--four-steps). |
 | `onContentEdit(doc)` | **Restamp a hand-edited content document** — recompute its content hash, rewrite its id suffix and validate; idempotent, so an unchanged document restamps to the same id. The spiral descriptor calls it on every envelope deserialize, and a CHANGED id is what clears the downstream `regions`/`compile`. Declared by jta. ⛓ Documented in full one door down, at its consumer: [The Stepped Pipeline § *Spiral mode — four steps*](./stepped-pipeline.md#spiral-mode--four-steps). |
+| `rulesJsonBlocks()` | **Top-level blocks this substrate's runtime reads off the rules.json itself** rather than off a sidecar — returns `{<key>: <value>}`, merged at the document's top level by `buildRulesJson`. Asked ONLY of the substrates that realised ≥1 region in the world, in grid order, so a world without one carries none of its blocks and every other world's bytes are unchanged; a key the document already holds is **refused by name** (two writers of one block would overwrite each other). Declared by `flash_seedling`: `region_atlas` and `flash_panel`, as the installed atlas's own compile writes them (the flash panel engages on `flash_panel`). |
 | `victoryItem` | Name of the item the source's entry table places as the goal. Emission paths use it as the completion-condition item when the scenario pool contributes no `is_victory` item — without it the AP world would have no goal and be "beaten" at sphere 0. Bounce, runner, and jta declare one (`'Victory'`). |
 
 **Content-source residency in the stepped pipeline.** A content source that also feeds a *document* into the pipeline (jta's synthetic dataset; a loaded region library) declares `emitsSpiralContent: true` and names the config field its document rides under with `spiralContentConfigKey` (default `datasetDoc`). The stepped spiral's ② content step materialises that document onto the envelope, restamps it on hand-edit, and clears downstream on a real id change — see [The Stepped Pipeline](./stepped-pipeline.md#spiral-mode--four-steps). A content source with no such document (a vanilla-table jta world) leaves ② a byte-identical no-op.
@@ -216,7 +217,7 @@ Both of those are the checked-in snapshot, taken headless by the generator. The 
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**8 registered entries · 72 fields · 14 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**8 registered entries · 73 fields · 14 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported.
 
@@ -316,6 +317,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `extractZoneRules` | — | — | fn | fn | — | fn | fn | fn |
 | `getSpiralContent` | — | — | — | — | — | — | fn | — |
 | `onContentEdit` | — | — | — | — | — | — | fn | — |
+| `rulesJsonBlocks` | — | — | — | — | — | fn | — | — |
 | `spiralContentConfigKey` | — | — | — | — | — | — | datasetDoc | — |
 | `victoryItem` | — | — | Victory | Victory | — | — | Victory | Victory |
 | `zoneCount` | — | — | 5 | 6 | — | 4 | 30 | 1 |

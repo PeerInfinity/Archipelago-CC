@@ -6639,6 +6639,31 @@ export function buildRulesJson(grid, opts = {}) {
     // discovery applies); callers wanting the legacy reveal-on-entry
     // behavior pass `fogEnabled: false` explicitly. Per-region
     // overrides are a later v2 concern.
+    //
+    // ⛓ A substrate's TOP-LEVEL blocks (`rulesJsonBlocks()` on its registry
+    // entry): what its runtime reads off the rules.json itself rather than off
+    // a sidecar — flash_seedling's `flash_panel` (the panel engages on it) and
+    // `region_atlas` (the map document it resolves). Asked ONLY of the
+    // substrates that realised ≥1 region here, in grid order, so a world
+    // without one carries none of its blocks and every other world's bytes are
+    // what they were. A key the document already holds is refused — two
+    // writers of one block would overwrite each other silently.
+    const realisedSubstrates = [];
+    for (const region of grid.allRegions()) {
+        const id = region.substrate ?? DEFAULT_SUBSTRATE_ID;
+        if (!realisedSubstrates.includes(id)) realisedSubstrates.push(id);
+    }
+    for (const id of realisedSubstrates) {
+        const blocks = substrateRegistry.get(id)?.rulesJsonBlocks?.() ?? {};
+        for (const [key, value] of Object.entries(blocks)) {
+            if (Object.hasOwn(scaffold, key)) {
+                throw new Error(`buildRulesJson: substrate '${id}' asks for a top-level '${key}' block, `
+                    + 'which this rules.json already carries — two writers of one block would overwrite '
+                    + 'each other silently, so the compile refuses rather than pick one.');
+            }
+            scaffold[key] = value;
+        }
+    }
     scaffold.preset_sidecars = buildPresetSidecars(grid, {
         playerId,
         baseObstacleLib: obstacleLib,
