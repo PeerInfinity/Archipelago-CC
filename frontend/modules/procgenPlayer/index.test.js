@@ -196,7 +196,7 @@ describe('procgenPlayer index', () => {
             .filter((p) => p.event === 'maze:loadRegion');
         expect(newLoadEvents).toHaveLength(1);
         expect(newLoadEvents[0].data.region_id).toBe('region_0_1');
-        expect(newLoadEvents[0].data.arrivedFrom).toEqual({ exit_id: 'exit' });
+        expect(newLoadEvents[0].data.arrivedFrom).toEqual({ exit_id: 'exit', source_region: 'region_0_0' });
         // Always forwards on the dispatcher chain.
         expect(dispatcher.forwarded).toHaveLength(1);
         expect(dispatcher.forwarded[0].eventName).toBe('user:regionMove');
@@ -259,7 +259,7 @@ describe('procgenPlayer index', () => {
         const newLoadEvents = eventBus.published.slice(baseline)
             .filter((p) => p.event === 'maze:loadRegion');
         expect(newLoadEvents).toHaveLength(1);
-        expect(newLoadEvents[0].data.arrivedFrom).toEqual({ exit_id: 'A' });
+        expect(newLoadEvents[0].data.arrivedFrom).toEqual({ exit_id: 'A', source_region: 'A' });
     });
 
     it('does not publish loadRegion for region moves to non-warehoused regions, but still forwards', () => {

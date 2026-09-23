@@ -16,6 +16,7 @@ import {
     SeedlingRegionBinding,
     resolveArrivalSpawn,
     resolveCrossingExit,
+    departureExitOf,
     exitList,
     outExitIdOf,
     parsePendingExit,
@@ -728,5 +729,95 @@ describe('H3 — the pendingExit arm', () => {
         b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
         b.onGameRestart();
         expect(b.pendingDeparture).toBeNull();
+    });
+});
+
+/**
+ * ⛓⛓⛓ SEEDLING IN THE PIPELINE T1 — **A ROOM THE PIPELINE PLACED.** Its sidecar
+ * keeps the atlas door id as `exit_id`, carries the engine's `exit_<side>` as
+ * `exitName`, and every door is `external`. Built here exactly as the pipeline
+ * builds it: `extractZoneRules` then the entry's own `serializeWorld` over a
+ * stitched exit table (the spiral leaves `targetExitId` null), then the
+ * warehouse's `deserializeWorld`.
+ */
+describe('T1 — arrival and departure in a room the pipeline placed', () => {
+    const placedWorld = () => {
+        const k = [...Array(seedlingEntry.zoneCount).keys()].find((i) => (
+            seedlingEntry.extractZoneRules(i, { region_id: 'p', exitSides: [] }).notes?.length ?? 0) >= 2);
+        const z = seedlingEntry.extractZoneRules(k, { region_id: 'r_0_0', exitSides: ['S', 'E'] });
+        const engine = new Map([
+            ['exit_S', { exit_id: 'exit_S', side: 'S', exitName: 'exit_S', targetRegion: 'r_0_1', targetExitId: null }],
+            ['exit_E', { exit_id: 'exit_E', side: 'E', exitName: 'exit_E', targetRegion: 'r_1_0', targetExitId: null }],
+        ]);
+        const payload = seedlingEntry.serializeWorld({ ...z.payload, exits: engine }, null, null, null,
+            { substrateOfRegion: () => 'maze' });
+        return seedlingEntry.deserializeWorld(payload);
+    };
+
+    /** The resolution before T1: `exit_id` alone, else the first exit. */
+    const exitIdOnly = (world, arrivedFrom) => {
+        const exits = exitList(world);
+        return exits.find((e) => e.exit_id === arrivedFrom?.exit_id) ?? exits[0];
+    };
+
+    it('⛓ a compiled seedling_atlas world resolves EXACTLY as before — every exit, with and without source_region', () => {
+        let rows = 0;
+        for (const regionId of Object.keys(SIDECARS)) {
+            const world = worldFor(regionId);
+            const asks = [null, { exit_id: 'GameStart', source_region: 'Menu' },
+                ...exitList(world).flatMap((e) => [{ exit_id: e.exit_id },
+                    { exit_id: e.exit_id, source_region: e.targetRegion }])];
+            for (const ask of asks) {
+                const want = exitIdOnly(world, ask);
+                const got = resolveArrivalSpawn(world, ask);
+                if (!want?.entrance_spawn) { expect(got).toBeNull(); continue; }
+                expect(got.exitId, `${regionId} ${JSON.stringify(ask)}`).toBe(want.exit_id);
+                rows += 1;
+            }
+        }
+        expect(rows).toBeGreaterThan(10);
+    });
+
+    it('the placed room\'s exits keep the atlas id and carry exit_<side> as exitName', () => {
+        const exits = exitList(placedWorld());
+        expect(exits.map((e) => e.exitName)).toEqual(['exit_S', 'exit_E']);
+        expect(exits.every((e) => e.external === true && !e.exit_id.startsWith('exit_'))).toBe(true);
+    });
+
+    it('arm 2 — an arrival that names the engine exit (a world with targetExitId) lands on that door', () => {
+        const world = placedWorld();
+        const east = exitList(world)[1];
+        expect(resolveArrivalSpawn(world, { exit_id: 'exit_E' }))
+            .toMatchObject({ exitId: east.exit_id, x: east.entrance_spawn.x, matchedArrivedFrom: true });
+    });
+
+    it('arm 3 — a SPIRAL arrival (the source exit\'s own name + source_region) lands on the door leading back', () => {
+        const world = placedWorld();
+        const east = exitList(world)[1];
+        expect(resolveArrivalSpawn(world, { exit_id: 'exit_1', source_region: 'r_1_0' }))
+            .toMatchObject({ exitId: east.exit_id, matchedArrivedFrom: true });
+        // …and with no source it is the first-door fallback, flagged
+        expect(resolveArrivalSpawn(world, { exit_id: 'exit_1' }).matchedArrivedFrom).toBe(false);
+    });
+
+    it('arm 2 of the departure — a hand-named door is matched by its TILE (payload tile_size), and publishes the move', () => {
+        const world = placedWorld();
+        const east = exitList(world)[1];
+        const [tx, ty] = east.exit_tiles[0];
+        const door = { type: 'teleporter', x: tx * world.tile_size, y: ty * world.tile_size };
+        expect(outExitIdOf(door)).not.toBe(east.exit_id); // the id arm cannot see it
+        expect(departureExitOf(world, door)).toBe(east);
+        const b = binding();
+        b.onLoadRegion({ region_id: 'r_0_0', world, arrivedFrom: null });
+        b.onStateReport('level', world.level); // baseline
+        const out = b.onStateReport('pendingExit', `1|${world.level}|${door.type}|${door.x}|${door.y}|86`);
+        expect(out).toEqual([expect.objectContaining({
+            type: 'regionMove', targetRegion: 'r_1_0', exitName: 'exit_E', exitId: east.exit_id, external: true,
+        })]);
+    });
+
+    it('a door report on no exit tile matches nothing — the partial-atlas silence stands', () => {
+        const world = placedWorld();
+        expect(departureExitOf(world, { type: 'teleporter', x: 0, y: 0 })).toBeNull();
     });
 });

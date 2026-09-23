@@ -213,7 +213,15 @@ function handleRegionMove(data) {
             const srcExit = sourceWorld.exits.get(data.exitName);
             if (srcExit?.targetExitId) arrivedExitId = srcExit.targetExitId;
         }
-        const arrivedFrom = arrivedExitId ? { exit_id: arrivedExitId } : null;
+        // ⛓ `source_region` rides along (additive — every consumer reads
+        // `exit_id` as before): a world whose exits carry no `targetExitId`
+        // (the shuffled spiral never links reverse exits) leaves `exit_id` as
+        // the SOURCE region's own exit name, which names nothing in the target.
+        // The source region is then the only fact that says which of the
+        // target's exits the player came through — the one leading back.
+        const arrivedFrom = arrivedExitId
+            ? { exit_id: arrivedExitId, ...(data?.sourceRegion ? { source_region: data.sourceRegion } : {}) }
+            : null;
         publishLoadRegion(target, arrivedFrom);
     } else if (warehouse) {
         // Target is a region the warehouse doesn't own (e.g. AP-native
