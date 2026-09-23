@@ -54,7 +54,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js"
         },
         {
-            "fields": 12,
+            "fields": 17,
             "id": "flash_seedling",
             "label": "Seedling (region atlas)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
@@ -495,6 +495,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "flash_seedling",
                 "jta",
                 "omsi"
             ],
@@ -536,9 +537,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -1676,6 +1677,7 @@ export const REGISTRY = frz({
                 "bounce",
                 "runner",
                 "text_adventure",
+                "flash_seedling",
                 "jta",
                 "omsi"
             ],
@@ -1726,10 +1728,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "{keys, relabel}",
+                    "type": "object",
+                    "value": [
+                        "keys",
+                        "relabel"
+                    ]
                 },
                 {
                     "id": "jta",
@@ -1827,6 +1832,7 @@ export const REGISTRY = frz({
             "carriedBy": [
                 "bounce",
                 "runner",
+                "flash_seedling",
                 "jta",
                 "omsi"
             ],
@@ -1868,9 +1874,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -4263,6 +4269,7 @@ export const REGISTRY = frz({
                 "bounce",
                 "runner",
                 "text_adventure",
+                "flash_seedling",
                 "jta",
                 "omsi"
             ],
@@ -4304,10 +4311,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "sides",
+                    "type": "string",
+                    "value": "sides"
                 },
                 {
                     "id": "jta",
@@ -5505,6 +5512,7 @@ export const REGISTRY = frz({
             "carriedBy": [
                 "bounce",
                 "runner",
+                "flash_seedling",
                 "jta",
                 "omsi"
             ],
@@ -5546,10 +5554,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "4",
+                    "type": "number",
+                    "value": 4
                 },
                 {
                     "id": "jta",

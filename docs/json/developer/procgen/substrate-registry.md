@@ -293,7 +293,7 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
 |---|---|---|---|---|---|---|---|---|
-| `exitSides` | — | — | {keys, relabel} | {keys, relabel} | {keys, relabel} | — | {keys, relabel} | {keys, relabel} |
+| `exitSides` | — | — | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} |
 | `regionRoundTrip` | {open, save} | — | {open, save} | — | {open, rules, save} | {refused} | — | — |
 | `roomEditor` | {arm, kind, page} | — | {kind, open} | — | — | {arm, kind, page} | — | — |
 
@@ -311,20 +311,20 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
 |---|---|---|---|---|---|---|---|---|
-| `applyPipelineConfig` | — | — | — | — | — | — | fn | fn |
+| `applyPipelineConfig` | — | — | — | — | — | fn | fn | fn |
 | `emitsSpiralContent` | — | — | — | — | — | — | yes | — |
-| `extractZoneRules` | — | — | fn | fn | — | — | fn | fn |
+| `extractZoneRules` | — | — | fn | fn | — | fn | fn | fn |
 | `getSpiralContent` | — | — | — | — | — | — | fn | — |
 | `onContentEdit` | — | — | — | — | — | — | fn | — |
 | `spiralContentConfigKey` | — | — | — | — | — | — | datasetDoc | — |
 | `victoryItem` | — | — | Victory | Victory | — | — | Victory | Victory |
-| `zoneCount` | — | — | 5 | 6 | — | — | 30 | 1 |
+| `zoneCount` | — | — | 5 | 6 | — | 4 | 30 | 1 |
 
 **Build-time — region geometry**
 
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
 |---|---|---|---|---|---|---|---|---|
-| `regionGeometry` | — | — | sides | sides | sides | — | sides | sides |
+| `regionGeometry` | — | — | sides | sides | sides | sides | sides | sides |
 
 **Build-time — generation cost**
 
