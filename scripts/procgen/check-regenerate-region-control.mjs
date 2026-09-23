@@ -31,12 +31,21 @@
  * `--limit=12` entries per slot and `--targets=maze,text_adventure`. Progress
  * (one line per document, with its elapsed time) goes to stderr.
  *
+ * ⛔ AND ONE OP MAY NEVER RETURN — measured at R0: `procgen_topdown/AP_4`'s
+ * start region `C` → `bounce` ran past ten minutes in one synchronous realise
+ * (its one location is gated on a `HasAll` of every `Checked N` item). The op
+ * is synchronous and cannot be interrupted in-thread, so every op runs in ONE
+ * worker thread with a budget (`--op-timeout=<s>`, default `DEFAULT_OP_TIMEOUT_S`);
+ * an op past it is TERMINATED with its worker, binned `timed out`, named on
+ * stderr, and a fresh worker takes the next op.
+ *
  * Run:
  *   node scripts/procgen/check-regenerate-region-control.mjs
  *   node scripts/procgen/check-regenerate-region-control.mjs --json
  *   node scripts/procgen/check-regenerate-region-control.mjs --targets=all --limit=4
  *   node scripts/procgen/check-regenerate-region-control.mjs --targets=bounce,runner --limit=2 --fixtures
  *   node scripts/procgen/check-regenerate-region-control.mjs --seed=7
+ *   node scripts/procgen/check-regenerate-region-control.mjs --targets=bounce --op-timeout=20
  *
  * Pure node: no dev server, no browser. `--targets=all` = every registered entry
  * with a realiser (derived from the registry, never listed here).
@@ -46,6 +55,7 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { Worker, isMainThread, parentPort, workerData } from 'node:worker_threads';
 
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 
@@ -65,9 +75,12 @@ const FIXTURES = argv.includes('--fixtures');
 export const DEFAULT_LIMIT = 12;
 export const DEFAULT_TARGETS = Object.freeze(['maze', 'text_adventure']);
 export const DEFAULT_SEED = 1;
+/** ⛓ One op's budget, in seconds (the header's ⛔). */
+export const DEFAULT_OP_TIMEOUT_S = 60;
 
 const LIMIT = Number.parseInt(arg('limit') ?? `${DEFAULT_LIMIT}`, 10);
 const SEED = Number.parseInt(arg('seed') ?? `${DEFAULT_SEED}`, 10);
+const OP_TIMEOUT_S = Number(arg('op-timeout') ?? DEFAULT_OP_TIMEOUT_S);
 
 const errOut = (s) => process.stderr.write(`${s}\n`);
 
@@ -122,24 +135,93 @@ const median = (xs) => {
 };
 const round1 = (x) => (x == null ? null : Math.round(x * 10) / 10);
 
+/** ⛓ ONE op, classified — runs in the worker. */
+function classifyOp(mods, doc, baseline, p, region, to) {
+    const { substrateRegistry, applyRulesDocOp, strandedReferences } = mods;
+    const s = performance.now();
+    let res;
+    try {
+        res = applyRulesDocOp(doc, { op: 'regenerate-region-sidecar', player: p, region, substrate: to, seed: SEED });
+    } catch (e) {
+        res = { ok: false, error: `THREW OUTSIDE THE OP: ${e?.message ?? e}` };
+    }
+    const ms = performance.now() - s;
+    if (!res.ok) return { ms, refused: refusalClass(res.error) };
+    const reg = substrateRegistry.get(to);
+    const entry = res.doc.preset_sidecars[p][region];
+    const carried = typeof reg?.apLocationNamesOf === 'function'
+        ? new Set(reg.apLocationNamesOf(entry.playable_payload)) : null;
+    const lost = carried
+        ? (doc.regions?.[p]?.[region]?.locations ?? []).filter((l) => !carried.has(l.name)).length : 0;
+    const named = new Set(strandedReferences(doc, p, region, entry).map((x) => `REF_UNRESOLVED|${x.region}`));
+    const all = [...errorKeys(mods, res.doc, p)].filter((k) => !baseline.has(k));
+    const added = all.filter((k) => !named.has(k.split('|').slice(0, 2).join('|')));
+    return { ms, lost, stranded: all.length - added.length, addedKinds: added.map((k) => k.split('|')[0]) };
+}
+
+const errorKeys = (mods, doc, p) => new Set(mods.sidecarIssues(doc, p).filter((i) => i.severity === 'error')
+    .map((i) => `${i.kind}|${i.region}|${i.message ?? ''}`));
+
+/** ⛓ The worker: load once, answer one op per message. */
+async function workerLoop() {
+    const mods = await loadModules();
+    let cached = { rel: null, doc: null, base: new Map() };
+    parentPort.on('message', ({ rel, p, region, to }) => {
+        if (cached.rel !== rel) {
+            cached = { rel, doc: JSON.parse(readFileSync(join(REPO, rel), 'utf8')), base: new Map() };
+        }
+        if (!cached.base.has(p)) cached.base.set(p, errorKeys(mods, cached.doc, p));
+        parentPort.postMessage(classifyOp(mods, cached.doc, cached.base.get(p), p, region, to));
+    });
+    const realisers = mods.substrateRegistry.getAll()
+        .filter((e) => mods.regionRealiserKind(e) !== null).map((e) => e.id);
+    parentPort.postMessage({ ready: true, realisers, failed: mods.failed });
+}
+
+/** ⛓ The main thread's handle on the worker: spawn, ask with a budget, respawn after a kill. */
+function opRunner() {
+    let worker = null;
+    const spawn = () => new Promise((resolve, reject) => {
+        worker = new Worker(new URL(import.meta.url), {
+            workerData: { regenerateControlWorker: true }, argv: process.argv.slice(2), stdout: true, stderr: true,
+        });
+        worker.stdout.resume();
+        worker.stderr.resume();
+        worker.once('message', resolve);
+        worker.once('error', reject);
+    });
+    const ask = (msg) => new Promise((resolve) => {
+        const w = worker;
+        const timer = setTimeout(() => {
+            w.removeAllListeners('message');
+            w.terminate().then(() => spawn()).then(() => resolve({ timedOut: true, ms: OP_TIMEOUT_S * 1000 }));
+        }, OP_TIMEOUT_S * 1000);
+        w.once('message', (m) => { clearTimeout(timer); resolve(m); });
+        w.postMessage(msg);
+    });
+    return { spawn, ask, stop: () => worker?.terminate() };
+}
+
 async function main() {
     const t0 = Date.now();
-    const {
-        substrateRegistry, applyRulesDocOp, sidecarIssues, regionRealiserKind, strandedReferences, failed,
-    } = await loadModules();
-    const realisers = substrateRegistry.getAll().filter((e) => regionRealiserKind(e) !== null).map((e) => e.id);
+    const runner = opRunner();
+    const { realisers, failed } = await runner.spawn();
     const targetsArg = arg('targets');
     const targets = targetsArg === 'all' ? realisers
         : (targetsArg ? targetsArg.split(',').map((s) => s.trim()).filter(Boolean) : [...DEFAULT_TARGETS]);
-    const errorKeys = (doc, p) => new Set(sidecarIssues(doc, p).filter((i) => i.severity === 'error')
-        .map((i) => `${i.kind}|${i.region}|${i.message ?? ''}`));
 
     const cells = new Map(); // "from → to" -> tally
     const tally = (from, to) => {
         const k = `${from} → ${to}`;
-        if (!cells.has(k)) cells.set(k, { from, to, n: 0, clean: 0, stranded: 0, newErrors: 0, namesLost: 0, refused: {}, newKinds: {}, ms: [] });
+        if (!cells.has(k)) {
+            cells.set(k, {
+                from, to, n: 0, clean: 0, stranded: 0, newErrors: 0, namesLost: 0, timedOut: 0,
+                refused: {}, newKinds: {}, ms: [],
+            });
+        }
         return cells.get(k);
     };
+    const timeouts = [];
     const docs = documents();
     let entries = 0;
     for (const [di, rel] of docs.entries()) {
@@ -154,85 +236,69 @@ async function main() {
         if (!slots.length) continue;
         let here = 0;
         for (const [p, slot] of slots) {
-            const baseline = errorKeys(doc, p);
             for (const [region, entry] of Object.entries(slot ?? {}).slice(0, LIMIT)) {
                 entries += 1;
                 for (const to of targets) {
                     const t = tally(entry?.substrate ?? '(none)', to);
                     t.n += 1;
                     here += 1;
-                    const s = performance.now();
-                    let res;
-                    try {
-                        res = applyRulesDocOp(doc, {
-                            op: 'regenerate-region-sidecar', player: p, region, substrate: to, seed: SEED,
-                        });
-                    } catch (e) {
-                        res = { ok: false, error: `THREW OUTSIDE THE OP: ${e?.message ?? e}` };
-                    }
-                    t.ms.push(performance.now() - s);
-                    if (!res.ok) {
-                        const c = refusalClass(res.error);
-                        t.refused[c] = (t.refused[c] ?? 0) + 1;
-                        continue;
-                    }
-                    const reg = substrateRegistry.get(to);
-                    const carried = typeof reg?.apLocationNamesOf === 'function'
-                        ? new Set(reg.apLocationNamesOf(res.doc.preset_sidecars[p][region].playable_payload)) : null;
-                    const lost = carried
-                        ? (doc.regions?.[p]?.[region]?.locations ?? []).filter((l) => !carried.has(l.name)).length : 0;
-                    const named = new Set(strandedReferences(doc, p, region, res.doc.preset_sidecars[p][region])
-                        .map((x) => `REF_UNRESOLVED|${x.region}`));
-                    const all = [...errorKeys(res.doc, p)].filter((k) => !baseline.has(k));
-                    const added = all.filter((k) => !named.has(k.split('|').slice(0, 2).join('|')));
-                    if (lost) t.namesLost += 1;
-                    if (!added.length && !lost && all.length) {
-                        t.stranded += 1;
-                    } else if (added.length || lost) {
-                        t.newErrors += 1;
-                        for (const k of added) {
-                            const kind = k.split('|')[0];
-                            t.newKinds[kind] = (t.newKinds[kind] ?? 0) + 1;
-                        }
+                    // eslint-disable-next-line no-await-in-loop
+                    const r = await runner.ask({ rel, p, region, to });
+                    t.ms.push(r.ms);
+                    if (r.timedOut) {
+                        t.timedOut += 1;
+                        timeouts.push({ document: rel, slot: p, region, from: t.from, to });
+                        errOut(`  ⛔ TIMED OUT (> ${OP_TIMEOUT_S} s): ${rel} slot ${p} ${region} → ${to}`);
+                    } else if (r.refused) {
+                        t.refused[r.refused] = (t.refused[r.refused] ?? 0) + 1;
                     } else {
-                        t.clean += 1;
+                        if (r.lost) t.namesLost += 1;
+                        if (r.addedKinds.length || r.lost) {
+                            t.newErrors += 1;
+                            for (const kind of r.addedKinds) t.newKinds[kind] = (t.newKinds[kind] ?? 0) + 1;
+                        } else if (r.stranded) {
+                            t.stranded += 1;
+                        } else {
+                            t.clean += 1;
+                        }
                     }
                 }
             }
         }
         errOut(`[${di + 1}/${docs.length}] ${rel}: ${here} op(s), ${((Date.now() - td) / 1000).toFixed(1)} s`);
     }
+    await runner.stop();
 
     const rows = [...cells.values()].sort((a, b) => a.from.localeCompare(b.from) || a.to.localeCompare(b.to))
         .map((t) => ({
             from: t.from, to: t.to, n: t.n, clean: t.clean, stranded: t.stranded, newErrors: t.newErrors,
-            namesLost: t.namesLost,
+            namesLost: t.namesLost, timedOut: t.timedOut,
             refused: Object.values(t.refused).reduce((s, x) => s + x, 0), refusedByClass: t.refused,
             newErrorKinds: t.newKinds, medianMs: round1(median(t.ms)), maxMs: round1(Math.max(...t.ms)),
         }));
     const totals = rows.reduce((s, r) => ({
         n: s.n + r.n, clean: s.clean + r.clean, stranded: s.stranded + r.stranded, newErrors: s.newErrors + r.newErrors,
-        refused: s.refused + r.refused,
-    }), { n: 0, clean: 0, stranded: 0, newErrors: 0, refused: 0 });
+        refused: s.refused + r.refused, timedOut: s.timedOut + r.timedOut,
+    }), { n: 0, clean: 0, stranded: 0, newErrors: 0, refused: 0, timedOut: 0 });
     const out = {
-        seed: SEED, limitPerSlot: LIMIT, targets, realisers, documents: docs.length, entries,
-        libraryLoadFailures: failed, totals, rows, seconds: Math.round((Date.now() - t0) / 100) / 10,
+        seed: SEED, limitPerSlot: LIMIT, opTimeoutS: OP_TIMEOUT_S, targets, realisers, documents: docs.length,
+        entries, libraryLoadFailures: failed, totals, rows, timeouts, seconds: Math.round((Date.now() - t0) / 100) / 10,
     };
     if (JSON_OUT) {
         console.log(JSON.stringify(out, null, 1));
         return;
     }
-    console.log(`regenerate-region control — seed ${SEED}, ≤${LIMIT} entries per slot, targets [${targets.join(', ')}] `
+    console.log(`regenerate-region control — seed ${SEED}, ≤${LIMIT} entries per slot, ${OP_TIMEOUT_S} s per op, targets [${targets.join(', ')}] `
         + `(realisers registered: ${realisers.join(', ')})`);
     console.log(`${docs.length} documents, ${entries} entries, ${totals.n} ops in ${out.seconds} s`);
     for (const f of failed) console.log(`  ⚠ library did not load: ${f.file}: ${f.error}`);
     console.log('');
-    console.log('| from → to | ops | clean | stranded (named) | new errors | refused | median ms | max ms |');
-    console.log('|---|---:|---:|---:|---:|---:|---:|---:|');
+    console.log('| from → to | ops | clean | stranded (named) | new errors | refused | timed out | median ms | max ms |');
+    console.log('|---|---:|---:|---:|---:|---:|---:|---:|---:|');
     for (const r of rows) {
-        console.log(`| ${r.from} → ${r.to} | ${r.n} | ${r.clean} | ${r.stranded} | ${r.newErrors} | ${r.refused} | ${r.medianMs} | ${r.maxMs} |`);
+        console.log(`| ${r.from} → ${r.to} | ${r.n} | ${r.clean} | ${r.stranded} | ${r.newErrors} | ${r.refused} | ${r.timedOut} | ${r.medianMs} | ${r.maxMs} |`);
     }
-    console.log(`| **total** | ${totals.n} | ${totals.clean} | ${totals.stranded} | ${totals.newErrors} | ${totals.refused} | | |`);
+    console.log(`| **total** | ${totals.n} | ${totals.clean} | ${totals.stranded} | ${totals.newErrors} | ${totals.refused} | ${totals.timedOut} | | |`);
     const classes = {};
     const kinds = {};
     for (const r of rows) {
@@ -243,10 +309,15 @@ async function main() {
         console.log('\nrefused, by class (target ← cause):');
         for (const [c, n] of Object.entries(classes).sort((a, b) => b[1] - a[1])) console.log(`  ${n}× ${c}`);
     }
+    if (timeouts.length) {
+        console.log(`\ntimed out (> ${OP_TIMEOUT_S} s, terminated):`);
+        for (const x of timeouts) console.log(`  ${x.document} slot ${x.slot} ${x.region}: ${x.from} → ${x.to}`);
+    }
     if (Object.keys(kinds).length) {
         console.log('\nnew sidecarIssues errors, by kind:');
         for (const [k, n] of Object.entries(kinds).sort((a, b) => b[1] - a[1])) console.log(`  ${n}× ${k}`);
     }
 }
 
-if (isEntryPoint(import.meta.url)) await main();
+if (!isMainThread && workerData?.regenerateControlWorker) await workerLoop();
+else if (isEntryPoint(import.meta.url)) await main();
