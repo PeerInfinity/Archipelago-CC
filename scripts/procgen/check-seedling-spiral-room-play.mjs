@@ -206,6 +206,8 @@ async function main() {
         return p ? { x: p.x, y: p.y } : null;
     }
 
+    const activeTabTitles = () => page.evaluate(() => [...document.querySelectorAll('.lm_tab.lm_active')]
+        .map((t) => t.title));
     const currentRegion = () => page.evaluate(() =>
         window.centralRegistry?.getPublicFunction('gameState', 'getCurrentRegion')?.() ?? null);
     const glueStats = () => page.evaluate(async () => {
@@ -491,6 +493,18 @@ async function main() {
         const stats = await glueStats();
         check(`${label}: the glue resumed and loaded the room again`, stats.loads === expectLoads
             && (await activeSubstrates()).at(-1) === SIDECARS[START].substrate, JSON.stringify(stats));
+        /**
+         * ⛓ T2b U1 — THE RETURN BRINGS THE FLASH GAME TAB FORWARD BY ITSELF.
+         * Nothing in this gate has clicked a tab since the departure (the maze
+         * tab came forward then), so the only writer of this state is the
+         * panel's own activation on `flashSeedling:loadRegion`.
+         */
+        const tabs = await waitFor('the Flash Game tab comes forward on the return', async () => {
+            const t = await activeTabTitles();
+            return t.includes('Flash Game') ? t : null;
+        }, 5000).catch(async () => activeTabTitles());
+        check(`${label}: the return ACTIVATED the Flash Game tab by itself (no tab click)`,
+            tabs.includes('Flash Game'), `active tabs: ${tabs.join(', ')}`);
     }
 
     try {

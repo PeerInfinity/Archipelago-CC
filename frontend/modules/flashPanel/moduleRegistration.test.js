@@ -17,7 +17,7 @@
  */
 import { describe, expect, it } from 'vitest';
 
-import { register } from './index.js';
+import { initialize, register } from './index.js';
 import { AP_ITEM_FOUND_EVENT } from './seedlingRegionGlue.js';
 import { FLASH_SEEDLING_LOAD_REGION_EVENT } from './flashSeedlingLibrary.js';
 
@@ -87,5 +87,49 @@ describe('the flashPanel module\'s bus registration', () => {
         for (const event of names) {
             expect(seen.publishers, `${event} is published but not registered`).toContain(event);
         }
+    });
+});
+
+/**
+ * ⛓ SEEDLING T2b (U1) — a `flashSeedling:loadRegion` brings the panel forward,
+ * as every other substrate panel's load does. Driven through the module's real
+ * `initialize()` with a recording bus: the handler that runs is the one the
+ * page subscribes, not a helper called by hand.
+ */
+describe('the flashPanel module activates itself on a region load (U1)', () => {
+    function boot({ locked = false } = {}) {
+        const subs = new Map();
+        const published = [];
+        const bus = {
+            subscribe: (ev, fn) => { subs.set(ev, [...(subs.get(ev) ?? []), fn]); return () => {}; },
+            unsubscribe: () => {},
+            publish: (ev, data) => published.push({ ev, data }),
+        };
+        const stop = initialize('flashPanel', 0, {
+            getDispatcher: () => null,
+            getEventBus: () => bus,
+            getModuleFunction: (mod, fn) => (mod === 'loops' && fn === 'isFocusLocked' ? () => locked : null),
+        });
+        const fire = (ev, payload) => { for (const fn of subs.get(ev) ?? []) fn(payload); };
+        return { published, fire, stop };
+    }
+
+    it('registers the ui:activatePanel publisher it needs', () => {
+        expect(recordRegistration().publishers).toContain('ui:activatePanel');
+    });
+
+    it('a region load publishes ui:activatePanel for the flash panel', () => {
+        const { published, fire, stop } = boot();
+        fire(FLASH_SEEDLING_LOAD_REGION_EVENT, { region_id: 'r', world: null });
+        stop();
+        expect(published.filter((p) => p.ev === 'ui:activatePanel'))
+            .toEqual([{ ev: 'ui:activatePanel', data: { panelId: 'flashPanel' } }]);
+    });
+
+    it('…and does NOT when loops pins another panel (isFocusLocked)', () => {
+        const { published, fire, stop } = boot({ locked: true });
+        fire(FLASH_SEEDLING_LOAD_REGION_EVENT, { region_id: 'r', world: null });
+        stop();
+        expect(published.filter((p) => p.ev === 'ui:activatePanel')).toEqual([]);
     });
 });
