@@ -230,8 +230,10 @@ describe('⛓ the links the render emits', () => {
         //   pointers from `jta.md` and `omsi.md` at the registry's region-geometry §;
         //   230 → 233: PRESET SIDECARS G1's three more at that same § — from
         //   `bounce.md`, `runner.md` and `stepped-pipeline.md`; 233 → 234: PROCGEN
-        //   PIPELINE PRESETS P1's README index row for `pipeline-presets.md`.
-        expect(checked).toBe(234);
+        //   PIPELINE PRESETS P1's README index row for `pipeline-presets.md`;
+        //   234 → 236: SEEDLING IN THE PIPELINE T1's mutual pair between the
+        //   registry's content-sources § and `flash.md`'s content-source §.
+        expect(checked).toBe(236);
     });
 
     it('tags each link with the kind that produced it', () => {
