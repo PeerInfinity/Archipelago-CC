@@ -139,6 +139,16 @@ export class MazeRoomUI {
 
     constructor(container, componentState) {
         this.container = container;
+        /**
+         * ⛓ T2b F4 — THE PANEL THAT BECOMES VISIBLE TAKES THE KEYBOARD. A
+         * `maze:loadRegion` asks for activation and then focuses the root, but
+         * measured on the box the root was still HIDDEN when `focus()` ran
+         * (Golden Layout shows the tab afterwards), so the focus was refused and
+         * the page's focus fell to BODY when the flash iframe was hidden: the
+         * maze's keys were dead until a click. `onPanelShow` (render + focus)
+         * existed with nothing calling it; the container's own 'show' does now.
+         */
+        this.container?.on?.('show', () => this.onPanelShow());
         this.params = { ...DEFAULT_PARAMS };
         this.world = null;
         this.state = null;
@@ -1601,7 +1611,7 @@ export class MazeRoomUI {
         }
         if (!skipRender) {
             this.render();
-            this.rootElement?.focus();
+            this._focusWhenVisible();
         }
     }
 
@@ -1623,9 +1633,32 @@ export class MazeRoomUI {
         if (this._playbackBar) { this._playbackBar.destroy(); this._playbackBar = null; }
         if (this._visualizer) { this._visualizer.stop(); this._visualizer = null; }
         this._stopReplay();
+        if (this._focusTimer) { clearTimeout(this._focusTimer); this._focusTimer = null; }
         setPanelInstance(null);
     }
-    onPanelShow() { this.render(); this.rootElement?.focus(); }
+    onPanelShow() { this.render(); this._focusWhenVisible(); }
+
+    /**
+     * ⛓ T2b F4 — focus the root ONCE IT IS DISPLAYED. Measured: both the load's
+     * focus and Golden Layout's 'show' ran while the root had no layout box
+     * (`getClientRects()` empty: the tab is shown after the event), and a hidden
+     * element refuses focus. So the attempt is retried briefly until it has one.
+     */
+    _focusWhenVisible() {
+        if (this._focusTimer) { clearTimeout(this._focusTimer); this._focusTimer = null; }
+        const delays = [0, 50, 150, 400, 1000];
+        const attempt = (i) => {
+            this._focusTimer = null;
+            const el = this.rootElement;
+            if (!el) return;
+            const shown = typeof el.getClientRects !== 'function' || el.getClientRects().length > 0;
+            if (shown) { el.focus?.(); return; }
+            if (i + 1 < delays.length) {
+                this._focusTimer = setTimeout(() => attempt(i + 1), delays[i + 1] - delays[i]);
+            }
+        };
+        attempt(0);
+    }
     onPanelResize() {}
 
     render() {

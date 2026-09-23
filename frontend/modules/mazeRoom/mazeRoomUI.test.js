@@ -166,6 +166,32 @@ describe('MazeRoomUI — arrival position on region load', () => {
         resetDiscoverySingleton();
     });
 
+    it('T2b F4 — the container\'s \'show\' reaches onPanelShow (render + focus)', () => {
+        const handlers = {};
+        const panel = new MazeRoomUI({ on: (ev, fn) => { handlers[ev] = fn; } }, {});
+        panel.onPanelShow = vi.fn();
+        expect(typeof handlers.show).toBe('function');
+        handlers.show();
+        expect(panel.onPanelShow).toHaveBeenCalledTimes(1);
+    });
+
+    it('T2b F4 — the focus waits until the root is DISPLAYED (a hidden root refuses focus)', () => {
+        vi.useFakeTimers();
+        try {
+            const panel = new MazeRoomUI(null, {});
+            let shown = false;
+            const el = { getClientRects: () => (shown ? [{}] : []), focus: vi.fn() };
+            panel.rootElement = el;
+            panel._focusWhenVisible();
+            expect(el.focus).not.toHaveBeenCalled();
+            shown = true;
+            vi.advanceTimersByTime(60);
+            expect(el.focus).toHaveBeenCalledTimes(1);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
     it('spawns at the entrance when arrivedFrom is null', () => {
         const panel = new MazeRoomUI(null, {});
         panel.applyLoadedRegion({
