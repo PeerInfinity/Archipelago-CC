@@ -126,8 +126,20 @@ const REGEN_ENTRIES = REGEN_WORLDS.flatMap(({ file, doc }) => Object.entries(doc
  * (⛓ R2: jta declares now, and a jta zone with no exits key has no exit to move —
  * `NO_EXITS_KEY_KEPT_ABSENT`).
  */
-const DECLARING = [...ENTRIES, ...REGEN_ENTRIES].filter(([, , , entry]) => declares(entry)
+const DECLARING_WITH_EXITS = [...ENTRIES, ...REGEN_ENTRIES].filter(([, , , entry]) => declares(entry)
     && Array.isArray(entry.playable_payload?.exits));
+/**
+ * ⛓ SEEDLING IN THE PIPELINE T1 — an entry whose exits carry NO `side` has no
+ * side to move from. A COMPILED atlas room (`seedling_atlas`: its doors are
+ * teleporters, and the compiler writes a `side` only for a map-edge exit) is one;
+ * its substrate declares `exitSides` because a room the PIPELINE places does carry
+ * sides. Such entries leave the population here, and the row below pins that the
+ * op REFUSES each of their exits by name — so the exclusion is a checked fact and
+ * not a quiet filter.
+ */
+const exitsCarrySides = (entry) => entry.playable_payload.exits.every((x) => SIDES.includes(x.side));
+const SIDELESS = DECLARING_WITH_EXITS.filter(([, , , entry]) => !exitsCarrySides(entry));
+const DECLARING = DECLARING_WITH_EXITS.filter(([, , , entry]) => exitsCarrySides(entry));
 
 /** ⛓ Does the entry's substrate's payload DECLARATION carry a side-keyed portal map? (the declaration, not the payload) */
 const declaresPortalMap = (entry) => !!sidecarFieldsOf(substrateRegistry.get(entry?.substrate))
@@ -177,6 +189,20 @@ describe('⛓⛓ THE CORPUS CONTROL — every committed entry that declares `exi
             expect(exitSidesOf(substrateRegistry.get(id)).absent, id).toBe(true);
         }
         expect(outside.size).toBeGreaterThan(0);
+    });
+
+    it('⛓ T1 — the entries left out carry NO side on any exit, and the op refuses every one of their exits by name', () => {
+        expect(SIDELESS.length).toBeGreaterThan(0);
+        for (const [file, slot, name, entry, doc] of SIDELESS) {
+            expect(entry.playable_payload.exits.every((x) => x.side === undefined), `${file} ${name}`).toBe(true);
+            for (const x of entry.playable_payload.exits) {
+                const res = applyRulesDocOp(doc, {
+                    op: 'move-exit-side', player: slot, region: name, exitId: x.exit_id, side: SIDES[0],
+                });
+                expect(res.ok, `${file} ${name} ${x.exit_id}`).toBe(false);
+                expect(res.error).toContain(`exit ${x.exit_id} of region "${name}" carries side undefined`);
+            }
+        }
     });
 
     it('⛓ G2a — each regenerated world reproduces its committed file in every top key but '
