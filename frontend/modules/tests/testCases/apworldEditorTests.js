@@ -143,6 +143,24 @@ import {
 import { SIDECAR_ISSUE_KINDS } from '../../apworldEditor/sidecarIssues.js';
 import { sidecarFieldsOf } from '../../procgenCore/sidecarFields.js';
 /**
+ * ⛓⛓ APWORLD SUBSTRATE CHANGE R2 — the block's Region generation form. The
+ * rows assert the product's own constants and sentences (the op's, the
+ * worker's), and derive every knob set from the registry.
+ */
+import settingsManager from '../../../app/core/settingsManager.js';
+import {
+    REGION_GENERATION_FIELDS, renderRegionGenerationForm,
+} from '../../procgenCore/regionGenerationForm.js';
+import { geometryOf, REGION_GEOMETRY } from '../../procgenCore/regionGeometry.js';
+import {
+    REGION_GENERATION_OP_FIELDS, regionGenerationPlan,
+} from '../../apworldEditor/regionGenerationFlow.js';
+import {
+    REGION_GENERATION_CANCELLED, REGION_GENERATION_TIMEOUT_SETTING, regionGenerationTimeoutSentence,
+} from '../../apworldEditor/regionGenerationRun.js';
+import { regionRealiserKind } from '../../apworldEditor/regionRegenerate.js';
+import { REGENERATE_RULES_UNCHANGED, regenerateOpRefusal } from '../../apworldEditor/rulesDocOps.js';
+/**
  * ⛓ D1 — the fields view's vocabulary: which control a row stamps, which level
  * it is on, the two ENTRY keys the form names (the payload's, the substrate's),
  * and the clause the picker's title carries — so a row asserts the product's
@@ -9640,3 +9658,480 @@ registerTest({
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R2 — THE BLOCK'S REGION GENERATION FORM
+ * (the substrate-change plan §3b R2, §9.3–§9.4; ⚖ user 2026-09-23)
+ *
+ * A substrate pick writes the label (D1's op) and opens ▾ Region generation
+ * under the block; Generate ▸ runs the region in a WORKER under
+ * `moduleSettings.apworldEditor.regionGenerationTimeoutSeconds`, with the
+ * elapsed time shown, and lands ONE `set-region-sidecar` carrying a
+ * `provenance`. Every row presses the product's own controls, waits on the
+ * document's IDENTITY (its entry byte-equal to the file on disk, no ops) rather
+ * than on "a document", and asserts the product's own sentences — the op's
+ * (`regenerateOpRefusal`, its description) and the worker's (the timeout
+ * sentence, `REGION_GENERATION_CANCELLED`) — never a copy. Every knob set is
+ * derived from the registry.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ R0's measured never-returning region (trap 1393): its start region `C`, as bounce. */
+const TOPDOWN_AP4_PATH = './presets/procgen_topdown/AP_4/AP_4_rules.json';
+
+/** ⛓ The Region generation section under a region's block on the showing tab — re-queried. */
+const regionGenSection = (region, host = null) => document.querySelector(`${PANEL_SELECTOR} `
+    + `.apworld-sidecar-block${host ? `[data-host-tab="${host}"]` : ''}[data-region-name="${CSS.escape(region)}"] `
+    + '.apworld-region-generation');
+
+/** ⛓ Labels drawn by a form, in order. */
+const formLabels = (el) => [...(el?.querySelectorAll('.procgen-region-generation-form label') ?? [])]
+    .map((l) => l.textContent);
+
+/**
+ * ⛓ Open the hub on `path` and wait for THAT document: the slot's `region`
+ * entry byte-equal to the file on disk and an empty op list — a wait on "a
+ * document" reads the previous row's.
+ */
+async function openHubOnDocument(testController, path, slot, region) {
+    const disk = await (await fetch(path)).json();
+    const want = JSON.stringify(disk.preset_sidecars?.[slot]?.[region] ?? null);
+    const panel = await openHub(testController, path);
+    if (!panel) return null;
+    const same = await testController.pollForCondition(
+        () => panel.session?.ops().length === 0
+            && JSON.stringify(panel.rulesDoc?.preset_sidecars?.[slot]?.[region] ?? null) === want,
+        `the hub holds ${path} (slot ${slot} ${region} as on disk, no ops)`, 15000, 50);
+    testController.reportCondition(`identity: the hub holds ${path}`, same);
+    await testController.pollForCondition(() => !!panel._rulesSchema,
+        'the panel loaded rules.schema.json', 8000, 50);
+    return same ? panel : null;
+}
+
+/**
+ * ⛓ Pick `target` in the region's `substrate` picker (the D1 control, entry
+ * level) and wait for the label op AND the form it opens. → true when both.
+ */
+async function pickSubstrateAndOpenForm(testController, panel, region, target) {
+    await openSidecarJson(testController, region);
+    const picker = sidecarFieldControl(region, SUBSTRATE_KEY, SIDECAR_FORM_LEVELS.ENTRY);
+    const index = [...(picker?.options ?? [])].findIndex((o) => !o.disabled && o.textContent === target);
+    testController.reportCondition(`the picker offers \`${target}\``, index >= 0);
+    if (index < 0) return false;
+    const opsBefore = panel.session.ops().length;
+    picker.value = picker.options[index].value;
+    picker.dispatchEvent(new Event('change', { bubbles: true }));
+    return testController.pollForCondition(
+        () => panel.session.ops().length === opsBefore + 1 && regionGenSection(region)?.dataset.target === target,
+        `the pick of \`${target}\` recorded ONE label op and opened the form`, 8000, 50);
+}
+
+/** ⛓ The first registered id with a realiser, of a geometry, that is not `not`
+ *  (and, with `hooked`, declares its own knobs). Derived. */
+function realiserOf(tiles, not, { hooked = false } = {}) {
+    return substrateRegistry.getAll().find((e) => regionRealiserKind(e) !== null && e.id !== not
+        && (geometryOf(e) === REGION_GEOMETRY.TILES) === tiles
+        && (!hooked || typeof e.renderProcgenParams === 'function'))?.id ?? null;
+}
+
+/** ⛓ The labels the form must draw for `target`: Seed, the op's generic rows its geometry takes, the hook's. */
+function expectedFormLabels(target) {
+    const entry = substrateRegistry.get(target);
+    const generic = REGION_GENERATION_FIELDS.filter((f) => REGION_GENERATION_OP_FIELDS.includes(f.key)
+        && (f.appliesTo === undefined || f.appliesTo === geometryOf(entry))).map((f) => f.label);
+    const hook = renderRegionGenerationForm({
+        substrateId: target, params: { ...(entry.defaultProcgenParams ?? {}) }, generic: false,
+    });
+    return ['Seed', ...generic, ...[...hook.querySelectorAll('label')].map((l) => l.textContent)];
+}
+
+/** ⛓ Wait for the answer beside the block to change from `before`. */
+const answerAfter = (testController, region, before, label, budget = 30000) => testController.pollForValue(
+    () => { const t = sidecarMessageFor(region)?.textContent ?? null; return t && t !== before ? t : null; },
+    label, budget, 50);
+
+/**
+ * ⛓⛓⛓ **(i) A PICK OPENS THE FORM WITH THE TARGET'S DECLARED KNOBS** — on every
+ * host. Four-player slot 3 `region_1_0` → the first TILES realiser (derived):
+ * the form draws Seed, the region width/height the op reads (never max items),
+ * and the target hook's own rows; a Generate ▸; the same form under the
+ * block on the Sidecars tab and under the Map's selection. Then slot 1's
+ * `region_1_1` → the first SIDES realiser: Seed + its hook's rows, no size.
+ */
+export async function apworldAPickOpensTheRegionGenerationFormWithTheTargetsKnobs(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        if (!panel) return testController.getOverallResult();
+        const tiles = realiserOf(true, panel.rulesDoc.preset_sidecars['3'][region].substrate);
+        testController.reportCondition(`⛓ premise: a TILES realiser to pick (${tiles})`, !!tiles);
+        testController.reportCondition('slot 3 selected', await onRegionsTabFor(testController, panel, '3'));
+        if (!tiles || !await pickSubstrateAndOpenForm(testController, panel, region, tiles)) {
+            return testController.getOverallResult();
+        }
+        const want = expectedFormLabels(tiles);
+        testController.assertEqual(`[${region} → ${tiles}] ⛓⛓ the form draws Seed, the size rows and the hook's knobs`,
+            JSON.stringify(want), JSON.stringify(formLabels(regionGenSection(region))));
+        testController.reportCondition('…and NO max-items row (a control that would write nothing)',
+            !formLabels(regionGenSection(region)).includes(
+                REGION_GENERATION_FIELDS.find((f) => !REGION_GENERATION_OP_FIELDS.includes(f.key)).label));
+        testController.reportCondition('…and a Generate ▸', !!regionGenSection(region)?.querySelector('.apworld-region-generate'));
+        const plan = regionGenerationPlan(panel.rulesDoc, '3', region, tiles);
+        const width = [...regionGenSection(region).querySelectorAll('input')][1]?.value;
+        testController.assertEqual('the width row shows regionSizeFor\'s width', String(plan.size.width), String(width));
+
+        selectTab(panel, SIDECARS_TAB_ID);
+        // ⛓ The Sidecars tab builds its per-region list only on its own expand (W0's rule).
+        const expand = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-expand`), 'the Sidecars list expand', 8000, 50);
+        if (expand?.dataset.open !== 'true') expand?.click();
+        testController.reportCondition('⛓ the SAME form is drawn under the block on the Sidecars tab',
+            await testController.pollForCondition(() => regionGenSection(region, SIDECARS_TAB_ID)?.dataset.target === tiles,
+                'the Sidecars host draws the form', 8000, 50));
+        // ⛓ The Map host is asserted in (ii), after Generate: between the label pick and
+        //   Generate the map REFUSES the region (its payload does not fit its label), so
+        //   it draws no block there at all (C1's rule, measured by this row's first run).
+
+        const sidesRegion = 'region_1_1';
+        const sides = realiserOf(false, panel.rulesDoc.preset_sidecars['1'][sidesRegion].substrate, { hooked: true });
+        testController.reportCondition(`⛓ premise: a SIDES realiser to pick (${sides})`, !!sides);
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (sides && await pickSubstrateAndOpenForm(testController, panel, sidesRegion, sides)) {
+            testController.assertEqual(`[${sidesRegion} → ${sides}] ⛓⛓ Seed and the hook's knobs, no size rows`,
+                JSON.stringify(expectedFormLabels(sides)), JSON.stringify(formLabels(regionGenSection(sidesRegion))));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('region-generation form test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(ii) GENERATE ON A MAZE TARGET LANDS ONE `set-region-sidecar` WITH ITS
+ * PROVENANCE.** Four-player slot 3 `region_1_0` → the tiles realiser, Generate
+ * pressed: ONE op, a `set-region-sidecar` whose `provenance` names the pure op,
+ * the target and the seed the form showed; the block reports 0 sidecar issues;
+ * the answer is the regenerate OP's own description (asked of the pure op on
+ * the same arguments, whose entry is byte-equal to the one the worker built);
+ * the seed row moves on by one; one Undo restores the document.
+ */
+export async function apworldGenerateOnAMazeTargetLandsOneOpWithProvenance(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        if (!panel) return testController.getOverallResult();
+        const target = realiserOf(true, panel.rulesDoc.preset_sidecars['3'][region].substrate);
+        testController.reportCondition('slot 3 selected', await onRegionsTabFor(testController, panel, '3'));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, target)) return testController.getOverallResult();
+        const seed = Number(regionGenSection(region).querySelector('input')?.value);
+        testController.reportCondition(`the seed row shows a whole number (${seed})`, Number.isInteger(seed));
+        const docBefore = JSON.stringify(panel.rulesDoc);
+        const docObj = JSON.parse(docBefore);
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        regionGenSection(region).querySelector('.apworld-region-generate').click();
+        const answer = await answerAfter(testController, region, said, 'the Generate answer');
+        testController.assertEqual('⛓⛓ ONE op recorded', String(opsBefore + 1), String(panel.session.ops().length));
+        const op = panel.session.ops().at(-1);
+        testController.assertEqual('…a set-region-sidecar (the RESULT, not the realiser)', 'set-region-sidecar', String(op?.op));
+        const prov = op?.provenance ?? {};
+        testController.assertEqual('⛓⛓ its provenance names the pure op', 'regenerate-region-sidecar', String(prov.op));
+        testController.assertEqual('…the target', target, String(prov.substrate));
+        testController.assertEqual('…and the seed the form showed', String(seed), String(prov.seed));
+        testController.assertEqual('⛓ 0 sidecar issues on the block', '0', String(sidecarBlockFor(region)?.dataset.sidecarIssues));
+        const pure = applyRulesDocOp(docObj, {
+            op: 'regenerate-region-sidecar', player: '3', region, substrate: target, seed,
+            regionParams: prov.regionParams, hazardOpts: prov.hazardOpts, size: prov.size, freeItems: prov.freeItems,
+        });
+        testController.reportCondition('the pure op on the same arguments builds', pure.ok);
+        testController.assertEqual('⛓⛓ the worker\'s entry is the pure op\'s, byte for byte',
+            JSON.stringify(pure.doc?.preset_sidecars?.['3']?.[region]),
+            JSON.stringify(panel.rulesDoc.preset_sidecars['3'][region]));
+        testController.assertEqual('⛓⛓ the answer is the regenerate op\'s own description', String(pure.description), String(answer));
+        testController.reportCondition('…which names the seed and the unchanged rules',
+            String(answer).includes(`seed ${seed}`) && String(answer).includes(REGENERATE_RULES_UNCHANGED));
+        testController.assertEqual('the seed row moved on by one', String(seed + 1),
+            String(regionGenSection(region)?.querySelector('input')?.value));
+        // ⛓ The THIRD host: the regenerated region fits its label again, so the Map draws its
+        //   block under the selection — and the open form with it.
+        const { reconstructResultFromSidecars } = await import('../../procgenPipeline/compositeMapDocument.js');
+        const cell = (reconstructResultFromSidecars(panel.rulesDoc, { playerId: '3' })?.grid?.allRegions() ?? [])
+            .find((c) => c.region_id === region)?.cell;
+        testController.reportCondition('⛓ premise: the regenerated region is placed on the map', !!cell);
+        const canvas = await onMapTabFor(testController, panel);
+        if (canvas && cell) clickMapCell(cell);
+        testController.reportCondition('⛓ the form is drawn under the Map\'s selection too',
+            await testController.pollForCondition(
+                () => mapSelectionBlock()?.querySelector('.apworld-region-generation')?.dataset.target === target,
+                'the Map host draws the form', 8000, 50));
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('⛓ one Undo restores the document', docBefore, JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('maze Generate test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(iii) A ZONE GENERATE SHOWS THE ELAPSED TICKER AND LANDS.** Four-player
+ * slot 3 `region_2_1` (a zone region already): the picker opens the form only
+ * on a CHANGE, so the label goes to the tiles realiser and back — the form
+ * then opens for the region's own substrate, and offers its recorded knobs
+ * when they differ (`regionGenerationPlan`). Generate: the elapsed readout is
+ * drawn and ADVANCES while the worker runs, and one op lands whose answer
+ * carries no "rode free" clause (the target hosts surplus exits natively).
+ */
+export async function apworldAZoneGenerateShowsTheElapsedTickerAndLands(testController) {
+    try {
+        const region = 'region_2_1';
+        const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        if (!panel) return testController.getOverallResult();
+        const own = panel.rulesDoc.preset_sidecars['3'][region].substrate;
+        testController.reportCondition(`⛓ premise: the region is a zone realiser's (${own})`,
+            regionRealiserKind(substrateRegistry.get(own)) === 'zone');
+        testController.reportCondition('slot 3 selected', await onRegionsTabFor(testController, panel, '3'));
+        const away = realiserOf(true, own);
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, away)) return testController.getOverallResult();
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, own)) return testController.getOverallResult();
+        const plan = regionGenerationPlan(panel.rulesDoc, '3', region, own);
+        testController.assertEqual('⛓ the recorded-knobs line is drawn iff the payload\'s knobs differ',
+            String(!!plan.recorded), String(!!regionGenSection(region)?.querySelector('.apworld-region-generation-recorded')));
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        regionGenSection(region).querySelector('.apworld-region-generate').click();
+        const readings = [];
+        const answer = await testController.pollForValue(() => {
+            const e = regionGenSection(region)?.querySelector('.apworld-region-generation-elapsed');
+            if (e && e.textContent && readings.at(-1) !== e.textContent) readings.push(e.textContent);
+            const t = sidecarMessageFor(region)?.textContent ?? null;
+            return t && t !== said && !regionGenSection(region)?.querySelector('.apworld-region-generation-elapsed') ? t : null;
+        }, 'the zone Generate answer', 60000, 20);
+        testController.log(`elapsed readings: ${readings.slice(0, 6).join(' | ')}`);
+        testController.reportCondition(`⛓⛓ the elapsed readout was drawn and ADVANCED (${readings.length} distinct readings)`,
+            readings.length >= 2 && readings.every((r) => /\d+\.\d s/.test(r)));
+        testController.assertEqual('⛓ ONE op landed', String(opsBefore + 1), String(panel.session.ops().length));
+        testController.assertEqual('…with the region\'s substrate in its provenance', own,
+            String(panel.session.ops().at(-1)?.provenance?.substrate));
+        testController.reportCondition('…and the answer is the op\'s description', String(answer).includes(`regenerated as \`${own}\``));
+        testController.reportCondition('⛓ no "rode free" clause — the target hosts surplus exits natively',
+            !String(answer).includes('rode free'));
+        testController.reportCondition('the ticker is cleared after the answer', panel._regionGenTicker === null);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('zone Generate test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/** ⛓ AP_4's start region → the zone target R0 measured never returning; the form open. */
+async function ap4NeverReturning(testController) {
+    const region = 'C';
+    const panel = await openHubOnDocument(testController, TOPDOWN_AP4_PATH, '1', region);
+    if (!panel) return null;
+    const target = substrateRegistry.getAll().find((e) => regionRealiserKind(e) === 'zone'
+        && typeof e.hostsSurplusExitsNatively === 'function'
+        && !e.hostsSurplusExitsNatively({ bounceMode: 'column' }))?.id ?? null;
+    testController.reportCondition(`⛓ premise: the zone target R0 measured unbounded here (${target})`, !!target);
+    testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+    if (!target || !await pickSubstrateAndOpenForm(testController, panel, region, target)) return null;
+    return { panel, region, target };
+}
+
+/**
+ * ⛓⛓⛓ **(iv) THE TIME LIMIT — A SETTING, AND A TIMEOUT RECORDS NOTHING.** The
+ * setting overridden to 1 s for the session (`persist: false`), AP_4's `C` →
+ * the zone target: the answer is the timeout sentence quoting the setting, the
+ * run timed out in its `running` phase (the budget bounds the realiser, not the
+ * libraries' load), NOTHING was recorded, the worker was terminated, and no
+ * second answer arrives after the sentence. The override is dropped after.
+ */
+export async function apworldAGenerateThatRunsOutOfTimeRecordsNothing(testController) {
+    try {
+        await settingsManager.updateSetting(REGION_GENERATION_TIMEOUT_SETTING, 1, { persist: false });
+        const got = await ap4NeverReturning(testController);
+        if (!got) return testController.getOverallResult();
+        const { panel, region, target } = got;
+        const opsBefore = panel.session.ops().length;
+        const docBefore = JSON.stringify(panel.rulesDoc);
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        regionGenSection(region).querySelector('.apworld-region-generate').click();
+        const answer = await answerAfter(testController, region, said, 'the timeout answer', 30000);
+        testController.assertEqual('⛓⛓ the answer is the timeout sentence, quoting the setting',
+            `Refused: ${regionGenerationTimeoutSentence(1, target, region)}`, String(answer));
+        const run = panel._regionGenLastRun;
+        testController.reportCondition('the run TIMED OUT', run?.outcome?.timedOut === true);
+        testController.assertEqual('…in the realiser\'s phase (the budget restarts at ready)', 'running', String(run?.outcome?.phase));
+        testController.reportCondition('⛓⛓ the worker was TERMINATED', run?.handle?.terminated() === true);
+        testController.assertEqual('⛓ NOTHING was recorded', String(opsBefore), String(panel.session.ops().length));
+        testController.assertEqual('…the document is as it was', docBefore, JSON.stringify(panel.rulesDoc));
+        await new Promise((r) => setTimeout(r, 1500));
+        testController.assertEqual('⛓ no second answer arrives after the sentence', '0', String(run?.handle?.late()));
+        testController.assertEqual('…the answer stands', String(answer), String(sidecarMessageFor(region)?.textContent));
+        testController.assertEqual('…and still nothing recorded', String(opsBefore), String(panel.session.ops().length));
+        testController.reportCondition('the form is back to Generate ▸', !!regionGenSection(region)?.querySelector('.apworld-region-generate'));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('timeout test error-free', false);
+    } finally {
+        await settingsManager.clearOverride(REGION_GENERATION_TIMEOUT_SETTING);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(v) CANCEL MID-RUN.** AP_4's `C` → the zone target at the default
+ * budget; once the realiser is running, Cancel: the cancel sentence, nothing
+ * recorded, the worker terminated, the ticker cleared, Generate back, and no
+ * late answer.
+ */
+export async function apworldCancelStopsARunningGeneration(testController) {
+    try {
+        const got = await ap4NeverReturning(testController);
+        if (!got) return testController.getOverallResult();
+        const { panel, region } = got;
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        regionGenSection(region).querySelector('.apworld-region-generate').click();
+        const running = await testController.pollForCondition(
+            () => panel._regionGen?.run?.handle.phase() === 'running'
+                && /^Generating as/.test(regionGenSection(region)?.querySelector('.apworld-region-generation-elapsed')?.textContent ?? ''),
+            'the realiser is running, and the readout says so', 20000, 50);
+        testController.reportCondition('⛓ premise: the realiser is running', running);
+        const run = panel._regionGen?.run;
+        regionGenSection(region)?.querySelector('.apworld-region-generation-cancel')?.click();
+        const answer = await answerAfter(testController, region, said, 'the Cancel answer', 8000);
+        testController.assertEqual('⛓⛓ the answer is the Cancel sentence', `Refused: apworld: ${REGION_GENERATION_CANCELLED}.`, String(answer));
+        testController.reportCondition('⛓ the worker was TERMINATED', run?.handle.terminated() === true);
+        testController.assertEqual('⛓ NOTHING was recorded', String(opsBefore), String(panel.session.ops().length));
+        testController.reportCondition('the ticker is cleared', panel._regionGenTicker === null);
+        testController.reportCondition('Generate ▸ is back', !!regionGenSection(region)?.querySelector('.apworld-region-generate'));
+        await new Promise((r) => setTimeout(r, 1000));
+        testController.assertEqual('no late answer', '0', String(run?.handle.late()));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('cancel test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(vi) A TARGET WITHOUT A REALISER: THE OP'S REFUSAL, NO GENERATE.** Every
+ * id the picker offers whose registry entry has no realiser (derived): picked
+ * on four-player slot 3 `region_1_0`, the form prints the op's own refusal
+ * (asked of `regenerateOpRefusal` on the same document) and draws no Generate.
+ */
+export async function apworldANoRealiserTargetPrintsTheOpsRefusal(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition('slot 3 selected', await onRegionsTabFor(testController, panel, '3'));
+        await openSidecarJson(testController, region);
+        const picker = sidecarFieldControl(region, SUBSTRATE_KEY, SIDECAR_FORM_LEVELS.ENTRY);
+        const none = [...(picker?.options ?? [])].filter((o) => !o.disabled).map((o) => o.textContent)
+            .filter((id) => regionRealiserKind(substrateRegistry.get(id)) === null
+                && id !== panel.rulesDoc.preset_sidecars['3'][region].substrate);
+        testController.reportCondition(`⛓ premise: the picker offers ids without a realiser (${none.join(', ')})`, none.length > 0);
+        for (const id of none) {
+            if (!await pickSubstrateAndOpenForm(testController, panel, region, id)) continue;
+            const sec = regionGenSection(region);
+            const want = regenerateOpRefusal(panel.rulesDoc, {
+                op: 'regenerate-region-sidecar', player: '3', region, substrate: id,
+                seed: panel._regionGen?.bag?.seed,
+            });
+            testController.assertEqual(`[→ ${id}] ⛓⛓ the form prints the op's own refusal`, String(want),
+                String(sec?.querySelector('.apworld-region-generation-refusal')?.textContent));
+            testController.reportCondition(`[→ ${id}] …and draws NO Generate`,
+                sec?.dataset.generate === 'none' && !sec.querySelector('.apworld-region-generate'));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('no-realiser test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(vii) THE FORM IS TORN DOWN ON A SLOT PICK AND ON A NEW DOCUMENT — NO
+ * STALE TICKER.** A live run on four-player slot 3 `region_1_0` (pressed, then
+ * the slot picked while it runs): the form is gone, the run cancelled and its
+ * worker terminated, the ticker cleared, and nothing lands after. Then a live
+ * run on AP_4's `C` and a NEW document loaded: the same, on the new session.
+ */
+export async function apworldTheFormIsTornDownOnASlotPickAndANewDocument(testController) {
+    try {
+        const region = 'region_1_0';
+        let panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition('slot 3 selected', await onRegionsTabFor(testController, panel, '3'));
+        const target = realiserOf(true, panel.rulesDoc.preset_sidecars['3'][region].substrate);
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, target)) return testController.getOverallResult();
+        const opsBefore = panel.session.ops().length;
+        regionGenSection(region).querySelector('.apworld-region-generate').click();
+        const live = await testController.pollForValue(() => panel._regionGen?.run ?? null, 'a live run', 5000, 5);
+        testController.reportCondition(`⛓ premise: the run is live at the pick (${live?.handle.phase()})`,
+            !!live && live.handle.phase() !== 'done');
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        selectPlayer(select, '1');
+        testController.reportCondition('⛓⛓ a SLOT PICK closes the form', panel._regionGen === null
+            && !document.querySelector(`${PANEL_SELECTOR} .apworld-region-generation`));
+        testController.reportCondition('…cancels the run, terminating its worker',
+            live?.outcome?.cancelled === true || live?.handle.terminated() === true);
+        testController.reportCondition('…and clears the ticker', panel._regionGenTicker === null);
+        await new Promise((r) => setTimeout(r, 2500));
+        testController.assertEqual('⛓ nothing landed after the pick', String(opsBefore), String(panel.session.ops().length));
+        testController.assertEqual('no late answer', '0', String(live?.handle.late()));
+
+        const got = await ap4NeverReturning(testController);
+        if (!got) return testController.getOverallResult();
+        panel = got.panel;
+        regionGenSection(got.region).querySelector('.apworld-region-generate').click();
+        const run = await testController.pollForValue(() => panel._regionGen?.run ?? null, 'a live AP_4 run', 5000, 5);
+        await testController.pollForCondition(() => run?.handle.phase() === 'running', 'the realiser running', 20000, 50);
+        panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        testController.reportCondition('⛓⛓ a NEW DOCUMENT closes the form', !!panel && panel._regionGen === null
+            && !document.querySelector(`${PANEL_SELECTOR} .apworld-region-generation`));
+        testController.reportCondition('…terminates the old run\'s worker', run?.handle.terminated() === true);
+        testController.reportCondition('…and leaves no ticker', panel?._regionGenTicker === null);
+        testController.reportCondition('…and resets the seed counter', panel?._regionGenSeeds?.size === 0);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('teardown test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+const R2_TESTS = [
+    ['apworld-a-pick-opens-the-region-generation-form-with-the-targets-knobs',
+        'APWorld hub: a substrate pick opens Region generation with the target\'s declared knobs, on every host',
+        apworldAPickOpensTheRegionGenerationFormWithTheTargetsKnobs],
+    ['apworld-generate-on-a-maze-target-lands-one-op-with-provenance',
+        'APWorld hub: Generate on a maze target lands ONE set-region-sidecar with provenance; the answer is the op\'s; Undo restores',
+        apworldGenerateOnAMazeTargetLandsOneOpWithProvenance],
+    ['apworld-a-zone-generate-shows-the-elapsed-ticker-and-lands',
+        'APWorld hub: a zone Generate shows the elapsed time ticking and lands',
+        apworldAZoneGenerateShowsTheElapsedTickerAndLands],
+    ['apworld-a-generate-that-runs-out-of-time-records-nothing',
+        'APWorld hub: a Generate past the time-limit setting prints the timeout sentence, terminates the worker, records nothing',
+        apworldAGenerateThatRunsOutOfTimeRecordsNothing],
+    ['apworld-cancel-stops-a-running-generation',
+        'APWorld hub: Cancel stops a running generation — worker terminated, nothing recorded',
+        apworldCancelStopsARunningGeneration],
+    ['apworld-a-no-realiser-target-prints-the-ops-refusal',
+        'APWorld hub: a target without a realiser prints the op\'s own refusal and no Generate',
+        apworldANoRealiserTargetPrintsTheOpsRefusal],
+    ['apworld-the-form-is-torn-down-on-a-slot-pick-and-a-new-document',
+        'APWorld hub: the Region generation form and its run are torn down on a slot pick and a new document',
+        apworldTheFormIsTornDownOnASlotPickAndANewDocument],
+];
+for (const [id, name, testFunction] of R2_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE R2. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}

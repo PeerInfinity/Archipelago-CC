@@ -759,6 +759,48 @@
             "_comment": "PRESET SIDECARS D1. The substrate picker lists the registry's playable ids (sorted) and says it changes the label only; choosing the other slot's substrate records one op, payload untouched, and V0's SUBSTRATE_MISMATCH appears; Undo clears it."
         },
         {
+            "id": "apworld-a-pick-opens-the-region-generation-form-with-the-targets-knobs",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWORLD SUBSTRATE CHANGE R2 (i). A substrate pick writes the label and opens Region generation: Seed, the size rows the op reads (tiles only), the target hook's knobs, Generate; the same form on the Sidecars and Map hosts."
+        },
+        {
+            "id": "apworld-generate-on-a-maze-target-lands-one-op-with-provenance",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R2 (ii). Generate on a maze target: ONE set-region-sidecar with provenance, 0 sidecar issues, the answer is the regenerate op's own description (the pure op builds the same entry), Undo restores. Mutant: provenance dropped."
+        },
+        {
+            "id": "apworld-a-zone-generate-shows-the-elapsed-ticker-and-lands",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R2 (iii). A zone Generate: the elapsed readout advances while the worker runs, one op lands, no rode-free clause (braid hosts surplus exits natively)."
+        },
+        {
+            "id": "apworld-a-generate-that-runs-out-of-time-records-nothing",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R2 (iv). The time-limit setting at 1 s on AP_4 C (R0's never-returning region): the timeout sentence quoting the setting, the worker terminated, nothing recorded, no late answer. Mutant: no terminate() on timeout."
+        },
+        {
+            "id": "apworld-cancel-stops-a-running-generation",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R2 (v). Cancel while the realiser runs: the cancel sentence, the worker terminated, nothing recorded, the ticker cleared."
+        },
+        {
+            "id": "apworld-a-no-realiser-target-prints-the-ops-refusal",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R2 (vi). Every picker id without a realiser: the form prints the op's own refusal and no Generate."
+        },
+        {
+            "id": "apworld-the-form-is-torn-down-on-a-slot-pick-and-a-new-document",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R2 (vii). A live run torn down by a slot pick and by a new document: form gone, worker terminated, no ticker, nothing lands."
+        },
+        {
             "id": "apworld-the-preset-sidecars-door-lands-on-the-sidecars-tab",
             "enabled": true,
             "category": "apworldEditor",
