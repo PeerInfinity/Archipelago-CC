@@ -54,3 +54,46 @@
 .srp-table th:first-child, .srp-table td:first-child { width: 34%; }
 .srp-table th { color: #9a9aa8; font-weight: normal; }
 .srp-note { color: #8a8a96; font-style: italic; }
+
+/* ─── the mode toggle, the filter, the legend ─── */
+.srp-bar button.srp-mode[aria-pressed="true"] { background: #2a3440; border-color: #7fe0ff; color: #7fe0ff; }
+.srp-filter {
+    background: #14141a;
+    color: #d8d8e0;
+    border: 1px solid #34343e;
+    padding: 2px 6px;
+    font: inherit;
+    width: 10em;
+}
+.srp-legend { padding: 2px 8px; color: #9a9aa8; border-bottom: 1px solid #24242c; }
+.srp-legend[hidden], .srp-filter[hidden] { display: none; }
+
+/* ─── the matrix ─── */
+.srp-matrix { border-collapse: separate; border-spacing: 0; }
+.srp-matrix th, .srp-matrix td { padding: 1px 6px; border-bottom: 1px solid #1c1c22; white-space: nowrap; }
+.srp-matrix thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #16161c;
+    color: #7fe0ff;
+    font-weight: normal;
+    border-bottom: 1px solid #34343e;
+}
+.srp-matrix-row th { text-align: left; font-weight: normal; color: #d8d8e0; }
+.srp-matrix-row th.srp-feature { padding-left: 2em; color: #9a9aa8; }
+.srp-matrix-group th {
+    text-align: left;
+    color: #c8b060;
+    font-weight: normal;
+    cursor: pointer;
+    padding-top: 6px;
+}
+.srp-matrix-group th::before { content: '▾ '; }
+.srp-matrix-group[data-collapsed] th::before { content: '▸ '; }
+.srp-matrix-group[hidden], .srp-matrix-row[data-collapsed], .srp-matrix-row[data-filtered] { display: none; }
+.srp-cell { text-align: center; }
+.srp-yes { color: #7fd88f; }
+.srp-no { color: #8a8a96; }
+.srp-number { color: #7fe0ff; }
+.srp-count { color: #c8b060; }

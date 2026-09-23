@@ -1,9 +1,13 @@
 /**
  * substrateRegistryPanel/substrateRegistryPanelUI — **THE DOM.** Draws the
  * view-model `describeRegistry` makes of the LIVE `substrateRegistry` and the
- * checked-in snapshot: a drift block first, then one `<details>` per entry
- * (identity, every field grouped by the snapshot's groups with its FULL value,
- * and the two callable answers only a running app can give).
+ * checked-in snapshot, in one of two MODES:
+ * - **Matrix** (the default): one table, fields and their feature rows down,
+ *   entries across, each cell ✓ / ✗ / a number (`matrixOf`); groups collapse,
+ *   a filter narrows the rows by name.
+ * - **Detail**: a drift block first, then one `<details>` per entry
+ *   (identity, every field grouped by the snapshot's groups with its FULL
+ *   value, and the two callable answers only a running app can give).
  *
  * ⛔ Every value reaches the page through `textContent`, never `innerHTML` — a
  * registry value is data, and a label or a type name is a string somebody
@@ -16,10 +20,24 @@
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { REGISTRY } from '../procgenDocs/generated/registry.js';
-import { describeRegistry, driftIsEmpty, fullValueText } from './substrateRegistryPanelLibrary.js';
+import {
+    describeRegistry, driftIsEmpty, fullValueText, GLYPH, matrixOf, ROW_KINDS,
+} from './substrateRegistryPanelLibrary.js';
 
 /** ⛓ Where the snapshot's own full reading lives, relative to `frontend/`. */
 export const REFERENCE_HREF = 'modules/procgenDocs/reference.html#section-registry';
+
+/** ⛓ The panel's view modes; the button for each carries `data-mode`. */
+export const MODES = Object.freeze({ matrix: 'matrix', detail: 'detail' });
+
+/** ⛓ The mode the panel opens in — the matrix is what was asked for. */
+export const DEFAULT_MODE = MODES.matrix;
+
+const MODE_LABELS = Object.freeze({ [MODES.detail]: 'Detail', [MODES.matrix]: 'Matrix' });
+
+/** ⛓ The Matrix mode's one-line key. */
+export const LEGEND = `${GLYPH.yes} carried / true · ${GLYPH.no} absent / false · a number: its value, `
+    + 'or a list\'s count · an indented row: one element of the list above · hover a cell for the full value';
 
 const el = (tag, cls, text) => {
     const n = document.createElement(tag);
@@ -65,14 +83,33 @@ export class SubstrateRegistryPanelUI {
         this.refreshButton = el('button', 'srp-refresh', 'Refresh');
         this.refreshButton.type = 'button';
         this.refreshButton.addEventListener('click', () => this.render());
+        this.mode = DEFAULT_MODE;
+        /** Group titles the reader collapsed — kept across Refresh. */
+        this.collapsed = new Set();
+        this.filterText = '';
+        this.modeButtons = Object.values(MODES).map((m) => {
+            const b = el('button', 'srp-mode', MODE_LABELS[m]);
+            b.type = 'button';
+            b.dataset.mode = m;
+            b.addEventListener('click', () => { this.mode = m; this.render(); });
+            return b;
+        });
+        this.filterInput = el('input', 'srp-filter');
+        this.filterInput.type = 'search';
+        this.filterInput.placeholder = 'filter rows';
+        this.filterInput.addEventListener('input', () => {
+            this.filterText = this.filterInput.value;
+            this._applyMatrixState();
+        });
         const link = el('a', 'srp-reference', 'snapshot reference ↗');
         link.href = REFERENCE_HREF;
         link.target = '_blank';
         link.rel = 'noopener';
-        bar.append(this.headerEl, this.refreshButton, link);
+        bar.append(this.headerEl, ...this.modeButtons, this.filterInput, this.refreshButton, link);
+        this.legendEl = el('div', 'srp-legend', LEGEND);
 
         this.bodyEl = el('div', 'srp-body');
-        this.rootElement.append(bar, this.bodyEl);
+        this.rootElement.append(bar, this.legendEl, this.bodyEl);
     }
 
     getRootElement() { return this.rootElement; }
@@ -85,7 +122,77 @@ export class SubstrateRegistryPanelUI {
         this.viewModel = vm;
         this.headerEl.textContent = `${vm.columns.length} entries · ${vm.rows.length} fields · `
             + `snapshot: ${vm.snapshotCount} entries`;
-        this.bodyEl.replaceChildren(this._drift(vm), ...vm.columns.map((c) => this._entry(vm, c)));
+        const matrix = this.mode === MODES.matrix;
+        for (const b of this.modeButtons) b.setAttribute('aria-pressed', String(b.dataset.mode === this.mode));
+        this.filterInput.hidden = !matrix;
+        this.legendEl.hidden = !matrix;
+        this.matrixGroups = [];
+        if (matrix) this.bodyEl.replaceChildren(this._matrix(vm));
+        else this.bodyEl.replaceChildren(this._drift(vm), ...vm.columns.map((c) => this._entry(vm, c)));
+    }
+
+    /** One table: entries across, each group's field and feature rows down. */
+    _matrix(vm) {
+        const m = matrixOf(vm);
+        const t = el('table', 'srp-matrix');
+        const thead = el('thead');
+        const hr = el('tr');
+        hr.appendChild(el('th', 'srp-matrix-corner', 'field'));
+        for (const c of m.columns) {
+            const th = el('th', 'srp-matrix-col');
+            th.appendChild(el('code', null, c.id));
+            th.title = c.label ?? c.id;
+            hr.appendChild(th);
+        }
+        thead.appendChild(hr);
+        t.appendChild(thead);
+        const tbody = el('tbody');
+        for (const g of m.groups) {
+            const header = el('tr', 'srp-matrix-group');
+            const th = el('th', null, g.title);
+            th.colSpan = m.columns.length + 1;
+            th.addEventListener('click', () => {
+                if (this.collapsed.has(g.title)) this.collapsed.delete(g.title);
+                else this.collapsed.add(g.title);
+                this._applyMatrixState();
+            });
+            header.appendChild(th);
+            tbody.appendChild(header);
+            const rows = g.rows.map((r) => {
+                const tr = el('tr', 'srp-matrix-row');
+                const name = el('th', r.kind === ROW_KINDS.feature ? 'srp-feature' : null, r.name);
+                if (r.parent) name.title = r.parent;
+                tr.appendChild(name);
+                for (const c of r.cells) {
+                    const td = el('td', `srp-cell srp-${c.kind}`, c.text);
+                    td.title = c.title;
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+                return { tr, name: r.name.toLowerCase() };
+            });
+            this.matrixGroups.push({ title: g.title, header, rows });
+        }
+        t.appendChild(tbody);
+        this._applyMatrixState();
+        return t;
+    }
+
+    /** Collapse and filter, over the drawn rows — no redraw. */
+    _applyMatrixState() {
+        const needle = this.filterText.trim().toLowerCase();
+        for (const g of this.matrixGroups ?? []) {
+            const collapsed = this.collapsed.has(g.title);
+            g.header.toggleAttribute('data-collapsed', collapsed);
+            let visible = 0;
+            for (const r of g.rows) {
+                const filtered = needle !== '' && !r.name.includes(needle);
+                r.tr.toggleAttribute('data-filtered', filtered);
+                r.tr.toggleAttribute('data-collapsed', collapsed);
+                if (!filtered) visible += 1;
+            }
+            g.header.hidden = visible === 0;
+        }
     }
 
     _drift(vm) {

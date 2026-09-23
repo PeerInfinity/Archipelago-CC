@@ -871,6 +871,12 @@
             "enabled": true,
             "category": "substrateRegistry",
             "_comment": "SUBSTRATE REGISTRY PANEL R1. The panel draws one block per live substrateRegistry entry (expectation read from getAll() at run time, after the panel's own Refresh)."
+        },
+        {
+            "id": "substrate-registry-panel-matrix-has-a-column-per-entry",
+            "enabled": true,
+            "category": "substrateRegistry",
+            "_comment": "SUBSTRATE REGISTRY PANEL R2. The Matrix mode: header == getAll() ids in order; row count == matrixOf(describeRegistry(getAll(), REGISTRY)); every cell is a glyph or an integer."
         }
     ]
 }
