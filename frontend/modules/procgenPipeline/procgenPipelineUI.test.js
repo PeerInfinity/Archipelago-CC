@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
+import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
@@ -562,5 +563,36 @@ describe('R1 — the Parameters section binds the same bag keys it bound before 
             for (const c of controls(ctx._renderParams())) { perturb(c); c.fire('change'); }
         });
         expect([...written].sort()).toEqual(PARAMETER_KEYS_BEFORE_R1[mode]);
+    });
+});
+
+/**
+ * ⛓ The WHOLE Parameters section, not only its keys: the serialised DOM per
+ * mode, with each per-substrate `procgen-region-generation-form` wrapper
+ * spliced out (R1 adds that one element per active substrate and nothing
+ * else), hashed. CAPTURED at the start HEAD `9ab1459239` by the same fake
+ * document; the wrapper's own rows are `regionGenerationForm.test.js`'s.
+ */
+const PARAMETERS_SECTION_SHA256_BEFORE_R1 = Object.freeze({
+    gridGrowth: 'f49e89f68ba8a5cb858d3abd74e9b4d1825b42a0f0e98b5d238fb83067e1c298',
+    sphereGrowth: 'd19a7149611d9cd1289e8f9fac457b81da16df18742771c6ff57b049834ea71a',
+    shuffledSpiral: 'cbd1d83f8490db92a82331113efd87544be267f2471c54f6dbe7e9b0f3eecf9b',
+    topDown: '666aeec3b7aa23a8c5ec85e65d1baaeee26de7c3c97cd060f9eae163d12b312d',
+});
+function unwrapForms(el) {
+    el.children = el.children.flatMap((c) => (c.className === 'procgen-region-generation-form'
+        ? c.children.map(unwrapForms) : [unwrapForms(c)]));
+    return el;
+}
+
+describe('R1 — the Parameters section draws the DOM it drew before the split', () => {
+    it.each(Object.keys(PARAMETERS_SECTION_SHA256_BEFORE_R1))('⛓ %s: the section\'s serialised DOM hash is the captured fixture', (mode) => {
+        const ctx = Object.create(ProcgenPipelineUI.prototype);
+        ctx.mode = mode;
+        ctx.params = { ...panelDefaultParams(), enableHazards: true };
+        ctx._activeSubstrateDict = () => ({ maze: 1, bounce: 1, runner: 1 });
+        ctx._saveToLocalStorage = () => {};
+        const html = withFakeDocument(() => serialize(unwrapForms(ctx._renderParams())));
+        expect(createHash('sha256').update(html).digest('hex')).toBe(PARAMETERS_SECTION_SHA256_BEFORE_R1[mode]);
     });
 });

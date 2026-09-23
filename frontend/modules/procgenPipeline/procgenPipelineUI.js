@@ -62,6 +62,9 @@ import {
 import { reconstructResultFromSidecars, refusedRegionsNote } from './compositeMapDocument.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import {
+    REGION_GENERATION_FIELDS, bagIntegerField, renderRegionGenerationForm,
+} from '../procgenCore/regionGenerationForm.js';
 import { activeSubstrateIds } from './sphereConfigHooks.js';
 // ⛓ PROCGEN PIPELINE PRESETS P0 — every mode's run is ASSEMBLED in presetRun.js
 // (pure functions of a panel-shaped state); the methods below that used to build
@@ -1935,9 +1938,10 @@ export class ProcgenPipelineUI {
                 { key: 'gridWidth',     label: 'Grid width',       min: 1, max: 10 },
                 { key: 'gridHeight',    label: 'Grid height',      min: 1, max: 10 },
             ] : []),
-            { key: 'regionWidth',       label: 'Region width',     min: 2, max: 40 },
-            { key: 'regionHeight',      label: 'Region height',    min: 2, max: 40 },
-            { key: 'maxItemsPerRegion', label: 'Max items/region', min: 0, max: 10 },
+            // The per-REGION rows (region size, max items) are the shared
+            // generation form's (procgenCore/regionGenerationForm.js); drawn
+            // here, in the grid, for every substrate at once.
+            ...REGION_GENERATION_FIELDS,
             ...(this.mode === 'sphereGrowth' ? [
                 { key: 'sphereCount',   label: 'Spheres',          min: 1, max: 20 },
                 { key: 'fillerCount',   label: 'Filler regions',   min: 0, max: 50 },
@@ -1954,33 +1958,7 @@ export class ProcgenPipelineUI {
         ];
 
         for (const f of fields) {
-            const row = document.createElement('div');
-            row.className = 'procgen-pipeline-field';
-            const label = document.createElement('label');
-            label.textContent = f.label;
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.value = this.params[f.key] ?? '';
-            if (f.min !== undefined) input.min = f.min;
-            if (f.max !== undefined) input.max = f.max;
-            if (f.placeholder) input.placeholder = f.placeholder;
-            if (f.title) { input.title = f.title; label.title = f.title; }
-            input.addEventListener('change', () => {
-                // Nullable fields collapse to null (shown as the placeholder)
-                // both on an empty box AND when the spinner steps down to 0 —
-                // so "Spheres/batch" toggles 1 ⇄ all from the up/down arrows.
-                if (f.nullable && (input.value === '' || parseInt(input.value, 10) <= 0)) {
-                    this.params[f.key] = null;
-                    input.value = '';
-                } else {
-                    const v = parseInt(input.value, 10);
-                    if (Number.isFinite(v)) this.params[f.key] = v;
-                }
-                this._saveToLocalStorage();
-            });
-            row.appendChild(label);
-            row.appendChild(input);
-            grid.appendChild(row);
+            grid.appendChild(bagIntegerField(this.params, f, () => this._saveToLocalStorage()));
         }
         section.appendChild(grid);
 
@@ -4991,13 +4969,19 @@ export class ProcgenPipelineUI {
     }
 
     /**
-     * Per-substrate parameter subsections inside Parameters. Each
-     * substrate renders its own controls via the registry
-     * `renderProcgenParams` hook (bounceProcgenParams.js,
-     * runnerProcgenParams.js, mazeProcgenParams.js); substrates without
-     * it render nothing. An empty selection falls back to the engine's
-     * default substrate (DEFAULT_SUBSTRATE_ID) — the substrate the engine
-     * builds with when nothing is selected, so its subsection shows then.
+     * Per-substrate parameter subsections inside Parameters: one shared
+     * per-region generation form per active substrate
+     * (`procgenCore/regionGenerationForm.js`, apworld substrate R1), which
+     * draws the entry's registry `renderProcgenParams` hook
+     * (bounceProcgenParams.js, runnerProcgenParams.js, mazeProcgenParams.js)
+     * under its subheader; substrates without it render nothing but the
+     * form's empty wrapper (`data-procgen-params="none"`). The generic
+     * per-region rows are drawn once, in the grid, so each form is called
+     * with `generic: false`. Same bag, same onChange: the params, their keys
+     * and every run path are unchanged. An empty selection falls back to the
+     * engine's default substrate (DEFAULT_SUBSTRATE_ID) — the substrate the
+     * engine builds with when nothing is selected, so its subsection shows
+     * then.
      */
     _renderSubstrateParamSections() {
         const wrap = document.createElement('div');
@@ -5005,15 +4989,15 @@ export class ProcgenPipelineUI {
         let ids = Object.keys(dict).filter((id) => Number(dict[id]) > 0).sort();
         if (ids.length === 0) ids = [DEFAULT_SUBSTRATE_ID];
         for (const id of ids) {
-            const hook = substrateRegistry.get(id)?.renderProcgenParams;
-            if (typeof hook !== 'function') continue;
-            const node = hook({ params: this.params, onChange: () => this._saveToLocalStorage() });
-            if (!node) continue;
-            const header = document.createElement('div');
-            header.className = 'procgen-pipeline-scenario-subheader';
-            header.textContent = `${id} parameters`;
-            wrap.appendChild(header);
-            wrap.appendChild(node);
+            // The generic per-region rows are already in the grid above
+            // (`generic: false`); the form adds the entry's own knobs under
+            // its subheader, or nothing for an entry without the hook.
+            wrap.appendChild(renderRegionGenerationForm({
+                substrateId: id,
+                params: this.params,
+                onChange: () => this._saveToLocalStorage(),
+                generic: false,
+            }));
         }
         return wrap;
     }
