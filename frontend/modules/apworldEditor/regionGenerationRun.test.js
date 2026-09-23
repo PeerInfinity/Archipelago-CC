@@ -12,7 +12,7 @@ import { SettingsManager } from '../../app/core/settingsManager.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { register } from './index.js';
 import {
-    REGENERATE_WORKER_LIBRARIES, REGENERATE_WORKER_PATH, REGION_GENERATION_CANCELLED,
+    REGENERATE_WORKER_LIBRARIES, REGENERATE_WORKER_PATH, REGION_GENERATION_CANCELLED, REGION_GENERATION_LOAD_BOUND_MS,
     REGION_GENERATION_GAVE_UP, REGION_GENERATION_TIMEOUT_DEFAULT_S, REGION_GENERATION_TIMEOUT_KEY,
     REGION_GENERATION_TIMEOUT_SETTING, REGION_GENERATION_TIMEOUT_WHERE, regionGenerationTimeoutSeconds,
     regionGenerationTimeoutSentence, runRegenerateInWorker, runRegenerateJob,
@@ -192,11 +192,26 @@ describe('runRegenerateInWorker — the page side: budget, Cancel, terminate', (
         expect((await run.promise).timedOut).toBe(true);
     });
 
-    it('⛓ a load that never says ready is bounded by the same budget', async () => {
+    it('⛓⛓ the LOAD is not bounded by a short budget — a 1 s setting still reaches the realiser (the in-app row\'s find)', async () => {
         const { w, run } = start(1000);
+        vi.advanceTimersByTime(1500);
+        expect(run.phase()).toBe('loading');
+        w.say({ type: 'ready', registered: ['bounce'], failed: [] });
+        expect(run.phase()).toBe('running');
         vi.advanceTimersByTime(1000);
-        expect(await run.promise).toMatchObject({ timedOut: true, phase: 'loading' });
+        expect(await run.promise).toMatchObject({ timedOut: true, phase: 'running', budgetMs: 1000 });
+    });
+
+    it('⛓ a load that never says ready ends at REGION_GENERATION_LOAD_BOUND_MS (or the budget, if longer)', async () => {
+        const { w, run } = start(1000);
+        vi.advanceTimersByTime(REGION_GENERATION_LOAD_BOUND_MS - 1);
+        expect(run.phase()).toBe('loading');
+        vi.advanceTimersByTime(1);
+        expect(await run.promise).toMatchObject({ timedOut: true, phase: 'loading', budgetMs: REGION_GENERATION_LOAD_BOUND_MS });
         expect(w.terminated).toBe(1);
+        const long = start(REGION_GENERATION_LOAD_BOUND_MS + 5000);
+        vi.advanceTimersByTime(REGION_GENERATION_LOAD_BOUND_MS);
+        expect(long.run.phase()).toBe('loading');
     });
 
     it('⛓ CANCEL terminates and answers cancelled; the timer that would have fired does nothing', async () => {

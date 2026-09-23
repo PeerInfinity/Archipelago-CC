@@ -71,6 +71,22 @@ export function regionGenerationTimeoutSentence(seconds, substrate, region) {
         + 'The worker was stopped; nothing was recorded.';
 }
 
+/**
+ * ⛓ The bound on the worker's LIBRARY LOAD, in ms — separate from the setting,
+ * which bounds the realiser. Measured (plan §10 R2, task 0): the eight libraries
+ * load in ≈1.2 s cold, so a one-second setting applied to the load would time
+ * out every generation before its realiser started (the in-app timeout row
+ * found exactly that). The load gets `max(budget, this)`; a load that never
+ * finishes still ends.
+ */
+export const REGION_GENERATION_LOAD_BOUND_MS = 30000;
+
+/** ⛓ The sentence for a worker whose libraries did not load within their bound. */
+export function regionGenerationLoadTimeoutSentence(ms) {
+    return `apworld: the generation worker did not load its substrate libraries within ${Math.round(ms / 1000)} s `
+        + '— the worker was stopped; nothing was recorded.';
+}
+
 /** ⛓ The Cancel sentence. EXPORTED for the rows. */
 export const REGION_GENERATION_CANCELLED = 'generation cancelled — the worker was stopped; nothing was recorded';
 
@@ -155,11 +171,11 @@ export async function runRegenerateJob(args, { post, loadLibraries, regenerate, 
  * outcome but a result the worker is `terminate()`d, and after ANY outcome a
  * late message is ignored.
  *
- * ⛓ The budget runs from the press. While the libraries load (`phase`
- * `loading`) the budget is the same; when the worker says `ready` the clock
- * RESTARTS for the realiser (`phase` `running`, `startedAt` moved) — so a
- * one-second budget bounds the realiser, not the cold start (measured ≈1.2 s
- * for the eight libraries, plan §10 R2 task 0).
+ * ⛓ While the libraries load (`phase` `loading`) the bound is
+ * `max(budget, REGION_GENERATION_LOAD_BOUND_MS)`; when the worker says `ready`
+ * the clock RESTARTS at the budget for the realiser (`phase` `running`,
+ * `startedAt` moved) — so the setting bounds the realiser, not the cold start
+ * (measured ≈1.2 s for the eight libraries, plan §10 R2 task 0).
  *
  * @param {object} args the job (`runRegenerateJob`'s)
  * @param {{timeoutMs: number, createWorker?: Function, now?: Function,
@@ -174,6 +190,7 @@ export function runRegenerateInWorker(args, {
     setTimer = (fn, ms) => setTimeout(fn, ms),
     clearTimer = (t) => clearTimeout(t),
     onPhase = () => {},
+    loadBoundMs = REGION_GENERATION_LOAD_BOUND_MS,
 } = {}) {
     const budgetMs = timeoutMs;
     let phase = 'loading';
@@ -199,11 +216,11 @@ export function runRegenerateInWorker(args, {
         phase = 'done';
         settle(outcome);
     };
-    const arm = () => {
+    const arm = (ms) => {
         if (timer !== null) clearTimer(timer);
         timer = setTimer(() => finish({
-            ok: false, timedOut: true, phase, ms: now() - startedAt, budgetMs,
-        }, { kill: true }), budgetMs);
+            ok: false, timedOut: true, phase, ms: now() - startedAt, budgetMs: ms,
+        }, { kill: true }), ms);
     };
     try {
         worker = createWorker();
@@ -224,7 +241,7 @@ export function runRegenerateInWorker(args, {
             phase = 'running';
             startedAt = now();
             onPhase(phase, msg);
-            arm();
+            arm(budgetMs);
         } else if (msg.type === 'result') {
             const { type, ...res } = msg;
             finish({ ...res, loadMs: startedAt - pressedAt }, { kill: true });
@@ -237,7 +254,7 @@ export function runRegenerateInWorker(args, {
                 + `${ev?.filename ? ` (${ev.filename}:${ev.lineno})` : ''}`,
         }, { kill: true });
     };
-    arm();
+    arm(Math.max(budgetMs, loadBoundMs));
     worker.postMessage({ type: 'run', args });
     return {
         promise,

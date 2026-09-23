@@ -32,7 +32,9 @@ import {
 } from './regionRegenerate.js';
 import { describeRegeneration, regenerateOpRefusal, regenerateRealiserRefusal } from './rulesDocOps.js';
 import { payloadBuiltBy } from './sidecarIssues.js';
-import { REGION_GENERATION_CANCELLED, regionGenerationTimeoutSentence } from './regionGenerationRun.js';
+import {
+    REGION_GENERATION_CANCELLED, regionGenerationLoadTimeoutSentence, regionGenerationTimeoutSentence,
+} from './regionGenerationRun.js';
 
 /** ⛓ The bag key the form's seed row binds. */
 export const REGION_GENERATION_SEED_KEY = 'seed';
@@ -158,6 +160,9 @@ export function regenerationProvenance(args, res) {
 export function regenerationAnswer(args, res, budgetS) {
     const { region, substrate, seed } = args;
     if (res.ok) return { landed: true, text: describeRegeneration({ region, substrate, seed, res }) };
+    if (res.timedOut && res.phase === 'loading') {
+        return { landed: false, text: regionGenerationLoadTimeoutSentence(res.budgetMs) };
+    }
     if (res.timedOut) return { landed: false, text: regionGenerationTimeoutSentence(budgetS, substrate, region) };
     if (res.cancelled) return { landed: false, text: `apworld: ${REGION_GENERATION_CANCELLED}.` };
     if (res.unavailable || res.workerFailed) return { landed: false, text: `apworld: ${res.threw}` };

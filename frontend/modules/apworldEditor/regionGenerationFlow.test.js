@@ -31,7 +31,9 @@ import {
     composeRegenerateArgs, freeItemsSentence, regenerateArgsRefusal, regenerationAnswer,
     regenerationProvenance, regionGenerationPlan,
 } from './regionGenerationFlow.js';
-import { REGION_GENERATION_CANCELLED, regionGenerationTimeoutSentence } from './regionGenerationRun.js';
+import {
+    REGION_GENERATION_CANCELLED, regionGenerationLoadTimeoutSentence, regionGenerationTimeoutSentence,
+} from './regionGenerationRun.js';
 import ApworldEditorUI from './apworldEditorUI.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -175,6 +177,8 @@ describe('regenerationAnswer / regenerationProvenance', () => {
     it('⛓ each outcome answers in the op\'s or the worker\'s own words; only a result lands', () => {
         expect(regenerationAnswer(args, { ok: false, timedOut: true }, 9))
             .toEqual({ landed: false, text: regionGenerationTimeoutSentence(9, 'z', 'C') });
+        expect(regenerationAnswer(args, { ok: false, timedOut: true, phase: 'loading', budgetMs: 30000 }, 9))
+            .toEqual({ landed: false, text: regionGenerationLoadTimeoutSentence(30000) });
         expect(regenerationAnswer(args, { ok: false, cancelled: true }, 9))
             .toEqual({ landed: false, text: `apworld: ${REGION_GENERATION_CANCELLED}.` });
         expect(regenerationAnswer(args, { ok: false, unavailable: true, threw: 'no z' }, 9).text).toBe('apworld: no z');
