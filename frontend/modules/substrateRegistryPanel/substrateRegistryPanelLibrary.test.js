@@ -9,8 +9,8 @@ import { describe, expect, it } from 'vitest';
 
 import { cellOf, fieldNamesOf, shapeRows } from '../procgenDocs/registryShape.js';
 import {
-    describeRegistry, driftIsEmpty, FEATURE_SEPARATOR, featureRowsOf, fullValueText, GLYPH, MATRIX_KINDS,
-    matrixCell, matrixOf, ROW_KINDS, snapshotExpandable, THREW_PREFIX, UNSNAPSHOTTED_GROUP,
+    applyColumnControls, describeRegistry, driftIsEmpty, FEATURE_SEPARATOR, featureRowsOf, fullValueText, GLYPH, MATRIX_KINDS,
+    matrixCell, matrixOf, reorderIds, ROW_KINDS, snapshotExpandable, THREW_PREFIX, UNSNAPSHOTTED_GROUP,
 } from './substrateRegistryPanelLibrary.js';
 
 const controller = { play() {}, stop() {} };
@@ -217,5 +217,68 @@ describe('the matrix mode', () => {
             .toEqual(['features', 'features', 'sharing.items.types']);
         const feat = flat.find((r) => r.name === 'features');
         expect(feat.cells.map((c) => c.text)).toEqual(['2', '1', GLYPH.no]);
+    });
+});
+
+describe('the column controls', () => {
+    const vm = describeRegistry([alpha, beta, gamma], fixtureSnapshot());
+    const m = matrixOf(vm);
+    const ids = (x) => x.columns.map((c) => c.id);
+    const rows = (x) => x.groups.flatMap((g) => g.rows);
+    /** Every row's cells, as the ids they belong to. */
+    const cellIds = (x) => rows(x).map((r) => r.cells.map((c) => c.id).join(','));
+
+    it('reorderIds: the order\'s live ids first, then the unnamed ids in input order', () => {
+        expect(reorderIds(['a', 'b', 'c'])).toEqual(['a', 'b', 'c']);
+        expect(reorderIds(['a', 'b', 'c'], ['c', 'a'])).toEqual(['c', 'a', 'b']);
+        expect(reorderIds(['a', 'b', 'c'], ['ghost', 'b', 'b'])).toEqual(['b', 'a', 'c']);
+        expect(reorderIds([], ['a'])).toEqual([]);
+    });
+
+    it('the default controls are the identity', () => {
+        const out = applyColumnControls(m);
+        expect(out).toEqual(m);
+        expect(out).not.toBe(m);
+        expect(applyColumnControls(m, { hidden: new Set(), order: [] })).toEqual(m);
+    });
+
+    it('hiding one id shrinks the columns and EVERY row\'s cells together, feature rows included', () => {
+        const hidden = ids(m)[0];
+        const out = applyColumnControls(m, { hidden: new Set([hidden]) });
+        const kept = ids(m).filter((id) => id !== hidden);
+        expect(ids(out)).toEqual(kept);
+        expect(rows(out).length).toBe(rows(m).length);
+        expect(rows(out).some((r) => r.kind === ROW_KINDS.feature)).toBe(true);
+        for (const r of rows(out)) expect(r.cells.map((c) => c.id)).toEqual(kept);
+    });
+
+    it('reordering moves each row\'s cells with its column', () => {
+        const order = [...ids(m)].reverse();
+        const out = applyColumnControls(m, { order });
+        expect(ids(out)).toEqual(order);
+        for (const [i, r] of rows(out).entries()) {
+            const before = rows(m)[i];
+            expect(r.name).toBe(before.name);
+            expect(r.cells).toEqual(order.map((id) => before.cells.find((c) => c.id === id)));
+        }
+    });
+
+    it('a stale id in order is dropped; a live id missing from order appends in input order', () => {
+        const [first, second, third] = ids(m);
+        const out = applyColumnControls(m, { order: ['ghost-no-longer-live', third] });
+        expect(ids(out)).toEqual([third, first, second]);
+        expect(new Set(cellIds(out))).toEqual(new Set([[third, first, second].join(',')]));
+    });
+
+    it('hiding everything leaves the rows with no cells', () => {
+        const out = applyColumnControls(m, { hidden: new Set(ids(m)) });
+        expect(out.columns).toEqual([]);
+        expect(rows(out).every((r) => r.cells.length === 0)).toBe(true);
+    });
+
+    it('the input matrix is not mutated', () => {
+        const before = structuredClone(m);
+        applyColumnControls(m, { hidden: new Set([ids(m)[1]]), order: [...ids(m)].reverse() });
+        expect(m).toEqual(before);
     });
 });

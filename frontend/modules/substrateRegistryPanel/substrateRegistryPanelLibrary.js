@@ -271,3 +271,46 @@ export function matrixOf(vm) {
         })),
     };
 }
+
+/**
+ * The ORDER rule for the matrix's columns: the ids of `order` that are still
+ * in `ids`, in `order`'s order (a stale id is dropped, a repeat counts once),
+ * then every id of `ids` that `order` does not name, in `ids`' own order — an
+ * entry registered after the reader reordered APPENDS rather than vanishing.
+ * An empty `order` is the identity.
+ *
+ * @param {string[]} ids    the live ids, in registry order
+ * @param {string[]} order  the reader's display order (may be stale)
+ * @returns {string[]}
+ */
+export function reorderIds(ids, order = []) {
+    const live = new Set(ids);
+    const head = [...new Set(order)].filter((id) => live.has(id));
+    const named = new Set(head);
+    return [...head, ...ids.filter((id) => !named.has(id))];
+}
+
+/**
+ * The column CONTROLS applied to a `matrixOf` result: `columns` reordered by
+ * `reorderIds` and stripped of every id in `hidden`, and every row's `cells`
+ * projected to match, so a hidden column never reaches the DOM. Pure — a NEW
+ * matrix; the input is not touched. The default (nothing hidden, no order) is
+ * the identity.
+ *
+ * @param {ReturnType<typeof matrixOf>} matrix
+ * @param {{ hidden?: Set<string>, order?: string[] }} [controls]
+ */
+export function applyColumnControls(matrix, { hidden = new Set(), order = [] } = {}) {
+    const ids = matrix.columns.map((c) => c.id);
+    const at = reorderIds(ids, order)
+        .filter((id) => !hidden.has(id))
+        .map((id) => ids.indexOf(id));
+    return {
+        ...matrix,
+        columns: at.map((i) => matrix.columns[i]),
+        groups: matrix.groups.map((g) => ({
+            ...g,
+            rows: g.rows.map((r) => ({ ...r, cells: at.map((i) => r.cells[i]) })),
+        })),
+    };
+}
