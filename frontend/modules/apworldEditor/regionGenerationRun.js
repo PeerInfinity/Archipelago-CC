@@ -165,7 +165,7 @@ export async function runRegenerateJob(args, { post, loadLibraries, regenerate, 
  * @param {{timeoutMs: number, createWorker?: Function, now?: Function,
  *   setTimer?: Function, clearTimer?: Function, onPhase?: Function}} opts
  * @returns {{promise: Promise<object>, cancel: Function, phase: Function,
- *   startedAt: Function, budgetMs: number}}
+ *   startedAt: Function, budgetMs: number, late: Function, terminated: Function}}
  */
 export function runRegenerateInWorker(args, {
     timeoutMs,
@@ -183,13 +183,18 @@ export function runRegenerateInWorker(args, {
     let timer = null;
     let settle = null;
     let settled = false;
+    let late = 0;
+    let terminated = false;
     const promise = new Promise((resolve) => { settle = resolve; });
     const finish = (outcome, { kill }) => {
         if (settled) return;
         settled = true;
         if (timer !== null) clearTimer(timer);
         timer = null;
-        if (kill && worker) worker.terminate();
+        if (kill && worker) {
+            worker.terminate();
+            terminated = true;
+        }
         worker = null;
         phase = 'done';
         settle(outcome);
@@ -204,10 +209,16 @@ export function runRegenerateInWorker(args, {
         worker = createWorker();
     } catch (e) {
         finish({ ok: false, workerFailed: true, threw: String(e?.message ?? e), ms: 0 }, { kill: false });
-        return { promise, cancel: () => {}, phase: () => phase, startedAt: () => startedAt, budgetMs };
+        return {
+            promise, cancel: () => {}, phase: () => phase, startedAt: () => startedAt, budgetMs,
+            late: () => late, terminated: () => terminated,
+        };
     }
     worker.onmessage = (ev) => {
-        if (settled) return;
+        if (settled) {
+            late += 1;
+            return;
+        }
         const msg = ev?.data ?? {};
         if (msg.type === 'ready') {
             phase = 'running';
@@ -234,5 +245,9 @@ export function runRegenerateInWorker(args, {
         phase: () => phase,
         startedAt: () => startedAt,
         budgetMs,
+        /** ⛓ Messages that arrived AFTER the outcome (ignored) — a row's "no second answer". */
+        late: () => late,
+        /** ⛓ Whether this run `terminate()`d its worker. */
+        terminated: () => terminated,
     };
 }

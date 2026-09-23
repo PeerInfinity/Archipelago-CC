@@ -178,6 +178,8 @@ describe('runRegenerateInWorker — the page side: budget, Cancel, terminate', (
         w.say({ type: 'result', ok: true, entry: {} });
         expect(await run.promise).toBe(out);
         expect(w.terminated).toBe(1);
+        expect(run.terminated()).toBe(true);
+        expect(run.late()).toBe(1);
     });
 
     it('⛓ the budget RESTARTS at ready: it bounds the realiser, not the libraries\' cold start', async () => {

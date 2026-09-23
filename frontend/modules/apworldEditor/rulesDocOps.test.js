@@ -24,7 +24,7 @@ import {
     PLACEMENT_ISSUE_REASONS, PROGRESSION_ISSUE_REASONS, PROGRESSION_KINDS,
     PROGRESSION_MAPPING_KEY, REFUSAL_NAME_LIMIT, REGENERATE_NEVER_CREATES, REGENERATE_RELINKED,
     REGENERATE_RULES_UNCHANGED, REGENERATE_SEED_REQUIRED, RULES_OP_KINDS, SET_KEY_SCOPES,
-    SIDECAR_NOT_REDERIVED, applyRulesDocOp,
+    SIDECAR_NOT_REDERIVED, SIDECAR_REGENERATED_AS, applyRulesDocOp,
     canonicalPlacementIssues, canonicalPlacementIssuesByPlayer, deleteItemOps, deleteRegionOps,
     describePlacementIssue, describeProgressionIssue, exitsPointingAt, itemGroupRegistry,
     itemsCarryingGroup, locationsOfPlayer, nextName, progressionKindOf, progressionMappingIssues,
@@ -1089,6 +1089,27 @@ describe('set-region-sidecar — the raw entry save (PRESET SIDECARS S1)', () =>
         for (const payload of [null, [1, 2], 'tiles', 0]) {
             expect(apply(doc, { ...base, entry: { ...edited(), playable_payload: payload } }).error,
                 JSON.stringify(payload)).toMatch(/`playable_payload` is the substrate's own serialized world/);
+        }
+    });
+
+    it('⛓⛓ R2 — a `provenance` object is RECORDED and named, and writes nothing into the document', () => {
+        const doc = fixture();
+        const plain = applied(doc, { op: 'set-region-sidecar', region: 'Hall', entry: edited() });
+        const provenance = { op: 'regenerate-region-sidecar', substrate: 'bounce', seed: 3, ms: 1234 };
+        const res = applied(doc, { op: 'set-region-sidecar', region: 'Hall', entry: edited(), provenance });
+        expect(bytes(res.doc), 'the provenance reached the document').toBe(bytes(plain.doc));
+        expect(res.description).toBe(`${plain.description} — ${SIDECAR_REGENERATED_AS} \`bounce\` (seed 3, 1.2 s)`);
+        const other = applied(doc, { op: 'set-region-sidecar', region: 'Hall', entry: edited(),
+            provenance: { op: 'some-tool' } });
+        expect(other.description).toBe(`${plain.description} — from \`some-tool\``);
+    });
+
+    it('⛔ R2 — a `provenance` that is not an object is refused BY NAME', () => {
+        const doc = fixture();
+        for (const provenance of [null, 'regenerate', 3, [{ op: 'x' }]]) {
+            const res = apply(doc, { op: 'set-region-sidecar', region: 'Hall', entry: edited(), provenance });
+            expect(res.ok, JSON.stringify(provenance)).toBe(false);
+            expect(res.error).toMatch(/`provenance` says how an entry came to be — an object/);
         }
     });
 

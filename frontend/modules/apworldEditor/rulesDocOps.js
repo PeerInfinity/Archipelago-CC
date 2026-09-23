@@ -1873,6 +1873,12 @@ export const SIDECAR_NOT_REDERIVED =
  * the Document tab's whole-slot Save does, so `grid_cell`'s `{gx, gy}` and the
  * rest of the entry's declared shape are vetted there, by path.
  *
+ * ⛓ APWORLD SUBSTRATE CHANGE R2 — an optional `provenance` object says how the
+ * entry came to be (the hub's Generate lands the worker's RESULT this way, plan
+ * §9.3, with `{op: 'regenerate-region-sidecar', substrate, seed, regionParams,
+ * hazardOpts, size, freeItems, ms}`); refused by name when it is not an object,
+ * named in the description, and never written into the document.
+ *
  * ⛓ THE ENTRY IS COPIED AT THE DOOR — `applyRulesDocOp`'s `carried()` clones
  * the whole op before dispatch, so a JSON widget that keeps mutating the object
  * it parsed cannot write THROUGH the record (`set-rule-tree`'s defect).
@@ -1908,10 +1914,35 @@ function opSetRegionSidecar(doc, op) {
         return refuse('apworld: `playable_payload` is the substrate\'s own serialized world, an '
             + `object — got ${describeValue(payload)}.`);
     }
+    const prov = op.provenance;
+    if (prov !== undefined && (!prov || typeof prov !== 'object' || Array.isArray(prov))) {
+        return refuse('apworld: `provenance` says how an entry came to be — an object '
+            + `({op, substrate, seed, …}), got ${describeValue(prov)}.`);
+    }
     const n = hasPayload ? Object.keys(payload).length : 0;
     return ok(setPath(doc, ['preset_sidecars', p, name], entry),
         `region ${name}: sidecar entry replaced (${hasPayload
-            ? `${n} payload key${n === 1 ? '' : 's'}` : 'no payload'}) — ${SIDECAR_NOT_REDERIVED}`);
+            ? `${n} payload key${n === 1 ? '' : 's'}` : 'no payload'}) — ${SIDECAR_NOT_REDERIVED}`
+        + (prov ? provenanceClause(prov) : ''));
+}
+
+/** ⛓ The clause a `provenance` adds to `set-region-sidecar`'s description.
+ *  EXPORTED for the rows. */
+export const SIDECAR_REGENERATED_AS = 'regenerated as';
+
+/**
+ * ⛓ `— regenerated as \`bounce\` (seed 3, 1.2 s)` for a `regenerate-region-sidecar`
+ * provenance; `— from \`<op>\`` for any other. ⛔ The provenance is RECORDED in
+ * the op and never written into the document: the op writes the entry alone.
+ */
+function provenanceClause(prov) {
+    if (prov.op !== 'regenerate-region-sidecar') {
+        return ` — from \`${typeof prov.op === 'string' ? prov.op : describeValue(prov.op)}\``;
+    }
+    const bits = [];
+    if (Number.isInteger(prov.seed)) bits.push(`seed ${prov.seed}`);
+    if (Number.isFinite(prov.ms)) bits.push(`${(prov.ms / 1000).toFixed(1)} s`);
+    return ` — ${SIDECAR_REGENERATED_AS} \`${prov.substrate}\`${bits.length ? ` (${bits.join(', ')})` : ''}`;
 }
 
 /* ── the payload regenerated (APWORLD SUBSTRATE CHANGE R0) ────────────── */
@@ -1991,89 +2022,141 @@ function noRealiserSentence(id, facts) {
  * ⚠ The panel's `_saveRegionSidecar` veto chain is not this op's (R2 wires it).
  */
 function opRegenerateRegionSidecar(doc, op) {
+    const refusal = regenerateOpRefusal(doc, op);
+    if (refusal) return refuse(refusal);
+    const p = playerOf(op);
+    const substrate = op.substrate ?? doc.preset_sidecars[p][op.region].substrate;
+    const res = regenerateRegionEntry({
+        doc, player: p, region: op.region, substrate, seed: op.seed,
+        regionParams: op.regionParams, hazardOpts: op.hazardOpts, size: op.size, freeItems: op.freeItems,
+    });
+    if (!res.ok) return refuse(regenerateRealiserRefusal({ region: op.region, substrate, res }));
+    return ok(setPath(doc, ['preset_sidecars', p, op.region], res.entry),
+        describeRegeneration({ region: op.region, substrate, seed: op.seed, res }));
+}
+
+/**
+ * ⛓⛓ **EVERY REFUSAL `regenerate-region-sidecar` CAN NAME BEFORE THE REALISER
+ * RUNS** — the op's own, EXPORTED so the hub's Region generation form (R2) asks
+ * the op's question without running a realiser that may never return (trap
+ * 1393): the form prints this sentence and draws no Generate. `null` = the op
+ * would hand the region to the realiser.
+ *
+ * @returns {string|null}
+ */
+export function regenerateOpRefusal(doc, op) {
     const p = playerOf(op);
     const name = op.region;
     if (typeof name !== 'string' || !name.trim()) {
-        return refuse('apworld: regenerate-region-sidecar needs a region NAME, got '
-            + `${JSON.stringify(op.region)}.`);
+        return 'apworld: regenerate-region-sidecar needs a region NAME, got '
+            + `${JSON.stringify(op.region)}.`;
     }
     const slotSidecars = doc?.preset_sidecars?.[p];
     const current = slotSidecars?.[name];
     if (!current || typeof current !== 'object' || Array.isArray(current)) {
-        return refuse(`apworld: player ${p} has no sidecar entry for region "${name}". `
+        return `apworld: player ${p} has no sidecar entry for region "${name}". `
             + `${REGENERATE_NEVER_CREATES} This slot's sidecars are `
-            + `[${Object.keys(slotSidecars ?? {}).join(', ') || 'none'}].`);
+            + `[${Object.keys(slotSidecars ?? {}).join(', ') || 'none'}].`;
     }
     if (!Object.hasOwn(regionsOf(doc, p), name)) {
-        return refuse(`apworld: region "${name}" has a sidecar entry but no region in player ${p}'s `
+        return `apworld: region "${name}" has a sidecar entry but no region in player ${p}'s `
             + '`regions` — a regenerated room is built FROM the region\'s exits, locations and '
-            + 'access rules, and there are none to build it from.');
+            + 'access rules, and there are none to build it from.';
     }
     if (!Number.isInteger(op.seed)) {
-        return refuse('apworld: regenerate-region-sidecar needs `seed` as a whole number — '
-            + `${REGENERATE_SEED_REQUIRED} — got ${op.seed === undefined ? 'none' : describeValue(op.seed)}.`);
+        return 'apworld: regenerate-region-sidecar needs `seed` as a whole number — '
+            + `${REGENERATE_SEED_REQUIRED} — got ${op.seed === undefined ? 'none' : describeValue(op.seed)}.`;
     }
     const substrate = op.substrate ?? current.substrate;
     if (typeof substrate !== 'string' || !substrate) {
-        return refuse('apworld: regenerate-region-sidecar needs a target `substrate` id, got '
-            + `${describeValue(substrate)}.`);
+        return 'apworld: regenerate-region-sidecar needs a target `substrate` id, got '
+            + `${describeValue(substrate)}.`;
     }
     const facts = regenerateTargetFacts(substrate);
     if (!facts.registered) {
-        return refuse(`apworld: no module registers substrate "${substrate}" here, so nothing can `
-            + 'build a payload for it. Load its library first, or pick a registered substrate.');
+        return `apworld: no module registers substrate "${substrate}" here, so nothing can `
+            + 'build a payload for it. Load its library first, or pick a registered substrate.';
     }
     if (!facts.playable) {
-        return refuse(`apworld: substrate "${substrate}" declares no \`deserializeWorld\` / `
-            + '`serializeWorld` pair, so a payload built for it could be neither played nor written.');
+        return `apworld: substrate "${substrate}" declares no \`deserializeWorld\` / `
+            + '`serializeWorld` pair, so a payload built for it could be neither played nor written.';
     }
-    if (!facts.kind) return refuse(`apworld: ${noRealiserSentence(substrate, facts)}`);
+    if (!facts.kind) return `apworld: ${noRealiserSentence(substrate, facts)}`;
     const nExits = (regionsOf(doc, p)[name].exits ?? []).length;
     if (facts.sideKeys && nExits > facts.sides) {
-        return refuse(`apworld: region "${name}" has ${plural(nExits, 'exit')}, and \`${substrate}\` holds ONE exit `
+        return `apworld: region "${name}" has ${plural(nExits, 'exit')}, and \`${substrate}\` holds ONE exit `
             + `per side (its \`exitSides\` keys ${facts.sideKeys.map((k) => `\`${k}\``).join(', ')} by side) — `
-            + `${facts.sides} at most. Pick a target whose sides can share, or remove exits first.`);
+            + `${facts.sides} at most. Pick a target whose sides can share, or remove exits first.`;
     }
     const isObj = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
     if (op.regionParams !== undefined && !isObj(op.regionParams)) {
-        return refuse(`apworld: \`regionParams\` is an object, got ${describeValue(op.regionParams)}.`);
+        return `apworld: \`regionParams\` is an object, got ${describeValue(op.regionParams)}.`;
     }
     if (op.hazardOpts !== undefined && op.hazardOpts !== null && !isObj(op.hazardOpts)) {
-        return refuse(`apworld: \`hazardOpts\` is an object or null, got ${describeValue(op.hazardOpts)}.`);
+        return `apworld: \`hazardOpts\` is an object or null, got ${describeValue(op.hazardOpts)}.`;
     }
     if (op.size !== undefined && !(isObj(op.size) && Number.isInteger(op.size.width)
         && Number.isInteger(op.size.height) && op.size.width > 0 && op.size.height > 0)) {
-        return refuse('apworld: `size` is {width, height} in whole tiles, got '
-            + `${describeValue(op.size)}.`);
+        return 'apworld: `size` is {width, height} in whole tiles, got '
+            + `${describeValue(op.size)}.`;
     }
     if (op.freeItems !== undefined && !(Array.isArray(op.freeItems)
         && op.freeItems.every((n) => typeof n === 'string'))) {
-        return refuse(`apworld: \`freeItems\` is a list of item names, got ${describeValue(op.freeItems)}.`);
+        return `apworld: \`freeItems\` is a list of item names, got ${describeValue(op.freeItems)}.`;
     }
-    const res = regenerateRegionEntry({
-        doc, player: p, region: name, substrate, seed: op.seed,
-        regionParams: op.regionParams, hazardOpts: op.hazardOpts, size: op.size, freeItems: op.freeItems,
-    });
-    if (!res.ok) {
-        return refuse(`apworld: the \`${substrate}\` realiser refused region "${name}": ${res.threw} `
-            + `— with ${plural(res.freeItems.length, 'item')} riding free`
-            + `${res.freeItems.length ? ` [${res.freeItems.join(', ')}]` : ''}.`);
-    }
+    return null;
+}
+
+/**
+ * ⛓ The free-item clause — or nothing when the target hosts surplus exits
+ * natively under the params it was asked with (`res.hostsSurplus`): the items
+ * are then granted to the realiser but never drift an exit, so "rode free"
+ * would name a device that did not run (plan §7.7 ⚖ #5, RULED 2026-09-23).
+ */
+function freeItemsClause(res, verb, { list = false } = {}) {
+    if (res.hostsSurplus) return '';
+    const names = list && res.freeItems.length ? ` [${res.freeItems.join(', ')}]` : '';
+    return `${plural(res.freeItems.length, 'item')} ${verb}${names}`;
+}
+
+/** ⛓ The free-item clause's verbs. EXPORTED for the rows. */
+export const REGENERATE_RODE_FREE = 'rode free';
+export const REGENERATE_RIDING_FREE = 'riding free';
+
+/**
+ * ⛓ The op's answer when the REALISER throws — its message verbatim, and the
+ * items that rode free (unless the target hosts surplus exits natively).
+ * EXPORTED: the hub's worker flow prints the same sentence for the same result.
+ */
+export function regenerateRealiserRefusal({ region, substrate, res }) {
+    const free = freeItemsClause(res, REGENERATE_RIDING_FREE, { list: true });
+    return `apworld: the \`${substrate}\` realiser refused region "${region}": ${res.threw}`
+        + `${free ? ` — with ${free}` : ''}.`;
+}
+
+/**
+ * ⛓⛓ **THE OP'S DESCRIPTION, FROM A RESULT** — `regenerateRegionEntry`'s
+ * `{entry, freeItems, hostsSurplus, exitsRelinked, spec, stranded}`. EXPORTED:
+ * the hub's worker flow lands `set-region-sidecar` with the entry the worker
+ * computed (plan §9.3 — the RESULT is recorded, not the pure op) and answers
+ * with this sentence, so the two roads cannot describe one result differently.
+ */
+export function describeRegeneration({ region, substrate, seed, res }) {
     const k = res.spec.exitSpecs.length;
     const l = res.spec.locationSpecs.length;
+    const free = freeItemsClause(res, REGENERATE_RODE_FREE);
     const stranded = res.stranded.length
         ? `; ⚠ ${res.stranded.map((x) => `${x.region}'s \`${x.field}\``).join(', ')} `
             + `${REGENERATE_STRANDED} (\`${[...new Set(res.stranded.map((x) => x.target))].join('`, `')}\` `
-            + `was hosted by ${name}'s old payload)`
+            + `was hosted by ${region}'s old payload)`
         : '';
-    return ok(setPath(doc, ['preset_sidecars', p, name], res.entry),
-        `region ${name}: payload regenerated as \`${substrate}\` (seed ${op.seed}; `
+    return `region ${region}: payload regenerated as \`${substrate}\` (seed ${seed}; `
         + `${plural(k, 'exit')}, ${plural(l, 'location')} carried; `
-        + `${plural(res.freeItems.length, 'item')} rode free; `
+        + `${free ? `${free}; ` : ''}`
         + `${plural(res.exitsRelinked, 'exit')} ${REGENERATE_RELINKED}`
         + `${res.spec.sidesReassigned.length ? `; ${REGENERATE_SIDES_REASSIGNED} `
             + `${res.spec.sidesReassigned.join(', ')} a free side` : ''}) — ${REGENERATE_RULES_UNCHANGED}`
-        + stranded);
+        + stranded;
 }
 
 /* ── the map moves (PRESET SIDECARS M2) ───────────────────────────────── */

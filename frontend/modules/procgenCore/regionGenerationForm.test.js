@@ -118,6 +118,18 @@ describe('the generic per-region rows follow the entry\'s declared region geomet
         }
     });
 
+    it('⛓ `fields` keeps only the listed generic rows the geometry takes (R2: the hub draws no control that writes nothing)', () => {
+        for (const entry of byGeometry(REGION_GEOMETRY.TILES).slice(0, 1)) {
+            const bag = {};
+            const keys = withFakeDocument(() => boundKeys(renderRegionGenerationForm({
+                substrateId: entry.id, params: bag, fields: TILE_ONLY_KEYS,
+                registry: { get: () => ({ ...entry, renderProcgenParams: undefined }) },
+            }), bag)).flat();
+            expect(keys.sort(), entry.id).toEqual([...TILE_ONLY_KEYS].sort());
+            expect(EVERY_GEOMETRY_KEYS.some((k) => keys.includes(k)), 'a row not listed was drawn').toBe(false);
+        }
+    });
+
     it('⛓ `generic: false` draws no generic row (a host that drew them already)', () => {
         const form = withFakeDocument(() => renderRegionGenerationForm(
             { substrateId: SYN.bare, params: {}, generic: false }));

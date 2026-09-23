@@ -150,10 +150,14 @@ export function regionGenerationFieldsFor(entry) {
  * @param {object} [o.registry] the registry to resolve the entry in
  * @param {boolean} [o.generic] draw the generic per-region rows
  * @param {{key: string}|null} [o.seed] draw a seed row bound to `params[key]`
+ * @param {string[]|null} [o.fields] draw only the generic rows whose `key` is
+ *   listed (null = every row the geometry takes) — a host whose realiser reads
+ *   no such knob draws no control that writes nothing
  * @returns {HTMLElement}
  */
 export function renderRegionGenerationForm({
     substrateId, params, onChange = () => {}, registry = substrateRegistry, generic = true, seed = null,
+    fields = null,
 } = {}) {
     const entry = registry.get(substrateId);
     const wrap = document.createElement('div');
@@ -162,7 +166,8 @@ export function renderRegionGenerationForm({
 
     const rows = [
         ...(seed ? [{ key: seed.key, label: 'Seed', min: 0 }] : []),
-        ...(generic ? regionGenerationFieldsFor(entry) : []),
+        ...(generic ? regionGenerationFieldsFor(entry)
+            .filter((f) => !Array.isArray(fields) || fields.includes(f.key)) : []),
     ];
     if (rows.length) {
         const grid = document.createElement('div');

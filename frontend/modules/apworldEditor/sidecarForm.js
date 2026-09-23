@@ -72,7 +72,7 @@ export const SIDECAR_FORM_CONTROLS = Object.freeze({
  * so a row asserts the sentence the product wrote rather than a copy.
  */
 export const SUBSTRATE_PICKER_CLAUSE =
-    'changes the label only — regenerate in the pipeline to rebuild the payload';
+    'changes the label only — Generate below rebuilds the payload here, or regenerate in the pipeline';
 
 const C = SIDECAR_FORM_CONTROLS;
 const L = SIDECAR_FORM_LEVELS;

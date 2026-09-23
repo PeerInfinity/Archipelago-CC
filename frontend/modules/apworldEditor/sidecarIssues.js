@@ -254,6 +254,19 @@ function declaringCandidates() {
     return out;
 }
 
+/**
+ * ⛓ The substrate(s) a payload's keys say built it — the report's own fit rule
+ * over every declaring entry (`bestFittingSubstrates`); `[]` when nothing fits.
+ * APWORLD SUBSTRATE CHANGE R2: the Region generation form reads a target's
+ * `procgenParamsFromPayload` off a payload ONLY when the payload is the
+ * target's own — after a label-only pick, it is still the OLD substrate's.
+ *
+ * @returns {string[]}
+ */
+export function payloadBuiltBy(payload) {
+    return bestFittingSubstrates(payload, declaringCandidates()).ids;
+}
+
 /* ── one entry ─────────────────────────────────────────────────────────── */
 
 /** A declared carrier, asked: `{names}` | `{absent: true}` | `{notCarried: true}` | `{error}`. */

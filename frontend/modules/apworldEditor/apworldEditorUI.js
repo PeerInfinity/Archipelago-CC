@@ -137,6 +137,22 @@ import {
  */
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { applyRulesDocOp } from './rulesDocOps.js';
+/**
+ * ⛓⛓ APWORLD SUBSTRATE CHANGE R2 — the block's **Region generation** form: the
+ * shared per-region form (R1), what it opens on and sends (`regionGenerationFlow`),
+ * and the worker it runs in under the reader's time limit (`regionGenerationRun`).
+ */
+import settingsManager from '../../app/core/settingsManager.js';
+import { renderRegionGenerationForm } from '../procgenCore/regionGenerationForm.js';
+import {
+  REGION_GENERATION_FIRST_SEED, REGION_GENERATION_OP_FIELDS, REGION_GENERATION_SEED_KEY,
+  composeRegenerateArgs, freeItemsSentence, regenerateArgsRefusal, regenerationAnswer,
+  regenerationProvenance, regionGenerationPlan,
+} from './regionGenerationFlow.js';
+import {
+  REGION_GENERATION_TIMEOUT_DEFAULT_S, REGION_GENERATION_TIMEOUT_KEY, REGION_GENERATION_TIMEOUT_SETTING,
+  regionGenerationTimeoutSeconds, runRegenerateInWorker,
+} from './regionGenerationRun.js';
 // ⛓ PRESET SIDECARS M3 — the exit-side control reads the declaration the op reads.
 import { exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
 import { SIDE_WORDS } from './regionLayout.js';
@@ -382,6 +398,23 @@ class ApworldEditorUI {
      * scrolled to a row should not have to look back up at the chrome.
      */
     this._opRowMessage = null;
+    /**
+     * ⛓⛓ APWORLD SUBSTRATE CHANGE R2 — **THE ONE OPEN "REGION GENERATION"
+     * FORM** (`_openRegionGeneration`), or null: `{player, region, target, plan,
+     * bag, usingRecorded, run}`. ONE at a time, keyed by slot AND region (trap
+     * 1320's family: slots share region names). `run` is the live worker
+     * (`runRegenerateInWorker`'s handle + what it was asked), and the elapsed
+     * ticker is `_regionGenTicker` — both on the PANEL, and cleared on
+     * `onPanelDestroy`, a new document, a slot pick, Cancel, and another pick
+     * (`_closeRegionGeneration` / `_stopRegionGenRun`), because a remounted
+     * panel keeps old listeners and a stale ticker would paint a dead run.
+     */
+    this._regionGen = null;
+    this._regionGenTicker = null;
+    /** ⛓ R2 — the next seed per `slot|region`; +1 per Generate, reset on a new document. */
+    this._regionGenSeeds = new Map();
+    /** ⛓ R2 — the last run started (its handle, budget, args, outcome), for the in-app rows. */
+    this._regionGenLastRun = null;
     /**
      * ⛓⛓ **THE ECHO OF OUR OWN APPLY, TOLD APART BY OBJECT IDENTITY.** It used
      * to be told apart by `sourceName === APPLY_SOURCE`, which stopped working
@@ -738,6 +771,10 @@ class ApworldEditorUI {
     // ⛓ S1 — a message about a row of the OLD document says nothing about this
     //   one, and the row it names may not even be present here.
     this._opRowMessage = null;
+    // ⛓ R2 — a Region generation form (and any run it holds) describes a region
+    //   of the OLD document; the seed counters start again with the new one.
+    this._closeRegionGeneration();
+    this._regionGenSeeds.clear();
     this._rawDraft = null;
     this._rawEdited = false;
     // ⛓ A boundary installs a different world: a region name from the old one
@@ -958,6 +995,8 @@ class ApworldEditorUI {
   }
 
   onPanelDestroy() {
+    // ⛓ R2 — a live worker and its ticker belong to THIS panel instance.
+    this._closeRegionGeneration();
     this._teardownRawEditor();
     this._closeRoomEditor();
     if (this._keyHandler) {
@@ -1067,6 +1106,8 @@ class ApworldEditorUI {
       //   (`playerId` still names the OLD slot here — `_syncPlayer` moves it on
       //   the render below — so `_armedMove` can still see the move it drops.)
       const cancelled = this._dropMapMove('a slot pick');
+      // ⛓ R2 — and the Region generation form: its region name is the old slot's.
+      this._closeRegionGeneration();
       this._opMessage = `Editing player ${this._chosenPlayer}.${cancelled}`;
       this._render();
     });
@@ -4204,12 +4245,15 @@ class ApworldEditorUI {
    *   and the block lists the sentences. The schema veto is exactly as strict
    *   as it was.
    */
-  _saveRegionSidecar(player, regionName, entry) {
+  _saveRegionSidecar(player, regionName, entry, { provenance = null, answer = null } = {}) {
     if (!this.session) {
       alert('Load a rules.json first.');
       return;
     }
-    const op = { op: 'set-region-sidecar', region: regionName, entry, player };
+    // ⛓ R2 — the Region generation form's Generate lands its RESULT here, with
+    //   a `provenance` the op records and the regenerate op's own `answer`.
+    const op = { op: 'set-region-sidecar', region: regionName, entry, player,
+      ...(provenance ? { provenance } : {}) };
     const beside = (text, refused) => {
       this._opRowMessage = { sidecar: `${player}|${regionName}`, text, refused };
     };
@@ -4224,6 +4268,7 @@ class ApworldEditorUI {
       return;
     }
     const res = this._applyOp(op, { rerender: false });
+    if (res.ok && res.applied && answer) this._opMessage = answer;
     if (res.ok) {
       // ⛓ V0 — errors block nothing, but the answer says there are some: the
       //   count of the report's issues for the entry this save wrote. ⛓ D1 —
@@ -6032,6 +6077,10 @@ class ApworldEditorUI {
      * landed — which says what was NOT re-derived — or the refusal, by name.
      * Keyed by slot and region, so it follows the entry to the other host.
      */
+    const gen = this._regionGen;
+    if (gen && String(gen.player) === String(player) && gen.region === regionName) {
+      box.appendChild(this._makeRegionGenerationSection(gen));
+    }
     const said = this._opRowMessage;
     if (said && said.sidecar === `${player}|${regionName}`) {
       const msg = document.createElement('div');
@@ -6417,6 +6466,273 @@ class ApworldEditorUI {
     const current = sidecarOf(this.rulesDoc, player, regionName);
     if (!current) { refuse(`slot ${player} has no sidecar entry for "${regionName}" any more`); return; }
     onSave(withSidecarField(current, row.level, row.field, parsed.value));
+    /**
+     * ⛓⛓ R2 (⚖ Q1 A) — **A SUBSTRATE PICK CHANGES THE LABEL AND OPENS THE
+     * FORM.** The label is D1's op above, untouched; the form opens only when
+     * that op LANDED the new label (a refused save opens nothing), and
+     * Generate is a separate press.
+     */
+    const picked = sidecarOf(this.rulesDoc, player, regionName)?.substrate;
+    if (row.level === SIDECAR_FORM_LEVELS.ENTRY && row.field === SUBSTRATE_KEY
+        && picked === parsed.value && picked !== current.substrate) {
+      this._openRegionGeneration(player, regionName, picked);
+      this._render();
+    }
+  }
+
+  /* ── APWORLD SUBSTRATE CHANGE R2 — the block's Region generation form ── */
+
+  /**
+   * ⛓⛓ **OPEN THE FORM FOR `region` → `target`** (replacing any open one — and
+   * stopping its run). The bag starts on the target's REGISTRY DEFAULTS, the
+   * seed counter's next seed for this slot|region, and the region size a tiles
+   * target is asked for (`regionGenerationPlan`).
+   */
+  _openRegionGeneration(player, region, target) {
+    this._closeRegionGeneration();
+    const seed = this._regionGenSeeds.get(`${player}|${region}`) ?? REGION_GENERATION_FIRST_SEED;
+    const plan = regionGenerationPlan(this.rulesDoc, String(player), region, target, { seed });
+    this._regionGen = {
+      player: String(player), region, target, plan, bag: { ...plan.defaults }, usingRecorded: false, run: null,
+    };
+  }
+
+  /** ⛓ Close the form and stop its run SILENTLY (a boundary, not a reader's Cancel). */
+  _closeRegionGeneration() {
+    this._stopRegionGenRun();
+    this._regionGen = null;
+  }
+
+  /**
+   * ⛓ Stop the live run: forget it FIRST (so its settling continuation finds
+   * it is no longer the form's run and paints nothing), then `cancel()` —
+   * which `terminate()`s the worker — and clear the elapsed ticker.
+   */
+  _stopRegionGenRun() {
+    const run = this._regionGen?.run ?? null;
+    if (this._regionGen) this._regionGen.run = null;
+    if (run) run.handle.cancel();
+    if (this._regionGenTicker !== null) {
+      clearInterval(this._regionGenTicker);
+      this._regionGenTicker = null;
+    }
+  }
+
+  /** ⛓ The elapsed readout, painted in place on every drawn copy (no re-render). */
+  _regionGenElapsedText() {
+    const gen = this._regionGen;
+    const run = gen?.run;
+    if (!run) return '';
+    const s = ((performance.now() - run.handle.startedAt()) / 1000).toFixed(1);
+    return run.handle.phase() === 'loading'
+      ? `Loading the substrate libraries… ${s} s`
+      : `Generating as \`${gen.target}\`… ${s} s / ${run.budgetS} s`;
+  }
+
+  _paintRegionGenElapsed() {
+    const text = this._regionGenElapsedText();
+    for (const el of this.rootElement.querySelectorAll('.apworld-region-generation-elapsed')) {
+      el.textContent = text;
+    }
+  }
+
+  /**
+   * ⛓⛓⛓ **THE FORM, DRAWN UNDER THE BLOCK** (all three hosts — it is part of
+   * `_makeRegionSidecarBlock`). A target the op would refuse before its realiser
+   * runs (no realiser, more exits than sides, …) gets the op's own sentence and
+   * NO Generate. Otherwise: the recorded-knobs line when they differ, the shared
+   * form (R1; seed row; the region size rows the op reads, for a tiles target),
+   * the free-item sentence unless the target hosts surplus exits natively, and
+   * **Generate ▸** — or, while a run is live, the elapsed readout and **Cancel**.
+   */
+  _makeRegionGenerationSection(gen) {
+    const sec = document.createElement('div');
+    sec.className = 'apworld-region-generation';
+    Object.assign(sec.dataset, { regionName: gen.region, player: gen.player, target: gen.target });
+    Object.assign(sec.style, { margin: '6px 0 0', padding: '5px 7px', border: '1px solid #3a4a5a',
+      borderRadius: '3px', backgroundColor: '#1a2027' });
+    const head = document.createElement('div');
+    Object.assign(head.style, { display: 'flex', alignItems: 'center', gap: '8px', color: '#9cd',
+      marginBottom: '4px' });
+    const title = document.createElement('span');
+    title.className = 'apworld-region-generation-title';
+    title.textContent = `▾ Region generation — \`${gen.target}\``;
+    title.style.flex = '1 1 auto';
+    head.appendChild(title);
+    const close = this._makeButton('✕', '#333', () => { this._closeRegionGeneration(); this._render(); });
+    close.className = 'apworld-region-generation-close';
+    close.title = 'Close the form (a live generation is stopped; nothing is recorded).';
+    close.style.fontSize = '10px';
+    head.appendChild(close);
+    sec.appendChild(head);
+
+    const note = (className, text, color = '#999') => {
+      const d = document.createElement('div');
+      d.className = className;
+      d.textContent = text;
+      Object.assign(d.style, { color, fontSize: '10px', margin: '3px 0', lineHeight: '1.35' });
+      sec.appendChild(d);
+      return d;
+    };
+
+    if (gen.plan.refusal) {
+      sec.dataset.generate = 'none';
+      note('apworld-region-generation-refusal', gen.plan.refusal, '#e8a095');
+      return sec;
+    }
+    sec.dataset.generate = 'drawn';
+    const running = !!gen.run;
+    sec.dataset.state = running ? 'running' : 'idle';
+
+    if (gen.plan.recorded) {
+      const line = document.createElement('div');
+      line.className = 'apworld-region-generation-recorded';
+      Object.assign(line.style, { display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap',
+        color: '#bba', fontSize: '10px', margin: '2px 0 4px' });
+      const said = document.createElement('span');
+      said.textContent = `this region was built with: ${gen.plan.recordedDiff
+        .map(([k, v]) => `${k} ${typeof v === 'string' ? v : JSON.stringify(v)}`).join(', ')}`
+        + (gen.usingRecorded ? ' (in use)' : ` — the form shows ${gen.target}'s defaults`);
+      line.appendChild(said);
+      const use = this._makeButton(gen.usingRecorded ? 'use the defaults' : 'use these', '#3a3a3a', () => {
+        const seed = gen.bag[REGION_GENERATION_SEED_KEY];
+        gen.usingRecorded = !gen.usingRecorded;
+        gen.bag = { ...(gen.usingRecorded ? gen.plan.recorded : gen.plan.defaults),
+          [REGION_GENERATION_SEED_KEY]: seed };
+        this._render();
+      });
+      use.className = 'apworld-region-generation-use-recorded';
+      use.style.fontSize = '10px';
+      use.disabled = running;
+      line.appendChild(use);
+      sec.appendChild(line);
+    }
+
+    let free = null;
+    const freeText = () => freeItemsSentence(gen.target,
+      composeRegenerateArgs(this.rulesDoc, gen.player, gen.region, gen.target, gen.bag));
+    const form = renderRegionGenerationForm({
+      substrateId: gen.target,
+      params: gen.bag,
+      seed: { key: REGION_GENERATION_SEED_KEY },
+      fields: REGION_GENERATION_OP_FIELDS,
+      // ⛓ No re-render per keystroke: only the free-item sentence can move
+      //   (a layout knob may switch surplus-exit hosting on or off).
+      onChange: () => {
+        const t = freeText();
+        if (free) {
+          free.textContent = t ?? '';
+          free.style.display = t ? '' : 'none';
+        }
+      },
+    });
+    if (running) for (const c of form.querySelectorAll('input, select, button')) c.disabled = true;
+    sec.appendChild(form);
+    const t = freeText();
+    free = note('apworld-region-generation-free', t ?? '');
+    if (!t) free.style.display = 'none';
+
+    const row = document.createElement('div');
+    Object.assign(row.style, { display: 'flex', alignItems: 'center', gap: '8px', margin: '4px 0 0' });
+    if (running) {
+      const elapsed = document.createElement('span');
+      elapsed.className = 'apworld-region-generation-elapsed';
+      elapsed.textContent = this._regionGenElapsedText();
+      Object.assign(elapsed.style, { color: '#cde', fontFamily: 'monospace' });
+      row.appendChild(elapsed);
+      const cancel = this._makeButton('Cancel', '#5a2e2e', () => this._cancelRegionGeneration());
+      cancel.className = 'apworld-region-generation-cancel';
+      row.appendChild(cancel);
+    } else {
+      const go = this._makeButton('Generate ▸', '#2e5f2e', () => { this._generateRegion(); });
+      go.className = 'apworld-region-generate';
+      go.title = `Rebuild this region's payload as \`${gen.target}\` from its exits, locations and access `
+        + 'rules, in a worker under the time limit (Options › All Settings › apworldEditor › '
+        + `${REGION_GENERATION_TIMEOUT_KEY}) — ONE undoable edit.`;
+      row.appendChild(go);
+    }
+    sec.appendChild(row);
+    return sec;
+  }
+
+  /** ⛓ The reader's Cancel: the run settles as cancelled and the sentence is printed. */
+  _cancelRegionGeneration() {
+    const run = this._regionGen?.run;
+    if (run) run.handle.cancel();
+  }
+
+  /**
+   * ⛓⛓⛓ **GENERATE ▸ — ONE REGION IN A WORKER, THE RESULT LANDED AS ONE OP**
+   * (plan §9.3). The bag → the op's arguments; the op's own pre-realiser
+   * refusal first (never the realiser on the main thread); the budget read
+   * from the setting at the press; the worker; then — only if this run is
+   * still the form's run and the document is the one it was asked about —
+   * `set-region-sidecar` with the computed entry and a `provenance`, through
+   * `_saveRegionSidecar`'s own path (preview → veto → ONE op). The answer is
+   * the regenerate op's own description; a refusal, a timeout or a Cancel is
+   * its sentence beside the block, and nothing is recorded.
+   *
+   * @returns {Promise<object|null>} the run's outcome (rows read it), or null
+   */
+  async _generateRegion() {
+    const gen = this._regionGen;
+    if (!gen || gen.run || !this.session) return null;
+    const key = `${gen.player}|${gen.region}`;
+    const beside = (text, refused) => {
+      this._opMessage = refused ? `Refused: ${text}` : text;
+      this._opRowMessage = { sidecar: key, text: this._opMessage, refused };
+    };
+    const doc = this.rulesDoc;
+    const args = composeRegenerateArgs(doc, gen.player, gen.region, gen.target, gen.bag);
+    const refusal = regenerateArgsRefusal(args);
+    if (refusal) {
+      beside(refusal, true);
+      this._render();
+      return null;
+    }
+    const budgetS = regionGenerationTimeoutSeconds(await settingsManager.getSetting(
+      REGION_GENERATION_TIMEOUT_SETTING, REGION_GENERATION_TIMEOUT_DEFAULT_S));
+    if (this._regionGen !== gen || gen.run) return null;
+    const handle = runRegenerateInWorker(args, {
+      timeoutMs: budgetS * 1000,
+      onPhase: () => this._paintRegionGenElapsed(),
+    });
+    const run = { handle, budgetS, args };
+    gen.run = run;
+    this._regionGenLastRun = run;
+    this._opRowMessage = null;
+    this._regionGenTicker = setInterval(() => this._paintRegionGenElapsed(), 100);
+    this._render();
+
+    const res = await handle.promise;
+    run.outcome = res;
+    // ⛓ Closed, replaced or re-opened while it ran: that boundary already
+    //   stopped this run, and nothing about it is painted.
+    if (this._regionGen !== gen || gen.run !== run) return res;
+    gen.run = null;
+    clearInterval(this._regionGenTicker);
+    this._regionGenTicker = null;
+    // ⛓ The counter moves once per press, whatever the outcome — a re-press
+    //   is a new roll unless the reader types the seed back.
+    const next = args.seed + 1;
+    this._regionGenSeeds.set(key, next);
+    gen.bag[REGION_GENERATION_SEED_KEY] = next;
+    const answer = regenerationAnswer(args, res, budgetS);
+    if (!answer.landed) {
+      beside(answer.text, true);
+      this._render();
+      return res;
+    }
+    if (this.rulesDoc !== doc) {
+      beside('apworld: the document changed while the region was generating — the result was built '
+        + 'from the old one, so nothing was recorded. Press Generate ▸ again.', true);
+      this._render();
+      return res;
+    }
+    this._saveRegionSidecar(gen.player, gen.region, res.entry, {
+      provenance: regenerationProvenance(args, res), answer: answer.text,
+    });
+    return res;
   }
 
   _renderRegion(regionName, region) {

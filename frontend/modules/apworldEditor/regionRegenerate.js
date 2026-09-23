@@ -307,6 +307,17 @@ export function buildDocumentRegionSpec(doc, player, region, { size, substrate }
 }
 
 /**
+ * ⛓ Does `entry` host surplus exits natively under `regionParams`? — its own
+ * `hostsSurplusExitsNatively` hook, the one the engine asks before it drifts a
+ * surplus exit onto a free item. `false` for an entry without the hook (the
+ * engine's `?.()` default).
+ */
+export function hostsSurplusExitsNatively(entry, regionParams) {
+    return typeof entry?.hostsSurplusExitsNatively === 'function'
+        && entry.hostsSurplusExitsNatively(regionParams) === true;
+}
+
+/**
  * ⛓ The default `regionParams` for a target: its `buildRegionParams` over its
  * `defaultProcgenParams` in top-down mode when it declares both, else `{}`.
  */
@@ -400,8 +411,9 @@ export function strandedReferences(doc, player, region, newEntry) {
  * refused every input it can name; what can still fail here is the realiser
  * itself, answered as `{ok: false, threw}` with its message verbatim.
  *
- * @returns {{ok: true, entry: object, freeItems: string[], exitsRelinked: number,
- *            spec: object, stranded: object[]} | {ok: false, threw: string, freeItems: string[]}}
+ * @returns {{ok: true, entry: object, freeItems: string[], hostsSurplus: boolean,
+ *            exitsRelinked: number, spec: object, stranded: object[]}
+ *          | {ok: false, threw: string, freeItems: string[], hostsSurplus: boolean}}
  */
 export function regenerateRegionEntry({
     doc, player, region, substrate, seed, regionParams, hazardOpts, size, freeItems,
@@ -416,6 +428,11 @@ export function regenerateRegionEntry({
         ...(regionParams && typeof regionParams === 'object' ? regionParams : defaultRegionParamsFor(reg)),
     };
     const itemLib = mergeSubstrateItemLib(DEFAULT_ITEMS, [target]);
+    // ⛓ R2 — the free items are the engine's DRIFT device, and a target that
+    //   hosts surplus exits natively under these params never drifts (the
+    //   engine's own test, `procgenPipelineEngine.js`): the op's sentence
+    //   follows it instead of saying items "rode free" that rode nowhere.
+    const hostsSurplus = hostsSurplusExitsNatively(reg, params);
     let descriptor;
     try {
         descriptor = generateRegion({
@@ -437,7 +454,7 @@ export function regenerateRegionEntry({
             freeItems: free,
         });
     } catch (e) {
-        return { ok: false, threw: String(e?.message ?? e), freeItems: free };
+        return { ok: false, threw: String(e?.message ?? e), freeItems: free, hostsSurplus };
     }
     const exitsRelinked = relinkRegionExits(doc, player, region, descriptor, old);
     const cell = old.grid_cell;
@@ -450,7 +467,7 @@ export function regenerateRegionEntry({
     if (cell === undefined) delete built.grid_cell;
     else built.grid_cell = cell;
     return {
-        ok: true, entry: built, freeItems: free, exitsRelinked, spec,
+        ok: true, entry: built, freeItems: free, hostsSurplus, exitsRelinked, spec,
         stranded: strandedReferences(doc, player, region, built),
     };
 }
