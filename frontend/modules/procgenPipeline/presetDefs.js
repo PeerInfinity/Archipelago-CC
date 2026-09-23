@@ -558,6 +558,18 @@ export const SHIPPED_PRESETS = Object.freeze([
         },
     },
     {
+        id: 'shipped:seedling-spiral-room-demo',
+        label: 'Seedling room in a maze spiral',
+        group: PRESET_GROUPS.shuffledSpiral,
+        description: 'One room of the REAL Seedling map placed among three maze rooms: '
+            + 'the start region is the Seedling overworld start screen, its house door and '
+            + 'owl\'s-nest stairs bound to the spiral\'s exits into the maze. Look at the '
+            + 'composite map (the Seedling cell\'s two exits lead into maze cells) and at the '
+            + 'flash_seedling sidecar; the same world is committed as the seedling_spiral_room '
+            + 'preset, which plays in the Seedling wasm.',
+        state: SEEDLING_SPIRAL_ROOM_STATE,
+    },
+    {
         id: 'shipped:grid-growth-demo',
         label: 'Maze + text adventure (grid growth, legacy)',
         group: PRESET_GROUPS.gridGrowth,

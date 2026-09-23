@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import {
     SHIPPED_PRESETS, VALID_MODES, PRESET_GROUPS, PRESET_GROUP_ORDER, LS_PRESETS_KEY,
     PRESET_HEADLESS_BUDGET_MS, PRESETS_SKIPPED_AS_HEAVY,
+    SEEDLING_SPIRAL_ROOM_STATE,
     capturePresetState, applyPresetState, getPresetById, restoredActivePresetId, groupShippedPresets,
     userPresetId, loadUserPresets, saveUserPreset, deleteUserPreset,
 } from './presetDefs.js';
@@ -156,6 +157,15 @@ describe('SHIPPED_PRESETS', () => {
             ['served', 'demo-maze-pack.json', 2],
             ['served', 'demo-runner-pack.json', 2],
         ]);
+    });
+
+    it('seedling spiral room demo IS the committed preset\'s state — one Seedling room, three maze rooms', () => {
+        const p = getPresetById('shipped:seedling-spiral-room-demo');
+        // ONE spelling: the drop-down, the committed seedling_spiral_room preset and
+        // the headless oracle all read this object.
+        expect(p.state).toBe(SEEDLING_SPIRAL_ROOM_STATE);
+        expect(p.state.mode).toBe('shuffledSpiral');
+        expect(p.state.substrateQuotas).toEqual({ maze: 3, flash_seedling: 1 });
     });
 
     it('top-down maze + text adventure demo pins the mix maze 2 : text_adventure 1', () => {
