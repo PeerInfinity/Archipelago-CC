@@ -40,8 +40,8 @@
  */
 
 import {
-    DEFAULT_REGION_SIZE, exitTileForMirror, generateRegion, getRegionExits, linkIsAdjacentOnSide,
-    perimeterMidpoint, serializeRegionEntry,
+    DEFAULT_REGION_SIZE, LIBRARY_SLOT_FILLER_ITEM, assembleZoneRegion, exitTileForMirror, generateRegion,
+    getRegionExits, linkIsAdjacentOnSide, perimeterMidpoint, serializeRegionEntry,
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { mergeSubstrateItemLib } from '../procgenPipeline/sphereConfigHooks.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -96,6 +96,7 @@ export function regenerateTargetFacts(substrate) {
         kind: regionRealiserKind(reg),
         zoneCount: Number.isInteger(reg?.zoneCount) ? reg.zoneCount : null,
         extractsZoneRules: typeof reg?.extractZoneRules === 'function',
+        offersLibrary: offersLibrarySource(reg),
         sideKeys: oneExitPerSide(reg) ? sideMayHoldAnotherExit(reg).keys : null,
         sides: SIDES.length,
     };
@@ -446,8 +447,11 @@ export function strandedReferences(doc, player, region, newEntry) {
  *          | {ok: false, threw: string, freeItems: string[], hostsSurplus: boolean, spec: object}}
  */
 export function regenerateRegionEntry({
-    doc, player, region, substrate, seed, regionParams, hazardOpts, size, freeItems,
+    doc, player, region, substrate, seed, regionParams, hazardOpts, size, freeItems, source,
 }) {
+    if (source?.kind === REGION_SOURCE_KINDS.LIBRARY) {
+        return regenerateFromLibraryEntry({ doc, player, region, substrate, regionParams, source });
+    }
     const old = doc.preset_sidecars[player][region];
     const target = substrate ?? old.substrate;
     const reg = substrateRegistry.get(target);
@@ -499,5 +503,282 @@ export function regenerateRegionEntry({
     return {
         ok: true, entry: built, freeItems: free, hostsSurplus, exitsRelinked, spec,
         stranded: strandedReferences(doc, player, region, built),
+    };
+}
+
+/* ── the LIBRARY ENTRY source (APWORLD SUBSTRATE CHANGE R5a, plan §12) ───── */
+
+/**
+ * ⛓ Where a regenerated region's DATA comes from. Absent = `generate` (the
+ * realiser, R0's path, byte-identical); `library` = a captured region-library
+ * entry, INLINED in the op (`{kind, library_id, entry_id, entry}`) so a replay
+ * or an undo's refold never fetches.
+ */
+export const REGION_SOURCE_KINDS = Object.freeze({ GENERATE: 'generate', LIBRARY: 'library' });
+
+/**
+ * ⛓⛓ **DOES THIS TARGET OFFER THE LIBRARY SOURCE?** — the test the sphere path
+ * makes before it hands a slot to a library entry
+ * (`procgenPipelineEngine.buildSphereLibraryRegion` / `resolveSphereLibrarySources`):
+ * the registry entry declares `instantiateLibraryEntryForSpecs`.
+ */
+export function offersLibrarySource(entry) {
+    return typeof entry?.instantiateLibraryEntryForSpecs === 'function';
+}
+
+/**
+ * ⛓ The sides the hook is asked for, from the document spec (§12: *"the
+ * ENTRANCE side FIRST, then the child sides"*). Every document exit gets a
+ * side: its spec side, else the free sides clockwise (the zone realiser's own
+ * rule, `generateRegionZoneGen`), else the sides again in order.
+ *
+ * Two shapes, told apart the way `buildSphereLibraryRegion` tells them — by
+ * whether the entry builds a FULL descriptor (`generateRegionCore`):
+ *   · FULL (a tile room): the hook RESERVES `exitSides[0]` for the sphere
+ *     driver's back portal and opens a captured hole for each LATER side only.
+ *     The hub has no back-portal pass — the document's exit to the parent is a
+ *     real exit — so the reserved slot carries the entrance side (or `null`
+ *     for a region with no entrance) and EVERY document exit, the parent's
+ *     included, follows it in document order (duplicates allowed: a tile room
+ *     holds several exits on one wall).
+ *   · ZONE (sides are portal KEYS): one side per exit, the entrance side
+ *     first when a document exit takes it, then the others in document order.
+ *
+ * @returns {{exitSides: Array<string|null>, sideOf: string[], full: boolean}}
+ *   `sideOf[k]` — the side the k-th document exit was given.
+ */
+export function libraryExitSides(spec, entry) {
+    const used = new Set(spec.exitSpecs.filter((e) => e.side).map((e) => e.side));
+    const free = SIDES.filter((s) => !used.has(s));
+    let spill = 0;
+    const sideOf = spec.exitSpecs.map((e) => e.side ?? free.shift() ?? SIDES[spill++ % SIDES.length]);
+    const full = typeof entry?.generateRegionCore === 'function';
+    const entrance = spec.entrances[0]?.side ?? null;
+    if (full) return { exitSides: [entrance, ...sideOf], sideOf, full };
+    const ordered = [...new Set(entrance && sideOf.includes(entrance) ? [entrance, ...sideOf] : sideOf)];
+    return { exitSides: ordered, sideOf, full };
+}
+
+/**
+ * ⛓ The one-line facts a picker shows for a library entry, and whether a
+ * region with `nLocations` locations can use it (the op's slot refusal).
+ */
+export function libraryEntryFacts(entry, nLocations = 0) {
+    const slots = Number.isInteger(entry?.location_slots) ? entry.location_slots : null;
+    const sides = Array.isArray(entry?.exit_sides) ? entry.exit_sides : [];
+    return {
+        slots,
+        sides,
+        fits: slots !== null && nLocations <= slots,
+    };
+}
+
+/**
+ * ⛓⛓⛓ **THE DOCUMENT'S NAMES ONTO THE CAPTURED SLOTS, k-th ONTO k-th** — the
+ * library analogue of R0's `useSourceLocationName`. The hook placed the k-th
+ * spec's item on the k-th captured slot (its slot order); here the k-th
+ * DOCUMENT location's name becomes that slot's `id` and `global_name` (what
+ * `serializeWorld` bakes — the maze serializer reads `global_name`) and the
+ * spec's rule its `access_rule` (the generate branch's override: the spec rule
+ * IS the rule). Slots beyond the document's locations are SURPLUS: returned,
+ * so the caller drops them from the payload — the document has no location
+ * for them, and the op never adds one.
+ *
+ * @returns {{surplus: object[], renamed: Map<string, string>}} the surplus
+ *   extracted locations (slot order), and each kept slot's captured id → the
+ *   document name it now carries
+ */
+export function stampLibraryLocations(descriptor, locationSpecs) {
+    const locs = descriptor.extracted_rules?.locations ?? [];
+    const renamed = new Map();
+    locs.forEach((loc, k) => {
+        const sl = locationSpecs[k];
+        if (!sl) return;
+        renamed.set(loc.id, sl.id);
+        loc.id = sl.id;
+        loc.global_name = sl.id;
+        loc.item = sl.item;
+        if (sl.access_rule) loc.access_rule = sl.access_rule;
+    });
+    const surplus = locs.slice(locationSpecs.length);
+    descriptor.extracted_rules.locations = locs.slice(0, locationSpecs.length);
+    return { surplus, renamed };
+}
+
+/**
+ * ⛓ Rename a FULL descriptor's kept openings to the document's exits: the k-th
+ * document exit takes the next kept opening the hook put on its side (the hook
+ * assigned exactly one per requested side occurrence). The exits Map is the
+ * world's own (maze aliases it), so it is rebuilt IN PLACE.
+ *
+ * @returns {number} how many openings sit on a wall other than the one they
+ *   were captured on (the hook's best-effort relabel)
+ */
+function renameFullExits(descriptor, spec, sideOf, entry) {
+    const exits = descriptor.exits;
+    const kept = [...exits.values()];
+    const capturedSide = new Map((entry.payload?.exits ?? []).map((x) => [x.exit_id, x.side]));
+    const extractedById = new Map((descriptor.extracted_rules?.exits ?? []).map((x) => [x.id, x]));
+    const claimed = new Set();
+    let relabelled = 0;
+    const renamed = [];
+    spec.exitSpecs.forEach((e, k) => {
+        const ex = kept.find((x) => !claimed.has(x) && x.side === sideOf[k]);
+        if (!ex) {
+            throw new Error(`library entry '${entry.entry_id}' kept no opening on side ${sideOf[k]} `
+                + `for exit ${e.exit_id}`);
+        }
+        claimed.add(ex);
+        if (capturedSide.has(ex.exit_id) && capturedSide.get(ex.exit_id) !== ex.side) relabelled += 1;
+        const ext = extractedById.get(ex.exit_id);
+        if (ext) {
+            ext.id = e.exit_id;
+            ext.target_region = e.target_region;
+            if (e.access_rule) ext.access_rule = e.access_rule;
+        }
+        ex.exit_id = e.exit_id;
+        ex.exitName = e.exitName;
+        ex.targetRegion = e.target_region;
+        renamed.push(ex);
+    });
+    exits.clear();
+    for (const ex of renamed) exits.set(ex.exit_id, ex);
+    descriptor.exits_placed = renamed.map((ex) => ({
+        exit_id: ex.exit_id, side: ex.side, tile_position: { x: ex.x, y: ex.y },
+    }));
+    return relabelled;
+}
+
+/**
+ * ⛓ Build the ZONE descriptor from the hook's geometry-only zoneRules through
+ * the engine's own `assembleZoneRegion` (the sphere path's tail), then key its
+ * synthetic `exit_<side>` exits by the DOCUMENT's exit ids, with the spec's
+ * rules and targets (the generate branch keys its zone exits the same way).
+ */
+function assembleLibraryZone(zoneRules, { target, region, spec, exitSides, sideOf, params }) {
+    const descriptor = assembleZoneRegion({
+        substrate: target, region_id: region, regionSize: spec.size, exitSides, zoneRules, zonePayload: {},
+    });
+    // ⛓ `assembleZoneRegion` keys each side's exit `exit_<side>`, in the
+    //   descriptor's Map and in `extracted_rules.exits` alike.
+    const bySide = new Map([...descriptor.exits.values()].map((x) => [x.side, x]));
+    const extractedById = new Map((descriptor.extracted_rules.exits ?? []).map((x) => [x.id, x]));
+    const exits = new Map();
+    const placed = [];
+    const extracted = [];
+    spec.exitSpecs.forEach((e, k) => {
+        const ex = bySide.get(sideOf[k]);
+        const ext = extractedById.get(ex.exit_id);
+        ex.exit_id = e.exit_id;
+        ex.exitName = e.exitName;
+        ex.targetRegion = e.target_region;
+        exits.set(e.exit_id, ex);
+        placed.push({ exit_id: e.exit_id, side: ex.side,
+            ...(Number.isInteger(ex.x) ? { tile_position: { x: ex.x, y: ex.y } } : {}) });
+        if (ext) {
+            ext.id = e.exit_id;
+            ext.target_region = e.target_region;
+            if (e.access_rule) ext.access_rule = e.access_rule;
+            extracted.push(ext);
+        }
+    });
+    descriptor.exits = exits;
+    descriptor.exits_placed = placed;
+    descriptor.extracted_rules.exits = extracted;
+    // ⛓ Parity with the generate branch's zone tail: landing on the entrance
+    //   side resolves to the back exit; `fallBehavior` is per-world.
+    const ent = spec.entrances[0];
+    const pp = descriptor.playable_payload;
+    if (pp?.params && ent?.side) {
+        pp.params.backExitSide = ent.side;
+        if (params.fallBehavior) pp.params.fallBehavior = params.fallBehavior;
+    }
+    return descriptor;
+}
+
+/**
+ * ⛓⛓⛓ **ONE REGION'S PAYLOAD FROM A CAPTURED LIBRARY ENTRY** (R5a). The op
+ * (`rulesDocOps.regenerateOpRefusal`) has refused every input it can name —
+ * no hook, another substrate's entry, more document locations than slots, no
+ * entry, a seed. Mirrors the sphere path's call
+ * (`procgenPipelineEngine.buildSphereLibraryRegion`): `exitSides` entrance
+ * first (`libraryExitSides`), `locationSpecs` = the spec's items in document
+ * order, `fillerItem` = `LIBRARY_SLOT_FILLER_ITEM`, `regionParams` = the op's
+ * (`{}` when absent — the hook's flags default to "don't require"). Then the
+ * document's names and rules onto the slots k-th onto k-th, the SURPLUS slots
+ * dropped (a zone payload's `ap_locations` rebuilt onto the kept names, the
+ * zone branch's reconciliation), and the SAME re-link / serialise / stranded
+ * tail as Generate. Draws no rng.
+ */
+function regenerateFromLibraryEntry({ doc, player, region, substrate, regionParams, source }) {
+    const old = doc.preset_sidecars[player][region];
+    const target = substrate ?? old.substrate;
+    const reg = substrateRegistry.get(target);
+    const entry = source.entry;
+    const size = isSize(entry.region_size) ? entry.region_size : undefined;
+    const spec = buildDocumentRegionSpec(doc, player, region, { size, substrate: target });
+    const params = regionParams && typeof regionParams === 'object' ? regionParams : {};
+    const { exitSides, sideOf, full } = libraryExitSides(spec, reg);
+    const common = { freeItems: [], hostsSurplus: true, spec, source: librarySourceSummary(source) };
+    let descriptor;
+    let relabelled = 0;
+    try {
+        const out = reg.instantiateLibraryEntryForSpecs(entry, {
+            region_id: region,
+            regionSize: spec.size,
+            exitSides,
+            locationSpecs: spec.locationSpecs.map((l) => ({ item: l.item })),
+            fillerItem: LIBRARY_SLOT_FILLER_ITEM,
+            regionParams: params,
+        });
+        if (full) {
+            descriptor = out;
+            relabelled = renameFullExits(descriptor, spec, sideOf, entry);
+        } else {
+            descriptor = assembleLibraryZone(out, { target, region, spec, exitSides, sideOf, params });
+        }
+    } catch (e) {
+        return { ok: false, threw: String(e?.message ?? e), ...common };
+    }
+    const { surplus, renamed } = stampLibraryLocations(descriptor, spec.locationSpecs);
+    const pp = descriptor.playable_payload;
+    if (full && pp?.items instanceof Map) {
+        for (const s of surplus) if (s.position) pp.items.delete(`${s.position.x},${s.position.y}`);
+    }
+    // ⛓ The zone branch's reconciliation (`generateRegionZoneGen`, top-down):
+    //   the payload's `ap_locations` maps each captured objective to the name
+    //   the bridge reports — now the DOCUMENT's; a surplus objective reports
+    //   nothing (it stays geometry, as a pruned portal does).
+    if (pp?.ap_locations && typeof pp.ap_locations === 'object') {
+        const dropped = new Set(surplus.map((l) => l.id));
+        pp.ap_locations = Object.fromEntries(Object.entries(pp.ap_locations)
+            .filter(([k]) => !dropped.has(k))
+            .map(([k, v]) => [k, renamed.get(k) ?? v]));
+    }
+    const exitsRelinked = relinkRegionExits(doc, player, region, descriptor, old);
+    const cell = old.grid_cell;
+    const itemLib = mergeSubstrateItemLib(DEFAULT_ITEMS, [target]);
+    const built = serializeRegionEntry({ ...descriptor, cell: cell ?? { gx: 0, gy: 0 } }, {
+        manaEnabled: old.playable_payload?.manaEnabled === true,
+        fogEnabled: old.playable_payload?.fogEnabled !== false,
+        baseObstacleLib: DEFAULT_OBSTACLES,
+        baseItemLib: itemLib,
+    });
+    if (cell === undefined) delete built.grid_cell;
+    else built.grid_cell = cell;
+    return {
+        ok: true, entry: built, exitsRelinked, surplusSlots: surplus.length, exitsRelabelled: relabelled,
+        stranded: strandedReferences(doc, player, region, built), ...common,
+    };
+}
+
+/** ⛓ The record's view of a library source: the id pair and the entry's name
+ *  — never its payload (the op carries the whole entry; `provenance` does not). */
+export function librarySourceSummary(source) {
+    return {
+        kind: REGION_SOURCE_KINDS.LIBRARY,
+        library_id: source?.library_id ?? null,
+        entry_id: source?.entry_id ?? source?.entry?.entry_id ?? null,
+        ...(typeof source?.entry?.name === 'string' ? { name: source.entry.name } : {}),
     };
 }

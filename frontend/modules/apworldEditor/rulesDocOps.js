@@ -85,7 +85,9 @@ import {
 //   behind `regionLayout.js`); every refusal sentence stays in this file.
 // ⛓ APWORLD SUBSTRATE CHANGE R0 — one region's payload rebuilt by a substrate's
 //   realiser, through the same kind of door (`regionRegenerate.js`).
-import { regenerateRegionEntry, regenerateTargetFacts } from './regionRegenerate.js';
+import {
+    REGION_SOURCE_KINDS, regenerateRegionEntry, regenerateTargetFacts,
+} from './regionRegenerate.js';
 import {
     SIDE_WORDS, exitSideVerdicts, exitSidesOfSubstrate, layoutChange, occupantAt, pairLinkFlips,
     rewriteExitFlags, rewriteExits, sideSharingOfSubstrate, slotLayout,
@@ -1959,6 +1961,7 @@ function provenanceClause(prov) {
         return ` — from \`${typeof prov.op === 'string' ? prov.op : describeValue(prov.op)}\``;
     }
     const bits = [];
+    if (prov.source?.kind === REGION_SOURCE_KINDS.LIBRARY) bits.push(librarySourceLabel(prov.source));
     if (Number.isInteger(prov.seed)) bits.push(`seed ${prov.seed}`);
     if (Number.isFinite(prov.ms)) bits.push(`${(prov.ms / 1000).toFixed(1)} s`);
     return ` — ${SIDECAR_REGENERATED_AS} \`${prov.substrate}\`${bits.length ? ` (${bits.join(', ')})` : ''}`;
@@ -2048,6 +2051,7 @@ function opRegenerateRegionSidecar(doc, op) {
     const res = regenerateRegionEntry({
         doc, player: p, region: op.region, substrate, seed: op.seed,
         regionParams: op.regionParams, hazardOpts: op.hazardOpts, size: op.size, freeItems: op.freeItems,
+        ...(op.source !== undefined ? { source: op.source } : {}),
     });
     if (!res.ok) return refuse(regenerateRealiserRefusal({ region: op.region, substrate, res }));
     return ok(setPath(doc, ['preset_sidecars', p, op.region], res.entry),
@@ -2082,7 +2086,15 @@ export function regenerateOpRefusal(doc, op) {
             + '`regions` — a regenerated room is built FROM the region\'s exits, locations and '
             + 'access rules, and there are none to build it from.';
     }
-    if (!Number.isInteger(op.seed)) {
+    const sourceRefusal = regenerateSourceRefusal(op.source);
+    if (sourceRefusal) return sourceRefusal;
+    const library = op.source?.kind === REGION_SOURCE_KINDS.LIBRARY;
+    if (library && op.seed !== undefined && op.seed !== null) {
+        return `apworld: a library entry is captured geometry and draws no randomness, so a seed means `
+            + `nothing to it — ${REGENERATE_LIBRARY_NO_SEED} (got seed ${describeValue(op.seed)}). `
+            + 'Drop `seed`, or Generate instead.';
+    }
+    if (!library && !Number.isInteger(op.seed)) {
         return 'apworld: regenerate-region-sidecar needs `seed` as a whole number — '
             + `${REGENERATE_SEED_REQUIRED} — got ${op.seed === undefined ? 'none' : describeValue(op.seed)}.`;
     }
@@ -2100,7 +2112,10 @@ export function regenerateOpRefusal(doc, op) {
         return `apworld: substrate "${substrate}" declares no \`deserializeWorld\` / `
             + '`serializeWorld` pair, so a payload built for it could be neither played nor written.';
     }
-    if (!facts.kind) return `apworld: ${noRealiserSentence(substrate, facts)}`;
+    if (library) {
+        const refusal = librarySourceRefusal(doc, p, name, substrate, facts, op.source.entry);
+        if (refusal) return refusal;
+    } else if (!facts.kind) return `apworld: ${noRealiserSentence(substrate, facts)}`;
     const nExits = (regionsOf(doc, p)[name].exits ?? []).length;
     if (facts.sideKeys && nExits > facts.sides) {
         return `apworld: region "${name}" has ${plural(nExits, 'exit')}, and \`${substrate}\` holds ONE exit `
@@ -2122,6 +2137,69 @@ export function regenerateOpRefusal(doc, op) {
     if (op.freeItems !== undefined && !(Array.isArray(op.freeItems)
         && op.freeItems.every((n) => typeof n === 'string'))) {
         return `apworld: \`freeItems\` is a list of item names, got ${describeValue(op.freeItems)}.`;
+    }
+    return null;
+}
+
+/** ⛓ The seed refusal for a library source — why a number would lie. EXPORTED for the rows. */
+export const REGENERATE_LIBRARY_NO_SEED = 'the record replays from the inlined entry alone';
+
+/** ⛓ The library source's clauses. EXPORTED for the rows and the form. */
+export const REGENERATE_FROM_LIBRARY = 'from library entry';
+export const REGENERATE_SURPLUS_DROPPED = 'the document has no location for, dropped';
+export const REGENERATE_LIBRARY_NEEDS_HOOK = 'declares no `instantiateLibraryEntryForSpecs`';
+
+/**
+ * ⛓ `source` is absent (Generate — R0's path), or `{kind: 'library',
+ * library_id, entry_id, entry}` with the entry INLINED (so the record replays
+ * without a fetch). Every other shape is refused by name.
+ */
+function regenerateSourceRefusal(source) {
+    if (source === undefined) return null;
+    const isObj = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+    if (!isObj(source)) {
+        return 'apworld: `source` says where the region\'s data comes from — an object '
+            + `({kind: '${REGION_SOURCE_KINDS.LIBRARY}', library_id, entry_id, entry}) or nothing, got `
+            + `${describeValue(source)}.`;
+    }
+    if (source.kind !== REGION_SOURCE_KINDS.LIBRARY) {
+        return `apworld: \`source.kind\` ${describeValue(source.kind)} is not a source this op knows — `
+            + `\`${REGION_SOURCE_KINDS.LIBRARY}\`, or no \`source\` to generate.`;
+    }
+    if (!isObj(source.entry)) {
+        return 'apworld: a library source carries its ENTRY inline (`source.entry`, the pack\'s '
+            + `{entry_id, substrate, payload, location_slots, …}) so the record replays without a fetch — got `
+            + `${source.entry === undefined ? 'none' : describeValue(source.entry)}.`;
+    }
+    if (typeof source.library_id !== 'string' || !source.library_id
+        || typeof source.entry_id !== 'string' || !source.entry_id) {
+        return 'apworld: a library source names its pack and entry (`library_id`, `entry_id` as strings) '
+            + `— got ${describeValue(source.library_id)} / ${describeValue(source.entry_id)}.`;
+    }
+    return null;
+}
+
+/**
+ * ⛓ What a library entry cannot do for `region` → `substrate`, BEFORE the
+ * hook runs: a target without the hook; an entry of another substrate; more
+ * document locations than the entry's captured slots (bounce's hook says so
+ * too; maze's would fill — here it is refused first, for every target).
+ */
+function librarySourceRefusal(doc, p, region, substrate, facts, entry) {
+    if (!facts.offersLibrary) {
+        return `apworld: \`${substrate}\` ${REGENERATE_LIBRARY_NEEDS_HOOK} — its registry entry cannot `
+            + 'instantiate a captured library entry for a region. Generate instead.';
+    }
+    if (entry.substrate !== substrate) {
+        return `apworld: library entry \`${entry.name ?? entry.entry_id}\` is a \`${entry.substrate}\` room, `
+            + `and the target is \`${substrate}\` — pick an entry of the target's own substrate.`;
+    }
+    const nLocs = (regionsOf(doc, p)[region].locations ?? []).length;
+    if (!Number.isInteger(entry.location_slots) || nLocs > entry.location_slots) {
+        return `apworld: region "${region}" has ${plural(nLocs, 'location')}, and library entry `
+            + `\`${entry.name ?? entry.entry_id}\` captured ${Number.isInteger(entry.location_slots)
+                ? plural(entry.location_slots, 'slot') : 'no `location_slots`'} — each document location `
+            + 'needs a captured slot. Pick an entry with more slots, or Generate.';
     }
     return null;
 }
@@ -2179,6 +2257,11 @@ export const REGENERATE_RIDING_FREE = 'riding free';
  * EXPORTED: the hub's worker flow prints the same sentence for the same result.
  */
 export function regenerateRealiserRefusal({ region, substrate, res }) {
+    if (res.source?.kind === REGION_SOURCE_KINDS.LIBRARY) {
+        const start = startingInventoryClause(res.spec);
+        return `apworld: \`${substrate}\`'s ${librarySourceLabel(res.source)} refused region "${region}": `
+            + `${res.threw}${start ? ` — with ${start}` : ''}.`;
+    }
     const free = freeItemsClause(res, REGENERATE_RIDING_FREE, { list: true });
     const start = startingInventoryClause(res.spec);
     const withs = [free, start].filter(Boolean).join('; ');
@@ -2194,6 +2277,7 @@ export function regenerateRealiserRefusal({ region, substrate, res }) {
  * with this sentence, so the two roads cannot describe one result differently.
  */
 export function describeRegeneration({ region, substrate, seed, res }) {
+    if (res.source?.kind === REGION_SOURCE_KINDS.LIBRARY) return describeLibraryRegeneration({ region, substrate, res });
     const k = res.spec.exitSpecs.length;
     const l = res.spec.locationSpecs.length;
     const free = freeItemsClause(res, REGENERATE_RODE_FREE);
@@ -2211,6 +2295,42 @@ export function describeRegeneration({ region, substrate, seed, res }) {
         + `${res.spec.sidesReassigned.length ? `; ${REGENERATE_SIDES_REASSIGNED} `
             + `${res.spec.sidesReassigned.join(', ')} a free side` : ''}) — ${REGENERATE_RULES_UNCHANGED}`
         + stranded;
+}
+
+/** ⛓ `library entry \`Crossroads\` (\`demo-maze-pack-3dd25239\`)` — the one
+ *  spelling of a library source in every sentence. EXPORTED for the form. */
+export function librarySourceLabel(source) {
+    return `${REGENERATE_FROM_LIBRARY} \`${source?.name ?? source?.entry_id}\` (\`${source?.library_id}\`)`;
+}
+
+/** ⛓ The stranded clause both descriptions end with. */
+function strandedClause(region, res) {
+    return res.stranded.length
+        ? `; ⚠ ${res.stranded.map((x) => `${x.region}'s \`${x.field}\``).join(', ')} `
+            + `${REGENERATE_STRANDED} (\`${[...new Set(res.stranded.map((x) => x.target))].join('`, `')}\` `
+            + `was hosted by ${region}'s old payload)`
+        : '';
+}
+
+/**
+ * ⛓ The library source's description (R5a): no seed (nothing was drawn), no
+ * free items (nothing drifts), the surplus slots dropped and the openings
+ * relabelled onto another wall named.
+ */
+function describeLibraryRegeneration({ region, substrate, res }) {
+    const k = res.spec.exitSpecs.length;
+    const l = res.spec.locationSpecs.length;
+    const start = startingInventoryClause(res.spec);
+    return `region ${region}: payload rebuilt as \`${substrate}\` ${librarySourceLabel(res.source)} (`
+        + `${plural(k, 'exit')}, ${plural(l, 'location')} carried; `
+        + `${start ? `${start}; ` : ''}`
+        + `${res.surplusSlots ? `${plural(res.surplusSlots, 'captured slot')} ${REGENERATE_SURPLUS_DROPPED}; ` : ''}`
+        + `${res.exitsRelabelled ? `${plural(res.exitsRelabelled, 'opening')} relabelled onto a wall it was not `
+            + 'captured on; ' : ''}`
+        + `${plural(res.exitsRelinked, 'exit')} ${REGENERATE_RELINKED}`
+        + `${res.spec.sidesReassigned.length ? `; ${REGENERATE_SIDES_REASSIGNED} `
+            + `${res.spec.sidesReassigned.join(', ')} a free side` : ''}) — ${REGENERATE_RULES_UNCHANGED}`
+        + strandedClause(region, res);
 }
 
 /* ── the map moves (PRESET SIDECARS M2) ───────────────────────────────── */
