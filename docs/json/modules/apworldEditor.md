@@ -30,6 +30,8 @@ document.
 | `regionGenerationFlow.js` | (substrate change R2) what the block's **Region generation** form opens on and sends — `regionGenerationPlan` (the target's registry defaults, the seed, ⚖ Q4's size for a tiles target, the region's own recorded knobs when its payload is the target's own, or the op's pre-realiser refusal), `composeRegenerateArgs` (the bag → the op's arguments, as top-down composes them), `freeItemsSentence`, `regenerationProvenance`, `regenerationAnswer` |
 | `regionGenerationRun.js` | (R2) the **time-limit setting** (`regionGenerationTimeoutSeconds`, `REGION_GENERATION_TIMEOUT_DEFAULT_S`) and the **worker** protocol: `runRegenerateJob` (the worker's side) and `runRegenerateInWorker` (the page's: the budget, Cancel, `terminate()`), the timeout and Cancel sentences |
 | `regionRegenerateWorker.js` | (R2) the MODULE WORKER one Generate runs in — imports the eight registry libraries into its own registry, then `regionRegenerate.js`. ⛔ A worker cannot be bundled into `bundle.js`: `scripts/build/bundle-frontend.js` copies it into `dist/` (beside `stateManagerWorker.js` and `balanceWorker.js`), and in bundled mode the page resolves it at its SOURCE location, `stateManagerProxy`'s rule |
+| `startingInventoryBlock.js` | (substrate change R3) the **Starting inventory** block as data — `startingInventoryList` (the list as `{name, count}`), `substratesInSlot`, `startingNeedRows` (each substrate's registry `startingInventory` needs against the list, with a grant op per candidate), `startingGrantOp` (`set-starting-count` at current + 1), `needSentence`; the panel draws what these answer, on the Items tab and in the Region generation form |
+| `../procgenCore/ruleWithOwned.js` | (R3) `ruleWithOwned(rule, owned)` — a rule with the owned items treated as held (`Has`/`HasAll`/`HasAny`/`And`/`Or`; everything else unchanged and named in `unmodelled`); the regenerate spec's starting-inventory rewrite |
 | `regionRederive.js` | (S2) **Re-derive rules ▸** — `rederiveRegionRules({base, ops, doc}, slot, region)`: the pre-edit payload recovered from the session's record, and the ONE op that moves only the rules it produced |
 | `../procgenCore/compositeMapRenderer.js` | the **Map** tab's painter — shared with the procgen pipeline panel, substrate-neutral |
 | `../procgenCore/exitSides.js` | (M3) `exitSidesOf` — the registry-entry `exitSides` declaration (what else a payload keys by an exit's side), or why there is none; the one reader the ops and the block's side picker share |
@@ -760,6 +762,32 @@ tracked entry regenerated as `maze` and as `text_adventure` came out clean excep
 the `jta` dataset hosts, whose strandings the op names (the numbers are in the
 R0 record, plan §7).
 
+**The starting inventory is OWNED** (R3, plan §9.2; ⚖ user 2026-09-23). Play
+starts with `starting_items[p]` in the inventory, so a rule on one of them passes
+from the first step — and the spec now says so to the realiser:
+`buildDocumentRegionSpec` hands every exit's and location's `access_rule` through
+`ruleWithOwned(rule, starting_items[p])` (`procgenCore/ruleWithOwned.js`): `Has X`
+of an owned X → `True_`, `HasAll` minus the owned names, `HasAny` with an owned
+name → `True_`, `And`/`Or` collapsed; `Count`, `HasGroup`, `HasFromListUnique` and
+every other construct are left as written (a property row holds the rewrite to
+evaluating the same as the original, under `evaluateRule`, for every inventory
+that holds the owned set). ⛔ The SPEC only — `regions[p]` keeps every rule as
+written, the op still writes the entry and nothing else. The spec records each
+rewritten endpoint (`rulesSatisfiedByStart: [{endpoint, before, after}]`) and the
+description gains a clause (`REGENERATE_SATISFIED_BY_START`,
+`REGENERATE_NARROWED_BY_START`): *"… 2 rules treated as satisfied by the starting
+inventory [Right arrow] (exit exit_E, location region_0_1__loc_right); …"*, or
+*"1 rule narrowed by the starting inventory [Left arrow] (location …)"* when an
+owned item only shortens a rule. A realiser refusal carries the same clause. A
+maze exit gated only on a starting item is therefore built OPEN (no logic gate
+on its tile); a bounce region gated on both arrows builds once one arrow is a
+starting item. The refusals that remain are REAL and per WORLD: on
+`bounce_worldgen`, a starting **Right arrow** builds `region_0_1` and makes
+`region_1_1` refuse *"at most one arrowless-gated exit"* (its three exits become
+arrowless); both arrows build every bounce region. The corpus control takes
+`--starting=<item>[,…]` (appended to every slot's list on the worker's copy) and
+`--from=<id>` and counts the ops whose rules were owned (`rules owned`).
+
 **The free-item clause follows the target** (R2, §7.7 ⚖ #5): a target whose
 `hostsSurplusExitsNatively(regionParams)` answers true (bounce's `braid`, runner)
 never drifts an exit onto a free item, so the description and the realiser's
@@ -797,6 +825,11 @@ block for it.
   rule) and its `procgenParamsFromPayload` read differs from the defaults (trap
   1399: the recorded knobs can be the harder ones, so the defaults come first);
 - the free-item sentence, unless the target hosts surplus exits natively;
+- (R3) what the TARGET needs in the starting inventory — the same need line the
+  Items tab's Starting inventory block draws (below), with its **grant ▸**
+  buttons, for a target whose registry entry declares `startingInventory`; none
+  for one that declares nothing. A grant lands at once (one op) and the form
+  stays open, so the next Generate treats the granted item as owned;
 - **Generate ▸** — or, for a target the op refuses before its realiser runs (no
   realiser — jta, omsi, flash_seedling — or more exits than sides), the op's OWN
   refusal sentence (`regenerateOpRefusal`) and no Generate.
@@ -995,6 +1028,40 @@ rules, because it is a document rule edited behind a payload that a rebuild woul
 put back; **derived** (absent — maze, bounce: rules from geometry) counts it on
 one line per substrate and never fails, because those are the endpoints Edit ▸
 already freezes.
+
+## The Items tab's Starting inventory block (substrate change R3)
+
+⚖ User, 2026-09-23: *"register the requirement for the initial arrow key in the
+substrate registry, and update the APWorld Editor to have a section for starting
+inventory"* — and the planner's three parts (declaration, hub section, requirements
+minus starting items), agreed.
+
+The Items tab opens on **Starting inventory (N)**: the slot's `starting_items[p]`
+as chips, *name × count* in first-appearance order (the list is a MULTISET —
+`set-starting-count` repeats a name), an **add** control (a picker over the slot's
+items and **+ add ▸**), and one need line per `startingInventory` need declared by
+a substrate the slot's sidecars carry (`substratesInSlot` → the registry entry →
+`procgenCore/startingInventory.js`). A need reads *"`bounce` needs one of Left
+arrow / Right arrow — none held"* with a **grant ▸** per candidate, or *"… — met:
+Right arrow"*. The counts are the per-item **Start:** inputs' counts — both read
+`startingCountOf` over the one list. The same need line is drawn in the Region
+generation form for the target (above).
+
+Every change is ONE op, one undo: `set-starting-count {item, count: current + 1}`
+(`startingGrantOp`) for a grant and for **add**. The op refuses, by name, a
+positive count of an item the slot does not define (`startingItemRefusal` — 0 of
+the 222 committed slots starts with one); a count of 0 is never refused, so a
+stale name can always be removed. A grant for a candidate the slot does not
+define is drawn disabled with that sentence as its title.
+
+**What a grant means for the world's logic.** A starting item is owned from the
+first step, so a location gated only on it is open at once and an exit gated only
+on it is open; a rule that needs it with other items needs only the others. That
+is how play has always read `starting_items` — the grant changes the document's
+starting list, never its rules, so **the validity report is unchanged by a
+grant** (no rule, sidecar or placement moves). What moves is the next
+regeneration: the spec treats the starting items as owned (see *Regenerating a
+payload*), and the Generate answer names the rules it treated as satisfied.
 
 ## The Items tab's Groups section (I1)
 
