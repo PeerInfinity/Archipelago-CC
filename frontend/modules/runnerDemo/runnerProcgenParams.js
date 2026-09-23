@@ -27,6 +27,7 @@
 
 import { PROFILES, DEFAULT_PROFILE_ID } from './physics.js';
 import { SWEEP_SATURATING_PROFILES } from './generator.js';
+import { fieldRow, numberField } from '../procgenCore/regionGenerationForm.js';
 
 // ── Panel parameter defaults ────────────────────────────────────────
 // Merged into the Procgen Pipeline panel's DEFAULT_PARAMS via the
@@ -105,14 +106,6 @@ export function buildRunnerRegionParams({ params } = {}) {
 export function renderRunnerProcgenParams({ params, onChange = () => {} } = {}) {
     const wrap = document.createElement('div');
 
-    const physRow = document.createElement('div');
-    physRow.className = 'procgen-pipeline-field';
-    const physLabel = document.createElement('label');
-    physLabel.textContent = 'Physics profile';
-    physLabel.title = 'Logic-affecting: access rules derive from the profile\'s physics, '
-        + 'and the profile is stamped into every runner payload. Profiles that saturate '
-        + 'the calibration sweep cannot host physics gates (double-jump / blue-platform '
-        + 'gaps are vetoed there).';
     const physSelect = document.createElement('select');
     for (const profile of Object.values(PROFILES)) {
         const o = document.createElement('option');
@@ -126,66 +119,59 @@ export function renderRunnerProcgenParams({ params, onChange = () => {} } = {}) 
         params.runnerPhysicsProfile = physSelect.value;
         onChange();
     });
-    physRow.appendChild(physLabel);
-    physRow.appendChild(physSelect);
-    wrap.appendChild(physRow);
+    wrap.appendChild(fieldRow('Physics profile',
+        'Logic-affecting: access rules derive from the profile\'s physics, '
+        + 'and the profile is stamped into every runner payload. Profiles that saturate '
+        + 'the calibration sweep cannot host physics gates (double-jump / blue-platform '
+        + 'gaps are vetoed there).',
+        physSelect));
 
-    const numberField = (labelText, title, key, def, { step = 1, max = null } = {}) => {
-        const r = document.createElement('div');
-        r.className = 'procgen-pipeline-field';
-        const l = document.createElement('label');
-        l.textContent = labelText;
-        l.title = title;
-        const input = document.createElement('input');
-        input.type = 'number';
-        input.min = '0';
-        input.step = String(step); // without this the browser rejects non-integers
-        if (max != null) input.max = String(max);
-        input.value = String(params[key] ?? def);
-        input.addEventListener('change', () => {
-            let v = Number(input.value);
-            if (!Number.isFinite(v) || v < 0) v = def;
-            if (max != null) v = Math.min(v, max);
-            params[key] = v;
-            input.value = String(v);
-            onChange();
-        });
-        r.appendChild(l);
-        r.appendChild(input);
-        return r;
-    };
-    wrap.appendChild(numberField('Gap margin',
-        'How close plain run gaps sit to the max grounded jump (0–1). 0 = the calibrated '
+    wrap.appendChild(numberField(params, {
+        key: 'runnerGapMargin', label: 'Gap margin',
+        title: 'How close plain run gaps sit to the max grounded jump (0–1). 0 = the calibrated '
         + 'default window; 1 = gaps up to the 0.75×reach structural cap. Gate windows '
         + 'never move.',
-        'runnerGapMargin', 0, { step: 0.01, max: 1 }));
-    wrap.appendChild(numberField('Hazard density',
-        'Spike-patch probability per eligible plain floor (0–1). Spiked floors always '
+        def: 0, step: 0.01, max: 1,
+    }, onChange));
+    wrap.appendChild(numberField(params, {
+        key: 'runnerHazardDensity', label: 'Hazard density',
+        title: 'Spike-patch probability per eligible plain floor (0–1). Spiked floors always '
         + 'get a flush partner floor.',
-        'runnerHazardDensity', 0.35, { step: 0.01, max: 1 }));
-    wrap.appendChild(numberField('Length steps',
-        'Max plain floors between features (1 + random·N) — longer strips per region.',
-        'runnerLengthSteps', 2, { step: 1, max: 8 }));
-    wrap.appendChild(numberField('Jitter',
-        'Vertical placement jitter (0–1): plain floors rise up to jitter × 1.2 units '
+        def: 0.35, step: 0.01, max: 1,
+    }, onChange));
+    wrap.appendChild(numberField(params, {
+        key: 'runnerLengthSteps', label: 'Length steps',
+        title: 'Max plain floors between features (1 + random·N) — longer strips per region.',
+        def: 2, step: 1, max: 8,
+    }, onChange));
+    wrap.appendChild(numberField(params, {
+        key: 'runnerJitter', label: 'Jitter',
+        title: 'Vertical placement jitter (0–1): plain floors rise up to jitter × 1.2 units '
         + 'above the base line. Gates and branch tips stay flat — gap windows never move.',
-        'runnerJitter', 0, { step: 0.01, max: 1 }));
-    wrap.appendChild(numberField('Splits',
-        'Split-segment probability per plains slot (0–1): a rising ramp forks into a '
+        def: 0, step: 0.01, max: 1,
+    }, onChange));
+    wrap.appendChild(numberField(params, {
+        key: 'runnerSplitChance', label: 'Splits',
+        title: 'Split-segment probability per plains slot (0–1): a rising ramp forks into a '
         + 'one-way top lane (jump) over a bottom lane (no jump / drop), merging where '
         + 'the lane ends. Route texture only — requirements never change.',
-        'runnerSplitChance', 0, { step: 0.01, max: 1 }));
-    wrap.appendChild(numberField('Ceiling hazards',
-        'Ceiling-hazard probability per plains slot (0–1): a kill slab hung over its '
+        def: 0, step: 0.01, max: 1,
+    }, onChange));
+    wrap.appendChild(numberField(params, {
+        key: 'runnerCeilingDensity', label: 'Ceiling hazards',
+        title: 'Ceiling-hazard probability per plains slot (0–1): a kill slab hung over its '
         + 'own short gap — full jumps clip it, short holds cross underneath. Difficulty '
         + 'texture only — requirements never change. Some physics profiles have no '
         + 'safe ceiling window and skip these.',
-        'runnerCeilingDensity', 0, { step: 0.01, max: 1 }));
-    wrap.appendChild(numberField('Ceiling margin',
-        'Margin of error under ceiling hazards (0–1). 1 (default): a plain short hop '
+        def: 0, step: 0.01, max: 1,
+    }, onChange));
+    wrap.appendChild(numberField(params, {
+        key: 'runnerCeilingMargin', label: 'Ceiling margin',
+        title: 'Margin of error under ceiling hazards (0–1). 1 (default): a plain short hop '
         + 'pressed before the lip crosses — no coyote-time tricks needed. 0: expert — '
         + 'gaps widen so only a late run-off tap fits under the slab. Mid and full '
         + 'jumps are punished at every setting.',
-        'runnerCeilingMargin', 1, { step: 0.01, max: 1 }));
+        def: 1, step: 0.01, max: 1,
+    }, onChange));
     return wrap;
 }
