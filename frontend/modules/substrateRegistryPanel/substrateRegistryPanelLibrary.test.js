@@ -9,8 +9,8 @@ import { describe, expect, it } from 'vitest';
 
 import { cellOf, fieldNamesOf, shapeRows } from '../procgenDocs/registryShape.js';
 import {
-    describeRegistry, driftIsEmpty, fullValueText, snapshotExpandable, THREW_PREFIX,
-    UNSNAPSHOTTED_GROUP,
+    describeRegistry, driftIsEmpty, FEATURE_SEPARATOR, featureRowsOf, fullValueText, GLYPH, MATRIX_KINDS,
+    matrixCell, matrixOf, ROW_KINDS, snapshotExpandable, THREW_PREFIX, UNSNAPSHOTTED_GROUP,
 } from './substrateRegistryPanelLibrary.js';
 
 const controller = { play() {}, stop() {} };
@@ -137,5 +137,85 @@ describe('describeRegistry', () => {
         });
         expect(seen).toHaveLength(2);
         expect(faked.answers.alpha).toEqual({ playbackController: 'returned number', itemTypes: 'returned null' });
+    });
+});
+
+describe('the matrix mode', () => {
+    const { yes, no, number, count } = MATRIX_KINDS;
+
+    it('matrixCell: one kind per cellOf TYPE, the title says which ✗ it is', () => {
+        const kinds = (v) => { const m = matrixCell(cellOf(v)); return [m.kind, m.text]; };
+        expect(kinds(undefined)).toEqual([no, GLYPH.no]);
+        expect(kinds(null)).toEqual([yes, GLYPH.yes]);
+        expect(kinds(() => 1)).toEqual([yes, GLYPH.yes]);
+        expect(kinds('s')).toEqual([yes, GLYPH.yes]);
+        expect(kinds({ a: 1 })).toEqual([yes, GLYPH.yes]);
+        expect(kinds(true)).toEqual([yes, GLYPH.yes]);
+        expect(kinds(false)).toEqual([no, GLYPH.no]);
+        expect(kinds(30)).toEqual([number, '30']);
+        expect(kinds(['a', 'b', 'c'])).toEqual([count, '3']);
+        expect(kinds([])).toEqual([count, '0']);
+        expect(matrixCell(cellOf(undefined)).title).toMatch(/^absent/);
+        expect(matrixCell(cellOf(false)).title).toMatch(/^false/);
+        expect(matrixCell(cellOf(null)).title).toBe('null');
+        expect(matrixCell(cellOf(['a', 'b'])).title).toBe('a, b');
+    });
+
+    /** Rows the way describeRegistry makes them (it adds `allStrings`). */
+    const rowsOf = (entries) => describeRegistry(entries, { columns: [], groups: [], rows: [] }).rows;
+    const row = (entries, name) => rowsOf(entries).find((r) => r.name === name);
+
+    it('featureRowsOf: the SORTED union across entries, ✓ where the entry holds it', () => {
+        const feats = featureRowsOf(row([{ id: 'p', f: ['b', 'a'] }, { id: 'q', f: ['c', 'a'] }, { id: 'r' }], 'f'));
+        expect(feats.map((f) => f.name)).toEqual(['a', 'b', 'c'].map((e) => `f${FEATURE_SEPARATOR}${e}`));
+        expect(feats.every((f) => f.parent === 'f')).toBe(true);
+        expect(feats.map((f) => f.cells.map((c) => c.text).join(''))).toEqual([
+            GLYPH.yes + GLYPH.yes + GLYPH.no, GLYPH.yes + GLYPH.no + GLYPH.no, GLYPH.no + GLYPH.yes + GLYPH.no]);
+        expect(feats[0].cells[2].title).toMatch(/^absent/);
+    });
+
+    it('featureRowsOf: an array of non-strings is NOT expanded', () => {
+        expect(featureRowsOf(row([{ id: 'p', f: [1, 2] }], 'f'))).toEqual([]);
+        expect(featureRowsOf(row([{ id: 'p', f: ['a'] }, { id: 'q', f: [{ x: 1 }] }], 'f'))).toEqual([]);
+    });
+
+    it('featureRowsOf: a null cell beside arrays still expands; the null column is all ✗', () => {
+        const feats = featureRowsOf(row([{ id: 'p', f: ['a', 'b'] }, { id: 'n', f: null }], 'f'));
+        expect(feats).toHaveLength(2);
+        for (const f of feats) {
+            expect(f.cells[1]).toMatchObject({ id: 'n', kind: no, text: GLYPH.no });
+            expect(f.cells[1].title).toMatch(/null/);
+        }
+    });
+
+    it('featureRowsOf: no arrays (or only nulls, or a mixed row) — nothing to expand', () => {
+        expect(featureRowsOf(row([{ id: 'p', f: true }, { id: 'q', f: false }], 'f'))).toEqual([]);
+        expect(featureRowsOf(row([{ id: 'p', f: null }], 'f'))).toEqual([]);
+        expect(featureRowsOf(row([{ id: 'p', f: ['a'] }, { id: 'q', f: 'a' }], 'f'))).toEqual([]);
+        expect(featureRowsOf(row([{ id: 'p', f: [] }], 'f'))).toEqual([]);
+    });
+
+    it('matrixOf: groups in vm.groups order, each feature row directly after its parent', () => {
+        const vm = describeRegistry([alpha, beta, gamma], fixtureSnapshot());
+        const m = matrixOf(vm);
+        expect(m.columns).toBe(vm.columns);
+        expect(m.groups.map((g) => g.title)).toEqual(vm.groups.map((g) => g.title));
+        const names = m.groups.flatMap((g) => g.rows.map((r) => r.name));
+        const i = names.indexOf('features');
+        expect(names.slice(i, i + 3)).toEqual(['features', `features${FEATURE_SEPARATOR}a`,
+            `features${FEATURE_SEPARATOR}b`]);
+        const flat = m.groups.flatMap((g) => g.rows);
+        expect(flat.filter((r) => r.kind === ROW_KINDS.field).map((r) => r.name))
+            .toEqual(vm.groups.flatMap((g) => g.rows));
+        // Every feature row's parent is the nearest field row above it.
+        let lastField = null;
+        for (const r of flat) {
+            if (r.kind === ROW_KINDS.field) lastField = r.name;
+            else expect(r.parent).toBe(lastField);
+        }
+        expect(flat.filter((r) => r.kind === ROW_KINDS.feature).map((r) => r.parent))
+            .toEqual(['features', 'features', 'sharing.items.types']);
+        const feat = flat.find((r) => r.name === 'features');
+        expect(feat.cells.map((c) => c.text)).toEqual(['2', '1', GLYPH.no]);
     });
 });

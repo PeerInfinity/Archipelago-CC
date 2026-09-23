@@ -109,7 +109,15 @@ export function describeRegistry(entries, snapshot, { call = invoke } = {}) {
     const liveIds = entries.map((e) => e.id);
 
     const names = fieldNamesOf(entries, snapshotExpandable(snapshot));
-    const rows = shapeRows(entries, names);
+    /* ⛓ `cellOf` stringifies an array's elements, so whether they WERE strings
+     * is only knowable here, off the raw value — the matrix's feature-row rule
+     * needs it (`featureRowsOf`). Added beside the shaped cell, never in it. */
+    const rows = shapeRows(entries, names).map((r) => ({
+        ...r,
+        cells: r.cells.map((c, i) => (c.type === 'array'
+            ? { ...c, allStrings: digTwo(entries[i], r.name).every((v) => typeof v === 'string') }
+            : c)),
+    }));
 
     const groupOf = new Map();
     for (const g of snapGroups) for (const n of g.rows) groupOf.set(n, g.title);
@@ -168,3 +176,98 @@ export function describeRegistry(entries, snapshot, { call = invoke } = {}) {
 /** Whether a drift says nothing at all — the UI turns that into a SENTENCE. */
 export const driftIsEmpty = (drift) => !drift.liveOnly.length && !drift.snapshotOnly.length
     && !drift.fields.length;
+
+/* ─── THE MATRIX MODE — features × substrates, ✓ / ✗ / a number ─────────── */
+
+/** ⛓ The two glyphs a matrix cell can carry besides a number. */
+export const GLYPH = Object.freeze({ yes: '✓', no: '✗' });
+
+/** ⛓ What a matrix cell IS; the UI's class is `srp-<kind>`. */
+export const MATRIX_KINDS = Object.freeze({ yes: 'yes', no: 'no', number: 'number', count: 'count' });
+
+/** ⛓ What a matrix row IS: a registry field, or one element of a field's list. */
+export const ROW_KINDS = Object.freeze({ field: 'field', feature: 'feature' });
+
+/** ⛓ Between a feature row's parent field and its element. */
+export const FEATURE_SEPARATOR = ': ';
+
+/**
+ * ⛓ THE CELL RULE — a function of the cell's TYPE (`registryShape.cellOf`),
+ * never of the row: absent → ✗; boolean → ✓ / ✗; number → the number; array
+ * → its COUNT; every other present type (function, string, object, `null`) →
+ * ✓. The `title` is the full value, prefixed where the ✗ alone would not say
+ * WHICH ✗ it is (absent, or declared `false`).
+ *
+ * @returns {{ kind: string, text: string, title: string }}
+ */
+export function matrixCell(cell) {
+    const full = fullValueText(cell).text;
+    if (!cell.present) return { kind: MATRIX_KINDS.no, text: GLYPH.no, title: 'absent — the entry does not carry it' };
+    if (cell.type === 'boolean') {
+        return cell.value
+            ? { kind: MATRIX_KINDS.yes, text: GLYPH.yes, title: full }
+            : { kind: MATRIX_KINDS.no, text: GLYPH.no, title: `false — declared ${full}` };
+    }
+    if (cell.type === 'number') return { kind: MATRIX_KINDS.number, text: String(cell.value), title: full };
+    if (cell.type === 'array') {
+        return { kind: MATRIX_KINDS.count, text: String(cell.value.length), title: full };
+    }
+    return { kind: MATRIX_KINDS.yes, text: GLYPH.yes, title: full };
+}
+
+/**
+ * ⛓ THE FEATURE-ROW RULE — a row whose every present, non-`null` cell is an
+ * array of STRINGS (and which has at least one such cell) expands into one
+ * child row per element of the sorted union across the entries: ✓ where that
+ * entry's array holds the element, ✗ otherwise. A `null` cell does not stop
+ * the expansion (the registry doc gives `null` meanings of its own, e.g.
+ * *null ⇒ full vocabulary*) — its children are ✗ and the title says why.
+ * ⛔ No list of field names: the rule reads the cells.
+ *
+ * @returns {{ name: string, parent: string, cells: object[] }[]} `[]` when
+ *   the rule does not apply
+ */
+export function featureRowsOf(row) {
+    const declared = row.cells.filter((c) => c.present && c.type !== 'null');
+    if (!declared.length || !declared.every((c) => c.type === 'array' && c.allStrings === true)) return [];
+    const union = [...new Set(declared.flatMap((c) => c.value))].sort();
+    return union.map((element) => ({
+        name: `${row.name}${FEATURE_SEPARATOR}${element}`,
+        parent: row.name,
+        cells: row.cells.map((c) => {
+            const has = c.type === 'array' && c.value.includes(element);
+            let why = `${row.name} = ${fullValueText(c).text}`;
+            if (!c.present) why = `absent — the entry has no ${row.name}`;
+            else if (c.type === 'null') why = `${row.name} is null — see the registry doc for what null means`;
+            return {
+                id: c.id,
+                kind: has ? MATRIX_KINDS.yes : MATRIX_KINDS.no,
+                text: has ? GLYPH.yes : GLYPH.no,
+                title: why,
+            };
+        }),
+    }));
+}
+
+/**
+ * The matrix over a view-model: `vm.columns` across, `vm.groups` down, each
+ * field row followed directly by its feature rows.
+ *
+ * @param {ReturnType<typeof describeRegistry>} vm
+ */
+export function matrixOf(vm) {
+    const byName = new Map(vm.rows.map((r) => [r.name, r]));
+    return {
+        columns: vm.columns,
+        groups: vm.groups.map((g) => ({
+            title: g.title,
+            rows: g.rows.flatMap((name) => {
+                const row = byName.get(name);
+                return [
+                    { name, kind: ROW_KINDS.field, cells: row.cells.map((c) => ({ id: c.id, ...matrixCell(c) })) },
+                    ...featureRowsOf(row).map((f) => ({ ...f, kind: ROW_KINDS.feature })),
+                ];
+            }),
+        })),
+    };
+}
