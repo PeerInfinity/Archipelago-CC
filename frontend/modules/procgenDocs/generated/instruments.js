@@ -1989,6 +1989,7 @@ export const INSTRUMENTS = frz({
                 "fixtures",
                 "json",
                 "limit",
+                "op-timeout",
                 "seed",
                 "targets"
             ],
@@ -2011,6 +2012,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "limit"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "op-timeout"
                 },
                 {
                     "how": [
