@@ -38,11 +38,15 @@ function makeHarness() {
     // onto invokeQueue, which the push loop drains into the game.
     const adapter = { teleport: vi.fn(() => true), onStateReport: null };
     const panelLines = [];
+    const keyReleases = [];
     const glue = new SeedlingRegionGlue({
         eventBus,
         getDispatcher: () => dispatcher,
         loadRegionEvent: FLASH_SEEDLING_LOAD_REGION_EVENT,
-        getPanel: () => ({ _panelLog: (m, cls) => panelLines.push({ m, cls }) }),
+        getPanel: () => ({
+            _panelLog: (m, cls) => panelLines.push({ m, cls }),
+            releaseHeldKeys: (why) => keyReleases.push(why),
+        }),
     });
     glue.start();
     return {
@@ -51,6 +55,7 @@ function makeHarness() {
         published,
         busPublished,
         panelLines,
+        keyReleases,
         emitLoad: (payload) => subs.get(FLASH_SEEDLING_LOAD_REGION_EVENT)(payload),
         subscribed: () => subs.has(FLASH_SEEDLING_LOAD_REGION_EVENT),
         // ⛓ procgenPlayer's own payload shape (`buildActiveSubstratePayload`).
@@ -177,6 +182,19 @@ describe('crossing', () => {
  * ══════════════════════════════════════════════════════════════════════ */
 
 describe('the park', () => {
+    /**
+     * ⛓ T2b F3 — the park releases the keys the GAME still holds (a door fired
+     * mid-hold), once per park, never on a resume or a repeated park.
+     */
+    it('a park asks the panel to release the game\'s held keys — once, and not on a resume', () => {
+        h.emitActive('maze', 'mz.a');
+        h.emitActive('maze', 'mz.b');   // still parked: not a second park
+        h.emitActive(FLASH_SEEDLING_SUBSTRATE_ID, 'r');
+        expect(h.keyReleases).toEqual(['the flash substrate parked']);
+        h.emitActive(null, null);        // null parks too
+        expect(h.keyReleases).toEqual(['the flash substrate parked', 'the flash substrate parked']);
+    });
+
     const boot = () => {
         h.glue.attachAdapter(h.adapter);
         loadRegion('overworld_start__r8c0', null);

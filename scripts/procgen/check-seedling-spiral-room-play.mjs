@@ -298,7 +298,7 @@ async function main() {
      * Out through `door`, fired by the game. Returns the parsed pendingExit.
      * `expectMoves` is the glue-move count the departure must leave behind.
      */
-    async function departThrough(label, door, expectMoves, expectParks) {
+    async function departThrough(label, door, expectMoves, expectParks, { holdAcross = false } = {}) {
         const keys = STEP_KEYS[door.exit_id];
         await focusGame();
         const centre = { x: door.entrance_spawn.x + TILE / 2, y: door.entrance_spawn.y + TILE / 2 };
@@ -313,10 +313,39 @@ async function main() {
         check(`${label}: ${keys.off} held until the LIVE player stood a tile off ${door.exit_id}`,
             !!off.value, `${JSON.stringify(before)} -> ${JSON.stringify(off.value ?? await livePlayer())} in ${off.ms} ms`);
         const pendingBefore = (await readGameState()).pendingExit;
-        const on = await holdUntil(keys.on, async () => {
+        const firedYet = async () => {
             const s = await readGameState();
             return s.pendingExit !== pendingBefore ? s.pendingExit : null;
-        });
+        };
+        /**
+         * ⛓ T2b F3 — `holdAcross`: the key stays DOWN through the door, the
+         * park and the maze tab coming forward, and comes up only then, landing
+         * wherever the page's focus now is. That is a person holding the key
+         * into the door; the game must still end up with the key released.
+         */
+        const on = holdAcross
+            ? await (async () => {
+                const start = Date.now();
+                await page.keyboard.down(keys.on);
+                let value = null;
+                try {
+                    while (!value && Date.now() - start < HOLD_CEILING_MS) {
+                        // eslint-disable-next-line no-await-in-loop
+                        await page.waitForTimeout(50);
+                        // eslint-disable-next-line no-await-in-loop
+                        value = await firedYet();
+                    }
+                    if (value) {
+                        await waitFor('the park, with the key still held', async () =>
+                            ((await glueStats())?.parks === expectParks) || null, 15000);
+                        await page.waitForTimeout(300);
+                    }
+                } finally {
+                    await page.keyboard.up(keys.on);
+                }
+                return { value, ms: Date.now() - start };
+            })()
+            : await holdUntil(keys.on, firedYet);
         check(`${label}: ${keys.on} held until the game fired a door`, !!on.value,
             `pendingExit ${JSON.stringify(on.value)} in ${on.ms} ms`);
         const moves = await waitFor(`the game fires ${door.exit_id} and the glue publishes the move`, async () => {
@@ -438,7 +467,7 @@ async function main() {
      * region's `clear()` emptied the queue, and the cursor then advanced past it.
      * Each hop prints the queue's `{cursor, length}` before it moves.
      */
-    async function returnFrom(label, mazeRegion, door, expectLoads) {
+    async function returnFrom(label, mazeRegion, door, expectLoads, { stillAfterReturn = false } = {}) {
         await page.evaluate(async () => {
             const bus = (await import('./app/core/eventBus.js')).default;
             bus.publish('ui:activatePanel', { panelId: 'mazeRoomPanel' }, 'check-seedling-spiral-room-play');
@@ -482,6 +511,24 @@ async function main() {
             return s.level === ROOM.level && s.playerPositionX === door.entrance_spawn.x
                 && s.playerPositionY === door.entrance_spawn.y ? s : null;
         }, 15000);
+        if (stillAfterReturn) {
+            /**
+             * ⛓ T2b F3 — NO WALKING WITHOUT A KEY. Phase C held its key across
+             * the door and released it after the park, where the game could not
+             * hear it. Nothing presses a key here, and nothing released one into
+             * the game for it.
+             */
+            const samples = [];
+            for (let i = 0; i < 12; i += 1) {
+                // eslint-disable-next-line no-await-in-loop
+                samples.push(await livePlayer());
+                // eslint-disable-next-line no-await-in-loop
+                await page.waitForTimeout(200);
+            }
+            const ok = samples.every((p) => p && Math.hypot(p.x - samples[0].x, p.y - samples[0].y) <= 1);
+            check(`${label}: the player stands STILL after the return — the key held across the door was released into the game`,
+                ok, samples.map((p) => (p ? `(${p.x.toFixed(1)},${p.y.toFixed(1)})` : 'null')).join(' '));
+        }
         const a = await arrival();
         const armsOneTwo = DOORS.some((d) => d.exit_id === a.arrivedFrom?.exit_id || d.exitName === a.arrivedFrom?.exit_id);
         check(`${label}: back in ${START}, and the arrival teleport landed on ${door.exit_id}'s spawn`,
@@ -584,8 +631,8 @@ async function main() {
             + JSON.stringify(stLatch.pendingExit));
 
         // ── Phase C / D — out and back through the first door ───────────────────
-        await departThrough('Phase C', first, 1, 1);
-        await returnFrom('Phase D', first.targetRegion, first, 2);
+        await departThrough('Phase C', first, 1, 1, { holdAcross: true });
+        await returnFrom('Phase D', first.targetRegion, first, 2, { stillAfterReturn: true });
         check('Phase D: the return published no crossing', (await glueMoves()).length === 1,
             `${(await glueMoves()).length} glue moves`);
 
