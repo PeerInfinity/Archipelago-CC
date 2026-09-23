@@ -83,6 +83,9 @@ import {
 // ⛓ PRESET SIDECARS M2 — the map moves' layout arithmetic. It is the one import
 //   here that reaches the pipeline ENGINE and the substrate REGISTRY (both
 //   behind `regionLayout.js`); every refusal sentence stays in this file.
+// ⛓ APWORLD SUBSTRATE CHANGE R0 — one region's payload rebuilt by a substrate's
+//   realiser, through the same kind of door (`regionRegenerate.js`).
+import { regenerateRegionEntry, regenerateTargetFacts } from './regionRegenerate.js';
 import {
     SIDE_WORDS, exitSideVerdicts, exitSidesOfSubstrate, layoutChange, occupantAt, pairLinkFlips,
     rewriteExitFlags, rewriteExits, sideSharingOfSubstrate, slotLayout,
@@ -115,6 +118,7 @@ export const RULES_OP_KINDS = Object.freeze([
     'set-rule-tree',
     'replace-region-sidecar',
     'set-region-sidecar',
+    'regenerate-region-sidecar',
     'move-region',
     'swap-regions',
     'move-exit-side',
@@ -365,6 +369,7 @@ function dispatchRulesDocOp(doc, op) {
         case 'set-rule-tree': return opSetRuleTree(doc, op);
         case 'replace-region-sidecar': return opReplaceRegionSidecar(doc, op);
         case 'set-region-sidecar': return opSetRegionSidecar(doc, op);
+        case 'regenerate-region-sidecar': return opRegenerateRegionSidecar(doc, op);
         case 'move-region': return opMoveRegion(doc, op);
         case 'swap-regions': return opSwapRegions(doc, op);
         case 'move-exit-side': return opMoveExitSide(doc, op);
@@ -1907,6 +1912,137 @@ function opSetRegionSidecar(doc, op) {
     return ok(setPath(doc, ['preset_sidecars', p, name], entry),
         `region ${name}: sidecar entry replaced (${hasPayload
             ? `${n} payload key${n === 1 ? '' : 's'}` : 'no payload'}) — ${SIDECAR_NOT_REDERIVED}`);
+}
+
+/* ── the payload regenerated (APWORLD SUBSTRATE CHANGE R0) ────────────── */
+
+/**
+ * ⛓ What `regenerate-region-sidecar` leaves exactly as it was — the clause its
+ * description ends with. EXPORTED so the rows assert the sentence the op wrote.
+ */
+export const REGENERATE_RULES_UNCHANGED = 'access rules and location names unchanged';
+
+/** ⛓ The re-link clause's verb (`N exits re-linked`). EXPORTED for the rows. */
+export const REGENERATE_RELINKED = 're-linked';
+
+/** ⛓ The no-entry refusal's law — S1's, in this op's name. EXPORTED for the rows. */
+export const REGENERATE_NEVER_CREATES = '⛔ regenerate-region-sidecar REPLACES an entry and never '
+    + 'CREATES one — a region with no room stays roomless, because a room needs the substrate '
+    + 'that generated it.';
+
+/** ⛓ The seed refusal's reason. EXPORTED for the rows. */
+export const REGENERATE_SEED_REQUIRED = 'the op is replayable only because its seed is IN the op';
+
+const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
+
+/**
+ * ⛓ Why a registered target cannot rebuild a region here, from the entry's own
+ * slots — ⛔ no substrate is named in this source.
+ */
+function noRealiserSentence(id, facts) {
+    const head = `\`${id}\` has no per-region realiser — its registry entry declares neither `
+        + '`generateRegionCore` nor `generateZoneForSpecs`/`generateZoneForSpecsGen`';
+    if (facts.zoneCount != null && facts.extractsZoneRules) {
+        return `${head}. It is pre-built by reference — its zones come from a dataset index `
+            + `(\`zoneCount\` ${facts.zoneCount}, \`extractZoneRules(zoneIdx)\`) through the spiral, `
+            + 'not from this region\'s rules; selecting a zone is a later rung.';
+    }
+    return `${head}. Its regions are pre-built by reference (compiled from another source by `
+        + 'the pipeline), not from this region\'s rules; selecting an existing region is a later rung.';
+}
+
+/**
+ * ⛓⛓⛓ **REBUILD ONE REGION'S PAYLOAD FOR A SUBSTRATE** (APWORLD SUBSTRATE CHANGE
+ * R0; plan §2.1, ⚖ user 2026-09-23). `{player, region, substrate?, seed,
+ * regionParams?, hazardOpts?, size?, freeItems?}` — `substrate` absent is the
+ * RE-ROLL (the entry's own); `seed` is REQUIRED, because the op is replayable
+ * only when the randomness is in the op. The rest default as
+ * `regionRegenerate.js` says (the target's params hooks, top-down's free-item
+ * rule, ⚖ Q4's size rule).
+ *
+ * ⛔ **WHAT IT WRITES:** `preset_sidecars[p][region]` and NOTHING else — the
+ * access rules are the spec's, the location names ride into the payload
+ * verbatim, and a neighbour's `targetExitId` still names an exit id the spec
+ * kept. The envelope keeps `grid_cell`; `substrate`, `render_hint`,
+ * `playable_payload`, `biome?`, `grow_telemetry?` are the serialiser's.
+ *
+ * Refused by name: no region name; no sidecar entry (it never CREATES one);
+ * the region missing from `regions[p]` (the spec is its rules); a seed that is
+ * not an integer; a target that is not registered, cannot be played
+ * (`deserializeWorld`), or has no realiser; malformed optional fields; and the
+ * realiser THROWING — its message verbatim, with the items that rode free.
+ * ⚠ The panel's `_saveRegionSidecar` veto chain is not this op's (R2 wires it).
+ */
+function opRegenerateRegionSidecar(doc, op) {
+    const p = playerOf(op);
+    const name = op.region;
+    if (typeof name !== 'string' || !name.trim()) {
+        return refuse('apworld: regenerate-region-sidecar needs a region NAME, got '
+            + `${JSON.stringify(op.region)}.`);
+    }
+    const slotSidecars = doc?.preset_sidecars?.[p];
+    const current = slotSidecars?.[name];
+    if (!current || typeof current !== 'object' || Array.isArray(current)) {
+        return refuse(`apworld: player ${p} has no sidecar entry for region "${name}". `
+            + `${REGENERATE_NEVER_CREATES} This slot's sidecars are `
+            + `[${Object.keys(slotSidecars ?? {}).join(', ') || 'none'}].`);
+    }
+    if (!Object.hasOwn(regionsOf(doc, p), name)) {
+        return refuse(`apworld: region "${name}" has a sidecar entry but no region in player ${p}'s `
+            + '`regions` — a regenerated room is built FROM the region\'s exits, locations and '
+            + 'access rules, and there are none to build it from.');
+    }
+    if (!Number.isInteger(op.seed)) {
+        return refuse('apworld: regenerate-region-sidecar needs `seed` as a whole number — '
+            + `${REGENERATE_SEED_REQUIRED} — got ${op.seed === undefined ? 'none' : describeValue(op.seed)}.`);
+    }
+    const substrate = op.substrate ?? current.substrate;
+    if (typeof substrate !== 'string' || !substrate) {
+        return refuse('apworld: regenerate-region-sidecar needs a target `substrate` id, got '
+            + `${describeValue(substrate)}.`);
+    }
+    const facts = regenerateTargetFacts(substrate);
+    if (!facts.registered) {
+        return refuse(`apworld: no module registers substrate "${substrate}" here, so nothing can `
+            + 'build a payload for it. Load its library first, or pick a registered substrate.');
+    }
+    if (!facts.playable) {
+        return refuse(`apworld: substrate "${substrate}" declares no \`deserializeWorld\` / `
+            + '`serializeWorld` pair, so a payload built for it could be neither played nor written.');
+    }
+    if (!facts.kind) return refuse(`apworld: ${noRealiserSentence(substrate, facts)}`);
+    const isObj = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+    if (op.regionParams !== undefined && !isObj(op.regionParams)) {
+        return refuse(`apworld: \`regionParams\` is an object, got ${describeValue(op.regionParams)}.`);
+    }
+    if (op.hazardOpts !== undefined && op.hazardOpts !== null && !isObj(op.hazardOpts)) {
+        return refuse(`apworld: \`hazardOpts\` is an object or null, got ${describeValue(op.hazardOpts)}.`);
+    }
+    if (op.size !== undefined && !(isObj(op.size) && Number.isInteger(op.size.width)
+        && Number.isInteger(op.size.height) && op.size.width > 0 && op.size.height > 0)) {
+        return refuse('apworld: `size` is {width, height} in whole tiles, got '
+            + `${describeValue(op.size)}.`);
+    }
+    if (op.freeItems !== undefined && !(Array.isArray(op.freeItems)
+        && op.freeItems.every((n) => typeof n === 'string'))) {
+        return refuse(`apworld: \`freeItems\` is a list of item names, got ${describeValue(op.freeItems)}.`);
+    }
+    const res = regenerateRegionEntry({
+        doc, player: p, region: name, substrate, seed: op.seed,
+        regionParams: op.regionParams, hazardOpts: op.hazardOpts, size: op.size, freeItems: op.freeItems,
+    });
+    if (!res.ok) {
+        return refuse(`apworld: the \`${substrate}\` realiser refused region "${name}": ${res.threw} `
+            + `— with ${plural(res.freeItems.length, 'item')} riding free`
+            + `${res.freeItems.length ? ` [${res.freeItems.join(', ')}]` : ''}.`);
+    }
+    const k = res.spec.exitSpecs.length;
+    const l = res.spec.locationSpecs.length;
+    return ok(setPath(doc, ['preset_sidecars', p, name], res.entry),
+        `region ${name}: payload regenerated as \`${substrate}\` (seed ${op.seed}; `
+        + `${plural(k, 'exit')}, ${plural(l, 'location')} carried; `
+        + `${plural(res.freeItems.length, 'item')} rode free; `
+        + `${plural(res.exitsRelinked, 'exit')} ${REGENERATE_RELINKED}) — ${REGENERATE_RULES_UNCHANGED}`);
 }
 
 /* ── the map moves (PRESET SIDECARS M2) ───────────────────────────────── */

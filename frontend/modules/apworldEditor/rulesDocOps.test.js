@@ -22,13 +22,20 @@ import { validateRules } from './rulesUtils.js';
 import {
     ADDITIVE_TYPE, EXIT_FIELDS, ITEM_FIELDS, ITEM_GROUPS_KEY, META_FIELDS,
     PLACEMENT_ISSUE_REASONS, PROGRESSION_ISSUE_REASONS, PROGRESSION_KINDS,
-    PROGRESSION_MAPPING_KEY, REFUSAL_NAME_LIMIT, RULES_OP_KINDS, SET_KEY_SCOPES,
+    PROGRESSION_MAPPING_KEY, REFUSAL_NAME_LIMIT, REGENERATE_NEVER_CREATES, REGENERATE_RELINKED,
+    REGENERATE_RULES_UNCHANGED, REGENERATE_SEED_REQUIRED, RULES_OP_KINDS, SET_KEY_SCOPES,
     SIDECAR_NOT_REDERIVED, applyRulesDocOp,
     canonicalPlacementIssues, canonicalPlacementIssuesByPlayer, deleteItemOps, deleteRegionOps,
     describePlacementIssue, describeProgressionIssue, exitsPointingAt, itemGroupRegistry,
     itemsCarryingGroup, locationsOfPlayer, nextName, progressionKindOf, progressionMappingIssues,
     progressionMappings, progressionMemberNames, unlistedItemGroups,
 } from './rulesDocOps.js';
+// ⛓ APWORLD SUBSTRATE CHANGE R0 — the ONE substrate this file registers: the
+//   fixture's `Hall` is a maze room, and `regenerate-region-sidecar` builds a
+//   real one through the realiser (its sample below, and its rows at the end).
+//   Every other op here stays substrate-blind; the corpus rows are
+//   `regionRegenerate.test.js`'.
+import '../mazeRoom/mazeRoomLibrary.js';
 
 const P = '1';
 
@@ -157,6 +164,7 @@ describe('the contract shape', () => {
                 op: 'set-region-sidecar', region: 'Hall',
                 entry: { substrate: 'maze', playable_payload: { width: 4, height: 4, tiles: 'bbbb' } },
             },
+            'regenerate-region-sidecar': { op: 'regenerate-region-sidecar', region: 'Hall', seed: 1 },
             'move-region': { op: 'move-region', region: 'Hall', to: { gx: 1, gy: 0 } },
             'swap-regions': { op: 'swap-regions', a: 'Hall', b: 'Vault' },
             'move-exit-side': { op: 'move-exit-side', region: 'Vault', exitId: 'e1', side: 'N' },
@@ -1122,6 +1130,92 @@ describe('set-region-sidecar — the raw entry save (PRESET SIDECARS S1)', () =>
     });
 });
 
+
+describe('regenerate-region-sidecar — one region\'s payload rebuilt (APWORLD SUBSTRATE CHANGE R0)', () => {
+    const regen = (extra = {}) => ({ op: 'regenerate-region-sidecar', region: 'Hall', seed: 1, ...extra });
+
+    /** Every top-level / slot / region path at which two documents differ, to the entry. */
+    const entryDiff = (a, b) => {
+        const out = [];
+        for (const k of new Set([...Object.keys(a), ...Object.keys(b)])) {
+            if (k !== 'preset_sidecars') {
+                if (bytes(a[k]) !== bytes(b[k])) out.push(`$.${k}`);
+                continue;
+            }
+            for (const slot of new Set([...Object.keys(a[k] ?? {}), ...Object.keys(b[k] ?? {})])) {
+                for (const r of new Set([...Object.keys(a[k]?.[slot] ?? {}), ...Object.keys(b[k]?.[slot] ?? {})])) {
+                    if (bytes(a[k]?.[slot]?.[r]) !== bytes(b[k]?.[slot]?.[r])) out.push(`$.${k}.${slot}.${r}`);
+                }
+            }
+        }
+        return out;
+    };
+
+    it('⛓⛓ writes the ENTRY and nothing else — the deep diff is exactly its path (trap 1306)', () => {
+        const doc = fixture();
+        const res = applied(doc, regen({ substrate: 'maze' }));
+        expect(entryDiff(doc, res.doc)).toEqual([`$.preset_sidecars.${P}.Hall`]);
+        expect(bytes(res.doc.regions), 'the op moved the rules').toBe(bytes(doc.regions));
+        expect(res.doc.preset_sidecars[P].Hall.grid_cell, 'grid_cell was not KEPT')
+            .toEqual(doc.preset_sidecars[P].Hall.grid_cell);
+        expect(Object.keys(res.doc.preset_sidecars[P].Hall.playable_payload).length)
+            .toBeGreaterThan(Object.keys(doc.preset_sidecars[P].Hall.playable_payload).length);
+    });
+
+    it('⛓ its description names the substrate, the seed, the counts, and what it left alone', () => {
+        const doc = fixture();
+        const res = applied(doc, regen({ seed: 7 }));
+        const nx = doc.regions[P].Hall.exits.length;
+        const nl = doc.regions[P].Hall.locations.length;
+        const s = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+        expect(res.description).toContain('region Hall: payload regenerated as `maze` (seed 7; ');
+        expect(res.description).toContain(`${s(nx, 'exit')}, ${s(nl, 'location')} carried`);
+        expect(res.description).toContain(REGENERATE_RELINKED);
+        expect(res.description.endsWith(`— ${REGENERATE_RULES_UNCHANGED}`)).toBe(true);
+    });
+
+    it('⛓ the same op twice is the same entry, byte for byte; another seed is not', () => {
+        const doc = fixture();
+        const a = applied(doc, regen()).doc.preset_sidecars[P].Hall;
+        const b = applied(doc, regen()).doc.preset_sidecars[P].Hall;
+        const c = applied(doc, regen({ seed: 2 })).doc.preset_sidecars[P].Hall;
+        expect(bytes(a)).toBe(bytes(b));
+        expect(bytes(c)).not.toBe(bytes(a));
+    });
+
+    it('⛔ refuses a missing or fractional seed — the op is replayable only with its seed IN it', () => {
+        for (const seed of [undefined, 1.5, '1']) {
+            const res = apply(fixture(), regen({ seed }));
+            expect(res.ok, `seed ${JSON.stringify(seed)}`).toBe(false);
+            expect(res.error).toContain(REGENERATE_SEED_REQUIRED);
+        }
+    });
+
+    it('⛔ REPLACES, never CREATES — a region with no entry is refused, naming the slot\'s entries', () => {
+        const res = apply(fixture(), { op: 'regenerate-region-sidecar', region: 'Vault', seed: 1 });
+        expect(res.ok).toBe(false);
+        expect(res.error).toContain(REGENERATE_NEVER_CREATES);
+        expect(res.error).toContain('[Hall]');
+    });
+
+    it('⛔ refuses an entry whose region is not in `regions[p]` — the spec is the region\'s rules', () => {
+        const doc = fixture();
+        doc.preset_sidecars[P].Ghost = { substrate: 'maze', playable_payload: {} };
+        const res = apply(doc, { op: 'regenerate-region-sidecar', region: 'Ghost', seed: 1 });
+        expect(res.ok).toBe(false);
+        expect(res.error).toContain('"Ghost" has a sidecar entry but no region');
+    });
+
+    it('⛔ refuses a blank region, an unregistered substrate, and malformed optional fields', () => {
+        expect(apply(fixture(), regen({ region: ' ' })).error).toContain('needs a region NAME');
+        expect(apply(fixture(), regen({ substrate: 'no-such-substrate' })).error)
+            .toContain('no module registers substrate "no-such-substrate"');
+        expect(apply(fixture(), regen({ regionParams: [] })).error).toContain('`regionParams` is an object');
+        expect(apply(fixture(), regen({ hazardOpts: 3 })).error).toContain('`hazardOpts` is an object or null');
+        expect(apply(fixture(), regen({ size: { width: 0, height: 4 } })).error).toContain('`size` is {width, height}');
+        expect(apply(fixture(), regen({ freeItems: [1] })).error).toContain('`freeItems` is a list of item names');
+    });
+});
 
 describe('replace-document — the raw view\'s one op (H2)', () => {
     it('⛓ replaces the WHOLE record and says how many keys arrived', () => {
