@@ -712,7 +712,12 @@ and every access rule are untouched (the op writes `preset_sidecars[p][region]`
 and nothing else), and a neighbour's `targetExitId` still names an exit this
 region has. The envelope keeps `grid_cell`; exit sides come from the old
 payload, and the exit back to the region's BFS parent is pinned to the entrance,
-whose tile is the parent's exit tile mirrored across the wall.
+whose tile is the parent's exit tile mirrored across the wall. A target whose
+`exitSides` declaration KEYS a payload fact by side (`sideMayHoldAnotherExit` →
+`keyed`: the zone family's `params.sidePortals`) holds one exit per side, so on a
+collision the side stays with the parent pin, else the link adjacent on that
+side, else the first, and the realiser assigns the others a free side (the
+description names them).
 
 **What it re-links.** A fresh payload's exits carry no counterpart. Before
 serialising, each exit's `targetExitId` is set from the TARGET region's payload
@@ -734,13 +739,21 @@ law); a region missing from `regions[p]`; a seed that is not a whole number; a
 target that is not registered, cannot be played (`deserializeWorld` /
 `serializeWorld`), or has no per-region realiser (the sentence is built from the
 entry's `zoneCount` / `extractZoneRules`: a zone-index substrate is pre-built by
-reference through the spiral); malformed optional fields; and the realiser
+reference through the spiral); a region with more exits than sides for a target
+that holds one exit per side; malformed optional fields; and the realiser
 throwing — its message verbatim, with the items that rode free. ⚠ A bounce
 region with two plain exits in `column` mode needs the free arrows; the default
 `braid` mode hosts surplus exits natively.
 
+⛔ **The op is synchronous, and one zone realise can run for minutes.** Measured
+at R0: the APCalc worlds' start region `C` (`procgen_topdown/AP_4`–`AP_6`; its one
+location is gated on a `HasAll` of every `Checked N` item) did not return from a
+`bounce` or `runner` realise within the control's budget. A caller that runs the
+op on the page's main thread for a zone target needs a budget of its own.
+
 The corpus control is `node scripts/procgen/check-regenerate-region-control.mjs`
-(never writes; `--targets=all`, `--limit=<n per slot>`, `--json`): at R0, every
+(never writes; each op in a worker with `--op-timeout=<s>`; `--targets=all`,
+`--limit=<n per slot>`, `--json`): at R0, every
 tracked entry regenerated as `maze` and as `text_adventure` came out clean except
 the `jta` dataset hosts, whose strandings the op names (the numbers are in the
 R0 record, plan §7).
