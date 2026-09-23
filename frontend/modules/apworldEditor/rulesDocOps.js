@@ -1937,6 +1937,10 @@ export const REGENERATE_NEVER_CREATES = '⛔ regenerate-region-sidecar REPLACES 
  */
 export const REGENERATE_STRANDED = 'now point at a value no entry in the slot carries';
 
+/** ⛓ The clause a regeneration adds when a one-exit-per-side target moved
+ *  colliding exits off their old side. EXPORTED for the rows. */
+export const REGENERATE_SIDES_REASSIGNED = 'one exit per side — the realiser assigned';
+
 /** ⛓ The seed refusal's reason. EXPORTED for the rows. */
 export const REGENERATE_SEED_REQUIRED = 'the op is replayable only because its seed is IN the op';
 
@@ -1981,7 +1985,8 @@ function noRealiserSentence(id, facts) {
  * Refused by name: no region name; no sidecar entry (it never CREATES one);
  * the region missing from `regions[p]` (the spec is its rules); a seed that is
  * not an integer; a target that is not registered, cannot be played
- * (`deserializeWorld`), or has no realiser; malformed optional fields; and the
+ * (`deserializeWorld`), or has no realiser; a region with more exits than sides
+ * for a target that holds one exit per side; malformed optional fields; and the
  * realiser THROWING — its message verbatim, with the items that rode free.
  * ⚠ The panel's `_saveRegionSidecar` veto chain is not this op's (R2 wires it).
  */
@@ -2023,6 +2028,12 @@ function opRegenerateRegionSidecar(doc, op) {
             + '`serializeWorld` pair, so a payload built for it could be neither played nor written.');
     }
     if (!facts.kind) return refuse(`apworld: ${noRealiserSentence(substrate, facts)}`);
+    const nExits = (regionsOf(doc, p)[name].exits ?? []).length;
+    if (facts.sideKeys && nExits > facts.sides) {
+        return refuse(`apworld: region "${name}" has ${plural(nExits, 'exit')}, and \`${substrate}\` holds ONE exit `
+            + `per side (its \`exitSides\` keys ${facts.sideKeys.map((k) => `\`${k}\``).join(', ')} by side) — `
+            + `${facts.sides} at most. Pick a target whose sides can share, or remove exits first.`);
+    }
     const isObj = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
     if (op.regionParams !== undefined && !isObj(op.regionParams)) {
         return refuse(`apworld: \`regionParams\` is an object, got ${describeValue(op.regionParams)}.`);
@@ -2059,7 +2070,9 @@ function opRegenerateRegionSidecar(doc, op) {
         `region ${name}: payload regenerated as \`${substrate}\` (seed ${op.seed}; `
         + `${plural(k, 'exit')}, ${plural(l, 'location')} carried; `
         + `${plural(res.freeItems.length, 'item')} rode free; `
-        + `${plural(res.exitsRelinked, 'exit')} ${REGENERATE_RELINKED}) — ${REGENERATE_RULES_UNCHANGED}`
+        + `${plural(res.exitsRelinked, 'exit')} ${REGENERATE_RELINKED}`
+        + `${res.spec.sidesReassigned.length ? `; ${REGENERATE_SIDES_REASSIGNED} `
+            + `${res.spec.sidesReassigned.join(', ')} a free side` : ''}) — ${REGENERATE_RULES_UNCHANGED}`
         + stranded);
 }
 

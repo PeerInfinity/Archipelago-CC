@@ -45,13 +45,14 @@ import {
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { mergeSubstrateItemLib } from '../procgenPipeline/sphereConfigHooks.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { OPPOSITE_SIDE, mirrorTileAcrossSide } from '../shared/procgen/spatialPrimitives.js';
+import { OPPOSITE_SIDE, SIDES, mirrorTileAcrossSide } from '../shared/procgen/spatialPrimitives.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { createRng } from '../shared/rng.js';
 import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
 import { apExitNameCandidates } from '../procgenCore/apLocationNaming.js';
 import { regionsOf, startRegionsOf } from '../procgenCore/rulesGraph.js';
 import { sidecarFieldsOf } from '../procgenCore/sidecarFields.js';
+import { SIDE_SHARING, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
 import { SIDE_WORDS, slotLayout } from './regionLayout.js';
 
 /**
@@ -94,7 +95,20 @@ export function regenerateTargetFacts(substrate) {
         kind: regionRealiserKind(reg),
         zoneCount: Number.isInteger(reg?.zoneCount) ? reg.zoneCount : null,
         extractsZoneRules: typeof reg?.extractZoneRules === 'function',
+        sideKeys: oneExitPerSide(reg) ? sideMayHoldAnotherExit(reg).keys : null,
+        sides: SIDES.length,
     };
+}
+
+/**
+ * ⛓ Does the target hold ONE exit per side? — its `exitSides` declaration KEYS
+ * some payload fact by side (`sideMayHoldAnotherExit` → `keyed`: the zone
+ * family's `params.sidePortals`). A tile room (no declaration) and a side-agnostic
+ * one hold several; measured by the R0 corpus control, the keyed ones refuse a
+ * duplicate side outright.
+ */
+export function oneExitPerSide(entry) {
+    return !!entry && sideMayHoldAnotherExit(entry).reason === SIDE_SHARING.KEYED;
 }
 
 /** ⛓ The three steps of the region-size rule, in ORDER (⚖ Q4 B-then-A). */
@@ -216,10 +230,13 @@ export function bfsParents(doc, player) {
  *     exit(s) back to the parent pinned to the entrance `{side, tile}`.
  *   · locations — `{id: name, item, access_rule}`: the fill rides as `item`.
  *
+ *   · one exit per side when the TARGET keys a payload fact by side
+ *     (`oneExitPerSide`): the colliding exits lose their side (`sidesReassigned`).
+ *
  * @returns {{entrances: object[], exitSpecs: object[], locationSpecs: object[],
- *            parent: {name, exit}|null, size: {width, height}}}
+ *            parent: {name, exit}|null, size: {width, height}, sidesReassigned: string[]}}
  */
-export function buildDocumentRegionSpec(doc, player, region, { size } = {}) {
+export function buildDocumentRegionSpec(doc, player, region, { size, substrate } = {}) {
     const sidecars = doc?.preset_sidecars?.[player] ?? {};
     const source = regionsOf(doc, player)[region] ?? {};
     const old = sidecars[region];
@@ -257,13 +274,36 @@ export function buildDocumentRegionSpec(doc, player, region, { size } = {}) {
         };
     });
 
+    // ⛓ One exit per side for a KEYED target (`oneExitPerSide`): on a collision
+    //   the side stays with the parent pin, else the link adjacent on that side
+    //   (the slot's cells, M2's law), else the first; the others lose it and
+    //   the realiser assigns them clockwise over the free sides, exactly as it
+    //   does a top-down teleporter exit.
+    const sidesReassigned = [];
+    if (oneExitPerSide(substrateRegistry.get(substrate))) {
+        const layout = slotLayout(doc, player);
+        const here = layout.cells.get(region);
+        const adjacent = (e) => !!(here && layout.grid && layout.cells.get(e.target_region)
+            && linkIsAdjacentOnSide(layout.grid, here, e.side, layout.cells.get(e.target_region)));
+        for (const side of SIDES) {
+            const on = exitSpecs.filter((e) => e.side === side);
+            if (on.length < 2) continue;
+            const keep = on.find((e) => e.tile) ?? on.find(adjacent) ?? on[0];
+            for (const e of on) {
+                if (e === keep) continue;
+                delete e.side;
+                sidesReassigned.push(e.exit_id);
+            }
+        }
+    }
+
     const locationSpecs = (source.locations ?? []).map((l) => ({
         id: l.name,
         item: l.item?.name ?? null,
         ...(l.access_rule ? { access_rule: l.access_rule } : {}),
     })).filter((l) => typeof l.id === 'string' && l.id);
 
-    return { entrances, exitSpecs, locationSpecs, parent, size: resolvedSize };
+    return { entrances, exitSpecs, locationSpecs, parent, size: resolvedSize, sidesReassigned };
 }
 
 /**
@@ -370,7 +410,7 @@ export function regenerateRegionEntry({
     const target = substrate ?? old.substrate;
     const reg = substrateRegistry.get(target);
     const free = Array.isArray(freeItems) ? [...freeItems] : freeItemsFor(doc, player, reg);
-    const spec = buildDocumentRegionSpec(doc, player, region, { size });
+    const spec = buildDocumentRegionSpec(doc, player, region, { size, substrate: target });
     const params = {
         ...REGENERATE_BASE_REGION_PARAMS,
         ...(regionParams && typeof regionParams === 'object' ? regionParams : defaultRegionParamsFor(reg)),
