@@ -177,9 +177,12 @@ export function getActivePanelInstance() {
  * (`isFocusLocked`); the glue still takes the region, only the tab switch is
  * suppressed.
  */
-export function activateOnLoadRegion(bus, isFocusLocked) {
+export function activateOnLoadRegion(bus, isFocusLocked, focusGame) {
   if (isFocusLocked?.()) return false;
   bus?.publish?.('ui:activatePanel', { panelId: moduleInfo.componentType });
+  // ⛓ T2b U2a — and the KEYBOARD with it. A tab that was already in front
+  // gets no 'show', so the focus is asked for here too.
+  focusGame?.('a region load activated the panel');
   return true;
 }
 
@@ -204,7 +207,8 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   // tab switch that resumes the game's page.
   const activationBus = getModuleEventBus();
   const onLoadRegionActivate = () => activateOnLoadRegion(activationBus,
-    initializationApi.getModuleFunction?.('loops', 'isFocusLocked'));
+    initializationApi.getModuleFunction?.('loops', 'isFocusLocked'),
+    (why) => activePanelInstance?.focusGame?.(why));
   const offActivate = activationBus.subscribe(FLASH_SEEDLING_LOAD_REGION_EVENT, onLoadRegionActivate);
 
   log('info', '[FlashPanel Module] Initialization complete.');

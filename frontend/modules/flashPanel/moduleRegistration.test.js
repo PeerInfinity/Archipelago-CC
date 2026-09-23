@@ -17,7 +17,7 @@
  */
 import { describe, expect, it } from 'vitest';
 
-import { initialize, register } from './index.js';
+import { initialize, register, setActivePanelInstance } from './index.js';
 import { AP_ITEM_FOUND_EVENT } from './seedlingRegionGlue.js';
 import { FLASH_SEEDLING_LOAD_REGION_EVENT } from './flashSeedlingLibrary.js';
 
@@ -124,6 +124,26 @@ describe('the flashPanel module activates itself on a region load (U1)', () => {
         stop();
         expect(published.filter((p) => p.ev === 'ui:activatePanel'))
             .toEqual([{ ev: 'ui:activatePanel', data: { panelId: 'flashPanel' } }]);
+    });
+
+    it('…and gives the GAME the keyboard with it (U2a): the load asks the panel to focus the game', () => {
+        const asked = [];
+        setActivePanelInstance({ focusGame: (why) => asked.push(why) });
+        const { fire, stop } = boot();
+        fire(FLASH_SEEDLING_LOAD_REGION_EVENT, { region_id: 'r', world: null });
+        stop();
+        setActivePanelInstance(null);
+        expect(asked).toEqual(['a region load activated the panel']);
+    });
+
+    it('…neither the tab nor the keyboard under a focus lock', () => {
+        const asked = [];
+        setActivePanelInstance({ focusGame: (why) => asked.push(why) });
+        const { fire, stop } = boot({ locked: true });
+        fire(FLASH_SEEDLING_LOAD_REGION_EVENT, { region_id: 'r', world: null });
+        stop();
+        setActivePanelInstance(null);
+        expect(asked).toEqual([]);
     });
 
     it('…and does NOT when loops pins another panel (isFocusLocked)', () => {
