@@ -162,6 +162,21 @@ export function buildBounceRegionParams({ params, mode = 'sphere' } = {}) {
     return out;
 }
 
+// ── The knobs a payload records (⚖ Q2 C-then-A) ────────────────────
+/**
+ * What an existing bounce payload says about how it was generated, as bag
+ * keys — so a per-region generation form (procgenCore/regionGenerationForm.js
+ * `bagFromPayload`) opens on the region's own knobs instead of the defaults.
+ * Only the physics profile is recorded: `params.physics.profile`, and an
+ * ABSENT stamp means 'experimental' (that profile stamps nothing —
+ * physicsStampFor; bounceLibraryEntry.js's capture reads it the same way).
+ * The braid width / jitter / decor chances leave no readable trace (the
+ * level's size is not the braid width).
+ */
+export function bounceProcgenParamsFromPayload(payload) {
+    return { bouncePhysicsProfile: payload?.params?.physics?.profile ?? 'experimental' };
+}
+
 // ── Panel parameter controls ────────────────────────────────────────
 /**
  * Render the bounce parameter subsection for the Procgen Pipeline

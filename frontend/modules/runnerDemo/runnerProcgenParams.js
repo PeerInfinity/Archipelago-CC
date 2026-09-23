@@ -96,6 +96,18 @@ export function buildRunnerRegionParams({ params } = {}) {
     };
 }
 
+// ── The knobs a payload records (⚖ Q2 C-then-A) ────────────────────
+/**
+ * What an existing runner payload says about how it was generated, as bag
+ * keys (procgenCore/regionGenerationForm.js `bagFromPayload`). Only the
+ * physics profile is recorded: runner ALWAYS stamps `params.physics =
+ * { profile, constants }`; a payload without it reads as DEFAULT_PROFILE_ID,
+ * as runnerLibraryEntry.js's capture does.
+ */
+export function runnerProcgenParamsFromPayload(payload) {
+    return { runnerPhysicsProfile: payload?.params?.physics?.profile ?? DEFAULT_PROFILE_ID };
+}
+
 // ── Panel parameter controls ────────────────────────────────────────
 /**
  * Render the runner parameter subsection for the Procgen Pipeline

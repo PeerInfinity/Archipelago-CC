@@ -42,7 +42,7 @@ import { springGap } from './fixtures/springGap.js';
 import { fork } from './fixtures/fork.js';
 import {
     DEFAULT_BOUNCE_PROCGEN_PARAMS, prepareBounceSphereGrowth,
-    buildBounceRegionParams, renderBounceProcgenParams,
+    buildBounceRegionParams, renderBounceProcgenParams, bounceProcgenParamsFromPayload,
 } from './bounceProcgenParams.js';
 import {
     captureBounceLibraryEntry,
@@ -1083,6 +1083,9 @@ export function createBounceSubstrateEntry({
         prepareSphereGrowth: prepareBounceSphereGrowth,
         buildRegionParams: buildBounceRegionParams,
         renderProcgenParams: renderBounceProcgenParams,
+        // What an existing payload records of those params (the per-region
+        // generation form opens on it — apworld substrate R1).
+        procgenParamsFromPayload: bounceProcgenParamsFromPayload,
     });
 }
 
