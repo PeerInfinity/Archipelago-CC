@@ -11,7 +11,9 @@
  *
  * ⛓ The panel opens in its MATRIX mode; the Detail row presses `Detail` first,
  * the Matrix row presses `Matrix` first — each is green whatever mode the row
- * before it left the panel in.
+ * before it left the panel in. The Columns row ends (pass or fail) by pressing
+ * `All` and `Registry order` and closing the section, so the row after it
+ * inherits the default columns.
  */
 
 import { registerTest } from '../testRegistry.js';
@@ -20,7 +22,9 @@ import { REGISTRY } from '../../procgenDocs/generated/registry.js';
 import {
     describeRegistry, GLYPH, matrixOf,
 } from '../../substrateRegistryPanel/substrateRegistryPanelLibrary.js';
-import { MODES } from '../../substrateRegistryPanel/substrateRegistryPanelUI.js';
+import {
+    COLUMN_ACTIONS, columnsSummary, MODES,
+} from '../../substrateRegistryPanel/substrateRegistryPanelUI.js';
 
 /** Activate the panel and wait for its bar; null when it never appeared. */
 async function mountPanel(testController) {
@@ -121,6 +125,82 @@ registerTest({
                + 'is `substrateRegistry.getAll()`\'s ids in order, the row count is what `matrixOf` makes '
                + 'of the live registry (fields plus feature rows), and every cell is ✓, ✗ or an integer.',
     testFunction: substrateRegistryPanelMatrixHasAColumnPerEntry,
+    category: 'substrateRegistry',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+/** The matrix header's ids, left to right. */
+const headerIds = (root) => [...root.querySelectorAll('table.srp-matrix thead th.srp-matrix-col')]
+    .map((th) => th.textContent);
+
+async function substrateRegistryPanelColumnsCanBeHiddenAndReordered(testController) {
+    const root = await mountPanel(testController);
+    if (!root || !pressMode(testController, root, MODES.matrix)) return testController.getOverallResult();
+    root.querySelector('.srp-refresh').click();
+
+    const controls = root.querySelector('details.srp-controls');
+    testController.reportCondition('the matrix has a Columns section', controls !== null);
+    if (!controls) return testController.getOverallResult();
+    const action = (name, scope = controls) => scope.querySelector(`button[data-action="${name}"]`);
+    try {
+        testController.reportCondition('the Columns section is closed by default', !controls.open);
+        controls.open = true;
+
+        const live = substrateRegistry.getAll().map((e) => e.id);
+        testController.log(`live registry: ${live.length} entries — ${live.join(', ')}`);
+        testController.reportCondition('the live registry has at least three entries', live.length >= 3);
+        if (live.length < 3) return testController.getOverallResult();
+        testController.assertEqual('before: header == live ids, in order', live.join(', '),
+            headerIds(root).join(', '));
+        testController.assertEqual('summary counts every column shown', columnsSummary(live.length, live.length),
+            controls.querySelector('summary')?.textContent);
+        const lineIds = [...controls.querySelectorAll('.srp-col-line')].map((l) => l.dataset.substrateId);
+        testController.assertEqual('one control line per live id, in order', live.join(', '), lineIds.join(', '));
+
+        // Untick the first live id.
+        const [first, second, third] = live;
+        const tick = controls.querySelector(`input[type="checkbox"][aria-label="${first}"]`);
+        testController.reportCondition(`a checkbox labelled ${first}`, tick !== null);
+        tick?.click();
+        const afterHide = headerIds(root);
+        testController.assertEqual('after unticking the first: n−1 header cells', live.length - 1, afterHide.length);
+        testController.reportCondition(`the header lacks ${first}`, !afterHide.includes(first));
+        testController.assertEqual('after unticking the first: summary', columnsSummary(live.length - 1, live.length),
+            controls.querySelector('summary')?.textContent);
+        testController.reportCondition('the section stays open across the redraw', controls.open);
+        const rows = root.querySelectorAll('table.srp-matrix tbody tr.srp-matrix-row').length;
+        testController.assertEqual('cells == rows × (n−1)', rows * (live.length - 1),
+            root.querySelectorAll('table.srp-matrix td.srp-cell').length);
+
+        // ▼ on the first line still shown: it swaps with the next.
+        const line = controls.querySelector(`.srp-col-line[data-substrate-id="${second}"]`);
+        const down = line ? action(COLUMN_ACTIONS.down, line) : null;
+        testController.reportCondition(`${second}'s line has an enabled ▼`, down !== null && !down.disabled);
+        down?.click();
+        testController.assertEqual('after ▼: the header\'s first two ids swap',
+            [third, second].join(', '), headerIds(root).slice(0, 2).join(', '));
+        const firstLine = controls.querySelector('.srp-col-line');
+        testController.reportCondition('the first line\'s ▲ is disabled',
+            action(COLUMN_ACTIONS.up, firstLine)?.disabled === true);
+    } finally {
+        action(COLUMN_ACTIONS.all)?.click();
+        action(COLUMN_ACTIONS.registryOrder)?.click();
+        controls.open = false;
+    }
+    const live = substrateRegistry.getAll().map((e) => e.id);
+    testController.assertEqual('after All + Registry order: header == live ids, in order', live.join(', '),
+        headerIds(root).join(', '));
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'substrate-registry-panel-columns-can-be-hidden-and-reordered',
+    name: 'Substrate Registry panel: the matrix columns can be hidden and reordered',
+    description: 'In the Substrate Registry panel\'s Matrix mode, opens the Columns section, unticks the '
+               + 'first live id (the header loses it), presses ▼ on the next line (the header\'s first two '
+               + 'ids swap), then presses All and Registry order and asserts the header is '
+               + '`substrateRegistry.getAll()`\'s ids in order again. Ids read live.',
+    testFunction: substrateRegistryPanelColumnsCanBeHiddenAndReordered,
     category: 'substrateRegistry',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

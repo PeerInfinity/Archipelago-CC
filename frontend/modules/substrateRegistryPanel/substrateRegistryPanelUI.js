@@ -4,7 +4,8 @@
  * checked-in snapshot, in one of two MODES:
  * - **Matrix** (the default): one table, fields and their feature rows down,
  *   entries across, each cell ✓ / ✗ / a number (`matrixOf`); groups collapse,
- *   a filter narrows the rows by name.
+ *   a filter narrows the rows by name, and a collapsible Columns section
+ *   hides and reorders the entry columns (`applyColumnControls`).
  * - **Detail**: a drift block first, then one `<details>` per entry
  *   (identity, every field grouped by the snapshot's groups with its FULL
  *   value, and the two callable answers only a running app can give).
@@ -21,7 +22,7 @@
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { REGISTRY } from '../procgenDocs/generated/registry.js';
 import {
-    describeRegistry, driftIsEmpty, fullValueText, GLYPH, matrixOf, ROW_KINDS,
+    applyColumnControls, describeRegistry, driftIsEmpty, fullValueText, GLYPH, matrixOf, reorderIds, ROW_KINDS,
 } from './substrateRegistryPanelLibrary.js';
 
 /** ⛓ Where the snapshot's own full reading lives, relative to `frontend/`. */
@@ -38,6 +39,22 @@ const MODE_LABELS = Object.freeze({ [MODES.detail]: 'Detail', [MODES.matrix]: 'M
 /** ⛓ The Matrix mode's one-line key. */
 export const LEGEND = `${GLYPH.yes} carried / true · ${GLYPH.no} absent / false · a number: its value, `
     + 'or a list\'s count · an indented row: one element of the list above · hover a cell for the full value';
+
+/** ⛓ The Columns section's buttons; each carries its key as `data-action`. */
+export const COLUMN_ACTIONS = Object.freeze({
+    all: 'all', none: 'none', registryOrder: 'registry-order', up: 'up', down: 'down',
+});
+
+const COLUMN_ACTION_LABELS = Object.freeze({
+    [COLUMN_ACTIONS.all]: 'All',
+    [COLUMN_ACTIONS.none]: 'None',
+    [COLUMN_ACTIONS.registryOrder]: 'Registry order',
+    [COLUMN_ACTIONS.up]: '▲',
+    [COLUMN_ACTIONS.down]: '▼',
+});
+
+/** ⛓ The Columns section's summary line. */
+export const columnsSummary = (shown, total) => `Columns · ${shown} of ${total} shown`;
 
 const el = (tag, cls, text) => {
     const n = document.createElement(tag);
@@ -87,6 +104,10 @@ export class SubstrateRegistryPanelUI {
         /** Group titles the reader collapsed — kept across Refresh. */
         this.collapsed = new Set();
         this.filterText = '';
+        /** Entry ids the reader unticked, and the reader's column order (empty
+         *  = registry order) — both kept across Refresh, not across reloads. */
+        this.hidden = new Set();
+        this.order = [];
         this.modeButtons = Object.values(MODES).map((m) => {
             const b = el('button', 'srp-mode', MODE_LABELS[m]);
             b.type = 'button';
@@ -107,9 +128,15 @@ export class SubstrateRegistryPanelUI {
         link.rel = 'noopener';
         bar.append(this.headerEl, ...this.modeButtons, this.filterInput, this.refreshButton, link);
         this.legendEl = el('div', 'srp-legend', LEGEND);
+        /* One element for the panel's life, re-filled by each render, so the
+         * reader's open/closed choice survives every control press. */
+        this.controlsEl = el('details', 'srp-controls');
+        this.controlsSummaryEl = el('summary');
+        this.controlsListEl = el('div', 'srp-controls-list');
+        this.controlsEl.append(this.controlsSummaryEl, this.controlsListEl);
 
         this.bodyEl = el('div', 'srp-body');
-        this.rootElement.append(bar, this.legendEl, this.bodyEl);
+        this.rootElement.append(bar, this.legendEl, this.controlsEl, this.bodyEl);
     }
 
     getRootElement() { return this.rootElement; }
@@ -126,14 +153,19 @@ export class SubstrateRegistryPanelUI {
         for (const b of this.modeButtons) b.setAttribute('aria-pressed', String(b.dataset.mode === this.mode));
         this.filterInput.hidden = !matrix;
         this.legendEl.hidden = !matrix;
+        this.controlsEl.hidden = !matrix;
         this.matrixGroups = [];
-        if (matrix) this.bodyEl.replaceChildren(this._matrix(vm));
+        if (matrix) {
+            this._controls(vm);
+            this.bodyEl.replaceChildren(this._matrix(vm));
+        }
         else this.bodyEl.replaceChildren(this._drift(vm), ...vm.columns.map((c) => this._entry(vm, c)));
     }
 
     /** One table: entries across, each group's field and feature rows down. */
     _matrix(vm) {
-        const m = matrixOf(vm);
+        // Once, before the header and the rows: a hidden column is never drawn.
+        const m = applyColumnControls(matrixOf(vm), { hidden: this.hidden, order: this.order });
         const t = el('table', 'srp-matrix');
         const thead = el('thead');
         const hr = el('tr');
@@ -176,6 +208,56 @@ export class SubstrateRegistryPanelUI {
         t.appendChild(tbody);
         this._applyMatrixState();
         return t;
+    }
+
+    /** The Columns section: one line per live entry in the CURRENT display
+     *  order — tick, id, label, ▲ ▼ — then All · None · Registry order. */
+    _controls(vm) {
+        const ids = vm.columns.map((c) => c.id);
+        const shown = reorderIds(ids, this.order);
+        this.controlsSummaryEl.textContent = columnsSummary(shown.filter((id) => !this.hidden.has(id)).length,
+            ids.length);
+        const button = (action, onClick, disabled = false) => {
+            const b = el('button', 'srp-col-action', COLUMN_ACTION_LABELS[action]);
+            b.type = 'button';
+            b.dataset.action = action;
+            b.disabled = disabled;
+            b.addEventListener('click', () => { onClick(); this.render(); });
+            return b;
+        };
+        const lines = shown.map((id, i) => {
+            const col = vm.columns.find((c) => c.id === id);
+            const line = el('div', 'srp-col-line');
+            line.dataset.substrateId = id;
+            const tick = el('input');
+            tick.type = 'checkbox';
+            tick.checked = !this.hidden.has(id);
+            tick.setAttribute('aria-label', id);
+            tick.addEventListener('change', () => {
+                if (tick.checked) this.hidden.delete(id);
+                else this.hidden.add(id);
+                this.render();
+            });
+            line.append(tick, el('code', null, id), el('span', 'srp-sub', col.label ?? ''),
+                button(COLUMN_ACTIONS.up, () => this._swap(shown, i, i - 1), i === 0),
+                button(COLUMN_ACTIONS.down, () => this._swap(shown, i, i + 1), i === shown.length - 1));
+            return line;
+        });
+        const all = el('div', 'srp-col-all');
+        all.append(
+            button(COLUMN_ACTIONS.all, () => this.hidden.clear()),
+            button(COLUMN_ACTIONS.none, () => { this.hidden = new Set(ids); }),
+            button(COLUMN_ACTIONS.registryOrder, () => { this.order = []; }),
+        );
+        this.controlsListEl.replaceChildren(...lines, all);
+    }
+
+    /** Swap two places of the display order — seeded from what is shown, so
+     *  the swap is well-defined whatever `this.order` held before. */
+    _swap(shown, a, b) {
+        const next = [...shown];
+        [next[a], next[b]] = [next[b], next[a]];
+        this.order = next;
     }
 
     /** Collapse and filter, over the drawn rows — no redraw. */

@@ -97,3 +97,21 @@
 .srp-no { color: #8a8a96; }
 .srp-number { color: #7fe0ff; }
 .srp-count { color: #c8b060; }
+
+/* ─── the Columns section (Matrix mode) ─── */
+.srp-controls { padding: 2px 8px; border-bottom: 1px solid #24242c; }
+.srp-controls[hidden] { display: none; }
+.srp-controls summary { cursor: pointer; color: #c8b060; }
+.srp-controls-list { display: flex; flex-direction: column; gap: 1px; padding: 2px 0 4px; }
+.srp-col-line { display: flex; align-items: center; gap: 6px; }
+.srp-col-line .srp-sub { margin-left: 0; flex: 1; }
+.srp-col-all { display: flex; gap: 6px; padding-top: 3px; }
+.srp-controls button {
+    background: #1e1e26;
+    color: #d8d8e0;
+    border: 1px solid #34343e;
+    padding: 0 6px;
+    cursor: pointer;
+    font: inherit;
+}
+.srp-controls button:disabled { color: #4a4a54; cursor: default; }

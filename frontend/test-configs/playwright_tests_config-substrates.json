@@ -877,6 +877,12 @@
             "enabled": true,
             "category": "substrateRegistry",
             "_comment": "SUBSTRATE REGISTRY PANEL R2. The Matrix mode: header == getAll() ids in order; row count == matrixOf(describeRegistry(getAll(), REGISTRY)); every cell is a glyph or an integer."
+        },
+        {
+            "id": "substrate-registry-panel-columns-can-be-hidden-and-reordered",
+            "enabled": true,
+            "category": "substrateRegistry",
+            "_comment": "SUBSTRATE REGISTRY PANEL R3. The Columns section: untick the first live id (header n-1, lacks it); ▼ on the next line (header's first two swap); All + Registry order (header == getAll() ids again). Restores the default columns at the end."
         }
     ]
 }
