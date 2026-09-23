@@ -63,6 +63,19 @@ A requirement the gate vocabulary cannot carry (a disjunction, a count) is **dec
 
 The fallback (`--atlas-placement quota`) keeps the older behaviour: the grower draws atlas regions like any substrate and gates them synthetically.
 
+### Seedling as a leaf (`flash_seedling`)
+
+Since SEEDLING IN THE PIPELINE T3 (2026-09-23) a quota of `flash_seedling` places a room of the **real Seedling map** that plays in the Seedling wasm ([Flash Substrate § As a sphere-growth leaf](./flash.md#as-a-sphere-growth-leaf)). It is a substrate quota, not an `atlas:` pool: the realiser is the entry's own `generateZoneForSpecs`, over the same compile the shuffled spiral places rooms from.
+
+The room is always a **leaf**, and that follows from what a real door can enforce. Sphere growth puts a node's ENTRY gate on the PARENT's forward exit and its children's gates on the node's own forward exits (`generateRegionZoneGen`). A Seedling door opens for whoever walks onto it, so it cannot carry an AP item gate. Two registry hooks say so:
+
+- `canHostExitGates: () => false` — the grower never attaches a child to the room, so no gate ever has to ride one of its doors.
+- `backPortalGated: () => false` — the room's door back to its parent is ungated, as bounce's braid back portal is. The entry gate stays on the parent's exit, where the parent's substrate enforces it: in `seedling_sphere_room` the maze stops the player at `exit_1` until `key_blue` is held (measured on the box).
+
+Logic-looser-than-physics is refused here: a gate the game does not enforce would let a player walk past what the rules say they cannot. The atlas sorter's route (the room's own authored entry rule as its gate) needs authored door rules, and the starter atlas has none.
+
+A real room is a specific place, so it is placed **at most once per generation**. Sphere growth does not consult `zoneCount` (that is the spiral's quota check), so this is the entry's own law: the placed rooms are keyed by the region that took them, and `prepareSphereGrowth` — called once per generation by the config assembly below — clears them. The room is the TIGHTEST fit: fewest locations, then fewest doors, then declaration order (the atlas source's rule), so a 0-item filler does not take the one room with a chest. A node that needs more doors or locations than any unplaced room has is refused by name, with the knobs to turn.
+
 ## Config assembly (`sphereConfigHooks.js`)
 
 The panel and both headless CLIs build a sphere-growth config the same way: merge every active substrate's `defaultProcgenParams`, `prepareSphereGrowth`, and `buildRegionParams` registry hooks. Active substrates are those with a positive quota plus the start substrate. Centralising this keeps the drivers substrate-agnostic and stops the CLIs drifting from the panel — there is one assembly path.
