@@ -801,6 +801,24 @@
             "_comment": "R2 (vii). A live run torn down by a slot pick and by a new document: form gone, worker terminated, no ticker, nothing lands."
         },
         {
+            "id": "apworld-the-starting-inventory-block-lists-starting-items",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R3 (a). The Items tab's Starting inventory block = startingInventoryList of the document; each Start input agrees."
+        },
+        {
+            "id": "apworld-a-starting-grant-is-one-op-and-the-need-reads-met",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R3 (b). bounce_worldgen: the need line, a grant = ONE set-starting-count + undo, the need reads met, add is current + 1."
+        },
+        {
+            "id": "apworld-a-generate-after-a-starting-grant-lands-with-the-satisfied-clause",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R3 (c). The form shows the target's need (none for a non-declaring target); Generate after a grant lands bounce region_0_1 with the satisfied-rules clause."
+        },
+        {
             "id": "apworld-the-preset-sidecars-door-lands-on-the-sidecars-tab",
             "enabled": true,
             "category": "apworldEditor",

@@ -28,7 +28,7 @@ import {
     canonicalPlacementIssues, canonicalPlacementIssuesByPlayer, deleteItemOps, deleteRegionOps,
     describePlacementIssue, describeProgressionIssue, exitsPointingAt, itemGroupRegistry,
     itemsCarryingGroup, locationsOfPlayer, nextName, progressionKindOf, progressionMappingIssues,
-    progressionMappings, progressionMemberNames, unlistedItemGroups,
+    progressionMappings, progressionMemberNames, startingItemRefusal, unlistedItemGroups,
 } from './rulesDocOps.js';
 // ⛓ APWORLD SUBSTRATE CHANGE R0 — the ONE substrate this file registers: the
 //   fixture's `Hall` is a maze room, and `regenerate-region-sidecar` builds a
@@ -441,6 +441,18 @@ describe('items', () => {
         const two = applied(doc, { op: 'set-starting-count', item: 'Victory', count: 1 }).doc;
         expect(applied(two, { op: 'set-starting-count', item: 'Key', count: 1 }).doc.starting_items[P])
             .toEqual(['Victory', 'Key']);
+    });
+
+    it('⛔ set-starting-count refuses a positive count of an item the slot does not define — by name; 0 removes it anyway (R3)', () => {
+        const doc = fixture();
+        const res = apply(doc, { op: 'set-starting-count', item: 'Ghost', count: 1 });
+        expect(res.ok).toBe(false);
+        expect(res.error).toBe(startingItemRefusal(doc, P, 'Ghost', 1));
+        expect(res.error).toContain('"Ghost"');
+        for (const n of Object.keys(doc.items[P])) expect(res.error).toContain(n);
+        const stale = fixture();
+        stale.starting_items[P] = ['Ghost', 'Key'];
+        expect(applied(stale, { op: 'set-starting-count', item: 'Ghost', count: 0 }).doc.starting_items[P]).toEqual(['Key']);
     });
 });
 

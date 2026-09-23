@@ -762,6 +762,23 @@ function opSetItemField(doc, op) {
 }
 
 /**
+ * ⛓ The one refusal a starting count can earn beyond a missing name (R3): the
+ * player cannot START with an item the slot does not define — measured, 0 of the
+ * 222 committed slots does. A count of 0 (removing a name) is never refused, so
+ * a stale name can always be taken out. EXPORTED: the Starting inventory block
+ * asks it before drawing a grant, so the button and the op say one sentence.
+ *
+ * @returns {string|null}
+ */
+export function startingItemRefusal(doc, player, item, count = 1) {
+    if (!(count > 0)) return null;
+    const defined = doc?.items?.[player] ?? {};
+    if (Object.hasOwn(defined, item)) return null;
+    return `apworld: player ${player} defines no item "${item}", so it cannot be in the starting inventory — `
+        + `add it on the Items tab first. This slot's items are [${listNames(Object.keys(defined))}].`;
+}
+
+/**
  * ⛓ `{item, count}` — the LIST rewrite `_setStartingCount` did: every entry for
  * the item removed, then `count` of them appended. ⚠ The panel's rounding and
  * its floor of 0 live HERE, so the op list records the count that was applied
@@ -773,6 +790,8 @@ function opSetStartingCount(doc, op) {
         return refuse(`apworld: set-starting-count needs an item name, got ${JSON.stringify(op.item)}.`);
     }
     const c = Math.max(0, Math.floor(op.count) || 0);
+    const undefinedItem = startingItemRefusal(doc, p, op.item, c);
+    if (undefinedItem) return refuse(undefinedItem);
     const list = startingOf(doc, p).filter((n) => n !== op.item);
     for (let i = 0; i < c; i += 1) list.push(op.item);
     return ok(withStarting(doc, p, list), `starting ${op.item} × ${c}`);

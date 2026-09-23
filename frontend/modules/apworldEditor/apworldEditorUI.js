@@ -181,6 +181,9 @@ import {
 } from '../procgenCore/compositeMapRenderer.js';
 import { reconstructResultFromSidecars, refusedRegionsNote } from '../procgenPipeline/compositeMapDocument.js';
 import { downloadJson, rulesDownloadName } from './downloadJson.js';
+import {
+  needSentence, startingCountOf, startingGrantOp, startingInventoryList, startingNeedRows, substratesInSlot,
+} from './startingInventoryBlock.js';
 /**
  * ⛓⛓ H2b — the raw tab is a CodeMirror 6 view, not a `<textarea>`. The barrel
  * is the LOCAL bundled CM6 library (no CDN) and it is already in this app's
@@ -1274,17 +1277,10 @@ class ApworldEditorUI {
     return this.rulesDoc?.itempool_counts?.[this.playerId] ?? {};
   }
 
-  _startingItems() {
-    const list = this.rulesDoc?.starting_items?.[this.playerId];
-    return Array.isArray(list) ? list : [];
-  }
-
+  /** ⛓ ONE source for every count the panel shows — the Start inputs and the
+   *  Starting inventory block both read `startingCountOf` over the one list. */
   _startingCount(itemName) {
-    let n = 0;
-    for (const s of this._startingItems()) {
-      if (s === itemName) n++;
-    }
-    return n;
+    return startingCountOf(this.rulesDoc, this.playerId, itemName);
   }
 
   // ---------- Mutations — every one an OP through the session ----------
@@ -1758,6 +1754,10 @@ class ApworldEditorUI {
   }
 
   _renderItemsTab() {
+    // ⛓ R3 — the starting inventory first: what the player holds at the start
+    //   and what the slot's substrates NEED there (the registry's
+    //   `startingInventory`), with a grant per candidate.
+    this.scrollContainer.appendChild(this._makeStartingInventoryBlock());
     // ⛓ I1 — the slot's group VOCABULARY first, then the items that use it:
     //   a person adds a group before they can put anything in it, and the
     //   per-item picker below draws only names this section lists.
@@ -1803,19 +1803,117 @@ class ApworldEditorUI {
     for (const name of names) {
       this.scrollContainer.appendChild(this._renderItemRow(name, items[name]));
     }
+  }
 
-    // Starting items summary
-    const startList = this._startingItems();
-    if (startList.length) {
-      const startHeader = document.createElement('div');
-      startHeader.style.cssText = 'color:#9ab;font-weight:bold;margin:14px 0 4px;';
-      startHeader.textContent = `Starting items (${startList.length})`;
-      this.scrollContainer.appendChild(startHeader);
-      const startDesc = document.createElement('div');
-      startDesc.style.cssText = 'color:#888;font-size:11px;margin-bottom:4px;';
-      startDesc.textContent = 'Edit per-item "Start" counts on the rows above to change starting items.';
-      this.scrollContainer.appendChild(startDesc);
+  /* ══════════════════════════════════════════════════════════════════
+   * THE STARTING INVENTORY BLOCK (APWORLD SUBSTRATE CHANGE R3)
+   * ══════════════════════════════════════════════════════════════════ */
+
+  /**
+   * ⛓⛓ **THE STARTING INVENTORY, AT THE TOP OF THE ITEMS TAB.** The list with
+   * its counts (the numbers the per-item Start inputs show — one list, one
+   * `startingCountOf`), an *add* control over the slot's items, and the needs
+   * of every substrate the slot's sidecars carry (`_makeStartingNeedsNode`).
+   * Every change is ONE `set-starting-count` op (`startingGrantOp`: current + 1).
+   */
+  _makeStartingInventoryBlock() {
+    const doc = this.rulesDoc;
+    const p = this.playerId;
+    const block = document.createElement('div');
+    block.className = 'apworld-starting-inventory';
+    Object.assign(block.style, { margin: '0 0 10px', padding: '6px 8px', border: '1px solid #3a4a3a',
+      borderRadius: '3px', backgroundColor: '#1b221b' });
+    const list = startingInventoryList(doc, p);
+    const head = document.createElement('div');
+    head.className = 'apworld-starting-inventory-title';
+    head.style.cssText = 'color:#9ab;font-weight:bold;margin-bottom:4px;';
+    head.textContent = `Starting inventory (${list.reduce((n, x) => n + x.count, 0)})`;
+    block.appendChild(head);
+
+    const ul = document.createElement('div');
+    ul.className = 'apworld-starting-list';
+    Object.assign(ul.style, { display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '4px' });
+    if (!list.length) {
+      const none = document.createElement('span');
+      none.style.cssText = 'color:#888;font-size:11px;';
+      none.textContent = 'The player starts with nothing.';
+      ul.appendChild(none);
     }
+    for (const { name, count } of list) {
+      const chip = document.createElement('span');
+      chip.className = 'apworld-starting-entry';
+      Object.assign(chip.dataset, { item: name, count: String(count) });
+      Object.assign(chip.style, { padding: '1px 6px', border: '1px solid #4a5a4a', borderRadius: '8px',
+        color: '#cdc', fontSize: '11px' });
+      chip.textContent = `${name} × ${count}`;
+      ul.appendChild(chip);
+    }
+    block.appendChild(ul);
+
+    const names = Object.keys(this._items());
+    if (names.length) {
+      const addRow = document.createElement('div');
+      Object.assign(addRow.style, { display: 'flex', gap: '6px', alignItems: 'center', margin: '2px 0 4px' });
+      const pick = document.createElement('select');
+      pick.className = 'apworld-starting-add-item';
+      for (const n of names) {
+        const o = document.createElement('option');
+        o.value = n;
+        o.textContent = n;
+        pick.appendChild(o);
+      }
+      addRow.appendChild(pick);
+      const add = this._makeButton('+ add ▸', '#3a5a3a', () => this._applyOp(startingGrantOp(doc, p, pick.value)));
+      add.className = 'apworld-starting-add';
+      add.title = 'One more of the picked item in the starting inventory — one undoable edit.';
+      add.style.fontSize = '11px';
+      addRow.appendChild(add);
+      block.appendChild(addRow);
+    }
+
+    const needs = this._makeStartingNeedsNode(substratesInSlot(doc, p));
+    if (needs) block.appendChild(needs);
+    return block;
+  }
+
+  /**
+   * ⛓⛓⛓ **WHAT `substrateIds` NEED IN THE STARTING INVENTORY** — one line per
+   * declared need (`startingNeedRows`, read off each registry entry), *met* or
+   * *none held* with a **grant ▸** per candidate. ONE renderer, two hosts: the
+   * Items block (every substrate in the slot) and the Region generation form
+   * (the target, above Generate). A candidate the slot does not define gets the
+   * op's own refusal and no working button. `null` when nothing is needed.
+   */
+  _makeStartingNeedsNode(substrateIds, { disabled = false } = {}) {
+    const rows = startingNeedRows(this.rulesDoc, this.playerId, substrateIds);
+    if (!rows.length) return null;
+    const box = document.createElement('div');
+    box.className = 'apworld-starting-needs';
+    for (const row of rows) {
+      const line = document.createElement('div');
+      line.className = 'apworld-starting-need';
+      Object.assign(line.dataset, { substrate: row.substrate, met: String(row.met) });
+      Object.assign(line.style, { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px',
+        fontSize: '11px', margin: '2px 0', color: row.met ? '#9c9' : '#e8c07a' });
+      const text = document.createElement('span');
+      text.className = 'apworld-starting-need-text';
+      text.textContent = needSentence(row);
+      text.title = row.reason;
+      line.appendChild(text);
+      if (!row.met) {
+        for (const g of row.grants) {
+          const b = this._makeButton(`grant ${g.item} ▸`, '#4a4a2a', () => this._applyOp(g.op));
+          b.className = 'apworld-starting-grant';
+          b.dataset.item = g.item;
+          b.style.fontSize = '10px';
+          b.title = g.refusal ?? `Start with ${g.item} — one undoable edit (${row.reason}).`;
+          b.disabled = disabled || !!g.refusal;
+          line.appendChild(b);
+        }
+      }
+      box.appendChild(line);
+    }
+    return box;
   }
 
   /* ══════════════════════════════════════════════════════════════════
@@ -5579,6 +5677,8 @@ class ApworldEditorUI {
     startLabel.appendChild(document.createTextNode('Start:'));
     const startInput = this._makeTextInput(String(this._startingCount(name)), '50px');
     startInput.title = 'How many of this item the player starts with';
+    startInput.classList.add('apworld-item-start');
+    startInput.dataset.item = name;
     onCommit(startInput, (v) => {
       const n = parseInt(v, 10);
       this._setStartingCount(name, Number.isFinite(n) ? n : 0);
@@ -6631,6 +6731,11 @@ class ApworldEditorUI {
     const t = freeText();
     free = note('apworld-region-generation-free', t ?? '');
     if (!t) free.style.display = 'none';
+
+    // ⛓ R3 — what the TARGET needs in the starting inventory, where its refusal
+    //   would land: the realiser treats the starting items as owned.
+    const needs = this._makeStartingNeedsNode([gen.target], { disabled: running });
+    if (needs) sec.appendChild(needs);
 
     const row = document.createElement('div');
     Object.assign(row.style, { display: 'flex', alignItems: 'center', gap: '8px', margin: '4px 0 0' });

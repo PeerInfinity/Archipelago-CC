@@ -161,6 +161,15 @@ import {
 import { regionRealiserKind } from '../../apworldEditor/regionRegenerate.js';
 import { REGENERATE_RULES_UNCHANGED, regenerateOpRefusal } from '../../apworldEditor/rulesDocOps.js';
 /**
+ * ⛓⛓ APWORLD SUBSTRATE CHANGE R3 — the Starting inventory block. The rows ask
+ * the block's own data functions and the op's own clause.
+ */
+import {
+    NEED_MET, NEED_NONE_HELD, needSentence, startingInventoryList, startingNeedRows, substratesInSlot,
+} from '../../apworldEditor/startingInventoryBlock.js';
+import { REGENERATE_SATISFIED_BY_START } from '../../apworldEditor/rulesDocOps.js';
+import { declaredStartingNeeds } from '../../procgenCore/startingInventory.js';
+/**
  * ⛓ D1 — the fields view's vocabulary: which control a row stamps, which level
  * it is on, the two ENTRY keys the form names (the payload's, the substrate's),
  * and the clause the picker's title carries — so a row asserts the product's
@@ -10130,6 +10139,207 @@ for (const [id, name, testFunction] of R2_TESTS) {
         id,
         name,
         description: `APWORLD SUBSTRATE CHANGE R2. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R3 — THE STARTING INVENTORY BLOCK
+ * (the substrate-change plan §3b R3, §9.2; ⚖ user 2026-09-23)
+ *
+ * The Items tab opens on a Starting inventory block: the list, an add control,
+ * and — for every substrate in the slot's sidecars that declares
+ * `startingInventory` — its needs with a grant per candidate. The same need
+ * line is drawn in the Region generation form for the TARGET, above Generate.
+ * The rows assert against the block's data functions (`startingNeedRows`,
+ * `needSentence`) and the op's own description, never a copy.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ `BOUNCE_WORLDGEN_PATH` (above): its bounce slot starts with nothing and defines both arrows (plan §9.2). */
+/** ⛓ Measured: one of the four committed slots with a NON-empty starting list and sidecars. */
+const STARTING_LIST_PRESET_PATH = './presets/procgen_topdown/AP_4/AP_4_rules.json';
+
+const startingBlock = () => document.querySelector(`${PANEL_SELECTOR} .apworld-starting-inventory`);
+const startingChips = () => [...(startingBlock()?.querySelectorAll('.apworld-starting-entry') ?? [])]
+    .map((c) => ({ name: c.dataset.item, count: Number(c.dataset.count) }));
+const startInputFor = (item) => document.querySelector(
+    `${PANEL_SELECTOR} .apworld-item-start[data-item="${CSS.escape(item)}"]`);
+const needLines = (root) => [...(root?.querySelectorAll('.apworld-starting-need') ?? [])];
+
+/**
+ * ⛓⛓⛓ **(a) THE BLOCK'S LIST IS `starting_items`, AND THE START INPUTS SAY THE
+ * SAME COUNTS.** On a committed slot with a non-empty list (`AP_4`): the chips,
+ * in order, equal `startingInventoryList` of the document; every chip's count
+ * is the per-item Start input's value; no need line (its slot's substrates
+ * declare none — derived).
+ */
+export async function apworldTheStartingInventoryBlockListsStartingItems(testController) {
+    try {
+        const panel = await openHub(testController, STARTING_LIST_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+        const want = startingInventoryList(panel.rulesDoc, panel.playerId);
+        testController.reportCondition(`⛓ premise: a non-empty starting list (${want.length} names)`, want.length > 0);
+        await testController.pollForCondition(() => !!startingBlock(), 'the Starting inventory block', 8000, 50);
+        testController.assertEqual('⛓⛓ the block lists starting_items as {name, count}, in order',
+            JSON.stringify(want), JSON.stringify(startingChips()));
+        for (const { name, count } of want) {
+            testController.assertEqual(`…and the Start input of ${name} says ${count}`, String(count),
+                String(startInputFor(name)?.value));
+        }
+        const needed = substratesInSlot(panel.rulesDoc, panel.playerId)
+            .filter((id) => declaredStartingNeeds(substrateRegistry.get(id)).length);
+        testController.assertEqual('need lines = the slot\'s declaring substrates\' needs (derived)',
+            String(startingNeedRows(panel.rulesDoc, panel.playerId, needed).length), String(needLines(startingBlock()).length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('starting inventory list test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(b) A GRANT IS ONE OP AND ONE UNDO; THE NEED READS MET; ADD IS CURRENT
+ * + 1.** `bounce_worldgen` slot 1 (starts with nothing): the block draws each
+ * declared need as *none held* with one grant per candidate; pressing the last
+ * candidate's grant records ONE op, the list becomes that item, its Start input
+ * reads 1 and the need line reads *met: <item>*; the add control pressed twice
+ * on that item makes the count 3 (not 1 — the grant is current + 1); three
+ * Undos restore the document.
+ */
+export async function apworldAStartingGrantIsOneOpAndTheNeedReadsMet(testController) {
+    try {
+        const panel = await openHub(testController, BOUNCE_WORLDGEN_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+        await testController.pollForCondition(() => !!startingBlock(), 'the Starting inventory block', 8000, 50);
+        const p = panel.playerId;
+        const rows = startingNeedRows(panel.rulesDoc, p, substratesInSlot(panel.rulesDoc, p));
+        testController.reportCondition(`⛓ premise: an unmet need in this slot (${rows.length})`,
+            rows.length > 0 && rows.every((r) => !r.met));
+        testController.assertEqual('⛓ one need line per declared need, each the block\'s sentence',
+            JSON.stringify(rows.map(needSentence)),
+            JSON.stringify(needLines(startingBlock()).map((l) => l.querySelector('.apworld-starting-need-text')?.textContent)));
+        testController.reportCondition(`…reading "${NEED_NONE_HELD}"`,
+            needLines(startingBlock()).every((l) => l.dataset.met === 'false'));
+        const item = rows[0].anyOf.at(-1);
+        const docBefore = JSON.stringify(panel.rulesDoc);
+        const opsBefore = panel.session.ops().length;
+        needLines(startingBlock())[0].querySelector(`.apworld-starting-grant[data-item="${CSS.escape(item)}"]`)?.click();
+        testController.assertEqual(`⛓⛓ the grant of ${item} is ONE op`, String(opsBefore + 1), String(panel.session.ops().length));
+        testController.assertEqual('…a set-starting-count', 'set-starting-count', String(panel.session.ops().at(-1)?.op));
+        testController.assertEqual('…and the list is that item', JSON.stringify([item]),
+            JSON.stringify(panel.rulesDoc.starting_items[p]));
+        testController.assertEqual('⛓ the per-item Start input agrees', '1', String(startInputFor(item)?.value));
+        const line = needLines(startingBlock())[0];
+        testController.reportCondition(`⛓⛓ the need line reads "${NEED_MET}: ${item}"`,
+            line?.dataset.met === 'true' && line.textContent.includes(`${NEED_MET}: ${item}`));
+        const pick = startingBlock().querySelector('.apworld-starting-add-item');
+        pick.value = item;
+        startingBlock().querySelector('.apworld-starting-add').click();
+        const pick2 = startingBlock().querySelector('.apworld-starting-add-item');
+        pick2.value = item;
+        startingBlock().querySelector('.apworld-starting-add').click();
+        testController.assertEqual('⛓ add twice more: the count is 3 (current + 1 each time)', '3',
+            String(startingChips().find((c) => c.name === item)?.count));
+        testController.assertEqual('…and the Start input says 3', '3', String(startInputFor(item)?.value));
+        for (let i = 0; i < 3; i += 1) document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('⛓ three Undos restore the document', docBefore, JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('starting grant test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(c) THE FORM SHOWS THE TARGET'S NEED; A GENERATE AFTER A GRANT LANDS
+ * BOUNCE WITH THE SATISFIED-RULES CLAUSE** (the R2 flow end to end).
+ * `bounce_worldgen` slot 1 `region_0_1` — refused by the realiser with nothing
+ * held (§9.2). Pick a target that declares nothing (derived): the form draws NO
+ * need line. Pick the region's own substrate back: the form draws the need,
+ * *none held*, with grants. Grant the candidate for which the PURE op builds
+ * the region at the form's seed (derived, not typed): the need reads met inside
+ * the form; Generate lands ONE `set-region-sidecar`, and the answer is the pure
+ * op's description on the same arguments and names the rules the starting
+ * inventory satisfied.
+ */
+export async function apworldAGenerateAfterAStartingGrantLandsWithTheSatisfiedClause(testController) {
+    try {
+        const region = 'region_0_1';
+        const panel = await openHubOnDocument(testController, BOUNCE_WORLDGEN_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        const own = panel.rulesDoc.preset_sidecars['1'][region].substrate;
+        const plain = substrateRegistry.getAll().find((e) => regionRealiserKind(e) !== null && e.id !== own
+            && !declaredStartingNeeds(e).length)?.id;
+        testController.reportCondition(`⛓ premise: a realiser that declares no need (${plain})`, !!plain);
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (!plain || !await pickSubstrateAndOpenForm(testController, panel, region, plain)) return testController.getOverallResult();
+        testController.assertEqual(`⛓ the form for \`${plain}\` draws NO need line`, '0',
+            String(needLines(regionGenSection(region)).length));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, own)) return testController.getOverallResult();
+        const rows = startingNeedRows(panel.rulesDoc, '1', [own]);
+        testController.reportCondition(`⛓ premise: \`${own}\` declares a need, unmet here`, rows.length > 0 && !rows[0].met);
+        testController.assertEqual(`⛓⛓ the form for \`${own}\` draws its need`, JSON.stringify(rows.map(needSentence)),
+            JSON.stringify(needLines(regionGenSection(region)).map((l) => l.querySelector('.apworld-starting-need-text')?.textContent)));
+        const seed = Number(regionGenSection(region).querySelector('input')?.value);
+        const base = JSON.parse(JSON.stringify(panel.rulesDoc));
+        const builds = (item) => applyRulesDocOp(
+            { ...base, starting_items: { ...base.starting_items, 1: [item] } },
+            { op: 'regenerate-region-sidecar', player: '1', region, seed }).ok;
+        const item = rows[0].anyOf.find(builds);
+        testController.reportCondition(`⛓ premise: a candidate with which the pure op builds ${region} (${item})`, !!item);
+        if (!item) return testController.getOverallResult();
+        needLines(regionGenSection(region))[0].querySelector(`.apworld-starting-grant[data-item="${CSS.escape(item)}"]`)?.click();
+        testController.assertEqual('the grant landed', JSON.stringify([item]), JSON.stringify(panel.rulesDoc.starting_items['1']));
+        testController.reportCondition('⛓ the form is still open and its need line reads met',
+            await testController.pollForCondition(() => needLines(regionGenSection(region))[0]?.dataset.met === 'true',
+                'the form\'s need line reads met', 8000, 50));
+        const docObj = JSON.parse(JSON.stringify(panel.rulesDoc));
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        regionGenSection(region).querySelector('.apworld-region-generate')?.click();
+        const answer = await answerAfter(testController, region, said, 'the Generate answer', 60000);
+        testController.assertEqual('⛓⛓ ONE op recorded', String(opsBefore + 1), String(panel.session.ops().length));
+        const op = panel.session.ops().at(-1);
+        testController.assertEqual('…a set-region-sidecar', 'set-region-sidecar', String(op?.op));
+        testController.assertEqual(`…whose entry is \`${own}\``, own, String(panel.rulesDoc.preset_sidecars['1'][region]?.substrate));
+        const prov = op?.provenance ?? {};
+        const pure = applyRulesDocOp(docObj, {
+            op: 'regenerate-region-sidecar', player: '1', region, substrate: own, seed: prov.seed,
+            regionParams: prov.regionParams, hazardOpts: prov.hazardOpts, size: prov.size, freeItems: prov.freeItems,
+        });
+        testController.reportCondition('the pure op on the same arguments builds', pure.ok);
+        testController.assertEqual('⛓⛓ the answer is the regenerate op\'s own description', String(pure.description), String(answer));
+        testController.reportCondition(`⛓⛓ …which names the rules ${REGENERATE_SATISFIED_BY_START} [${item}]`,
+            String(answer).includes(`${REGENERATE_SATISFIED_BY_START} [${item}]`));
+        testController.assertEqual('⛓ the document\'s rules are untouched', JSON.stringify(docObj.regions),
+            JSON.stringify(panel.rulesDoc.regions));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('starting grant + Generate test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+const R3_TESTS = [
+    ['apworld-the-starting-inventory-block-lists-starting-items',
+        'APWorld hub: the Items tab\'s Starting inventory block lists starting_items; the Start inputs agree',
+        apworldTheStartingInventoryBlockListsStartingItems],
+    ['apworld-a-starting-grant-is-one-op-and-the-need-reads-met',
+        'APWorld hub: a starting-inventory grant is ONE op + undo, the need reads met, add is current + 1',
+        apworldAStartingGrantIsOneOpAndTheNeedReadsMet],
+    ['apworld-a-generate-after-a-starting-grant-lands-with-the-satisfied-clause',
+        'APWorld hub: the form shows the target\'s starting need; Generate after a grant lands bounce with the satisfied-rules clause',
+        apworldAGenerateAfterAStartingGrantLandsWithTheSatisfiedClause],
+];
+for (const [id, name, testFunction] of R3_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE R3. ${name}. See the row's docblock in apworldEditorTests.js.`,
         testFunction,
         category: 'apworldEditor',
         enabled: false, // off by default — runs only in the test-substrates mode
