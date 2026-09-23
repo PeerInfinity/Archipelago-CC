@@ -60,6 +60,7 @@ const TEST_CASE_FILES = [
   './testCases/seedlingAtlasMazeTests.js',
   './testCases/taswBlockModeTests.js',
   './testCases/apworldEditorTests.js',
+  './testCases/substrateRegistryPanelTests.js',
   //'./testCases/manualTests.js',
 ];
 

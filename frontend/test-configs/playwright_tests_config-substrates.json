@@ -865,6 +865,12 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "PRESET SIDECARS M3 play witness. bounce_worldgen: the active region's exit moved to a free side and Applied; the bounce game's own portal -> side map (__bounceDebug.portalSides) serves the old side's portal on the new side, the warehouse keys it there, no error event."
+        },
+        {
+            "id": "substrate-registry-panel-shows-every-entry",
+            "enabled": true,
+            "category": "substrateRegistry",
+            "_comment": "SUBSTRATE REGISTRY PANEL R1. The panel draws one block per live substrateRegistry entry (expectation read from getAll() at run time, after the panel's own Refresh)."
         }
     ]
 }
