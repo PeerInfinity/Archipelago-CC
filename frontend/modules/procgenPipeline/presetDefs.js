@@ -102,6 +102,32 @@ export const SEEDLING_SPIRAL_ROOM_STATE = Object.freeze({
 });
 
 /**
+ * ⛓ SEEDLING IN THE PIPELINE T3 — **A REAL SEEDLING ROOM AS A SPHERE-GROWTH
+ * LEAF, SPELLED ONCE.** Three maze rooms and ONE real Seedling room, seed 1,
+ * 3 spheres, 1 filler, starting in a maze. The room is the filler: a LEAF
+ * behind its maze parent's gated exit (a real door enforces no AP gate, so the
+ * room hosts no children and its door back is ungated — `flashSeedlingLibrary.js`
+ * § generateZoneForSpecs). Its readers: the committed preset
+ * `frontend/presets/seedling_sphere_room/AP_1` (written by
+ * `scripts/procgen/make-seedling-spiral-room-preset.mjs --state=sphere`), the
+ * headless oracle `flashPanel/seedlingSphereWorld.test.js`, and the box gate
+ * `check-seedling-sphere-room-play.mjs`.
+ */
+export const SEEDLING_SPHERE_ROOM_STATE = Object.freeze({
+    mode: 'sphereGrowth',
+    params: Object.freeze({
+        seed: 1, startSubstrate: 'maze', sphereCount: 3, fillerCount: 1, maxItemsPerRegion: 2,
+    }),
+    scenario: Object.freeze({
+        items: Object.freeze({ key_red: 1, key_blue: 1, victory: 1 }),
+        obstacles: Object.freeze({}),
+    }),
+    substrateQuotas: Object.freeze({ maze: 3, flash_seedling: 1 }),
+    substrateMix: Object.freeze({}),
+    substrateMode: 'quotas',
+});
+
+/**
  * Shipped presets. All are fixture-backed known-good configs:
  *
  * - runner-sphere-demo extends the committed runner_sphere_worldgen
