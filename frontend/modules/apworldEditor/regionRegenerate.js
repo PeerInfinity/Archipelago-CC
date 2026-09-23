@@ -53,6 +53,7 @@ import { apExitNameCandidates } from '../procgenCore/apLocationNaming.js';
 import { regionsOf, startRegionsOf } from '../procgenCore/rulesGraph.js';
 import { sidecarFieldsOf } from '../procgenCore/sidecarFields.js';
 import { SIDE_SHARING, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
+import { ownedCounts, ruleWithOwned } from '../procgenCore/ruleWithOwned.js';
 import { SIDE_WORDS, slotLayout } from './regionLayout.js';
 
 /**
@@ -151,6 +152,13 @@ export function regionSizeFor(doc, player) {
     return { ...DEFAULT_REGION_SIZE, source: REGION_SIZE_SOURCES[2] };
 }
 
+/** ⛓ The slot's `starting_items` list — a MULTISET of names (`set-starting-count`
+ *  repeats a name); non-strings dropped. */
+export function startingItemsOf(doc, player) {
+    return Array.isArray(doc?.starting_items?.[player])
+        ? doc.starting_items[player].filter((n) => typeof n === 'string') : [];
+}
+
 /**
  * ⛓⛓ **THE ITEMS THAT RIDE FREE** — top-down's rule
  * (`topDownSteps.buildTopDownEnvelope`): the slot's `starting_items`, then the
@@ -162,8 +170,7 @@ export function regionSizeFor(doc, player) {
  * @returns {string[]}
  */
 export function freeItemsFor(doc, player, entry) {
-    const starting = Array.isArray(doc?.starting_items?.[player])
-        ? doc.starting_items[player].filter((n) => typeof n === 'string') : [];
+    const starting = startingItemsOf(doc, player);
     const defined = doc?.items?.[player] ?? {};
     const out = [...starting];
     for (const [name, def] of Object.entries(entry?.libraryItems ?? {})) {
@@ -232,9 +239,18 @@ export function bfsParents(doc, player) {
  *
  *   · one exit per side when the TARGET keys a payload fact by side
  *     (`oneExitPerSide`): the colliding exits lose their side (`sidesReassigned`).
+ *   · ⛓⛓ the STARTING INVENTORY is owned (R3, plan §9.2): each exit's and
+ *     location's `access_rule` reaches the realiser as `ruleWithOwned(rule,
+ *     starting_items[p])` — play starts with those items, so a gate on one is
+ *     open from the first step, and the realiser now builds it open. The SPEC
+ *     only: `regions[p]` keeps the rule as written (the op writes the sidecar
+ *     entry and nothing else). Every rewritten endpoint is recorded in
+ *     `rulesSatisfiedByStart` as `{endpoint, before, after}` (`endpoint` =
+ *     `exit <short name>` / `location <name>`).
  *
  * @returns {{entrances: object[], exitSpecs: object[], locationSpecs: object[],
- *            parent: {name, exit}|null, size: {width, height}, sidesReassigned: string[]}}
+ *            parent: {name, exit}|null, size: {width, height}, sidesReassigned: string[],
+ *            startingItems: string[], rulesSatisfiedByStart: object[], rulesUnmodelled: string[]}}
  */
 export function buildDocumentRegionSpec(doc, player, region, { size, substrate } = {}) {
     const sidecars = doc?.preset_sidecars?.[player] ?? {};
@@ -243,6 +259,17 @@ export function buildDocumentRegionSpec(doc, player, region, { size, substrate }
     const resolvedSize = isSize(size) ? { width: size.width, height: size.height }
         : (({ width, height }) => ({ width, height }))(regionSizeFor(doc, player));
     const parent = bfsParents(doc, player).get(region) ?? null;
+    const startingItems = startingItemsOf(doc, player);
+    const owned = ownedCounts(startingItems);
+    const rulesSatisfiedByStart = [];
+    const unmodelled = new Set();
+    const owning = (endpoint, rule) => {
+        if (!rule || owned.size === 0) return rule;
+        const out = ruleWithOwned(rule, owned);
+        for (const u of out.unmodelled) unmodelled.add(u);
+        if (out.changed) rulesSatisfiedByStart.push({ endpoint, before: rule, after: out.rule });
+        return out.rule;
+    };
 
     let entrances = [];
     if (parent) {
@@ -270,7 +297,7 @@ export function buildDocumentRegionSpec(doc, player, region, { size, substrate }
             target_region: target,
             ...(side ? { side } : {}),
             ...(pinned ? { tile: entrances[0].tile } : {}),
-            ...(e.access_rule ? { access_rule: e.access_rule } : {}),
+            ...(e.access_rule ? { access_rule: owning(`exit ${short}`, e.access_rule) } : {}),
         };
     });
 
@@ -300,10 +327,13 @@ export function buildDocumentRegionSpec(doc, player, region, { size, substrate }
     const locationSpecs = (source.locations ?? []).map((l) => ({
         id: l.name,
         item: l.item?.name ?? null,
-        ...(l.access_rule ? { access_rule: l.access_rule } : {}),
+        ...(l.access_rule ? { access_rule: owning(`location ${l.name}`, l.access_rule) } : {}),
     })).filter((l) => typeof l.id === 'string' && l.id);
 
-    return { entrances, exitSpecs, locationSpecs, parent, size: resolvedSize, sidesReassigned };
+    return {
+        entrances, exitSpecs, locationSpecs, parent, size: resolvedSize, sidesReassigned,
+        startingItems, rulesSatisfiedByStart, rulesUnmodelled: [...unmodelled].sort(),
+    };
 }
 
 /**
@@ -413,7 +443,7 @@ export function strandedReferences(doc, player, region, newEntry) {
  *
  * @returns {{ok: true, entry: object, freeItems: string[], hostsSurplus: boolean,
  *            exitsRelinked: number, spec: object, stranded: object[]}
- *          | {ok: false, threw: string, freeItems: string[], hostsSurplus: boolean}}
+ *          | {ok: false, threw: string, freeItems: string[], hostsSurplus: boolean, spec: object}}
  */
 export function regenerateRegionEntry({
     doc, player, region, substrate, seed, regionParams, hazardOpts, size, freeItems,
@@ -454,7 +484,7 @@ export function regenerateRegionEntry({
             freeItems: free,
         });
     } catch (e) {
-        return { ok: false, threw: String(e?.message ?? e), freeItems: free, hostsSurplus };
+        return { ok: false, threw: String(e?.message ?? e), freeItems: free, hostsSurplus, spec };
     }
     const exitsRelinked = relinkRegionExits(doc, player, region, descriptor, old);
     const cell = old.grid_cell;

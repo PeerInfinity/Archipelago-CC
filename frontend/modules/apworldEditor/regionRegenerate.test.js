@@ -27,8 +27,10 @@ import {
     DEFAULT_REGION_SIZE, generateRegion, getRegionExits, linkIsAdjacentOnSide,
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import {
-    REGENERATE_RULES_UNCHANGED, REGENERATE_SIDES_REASSIGNED, REGENERATE_STRANDED, applyRulesDocOp,
+    REGENERATE_NARROWED_BY_START, REGENERATE_RULES_UNCHANGED, REGENERATE_SATISFIED_BY_START,
+    REGENERATE_SIDES_REASSIGNED, REGENERATE_STRANDED, applyRulesDocOp,
 } from './rulesDocOps.js';
+import { ruleWithOwned } from '../procgenCore/ruleWithOwned.js';
 import { sidecarIssues } from './sidecarIssues.js';
 import { slotLayout } from './regionLayout.js';
 import {
@@ -48,7 +50,8 @@ const read = (rel) => JSON.parse(readFileSync(join(PRESETS, rel), 'utf8'));
 const bytes = (o) => JSON.stringify(o);
 const FOUR_PATH = 'multiworld/AP_05594871498841892311/AP_05594871498841892311_rules.json';
 const AP10_PATH = 'procgen_topdown/AP_10/AP_10_rules.json';
-const DOCS = { four: read(FOUR_PATH), ap10: read(AP10_PATH) };
+const BOUNCE_WG_PATH = 'bounce_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+const DOCS = { four: read(FOUR_PATH), ap10: read(AP10_PATH), bounceWg: read(BOUNCE_WG_PATH) };
 
 /** ⛓ The plan's eight probed region × target pairs (§1.4), as rows. */
 const PAIRS = [
@@ -431,5 +434,114 @@ describe('the region size (⚖ Q4 B-then-A) — regionSizeFor', () => {
         const pl = res.doc.preset_sidecars['3'].region_1_0.playable_payload;
         expect(pl.width).toBeGreaterThanOrEqual(11);
         expect(pl.height).toBeGreaterThanOrEqual(9);
+    });
+});
+
+describe('the starting inventory is OWNED — the spec, not the document (R3, plan §9.2)', () => {
+    const doc = DOCS.bounceWg;
+    const withStart = (d, p, items) => {
+        const out = structuredClone(d);
+        out.starting_items = { ...out.starting_items, [p]: items };
+        return out;
+    };
+    /** The region's endpoints whose rule `owned` SATISFIES / only NARROWS — derived by the pure function. */
+    const endpointsOf = (d, p, region, owned) => {
+        const r = d.regions[p][region];
+        const all = [
+            ...(r.exits ?? []).map((e) => [`exit ${exitShortName(region, e.name)}`, e.access_rule]),
+            ...(r.locations ?? []).map((l) => [`location ${l.name}`, l.access_rule]),
+        ].filter(([, rule]) => rule).map(([endpoint, rule]) => [endpoint, ruleWithOwned(rule, owned)]);
+        return {
+            satisfied: all.filter(([, o]) => o.changed && o.rule.rule === 'True_').map(([e]) => e),
+            narrowed: all.filter(([, o]) => o.changed && o.rule.rule !== 'True_').map(([e]) => e),
+        };
+    };
+    // the two arrows, off bounce's own declaration (the document's rules spell them the same)
+    const arrows = substrateRegistry.get('bounce').driftItems;
+    const RIGHT = arrows.find((a) => /right/i.test(a));
+    const LEFT = arrows.find((a) => /left/i.test(a));
+
+    it('⛓ with no starting items the spec hands the realiser the document\'s rule OBJECTS, and records nothing', () => {
+        const spec = buildDocumentRegionSpec(doc, '1', 'region_0_1', { substrate: 'bounce' });
+        expect(doc.starting_items['1']).toEqual([]);
+        expect(spec.rulesSatisfiedByStart).toEqual([]);
+        const src = doc.regions['1'].region_0_1;
+        spec.exitSpecs.forEach((e, i) => expect(e.access_rule).toBe(src.exits[i].access_rule));
+        spec.locationSpecs.forEach((l, i) => expect(l.access_rule).toBe(src.locations[i].access_rule));
+    });
+
+    it('⛓⛓ the spec records {endpoint, before, after} per rewritten rule; the document\'s rules are untouched', () => {
+        const d = withStart(doc, '1', [RIGHT]);
+        const before = bytes(d.regions);
+        const spec = buildDocumentRegionSpec(d, '1', 'region_0_1', { substrate: 'bounce' });
+        const want = endpointsOf(d, '1', 'region_0_1', [RIGHT]);
+        expect(spec.rulesSatisfiedByStart.map((r) => r.endpoint).sort())
+            .toEqual([...want.satisfied, ...want.narrowed].sort());
+        expect(want.satisfied.length).toBeGreaterThan(0);
+        for (const r of spec.rulesSatisfiedByStart) expect(r.after).toEqual(ruleWithOwned(r.before, [RIGHT]).rule);
+        expect(bytes(d.regions)).toBe(before);
+    });
+
+    it.each([1, 2, 3])('⛓⛓⛓ bounce_worldgen region_0_1 BUILDS with a starting Right arrow (seed %i); ONLY the entry moves; the clause names the satisfied rules', (seed) => {
+        const d = withStart(doc, '1', [RIGHT]);
+        const res = applyRulesDocOp(d, { op: 'regenerate-region-sidecar', player: '1', region: 'region_0_1', seed });
+        expect(res.ok, res.error).toBe(true);
+        const want = JSON.parse(bytes(d));
+        want.preset_sidecars['1'].region_0_1 = res.doc.preset_sidecars['1'].region_0_1;
+        expect(bytes(res.doc)).toBe(bytes(want));
+        const { satisfied } = endpointsOf(d, '1', 'region_0_1', [RIGHT]);
+        expect(res.description).toContain(
+            `${satisfied.length} rules ${REGENERATE_SATISFIED_BY_START} [${RIGHT}] (${satisfied.join(', ')})`);
+        expect(res.description.endsWith(REGENERATE_RULES_UNCHANGED)).toBe(true);
+    });
+
+    it('⛓⛓ BOTH WAYS: region_0_1 is refused with NO starting arrow and with Left arrow — the refusals are REAL and named', () => {
+        const none = applyRulesDocOp(doc, { op: 'regenerate-region-sidecar', player: '1', region: 'region_0_1', seed: 1 });
+        expect(none.ok).toBe(false);
+        expect(none.error).toContain('column-goal requirements must form a nested chain');
+        expect(none.error).not.toContain('starting inventory');
+        const d = withStart(doc, '1', [LEFT]);
+        const left = applyRulesDocOp(d, { op: 'regenerate-region-sidecar', player: '1', region: 'region_0_1', seed: 1 });
+        expect(left.ok).toBe(false);
+        expect(left.error).toContain('column-goal requirements must form a nested chain');
+        const { narrowed } = endpointsOf(d, '1', 'region_0_1', [LEFT]);
+        expect(narrowed.length).toBeGreaterThan(0);
+        expect(left.error).toContain(`${REGENERATE_NARROWED_BY_START} [${LEFT}] (${narrowed.join(', ')})`);
+    });
+
+    it('⛓⛓ BOTH WAYS: region_1_1 builds with none and is refused with a starting Right arrow — "at most one arrowless-gated exit"', () => {
+        const none = applyRulesDocOp(doc, { op: 'regenerate-region-sidecar', player: '1', region: 'region_1_1', seed: 1 });
+        expect(none.ok, none.error).toBe(true);
+        const right = applyRulesDocOp(withStart(doc, '1', [RIGHT]),
+            { op: 'regenerate-region-sidecar', player: '1', region: 'region_1_1', seed: 1 });
+        expect(right.ok).toBe(false);
+        expect(right.error).toContain('at most one arrowless-gated exit');
+        expect(right.error).toContain(REGENERATE_SATISFIED_BY_START);
+    });
+
+    it('⛓⛓ a MAZE target: an exit gated only on a starting item is realised OPEN — no logic gate on its tile', () => {
+        // derived: the first sidecar'd region of the four-player fixture with an exit gated on one `Has`
+        const four = DOCS.four;
+        let pick = null;
+        for (const [p, regs] of Object.entries(four.regions)) {
+            for (const [region, r] of Object.entries(regs)) {
+                const e = four.preset_sidecars?.[p]?.[region] && (r.exits ?? []).find((x) => x.access_rule?.rule === 'Has');
+                if (e && !pick) pick = { p, region, exit: exitShortName(region, e.name), item: e.access_rule.args.item_name };
+            }
+        }
+        expect(pick).not.toBeNull();
+        const gateAt = (res) => {
+            const pl = res.doc.preset_sidecars[pick.p][pick.region].playable_payload;
+            const x = pl.exits.find((ex) => ex.exit_id === pick.exit);
+            return pl.obstacles.filter((o) => o.x === x.x && o.y === x.y && pl.obstacleLib[o.id]?.clear_rule);
+        };
+        const op = { op: 'regenerate-region-sidecar', player: pick.p, region: pick.region, substrate: 'maze', seed: 1 };
+        const gated = applyRulesDocOp(four, op);
+        expect(gated.ok, gated.error).toBe(true);
+        expect(gateAt(gated)).toHaveLength(1);
+        const open = applyRulesDocOp(withStart(four, pick.p, [pick.item]), op);
+        expect(open.ok, open.error).toBe(true);
+        expect(gateAt(open)).toEqual([]);
+        expect(open.description).toContain(`${REGENERATE_SATISFIED_BY_START} [${pick.item}] (exit ${pick.exit}`);
     });
 });

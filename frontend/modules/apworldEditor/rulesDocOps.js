@@ -2119,6 +2119,37 @@ function freeItemsClause(res, verb, { list = false } = {}) {
     return `${plural(res.freeItems.length, 'item')} ${verb}${names}`;
 }
 
+/**
+ * ⛓ The starting-inventory clauses (R3, plan §9.2): the spec hands the realiser
+ * each rule with `starting_items[p]` OWNED (`buildDocumentRegionSpec` →
+ * `ruleWithOwned`), so a rule the starting inventory satisfies is built open
+ * and one it only shortens is built on what is left. `regions[p]` keeps every
+ * rule as written. EXPORTED for the rows and the hub's answer.
+ */
+export const REGENERATE_SATISFIED_BY_START = 'treated as satisfied by the starting inventory';
+export const REGENERATE_NARROWED_BY_START = 'narrowed by the starting inventory';
+
+/**
+ * ⛓ `2 rules treated as satisfied by the starting inventory [Right arrow] (exit
+ * X, location Y)` and/or `1 rule narrowed by …` — '' when the starting inventory
+ * rewrote no rule of this region.
+ */
+export function startingInventoryClause(spec) {
+    const rows = spec?.rulesSatisfiedByStart ?? [];
+    if (!rows.length) return '';
+    const isTrue = (r) => r?.rule === 'True_';
+    const sat = rows.filter((r) => isTrue(r.after)).map((r) => r.endpoint);
+    const nar = rows.filter((r) => !isTrue(r.after)).map((r) => r.endpoint);
+    const held = [...new Set(spec.startingItems ?? [])].join(', ');
+    const parts = [];
+    if (sat.length) parts.push(`${plural(sat.length, 'rule')} ${REGENERATE_SATISFIED_BY_START} [${held}] (${sat.join(', ')})`);
+    if (nar.length) {
+        parts.push(`${plural(nar.length, 'rule')} ${REGENERATE_NARROWED_BY_START}${sat.length ? '' : ` [${held}]`} `
+            + `(${nar.join(', ')})`);
+    }
+    return parts.join('; ');
+}
+
 /** ⛓ The free-item clause's verbs. EXPORTED for the rows. */
 export const REGENERATE_RODE_FREE = 'rode free';
 export const REGENERATE_RIDING_FREE = 'riding free';
@@ -2130,8 +2161,10 @@ export const REGENERATE_RIDING_FREE = 'riding free';
  */
 export function regenerateRealiserRefusal({ region, substrate, res }) {
     const free = freeItemsClause(res, REGENERATE_RIDING_FREE, { list: true });
+    const start = startingInventoryClause(res.spec);
+    const withs = [free, start].filter(Boolean).join('; ');
     return `apworld: the \`${substrate}\` realiser refused region "${region}": ${res.threw}`
-        + `${free ? ` — with ${free}` : ''}.`;
+        + `${withs ? ` — with ${withs}` : ''}.`;
 }
 
 /**
@@ -2145,6 +2178,7 @@ export function describeRegeneration({ region, substrate, seed, res }) {
     const k = res.spec.exitSpecs.length;
     const l = res.spec.locationSpecs.length;
     const free = freeItemsClause(res, REGENERATE_RODE_FREE);
+    const start = startingInventoryClause(res.spec);
     const stranded = res.stranded.length
         ? `; ⚠ ${res.stranded.map((x) => `${x.region}'s \`${x.field}\``).join(', ')} `
             + `${REGENERATE_STRANDED} (\`${[...new Set(res.stranded.map((x) => x.target))].join('`, `')}\` `
@@ -2152,6 +2186,7 @@ export function describeRegeneration({ region, substrate, seed, res }) {
         : '';
     return `region ${region}: payload regenerated as \`${substrate}\` (seed ${seed}; `
         + `${plural(k, 'exit')}, ${plural(l, 'location')} carried; `
+        + `${start ? `${start}; ` : ''}`
         + `${free ? `${free}; ` : ''}`
         + `${plural(res.exitsRelinked, 'exit')} ${REGENERATE_RELINKED}`
         + `${res.spec.sidesReassigned.length ? `; ${REGENERATE_SIDES_REASSIGNED} `

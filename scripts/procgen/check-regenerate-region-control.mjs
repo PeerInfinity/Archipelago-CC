@@ -39,8 +39,18 @@
  * an op past it is TERMINATED with its worker, binned `timed out`, named on
  * stderr, and a fresh worker takes the next op.
  *
+ * ⛓ THE STARTING INVENTORY (R3, plan §9.2): the op hands the realiser each rule
+ * with the slot's `starting_items` OWNED. `--starting=<item>[,<item>…]` appends
+ * those names to EVERY slot's `starting_items` on the worker's copy before its
+ * ops (a slot whose rules never name them is unmoved), and `--from=<id>[,<id>…]`
+ * keeps only entries whose CURRENT substrate is listed — so the granted-arrow
+ * table of the bounce slots is `--from=bounce --targets=bounce --starting=…`.
+ * The `rules owned` column counts the ops whose spec rewrote ≥ 1 rule (the op's
+ * description or refusal carries the starting-inventory clause).
+ *
  * Run:
  *   node scripts/procgen/check-regenerate-region-control.mjs
+ *   node scripts/procgen/check-regenerate-region-control.mjs --from=bounce --targets=bounce --starting='Right arrow'
  *   node scripts/procgen/check-regenerate-region-control.mjs --json
  *   node scripts/procgen/check-regenerate-region-control.mjs --targets=all --limit=4
  *   node scripts/procgen/check-regenerate-region-control.mjs --targets=bounce,runner --limit=2 --fixtures
@@ -81,6 +91,11 @@ export const DEFAULT_OP_TIMEOUT_S = 60;
 const LIMIT = Number.parseInt(arg('limit') ?? `${DEFAULT_LIMIT}`, 10);
 const SEED = Number.parseInt(arg('seed') ?? `${DEFAULT_SEED}`, 10);
 const OP_TIMEOUT_S = Number(arg('op-timeout') ?? DEFAULT_OP_TIMEOUT_S);
+const list = (v) => (v ? v.split(',').map((x) => x.trim()).filter(Boolean) : []);
+/** ⛓ Names appended to every slot's `starting_items` (the header's ⛓). */
+const STARTING = list(arg('starting'));
+/** ⛓ Only entries whose current substrate is one of these (empty = all). */
+const FROM = list(arg('from'));
 
 const errOut = (s) => process.stderr.write(`${s}\n`);
 
@@ -114,15 +129,21 @@ async function loadModules() {
         Object.assign(console, saved);
     }
     const { substrateRegistry } = await mod('frontend/modules/shared/procgen/substrateRegistry.js');
-    const { applyRulesDocOp } = await mod('frontend/modules/apworldEditor/rulesDocOps.js');
+    const {
+        applyRulesDocOp, REGENERATE_NARROWED_BY_START, REGENERATE_SATISFIED_BY_START,
+    } = await mod('frontend/modules/apworldEditor/rulesDocOps.js');
     const { sidecarIssues } = await mod('frontend/modules/apworldEditor/sidecarIssues.js');
     const { regionRealiserKind, strandedReferences } = await mod('frontend/modules/apworldEditor/regionRegenerate.js');
-    return { substrateRegistry, applyRulesDocOp, sidecarIssues, regionRealiserKind, strandedReferences, failed };
+    return {
+        substrateRegistry, applyRulesDocOp, sidecarIssues, regionRealiserKind, strandedReferences, failed,
+        ownedClauses: [REGENERATE_SATISFIED_BY_START, REGENERATE_NARROWED_BY_START],
+    };
 }
 
 /** ⛓ A refusal's CLASS: digits and quoted/backticked ids folded, so one cause is one row. */
 export function refusalClass(error) {
-    const threw = /realiser refused region "[^"]*": (.*?) — with \d+ items? riding free/.exec(error);
+    const threw = /realiser refused region "[^"]*": (.*?)(?: — with (?:\d+ items? riding free|\d+ rules? (?:treated|narrowed)).*)?\.$/
+        .exec(error);
     const head = threw ? `threw: ${threw[1]}` : error.replace(/^apworld: /, '');
     return head.replace(/'[^']*'|"[^"]*"|`[^`]*`/g, '…').replace(/\d+(\.\d+)?/g, 'N').slice(0, 120);
 }
@@ -146,7 +167,8 @@ function classifyOp(mods, doc, baseline, p, region, to) {
         res = { ok: false, error: `THREW OUTSIDE THE OP: ${e?.message ?? e}` };
     }
     const ms = performance.now() - s;
-    if (!res.ok) return { ms, refused: refusalClass(res.error) };
+    const owned = mods.ownedClauses.some((c) => (res.ok ? res.description : res.error).includes(c));
+    if (!res.ok) return { ms, owned, refused: refusalClass(res.error) };
     const reg = substrateRegistry.get(to);
     const entry = res.doc.preset_sidecars[p][region];
     const carried = typeof reg?.apLocationNamesOf === 'function'
@@ -156,7 +178,7 @@ function classifyOp(mods, doc, baseline, p, region, to) {
     const named = new Set(strandedReferences(doc, p, region, entry).map((x) => `REF_UNRESOLVED|${x.region}`));
     const all = [...errorKeys(mods, res.doc, p)].filter((k) => !baseline.has(k));
     const added = all.filter((k) => !named.has(k.split('|').slice(0, 2).join('|')));
-    return { ms, lost, stranded: all.length - added.length, addedKinds: added.map((k) => k.split('|')[0]) };
+    return { ms, owned, lost, stranded: all.length - added.length, addedKinds: added.map((k) => k.split('|')[0]) };
 }
 
 const errorKeys = (mods, doc, p) => new Set(mods.sidecarIssues(doc, p).filter((i) => i.severity === 'error')
@@ -168,7 +190,14 @@ async function workerLoop() {
     let cached = { rel: null, doc: null, base: new Map() };
     parentPort.on('message', ({ rel, p, region, to }) => {
         if (cached.rel !== rel) {
-            cached = { rel, doc: JSON.parse(readFileSync(join(REPO, rel), 'utf8')), base: new Map() };
+            const doc = JSON.parse(readFileSync(join(REPO, rel), 'utf8'));
+            if (STARTING.length) {
+                doc.starting_items = { ...(doc.starting_items ?? {}) };
+                for (const p of Object.keys(doc.preset_sidecars ?? {})) {
+                    doc.starting_items[p] = [...(doc.starting_items[p] ?? []), ...STARTING];
+                }
+            }
+            cached = { rel, doc, base: new Map() };
         }
         if (!cached.base.has(p)) cached.base.set(p, errorKeys(mods, cached.doc, p));
         parentPort.postMessage(classifyOp(mods, cached.doc, cached.base.get(p), p, region, to));
@@ -215,7 +244,7 @@ async function main() {
         const k = `${from} → ${to}`;
         if (!cells.has(k)) {
             cells.set(k, {
-                from, to, n: 0, clean: 0, stranded: 0, newErrors: 0, namesLost: 0, timedOut: 0,
+                from, to, n: 0, clean: 0, stranded: 0, newErrors: 0, namesLost: 0, timedOut: 0, owned: 0,
                 refused: {}, newKinds: {}, ms: [],
             });
         }
@@ -237,6 +266,7 @@ async function main() {
         let here = 0;
         for (const [p, slot] of slots) {
             for (const [region, entry] of Object.entries(slot ?? {}).slice(0, LIMIT)) {
+                if (FROM.length && !FROM.includes(entry?.substrate)) continue;
                 entries += 1;
                 for (const to of targets) {
                     const t = tally(entry?.substrate ?? '(none)', to);
@@ -245,6 +275,7 @@ async function main() {
                     // eslint-disable-next-line no-await-in-loop
                     const r = await runner.ask({ rel, p, region, to });
                     t.ms.push(r.ms);
+                    if (r.owned) t.owned += 1;
                     if (r.timedOut) {
                         t.timedOut += 1;
                         timeouts.push({ document: rel, slot: p, region, from: t.from, to });
@@ -272,16 +303,17 @@ async function main() {
     const rows = [...cells.values()].sort((a, b) => a.from.localeCompare(b.from) || a.to.localeCompare(b.to))
         .map((t) => ({
             from: t.from, to: t.to, n: t.n, clean: t.clean, stranded: t.stranded, newErrors: t.newErrors,
-            namesLost: t.namesLost, timedOut: t.timedOut,
+            namesLost: t.namesLost, timedOut: t.timedOut, rulesOwned: t.owned,
             refused: Object.values(t.refused).reduce((s, x) => s + x, 0), refusedByClass: t.refused,
             newErrorKinds: t.newKinds, medianMs: round1(median(t.ms)), maxMs: round1(Math.max(...t.ms)),
         }));
     const totals = rows.reduce((s, r) => ({
         n: s.n + r.n, clean: s.clean + r.clean, stranded: s.stranded + r.stranded, newErrors: s.newErrors + r.newErrors,
-        refused: s.refused + r.refused, timedOut: s.timedOut + r.timedOut,
-    }), { n: 0, clean: 0, stranded: 0, newErrors: 0, refused: 0, timedOut: 0 });
+        refused: s.refused + r.refused, timedOut: s.timedOut + r.timedOut, rulesOwned: s.rulesOwned + r.rulesOwned,
+    }), { n: 0, clean: 0, stranded: 0, newErrors: 0, refused: 0, timedOut: 0, rulesOwned: 0 });
     const out = {
-        seed: SEED, limitPerSlot: LIMIT, opTimeoutS: OP_TIMEOUT_S, targets, realisers, documents: docs.length,
+        seed: SEED, limitPerSlot: LIMIT, opTimeoutS: OP_TIMEOUT_S, targets, from: FROM, starting: STARTING,
+        realisers, documents: docs.length,
         entries, libraryLoadFailures: failed, totals, rows, timeouts, seconds: Math.round((Date.now() - t0) / 100) / 10,
     };
     if (JSON_OUT) {
@@ -289,16 +321,17 @@ async function main() {
         return;
     }
     console.log(`regenerate-region control — seed ${SEED}, ≤${LIMIT} entries per slot, ${OP_TIMEOUT_S} s per op, targets [${targets.join(', ')}] `
-        + `(realisers registered: ${realisers.join(', ')})`);
+        + `(realisers registered: ${realisers.join(', ')})`
+        + `${FROM.length ? `, from [${FROM.join(', ')}]` : ''}${STARTING.length ? `, starting += [${STARTING.join(', ')}]` : ''}`);
     console.log(`${docs.length} documents, ${entries} entries, ${totals.n} ops in ${out.seconds} s`);
     for (const f of failed) console.log(`  ⚠ library did not load: ${f.file}: ${f.error}`);
     console.log('');
-    console.log('| from → to | ops | clean | stranded (named) | new errors | refused | timed out | median ms | max ms |');
-    console.log('|---|---:|---:|---:|---:|---:|---:|---:|---:|');
+    console.log('| from → to | ops | clean | stranded (named) | new errors | refused | timed out | rules owned | median ms | max ms |');
+    console.log('|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|');
     for (const r of rows) {
-        console.log(`| ${r.from} → ${r.to} | ${r.n} | ${r.clean} | ${r.stranded} | ${r.newErrors} | ${r.refused} | ${r.timedOut} | ${r.medianMs} | ${r.maxMs} |`);
+        console.log(`| ${r.from} → ${r.to} | ${r.n} | ${r.clean} | ${r.stranded} | ${r.newErrors} | ${r.refused} | ${r.timedOut} | ${r.rulesOwned} | ${r.medianMs} | ${r.maxMs} |`);
     }
-    console.log(`| **total** | ${totals.n} | ${totals.clean} | ${totals.stranded} | ${totals.newErrors} | ${totals.refused} | ${totals.timedOut} | | |`);
+    console.log(`| **total** | ${totals.n} | ${totals.clean} | ${totals.stranded} | ${totals.newErrors} | ${totals.refused} | ${totals.timedOut} | ${totals.rulesOwned} | | |`);
     const classes = {};
     const kinds = {};
     for (const r of rows) {
