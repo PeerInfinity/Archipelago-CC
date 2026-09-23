@@ -1,6 +1,9 @@
 // UI Class for this module
 import ApworldEditorUI from './apworldEditorUI.js';
 import eventBus from '../../app/core/eventBus.js';
+import {
+  REGION_GENERATION_TIMEOUT_KEY, REGION_GENERATION_TIMEOUT_SCHEMA,
+} from './regionGenerationRun.js';
 
 // Direct hand-off channel (§2.2): procgen's "Open in APWorld Editor" publishes
 // this with { jsonData } instead of the global files:jsonLoaded, so handing a
@@ -131,6 +134,20 @@ export function register(registrationApi) {
   // `DOCUMENT_KEY_EDITORS[...].open`.
   registrationApi.registerEventBusPublisher('procgenPipeline:loadRules');
   registrationApi.registerEventBusPublisher('loopsCostDebugger:loadRules');
+
+  /**
+   * ⛓ APWORLD SUBSTRATE CHANGE R2 — the Region generation form's time limit
+   * (⚖ user 2026-09-23: a configurable setting, one minute per region). Read by
+   * the panel at each Generate press as
+   * `moduleSettings.apworldEditor.regionGenerationTimeoutSeconds`; the default
+   * is `REGION_GENERATION_TIMEOUT_DEFAULT_S`, the one number both sides use.
+   */
+  registrationApi.registerSettingsSchema({
+    type: 'object',
+    properties: {
+      [REGION_GENERATION_TIMEOUT_KEY]: { ...REGION_GENERATION_TIMEOUT_SCHEMA },
+    },
+  });
 }
 
 export function initialize(moduleId, priorityIndex, initializationApi) {

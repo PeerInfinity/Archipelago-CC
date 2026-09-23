@@ -237,6 +237,7 @@ describe('publisher registration covers every publish site', () => {
             registerEventBusPublisher: (e) => registered.add(e),
             registerEventBusSubscriberIntent: () => {},
             registerPublicFunction: () => {},
+            registerSettingsSchema: () => {}, // ⛓ R2: the region generation time limit
         });
         for (const event of published) {
             expect(registered.has(event), `${event} is published but not registered`).toBe(true);
@@ -262,6 +263,7 @@ describe('publisher registration covers every publish site', () => {
             registerEventBusPublisher: () => {},
             registerEventBusSubscriberIntent: () => {},
             registerPublicFunction: () => {},
+            registerSettingsSchema: () => {}, // ⛓ R2: the region generation time limit
         });
         expect(registeredAs).toBe(APWORLD_EDITOR_PANEL_ID);
         expect(moduleInfo.componentType).toBe(APWORLD_EDITOR_PANEL_ID);

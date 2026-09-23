@@ -100,6 +100,11 @@ const filesToCopy = [
     src: path.join(frontendDir, 'modules/jtaBalance/balanceWorker.js'),
     dest: path.join(distDir, 'modules/jtaBalance/balanceWorker.js'),
   },
+  // APWorld Editor's Region generation → Generate ▸ (APWORLD SUBSTRATE CHANGE R2).
+  {
+    src: path.join(frontendDir, 'modules/apworldEditor/regionRegenerateWorker.js'),
+    dest: path.join(distDir, 'modules/apworldEditor/regionRegenerateWorker.js'),
+  },
 ];
 
 // Copy required files to dist
