@@ -578,7 +578,7 @@ export function libraryEntryFacts(entry, nLocations = 0) {
  * library analogue of R0's `useSourceLocationName`. The hook placed the k-th
  * spec's item on the k-th captured slot (its slot order); here the k-th
  * DOCUMENT location's name becomes that slot's `id` and `global_name` (what
- * `serializeWorld` bakes — the maze serializer reads `global_name`) and the
+ * `serializeWorld` bakes — a tile serializer reads `global_name`) and the
  * spec's rule its `access_rule` (the generate branch's override: the spec rule
  * IS the rule). Slots beyond the document's locations are SURPLUS: returned,
  * so the caller drops them from the payload — the document has no location
@@ -609,7 +609,7 @@ export function stampLibraryLocations(descriptor, locationSpecs) {
  * ⛓ Rename a FULL descriptor's kept openings to the document's exits: the k-th
  * document exit takes the next kept opening the hook put on its side (the hook
  * assigned exactly one per requested side occurrence). The exits Map is the
- * world's own (maze aliases it), so it is rebuilt IN PLACE.
+ * world's own (a tile world aliases it), so it is rebuilt IN PLACE.
  *
  * @returns {number} how many openings sit on a wall other than the one they
  *   were captured on (the hook's best-effort relabel)

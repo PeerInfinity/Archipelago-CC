@@ -2182,8 +2182,8 @@ function regenerateSourceRefusal(source) {
 /**
  * ⛓ What a library entry cannot do for `region` → `substrate`, BEFORE the
  * hook runs: a target without the hook; an entry of another substrate; more
- * document locations than the entry's captured slots (bounce's hook says so
- * too; maze's would fill — here it is refused first, for every target).
+ * document locations than the entry's captured slots (a zone hook says so
+ * too; a tile hook would fill — here it is refused first, for every target).
  */
 function librarySourceRefusal(doc, p, region, substrate, facts, entry) {
     if (!facts.offersLibrary) {
@@ -2297,7 +2297,7 @@ export function describeRegeneration({ region, substrate, seed, res }) {
         + stranded;
 }
 
-/** ⛓ `library entry \`Crossroads\` (\`demo-maze-pack-3dd25239\`)` — the one
+/** ⛓ `library entry \`<name>\` (\`<library_id>\`)` — the one
  *  spelling of a library source in every sentence. EXPORTED for the form. */
 export function librarySourceLabel(source) {
     return `${REGENERATE_FROM_LIBRARY} \`${source?.name ?? source?.entry_id}\` (\`${source?.library_id}\`)`;
