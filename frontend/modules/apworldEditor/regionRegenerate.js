@@ -51,6 +51,7 @@ import { createRng } from '../shared/rng.js';
 import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
 import { apExitNameCandidates } from '../procgenCore/apLocationNaming.js';
 import { regionsOf, startRegionsOf } from '../procgenCore/rulesGraph.js';
+import { sidecarFieldsOf } from '../procgenCore/sidecarFields.js';
 import { SIDE_WORDS, slotLayout } from './regionLayout.js';
 
 /**
@@ -309,12 +310,58 @@ export function relinkRegionExits(doc, player, region, descriptor, oldEntry) {
 }
 
 /**
+ * ⛓⛓ **THE SIBLINGS A REGENERATION STRANDS** — measured by the R0 corpus
+ * control: a region's payload may HOST a value its siblings point at (a sidecar
+ * field descriptor's `references: {field, key}`, the one `sidecarIssues` reads
+ * for `REF_UNRESOLVED`). A regenerated payload carries no such host field, so
+ * every sibling whose reference no other entry still carries is stranded. The
+ * op NAMES them (M3's law: a link the op breaks is reported, never repaired —
+ * ⚖ user 2026-09-22, the data may go temporarily invalid).
+ *
+ * @returns {Array<{region: string, field: string, target: string, key: string, value: *}>}
+ */
+export function strandedReferences(doc, player, region, newEntry) {
+    const slot = doc?.preset_sidecars?.[player] ?? {};
+    const isObj = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+    const carriers = (entries, field, key) => {
+        const out = new Set();
+        for (const e of entries) {
+            const v = isObj(e?.playable_payload) ? e.playable_payload[field] : undefined;
+            if (isObj(v) && v[key] !== undefined) out.add(v[key]);
+        }
+        return out;
+    };
+    const before = Object.values(slot);
+    const after = Object.entries(slot).map(([n, e]) => (n === region ? newEntry : e));
+    const out = [];
+    for (const [name, entry] of Object.entries(slot)) {
+        if (name === region) continue;
+        let fields = null;
+        try {
+            fields = sidecarFieldsOf(substrateRegistry.get(entry?.substrate));
+        } catch { fields = null; }
+        const payload = isObj(entry?.playable_payload) ? entry.playable_payload : null;
+        if (!fields || !payload) continue;
+        for (const [field, d] of Object.entries(fields)) {
+            const ref = d.references;
+            if (!ref || !isObj(payload[field])) continue;
+            const value = payload[field][ref.key];
+            if (value === undefined) continue;
+            if (carriers(before, ref.field, ref.key).has(value) && !carriers(after, ref.field, ref.key).has(value)) {
+                out.push({ region: name, field, target: ref.field, key: ref.key, value });
+            }
+        }
+    }
+    return out;
+}
+
+/**
  * ⛓⛓⛓ **REGENERATE ONE REGION'S SIDECAR ENTRY.** The caller (the op) has
  * refused every input it can name; what can still fail here is the realiser
  * itself, answered as `{ok: false, threw}` with its message verbatim.
  *
  * @returns {{ok: true, entry: object, freeItems: string[], exitsRelinked: number,
- *            spec: object} | {ok: false, threw: string, freeItems: string[]}}
+ *            spec: object, stranded: object[]} | {ok: false, threw: string, freeItems: string[]}}
  */
 export function regenerateRegionEntry({
     doc, player, region, substrate, seed, regionParams, hazardOpts, size, freeItems,
@@ -362,5 +409,8 @@ export function regenerateRegionEntry({
     });
     if (cell === undefined) delete built.grid_cell;
     else built.grid_cell = cell;
-    return { ok: true, entry: built, freeItems: free, exitsRelinked, spec };
+    return {
+        ok: true, entry: built, freeItems: free, exitsRelinked, spec,
+        stranded: strandedReferences(doc, player, region, built),
+    };
 }
