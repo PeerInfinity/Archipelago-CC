@@ -36,7 +36,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 42,
+            "fields": 43,
             "id": "bounce",
             "label": "Bounce Demo",
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
@@ -214,7 +214,8 @@ export const REGISTRY = frz({
                 "prepareSphereGrowth",
                 "procgenParamsFromPayload",
                 "renderLibraryProcgenParams",
-                "renderProcgenParams"
+                "renderProcgenParams",
+                "startingInventory"
             ],
             "title": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)"
         }
@@ -5333,6 +5334,74 @@ export const REGISTRY = frz({
             "documentedHow": "prose",
             "group": "Build-time — content sources (zone-based substrates)",
             "name": "spiralContentConfigKey"
+        },
+        {
+            "carriedBy": [
+                "bounce"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": true,
+                    "short": "{needs}",
+                    "type": "object",
+                    "value": [
+                        "needs"
+                    ]
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
+            "name": "startingInventory"
         },
         {
             "carriedBy": [

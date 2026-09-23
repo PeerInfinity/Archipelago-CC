@@ -1979,7 +1979,8 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
-                "arg"
+                "arg",
+                "list"
             ],
             "browser": false,
             "category": "check",
@@ -1987,10 +1988,12 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "fixtures",
+                "from",
                 "json",
                 "limit",
                 "op-timeout",
                 "seed",
+                "starting",
                 "targets"
             ],
             "file": "check-regenerate-region-control.mjs",
@@ -2000,6 +2003,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "fixtures"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "from"
                 },
                 {
                     "how": [
@@ -2024,6 +2033,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "seed"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "starting"
                 },
                 {
                     "how": [

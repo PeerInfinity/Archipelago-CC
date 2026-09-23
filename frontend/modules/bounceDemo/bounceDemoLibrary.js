@@ -1069,6 +1069,18 @@ export function createBounceSubstrateEntry({
         // the realised logic is unchanged — see generateRegionZoneGen.
         driftItems: [ABILITY_ITEM_NAMES.left, ABILITY_ITEM_NAMES.right],
         libraryItems: BOUNCE_LIBRARY_ITEMS,
+        // What a world built of bounce regions NEEDS in its starting inventory
+        // (apworld substrate R3): the same fact prepareBounceSphereGrowth acts
+        // on — it grants ONE arrow so no region gates on it. Data, read by
+        // procgenCore/startingInventory.js; the APWorld editor's Starting
+        // inventory block draws it with a grant per candidate.
+        startingInventory: Object.freeze({
+            needs: Object.freeze([Object.freeze({
+                anyOf: Object.freeze([ABILITY_ITEM_NAMES.left, ABILITY_ITEM_NAMES.right]),
+                reason: 'a bounce level cannot gate both arrows in one region, and hosts at most one '
+                    + 'arrowless-gated exit — the sphere route grants one arrow at the start for this reason',
+            })]),
+        }),
         // No `libraryObstacles`: the physics gate defs (BOUNCE_LIBRARY_OBSTACLES)
         // reach the compiler as each zone region's own `obstacle_defs` (see
         // extractZoneRules), never through a registry-level pool.
