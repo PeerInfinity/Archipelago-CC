@@ -92,6 +92,7 @@ import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { returnKey, returnSpawnTable } from '../../frontend/modules/flashPanel/seedlingReturnSpawns.js';
+import { createRoomPlay, STEP_OFF_PX, HOLD_CEILING_MS } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 
@@ -141,15 +142,14 @@ async function main() {
         owls_nest_stairs: { off: 'ArrowLeft', on: 'ArrowRight' },
     });
     /**
-     * ⛔ HELD UNTIL, NOT HELD FOR. A fixed hold covers a different number of game
+     * ⛔ HELD UNTIL, NOT HELD FOR (`STEP_OFF_PX` / `HOLD_CEILING_MS`, now in
+     * `seedlingRoomPlay.js`). A fixed hold covers a different number of game
      * ticks at a different load: run 1 of this gate held the step-off for 400 ms,
      * the player stopped at y 286.7 (W0 had reached 290.5), still inside the door,
      * so the latch never cleared and the step back on fired nothing. The step-off
      * now holds until the LIVE player is a whole tile from the door's spawn, and
      * the step-on until the game writes a new `pendingExit`; each has a ceiling.
      */
-    const STEP_OFF_PX = 16;
-    const HOLD_CEILING_MS = 4000;
 
     // The undeclared door for Phase E: the first atlas DOOR (not a screen edge) of
     // the room's own sub-region that the preset did NOT bind, and the map entity on
@@ -192,165 +192,13 @@ async function main() {
     const pageErrors = [];
     page.on('pageerror', (err) => pageErrors.push(err.message));
 
-    let failures = 0;
-    /** `PASS: ` / `FAIL: ` rows and a last `ALL CHECKS PASSED` / `N CHECK(S) FAILED` (F1's vocabulary). */
-    function check(name, ok, detail = '') {
-        console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
-        if (!ok) failures += 1;
-    }
-
-    async function waitFor(desc, fn, timeoutMs = 60000) {
-        const start = Date.now();
-        for (;;) {
-            const v = await fn();
-            if (v) return v;
-            if (Date.now() - start > timeoutMs) {
-                console.log(`PAGE LOGS (last 40):\n${logs.slice(-40).join('\n')}`);
-                throw new Error(`timeout waiting for: ${desc}`);
-            }
-            await page.waitForTimeout(250);
-        }
-    }
-
-    function gameFrame() {
-        const f = page.frames().find((fr) => fr.url().includes(WASM_PAGE));
-        if (!f) throw new Error('seedling wasm iframe not found');
-        return f;
-    }
-
-    /** readState: `level`, `pendingExit` and the `Main.*` CHECKPOINT (not the live position). */
-    async function readGameState() {
-        const raw = await gameFrame().evaluate(() => window.__swfBridge.game.readState());
-        try { return JSON.parse(raw); } catch { return { __raw: raw }; }
-    }
-
-    /** The player's LIVE position (entity centre), off `botMobiles`. */
-    async function livePlayer() {
-        const raw = await gameFrame().evaluate(() => window.__swfBridge.game.botMobiles());
-        let doc;
-        try { doc = JSON.parse(raw); } catch { return null; }
-        const p = (doc?.mobiles ?? []).find((m) => /player/i.test(m.cls ?? ''));
-        return p ? { x: p.x, y: p.y } : null;
-    }
-
-    const activeTabTitles = () => page.evaluate(() => [...document.querySelectorAll('.lm_tab.lm_active')]
-        .map((t) => t.title));
-    const currentRegion = () => page.evaluate(() =>
-        window.centralRegistry?.getPublicFunction('gameState', 'getCurrentRegion')?.() ?? null);
-    const glueStats = () => page.evaluate(async () => {
-        const mod = await import('./modules/flashPanel/index.js');
-        return mod.getSeedlingRegionGlue()?.stats ?? null;
-    });
-    const glueMoves = async () => (await page.evaluate(() => window.__roomMoves ?? []))
-        .filter((m) => m.source === 'seedlingRegionGlue');
-    const activeSubstrates = () => page.evaluate(() => window.__roomActive ?? []);
-
-    /** What the binding resolved for the region it holds: the arm's own answer, not a log line. */
-    const arrival = () => page.evaluate(async () => {
-        const glue = (await import('./modules/flashPanel/index.js')).getSeedlingRegionGlue();
-        const { resolveArrivalSpawn } = await import('./modules/flashPanel/seedlingRegionBinding.js');
-        const b = glue.binding;
-        return { region: b.region, arrivedFrom: b.arrivedFrom,
-            spawn: resolveArrivalSpawn(b.world, b.arrivedFrom, b.returnSpawns) };
-    });
-
-    /** A `new Game(level, x, y)` the glue did not ask for: the template's native jump. */
-    async function jump(level, x, y) {
-        await gameFrame().evaluate(({ l, px, py }) => {
-            window.__swfBridge.queueItems({
-                invocation: 'new_instance',
-                className: 'Game',
-                args: [l, px, py],
-                assignTo: { class: 'net.flashpunk.FP', property: 'world' },
-            });
-        }, { l: level, px: x, py: y });
-    }
-
-    /**
-     * ⛔ GIVE THE GAME REAL FOCUS, THE WAY A PLAYER DOES. The Flash Game and Maze
-     * Room tabs share one stack, and walking the maze back (Phase D) brings the
-     * maze tab forward; `canvas.focus()` inside the iframe then does NOT move the
-     * page's own focus back into it, and held keys went to the maze panel (run 2:
-     * the step-off "moved" the wrong way and the door never fired). So the tab is
-     * selected again and the canvas CLICKED.
-     */
-    async function focusGame() {
-        await page.evaluate(() => {
-            [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Game')?.click();
-        });
-        await page.waitForTimeout(300);
-        await gameFrame().click('#canvas');
-        // ⛔ …and RELEASE every arrow into it. A door fires mid-hold, and the
-        // region move that follows can take the page's focus before the key comes
-        // up, so the game never hears the release and walks on with it held.
-        for (const k of ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']) {
-            // eslint-disable-next-line no-await-in-loop
-            await page.keyboard.up(k);
-        }
-        await page.waitForTimeout(200);
-    }
-
-    /**
-     * ⛓ T2b U2a — WHERE THE PAGE'S KEYBOARD IS, read without touching it: the
-     * page's active element and, when that is the game's frame, the frame's.
-     */
-    const focusChain = () => page.evaluate((wasmPage) => {
-        const a = document.activeElement;
-        const frame = [...document.querySelectorAll('iframe')].find((f) => f.src.includes(wasmPage));
-        const inner = a === frame ? frame?.contentDocument?.activeElement : null;
-        return { page: a?.tagName ?? null, frame: a === frame, inner: inner?.tagName ?? null };
-    }, WASM_PAGE);
-    const gameHasKeys = (c) => c.frame && c.inner === 'CANVAS';
-
-    /**
-     * A key pressed the way a PERSON presses it after an activation: no tab
-     * click, no canvas click, no focus() — whatever has the page's focus gets
-     * it. `{moved, before, after}`.
-     */
-    async function keyMovesPlayer(key, minPx = 4, ceilingMs = 1500) {
-        const before = await livePlayer();
-        const start = Date.now();
-        await page.keyboard.down(key);
-        let after = before;
-        try {
-            while (Date.now() - start < ceilingMs) {
-                // eslint-disable-next-line no-await-in-loop
-                await page.waitForTimeout(50);
-                // eslint-disable-next-line no-await-in-loop
-                after = await livePlayer();
-                if (before && after && Math.hypot(after.x - before.x, after.y - before.y) >= minPx) break;
-            }
-        } finally {
-            await page.keyboard.up(key);
-        }
-        const moved = !!before && !!after && Math.hypot(after.x - before.x, after.y - before.y) >= minPx;
-        return { moved, before, after };
-    }
-
-    /** Hold `key` until `until()` answers, or the ceiling; `{value, ms}`. */
-    async function holdUntil(key, until, ceilingMs = HOLD_CEILING_MS) {
-        await gameFrame().evaluate(() => document.getElementById('canvas')?.focus());
-        const start = Date.now();
-        await page.keyboard.down(key);
-        let value = null;
-        try {
-            while (!value && Date.now() - start < ceilingMs) {
-                // eslint-disable-next-line no-await-in-loop
-                await page.waitForTimeout(50);
-                // eslint-disable-next-line no-await-in-loop
-                value = await until();
-            }
-        } finally {
-            await page.keyboard.up(key);
-        }
-        return { value, ms: Date.now() - start };
-    }
-
-    const invoked = (level, spawn) => `[BridgeGeneric] Invoked: new Game(${level},${spawn.x},${spawn.y})`;
-    const parsePending = (v) => {
-        const parts = String(v ?? '').split('|');
-        return parts.length === 6 ? { fromLevel: +parts[1], type: parts[2], x: +parts[3], y: +parts[4], to: +parts[5] } : null;
-    };
+    /** ⛓ T3: the shared hands (`seedlingRoomPlay.js`); this gate keeps only its own phases. */
+    const {
+        check, failures, waitFor, gameFrame, readGameState, livePlayer, activeTabTitles, currentRegion,
+        glueStats, glueMoves, activeSubstrates, arrival, installWatchers, jump, focusGame, focusChain,
+        gameHasKeys, keyMovesPlayer, holdUntil, invoked, parsePending, mazeKeyPlan, pressKeys,
+        mazeHasKeys,
+    } = createRoomPlay({ page, wasmPage: WASM_PAGE, logs, name: 'check-seedling-spiral-room-play' });
 
     /**
      * Out through `door`, fired by the game. Returns the parsed pendingExit.
@@ -471,10 +319,7 @@ async function main() {
          * focus nowhere useful before (BODY, measured): the maze's root was
          * focused while still hidden. Nothing here clicks it.
          */
-        const mazeKeys = await waitFor('the maze panel has the keyboard after the door', () => page.evaluate(async () => {
-            const p = (await import('./modules/mazeRoom/index.js')).getPanelInstance();
-            return p?.rootElement?.contains(document.activeElement) ? document.activeElement.className : null;
-        }), 5000).catch(async () => page.evaluate(() => `${document.activeElement?.tagName}.${document.activeElement?.className}`));
+        const mazeKeys = await waitFor('the maze panel has the keyboard after the door', mazeHasKeys, 5000).catch(async () => page.evaluate(() => `${document.activeElement?.tagName}.${document.activeElement?.className}`));
         check(`${label}: the MAZE panel has the page's keyboard after the door (no click)`,
             typeof mazeKeys === 'string' && mazeKeys.startsWith('maze-room-panel'), `activeElement ${JSON.stringify(mazeKeys)}`);
         check(`${label}: the maze put the player ON its exit back to ${START} (${landed.back.map((e) => e.id).join(', ')}), not on its entrance`,
@@ -548,53 +393,9 @@ async function main() {
      * queue}` after the crossing, or `{error}`.
      */
     const mazeKeyCross = async (target) => {
-        const plan = await page.evaluate(async (want) => {
-            const p = (await import('./modules/mazeRoom/index.js')).getPanelInstance();
-            const world = p.world;
-            const key = (x, y) => `${x},${y}`;
-            const exitAt = new Map([...world.exits.values()].map((e) => [key(e.x, e.y), e]));
-            const from = { ...p.state.player_pos };
-            // Standing ON the exit into `want` (an arrival lands on its paired
-            // exit): step off onto a floor neighbour and back on.
-            const here = exitAt.get(key(from.x, from.y));
-            if (here?.targetRegion === want) {
-                const dirs = [[0, -1, 'ArrowUp', 'ArrowDown'], [1, 0, 'ArrowRight', 'ArrowLeft'],
-                    [0, 1, 'ArrowDown', 'ArrowUp'], [-1, 0, 'ArrowLeft', 'ArrowRight']];
-                const off = dirs.find(([dx, dy]) => {
-                    const nx = from.x + dx; const ny = from.y + dy;
-                    return nx >= 0 && ny >= 0 && nx < world.width && ny < world.height && !exitAt.has(key(nx, ny))
-                        && !world.obstacles.has(key(nx, ny)) && world.tiles[ny * world.width + nx] === 0;
-                });
-                if (off) return { keys: [off[2], off[3]], from: p.currentRegionId };
-            }
-            const prev = new Map([[key(from.x, from.y), null]]);
-            const queue = [from];
-            let goal = null;
-            while (queue.length && !goal) {
-                const c = queue.shift();
-                for (const [dx, dy, k] of [[0, -1, 'ArrowUp'], [1, 0, 'ArrowRight'], [0, 1, 'ArrowDown'], [-1, 0, 'ArrowLeft']]) {
-                    const nx = c.x + dx; const ny = c.y + dy; const kk = key(nx, ny);
-                    if (prev.has(kk) || nx < 0 || ny < 0 || nx >= world.width || ny >= world.height) continue;
-                    const ex = exitAt.get(kk);
-                    if (ex) { if (ex.targetRegion === want) { prev.set(kk, { c, k }); goal = kk; break; } continue; }
-                    if (world.obstacles.has(kk) || world.tiles[ny * world.width + nx] !== 0) continue;
-                    prev.set(kk, { c, k });
-                    queue.push({ x: nx, y: ny });
-                }
-            }
-            if (!goal) return { error: `no key path from ${JSON.stringify(from)} in ${p.currentRegionId} to ${want}` };
-            const keys = [];
-            let at = goal;
-            while (prev.get(at)) { const { c, k } = prev.get(at); keys.unshift(k); at = key(c.x, c.y); }
-            return { keys, from: p.currentRegionId };
-        }, target);
+        const plan = await mazeKeyPlan({ exitTo: target });
         if (plan.error) return plan;
-        for (const k of plan.keys) {
-            // eslint-disable-next-line no-await-in-loop
-            await page.keyboard.press(k);
-            // eslint-disable-next-line no-await-in-loop
-            await page.waitForTimeout(80);
-        }
+        await pressKeys(plan.keys);
         const after = await waitFor(`the keypresses crossed into ${target}`, () => page.evaluate(async (want) => {
             const p = (await import('./modules/mazeRoom/index.js')).getPanelInstance();
             return p?.currentRegionId === want
@@ -759,23 +560,7 @@ async function main() {
         await page.goto(URL, { waitUntil: 'domcontentloaded' });
         await waitFor('rules loaded', () => page.evaluate(
             () => window.stateManagerProxy?.getStaticData?.()?.regions?.size > 0));
-        const wrapped = await page.evaluate(async () => {
-            const mod = await import('./modules/flashPanel/index.js');
-            const d = mod.getDispatcher();
-            if (!d || typeof d.publish !== 'function') return false;
-            window.__roomMoves = [];
-            const publish = d.publish.bind(d);
-            d.publish = (name, data, opts) => {
-                if (name === 'user:regionMove') window.__roomMoves.push(data);
-                return publish(name, data, opts);
-            };
-            window.__roomActive = [];
-            const bus = (await import('./app/core/eventBus.js')).default;
-            bus.subscribe('procgen:activeSubstrateChanged',
-                (p) => window.__roomActive.push(p ? p.substrate : null), 'check-seedling-spiral-room-play');
-            return true;
-        });
-        if (!wrapped) throw new Error('could not wrap the flashPanel dispatcher — the watcher would be silent');
+        await installWatchers();
         check('Phase A: the regionMove watcher is installed on the real publish channel', true);
         check(`Phase A: the preset loaded and the player starts in ${START}`,
             (await currentRegion()) === START, await currentRegion());
@@ -916,9 +701,8 @@ async function main() {
         check('the glue agrees with the independent watcher', statsEnd.regionMoves === (await glueMoves()).length
             && statsEnd.parks === 2 && statsEnd.resumes === 2, JSON.stringify(statsEnd));
     } catch (err) {
-        console.log(`FAIL: fatal: ${err.message}`);
+        check(`fatal: ${err.message}`, false);
         console.log(`PAGE LOGS (last 60):\n${logs.slice(-60).join('\n')}`);
-        failures += 1;
     } finally {
         await browser.close();
     }
@@ -926,9 +710,10 @@ async function main() {
     // ⛔ Not a check(): see the header. Printed verbatim so a third error shows.
     console.log(`PAGE ERRORS (diagnostic, logic-only channel — the device loss is expected): ${pageErrors.length}`);
     for (const e of pageErrors) console.log(`  pageerror: ${e}`);
-    console.log(failures === 0
+    const failed = failures();
+    console.log(failed === 0
         ? '\nOK: the placed Seedling room plays — its own doors out into the maze, the maze walked back in'
-        : `\nFAILED: ${failures} check(s)`);
-    console.log(failures === 0 ? 'ALL CHECKS PASSED' : `${failures} CHECK(S) FAILED`);
-    process.exit(failures === 0 ? 0 : 1);
+        : `\nFAILED: ${failed} check(s)`);
+    console.log(failed === 0 ? 'ALL CHECKS PASSED' : `${failed} CHECK(S) FAILED`);
+    process.exit(failed === 0 ? 0 : 1);
 }

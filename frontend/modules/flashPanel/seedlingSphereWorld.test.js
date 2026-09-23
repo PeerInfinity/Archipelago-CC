@@ -11,6 +11,7 @@
  * it. This file is the oracle the committed `seedling_sphere_room` preset is
  * checked against.
  */
+import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -143,4 +144,12 @@ describe('the sphere-growth world with a real Seedling room as a LEAF (T3)', () 
         expect(Object.keys(state.scenario.items)).toContain(locs[0].item?.name);
     });
 
+    it('the committed seedling_sphere_room preset IS this world', async () => {
+        // The byte gate is make-seedling-spiral-room-preset.mjs --state=sphere --check;
+        // this row keeps the equality in the CI suite, format-agnostic.
+        const committed = JSON.parse(readFileSync(
+            join(ROOT, 'frontend/presets/seedling_sphere_room/AP_1/AP_1_rules.json'), 'utf8'));
+        const { rulesJson } = await build(SEEDLING_SPHERE_ROOM_STATE);
+        expect(committed).toEqual(rulesJson);
+    });
 });

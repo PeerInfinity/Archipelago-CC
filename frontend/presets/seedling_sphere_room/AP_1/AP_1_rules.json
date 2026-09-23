@@ -1,0 +1,964 @@
+{
+  "schema_version": 3,
+  "game_name": "Procgen Maze",
+  "game_directory": "procgen_maze_worldgen",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 1,
+  "seed_name": "",
+  "player_names": {
+    "1": "Player1"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "region_2_2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_2_2": {
+        "name": "region_2_2",
+        "exits": [
+          {
+            "name": "exit_0",
+            "connected_region": "region_2_3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_blue"
+              }
+            }
+          },
+          {
+            "name": "exit_1",
+            "connected_region": "region_3_2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_blue"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_2_2__loc_0__2_3",
+            "id": 1000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "key_blue",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "region_3_2": {
+        "name": "region_3_2",
+        "exits": [
+          {
+            "name": "region_2_2",
+            "connected_region": "region_2_2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_blue"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_2_3": {
+        "name": "region_2_3",
+        "exits": [
+          {
+            "name": "exit",
+            "connected_region": "region_2_4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_red"
+              }
+            }
+          },
+          {
+            "name": "region_2_2",
+            "connected_region": "region_2_2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_blue"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_2_3__loc_0__2_3",
+            "id": 1001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "key_red",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "region_2_4": {
+        "name": "region_2_4",
+        "exits": [
+          {
+            "name": "region_2_3",
+            "connected_region": "region_2_3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_red"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_2_4__loc_0__0_0",
+            "id": 1002,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "victory",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "key_blue": {
+        "name": "key_blue",
+        "id": 1,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "key_red": {
+        "name": "key_red",
+        "id": 2,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "victory": {
+        "name": "victory",
+        "id": 3,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "key_blue": 1,
+      "key_red": 1,
+      "victory": 1
+    }
+  },
+  "world": {
+    "1": {
+      "game": "Procgen Maze",
+      "world_class_name": "ProcgenMazeWorld",
+      "options": {}
+    }
+  },
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "victory"
+      }
+    }
+  },
+  "helpers": {},
+  "exporter": {},
+  "canonical_placements": {
+    "1": {
+      "region_2_2__loc_0__2_3": "key_blue",
+      "region_2_3__loc_0__2_3": "key_red",
+      "region_2_4__loc_0__0_0": "victory"
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "assume_bidirectional_exits": true,
+  "region_atlas": {
+    "atlas_id": "seedling-ab0b2709",
+    "game": "seedling",
+    "map_document": "seedling-map.json"
+  },
+  "flash_panel": {
+    "config": "seedling.json",
+    "wasm": "seedling_bot_ap_p4d/game.html"
+  },
+  "preset_sidecars": {
+    "1": {
+      "region_2_2": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 2
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1
+          ],
+          "entrance": {
+            "x": 4,
+            "y": 3
+          },
+          "exits": [
+            {
+              "exit_id": "exit_0",
+              "x": 3,
+              "y": 5,
+              "side": "S",
+              "exitName": "exit_0",
+              "targetRegion": "region_2_3",
+              "targetExitId": "region_2_2",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_1",
+              "x": 7,
+              "y": 1,
+              "side": "E",
+              "exitName": "exit_1",
+              "targetRegion": "region_3_2",
+              "targetExitId": "region_2_2",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 3,
+              "y": 5,
+              "id": "logic_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "id": "logic_gate_1"
+            }
+          ],
+          "items": [
+            {
+              "x": 2,
+              "y": 3,
+              "id": "key_blue",
+              "locationName": "region_2_2__loc_0__2_3"
+            }
+          ],
+          "obstacleLib": {
+            "logic_gate_0": {
+              "name": "Logic Gate",
+              "id": "logic_gate_0",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "key_blue"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            },
+            "logic_gate_1": {
+              "name": "Logic Gate",
+              "id": "logic_gate_1",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "key_blue"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 10,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
+      },
+      "region_2_3": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 3
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "entrance": {
+            "x": 3,
+            "y": 0
+          },
+          "exits": [
+            {
+              "exit_id": "exit",
+              "x": 1,
+              "y": 5,
+              "side": "S",
+              "exitName": "exit",
+              "targetRegion": "region_2_4",
+              "targetExitId": "region_2_3",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "region_2_2",
+              "x": 3,
+              "y": 0,
+              "side": "N",
+              "exitName": "region_2_2",
+              "targetRegion": "region_2_2",
+              "targetExitId": "exit_0",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 1,
+              "y": 5,
+              "id": "logic_gate_0"
+            }
+          ],
+          "items": [
+            {
+              "x": 2,
+              "y": 3,
+              "id": "key_red",
+              "locationName": "region_2_3__loc_0__2_3"
+            }
+          ],
+          "obstacleLib": {
+            "logic_gate_0": {
+              "name": "Logic Gate",
+              "id": "logic_gate_0",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "key_red"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 21,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
+      },
+      "region_3_2": {
+        "substrate": "flash_seedling",
+        "render_hint": "flash_seedling",
+        "grid_cell": {
+          "gx": 3,
+          "gy": 2
+        },
+        "playable_payload": {
+          "gameId": "seedling",
+          "atlas_ref": "seedling-ab0b2709",
+          "atlas_region": "dungeon1_room1",
+          "atlas_sub_region": "r0c4",
+          "level": 3,
+          "tile_size": 16,
+          "exits": [
+            {
+              "exit_id": "stairs_up",
+              "kind": "teleporter",
+              "exit_tiles": [
+                [
+                  4,
+                  0
+                ]
+              ],
+              "entrance_tile": [
+                4,
+                0
+              ],
+              "entrance_spawn": {
+                "x": 64,
+                "y": 0
+              },
+              "exitName": "region_2_2",
+              "targetRegion": "region_2_2",
+              "targetExitId": "exit_1",
+              "target_level": null,
+              "target_spawn": null,
+              "side": "W",
+              "external": true,
+              "isTeleporter": false,
+              "target_substrate": "maze"
+            }
+          ],
+          "fogEnabled": true
+        }
+      },
+      "region_2_4": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 4
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "entrance": {
+            "x": 1,
+            "y": 0
+          },
+          "exits": [
+            {
+              "exit_id": "region_2_3",
+              "x": 1,
+              "y": 0,
+              "side": "N",
+              "exitName": "region_2_3",
+              "targetRegion": "region_2_3",
+              "targetExitId": "exit",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [],
+          "items": [
+            {
+              "x": 0,
+              "y": 0,
+              "id": "victory",
+              "locationName": "region_2_4__loc_0__0_0"
+            }
+          ],
+          "obstacleLib": {},
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
+      }
+    }
+  },
+  "procgen_metadata": {
+    "driver": "sphere-growth",
+    "stop_reason": "plan_complete",
+    "sphere_plan": {
+      "seed": 1,
+      "spheres": [
+        {
+          "sphere": 1,
+          "items": [
+            "key_blue"
+          ]
+        },
+        {
+          "sphere": 2,
+          "items": [
+            "key_red"
+          ]
+        },
+        {
+          "sphere": 3,
+          "items": [
+            "victory"
+          ]
+        }
+      ]
+    },
+    "sphere_tree": {
+      "nodes": [
+        {
+          "index": 0,
+          "wave": 0,
+          "parent": null,
+          "side": null,
+          "cell": {
+            "gx": 2,
+            "gy": 2
+          },
+          "isTeleporter": false,
+          "substrate": "maze",
+          "gate": [],
+          "gateCounts": {},
+          "usedSides": [
+            "E",
+            "N"
+          ],
+          "childGates": [
+            [
+              {
+                "item": "key_blue",
+                "count": 1
+              }
+            ],
+            [
+              {
+                "item": "key_blue",
+                "count": 1
+              }
+            ]
+          ],
+          "isFiller": false
+        },
+        {
+          "index": 1,
+          "wave": 1,
+          "parent": 0,
+          "side": "S",
+          "cell": {
+            "gx": 2,
+            "gy": 3
+          },
+          "isTeleporter": false,
+          "substrate": "maze",
+          "gate": [
+            "key_blue"
+          ],
+          "gateCounts": {
+            "key_blue": 1
+          },
+          "usedSides": [
+            "W",
+            "E"
+          ],
+          "childGates": [
+            [
+              {
+                "item": "key_blue",
+                "count": 1
+              }
+            ],
+            [
+              {
+                "item": "key_red",
+                "count": 1
+              }
+            ]
+          ],
+          "isFiller": false
+        },
+        {
+          "index": 2,
+          "wave": 1,
+          "parent": 0,
+          "side": "E",
+          "cell": {
+            "gx": 3,
+            "gy": 2
+          },
+          "isTeleporter": false,
+          "substrate": "flash_seedling",
+          "gate": [
+            "key_blue"
+          ],
+          "gateCounts": {
+            "key_blue": 1
+          },
+          "usedSides": [
+            "S"
+          ],
+          "childGates": [],
+          "isFiller": true
+        },
+        {
+          "index": 3,
+          "wave": 2,
+          "parent": 1,
+          "side": "S",
+          "cell": {
+            "gx": 2,
+            "gy": 4
+          },
+          "isTeleporter": false,
+          "substrate": "maze",
+          "gate": [
+            "key_red"
+          ],
+          "gateCounts": {
+            "key_red": 1
+          },
+          "usedSides": [
+            "W"
+          ],
+          "childGates": [
+            [
+              {
+                "item": "key_red",
+                "count": 1
+              }
+            ]
+          ],
+          "isFiller": false
+        }
+      ],
+      "substrateCounts": {
+        "maze": 3,
+        "flash_seedling": 1
+      },
+      "quotaFallbacks": 0
+    },
+    "region_count": 4,
+    "grid_dims": {
+      "width": 4,
+      "height": 5
+    }
+  },
+  "sphere_log": [
+    {
+      "type": "metadata",
+      "seed": 1,
+      "seed_name": "",
+      "event_locations": {},
+      "event_items": {}
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {},
+            "resolved_items": {}
+          },
+          "new_accessible_locations": [
+            "region_2_2__loc_0__2_3"
+          ],
+          "new_accessible_regions": [
+            "Menu",
+            "region_2_2"
+          ],
+          "sphere_locations": []
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_blue": 1
+            },
+            "resolved_items": {
+              "key_blue": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_2_3__loc_0__2_3"
+          ],
+          "new_accessible_regions": [
+            "region_2_3",
+            "region_3_2"
+          ],
+          "sphere_locations": [
+            "region_2_2__loc_0__2_3"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_red": 1
+            },
+            "resolved_items": {
+              "key_red": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_2_4__loc_0__0_0"
+          ],
+          "new_accessible_regions": [
+            "region_2_4"
+          ],
+          "sphere_locations": [
+            "region_2_3__loc_0__2_3"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "victory": 1
+            },
+            "resolved_items": {
+              "victory": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_2_4__loc_0__0_0"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -148,7 +148,9 @@ describe('⚖ F7b — the override has no instance in the tree, and no channel t
         // ⛓ 4 since seedling-pipeline T2 (2026-09-23): `seedling_spiral_room`, a
         //   spiral world with a placed flash_seedling room, carries the installed
         //   atlas's `region_atlas` block — and names the default, like the other three.
-        expect(named).toHaveLength(4);
+        // ⛓ 5 since seedling-pipeline T3 (2026-09-23): `seedling_sphere_room`, the
+        //   sphere-growth world with a placed room as a leaf, carries it the same way.
+        expect(named).toHaveLength(5);
         for (const doc of named) expect(doc).toBe(DEFAULT_MAP_DOCUMENT);
     });
 
