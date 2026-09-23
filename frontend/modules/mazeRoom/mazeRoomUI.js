@@ -72,6 +72,7 @@ import {
 // same worlds with the same pixels. `_drawWorld` is now an adapter that
 // builds `drawWorld`'s `view` out of this panel's own state.
 import { TILE_PX, drawWorld } from './mazeRoomRender.js';
+import { resolveMazeArrival } from './mazeArrival.js';
 /**
  * ⛓ DEDUP M6 — the ONE pixel→tile conversion, DOM-free and unit-tested. The
  * lab page's canvas has used it since editor v3; the panel divided by the
@@ -1538,11 +1539,13 @@ export class MazeRoomUI {
         this._lastConsumableResetCount = null;
         this.world = payload.world;
         this.state = createState(this.world);
-        const arrivedExitId = payload.arrivedFrom?.exit_id;
+        // ⛓ T2b F1 — `exit_id`, else the exit leading back to
+        // `arrivedFrom.source_region` (a world with no reverse links, e.g. a
+        // return from a placed Seedling room), else the entrance.
+        const arrival = resolveMazeArrival(this.world, payload.arrivedFrom);
         let spawnAt = null;
-        if (arrivedExitId && this.world.exits?.has(arrivedExitId)) {
-            const exit = this.world.exits.get(arrivedExitId);
-            spawnAt = { x: exit.x, y: exit.y };
+        if (arrival) {
+            spawnAt = { x: arrival.x, y: arrival.y };
             this.state.player_pos = spawnAt;
         }
         this.stats = null;

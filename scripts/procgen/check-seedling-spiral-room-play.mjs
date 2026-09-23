@@ -441,6 +441,22 @@ async function main() {
         check(`${label}: the flash panel PARKED and the maze owns the region (procgen:activeSubstrateChanged)`,
             stats.parks === expectParks && active[active.length - 1] === door.target_substrate,
             `parks ${stats.parks}, active-substrate events ${JSON.stringify(active)}`);
+        /**
+         * ⛓ T2b F1 — THE MAZE LANDS THE PLAYER ON ITS EXIT BACK, not on its
+         * `entrance`. The spiral links no reverse exits, so `arrivedFrom.exit_id`
+         * is the room's own `exitName`, which no maze exit has; the maze's
+         * `source_region` arm picks the exit whose target is the room. Read off
+         * the maze panel's live state and the live world, nothing typed here.
+         */
+        const landed = await waitFor(`the maze panel holds ${door.targetRegion}`, () => page.evaluate(async (want) => {
+            const p = (await import('./modules/mazeRoom/index.js')).getPanelInstance();
+            if (!p?.world || p.currentRegionId !== want.region) return null;
+            const back = [...p.world.exits.values()].filter((e) => e.targetRegion === want.start);
+            return { pos: { ...p.state.player_pos }, entrance: p.world.entrance, back: back.map((e) => ({ id: e.exit_id, x: e.x, y: e.y })) };
+        }, { region: door.targetRegion, start: START }), 15000);
+        check(`${label}: the maze put the player ON its exit back to ${START} (${landed.back.map((e) => e.id).join(', ')}), not on its entrance`,
+            landed.back.some((e) => e.x === landed.pos.x && e.y === landed.pos.y),
+            `player ${JSON.stringify(landed.pos)}, entrance ${JSON.stringify(landed.entrance)}, exits back ${JSON.stringify(landed.back)}`);
         return fired;
     }
 
@@ -506,13 +522,14 @@ async function main() {
      * and ONLY from it: the arrival arm under test is the one that reads
      * `source_region`.
      *
-     * ⛔ THE STRAIGHT WALK BACK IS NOT ALWAYS THERE (measured, run 6). Arriving
-     * from the room, the maze puts the player on its `entrance`, because the spiral
-     * links no reverse exit and the maze has no `source_region` arm. In
-     * `region_1_0` that cell is a six-tile pocket whose only way out is `exit_0`.
-     * So when the exit back is out of reach, the walk goes out to a neighbour and
-     * back in. The maze lands a maze-to-maze arrival ON the paired exit tile, which
-     * is on the far side of the pocket, and every hop is the maze's own walking.
+     * ⛓ THE STRAIGHT WALK BACK (T2b F1). Before F1 the maze put an arrival from
+     * the room on its `entrance`, because the spiral links no reverse exit and
+     * the maze had no `source_region` arm; in `region_1_0` that cell is a
+     * six-tile pocket whose only way out is `exit_0`, and this walk had to go out
+     * to a neighbour and back in (3 hops, measured). The maze now lands the player
+     * ON its exit back (the departure asserts it), so the walk is one hop. The
+     * out-and-back fallback stays for a world where the exit back is out of reach;
+     * the hop list printed below says which path ran.
      *
      * ⚠ THE PLACED-REGION LEG'S KEYPRESS (`_handleKeydown`) IS NOT USED HERE. Run 7
      * took the second hop by keypress, and the maze panel's own `ActionQueue.add`
