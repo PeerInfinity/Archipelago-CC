@@ -48,6 +48,7 @@ import { join } from 'node:path';
 
 import { REPO, src } from './lib.mjs';
 import { M } from './sources.mjs';
+import { fieldNamesOf, shapeRows } from '../../../frontend/modules/procgenDocs/registryShape.js';
 
 /** ⛓ THE DOC THIS TABLE LIVES IN — its headings group the rows, and its
  *  "Capability matrix" section is the region the generator writes. */
@@ -173,51 +174,11 @@ function mentionedElsewhere(name) {
  * THE VALUES
  * ══════════════════════════════════════════════════════════════════════ */
 
-/** ⛓ What ONE entry says about ONE field — the TYPE always, the value where a
- *  value is a fact a reader can use. A function is a `function` and nothing
- *  more: its body is not this table's subject. */
-function cellOf(value) {
-    if (value === undefined) return { present: false, type: 'absent', value: null, short: '—' };
-    /** ⛔ `null` IS A VALUE HERE, not an absence: bounce declares
-     *  `gateableItems: null`, and the doc's own bullet says what it means —
-     *  *null ⇒ full vocabulary*. Reading it as an object crashed the page. */
-    if (value === null) return { present: true, type: 'null', value: null, short: '`null`' };
-    if (typeof value === 'function') {
-        return { present: true, type: 'function', value: null, short: 'fn' };
-    }
-    if (Array.isArray(value)) {
-        return {
-            present: true,
-            type: 'array',
-            value: value.map((v) => (typeof v === 'object' ? JSON.stringify(v) : String(v))),
-            short: value.length <= 3 && value.join(', ').length <= 44
-                ? value.join(', ') : `${value.length} items`,
-        };
-    }
-    if (value && typeof value === 'object') {
-        const keys = Object.keys(value).sort();
-        return {
-            present: true, type: 'object', value: keys,
-            short: keys.join(', ').length <= 44 ? `{${keys.join(', ')}}` : `${keys.length} keys`,
-        };
-    }
-    if (typeof value === 'boolean') {
-        return { present: true, type: 'boolean', value, short: value ? 'yes' : 'no' };
-    }
-    return {
-        present: true, type: typeof value, value,
-        short: String(value).length <= 44 ? String(value) : `${String(value).length} chars`,
-    };
-}
-
-const digTwo = (entry, path) => {
-    let v = entry;
-    for (const k of path.split('.')) {
-        if (v === null || typeof v !== 'object' || !(k in v)) return undefined;
-        v = v[k];
-    }
-    return v;
-};
+/** ⛓ The cell shaper (`cellOf`, `digTwo`) and the row universe
+ *  (`fieldNamesOf`, `shapeRows`) live in `frontend/modules/procgenDocs/
+ *  registryShape.js`, browser-safe, because the in-app `substrateRegistryPanel`
+ *  shapes the LIVE registry with the same code and diffs it against this
+ *  snapshot. */
 
 /**
  * ⛓ WHICH FIELDS GET EXPANDED into `parent.child` rows — DERIVED, not listed:
@@ -258,28 +219,12 @@ export async function buildRegistry() {
 
     /* ⛓ THE ROW UNIVERSE — the union of what the ENTRIES carry, plus the
      * dotted sub-fields of every expandable parent. ⛔ Never a hand list. */
-    const names = new Set();
-    for (const e of entries) {
-        for (const k of Object.keys(e)) {
-            names.add(k);
-            if (!expandable.has(k)) continue;
-            const child = e[k];
-            if (!child || typeof child !== 'object' || Array.isArray(child)) continue;
-            for (const c of Object.keys(child)) {
-                names.add(`${k}.${c}`);
-                if (!expandable.has(`${k}.${c}`)) continue;
-                const grand = child[c];
-                if (!grand || typeof grand !== 'object' || Array.isArray(grand)) continue;
-                for (const g of Object.keys(grand)) names.add(`${k}.${c}.${g}`);
-            }
-        }
-    }
+    const names = fieldNamesOf(entries, expandable);
 
     const UNDOCUMENTED = 'Not documented in the registry reference';
     const findings = [];
-    const rows = [...names].sort().map((name) => {
+    const rows = shapeRows(entries, names).map(({ name, cells }) => {
         const doc = documented.get(name) ?? null;
-        const cells = entries.map((e) => ({ id: e.id, ...cellOf(digTwo(e, name)) }));
         if (!doc) {
             const elsewhere = mentionedElsewhere(name.split('.')[0]);
             findings.push({
