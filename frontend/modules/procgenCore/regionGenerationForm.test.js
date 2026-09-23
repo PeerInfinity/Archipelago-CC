@@ -23,7 +23,7 @@ import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { geometryOf, REGION_GEOMETRY } from './regionGeometry.js';
 import {
-    REGION_GENERATION_FIELDS, PROCGEN_PARAMS_ATTR, bagFromPayload, fieldRow, numberField,
+    REGION_GENERATION_FIELDS, PROCGEN_PARAMS_ATTR, bagFromPayload, bagIntegerField, fieldRow, numberField,
     regionGenerationFieldsFor, renderRegionGenerationForm,
 } from './regionGenerationForm.js';
 
@@ -191,6 +191,32 @@ describe('a change writes its bag key and calls onChange exactly once', () => {
         expect([bag.k, input.value]).toEqual([2, '2.7']);
         input.value = 'abc'; input.fire('change');
         expect(bag.k).toBe(1);
+    });
+
+    it('⛓ bagIntegerField: parseInt, no clamping, a non-number leaves the bag alone', () => {
+        const bag = { k: 3 };
+        let calls = 0;
+        const row = withFakeDocument(() => bagIntegerField(bag, { key: 'k', label: 'K', min: 0, max: 10 },
+            () => { calls += 1; }));
+        const [input] = controls(row);
+        input.value = '99.9'; input.fire('change');
+        expect(bag.k).toBe(99);
+        input.value = 'abc'; input.fire('change');
+        expect(bag.k).toBe(99);
+        expect(calls).toBe(2);
+    });
+
+    it('⛓ bagIntegerField `nullable`: an empty box or a step down to 0 stores null and clears the box', () => {
+        const bag = { k: 2 };
+        const row = withFakeDocument(() => bagIntegerField(bag,
+            { key: 'k', label: 'K', min: 0, nullable: true, placeholder: 'all' }));
+        const [input] = controls(row);
+        input.value = '0'; input.fire('change');
+        expect([bag.k, input.value]).toEqual([null, '']);
+        input.value = '3'; input.fire('change');
+        expect(bag.k).toBe(3);
+        input.value = ''; input.fire('change');
+        expect([bag.k, input.value]).toEqual([null, '']);
     });
 
     it('⛓ fieldRow wraps any control in one labelled `procgen-pipeline-field` row', () => {
