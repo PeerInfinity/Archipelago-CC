@@ -93,11 +93,34 @@ export function exitList(world) {
  * alternative; it is keyed by display names that atlas region ids do not match,
  * and it is engine binding for the manual teleport UI, not map truth.)
  */
+/**
+ * ⛓⛓ SEEDLING IN THE PIPELINE T1 — **WHICH EXIT AN ARRIVAL NAMES, THREE WAYS,
+ * IN THIS ORDER.** A compiled atlas world names it by the ATLAS exit id (its
+ * source exits carry `targetExitId`), and that arm is tried first, so every
+ * such world resolves exactly as before. A room PLACED by the pipeline keeps
+ * the atlas id as `exit_id` and carries the engine's `exit_<side>` as
+ * `exitName` — a world that links reverse exits (sphere, grid, top-down) names
+ * that. And a world that links none (the shuffled spiral: `linkReverseExits`
+ * is top-down's alone) hands over only the SOURCE region's own exit name,
+ * which names nothing here; `source_region` is then the one fact left, and the
+ * arrival is the exit leading back to it. Two doors to one neighbour: the
+ * first in payload order, which is the order the doors were bound in.
+ */
+function arrivalExitOf(exits, arrivedFrom) {
+    const wanted = arrivedFrom?.exit_id ?? null;
+    if (wanted) {
+        const byId = exits.find((e) => e.exit_id === wanted)
+            ?? exits.find((e) => e.exitName === wanted);
+        if (byId) return byId;
+    }
+    const source = arrivedFrom?.source_region ?? null;
+    return source ? (exits.find((e) => e.targetRegion === source) ?? null) : null;
+}
+
 export function resolveArrivalSpawn(world, arrivedFrom) {
     const exits = exitList(world);
     if (exits.length === 0) return null;
-    const wantedId = arrivedFrom?.exit_id ?? null;
-    const byId = wantedId ? exits.find((e) => e.exit_id === wantedId) : null;
+    const byId = arrivalExitOf(exits, arrivedFrom);
     const exit = byId ?? exits[0];
     const spawn = exit?.entrance_spawn;
     if (!spawn || !Number.isFinite(world?.level)) return null;
@@ -173,6 +196,29 @@ export function parsePendingExit(value) {
  * exist; deleting it deletes the licence.
  */
 export const outExitIdOf = ({ type, x, y }) => `out_${type}_${x}_${y}`;
+
+/**
+ * ⛓⛓ SEEDLING IN THE PIPELINE T1 — **WHICH EXIT A DOOR REPORT IS, TWO WAYS,
+ * IN THIS ORDER.** A DERIVED atlas spells its door ids `out_<type>_<x>_<y>`,
+ * and that arm is tried first, so every such world resolves exactly as before.
+ * A HAND-AUTHORED atlas names its doors (the starter atlas: `house_door`,
+ * `owls_nest_stairs`), so the id cannot be rebuilt from the report; what the
+ * two share is the TILE — the door's pixel position over the payload's own
+ * `tile_size` falls in one of the exit's `exit_tiles`. Measured on the starter
+ * atlas: every door id is a name, so without this arm no door of a placed
+ * starter-atlas room could ever be recognised as a departure.
+ */
+export function departureExitOf(world, door) {
+    const exits = exitList(world);
+    const exitId = outExitIdOf(door);
+    const byId = exits.find((e) => e.exit_id === exitId);
+    if (byId) return byId;
+    const size = world?.tile_size;
+    if (!Number.isInteger(size) || size <= 0) return null;
+    const tx = Math.floor(door.x / size);
+    const ty = Math.floor(door.y / size);
+    return exits.find((e) => (e.exit_tiles ?? []).some(([x, y]) => x === tx && y === ty)) ?? null;
+}
 
 const dist2 = (a, b) => {
     if (!a || !b || !Number.isFinite(a.x) || !Number.isFinite(a.y)) return Number.POSITIVE_INFINITY;
@@ -464,8 +510,7 @@ export class SeedlingRegionBinding {
      */
     _resolveDeparture(door) {
         if (!door) return [];
-        const exitId = outExitIdOf(door);
-        const exit = exitList(this.world).find((e) => e.exit_id === exitId);
+        const exit = departureExitOf(this.world, door);
         if (!exit || !exit.external) return [];
         // The game swaps anyway — design (c) — into a real room of its own
         // set. Mark that swap so its `level` report is not read as a crossing.
