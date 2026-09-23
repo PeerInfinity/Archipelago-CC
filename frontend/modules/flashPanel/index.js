@@ -117,6 +117,9 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher(AP_ITEM_FOUND_EVENT);
   registrationApi.registerEventBusSubscriberIntent(AP_ITEM_FOUND_EVENT);
 
+  // Self-activation on a region load (see `activateOnLoadRegion`).
+  registrationApi.registerEventBusPublisher('ui:activatePanel');
+
   log('info', '[FlashPanel Module] Registration complete.');
 }
 
@@ -163,6 +166,23 @@ export function getActivePanelInstance() {
   return activePanelInstance;
 }
 
+/**
+ * ⛓ SEEDLING T2b (U1) — **A REGION LOAD BRINGS THE PANEL FORWARD**, the rule
+ * every other substrate panel already follows (bounce `flashSubstrate/index.js`,
+ * maze `mazeRoom/index.js`, jta). Without it a return from a maze region into a
+ * placed Seedling room left the Maze Room tab in front, showing *"Currently
+ * playing Seedling (region atlas)"*, and the person had to find the tab.
+ *
+ * Skipped when loops' "Keep this panel focused" pins another panel
+ * (`isFocusLocked`); the glue still takes the region, only the tab switch is
+ * suppressed.
+ */
+export function activateOnLoadRegion(bus, isFocusLocked) {
+  if (isFocusLocked?.()) return false;
+  bus?.publish?.('ui:activatePanel', { panelId: moduleInfo.componentType });
+  return true;
+}
+
 export function initialize(moduleId, priorityIndex, initializationApi) {
   log('info', `[FlashPanel Module] Initializing with priority ${priorityIndex}...`);
   moduleDispatcher = initializationApi.getDispatcher();
@@ -180,9 +200,18 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   });
   seedlingRegionGlue.start();
 
+  // ⛓ AFTER the glue's own subscription, so the arrival is queued before the
+  // tab switch that resumes the game's page.
+  const activationBus = getModuleEventBus();
+  const onLoadRegionActivate = () => activateOnLoadRegion(activationBus,
+    initializationApi.getModuleFunction?.('loops', 'isFocusLocked'));
+  const offActivate = activationBus.subscribe(FLASH_SEEDLING_LOAD_REGION_EVENT, onLoadRegionActivate);
+
   log('info', '[FlashPanel Module] Initialization complete.');
 
   return () => {
+    if (typeof offActivate === 'function') offActivate();
+    else activationBus.unsubscribe?.(FLASH_SEEDLING_LOAD_REGION_EVENT, onLoadRegionActivate);
     if (seedlingRegionGlue) { seedlingRegionGlue.stop(); seedlingRegionGlue = null; }
   };
 }
