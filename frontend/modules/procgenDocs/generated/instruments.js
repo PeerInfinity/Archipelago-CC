@@ -99,7 +99,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 6,
+            "count": 7,
             "id": "make"
         },
         {
@@ -5353,6 +5353,31 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "THE SEGMENT CAMPAIGN'S MAP — AP's own collection order for the honest playthrough, read back out of the sphere log (R7 kickoff §3.5, slice 5).",
             "path": "scripts/procgen/make-seedling-sphere-order.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "make",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "make-seedling-spiral-room-preset.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Write the `seedling_spiral_room` preset: the shuffled-spiral world with ONE real Seedling room (seedling-in-the-pipeline T2), built headless from `SEEDLING_SPIRAL_ROOM_STATE` in `procgenPipeline/presetDefs.js`.",
+            "path": "scripts/procgen/make-seedling-spiral-room-preset.mjs"
         },
         {
             "argvHelpers": [],

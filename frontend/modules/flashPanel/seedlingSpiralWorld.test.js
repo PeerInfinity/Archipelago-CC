@@ -15,6 +15,7 @@ import { describe, it, expect } from 'vitest';
 
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { buildRunFromState, runPresetHeadless } from '../procgenPipeline/presetRun.js';
+import { SEEDLING_SPIRAL_ROOM_STATE } from '../procgenPipeline/presetDefs.js';
 import { FLASH_SEEDLING_SUBSTRATE_ID, SEEDLING_STARTER_ATLAS } from './flashSeedlingLibrary.js';
 import { SIDES } from '../shared/procgen/spatialPrimitives.js';
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
@@ -29,21 +30,24 @@ for (const rel of REGISTRY_LIBRARIES) {
 const COMMITTED = JSON.parse(readFileSync(
     join(ROOT, 'frontend/presets/seedling_atlas/AP_1/AP_1_rules.json'), 'utf8'));
 
-/** The one-room world: three maze rooms and ONE real Seedling room, seed 1. */
-export const ONE_ROOM_STATE = Object.freeze({
-    mode: 'shuffledSpiral',
-    params: { seed: 1, regionWidth: 8, regionHeight: 6 },
-    scenario: { items: {}, obstacles: {} },
-    substrateQuotas: { maze: 3, [FLASH_SEEDLING_SUBSTRATE_ID]: 1 },
-    substrateMix: {},
-    substrateMode: 'quotas',
-});
+/**
+ * The one-room world: three maze rooms and ONE real Seedling room, seed 1.
+ * ⛓ T2: spelled ONCE, in presetDefs.js — the committed `seedling_spiral_room`
+ * preset is written from the same object — and re-exported here under T1's name.
+ */
+export const ONE_ROOM_STATE = SEEDLING_SPIRAL_ROOM_STATE;
 const build = async (state) => runPresetHeadless(buildRunFromState(structuredClone(state)));
 
 /** The top-level blocks the flash panel reads, and the committed atlas preset's values for them. */
 const PANEL_BLOCKS = ['region_atlas', 'flash_panel'];
 
 describe('the one-room spiral world — the two top-level blocks', () => {
+    it('the state spells the Seedling quota with the library\'s own substrate id', () => {
+        // presetDefs.js is data with no imports, so it spells the id; this row is the drift guard.
+        expect(Object.keys(ONE_ROOM_STATE.substrateQuotas)).toContain(FLASH_SEEDLING_SUBSTRATE_ID);
+        expect(ONE_ROOM_STATE.substrateQuotas[FLASH_SEEDLING_SUBSTRATE_ID]).toBe(1);
+    });
+
     it('a world that realised a Seedling room carries `region_atlas` and `flash_panel`, the atlas\'s own values', async () => {
         const { rulesJson } = await build(ONE_ROOM_STATE);
         const realised = Object.values(rulesJson.preset_sidecars['1']).map((s) => s.substrate);
@@ -100,6 +104,15 @@ describe('the one-room spiral world, end to end (T2\'s oracle)', () => {
         const all = Object.keys(regionsOf(rulesJson));
         expect(all.length).toBeGreaterThan(4);
         expect([...reachableRegions(rulesJson)].sort()).toEqual([...all].sort());
+    });
+
+    it('the committed seedling_spiral_room preset IS this world (T2)', async () => {
+        // The byte gate is make-seedling-spiral-room-preset.mjs --check; this row
+        // keeps the equality in the CI suite, format-agnostic.
+        const committed = JSON.parse(readFileSync(
+            join(ROOT, 'frontend/presets/seedling_spiral_room/AP_1/AP_1_rules.json'), 'utf8'));
+        const { rulesJson } = await build(ONE_ROOM_STATE);
+        expect(committed).toEqual(rulesJson);
     });
 
     it('the same world built TWICE is byte-identical', async () => {

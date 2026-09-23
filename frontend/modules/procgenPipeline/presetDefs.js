@@ -83,6 +83,25 @@ export const PRESETS_SKIPPED_AS_HEAVY = Object.freeze([
 ]);
 
 /**
+ * ⛓ SEEDLING IN THE PIPELINE T2 — **THE ONE-ROOM SEEDLING WORLD, SPELLED ONCE.**
+ * Three maze rooms and ONE real Seedling room (the start region), seed 1. Its
+ * readers: the committed preset `frontend/presets/seedling_spiral_room/AP_1`
+ * (written from this state by `scripts/procgen/make-seedling-spiral-room-preset.mjs`,
+ * whose `--check` regenerates it byte-identically), the headless oracle
+ * `flashPanel/seedlingSpiralWorld.test.js` (re-exported there as
+ * `ONE_ROOM_STATE`), and the box gate `check-seedling-spiral-room-play.mjs`,
+ * which plays that preset in the Seedling wasm.
+ */
+export const SEEDLING_SPIRAL_ROOM_STATE = Object.freeze({
+    mode: 'shuffledSpiral',
+    params: Object.freeze({ seed: 1, regionWidth: 8, regionHeight: 6 }),
+    scenario: Object.freeze({ items: Object.freeze({}), obstacles: Object.freeze({}) }),
+    substrateQuotas: Object.freeze({ maze: 3, flash_seedling: 1 }),
+    substrateMix: Object.freeze({}),
+    substrateMode: 'quotas',
+});
+
+/**
  * Shipped presets. All are fixture-backed known-good configs:
  *
  * - runner-sphere-demo extends the committed runner_sphere_worldgen

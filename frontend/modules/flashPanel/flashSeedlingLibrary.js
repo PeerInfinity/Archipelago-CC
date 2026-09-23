@@ -308,6 +308,11 @@ function serializeWorld(world, extractedRules, obstacleLib, itemLib, context) {
             exitName: e.exitName ?? e.exit_id,
             targetRegion: e.targetRegion ?? null,
             targetExitId: e.targetExitId ?? null,
+            // ⛓ T2: the side law's flag, as every stitched maze exit carries it.
+            //   Absent, the editor's `move-exit-side` writes `true` out and an
+            //   explicit `false` back, and the room does not round-trip
+            //   (`apworldEditor/exitSides.test.js`'s corpus control).
+            isTeleporter: !!e.isTeleporter,
             target_level: null,
             target_spawn: null,
             // `external: true` is the bound door's own (extractZoneRules wrote it).
