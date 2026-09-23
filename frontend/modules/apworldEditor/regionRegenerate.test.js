@@ -250,6 +250,31 @@ describe('the re-link — ③ for one region', () => {
     });
 });
 
+describe('isTeleporter is the SIDE LAW\'s, not the old flag', () => {
+    it('⛓ a region whose cell no longer neighbours its target: the fresh exit IS a teleporter', () => {
+        const doc = JSON.parse(bytes(DOCS.ap10));
+        const { grid, cells } = slotLayout(doc, '1');
+        const region = 'YellowCastle';
+        const x0 = doc.preset_sidecars['1'][region].playable_payload.exits[0];
+        expect(x0.isTeleporter, 'the premise: the stored link is adjacent').toBe(false);
+        // the first empty cell that is NOT the target's neighbour on the exit's side
+        const there = cells.get(x0.targetRegion);
+        let away = null;
+        for (let gy = 0; gy < grid.height && !away; gy += 1) {
+            for (let gx = 0; gx < grid.width && !away; gx += 1) {
+                const c = { gx, gy };
+                if (!grid.hasRegion(c) && !linkIsAdjacentOnSide(grid, c, x0.side, there)) away = c;
+            }
+        }
+        expect(away, 'the map has no empty non-adjacent cell').toBeTruthy();
+        doc.preset_sidecars['1'][region].grid_cell = away;
+        const res = applyRulesDocOp(doc, regenOp('1', region, 'maze'));
+        expect(res.ok, res.error).toBe(true);
+        const x = res.doc.preset_sidecars['1'][region].playable_payload.exits.find((e) => e.exit_id === x0.exit_id);
+        expect(x.isTeleporter).toBe(true);
+    });
+});
+
 describe('the items that ride free (freeItemsFor) — top-down\'s rule', () => {
     const bounce = () => substrateRegistry.get('bounce');
     const columnParams = () => ({ ...defaultRegionParamsFor(bounce()), bounceMode: 'column' });
