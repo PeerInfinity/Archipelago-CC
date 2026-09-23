@@ -212,6 +212,8 @@ node scripts/procgen/generate-procgen-reference.mjs --check   # regenerate = no 
 
 Everything outside the two markers — including the hand-kept annotations below — is prose the generator never touches. The same data, with every full value rather than a shortened cell, is on the [reference page](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html#section-registry).
 
+Both of those are the checked-in snapshot, taken headless by the generator. The live app's view is the **Substrate Registry** panel (`frontend/modules/substrateRegistryPanel/`), which reads `substrateRegistry.getAll()` in the running page and adds three things a snapshot cannot: the registry for THIS mode (entries also register from each module's `register()` hook, and the module set varies by mode), the answers of the two callables — what `getPlaybackController()` returns right now (a controller, `null`, or absent) and the shared item-type list, static or from its `getTypes()` provider — and the drift against this snapshot, per id in both directions and per field whose short value moved since the last regeneration. It shapes cells with the generator's own shaper (`frontend/modules/procgenDocs/registryShape.js`), so a drift line is a change in the registry, not a difference between two readers.
+
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
 **8 registered entries · 72 fields · 14 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
