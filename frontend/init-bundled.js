@@ -122,6 +122,7 @@ import * as apcalcGeneratorModule from './modules/apcalcGenerator/index.js';
 import * as apworldEditorModule from './modules/apworldEditor/index.js';
 import * as mazeRoomModule from './modules/mazeRoom/index.js';
 import * as procgenLabPanelModule from './modules/procgenLabPanel/index.js';
+import * as substrateRegistryPanelModule from './modules/substrateRegistryPanel/index.js';
 import * as procgenPipelineModule from './modules/procgenPipeline/index.js';
 import * as procgenPlayerModule from './modules/procgenPlayer/index.js';
 import * as menuPanelModule from './modules/menuPanel/index.js';
@@ -227,6 +228,7 @@ const BUNDLED_MODULES = {
   apworldEditor: apworldEditorModule,
   mazeRoom: mazeRoomModule,
   procgenLabPanel: procgenLabPanelModule,
+  substrateRegistryPanel: substrateRegistryPanelModule,
   procgenPipeline: procgenPipelineModule,
   procgenPlayer: procgenPlayerModule,
   menuPanel: menuPanelModule,

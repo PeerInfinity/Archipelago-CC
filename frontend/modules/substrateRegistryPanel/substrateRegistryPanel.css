@@ -1,0 +1,56 @@
+/* substrateRegistryPanel — the live registry readout. */
+
+.substrate-registry-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: #d8d8e0;
+}
+
+.srp-bar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 4px 8px;
+    border-bottom: 1px solid #24242c;
+}
+
+.srp-header { color: #7fe0ff; flex: 1; }
+
+.srp-bar button {
+    background: #1e1e26;
+    color: #d8d8e0;
+    border: 1px solid #34343e;
+    padding: 2px 8px;
+    cursor: pointer;
+    font: inherit;
+}
+
+.srp-reference { color: #7fd88f; }
+
+.srp-body { overflow: auto; padding: 6px 8px; min-height: 0; }
+
+.srp-drift { margin-bottom: 8px; padding: 4px 8px; border: 1px solid #5a4a20; }
+.srp-drift.srp-drift-none { border-color: #2e4a34; }
+.srp-drift h3 { margin: 0 0 4px; font-size: 12px; }
+.srp-drift p { margin: 2px 0; }
+
+.srp-entry { margin: 4px 0; border: 1px solid #24242c; padding: 2px 6px; }
+.srp-entry summary { cursor: pointer; }
+.srp-sub { color: #9a9aa8; margin-left: 0.6em; }
+
+.srp-group { margin: 6px 0 2px; color: #c8b060; }
+
+.srp-table { border-collapse: collapse; width: 100%; }
+.srp-table th, .srp-table td {
+    text-align: left;
+    vertical-align: top;
+    padding: 1px 6px;
+    border-bottom: 1px solid #1c1c22;
+    word-break: break-word;
+}
+.srp-table th:first-child, .srp-table td:first-child { width: 34%; }
+.srp-table th { color: #9a9aa8; font-weight: normal; }
+.srp-note { color: #8a8a96; font-style: italic; }

@@ -194,6 +194,13 @@ export const moduleMetadata = {
     name: 'procgenLabPanel',
     column: 3
   },
+  // Substrate registry panel R1: the live substrateRegistry readout.
+  substrateRegistryPanel: {
+    title: 'Substrate Registry',
+    icon: '🗂️',
+    name: 'substrateRegistryPanel',
+    column: 3
+  },
   windowPanel: {
     title: 'Window Panel',
     icon: '🪟',

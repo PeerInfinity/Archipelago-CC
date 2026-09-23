@@ -248,6 +248,10 @@
       "path": "./modules/procgenLabPanel/index.js",
       "enabled": true
     },
+    "substrateRegistryPanel": {
+      "path": "./modules/substrateRegistryPanel/index.js",
+      "enabled": true
+    },
     "textAdventureSubstrateWrapper": {
       "path": "./modules/textAdventureSubstrateWrapper/index.js",
       "enabled": true
@@ -360,6 +364,7 @@
     "apworldEditor",
     "mazeRoom",
     "procgenLabPanel",
+    "substrateRegistryPanel",
     "textAdventureSubstrateWrapper",
     "jtaSubstrateWrapper",
     "omsiSubstrateWrapper",
