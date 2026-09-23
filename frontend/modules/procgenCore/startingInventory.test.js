@@ -49,9 +49,17 @@ describe('⛓⛓ the declarations in the registry', () => {
             const itemPool = Object.fromEntries([...vocabularyOf(entry)].map((n) => [n, 1]));
             for (const seed of [1, 2, 3, 4, 5]) {
                 const out = entry.prepareSphereGrowth({ itemPool, quotas: { [entry.id]: 1 }, seed, substrateId: entry.id });
-                const needs = startingInventoryNeeds(entry, out.startingItems ?? []);
+                const granted = out?.startingItems ?? [];
+                const needs = startingInventoryNeeds(entry, granted);
+                // ⛓ "One fact" both ways. A hook that GRANTS nothing (flash_seedling's only
+                // resets its placed-room set — seedling-pipeline T3) must declare NO need;
+                // a hook that grants must declare the need its grant meets.
+                if (granted.length === 0) {
+                    expect(needs, `seed ${seed}: the entry grants nothing yet declares a need`).toEqual([]);
+                    continue;
+                }
                 expect(needs.length, 'the entry grants a starting item but declares no need').toBeGreaterThan(0);
-                expect(needs.every((n) => n.met), `seed ${seed}: granted ${out.startingItems}`).toBe(true);
+                expect(needs.every((n) => n.met), `seed ${seed}: granted ${granted}`).toBe(true);
             }
         },
     );
