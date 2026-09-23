@@ -145,7 +145,10 @@ describe('⚖ F7b — the override has no instance in the tree, and no channel t
         const named = files
             .map((f) => JSON.parse(readFileSync(f, 'utf8'))?.region_atlas?.map_document)
             .filter((d) => typeof d === 'string');
-        expect(named).toHaveLength(3);
+        // ⛓ 4 since seedling-pipeline T2 (2026-09-23): `seedling_spiral_room`, a
+        //   spiral world with a placed flash_seedling room, carries the installed
+        //   atlas's `region_atlas` block — and names the default, like the other three.
+        expect(named).toHaveLength(4);
         for (const doc of named) expect(doc).toBe(DEFAULT_MAP_DOCUMENT);
     });
 
