@@ -232,8 +232,10 @@ describe('⛓ the links the render emits', () => {
         //   `bounce.md`, `runner.md` and `stepped-pipeline.md`; 233 → 234: PROCGEN
         //   PIPELINE PRESETS P1's README index row for `pipeline-presets.md`;
         //   234 → 236: SEEDLING IN THE PIPELINE T1's mutual pair between the
-        //   registry's content-sources § and `flash.md`'s content-source §.
-        expect(checked).toBe(236);
+        //   registry's content-sources § and `flash.md`'s content-source §;
+        //   236 → 237: SEEDLING IN THE PIPELINE T2b's `flash.md` → `maze.md`
+        //   § Panel and runtime (the maze side of a return).
+        expect(checked).toBe(237);
     });
 
     it('tags each link with the kind that produced it', () => {
