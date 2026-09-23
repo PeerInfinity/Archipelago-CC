@@ -70,6 +70,7 @@
  */
 
 import { parseSeqPayload } from './seqPayload.js';
+import { returnKey } from './seedlingReturnSpawns.js';
 
 /** How long an in-flight arrival teleport stays armed before it is written off. */
 export const ARRIVAL_ECHO_TIMEOUT_MS = 15000;
@@ -117,19 +118,34 @@ function arrivalExitOf(exits, arrivedFrom) {
     return source ? (exits.find((e) => e.targetRegion === source) ?? null) : null;
 }
 
-export function resolveArrivalSpawn(world, arrivedFrom) {
+/**
+ * ⛓⛓ SEEDLING T2b (U2b) — **AND WHERE ON THAT EXIT: THE GAME'S OWN RETURN
+ * SPAWN, THE DOOR TILE ONLY WITHOUT ONE.** `returnSpawns` is
+ * `seedlingReturnSpawns.returnSpawnTable(mapDoc)`, injected (this module does
+ * no fetch). The game does not draw the player on the house door's tile and
+ * vanilla never lands there; leaving through a door, it lands one tile off,
+ * at the reverse link's `playerx/playery` (plan §15.0). The exit's tile is its
+ * `entrance_tile`, else its first `exit_tiles` entry. `landing` says which of
+ * the two answered.
+ */
+export function resolveArrivalSpawn(world, arrivedFrom, returnSpawns = null) {
     const exits = exitList(world);
     if (exits.length === 0) return null;
     const byId = arrivalExitOf(exits, arrivedFrom);
     const exit = byId ?? exits[0];
     const spawn = exit?.entrance_spawn;
     if (!spawn || !Number.isFinite(world?.level)) return null;
+    const tile = exit.entrance_tile ?? exit.exit_tiles?.[0] ?? null;
+    const back = tile && typeof returnSpawns?.get === 'function'
+        ? returnSpawns.get(returnKey(world.level, tile[0], tile[1])) ?? null
+        : null;
     return {
         level: world.level,
-        x: spawn.x,
-        y: spawn.y,
+        x: back ? back.x : spawn.x,
+        y: back ? back.y : spawn.y,
         exitId: exit.exit_id,
         matchedArrivedFrom: !!byId,
+        landing: back ? 'return-spawn' : 'entrance-spawn',
     };
 }
 
@@ -279,6 +295,20 @@ export class SeedlingRegionBinding {
         // An arrival asked for before the game was reporting; released on baseline.
         this.pendingSpawn = null;
         this.warnedLevels = new Set();
+        /** T2b U2b — the game's own return spawns (`setReturnSpawns`); null = door tiles. */
+        this.returnSpawns = null;
+    }
+
+    /**
+     * ⛓ T2b U2b — the host hands over `returnSpawnTable(mapDoc)` once the map
+     * document is in. An arrival already QUEUED (the game not booted yet, or the
+     * substrate parked) was resolved without it, so it is resolved again.
+     */
+    setReturnSpawns(table) {
+        this.returnSpawns = table ?? null;
+        if (this.pendingSpawn && this.world) {
+            this.pendingSpawn = resolveArrivalSpawn(this.world, this.arrivedFrom, this.returnSpawns);
+        }
     }
 
     /** procgen loaded a region into this substrate. */
@@ -287,7 +317,7 @@ export class SeedlingRegionBinding {
         this.world = world ?? null;
         this.arrivedFrom = arrivedFrom ?? null;
         this.warnedLevels.clear();
-        const spawn = resolveArrivalSpawn(this.world, this.arrivedFrom);
+        const spawn = resolveArrivalSpawn(this.world, this.arrivedFrom, this.returnSpawns);
         if (!spawn) {
             return [{
                 type: 'warn',
@@ -348,7 +378,7 @@ export class SeedlingRegionBinding {
         this.lastSpawn = { x: null, y: null };
         this.pendingArrival = null;
         this.pendingDeparture = null;
-        this.pendingSpawn = this.world ? resolveArrivalSpawn(this.world, this.arrivedFrom) : null;
+        this.pendingSpawn = this.world ? resolveArrivalSpawn(this.world, this.arrivedFrom, this.returnSpawns) : null;
     }
 
     /**
