@@ -11,7 +11,7 @@ import { createApFoundReadout } from './seedlingRandomizerReadout.js';
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
 import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
 import { createHeldKeyRelease, focusGameCanvas } from './gameInput.js';
-import { mapDocumentPath } from './mapDocumentPath.js';
+import { mapDocumentPath, rulesOfRawPayload } from './mapDocumentPath.js';
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
 
 function log(level, message, ...data) {
@@ -556,11 +556,14 @@ export class FlashPanelUI {
        * for the same reason). ⛓ IMPORTED STATICALLY, beside the proxy it comes
        * from: reached through a computed URL it would be a SECOND instance of
        * that module in the bundled build, whose `lastRawJsonPayload` is null.
+       * ⛔ And that payload is the EVENT WRAPPER: the rules are its
+       * `rawJsonData` (T4, trap 1405 — handed whole, every preset got the
+       * default map).
        */
       const loaded = await wiring.loadSeedlingRandomizer({
         flashPanel,
         manifest,
-        rawRules: getLastRawJsonData?.() ?? null,
+        rawRules: rulesOfRawPayload(getLastRawJsonData?.()),
         locations: staticData?.locations,
         playerId: staticData?.playerId,
         gameConfig: this.gameConfig,
@@ -828,7 +831,7 @@ export class FlashPanelUI {
     // ⛔ The catch-up payload is the EVENT's (`{source, rawJsonData, …}`);
     // the rules are its `rawJsonData` (measured: `region_atlas` is not on the
     // wrapper).
-    const raw = getLastRawJsonData?.()?.rawJsonData ?? null;
+    const raw = rulesOfRawPayload(getLastRawJsonData?.());
     if (!raw?.region_atlas) return;
     const { path, source } = mapDocumentPath(raw);
     try {

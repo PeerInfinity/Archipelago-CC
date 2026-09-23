@@ -58,6 +58,13 @@ export const DEFAULT_MAP_DOCUMENT = 'seedling-map.json';
 /**
  * The map document a preset declares, and where that answer came from.
  *
+ * ⛔ **THE EVENT WRAPPER IS REFUSED BY NAME** (seedling-pipeline T4, trap 1405).
+ * `stateManager`'s catch-up `getLastRawJsonData()` answers the
+ * `stateManager:rawJsonDataLoaded` payload `{source, rawJsonData,
+ * selectedPlayerInfo}`, not the rules. Read as rules it has no `region_atlas`,
+ * so this reader answered the default for EVERY preset, silently. Unwrap with
+ * `rulesOfRawPayload`; a wrapper handed here throws instead.
+ *
  * @param {object|null} rawRules  a preset's `rules.json`, or null/anything for
  *   the default — the LAB calls it with nothing, because the lab is never told.
  * @returns {{path: string, name: string, source: string}} `path` is relative to
@@ -65,6 +72,11 @@ export const DEFAULT_MAP_DOCUMENT = 'seedling-map.json';
  *   the preset asked for it.
  */
 export function mapDocumentPath(rawRules) {
+    if (rawRules && typeof rawRules === 'object' && 'rawJsonData' in rawRules) {
+        throw new TypeError('mapDocumentPath: handed the stateManager:rawJsonDataLoaded '
+            + 'WRAPPER ({source, rawJsonData, selectedPlayerInfo}), not the rules — '
+            + 'unwrap it with rulesOfRawPayload()');
+    }
     const named = rawRules?.region_atlas?.map_document;
     const declared = typeof named === 'string' && named !== '';
     const name = declared ? named : DEFAULT_MAP_DOCUMENT;
@@ -73,4 +85,15 @@ export function mapDocumentPath(rawRules) {
         name,
         source: declared ? 'region_atlas.map_document' : 'the atlases default',
     };
+}
+
+/**
+ * The rules OF a `stateManager:rawJsonDataLoaded` payload (what
+ * `getLastRawJsonData()` answers): its `rawJsonData`, else null.
+ *
+ * @param {{rawJsonData?: object}|null|undefined} payload
+ * @returns {object|null}
+ */
+export function rulesOfRawPayload(payload) {
+    return payload?.rawJsonData ?? null;
 }

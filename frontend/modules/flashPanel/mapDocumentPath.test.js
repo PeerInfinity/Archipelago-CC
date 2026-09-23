@@ -12,8 +12,8 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { ATLAS_DIR, DEFAULT_MAP_DOCUMENT, mapDocumentPath } from './mapDocumentPath.js';
-import { AP_ASSET_PATHS, resolveMapPath } from './seedlingRandomizerWiring.js';
+import { ATLAS_DIR, DEFAULT_MAP_DOCUMENT, mapDocumentPath, rulesOfRawPayload } from './mapDocumentPath.js';
+import { AP_ASSET_PATHS, loadSeedlingRandomizer, resolveMapPath } from './seedlingRandomizerWiring.js';
 import { ATLAS_PATH } from '../seedlingDemo/levelSource.js';
 import { LAB_EVENTS, LAB_PAYLOAD_FIELDS } from '../procgenCore/labProtocol.js';
 
@@ -159,5 +159,66 @@ describe('⚖ F7b — the override has no instance in the tree, and no channel t
         expect(fields).toContain('payload');
         expect(fields).not.toContain('rules');
         expect(fields.some((f) => /rule/i.test(f))).toBe(false);
+    });
+});
+
+/**
+ * ⛓ seedling-pipeline T4 (finding 1, trap 1405) — **THE CATCH-UP IS THE EVENT
+ * WRAPPER, NOT THE RULES.** `getLastRawJsonData()` answers the
+ * `stateManager:rawJsonDataLoaded` payload `{source, rawJsonData,
+ * selectedPlayerInfo}`. The flash panel handed that WRAPPER to the randomizer
+ * wiring as `rawRules`, and `mapDocumentPath` answered the atlases default for
+ * every preset — invisible, because all five presets that name a document name
+ * the default. These rows use a rules.json that names a DIFFERENT document.
+ */
+describe('T4 — a preset\'s map_document reaches the wiring through the catch-up', () => {
+    const PLAYTHROUGH = JSON.parse(source('frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json'));
+    const OTHER = { ...PLAYTHROUGH, region_atlas: { ...PLAYTHROUGH.region_atlas, map_document: 'other-map.json' } };
+    /** The payload stateManager publishes (`stateManager/index.js`, files:jsonLoaded). */
+    const PAYLOAD = { source: 'presets/seedling_playthrough', rawJsonData: OTHER, selectedPlayerInfo: { playerId: '1' } };
+
+    it('the rules OF the payload are its `rawJsonData`; nothing else is', () => {
+        expect(rulesOfRawPayload(PAYLOAD)).toBe(OTHER);
+        expect(rulesOfRawPayload(null)).toBeNull();
+        expect(rulesOfRawPayload(undefined)).toBeNull();
+        expect(rulesOfRawPayload({ source: 'x' })).toBeNull();
+    });
+
+    it('⛔ a rules.json naming a DIFFERENT map_document reaches the wiring as that name', async () => {
+        const asked = [];
+        const r = await loadSeedlingRandomizer({
+            flashPanel: OTHER.flash_panel,
+            manifest: JSON.parse(source('frontend/modules/flashPanel/wasm/builds.json')),
+            rawRules: rulesOfRawPayload(PAYLOAD),
+            locations: new Map(),
+            playerId: '1',
+            gameConfig: {},
+            baseUrl: 'http://example.test/frontend/',
+            fetchJson: async (u) => { asked.push(u); throw new Error('not served in this row'); },
+            importModule: async () => ({}),
+        });
+        expect(asked).toContain(`http://example.test/frontend/${ATLAS_DIR}other-map.json`);
+        expect(r.assets?.map?.source).toBe('region_atlas.map_document');
+    });
+
+    it('⛔ the reader REFUSES the wrapper by name instead of answering the default', () => {
+        expect(() => mapDocumentPath(PAYLOAD)).toThrow(/rawJsonData/);
+        expect(() => resolveMapPath(PAYLOAD)).toThrow(/rawJsonData/);
+        // …and a payload without rules is refused too: it is still the wrapper.
+        expect(() => mapDocumentPath({ source: 'x', rawJsonData: null, selectedPlayerInfo: null }))
+            .toThrow(/rawJsonData/);
+    });
+
+    /**
+     * ⛔ ASSERTED OVER THE SOURCE: `flashPanelUI.js` is a browser panel with no
+     * node moment. Every catch-up read in it goes through `rulesOfRawPayload`;
+     * the live proof is the AP-placement gate (a wrapper now throws there).
+     */
+    it('every `getLastRawJsonData` read in the flash panel is unwrapped by rulesOfRawPayload', () => {
+        const body = source('frontend/modules/flashPanel/flashPanelUI.js').split('\n')
+            .filter((line) => !/^\s*(\*|\/\/|\/\*)/.test(line)).join('\n');
+        const calls = body.match(/[\w.?]*\(?getLastRawJsonData\?*\.?\(\)[^,;\n]*/g) ?? [];
+        expect(calls.length).toBeGreaterThanOrEqual(2);
+        for (const c of calls) expect(c).toMatch(/^rulesOfRawPayload\(getLastRawJsonData\?\.\(\)\)/);
     });
 });
