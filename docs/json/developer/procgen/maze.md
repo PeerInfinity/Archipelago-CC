@@ -1013,6 +1013,10 @@ BFS pathfinding over maze worlds, used by the playback controller, the queue, an
 
 The panel (`mazeRoomUI.js`, component `mazeRoomPanel`) subscribes to `maze:loadRegion`. A load event that arrives before the panel mounts is buffered (`pendingLoadRegion` in `index.js`) and drained by the panel constructor — one of the standard init-race catch-ups. On load the module self-activates its panel unless the loops panel has "Keep this panel focused" set while its queue is driving.
 
+Where a load puts the player: `mazeArrival.resolveMazeArrival` tries the exit `arrivedFrom.exit_id` names, then the exit whose `targetRegion` is `arrivedFrom.source_region`, then keeps the world's `entrance`. The second arm exists for worlds that link no reverse exits: there `exit_id` is the SOURCE exit's own name. The shuffled spiral is one, and a return from a placed Seedling room names `exit_S`, which no maze exit has. Without the arm, the player landed on the entrance, which can be a pocket (seedling-pipeline T2b F1). The visit recording still keys on `arrivedFrom.exit_id ?? 'entrance'`, because `loops/blockIdentity.js` mirrors that exact key.
+
+The panel takes the keyboard when it is displayed: on its container's `show` and after a load, focus is retried briefly until the root has a layout box. Golden Layout shows the tab after the event that asked for it, and a hidden root refuses focus. Before this, the maze's keys were dead after a Seedling door until a click (T2b F4). A keypress whose step crosses into another region loads it synchronously inside `ActionQueue.stepOne`. That load clears the queue, and `stepOne` then leaves it alone (`superseded`) rather than advancing it to `{cursor: 1, length: 0}`, where the next key threw (T2b F2).
+
 Around the core panel:
 
 - The **playthrough visualizer** (`mazeRoomVisualizer.js`) auto-walks the region with its own simulated state — see [Playback and Debugging Tools](./playback-and-debugging.md#per-substrate-visualizers).

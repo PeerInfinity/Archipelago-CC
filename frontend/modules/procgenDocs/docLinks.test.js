@@ -148,22 +148,25 @@ describe('the corpus census — printed, then pinned', () => {
          *              content-sources paragraph points at `flash.md` § *As a
          *              content source in the pipeline*, and that § points back
          *              at the registry's content-sources § (`doc` 161 → 163).
+         *   236 → 237  SEEDLING IN THE PIPELINE T2b (2026-09-23): `flash.md`
+         *              § *Playing a placed room* points at `maze.md` § *Panel and
+         *              runtime* for the maze side of a return (`doc` 163 → 164).
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
          */
         expect(by).toEqual({
             'same-doc': 15,
-            doc: 163,
+            doc: 164,
             external: 23,
             repo: 35,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(236);
+        expect(CORPUS.length).toBe(237);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(163);
+        expect(docs).toHaveLength(164);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

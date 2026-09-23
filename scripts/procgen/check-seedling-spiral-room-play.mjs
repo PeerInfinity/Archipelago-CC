@@ -37,6 +37,18 @@
  *     the discriminator: the first door is also `exits[0]`, the no-match
  *     fallback, so only a return that lands on the second door's spawn proves
  *     the third arm chose it.
+ *   Phase D3 — the user's own path (T2b): the Maze Room tab, its inactive
+ *     overlay's "Open the … panel" button, then NO click: the Flash Game tab is
+ *     in front and a key moves the player.
+ *
+ *   ⛓ SEEDLING T2b rows (each one does NOT do the person's work for them):
+ *     U1 a return brings the Flash Game tab forward by itself; U2a the game's
+ *     canvas holds the page's keyboard after ▶ Start, after the automatic
+ *     activation and after the overlay's button (and a key moves the player);
+ *     U2b the arrival is the game's own return spawn, off the door; F3 a key
+ *     held ACROSS the house door leaves the player still after the return; F1
+ *     the maze lands the player ON its exit back; F4 the maze has the keyboard
+ *     after the door; F2 two maze crossings by real keypresses do not throw.
  *   Phase E — an UNDECLARED door of the same level. ⚠ It is a JUMP, not a
  *     door fire: the first one the atlas lists (hut_door) sits behind a
  *     breakablerock that needs a sword. So the game is sent straight to that
