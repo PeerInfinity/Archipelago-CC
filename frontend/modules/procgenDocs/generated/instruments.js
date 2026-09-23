@@ -48,8 +48,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 51,
-            "count": 86,
+            "browser": 52,
+            "count": 87,
             "id": "check"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 260,
-        "browser": 77,
+        "blockStyle": 261,
+        "browser": 78,
         "cited": 97,
-        "files": 271,
+        "files": 272,
         "lineStyle": 11,
-        "withDocblock": 271,
-        "withFlags": 185
+        "withDocblock": 272,
+        "withFlags": 186
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3198,6 +3198,46 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-source-pin — **THE SEEDLING SOURCE SUBMODULE IS THE SOURCE THE SHIPPED BUILDS WERE COMPILED FROM** (slice seedling-headless-V1).",
             "path": "scripts/procgen/check-seedling-source-pin.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "game",
+                "host"
+            ],
+            "file": "check-seedling-spiral-room-play.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "game"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling in the pipeline, T2: the ONE real Seedling room that the shuffled spiral placed among three maze rooms PLAYS in the Seedling wasm.",
+            "path": "scripts/procgen/check-seedling-spiral-room-play.mjs"
         },
         {
             "argvHelpers": [],
