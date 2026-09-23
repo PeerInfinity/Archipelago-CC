@@ -196,6 +196,41 @@ describe('MazeRoomUI — arrival position on region load', () => {
         expect(panel.state.player_pos).toEqual({ x: 7, y: 3 });
     });
 
+    /**
+     * ⛓ T2b F1 — a return from a region whose world links no reverse exits
+     * (a placed Seedling room in the shuffled spiral) names ITS OWN exit
+     * (`exit_S`), which no maze exit has. The maze lands on the exit leading
+     * back to `source_region`, not on the entrance (a pocket in region_1_0).
+     */
+    it('an exit_id that names nothing here + source_region → the exit leading back to the source', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.applyLoadedRegion({
+            region_id: 'A',
+            world: makeWorld({
+                entrance: { x: 4, y: 3 },
+                exits: [
+                    { exit_id: 'exit_0', x: 7, y: 3, side: 'E', targetRegion: 'B' },
+                    { exit_id: 'exit_1', x: 0, y: 4, side: 'W', targetRegion: 'SEED' },
+                ],
+            }),
+            arrivedFrom: { exit_id: 'exit_S', source_region: 'SEED' },
+        });
+        expect(panel.state.player_pos).toEqual({ x: 0, y: 4 });
+    });
+
+    it('…and with no exit leading back, the entrance stands', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.applyLoadedRegion({
+            region_id: 'A',
+            world: makeWorld({
+                entrance: { x: 4, y: 3 },
+                exits: [{ exit_id: 'exit_0', x: 7, y: 3, side: 'E', targetRegion: 'B' }],
+            }),
+            arrivedFrom: { exit_id: 'exit_S', source_region: 'SEED' },
+        });
+        expect(panel.state.player_pos).toEqual({ x: 4, y: 3 });
+    });
+
     it('the visualizer mirroring callback does not clobber the arrival pos', () => {
         // The bug was: visualizer.setWorld would reset its internal
         // _state to createState(world) (= entrance), then notify the
