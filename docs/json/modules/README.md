@@ -75,7 +75,7 @@ Documented in depth in the [procgen developer docs](../developer/procgen/README.
 - **Text Adventure Substrate Wrapper** (`textAdventureSubstrateWrapper`) — the enabled iframe-hosted text-adventure path. See [Text Adventure Substrate](../developer/procgen/text-adventure.md).
 - **JtA Substrate Wrapper** (`jtaSubstrateWrapper`) — Journey to Ascension as a zone-based substrate. See [JtA Substrate](../developer/procgen/jta.md).
 - **Playback Bot** (`playbackBot`) — sphere-log-driven auto-player over substrate playback controllers. See [Playback and Debugging Tools](../developer/procgen/playback-and-debugging.md).
-- **Substrate Registry** (`substrateRegistryPanel`) — the live `substrateRegistry` in the running app: every entry and field, the playback-controller and shared item-type answers, and drift against the checked-in registry snapshot.
+- **Substrate Registry** (`substrateRegistryPanel`) — the live `substrateRegistry` in the running app: every entry and field, the playback-controller and shared item-type answers, and drift against the checked-in registry snapshot; a Matrix mode (features × entries, ✓ / ✗ / number) and a Detail mode (one block per entry).
 - **Tile Map Analyzer** (`tileMapAnalyzer`) *(disabled)* — analyzes a tile-based Flash game's map data and emits an Archipelago rules.json.
 
 ## Loop Mode Modules
