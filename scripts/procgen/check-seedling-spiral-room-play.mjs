@@ -454,6 +454,17 @@ async function main() {
             const back = [...p.world.exits.values()].filter((e) => e.targetRegion === want.start);
             return { pos: { ...p.state.player_pos }, entrance: p.world.entrance, back: back.map((e) => ({ id: e.exit_id, x: e.x, y: e.y })) };
         }, { region: door.targetRegion, start: START }), 15000);
+        /**
+         * ⛓ T2b F4 — …AND THE MAZE HAS THE KEYBOARD. The door moved the page's
+         * focus nowhere useful before (BODY, measured): the maze's root was
+         * focused while still hidden. Nothing here clicks it.
+         */
+        const mazeKeys = await waitFor('the maze panel has the keyboard after the door', () => page.evaluate(async () => {
+            const p = (await import('./modules/mazeRoom/index.js')).getPanelInstance();
+            return p?.rootElement?.contains(document.activeElement) ? document.activeElement.className : null;
+        }), 5000).catch(async () => page.evaluate(() => `${document.activeElement?.tagName}.${document.activeElement?.className}`));
+        check(`${label}: the MAZE panel has the page's keyboard after the door (no click)`,
+            typeof mazeKeys === 'string' && mazeKeys.startsWith('maze-room-panel'), `activeElement ${JSON.stringify(mazeKeys)}`);
         check(`${label}: the maze put the player ON its exit back to ${START} (${landed.back.map((e) => e.id).join(', ')}), not on its entrance`,
             landed.back.some((e) => e.x === landed.pos.x && e.y === landed.pos.y),
             `player ${JSON.stringify(landed.pos)}, entrance ${JSON.stringify(landed.entrance)}, exits back ${JSON.stringify(landed.back)}`);
