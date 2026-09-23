@@ -203,6 +203,31 @@ function contentSource() {
 }
 
 /**
+ * ⛓ THE ONE BINDER (the spiral's `extractZoneRules` and sphere growth's
+ * `generateZoneForSpecs` both call it): the k-th requested side takes the k-th
+ * door in payload order, `external`, keeping its `exit_id`; a door beyond the
+ * sides is dropped with a `pruned_exit` note. The caller has already refused a
+ * side count the room cannot meet, in its own mode's sentence.
+ */
+function bindDoorsToSides(zone, regionId, exitSides) {
+    const { exits: doors, ...payload } = zone.payload;
+    const boundDoors = {};
+    const exitRules = {};
+    exitSides.forEach((side, k) => {
+        boundDoors[side] = { ...doors[k], side, external: true };
+        const rule = boundaryRule(zone.region, doors[k].exit_id);
+        if (rule) exitRules[side] = rule;
+    });
+    const notes = doors.slice(exitSides.length).map((door) => ({
+        kind: 'pruned_exit', region_id: regionId, exit_id: door.exit_id,
+        message: `"${zone.apName}" door "${door.exit_id}" has no side to route to in this world `
+            + `(its cell asks for ${exitSides.length} side(s)) — it is left out of the sidecar; the `
+            + 'real door stays in the level and fires the real game\'s own transition',
+    }));
+    return { payload: { ...payload, bound_doors: boundDoors }, exitRules, notes };
+}
+
+/**
  * The zone channel for one placed room (see `buildSeedlingContentSource`).
  * `payload` is the compile's payload for the region with `exits` REPLACED by
  * `bound_doors` — `{<side>: door}` — because `buildPresetSidecars` overwrites a
@@ -219,7 +244,7 @@ function extractZoneRules(zoneIdx, { region_id: regionId, exitSides = [] } = {})
             + `wired door [${source.doorless.join(', ')}] and cannot be placed, because a room with no `
             + 'door has no arrival spawn.');
     }
-    const { exits: doors, ...payload } = zone.payload;
+    const doors = zone.payload.exits;
     if (exitSides.length > doors.length) {
         throw new Error(`${FLASH_SEEDLING_SUBSTRATE_ID}: region "${regionId}" places the real room `
             + `"${zone.apName}", which has ${doors.length} wired door(s) `
@@ -228,19 +253,7 @@ function extractZoneRules(zoneIdx, { region_id: regionId, exitSides = [] } = {})
             + `doors it has: lower the quotas so the spiral leaves this cell at most ${doors.length} `
             + 'neighbour(s), or install an atlas whose room at this ordinal has more wired doors.');
     }
-    const boundDoors = {};
-    const exitRules = {};
-    exitSides.forEach((side, k) => {
-        boundDoors[side] = { ...doors[k], side, external: true };
-        const rule = boundaryRule(zone.region, doors[k].exit_id);
-        if (rule) exitRules[side] = rule;
-    });
-    const notes = doors.slice(exitSides.length).map((door) => ({
-        kind: 'pruned_exit', region_id: regionId, exit_id: door.exit_id,
-        message: `"${zone.apName}" door "${door.exit_id}" has no side to route to in this world `
-            + `(its cell asks for ${exitSides.length} side(s)) — it is left out of the sidecar; the `
-            + 'real door stays in the level and fires the real game\'s own transition',
-    }));
+    const { payload, exitRules, notes } = bindDoorsToSides(zone, regionId, exitSides);
     return {
         locations: zone.locations.map((loc) => ({
             id: loc.name,
@@ -249,8 +262,91 @@ function extractZoneRules(zoneIdx, { region_id: regionId, exitSides = [] } = {})
             ...(loc.access_rule ? { access_rule: loc.access_rule } : {}),
         })),
         exitRules,
-        payload: { ...payload, bound_doors: boundDoors },
+        payload,
         ...(notes.length ? { notes } : {}),
+    };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING IN THE PIPELINE T3 — **A REAL ROOM AS A SPHERE-GROWTH LEAF.**
+ *
+ * Sphere growth realises a node's ENTRY gate on its PARENT's forward exit and
+ * its children's gates on the node's own forward exits. A real Seedling door
+ * cannot enforce an AP item gate — the game opens it for whoever walks onto
+ * it — so a placed room hosts NO children (`canHostExitGates` declines every
+ * one) and its door back to the parent is UNGATED (`backPortalGated`): the
+ * entry gate stays on the parent's exit, where the parent's substrate
+ * enforces it. So the one spec this realiser can meet is a LEAF: exactly one
+ * exit side (the back door) and the node's items.
+ *
+ * ⛓ A real room is a SPECIFIC place, so it is placed AT MOST ONCE per
+ * generation — sphere growth never consults `zoneCount` (that is the
+ * spiral's), so this law is the entry's own. The placed rooms are keyed by
+ * the region that took them: a region realised again (a re-roll) keeps its
+ * room. `prepareSphereGrowth`, which sphere growth's config assembly calls once
+ * per generation (`sphereConfigHooks.collectSphereGrowthPrep`), clears them.
+ */
+const sphereRooms = new Map(); // region_id -> the placed room's apName
+
+/**
+ * Choose the room for a leaf needing `nSides` door(s) and `nItems` location(s):
+ * the TIGHTEST room no other region holds that fits —
+ * fewest locations, then fewest doors, then declaration order (the atlas
+ * source's rule, `buildSphereAtlasSource`: a leaf needing no location must not
+ * take the one room with a chest). Refused by name when none fits.
+ */
+function chooseSphereRoom(source, regionId, nSides, nItems) {
+    // ⛓ The rooms OTHER regions hold. A region realised again sees its own room
+    //   as free, and it is still the tightest fit (placements since then only
+    //   removed candidates), so it keeps it.
+    const placed = new Set([...sphereRooms].filter(([r]) => r !== regionId).map(([, room]) => room));
+    const fits = (z) => z.payload.exits.length >= nSides && z.locations.length >= nItems;
+    const pick = source.zones.map((z, i) => ({ z, i }))
+        .filter(({ z }) => !placed.has(z.apName) && fits(z))
+        .sort((a, b) => (a.z.locations.length - b.z.locations.length)
+            || (a.z.payload.exits.length - b.z.payload.exits.length) || (a.i - b.i))[0]?.z;
+    if (!pick) {
+        const table = source.zones.map((z) => `${z.apName} (${z.payload.exits.length} door(s), `
+            + `${z.locations.length} location(s)${placed.has(z.apName) ? ', placed' : ''})`).join('; ');
+        throw new Error(`${FLASH_SEEDLING_SUBSTRATE_ID}: no unplaced room of the installed atlas `
+            + `"${source.atlasId}" fits region "${regionId}" (needs ${nSides} door(s) + ${nItems} `
+            + `location(s)); the rooms are [${table}]. A real room is a SPECIFIC place and is placed at `
+            + `most once per world — lower the ${FLASH_SEEDLING_SUBSTRATE_ID} quota, lower `
+            + 'maxItemsPerRegion or raise fillerCount (a filler leaf needs no location), or install an '
+            + 'atlas with more rooms.');
+    }
+    sphereRooms.set(regionId, pick.apName);
+    return pick;
+}
+
+/**
+ * The sphere-growth zone realiser (`generateRegionZoneGen`'s contract). The
+ * room's marked locations take the node's items in order, under the COMPILER's
+ * names (`global_name` — the names the check binding reports); `exitRules` is
+ * EMPTY: the room hosts no child gate, and the back door's logic is the
+ * parent's forward gate, which `buildRulesJson`'s bidirectional pass copies onto
+ * it. `payload` is the spiral's atlas-reference payload, bound by the one binder.
+ */
+function generateZoneForSpecs({ region_id: regionId, exitSpecs = [], locationSpecs = [] } = {}) {
+    if (exitSpecs.length !== 1) {
+        throw new Error(`${FLASH_SEEDLING_SUBSTRATE_ID}: region "${regionId}" asks a real Seedling room `
+            + `for ${exitSpecs.length} exit side(s) [${exitSpecs.map((e) => e.side).join(', ')}], but a `
+            + 'room is placed only as a LEAF: its one exit is the door back to its parent. A real door '
+            + 'cannot enforce an AP gate, so the room hosts no children (canHostExitGates declines them) '
+            + 'and cannot be a start region — place it with sphere growth behind a parent of another '
+            + 'substrate, or with the shuffled spiral, which binds a door per neighbour.');
+    }
+    const source = contentSource();
+    const zone = chooseSphereRoom(source, regionId, exitSpecs.length, locationSpecs.length);
+    const { payload } = bindDoorsToSides(zone, regionId, exitSpecs.map((e) => e.side));
+    return {
+        locations: locationSpecs.map((spec, k) => ({
+            id: spec.id,
+            global_name: zone.locations[k].name,
+            item: spec.item ?? null,
+        })),
+        exitRules: {},
+        payload,
     };
 }
 
@@ -340,6 +436,20 @@ export const substrateRegistryEntry = Object.freeze({
     get zoneCount() { return contentSource().zones.length; },
     extractZoneRules,
     /**
+     * ⛓⛓⛓ T3 — **SPHERE GROWTH PLACES A ROOM AS A LEAF** (see
+     * `generateZoneForSpecs`). A real door enforces no AP gate: the room hosts
+     * no child exit, and its back door is ungated — the entry gate stays on
+     * the parent's exit.
+     */
+    generateZoneForSpecs,
+    canHostExitGates: () => false,
+    backPortalGated: () => false,
+    /** Once per sphere generation: every room is unplaced again. Contributes nothing to the plan. */
+    prepareSphereGrowth: () => {
+        sphereRooms.clear();
+        return {};
+    },
+    /**
      * Install `cfg.atlasDoc`, or the starter atlas when absent — a preset
      * carries no `substrateConfig`, so the default IS the path every preset
      * takes (jta's `applyPipelineConfig({})` precedent). Refused by name when
@@ -347,6 +457,8 @@ export const substrateRegistryEntry = Object.freeze({
      */
     applyPipelineConfig: (cfg) => {
         installedSource = buildSeedlingContentSource(cfg?.atlasDoc ?? SEEDLING_STARTER_ATLAS);
+        // A room placed from the atlas this replaces is not a room of the new one.
+        sphereRooms.clear();
         return installedSource.atlasDoc;
     },
     /**

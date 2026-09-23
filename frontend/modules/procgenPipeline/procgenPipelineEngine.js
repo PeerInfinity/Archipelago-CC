@@ -3138,6 +3138,11 @@ function* generateRegionZoneGen(spec) {
             // Source rule (top-down) wins; otherwise the compiler compiles
             // the obstacle paths above.
             ...(sl?.access_rule ? { access_rule: sl.access_rule } : {}),
+            // ⛓ A substrate that realises a location under a name of its own (a
+            //   placed real room keeps its atlas location's name — the name its
+            //   check binding reports) says so, as assembleZoneRegion's channel
+            //   already allows; top-down's source name still wins below.
+            ...(loc.global_name ? { global_name: loc.global_name } : {}),
             ...(spec.useSourceLocationName ? { global_name: loc.id } : {}),
         };
     });

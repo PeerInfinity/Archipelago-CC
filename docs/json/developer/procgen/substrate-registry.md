@@ -355,23 +355,23 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
 |---|---|---|---|---|---|---|---|---|
-| `backPortalGated` | — | — | fn | fn | — | — | — | — |
+| `backPortalGated` | — | — | fn | fn | — | fn | — | — |
 | `buildLibraryRegionParams` | fn | — | — | — | — | — | — | — |
 | `buildRegionContract` | — | — | fn | fn | — | — | — | — |
 | `buildRegionParams` | — | — | fn | fn | — | — | — | — |
 | `buildZoneSpecs` | — | — | fn | fn | — | — | — | — |
-| `canHostExitGates` | — | — | fn | fn | — | — | — | — |
+| `canHostExitGates` | — | — | fn | fn | — | fn | — | — |
 | `canHostExitGatesBraid` | — | — | fn | — | — | — | — | — |
 | `defaultProcgenParams` | 6 keys | — | 10 keys | 8 keys | — | — | — | — |
 | `driftItems` | — | — | Left arrow, Right arrow | — | — | — | — | — |
 | `exitGateVeto` | — | — | fn | fn | — | — | — | — |
 | `gateHostingHint` | — | — | fn | fn | — | — | — | — |
 | `gateableItems` | — | — | `null` | 5 items | — | — | — | — |
-| `generateZoneForSpecs` | — | — | fn | fn | — | — | — | — |
+| `generateZoneForSpecs` | — | — | fn | fn | — | fn | — | — |
 | `generateZoneForSpecsGen` | — | — | fn | fn | — | — | — | — |
 | `hostsSurplusExitsNatively` | — | — | fn | fn | — | — | — | — |
 | `libraryItems` | — | — | 7 keys | 6 keys | — | — | 48 keys | {Victory} |
-| `prepareSphereGrowth` | — | — | fn | — | — | — | — | — |
+| `prepareSphereGrowth` | — | — | fn | — | — | fn | — | — |
 | `procgenParamsFromPayload` | — | — | fn | fn | — | — | — | — |
 | `renderLibraryProcgenParams` | fn | — | — | — | — | — | — | — |
 | `renderProcgenParams` | fn | — | fn | fn | — | — | — | — |
