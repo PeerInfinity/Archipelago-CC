@@ -269,6 +269,43 @@ async function main() {
         await page.waitForTimeout(200);
     }
 
+    /**
+     * ⛓ T2b U2a — WHERE THE PAGE'S KEYBOARD IS, read without touching it: the
+     * page's active element and, when that is the game's frame, the frame's.
+     */
+    const focusChain = () => page.evaluate((wasmPage) => {
+        const a = document.activeElement;
+        const frame = [...document.querySelectorAll('iframe')].find((f) => f.src.includes(wasmPage));
+        const inner = a === frame ? frame?.contentDocument?.activeElement : null;
+        return { page: a?.tagName ?? null, frame: a === frame, inner: inner?.tagName ?? null };
+    }, WASM_PAGE);
+    const gameHasKeys = (c) => c.frame && c.inner === 'CANVAS';
+
+    /**
+     * A key pressed the way a PERSON presses it after an activation: no tab
+     * click, no canvas click, no focus() — whatever has the page's focus gets
+     * it. `{moved, before, after}`.
+     */
+    async function keyMovesPlayer(key, minPx = 4, ceilingMs = 1500) {
+        const before = await livePlayer();
+        const start = Date.now();
+        await page.keyboard.down(key);
+        let after = before;
+        try {
+            while (Date.now() - start < ceilingMs) {
+                // eslint-disable-next-line no-await-in-loop
+                await page.waitForTimeout(50);
+                // eslint-disable-next-line no-await-in-loop
+                after = await livePlayer();
+                if (before && after && Math.hypot(after.x - before.x, after.y - before.y) >= minPx) break;
+            }
+        } finally {
+            await page.keyboard.up(key);
+        }
+        const moved = !!before && !!after && Math.hypot(after.x - before.x, after.y - before.y) >= minPx;
+        return { moved, before, after };
+    }
+
     /** Hold `key` until `until()` answers, or the ceiling; `{value, ms}`. */
     async function holdUntil(key, until, ceilingMs = HOLD_CEILING_MS) {
         await gameFrame().evaluate(() => document.getElementById('canvas')?.focus());
@@ -467,7 +504,7 @@ async function main() {
      * region's `clear()` emptied the queue, and the cursor then advanced past it.
      * Each hop prints the queue's `{cursor, length}` before it moves.
      */
-    async function returnFrom(label, mazeRegion, door, expectLoads, { stillAfterReturn = false } = {}) {
+    async function returnFrom(label, mazeRegion, door, expectLoads, { stillAfterReturn = false, keyAfterReturn = null } = {}) {
         await page.evaluate(async () => {
             const bus = (await import('./app/core/eventBus.js')).default;
             bus.publish('ui:activatePanel', { panelId: 'mazeRoomPanel' }, 'check-seedling-spiral-room-play');
@@ -552,6 +589,22 @@ async function main() {
         }, 5000).catch(async () => activeTabTitles());
         check(`${label}: the return ACTIVATED the Flash Game tab by itself (no tab click)`,
             tabs.includes('Flash Game'), `active tabs: ${tabs.join(', ')}`);
+        /**
+         * ⛓ T2b U2a — …AND THE GAME HAS THE KEYBOARD. No canvas click and no
+         * focus() from here: the page's focus is inside the frame, on the
+         * canvas, and a key moves the player.
+         */
+        const chain = await waitFor('the game canvas has the keyboard after the return', async () => {
+            const c = await focusChain();
+            return gameHasKeys(c) ? c : null;
+        }, 5000).catch(async () => focusChain());
+        check(`${label}: the game's CANVAS has the page's keyboard after the automatic activation (no click)`,
+            gameHasKeys(chain), JSON.stringify(chain));
+        if (keyAfterReturn) {
+            const k = await keyMovesPlayer(keyAfterReturn);
+            check(`${label}: ${keyAfterReturn} pressed with no click moves the player`, k.moved,
+                `${JSON.stringify(k.before)} -> ${JSON.stringify(k.after)}`);
+        }
     }
 
     try {
@@ -619,6 +672,18 @@ async function main() {
         check(`Phase B: the arrival is a new Game at ${first.exit_id}'s entrance_spawn, level ${ROOM.level}`,
             stB.playerPositionY === first.entrance_spawn.y, arrivalCall);
         check('Phase B: the arrival published no crossing', (await glueMoves()).length === 0);
+        /**
+         * ⛓ T2b U2a — ▶ Start. The page's own click listener focuses the canvas
+         * (game.html), and then ~1.75 s later the AP loading overlay let go by
+         * focusing the IFRAME ELEMENT, which parks the frame's focus on its BODY
+         * (measured at 0f2e7a2a9f: canvas at 0.25 s, BODY from 1.75 s, three
+         * runs). So this reads ONCE, after the arrival has settled, the state a
+         * person is left in; a waitFor would pass on the transient canvas.
+         */
+        await page.waitForTimeout(2500);
+        const chainB = await focusChain();
+        check('Phase B: after ▶ Start, and after the arrival settled, the game\'s CANVAS has the page\'s keyboard (no canvas click)',
+            gameHasKeys(chainB), JSON.stringify(chainB));
         await page.waitForTimeout(1000);
         await focusGame();
         const onDoor = await livePlayer();
@@ -632,7 +697,8 @@ async function main() {
 
         // ── Phase C / D — out and back through the first door ───────────────────
         await departThrough('Phase C', first, 1, 1, { holdAcross: true });
-        await returnFrom('Phase D', first.targetRegion, first, 2, { stillAfterReturn: true });
+        await returnFrom('Phase D', first.targetRegion, first, 2,
+            { stillAfterReturn: true, keyAfterReturn: STEP_KEYS[first.exit_id].off });
         check('Phase D: the return published no crossing', (await glueMoves()).length === 1,
             `${(await glueMoves()).length} glue moves`);
 
@@ -655,6 +721,27 @@ async function main() {
         await returnFrom('Phase D2', second.targetRegion, second, 3);
         check('Phase D2: the return published no crossing', (await glueMoves()).length === 2,
             `${(await glueMoves()).length} glue moves`);
+
+        // ── Phase D3 — the OVERLAY'S BUTTON (the user's own path, T2b U2a) ──────
+        // A person looks at the Maze Room tab (the gate's one tab click, standing
+        // in for theirs), sees "Currently playing Seedling (region atlas)" and
+        // presses the overlay's button. From there on nothing is clicked.
+        await page.evaluate(() => {
+            [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Maze Room')?.click();
+        });
+        const button = page.locator('.substrate-inactive-overlay button').filter({ visible: true }).first();
+        await button.waitFor({ state: 'visible', timeout: 10000 });
+        const buttonText = await button.textContent();
+        await button.click();
+        const chainD3 = await waitFor('the game canvas has the keyboard after the button', async () => {
+            const c = await focusChain();
+            return gameHasKeys(c) ? c : null;
+        }, 5000).catch(async () => focusChain());
+        check(`Phase D3: "${buttonText}" — the Flash Game tab is in front and its CANVAS has the keyboard (no click)`,
+            (await activeTabTitles()).includes('Flash Game') && gameHasKeys(chainD3), JSON.stringify(chainD3));
+        const kD3 = await keyMovesPlayer(STEP_KEYS[second.exit_id].off);
+        check(`Phase D3: ${STEP_KEYS[second.exit_id].off} pressed with no click moves the player`, kD3.moved,
+            `${JSON.stringify(kD3.before)} -> ${JSON.stringify(kD3.after)}`);
 
         // ── Phase E — the undeclared door's level (a JUMP; see the header) ──────
         await page.waitForTimeout(1500);

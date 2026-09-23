@@ -10,7 +10,7 @@ import { seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.j
 import { createApFoundReadout } from './seedlingRandomizerReadout.js';
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
 import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
-import { createHeldKeyRelease } from './gameInput.js';
+import { createHeldKeyRelease, focusGameCanvas } from './gameInput.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -122,6 +122,10 @@ export class FlashPanelUI {
     setActivePanelInstance(this);
 
     this.container.on('destroy', () => this.destroy());
+    // ⛓ T2b U2a — the tab coming forward gives the game the keyboard. Wired
+    // here, as regionGraph / timerPanel / proofGraph wire theirs: measured, a
+    // tab switch never reached an `onShow` through panelManager's wrapper.
+    this.container.on('show', () => this.onShow());
 
     // Wait for rules to actually finish loading before picking the
     // config. `stateManager:rulesLoaded` fires after the worker
@@ -471,6 +475,9 @@ export class FlashPanelUI {
       if (this.adapter !== adapter) return;
       this._heldKeys.install();
       this._panelLog('bridge callbacks ready');
+      // ⛓ U2a: ▶ Start leaves the frame's focus on its BODY (measured); the
+      // game hears nothing until its canvas has it.
+      this.focusGame('the game started');
     } catch (err) {
       if (this.adapter !== adapter) return;
       this._panelLog(`bridge not ready: ${err.message}`, 'error');
@@ -636,7 +643,9 @@ export class FlashPanelUI {
       const f = iframe();
       if (!f) return;
       f.style.pointerEvents = '';
-      try { f.focus({ preventScroll: true }); } catch { /* focus is best-effort */ }
+      // ⛓ T2b U2a: the CANVAS, not the frame element — focusing the frame alone
+      // leaves the game deaf (measured).
+      this.focusGame('the loading overlay closed');
     };
     /**
      * ⛓ STICKY IS A STATE, NOT A TIMER. A refusal leaves the message up
@@ -888,6 +897,33 @@ export class FlashPanelUI {
     this._panelLog(`readState: ${this.adapter.readState()}`);
   }
 
+  /**
+   * ⛓ T2b U2a — GIVE THE GAME THE KEYBOARD, the way a click on its canvas
+   * does. Called on ▶ Start (the bridge comes up), when the tab is SHOWN (the
+   * overlay's button, the automatic activation on a region load, a person's
+   * tab click) and when the loading overlay lets go. A hidden frame refuses by
+   * name, so the attempt is retried briefly: Golden Layout shows the tab after
+   * the event that asked for it.
+   */
+  focusGame(reason = '') {
+    if (this._focusTimer) { clearTimeout(this._focusTimer); this._focusTimer = null; }
+    const delays = [0, 50, 150, 400, 1000];
+    const attempt = (i) => {
+      this._focusTimer = null;
+      const r = focusGameCanvas(document.getElementById(this.flashObjectId));
+      this._lastFocus = { ...r, reason, attempt: i };
+      if (!r.focused && i + 1 < delays.length) {
+        this._focusTimer = setTimeout(() => attempt(i + 1), delays[i + 1] - delays[i]);
+      }
+    };
+    attempt(0);
+  }
+
+  /** Golden Layout's container 'show' (wired in the constructor). */
+  onShow() {
+    this.focusGame('the panel was shown');
+  }
+
   /** The glue's park hook (and any other "the game no longer owns the keys"). */
   releaseHeldKeys(reason) {
     return this._heldKeys?.release(reason) ?? [];
@@ -911,6 +947,7 @@ export class FlashPanelUI {
   destroy() {
     log('info', '[FlashPanelUI] Destroying');
     this._heldKeys?.uninstall();
+    if (this._focusTimer) { clearTimeout(this._focusTimer); this._focusTimer = null; }
     if (this._rulesLoadedHandler) {
       this.eventBus.unsubscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);
       this._rulesLoadedHandler = null;
