@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import {
     SHIPPED_PRESETS, VALID_MODES, PRESET_GROUPS, PRESET_GROUP_ORDER, LS_PRESETS_KEY,
     PRESET_HEADLESS_BUDGET_MS, PRESETS_SKIPPED_AS_HEAVY,
-    SEEDLING_SPIRAL_ROOM_STATE,
+    SEEDLING_SPIRAL_ROOM_STATE, SEEDLING_SPHERE_ROOM_STATE,
     capturePresetState, applyPresetState, getPresetById, restoredActivePresetId, groupShippedPresets,
     userPresetId, loadUserPresets, saveUserPreset, deleteUserPreset,
 } from './presetDefs.js';
@@ -165,6 +165,16 @@ describe('SHIPPED_PRESETS', () => {
         // the headless oracle all read this object.
         expect(p.state).toBe(SEEDLING_SPIRAL_ROOM_STATE);
         expect(p.state.mode).toBe('shuffledSpiral');
+        expect(p.state.substrateQuotas).toEqual({ maze: 3, flash_seedling: 1 });
+    });
+
+    it('seedling sphere room demo IS the committed preset\'s state — a Seedling room as a sphere leaf', () => {
+        const p = getPresetById('shipped:seedling-sphere-room-demo');
+        // ONE spelling: the drop-down, the committed seedling_sphere_room preset and
+        // the headless oracle all read this object.
+        expect(p.state).toBe(SEEDLING_SPHERE_ROOM_STATE);
+        expect(p.group).toBe(PRESET_GROUPS.sphereGrowth);
+        expect(p.state.mode).toBe('sphereGrowth');
         expect(p.state.substrateQuotas).toEqual({ maze: 3, flash_seedling: 1 });
     });
 

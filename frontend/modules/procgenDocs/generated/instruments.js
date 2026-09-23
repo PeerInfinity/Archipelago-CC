@@ -206,7 +206,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 263,
         "browser": 79,
-        "cited": 99,
+        "cited": 100,
         "files": 274,
         "lineStyle": 11,
         "withDocblock": 274,
@@ -3284,7 +3284,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/pipeline-presets.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "game",

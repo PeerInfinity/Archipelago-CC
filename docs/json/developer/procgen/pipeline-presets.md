@@ -24,6 +24,7 @@ Measured 2026-09-16 on a WSL2 box at 1-minute load ~7.7, through `buildRunFromSt
 | `shipped:bounce-sphere-demo` | Bounce demo (sphere growth) | bounce 99; 3 spheres; the seven-item bounce pool | bounce alone: the free-arrow start, gated exits | play after *Load* | 4 · 64 / 32 |
 | `shipped:runner-sphere-demo` | Runner demo (sphere growth) | runner 99, start runner; 3 spheres; four-item pool, celeste physics | runner alone | play after *Load* | 4 · 5,500 / 4,664 |
 | `shipped:runner-placement-demo` | Runner demo (jitter + splits + ceilings) | as the runner demo, with jitter 0.75, splits 0.6, ceilings 0.5 | the runner's placement and texture knobs | play after *Load* | 4 · 10,186 / 17,281 |
+| `shipped:seedling-sphere-room-demo` | Seedling room as a sphere leaf | maze 3 + flash_seedling 1, start maze; 3 spheres, 1 filler; two keys + victory | ONE room of the real Seedling map grown into a sphere world as a LEAF: the filler is a Seedling dungeon room behind a maze exit gated on `key_blue`. A real door cannot enforce an AP gate, so the room hosts no children and its stairs back are ungated; the gate is the maze's. The same state (`SEEDLING_SPHERE_ROOM_STATE`, spelled once) is the committed `seedling_sphere_room` preset, which `check-seedling-sphere-room-play.mjs` plays in the Seedling wasm | the composite map (the Seedling cell hangs off the start cell); the `flash_seedling` sidecar's one exit, paired with the maze's `exit_1` | 5 · 110 / 39 |
 
 ### Shuffled spiral
 
