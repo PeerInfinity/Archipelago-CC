@@ -48,8 +48,17 @@
  * The `rules owned` column counts the ops whose spec rewrote ≥ 1 rule (the op's
  * description or refusal carries the starting-inventory clause).
  *
+ * ⛓ THE LIBRARY ENTRY SOURCE (R5a, plan §12): `--source=library` asks the op
+ * with `source: {kind: 'library', …}` instead of a seed — EVERY entry of every
+ * SERVED pack (`frontend/region-libraries/`, read off disk through the served
+ * index) × EVERY committed region whose current substrate is the entry's
+ * (`--limit` does not apply unless given; the hook draws no rng, so the ops are
+ * fast). The rows are `from → <substrate> ← <entry_id>`; `--targets` / `--seed`
+ * / `--starting` do not apply.
+ *
  * Run:
  *   node scripts/procgen/check-regenerate-region-control.mjs
+ *   node scripts/procgen/check-regenerate-region-control.mjs --source=library
  *   node scripts/procgen/check-regenerate-region-control.mjs --from=bounce --targets=bounce --starting='Right arrow'
  *   node scripts/procgen/check-regenerate-region-control.mjs --json
  *   node scripts/procgen/check-regenerate-region-control.mjs --targets=all --limit=4
@@ -88,7 +97,15 @@ export const DEFAULT_SEED = 1;
 /** ⛓ One op's budget, in seconds (the header's ⛔). */
 export const DEFAULT_OP_TIMEOUT_S = 60;
 
-const LIMIT = Number.parseInt(arg('limit') ?? `${DEFAULT_LIMIT}`, 10);
+/** ⛓ The op's data source: `generate` (the realiser) or `library` (the header's ⛓). */
+export const CONTROL_SOURCES = Object.freeze(['generate', 'library']);
+const SOURCE = arg('source') ?? CONTROL_SOURCES[0];
+if (!CONTROL_SOURCES.includes(SOURCE)) {
+    process.stderr.write(`--source must be one of [${CONTROL_SOURCES.join(', ')}], got ${SOURCE}\n`);
+    process.exit(2);
+}
+const LIBRARY = SOURCE === 'library';
+const LIMIT = arg('limit') === null && LIBRARY ? Infinity : Number.parseInt(arg('limit') ?? `${DEFAULT_LIMIT}`, 10);
 const SEED = Number.parseInt(arg('seed') ?? `${DEFAULT_SEED}`, 10);
 const OP_TIMEOUT_S = Number(arg('op-timeout') ?? DEFAULT_OP_TIMEOUT_S);
 const list = (v) => (v ? v.split(',').map((x) => x.trim()).filter(Boolean) : []);
@@ -142,7 +159,7 @@ async function loadModules() {
 
 /** ⛓ A refusal's CLASS: digits and quoted/backticked ids folded, so one cause is one row. */
 export function refusalClass(error) {
-    const threw = /realiser refused region "[^"]*": (.*?)(?: — with (?:\d+ items? riding free|\d+ rules? (?:treated|narrowed)).*)?\.$/
+    const threw = /refused region "[^"]*": (.*?)(?: — with (?:\d+ items? riding free|\d+ rules? (?:treated|narrowed)).*)?\.$/
         .exec(error);
     const head = threw ? `threw: ${threw[1]}` : error.replace(/^apworld: /, '');
     return head.replace(/'[^']*'|"[^"]*"|`[^`]*`/g, '…').replace(/\d+(\.\d+)?/g, 'N').slice(0, 120);
@@ -157,12 +174,14 @@ const median = (xs) => {
 const round1 = (x) => (x == null ? null : Math.round(x * 10) / 10);
 
 /** ⛓ ONE op, classified — runs in the worker. */
-function classifyOp(mods, doc, baseline, p, region, to) {
+function classifyOp(mods, doc, baseline, p, region, to, source) {
     const { substrateRegistry, applyRulesDocOp, strandedReferences } = mods;
     const s = performance.now();
     let res;
     try {
-        res = applyRulesDocOp(doc, { op: 'regenerate-region-sidecar', player: p, region, substrate: to, seed: SEED });
+        res = applyRulesDocOp(doc, {
+            op: 'regenerate-region-sidecar', player: p, region, substrate: to, ...(source ? { source } : { seed: SEED }),
+        });
     } catch (e) {
         res = { ok: false, error: `THREW OUTSIDE THE OP: ${e?.message ?? e}` };
     }
@@ -188,7 +207,7 @@ const errorKeys = (mods, doc, p) => new Set(mods.sidecarIssues(doc, p).filter((i
 async function workerLoop() {
     const mods = await loadModules();
     let cached = { rel: null, doc: null, base: new Map() };
-    parentPort.on('message', ({ rel, p, region, to }) => {
+    parentPort.on('message', ({ rel, p, region, to, source }) => {
         if (cached.rel !== rel) {
             const doc = JSON.parse(readFileSync(join(REPO, rel), 'utf8'));
             if (STARTING.length) {
@@ -200,11 +219,28 @@ async function workerLoop() {
             cached = { rel, doc, base: new Map() };
         }
         if (!cached.base.has(p)) cached.base.set(p, errorKeys(mods, cached.doc, p));
-        parentPort.postMessage(classifyOp(mods, cached.doc, cached.base.get(p), p, region, to));
+        parentPort.postMessage(classifyOp(mods, cached.doc, cached.base.get(p), p, region, to, source));
     });
     const realisers = mods.substrateRegistry.getAll()
         .filter((e) => mods.regionRealiserKind(e) !== null).map((e) => e.id);
     parentPort.postMessage({ ready: true, realisers, failed: mods.failed });
+}
+
+/**
+ * ⛓ Every entry of every SERVED pack, read off disk through the served index
+ * (the files the page fetches), as the op's `source` — the entry inlined.
+ */
+function servedLibraryJobs() {
+    const dir = join(REPO, 'frontend', 'region-libraries');
+    const index = JSON.parse(readFileSync(join(dir, 'region_library_files.json'), 'utf8')).libraries ?? [];
+    return index.flatMap((row) => {
+        const pack = JSON.parse(readFileSync(join(dir, row.file), 'utf8'));
+        return (pack.entries ?? []).map((entry) => ({
+            to: entry.substrate,
+            label: `${entry.substrate} ← ${entry.entry_id}`,
+            source: { kind: 'library', library_id: pack.library_id, entry_id: entry.entry_id, entry },
+        }));
+    });
 }
 
 /** ⛓ The main thread's handle on the worker: spawn, ask with a budget, respawn after a kill. */
@@ -235,6 +271,8 @@ async function main() {
     const t0 = Date.now();
     const runner = opRunner();
     const { realisers, failed } = await runner.spawn();
+    // ⛓ `--source=library`: every served entry, as `{to, source, label}` jobs (the header's ⛓).
+    const servedJobs = LIBRARY ? servedLibraryJobs() : null;
     const targetsArg = arg('targets');
     const targets = targetsArg === 'all' ? realisers
         : (targetsArg ? targetsArg.split(',').map((s) => s.trim()).filter(Boolean) : [...DEFAULT_TARGETS]);
@@ -267,13 +305,17 @@ async function main() {
         for (const [p, slot] of slots) {
             for (const [region, entry] of Object.entries(slot ?? {}).slice(0, LIMIT)) {
                 if (FROM.length && !FROM.includes(entry?.substrate)) continue;
+                const jobs = LIBRARY
+                    ? servedJobs.filter((j) => j.to === entry?.substrate)
+                    : targets.map((to) => ({ to, label: to, source: undefined }));
+                if (LIBRARY && !jobs.length) continue;
                 entries += 1;
-                for (const to of targets) {
-                    const t = tally(entry?.substrate ?? '(none)', to);
+                for (const { to, label, source } of jobs) {
+                    const t = tally(entry?.substrate ?? '(none)', label);
                     t.n += 1;
                     here += 1;
                     // eslint-disable-next-line no-await-in-loop
-                    const r = await runner.ask({ rel, p, region, to });
+                    const r = await runner.ask({ rel, p, region, to, source });
                     t.ms.push(r.ms);
                     if (r.owned) t.owned += 1;
                     if (r.timedOut) {
@@ -312,7 +354,8 @@ async function main() {
         refused: s.refused + r.refused, timedOut: s.timedOut + r.timedOut, rulesOwned: s.rulesOwned + r.rulesOwned,
     }), { n: 0, clean: 0, stranded: 0, newErrors: 0, refused: 0, timedOut: 0, rulesOwned: 0 });
     const out = {
-        seed: SEED, limitPerSlot: LIMIT, opTimeoutS: OP_TIMEOUT_S, targets, from: FROM, starting: STARTING,
+        source: SOURCE,
+        seed: LIBRARY ? null : SEED, limitPerSlot: LIMIT, opTimeoutS: OP_TIMEOUT_S, targets, from: FROM, starting: STARTING,
         realisers, documents: docs.length,
         entries, libraryLoadFailures: failed, totals, rows, timeouts, seconds: Math.round((Date.now() - t0) / 100) / 10,
     };
@@ -320,7 +363,9 @@ async function main() {
         console.log(JSON.stringify(out, null, 1));
         return;
     }
-    console.log(`regenerate-region control — seed ${SEED}, ≤${LIMIT} entries per slot, ${OP_TIMEOUT_S} s per op, targets [${targets.join(', ')}] `
+    console.log(`regenerate-region control — ${LIBRARY
+        ? `source library (${servedJobs.length} served entries)` : `seed ${SEED}`}, ≤${LIMIT} entries per slot, `
+        + `${OP_TIMEOUT_S} s per op, targets [${LIBRARY ? [...new Set(servedJobs.map((j) => j.to))].join(', ') : targets.join(', ')}] `
         + `(realisers registered: ${realisers.join(', ')})`
         + `${FROM.length ? `, from [${FROM.join(', ')}]` : ''}${STARTING.length ? `, starting += [${STARTING.join(', ')}]` : ''}`);
     console.log(`${docs.length} documents, ${entries} entries, ${totals.n} ops in ${out.seconds} s`);
