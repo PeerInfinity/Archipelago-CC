@@ -44,6 +44,7 @@ import {
 
 // Import core settings schemas (top-level scopes; schema-as-default-source)
 import { registerCoreSettingsSchemas } from '../core/coreSettingsSchemas.js';
+import { wirePanelLifecycle } from '../core/panelManager.js';
 
 // Import layout management
 import { initializeLayoutManager } from './layoutManager.js';
@@ -900,6 +901,9 @@ function createModuleManagerApi(options) {
                           if (typeof uiProvider.onMount === 'function') {
                             uiProvider.onMount(container, componentState);
                           }
+                          // onShow / onHide / onResize (T4, trap 1404), as
+                          // desktopLayout's factory does.
+                          wirePanelLifecycle(container, uiProvider);
                         } catch (e) {
                           logger.error(
                             'init',
