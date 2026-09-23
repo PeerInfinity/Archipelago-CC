@@ -151,6 +151,17 @@ export class MazeRoomUI {
         this.container?.on?.('show', () => this.onPanelShow());
         this.params = { ...DEFAULT_PARAMS };
         this.world = null;
+        /**
+         * ⛓ T4 (finding 3) — where the current visit came in, as TWO facts.
+         * `arrivedFromExitId` is the saved-queue STORE's key: the recording's
+         * `arrivedFrom.exit_id` (null → 'entrance'), which
+         * `loops/blockIdentity.arrivalKeyOf` mirrors. `arrivalDoorId` is the
+         * exit `resolveMazeArrival` placed the player on — the hazard reset's
+         * door. In a world with no reverse links they differ. Both were read
+         * and never assigned before T4.
+         */
+        this.arrivedFromExitId = null;
+        this.arrivalDoorId = null;
         this.state = null;
         this.stats = null;
         this.isGenerating = false;
@@ -1553,6 +1564,8 @@ export class MazeRoomUI {
         // `arrivedFrom.source_region` (a world with no reverse links, e.g. a
         // return from a placed Seedling room), else the entrance.
         const arrival = resolveMazeArrival(this.world, payload.arrivedFrom);
+        this.arrivedFromExitId = payload?.arrivedFrom?.exit_id ?? null;
+        this.arrivalDoorId = arrival?.exitId ?? null;
         let spawnAt = null;
         if (arrival) {
             spawnAt = { x: arrival.x, y: arrival.y };
@@ -3549,6 +3562,9 @@ export class MazeRoomUI {
             this.world = world;
             this.state = createState(world);
             this.stats = stats;
+            // A generated world is entered at its entrance, from nowhere.
+            this.arrivedFromExitId = null;
+            this.arrivalDoorId = null;
             // Generate dev flow uses state.inventory directly — drop
             // any external inventory left over from a prior LoadRegion
             // session in this panel.
@@ -4110,11 +4126,12 @@ export class MazeRoomUI {
 
     _resolveHazardEntranceTile() {
         // Prefer the exit tile the player arrived through (the door
-        // they came in by) — mirrors _adoptLoadedRegion's spawn-
-        // positioning logic. Falls back to world.entrance for the
-        // initial spawn / standalone Generate flow.
-        if (this.arrivedFromExitId && this.world?.exits?.has(this.arrivedFromExitId)) {
-            const exit = this.world.exits.get(this.arrivedFromExitId);
+        // they came in by) — the exit _adoptLoadedRegion's
+        // resolveMazeArrival placed them on (`arrivalDoorId`, T4). Falls
+        // back to world.entrance for the initial spawn / standalone
+        // Generate flow.
+        if (this.arrivalDoorId && this.world?.exits?.has(this.arrivalDoorId)) {
+            const exit = this.world.exits.get(this.arrivalDoorId);
             return { x: exit.x, y: exit.y };
         }
         return this.world?.entrance ?? null;

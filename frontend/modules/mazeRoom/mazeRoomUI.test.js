@@ -284,6 +284,63 @@ describe('MazeRoomUI — arrival position on region load', () => {
         expect(panel.state.player_pos).toEqual({ x: 4, y: 3 });
     });
 
+    /**
+     * ⛓ seedling-pipeline T4 (finding 3) — `arrivedFromExitId` was READ (the
+     * hazard reset's arrival door, the saved-queue filters) and ASSIGNED
+     * NOWHERE, so every hazard reset sent the player to the entrance and every
+     * replay filter asked for the 'entrance' recordings.
+     *
+     * ⛔ TWO READERS, TWO KEYS. The saved-queue filters compare against the
+     * STORE's key, which is the recording's `arrivedFrom.exit_id ?? 'entrance'`
+     * (`loops/blockIdentity.arrivalKeyOf` mirrors it exactly). So
+     * `arrivedFromExitId` is that raw key. The hazard reset wants the DOOR the
+     * player came in by, which is what `resolveMazeArrival` placed them on;
+     * that is `arrivalDoorId`, and in an unlinked world the two differ.
+     */
+    const twoExitWorld = () => makeWorld({
+        entrance: { x: 4, y: 3 },
+        exits: [
+            { exit_id: 'exit_0', x: 7, y: 3, side: 'E', targetRegion: 'B' },
+            { exit_id: 'exit_1', x: 0, y: 4, side: 'W', targetRegion: 'SEED' },
+        ],
+    });
+
+    it('⛔ a load arriving through an exit → the hazard reset\'s door is THAT exit', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.applyLoadedRegion({ region_id: 'A', world: twoExitWorld(), arrivedFrom: { exit_id: 'exit_0' } });
+        expect(panel.arrivedFromExitId).toBe('exit_0');
+        expect(panel.arrivalDoorId).toBe('exit_0');
+        expect(panel._resolveHazardEntranceTile()).toEqual({ x: 7, y: 3 });
+        // the recording and the readers key on the same string
+        expect(panel._visitRecording.arrivalExitId).toBe(panel.arrivedFromExitId);
+    });
+
+    it('⛔ …through the source_region arm: the door is the exit it resolved to; the key stays the store\'s', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.applyLoadedRegion({
+            region_id: 'A', world: twoExitWorld(), arrivedFrom: { exit_id: 'exit_S', source_region: 'SEED' },
+        });
+        expect(panel.arrivalDoorId).toBe('exit_1');
+        expect(panel._resolveHazardEntranceTile()).toEqual({ x: 0, y: 4 });
+        expect(panel.arrivedFromExitId).toBe('exit_S');
+        expect(panel._visitRecording.arrivalExitId).toBe('exit_S');
+    });
+
+    it('a load with no arrival (or none that resolves) clears both: the entrance, and the "entrance" key', () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.applyLoadedRegion({ region_id: 'A', world: twoExitWorld(), arrivedFrom: { exit_id: 'exit_0' } });
+        panel.applyLoadedRegion({ region_id: 'A', world: twoExitWorld(), arrivedFrom: null });
+        expect(panel.arrivedFromExitId).toBeNull();
+        expect(panel.arrivalDoorId).toBeNull();
+        expect(panel._resolveHazardEntranceTile()).toEqual({ x: 4, y: 3 });
+        expect(panel._visitRecording.arrivalExitId).toBe('entrance');
+        panel.applyLoadedRegion({
+            region_id: 'A', world: twoExitWorld(), arrivedFrom: { exit_id: 'nowhere', source_region: 'nowhere' },
+        });
+        expect(panel.arrivalDoorId).toBeNull();
+        expect(panel._resolveHazardEntranceTile()).toEqual({ x: 4, y: 3 });
+    });
+
     it('the visualizer mirroring callback does not clobber the arrival pos', () => {
         // The bug was: visualizer.setWorld would reset its internal
         // _state to createState(world) (= entrance), then notify the
@@ -1674,6 +1731,31 @@ describe('MazeRoomUI — saved queue replay', () => {
         expect(targets[1].totalCost).toBe(5);
     });
 
+    /** ⛓ T4 (finding 3): the filter's key comes from the LOAD now, not only from a test's assignment. */
+    it('⛔ after a load through an exit, the recordings made through that exit are the ones offered', () => {
+        const rulesHash = hashRulesData(RULES_DATA);
+        const rec = (arrivalExitId, departureExitId, recordedAt) => saveQueue(rulesHash, {
+            regionName: 'Forest', substrate: 'maze', arrivalExitId, departureExitId,
+            actions: [moveEntry('E', 1)], manaAtEntry: 100, manaAtExit: 99, manaMin: 99,
+            locationsChecked: [], itemsPickedUp: [], recordedAt,
+        });
+        rec('exit_a', 'exit_b', 4001);
+        rec('entrance', 'exit_a', 4002);
+        const panel = panelWithRules();
+        panel.applyLoadedRegion({
+            region_id: 'Forest',
+            world: makeWorld({
+                entrance: { x: 4, y: 3 },
+                exits: [
+                    { exit_id: 'exit_a', x: 0, y: 3, side: 'W', targetRegion: 'A', exitName: 'west_door' },
+                    { exit_id: 'exit_b', x: 7, y: 3, side: 'E', targetRegion: 'B', exitName: 'east_door' },
+                ],
+            }),
+            arrivedFrom: { exit_id: 'exit_a' },
+        });
+        expect(panel._getReplayableTargets().map((t) => t.label)).toEqual(['exit: east_door']);
+    });
+
     it('_getReplayableTargets uses "entrance" sentinel when arrivedFromExitId is null', () => {
         const rulesHash = hashRulesData(RULES_DATA);
         saveQueue(rulesHash, {
@@ -1985,6 +2067,9 @@ describe('MazeRoomUI — hazard runtime integration (Phase 2e)', () => {
         };
         panel.currentRegionId = opts.regionId ?? 'R';
         panel.arrivedFromExitId = opts.arrivedFrom ?? null;
+        // ⛓ T4: the hazard reset reads the RESOLVED door, a field of its own
+        // (a load sets both; this fixture has no load, so it sets both).
+        panel.arrivalDoorId = opts.arrivedFrom ?? null;
         // Stub render so headless tests don't try to draw.
         panel.render = () => {};
         return panel;
