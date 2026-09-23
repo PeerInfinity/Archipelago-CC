@@ -278,8 +278,15 @@ function crossingRule(region, from, to) {
     return null;
 }
 
-/** The atlas's own rule for one BOUNDARY exit. */
-function boundaryRule(region, exitId) {
+/**
+ * The atlas's own rule for one BOUNDARY exit.
+ *
+ * ⛓ Exported for `flash_seedling`'s content source (`flashPanel/
+ * flashSeedlingLibrary.js`), which binds a real door to a grid side and hands
+ * the door's authored rule to the spiral as that side's `exitRules` entry — the
+ * same reader, so the pool and the content source cannot disagree on a door.
+ */
+export function boundaryRule(region, exitId) {
     return (region.exits ?? []).find((e) => e.exit_id === exitId)?.access_rule ?? null;
 }
 

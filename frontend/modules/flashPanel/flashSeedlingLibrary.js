@@ -51,8 +51,21 @@
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
 import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
+import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
+import { SIDE_AGNOSTIC_EXIT_SIDES } from '../procgenCore/exitSides.js';
+import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
+import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
+import { boundaryRule } from '../procgenPipeline/regionAtlasPool.js';
+// ⛓ The jta precedent (`jtaSubstrateWrapper/vanillaDataset.js`): a static JSON
+// module import is ONE spelling of the document's location for the browser's
+// raw ES modules, the esbuild bundle, node CLIs and vitest alike — no fetch, so
+// the synchronous `applyPipelineConfig` seam can install it.
+import SEEDLING_STARTER_ATLAS_DOC from './atlases/seedling.json' with { type: 'json' };
 
 export const FLASH_SEEDLING_SUBSTRATE_ID = 'flash_seedling';
+
+/** The atlas this substrate places when no `substrateConfig.flash_seedling.atlasDoc` is given. */
+export const SEEDLING_STARTER_ATLAS = SEEDLING_STARTER_ATLAS_DOC;
 export const FLASH_SEEDLING_PANEL_COMPONENT_TYPE = 'flashPanel';
 export const FLASH_SEEDLING_LOAD_REGION_EVENT = 'flashSeedling:loadRegion';
 
@@ -104,6 +117,143 @@ export const FLASH_SEEDLING_SIDECAR_FIELDS = Object.freeze({
     }),
 });
 
+/**
+ * ⛓⛓⛓ SEEDLING IN THE PIPELINE T1 — **A REAL ROOM AS SPIRAL CONTENT.**
+ *
+ * The zone content-source contract (`substrate-registry.md` § *Build-time —
+ * content sources*): `zoneCount` + `extractZoneRules(zoneIdx, {region_id,
+ * exitSides})`. An entry of the pool is ONE AP region of the installed atlas —
+ * a sub-region where the atlas region has a subgraph — and it plays as the
+ * real level, exactly as `seedling_atlas` does.
+ *
+ * ⛔ **EVERYTHING IS READ OFF `compileRegionAtlas`, NOTHING IS RESTATED.** The
+ * pool is the compile's own `preset_sidecars` (its payload IS the one
+ * `buildFlashRegionSidecars` writes for `seedling_atlas`), its locations are the
+ * compile's own region locations, and a door's rule is `boundaryRule` — the
+ * reader the atlas pool uses. So the pool, the committed atlas preset and this
+ * source cannot drift apart: they are one compile.
+ *
+ * ⛔ **THE POOL IS THE REGIONS WITH ≥1 WIRED DOOR, AND THAT IS NOT A FILTER OF
+ * TASTE.** A placed room is entered through a door: `seedlingRegionBinding.
+ * resolveArrivalSpawn` lands the player on the arrival exit's `entrance_spawn`,
+ * and a region whose payload lists no exit has no spawn to land on — the
+ * binding warns and does not teleport. The compile lists only WIRED doors (an
+ * unwired one has no destination in the atlas; the compiler omits it by
+ * design), so the predicate is "the compiled payload lists ≥1 exit", over the
+ * compile's own output, never a list of names. Measured on the starter atlas:
+ * 4 of its 10 AP regions — the other six hold only map edges and walk
+ * crossings. Order is the compile's (atlas region order × sub-region order).
+ *
+ * ⛓ **A DOOR IS BOUND TO A SIDE BY ORDER, AND BECOMES `external`** (⚖ the
+ * user, 2026-09-22, Q10 — the maze atlas hook's relabel rule,
+ * `mazeLibraryEntry.js`). A Seedling door has no side; the grid asks for sides.
+ * The k-th side the driver asks for takes the k-th door in payload order, and
+ * the door keeps its `exit_id` (the atlas's own spelling — what the binding
+ * matches a departure against) while the engine's `exit_<side>` rides
+ * `exitName`. Every bound door is `external: true` with `target_level`/
+ * `target_spawn` NULL: its far side is whatever the grid put there, never the
+ * level the real game's door leads to. A surplus door is dropped with a
+ * `pruned_exit` note; a side beyond the room's doors is REFUSED by name —
+ * the spiral's quota check cannot see a door count.
+ *
+ * @param {object} atlasDoc a region atlas document
+ * @returns {{atlasDoc: object, atlasId: string, zones: object[], doorless: string[], blocks: object}}
+ */
+export function buildSeedlingContentSource(atlasDoc) {
+    const validation = validateRegionAtlas(atlasDoc);
+    if (!validation.ok) {
+        throw new Error(`${FLASH_SEEDLING_SUBSTRATE_ID}: the atlas document handed to applyPipelineConfig `
+            + `({atlasDoc}) does not validate, so none of its rooms can be placed as content: `
+            + validation.errors.join('; '));
+    }
+    const { rules } = compileRegionAtlas(atlasDoc);
+    const apRegions = rules.regions['1'];
+    const zones = [];
+    const doorless = [];
+    for (const [apName, sidecar] of Object.entries(rules.preset_sidecars?.['1'] ?? {})) {
+        if (sidecar.substrate !== FLASH_SEEDLING_SUBSTRATE_ID) continue;
+        const payload = sidecar.playable_payload;
+        if (payload.exits.length === 0) { doorless.push(apName); continue; }
+        zones.push({
+            apName,
+            region: atlasDoc.regions.find((r) => r.region_id === payload.atlas_region),
+            payload,
+            locations: apRegions[apName].locations,
+        });
+    }
+    return {
+        atlasDoc,
+        atlasId: atlasDoc.atlas_id,
+        zones,
+        doorless,
+        // The two top-level blocks the flash panel engages on, as THIS compile
+        // wrote them (`rulesJsonBlocks` below).
+        blocks: {
+            region_atlas: rules.region_atlas,
+            ...(rules.flash_panel ? { flash_panel: rules.flash_panel } : {}),
+        },
+    };
+}
+
+let installedSource = null;
+/** The installed content source — the starter atlas until `applyPipelineConfig` installs another. */
+function contentSource() {
+    installedSource ??= buildSeedlingContentSource(SEEDLING_STARTER_ATLAS);
+    return installedSource;
+}
+
+/**
+ * The zone channel for one placed room (see `buildSeedlingContentSource`).
+ * `payload` is the compile's payload for the region with `exits` REPLACED by
+ * `bound_doors` — `{<side>: door}` — because `buildPresetSidecars` overwrites a
+ * payload's `exits` with the engine's own exit table before serializing; this
+ * entry's `serializeWorld` joins the two back into the sidecar's exit list.
+ */
+function extractZoneRules(zoneIdx, { region_id: regionId, exitSides = [] } = {}) {
+    const source = contentSource();
+    const zone = source.zones[zoneIdx];
+    if (!zone) {
+        throw new Error(`${FLASH_SEEDLING_SUBSTRATE_ID}: zone ordinal ${zoneIdx} is out of range — the `
+            + `installed atlas "${source.atlasId}" offers ${source.zones.length} placeable room(s) `
+            + `[${source.zones.map((z) => z.apName).join(', ')}]; ${source.doorless.length} more have no `
+            + `wired door [${source.doorless.join(', ')}] and cannot be placed, because a room with no `
+            + 'door has no arrival spawn.');
+    }
+    const { exits: doors, ...payload } = zone.payload;
+    if (exitSides.length > doors.length) {
+        throw new Error(`${FLASH_SEEDLING_SUBSTRATE_ID}: region "${regionId}" places the real room `
+            + `"${zone.apName}", which has ${doors.length} wired door(s) `
+            + `[${doors.map((d) => d.exit_id).join(', ')}], but its grid cell needs ${exitSides.length} `
+            + `exit side(s) [${exitSides.join(', ')}], one per occupied neighbour. A real room has the `
+            + `doors it has: lower the quotas so the spiral leaves this cell at most ${doors.length} `
+            + 'neighbour(s), or install an atlas whose room at this ordinal has more wired doors.');
+    }
+    const boundDoors = {};
+    const exitRules = {};
+    exitSides.forEach((side, k) => {
+        boundDoors[side] = { ...doors[k], side, external: true };
+        const rule = boundaryRule(zone.region, doors[k].exit_id);
+        if (rule) exitRules[side] = rule;
+    });
+    const notes = doors.slice(exitSides.length).map((door) => ({
+        kind: 'pruned_exit', region_id: regionId, exit_id: door.exit_id,
+        message: `"${zone.apName}" door "${door.exit_id}" has no side to route to in this world `
+            + `(its cell asks for ${exitSides.length} side(s)) — it is left out of the sidecar; the `
+            + 'real door stays in the level and fires the real game\'s own transition',
+    }));
+    return {
+        locations: zone.locations.map((loc) => ({
+            id: loc.name,
+            global_name: loc.name,
+            item: loc.item?.name ?? null,
+            ...(loc.access_rule ? { access_rule: loc.access_rule } : {}),
+        })),
+        exitRules,
+        payload: { ...payload, bound_doors: boundDoors },
+        ...(notes.length ? { notes } : {}),
+    };
+}
+
 const base = createFlashSubstrateEntry({
     id: FLASH_SEEDLING_SUBSTRATE_ID,
     label: 'Seedling (region atlas)',
@@ -133,10 +283,67 @@ const {
     ...runtime
 } = base;
 
+/**
+ * The sidecar of a PLACED room: the compile's payload with `bound_doors`
+ * joined onto the engine's exit table (see `extractZoneRules`). Each engine
+ * exit contributes what only stitching knows — `exitName`, `targetRegion`,
+ * `targetExitId` — and, through the 5th argument `buildPresetSidecars` passes,
+ * `target_substrate`. A payload with no `bound_doors` (every compiled
+ * `seedling_atlas` room) takes the flash family's pass-through unchanged.
+ */
+function serializeWorld(world, extractedRules, obstacleLib, itemLib, context) {
+    const { bound_doors: boundDoors, ...rest } = world ?? {};
+    if (boundDoors === undefined) return runtime.serializeWorld(world, extractedRules, obstacleLib, itemLib);
+    const engineExits = rest.exits instanceof Map ? [...rest.exits.values()] : (rest.exits ?? []);
+    const exits = engineExits.map((e) => {
+        const door = boundDoors[e.side];
+        if (!door) {
+            throw new Error(`${FLASH_SEEDLING_SUBSTRATE_ID}: the region's exit "${e.exitName ?? e.exit_id}" `
+                + `(side ${e.side}) has no real door bound to it — extractZoneRules binds one door per side `
+                + `it is asked for [${Object.keys(boundDoors).join(', ')}], so this exit was added after `
+                + 'extraction and there is no door in the level for it to be.');
+        }
+        return {
+            ...door,
+            exitName: e.exitName ?? e.exit_id,
+            targetRegion: e.targetRegion ?? null,
+            targetExitId: e.targetExitId ?? null,
+            target_level: null,
+            target_spawn: null,
+            // `external: true` is the bound door's own (extractZoneRules wrote it).
+            target_substrate: context?.substrateOfRegion?.(e.targetRegion) ?? null,
+        };
+    });
+    return { ...rest, exits };
+}
+
 export const substrateRegistryEntry = Object.freeze({
     ...runtime,
     panelComponentType: FLASH_SEEDLING_PANEL_COMPONENT_TYPE,
     loadRegionEvent: FLASH_SEEDLING_LOAD_REGION_EVENT,
+    serializeWorld,
+
+    /**
+     * ⛓⛓⛓ SEEDLING IN THE PIPELINE T1 — **THE CONTENT SOURCE** (see
+     * `buildSeedlingContentSource`). A placed room's exits are its SIDES — the
+     * door it is bound to stays where the level put it — so the engine mints
+     * no fictional tile for it, and its side is only a label.
+     */
+    regionGeometry: REGION_GEOMETRY.SIDES,
+    exitSides: SIDE_AGNOSTIC_EXIT_SIDES,
+    /** Placeable rooms in the installed atlas — a getter, so the spiral's quota check sees the live document. */
+    get zoneCount() { return contentSource().zones.length; },
+    extractZoneRules,
+    /**
+     * Install `cfg.atlasDoc`, or the starter atlas when absent — a preset
+     * carries no `substrateConfig`, so the default IS the path every preset
+     * takes (jta's `applyPipelineConfig({})` precedent). Refused by name when
+     * the document does not validate.
+     */
+    applyPipelineConfig: (cfg) => {
+        installedSource = buildSeedlingContentSource(cfg?.atlasDoc ?? SEEDLING_STARTER_ATLAS);
+        return installedSource.atlasDoc;
+    },
     /**
      * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE ROOM-EDITOR DECLARATION**
      * (the editor-integration plan §3.2). Seedling's room editor is

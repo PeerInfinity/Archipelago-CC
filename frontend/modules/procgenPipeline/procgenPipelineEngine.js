@@ -2725,6 +2725,12 @@ export function assembleZoneRegion({
         position: loc.position ?? null,
         paths: loc.paths ?? [{ path_id: 'p1', obstacles: [] }],
         ...(!loc.paths && loc.access_rule ? { access_rule: loc.access_rule } : {}),
+        // A content source whose locations already HAVE names (a real map's
+        // marked locations) passes them as `global_name`, the field top-down
+        // uses for the same reason; compileRegion keeps it and
+        // compileRegionGraph prefers it over `Region__id__x_y`. No zone source
+        // set it before, so no world's bytes move.
+        ...(loc.global_name ? { global_name: loc.global_name } : {}),
     }));
     return {
         substrate,
@@ -2751,6 +2757,11 @@ export function assembleZoneRegion({
         wall_stats: null,
         biome: null,
         grow_telemetry: null,
+        // What the content source dropped to fit this slot (a real room's
+        // surplus doors — the `pruned_exit` shape the atlas hook reports).
+        // Present only when there is something to say, so no other zone
+        // region gains a key.
+        ...(zoneRules?.notes?.length ? { notes: zoneRules.notes } : {}),
     };
 }
 
@@ -3488,6 +3499,9 @@ export function realiseSpiralRegions(plan, config) {
     // are stateless; memoizing them is harmless).
     const sourceCache = {};
     const occupied = new Set(cells.map((c) => cellKey(c)));
+    // Every note a content source attached to a region it built (a real room's
+    // dropped surplus doors), surfaced on stats — never in the rules.json.
+    const contentNotes = [];
 
     for (let i = 0; i < cells.length; i++) {
         const cell = cells[i];
@@ -3510,6 +3524,7 @@ export function realiseSpiralRegions(plan, config) {
         if (source) {
             // Content source: instantiate its Nth entry (draws no rng).
             region = source.instantiate({ region_id, ordinal, regionSize, exitSides });
+            if (region.notes?.length) contentNotes.push(...region.notes);
         } else {
             // Procedural substrate: grow geometry from the rng stream.
             getAdapter(substrate); // preserve the "unregistered id" throw
@@ -3553,6 +3568,7 @@ export function realiseSpiralRegions(plan, config) {
         teleportersPlaced: 0,
         stopReason: 'spiral_complete',
         substrateCounts: { ...ordinalCounter },
+        ...(contentNotes.length ? { contentNotes } : {}),
     };
     return { grid, pool, stats, startCell };
 }
@@ -6353,6 +6369,18 @@ export function buildPresetSidecars(grid, {
     fogEnabled = true,
 } = {}) {
     const regionMap = {};
+    // ⛓ The 5th `serializeWorld` argument — what a payload can only know
+    // AFTER stitching: which substrate plays the region an exit leads to. A
+    // substrate whose sidecar records a crossing's far side (flash_seedling's
+    // `target_substrate` on an `external` door) reads it; every other
+    // serializer takes four arguments and never sees it.
+    const substrateById = new Map();
+    for (const region of grid.allRegions()) {
+        substrateById.set(region.region_id, region.substrate ?? DEFAULT_SUBSTRATE_ID);
+    }
+    const serializeContext = Object.freeze({
+        substrateOfRegion: (regionId) => substrateById.get(regionId) ?? null,
+    });
     for (const region of grid.allRegions()) {
         const substrateId = region.substrate ?? DEFAULT_SUBSTRATE_ID;
         const adapter = getAdapter(substrateId);
@@ -6377,6 +6405,7 @@ export function buildPresetSidecars(grid, {
             region.extracted_rules,
             baseObstacleLib,
             baseItemLib,
+            serializeContext,
         );
         if (manaEnabled) {
             playablePayload.manaEnabled = true;
