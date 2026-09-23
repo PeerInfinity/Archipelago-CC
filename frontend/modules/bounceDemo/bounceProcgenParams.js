@@ -26,6 +26,7 @@
 
 import { ABILITY_ITEM_NAMES } from './apRules.js';
 import { createRng } from '../shared/rng.js';
+import { fieldRow, numberField } from '../procgenCore/regionGenerationForm.js';
 
 // ── Panel parameter defaults ────────────────────────────────────────
 // Merged into the Procgen Pipeline panel's DEFAULT_PARAMS via the
@@ -170,11 +171,6 @@ export function buildBounceRegionParams({ params, mode = 'sphere' } = {}) {
  */
 export function renderBounceProcgenParams({ params, onChange = () => {} } = {}) {
     const wrap = document.createElement('div');
-    const row = document.createElement('div');
-    row.className = 'procgen-pipeline-field';
-    const label = document.createElement('label');
-    label.textContent = 'Fall behavior';
-    label.title = 'What falling off the level bottom does. Routing never depends on it — every non-start region has a real back portal.';
     const select = document.createElement('select');
     for (const opt of BOUNCE_FALL_OPTIONS) {
         const o = document.createElement('option');
@@ -188,17 +184,10 @@ export function renderBounceProcgenParams({ params, onChange = () => {} } = {}) 
         params.bounceFallBehavior = select.value;
         onChange();
     });
-    row.appendChild(label);
-    row.appendChild(select);
-    wrap.appendChild(row);
+    wrap.appendChild(fieldRow('Fall behavior',
+        'What falling off the level bottom does. Routing never depends on it — every non-start region has a real back portal.',
+        select));
 
-    const physRow = document.createElement('div');
-    physRow.className = 'procgen-pipeline-field';
-    const physLabel = document.createElement('label');
-    physLabel.textContent = 'Physics profile';
-    physLabel.title = 'Logic-affecting: access rules derive from the profile\'s physics, '
-        + 'and the profile is stamped into every bounce payload so the world plays under '
-        + 'the constants it was generated with. dj is provisional until probe calibration.';
     const physSelect = document.createElement('select');
     for (const opt of BOUNCE_PHYSICS_PROFILE_OPTIONS) {
         const o = document.createElement('option');
@@ -212,71 +201,65 @@ export function renderBounceProcgenParams({ params, onChange = () => {} } = {}) 
         params.bouncePhysicsProfile = physSelect.value;
         onChange();
     });
-    physRow.appendChild(physLabel);
-    physRow.appendChild(physSelect);
-    wrap.appendChild(physRow);
+    wrap.appendChild(fieldRow('Physics profile',
+        'Logic-affecting: access rules derive from the profile\'s physics, '
+        + 'and the profile is stamped into every bounce payload so the world plays under '
+        + 'the constants it was generated with. dj is provisional until probe calibration.',
+        physSelect));
 
     // Layout is always braid (the 2-wide branching-path generator);
     // column mode was deprecated 2026-06-19, so there is no layout
     // selector. The braid sub-fields (width + per-row jitter +
     // decoration) are always shown.
     const braidFields = document.createElement('div');
-    const numberField = (labelText, title, key, def, { step = 1, max = null } = {}) => {
-        const r = document.createElement('div');
-        r.className = 'procgen-pipeline-field';
-        const l = document.createElement('label');
-        l.textContent = labelText;
-        l.title = title;
-        const input = document.createElement('input');
-        input.type = 'number';
-        input.min = '0';
-        input.step = String(step); // without this the browser rejects non-integers
-        if (max != null) input.max = String(max);
-        input.value = String(params[key] ?? def);
-        input.addEventListener('change', () => {
-            let v = Number(input.value);
-            if (!Number.isFinite(v) || v < 0) v = def;
-            if (max != null) v = Math.min(v, max);
-            params[key] = v;
-            input.value = String(v);
-            onChange();
-        });
-        r.appendChild(l);
-        r.appendChild(input);
-        return r;
-    };
-    braidFields.appendChild(numberField('Braid width',
-        'Wrap-ring width in px. 240 is DJ-authentic and fits two simultaneous branches; three need ≥318.',
-        'bounceBraidWidth', 240));
-    braidFields.appendChild(numberField('Max jitter',
-        'Per-row horizontal meander in px (clamped to ~one hop\'s reach). 0 = straight lanes.',
-        'bounceJitter', 40));
-    braidFields.appendChild(numberField('Platform rows',
-        'Extra plain climb rows added per region AFTER the logic-gating content '
+    braidFields.appendChild(numberField(params, {
+        key: 'bounceBraidWidth', label: 'Braid width',
+        title: 'Wrap-ring width in px. 240 is DJ-authentic and fits two simultaneous branches; three need ≥318.',
+        def: 240,
+    }, onChange));
+    braidFields.appendChild(numberField(params, {
+        key: 'bounceJitter', label: 'Max jitter',
+        title: 'Per-row horizontal meander in px (clamped to ~one hop\'s reach). 0 = straight lanes.',
+        def: 40,
+    }, onChange));
+    braidFields.appendChild(numberField(params, {
+        key: 'bouncePlatformRows', label: 'Platform rows',
+        title: 'Extra plain climb rows added per region AFTER the logic-gating content '
         + '(sphere-growth / gated braid only). Spread across the gate segments to make '
         + 'levels taller and lift the hardest exit to the summit. 0 = minimal gated chain.',
-        'bouncePlatformRows', 0));
-    braidFields.appendChild(numberField('Blue chance',
-        'Per-eligible-platform probability (0–1) of a blue platform (moving, full-width '
+        def: 0,
+    }, onChange));
+    braidFields.appendChild(numberField(params, {
+        key: 'bounceBlueChance', label: 'Blue chance',
+        title: 'Per-eligible-platform probability (0–1) of a blue platform (moving, full-width '
         + 'sweep; 1-lane rows only). Capped per level so the reachability check stays fast.',
-        'bounceBlueChance', 0.3, { step: 0.01, max: 1 }));
-    braidFields.appendChild(numberField('Brown chance',
-        'Per-eligible-platform probability (0–1) of a brown platform (breaks on landing; '
+        def: 0.3, step: 0.01, max: 1,
+    }, onChange));
+    braidFields.appendChild(numberField(params, {
+        key: 'bounceBrownChance', label: 'Brown chance',
+        title: 'Per-eligible-platform probability (0–1) of a brown platform (breaks on landing; '
         + 'terminal only — a pre-merge branch or the top). Capped per level.',
-        'bounceBrownChance', 0.3, { step: 0.01, max: 1 }));
-    braidFields.appendChild(numberField('Spring chance',
-        'Per-eligible-platform probability (0–1) of a spring (1-lane rows; launches higher, '
+        def: 0.3, step: 0.01, max: 1,
+    }, onChange));
+    braidFields.appendChild(numberField(params, {
+        key: 'bounceSpringChance', label: 'Spring chance',
+        title: 'Per-eligible-platform probability (0–1) of a spring (1-lane rows; launches higher, '
         + 'so the gap above grows to the spring window).',
-        'bounceSpringChance', 0.3, { step: 0.01, max: 1 }));
-    braidFields.appendChild(numberField('Jetpack chance',
-        'Per-eligible-platform probability (0–1) of a jetpack (1-lane rows). Launches FAR '
+        def: 0.3, step: 0.01, max: 1,
+    }, onChange));
+    braidFields.appendChild(numberField(params, {
+        key: 'bounceJetpackChance', label: 'Jetpack chance',
+        title: 'Per-eligible-platform probability (0–1) of a jetpack (1-lane rows). Launches FAR '
         + 'higher — under dj the gap is ~6200px, making very tall levels. Default 0.',
-        'bounceJetpackChance', 0, { step: 0.01, max: 1 }));
-    braidFields.appendChild(numberField('Fork chance',
-        'Per-extra-row probability (0–1) of a decorative 2-wide fork/merge beside the '
+        def: 0, step: 0.01, max: 1,
+    }, onChange));
+    braidFields.appendChild(numberField(params, {
+        key: 'bounceForkChance', label: 'Fork chance',
+        title: 'Per-extra-row probability (0–1) of a decorative 2-wide fork/merge beside the '
         + 'gated spine (sphere growth). Adds companion platforms BEYOND the platform-rows '
         + 'target; the terminal merge branch breaks at Brown chance. Default 0.',
-        'bounceForkChance', 0, { step: 0.01, max: 1 }));
+        def: 0, step: 0.01, max: 1,
+    }, onChange));
     wrap.appendChild(braidFields);
     return wrap;
 }

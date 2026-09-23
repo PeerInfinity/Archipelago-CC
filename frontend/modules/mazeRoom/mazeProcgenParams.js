@@ -26,8 +26,12 @@
  *     the panel's Region libraries subsection.
  *
  * Pure logic + call-time DOM only (no top-level document/window access) so
- * headless CLI drivers can import the maze library without panel code.
+ * headless CLI drivers can import the maze library without panel code. The
+ * row helpers are the shared per-region form's (`procgenCore/
+ * regionGenerationForm.js`, apworld substrate R1), not a private copy.
  */
+
+import { fieldRow, numberField } from '../procgenCore/regionGenerationForm.js';
 
 // ── Panel parameter defaults ────────────────────────────────────────
 export const DEFAULT_MAZE_PROCGEN_PARAMS = Object.freeze({
@@ -49,18 +53,6 @@ export const DEFAULT_MAZE_PROCGEN_PARAMS = Object.freeze({
     hazardWallOverlapAllowed: false,
 });
 
-/** One labelled `procgen-pipeline-field` row around `input`. */
-function fieldRow(text, title, input) {
-    const row = document.createElement('div');
-    row.className = 'procgen-pipeline-field';
-    const label = document.createElement('label');
-    label.textContent = text;
-    label.title = title;
-    row.appendChild(label);
-    row.appendChild(input);
-    return row;
-}
-
 /**
  * The hazard sub-fields shown while hazards are enabled: count per region, max
  * consecutive placement failures before stopping, and the wall-overlap toggle —
@@ -70,29 +62,14 @@ function renderHazardSubFields(params, onChange) {
     const wrap = document.createElement('div');
     wrap.className = 'procgen-pipeline-hazard-fields';
 
-    const countInput = document.createElement('input');
-    countInput.type = 'number';
-    countInput.min = '0';
-    countInput.step = '1';
-    countInput.value = String(params.hazardCount ?? 0);
-    countInput.addEventListener('change', () => {
-        params.hazardCount = Math.max(0, Math.floor(Number(countInput.value) || 0));
-        onChange();
-    });
-    wrap.appendChild(fieldRow('Hazards per region',
-        'Target hazard count for each region (0 disables)', countInput));
-
-    const failInput = document.createElement('input');
-    failInput.type = 'number';
-    failInput.min = '1';
-    failInput.step = '1';
-    failInput.value = String(params.hazardMaxConsecutiveFails ?? 10);
-    failInput.addEventListener('change', () => {
-        params.hazardMaxConsecutiveFails = Math.max(1, Math.floor(Number(failInput.value) || 1));
-        onChange();
-    });
-    wrap.appendChild(fieldRow('Max consecutive fails',
-        'Stop early after this many failed placement attempts in a row', failInput));
+    wrap.appendChild(numberField(params, {
+        key: 'hazardCount', label: 'Hazards per region',
+        title: 'Target hazard count for each region (0 disables)', def: 0, min: 0, integer: true,
+    }, onChange));
+    wrap.appendChild(numberField(params, {
+        key: 'hazardMaxConsecutiveFails', label: 'Max consecutive fails',
+        title: 'Stop early after this many failed placement attempts in a row', def: 10, min: 1, integer: true,
+    }, onChange));
 
     const overlapInput = document.createElement('input');
     overlapInput.type = 'checkbox';
