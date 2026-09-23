@@ -26,8 +26,9 @@ document.
 | `sidecarForm.js` | (D1) the sidecar block's **fields view** model — `sidecarFormModel(entry, {rulesSchema})`: the rows (the entry subschema's fields, then the substrate's declaration), the control each type draws, and `withSidecarField`, the whole entry one control's change writes |
 | `regionRoundTrip.js` | the per-region **Edit ▸** door — resolves the substrate's declarations, runs the baseline, folds a save into ONE op; (S0) `sidecarEntryFacts`, what a region's sidecar block says about its entry; and (S2) `deriveRegionRules`, the derivation half alone — a payload's own rules, named by the document |
 | `regionLayout.js` | (M2) the map moves' layout — `slotLayout` (a slot's cells on a `Grid` sized by `mapBoundsFor`), `layoutChange` (the engine's placement, and every exit whose side-law verdict the move changed), `rewriteExitFlags` (a payload's `exits` in its substrate's own serialized form); (M3) `rewriteExits` (the one path a flag write and a side write share), `exitSideVerdicts` (the side law asked of a moved exit alone), `exitSidesOfSubstrate`; the ops and their refusal sentences are `rulesDocOps.js`'s `move-region` / `swap-regions` / `move-exit-side` / `swap-exit-sides` |
-| `regionRegenerate.js` | (substrate change R0) one region's payload **rebuilt for a substrate from the document alone** — `buildDocumentRegionSpec` (the realiser's spec off `regions[p][R]` + the slot's sidecars), `regionRealiserKind`, `freeItemsFor`, `regionSizeFor`, `strandedReferences`, `regenerateRegionEntry` (the engine's `generateRegion`, the one-region re-link, the engine's `serializeRegionEntry`); the op and its refusal sentences are `rulesDocOps.js`'s `regenerate-region-sidecar` |
+| `regionRegenerate.js` | (substrate change R0) one region's payload **rebuilt for a substrate from the document alone** — `buildDocumentRegionSpec` (the realiser's spec off `regions[p][R]` + the slot's sidecars), `regionRealiserKind`, `freeItemsFor`, `regionSizeFor`, `strandedReferences`, `regenerateRegionEntry` (the engine's `generateRegion`, the one-region re-link, the engine's `serializeRegionEntry`); since R5a also the LIBRARY source — `offersLibrarySource`, `libraryExitSides`, `stampLibraryLocations`, `librarySourceSummary` (a captured entry through the target's `instantiateLibraryEntryForSpecs`); the op and its refusal sentences are `rulesDocOps.js`'s `regenerate-region-sidecar` |
 | `regionGenerationFlow.js` | (substrate change R2) what the block's **Region generation** form opens on and sends — `regionGenerationPlan` (the target's registry defaults, the seed, ⚖ Q4's size for a tiles target, the region's own recorded knobs when its payload is the target's own, or the op's pre-realiser refusal), `composeRegenerateArgs` (the bag → the op's arguments, as top-down composes them), `freeItemsSentence`, `regenerationProvenance`, `regenerationAnswer` |
+| `librarySourcePicker.js` | (substrate change R5a) the form's **Library entry** picker — `createServedLibraryCatalog` / `servedLibraryCatalog` (the served index fetched ONCE per page, the packs on demand, through the pipeline's `regionLibraryLoader`; base path `LIBRARY_BASE_PATH`, the pipeline panel's `'./'` rule), `libraryPickerOptions` (the target's entries, disabled with the op's own refusal), `loadLibraryOptions` (never throws: `libraryFetchFailureSentence`) |
 | `regionGenerationRun.js` | (R2) the **time-limit setting** (`regionGenerationTimeoutSeconds`, `REGION_GENERATION_TIMEOUT_DEFAULT_S`) and the **worker** protocol: `runRegenerateJob` (the worker's side) and `runRegenerateInWorker` (the page's: the budget, Cancel, `terminate()`), the timeout and Cancel sentences |
 | `regionRegenerateWorker.js` | (R2) the MODULE WORKER one Generate runs in — imports the eight registry libraries into its own registry, then `regionRegenerate.js`. ⛔ A worker cannot be bundled into `bundle.js`: `scripts/build/bundle-frontend.js` copies it into `dist/` (beside `stateManagerWorker.js` and `balanceWorker.js`), and in bundled mode the page resolves it at its SOURCE location, `stateManagerProxy`'s rule |
 | `startingInventoryBlock.js` | (substrate change R3) the **Starting inventory** block as data — `startingInventoryList` (the list as `{name, count}`), `substratesInSlot`, `startingNeedRows` (each substrate's registry `startingInventory` needs against the list, with a grant op per candidate), `startingGrantOp` (`set-starting-count` at current + 1), `needSentence`; the panel draws what these answer, on the Items tab and in the Region generation form |
@@ -878,6 +879,76 @@ imports the eight libraries `scripts/procgen/reference/registry.mjs` declares as
 eight load in a browser worker. A library that refused to load would be reported,
 and a target none of the loaded ones registers is refused by name — derived, not
 typed.
+
+#### The library entry source (substrate change R5a)
+
+The form's **Source** row — *Generate* (the default: the realiser, everything
+above) · *Library entry* — is drawn when the TARGET's registry entry declares
+`instantiateLibraryEntryForSpecs`, the same test the pipeline's sphere path makes
+before it hands a slot to a library entry (`regionGenerationSourcesFor`; today
+maze, bounce and runner). *Library entry* fetches the served packs
+(`frontend/region-libraries/`, the index once per page) and lists every entry
+whose `substrate` is the target, grouped by pack, as *"Crossroads · 3 slots · exit
+sides N,E,S,W"*. An entry the op would refuse for this region (fewer captured
+slots than the region has locations) is shown disabled, with the op's own
+sentence under the picker. A fetch failure is a sentence in the form, not an
+exception, and Generate still works.
+
+Under *Library entry* the form draws **no seed row** (a captured entry draws no
+randomness), **no size rows** (the captured room keeps its size) and **none of the
+generate knobs**. It draws only the target's LIBRARY knobs
+(`renderLibraryProcgenParams`, read through `buildLibraryRegionParams` in the
+sphere mode the hook is written for: the maze's *Require same wall* and *Require
+tile alignment*), the starting-need line, and **Generate ▸**. The press runs the
+SAME worker path, under the same time limit, with the entry inlined in the op:
+
+```js
+{ op: 'regenerate-region-sidecar', player, region, substrate,
+  source: { kind: 'library', library_id, entry_id, entry }, regionParams? }
+```
+
+The entry rides INSIDE the op so a replay or an undo's refold never fetches
+(a row applies the op twice with every `fetch` throwing: byte-identical). The
+landed `set-region-sidecar`'s `provenance` carries `source` as the id pair and
+the entry's name, never its payload, and `seed: null`.
+
+**What it does.** The op calls the entry's hook with the sphere path's context
+(`procgenPipelineEngine.buildSphereLibraryRegion`): `exitSides` with the entrance
+side first, `locationSpecs` = the region's items in document order, `fillerItem`
+= `LIBRARY_SLOT_FILLER_ITEM`, and the op's `regionParams` (`{}` by default: the
+hook's flags default to "don't require"). A tile entry (maze) reserves
+`exitSides[0]` for the sphere driver's back portal. The hub has no back portal
+(the document's exit to the parent is a real exit), so every document exit follows
+that slot and gets a captured opening. The hook opens same-wall first, then
+relabels a leftover opening onto the side. A zone entry (bounce, runner) gets one
+side per exit, and the hook relabels its portals by index. The document's exits
+then key the descriptor's exits (the short names, their targets, the spec's
+rules), and **the k-th document location's name and rule go onto the k-th
+captured slot** (`stampLibraryLocations`, R0's `useSourceLocationName` for a
+captured room). **Surplus slots are DROPPED**: the tile room's pickups are
+removed, and a zone payload's `ap_locations` loses the entry (the objective
+stays as geometry). The document has no location for them, and the op never
+adds one. Then comes the same re-link / serialise / stranded tail as Generate.
+The description reads *"region R: payload rebuilt as `maze` from library entry
+`Crossroads` (`demo-maze-pack-3dd25239`) (2 exits, 2 locations carried; 1
+captured slot the document has no location for, dropped; 2 exits re-linked) —
+access rules and location names unchanged"*. It also names openings relabelled
+onto a wall they were not captured on.
+
+**What refuses it, by name, before the hook runs:** a `source` that is not an
+object, an unknown `kind`, a missing or non-object `entry`, missing
+`library_id` / `entry_id`; **a seed** (`REGENERATE_LIBRARY_NO_SEED` — the record
+would claim a randomness it never drew; `seed: null` is accepted); a target that
+declares no `instantiateLibraryEntryForSpecs`; an entry of another substrate than
+the target; more document locations than the entry's `location_slots`. What the
+hook itself refuses — a maze entry with fewer captured openings than the region
+has exits, `mazeRequireSameWall` with no opening on a needed wall,
+`mazeRequireTileAlign` always — is its own sentence, verbatim, as a realiser
+refusal is.
+
+The corpus control takes `--source=library`: every served entry × every
+committed region of its substrate, on a copy (the numbers are in the R5a record,
+plan §13).
 
 #### The fields view (D1)
 
