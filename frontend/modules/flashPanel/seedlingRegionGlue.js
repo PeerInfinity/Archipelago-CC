@@ -219,6 +219,16 @@ export class SeedlingRegionGlue {
         const was = this.binding.active;
         const effects = this.binding.setActive(mine);
         if (was !== this.binding.active) this.stats[mine ? 'resumes' : 'parks'] += 1;
+        /**
+         * ⛓ T2b F3 — A PARK RELEASES THE GAME'S HELD KEYS. The door that parks
+         * us fires mid-hold, and the key's release goes to whatever takes the
+         * page's focus next, never to the game. The panel also releases on the
+         * game's blur; this is the substrate-level twin, for a park that does
+         * not move focus.
+         */
+        if (was && !this.binding.active) {
+            try { this.getPanel()?.releaseHeldKeys?.('the flash substrate parked'); } catch { /* the panel may be mid-teardown */ }
+        }
         this.apply(effects);
     }
 

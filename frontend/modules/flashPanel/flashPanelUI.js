@@ -10,6 +10,7 @@ import { seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.j
 import { createApFoundReadout } from './seedlingRandomizerReadout.js';
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
 import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
+import { createHeldKeyRelease } from './gameInput.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -102,6 +103,16 @@ export class FlashPanelUI {
     this.unsubscribeHandles = [];
     this.isInitialized = false;
 
+    /**
+     * ⛓ T2b F3 — the keys the GAME is holding, released into it when its
+     * focus goes (a door fired and the maze tab came forward) or the substrate
+     * parks. See `gameInput.js`; installed once the wasm page is up.
+     */
+    this._heldKeys = createHeldKeyRelease({
+      getFrame: () => document.getElementById(this.flashObjectId),
+      onRelease: (codes, why) => this._panelLog(`[game input] released ${codes.join(', ')} into the game — ${why}`),
+    });
+
     this._createBaseUI();
 
     // Make this instance available to the dispatcher receivers
@@ -193,6 +204,7 @@ export class FlashPanelUI {
   }
 
   _teardownForReinit() {
+    this._heldKeys?.uninstall();
     if (this.adapter) {
       this._detachRegionGlue();
       this.adapter.detach();
@@ -450,12 +462,14 @@ export class FlashPanelUI {
       this._setStatus('loading wasm page…');
       await adapter.waitForRuntime(30000);
       if (this.adapter !== adapter) return;
+      this._heldKeys.install();
       this._setStatus('click ▶ Start in the game');
       this._panelLog('wasm page loaded — click ▶ Start in the game to boot it');
       // Callbacks appear only after the user starts the game; wait
       // generously rather than timing out under them.
       await adapter.waitForBridge(10 * 60 * 1000);
       if (this.adapter !== adapter) return;
+      this._heldKeys.install();
       this._panelLog('bridge callbacks ready');
     } catch (err) {
       if (this.adapter !== adapter) return;
@@ -874,6 +888,11 @@ export class FlashPanelUI {
     this._panelLog(`readState: ${this.adapter.readState()}`);
   }
 
+  /** The glue's park hook (and any other "the game no longer owns the keys"). */
+  releaseHeldKeys(reason) {
+    return this._heldKeys?.release(reason) ?? [];
+  }
+
   _setStatus(text) {
     if (this.statusElement) this.statusElement.textContent = text;
   }
@@ -891,6 +910,7 @@ export class FlashPanelUI {
 
   destroy() {
     log('info', '[FlashPanelUI] Destroying');
+    this._heldKeys?.uninstall();
     if (this._rulesLoadedHandler) {
       this.eventBus.unsubscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);
       this._rulesLoadedHandler = null;
