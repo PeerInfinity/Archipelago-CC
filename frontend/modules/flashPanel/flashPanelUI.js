@@ -124,10 +124,10 @@ export class FlashPanelUI {
     setActivePanelInstance(this);
 
     this.container.on('destroy', () => this.destroy());
-    // ⛓ T2b U2a — the tab coming forward gives the game the keyboard. Wired
-    // here, as regionGraph / timerPanel / proofGraph wire theirs: measured, a
-    // tab switch never reached an `onShow` through panelManager's wrapper.
-    this.container.on('show', () => this.onShow());
+    // ⛓ T2b U2a — the tab coming forward gives the game the keyboard, through
+    // `onShow`. ⛓ T4: the layout's factory wires it (`wirePanelLifecycle`);
+    // this panel wired its own until the factory did, and keeping both would
+    // run onShow twice per tab switch.
 
     // Wait for rules to actually finish loading before picking the
     // config. `stateManager:rulesLoaded` fires after the worker
@@ -952,7 +952,7 @@ export class FlashPanelUI {
     attempt(0);
   }
 
-  /** Golden Layout's container 'show' (wired in the constructor). */
+  /** Golden Layout's container 'show' (wired by the layout's factory, `wirePanelLifecycle`). */
   onShow() {
     this.focusGame('the panel was shown');
   }

@@ -14,6 +14,44 @@ function log(level, message, ...data) {
   }
 }
 
+/**
+ * Wire a panel provider's lifecycle methods onto its Golden Layout container:
+ * `onShow` on 'show', `onHide` on 'hide', `onResize` on 'resize' — each only
+ * when the provider has it.
+ *
+ * ⛔ EVERY FACTORY GOLDEN LAYOUT BUILDS PANELS WITH MUST CALL THIS
+ * (slice T4, trap 1404). The panels are built by
+ * `desktopLayout.js`'s factory and the dynamic-enable one in
+ * `initialization/index.js`, not by `registerPanelComponent`'s wrapper below.
+ * Until T4 only that unused wrapper wired these, so a provider's `onShow`
+ * never ran on a tab switch (measured: the container emitted 'show' 3 times,
+ * the provider heard 0).
+ *
+ * @param {object} container  the Golden Layout ComponentContainer
+ * @param {object} uiProvider the panel's UI instance
+ * @returns {string[]} the events wired, in order
+ */
+export function wirePanelLifecycle(container, uiProvider) {
+  const wired = [];
+  if (!container || typeof container.on !== 'function' || !uiProvider) return wired;
+  for (const [event, method] of [['show', 'onShow'], ['hide', 'onHide'], ['resize', 'onResize']]) {
+    if (typeof uiProvider[method] === 'function') {
+      // ⛔ A THROW HERE WOULD ABORT GOLDEN LAYOUT'S OWN EMIT, mid layout
+      // update (T4 measured one: a panel's never-before-called onShow threw on
+      // every show once this wiring reached it). Logged by name instead.
+      container.on(event, () => {
+        try {
+          uiProvider[method]();
+        } catch (err) {
+          log('error', `${uiProvider.constructor?.name ?? 'panel'}.${method} threw on '${event}':`, err);
+        }
+      });
+      wired.push(event);
+    }
+  }
+  return wired;
+}
+
 class PanelManager {
   constructor() {
     log('info', '[PanelManager CONSTRUCTOR CALLED]', new Date().toISOString());
@@ -368,15 +406,7 @@ class PanelManager {
       };
 
       // Optional: handle show/hide/resize if your UI components need them
-      if (this.uiProvider && typeof this.uiProvider.onShow === 'function') {
-        container.on('show', () => this.uiProvider.onShow());
-      }
-      if (this.uiProvider && typeof this.uiProvider.onHide === 'function') {
-        container.on('hide', () => this.uiProvider.onHide());
-      }
-      if (this.uiProvider && typeof this.uiProvider.onResize === 'function') {
-        container.on('resize', () => this.uiProvider.onResize());
-      }
+      wirePanelLifecycle(container, this.uiProvider);
     };
 
     // Register the component type with Golden Layout

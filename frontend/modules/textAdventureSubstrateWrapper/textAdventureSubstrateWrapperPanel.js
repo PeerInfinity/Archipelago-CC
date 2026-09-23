@@ -62,7 +62,7 @@ export class TextAdventureSubstrateWrapperPanel {
     }
 
     /**
-     * Called by panelManager when this panel becomes the active tab
+     * Called (via panelManager's `wirePanelLifecycle`) when this panel becomes the active tab
      * in its Golden Layout stack. Used to refocus the engine's
      * command input across the iframe boundary — the iframe content
      * stays alive when GL hides the tab (CSS display:none), but
@@ -71,7 +71,9 @@ export class TextAdventureSubstrateWrapperPanel {
      * returns.
      */
     onShow() {
-        eventBus.publish(PANEL_SHOWN_EVENT, {});
+        // ⛓ T4: named, as this file's other publishes are. Unnamed, publish()
+        // throws — invisible until T4, because nothing called onShow.
+        eventBus.publish(PANEL_SHOWN_EVENT, {}, 'textAdventureSubstrateWrapper');
     }
 
     _initializeUI() {
