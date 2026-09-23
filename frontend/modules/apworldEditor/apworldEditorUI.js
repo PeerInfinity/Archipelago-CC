@@ -147,8 +147,10 @@ import { renderRegionGenerationForm } from '../procgenCore/regionGenerationForm.
 import {
   REGION_GENERATION_FIRST_SEED, REGION_GENERATION_OP_FIELDS, REGION_GENERATION_SEED_KEY,
   composeRegenerateArgs, freeItemsSentence, regenerateArgsRefusal, regenerationAnswer,
-  regenerationProvenance, regionGenerationPlan,
+  regenerationProvenance, regionGenerationPlan, regionGenerationSourcesFor,
 } from './regionGenerationFlow.js';
+import { loadLibraryOptions, servedLibraryCatalog } from './librarySourcePicker.js';
+import { REGION_SOURCE_KINDS } from './regionRegenerate.js';
 import {
   REGION_GENERATION_TIMEOUT_DEFAULT_S, REGION_GENERATION_TIMEOUT_KEY, REGION_GENERATION_TIMEOUT_SETTING,
   regionGenerationTimeoutSeconds, runRegenerateInWorker,
@@ -6594,7 +6596,52 @@ class ApworldEditorUI {
     const plan = regionGenerationPlan(this.rulesDoc, String(player), region, target, { seed });
     this._regionGen = {
       player: String(player), region, target, plan, bag: { ...plan.defaults }, usingRecorded: false, run: null,
+      // ⛓ R5a — the Source row: `generate` (default) or `library`; the
+      //   picker's state is loaded on the first switch to `library`.
+      source: REGION_SOURCE_KINDS.GENERATE,
+      library: { status: 'idle', options: [], error: null, selected: null },
     };
+  }
+
+  /**
+   * ⛓ R5a — the served-pack catalog the picker reads: the page's ONE memoised
+   * catalog (`librarySourcePicker.servedLibraryCatalog`), unless a row set
+   * `_libraryCatalog` (a fetch that fails, a counting stub).
+   */
+  _libraryCatalogInUse() {
+    return this._libraryCatalog ?? servedLibraryCatalog();
+  }
+
+  /** ⛓ R5a — switch the form's source; the picker loads on the first `library`. */
+  _setRegionGenSource(gen, source) {
+    gen.source = source;
+    if (source === REGION_SOURCE_KINDS.LIBRARY && gen.library.status === 'idle') this._loadLibraryPicker(gen);
+    this._render();
+  }
+
+  /**
+   * ⛓ R5a — load the picker for `gen` (never throws: a fetch failure is the
+   * picker's sentence). The first entry the op would take is selected.
+   *
+   * @returns {Promise<object>} the load's outcome (rows read it)
+   */
+  async _loadLibraryPicker(gen) {
+    gen.library = { status: 'loading', options: [], error: null, selected: null };
+    const res = await loadLibraryOptions(this._libraryCatalogInUse(), this.rulesDoc, gen.player, gen.region,
+      gen.target);
+    if (this._regionGen !== gen) return res;
+    gen.library = res.ok
+      ? { status: 'ready', options: res.options, error: null,
+        selected: res.options.find((o) => !o.disabled)?.value ?? null }
+      : { status: 'failed', options: [], error: res.error, selected: null };
+    this._render();
+    return res;
+  }
+
+  /** ⛓ R5a — the picked option, or null. */
+  _regionGenLibraryPick(gen) {
+    const pick = gen.library.options.find((o) => o.value === gen.library.selected);
+    return pick && !pick.disabled ? pick : null;
   }
 
   /** ⛓ Close the form and stop its run SILENTLY (a boundary, not a reader's Cancel). */
@@ -6675,13 +6722,43 @@ class ApworldEditorUI {
       return d;
     };
 
+    const running = !!gen.run;
+    // ⛓ R5a — the SOURCE row, drawn when the target offers more than Generate
+    //   (`regionGenerationSourcesFor`: a library entry only where the target
+    //   declares `instantiateLibraryEntryForSpecs`).
+    const sources = regionGenerationSourcesFor(gen.plan);
+    sec.dataset.source = gen.source;
+    if (sources.length > 1) {
+      const srcRow = document.createElement('label');
+      srcRow.className = 'apworld-region-generation-source-row';
+      Object.assign(srcRow.style, { display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px',
+        color: '#bcd', margin: '0 0 4px' });
+      srcRow.appendChild(document.createTextNode('Source'));
+      const sel = document.createElement('select');
+      sel.className = 'apworld-region-generation-source';
+      for (const src of sources) {
+        const o = document.createElement('option');
+        o.value = src.id;
+        o.textContent = src.label;
+        sel.appendChild(o);
+      }
+      sel.value = gen.source;
+      sel.disabled = running;
+      sel.addEventListener('change', () => this._setRegionGenSource(gen, sel.value));
+      srcRow.appendChild(sel);
+      sec.appendChild(srcRow);
+    }
+    if (gen.source === REGION_SOURCE_KINDS.LIBRARY) {
+      this._fillLibrarySourceSection(sec, gen, note, running);
+      return sec;
+    }
+
     if (gen.plan.refusal) {
       sec.dataset.generate = 'none';
       note('apworld-region-generation-refusal', gen.plan.refusal, '#e8a095');
       return sec;
     }
     sec.dataset.generate = 'drawn';
-    const running = !!gen.run;
     sec.dataset.state = running ? 'running' : 'idle';
 
     if (gen.plan.recorded) {
@@ -6737,6 +6814,15 @@ class ApworldEditorUI {
     const needs = this._makeStartingNeedsNode([gen.target], { disabled: running });
     if (needs) sec.appendChild(needs);
 
+    sec.appendChild(this._makeRegionGenGoRow(gen, running,
+      `Rebuild this region's payload as \`${gen.target}\` from its exits, locations and access `
+        + 'rules, in a worker under the time limit (Options › All Settings › apworldEditor › '
+        + `${REGION_GENERATION_TIMEOUT_KEY}) — ONE undoable edit.`));
+    return sec;
+  }
+
+  /** ⛓ The Generate ▸ row — or, while a run is live, the elapsed readout and Cancel. */
+  _makeRegionGenGoRow(gen, running, title, { disabled = false } = {}) {
     const row = document.createElement('div');
     Object.assign(row.style, { display: 'flex', alignItems: 'center', gap: '8px', margin: '4px 0 0' });
     if (running) {
@@ -6751,13 +6837,88 @@ class ApworldEditorUI {
     } else {
       const go = this._makeButton('Generate ▸', '#2e5f2e', () => { this._generateRegion(); });
       go.className = 'apworld-region-generate';
-      go.title = `Rebuild this region's payload as \`${gen.target}\` from its exits, locations and access `
-        + 'rules, in a worker under the time limit (Options › All Settings › apworldEditor › '
-        + `${REGION_GENERATION_TIMEOUT_KEY}) — ONE undoable edit.`;
+      go.title = title;
+      go.disabled = disabled;
       row.appendChild(go);
     }
-    sec.appendChild(row);
-    return sec;
+    return row;
+  }
+
+  /**
+   * ⛓⛓ R5a — **THE LIBRARY ENTRY SOURCE, DRAWN.** No seed row (a captured
+   * entry draws no randomness — the op refuses a seed), no size rows (the
+   * captured room's own), no generate knobs (the hook reads none); the target's
+   * LIBRARY knobs (`renderLibraryProcgenParams`, the ones its
+   * `buildLibraryRegionParams` hands the hook), the picker, the starting-need
+   * line, and Generate ▸ — which runs the SAME worker path with the entry
+   * inlined in the op's `source`.
+   */
+  _fillLibrarySourceSection(sec, gen, note, running) {
+    const lib = gen.library;
+    sec.dataset.library = lib.status;
+    if (lib.status === 'loading' || lib.status === 'idle') {
+      sec.dataset.generate = 'none';
+      note('apworld-region-generation-library-loading', 'Loading the served region-library packs…');
+      return;
+    }
+    if (lib.status === 'failed') {
+      sec.dataset.generate = 'none';
+      note('apworld-region-generation-library-error', lib.error, '#e8a095');
+      return;
+    }
+    if (!lib.options.length) {
+      sec.dataset.generate = 'none';
+      note('apworld-region-generation-library-empty',
+        `apworld: no served region-library pack offers a \`${gen.target}\` entry.`, '#e8a095');
+      return;
+    }
+    sec.dataset.generate = 'drawn';
+    sec.dataset.state = running ? 'running' : 'idle';
+    const pickRow = document.createElement('label');
+    Object.assign(pickRow.style, { display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px',
+      color: '#bcd', margin: '0 0 4px' });
+    pickRow.appendChild(document.createTextNode('Entry'));
+    const sel = document.createElement('select');
+    sel.className = 'apworld-region-generation-library';
+    let pack = null;
+    let group = null;
+    for (const o of lib.options) {
+      if (o.library_id !== pack) {
+        pack = o.library_id;
+        group = document.createElement('optgroup');
+        group.label = o.pack_name;
+        sel.appendChild(group);
+      }
+      const opt = document.createElement('option');
+      opt.value = o.value;
+      opt.textContent = o.disabled ? `${o.label} — unusable here` : o.label;
+      opt.disabled = o.disabled;
+      Object.assign(opt.dataset, { libraryId: o.library_id, entryId: o.entry_id });
+      if (o.reason) opt.title = o.reason;
+      group.appendChild(opt);
+    }
+    if (lib.selected) sel.value = lib.selected;
+    sel.disabled = running;
+    sel.addEventListener('change', () => { lib.selected = sel.value; this._render(); });
+    pickRow.appendChild(sel);
+    sec.appendChild(pickRow);
+    for (const o of lib.options.filter((x) => x.disabled)) {
+      const d = note('apworld-region-generation-library-disabled', `${o.label}: ${o.reason}`, '#a98');
+      Object.assign(d.dataset, { libraryId: o.library_id, entryId: o.entry_id });
+    }
+    const hook = substrateRegistry.get(gen.target)?.renderLibraryProcgenParams;
+    const knobs = typeof hook === 'function' ? hook({ params: gen.bag, onChange: () => {} }) : null;
+    if (knobs) {
+      knobs.classList.add('apworld-region-generation-library-knobs');
+      if (running) for (const c of knobs.querySelectorAll('input, select, button')) c.disabled = true;
+      sec.appendChild(knobs);
+    }
+    const needs = this._makeStartingNeedsNode([gen.target], { disabled: running });
+    if (needs) sec.appendChild(needs);
+    const pick = this._regionGenLibraryPick(gen);
+    sec.appendChild(this._makeRegionGenGoRow(gen, running,
+      `Rebuild this region's payload from the captured library entry, keeping its exits, location names `
+        + 'and access rules, in a worker under the time limit — ONE undoable edit.', { disabled: !pick }));
   }
 
   /** ⛓ The reader's Cancel: the run settles as cancelled and the sentence is printed. */
@@ -6788,7 +6949,11 @@ class ApworldEditorUI {
       this._opRowMessage = { sidecar: key, text: this._opMessage, refused };
     };
     const doc = this.rulesDoc;
-    const args = composeRegenerateArgs(doc, gen.player, gen.region, gen.target, gen.bag);
+    const library = gen.source === REGION_SOURCE_KINDS.LIBRARY;
+    const pick = library ? this._regionGenLibraryPick(gen) : null;
+    if (library && !pick) return null;
+    const args = composeRegenerateArgs(doc, gen.player, gen.region, gen.target, gen.bag,
+      { source: pick?.source });
     const refusal = regenerateArgsRefusal(args);
     if (refusal) {
       beside(refusal, true);
@@ -6818,10 +6983,13 @@ class ApworldEditorUI {
     clearInterval(this._regionGenTicker);
     this._regionGenTicker = null;
     // ⛓ The counter moves once per press, whatever the outcome — a re-press
-    //   is a new roll unless the reader types the seed back.
-    const next = args.seed + 1;
-    this._regionGenSeeds.set(key, next);
-    gen.bag[REGION_GENERATION_SEED_KEY] = next;
+    //   is a new roll unless the reader types the seed back. A library source
+    //   drew no seed, so it moves nothing.
+    if (Number.isInteger(args.seed)) {
+      const next = args.seed + 1;
+      this._regionGenSeeds.set(key, next);
+      gen.bag[REGION_GENERATION_SEED_KEY] = next;
+    }
     const answer = regenerationAnswer(args, res, budgetS);
     if (!answer.landed) {
       beside(answer.text, true);

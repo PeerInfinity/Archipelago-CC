@@ -168,6 +168,16 @@ import {
     NEED_MET, NEED_NONE_HELD, needSentence, startingInventoryList, startingNeedRows, substratesInSlot,
 } from '../../apworldEditor/startingInventoryBlock.js';
 import { REGENERATE_SATISFIED_BY_START } from '../../apworldEditor/rulesDocOps.js';
+/**
+ * ⛓ APWORLD SUBSTRATE CHANGE R5a — the library entry source: the picker's
+ * catalog (a row swaps in a failing one), the sources the form offers, and
+ * the served files the expected options are derived from.
+ */
+import {
+    LIBRARY_BASE_PATH, createServedLibraryCatalog, libraryFetchFailureSentence, librarySourceFor,
+} from '../../apworldEditor/librarySourcePicker.js';
+import { REGION_SOURCE_KINDS, offersLibrarySource } from '../../apworldEditor/regionRegenerate.js';
+import { SERVED_LIBRARY_DIR, SERVED_LIBRARY_INDEX } from '../../procgenPipeline/regionLibraryLoader.js';
 import { declaredStartingNeeds } from '../../procgenCore/startingInventory.js';
 /**
  * ⛓ D1 — the fields view's vocabulary: which control a row stamps, which level
@@ -10340,6 +10350,292 @@ for (const [id, name, testFunction] of R3_TESTS) {
         id,
         name,
         description: `APWORLD SUBSTRATE CHANGE R3. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R5a — THE LIBRARY ENTRY SOURCE
+ * (the substrate-change plan §12, §3c)
+ *
+ * The Region generation form gains a Source row — Generate · Library entry —
+ * drawn when the TARGET declares `instantiateLibraryEntryForSpecs`; Library
+ * entry hides the seed row and the generate knobs, lists the served packs'
+ * entries for the target (too-few-slot entries disabled, with the op's own
+ * sentence), and Generate ▸ runs the SAME worker path with the entry inlined
+ * in the op's `source`. Every expectation is derived from the registry, the
+ * served files, or the pure op.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const AP10_PATH = './presets/procgen_topdown/AP_10/AP_10_rules.json';
+
+/** ⛓ The first registered id with a realiser that is not `not`, with or without the library hook. Derived. */
+const realiserHooked = (hooked, not = null) => substrateRegistry.getAll().find((e) => regionRealiserKind(e) !== null
+    && e.id !== not && offersLibrarySource(e) === hooked)?.id ?? null;
+
+/** ⛓ The served packs for `substrate`, fetched the way the page does — the rows' expectation source. */
+async function servedPacksFor(substrate) {
+    const base = `${LIBRARY_BASE_PATH}${SERVED_LIBRARY_DIR}/`;
+    const index = (await (await fetch(`${base}${SERVED_LIBRARY_INDEX}`)).json()).libraries;
+    return Promise.all(index.filter((r) => r.substrates.includes(substrate))
+        .map(async (r) => (await fetch(`${base}${r.file}`)).json()));
+}
+
+/** ⛓ Open the form for the region's OWN substrate (a pick away, then back — the form opens on a CHANGE). */
+async function openFormOnOwnSubstrate(testController, panel, slot, region) {
+    const own = panel.rulesDoc.preset_sidecars[slot][region].substrate;
+    testController.reportCondition(`slot ${slot} selected`, await onRegionsTabFor(testController, panel, slot));
+    const away = realiserHooked(false, own) ?? realiserHooked(true, own);
+    if (!await pickSubstrateAndOpenForm(testController, panel, region, away)) return null;
+    if (!await pickSubstrateAndOpenForm(testController, panel, region, own)) return null;
+    return own;
+}
+
+/** ⛓ Choose `Library entry` in the Source row and wait for the picker to settle. → the section's library state. */
+async function chooseLibrarySource(testController, region) {
+    const sel = regionGenSection(region)?.querySelector('.apworld-region-generation-source');
+    testController.reportCondition('⛓ the Source row is drawn', !!sel);
+    if (!sel) return null;
+    sel.value = REGION_SOURCE_KINDS.LIBRARY;
+    sel.dispatchEvent(new Event('change', { bubbles: true }));
+    return testController.pollForValue(() => {
+        const st = regionGenSection(region)?.dataset.library;
+        return st === 'ready' || st === 'failed' ? st : null;
+    }, 'the library picker settled', 15000, 50);
+}
+
+/** ⛓ The picker's options as `{value, disabled}` — re-queried. */
+const pickerOptions = (region) => [...(regionGenSection(region)
+    ?.querySelectorAll('.apworld-region-generation-library option') ?? [])]
+    .map((o) => ({ value: o.value, disabled: o.disabled }));
+
+/**
+ * ⛓⛓ **(a) THE SOURCE ROW APPEARS FOR A TARGET WITH THE HOOK, AND NOT FOR ONE
+ * WITHOUT** — four-player slot 3 `region_1_0`: pick the first realiser that
+ * declares `instantiateLibraryEntryForSpecs` (derived) → the Source row offers
+ * Generate · Library entry; pick the first realiser that does not → no Source row.
+ */
+export async function apworldTheSourceRowAppearsOnlyForATargetWithTheLibraryHook(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        if (!panel) return testController.getOverallResult();
+        const own = panel.rulesDoc.preset_sidecars['3'][region].substrate;
+        const hooked = realiserHooked(true, own);
+        const bare = realiserHooked(false, own);
+        testController.reportCondition(`⛓ premise: a hooked (${hooked}) and an unhooked (${bare}) realiser exist`,
+            !!hooked && !!bare);
+        testController.reportCondition('slot 3 selected', await onRegionsTabFor(testController, panel, '3'));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, hooked)) return testController.getOverallResult();
+        const sources = [...(regionGenSection(region)?.querySelectorAll('.apworld-region-generation-source option') ?? [])]
+            .map((o) => o.value);
+        testController.assertEqual(`⛓⛓ \`${hooked}\`: the Source row offers Generate · Library entry`,
+            JSON.stringify([REGION_SOURCE_KINDS.GENERATE, REGION_SOURCE_KINDS.LIBRARY]), JSON.stringify(sources));
+        testController.assertEqual('…Generate is the default', REGION_SOURCE_KINDS.GENERATE,
+            String(regionGenSection(region)?.dataset.source));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, bare)) return testController.getOverallResult();
+        testController.reportCondition(`⛓⛓ \`${bare}\`: no Source row`,
+            !regionGenSection(region)?.querySelector('.apworld-region-generation-source'));
+        testController.reportCondition('…and its Generate ▸ is drawn', !!regionGenSection(region)?.querySelector('.apworld-region-generate'));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('source row test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(b) THE PICKER LISTS THE SERVED ENTRIES FOR THE TARGET AND DISABLES THE
+ * ONES WITH TOO FEW SLOTS** — four-player slot 1 `region_1_0` (every entry fits)
+ * and AP_10 slot 1 `BlackCastle` (more locations than any entry has slots),
+ * both on their own substrate: the options = the served packs' entries of that
+ * substrate, in order; disabled exactly when `location_slots` < the region's
+ * locations; each disabled entry's reason is the op's own refusal; the seed
+ * row is gone; Generate ▸ is disabled when nothing fits.
+ */
+export async function apworldTheLibraryPickerListsTheServedEntriesAndDisablesTooFewSlots(testController) {
+    try {
+        for (const [path, region] of [[FOUR_PLAYER_PATH, 'region_1_0'], [AP10_PATH, 'BlackCastle']]) {
+            // eslint-disable-next-line no-await-in-loop
+            const panel = await openHubOnDocument(testController, path, '1', region);
+            if (!panel) return testController.getOverallResult();
+            // eslint-disable-next-line no-await-in-loop
+            const own = await openFormOnOwnSubstrate(testController, panel, '1', region);
+            if (!own) return testController.getOverallResult();
+            // eslint-disable-next-line no-await-in-loop
+            const state = await chooseLibrarySource(testController, region);
+            testController.assertEqual(`${region}: the picker loaded`, 'ready', String(state));
+            const nLocs = panel.rulesDoc.regions['1'][region].locations.length;
+            // eslint-disable-next-line no-await-in-loop
+            const packs = await servedPacksFor(own);
+            const want = packs.flatMap((pack) => pack.entries.filter((e) => e.substrate === own)
+                .map((e) => ({ value: `${pack.library_id}|${e.entry_id}`, disabled: e.location_slots < nLocs })));
+            testController.reportCondition(`⛓ premise: the served packs carry \`${own}\` entries (${want.length})`, want.length > 0);
+            testController.assertEqual(`⛓⛓ ${region}: the options are the served \`${own}\` entries, disabled iff too few slots`,
+                JSON.stringify(want), JSON.stringify(pickerOptions(region)));
+            const firstDisabled = packs.flatMap((pack) => pack.entries.filter((e) => e.substrate === own)
+                .map((e) => librarySourceFor(pack, e))).find((src) => src.entry.location_slots < nLocs);
+            if (firstDisabled) {
+                const reason = regenerateOpRefusal(panel.rulesDoc, {
+                    op: 'regenerate-region-sidecar', player: '1', region, substrate: own, source: firstDisabled,
+                });
+                const drawn = regionGenSection(region)?.querySelector(`.apworld-region-generation-library-disabled[data-entry-id="${CSS.escape(firstDisabled.entry_id)}"]`);
+                testController.reportCondition(`⛓ ${region}: a disabled entry shows the op's own refusal`,
+                    !!reason && String(drawn?.textContent).endsWith(reason));
+            }
+            testController.reportCondition(`⛓⛓ ${region}: no seed row under Library entry`,
+                !regionGenSection(region)?.querySelector('.procgen-region-generation-form'));
+            const go = regionGenSection(region)?.querySelector('.apworld-region-generate');
+            testController.assertEqual(`${region}: Generate ▸ is enabled iff an entry fits`,
+                String(want.some((o) => !o.disabled)), String(!!go && !go.disabled));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('library picker test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ Generate ▸ with the picker's first fitting entry on `region` (slot `slot`,
+ * its own substrate): ONE `set-region-sidecar` whose provenance carries the
+ * source (id pair + name, seed null, no payload); names kept; 0 sidecar
+ * issues; the answer and the entry are the pure op's; one Undo restores.
+ */
+async function libraryGenerateLands(testController, slot, region) {
+    const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, slot, region);
+    if (!panel) return;
+    const own = await openFormOnOwnSubstrate(testController, panel, slot, region);
+    if (!own) return;
+    testController.assertEqual('the picker loaded', 'ready', String(await chooseLibrarySource(testController, region)));
+    const nLocs = panel.rulesDoc.regions[slot][region].locations.length;
+    const packs = await servedPacksFor(own);
+    const pick = packs.flatMap((pack) => pack.entries.filter((e) => e.substrate === own)
+        .map((e) => librarySourceFor(pack, e))).find((src) => src.entry.location_slots >= nLocs);
+    testController.reportCondition(`⛓ premise: a served \`${own}\` entry fits ${region} (${pick?.entry_id})`, !!pick);
+    if (!pick) return;
+    testController.assertEqual('⛓ the picker selected the first fitting entry', `${pick.library_id}|${pick.entry_id}`,
+        String(regionGenSection(region)?.querySelector('.apworld-region-generation-library')?.value));
+    testController.reportCondition('⛓⛓ no seed row under Library entry',
+        !regionGenSection(region)?.querySelector('.procgen-region-generation-form'));
+    const docBefore = JSON.stringify(panel.rulesDoc);
+    const docObj = JSON.parse(docBefore);
+    const opsBefore = panel.session.ops().length;
+    const said = sidecarMessageFor(region)?.textContent ?? null;
+    regionGenSection(region).querySelector('.apworld-region-generate').click();
+    const answer = await answerAfter(testController, region, said, 'the Generate answer', 60000);
+    testController.assertEqual('⛓⛓ ONE op recorded', String(opsBefore + 1), String(panel.session.ops().length));
+    const op = panel.session.ops().at(-1);
+    testController.assertEqual('…a set-region-sidecar', 'set-region-sidecar', String(op?.op));
+    const prov = op?.provenance ?? {};
+    testController.assertEqual('⛓⛓ provenance.source = the id pair and the name',
+        JSON.stringify({ kind: REGION_SOURCE_KINDS.LIBRARY, library_id: pick.library_id, entry_id: pick.entry_id, name: pick.entry.name }),
+        JSON.stringify(prov.source ?? null));
+    testController.assertEqual('…seed null', 'null', JSON.stringify(prov.seed));
+    testController.reportCondition('…never the entry\'s payload', !JSON.stringify(prov).includes('"payload"'));
+    testController.assertEqual('⛓ 0 sidecar issues on the block', '0', String(sidecarBlockFor(region)?.dataset.sidecarIssues));
+    const built = panel.rulesDoc.preset_sidecars[slot][region];
+    const names = substrateRegistry.get(built.substrate).apLocationNamesOf(built.playable_payload) ?? [];
+    const docNames = docObj.regions[slot][region].locations.map((l) => l.name);
+    testController.reportCondition(`⛓⛓ names kept: the payload carries [${docNames.join(', ')}]`,
+        docNames.every((n) => names.includes(n)));
+    const pure = applyRulesDocOp(docObj, {
+        op: 'regenerate-region-sidecar', player: slot, region, substrate: own, source: pick, regionParams: prov.regionParams,
+    });
+    testController.reportCondition('the pure op on the same source builds', pure.ok);
+    testController.assertEqual('⛓⛓ the worker\'s entry is the pure op\'s, byte for byte',
+        JSON.stringify(pure.doc?.preset_sidecars?.[slot]?.[region]), JSON.stringify(built));
+    testController.assertEqual('⛓⛓ the answer is the op\'s own description', String(pure.description), String(answer));
+    testController.reportCondition(`…which names the entry (${pick.entry.name}) and the pack`,
+        String(answer).includes(`\`${pick.entry.name}\` (\`${pick.library_id}\`)`));
+    testController.assertEqual('⛓ the document\'s rules are untouched', JSON.stringify(docObj.regions),
+        JSON.stringify(panel.rulesDoc.regions));
+    document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+    testController.assertEqual('⛓ one Undo restores the document', docBefore, JSON.stringify(panel.rulesDoc));
+}
+
+/**
+ * ⛓⛓⛓ **(c) GENERATE WITH A LIBRARY ENTRY ON A MAZE REGION** — four-player slot 1
+ * `region_1_0` ← the demo maze pack's first fitting entry (`libraryGenerateLands`).
+ */
+export async function apworldALibraryGenerateOnAMazeRegionLandsOneOpWithTheSource(testController) {
+    try {
+        await libraryGenerateLands(testController, '1', 'region_1_0');
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('maze library Generate test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(d) THE SAME ON A ZONE REGION** — four-player slot 3 `region_2_0` ← the
+ * demo bounce pack's first fitting entry.
+ */
+export async function apworldALibraryGenerateOnAZoneRegionLandsOneOpWithTheSource(testController) {
+    try {
+        await libraryGenerateLands(testController, '3', 'region_2_0');
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('zone library Generate test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(e) A FETCH FAILURE PRINTS ITS SENTENCE** — the panel's catalog swapped
+ * for one whose fetch throws: choosing Library entry prints
+ * `libraryFetchFailureSentence` and draws no Generate; nothing is recorded.
+ */
+export async function apworldALibraryFetchFailurePrintsItsSentence(testController) {
+    let panel = null;
+    try {
+        const region = 'region_1_0';
+        panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        const failure = new Error('the served packs are unreachable (row e)');
+        panel._libraryCatalog = createServedLibraryCatalog({ fetchImpl: async () => { throw failure; } });
+        if (!await openFormOnOwnSubstrate(testController, panel, '1', region)) return testController.getOverallResult();
+        const opsBefore = panel.session.ops().length;
+        testController.assertEqual('the picker failed', 'failed', String(await chooseLibrarySource(testController, region)));
+        testController.assertEqual('⛓⛓ the form prints the fetch-failure sentence', libraryFetchFailureSentence(failure),
+            String(regionGenSection(region)?.querySelector('.apworld-region-generation-library-error')?.textContent));
+        testController.reportCondition('…and no Generate ▸', !regionGenSection(region)?.querySelector('.apworld-region-generate'));
+        testController.assertEqual('…nothing recorded', String(opsBefore), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('fetch failure test error-free', false);
+    } finally {
+        if (panel) panel._libraryCatalog = null;
+    }
+    return testController.getOverallResult();
+}
+
+const R5A_TESTS = [
+    ['apworld-the-source-row-appears-only-for-a-target-with-the-library-hook',
+        'APWorld hub: the Region generation form draws a Source row for a target with the library hook, and none without',
+        apworldTheSourceRowAppearsOnlyForATargetWithTheLibraryHook],
+    ['apworld-the-library-picker-lists-the-served-entries-and-disables-too-few-slots',
+        'APWorld hub: the library picker lists the served entries for the target, too-few-slot entries disabled with the op\'s reason',
+        apworldTheLibraryPickerListsTheServedEntriesAndDisablesTooFewSlots],
+    ['apworld-a-library-generate-on-a-maze-region-lands-one-op-with-the-source',
+        'APWorld hub: Generate with a library entry on a maze region lands ONE op with provenance.source, names kept, Undo restores',
+        apworldALibraryGenerateOnAMazeRegionLandsOneOpWithTheSource],
+    ['apworld-a-library-generate-on-a-zone-region-lands-one-op-with-the-source',
+        'APWorld hub: Generate with a library entry on a zone region lands ONE op with provenance.source, names kept, Undo restores',
+        apworldALibraryGenerateOnAZoneRegionLandsOneOpWithTheSource],
+    ['apworld-a-library-fetch-failure-prints-its-sentence',
+        'APWorld hub: a failed served-pack fetch prints its sentence in the form and records nothing',
+        apworldALibraryFetchFailurePrintsItsSentence],
+];
+for (const [id, name, testFunction] of R5A_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE R5a. ${name}. See the row's docblock in apworldEditorTests.js.`,
         testFunction,
         category: 'apworldEditor',
         enabled: false, // off by default — runs only in the test-substrates mode

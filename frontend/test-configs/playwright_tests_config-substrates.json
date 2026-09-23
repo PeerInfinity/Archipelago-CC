@@ -819,6 +819,36 @@
             "_comment": "R3 (c). The form shows the target's need (none for a non-declaring target); Generate after a grant lands bounce region_0_1 with the satisfied-rules clause."
         },
         {
+            "id": "apworld-the-source-row-appears-only-for-a-target-with-the-library-hook",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5a (a). The Source row is drawn for a target that declares instantiateLibraryEntryForSpecs, and not for one that does not (both derived)."
+        },
+        {
+            "id": "apworld-the-library-picker-lists-the-served-entries-and-disables-too-few-slots",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5a (b). The picker = the served packs' entries of the target's substrate; too-few-slot entries disabled with the op's refusal; no seed row."
+        },
+        {
+            "id": "apworld-a-library-generate-on-a-maze-region-lands-one-op-with-the-source",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5a (c). four-player slot 1 region_1_0 <- the maze pack's first fitting entry: ONE op, provenance.source, names kept, 0 issues, Undo restores."
+        },
+        {
+            "id": "apworld-a-library-generate-on-a-zone-region-lands-one-op-with-the-source",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5a (d). four-player slot 3 region_2_0 <- the bounce pack's first fitting entry: ONE op, provenance.source, names kept, 0 issues, Undo restores."
+        },
+        {
+            "id": "apworld-a-library-fetch-failure-prints-its-sentence",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5a (e). A catalog whose fetch throws: the form prints the fetch-failure sentence, no Generate, nothing recorded."
+        },
+        {
             "id": "apworld-the-preset-sidecars-door-lands-on-the-sidecars-tab",
             "enabled": true,
             "category": "apworldEditor",
