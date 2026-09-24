@@ -6,9 +6,10 @@
  * zone-channel region (derived by scanning `frontend/presets/`).
  *
  * ⛓⛓ The populations are DERIVED at run time. The measured bins the plan's §14
- * quotes (which documents record their config and which do not) are pinned as
- * the oracle's expectation, so a document that starts or stops reproducing is a
- * red row, not a silent re-bin. A row that asserts a guard has a driven mutant
+ * quotes are pinned as the oracle's expectation, so a document that starts or
+ * stops reproducing is a red row, not a silent re-bin — except the one bin that
+ * is a fact about the CORPUS (which documents record their config), which is
+ * derived from the documents since R6c (trap 1423). A row that asserts a guard has a driven mutant
  * recorded in §14.
  */
 
@@ -37,6 +38,7 @@ import {
     installedZoneConfigFrom, replaceRegionContentFromZone, unplacedPoolItems, zoneContentFor, zoneHeldBy,
     zoneOfRegion, zoneOptions, zoneSourceFacts, zoneSourceRefusal,
 } from './regionContent.js';
+import { withoutProcgenMetadata } from './test-helpers.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..', '..');
@@ -70,17 +72,26 @@ for (const game of readdirSync(PRESETS)) {
 const byGame = (g) => DOCS.find((d) => d.game === g);
 const REGIONS = DOCS.flatMap((d) => d.regions.map((r) => ({ ...d, ...r, key: `${d.name} p${d.p} ${r.region}` })));
 
+/** ⛓ Does the document record jta's pipeline config (`procgen_metadata.substrate_configs.jta`, R6b)? */
+const recordsJta = (doc) => !!doc.procgen_metadata?.substrate_configs?.jta;
+
 /**
- * ⛓⛓ THE ORACLE'S MEASURED BINS (plan §14.1). The pipeline-built jta documents
- * reproduce every region as its own zone byte-for-byte; `jta_randomized_test` was
- * built with a perk-shuffle seed the document does not record; `jta_substrate_test`
- * is a hand-authored fixture whose locations the zone channel never made; the
+ * ⛓⛓ THE ORACLE'S BINS (plan §14.1, re-cut at R6c §18). The five pipeline-built
+ * jta documents — the fixture generator's outputs, which record their config
+ * since the R6c re-record — reproduce every region as its own zone byte-for-byte
+ * (`jta_randomized_test` included: its perk-shuffle seed is now recorded); the
  * hand-authored `jta_mixed_test` reproduces its content and gains the
  * serialiser's envelope (`exits`, `fogEnabled`); omsi declares no read-back.
+ * `NOT_RECORDED` is DERIVED: every other jta-zone document that records no config
+ * (today `jta_substrate_test`, the hand-authored export whose locations the zone
+ * channel never made). ⛔ A generator output that loses its record lands in two
+ * bins and the population row names it.
  */
-const REPRODUCES = ['jta_dataset_test', 'jta_schedule_test', 'jta_locations_test', 'jta_prestige_test'];
+const REPRODUCES = ['jta_dataset_test', 'jta_schedule_test', 'jta_locations_test', 'jta_prestige_test', 'jta_randomized_test'];
 const ENVELOPE_ONLY = ['jta_mixed_test'];
-const NOT_RECORDED = ['jta_randomized_test', 'jta_substrate_test'];
+const NOT_RECORDED = [...new Set(DOCS
+    .filter((d) => d.regions.some((r) => r.substrate === 'jta') && !recordsJta(d.doc) && !ENVELOPE_ONLY.includes(d.game))
+    .map((d) => d.game))];
 /**
  * ⛓ R5c — the documents whose zone-channel regions are ATLAS ROOMS
  * (`flash_seedling` declares the read-back since R5c). Their oracle is
@@ -121,6 +132,10 @@ describe('the population (derived)', () => {
         expect(REGIONS.length).toBeGreaterThan(0);
         const games = new Set(DOCS.map((d) => d.game));
         for (const g of [...R5B_BINS, ...ATLAS_ROOM_DOCS]) expect(games.has(g), g).toBe(true);
+        expect(NOT_RECORDED.length).toBeGreaterThan(0);
+        // ⛓ the bins are disjoint: a pipeline fixture that records nothing is in REPRODUCES and NOT_RECORDED
+        expect(REPRODUCES.filter((g) => NOT_RECORDED.includes(g)), 'a generator output without its record').toEqual([]);
+        for (const g of REPRODUCES) expect(recordsJta(byGame(g).doc), `${g} records its config`).toBe(true);
         // ⛓ every enrolled game is in exactly one bin, or is a substrate with no read-back
         for (const d of DOCS) {
             const binned = [...R5B_BINS, ...ATLAS_ROOM_DOCS].includes(d.game);
@@ -187,9 +202,9 @@ describe('the oracle — every committed region, as its OWN zone', () => {
         }
     });
 
-    it('the refusal names WHICH region fails and the first difference (jta_randomized_test)', () => {
+    it('the refusal names WHICH region fails and the first difference (jta_randomized_test, its record stripped)', () => {
         const d = byGame('jta_randomized_test');
-        const res = zoneContentFor(d.doc, d.p, d.regions[0].region, 'jta', 0);
+        const res = zoneContentFor(withoutProcgenMetadata(d.doc), d.p, d.regions[0].region, 'jta', 0);
         expect(res.ok).toBe(false);
         expect(res.why).toMatch(/region "region_0_0" does not reproduce as its own zone 0 — location \d+ \("region_0_0__\d+"\): item/);
     });
@@ -423,7 +438,9 @@ describe('the host, the held zone, the range — the refusals and the carry', ()
     });
 
     it('a relabel that leaves the GOAL unrecorded is refused by name, never extracted with the goal dropped (trap 1415)', () => {
-        const v = byGame('jta_locations_test');
+        // ⛓ the document WITHOUT its record (stripped, R6c); the recorded survival is recordedZoneConfig.test.js's
+        const v0 = byGame('jta_locations_test');
+        const v = { ...v0, doc: withoutProcgenMetadata(v0.doc) };
         const victoryAt = Object.entries(v.doc.canonical_placements[v.p]).find(([, i]) => i === 'Victory')[0];
         const holder = v.regions.map((r) => r.region)
             .find((r) => v.doc.regions[v.p][r].locations.some((l) => l.name === victoryAt));

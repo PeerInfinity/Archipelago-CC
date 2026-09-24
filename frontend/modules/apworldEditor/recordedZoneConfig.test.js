@@ -6,11 +6,13 @@
  * takes a recorded field over both its own read-back and its assumption — still
  * VERIFIED by re-extracting every committed zone.
  *
- * ⛓ Two kinds of document: the committed jta fixtures (which record nothing —
- * their outcome is pinned unchanged) and the same documents with the record the
- * fixture generator now writes (its `--out` regeneration differs from each
- * committed file ONLY by that block, plan §17), plus a world built end-to-end
- * through the pipeline under a non-default config and read back.
+ * ⛓ Two kinds of document: a committed jta fixture with its `procgen_metadata`
+ * STRIPPED (the un-recorded case — derived, R6c) and the same fixture with the
+ * record the fixture generator writes (plan §17's diff; the committed files carry
+ * it since the R6c re-record), plus a world built end-to-end through the pipeline
+ * under a non-default config and read back. ⛔ No row relies on what the corpus
+ * records: the un-recorded document is built by `withoutProcgenMetadata`, the
+ * recorded one by `withRecord` (trap 1423).
  */
 
 import { readFileSync } from 'node:fs';
@@ -31,6 +33,7 @@ import {
     REPLACE_REGION_CONTENT_OP, ZONE_NOT_RECORDED, installedZoneConfigFrom, replaceRegionContentFromZone,
     zoneConfigSplitSentence, zoneContentFor, zoneJobAnswer, zoneOfRegion, zoneSourceFacts, zoneSourceRefusal,
 } from './regionContent.js';
+import { withoutProcgenMetadata } from './test-helpers.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 for (const rel of REGISTRY_LIBRARIES) {
@@ -66,18 +69,17 @@ const otherLabel = () => substrateRegistry.getAll().find((e) => !zoneSourceFacts
 
 afterAll(() => jta.applyPipelineConfig({}));
 
-describe('⛓⛓ the committed fixtures record nothing — their read-back and outcome are unchanged', () => {
-    it.each(FIXTURES.map((g) => [g]))('%s: recorded = [], assumed = the three unread fields', (g) => {
-        const doc = load(g);
-        expect(Object.hasOwn(doc, 'procgen_metadata')).toBe(false);
+describe('⛓⛓ a fixture WITHOUT its record (the block stripped) — the read-back assumes, and the shuffled one is refused', () => {
+    it.each(FIXTURES.map((g) => [g]))('%s stripped: recorded = [], assumed = the three unread fields', (g) => {
+        const doc = withoutProcgenMetadata(load(g));
         const rec = installedZoneConfigFrom(doc, slotOf(doc), JTA);
         expect(rec.ok).toBe(true);
         expect(rec.recorded).toEqual([]);
         expect(rec.assumed).toEqual({ perkShuffleSeed: null, freeZones: 1, startingPerks: 0 });
     });
 
-    it('jta_randomized_test is still REFUSED without its record, naming the assumed shuffle seed', () => {
-        const doc = load('jta_randomized_test');
+    it('jta_randomized_test stripped of its record is REFUSED, naming the assumed shuffle seed', () => {
+        const doc = withoutProcgenMetadata(load('jta_randomized_test'));
         const p = slotOf(doc);
         const got = zoneContentFor(doc, p, jtaRegions(doc, p)[0], JTA, freeZone(doc, p));
         expect(got.ok).toBe(false);
@@ -146,13 +148,13 @@ describe('⛓⛓ a RECORDED config is preferred over the assumption — and stil
     });
 
     it('a recorded goal survives the relabel that trap 1415 refused (the Victory holder moved out of jta)', () => {
-        const base = load('jta_locations_test');
+        const base = withoutProcgenMetadata(load('jta_locations_test'));
         const p = slotOf(base);
         const victoryAt = Object.entries(base.canonical_placements[p]).find(([, i]) => i === 'Victory')[0];
         const holder = jtaRegions(base, p).find((r) => base.regions[p][r].locations.some((l) => l.name === victoryAt));
         const other = jtaRegions(base, p).find((r) => r !== holder);
         const relabel = (doc) => { const d = clone(doc); d.preset_sidecars[p][holder].substrate = otherLabel(); return d; };
-        // ⛓ the control: without the record, R5b's refusal
+        // ⛓ the control: the stripped document (no record) — R5b's refusal
         expect(zoneSourceRefusal(relabel(base), { player: p, region: other, substrate: JTA, zoneIdx: 5 }))
             .toContain('its goal zone is not recorded');
         const doc = relabel(withRecord(base, RECORD(1, null)));
