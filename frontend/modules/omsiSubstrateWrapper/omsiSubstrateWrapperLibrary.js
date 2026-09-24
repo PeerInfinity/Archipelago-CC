@@ -211,6 +211,11 @@ export function getOmsiTownCount() { return _townCount; }
 export function getOmsiEmitUnlockLocations() { return _emitUnlockLocations; }
 export function getOmsiUnlockScale() { return _unlockScale; }
 
+/** ⛓ R6b — every key `applyPipelineConfig` reads (the registry's `pipelineConfigKeys`). */
+export const OMSI_PIPELINE_CONFIG_KEYS = Object.freeze([
+    'awardSchedule', 'towns', 'emitUnlockLocations', 'unlockScale', 'regionSplit',
+]);
+
 // arc C region splitting. Absent ⇒ today's behavior exactly (byte-inert):
 // zoneCount is _townCount and no zone carries an omsiRegion descriptor. When
 // set, the substrate emits `count` SEPARATE zones that ALL map to the ONE
@@ -586,6 +591,29 @@ export const substrateRegistryEntry = Object.freeze({
         _regionSplit = _readRegionSplit(cfg?.regionSplit);
         _libraryItemsCache = null;
     },
+
+    // ⛓ APWORLD SUBSTRATE CHANGE R6b — the keys `applyPipelineConfig` reads.
+    pipelineConfigKeys: OMSI_PIPELINE_CONFIG_KEYS,
+
+    // ⛓⛓ R6b — **THE CONFIG A DOCUMENT RECORDS** (`procgen_metadata.
+    // substrate_configs.omsi`): the installed knobs, the defaults included.
+    // `awardSchedule` is left out — the zone-0 payload already carries it, as
+    // jta's host entry carries its dataset. `regionSplit` is written in the
+    // shape `applyPipelineConfig` reads (per-zone caps as `regions` overrides),
+    // so installing the record reproduces it. The FETCHED unlock table is data,
+    // not config: it is not recordable here.
+    recordablePipelineConfig: () => ({
+        towns: _townCount,
+        emitUnlockLocations: _emitUnlockLocations,
+        unlockScale: _unlockScale,
+        regionSplit: _regionSplit ? {
+            count: _regionSplit.count,
+            townIndex: _regionSplit.townIndex,
+            exploreVar: _regionSplit.exploreVar,
+            exploreThreshold: _regionSplit.exploreThreshold,
+            regions: _regionSplit.exploreMaxLevels.map((exploreMaxLevel) => ({ exploreMaxLevel })),
+        } : null,
+    }),
 
     extractZoneRules: (zoneIdx, { region_id } = {}) => {
         const locations = [];

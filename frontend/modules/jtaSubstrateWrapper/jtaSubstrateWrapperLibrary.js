@@ -252,6 +252,11 @@ export function setJtaStartingPerks(n) {
 }
 export function getJtaStartingPerks() { return _startingPerks; }
 
+/** ⛓ R6b — every key `applyPipelineConfig` reads (the registry's `pipelineConfigKeys`). */
+export const JTA_PIPELINE_CONFIG_KEYS = Object.freeze([
+    'datasetDoc', 'emitZoneLocations', 'goalZone', 'freeZones', 'startingPerks', 'perkShuffleSeed',
+]);
+
 // --- Synthetic dataset mode (Phase 5d, jta-synthetic-data-plan §4.1) ---
 //
 // When a dataset document is active, the pipeline reads IT instead of the
@@ -913,6 +918,25 @@ export const substrateRegistryEntry = Object.freeze({
         setJtaPerkShuffleSeed(c.perkShuffleSeed);
         return getJtaDataset();
     },
+
+    // ⛓ APWORLD SUBSTRATE CHANGE R6b — the keys `applyPipelineConfig` reads,
+    // declared beside it so a registry row can hold `recordablePipelineConfig`'s
+    // answer to them without typing them in the test.
+    pipelineConfigKeys: JTA_PIPELINE_CONFIG_KEYS,
+
+    // ⛓⛓ R6b — **THE CONFIG A DOCUMENT RECORDS**: the installed config minus
+    // `datasetDoc`, which the document already carries (the host entry's
+    // `jta_dataset`). `buildRulesJson` writes it to
+    // `procgen_metadata.substrate_configs.jta` for a world that realised a jta
+    // region, and `zoneConfigFromSlot` prefers it over `assumed`. The defaults
+    // are recorded too: they are exactly what a read-back cannot know.
+    recordablePipelineConfig: () => ({
+        emitZoneLocations: getJtaEmitZoneLocations(),
+        goalZone: getJtaGoalZone(),
+        freeZones: getJtaFreeZones(),
+        startingPerks: getJtaStartingPerks(),
+        perkShuffleSeed: getJtaPerkShuffleSeed(),
+    }),
 
     // ⛓⛓ APWORLD SUBSTRATE CHANGE R5b — **THE CONFIG A DOCUMENT RECORDS FOR ITS
     // ZONES**, read back without installing anything (the hub's *Zone N* source,

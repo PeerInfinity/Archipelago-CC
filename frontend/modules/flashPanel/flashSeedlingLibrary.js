@@ -625,6 +625,12 @@ export const substrateRegistryEntry = Object.freeze({
         return installedSource.atlasDoc;
     },
     /**
+     * ⛓ APWORLD SUBSTRATE CHANGE R6b — the one key `applyPipelineConfig` reads.
+     * No `recordablePipelineConfig`: the atlas is the whole config, and the
+     * document already names it (`region_atlas.atlas_id`).
+     */
+    pipelineConfigKeys: Object.freeze(['atlasDoc']),
+    /**
      * The two top-level blocks the flash panel needs in the rules.json of a
      * world that placed a room — `region_atlas` (`mapDocumentPath.js` resolves
      * the map document through it) and `flash_panel` (the panel engages on it,

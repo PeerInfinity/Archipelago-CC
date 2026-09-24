@@ -241,6 +241,25 @@ describe('region split — per-region max Explore level (arc D2 slice 2b)', () =
 
     afterEach(() => substrateRegistryEntry.applyPipelineConfig({}));
 
+    // ⛓ APWORLD SUBSTRATE CHANGE R6b — the RECORD of a non-default install
+    //   installs back to itself: the split's per-zone caps are recorded as the
+    //   `regions` overrides `applyPipelineConfig` reads, not as the internal
+    //   `exploreMaxLevels` it computes (which it would ignore).
+    it('R6b: recordablePipelineConfig of a split, scaled, multi-town install is a fixed point', () => {
+        substrateRegistryEntry.applyPipelineConfig({
+            towns: 3, emitUnlockLocations: true, unlockScale: 0.5,
+            regionSplit: { townIndex: 1, count: 4, exploreVar: 'Wander', exploreThreshold: 0.5,
+                exploreMaxLevel: 10, regions: [{ exploreMaxLevel: 4 }] },
+        });
+        const rec = substrateRegistryEntry.recordablePipelineConfig();
+        expect(rec.regionSplit.regions.map((r) => r.exploreMaxLevel)).toEqual([4, 10, 10, 10]);
+        const split = JSON.stringify(getOmsiRegionSplit());
+        substrateRegistryEntry.applyPipelineConfig({});
+        substrateRegistryEntry.applyPipelineConfig(JSON.parse(JSON.stringify(rec)));
+        expect(substrateRegistryEntry.recordablePipelineConfig()).toEqual(rec);
+        expect(JSON.stringify(getOmsiRegionSplit())).toBe(split);
+    });
+
     it('defaults to an even split of the town’s 100 levels', () => {
         substrateRegistryEntry.applyPipelineConfig({
             regionSplit: { townIndex: 0, count: 4, exploreVar: 'Wander' },
