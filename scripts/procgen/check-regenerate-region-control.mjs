@@ -66,6 +66,12 @@
  * CHANGE by design (a content replacement), so no name is "lost". Rows are
  * `from → <substrate> zone`; `--targets` / `--seed` / `--starting` do not apply.
  *
+ * ⛓ R5c — a read-back that names SERVED documents (flash_seedling's atlas intake:
+ * the atlas index, then the atlas) is answered by a DISK READ at the same path
+ * from `frontend/` the page and the worker fetch (`diskFetch`). The control's
+ * worker takes the generation worker's own path: `zoneJobAnswer` (fetch, install,
+ * verify, extract), then the op landed with the answer INLINED, as the page does.
+ *
  * Run:
  *   node scripts/procgen/check-regenerate-region-control.mjs
  *   node scripts/procgen/check-regenerate-region-control.mjs --source=library
@@ -164,10 +170,12 @@ async function loadModules() {
     const { sidecarIssues } = await mod('frontend/modules/apworldEditor/sidecarIssues.js');
     const { regionRealiserKind, strandedReferences } = await mod('frontend/modules/apworldEditor/regionRegenerate.js');
     const { canonicalPlacementIssues } = await mod('frontend/modules/apworldEditor/rulesDocOps.js');
-    const { installedZoneConfigFrom, zoneSourceFacts } = await mod('frontend/modules/apworldEditor/regionContent.js');
+    const {
+        installedZoneConfigFrom, resolveZoneFetches, zoneJobAnswer, zoneSourceFacts,
+    } = await mod('frontend/modules/apworldEditor/regionContent.js');
     return {
         substrateRegistry, applyRulesDocOp, sidecarIssues, regionRealiserKind, strandedReferences, failed,
-        canonicalPlacementIssues, installedZoneConfigFrom, zoneSourceFacts,
+        canonicalPlacementIssues, installedZoneConfigFrom, resolveZoneFetches, zoneJobAnswer, zoneSourceFacts,
         ownedClauses: [REGENERATE_SATISFIED_BY_START, REGENERATE_NARROWED_BY_START],
     };
 }
@@ -187,6 +195,14 @@ const median = (xs) => {
     return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
 };
 const round1 = (x) => (x == null ? null : Math.round(x * 10) / 10);
+
+/**
+ * ⛓ R5c — a SERVED document by its path from `frontend/` (the page's and the
+ * generation worker's fetch), read off disk.
+ */
+export async function diskFetch(path) {
+    return JSON.parse(readFileSync(join(REPO, 'frontend', path), 'utf8'));
+}
 
 /** ⛓ ONE op, classified — runs in the worker. */
 function classifyOp(mods, doc, baseline, p, region, to, source) {
@@ -217,11 +233,16 @@ function classifyOp(mods, doc, baseline, p, region, to, source) {
 }
 
 /** ⛓ ONE `replace-region-content`, classified (the header's ⛓ zone). */
-function classifyZoneOp(mods, doc, baseline, p, region, source) {
+async function classifyZoneOp(mods, doc, baseline, p, region, source) {
     const s = performance.now();
     let res;
     try {
-        res = mods.applyRulesDocOp(doc, { op: 'replace-region-content', player: p, region, source });
+        // ⛓ R5c — the generation worker's answer, then the page's landing (the answer inlined)
+        const ans = await mods.zoneJobAnswer({ doc, player: p, region, substrate: source.substrate, source },
+            { fetchJson: diskFetch });
+        res = ans.ok
+            ? mods.applyRulesDocOp(doc, { op: 'replace-region-content', player: p, region, source: { ...source, zone: ans.zone } })
+            : { ok: false, error: ans.threw };
     } catch (e) {
         res = { ok: false, error: `THREW OUTSIDE THE OP: ${e?.message ?? e}` };
     }
@@ -246,7 +267,7 @@ const errorKeys = (mods, doc, p) => new Set(mods.sidecarIssues(doc, p).filter((i
 async function workerLoop() {
     const mods = await loadModules();
     let cached = { rel: null, doc: null, base: new Map() };
-    parentPort.on('message', ({ rel, p, region, to, source }) => {
+    parentPort.on('message', async ({ rel, p, region, to, source }) => {
         if (cached.rel !== rel) {
             const doc = JSON.parse(readFileSync(join(REPO, rel), 'utf8'));
             if (STARTING.length) {
@@ -258,7 +279,7 @@ async function workerLoop() {
             cached = { rel, doc, base: new Map() };
         }
         if (!cached.base.has(p)) cached.base.set(p, errorKeys(mods, cached.doc, p));
-        parentPort.postMessage(classifyOp(mods, cached.doc, cached.base.get(p), p, region, to, source));
+        parentPort.postMessage(await classifyOp(mods, cached.doc, cached.base.get(p), p, region, to, source));
     });
     const realisers = mods.substrateRegistry.getAll()
         .filter((e) => mods.regionRealiserKind(e) !== null).map((e) => e.id);
@@ -315,10 +336,13 @@ async function main() {
     // ⛓ `--source=zone`: the zone jobs are read off each slot's RECORDED config — pure, no install
     //   (the main thread only asks; the op installs in the worker).
     const zmods = ZONE ? await loadModules() : null;
-    const zoneJobs = (doc, p, entry) => {
+    const zoneJobs = async (doc, p, entry) => {
         const sub = entry?.substrate;
         if (!zmods.zoneSourceFacts(zmods.substrateRegistry.get(sub)).offers) return [];
-        const rec = zmods.installedZoneConfigFrom(doc, p, sub);
+        // ⛓ R5c — the served documents the read-back names, read off disk (no install)
+        const got = zmods.zoneSourceFacts(zmods.substrateRegistry.get(sub)).recovers
+            ? await zmods.resolveZoneFetches(doc, p, sub, diskFetch) : { fetched: {} };
+        const rec = zmods.installedZoneConfigFrom(doc, p, sub, { fetched: got.fetched });
         const n = rec.ok ? rec.zoneCount : 1;
         return Array.from({ length: n }, (_, z) => ({
             to: sub, label: `${sub} zone`, source: { kind: 'zone', substrate: sub, zoneIdx: z },
@@ -358,7 +382,8 @@ async function main() {
                 if (FROM.length && !FROM.includes(entry?.substrate)) continue;
                 const jobs = LIBRARY
                     ? servedJobs.filter((j) => j.to === entry?.substrate)
-                    : ZONE ? zoneJobs(doc, p, entry)
+                    // eslint-disable-next-line no-await-in-loop
+                    : ZONE ? await zoneJobs(doc, p, entry)
                         : targets.map((to) => ({ to, label: to, source: undefined }));
                 if ((LIBRARY || ZONE) && !jobs.length) continue;
                 entries += 1;
