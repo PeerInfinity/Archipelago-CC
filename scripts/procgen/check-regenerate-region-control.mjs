@@ -56,9 +56,20 @@
  * fast). The rows are `from → <substrate> ← <entry_id>`; `--targets` / `--seed`
  * / `--starting` do not apply.
  *
+ * ⛓ THE ZONE SOURCE (R5b, plan §12): `--source=zone` asks `replace-region-content`
+ * with `source: {kind: 'zone', substrate, zoneIdx}` — EVERY committed region whose
+ * current substrate declares the zone channel × EVERY zone of its slot's RECORDED
+ * config (`installedZoneConfigFrom`; a slot whose config cannot be read back gets
+ * one op, zone 0, which the op refuses by name). The op installs the config in the
+ * control's worker and extracts there. CLEAN = applied, no new sidecar error but
+ * the stranded ones it named, and no new `canonicalPlacementIssues`; the names
+ * CHANGE by design (a content replacement), so no name is "lost". Rows are
+ * `from → <substrate> zone`; `--targets` / `--seed` / `--starting` do not apply.
+ *
  * Run:
  *   node scripts/procgen/check-regenerate-region-control.mjs
  *   node scripts/procgen/check-regenerate-region-control.mjs --source=library
+ *   node scripts/procgen/check-regenerate-region-control.mjs --source=zone
  *   node scripts/procgen/check-regenerate-region-control.mjs --from=bounce --targets=bounce --starting='Right arrow'
  *   node scripts/procgen/check-regenerate-region-control.mjs --json
  *   node scripts/procgen/check-regenerate-region-control.mjs --targets=all --limit=4
@@ -98,14 +109,15 @@ export const DEFAULT_SEED = 1;
 export const DEFAULT_OP_TIMEOUT_S = 60;
 
 /** ⛓ The op's data source: `generate` (the realiser) or `library` (the header's ⛓). */
-export const CONTROL_SOURCES = Object.freeze(['generate', 'library']);
+export const CONTROL_SOURCES = Object.freeze(['generate', 'library', 'zone']);
 const SOURCE = arg('source') ?? CONTROL_SOURCES[0];
 if (!CONTROL_SOURCES.includes(SOURCE)) {
     process.stderr.write(`--source must be one of [${CONTROL_SOURCES.join(', ')}], got ${SOURCE}\n`);
     process.exit(2);
 }
 const LIBRARY = SOURCE === 'library';
-const LIMIT = arg('limit') === null && LIBRARY ? Infinity : Number.parseInt(arg('limit') ?? `${DEFAULT_LIMIT}`, 10);
+const ZONE = SOURCE === 'zone';
+const LIMIT = arg('limit') === null && (LIBRARY || ZONE) ? Infinity : Number.parseInt(arg('limit') ?? `${DEFAULT_LIMIT}`, 10);
 const SEED = Number.parseInt(arg('seed') ?? `${DEFAULT_SEED}`, 10);
 const OP_TIMEOUT_S = Number(arg('op-timeout') ?? DEFAULT_OP_TIMEOUT_S);
 const list = (v) => (v ? v.split(',').map((x) => x.trim()).filter(Boolean) : []);
@@ -151,8 +163,11 @@ async function loadModules() {
     } = await mod('frontend/modules/apworldEditor/rulesDocOps.js');
     const { sidecarIssues } = await mod('frontend/modules/apworldEditor/sidecarIssues.js');
     const { regionRealiserKind, strandedReferences } = await mod('frontend/modules/apworldEditor/regionRegenerate.js');
+    const { canonicalPlacementIssues } = await mod('frontend/modules/apworldEditor/rulesDocOps.js');
+    const { installedZoneConfigFrom, zoneSourceFacts } = await mod('frontend/modules/apworldEditor/regionContent.js');
     return {
         substrateRegistry, applyRulesDocOp, sidecarIssues, regionRealiserKind, strandedReferences, failed,
+        canonicalPlacementIssues, installedZoneConfigFrom, zoneSourceFacts,
         ownedClauses: [REGENERATE_SATISFIED_BY_START, REGENERATE_NARROWED_BY_START],
     };
 }
@@ -175,6 +190,7 @@ const round1 = (x) => (x == null ? null : Math.round(x * 10) / 10);
 
 /** ⛓ ONE op, classified — runs in the worker. */
 function classifyOp(mods, doc, baseline, p, region, to, source) {
+    if (source?.kind === 'zone') return classifyZoneOp(mods, doc, baseline, p, region, source);
     const { substrateRegistry, applyRulesDocOp, strandedReferences } = mods;
     const s = performance.now();
     let res;
@@ -198,6 +214,29 @@ function classifyOp(mods, doc, baseline, p, region, to, source) {
     const all = [...errorKeys(mods, res.doc, p)].filter((k) => !baseline.has(k));
     const added = all.filter((k) => !named.has(k.split('|').slice(0, 2).join('|')));
     return { ms, owned, lost, stranded: all.length - added.length, addedKinds: added.map((k) => k.split('|')[0]) };
+}
+
+/** ⛓ ONE `replace-region-content`, classified (the header's ⛓ zone). */
+function classifyZoneOp(mods, doc, baseline, p, region, source) {
+    const s = performance.now();
+    let res;
+    try {
+        res = mods.applyRulesDocOp(doc, { op: 'replace-region-content', player: p, region, source });
+    } catch (e) {
+        res = { ok: false, error: `THREW OUTSIDE THE OP: ${e?.message ?? e}` };
+    }
+    const ms = performance.now() - s;
+    if (!res.ok) return { ms, owned: false, refused: refusalClass(res.error) };
+    const entry = res.doc.preset_sidecars[p][region];
+    const named = new Set(mods.strandedReferences(doc, p, region, entry).map((x) => `REF_UNRESOLVED|${x.region}`));
+    const all = [...errorKeys(mods, res.doc, p)].filter((k) => !baseline.has(k));
+    const added = all.filter((k) => !named.has(k.split('|').slice(0, 2).join('|')));
+    const cpBefore = new Set(mods.canonicalPlacementIssues(doc, p).map((i) => `${i.location}|${i.reason}`));
+    const cpAdded = mods.canonicalPlacementIssues(res.doc, p).filter((i) => !cpBefore.has(`${i.location}|${i.reason}`));
+    return {
+        ms, owned: false, lost: 0, stranded: all.length - added.length,
+        addedKinds: [...added.map((k) => k.split('|')[0]), ...cpAdded.map(() => 'PLACEMENT_ISSUE')],
+    };
 }
 
 const errorKeys = (mods, doc, p) => new Set(mods.sidecarIssues(doc, p).filter((i) => i.severity === 'error')
@@ -273,6 +312,18 @@ async function main() {
     const { realisers, failed } = await runner.spawn();
     // ⛓ `--source=library`: every served entry, as `{to, source, label}` jobs (the header's ⛓).
     const servedJobs = LIBRARY ? servedLibraryJobs() : null;
+    // ⛓ `--source=zone`: the zone jobs are read off each slot's RECORDED config — pure, no install
+    //   (the main thread only asks; the op installs in the worker).
+    const zmods = ZONE ? await loadModules() : null;
+    const zoneJobs = (doc, p, entry) => {
+        const sub = entry?.substrate;
+        if (!zmods.zoneSourceFacts(zmods.substrateRegistry.get(sub)).offers) return [];
+        const rec = zmods.installedZoneConfigFrom(doc, p, sub);
+        const n = rec.ok ? rec.zoneCount : 1;
+        return Array.from({ length: n }, (_, z) => ({
+            to: sub, label: `${sub} zone`, source: { kind: 'zone', substrate: sub, zoneIdx: z },
+        }));
+    };
     const targetsArg = arg('targets');
     const targets = targetsArg === 'all' ? realisers
         : (targetsArg ? targetsArg.split(',').map((s) => s.trim()).filter(Boolean) : [...DEFAULT_TARGETS]);
@@ -307,8 +358,9 @@ async function main() {
                 if (FROM.length && !FROM.includes(entry?.substrate)) continue;
                 const jobs = LIBRARY
                     ? servedJobs.filter((j) => j.to === entry?.substrate)
-                    : targets.map((to) => ({ to, label: to, source: undefined }));
-                if (LIBRARY && !jobs.length) continue;
+                    : ZONE ? zoneJobs(doc, p, entry)
+                        : targets.map((to) => ({ to, label: to, source: undefined }));
+                if ((LIBRARY || ZONE) && !jobs.length) continue;
                 entries += 1;
                 for (const { to, label, source } of jobs) {
                     const t = tally(entry?.substrate ?? '(none)', label);
@@ -355,7 +407,7 @@ async function main() {
     }), { n: 0, clean: 0, stranded: 0, newErrors: 0, refused: 0, timedOut: 0, rulesOwned: 0 });
     const out = {
         source: SOURCE,
-        seed: LIBRARY ? null : SEED, limitPerSlot: LIMIT, opTimeoutS: OP_TIMEOUT_S, targets, from: FROM, starting: STARTING,
+        seed: LIBRARY || ZONE ? null : SEED, limitPerSlot: LIMIT, opTimeoutS: OP_TIMEOUT_S, targets, from: FROM, starting: STARTING,
         realisers, documents: docs.length,
         entries, libraryLoadFailures: failed, totals, rows, timeouts, seconds: Math.round((Date.now() - t0) / 100) / 10,
     };
@@ -364,8 +416,10 @@ async function main() {
         return;
     }
     console.log(`regenerate-region control — ${LIBRARY
-        ? `source library (${servedJobs.length} served entries)` : `seed ${SEED}`}, ≤${LIMIT} entries per slot, `
-        + `${OP_TIMEOUT_S} s per op, targets [${LIBRARY ? [...new Set(servedJobs.map((j) => j.to))].join(', ') : targets.join(', ')}] `
+        ? `source library (${servedJobs.length} served entries)` : ZONE ? 'source zone (every zone of the slot\'s recorded config)'
+            : `seed ${SEED}`}, ≤${LIMIT} entries per slot, `
+        + `${OP_TIMEOUT_S} s per op, targets [${LIBRARY ? [...new Set(servedJobs.map((j) => j.to))].join(', ')
+            : ZONE ? 'each region\'s own zone channel' : targets.join(', ')}] `
         + `(realisers registered: ${realisers.join(', ')})`
         + `${FROM.length ? `, from [${FROM.join(', ')}]` : ''}${STARTING.length ? `, starting += [${STARTING.join(', ')}]` : ''}`);
     console.log(`${docs.length} documents, ${entries} entries, ${totals.n} ops in ${out.seconds} s`);
