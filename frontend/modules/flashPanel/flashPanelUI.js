@@ -6,7 +6,8 @@ import {
   getDispatcher, getModuleEventBus, setActivePanelInstance, getSeedlingRegionGlue,
 } from './index.js';
 import { AP_ITEM_FOUND_EVENT } from './seedlingRegionGlue.js';
-import { seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
+import { RANDOMIZER_ARMS, seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
+import { generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
 import { createApFoundReadout } from './seedlingRandomizerReadout.js';
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
 import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
@@ -532,7 +533,16 @@ export class FlashPanelUI {
     }
     if (this.adapter !== adapter) return;
 
-    const cheap = seedlingRandomizerEligibility({ flashPanel, transport: 'wasm', manifest });
+    /**
+     * ⛓ THE FIFTH FACT, READ HERE (seedling generated G2): does the world
+     * carry GENERATED Seedling rooms? The census is a pass over the rules the
+     * panel already holds, so the cheap call can DECIDE the generated arm — its
+     * `divert` — before anything heavy is fetched. ⛔ The raw rules, never the
+     * event wrapper (T4, trap 1405).
+     */
+    const rawRules = rulesOfRawPayload(getLastRawJsonData?.());
+    const generated = generatedRoomCensus(rawRules);
+    const cheap = seedlingRandomizerEligibility({ flashPanel, transport: 'wasm', manifest, generated });
     if (cheap.verdict === 'ineligible') {
       // ⛓ ONE LINE, AND IT NAMES THE CHECK. "Nothing happened" with no reason
       // is the shape a data-driven feature fails in.
@@ -560,10 +570,18 @@ export class FlashPanelUI {
        * `rawJsonData` (T4, trap 1405 — handed whole, every preset got the
        * default map).
        */
-      const loaded = await wiring.loadSeedlingRandomizer({
+      // ⛓ THE ARM IS THE DIVERTING CHECK'S: a generated world never reaches
+      // the vanilla load (its (iii) would refuse it by count), and a vanilla
+      // world never reaches the assembler. Both return the same shape.
+      const generatedArm = cheap.arm === RANDOMIZER_ARMS.GENERATED;
+      if (generatedArm) {
+        this._panelLog('ap placement: the GENERATED arm — '
+          + `${cheap.checks.find((c) => c.id === 'generated')?.why ?? ''}`);
+      }
+      const loaded = await (generatedArm ? wiring.loadSeedlingGenerated : wiring.loadSeedlingRandomizer)({
         flashPanel,
         manifest,
-        rawRules: rulesOfRawPayload(getLastRawJsonData?.()),
+        rawRules,
         locations: staticData?.locations,
         playerId: staticData?.playerId,
         gameConfig: this.gameConfig,

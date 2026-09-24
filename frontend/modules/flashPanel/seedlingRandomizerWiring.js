@@ -75,8 +75,11 @@
 import { indexLevels } from '../seedlingDemo/atlasSource.js';
 import {
     AP_ITEM_CAPABILITY,
+    RANDOMIZER_ARMS,
     seedlingRandomizerEligibility,
 } from './seedlingRandomizerEligibility.js';
+// ⛓ LIGHT: imports nothing, and is already in the panel's static closure.
+import { GEN_ROOM_TILE_SIZE, generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
 import { SeedlingCheckBinding } from './seedlingCheckBinding.js';
 import { SeedlingLevelSetDelivery } from './seedlingLevelSetDelivery.js';
 import { ATLAS_DIR, mapDocumentPath } from './mapDocumentPath.js';
@@ -93,6 +96,16 @@ export const AP_MODULE_PATHS = Object.freeze({
     validator: 'modules/seedlingDemo/levelSetValidator.js',
     ledger: 'modules/seedlingDemo/r7Acceptance.js',
     derivation: 'modules/seedlingDemo/seedlingAtlasDerivation.js',
+});
+
+/**
+ * ⛓ THE GENERATED ARM'S MODULES (seedling generated G2), the same kind of data.
+ * A SIBLING of `AP_MODULE_PATHS` rather than a member: that table is the
+ * VANILLA load's, and its row holds every entry to being imported by it.
+ */
+export const AP_GENERATED_MODULE_PATHS = Object.freeze({
+    generatedSet: 'modules/seedlingDemo/seedlingGeneratedSet.js',
+    validator: AP_MODULE_PATHS.validator,
 });
 
 /**
@@ -776,6 +789,123 @@ export async function loadSeedlingRandomizer({
         /** ⛓ The map document's OWN grid, carried so the reset can recover a
          *  constructor argument from a roster position without typing an 8. */
         tileSize: mapDoc.tile_size,
+        capability: AP_ITEM_CAPABILITY,
+    };
+}
+
+/**
+ * ⛓⛓ **THE GENERATED ARM** (seedling generated G2; plan
+ * `seedling-generated-plan.md` §2.2 item 3): a world whose rooms the pipeline
+ * GENERATED. No map and no vanilla record set are fetched — the set is
+ * ASSEMBLED from the rules.json (`seedlingGeneratedSet.js`, reached through the
+ * same computed specifier as the rewriter), delivered through the same
+ * `SeedlingLevelSetDelivery`, and bound through the same `SeedlingCheckBinding`.
+ *
+ * ⛓ IT RETURNS `loadSeedlingRandomizer`'s SHAPE, so `runSeedlingRandomizerLoad`
+ * and the panel's call site run unchanged: `delivery`, `checkBinding`, `set`,
+ * `invalidation`, `table`, `replaced` (the `apitem`s placed), a `census` with
+ * the generated counts, `selfPlayer`, `tileSize`, and `arm: 'generated'`.
+ *
+ * ⛔ The verdict is re-decided HERE from the rules (the census) rather than
+ * taken on the caller's word: a mixed world is refused by the eligibility
+ * check's sentence, and the assembler refuses by its own.
+ */
+export async function loadSeedlingGenerated({
+    flashPanel,
+    manifest,
+    rawRules = null,
+    locations,
+    playerId,
+    bot = null,
+    baseUrl,
+    importModule = defaultImportModule,
+    log = () => {},
+} = {}) {
+    const url = (rel) => new URL(rel, baseUrl).href;
+    const refuse = (eligibility, extra = {}) => ({
+        verdict: eligibility.verdict,
+        why: eligibility.why,
+        eligibility,
+        arm: RANDOMIZER_ARMS.GENERATED,
+        delivery: null,
+        checkBinding: null,
+        table: null,
+        replaced: 0,
+        set: null,
+        invalidation: null,
+        census: null,
+        assets: null,
+        selfPlayer: null,
+        ...extra,
+    });
+
+    const generated = generatedRoomCensus(rawRules);
+    const eligibility = seedlingRandomizerEligibility({ flashPanel, transport: 'wasm', manifest, generated });
+    if (eligibility.verdict === 'ineligible') return refuse(eligibility);
+    if (eligibility.arm !== RANDOMIZER_ARMS.GENERATED) {
+        // ⛔ NOT `undecided`: whatever the vanilla facts would say, THIS arm has
+        // nothing to assemble, and a caller must not wait on it.
+        return refuse({ ...eligibility, eligible: false, verdict: 'ineligible', arm: null,
+            failed: 'generated',
+            why: 'generated: the rules carry no generated Seedling rooms — this is the vanilla arm\'s load' });
+    }
+    const selfPlayer = selfPlayerOf(playerId);
+    if (selfPlayer === null) {
+        return refuse({
+            ...eligibility,
+            eligible: false,
+            verdict: 'ineligible',
+            failed: 'generated',
+            why: `generated: the loaded slot ${JSON.stringify(playerId)} is not an integer player id — `
+                + 'the check readout names whose item was found relative to it',
+        });
+    }
+
+    const [assembler, validator] = await Promise.all(
+        [AP_GENERATED_MODULE_PATHS.generatedSet, AP_GENERATED_MODULE_PATHS.validator]
+            .map((p) => importModule(url(p))));
+    const byName = locations instanceof Map ? locations : new Map(Object.entries(locations ?? {}));
+    const t0 = Date.now();
+    const { set, invalidation, table, levelOf, report } = assembler.assembleGeneratedSeedlingSet(rawRules, {
+        locationItemOf: (name) => itemOfRecord(byName.get(name)),
+        selfPlayer,
+    });
+    const assembleMs = Date.now() - t0;
+    if (report.unjoined.length > 0) {
+        log(`[ap placement] ${report.unjoined.length} generated location(s) have no item in these rules `
+            + `(the apitem stands, AP fills it): ${report.unjoined.join(', ')}`);
+    }
+    log(`[ap placement] generated arm: ${generated.rooms.length} generated room(s) + the parking room `
+        + `assembled in ${assembleMs} ms — ${set.set_id}`);
+
+    const delivery = new SeedlingLevelSetDelivery({
+        planChunks: validator.planLevelSetChunks,
+        bot,
+        log,
+    }).arm(set, invalidation);
+    const checkBinding = new SeedlingCheckBinding({
+        table, placementKey: assembler.placementKey, selfPlayer,
+    });
+
+    return {
+        verdict: 'eligible',
+        why: eligibility.why,
+        eligibility,
+        arm: RANDOMIZER_ARMS.GENERATED,
+        delivery,
+        checkBinding,
+        table,
+        replaced: report.apitems.length,
+        set,
+        invalidation,
+        levelOf,
+        report,
+        census: { rooms: generated.rooms.length, apitems: report.apitems.length,
+            unjoined: report.unjoined, parkingLevel: report.parkingLevel, assembleMs },
+        assets: null,
+        selfPlayer,
+        /** ⛓ The generated rooms' own grid (G1's payload `tile_size`). */
+        tileSize: GEN_ROOM_TILE_SIZE,
         capability: AP_ITEM_CAPABILITY,
     };
 }
