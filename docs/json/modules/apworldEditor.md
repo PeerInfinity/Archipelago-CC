@@ -1013,7 +1013,8 @@ committed jta document has one.
 **What refuses it, by name, before anything is written:** no sidecar entry for the
 region (it never creates); a target without the channel or the read-back; a slot
 whose references name a dataset no entry carries; a zone outside
-`0..zoneCount-1`; **a zone another region of the slot holds** (named); and, in the
+`0..zoneCount-1`; **a zone another region of the slot holds** (named); a slot whose GOAL zone is no longer
+recorded (the region holding `Victory` relabelled, and no zone rule left naming the perk universe); and, in the
 worker, **a slot whose committed zones do not reproduce under the recorded
 config**. That last one names the region, the first difference and what the
 document does not record: `perkShuffleSeed`, `freeZones`, `startingPerks`, which

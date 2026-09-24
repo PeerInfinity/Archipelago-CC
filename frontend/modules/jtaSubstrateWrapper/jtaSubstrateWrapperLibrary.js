@@ -955,11 +955,24 @@ export const substrateRegistryEntry = Object.freeze({
         const goalZone = goalZoneFromUniverse(source, !!datasetDoc, payloads, locations)
             ?? goalZoneFromVictory(payloads, locations);
         if (goalZone && goalZone.ambiguous) return { ok: false, why: goalZone.ambiguous };
+        const emitZoneLocations = payloads.some(([, p]) => p.ap_locations && typeof p.ap_locations === 'object');
+        // ⛓ With the zone locations on, the pipeline ALWAYS sets a goal zone (the
+        //   deepest emitted one). No rule universe and no victory placement left in
+        //   this substrate's regions (the hub relabelled the goal's holder) means
+        //   the document no longer records it — `null` would silently drop the
+        //   goal from every zone extracted (measured, trap 1415), so: refused.
+        if (emitZoneLocations && !goalZone) {
+            return {
+                ok: false,
+                why: 'its goal zone is not recorded — no zone rule names the perk universe and no `jta` region '
+                    + `holds the \`${JTA_VICTORY_ITEM_NAME}\` placement (give the region that holds it back its \`jta\` label)`,
+            };
+        }
         return {
             ok: true,
             cfg: {
                 datasetDoc,
-                emitZoneLocations: payloads.some(([, p]) => p.ap_locations && typeof p.ap_locations === 'object'),
+                emitZoneLocations,
                 goalZone: goalZone ? goalZone.zone : null,
             },
             assumed: { perkShuffleSeed: null, freeZones: 1, startingPerks: 0 },
