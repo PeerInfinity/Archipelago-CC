@@ -46,6 +46,9 @@ import {
     GEN_ROOM_TILE_SIZE, genDoorId, genRoomRefusal, generatedRoomCensus,
 } from './seedlingGenRoomPayload.js';
 
+/** ⛓ The table's key function, re-exported so the check binding is handed the rewriter's own. */
+export { placementKey };
+
 /** The set id's base; the world's seed follows it, then the stamp's content hash. */
 export const GENERATED_SET_ID_BASE = 'seedling-gen';
 

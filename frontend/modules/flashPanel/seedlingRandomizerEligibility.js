@@ -14,9 +14,33 @@
  *
  *   (i)   the panel's transport is the wasm page, and the preset names one
  *   (ii)  the build the preset names DECLARES `apitem` in `builds.json`
+ *   (v)   the rules carry GENERATED Seedling rooms — ⛓ a DIVERTING check,
+ *         declared between (ii) and (iii); see below
  *   (iii) at least one goal-ledger location resolves against the loaded
  *         Archipelago placement
  *   (iv)  the vanilla record set and the room map are reachable
+ *
+ * ── ⛓⛓ THE FIFTH FACT DIVERTS; IT DOES NOT GATE (seedling generated G2) ──
+ *
+ * The four facts decide ONE arm: the vanilla rewrite. A world whose rooms the
+ * pipeline GENERATED (`flash_seedling_gen` sidecars) is a Seedling placement
+ * too, but not of the 116 — (iii) would refuse it (*"0 of 41 goal-ledger
+ * locations resolve"*) and (iv) fetches documents it does not use. So check
+ * `generated` answers one of FOUR things, and the fourth is what makes it
+ * different from the other four checks:
+ *
+ *   pass     no generated room (or no census supplied): the vanilla facts decide
+ *   fail     generated rooms AND a real room of the same game — a MIXED world,
+ *            refused by name, never half-delivered
+ *   unknown  never: the census is read off the rules the panel already holds
+ *   divert   generated rooms and nothing else: the verdict is DECIDED here —
+ *            `eligible` on the `generated` arm — and every later check is
+ *            reported `skipped`, not evaluated (they are the vanilla arm's facts)
+ *
+ * (i) and (ii) still apply to the generated arm (it delivers `<apitem>`s too),
+ * which is why the diverting check comes after them. The census is
+ * `seedlingGenRoomPayload.generatedRoomCensus(rules)`; this module stays
+ * import-free and takes it as an input.
  *
  * ── ⛔ WHY THE PREDICATE IS PURE, AND WHY IT ANSWERS `undecided` ─────────
  *
@@ -94,9 +118,15 @@ export const ARM_CAPABILITY = 'arm';
 export const WASM_BUILD_CAPABILITIES = Object.freeze(
     [AP_ITEM_CAPABILITY, ARM_CAPABILITY]);
 
-/** The ids the four checks report themselves by, in the ruled order. */
+/** The ids the five checks report themselves by, in the ruled order. */
 export const ELIGIBILITY_CHECK_IDS = Object.freeze(
-    ['transport', 'capability', 'placement', 'assets']);
+    ['transport', 'capability', 'generated', 'placement', 'assets']);
+
+/** The checks whose PASS is a `divert`: the verdict is decided there, on another arm. */
+export const DIVERTING_CHECK_IDS = Object.freeze(['generated']);
+
+/** Which load an eligible verdict names. */
+export const RANDOMIZER_ARMS = Object.freeze({ VANILLA: 'vanilla', GENERATED: 'generated' });
 
 /**
  * The build directory a `flash_panel.wasm` wiring names.
@@ -145,6 +175,8 @@ export function capabilitiesOf(manifest, buildName) {
 const pass = (why) => ({ status: 'pass', why });
 const fail = (why) => ({ status: 'fail', why });
 const unknown = (why) => ({ status: 'unknown', why });
+const divert = (why) => ({ status: 'divert', why });
+const skipped = (why) => ({ status: 'skipped', why });
 
 /**
  * ── (i) THE TRANSPORT ────────────────────────────────────────────────────
@@ -197,6 +229,31 @@ function checkCapability({ flashPanel, manifest }) {
 }
 
 /**
+ * ── (v) GENERATED ROOMS — the diverting check (see the header) ───────────
+ *
+ * ⛓ ABSENT IS `pass`, NOT `unknown`: the census is read off the rules the
+ * panel already holds, so a caller that omits it is asking the vanilla
+ * question — and the vanilla arm's own rows pass nothing here.
+ */
+function checkGenerated({ generated }) {
+    if (generated === undefined) {
+        return pass('no generated-room census was supplied — the vanilla facts decide');
+    }
+    const rooms = Array.isArray(generated?.rooms) ? generated.rooms : [];
+    const mixed = Array.isArray(generated?.mixed) ? generated.mixed : [];
+    if (rooms.length === 0) return pass('the rules carry no generated Seedling rooms');
+    if (mixed.length > 0) {
+        return fail(`the rules carry ${rooms.length} generated Seedling room(s) (${rooms.join(', ')}) `
+            + `AND ${mixed.length} real one(s) (${mixed.join(', ')}) — a mixed world is not delivered yet: `
+            + 'the game mounts ONE level set, and the real rooms and the generated ones would each need '
+            + 'it. The game runs its vanilla rooms.');
+    }
+    return divert(`the rules carry ${rooms.length} generated Seedling room(s) (${rooms.join(', ')}) — `
+        + 'their level set is assembled from the rules, so the vanilla placement and its two '
+        + 'documents do not apply');
+}
+
+/**
  * ── (iii) THE PLACEMENT ─────────────────────────────────────────────────
  *
  * ⛓ THE COUNT IS REPORTED EITHER WAY, and zero is the only refusal. A preset
@@ -236,6 +293,7 @@ function checkAssets({ assets }) {
 const CHECKS = Object.freeze([
     ['transport', checkTransport],
     ['capability', checkCapability],
+    ['generated', checkGenerated],
     ['placement', checkPlacement],
     ['assets', checkAssets],
 ]);
@@ -250,16 +308,29 @@ const CHECKS = Object.freeze([
  * @param {{resolved: number, total: number, unresolved?: string[]}} [inputs.placement]
  * @param {{recordSet: {url: string, ok: boolean},
  *          map: {url: string, ok: boolean, source: string}}} [inputs.assets]
+ * @param {{rooms: string[], mixed: string[]}} [inputs.generated]  `generatedRoomCensus(rules)`
  * @returns {{eligible: boolean, verdict: 'eligible'|'ineligible'|'undecided',
- *           failed: string|null, why: string, checks: object[]}}
+ *           arm: 'vanilla'|'generated'|null, failed: string|null, why: string, checks: object[]}}
  */
 export function seedlingRandomizerEligibility(inputs = {}) {
-    const checks = CHECKS.map(([id, run]) => ({ id, ...run(inputs) }));
+    // ⛓ A DIVERT ENDS THE EVALUATION: the checks after it are the other arm's.
+    const checks = [];
+    let diverted = null;
+    for (const [id, run] of CHECKS) {
+        if (diverted) {
+            checks.push({ id, ...skipped(`not asked — the ${diverted.id} check diverted to another arm`) });
+            continue;
+        }
+        const c = { id, ...run(inputs) };
+        checks.push(c);
+        if (c.status === 'divert') diverted = c;
+    }
     const firstFail = checks.find((c) => c.status === 'fail');
     if (firstFail) {
         return {
             eligible: false,
             verdict: 'ineligible',
+            arm: null,
             failed: firstFail.id,
             why: `${firstFail.id}: ${firstFail.why}`,
             checks,
@@ -270,6 +341,7 @@ export function seedlingRandomizerEligibility(inputs = {}) {
         return {
             eligible: false,
             verdict: 'undecided',
+            arm: null,
             failed: null,
             why: `${firstUnknown.id}: ${firstUnknown.why}`,
             checks,
@@ -278,8 +350,9 @@ export function seedlingRandomizerEligibility(inputs = {}) {
     return {
         eligible: true,
         verdict: 'eligible',
+        arm: diverted ? RANDOMIZER_ARMS.GENERATED : RANDOMIZER_ARMS.VANILLA,
         failed: null,
-        why: checks.map((c) => `${c.id}: ${c.why}`).join(' · '),
+        why: checks.filter((c) => c.status !== 'skipped').map((c) => `${c.id}: ${c.why}`).join(' · '),
         checks,
     };
 }
