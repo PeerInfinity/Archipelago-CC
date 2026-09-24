@@ -146,9 +146,12 @@ import settingsManager from '../../app/core/settingsManager.js';
 import { renderRegionGenerationForm } from '../procgenCore/regionGenerationForm.js';
 import {
   REGION_GENERATION_FIRST_SEED, REGION_GENERATION_OP_FIELDS, REGION_GENERATION_SEED_KEY,
-  composeRegenerateArgs, freeItemsSentence, regenerateArgsRefusal, regenerationAnswer,
-  regenerationProvenance, regionGenerationPlan, regionGenerationSourcesFor,
+  composeRegenerateArgs, defaultRegionGenerationSource, freeItemsSentence, regenerateArgsRefusal,
+  regenerationAnswer, regenerationProvenance, regionGenerationPlan, regionGenerationSourcesFor, zonePickerFor,
 } from './regionGenerationFlow.js';
+// ⛓ APWORLD SUBSTRATE CHANGE R5b — the *Zone N* source: the op it lands and the
+//   Placements tab's readout of what the cascade leaves in the pool, unplaced.
+import { REPLACE_REGION_CONTENT_OP, unplacedPoolItems } from './regionContent.js';
 import { loadLibraryOptions, servedLibraryCatalog } from './librarySourcePicker.js';
 import { REGION_SOURCE_KINDS } from './regionRegenerate.js';
 import {
@@ -2853,6 +2856,23 @@ class ApworldEditorUI {
           + `${tally.orphanItems.length === 1 ? ' names' : ' name'} an item it does not hold`
         : '');
     this.scrollContainer.appendChild(summary);
+
+    // ⛓ R5b — what a `replace-region-content` leaves behind (⚖ the ruling: the
+    //   displaced items stay in the pool, unplaced — the reader's to repair):
+    //   every item whose pool count exceeds the placements holding it.
+    const unplaced = unplacedPoolItems(this.rulesDoc, String(this.playerId));
+    summary.dataset.unplacedItems = String(unplaced.length);
+    if (unplaced.length) {
+      const line = document.createElement('div');
+      line.className = 'apworld-placements-unplaced';
+      line.dataset.items = JSON.stringify(unplaced.map((u) => u.item));
+      Object.assign(line.style, { color: '#e0a030', fontSize: '11px', margin: '0 0 6px', lineHeight: '1.4' });
+      const n = unplaced.reduce((a, u) => a + u.unplaced, 0);
+      line.textContent = `${n} pool item${n === 1 ? '' : 's'} placed nowhere: `
+        + unplaced.map((u) => `${u.item} ×${u.unplaced}`).join(', ')
+        + ' — place them on a location, or lower their pool count on the Items tab.';
+      this.scrollContainer.appendChild(line);
+    }
 
     if (items.length === 0) {
       const none = document.createElement('div');
@@ -6598,9 +6618,17 @@ class ApworldEditorUI {
       player: String(player), region, target, plan, bag: { ...plan.defaults }, usingRecorded: false, run: null,
       // ⛓ R5a — the Source row: `generate` (default) or `library`; the
       //   picker's state is loaded on the first switch to `library`.
-      source: REGION_SOURCE_KINDS.GENERATE,
+      source: defaultRegionGenerationSource(plan),
       library: { status: 'idle', options: [], error: null, selected: null },
+      // ⛓ R5b — the Zone N picker, computed from the RECORDED config (no install)
+      zone: { status: 'idle', options: [], error: null, selected: null },
     };
+    if (this._regionGen.source === REGION_SOURCE_KINDS.ZONE) this._loadZonePicker(this._regionGen);
+  }
+
+  /** ⛓ R5b — (re)compute the Zone N picker for `gen` off the current document. */
+  _loadZonePicker(gen) {
+    gen.zone = zonePickerFor(this.rulesDoc, gen.player, gen.region, gen.target);
   }
 
   /**
@@ -6616,6 +6644,7 @@ class ApworldEditorUI {
   _setRegionGenSource(gen, source) {
     gen.source = source;
     if (source === REGION_SOURCE_KINDS.LIBRARY && gen.library.status === 'idle') this._loadLibraryPicker(gen);
+    if (source === REGION_SOURCE_KINDS.ZONE) this._loadZonePicker(gen);
     this._render();
   }
 
@@ -6750,6 +6779,10 @@ class ApworldEditorUI {
     }
     if (gen.source === REGION_SOURCE_KINDS.LIBRARY) {
       this._fillLibrarySourceSection(sec, gen, note, running);
+      return sec;
+    }
+    if (gen.source === REGION_SOURCE_KINDS.ZONE) {
+      this._fillZoneSourceSection(sec, gen, note, running);
       return sec;
     }
 
@@ -6921,6 +6954,93 @@ class ApworldEditorUI {
         + 'and access rules, in a worker under the time limit — ONE undoable edit.', { disabled: !pick }));
   }
 
+  /**
+   * ⛓⛓ R5b — **THE ZONE N SOURCE, DRAWN.** No seed row (the zone channel draws no
+   * rng), no size or knobs (a zone is the substrate's own content); a picker over
+   * `0..zoneCount-1` read off the config the document RECORDS, every zone another
+   * region of the slot holds DISABLED and labelled with that region; the cascade
+   * said out loud before the press; Generate ▸ — which runs the extraction in the
+   * worker (the install is module-global) and lands ONE `replace-region-content`.
+   */
+  _fillZoneSourceSection(sec, gen, note, running) {
+    const z = gen.zone;
+    sec.dataset.zone = z.status;
+    if (z.status !== 'ready') {
+      sec.dataset.generate = 'none';
+      note('apworld-region-generation-zone-refusal', z.error ?? 'apworld: the zone picker is not ready.', '#e8a095');
+      return;
+    }
+    sec.dataset.generate = 'drawn';
+    sec.dataset.state = running ? 'running' : 'idle';
+    const pickRow = document.createElement('label');
+    Object.assign(pickRow.style, { display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px',
+      color: '#bcd', margin: '0 0 4px' });
+    pickRow.appendChild(document.createTextNode('Zone'));
+    const sel = document.createElement('select');
+    sel.className = 'apworld-region-generation-zone';
+    for (const o of z.options) {
+      const opt = document.createElement('option');
+      opt.value = String(o.zoneIdx);
+      opt.textContent = o.label;
+      opt.disabled = o.disabled;
+      Object.assign(opt.dataset, { zoneIdx: String(o.zoneIdx), ...(o.heldBy ? { heldBy: o.heldBy } : {}) });
+      sel.appendChild(opt);
+    }
+    if (z.selected !== null) sel.value = String(z.selected);
+    sel.disabled = running;
+    sel.addEventListener('change', () => { z.selected = Number(sel.value); this._render(); });
+    pickRow.appendChild(sel);
+    sec.appendChild(pickRow);
+    const held = z.options.filter((o) => o.heldBy);
+    if (held.length) {
+      note('apworld-region-generation-zone-held', `${held.length} zone${held.length === 1 ? '' : 's'} held by `
+        + `another region of this slot (disabled): ${held.map((o) => `${o.zoneIdx} → ${o.heldBy}`).join(', ')}.`,
+      '#a98');
+    }
+    note('apworld-region-generation-zone-cascade', 'Replaces this region\'s LOCATIONS with the zone\'s own: '
+      + 'the zone\'s items are registered and placed, and every placement on the old locations is DELETED and '
+      + 'named — those items stay in the pool, unplaced (the Placements tab lists them). Exits are unchanged.');
+    const needs = this._makeStartingNeedsNode([gen.target], { disabled: running });
+    if (needs) sec.appendChild(needs);
+    sec.appendChild(this._makeRegionGenGoRow(gen, running,
+      `Replace this region's content with the picked zone of \`${gen.target}\`, extracted in a worker under the `
+        + 'config this document records — ONE undoable edit.', { disabled: z.selected === null }));
+  }
+
+  /**
+   * ⛓⛓⛓ R5b — **THE ZONE RESULT, LANDED AS ONE `replace-region-content`** with the
+   * zone channel's answer INLINED (`source.zone`), so the op the session records
+   * refolds without installing anything. The same gates as `_saveRegionSidecar`:
+   * the op's own preview, the raw-save veto (schema + placements), then ONE op;
+   * the answer is the op's own description, plus V0's count.
+   */
+  _landRegionContent(gen, args, res) {
+    const op = {
+      op: REPLACE_REGION_CONTENT_OP, player: gen.player, region: gen.region,
+      source: { kind: REGION_SOURCE_KINDS.ZONE, substrate: args.substrate, zoneIdx: args.source.zoneIdx, zone: res.zone },
+      provenance: regenerationProvenance(args, res),
+    };
+    const key = `${gen.player}|${gen.region}`;
+    const preview = applyRulesDocOp(this.rulesDoc, op);
+    const refusal = preview.ok ? this._rawSaveRefusal(op, `regions.${gen.player}.${gen.region}`) : preview.error;
+    if (refusal) {
+      this._opMessage = `Refused: ${refusal}`;
+      this._opRowMessage = { sidecar: key, text: this._opMessage, refused: true };
+      this._render();
+      return { ok: false, preview };
+    }
+    const applied = this._applyOp(op, { rerender: false });
+    if (applied.ok && applied.applied) {
+      const n = this._sidecarIssuesOf(gen.region).length;
+      if (n > 0) this._opMessage = `${this._opMessage} — ${n} sidecar issue${n === 1 ? '' : 's'}, see the block`;
+    }
+    if (applied.ok) this._opRowMessage = { sidecar: key, text: this._opMessage, refused: false };
+    // ⛓ the picker's held zones moved with the document
+    if (this._regionGen === gen) this._loadZonePicker(gen);
+    this._render();
+    return { ok: applied.ok, preview, applied };
+  }
+
   /** ⛓ The reader's Cancel: the run settles as cancelled and the sentence is printed. */
   _cancelRegionGeneration() {
     const run = this._regionGen?.run;
@@ -6950,10 +7070,12 @@ class ApworldEditorUI {
     };
     const doc = this.rulesDoc;
     const library = gen.source === REGION_SOURCE_KINDS.LIBRARY;
+    const zone = gen.source === REGION_SOURCE_KINDS.ZONE;
     const pick = library ? this._regionGenLibraryPick(gen) : null;
     if (library && !pick) return null;
+    if (zone && gen.zone.selected === null) return null;
     const args = composeRegenerateArgs(doc, gen.player, gen.region, gen.target, gen.bag,
-      { source: pick?.source });
+      { source: zone ? { kind: REGION_SOURCE_KINDS.ZONE, zoneIdx: gen.zone.selected } : pick?.source });
     const refusal = regenerateArgsRefusal(args);
     if (refusal) {
       beside(refusal, true);
@@ -7000,6 +7122,10 @@ class ApworldEditorUI {
       beside('apworld: the document changed while the region was generating — the result was built '
         + 'from the old one, so nothing was recorded. Press Generate ▸ again.', true);
       this._render();
+      return res;
+    }
+    if (zone) {
+      run.landed = this._landRegionContent(gen, args, res);
       return res;
     }
     this._saveRegionSidecar(gen.player, gen.region, res.entry, {

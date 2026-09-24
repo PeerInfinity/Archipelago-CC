@@ -573,3 +573,37 @@ export function unplacedPoolItems(doc, player) {
     }
     return out;
 }
+
+/* ── the generation worker's answer ─────────────────────────────────────── */
+
+/**
+ * ⛓⛓ **ONE ZONE JOB, AS THE WORKER ANSWERS IT** (`regionRegenerateWorker.js`):
+ * the whole operation on the document the worker was HANDED, answered as the
+ * zone (which the page inlines in the op it lands) plus the next document's
+ * touched slices and the entry — never the whole document back across the
+ * boundary. A refusal is the op's own sentence, `refused: true`.
+ */
+export function zoneJobAnswer({ doc, player, region, substrate, source }) {
+    const res = replaceRegionContentFromZone({ doc, player, region, substrate, zoneIdx: source?.zoneIdx });
+    if (!res.ok) return { ok: false, refused: true, threw: res.why, freeItems: [], hostsSurplus: false };
+    const p = String(player);
+    return {
+        ok: true,
+        zone: res.zone,
+        verified: res.verified,
+        entry: res.entry,
+        next: {
+            locations: res.doc.regions[p][region].locations,
+            items: res.doc.items[p],
+            itempool_counts: res.doc.itempool_counts[p],
+            canonical_placements: res.doc.canonical_placements[p],
+        },
+        locations: res.locations,
+        itemsRegistered: res.itemsRegistered,
+        placementsDisplaced: res.placementsDisplaced,
+        placementsAdded: res.placementsAdded,
+        hostCarried: res.hostCarried,
+        danglingReferences: res.danglingReferences,
+        stranded: res.stranded,
+    };
+}

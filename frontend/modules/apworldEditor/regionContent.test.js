@@ -25,6 +25,10 @@ import { sidecarIssues } from './sidecarIssues.js';
 import { validateRules } from './rulesUtils.js';
 import { REGION_SOURCE_KINDS } from './regionRegenerate.js';
 import {
+    composeRegenerateArgs, defaultRegionGenerationSource, regenerateArgsRefusal, regenerationAnswer,
+    regenerationProvenance, regionGenerationPlan, regionGenerationSourcesFor, zonePickerFor,
+} from './regionGenerationFlow.js';
+import {
     REPLACE_REGION_CONTENT_KEYS, REPLACE_REGION_CONTENT_OP, ZONE_CONFIG_HOOK, ZONE_DANGLING_REFS, ZONE_DISPLACED,
     ZONE_HELD, ZONE_HOST_CARRIED, ZONE_ITEM_GROUPS, ZONE_NEVER_CREATES, ZONE_NOT_RECORDED, ZONE_NO_CHANNEL,
     ZONE_NO_RECOVERY, ZONE_OUT_OF_RANGE, ZONE_UNPLACED_CLAUSE, applyZoneContent, describeZoneReplacement,
@@ -452,5 +456,55 @@ describe('the op — one record, pure on refold', () => {
         const pure = applyZoneContent({ doc: d.doc, player: d.p, region, substrate: 'jta', zoneIdx: z, zone: got.zone });
         const whole = replaceRegionContentFromZone({ doc: d.doc, player: d.p, region, substrate: 'jta', zoneIdx: z });
         expect(bytes(pure.doc)).toBe(bytes(whole.doc));
+    });
+});
+
+describe('the form — the Source row, the picker, what Generate sends (R5b)', () => {
+    const d = byGame('jta_dataset_test');
+    const [r0] = d.regions.map((r) => r.region);
+
+    it('Zone N is offered exactly for the targets that can read their config back — over every registered entry', () => {
+        for (const e of substrateRegistry.getAll()) {
+            const plan = regionGenerationPlan(d.doc, d.p, r0, e.id);
+            const ids = regionGenerationSourcesFor(plan).map((x) => x.id);
+            expect(ids.includes(REGION_SOURCE_KINDS.ZONE), e.id).toBe(zoneSourceFacts(e).recovers);
+        }
+        // ⛓ the form OPENS on the zone for a target that has no realiser but offers it
+        const jta = regionGenerationPlan(d.doc, d.p, r0, 'jta');
+        expect(jta.refusal).toBeTruthy();
+        expect(defaultRegionGenerationSource(jta)).toBe(REGION_SOURCE_KINDS.ZONE);
+        const maze = regionGenerationPlan(d.doc, d.p, r0, 'maze');
+        expect(defaultRegionGenerationSource(maze)).toBe(REGION_SOURCE_KINDS.GENERATE);
+    });
+
+    it('the picker: every zone held by ANOTHER region disabled; with all held but the own, the own is selected', () => {
+        const picker = zonePickerFor(d.doc, d.p, r0, 'jta');
+        expect(picker.status).toBe('ready');
+        const held = picker.options.filter((o) => o.disabled).map((o) => o.zoneIdx);
+        expect(held).toEqual(picker.options.filter((o) => zoneHeldBy(d.doc, d.p, 'jta', o.zoneIdx, { except: r0 }))
+            .map((o) => o.zoneIdx));
+        expect(picker.selected).toBe(zoneOfRegion(d.doc, d.p, r0));
+        // ⛓ a vanilla slot with free zones selects the first free zone that is not its own
+        const v = byGame('jta_locations_test');
+        const vr = v.regions[0].region;
+        const vp = zonePickerFor(v.doc, v.p, vr, 'jta');
+        expect(vp.selected).toBe(vp.options.find((o) => !o.disabled && !o.own).zoneIdx);
+        // ⛓ a target with no read-back: the picker is its refusal
+        expect(zonePickerFor(d.doc, d.p, r0, 'omsi')).toMatchObject({ status: 'refused', options: [] });
+    });
+
+    it('Generate sends no seed, no size, no params; the refusal is the op\'s; the provenance names the zone', () => {
+        const args = composeRegenerateArgs(d.doc, d.p, r0, 'jta', { seed: 7 }, { source: { kind: 'zone', zoneIdx: 1 } });
+        expect(args.seed).toBeUndefined();
+        expect(args.size).toBeUndefined();
+        expect(args.regionParams).toBeUndefined();
+        expect(args.source).toEqual({ kind: 'zone', zoneIdx: 1, substrate: 'jta' });
+        const held = zoneHeldBy(d.doc, d.p, 'jta', 1, { except: r0 });
+        expect(regenerateArgsRefusal(args)).toBe(zoneSourceRefusal(d.doc, { player: d.p, region: r0, substrate: 'jta', zoneIdx: 1 }));
+        expect(regenerateArgsRefusal(args)).toContain(held);
+        const prov = regenerationProvenance(args, { ms: 12.4, verified: ['a'] });
+        expect(prov).toEqual({ op: REPLACE_REGION_CONTENT_OP, substrate: 'jta', zoneIdx: 1, verified: ['a'], ms: 12 });
+        expect(regenerationAnswer(args, { ok: false, refused: true, threw: 'apworld: x' }, 60)).toEqual({ landed: false, text: 'apworld: x' });
+        expect(regenerationAnswer(args, { ok: true }, 60).landed).toBe(true);
     });
 });
