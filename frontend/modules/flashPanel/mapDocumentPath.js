@@ -56,6 +56,30 @@ export const ATLAS_DIR = 'modules/flashPanel/atlases/';
 export const DEFAULT_MAP_DOCUMENT = 'seedling-map.json';
 
 /**
+ * ⛓⛓ APWORLD SUBSTRATE CHANGE R5c — **THE ATLAS INDEX: `atlas_id` → FILE.**
+ * A rules.json names its atlas only by id (`region_atlas.atlas_id`, and every
+ * payload's `atlas_ref`); `map_document` is the LEVEL map, not an atlas. The
+ * index is DERIVED from this directory (`atlasIndex.test.js` pins it), served
+ * beside the atlases so a page or worker can resolve an id with one fetch.
+ */
+export const ATLAS_INDEX_FILE = 'atlas_files.json';
+
+/** The served path of the atlas index, from `frontend/`. */
+export function atlasIndexPath() {
+    return ATLAS_DIR + ATLAS_INDEX_FILE;
+}
+
+/**
+ * The served path of the atlas `atlasId` names in `index` (the parsed
+ * `atlas_files.json`), or null when the index lists no such atlas.
+ */
+export function atlasPathInIndex(index, atlasId) {
+    const hit = (Array.isArray(index?.atlases) ? index.atlases : [])
+        .find((a) => a && a.atlas_id === atlasId && typeof a.file === 'string' && a.file !== '');
+    return hit ? ATLAS_DIR + hit.file : null;
+}
+
+/**
  * The map document a preset declares, and where that answer came from.
  *
  * ⛔ **THE EVENT WRAPPER IS REFUSED BY NAME** (seedling-pipeline T4, trap 1405).

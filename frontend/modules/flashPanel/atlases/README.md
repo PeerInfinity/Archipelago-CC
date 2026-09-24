@@ -126,3 +126,11 @@ atlas, the CLI loads it and resolves every `map_ref` against a real level.
   location access rules, both `rules_source` flavours, the vanilla layout), not
   to describe the real map. It is the format anchor the validator tests read off
   disk — leave it alone; author real maps in their own file.
+
+- `atlas_files.json` — the **served atlas index**: `atlas_id` → file for every
+  region atlas in this directory. A rules.json names its atlas only by id
+  (`region_atlas.atlas_id`, every payload's `atlas_ref`) — `map_document` is the
+  level map above, not an atlas — so the APWorld Editor's atlas-room source
+  resolves the id here (`mapDocumentPath.atlasPathInIndex`). It is DERIVED:
+  `flashPanel/atlasIndex.test.js` pins it to the directory, and a restamped atlas
+  reds that row, naming the index and the `atlases` array to write.

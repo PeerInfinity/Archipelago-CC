@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "description": "The served index of the region atlases in this directory: atlas_id -> file. DERIVED — flashPanel/atlasIndex.test.js pins it to the directory; a restamped atlas reds that row until this file names the new id.",
+  "atlases": [
+    {
+      "file": "seedling-fixture.json",
+      "atlas_id": "seedling-fixture-b656bf3b",
+      "game": "seedling"
+    },
+    {
+      "file": "seedling-playthrough.json",
+      "atlas_id": "seedling-ae833c1e",
+      "game": "seedling"
+    },
+    {
+      "file": "seedling.json",
+      "atlas_id": "seedling-ab0b2709",
+      "game": "seedling"
+    }
+  ]
+}
