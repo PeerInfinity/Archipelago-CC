@@ -247,6 +247,99 @@ export function planTopology(roomCount, { kind = 'chain' } = {}) {
 }
 
 /**
+ * ⛓⛓ **ONE ROOM'S DOOR CELLS — pass 1 of `linkGeneratedRooms`, lifted** (seedling
+ * generated levels G1, plan §2.2 item 1). The linker and the pipeline's
+ * generated room (`seedlingGenRoom.js`) pick doors by ONE rule, so a room the
+ * pipeline specifies and a room the exporter links cannot disagree about where
+ * a door may stand:
+ *
+ *   · the cells of ONE flood from `start` with every solid live (`walkableCellsFrom`)
+ *   · minus the cells an entity occupies, minus the start itself, minus `exclude`
+ *   · FARTHEST first, ties by (ty, tx) — a total order
+ *   · greedy, never orthogonally adjacent to a door already chosen
+ *
+ * ⛓ **PREFIX-STABLE**: the walk is over one fixed order and stops at `n`, so the
+ * first k doors of `n` are the doors of `k`. A caller that adds an exit later
+ * (the engine inserts a sphere leaf's back exit after its core ran) keeps every
+ * door it already had.
+ *
+ * `exclude` is a Set of `"tx,ty"` keys no door may take (the linker passes none).
+ * `room` only names the room in the refusal.
+ *
+ * @returns {{doors: Array<{tx, ty, dist, from}>, flood: Map, taken: Set<string>}}
+ */
+export function pickDoorCells(record, start, n, { room = '?', exclude = null } = {}) {
+    const flood = walkableCellsFrom(record, start);
+    const taken = occupiedCells(record);
+    // ⛔ THE ROOM'S OWN START IS NEVER A DOOR. Room 0's start is where the
+    // player boots; a door there is a portal the player is standing on
+    // before they have pressed anything, and stepping off and back on warps
+    // them out of the set's first room by accident.
+    taken.add(cellKey(start.tx, start.ty));
+    for (const key of exclude ?? []) taken.add(key);
+    const candidates = [...flood.values()]
+        .filter((c) => !taken.has(cellKey(c.tx, c.ty)))
+        // Farthest first, so two doors of one room end up apart rather than
+        // adjacent. Ties broken by (ty, tx) — a total order, so the choice
+        // does not depend on Map iteration.
+        .sort((p, q) => (q.dist - p.dist) || (p.ty - q.ty) || (p.tx - q.tx));
+
+    // ⛔ TWO DOORS OF ONE ROOM ARE NEVER ADJACENT, and the first version of
+    // this got it wrong — measured on the six-seed export, room 1's doors
+    // came out at (8,1) and (8,2). Two consequences, one cosmetic and one
+    // not: a player arriving on one is standing next to the other, and the
+    // `approach` cell this function hands back as a WITNESS was itself a
+    // door, so a tape told to walk in from there would have warped before it
+    // took a step. Non-adjacency fixes both at once — every door's flood
+    // predecessor is then guaranteed not to be a door.
+    const chosen = [];
+    for (const c of candidates) {
+        if (chosen.length === n) break;
+        const adjacent = chosen.some((d) => Math.abs(d.tx - c.tx) + Math.abs(d.ty - c.ty) <= 1);
+        if (!adjacent) chosen.push(c);
+    }
+    if (chosen.length < n) {
+        fail(`levelSetExits: room ${room} needs ${n} door cell(s) and its `
+            + `walkable component offers ${chosen.length} usable cell(s) (flood of `
+            + `${flood.size} from (${start.tx}, ${start.ty}), ${taken.size} occupied, `
+            + 'doors kept non-adjacent). A door outside the component would be an exit '
+            + 'the player cannot reach, which is exactly what reachabilityOf cannot see.');
+    }
+    return { doors: chosen, flood, taken };
+}
+
+/**
+ * ⛓⛓ **ONE ROOM'S DOOR ENTITIES — pass 2 of `linkGeneratedRooms`, lifted.**
+ * Returns a NEW record: `record.entities` followed by one exit element per door,
+ * in the order given. A door is `{cell: {tx, ty}, to, arrival: {x, y}, sign}` —
+ * `to` the level it leads to, `arrival` where the player lands there, in pixels.
+ */
+export function emitDoorEntities(record, doors, { element = 'teleporter' } = {}) {
+    if (!EXIT_ELEMENTS.includes(element)) {
+        fail(`levelSetExits: "${element}" does not carry @to — the exit elements are `
+            + `${EXIT_ELEMENTS.join(', ')} (Game.as:2261-2263)`);
+    }
+    const added = doors.map((d) => ({
+        type: element,
+        x: d.cell.tx * TILE_SIZE,
+        y: d.cell.ty * TILE_SIZE,
+        attrs: {
+            to: d.to,
+            playerx: d.arrival.x,
+            playery: d.arrival.y,
+            // `Game.as:2263` reads an ABSENT tag as -1; written out so a
+            // reader does not have to know that. -1 = never deactivated.
+            tag: -1,
+            // Visible, because a generated room has no other cue that a
+            // cell is a door (`Teleporter`'s `_show` gates the sprite).
+            show: 1,
+            sign: d.sign,
+        },
+    }));
+    return { ...record, entities: [...(record.entities ?? []), ...added] };
+}
+
+/**
  * GIVE A SET OF GENERATED ROOMS ITS EXITS — the EMIT arm.
  *
  * @param {Array<{record: object, start?: {tx,ty}}>} rooms  in SET ORDER; index is the level id
@@ -292,42 +385,8 @@ export function linkGeneratedRooms(rooms, options = {}) {
     rooms.forEach((room, id) => {
         const record = room?.record ?? room;
         const start = room?.start ?? { tx: 1, ty: 1 };
-        const flood = walkableCellsFrom(record, start);
+        const { doors: chosen, flood } = pickDoorCells(record, start, needs[id].length, { room: id });
         floods.push({ flood, start });
-        const taken = occupiedCells(record);
-        // ⛔ THE ROOM'S OWN START IS NEVER A DOOR. Room 0's start is where the
-        // player boots; a door there is a portal the player is standing on
-        // before they have pressed anything, and stepping off and back on warps
-        // them out of the set's first room by accident.
-        taken.add(cellKey(start.tx, start.ty));
-        const candidates = [...flood.values()]
-            .filter((c) => !taken.has(cellKey(c.tx, c.ty)))
-            // Farthest first, so two doors of one room end up apart rather than
-            // adjacent. Ties broken by (ty, tx) — a total order, so the choice
-            // does not depend on Map iteration.
-            .sort((p, q) => (q.dist - p.dist) || (p.ty - q.ty) || (p.tx - q.tx));
-
-        // ⛔ TWO DOORS OF ONE ROOM ARE NEVER ADJACENT, and the first version of
-        // this got it wrong — measured on the six-seed export, room 1's doors
-        // came out at (8,1) and (8,2). Two consequences, one cosmetic and one
-        // not: a player arriving on one is standing next to the other, and the
-        // `approach` cell this function hands back as a WITNESS was itself a
-        // door, so a tape told to walk in from there would have warped before it
-        // took a step. Non-adjacency fixes both at once — every door's flood
-        // predecessor is then guaranteed not to be a door.
-        const chosen = [];
-        for (const c of candidates) {
-            if (chosen.length === needs[id].length) break;
-            const adjacent = chosen.some((d) => Math.abs(d.tx - c.tx) + Math.abs(d.ty - c.ty) <= 1);
-            if (!adjacent) chosen.push(c);
-        }
-        if (chosen.length < needs[id].length) {
-            fail(`levelSetExits: room ${id} needs ${needs[id].length} door cell(s) and its `
-                + `walkable component offers ${chosen.length} usable cell(s) (flood of `
-                + `${flood.size} from (${start.tx}, ${start.ty}), ${taken.size} occupied, `
-                + 'doors kept non-adjacent). A door outside the component would be an exit '
-                + 'the player cannot reach, which is exactly what reachabilityOf cannot see.');
-        }
         needs[id].forEach((linkIndex, n) => {
             doorOf.set(`${id}:${linkIndex}`, chosen[n]);
         });
@@ -347,23 +406,8 @@ export function linkGeneratedRooms(rooms, options = {}) {
             const there = doorOf.get(`${to}:${i}`);
             const sign = signForTransition(regions[from] ?? REGION_NONE, regions[to] ?? REGION_NONE);
             if (sign === SIGN_NONE) silent += 1; else announced += 1;
-            added[from].push({
-                type: element,
-                x: here.tx * TILE_SIZE,
-                y: here.ty * TILE_SIZE,
-                attrs: {
-                    to,
-                    playerx: there.tx * TILE_SIZE,
-                    playery: there.ty * TILE_SIZE,
-                    // `Game.as:2263` reads an ABSENT tag as -1; written out so a
-                    // reader does not have to know that. -1 = never deactivated.
-                    tag: -1,
-                    // Visible, because a generated room has no other cue that a
-                    // cell is a door (`Teleporter`'s `_show` gates the sprite).
-                    show: 1,
-                    sign,
-                },
-            });
+            const arrival = { x: there.tx * TILE_SIZE, y: there.ty * TILE_SIZE };
+            added[from].push({ cell: { tx: here.tx, ty: here.ty }, to, arrival, sign });
             // ⛓ THE WITNESS THE ROUND TRIP DRIVES. `approach` is the flood's own
             // predecessor of the door cell — free by construction and adjacent —
             // so a tape can boot there, hold `key`, and walk into the portal.
@@ -374,7 +418,7 @@ export function linkGeneratedRooms(rooms, options = {}) {
                 link: i,
                 cell: { tx: here.tx, ty: here.ty },
                 oel: { x: here.tx * TILE_SIZE, y: here.ty * TILE_SIZE },
-                arrival: { x: there.tx * TILE_SIZE, y: there.ty * TILE_SIZE },
+                arrival,
                 sign,
                 approach: approach === null ? null : { tx: approach.tx, ty: approach.ty },
                 key: approach === null ? null : approachKey(approach, here),
@@ -382,10 +426,7 @@ export function linkGeneratedRooms(rooms, options = {}) {
         }
     });
 
-    const records = rooms.map((room, id) => {
-        const record = room?.record ?? room;
-        return { ...record, entities: [...(record.entities ?? []), ...added[id]] };
-    });
+    const records = rooms.map((room, id) => emitDoorEntities(room?.record ?? room, added[id], { element }));
 
     return {
         records,

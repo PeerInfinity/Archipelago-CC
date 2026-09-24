@@ -15,7 +15,9 @@ import {
     MAX_REGION,
     REGION_NONE,
     approachKey,
+    emitDoorEntities,
     linkGeneratedRooms,
+    pickDoorCells,
     occupiedCells,
     planTopology,
     retargetLevelSet,
@@ -396,6 +398,101 @@ describe('linkGeneratedRooms — the EMIT arm', () => {
         const b = linkGeneratedRooms(rooms(5), { topology: 'ring' });
         expect(JSON.stringify(a.doors)).toBe(JSON.stringify(b.doors));
     });
+});
+
+/**
+ * ⛓⛓ SEEDLING GENERATED LEVELS G1 — **THE LINKER'S TWO PASSES, LIFTED.**
+ * `pickDoorCells` (pass 1) and `emitDoorEntities` (pass 2) are what the
+ * pipeline's generated room (`seedlingGenRoom.js`) mints its doors with, so the
+ * linker must be a pure re-composition of them: these rows rebuild the linker's
+ * output from the two functions, and the six-seed set the box gate stamps
+ * (`check-seedling-generated-set.mjs`) keeps its content-hashed id.
+ */
+describe('G1 — pickDoorCells + emitDoorEntities ARE the linker', () => {
+    const POCKET_WALLS = [
+        { tx: 6, ty: 7, terrain: 'wall' }, { tx: 6, ty: 8, terrain: 'wall' },
+        { tx: 7, ty: 6, terrain: 'wall' }, { tx: 8, ty: 6, terrain: 'wall' },
+    ];
+    const rooms = (n) => Array.from({ length: n }, (_, i) => ({
+        record: withEntities(withTerrain(room(i), POCKET_WALLS),
+            [{ type: 'torchpickup', ...oelAtTile(4, 4), attrs: { tag: '0' } }]),
+        start: { tx: 1, ty: 1 },
+    }));
+    const key = (c) => `${c.tx},${c.ty}`;
+
+    it('the linker\'s doors and records are the two functions, room by room (ring of 5)', () => {
+        const input = rooms(5);
+        const linked = linkGeneratedRooms(input, { topology: 'ring' });
+        input.forEach((r, id) => {
+            const mine = linked.doors.filter((d) => d.room === id);
+            const picked = pickDoorCells(r.record, r.start, mine.length, { room: id }).doors;
+            // pass 1: the room's doors are the picker's, in LINK order (the order needs[] was filled)
+            const byLink = [...mine].sort((a, b) => a.link - b.link);
+            expect(byLink.map((d) => key(d.cell))).toEqual(picked.map(key));
+            // the witness's approach is the flood predecessor the picker returned
+            expect(byLink.map((d) => d.approach)).toEqual(picked.map((c) => c.from));
+            // pass 2: the record is the emitter's over the room's doors in pass-2 order
+            expect(linked.records[id]).toEqual(emitDoorEntities(r.record, mine.map((d) => ({
+                cell: d.cell, to: d.to, arrival: d.arrival, sign: d.sign,
+            }))));
+        });
+    });
+
+    it('PREFIX-STABLE: the first k doors of n are the doors of k', () => {
+        const [{ record, start }] = rooms(1);
+        const all = pickDoorCells(record, start, 4).doors;
+        expect(all).toHaveLength(4);
+        for (let k = 0; k <= 4; k += 1) {
+            expect(pickDoorCells(record, start, k).doors.map(key)).toEqual(all.slice(0, k).map(key));
+        }
+    });
+
+    it('`exclude` removes cells from the candidates, and a door that was not excluded stays', () => {
+        const [{ record, start }] = rooms(1);
+        const [first, second] = pickDoorCells(record, start, 2).doors;
+        const without = pickDoorCells(record, start, 2, { exclude: new Set([key(first)]) }).doors;
+        expect(without.map(key)).not.toContain(key(first));
+        // excluding a cell the walk SKIPPED changes nothing (the prefix argument)
+        const skipped = pickDoorCells(record, start, 2, { exclude: new Set(['1,2']) }).doors;
+        expect(skipped.map(key)).toEqual([first, second].map(key));
+    });
+
+    it('refuses by the linker\'s sentence, naming the room it was given', () => {
+        const [{ record, start }] = rooms(1);
+        expect(() => pickDoorCells(record, start, 99, { room: 'gen:region_0_0' }))
+            .toThrow(/room gen:region_0_0 needs 99 door cell\(s\)/);
+    });
+
+    it('emitDoorEntities returns a NEW record and leaves its input untouched', () => {
+        const [{ record }] = rooms(1);
+        const before = JSON.stringify(record);
+        const out = emitDoorEntities(record, [{ cell: { tx: 8, ty: 2 }, to: 3, arrival: { x: 16, y: 16 }, sign: 0 }]);
+        expect(JSON.stringify(record)).toBe(before);
+        expect(out.entities.at(-1)).toEqual({
+            type: 'teleporter', x: 128, y: 32,
+            attrs: { to: 3, playerx: 16, playery: 16, tag: -1, show: 1, sign: 0 },
+        });
+        expect(() => emitDoorEntities(record, [], { element: 'chest' })).toThrow(/does not carry @to/);
+    });
+
+    it('the six-seed set the box gate stamps keeps its id — `procgen-roundtrip-6-c75feb6f`', async () => {
+        const { generateSeedlingLevel } = await import('./procgenSeedling.js');
+        const { GENERATE_BIOMES } = await import('./watchGenerate.js');
+        // ⛓ check-seedling-generated-set.mjs's own build (lines 131-150), headless.
+        const bounds = { obstacleTarget: 6, triesPerStep: 8, saturationK: 3 };
+        const entries = [1, 2, 3, 4, 5, 6].map((seed) => {
+            const out = generateSeedlingLevel({ seed, palette: GENERATE_BIOMES['pre-sword'], bounds });
+            return { seed, record: out.record, summary: out.summary, name: `pre-sword_seed${seed}` };
+        });
+        const regions = entries.map((e, r) => (r < Math.ceil(entries.length / 2) ? 1 : 2));
+        const { set } = buildLevelSet(entries, {
+            setId: `procgen-roundtrip-${entries.length}`,
+            generator: 'scripts/procgen/check-seedling-generated-set.mjs',
+            provenance: { biome: 'pre-sword', seeds: entries.map((e, r) => ({ room: r, seed: e.seed })), bounds },
+            link: { topology: 'chain', regions },
+        });
+        expect(set.set_id).toBe('procgen-roundtrip-6-c75feb6f');
+    }, 60_000);
 });
 
 describe('retargetRoomXml — the RETARGET arm', () => {
