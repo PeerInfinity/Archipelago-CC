@@ -361,13 +361,16 @@ describe('who takes the box', () => {
          * thing this row actually protects: a guard nobody declared is a taker
          * that silently stopped taking. (Seedling-pipeline T2 adds
          * `check-seedling-spiral-room-play.mjs` for the same import-door reason,
-         * and T3 its sphere-growth sibling `check-seedling-sphere-room-play.mjs`.)
+         * and T3 its sphere-growth sibling `check-seedling-sphere-room-play.mjs`;
+         * seedling generated G2 the generated-room gate
+         * `check-seedling-generated-room-play.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
             'solve-seedling-r9-campaign.mjs',
             'measure-apworld-raw-view.mjs', 'shot-loaded-composite-map.mjs',
-            'check-seedling-spiral-room-play.mjs', 'check-seedling-sphere-room-play.mjs'];
+            'check-seedling-spiral-room-play.mjs', 'check-seedling-sphere-room-play.mjs',
+            'check-seedling-generated-room-play.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

@@ -364,6 +364,20 @@ describe('unmapped levels — the atlas is partial by design', () => {
         expect(b.onStateReport('level', 42)[0].repeat).toBe(true);
     });
 
+    // ⛓ G2: measured on the box — mounting a delivered set reports level −1 between
+    //   the arrival and the reset. The game's "no game" sentinel is not a room.
+    it('a NEGATIVE level (the game\'s "no game" sentinel) is neither a crossing nor a baseline', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        expect(b.onStateReport('level', -1)).toEqual([]);
+        expect(b.baselineSeen).toBe(false);
+        expect(types(b.onStateReport('level', 0))).toEqual(['teleport']); // the real baseline, and its arrival
+        expect(b.onStateReport('level', -1)).toEqual([]);
+        expect(b.lastLevel).toBe(0);
+        expect(b.onStateReport('level', 0)).toEqual([]);
+        expect(b.warnedLevels.size).toBe(0);
+    });
+
     it('a region with no arrival spawn warns rather than teleporting nowhere', () => {
         const b = binding();
         const effects = b.onLoadRegion({ region_id: 'empty', world: { level: 3, exits: new Map() } });

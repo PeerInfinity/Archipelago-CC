@@ -286,6 +286,59 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
         }
     }
 
+    /** ⛓ G2: the MOUNTED level set, read back out of the game (`botLevelSet`). */
+    async function readLevelSet() {
+        const raw = await gameFrame().evaluate(() => window.__swfBridge.game.botLevelSet());
+        try { return typeof raw === 'string' ? JSON.parse(raw) : raw; } catch { return { __raw: raw }; }
+    }
+
+    /**
+     * ⛓ G2 — WALK A PATH OF TILES with real keys, one tile at a time, the way a
+     * person steers: hold the key toward the next cell until the LIVE player's
+     * centre stands within `snapPx` of that cell's centre along the way it moves,
+     * then let go. `cells` are `{tx, ty}` from the player's cell onward (the first
+     * is where it stands). `stopWhen()` ends the walk early (a door fired, a
+     * pickup reported). `{ok, at, steps, why}` — `at` the live cell at the end.
+     */
+    async function walkPath(cells, { tile = 16, snapPx = 3, stepCeilingMs = 2500, stopWhen = null } = {}) {
+        const keyFor = (a, b) => (b.tx > a.tx ? 'ArrowRight' : b.tx < a.tx ? 'ArrowLeft'
+            : b.ty > a.ty ? 'ArrowDown' : 'ArrowUp');
+        const cellOf = (p) => (p ? { tx: Math.floor(p.x / tile), ty: Math.floor(p.y / tile) } : null);
+        let steps = 0;
+        /** One `[tx,ty]@(x,y)` per step, where the live player stood when the key came up. */
+        const trace = [];
+        const mark = (p) => (p ? `(${p.x.toFixed(1)},${p.y.toFixed(1)})` : 'null');
+        for (let i = 1; i < cells.length; i += 1) {
+            const from = cells[i - 1];
+            const to = cells[i];
+            const k = keyFor(from, to);
+            const cx = to.tx * tile + tile / 2;
+            const cy = to.ty * tile + tile / 2;
+            const arrived = (p) => (k === 'ArrowRight' ? p.x >= cx - snapPx : k === 'ArrowLeft' ? p.x <= cx + snapPx
+                : k === 'ArrowDown' ? p.y >= cy - snapPx : p.y <= cy + snapPx);
+            // eslint-disable-next-line no-await-in-loop
+            const held = await holdUntil(k, async () => {
+                if (stopWhen && await stopWhen()) return 'stopped';
+                const p = await livePlayer();
+                return p && arrived(p) ? 'arrived' : null;
+            }, stepCeilingMs);
+            steps += 1;
+            // eslint-disable-next-line no-await-in-loop
+            trace.push(`${to.tx},${to.ty}${held.value === 'arrived' ? '' : `!${held.value ?? 'timeout'}`}@${mark(await livePlayer())}`);
+            // eslint-disable-next-line no-await-in-loop
+            if (held.value === 'stopped' || (stopWhen && await stopWhen())) {
+                return { ok: true, stopped: true, steps, at: cellOf(await livePlayer()), trace };
+            }
+            if (held.value !== 'arrived') {
+                // eslint-disable-next-line no-await-in-loop
+                const p = await livePlayer();
+                return { ok: false, steps, at: cellOf(p), trace, why: `the step ${JSON.stringify(from)} -> ${JSON.stringify(to)} `
+                    + `(${k}) did not arrive in ${held.ms} ms; live ${JSON.stringify(p)}` };
+            }
+        }
+        return { ok: true, steps, at: cellOf(await livePlayer()), trace };
+    }
+
     /** The maze player's tile and the panel's queue. */
     const mazePlayer = () => page.evaluate(async () => {
         const p = (await import('./modules/mazeRoom/index.js')).getPanelInstance();
@@ -304,5 +357,6 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
         activeTabTitles, currentRegion, glueStats, glueMoves, activeSubstrates, arrival,
         installWatchers, jump, focusGame, focusChain, gameHasKeys, keyMovesPlayer, holdUntil,
         invoked, parsePending, mazeRegionNow, mazeKeyPlan, pressKeys, mazePlayer, mazeHasKeys,
+        readLevelSet, walkPath,
     };
 }
