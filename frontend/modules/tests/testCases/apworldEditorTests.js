@@ -185,7 +185,7 @@ import { SERVED_LIBRARY_DIR, SERVED_LIBRARY_INDEX } from '../../procgenPipeline/
 import {
     REPLACE_REGION_CONTENT_OP, unplacedPoolItems, zoneHeldBy, zoneOfRegion, zoneSourceFacts, zoneSourceRefusal,
 } from '../../apworldEditor/regionContent.js';
-import { regionGenerationSourcesFor } from '../../apworldEditor/regionGenerationFlow.js';
+import { defaultRegionGenerationSource, regionGenerationSourcesFor } from '../../apworldEditor/regionGenerationFlow.js';
 import { declaredStartingNeeds } from '../../procgenCore/startingInventory.js';
 /**
  * ⛓ D1 — the fields view's vocabulary: which control a row stamps, which level
@@ -10062,6 +10062,16 @@ export async function apworldANoRealiserTargetPrintsTheOpsRefusal(testController
         testController.reportCondition(`⛓ premise: the picker offers ids without a realiser (${none.join(', ')})`, none.length > 0);
         for (const id of none) {
             if (!await pickSubstrateAndOpenForm(testController, panel, region, id)) continue;
+            // ⛓ R5b — a no-realiser target that offers Zone N OPENS on the zone
+            //   (`defaultRegionGenerationSource`); the Generate refusal is under *Generate*.
+            const plan = regionGenerationPlan(panel.rulesDoc, '3', region, id);
+            testController.assertEqual(`[→ ${id}] the form opens on the flow's default source`,
+                String(defaultRegionGenerationSource(plan)), String(regionGenSection(region)?.dataset.source));
+            const srcSel = regionGenSection(region)?.querySelector('.apworld-region-generation-source');
+            if (srcSel && srcSel.value !== REGION_SOURCE_KINDS.GENERATE) {
+                srcSel.value = REGION_SOURCE_KINDS.GENERATE;
+                srcSel.dispatchEvent(new Event('change', { bubbles: true }));
+            }
             const sec = regionGenSection(region);
             const want = regenerateOpRefusal(panel.rulesDoc, {
                 op: 'regenerate-region-sidecar', player: '3', region, substrate: id,
