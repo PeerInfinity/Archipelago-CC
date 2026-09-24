@@ -11,6 +11,7 @@ import {
   getClientModuleEventBus,
 } from '../index.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js'; // RE-ADD import
+import { docsBase } from '../../../app/config/docsBase.js';
 
 
 // Helper function for logging with fallback
@@ -410,10 +411,7 @@ class MainContentUI {
     this.appendConsoleMessage(
       'Console initialized. Type "help" for local commands, or "!help" for server commands.'
     );
-    const isStable = window.location.pathname.startsWith('/Archipelago/');
-    const overviewUrl = isStable
-      ? 'https://github.com/PeerInfinity/Archipelago/blob/JSONExport/docs/json/user/overview.md'
-      : 'https://github.com/PeerInfinity/Archipelago-CC/blob/main/docs/json/user/overview.md';
+    const overviewUrl = docsBase() + 'docs/json/user/overview.md';
     this.appendConsoleLink(
       'New here? See the ',
       'Overview',

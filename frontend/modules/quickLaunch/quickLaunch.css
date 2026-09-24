@@ -1,0 +1,77 @@
+/* quickLaunch — the Quick Launch panel. Dark chrome, matching the other panels. */
+
+.quick-launch-panel {
+    height: 100%;
+    overflow: auto;
+    padding: 6px 8px;
+    box-sizing: border-box;
+    font-size: 13px;
+    color: #d8d8e0;
+}
+
+.ql-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.ql-header { color: #9a9aa8; }
+
+.ql-bar button,
+.ql-panel {
+    background: #1e1e26;
+    color: #d8d8e0;
+    border: 1px solid #34343e;
+    border-radius: 3px;
+    cursor: pointer;
+    font: inherit;
+}
+
+.ql-bar button { padding: 2px 8px; }
+.ql-bar button:hover,
+.ql-panel:hover { border-color: #5a8dee; }
+
+.ql-group { margin-bottom: 6px; }
+.ql-group > summary { cursor: pointer; font-weight: bold; padding: 2px 0; }
+
+.ql-list {
+    list-style: none;
+    margin: 2px 0 0;
+    padding: 0 0 0 4px;
+}
+
+.ql-panel-row,
+.ql-help {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 2px 0;
+}
+
+.ql-panel {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 6px;
+    text-align: left;
+    min-width: 0;
+}
+
+.ql-icon { width: 1.4em; text-align: center; flex: none; }
+.ql-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.ql-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex: none;
+}
+.ql-dot.ql-on { background: #4caf50; }
+.ql-dot.ql-off { background: transparent; border: 1px solid #6a6a78; }
+
+.ql-doc a,
+.ql-help a { color: #4dabf7; }
+.ql-doc a { text-decoration: none; padding: 0 4px; font-weight: bold; }
