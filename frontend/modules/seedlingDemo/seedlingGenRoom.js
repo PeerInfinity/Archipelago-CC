@@ -73,7 +73,7 @@ import { generateSeedlingLevel, placementTagId, seedlingOracle } from './procgen
 import { VERDICT } from './procgenOracle.js';
 import { PRE_SWORD_PALETTE, POST_SWORD_PALETTE } from './procgenPalette.js';
 import { pickDoorCells } from './levelSetExits.js';
-import { TILE_SIZE } from './levelWorld.js';
+import { TILE_SIZE, buildLevelWorld } from './levelWorld.js';
 import { coreLevelRecord } from './levelSetValidator.js';
 import { SIDES } from '../shared/procgen/spatialPrimitives.js';
 import { makeLocationName } from '../procgenCore/apLocationNaming.js';
@@ -174,8 +174,9 @@ function doorFields(cell) {
 
 /**
  * ⛓ HOW MANY TIMES a room that cannot seat its doors without sealing an approach
- * is re-rolled before the `tooManyDoors` refusal (G2; measured: the registry's
- * 8×6 drive room needs 1, top-down `seedling_atlas` at 10×10 at most 2).
+ * or its hazards is re-rolled before the `tooManyDoors` refusal (G2; measured:
+ * the registry's 8×6 drive room needs 2, top-down `seedling_atlas` at 10×10 at
+ * most 4, seeds 1–8).
  */
 export const GEN_ROOM_DOOR_REROLLS = 8;
 
@@ -204,6 +205,38 @@ export function goalHoldsWithDoorsAsWalls(out, doors, items) {
     });
     const cert = seedlingOracle({ model: out.model, items }).solve({ ...out.record, layers });
     return cert.verdict === VERDICT.SOLVED ? true : String(cert.verdict);
+}
+
+/**
+ * ⛓ G2 — THE CELLS NO PLAYER SURVIVES STANDING ON: water and lava (lethal
+ * without the conch / the dark suit — `lethalTerrainTiles`) and pits. They are
+ * not SOLID, so the flood walks them; MEASURED on the box (seedling generated G2):
+ * a walk through a pit cell respawned the player at the checkpoint, and G1's
+ * `region_0_1` had door 1 AND its approach on water — an arrival there drowns and
+ * respawns onto the same cell. So no door, approach or location stands on one,
+ * and the seal flood treats them as walls.
+ */
+export function hazardCells(record) {
+    const world = buildLevelWorld(record);
+    return new Set([...world.lethalTerrainTiles, ...world.pitTiles]
+        .map((t) => cellKey({ tx: Math.floor(t.x / TILE_SIZE), ty: Math.floor(t.y / TILE_SIZE) })));
+}
+
+/** The cells reachable from the start with every door and every hazard a wall. */
+function safeReach(world) {
+    const { flood } = pickDoorCells(world.record, world.start, 0, { room: `'${world.region_id}'` });
+    const wall = hazardCells(world.record);
+    for (const e of world.exits.values()) for (const [tx, ty] of e.exit_tiles ?? []) wall.add(cellKey({ tx, ty }));
+    const seen = new Set([cellKey(world.start)]);
+    const queue = [world.start];
+    for (let i = 0; i < queue.length; i += 1) {
+        for (const n of around(queue[i])) {
+            if (seen.has(cellKey(n)) || wall.has(cellKey(n)) || !flood.has(cellKey(n))) continue;
+            seen.add(cellKey(n));
+            queue.push(n);
+        }
+    }
+    return seen;
 }
 
 /** The goal cell's neighbours: no door may stand there (the approach would be the check). */
@@ -238,8 +271,10 @@ export function generateGenRoom(input = {}) {
         start = { ...out.summary.startCell };
         goalCell = { ...out.summary.goalCell };
         try {
+            const hazards = hazardCells(record);
             ({ doors } = pickDoorCells(record, start, exits.length, {
-                room: `'${regionId}'`, exclude: goalGuard(goalCell), keepReachable: { cells: [goalCell] },
+                room: `'${regionId}'`, exclude: new Set([...goalGuard(goalCell), ...hazards]),
+                keepReachable: { walls: hazards, cells: [goalCell] },
             }));
         } catch (e) {
             if (e.name !== 'LevelSetExitError') throw e;
@@ -299,7 +334,10 @@ function locationCells(world) {
         }
     }
     for (const l of world.locations) blocked.add(cellKey(l.cell));
-    return [...flood.values()].filter((c) => !blocked.has(cellKey(c))).map((c) => ({ tx: c.tx, ty: c.ty }));
+    // ⛓ G2: only cells the player reaches SAFELY — no hazard, no door crossed on the way.
+    const safe = safeReach(world);
+    return [...flood.values()].filter((c) => !blocked.has(cellKey(c)) && safe.has(cellKey(c)))
+        .map((c) => ({ tx: c.tx, ty: c.ty }));
 }
 
 /** The record the tags are allocated against: the room without its goal pickup. */
@@ -428,7 +466,9 @@ function bindAllDoors(world, entries) {
     // ⛓ G2: the doors already bound are WALLS, and their approaches, the goal and
     //   every location stay reachable from the start (`keepReachable`).
     const bound = entries.filter(([, e]) => Array.isArray(e.exit_tiles));
-    const walls = new Set(bound.flatMap(([, e]) => e.exit_tiles.map(([tx, ty]) => cellKey({ tx, ty }))));
+    const hazards = hazardCells(world.record);
+    for (const h of hazards) exclude.add(h);
+    const walls = new Set([...hazards, ...bound.flatMap(([, e]) => e.exit_tiles.map(([tx, ty]) => cellKey({ tx, ty })))]);
     const keepReachable = {
         walls,
         cells: [world.goalCell, ...world.locations.map((l) => l.cell),
