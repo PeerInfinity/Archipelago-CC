@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 18,
-        "headings": 808,
+        "headings": 810,
         "indexHeadings": 2,
-        "lines": 21454,
+        "lines": 21468,
         "pages": 4,
-        "words": 272642
+        "words": 273279
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -180,8 +180,8 @@ export const DOCS_INDEX = frz({
             "description": "Sphere growth is the primary procgen driver: instead of growing a world and then discovering its progression structure, it **plans the progression first** — which items belong to which sphere — and then grows a world guaranteed to realise that plan. The plan doubles as a verification oracle, so every generated world ships with a proof that its progression matches the intent.",
             "file": "sphere-growth.md",
             "h1": "Sphere-Driven Growth",
-            "headings": 12,
-            "lines": 99,
+            "headings": 13,
+            "lines": 103,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -189,7 +189,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/sphere-growth.md",
-            "words": 1819
+            "words": 1966
         },
         {
             "description": "Paths-and-obstacles is the intermediate representation procgen uses for access rules.",
@@ -229,7 +229,7 @@ export const DOCS_INDEX = frz({
             "lines": 80,
             "links": [],
             "path": "docs/json/developer/procgen/pipeline-presets.md",
-            "words": 2596
+            "words": 2603
         },
         {
             "description": "The text-adventure substrate (id `text_adventure`) renders a procgen region as prose: a textual description with compass-labelled clickable exits and clickable locations.",
@@ -265,17 +265,18 @@ export const DOCS_INDEX = frz({
             "description": "The flash substrate (`frontend/modules/flashSubstrate/`, id `flash`) hosts recompiled Flash games — SWF → C → WASM via SWFRecomp-CC — in a same-origin iframe as procgen regions. The module ships a placeholder game page, so it is testable independently of any real recompiled game; its real significance is as the **shared iframe-substrate machinery** other substrates build on.",
             "file": "flash.md",
             "h1": "Flash Substrate",
-            "headings": 16,
-            "lines": 210,
+            "headings": 17,
+            "lines": 220,
             "links": [
                 "architecture.md",
                 "bounce.md",
                 "maze.md",
+                "pipeline-presets.md",
                 "sphere-growth.md",
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/flash.md",
-            "words": 8622
+            "words": 9105
         },
         {
             "description": "The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) hosts the Journey to Ascension fork — an incremental/idle game in the `frontend/modules/journey-to-ascension/` submodule — in a same-origin iframe as a loop-mode substrate.",

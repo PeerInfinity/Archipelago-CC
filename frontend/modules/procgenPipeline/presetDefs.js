@@ -671,9 +671,9 @@ export const SHIPPED_PRESETS = Object.freeze([
             + 'among two maze rooms: the start region is a generated room holding the blue key on '
             + 'its goal cell, one door into the other generated room and one into the maze. Look at '
             + 'the composite map and at the flash_seedling_gen sidecars (each room, its doors, its '
-            + 'location). The spiral hands every room the generator\'s defaults, so the knobs in '
-            + 'Parameters do not reach it here. The same world is committed as the '
-            + 'seedling_generated_room preset, which plays in the Seedling wasm.',
+            + 'location); the Parameters section draws the generator\'s knobs, and they reach every '
+            + 'room. The same world is committed as the seedling_generated_room preset, which plays '
+            + 'in the Seedling wasm.',
         state: SEEDLING_GENERATED_ROOM_STATE,
     },
     {

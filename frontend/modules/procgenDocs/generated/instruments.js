@@ -3146,7 +3146,9 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/pipeline-presets.md"
+                "docs/json/developer/procgen/flash.md",
+                "docs/json/developer/procgen/pipeline-presets.md",
+                "docs/json/developer/procgen/sphere-growth.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [

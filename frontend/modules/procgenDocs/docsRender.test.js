@@ -238,8 +238,9 @@ describe('⛓ the links the render emits', () => {
         //   THE PIPELINE T3's mutual pair between `sphere-growth.md` § Seedling as a
         //   leaf and `flash.md` § As a sphere-growth leaf; 239 → 241: SEEDLING
         //   GENERATED LEVELS G1's two registry pointers at `flash.md` § Generated
-        //   rooms.
-        expect(checked).toBe(241);
+        //   rooms; 241 → 243: G3's `flash.md` → `pipeline-presets.md` and
+        //   `sphere-growth.md` → `flash.md` § Generated rooms.
+        expect(checked).toBe(243);
     });
 
     it('tags each link with the kind that produced it', () => {

@@ -158,22 +158,27 @@ describe('the corpus census — printed, then pinned', () => {
          *              from `substrate-registry.md` (§ *Build-time — procedural
          *              substrates* and the hand-kept `flash_seedling_gen` row) at
          *              `flash.md` § *Generated rooms* (`doc` 166 → 168).
+         *   241 → 243  SEEDLING GENERATED LEVELS G3 (2026-09-24): `flash.md`
+         *              § *The leaf, the panel presets and the knobs* points at
+         *              `pipeline-presets.md`, and `sphere-growth.md` § *Seedling
+         *              as a leaf, generated* at `flash.md` § *Generated rooms*
+         *              (`doc` 168 → 170).
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
          */
         expect(by).toEqual({
             'same-doc': 15,
-            doc: 168,
+            doc: 170,
             external: 23,
             repo: 35,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(241);
+        expect(CORPUS.length).toBe(243);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(168);
+        expect(docs).toHaveLength(170);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

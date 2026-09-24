@@ -76,6 +76,10 @@ Logic-looser-than-physics is refused here: a gate the game does not enforce woul
 
 A real room is a specific place, so it is placed **at most once per generation**. Sphere growth does not consult `zoneCount` (that is the spiral's quota check), so this is the entry's own law: the placed rooms are keyed by the region that took them, and `prepareSphereGrowth` — called once per generation by the config assembly below — clears them. The room is the TIGHTEST fit: fewest locations, then fewest doors, then declaration order (the atlas source's rule), so a 0-item filler does not take the one room with a chest. A node that needs more doors or locations than any unplaced room has is refused by name, with the knobs to turn.
 
+### Seedling as a leaf, generated (`flash_seedling_gen`)
+
+A quota of `flash_seedling_gen` places a room the Seedling GENERATOR builds to the node's spec ([Flash Substrate § Generated rooms](./flash.md#generated-rooms-flash_seedling_gen)). It keeps the same leaf law: `canHostExitGates` and `backPortalGated` answer false, so the entry gate is the parent's. Unlike a real room it is not placed at most once, because every node gets a new room. The room's door back to its parent is an exit the ENGINE adds after the core ran, so it takes its door at serialize time. Unlike the core's doors, it cannot be re-rolled if it would seal an approach, and the world is refused instead. The committed world is `seedling_generated_leaf` (`SEEDLING_GENERATED_LEAF_STATE`: two maze rooms, then the generated leaf holding `victory` behind `Has(key_red)`, 0 re-rolls). `check-seedling-generated-leaf-play.mjs` plays it in the Seedling wasm, and the check on the goal cell delivers the item (seedling generated G3).
+
 ## Config assembly (`sphereConfigHooks.js`)
 
 The panel and both headless CLIs build a sphere-growth config the same way: merge every active substrate's `defaultProcgenParams`, `prepareSphereGrowth`, and `buildRegionParams` registry hooks. Active substrates are those with a positive quota plus the start substrate. Centralising this keeps the drivers substrate-agnostic and stops the CLIs drifting from the panel — there is one assembly path.
