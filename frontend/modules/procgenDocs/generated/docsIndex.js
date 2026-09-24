@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 18,
         "headings": 808,
         "indexHeadings": 2,
-        "lines": 21452,
+        "lines": 21454,
         "pages": 4,
-        "words": 272386
+        "words": 272642
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -226,10 +226,10 @@ export const DOCS_INDEX = frz({
             "file": "pipeline-presets.md",
             "h1": "Pipeline Presets",
             "headings": 10,
-            "lines": 78,
+            "lines": 80,
             "links": [],
             "path": "docs/json/developer/procgen/pipeline-presets.md",
-            "words": 2340
+            "words": 2596
         },
         {
             "description": "The text-adventure substrate (id `text_adventure`) renders a procgen region as prose: a textual description with compass-labelled clickable exits and clickable locations.",

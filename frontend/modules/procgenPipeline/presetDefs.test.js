@@ -4,6 +4,7 @@ import {
     SHIPPED_PRESETS, VALID_MODES, PRESET_GROUPS, PRESET_GROUP_ORDER, LS_PRESETS_KEY,
     PRESET_HEADLESS_BUDGET_MS, PRESETS_SKIPPED_AS_HEAVY,
     SEEDLING_SPIRAL_ROOM_STATE, SEEDLING_SPHERE_ROOM_STATE,
+    SEEDLING_GENERATED_ROOM_STATE, SEEDLING_GENERATED_LEAF_STATE,
     capturePresetState, applyPresetState, getPresetById, restoredActivePresetId, groupShippedPresets,
     userPresetId, loadUserPresets, saveUserPreset, deleteUserPreset,
 } from './presetDefs.js';
@@ -176,6 +177,26 @@ describe('SHIPPED_PRESETS', () => {
         expect(p.group).toBe(PRESET_GROUPS.sphereGrowth);
         expect(p.state.mode).toBe('sphereGrowth');
         expect(p.state.substrateQuotas).toEqual({ maze: 3, flash_seedling: 1 });
+    });
+
+    it('seedling generated room demo IS the committed preset\'s state — two generated rooms, two maze rooms', () => {
+        const p = getPresetById('shipped:seedling-generated-room-demo');
+        // ONE spelling: the drop-down, the committed seedling_generated_room preset and
+        // the headless oracle all read this object.
+        expect(p.state).toBe(SEEDLING_GENERATED_ROOM_STATE);
+        expect(p.group).toBe(PRESET_GROUPS.shuffledSpiral);
+        expect(p.state.mode).toBe('shuffledSpiral');
+        expect(p.state.substrateQuotas).toEqual({ maze: 2, flash_seedling_gen: 2 });
+    });
+
+    it('seedling generated leaf demo IS the committed preset\'s state — a generated room as a sphere leaf', () => {
+        const p = getPresetById('shipped:seedling-generated-leaf-demo');
+        // ONE spelling: the drop-down, the committed seedling_generated_leaf preset and
+        // the headless oracle all read this object.
+        expect(p.state).toBe(SEEDLING_GENERATED_LEAF_STATE);
+        expect(p.group).toBe(PRESET_GROUPS.sphereGrowth);
+        expect(p.state.mode).toBe('sphereGrowth');
+        expect(p.state.substrateQuotas).toEqual({ maze: 3, flash_seedling_gen: 1 });
     });
 
     it('top-down maze + text adventure demo pins the mix maze 2 : text_adventure 1', () => {

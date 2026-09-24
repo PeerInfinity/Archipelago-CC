@@ -505,6 +505,20 @@ export const SHIPPED_PRESETS = Object.freeze([
         state: SEEDLING_SPHERE_ROOM_STATE,
     },
     {
+        id: 'shipped:seedling-generated-leaf-demo',
+        label: 'Generated Seedling room as a sphere leaf',
+        group: PRESET_GROUPS.sphereGrowth,
+        description: 'A room the Seedling level GENERATOR builds to the pipeline\'s spec, grown into a '
+            + 'maze sphere world as a LEAF: two maze rooms, key_blue opening the second, key_red '
+            + 'opening the generated room, and the victory item on its goal cell. A generated door '
+            + 'enforces no AP gate, so the room hosts no children and its one door back is ungated; '
+            + 'the gate is the maze\'s. Look at the composite map and at the flash_seedling_gen '
+            + 'sidecar (the room, its door, its location); the Parameters section draws the '
+            + 'generator\'s knobs. The same world is committed as the seedling_generated_leaf '
+            + 'preset, which plays in the Seedling wasm.',
+        state: SEEDLING_GENERATED_LEAF_STATE,
+    },
+    {
         id: 'shipped:jta-zone-demo',
         label: 'JtA demo (zone tables)',
         group: PRESET_GROUPS.shuffledSpiral,
@@ -648,6 +662,19 @@ export const SHIPPED_PRESETS = Object.freeze([
             + 'flash_seedling sidecar; the same world is committed as the seedling_spiral_room '
             + 'preset, which plays in the Seedling wasm.',
         state: SEEDLING_SPIRAL_ROOM_STATE,
+    },
+    {
+        id: 'shipped:seedling-generated-room-demo',
+        label: 'Generated Seedling rooms in a maze spiral',
+        group: PRESET_GROUPS.shuffledSpiral,
+        description: 'Two rooms the Seedling level GENERATOR builds to the pipeline\'s spec, placed '
+            + 'among two maze rooms: the start region is a generated room holding the blue key on '
+            + 'its goal cell, one door into the other generated room and one into the maze. Look at '
+            + 'the composite map and at the flash_seedling_gen sidecars (each room, its doors, its '
+            + 'location). The spiral hands every room the generator\'s defaults, so the knobs in '
+            + 'Parameters do not reach it here. The same world is committed as the '
+            + 'seedling_generated_room preset, which plays in the Seedling wasm.',
+        state: SEEDLING_GENERATED_ROOM_STATE,
     },
     {
         id: 'shipped:grid-growth-demo',
