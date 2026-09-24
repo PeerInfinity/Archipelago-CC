@@ -909,6 +909,12 @@
             "_comment": "R5c (e). In memory (set-key): region_atlas names an unserved id: the fetched index refuses by name; a stubbed 404 names the path."
         },
         {
+            "id": "apworld-displaced-filler-leaves-the-pool",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R6 (5). jta_dataset_test, region_1_1 relabelled, region_1_0 takes zone 2: displaced filler leaves the pool (pool = placed + non-filler unplaced), 0 placement issues, the answer's clause. Mutant: the filler kept in the pool."
+        },
+        {
             "id": "apworld-the-library-picker-disables-too-few-openings",
             "enabled": true,
             "category": "apworldEditor",

@@ -210,6 +210,9 @@ import { PLAYER_SLOTS_NEED_SCHEMA, playerSlotsWaitSentence } from '../../apworld
 import { REGION_GENERATION_FIRST_SEED as R6_FIRST_SEED, regionRerollFacts } from '../../apworldEditor/regionGenerationFlow.js';
 /** ⛓ R6 — the library hook's openings precheck (the op asks it; the picker disables on the op). */
 import { libraryEntryPrecheck } from '../../apworldEditor/regionRegenerate.js';
+/** ⛓ R6 — the zone cascade's filler clause. */
+import { ZONE_FILLER_DROPPED } from '../../apworldEditor/regionContent.js';
+import { canonicalPlacementIssues } from '../../apworldEditor/rulesDocOps.js';
 
 const PANEL_ID = 'apworldEditorPanel';
 const PANEL_SELECTOR = '.apworld-editor-panel';
@@ -11140,10 +11143,14 @@ async function zoneGenerateLands(testController, holder, onto) {
     const drawn = JSON.parse(line?.dataset.items ?? '[]');
     const want = unplacedPoolItems(panel.rulesDoc, '1').map((u) => u.item);
     testController.assertEqual('⛓⛓ the Placements tab lists the pool items placed nowhere', JSON.stringify(want), JSON.stringify(drawn));
-    const displacedItems = [...new Set(displaced.map((n) => docObj.canonical_placements['1'][n]))];
-    testController.reportCondition(`…which include every displaced item [${displacedItems.join(', ')}]`,
+    // ⛓ R6 — the displaced FILLER leaves the pool (plan §14.7 #4), so the line lists
+    //   every displaced item EXCEPT filler — read off the document's own item
+    //   classification, not off the product's declaration reader.
+    const isFiller = (i) => docObj.items['1'][i]?.classification === 'filler';
+    const displacedItems = [...new Set(displaced.map((n) => docObj.canonical_placements['1'][n]))].filter((i) => !isFiller(i));
+    testController.reportCondition(`…which include every displaced non-filler item [${displacedItems.join(', ')}]`,
         displacedItems.every((i) => drawn.includes(i)));
-    return { panel, op, docBefore, answer };
+    return { panel, op, docBefore, docObj, displaced, drawn, answer, isFiller };
 }
 
 /**
@@ -11551,7 +11558,50 @@ export async function apworldTheLibraryPickerDisablesTooFewOpenings(testControll
     return testController.getOverallResult();
 }
 
+/**
+ * ⛓⛓⛓ **(5) DISPLACED FILLER LEAVES THE POOL** (plan §14.7 #4). The R5b cascade on
+ * `jta_dataset_test` (`region_1_1` relabelled frees zone 2; `region_1_0` takes it):
+ * the displaced placements whose item the document classifies `filler` leave the
+ * pool — per item, pool = placed + non-filler unplaced; the Placements line lists
+ * no filler; 0 placement issues; the answer names the dropped count in the op's
+ * clause. Every other displaced item stays unplaced, as ruled.
+ */
+export async function apworldDisplacedFillerLeavesThePool(testController) {
+    try {
+        const got = await zoneGenerateLands(testController, 'region_1_1', 'region_1_0');
+        if (!got) return testController.getOverallResult();
+        const { panel, docObj, displaced, drawn, answer, isFiller } = got;
+        const fillerDisplaced = displaced.filter((n) => isFiller(docObj.canonical_placements['1'][n]));
+        testController.reportCondition(`⛓ premise: filler placements were displaced (${fillerDisplaced.length})`, fillerDisplaced.length > 0);
+        const doc = panel.rulesDoc;
+        const placed = {};
+        for (const item of Object.values(doc.canonical_placements['1'])) placed[item] = (placed[item] ?? 0) + 1;
+        const nonFillerUnplaced = {};
+        for (const n of displaced) {
+            const item = docObj.canonical_placements['1'][n];
+            if (!isFiller(item)) nonFillerUnplaced[item] = (nonFillerUnplaced[item] ?? 0) + 1;
+        }
+        const bad = Object.entries(doc.itempool_counts['1'])
+            .filter(([k, n]) => n !== (placed[k] ?? 0) + (nonFillerUnplaced[k] ?? 0)).map(([k, n]) => `${k} ${n}`);
+        testController.assertEqual('⛓⛓⛓ per item: pool = placed + non-filler unplaced', '[]', JSON.stringify(bad));
+        testController.reportCondition('⛓⛓ the Placements line lists no filler', !drawn.some(isFiller));
+        testController.assertEqual('⛓ 0 placement issues', '0', String(canonicalPlacementIssues(doc, '1').length));
+        const k = fillerDisplaced.length;
+        testController.reportCondition(`⛓⛓ the answer names the dropped count (${k})`,
+            String(answer).includes(`${k} filler placement${k === 1 ? '' : 's'} ${ZONE_FILLER_DROPPED}`));
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('⛓ one Undo restores the document, pool included', got.docBefore, JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('displaced filler test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
 const R6_TESTS = [
+    ['apworld-displaced-filler-leaves-the-pool',
+        'APWorld hub: a zone cascade drops the displaced FILLER from the pool (pool = placed + non-filler unplaced), names the count, keeps the rest unplaced',
+        apworldDisplacedFillerLeavesThePool],
     ['apworld-the-library-picker-disables-too-few-openings',
         'APWorld hub: a library entry with the slots but too few openings for the region is disabled in the hook\'s own words; one that fits is enabled',
         apworldTheLibraryPickerDisablesTooFewOpenings],

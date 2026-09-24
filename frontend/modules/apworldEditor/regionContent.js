@@ -23,6 +23,11 @@
  *   3. the OLD locations' placements are DELETED and NAMED; their items STAY in the
  *      pool, unplaced — *"it's the user's responsibility to find a way to make the
  *      data valid again"*; the Placements tab lists them (`unplacedPoolItems`);
+ *      ⛓ R6 (plan §14.7 #4, within the ruling): EXCEPT the target's declared
+ *      FILLER — an item its `libraryItems` classifies `filler`, inlined in the
+ *      zone answer as `fillerItems` — which leaves the pool, −1 per displaced
+ *      placement (the zone's own filler placements add theirs back), so filler
+ *      never inflates the pool; the item's DEFINITION is never touched;
  *      a location that keeps its name AND its item is neither displaced nor new
  *      (so a region re-taking its OWN zone leaves the document as it was);
  *   4. exits unchanged (the old payload's, verbatim; `regions[p][R].exits` is
@@ -106,6 +111,10 @@ export const ZONE_OUT_OF_RANGE = 'is not a zone of this slot';
 export const ZONE_DISPLACED = 'displaced';
 export const ZONE_UNPLACED_CLAUSE = 'their items stay in the pool, unplaced — the Placements tab lists them; '
     + 'it is the reader\'s to make the data valid again';
+/** ⛓ R6 — the clause naming the displaced FILLER placements the pool dropped. */
+export const ZONE_FILLER_DROPPED = 'displaced and dropped from the pool';
+/** ⛓ R6 — the classification a target's `libraryItems` gives its filler. */
+export const ZONE_FILLER_CLASSIFICATION = 'filler';
 export const ZONE_HOST_CARRIED = 'carried';
 export const ZONE_DANGLING_REFS = 'now name a location the document no longer holds';
 export const ZONE_PAGE_NEVER_EXTRACTS = 'the zone channel\'s answer is computed where the config may be '
@@ -359,9 +368,11 @@ export function zoneSourceRefusal(doc, { player, region, substrate, zoneIdx }, {
 /** ⛓ The shape `source.zone` must have — the channel's own answer. */
 export function zoneAnswerRefusal(zone) {
     if (!isObj(zone) || !Array.isArray(zone.locations) || !isObj(zone.payload)
-        || (zone.itemClasses !== undefined && !isObj(zone.itemClasses))) {
+        || (zone.itemClasses !== undefined && !isObj(zone.itemClasses))
+        || (zone.fillerItems !== undefined && !(Array.isArray(zone.fillerItems)
+            && zone.fillerItems.every((n) => typeof n === 'string')))) {
         return 'apworld: `source.zone` is the zone channel\'s answer `{locations: [...], payload: {...}, '
-            + `itemClasses?}\` — got ${zone === undefined ? 'none' : JSON.stringify(zone).slice(0, 80)}.`;
+            + `itemClasses?, fillerItems?}\` — got ${zone === undefined ? 'none' : JSON.stringify(zone).slice(0, 80)}.`;
     }
     if (zone.locations.some((l) => !isObj(l) || (typeof l.id !== 'string' && typeof l.id !== 'number'))) {
         return 'apworld: every location of `source.zone` carries an `id` (a task id).';
@@ -526,9 +537,26 @@ export function zoneContentFor(doc, player, region, substrate, zoneIdx, { fetche
     }
     return {
         ok: true,
-        zone: JSON.parse(JSON.stringify({ locations: answer.locations ?? [], payload: answer.payload ?? {}, itemClasses })),
+        zone: JSON.parse(JSON.stringify({
+            locations: answer.locations ?? [], payload: answer.payload ?? {}, itemClasses,
+            fillerItems: zoneFillerItemsOf(entry),
+        })),
         verified,
     };
+}
+
+/**
+ * ⛓ R6 — **THE TARGET'S DECLARED FILLER**: the items its registry entry's
+ * `libraryItems` classifies `filler` (the declaration the pipeline's item
+ * library already merges — no new slot; jta: `JtA Filler`, the item its zone
+ * channel places on every task that carries no perk). Read in the worker and
+ * INLINED in the answer, so the apply stays pure.
+ *
+ * @returns {string[]}
+ */
+export function zoneFillerItemsOf(entry) {
+    return Object.entries(entry?.libraryItems ?? {})
+        .filter(([, d]) => d?.classification === ZONE_FILLER_CLASSIFICATION).map(([name]) => name);
 }
 
 /* ── the apply, pure ───────────────────────────────────────────────────── */
@@ -629,6 +657,18 @@ export function applyZoneContent({ doc, player, region, substrate, zoneIdx, zone
         nextPlacements[l.name] = l.item;
         placementsAdded.push({ location: l.name, item: l.item });
     }
+    // 3b. ⛓ R6 — a displaced FILLER placement leaves the pool (−1 each; a count
+    //   that reaches 0 leaves the pool block); every other displaced item stays,
+    //   unplaced, as ruled. An answer recorded before R6 carries no
+    //   `fillerItems` and replays exactly as it did.
+    const fillers = new Set(Array.isArray(zone.fillerItems) ? zone.fillerItems : []);
+    const fillerDropped = [];
+    for (const d of placementsDisplaced) {
+        if (!fillers.has(d.item) || !(Number.isFinite(nextPool[d.item]) && nextPool[d.item] > 0)) continue;
+        nextPool[d.item] -= 1;
+        if (nextPool[d.item] === 0) delete nextPool[d.item];
+        fillerDropped.push(d);
+    }
 
     // 4. the entry: the zone's payload + the hosted field carried, the OLD exits
     let built;
@@ -657,6 +697,7 @@ export function applyZoneContent({ doc, player, region, substrate, zoneIdx, zone
         itemsRegistered,
         placementsDisplaced,
         placementsAdded,
+        fillerDropped,
         hostCarried,
         danglingReferences: referencesTo(next, p, region, removed),
         stranded: strandedReferences(doc, p, region, built),
@@ -689,6 +730,7 @@ const listed = (xs, fmt, limit = 12) => {
  */
 export function describeZoneReplacement({ region, substrate, zoneIdx, res }) {
     const n = res.placementsDisplaced.length;
+    const f = res.fillerDropped?.length ?? 0;
     const parts = [
         `region ${region}: content replaced by zone ${zoneIdx} of ${tick(substrate)} — locations `
             + `${res.locations.before} → ${res.locations.after}`,
@@ -697,9 +739,15 @@ export function describeZoneReplacement({ region, substrate, zoneIdx, res }) {
                 + `[${listed(res.itemsRegistered, (s) => s)}]`
             : 'no item registered',
         n ? `${n} placement${n === 1 ? '' : 's'} ${ZONE_DISPLACED}: ${listed(res.placementsDisplaced,
-            (d) => `${tick(d.item)} at ${tick(d.location)}`)} — ${ZONE_UNPLACED_CLAUSE}`
+            (d) => `${tick(d.item)} at ${tick(d.location)}`)} — ${f ? 'the filler excepted (below), ' : ''}`
+            + ZONE_UNPLACED_CLAUSE
             : `0 placements ${ZONE_DISPLACED}`,
     ];
+    if (f) {
+        const names = [...new Set(res.fillerDropped.map((d) => d.item))].map(tick).join(', ');
+        parts.push(`${f} filler placement${f === 1 ? '' : 's'} ${ZONE_FILLER_DROPPED} (${names} — the target's `
+            + 'declared filler; the zone\'s own filler placements are counted in)');
+    }
     if (res.hostCarried.length) {
         parts.push(`${res.hostCarried.map(tick).join(', ')} ${ZONE_HOST_CARRIED} (the siblings' references still resolve)`);
     }
@@ -775,6 +823,7 @@ export async function zoneJobAnswer({ doc, player, region, substrate, source }, 
         itemsRegistered: res.itemsRegistered,
         placementsDisplaced: res.placementsDisplaced,
         placementsAdded: res.placementsAdded,
+        fillerDropped: res.fillerDropped,
         hostCarried: res.hostCarried,
         danglingReferences: res.danglingReferences,
         stranded: res.stranded,

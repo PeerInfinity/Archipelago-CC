@@ -24,6 +24,7 @@ import { RULES_OP_KINDS, applyRulesDocOp, canonicalPlacementIssues } from './rul
 import { sidecarIssues } from './sidecarIssues.js';
 import { validateRules } from './rulesUtils.js';
 import { REGION_SOURCE_KINDS } from './regionRegenerate.js';
+import { JTA_FILLER_ITEM_NAME } from '../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 import {
     composeRegenerateArgs, defaultRegionGenerationSource, regenerateArgsRefusal, regenerationAnswer,
     regenerationProvenance, regionGenerationPlan, regionGenerationSourcesFor, zonePickerFor,
@@ -31,6 +32,7 @@ import {
 import {
     REPLACE_REGION_CONTENT_KEYS, REPLACE_REGION_CONTENT_OP, ZONE_CONFIG_HOOK, ZONE_DANGLING_REFS, ZONE_DISPLACED,
     ZONE_HELD, ZONE_HOST_CARRIED, ZONE_ITEM_GROUPS, ZONE_NEVER_CREATES, ZONE_NOT_RECORDED, ZONE_NO_CHANNEL,
+    ZONE_FILLER_DROPPED, zoneFillerItemsOf,
     ZONE_NO_RECOVERY, ZONE_OUT_OF_RANGE, ZONE_UNPLACED_CLAUSE, applyZoneContent, describeZoneReplacement,
     installedZoneConfigFrom, replaceRegionContentFromZone, unplacedPoolItems, zoneContentFor, zoneHeldBy,
     zoneOfRegion, zoneOptions, zoneSourceFacts, zoneSourceRefusal,
@@ -262,13 +264,20 @@ describe('the cascade — a region taking another zone, every clause on the docu
                 name, id: null, classification: res.zone.itemClasses[name], groups: [...ZONE_ITEM_GROUPS],
             });
         }
+        // ⛓ R6 — the target's declared filler (inlined in the answer = the registry's `libraryItems`)
+        const fillers = new Set(res.zone.fillerItems);
+        expect([...fillers]).toEqual(zoneFillerItemsOf(substrateRegistry.get('jta')));
         const added = {};
         for (const a of res.placementsAdded) added[a.item] = (added[a.item] ?? 0) + 1;
+        const dropped = {};
+        for (const d of res.placementsDisplaced) if (fillers.has(d.item)) dropped[d.item] = (dropped[d.item] ?? 0) + 1;
+        expect(res.fillerDropped).toEqual(res.placementsDisplaced.filter((d) => fillers.has(d.item)));
         const poolKeys = new Set([...Object.keys(doc.itempool_counts[p]), ...Object.keys(next.itempool_counts[p])]);
         for (const k of poolKeys) {
-            expect(next.itempool_counts[p][k] ?? 0, k).toBe((doc.itempool_counts[p][k] ?? 0) + (added[k] ?? 0));
+            expect(next.itempool_counts[p][k] ?? 0, k)
+                .toBe((doc.itempool_counts[p][k] ?? 0) + (added[k] ?? 0) - (dropped[k] ?? 0));
         }
-        // 3. the OLD placements deleted and NAMED; their items stay in the pool, unplaced
+        // 3. the OLD placements deleted and NAMED; the NON-filler items stay in the pool, unplaced
         const oldPlaced = oldLocs.filter((l) => l.name in doc.canonical_placements[p] && !(l.name in cp))
             .map((l) => ({ location: l.name, item: doc.canonical_placements[p][l.name] }));
         expect(res.placementsDisplaced).toEqual(oldPlaced);
@@ -276,10 +285,21 @@ describe('the cascade — a region taking another zone, every clause on the docu
         const unplaced = {};
         for (const u of unplacedPoolItems(next, p)) unplaced[u.item] = u.unplaced;
         const displacedCount = {};
-        for (const d of res.placementsDisplaced) displacedCount[d.item] = (displacedCount[d.item] ?? 0) + 1;
+        for (const d of res.placementsDisplaced) {
+            if (!fillers.has(d.item)) displacedCount[d.item] = (displacedCount[d.item] ?? 0) + 1;
+        }
         expect(unplacedPoolItems(doc, p)).toEqual([]);
         expect(unplaced).toEqual(displacedCount);
+        // ⛓⛓ R6 — the brief's invariant, per item: pool = placed + non-filler unplaced
+        const placed = {};
+        for (const item of Object.values(cp)) placed[item] = (placed[item] ?? 0) + 1;
+        for (const [k, n] of Object.entries(next.itempool_counts[p])) {
+            expect(n, `pool of ${k}`).toBe((placed[k] ?? 0) + (displacedCount[k] ?? 0));
+        }
         const desc = describeZoneReplacement({ region, substrate: 'jta', zoneIdx: z, res });
+        const f = res.fillerDropped.length;
+        if (f) expect(desc).toContain(`${f} filler placement${f === 1 ? '' : 's'} ${ZONE_FILLER_DROPPED}`);
+        else expect(desc).not.toContain(ZONE_FILLER_DROPPED);
         for (const d of res.placementsDisplaced) expect(desc).toContain(`\`${d.item}\` at \`${d.location}\``);
         expect(desc).toContain(`${res.placementsDisplaced.length} placement`);
         expect(desc).toContain(ZONE_UNPLACED_CLAUSE);
@@ -302,6 +322,52 @@ describe('the cascade — a region taking another zone, every clause on the docu
         for (const t of touched) expect([...allowed].some((a) => t === a || t.startsWith(`${a}.`)), t).toBe(true);
         expect(new Set(touched.map((t) => t.split('.')[0])).size).toBeGreaterThanOrEqual(3);
         for (const t of touched) expect(REPLACE_REGION_CONTENT_KEYS).toContain(t.split('.')[0]);
+    });
+});
+
+describe('R6 — displaced FILLER leaves the pool (plan §14.7 #4)', () => {
+    it('⛓⛓ some cascade case displaces filler (the bin the rule acts on is non-empty)', () => {
+        const n = CASES.map((c) => replaceRegionContentFromZone({ doc: c.doc, player: c.p, region: c.region, substrate: 'jta', zoneIdx: c.z }))
+            .filter((r) => r.ok && r.fillerDropped.length > 0).length;
+        expect(n).toBeGreaterThan(0);
+    });
+
+    it('⛓⛓ the declaration agrees with the channel: every item the zones place that libraryItems calls filler is the declared filler, and jta declares its channel constant', () => {
+        const declared = zoneFillerItemsOf(substrateRegistry.get('jta'));
+        expect(declared).toEqual([JTA_FILLER_ITEM_NAME]);
+        let seen = 0;
+        for (const c of CASES) {
+            const res = replaceRegionContentFromZone({ doc: c.doc, player: c.p, region: c.region, substrate: 'jta', zoneIdx: c.z });
+            expect(res.ok, res.why).toBe(true);
+            for (const l of res.zone.locations) {
+                if (res.zone.itemClasses[l.item] === 'filler') {
+                    seen += 1;
+                    expect(declared, `${c.label}: ${l.item}`).toContain(l.item);
+                }
+            }
+        }
+        expect(seen, 'premise: the channel places filler').toBeGreaterThan(0);
+    });
+
+    it('⛓ an answer recorded BEFORE R6 (no fillerItems) replays as it did: nothing dropped', () => {
+        const c = CASES.find((k) => replaceRegionContentFromZone({ doc: k.doc, player: k.p, region: k.region, substrate: 'jta', zoneIdx: k.z }).fillerDropped?.length);
+        const got = replaceRegionContentFromZone({ doc: c.doc, player: c.p, region: c.region, substrate: 'jta', zoneIdx: c.z });
+        const { fillerItems, ...old } = got.zone;
+        expect(fillerItems.length).toBeGreaterThan(0);
+        const res = applyZoneContent({ doc: c.doc, player: c.p, region: c.region, substrate: 'jta', zoneIdx: c.z, zone: old });
+        expect(res.ok, res.why).toBe(true);
+        expect(res.fillerDropped).toEqual([]);
+        const displaced = res.placementsDisplaced.length;
+        expect(unplacedPoolItems(res.doc, c.p).reduce((s2, u) => s2 + u.unplaced, 0)).toBe(displaced);
+    });
+
+    it('⛔ a malformed fillerItems is refused by the shape check', () => {
+        const c = CASES[0];
+        const got = replaceRegionContentFromZone({ doc: c.doc, player: c.p, region: c.region, substrate: 'jta', zoneIdx: c.z });
+        const res = applyZoneContent({ doc: c.doc, player: c.p, region: c.region, substrate: 'jta', zoneIdx: c.z,
+            zone: { ...got.zone, fillerItems: 'JtA Filler' } });
+        expect(res.ok).toBe(false);
+        expect(res.why).toContain('fillerItems?');
     });
 });
 
