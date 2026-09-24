@@ -2,8 +2,10 @@
  * ⛓ SEEDLING IN THE PIPELINE T3 — **THE TWO ROOM-PLAY GATES' SHARED HANDS.**
  *
  * `check-seedling-spiral-room-play.mjs` (T2/T2b: a placed room as the spiral's
- * START region) and `check-seedling-sphere-room-play.mjs` (T3: a placed room as
- * a sphere-growth LEAF behind a maze gate) drive the same page the same way:
+ * START region), `check-seedling-sphere-room-play.mjs` (T3: a placed room as
+ * a sphere-growth LEAF behind a maze gate), and the generated-room gates
+ * `check-seedling-generated-room-play.mjs` (G2) and
+ * `check-seedling-generated-leaf-play.mjs` (G3) drive the same page the same way:
  * the same readouts of the game, the binding, the glue and the maze panel, and
  * the same key recipes. They live here ONCE; each gate keeps only its own
  * phases. Everything was measured on the box by the gate that first needed it
@@ -16,6 +18,43 @@
 export const STEP_OFF_PX = 16;
 /** The ceiling on every held key. */
 export const HOLD_CEILING_MS = 4000;
+
+/**
+ * ⛓ G2, shared at G3 — **A SAFE PATH THROUGH A GENERATED ROOM.** A shortest
+ * path of cells in `payload`'s room from `from` to `to`, walking the room's own
+ * flood (`walkableCellsFrom`, every solid live) with every door a wall except
+ * `to` itself, and every HAZARD a wall — water and lava (lethal without the
+ * conch / the dark suit) and pits, read off the room's own collision world
+ * (`buildLevelWorld`). ⛔ MEASURED (G2): a first version walked a pit cell and
+ * the game respawned the player at the checkpoint mid-walk. `null` when there is
+ * none. The two readers are handed in (`seedlingDemo/levelSetExits.js`,
+ * `seedlingDemo/levelWorld.js`), so importing these hands loads no game module.
+ */
+export function roomPath(payload, from, to, { walkableCellsFrom, buildLevelWorld }) {
+    const tile = payload.tile_size;
+    const flood = walkableCellsFrom(payload.record, payload.start);
+    const world = buildLevelWorld(payload.record);
+    const walls = new Set(payload.exits.map((e) => `${e.exit_tiles[0][0]},${e.exit_tiles[0][1]}`));
+    for (const t of [...world.lethalTerrainTiles, ...world.pitTiles]) walls.add(`${Math.floor(t.x / tile)},${Math.floor(t.y / tile)}`);
+    const k = (c) => `${c.tx},${c.ty}`;
+    const prev = new Map([[k(from), null]]);
+    const queue = [from];
+    for (let i = 0; i < queue.length; i += 1) {
+        const at = queue[i];
+        if (at.tx === to.tx && at.ty === to.ty) break;
+        for (const [dx, dy] of [[0, -1], [-1, 0], [1, 0], [0, 1]]) {
+            const c = { tx: at.tx + dx, ty: at.ty + dy };
+            const isTo = c.tx === to.tx && c.ty === to.ty;
+            if (prev.has(k(c)) || !flood.has(k(c)) || (walls.has(k(c)) && !isTo)) continue;
+            prev.set(k(c), at);
+            queue.push(c);
+        }
+    }
+    if (!prev.has(k(to))) return null;
+    const out = [];
+    for (let c = to; c; c = prev.get(k(c))) out.unshift(c);
+    return out;
+}
 
 /**
  * The helpers for one page. `wasmPage` is the preset's own `flash_panel.wasm`;

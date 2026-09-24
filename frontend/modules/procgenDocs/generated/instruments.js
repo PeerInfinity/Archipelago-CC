@@ -48,8 +48,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 54,
-            "count": 90,
+            "browser": 55,
+            "count": 91,
             "id": "check"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 264,
-        "browser": 80,
+        "blockStyle": 265,
+        "browser": 81,
         "cited": 101,
-        "files": 275,
+        "files": 276,
         "lineStyle": 11,
-        "withDocblock": 275,
-        "withFlags": 189
+        "withDocblock": 276,
+        "withFlags": 190
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3138,6 +3138,46 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-full-tier-owed — **A MEASUREMENT OWED IS A RED ROW, NOT A MEMORY** (R9 slice P3b, §47.11 (3) (c)/(d)).",
             "path": "scripts/procgen/check-seedling-full-tier-owed.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "game",
+                "host"
+            ],
+            "file": "check-seedling-generated-leaf-play.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "game"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling generated levels, G3: a GENERATED Seedling room that sphere growth placed as a LEAF behind a maze gate plays in the Seedling wasm, and the AP item it holds is DELIVERED — the case `seedling-pipeline-plan.md` §17.6 left open for real rooms.",
+            "path": "scripts/procgen/check-seedling-generated-leaf-play.mjs"
         },
         {
             "argvHelpers": [

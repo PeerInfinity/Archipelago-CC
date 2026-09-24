@@ -57,7 +57,7 @@ import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { createRoomPlay } from './seedlingRoomPlay.js';
+import { createRoomPlay, roomPath } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 
@@ -114,40 +114,9 @@ async function main() {
     const OTHER = GEN_DOOR ? SIDECARS[GEN_DOOR.targetRegion].playable_payload : null;
     const PAIRED = OTHER?.exits.find((e) => e.targetRegion === START) ?? null;
     const cellOfPx = (p) => ({ tx: p.x / TILE, ty: p.y / TILE });
-    const doorCells = (payload) => new Set(payload.exits.map((e) => `${e.exit_tiles[0][0]},${e.exit_tiles[0][1]}`));
 
-    /**
-     * A shortest path of cells in `payload`'s room from `from` to `to`, walking the
-     * room's own flood (`walkableCellsFrom`, every solid live) with every door a
-     * wall except `to` itself, and every HAZARD a wall — water and lava (lethal
-     * without the conch / the dark suit) and pits, read off the room's own
-     * collision world. ⛔ MEASURED: a first version walked a pit cell and the game
-     * respawned the player at the checkpoint mid-walk. `null` when there is none.
-     */
-    function pathIn(payload, from, to) {
-        const flood = walkableCellsFrom(payload.record, payload.start);
-        const world = buildLevelWorld(payload.record);
-        const doors = doorCells(payload);
-        for (const t of [...world.lethalTerrainTiles, ...world.pitTiles]) doors.add(`${Math.floor(t.x / TILE)},${Math.floor(t.y / TILE)}`);
-        const k = (c) => `${c.tx},${c.ty}`;
-        const prev = new Map([[k(from), null]]);
-        const queue = [from];
-        for (let i = 0; i < queue.length; i += 1) {
-            const at = queue[i];
-            if (at.tx === to.tx && at.ty === to.ty) break;
-            for (const [dx, dy] of [[0, -1], [-1, 0], [1, 0], [0, 1]]) {
-                const c = { tx: at.tx + dx, ty: at.ty + dy };
-                const isTo = c.tx === to.tx && c.ty === to.ty;
-                if (prev.has(k(c)) || !flood.has(k(c)) || (doors.has(k(c)) && !isTo)) continue;
-                prev.set(k(c), at);
-                queue.push(c);
-            }
-        }
-        if (!prev.has(k(to))) return null;
-        const out = [];
-        for (let c = to; c; c = prev.get(k(c))) out.unshift(c);
-        return out;
-    }
+    /** The hazard-walled path planner (the shared hands' `roomPath`). */
+    const pathIn = (payload, from, to) => roomPath(payload, from, to, { walkableCellsFrom, buildLevelWorld });
 
     const URL = `${HOST}/frontend/?game=${GAME}&seed=1`;
     const browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });
