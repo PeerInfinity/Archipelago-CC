@@ -1925,22 +1925,22 @@
               "target_substrate": "flash_seedling_gen"
             },
             {
-              "exit_id": "out_teleporter_96_96",
+              "exit_id": "out_teleporter_96_48",
               "kind": "teleporter",
               "side": "E",
               "exit_tiles": [
                 [
                   6,
-                  6
+                  3
                 ]
               ],
               "entrance_tile": [
                 6,
-                6
+                3
               ],
               "entrance_spawn": {
-                "x": 112,
-                "y": 96
+                "x": 96,
+                "y": 64
               },
               "exitName": "exit_1",
               "targetRegion": "region_1_1",

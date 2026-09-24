@@ -19,8 +19,16 @@ import { createRng } from '../shared/rng.js';
 import { pickDoorCells, walkableCellsFrom } from './levelSetExits.js';
 import { generateSeedlingLevel } from './procgenSeedling.js';
 import {
-    GEN_ROOM_BIOMES, GEN_ROOM_DOOR_REROLLS, generateGenRoom, goalHoldsWithDoorsAsWalls, rerollSeed,
+    GEN_ROOM_BIOMES, GEN_ROOM_DOOR_REROLLS, generateGenRoom, goalHoldsWithDoorsAsWalls, hazardCells, rerollSeed,
 } from './seedlingGenRoom.js';
+import { SEEDLING_GENERATED_LEAF_STATE } from '../procgenPipeline/presetDefs.js';
+import { buildLevelWorld } from './levelWorld.js';
+
+/** ⛔ The test's OWN hazard read — never the subject's `hazardCells` (a probe sharing its subject's assumption agrees with the bug). */
+const hazardsOf = (record) => {
+    const w = buildLevelWorld(record);
+    return new Set([...w.lethalTerrainTiles, ...w.pitTiles].map((t) => `${Math.floor(t.x / 16)},${Math.floor(t.y / 16)}`));
+};
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 const key = (c) => `${c.tx},${c.ty}`;
@@ -102,7 +110,7 @@ describe('the re-roll — deterministic, no engine rng, recorded', () => {
         expect(GEN_ROOM_DOOR_REROLLS).toBe(8);
     });
 
-    it('the registry\'s drive room (8x6, a/b, createRng(1)) seats on re-roll 1 — ONE engine draw, the seed recorded', () => {
+    it('the registry\'s drive room (8x6, a/b, createRng(1)) seats on re-roll 2 — ONE engine draw, the seed recorded', () => {
         const rng = createRng(1);
         let calls = 0;
         const spy = { next: () => { calls += 1; return rng.next(); } };
@@ -110,8 +118,8 @@ describe('the re-roll — deterministic, no engine rng, recorded', () => {
         const { world } = generateGenRoom({ region_id: 'probe', exits: [{ exit_id: 'a', side: 'N' }, { exit_id: 'b', side: 'S' }],
             size: { width: 8, height: 6 }, rng: spy, params: {} });
         expect(calls).toBe(1);
-        expect(world.generation.rerolls).toBe(1);
-        expect(world.seed).toBe(rerollSeed(drawn, 1));
+        expect(world.generation.rerolls).toBe(2);
+        expect(world.seed).toBe(rerollSeed(drawn, 2));
     });
 
     it('a room that seats on the FIRST draw: rerolls 0, the drawn seed, and the generator\'s own record for it', () => {
@@ -139,5 +147,52 @@ describe('the re-roll — deterministic, no engine rng, recorded', () => {
         const exits = [0, 1, 2, 3, 4, 5, 6].map((i) => ({ exit_id: `e${i}` }));
         expect(() => generateGenRoom({ region_id: 'seven', exits, size: { width: 8, height: 6 }, rng: createRng(3), params: {} }))
             .toThrow(/generated Seedling room 'seven' \(seed \d+, 8x6\) must hold 7 door\(s\), one per exit, and its walkable area cannot seat them apart without sealing an approach/);
+    });
+});
+
+describe('hazards — no door, approach or location on water, lava or a pit (measured on the box, G2)', () => {
+    let worlds;
+    beforeAll(async () => {
+        for (const rel of REGISTRY_LIBRARIES) {
+            // eslint-disable-next-line no-await-in-loop
+            await import(join(ROOT, rel));
+        }
+        worlds = {};
+        for (const [name, state] of Object.entries({ spiral: SEEDLING_GENERATED_ROOM_STATE, leaf: SEEDLING_GENERATED_LEAF_STATE })) {
+            // eslint-disable-next-line no-await-in-loop
+            worlds[name] = (await runPresetHeadless(buildRunFromState(structuredClone(state)))).rulesJson;
+        }
+    }, 60000);
+
+    it('the measured case: region_0_1\'s record has WATER where G1 put door 1 (6,6) and its approach (7,6)', () => {
+        const p = worlds.spiral.preset_sidecars['1'].region_0_1.playable_payload;
+        const hazards = hazardCells(p.record);
+        expect(hazards.has('6,6') && hazards.has('7,6')).toBe(true);
+        expect(p.exits.map((e) => e.exit_tiles[0])).not.toContainEqual([6, 6]);
+    });
+
+    it('in every generated room of both worlds: doors, approaches and locations stand on SAFE cells, reached safely', () => {
+        let rooms = 0;
+        for (const world of Object.values(worlds)) {
+            for (const s of Object.values(world.preset_sidecars['1'])) {
+                if (s.substrate !== 'flash_seedling_gen') continue;
+                rooms += 1;
+                const p = s.playable_payload;
+                const hazards = hazardsOf(p.record);
+                expect(hazardCells(p.record)).toEqual(hazards);
+                const doors = p.exits.map((e) => ({ tx: e.exit_tiles[0][0], ty: e.exit_tiles[0][1] }));
+                const seen = sealedFlood(p.record, p.start, [...doors, ...[...hazards].map((h) => {
+                    const [tx, ty] = h.split(',').map(Number);
+                    return { tx, ty };
+                })]);
+                for (const d of doors) expect(hazards.has(key(d)), `door ${key(d)}`).toBe(false);
+                for (const e of p.exits) {
+                    const a = { tx: e.entrance_spawn.x / 16, ty: e.entrance_spawn.y / 16 };
+                    expect(hazards.has(key(a)) || !seen.has(key(a)), `approach ${key(a)}`).toBe(false);
+                }
+                for (const l of p.locations) expect(hazards.has(key(l.cell)), `location ${l.name}`).toBe(false);
+            }
+        }
+        expect(rooms).toBe(3);
     });
 });
