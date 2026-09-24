@@ -247,7 +247,7 @@ describe('refused by NAME before the hook runs', () => {
         expect(refused({ ...base, source: { ...base.source, entry: undefined } })).toContain('carries its ENTRY inline');
         expect(refused({ ...base, source: { ...base.source, entry: [entry] } })).toContain('carries its ENTRY inline');
         expect(refused({ ...base, source: { ...base.source, library_id: undefined } })).toContain('names its pack and entry');
-        expect(refused({ ...base, source: { ...base.source, kind: 'zone' } })).toContain('is not a source this op knows');
+        expect(refused({ ...base, source: { ...base.source, kind: 'atlas' } })).toContain('is not a source this op knows');
         expect(refused({ ...base, source: 'mz_cross' })).toContain('says where the region\'s data comes from');
     });
 

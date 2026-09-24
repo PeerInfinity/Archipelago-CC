@@ -512,9 +512,11 @@ export function regenerateRegionEntry({
  * ⛓ Where a regenerated region's DATA comes from. Absent = `generate` (the
  * realiser, R0's path, byte-identical); `library` = a captured region-library
  * entry, INLINED in the op (`{kind, library_id, entry_id, entry}`) so a replay
- * or an undo's refold never fetches.
+ * or an undo's refold never fetches. `zone` (R5b) = a zone substrate's zone N —
+ * a CONTENT replacement, which is `replace-region-content` (`regionContent.js`),
+ * never this module's regenerate.
  */
-export const REGION_SOURCE_KINDS = Object.freeze({ GENERATE: 'generate', LIBRARY: 'library' });
+export const REGION_SOURCE_KINDS = Object.freeze({ GENERATE: 'generate', LIBRARY: 'library', ZONE: 'zone' });
 
 /**
  * ⛓⛓ **DOES THIS TARGET OFFER THE LIBRARY SOURCE?** — the test the sphere path

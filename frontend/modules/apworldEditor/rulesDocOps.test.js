@@ -36,6 +36,10 @@ import {
 //   Every other op here stays substrate-blind; the corpus rows are
 //   `regionRegenerate.test.js`'.
 import '../mazeRoom/mazeRoomLibrary.js';
+// ⛓ APWORLD SUBSTRATE CHANGE R5b — the one zone substrate with a read-back, for
+//   `replace-region-content`'s sample (an INLINED zone answer: no install). Its
+//   rows are `regionContent.test.js`'.
+import '../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 
 const P = '1';
 
@@ -165,6 +169,10 @@ describe('the contract shape', () => {
                 entry: { substrate: 'maze', playable_payload: { width: 4, height: 4, tiles: 'bbbb' } },
             },
             'regenerate-region-sidecar': { op: 'regenerate-region-sidecar', region: 'Hall', seed: 1 },
+            'replace-region-content': {
+                op: 'replace-region-content', region: 'Vault',
+                source: { kind: 'zone', substrate: 'jta', zoneIdx: 0, zone: { locations: [], payload: { jtaZone: 0 } } },
+            },
             'move-region': { op: 'move-region', region: 'Hall', to: { gx: 1, gy: 0 } },
             'swap-regions': { op: 'swap-regions', a: 'Hall', b: 'Vault' },
             'move-exit-side': { op: 'move-exit-side', region: 'Vault', exitId: 'e1', side: 'N' },

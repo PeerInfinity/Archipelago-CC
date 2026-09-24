@@ -88,6 +88,12 @@ import {
 import {
     REGION_SOURCE_KINDS, regenerateRegionEntry, regenerateTargetFacts,
 } from './regionRegenerate.js';
+// ⛓ APWORLD SUBSTRATE CHANGE R5b — a region's CONTENT replaced by a zone
+//   (`regionContent.js`: the cascade's mechanics and its sentences).
+import {
+    REPLACE_REGION_CONTENT_OP, ZONE_PAGE_NEVER_EXTRACTS, applyZoneContent, describeZoneReplacement,
+    replaceRegionContentFromZone,
+} from './regionContent.js';
 import {
     SIDE_WORDS, exitSideVerdicts, exitSidesOfSubstrate, layoutChange, occupantAt, pairLinkFlips,
     rewriteExitFlags, rewriteExits, sideSharingOfSubstrate, slotLayout,
@@ -121,6 +127,7 @@ export const RULES_OP_KINDS = Object.freeze([
     'replace-region-sidecar',
     'set-region-sidecar',
     'regenerate-region-sidecar',
+    'replace-region-content',
     'move-region',
     'swap-regions',
     'move-exit-side',
@@ -372,6 +379,7 @@ function dispatchRulesDocOp(doc, op) {
         case 'replace-region-sidecar': return opReplaceRegionSidecar(doc, op);
         case 'set-region-sidecar': return opSetRegionSidecar(doc, op);
         case 'regenerate-region-sidecar': return opRegenerateRegionSidecar(doc, op);
+        case 'replace-region-content': return opReplaceRegionContent(doc, op);
         case 'move-region': return opMoveRegion(doc, op);
         case 'swap-regions': return opSwapRegions(doc, op);
         case 'move-exit-side': return opMoveExitSide(doc, op);
@@ -2043,6 +2051,46 @@ function noRealiserSentence(id, facts) {
  * realiser THROWING — its message verbatim, with the items that rode free.
  * ⚠ The panel's `_saveRegionSidecar` veto chain is not this op's (R2 wires it).
  */
+/* ── a region's CONTENT replaced by a zone (APWORLD SUBSTRATE CHANGE R5b) ─ */
+
+/** ⛓ The clause a `replace-region-content` provenance adds. EXPORTED for the rows. */
+export const ZONE_EXTRACTED_IN = 'zone extracted in';
+
+/**
+ * ⛓⛓⛓ `{player, region, source: {kind: 'zone', substrate, zoneIdx, zone?}, provenance?}`
+ * — ONE op, ONE undo: the region's locations, the items and pool they need, the
+ * canonical placements and the sidecar entry, together (`regionContent.js` holds
+ * the cascade and every sentence it refuses with).
+ *
+ * ⛔ `source.zone` is the zone channel's answer, INLINED: the page lands the op
+ * with it (computed in the generation worker) and a refold never installs. An op
+ * WITHOUT it computes it here (Node, the worker, the control) — and the RESOLVED
+ * op records what was computed, so the record replays pure from then on.
+ */
+function opReplaceRegionContent(doc, op) {
+    const p = String(playerOf(op));
+    const src = op.source;
+    if (!src || typeof src !== 'object' || Array.isArray(src) || src.kind !== REGION_SOURCE_KINDS.ZONE) {
+        return refuse(`apworld: ${REPLACE_REGION_CONTENT_OP} takes \`source: {kind: '${REGION_SOURCE_KINDS.ZONE}', `
+            + `substrate, zoneIdx, zone?}\` — got ${src === undefined ? 'none' : describeValue(src)}. `
+            + `(${ZONE_PAGE_NEVER_EXTRACTS}.)`);
+    }
+    const prov = op.provenance;
+    if (prov !== undefined && (!prov || typeof prov !== 'object' || Array.isArray(prov))) {
+        return refuse('apworld: `provenance` says how the content came to be — an object '
+            + `({op, substrate, zoneIdx, ms}), got ${describeValue(prov)}.`);
+    }
+    const args = { doc, player: p, region: op.region, substrate: src.substrate, zoneIdx: src.zoneIdx };
+    const res = src.zone === undefined
+        ? replaceRegionContentFromZone(args)
+        : applyZoneContent({ ...args, zone: src.zone });
+    if (!res.ok) return refuse(res.why);
+    const description = describeZoneReplacement({ region: op.region, substrate: src.substrate, zoneIdx: src.zoneIdx, res })
+        + (prov && Number.isFinite(prov.ms) ? ` — ${ZONE_EXTRACTED_IN} the generation worker (${Math.round(prov.ms)} ms)` : '');
+    const resolved = src.zone === undefined ? { ...op, source: { ...src, zone: res.zone } } : op;
+    return ok(res.doc, description, undefined, resolved);
+}
+
 function opRegenerateRegionSidecar(doc, op) {
     const refusal = regenerateOpRefusal(doc, op);
     if (refusal) return refuse(refusal);
@@ -2161,6 +2209,10 @@ function regenerateSourceRefusal(source) {
         return 'apworld: `source` says where the region\'s data comes from — an object '
             + `({kind: '${REGION_SOURCE_KINDS.LIBRARY}', library_id, entry_id, entry}) or nothing, got `
             + `${describeValue(source)}.`;
+    }
+    if (source.kind === REGION_SOURCE_KINDS.ZONE) {
+        return `apworld: a \`${REGION_SOURCE_KINDS.ZONE}\` source replaces the region's CONTENT — its locations, `
+            + `items and placements — which is \`${REPLACE_REGION_CONTENT_OP}\`, not a payload regenerate.`;
     }
     if (source.kind !== REGION_SOURCE_KINDS.LIBRARY) {
         return `apworld: \`source.kind\` ${describeValue(source.kind)} is not a source this op knows — `
