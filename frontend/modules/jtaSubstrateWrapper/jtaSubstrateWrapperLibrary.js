@@ -511,6 +511,52 @@ function buildZoneLocations(zoneIdx, region_id) {
     return { locations, payload };
 }
 
+/**
+ * ⛓ R5b — the perk names an IDENTITY placement puts on zones 0..g of `doc`, for
+ * every g (sorted, as `_perkUniverse` sorts them). Pure: reads the document, not
+ * the installed state. The excluded tasks follow `_zoneView`'s rule.
+ */
+function identityUniverses(doc, isDataset) {
+    const excluded = isDataset ? new Set(doc.prestige?.sbtv_unlock_task_ids ?? []) : SBTV_GATED_TASK_IDS;
+    const names = new Set();
+    return doc.zones.map((z) => {
+        for (const t of z.tasks) {
+            if (excluded.has(t.id) || t.perk == null) continue;
+            const name = doc.perks[t.perk]?.name;
+            if (name) names.add(name);
+        }
+        return [...names].sort();
+    });
+}
+
+/** ⛓ R5b — `{zone}` whose identity universe equals a zone rule's `item_names`, or null. */
+function goalZoneFromUniverse(doc, isDataset, payloads, locations) {
+    const seen = new Set();
+    for (const [region] of payloads) {
+        for (const l of locations[region] ?? []) {
+            const r = l?.access_rule;
+            if (r?.rule === 'HasFromListUnique' && Array.isArray(r.args?.item_names)) {
+                seen.add(JSON.stringify(r.args.item_names));
+            }
+        }
+    }
+    if (!seen.size) return null;
+    if (seen.size > 1) return { ambiguous: `its zone rules name ${seen.size} different perk universes` };
+    const want = [...seen][0];
+    const universes = identityUniverses(doc, isDataset);
+    const g = universes.findIndex((u) => JSON.stringify(u) === want);
+    return g < 0 ? null : { zone: g };
+}
+
+/** ⛓ R5b — `{zone}` of the one region of this substrate holding the victory placement, or null. */
+function goalZoneFromVictory(payloads, locations) {
+    const zones = [...new Set(payloads
+        .filter(([region]) => (locations[region] ?? []).some((l) => l?.item === JTA_VICTORY_ITEM_NAME))
+        .map(([, p]) => p.jtaZone))];
+    if (zones.length > 1) return { ambiguous: `\`${JTA_VICTORY_ITEM_NAME}\` is placed in ${zones.length} zones [${zones.join(', ')}]` };
+    return zones.length ? { zone: zones[0] } : null;
+}
+
 /** The zone-locations channel — the one pipeline writer of every field below. */
 const ZONE_CHANNEL = '`buildZoneLocations` (the zone-locations channel of `extractZoneRules`)';
 
@@ -867,6 +913,63 @@ export const substrateRegistryEntry = Object.freeze({
         setJtaPerkShuffleSeed(c.perkShuffleSeed);
         return getJtaDataset();
     },
+
+    // ⛓⛓ APWORLD SUBSTRATE CHANGE R5b — **THE CONFIG A DOCUMENT RECORDS FOR ITS
+    // ZONES**, read back without installing anything (the hub's *Zone N* source,
+    // `apworldEditor/regionContent.js`). `entries` = this substrate's sidecar
+    // entries of ONE slot by region; `locations` = region → `[{name, item,
+    // access_rule}]` (the placed item, or null) for EVERY region of the slot.
+    // What the document records:
+    //   · `datasetDoc` — the sibling that CARRIES the `jta_dataset` every
+    //     `jta_dataset_ref` points at (no ref anywhere ⇒ the bundled vanilla
+    //     fixture, which is what the channel writes no ref for);
+    //   · `emitZoneLocations` — an entry carries `ap_locations`;
+    //   · `goalZone` — read off the perk UNIVERSE a zone rule names (the perks
+    //     placed on zones 0..goalZone, `_perkUniverse`), else the zone of the
+    //     region holding the victory placement.
+    // What it does NOT record — the shuffle seed and the zone gating — is
+    // answered as `assumed` (the setters' own defaults), and the hub VERIFIES it
+    // by re-extracting every committed zone; a slot that does not reproduce is
+    // refused by name there, never guessed.
+    zoneConfigFromSlot: ({ entries = {}, locations = {} } = {}) => {
+        const payloads = Object.entries(entries)
+            .map(([region, e]) => [region, e?.playable_payload])
+            .filter(([, p]) => p && typeof p === 'object' && !Array.isArray(p));
+        const refs = [...new Set(payloads.map(([, p]) => p.jta_dataset_ref?.dataset_id).filter(Boolean))];
+        const hosts = payloads.filter(([, p]) => p.jta_dataset && typeof p.jta_dataset === 'object');
+        if (refs.length > 1) {
+            return { ok: false, why: `its regions point at ${refs.length} different datasets [${refs.join(', ')}]` };
+        }
+        const host = refs.length
+            ? hosts.find(([, p]) => p.jta_dataset.dataset_id === refs[0]) ?? null
+            : (hosts[0] ?? null);
+        if (refs.length && !host) {
+            return { ok: false, why: `its regions point at dataset \`${refs[0]}\`, but no entry of the slot carries it` };
+        }
+        const datasetDoc = host ? host[1].jta_dataset : null;
+        if (datasetDoc) {
+            const v = validateJtaDataset(datasetDoc);
+            if (!v.ok) return { ok: false, why: `the dataset \`${host[0]}\` carries is invalid: ${v.errors[0]}` };
+        }
+        const source = datasetDoc ?? JTA_VANILLA_DATASET;
+        const goalZone = goalZoneFromUniverse(source, !!datasetDoc, payloads, locations)
+            ?? goalZoneFromVictory(payloads, locations);
+        if (goalZone && goalZone.ambiguous) return { ok: false, why: goalZone.ambiguous };
+        return {
+            ok: true,
+            cfg: {
+                datasetDoc,
+                emitZoneLocations: payloads.some(([, p]) => p.ap_locations && typeof p.ap_locations === 'object'),
+                goalZone: goalZone ? goalZone.zone : null,
+            },
+            assumed: { perkShuffleSeed: null, freeZones: 1, startingPerks: 0 },
+            zoneCount: source.zones.length,
+            host: host ? host[0] : null,
+        };
+    },
+
+    // ⛓ R5b — the zone a payload plays (the hub's "held by" test), or null.
+    zoneOfPayload: (payload) => (Number.isInteger(payload?.jtaZone) ? payload.jtaZone : null),
 
     // The installed content document for the ② content step to materialise onto
     // the envelope as the editable artifact (null when no dataset is active).
