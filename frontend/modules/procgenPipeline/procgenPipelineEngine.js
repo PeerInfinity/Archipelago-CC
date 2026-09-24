@@ -6379,12 +6379,25 @@ export function buildPresetSidecars(grid, {
     // substrate whose sidecar records a crossing's far side (flash_seedling's
     // `target_substrate` on an `external` door) reads it; every other
     // serializer takes four arguments and never sees it.
+    //
+    // ⛓ seedling generated G1 — and `ordinalOfRegion`: the region's index among
+    // the regions of ITS OWN substrate, in sidecar order (the order written
+    // below). A substrate whose play-time runtime numbers its regions (a
+    // generated Seedling room is a LEVEL of the set assembled at play) writes it;
+    // no other serializer reads it.
     const substrateById = new Map();
+    const ordinalById = new Map();
+    const countBySubstrate = new Map();
     for (const region of grid.allRegions()) {
-        substrateById.set(region.region_id, region.substrate ?? DEFAULT_SUBSTRATE_ID);
+        const substrate = region.substrate ?? DEFAULT_SUBSTRATE_ID;
+        substrateById.set(region.region_id, substrate);
+        const n = countBySubstrate.get(substrate) ?? 0;
+        ordinalById.set(region.region_id, n);
+        countBySubstrate.set(substrate, n + 1);
     }
     const serializeContext = Object.freeze({
         substrateOfRegion: (regionId) => substrateById.get(regionId) ?? null,
+        ordinalOfRegion: (regionId) => ordinalById.get(regionId) ?? null,
     });
     for (const region of grid.allRegions()) {
         regionMap[region.region_id] = serializeRegionEntry(region, {

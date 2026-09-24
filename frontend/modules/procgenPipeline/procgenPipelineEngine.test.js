@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 import { createRng } from '../shared/rng.js';
 // Side-effect: registers the maze and text-adventure substrates.
@@ -1425,6 +1425,50 @@ describe('buildPresetSidecars', () => {
             expect(typeof side.playable_payload.longestShortestPath).toBe('number');
             expect(side.playable_payload.longestShortestPath).toBeGreaterThanOrEqual(1);
         }
+    });
+
+    /**
+     * ⛓ seedling generated G1 — the 5th `serializeWorld` argument carries
+     * `ordinalOfRegion`: a region's index among the regions of ITS OWN
+     * substrate, in sidecar order. A spy substrate plays the middle region of a
+     * three-region world; every serializer is handed the same context.
+     */
+    it('hands every serializer `ordinalOfRegion` — the index among its own substrate\'s regions, in sidecar order', () => {
+        const { grid } = smallGrid();
+        const regions = grid.allRegions();
+        expect(regions.length).toBeGreaterThanOrEqual(3);
+        const spyId = regions[1].region_id;
+        regions[1].substrate = 'spy_ordinal';
+        const seen = [];
+        const realGet = substrateRegistry.get.bind(substrateRegistry);
+        const maze = realGet('maze');
+        const spy = vi.spyOn(substrateRegistry, 'get').mockImplementation((id) => {
+            const record = (world, ctx, sub) => seen.push({ sub, region: world.__region, ctx });
+            if (id === 'spy_ordinal') {
+                return { id, serializeWorld: (w, _e, _o, _i, ctx) => { record({ __region: spyId }, ctx, id); return {}; } };
+            }
+            if (id === 'maze') {
+                return {
+                    ...maze,
+                    serializeWorld: (w, e, o, i, ctx) => { seen.push({ sub: 'maze', ctx }); return maze.serializeWorld(w, e, o, i); },
+                };
+            }
+            return realGet(id);
+        });
+        try {
+            buildPresetSidecars(grid);
+        } finally {
+            spy.mockRestore();
+            regions[1].substrate = 'maze';
+        }
+        expect(seen).toHaveLength(regions.length);
+        const ctx = seen[0].ctx;
+        for (const s of seen) expect(s.ctx).toBe(ctx); // one context for the whole grid
+        const mazeIds = regions.filter((r) => r.region_id !== spyId).map((r) => r.region_id);
+        expect(mazeIds.map((id) => ctx.ordinalOfRegion(id))).toEqual(mazeIds.map((_, k) => k));
+        expect(ctx.ordinalOfRegion(spyId)).toBe(0);
+        expect(ctx.substrateOfRegion(spyId)).toBe('spy_ordinal');
+        expect(ctx.ordinalOfRegion('no_such_region')).toBeNull();
     });
 
     it('omits manaEnabled by default (loop mode opt-in)', () => {
