@@ -29,7 +29,7 @@ document.
 | `regionRegenerate.js` | (substrate change R0) one region's payload **rebuilt for a substrate from the document alone** — `buildDocumentRegionSpec` (the realiser's spec off `regions[p][R]` + the slot's sidecars), `regionRealiserKind`, `freeItemsFor`, `regionSizeFor`, `strandedReferences`, `regenerateRegionEntry` (the engine's `generateRegion`, the one-region re-link, the engine's `serializeRegionEntry`); since R5a also the LIBRARY source — `offersLibrarySource`, `libraryExitSides`, `stampLibraryLocations`, `librarySourceSummary` (a captured entry through the target's `instantiateLibraryEntryForSpecs`); the op and its refusal sentences are `rulesDocOps.js`'s `regenerate-region-sidecar` |
 | `regionGenerationFlow.js` | (substrate change R2) what the block's **Region generation** form opens on and sends — `regionGenerationPlan` (the target's registry defaults, the seed, ⚖ Q4's size for a tiles target, the region's own recorded knobs when its payload is the target's own, or the op's pre-realiser refusal), `composeRegenerateArgs` (the bag → the op's arguments, as top-down composes them), `freeItemsSentence`, `regenerationProvenance`, `regenerationAnswer` |
 | `librarySourcePicker.js` | (substrate change R5a) the form's **Library entry** picker — `createServedLibraryCatalog` / `servedLibraryCatalog` (the served index fetched ONCE per page, the packs on demand, through the pipeline's `regionLibraryLoader`; base path `LIBRARY_BASE_PATH`, the pipeline panel's `'./'` rule), `libraryPickerOptions` (the target's entries, disabled with the op's own refusal), `loadLibraryOptions` (never throws: `libraryFetchFailureSentence`) |
-| `regionContent.js` | (substrate change R5b) a region's CONTENT **replaced by a zone** — the op `replace-region-content`'s mechanics and sentences: `zoneSourceFacts` (the channel + the read-back), `installedZoneConfigFrom` (the target's `zoneConfigFromSlot` — no install), `zoneHeldBy` / `zoneOfRegion` / `zoneOptions`, `zoneSourceRefusal`, `zoneContentFor` (install + verify + extract: worker or Node only), `applyZoneContent` (the pure cascade), `describeZoneReplacement`, `unplacedPoolItems` (the Placements tab's readout), `zoneJobAnswer` (the worker's answer) |
+| `regionContent.js` | (substrate change R5b) a region's CONTENT **replaced by a zone** — the op `replace-region-content`'s mechanics and sentences: `zoneSourceFacts` (the channel + the read-back), `installedZoneConfigFrom` (the target's `zoneConfigFromSlot` — no install), `zoneHeldBy` / `zoneOfRegion` / `zoneOptions`, `zoneSourceRefusal`, `zoneContentFor` (install + verify + extract: worker or Node only), `applyZoneContent` (the pure cascade), `describeZoneReplacement`, `unplacedPoolItems` (the Placements tab's readout), `zoneJobAnswer` (the worker's answer); since R5c `resolveZoneFetches` (the served documents a read-back names, fetched and asked again) and `zoneSourceLabelOf` (the Source row's word) |
 | `regionGenerationRun.js` | (R2) the **time-limit setting** (`regionGenerationTimeoutSeconds`, `REGION_GENERATION_TIMEOUT_DEFAULT_S`) and the **worker** protocol: `runRegenerateJob` (the worker's side) and `runRegenerateInWorker` (the page's: the budget, Cancel, `terminate()`), the timeout and Cancel sentences |
 | `regionRegenerateWorker.js` | (R2) the MODULE WORKER one Generate runs in — imports the eight registry libraries into its own registry, then `regionRegenerate.js`. ⛔ A worker cannot be bundled into `bundle.js`: `scripts/build/bundle-frontend.js` copies it into `dist/` (beside `stateManagerWorker.js` and `balanceWorker.js`), and in bundled mode the page resolves it at its SOURCE location, `stateManagerProxy`'s rule |
 | `startingInventoryBlock.js` | (substrate change R3) the **Starting inventory** block as data — `startingInventoryList` (the list as `{name, count}`), `substratesInSlot`, `startingNeedRows` (each substrate's registry `startingInventory` needs against the list, with a grant op per candidate), `startingGrantOp` (`set-starting-count` at current + 1), `needSentence`; the panel draws what these answer, on the Items tab and in the Region generation form |
@@ -958,10 +958,10 @@ dataset, and its locations are that zone's tasks. So a zone is not a payload
 around the document's locations (R0, R5a), it is the region's **content**. The
 form's Source row offers **Zone N** when the target declares the zone channel
 (`zoneCount` + `extractZoneRules`) AND can read back, from the document, the
-config its zones were built with (`zoneConfigFromSlot`). Today that is jta. The
-bounce, runner, omsi and flash_seedling channels have no read-back, so the op
-refuses them by name and the form does not offer them. A target with no realiser
-(jta) opens on the zone.
+config its zones were built with (`zoneConfigFromSlot`). Today that is jta and,
+since R5c, flash_seedling (*Atlas room*, below). The bounce, runner and omsi
+channels have no read-back, so the op refuses them by name and the form does not
+offer them. A target with no realiser (jta) opens on the zone.
 
 **The picker** lists `0..zoneCount-1` of the slot's RECORDED dataset (the sibling
 that hosts `jta_dataset`, else the bundled vanilla table). A zone another region
@@ -1024,6 +1024,39 @@ hand-authored, so both refuse.
 
 The corpus control takes `--source=zone`: every committed zone-channel region ×
 every zone of its slot, on a copy (the numbers are in the R5b record, plan §14).
+
+#### The atlas-room source (substrate change R5c)
+
+`flash_seedling`'s regions are real Seedling rooms of an atlas, so its zone
+source is a **room**: the Source row reads the entry's own word for it
+(`zoneSourceLabel`: *Atlas room*; jta keeps *Zone N*; the hub names no substrate),
+and the rest is R5b's path — the same op, cascade and refusals.
+
+**The intake.** A rules.json names its atlas only by `region_atlas.atlas_id`
+(`map_document` is the level map, not an atlas). The bundled starter atlas is
+read in place; any other is resolved through the served index
+`modules/flashPanel/atlases/atlas_files.json` and **fetched** — by the picker, for
+the room names (once per page, installing nothing), and again by the generation
+worker, which installs it and extracts. A fetch that fails is refused, naming the
+path (*"… reads the served document `…`, which could not be fetched (HTTP 404)"*);
+an id the index does not list is refused naming the index.
+
+**The picker** lists the atlas's placeable rooms by name, a room another region
+of the slot plays disabled and labelled with it, and then the doorless rooms,
+disabled, with the channel's reason. The new room's doors bind to the region's
+existing exit sides in order; a room with fewer doors than the region has exits
+is refused in the channel's sentence. The Region's exits are unchanged, and their
+targets carry over onto the bound doors.
+
+**What refuses it, by name**, beyond R5b's list: a document without the
+`region_atlas` or `flash_panel` block (the atlas is named only in the first, the
+flash panel engages on the second); a room whose `atlas_ref` is not the
+document's atlas; **the atlas compiler's projection** (`seedling_atlas`,
+`seedling_playthrough`: their exits are the level's own transitions, not doors
+bound to sides, so the content source never made them); a fetched atlas whose id
+is not the one asked for (a stale index, a restamp). `seedling_spiral_room` and
+`seedling_sphere_room` take their own room back byte-identically. The corpus
+control's `--source=zone` reads the served documents off disk (numbers: plan §15).
 
 #### The fields view (D1)
 

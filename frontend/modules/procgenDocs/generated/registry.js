@@ -78,13 +78,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js"
         }
     ],
-    "findings": [
-        {
-            "name": "zoneSourceLabel",
-            "severity": "documented NOWHERE in the procgen docs",
-            "what": "`zoneSourceLabel` is carried by [flash_seedling] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads."
-        }
-    ],
+    "findings": [],
     "groups": [
         {
             "rows": [
@@ -181,7 +175,8 @@ export const REGISTRY = frz({
                 "victoryItem",
                 "zoneConfigFromSlot",
                 "zoneCount",
-                "zoneOfPayload"
+                "zoneOfPayload",
+                "zoneSourceLabel"
             ],
             "title": "Build-time — content sources (zone-based substrates)"
         },
@@ -232,12 +227,6 @@ export const REGISTRY = frz({
                 "startingInventory"
             ],
             "title": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)"
-        },
-        {
-            "rows": [
-                "zoneSourceLabel"
-            ],
-            "title": "Not documented in the registry reference"
         }
     ],
     "libraries": [
@@ -6623,8 +6612,8 @@ export const REGISTRY = frz({
                     "value": null
                 }
             ],
-            "documentedHow": null,
-            "group": "Not documented in the registry reference",
+            "documentedHow": "table",
+            "group": "Build-time — content sources (zone-based substrates)",
             "name": "zoneSourceLabel"
         }
     ],
