@@ -4,6 +4,10 @@
       "path": "./modules/modules/index.js",
       "enabled": true
     },
+    "quickLaunch": {
+      "path": "./modules/quickLaunch/index.js",
+      "enabled": true
+    },
     "json": {
       "path": "./modules/json/index.js",
       "enabled": true
@@ -227,6 +231,7 @@
   },
   "loadPriority": [
     "modules",
+    "quickLaunch",
     "json",
     "events",
     "stateManager",

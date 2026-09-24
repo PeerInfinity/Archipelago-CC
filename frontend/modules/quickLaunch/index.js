@@ -17,6 +17,7 @@ export const moduleInfo = {
     icon: '🚀',
     column: 1,
     description: 'A button for every panel (click to open or bring it forward) and links to the user guides.',
+    docs: 'docs/json/user/modules/quickLaunch.md',
     requires: [],
 };
 

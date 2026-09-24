@@ -43,6 +43,7 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 - [Game State Panel](./gameStatePanel.md)
 - [Presets](./presets.md)
 - [Progress Bar Panel](./progressBarPanel.md)
+- [Quick Launch](../user/modules/quickLaunch.md) (`quickLaunch`) — a button per registered panel (opens it, or brings it forward) and a link per user guide; its catalog is read off the live registry and each module's own `moduleInfo` (`docs` = its guide). Code: `frontend/modules/quickLaunch/`.
 - [Region Graph](./regionGraph.md)
 - [Regions](./regions.md)
 - [Settings](./settings.md)

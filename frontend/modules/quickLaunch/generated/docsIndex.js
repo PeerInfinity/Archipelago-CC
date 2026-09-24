@@ -116,6 +116,11 @@ export const DOCS_INDEX = Object.freeze([
         "section": "user/modules"
     },
     {
+        "path": "docs/json/user/modules/quickLaunch.md",
+        "title": "Quick Launch Panel",
+        "section": "user/modules"
+    },
+    {
         "path": "docs/json/user/modules/regionGraph.md",
         "title": "Region Graph Panel",
         "section": "user/modules"

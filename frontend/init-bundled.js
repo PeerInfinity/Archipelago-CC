@@ -62,6 +62,7 @@ import { incrementFileCounter, addFileError } from './app/initialization/fileLoa
 // STATIC MODULE IMPORTS - These get bundled instead of dynamically loaded
 // ============================================================================
 import * as modulesModule from './modules/modules/index.js';
+import * as quickLaunchModule from './modules/quickLaunch/index.js';
 import * as jsonModule from './modules/json/index.js';
 import * as eventsModule from './modules/events/index.js';
 import * as stateManagerModule from './modules/stateManager/index.js';
@@ -169,6 +170,7 @@ window.__BUNDLED_TEST_CASES__ = true;
 // Map of pre-imported modules for the bundled loader
 const BUNDLED_MODULES = {
   modules: modulesModule,
+  quickLaunch: quickLaunchModule,
   json: jsonModule,
   events: eventsModule,
   stateManager: stateManagerModule,
