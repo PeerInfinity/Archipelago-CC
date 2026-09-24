@@ -212,6 +212,8 @@ import { REGION_GENERATION_FIRST_SEED as R6_FIRST_SEED, regionRerollFacts } from
 import { libraryEntryPrecheck } from '../../apworldEditor/regionRegenerate.js';
 /** ⛓ R6 — the zone cascade's filler clause. */
 import { ZONE_FILLER_DROPPED } from '../../apworldEditor/regionContent.js';
+/** ⛓ R6b — the zone answer's config clause (recorded vs assumed). */
+import { zoneConfigSplitSentence } from '../../apworldEditor/regionContent.js';
 import { canonicalPlacementIssues } from '../../apworldEditor/rulesDocOps.js';
 
 const PANEL_ID = 'apworldEditorPanel';
@@ -11625,3 +11627,47 @@ for (const [id, name, testFunction] of R6_TESTS) {
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R6b — THE ZONE ANSWER NAMES WHAT THE DOCUMENT
+ * RECORDS AND WHAT WAS ASSUMED (plan §3d, §17).
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓ **THE ZONE GENERATE ANSWER NAMES THE CONFIG SPLIT** — R5b (c)'s scenario
+ * (`region_1_1` relabelled frees zone 2; `region_1_0` takes it) on the committed
+ * `jta_dataset_test`, which records no config: the answer is the op's
+ * description followed by `zoneConfigSplitSentence` over the READ-BACK's own
+ * split (derived from the document on the page, never typed), and the op's
+ * provenance records the same split and the verified regions.
+ */
+export async function apworldTheZoneAnswerNamesTheConfigSplit(testController) {
+    try {
+        const disk = await (await fetch(JTA_DATASET_PATH)).json();
+        const rec = installedZoneConfigFrom(disk, '1', 'jta');
+        testController.reportCondition(`⛓ premise: the document's read-back answers (recorded [${rec.recorded}], `
+            + `assumed [${Object.keys(rec.assumed ?? {})}])`, rec.ok === true && Array.isArray(rec.recorded));
+        const want = { recorded: rec.recorded, assumed: Object.keys(rec.assumed) };
+        const got = await zoneGenerateLands(testController, 'region_1_1', 'region_1_0');
+        if (!got) return testController.getOverallResult();
+        testController.assertEqual('⛓⛓ the provenance records the split', JSON.stringify(want),
+            JSON.stringify(got.op?.provenance?.config));
+        const verified = got.op?.provenance?.verified ?? [];
+        testController.reportCondition(`…and the regions it verified (${verified.length})`, verified.length > 0);
+        const clause = zoneConfigSplitSentence(want, verified.length);
+        testController.reportCondition(`⛓⛓ the answer names it: "${clause}"`, String(got.answer).includes(` — ${clause}`));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('zone config split test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-the-zone-answer-names-the-config-split',
+    name: 'APWorld hub: a zone Generate\'s answer names the config fields the document recorded and the ones assumed, and the provenance records them',
+    description: 'APWORLD SUBSTRATE CHANGE R6b. The zone answer names the config split. See the row\'s docblock in apworldEditorTests.js.',
+    testFunction: apworldTheZoneAnswerNamesTheConfigSplit,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});

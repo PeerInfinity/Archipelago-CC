@@ -535,6 +535,25 @@ function identityUniverses(doc, isDataset) {
 }
 
 /** ⛓ R5b — `{zone}` whose identity universe equals a zone rule's `item_names`, or null. */
+/**
+ * ⛓ R6b — what the document cannot read back from its entries, at the setters'
+ * own defaults: the `assumed` half of `zoneConfigFromSlot`'s answer.
+ */
+const JTA_ASSUMED_CONFIG = Object.freeze({ perkShuffleSeed: null, freeZones: 1, startingPerks: 0 });
+const JTA_UNREAD_CONFIG_KEYS = Object.freeze(Object.keys(JTA_ASSUMED_CONFIG));
+
+/**
+ * ⛓ R6b — the recorded config (`procgen_metadata.substrate_configs.jta`), kept
+ * to the keys `recordablePipelineConfig` writes, in `JTA_PIPELINE_CONFIG_KEYS`
+ * order; anything that is not a plain object records nothing.
+ */
+function recordedJtaConfig(recorded) {
+    if (!recorded || typeof recorded !== 'object' || Array.isArray(recorded)) return {};
+    return Object.fromEntries(JTA_PIPELINE_CONFIG_KEYS
+        .filter((k) => k !== 'datasetDoc' && Object.hasOwn(recorded, k))
+        .map((k) => [k, recorded[k]]));
+}
+
 function goalZoneFromUniverse(doc, isDataset, payloads, locations) {
     const seen = new Set();
     for (const [region] of payloads) {
@@ -955,7 +974,12 @@ export const substrateRegistryEntry = Object.freeze({
     // answered as `assumed` (the setters' own defaults), and the hub VERIFIES it
     // by re-extracting every committed zone; a slot that does not reproduce is
     // refused by name there, never guessed.
-    zoneConfigFromSlot: ({ entries = {}, locations = {} } = {}) => {
+    // ⛓ R6b — `recorded` = the document's `procgen_metadata.substrate_configs.jta`
+    //   (`recordablePipelineConfig` at compile time). A field it holds is taken
+    //   over both the read-back and the assumption, and named in the answer's
+    //   `recorded`; `assumed` keeps only what it lacks. Still VERIFIED.
+    zoneConfigFromSlot: ({ entries = {}, locations = {}, recorded = null } = {}) => {
+        const rec = recordedJtaConfig(recorded);
         const payloads = Object.entries(entries)
             .map(([region, e]) => [region, e?.playable_payload])
             .filter(([, p]) => p && typeof p === 'object' && !Array.isArray(p));
@@ -976,16 +1000,19 @@ export const substrateRegistryEntry = Object.freeze({
             if (!v.ok) return { ok: false, why: `the dataset \`${host[0]}\` carries is invalid: ${v.errors[0]}` };
         }
         const source = datasetDoc ?? JTA_VANILLA_DATASET;
-        const goalZone = goalZoneFromUniverse(source, !!datasetDoc, payloads, locations)
-            ?? goalZoneFromVictory(payloads, locations);
+        const goalZone = Object.hasOwn(rec, 'goalZone')
+            ? (rec.goalZone === null ? null : { zone: rec.goalZone })
+            : (goalZoneFromUniverse(source, !!datasetDoc, payloads, locations)
+                ?? goalZoneFromVictory(payloads, locations));
         if (goalZone && goalZone.ambiguous) return { ok: false, why: goalZone.ambiguous };
-        const emitZoneLocations = payloads.some(([, p]) => p.ap_locations && typeof p.ap_locations === 'object');
+        const emitZoneLocations = Object.hasOwn(rec, 'emitZoneLocations') ? rec.emitZoneLocations
+            : payloads.some(([, p]) => p.ap_locations && typeof p.ap_locations === 'object');
         // ⛓ With the zone locations on, the pipeline ALWAYS sets a goal zone (the
         //   deepest emitted one). No rule universe and no victory placement left in
         //   this substrate's regions (the hub relabelled the goal's holder) means
         //   the document no longer records it — `null` would silently drop the
         //   goal from every zone extracted (measured, trap 1415), so: refused.
-        if (emitZoneLocations && !goalZone) {
+        if (emitZoneLocations && !goalZone && !Object.hasOwn(rec, 'goalZone')) {
             return {
                 ok: false,
                 why: 'its goal zone is not recorded — no zone rule names the perk universe and no `jta` region '
@@ -998,8 +1025,10 @@ export const substrateRegistryEntry = Object.freeze({
                 datasetDoc,
                 emitZoneLocations,
                 goalZone: goalZone ? goalZone.zone : null,
+                ...Object.fromEntries(JTA_UNREAD_CONFIG_KEYS.filter((k) => Object.hasOwn(rec, k)).map((k) => [k, rec[k]])),
             },
-            assumed: { perkShuffleSeed: null, freeZones: 1, startingPerks: 0 },
+            assumed: Object.fromEntries(Object.entries(JTA_ASSUMED_CONFIG).filter(([k]) => !Object.hasOwn(rec, k))),
+            recorded: Object.keys(rec),
             zoneCount: source.zones.length,
             host: host ? host[0] : null,
         };

@@ -939,6 +939,12 @@
             "_comment": "R6 (4). The pre-schema 'No change' cause: the selector derived no slots and a slot-3 pick fell back to slot 1 silently. Now the selector says why and refuses by name; after the schema the pick lands. Mutant: the refusal reverted."
         },
         {
+            "id": "apworld-the-zone-answer-names-the-config-split",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R6b. R5b (c)'s scenario on jta_dataset_test (records nothing): the answer = the op's description + zoneConfigSplitSentence over the read-back's own recorded/assumed split; the provenance records the split and the verified regions."
+        },
+        {
             "id": "apworld-the-preset-sidecars-door-lands-on-the-sidecars-tab",
             "enabled": true,
             "category": "apworldEditor",

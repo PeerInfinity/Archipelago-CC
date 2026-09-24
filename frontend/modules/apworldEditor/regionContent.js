@@ -50,6 +50,9 @@
  * The config is what the TARGET declares it can read back (`zoneConfigFromSlot`);
  * what it cannot is `assumed` and VERIFIED by re-extracting every committed zone
  * of the slot — a slot that does not reproduce is refused by name, never guessed.
+ * ⛓ R6b — what the document RECORDS (`procgen_metadata.substrate_configs[id]`,
+ * written by the pipeline's compile) is handed to the read-back as `recorded`,
+ * which the target prefers over `assumed`; the verification is unchanged.
  *
  * ⛔ No substrate is named here: the channel, the recovery, the held-zone reading
  * and the hosted fields are all read off the registry entry.
@@ -65,6 +68,7 @@ import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { makeLocationName } from '../procgenCore/apLocationNaming.js';
 import { walkRuleTrees } from '../procgenCore/rulesGraph.js';
 import { sidecarFieldsOf } from '../procgenCore/sidecarFields.js';
+import { recordedConfigOf } from '../procgenCore/substrateConfigRecord.js';
 import { strandedReferences } from './regionRegenerate.js';
 
 /** ⛓ The op this module is the mechanics of. */
@@ -191,7 +195,10 @@ function locationsByRegion(doc, player) {
  * ⛓⛓ **THE CONFIG THE DOCUMENT RECORDS FOR `substrate`'s ZONES IN THIS SLOT** —
  * the target's own read-back (`zoneConfigFromSlot`), never an install.
  *
- * @returns {{ok: true, cfg: object, assumed: object, zoneCount: number, host: string|null}
+ * ⛓ R6b — `recorded` is the document's record for `substrate` (or null); the
+ * answer's `recorded` names the config fields taken from it.
+ *
+ * @returns {{ok: true, cfg: object, assumed: object, recorded: string[], zoneCount: number, host: string|null}
  *          | {ok: false, why: string}}
  */
 export function installedZoneConfigFrom(doc, player, substrate, { fetched = {} } = {}) {
@@ -203,6 +210,7 @@ export function installedZoneConfigFrom(doc, player, substrate, { fetched = {} }
         locations: locationsByRegion(doc, player),
         blocks: blocksOf(doc, entry),
         fetched,
+        recorded: recordedConfigOf(doc, substrate),
     });
     // ⛓ R5c — a read-back that needs SERVED documents answers which; the caller
     //   fetches them (`resolveZoneFetches`) and asks again. Never a guess.
@@ -221,6 +229,7 @@ export function installedZoneConfigFrom(doc, player, substrate, { fetched = {} }
         ok: true,
         cfg: res.cfg,
         assumed: res.assumed ?? {},
+        recorded: Array.isArray(res.recorded) ? [...res.recorded] : [],
         zoneCount: res.zoneCount,
         host: res.host ?? null,
         ...(Array.isArray(res.zoneNames) ? { zoneNames: res.zoneNames } : {}),
@@ -514,12 +523,16 @@ export function zoneContentFor(doc, player, region, substrate, zoneIdx, { fetche
         if (diff) {
             const assumed = Object.entries(rec.assumed)
                 .map(([k, v]) => `${tick(k)} (assumed ${JSON.stringify(v)})`).join(', ');
+            const recorded = rec.recorded.map((k) => `${tick(k)} (${JSON.stringify(rec.cfg[k])})`).join(', ');
             return {
                 ok: false,
                 why: `apworld: ${ZONE_NOT_RECORDED} (slot ${player}, ${tick(substrate)}): region "${r}" does not `
                     + `reproduce as its own zone ${z} — ${diff}. `
+                    + (recorded ? `The document records ${recorded}. ` : '')
                     + (assumed ? `The document does not record ${assumed}, and the region's content was not built `
-                        + 'under those defaults (or not by the zone channel at all), ' : '')
+                        + 'under those defaults (or not by the zone channel at all), '
+                        : (recorded ? 'The region\'s content was not built under that record (or it was edited '
+                            + 'since), ' : ''))
                     + 'so a zone of this slot cannot be rebuilt without guessing.',
             };
         }
@@ -542,6 +555,7 @@ export function zoneContentFor(doc, player, region, substrate, zoneIdx, { fetche
             fillerItems: zoneFillerItemsOf(entry),
         })),
         verified,
+        config: { recorded: [...rec.recorded], assumed: Object.keys(rec.assumed) },
     };
 }
 
@@ -713,7 +727,7 @@ export function replaceRegionContentFromZone({ doc, player, region, substrate, z
     const got = zoneContentFor(doc, String(player), region, substrate, zoneIdx, { fetched });
     if (!got.ok) return got;
     const res = applyZoneContent({ doc, player: String(player), region, substrate, zoneIdx, zone: got.zone });
-    return res.ok ? { ...res, zone: got.zone, verified: got.verified } : res;
+    return res.ok ? { ...res, zone: got.zone, verified: got.verified, config: got.config } : res;
 }
 
 /* ── the description (the op's, and the form's answer) ─────────────────── */
@@ -761,6 +775,19 @@ export function describeZoneReplacement({ region, substrate, zoneIdx, res }) {
             + listed(res.stranded, (s) => `${s.region}.${s.field}`));
     }
     return `${parts.join('; ')}.`;
+}
+
+/**
+ * ⛓ R6b — **WHICH CONFIG FIELDS THE EXTRACTION TOOK FROM THE DOCUMENT'S RECORD
+ * AND WHICH IT ASSUMED** — the clause the hub appends to a zone op's answer.
+ * `config` is `zoneContentFor`'s `{recorded, assumed}` (field names).
+ */
+export function zoneConfigSplitSentence(config, verifiedCount) {
+    const rec = config?.recorded ?? [];
+    const ass = config?.assumed ?? [];
+    const names = (xs) => (xs.length ? xs.map(tick).join(', ') : 'none');
+    return `config: recorded ${names(rec)}; assumed ${names(ass)} — verified on ${verifiedCount} `
+        + `region${verifiedCount === 1 ? '' : 's'} of the slot`;
 }
 
 /* ── the Placements tab's readout ───────────────────────────────────────── */
@@ -812,6 +839,7 @@ export async function zoneJobAnswer({ doc, player, region, substrate, source }, 
         ok: true,
         zone: res.zone,
         verified: res.verified,
+        config: res.config,
         entry: res.entry,
         next: {
             locations: res.doc.regions[p][region].locations,

@@ -247,6 +247,8 @@ export function regenerationProvenance(args, res) {
             substrate: args.substrate,
             zoneIdx: args.source.zoneIdx,
             verified: res.verified ?? [],
+            // ⛓ R6b — the config fields taken from the document's record vs assumed
+            ...(res.config ? { config: res.config } : {}),
             ms: Math.round(res.ms ?? 0),
         };
     }

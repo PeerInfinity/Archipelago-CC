@@ -152,7 +152,9 @@ import {
 } from './regionGenerationFlow.js';
 // ⛓ APWORLD SUBSTRATE CHANGE R5b — the *Zone N* source: the op it lands and the
 //   Placements tab's readout of what the cascade leaves in the pool, unplaced.
-import { REPLACE_REGION_CONTENT_OP, resolveZoneFetches, unplacedPoolItems } from './regionContent.js';
+import {
+  REPLACE_REGION_CONTENT_OP, resolveZoneFetches, unplacedPoolItems, zoneConfigSplitSentence,
+} from './regionContent.js';
 import { loadLibraryOptions, servedLibraryCatalog } from './librarySourcePicker.js';
 import { REGION_SOURCE_KINDS } from './regionRegenerate.js';
 import {
@@ -7164,6 +7166,8 @@ class ApworldEditorUI {
     }
     const applied = this._applyOp(op, { rerender: false });
     if (applied.ok && applied.applied) {
+      // ⛓ R6b — the answer names which config fields the document recorded and which were assumed
+      if (res.config) this._opMessage = `${this._opMessage} — ${zoneConfigSplitSentence(res.config, (res.verified ?? []).length)}`;
       const n = this._sidecarIssuesOf(gen.region).length;
       if (n > 0) this._opMessage = `${this._opMessage} — ${n} sidecar issue${n === 1 ? '' : 's'}, see the block`;
     }
