@@ -69,7 +69,8 @@
  * Headless-safe: no `node:` imports and no DOM.
  */
 
-import { generateSeedlingLevel, placementTagId } from './procgenSeedling.js';
+import { generateSeedlingLevel, placementTagId, seedlingOracle } from './procgenSeedling.js';
+import { VERDICT } from './procgenOracle.js';
 import { PRE_SWORD_PALETTE, POST_SWORD_PALETTE } from './procgenPalette.js';
 import { pickDoorCells } from './levelSetExits.js';
 import { TILE_SIZE } from './levelWorld.js';
@@ -171,6 +172,40 @@ function doorFields(cell) {
     };
 }
 
+/**
+ * ⛓ HOW MANY TIMES a room that cannot seat its doors without sealing an approach
+ * is re-rolled before the `tooManyDoors` refusal (G2; measured: the registry's
+ * 8×6 drive room needs 1, top-down `seedling_atlas` at 10×10 at most 2).
+ */
+export const GEN_ROOM_DOOR_REROLLS = 8;
+
+/**
+ * The room seed of attempt `k`: the drawn seed itself at 0, then a fixed integer
+ * hash of (drawn, k) — never 0 (Seedling refuses seed 0), never the engine's rng.
+ */
+export function rerollSeed(drawn, k) {
+    if (k === 0) return drawn;
+    return (((Math.imul(drawn, 2654435761) + Math.imul(k, 40503)) >>> 1) % 0x7fffffff) || 1;
+}
+
+/**
+ * ⛓ DOES THE GOAL STILL CERTIFY WITH THE DOORS AS WALLS? One solve of the
+ * generator's own oracle over a COPY of the room whose door tiles are the room's
+ * wall tile (its corner — the border is wall by construction, never a typed id).
+ * `true`, or the solve's verdict as a string.
+ */
+export function goalHoldsWithDoorsAsWalls(out, doors, items) {
+    const doorKeys = new Set(doors.map((d) => cellKey(d)));
+    const layers = out.record.layers.map((layer) => {
+        if (!Array.isArray(layer.tiles)) return layer;
+        const wall = layer.tiles.find(([tx, ty]) => tx === 0 && ty === 0)?.[2];
+        return { ...layer, tiles: layer.tiles.map((t) => (doorKeys.has(cellKey({ tx: t[0], ty: t[1] }))
+            ? [t[0], t[1], wall, ...t.slice(3)] : t)) };
+    });
+    const cert = seedlingOracle({ model: out.model, items }).solve({ ...out.record, layers });
+    return cert.verdict === VERDICT.SOLVED ? true : String(cert.verdict);
+}
+
 /** The goal cell's neighbours: no door may stand there (the approach would be the check). */
 function goalGuard(goalCell) {
     return new Set(around(goalCell).map(cellKey));
@@ -185,30 +220,40 @@ function goalGuard(goalCell) {
 export function generateGenRoom(input = {}) {
     const { region_id: regionId, exits = [], size = { width: 10, height: 10 }, rng, params } = input;
     if (!regionId) throw new Error(GEN_ROOM_REFUSALS.noRegionId());
-    const seed = ((rng.next() * 0x7fffffff) | 0) || 1;
+    const drawn = ((rng.next() * 0x7fffffff) | 0) || 1;
     const knobs = knobsOf(params);
-    let out;
-    try {
-        out = generateSeedlingLevel(generatorInput(regionId, seed, size, knobs));
-    } catch (e) {
-        if (e.message.startsWith('generated Seedling room')) throw e;
-        throw new Error(GEN_ROOM_REFUSALS.generator(regionId, seed, size, e.message));
+    let seed; let out; let record; let start; let goalCell; let doors; let lastErr = null; let rerolls = 0;
+    // ⛓ G2 (⚖ planner): a room that cannot seat its doors UNSEALED is re-rolled —
+    //   `rerollSeed(drawn, k)`, no engine rng consumed, so a room that seats on the
+    //   first draw is byte-unchanged and no other region moves.
+    for (let k = 0; k <= GEN_ROOM_DOOR_REROLLS; k += 1) {
+        seed = rerollSeed(drawn, k);
+        try {
+            out = generateSeedlingLevel(generatorInput(regionId, seed, size, knobs));
+        } catch (e) {
+            if (e.message.startsWith('generated Seedling room')) throw e;
+            throw new Error(GEN_ROOM_REFUSALS.generator(regionId, seed, size, e.message));
+        }
+        record = coreLevelRecord(out.record);
+        start = { ...out.summary.startCell };
+        goalCell = { ...out.summary.goalCell };
+        try {
+            ({ doors } = pickDoorCells(record, start, exits.length, {
+                room: `'${regionId}'`, exclude: goalGuard(goalCell), keepReachable: { cells: [goalCell] },
+            }));
+        } catch (e) {
+            if (e.name !== 'LevelSetExitError') throw e;
+            lastErr = e;
+            continue;
+        }
+        // ⛓ G2 (⚖ planner): the flood check ignores a goal past a solid the solver
+        //   clears, so the GOAL is re-certified with the doors as WALLS — one solve.
+        const unsealed = goalHoldsWithDoorsAsWalls(out, doors, GEN_ROOM_BIOMES[knobs.biome].items ?? null);
+        if (unsealed === true) { lastErr = null; rerolls = k; break; }
+        lastErr = new Error(`levelSetExits: room '${regionId}' seats its ${exits.length} door(s), but with them as `
+            + `walls the generator's own solver no longer reaches the goal (${unsealed})`);
     }
-    // ⛓ The CORE record — `{width, height, layers, entities}`, attrs as strings —
-    //   exactly what `buildLevelSet` writes into a set (`source.record`), so the
-    //   sidecar's room IS the exporter's room for that seed and knobs.
-    const record = coreLevelRecord(out.record);
-    const start = { ...out.summary.startCell };
-    const goalCell = { ...out.summary.goalCell };
-    let doors;
-    try {
-        ({ doors } = pickDoorCells(record, start, exits.length, {
-            room: `'${regionId}'`, exclude: goalGuard(goalCell),
-        }));
-    } catch (e) {
-        if (e.name !== 'LevelSetExitError') throw e;
-        throw new Error(GEN_ROOM_REFUSALS.tooManyDoors(regionId, seed, record, exits.length, e.message));
-    }
+    if (lastErr) throw new Error(GEN_ROOM_REFUSALS.tooManyDoors(regionId, seed, record, exits.length, lastErr.message));
     const nextSide = sideAssigner(exits);
     const defaultExitId = (i) => (exits.length === 1 ? 'exit' : `exit_${i}`);
     const roomExits = new Map();
@@ -233,7 +278,8 @@ export function generateGenRoom(input = {}) {
             record,
             start,
             goalCell,
-            generation: knobs,
+            // ⛓ `rerolls`: how many re-rolls it took (0 = the first draw) — `seed` is the one used.
+            generation: { ...knobs, rerolls },
             exits: roomExits,
             locations: [],
             summary: { stop: out.summary.stop ?? null, keptCount: out.summary.keptCount ?? null },
@@ -379,9 +425,38 @@ function bindAllDoors(world, entries) {
     const guard = (c) => { exclude.add(cellKey(c)); for (const n of around(c)) exclude.add(cellKey(n)); };
     for (const [, e] of entries) for (const [tx, ty] of e.exit_tiles ?? []) guard({ tx, ty });
     for (const l of world.locations) guard(l.cell);
-    const { doors } = pickDoorCells(world.record, world.start, unbound.length, {
-        room: `'${world.region_id ?? '?'}'`, exclude,
+    // ⛓ G2: the doors already bound are WALLS, and their approaches, the goal and
+    //   every location stay reachable from the start (`keepReachable`).
+    const bound = entries.filter(([, e]) => Array.isArray(e.exit_tiles));
+    const walls = new Set(bound.flatMap(([, e]) => e.exit_tiles.map(([tx, ty]) => cellKey({ tx, ty }))));
+    const keepReachable = {
+        walls,
+        cells: [world.goalCell, ...world.locations.map((l) => l.cell),
+            ...bound.map(([, e]) => ({ tx: e.entrance_spawn.x / TILE_SIZE, ty: e.entrance_spawn.y / TILE_SIZE }))],
+    };
+    const pick = (ex) => pickDoorCells(world.record, world.start, unbound.length, {
+        room: `'${world.region_id ?? '?'}'`, exclude: ex, keepReachable,
     });
+    /**
+     * ⛓ G2: the room is FIXED here (its locations are placed), so it cannot be
+     * re-rolled. When the neighbour guards leave no unsealing cell, the second try
+     * keeps only the cells themselves (goal, locations, doors): `keepReachable`
+     * already rejects a door whose approach is a door or that seals one, which is
+     * what the guards were for. Neither → the room's refusal, as a sentence.
+     */
+    let doors;
+    try {
+        ({ doors } = pick(exclude));
+    } catch (first) {
+        if (first.name !== 'LevelSetExitError') throw first;
+        try {
+            ({ doors } = pick(new Set([cellKey(world.goalCell), ...world.locations.map((l) => cellKey(l.cell)), ...walls])));
+        } catch (e) {
+            if (e.name !== 'LevelSetExitError') throw e;
+            throw new Error(GEN_ROOM_REFUSALS.tooManyDoors(world.region_id ?? '?', world.seed, world.size,
+                entries.length, e.message));
+        }
+    }
     const fresh = new Map(unbound.map(([key], k) => [key, doors[k]]));
     return entries.map(([key, e]) => (fresh.has(key) ? [key, { ...e, ...doorFields(fresh.get(key)) }] : [key, e]));
 }

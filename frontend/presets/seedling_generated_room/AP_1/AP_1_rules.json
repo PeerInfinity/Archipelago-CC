@@ -837,7 +837,8 @@
             "skeleton": "",
             "elements": "",
             "areas": "",
-            "fill": "dense"
+            "fill": "dense",
+            "rerolls": 0
           },
           "locations": [
             {
@@ -881,22 +882,22 @@
               "target_substrate": "flash_seedling_gen"
             },
             {
-              "exit_id": "out_teleporter_128_48",
+              "exit_id": "out_teleporter_128_128",
               "kind": "teleporter",
               "side": "E",
               "exit_tiles": [
                 [
                   8,
-                  3
+                  8
                 ]
               ],
               "entrance_tile": [
                 8,
-                3
+                8
               ],
               "entrance_spawn": {
                 "x": 128,
-                "y": 64
+                "y": 112
               },
               "exitName": "exit_1",
               "targetRegion": "region_1_0",
@@ -1889,7 +1890,8 @@
             "skeleton": "",
             "elements": "",
             "areas": "",
-            "fill": "dense"
+            "fill": "dense",
+            "rerolls": 0
           },
           "locations": [],
           "level": 1,
