@@ -84,10 +84,13 @@ async function main() {
     // Compile a grid exactly the way generate-jta-locations-test-preset.mjs does
     // (same buildRulesJson opts + the loop_costs block + JSON formatting), so a
     // byte compare against the committed preset is meaningful.
-    const compile = (grid, startCell) => {
+    // ⛓ R6b — the generator now passes the spiral compile's procgenMetadata, so
+    //   the compile records the installed jta config (`substrate_configs.jta`).
+    const compile = (grid, startCell, stats) => {
         const rules = engine.buildRulesJson(grid, {
             startCell, seed: SEED, itemLib, gameName: GAME_NAME,
             completionConditionItem: victoryName,
+            procgenMetadata: { driver: 'shuffled-spiral', stop_reason: stats.stopReason },
         });
         rules.loop_costs = {
             regions: {}, locations: {},
@@ -106,7 +109,7 @@ async function main() {
         regionSize: { width: 8, height: 6 }, itemPool: {}, obstaclePool: {}, seed: SEED,
         growthParams: { substrateQuotas: { jta: QUOTA }, assumeBidirectional: true, startSubstrate: 'jta' },
     });
-    const monoRules = compile(mono.grid, mono.startCell);
+    const monoRules = compile(mono.grid, mono.startCell, mono.stats);
 
     // --- pipeline grid (Part 3: stepped spiral + ② content config seam) ---
     // Reset the globals first to prove ① applySubstrateConfig installs the
@@ -128,7 +131,7 @@ async function main() {
         },
         compileIn: { seed: SEED },
     }), 'regions');
-    const pipeRules = compile(env.regions.grid, env.regions.startCell);
+    const pipeRules = compile(env.regions.grid, env.regions.startCell, env.regions.stats);
 
     ok(env.content?.dataset_id === datasetDoc.dataset_id,
         'pipeline ② content materialised the dataset onto the envelope');
@@ -140,8 +143,21 @@ async function main() {
             + '(regenerate with scripts/test/generate-jta-locations-test-preset.mjs --only jta_dataset_test)');
     } else {
         const committed = fs.readFileSync(COMMITTED, 'utf8');
-        ok(pipeRules === committed,
-            `pipeline rules.json === committed ${GAME_ID} preset the in-app test solves + plays`);
+        // ⛓ R6b — a committed preset that PREDATES the recorded config (the re-record
+        //   is the user's call, apworld-substrate plan §17) must differ from the
+        //   pipeline's output by EXACTLY the `procgen_metadata` block; once it is
+        //   re-recorded the compare is byte-for-byte again. Any other difference reds.
+        const predates = !Object.hasOwn(JSON.parse(committed), 'procgen_metadata');
+        const want = predates
+            ? (() => { const r = JSON.parse(pipeRules); delete r.procgen_metadata; return JSON.stringify(r, null, 2) + '\n'; })()
+            : pipeRules;
+        if (predates) {
+            console.log(`  NOTE: the committed ${GAME_ID} preset predates the recorded config — compared without `
+                + 'the pipeline\'s procgen_metadata block (the re-record is pending)');
+        }
+        ok(want === committed,
+            `pipeline rules.json === committed ${GAME_ID} preset the in-app test solves + plays`
+                + (predates ? ' (but for the procgen_metadata block it predates)' : ''));
     }
 
     console.log(failures === 0

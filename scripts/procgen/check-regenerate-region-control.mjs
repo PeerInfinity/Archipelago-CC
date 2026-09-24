@@ -82,14 +82,20 @@
  *   node scripts/procgen/check-regenerate-region-control.mjs --targets=bounce,runner --limit=2 --fixtures
  *   node scripts/procgen/check-regenerate-region-control.mjs --seed=7
  *   node scripts/procgen/check-regenerate-region-control.mjs --targets=bounce --op-timeout=20
+ *   node scripts/procgen/check-regenerate-region-control.mjs --source=zone --tree=/tmp/jta-scratch
+ *
+ * ⛓ R6b — `--tree=<dir>` replaces the tracked corpus with every `*_rules.json`
+ * under `<dir>` (a scratch regeneration, e.g. the jta fixture generator's
+ * `--out`), so a BEFORE/AFTER over the same worlds reads the committed and the
+ * regenerated documents through one control.
  *
  * Pure node: no dev server, no browser. `--targets=all` = every registered entry
  * with a realiser (derived from the registry, never listed here).
  */
 
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { readFileSync, readdirSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { Worker, isMainThread, parentPort, workerData } from 'node:worker_threads';
 
@@ -106,6 +112,7 @@ const arg = (n) => {
 };
 const JSON_OUT = argv.includes('--json');
 const FIXTURES = argv.includes('--fixtures');
+const TREE = arg('tree');
 
 /** ⛓ The fast form's defaults (the header's ⚠). */
 export const DEFAULT_LIMIT = 12;
@@ -134,7 +141,15 @@ const FROM = list(arg('from'));
 
 const errOut = (s) => process.stderr.write(`${s}\n`);
 
+/** ⛓ R6b — every `*_rules.json` under `dir`, as absolute paths, sorted. */
+function treeDocuments(dir) {
+    const root = resolve(dir);
+    return readdirSync(root, { recursive: true })
+        .filter((f) => String(f).endsWith('_rules.json')).map((f) => join(root, String(f))).sort();
+}
+
 function documents() {
+    if (TREE) return treeDocuments(TREE);
     const ls = (...extra) => execFileSync('git',
         ['-C', REPO, 'ls-files', ...extra, '--', 'frontend/presets'], { encoding: 'utf8' })
         .split('\n').filter((f) => f.endsWith('_rules.json'));
@@ -269,7 +284,7 @@ async function workerLoop() {
     let cached = { rel: null, doc: null, base: new Map() };
     parentPort.on('message', async ({ rel, p, region, to, source }) => {
         if (cached.rel !== rel) {
-            const doc = JSON.parse(readFileSync(join(REPO, rel), 'utf8'));
+            const doc = JSON.parse(readFileSync(resolve(REPO, rel), 'utf8'));
             if (STARTING.length) {
                 doc.starting_items = { ...(doc.starting_items ?? {}) };
                 for (const p of Object.keys(doc.preset_sidecars ?? {})) {
@@ -370,7 +385,7 @@ async function main() {
         const td = Date.now();
         let doc;
         try {
-            doc = JSON.parse(readFileSync(join(REPO, rel), 'utf8'));
+            doc = JSON.parse(readFileSync(resolve(REPO, rel), 'utf8'));
         } catch {
             continue;
         }

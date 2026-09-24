@@ -35,8 +35,17 @@
  * Re-running is idempotent (overwrites the rules.json). Register the
  * preset index entry with scripts/utils/register-preset.py (done once).
  *
- *   node scripts/test/generate-jta-locations-test-preset.mjs            # both
+ * ⛓ APWORLD SUBSTRATE CHANGE R6b — the output carries `procgen_metadata` (the
+ * spiral compile's shape, `spiralSteps.js` ④), so `buildRulesJson` records the
+ * installed jta config in `procgen_metadata.substrate_configs.jta` — the fields
+ * the APWorld hub's zone read-back cannot otherwise recover (the shuffle seed,
+ * the zone gating). `--out <dir>` writes `<dir>/<gameId>/<seed id>/…` instead of
+ * `frontend/presets/` (a scratch regeneration; the committed fixtures'
+ * re-record is a separate, deliberate step).
+ *
+ *   node scripts/test/generate-jta-locations-test-preset.mjs            # all five
  *   node scripts/test/generate-jta-locations-test-preset.mjs --only jta_randomized_test
+ *   node scripts/test/generate-jta-locations-test-preset.mjs --out /tmp/jta-scratch
  */
 
 import fs from 'node:fs';
@@ -114,11 +123,11 @@ const PRESETS = [
     },
 ];
 
-async function generate(preset, mods) {
+async function generate(preset, mods, outRoot) {
     const { jtaLib, engine, substrateRegistry, mergeSubstrateItemLib, DEFAULT_ITEMS } = mods;
     const { gameId, gameName, quota, shuffleSeed, startInventory, dataset, itemSchedule } = preset;
     const goalZone = quota - 1;   // arrangeShuffledSpiral maps the Nth jta region to zone N
-    const outDir = path.join(repoRoot, 'frontend/presets', gameId, SEED_ID);
+    const outDir = path.join(outRoot, gameId, SEED_ID);
     const outFile = path.join(outDir, `${SEED_ID}_rules.json`);
 
     // Synthetic dataset (Phase 5d): generated fresh — deterministic per
@@ -153,7 +162,7 @@ async function generate(preset, mods) {
     jtaLib.setJtaGoalZone(goalZone);
     jtaLib.setJtaPerkShuffleSeed(shuffleSeed);
 
-    const { grid, startCell } = engine.arrangeShuffledSpiral({
+    const { grid, startCell, stats } = engine.arrangeShuffledSpiral({
         regionSize: { width: 8, height: 6 }, itemPool: {}, obstaclePool: {}, seed: SEED,
         growthParams: { substrateQuotas: { jta: quota }, assumeBidirectional: true, startSubstrate: 'jta' },
     });
@@ -164,6 +173,9 @@ async function generate(preset, mods) {
         startCell, seed: SEED, itemLib,
         gameName,
         completionConditionItem: victoryName,
+        // ⛓ R6b — the spiral compile's metadata (`spiralSteps.js` ④), so the
+        //   compile records the installed jta config beside it.
+        procgenMetadata: { driver: 'shuffled-spiral', stop_reason: stats.stopReason },
     });
 
     // The loops module auto-enters loop mode when cost data is present;
@@ -268,6 +280,10 @@ async function generate(preset, mods) {
 async function main() {
     const only = process.argv.includes('--only')
         ? process.argv[process.argv.indexOf('--only') + 1] : null;
+    const outArg = process.argv.includes('--out')
+        ? process.argv[process.argv.indexOf('--out') + 1] : null;
+    if (process.argv.includes('--out') && !outArg) throw new Error('--out needs a directory');
+    const outRoot = outArg ? path.resolve(outArg) : path.join(repoRoot, 'frontend/presets');
     const mods = {
         jtaLib: await import(pathToFileURL(path.join(repoRoot,
             'frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js'))),
@@ -293,7 +309,7 @@ async function main() {
     for (const preset of PRESETS) {
         if (only && preset.gameId !== only) continue;
         console.log(`\n--- ${preset.gameId}`);
-        await generate(preset, mods);
+        await generate(preset, mods, outRoot);
     }
 }
 
