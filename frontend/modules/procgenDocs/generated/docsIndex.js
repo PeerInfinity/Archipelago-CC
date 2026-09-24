@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 18,
-        "headings": 805,
+        "headings": 806,
         "indexHeadings": 2,
-        "lines": 21409,
+        "lines": 21427,
         "pages": 4,
-        "words": 269590
+        "words": 270607
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -54,7 +54,7 @@ export const DOCS_INDEX = frz({
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
             "headings": 21,
-            "lines": 261,
+            "lines": 262,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -63,7 +63,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 9816
+            "words": 9975
         },
         {
             "description": "Every demonstrable feature of the two procgen lab pages, one entry each, with the link that shows it, the CLI command that reproduces it in node, which control to press, and what you are looking at.",
@@ -265,8 +265,8 @@ export const DOCS_INDEX = frz({
             "description": "The flash substrate (`frontend/modules/flashSubstrate/`, id `flash`) hosts recompiled Flash games — SWF → C → WASM via SWFRecomp-CC — in a same-origin iframe as procgen regions. The module ships a placeholder game page, so it is testable independently of any real recompiled game; its real significance is as the **shared iframe-substrate machinery** other substrates build on.",
             "file": "flash.md",
             "h1": "Flash Substrate",
-            "headings": 13,
-            "lines": 171,
+            "headings": 14,
+            "lines": 188,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -275,7 +275,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/flash.md",
-            "words": 6570
+            "words": 7428
         },
         {
             "description": "The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) hosts the Journey to Ascension fork — an incremental/idle game in the `frontend/modules/journey-to-ascension/` submodule — in a same-origin iframe as a loop-mode substrate.",

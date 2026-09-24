@@ -561,7 +561,10 @@ describe('the registry matrix is one column per ENTRY and one row per FIELD', ()
         }
         ({ substrateRegistry } = await import('../shared/procgen/substrateRegistry.js'));
         entries = substrateRegistry.getAll();
-    });
+    // ⛓ seedling generated G1: the list's `flashSeedlingGenBuild.js` imports the
+    //   Seedling generator (~94 modules). Measured: this hook timed out at the
+    //   default 10 s under a loaded parallel run; the budget says so out loud.
+    }, 60_000);
 
     it('⛓⛓ every entry the REGISTRY returns is a column, in the same order', () => {
         expect(REGISTRY.columns.map((c) => c.id)).toEqual(entries.map((e) => e.id));

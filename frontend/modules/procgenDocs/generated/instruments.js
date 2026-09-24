@@ -4424,7 +4424,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "export",
             "citedBy": [
-                "docs/json/developer/procgen/architecture.md"
+                "docs/json/developer/procgen/architecture.md",
+                "docs/json/developer/procgen/flash.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
