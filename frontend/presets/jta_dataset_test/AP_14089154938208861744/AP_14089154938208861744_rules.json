@@ -3251,6 +3251,24 @@
       }
     }
   },
+  "procgen_metadata": {
+    "driver": "shuffled-spiral",
+    "stop_reason": "spiral_complete",
+    "region_count": 3,
+    "grid_dims": {
+      "width": 2,
+      "height": 2
+    },
+    "substrate_configs": {
+      "jta": {
+        "emitZoneLocations": true,
+        "goalZone": 2,
+        "freeZones": 1,
+        "startingPerks": 0,
+        "perkShuffleSeed": null
+      }
+    }
+  },
   "sphere_log": [
     {
       "type": "metadata",
