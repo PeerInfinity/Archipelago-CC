@@ -107,6 +107,15 @@ describe('the spiral — SEEDLING_GENERATED_ROOM_STATE (maze 2 + flash_seedling_
         const [[, { playable_payload: p }]] = holding;
         expect(p.locations[0]).toMatchObject({ item: 'key_blue', cell: p.goal_cell });
     }, 60_000);
+
+    it('the committed seedling_generated_room preset IS this world (G2)', async () => {
+        // The byte gate is make-seedling-spiral-room-preset.mjs --state=generated --check;
+        // this row keeps the equality in the CI suite, format-agnostic.
+        const committed = JSON.parse(readFileSync(
+            join(ROOT, 'frontend/presets/seedling_generated_room/AP_1/AP_1_rules.json'), 'utf8'));
+        const { rulesJson } = await build(SEEDLING_GENERATED_ROOM_STATE);
+        expect(committed).toEqual(rulesJson);
+    }, 60_000);
 });
 
 describe('sphere growth — SEEDLING_GENERATED_LEAF_STATE (a 1-item generated leaf behind a maze gate)', () => {

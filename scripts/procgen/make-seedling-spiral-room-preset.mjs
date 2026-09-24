@@ -8,9 +8,13 @@
  *            from `SEEDLING_SPIRAL_ROOM_STATE`;
  *   sphere → `seedling_sphere_room`: the sphere-growth world with ONE real
  *            Seedling room as a LEAF behind a maze gate (T3), from
- *            `SEEDLING_SPHERE_ROOM_STATE`.
+ *            `SEEDLING_SPHERE_ROOM_STATE`;
+ *   generated → `seedling_generated_room`: the shuffled spiral with TWO
+ *            GENERATED Seedling rooms (`flash_seedling_gen`) and two maze rooms,
+ *            the start room holding an AP item (seedling generated G2), from
+ *            `SEEDLING_GENERATED_ROOM_STATE`.
  *
- * ONE recipe, two states: the same assembly, the same bytes rule, the same
+ * ONE recipe, three states: the same assembly, the same bytes rule, the same
  * `--check`.
  *
  * The preset is a FUNCTION of that committed state, never a hand edit: this
@@ -27,10 +31,11 @@
  * (`scripts/utils/register-preset.py --game-id <game id> <file>`); each is a dev
  * preset, listed in `scripts/release/preserved-dev-presets.txt`, not in
  * `preset_files.live.json`. The box gates that PLAY them are
- * `check-seedling-spiral-room-play.mjs` and `check-seedling-sphere-room-play.mjs`.
+ * `check-seedling-spiral-room-play.mjs`, `check-seedling-sphere-room-play.mjs` and
+ * `check-seedling-generated-room-play.mjs`.
  *
  * Usage:
- *   node scripts/procgen/make-seedling-spiral-room-preset.mjs [--state=spiral|sphere] [--check]
+ *   node scripts/procgen/make-seedling-spiral-room-preset.mjs [--state=spiral|sphere|generated] [--check]
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -45,6 +50,7 @@ const repoRoot = path.resolve(here, '../..');
 const PRESETS = Object.freeze({
     spiral: Object.freeze({ stateExport: 'SEEDLING_SPIRAL_ROOM_STATE', gameId: 'seedling_spiral_room' }),
     sphere: Object.freeze({ stateExport: 'SEEDLING_SPHERE_ROOM_STATE', gameId: 'seedling_sphere_room' }),
+    generated: Object.freeze({ stateExport: 'SEEDLING_GENERATED_ROOM_STATE', gameId: 'seedling_generated_room' }),
 });
 const imp = (rel) => import(pathToFileURL(path.join(repoRoot, rel)));
 

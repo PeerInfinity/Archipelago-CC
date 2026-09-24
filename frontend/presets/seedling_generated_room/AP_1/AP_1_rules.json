@@ -1,0 +1,2021 @@
+{
+  "schema_version": 3,
+  "game_name": "Procgen Maze",
+  "game_directory": "procgen_maze_worldgen",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 1,
+  "seed_name": "",
+  "player_names": {
+    "1": "Player1"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "region_0_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_0_0": {
+        "name": "region_0_0",
+        "exits": [
+          {
+            "name": "exit_0",
+            "connected_region": "region_0_1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "exit_1",
+            "connected_region": "region_1_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_0_0__key_blue_pickup",
+            "id": 1000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "key_blue",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "region_1_0": {
+        "name": "region_1_0",
+        "exits": [
+          {
+            "name": "exit_0",
+            "connected_region": "region_1_1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "exit_1",
+            "connected_region": "region_0_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_0_1": {
+        "name": "region_0_1",
+        "exits": [
+          {
+            "name": "exit_0",
+            "connected_region": "region_0_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "exit_1",
+            "connected_region": "region_1_1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_1_1": {
+        "name": "region_1_1",
+        "exits": [
+          {
+            "name": "exit_0",
+            "connected_region": "region_1_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "exit_1",
+            "connected_region": "region_0_1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "key_blue": {
+        "name": "key_blue",
+        "id": 1,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "key_blue": 1
+    }
+  },
+  "world": {
+    "1": {
+      "game": "Procgen Maze",
+      "world_class_name": "ProcgenMazeWorld",
+      "options": {}
+    }
+  },
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "constant",
+        "value": true
+      }
+    }
+  },
+  "helpers": {},
+  "exporter": {},
+  "canonical_placements": {
+    "1": {
+      "region_0_0__key_blue_pickup": "key_blue"
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "assume_bidirectional_exits": true,
+  "flash_panel": {
+    "config": "seedling.json",
+    "wasm": "seedling_bot_ap_p4d/game.html"
+  },
+  "preset_sidecars": {
+    "1": {
+      "region_0_0": {
+        "substrate": "flash_seedling_gen",
+        "render_hint": "flash_seedling_gen",
+        "grid_cell": {
+          "gx": 0,
+          "gy": 0
+        },
+        "playable_payload": {
+          "gameId": "seedling",
+          "generated": true,
+          "seed": 2079575700,
+          "size": {
+            "width": 10,
+            "height": 10
+          },
+          "record": {
+            "width": 10,
+            "height": 10,
+            "layers": [
+              {
+                "name": "tiles",
+                "set": "tileset",
+                "tiles": [
+                  [
+                    0,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    2,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    3,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    4,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    5,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    6,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    7,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    8,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    9,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    3,
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    4,
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    5,
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    6,
+                    1,
+                    48,
+                    0
+                  ],
+                  [
+                    7,
+                    1,
+                    48,
+                    0
+                  ],
+                  [
+                    8,
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    1,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    2,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    2,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    2,
+                    48,
+                    0
+                  ],
+                  [
+                    3,
+                    2,
+                    48,
+                    0
+                  ],
+                  [
+                    4,
+                    2,
+                    48,
+                    0
+                  ],
+                  [
+                    5,
+                    2,
+                    0,
+                    0
+                  ],
+                  [
+                    6,
+                    2,
+                    48,
+                    0
+                  ],
+                  [
+                    7,
+                    2,
+                    48,
+                    0
+                  ],
+                  [
+                    8,
+                    2,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    2,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    3,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    3,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    3,
+                    0,
+                    0
+                  ],
+                  [
+                    3,
+                    3,
+                    0,
+                    0
+                  ],
+                  [
+                    4,
+                    3,
+                    0,
+                    0
+                  ],
+                  [
+                    5,
+                    3,
+                    0,
+                    0
+                  ],
+                  [
+                    6,
+                    3,
+                    48,
+                    0
+                  ],
+                  [
+                    7,
+                    3,
+                    48,
+                    0
+                  ],
+                  [
+                    8,
+                    3,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    3,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    4,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    4,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    4,
+                    0,
+                    0
+                  ],
+                  [
+                    3,
+                    4,
+                    0,
+                    0
+                  ],
+                  [
+                    4,
+                    4,
+                    0,
+                    0
+                  ],
+                  [
+                    5,
+                    4,
+                    0,
+                    0
+                  ],
+                  [
+                    6,
+                    4,
+                    48,
+                    0
+                  ],
+                  [
+                    7,
+                    4,
+                    48,
+                    0
+                  ],
+                  [
+                    8,
+                    4,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    4,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    5,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    5,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    5,
+                    0,
+                    0
+                  ],
+                  [
+                    3,
+                    5,
+                    112,
+                    0
+                  ],
+                  [
+                    4,
+                    5,
+                    112,
+                    0
+                  ],
+                  [
+                    5,
+                    5,
+                    112,
+                    0
+                  ],
+                  [
+                    6,
+                    5,
+                    48,
+                    0
+                  ],
+                  [
+                    7,
+                    5,
+                    48,
+                    0
+                  ],
+                  [
+                    8,
+                    5,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    5,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    6,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    6,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    6,
+                    0,
+                    0
+                  ],
+                  [
+                    3,
+                    6,
+                    0,
+                    0
+                  ],
+                  [
+                    4,
+                    6,
+                    0,
+                    0
+                  ],
+                  [
+                    5,
+                    6,
+                    0,
+                    0
+                  ],
+                  [
+                    6,
+                    6,
+                    0,
+                    0
+                  ],
+                  [
+                    7,
+                    6,
+                    0,
+                    0
+                  ],
+                  [
+                    8,
+                    6,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    6,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    7,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    7,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    7,
+                    0,
+                    0
+                  ],
+                  [
+                    3,
+                    7,
+                    48,
+                    0
+                  ],
+                  [
+                    4,
+                    7,
+                    48,
+                    0
+                  ],
+                  [
+                    5,
+                    7,
+                    48,
+                    0
+                  ],
+                  [
+                    6,
+                    7,
+                    0,
+                    0
+                  ],
+                  [
+                    7,
+                    7,
+                    0,
+                    0
+                  ],
+                  [
+                    8,
+                    7,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    7,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    8,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    8,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    8,
+                    48,
+                    0
+                  ],
+                  [
+                    3,
+                    8,
+                    48,
+                    0
+                  ],
+                  [
+                    4,
+                    8,
+                    48,
+                    0
+                  ],
+                  [
+                    5,
+                    8,
+                    48,
+                    0
+                  ],
+                  [
+                    6,
+                    8,
+                    0,
+                    0
+                  ],
+                  [
+                    7,
+                    8,
+                    0,
+                    0
+                  ],
+                  [
+                    8,
+                    8,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    8,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    2,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    3,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    4,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    5,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    6,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    7,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    8,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    9,
+                    9,
+                    48,
+                    0
+                  ]
+                ]
+              }
+            ],
+            "entities": [
+              {
+                "type": "torchpickup",
+                "x": 64,
+                "y": 16,
+                "attrs": {
+                  "tag": "0"
+                }
+              }
+            ]
+          },
+          "start": {
+            "tx": 1,
+            "ty": 1
+          },
+          "goal_cell": {
+            "tx": 4,
+            "ty": 1
+          },
+          "generation": {
+            "biome": "pre-sword",
+            "obstacleTarget": 6,
+            "triesPerStep": 8,
+            "saturationK": 3,
+            "skeleton": "",
+            "elements": "",
+            "areas": "",
+            "fill": "dense"
+          },
+          "locations": [
+            {
+              "name": "region_0_0__key_blue_pickup",
+              "item": "key_blue",
+              "cell": {
+                "tx": 4,
+                "ty": 1
+              },
+              "tag": 0
+            }
+          ],
+          "level": 0,
+          "tile_size": 16,
+          "exits": [
+            {
+              "exit_id": "out_teleporter_128_16",
+              "kind": "teleporter",
+              "side": "S",
+              "exit_tiles": [
+                [
+                  8,
+                  1
+                ]
+              ],
+              "entrance_tile": [
+                8,
+                1
+              ],
+              "entrance_spawn": {
+                "x": 128,
+                "y": 32
+              },
+              "exitName": "exit_0",
+              "targetRegion": "region_0_1",
+              "targetExitId": null,
+              "isTeleporter": false,
+              "external": true,
+              "target_level": null,
+              "target_spawn": null,
+              "target_substrate": "flash_seedling_gen"
+            },
+            {
+              "exit_id": "out_teleporter_128_48",
+              "kind": "teleporter",
+              "side": "E",
+              "exit_tiles": [
+                [
+                  8,
+                  3
+                ]
+              ],
+              "entrance_tile": [
+                8,
+                3
+              ],
+              "entrance_spawn": {
+                "x": 128,
+                "y": 64
+              },
+              "exitName": "exit_1",
+              "targetRegion": "region_1_0",
+              "targetExitId": null,
+              "isTeleporter": false,
+              "external": true,
+              "target_level": null,
+              "target_spawn": null,
+              "target_substrate": "maze"
+            }
+          ],
+          "exitGates": {},
+          "fogEnabled": true
+        }
+      },
+      "region_1_0": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 0
+        },
+        "playable_payload": {
+          "width": 10,
+          "height": 10,
+          "tiles": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "entrance": {
+            "x": 5,
+            "y": 5
+          },
+          "exits": [
+            {
+              "exit_id": "exit_0",
+              "x": 3,
+              "y": 9,
+              "side": "S",
+              "exitName": "exit_0",
+              "targetRegion": "region_1_1",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_1",
+              "x": 0,
+              "y": 5,
+              "side": "W",
+              "exitName": "exit_1",
+              "targetRegion": "region_0_0",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "itemLib": {},
+          "longestShortestPath": 9,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 10,
+            "height": 10
+          },
+          "final_size": {
+            "width": 10,
+            "height": 10
+          },
+          "grow_attempts": 0
+        }
+      },
+      "region_1_1": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 1
+        },
+        "playable_payload": {
+          "width": 10,
+          "height": 10,
+          "tiles": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "entrance": {
+            "x": 5,
+            "y": 5
+          },
+          "exits": [
+            {
+              "exit_id": "exit_0",
+              "x": 4,
+              "y": 0,
+              "side": "N",
+              "exitName": "exit_0",
+              "targetRegion": "region_1_0",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_1",
+              "x": 0,
+              "y": 8,
+              "side": "W",
+              "exitName": "exit_1",
+              "targetRegion": "region_0_1",
+              "targetExitId": null,
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "itemLib": {},
+          "longestShortestPath": 20,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 10,
+            "height": 10
+          },
+          "final_size": {
+            "width": 10,
+            "height": 10
+          },
+          "grow_attempts": 0
+        }
+      },
+      "region_0_1": {
+        "substrate": "flash_seedling_gen",
+        "render_hint": "flash_seedling_gen",
+        "grid_cell": {
+          "gx": 0,
+          "gy": 1
+        },
+        "playable_payload": {
+          "gameId": "seedling",
+          "generated": true,
+          "seed": 1049664918,
+          "size": {
+            "width": 10,
+            "height": 10
+          },
+          "record": {
+            "width": 10,
+            "height": 10,
+            "layers": [
+              {
+                "name": "tiles",
+                "set": "tileset",
+                "tiles": [
+                  [
+                    0,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    2,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    3,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    4,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    5,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    6,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    7,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    8,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    9,
+                    0,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    3,
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    4,
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    5,
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    6,
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    7,
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    8,
+                    1,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    1,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    2,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    2,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    2,
+                    0,
+                    0
+                  ],
+                  [
+                    3,
+                    2,
+                    48,
+                    0
+                  ],
+                  [
+                    4,
+                    2,
+                    48,
+                    0
+                  ],
+                  [
+                    5,
+                    2,
+                    48,
+                    0
+                  ],
+                  [
+                    6,
+                    2,
+                    48,
+                    0
+                  ],
+                  [
+                    7,
+                    2,
+                    48,
+                    0
+                  ],
+                  [
+                    8,
+                    2,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    2,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    3,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    3,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    3,
+                    0,
+                    0
+                  ],
+                  [
+                    3,
+                    3,
+                    48,
+                    0
+                  ],
+                  [
+                    4,
+                    3,
+                    0,
+                    0
+                  ],
+                  [
+                    5,
+                    3,
+                    0,
+                    0
+                  ],
+                  [
+                    6,
+                    3,
+                    0,
+                    0
+                  ],
+                  [
+                    7,
+                    3,
+                    48,
+                    0
+                  ],
+                  [
+                    8,
+                    3,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    3,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    4,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    4,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    4,
+                    48,
+                    0
+                  ],
+                  [
+                    3,
+                    4,
+                    48,
+                    0
+                  ],
+                  [
+                    4,
+                    4,
+                    0,
+                    0
+                  ],
+                  [
+                    5,
+                    4,
+                    0,
+                    0
+                  ],
+                  [
+                    6,
+                    4,
+                    0,
+                    0
+                  ],
+                  [
+                    7,
+                    4,
+                    0,
+                    0
+                  ],
+                  [
+                    8,
+                    4,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    4,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    5,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    5,
+                    32,
+                    0
+                  ],
+                  [
+                    2,
+                    5,
+                    48,
+                    0
+                  ],
+                  [
+                    3,
+                    5,
+                    48,
+                    0
+                  ],
+                  [
+                    4,
+                    5,
+                    48,
+                    0
+                  ],
+                  [
+                    5,
+                    5,
+                    48,
+                    0
+                  ],
+                  [
+                    6,
+                    5,
+                    48,
+                    0
+                  ],
+                  [
+                    7,
+                    5,
+                    48,
+                    0
+                  ],
+                  [
+                    8,
+                    5,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    5,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    6,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    6,
+                    32,
+                    0
+                  ],
+                  [
+                    2,
+                    6,
+                    48,
+                    0
+                  ],
+                  [
+                    3,
+                    6,
+                    0,
+                    0
+                  ],
+                  [
+                    4,
+                    6,
+                    0,
+                    0
+                  ],
+                  [
+                    5,
+                    6,
+                    32,
+                    0
+                  ],
+                  [
+                    6,
+                    6,
+                    32,
+                    0
+                  ],
+                  [
+                    7,
+                    6,
+                    32,
+                    0
+                  ],
+                  [
+                    8,
+                    6,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    6,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    7,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    7,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    7,
+                    48,
+                    0
+                  ],
+                  [
+                    3,
+                    7,
+                    32,
+                    0
+                  ],
+                  [
+                    4,
+                    7,
+                    0,
+                    0
+                  ],
+                  [
+                    5,
+                    7,
+                    32,
+                    0
+                  ],
+                  [
+                    6,
+                    7,
+                    32,
+                    0
+                  ],
+                  [
+                    7,
+                    7,
+                    32,
+                    0
+                  ],
+                  [
+                    8,
+                    7,
+                    0,
+                    0
+                  ],
+                  [
+                    9,
+                    7,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    8,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    8,
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    8,
+                    0,
+                    0
+                  ],
+                  [
+                    3,
+                    8,
+                    112,
+                    0
+                  ],
+                  [
+                    4,
+                    8,
+                    112,
+                    0
+                  ],
+                  [
+                    5,
+                    8,
+                    112,
+                    0
+                  ],
+                  [
+                    6,
+                    8,
+                    0,
+                    0
+                  ],
+                  [
+                    7,
+                    8,
+                    48,
+                    0
+                  ],
+                  [
+                    8,
+                    8,
+                    48,
+                    0
+                  ],
+                  [
+                    9,
+                    8,
+                    48,
+                    0
+                  ],
+                  [
+                    0,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    1,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    2,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    3,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    4,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    5,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    6,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    7,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    8,
+                    9,
+                    48,
+                    0
+                  ],
+                  [
+                    9,
+                    9,
+                    48,
+                    0
+                  ]
+                ]
+              }
+            ],
+            "entities": [
+              {
+                "type": "torchpickup",
+                "x": 128,
+                "y": 80,
+                "attrs": {
+                  "tag": "0"
+                }
+              }
+            ]
+          },
+          "start": {
+            "tx": 1,
+            "ty": 1
+          },
+          "goal_cell": {
+            "tx": 8,
+            "ty": 5
+          },
+          "generation": {
+            "biome": "pre-sword",
+            "obstacleTarget": 6,
+            "triesPerStep": 8,
+            "saturationK": 3,
+            "skeleton": "",
+            "elements": "",
+            "areas": "",
+            "fill": "dense"
+          },
+          "locations": [],
+          "level": 1,
+          "tile_size": 16,
+          "exits": [
+            {
+              "exit_id": "out_teleporter_64_48",
+              "kind": "teleporter",
+              "side": "N",
+              "exit_tiles": [
+                [
+                  4,
+                  3
+                ]
+              ],
+              "entrance_tile": [
+                4,
+                3
+              ],
+              "entrance_spawn": {
+                "x": 80,
+                "y": 48
+              },
+              "exitName": "exit_0",
+              "targetRegion": "region_0_0",
+              "targetExitId": null,
+              "isTeleporter": false,
+              "external": true,
+              "target_level": null,
+              "target_spawn": null,
+              "target_substrate": "flash_seedling_gen"
+            },
+            {
+              "exit_id": "out_teleporter_96_96",
+              "kind": "teleporter",
+              "side": "E",
+              "exit_tiles": [
+                [
+                  6,
+                  6
+                ]
+              ],
+              "entrance_tile": [
+                6,
+                6
+              ],
+              "entrance_spawn": {
+                "x": 112,
+                "y": 96
+              },
+              "exitName": "exit_1",
+              "targetRegion": "region_1_1",
+              "targetExitId": null,
+              "isTeleporter": false,
+              "external": true,
+              "target_level": null,
+              "target_spawn": null,
+              "target_substrate": "maze"
+            }
+          ],
+          "exitGates": {},
+          "fogEnabled": true
+        }
+      }
+    }
+  },
+  "procgen_metadata": {
+    "driver": "shuffled-spiral",
+    "stop_reason": "spiral_complete",
+    "region_count": 4,
+    "grid_dims": {
+      "width": 2,
+      "height": 2
+    }
+  },
+  "sphere_log": [
+    {
+      "type": "metadata",
+      "seed": 1,
+      "seed_name": "",
+      "event_locations": {},
+      "event_items": {}
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {},
+            "resolved_items": {}
+          },
+          "new_accessible_locations": [
+            "region_0_0__key_blue_pickup"
+          ],
+          "new_accessible_regions": [
+            "Menu",
+            "region_0_0",
+            "region_0_1",
+            "region_1_0",
+            "region_1_1"
+          ],
+          "sphere_locations": []
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_blue": 1
+            },
+            "resolved_items": {
+              "key_blue": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_0_0__key_blue_pickup"
+          ]
+        }
+      }
+    }
+  ]
+}
