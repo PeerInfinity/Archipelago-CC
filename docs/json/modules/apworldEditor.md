@@ -29,6 +29,7 @@ document.
 | `regionRegenerate.js` | (substrate change R0) one region's payload **rebuilt for a substrate from the document alone** — `buildDocumentRegionSpec` (the realiser's spec off `regions[p][R]` + the slot's sidecars), `regionRealiserKind`, `freeItemsFor`, `regionSizeFor`, `strandedReferences`, `regenerateRegionEntry` (the engine's `generateRegion`, the one-region re-link, the engine's `serializeRegionEntry`); since R5a also the LIBRARY source — `offersLibrarySource`, `libraryExitSides`, `stampLibraryLocations`, `librarySourceSummary` (a captured entry through the target's `instantiateLibraryEntryForSpecs`); the op and its refusal sentences are `rulesDocOps.js`'s `regenerate-region-sidecar` |
 | `regionGenerationFlow.js` | (substrate change R2) what the block's **Region generation** form opens on and sends — `regionGenerationPlan` (the target's registry defaults, the seed, ⚖ Q4's size for a tiles target, the region's own recorded knobs when its payload is the target's own, or the op's pre-realiser refusal), `composeRegenerateArgs` (the bag → the op's arguments, as top-down composes them), `freeItemsSentence`, `regenerationProvenance`, `regenerationAnswer` |
 | `librarySourcePicker.js` | (substrate change R5a) the form's **Library entry** picker — `createServedLibraryCatalog` / `servedLibraryCatalog` (the served index fetched ONCE per page, the packs on demand, through the pipeline's `regionLibraryLoader`; base path `LIBRARY_BASE_PATH`, the pipeline panel's `'./'` rule), `libraryPickerOptions` (the target's entries, disabled with the op's own refusal), `loadLibraryOptions` (never throws: `libraryFetchFailureSentence`) |
+| `regionContent.js` | (substrate change R5b) a region's CONTENT **replaced by a zone** — the op `replace-region-content`'s mechanics and sentences: `zoneSourceFacts` (the channel + the read-back), `installedZoneConfigFrom` (the target's `zoneConfigFromSlot` — no install), `zoneHeldBy` / `zoneOfRegion` / `zoneOptions`, `zoneSourceRefusal`, `zoneContentFor` (install + verify + extract: worker or Node only), `applyZoneContent` (the pure cascade), `describeZoneReplacement`, `unplacedPoolItems` (the Placements tab's readout), `zoneJobAnswer` (the worker's answer) |
 | `regionGenerationRun.js` | (R2) the **time-limit setting** (`regionGenerationTimeoutSeconds`, `REGION_GENERATION_TIMEOUT_DEFAULT_S`) and the **worker** protocol: `runRegenerateJob` (the worker's side) and `runRegenerateInWorker` (the page's: the budget, Cancel, `terminate()`), the timeout and Cancel sentences |
 | `regionRegenerateWorker.js` | (R2) the MODULE WORKER one Generate runs in — imports the eight registry libraries into its own registry, then `regionRegenerate.js`. ⛔ A worker cannot be bundled into `bundle.js`: `scripts/build/bundle-frontend.js` copies it into `dist/` (beside `stateManagerWorker.js` and `balanceWorker.js`), and in bundled mode the page resolves it at its SOURCE location, `stateManagerProxy`'s rule |
 | `startingInventoryBlock.js` | (substrate change R3) the **Starting inventory** block as data — `startingInventoryList` (the list as `{name, count}`), `substratesInSlot`, `startingNeedRows` (each substrate's registry `startingInventory` needs against the list, with a grant op per candidate), `startingGrantOp` (`set-starting-count` at current + 1), `needSentence`; the panel draws what these answer, on the Items tab and in the Region generation form |
@@ -950,6 +951,79 @@ The corpus control takes `--source=library`: every served entry × every
 committed region of its substrate, on a copy (the numbers are in the R5a record,
 plan §13).
 
+#### The zone source (substrate change R5b)
+
+A zone substrate's regions ARE its zones: a jta region plays zone N of its
+dataset, and its locations are that zone's tasks. So a zone is not a payload
+around the document's locations (R0, R5a), it is the region's **content**. The
+form's Source row offers **Zone N** when the target declares the zone channel
+(`zoneCount` + `extractZoneRules`) AND can read back, from the document, the
+config its zones were built with (`zoneConfigFromSlot`). Today that is jta. The
+bounce, runner, omsi and flash_seedling channels have no read-back, so the op
+refuses them by name and the form does not offer them. A target with no realiser
+(jta) opens on the zone.
+
+**The picker** lists `0..zoneCount-1` of the slot's RECORDED dataset (the sibling
+that hosts `jta_dataset`, else the bundled vanilla table). A zone another region
+of the slot plays is **disabled and labelled with that region** (`zoneHeldBy`),
+because two regions on one zone would share its task locations. Nothing is
+installed on the page: the install is module-global, and the page's registry is
+the pipeline panel's too, so the page's `zoneCount` does not move (a row checks
+this). There is no seed row, since a zone draws no randomness. To free a zone,
+give its holder another substrate first (the substrate pick, one op).
+
+**Generate ▸** runs the extraction in the generation WORKER, under the same time
+limit. The worker installs the config the document records, **verifies it** by
+re-extracting every committed zone of the slot, and extracts the pick. The page
+then lands ONE op with the zone channel's answer INLINED, so an undo's refold never
+installs (measured: 2.4 ms per refold on `jta_dataset_test`):
+
+```js
+{ op: 'replace-region-content', player, region,
+  source: { kind: 'zone', substrate, zoneIdx, zone: { locations, payload, itemClasses } },
+  provenance: { op, substrate, zoneIdx, verified, ms } }
+```
+
+**What it does** (the ruling, 2026-09-23 — *"it's the user's responsibility to
+find a way to make the data valid again"*):
+
+1. the zone's locations **replace** the region's: named `region__task` (what the
+   payload's `ap_locations` says), `id: null` for a new name (as `add-location`
+   mints it; a location that keeps its name keeps its id), the zone's access rule,
+   and the `item` placement object the pipeline writes;
+2. every item the zone places is **registered** if the slot lacks it
+   (`{name, id: null, classification, groups: ['Everything']}` — the pipeline's
+   fields, the hub's null id), each new placement adds 1 to its pool count, and
+   `canonical_placements` gets it;
+3. the old locations' placements are **deleted and named** in the description
+   (*"8 placements displaced: `JtA Filler` at `region_1_0__30`, …"*). Their items
+   **stay in the pool, unplaced**. The Placements tab lists them (*"N pool items
+   placed nowhere: …"*), and making the data valid again is the reader's job;
+4. exits are unchanged (the old payload's, verbatim), the entry is
+   `assembleZoneRegion` + `serializeRegionEntry`, and `grid_cell` is kept. **A
+   field the old payload HOSTED for its siblings** (the dataset every
+   `jta_dataset_ref` points at) **is carried** onto the new entry, so nothing
+   strands.
+
+A region re-taking its OWN zone leaves the document byte-identical (the oracle,
+on the five pipeline-built jta documents). A `CanReachLocation` elsewhere that
+names a removed location stays as it is, and the description names it; no
+committed jta document has one.
+
+**What refuses it, by name, before anything is written:** no sidecar entry for the
+region (it never creates); a target without the channel or the read-back; a slot
+whose references name a dataset no entry carries; a zone outside
+`0..zoneCount-1`; **a zone another region of the slot holds** (named); and, in the
+worker, **a slot whose committed zones do not reproduce under the recorded
+config**. That last one names the region, the first difference and what the
+document does not record: `perkShuffleSeed`, `freeZones`, `startingPerks`, which
+are assumed at their defaults. `jta_randomized_test` was built with a shuffle
+seed the document does not carry, and `jta_substrate_test`'s locations were
+hand-authored, so both refuse.
+
+The corpus control takes `--source=zone`: every committed zone-channel region ×
+every zone of its slot, on a copy (the numbers are in the R5b record, plan §14).
+
 #### The fields view (D1)
 
 ⚖ user, 2026-09-10, Q3: the block edits the whole entry, and *"I also want to
@@ -1368,6 +1442,10 @@ against the progression predicate: like the Raw JSON tab (P1's open question 1),
 that is the deliberate everything-fallback, and the same reading covers both.
 
 ## The Placements tab (W3)
+
+> **R5b:** under the summary, a line lists the **pool items placed nowhere**
+> (`itempool_counts` minus the placements holding them, where positive). That is
+> where the items a `replace-region-content` displaced appear.
 
 ⚖ *"Yes, I want to add a canonical placements tool."* and *"Yes, canonical
 placements should have their own tab."* (user, 2026-09-08).
