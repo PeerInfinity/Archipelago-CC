@@ -149,6 +149,24 @@ export function instantiateBounceLibraryEntry(entry, ctx = {}, deps) {
  * @param deps   { buildZonePayload }
  * @returns { locations, payload, obstacleDefs }  (no exit rules — engine overlays)
  */
+/**
+ * ⛓ APWORLD SUBSTRATE CHANGE R6 — **THE HOOK'S PORTALS REFUSAL, ASKED BEFORE IT
+ * RUNS** (registry field `libraryEntryRefusal`): the sentence
+ * `instantiateLibraryEntryForSpecs` throws when the entry captured fewer
+ * portals (`payload.sidePortals`, re-keyable onto any side) than the slot has
+ * sides (`ctx.exitSides`, entrance included), else null. The hook calls it, so
+ * the precheck and the throw are one rule in one wording.
+ */
+export function bounceLibraryEntryRefusal(entry, ctx = {}) {
+    const exitSides = ctx.exitSides ?? [];
+    const capturedSides = Object.keys(entry?.payload?.sidePortals ?? {});
+    return capturedSides.length < exitSides.length
+        ? `instantiateLibraryEntryForSpecs(bounce): entry '${entry?.entry_id}' offers `
+            + `${capturedSides.length} portal(s) [${capturedSides.join(',')}] but the slot `
+            + `needs ${exitSides.length} side(s) [${exitSides.join(',')}]`
+        : null;
+}
+
 export function instantiateLibraryEntryForSpecs(entry, ctx = {}, deps) {
     const { buildZonePayload } = deps;
     const region_id = ctx.region_id ?? entry.entry_id;
@@ -158,12 +176,8 @@ export function instantiateLibraryEntryForSpecs(entry, ctx = {}, deps) {
 
     const capturedPortals = entry.payload?.sidePortals ?? {};
     const capturedSides = Object.keys(capturedPortals);
-    if (capturedSides.length < exitSides.length) {
-        throw new Error(
-            `instantiateLibraryEntryForSpecs(bounce): entry '${entry.entry_id}' offers `
-            + `${capturedSides.length} portal(s) [${capturedSides.join(',')}] but the slot `
-            + `needs ${exitSides.length} side(s) [${exitSides.join(',')}]`);
-    }
+    const refusal = bounceLibraryEntryRefusal(entry, ctx);
+    if (refusal) throw new Error(refusal);
     const capturedSlots = entry.carried_rules?.locations ?? [];
     if (locationSpecs.length > capturedSlots.length) {
         throw new Error(

@@ -24,7 +24,10 @@ import {
     REGION_GENERATION_SOURCES, composeRegenerateArgs, regenerationProvenance, regionGenerationPlan,
     regionGenerationSourcesFor,
 } from './regionGenerationFlow.js';
-import { REGION_SOURCE_KINDS, offersLibrarySource } from './regionRegenerate.js';
+import {
+    LIBRARY_ENTRY_REFUSAL_HOOK, REGION_SOURCE_KINDS, libraryEntryPrecheck, offersLibrarySource, regenerateRegionEntry,
+} from './regionRegenerate.js';
+import { SIDES } from '../shared/procgen/spatialPrimitives.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..', '..');
@@ -125,6 +128,82 @@ describe('the options', () => {
     it('⛓ the label says name · slots · exit sides', () => {
         const e = packsFor('maze')[0].entries[0];
         expect(libraryOptionLabel(e)).toBe(`${e.name} · ${e.location_slots} slot${e.location_slots === 1 ? '' : 's'} · exit sides ${e.exit_sides.join(',')}`);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R6 — **THE OPENINGS PRECHECK** (plan §13.6 #3). An entry with fewer captured
+ * openings (maze: payload exits; bounce: `sidePortals`) than the region needs was
+ * OFFERED and refused at Generate by the hook's own sentence (276 of R5a's 668
+ * control refusals). The target's declared `libraryEntryRefusal` is now asked
+ * before the hook runs, by the op (so by the picker, which disables on the op's
+ * refusal), in the hook's own words.
+ */
+describe('R6 — the library picker pre-checks OPENINGS as well as slots', () => {
+    const AP5 = readJson(join(FRONTEND, 'presets', 'procgen_topdown/AP_5/AP_5_rules.json'));
+    const declarers = () => substrateRegistry.getAll().filter((e) => typeof e[LIBRARY_ENTRY_REFUSAL_HOOK] === 'function');
+
+    it('⛓⛓ every declarer: the precheck IS the hook\'s refusal — same sentence where it throws, null where it does not', () => {
+        expect(declarers().map((e) => e.id).length, 'premise: substrates declare the precheck').toBeGreaterThan(0);
+        let refused = 0;
+        for (const reg of declarers()) {
+            const entries = packsFor(reg.id).flatMap((pack) => pack.entries.filter((e) => e.substrate === reg.id));
+            expect(entries.length, `premise: served entries of ${reg.id}`).toBeGreaterThan(0);
+            for (const entry of entries) {
+                for (let n = 1; n <= SIDES.length + 3; n += 1) {
+                    const exitSides = Array.from({ length: n }, (_, i) => SIDES[i % SIDES.length]);
+                    const ctx = { region_id: 'r', exitSides, locationSpecs: [], fillerItem: 'F', regionParams: {} };
+                    const pre = reg[LIBRARY_ENTRY_REFUSAL_HOOK](entry, ctx);
+                    let threw = null;
+                    try { reg.instantiateLibraryEntryForSpecs(entry, ctx); } catch (e) { threw = String(e?.message ?? e); }
+                    if (pre) {
+                        refused += 1;
+                        expect(threw, `${reg.id} ${entry.entry_id} × ${n} sides`).toBe(pre);
+                    } else if (threw) {
+                        expect(threw, `${reg.id} ${entry.entry_id} × ${n} sides: a throw the precheck did not see`)
+                            .not.toMatch(/captured opening\(s\)|portal\(s\)/);
+                    }
+                }
+            }
+        }
+        expect(refused, 'both bins non-empty: the precheck refuses some').toBeGreaterThan(0);
+    });
+
+    it('⛓ the maze precheck counts the entry\'s payload exits = the openings the hook deserialises', () => {
+        const reg = substrateRegistry.get('maze');
+        for (const entry of packsFor('maze').flatMap((p) => p.entries)) {
+            expect(entry.payload.exits.length, entry.entry_id).toBe(reg.deserializeWorld(entry.payload).exits.size);
+        }
+    });
+
+    it('⛓⛓⛓ disabled ⇔ the op refuses — over every region of two documents × every served entry of its substrate; the openings bin non-empty', () => {
+        const bins = { slots: 0, openings: 0, enabled: 0 };
+        for (const [doc, tag] of [[AP5, 'AP_5'], [FOUR, 'four-player']]) {
+            for (const [p, regions] of Object.entries(doc.preset_sidecars)) {
+                for (const [region, sc] of Object.entries(regions)) {
+                    const target = sc.substrate;
+                    if (!offersLibrarySource(substrateRegistry.get(target))) continue;
+                    const opts = libraryPickerOptions(doc, p, region, target, packsFor(target));
+                    const n = doc.regions[p][region].locations.length;
+                    for (const o of opts) {
+                        const where = `${tag} ${p} ${region} ← ${o.entry_id}`;
+                        const raw = regenerateRegionEntry({ doc, player: p, region, substrate: target, source: o.source });
+                        const pre = libraryEntryPrecheck(doc, p, region, target, o.source.entry);
+                        const tooFewSlots = o.source.entry.location_slots < n;
+                        // the HOOK run with no precheck in front of it: the openings class it throws
+                        const hookOpenings = !raw.ok && /captured opening\(s\)|portal\(s\)/.test(String(raw.threw));
+                        expect(o.disabled, where).toBe(tooFewSlots || hookOpenings);
+                        if (hookOpenings) expect(raw.threw, where).toBe(pre);
+                        if (!tooFewSlots && pre) expect(o.reason, where).toContain(pre);
+                        if (o.disabled && tooFewSlots) bins.slots += 1;
+                        else if (o.disabled) bins.openings += 1;
+                        else bins.enabled += 1;
+                    }
+                }
+            }
+        }
+        expect(bins.openings, JSON.stringify(bins)).toBeGreaterThan(0);
+        expect(bins.enabled, JSON.stringify(bins)).toBeGreaterThan(0);
     });
 });
 

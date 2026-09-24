@@ -32,6 +32,7 @@ import {
     instantiateTileGridLibraryEntryForSpecs,
     instantiateAtlasEntryForSpecs,
     validateTileGridLibraryEntry,
+    tileGridLibraryEntryRefusal,
 } from './mazeLibraryEntry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { generateHazards } from '../shared/procgen/contentModules/hazardPathGen.js';
@@ -298,6 +299,9 @@ export const substrateRegistryEntry = Object.freeze({
         extract: tileGridPathExtractor,
         substrate: 'maze',
     }),
+    // ⛓ APWORLD SUBSTRATE CHANGE R6 — the hook's openings refusal, asked before
+    //   it runs (the hub's library picker disables the entry in these words).
+    libraryEntryRefusal: (entry, ctx) => tileGridLibraryEntryRefusal(entry, ctx, { substrate: 'maze' }),
     validateLibraryEntry: (entry) => validateTileGridLibraryEntry(entry, {
         deserialize: tileGridDeserializer,
     }),

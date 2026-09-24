@@ -208,6 +208,8 @@ import {
 import { PLAYER_SLOTS_NEED_SCHEMA, playerSlotsWaitSentence } from '../../apworldEditor/documentKeys.js';
 /** ⛓ R6 — the Re-roll button's target and refusal, and the counter's first seed. */
 import { REGION_GENERATION_FIRST_SEED as R6_FIRST_SEED, regionRerollFacts } from '../../apworldEditor/regionGenerationFlow.js';
+/** ⛓ R6 — the library hook's openings precheck (the op asks it; the picker disables on the op). */
+import { libraryEntryPrecheck } from '../../apworldEditor/regionRegenerate.js';
 
 const PANEL_ID = 'apworldEditorPanel';
 const PANEL_SELECTOR = '.apworld-editor-panel';
@@ -11472,7 +11474,87 @@ export async function apworldReRollOpensTheFormOnTheOwnSubstrateAtTheNextSeed(te
     return testController.getOverallResult();
 }
 
+/** ⛓ R6 — a document whose maze hubs have more exits than any served maze entry has openings. */
+const TOPDOWN_AP5_PATH = './presets/procgen_topdown/AP_5/AP_5_rules.json';
+
+/**
+ * ⛓⛓⛓ **(2) THE LIBRARY PICKER PRE-CHECKS OPENINGS** (plan §13.6 #3). On AP_5
+ * (derived): a region every served entry of its substrate has the SLOTS for but
+ * too few OPENINGS — opened through Re-roll ▸ in one press, Library entry chosen:
+ * every option disabled, each one's note carrying the hook's own sentence (the
+ * precheck's, which a vitest row pins equal to the hook's throw), no Generate.
+ * And a region where the entries fit: every option enabled, Generate enabled.
+ */
+export async function apworldTheLibraryPickerDisablesTooFewOpenings(testController) {
+    try {
+        const disk = await (await fetch(TOPDOWN_AP5_PATH)).json();
+        const regions = Object.entries(disk.preset_sidecars['1']);
+        const packsBy = new Map();
+        const entriesOf = async (sub) => {
+            if (!packsBy.has(sub)) packsBy.set(sub, (await servedPacksFor(sub)).flatMap((pk) => pk.entries.filter((e) => e.substrate === sub)));
+            return packsBy.get(sub);
+        };
+        let short = null;
+        let fits = null;
+        for (const [region, sc] of regions) {
+            // eslint-disable-next-line no-await-in-loop
+            const entries = await entriesOf(sc.substrate);
+            if (!entries.length) continue;
+            const nLocs = disk.regions['1'][region].locations.length;
+            const slotsOk = entries.every((e) => e.location_slots >= nLocs);
+            // ⛔ Derived WITHOUT the product's precheck (a probe sharing its subject's
+            //   assumption agrees with the bug — the first cut of this row survived the
+            //   slots-for-openings mutant): the region's exits (one child side each on a
+            //   full-descriptor entry) against each entry's captured openings.
+            const exits = disk.regions['1'][region].exits.length;
+            const openings = entries.map((e) => (Array.isArray(e.payload?.exits) ? e.payload.exits.length : 0));
+            if (!short && slotsOk && openings.every((n) => n < exits)) {
+                short = { region, entries, openings, pre: entries.map((e) => libraryEntryPrecheck(disk, '1', region, sc.substrate, e)) };
+            }
+            if (!fits && slotsOk && exits > 1 && openings.every((n) => n >= exits)) fits = { region, entries };
+        }
+        testController.reportCondition(`⛓ premise: a region with too few openings everywhere (${short?.region})`, !!short);
+        testController.reportCondition(`⛓ premise: a region every entry fits (${fits?.region})`, !!fits);
+        if (!short || !fits) return testController.getOverallResult();
+
+        const panel = await openHubOnDocument(testController, TOPDOWN_AP5_PATH, '1', short.region);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        for (const { region, entries, pre, openings } of [short, { ...fits, pre: null }]) {
+            // eslint-disable-next-line no-await-in-loop
+            const btn = await testController.pollForValue(() => rerollButton(region, 'regions'), `Re-roll ▸ on ${region}`, 8000, 50);
+            btn?.click();
+            // eslint-disable-next-line no-await-in-loop
+            const state = await chooseLibrarySource(testController, region);
+            testController.assertEqual(`${region}: the picker loaded`, 'ready', String(state));
+            const opts = pickerOptions(region);
+            testController.assertEqual(`${region}: every served entry is listed`, String(entries.length), String(opts.length));
+            testController.assertEqual(`⛓⛓⛓ ${region}: disabled ${pre ? 'EVERY option (too few openings)' : 'none (every entry fits)'}`,
+                JSON.stringify(entries.map(() => !!pre)), JSON.stringify(opts.map((o) => o.disabled)));
+            if (pre) {
+                entries.forEach((e, i) => {
+                    const drawn = regionGenSection(region)?.querySelector(
+                        `.apworld-region-generation-library-disabled[data-entry-id="${CSS.escape(e.entry_id)}"]`);
+                    testController.reportCondition(`⛓⛓ ${region} ← ${e.entry_id}: the note carries the hook's own sentence`,
+                        !!pre[i] && String(drawn?.textContent).includes(pre[i]));
+                    testController.reportCondition(`⛓⛓ …which counts the entry's ${openings[i]} captured openings`,
+                        String(drawn?.textContent).includes(`offers ${openings[i]} captured opening(s)`));
+                });
+            }
+            const go = regionGenSection(region)?.querySelector('.apworld-region-generate');
+            testController.assertEqual(`${region}: Generate ▸ enabled iff an entry fits`, String(!pre), String(!!go && !go.disabled));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('openings precheck test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
 const R6_TESTS = [
+    ['apworld-the-library-picker-disables-too-few-openings',
+        'APWorld hub: a library entry with the slots but too few openings for the region is disabled in the hook\'s own words; one that fits is enabled',
+        apworldTheLibraryPickerDisablesTooFewOpenings],
     ['apworld-re-roll-opens-the-form-on-the-own-substrate-at-the-next-seed',
         'APWorld hub: Re-roll ▸ (all three hosts) opens the form on the region\'s own substrate at its next seed; two re-rolls differ; a no-realiser region\'s button is disabled with the op\'s sentence',
         apworldReRollOpensTheFormOnTheOwnSubstrateAtTheNextSeed],

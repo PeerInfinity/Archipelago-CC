@@ -909,6 +909,12 @@
             "_comment": "R5c (e). In memory (set-key): region_atlas names an unserved id: the fetched index refuses by name; a stubbed 404 names the path."
         },
         {
+            "id": "apworld-the-library-picker-disables-too-few-openings",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R6 (2). AP_5, derived: a hub region with the slots but too few openings → every served maze entry disabled with the hook's sentence, no Generate; a fitting region → all enabled. Mutant: the precheck counts slots instead of openings."
+        },
+        {
             "id": "apworld-re-roll-opens-the-form-on-the-own-substrate-at-the-next-seed",
             "enabled": true,
             "category": "apworldEditor",

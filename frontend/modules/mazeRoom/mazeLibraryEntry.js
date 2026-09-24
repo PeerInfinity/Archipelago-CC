@@ -137,6 +137,37 @@ export function instantiateTileGridLibraryEntry(entry, ctx = {}, deps) {
 }
 
 /**
+ * The sentence the sphere hook throws when an entry has fewer captured openings
+ * than the slot has CHILD sides — one builder for the hook's throw and its
+ * precheck (`tileGridLibraryEntryRefusal`), so the two cannot word it apart.
+ */
+export function tileLibraryOpeningsSentence(substrate, entryId, offered, childSides) {
+    return `instantiateLibraryEntryForSpecs(${substrate}): entry '${entryId}' offers `
+        + `${offered} captured opening(s) but the slot needs `
+        + `${childSides.length} child side(s) [${childSides.join(',')}]`;
+}
+
+/**
+ * ⛓ APWORLD SUBSTRATE CHANGE R6 — **THE HOOK'S OPENINGS REFUSAL, ASKED BEFORE IT
+ * RUNS** (registry field `libraryEntryRefusal`): the sentence
+ * `instantiateTileGridLibraryEntryForSpecs` would throw for this `ctx` when the
+ * entry has fewer captured openings than the slot has CHILD sides (slot 0 is the
+ * entrance, served by the driver's back portal), else null. Read off the entry's
+ * own `payload.exits` — one captured opening per payload exit, the count the
+ * hook's `deserialize` yields (a row pins the two equal over the served packs) —
+ * so a picker can disable the entry without deserialising it. ⛔ The
+ * `mazeRequireSameWall` / `mazeRequireTileAlign` refusals are knob-dependent and
+ * stay the hook's own at the press.
+ */
+export function tileGridLibraryEntryRefusal(entry, ctx = {}, { substrate }) {
+    const childSides = (ctx.exitSides ?? []).slice(1);
+    const offered = Array.isArray(entry?.payload?.exits) ? entry.payload.exits.length : 0;
+    return offered < childSides.length
+        ? tileLibraryOpeningsSentence(substrate, entry?.entry_id, offered, childSides)
+        : null;
+}
+
+/**
  * Requirement-aware sphere instantiate (region-library F6c, tile/maze). The sphere
  * analogue of instantiateTileGridLibraryEntry: where the spiral hook fills a
  * sides-only slot, the sphere driver needs SPECIFIC sides (the entrance mirrored
@@ -243,10 +274,7 @@ export function instantiateTileGridLibraryEntryForSpecs(entry, ctx = {}, deps) {
         }
         const leftover = capturedExits.filter((ex) => !usedIds.has(ex.exit_id));
         if (leftover.length < unmatched.length) {
-            throw new Error(
-                `instantiateLibraryEntryForSpecs(${substrate}): entry '${entry.entry_id}' offers `
-                + `${capturedExits.length} captured opening(s) but the slot needs `
-                + `${childSides.length} child side(s) [${childSides.join(',')}]`);
+            throw new Error(tileLibraryOpeningsSentence(substrate, entry.entry_id, capturedExits.length, childSides));
         }
         unmatched.forEach((side, i) => {
             const ex = leftover[i];

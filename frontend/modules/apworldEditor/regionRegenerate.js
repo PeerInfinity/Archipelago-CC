@@ -712,27 +712,59 @@ function assembleLibraryZone(zoneRules, { target, region, spec, exitSides, sideO
  * zone branch's reconciliation), and the SAME re-link / serialise / stranded
  * tail as Generate. Draws no rng.
  */
-function regenerateFromLibraryEntry({ doc, player, region, substrate, regionParams, source }) {
-    const old = doc.preset_sidecars[player][region];
-    const target = substrate ?? old.substrate;
+/**
+ * ⛓ R6 — **THE CTX THE LIBRARY HOOK IS HANDED, BUILT ONCE** for the op and for
+ * its precheck (`libraryEntryPrecheck`), so the two ask the hook about the same
+ * sides: the document region's spec at the entry's captured size, the sides
+ * `libraryExitSides` gives it, the spec's items, the slot filler and the knobs.
+ */
+function libraryHookCtx(doc, player, region, target, entry, regionParams) {
     const reg = substrateRegistry.get(target);
-    const entry = source.entry;
-    const size = isSize(entry.region_size) ? entry.region_size : undefined;
+    const size = isSize(entry?.region_size) ? entry.region_size : undefined;
     const spec = buildDocumentRegionSpec(doc, player, region, { size, substrate: target });
     const params = regionParams && typeof regionParams === 'object' ? regionParams : {};
     const { exitSides, sideOf, full } = libraryExitSides(spec, reg);
+    const ctx = {
+        region_id: region,
+        regionSize: spec.size,
+        exitSides,
+        locationSpecs: spec.locationSpecs.map((l) => ({ item: l.item })),
+        fillerItem: LIBRARY_SLOT_FILLER_ITEM,
+        regionParams: params,
+    };
+    return { reg, spec, exitSides, sideOf, full, ctx };
+}
+
+/** ⛓ The registry field a library hook's precheck is declared under (R6). */
+export const LIBRARY_ENTRY_REFUSAL_HOOK = 'libraryEntryRefusal';
+
+/**
+ * ⛓⛓ R6 — **WHAT THE TARGET'S LIBRARY HOOK WOULD REFUSE, ASKED BEFORE IT RUNS**:
+ * the entry's declared `libraryEntryRefusal(entry, ctx)` over the ctx the op
+ * would hand `instantiateLibraryEntryForSpecs` — the hook's own sentence
+ * (captured openings/portals vs the sides the region needs), or null. A target
+ * that declares no precheck answers null (its hook still refuses at the press).
+ *
+ * @returns {string|null}
+ */
+export function libraryEntryPrecheck(doc, player, region, target, entry, regionParams = {}) {
+    const reg = substrateRegistry.get(target);
+    const check = reg?.[LIBRARY_ENTRY_REFUSAL_HOOK];
+    if (typeof check !== 'function') return null;
+    return check(entry, libraryHookCtx(doc, player, region, target, entry, regionParams).ctx) ?? null;
+}
+
+function regenerateFromLibraryEntry({ doc, player, region, substrate, regionParams, source }) {
+    const old = doc.preset_sidecars[player][region];
+    const target = substrate ?? old.substrate;
+    const entry = source.entry;
+    const { reg, spec, exitSides, sideOf, full, ctx } = libraryHookCtx(doc, player, region, target, entry, regionParams);
+    const params = ctx.regionParams;
     const common = { freeItems: [], hostsSurplus: true, spec, source: librarySourceSummary(source) };
     let descriptor;
     let relabelled = 0;
     try {
-        const out = reg.instantiateLibraryEntryForSpecs(entry, {
-            region_id: region,
-            regionSize: spec.size,
-            exitSides,
-            locationSpecs: spec.locationSpecs.map((l) => ({ item: l.item })),
-            fillerItem: LIBRARY_SLOT_FILLER_ITEM,
-            regionParams: params,
-        });
+        const out = reg.instantiateLibraryEntryForSpecs(entry, ctx);
         if (full) {
             descriptor = out;
             relabelled = renameFullExits(descriptor, spec, sideOf, entry);

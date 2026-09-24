@@ -48,6 +48,7 @@ import {
     captureBounceLibraryEntry,
     instantiateBounceLibraryEntry,
     instantiateLibraryEntryForSpecs,
+    bounceLibraryEntryRefusal,
     validateBounceLibraryEntry,
 } from './bounceLibraryEntry.js';
 
@@ -1038,6 +1039,9 @@ export function createBounceSubstrateEntry({
         // bounceLibraryEntry.js / buildSphereLibraryRegion.
         instantiateLibraryEntryForSpecs: (entry, ctx) =>
             instantiateLibraryEntryForSpecs(entry, ctx, { buildZonePayload }),
+        // ⛓ APWORLD SUBSTRATE CHANGE R6 — the hook's portals refusal, asked
+        //   before it runs (the hub's library picker disables in these words).
+        libraryEntryRefusal: bounceLibraryEntryRefusal,
         validateLibraryEntry: validateBounceLibraryEntry,
 
         // Sphere-driven growth: requirement-targeted generation + the

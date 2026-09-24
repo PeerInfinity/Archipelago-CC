@@ -86,7 +86,7 @@ import {
 // ⛓ APWORLD SUBSTRATE CHANGE R0 — one region's payload rebuilt by a substrate's
 //   realiser, through the same kind of door (`regionRegenerate.js`).
 import {
-    REGION_SOURCE_KINDS, regenerateRegionEntry, regenerateTargetFacts,
+    REGION_SOURCE_KINDS, libraryEntryPrecheck, regenerateRegionEntry, regenerateTargetFacts,
 } from './regionRegenerate.js';
 // ⛓ APWORLD SUBSTRATE CHANGE R5b — a region's CONTENT replaced by a zone
 //   (`regionContent.js`: the cascade's mechanics and its sentences).
@@ -2252,6 +2252,15 @@ function librarySourceRefusal(doc, p, region, substrate, facts, entry) {
             + `\`${entry.name ?? entry.entry_id}\` captured ${Number.isInteger(entry.location_slots)
                 ? plural(entry.location_slots, 'slot') : 'no `location_slots`'} — each document location `
             + 'needs a captured slot. Pick an entry with more slots, or Generate.';
+    }
+    // ⛓ R6 — the hook's own openings/portals refusal, asked BEFORE it runs
+    //   (the entry's declared `libraryEntryRefusal`, over the ctx the op hands
+    //   the hook): the picker disables the entry in the hook's own words, and
+    //   the op refuses it here rather than at the realiser.
+    const hook = libraryEntryPrecheck(doc, p, region, substrate, entry);
+    if (hook) {
+        return `apworld: library entry \`${entry.name ?? entry.entry_id}\` cannot serve region "${region}" — `
+            + `${hook}. Pick an entry with more openings, or Generate.`;
     }
     return null;
 }
