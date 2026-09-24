@@ -203,3 +203,30 @@ describe('grid growth — maze + flash_seedling_gen', () => {
         expect(assertGeneratedSidecars(a.rulesJson).length).toBeGreaterThan(0);
     }, 60_000);
 });
+
+describe('the generator\'s knobs reach the BUILT room in every mode that builds one (G3)', () => {
+    /**
+     * ⛓ G3 W0 measured the spiral and the grid growth building every room at the
+     * DEFAULTS whatever the bag said (`regionParams: {}`); G3 passes the in-mix
+     * `buildRegionParams` hooks through. The knobs are read back off each room's
+     * payload (`generation`), the value the form reopens on.
+     */
+    const KNOBS = { seedlingGenObstacleTarget: 2, seedlingGenFill: 'shell' };
+    const GRID = {
+        mode: 'gridGrowth', params: { seed: 1, gridWidth: 3, gridHeight: 3, regionWidth: 10, regionHeight: 10 },
+        scenario: { items: { key_red: 1, key_blue: 1, victory: 1 }, obstacles: { door_red: 1, door_blue: 1 } },
+        substrateQuotas: {}, substrateMix: { maze: 1, [FLASH_SEEDLING_GEN_SUBSTRATE_ID]: 1 }, substrateMode: 'mix',
+    };
+    it.each([
+        ['the spiral', SEEDLING_GENERATED_ROOM_STATE],
+        ['sphere growth', SEEDLING_GENERATED_LEAF_STATE],
+        ['grid growth', GRID],
+    ])('%s: every generated room records obstacleTarget 2 and fill shell', async (_name, state) => {
+        const { rulesJson } = await build({ ...state, params: { ...state.params, ...KNOBS } });
+        const rooms = generatedOf(rulesJson);
+        expect(rooms.length).toBeGreaterThan(0);
+        for (const [regionId, { playable_payload: p }] of rooms) {
+            expect(p.generation, regionId).toMatchObject({ obstacleTarget: 2, fill: 'shell' });
+        }
+    }, 60_000);
+});

@@ -17,7 +17,7 @@ import {
     groupLibraryByFeature, ProcgenPipelineUI, HANDOFF_REALISED_SLOT, HANDOFF_TOPDOWN_COST,
 } from './procgenPipelineUI.js';
 import { sphereRebuildRefusal } from './procgenPipelineEngine.js';
-import { panelDefaultParams } from './presetRun.js';
+import { panelDefaultParams, buildRunFromState } from './presetRun.js';
 import { DOCUMENT_KEY_EDITORS } from '../apworldEditor/documentKeys.js';
 
 /**
@@ -594,5 +594,62 @@ describe('R1 — the Parameters section draws the DOM it drew before the split',
         ctx._saveToLocalStorage = () => {};
         const html = withFakeDocument(() => serialize(unwrapForms(ctx._renderParams())));
         expect(createHash('sha256').update(html).digest('hex')).toBe(PARAMETERS_SECTION_SHA256_BEFORE_R1[mode]);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ SEEDLING GENERATED G3 — the generator's knobs, from the form to the run
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * With a generated-room quota active the Parameters section draws that entry's
+ * `renderProcgenParams` (R1's shared form), and an edit there must reach the
+ * core in EVERY mode. ⛔ MEASURED at G3 W0: the spiral and the grid growth
+ * handed every core `regionParams: {}`, so the form drew knobs that reached
+ * nothing there; G3 passes the in-mix hooks through (`presetRun.js`
+ * `buildSpiralRun` / `buildGridRun`). The entry is registered HERE, after every
+ * row above (whose captured fixtures name their own substrates), and read by
+ * its exported id.
+ */
+describe('G3 — a generated-room quota: the knobs are drawn, and an edit reaches the run in every mode', () => {
+    /** Where each mode's run carries the regionParams its cores receive. */
+    const RUN_REGION_PARAMS = Object.freeze({
+        sphereGrowth: (run) => run.config.regionParams,
+        shuffledSpiral: (run) => run.config.regionParams,
+        topDown: (run) => run.regionParams,
+        gridGrowth: (run) => run.grow.regionParams,
+    });
+    const labelled = (root, text) => descendants(root).find((c) => c.tagName === 'DIV'
+        && c.children[0]?.tagName === 'LABEL' && c.children[0].textContent === text)?.children[1] ?? null;
+
+    it.each(Object.keys(RUN_REGION_PARAMS))('⛓⛓ %s: the form is drawn; Obstacle target 2 + Fill shell reach the cores\' regionParams', async (mode) => {
+        const { FLASH_SEEDLING_GEN_SUBSTRATE_ID: GEN, DEFAULT_SEEDLING_GEN_PROCGEN_PARAMS } = await import(
+            '../flashPanel/flashSeedlingGenLibrary.js');
+        const mix = { maze: 1, [GEN]: 1 };
+        const ctx = Object.create(ProcgenPipelineUI.prototype);
+        ctx.mode = mode;
+        ctx.params = { ...panelDefaultParams(), ...DEFAULT_SEEDLING_GEN_PROCGEN_PARAMS };
+        ctx._activeSubstrateDict = () => mix;
+        ctx._saveToLocalStorage = () => {};
+        const form = withFakeDocument(() => {
+            const section = ctx._renderParams();
+            const f = descendants(section).find((c) => c.dataset?.substrateId === GEN);
+            const target = labelled(f, 'Obstacle target');
+            const fill = labelled(f, 'Fill');
+            target.value = '2';
+            target.fire('change');
+            fill.value = 'shell';
+            fill.fire('change');
+            return f;
+        });
+        expect(form.dataset.procgenParams).toBe('drawn');
+        expect(descendants(form).some((c) => c.textContent === `${GEN} parameters`)).toBe(true);
+        expect(ctx.params).toMatchObject({ seedlingGenObstacleTarget: 2, seedlingGenFill: 'shell' });
+
+        const { run } = buildRunFromState({
+            mode, params: ctx.params, scenario: { items: {}, obstacles: {} },
+            substrateQuotas: mix, substrateMix: mix,
+            substrateMode: mode === 'topDown' || mode === 'gridGrowth' ? 'mix' : 'quotas',
+        }, { topDownSource: {} });
+        expect(RUN_REGION_PARAMS[mode](run).seedlingGen).toMatchObject({ obstacleTarget: 2, fill: 'shell' });
     });
 });

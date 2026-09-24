@@ -243,9 +243,10 @@ const KNOB_OF = Object.freeze({
 });
 
 /**
- * The regionParams the room reads (`params.seedlingGen`), from the panel bag —
- * sphere and top-down (`assembleRegionParams`). ⚠ The spiral and grid growth
- * hand every core `{}`, so a room there is built at the defaults.
+ * The regionParams the room reads (`params.seedlingGen`), from the panel bag
+ * (`assembleRegionParams`) — in every pipeline mode and the APWorld editor's
+ * Generate (the spiral and grid growth handed every core `{}` until seedling
+ * generated G3).
  */
 export function buildSeedlingGenRegionParams({ params = {} } = {}) {
     const seedlingGen = {};

@@ -360,7 +360,12 @@ export function buildSpiralRun(state, { resolvedLibraries = [] } = {}) {
         itemPool: { ...state.scenario.items },
         obstaclePool: { ...state.scenario.obstacles },
         seed,
-        regionParams: {},
+        // ⛓ seedling generated G3: the in-quota substrates' `buildRegionParams`
+        //   hooks, in the default ('sphere') mode, as sphere growth passes them —
+        //   so a per-region knob reaches the core here too. Measured byte-inert for
+        //   every digest, shipped preset and committed spiral preset (the hooks'
+        //   defaults build what `{}` built).
+        regionParams: assembleRegionParams({ activeIds: Object.keys(substrateQuotas), mode: 'sphere', params }),
         growthParams: {
             substrateQuotas,
             maxItemsPerRegion,
@@ -432,7 +437,8 @@ export function buildGridRun(state) {
             itemPool: { ...state.scenario.items },
             obstaclePool: { ...state.scenario.obstacles },
             seed,
-            regionParams: {},
+            // ⛓ seedling generated G3 — the spiral's pass-through, for the grid.
+            regionParams: assembleRegionParams({ activeIds: Object.keys(quotas ?? mix ?? {}), mode: 'sphere', params }),
             growthParams: {
                 maxItemsPerRegion,
                 maxRegions: maxRegions ?? null,

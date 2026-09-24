@@ -3840,9 +3840,9 @@ export class ProcgenPipelineUI {
 
     // Build a fresh spiral envelope from the panel's current params + scenario.
     // The { config, compileIn } pair is EXACTLY what the old one-shot fed
-    // arrangeShuffledSpiral + buildRulesJson (regionParams:{} — no substrate
-    // config yet; JtA's dataset config lands on ② content in Part 3), so
-    // byte-identity holds.
+    // arrangeShuffledSpiral + buildRulesJson (regionParams: the in-quota
+    // substrates' buildRegionParams hooks since seedling generated G3; JtA's
+    // dataset config lands on ② content in Part 3), so byte-identity holds.
     _buildSpiralEnvelope() {
         return newSpiralEnvelope(buildSpiralRun(this, { resolvedLibraries: this.regionLibraries }));
     }

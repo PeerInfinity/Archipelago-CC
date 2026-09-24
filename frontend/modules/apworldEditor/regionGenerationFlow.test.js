@@ -142,6 +142,48 @@ describe('composeRegenerateArgs — the bag → the op, as top-down composes it'
     });
 });
 
+describe('G3 — a GENERATED room\'s block: the form opens on the room\'s own knobs, and an edit reaches the regenerated room', () => {
+    /**
+     * ⛓ seedling generated G3, on the committed `seedling_generated_leaf` preset:
+     * its one generated region, read by its sidecar's substrate (no id typed).
+     * The payload's `generation` reads back through `bagFromPayload`; a knob that
+     * differs is offered beside the defaults; a changed knob rides
+     * `composeRegenerateArgs` (top-down's assembly) into the op, and the room the
+     * op builds records it.
+     */
+    const LEAF = read('seedling_generated_leaf/AP_1/AP_1_rules.json');
+    const [region, sidecar] = Object.entries(LEAF.preset_sidecars['1'])
+        .find(([, sc]) => sc.playable_payload?.generated === true) ?? [];
+
+    it('⛓ the form opens on the defaults — the room was built at them, so nothing is offered beside', () => {
+        const entry = substrateRegistry.get(sidecar.substrate);
+        expect(typeof entry.renderProcgenParams, 'premise: the entry draws knobs').toBe('function');
+        const plan = regionGenerationPlan(LEAF, '1', region, sidecar.substrate, { seed: 3 });
+        expect(plan.refusal).toBeNull();
+        expect(plan.defaults).toEqual({ ...entry.defaultProcgenParams, [REGION_GENERATION_SEED_KEY]: 3 });
+        expect(bagFromPayload(entry, sidecar.playable_payload)).toEqual(entry.defaultProcgenParams);
+        expect(plan.recorded).toBeNull();
+    });
+
+    it('⛓ a room built with other knobs reopens on them (the recorded diff)', () => {
+        const doc = structuredClone(LEAF);
+        doc.preset_sidecars['1'][region].playable_payload.generation.obstacleTarget = 4;
+        const plan = regionGenerationPlan(doc, '1', region, sidecar.substrate);
+        expect(plan.recordedDiff).toEqual([['seedlingGenObstacleTarget', 4]]);
+        expect(plan.recorded).toMatchObject({ seedlingGenObstacleTarget: 4 });
+    });
+
+    it('⛓⛓ Obstacle target 2 + Fill shell in the bag → the op\'s regionParams → the regenerated room records them', () => {
+        const plan = regionGenerationPlan(LEAF, '1', region, sidecar.substrate, { seed: 1 });
+        const bag = { ...plan.defaults, seedlingGenObstacleTarget: 2, seedlingGenFill: 'shell' };
+        const args = composeRegenerateArgs(LEAF, '1', region, sidecar.substrate, bag);
+        expect(args.regionParams.seedlingGen).toMatchObject({ obstacleTarget: 2, fill: 'shell' });
+        const res = regenerateRegionEntry(args);
+        expect(res.ok, res.threw).toBe(true);
+        expect(res.entry.playable_payload.generation).toMatchObject({ obstacleTarget: 2, fill: 'shell' });
+    }, 60_000);
+});
+
 describe('the free-item clause follows hostsSurplusExitsNatively (§7.7 ⚖ #5, RULED)', () => {
     const bounceLike = () => sidesIds().find((id) => typeof substrateRegistry.get(id).hostsSurplusExitsNatively
         === 'function' && !substrateRegistry.get(id).hostsSurplusExitsNatively({ bounceMode: 'column' }));
