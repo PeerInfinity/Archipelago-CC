@@ -909,6 +909,12 @@
             "_comment": "R5c (e). In memory (set-key): region_atlas names an unserved id: the fetched index refuses by name; a stubbed 404 names the path."
         },
         {
+            "id": "apworld-the-map-draws-a-misfit-regions-block",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R6 (3), trap 1402. A label-only pick on the Map's block: the painter refuses the region, the block stays with the refusal sentence, V0's mismatch and the form; Generate lands; two Undos repaint. Mutant: the block hidden again."
+        },
+        {
             "id": "apworld-a-slot-pick-before-the-schema-is-refused-by-name",
             "enabled": true,
             "category": "apworldEditor",

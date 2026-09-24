@@ -4794,10 +4794,21 @@ class ApworldEditorUI {
      * `_makeRegionSidecarBlock` the Regions tab and the Sidecars list draw — one
      * renderer, `hostTab: 'map'` keeping its own JSON disclosure. The region is
      * the map's own selection (`_selectedRegion`, the outline's source), drawn
-     * only when that region is placed on THIS slot's grid: a selection the map
-     * does not show has no business drawing a block under it.
+     * when that region is placed on THIS slot's grid — ⛓ R6: or when the
+     * painter REFUSED it (`refusedSelection` above), with the refusal said.
      */
-    if (selection) {
+    /**
+     * ⛓⛓⛓ R6 (trap 1402) — **A SELECTED REGION THE MAP CANNOT DRAW KEEPS ITS
+     * BLOCK.** After a label-only pick the region's payload no longer fits its
+     * label, the painter refuses it (C1's rule) and there is no cell to outline —
+     * and until R6 no block either, so the Region generation form that pick
+     * opened was unreachable here until Generate. The block is drawn for it, the
+     * painter's own refusal sentence standing where the outline would be.
+     */
+    const refusedSelection = !selection && this._selectedRegion
+      ? (result.refused ?? []).find((r) => r.region_id === this._selectedRegion) ?? null
+      : null;
+    if (selection || refusedSelection) {
       const regionName = this._selectedRegion;
       const block = this._makeRegionSidecarBlock(this.playerId, regionName, {
         hostTab: 'map',
@@ -4807,6 +4818,7 @@ class ApworldEditorUI {
         const host = document.createElement('div');
         host.className = 'apworld-map-selection';
         host.dataset.regionName = regionName;
+        host.dataset.drawn = refusedSelection ? 'false' : 'true';
         Object.assign(host.style, { border: '1px solid #2c2c2c', borderRadius: '3px',
           margin: '6px 0 0', backgroundColor: '#1c1c1c' });
         const head = document.createElement('div');
@@ -4830,18 +4842,29 @@ class ApworldEditorUI {
          * A second press while armed cancels.
          */
         const armedHere = armed?.region === regionName;
-        const move = this._makeButton(armedHere ? 'Move / swap ▸ (armed)' : 'Move / swap ▸',
+        // ⛓ R6 — a region with no cell has nowhere to move FROM: no Move / swap.
+        const move = refusedSelection ? null : this._makeButton(armedHere ? 'Move / swap ▸ (armed)' : 'Move / swap ▸',
           armedHere ? '#8a6d2e' : '#3a3a3a',
           () => (this._armedMove() ? this._disarmMapMove('Move cancelled.') : this._armMapMove(regionName)));
-        move.className = 'apworld-map-move-region';
-        move.dataset.regionName = regionName;
-        move.dataset.armed = armedHere ? 'true' : 'false';
-        move.style.fontSize = '11px';
-        move.title = 'Then click an empty cell to MOVE this region there, or another region to '
-          + 'SWAP the two. Links are kept; a link whose ends stop touching becomes a teleporter, '
-          + 'and the answer names it.';
-        head.appendChild(move);
+        if (move) {
+          move.className = 'apworld-map-move-region';
+          move.dataset.regionName = regionName;
+          move.dataset.armed = armedHere ? 'true' : 'false';
+          move.style.fontSize = '11px';
+          move.title = 'Then click an empty cell to MOVE this region there, or another region to '
+            + 'SWAP the two. Links are kept; a link whose ends stop touching becomes a teleporter, '
+            + 'and the answer names it.';
+          head.appendChild(move);
+        }
         host.appendChild(head);
+        if (refusedSelection) {
+          const why = document.createElement('div');
+          why.className = 'apworld-map-selection-refused';
+          why.dataset.regionName = regionName;
+          why.textContent = `⛔ Not drawn on the map — ${refusedSelection.sentence}`;
+          Object.assign(why.style, { color: '#e0a040', fontSize: '11px', padding: '0 8px 4px' });
+          host.appendChild(why);
+        }
         host.appendChild(block);
         this.scrollContainer.appendChild(host);
       }

@@ -9823,9 +9823,9 @@ export async function apworldAPickOpensTheRegionGenerationFormWithTheTargetsKnob
         testController.reportCondition('⛓ the SAME form is drawn under the block on the Sidecars tab',
             await testController.pollForCondition(() => regionGenSection(region, SIDECARS_TAB_ID)?.dataset.target === tiles,
                 'the Sidecars host draws the form', 8000, 50));
-        // ⛓ The Map host is asserted in (ii), after Generate: between the label pick and
-        //   Generate the map REFUSES the region (its payload does not fit its label), so
-        //   it draws no block there at all (C1's rule, measured by this row's first run).
+        // ⛓ The Map host is asserted in (ii), after Generate, and — between the label pick
+        //   and Generate, where the map REFUSES the region (its payload does not fit its
+        //   label) — by R6's `apworld-the-map-draws-a-misfit-regions-block` (trap 1402).
 
         const sidesRegion = 'region_1_1';
         const sides = realiserOf(false, panel.rulesDoc.preset_sidecars['1'][sidesRegion].substrate, { hooked: true });
@@ -11328,7 +11328,74 @@ export async function apworldASlotPickBeforeTheSchemaIsRefusedByName(testControl
     return testController.getOverallResult();
 }
 
+/**
+ * ⛓⛓⛓ **(3) THE MAP DRAWS A MISFIT REGION'S BLOCK** (trap 1402). Four-player slot 3
+ * `region_1_0`, selected ON THE MAP, relabelled to the first tiles realiser from the
+ * Map's own block: the painter now refuses the region (its payload no longer fits
+ * its label), and the block STAYS under the map, the painter's refusal sentence
+ * standing where the outline was, V0's `SUBSTRATE_MISMATCH` in the block, and the
+ * Region generation form under it. Generate there lands one op and the region is
+ * painted again; two Undos restore the document and the painted cell.
+ */
+export async function apworldTheMapDrawsAMisfitRegionsBlock(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        if (!panel) return testController.getOverallResult();
+        const docBefore = JSON.stringify(panel.rulesDoc);
+        const { reconstructResultFromSidecars } = await import('../../procgenPipeline/compositeMapDocument.js');
+        const mapOf = () => reconstructResultFromSidecars(panel.rulesDoc, { playerId: '3' });
+        const cellOf = () => (mapOf()?.grid?.allRegions() ?? []).find((c) => c.region_id === region)?.cell ?? null;
+        const cell = cellOf();
+        testController.reportCondition('⛓ premise: the region is painted on slot 3\'s map', !!cell);
+        const canvas = await onMapTabFor(testController, panel, '3');
+        const drawnBefore = canvas?.dataset.regions;
+        if (canvas && cell) clickMapCell(cell);
+        testController.reportCondition('the Map draws the selection\'s block', await testController.pollForCondition(
+            () => mapSelectionBlock()?.dataset.regionName === region, 'the Map selection block', 8000, 50));
+        const target = realiserOf(true, panel.rulesDoc.preset_sidecars['3'][region].substrate);
+        if (!target || !await pickSubstrateAndOpenForm(testController, panel, region, target)) {
+            testController.reportCondition(`⛓⛓⛓ the \`${target}\` pick on the Map's block opened the form`, false);
+            return testController.getOverallResult();
+        }
+        const refused = (mapOf()?.refused ?? []).find((r) => r.region_id === region) ?? null;
+        testController.reportCondition('⛓ premise: the painter now REFUSES the region', !!refused && !cellOf());
+        const host = () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-selection`);
+        testController.assertEqual('⛓⛓⛓ the block is still drawn under the map, for the undrawn region',
+            `${region}|false`, `${host()?.dataset.regionName}|${host()?.dataset.drawn}`);
+        testController.assertEqual('⛓⛓ …with the painter\'s refusal where the outline was',
+            `⛔ Not drawn on the map — ${refused?.sentence}`,
+            host()?.querySelector('.apworld-map-selection-refused')?.textContent ?? null);
+        testController.reportCondition('⛓ …V0 names the mismatch in the block',
+            !!mapSelectionBlock()?.querySelector(`.apworld-sidecar-issue[data-kind="${SIDECAR_ISSUE_KINDS.SUBSTRATE_MISMATCH}"]`));
+        const gen = () => mapSelectionBlock()?.querySelector('.apworld-region-generation');
+        testController.assertEqual('⛓⛓⛓ …and the Region generation form under it', target, gen()?.dataset.target ?? null);
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        gen()?.querySelector('.apworld-region-generate')?.click();
+        await answerAfter(testController, region, said, 'the Generate answer on the Map host');
+        testController.assertEqual('⛓⛓ Generate on the Map lands ONE op', String(opsBefore + 1), String(panel.session.ops().length));
+        testController.reportCondition('⛓ …and the region is painted again, its block drawn', await testController.pollForCondition(
+            () => !!cellOf() && host()?.dataset.drawn === 'true', 'the region painted again', 8000, 50));
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('⛓ two Undos restore the document', docBefore, JSON.stringify(panel.rulesDoc));
+        testController.reportCondition('⛓ …and the painted cell', await testController.pollForCondition(
+            () => JSON.stringify(cellOf()) === JSON.stringify(cell)
+                && document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`)?.dataset.regions === drawnBefore
+                && host()?.dataset.drawn === 'true',
+            'the cell painted as before', 8000, 50));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('misfit Map block test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
 const R6_TESTS = [
+    ['apworld-the-map-draws-a-misfit-regions-block',
+        'APWorld hub: a region relabelled from the Map keeps its block under the map with the painter\'s refusal and the form; Generate lands, Undo repaints',
+        apworldTheMapDrawsAMisfitRegionsBlock],
     ['apworld-a-slot-pick-before-the-schema-is-refused-by-name',
         'APWorld hub: before rules.schema.json loads the slot selector says why it offers one slot and refuses a pick by name; after, the pick lands',
         apworldASlotPickBeforeTheSchemaIsRefusedByName],
