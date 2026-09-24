@@ -57,10 +57,11 @@ import {
     seedlingFlashPanelBlock,
 } from './flashSeedlingLibrary.js';
 import {
-    GEN_ROOM_DEFAULTS, deserializeGenRoom, genRoomApLocationNames,
+    GEN_ROOM_DEFAULTS, GEN_ROOM_SUBSTRATE_ID, deserializeGenRoom, genRoomApLocationNames,
 } from '../seedlingDemo/seedlingGenRoomPayload.js';
 
-export const FLASH_SEEDLING_GEN_SUBSTRATE_ID = 'flash_seedling_gen';
+/** ⛓ Spelled ONCE, in the light payload module — the play-time assembler reads it there (G2). */
+export const FLASH_SEEDLING_GEN_SUBSTRATE_ID = GEN_ROOM_SUBSTRATE_ID;
 
 /** The room module's build functions this entry delegates to — the install seam's contract. */
 export const SEEDLING_GEN_ROOM_EXPORTS = Object.freeze([
