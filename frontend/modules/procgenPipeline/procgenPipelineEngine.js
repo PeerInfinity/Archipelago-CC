@@ -33,6 +33,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
 import { deserializeOrRefuse } from '../procgenCore/deserializeRefusal.js';
 import { exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
+import { SUBSTRATE_CONFIGS_KEY, recordableConfigsFor } from '../procgenCore/substrateConfigRecord.js';
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
 import { isAtlasSourceId, atlasSourceGame, requirementDnf } from './regionAtlasPool.js';
 
@@ -6736,6 +6737,20 @@ export function buildRulesJson(grid, opts = {}) {
                 height: maxGy >= 0 ? maxGy + 1 : 0,
             },
         };
+        // ⛓⛓ APWORLD SUBSTRATE CHANGE R6b — the config each content source was
+        // installed with, for every source that declares
+        // `recordablePipelineConfig` AND realised ≥1 region here (the same
+        // grid-derived population as the blocks above). No declarer realised ⇒
+        // no key at all, so every other world's metadata is what it was.
+        const configs = recordableConfigsFor(realisedSubstrates, (id) => substrateRegistry.get(id));
+        if (configs) {
+            if (Object.hasOwn(procgenMetadata, SUBSTRATE_CONFIGS_KEY)) {
+                throw new Error(`buildRulesJson: the caller's procgenMetadata carries '${SUBSTRATE_CONFIGS_KEY}', `
+                    + 'which the compile writes from the installed sources — two writers of one block would '
+                    + 'overwrite each other silently, so the compile refuses rather than pick one.');
+            }
+            scaffold.procgen_metadata[SUBSTRATE_CONFIGS_KEY] = configs;
+        }
     }
 
     // Procgen-side sphere log — Phase 4. Walks the freshly-built
