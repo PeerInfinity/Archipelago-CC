@@ -91,6 +91,20 @@ is derived, in this order (`documentKeys.defaultPlayerOf`):
 ⚠ A `playerId` naming a slot the document does not hold is ignored — otherwise
 every tab would draw an empty world with nothing saying why.
 
+⛓ **Before `rules.schema.json` loads, the selector says why it offers one slot**
+(substrate change R6). The slots are derived from the schema's per-player keys,
+so until the fetch lands `playerSlotsOf` answers `[]` and only the default slot
+can be offered. That used to be drawn under the title *"This document is about
+one player slot"*, a false answer that hid the others: a slot pick made in that
+window resolved to no option and fell back to the default slot in silence, and
+the next edit landed there (measured on the four-player fixture: a slot-3 pick
+became slot 1, and the `maze` pick on slot 1's `region_1_0`, already a maze,
+answered *"No change"*, which was the pre-schema "No change" R2 recorded). Now the
+selector's title and a note beside it say `playerSlotsWaitSentence` (pending, or
+the fetch's failure), and a pick the selector cannot honour is refused by name
+instead of falling back. In-app row
+`apworld-a-slot-pick-before-the-schema-is-refused-by-name`.
+
 ⛔ Nothing about the selector is gated on `preset_sidecars`: that block is `{}` in
 158 of the 192 presets carrying it, and every populated one keys under slot `"1"`
 — the four-player multiworld documents included.
@@ -809,10 +823,24 @@ elapsed while the region is generating"*.
 the label (D1's op, untouched) and — only when that op LANDED — opens
 **▾ Region generation — `<target>`** under the block, on all three hosts (it is
 part of `_makeRegionSidecarBlock`; ONE form is open at a time, keyed by slot and
-region). Generate is a separate press. ⚠ On the **Map** the form is visible only
-once the region is drawable again: between the label pick and Generate the map
-refuses the region (its payload does not fit its label, C1's rule) and draws no
-block for it.
+region). Generate is a separate press. On the **Map**, between the label pick
+and Generate, the painter refuses the region (its payload does not fit its label,
+C1's rule), so there is no cell to outline; since R6 the selection's block is drawn
+anyway, with the painter's refusal where the outline would be (see the Map tab),
+so the form is reachable on all three hosts.
+
+**Re-roll ▸ (substrate change R6).** The block also carries **Re-roll ▸**, beside
+Edit ▸, Re-derive and Regenerate in the pipeline ▸. ONE press opens the form for
+the region's OWN substrate at its next seed (the per-region counter below), and
+the reader presses Generate: the settings are the point of the form, so the
+button does not generate by itself. Before R6 re-rolling a region under its own
+substrate took two picks, away and back. The button is enabled iff the op would
+Generate for that target (`regionRerollFacts`); otherwise it is disabled with
+the op's own sentence as its title (a target with no realiser, such as jta, or
+more exits than a one-exit-per-side target holds). ⚠ A jta region still reaches
+*Zone N* through two label picks, because jta has no realiser to re-roll with.
+In-app row `apworld-re-roll-opens-the-form-on-the-own-substrate-at-the-next-seed`
+(two re-rolls land two ops at consecutive seeds with different entries).
 
 **What the form opens on** (`regionGenerationPlan`):
 - the shared per-region form (`procgenCore/regionGenerationForm.js`, R1) on a bag
@@ -941,15 +969,20 @@ object, an unknown `kind`, a missing or non-object `entry`, missing
 `library_id` / `entry_id`; **a seed** (`REGENERATE_LIBRARY_NO_SEED` — the record
 would claim a randomness it never drew; `seed: null` is accepted); a target that
 declares no `instantiateLibraryEntryForSpecs`; an entry of another substrate than
-the target; more document locations than the entry's `location_slots`. What the
-hook itself refuses — a maze entry with fewer captured openings than the region
-has exits, `mazeRequireSameWall` with no opening on a needed wall,
-`mazeRequireTileAlign` always — is its own sentence, verbatim, as a realiser
-refusal is.
+the target; more document locations than the entry's `location_slots`; and
+(R6) **too few captured openings**: the target's declared `libraryEntryRefusal`,
+asked over the same `ctx` the op hands the hook, so a maze entry with fewer
+captured openings than the region has exits (or a bounce entry with fewer portals
+than sides) is refused in the HOOK's own sentence before the hook runs. The
+picker disables on the op's refusal, so it now pre-checks openings as well as
+slots, and the note under it carries that sentence. What the hook still refuses
+at the press is knob-dependent: `mazeRequireSameWall` with no opening on a needed
+wall, and `mazeRequireTileAlign` always.
 
 The corpus control takes `--source=library`: every served entry × every
 committed region of its substrate, on a copy (the numbers are in the R5a record,
-plan §13).
+plan §13; R6 moved the 276 openings refusals from the hook to the op's precheck,
+plan §16).
 
 #### The zone source (substrate change R5b)
 
@@ -980,7 +1013,7 @@ installs (measured: 2.4 ms per refold on `jta_dataset_test`):
 
 ```js
 { op: 'replace-region-content', player, region,
-  source: { kind: 'zone', substrate, zoneIdx, zone: { locations, payload, itemClasses } },
+  source: { kind: 'zone', substrate, zoneIdx, zone: { locations, payload, itemClasses, fillerItems } },
   provenance: { op, substrate, zoneIdx, verified, ms } }
 ```
 
@@ -998,7 +1031,15 @@ find a way to make the data valid again"*):
 3. the old locations' placements are **deleted and named** in the description
    (*"8 placements displaced: `JtA Filler` at `region_1_0__30`, …"*). Their items
    **stay in the pool, unplaced**. The Placements tab lists them (*"N pool items
-   placed nowhere: …"*), and making the data valid again is the reader's job;
+   placed nowhere: …"*), and making the data valid again is the reader's job.
+   ⛓ R6: **except the target's declared FILLER**, the items its `libraryItems`
+   classifies `filler` (jta: `JtA Filler`), which the worker inlines in the answer
+   as `fillerItems`. Each displaced filler placement leaves the pool (−1; a count
+   that reaches 0 leaves the pool block; the item's definition is never touched),
+   so filler no longer inflates the pool, and the description adds *"N filler
+   placements displaced and dropped from the pool"*. Per item, pool = placed +
+   non-filler unplaced. An answer recorded before R6 carries no `fillerItems` and
+   replays as it did;
 4. exits are unchanged (the old payload's, verbatim), the entry is
    `assembleZoneRegion` + `serializeRegionEntry`, and `grid_cell` is kept. **A
    field the old payload HOSTED for its siblings** (the dataset every
@@ -1731,6 +1772,16 @@ region and returns it on `refused` (`{region_id, substrate, sentence}`, with
 pipeline panel puts the same note in its message line. In-app row
 `apworld-map-draws-the-other-regions-and-names-the-refused-one`. ⚠ A slot whose
 EVERY gridded region is refused still returns null and gets the no-map sentence.
+
+⛓ **R6 (trap 1402) — a SELECTED region the painter refuses keeps its block.** A
+label-only substrate pick makes the region's payload misfit its label, so the
+painter refuses it and there is no cell to outline. Until R6 the selection's
+block went with it, and with the block went the Region generation form the pick
+had just opened. The block is now drawn for a selected region on `refused`
+(`.apworld-map-selection[data-drawn="false"]`, with no Move / swap, since it has
+no cell), and the painter's own sentence stands where the outline would be
+(`.apworld-map-selection-refused`). Generate there lands, and the region is
+painted again. In-app row `apworld-the-map-draws-a-misfit-regions-block`.
 
 **Two clicks, the pipeline's `edit` mode's shape** (PRESET SIDECARS M1). The
 click→cell mapping is the renderer's exported geometry (`canvasPointOf` /
