@@ -128,6 +128,48 @@ export const SEEDLING_SPHERE_ROOM_STATE = Object.freeze({
 });
 
 /**
+ * ⛓ SEEDLING GENERATED LEVELS G1 — **GENERATED SEEDLING ROOMS IN A SPIRAL,
+ * SPELLED ONCE.** Two maze rooms and TWO rooms the Seedling generator builds to
+ * the pipeline's spec (`flash_seedling_gen`), seed 1, one blue key in the pool
+ * (it lands in a generated room — an AP location on that room's goal cell), the
+ * rooms at the Seedling default 10x10. Its readers: the headless oracle
+ * `flashPanel/seedlingGeneratedWorld.test.js`; G2 commits its preset and
+ * plays it.
+ */
+export const SEEDLING_GENERATED_ROOM_STATE = Object.freeze({
+    mode: 'shuffledSpiral',
+    params: Object.freeze({ seed: 1, regionWidth: 10, regionHeight: 10 }),
+    scenario: Object.freeze({ items: Object.freeze({ key_blue: 1 }), obstacles: Object.freeze({}) }),
+    substrateQuotas: Object.freeze({ maze: 2, flash_seedling_gen: 2 }),
+    substrateMix: Object.freeze({}),
+    substrateMode: 'quotas',
+});
+
+/**
+ * ⛓ SEEDLING GENERATED LEVELS G1 — **A GENERATED ROOM AS A 1-ITEM SPHERE LEAF,
+ * SPELLED ONCE.** Seed 1, 3 spheres, NO filler and at most one item per region,
+ * starting in a maze: the tree realises three regions and the generated room is
+ * the leaf that holds the victory item, behind its maze parent's `Has(key_red)`
+ * gate (a generated door enforces no AP gate — the room hosts no children and
+ * its door back is ungated, T3's law). The quota offers 3 maze rooms; the tree
+ * uses 2. Its readers: `flashPanel/seedlingGeneratedWorld.test.js`; G3 commits
+ * and plays it.
+ */
+export const SEEDLING_GENERATED_LEAF_STATE = Object.freeze({
+    mode: 'sphereGrowth',
+    params: Object.freeze({
+        seed: 1, startSubstrate: 'maze', sphereCount: 3, fillerCount: 0, maxItemsPerRegion: 1,
+    }),
+    scenario: Object.freeze({
+        items: Object.freeze({ key_red: 1, key_blue: 1, victory: 1 }),
+        obstacles: Object.freeze({}),
+    }),
+    substrateQuotas: Object.freeze({ maze: 3, flash_seedling_gen: 1 }),
+    substrateMix: Object.freeze({}),
+    substrateMode: 'quotas',
+});
+
+/**
  * Shipped presets. All are fixture-backed known-good configs:
  *
  * - runner-sphere-demo extends the committed runner_sphere_worldgen

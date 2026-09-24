@@ -200,9 +200,15 @@ export function generateGenRoom(input = {}) {
     const record = coreLevelRecord(out.record);
     const start = { ...out.summary.startCell };
     const goalCell = { ...out.summary.goalCell };
-    const { doors } = pickDoorCells(record, start, exits.length, {
-        room: `'${regionId}'`, exclude: goalGuard(goalCell),
-    });
+    let doors;
+    try {
+        ({ doors } = pickDoorCells(record, start, exits.length, {
+            room: `'${regionId}'`, exclude: goalGuard(goalCell),
+        }));
+    } catch (e) {
+        if (e.name !== 'LevelSetExitError') throw e;
+        throw new Error(GEN_ROOM_REFUSALS.tooManyDoors(regionId, seed, record, exits.length, e.message));
+    }
     const nextSide = sideAssigner(exits);
     const defaultExitId = (i) => (exits.length === 1 ? 'exit' : `exit_${i}`);
     const roomExits = new Map();
