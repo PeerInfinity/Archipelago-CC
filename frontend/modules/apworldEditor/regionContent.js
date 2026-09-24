@@ -69,6 +69,15 @@ export const REPLACE_REGION_CONTENT_OP = 'replace-region-content';
 export const ZONE_CONFIG_HOOK = 'zoneConfigFromSlot';
 export const ZONE_OF_PAYLOAD_HOOK = 'zoneOfPayload';
 
+/** ⛓ The Source row's word for a target's zones when the entry declares none (`zoneSourceLabel`). */
+export const ZONE_SOURCE_LABEL_DEFAULT = 'Zone N';
+
+/**
+ * ⛓ R5c — how many rounds of served documents a read-back may ask for before
+ * the resolver gives up (the atlas intake asks twice: the index, then the atlas).
+ */
+export const ZONE_FETCH_ROUNDS = 4;
+
 /** ⛓ The item classification a location's placement object is written with when
  *  the target's library does not classify it — `compileRegionGraph`'s default. */
 export const ZONE_ITEM_DEFAULT_CLASSIFICATION = 'progression';
@@ -101,6 +110,8 @@ export const ZONE_HOST_CARRIED = 'carried';
 export const ZONE_DANGLING_REFS = 'now name a location the document no longer holds';
 export const ZONE_PAGE_NEVER_EXTRACTS = 'the zone channel\'s answer is computed where the config may be '
     + 'installed (the generation worker, or Node) and INLINED in the op as `source.zone`';
+export const ZONE_NEEDS_FETCH = 'reads its config from served documents that have not been fetched';
+export const ZONE_FETCH_FAILED = 'could not be fetched';
 
 /* ── the facts, pure ──────────────────────────────────────────────────── */
 
@@ -118,6 +129,30 @@ export function zoneSourceFacts(entry) {
     const why = !offers ? `${tick(entry.id)} ${ZONE_NO_CHANNEL}`
         : !recovers ? `${tick(entry.id)} ${ZONE_NO_RECOVERY}` : null;
     return { offers, recovers, why };
+}
+
+/** ⛓ R5c — the Source row's word for `entry`'s zones (the entry's `zoneSourceLabel`, else *Zone N*). */
+export function zoneSourceLabelOf(entry) {
+    const label = entry?.zoneSourceLabel;
+    return typeof label === 'string' && label !== '' ? label : ZONE_SOURCE_LABEL_DEFAULT;
+}
+
+/**
+ * ⛓ R5c — the document's top-level blocks the target WRITES (`rulesJsonBlocks`),
+ * keyed by the entry's own answer, never typed: a read-back may need them (an
+ * atlas is named only in `region_atlas`). A key the document lacks is present
+ * with `undefined`, so the read-back can refuse it by name.
+ */
+function blocksOf(doc, entry) {
+    let keys = [];
+    try { keys = Object.keys(entry?.rulesJsonBlocks?.() ?? {}); } catch { keys = []; }
+    return Object.fromEntries(keys.map((k) => [k, doc?.[k]]));
+}
+
+/** ⛓ R5c — a region's exit SIDES in document order (a side-bound channel binds one door per side). */
+export function exitSidesOfEntry(entry) {
+    const exits = entry?.playable_payload?.exits;
+    return (Array.isArray(exits) ? exits : []).map((x) => x?.side).filter((sd) => typeof sd === 'string');
 }
 
 /** ⛓ The slot's entries of `substrate`, by region (document order). */
@@ -150,37 +185,97 @@ function locationsByRegion(doc, player) {
  * @returns {{ok: true, cfg: object, assumed: object, zoneCount: number, host: string|null}
  *          | {ok: false, why: string}}
  */
-export function installedZoneConfigFrom(doc, player, substrate) {
+export function installedZoneConfigFrom(doc, player, substrate, { fetched = {} } = {}) {
     const entry = substrateRegistry.get(substrate);
     const facts = zoneSourceFacts(entry);
     if (!facts.recovers) return { ok: false, why: `apworld: ${facts.why}.` };
     const res = entry[ZONE_CONFIG_HOOK]({
-        entries: entriesOf(doc, player, substrate), locations: locationsByRegion(doc, player),
+        entries: entriesOf(doc, player, substrate),
+        locations: locationsByRegion(doc, player),
+        blocks: blocksOf(doc, entry),
+        fetched,
     });
+    // ⛓ R5c — a read-back that needs SERVED documents answers which; the caller
+    //   fetches them (`resolveZoneFetches`) and asks again. Never a guess.
+    if (!res?.ok && Array.isArray(res?.needs) && res.needs.length) {
+        return {
+            ok: false,
+            needs: [...res.needs],
+            why: `apworld: ${tick(substrate)} ${ZONE_NEEDS_FETCH} [${res.needs.join(', ')}] (slot ${player}) — `
+                + 'the generation worker fetches them before it extracts.',
+        };
+    }
     if (!res?.ok) {
         return { ok: false, why: `apworld: ${ZONE_NOT_RECORDED} (slot ${player}, ${tick(substrate)}): ${res?.why}.` };
     }
-    return { ok: true, cfg: res.cfg, assumed: res.assumed ?? {}, zoneCount: res.zoneCount, host: res.host ?? null };
+    return {
+        ok: true,
+        cfg: res.cfg,
+        assumed: res.assumed ?? {},
+        zoneCount: res.zoneCount,
+        host: res.host ?? null,
+        ...(Array.isArray(res.zoneNames) ? { zoneNames: res.zoneNames } : {}),
+        unplaceable: Array.isArray(res.unplaceable) ? res.unplaceable : [],
+    };
+}
+
+/**
+ * ⛓⛓ R5c — **FETCH WHAT THE READ-BACK ASKS FOR, THEN ASK AGAIN** (the worker, the
+ * page's picker, the control — each with its own `fetchJson`). Bounded by
+ * `ZONE_FETCH_ROUNDS`; a failed fetch is a refusal naming the path.
+ *
+ * @param {(path: string) => Promise<object>} fetchJson
+ * @returns {Promise<{ok: true, fetched: object} | {ok: false, why: string, fetched: object}>}
+ */
+export async function resolveZoneFetches(doc, player, substrate, fetchJson, { fetched = {} } = {}) {
+    const have = { ...fetched };
+    for (let round = 0; round < ZONE_FETCH_ROUNDS; round += 1) {
+        const rec = installedZoneConfigFrom(doc, String(player), substrate, { fetched: have });
+        if (!rec.needs) return { ok: true, fetched: have };
+        for (const path of rec.needs) {
+            if (path in have) continue;
+            try {
+                // eslint-disable-next-line no-await-in-loop
+                have[path] = await fetchJson(path);
+            } catch (e) {
+                return {
+                    ok: false,
+                    fetched: have,
+                    why: `apworld: ${tick(substrate)}'s config reads the served document ${tick(path)}, which `
+                        + `${ZONE_FETCH_FAILED} (${String(e?.message ?? e).split('\n')[0]}) — nothing was changed.`,
+                };
+            }
+        }
+    }
+    return {
+        ok: false,
+        fetched: have,
+        why: `apworld: ${tick(substrate)}'s read-back still asks for documents after ${ZONE_FETCH_ROUNDS} rounds.`,
+    };
 }
 
 /**
  * ⛓ **WHICH REGION OF THE SLOT HOLDS `substrate`'s zone `zoneIdx`** (read through
  * the entry's `zoneOfPayload`), other than `except` — or null.
  */
-export function zoneHeldBy(doc, player, substrate, zoneIdx, { except = null } = {}) {
+export function zoneHeldBy(doc, player, substrate, zoneIdx, { except = null, cfg = undefined } = {}) {
     const reader = substrateRegistry.get(substrate)?.[ZONE_OF_PAYLOAD_HOOK];
     if (typeof reader !== 'function') return null;
     for (const [region, e] of Object.entries(entriesOf(doc, player, substrate))) {
-        if (region !== except && reader(e.playable_payload) === zoneIdx) return region;
+        if (region !== except && reader(e.playable_payload, cfg) === zoneIdx) return region;
     }
     return null;
 }
 
-/** ⛓ The zone a region's entry plays, or null (the entry's own reader). */
-export function zoneOfRegion(doc, player, region) {
+/**
+ * ⛓ The zone a region's entry plays, or null (the entry's own reader). `cfg` is
+ * the read-back's config — R5c: a room's ordinal is its index in the ATLAS, which
+ * the payload names only by room (jta's reader ignores it).
+ */
+export function zoneOfRegion(doc, player, region, { cfg = undefined } = {}) {
     const e = doc?.preset_sidecars?.[player]?.[region];
     const reader = substrateRegistry.get(e?.substrate)?.[ZONE_OF_PAYLOAD_HOOK];
-    return typeof reader === 'function' ? reader(e?.playable_payload) : null;
+    return typeof reader === 'function' ? reader(e?.playable_payload, cfg) : null;
 }
 
 /**
@@ -190,21 +285,34 @@ export function zoneOfRegion(doc, player, region) {
  * @returns {{ok: true, zoneCount: number, options: Array<{zoneIdx, label, heldBy, own, disabled}>}
  *          | {ok: false, why: string}}
  */
-export function zoneOptions(doc, player, region, substrate) {
-    const cfg = installedZoneConfigFrom(doc, player, substrate);
-    if (!cfg.ok) return cfg;
+export function zoneOptions(doc, player, region, substrate, { fetched = {} } = {}) {
+    const rec = installedZoneConfigFrom(doc, player, substrate, { fetched });
+    if (!rec.ok) return rec;
+    const cfg = { ...rec.cfg, ...rec.assumed };
     const own = doc?.preset_sidecars?.[player]?.[region]?.substrate === substrate
-        ? zoneOfRegion(doc, player, region) : null;
+        ? zoneOfRegion(doc, player, region, { cfg }) : null;
     const options = [];
-    for (let z = 0; z < cfg.zoneCount; z += 1) {
-        const heldBy = zoneHeldBy(doc, player, substrate, z, { except: region });
+    for (let z = 0; z < rec.zoneCount; z += 1) {
+        const heldBy = zoneHeldBy(doc, player, substrate, z, { except: region, cfg });
+        // ⛓ R5c — a zone the read-back NAMES (an atlas room) is listed by its
+        //   name; an ordinal-only zone keeps R5b's `Zone N`.
+        const name = rec.zoneNames?.[z];
         options.push({
             zoneIdx: z,
-            label: `Zone ${z}${z === own ? ' (this region\'s own)' : ''}${heldBy ? ` — held by ${heldBy}` : ''}`,
+            label: `${typeof name === 'string' ? name : `Zone ${z}`}${z === own ? ' (this region\'s own)' : ''}`
+                + `${heldBy ? ` — held by ${heldBy}` : ''}`,
+            ...(typeof name === 'string' ? { name } : {}),
             heldBy, own: z === own, disabled: !!heldBy,
         });
     }
-    return { ok: true, zoneCount: cfg.zoneCount, options };
+    // ⛓ R5c — what the channel cannot place is LISTED, disabled, with its reason.
+    for (const u of rec.unplaceable) {
+        options.push({
+            zoneIdx: null, label: `${u.name} — ${u.why}`, name: u.name, heldBy: null, own: false, disabled: true,
+            unplaceable: u.why,
+        });
+    }
+    return { ok: true, zoneCount: rec.zoneCount, options };
 }
 
 /**
@@ -212,7 +320,7 @@ export function zoneOptions(doc, player, region, substrate) {
  * install): the entry, the region, the channel, the recovery, the range, the
  * held zone. `null` when the op may proceed.
  */
-export function zoneSourceRefusal(doc, { player, region, substrate, zoneIdx }) {
+export function zoneSourceRefusal(doc, { player, region, substrate, zoneIdx }, { fetched = {}, answerInlined = false } = {}) {
     const slot = doc?.preset_sidecars?.[player];
     if (typeof region !== 'string' || !isObj(slot?.[region])) {
         return `apworld: player ${player} has no sidecar entry for region ${JSON.stringify(region)}. `
@@ -227,13 +335,19 @@ export function zoneSourceRefusal(doc, { player, region, substrate, zoneIdx }) {
     }
     const facts = zoneSourceFacts(substrateRegistry.get(substrate));
     if (!facts.offers || !facts.recovers) return `apworld: ${facts.why}.`;
-    const cfg = installedZoneConfigFrom(doc, player, substrate);
-    if (!cfg.ok) return cfg.why;
-    if (!Number.isInteger(zoneIdx) || zoneIdx < 0 || zoneIdx >= cfg.zoneCount) {
+    const rec = installedZoneConfigFrom(doc, player, substrate, { fetched });
+    // ⛓ R5c — an op carrying the channel's answer INLINED applies pure (a refold,
+    //   an undo, a replay without the network): a config that must be FETCHED to
+    //   be read back was read, range-checked and held-checked where the answer
+    //   was computed (the worker), so its absence here is not a refusal.
+    if (!rec.ok && rec.needs && answerInlined) return Number.isInteger(zoneIdx) && zoneIdx >= 0 ? null
+        : `apworld: zone ${JSON.stringify(zoneIdx)} ${ZONE_OUT_OF_RANGE}.`;
+    if (!rec.ok) return rec.why;
+    if (!Number.isInteger(zoneIdx) || zoneIdx < 0 || zoneIdx >= rec.zoneCount) {
         return `apworld: zone ${JSON.stringify(zoneIdx)} ${ZONE_OUT_OF_RANGE} — ${tick(substrate)} offers zones `
-            + `0..${cfg.zoneCount - 1} here.`;
+            + `0..${rec.zoneCount - 1} here.`;
     }
-    const heldBy = zoneHeldBy(doc, player, substrate, zoneIdx, { except: region });
+    const heldBy = zoneHeldBy(doc, player, substrate, zoneIdx, { except: region, cfg: { ...rec.cfg, ...rec.assumed } });
     if (heldBy) {
         return `apworld: zone ${zoneIdx} of ${tick(substrate)} ${ZONE_HELD} region "${heldBy}" in slot ${player} — `
             + 'two regions playing one zone would share its task locations. Free it first (give that region '
@@ -271,6 +385,46 @@ function compiledZoneLocations(region, substrate, zone) {
     }));
 }
 
+/**
+ * ⛓⛓ R5c — **THE SIDECAR ENTRY A ZONE ANSWER SERIALISES TO** for `region` (the
+ * apply's, and the verification's — one builder, so the check compares what the
+ * op would write): the zone's payload with the fields the OLD payload hosted for
+ * its siblings carried, the OLD exits (`regions[p][R].exits` untouched; a
+ * side-bound channel joins its bound doors onto them in `serializeWorld`), the
+ * old `grid_cell`, and the 5th `serializeWorld` argument naming each exit's
+ * target substrate.
+ */
+function zoneEntryFor(doc, player, region, substrate, zone) {
+    const old = doc.preset_sidecars[player][region];
+    const hosted = hostedFields(doc, player, old);
+    const payload = { ...zone.payload };
+    const hostCarried = [];
+    for (const f of hosted) {
+        if (!(f in payload)) {
+            payload[f] = old.playable_payload[f];
+            hostCarried.push(f);
+        }
+    }
+    const descriptor = assembleZoneRegion({
+        substrate, region_id: region, regionSize: { ...DEFAULT_REGION_SIZE }, exitSides: [],
+        zoneRules: { locations: zone.locations, payload }, zonePayload: {},
+    });
+    const oldExits = Array.isArray(old.playable_payload?.exits) ? JSON.parse(JSON.stringify(old.playable_payload.exits)) : [];
+    descriptor.exits = new Map(oldExits.map((x, i) => [x?.exit_id ?? x?.exitName ?? `#${i}`, x]));
+    const cell = old.grid_cell;
+    const slot = doc.preset_sidecars[player];
+    const entry = serializeRegionEntry({ ...descriptor, cell: cell ?? { gx: 0, gy: 0 } }, {
+        manaEnabled: old.playable_payload?.manaEnabled === true,
+        fogEnabled: old.playable_payload?.fogEnabled !== false,
+        baseObstacleLib: DEFAULT_OBSTACLES,
+        baseItemLib: mergeSubstrateItemLib(DEFAULT_ITEMS, [substrate]),
+        serializeContext: { substrateOfRegion: (target) => slot?.[target]?.substrate ?? null },
+    });
+    if (cell === undefined) delete entry.grid_cell;
+    else entry.grid_cell = cell;
+    return { built: JSON.parse(JSON.stringify(entry)), hostCarried };
+}
+
 /** ⛓ The first difference between a region's committed content and its zone's. */
 function reproductionDifference(doc, player, region, entry, zone, substrate) {
     const mine = compiledZoneLocations(region, substrate, zone);
@@ -289,11 +443,32 @@ function reproductionDifference(doc, player, region, entry, zone, substrate) {
             }
         }
     }
+    // ⛓ R5c — the payload is compared AS THE OP WOULD WRITE IT (`zoneEntryFor`):
+    //   a side-bound channel's `bound_doors` exist only until `serializeWorld`
+    //   joins them onto the exits. Every key the committed payload holds or the
+    //   zone names is compared; a key only the serialiser's envelope adds, which
+    //   the committed payload lacks, is not a difference (R5b's envelope rule).
     const pay = entry.playable_payload ?? {};
-    for (const [k, v] of Object.entries(zone.payload)) {
-        if (JSON.stringify(v) !== JSON.stringify(pay[k])) return `its payload's \`${k}\` differs from the zone's`;
+    let built;
+    try {
+        built = zoneEntryFor(doc, player, region, substrate, zone).built.playable_payload ?? {};
+    } catch (e) {
+        return `its entry cannot be rebuilt from the zone — ${String(e?.message ?? e)}`;
+    }
+    const keys = new Set([...Object.keys(pay), ...Object.keys(zone.payload).filter((k) => k in built)]);
+    for (const k of keys) {
+        if (JSON.stringify(built[k]) !== JSON.stringify(pay[k])) return `its payload's \`${k}\` differs from the zone's`;
     }
     return null;
+}
+
+/** ⛓ R5c — the zone channel's answer, or its throw as a sentence (a real room refuses sides it lacks). */
+function extractOrWhy(entry, zoneIdx, regionId, exitSides) {
+    try {
+        return { answer: entry.extractZoneRules(zoneIdx, { region_id: regionId, exitSides }) };
+    } catch (e) {
+        return { why: String(e?.message ?? e) };
+    }
 }
 
 /**
@@ -307,19 +482,24 @@ function reproductionDifference(doc, player, region, entry, zone, substrate) {
  * @returns {{ok: true, zone: {locations, payload, itemClasses}, verified: string[]}
  *          | {ok: false, why: string}}
  */
-export function zoneContentFor(doc, player, region, substrate, zoneIdx) {
-    const refusal = zoneSourceRefusal(doc, { player, region, substrate, zoneIdx });
+export function zoneContentFor(doc, player, region, substrate, zoneIdx, { fetched = {} } = {}) {
+    const refusal = zoneSourceRefusal(doc, { player, region, substrate, zoneIdx }, { fetched });
     if (refusal) return { ok: false, why: refusal };
     const entry = substrateRegistry.get(substrate);
-    const rec = installedZoneConfigFrom(doc, player, substrate);
-    entry.applyPipelineConfig({ ...rec.cfg, ...rec.assumed });
+    const rec = installedZoneConfigFrom(doc, player, substrate, { fetched });
+    const cfg = { ...rec.cfg, ...rec.assumed };
+    entry.applyPipelineConfig(cfg);
     const reader = entry[ZONE_OF_PAYLOAD_HOOK];
     const verified = [];
     for (const [r, e] of Object.entries(entriesOf(doc, player, substrate))) {
-        const z = typeof reader === 'function' ? reader(e.playable_payload) : null;
+        const z = typeof reader === 'function' ? reader(e.playable_payload, cfg) : null;
         if (!Number.isInteger(z)) continue;
-        const answer = entry.extractZoneRules(z, { region_id: r });
-        const diff = reproductionDifference(doc, player, r, e, answer, substrate);
+        // ⛓ R5c — the region's own exit SIDES, in document order: a side-bound
+        //   channel binds the k-th door to the k-th side (jta ignores them).
+        const got = extractOrWhy(entry, z, r, exitSidesOfEntry(e));
+        const answer = got.answer;
+        const diff = got.why ? `the channel refuses it: ${got.why}`
+            : reproductionDifference(doc, player, r, e, answer, substrate);
         if (diff) {
             const assumed = Object.entries(rec.assumed)
                 .map(([k, v]) => `${tick(k)} (assumed ${JSON.stringify(v)})`).join(', ');
@@ -334,7 +514,9 @@ export function zoneContentFor(doc, player, region, substrate, zoneIdx) {
         }
         verified.push(r);
     }
-    const answer = entry.extractZoneRules(zoneIdx, { region_id: region });
+    const got = extractOrWhy(entry, zoneIdx, region, exitSidesOfEntry(doc.preset_sidecars[player][region]));
+    if (got.why) return { ok: false, why: `apworld: ${got.why}` };
+    const { answer } = got;
     const lib = mergeSubstrateItemLib(DEFAULT_ITEMS, [substrate]);
     const itemClasses = {};
     for (const l of answer.locations ?? []) {
@@ -387,11 +569,11 @@ function referencesTo(doc, player, region, names) {
  *            placementsAdded: Array<{location, item}>, hostCarried: string[],
  *            danglingReferences: object[], stranded: object[]} | {ok: false, why: string}}
  */
-export function applyZoneContent({ doc, player, region, substrate, zoneIdx, zone }) {
-    const refusal = zoneSourceRefusal(doc, { player, region, substrate, zoneIdx }) ?? zoneAnswerRefusal(zone);
+export function applyZoneContent({ doc, player, region, substrate, zoneIdx, zone, fetched = {} }) {
+    const refusal = zoneSourceRefusal(doc, { player, region, substrate, zoneIdx }, { fetched, answerInlined: true })
+        ?? zoneAnswerRefusal(zone);
     if (refusal) return { ok: false, why: refusal };
     const p = String(player);
-    const old = doc.preset_sidecars[p][region];
     const oldRegion = doc.regions[p][region];
     const oldLocations = Array.isArray(oldRegion.locations) ? oldRegion.locations : [];
     const placements = doc.canonical_placements?.[p] ?? {};
@@ -449,31 +631,14 @@ export function applyZoneContent({ doc, player, region, substrate, zoneIdx, zone
     }
 
     // 4. the entry: the zone's payload + the hosted field carried, the OLD exits
-    const hosted = hostedFields(doc, p, old);
-    const payload = { ...zone.payload };
-    const hostCarried = [];
-    for (const f of hosted) {
-        if (!(f in payload)) {
-            payload[f] = old.playable_payload[f];
-            hostCarried.push(f);
-        }
+    let built;
+    let hostCarried;
+    try {
+        ({ built, hostCarried } = zoneEntryFor(doc, p, region, substrate, zone));
+    } catch (e) {
+        // ⛓ R5c — a side-bound serialiser refuses an exit no door was bound to.
+        return { ok: false, why: `apworld: ${String(e?.message ?? e)}` };
     }
-    const descriptor = assembleZoneRegion({
-        substrate, region_id: region, regionSize: { ...DEFAULT_REGION_SIZE }, exitSides: [],
-        zoneRules: { locations: zone.locations, payload }, zonePayload: {},
-    });
-    const oldExits = Array.isArray(old.playable_payload?.exits) ? JSON.parse(JSON.stringify(old.playable_payload.exits)) : [];
-    descriptor.exits = new Map(oldExits.map((x, i) => [x?.exit_id ?? x?.exitName ?? `#${i}`, x]));
-    const cell = old.grid_cell;
-    const entry = serializeRegionEntry({ ...descriptor, cell: cell ?? { gx: 0, gy: 0 } }, {
-        manaEnabled: old.playable_payload?.manaEnabled === true,
-        fogEnabled: old.playable_payload?.fogEnabled !== false,
-        baseObstacleLib: DEFAULT_OBSTACLES,
-        baseItemLib: mergeSubstrateItemLib(DEFAULT_ITEMS, [substrate]),
-    });
-    if (cell === undefined) delete entry.grid_cell;
-    else entry.grid_cell = cell;
-    const built = JSON.parse(JSON.stringify(entry));
 
     const removed = new Set(oldLocations.map((l) => l?.name).filter((n) => typeof n === 'string' && !freshBy.has(n)));
     const next = {
@@ -503,8 +668,8 @@ export function applyZoneContent({ doc, player, region, substrate, zoneIdx, zone
  * under the recorded config, then apply. The brief's API; the op calls it when
  * `source.zone` is absent.
  */
-export function replaceRegionContentFromZone({ doc, player, region, substrate, zoneIdx }) {
-    const got = zoneContentFor(doc, String(player), region, substrate, zoneIdx);
+export function replaceRegionContentFromZone({ doc, player, region, substrate, zoneIdx, fetched = {} }) {
+    const got = zoneContentFor(doc, String(player), region, substrate, zoneIdx, { fetched });
     if (!got.ok) return got;
     const res = applyZoneContent({ doc, player: String(player), region, substrate, zoneIdx, zone: got.zone });
     return res.ok ? { ...res, zone: got.zone, verified: got.verified } : res;
@@ -583,8 +748,16 @@ export function unplacedPoolItems(doc, player) {
  * touched slices and the entry — never the whole document back across the
  * boundary. A refusal is the op's own sentence, `refused: true`.
  */
-export function zoneJobAnswer({ doc, player, region, substrate, source }) {
-    const res = replaceRegionContentFromZone({ doc, player, region, substrate, zoneIdx: source?.zoneIdx });
+export async function zoneJobAnswer({ doc, player, region, substrate, source }, { fetchJson = null } = {}) {
+    // ⛓ R5c — the served documents the read-back names are fetched HERE, in the
+    //   worker, with the rest of the job (the page's timer bounds it).
+    let fetched = {};
+    if (typeof fetchJson === 'function' && substrateRegistry.has(substrate)) {
+        const got = await resolveZoneFetches(doc, player, substrate, fetchJson);
+        if (!got.ok) return { ok: false, refused: true, threw: got.why, freeItems: [], hostsSurplus: false };
+        fetched = got.fetched;
+    }
+    const res = replaceRegionContentFromZone({ doc, player, region, substrate, zoneIdx: source?.zoneIdx, fetched });
     if (!res.ok) return { ok: false, refused: true, threw: res.why, freeItems: [], hostsSurplus: false };
     const p = String(player);
     return {

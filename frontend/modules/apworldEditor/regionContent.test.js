@@ -79,6 +79,14 @@ const REGIONS = DOCS.flatMap((d) => d.regions.map((r) => ({ ...d, ...r, key: `${
 const REPRODUCES = ['jta_dataset_test', 'jta_schedule_test', 'jta_locations_test', 'jta_prestige_test'];
 const ENVELOPE_ONLY = ['jta_mixed_test'];
 const NOT_RECORDED = ['jta_randomized_test', 'jta_substrate_test'];
+/**
+ * ⛓ R5c — the documents whose zone-channel regions are ATLAS ROOMS
+ * (`flash_seedling` declares the read-back since R5c). Their oracle is
+ * `flashPanel/flashSeedlingAtlasRoom.test.js` (two reproduce, two are the atlas
+ * compiler's projection and refuse); this file's jta-shaped oracle skips them.
+ */
+const ATLAS_ROOM_DOCS = ['seedling_spiral_room', 'seedling_sphere_room', 'seedling_atlas', 'seedling_playthrough'];
+const R5B_BINS = [...REPRODUCES, ...ENVELOPE_ONLY, ...NOT_RECORDED];
 
 /** ⛓ A document with `substrate`'s zone `z` FREED: the region holding it loses its sidecar entry. */
 function freed(doc, p, substrate, z) {
@@ -110,10 +118,10 @@ describe('the population (derived)', () => {
     it('every committed zone-channel region is enrolled, and every bin is non-empty', () => {
         expect(REGIONS.length).toBeGreaterThan(0);
         const games = new Set(DOCS.map((d) => d.game));
-        for (const g of [...REPRODUCES, ...ENVELOPE_ONLY, ...NOT_RECORDED]) expect(games.has(g), g).toBe(true);
+        for (const g of [...R5B_BINS, ...ATLAS_ROOM_DOCS]) expect(games.has(g), g).toBe(true);
         // ⛓ every enrolled game is in exactly one bin, or is a substrate with no read-back
         for (const d of DOCS) {
-            const binned = [...REPRODUCES, ...ENVELOPE_ONLY, ...NOT_RECORDED].includes(d.game);
+            const binned = [...R5B_BINS, ...ATLAS_ROOM_DOCS].includes(d.game);
             const recovers = d.regions.every((r) => zoneSourceFacts(substrateRegistry.get(r.substrate)).recovers);
             expect(binned || !recovers, d.name).toBe(true);
         }
@@ -147,7 +155,7 @@ describe('the oracle — every committed region, as its OWN zone', () => {
         }
     });
 
-    it.each(REGIONS.filter(recovers).map((r) => [r.key, r]))('%s', (_k, r) => {
+    it.each(REGIONS.filter((r) => recovers(r) && R5B_BINS.includes(r.game)).map((r) => [r.key, r]))('%s', (_k, r) => {
         const own = zoneOfRegion(r.doc, r.p, r.region) ?? 0;
         const before = bytes(r.doc);
         const res = replaceRegionContentFromZone({

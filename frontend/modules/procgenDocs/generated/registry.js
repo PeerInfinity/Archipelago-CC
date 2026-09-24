@@ -54,7 +54,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js"
         },
         {
-            "fields": 22,
+            "fields": 25,
             "id": "flash_seedling",
             "label": "Seedling (region atlas)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
@@ -78,7 +78,13 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js"
         }
     ],
-    "findings": [],
+    "findings": [
+        {
+            "name": "zoneSourceLabel",
+            "severity": "documented NOWHERE in the procgen docs",
+            "what": "`zoneSourceLabel` is carried by [flash_seedling] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads."
+        }
+    ],
     "groups": [
         {
             "rows": [
@@ -226,6 +232,12 @@ export const REGISTRY = frz({
                 "startingInventory"
             ],
             "title": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)"
+        },
+        {
+            "rows": [
+                "zoneSourceLabel"
+            ],
+            "title": "Not documented in the registry reference"
         }
     ],
     "libraries": [
@@ -6319,6 +6331,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "flash_seedling",
                 "jta"
             ],
             "cells": [
@@ -6359,9 +6372,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -6469,6 +6482,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "flash_seedling",
                 "jta"
             ],
             "cells": [
@@ -6509,9 +6523,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -6539,6 +6553,79 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Build-time — content sources (zone-based substrates)",
             "name": "zoneOfPayload"
+        },
+        {
+            "carriedBy": [
+                "flash_seedling"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": true,
+                    "short": "Atlas room",
+                    "type": "string",
+                    "value": "Atlas room"
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": null,
+            "group": "Not documented in the registry reference",
+            "name": "zoneSourceLabel"
         }
     ],
     "shortValueRule": "a cell in the markdown region is SHORT: a function is `fn`, a boolean is yes/no, an array of at most 3 short values is the list and any longer one is its count, an object is its key set or its key count. The reference page prints the full value.",

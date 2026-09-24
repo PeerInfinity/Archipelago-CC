@@ -226,7 +226,7 @@ Both of those are the checked-in snapshot, taken headless by the generator. The 
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**9 registered entries · 77 fields · 14 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**9 registered entries · 78 fields · 15 groups · 1 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported.
 
@@ -329,9 +329,9 @@ Groups are this document's own § headings, matched to a field by the section th
 | `rulesJsonBlocks` | — | — | — | — | — | fn | fn | — | — |
 | `spiralContentConfigKey` | — | — | — | — | — | — | — | datasetDoc | — |
 | `victoryItem` | — | — | Victory | Victory | — | — | — | Victory | Victory |
-| `zoneConfigFromSlot` | — | — | — | — | — | — | — | fn | — |
+| `zoneConfigFromSlot` | — | — | — | — | — | fn | — | fn | — |
 | `zoneCount` | — | — | 5 | 6 | — | 4 | — | 30 | 1 |
-| `zoneOfPayload` | — | — | — | — | — | — | — | fn | — |
+| `zoneOfPayload` | — | — | — | — | — | fn | — | fn | — |
 
 **Build-time — region geometry**
 
@@ -381,6 +381,12 @@ Groups are this document's own § headings, matched to a field by the section th
 | `renderProcgenParams` | fn | — | fn | fn | — | — | fn | — | — |
 | `startingInventory` | — | — | {needs} | — | — | — | — | — | — |
 
+**Not documented in the registry reference**
+
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|---|
+| `zoneSourceLabel` | — | — | — | — | — | Atlas room | — | — | — |
+
 **Which library registered which entry** — entries self-register on library import, and this is the order the generator imports them in.
 
 | Library | Registers | Loads headless |
@@ -394,6 +400,12 @@ Groups are this document's own § headings, matched to a field by the section th
 | `frontend/modules/flashPanel/flashSeedlingGenBuild.js` | `flash_seedling_gen` | yes |
 | `frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js` | `jta` | yes |
 | `frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js` | `omsi` | yes |
+
+**1 findings — where an ENTRY and this document disagree.** ⛔ Printed, never fixed: the generator does not edit the code or the prose it reads.
+
+| Field | What |
+|---|---|
+| `zoneSourceLabel` | `zoneSourceLabel` is carried by [flash_seedling] and `docs/json/developer/procgen/substrate-registry.md` § *Entry contract* does not name it. No procgen doc names it at all. ⛔ Reported, not fixed: the generator never edits the code or the prose it reads. |
 
 <!-- GENERATED:substrate-capability-matrix END -->
 

@@ -14,6 +14,18 @@ import { REGENERATE_WORKER_LIBRARIES, runRegenerateJob } from './regionGeneratio
 
 let loaded = null;
 
+/**
+ * ⛓ R5c — a SERVED document, by its path from `frontend/` (the atlas index, an
+ * atlas): the worker sits at `frontend/modules/apworldEditor/` in raw and bundled
+ * mode alike (`resolveRegenerateWorkerUrl`). A non-2xx answer is a throw, which
+ * the resolver turns into a refusal naming the path.
+ */
+async function fetchServedJson(path) {
+    const res = await fetch(new URL(`../../${path}`, import.meta.url));
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+}
+
 /** Import every library once, recording what each registered and which refused. */
 function loadLibraries() {
     if (!loaded) {
@@ -35,7 +47,9 @@ function loadLibraries() {
             return {
                 registered: substrateRegistry.getAll().map((e) => e.id),
                 failed,
-                regenerate: (args) => (args?.source?.kind === 'zone' ? zoneJobAnswer(args) : regenerateRegionEntry(args)),
+                regenerate: (args) => (args?.source?.kind === 'zone'
+                    ? zoneJobAnswer(args, { fetchJson: fetchServedJson })
+                    : regenerateRegionEntry(args)),
             };
         })();
     }

@@ -61,6 +61,7 @@ import { boundaryRule } from '../procgenPipeline/regionAtlasPool.js';
 // raw ES modules, the esbuild bundle, node CLIs and vitest alike — no fetch, so
 // the synchronous `applyPipelineConfig` seam can install it.
 import SEEDLING_STARTER_ATLAS_DOC from './atlases/seedling.json' with { type: 'json' };
+import { atlasIndexPath, atlasPathInIndex } from './mapDocumentPath.js';
 
 export const FLASH_SEEDLING_SUBSTRATE_ID = 'flash_seedling';
 
@@ -195,10 +196,32 @@ export function buildSeedlingContentSource(atlasDoc) {
     };
 }
 
+/**
+ * ⛓ A content source per atlas DOCUMENT, built once — the hub's read-back asks
+ * for the same fetched atlas many times per picker draw (`zoneOfPayload` per
+ * sibling), and a build compiles the atlas. Pure: nothing is installed.
+ */
+const builtSources = new WeakMap();
+function sourceOf(atlasDoc) {
+    if (atlasDoc === SEEDLING_STARTER_ATLAS) return contentSourceOfStarter();
+    let src = builtSources.get(atlasDoc);
+    if (!src) {
+        src = buildSeedlingContentSource(atlasDoc);
+        builtSources.set(atlasDoc, src);
+    }
+    return src;
+}
+
+let starterSource = null;
+function contentSourceOfStarter() {
+    starterSource ??= buildSeedlingContentSource(SEEDLING_STARTER_ATLAS);
+    return starterSource;
+}
+
 let installedSource = null;
 /** The installed content source — the starter atlas until `applyPipelineConfig` installs another. */
 function contentSource() {
-    installedSource ??= buildSeedlingContentSource(SEEDLING_STARTER_ATLAS);
+    installedSource ??= contentSourceOfStarter();
     return installedSource;
 }
 
@@ -361,6 +384,135 @@ function generateZoneForSpecs({ region_id: regionId, exitSpecs = [], locationSpe
     };
 }
 
+/* ── APWORLD SUBSTRATE CHANGE R5c — the hub's ATLAS-ROOM source ────────── */
+
+/** ⛓ The Source row's word for this entry's zones (the hub reads it; default *Zone N*). */
+export const FLASH_SEEDLING_ZONE_SOURCE_LABEL = 'Atlas room';
+
+/** ⛓ Why a doorless room cannot be picked — the channel's own reason, said once. */
+export const FLASH_SEEDLING_DOORLESS_REASON = 'no wired door — a placed room is entered through a door, and a '
+    + 'room with none has no arrival spawn';
+
+const isPlainObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+
+/**
+ * ⛓⛓⛓ **THE ATLAS A DOCUMENT'S ROOMS WERE PLACED FROM, READ BACK** (the hub's
+ * `zoneConfigFromSlot` contract, `apworldEditor/regionContent.js`). What the
+ * document records, and where:
+ *
+ *   · the atlas's IDENTITY — `region_atlas.atlas_id` (a document-level block
+ *     this entry's `rulesJsonBlocks` writes; the hub hands it in as
+ *     `blocks.region_atlas`), which every placed room's `atlas_ref` repeats;
+ *   · NOT the atlas itself — `region_atlas.map_document` names the LEVEL map,
+ *     not an atlas. The id is resolved through the served index
+ *     (`atlas_files.json`), and the atlas is FETCHED: the answer is `{ok: false,
+ *     needs: [path]}` until the caller hands the fetched documents back in
+ *     `fetched` (`{[path]: doc}`). The bundled starter atlas needs no fetch.
+ *
+ * Refused by name: a missing block (the flash panel engages on
+ * `flash_panel`, and the atlas is named only in `region_atlas`); a room whose
+ * `atlas_ref` is not the document's `atlas_id`; an id the index does not list;
+ * a fetched atlas whose `atlas_id` is not the one asked for; an atlas that
+ * does not validate. Nothing is `assumed` — the atlas is the whole config.
+ */
+function zoneConfigFromSlot({ entries = {}, blocks = {}, fetched = {} } = {}) {
+    for (const key of Object.keys(blocks)) {
+        if (!isPlainObject(blocks[key])) {
+            return {
+                ok: false,
+                why: `the document carries no \`${key}\` block — a placed room needs both top-level blocks this `
+                    + `entry writes [${Object.keys(blocks).join(', ')}] (\`region_atlas\` names the atlas the room `
+                    + 'is read from; the flash panel engages on `flash_panel`)',
+            };
+        }
+    }
+    const atlasId = blocks.region_atlas?.atlas_id;
+    if (typeof atlasId !== 'string' || atlasId === '') {
+        return { ok: false, why: 'its `region_atlas` block names no `atlas_id`' };
+    }
+    for (const [region, e] of Object.entries(entries)) {
+        const ref = e?.playable_payload?.atlas_ref;
+        if (typeof ref !== 'string') continue;
+        if (ref !== atlasId) {
+            return {
+                ok: false,
+                why: `region "${region}" plays a room of atlas \`${ref}\`, but the document's \`region_atlas\` `
+                    + `names \`${atlasId}\` — one slot reads its rooms from one atlas`,
+            };
+        }
+        // ⛓ A PLACED room's exits are doors bound to sides (`bindDoorsToSides`:
+        //   `side` + `external`). The atlas COMPILER's projection writes the
+        //   level's own transitions instead — a whole-atlas world, not rooms
+        //   placed as content — so the channel never made it and cannot rebuild it.
+        const exits = Array.isArray(e.playable_payload.exits) ? e.playable_payload.exits : [];
+        const unbound = exits.filter((x) => typeof x?.side !== 'string' || x?.external !== true);
+        if (unbound.length) {
+            return {
+                ok: false,
+                why: `region "${region}" is the region atlas COMPILER's projection of its room, not a room placed as `
+                    + `content — ${unbound.length} of its ${exits.length} exit(s) are the level's own transitions `
+                    + `[${unbound.slice(0, 3).map((x) => x?.exit_id).join(', ')}${unbound.length > 3 ? ', …' : ''}], `
+                    + 'not doors bound to sides, so the content source never made this slot and cannot rebuild it',
+            };
+        }
+    }
+    let atlasDoc = null;
+    if (atlasId === SEEDLING_STARTER_ATLAS.atlas_id) {
+        atlasDoc = SEEDLING_STARTER_ATLAS;
+    } else {
+        const indexPath = atlasIndexPath();
+        if (!(indexPath in fetched)) return { ok: false, needs: [indexPath] };
+        const atlasPath = atlasPathInIndex(fetched[indexPath], atlasId);
+        if (!atlasPath) {
+            return {
+                ok: false,
+                why: `the atlas index \`${indexPath}\` lists no atlas \`${atlasId}\` — the document's `
+                    + '`region_atlas` names an atlas this site does not serve (restamped, or never committed)',
+            };
+        }
+        if (!(atlasPath in fetched)) return { ok: false, needs: [atlasPath] };
+        atlasDoc = fetched[atlasPath];
+        if (atlasDoc?.atlas_id !== atlasId) {
+            return {
+                ok: false,
+                why: `the served atlas \`${atlasPath}\` is \`${atlasDoc?.atlas_id}\`, not the \`${atlasId}\` the `
+                    + 'document names — the index is stale, or the atlas was restamped after this document was built',
+            };
+        }
+    }
+    let source;
+    try {
+        source = sourceOf(atlasDoc);
+    } catch (e) {
+        return { ok: false, why: String(e?.message ?? e) };
+    }
+    return {
+        ok: true,
+        cfg: { atlasDoc },
+        assumed: {},
+        zoneCount: source.zones.length,
+        zoneNames: source.zones.map((z) => z.apName),
+        unplaceable: source.doorless.map((name) => ({ name, why: FLASH_SEEDLING_DOORLESS_REASON })),
+        host: null,
+    };
+}
+
+/**
+ * ⛓ The room a payload plays, as an ordinal of `cfg.atlasDoc`'s placeable
+ * rooms (the hub's held-room test) — matched by `atlas_region` +
+ * `atlas_sub_region`, the payload's own spelling of the room; null without the
+ * config, for another atlas's room, or for a room this atlas cannot place.
+ */
+function zoneOfPayload(payload, cfg) {
+    if (!isPlainObject(payload) || !isPlainObject(cfg?.atlasDoc)) return null;
+    let source;
+    try { source = sourceOf(cfg.atlasDoc); } catch { return null; }
+    if (payload.atlas_ref !== source.atlasId) return null;
+    const i = source.zones.findIndex((z) => z.payload.atlas_region === payload.atlas_region
+        && (z.payload.atlas_sub_region ?? null) === (payload.atlas_sub_region ?? null));
+    return i < 0 ? null : i;
+}
+
 const base = createFlashSubstrateEntry({
     id: FLASH_SEEDLING_SUBSTRATE_ID,
     label: 'Seedling (region atlas)',
@@ -467,7 +619,7 @@ export const substrateRegistryEntry = Object.freeze({
      * the document does not validate.
      */
     applyPipelineConfig: (cfg) => {
-        installedSource = buildSeedlingContentSource(cfg?.atlasDoc ?? SEEDLING_STARTER_ATLAS);
+        installedSource = sourceOf(cfg?.atlasDoc ?? SEEDLING_STARTER_ATLAS);
         // A room placed from the atlas this replaces is not a room of the new one.
         sphereRooms.clear();
         return installedSource.atlasDoc;
@@ -481,6 +633,14 @@ export const substrateRegistryEntry = Object.freeze({
      * realised.
      */
     rulesJsonBlocks: () => structuredClone(contentSource().blocks),
+    /**
+     * ⛓⛓ APWORLD SUBSTRATE CHANGE R5c — **THE HUB'S ATLAS-ROOM SOURCE**: the
+     * read-back pair `apworldEditor/regionContent.js` asks (see
+     * `zoneConfigFromSlot` above), and the Source row's word for it.
+     */
+    zoneConfigFromSlot,
+    zoneOfPayload,
+    zoneSourceLabel: FLASH_SEEDLING_ZONE_SOURCE_LABEL,
     /**
      * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE ROOM-EDITOR DECLARATION**
      * (the editor-integration plan §3.2). Seedling's room editor is

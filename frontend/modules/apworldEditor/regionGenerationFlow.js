@@ -32,7 +32,9 @@ import {
     librarySourceSummary, offersLibrarySource, regionSizeFor,
 } from './regionRegenerate.js';
 import { describeRegeneration, regenerateOpRefusal, regenerateRealiserRefusal } from './rulesDocOps.js';
-import { REPLACE_REGION_CONTENT_OP, zoneOptions, zoneSourceFacts, zoneSourceRefusal } from './regionContent.js';
+import {
+    REPLACE_REGION_CONTENT_OP, zoneOptions, zoneSourceFacts, zoneSourceLabelOf, zoneSourceRefusal,
+} from './regionContent.js';
 import { payloadBuiltBy } from './sidecarIssues.js';
 import {
     REGION_GENERATION_CANCELLED, regionGenerationLoadTimeoutSentence, regionGenerationTimeoutSentence,
@@ -91,6 +93,9 @@ export function regionGenerationPlan(doc, player, region, target, { seed = REGIO
         //   read-back (bounce, runner, omsi, flash_seedling) would draw a source
         //   that always refuses.
         offersZone: zoneSourceFacts(entry).recovers,
+        // ⛓ R5c — the Source row's word for the zone source, read off the entry
+        //   (`zoneSourceLabel`: flash_seedling's *Atlas room*), never typed here.
+        zoneSourceLabel: zoneSourceLabelOf(entry),
     };
 }
 
@@ -107,7 +112,9 @@ export const REGION_GENERATION_SOURCES = Object.freeze([
 
 export function regionGenerationSourcesFor(plan) {
     return REGION_GENERATION_SOURCES.filter((s) => (s.id !== REGION_SOURCE_KINDS.LIBRARY || plan.offersLibrary)
-        && (s.id !== REGION_SOURCE_KINDS.ZONE || plan.offersZone));
+        && (s.id !== REGION_SOURCE_KINDS.ZONE || plan.offersZone))
+        .map((s) => (s.id === REGION_SOURCE_KINDS.ZONE && plan.zoneSourceLabel
+            ? { ...s, label: plan.zoneSourceLabel } : s));
 }
 
 /**
@@ -124,8 +131,11 @@ export function defaultRegionGenerationSource(plan) {
  * the RECORDED config (`zoneOptions` — never an install), the held zones
  * disabled, the first enabled one selected (the region's own zone last).
  */
-export function zonePickerFor(doc, player, region, target) {
-    const res = zoneOptions(doc, player, region, target);
+export function zonePickerFor(doc, player, region, target, { fetched = {} } = {}) {
+    const res = zoneOptions(doc, player, region, target, { fetched });
+    // ⛓ R5c — the read-back names served documents to fetch first: the panel
+    //   fetches them (`resolveZoneFetches` — no install) and asks again.
+    if (!res.ok && res.needs) return { status: 'needs', needs: res.needs, options: [], error: res.why, selected: null };
     if (!res.ok) return { status: 'refused', options: [], error: res.why, selected: null };
     const free = res.options.filter((o) => !o.disabled);
     const pick = free.find((o) => !o.own) ?? free[0] ?? null;
@@ -179,12 +189,12 @@ export function composeRegenerateArgs(doc, player, region, target, bag, { source
  * (a seed typed as nothing, a size below one tile, …) — `null` when the op would
  * hand them to the realiser.
  */
-export function regenerateArgsRefusal(args) {
+export function regenerateArgsRefusal(args, { fetched = {} } = {}) {
     const { doc, ...op } = args;
     if (op.source?.kind === REGION_SOURCE_KINDS.ZONE) {
         return zoneSourceRefusal(doc, {
             player: op.player, region: op.region, substrate: op.substrate, zoneIdx: op.source.zoneIdx,
-        });
+        }, { fetched });
     }
     return regenerateOpRefusal(doc, { op: 'regenerate-region-sidecar', ...op });
 }

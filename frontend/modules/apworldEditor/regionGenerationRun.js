@@ -155,7 +155,10 @@ export async function runRegenerateJob(args, { post, loadLibraries, regenerate, 
     }
     let res;
     try {
-        res = regenerate(args);
+        // ⛓ R5c — a zone job may FETCH (the atlas intake) before it extracts, so it
+        //   answers a promise; a realiser job answers synchronously, and awaiting a
+        //   value is that value.
+        res = await regenerate(args);
     } catch (e) {
         // ⛓ `regenerateRegionEntry` answers a realiser throw itself; a throw that
         //   escapes it is a defect of the op's own code, reported as the realiser's.
