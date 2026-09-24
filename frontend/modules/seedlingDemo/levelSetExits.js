@@ -266,9 +266,24 @@ export function planTopology(roomCount, { kind = 'chain' } = {}) {
  * `exclude` is a Set of `"tx,ty"` keys no door may take (the linker passes none).
  * `room` only names the room in the refusal.
  *
+ * ⛓⛓ **`keepReachable` — NO DOOR MAY SEAL AN APPROACH** (seedling generated G2,
+ * ⚖ planner (A)). Non-adjacency keeps each door's approach from BEING a door; it
+ * does not keep it REACHABLE. MEASURED at the G1 spiral state: `region_0_0`'s
+ * door 0 at (8,1) has its approach at (8,2), a one-cell pocket whose only other
+ * neighbour, (8,3), became door 1 — so the arrival there stood between two
+ * portals, and the room body was reachable only through one of them. With
+ * `keepReachable` a candidate is REJECTED when, with every door cell a wall
+ * (`walls` — doors placed earlier — plus the chosen plus the candidate), the
+ * flood from `start` would no longer reach every chosen door's approach, the
+ * candidate's own, and every cell in `cells` (the goal, a location) the door-free
+ * flood reaches — one it does not is no door's to seal. The greedy
+ * order is unchanged, so the walk stays PREFIX-STABLE. ⛔ OPT-IN: the linker
+ * passes none, and its sets (the export, the six-seed id) do not move.
+ *
+ * @param {object} [options.keepReachable]  `{walls?: Set<"tx,ty">, cells?: Array<{tx, ty}>}`
  * @returns {{doors: Array<{tx, ty, dist, from}>, flood: Map, taken: Set<string>}}
  */
-export function pickDoorCells(record, start, n, { room = '?', exclude = null } = {}) {
+export function pickDoorCells(record, start, n, { room = '?', exclude = null, keepReachable = null } = {}) {
     const flood = walkableCellsFrom(record, start);
     const taken = occupiedCells(record);
     // ⛔ THE ROOM'S OWN START IS NEVER A DOOR. Room 0's start is where the
@@ -293,19 +308,51 @@ export function pickDoorCells(record, start, n, { room = '?', exclude = null } =
     // took a step. Non-adjacency fixes both at once — every door's flood
     // predecessor is then guaranteed not to be a door.
     const chosen = [];
+    const seals = keepReachable ? sealsAnApproach(flood, start, keepReachable) : null;
     for (const c of candidates) {
         if (chosen.length === n) break;
         const adjacent = chosen.some((d) => Math.abs(d.tx - c.tx) + Math.abs(d.ty - c.ty) <= 1);
-        if (!adjacent) chosen.push(c);
+        if (!adjacent && !(seals && seals(chosen, c))) chosen.push(c);
     }
     if (chosen.length < n) {
         fail(`levelSetExits: room ${room} needs ${n} door cell(s) and its `
             + `walkable component offers ${chosen.length} usable cell(s) (flood of `
             + `${flood.size} from (${start.tx}, ${start.ty}), ${taken.size} occupied, `
-            + 'doors kept non-adjacent). A door outside the component would be an exit '
+            + `doors kept non-adjacent${keepReachable ? ', and no door sealing an approach or a kept '
+                + 'cell from the start' : ''}). A door outside the component would be an exit `
             + 'the player cannot reach, which is exactly what reachabilityOf cannot see.');
     }
     return { doors: chosen, flood, taken };
+}
+
+/**
+ * `keepReachable`'s test: `(chosen, candidate) => true` when adding the
+ * candidate would SEAL something — the flood from `start` over `flood`'s cells,
+ * with every door cell a wall, misses an approach (`from`) of a chosen door or of
+ * the candidate, or a kept cell.
+ */
+function sealsAnApproach(flood, start, { walls = null, cells = [] } = {}) {
+    const startKey = cellKey(start.tx, start.ty);
+    // ⛓ A kept cell the DOOR-FREE flood does not reach (the generator's goal can sit
+    //   past a solid its solver clears) is not a door's to seal: only the flood's own.
+    const kept = (cells ?? []).filter((c) => flood.has(cellKey(c.tx, c.ty)));
+    return (chosen, candidate) => {
+        const wall = new Set(walls ?? []);
+        for (const d of [...chosen, candidate]) wall.add(cellKey(d.tx, d.ty));
+        const seen = new Set([startKey]);
+        const queue = [start];
+        for (let head = 0; head < queue.length; head += 1) {
+            const at = queue[head];
+            for (const [dx, dy] of [[0, -1], [-1, 0], [1, 0], [0, 1]]) {
+                const key = cellKey(at.tx + dx, at.ty + dy);
+                if (seen.has(key) || wall.has(key) || !flood.has(key)) continue;
+                seen.add(key);
+                queue.push({ tx: at.tx + dx, ty: at.ty + dy });
+            }
+        }
+        const must = [...[...chosen, candidate].map((d) => d.from).filter(Boolean), ...kept];
+        return must.some((c) => !seen.has(cellKey(c.tx, c.ty)));
+    };
 }
 
 /**

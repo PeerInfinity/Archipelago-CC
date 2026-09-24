@@ -199,11 +199,13 @@ describe('generateRegionCore — the room and its doors', () => {
         expect([...core.world.exits.keys()]).toEqual(['a', 'b']);
     });
 
-    it('⛓ the k-th exit takes the k-th door the LINKER\'s picker mints; an explicit exit_id is kept', () => {
+    // ⛓ G2: the linker's picker WITH `keepReachable` (no door seals an approach or the goal).
+    it('⛓ the k-th exit takes the k-th door the LINKER\'s picker mints (keepReachable); an explicit exit_id is kept', () => {
         const { world, exits_placed: placed } = build();
         const doors = pickDoorCells(world.record, world.start, EXITS.length, {
             exclude: new Set([[0, -1], [-1, 0], [1, 0], [0, 1]]
                 .map(([dx, dy]) => key({ tx: world.goalCell.tx + dx, ty: world.goalCell.ty + dy }))),
+            keepReachable: { cells: [world.goalCell] },
         }).doors;
         expect(placed.map((p) => p.exit_id)).toEqual(['a', 'b', 'c']);
         [...world.exits.values()].forEach((e, k) => {

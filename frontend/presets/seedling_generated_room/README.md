@@ -13,10 +13,14 @@ wasm (seedling generated levels G2).
 - Each generated room has two doors, drawn as portals:
   - `region_0_0` `exit_0` (tile 8,1) ↔ `region_0_1` `exit_0` (tile 4,3). The
     game makes this crossing itself, and the host moves the AP region to match.
-  - `region_0_0` `exit_1` (tile 8,3) → the maze `region_1_0`, and `region_0_1`
+  - `region_0_0` `exit_1` (tile 8,8) → the maze `region_1_0`, and `region_0_1`
     `exit_1` (tile 6,6) → the maze `region_1_1`. At these doors the game waits in
     a one-cell PARKING room while the maze plays. Coming back, the player
     lands on the approach cell of the door they left by.
+- No door seals another's approach: with every door a wall, the start still
+  reaches each door's approach cell and the goal (seedling generated G2; a room
+  that cannot seat its doors that way is re-rolled, and `generation.rerolls`
+  records how many times — 0 for both rooms here).
 - No region names are declared, so no door shows a region sign.
 
 The level set is not in this file. At play it is ASSEMBLED from the rooms the

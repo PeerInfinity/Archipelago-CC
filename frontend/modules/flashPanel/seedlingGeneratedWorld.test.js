@@ -177,8 +177,12 @@ describe('top-down over the seedling_atlas source, mix {flash_seedling_gen: 1}',
 
 describe('grid growth — maze + flash_seedling_gen', () => {
     it('builds twice byte-identically; schema-valid; every region reachable; the generated rooms lawful', async () => {
+        // ⛓ G2: 10x10, not the 8x6 default. Under `keepReachable` (no door seals an
+        //   approach) seed 1 at 8x6 REFUSES: `region_0_1` gets an ENGINE-added exit its
+        //   12-cell room cannot seat unsealed, and an engine-added door cannot re-roll
+        //   (the room and its locations are fixed by then). G1 built it with a sealed door.
         const state = {
-            mode: 'gridGrowth', params: { seed: 1, gridWidth: 3, gridHeight: 3 },
+            mode: 'gridGrowth', params: { seed: 1, gridWidth: 3, gridHeight: 3, regionWidth: 10, regionHeight: 10 },
             scenario: { items: { key_red: 1, key_blue: 1, victory: 1 }, obstacles: { door_red: 1, door_blue: 1 } },
             substrateQuotas: {}, substrateMix: { maze: 1, [FLASH_SEEDLING_GEN_SUBSTRATE_ID]: 1 }, substrateMode: 'mix',
         };

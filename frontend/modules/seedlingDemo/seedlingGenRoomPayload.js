@@ -64,8 +64,9 @@ export const GEN_ROOM_REFUSALS = Object.freeze({
         + 'per room), or raise the region size.',
     tooManyDoors: (regionId, seed, size, want, message) => `generated Seedling room '${regionId}' (seed ${seed}, `
         + `${size.width}x${size.height}) must hold ${want} door(s), one per exit, and its walkable area cannot `
-        + `seat them apart (${message.replace(/^levelSetExits: /, '')}). Raise the region size (regionWidth / `
-        + 'regionHeight), or place this region with a substrate that takes more exits in less room.',
+        + `seat them apart without sealing an approach (${message.replace(/^levelSetExits: /, '')}). Raise the `
+        + 'region size (regionWidth / regionHeight), or place this region with a substrate that takes more '
+        + 'exits in less room.',
     notARoom: (why) => `this payload is not a generated Seedling room — ${why}. Regenerate the region `
         + 'through flash_seedling_gen.',
 });
