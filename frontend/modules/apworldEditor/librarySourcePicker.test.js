@@ -136,7 +136,9 @@ describe('the form\'s Source row and what Generate sends', () => {
             expect(ids[0]).toBe(REGION_SOURCE_KINDS.GENERATE);
             expect(ids.includes(REGION_SOURCE_KINDS.LIBRARY)).toBe(offersLibrarySource(entry));
         }
-        expect(REGION_GENERATION_SOURCES.map((s) => s.id)).toEqual([REGION_SOURCE_KINDS.GENERATE, REGION_SOURCE_KINDS.LIBRARY]);
+        // ⛓ R5b appended *Zone N* (its own rows: `regionContent.test.js`)
+        expect(REGION_GENERATION_SOURCES.map((s) => s.id))
+            .toEqual([REGION_SOURCE_KINDS.GENERATE, REGION_SOURCE_KINDS.LIBRARY, REGION_SOURCE_KINDS.ZONE]);
     });
 
     it('⛓ a library Generate sends no seed, no size, no free items — the target\'s LIBRARY knobs only', () => {

@@ -32,6 +32,7 @@ import {
     librarySourceSummary, offersLibrarySource, regionSizeFor,
 } from './regionRegenerate.js';
 import { describeRegeneration, regenerateOpRefusal, regenerateRealiserRefusal } from './rulesDocOps.js';
+import { REPLACE_REGION_CONTENT_OP, zoneOptions, zoneSourceFacts, zoneSourceRefusal } from './regionContent.js';
 import { payloadBuiltBy } from './sidecarIssues.js';
 import {
     REGION_GENERATION_CANCELLED, regionGenerationLoadTimeoutSentence, regionGenerationTimeoutSentence,
@@ -85,6 +86,11 @@ export function regionGenerationPlan(doc, player, region, target, { seed = REGIO
     }
     return {
         target, refusal, tiles, size, defaults, recorded, recordedDiff, offersLibrary: offersLibrarySource(entry),
+        // ⛓ R5b — *Zone N* only where the target can read its zone config BACK
+        //   from the document (`zoneSourceFacts.recovers`); a channel without the
+        //   read-back (bounce, runner, omsi, flash_seedling) would draw a source
+        //   that always refuses.
+        offersZone: zoneSourceFacts(entry).recovers,
     };
 }
 
@@ -96,10 +102,34 @@ export function regionGenerationPlan(doc, player, region, target, { seed = REGIO
 export const REGION_GENERATION_SOURCES = Object.freeze([
     { id: REGION_SOURCE_KINDS.GENERATE, label: 'Generate' },
     { id: REGION_SOURCE_KINDS.LIBRARY, label: 'Library entry' },
+    { id: REGION_SOURCE_KINDS.ZONE, label: 'Zone N' },
 ]);
 
 export function regionGenerationSourcesFor(plan) {
-    return REGION_GENERATION_SOURCES.filter((s) => s.id !== REGION_SOURCE_KINDS.LIBRARY || plan.offersLibrary);
+    return REGION_GENERATION_SOURCES.filter((s) => (s.id !== REGION_SOURCE_KINDS.LIBRARY || plan.offersLibrary)
+        && (s.id !== REGION_SOURCE_KINDS.ZONE || plan.offersZone));
+}
+
+/**
+ * ⛓ R5b — the source the form OPENS on: *Generate*, unless the target has no
+ * realiser to generate with (the op's refusal) and offers *Zone N* — then the
+ * zone, so a jta pick opens on the one source that can do anything.
+ */
+export function defaultRegionGenerationSource(plan) {
+    return plan.refusal && plan.offersZone ? REGION_SOURCE_KINDS.ZONE : REGION_SOURCE_KINDS.GENERATE;
+}
+
+/**
+ * ⛓ R5b — the *Zone N* picker's state for `region` → `target`: the options from
+ * the RECORDED config (`zoneOptions` — never an install), the held zones
+ * disabled, the first enabled one selected (the region's own zone last).
+ */
+export function zonePickerFor(doc, player, region, target) {
+    const res = zoneOptions(doc, player, region, target);
+    if (!res.ok) return { status: 'refused', options: [], error: res.why, selected: null };
+    const free = res.options.filter((o) => !o.disabled);
+    const pick = free.find((o) => !o.own) ?? free[0] ?? null;
+    return { status: 'ready', options: res.options, error: null, selected: pick ? pick.zoneIdx : null };
 }
 
 /**
@@ -114,6 +144,11 @@ export function composeRegenerateArgs(doc, player, region, target, bag, { source
     //   one), no size (the captured room's own), no free items (nothing
     //   drifts); `regionParams` = the target's LIBRARY knobs
     //   (`buildLibraryRegionParams`, in the sphere mode the hook is written for).
+    // ⛓ R5b — a ZONE source: no seed, no size, no params — the zone channel draws
+    //   no rng and reads only the config the document records.
+    if (source?.kind === REGION_SOURCE_KINDS.ZONE) {
+        return { doc, player, region, substrate: target, source: { ...source, substrate: target } };
+    }
     if (source?.kind === REGION_SOURCE_KINDS.LIBRARY) {
         return {
             doc,
@@ -146,6 +181,11 @@ export function composeRegenerateArgs(doc, player, region, target, bag, { source
  */
 export function regenerateArgsRefusal(args) {
     const { doc, ...op } = args;
+    if (op.source?.kind === REGION_SOURCE_KINDS.ZONE) {
+        return zoneSourceRefusal(doc, {
+            player: op.player, region: op.region, substrate: op.substrate, zoneIdx: op.source.zoneIdx,
+        });
+    }
     return regenerateOpRefusal(doc, { op: 'regenerate-region-sidecar', ...op });
 }
 
@@ -168,6 +208,17 @@ export function freeItemsSentence(target, args) {
  * op's arguments, so the record says how the entry came to be.
  */
 export function regenerationProvenance(args, res) {
+    // ⛓ R5b — what the worker did: the zone, the slot's regions it VERIFIED
+    //   reproduce under the recorded config, and how long it took.
+    if (args.source?.kind === REGION_SOURCE_KINDS.ZONE) {
+        return {
+            op: REPLACE_REGION_CONTENT_OP,
+            substrate: args.substrate,
+            zoneIdx: args.source.zoneIdx,
+            verified: res.verified ?? [],
+            ms: Math.round(res.ms ?? 0),
+        };
+    }
     // ⛓ R5a — the id pair and the entry's name, never its payload: the pure op
     //   carries the whole entry; the record's reader needs the pair.
     if (args.source?.kind === REGION_SOURCE_KINDS.LIBRARY) {
@@ -202,6 +253,10 @@ export function regenerationProvenance(args, res) {
  */
 export function regenerationAnswer(args, res, budgetS) {
     const { region, substrate, seed } = args;
+    // ⛓ R5b — a zone job's refusal is already the op's own sentence; its success
+    //   is answered by the LANDED op's description (the page lands it).
+    if (args.source?.kind === REGION_SOURCE_KINDS.ZONE && res.ok) return { landed: true, text: null };
+    if (args.source?.kind === REGION_SOURCE_KINDS.ZONE && res.refused) return { landed: false, text: res.threw };
     if (res.ok) return { landed: true, text: describeRegeneration({ region, substrate, seed, res }) };
     if (res.timedOut && res.phase === 'loading') {
         return { landed: false, text: regionGenerationLoadTimeoutSentence(res.budgetMs) };

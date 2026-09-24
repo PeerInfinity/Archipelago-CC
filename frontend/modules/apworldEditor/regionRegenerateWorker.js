@@ -29,10 +29,13 @@ function loadLibraries() {
                 }
             }
             const { regenerateRegionEntry } = await import('./regionRegenerate.js');
+            // ⛓ R5b — a ZONE source replaces the region's content; the install it
+            //   needs is module-global, which is why it runs HERE and never on the page.
+            const { zoneJobAnswer } = await import('./regionContent.js');
             return {
                 registered: substrateRegistry.getAll().map((e) => e.id),
                 failed,
-                regenerate: regenerateRegionEntry,
+                regenerate: (args) => (args?.source?.kind === 'zone' ? zoneJobAnswer(args) : regenerateRegionEntry(args)),
             };
         })();
     }
