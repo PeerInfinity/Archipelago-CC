@@ -1014,8 +1014,13 @@ installs (measured: 2.4 ms per refold on `jta_dataset_test`):
 ```js
 { op: 'replace-region-content', player, region,
   source: { kind: 'zone', substrate, zoneIdx, zone: { locations, payload, itemClasses, fillerItems } },
-  provenance: { op, substrate, zoneIdx, verified, ms } }
+  provenance: { op, substrate, zoneIdx, verified, config, ms } }
 ```
+
+⛓ R6b: `config` is `{recorded, assumed}`, the field names the extraction took
+from the document's record and the ones it assumed, and the answer ends with the
+same split: *"… — config: recorded none; assumed `perkShuffleSeed`, `freeZones`,
+`startingPerks` — verified on 2 regions of the slot"*.
 
 **What it does** (the ruling, 2026-09-23 — *"it's the user's responsibility to
 find a way to make the data valid again"*):
@@ -1063,8 +1068,27 @@ are assumed at their defaults. `jta_randomized_test` was built with a shuffle
 seed the document does not carry, and `jta_substrate_test`'s locations were
 hand-authored, so both refuse.
 
+**The recorded config (substrate change R6b).** Since R6b the pipeline's compile
+RECORDS each content source's installed config in the document:
+`procgen_metadata.substrate_configs[<substrate id>]`, written from the source's
+`recordablePipelineConfig` (jta: `{emitZoneLocations, goalZone, freeZones,
+startingPerks, perkShuffleSeed}`). The hub hands that record to the target's
+read-back as `recorded` (`regionContent.js` reads the key by the substrate's id and
+names no substrate). jta takes a recorded field over both its own read-back and its
+assumption, so `assumed` keeps only what the record lacks. The verification still
+runs: a wrong record is refused, and the sentence names what the document records.
+A recorded goal zone also survives the relabel of the region holding `Victory`
+(the refusal above applies only when nothing records the goal). A document built
+under a non-default shuffle seed (`jta_randomized_test`, once regenerated) now takes
+the zone source. The committed fixtures predate the record, so they refuse exactly
+as before until they are re-recorded.
+
 The corpus control takes `--source=zone`: every committed zone-channel region ×
 every zone of its slot, on a copy (the numbers are in the R5b record, plan §14).
+`--tree=<dir>` reads every `*_rules.json` under a directory instead: the jta
+fixture generator's `--out` regeneration takes the zone source on all five worlds
+(230 clean, 0 "config not recorded", against 122 / 108 for the committed files;
+plan §17).
 
 #### The atlas-room source (substrate change R5c)
 

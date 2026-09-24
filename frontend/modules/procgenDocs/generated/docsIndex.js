@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 18,
         "headings": 810,
         "indexHeadings": 2,
-        "lines": 21469,
+        "lines": 21471,
         "pages": 4,
-        "words": 273419
+        "words": 273855
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -54,7 +54,7 @@ export const DOCS_INDEX = frz({
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
             "headings": 21,
-            "lines": 266,
+            "lines": 268,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -63,7 +63,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 10700
+            "words": 11007
         },
         {
             "description": "Every demonstrable feature of the two procgen lab pages, one entry each, with the link that shows it, the CLI command that reproduces it in node, which control to press, and what you are looking at.",
@@ -219,7 +219,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/stepped-pipeline.md",
-            "words": 2825
+            "words": 2954
         },
         {
             "description": "The Procgen Pipeline panel's **Preset** drop-down applies a shipped configuration — a mode, a seed, substrate quotas or a mix, the mode's knobs and an item pool — so that Generate builds a world that demonstrates one feature, and every shipped preset whose substrates are not declared heavy is generated headless on each CI run, twice and byte-identically, within a 30-second budget.",

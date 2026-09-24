@@ -54,7 +54,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js"
         },
         {
-            "fields": 25,
+            "fields": 26,
             "id": "flash_seedling",
             "label": "Seedling (region atlas)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
@@ -66,13 +66,13 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingGenBuild.js"
         },
         {
-            "fields": 29,
+            "fields": 31,
             "id": "jta",
             "label": "JtA",
             "registeredBy": "frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js"
         },
         {
-            "fields": 23,
+            "fields": 25,
             "id": "omsi",
             "label": "Idle Loops",
             "registeredBy": "frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js"
@@ -170,6 +170,8 @@ export const REGISTRY = frz({
                 "extractZoneRules",
                 "getSpiralContent",
                 "onContentEdit",
+                "pipelineConfigKeys",
+                "recordablePipelineConfig",
                 "rulesJsonBlocks",
                 "spiralContentConfigKey",
                 "victoryItem",
@@ -4564,6 +4566,96 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "flash_seedling",
+                "jta",
+                "omsi"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": true,
+                    "short": "atlasDoc",
+                    "type": "array",
+                    "value": [
+                        "atlasDoc"
+                    ]
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": true,
+                    "short": "6 items",
+                    "type": "array",
+                    "value": [
+                        "datasetDoc",
+                        "emitZoneLocations",
+                        "goalZone",
+                        "freeZones",
+                        "startingPerks",
+                        "perkShuffleSeed"
+                    ]
+                },
+                {
+                    "id": "omsi",
+                    "present": true,
+                    "short": "5 items",
+                    "type": "array",
+                    "value": [
+                        "awardSchedule",
+                        "towns",
+                        "emitUnlockLocations",
+                        "unlockScale",
+                        "regionSplit"
+                    ]
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — content sources (zone-based substrates)",
+            "name": "pipelineConfigKeys"
+        },
+        {
+            "carriedBy": [
                 "maze",
                 "text_adventure",
                 "flash_seedling_gen"
@@ -4860,6 +4952,80 @@ export const REGISTRY = frz({
             "documentedHow": "bullet",
             "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "procgenParamsFromPayload"
+        },
+        {
+            "carriedBy": [
+                "jta",
+                "omsi"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — content sources (zone-based substrates)",
+            "name": "recordablePipelineConfig"
         },
         {
             "carriedBy": [

@@ -358,6 +358,13 @@
         "edits": {
           "type": "array",
           "description": "Recorded hand edits to the generated grid, kept as provenance. Producers: procgenPipeline/sphereSteps.js and topDownSteps.js:141 (omitted entirely when nothing was edited)."
+        },
+        "substrate_configs": {
+          "type": "object",
+          "description": "The config each content source was installed with, by substrate id (APWORLD SUBSTRATE CHANGE R6b). Producer: procgenPipeline/procgenPipelineEngine.js `buildRulesJson` — for every registry entry that declares `recordablePipelineConfig` AND realised a region of the grid, whenever the compile writes procgen_metadata (procgenCore/substrateConfigRecord.js). Absent when no declaring source was realised. Consumer: the APWorld hub's zone read-back (apworldEditor/regionContent.js), which prefers a recorded field over its assumption.",
+          "additionalProperties": {
+            "type": "object"
+          }
         }
       }
     },

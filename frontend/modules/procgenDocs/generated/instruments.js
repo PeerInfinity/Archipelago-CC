@@ -1995,7 +1995,8 @@ export const INSTRUMENTS = frz({
                 "seed",
                 "source",
                 "starting",
-                "targets"
+                "targets",
+                "tree"
             ],
             "file": "check-regenerate-region-control.mjs",
             "flags": [
@@ -2052,6 +2053,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "targets"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tree"
                 }
             ],
             "inheritedFlags": [
