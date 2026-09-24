@@ -15,6 +15,10 @@ import {
     FLASH_SEEDLING_LOAD_REGION_EVENT,
     FLASH_SEEDLING_SUBSTRATE_ID,
 } from './flashSeedlingLibrary.js';
+import {
+    substrateRegistryEntry as seedlingGenEntry,
+    FLASH_SEEDLING_GEN_SUBSTRATE_ID,
+} from './flashSeedlingGenLibrary.js';
 
 const PRESET = JSON.parse(readFileSync(
     fileURLToPath(new URL('../../presets/seedling_atlas/AP_1/AP_1_rules.json', import.meta.url)), 'utf8'));
@@ -96,9 +100,29 @@ describe('wiring', () => {
         expect(h.activeSubscribed()).toBe(false);
     });
 
-    it('takes its own substrate id from the registry entry, not a literal', () => {
-        expect(h.glue.substrateId).toBe(FLASH_SEEDLING_SUBSTRATE_ID);
+    /**
+     * ⛓ SEEDLING GENERATED G1 — BOTH entries that play in this panel are ours:
+     * `flash_seedling` (a real room) and `flash_seedling_gen` (a generated one)
+     * share the load event, so one glue serves both. Taken from the two
+     * registry entries' own constants, never literals.
+     */
+    it('takes its substrate ids from the two registry entries, not literals', () => {
+        expect([...h.glue.substrateIds].sort()).toEqual([FLASH_SEEDLING_GEN_SUBSTRATE_ID, FLASH_SEEDLING_SUBSTRATE_ID].sort());
         expect(seedlingEntry.id).toBe(FLASH_SEEDLING_SUBSTRATE_ID);
+        expect(seedlingGenEntry.id).toBe(FLASH_SEEDLING_GEN_SUBSTRATE_ID);
+        expect(seedlingGenEntry.loadRegionEvent).toBe(seedlingEntry.loadRegionEvent);
+        // a caller that names ONE id gets exactly that one
+        const one = new SeedlingRegionGlue({ loadRegionEvent: 'x', substrateId: FLASH_SEEDLING_SUBSTRATE_ID });
+        expect([...one.substrateIds]).toEqual([FLASH_SEEDLING_SUBSTRATE_ID]);
+    });
+
+    it('a generated-room region RESUMES the glue exactly as a real room does', () => {
+        h.emitActive('maze', 'mz.a');
+        expect(h.glue.binding.active).toBe(false);
+        h.emitActive(FLASH_SEEDLING_GEN_SUBSTRATE_ID, 'region_0_0');
+        expect(h.glue.binding.active).toBe(true);
+        h.emitActive('maze', 'mz.a');
+        expect(h.glue.binding.active).toBe(false);
     });
 
     it('installs its report hook on the adapter and removes it on detach', () => {

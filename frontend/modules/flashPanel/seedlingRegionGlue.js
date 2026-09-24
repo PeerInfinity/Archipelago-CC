@@ -35,6 +35,7 @@
  */
 
 import { FLASH_SEEDLING_SUBSTRATE_ID } from './flashSeedlingLibrary.js';
+import { FLASH_SEEDLING_GEN_SUBSTRATE_ID } from './flashSeedlingGenLibrary.js';
 import { SeedlingRegionBinding } from './seedlingRegionBinding.js';
 
 /** procgenPlayer's own broadcast of "which substrate owns the player now". */
@@ -54,8 +55,10 @@ export class SeedlingRegionGlue {
      * @param {object} deps.eventBus         module event bus (subscribe/unsubscribe)
      * @param {function} deps.getDispatcher  resolves the module dispatcher lazily
      * @param {string} deps.loadRegionEvent  the substrate's loadRegion event name
-     * @param {string} [deps.substrateId]    which substrate id is OURS; defaults to
-     *   the registry entry's own constant, never a literal spelled here
+     * @param {string|string[]} [deps.substrateId]  which substrate id(s) are OURS;
+     *   defaults to BOTH entries that play in this panel (`flash_seedling` and,
+     *   seedling generated G1, `flash_seedling_gen` — one load event, one glue),
+     *   their registry constants, never a literal spelled here
      * @param {function} [deps.getPanel]     resolves the active flashPanel instance
      * @param {function} [deps.now]          injectable clock (tests)
      */
@@ -63,7 +66,8 @@ export class SeedlingRegionGlue {
         this.eventBus = eventBus ?? null;
         this.getDispatcher = getDispatcher ?? (() => null);
         this.loadRegionEvent = loadRegionEvent;
-        this.substrateId = substrateId ?? FLASH_SEEDLING_SUBSTRATE_ID;
+        const ours = substrateId ?? [FLASH_SEEDLING_SUBSTRATE_ID, FLASH_SEEDLING_GEN_SUBSTRATE_ID];
+        this.substrateIds = new Set(Array.isArray(ours) ? ours : [ours]);
         this.getPanel = getPanel ?? (() => null);
         this.binding = new SeedlingRegionBinding({ now });
         this.adapter = null;
@@ -215,7 +219,7 @@ export class SeedlingRegionGlue {
      * same panel would read as ours.
      */
     handleActiveSubstrateChanged(payload) {
-        const mine = payload?.substrate === this.substrateId;
+        const mine = this.substrateIds.has(payload?.substrate);
         const was = this.binding.active;
         const effects = this.binding.setActive(mine);
         if (was !== this.binding.active) this.stats[mine ? 'resumes' : 'parks'] += 1;

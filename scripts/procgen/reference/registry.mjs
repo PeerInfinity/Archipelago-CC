@@ -76,6 +76,9 @@ export const REGISTRY_LIBRARIES = Object.freeze([
     'frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js',
     'frontend/modules/flashSubstrate/flashSubstrateLibrary.js',
     'frontend/modules/flashPanel/flashSeedlingLibrary.js',
+    // ⛓ seedling generated G1: the BUILD door (registers the light entry AND
+    // installs the generator) — a registry-wide row that drives a core needs it.
+    'frontend/modules/flashPanel/flashSeedlingGenBuild.js',
     'frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js',
     'frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js',
 ]);

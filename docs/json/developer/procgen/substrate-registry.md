@@ -224,7 +224,7 @@ Both of those are the checked-in snapshot, taken headless by the generator. The 
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**8 registered entries · 75 fields · 14 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**9 registered entries · 75 fields · 14 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported.
 
@@ -234,148 +234,148 @@ Groups are this document's own § headings, matched to a field by the section th
 
 **Identity**
 
-| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
-|---|---|---|---|---|---|---|---|---|
-| `id` | maze | flash | bounce | runner | text_adventure | flash_seedling | jta | omsi |
-| `label` | Maze | Flash | Bounce Demo | Runner Demo | Text Adventure | Seedling (region atlas) | JtA | Idle Loops |
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|---|
+| `id` | maze | flash | bounce | runner | text_adventure | flash_seedling | flash_seedling_gen | jta | omsi |
+| `label` | Maze | Flash | Bounce Demo | Runner Demo | Text Adventure | Seedling (region atlas) | Seedling (generated room) | JtA | Idle Loops |
 
 **Runtime**
 
-| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
-|---|---|---|---|---|---|---|---|---|
-| `apExitNamesOf` | fn | fn | fn | fn | fn | — | fn | fn |
-| `apLocationNamesOf` | fn | fn | fn | fn | fn | — | fn | fn |
-| `deserializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn |
-| `iframeId` | — | flashSubstrate | bounceDemo | runnerDemo | — | — | jtaSubstrateWrapper | omsiSubstrateWrapper |
-| `loadRegionEvent` | maze:loadRegion | flash:loadRegion | bounce:loadRegion | runner:loadRegion | textAdventure:loadRegion | flashSeedling:loadRegion | jta:loadRegion | omsi:loadRegion |
-| `panelComponentType` | mazeRoomPanel | flashSubstratePanel | bounceDemoPanel | runnerDemoPanel | textAdventureSubstrateWrapperPanel | flashPanel | jtaSubstrateWrapperPanel | omsiSubstrateWrapperPanel |
-| `serializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn |
-| `sharing` | {mana} | — | — | — | {mana} | — | {items, mana} | {items, mana} |
-| `sidecarFields` | 18 keys | 6 keys | 7 keys | 7 keys | {exitGates, exits, fogEnabled, locations} | 7 keys | 5 keys | 9 keys |
-| `supportedFeatures` | 7 items | arbitrary_ap_locations | arbitrary_ap_locations, bounce_abilities | arbitrary_ap_locations, runner_abilities | 6 items | arbitrary_ap_locations | 2 items | 2 items |
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|---|
+| `apExitNamesOf` | fn | fn | fn | fn | fn | — | fn | fn | fn |
+| `apLocationNamesOf` | fn | fn | fn | fn | fn | — | fn | fn | fn |
+| `deserializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn | fn |
+| `iframeId` | — | flashSubstrate | bounceDemo | runnerDemo | — | — | — | jtaSubstrateWrapper | omsiSubstrateWrapper |
+| `loadRegionEvent` | maze:loadRegion | flash:loadRegion | bounce:loadRegion | runner:loadRegion | textAdventure:loadRegion | flashSeedling:loadRegion | flashSeedling:loadRegion | jta:loadRegion | omsi:loadRegion |
+| `panelComponentType` | mazeRoomPanel | flashSubstratePanel | bounceDemoPanel | runnerDemoPanel | textAdventureSubstrateWrapperPanel | flashPanel | flashPanel | jtaSubstrateWrapperPanel | omsiSubstrateWrapperPanel |
+| `serializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn | fn |
+| `sharing` | {mana} | — | — | — | {mana} | — | — | {items, mana} | {items, mana} |
+| `sidecarFields` | 18 keys | 6 keys | 7 keys | 7 keys | {exitGates, exits, fogEnabled, locations} | 7 keys | 14 keys | 5 keys | 9 keys |
+| `supportedFeatures` | 7 items | arbitrary_ap_locations | arbitrary_ap_locations, bounce_abilities | arbitrary_ap_locations, runner_abilities | 6 items | arbitrary_ap_locations | arbitrary_ap_locations | 2 items | 2 items |
 
 **Playback**
 
-| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
-|---|---|---|---|---|---|---|---|---|
-| `getPlaybackController` | fn | fn | fn | fn | fn | fn | fn | fn |
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|---|
+| `getPlaybackController` | fn | fn | fn | fn | fn | fn | fn | fn | fn |
 
 **Action labelling**
 
-| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
-|---|---|---|---|---|---|---|---|---|
-| `describeAction` | fn | — | — | — | — | — | fn | fn |
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|---|
+| `describeAction` | fn | — | — | — | — | — | — | fn | fn |
 
 **Composite map**
 
-| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
-|---|---|---|---|---|---|---|---|---|
-| `compositeMap` | {drawRegion} | — | — | — | {drawRegion} | — | — | — |
-| `compositeMap.drawRegion` | fn | — | — | — | fn | — | — | — |
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|---|
+| `compositeMap` | {drawRegion} | — | — | — | {drawRegion} | — | — | — | — |
+| `compositeMap.drawRegion` | fn | — | — | — | fn | — | — | — | — |
 
 **Loop mode**
 
-| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
-|---|---|---|---|---|---|---|---|---|
-| `loopSupport` | 6 keys | {customQueues, manual, queueActions} | 8 keys | 8 keys | 6 keys | {customQueues, manual, queueActions} | 8 keys | 8 keys |
-| `loopSupport.customQueues` | yes | no | no | no | no | no | no | no |
-| `loopSupport.executeVia` | — | — | solver | solver | — | — | solver | solver |
-| `loopSupport.instant` | yes | — | yes | yes | yes | — | yes | yes |
-| `loopSupport.manual` | yes | yes | yes | yes | yes | yes | yes | yes |
-| `loopSupport.playback` | yes | — | yes | yes | yes | — | yes | yes |
-| `loopSupport.queueActions` | regionMove, locationCheck, explore | regionMove | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck, explore | regionMove | regionMove | regionMove |
-| `loopSupport.record` | yes | — | yes | yes | yes | — | yes | yes |
-| `loopSupport.requiresLoopMode` | — | — | — | — | — | — | yes | yes |
-| `loopSupport.summaryRecording` | — | — | yes | yes | — | — | — | — |
-| `takeLastRecording` | fn | — | — | — | — | — | fn | fn |
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|---|
+| `loopSupport` | 6 keys | {customQueues, manual, queueActions} | 8 keys | 8 keys | 6 keys | {customQueues, manual, queueActions} | {customQueues, manual, queueActions} | 8 keys | 8 keys |
+| `loopSupport.customQueues` | yes | no | no | no | no | no | no | no | no |
+| `loopSupport.executeVia` | — | — | solver | solver | — | — | — | solver | solver |
+| `loopSupport.instant` | yes | — | yes | yes | yes | — | — | yes | yes |
+| `loopSupport.manual` | yes | yes | yes | yes | yes | yes | yes | yes | yes |
+| `loopSupport.playback` | yes | — | yes | yes | yes | — | — | yes | yes |
+| `loopSupport.queueActions` | regionMove, locationCheck, explore | regionMove | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck, explore | regionMove | regionMove | regionMove | regionMove |
+| `loopSupport.record` | yes | — | yes | yes | yes | — | — | yes | yes |
+| `loopSupport.requiresLoopMode` | — | — | — | — | — | — | — | yes | yes |
+| `loopSupport.summaryRecording` | — | — | yes | yes | — | — | — | — | — |
+| `takeLastRecording` | fn | — | — | — | — | — | — | fn | fn |
 
 **Cross-substrate sharing**
 
-| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
-|---|---|---|---|---|---|---|---|---|
-| `sharing.items` | — | — | — | — | — | — | {getTypes} | {types} |
-| `sharing.mana` | {loopActionDelegation} | — | — | — | {} | — | {} | {} |
-| `sharing.mana.loopActionDelegation` | yes | — | — | — | — | — | — | — |
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|---|
+| `sharing.items` | — | — | — | — | — | — | — | {getTypes} | {types} |
+| `sharing.mana` | {loopActionDelegation} | — | — | — | {} | — | — | {} | {} |
+| `sharing.mana.loopActionDelegation` | yes | — | — | — | — | — | — | — | — |
 
 **Editing**
 
-| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
-|---|---|---|---|---|---|---|---|---|
-| `exitSides` | — | — | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} |
-| `regionRoundTrip` | {open, save} | — | {open, save} | — | {open, rules, save} | {refused} | — | — |
-| `roomEditor` | {arm, kind, page} | — | {kind, open} | — | — | {arm, kind, page} | — | — |
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|---|
+| `exitSides` | — | — | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} |
+| `regionRoundTrip` | {open, save} | — | {open, save} | — | {open, rules, save} | {refused} | — | — | — |
+| `roomEditor` | {arm, kind, page} | — | {kind, open} | — | — | {arm, kind, page} | {arm, kind, page} | — | — |
 
 **Build-time — procedural substrates**
 
-| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
-|---|---|---|---|---|---|---|---|---|
-| `applyContentModules` | fn | — | — | — | — | — | — | — |
-| `extractPathsAndObstacles` | fn | — | — | — | fn | — | — | — |
-| `generateRegionCore` | fn | — | — | — | fn | — | — | — |
-| `placeFromItems` | fn | — | — | — | fn | — | — | — |
-| `placeFromRules` | fn | — | — | — | fn | — | — | — |
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|---|
+| `applyContentModules` | fn | — | — | — | — | — | — | — | — |
+| `extractPathsAndObstacles` | fn | — | — | — | fn | — | fn | — | — |
+| `generateRegionCore` | fn | — | — | — | fn | — | fn | — | — |
+| `placeFromItems` | fn | — | — | — | fn | — | fn | — | — |
+| `placeFromRules` | fn | — | — | — | fn | — | fn | — | — |
 
 **Build-time — content sources (zone-based substrates)**
 
-| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
-|---|---|---|---|---|---|---|---|---|
-| `applyPipelineConfig` | — | — | — | — | — | fn | fn | fn |
-| `emitsSpiralContent` | — | — | — | — | — | — | yes | — |
-| `extractZoneRules` | — | — | fn | fn | — | fn | fn | fn |
-| `getSpiralContent` | — | — | — | — | — | — | fn | — |
-| `onContentEdit` | — | — | — | — | — | — | fn | — |
-| `rulesJsonBlocks` | — | — | — | — | — | fn | — | — |
-| `spiralContentConfigKey` | — | — | — | — | — | — | datasetDoc | — |
-| `victoryItem` | — | — | Victory | Victory | — | — | Victory | Victory |
-| `zoneCount` | — | — | 5 | 6 | — | 4 | 30 | 1 |
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|---|
+| `applyPipelineConfig` | — | — | — | — | — | fn | — | fn | fn |
+| `emitsSpiralContent` | — | — | — | — | — | — | — | yes | — |
+| `extractZoneRules` | — | — | fn | fn | — | fn | — | fn | fn |
+| `getSpiralContent` | — | — | — | — | — | — | — | fn | — |
+| `onContentEdit` | — | — | — | — | — | — | — | fn | — |
+| `rulesJsonBlocks` | — | — | — | — | — | fn | fn | — | — |
+| `spiralContentConfigKey` | — | — | — | — | — | — | — | datasetDoc | — |
+| `victoryItem` | — | — | Victory | Victory | — | — | — | Victory | Victory |
+| `zoneCount` | — | — | 5 | 6 | — | 4 | — | 30 | 1 |
 
 **Build-time — region geometry**
 
-| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
-|---|---|---|---|---|---|---|---|---|
-| `regionGeometry` | — | — | sides | sides | sides | sides | sides | sides |
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|---|
+| `regionGeometry` | — | — | sides | sides | sides | sides | sides | sides | sides |
 
 **Build-time — generation cost**
 
-| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
-|---|---|---|---|---|---|---|---|---|
-| `generationCost` | — | — | — | heavy | — | — | — | — |
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|---|
+| `generationCost` | — | — | — | heavy | — | — | — | — | — |
 
 **Build-time — region library entries (capture / instantiate / validate)**
 
-| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
-|---|---|---|---|---|---|---|---|---|
-| `captureLibraryEntry` | fn | — | fn | fn | — | — | — | — |
-| `instantiateAtlasEntryForSpecs` | fn | — | — | — | — | — | — | — |
-| `instantiateLibraryEntry` | fn | — | fn | fn | — | — | — | — |
-| `instantiateLibraryEntryForSpecs` | fn | — | fn | fn | — | — | — | — |
-| `validateLibraryEntry` | fn | — | fn | fn | — | — | — | — |
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|---|
+| `captureLibraryEntry` | fn | — | fn | fn | — | — | — | — | — |
+| `instantiateAtlasEntryForSpecs` | fn | — | — | — | — | — | — | — | — |
+| `instantiateLibraryEntry` | fn | — | fn | fn | — | — | — | — | — |
+| `instantiateLibraryEntryForSpecs` | fn | — | fn | fn | — | — | — | — | — |
+| `validateLibraryEntry` | fn | — | fn | fn | — | — | — | — | — |
 
 **Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)**
 
-| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
-|---|---|---|---|---|---|---|---|---|
-| `backPortalGated` | — | — | fn | fn | — | fn | — | — |
-| `buildLibraryRegionParams` | fn | — | — | — | — | — | — | — |
-| `buildRegionContract` | — | — | fn | fn | — | — | — | — |
-| `buildRegionParams` | — | — | fn | fn | — | — | — | — |
-| `buildZoneSpecs` | — | — | fn | fn | — | — | — | — |
-| `canHostExitGates` | — | — | fn | fn | — | fn | — | — |
-| `canHostExitGatesBraid` | — | — | fn | — | — | — | — | — |
-| `defaultProcgenParams` | 6 keys | — | 10 keys | 8 keys | — | — | — | — |
-| `driftItems` | — | — | Left arrow, Right arrow | — | — | — | — | — |
-| `exitGateVeto` | — | — | fn | fn | — | — | — | — |
-| `gateHostingHint` | — | — | fn | fn | — | — | — | — |
-| `gateableItems` | — | — | `null` | 5 items | — | — | — | — |
-| `generateZoneForSpecs` | — | — | fn | fn | — | fn | — | — |
-| `generateZoneForSpecsGen` | — | — | fn | fn | — | — | — | — |
-| `hostsSurplusExitsNatively` | — | — | fn | fn | — | — | — | — |
-| `libraryItems` | — | — | 7 keys | 6 keys | — | — | 48 keys | {Victory} |
-| `prepareSphereGrowth` | — | — | fn | — | — | fn | — | — |
-| `procgenParamsFromPayload` | — | — | fn | fn | — | — | — | — |
-| `renderLibraryProcgenParams` | fn | — | — | — | — | — | — | — |
-| `renderProcgenParams` | fn | — | fn | fn | — | — | — | — |
-| `startingInventory` | — | — | {needs} | — | — | — | — | — |
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|---|
+| `backPortalGated` | — | — | fn | fn | — | fn | fn | — | — |
+| `buildLibraryRegionParams` | fn | — | — | — | — | — | — | — | — |
+| `buildRegionContract` | — | — | fn | fn | — | — | — | — | — |
+| `buildRegionParams` | — | — | fn | fn | — | — | fn | — | — |
+| `buildZoneSpecs` | — | — | fn | fn | — | — | — | — | — |
+| `canHostExitGates` | — | — | fn | fn | — | fn | fn | — | — |
+| `canHostExitGatesBraid` | — | — | fn | — | — | — | — | — | — |
+| `defaultProcgenParams` | 6 keys | — | 10 keys | 8 keys | — | — | 7 keys | — | — |
+| `driftItems` | — | — | Left arrow, Right arrow | — | — | — | — | — | — |
+| `exitGateVeto` | — | — | fn | fn | — | — | — | — | — |
+| `gateHostingHint` | — | — | fn | fn | — | — | — | — | — |
+| `gateableItems` | — | — | `null` | 5 items | — | — | — | — | — |
+| `generateZoneForSpecs` | — | — | fn | fn | — | fn | — | — | — |
+| `generateZoneForSpecsGen` | — | — | fn | fn | — | — | — | — | — |
+| `hostsSurplusExitsNatively` | — | — | fn | fn | — | — | — | — | — |
+| `libraryItems` | — | — | 7 keys | 6 keys | — | — | — | 48 keys | {Victory} |
+| `prepareSphereGrowth` | — | — | fn | — | — | fn | — | — | — |
+| `procgenParamsFromPayload` | — | — | fn | fn | — | — | fn | — | — |
+| `renderLibraryProcgenParams` | fn | — | — | — | — | — | — | — | — |
+| `renderProcgenParams` | fn | — | fn | fn | — | — | fn | — | — |
+| `startingInventory` | — | — | {needs} | — | — | — | — | — | — |
 
 **Which library registered which entry** — entries self-register on library import, and this is the order the generator imports them in.
 
@@ -387,6 +387,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js` | `text_adventure` | yes |
 | `frontend/modules/flashSubstrate/flashSubstrateLibrary.js` | — (nothing new) | yes |
 | `frontend/modules/flashPanel/flashSeedlingLibrary.js` | `flash_seedling` | yes |
+| `frontend/modules/flashPanel/flashSeedlingGenBuild.js` | `flash_seedling_gen` | yes |
 | `frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js` | `jta` | yes |
 | `frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js` | `omsi` | yes |
 

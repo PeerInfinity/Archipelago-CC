@@ -6,6 +6,15 @@ import {
   substrateRegistryEntry as flashSeedlingEntry,
   FLASH_SEEDLING_LOAD_REGION_EVENT,
 } from './flashSeedlingLibrary.js';
+// Import side effect registers `flash_seedling_gen` — the LIGHT entry; its
+// generator is installed below through a computed specifier (seedling
+// generated levels G1: a static path would put +94 files / +4.96 MB here).
+import {
+  substrateRegistryEntry as flashSeedlingGenEntry,
+  installSeedlingGenRoom,
+  seedlingGenRoomInstalled,
+  SEEDLING_GEN_ROOM_MODULE_PATH,
+} from './flashSeedlingGenLibrary.js';
 import { AP_ITEM_FOUND_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
 
 let moduleDispatcher = null;
@@ -32,6 +41,31 @@ export const moduleInfo = {
   requires: ['stateManager'],
 };
 
+/**
+ * ⛓⛓ SEEDLING GENERATED LEVELS G1 — **INSTALL THE GENERATOR, LAZILY.** The
+ * `flash_seedling_gen` entry's build hooks need `procgenSeedling.js`
+ * synchronously; the entry itself is light. The room module is loaded through a
+ * COMPUTED specifier against `document.baseURI` (the randomizer wiring's
+ * pattern: esbuild cannot see the string, so the bundle does not move, and the
+ * base is the document in both builds) and installed into THIS instance of the
+ * library. Until it lands, a build hook refuses by name. Headless: no document,
+ * nothing to do — callers import `flashSeedlingGenBuild.js`.
+ */
+let seedlingGeneratorLoad = null;
+export function loadSeedlingGenerator({ baseURI = globalThis.document?.baseURI, importer = (url) => import(/* @vite-ignore */ url) } = {}) {
+  if (seedlingGenRoomInstalled()) return Promise.resolve(true);
+  if (!baseURI) return Promise.resolve(false);
+  seedlingGeneratorLoad ??= importer(new URL(SEEDLING_GEN_ROOM_MODULE_PATH, baseURI).href)
+    .then((room) => { installSeedlingGenRoom(room); return true; })
+    .catch((err) => {
+      seedlingGeneratorLoad = null;
+      log('error', `[FlashPanel Module] the Seedling generator (${SEEDLING_GEN_ROOM_MODULE_PATH}) did not load — `
+        + `generated Seedling rooms cannot be built until the page is reloaded: ${err?.message ?? err}`);
+      return false;
+    });
+  return seedlingGeneratorLoad;
+}
+
 export function register(registrationApi) {
   log('info', '[FlashPanel Module] Registering...');
 
@@ -48,6 +82,10 @@ export function register(registrationApi) {
   if (!substrateRegistry.has(flashSeedlingEntry.id)) {
     substrateRegistry.register(flashSeedlingEntry);
   }
+  if (!substrateRegistry.has(flashSeedlingGenEntry.id)) {
+    substrateRegistry.register(flashSeedlingGenEntry);
+  }
+  loadSeedlingGenerator();
 
   // Observe user:locationCheck as it flows through the dispatcher
   // chain, so the panel's "TP on UI click" feature can react to

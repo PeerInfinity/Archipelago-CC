@@ -203,6 +203,17 @@ function contentSource() {
 }
 
 /**
+ * ⛓ SEEDLING GENERATED LEVELS G1 — **THE `flash_panel` BLOCK, READ OFF THE
+ * INSTALLED SOURCE** (a copy). `FLASH_PANEL_WIRING` (`regionAtlasCompiler.js`) is
+ * the ONLY code source of a preset's `flash_panel` block, and the compile of the
+ * installed atlas is where it is written; `flash_seedling_gen`'s
+ * `rulesJsonBlocks` reads it here rather than typing the wiring a second time.
+ */
+export function seedlingFlashPanelBlock() {
+    return structuredClone(contentSource().blocks.flash_panel);
+}
+
+/**
  * ⛓ THE ONE BINDER (the spiral's `extractZoneRules` and sphere growth's
  * `generateZoneForSpecs` both call it): the k-th requested side takes the k-th
  * door in payload order, `external`, keeping its `exit_id`; a door beyond the
