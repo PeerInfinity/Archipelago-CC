@@ -206,6 +206,8 @@ import {
 } from '../../apworldEditor/sidecarForm.js';
 /** ⛓ R6 — the slot selector's sentence while the slots wait on the schema. */
 import { PLAYER_SLOTS_NEED_SCHEMA, playerSlotsWaitSentence } from '../../apworldEditor/documentKeys.js';
+/** ⛓ R6 — the Re-roll button's target and refusal, and the counter's first seed. */
+import { REGION_GENERATION_FIRST_SEED as R6_FIRST_SEED, regionRerollFacts } from '../../apworldEditor/regionGenerationFlow.js';
 
 const PANEL_ID = 'apworldEditorPanel';
 const PANEL_SELECTOR = '.apworld-editor-panel';
@@ -11392,7 +11394,88 @@ export async function apworldTheMapDrawsAMisfitRegionsBlock(testController) {
     return testController.getOverallResult();
 }
 
+/** ⛓ R6 — the Re-roll ▸ button on a region's block, on the showing tab (or a given host) — re-queried. */
+const rerollButton = (region, host = null) => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecar-block`
+    + `${host ? `[data-host-tab="${host}"]` : ''}[data-region-name="${CSS.escape(region)}"] .apworld-sidecar-reroll`);
+
+/**
+ * ⛓⛓⛓ **(1) RE-ROLL ▸ — ONE PRESS OPENS THE FORM ON THE REGION'S OWN SUBSTRATE AT
+ * ITS NEXT SEED.** Four-player slot 1 `region_1_0` (a region whose own substrate
+ * the op would Generate — derived): the button is on all three hosts (Regions,
+ * Sidecars, the Map's selection); one press opens the form for the OWN substrate
+ * at the counter's seed and records nothing; Generate lands one op at that seed;
+ * a second Re-roll opens at the NEXT seed and its Generate lands a DIFFERENT
+ * entry (two re-rolls differ — the seed-not-advanced mutant's witness). A region
+ * whose substrate has no realiser (`jta_dataset_test`): the button is disabled
+ * with the op's own sentence in its title.
+ */
+export async function apworldReRollOpensTheFormOnTheOwnSubstrateAtTheNextSeed(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        const own = panel.rulesDoc.preset_sidecars['1'][region].substrate;
+        testController.reportCondition(`⛓ premise: the op would Generate \`${own}\` here`,
+            regionRerollFacts(panel.rulesDoc, '1', region).refusal === null);
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        const btn = await testController.pollForValue(() => rerollButton(region, 'regions'), 'Re-roll ▸ on the Regions host', 8000, 50);
+        testController.reportCondition('⛓ Re-roll ▸ on the Regions host, enabled', !!btn && !btn.disabled);
+
+        selectTab(panel, SIDECARS_TAB_ID);
+        const expand = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-expand`), 'the Sidecars list expand', 8000, 50);
+        if (expand?.dataset.open !== 'true') expand?.click();
+        testController.reportCondition('⛓ …on the Sidecars host', await testController.pollForCondition(
+            () => !!rerollButton(region, SIDECARS_TAB_ID), 'Re-roll ▸ on the Sidecars host', 8000, 50));
+        const { reconstructResultFromSidecars } = await import('../../procgenPipeline/compositeMapDocument.js');
+        const cell = (reconstructResultFromSidecars(panel.rulesDoc, { playerId: '1' })?.grid?.allRegions() ?? [])
+            .find((c) => c.region_id === region)?.cell;
+        const canvas = await onMapTabFor(testController, panel);
+        if (canvas && cell) clickMapCell(cell);
+        testController.reportCondition('⛓ …and on the Map\'s selection', await testController.pollForCondition(
+            () => !!rerollButton(region, 'map'), 'Re-roll ▸ on the Map host', 8000, 50));
+
+        selectTab(panel, 'regions');
+        const rolls = [];
+        for (let k = 0; k < 2; k += 1) {
+            const expected = panel._regionGenSeeds.get(`1|${region}`) ?? R6_FIRST_SEED;
+            const opsBefore = panel.session.ops().length;
+            (await testController.pollForValue(() => rerollButton(region, 'regions'), 'Re-roll ▸', 8000, 50))?.click();
+            const opened = await testController.pollForCondition(
+                () => regionGenSection(region, 'regions')?.dataset.target === own, `re-roll ${k + 1}: the form opened`, 8000, 50);
+            testController.reportCondition(`⛓⛓⛓ re-roll ${k + 1}: ONE press opens the form on \`${own}\``, opened);
+            testController.assertEqual(`…recording nothing (re-roll ${k + 1})`, String(opsBefore), String(panel.session.ops().length));
+            const seed = Number(regionGenSection(region, 'regions')?.querySelector('input')?.value);
+            testController.assertEqual(`⛓⛓ …at the region's next seed (re-roll ${k + 1})`, String(expected), String(seed));
+            const said = sidecarMessageFor(region)?.textContent ?? null;
+            regionGenSection(region, 'regions')?.querySelector('.apworld-region-generate')?.click();
+            await answerAfter(testController, region, said, `re-roll ${k + 1}: the Generate answer`);
+            testController.assertEqual(`⛓⛓ re-roll ${k + 1}: Generate lands ONE op`, String(opsBefore + 1), String(panel.session.ops().length));
+            testController.assertEqual(`…at that seed (re-roll ${k + 1})`, String(seed), String(panel.session.ops().at(-1)?.provenance?.seed));
+            rolls.push({ seed, entry: JSON.stringify(panel.rulesDoc.preset_sidecars['1'][region]) });
+        }
+        testController.assertEqual('⛓⛓⛓ the second re-roll is the NEXT seed', String(rolls[0].seed + 1), String(rolls[1].seed));
+        testController.reportCondition('⛓⛓⛓ …and lands a DIFFERENT entry (two re-rolls differ)', rolls[0].entry !== rolls[1].entry);
+
+        const jta = await openHubOnDocument(testController, JTA_DATASET_PATH, '1', region);
+        if (!jta) return testController.getOverallResult();
+        const facts = regionRerollFacts(jta.rulesDoc, '1', region);
+        testController.reportCondition(`⛓ premise: \`${facts.substrate}\` is refused by the op`, !!facts.refusal);
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, jta, '1'));
+        const off = await testController.pollForValue(() => rerollButton(region, 'regions'), 'Re-roll ▸ on the jta block', 8000, 50);
+        testController.reportCondition('⛓⛓ a no-realiser region\'s Re-roll ▸ is DISABLED', !!off?.disabled);
+        testController.assertEqual('⛓⛓ …with the op\'s own sentence in its title', String(facts.refusal), String(off?.title));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('Re-roll test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
 const R6_TESTS = [
+    ['apworld-re-roll-opens-the-form-on-the-own-substrate-at-the-next-seed',
+        'APWorld hub: Re-roll ▸ (all three hosts) opens the form on the region\'s own substrate at its next seed; two re-rolls differ; a no-realiser region\'s button is disabled with the op\'s sentence',
+        apworldReRollOpensTheFormOnTheOwnSubstrateAtTheNextSeed],
     ['apworld-the-map-draws-a-misfit-regions-block',
         'APWorld hub: a region relabelled from the Map keeps its block under the map with the painter\'s refusal and the form; Generate lands, Undo repaints',
         apworldTheMapDrawsAMisfitRegionsBlock],

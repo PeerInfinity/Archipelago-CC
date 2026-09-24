@@ -147,7 +147,8 @@ import { renderRegionGenerationForm } from '../procgenCore/regionGenerationForm.
 import {
   REGION_GENERATION_FIRST_SEED, REGION_GENERATION_OP_FIELDS, REGION_GENERATION_SEED_KEY,
   composeRegenerateArgs, defaultRegionGenerationSource, freeItemsSentence, regenerateArgsRefusal,
-  regenerationAnswer, regenerationProvenance, regionGenerationPlan, regionGenerationSourcesFor, zonePickerFor,
+  regenerationAnswer, regenerationProvenance, regionGenerationPlan, regionGenerationSourcesFor, regionRerollFacts,
+  zonePickerFor,
 } from './regionGenerationFlow.js';
 // ⛓ APWORLD SUBSTRATE CHANGE R5b — the *Zone N* source: the op it lands and the
 //   Placements tab's readout of what the cascade leaves in the pool, unplaced.
@@ -6009,6 +6010,40 @@ class ApworldEditorUI {
   }
 
   /**
+   * ⛓⛓ R6 — **Re-roll ▸**, beside Edit ▸ / Re-derive / Regenerate in the
+   * pipeline ▸ (all three hosts: it is part of `_makeRegionSidecarBlock`). ONE
+   * press opens the Region generation form for the region's OWN substrate at
+   * its next seed (`_openRegionGeneration` reads the per-region counter each
+   * Generate moves); Generate is the reader's second press, because the
+   * settings are the point of the form (planner's preference, plan §3d).
+   * Disabled with the op's own refusal where the op would not Generate
+   * (`regionRerollFacts`).
+   */
+  _makeRerollButton(player, regionName) {
+    const { substrate, refusal } = regionRerollFacts(this.rulesDoc, String(player), regionName);
+    const btn = this._makeButton('Re-roll ▸', refusal ? '#3a3a3a' : '#2f4a5f', () => {
+      this._openRegionGeneration(player, regionName, substrate);
+      this._opMessage = `Re-roll ${regionName} as \`${substrate}\` — seed `
+        + `${this._regionGen?.bag?.[REGION_GENERATION_SEED_KEY]}; press Generate ▸ under the block.`;
+      this._render();
+    });
+    btn.classList.add('apworld-sidecar-reroll');
+    btn.dataset.regionName = regionName;
+    btn.dataset.substrate = substrate ?? '';
+    btn.style.fontSize = '11px';
+    if (refusal) {
+      btn.disabled = true;
+      btn.style.cursor = 'not-allowed';
+      btn.style.color = '#999';
+      btn.title = refusal;
+    } else {
+      btn.title = `Open Region generation for this region's own substrate \`${substrate}\` at its next seed `
+        + '(each Generate moves it on by one), then press Generate ▸. ONE edit, one Undo.';
+    }
+    return btn;
+  }
+
+  /**
    * ⛓⛓ The press. The history is THIS session's — the base it was opened on,
    * its ops, the record now — captured BEFORE the await: an op landing while the
    * two round trips run would make the answer about a document that is gone, so
@@ -6155,6 +6190,7 @@ class ApworldEditorUI {
     const edit = this._makeRoomEditorButton(regionName);
     if (edit) line.appendChild(edit);
     line.appendChild(this._makeRederiveButton(player, regionName, facts.substrate));
+    line.appendChild(this._makeRerollButton(player, regionName));
 
     /**
      * ⛓ The hand-off door. ⛔ Its words are the DOOR's (`regionDoor` on the

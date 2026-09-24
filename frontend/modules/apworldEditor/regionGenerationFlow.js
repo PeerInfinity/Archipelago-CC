@@ -100,6 +100,27 @@ export function regionGenerationPlan(doc, player, region, target, { seed = REGIO
 }
 
 /**
+ * ⛓⛓ R6 — **RE-ROLL ▸: THE FORM FOR THE REGION'S OWN SUBSTRATE, IN ONE PRESS**
+ * (plan §10.6 #4, §13.6 #4 — asked three times). Until R6 the form opened only
+ * on a label CHANGE, so re-rolling a region under its own substrate was two
+ * picks, away and back. The button opens the form for the CURRENT substrate at
+ * the region's next seed (the panel's per-region counter, moved by each
+ * Generate); the reader presses Generate. It is enabled iff the op would take a
+ * Generate for this target, and disabled with the op's own sentence otherwise
+ * (1305: a target with no realiser, more exits than its sides hold, …).
+ *
+ * @returns {{substrate: string|null, refusal: string|null}}
+ */
+export function regionRerollFacts(doc, player, region) {
+    const entry = doc?.preset_sidecars?.[player]?.[region];
+    const substrate = typeof entry?.substrate === 'string' ? entry.substrate : null;
+    const refusal = regenerateOpRefusal(doc, {
+        op: 'regenerate-region-sidecar', player, region, substrate, seed: REGION_GENERATION_FIRST_SEED,
+    });
+    return { substrate, refusal };
+}
+
+/**
  * ⛓ The form's SOURCE row (R5a, plan §12): *Generate* always; *Library entry*
  * only when the target declares `instantiateLibraryEntryForSpecs`
  * (`plan.offersLibrary`, the sphere path's own test).

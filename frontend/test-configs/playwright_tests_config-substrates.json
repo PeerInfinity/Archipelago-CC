@@ -909,6 +909,12 @@
             "_comment": "R5c (e). In memory (set-key): region_atlas names an unserved id: the fetched index refuses by name; a stubbed 404 names the path."
         },
         {
+            "id": "apworld-re-roll-opens-the-form-on-the-own-substrate-at-the-next-seed",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R6 (1). Re-roll ▸ on all three hosts; one press opens the form on the own substrate at the next seed; two Generates at consecutive seeds land different entries; jta's button disabled with the op's refusal. Mutant: the seed counter not advanced."
+        },
+        {
             "id": "apworld-the-map-draws-a-misfit-regions-block",
             "enabled": true,
             "category": "apworldEditor",

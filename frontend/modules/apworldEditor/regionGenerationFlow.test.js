@@ -29,7 +29,7 @@ import {
 import {
     REGION_GENERATION_FIRST_SEED, REGION_GENERATION_OP_FIELDS, REGION_GENERATION_SEED_KEY,
     composeRegenerateArgs, freeItemsSentence, regenerateArgsRefusal, regenerationAnswer,
-    regenerationProvenance, regionGenerationPlan,
+    regenerationProvenance, regionGenerationPlan, regionRerollFacts,
 } from './regionGenerationFlow.js';
 import {
     REGION_GENERATION_CANCELLED, regionGenerationLoadTimeoutSentence, regionGenerationTimeoutSentence,
@@ -236,6 +236,78 @@ describe('regenerationAnswer / regenerationProvenance', () => {
         expect(regenerationProvenance({ ...args, size: { width: 3, height: 4 } }, { ms: 1 }).size)
             .toEqual({ width: 3, height: 4 });
         expect(REGION_GENERATION_OP_FIELDS).toEqual(['regionWidth', 'regionHeight']);
+    });
+});
+
+/**
+ * ⛓⛓ R6 — **RE-ROLL ▸** opens the form for the region's OWN substrate. Its
+ * enabled state is the op's own answer for that target (1305), over every
+ * sidecar region of both documents and every registered id with no realiser.
+ */
+describe('R6 — regionRerollFacts: the Re-roll button\'s target and refusal', () => {
+    const regionsOfDocs = () => [[FOUR, 'four-player'], [AP10, 'AP_10']].flatMap(([doc, tag]) =>
+        Object.entries(doc.preset_sidecars).flatMap(([p, regions]) => Object.keys(regions)
+            .map((r) => ({ doc, tag, p, r, own: regions[r].substrate }))));
+
+    it('⛓⛓ every sidecar region: the target is its own substrate, the refusal is the op\'s own (null ⇔ the plan would Generate)', () => {
+        const population = regionsOfDocs();
+        expect(population.length, 'premise: sidecar regions to walk').toBeGreaterThan(10);
+        let enabled = 0;
+        for (const { doc, tag, p, r, own } of population) {
+            const facts = regionRerollFacts(doc, p, r);
+            expect(facts.substrate, `${tag} ${p} ${r}`).toBe(own);
+            expect(facts.refusal, `${tag} ${p} ${r}`).toBe(regenerateOpRefusal(doc, {
+                op: 'regenerate-region-sidecar', player: p, region: r, substrate: own, seed: REGION_GENERATION_FIRST_SEED,
+            }));
+            expect(facts.refusal === null, `${tag} ${p} ${r}`)
+                .toBe(regionGenerationPlan(doc, p, r, own).refusal === null);
+            if (facts.refusal === null) enabled += 1;
+        }
+        expect(enabled, 'both bins non-empty: some regions re-roll').toBeGreaterThan(0);
+    });
+
+    it('⛓⛓ a region whose substrate has NO realiser: disabled with the op\'s refusal — every such registered id', () => {
+        const none = substrateRegistry.getAll().filter((e) => !regionRealiserKind(e)).map((e) => e.id);
+        expect(none.length, 'premise: ids without a realiser').toBeGreaterThan(0);
+        for (const id of none) {
+            const doc = structuredClone(FOUR);
+            doc.preset_sidecars['3'].region_1_0.substrate = id;
+            const facts = regionRerollFacts(doc, '3', 'region_1_0');
+            expect(facts.substrate).toBe(id);
+            expect(facts.refusal, id).toBeTruthy();
+            expect(facts.refusal).toBe(regenerateOpRefusal(doc, {
+                op: 'regenerate-region-sidecar', player: '3', region: 'region_1_0', substrate: id,
+                seed: REGION_GENERATION_FIRST_SEED,
+            }));
+        }
+    });
+
+    it('⛓⛓ the panel opens the form at the region\'s NEXT seed — the per-region counter, else the first seed', () => {
+        const P = ApworldEditorUI.prototype;
+        const self = { rulesDoc: FOUR, _regionGen: null, _regionGenTicker: null, _regionGenSeeds: new Map() };
+        Object.assign(self, { _stopRegionGenRun: P._stopRegionGenRun, _closeRegionGeneration: P._closeRegionGeneration });
+        const own = FOUR.preset_sidecars['1'].region_1_0.substrate;
+        P._openRegionGeneration.call(self, '1', 'region_1_0', own);
+        expect(self._regionGen.target).toBe(own);
+        expect(self._regionGen.bag[REGION_GENERATION_SEED_KEY]).toBe(REGION_GENERATION_FIRST_SEED);
+        self._regionGenSeeds.set('1|region_1_0', REGION_GENERATION_FIRST_SEED + 4);
+        P._openRegionGeneration.call(self, '1', 'region_1_0', own);
+        expect(self._regionGen.bag[REGION_GENERATION_SEED_KEY]).toBe(REGION_GENERATION_FIRST_SEED + 4);
+    });
+
+    it('⛓ two re-rolls at consecutive seeds differ; one seed twice is byte-identical (the counter is what makes a re-roll new)', () => {
+        const r = 'region_1_0';
+        const own = FOUR.preset_sidecars['1'][r].substrate;
+        expect(regionRerollFacts(FOUR, '1', r).refusal, 'premise: slot 1 region_1_0 re-rolls').toBeNull();
+        const at = (seed) => {
+            const bag = { ...regionGenerationPlan(FOUR, '1', r, own, { seed }).defaults };
+            const res = regenerateRegionEntry(composeRegenerateArgs(FOUR, '1', r, own, bag));
+            expect(res.ok, `seed ${seed}`).toBe(true);
+            return bytes(res.entry);
+        };
+        const s = REGION_GENERATION_FIRST_SEED;
+        expect(at(s)).toBe(at(s));
+        expect(at(s + 1)).not.toBe(at(s));
     });
 });
 
