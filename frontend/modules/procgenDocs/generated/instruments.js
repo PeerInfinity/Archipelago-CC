@@ -48,8 +48,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 53,
-            "count": 89,
+            "browser": 54,
+            "count": 90,
             "id": "check"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 263,
-        "browser": 79,
-        "cited": 100,
-        "files": 274,
+        "blockStyle": 264,
+        "browser": 80,
+        "cited": 101,
+        "files": 275,
         "lineStyle": 11,
-        "withDocblock": 274,
-        "withFlags": 188
+        "withDocblock": 275,
+        "withFlags": 189
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3138,6 +3138,48 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-full-tier-owed — **A MEASUREMENT OWED IS A RED ROW, NOT A MEMORY** (R9 slice P3b, §47.11 (3) (c)/(d)).",
             "path": "scripts/procgen/check-seedling-full-tier-owed.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "game",
+                "host"
+            ],
+            "file": "check-seedling-generated-room-play.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "game"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling generated levels, G2: a world whose Seedling rooms the procgen pipeline GENERATED plays in the Seedling wasm.",
+            "path": "scripts/procgen/check-seedling-generated-room-play.mjs"
         },
         {
             "argvHelpers": [
