@@ -188,6 +188,13 @@ import {
 import { defaultRegionGenerationSource, regionGenerationSourcesFor } from '../../apworldEditor/regionGenerationFlow.js';
 import { declaredStartingNeeds } from '../../procgenCore/startingInventory.js';
 /**
+ * ⛓ APWORLD SUBSTRATE CHANGE R5c — the atlas-room source: the read-back the
+ * expected picker is derived from, the fetch sentence's fixed words, the index.
+ */
+import { ZONE_FETCH_FAILED, installedZoneConfigFrom } from '../../apworldEditor/regionContent.js';
+import { atlasIndexPath } from '../../flashPanel/mapDocumentPath.js';
+import { buildSeedlingContentSource } from '../../flashPanel/flashSeedlingLibrary.js';
+/**
  * ⛓ D1 — the fields view's vocabulary: which control a row stamps, which level
  * it is on, the two ENTRY keys the form names (the payload's, the substrate's),
  * and the clause the picker's title carries — so a row asserts the product's
@@ -10654,6 +10661,314 @@ for (const [id, name, testFunction] of R5A_TESTS) {
         id,
         name,
         description: `APWORLD SUBSTRATE CHANGE R5a. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R5c — THE ATLAS-ROOM SOURCE (plan §12's R5c row,
+ * §15). `flash_seedling` declares the zone read-back; the Source row offers its
+ * word (*Atlas room*, read off the entry) and the picker lists the installed
+ * atlas's rooms by name. On `seedling_spiral_room` (T2: one room `region_0_0`
+ * beside three maze regions) and `seedling_sphere_room` (T3: one room leaf,
+ * `region_3_2`). Every expectation is the product's own function asked of the
+ * document the panel holds.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const SEEDLING_SPIRAL_ROOM_PATH = './presets/seedling_spiral_room/AP_1/AP_1_rules.json';
+const SEEDLING_SPHERE_ROOM_PATH = './presets/seedling_sphere_room/AP_1/AP_1_rules.json';
+const SEEDLING = 'flash_seedling';
+
+/** ⛓ The room picker's options as `{zone, name, disabled, heldBy, unplaceable}` — re-queried. */
+const roomPickerOptions = (region) => [...(regionGenSection(region)
+    ?.querySelectorAll('.apworld-region-generation-zone option') ?? [])]
+    .map((o) => ({
+        zone: o.value === '' ? null : Number(o.value), name: o.dataset.zoneName ?? null, disabled: o.disabled,
+        heldBy: o.dataset.heldBy ?? null, unplaceable: o.dataset.unplaceable ?? null,
+    }));
+
+/** ⛓ The first maze region of the slot with `n` exits — derived. */
+const mazeRegionWithExits = (doc, n) => Object.entries(doc.preset_sidecars['1'])
+    .find(([, e]) => e.substrate === 'maze' && (e.playable_payload.exits ?? []).length === n)?.[0] ?? null;
+
+/** ⛓ The page's installed atlas, as the entry answers it (the picker must not move it). */
+const installedAtlasId = () => substrateRegistry.get(SEEDLING).rulesJsonBlocks().region_atlas?.atlas_id ?? null;
+
+/** ⛓ Relabel `region` to `flash_seedling` (D1's pick) and switch its form to the room source; wait for the picker. */
+async function openRoomSource(testController, panel, region) {
+    if (!await pickSubstrateAndOpenForm(testController, panel, region, SEEDLING)) return false;
+    const sel = regionGenSection(region)?.querySelector('.apworld-region-generation-source');
+    testController.reportCondition('the Source row is drawn', !!sel);
+    if (!sel) return false;
+    sel.value = REGION_SOURCE_KINDS.ZONE;
+    sel.dispatchEvent(new Event('change', { bubbles: true }));
+    return testController.pollForCondition(() => {
+        const st = regionGenSection(region)?.dataset.zone;
+        return st === 'ready' || st === 'refused';
+    }, 'the room picker settled', 15000, 50);
+}
+
+/**
+ * ⛓⛓ **(a) THE SOURCE ROW OFFERS *ATLAS ROOM* FOR `flash_seedling`, NOT FOR MAZE** —
+ * `seedling_spiral_room` `region_0_0`: pick maze → no room source; pick
+ * `flash_seedling` back → the Source row = the flow's sources (derived), the
+ * zone source labelled with the ENTRY's word, never typed here.
+ */
+export async function apworldTheSourceRowOffersAtlasRoomForSeedling(testController) {
+    try {
+        const region = 'region_0_0';
+        const panel = await openHubOnDocument(testController, SEEDLING_SPIRAL_ROOM_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        const optionsOf = () => [...(regionGenSection(region)?.querySelectorAll('.apworld-region-generation-source option') ?? [])]
+            .map((o) => ({ id: o.value, label: o.textContent }));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, 'maze')) return testController.getOverallResult();
+        testController.reportCondition('⛓⛓ `maze`: no room source in the Source row',
+            !optionsOf().some((o) => o.id === REGION_SOURCE_KINDS.ZONE));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, SEEDLING)) return testController.getOverallResult();
+        const want = regionGenerationSourcesFor(regionGenerationPlan(panel.rulesDoc, '1', region, SEEDLING))
+            .map((x) => ({ id: x.id, label: x.label }));
+        testController.assertEqual('⛓⛓ `flash_seedling`: the Source row = the flow\'s sources (derived)',
+            JSON.stringify(want), JSON.stringify(optionsOf()));
+        testController.assertEqual('⛓⛓ …the room source carries the ENTRY\'s word',
+            String(substrateRegistry.get(SEEDLING).zoneSourceLabel),
+            String(optionsOf().find((o) => o.id === REGION_SOURCE_KINDS.ZONE)?.label));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('atlas room source row test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(b) THE PICKER LISTS THE ATLAS'S ROOMS, THE HELD ONE DISABLED** — a maze
+ * region of `seedling_spiral_room` relabelled to `flash_seedling`: the options =
+ * the recorded atlas's placeable rooms by name (the read-back's `zoneNames`), a
+ * room another region plays disabled and labelled with it (`zoneHeldBy`), then
+ * the doorless rooms, disabled, with the channel's reason. The page's installed
+ * atlas does not move.
+ */
+export async function apworldTheRoomPickerListsTheAtlasRooms(testController) {
+    try {
+        const probe = await (await fetch(SEEDLING_SPIRAL_ROOM_PATH)).json();
+        const region = mazeRegionWithExits(probe, 2);
+        testController.reportCondition(`⛓ premise: a 2-exit maze region (${region})`, !!region);
+        const panel = await openHubOnDocument(testController, SEEDLING_SPIRAL_ROOM_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        const atlasBefore = installedAtlasId();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (!await openRoomSource(testController, panel, region)) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const rec = installedZoneConfigFrom(doc, '1', SEEDLING);
+        testController.reportCondition('the read-back answers on the panel\'s document', rec.ok);
+        const cfg = { ...rec.cfg, ...rec.assumed };
+        const want = [
+            ...rec.zoneNames.map((name, z) => {
+                const heldBy = zoneHeldBy(doc, '1', SEEDLING, z, { except: region, cfg });
+                return { zone: z, name, disabled: !!heldBy, heldBy, unplaceable: null };
+            }),
+            ...rec.unplaceable.map((u) => ({ zone: null, name: u.name, disabled: true, heldBy: null, unplaceable: u.why })),
+        ];
+        testController.assertEqual('⛓⛓ the rooms by name, the held one disabled and named, then the doorless ones (derived)',
+            JSON.stringify(want), JSON.stringify(roomPickerOptions(region)));
+        testController.reportCondition('⛓ premise: a room is held (by region_0_0)', want.some((o) => o.heldBy === 'region_0_0'));
+        testController.reportCondition('⛓ premise: a doorless room is listed', want.some((o) => o.unplaceable));
+        testController.assertEqual('⛓⛓ the page\'s installed atlas is unchanged (nothing installed)',
+            String(atlasBefore), String(installedAtlasId()));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('room picker test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(c) GENERATE WITH ANOTHER ROOM LANDS ONE `replace-region-content`** —
+ * `seedling_sphere_room`'s one-exit maze leaf relabelled to `flash_seedling`
+ * takes a free room WITH a location: ONE op, the room INLINED; the worker's entry
+ * and slices = the pure op's; the document = the pure op's; the room's locations
+ * placed, the leaf's old placements displaced and named; 0 new sidecar errors;
+ * one Undo restores every key.
+ */
+export async function apworldAnAtlasRoomGenerateLandsOneReplaceRegionContent(testController) {
+    try {
+        const probe = await (await fetch(SEEDLING_SPHERE_ROOM_PATH)).json();
+        const region = mazeRegionWithExits(probe, 1);
+        testController.reportCondition(`⛓ premise: a 1-exit maze leaf (${region})`, !!region);
+        const panel = await openHubOnDocument(testController, SEEDLING_SPHERE_ROOM_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        const atlasBefore = installedAtlasId();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (!await openRoomSource(testController, panel, region)) return testController.getOverallResult();
+        const docObj = JSON.parse(JSON.stringify(panel.rulesDoc));
+        const rec = installedZoneConfigFrom(docObj, '1', SEEDLING);
+        const cfg = { ...rec.cfg, ...rec.assumed };
+        // ⛓ a free room with a location and a door (derived off the read-back and the atlas's own compile)
+        //   — a PURE build of the recorded atlas (`buildSeedlingContentSource` installs nothing)
+        const rooms = buildSeedlingContentSource(rec.cfg.atlasDoc).zones;
+        const withLoc = roomPickerOptions(region).filter((o) => o.zone !== null && !o.disabled)
+            .find((o) => rooms[o.zone].locations.length > 0);
+        testController.reportCondition(`⛓ premise: a free room with a location (${withLoc?.name})`, !!withLoc);
+        if (!withLoc) return testController.getOverallResult();
+        testController.reportCondition('…and no region holds it', !zoneHeldBy(docObj, '1', SEEDLING, withLoc.zone, { except: region, cfg }));
+        const sel = regionGenSection(region).querySelector('.apworld-region-generation-zone');
+        sel.value = String(withLoc.zone);
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+        await testController.pollForCondition(() => panel._regionGen?.zone?.selected === withLoc.zone, 'the room is selected', 4000, 50);
+        const docBefore = JSON.stringify(panel.rulesDoc);
+        const errorsBefore = sidecarIssues(docObj, '1').filter((i) => i.severity === 'error').length;
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        regionGenSection(region).querySelector('.apworld-region-generate').click();
+        const answer = await answerAfter(testController, region, said, 'the Generate answer', 60000);
+        testController.assertEqual('⛓⛓ ONE op recorded', String(opsBefore + 1), String(panel.session.ops().length));
+        const op = panel.session.ops().at(-1);
+        testController.assertEqual('…a replace-region-content', REPLACE_REGION_CONTENT_OP, String(op?.op));
+        testController.reportCondition('⛓⛓ the room is INLINED in the op', !!op?.source?.zone && Array.isArray(op.source.zone.locations));
+        const run = panel._regionGenLastRun;
+        const pure = applyRulesDocOp(docObj, { ...op });
+        testController.reportCondition('the pure op on the same record applies', pure.ok);
+        testController.assertEqual('⛓⛓ the worker\'s entry is the pure op\'s, byte for byte',
+            JSON.stringify(pure.doc?.preset_sidecars?.['1']?.[region]), JSON.stringify(run?.outcome?.entry));
+        testController.assertEqual('⛓⛓ the document is the pure op\'s', JSON.stringify(pure.doc), JSON.stringify(panel.rulesDoc));
+        testController.reportCondition('⛓⛓ the answer is the op\'s own description', String(answer).startsWith(String(pure.description)));
+        const entry = panel.rulesDoc.preset_sidecars['1'][region];
+        testController.assertEqual('⛓ the entry plays the picked room', String(withLoc.zone),
+            String(substrateRegistry.get(SEEDLING).zoneOfPayload(entry.playable_payload, cfg)));
+        const locs = panel.rulesDoc.regions['1'][region].locations;
+        testController.reportCondition(`⛓ the room's ${locs.length} location(s) are placed`,
+            locs.length > 0 && locs.every((l) => typeof panel.rulesDoc.canonical_placements['1'][l.name] === 'string'));
+        const displaced = docObj.regions['1'][region].locations.map((l) => l.name)
+            .filter((n) => n in docObj.canonical_placements['1'] && !(n in panel.rulesDoc.canonical_placements['1']));
+        testController.reportCondition(`⛓ premise: the leaf's placements were displaced (${displaced.length})`, displaced.length > 0);
+        for (const n of displaced) {
+            if (!String(answer).includes(`\`${n}\``)) testController.reportCondition(`the answer names ${n}`, false);
+        }
+        // ⛓ the relabel alone leaves the leaf's maze payload under the seedling label
+        //   (SUBSTRATE_MISMATCH); the op's entry is the room's, so the report is clean.
+        const errorsAfter = sidecarIssues(panel.rulesDoc, '1').filter((i) => i.severity === 'error').length;
+        testController.log(`sidecar errors: ${errorsBefore} after the relabel → ${errorsAfter} after the op`);
+        testController.assertEqual('⛓⛓ 0 sidecar errors after the op', '0', String(errorsAfter));
+        testController.assertEqual('⛓⛓ the page\'s installed atlas is unchanged after Generate',
+            String(atlasBefore), String(installedAtlasId()));
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('⛓⛓ one Undo restores every key', docBefore, JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('atlas room Generate test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(d) A HELD ROOM IS REFUSED BY THE OP'S OWN SENTENCE** — the picker disables
+ * it, so the row forces the selection onto it and presses Generate: the answer
+ * is `zoneSourceRefusal`'s sentence naming the holder; nothing recorded.
+ */
+export async function apworldAHeldAtlasRoomIsRefusedByName(testController) {
+    try {
+        const probe = await (await fetch(SEEDLING_SPIRAL_ROOM_PATH)).json();
+        const region = mazeRegionWithExits(probe, 2);
+        const panel = await openHubOnDocument(testController, SEEDLING_SPIRAL_ROOM_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (!await openRoomSource(testController, panel, region)) return testController.getOverallResult();
+        const held = roomPickerOptions(region).find((o) => o.heldBy);
+        testController.reportCondition(`⛓ premise: room ${held?.name} is held by ${held?.heldBy}`, !!held);
+        if (!held) return testController.getOverallResult();
+        panel._regionGen.zone.selected = held.zone;
+        const want = zoneSourceRefusal(panel.rulesDoc, { player: '1', region, substrate: SEEDLING, zoneIdx: held.zone });
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        await panel._generateRegion();
+        const answer = await answerAfter(testController, region, said, 'the refusal', 8000);
+        testController.assertEqual('⛓⛓ the answer is the op\'s own refusal', `Refused: ${want}`, String(answer));
+        testController.reportCondition(`…naming the holder (${held.heldBy})`, String(answer).includes(`"${held.heldBy}"`));
+        testController.assertEqual('…nothing recorded', String(opsBefore), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('held room test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(e) AN ATLAS THE SITE DOES NOT SERVE IS REFUSED BY NAME** — built IN
+ * MEMORY through the hub's own ops (nothing on disk): `seedling_sphere_room`'s
+ * room region relabelled to maze, the document's `region_atlas.atlas_id` set
+ * (`set-key`) to an id the served index does not list, and the maze leaf
+ * relabelled to `flash_seedling`: the picker FETCHES the index (a real fetch)
+ * and refuses naming it. Then a failing fetch (a row stub on the panel's fetch
+ * seam, the index path answering 404): the sentence names the path and the
+ * failure. Nothing is recorded by either.
+ */
+export async function apworldAnUnservedAtlasIsRefusedByName(testController) {
+    try {
+        const probe = await (await fetch(SEEDLING_SPHERE_ROOM_PATH)).json();
+        const leaf = mazeRegionWithExits(probe, 1);
+        const room = Object.entries(probe.preset_sidecars['1']).find(([, e]) => e.substrate === SEEDLING)?.[0];
+        const panel = await openHubOnDocument(testController, SEEDLING_SPHERE_ROOM_PATH, '1', leaf);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (!await pickSubstrateAndOpenForm(testController, panel, room, 'maze')) return testController.getOverallResult();
+        const unserved = 'seedling-00000000';
+        const applied = panel._applyOp({ op: 'set-key', key: 'region_atlas', scope: 'document',
+            value: { ...panel.rulesDoc.region_atlas, atlas_id: unserved } });
+        testController.reportCondition('⛓ the document now names an unserved atlas (one set-key op)',
+            applied.ok && panel.rulesDoc.region_atlas.atlas_id === unserved);
+        panel._zoneFetched = {};
+        const opsBefore = panel.session.ops().length;
+        if (!await openRoomSource(testController, panel, leaf)) return testController.getOverallResult();
+        const refusal = () => regionGenSection(leaf)?.querySelector('.apworld-region-generation-zone-refusal')?.textContent ?? '';
+        testController.assertEqual('⛓ the picker refused', 'refused', String(regionGenSection(leaf)?.dataset.zone));
+        testController.reportCondition('⛓⛓ the index was FETCHED', atlasIndexPath() in (panel._zoneFetched ?? {}));
+        testController.reportCondition(`⛓⛓ the refusal names the index and the id: ${refusal().slice(0, 160)}`,
+            refusal().includes(`\`${atlasIndexPath()}\``) && refusal().includes(`\`${unserved}\``));
+        // ⛓ a failing fetch: the index answers 404
+        panel._zoneFetched = {};
+        panel._zoneFetchJson = async () => { throw new Error('HTTP 404'); };
+        try {
+            await panel._loadZonePicker(panel._regionGen);
+            panel._render();
+            testController.reportCondition(`⛓⛓ a failed fetch names the path: ${refusal().slice(0, 160)}`,
+                refusal().includes(`\`${atlasIndexPath()}\`, which ${ZONE_FETCH_FAILED} (HTTP 404)`));
+        } finally {
+            delete panel._zoneFetchJson;
+            panel._zoneFetched = {};
+        }
+        testController.reportCondition('…no Generate drawn', !regionGenSection(leaf)?.querySelector('.apworld-region-generate'));
+        testController.assertEqual('…nothing recorded by the picker', String(opsBefore + 1), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('unserved atlas test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+const R5C_TESTS = [
+    ['apworld-the-source-row-offers-atlas-room-for-seedling',
+        'APWorld hub: the Region generation form offers Atlas room (the entry\'s word) for flash_seedling and no room source for maze',
+        apworldTheSourceRowOffersAtlasRoomForSeedling],
+    ['apworld-the-room-picker-lists-the-atlas-rooms',
+        'APWorld hub: the Atlas room picker lists the recorded atlas\'s rooms by name, the held one disabled, the doorless ones with the reason',
+        apworldTheRoomPickerListsTheAtlasRooms],
+    ['apworld-an-atlas-room-generate-lands-one-replace-region-content',
+        'APWorld hub: Generate with a free atlas room lands ONE replace-region-content, the room\'s locations placed, Undo restores',
+        apworldAnAtlasRoomGenerateLandsOneReplaceRegionContent],
+    ['apworld-a-held-atlas-room-is-refused-by-name',
+        'APWorld hub: an atlas room another region plays is refused by the op\'s own sentence, nothing recorded',
+        apworldAHeldAtlasRoomIsRefusedByName],
+    ['apworld-an-unserved-atlas-is-refused-by-name',
+        'APWorld hub: a document naming an atlas the site does not serve is refused naming the index; a failed fetch names the path',
+        apworldAnUnservedAtlasIsRefusedByName],
+];
+for (const [id, name, testFunction] of R5C_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE R5c. ${name}. See the row's docblock in apworldEditorTests.js.`,
         testFunction,
         category: 'apworldEditor',
         enabled: false, // off by default — runs only in the test-substrates mode

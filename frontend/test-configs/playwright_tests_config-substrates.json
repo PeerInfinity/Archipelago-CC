@@ -879,6 +879,36 @@
             "_comment": "R5b (e). The dataset host region_0_0 takes the freed zone 2: jta_dataset carried, no REF_UNRESOLVED."
         },
         {
+            "id": "apworld-the-source-row-offers-atlas-room-for-seedling",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5c (a). spiral_room region_0_0: maze offers no room source; flash_seedling's Source row = the flow's, the room source labelled with the entry's word."
+        },
+        {
+            "id": "apworld-the-room-picker-lists-the-atlas-rooms",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5c (b). A 2-exit maze region relabelled to flash_seedling: the recorded atlas's rooms by name, the held one disabled and named, the doorless ones with the reason; the page's atlas unchanged."
+        },
+        {
+            "id": "apworld-an-atlas-room-generate-lands-one-replace-region-content",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5c (c). sphere_room's 1-exit maze leaf takes a free room with a location: ONE replace-region-content, room inlined, worker = pure op, 0 new sidecar errors, Undo restores."
+        },
+        {
+            "id": "apworld-a-held-atlas-room-is-refused-by-name",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5c (d). A held room forced into the form: the op's own refusal naming the holder, nothing recorded."
+        },
+        {
+            "id": "apworld-an-unserved-atlas-is-refused-by-name",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5c (e). In memory (set-key): region_atlas names an unserved id: the fetched index refuses by name; a stubbed 404 names the path."
+        },
+        {
             "id": "apworld-the-preset-sidecars-door-lands-on-the-sidecars-tab",
             "enabled": true,
             "category": "apworldEditor",

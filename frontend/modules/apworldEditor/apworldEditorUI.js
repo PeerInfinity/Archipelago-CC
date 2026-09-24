@@ -151,7 +151,7 @@ import {
 } from './regionGenerationFlow.js';
 // ⛓ APWORLD SUBSTRATE CHANGE R5b — the *Zone N* source: the op it lands and the
 //   Placements tab's readout of what the cascade leaves in the pool, unplaced.
-import { REPLACE_REGION_CONTENT_OP, unplacedPoolItems } from './regionContent.js';
+import { REPLACE_REGION_CONTENT_OP, resolveZoneFetches, unplacedPoolItems } from './regionContent.js';
 import { loadLibraryOptions, servedLibraryCatalog } from './librarySourcePicker.js';
 import { REGION_SOURCE_KINDS } from './regionRegenerate.js';
 import {
@@ -335,6 +335,18 @@ function mapCellNote(result) {
     if (result.regionSizeSource === 'payload') return `cell ${size} tiles`;
     if (result.regionSizeSource === 'declared') return `cell ${size} (declared by the substrate)`;
     return `cell ${size} (the engine's default — this world stores no tile geometry)`;
+}
+
+/**
+ * ⛓ R5c — a SERVED document for the zone picker's read-back (the atlas index,
+ * an atlas), by its path from `frontend/`: DOCUMENT-relative, the panel's base
+ * in raw and bundled mode alike (`flashPanel/mapDocumentPath.js`'s rule). A
+ * non-2xx answer throws, and the resolver names the path.
+ */
+async function fetchServedJson(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
 }
 
 class ApworldEditorUI {
@@ -6626,9 +6638,32 @@ class ApworldEditorUI {
     if (this._regionGen.source === REGION_SOURCE_KINDS.ZONE) this._loadZonePicker(this._regionGen);
   }
 
-  /** ⛓ R5b — (re)compute the Zone N picker for `gen` off the current document. */
-  _loadZonePicker(gen) {
-    gen.zone = zonePickerFor(this.rulesDoc, gen.player, gen.region, gen.target);
+  /**
+   * ⛓ R5b — (re)compute the Zone N picker for `gen` off the current document.
+   *
+   * ⛓ R5c — a read-back that names SERVED documents (the atlas intake: the atlas
+   * index, then the atlas) is fetched here, once per page (`_zoneFetched`), and
+   * asked again. The fetch builds nothing into the registry — the INSTALL stays
+   * in the worker, which fetches for itself. A failed fetch is the picker's
+   * refusal, naming the path.
+   *
+   * @returns {Promise<object>} the picker's final state (rows read it)
+   */
+  async _loadZonePicker(gen) {
+    this._zoneFetched ??= {};
+    gen.zone = zonePickerFor(this.rulesDoc, gen.player, gen.region, gen.target, { fetched: this._zoneFetched });
+    if (gen.zone.status !== 'needs') return gen.zone;
+    gen.zone = { status: 'loading', options: [], error: `fetching ${gen.zone.needs.join(', ')} …`, selected: null };
+    const doc = this.rulesDoc;
+    const got = await resolveZoneFetches(doc, gen.player, gen.target, this._zoneFetchJson ?? fetchServedJson,
+      { fetched: this._zoneFetched });
+    Object.assign(this._zoneFetched, got.fetched);
+    if (this._regionGen !== gen) return gen.zone;
+    gen.zone = got.ok
+      ? zonePickerFor(this.rulesDoc, gen.player, gen.region, gen.target, { fetched: this._zoneFetched })
+      : { status: 'refused', options: [], error: got.why, selected: null };
+    this._render();
+    return gen.zone;
   }
 
   /**
@@ -6975,15 +7010,22 @@ class ApworldEditorUI {
     const pickRow = document.createElement('label');
     Object.assign(pickRow.style, { display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px',
       color: '#bcd', margin: '0 0 4px' });
-    pickRow.appendChild(document.createTextNode('Zone'));
+    // ⛓ R5c — the entry's word for its zones (*Atlas room*), read off the plan.
+    pickRow.appendChild(document.createTextNode(gen.plan.zoneSourceLabel));
     const sel = document.createElement('select');
     sel.className = 'apworld-region-generation-zone';
     for (const o of z.options) {
       const opt = document.createElement('option');
-      opt.value = String(o.zoneIdx);
+      // ⛓ R5c — a room the channel cannot place is listed, disabled, with its reason.
+      opt.value = o.zoneIdx === null ? '' : String(o.zoneIdx);
       opt.textContent = o.label;
       opt.disabled = o.disabled;
-      Object.assign(opt.dataset, { zoneIdx: String(o.zoneIdx), ...(o.heldBy ? { heldBy: o.heldBy } : {}) });
+      Object.assign(opt.dataset, {
+        zoneIdx: o.zoneIdx === null ? '' : String(o.zoneIdx),
+        ...(o.name ? { zoneName: o.name } : {}),
+        ...(o.heldBy ? { heldBy: o.heldBy } : {}),
+        ...(o.unplaceable ? { unplaceable: o.unplaceable } : {}),
+      });
       sel.appendChild(opt);
     }
     if (z.selected !== null) sel.value = String(z.selected);
@@ -6994,7 +7036,7 @@ class ApworldEditorUI {
     const held = z.options.filter((o) => o.heldBy);
     if (held.length) {
       note('apworld-region-generation-zone-held', `${held.length} zone${held.length === 1 ? '' : 's'} held by `
-        + `another region of this slot (disabled): ${held.map((o) => `${o.zoneIdx} → ${o.heldBy}`).join(', ')}.`,
+        + `another region of this slot (disabled): ${held.map((o) => `${o.name ?? o.zoneIdx} → ${o.heldBy}`).join(', ')}.`,
       '#a98');
     }
     note('apworld-region-generation-zone-cascade', 'Replaces this region\'s LOCATIONS with the zone\'s own: '
@@ -7076,7 +7118,7 @@ class ApworldEditorUI {
     if (zone && gen.zone.selected === null) return null;
     const args = composeRegenerateArgs(doc, gen.player, gen.region, gen.target, gen.bag,
       { source: zone ? { kind: REGION_SOURCE_KINDS.ZONE, zoneIdx: gen.zone.selected } : pick?.source });
-    const refusal = regenerateArgsRefusal(args);
+    const refusal = regenerateArgsRefusal(args, { fetched: this._zoneFetched ?? {} });
     if (refusal) {
       beside(refusal, true);
       this._render();
