@@ -204,6 +204,8 @@ import { buildSeedlingContentSource } from '../../flashPanel/flashSeedlingLibrar
 import {
     PAYLOAD_KEY, SIDECAR_FORM_CONTROLS, SIDECAR_FORM_LEVELS, SUBSTRATE_KEY, SUBSTRATE_PICKER_CLAUSE,
 } from '../../apworldEditor/sidecarForm.js';
+/** ⛓ R6 — the slot selector's sentence while the slots wait on the schema. */
+import { PLAYER_SLOTS_NEED_SCHEMA, playerSlotsWaitSentence } from '../../apworldEditor/documentKeys.js';
 
 const PANEL_ID = 'apworldEditorPanel';
 const PANEL_SELECTOR = '.apworld-editor-panel';
@@ -11238,6 +11240,104 @@ for (const [id, name, testFunction] of R5B_TESTS) {
         id,
         name,
         description: `APWORLD SUBSTRATE CHANGE R5b. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R6 — THE CLEAN-UP BUNDLE (plan §3d).
+ *
+ * Five places where a refusal or a hidden state had no sentence (the family
+ * *"a check whose FALSE answer REMOVES something is invisible"*): each row
+ * asserts the sentence that now stands where the state was hidden, and the
+ * gesture that works once it is said. Every expectation is the product's own
+ * function asked of the document the panel holds.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **(4) A SLOT PICK BEFORE THE SCHEMA IS REFUSED BY NAME, AND WORKS AFTER.**
+ * The cause of the pre-schema *"No change"* (plan §10.1 #5), measured: without
+ * `rules.schema.json` the panel derives no slots, the selector offered ONE (the
+ * default) under *"This document is about one player slot"*, a pick of slot 3
+ * read as `''`, `_syncPlayer` fell back to slot 1 in silence, and the `maze` pick
+ * then landed on slot 1's `region_1_0` — already a maze — as *"No change"*. The
+ * schema is held back the way a pending fetch holds it (`_rulesSchema` null,
+ * `_schemaPending` true): the selector says why it offers one slot, a slot-3 pick
+ * is refused in those words and moves nothing; the schema restored, the same
+ * pick reaches slot 3 and the substrate pick lands ONE op there.
+ */
+export async function apworldASlotPickBeforeTheSchemaIsRefusedByName(testController) {
+    let panel = null;
+    let schema = null;
+    try {
+        const region = 'region_1_0';
+        panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        if (!panel) return testController.getOverallResult();
+        schema = panel._rulesSchema;
+        panel._rulesSchema = null;
+        panel._schemaPending = true;
+        panel._chosenPlayer = null;
+        panel._render();
+        const select = () => document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        const note = () => document.querySelector(`${PANEL_SELECTOR} .apworld-player-slots-note`);
+        const fallback = panel.playerId;
+        testController.assertEqual('⛓ pending: the selector offers only the default slot',
+            JSON.stringify([fallback]), JSON.stringify([...select().options].map((o) => o.value)));
+        testController.assertEqual('⛓⛓ pending: the selector is marked as waiting on the schema', 'true',
+            select().dataset.slotsWaiting);
+        testController.assertEqual('⛓⛓ pending: the note beside it is the wait sentence',
+            playerSlotsWaitSentence(null), note()?.textContent ?? null);
+        testController.assertEqual('…and so is its title (never "one player slot")', playerSlotsWaitSentence(null),
+            select().title);
+        const opsBefore = panel.session.ops().length;
+        selectPlayer(select(), '3');
+        testController.assertEqual('⛓⛓⛓ a slot-3 pick moves nothing', String(fallback), String(panel.playerId));
+        testController.reportCondition(`⛓⛓⛓ …and is REFUSED naming the schema (${panel._opMessage})`,
+            // ⛓ The select holds no option `3`, so the DOM reads the pick as '' — the refusal says so.
+            String(panel._opMessage).startsWith('Refused: player (none)')
+                && String(panel._opMessage).includes(PLAYER_SLOTS_NEED_SCHEMA));
+        testController.assertEqual('…nothing recorded', String(opsBefore), String(panel.session.ops().length));
+
+        panel._rulesSchema = schema;
+        panel._schemaPending = false;
+        panel._render();
+        schema = null;
+        testController.assertEqual('⛓ loaded: the selector is not waiting', 'false', select().dataset.slotsWaiting);
+        testController.reportCondition('…and the note is gone', !note()?.textContent);
+        testController.reportCondition('⛓⛓ loaded: the same pick reaches slot 3', await onRegionsTabFor(testController, panel, '3'));
+        const own = panel.rulesDoc.preset_sidecars['3'][region].substrate;
+        const target = realiserOf(true, own);
+        const slot1 = JSON.stringify(panel.rulesDoc.preset_sidecars['1'][region]);
+        testController.reportCondition(`⛓⛓⛓ the \`${target}\` pick lands ONE op and opens the form`,
+            !!target && await pickSubstrateAndOpenForm(testController, panel, region, target));
+        testController.assertEqual('…on slot 3', target, panel.rulesDoc.preset_sidecars['3'][region].substrate);
+        testController.assertEqual('…and slot 1\'s region_1_0 is untouched', slot1,
+            JSON.stringify(panel.rulesDoc.preset_sidecars['1'][region]));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('pre-schema slot pick test error-free', false);
+    } finally {
+        if (panel && schema) {
+            panel._rulesSchema = schema;
+            panel._schemaPending = false;
+            panel._render();
+        }
+    }
+    return testController.getOverallResult();
+}
+
+const R6_TESTS = [
+    ['apworld-a-slot-pick-before-the-schema-is-refused-by-name',
+        'APWorld hub: before rules.schema.json loads the slot selector says why it offers one slot and refuses a pick by name; after, the pick lands',
+        apworldASlotPickBeforeTheSchemaIsRefusedByName],
+];
+for (const [id, name, testFunction] of R6_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE R6. ${name}. See the row's docblock in apworldEditorTests.js.`,
         testFunction,
         category: 'apworldEditor',
         enabled: false, // off by default — runs only in the test-substrates mode

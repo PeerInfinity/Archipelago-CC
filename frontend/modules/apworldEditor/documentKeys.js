@@ -670,6 +670,29 @@ export function playerSlotsOf(doc, schema) {
 }
 
 /**
+ * ⛓⛓ APWORLD SUBSTRATE CHANGE R6 — **WHAT THE SLOT SELECTOR SAYS WHILE IT
+ * CANNOT DERIVE THE SLOTS.** `playerSlotsOf` answers `[]` without a schema (the
+ * H1 row below: an answer, not a throw), and the panel then offered ONE slot —
+ * the default — under the title *"This document is about one player slot"*: a
+ * FALSE answer that REMOVED the document's other slots. A slot pick made in that
+ * window resolved to no option, `_syncPlayer` fell back to the default slot, and
+ * the next edit landed there (measured on the four-player fixture: the slot-3
+ * pick became slot 1, and the `maze` pick on slot 1's `region_1_0` — already a
+ * maze — answered *"No change"*; plan §10.1 #5). The selector now says WHY it
+ * offers one slot, and the panel refuses a pick it cannot honour in these words.
+ *
+ * @param {string|null} schemaError the fetch's failure, or null while it is pending
+ */
+export const PLAYER_SLOTS_NEED_SCHEMA = 'the player slots are read off rules.schema.json';
+
+export function playerSlotsWaitSentence(schemaError = null) {
+    return schemaError
+        ? `Only the default slot is offered: ${PLAYER_SLOTS_NEED_SCHEMA}, which failed to load (${schemaError}).`
+        : `Only the default slot is offered until the schema loads: ${PLAYER_SLOTS_NEED_SCHEMA}, which has `
+            + 'not loaded yet.';
+}
+
+/**
  * ⛓⛓ **THE DEFAULT SLOT, AND ITS ORDER IS A RULING** (plan §10.5 ⚖ 2): the
  * document's own `playerId` FIRST — it is the only top-level key that says which
  * slot the document is about, and it is a STRING (`exporter.py:2864-2866`) —

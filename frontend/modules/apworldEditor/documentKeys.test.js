@@ -36,6 +36,8 @@ import {
     documentKeyRows,
     labelForKey,
     playerSlotsOf,
+    PLAYER_SLOTS_NEED_SCHEMA,
+    playerSlotsWaitSentence,
     summarizeValue,
 } from './documentKeys.js';
 import { ITEM_GROUPS_KEY, PROGRESSION_MAPPING_KEY } from './rulesDocOps.js';
@@ -890,5 +892,20 @@ describe('the player slots, and which one is the default', () => {
         expect(defaultPlayerOf({}, null, '4')).toBe('4');
         // ⛔ The registry builder still refuses — the tolerance is scoped.
         expect(() => buildDocumentKeys(null)).toThrow();
+    });
+
+    /**
+     * ⛓⛓ R6 — **THE ONE-SLOT OFFER WITHOUT A SCHEMA IS SAID, NOT IMPLIED.** The
+     * selector's sentence names the schema as the reason, pending or failed, so
+     * "one slot" is never read as "this document has one slot".
+     */
+    it('⛓⛓ R6: the selector wait sentence names the schema, pending and failed', () => {
+        expect(playerSlotsOf(combined(), null)).toEqual([]);
+        const pending = playerSlotsWaitSentence(null);
+        const failed = playerSlotsWaitSentence('./schema/rules.schema.json: HTTP 404');
+        for (const s of [pending, failed]) expect(s).toContain(PLAYER_SLOTS_NEED_SCHEMA);
+        expect(pending).toContain('not loaded yet');
+        expect(failed).toContain('HTTP 404');
+        expect(failed).not.toBe(pending);
     });
 });

@@ -909,6 +909,12 @@
             "_comment": "R5c (e). In memory (set-key): region_atlas names an unserved id: the fetched index refuses by name; a stubbed 404 names the path."
         },
         {
+            "id": "apworld-a-slot-pick-before-the-schema-is-refused-by-name",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R6 (4). The pre-schema 'No change' cause: the selector derived no slots and a slot-3 pick fell back to slot 1 silently. Now the selector says why and refuses by name; after the schema the pick lands. Mutant: the refusal reverted."
+        },
+        {
             "id": "apworld-the-preset-sidecars-door-lands-on-the-sidecars-tab",
             "enabled": true,
             "category": "apworldEditor",

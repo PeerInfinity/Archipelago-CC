@@ -173,6 +173,7 @@ import {
   PLACEMENTS_TAB_KEY,
   SIDECARS_TAB_ID,
   SIDECARS_TAB_SUMMARY_KEY,
+  playerSlotsWaitSentence,
 } from './documentKeys.js';
 import { buildLinkRows, DOCUMENT_LINKS } from './documentLinks.js';
 /**
@@ -947,10 +948,21 @@ class ApworldEditorUI {
     this.playerSelect.value = this.playerId;
     this.playerSelect.disabled = !this.rulesDoc || shown.length <= 1;
     this.playerSelect.style.opacity = this.playerSelect.disabled ? '0.5' : '1';
-    this.playerSelect.title = slots.length > 1
-      ? `This document carries ${slots.length} player slots; every tab and every edit `
-        + 'is about the one selected here.'
-      : 'This document is about one player slot.';
+    // ⛓⛓ R6 — without the schema there are no slots to derive, and "one
+    //   player slot" would be a false answer that hides the others: the
+    //   selector says WHY it offers one, in its title and beside it.
+    const waiting = !!this.rulesDoc && !this._rulesSchema;
+    this.playerSelect.dataset.slotsWaiting = waiting ? 'true' : 'false';
+    this.playerSelect.title = waiting
+      ? playerSlotsWaitSentence(this._schemaError)
+      : (slots.length > 1
+        ? `This document carries ${slots.length} player slots; every tab and every edit `
+          + 'is about the one selected here.'
+        : 'This document is about one player slot.');
+    if (this.playerSlotsNote) {
+      this.playerSlotsNote.textContent = waiting ? playerSlotsWaitSentence(this._schemaError) : '';
+      this.playerSlotsNote.style.display = waiting ? '' : 'none';
+    }
   }
 
   /**
@@ -1109,6 +1121,22 @@ class ApworldEditorUI {
       borderRadius: '3px', fontSize: '12px', padding: '2px 4px',
     });
     this.playerSelect.addEventListener('change', (e) => {
+      /**
+       * ⛓⛓ R6 — **A PICK THE SELECTOR CANNOT HONOUR IS REFUSED BY NAME.**
+       * Before the schema loads the slots cannot be derived (`_playerSlots` →
+       * `[]`), a pick of any other slot reads as `''`, and `_syncPlayer` used to
+       * fall back to the default slot in SILENCE — the next edit then landed on
+       * the wrong slot (plan §10.1 #5, the "No change" answer). The slot stays
+       * what it was, and the answer says why.
+       */
+      const slots = this._playerSlots();
+      if (!(slots.length ? slots : [this.playerId]).includes(e.target.value)) {
+        this._opMessage = `Refused: player ${e.target.value === '' ? '(none)' : e.target.value} — `
+          + (slots.length ? `this document's slots are [${slots.join(', ')}].`
+            : playerSlotsWaitSentence(this._schemaError));
+        this._render();
+        return;
+      }
       this._chosenPlayer = e.target.value;
       /**
        * ⛓⛓ PRESET SIDECARS M1 — **A SLOT PICK DROPS THE SELECTION.** It is a
@@ -1132,6 +1160,10 @@ class ApworldEditorUI {
       this._render();
     });
     playerWrap.appendChild(this.playerSelect);
+    this.playerSlotsNote = document.createElement('span');
+    this.playerSlotsNote.className = 'apworld-player-slots-note';
+    Object.assign(this.playerSlotsNote.style, { color: '#d6a030', fontSize: '11px', display: 'none' });
+    playerWrap.appendChild(this.playerSlotsNote);
     toolbar.appendChild(playerWrap);
 
     this.statusLabel = document.createElement('span');
