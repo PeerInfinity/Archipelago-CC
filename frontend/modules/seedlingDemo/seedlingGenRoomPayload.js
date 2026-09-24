@@ -14,6 +14,15 @@
 const cloneRule = (rule) => structuredClone(rule);
 
 /**
+ * ⛓ THE REGISTRY ID OF A GENERATED ROOM, spelled here and nowhere else:
+ * `flashSeedlingGenLibrary` re-exports it as `FLASH_SEEDLING_GEN_SUBSTRATE_ID`,
+ * and the play-time half — the census below, the set assembler
+ * (`seedlingGeneratedSet.js`) — reads it without importing the registry entry
+ * (which would register a second copy of it behind a computed specifier).
+ */
+export const GEN_ROOM_SUBSTRATE_ID = 'flash_seedling_gen';
+
+/**
  * ⛓ THE KNOBS A ROOM IS BUILT WITH — `export-seedling-level-set.mjs`'s own
  * defaults (`--biome=pre-sword --count=6 --tries=8 --saturation=3`, no skeleton,
  * element, area or fill flag), so a room at the default knobs IS the CLI's room
@@ -121,4 +130,24 @@ export function deserializeGenRoom(payload) {
 export function genRoomApLocationNames(payload) {
     if (!Array.isArray(payload?.locations)) return null;
     return payload.locations.map((l) => l?.name).filter((n) => typeof n === 'string' && n !== '');
+}
+
+/**
+ * ⛓ WHICH SIDECARS OF A rules.json ARE GENERATED ROOMS, and which are REAL rooms
+ * of the same game — read from DATA, so it needs no second registry id: a
+ * sidecar of another substrate whose payload names the same `gameId` as a
+ * generated room is a real room of that game (today: `flash_seedling`). The
+ * eligibility check `generated` and the assembler both read this one census.
+ *
+ * @param {object|null} rules  the rules.json (not the event wrapper)
+ * @returns {{rooms: string[], mixed: string[], gameIds: string[]}}  region ids, in sidecar order
+ */
+export function generatedRoomCensus(rules) {
+    const sidecars = Object.entries(rules?.preset_sidecars?.['1'] ?? {});
+    const rooms = sidecars.filter(([, s]) => s?.substrate === GEN_ROOM_SUBSTRATE_ID).map(([r]) => r);
+    const gameIds = [...new Set(rooms.map((r) => rules.preset_sidecars['1'][r]?.playable_payload?.gameId)
+        .filter((g) => typeof g === 'string'))];
+    const mixed = sidecars.filter(([, s]) => s?.substrate !== GEN_ROOM_SUBSTRATE_ID
+        && gameIds.includes(s?.playable_payload?.gameId)).map(([r]) => r);
+    return { rooms, mixed, gameIds };
 }
