@@ -33,6 +33,7 @@ export const moduleInfo = {
   name: 'editor',
   title: 'Editor',
   componentType: 'editorPanel',
+  docs: 'docs/json/user/modules/editor.md',
   icon: '✏️',
   column: 2, // Middle column,
   description: 'Text Editor panel.',

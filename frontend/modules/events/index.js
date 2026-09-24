@@ -34,6 +34,7 @@ export const moduleInfo = {
   name: 'events',
   title: 'Events',
   componentType: 'eventsPanel',
+  docs: 'docs/json/user/modules/events.md',
   icon: '📡',
   column: 1, // Left column,
   description: 'Displays registered event publishers, subscribers, senders, and receivers.',

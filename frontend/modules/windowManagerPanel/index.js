@@ -7,6 +7,7 @@ export const moduleInfo = {
   name: 'windowManagerPanel',
   title: 'Window Manager',
   componentType: 'windowManagerPanel',
+  docs: 'docs/json/user/modules/windowManagerPanel.md',
   icon: '🪟',
   column: 2, // Middle column
   description: 'Window Manager display panel.',

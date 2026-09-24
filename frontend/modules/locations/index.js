@@ -18,6 +18,7 @@ export const moduleInfo = {
   name: 'locations',
   title: 'Locations',
   componentType: 'locationsPanel',
+  docs: 'docs/json/user/modules/locations.md',
   icon: '📍',
   column: 3, // Right column,
   description: 'Locations display panel.',

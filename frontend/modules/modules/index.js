@@ -36,6 +36,7 @@ export const moduleInfo = {
   name: 'modules',
   title: 'Modules',
   componentType: 'modulesPanel',
+  docs: 'docs/json/user/modules/modules.md',
   icon: '📦',
   column: 1, // Left column,
   description: 'Panel to manage modules.',

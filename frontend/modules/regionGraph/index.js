@@ -8,6 +8,7 @@ export const moduleInfo = {
   name: 'regionGraph',
   title: 'Region Graph',
   componentType: 'regionGraphPanel',
+  docs: 'docs/json/user/modules/regionGraph.md',
   icon: '🌐',
   column: 2, // Middle column,
   description: 'Interactive visualization of region connectivity graph with deterministic layout',

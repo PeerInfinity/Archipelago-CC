@@ -33,6 +33,7 @@ export const moduleInfo = {
   name: 'progressBarPanel',
   title: 'Progress Bars',
   componentType: 'progressBarPanel',
+  docs: 'docs/json/user/modules/progressBarPanel.md',
   icon: '📊',
   column: 2, // Middle column,
   description: 'Panel container for hosting progress bars.',

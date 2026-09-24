@@ -21,6 +21,7 @@ export const moduleInfo = {
   name: 'regions',
   title: 'Regions',
   componentType: 'regionsPanel',
+  docs: 'docs/json/user/modules/regions.md',
   icon: '🗺️',
   column: 3, // Right column
   description: 'Regions display panel.',

@@ -41,6 +41,7 @@ export const moduleInfo = {
   name: 'spoilerChecklist',
   title: 'Spoiler Checklist',
   componentType: 'spoilerChecklistPanel',
+  docs: 'docs/json/user/modules/spoilerChecklist.md',
   icon: '📋',
   column: 2, // Middle column
   description: 'Displays sphere log data as an interactive checklist.',

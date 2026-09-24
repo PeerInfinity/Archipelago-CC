@@ -32,6 +32,7 @@ export const moduleInfo = {
   name: 'json',
   title: 'JSON',
   componentType: 'jsonPanel',
+  docs: 'docs/json/user/modules/json.md',
   icon: '📄',
   column: 1, // Left column,
   description: 'Manages loading, combining, and saving of various application JSON data sources and modes.',

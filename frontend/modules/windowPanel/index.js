@@ -7,6 +7,7 @@ export const moduleInfo = {
   name: 'windowPanel',
   title: 'Window Panel',
   componentType: 'windowPanel',
+  docs: 'docs/json/user/modules/windowPanel.md',
   icon: '🪟',
   column: 3, // Right column
   description: 'Window Panel display panel.',

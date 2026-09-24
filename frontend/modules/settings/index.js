@@ -33,6 +33,7 @@ export const moduleInfo = {
   name: 'settings',
   title: 'Settings',
   componentType: 'settingsPanel',
+  docs: 'docs/json/user/modules/settings.md',
   icon: '⚙️',
   column: 2, // Middle column,
   description: 'Settings editor panel.',

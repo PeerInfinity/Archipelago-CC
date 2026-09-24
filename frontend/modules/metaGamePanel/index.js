@@ -5,6 +5,7 @@ export const moduleInfo = {
   name: 'metaGamePanel',
   title: 'Meta Game',
   componentType: 'metaGamePanel',
+  docs: 'docs/json/user/modules/metaGamePanel.md',
   icon: '🎯',
   column: 2, // Middle column,
   description: 'UI panel for metaGame module configuration and management',

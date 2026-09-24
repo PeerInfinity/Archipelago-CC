@@ -22,6 +22,7 @@ export const moduleInfo = {
   name: 'inventory',
   title: 'Inventory',
   componentType: 'inventoryPanel',
+  docs: 'docs/json/user/modules/inventory.md',
   icon: '🎒',
   column: 1, // Left column
   description: 'Inventory display panel.',

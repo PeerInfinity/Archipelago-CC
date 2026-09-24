@@ -18,6 +18,7 @@ export const moduleInfo = {
   name: 'spoilerTest',
   title: 'Spoiler Test',
   componentType: 'spoilerTestPanel',
+  docs: 'docs/json/user/modules/spoilerTest.md',
   icon: '🔍',
   column: 2, // Middle column,
   description: 'Provides UI for loading and running test Spoilers.',

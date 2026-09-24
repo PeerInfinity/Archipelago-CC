@@ -6,6 +6,7 @@ export const moduleInfo = {
   name: 'gameStatePanel',
   title: 'Game State',
   componentType: 'gameStatePanel',
+  docs: 'docs/json/user/modules/gameStatePanel.md',
   icon: '👤',
   column: 2, // Middle column
   description: 'Game State display panel.',

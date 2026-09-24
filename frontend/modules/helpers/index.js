@@ -15,6 +15,7 @@ export const moduleInfo = {
   name: 'helpers',
   title: 'Helpers',
   componentType: 'helpersPanel',
+  docs: 'docs/json/user/modules/helpers.md',
   icon: 'fn',
   column: 3, // Right column
   description: 'Helper functions display panel.',

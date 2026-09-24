@@ -8,6 +8,7 @@ export const moduleInfo = {
   name: 'iframeManagerPanel',
   title: 'Iframe Manager',
   componentType: 'iframeManagerPanel',
+  docs: 'docs/json/user/modules/iframeManagerPanel.md',
   icon: '🖼️',
   column: 2, // Middle column
   description: 'Iframe Manager display panel.',

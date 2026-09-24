@@ -18,6 +18,7 @@ export const moduleInfo = {
   name: 'exits',
   title: 'Exits',
   componentType: 'exitsPanel',
+  docs: 'docs/json/user/modules/exits.md',
   icon: '🚪',
   column: 3, // Right column,
   description: 'Exits display panel.',

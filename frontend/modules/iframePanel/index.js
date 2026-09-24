@@ -7,6 +7,7 @@ export const moduleInfo = {
   name: 'iframePanel',
   title: 'Iframe Panel',
   componentType: 'iframePanel',
+  docs: 'docs/json/user/modules/iframePanel.md',
   icon: '🖼️',
   column: 3, // Right column
   description: 'Iframe Panel display panel.',

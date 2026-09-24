@@ -18,6 +18,7 @@ export const moduleInfo = {
   name: 'discoveryPanel',
   title: 'Discovery',
   componentType: 'discoveryPanel',
+  docs: 'docs/json/user/modules/discoveryPanel.md',
   icon: '🔍',
   column: 2, // Middle column
   description: 'Discovery mode settings and discovered items display.',

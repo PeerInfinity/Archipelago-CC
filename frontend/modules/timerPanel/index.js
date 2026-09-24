@@ -19,6 +19,7 @@ export const moduleInfo = {
   name: 'timerPanel',
   title: 'Timer Panel',
   componentType: 'timerPanel',
+  docs: 'docs/json/user/modules/timerPanel.md',
   icon: '⏱️',
   column: 2, // Middle column,
   description: 'A dedicated panel for displaying the Timer UI.',
