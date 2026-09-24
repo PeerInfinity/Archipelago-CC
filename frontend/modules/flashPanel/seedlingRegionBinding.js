@@ -442,6 +442,15 @@ export class SeedlingRegionBinding {
         if (property === 'pendingExit') return this._resolveDeparture(parsePendingExit(value));
         if (property !== 'level') return [];
         const level = Number(value);
+        /**
+         * ⛓ G2 — A NEGATIVE LEVEL IS NOT A ROOM. `-1` is the game's own "no game"
+         * sentinel, and MEASURED (seedling generated G2, the box gate): mounting a
+         * delivered level set reports `level -1` between the arrival and the load's
+         * reset, which the arm below read as two undeclared crossings (0 → −1 → 0)
+         * and warned about twice. No room is left or entered, so it is neither a
+         * baseline nor a crossing, and `lastLevel` keeps the last real room.
+         */
+        if (!Number.isInteger(level) || level < 0) return [];
 
         if (!this.baselineSeen) {
             this.baselineSeen = true;
