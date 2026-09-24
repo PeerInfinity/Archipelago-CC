@@ -40,8 +40,10 @@
  * installed jta config in `procgen_metadata.substrate_configs.jta` — the fields
  * the APWorld hub's zone read-back cannot otherwise recover (the shuffle seed,
  * the zone gating). `--out <dir>` writes `<dir>/<gameId>/<seed id>/…` instead of
- * `frontend/presets/` (a scratch regeneration; the committed fixtures'
- * re-record is a separate, deliberate step).
+ * `frontend/presets/` (a scratch regeneration). Without `--out` it rewrites the
+ * committed fixtures in place — a re-record, a deliberate step (R6c re-recorded
+ * all five; nothing else moved, and `preset_files.json` is not touched: the
+ * "Register with:" line below is a hint, not a step this script runs).
  *
  *   node scripts/test/generate-jta-locations-test-preset.mjs            # all five
  *   node scripts/test/generate-jta-locations-test-preset.mjs --only jta_randomized_test

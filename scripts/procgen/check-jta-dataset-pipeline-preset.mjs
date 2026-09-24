@@ -143,21 +143,12 @@ async function main() {
             + '(regenerate with scripts/test/generate-jta-locations-test-preset.mjs --only jta_dataset_test)');
     } else {
         const committed = fs.readFileSync(COMMITTED, 'utf8');
-        // ⛓ R6b — a committed preset that PREDATES the recorded config (the re-record
-        //   is the user's call, apworld-substrate plan §17) must differ from the
-        //   pipeline's output by EXACTLY the `procgen_metadata` block; once it is
-        //   re-recorded the compare is byte-for-byte again. Any other difference reds.
-        const predates = !Object.hasOwn(JSON.parse(committed), 'procgen_metadata');
-        const want = predates
-            ? (() => { const r = JSON.parse(pipeRules); delete r.procgen_metadata; return JSON.stringify(r, null, 2) + '\n'; })()
-            : pipeRules;
-        if (predates) {
-            console.log(`  NOTE: the committed ${GAME_ID} preset predates the recorded config — compared without `
-                + 'the pipeline\'s procgen_metadata block (the re-record is pending)');
-        }
-        ok(want === committed,
-            `pipeline rules.json === committed ${GAME_ID} preset the in-app test solves + plays`
-                + (predates ? ' (but for the procgen_metadata block it predates)' : ''));
+        // ⛓ Byte-for-byte, `procgen_metadata` included. R6b accepted a preset that
+        //   predated the recorded config (equal but for that block) until the re-record;
+        //   R6c re-recorded the five jta fixtures and removed that branch — nothing
+        //   reached it (apworld-substrate plan §18, trap 1422).
+        ok(pipeRules === committed,
+            `pipeline rules.json === committed ${GAME_ID} preset the in-app test solves + plays`);
     }
 
     console.log(failures === 0

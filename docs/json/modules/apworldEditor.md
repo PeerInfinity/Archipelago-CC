@@ -1064,9 +1064,10 @@ recorded (the region holding `Victory` relabelled, and no zone rule left naming 
 worker, **a slot whose committed zones do not reproduce under the recorded
 config**. That last one names the region, the first difference and what the
 document does not record: `perkShuffleSeed`, `freeZones`, `startingPerks`, which
-are assumed at their defaults. `jta_randomized_test` was built with a shuffle
-seed the document does not carry, and `jta_substrate_test`'s locations were
-hand-authored, so both refuse.
+are assumed at their defaults. `jta_substrate_test`'s locations were
+hand-authored, so it refuses; a pipeline document with its record stripped
+refuses the same way when it was built off the defaults (`jta_randomized_test`'s
+shuffle seed).
 
 **The recorded config (substrate change R6b).** Since R6b the pipeline's compile
 RECORDS each content source's installed config in the document:
@@ -1079,16 +1080,20 @@ assumption, so `assumed` keeps only what the record lacks. The verification stil
 runs: a wrong record is refused, and the sentence names what the document records.
 A recorded goal zone also survives the relabel of the region holding `Victory`
 (the refusal above applies only when nothing records the goal). A document built
-under a non-default shuffle seed (`jta_randomized_test`, once regenerated) now takes
-the zone source. The committed fixtures predate the record, so they refuse exactly
-as before until they are re-recorded.
+under a non-default shuffle seed (`jta_randomized_test`) now takes the zone source.
+The five committed jta pipeline fixtures carry the record since the R6c re-record
+(user ruling 2026-09-24); the vitest rows about an UN-recorded document strip the
+block from a copy (`apworldEditor/test-helpers.js` `withoutProcgenMetadata`)
+rather than rely on the corpus lacking it.
 
 The corpus control takes `--source=zone`: every committed zone-channel region ×
 every zone of its slot, on a copy (the numbers are in the R5b record, plan §14).
 `--tree=<dir>` reads every `*_rules.json` under a directory instead: the jta
 fixture generator's `--out` regeneration takes the zone source on all five worlds
-(230 clean, 0 "config not recorded", against 122 / 108 for the committed files;
-plan §17).
+(230 clean, 0 "config not recorded", against 122 / 108 for the pre-R6c committed
+files; plan §17). Since the re-record the committed corpus reads the same
+(`--from=jta`: 260 clean; the 240 "does not record" are all `jta_substrate_test`;
+plan §18).
 
 #### The atlas-room source (substrate change R5c)
 
