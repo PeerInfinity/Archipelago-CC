@@ -66,7 +66,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingGenBuild.js"
         },
         {
-            "fields": 27,
+            "fields": 29,
             "id": "jta",
             "label": "JtA",
             "registeredBy": "frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js"
@@ -173,7 +173,9 @@ export const REGISTRY = frz({
                 "rulesJsonBlocks",
                 "spiralContentConfigKey",
                 "victoryItem",
-                "zoneCount"
+                "zoneConfigFromSlot",
+                "zoneCount",
+                "zoneOfPayload"
             ],
             "title": "Build-time — content sources (zone-based substrates)"
         },
@@ -6317,6 +6319,79 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "jta"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — content sources (zone-based substrates)",
+            "name": "zoneConfigFromSlot"
+        },
+        {
+            "carriedBy": [
                 "bounce",
                 "runner",
                 "flash_seedling",
@@ -6391,6 +6466,79 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Build-time — content sources (zone-based substrates)",
             "name": "zoneCount"
+        },
+        {
+            "carriedBy": [
+                "jta"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — content sources (zone-based substrates)",
+            "name": "zoneOfPayload"
         }
     ],
     "shortValueRule": "a cell in the markdown region is SHORT: a function is `fn`, a boolean is yes/no, an array of at most 3 short values is the list and any longer one is its count, an object is its key set or its key count. The reference page prints the full value.",
