@@ -348,6 +348,21 @@ describe('the host, the held zone, the range — the refusals and the carry', ()
         }
     });
 
+    it('a relabel that leaves the GOAL unrecorded is refused by name, never extracted with the goal dropped (trap 1415)', () => {
+        const v = byGame('jta_locations_test');
+        const victoryAt = Object.entries(v.doc.canonical_placements[v.p]).find(([, i]) => i === 'Victory')[0];
+        const holder = v.regions.map((r) => r.region)
+            .find((r) => v.doc.regions[v.p][r].locations.some((l) => l.name === victoryAt));
+        const other = v.regions.map((r) => r.region).find((r) => r !== holder);
+        const doc = clone(v.doc);
+        doc.preset_sidecars[v.p][holder].substrate = substrateRegistry.getAll().find((e) => !zoneSourceFacts(e).offers).id;
+        // ⛓ premise: the remaining region plays a free zone, so no rule names the universe
+        expect(doc.regions[v.p][other].locations.some((l) => l.access_rule?.rule === 'HasFromListUnique')).toBe(false);
+        const why = zoneSourceRefusal(doc, { player: v.p, region: other, substrate: 'jta', zoneIdx: 5 });
+        expect(why).toContain(ZONE_NOT_RECORDED);
+        expect(why).toContain('its goal zone is not recorded');
+    });
+
     it('zoneIdx outside 0..zoneCount-1, a region without an entry, a target without the channel — each by name', () => {
         const rec = installedZoneConfigFrom(d.doc, d.p, 'jta');
         const at = (extra) => zoneSourceRefusal(d.doc, { player: d.p, region: hostRegion, substrate: 'jta', ...extra });
