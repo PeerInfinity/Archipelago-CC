@@ -849,6 +849,36 @@
             "_comment": "R5a (e). A catalog whose fetch throws: the form prints the fetch-failure sentence, no Generate, nothing recorded."
         },
         {
+            "id": "apworld-the-source-row-offers-zone-n-for-a-jta-target-only",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5b (a). jta_dataset_test region_1_0: a non-zone realiser's Source row has no Zone N; jta's = the flow's sources (derived), opened on the zone, no seed row."
+        },
+        {
+            "id": "apworld-the-zone-picker-disables-the-held-zones",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5b (b). The picker = the host dataset's zones, disabled + named iff another region holds them (zoneHeldBy); own zone selected; the page's jta zoneCount unchanged."
+        },
+        {
+            "id": "apworld-a-zone-generate-lands-one-replace-region-content",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5b (c). region_1_1 relabelled frees zone 2; region_1_0 takes it: ONE replace-region-content (zone inlined), worker = pure op, Placements lists the displaced items unplaced, Undo restores."
+        },
+        {
+            "id": "apworld-a-held-zone-is-refused-by-name",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5b (d). A held zone forced into the form: the op's own refusal naming the holder, nothing recorded."
+        },
+        {
+            "id": "apworld-the-host-region-taking-another-zone-keeps-the-dataset",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5b (e). The dataset host region_0_0 takes the freed zone 2: jta_dataset carried, no REF_UNRESOLVED."
+        },
+        {
             "id": "apworld-the-preset-sidecars-door-lands-on-the-sidecars-tab",
             "enabled": true,
             "category": "apworldEditor",

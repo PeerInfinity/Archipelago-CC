@@ -140,7 +140,7 @@ import {
  * declaration, so the field a row drops is picked off the substrate's own
  * declaration rather than typed.
  */
-import { SIDECAR_ISSUE_KINDS } from '../../apworldEditor/sidecarIssues.js';
+import { SIDECAR_ISSUE_KINDS, sidecarIssues } from '../../apworldEditor/sidecarIssues.js';
 import { sidecarFieldsOf } from '../../procgenCore/sidecarFields.js';
 /**
  * ⛓⛓ APWORLD SUBSTRATE CHANGE R2 — the block's Region generation form. The
@@ -178,6 +178,14 @@ import {
 } from '../../apworldEditor/librarySourcePicker.js';
 import { REGION_SOURCE_KINDS, offersLibrarySource } from '../../apworldEditor/regionRegenerate.js';
 import { SERVED_LIBRARY_DIR, SERVED_LIBRARY_INDEX } from '../../procgenPipeline/regionLibraryLoader.js';
+/**
+ * ⛓ APWORLD SUBSTRATE CHANGE R5b — the zone source: the op the rows expect, the
+ * held-zone and own-zone readers, the refusal, the flow's sources, the unplaced readout.
+ */
+import {
+    REPLACE_REGION_CONTENT_OP, unplacedPoolItems, zoneHeldBy, zoneOfRegion, zoneSourceFacts, zoneSourceRefusal,
+} from '../../apworldEditor/regionContent.js';
+import { regionGenerationSourcesFor } from '../../apworldEditor/regionGenerationFlow.js';
 import { declaredStartingNeeds } from '../../procgenCore/startingInventory.js';
 /**
  * ⛓ D1 — the fields view's vocabulary: which control a row stamps, which level
@@ -10636,6 +10644,275 @@ for (const [id, name, testFunction] of R5A_TESTS) {
         id,
         name,
         description: `APWORLD SUBSTRATE CHANGE R5a. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R5b — THE ZONE N SOURCE (plan §12 + the ruling).
+ *
+ * On `jta_dataset_test` (3 zones, all held — the dataset's regions ARE its
+ * zones): a zone is FREED the way the hub can free one — the holder's substrate
+ * label changed (D1's pick, one op) — and a jta region then takes it through the
+ * form. Every expectation is the product's own function asked of the document
+ * the panel holds (`zoneHeldBy`, `regionGenerationSourcesFor`, the pure op).
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const JTA_DATASET_PATH = './presets/jta_dataset_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+
+/** ⛓ The first registered realiser that is not a zone substrate (the "maze one" of the brief) — derived. */
+const nonZoneRealiser = () => substrateRegistry.getAll().find((e) => regionRealiserKind(e) !== null
+    && !zoneSourceFacts(e).offers)?.id ?? null;
+
+/** ⛓ The zone picker's options as `{zone, disabled, heldBy}` — re-queried. */
+const zonePickerOptions = (region) => [...(regionGenSection(region)
+    ?.querySelectorAll('.apworld-region-generation-zone option') ?? [])]
+    .map((o) => ({ zone: Number(o.value), disabled: o.disabled, heldBy: o.dataset.heldBy ?? null }));
+
+/** ⛓ Relabel `region` to a non-zone realiser (frees its zone), then open the jta form on `onto`. */
+async function freeAZoneAndOpenJtaForm(testController, panel, holder, onto) {
+    const away = nonZoneRealiser();
+    testController.reportCondition(`⛓ premise: a non-zone realiser exists (${away})`, !!away);
+    testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+    if (!await pickSubstrateAndOpenForm(testController, panel, holder, away)) return false;
+    if (!await pickSubstrateAndOpenForm(testController, panel, onto, away)) return false;
+    return pickSubstrateAndOpenForm(testController, panel, onto, 'jta');
+}
+
+/**
+ * ⛓⛓ **(a) THE SOURCE ROW OFFERS ZONE N FOR A JTA TARGET AND NOT FOR A NON-ZONE ONE**
+ * — `jta_dataset_test` `region_1_0`: pick a non-zone realiser (derived) → its
+ * Source row has no Zone N; pick `jta` back → Generate · Zone N, opened on the
+ * zone (jta has no realiser); no seed row under the zone.
+ */
+export async function apworldTheSourceRowOffersZoneNForAJtaTargetOnly(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, JTA_DATASET_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        const away = nonZoneRealiser();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, away)) return testController.getOverallResult();
+        const sourcesOf = () => [...(regionGenSection(region)?.querySelectorAll('.apworld-region-generation-source option') ?? [])]
+            .map((o) => o.value);
+        testController.reportCondition(`⛓⛓ \`${away}\`: no Zone N in the Source row`,
+            !sourcesOf().includes(REGION_SOURCE_KINDS.ZONE));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, 'jta')) return testController.getOverallResult();
+        const want = regionGenerationSourcesFor(regionGenerationPlan(panel.rulesDoc, '1', region, 'jta')).map((s) => s.id);
+        testController.assertEqual('⛓⛓ `jta`: the Source row = the flow\'s sources for the target (derived)',
+            JSON.stringify(want), JSON.stringify(sourcesOf()));
+        testController.reportCondition('…and it includes Zone N', want.includes(REGION_SOURCE_KINDS.ZONE));
+        testController.assertEqual('⛓ the form opens on the zone (jta has no realiser)', REGION_SOURCE_KINDS.ZONE,
+            String(regionGenSection(region)?.dataset.source));
+        testController.reportCondition('⛓ no seed row under Zone N',
+            !regionGenSection(region)?.querySelector('.procgen-region-generation-form'));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('zone source row test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(b) THE PICKER DISABLES THE HELD ZONES** — `jta_dataset_test` `region_1_0`
+ * on `jta`: the options are `0..zoneCount-1` of the HOST's dataset, and a zone is
+ * disabled (labelled with its holder) exactly when another region of the slot
+ * plays it (`zoneHeldBy` on the panel's document); with all others held, the
+ * region's own zone is the one enabled and selected. The page's `zoneCount` is
+ * unchanged (the picker installs nothing).
+ */
+export async function apworldTheZonePickerDisablesTheHeldZones(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, JTA_DATASET_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        const pageCount = substrateRegistry.get('jta').zoneCount;
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, nonZoneRealiser())) return testController.getOverallResult();
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, 'jta')) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const host = Object.values(doc.preset_sidecars['1']).find((e) => e.playable_payload?.jta_dataset);
+        const n = host.playable_payload.jta_dataset.zones.length;
+        const want = Array.from({ length: n }, (_, z) => {
+            const heldBy = zoneHeldBy(doc, '1', 'jta', z, { except: region });
+            return { zone: z, disabled: !!heldBy, heldBy };
+        });
+        testController.assertEqual(`⛓⛓ the ${n} zones of the host's dataset, held ones disabled and named (derived)`,
+            JSON.stringify(want), JSON.stringify(zonePickerOptions(region)));
+        testController.reportCondition('⛓ premise: at least one zone is held', want.some((o) => o.disabled));
+        testController.assertEqual('⛓ the own zone is selected (every other is held)',
+            String(zoneOfRegion(doc, '1', region)), String(regionGenSection(region)?.querySelector('.apworld-region-generation-zone')?.value));
+        testController.assertEqual('⛓⛓ the page\'s `jta` zoneCount is unchanged (nothing installed)',
+            String(pageCount), String(substrateRegistry.get('jta').zoneCount));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('zone picker test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ Generate with the freed zone on `onto`, after `holder`'s label freed it:
+ * ONE `replace-region-content` (its zone INLINED, a provenance); the answer = the
+ * pure op's description; the worker's entry and touched slices = the pure op's;
+ * the Placements tab lists the displaced items unplaced; the page's zoneCount is
+ * unchanged; one Undo restores every key. → `{panel, op, docBefore}` or null.
+ */
+async function zoneGenerateLands(testController, holder, onto) {
+    const panel = await openHubOnDocument(testController, JTA_DATASET_PATH, '1', onto);
+    if (!panel) return null;
+    const pageCount = substrateRegistry.get('jta').zoneCount;
+    const freedZone = zoneOfRegion(panel.rulesDoc, '1', holder);
+    if (!await freeAZoneAndOpenJtaForm(testController, panel, holder, onto)) return null;
+    testController.assertEqual(`⛓ the picker selected the freed zone ${freedZone}`, String(freedZone),
+        String(regionGenSection(onto)?.querySelector('.apworld-region-generation-zone')?.value));
+    const docBefore = JSON.stringify(panel.rulesDoc);
+    const docObj = JSON.parse(docBefore);
+    const opsBefore = panel.session.ops().length;
+    const said = sidecarMessageFor(onto)?.textContent ?? null;
+    regionGenSection(onto).querySelector('.apworld-region-generate').click();
+    const answer = await answerAfter(testController, onto, said, 'the Generate answer', 60000);
+    testController.assertEqual('⛓⛓ ONE op recorded', String(opsBefore + 1), String(panel.session.ops().length));
+    const op = panel.session.ops().at(-1);
+    testController.assertEqual('…a replace-region-content', REPLACE_REGION_CONTENT_OP, String(op?.op));
+    testController.reportCondition('⛓⛓ the zone channel\'s answer is INLINED in the op', !!op?.source?.zone
+        && Array.isArray(op.source.zone.locations));
+    testController.assertEqual('…its provenance names the zone', JSON.stringify({ op: REPLACE_REGION_CONTENT_OP, zoneIdx: freedZone }),
+        JSON.stringify({ op: op?.provenance?.op, zoneIdx: op?.provenance?.zoneIdx }));
+    const run = panel._regionGenLastRun;
+    const pure = applyRulesDocOp(docObj, { ...op });
+    testController.reportCondition('the pure op on the same record applies', pure.ok);
+    testController.assertEqual('⛓⛓ the worker\'s entry is the pure op\'s, byte for byte',
+        JSON.stringify(pure.doc?.preset_sidecars?.['1']?.[onto]), JSON.stringify(run?.outcome?.entry));
+    testController.assertEqual('⛓⛓ …and its touched slices', JSON.stringify({
+        locations: pure.doc?.regions?.['1']?.[onto]?.locations, items: pure.doc?.items?.['1'],
+        itempool_counts: pure.doc?.itempool_counts?.['1'], canonical_placements: pure.doc?.canonical_placements?.['1'],
+    }), JSON.stringify(run?.outcome?.next));
+    testController.assertEqual('⛓⛓ the document is the pure op\'s', JSON.stringify(pure.doc), JSON.stringify(panel.rulesDoc));
+    testController.reportCondition('⛓⛓ the answer is the op\'s own description', String(answer).startsWith(String(pure.description)));
+    const t0 = performance.now();
+    for (let i = 0; i < 10; i += 1) applyRulesDocOp(docObj, op);
+    testController.log(`refold: replace-region-content on ${JTA_DATASET_PATH} = ${((performance.now() - t0) / 10).toFixed(2)} ms/op`);
+    const displaced = docObj.regions['1'][onto].locations.map((l) => l.name)
+        .filter((name) => name in docObj.canonical_placements['1'] && !(name in panel.rulesDoc.canonical_placements['1']));
+    testController.reportCondition(`⛓ premise: placements were displaced (${displaced.length})`, displaced.length > 0);
+    for (const name of displaced) {
+        if (!String(answer).includes(`\`${name}\``)) testController.reportCondition(`the answer names ${name}`, false);
+    }
+    testController.assertEqual('⛓⛓ the page\'s `jta` zoneCount is unchanged after Generate',
+        String(pageCount), String(substrateRegistry.get('jta').zoneCount));
+    selectTab(panel, 'placements');
+    const line = await testController.pollForValue(
+        () => document.querySelector(`${PANEL_SELECTOR} .apworld-placements-unplaced`), 'the unplaced line', 8000, 50);
+    const drawn = JSON.parse(line?.dataset.items ?? '[]');
+    const want = unplacedPoolItems(panel.rulesDoc, '1').map((u) => u.item);
+    testController.assertEqual('⛓⛓ the Placements tab lists the pool items placed nowhere', JSON.stringify(want), JSON.stringify(drawn));
+    const displacedItems = [...new Set(displaced.map((n) => docObj.canonical_placements['1'][n]))];
+    testController.reportCondition(`…which include every displaced item [${displacedItems.join(', ')}]`,
+        displacedItems.every((i) => drawn.includes(i)));
+    return { panel, op, docBefore, answer };
+}
+
+/**
+ * ⛓⛓⛓ **(c) GENERATE WITH A FREE ZONE LANDS ONE `replace-region-content`** —
+ * `region_1_1`'s label moved off jta frees zone 2; `region_1_0` takes it. Then one
+ * Undo restores every key.
+ */
+export async function apworldAZoneGenerateLandsOneReplaceRegionContent(testController) {
+    try {
+        const got = await zoneGenerateLands(testController, 'region_1_1', 'region_1_0');
+        if (!got) return testController.getOverallResult();
+        selectTab(got.panel, 'regions');
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('⛓⛓ one Undo restores every key', got.docBefore, JSON.stringify(got.panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('zone Generate test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(d) A HELD ZONE IS REFUSED BY THE OP'S OWN SENTENCE** — the picker disables
+ * it, so the row forces the form's selection onto a held zone (the op is the
+ * authority, the picker a courtesy) and presses Generate: the answer is
+ * `zoneSourceRefusal`'s sentence naming the holder, and nothing is recorded.
+ */
+export async function apworldAHeldZoneIsRefusedByName(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, JTA_DATASET_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, nonZoneRealiser())) return testController.getOverallResult();
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, 'jta')) return testController.getOverallResult();
+        const held = zonePickerOptions(region).find((o) => o.disabled);
+        testController.reportCondition(`⛓ premise: zone ${held?.zone} is held by ${held?.heldBy}`, !!held);
+        if (!held) return testController.getOverallResult();
+        panel._regionGen.zone.selected = held.zone;
+        const want = zoneSourceRefusal(panel.rulesDoc, { player: '1', region, substrate: 'jta', zoneIdx: held.zone });
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        await panel._generateRegion();
+        const answer = await answerAfter(testController, region, said, 'the refusal', 8000);
+        testController.assertEqual('⛓⛓ the answer is the op\'s own refusal', `Refused: ${want}`, String(answer));
+        testController.reportCondition(`…naming the holder (${held.heldBy})`, String(answer).includes(`"${held.heldBy}"`));
+        testController.assertEqual('…nothing recorded', String(opsBefore), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('held zone test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(e) THE HOST REGION TAKING ANOTHER ZONE KEEPS `jta_dataset`** — `region_0_0`
+ * hosts the dataset its siblings reference; it takes the freed zone 2: the new
+ * entry carries the SAME dataset, and the validity report names no
+ * `REF_UNRESOLVED` (no sibling strands).
+ */
+export async function apworldTheHostRegionTakingAnotherZoneKeepsTheDataset(testController) {
+    try {
+        const got = await zoneGenerateLands(testController, 'region_1_1', 'region_0_0');
+        if (!got) return testController.getOverallResult();
+        const before = JSON.parse(got.docBefore).preset_sidecars['1'].region_0_0.playable_payload.jta_dataset;
+        const now = got.panel.rulesDoc.preset_sidecars['1'].region_0_0.playable_payload.jta_dataset;
+        testController.reportCondition('⛓ premise: region_0_0 hosted the dataset', !!before);
+        testController.assertEqual('⛓⛓ the new entry carries the same `jta_dataset`', JSON.stringify(before), JSON.stringify(now));
+        const refs = sidecarIssues(got.panel.rulesDoc, '1').filter((i) => i.kind === SIDECAR_ISSUE_KINDS.REF_UNRESOLVED);
+        testController.assertEqual('⛓⛓ no REF_UNRESOLVED in the validity report', '0', String(refs.length));
+        testController.reportCondition('…and the answer says the field was carried', String(got.answer).includes('`jta_dataset` carried'));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('host zone test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+const R5B_TESTS = [
+    ['apworld-the-source-row-offers-zone-n-for-a-jta-target-only',
+        'APWorld hub: the Region generation form offers Zone N for a jta target and not for a non-zone one, with no seed row',
+        apworldTheSourceRowOffersZoneNForAJtaTargetOnly],
+    ['apworld-the-zone-picker-disables-the-held-zones',
+        'APWorld hub: the Zone N picker lists the dataset\'s zones, the ones another region holds disabled and named',
+        apworldTheZonePickerDisablesTheHeldZones],
+    ['apworld-a-zone-generate-lands-one-replace-region-content',
+        'APWorld hub: Generate with a freed zone lands ONE replace-region-content, the displaced items listed unplaced, Undo restores',
+        apworldAZoneGenerateLandsOneReplaceRegionContent],
+    ['apworld-a-held-zone-is-refused-by-name',
+        'APWorld hub: a zone another region holds is refused by the op\'s own sentence, nothing recorded',
+        apworldAHeldZoneIsRefusedByName],
+    ['apworld-the-host-region-taking-another-zone-keeps-the-dataset',
+        'APWorld hub: the dataset host taking another zone keeps jta_dataset, and no sibling reference strands',
+        apworldTheHostRegionTakingAnotherZoneKeepsTheDataset],
+];
+for (const [id, name, testFunction] of R5B_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE R5b. ${name}. See the row's docblock in apworldEditorTests.js.`,
         testFunction,
         category: 'apworldEditor',
         enabled: false, // off by default — runs only in the test-substrates mode
