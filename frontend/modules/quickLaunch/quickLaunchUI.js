@@ -105,6 +105,8 @@ export class QuickLaunchUI {
         /** The stored tree as last read or written (migrated). */
         this.tree = EMPTY_TREE;
         this.editing = false;
+        /** Bumped by every render; a render whose awaits finish after a newer one started draws nothing. */
+        this._renderGen = 0;
         this._unsubs = [];
         this._buildDom();
         this._scheduleRender = debounce(() => this.render(), RENDER_DEBOUNCE_MS);
@@ -180,24 +182,29 @@ export class QuickLaunchUI {
      * from it. The write publishes `settings:changed` for our own key; the
      * subscriber skips that event (its value IS `this.tree`), so an edit
      * renders once, not twice. A refused op (RangeError) changes nothing.
+     * The op runs on the setting as it is NOW, not on the last render's copy.
      */
     async _apply(op, ...args) {
+        const current = migrate(await settingsManager.getSetting(TREE_SETTING, EMPTY_TREE));
         let next;
         try {
-            next = op(this.tree, ...args);
+            next = op(current, ...args);
         } catch (err) {
             console.warn('[quickLaunch] edit refused:', err.message);
             return;
         }
-        if (next === this.tree) return;
+        if (next === current) return;
         this.tree = next;
         await settingsManager.updateModuleSetting(MODULE_ID, TREE_KEY, next);
         await this.render();
     }
 
     async render() {
+        const gen = ++this._renderGen;
         const target = await settingsManager.getSetting(DOCS_LINK_SETTING, DOCS_LINK_TARGETS.github);
-        this.tree = migrate(await settingsManager.getSetting(TREE_SETTING, EMPTY_TREE));
+        const tree = migrate(await settingsManager.getSetting(TREE_SETTING, EMPTY_TREE));
+        if (gen !== this._renderGen) return; // a newer render is under way; it draws
+        this.tree = tree;
         const catalog = this.catalog();
         this.headerEl.textContent = headerText(catalog);
         const sections = [];
