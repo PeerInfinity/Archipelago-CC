@@ -31,6 +31,10 @@ Each item has an **Edit** button that sends that item's data to the Editor panel
 - **Export to Text** — Sends the selected data to the [Editor](./editor.md) panel as JSON text, where you can inspect or edit it before applying.
 - **Import from Text** — Reads JSON from the Editor panel and applies it. Paste your JSON into the Editor first, then click this button.
 
+### When a layout is applied live
+
+Applying a Layout Config live (from a file or from the Editor) replaces the panel arrangement without closing any panel. Afterwards, a panel that has a tab in the new layout counts as open, and a panel whose tab the new layout dropped counts as closed. The [Modules](./modules.md) panel's checkboxes and the [Quick Launch](./quickLaunch.md) panel's open/closed dots follow the new layout. Opening a panel that is already in the layout brings its tab to the front; it does not add a second tab.
+
 ### Save to Browser (LocalStorage)
 
 - **Save to LocalStorage** — Saves the selected data under a mode name in your browser. This persists across sessions and is automatically reloaded the next time you open the app. Appears at the top of the panel with a green button.

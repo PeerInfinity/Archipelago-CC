@@ -4,6 +4,16 @@ import { GoldenLayout } from '../../libs/golden-layout/js/esm/golden-layout.js';
 import { centralRegistry } from './centralRegistry.js'; // Corrected import
 
 // Helper function for logging with fallback
+/** Published when a panel's tab is closed (not when a layout swap destroys it). */
+export const PANEL_MANUALLY_CLOSED_EVENT = 'ui:panelManuallyClosed';
+
+/**
+ * Published by `applyLayoutConfig` (utils/dataApplicator.js) once a live layout
+ * import has rebuilt the layout; payload `{ previousComponentTypes }`. The
+ * initializer reconciles module states on it (syncModuleStatesToLayout).
+ */
+export const LAYOUT_REPLACED_EVENT = 'layout:replaced';
+
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
     window.logger[level]('panelManager', message, ...data);
@@ -60,7 +70,33 @@ class PanelManager {
     this.panelMap = new Map(); // Map<GoldenLayoutContainer, { uiInstance: object, container: GoldenLayoutContainer, componentType: string }>
     this.panelMapById = new Map(); // Map<string, { componentType: string, panelInstance: object }>
     this.isInitialized = false; // Add initialization flag
+    this.layoutSwapDepth = 0; // > 0 while withLayoutSwap() runs
     log('info', 'PanelManager instance created');
+  }
+
+  /**
+   * Run `fn` (a synchronous `goldenLayout.loadLayout(...)`) as a LAYOUT SWAP:
+   * the items Golden Layout destroys meanwhile are still unmapped, but they do
+   * NOT publish PANEL_MANUALLY_CLOSED_EVENT — nobody closed them, and publishing
+   * disabled every module whose tab the new layout rebuilds (trap 1424). The
+   * caller reconciles module states afterwards (LAYOUT_REPLACED_EVENT).
+   * Synchronous is enough: measured, every itemDestroyed of a loadLayout has
+   * fired by the time it returns, and none after the next tick.
+   * @param {() => *} fn
+   * @returns {*} fn's result
+   */
+  withLayoutSwap(fn) {
+    this.layoutSwapDepth++;
+    try {
+      return fn();
+    } finally {
+      this.layoutSwapDepth--;
+    }
+  }
+
+  /** @returns {boolean} whether a withLayoutSwap() is running. */
+  isLayoutSwapInProgress() {
+    return this.layoutSwapDepth > 0;
   }
 
   /**
@@ -190,9 +226,13 @@ class PanelManager {
 
               // Publish ui:panelManuallyClosed centrally so the modules panel
               // checkbox stays in sync without each module needing to do it.
+              // Not during a layout swap: the layout is being replaced, not
+              // closed by anyone (see withLayoutSwap).
               const componentEntry = centralRegistry.panelComponents.get(componentType);
-              if (componentEntry && componentEntry.moduleId) {
-                eventBus.publish('ui:panelManuallyClosed', {
+              if (this.isLayoutSwapInProgress()) {
+                log('debug', `[PanelManager itemDestroyed Event] ${componentType} destroyed by a layout swap; not publishing ${PANEL_MANUALLY_CLOSED_EVENT}.`);
+              } else if (componentEntry && componentEntry.moduleId) {
+                eventBus.publish(PANEL_MANUALLY_CLOSED_EVENT, {
                   moduleId: componentEntry.moduleId,
                 }, 'panelManager');
               }
