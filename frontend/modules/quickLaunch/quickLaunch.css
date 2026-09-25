@@ -125,3 +125,17 @@ select.ql-ctl { max-width: 8em; }
     padding-left: calc(1.4em + 6px);
 }
 .ql-bar .ql-view[aria-pressed="true"] { background: #2d3f66; border-color: #5a8dee; }
+
+/* Q3 — the filter box. */
+.ql-filter {
+    flex: 1 1 8em;
+    min-width: 6em;
+    background: #16161c;
+    color: #d8d8e0;
+    border: 1px solid #34343e;
+    border-radius: 3px;
+    padding: 2px 6px;
+    font: inherit;
+}
+.ql-filter:focus { outline: none; border-color: #5a8dee; }
+.ql-no-match { color: #9a9aa8; font-style: italic; margin: 4px 0; }

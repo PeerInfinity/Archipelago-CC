@@ -15,10 +15,11 @@ import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { DOCS_LINK_TARGETS, docsHref } from '../../app/config/docsBase.js';
 import { debounce } from '../commonUI/index.js';
 import { DOCS_INDEX } from './generated/docsIndex.js';
-import { VIRTUAL_GROUPS, buildCatalog, virtualGroups } from './quickLaunchCatalog.js';
+import { buildCatalog } from './quickLaunchCatalog.js';
+import { buildViewModel, filterView, groupSize } from './quickLaunchFilter.js';
 import {
     EMPTY_TREE, NODE_KINDS, addGroup, addRef, addUrl, deleteNode, findNode, groupsOf, migrate, moveDown, moveNode,
-    moveUp, renameGroup, resolve, unfiled,
+    moveUp, renameGroup,
 } from './quickLaunchTree.js';
 import { getModuleManager } from './index.js';
 
@@ -33,6 +34,11 @@ export const TREE_SETTING = `moduleSettings.${MODULE_ID}.${TREE_KEY}`;
 export const VIEWS = Object.freeze({ tree: 'tree', cards: 'cards' });
 export const VIEW_KEY = 'view';
 export const VIEW_SETTING = `moduleSettings.${MODULE_ID}.${VIEW_KEY}`;
+/** The ids of the user's own groups the reader collapsed (virtual groups' state is not saved). */
+export const COLLAPSED_KEY = 'collapsedGroups';
+export const COLLAPSED_SETTING = `moduleSettings.${MODULE_ID}.${COLLAPSED_KEY}`;
+export const FILTER_PLACEHOLDER = 'Filter…';
+export const NO_MATCH_TEXT = 'Nothing matches the filter.';
 export const DOC_ICON = '📄';
 export const URL_ICON = '🔗';
 export const MISSING_ICON = '✕';
@@ -43,6 +49,7 @@ const REFRESH_EVENTS = ['module:stateChanged', 'app:readyForUiDataLoad', 'settin
 export const CONTROLS = Object.freeze({
     edit: 'ql-edit',
     view: 'ql-view',
+    filter: 'ql-filter',
     up: 'ql-ctl-up',
     down: 'ql-ctl-down',
     rename: 'ql-ctl-rename',
@@ -105,8 +112,16 @@ export class QuickLaunchUI {
     constructor(container, componentState) {
         this.container = container;
         this.componentState = componentState || {};
-        /** Group ids the reader collapsed — kept across re-render, not across reloads (Q3). */
+        /**
+         * Group ids the reader collapsed. The user's own groups' ids are also
+         * saved (COLLAPSED_SETTING) and reloaded every render; the virtual
+         * groups' ids live only here, for the life of the panel.
+         */
         this.collapsed = new Set();
+        /** The collapsedGroups array as last read or written. */
+        this.collapsedStored = [];
+        /** The filter box's text; never saved. */
+        this.query = '';
         /** The stored tree as last read or written (migrated). */
         this.tree = EMPTY_TREE;
         this.editing = false;
@@ -122,6 +137,7 @@ export class QuickLaunchUI {
                 // Our own tree / view write: `_apply` / `setView` has already rendered from it.
                 if (payload?.key === TREE_SETTING && payload.value === this.tree) return;
                 if (payload?.key === VIEW_SETTING && payload.value === this.view) return;
+                if (payload?.key === COLLAPSED_SETTING && payload.value === this.collapsedStored) return;
                 this._scheduleRender();
             }, MODULE_ID));
         }
@@ -164,10 +180,19 @@ export class QuickLaunchUI {
         this.viewButton.setAttribute('aria-pressed', 'false');
         this.viewButton.addEventListener('click',
             () => this.setView(this.view === VIEWS.cards ? VIEWS.tree : VIEWS.cards));
+        this.filterInput = document.createElement('input');
+        this.filterInput.type = 'search';
+        this.filterInput.className = CONTROLS.filter;
+        this.filterInput.placeholder = FILTER_PLACEHOLDER;
+        this.filterInput.title = 'Show only the items whose title, description or group matches';
+        this.filterInput.addEventListener('input', () => {
+            this.query = this.filterInput.value;
+            this._scheduleRender();
+        });
         const buttons = document.createElement('span');
         buttons.className = 'ql-bar-buttons';
         buttons.append(this.viewButton, this.editButton, modulesButton);
-        bar.append(this.headerEl, buttons);
+        bar.append(this.headerEl, this.filterInput, buttons);
         this.groupsEl = document.createElement('div');
         this.groupsEl.className = 'ql-groups';
         this.rootElement.append(bar, this.groupsEl);
@@ -227,29 +252,77 @@ export class QuickLaunchUI {
         const target = await settingsManager.getSetting(DOCS_LINK_SETTING, DOCS_LINK_TARGETS.github);
         const tree = migrate(await settingsManager.getSetting(TREE_SETTING, EMPTY_TREE));
         const view = await settingsManager.getSetting(VIEW_SETTING, VIEWS.tree);
+        const stored = await settingsManager.getSetting(COLLAPSED_SETTING, []);
         if (gen !== this._renderGen) return; // a newer render is under way; it draws
         this.tree = tree;
+        this._loadCollapsed(stored);
         this.view = view === VIEWS.cards ? VIEWS.cards : VIEWS.tree;
         this.viewButton.setAttribute('aria-pressed', String(this.view === VIEWS.cards));
         this.rootElement.classList.toggle('ql-cards', this.view === VIEWS.cards);
         const catalog = this.catalog();
         this.headerEl.textContent = headerText(catalog);
+        const model = buildViewModel(this.tree, catalog);
+        const shown = filterView(model, this.query);
+        // While filtering, every group drawn is open (it holds a match); `collapsed` is left as it is.
+        this._filtering = shown !== model;
         const sections = [];
         if (this.editing) sections.push(this._rootControls());
-        if (this.tree.nodes.length) sections.push(this._stored(resolve(this.tree, catalog), target));
-        // Unfiled: hidden when empty, and ALWAYS hidden while the tree is empty —
-        // then every entry is unfiled, and All panels / Help already show each one.
-        const loose = this.tree.nodes.length ? unfiled(this.tree, catalog) : [];
-        if (loose.length) sections.push(this._group({ ...VIRTUAL_GROUPS.unfiled, items: loose }, target));
-        sections.push(...virtualGroups(catalog).map((g) => this._group(g, target)));
+        if (shown.stored.length) sections.push(this._stored(shown.stored, target));
+        sections.push(...shown.groups.map((g) => this._group(g, target)));
+        if (this._filtering && !shown.stored.length && !shown.groups.length) {
+            const none = document.createElement('p');
+            none.className = 'ql-no-match';
+            none.textContent = NO_MATCH_TEXT;
+            sections.push(none);
+        }
         this.groupsEl.replaceChildren(...sections);
     }
 
+    /** The saved collapsed ids decide each user group's state; anything else in `collapsed` is virtual. */
+    _loadCollapsed(stored) {
+        this.collapsedStored = stored;
+        const saved = new Set(Array.isArray(stored) ? stored : []);
+        for (const { id } of groupsOf(this.tree)) {
+            if (saved.has(id)) this.collapsed.add(id);
+            else this.collapsed.delete(id);
+        }
+    }
+
+    /**
+     * Wire a group's `<details>`: its initial state, and a reader's toggle
+     * updating `collapsed` (and, for a user group, the saved setting). Setting
+     * `open` fires `toggle` too, so only a real change counts; a group drawn
+     * forced-open by the filter records nothing.
+     */
+    _collapsible(details, id, { saved = false } = {}) {
+        const forced = this._filtering;
+        details.open = forced || !this.collapsed.has(id);
+        details.addEventListener('toggle', () => {
+            if (forced || !details.isConnected) return;
+            const nowCollapsed = !details.open;
+            if (nowCollapsed === this.collapsed.has(id)) return;
+            if (nowCollapsed) this.collapsed.add(id);
+            else this.collapsed.delete(id);
+            if (saved) this._saveCollapsed();
+        });
+    }
+
+    /**
+     * Write the collapsed user-group ids — only ids the tree still holds, so an
+     * id of a deleted group is dropped here. Our own write is skipped by the
+     * settings:changed guard: the DOM already shows the new state.
+     */
+    _saveCollapsed() {
+        const ids = groupsOf(this.tree).map((g) => g.id).filter((id) => this.collapsed.has(id));
+        this.collapsedStored = ids;
+        return settingsManager.updateModuleSetting(MODULE_ID, COLLAPSED_KEY, ids);
+    }
+
     /** The user's tree: one list in stored order, a group as a nested `<details>`. */
-    _stored(tree, target) {
+    _stored(nodes, target) {
         const list = document.createElement('ul');
         list.className = 'ql-list ql-root';
-        list.append(...tree.nodes.map((n) => this._node(n, target)));
+        list.append(...nodes.map((n) => this._node(n, target)));
         return list;
     }
 
@@ -387,11 +460,7 @@ export class QuickLaunchUI {
         const details = document.createElement('details');
         details.className = 'ql-group ql-user';
         details.dataset.groupId = node.id;
-        details.open = !this.collapsed.has(node.id);
-        details.addEventListener('toggle', () => {
-            if (details.open) this.collapsed.delete(node.id);
-            else this.collapsed.add(node.id);
-        });
+        this._collapsible(details, node.id, { saved: true });
         const summary = document.createElement('summary');
         summary.textContent = `${node.label} (${node.children.length})`;
         details.append(summary);
@@ -445,15 +514,10 @@ export class QuickLaunchUI {
         const details = document.createElement('details');
         details.className = 'ql-group';
         details.dataset.groupId = group.id;
-        details.open = !this.collapsed.has(group.id);
-        details.addEventListener('toggle', () => {
-            if (details.open) this.collapsed.delete(group.id);
-            else this.collapsed.add(group.id);
-        });
+        this._collapsible(details, group.id);
         const summary = document.createElement('summary');
+        summary.textContent = `${group.label} (${groupSize(group)})`;
         if (group.groups) {
-            const count = group.groups.reduce((n, g) => n + g.items.length, 0);
-            summary.textContent = `${group.label} (${count})`;
             const inner = document.createElement('div');
             inner.className = 'ql-subgroups';
             inner.append(...group.groups.map((g) => this._group(g, target)));
@@ -461,14 +525,9 @@ export class QuickLaunchUI {
             details.append(summary, inner);
             return details;
         }
-        summary.textContent = `${group.label} (${group.items.length})`;
         const list = document.createElement('ul');
         list.className = 'ql-list';
-        const asEntry = {
-            [VIRTUAL_GROUPS.help.id]: (d) => ({ kind: NODE_KINDS.doc, item: d }),
-            [VIRTUAL_GROUPS.unfiled.id]: (entry) => entry,
-        }[group.id] ?? ((p) => ({ kind: NODE_KINDS.panel, item: p })); // an All panels category
-        list.append(...group.items.map(asEntry).map(({ kind, item }) => {
+        list.append(...group.entries.map(({ kind, item }) => {
             const doc = kind === NODE_KINDS.doc;
             const li = doc ? this._docRow(item, target) : this._panelRow(item, target);
             if (this.editing) li.append(this._addTo(kind, doc ? item.path : item.componentType));

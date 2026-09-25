@@ -59,6 +59,14 @@ export function register(registrationApi) {
             description: "'tree' draws each item as one compact row; 'cards' adds each item's description "
                 + "(or its guide's first paragraph). The panel's Cards button switches it. Saved per mode.",
         },
+        collapsedGroups: {
+            type: 'array',
+            default: [],
+            label: 'Collapsed groups',
+            description: 'The ids of your own groups that are folded shut (written when you fold or unfold one). '
+                + "Ids no longer in the arrangement are ignored and dropped on the next write. Saved per mode; "
+                + "the built-in groups' folding is not saved.",
+        },
         tree: {
             type: 'object',
             default: EMPTY_TREE,
