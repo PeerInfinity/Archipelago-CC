@@ -3,7 +3,7 @@
  * generate-docs-index — writes `frontend/modules/quickLaunch/generated/docsIndex.js`,
  * the list of user guides the Quick Launch panel links to (its Help group).
  *
- * One row per `docs/json/user/**\/*.md`: `{ path, title, section }` where
+ * One row per `docs/json/user/**\/*.md` (minus EXCLUDED_BASENAMES): `{ path, title, section }` where
  * `path` is repo-relative, `title` is the file's first `# ` line (the file name
  * when it has none) and `section` is the directory under `docs/json/` it sits in
  * (`user` or `user/modules`). Rows are sorted by path.
@@ -29,6 +29,13 @@ export const DOCS_ROOT = 'docs/json';
 export const USER_DOCS_DIR = `${DOCS_ROOT}/user`;
 export const OUTPUT = 'frontend/modules/quickLaunch/generated/docsIndex.js';
 
+/**
+ * File names the walk skips wherever they sit. `TODO.md` under
+ * docs/json/user/modules/ is a working list for developers, not a guide; the
+ * Help group listed it as "User Guide TODO" until quick-launch Q2.
+ */
+export const EXCLUDED_BASENAMES = Object.freeze(['TODO.md']);
+
 const toPosix = (p) => p.split(sep).join('/');
 
 function walk(dir) {
@@ -36,7 +43,7 @@ function walk(dir) {
     for (const ent of readdirSync(dir, { withFileTypes: true })) {
         const full = join(dir, ent.name);
         if (ent.isDirectory()) out.push(...walk(full));
-        else if (ent.isFile() && ent.name.endsWith('.md')) out.push(full);
+        else if (ent.isFile() && ent.name.endsWith('.md') && !EXCLUDED_BASENAMES.includes(ent.name)) out.push(full);
     }
     return out;
 }

@@ -19,6 +19,31 @@ A **?** after a button links to that panel's user guide, when it has one.
 
 Links to the user guides: the general guides first, then one per panel. Every link opens in a new browser tab.
 
+## Your own groups
+
+Above the built-in groups you can keep your own arrangement: groups (nested as deep as you like), panel buttons, guide links and web links. Press **Edit** in the header to change it; press it again to finish.
+
+In edit mode:
+
+- **+ group** and **+ url** (at the top, and on every group) add a group or a web link there. The panel asks for the name, or for the link's address and label.
+- **add to ▾** on every row of *Unfiled*, *All panels* and *Help* files that panel or guide into one of your groups (or the top level). The row stays where it is: the built-in groups never change.
+- On your own items: **▲ ▼** move an item within its group, **move to ▾** puts it in another group, **✎** renames a group, **✕** removes an item. Removing a group removes everything in it, and the panel asks first unless the group is empty.
+
+Your groups hold *references*, so the same panel can appear in several of them, and every copy opens the same tab. If something you filed no longer exists (a guide was removed, or the panel belongs to a module this mode does not load), it stays in your group, greyed out with its name, until you remove it.
+
+## Unfiled
+
+Once you have your own groups, *Unfiled* lists every panel and guide that none of them contains, so a panel added to the app later still shows up. It is hidden when there is nothing left to file, and while you have no groups at all (then *All panels* and *Help* already show everything).
+
+## Where the arrangement is saved
+
+The arrangement is a setting, **Arrangement** (`moduleSettings.quickLaunch.tree`), saved with the rest of your settings for the current mode. So each mode has its own arrangement, and a fresh mode starts with none.
+
+- The Options panel's *All Settings* view shows it as JSON (filter for `quickLaunch`); you can edit it there. Each item is `{id, kind, ...}` with `kind` one of `group` (`label`, `children`), `panel` (`ref`: the panel's component type), `doc` (`ref`: the guide's path) or `url` (`href`, `label`).
+- The JSON panel's settings export and import carry it too.
+- **Reset to Defaults** in the Options panel empties it.
+- ⚠ Saved settings are only reloaded when the page address names the mode (for example `?mode=default`) or when **Auto-load Mode** is on in the Options panel. Without either, the page starts from the default settings: your groups are not shown, and the next setting you change is saved over them.
+
 ## Reopening a closed panel
 
 Closing a tab with its **×** disables its module. To get it back, click its button in **All panels** (or tick it in the Modules panel). If you closed the Quick Launch panel itself, reopen it from the Modules panel.
@@ -32,5 +57,4 @@ Closing a tab with its **×** disables its module. To get it back, click its but
 
 ## Coming later
 
-- **Your own groups** — arrange buttons and links into your own nested groups, with an edit mode; panels you have not placed stay listed in an *Unfiled* group.
 - **A cards view** — the same groups with each panel's description shown, plus a filter box and category grouping.

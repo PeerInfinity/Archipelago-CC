@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
-    OUTPUT, REPO, buildDocsIndex, renderDocsIndexModule,
+    EXCLUDED_BASENAMES, OUTPUT, REPO, buildDocsIndex, renderDocsIndexModule,
 } from '../../../scripts/quicklaunch/generate-docs-index.mjs';
 import { DOCS_INDEX } from './generated/docsIndex.js';
 
@@ -18,6 +18,10 @@ describe('quickLaunch generated/docsIndex.js', () => {
 
     it('the imported table deep-equals a fresh walk', () => {
         expect(DOCS_INDEX).toEqual(buildDocsIndex());
+    });
+
+    it('lists no excluded file name (TODO.md is not a guide)', () => {
+        expect(DOCS_INDEX.filter((d) => EXCLUDED_BASENAMES.includes(d.path.split('/').pop()))).toEqual([]);
     });
 
     it('every row has a path under docs/json/user, a title and a section', () => {

@@ -16,11 +16,6 @@ export const DOCS_INDEX = Object.freeze([
         "section": "user"
     },
     {
-        "path": "docs/json/user/modules/TODO.md",
-        "title": "User Guide TODO",
-        "section": "user/modules"
-    },
-    {
         "path": "docs/json/user/modules/discoveryPanel.md",
         "title": "Discovery Panel",
         "section": "user/modules"
