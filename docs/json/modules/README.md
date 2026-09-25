@@ -7,6 +7,8 @@ This directory is an index for module documentation. Each module has two levels 
 
 Each entry below links to the available documentation for that module; modules without a dedicated page here carry a one-line description inline (the procedural-generation modules are documented in depth under [`../developer/procgen/`](../developer/procgen/README.md) instead). See the [user guide TODO list](../user/modules/TODO.md) for the status of user-facing documentation.
 
+The `## ` module sections below double as the module categories: each panel module declares one of their names, verbatim, as `moduleInfo.category`, and the Quick Launch panel groups *All panels* by them in this order (`CATEGORY_ORDER`, generated from these headings by `scripts/quicklaunch/generate-docs-index.mjs` and pinned by the vitest — rerun the generator after renaming, adding or reordering a section).
+
 Modules marked *(disabled)* are present in the codebase but not enabled in the default module configuration (`frontend/module-configs/modules.json`); which modules are live depends on the launch mode (`frontend/modes.json`).
 
 ---
