@@ -257,40 +257,12 @@
       "category": "Settings Panel"
     },
     {
-      "id": "quick-launch-lists-every-registered-panel",
-      "enabled": true,
-      "order": 28,
-      "category": "Quick Launch",
-      "_comment": "Quick Launch Q1 (2026-09-24): expectations are read off centralRegistry / module states / DOCS_INDEX at run time. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it). Ordered BEFORE the JSON Panel rows: test_json_panel_layout_import_export reloads the Golden Layout, every itemDestroyed publishes ui:panelManuallyClosed, and every module then reads enabled:false with its tab still open (measured) — a later click adds a duplicate tab."
-    },
-    {
-      "id": "quick-launch-button-activates-open-panel",
-      "enabled": true,
-      "order": 29,
-      "category": "Quick Launch",
-      "_comment": "Quick Launch Q1 (2026-09-24): expectations are read off centralRegistry / module states / DOCS_INDEX at run time. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it). Ordered BEFORE the JSON Panel rows: test_json_panel_layout_import_export reloads the Golden Layout, every itemDestroyed publishes ui:panelManuallyClosed, and every module then reads enabled:false with its tab still open (measured) — a later click adds a duplicate tab."
-    },
-    {
-      "id": "quick-launch-button-reopens-closed-panel",
-      "enabled": true,
-      "order": 30,
-      "category": "Quick Launch",
-      "_comment": "Quick Launch Q1 (2026-09-24): expectations are read off centralRegistry / module states / DOCS_INDEX at run time. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it). Ordered BEFORE the JSON Panel rows: test_json_panel_layout_import_export reloads the Golden Layout, every itemDestroyed publishes ui:panelManuallyClosed, and every module then reads enabled:false with its tab still open (measured) — a later click adds a duplicate tab."
-    },
-    {
-      "id": "quick-launch-doc-links-resolve-to-index",
-      "enabled": true,
-      "order": 31,
-      "category": "Quick Launch",
-      "_comment": "Quick Launch Q1 (2026-09-24): expectations are read off centralRegistry / module states / DOCS_INDEX at run time. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it). Ordered BEFORE the JSON Panel rows: test_json_panel_layout_import_export reloads the Golden Layout, every itemDestroyed publishes ui:panelManuallyClosed, and every module then reads enabled:false with its tab still open (measured) — a later click adds a duplicate tab."
-    },
-    {
       "id": "test_json_panel_import_from_text",
       "name": "JSON Panel - Import from Text",
       "description": "Tests the Import from Text functionality of the JSON panel by exporting settings, modifying them, and importing them back",
       "functionName": "testJSONPanelImportFromText",
       "enabled": true,
-      "order": 32,
+      "order": 28,
       "category": "JSON Panel"
     },
     {
@@ -299,7 +271,7 @@
       "description": "Tests the layout import/export functionality of the JSON panel",
       "functionName": "testJSONPanelLayoutImportExport",
       "enabled": true,
-      "order": 33,
+      "order": 29,
       "category": "JSON Panel"
     },
     {
@@ -308,8 +280,36 @@
       "description": "Tests the game state import/export functionality covering inventory and checked locations",
       "functionName": "testJSONPanelGameStateImportExport",
       "enabled": true,
-      "order": 34,
+      "order": 30,
       "category": "JSON Panel"
+    },
+    {
+      "id": "quick-launch-lists-every-registered-panel",
+      "enabled": true,
+      "order": 31,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch Q1 (2026-09-24): expectations are read off centralRegistry / module states / DOCS_INDEX at run time. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
+      "id": "quick-launch-button-activates-open-panel",
+      "enabled": true,
+      "order": 32,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch Q1 (2026-09-24): expectations are read off centralRegistry / module states / DOCS_INDEX at run time. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
+      "id": "quick-launch-button-reopens-closed-panel",
+      "enabled": true,
+      "order": 33,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch Q1 (2026-09-24): expectations are read off centralRegistry / module states / DOCS_INDEX at run time. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
+      "id": "quick-launch-doc-links-resolve-to-index",
+      "enabled": true,
+      "order": 34,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch Q1 (2026-09-24): expectations are read off centralRegistry / module states / DOCS_INDEX at run time. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
     },
     {
       "id": "layout-import-keeps-module-state-in-sync",
