@@ -11,6 +11,11 @@
  * ⛓ Each row leaves the layout as it found it: the activation row restores the
  * stack's previously active tab; the reopen row ends with Events open again.
  *
+ * ⛓ The Q2 rows (the stored tree, edit mode, Unfiled) each END by writing
+ * the tree setting back to EMPTY_TREE and leaving edit mode, in `finally` —
+ * so no row owes its state to the row before it, and the Q1 rows (which
+ * count buttons on an empty tree) are unaffected by where these run.
+ *
  * Handles (quick-launch Q1 W0 (e)): a panel is closed the way its × does with
  * `window.panelManager.destroyPanelByComponentType(type)` (it fires Golden
  * Layout's itemDestroyed → `ui:panelManuallyClosed` → the module is disabled);
@@ -20,7 +25,13 @@
 
 import { registerTest } from '../testRegistry.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
+import settingsManager from '../../../app/core/settingsManager.js';
 import { DOCS_INDEX } from '../../quickLaunch/generated/docsIndex.js';
+import { VIRTUAL_GROUPS } from '../../quickLaunch/quickLaunchCatalog.js';
+import { EMPTY_TREE, NODE_KINDS } from '../../quickLaunch/quickLaunchTree.js';
+import {
+    CONTROLS, MODULE_ID, ROOT_CHOICE, TREE_KEY, TREE_SETTING, dialogs,
+} from '../../quickLaunch/quickLaunchUI.js';
 
 const CATEGORY = 'Quick Launch';
 const MOUNT_TIMEOUT_MS = 10000;
@@ -163,6 +174,199 @@ async function quickLaunchDocLinksResolveToIndex(testController) {
     return testController.getOverallResult();
 }
 
+// ── Q2: the stored tree ───────────────────────────────────────────────────
+
+const clone = (v) => JSON.parse(JSON.stringify(v));
+const writeTree = (tree) => settingsManager.updateModuleSetting(MODULE_ID, TREE_KEY, clone(tree));
+const readTree = () => settingsManager.getSetting(TREE_SETTING, EMPTY_TREE);
+const withoutIds = (nodes) => nodes.map(({ id, children, ...rest }) => (
+    children ? { ...rest, children: withoutIds(children) } : rest));
+const topGroupIds = (root) => [...root.querySelectorAll(':scope > .ql-groups > details')].map((d) => d.dataset.groupId);
+const userGroup = (root, label) => [...root.querySelectorAll('.ql-user')]
+    .find((d) => d.querySelector(':scope > summary')?.textContent.startsWith(`${label} (`)) ?? null;
+const virtualRow = (root, groupId, predicate) => [...root.querySelectorAll(`details[data-group-id="${groupId}"] > .ql-list > li`)]
+    .find(predicate) ?? null;
+
+/** Choose `value` in a "move to" / "add to" select, as a person would. */
+function pick(select, value) {
+    select.value = value;
+    select.dispatchEvent(new Event('change'));
+}
+
+/** Put everything a Q2 row may have changed back: edit mode off, the tree empty, the real dialogs. */
+async function restoreQ2(testController, root, savedDialogs) {
+    Object.assign(dialogs, savedDialogs);
+    const edit = root?.querySelector(`.${CONTROLS.edit}`);
+    if (edit?.getAttribute('aria-pressed') === 'true') edit.click();
+    await writeTree(EMPTY_TREE);
+    await testController.pollForCondition(
+        () => !document.querySelector('.quick-launch-panel .ql-root, .quick-launch-panel .ql-ctl'),
+        'Quick Launch to render the empty tree again',
+        ACTION_TIMEOUT_MS,
+        POLL_MS,
+    );
+}
+
+async function quickLaunchEmptyTreeRendersAsQ1(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const saved = { ...dialogs };
+    try {
+        await writeTree(EMPTY_TREE);
+        const settled = await testController.pollForCondition(
+            () => !root.querySelector('.ql-root'),
+            'no stored section with an empty tree',
+            ACTION_TIMEOUT_MS,
+            POLL_MS,
+        );
+        testController.reportCondition('an empty tree draws no stored section (.ql-root)', settled);
+        testController.assertEqual('the sections are exactly the two Q1 virtual groups',
+            [VIRTUAL_GROUPS.allPanels.id, VIRTUAL_GROUPS.help.id].join(','), topGroupIds(root).join(','));
+        testController.reportCondition('no Unfiled group while the tree is empty',
+            !root.querySelector(`details[data-group-id="${VIRTUAL_GROUPS.unfiled.id}"]`));
+        testController.assertEqual('header counts the registry and the docs index',
+            `${centralRegistry.getAllPanelComponents().size} panels · ${DOCS_INDEX.length} guides`,
+            root.querySelector('.ql-header')?.textContent ?? '');
+        testController.assertEqual('no edit controls outside edit mode', 0, root.querySelectorAll('.ql-ctl').length);
+        testController.assertEqual('the Edit button is not pressed', 'false',
+            root.querySelector(`.${CONTROLS.edit}`)?.getAttribute('aria-pressed'));
+    } finally {
+        await restoreQ2(testController, root, saved);
+    }
+    return testController.getOverallResult();
+}
+
+async function quickLaunchEditOpsPersist(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const saved = { ...dialogs };
+    const answers = [];
+    dialogs.prompt = () => answers.shift() ?? null;
+    dialogs.confirm = () => true;
+    const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
+    const docPath = DOCS_INDEX[0]?.path;
+    const docRow = () => virtualRow(root, VIRTUAL_GROUPS.help.id, (li) => li.querySelector('a')?.title === docPath);
+    const invRow = () => virtualRow(root, VIRTUAL_GROUPS.allPanels.id,
+        (li) => li.querySelector('.ql-panel')?.dataset.componentType === OPEN_TARGET);
+    try {
+        await writeTree(EMPTY_TREE);
+        root.querySelector(`.${CONTROLS.edit}`)?.click();
+        testController.reportCondition('Edit shows the top-level controls',
+            await until(() => root.querySelector(`.ql-root-ctl .${CONTROLS.addGroup}`), 'the root "+ group" button'));
+
+        answers.push('Mine');
+        root.querySelector(`.ql-root-ctl .${CONTROLS.addGroup}`).click();
+        testController.reportCondition('"+ group" adds the group', await until(() => userGroup(root, 'Mine'), 'group "Mine"'));
+        const mine = userGroup(root, 'Mine').dataset.groupId;
+
+        pick(invRow().querySelector(`.${CONTROLS.addTo}`), mine);
+        await until(() => userGroup(root, 'Mine')?.querySelectorAll('.ql-node').length === 1, 'Inventory filed in Mine');
+        pick(docRow().querySelector(`.${CONTROLS.addTo}`), mine);
+        await until(() => userGroup(root, 'Mine')?.querySelectorAll('.ql-node').length === 2, 'the guide filed in Mine');
+        pick(invRow().querySelector(`.${CONTROLS.addTo}`), ROOT_CHOICE);
+        await until(() => root.querySelectorAll('.ql-root > .ql-node[data-kind="panel"]').length === 1,
+            'a second Inventory at the top level');
+
+        userGroup(root, 'Mine').querySelector(`.ql-node[data-kind="doc"] .${CONTROLS.up}`).click();
+        await until(() => userGroup(root, 'Mine')?.querySelector('.ql-node')?.dataset.kind === 'doc', 'the guide moved up');
+
+        answers.push('Mine 2');
+        userGroup(root, 'Mine').querySelector(`:scope > .ql-ctl-row .${CONTROLS.rename}`).click();
+        testController.reportCondition('✎ renames the group', await until(() => userGroup(root, 'Mine 2'), 'group "Mine 2"'));
+
+        answers.push('Scratch');
+        root.querySelector(`.ql-root-ctl .${CONTROLS.addGroup}`).click();
+        await until(() => userGroup(root, 'Scratch'), 'group "Scratch"');
+        dialogs.confirm = () => false; // an EMPTY group must not ask
+        userGroup(root, 'Scratch').querySelector(`:scope > .ql-ctl-row .${CONTROLS.remove}`).click();
+        testController.reportCondition('✕ deletes an empty group without asking',
+            await until(() => !userGroup(root, 'Scratch'), 'group "Scratch" gone'));
+
+        const stored = await readTree();
+        testController.assertEqual('the stored tree, minus ids', JSON.stringify([
+            { kind: NODE_KINDS.group, label: 'Mine 2', children: [
+                { kind: NODE_KINDS.doc, ref: docPath }, { kind: NODE_KINDS.panel, ref: OPEN_TARGET }] },
+            { kind: NODE_KINDS.panel, ref: OPEN_TARGET },
+        ]), JSON.stringify(withoutIds(stored?.nodes ?? [])));
+
+        // Leaving edit mode renders again, from the setting.
+        root.querySelector(`.${CONTROLS.edit}`).click();
+        const shown = await until(() => !root.querySelector('.ql-ctl')
+            && userGroup(root, 'Mine 2')?.querySelector(':scope > summary').textContent === 'Mine 2 (2)',
+        'the read view to show "Mine 2 (2)"');
+        testController.reportCondition('a fresh render shows the group and its two items', shown);
+        testController.assertEqual('top-level order: the stored list, then Unfiled, All panels, Help',
+            [VIRTUAL_GROUPS.unfiled.id, VIRTUAL_GROUPS.allPanels.id, VIRTUAL_GROUPS.help.id].join(','),
+            topGroupIds(root).join(','));
+        testController.reportCondition('the stored list comes first', root.querySelector('.ql-groups')?.firstElementChild?.classList.contains('ql-root'));
+    } finally {
+        await restoreQ2(testController, root, saved);
+    }
+    return testController.getOverallResult();
+}
+
+async function quickLaunchUnfiledShowsUnreferenced(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const saved = { ...dialogs };
+    try {
+        await writeTree({ version: 1, nodes: [{ id: 'filed-1', kind: NODE_KINDS.panel, ref: OPEN_TARGET }] });
+        const sel = `details[data-group-id="${VIRTUAL_GROUPS.unfiled.id}"]`;
+        const shown = await testController.pollForCondition(() => root.querySelector(sel),
+            'the Unfiled group to appear', ACTION_TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('filing one panel shows Unfiled', !!shown);
+        const unfiledEl = root.querySelector(sel);
+        const expected = centralRegistry.getAllPanelComponents().size - 1 + DOCS_INDEX.length;
+        testController.assertEqual('Unfiled rows = registry panels - 1 + indexed guides', expected,
+            unfiledEl?.querySelectorAll(':scope > .ql-list > li').length);
+        testController.reportCondition('the filed panel is not in Unfiled',
+            !unfiledEl?.querySelector(`.ql-panel[data-component-type="${OPEN_TARGET}"]`));
+        testController.assertEqual('Unfiled comes right after the stored list', VIRTUAL_GROUPS.unfiled.id,
+            topGroupIds(root)[0]);
+    } finally {
+        await restoreQ2(testController, root, saved);
+    }
+    return testController.getOverallResult();
+}
+
+async function quickLaunchDuplicateRefsBothActivate(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const saved = { ...dialogs };
+    const item = tabItem(OPEN_TARGET);
+    testController.reportCondition(`${OPEN_TARGET} has a tab`, item !== null);
+    if (!item) return testController.getOverallResult();
+    const stack = item.parent;
+    const before = stack.getActiveComponentItem();
+    const sibling = stack.contentItems.find((c) => c !== item);
+    testController.reportCondition(`${OPEN_TARGET}'s stack has another tab`, !!sibling);
+    try {
+        await writeTree({ version: 1, nodes: [
+            { id: 'dup-a', kind: NODE_KINDS.panel, ref: OPEN_TARGET },
+            { id: 'dup-g', kind: NODE_KINDS.group, label: 'Dup', children: [
+                { id: 'dup-b', kind: NODE_KINDS.panel, ref: OPEN_TARGET }] },
+        ] });
+        const both = await testController.pollForCondition(
+            () => root.querySelectorAll('.ql-root .ql-node[data-kind="panel"] .ql-panel').length === 2,
+            'two stored Inventory rows', ACTION_TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('both references render', both);
+        for (const nodeId of ['dup-a', 'dup-b']) {
+            if (sibling) stack.setActiveComponentItem(sibling);
+            testController.reportCondition(`${OPEN_TARGET} is in the background before clicking ${nodeId}`,
+                !isActiveTab(tabItem(OPEN_TARGET)));
+            root.querySelector(`.ql-node[data-node-id="${nodeId}"] .ql-panel`)?.click();
+            const active = await testController.pollForCondition(
+                () => isActiveTab(tabItem(OPEN_TARGET)),
+                `${OPEN_TARGET} to become active after clicking ${nodeId}`, ACTION_TIMEOUT_MS, POLL_MS);
+            testController.reportCondition(`clicking ${nodeId} brings ${OPEN_TARGET} forward`, active);
+        }
+    } finally {
+        if (before && before.parent === stack) stack.setActiveComponentItem(before);
+        await restoreQ2(testController, root, saved);
+    }
+    return testController.getOverallResult();
+}
+
 const TESTS = [
     ['quick-launch-lists-every-registered-panel', 'Quick Launch: a button per registered panel',
         'Asserts the Quick Launch panel draws one button per componentType centralRegistry.getAllPanelComponents() '
@@ -180,6 +384,21 @@ const TESTS = [
         'Every .ql-doc and .ql-help link\'s href ends with a DOCS_INDEX path and has target="_blank"; Help holds '
         + 'one link per indexed guide.',
         quickLaunchDocLinksResolveToIndex],
+    ['quick-launch-empty-tree-renders-as-q1', 'Quick Launch: an empty tree draws what Q1 drew',
+        'With the tree setting at EMPTY_TREE: no stored section, no Unfiled group, exactly All panels + Help, the '
+        + 'Q1 header, no edit controls.',
+        quickLaunchEmptyTreeRendersAsQ1],
+    ['quick-launch-edit-ops-persist', 'Quick Launch: edit-mode buttons write the tree',
+        'Drives the edit-mode controls by clicking (add group, add to ▾ ×3, ▲, ✎, add + delete an empty group), '
+        + 'reads the setting back and compares its shape minus ids, then leaves edit mode and checks the render.',
+        quickLaunchEditOpsPersist],
+    ['quick-launch-unfiled-shows-unreferenced', 'Quick Launch: Unfiled lists what the tree does not reference',
+        'Files one panel; Unfiled then holds every other registered panel and every indexed guide (the count is '
+        + 'read off the registry and DOCS_INDEX).',
+        quickLaunchUnfiledShowsUnreferenced],
+    ['quick-launch-duplicate-refs-both-activate', 'Quick Launch: two references to one panel both activate it',
+        'Stores Inventory twice (top level and in a group); clicking each brings Inventory forward.',
+        quickLaunchDuplicateRefsBothActivate],
 ];
 
 for (const [id, name, description, testFunction] of TESTS) {

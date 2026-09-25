@@ -285,12 +285,40 @@
       "_comment": "Quick Launch Q1 (2026-09-24): expectations are read off centralRegistry / module states / DOCS_INDEX at run time. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it). Ordered BEFORE the JSON Panel rows: test_json_panel_layout_import_export reloads the Golden Layout, every itemDestroyed publishes ui:panelManuallyClosed, and every module then reads enabled:false with its tab still open (measured) — a later click adds a duplicate tab."
     },
     {
+      "id": "quick-launch-empty-tree-renders-as-q1",
+      "enabled": true,
+      "order": 32,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch Q2 (2026-09-24): the stored tree / edit mode / Unfiled. Each row writes the tree back to EMPTY_TREE and leaves edit mode in finally, so it depends on no neighbour's state. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
+      "id": "quick-launch-edit-ops-persist",
+      "enabled": true,
+      "order": 33,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch Q2 (2026-09-24): the stored tree / edit mode / Unfiled. Each row writes the tree back to EMPTY_TREE and leaves edit mode in finally, so it depends on no neighbour's state. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
+      "id": "quick-launch-unfiled-shows-unreferenced",
+      "enabled": true,
+      "order": 34,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch Q2 (2026-09-24): the stored tree / edit mode / Unfiled. Each row writes the tree back to EMPTY_TREE and leaves edit mode in finally, so it depends on no neighbour's state. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
+      "id": "quick-launch-duplicate-refs-both-activate",
+      "enabled": true,
+      "order": 35,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch Q2 (2026-09-24): the stored tree / edit mode / Unfiled. Each row writes the tree back to EMPTY_TREE and leaves edit mode in finally, so it depends on no neighbour's state. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
       "id": "test_json_panel_import_from_text",
       "name": "JSON Panel - Import from Text",
       "description": "Tests the Import from Text functionality of the JSON panel by exporting settings, modifying them, and importing them back",
       "functionName": "testJSONPanelImportFromText",
       "enabled": true,
-      "order": 32,
+      "order": 36,
       "category": "JSON Panel"
     },
     {
@@ -299,7 +327,7 @@
       "description": "Tests the layout import/export functionality of the JSON panel",
       "functionName": "testJSONPanelLayoutImportExport",
       "enabled": true,
-      "order": 33,
+      "order": 37,
       "category": "JSON Panel"
     },
     {
@@ -308,7 +336,7 @@
       "description": "Tests the game state import/export functionality covering inventory and checked locations",
       "functionName": "testJSONPanelGameStateImportExport",
       "enabled": true,
-      "order": 34,
+      "order": 38,
       "category": "JSON Panel"
     }
   ]
