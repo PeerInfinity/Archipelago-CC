@@ -85,3 +85,22 @@
 .ql-user > summary { color: #e8d48a; }
 .ql-user > .ql-list { border-left: 1px solid #34343e; margin-left: 4px; padding-left: 6px; }
 .ql-missing { color: #6a6a78; font-style: italic; }
+
+/* Q2 — edit mode. Controls appear only while the Edit button is pressed. */
+.ql-bar-buttons { display: flex; gap: 4px; }
+.ql-bar .ql-edit[aria-pressed="true"] { background: #2d3f66; border-color: #5a8dee; }
+.ql-ctl-row { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; margin: 2px 0 4px 4px; }
+.ql-ctls { display: inline-flex; align-items: center; gap: 2px; flex: none; }
+.ql-ctl {
+    background: #1e1e26;
+    color: #b8b8c4;
+    border: 1px solid #34343e;
+    border-radius: 3px;
+    font: inherit;
+    font-size: 11px;
+    padding: 0 4px;
+    cursor: pointer;
+}
+.ql-ctl:hover { border-color: #5a8dee; color: #d8d8e0; }
+select.ql-ctl { max-width: 8em; }
+.ql-ctl-delete:hover { border-color: #e06c75; }
