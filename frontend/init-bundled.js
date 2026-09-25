@@ -42,6 +42,7 @@ centralRegistry.registerEventBusPublisher('core', 'module:loaded');
 centralRegistry.registerEventBusPublisher('core', 'module:loadFailed');
 centralRegistry.registerEventBusPublisher('core', 'app:modesJsonLoaded');
 centralRegistry.registerEventBusPublisher('core', 'app:readyForUiDataLoad');
+centralRegistry.registerEventBusPublisher('core', 'layout:replaced');
 centralRegistry.registerEventBusPublisher('core', 'app:activeModeDetermined');
 centralRegistry.registerEventBusPublisher('core', 'uiHostRegistry:hostStatusChanged');
 centralRegistry.registerEventBusPublisher('core', 'ui:activatePanel');

@@ -44,7 +44,8 @@ import {
 
 // Import core settings schemas (top-level scopes; schema-as-default-source)
 import { registerCoreSettingsSchemas } from '../core/coreSettingsSchemas.js';
-import { wirePanelLifecycle } from '../core/panelManager.js';
+import { wirePanelLifecycle, PANEL_MANUALLY_CLOSED_EVENT, LAYOUT_REPLACED_EVENT } from '../core/panelManager.js';
+import { openComponentTypes, reconcileModuleStates } from '../layout/moduleLayoutSync.js';
 
 // Import layout management
 import { initializeLayoutManager } from './layoutManager.js';
@@ -421,8 +422,14 @@ export async function initializeApplication(dependencies) {
 
   logger.info('init', 'ModuleManagerAPI populated.');
 
+  // After a live layout import the layout was rebuilt without closing anything
+  // (panelManager.withLayoutSwap); bring module states into agreement with it.
+  eventBus.subscribe(LAYOUT_REPLACED_EVENT, (payload) => {
+    moduleManagerApi.syncModuleStatesToLayout(payload ?? {});
+  }, 'core');
+
   // Listen for panels being closed manually
-  eventBus.subscribe('ui:panelManuallyClosed', ({ moduleId }) => {
+  eventBus.subscribe(PANEL_MANUALLY_CLOSED_EVENT, ({ moduleId }) => {
     if (!moduleId) return;
     const moduleState = runtimeModuleStates.get(moduleId);
     if (!moduleState || moduleState.enabled === false) return;
@@ -1156,6 +1163,45 @@ function createModuleManagerApi(options) {
         }, 0);
       }
     }
+  };
+
+  /**
+   * Make module enabled-states agree with the tabs in the layout — run after a
+   * layout swap (LAYOUT_REPLACED_EVENT, trap 1424). A disabled module whose
+   * panel the layout holds is marked enabled (no panel is created: it exists);
+   * an enabled module whose tab the swap removed (its type is in
+   * `previousComponentTypes`) is disabled without a panel destroy. Decisions:
+   * reconcileModuleStates (app/layout/moduleLayoutSync.js).
+   * @param {{previousComponentTypes?: string[]|null}} [options]
+   * @returns {{toDisable: string[], toEnable: string[]}}
+   */
+  api.syncModuleStatesToLayout = ({ previousComponentTypes = null } = {}) => {
+    const goldenLayout = panelManagerInstance?.goldenLayout;
+    if (!goldenLayout) return { toDisable: [], toEnable: [] };
+    const enabledById = {};
+    for (const [moduleId, state] of runtimeModuleStates.entries()) {
+      enabledById[moduleId] = state.enabled === true;
+    }
+    const result = reconcileModuleStates(
+      enabledById,
+      (moduleId) => centralRegistry.getComponentTypeForModule(moduleId),
+      openComponentTypes(goldenLayout),
+      previousComponentTypes
+    );
+    for (const moduleId of result.toEnable) {
+      runtimeModuleStates.get(moduleId).enabled = true;
+      eventBus.publish('module:stateChanged', { moduleId, enabled: true }, 'core');
+    }
+    for (const moduleId of result.toDisable) {
+      api.disableModule(moduleId, { skipPanelDestroy: true });
+    }
+    if (result.toEnable.length || result.toDisable.length) {
+      logger.info(
+        'init',
+        `Module states synced to the layout: enabled [${result.toEnable.join(', ')}], disabled [${result.toDisable.join(', ')}]`
+      );
+    }
+    return result;
   };
 
   api.getModuleState = (moduleId) => {
