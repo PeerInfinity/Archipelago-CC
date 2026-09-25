@@ -310,6 +310,13 @@
       "enabled": true,
       "order": 34,
       "category": "JSON Panel"
+    },
+    {
+      "id": "layout-import-keeps-module-state-in-sync",
+      "enabled": true,
+      "order": 35,
+      "category": "JSON Panel",
+      "_comment": "Quick Launch Q1b (2026-09-24), trap 1424: a live layout import (applyLayoutConfig) must leave every module with a panel enabled exactly when its tab exists and disable nothing; a layout without Events disables it and the original re-enables it; enableModule then activates the existing tab instead of adding a second. Self-contained (ends on the layout it started with)."
     }
   ]
 }

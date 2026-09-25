@@ -1,6 +1,10 @@
 // JSONPanelTests.js - Tests for the JSON panel functionality
 
 import { registerTest } from '../testRegistry.js';
+import { centralRegistry } from '../../../app/core/centralRegistry.js';
+import { LAYOUT_REPLACED_EVENT } from '../../../app/core/panelManager.js';
+import { openComponentTypes } from '../../../app/layout/moduleLayoutSync.js';
+import { applyLayoutConfig } from '../../../utils/dataApplicator.js';
 
 // Helper function for logging
 function log(level, message, ...data) {
@@ -1184,6 +1188,120 @@ export async function testJSONPanelGameStateImportExport(testController) {
   }
 }
 
+const SYNC_TIMEOUT_MS = 5000;
+const SYNC_POLL_MS = 100;
+const SYNC_OPEN_TARGET = { moduleId: 'inventory', componentType: 'inventoryPanel' };
+const SYNC_DROP_TARGET = { moduleId: 'events', componentType: 'eventsPanel' };
+
+/** A copy of a saved layout without the components of `componentType`; null if it had none. */
+function layoutWithout(savedLayout, componentType) {
+  const copy = JSON.parse(JSON.stringify(savedLayout));
+  let removed = 0;
+  const prune = (node) => {
+    if (!Array.isArray(node?.content)) return;
+    const kept = node.content.filter((child) => child.componentType !== componentType);
+    removed += node.content.length - kept.length;
+    node.content = kept;
+    kept.forEach(prune);
+  };
+  prune(copy.root);
+  return removed > 0 ? copy : null;
+}
+
+/**
+ * Modules whose enabled-state disagrees with the layout: disabled with a tab,
+ * or enabled without one although they had one before the import. (Enabled
+ * with no tab at all is a boot state — measured: `settings` — so it is not a
+ * disagreement.)
+ */
+function moduleLayoutDisagreements(tabsBefore) {
+  const tabs = new Set(openComponentTypes(window.goldenLayoutInstance));
+  const out = [];
+  for (const [moduleId, state] of Object.entries(window.moduleManagerApi.getAllModuleStates())) {
+    const componentType = centralRegistry.getComponentTypeForModule(moduleId);
+    if (!componentType) continue;
+    const hasTab = tabs.has(componentType);
+    if (!state.enabled && hasTab) out.push(`${moduleId}: disabled with a tab`);
+    else if (state.enabled && !hasTab && tabsBefore.has(componentType)) out.push(`${moduleId}: enabled, tab gone`);
+  }
+  return out;
+}
+
+/**
+ * Trap 1424 (quick-launch Q1b): a live layout import used to disable every
+ * module while the rebuilt layout held its tab, and a later enableModule added
+ * a duplicate tab. Self-contained: imports the current layout, so it ends in
+ * the state it started in.
+ */
+export async function testLayoutImportKeepsModuleStateInSync(testController) {
+  const gl = window.goldenLayoutInstance;
+  testController.reportCondition('a Golden Layout instance and the module manager exist',
+    !!gl && !!window.moduleManagerApi);
+  if (!gl || !window.moduleManagerApi) return testController.getOverallResult();
+
+  const tabsBefore = new Set(openComponentTypes(gl));
+  testController.assertEqual('module states agree with the layout BEFORE the import', '',
+    moduleLayoutDisagreements(tabsBefore).join('; '));
+
+  let replacedSeen = 0;
+  const disabledByImport = [];
+  const offReplaced = testController.eventBus.subscribe(LAYOUT_REPLACED_EVENT, () => { replacedSeen++; }, 'tests');
+  const offState = testController.eventBus.subscribe('module:stateChanged', ({ moduleId, enabled }) => {
+    if (enabled === false) disabledByImport.push(moduleId);
+  }, 'tests');
+  try {
+    await applyLayoutConfig(gl.saveLayout());
+    await new Promise((resolve) => setTimeout(resolve, 0)); // let any deferred close handling run
+    const agreed = await testController.pollForCondition(
+      () => moduleLayoutDisagreements(tabsBefore).length === 0,
+      'module states to agree with the layout after the import',
+      SYNC_TIMEOUT_MS,
+      SYNC_POLL_MS,
+    );
+    testController.assertEqual('module states agree with the layout AFTER the import', '',
+      agreed ? '' : moduleLayoutDisagreements(tabsBefore).join('; '));
+    testController.reportCondition(`${LAYOUT_REPLACED_EVENT} was published once`, replacedSeen === 1);
+    testController.assertEqual('the import disabled no module (it closed nothing)', '', disabledByImport.join(', '));
+  } finally {
+    offReplaced();
+    offState();
+  }
+
+  // The reconcile both ways: a layout without Events disables it; the original layout re-enables it.
+  const moduleEnabled = (moduleId) => window.moduleManagerApi.getAllModuleStates()[moduleId]?.enabled === true;
+  const hasTab = (componentType) => openComponentTypes(gl).includes(componentType);
+  const saved = gl.saveLayout();
+  const without = layoutWithout(saved, SYNC_DROP_TARGET.componentType);
+  testController.reportCondition(`the saved layout has a ${SYNC_DROP_TARGET.componentType} to drop`, without !== null);
+  if (without) {
+    await applyLayoutConfig(without);
+    testController.reportCondition(`a layout without ${SYNC_DROP_TARGET.componentType} disables ${SYNC_DROP_TARGET.moduleId}`,
+      await testController.pollForCondition(
+        () => !hasTab(SYNC_DROP_TARGET.componentType) && !moduleEnabled(SYNC_DROP_TARGET.moduleId),
+        `${SYNC_DROP_TARGET.moduleId} to be disabled with no tab`, SYNC_TIMEOUT_MS, SYNC_POLL_MS));
+    await applyLayoutConfig(saved);
+    testController.reportCondition(`the layout with ${SYNC_DROP_TARGET.componentType} again re-enables ${SYNC_DROP_TARGET.moduleId}`,
+      await testController.pollForCondition(
+        () => hasTab(SYNC_DROP_TARGET.componentType) && moduleEnabled(SYNC_DROP_TARGET.moduleId),
+        `${SYNC_DROP_TARGET.moduleId} to be enabled with its tab`, SYNC_TIMEOUT_MS, SYNC_POLL_MS));
+  }
+
+  const tabsOf = () => gl.getAllContentItems()
+    .filter((item) => item.isComponent && item.componentType === SYNC_OPEN_TARGET.componentType);
+  const stack = tabsOf()[0]?.parent ?? null;
+  const activeBefore = stack?.getActiveComponentItem?.() ?? null;
+  try {
+    await window.moduleManagerApi.enableModule(SYNC_OPEN_TARGET.moduleId);
+    const tabs = tabsOf();
+    testController.assertEqual(`enableModule('${SYNC_OPEN_TARGET.moduleId}') leaves exactly one tab`, 1, tabs.length);
+    testController.reportCondition(`that tab is the active item of its stack`,
+      tabs.length === 1 && tabs[0].parent.getActiveComponentItem() === tabs[0]);
+  } finally {
+    if (activeBefore && activeBefore.parent === stack) stack.setActiveComponentItem(activeBefore);
+  }
+  return testController.getOverallResult();
+}
+
 // Register the tests
 registerTest({
   id: 'test_json_panel_import_from_text',
@@ -1210,4 +1328,16 @@ registerTest({
   category: 'JSON Panel',
   //enabled: false,
   testFunction: testJSONPanelGameStateImportExport
+});
+
+registerTest({
+  id: 'layout-import-keeps-module-state-in-sync',
+  name: 'JSON Panel - a layout import keeps module states in sync',
+  description: 'Imports the current layout through applyLayoutConfig and asserts every module with a panel is enabled '
+    + 'exactly when its tab exists and that the import disabled nothing; that a layout without Events disables it '
+    + 'and the original layout re-enables it; and that enableModule(\'inventory\') then activates the one '
+    + 'Inventory tab instead of adding a second (trap 1424).',
+  category: 'JSON Panel',
+  enabled: false, // runs where a roster enrols it (the regression config)
+  testFunction: testLayoutImportKeepsModuleStateInSync
 });
