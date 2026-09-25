@@ -340,9 +340,37 @@
       "_comment": "Quick Launch Q2 (2026-09-24): the stored tree / edit mode / Unfiled. Each row writes the tree back to EMPTY_TREE and leaves edit mode in finally, so it depends on no neighbour's state. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
     },
     {
-      "id": "layout-import-keeps-module-state-in-sync",
+      "id": "quick-launch-categories-group-every-panel",
       "enabled": true,
       "order": 39,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch Q3 (2026-09-24): categories / cards view / filter / collapsed groups. Expectations are read off centralRegistry and CATEGORY_ORDER at run time. Each row ends (restoreQ3) with the tree EMPTY_TREE, the view tree, the filter box empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
+      "id": "quick-launch-cards-view-shows-descriptions",
+      "enabled": true,
+      "order": 40,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch Q3 (2026-09-24): categories / cards view / filter / collapsed groups. Expectations are read off centralRegistry and CATEGORY_ORDER at run time. Each row ends (restoreQ3) with the tree EMPTY_TREE, the view tree, the filter box empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
+      "id": "quick-launch-filter-keeps-ancestors-open",
+      "enabled": true,
+      "order": 41,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch Q3 (2026-09-24): categories / cards view / filter / collapsed groups. Expectations are read off centralRegistry and CATEGORY_ORDER at run time. Each row ends (restoreQ3) with the tree EMPTY_TREE, the view tree, the filter box empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
+      "id": "quick-launch-collapsed-groups-persist",
+      "enabled": true,
+      "order": 42,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch Q3 (2026-09-24): categories / cards view / filter / collapsed groups. Expectations are read off centralRegistry and CATEGORY_ORDER at run time. Each row ends (restoreQ3) with the tree EMPTY_TREE, the view tree, the filter box empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
+      "id": "layout-import-keeps-module-state-in-sync",
+      "enabled": true,
+      "order": 43,
       "category": "JSON Panel",
       "_comment": "Quick Launch Q1b (2026-09-24), trap 1424: a live layout import (applyLayoutConfig) must leave every module with a panel enabled exactly when its tab exists and disable nothing; a layout without Events disables it and the original re-enables it; enableModule then activates the existing tab instead of adding a second. Self-contained (ends on the layout it started with)."
     }

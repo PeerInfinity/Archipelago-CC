@@ -14,7 +14,10 @@
  * ⛓ The Q2 rows (the stored tree, edit mode, Unfiled) each END by writing
  * the tree setting back to EMPTY_TREE and leaving edit mode, in `finally` —
  * so no row owes its state to the row before it, and the Q1 rows (which
- * count buttons on an empty tree) are unaffected by where these run.
+ * count buttons on an empty tree) are unaffected by where these run. The Q3
+ * rows (categories, cards, filter, collapsed groups) end the same way and
+ * also put the view back to tree, clear the filter box and empty
+ * collapsedGroups (`restoreQ3`).
  *
  * Handles (quick-launch Q1 W0 (e)): a panel is closed the way its × does with
  * `window.panelManager.destroyPanelByComponentType(type)` (it fires Golden
@@ -27,10 +30,12 @@ import { registerTest } from '../testRegistry.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import { DOCS_INDEX } from '../../quickLaunch/generated/docsIndex.js';
-import { VIRTUAL_GROUPS } from '../../quickLaunch/quickLaunchCatalog.js';
+import { CATEGORY_ORDER } from '../../quickLaunch/generated/docsIndex.js';
+import { OTHER_CATEGORY, VIRTUAL_GROUPS, lookupModuleInfo } from '../../quickLaunch/quickLaunchCatalog.js';
 import { EMPTY_TREE, NODE_KINDS } from '../../quickLaunch/quickLaunchTree.js';
 import {
-    CONTROLS, MODULE_ID, ROOT_CHOICE, TREE_KEY, TREE_SETTING, dialogs,
+    COLLAPSED_KEY, COLLAPSED_SETTING, CONTROLS, MODULE_ID, ROOT_CHOICE, TREE_KEY, TREE_SETTING, VIEWS, VIEW_KEY,
+    VIEW_SETTING, dialogs,
 } from '../../quickLaunch/quickLaunchUI.js';
 
 const CATEGORY = 'Quick Launch';
@@ -368,6 +373,170 @@ async function quickLaunchDuplicateRefsBothActivate(testController) {
     return testController.getOverallResult();
 }
 
+// ── Q3: categories, the cards view, the filter, collapsed groups ─────────
+
+const summaryLabel = (details) => details.querySelector(':scope > summary')?.textContent.replace(/ \(\d+\)$/, '') ?? '';
+const allPanelsEl = (root) => root.querySelector(`details[data-group-id="${VIRTUAL_GROUPS.allPanels.id}"]`);
+/** The registry's moduleInfo for `componentType`, through the panel's own lookup order. */
+const infoOf = (componentType) => lookupModuleInfo(componentType, centralRegistry.getAllPanelComponents().get(componentType)) || {};
+
+/** Type into the filter box as a person does. */
+function typeFilter(root, text) {
+    const input = root.querySelector(`.${CONTROLS.filter}`);
+    input.value = text;
+    input.dispatchEvent(new Event('input'));
+}
+
+/** restoreQ2, plus the view back to tree, the filter box empty and no saved collapsed groups. */
+async function restoreQ3(testController, root, savedDialogs) {
+    if (root?.querySelector(`.${CONTROLS.filter}`)?.value) typeFilter(root, '');
+    await settingsManager.updateModuleSetting(MODULE_ID, VIEW_KEY, VIEWS.tree);
+    await settingsManager.updateModuleSetting(MODULE_ID, COLLAPSED_KEY, []);
+    await restoreQ2(testController, root, savedDialogs);
+    await testController.pollForCondition(
+        () => !root?.classList.contains('ql-cards') && !root?.querySelector('.ql-desc'),
+        'Quick Launch to be back in the tree view',
+        ACTION_TIMEOUT_MS,
+        POLL_MS,
+    );
+}
+
+async function quickLaunchCategoriesGroupEveryPanel(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const saved = { ...dialogs };
+    try {
+        await writeTree(EMPTY_TREE);
+        // The categories present, read off the registry: a declared one CATEGORY_ORDER lists, else Other.
+        const registry = centralRegistry.getAllPanelComponents();
+        const expected = new Set([...registry.keys()].map((ct) => {
+            const c = infoOf(ct).category;
+            return CATEGORY_ORDER.includes(c) ? c : OTHER_CATEGORY;
+        }));
+        testController.log(`registry: ${registry.size} panels in ${expected.size} categories`);
+        const all = allPanelsEl(root);
+        testController.reportCondition('All panels is drawn', !!all);
+        if (!all) return testController.getOverallResult();
+        const subs = [...all.querySelectorAll(':scope > .ql-subgroups > details')];
+        const labels = subs.map(summaryLabel);
+        testController.assertEqual('sub-group labels == the categories present in the registry',
+            [...expected].sort().join(' | '), [...labels].sort().join(' | '));
+        testController.assertEqual('sub-groups follow CATEGORY_ORDER, Other last',
+            [...CATEGORY_ORDER, OTHER_CATEGORY].filter((c) => expected.has(c)).join(' | '), labels.join(' | '));
+        const buttons = [...all.querySelectorAll('.ql-panel')];
+        testController.assertEqual('All panels holds one button per registered panel', registry.size, buttons.length);
+        const misplaced = buttons.filter((b) => {
+            const label = summaryLabel(b.closest('details'));
+            const c = infoOf(b.dataset.componentType).category;
+            return label !== (CATEGORY_ORDER.includes(c) ? c : OTHER_CATEGORY);
+        }).map((b) => b.dataset.componentType);
+        testController.assertEqual('every panel sits under its own category (misplaced)', '', misplaced.join(', '));
+    } finally {
+        await restoreQ3(testController, root, saved);
+    }
+    return testController.getOverallResult();
+}
+
+async function quickLaunchCardsViewShowsDescriptions(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const saved = { ...dialogs };
+    const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
+    try {
+        await writeTree(EMPTY_TREE);
+        const toggle = root.querySelector(`.${CONTROLS.view}`);
+        testController.reportCondition('the bar has a view toggle', !!toggle);
+        testController.assertEqual('the toggle starts unpressed (tree view)', 'false', toggle?.getAttribute('aria-pressed'));
+        toggle?.click();
+        const cards = await until(() => root.classList.contains('ql-cards') && root.querySelector('.ql-card'), 'the cards view');
+        testController.reportCondition('clicking the toggle switches to cards', !!cards);
+        testController.assertEqual('the view setting is cards', VIEWS.cards, await settingsManager.getSetting(VIEW_SETTING));
+        testController.assertEqual('the toggle reads pressed', 'true', toggle?.getAttribute('aria-pressed'));
+        const buttons = [...allPanelsEl(root).querySelectorAll('.ql-panel')];
+        const described = buttons.filter((b) => infoOf(b.dataset.componentType).description);
+        testController.log(`${described.length} of ${buttons.length} panel cards have a moduleInfo.description`);
+        testController.reportCondition('some panel declares a description', described.length > 0);
+        const wrong = described.filter((b) => b.querySelector('.ql-desc')?.textContent !== infoOf(b.dataset.componentType).description)
+            .map((b) => b.dataset.componentType);
+        testController.assertEqual('every described panel card shows its description (wrong)', '', wrong.join(', '));
+        toggle?.click();
+        const back = await until(() => !root.classList.contains('ql-cards') && !root.querySelector('.ql-desc'), 'the tree view');
+        testController.reportCondition('clicking again returns to the tree view', !!back);
+        testController.assertEqual('the view setting is tree', VIEWS.tree, await settingsManager.getSetting(VIEW_SETTING));
+    } finally {
+        await restoreQ3(testController, root, saved);
+    }
+    return testController.getOverallResult();
+}
+
+async function quickLaunchFilterKeepsAncestorsOpen(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const saved = { ...dialogs };
+    const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
+    const group = () => root.querySelector('details[data-group-id="flt-g"]');
+    try {
+        await writeTree({ version: 1, nodes: [{ id: 'flt-g', kind: NODE_KINDS.group, label: 'Filtered', children: [
+            { id: 'flt-inv', kind: NODE_KINDS.panel, ref: OPEN_TARGET },
+            { id: 'flt-ev', kind: NODE_KINDS.panel, ref: CLOSE_TARGET }] }] });
+        await settingsManager.updateModuleSetting(MODULE_ID, COLLAPSED_KEY, ['flt-g']);
+        testController.reportCondition('the stored group is drawn collapsed',
+            !!await until(() => group() && !group().open, 'group "Filtered" drawn, collapsed'));
+
+        typeFilter(root, 'inv');
+        const opened = await until(() => group()?.open
+            && [...group().querySelectorAll('.ql-panel')].map((b) => b.dataset.componentType).join() === OPEN_TARGET,
+        'the collapsed group open, holding only Inventory');
+        testController.reportCondition('typing "inv" opens the group and shows only Inventory in it', !!opened);
+        testController.reportCondition(`${CLOSE_TARGET} is drawn nowhere while filtering`,
+            !root.querySelector(`.ql-panel[data-component-type="${CLOSE_TARGET}"]`));
+        const shownTypes = new Set([...root.querySelectorAll('.ql-panel')].map((b) => b.dataset.componentType));
+        testController.assertEqual('the only panel drawn is Inventory', OPEN_TARGET, [...shownTypes].join(','));
+        testController.assertEqual('the filter does not touch the saved collapsed groups', JSON.stringify(['flt-g']),
+            JSON.stringify(await settingsManager.getSetting(COLLAPSED_SETTING)));
+
+        typeFilter(root, '');
+        const closed = await until(() => group() && !group().open
+            && group().querySelectorAll('.ql-panel').length === 2, 'the group collapsed again, both rows back');
+        testController.reportCondition('clearing the filter restores the collapsed state', !!closed);
+    } finally {
+        await restoreQ3(testController, root, saved);
+    }
+    return testController.getOverallResult();
+}
+
+async function quickLaunchCollapsedGroupsPersist(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const saved = { ...dialogs };
+    const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
+    const group = () => root.querySelector('details[data-group-id="col-g"]');
+    const tree = { version: 1, nodes: [{ id: 'col-g', kind: NODE_KINDS.group, label: 'Folding', children: [
+        { id: 'col-inv', kind: NODE_KINDS.panel, ref: OPEN_TARGET }] }] };
+    try {
+        await settingsManager.updateModuleSetting(MODULE_ID, COLLAPSED_KEY, []);
+        await writeTree(tree);
+        testController.reportCondition('the stored group is drawn open',
+            !!await until(() => group()?.open, 'group "Folding" drawn, open'));
+        const first = group();
+        first.querySelector(':scope > summary').click();
+        const stored = await until(async () => {
+            const v = await settingsManager.getSetting(COLLAPSED_SETTING);
+            return Array.isArray(v) && v.join() === 'col-g';
+        }, 'collapsedGroups to hold the group id');
+        testController.reportCondition('collapsing the group through its summary saves its id', !!stored);
+
+        // Re-render from the settings: a foreign write of the same tree redraws every element.
+        await writeTree(tree);
+        const redrawn = await until(() => group() && group() !== first, 'the group redrawn');
+        testController.reportCondition('the panel re-rendered (a new element)', !!redrawn);
+        testController.reportCondition('after the re-render the group is still collapsed', group()?.open === false);
+    } finally {
+        await restoreQ3(testController, root, saved);
+    }
+    return testController.getOverallResult();
+}
+
 const TESTS = [
     ['quick-launch-lists-every-registered-panel', 'Quick Launch: a button per registered panel',
         'Asserts the Quick Launch panel draws one button per componentType centralRegistry.getAllPanelComponents() '
@@ -400,6 +569,23 @@ const TESTS = [
     ['quick-launch-duplicate-refs-both-activate', 'Quick Launch: two references to one panel both activate it',
         'Stores Inventory twice (top level and in a group); clicking each brings Inventory forward.',
         quickLaunchDuplicateRefsBothActivate],
+    ['quick-launch-categories-group-every-panel', 'Quick Launch: All panels is split by module category',
+        'Every .ql-panel in All panels sits in the sub-group named by its moduleInfo.category (Other when it '
+        + 'declares none CATEGORY_ORDER lists); the sub-group labels are exactly the categories the registry holds, '
+        + 'in CATEGORY_ORDER, Other last.',
+        quickLaunchCategoriesGroupEveryPanel],
+    ['quick-launch-cards-view-shows-descriptions', 'Quick Launch: the cards view shows each panel\'s description',
+        'Switches to cards through the bar toggle; every panel card whose moduleInfo declares a description shows '
+        + 'it; the view setting follows; switching back removes the text.',
+        quickLaunchCardsViewShowsDescriptions],
+    ['quick-launch-filter-keeps-ancestors-open', 'Quick Launch: the filter opens the groups holding a match',
+        'A stored group (Inventory + Events) saved collapsed; typing "inv" draws it open with only Inventory, and '
+        + 'no Events anywhere; clearing the box draws it collapsed again.',
+        quickLaunchFilterKeepsAncestorsOpen],
+    ['quick-launch-collapsed-groups-persist', 'Quick Launch: a collapsed user group stays collapsed',
+        'Collapses a stored group through its summary; collapsedGroups holds its id; after a re-render the '
+        + 'redrawn group is still collapsed.',
+        quickLaunchCollapsedGroupsPersist],
 ];
 
 for (const [id, name, description, testFunction] of TESTS) {
