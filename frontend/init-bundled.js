@@ -163,6 +163,7 @@ import './modules/tests/testCases/textAdventureWrapperTests.js';
 import './modules/tests/testCases/flashSubstrateTests.js';
 import './modules/tests/testCases/runnerDemoTests.js';
 import './modules/tests/testCases/substrateRegistryPanelTests.js';
+import './modules/tests/testCases/quickLaunchTests.js';
 
 // Signal that test cases have been pre-imported
 window.__BUNDLED_TEST_CASES__ = true;
