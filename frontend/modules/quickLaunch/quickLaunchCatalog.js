@@ -21,8 +21,11 @@
 
 export const BLANK_ICON = '';
 
-/** The two groups rendered from the catalog; neither is stored or editable. */
+/** The groups rendered from the catalog; none is stored or editable. `unfiled`
+ *  (the entries the user's own tree does not reference) is drawn by the panel
+ *  from quickLaunchTree.js `unfiled()`, so `virtualGroups` does not return it. */
 export const VIRTUAL_GROUPS = Object.freeze({
+    unfiled: Object.freeze({ id: 'unfiled', label: 'Unfiled' }),
     allPanels: Object.freeze({ id: 'all-panels', label: 'All panels' }),
     help: Object.freeze({ id: 'help', label: 'Help' }),
 });

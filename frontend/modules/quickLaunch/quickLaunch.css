@@ -43,7 +43,9 @@
 }
 
 .ql-panel-row,
-.ql-help {
+.ql-help,
+.ql-url,
+.ql-missing {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -73,5 +75,13 @@
 .ql-dot.ql-off { background: transparent; border: 1px solid #6a6a78; }
 
 .ql-doc a,
-.ql-help a { color: #4dabf7; }
+.ql-help a,
+.ql-url a { color: #4dabf7; }
 .ql-doc a { text-decoration: none; padding: 0 4px; font-weight: bold; }
+
+/* Q2 — the user's own tree, drawn above the virtual groups. */
+.ql-root { padding-left: 0; margin-bottom: 6px; }
+.ql-user-group { margin: 2px 0; }
+.ql-user > summary { color: #e8d48a; }
+.ql-user > .ql-list { border-left: 1px solid #34343e; margin-left: 4px; padding-left: 6px; }
+.ql-missing { color: #6a6a78; font-style: italic; }

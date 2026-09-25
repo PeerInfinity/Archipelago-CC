@@ -4,11 +4,12 @@
  * render (quickLaunchCatalog.js); nothing about other modules is listed here.
  *
  * Plan: NewDocs/plans/quick-launch-panel-plan.md (Q1: the virtual groups,
- * docs links, activation; the stored tree and edit mode come in Q2).
+ * docs links, activation; Q2: the stored tree, edit mode, Unfiled).
  */
 
 import { MODULE_ID, QuickLaunchUI } from './quickLaunchUI.js';
 import { DOCS_LINK_TARGETS } from '../../app/config/docsBase.js';
+import { EMPTY_TREE } from './quickLaunchTree.js';
 
 export const moduleInfo = {
     name: MODULE_ID,
@@ -47,6 +48,14 @@ export function register(registrationApi) {
             description: "Where the guide links point: 'github' opens the guide on GitHub (works everywhere); "
                 + "'local' opens the copy this server serves (works on the dev server, 404s on GitHub Pages, "
                 + 'which publishes no user guides).',
+        },
+        tree: {
+            type: 'object',
+            default: EMPTY_TREE,
+            label: 'Arrangement',
+            description: "Your own groups of Quick Launch items (the panel's Edit button builds it). Saved per mode. "
+                + "Nodes are {id, kind:'group', label, children} | {id, kind:'panel', ref:<componentType>} | "
+                + "{id, kind:'doc', ref:<docs path>} | {id, kind:'url', href, label}. Empty = only the built-in groups.",
         },
     });
 

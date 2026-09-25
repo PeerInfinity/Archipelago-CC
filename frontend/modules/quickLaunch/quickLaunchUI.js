@@ -1,6 +1,7 @@
 /**
  * QuickLaunchUI — the Quick Launch panel: a header line, a "Modules ⇄" button,
- * and the two virtual groups (All panels, Help) as `<details>` sections.
+ * the user's own arrangement (the stored tree, quickLaunchTree.js), then the
+ * virtual groups (Unfiled, All panels, Help) as `<details>` sections.
  *
  * Everything drawn comes from `buildCatalog` over the live registry at render
  * time; the panel re-renders on `module:stateChanged` so the state dots follow
@@ -15,6 +16,7 @@ import { DOCS_LINK_TARGETS, docsHref } from '../../app/config/docsBase.js';
 import { debounce } from '../commonUI/index.js';
 import { DOCS_INDEX } from './generated/docsIndex.js';
 import { VIRTUAL_GROUPS, buildCatalog, virtualGroups } from './quickLaunchCatalog.js';
+import { EMPTY_TREE, NODE_KINDS, migrate, resolve, unfiled } from './quickLaunchTree.js';
 import { getModuleManager } from './index.js';
 
 // Declared here, not in index.js: index.js imports this file, so a top-level
@@ -22,7 +24,11 @@ import { getModuleManager } from './index.js';
 export const MODULE_ID = 'quickLaunch';
 export const RENDER_DEBOUNCE_MS = 50;
 export const DOCS_LINK_SETTING = `moduleSettings.${MODULE_ID}.docsLinkTarget`;
+export const TREE_KEY = 'tree';
+export const TREE_SETTING = `moduleSettings.${MODULE_ID}.${TREE_KEY}`;
 export const DOC_ICON = '📄';
+export const URL_ICON = '🔗';
+export const MISSING_ICON = '✕';
 export const MODULES_TARGET = Object.freeze({ moduleId: 'modules', componentType: 'modulesPanel' });
 const REFRESH_EVENTS = ['module:stateChanged', 'app:readyForUiDataLoad', 'settings:changed'];
 
@@ -111,10 +117,95 @@ export class QuickLaunchUI {
 
     async render() {
         const target = await settingsManager.getSetting(DOCS_LINK_SETTING, DOCS_LINK_TARGETS.github);
+        this.tree = migrate(await settingsManager.getSetting(TREE_SETTING, EMPTY_TREE));
         const catalog = this.catalog();
         this.headerEl.textContent = headerText(catalog);
-        const groups = virtualGroups(catalog).map((g) => this._group(g, target));
-        this.groupsEl.replaceChildren(...groups);
+        const sections = [];
+        if (this.tree.nodes.length) sections.push(this._stored(resolve(this.tree, catalog), target));
+        // Unfiled: hidden when empty, and ALWAYS hidden while the tree is empty —
+        // then every entry is unfiled, and All panels / Help already show each one.
+        const loose = this.tree.nodes.length ? unfiled(this.tree, catalog) : [];
+        if (loose.length) sections.push(this._group({ ...VIRTUAL_GROUPS.unfiled, items: loose }, target));
+        sections.push(...virtualGroups(catalog).map((g) => this._group(g, target)));
+        this.groupsEl.replaceChildren(...sections);
+    }
+
+    /** The user's tree: one list in stored order, a group as a nested `<details>`. */
+    _stored(tree, target) {
+        const list = document.createElement('ul');
+        list.className = 'ql-list ql-root';
+        list.append(...tree.nodes.map((n) => this._node(n, target)));
+        return list;
+    }
+
+    _node(node, target) {
+        let li;
+        if (node.kind === NODE_KINDS.group) {
+            li = document.createElement('li');
+            li.className = 'ql-user-group';
+            li.append(this._userGroup(node, target));
+        } else if (node.missing) {
+            li = this._missingRow(node);
+        } else if (node.kind === NODE_KINDS.panel) {
+            li = this._panelRow(node.item, target);
+        } else if (node.kind === NODE_KINDS.doc) {
+            li = this._docRow(node.item, target);
+        } else {
+            li = this._urlRow(node);
+        }
+        li.classList.add('ql-node');
+        li.dataset.nodeId = node.id;
+        li.dataset.kind = node.kind;
+        return li;
+    }
+
+    _userGroup(node, target) {
+        const details = document.createElement('details');
+        details.className = 'ql-group ql-user';
+        details.dataset.groupId = node.id;
+        details.open = !this.collapsed.has(node.id);
+        details.addEventListener('toggle', () => {
+            if (details.open) this.collapsed.delete(node.id);
+            else this.collapsed.add(node.id);
+        });
+        const summary = document.createElement('summary');
+        summary.textContent = `${node.label} (${node.children.length})`;
+        const list = document.createElement('ul');
+        list.className = 'ql-list';
+        list.append(...node.children.map((n) => this._node(n, target)));
+        details.append(summary, list);
+        return details;
+    }
+
+    /** A ref whose target the catalog does not hold: greyed, showing the ref itself. */
+    _missingRow(node) {
+        const li = document.createElement('li');
+        li.className = 'ql-missing';
+        const icon = document.createElement('span');
+        icon.className = 'ql-icon';
+        icon.textContent = MISSING_ICON;
+        const text = document.createElement('span');
+        text.className = 'ql-title';
+        text.textContent = node.ref;
+        text.title = `${node.kind} "${node.ref}" is not in this app's catalog`;
+        li.append(icon, text);
+        return li;
+    }
+
+    _urlRow(node) {
+        const li = document.createElement('li');
+        li.className = 'ql-url';
+        const icon = document.createElement('span');
+        icon.className = 'ql-icon';
+        icon.textContent = URL_ICON;
+        const a = document.createElement('a');
+        a.href = node.href;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.textContent = node.label;
+        a.title = node.href;
+        li.append(icon, a);
+        return li;
     }
 
     _group(group, target) {
@@ -130,9 +221,12 @@ export class QuickLaunchUI {
         summary.textContent = `${group.label} (${group.items.length})`;
         const list = document.createElement('ul');
         list.className = 'ql-list';
-        const row = group.id === VIRTUAL_GROUPS.help.id
-            ? (d) => this._docRow(d, target)
-            : (p) => this._panelRow(p, target);
+        const row = {
+            [VIRTUAL_GROUPS.help.id]: (d) => this._docRow(d, target),
+            [VIRTUAL_GROUPS.allPanels.id]: (p) => this._panelRow(p, target),
+            [VIRTUAL_GROUPS.unfiled.id]: ({ kind, item }) => (kind === NODE_KINDS.doc
+                ? this._docRow(item, target) : this._panelRow(item, target)),
+        }[group.id];
         list.append(...group.items.map(row));
         details.append(summary, list);
         return details;
