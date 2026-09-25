@@ -29,6 +29,10 @@ export const RENDER_DEBOUNCE_MS = 50;
 export const DOCS_LINK_SETTING = `moduleSettings.${MODULE_ID}.docsLinkTarget`;
 export const TREE_KEY = 'tree';
 export const TREE_SETTING = `moduleSettings.${MODULE_ID}.${TREE_KEY}`;
+/** The two views over the same groups: compact rows, or cards that add each item's text. */
+export const VIEWS = Object.freeze({ tree: 'tree', cards: 'cards' });
+export const VIEW_KEY = 'view';
+export const VIEW_SETTING = `moduleSettings.${MODULE_ID}.${VIEW_KEY}`;
 export const DOC_ICON = '📄';
 export const URL_ICON = '🔗';
 export const MISSING_ICON = '✕';
@@ -38,6 +42,7 @@ const REFRESH_EVENTS = ['module:stateChanged', 'app:readyForUiDataLoad', 'settin
 /** Edit mode's controls: one class each, so tests and CSS address them by name. */
 export const CONTROLS = Object.freeze({
     edit: 'ql-edit',
+    view: 'ql-view',
     up: 'ql-ctl-up',
     down: 'ql-ctl-down',
     rename: 'ql-ctl-rename',
@@ -105,6 +110,8 @@ export class QuickLaunchUI {
         /** The stored tree as last read or written (migrated). */
         this.tree = EMPTY_TREE;
         this.editing = false;
+        /** The view setting as last read or written. */
+        this.view = VIEWS.tree;
         /** Bumped by every render; a render whose awaits finish after a newer one started draws nothing. */
         this._renderGen = 0;
         this._unsubs = [];
@@ -112,8 +119,9 @@ export class QuickLaunchUI {
         this._scheduleRender = debounce(() => this.render(), RENDER_DEBOUNCE_MS);
         for (const event of REFRESH_EVENTS) {
             this._unsubs.push(eventBus.subscribe(event, (payload) => {
-                // Our own tree write: `_apply` has already rendered from it.
+                // Our own tree / view write: `_apply` / `setView` has already rendered from it.
                 if (payload?.key === TREE_SETTING && payload.value === this.tree) return;
+                if (payload?.key === VIEW_SETTING && payload.value === this.view) return;
                 this._scheduleRender();
             }, MODULE_ID));
         }
@@ -148,9 +156,17 @@ export class QuickLaunchUI {
         this.editButton.title = 'Arrange your own groups (the built-in groups stay as they are)';
         this.editButton.setAttribute('aria-pressed', 'false');
         this.editButton.addEventListener('click', () => this.setEditing(!this.editing));
+        this.viewButton = document.createElement('button');
+        this.viewButton.type = 'button';
+        this.viewButton.className = CONTROLS.view;
+        this.viewButton.textContent = 'Cards';
+        this.viewButton.title = 'Show every item as a card with its description (press again for the compact tree)';
+        this.viewButton.setAttribute('aria-pressed', 'false');
+        this.viewButton.addEventListener('click',
+            () => this.setView(this.view === VIEWS.cards ? VIEWS.tree : VIEWS.cards));
         const buttons = document.createElement('span');
         buttons.className = 'ql-bar-buttons';
-        buttons.append(this.editButton, modulesButton);
+        buttons.append(this.viewButton, this.editButton, modulesButton);
         bar.append(this.headerEl, buttons);
         this.groupsEl = document.createElement('div');
         this.groupsEl.className = 'ql-groups';
@@ -175,6 +191,13 @@ export class QuickLaunchUI {
         this.editButton.setAttribute('aria-pressed', String(this.editing));
         this.rootElement.classList.toggle('ql-editing', this.editing);
         return this.render();
+    }
+
+    /** Switch views: write the setting (per mode, like the tree) and render from it. */
+    async setView(view) {
+        this.view = view === VIEWS.cards ? VIEWS.cards : VIEWS.tree;
+        await settingsManager.updateModuleSetting(MODULE_ID, VIEW_KEY, this.view);
+        await this.render();
     }
 
     /**
@@ -203,8 +226,12 @@ export class QuickLaunchUI {
         const gen = ++this._renderGen;
         const target = await settingsManager.getSetting(DOCS_LINK_SETTING, DOCS_LINK_TARGETS.github);
         const tree = migrate(await settingsManager.getSetting(TREE_SETTING, EMPTY_TREE));
+        const view = await settingsManager.getSetting(VIEW_SETTING, VIEWS.tree);
         if (gen !== this._renderGen) return; // a newer render is under way; it draws
         this.tree = tree;
+        this.view = view === VIEWS.cards ? VIEWS.cards : VIEWS.tree;
+        this.viewButton.setAttribute('aria-pressed', String(this.view === VIEWS.cards));
+        this.rootElement.classList.toggle('ql-cards', this.view === VIEWS.cards);
         const catalog = this.catalog();
         this.headerEl.textContent = headerText(catalog);
         const sections = [];
@@ -399,6 +426,7 @@ export class QuickLaunchUI {
     _urlRow(node) {
         const li = document.createElement('li');
         li.className = 'ql-url';
+        if (this.view === VIEWS.cards) li.classList.add('ql-card');
         const icon = document.createElement('span');
         icon.className = 'ql-icon';
         icon.textContent = URL_ICON;
@@ -469,6 +497,12 @@ export class QuickLaunchUI {
         dot.className = `ql-dot ${item.enabled ? 'ql-on' : 'ql-off'}`;
         dot.title = item.enabled ? 'enabled (open)' : 'closed';
         button.append(icon, title, dot);
+        if (this.view === VIEWS.cards) {
+            li.classList.add('ql-card');
+            // A card's text: the module's own description, else its guide's first paragraph, else none.
+            const text = item.description || item.summary;
+            if (text) button.append(this._desc(text));
+        }
         button.addEventListener('click', () => activate(item.moduleId, item.componentType));
         li.append(button);
         if (item.docs) {
@@ -488,7 +522,19 @@ export class QuickLaunchUI {
         icon.className = 'ql-icon';
         icon.textContent = DOC_ICON;
         li.append(icon, this._link(doc.path, doc.title, target, doc.path));
+        if (this.view === VIEWS.cards) {
+            li.classList.add('ql-card');
+            if (doc.summary) li.append(this._desc(doc.summary));
+        }
         return li;
+    }
+
+    /** A card's line of text. */
+    _desc(text) {
+        const desc = document.createElement('span');
+        desc.className = 'ql-desc';
+        desc.textContent = text;
+        return desc;
     }
 
     _link(path, text, target, tooltip) {

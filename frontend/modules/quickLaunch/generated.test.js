@@ -7,8 +7,8 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
-    EXCLUDED_BASENAMES, MODULES_README, OUTPUT, REPO, buildCategoryOrder, buildDocsIndex, isDirectoryBullet,
-    readmeCategories, renderDocsIndexModule,
+    EXCLUDED_BASENAMES, MODULES_README, OUTPUT, REPO, SUMMARY_MAX_LENGTH, buildCategoryOrder, buildDocsIndex, docSummary,
+    isDirectoryBullet, readmeCategories, renderDocsIndexModule,
 } from '../../../scripts/quicklaunch/generate-docs-index.mjs';
 import { CATEGORY_ORDER, DOCS_INDEX } from './generated/docsIndex.js';
 
@@ -29,6 +29,31 @@ describe('quickLaunch generated/docsIndex.js', () => {
     it('every row has a path under docs/json/user, a title and a section', () => {
         const bad = DOCS_INDEX.filter((d) => !d.path.startsWith('docs/json/user/') || !d.title || !d.section);
         expect(bad).toEqual([]);
+    });
+
+    it('every row has a summary no longer than SUMMARY_MAX_LENGTH (warning when one is empty)', () => {
+        const tooLong = DOCS_INDEX.filter((d) => typeof d.summary !== 'string' || d.summary.length > SUMMARY_MAX_LENGTH);
+        expect(tooLong.map((d) => d.path)).toEqual([]);
+        const empty = DOCS_INDEX.filter((d) => !d.summary).map((d) => d.path);
+        if (empty.length) console.warn(`WARNING: guides with no first paragraph (no summary): ${empty.join(', ')}`);
+    });
+});
+
+describe('docSummary', () => {
+    it('is the first non-heading paragraph as plain text, whitespace collapsed', () => {
+        const text = '# Title\n\n## Sub\n\nThe **Foo** panel shows\n[links](x.md) and `code`.\n\nSecond.';
+        expect(docSummary(text)).toBe('The Foo panel shows links and code.');
+    });
+
+    it('is empty when there is no paragraph', () => {
+        expect(docSummary('# Only a title\n')).toBe('');
+    });
+
+    it('cuts a long paragraph at a word, ending in an ellipsis, within the cap', () => {
+        const long = `# T\n\n${'word '.repeat(100)}`;
+        const s = docSummary(long);
+        expect(s.length).toBeLessThanOrEqual(SUMMARY_MAX_LENGTH);
+        expect(s.endsWith('word…')).toBe(true);
     });
 });
 

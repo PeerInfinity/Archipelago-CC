@@ -11,7 +11,7 @@ class EntryPanel {}
 class OffPanel {}
 
 const DOCS = [
-    { path: 'docs/json/user/modules/entry.md', title: 'Entry Panel', section: 'user/modules' },
+    { path: 'docs/json/user/modules/entry.md', title: 'Entry Panel', section: 'user/modules', summary: 'Entry guide.' },
     { path: 'docs/json/user/overview.md', title: 'Overview', section: 'user' },
     { path: 'docs/json/user/quick-start.md', title: 'Quick Start', section: 'user' },
 ];
@@ -77,6 +77,13 @@ describe('buildCatalog — panels', () => {
     it('docs is the declared path only when the index lists it', () => {
         expect(panel(build(), 'entryPanel').docs).toBe('docs/json/user/modules/entry.md');
         expect(panel(build(), 'offPanel').docs).toBeNull();
+    });
+
+    it('summary is the declared guide\'s first paragraph, empty without one', () => {
+        expect(panel(build(), 'entryPanel').summary).toBe('Entry guide.');
+        expect(panel(build(), 'offPanel').summary).toBe('');
+        expect(build().docs.find((d) => d.path.endsWith('entry.md')).summary).toBe('Entry guide.');
+        expect(build().docs.find((d) => d.path.endsWith('overview.md')).summary).toBe('');
     });
 
     it('orders by loadPriority index, then title, unlisted modules last', () => {

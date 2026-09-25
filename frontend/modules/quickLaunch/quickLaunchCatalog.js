@@ -57,12 +57,14 @@ export function buildCatalog({
     loadPriority = [],
     lookup = lookupModuleInfo,
 }) {
-    const docPaths = new Set(docsIndex.map((d) => d.path));
+    const docByPath = new Map(docsIndex.map((d) => [d.path, d]));
     const panels = [];
     for (const [componentType, entry] of panelComponents) {
         const info = lookup(componentType, entry) || {};
         const moduleId = entry.moduleId;
         const priority = loadPriority.indexOf(moduleId);
+        // Only a path the index knows is linked: a typo is no link, not a 404.
+        const guide = info.docs ? docByPath.get(info.docs) : undefined;
         panels.push({
             componentType,
             moduleId,
@@ -73,8 +75,9 @@ export function buildCatalog({
             column: info.column ?? null,
             enabled: moduleStates[moduleId]?.enabled === true,
             allowMultipleInstances: info.allowMultipleInstances === true,
-            // Only a path the index knows is linked: a typo is no link, not a 404.
-            docs: info.docs && docPaths.has(info.docs) ? info.docs : null,
+            docs: guide ? guide.path : null,
+            // The guide's first paragraph: the cards view's text when `description` is empty.
+            summary: guide?.summary || '',
             order: priority === -1 ? loadPriority.length : priority,
         });
     }
@@ -85,7 +88,7 @@ export function buildCatalog({
         return i === -1 ? DOC_SECTION_ORDER.length : i;
     };
     const docs = docsIndex
-        .map(({ path, title, section }) => ({ path, title, section }))
+        .map(({ path, title, section, summary = '' }) => ({ path, title, section, summary }))
         .sort((a, b) => sectionRank(a.section) - sectionRank(b.section) || byText(a.path, b.path));
 
     return { panels, docs };

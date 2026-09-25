@@ -4,10 +4,11 @@
  * render (quickLaunchCatalog.js); nothing about other modules is listed here.
  *
  * Plan: NewDocs/plans/quick-launch-panel-plan.md (Q1: the virtual groups,
- * docs links, activation; Q2: the stored tree, edit mode, Unfiled).
+ * docs links, activation; Q2: the stored tree, edit mode, Unfiled; Q3: categories,
+ * the cards view, the filter, collapsed groups).
  */
 
-import { MODULE_ID, QuickLaunchUI } from './quickLaunchUI.js';
+import { MODULE_ID, QuickLaunchUI, VIEWS } from './quickLaunchUI.js';
 import { DOCS_LINK_TARGETS } from '../../app/config/docsBase.js';
 import { EMPTY_TREE } from './quickLaunchTree.js';
 
@@ -49,6 +50,14 @@ export function register(registrationApi) {
             description: "Where the guide links point: 'github' opens the guide on GitHub (works everywhere); "
                 + "'local' opens the copy this server serves (works on the dev server, 404s on GitHub Pages, "
                 + 'which publishes no user guides).',
+        },
+        view: {
+            type: 'string',
+            default: VIEWS.tree,
+            enum: Object.values(VIEWS),
+            label: 'View',
+            description: "'tree' draws each item as one compact row; 'cards' adds each item's description "
+                + "(or its guide's first paragraph). The panel's Cards button switches it. Saved per mode.",
         },
         tree: {
             type: 'object',
