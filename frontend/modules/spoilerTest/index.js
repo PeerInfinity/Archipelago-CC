@@ -21,6 +21,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/spoilerTest.md',
   icon: '🔍',
   column: 2, // Middle column,
+  category: 'UI Panel Modules',
   description: 'Provides UI for loading and running test Spoilers.',
 };
 

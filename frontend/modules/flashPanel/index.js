@@ -37,6 +37,7 @@ export const moduleInfo = {
   componentType: 'flashPanel',
   icon: '🎮',
   column: 2,
+  category: 'Procedural Generation and Substrate Modules',
   description: 'Embeds a Flash game with an injected Archipelago bridge.',
   requires: ['stateManager'],
 };

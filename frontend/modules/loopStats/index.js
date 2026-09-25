@@ -27,6 +27,7 @@ export const moduleInfo = {
   componentType: 'loopStatsPanel',
   icon: '📊',
   column: 1, // Left column (narrow width design)
+  category: 'Loop Mode Modules',
   description: 'Detailed action queue analysis with mana cost predictions.',
   requires: ['loops'],
 };

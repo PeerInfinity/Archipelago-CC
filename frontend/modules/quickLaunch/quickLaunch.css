@@ -104,3 +104,8 @@
 .ql-ctl:hover { border-color: #5a8dee; color: #d8d8e0; }
 select.ql-ctl { max-width: 8em; }
 .ql-ctl-delete:hover { border-color: #e06c75; }
+
+/* Q3 — "All panels" holds one sub-group per module category. */
+.ql-subgroups { padding-left: 8px; }
+.ql-subgroups > .ql-group { margin-bottom: 2px; }
+.ql-subgroups > .ql-group > summary { font-weight: normal; color: #b8b8c4; }

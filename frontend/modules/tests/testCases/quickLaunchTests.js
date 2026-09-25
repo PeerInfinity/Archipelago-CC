@@ -246,8 +246,9 @@ async function quickLaunchEditOpsPersist(testController) {
     const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
     const docPath = DOCS_INDEX[0]?.path;
     const docRow = () => virtualRow(root, VIRTUAL_GROUPS.help.id, (li) => li.querySelector('a')?.title === docPath);
-    const invRow = () => virtualRow(root, VIRTUAL_GROUPS.allPanels.id,
-        (li) => li.querySelector('.ql-panel')?.dataset.componentType === OPEN_TARGET);
+    // All panels holds one sub-group per category (Q3): the row sits in whichever one Inventory declares.
+    const invRow = () => root.querySelector(`details[data-group-id="${VIRTUAL_GROUPS.allPanels.id}"] `
+        + `.ql-panel[data-component-type="${OPEN_TARGET}"]`)?.closest('li') ?? null;
     try {
         await writeTree(EMPTY_TREE);
         root.querySelector(`.${CONTROLS.edit}`)?.click();

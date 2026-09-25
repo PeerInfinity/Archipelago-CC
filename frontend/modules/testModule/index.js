@@ -16,6 +16,7 @@ export const moduleInfo = {
   title: 'Test Module',
   description: 'A simple panel loaded dynamically.',
   componentType: 'testPanel',
+  category: 'Utility Modules',
 };
 
 /**

@@ -181,3 +181,17 @@ export const DOCS_INDEX = Object.freeze([
         "section": "user"
     }
 ].map(Object.freeze));
+
+/**
+ * The module categories: the `## ` headings of docs/json/modules/README.md that list
+ * modules, in README order. `moduleInfo.category` takes one of these
+ * (moduleCategoryPins.test.js); the "All panels" group is split by them.
+ */
+export const CATEGORY_ORDER = Object.freeze([
+    "Core Service Modules",
+    "UI Panel Modules",
+    "Procedural Generation and Substrate Modules",
+    "Loop Mode Modules",
+    "Game and Tool Modules",
+    "Utility Modules"
+]);

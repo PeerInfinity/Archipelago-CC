@@ -11,6 +11,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/regionGraph.md',
   icon: '🌐',
   column: 2, // Middle column,
+  category: 'UI Panel Modules',
   description: 'Interactive visualization of region connectivity graph with deterministic layout',
   requires: ['stateManager', 'gameState'],
 };

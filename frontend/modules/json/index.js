@@ -35,6 +35,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/json.md',
   icon: '📄',
   column: 1, // Left column,
+  category: 'UI Panel Modules',
   description: 'Manages loading, combining, and saving of various application JSON data sources and modes.',
 };
 

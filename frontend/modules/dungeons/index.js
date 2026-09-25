@@ -18,6 +18,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/dungeons.md',
   icon: '🏰',
   column: 3, // Right column
+  category: 'UI Panel Modules',
   description: 'Dungeons display panel.',
   requires: ['stateManager', 'commonUI'],
 };

@@ -19,7 +19,12 @@
  * nothing still gets a row — titled by its componentType, with a blank icon.
  */
 
+import { CATEGORY_ORDER } from './generated/docsIndex.js';
+
 export const BLANK_ICON = '';
+
+/** The category of a panel that declares none, or one CATEGORY_ORDER does not list; drawn last. */
+export const OTHER_CATEGORY = 'Other';
 
 /** The groups rendered from the catalog; none is stored or editable. `unfiled`
  *  (the entries the user's own tree does not reference) is drawn by the panel
@@ -64,6 +69,7 @@ export function buildCatalog({
             title: info.title || info.name || componentType,
             icon: info.icon || BLANK_ICON,
             description: info.description || '',
+            category: info.category || OTHER_CATEGORY,
             column: info.column ?? null,
             enabled: moduleStates[moduleId]?.enabled === true,
             allowMultipleInstances: info.allowMultipleInstances === true,
@@ -85,11 +91,30 @@ export function buildCatalog({
     return { panels, docs };
 }
 
-/** The groups the panel draws, in order. `all-panels` is one flat group until
- *  `moduleInfo.category` exists (Q3). */
-export function virtualGroups(catalog) {
+/** The id of the "All panels" sub-group for `category`: `all-panels/<slug>`. */
+export function categoryGroupId(category) {
+    const slug = category.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    return `${VIRTUAL_GROUPS.allPanels.id}/${slug}`;
+}
+
+/**
+ * The groups the panel draws, in order. "All panels" holds no rows of its own:
+ * `groups` is one sub-group per category, in `categoryOrder` (the modules
+ * README's section order), each keeping the catalog's load-priority order;
+ * a category `categoryOrder` does not list counts as OTHER_CATEGORY, which
+ * comes last and only when it has a panel. Empty categories are left out.
+ */
+export function virtualGroups(catalog, categoryOrder = CATEGORY_ORDER) {
+    const known = new Set(categoryOrder);
+    const byCategory = new Map([...categoryOrder, OTHER_CATEGORY].map((c) => [c, []]));
+    for (const panel of catalog.panels) {
+        byCategory.get(known.has(panel.category) ? panel.category : OTHER_CATEGORY).push(panel);
+    }
+    const groups = [...byCategory]
+        .filter(([, items]) => items.length > 0)
+        .map(([label, items]) => ({ id: categoryGroupId(label), label, items }));
     return [
-        { ...VIRTUAL_GROUPS.allPanels, items: catalog.panels },
+        { ...VIRTUAL_GROUPS.allPanels, groups },
         { ...VIRTUAL_GROUPS.help, items: catalog.docs },
     ];
 }

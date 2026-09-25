@@ -8,6 +8,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/metaGamePanel.md',
   icon: '🎯',
   column: 2, // Middle column,
+  category: 'UI Panel Modules',
   description: 'UI panel for metaGame module configuration and management',
   requires: ['metaGame'],
 };

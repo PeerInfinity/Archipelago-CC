@@ -40,6 +40,7 @@ export const moduleInfo = {
   componentType: 'clientPanel',
   icon: '💻',
   column: 2, // Middle column,
+  category: 'Core Service Modules',
   description: 'Handles Archipelago client connection and communication.',
   requires: ['stateManager'],
 };

@@ -36,6 +36,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/editor.md',
   icon: '✏️',
   column: 2, // Middle column,
+  category: 'UI Panel Modules',
   description: 'Text Editor panel.',
   requires: ['editorCore'],
 };

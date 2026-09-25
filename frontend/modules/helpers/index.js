@@ -18,6 +18,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/helpers.md',
   icon: 'fn',
   column: 3, // Right column
+  category: 'UI Panel Modules',
   description: 'Helper functions display panel.',
   requires: ['stateManager', 'commonUI'],
 };

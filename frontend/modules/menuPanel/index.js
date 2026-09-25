@@ -63,6 +63,7 @@ export const moduleInfo = {
     componentType: MENU_PANEL_COMPONENT_TYPE,
     icon: '🚪',
     column: 3,
+    category: 'UI Panel Modules',
     description: "The start region's substrate: its exits, a Restart, and the skip-the-menu setting.",
     requires: ['gameState'],
 };

@@ -105,6 +105,7 @@ export const moduleInfo = {
   componentType: APWORLD_EDITOR_PANEL_ID,
   icon: '🧩',
   column: 3,
+  category: 'Game and Tool Modules',
   description: 'GUI editor for apworld rules.json (regions, exits, locations, access rules).',
   requires: ['stateManager'],
 };

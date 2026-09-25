@@ -116,6 +116,7 @@ export const moduleInfo = {
     componentType: BOUNCE_PANEL_COMPONENT_TYPE,
     icon: '🏀',
     column: 3,
+    category: 'Procedural Generation and Substrate Modules',
     description:
         'Procedurally generated bounce-platformer (DJ-Metroidvania) as a '
         + 'procgen substrate: every region is a vertical level whose access '

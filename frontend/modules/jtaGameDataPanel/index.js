@@ -9,6 +9,7 @@ export const moduleInfo = {
   componentType: 'jtaGameDataPanel',
   icon: '',
   column: 2,
+  category: 'Game and Tool Modules',
   description: 'View and control Journey to Ascension game data.',
   requires: ['iframeAdapter', 'iframePanel'],
 };

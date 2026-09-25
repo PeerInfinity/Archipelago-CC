@@ -26,6 +26,7 @@ export const moduleInfo = {
     componentType: 'jtaCostDebuggerPanel',
     icon: '',
     column: 2,
+    category: 'Game and Tool Modules',
     description: 'Step-through debugger for JTA cost generation via simulated playthrough.',
     requires: ['jtaGameDataPanel'],
 };

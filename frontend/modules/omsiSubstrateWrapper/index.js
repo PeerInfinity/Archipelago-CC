@@ -41,6 +41,7 @@ export const moduleInfo = {
     componentType: 'omsiSubstrateWrapperPanel',
     icon: '🔁',
     column: 3,
+    category: 'Procedural Generation and Substrate Modules',
     description:
         'Idle Loops (omsi-loops) hosted in an iframe as a loop-mode '
         + 'substrate. v0: one AP region = Beginnersville; the game\'s '

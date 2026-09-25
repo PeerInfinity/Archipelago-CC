@@ -28,6 +28,7 @@ export const moduleInfo = {
   componentType: 'loopsCostDebuggerPanel',
   icon: '',
   column: 1,
+  category: 'Loop Mode Modules',
   description: 'Step-through debugger for Loops cost generation algorithm.',
   requires: ['loops', 'sphereState'],
 };

@@ -24,6 +24,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/regions.md',
   icon: '🗺️',
   column: 3, // Right column
+  category: 'UI Panel Modules',
   description: 'Regions display panel.',
   requires: ['stateManager', 'commonUI'],
 };

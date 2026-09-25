@@ -27,6 +27,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/proofGraph.md',
   icon: '\u{1F517}', // link emoji
   column: 3,
+  category: 'UI Panel Modules',
   description: 'Reconstruct proof dependency edges in a graph puzzle.',
   requires: ['stateManager'],
 };

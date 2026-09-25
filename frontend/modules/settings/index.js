@@ -36,6 +36,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/settings.md',
   icon: '⚙️',
   column: 2, // Middle column,
+  category: 'UI Panel Modules',
   description: 'Settings editor panel.',
 };
 

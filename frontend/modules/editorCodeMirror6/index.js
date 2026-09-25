@@ -41,6 +41,7 @@ export const moduleInfo = {
   componentType: 'editorCodeMirror6Panel',
   icon: '📝',
   column: 2, // Middle column
+  category: 'UI Panel Modules',
   description: 'CodeMirror 6 based editor with JSON support and folding.',
   requires: ['editorCore'],
 };

@@ -37,6 +37,7 @@ export const moduleInfo = {
   componentType: 'ruleConverterPanel',
   icon: '\u{1F504}', // Counterclockwise arrows emoji
   column: 2,
+  category: 'Game and Tool Modules',
   description: 'Convert between Python code and JSON rule format.',
 };
 

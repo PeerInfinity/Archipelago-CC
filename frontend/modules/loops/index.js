@@ -15,6 +15,7 @@ export const moduleInfo = {
   componentType: 'loopsPanel',
   icon: '🔄',
   column: 3, // Right column
+  category: 'Loop Mode Modules',
   description: 'Loop mode logic and UI panel.',
   requires: ['stateManager', 'discovery'],
 };

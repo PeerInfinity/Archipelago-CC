@@ -412,6 +412,7 @@ export class QuickLaunchUI {
         return li;
     }
 
+    /** A virtual group: rows of catalog entries, or (All panels) one sub-group per category. */
     _group(group, target) {
         const details = document.createElement('details');
         details.className = 'ql-group';
@@ -422,14 +423,23 @@ export class QuickLaunchUI {
             else this.collapsed.add(group.id);
         });
         const summary = document.createElement('summary');
+        if (group.groups) {
+            const count = group.groups.reduce((n, g) => n + g.items.length, 0);
+            summary.textContent = `${group.label} (${count})`;
+            const inner = document.createElement('div');
+            inner.className = 'ql-subgroups';
+            inner.append(...group.groups.map((g) => this._group(g, target)));
+            details.classList.add('ql-parent');
+            details.append(summary, inner);
+            return details;
+        }
         summary.textContent = `${group.label} (${group.items.length})`;
         const list = document.createElement('ul');
         list.className = 'ql-list';
         const asEntry = {
             [VIRTUAL_GROUPS.help.id]: (d) => ({ kind: NODE_KINDS.doc, item: d }),
-            [VIRTUAL_GROUPS.allPanels.id]: (p) => ({ kind: NODE_KINDS.panel, item: p }),
             [VIRTUAL_GROUPS.unfiled.id]: (entry) => entry,
-        }[group.id];
+        }[group.id] ?? ((p) => ({ kind: NODE_KINDS.panel, item: p })); // an All panels category
         list.append(...group.items.map(asEntry).map(({ kind, item }) => {
             const doc = kind === NODE_KINDS.doc;
             const li = doc ? this._docRow(item, target) : this._panelRow(item, target);

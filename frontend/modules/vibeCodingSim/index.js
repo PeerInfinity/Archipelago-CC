@@ -16,6 +16,7 @@ export const moduleInfo = {
     componentType: 'vibeCodingSimPanel',
     icon: '🤖',
     column: 1,
+    category: 'UI Panel Modules',
     description: 'Simulate managing an AI-assisted coding project',
     requires: ['stateManager'],
 };

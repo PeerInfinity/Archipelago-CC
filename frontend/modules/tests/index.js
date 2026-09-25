@@ -21,6 +21,7 @@ export const moduleInfo = {
   componentType: 'testsPanel',
   icon: '✅',
   column: 1, // Left column,
+  category: 'Utility Modules',
   description: 'Automated application feature testing.',
 };
 

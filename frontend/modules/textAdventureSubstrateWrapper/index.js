@@ -75,6 +75,7 @@ export const moduleInfo = {
     componentType: 'textAdventureSubstrateWrapperPanel',
     icon: '📜',
     column: 3,
+    category: 'Procedural Generation and Substrate Modules',
     description:
         'Text-adventure renderer driven by the synthetic engine in an '
         + 'iframe. The surviving text-adventure module — supersedes the '

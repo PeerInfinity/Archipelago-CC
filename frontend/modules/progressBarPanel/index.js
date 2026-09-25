@@ -36,6 +36,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/progressBarPanel.md',
   icon: '📊',
   column: 2, // Middle column,
+  category: 'UI Panel Modules',
   description: 'Panel container for hosting progress bars.',
   requires: ['progressBar'],
 };

@@ -18,6 +18,7 @@ export const moduleInfo = {
     componentType: 'procgenPipelinePanel',
     icon: '🧭',
     column: 3,
+    category: 'Procedural Generation and Substrate Modules',
     description: 'Procedural-generation pipeline (sphere growth, top-down, shuffled spiral, grid growth)',
     requires: [],
 };

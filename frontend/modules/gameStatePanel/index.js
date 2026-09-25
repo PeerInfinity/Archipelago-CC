@@ -9,6 +9,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/gameStatePanel.md',
   icon: '👤',
   column: 2, // Middle column
+  category: 'UI Panel Modules',
   description: 'Game State display panel.',
 };
 

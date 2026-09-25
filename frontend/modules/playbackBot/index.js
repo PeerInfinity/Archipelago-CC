@@ -27,6 +27,7 @@ export const moduleInfo = {
     componentType: 'playbackBotPanel',
     icon: '🤖',
     column: 3,
+    category: 'Procedural Generation and Substrate Modules',
     description: 'Sphere-log playback bot — drives the maze panel '
                + 'visualizer through a recorded playthrough.',
     requires: [],

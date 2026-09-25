@@ -73,6 +73,7 @@ export const moduleInfo = {
     componentType: RUNNER_PANEL_COMPONENT_TYPE,
     icon: '🏃',
     column: 3,
+    category: 'Procedural Generation and Substrate Modules',
     description:
         'Procedurally generated auto-runner platformer as a procgen '
         + 'substrate: every region is a horizontal strip whose access '

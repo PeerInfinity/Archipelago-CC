@@ -37,6 +37,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/events.md',
   icon: '📡',
   column: 1, // Left column,
+  category: 'UI Panel Modules',
   description: 'Displays registered event publishers, subscribers, senders, and receivers.',
 };
 

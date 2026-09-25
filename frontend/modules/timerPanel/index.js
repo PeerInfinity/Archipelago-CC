@@ -22,6 +22,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/timerPanel.md',
   icon: '⏱️',
   column: 2, // Middle column,
+  category: 'UI Panel Modules',
   description: 'A dedicated panel for displaying the Timer UI.',
 };
 
