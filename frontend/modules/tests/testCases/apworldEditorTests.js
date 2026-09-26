@@ -11853,7 +11853,8 @@ export async function apworldInitialisePreviewsAndNamesTheReturnExits(testContro
     return testController.getOverallResult();
 }
 
-/** ⛓⛓ **(iv) A POPULATED SLOT SHOWS NO DOOR** — every slot of the four-player fixture, both hosts. */
+/** ⛓⛓ **(iv) A POPULATED SLOT SHOWS NO DOOR** — every slot of the four-player fixture, both hosts, and the
+ *  Map's *No map* state of a populated slot whose entries carry no `grid_cell`. */
 export async function apworldInitialiseDoorIsAbsentOnAPopulatedSlot(testController) {
     try {
         const panel = await openHub(testController, FOUR_PLAYER_PATH);
@@ -11870,6 +11871,17 @@ export async function apworldInitialiseDoorIsAbsentOnAPopulatedSlot(testControll
             selectTab(panel, 'sidecars');
             testController.reportCondition(`slot ${slot}: the Sidecars tab draws no door`, !initDoor());
         }
+        // ⛓ The Map's "No map" state on a POPULATED slot (entries, no grid_cell): here the
+        //   door's own test is the only guard — the four-player Map draws a grid and never asks.
+        const noGrid = await openHub(testController, NO_GRID_PRESET_PATH);
+        if (!noGrid) return testController.getOverallResult();
+        const entries = Object.keys(noGrid.rulesDoc.preset_sidecars?.[noGrid.playerId] ?? {}).length;
+        testController.reportCondition(`⛓ premise: a populated slot with no grid (${entries} entries)`, entries > 0);
+        selectTab(noGrid, 'map');
+        const said = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-intro`), 'the no-grid Map', 8000, 50);
+        testController.reportCondition('…its Map says "No map"', !!said && said.textContent.startsWith('No map'));
+        testController.reportCondition('⛓⛓ …and draws no door', !initDoor());
     } catch (error) {
         testController.log(`ERROR: ${error.message}`);
         testController.reportCondition('no door test error-free', false);
