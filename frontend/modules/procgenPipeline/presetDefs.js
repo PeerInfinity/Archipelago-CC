@@ -555,8 +555,8 @@ export const SHIPPED_PRESETS = Object.freeze([
         group: PRESET_GROUPS.sphereGrowth,
         description: 'One room of the REAL Seedling map grown into a maze sphere world as a '
             + 'LEAF: three maze rooms and a Seedling dungeon room behind a maze exit gated on '
-            + 'key_blue. A real door cannot enforce an AP gate, so the room hosts no children and '
-            + 'its stairs back are ungated; the gate is the maze\'s. Look at the composite map (the '
+            + 'key_blue. The room is a leaf by this state\'s knob (seedlingAtlasHostChildren off): it '
+            + 'hosts no children and its stairs back take no gate slot in the tree; the gate is the maze\'s. Look at the composite map (the '
             + 'Seedling cell hangs off the start cell) and at the flash_seedling sidecar; the same '
             + 'world is committed as the seedling_sphere_room preset, which plays in the Seedling wasm.',
         state: SEEDLING_SPHERE_ROOM_STATE,
@@ -588,6 +588,20 @@ export const SHIPPED_PRESETS = Object.freeze([
             + 'exitGates carries the door\'s rule). The same world is committed as the '
             + 'seedling_generated_host preset, which plays in the Seedling wasm.',
         state: SEEDLING_GENERATED_HOST_STATE,
+    },
+    {
+        id: 'shipped:seedling-atlas-host-demo',
+        label: 'Seedling room hosting a gated child',
+        group: PRESET_GROUPS.sphereGrowth,
+        description: 'A room of the REAL Seedling map HOSTS a maze child behind an AP gate: the same world as '
+            + 'the leaf demo without its knob, so the overworld room outside the starting house sits in sphere 2 '
+            + 'with two doors — the owl\'s-nest stairs back to the start (gated on key_blue) and the house door on '
+            + 'to a maze holding victory (gated on key_red, which lies in the other maze). The host enforces both '
+            + 'gates, reading each rule from the logic\'s own static data: without key_red the house door bounces the '
+            + 'player back and the Flash Game log says which item is missing. Look at the composite map and at the '
+            + 'flash_seedling sidecar (two bound doors, no rule in it). The same world is committed as the '
+            + 'seedling_atlas_host preset, which plays in the Seedling wasm to world completion.',
+        state: SEEDLING_ATLAS_HOST_STATE,
     },
     {
         id: 'shipped:jta-zone-demo',
