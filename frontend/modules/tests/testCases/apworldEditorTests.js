@@ -12171,3 +12171,283 @@ for (const [id, name, testFunction] of S1_TESTS) {
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE S2 — THE GENERATION SETTINGS ON THE INITIALISE
+ * FORM (user 2026-09-26: *"I would like to add the UI for the generation
+ * settings, rather than always using the default settings."*). The form draws
+ * R1's per-region form (the region size, the target's `renderProcgenParams`
+ * node) under the substrate; the build runs under that bag; the op's
+ * `provenance` records it; R2's per-region form reads a knob back off a built
+ * payload. Targets, knobs and controls DERIVED from the registry.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line import/first
+import { PROCGEN_PARAMS_ATTR, bagFromPayload } from '../../procgenCore/regionGenerationForm.js';
+// eslint-disable-next-line import/first
+import { assembleRegionParams as s2Assemble } from '../../procgenPipeline/sphereConfigHooks.js';
+// eslint-disable-next-line import/first
+import { effectiveHazardOpts as s2Hazards } from '../../procgenPipeline/presetRun.js';
+// eslint-disable-next-line import/first
+import { regionSizeFor as s2RegionSizeFor } from '../../apworldEditor/regionRegenerate.js';
+// eslint-disable-next-line import/first
+import {
+    DEFAULT_SUBSTRATE_ID as S2_DEFAULT, INITIALISE_SIZE_KEYS, initialiseSlot as s2InitialiseSlot,
+} from '../../apworldEditor/slotInitialise.js';
+// eslint-disable-next-line import/first
+import { initialiseArgs as s2Args, initialiseBagFor as s2BagFor } from '../../apworldEditor/initialiseFlow.js';
+
+const initSettings = () => initSection()?.querySelector('.apworld-initialise-settings') ?? null;
+const s2Defaults = (id) => ({ ...(substrateRegistry.get(id)?.defaultProcgenParams ?? {}) });
+/** ⛓ The first key of a target's defaults whose value is a number or a boolean — never typed. */
+const s2FirstKnob = (id) => Object.keys(s2Defaults(id))
+    .find((k) => typeof s2Defaults(id)[k] === 'number' || typeof s2Defaults(id)[k] === 'boolean') ?? null;
+const s2Oracle = (id, bag) => JSON.stringify([s2Assemble({ activeIds: [id], mode: 'topDown', params: bag }), s2Hazards(bag)]);
+/** ⛓ Does moving `id`'s first knob reach its realiser (assembleRegionParams / effectiveHazardOpts the oracle)? */
+const s2KnobReaches = (id) => {
+    const k = s2FirstKnob(id);
+    if (!k) return false;
+    const d = s2Defaults(id);
+    const v = typeof d[k] === 'boolean' ? !d[k] : d[k] + 1;
+    return s2Oracle(id, { ...d, [k]: v }) !== s2Oracle(id, d);
+};
+/** ⛓ (ii)'s target: the first hooked realiser target that is not the form's default and whose first knob reaches the realiser. */
+const s2KnobTarget = () => s1Targets().find((t) => t !== S2_DEFAULT
+    && typeof substrateRegistry.get(t)?.renderProcgenParams === 'function' && s2KnobReaches(t)) ?? null;
+/** ⛓ (iii)'s target: the first hooked realiser target whose payload read-back names a knob. */
+const s2ReadBackTarget = () => s1Targets().find((t) => {
+    const e = substrateRegistry.get(t);
+    return typeof e?.renderProcgenParams === 'function' && typeof e?.procgenParamsFromPayload === 'function';
+}) ?? null;
+
+/** ⛓ Pick `target` in the Initialise form's substrate select; → true when the form (and its bag) holds it. */
+async function s2PickTarget(testController, panel, target) {
+    const sub = initSection().querySelector('.apworld-initialise-substrate');
+    sub.value = target;
+    sub.dispatchEvent(new Event('change', { bubbles: true }));
+    return testController.pollForCondition(() => panel._initialise?.state?.substrate === target
+        && initSettings()?.dataset.substrateId === target, `the form holds \`${target}\``, 8000, 50);
+}
+
+/**
+ * ⛓ Move ONE knob through the hook's OWN control, found by the bag key it
+ * writes: each control of the hook's node in turn is moved (a number +1 — or
+ * the next step —, a select to another enabled option, a checkbox flipped); the
+ * first whose change moves exactly `key` in the bag (or, with no `key`, exactly
+ * one knob key) is kept, any other is put back. → {key, from, to} or null.
+ */
+function s2MoveHookKnob(bag, key = null) {
+    const form = initSettings();
+    const header = [...(form?.children ?? [])].find((c) => c.classList.contains('procgen-pipeline-scenario-subheader'));
+    const hookNode = header?.nextElementSibling ?? null;
+    if (!hookNode) return null;
+    for (const c of hookNode.querySelectorAll('input, select')) {
+        const snap = JSON.stringify(bag);
+        const old = c.type === 'checkbox' ? c.checked : c.value;
+        if (c.tagName === 'SELECT') {
+            const other = [...c.options].find((o) => !o.disabled && o.value !== c.value);
+            if (!other) continue;
+            c.value = other.value;
+        } else if (c.type === 'checkbox') {
+            c.checked = !c.checked;
+        } else {
+            c.value = String(Number(c.value) + Number(c.step || 1));
+        }
+        c.dispatchEvent(new Event('change', { bubbles: true }));
+        const before = JSON.parse(snap);
+        const movedKeys = Object.keys(bag).filter((k) => JSON.stringify(bag[k]) !== JSON.stringify(before[k]));
+        if (movedKeys.length === 1 && (key === null || movedKeys[0] === key)) {
+            return { key: movedKeys[0], from: before[movedKeys[0]], to: bag[movedKeys[0]] };
+        }
+        if (c.type === 'checkbox') c.checked = old; else c.value = old;
+        c.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    return null;
+}
+
+/**
+ * ⛓⛓⛓ **(i) THE SIZE FIELDS REACH EVERY PAYLOAD** — adventure, the form's
+ * default target: the settings node is R1's form (its `data-procgen-params`
+ * says whether the target has a hook — derived), the size fields show
+ * `regionSizeFor`'s answer; the width moved +2 through its own field re-plans
+ * the preview; Generate → every built payload's `width` is the new value, the
+ * op's `provenance.bag` carries it; Undo returns the document byte for byte.
+ */
+export async function apworldInitialiseSettingsSizeReachesEveryPayload(testController) {
+    try {
+        const panel = await openInitialiseForm(testController, INIT_ADVENTURE_PATH);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        const st = panel._initialise.state;
+        const entry = substrateRegistry.get(st.substrate);
+        testController.reportCondition(`⛓ premise: the default target \`${st.substrate}\` is a TILES realiser`,
+            geometryOf(entry) === REGION_GEOMETRY.TILES);
+        const form = initSettings();
+        testController.reportCondition('⛓ the form draws R1\'s generation form', !!form
+            && form.classList.contains('procgen-region-generation-form'));
+        testController.assertEqual('⛓ …whose procgen-params node matches whether the target has a hook',
+            typeof entry.renderProcgenParams === 'function' ? 'drawn' : 'none', form?.dataset[PROCGEN_PARAMS_ATTR]);
+        const size = s2RegionSizeFor(panel.rulesDoc, p);
+        const sizeField = (key) => {
+            const label = REGION_GENERATION_FIELDS.find((f) => f.key === key).label;
+            return [...form.querySelectorAll('.procgen-pipeline-field')]
+                .find((r) => r.querySelector('label')?.textContent === label)?.querySelector('input') ?? null;
+        };
+        testController.assertEqual('⛓ the width field shows regionSizeFor\'s', String(size.width),
+            sizeField(INITIALISE_SIZE_KEYS.width)?.value);
+        testController.assertEqual('…and the height field', String(size.height), sizeField(INITIALISE_SIZE_KEYS.height)?.value);
+        const want = size.width + 2;
+        const w = sizeField(INITIALISE_SIZE_KEYS.width);
+        w.value = String(want);
+        w.dispatchEvent(new Event('change', { bubbles: true }));
+        const replanned = await testController.pollForCondition(
+            () => panel._initialise?.state?.bag?.[INITIALISE_SIZE_KEYS.width] === want
+                && initSettings() !== form && initSettings()?.querySelector('input')
+                && initSection().querySelector('.apworld-initialise-preview')?.textContent
+                    === initialisePreview(panel.rulesDoc, p, panel._initialise.state).text,
+            'a size edit re-plans the preview (the form re-drawn)', 8000, 50);
+        testController.reportCondition('⛓ a size edit re-plans the preview', replanned);
+        const before = JSON.stringify(panel.rulesDoc);
+        const run = await pressInitialise(testController, panel);
+        testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+        const op = panel.session.ops().at(-1);
+        testController.assertEqual('⛓⛓ the op\'s provenance carries the bag\'s width', String(want),
+            String(op?.provenance?.bag?.[INITIALISE_SIZE_KEYS.width]));
+        const widths = Object.values(panel.rulesDoc.preset_sidecars?.[p] ?? {}).map((e) => e.playable_payload?.width);
+        testController.reportCondition(`⛓⛓ every built payload is ${want} wide (${widths.length} payloads)`,
+            widths.length > 0 && widths.every((x) => x === want));
+        panel.session.undo();
+        panel._render();
+        testController.assertEqual('⛓ Undo restores the document byte for byte', before, JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('initialise size test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(ii) A HOOK KNOB REACHES THE BUILD AND THE RECORD** — adventure → the
+ * first hooked realiser target that is not the default and whose first knob
+ * reaches its realiser in top-down mode (derived; the default's first knob does
+ * NOT — `assembleRegionParams` is the oracle, and plan §24 says which). The
+ * substrate change resets the bag to that target's defaults (size kept); the
+ * knob is moved through the hook's own control, found by the key it writes;
+ * the preview is unchanged (a hook knob does not move the plan); Generate →
+ * `provenance.bag` carries the moved value and the payloads differ from the
+ * default-bag build of the same seed.
+ */
+export async function apworldInitialiseAHookKnobReachesTheBuildAndTheRecord(testController) {
+    try {
+        const target = s2KnobTarget();
+        testController.reportCondition(`⛓ premise: a hooked target whose first knob reaches its realiser (${target})`, !!target);
+        testController.reportCondition(`(the default \`${S2_DEFAULT}\`'s first knob ${s2FirstKnob(S2_DEFAULT)} reaches it: ${s2KnobReaches(S2_DEFAULT)})`, true);
+        if (!target) return testController.getOverallResult();
+        const panel = await openInitialiseForm(testController, INIT_ADVENTURE_PATH);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        const size0 = { ...panel._initialise.state.bag };
+        testController.reportCondition(`the form holds \`${target}\``, await s2PickTarget(testController, panel, target));
+        const bag = panel._initialise.state.bag;
+        testController.assertEqual('⛓ the substrate change reset the bag to the target\'s defaults (the size kept)',
+            JSON.stringify({ ...s2Defaults(target), [INITIALISE_SIZE_KEYS.width]: size0[INITIALISE_SIZE_KEYS.width],
+                [INITIALISE_SIZE_KEYS.height]: size0[INITIALISE_SIZE_KEYS.height] }), JSON.stringify(bag));
+        const previewBefore = initSection().querySelector('.apworld-initialise-preview')?.textContent;
+        const k = s2FirstKnob(target);
+        const moved = s2MoveHookKnob(bag, k);
+        testController.reportCondition(`⛓⛓ the hook's own control moved \`${k}\` in the bag (${moved?.from} → ${moved?.to})`,
+            !!moved && moved.key === k);
+        if (!moved) return testController.getOverallResult();
+        testController.assertEqual('⛓ a hook knob does not re-plan the preview', previewBefore,
+            initSection().querySelector('.apworld-initialise-preview')?.textContent);
+        const doc0 = panel.rulesDoc;
+        const run = await pressInitialise(testController, panel);
+        testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+        const op = panel.session.ops().at(-1);
+        testController.assertEqual(`⛓⛓ the op's provenance carries \`${k}\``, JSON.stringify(moved.to),
+            JSON.stringify(op?.provenance?.bag?.[k]));
+        const dflt = s2InitialiseSlot({ doc: doc0, ...s2Args(p, {
+            substrate: target, side: op.provenance.gridDims.width, seed: op.provenance.seed,
+            backExits: op.provenance.backExits, bag: s2BagFor(doc0, p, target, op.provenance.bag),
+        }) });
+        testController.reportCondition('the default-bag build of the same seed succeeded', dflt?.ok === true);
+        testController.reportCondition(`⛓⛓ the payloads differ from the default-bag build (\`${k}\` reached the realiser)`,
+            JSON.stringify(op?.result?.entries) !== JSON.stringify(dflt?.entries));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('initialise hook knob test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iii) R2'S FORM READS THE INITIALISE BAG BACK** — adventure → the first
+ * hooked target with a payload read-back (`procgenParamsFromPayload`); the knob
+ * it reads back (derived: the key the read-back names that the hook's control
+ * writes) moved through the hook's control; Generate; Regions tab → the first
+ * new region → Re-roll ▸ (the form on its own substrate): the *this region was
+ * built with* line names the knob at the value the Initialise form set, which
+ * is `bagFromPayload`'s read of that region's payload.
+ */
+export async function apworldARegionFormReadsBackTheInitialiseBag(testController) {
+    try {
+        const target = s2ReadBackTarget();
+        testController.reportCondition(`⛓ premise: a hooked target with a payload read-back (${target})`, !!target);
+        if (!target) return testController.getOverallResult();
+        const panel = await openInitialiseForm(testController, INIT_ADVENTURE_PATH);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        testController.reportCondition(`the form holds \`${target}\``, await s2PickTarget(testController, panel, target));
+        const entry = substrateRegistry.get(target);
+        const bag = panel._initialise.state.bag;
+        // ⛓ the knob the read-back names — any key of its answer the hook's control writes
+        let moved = null;
+        for (const key of Object.keys(entry.procgenParamsFromPayload({}) ?? {})) {
+            moved = s2MoveHookKnob(bag, key);
+            if (moved) break;
+        }
+        testController.reportCondition(`⛓ the hook's control moved the read-back knob (${moved?.key}: ${moved?.from} → ${moved?.to})`, !!moved);
+        if (!moved) return testController.getOverallResult();
+        const run = await pressInitialise(testController, panel);
+        testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+        const region = Object.keys(panel.rulesDoc.preset_sidecars?.[p] ?? {})[0];
+        const read = bagFromPayload(entry, panel.rulesDoc.preset_sidecars[p][region].playable_payload);
+        testController.assertEqual(`⛓⛓ bagFromPayload reads \`${moved.key}\` off "${region}"'s payload`,
+            JSON.stringify(moved.to), JSON.stringify(read[moved.key]));
+        testController.reportCondition(`slot ${p} selected`, await onRegionsTabFor(testController, panel, p));
+        const btn = await testController.pollForValue(() => rerollButton(region, 'regions'), 'Re-roll ▸ on the new region', 8000, 50);
+        testController.reportCondition('⛓ Re-roll ▸ is enabled on the new region', !!btn && !btn.disabled);
+        btn?.click();
+        const line = await testController.pollForValue(
+            () => regionGenSection(region)?.querySelector('.apworld-region-generation-recorded') ?? null,
+            'the "this region was built with" line', 8000, 50);
+        const want = `${moved.key} ${typeof moved.to === 'string' ? moved.to : JSON.stringify(moved.to)}`;
+        testController.reportCondition(`⛓⛓ R2's form reads it back: "${want}"`, !!line && line.textContent.includes(want));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('region read-back test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+const S2_TESTS = [
+    ['apworld-initialise-settings-size-reaches-every-payload',
+        'APWorld hub: the Initialise form draws the generation settings; a region width set there reaches every built payload and the op\'s provenance; Undo restores',
+        apworldInitialiseSettingsSizeReachesEveryPayload],
+    ['apworld-initialise-a-hook-knob-reaches-the-build-and-the-record',
+        'APWorld hub: a substrate knob moved through its own control on the Initialise form is recorded in the provenance and changes the build',
+        apworldInitialiseAHookKnobReachesTheBuildAndTheRecord],
+    ['apworld-a-region-form-reads-back-the-initialise-bag',
+        'APWorld hub: after an Initialise with a moved knob, the per-region Region generation form reads that knob back off the new region',
+        apworldARegionFormReadsBackTheInitialiseBag],
+];
+for (const [id, name, testFunction] of S2_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE S2. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
