@@ -56,6 +56,7 @@ import { SIDE_AGNOSTIC_EXIT_SIDES } from '../procgenCore/exitSides.js';
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
 import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import { boundaryRule } from '../procgenPipeline/regionAtlasPool.js';
+import { makeHasRule } from '../shared/rulesJsonBuilder.js';
 // ⛓ The jta precedent (`jtaSubstrateWrapper/vanillaDataset.js`): a static JSON
 // module import is ONE spelling of the document's location for the browser's
 // raw ES modules, the esbuild bundle, node CLIs and vitest alike — no fetch, so
@@ -302,16 +303,22 @@ function extractZoneRules(zoneIdx, { region_id: regionId, exitSides = [] } = {})
 }
 
 /**
- * ⛓⛓⛓ SEEDLING IN THE PIPELINE T3 — **A REAL ROOM AS A SPHERE-GROWTH LEAF.**
+ * ⛓⛓⛓ SEEDLING IN THE PIPELINE T3 / SEEDLING GENERATED G6 — **A REAL ROOM IN
+ * SPHERE GROWTH, AS A LEAF OR A HOST.**
  *
  * Sphere growth realises a node's ENTRY gate on its PARENT's forward exit and
  * its children's gates on the node's own forward exits. A real Seedling door
- * cannot enforce an AP item gate — the game opens it for whoever walks onto
- * it — so a placed room hosts NO children (`canHostExitGates` declines every
- * one) and its door back to the parent is UNGATED (`backPortalGated`): the
- * entry gate stays on the parent's exit, where the parent's substrate
- * enforces it. So the one spec this realiser can meet is a LEAF: exactly one
- * exit side (the back door) and the node's items.
+ * cannot hold an AP item — the game opens it for whoever walks onto it — so
+ * until G6 a placed room was only ever a LEAF. Since G6 the HOST enforces the
+ * gate (`seedlingDoorGate.js`: the rule is read off the state manager's static
+ * data by the exit's AP name, and a refused door bounces the player back onto
+ * its approach), so a room HOSTS children on its own doors, one child per door
+ * it has (`canHostExitGates`, bounded by the installed atlas's roomiest room),
+ * and its door back to the parent is gated on the entry gate (sound: you are
+ * only inside if you held it). A state that wants T3's LEAF says
+ * `seedlingAtlasHostChildren: false` (the committed `seedling_sphere_room`
+ * does — that is what keeps its bytes): no child, and the back door takes no
+ * gate slot.
  *
  * ⛓ A real room is a SPECIFIC place, so it is placed AT MOST ONCE per
  * generation — sphere growth never consults `zoneCount` (that is the
@@ -323,7 +330,75 @@ function extractZoneRules(zoneIdx, { region_id: regionId, exitSides = [] } = {})
 const sphereRooms = new Map(); // region_id -> the placed room's apName
 
 /**
- * Choose the room for a leaf needing `nSides` door(s) and `nItems` location(s):
+ * ⛓⛓ G6 — **DOES A PLACED ROOM HOST CHILDREN?** A bag key that steers sphere
+ * growth's tree (the hooks on the entry), never the room: default TRUE; a state
+ * that wants T3's leaf says `false`. `seedlingGenHostChildren`'s sibling for the
+ * real-atlas rooms.
+ */
+export const SEEDLING_ATLAS_HOST_CHILDREN_KEY = 'seedlingAtlasHostChildren';
+export const atlasRoomHostsChildren = (regionParams) => regionParams?.seedlingAtlas?.hostChildren !== false;
+
+/** The regionParams this entry reads (`params.seedlingAtlas`), from the panel bag. */
+export function buildSeedlingAtlasRegionParams({ params = {} } = {}) {
+    return { seedlingAtlas: { hostChildren: params[SEEDLING_ATLAS_HOST_CHILDREN_KEY] !== false } };
+}
+
+/** The most doors any placeable room of the installed atlas has — the most gates one room can realise. */
+function mostDoorsOfAnyRoom() {
+    return Math.max(0, ...contentSource().zones.map((z) => z.payload.exits.length));
+}
+
+/**
+ * ⛓ The tree's veto: a room realises a gate per DOOR, so a host takes one more
+ * gate only while the installed atlas has a room with a door for it. The
+ * gates it already holds count its back door when that door is gated (the
+ * tree seeds it — `backPortalGated`), so for a start region every door is a
+ * child's. Which room it gets is decided at realisation (the tightest fit).
+ */
+function canHostExitGates(existingGates = []) {
+    return existingGates.length + 1 <= mostDoorsOfAnyRoom();
+}
+
+/** The per-term LOCK obstacle id — pure logic, no geometry (bounce's authored-lock precedent). */
+export const SEEDLING_DOOR_LOCK_PREFIX = 'seedling_door_lock_';
+function doorLockId(item, count) {
+    const slug = String(item).replace(/[^A-Za-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+    return count > 1 ? `${SEEDLING_DOOR_LOCK_PREFIX}${slug}__x${count}` : `${SEEDLING_DOOR_LOCK_PREFIX}${slug}`;
+}
+
+/**
+ * ⛓⛓ G6 — **A DOOR'S GATE, EXPRESSED WHERE THE ENGINE READS IT.** Sphere
+ * growth's zone path compiles `exitPaths[side]` against `obstacleDefs` (it does
+ * NOT read `exitRules` — T3 §17.0 #3), so each requirement term becomes one
+ * obstacle that is a pure rule LOCK (`clear_set_type: 'rule'`, `Has(item[,
+ * count])`) and the side's one path crosses all of them: the compiled exit rule
+ * is the AND of the terms — the tree's gate exactly. An empty requirement is
+ * one path with no obstacle (`True_`), which is also the engine's default, so a
+ * leaf's bytes do not move. The same encoding bounce uses for its authored
+ * terms (`emitObstaclePaths`), with this entry's own ids.
+ */
+export function seedlingDoorLocks(exitSpecs) {
+    const exitPaths = {};
+    const obstacleDefs = {};
+    for (const { side, requirement = [], counts = {} } of exitSpecs) {
+        const obstacles = requirement.map((item) => {
+            const count = counts?.[item] ?? 1;
+            const id = doorLockId(item, count);
+            obstacleDefs[id] = {
+                id,
+                name: `${item}${count > 1 ? ` x${count}` : ''} lock`,
+                clear_set_type: 'rule',
+                clear_rule: makeHasRule(item, count),
+            };
+            return id;
+        });
+        exitPaths[side] = [{ path_id: 'p1', obstacles }];
+    }
+    return { exitPaths, obstacleDefs };
+}
+
+/**
+ * Choose the room for a region needing `nSides` door(s) and `nItems` location(s):
  * the TIGHTEST room no other region holds that fits —
  * fewest locations, then fewest doors, then declaration order (the atlas
  * source's rule, `buildSphereAtlasSource`: a leaf needing no location must not
@@ -354,25 +429,23 @@ function chooseSphereRoom(source, regionId, nSides, nItems) {
 }
 
 /**
- * The sphere-growth zone realiser (`generateRegionZoneGen`'s contract). The
- * room's marked locations take the node's items in order, under the COMPILER's
- * names (`global_name` — the names the check binding reports); `exitRules` is
- * EMPTY: the room hosts no child gate, and the back door's logic is the
- * parent's forward gate, which `buildRulesJson`'s bidirectional pass copies onto
- * it. `payload` is the spiral's atlas-reference payload, bound by the one binder.
+ * The sphere-growth zone realiser (`generateRegionZoneGen`'s contract). One
+ * door per exit spec (the one binder: the k-th spec's side takes the k-th door
+ * in payload order), each spec's requirement a LOCK on its side's path
+ * (`seedlingDoorLocks`); the room's marked locations take the node's items in
+ * order, under the COMPILER's names (`global_name` — the names the check
+ * binding reports). `exitRules` is EMPTY: this path compiles `exitPaths`.
  */
 function generateZoneForSpecs({ region_id: regionId, exitSpecs = [], locationSpecs = [] } = {}) {
-    if (exitSpecs.length !== 1) {
+    if (exitSpecs.length === 0) {
         throw new Error(`${FLASH_SEEDLING_SUBSTRATE_ID}: region "${regionId}" asks a real Seedling room `
-            + `for ${exitSpecs.length} exit side(s) [${exitSpecs.map((e) => e.side).join(', ')}], but a `
-            + 'room is placed only as a LEAF: its one exit is the door back to its parent. A real door '
-            + 'cannot enforce an AP gate, so the room hosts no children (canHostExitGates declines them) '
-            + 'and cannot be a start region — place it with sphere growth behind a parent of another '
-            + 'substrate, or with the shuffled spiral, which binds a door per neighbour.');
+            + 'for no exit side at all, and a placed room is entered and left through its doors — a '
+            + 'region of this substrate needs at least one exit (its door back, or a child\'s door).');
     }
     const source = contentSource();
     const zone = chooseSphereRoom(source, regionId, exitSpecs.length, locationSpecs.length);
     const { payload } = bindDoorsToSides(zone, regionId, exitSpecs.map((e) => e.side));
+    const { exitPaths, obstacleDefs } = seedlingDoorLocks(exitSpecs);
     return {
         locations: locationSpecs.map((spec, k) => ({
             id: spec.id,
@@ -380,6 +453,8 @@ function generateZoneForSpecs({ region_id: regionId, exitSpecs = [], locationSpe
             item: spec.item ?? null,
         })),
         exitRules: {},
+        exitPaths,
+        obstacleDefs,
         payload,
     };
 }
@@ -599,14 +674,17 @@ export const substrateRegistryEntry = Object.freeze({
     get zoneCount() { return contentSource().zones.length; },
     extractZoneRules,
     /**
-     * ⛓⛓⛓ T3 — **SPHERE GROWTH PLACES A ROOM AS A LEAF** (see
-     * `generateZoneForSpecs`). A real door enforces no AP gate: the room hosts
-     * no child exit, and its back door is ungated — the entry gate stays on
-     * the parent's exit.
+     * ⛓⛓⛓ T3 / G6 — **SPHERE GROWTH PLACES A ROOM AS A LEAF OR A HOST** (see
+     * `generateZoneForSpecs`). The host enforces a door's gate at play, so a
+     * room hosts a child per door and its back door is gated on the entry
+     * gate; `seedlingAtlasHostChildren: false` keeps T3's leaf (no child, the
+     * back door takes no gate slot).
      */
     generateZoneForSpecs,
-    canHostExitGates: () => false,
-    backPortalGated: () => false,
+    canHostExitGates,
+    exitGateVeto: (regionParams) => (atlasRoomHostsChildren(regionParams) ? canHostExitGates : () => false),
+    backPortalGated: (regionParams) => atlasRoomHostsChildren(regionParams),
+    buildRegionParams: buildSeedlingAtlasRegionParams,
     /** Once per sphere generation: every room is unplaced again. Contributes nothing to the plan. */
     prepareSphereGrowth: () => {
         sphereRooms.clear();

@@ -1,5 +1,6 @@
 /**
- * ⛓⛓⛓ SEEDLING IN THE PIPELINE T3 — `flash_seedling` AS A SPHERE-GROWTH LEAF.
+ * ⛓⛓⛓ SEEDLING IN THE PIPELINE T3 — `flash_seedling` AS A SPHERE-GROWTH LEAF
+ * (and, since seedling generated G6, a HOST: the rows under "G6" below).
  *
  * The entry's sphere hooks (`flashSeedlingLibrary.js` § `generateZoneForSpecs`):
  * a leaf spec binds ONE real door, returns no exit rule, maps the node's items
@@ -15,8 +16,13 @@ import {
     substrateRegistryEntry as entry,
     SEEDLING_STARTER_ATLAS,
     FLASH_SEEDLING_SUBSTRATE_ID,
+    SEEDLING_ATLAS_HOST_CHILDREN_KEY,
+    SEEDLING_DOOR_LOCK_PREFIX,
+    buildSeedlingAtlasRegionParams,
+    seedlingDoorLocks,
 } from './flashSeedlingLibrary.js';
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
+import { compileAccessRule } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 
 const compiled = compileRegionAtlas(SEEDLING_STARTER_ATLAS);
 /** The placeable rooms (≥1 wired door), in the compile's order, with their doors and locations. */
@@ -51,10 +57,23 @@ describe('flash_seedling — a sphere-growth LEAF', () => {
         expect(withLoc[0].locations).toHaveLength(1);
     });
 
-    it('declares the leaf law: no child gate is hostable, and the back door is ungated', () => {
-        expect(entry.canHostExitGates([], [{ item: 'key_red' }])).toBe(false);
-        expect(entry.canHostExitGates([], [])).toBe(false);
-        expect(entry.backPortalGated({})).toBe(false);
+    it('G6 — a HOST by default (a gate per door of the roomiest room), T3\'s LEAF by the state\'s knob', () => {
+        const most = Math.max(...ROOMS.map((r) => r.doors.length));
+        const gates = (n) => Array.from({ length: n }, (_, k) => [{ item: `key_${k}`, count: 1 }]);
+        expect(entry.canHostExitGates([], [{ item: 'key_red' }])).toBe(true);
+        expect(entry.canHostExitGates(gates(most - 1), [{ item: 'key_red' }])).toBe(true);
+        expect(entry.canHostExitGates(gates(most), [{ item: 'key_red' }])).toBe(false);
+        const host = buildSeedlingAtlasRegionParams({ params: {} });
+        expect(entry.exitGateVeto(host)([], [{ item: 'key_red' }])).toBe(true);
+        expect(entry.exitGateVeto({})(gates(most), [{ item: 'key_red' }])).toBe(false);
+        expect(entry.backPortalGated({})).toBe(true);
+        expect(entry.backPortalGated(host)).toBe(true);
+        const leafParams = buildSeedlingAtlasRegionParams({ params: { [SEEDLING_ATLAS_HOST_CHILDREN_KEY]: false } });
+        expect(leafParams).toEqual({ seedlingAtlas: { hostChildren: false } });
+        expect(entry.exitGateVeto(leafParams)([], [{ item: 'key_red' }])).toBe(false);
+        expect(entry.exitGateVeto(leafParams)([], [])).toBe(false);
+        expect(entry.backPortalGated(leafParams)).toBe(false);
+        expect(entry.buildRegionParams).toBe(buildSeedlingAtlasRegionParams);
     });
 
     it('(a) a leaf spec binds ONE real door to its side, external, and returns no exit rule', () => {
@@ -85,12 +104,44 @@ describe('flash_seedling — a sphere-growth LEAF', () => {
         expect(room.apName).toBe(noLoc.find((r) => r.doors.length === fewest).apName);
     });
 
-    it('(b) a spec with a CHILD exit is refused: a real room hosts no children', () => {
+    it('(b) G6 — a HOST spec binds a door per side (the tightest room with enough doors), each child\'s gate a LOCK on its path', () => {
         const spec = leaf('region_3_2');
         spec.exitSpecs.unshift({ side: 'N', requirement: ['key_red'], counts: { key_red: 1 } });
-        expect(() => entry.generateZoneForSpecs(spec)).toThrow(
-            /region "region_3_2" asks a real Seedling room for 2 exit side\(s\) \[N, W\].*placed only as a LEAF.*hosts no children/);
-        expect(() => entry.generateZoneForSpecs({ ...spec, exitSpecs: [] })).toThrow(/for 0 exit side\(s\)/);
+        const out = entry.generateZoneForSpecs(spec);
+        const room = roomOf(out.payload);
+        expect(room.doors.length).toBeGreaterThanOrEqual(2);
+        expect(Object.entries(out.payload.bound_doors).map(([side, d]) => [side, d.exit_id]))
+            .toEqual([['N', room.doors[0]], ['W', room.doors[1]]]);
+        expect(out.exitRules).toEqual({}); // this path compiles exitPaths (T3 §17.0 #3)
+        // the compiled rule is the tree's gate EXACTLY; the ungated side is True_
+        expect(compileAccessRule(out.exitPaths.N, out.obstacleDefs)).toEqual({ rule: 'Has', args: { item_name: 'key_red' } });
+        expect(compileAccessRule(out.exitPaths.W, out.obstacleDefs)).toEqual({ rule: 'True_' });
+        expect(out.obstacleDefs).toEqual({ [`${SEEDLING_DOOR_LOCK_PREFIX}key_red`]: {
+            id: `${SEEDLING_DOOR_LOCK_PREFIX}key_red`, name: 'key_red lock', clear_set_type: 'rule',
+            clear_rule: { rule: 'Has', args: { item_name: 'key_red' } } } });
+    });
+
+    it('(b) G6 — the lock carries EVERY term: several items AND together, a count rides the rule', () => {
+        const { exitPaths, obstacleDefs } = seedlingDoorLocks([
+            { side: 'E', requirement: ['key_red', 'key_blue'], counts: { key_blue: 2 } },
+            { side: 'S', requirement: [], counts: {} },
+        ]);
+        expect(compileAccessRule(exitPaths.E, obstacleDefs)).toEqual({ rule: 'And', children: [
+            { rule: 'Has', args: { item_name: 'key_red' } },
+            { rule: 'Has', args: { item_name: 'key_blue', count: 2 } }] });
+        expect(Object.keys(obstacleDefs)).toEqual([`${SEEDLING_DOOR_LOCK_PREFIX}key_red`,
+            `${SEEDLING_DOOR_LOCK_PREFIX}key_blue__x2`]);
+        // an empty requirement is the engine's own default path (a leaf's bytes cannot move)
+        expect(exitPaths.S).toEqual([{ path_id: 'p1', obstacles: [] }]);
+    });
+
+    it('(b) more sides than any room has doors, or none at all, is refused by name', () => {
+        const most = Math.max(...ROOMS.map((r) => r.doors.length));
+        const spec = { region_id: 'region_3_2', exitSpecs: ['N', 'E', 'S', 'W'].slice(0, most + 1)
+            .map((side) => ({ side, requirement: [], counts: {} })), locationSpecs: [], seed: 1 };
+        expect(() => entry.generateZoneForSpecs(spec)).toThrow(new RegExp(`needs ${most + 1} door\\(s\\) \\+ 0 location`));
+        expect(() => entry.generateZoneForSpecs({ ...spec, exitSpecs: [] }))
+            .toThrow(/region "region_3_2" asks a real Seedling room for no exit side at all/);
     });
 
     it('(c) each placement takes a DIFFERENT room; with none left the next is refused by name', () => {

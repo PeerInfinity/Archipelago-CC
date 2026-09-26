@@ -105,18 +105,25 @@ export const SEEDLING_SPIRAL_ROOM_STATE = Object.freeze({
  * ⛓ SEEDLING IN THE PIPELINE T3 — **A REAL SEEDLING ROOM AS A SPHERE-GROWTH
  * LEAF, SPELLED ONCE.** Three maze rooms and ONE real Seedling room, seed 1,
  * 3 spheres, 1 filler, starting in a maze. The room is the filler: a LEAF
- * behind its maze parent's gated exit (a real door enforces no AP gate, so the
- * room hosts no children and its door back is ungated — `flashSeedlingLibrary.js`
- * § generateZoneForSpecs). Its readers: the committed preset
+ * behind its maze parent's gated exit (the room hosts no children and its door
+ * back takes no gate slot — `flashSeedlingLibrary.js` § generateZoneForSpecs).
+ * Its readers: the committed preset
  * `frontend/presets/seedling_sphere_room/AP_1` (written by
  * `scripts/procgen/make-seedling-spiral-room-preset.mjs --state=sphere`), the
  * headless oracle `flashPanel/seedlingSphereWorld.test.js`, and the box gate
  * `check-seedling-sphere-room-play.mjs`.
+ *
+ * ⛓ SEEDLING GENERATED G6 — A LEAF BY ITS STATE: `seedlingAtlasHostChildren:
+ * false`. Since G6 a real room HOSTS children by default (the host enforces its
+ * doors' gates off static data) and its back door takes a gate slot in the tree,
+ * which moved this world's tree and placements (measured, plan §12.1 #2); the
+ * knob keeps T3's leaf and its committed bytes.
  */
 export const SEEDLING_SPHERE_ROOM_STATE = Object.freeze({
     mode: 'sphereGrowth',
     params: Object.freeze({
         seed: 1, startSubstrate: 'maze', sphereCount: 3, fillerCount: 1, maxItemsPerRegion: 2,
+        seedlingAtlasHostChildren: false,
     }),
     scenario: Object.freeze({
         items: Object.freeze({ key_red: 1, key_blue: 1, victory: 1 }),
@@ -195,6 +202,34 @@ export const SEEDLING_GENERATED_HOST_STATE = Object.freeze({
         obstacles: Object.freeze({}),
     }),
     substrateQuotas: Object.freeze({ maze: 2, flash_seedling_gen: 1 }),
+    substrateMix: Object.freeze({}),
+    substrateMode: 'quotas',
+});
+
+/**
+ * ⛓⛓ SEEDLING GENERATED LEVELS G6 — **A REAL SEEDLING ROOM THAT HOSTS A CHILD
+ * BEHIND AN AP GATE, SPELLED ONCE.** G4's host shape with the start swapped to a
+ * room of the REAL map (`flash_seedling`): seed 1, 3 spheres, no filler, one item
+ * per region. The tree realises the start as the starter atlas's
+ * `starting_house` (one door, one chest — the tightest room that seats one door
+ * and one item), gives its door a maze child behind `Has(key_blue)`, and puts
+ * `key_blue` in the chest — so a player meets the door LOCKED (the host bounces
+ * them back and says which item), opens the chest in the same room, and the
+ * door opens. The maze child leads on to `key_red` and a second maze holding
+ * victory. Its readers: `flashPanel/seedlingAtlasHostWorld.test.js`, the
+ * committed preset `seedling_atlas_host` and its box gate
+ * `check-seedling-atlas-host-play.mjs`.
+ */
+export const SEEDLING_ATLAS_HOST_STATE = Object.freeze({
+    mode: 'sphereGrowth',
+    params: Object.freeze({
+        seed: 1, startSubstrate: 'flash_seedling', sphereCount: 3, fillerCount: 0, maxItemsPerRegion: 1,
+    }),
+    scenario: Object.freeze({
+        items: Object.freeze({ key_red: 1, key_blue: 1, victory: 1 }),
+        obstacles: Object.freeze({}),
+    }),
+    substrateQuotas: Object.freeze({ maze: 2, flash_seedling: 1 }),
     substrateMix: Object.freeze({}),
     substrateMode: 'quotas',
 });

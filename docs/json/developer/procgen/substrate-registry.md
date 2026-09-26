@@ -370,13 +370,13 @@ Groups are this document's own § headings, matched to a field by the section th
 | `backPortalGated` | — | — | fn | fn | — | fn | fn | — | — |
 | `buildLibraryRegionParams` | fn | — | — | — | — | — | — | — | — |
 | `buildRegionContract` | — | — | fn | fn | — | — | — | — | — |
-| `buildRegionParams` | — | — | fn | fn | — | — | fn | — | — |
+| `buildRegionParams` | — | — | fn | fn | — | fn | fn | — | — |
 | `buildZoneSpecs` | — | — | fn | fn | — | — | — | — | — |
 | `canHostExitGates` | — | — | fn | fn | — | fn | fn | — | — |
 | `canHostExitGatesBraid` | — | — | fn | — | — | — | — | — | — |
 | `defaultProcgenParams` | 6 keys | — | 10 keys | 8 keys | — | — | 7 keys | — | — |
 | `driftItems` | — | — | Left arrow, Right arrow | — | — | — | — | — | — |
-| `exitGateVeto` | — | — | fn | fn | — | — | fn | — | — |
+| `exitGateVeto` | — | — | fn | fn | — | fn | fn | — | — |
 | `gateHostingHint` | — | — | fn | fn | — | — | — | — | — |
 | `gateableItems` | — | — | `null` | 5 items | — | — | — | — | — |
 | `generateZoneForSpecs` | — | — | fn | fn | — | fn | — | — | — |
