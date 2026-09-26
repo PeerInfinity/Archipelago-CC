@@ -344,68 +344,89 @@
       "enabled": true,
       "order": 39,
       "category": "Quick Launch",
-      "_comment": "Quick Launch Q3 (2026-09-24): categories / cards view / filter / collapsed groups. Expectations are read off centralRegistry and CATEGORY_ORDER at run time. Each row ends (restoreQ3) with the tree EMPTY_TREE, the view tree, the filter box empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+      "_comment": "Quick Launch Q3 (2026-09-24): categories / cards view / filter / collapsed groups. Expectations are read off centralRegistry and CATEGORY_ORDER at run time. Each row ends (resetQuickLaunch, formerly restoreQ3) with the tree EMPTY_TREE, the view tree, the filter box empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
     },
     {
       "id": "quick-launch-cards-view-shows-descriptions",
       "enabled": true,
       "order": 40,
       "category": "Quick Launch",
-      "_comment": "Quick Launch Q3 (2026-09-24): categories / cards view / filter / collapsed groups. Expectations are read off centralRegistry and CATEGORY_ORDER at run time. Each row ends (restoreQ3) with the tree EMPTY_TREE, the view tree, the filter box empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+      "_comment": "Quick Launch Q3 (2026-09-24): categories / cards view / filter / collapsed groups. Expectations are read off centralRegistry and CATEGORY_ORDER at run time. Each row ends (resetQuickLaunch, formerly restoreQ3) with the tree EMPTY_TREE, the view tree, the filter box empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
     },
     {
       "id": "quick-launch-filter-keeps-ancestors-open",
       "enabled": true,
       "order": 41,
       "category": "Quick Launch",
-      "_comment": "Quick Launch Q3 (2026-09-24): categories / cards view / filter / collapsed groups. Expectations are read off centralRegistry and CATEGORY_ORDER at run time. Each row ends (restoreQ3) with the tree EMPTY_TREE, the view tree, the filter box empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+      "_comment": "Quick Launch Q3 (2026-09-24): categories / cards view / filter / collapsed groups. Expectations are read off centralRegistry and CATEGORY_ORDER at run time. Each row ends (resetQuickLaunch, formerly restoreQ3) with the tree EMPTY_TREE, the view tree, the filter box empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
     },
     {
       "id": "quick-launch-collapsed-groups-persist",
       "enabled": true,
       "order": 42,
       "category": "Quick Launch",
-      "_comment": "Quick Launch Q3 (2026-09-24): categories / cards view / filter / collapsed groups. Expectations are read off centralRegistry and CATEGORY_ORDER at run time. Each row ends (restoreQ3) with the tree EMPTY_TREE, the view tree, the filter box empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+      "_comment": "Quick Launch Q3 (2026-09-24): categories / cards view / filter / collapsed groups. Expectations are read off centralRegistry and CATEGORY_ORDER at run time. Each row ends (resetQuickLaunch, formerly restoreQ3) with the tree EMPTY_TREE, the view tree, the filter box empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
     },
     {
       "id": "quick-launch-help-sections-follow-the-docs-markers",
       "enabled": true,
       "order": 43,
       "category": "Quick Launch",
-      "_comment": "Quick Launch P6 (2026-09-26): Help sections declared by the docs tree (README markers → HELP_SECTIONS), the panel guides out of Help, the fold button, showDeveloperDocs. Expectations are read off HELP_SECTIONS / DOCS_INDEX / centralRegistry at run time. Each row ends (restoreP6) with showDeveloperDocs false, the fold button at \"Collapse all\", the tree EMPTY_TREE, the view tree, the filter empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+      "_comment": "Quick Launch P6 (2026-09-26): Help sections declared by the docs tree (README markers → HELP_SECTIONS), the panel guides out of Help, the fold button, showDeveloperDocs. Expectations are read off HELP_SECTIONS / DOCS_INDEX / centralRegistry at run time. Each row ends (resetQuickLaunch, formerly restoreP6) with showDeveloperDocs false, the fold button at \"Collapse all\", the tree EMPTY_TREE, the view tree, the filter empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
     },
     {
       "id": "quick-launch-panel-guides-not-listed-in-help",
       "enabled": true,
       "order": 44,
       "category": "Quick Launch",
-      "_comment": "Quick Launch P6 (2026-09-26): Help sections declared by the docs tree (README markers → HELP_SECTIONS), the panel guides out of Help, the fold button, showDeveloperDocs. Expectations are read off HELP_SECTIONS / DOCS_INDEX / centralRegistry at run time. Each row ends (restoreP6) with showDeveloperDocs false, the fold button at \"Collapse all\", the tree EMPTY_TREE, the view tree, the filter empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+      "_comment": "Quick Launch P6 (2026-09-26): Help sections declared by the docs tree (README markers → HELP_SECTIONS), the panel guides out of Help, the fold button, showDeveloperDocs. Expectations are read off HELP_SECTIONS / DOCS_INDEX / centralRegistry at run time. Each row ends (resetQuickLaunch, formerly restoreP6) with showDeveloperDocs false, the fold button at \"Collapse all\", the tree EMPTY_TREE, the view tree, the filter empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
     },
     {
       "id": "quick-launch-fold-button-collapses-then-expands",
       "enabled": true,
       "order": 45,
       "category": "Quick Launch",
-      "_comment": "Quick Launch P6 (2026-09-26): Help sections declared by the docs tree (README markers → HELP_SECTIONS), the panel guides out of Help, the fold button, showDeveloperDocs. Expectations are read off HELP_SECTIONS / DOCS_INDEX / centralRegistry at run time. Each row ends (restoreP6) with showDeveloperDocs false, the fold button at \"Collapse all\", the tree EMPTY_TREE, the view tree, the filter empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+      "_comment": "Quick Launch P6 (2026-09-26): Help sections declared by the docs tree (README markers → HELP_SECTIONS), the panel guides out of Help, the fold button, showDeveloperDocs. Expectations are read off HELP_SECTIONS / DOCS_INDEX / centralRegistry at run time. Each row ends (resetQuickLaunch, formerly restoreP6) with showDeveloperDocs false, the fold button at \"Collapse all\", the tree EMPTY_TREE, the view tree, the filter empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
     },
     {
       "id": "quick-launch-developer-docs-behind-setting",
       "enabled": true,
       "order": 46,
       "category": "Quick Launch",
-      "_comment": "Quick Launch P6 (2026-09-26): Help sections declared by the docs tree (README markers → HELP_SECTIONS), the panel guides out of Help, the fold button, showDeveloperDocs. Expectations are read off HELP_SECTIONS / DOCS_INDEX / centralRegistry at run time. Each row ends (restoreP6) with showDeveloperDocs false, the fold button at \"Collapse all\", the tree EMPTY_TREE, the view tree, the filter empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+      "_comment": "Quick Launch P6 (2026-09-26): Help sections declared by the docs tree (README markers → HELP_SECTIONS), the panel guides out of Help, the fold button, showDeveloperDocs. Expectations are read off HELP_SECTIONS / DOCS_INDEX / centralRegistry at run time. Each row ends (resetQuickLaunch, formerly restoreP6) with showDeveloperDocs false, the fold button at \"Collapse all\", the tree EMPTY_TREE, the view tree, the filter empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
+      "id": "quick-launch-fold-disabled-under-filter",
+      "enabled": true,
+      "order": 47,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch P3 (2026-09-26): the fold button disabled while filtering, the filter's Escape and \"N of M\" count, the \"filed N×\" badge. ⚖ RULED (5): each row sets its initial state first (panelRoot → resetQuickLaunch) and ends with resetQuickLaunch in finally. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
+      "id": "quick-launch-filter-esc-and-count",
+      "enabled": true,
+      "order": 48,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch P3 (2026-09-26): the fold button disabled while filtering, the filter's Escape and \"N of M\" count, the \"filed N×\" badge. ⚖ RULED (5): each row sets its initial state first (panelRoot → resetQuickLaunch) and ends with resetQuickLaunch in finally. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
+      "id": "quick-launch-filed-badge-in-edit-mode",
+      "enabled": true,
+      "order": 49,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch P3 (2026-09-26): the fold button disabled while filtering, the filter's Escape and \"N of M\" count, the \"filed N×\" badge. ⚖ RULED (5): each row sets its initial state first (panelRoot → resetQuickLaunch) and ends with resetQuickLaunch in finally. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
     },
     {
       "id": "mobile-tab-bar-resolves-every-panel",
       "enabled": true,
-      "order": 47,
+      "order": 50,
       "category": "Quick Launch",
       "_comment": "Quick Launch P2 (2026-09-26): the mobile fallback table is gone; every registered panel must declare the title and name the mobile tab bar shows in its own moduleInfo. Read off centralRegistry at run time. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
     },
     {
       "id": "layout-import-keeps-module-state-in-sync",
       "enabled": true,
-      "order": 48,
+      "order": 51,
       "category": "JSON Panel",
       "_comment": "Quick Launch Q1b (2026-09-24), trap 1424: a live layout import (applyLayoutConfig) must leave every module with a panel enabled exactly when its tab exists and disable nothing; a layout without Events disables it and the original re-enables it; enableModule then activates the existing tab instead of adding a second. Self-contained (ends on the layout it started with)."
     }

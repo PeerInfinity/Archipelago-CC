@@ -11,15 +11,14 @@
  * ⛓ Each row leaves the layout as it found it: the activation row restores the
  * stack's previously active tab; the reopen row ends with Events open again.
  *
- * ⛓ The Q2 rows (the stored tree, edit mode, Unfiled) each END by writing
- * the tree setting back to EMPTY_TREE and leaving edit mode, in `finally` —
- * so no row owes its state to the row before it, and the Q1 rows (which
- * count buttons on an empty tree) are unaffected by where these run. The Q3
- * rows (categories, cards, filter, collapsed groups) end the same way and
- * also put the view back to tree, clear the filter box and empty
- * collapsedGroups (`restoreQ3`). The P6 rows (Help sections, the fold button,
- * the developer-docs setting) also put showDeveloperDocs back to false and the
- * fold button back to "Collapse all" (`restoreP6`).
+ * ⚖ RULED (the user, 2026-09-26): every row SETS the state it expects at its
+ * start and cleans up after itself. `panelRoot` — the first call of every
+ * panel row — runs `resetQuickLaunch` before it waits for the buttons, and
+ * every row that changes anything runs it again in `finally`. The state:
+ * the real dialogs, the filter box empty, the fold button at "Collapse all",
+ * showDeveloperDocs false, the view tree, collapsedGroups [], edit mode off,
+ * the tree EMPTY_TREE. So no row owes its precondition to the row before it,
+ * and each passes alone.
  *
  * Handles (quick-launch Q1 W0 (e)): a panel is closed the way its × does with
  * `window.panelManager.destroyPanelByComponentType(type)` (it fires Golden
@@ -32,13 +31,16 @@ import { registerTest } from '../testRegistry.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import { CATEGORY_ORDER, DOCS_INDEX, HELP_SECTIONS } from '../../quickLaunch/generated/docsIndex.js';
-import { OTHER_CATEGORY, VIRTUAL_GROUPS, drawnHelpSections, lookupModuleInfo } from '../../quickLaunch/quickLaunchCatalog.js';
-import { EMPTY_TREE, NODE_KINDS } from '../../quickLaunch/quickLaunchTree.js';
+import {
+    OTHER_CATEGORY, VIRTUAL_GROUPS, buildCatalog, drawnHelpSections, lookupModuleInfo,
+} from '../../quickLaunch/quickLaunchCatalog.js';
+import { EMPTY_TREE, NODE_KINDS, refCounts } from '../../quickLaunch/quickLaunchTree.js';
 import { completeModuleInfo } from '../../../app/initialization/completeModuleInfo.js';
 import {
-    COLLAPSED_KEY, COLLAPSED_SETTING, CONTROLS, DEVELOPER_DOCS_KEY, DEVELOPER_DOCS_SETTING, FOLD_TEXT, INLINE, MODULE_ID,
-    ROOT_CHOICE, TREE_KEY, TREE_SETTING, VIEWS, VIEW_KEY, VIEW_SETTING, dialogs,
+    COLLAPSED_KEY, COLLAPSED_SETTING, CONTROLS, DEVELOPER_DOCS_KEY, DEVELOPER_DOCS_SETTING, FOLD_DISABLED_TITLE, FOLD_TEXT,
+    FOLD_TITLE, INLINE, MODULE_ID, ROOT_CHOICE, TREE_KEY, TREE_SETTING, VIEWS, VIEW_KEY, VIEW_SETTING, dialogs, filedText,
 } from '../../quickLaunch/quickLaunchUI.js';
+import { buildViewModel, countText, filterView } from '../../quickLaunch/quickLaunchFilter.js';
 
 const CATEGORY = 'Quick Launch';
 const MOUNT_TIMEOUT_MS = 10000;
@@ -47,10 +49,20 @@ const POLL_MS = 100;
 const OPEN_TARGET = 'inventoryPanel';
 const CLOSE_TARGET = 'eventsPanel';
 
-/** The panel's root once it shows a button per registered panel; null if it never does. */
+/**
+ * The panel's root, reset to the rows' initial state (`resetQuickLaunch`),
+ * once it shows a button per registered panel; null if it never does.
+ */
 async function panelRoot(testController) {
     const expected = centralRegistry.getAllPanelComponents().size;
-    const ready = await testController.pollForCondition(
+    const mounted = await testController.pollForCondition(
+        () => document.querySelector('.quick-launch-panel'),
+        'the Quick Launch panel to be mounted',
+        MOUNT_TIMEOUT_MS,
+        POLL_MS,
+    );
+    if (mounted) await resetQuickLaunch(testController, document.querySelector('.quick-launch-panel'));
+    const ready = mounted && await testController.pollForCondition(
         () => document.querySelectorAll('.quick-launch-panel .ql-panel').length === expected,
         `Quick Launch panel to show ${expected} panel buttons`,
         MOUNT_TIMEOUT_MS,
@@ -134,37 +146,46 @@ async function quickLaunchButtonReopensClosedPanel(testController) {
         tabItem(CLOSE_TARGET) !== null && moduleEnabled(moduleId));
     if (!moduleId) return testController.getOverallResult();
 
-    await window.panelManager.destroyPanelByComponentType(CLOSE_TARGET);
-    const disabled = await testController.pollForCondition(
-        () => !moduleEnabled(moduleId) && tabItem(CLOSE_TARGET) === null,
-        `${moduleId} to be disabled after its tab is closed`,
-        ACTION_TIMEOUT_MS,
-        POLL_MS,
-    );
-    testController.reportCondition('closing the tab disables the module', disabled);
-    const dotOff = await testController.pollForCondition(
-        () => rowButton(root, CLOSE_TARGET)?.querySelector('.ql-dot.ql-off') != null,
-        `${CLOSE_TARGET}'s dot to show closed`,
-        ACTION_TIMEOUT_MS,
-        POLL_MS,
-    );
-    testController.reportCondition('the row\'s dot follows the close', dotOff);
+    try {
+        await window.panelManager.destroyPanelByComponentType(CLOSE_TARGET);
+        const disabled = await testController.pollForCondition(
+            () => !moduleEnabled(moduleId) && tabItem(CLOSE_TARGET) === null,
+            `${moduleId} to be disabled after its tab is closed`,
+            ACTION_TIMEOUT_MS,
+            POLL_MS,
+        );
+        testController.reportCondition('closing the tab disables the module', disabled);
+        const dotOff = await testController.pollForCondition(
+            () => rowButton(root, CLOSE_TARGET)?.querySelector('.ql-dot.ql-off') != null,
+            `${CLOSE_TARGET}'s dot to show closed`,
+            ACTION_TIMEOUT_MS,
+            POLL_MS,
+        );
+        testController.reportCondition('the row\'s dot follows the close', dotOff);
 
-    rowButton(root, CLOSE_TARGET)?.click();
-    const reopened = await testController.pollForCondition(
-        () => moduleEnabled(moduleId) && tabItem(CLOSE_TARGET) !== null,
-        `${moduleId} to be enabled with a tab again`,
-        ACTION_TIMEOUT_MS,
-        POLL_MS,
-    );
-    testController.reportCondition('clicking its button reopens the panel', reopened);
-    const dotOn = await testController.pollForCondition(
-        () => rowButton(root, CLOSE_TARGET)?.querySelector('.ql-dot.ql-on') != null,
-        `${CLOSE_TARGET}'s dot to show open`,
-        ACTION_TIMEOUT_MS,
-        POLL_MS,
-    );
-    testController.reportCondition('the row\'s dot follows the reopen', dotOn);
+        rowButton(root, CLOSE_TARGET)?.click();
+        const reopened = await testController.pollForCondition(
+            () => moduleEnabled(moduleId) && tabItem(CLOSE_TARGET) !== null,
+            `${moduleId} to be enabled with a tab again`,
+            ACTION_TIMEOUT_MS,
+            POLL_MS,
+        );
+        testController.reportCondition('clicking its button reopens the panel', reopened);
+        const dotOn = await testController.pollForCondition(
+            () => rowButton(root, CLOSE_TARGET)?.querySelector('.ql-dot.ql-on') != null,
+            `${CLOSE_TARGET}'s dot to show open`,
+            ACTION_TIMEOUT_MS,
+            POLL_MS,
+        );
+        testController.reportCondition('the row\'s dot follows the reopen', dotOn);
+    } finally {
+        // A failed reopen must not leave Events closed for the rows after this one.
+        if (tabItem(CLOSE_TARGET) === null) {
+            await window.moduleManagerApi?.enableModule?.(moduleId);
+            await testController.pollForCondition(() => tabItem(CLOSE_TARGET) !== null,
+                `${CLOSE_TARGET} open again (cleanup)`, ACTION_TIMEOUT_MS, POLL_MS);
+        }
+    }
     return testController.getOverallResult();
 }
 
@@ -208,24 +229,41 @@ function pick(select, value) {
     select.dispatchEvent(new Event('change'));
 }
 
-/** Put everything a Q2 row may have changed back: edit mode off, the tree empty, the real dialogs. */
-async function restoreQ2(testController, root, savedDialogs) {
-    Object.assign(dialogs, savedDialogs);
+/** The dialogs as the module defines them, captured at import: every reset puts these back. */
+const REAL_DIALOGS = { ...dialogs };
+const foldButton = (root) => root?.querySelector(`.${CONTROLS.fold}`);
+
+/**
+ * ⚖ RULED (5): put the panel in the state every row starts from and ends in —
+ * the real dialogs, the filter box empty, the fold button at "Collapse all",
+ * showDeveloperDocs false, the view tree, collapsedGroups [], edit mode off,
+ * the tree EMPTY_TREE — and wait until the panel draws it. The filter is
+ * cleared FIRST: the fold button is disabled while it has text.
+ */
+async function resetQuickLaunch(testController, root) {
+    const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
+    Object.assign(dialogs, REAL_DIALOGS);
+    if (root?.querySelector(`.${CONTROLS.filter}`)?.value) typeFilter(root, '');
+    await until(() => foldButton(root) && !foldButton(root).disabled, 'the fold button enabled (the filter empty)');
+    // "Expand all" writes collapsedGroups [] and opens everything — the state written below anyway.
+    if (foldButton(root)?.textContent === FOLD_TEXT.expand) foldButton(root).click();
+    await settingsManager.updateModuleSetting(MODULE_ID, DEVELOPER_DOCS_KEY, false);
+    await settingsManager.updateModuleSetting(MODULE_ID, VIEW_KEY, VIEWS.tree);
+    await settingsManager.updateModuleSetting(MODULE_ID, COLLAPSED_KEY, []);
     const edit = root?.querySelector(`.${CONTROLS.edit}`);
     if (edit?.getAttribute('aria-pressed') === 'true') edit.click();
     await writeTree(EMPTY_TREE);
-    await testController.pollForCondition(
-        () => !document.querySelector('.quick-launch-panel .ql-root, .quick-launch-panel .ql-ctl'),
-        'Quick Launch to render the empty tree again',
-        ACTION_TIMEOUT_MS,
-        POLL_MS,
+    await until(
+        () => root && !root.querySelector('.ql-root, .ql-ctl, .ql-desc') && !root.classList.contains('ql-cards')
+            && foldButton(root)?.textContent === FOLD_TEXT.collapse
+            && !root.querySelector(`details[data-group-id^="${VIRTUAL_GROUPS.help.id}/developer"]`),
+        'Quick Launch back at its initial state (empty tree, tree view, no edit controls, "Collapse all", no developer section)',
     );
 }
 
 async function quickLaunchEmptyTreeRendersAsQ1(testController) {
     const root = await panelRoot(testController);
     if (!root) return testController.getOverallResult();
-    const saved = { ...dialogs };
     try {
         await writeTree(EMPTY_TREE);
         const settled = await testController.pollForCondition(
@@ -246,7 +284,7 @@ async function quickLaunchEmptyTreeRendersAsQ1(testController) {
         testController.assertEqual('the Edit button is not pressed', 'false',
             root.querySelector(`.${CONTROLS.edit}`)?.getAttribute('aria-pressed'));
     } finally {
-        await restoreQ2(testController, root, saved);
+        await resetQuickLaunch(testController, root);
     }
     return testController.getOverallResult();
 }
@@ -254,7 +292,6 @@ async function quickLaunchEmptyTreeRendersAsQ1(testController) {
 async function quickLaunchEditOpsPersist(testController) {
     const root = await panelRoot(testController);
     if (!root) return testController.getOverallResult();
-    const saved = { ...dialogs };
     dialogs.confirm = () => true;
     const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
     /** Click "+ group" at the top level and type the name into the inline input it opens. */
@@ -322,7 +359,7 @@ async function quickLaunchEditOpsPersist(testController) {
             topGroupIds(root).join(','));
         testController.reportCondition('the stored list comes first', root.querySelector('.ql-groups')?.firstElementChild?.classList.contains('ql-root'));
     } finally {
-        await restoreQ2(testController, root, saved);
+        await resetQuickLaunch(testController, root);
     }
     return testController.getOverallResult();
 }
@@ -330,7 +367,6 @@ async function quickLaunchEditOpsPersist(testController) {
 async function quickLaunchUnfiledShowsUnreferenced(testController) {
     const root = await panelRoot(testController);
     if (!root) return testController.getOverallResult();
-    const saved = { ...dialogs };
     try {
         await writeTree({ version: 1, nodes: [{ id: 'filed-1', kind: NODE_KINDS.panel, ref: OPEN_TARGET }] });
         const sel = `details[data-group-id="${VIRTUAL_GROUPS.unfiled.id}"]`;
@@ -346,7 +382,7 @@ async function quickLaunchUnfiledShowsUnreferenced(testController) {
         testController.assertEqual('Unfiled comes right after the stored list', VIRTUAL_GROUPS.unfiled.id,
             topGroupIds(root)[0]);
     } finally {
-        await restoreQ2(testController, root, saved);
+        await resetQuickLaunch(testController, root);
     }
     return testController.getOverallResult();
 }
@@ -354,7 +390,6 @@ async function quickLaunchUnfiledShowsUnreferenced(testController) {
 async function quickLaunchDuplicateRefsBothActivate(testController) {
     const root = await panelRoot(testController);
     if (!root) return testController.getOverallResult();
-    const saved = { ...dialogs };
     const item = tabItem(OPEN_TARGET);
     testController.reportCondition(`${OPEN_TARGET} has a tab`, item !== null);
     if (!item) return testController.getOverallResult();
@@ -384,7 +419,7 @@ async function quickLaunchDuplicateRefsBothActivate(testController) {
         }
     } finally {
         if (before && before.parent === stack) stack.setActiveComponentItem(before);
-        await restoreQ2(testController, root, saved);
+        await resetQuickLaunch(testController, root);
     }
     return testController.getOverallResult();
 }
@@ -403,24 +438,9 @@ function typeFilter(root, text) {
     input.dispatchEvent(new Event('input'));
 }
 
-/** restoreQ2, plus the view back to tree, the filter box empty and no saved collapsed groups. */
-async function restoreQ3(testController, root, savedDialogs) {
-    if (root?.querySelector(`.${CONTROLS.filter}`)?.value) typeFilter(root, '');
-    await settingsManager.updateModuleSetting(MODULE_ID, VIEW_KEY, VIEWS.tree);
-    await settingsManager.updateModuleSetting(MODULE_ID, COLLAPSED_KEY, []);
-    await restoreQ2(testController, root, savedDialogs);
-    await testController.pollForCondition(
-        () => !root?.classList.contains('ql-cards') && !root?.querySelector('.ql-desc'),
-        'Quick Launch to be back in the tree view',
-        ACTION_TIMEOUT_MS,
-        POLL_MS,
-    );
-}
-
 async function quickLaunchCategoriesGroupEveryPanel(testController) {
     const root = await panelRoot(testController);
     if (!root) return testController.getOverallResult();
-    const saved = { ...dialogs };
     try {
         await writeTree(EMPTY_TREE);
         // The categories present, read off the registry: a declared one CATEGORY_ORDER lists, else Other.
@@ -448,7 +468,7 @@ async function quickLaunchCategoriesGroupEveryPanel(testController) {
         }).map((b) => b.dataset.componentType);
         testController.assertEqual('every panel sits under its own category (misplaced)', '', misplaced.join(', '));
     } finally {
-        await restoreQ3(testController, root, saved);
+        await resetQuickLaunch(testController, root);
     }
     return testController.getOverallResult();
 }
@@ -456,7 +476,6 @@ async function quickLaunchCategoriesGroupEveryPanel(testController) {
 async function quickLaunchCardsViewShowsDescriptions(testController) {
     const root = await panelRoot(testController);
     if (!root) return testController.getOverallResult();
-    const saved = { ...dialogs };
     const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
     try {
         await writeTree(EMPTY_TREE);
@@ -480,7 +499,7 @@ async function quickLaunchCardsViewShowsDescriptions(testController) {
         testController.reportCondition('clicking again returns to the tree view', !!back);
         testController.assertEqual('the view setting is tree', VIEWS.tree, await settingsManager.getSetting(VIEW_SETTING));
     } finally {
-        await restoreQ3(testController, root, saved);
+        await resetQuickLaunch(testController, root);
     }
     return testController.getOverallResult();
 }
@@ -488,7 +507,6 @@ async function quickLaunchCardsViewShowsDescriptions(testController) {
 async function quickLaunchFilterKeepsAncestorsOpen(testController) {
     const root = await panelRoot(testController);
     if (!root) return testController.getOverallResult();
-    const saved = { ...dialogs };
     const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
     const group = () => root.querySelector('details[data-group-id="flt-g"]');
     try {
@@ -516,7 +534,7 @@ async function quickLaunchFilterKeepsAncestorsOpen(testController) {
             && group().querySelectorAll('.ql-panel').length === 2, 'the group collapsed again, both rows back');
         testController.reportCondition('clearing the filter restores the collapsed state', !!closed);
     } finally {
-        await restoreQ3(testController, root, saved);
+        await resetQuickLaunch(testController, root);
     }
     return testController.getOverallResult();
 }
@@ -524,7 +542,6 @@ async function quickLaunchFilterKeepsAncestorsOpen(testController) {
 async function quickLaunchCollapsedGroupsPersist(testController) {
     const root = await panelRoot(testController);
     if (!root) return testController.getOverallResult();
-    const saved = { ...dialogs };
     const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
     const group = () => root.querySelector('details[data-group-id="col-g"]');
     const tree = { version: 1, nodes: [{ id: 'col-g', kind: NODE_KINDS.group, label: 'Folding', children: [
@@ -548,7 +565,7 @@ async function quickLaunchCollapsedGroupsPersist(testController) {
         testController.reportCondition('the panel re-rendered (a new element)', !!redrawn);
         testController.reportCondition('after the re-render the group is still collapsed', group()?.open === false);
     } finally {
-        await restoreQ3(testController, root, saved);
+        await resetQuickLaunch(testController, root);
     }
     return testController.getOverallResult();
 }
@@ -559,27 +576,9 @@ const helpSection = (root, dir) => root.querySelector(`details[data-group-id="${
 const summaryCount = (details) => Number(details?.querySelector(':scope > summary')?.textContent.match(/\((\d+)\)$/)?.[1]);
 const sectionDocCount = (s) => s.docs.length + s.children.reduce((n, c) => n + c.docs.length, 0);
 const rowPaths = (details) => [...details.querySelectorAll(':scope > .ql-list > li.ql-help a')].map((a) => a.title);
-const foldButton = (root) => root?.querySelector(`.${CONTROLS.fold}`);
-
-/** restoreQ3, plus showDeveloperDocs false and the fold button back to "Collapse all". */
-async function restoreP6(testController, root, savedDialogs) {
-    // "Expand all" writes collapsedGroups [] and opens everything — the state restoreQ3 ends in anyway.
-    if (foldButton(root)?.textContent === FOLD_TEXT.expand) foldButton(root).click();
-    await settingsManager.updateModuleSetting(MODULE_ID, DEVELOPER_DOCS_KEY, false);
-    await restoreQ3(testController, root, savedDialogs);
-    await testController.pollForCondition(
-        () => foldButton(root)?.textContent === FOLD_TEXT.collapse
-            && !root.querySelector(`details[data-group-id^="${VIRTUAL_GROUPS.help.id}/developer"]`),
-        'the fold button back to "Collapse all" and no developer section',
-        ACTION_TIMEOUT_MS,
-        POLL_MS,
-    );
-}
-
 async function quickLaunchHelpSectionsFollowTheDocsMarkers(testController) {
     const root = await panelRoot(testController);
     if (!root) return testController.getOverallResult();
-    const saved = { ...dialogs };
     try {
         await settingsManager.updateModuleSetting(MODULE_ID, DEVELOPER_DOCS_KEY, false);
         // Read off the generated module here, not through the panel's own filter.
@@ -618,7 +617,7 @@ async function quickLaunchHelpSectionsFollowTheDocsMarkers(testController) {
         testController.reportCondition('some sub-directory is a single row (the rule is exercised)',
             expected.some((s) => s.children.some((c) => c.single)));
     } finally {
-        await restoreP6(testController, root, saved);
+        await resetQuickLaunch(testController, root);
     }
     return testController.getOverallResult();
 }
@@ -626,7 +625,6 @@ async function quickLaunchHelpSectionsFollowTheDocsMarkers(testController) {
 async function quickLaunchPanelGuidesNotListedInHelp(testController) {
     const root = await panelRoot(testController);
     if (!root) return testController.getOverallResult();
-    const saved = { ...dialogs };
     try {
         const panelGuides = new Set(HELP_SECTIONS.filter((s) => s.audience === 'panel').flatMap((s) => s.docs));
         testController.log(`${panelGuides.size} panel guides (audience panel)`);
@@ -642,7 +640,7 @@ async function quickLaunchPanelGuidesNotListedInHelp(testController) {
         const noMark = withDocs.filter((ct) => !rowButton(root, ct)?.closest('li')?.querySelector('.ql-doc a')?.href.endsWith(infoOf(ct).docs));
         testController.assertEqual('every panel row whose moduleInfo declares a guide shows its ? (missing)', '', noMark.join(', '));
     } finally {
-        await restoreP6(testController, root, saved);
+        await resetQuickLaunch(testController, root);
     }
     return testController.getOverallResult();
 }
@@ -650,7 +648,6 @@ async function quickLaunchPanelGuidesNotListedInHelp(testController) {
 async function quickLaunchFoldButtonCollapsesThenExpands(testController) {
     const root = await panelRoot(testController);
     if (!root) return testController.getOverallResult();
-    const saved = { ...dialogs };
     const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
     const details = () => [...root.querySelectorAll('.ql-groups details')];
     try {
@@ -684,7 +681,7 @@ async function quickLaunchFoldButtonCollapsesThenExpands(testController) {
         testController.assertEqual('the button reads "Collapse all" again', FOLD_TEXT.collapse, button?.textContent);
         testController.assertEqual('collapsedGroups is []', '[]', JSON.stringify(await settingsManager.getSetting(COLLAPSED_SETTING)));
     } finally {
-        await restoreP6(testController, root, saved);
+        await resetQuickLaunch(testController, root);
     }
     return testController.getOverallResult();
 }
@@ -692,7 +689,6 @@ async function quickLaunchFoldButtonCollapsesThenExpands(testController) {
 async function quickLaunchDeveloperDocsBehindSetting(testController) {
     const root = await panelRoot(testController);
     if (!root) return testController.getOverallResult();
-    const saved = { ...dialogs };
     const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
     const developer = HELP_SECTIONS.filter((s) => s.audience === 'developer');
     const drawnDev = () => developer.filter((s) => helpSection(root, s.dir));
@@ -721,7 +717,133 @@ async function quickLaunchDeveloperDocsBehindSetting(testController) {
         testController.reportCondition('back to false: the developer sections go again',
             !!await until(() => drawnDev().length === 0, 'no developer section'));
     } finally {
-        await restoreP6(testController, root, saved);
+        await resetQuickLaunch(testController, root);
+    }
+    return testController.getOverallResult();
+}
+
+// ── P3: the fold under a filter, the filter's Escape and count, the "filed N×" badge ──
+
+/** The rows the panel draws, counted in the DOM: panel buttons, guide rows, links, dangling refs. */
+const drawnRows = (root) => root.querySelectorAll('.ql-groups .ql-panel, .ql-groups .ql-help, .ql-groups .ql-url, .ql-groups .ql-missing').length;
+const countEl = (root) => root.querySelector(`.${CONTROLS.count}`);
+
+async function quickLaunchFoldDisabledUnderFilter(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
+    const group = () => root.querySelector('details[data-group-id="fd-g"]');
+    try {
+        await writeTree({ version: 1, nodes: [{ id: 'fd-g', kind: NODE_KINDS.group, label: 'Fold filter', children: [
+            { id: 'fd-inv', kind: NODE_KINDS.panel, ref: OPEN_TARGET }] }] });
+        testController.reportCondition('the stored group is drawn open', !!await until(() => group()?.open, 'group "Fold filter" open'));
+        const button = foldButton(root);
+        testController.reportCondition('with the filter empty the fold button is enabled', button?.disabled === false);
+        testController.assertEqual('its tooltip is the mode\'s', FOLD_TITLE.collapse, button?.title);
+
+        typeFilter(root, 'inv');
+        const disabled = await until(() => button?.disabled === true, 'the fold button disabled');
+        testController.reportCondition('typing in the filter disables the fold button', !!disabled);
+        testController.assertEqual('its tooltip says to clear the filter', FOLD_DISABLED_TITLE, button?.title);
+        testController.assertEqual('the filter leaves the button\'s mode alone', FOLD_TEXT.collapse, button?.textContent);
+        button?.click(); // a disabled button fires no click
+        await new Promise((r) => setTimeout(r, 300));
+        testController.reportCondition('a click on the disabled button folds nothing', group()?.open === true);
+        testController.assertEqual('…and writes no collapsedGroups', '[]', JSON.stringify(await settingsManager.getSetting(COLLAPSED_SETTING)));
+
+        typeFilter(root, '');
+        const enabled = await until(() => button?.disabled === false, 'the fold button enabled again');
+        testController.reportCondition('clearing the filter enables it again', !!enabled);
+        testController.assertEqual('with its mode\'s tooltip back', FOLD_TITLE.collapse, button?.title);
+        testController.assertEqual('still at "Collapse all"', FOLD_TEXT.collapse, button?.textContent);
+    } finally {
+        await resetQuickLaunch(testController, root);
+    }
+    return testController.getOverallResult();
+}
+
+async function quickLaunchFilterEscAndCount(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
+    const input = root.querySelector(`.${CONTROLS.filter}`);
+    const QUERY = 'inv';
+    // A stored group, a nested link and a dangling ref, so the count covers every kind of row.
+    const tree = { version: 1, nodes: [
+        { id: 'cnt-g', kind: NODE_KINDS.group, label: 'Counted', children: [
+            { id: 'cnt-inv', kind: NODE_KINDS.panel, ref: OPEN_TARGET },
+            { id: 'cnt-url', kind: NODE_KINDS.url, href: 'https://example.org', label: 'Example' }] },
+        { id: 'cnt-gone', kind: NODE_KINDS.panel, ref: 'noSuchPanelForTheCount' }] };
+    try {
+        await writeTree(tree);
+        await until(() => root.querySelector('.ql-root .ql-url') && root.querySelector('.ql-root .ql-missing'), 'the stored rows drawn');
+        testController.reportCondition('the count is hidden while the filter is empty', countEl(root)?.hidden === true);
+        const all = drawnRows(root);
+
+        // The same number through the exported pure functions, over the live registry and docs.
+        const catalog = buildCatalog({
+            panelComponents: centralRegistry.getAllPanelComponents(),
+            moduleStates: window.moduleManagerApi?.getAllModuleStates?.() ?? {},
+            docsIndex: DOCS_INDEX,
+            helpSections: HELP_SECTIONS,
+            showDeveloperDocs: false,
+            loadPriority: [],
+        });
+        const model = buildViewModel(await readTree(), catalog);
+        const expected = countText(model, filterView(model, QUERY));
+        testController.log(`rows drawn unfiltered: ${all}; countText for "${QUERY}": ${expected}`);
+
+        typeFilter(root, QUERY);
+        const shown = await until(() => countEl(root)?.hidden === false && drawnRows(root) < all, 'the filtered view with its count');
+        testController.reportCondition(`typing "${QUERY}" shows the count`, !!shown);
+        const text = countEl(root)?.textContent;
+        testController.assertEqual('the count is "N of M" over the rows drawn (DOM)', `${drawnRows(root)} of ${all}`, text);
+        testController.assertEqual('the count == countText(model, filterView(model, query))', expected, text);
+
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+        const cleared = await until(() => input.value === '' && countEl(root)?.hidden === true && drawnRows(root) === all,
+            'Escape to clear the filter and redraw every row');
+        testController.reportCondition('Escape clears the filter, hides the count and redraws every row', !!cleared);
+        testController.reportCondition('the fold button is enabled again', foldButton(root)?.disabled === false);
+    } finally {
+        await resetQuickLaunch(testController, root);
+    }
+    return testController.getOverallResult();
+}
+
+async function quickLaunchFiledBadgeInEditMode(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
+    const badges = () => [...root.querySelectorAll(`.${CONTROLS.filed}`)];
+    try {
+        await writeTree({ version: 1, nodes: [
+            { id: 'bdg-a', kind: NODE_KINDS.panel, ref: OPEN_TARGET },
+            { id: 'bdg-g', kind: NODE_KINDS.group, label: 'Badged', children: [
+                { id: 'bdg-b', kind: NODE_KINDS.panel, ref: OPEN_TARGET },
+                { id: 'bdg-c', kind: NODE_KINDS.panel, ref: CLOSE_TARGET }] }] });
+        await until(() => root.querySelectorAll('.ql-root .ql-node[data-kind="panel"]').length === 3, 'the three stored rows');
+        testController.assertEqual('no badge outside edit mode', 0, badges().length);
+
+        root.querySelector(`.${CONTROLS.edit}`)?.click();
+        await until(() => root.querySelector('.ql-root-ctl'), 'edit mode');
+        const counts = refCounts(await readTree());
+        const allPanels = allPanelsEl(root);
+        const rowBadge = (ct) => allPanels?.querySelector(`.ql-panel[data-component-type="${ct}"]`)?.closest('li')?.querySelector(`.${CONTROLS.filed}`);
+        testController.assertEqual(`${OPEN_TARGET}'s All panels row reads its filed count`,
+            filedText(counts.get(`${NODE_KINDS.panel}:${OPEN_TARGET}`)), rowBadge(OPEN_TARGET)?.textContent);
+        testController.assertEqual(`${OPEN_TARGET} is filed twice`, filedText(2), rowBadge(OPEN_TARGET)?.textContent);
+        testController.assertEqual(`${CLOSE_TARGET}'s row reads 1×`, filedText(1), rowBadge(CLOSE_TARGET)?.textContent);
+        testController.assertEqual('All panels holds one badge per filed ref', counts.size,
+            allPanels?.querySelectorAll(`.${CONTROLS.filed}`).length);
+        testController.assertEqual('no badge in the stored tree, Unfiled or Help', 0,
+            badges().filter((b) => !allPanels?.contains(b)).length);
+
+        root.querySelector(`.${CONTROLS.edit}`)?.click();
+        testController.reportCondition('leaving edit mode removes the badges',
+            !!await until(() => !root.querySelector('.ql-ctl') && badges().length === 0, 'no badges'));
+    } finally {
+        await resetQuickLaunch(testController, root);
     }
     return testController.getOverallResult();
 }
@@ -826,6 +948,19 @@ const TESTS = [
         'showDeveloperDocs false: no developer section; true: every audience-developer section appears with its '
         + 'count, after the user ones, and the header counts them; false again: they go.',
         quickLaunchDeveloperDocsBehindSetting],
+    ['quick-launch-fold-disabled-under-filter', 'Quick Launch: the fold button is disabled while filtering',
+        'A stored group; typing in the filter disables the fold button (tooltip: clear the filter), a click folds and '
+        + 'writes nothing, the mode stays "Collapse all"; clearing the filter enables it with its tooltip back.',
+        quickLaunchFoldDisabledUnderFilter],
+    ['quick-launch-filter-esc-and-count', 'Quick Launch: Escape clears the filter; the count reads "N of M"',
+        'With a stored group, link and dangling ref: the count is hidden, typing "inv" shows "N of M" equal to the '
+        + 'rows drawn in the DOM and to countText over the live catalog; Escape clears the box, hides the count and '
+        + 'redraws every row.',
+        quickLaunchFilterEscAndCount],
+    ['quick-launch-filed-badge-in-edit-mode', 'Quick Launch: edit mode badges a built-in row with its filed count',
+        'Inventory filed twice and Events once: in edit mode their All panels rows read "2×" and "1×" (refCounts over '
+        + 'the stored tree), no badge elsewhere; leaving edit mode removes them.',
+        quickLaunchFiledBadgeInEditMode],
     ['mobile-tab-bar-resolves-every-panel', 'Mobile tab bar: every panel resolves a title and name from its moduleInfo',
         'For every registered panel, the moduleInfo the mobile layout registers (the registry\'s lookup) declares a '
         + 'title and a name, so no componentType fallback fires; the panels declaring no icon are read off the '
