@@ -22,7 +22,7 @@ function log(level, message, ...data) {
 // --- Module Info ---
 export const moduleInfo = {
     name: 'jtaCostDebugger',
-    title: 'JTA Cost Debugger',
+    title: 'JtA Cost Debugger',
     componentType: 'jtaCostDebuggerPanel',
     icon: '',
     column: 2,

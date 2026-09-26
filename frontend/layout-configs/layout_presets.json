@@ -132,17 +132,17 @@
             {
               "type": "component",
               "componentType": "jtaGameDataPanel",
-              "title": "JTA Game Data"
+              "title": "JtA Game Data"
             },
             {
               "type": "component",
               "componentType": "jtaActionQueue",
-              "title": "JTA Action Queue"
+              "title": "JtA Action Queue"
             },
             {
               "type": "component",
               "componentType": "jtaCostDebuggerPanel",
-              "title": "JTA Cost Debugger"
+              "title": "JtA Cost Debugger"
             },
             {
               "type": "component",
@@ -224,7 +224,7 @@
             {
               "type": "component",
               "componentType": "flashPanel",
-              "title": "Flash Game"
+              "title": "Flash Panel"
             },
             {
               "type": "component",
@@ -281,7 +281,7 @@
             {
               "type": "component",
               "componentType": "flashSubstratePanel",
-              "title": "Flash"
+              "title": "Flash Substrate"
             },
             {
               "type": "component",
@@ -479,17 +479,17 @@
             {
               "type": "component",
               "componentType": "jtaActionQueue",
-              "title": "JTA Action Queue"
+              "title": "JtA Action Queue"
             },
             {
               "type": "component",
               "componentType": "jtaGameDataPanel",
-              "title": "JTA Game Data"
+              "title": "JtA Game Data"
             },
             {
               "type": "component",
               "componentType": "jtaCostDebuggerPanel",
-              "title": "JTA Cost Debugger"
+              "title": "JtA Cost Debugger"
             },
             {
               "type": "component",
@@ -521,7 +521,7 @@
             {
               "type": "component",
               "componentType": "iframePanel",
-              "title": "JTA Game"
+              "title": "JtA Game"
             },
             {
               "type": "component",

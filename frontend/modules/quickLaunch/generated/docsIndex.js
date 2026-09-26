@@ -613,9 +613,9 @@ export const DOCS_INDEX = Object.freeze([
     },
     {
         "path": "docs/json/games/journey-to-ascension/cost-adjustment-algorithm.md",
-        "title": "JTA Cost Adjustment & Auto Queue Algorithms",
+        "title": "JtA Cost Adjustment & Auto Queue Algorithms",
         "section": "games/journey-to-ascension",
-        "summary": "This document describes two algorithms that simulate JTA gameplay for different purposes:"
+        "summary": "This document describes two algorithms that simulate JtA gameplay for different purposes:"
     },
     {
         "path": "docs/json/games/loops/README.md",

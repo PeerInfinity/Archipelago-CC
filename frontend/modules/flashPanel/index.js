@@ -47,7 +47,7 @@ function log(level, message, ...data) {
 
 export const moduleInfo = {
   name: 'flashPanel',
-  title: 'Flash Game',
+  title: 'Flash Panel',
   componentType: 'flashPanel',
   icon: '🎮',
   column: 2,

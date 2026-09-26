@@ -295,7 +295,7 @@ These parameters control automatic connection to an Archipelago server.
 **Examples:**
 - `?iframe=jta` - Load Journey to Ascension in an iframe
 - `?iframe=mazegame` - Load A-Mazing-Idle in an iframe
-- `?iframe=jta&useWindow=1` - Load JTA in a separate browser window instead
+- `?iframe=jta&useWindow=1` - Load JtA in a separate browser window instead
 
 **Details:**
 - Resolved via `knownIframePages.js` shortname lookup, or passed through as a URL
@@ -316,8 +316,8 @@ These parameters control automatic connection to an Archipelago server.
 **Usage:** `?useWindow=1`
 
 **Examples:**
-- `?iframe=jta&useWindow=1` - Load JTA in a separate window
-- `?mode=jta&useWindow=1` - JTA mode with game in a separate window (via `iframeAutoLoad`)
+- `?iframe=jta&useWindow=1` - Load JtA in a separate window
+- `?mode=jta&useWindow=1` - JtA mode with game in a separate window (via `iframeAutoLoad`)
 - `?metagame=mazegame&useWindow=1` - Maze metagame with mazes opening in separate windows
 
 **Details:**

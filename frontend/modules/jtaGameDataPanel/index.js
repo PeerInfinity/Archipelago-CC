@@ -5,7 +5,7 @@ import eventBus from '../../app/core/eventBus.js';
 // --- Module Info ---
 export const moduleInfo = {
   name: 'jtaGameDataPanel',
-  title: 'JTA Game Data',
+  title: 'JtA Game Data',
   componentType: 'jtaGameDataPanel',
   icon: '',
   column: 2,

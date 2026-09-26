@@ -28,7 +28,7 @@ generated levels G3).
 
 The level set is not in this file. At play it is ASSEMBLED from the room the
 sidecar carries (`seedlingDemo/seedlingGeneratedSet.js`) and delivered to the
-game when the Flash Game panel starts. The panel log names the generated arm.
+game when the Flash Panel starts. The panel log names the generated arm.
 
 The world is a FUNCTION of `SEEDLING_GENERATED_LEAF_STATE` in
 `frontend/modules/procgenPipeline/presetDefs.js`, never a hand edit. Regenerate

@@ -268,7 +268,7 @@ const SWF_IFRAME_SRC = `./modules/flashSubstrate/placeholder/index.html?iframeId
 
 export const FlashSubstratePanel = createSubstrateIframePanelClass({
     componentType: 'flashSubstratePanel',
-    title: 'Flash',
+    title: 'Flash Substrate',
     iframeSrc: SWF_IFRAME_SRC,
     // Relative to SWF_IFRAME_SRC (.../flashSubstrate/placeholder/index.html),
     // `../bridge.js` resolves to .../flashSubstrate/bridge.js.

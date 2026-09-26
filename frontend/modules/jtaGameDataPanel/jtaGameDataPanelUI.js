@@ -73,7 +73,7 @@ export class JTAGameDataPanelUI {
     _createPanelHTML() {
         return `
             <div class="jta-game-data-panel" style="padding: 15px;">
-                <h3 style="margin: 0 0 15px 0; font-size: 16px; color: #cccccc;">JTA Game Data</h3>
+                <h3 style="margin: 0 0 15px 0; font-size: 16px; color: #cccccc;">JtA Game Data</h3>
 
                 <!-- Connection Status Section -->
                 ${this._sectionHTML('connection', 'Connection Status', true, `
@@ -1101,7 +1101,7 @@ export class JTAGameDataPanelUI {
         setStatus('Discovering preset...', false);
         const preset = await this._discoverPreset();
         if (!preset) {
-            setStatus('No JTA preset found', true);
+            setStatus('No JtA preset found', true);
             return;
         }
 
@@ -1290,7 +1290,7 @@ export class JTAGameDataPanelUI {
         setStatus('Discovering preset files...', false);
         const preset = await this._discoverPreset();
         if (!preset) {
-            setStatus('No JTA preset found. Generate a seed first.', true);
+            setStatus('No JtA preset found. Generate a seed first.', true);
             return;
         }
 

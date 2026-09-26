@@ -247,7 +247,7 @@ export class FlashPanelUI {
 
     this.rootElement.innerHTML = `
       <div class="flash-panel-header" style="flex-shrink: 0; margin-bottom: 6px;">
-        <span style="color: #e94560;">Flash Game</span>
+        <span style="color: #e94560;">Flash Panel</span>
         <span class="flash-panel-status" style="margin-left: 12px; color: #aaa; font-size: 12px;">initializing…</span>
       </div>
       <div class="flash-panel-swf" style="flex-shrink: 0; position: relative;"></div>

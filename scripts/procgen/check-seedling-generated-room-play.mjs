@@ -178,8 +178,8 @@ async function main() {
         await installWatchers();
         check(`boot: the preset loaded and the player starts in ${START}`, (await currentRegion()) === START,
             await currentRegion());
-        await waitFor('Flash Game tab activated', () => page.evaluate(() => {
-            const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Game');
+        await waitFor('Flash Panel tab activated', () => page.evaluate(() => {
+            const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Panel');
             if (!tab) return false;
             tab.click();
             return true;

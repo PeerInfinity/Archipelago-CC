@@ -18,7 +18,7 @@ hold a pipeline item (seedling generated levels G4).
   the door's approach cell (tile 1,1), right above it.
 - **Walk onto the door without the key**: the game fires the door and swaps
   into the PARKING room, the host refuses the crossing — no region move — and
-  teleports the player back onto the approach cell; the Flash Game panel's log
+  teleports the player back onto the approach cell; the Flash Panel's log
   says *"[door gate] the door to region_2_3 is locked — you need key_blue"*.
   Walk to the AP logo on the goal cell (right, down, right, down: 1,1 → 3,1 →
   3,2 → 4,2 → 4,3) and the key arrives; walk back onto the door and it opens:
@@ -29,7 +29,7 @@ hold a pipeline item (seedling generated levels G4).
 
 The level set is not in this file. At play it is ASSEMBLED from the room the
 sidecar carries (`seedlingDemo/seedlingGeneratedSet.js`) and delivered to the
-game when the Flash Game panel starts. The panel log names the generated arm.
+game when the Flash Panel starts. The panel log names the generated arm.
 
 The world is a FUNCTION of `SEEDLING_GENERATED_HOST_STATE` in
 `frontend/modules/procgenPipeline/presetDefs.js`, never a hand edit. Regenerate

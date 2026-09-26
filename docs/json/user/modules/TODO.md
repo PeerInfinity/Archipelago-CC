@@ -35,7 +35,9 @@ User-friendly guides still to be written. See the corresponding technical refere
 
 ## Core Service Modules
 
-Background modules that power the UI panels — useful for users who want to understand what's happening behind the scenes.
+These are the modules the [module index](../../modules/README.md) lists under *Core Service Modules* (its eleven categories; every panel module above belongs to one of the others).
+
+Background modules that power the UI panels — useful for users who want to understand what's happening behind the scenes:
 
 - [ ] stateManager.md — Game state, logic evaluation, and accessibility
 - [ ] client.md — WebSocket connection to the Archipelago server
@@ -44,9 +46,7 @@ Background modules that power the UI panels — useful for users who want to und
 - [ ] sphereState.md — Sphere log data and progression tracking
 - [ ] metaGame.md — Scripted/tutorial experience orchestration
 
-## Utility Modules
-
-Lower priority — primarily useful to developers.
+Lower priority — shared utilities, primarily useful to developers:
 
 - [ ] commonUI.md
 - [ ] editorCore.md

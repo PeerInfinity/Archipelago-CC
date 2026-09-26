@@ -32,7 +32,7 @@ Archipelago integration for [Journey to Ascension](https://imgreghenry.github.io
 The randomized perk order breaks the original game's difficulty curve. Three methods to fix this:
 
 1. **Automatic** — During seed generation (requires Node.js)
-2. **In-browser** — Via the JTA Game Data panel (no Node.js needed)
+2. **In-browser** — Via the JtA Game Data panel (no Node.js needed)
 3. **Command-line** — Via bundled script
 
 ## Further Reading

@@ -80,9 +80,7 @@ Documented in depth in the [procgen developer docs](../developer/procgen/README.
 - **Bounce Demo** (`bounceDemo`) — the Doodle-Jump-style platformer substrate. See [Bounce Substrate](../developer/procgen/bounce.md).
 - **Runner Demo** (`runnerDemo`) — the auto-runner platformer substrate. See [Runner Substrate](../developer/procgen/runner.md).
 - **Flash Substrate** (`flashSubstrate`) — recompiled Flash games as regions. See [Flash Substrate](../developer/procgen/flash.md).
-- [Text Adventure](./textAdventure.md)
-- [Text Adventure (substrate wrapper)](../developer/procgen/text-adventure.md)
-- **Text Adventure Substrate Wrapper** (`textAdventureSubstrateWrapper`) — the enabled iframe-hosted text-adventure path. See [Text Adventure Substrate](../developer/procgen/text-adventure.md).
+- [Text Adventure](./textAdventure.md) (`textAdventureSubstrateWrapper`) — the enabled iframe-hosted text-adventure path: regions as prose with clickable exits and locations. [User guide](../user/modules/textAdventure.md) · [Text Adventure Substrate](../developer/procgen/text-adventure.md).
 - **JtA Substrate Wrapper** (`jtaSubstrateWrapper`) — Journey to Ascension as a zone-based substrate. See [JtA Substrate](../developer/procgen/jta.md).
 - **Idle Loops Substrate Wrapper** (`omsiSubstrateWrapper`) — Idle Loops (omsi-loops) as a loop-mode substrate. See [Omsi Substrate (Idle Loops)](../developer/procgen/omsi.md).
 - **Maze Game Data Panel** (`mazeGameDataPanel`) — views and edits A-Mazing-Idle game data (points, biome, mazes, saves).

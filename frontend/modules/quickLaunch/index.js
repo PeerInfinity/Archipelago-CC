@@ -19,7 +19,7 @@ export const moduleInfo = {
     icon: '🚀',
     column: 1,
     category: 'Data and Configuration Panels',
-    description: 'A button for every panel (click to open or bring it forward) and links to the user guides.',
+    description: 'A button for every panel (click to open or bring it forward), your own groups of them, and the Help docs.',
     docs: 'docs/json/user/modules/quickLaunch.md',
     requires: [],
 };

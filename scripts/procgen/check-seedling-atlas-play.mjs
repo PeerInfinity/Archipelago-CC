@@ -236,8 +236,8 @@ try {
     check('Phase A: procgen routed the start region to the flash_seedling glue',
         !!statsA && statsA.loads >= 1, JSON.stringify(statsA));
 
-    await waitFor('Flash Game tab activated', () => page.evaluate(() => {
-        const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Game');
+    await waitFor('Flash Panel tab activated', () => page.evaluate(() => {
+        const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Panel');
         if (!tab) return false;
         tab.click();
         return true;

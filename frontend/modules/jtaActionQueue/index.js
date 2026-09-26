@@ -7,7 +7,7 @@ import { getEngine, createQueueEntry } from '../jtaQueueEngine/index.js';
 // --- Module Info ---
 export const moduleInfo = {
     name: 'jtaActionQueue',
-    title: 'JTA Action Queue',
+    title: 'JtA Action Queue',
     componentType: 'jtaActionQueue',
     icon: '',
     column: 2,

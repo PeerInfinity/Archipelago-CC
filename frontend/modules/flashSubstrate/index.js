@@ -29,7 +29,7 @@ import { substrateRegistryEntry } from './flashSubstrateLibrary.js';
 
 export const moduleInfo = {
     name: 'flashSubstrate',
-    title: 'Flash',
+    title: 'Flash Substrate',
     componentType: 'flashSubstratePanel',
     icon: '🎞️',
     column: 3,

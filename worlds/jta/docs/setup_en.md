@@ -70,7 +70,7 @@ included in the output alongside the randomized game data.
 
 ### From the Frontend (no Node.js needed)
 
-Open the JTA Game Data panel in the frontend and expand the **Cost Adjustment** section.
+Open the JtA Game Data panel in the frontend and expand the **Cost Adjustment** section.
 Click **Run Cost Adjustment** to run the algorithm entirely in the browser. From there
 you can:
 - **Apply to Game** to send the adjusted costs to the running game

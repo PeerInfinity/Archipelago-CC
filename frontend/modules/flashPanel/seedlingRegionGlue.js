@@ -266,7 +266,7 @@ export class SeedlingRegionGlue {
     _teleport({ level, x, y, region }) {
         if (!this.adapter?.teleport) {
             this._warn(`[region atlas] no flash adapter to teleport into "${region}" — `
-                + 'is the Flash Game panel open and the game started?');
+                + 'is the Flash Panel open and the game started?');
             return;
         }
         this.adapter.teleport({ level, x, y });
@@ -282,7 +282,7 @@ export class SeedlingRegionGlue {
     _bounce({ level, x, y, exit, region }) {
         if (!this.adapter?.teleport) {
             this._warn(`[door gate] no flash adapter to bounce the player back into "${region}" — `
-                + 'is the Flash Game panel open and the game started?');
+                + 'is the Flash Panel open and the game started?');
             return;
         }
         this.adapter.teleport({ level, x, y });

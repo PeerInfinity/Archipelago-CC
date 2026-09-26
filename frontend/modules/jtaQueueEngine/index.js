@@ -4,8 +4,8 @@ import eventBus from '../../app/core/eventBus.js';
 
 export const moduleInfo = {
     name: 'jtaQueueEngine',
-    title: 'JTA Queue Engine',
-    description: 'Headless engine for JTA action queue execution, strategy, and predictions.',
+    title: 'JtA Queue Engine',
+    description: 'Headless engine for JtA action queue execution, strategy, and predictions.',
     requires: ['iframeAdapter', 'iframePanel'],
 };
 

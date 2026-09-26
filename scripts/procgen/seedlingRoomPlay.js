@@ -172,7 +172,7 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
     }
 
     /**
-     * ⛔ GIVE THE GAME REAL FOCUS, THE WAY A PLAYER DOES. The Flash Game and Maze
+     * ⛔ GIVE THE GAME REAL FOCUS, THE WAY A PLAYER DOES. The Flash Panel and Maze
      * Room tabs share one stack, and walking the maze back brings the maze tab
      * forward; `canvas.focus()` inside the iframe then does NOT move the page's
      * own focus back into it, and held keys went to the maze panel (T2 run 2:
@@ -181,7 +181,7 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
      */
     async function focusGame() {
         await page.evaluate(() => {
-            [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Game')?.click();
+            [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Panel')?.click();
         });
         await page.waitForTimeout(300);
         await gameFrame().click('#canvas');

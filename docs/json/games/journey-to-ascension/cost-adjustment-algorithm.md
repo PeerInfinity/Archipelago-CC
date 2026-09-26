@@ -1,6 +1,6 @@
-# JTA Cost Adjustment & Auto Queue Algorithms
+# JtA Cost Adjustment & Auto Queue Algorithms
 
-This document describes two algorithms that simulate JTA gameplay for different purposes:
+This document describes two algorithms that simulate JtA gameplay for different purposes:
 
 1. **Cost Adjuster** (`jtaCostGenerator.js`) — Offline: adjusts task costs at seed generation time so a randomized seed is completable.
 2. **Auto Queue** (`jtaQueueBuilder.js` + `simulator.js`) — Real-time: generates optimal action queues during play.
@@ -47,8 +47,8 @@ The sphere log records the order in which Archipelago placed items. Each entry s
 - **`new_inventory_details.base_items`**: items (perks) the player receives
 
 In multiworld games, tasks completed and perks received are independent:
-- A JTA task might give an item for **another player** (not a JTA perk)
-- A JTA perk might arrive from **another player's game**
+- A JtA task might give an item for **another player** (not a JtA perk)
+- A JtA perk might arrive from **another player's game**
 - The player must still complete tasks in sphere log order
 - Perks arrive in sphere log order regardless of source
 

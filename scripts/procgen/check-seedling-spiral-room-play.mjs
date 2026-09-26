@@ -38,11 +38,11 @@
  *     fallback, so only a return that lands on the second door's spawn proves
  *     the third arm chose it.
  *   Phase D3 — the user's own path (T2b): the Maze Room tab, its inactive
- *     overlay's "Open the … panel" button, then NO click: the Flash Game tab is
+ *     overlay's "Open the … panel" button, then NO click: the Flash Panel tab is
  *     in front and a key moves the player.
  *
  *   ⛓ SEEDLING T2b rows (each one does NOT do the person's work for them):
- *     U1 a return brings the Flash Game tab forward by itself; U2a the game's
+ *     U1 a return brings the Flash Panel tab forward by itself; U2a the game's
  *     canvas holds the page's keyboard after ▶ Start, after the automatic
  *     activation and after the overlay's button (and a key moves the player);
  *     U2b the arrival is the game's own return spawn, off the door; F3 a key
@@ -523,12 +523,12 @@ async function main() {
          * tab came forward then), so the only writer of this state is the
          * panel's own activation on `flashSeedling:loadRegion`.
          */
-        const tabs = await waitFor('the Flash Game tab comes forward on the return', async () => {
+        const tabs = await waitFor('the Flash Panel tab comes forward on the return', async () => {
             const t = await activeTabTitles();
-            return t.includes('Flash Game') ? t : null;
+            return t.includes('Flash Panel') ? t : null;
         }, 5000).catch(async () => activeTabTitles());
-        check(`${label}: the return ACTIVATED the Flash Game tab by itself (no tab click)`,
-            tabs.includes('Flash Game'), `active tabs: ${tabs.join(', ')}`);
+        check(`${label}: the return ACTIVATED the Flash Panel tab by itself (no tab click)`,
+            tabs.includes('Flash Panel'), `active tabs: ${tabs.join(', ')}`);
         /**
          * ⛓ T2b U2a — …AND THE GAME HAS THE KEYBOARD. No canvas click and no
          * focus() from here: the page's focus is inside the frame, on the
@@ -567,8 +567,8 @@ async function main() {
         const statsA = await glueStats();
         check('Phase A: procgen routed the start region to the flash_seedling glue',
             !!statsA && statsA.loads === 1, JSON.stringify(statsA));
-        await waitFor('Flash Game tab activated', () => page.evaluate(() => {
-            const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Game');
+        await waitFor('Flash Panel tab activated', () => page.evaluate(() => {
+            const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Panel');
             if (!tab) return false;
             tab.click();
             return true;
@@ -673,8 +673,8 @@ async function main() {
             const c = await focusChain();
             return gameHasKeys(c) ? c : null;
         }, 5000).catch(async () => focusChain());
-        check(`Phase D3: "${buttonText}" — the Flash Game tab is in front and its CANVAS has the keyboard (no click)`,
-            (await activeTabTitles()).includes('Flash Game') && gameHasKeys(chainD3), JSON.stringify(chainD3));
+        check(`Phase D3: "${buttonText}" — the Flash Panel tab is in front and its CANVAS has the keyboard (no click)`,
+            (await activeTabTitles()).includes('Flash Panel') && gameHasKeys(chainD3), JSON.stringify(chainD3));
         const kD3 = await keyMovesPlayer(STEP_KEYS[second.exit_id].off);
         check(`Phase D3: ${STEP_KEYS[second.exit_id].off} pressed with no click moves the player`, kD3.moved,
             `${JSON.stringify(kD3.before)} -> ${JSON.stringify(kD3.after)}`);

@@ -96,7 +96,7 @@ if (!existsSync(join(ARTIFACT, 'game.html'))
 
 // mode=flash: the flashPanel module is enabled in modules-flash.json
 // (disabled in the default module config) and the default layout
-// already carries a "Flash Game" tab. No ?game param on purpose: the
+// already carries a "Flash Panel" tab. No ?game param on purpose: the
 // app boots on its fallback preset and the script switches to the
 // seedling preset afterwards, covering the panel's reinit-on-preset-
 // switch path (the flow a user takes when picking the preset in the
@@ -226,11 +226,11 @@ async function inGamePickup(property, expectLocation) {
 await page.goto(URL);
 await page.waitForTimeout(8000);
 
-// Bring the Flash Game tab forward (the panel constructs with the
+// Bring the Flash Panel tab forward (the panel constructs with the
 // layout; activation makes its DOM clickable).
-await waitFor('Flash Game tab activated', () => page.evaluate(() => {
+await waitFor('Flash Panel tab activated', () => page.evaluate(() => {
     const tab = [...document.querySelectorAll('.lm_tab')]
-        .find((t) => t.title === 'Flash Game');
+        .find((t) => t.title === 'Flash Panel');
     if (!tab) return false;
     tab.click();
     return true;

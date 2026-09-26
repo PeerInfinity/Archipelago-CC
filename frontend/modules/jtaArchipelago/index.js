@@ -8,10 +8,10 @@ import eventBus from '../../app/core/eventBus.js';
 // --- Module Info ---
 export const moduleInfo = {
   name: 'jtaArchipelago',
-  title: 'JTA Archipelago Bridge',
+  title: 'JtA Archipelago Bridge',
   componentType: null, // No UI panel
   icon: '',
-  description: 'Bridges JTA game events to Archipelago location checks and item grants.',
+  description: 'Bridges JtA game events to Archipelago location checks and item grants.',
   requires: ['stateManager', 'client', 'iframeAdapter', 'iframePanel'],
 };
 

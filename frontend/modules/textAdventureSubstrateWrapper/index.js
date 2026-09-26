@@ -77,6 +77,7 @@ export const moduleInfo = {
     column: 3,
     category: 'Procgen Substrate Panels',
     description: 'Shows each region as prose with clickable exits and locations; you can also type commands like go or check.',
+    docs: 'docs/json/user/modules/textAdventure.md',
     requires: ['stateManager', 'gameState', 'discovery', 'iframeAdapter'],
 };
 

@@ -555,7 +555,7 @@ export const SHIPPED_PRESETS = Object.freeze([
         description: 'A room the Seedling level GENERATOR builds to the pipeline\'s spec is the START, and '
             + 'it HOSTS a maze child behind key_blue: the gate is on the generated room\'s own door, and '
             + 'the host enforces it (the game cannot hold a pipeline item) — without the key the door '
-            + 'bounces the player back and the Flash Game log says which item is missing. key_blue '
+            + 'bounces the player back and the Flash Panel log says which item is missing. key_blue '
             + 'stands on the room\'s goal cell; key_red in the maze child opens a second maze holding '
             + 'victory. Look at the composite map and at the flash_seedling_gen sidecar (its '
             + 'exitGates carries the door\'s rule). The same world is committed as the '

@@ -2,7 +2,7 @@
 
 The Quick Launch panel is the first tab of the left column in the default layout. It lists every panel the app has registered, with a button to open each one, and links to the documentation.
 
-The bar at the top has two rows. The first holds the header line, which counts what the panel lists — *N panels · M docs*, where *M* is the number of documents the Help group shows — and the filter box. The second holds the buttons: **Cards** (the two views), **Collapse all** / **Expand all** (folding), **Edit** (your own groups) and **Modules ⇄**, which opens the [Modules panel](modules.md).
+The bar at the top has two rows. The first holds the header line, which counts what the panel lists — *N panels · M docs*, where *M* is the number of documents the Help group shows — and the filter box. The second holds the buttons: **Cards** (the two views), **Collapse all** / **Expand all** (folding), **Edit** (your own groups) and **Modules ⇄**, which opens the [Modules panel](modules.md). In a narrow column (a small window, or the column dragged narrower) the rows wrap: the filter box moves under the header, and the buttons continue on another line.
 
 ## All panels
 
@@ -40,11 +40,13 @@ Everything else is the same in both views: the groups, the dots, the **?** links
 
 Type in the filter box to show only what matches: a panel whose title or description contains the text (upper or lower case alike), a guide whose title does, a web link whose label does, or a group whose name does — a Help section's or sub-group's name included (then everything in that group is shown). The groups holding a match are shown open, even ones you had folded shut; clearing the box puts every group back the way it was. A group with no match is hidden, and if nothing matches at all the panel says so.
 
+While the box holds text, a count beside it reads *N of M*: the rows shown (panel buttons, guide links, web links and the greyed-out missing items), of all the rows the panel shows unfiltered. Press **Escape** in the box to clear it.
+
 ## Collapse all / Expand all
 
 One button folds every group at once. It does what it says, whatever state the groups are in, and then offers the opposite: **Collapse all** folds every group shut — your own groups, the built-in ones and every sub-group — and the button then reads **Expand all**, which opens them all again. Every time the panel is opened the button starts at **Collapse all**; which way it points is not saved.
 
-While the filter box holds text, the button acts only on the groups the filter shows. Those groups stay open while the filter is on (they hold matches); clear the box and they show folded.
+While the filter box holds text the button is disabled (hover it: *Clear the filter to fold*) — the filter shows every group holding a match open, so a fold would have nothing to show. Clearing the box enables it again, still pointing the way it did.
 
 ## Your own groups
 
@@ -52,9 +54,9 @@ Above the built-in groups you can keep your own arrangement: groups (nested as d
 
 In edit mode:
 
-- **+ group** and **+ url** (at the top, and on every group) add a group or a web link there. The panel asks for the name, or for the link's address and label.
-- **add to ▾** on every row of *Unfiled*, *All panels* and *Help* files that panel or guide into one of your groups (or the top level). The row stays where it is: the built-in groups never change.
-- On your own items: **▲ ▼** move an item within its group, **move to ▾** puts it in another group, **✎** renames a group, **✕** removes an item. Removing a group removes everything in it, and the panel asks first unless the group is empty.
+- **+ group** and **+ url** (at the top, and on every group) add a group or a web link there. Each opens a small form at the end of that list: a name box for a group; an address box, a label box and an **Add** button for a link (the label is optional — the address is used when it is empty). **Enter** adds, **Escape** cancels, and clicking elsewhere adds what you typed (an empty name or address adds nothing).
+- **add to ▾** on every row of *Unfiled*, *All panels* and *Help* files that panel or guide into one of your groups (or the top level). The row stays where it is: the built-in groups never change. A row already filed shows how many times, as a small badge before it — **2×** when it is in your groups twice.
+- On your own items: **▲ ▼** move an item within its group, **move to ▾** puts it in another group, **✎** turns a group's name into a text box (**Enter** or clicking elsewhere keeps the new name, **Escape** keeps the old one), **✕** removes an item. Removing a group removes everything in it, and the panel asks first unless the group is empty.
 
 Your groups hold *references*, so the same panel can appear in several of them, and every copy opens the same tab. If something you filed no longer exists (a guide was removed, or the panel belongs to a module this mode does not load), it stays in your group, greyed out with its name, until you remove it.
 

@@ -23,7 +23,7 @@
  *   Phase C — THE KEY. Real keys walk to the tile of the location that holds
  *     the gate item (the rules' own placement), and the item arrives.
  *   Phase D — IN. Real keys walk onto the exit: gameState moves to the room, the
- *     Flash Game tab comes forward by itself, and ▶ Start — the one click a
+ *     Flash Panel tab comes forward by itself, and ▶ Start — the one click a
  *     person makes — boots the game. The arrival teleport lands on the game's own
  *     return spawn for the bound door (T2b U2b; the door tile only when the map
  *     has none), and the binding chose the door by its SECOND arm: the sphere
@@ -37,7 +37,7 @@
  *     lands the player ON the exit paired with the door — its FIRST arrival arm
  *     (`exit_id`: the door's `targetExitId`) — and holds the keyboard.
  *   Phase F — IN AGAIN, by keys off and back onto that exit. The glue resumes,
- *     the Flash Game tab comes forward, the arrival lands on the same spawn, and
+ *     the Flash Panel tab comes forward, the arrival lands on the same spawn, and
  *     a key moves the player with no click.
  *
  * ⛔ PAGE ERRORS ARE A DIAGNOSTIC LINE, NOT A check() — the logic-only channel
@@ -162,7 +162,7 @@ async function main() {
 
     /**
      * The room's arrival: the invocation, the checkpoint, the binding's arm, and
-     * the Flash Game tab + canvas keyboard with no click. `loads` is the glue-load
+     * the Flash Panel tab + canvas keyboard with no click. `loads` is the glue-load
      * count this arrival must leave behind; `pending` the game's `pendingExit`
      * before it (the game keeps its LAST door report — '' only before the first).
      */
@@ -188,11 +188,11 @@ async function main() {
         const stats = await glueStats();
         check(`${label}: the flash glue loaded the room (${loads} load(s)) and flash_seedling owns it`,
             stats?.loads === loads && (await activeSubstrates()).at(-1) === 'flash_seedling', JSON.stringify(stats));
-        const tabs = await waitFor('the Flash Game tab comes forward', async () => {
+        const tabs = await waitFor('the Flash Panel tab comes forward', async () => {
             const t = await activeTabTitles();
-            return t.includes('Flash Game') ? t : null;
+            return t.includes('Flash Panel') ? t : null;
         }, 5000).catch(async () => activeTabTitles());
-        check(`${label}: the Flash Game tab came forward by itself (no tab click)`, tabs.includes('Flash Game'),
+        check(`${label}: the Flash Panel tab came forward by itself (no tab click)`, tabs.includes('Flash Panel'),
             `active tabs: ${tabs.join(', ')}`);
         // ⛓ Read ONCE after the arrival settled (T2b U2a: the overlay's release moved focus late).
         await page.waitForTimeout(2500);

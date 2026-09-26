@@ -1376,7 +1376,7 @@ const PANEL_JS = {
                 last = now;
             }
         }, 50);
-        const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Game');
+        const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Panel');
         if (tab) tab.click();
         return { tab: Boolean(tab), tabs: [...document.querySelectorAll('.lm_tab')]
             .map((t) => t.title) };
