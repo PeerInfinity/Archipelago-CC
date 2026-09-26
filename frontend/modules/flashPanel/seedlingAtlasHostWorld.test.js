@@ -53,7 +53,14 @@ const staticOf = (rulesJson) => ({
     game_info: rulesJson.game_info,
 });
 
-describe('sphere growth — SEEDLING_ATLAS_HOST_STATE (a REAL start room hosting a maze child)', () => {
+describe('sphere growth — SEEDLING_ATLAS_HOST_STATE (a REAL two-door room hosting a maze child, T3\'s world without its knob)', () => {
+    it('IS the sphere-room state less its knob — one world, a leaf by the knob and a host without it', () => {
+        const { [SEEDLING_ATLAS_HOST_CHILDREN_KEY]: knob, ...rest } = SEEDLING_SPHERE_ROOM_STATE.params;
+        expect(knob).toBe(false);
+        expect(SEEDLING_ATLAS_HOST_STATE.params).toEqual(rest);
+        expect({ ...SEEDLING_ATLAS_HOST_STATE, params: null }).toEqual({ ...SEEDLING_SPHERE_ROOM_STATE, params: null });
+    });
+
     it('builds twice byte-identically, oracle clean; schema-valid; every region reachable', async () => {
         const a = await build(SEEDLING_ATLAS_HOST_STATE);
         const b = await build(SEEDLING_ATLAS_HOST_STATE);
@@ -65,53 +72,68 @@ describe('sphere growth — SEEDLING_ATLAS_HOST_STATE (a REAL start room hosting
         expect([...reachableRegions(a.rulesJson)].sort()).toEqual([...all].sort());
     }, 60_000);
 
-    it('the real room is the START and HOSTS a maze child behind a gate — the compiled exit rule IS the tree\'s gate', async () => {
+    it('the real room HOSTS a maze child: one door per tree edge, every compiled exit rule IS the tree\'s gate', async () => {
         const { rulesJson } = await build(SEEDLING_ATLAS_HOST_STATE);
         const regions = regionsOf(rulesJson);
         const sidecars = rulesJson.preset_sidecars['1'];
         const rooms = atlasRoomsOf(rulesJson);
         expect(rooms).toHaveLength(1);
         const [[host, { playable_payload: p }]] = rooms;
-        expect(regions.Menu.exits.map((e) => e.connected_region)).toEqual([host]);
         const nodes = rulesJson.procgen_metadata.sphere_tree.nodes;
         const hostNode = nodes.find((n) => regionOfNode(n) === host);
-        expect(hostNode.substrate).toBe(FLASH_SEEDLING_SUBSTRATE_ID);
+        const parent = nodes[hostNode.parent];
         const children = nodes.filter((n) => n.parent === hostNode.index);
         expect(children.length).toBeGreaterThanOrEqual(1);
-        // ⛓ one bound door per child, and each door's compiled rule = that child's tree gate, EXACTLY
-        expect(p.exits).toHaveLength(children.length);
+        // ⛓ a door per edge — the children's AND the one back to the parent — each a REAL atlas door
+        expect(p.exits).toHaveLength(children.length + 1);
+        const doorTo = (target) => {
+            const exit = regions[host].exits.find((e) => e.connected_region === target);
+            return { exit, door: p.exits.find((d) => d.exitName === exit.name) };
+        };
         for (const child of children) {
             const target = regionOfNode(child);
-            const exit = regions[host].exits.find((e) => e.connected_region === target);
+            const { exit, door } = doorTo(target);
             expect(sidecars[target].substrate, target).toBe('maze');
             expect(isGate(exit.access_rule), `${host} → ${target}`).toBe(true);
             expect(exit.access_rule).toEqual(treeGateRule(child));
-            // the door is a REAL atlas door, bound to the exit by its AP name
-            const door = p.exits.find((d) => d.exitName === exit.name);
             expect(door, exit.name).toMatchObject({ external: true, targetRegion: target });
-            expect(typeof door.exit_id).toBe('string');
-            // the child is really BEHIND it: its back door is gated on the same rule
             const back = regions[target].exits.find((e) => e.connected_region === host);
             expect(back.access_rule, `${target}'s back door`).toEqual(exit.access_rule);
         }
+        // ⛓ the door BACK is gated on the room's own entry gate (backPortalGated), as the parent's exit in is
+        const { exit: backExit, door: backDoor } = doorTo(regionOfNode(parent));
+        expect(backExit.access_rule).toEqual(treeGateRule(hostNode));
+        expect(backDoor).toMatchObject({ external: true, targetRegion: regionOfNode(parent) });
+        // ⛔ the room holds NO location: a real room's own location has no play-side check path yet (plan §12.4)
+        expect(regions[host].locations).toEqual([]);
     }, 60_000);
 
-    it('the gate\'s item stands in the real room\'s own chest (reachable before the door) — and the host refuses/passes the door off STATIC DATA', async () => {
+    it('every gate\'s item lies BEFORE its door, in a maze; the host refuses/passes both real doors off STATIC DATA', async () => {
         const { rulesJson } = await build(SEEDLING_ATLAS_HOST_STATE);
         const [[host, { playable_payload: p }]] = atlasRoomsOf(rulesJson);
+        const regions = regionsOf(rulesJson);
+        const sidecars = rulesJson.preset_sidecars['1'];
         const world = atlasEntry.deserializeWorld(p);
-        const [door] = [...(world.exits instanceof Map ? world.exits.values() : world.exits)];
-        expect(door.access_rule).toBeUndefined(); // ⛔ a real room's payload carries NO rule — static data does
-        const exit = regionsOf(rulesJson)[host].exits.find((e) => e.name === door.exitName);
-        const item = exit.access_rule.args.item_name;
+        const doors = [...(world.exits instanceof Map ? world.exits.values() : world.exits)];
+        expect(doors.map((d) => d.access_rule)).toEqual(doors.map(() => undefined)); // ⛔ no rule in a real payload
         const placed = rulesJson.canonical_placements['1'];
-        const where = Object.entries(placed).filter(([, it]) => it === item).map(([loc]) => loc);
-        expect(where).toEqual(regionsOf(rulesJson)[host].locations.map((l) => l.name));
-        const gate = (inventory) => createDoorGate({ getSnapshot: () => ({ inventory, flags: [] }),
-            getStaticData: () => staticOf(rulesJson), getSnapshotInterface: () => createSnapshotInterface })(
-            door, { region: host });
-        expect(gate({})).toMatchObject({ pass: false, gated: true, missing: [item], source: 'static' });
-        expect(gate({ [item]: 1 })).toMatchObject({ pass: true, source: 'static' });
+        const nodes = rulesJson.procgen_metadata.sphere_tree.nodes;
+        const parentRegion = regionOfNode(nodes[nodes.find((n) => regionOfNode(n) === host).parent]);
+        const regionOfLocation = (loc) => Object.entries(regions).find(([, r]) => r.locations.some((l) => l.name === loc))?.[0];
+        for (const door of doors) {
+            const exit = regions[host].exits.find((e) => e.name === door.exitName);
+            const item = exit.access_rule.args.item_name;
+            const [where] = Object.entries(placed).filter(([, it]) => it === item).map(([loc]) => loc);
+            expect(sidecars[regionOfLocation(where)].substrate, `${item} at ${where}`).toBe('maze');
+            // a CHILD's key is not behind its own door (the door BACK leads to the parent, where its key may be — the
+            // player held it to come in)
+            if (exit.connected_region !== parentRegion) expect(regionOfLocation(where)).not.toBe(exit.connected_region);
+            const gate = (inventory) => createDoorGate({ getSnapshot: () => ({ inventory, flags: [] }),
+                getStaticData: () => staticOf(rulesJson), getSnapshotInterface: () => createSnapshotInterface })(
+                door, { region: host });
+            expect(gate({}), door.exit_id).toMatchObject({ pass: false, gated: true, missing: [item], source: 'static' });
+            expect(gate({ [item]: 1 }), door.exit_id).toMatchObject({ pass: true, source: 'static' });
+        }
     }, 60_000);
 
     it('world completion is REACHABLE: the completion condition names the victory item, placed in the world', async () => {
@@ -138,5 +160,16 @@ describe('the committed real-room LEAF stays a leaf by its STATE\'s knob', () =>
         const { rulesJson } = await build({ ...SEEDLING_SPHERE_ROOM_STATE, params });
         expect(JSON.stringify(rulesJson.procgen_metadata.sphere_tree))
             .not.toBe(JSON.stringify(committed.procgen_metadata.sphere_tree));
+    }, 60_000);
+});
+
+describe('the committed seedling_atlas_host preset IS this world (G6)', () => {
+    it('equals a fresh build of SEEDLING_ATLAS_HOST_STATE', async () => {
+        // The byte gate is make-seedling-spiral-room-preset.mjs --state=atlas-host --check;
+        // this row keeps the equality in the CI suite, format-agnostic.
+        const committed = JSON.parse(readFileSync(
+            join(ROOT, 'frontend/presets/seedling_atlas_host/AP_1/AP_1_rules.json'), 'utf8'));
+        const { rulesJson } = await build(SEEDLING_ATLAS_HOST_STATE);
+        expect(committed).toEqual(rulesJson);
     }, 60_000);
 });

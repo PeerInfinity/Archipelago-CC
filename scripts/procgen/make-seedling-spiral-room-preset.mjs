@@ -20,9 +20,14 @@
  *   generated-host → `seedling_generated_host`: the sphere-growth world whose
  *            START is a GENERATED Seedling room HOSTING a maze child behind
  *            `Has(key_blue)` — the host enforces the door's gate (seedling
- *            generated G4), from `SEEDLING_GENERATED_HOST_STATE`.
+ *            generated G4), from `SEEDLING_GENERATED_HOST_STATE`;
+ *   atlas-host → `seedling_atlas_host`: the sphere-growth world whose START is a
+ *            REAL Seedling room (`starting_house`) HOSTING a maze child behind
+ *            `Has(key_blue)`, the key in the room's chest — the host enforces the
+ *            door's gate off the state manager's static data (seedling generated
+ *            G6), from `SEEDLING_ATLAS_HOST_STATE`.
  *
- * ONE recipe, five states: the same assembly, the same bytes rule, the same
+ * ONE recipe, six states: the same assembly, the same bytes rule, the same
  * `--check`.
  *
  * The preset is a FUNCTION of that committed state, never a hand edit: this
@@ -40,11 +45,11 @@
  * preset, listed in `scripts/release/preserved-dev-presets.txt`, not in
  * `preset_files.live.json`. The box gates that PLAY them are
  * `check-seedling-spiral-room-play.mjs`, `check-seedling-sphere-room-play.mjs`,
- * `check-seedling-generated-room-play.mjs`, `check-seedling-generated-leaf-play.mjs` and
- * `check-seedling-generated-host-play.mjs`.
+ * `check-seedling-generated-room-play.mjs`, `check-seedling-generated-leaf-play.mjs`,
+ * `check-seedling-generated-host-play.mjs` and `check-seedling-atlas-host-play.mjs`.
  *
  * Usage:
- *   node scripts/procgen/make-seedling-spiral-room-preset.mjs [--state=spiral|sphere|generated|generated-leaf|generated-host] [--check]
+ *   node scripts/procgen/make-seedling-spiral-room-preset.mjs [--state=spiral|sphere|generated|generated-leaf|generated-host|atlas-host] [--check]
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -62,6 +67,7 @@ const PRESETS = Object.freeze({
     generated: Object.freeze({ stateExport: 'SEEDLING_GENERATED_ROOM_STATE', gameId: 'seedling_generated_room' }),
     'generated-leaf': Object.freeze({ stateExport: 'SEEDLING_GENERATED_LEAF_STATE', gameId: 'seedling_generated_leaf' }),
     'generated-host': Object.freeze({ stateExport: 'SEEDLING_GENERATED_HOST_STATE', gameId: 'seedling_generated_host' }),
+    'atlas-host': Object.freeze({ stateExport: 'SEEDLING_ATLAS_HOST_STATE', gameId: 'seedling_atlas_host' }),
 });
 const imp = (rel) => import(pathToFileURL(path.join(repoRoot, rel)));
 
