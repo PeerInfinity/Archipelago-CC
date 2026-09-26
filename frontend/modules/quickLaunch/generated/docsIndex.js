@@ -789,7 +789,7 @@ export const DOCS_INDEX = Object.freeze([
         "path": "docs/json/user/modules/quickLaunch.md",
         "title": "Quick Launch Panel",
         "section": "user/modules",
-        "summary": "The Quick Launch panel is the first tab of the left column in the default layout. It lists every panel the app has registered, with a button to open each one, and links to the user guides."
+        "summary": "The Quick Launch panel is the first tab of the left column in the default layout. It lists every panel the app has registered, with a button to open each one, and links to the documentation."
     },
     {
         "path": "docs/json/user/modules/regionGraph.md",

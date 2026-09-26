@@ -78,6 +78,10 @@ This section provides detailed, auto-generated, or manually written documentatio
 
 - **[Module Index](./modules/README.md)**: An overview and index of all documented frontend modules.
 
+### The Quick Launch Help group
+
+The web client's [Quick Launch panel](./user/modules/quickLaunch.md) lists documentation in its Help group, one sub-group per section. A directory here joins that group when its `README.md` carries one marker line, `<!-- quick-launch-help: order=<int> audience=<user|developer|panel> -->`: the section is titled by the README's `# ` heading and ordered by `order`; `audience=user` sections are always shown, `developer` ones only with the panel's *Show developer docs* setting, and `panel` ones never (the per-panel guides, which each panel's row already links). Its `.md` files are listed, and each unmarked sub-directory becomes a sub-group (a single row when it holds one page). After adding or changing a marker, or a page in a marked directory, run `node scripts/quicklaunch/generate-docs-index.mjs`; a malformed marker makes it fail, naming the file.
+
 ### 5. Source-Level Documentation
 
 READMEs in the source directories provide quick-start guides for each major component:

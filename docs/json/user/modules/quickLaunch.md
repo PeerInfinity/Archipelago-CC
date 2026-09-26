@@ -1,8 +1,8 @@
 # Quick Launch Panel
 
-The Quick Launch panel is the first tab of the left column in the default layout. It lists every panel the app has registered, with a button to open each one, and links to the user guides.
+The Quick Launch panel is the first tab of the left column in the default layout. It lists every panel the app has registered, with a button to open each one, and links to the documentation.
 
-The header line counts what it lists: *N panels · M guides*. Beside it are the filter box, the **Cards** button (the two views), **Edit** (your own groups) and **Modules ⇄**, which opens the [Modules panel](modules.md).
+The bar at the top has two rows. The first holds the header line, which counts what the panel lists — *N panels · M docs*, where *M* is the number of documents the Help group shows — and the filter box. The second holds the buttons: **Cards** (the two views), **Collapse all** / **Expand all** (folding), **Edit** (your own groups) and **Modules ⇄**, which opens the [Modules panel](modules.md).
 
 ## All panels
 
@@ -13,11 +13,19 @@ One button per panel, sorted into one sub-group per category. The categories are
 
 Clicking a button brings that panel's tab forward. If the panel was closed, it is reopened in its usual column — the same thing ticking its checkbox in the Modules panel does. Hover a button to read the panel's description.
 
-A **?** after a button links to that panel's user guide, when it has one.
+A **?** after a button links to that panel's user guide, when it has one. The panel guides are reached only this way — the Help group does not list them again.
 
 ## Help
 
-Links to the user guides: the general guides first, then one per panel. Every link opens in a new browser tab.
+Links to the documentation, in one sub-group per section:
+
+- **User Guides** — the overview, quick start, guided tour and the other general guides.
+- **Features** — one page per major feature.
+- **Playable Games** — one link per game; a game with more than one page gets a sub-group of its own.
+
+The **Show developer docs** setting (see *Settings* below) adds four more sections after these: **Developer Guides**, **Developer Reference Documentation**, **Frontend Module Reference** and **Procedural Generation**. Each section's count is in its heading. Every link opens in a new browser tab.
+
+The sections are not a list kept in the panel: a documentation directory whose `README.md` carries a marker line joins Help, titled by that README's heading (see the [documentation index](../../README.md)).
 
 ## Two views: tree and cards
 
@@ -30,7 +38,13 @@ Everything else is the same in both views: the groups, the dots, the **?** links
 
 ## Filter
 
-Type in the filter box to show only what matches: a panel whose title or description contains the text (upper or lower case alike), a guide whose title does, a web link whose label does, or a group whose name does (then everything in that group is shown). The groups holding a match are shown open, even ones you had folded shut; clearing the box puts every group back the way it was. A group with no match is hidden, and if nothing matches at all the panel says so.
+Type in the filter box to show only what matches: a panel whose title or description contains the text (upper or lower case alike), a guide whose title does, a web link whose label does, or a group whose name does — a Help section's or sub-group's name included (then everything in that group is shown). The groups holding a match are shown open, even ones you had folded shut; clearing the box puts every group back the way it was. A group with no match is hidden, and if nothing matches at all the panel says so.
+
+## Collapse all / Expand all
+
+One button folds every group at once. It does what it says, whatever state the groups are in, and then offers the opposite: **Collapse all** folds every group shut — your own groups, the built-in ones and every sub-group — and the button then reads **Expand all**, which opens them all again. Every time the panel is opened the button starts at **Collapse all**; which way it points is not saved.
+
+While the filter box holds text, the button acts only on the groups the filter shows. Those groups stay open while the filter is on (they hold matches); clear the box and they show folded.
 
 ## Your own groups
 
@@ -46,7 +60,7 @@ Your groups hold *references*, so the same panel can appear in several of them, 
 
 ## Unfiled
 
-Once you have your own groups, *Unfiled* lists every panel and guide that none of them contains, so a panel added to the app later still shows up. It is hidden when there is nothing left to file, and while you have no groups at all (then *All panels* and *Help* already show everything).
+Once you have your own groups, *Unfiled* lists every panel and every document Help shows that none of them contains, so a panel added to the app later still shows up. It is hidden when there is nothing left to file, and while you have no groups at all (then *All panels* and *Help* already show everything).
 
 ## Where the arrangement is saved
 
@@ -55,7 +69,7 @@ The arrangement is a setting, **Arrangement** (`moduleSettings.quickLaunch.tree`
 Two more settings are saved the same way:
 
 - **View** (`moduleSettings.quickLaunch.view`) — `tree` or `cards`, whichever the **Cards** button last chose.
-- **Collapsed groups** (`moduleSettings.quickLaunch.collapsedGroups`) — which of *your own* groups are folded shut. Folding a built-in group (*All panels*, a category, *Help*, *Unfiled*) lasts until the page is reloaded, and is not saved. The text in the filter box is never saved.
+- **Collapsed groups** (`moduleSettings.quickLaunch.collapsedGroups`) — which of *your own* groups are folded shut (folding one, or **Collapse all** / **Expand all**, writes it). Folding a built-in group (*All panels*, a category, *Help*, a Help section, *Unfiled*) lasts until the page is reloaded, and is not saved. The text in the filter box is never saved.
 
 - The Options panel's *All Settings* view shows it as JSON (filter for `quickLaunch`); you can edit it there. Each item is `{id, kind, ...}` with `kind` one of `group` (`label`, `children`), `panel` (`ref`: the panel's component type), `doc` (`ref`: the guide's path) or `url` (`href`, `label`).
 - The JSON panel's settings export and import carry it too.
@@ -67,6 +81,8 @@ Two more settings are saved the same way:
 Closing a tab with its **×** disables its module. To get it back, click its button in **All panels** (or tick it in the Modules panel). If you closed the Quick Launch panel itself, reopen it from the Modules panel.
 
 ## Settings
+
+**Show developer docs** (Options panel, `quickLaunch` section; `moduleSettings.quickLaunch.showDeveloperDocs`, off by default) — also list the four developer documentation sections in Help. Changing it redraws the panel at once; it is saved per mode like the settings above.
 
 **Docs link target** (Options panel, `quickLaunch` section):
 
