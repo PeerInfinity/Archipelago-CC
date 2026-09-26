@@ -48,8 +48,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 55,
-            "count": 91,
+            "browser": 56,
+            "count": 92,
             "id": "check"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 265,
-        "browser": 81,
+        "blockStyle": 266,
+        "browser": 82,
         "cited": 102,
-        "files": 276,
+        "files": 277,
         "lineStyle": 11,
-        "withDocblock": 276,
-        "withFlags": 190
+        "withDocblock": 277,
+        "withFlags": 191
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3145,6 +3145,46 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-full-tier-owed — **A MEASUREMENT OWED IS A RED ROW, NOT A MEMORY** (R9 slice P3b, §47.11 (3) (c)/(d)).",
             "path": "scripts/procgen/check-seedling-full-tier-owed.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "game",
+                "host"
+            ],
+            "file": "check-seedling-generated-host-play.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "game"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling generated levels, G4: a GENERATED Seedling room HOSTS a child behind an AP gate, and the HOST enforces it — the game cannot hold a pipeline item, so when the gated door fires without the item the glue refuses the crossing, swallows the game's own swap into the parking room and teleports the player back onto…",
+            "path": "scripts/procgen/check-seedling-generated-host-play.mjs"
         },
         {
             "argvHelpers": [

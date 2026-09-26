@@ -18,7 +18,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { initialize, register, setActivePanelInstance } from './index.js';
-import { AP_ITEM_FOUND_EVENT } from './seedlingRegionGlue.js';
+import { AP_ITEM_FOUND_EVENT, DOOR_LOCKED_EVENT } from './seedlingRegionGlue.js';
 import { FLASH_SEEDLING_LOAD_REGION_EVENT } from './flashSeedlingLibrary.js';
 
 /** A registrationApi that records rather than registers. */
@@ -80,10 +80,20 @@ describe('the flashPanel module\'s bus registration', () => {
         for (const m of src.matchAll(/publish(?:As)?\??\.?\(\s*([A-Z_][A-Z0-9_]*)\s*,/g)) {
             published.add(m[1]);
         }
-        // Resolve the constants this module owns to their values.
-        const known = { AP_ITEM_FOUND_EVENT, FLASH_SEEDLING_LOAD_REGION_EVENT };
-        const names = [...published].filter((n) => n in known).map((n) => known[n]);
-        expect(names.length).toBeGreaterThan(0);
+        // Resolve the constants this module owns to their values — off the
+        // glue module's own EXPORTS, not a typed list. ⛓ Seedling generated G4:
+        // the typed list `{AP_ITEM_FOUND_EVENT, …}` FILTERED every other name
+        // out, so a new `publish(DOOR_LOCKED_EVENT, …)` passed this row while
+        // the page dropped it (the box gate caught it). A name that resolves to
+        // nothing now FAILS instead of vanishing.
+        const glueExports = await import('./seedlingRegionGlue.js');
+        const known = {
+            ...Object.fromEntries(Object.entries(glueExports).filter(([, v]) => typeof v === 'string')),
+            FLASH_SEEDLING_LOAD_REGION_EVENT,
+        };
+        expect([...published].filter((n) => !(n in known)), 'published names this row cannot resolve').toEqual([]);
+        const names = [...published].map((n) => known[n]);
+        expect(names).toContain(DOOR_LOCKED_EVENT);
         for (const event of names) {
             expect(seen.publishers, `${event} is published but not registered`).toContain(event);
         }

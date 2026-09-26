@@ -13,8 +13,12 @@ generated levels G3).
   generated room; the generated room's goal cell (tile 5,3) holds the AP
   location `region_3_3__loc_0` — the `victory` item, as an Archipelago item.
 - The generated room has ONE door, the way back (tile 1,4, drawn as a portal),
-  bound to `region_2_3`'s exit. The engine inserted it; it is ungated (a
-  generated door enforces no AP gate, so the room hosts no children). Coming in
+  bound to `region_2_3`'s exit. The engine inserted it; it carries no gate the
+  host enforces (its payload records none — you are only inside if you held
+  `key_red`). The room is a LEAF by its state: since seedling generated G4 a
+  generated room hosts children by default, and
+  `SEEDLING_GENERATED_LEAF_STATE` says `seedlingGenHostChildren: false` (see
+  `seedling_generated_host` for a room that hosts one). Coming in
   from the maze, the player lands on its approach cell (tile 1,3); going out, the
   game waits in a one-cell PARKING room while the maze plays, and the maze puts
   the player on its exit paired with the door.

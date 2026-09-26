@@ -121,6 +121,17 @@ describe('sphere growth — SEEDLING_GENERATED_HOST_STATE (a generated START roo
     }, 60_000);
 });
 
+describe('the committed seedling_generated_host preset IS this world (G4)', () => {
+    it('equals a fresh build of SEEDLING_GENERATED_HOST_STATE', async () => {
+        // The byte gate is make-seedling-spiral-room-preset.mjs --state=generated-host --check;
+        // this row keeps the equality in the CI suite, format-agnostic.
+        const committed = JSON.parse(readFileSync(
+            join(ROOT, 'frontend/presets/seedling_generated_host/AP_1/AP_1_rules.json'), 'utf8'));
+        const { rulesJson } = await build(SEEDLING_GENERATED_HOST_STATE);
+        expect(committed).toEqual(rulesJson);
+    }, 60_000);
+});
+
 describe('the committed LEAF stays a leaf by its STATE, not by a re-record', () => {
     it('without the knob the leaf world moves — ONLY its tree record (the back door takes a gate slot)', async () => {
         const committed = JSON.parse(readFileSync(
