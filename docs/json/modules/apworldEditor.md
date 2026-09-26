@@ -30,7 +30,9 @@ document.
 | `regionGenerationFlow.js` | (substrate change R2) what the block's **Region generation** form opens on and sends — `regionGenerationPlan` (the target's registry defaults, the seed, ⚖ Q4's size for a tiles target, the region's own recorded knobs when its payload is the target's own, or the op's pre-realiser refusal), `composeRegenerateArgs` (the bag → the op's arguments, as top-down composes them), `freeItemsSentence`, `regenerationProvenance`, `regenerationAnswer` |
 | `librarySourcePicker.js` | (substrate change R5a) the form's **Library entry** picker — `createServedLibraryCatalog` / `servedLibraryCatalog` (the served index fetched ONCE per page, the packs on demand, through the pipeline's `regionLibraryLoader`; base path `LIBRARY_BASE_PATH`, the pipeline panel's `'./'` rule), `libraryPickerOptions` (the target's entries, disabled with the op's own refusal), `loadLibraryOptions` (never throws: `libraryFetchFailureSentence`) |
 | `regionContent.js` | (substrate change R5b) a region's CONTENT **replaced by a zone** — the op `replace-region-content`'s mechanics and sentences: `zoneSourceFacts` (the channel + the read-back), `installedZoneConfigFrom` (the target's `zoneConfigFromSlot` — no install), `zoneHeldBy` / `zoneOfRegion` / `zoneOptions`, `zoneSourceRefusal`, `zoneContentFor` (install + verify + extract: worker or Node only), `applyZoneContent` (the pure cascade), `describeZoneReplacement`, `unplacedPoolItems` (the Placements tab's readout), `zoneJobAnswer` (the worker's answer); since R5c `resolveZoneFetches` (the served documents a read-back names, fetched and asked again) and `zoneSourceLabelOf` (the Source row's word) |
-| `regionGenerationRun.js` | (R2) the **time-limit setting** (`regionGenerationTimeoutSeconds`, `REGION_GENERATION_TIMEOUT_DEFAULT_S`) and the **worker** protocol: `runRegenerateJob` (the worker's side) and `runRegenerateInWorker` (the page's: the budget, Cancel, `terminate()`), the timeout and Cancel sentences |
+| `regionGenerationRun.js` | (R2) the **time-limit setting** (`regionGenerationTimeoutSeconds`, `REGION_GENERATION_TIMEOUT_DEFAULT_S`; R7's whole-slot `initialiseTimeoutSeconds`, `INITIALISE_TIMEOUT_DEFAULT_S`) and the **worker** protocol (R7: a job's `{type: 'progress', event}` messages → `onProgress`): `runRegenerateJob` (the worker's side) and `runRegenerateInWorker` (the page's: the budget, Cancel, `terminate()`), the timeout and Cancel sentences |
+| `slotInitialise.js` | (substrate change R7) a BARE slot's procgen data **built in place** — the engine's four top-down stages (`layoutTopDown` → `realiseTopDownGen` → `finalizeTopDown` → `buildPresetSidecars`) on the current document: `initialiseFacts` (bare? the blockers as data), `initialiseGridSide` / `autoGridSide` (the hand-off's side, grown while a region lacks a cell), `planInitialise` (the layout only — the form's preview), `unplacedRegions` (each with a why DERIVED from the graph, `UNPLACED_WHY`), `returnExitsOf`, `initialiseSlot` (the result the op lands), `initialiseOpFor`; the op and its sentences are `rulesDocOps.js`'s `initialise-procgen-layout` |
+| `initialiseFlow.js` | (R7) what the **Initialise procgen data** form says and sends — `initialiseDoorShown`, `initialiseFormDefaults` / `withAutoSide`, `initialisePreview` (the op's refusal, or the plan's sentence), `initialiseJob`, `initialiseTickerText`, `initialiseAnswer` |
 | `regionRegenerateWorker.js` | (R2) the MODULE WORKER one Generate runs in — imports the eight registry libraries into its own registry, then `regionRegenerate.js`. ⛔ A worker cannot be bundled into `bundle.js`: `scripts/build/bundle-frontend.js` copies it into `dist/` (beside `stateManagerWorker.js` and `balanceWorker.js`), and in bundled mode the page resolves it at its SOURCE location, `stateManagerProxy`'s rule |
 | `startingInventoryBlock.js` | (substrate change R3) the **Starting inventory** block as data — `startingInventoryList` (the list as `{name, count}`), `substratesInSlot`, `startingNeedRows` (each substrate's registry `startingInventory` needs against the list, with a grant op per candidate), `startingGrantOp` (`set-starting-count` at current + 1), `needSentence`; the panel draws what these answer, on the Items tab and in the Region generation form |
 | `../procgenCore/ruleWithOwned.js` | (R3) `ruleWithOwned(rule, owned)` — a rule with the owned items treated as held (`Has`/`HasAll`/`HasAny`/`And`/`Or`; everything else unchanged and named in `unmodelled`); the regenerate spec's starting-inventory rewrite |
@@ -2118,6 +2120,82 @@ keeping in view here — until the four-player fixture landed, every no-map docu
 in the corpus carried no `grid_cell`, so ONE sentence covered the corpus by
 accident, and the fixture is what made the second cause visible at all.
 
+### Initialise procgen data ▸ — a BARE slot's grid and rooms (substrate change R7)
+
+A classic AP document carries no sidecar entry for its slot, so the Map has
+nothing to draw, no region has a block, and `set-region-sidecar` never creates
+one. On such a slot (`initialiseDoorShown`: no entry, some regions) the Map's
+*"No map for this world"* state and the Sidecars tab's empty list both draw
+**Initialise procgen data ▸**. It opens one form:
+
+| control | what it is |
+|---|---|
+| **Substrate (every region)** | the realiser targets (`initialiseTargets` — every registry entry `regionRealiserKind` accepts); default the engine's `DEFAULT_SUBSTRATE_ID`. ONE substrate for the slot (⚖ 2026-09-26 #4); a region's own picker changes it afterwards |
+| **Grid side** + *auto* | auto = the pipeline hand-off's side (`topDownGridSide`, `⌈√(1.5 n)⌉`, shared with the pipeline panel), GROWN one at a time while the layout leaves a region for want of a cell (`autoGridSide`); typing a side turns auto off |
+| **Seed** | the layout's and every region's (the engine's per-region sub-seed) |
+| **Add return exits** | default ON (⚖ #1) — see below |
+
+Under them, the **preview**, re-planned on every change from the LAYOUT alone
+(`planInitialise`, milliseconds even at 445 regions): *"81 regions placed on
+12×12, 50 teleporters; 80 return exits will be added; 0 unplaceable"*, the
+unplaceable NAMED with their why. A state the op refuses prints the op's own
+sentence instead and draws no Generate (1305). Then the chosen substrate's
+starting-inventory need line (R3), and **Generate ▸**.
+
+**Generate ▸** runs `initialiseSlot` in the generation worker
+(`regionRegenerateWorker.js`, job `initialise`), ticking *built 120 / 445 · 12.3 s
+of 300* from one progress message per region, with **Cancel**. The budget is
+`moduleSettings.apworldEditor.initialiseTimeoutSeconds` (Options › All Settings ›
+apworldEditor; default **300**, ⚖ #3) — a SEPARATE setting from R2's per-region
+limit, because the unit is the whole slot (`pokemon_rb`, 445 regions, ≈41 s as
+`maze`). Its sentence quotes the setting and how far the build got. The result
+lands as ONE `initialise-procgen-layout` with the result INLINE (a refold is a
+write, never a 40-second realise). The answer is the op's description plus the
+slot's sidecar-issue count (V0):
+
+> slot 1 initialised as `maze`: 81 regions on a 12×12 grid (50 teleporters), 80
+> return exits added, 0 regions unplaced — location names and existing access rules
+> unchanged — built in the generation worker (0.2 s) — 0 sidecar issues in slot 1
+
+**What the op writes** — `preset_sidecars[p]` (every placed region's entry),
+`procgen_metadata` (`driver: 'apworld-initialise'`, `player`, `stop_reason`,
+`region_count`, `grid_dims` = the cells' extent, `substrate_configs` per R6b when a
+declaring substrate realised a region), the substrate's own top-level blocks the
+document lacks (`rulesJsonBlocks`), and — with return exits ON — one exit per
+return route appended to `regions[p][R].exits`. **Never**: a location, an item, a
+placement, or an existing rule. Location names ride into the payloads verbatim
+(`useSourceLocationName`), so the placements, the sphere log and the loop costs
+still name what the rooms carry. Undo takes the whole thing back in one step.
+
+**Why return exits are a LOGIC change.** The finaliser gives every placed
+non-start region an exit back to the region the layout reached it from, unless the
+document already declares one leading there (`insertBackExit`'s rule). The payload
+then names an exit the document's regions block lacks — the report says
+`EXIT_UNKNOWN` per region — and the pipeline's compile resolves that by writing the
+exit into the block, with the paired FORWARD exit's rule (`buildRulesJson`'s
+bidirectional post-pass: the same gate guards both directions). The op makes the
+same edit, visibly: a one-way source (`apcalc`: 80 of 81 regions) gains return
+routes the world never declared. OFF, nothing is added and the rooms keep the
+document's one-way links (0 report errors either way on the probed documents).
+
+**Regions the layout cannot place** are NAMED and the rest built (⚖ #2) —
+never a refusal of the whole initialise. The why is derived from the graph
+(`UNPLACED_WHY`): *no incoming exit* (`alttp_worldgen`: `Chris Houlihan Room`,
+`Desert Northern Cliffs`, `Dark Death Mountain Bunny Descent Area`); *reachable
+only from Menu* (`pokemon_rb`: `Evolution`, `Pokedex`, `Fossil` — the layout
+strips `Menu` exactly as the pipeline does); *no free grid cell* (a side typed too
+small); *reachable only from unplaced regions*.
+
+**Refused by name** (`initialiseOpRefusal`, the form's courtesy asks the same
+function): no regions; the slot already carries an entry (a re-initialise would be
+a delete first, and the hub does not offer one); no usable start region; a
+document-level `procgen_metadata` already present (another slot's, or the
+pipeline's — two writers of one block); an unregistered, unplayable or
+realiser-less substrate; `gridDims` not whole numbers ≥ 1; a non-integer seed;
+`backExits` not `add`/`none`. An inlined result is checked too: entries only for
+the slot's regions, return exits only between them and under names they do not
+already use, top-level blocks the document does not already carry.
+
 ### The four-player fixture
 
 `frontend/presets/multiworld/AP_05594871498841892311/` (seed 4) is the only
@@ -2462,7 +2540,7 @@ The import is free in both modes, measured:
 
 | Suite | Where |
 |-------|-------|
-| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `regionRederive.test.js`, `regionLayout.test.js` (M2: every move and swap of two fixture slots, the refusals, the corpus control, the side law's census), `exitSides.test.js` (M3: the exit-side corpus control, the exhaustive deep diff over every side move and swap, the back exit, every refusal, ONE-WAY, Undo), `reverseLinks.test.js`, `sidecarIssues.test.js`, `sidecarForm.test.js`, `regionRegenerate.test.js`, `regionGenerationRun.test.js` (R2: the setting, the worker protocol with a fake worker — budget, load bound, Cancel, `terminate()`), `regionGenerationFlow.test.js` (R2: the plan, the args, the worker ≡ the op, the free-item clause, the panel's teardown) | vitest, `frontend/modules/apworldEditor/` |
+| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `regionRederive.test.js`, `regionLayout.test.js` (M2: every move and swap of two fixture slots, the refusals, the corpus control, the side law's census), `exitSides.test.js` (M3: the exit-side corpus control, the exhaustive deep diff over every side move and swap, the back exit, every refusal, ONE-WAY, Undo), `reverseLinks.test.js`, `sidecarIssues.test.js`, `sidecarForm.test.js`, `regionRegenerate.test.js`, `regionGenerationRun.test.js` (R2: the setting, the worker protocol with a fake worker — budget, load bound, Cancel, `terminate()`), `regionGenerationFlow.test.js` (R2: the plan, the args, the worker ≡ the op, the free-item clause, the panel's teardown), `slotInitialise.test.js` (R7: the population at the layout — every committed bare slot ≤ 100 regions; the probed documents built in full with 0 report errors both ways; the unplaced and their whys; preview ≡ build; the op's deep diff, Undo, refusals, the refold), `initialiseFlow.test.js` (R7: the door, the form, the preview, the ticker, the answers) | vitest, `frontend/modules/apworldEditor/` |
 | `check-sidecar-fields.mjs` (+ `checkSidecarFields.test.js`) | `scripts/procgen/` — the corpus gate: every committed entry against its declaration, (V0) `sidecarIssues` per slot as its second layer, and (G2b-1) `regionRuleAgreement` per region as its third |
 | `../procgenCore/compositeMapRenderer.test.js` | vitest — the Map tab's renderer, driven by a TOY substrate |
 | `../procgenPipeline/compositeMapDocument.test.js` | vitest — `preset_sidecars` → `Grid`, including the player slot; (M2) `mapBoundsFor` |
