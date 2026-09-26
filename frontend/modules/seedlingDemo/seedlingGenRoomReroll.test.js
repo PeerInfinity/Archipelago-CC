@@ -205,3 +205,96 @@ describe('case 1 — an ENGINE-added door re-rolls the room at serialize time (d
         }
     }, 60_000);
 });
+
+describe('case 2 — LOCATIONS the room cannot seat re-roll it at place time ((B), every driver)', () => {
+    /** An rng whose first draw yields `seed` as the room's drawn seed. */
+    const rngDrawing = (seed) => ({ next: () => (seed + 0.5) / 0x7fffffff });
+    const unitRoom = (drawn) => room.generateGenRoom({
+        region_id: 'u', exits: [{ exit_id: 'a' }], size: { width: 8, height: 6 }, rng: rngDrawing(drawn), params: {},
+    }).world;
+
+    /**
+     * ⛓ MEASURED (G5): drawn seed 1's 8×6 one-door room offers 4 location cells on
+     * its first draw; five items seat on re-roll 1. The world object and its exit
+     * record keep their IDENTITY (the engine holds both), the exit keeps its key,
+     * name and rule, every item keeps its location id.
+     */
+    it('placeGenItems (the spiral / grid growth placer): five items in a four-cell room seat on re-roll 1, in place', () => {
+        const world = unitRoom(1);
+        const exitRecord = world.exits.get('a');
+        exitRecord.access_rule = { rule: 'Has', args: { item_name: 'key_blue' } };
+        const firstSeed = world.seed;
+        const placed = room.placeGenItems(world, { items_to_place: ['i', 'i', 'i', 'i', 'i'] });
+        expect(placed.placed_items.map((p) => p.location_id)).toEqual(['i_pickup', 'i_pickup_2', 'i_pickup_3', 'i_pickup_4', 'i_pickup_5']);
+        expect(world.generation).toMatchObject({ rerolls: 1, rerollCause: GEN_ROOM_REROLL_CAUSES.locations });
+        expect(world.seed).not.toBe(firstSeed);
+        expect(world.exits.get('a')).toBe(exitRecord);
+        expect(exitRecord).toMatchObject({ exit_id: 'a', exitName: 'a', access_rule: { rule: 'Has', args: { item_name: 'key_blue' } } });
+        expect(world.locations.map((l) => [l.id, l.item])).toEqual(placed.placed_items.map((p) => [p.location_id, p.item_id]));
+        const p = room.serializeGenRoom(world, room.extractGenRules(world), null, null, undefined);
+        assertRoomLawful('u', p);
+        expect(new Set(p.locations.map((l) => l.tag)).size).toBe(5);
+    });
+
+    it('the first draw\'s free cells, measured: drawn seed 1 offers exactly 4 (so the row above needs a re-roll)', () => {
+        expect(() => room.placeGenItems(unitRoom(1), { items_to_place: ['i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i'] }))
+            .toThrow(/must hold 30 AP location\(s\), and only 4 cell\(s\) are free/);
+    });
+
+    it('no draw in the budget seats them → the refusal says so (drawn seed 2, 13 items)', () => {
+        expect(() => room.placeGenItems(unitRoom(2), { items_to_place: Array(13).fill('i') }))
+            .toThrow(new RegExp(`must hold 13 AP location\\(s\\).*in every draw up to re-roll ${GEN_ROOM_DOOR_REROLLS} \\(the budget\\)`));
+    });
+
+    const ADV = 'frontend/presets/adventure/AP_14089154938208861744/AP_14089154938208861744';
+    const ADVENTURE = {
+        topDownSource: JSON.parse(readFileSync(join(ROOT, `${ADV}_rules.json`), 'utf8')),
+        sphereLog: readFileSync(join(ROOT, `${ADV}_sphere_log.jsonl`), 'utf8').split('\n').filter((l) => l.trim()).map((l) => JSON.parse(l)),
+    };
+    const adventure = (seed, w, h) => ({
+        mode: 'topDown', params: { seed, regionWidth: w, regionHeight: h }, scenario: { items: {}, obstacles: {} },
+        substrateQuotas: {}, substrateMix: { [GEN]: 1 }, substrateMode: 'mix',
+    });
+    /** The world built with a spy on every core call, per region. */
+    async function spied(state, ctx) {
+        const calls = {};
+        installSeedlingGenRoom({ ...room, generateGenRoom: (input) => {
+            calls[input.region_id] = (calls[input.region_id] ?? 0) + 1;
+            return room.generateGenRoom(input);
+        } });
+        try {
+            return { calls, rulesJson: await build(state, ctx) };
+        } catch (error) {
+            return { calls, error };
+        } finally {
+            installSeedlingGenRoom(room);
+        }
+    }
+
+    /**
+     * ⛓ MEASURED (G5 W0): top-down Adventure seed 6 at 10×10 REFUSED at the base —
+     * `Overworld` must hold 11 locations, 10 cells free. Through the ROOM's re-roll
+     * (planner condition 1): the core ran ONCE per region, so the engine's own
+     * retry-then-grow loop (which would draw fresh engine rng and move every later
+     * region) was never entered.
+     */
+    it('top-down Adventure seed 6 (refused at the base): builds — Overworld re-rolled for its locations, ONE core call per region', async () => {
+        const { calls, rulesJson, error } = await spied(adventure(6, 10, 10), ADVENTURE);
+        expect(error).toBeUndefined();
+        const generated = rooms(rulesJson);
+        expect(generated).toHaveLength(9);
+        for (const [id] of generated) expect(calls[id], id).toBe(1);
+        const [, overworld] = generated.find(([id]) => id === 'Overworld');
+        expect(overworld.locations).toHaveLength(11);
+        expect(overworld.size).toEqual({ width: 10, height: 10 });
+        expect(overworld.generation).toMatchObject({ rerolls: 2, rerollCause: GEN_ROOM_REROLL_CAUSES.locations });
+        for (const [id, p] of generated) assertRoomLawful(id, p);
+    }, 60_000);
+
+    it('top-down Adventure seed 6 at 9x8: no draw seats Overworld\'s 11 — REFUSED by sentence, never returned short (the core ran once)', async () => {
+        const { calls, error } = await spied(adventure(6, 9, 8), ADVENTURE);
+        expect(error?.message).toMatch(new RegExp(`generated Seedling room 'Overworld' must hold 11 AP location\\(s\\).*`
+            + `in every draw up to re-roll ${GEN_ROOM_DOOR_REROLLS} \\(the budget\\)`));
+        expect(calls.Overworld).toBe(1);
+    }, 60_000);
+});
