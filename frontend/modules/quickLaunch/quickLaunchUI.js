@@ -16,7 +16,7 @@ import { DOCS_LINK_TARGETS, docsHref } from '../../app/config/docsBase.js';
 import { debounce } from '../commonUI/index.js';
 import { DOCS_INDEX, HELP_SECTIONS } from './generated/docsIndex.js';
 import { buildCatalog, helpDocs } from './quickLaunchCatalog.js';
-import { buildViewModel, filterView, groupSize } from './quickLaunchFilter.js';
+import { buildViewModel, filterView, foldAll, groupSize, virtualGroupIds } from './quickLaunchFilter.js';
 import {
     EMPTY_TREE, NODE_KINDS, addGroup, addRef, addUrl, deleteNode, findNode, groupsOf, migrate, moveDown, moveNode,
     moveUp, renameGroup,
@@ -41,6 +41,22 @@ export const COLLAPSED_SETTING = `moduleSettings.${MODULE_ID}.${COLLAPSED_KEY}`;
 export const DEVELOPER_DOCS_KEY = 'showDeveloperDocs';
 export const DEVELOPER_DOCS_SETTING = `moduleSettings.${MODULE_ID}.${DEVELOPER_DOCS_KEY}`;
 export const FILTER_PLACEHOLDER = 'Filter…';
+/**
+ * The fold button's two states, by what its NEXT click does (⚖ the user,
+ * 2026-09-26: "clicking the button does what the button says, and switches the
+ * button to the other mode, no matter what the current expansion and collapse
+ * state is"). The state is the panel's own: every panel starts at `collapse`;
+ * it is not saved.
+ */
+export const FOLD_MODES = Object.freeze({ collapse: 'collapse', expand: 'expand' });
+export const FOLD_TEXT = Object.freeze({ collapse: 'Collapse all', expand: 'Expand all' });
+export const FOLD_TITLE = Object.freeze({
+    collapse: 'Fold every group shut (while filtering: the groups shown)',
+    expand: 'Open every group (while filtering: the groups shown)',
+});
+export const MODULES_TEXT = 'Modules ⇄';
+export const EDIT_TEXT = 'Edit';
+export const CARDS_TEXT = 'Cards';
 export const NO_MATCH_TEXT = 'Nothing matches the filter.';
 export const DOC_ICON = '📄';
 export const URL_ICON = '🔗';
@@ -53,6 +69,7 @@ export const CONTROLS = Object.freeze({
     edit: 'ql-edit',
     view: 'ql-view',
     filter: 'ql-filter',
+    fold: 'ql-fold',
     up: 'ql-ctl-up',
     down: 'ql-ctl-down',
     rename: 'ql-ctl-rename',
@@ -130,6 +147,10 @@ export class QuickLaunchUI {
         this.editing = false;
         /** The view setting as last read or written. */
         this.view = VIEWS.tree;
+        /** What the fold button's next click does (FOLD_MODES); never saved. */
+        this.foldMode = FOLD_MODES.collapse;
+        /** The model the last render drew (filtered when a filter is on): what the fold button acts on. */
+        this._shown = null;
         /** Bumped by every render; a render whose awaits finish after a newer one started draws nothing. */
         this._renderGen = 0;
         this._unsubs = [];
@@ -165,20 +186,20 @@ export class QuickLaunchUI {
         const modulesButton = document.createElement('button');
         modulesButton.type = 'button';
         modulesButton.className = 'ql-modules';
-        modulesButton.textContent = 'Modules ⇄';
+        modulesButton.textContent = MODULES_TEXT;
         modulesButton.title = 'Open the Modules panel';
         modulesButton.addEventListener('click', () => activate(MODULES_TARGET.moduleId, MODULES_TARGET.componentType));
         this.editButton = document.createElement('button');
         this.editButton.type = 'button';
         this.editButton.className = CONTROLS.edit;
-        this.editButton.textContent = 'Edit';
+        this.editButton.textContent = EDIT_TEXT;
         this.editButton.title = 'Arrange your own groups (the built-in groups stay as they are)';
         this.editButton.setAttribute('aria-pressed', 'false');
         this.editButton.addEventListener('click', () => this.setEditing(!this.editing));
         this.viewButton = document.createElement('button');
         this.viewButton.type = 'button';
         this.viewButton.className = CONTROLS.view;
-        this.viewButton.textContent = 'Cards';
+        this.viewButton.textContent = CARDS_TEXT;
         this.viewButton.title = 'Show every item as a card with its description (press again for the compact tree)';
         this.viewButton.setAttribute('aria-pressed', 'false');
         this.viewButton.addEventListener('click',
@@ -192,10 +213,19 @@ export class QuickLaunchUI {
             this.query = this.filterInput.value;
             this._scheduleRender();
         });
-        const buttons = document.createElement('span');
-        buttons.className = 'ql-bar-buttons';
-        buttons.append(this.viewButton, this.editButton, modulesButton);
-        bar.append(this.headerEl, this.filterInput, buttons);
+        this.foldButton = document.createElement('button');
+        this.foldButton.type = 'button';
+        this.foldButton.className = CONTROLS.fold;
+        this.foldButton.addEventListener('click', () => this.fold());
+        this._showFoldMode();
+        // Two rows: the header and the filter, then the buttons — so nothing wraps in the narrow left column.
+        const top = document.createElement('div');
+        top.className = 'ql-bar-row ql-bar-top';
+        top.append(this.headerEl, this.filterInput);
+        const buttons = document.createElement('div');
+        buttons.className = 'ql-bar-row ql-bar-buttons';
+        buttons.append(this.viewButton, this.foldButton, this.editButton, modulesButton);
+        bar.append(top, buttons);
         this.groupsEl = document.createElement('div');
         this.groupsEl.className = 'ql-groups';
         this.rootElement.append(bar, this.groupsEl);
@@ -221,6 +251,35 @@ export class QuickLaunchUI {
         this.editButton.setAttribute('aria-pressed', String(this.editing));
         this.rootElement.classList.toggle('ql-editing', this.editing);
         return this.render();
+    }
+
+    _showFoldMode() {
+        this.foldButton.textContent = FOLD_TEXT[this.foldMode];
+        this.foldButton.title = FOLD_TITLE[this.foldMode];
+    }
+
+    /**
+     * The fold button: do what it says to every group the last render drew —
+     * the user's groups through `collapsedGroups` (one write, skipped by the
+     * settings:changed guard), the virtual groups and sub-groups through the
+     * in-memory `collapsed` Set — then show the other mode. While filtering it
+     * acts on the filtered view only, and the groups the filter forces open
+     * stay open until the filter is cleared.
+     */
+    async fold() {
+        const open = this.foldMode === FOLD_MODES.expand;
+        const shown = this._shown;
+        this.foldMode = open ? FOLD_MODES.collapse : FOLD_MODES.expand;
+        this._showFoldMode();
+        if (!shown) return;
+        for (const id of virtualGroupIds(shown)) {
+            if (open) this.collapsed.delete(id);
+            else this.collapsed.add(id);
+        }
+        const ids = foldAll(shown, open, this.collapsedStored);
+        this.collapsedStored = ids;
+        await settingsManager.updateModuleSetting(MODULE_ID, COLLAPSED_KEY, ids);
+        await this.render();
     }
 
     /** Switch views: write the setting (per mode, like the tree) and render from it. */
@@ -271,6 +330,7 @@ export class QuickLaunchUI {
         const shown = filterView(model, this.query);
         // While filtering, every group drawn is open (it holds a match); `collapsed` is left as it is.
         this._filtering = shown !== model;
+        this._shown = shown;
         const sections = [];
         if (this.editing) sections.push(this._rootControls());
         if (shown.stored.length) sections.push(this._stored(shown.stored, target));

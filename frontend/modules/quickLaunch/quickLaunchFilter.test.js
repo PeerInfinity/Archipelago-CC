@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { OTHER_CATEGORY, VIRTUAL_GROUPS, categoryGroupId, helpGroupId } from './quickLaunchCatalog.js';
-import { buildViewModel, filterView, groupSize } from './quickLaunchFilter.js';
+import { buildViewModel, filterView, foldAll, groupSize, userGroupIds, virtualGroupIds } from './quickLaunchFilter.js';
 import { EMPTY_TREE, NODE_KINDS } from './quickLaunchTree.js';
 
 const ORDER = ['UI Panel Modules', 'Loop Mode Modules'];
@@ -161,5 +161,36 @@ describe('filterView', () => {
         const before = JSON.stringify(m);
         filterView(m, 'inv');
         expect(JSON.stringify(m)).toBe(before);
+    });
+});
+
+describe('fold (the Collapse all / Expand all button)', () => {
+    it('userGroupIds: every stored group, nested ones too, in order; virtualGroupIds: every virtual group and sub-group', () => {
+        const m = model();
+        expect(userGroupIds(m)).toEqual(['g1', 'g2', 'g3']);
+        const v = virtualGroupIds(m);
+        expect(v[0]).toBe(VIRTUAL_GROUPS.unfiled.id);
+        expect(v).toContain(categoryGroupId(ORDER[0]));
+        expect(v).toContain(helpGroupId('games/multi'));
+        expect(v).not.toContain('g1');
+    });
+
+    it('collapse over the whole view writes every user group id; expand writes []', () => {
+        const m = model();
+        expect(foldAll(m, false, [])).toEqual(['g1', 'g2', 'g3']);
+        expect(foldAll(m, false, ['g2'])).toEqual(['g1', 'g2', 'g3']);
+        expect(foldAll(m, true, ['g1', 'g3'])).toEqual([]);
+    });
+
+    it('under a filter only the groups drawn are touched; the others keep their state', () => {
+        const f = filterView(model(), 'loopy'); // draws g3 only
+        expect(userGroupIds(f)).toEqual(['g3']);
+        expect(foldAll(f, false, ['g1'])).toEqual(['g3', 'g1']);
+        expect(foldAll(f, true, ['g1', 'g3'])).toEqual(['g1']);
+    });
+
+    it('an empty tree: nothing to write either way', () => {
+        expect(foldAll(model(EMPTY_TREE), false, [])).toEqual([]);
+        expect(foldAll(model(EMPTY_TREE), true, [])).toEqual([]);
     });
 });

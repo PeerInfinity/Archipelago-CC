@@ -9,16 +9,23 @@
     color: #d8d8e0;
 }
 
+/* P6 — the bar on two rows: the header and the filter, then the buttons. Neither row wraps. */
 .ql-bar {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 8px;
+    flex-direction: column;
+    gap: 4px;
     margin-bottom: 6px;
 }
+.ql-bar-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 4px;
+    min-width: 0;
+}
+.ql-bar-top { gap: 8px; }
 
-.ql-header { color: #9a9aa8; }
+.ql-header { color: #9a9aa8; white-space: nowrap; flex: none; }
 
 .ql-bar button,
 .ql-panel {
@@ -30,7 +37,7 @@
     font: inherit;
 }
 
-.ql-bar button { padding: 2px 8px; }
+.ql-bar button { padding: 2px 5px; white-space: nowrap; flex: none; }
 .ql-bar button:hover,
 .ql-panel:hover { border-color: #5a8dee; }
 
@@ -88,7 +95,6 @@
 .ql-missing { color: #6a6a78; font-style: italic; }
 
 /* Q2 — edit mode. Controls appear only while the Edit button is pressed. */
-.ql-bar-buttons { display: flex; gap: 4px; }
 .ql-bar .ql-edit[aria-pressed="true"] { background: #2d3f66; border-color: #5a8dee; }
 .ql-ctl-row { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; margin: 2px 0 4px 4px; }
 .ql-ctls { display: inline-flex; align-items: center; gap: 2px; flex: none; }
@@ -128,8 +134,9 @@ select.ql-ctl { max-width: 8em; }
 
 /* Q3 — the filter box. */
 .ql-filter {
-    flex: 1 1 8em;
-    min-width: 6em;
+    flex: 1 1 auto;
+    width: 0;
+    min-width: 4em;
     background: #16161c;
     color: #d8d8e0;
     border: 1px solid #34343e;
@@ -139,3 +146,7 @@ select.ql-ctl { max-width: 8em; }
 }
 .ql-filter:focus { outline: none; border-color: #5a8dee; }
 .ql-no-match { color: #9a9aa8; font-style: italic; margin: 4px 0; }
+
+/* P6 — mobile keeps the 44px touch target (styles/mobile.css) but narrows the side padding, so the
+   button row fits a 390px screen without wrapping or overflowing. */
+body.mobile-layout-active .ql-bar button { padding: 12px 8px; }

@@ -90,3 +90,36 @@ export function filterView(model, query) {
 
     return { stored: cutNodes(model.stored), groups: model.groups.map(cutGroup).filter(Boolean) };
 }
+
+/** The ids of the user's own groups a model draws (stored `group` nodes, nested ones too), in order. */
+export function userGroupIds(model) {
+    const out = [];
+    const walk = (nodes) => {
+        for (const node of nodes) {
+            if (node.kind !== NODE_KINDS.group) continue;
+            out.push(node.id);
+            walk(node.children);
+        }
+    };
+    walk(model.stored);
+    return out;
+}
+
+/** The ids of the virtual groups a model draws (Unfiled, All panels, Help and every sub-group), in order. */
+export function virtualGroupIds(model) {
+    const walk = (group) => [group.id, ...(group.groups ?? []).flatMap(walk)];
+    return model.groups.flatMap(walk);
+}
+
+/**
+ * The fold button's write: the `collapsedGroups` value after folding every
+ * user group `model` draws shut (`open` false) or open (`open` true), from the
+ * value `stored` now. Pass the model as DRAWN (filtered, when a filter is on):
+ * a group the model does not draw keeps its state. Over an unfiltered model
+ * this is every user group id, or [].
+ */
+export function foldAll(model, open, stored = []) {
+    const ids = userGroupIds(model);
+    const kept = (Array.isArray(stored) ? stored : []).filter((id) => !ids.includes(id));
+    return open ? kept : [...ids, ...kept];
+}
