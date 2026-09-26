@@ -69,6 +69,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { FLASH_PANEL, clickPanelTab } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-seedling-wasm-bridge.mjs', kind: 'browser' });
@@ -96,7 +97,7 @@ if (!existsSync(join(ARTIFACT, 'game.html'))
 
 // mode=flash: the flashPanel module is enabled in modules-flash.json
 // (disabled in the default module config) and the default layout
-// already carries a "Flash Panel" tab. No ?game param on purpose: the
+// already carries a flashPanel tab. No ?game param on purpose: the
 // app boots on its fallback preset and the script switches to the
 // seedling preset afterwards, covering the panel's reinit-on-preset-
 // switch path (the flow a user takes when picking the preset in the
@@ -226,15 +227,9 @@ async function inGamePickup(property, expectLocation) {
 await page.goto(URL);
 await page.waitForTimeout(8000);
 
-// Bring the Flash Panel tab forward (the panel constructs with the
+// Bring the flashPanel tab forward (found by componentType, never by title) (the panel constructs with the
 // layout; activation makes its DOM clickable).
-await waitFor('Flash Panel tab activated', () => page.evaluate(() => {
-    const tab = [...document.querySelectorAll('.lm_tab')]
-        .find((t) => t.title === 'Flash Panel');
-    if (!tab) return false;
-    tab.click();
-    return true;
-}));
+await waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
 
 // ── reinit-on-preset-switch: fallback preset first, then seedling ──
 check('panel idle on the fallback preset',

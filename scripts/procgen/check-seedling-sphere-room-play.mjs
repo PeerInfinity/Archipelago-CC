@@ -23,7 +23,7 @@
  *   Phase C — THE KEY. Real keys walk to the tile of the location that holds
  *     the gate item (the rules' own placement), and the item arrives.
  *   Phase D — IN. Real keys walk onto the exit: gameState moves to the room, the
- *     Flash Panel tab comes forward by itself, and ▶ Start — the one click a
+ *     flashPanel tab comes forward by itself, and ▶ Start — the one click a
  *     person makes — boots the game. The arrival teleport lands on the game's own
  *     return spawn for the bound door (T2b U2b; the door tile only when the map
  *     has none), and the binding chose the door by its SECOND arm: the sphere
@@ -37,7 +37,7 @@
  *     lands the player ON the exit paired with the door — its FIRST arrival arm
  *     (`exit_id`: the door's `targetExitId`) — and holds the keyboard.
  *   Phase F — IN AGAIN, by keys off and back onto that exit. The glue resumes,
- *     the Flash Panel tab comes forward, the arrival lands on the same spawn, and
+ *     the flashPanel tab comes forward, the arrival lands on the same spawn, and
  *     a key moves the player with no click.
  *
  * ⛔ PAGE ERRORS ARE A DIAGNOSTIC LINE, NOT A check() — the logic-only channel
@@ -60,7 +60,7 @@ import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { returnKey, returnSpawnTable } from '../../frontend/modules/flashPanel/seedlingReturnSpawns.js';
-import { createRoomPlay } from './seedlingRoomPlay.js';
+import { FLASH_PANEL, createRoomPlay } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 
@@ -143,7 +143,7 @@ async function main() {
     page.on('pageerror', (err) => pageErrors.push(err.message));
 
     const {
-        check, failures, waitFor, gameFrame, readGameState, livePlayer, activeTabTitles, currentRegion,
+        check, failures, waitFor, gameFrame, readGameState, livePlayer, activeTabTypes, currentRegion,
         glueStats, glueMoves, activeSubstrates, arrival, installWatchers, focusChain, gameHasKeys,
         keyMovesPlayer, holdUntil, invoked, parsePending, mazeKeyPlan, pressKeys, mazePlayer, mazeHasKeys,
     } = createRoomPlay({ page, wasmPage: WASM_PAGE, logs, name: 'check-seedling-sphere-room-play' });
@@ -162,7 +162,7 @@ async function main() {
 
     /**
      * The room's arrival: the invocation, the checkpoint, the binding's arm, and
-     * the Flash Panel tab + canvas keyboard with no click. `loads` is the glue-load
+     * the flashPanel tab + canvas keyboard with no click. `loads` is the glue-load
      * count this arrival must leave behind; `pending` the game's `pendingExit`
      * before it (the game keeps its LAST door report — '' only before the first).
      */
@@ -188,11 +188,11 @@ async function main() {
         const stats = await glueStats();
         check(`${label}: the flash glue loaded the room (${loads} load(s)) and flash_seedling owns it`,
             stats?.loads === loads && (await activeSubstrates()).at(-1) === 'flash_seedling', JSON.stringify(stats));
-        const tabs = await waitFor('the Flash Panel tab comes forward', async () => {
-            const t = await activeTabTitles();
-            return t.includes('Flash Panel') ? t : null;
-        }, 5000).catch(async () => activeTabTitles());
-        check(`${label}: the Flash Panel tab came forward by itself (no tab click)`, tabs.includes('Flash Panel'),
+        const tabs = await waitFor('the flashPanel tab comes forward', async () => {
+            const t = await activeTabTypes();
+            return t.includes(FLASH_PANEL) ? t : null;
+        }, 5000).catch(async () => activeTabTypes());
+        check(`${label}: the flashPanel tab came forward by itself (no tab click)`, tabs.includes(FLASH_PANEL),
             `active tabs: ${tabs.join(', ')}`);
         // ⛓ Read ONCE after the arrival settled (T2b U2a: the overlay's release moved focus late).
         await page.waitForTimeout(2500);

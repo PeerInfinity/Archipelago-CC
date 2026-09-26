@@ -99,6 +99,7 @@ import { fileURLToPath } from 'node:url';
 import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { argvHelp } from './argvHelp.js';
+import { FLASH_PANEL, clickPanelTabJs } from './seedlingRoomPlay.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
 
@@ -1376,10 +1377,9 @@ const PANEL_JS = {
                 last = now;
             }
         }, 50);
-        const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Panel');
-        if (tab) tab.click();
-        return { tab: Boolean(tab), tabs: [...document.querySelectorAll('.lm_tab')]
-            .map((t) => t.title) };
+        const tab = ${clickPanelTabJs(FLASH_PANEL)};
+        return { tab, tabs: (window.goldenLayoutInstance?.getAllContentItems?.() ?? [])
+            .filter((it) => it.isComponent).map((it) => it.componentType) };
     }`,
     /**
      * Load a preset's rules, optionally with ONE field moved (the control).

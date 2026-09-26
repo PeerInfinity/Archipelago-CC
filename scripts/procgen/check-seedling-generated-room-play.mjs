@@ -57,7 +57,7 @@ import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { createRoomPlay, roomPath } from './seedlingRoomPlay.js';
+import { FLASH_PANEL, MAZE_ROOM_PANEL, clickPanelTab, createRoomPlay, roomPath } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 
@@ -127,7 +127,7 @@ async function main() {
     page.on('pageerror', (err) => pageErrors.push(err.message));
 
     const {
-        check, failures, waitFor, gameFrame, readGameState, livePlayer, activeTabTitles, currentRegion,
+        check, failures, waitFor, gameFrame, readGameState, livePlayer, activeTabTypes, currentRegion,
         glueStats, glueMoves, activeSubstrates, arrival, installWatchers, focusGame, focusChain, gameHasKeys,
         invoked, parsePending, mazeHasKeys, readLevelSet, walkPath,
     } = createRoomPlay({ page, wasmPage: WASM_PAGE, logs, name: 'check-seedling-generated-room-play' });
@@ -178,12 +178,7 @@ async function main() {
         await installWatchers();
         check(`boot: the preset loaded and the player starts in ${START}`, (await currentRegion()) === START,
             await currentRegion());
-        await waitFor('Flash Panel tab activated', () => page.evaluate(() => {
-            const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Panel');
-            if (!tab) return false;
-            tab.click();
-            return true;
-        }));
+        await waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
         await waitFor('wasm iframe mounted', async () => page.frames().some((fr) => fr.url().includes(WASM_PAGE)));
         await waitFor('start button enabled', () => gameFrame().evaluate(() => {
             const b = document.getElementById('btn-start');
@@ -279,9 +274,9 @@ async function main() {
             `level ${parked?.level}, ${JSON.stringify(statsD)}, active ${JSON.stringify(await activeSubstrates())}`);
         const region = await waitFor('gameState follows', async () => ((await currentRegion()) === MAZE_DOOR.targetRegion) || null, 15000).catch(() => null);
         const mazeKeys = await waitFor('the maze panel has the keyboard', mazeHasKeys, 5000).catch(() => null);
-        const tabs = await activeTabTitles();
+        const tabs = await activeTabTypes();
         check('ARM D: gameState moved to the maze; the Maze Room tab is in front WITH the keyboard (no click)',
-            !!region && tabs.includes('Maze Room') && typeof mazeKeys === 'string' && mazeKeys.startsWith('maze-room-panel'),
+            !!region && tabs.includes(MAZE_ROOM_PANEL) && typeof mazeKeys === 'string' && mazeKeys.startsWith('maze-room-panel'),
             `tabs ${tabs.join(', ')}, activeElement ${JSON.stringify(mazeKeys)}`);
 
         // ── ARM E — back through the maze ───────────────────────────────────

@@ -23,7 +23,7 @@
  *     keys walk to the location that holds the hop's gate item (the item
  *     arrives), then through the hop's exit (gameState follows).
  *   Phase C — IN, DELIVERED. Real keys cross the parent's gated exit: gameState
- *     moves to the leaf and the Flash Panel tab comes forward; ▶ Start (the one
+ *     moves to the leaf and the flashPanel tab comes forward; ▶ Start (the one
  *     click a person makes); the panel log names the GENERATED arm; the game's
  *     `botLevelSet` reports the assembler's `set_id`; the arrival lands the
  *     player VISIBLE on the door's APPROACH cell (the binding's arm is printed);
@@ -64,7 +64,7 @@ import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { createRoomPlay, roomPath } from './seedlingRoomPlay.js';
+import { FLASH_PANEL, createRoomPlay, roomPath } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 
@@ -166,7 +166,7 @@ async function main() {
     page.on('pageerror', (err) => pageErrors.push(err.message));
 
     const {
-        check, failures, waitFor, gameFrame, readGameState, livePlayer, activeTabTitles, currentRegion,
+        check, failures, waitFor, gameFrame, readGameState, livePlayer, activeTabTypes, currentRegion,
         glueStats, glueMoves, activeSubstrates, arrival, installWatchers, focusGame, focusChain, gameHasKeys,
         invoked, parsePending, mazeKeyPlan, pressKeys, mazePlayer, mazeHasKeys, readLevelSet, walkPath,
     } = createRoomPlay({ page, wasmPage: WASM_PAGE, logs, name: 'check-seedling-generated-leaf-play' });
@@ -281,8 +281,8 @@ async function main() {
             inLeaf === LEAF, `${toLeaf.keys?.length ?? toLeaf.error} keys; region ${inLeaf}`);
         check('Phase C: the maze\'s crossing published no flash glue move', (await glueMoves()).length === 0);
         await waitFor('wasm iframe mounted', async () => page.frames().some((fr) => fr.url().includes(WASM_PAGE)));
-        const tabs = await activeTabTitles();
-        check('Phase C: the Flash Panel tab came forward by itself (no tab click)', tabs.includes('Flash Panel'),
+        const tabs = await activeTabTypes();
+        check('Phase C: the flashPanel tab came forward by itself (no tab click)', tabs.includes(FLASH_PANEL),
             `active tabs: ${tabs.join(', ')}`);
         await waitFor('start button enabled', () => gameFrame().evaluate(() => {
             const b = document.getElementById('btn-start');

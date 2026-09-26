@@ -14,6 +14,57 @@
  * Nothing here takes the box or launches a browser: a gate hands in its page.
  */
 
+/**
+ * ⛓ QUICK LAUNCH P7 — **A GATE FINDS A PANEL'S TAB BY ITS `componentType`,
+ * NEVER BY ITS TITLE.** Nine Seedling gates found the flashPanel tab with
+ * `.lm_tab` `t.title === '<its title>'`, so renaming the panel's title
+ * (quick-launch P3) had to rename 32 lines here too, in a tree where the gates
+ * could not run (trap 1433). The lookup below reads Golden
+ * Layout's own record (`goldenLayoutInstance.getAllContentItems()`, the
+ * component item whose `componentType` matches → its `tab.element`) and falls
+ * back to nothing: **a later rename of a panel's title touches nothing under
+ * `scripts/`.** Every gate that needs a tab imports these; this file has no
+ * imports and no side effects, so a gate that uses nothing else here pays nothing.
+ */
+export const FLASH_PANEL = 'flashPanel';
+export const MAZE_ROOM_PANEL = 'mazeRoomPanel';
+
+/**
+ * IN-PAGE, self-contained (it is serialised into the page — no closures): the
+ * tab element of the first layout component of `componentType`, or null.
+ */
+export function panelTabInPage(componentType) {
+    const items = window.goldenLayoutInstance?.getAllContentItems?.() ?? [];
+    const item = items.find((it) => it.isComponent && it.componentType === componentType);
+    return item?.tab?.element ?? null;
+}
+
+/** IN-PAGE, self-contained: the `componentType` of each stack's active tab. */
+export function activePanelTypesInPage() {
+    const items = window.goldenLayoutInstance?.getAllContentItems?.() ?? [];
+    return items.filter((it) => it.isComponent && it.parent?.getActiveComponentItem?.() === it)
+        .map((it) => it.componentType);
+}
+
+/** In-page source that clicks `componentType`'s tab: true when it had one (for a `PANEL_JS`-style string too). */
+export const clickPanelTabJs = (componentType) =>
+    `(() => { const tab = (${panelTabInPage})(${JSON.stringify(componentType)}); `
+    + 'if (!tab) return false; tab.click(); return true; })()';
+
+/** `componentType`'s tab as an ElementHandle, or null (Playwright). */
+export async function findPanelTab(page, componentType) {
+    const handle = await page.evaluateHandle(panelTabInPage, componentType);
+    const el = handle.asElement();
+    if (!el) await handle.dispose();
+    return el;
+}
+
+/** Click `componentType`'s tab in the page (a DOM click, as the gates always did); true when it had one. */
+export const clickPanelTab = (page, componentType) => page.evaluate(clickPanelTabJs(componentType));
+
+/** The `componentType`s of the active tabs (one per stack). */
+export const activePanelTypes = (page) => page.evaluate(activePanelTypesInPage);
+
 /** Step off a door by at least a tile (T2's "held until, not held for"). */
 export const STEP_OFF_PX = 16;
 /** The ceiling on every held key. */
@@ -105,8 +156,8 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
         return p ? { x: p.x, y: p.y } : null;
     }
 
-    const activeTabTitles = () => page.evaluate(() => [...document.querySelectorAll('.lm_tab.lm_active')]
-        .map((t) => t.title));
+    /** The active tabs' componentTypes (one per stack) — never their titles (see FLASH_PANEL). */
+    const activeTabTypes = () => activePanelTypes(page);
     const currentRegion = () => page.evaluate(() =>
         window.centralRegistry?.getPublicFunction('gameState', 'getCurrentRegion')?.() ?? null);
     const glueStats = () => page.evaluate(async () => {
@@ -172,17 +223,15 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
     }
 
     /**
-     * ⛔ GIVE THE GAME REAL FOCUS, THE WAY A PLAYER DOES. The Flash Panel and Maze
-     * Room tabs share one stack, and walking the maze back brings the maze tab
+     * ⛔ GIVE THE GAME REAL FOCUS, THE WAY A PLAYER DOES. The flashPanel and mazeRoomPanel
+     * tabs share one stack, and walking the maze back brings the maze tab
      * forward; `canvas.focus()` inside the iframe then does NOT move the page's
      * own focus back into it, and held keys went to the maze panel (T2 run 2:
      * the step-off "moved" the wrong way and the door never fired). So the tab is
      * selected again and the canvas CLICKED.
      */
     async function focusGame() {
-        await page.evaluate(() => {
-            [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Panel')?.click();
-        });
+        await clickPanelTab(page, FLASH_PANEL);
         await page.waitForTimeout(300);
         await gameFrame().click('#canvas');
         // ⛔ …and RELEASE every arrow into it. A door fires mid-hold, and the
@@ -393,7 +442,7 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
 
     return {
         check, failures: () => failures, waitFor, gameFrame, readGameState, livePlayer,
-        activeTabTitles, currentRegion, glueStats, glueMoves, activeSubstrates, arrival,
+        activeTabTypes, currentRegion, glueStats, glueMoves, activeSubstrates, arrival,
         installWatchers, jump, focusGame, focusChain, gameHasKeys, keyMovesPlayer, holdUntil,
         invoked, parsePending, mazeRegionNow, mazeKeyPlan, pressKeys, mazePlayer, mazeHasKeys,
         readLevelSet, walkPath,

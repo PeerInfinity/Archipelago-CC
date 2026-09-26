@@ -16,7 +16,7 @@
  * sentence is `lockedDoorMessage` of the rule's target and item.
  *
  *   Phase A — THE DELIVERY. Boot `?game=<preset>&seed=1` (the START is the
- *     generated room); Flash Panel tab, ▶ Start; the panel log names the
+ *     generated room); the flashPanel tab, ▶ Start; the panel log names the
  *     GENERATED arm; `botLevelSet` reports the assembler's `set_id`.
  *   Phase B — THE BOOT. The player is VISIBLE on the gated door's APPROACH cell;
  *     the state manager holds none of the gate's item.
@@ -59,7 +59,7 @@ import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { createRoomPlay, roomPath } from './seedlingRoomPlay.js';
+import { FLASH_PANEL, clickPanelTab, createRoomPlay, roomPath } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 
@@ -217,12 +217,7 @@ async function main() {
         }, { label: 'check-seedling-generated-host-play', event: DOOR_LOCKED_EVENT });
         check(`Phase A: the preset loaded and the player starts in the generated room ${START}`,
             (await currentRegion()) === START, await currentRegion());
-        await waitFor('Flash Panel tab activated', () => page.evaluate(() => {
-            const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Panel');
-            if (!tab) return false;
-            tab.click();
-            return true;
-        }));
+        await waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
         await waitFor('wasm iframe mounted', async () => page.frames().some((fr) => fr.url().includes(WASM_PAGE)));
         await waitFor('start button enabled', () => gameFrame().evaluate(() => {
             const b = document.getElementById('btn-start');

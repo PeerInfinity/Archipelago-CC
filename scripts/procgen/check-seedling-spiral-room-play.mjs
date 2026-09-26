@@ -38,11 +38,11 @@
  *     fallback, so only a return that lands on the second door's spawn proves
  *     the third arm chose it.
  *   Phase D3 — the user's own path (T2b): the Maze Room tab, its inactive
- *     overlay's "Open the … panel" button, then NO click: the Flash Panel tab is
+ *     overlay's "Open the … panel" button, then NO click: the flashPanel tab is
  *     in front and a key moves the player.
  *
  *   ⛓ SEEDLING T2b rows (each one does NOT do the person's work for them):
- *     U1 a return brings the Flash Panel tab forward by itself; U2a the game's
+ *     U1 a return brings the flashPanel tab forward by itself; U2a the game's
  *     canvas holds the page's keyboard after ▶ Start, after the automatic
  *     activation and after the overlay's button (and a key moves the player);
  *     U2b the arrival is the game's own return spawn, off the door; F3 a key
@@ -92,7 +92,9 @@ import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { returnKey, returnSpawnTable } from '../../frontend/modules/flashPanel/seedlingReturnSpawns.js';
-import { createRoomPlay, STEP_OFF_PX, HOLD_CEILING_MS } from './seedlingRoomPlay.js';
+import {
+    FLASH_PANEL, MAZE_ROOM_PANEL, activePanelTypes, clickPanelTab, createRoomPlay, STEP_OFF_PX, HOLD_CEILING_MS,
+} from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 
@@ -194,7 +196,7 @@ async function main() {
 
     /** ⛓ T3: the shared hands (`seedlingRoomPlay.js`); this gate keeps only its own phases. */
     const {
-        check, failures, waitFor, gameFrame, readGameState, livePlayer, activeTabTitles, currentRegion,
+        check, failures, waitFor, gameFrame, readGameState, livePlayer, activeTabTypes, currentRegion,
         glueStats, glueMoves, activeSubstrates, arrival, installWatchers, jump, focusGame, focusChain,
         gameHasKeys, keyMovesPlayer, holdUntil, invoked, parsePending, mazeKeyPlan, pressKeys,
         mazeHasKeys,
@@ -284,8 +286,7 @@ async function main() {
             ((await currentRegion()) === door.targetRegion ? door.targetRegion : null), 15000);
         check(`${label}: gameState really moved to ${door.targetRegion} (the effect, not just the event)`,
             region === door.targetRegion, region);
-        const activeTab = await page.evaluate(() => [...document.querySelectorAll('.lm_tab.lm_active')]
-            .map((t) => t.title).join(', '));
+        const activeTab = (await activePanelTypes(page)).join(', ');
         console.log(`  (diagnostic) active tabs right after the departure: ${activeTab}`);
         const swapped = await waitFor('the game swaps into the door\'s real destination', async () => {
             const s = await readGameState();
@@ -523,12 +524,12 @@ async function main() {
          * tab came forward then), so the only writer of this state is the
          * panel's own activation on `flashSeedling:loadRegion`.
          */
-        const tabs = await waitFor('the Flash Panel tab comes forward on the return', async () => {
-            const t = await activeTabTitles();
-            return t.includes('Flash Panel') ? t : null;
-        }, 5000).catch(async () => activeTabTitles());
-        check(`${label}: the return ACTIVATED the Flash Panel tab by itself (no tab click)`,
-            tabs.includes('Flash Panel'), `active tabs: ${tabs.join(', ')}`);
+        const tabs = await waitFor('the flashPanel tab comes forward on the return', async () => {
+            const t = await activeTabTypes();
+            return t.includes(FLASH_PANEL) ? t : null;
+        }, 5000).catch(async () => activeTabTypes());
+        check(`${label}: the return ACTIVATED the flashPanel tab by itself (no tab click)`,
+            tabs.includes(FLASH_PANEL), `active tabs: ${tabs.join(', ')}`);
         /**
          * ⛓ T2b U2a — …AND THE GAME HAS THE KEYBOARD. No canvas click and no
          * focus() from here: the page's focus is inside the frame, on the
@@ -567,12 +568,7 @@ async function main() {
         const statsA = await glueStats();
         check('Phase A: procgen routed the start region to the flash_seedling glue',
             !!statsA && statsA.loads === 1, JSON.stringify(statsA));
-        await waitFor('Flash Panel tab activated', () => page.evaluate(() => {
-            const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Panel');
-            if (!tab) return false;
-            tab.click();
-            return true;
-        }));
+        await waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
         await waitFor('wasm iframe mounted', async () => page.frames().some((fr) => fr.url().includes(WASM_PAGE)));
         await waitFor('start button enabled', () => gameFrame().evaluate(() => {
             const b = document.getElementById('btn-start');
@@ -662,9 +658,7 @@ async function main() {
         // A person looks at the Maze Room tab (the gate's one tab click, standing
         // in for theirs), sees "Currently playing Seedling (region atlas)" and
         // presses the overlay's button. From there on nothing is clicked.
-        await page.evaluate(() => {
-            [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Maze Room')?.click();
-        });
+        await clickPanelTab(page, MAZE_ROOM_PANEL);
         const button = page.locator('.substrate-inactive-overlay button').filter({ visible: true }).first();
         await button.waitFor({ state: 'visible', timeout: 10000 });
         const buttonText = await button.textContent();
@@ -673,8 +667,8 @@ async function main() {
             const c = await focusChain();
             return gameHasKeys(c) ? c : null;
         }, 5000).catch(async () => focusChain());
-        check(`Phase D3: "${buttonText}" — the Flash Panel tab is in front and its CANVAS has the keyboard (no click)`,
-            (await activeTabTitles()).includes('Flash Panel') && gameHasKeys(chainD3), JSON.stringify(chainD3));
+        check(`Phase D3: "${buttonText}" — the flashPanel tab is in front and its CANVAS has the keyboard (no click)`,
+            (await activeTabTypes()).includes(FLASH_PANEL) && gameHasKeys(chainD3), JSON.stringify(chainD3));
         const kD3 = await keyMovesPlayer(STEP_KEYS[second.exit_id].off);
         check(`Phase D3: ${STEP_KEYS[second.exit_id].off} pressed with no click moves the player`, kD3.moved,
             `${JSON.stringify(kD3.before)} -> ${JSON.stringify(kD3.after)}`);

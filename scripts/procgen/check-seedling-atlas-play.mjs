@@ -64,6 +64,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { FLASH_PANEL, clickPanelTab } from './seedlingRoomPlay.js';
 import { returnKey, returnSpawnTable } from '../../frontend/modules/flashPanel/seedlingReturnSpawns.js';
 
 argvHelp(import.meta.url);
@@ -236,12 +237,7 @@ try {
     check('Phase A: procgen routed the start region to the flash_seedling glue',
         !!statsA && statsA.loads >= 1, JSON.stringify(statsA));
 
-    await waitFor('Flash Panel tab activated', () => page.evaluate(() => {
-        const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Panel');
-        if (!tab) return false;
-        tab.click();
-        return true;
-    }));
+    await waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
     await waitFor('wasm iframe mounted', async () =>
         page.frames().some((fr) => fr.url().includes('seedling_bot_ap_p4d/game.html')));
     await waitFor('start button enabled', () => gameFrame().evaluate(() => {
