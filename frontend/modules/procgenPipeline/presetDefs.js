@@ -540,13 +540,27 @@ export const SHIPPED_PRESETS = Object.freeze([
         group: PRESET_GROUPS.sphereGrowth,
         description: 'A room the Seedling level GENERATOR builds to the pipeline\'s spec, grown into a '
             + 'maze sphere world as a LEAF: two maze rooms, key_blue opening the second, key_red '
-            + 'opening the generated room, and the victory item on its goal cell. A generated door '
-            + 'enforces no AP gate, so the room hosts no children and its one door back is ungated; '
-            + 'the gate is the maze\'s. Look at the composite map and at the flash_seedling_gen '
+            + 'opening the generated room, and the victory item on its goal cell. The room is a leaf '
+            + 'by this state\'s knob (seedlingGenHostChildren off): it hosts no children and its one '
+            + 'door back takes no gate; the gate is the maze\'s. Look at the composite map and at the flash_seedling_gen '
             + 'sidecar (the room, its door, its location); the Parameters section draws the '
             + 'generator\'s knobs. The same world is committed as the seedling_generated_leaf '
             + 'preset, which plays in the Seedling wasm.',
         state: SEEDLING_GENERATED_LEAF_STATE,
+    },
+    {
+        id: 'shipped:seedling-generated-host-demo',
+        label: 'Generated Seedling room hosting a gated child',
+        group: PRESET_GROUPS.sphereGrowth,
+        description: 'A room the Seedling level GENERATOR builds to the pipeline\'s spec is the START, and '
+            + 'it HOSTS a maze child behind key_blue: the gate is on the generated room\'s own door, and '
+            + 'the host enforces it (the game cannot hold a pipeline item) — without the key the door '
+            + 'bounces the player back and the Flash Game log says which item is missing. key_blue '
+            + 'stands on the room\'s goal cell; key_red in the maze child opens a second maze holding '
+            + 'victory. Look at the composite map and at the flash_seedling_gen sidecar (its '
+            + 'exitGates carries the door\'s rule). The same world is committed as the '
+            + 'seedling_generated_host preset, which plays in the Seedling wasm.',
+        state: SEEDLING_GENERATED_HOST_STATE,
     },
     {
         id: 'shipped:jta-zone-demo',
