@@ -9,6 +9,12 @@
  * payload's `exitGates` the way `serializeGenRoom` writes one — so the rows run
  * on the shape the pipeline emits, not a hand-built stand-in. The evaluator is
  * the REAL one (`createSnapshotInterface` + `evaluateRule`).
+ *
+ * ⛓ G6 — the gate reads the rule from the state manager's STATIC DATA (the
+ * region's exit by its AP name), so `STATIC` is the same preset's own regions
+ * with the same gate on `exit_1` — the rule the logic would evaluate. The G6
+ * rows below pull the two sources apart (static wins; the payload only as a
+ * named fallback), and run both entries on their COMMITTED worlds.
  */
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -18,16 +24,18 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
     DOOR_GATE_ERRORS,
     DOOR_GATE_ERROR_DEFAULT,
+    DOOR_RULE_FALLBACK,
     SNAPSHOT_INTERFACE_MODULE_PATH,
     createDoorGate,
     createSnapshotInterfaceLoader,
     lockedDoorMessage,
     ruleItemNames,
+    staticExitOf,
 } from './seedlingDoorGate.js';
 import { ARRIVAL_ECHO_TIMEOUT_MS, SeedlingRegionBinding, doorVerdict } from './seedlingRegionBinding.js';
 import { DOOR_LOCKED_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
 import { substrateRegistryEntry as genEntry } from './flashSeedlingGenLibrary.js';
-import { FLASH_SEEDLING_LOAD_REGION_EVENT } from './flashSeedlingLibrary.js';
+import { FLASH_SEEDLING_LOAD_REGION_EVENT, substrateRegistryEntry as atlasEntry } from './flashSeedlingLibrary.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 
 const PRESET = JSON.parse(readFileSync(
@@ -47,13 +55,22 @@ const L = PAYLOAD.level;
 /** The game's own report for that door: `<seq>|<fromLevel>|teleporter|<x>|<y>|<to>`. */
 const fire = (seq = 1) => `${seq}|${L}|teleporter|${DOOR_TX * 16}|${DOOR_TY * 16}|${PARKING}`;
 
-const STATIC = { game_name: PRESET.game_name, items: new Map(Object.entries(PRESET.items['1'])),
-    locations: new Map(), regions: new Map() };
-const realGate = (inventory) => createDoorGate({
+/** Static data as the proxy holds it (`regions` a Map) — a rules.json's regions, `exits` edited per region. */
+const staticOf = (rulesJson, edit = {}) => ({
+    game_name: rulesJson.game_name,
+    items: new Map(Object.entries(rulesJson.items['1'])),
+    locations: new Map(),
+    regions: new Map(Object.entries(structuredClone(rulesJson.regions['1'])).map(([name, r]) => [name,
+        { ...r, exits: r.exits.map((e) => (edit[name]?.[e.name] ? { ...e, access_rule: edit[name][e.name] } : e)) }])),
+    game_info: rulesJson.game_info,
+});
+const STATIC = staticOf(PRESET, { [ROOM]: { exit_1: HAS_BLUE } });
+const realGate = (inventory, staticData = STATIC) => createDoorGate({
     getSnapshot: () => (inventory === null ? null : { inventory, flags: [] }),
-    getStaticData: () => STATIC,
+    getStaticData: () => staticData,
     getSnapshotInterface: () => createSnapshotInterface,
 });
+const IN_ROOM = Object.freeze({ region: ROOM });
 
 let clock;
 beforeEach(() => { clock = 1_000_000; });
@@ -86,16 +103,21 @@ describe('the predicate — seedlingDoorGate', () => {
     it('with the REAL evaluator: refuses without the item, passes with it, and names what is missing', () => {
         const exit = gatedWorld().exits.get('exit_1');
         expect(exit.access_rule).toEqual(HAS_BLUE);
-        expect(realGate({})(exit)).toEqual({ pass: false, gated: true, needs: ['key_blue'], missing: ['key_blue'] });
-        expect(realGate({ key_red: 1 })(exit)).toMatchObject({ pass: false, missing: ['key_blue'] });
-        expect(realGate({ key_blue: 1 })(exit)).toEqual({ pass: true, gated: true, needs: ['key_blue'], missing: [] });
+        expect(realGate({})(exit, IN_ROOM)).toEqual({ pass: false, gated: true, needs: ['key_blue'],
+            missing: ['key_blue'], source: 'static' });
+        expect(realGate({ key_red: 1 })(exit, IN_ROOM)).toMatchObject({ pass: false, missing: ['key_blue'] });
+        expect(realGate({ key_blue: 1 })(exit, IN_ROOM)).toEqual({ pass: true, gated: true, needs: ['key_blue'],
+            missing: [], source: 'static' });
     });
 
-    it('an exit with NO rule passes without asking the state manager anything', () => {
+    it('an exit whose rule is `True_` (or absent) passes without asking for a snapshot or the evaluator', () => {
         const getSnapshot = vi.fn(() => { throw new Error('asked'); });
-        const gate = createDoorGate({ getSnapshot, getStaticData: () => null, getSnapshotInterface: () => null });
-        expect(gate(gatedWorld().exits.get('exit_0'))).toEqual({ pass: true, gated: false, needs: [], missing: [] });
+        const getSnapshotInterface = vi.fn(() => null);
+        const gate = createDoorGate({ getSnapshot, getStaticData: () => STATIC, getSnapshotInterface });
+        expect(gate(gatedWorld().exits.get('exit_0'), IN_ROOM)).toEqual({ pass: true, gated: false, needs: [],
+            missing: [], source: 'static' });
         expect(getSnapshot).not.toHaveBeenCalled();
+        expect(getSnapshotInterface).not.toHaveBeenCalled();
     });
 
     /**
@@ -108,10 +130,13 @@ describe('the predicate — seedlingDoorGate', () => {
         const exit = gatedWorld().exits.get('exit_1');
         const notLoaded = createDoorGate({ getSnapshot: () => ({ inventory: {} }), getStaticData: () => STATIC,
             getSnapshotInterface: () => null });
-        expect(() => notLoaded(exit)).toThrow(DOOR_GATE_ERRORS.notLoaded());
-        expect(() => realGate(null)(exit)).toThrow(DOOR_GATE_ERRORS.noSnapshot());
+        expect(() => notLoaded(exit, IN_ROOM)).toThrow(DOOR_GATE_ERRORS.notLoaded());
+        expect(() => realGate(null)(exit, IN_ROOM)).toThrow(DOOR_GATE_ERRORS.noSnapshot());
         const odd = gatedWorld({ rule: 'NoSuchRule', args: {} }).exits.get('exit_1');
-        expect(() => realGate({})(odd)).toThrow(/evaluated to undefined, not true or false/);
+        const oddStatic = staticOf(PRESET, { [ROOM]: { exit_1: { rule: 'NoSuchRule', args: {} } } });
+        expect(() => realGate({}, oddStatic)(odd, IN_ROOM)).toThrow(/evaluated to undefined, not true or false/);
+        // ⛓ G6 — and a fourth: no static data at all (the rule's source) is an error too, never "ungated"
+        expect(() => realGate({}, null)(exit, IN_ROOM)).toThrow(DOOR_GATE_ERRORS.noStaticData());
     });
 
     it('the lazy loader: a COMPUTED url, one load, a failure named and retryable', async () => {
@@ -301,10 +326,117 @@ describe('the glue applies `locked` and `bounce`', () => {
         expect(h.glue.stats.warnings).toBe(0);
     });
 
+    it('G6 — a rule read off the payload (static data has no such exit) says so on the panel line', () => {
+        vi.spyOn(console, 'info').mockImplementation(() => {});
+        const h = harness(realGate({}, { ...STATIC, regions: new Map() }));
+        h.adapter.onStateReport('pendingExit', fire());
+        expect(h.panel.at(-1)).toEqual({ m: `[door gate] the door to region_1_0 is locked — you need key_blue `
+            + `(${DOOR_RULE_FALLBACK(ROOM, 'exit_1')})`, cls: 'warn' });
+    });
+
     it('met: the crossing is published exactly as before', () => {
         const h = harness(realGate({ key_blue: 1 }));
         h.adapter.onStateReport('pendingExit', fire());
         expect(h.published.map((p) => [p.name, p.data.targetRegion])).toEqual([['user:regionMove', 'region_1_0']]);
         expect(h.glue.stats).toMatchObject({ doorsLocked: 0, bounces: 0 });
+    });
+});
+
+/**
+ * ⛓⛓ SEEDLING GENERATED G6 — **THE RULE'S SOURCE IS THE STATE MANAGER'S STATIC
+ * DATA** (plan §12.1 #3): the region's exit by its AP name (`exitName`), for
+ * BOTH entries, payload-agnostic; the world's own rule only as a NAMED
+ * fallback. Every world below is a COMMITTED preset through its entry's own
+ * `deserializeWorld`, and its static data is that preset's own regions.
+ */
+const committed = (gameId) => JSON.parse(readFileSync(
+    fileURLToPath(new URL(`../../presets/${gameId}/AP_1/AP_1_rules.json`, import.meta.url)), 'utf8'));
+const worldOf = (rulesJson, region) => {
+    const sc = rulesJson.preset_sidecars['1'][region];
+    return (sc.substrate === 'flash_seedling' ? atlasEntry : genEntry).deserializeWorld(sc.playable_payload);
+};
+const exitNamed = (world, name) => [...(world.exits instanceof Map ? world.exits.values() : world.exits)]
+    .find((e) => (e.exitName ?? e.exit_id) === name);
+
+describe('G6 — the gate reads static data', () => {
+    it('static data WINS over the payload: a payload gate static data does not carry is not enforced, and vice versa', () => {
+        const ungatedStatic = staticOf(PRESET); // the committed room: exit_1 is True_ in the logic
+        const payloadGated = gatedWorld().exits.get('exit_1');
+        expect(realGate({}, ungatedStatic)(payloadGated, IN_ROOM)).toEqual({ pass: true, gated: false, needs: [],
+            missing: [], source: 'static' });
+        const payloadOpen = genEntry.deserializeWorld(structuredClone(PAYLOAD)).exits.get('exit_1');
+        expect(payloadOpen.access_rule).toBeUndefined();
+        expect(realGate({})(payloadOpen, IN_ROOM)).toMatchObject({ pass: false, missing: ['key_blue'], source: 'static' });
+    });
+
+    it('the exit is found by its AP name (`exitName`), never its `exit_id`; region and name both matter', () => {
+        expect(staticExitOf(STATIC, ROOM, 'exit_1').access_rule).toEqual(HAS_BLUE);
+        expect(staticExitOf(STATIC, ROOM, DOOR.exit_id)).toBe(null);
+        // the region matters: another region's `exit_1` is another door (here gated differently), and no region no exit
+        expect(staticExitOf(STATIC, 'region_1_0', 'exit_1')).not.toBe(staticExitOf(STATIC, ROOM, 'exit_1'));
+        expect(staticExitOf(STATIC, 'no_such_region', 'exit_1')).toBe(null);
+        // the proxy holds a Map; a rules.json an object — both read
+        expect(staticExitOf({ regions: PRESET.regions['1'] }, ROOM, 'exit_0').access_rule).toEqual({ rule: 'True_' });
+    });
+
+    it('the FALLBACK: static data with no such exit → the payload\'s rule, and the verdict, the effect and the line SAY SO', () => {
+        const noRoom = { ...STATIC, regions: new Map() };
+        const verdict = realGate({}, noRoom)(gatedWorld().exits.get('exit_1'), IN_ROOM);
+        expect(verdict).toMatchObject({ pass: false, source: 'world', fallback: DOOR_RULE_FALLBACK(ROOM, 'exit_1') });
+        expect(verdict.fallback).toBe(`the rule is the room's own payload's — the state manager's static data has no `
+            + `exit "exit_1" out of region "${ROOM}"`);
+        const b = bindingWith(realGate({}, noRoom));
+        const [locked] = b.onStateReport('pendingExit', fire());
+        expect(locked).toMatchObject({ type: 'locked', fallback: DOOR_RULE_FALLBACK(ROOM, 'exit_1') });
+        // an OPEN fallback carries no sentence (nothing is enforced off the payload)
+        expect(realGate({}, noRoom)(genEntry.deserializeWorld(structuredClone(PAYLOAD)).exits.get('exit_1'), IN_ROOM))
+            .toEqual({ pass: true, gated: false, needs: [], missing: [], source: 'world' });
+    });
+
+    it('a REAL-atlas room (`flash_seedling`, committed seedling_sphere_room): its door carries no rule, static data gates it', () => {
+        const rj = committed('seedling_sphere_room');
+        const world = worldOf(rj, 'region_3_2');
+        const door = exitNamed(world, 'region_2_2');
+        expect(door.exit_id).toBe('stairs_up');
+        expect(door.access_rule).toBeUndefined();
+        const gate = (inv) => realGate(inv, staticOf(rj))(door, { region: 'region_3_2' });
+        expect(gate({})).toMatchObject({ pass: false, gated: true, missing: ['key_blue'], source: 'static' });
+        expect(gate({ key_blue: 1 })).toMatchObject({ pass: true, gated: true, source: 'static' });
+    });
+
+    it('a real room whose doors are `True_` in the logic (committed seedling_spiral_room) is UNGATED — no evaluator asked', () => {
+        const rj = committed('seedling_spiral_room');
+        const world = worldOf(rj, 'region_0_0');
+        const gate = createDoorGate({ getSnapshot: () => { throw new Error('asked'); }, getStaticData: () => staticOf(rj),
+            getSnapshotInterface: () => { throw new Error('asked'); } });
+        for (const name of ['exit_S', 'exit_E']) {
+            expect(gate(exitNamed(world, name), { region: 'region_0_0' })).toEqual({ pass: true, gated: false, needs: [],
+                missing: [], source: 'static' });
+        }
+    });
+
+    it('§9.0 #5 CLOSED — a generated room\'s ENGINE-inserted back exit (committed seedling_generated_leaf) is gated now', () => {
+        const rj = committed('seedling_generated_leaf');
+        const world = worldOf(rj, 'region_3_3');
+        const back = exitNamed(world, 'region_2_3');
+        expect(back.access_rule).toBeUndefined(); // the payload's exitGates never saw it
+        const gate = (inv) => realGate(inv, staticOf(rj))(back, { region: 'region_3_3' });
+        expect(gate({})).toMatchObject({ pass: false, missing: ['key_red'], source: 'static' });
+        expect(gate({ key_red: 1 })).toMatchObject({ pass: true, source: 'static' });
+    });
+
+    it('the committed generated HOST answers the same under the static read as under G4\'s payload read', () => {
+        const rj = committed('seedling_generated_host');
+        const world = worldOf(rj, 'region_2_2');
+        const door = exitNamed(world, 'exit');
+        const fromStatic = (inv) => realGate(inv, staticOf(rj))(door, { region: 'region_2_2' });
+        const fromPayload = (inv) => realGate(inv, { ...staticOf(rj), regions: new Map() })(door, { region: 'region_2_2' });
+        expect(staticExitOf(staticOf(rj), 'region_2_2', 'exit').access_rule).toEqual(door.access_rule);
+        for (const inv of [{}, { key_blue: 1 }, { key_red: 1 }]) {
+            const { source: s1, fallback: _f, ...a } = fromPayload(inv);
+            const { source: s2, ...b } = fromStatic(inv);
+            expect([s1, s2]).toEqual(['world', 'static']);
+            expect(b).toEqual(a);
+        }
     });
 });

@@ -22,6 +22,18 @@
  * a NULL snapshot evaluates to `false` — a state manager that has not loaded
  * would silently LOCK every door — and an unknown rule evaluates to `undefined`.
  * Each is refused here as an error by sentence, never read as an answer.
+ *
+ * ⛓⛓ SEEDLING GENERATED G6 — **THE RULE IS READ FROM THE STATE MANAGER'S STATIC
+ * DATA**, by the region the player is in and the exit's AP name (`exitName` —
+ * the name the binding publishes a crossing under; never `exit_id`, which is
+ * the door's own tile/atlas id): `staticData.regions[region].exits[].{name,
+ * access_rule}`, the shape the text adventure bridge reads. One source of truth
+ * — the very rule the logic evaluates — for EVERY Seedling room: a real-atlas
+ * room's payload carries no rule at all, and a generated room's `exitGates`
+ * never saw an engine-inserted exit (plan §9.0 #5). The world's own
+ * `access_rule` is the FALLBACK, taken only when static data has no such exit,
+ * and the verdict says so (`fallback`). A `True_` rule is UNGATED: no evaluator
+ * is asked, so an ungated door never depends on the lazy load.
  */
 
 import { evaluateRule } from '../shared/ruleEngine.js';
@@ -44,7 +56,32 @@ export const DOOR_GATE_ERRORS = Object.freeze({
     noSnapshot: () => 'the state manager has no state snapshot yet',
     notBoolean: (answer) => `the rule evaluated to ${answer === undefined ? 'undefined' : JSON.stringify(answer)}, `
         + 'not true or false — the rule engine does not know this rule',
+    noStaticData: () => 'the state manager has no static data yet, so the door\'s rule cannot be looked up',
 });
+
+/** ⛓ G6 — why a door's rule came off the room's payload instead of static data (the verdict's `fallback`). */
+export const DOOR_RULE_FALLBACK = (region, exitName) => `the rule is the room's own payload's — the state `
+    + `manager's static data has no exit "${exitName}" out of region "${region}"`;
+
+/** A region of static data — a `Map` in the state manager proxy, a plain object in a rules.json. */
+function staticRegionOf(staticData, region) {
+    const regions = staticData?.regions;
+    if (!regions || region == null) return null;
+    return (regions instanceof Map ? regions.get(region) : regions[region]) ?? null;
+}
+
+/**
+ * ⛓ G6 — the static-data exit a door is, by its region and AP name, or null.
+ * `{name, connected_region, access_rule}` as the rules.json writes it.
+ */
+export function staticExitOf(staticData, region, exitName) {
+    const exits = staticRegionOf(staticData, region)?.exits;
+    if (!Array.isArray(exits) || exitName == null) return null;
+    return exits.find((e) => e?.name === exitName) ?? null;
+}
+
+/** A rule that gates nothing: absent, or `True_`. */
+const isOpenRule = (rule) => !rule || rule.rule === 'True_';
 
 /**
  * The item names a rule mentions, in the order it names them, once each. Read
@@ -88,31 +125,41 @@ export function lockedDoorMessage(region, needs = []) {
 }
 
 /**
- * The `canPass(exit)` predicate the binding consults.
+ * The `canPass(exit, {region})` predicate the binding consults.
  *
  * @param {object} deps
  * @param {function} deps.getSnapshot            the state manager's latest snapshot (or null)
- * @param {function} deps.getStaticData          its static data (or null)
+ * @param {function} deps.getStaticData          its static data (or null) — the rule's SOURCE (G6)
  * @param {function} deps.getSnapshotInterface   → `createSnapshotInterface`, or null while it loads
  * @param {function} [deps.evaluate]             `evaluateRule` (injectable for tests)
- * @returns {function(object): {pass: boolean, gated: boolean, needs: string[], missing: string[]}}
- *   An exit with no `access_rule` passes without asking anything. THROWS a
- *   sentence when the rule cannot be evaluated (the binding catches it).
+ * @returns {function(object, {region}=): {pass: boolean, gated: boolean, needs: string[], missing: string[],
+ *   source: 'static'|'world', fallback?: string}}
+ *   The rule is static data's exit `exitName` out of `region`; the world's
+ *   `access_rule` only when static data has no such exit (`fallback` says so).
+ *   An absent or `True_` rule passes without asking anything. THROWS a sentence
+ *   when the rule cannot be evaluated — static data not loaded included (the
+ *   binding catches it and takes the declared default, loudly).
  */
 export function createDoorGate({ getSnapshot, getStaticData, getSnapshotInterface, evaluate = evaluateRule } = {}) {
-    return function canPass(exit) {
-        const rule = exit?.access_rule ?? null;
-        if (!rule) return { pass: true, gated: false, needs: [], missing: [] };
+    return function canPass(exit, { region = null } = {}) {
+        const staticData = getStaticData?.() ?? null;
+        if (!staticData) throw new Error(DOOR_GATE_ERRORS.noStaticData());
+        const exitName = exit?.exitName ?? exit?.exit_id ?? null;
+        const hit = staticExitOf(staticData, region, exitName);
+        const source = hit ? 'static' : 'world';
+        const rule = hit ? (hit.access_rule ?? null) : (exit?.access_rule ?? null);
+        const fallback = !hit && !isOpenRule(rule) ? { fallback: DOOR_RULE_FALLBACK(region, exitName) } : {};
+        if (isOpenRule(rule)) return { pass: true, gated: false, needs: [], missing: [], source };
         const make = getSnapshotInterface?.() ?? null;
         if (typeof make !== 'function') throw new Error(DOOR_GATE_ERRORS.notLoaded());
         const snapshot = getSnapshot?.() ?? null;
         if (!snapshot) throw new Error(DOOR_GATE_ERRORS.noSnapshot());
-        const answer = evaluate(rule, make(snapshot, getStaticData?.() ?? null));
+        const answer = evaluate(rule, make(snapshot, staticData));
         if (typeof answer !== 'boolean') throw new Error(DOOR_GATE_ERRORS.notBoolean(answer));
         const needs = ruleItemNames(rule);
         const inventory = snapshot.inventory ?? {};
         const missing = needs.filter((item) => !(Number(inventory[item]) > 0));
-        return { pass: answer, gated: true, needs, missing };
+        return { pass: answer, gated: true, needs, missing, source, ...fallback };
     };
 }
 
