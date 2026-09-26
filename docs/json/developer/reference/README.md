@@ -1,5 +1,7 @@
 # Developer Reference Documentation
 
+<!-- quick-launch-help: order=120 audience=developer -->
+
 This directory contains detailed technical reference material for specific subsystems and features of the Archipelago JSON Export Tools project.
 
 ## Core Systems

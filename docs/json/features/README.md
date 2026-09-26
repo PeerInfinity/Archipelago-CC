@@ -1,5 +1,7 @@
 # Features
 
+<!-- quick-launch-help: order=20 audience=user -->
+
 An overview of the major features in the Archipelago JSON Export Tools project.
 
 ## Core Tools

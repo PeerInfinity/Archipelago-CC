@@ -1,18 +1,39 @@
 #!/usr/bin/env node
 /**
  * generate-docs-index — writes `frontend/modules/quickLaunch/generated/docsIndex.js`,
- * the list of user guides the Quick Launch panel links to (its Help group).
+ * the documents the Quick Launch panel links to (its Help group, and the `?`
+ * link on each panel row).
  *
- * One row per `docs/json/user/**\/*.md` (minus EXCLUDED_BASENAMES): `{ path, title, section, summary }`
+ * ⛓ THE DOCS TREE DECLARES WHAT IS LISTED — this file names no directory. A
+ * directory under `docs/json/` is a Help SECTION iff its `README.md` carries the
+ * marker line (HELP_MARKER_RE):
+ *
+ *     <!-- quick-launch-help: order=<int> audience=<user|developer|panel> -->
+ *
+ * The section's label is that README's H1; the README itself is the label, not
+ * a row. `audience`: `user` sections are always drawn, `developer` ones only
+ * when the panel's `showDeveloperDocs` setting is on, `panel` ones never (they
+ * are indexed so the per-panel `?` links resolve — docs/json/user/modules). A
+ * marker that is present but malformed FAILS the generator, naming the file.
+ *
+ * A section holds its own `.md` files and, per unmarked sub-directory, one CHILD:
+ * `{ dir, label, docs, single }` — the child's docs are its whole subtree (minus
+ * any marked directory inside it, which is a section of its own), its label is
+ * its README's H1 (the directory name when it has none), and `single` is true
+ * when it holds exactly one doc (the panel draws it as one row, not a fold). A
+ * marked directory inside a marked one is always its own section.
+ *
+ * Output: `DOCS_INDEX`, one row per listed doc — `{ path, title, section, summary }`
  * where `path` is repo-relative, `title` is the file's first `# ` line (the file
- * name when it has none), `section` is the directory under `docs/json/` it sits
- * in (`user` or `user/modules`) and `summary` is its first paragraph as plain
- * text (`docSummary`; the Quick Launch cards view shows it). Rows are sorted by path.
+ * name when it has none), `section` is its directory relative to `docs/json/`
+ * (`user`, `games/apcalc`, …) and `summary` is its first paragraph as plain text
+ * (`docSummary`; the cards view shows it); sorted by path. And `HELP_SECTIONS`,
+ * the tree above (`buildHelpSections`), sorted by `order`.
  *
  * ⛓ WHEN TO RUN IT: after adding, removing, renaming or retitling any `.md`
- * under `docs/json/user/`. `generated.test.js` beside the output regenerates in
- * memory and fails when the committed file differs, so a guide edit that skips
- * this step is caught by the unit tests.
+ * in a marked directory, or adding / changing a marker. `generated.test.js`
+ * beside the output regenerates in memory and fails when the committed file
+ * differs, so an edit that skips this step is caught by the unit tests.
  *
  *     node scripts/quicklaunch/generate-docs-index.mjs          # write
  *     node scripts/quicklaunch/generate-docs-index.mjs --check  # exit 1 on drift
@@ -28,12 +49,11 @@
  */
 
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
-import { dirname, join, relative, sep } from 'node:path';
+import { basename, dirname, join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 export const DOCS_ROOT = 'docs/json';
-export const USER_DOCS_DIR = `${DOCS_ROOT}/user`;
 export const OUTPUT = 'frontend/modules/quickLaunch/generated/docsIndex.js';
 export const MODULES_README = `${DOCS_ROOT}/modules/README.md`;
 
@@ -46,14 +66,109 @@ export const EXCLUDED_BASENAMES = Object.freeze(['TODO.md']);
 
 const toPosix = (p) => p.split(sep).join('/');
 
-function walk(dir) {
-    const out = [];
-    for (const ent of readdirSync(dir, { withFileTypes: true })) {
-        const full = join(dir, ent.name);
-        if (ent.isDirectory()) out.push(...walk(full));
-        else if (ent.isFile() && ent.name.endsWith('.md') && !EXCLUDED_BASENAMES.includes(ent.name)) out.push(full);
+/** The file whose marker line makes its directory a Help section. */
+export const SECTION_README = 'README.md';
+
+/** Who a section is drawn for (see the file's docblock). */
+export const HELP_AUDIENCES = Object.freeze({ user: 'user', developer: 'developer', panel: 'panel' });
+
+/** A line that claims to be a marker; one that then fails HELP_MARKER_RE is an error, not a miss. */
+export const HELP_MARKER_PREFIX = '<!-- quick-launch-help';
+export const HELP_MARKER_RE = /^<!-- quick-launch-help: order=(-?\d+) audience=(user|developer|panel) -->$/;
+
+/**
+ * The marker in a README's text: `{ order, audience }`, or null when it has
+ * none. Throws (naming `file`) on a malformed marker or on two of them.
+ */
+export function parseHelpMarker(text, file) {
+    const claims = text.split('\n').map((l) => l.trim()).filter((l) => l.startsWith(HELP_MARKER_PREFIX));
+    if (claims.length === 0) return null;
+    if (claims.length > 1) throw new Error(`${file}: ${claims.length} quick-launch-help markers (one allowed)`);
+    const m = claims[0].match(HELP_MARKER_RE);
+    if (!m) {
+        throw new Error(`${file}: malformed quick-launch-help marker "${claims[0]}" — expected `
+            + '"<!-- quick-launch-help: order=<int> audience=<user|developer|panel> -->"');
     }
+    return { order: Number(m[1]), audience: m[2] };
+}
+
+const isDoc = (ent) => ent.isFile() && ent.name.endsWith('.md') && !EXCLUDED_BASENAMES.includes(ent.name);
+const byText = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
+const readText = (full) => { try { return readFileSync(full, 'utf8'); } catch { return null; } };
+
+/** The marker of `dir`'s README (null when it has no README or no marker). */
+function markerOf(repo, dir) {
+    const file = `${dir}/${SECTION_README}`;
+    const text = readText(join(repo, file));
+    return text === null ? null : parseHelpMarker(text, file);
+}
+
+/** Repo-relative sub-directories of `dir`, by name. */
+function subdirs(repo, dir) {
+    return readdirSync(join(repo, dir), { withFileTypes: true })
+        .filter((e) => e.isDirectory()).map((e) => `${dir}/${e.name}`).sort(byText);
+}
+
+/** Repo-relative docs directly in `dir`. */
+function ownDocs(repo, dir) {
+    return readdirSync(join(repo, dir), { withFileTypes: true }).filter(isDoc).map((e) => `${dir}/${e.name}`);
+}
+
+/** The docs of `dir`'s subtree, stopping at marked directories (they are sections of their own). */
+function subtreeDocs(repo, dir) {
+    const out = ownDocs(repo, dir);
+    for (const sub of subdirs(repo, dir)) if (!markerOf(repo, sub)) out.push(...subtreeDocs(repo, sub));
+    return out.sort(byText);
+}
+
+/** Every marked directory under `root` (repo-relative), each with its marker. */
+function markedDirs(repo, root) {
+    const out = [];
+    const visit = (dir) => {
+        const marker = markerOf(repo, dir);
+        if (marker) out.push({ dir, ...marker });
+        for (const sub of subdirs(repo, dir)) visit(sub);
+    };
+    visit(root);
     return out;
+}
+
+/** A directory's label: its README's H1, or its name. */
+function dirLabel(repo, dir) {
+    const text = readText(join(repo, dir, SECTION_README));
+    const h1 = text?.split('\n').find((line) => line.startsWith('# '));
+    return h1 ? h1.slice(2).trim() : basename(dir);
+}
+
+const docsRel = (dir) => dir.slice(DOCS_ROOT.length + 1);
+
+/**
+ * The Help sections read off the tree at `repo` under `root`, by `order` then
+ * directory: `[{ dir, label, order, audience, docs, children: [{ dir, label, docs, single }] }]`,
+ * `dir` relative to docs/json, `docs` repo-relative paths in path order.
+ */
+export function buildHelpSections(repo = REPO, root = DOCS_ROOT) {
+    return markedDirs(repo, root)
+        .map(({ dir, order, audience }) => ({
+            dir: docsRel(dir),
+            label: dirLabel(repo, dir),
+            order,
+            audience,
+            docs: ownDocs(repo, dir).filter((p) => basename(p) !== SECTION_README).sort(byText),
+            children: subdirs(repo, dir)
+                .filter((sub) => !markerOf(repo, sub))
+                .map((sub) => {
+                    const docs = subtreeDocs(repo, sub);
+                    return { dir: docsRel(sub), label: dirLabel(repo, sub), docs, single: docs.length === 1 };
+                })
+                .filter((child) => child.docs.length > 0),
+        }))
+        .sort((a, b) => a.order - b.order || byText(a.dir, b.dir));
+}
+
+/** Every doc path a section lists, own and children's. */
+export function sectionDocPaths(section) {
+    return [...section.docs, ...section.children.flatMap((c) => c.docs)];
 }
 
 /** The first `# ` heading, or the file's base name when it has none. */
@@ -83,12 +198,11 @@ export function docSummary(text) {
     return `${(space > 0 ? cut.slice(0, space) : cut).replace(/[\s,;:.—-]+$/, '')}…`;
 }
 
-/** The rows, read off the tree at `repo`. */
-export function buildDocsIndex(repo = REPO) {
-    return walk(join(repo, USER_DOCS_DIR))
-        .map((full) => {
-            const path = toPosix(relative(repo, full));
-            const text = readFileSync(full, 'utf8');
+/** The rows, one per doc a section lists (`sections` from `buildHelpSections`), by path. */
+export function buildDocsIndex(repo = REPO, sections = buildHelpSections(repo)) {
+    return sections.flatMap(sectionDocPaths)
+        .map((path) => {
+            const text = readFileSync(join(repo, path), 'utf8');
             return {
                 path,
                 title: docTitle(text, path),
@@ -96,7 +210,7 @@ export function buildDocsIndex(repo = REPO) {
                 summary: docSummary(text),
             };
         })
-        .sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
+        .sort((a, b) => byText(a.path, b.path));
 }
 
 /**
@@ -132,15 +246,22 @@ export function buildCategoryOrder(repo = REPO) {
 }
 
 /** The module text — no timestamp, so an unchanged tree is an unchanged file. */
-export function renderDocsIndexModule(rows, categories) {
+export function renderDocsIndexModule(rows, categories, sections) {
     return [
         '// GENERATED by scripts/quicklaunch/generate-docs-index.mjs — do not edit; regenerate.',
         '/**',
-        ' * The user guides under docs/json/user/, one row per .md: { path, title, section, summary }.',
+        ' * Every doc a Help section lists, one row per .md: { path, title, section, summary }.',
         ' * Read by the Quick Launch panel (its Help group, and to decide which',
         ' * `moduleInfo.docs` paths exist). Pinned by generated.test.js.',
         ' */',
         `export const DOCS_INDEX = Object.freeze(${JSON.stringify(rows, null, 4)}.map(Object.freeze));`,
+        '',
+        '/**',
+        ' * The Help sections: each docs/json directory whose README carries the',
+        ' * `quick-launch-help` marker, by `order` — { dir, label, order, audience, docs,',
+        ' * children: [{ dir, label, docs, single }] }. See the generator\'s docblock.',
+        ' */',
+        `export const HELP_SECTIONS = Object.freeze(${JSON.stringify(sections, null, 4)});`,
         '',
         '/**',
         ` * The module categories: the \`## \` headings of ${MODULES_README} that list`,
@@ -153,10 +274,11 @@ export function renderDocsIndexModule(rows, categories) {
 }
 
 function main(argv) {
-    const rows = buildDocsIndex();
+    const sections = buildHelpSections();
+    const rows = buildDocsIndex(REPO, sections);
     const categories = buildCategoryOrder();
-    const text = renderDocsIndexModule(rows, categories);
-    const counts = `${rows.length} guides, ${categories.length} categories`;
+    const text = renderDocsIndexModule(rows, categories, sections);
+    const counts = `${rows.length} docs, ${sections.length} sections, ${categories.length} categories`;
     const outPath = join(REPO, OUTPUT);
     if (argv.includes('--check')) {
         let onDisk = null;

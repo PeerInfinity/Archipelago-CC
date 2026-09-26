@@ -1,5 +1,7 @@
 # Frontend Module Reference
 
+<!-- quick-launch-help: order=130 audience=developer -->
+
 This directory contains detailed documentation for each of the major frontend modules in the web client. The application is built on a modular architecture where each distinct piece of functionality is encapsulated within its own module.
 
 This reference is intended for developers who need to understand the specific responsibilities, dependencies, and interactions of a particular module.

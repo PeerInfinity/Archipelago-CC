@@ -1,5 +1,7 @@
 # Developer Guides
 
+<!-- quick-launch-help: order=110 audience=developer -->
+
 This directory contains in-depth guides covering specific architectural components and development workflows for the Archipelago JSON Export Tools project.
 
 ## Core Architecture Guides

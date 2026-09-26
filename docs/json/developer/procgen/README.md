@@ -1,5 +1,7 @@
 # Procedural Generation
 
+<!-- quick-launch-help: order=140 audience=developer -->
+
 Developer documentation for the procedural-generation ("procgen") system: the pipeline that generates multi-region game worlds in the browser, the substrates that provide per-region playable content, and the runtime that plays the result.
 
 ⛔⛔ **THE INDEX BELOW IS GENERATED** — one row per `.md` in this directory, with the document's own H1 and its own first paragraph, written by `scripts/procgen/generate-procgen-reference.mjs` and gated by `--check` (regenerate = no diff). ⛔ If an entry reads thin, the fix is a better opening paragraph in the document it describes, not a better sentence here.

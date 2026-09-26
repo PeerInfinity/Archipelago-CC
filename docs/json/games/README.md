@@ -1,5 +1,7 @@
 # Playable Games
 
+<!-- quick-launch-help: order=30 audience=user -->
+
 Games and game modes playable through the Archipelago JSON Tools web client.
 
 Each game has its own documentation covering how to play, game mechanics, and configuration. For technical module documentation, see the [Frontend Module Reference](../modules/README.md). For the broader feature overview (including non-game features), see the [Features Index](../features/README.md).

@@ -1,21 +1,24 @@
 /**
  * The pin on generated/docsIndex.js: regenerate in memory and compare with
- * what is committed. A red here means a guide under docs/json/user/ changed
- * without `node scripts/quicklaunch/generate-docs-index.mjs` being run.
+ * what is committed. A red here means a doc in a marked docs/json directory
+ * (or a marker) changed without `node scripts/quicklaunch/generate-docs-index.mjs`
+ * being run.
  */
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
-    EXCLUDED_BASENAMES, MODULES_README, OUTPUT, REPO, SUMMARY_MAX_LENGTH, buildCategoryOrder, buildDocsIndex, docSummary,
-    isDirectoryBullet, readmeCategories, renderDocsIndexModule,
+    EXCLUDED_BASENAMES, HELP_AUDIENCES, MODULES_README, OUTPUT, REPO, SUMMARY_MAX_LENGTH, buildCategoryOrder,
+    buildDocsIndex, buildHelpSections, docSummary, isDirectoryBullet, parseHelpMarker, readmeCategories,
+    renderDocsIndexModule, sectionDocPaths,
 } from '../../../scripts/quicklaunch/generate-docs-index.mjs';
-import { CATEGORY_ORDER, DOCS_INDEX } from './generated/docsIndex.js';
+import { CATEGORY_ORDER, DOCS_INDEX, HELP_SECTIONS } from './generated/docsIndex.js';
 
 describe('quickLaunch generated/docsIndex.js', () => {
     it('equals what the generator writes today (byte for byte)', () => {
         expect(readFileSync(join(REPO, OUTPUT), 'utf8'))
-            .toBe(renderDocsIndexModule(buildDocsIndex(), buildCategoryOrder()));
+            .toBe(renderDocsIndexModule(buildDocsIndex(), buildCategoryOrder(), buildHelpSections()));
     });
 
     it('the imported table deep-equals a fresh walk', () => {
@@ -26,8 +29,9 @@ describe('quickLaunch generated/docsIndex.js', () => {
         expect(DOCS_INDEX.filter((d) => EXCLUDED_BASENAMES.includes(d.path.split('/').pop()))).toEqual([]);
     });
 
-    it('every row has a path under docs/json/user, a title and a section', () => {
-        const bad = DOCS_INDEX.filter((d) => !d.path.startsWith('docs/json/user/') || !d.title || !d.section);
+    it('every row has a path under docs/json, a title and a section (its directory under docs/json)', () => {
+        const bad = DOCS_INDEX.filter((d) => !d.path.startsWith('docs/json/') || !d.title
+            || `docs/json/${d.section}/${d.path.split('/').pop()}` !== d.path);
         expect(bad).toEqual([]);
     });
 
@@ -36,6 +40,146 @@ describe('quickLaunch generated/docsIndex.js', () => {
         expect(tooLong.map((d) => d.path)).toEqual([]);
         const empty = DOCS_INDEX.filter((d) => !d.summary).map((d) => d.path);
         if (empty.length) console.warn(`WARNING: guides with no first paragraph (no summary): ${empty.join(', ')}`);
+    });
+});
+
+describe('quickLaunch generated HELP_SECTIONS', () => {
+    it('deep-equals a fresh walk', () => {
+        expect(HELP_SECTIONS).toEqual(buildHelpSections());
+    });
+
+    it('is the eight marked directories, by order, labelled by their READMEs', () => {
+        expect(HELP_SECTIONS.map((s) => [s.order, s.audience, s.dir, s.label])).toEqual([
+            [0, 'panel', 'user/modules', 'Panel Guides'],
+            [10, 'user', 'user', 'User Guides'],
+            [20, 'user', 'features', 'Features'],
+            [30, 'user', 'games', 'Playable Games'],
+            [110, 'developer', 'developer/guides', 'Developer Guides'],
+            [120, 'developer', 'developer/reference', 'Developer Reference Documentation'],
+            [130, 'developer', 'developer/modules', 'Frontend Module Reference'],
+            [140, 'developer', 'developer/procgen', 'Procedural Generation'],
+        ]);
+    });
+
+    it('DOCS_INDEX is exactly the docs the sections list (each once)', () => {
+        const listed = HELP_SECTIONS.flatMap(sectionDocPaths);
+        expect(new Set(listed).size).toBe(listed.length);
+        expect([...listed].sort()).toEqual(DOCS_INDEX.map((d) => d.path));
+    });
+
+    it('games nests by sub-directory; a README-only sub-directory is single', () => {
+        const games = HELP_SECTIONS.find((s) => s.dir === 'games');
+        expect(games.docs).toEqual([]);
+        for (const child of games.children) {
+            expect(child.single).toBe(child.docs.length === 1);
+            if (child.single) expect(child.docs).toEqual([`docs/json/${child.dir}/README.md`]);
+        }
+        expect(games.children.filter((c) => !c.single).map((c) => c.dir))
+            .toEqual(['games/journey-to-ascension', 'games/vibe-coding-simulator']);
+    });
+
+    it('no marked README is a row (it is its section\'s label)', () => {
+        const labels = new Set(HELP_SECTIONS.map((s) => `docs/json/${s.dir}/README.md`));
+        expect(DOCS_INDEX.filter((d) => labels.has(d.path))).toEqual([]);
+    });
+});
+
+describe('parseHelpMarker', () => {
+    it('reads order and audience; null without a marker', () => {
+        expect(parseHelpMarker('# T\n\n<!-- quick-launch-help: order=20 audience=user -->\n', 'x')).toEqual(
+            { order: 20, audience: HELP_AUDIENCES.user });
+        expect(parseHelpMarker('# T\n\n<!-- some other comment -->\n', 'x')).toBeNull();
+    });
+
+    it('a malformed marker throws, naming the file', () => {
+        expect(() => parseHelpMarker('<!-- quick-launch-help: order=x audience=user -->', 'docs/json/a/README.md'))
+            .toThrow(/docs\/json\/a\/README\.md: malformed/);
+        expect(() => parseHelpMarker('<!-- quick-launch-help: order=1 audience=everyone -->', 'f')).toThrow(/malformed/);
+    });
+
+    it('two markers throw', () => {
+        const two = '<!-- quick-launch-help: order=1 audience=user -->\n<!-- quick-launch-help: order=2 audience=user -->';
+        expect(() => parseHelpMarker(two, 'f')).toThrow(/2 quick-launch-help markers/);
+    });
+});
+
+describe('buildHelpSections over a fixture tree', () => {
+    const mark = (order, audience) => `<!-- quick-launch-help: order=${order} audience=${audience} -->`;
+    const FILES = {
+        'docs/json/outer/README.md': `# Outer\n\n${mark(10, 'user')}\n`,
+        'docs/json/outer/a.md': '# A\n\nPara.',
+        'docs/json/outer/TODO.md': '# Todo',
+        'docs/json/outer/inner/README.md': `# Inner\n\n${mark(5, 'panel')}\n`,
+        'docs/json/outer/inner/p.md': '# P',
+        'docs/json/outer/multi/README.md': '# Multi Doc\n\nIntro.',
+        'docs/json/outer/multi/x.md': '# X',
+        'docs/json/outer/multi/y.md': '# Y',
+        'docs/json/outer/solo/README.md': '# Solo Only',
+        'docs/json/outer/empty/notes.txt': 'not a doc',
+        'docs/json/unmarked/z.md': '# Z',
+        'docs/json/dev/README.md': `# Dev\n\n${mark(100, 'developer')}\n`,
+        'docs/json/dev/d.md': '# D',
+    };
+    let repo;
+    const build = () => buildHelpSections(repo);
+
+    beforeAll(() => {
+        repo = mkdtempSync(join(tmpdir(), 'ql-help-'));
+        for (const [path, text] of Object.entries(FILES)) {
+            mkdirSync(dirname(join(repo, path)), { recursive: true });
+            writeFileSync(join(repo, path), text);
+        }
+    });
+    afterAll(() => rmSync(repo, { recursive: true, force: true }));
+
+    it('only marked directories are sections, by order; unmarked ones stay out', () => {
+        expect(build().map((s) => [s.dir, s.label, s.order, s.audience])).toEqual([
+            ['outer/inner', 'Inner', 5, 'panel'],
+            ['outer', 'Outer', 10, 'user'],
+            ['dev', 'Dev', 100, 'developer'],
+        ]);
+    });
+
+    it('a marked directory inside a marked one is its own section, not a child', () => {
+        const outer = build().find((s) => s.dir === 'outer');
+        expect(outer.children.map((c) => c.dir)).toEqual(['outer/multi', 'outer/solo']);
+        expect(build().find((s) => s.dir === 'outer/inner').docs).toEqual(['docs/json/outer/inner/p.md']);
+    });
+
+    it('own docs skip the README (the label) and EXCLUDED_BASENAMES', () => {
+        expect(build().find((s) => s.dir === 'outer').docs).toEqual(['docs/json/outer/a.md']);
+    });
+
+    it('an unmarked sub-directory: README + 2 is a sub-group labelled by its H1; README only is single', () => {
+        const [multi, solo] = build().find((s) => s.dir === 'outer').children;
+        expect(multi).toEqual({
+            dir: 'outer/multi', label: 'Multi Doc', single: false,
+            docs: ['docs/json/outer/multi/README.md', 'docs/json/outer/multi/x.md', 'docs/json/outer/multi/y.md'],
+        });
+        expect(solo).toEqual({ dir: 'outer/solo', label: 'Solo Only', single: true, docs: ['docs/json/outer/solo/README.md'] });
+    });
+
+    it('DOCS_INDEX rows over the fixture: the panel section is indexed, section = the directory', () => {
+        const rows = buildDocsIndex(repo, build());
+        expect(rows.map((r) => [r.path, r.section])).toEqual([
+            ['docs/json/dev/d.md', 'dev'],
+            ['docs/json/outer/a.md', 'outer'],
+            ['docs/json/outer/inner/p.md', 'outer/inner'],
+            ['docs/json/outer/multi/README.md', 'outer/multi'],
+            ['docs/json/outer/multi/x.md', 'outer/multi'],
+            ['docs/json/outer/multi/y.md', 'outer/multi'],
+            ['docs/json/outer/solo/README.md', 'outer/solo'],
+        ]);
+    });
+
+    it('a malformed marker anywhere fails the walk, naming the file', () => {
+        const bad = join(repo, 'docs/json/unmarked/README.md');
+        writeFileSync(bad, '# U\n\n<!-- quick-launch-help: order=1 -->\n');
+        try {
+            expect(build).toThrow(/docs\/json\/unmarked\/README\.md: malformed/);
+        } finally {
+            rmSync(bad);
+        }
     });
 });
 
