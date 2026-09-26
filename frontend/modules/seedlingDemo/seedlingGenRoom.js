@@ -447,12 +447,24 @@ export function rerollGenRoom(world, entries, rows, cause) {
 /**
  * Put `ids` (with their items and rules) into the room: the first on the goal
  * cell (if the room holds none yet), the rest on free flood cells nearest the
- * start. Refused by name when the room has too few cells.
+ * start. ⛓ G5: a room with too few cells is RE-ROLLED in place (`rerollGenRoom` —
+ * the engine's world object keeps its identity and its exit records theirs),
+ * and refused by name when no draw in the budget seats them — never returned
+ * short, so the engine's own retry-then-grow loop is never entered.
  */
 function addLocations(world, rows) {
     const seats = seatsFor(world, rows);
-    if (seats.short) throw new Error(locationsRefusal(world, rows, seats.free));
-    seatRows(world, rows, seats.free);
+    if (!seats.short) { seatRows(world, rows, seats.free); return; }
+    if (!Number.isInteger(world.drawnSeed)) throw new Error(locationsRefusal(world, rows, seats.free));
+    const all = [...world.locations.map(rowOf), ...rows];
+    const { room, bound, err } = rerollGenRoom(world, [...world.exits.entries()], all, GEN_ROOM_REROLL_CAUSES.locations);
+    if (err) throw new Error(locationsRefusal(world, rows, seats.free, GEN_ROOM_DOOR_REROLLS));
+    for (const key of ['seed', 'record', 'start', 'goalCell', 'generation', 'summary']) world[key] = room[key];
+    for (const [key, e] of bound) {
+        const record = world.exits.get(key);
+        for (const field of DOOR_FIELDS) record[field] = e[field];
+    }
+    world.locations = room.locations;
 }
 
 /** Seat `rows` on `free` (in order), each with a fresh tag. */
