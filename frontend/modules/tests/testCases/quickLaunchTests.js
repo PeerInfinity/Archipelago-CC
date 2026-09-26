@@ -17,7 +17,9 @@
  * count buttons on an empty tree) are unaffected by where these run. The Q3
  * rows (categories, cards, filter, collapsed groups) end the same way and
  * also put the view back to tree, clear the filter box and empty
- * collapsedGroups (`restoreQ3`).
+ * collapsedGroups (`restoreQ3`). The P6 rows (Help sections, the fold button,
+ * the developer-docs setting) also put showDeveloperDocs back to false and the
+ * fold button back to "Collapse all" (`restoreP6`).
  *
  * Handles (quick-launch Q1 W0 (e)): a panel is closed the way its × does with
  * `window.panelManager.destroyPanelByComponentType(type)` (it fires Golden
@@ -34,8 +36,8 @@ import { OTHER_CATEGORY, VIRTUAL_GROUPS, drawnHelpSections, lookupModuleInfo } f
 import { EMPTY_TREE, NODE_KINDS } from '../../quickLaunch/quickLaunchTree.js';
 import { completeModuleInfo } from '../../../app/initialization/completeModuleInfo.js';
 import {
-    COLLAPSED_KEY, COLLAPSED_SETTING, CONTROLS, MODULE_ID, ROOT_CHOICE, TREE_KEY, TREE_SETTING, VIEWS, VIEW_KEY,
-    VIEW_SETTING, dialogs,
+    COLLAPSED_KEY, COLLAPSED_SETTING, CONTROLS, DEVELOPER_DOCS_KEY, DEVELOPER_DOCS_SETTING, FOLD_TEXT, MODULE_ID,
+    ROOT_CHOICE, TREE_KEY, TREE_SETTING, VIEWS, VIEW_KEY, VIEW_SETTING, dialogs,
 } from '../../quickLaunch/quickLaunchUI.js';
 
 const CATEGORY = 'Quick Launch';
@@ -539,6 +541,179 @@ async function quickLaunchCollapsedGroupsPersist(testController) {
     return testController.getOverallResult();
 }
 
+// ── P6: Help sections from the docs tree, the fold button, the developer docs ──
+
+const helpSection = (root, dir) => root.querySelector(`details[data-group-id="${VIRTUAL_GROUPS.help.id}/${dir}"]`);
+const summaryCount = (details) => Number(details?.querySelector(':scope > summary')?.textContent.match(/\((\d+)\)$/)?.[1]);
+const sectionDocCount = (s) => s.docs.length + s.children.reduce((n, c) => n + c.docs.length, 0);
+const rowPaths = (details) => [...details.querySelectorAll(':scope > .ql-list > li.ql-help a')].map((a) => a.title);
+const foldButton = (root) => root?.querySelector(`.${CONTROLS.fold}`);
+
+/** restoreQ3, plus showDeveloperDocs false and the fold button back to "Collapse all". */
+async function restoreP6(testController, root, savedDialogs) {
+    // "Expand all" writes collapsedGroups [] and opens everything — the state restoreQ3 ends in anyway.
+    if (foldButton(root)?.textContent === FOLD_TEXT.expand) foldButton(root).click();
+    await settingsManager.updateModuleSetting(MODULE_ID, DEVELOPER_DOCS_KEY, false);
+    await restoreQ3(testController, root, savedDialogs);
+    await testController.pollForCondition(
+        () => foldButton(root)?.textContent === FOLD_TEXT.collapse
+            && !root.querySelector(`details[data-group-id^="${VIRTUAL_GROUPS.help.id}/developer"]`),
+        'the fold button back to "Collapse all" and no developer section',
+        ACTION_TIMEOUT_MS,
+        POLL_MS,
+    );
+}
+
+async function quickLaunchHelpSectionsFollowTheDocsMarkers(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const saved = { ...dialogs };
+    try {
+        await settingsManager.updateModuleSetting(MODULE_ID, DEVELOPER_DOCS_KEY, false);
+        // Read off the generated module here, not through the panel's own filter.
+        const expected = HELP_SECTIONS.filter((s) => s.audience === 'user');
+        testController.log(`HELP_SECTIONS: ${HELP_SECTIONS.length} sections, ${expected.length} with audience user`);
+        testController.reportCondition('the docs tree marks some user section', expected.length > 0);
+        const drawn = await testController.pollForCondition(
+            () => root.querySelectorAll(`details[data-group-id="${VIRTUAL_GROUPS.help.id}"] > .ql-subgroups > details`).length === expected.length,
+            'Help to hold one sub-group per user section', ACTION_TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('Help holds one sub-group per user section', drawn);
+        const helpEl = root.querySelector(`details[data-group-id="${VIRTUAL_GROUPS.help.id}"]`);
+        const subs = [...helpEl.querySelectorAll(':scope > .ql-subgroups > details')];
+        testController.assertEqual('the drawn section labels == HELP_SECTIONS (audience user), in order',
+            expected.map((s) => s.label).join(' | '), subs.map(summaryLabel).join(' | '));
+        testController.assertEqual('Help has no rows of its own', 0, helpEl.querySelectorAll(':scope > .ql-list').length);
+        for (const section of expected) {
+            const el = helpSection(root, section.dir);
+            testController.reportCondition(`section ${section.dir} is drawn`, !!el);
+            if (!el) continue;
+            testController.assertEqual(`${section.label}: summary count`, sectionDocCount(section), summaryCount(el));
+            const singles = section.children.filter((c) => c.single);
+            testController.assertEqual(`${section.label}: rows = own docs, then each single sub-directory's doc`,
+                [...section.docs, ...singles.flatMap((c) => c.docs)].join(' | '), rowPaths(el).join(' | '));
+            const nested = section.children.filter((c) => !c.single);
+            const nestedEls = [...el.querySelectorAll(':scope > .ql-subgroups > details')];
+            testController.assertEqual(`${section.label}: sub-groups = the sub-directories holding more than one doc`,
+                nested.map((c) => `${c.label} (${c.docs.length})`).join(' | '),
+                nestedEls.map((d) => d.querySelector(':scope > summary').textContent).join(' | '));
+            for (const child of nested) {
+                const childEl = helpSection(root, child.dir);
+                testController.assertEqual(`${child.label}: rows`, child.docs.join(' | '), childEl ? rowPaths(childEl).join(' | ') : '(not drawn)');
+            }
+        }
+        testController.reportCondition('some section nests a sub-directory (the rule is exercised)',
+            expected.some((s) => s.children.some((c) => !c.single)));
+        testController.reportCondition('some sub-directory is a single row (the rule is exercised)',
+            expected.some((s) => s.children.some((c) => c.single)));
+    } finally {
+        await restoreP6(testController, root, saved);
+    }
+    return testController.getOverallResult();
+}
+
+async function quickLaunchPanelGuidesNotListedInHelp(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const saved = { ...dialogs };
+    try {
+        const panelGuides = new Set(HELP_SECTIONS.filter((s) => s.audience === 'panel').flatMap((s) => s.docs));
+        testController.log(`${panelGuides.size} panel guides (audience panel)`);
+        testController.reportCondition('the docs tree marks a panel section with guides', panelGuides.size > 0);
+        const helpLinks = [...root.querySelectorAll(`details[data-group-id="${VIRTUAL_GROUPS.help.id}"] .ql-help a`)];
+        const listed = helpLinks.filter((a) => [...panelGuides].some((p) => a.href.endsWith(p))).map((a) => a.title);
+        testController.assertEqual('no Help row links a panel guide (listed)', '', listed.join(', '));
+        const indexed = new Set(DOCS_INDEX.map((d) => d.path));
+        const registry = [...centralRegistry.getAllPanelComponents().keys()];
+        const withDocs = registry.filter((ct) => indexed.has(infoOf(ct).docs));
+        testController.log(`${withDocs.length} of ${registry.length} panels declare an indexed guide`);
+        testController.reportCondition('some panel declares a guide', withDocs.length > 0);
+        const noMark = withDocs.filter((ct) => !rowButton(root, ct)?.closest('li')?.querySelector('.ql-doc a')?.href.endsWith(infoOf(ct).docs));
+        testController.assertEqual('every panel row whose moduleInfo declares a guide shows its ? (missing)', '', noMark.join(', '));
+    } finally {
+        await restoreP6(testController, root, saved);
+    }
+    return testController.getOverallResult();
+}
+
+async function quickLaunchFoldButtonCollapsesThenExpands(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const saved = { ...dialogs };
+    const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
+    const details = () => [...root.querySelectorAll('.ql-groups details')];
+    try {
+        await settingsManager.updateModuleSetting(MODULE_ID, COLLAPSED_KEY, []);
+        await writeTree({ version: 1, nodes: [
+            { id: 'fold-a', kind: NODE_KINDS.group, label: 'Fold A', children: [
+                { id: 'fold-inv', kind: NODE_KINDS.panel, ref: OPEN_TARGET },
+                { id: 'fold-b', kind: NODE_KINDS.group, label: 'Fold B', children: [
+                    { id: 'fold-ev', kind: NODE_KINDS.panel, ref: CLOSE_TARGET }] }] }] });
+        testController.reportCondition('the stored groups are drawn open',
+            !!await until(() => root.querySelectorAll('.ql-user').length === 2 && details().every((d) => d.open), 'two user groups, all open'));
+        const button = foldButton(root);
+        testController.assertEqual('the fold button starts at "Collapse all"', FOLD_TEXT.collapse, button?.textContent);
+        const userIds = [...root.querySelectorAll('.ql-user')].map((d) => d.dataset.groupId);
+
+        button?.click();
+        const closed = await until(() => details().length > 0 && details().every((d) => !d.open), 'every group closed');
+        testController.reportCondition('a click closes every drawn group', !!closed);
+        testController.assertEqual('the button now reads "Expand all"', FOLD_TEXT.expand, button?.textContent);
+        const stored = await until(async () => {
+            const v = await settingsManager.getSetting(COLLAPSED_SETTING);
+            return Array.isArray(v) && v.length === userIds.length;
+        }, 'collapsedGroups to hold the user group ids');
+        testController.reportCondition('collapsedGroups was written', !!stored);
+        testController.assertEqual('collapsedGroups == every user group id', [...userIds].sort().join(),
+            [...(await settingsManager.getSetting(COLLAPSED_SETTING)) ?? []].sort().join());
+
+        button?.click();
+        const opened = await until(() => details().length > 0 && details().every((d) => d.open), 'every group open');
+        testController.reportCondition('a second click opens every drawn group', !!opened);
+        testController.assertEqual('the button reads "Collapse all" again', FOLD_TEXT.collapse, button?.textContent);
+        testController.assertEqual('collapsedGroups is []', '[]', JSON.stringify(await settingsManager.getSetting(COLLAPSED_SETTING)));
+    } finally {
+        await restoreP6(testController, root, saved);
+    }
+    return testController.getOverallResult();
+}
+
+async function quickLaunchDeveloperDocsBehindSetting(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const saved = { ...dialogs };
+    const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
+    const developer = HELP_SECTIONS.filter((s) => s.audience === 'developer');
+    const drawnDev = () => developer.filter((s) => helpSection(root, s.dir));
+    try {
+        testController.log(`developer sections: ${developer.map((s) => `${s.label} (${sectionDocCount(s)})`).join(' · ')}`);
+        testController.reportCondition('the docs tree marks some developer section', developer.length > 0);
+        await settingsManager.updateModuleSetting(MODULE_ID, DEVELOPER_DOCS_KEY, false);
+        testController.reportCondition('showDeveloperDocs false: no developer section is drawn',
+            !!await until(() => drawnDev().length === 0 && root.querySelector(`details[data-group-id="${VIRTUAL_GROUPS.help.id}"]`), 'no developer section'));
+
+        await settingsManager.updateModuleSetting(MODULE_ID, DEVELOPER_DOCS_KEY, true);
+        testController.assertEqual('the setting reads true', true, await settingsManager.getSetting(DEVELOPER_DOCS_SETTING));
+        const shown = await until(() => drawnDev().length === developer.length, 'every developer section drawn');
+        testController.reportCondition('showDeveloperDocs true: every developer section appears (no reload)', !!shown);
+        testController.assertEqual('each developer section shows its count',
+            developer.map((s) => `${s.label} (${sectionDocCount(s)})`).join(' | '),
+            developer.map((s) => helpSection(root, s.dir)?.querySelector(':scope > summary').textContent ?? '(missing)').join(' | '));
+        const subs = [...root.querySelectorAll(`details[data-group-id="${VIRTUAL_GROUPS.help.id}"] > .ql-subgroups > details`)];
+        testController.assertEqual('the developer sections come after the user ones, in HELP_SECTIONS order',
+            drawnHelpSections(HELP_SECTIONS, true).map((s) => s.label).join(' | '), subs.map(summaryLabel).join(' | '));
+        testController.assertEqual('the header counts the docs drawn',
+            `${centralRegistry.getAllPanelComponents().size} panels · ${drawnDocPaths(true).length} docs`,
+            root.querySelector('.ql-header')?.textContent ?? '');
+
+        await settingsManager.updateModuleSetting(MODULE_ID, DEVELOPER_DOCS_KEY, false);
+        testController.reportCondition('back to false: the developer sections go again',
+            !!await until(() => drawnDev().length === 0, 'no developer section'));
+    } finally {
+        await restoreP6(testController, root, saved);
+    }
+    return testController.getOverallResult();
+}
+
 /**
  * The mobile tab bar's input, checked on the desktop layout (a row cannot switch
  * layout): every registered panel's own moduleInfo gives the title and name the
@@ -621,6 +796,23 @@ const TESTS = [
         'Collapses a stored group through its summary; collapsedGroups holds its id; after a re-render the '
         + 'redrawn group is still collapsed.',
         quickLaunchCollapsedGroupsPersist],
+    ['quick-launch-help-sections-follow-the-docs-markers', 'Quick Launch: Help sections follow the docs-tree markers',
+        'With showDeveloperDocs off, Help holds one sub-group per HELP_SECTIONS entry with audience user (read off the '
+        + 'generated module), in order, each counting its docs; a section\'s rows are its own docs then each single '
+        + 'sub-directory\'s doc, and each sub-directory holding more than one doc is a nested sub-group.',
+        quickLaunchHelpSectionsFollowTheDocsMarkers],
+    ['quick-launch-panel-guides-not-listed-in-help', 'Quick Launch: the panel guides are not listed in Help',
+        'No Help row links a guide of the audience-panel section; every panel whose moduleInfo declares an indexed '
+        + 'guide shows its ? on its row.',
+        quickLaunchPanelGuidesNotListedInHelp],
+    ['quick-launch-fold-button-collapses-then-expands', 'Quick Launch: the fold button collapses, then expands',
+        'With two stored groups (one nested): "Collapse all" closes every drawn group, reads "Expand all" and writes '
+        + 'every user group id to collapsedGroups; "Expand all" opens every group, reads "Collapse all", writes [].',
+        quickLaunchFoldButtonCollapsesThenExpands],
+    ['quick-launch-developer-docs-behind-setting', 'Quick Launch: the developer docs are behind showDeveloperDocs',
+        'showDeveloperDocs false: no developer section; true: every audience-developer section appears with its '
+        + 'count, after the user ones, and the header counts them; false again: they go.',
+        quickLaunchDeveloperDocsBehindSetting],
     ['mobile-tab-bar-resolves-every-panel', 'Mobile tab bar: every panel resolves a title and name from its moduleInfo',
         'For every registered panel, the moduleInfo the mobile layout registers (the registry\'s lookup) declares a '
         + 'title and a name, so no componentType fallback fires; the panels declaring no icon are read off the '
