@@ -9,7 +9,9 @@ import {
     parseSphereLogShape,
     buildSphereEnrichment,
     computeProcgenStats,
+    procgenDriverLabel,
 } from './presetUI.js';
+import { INITIALISE_DRIVER } from '../apworldEditor/initialiseDriver.js';
 
 // Fixture index — subset of the real preset_files.json shape with a
 // mix of plain, _worldgen, _vanilla, and procgen entries.
@@ -777,5 +779,25 @@ describe('APWORLD_EDITOR_BUTTON', () => {
     it('is frozen, so no caller can retarget the panel it raises', () => {
         expect(Object.isFrozen(APWORLD_EDITOR_BUTTON)).toBe(true);
         expect(Object.isFrozen(APWORLD_EDITOR_BUTTON.payload)).toBe(true);
+    });
+});
+
+describe('procgenDriverLabel — the preset card names the producer (APWORLD SUBSTRATE CHANGE S1)', () => {
+    const stats = (driver, sourceGame) => computeProcgenStats({
+        procgen_metadata: { driver, source_game: sourceGame },
+        preset_sidecars: { '1': { R: { substrate: 'maze', grid_cell: { gx: 0, gy: 0 }, playable_payload: {} } } },
+    });
+
+    it('⛓ an APWorld Editor initialise is labelled with its source game, never "driver unknown"', () => {
+        expect(procgenDriverLabel(stats(INITIALISE_DRIVER, 'Adventure'))).toBe('Initialised in the APWorld Editor (Adventure)');
+        expect(procgenDriverLabel(stats(INITIALISE_DRIVER, null))).toBe('Initialised in the APWorld Editor');
+        expect(procgenDriverLabel(stats(INITIALISE_DRIVER, '<b>'), (x) => x.replace(/</g, '&lt;')))
+            .toBe('Initialised in the APWorld Editor (&lt;b>)');
+    });
+
+    it('⛓ the other producers keep their labels', () => {
+        expect(procgenDriverLabel(stats('top-down', 'Adventure'))).toBe('Top-down (Adventure)');
+        expect(procgenDriverLabel(stats('grid-growth', null))).toBe('Grid-growth');
+        expect(procgenDriverLabel(stats(undefined, null))).toBe('Procgen (driver unknown)');
     });
 });

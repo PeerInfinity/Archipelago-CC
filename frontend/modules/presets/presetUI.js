@@ -6,6 +6,7 @@ import { centralRegistry } from '../../app/core/centralRegistry.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { JSZIP_SCRIPT, loadJSZipBrowser } from './loadJSZipBrowser.js';
 import { describeBundle, gunzipIfNeeded, readBundle } from './documentBundle.js';
+import { INITIALISE_DRIVER } from '../apworldEditor/initialiseDriver.js';
 
 const DEV_INDEX_PATH = './presets/preset_files.json';
 const LIVE_INDEX_PATH = './presets/preset_files.live.json';
@@ -669,6 +670,26 @@ function testPassCount(data) {
     const tr = data?.test_results;
     if (!tr) return 0;
     return Object.values(tr).filter((r) => r?.passed === true).length;
+}
+
+/**
+ * The preset card's driver label for `computeProcgenStats`' answer. `escape`
+ * is the card's HTML escaper (the source game is document text).
+ */
+export function procgenDriverLabel(stats, escape = (s) => s) {
+  if (stats.driver === 'top-down') {
+    return stats.sourceGame ? `Top-down (${escape(stats.sourceGame)})` : 'Top-down';
+  }
+  if (stats.driver === 'grid-growth') return 'Grid-growth';
+  // ⛓ APWORLD SUBSTRATE CHANGE S1 — a slot the APWorld Editor initialised in place.
+  if (stats.driver === INITIALISE_DRIVER) {
+    return stats.sourceGame
+      ? `Initialised in the APWorld Editor (${escape(stats.sourceGame)})`
+      : 'Initialised in the APWorld Editor';
+  }
+  // procgen_metadata absent (older procgen output) — preset_sidecars
+  // is present but we don't know the driver. Label honestly.
+  return 'Procgen (driver unknown)';
 }
 
 /**
@@ -2422,17 +2443,7 @@ export class PresetUI {
       host.innerHTML = '';
       return;
     }
-    const driverLabel = (() => {
-      if (stats.driver === 'top-down') {
-        return stats.sourceGame
-          ? `Top-down (${this.escapeHtml(stats.sourceGame)})`
-          : 'Top-down';
-      }
-      if (stats.driver === 'grid-growth') return 'Grid-growth';
-      // procgen_metadata absent (older procgen output) — preset_sidecars
-      // is present but we don't know the driver. Label honestly.
-      return 'Procgen (driver unknown)';
-    })();
+    const driverLabel = procgenDriverLabel(stats, (s) => this.escapeHtml(s));
 
     const stopReasonClass = stats.stopReason === 'all_placed'
       ? 'preset-procgen-stop-ok'

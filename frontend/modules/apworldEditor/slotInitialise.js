@@ -56,6 +56,7 @@ import { createRng } from '../shared/rng.js';
 import { regionsOf, startRegionsOf } from '../procgenCore/rulesGraph.js';
 import { SUBSTRATE_CONFIGS_KEY, recordableConfigsFor } from '../procgenCore/substrateConfigRecord.js';
 import { grantedLibraryItems } from '../procgenPipeline/topDownSteps.js';
+import { INITIALISE_DRIVER } from './initialiseDriver.js';
 import {
     REGENERATE_BASE_REGION_PARAMS, regionRealiserKind, regionSizeFor,
 } from './regionRegenerate.js';
@@ -65,8 +66,8 @@ export { DEFAULT_SUBSTRATE_ID };
 /** ⛓ The op's name, as data. */
 export const INITIALISE_OP = 'initialise-procgen-layout';
 
-/** ⛓ The `procgen_metadata.driver` an initialised slot records. */
-export const INITIALISE_DRIVER = 'apworld-initialise';
+/** ⛓ The `procgen_metadata.driver` an initialised slot records (its own module: the preset card reads it). */
+export { INITIALISE_DRIVER };
 
 /** ⛓ The return-exit choice (⚖ #1: `add` is the default, the pipeline's). */
 export const BACK_EXITS = Object.freeze({ ADD: 'add', NONE: 'none' });
