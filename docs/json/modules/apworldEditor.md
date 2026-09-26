@@ -26,12 +26,13 @@ document.
 | `sidecarForm.js` | (D1) the sidecar block's **fields view** model — `sidecarFormModel(entry, {rulesSchema})`: the rows (the entry subschema's fields, then the substrate's declaration), the control each type draws, and `withSidecarField`, the whole entry one control's change writes |
 | `regionRoundTrip.js` | the per-region **Edit ▸** door — resolves the substrate's declarations, runs the baseline, folds a save into ONE op; (S0) `sidecarEntryFacts`, what a region's sidecar block says about its entry; and (S2) `deriveRegionRules`, the derivation half alone — a payload's own rules, named by the document |
 | `regionLayout.js` | (M2) the map moves' layout — `slotLayout` (a slot's cells on a `Grid` sized by `mapBoundsFor`), `layoutChange` (the engine's placement, and every exit whose side-law verdict the move changed), `rewriteExitFlags` (a payload's `exits` in its substrate's own serialized form); (M3) `rewriteExits` (the one path a flag write and a side write share), `exitSideVerdicts` (the side law asked of a moved exit alone), `exitSidesOfSubstrate`; the ops and their refusal sentences are `rulesDocOps.js`'s `move-region` / `swap-regions` / `move-exit-side` / `swap-exit-sides` |
-| `regionRegenerate.js` | (substrate change R0) one region's payload **rebuilt for a substrate from the document alone** — `buildDocumentRegionSpec` (the realiser's spec off `regions[p][R]` + the slot's sidecars), `regionRealiserKind`, `freeItemsFor`, `regionSizeFor`, `strandedReferences`, `regenerateRegionEntry` (the engine's `generateRegion`, the one-region re-link, the engine's `serializeRegionEntry`); since R5a also the LIBRARY source — `offersLibrarySource`, `libraryExitSides`, `stampLibraryLocations`, `librarySourceSummary` (a captured entry through the target's `instantiateLibraryEntryForSpecs`); the op and its refusal sentences are `rulesDocOps.js`'s `regenerate-region-sidecar` |
-| `regionGenerationFlow.js` | (substrate change R2) what the block's **Region generation** form opens on and sends — `regionGenerationPlan` (the target's registry defaults, the seed, ⚖ Q4's size for a tiles target, the region's own recorded knobs when its payload is the target's own, or the op's pre-realiser refusal), `composeRegenerateArgs` (the bag → the op's arguments, as top-down composes them), `freeItemsSentence`, `regenerationProvenance`, `regenerationAnswer` |
+| `regionRegenerate.js` | (substrate change R0) one region's payload **rebuilt for a substrate from the document alone** — `buildDocumentRegionSpec` (the realiser's spec off `regions[p][R]` + the slot's sidecars), `regionRealiserKind`, `freeItemsFor` (since S1 a thin call of the pipeline's `topDownSteps.grantedLibraryItems` — ONE rule), `regionSizeFor`, `strandedReferences`, `regenerateRegionEntry` (the engine's `generateRegion`, the one-region re-link, the engine's `serializeRegionEntry`); since R5a also the LIBRARY source — `offersLibrarySource`, `libraryExitSides`, `stampLibraryLocations`, `librarySourceSummary` (a captured entry through the target's `instantiateLibraryEntryForSpecs`); the op and its refusal sentences are `rulesDocOps.js`'s `regenerate-region-sidecar` |
+| `regionGenerationFlow.js` | (substrate change R2) what the block's **Region generation** form opens on and sends — `regionGenerationPlan` (the target's registry defaults, the seed, ⚖ Q4's size for a tiles target, the region's own recorded knobs when its payload is the target's own, or the op's pre-realiser refusal), `composeRegenerateArgs` (the bag → the op's arguments, as top-down composes them), `freeItemsSentence`, (S1) `regenerationGrants` / `grantsSentence` / `withGrantsAnswer`, `regenerationProvenance`, `regenerationAnswer` |
 | `librarySourcePicker.js` | (substrate change R5a) the form's **Library entry** picker — `createServedLibraryCatalog` / `servedLibraryCatalog` (the served index fetched ONCE per page, the packs on demand, through the pipeline's `regionLibraryLoader`; base path `LIBRARY_BASE_PATH`, the pipeline panel's `'./'` rule), `libraryPickerOptions` (the target's entries, disabled with the op's own refusal), `loadLibraryOptions` (never throws: `libraryFetchFailureSentence`) |
 | `regionContent.js` | (substrate change R5b) a region's CONTENT **replaced by a zone** — the op `replace-region-content`'s mechanics and sentences: `zoneSourceFacts` (the channel + the read-back), `installedZoneConfigFrom` (the target's `zoneConfigFromSlot` — no install), `zoneHeldBy` / `zoneOfRegion` / `zoneOptions`, `zoneSourceRefusal`, `zoneContentFor` (install + verify + extract: worker or Node only), `applyZoneContent` (the pure cascade), `describeZoneReplacement`, `unplacedPoolItems` (the Placements tab's readout), `zoneJobAnswer` (the worker's answer); since R5c `resolveZoneFetches` (the served documents a read-back names, fetched and asked again) and `zoneSourceLabelOf` (the Source row's word) |
 | `regionGenerationRun.js` | (R2) the **time-limit setting** (`regionGenerationTimeoutSeconds`, `REGION_GENERATION_TIMEOUT_DEFAULT_S`; R7's whole-slot `initialiseTimeoutSeconds`, `INITIALISE_TIMEOUT_DEFAULT_S`) and the **worker** protocol (R7: a job's `{type: 'progress', event}` messages → `onProgress`): `runRegenerateJob` (the worker's side) and `runRegenerateInWorker` (the page's: the budget, Cancel, `terminate()`), the timeout and Cancel sentences |
-| `slotInitialise.js` | (substrate change R7) a BARE slot's procgen data **built in place** — the engine's four top-down stages (`layoutTopDown` → `realiseTopDownGen` → `finalizeTopDown` → `buildPresetSidecars`) on the current document: `initialiseFacts` (bare? the blockers as data), `initialiseGridSide` / `autoGridSide` (the hand-off's side, grown while a region lacks a cell), `planInitialise` (the layout only — the form's preview), `unplacedRegions` (each with a why DERIVED from the graph, `UNPLACED_WHY`), `returnExitsOf`, `initialiseSlot` (the result the op lands), `initialiseOpFor`; the op and its sentences are `rulesDocOps.js`'s `initialise-procgen-layout` |
+| `slotInitialise.js` | (substrate change R7) a BARE slot's procgen data **built in place** — the engine's four top-down stages (`layoutTopDown` → `realiseTopDownGen` → `finalizeTopDown` → `buildPresetSidecars`) on the current document: `initialiseFacts` (bare? the blockers as data), `initialiseGridSide` / `autoGridSide` (the hand-off's side, grown while a region lacks a cell), `planInitialise` (the layout only — the form's preview), `unplacedRegions` (each with a why DERIVED from the graph, `UNPLACED_WHY`), `returnExitsOf`, `initialiseSlot` (the result the op lands — since S1 with the grants), `initialiseOpFor`; the start is the engine's exported `resolveTopDownStart` (S1, R9); the op and its sentences are `rulesDocOps.js`'s `initialise-procgen-layout` |
+| `initialiseDriver.js` | (S1) `INITIALISE_DRIVER`, the `procgen_metadata.driver` an initialised slot records — its own module so the preset card imports it without the engine |
 | `initialiseFlow.js` | (R7) what the **Initialise procgen data** form says and sends — `initialiseDoorShown`, `initialiseFormDefaults` / `withAutoSide`, `initialisePreview` (the op's refusal, or the plan's sentence), `initialiseJob`, `initialiseTickerText`, `initialiseAnswer` |
 | `regionRegenerateWorker.js` | (R2) the MODULE WORKER one Generate runs in — imports the eight registry libraries into its own registry, then `regionRegenerate.js`. ⛔ A worker cannot be bundled into `bundle.js`: `scripts/build/bundle-frontend.js` copies it into `dist/` (beside `stateManagerWorker.js` and `balanceWorker.js`), and in bundled mode the page resolves it at its SOURCE location, `stateManagerProxy`'s rule |
 | `startingInventoryBlock.js` | (substrate change R3) the **Starting inventory** block as data — `startingInventoryList` (the list as `{name, count}`), `substratesInSlot`, `startingNeedRows` (each substrate's registry `startingInventory` needs against the list, with a grant op per candidate), `startingGrantOp` (`set-starting-count` at current + 1), `needSentence`; the panel draws what these answer, on the Items tab and in the Region generation form |
@@ -856,7 +857,12 @@ In-app row `apworld-re-roll-opens-the-form-on-the-own-substrate-at-the-next-seed
   the region's payload is the target's OWN (`payloadBuiltBy`, the report's fit
   rule) and its `procgenParamsFromPayload` read differs from the defaults (trap
   1399: the recorded knobs can be the harder ones, so the defaults come first);
-- the free-item sentence, unless the target hosts surplus exits natively;
+- the free-item sentence, unless the target hosts surplus exits natively, and
+  (S1) the grant sentence — *"6 library items [Right arrow, …] will be granted as
+  starting items — the slot does not define them and the realiser is handed them
+  free, so the same edit declares them"* — whenever the target's library holds
+  items the slot neither defines nor holds (`regenerationGrants`, the pipeline's
+  `grantedLibraryItems` for the one target; none for a library or zone source);
 - (R3) what the TARGET needs in the starting inventory — the same need line the
   Items tab's Starting inventory block draws (below), with its **grant ▸**
   buttons, for a target whose registry entry declares `startingInventory`; none
@@ -878,7 +884,16 @@ computed entry and a **`provenance`** — `{op: 'regenerate-region-sidecar',
 substrate, seed, regionParams, hazardOpts, size?, freeItems, ms}` — through
 `_saveRegionSidecar`'s own path (the op preview → the schema/placement veto →
 ONE op, one undo); the answer is the regenerate op's own description plus V0's
-count. ⛔ The RESULT is recorded, not the pure op: the session re-folds every
+count. (S1, ⚖ Q1b) The same op carries **`grants: {items: {name: def}, starting:
+[names]}`** when there is something to grant: a def per granted name into
+`items[p]` (the pipeline's `grantedItemDef` shape, ids 999↓ past any id the slot
+already uses) and the names appended to `starting_items[p]` — the realiser was
+handed them FREE, so without them the payload is built on items the document never
+grants (task 0 of S1 measured it on a hub-initialised slot and on
+`procgen_topdown/AP_4`: 0 of the six defined or held after). The op refuses a
+malformed `grants`, a name the slot already defines or holds, or a taken id, and
+its description and the answer end *"— 6 library items granted as starting items
+(…)"*. ⛔ The RESULT is recorded, not the pure op: the session re-folds every
 recorded op on each undo, so a recorded realiser would re-run (for up to the
 whole budget) on every later undo (plan §9.3). `set-region-sidecar` refuses a
 `provenance` that is not an object and names it in its description
@@ -2154,16 +2169,41 @@ write, never a 40-second realise). The answer is the op's description plus the
 slot's sidecar-issue count (V0):
 
 > slot 1 initialised as `maze`: 81 regions on a 12×12 grid (50 teleporters), 80
-> return exits added, 0 regions unplaced — location names and existing access rules
-> unchanged — built in the generation worker (0.2 s) — 0 sidecar issues in slot 1
+> return exits added, no library items granted as starting items, 0 regions
+> unplaced — location names and existing access rules unchanged — built in the
+> generation worker (0.2 s) — 0 sidecar issues in slot 1
+
+As `bounce` the grant clause reads *"6 library items granted as starting items
+(Right arrow, Left arrow, Springs, Jetpacks, Blue platforms, Brown platforms)"*.
+
+**The preset card** (`presets/presetUI.js`, `procgenDriverLabel`) labels a slot
+this op initialised *"Initialised in the APWorld Editor (<source_game>)"* — the
+driver constant lives in `initialiseDriver.js` (no imports) so the presets module
+reads it without the procgen engine.
 
 **What the op writes** — `preset_sidecars[p]` (every placed region's entry),
-`procgen_metadata` (`driver: 'apworld-initialise'`, `player`, `stop_reason`,
-`region_count`, `grid_dims` = the cells' extent, `substrate_configs` per R6b when a
-declaring substrate realised a region), the substrate's own top-level blocks the
-document lacks (`rulesJsonBlocks`), and — with return exits ON — one exit per
-return route appended to `regions[p][R].exits`. **Never**: a location, an item, a
-placement, or an existing rule. Location names ride into the payloads verbatim
+`procgen_metadata` (`driver: 'apworld-initialise'`, `player`, `source_game` (the
+document's `game_name`), `source_counts` (`computeSourceCounts`, as the pipeline
+records it), `stop_reason`, `region_count`, `grid_dims` = the cells' extent,
+`substrate_configs` per R6b when a declaring substrate realised a region), the
+substrate's own top-level blocks the document lacks (`rulesJsonBlocks`), with
+return exits ON one exit per return route appended to `regions[p][R].exits`, and
+(S1) **the grants**: every non-victory library item of the target that the slot
+does not define or hold gets a definition in `items[p]` and is appended to
+`starting_items[p]` (bounce: `Right arrow`, `Left arrow`, `Springs`, `Jetpacks`,
+`Blue platforms`, `Brown platforms`; maze and text_adventure grant none). **Why:
+the payload was built with them free** — `initialiseSlot` hands the realiser the
+pipeline's own `grantedLibraryItems(doc, p, [substrate]).startingItems`, exactly
+as `buildTopDownEnvelope` does, and the pipeline's compile writes the same two
+lines; without them the Items tab's grant buttons were disabled on a classic
+world (*"player 1 defines no item "Right arrow""*, plan §22.2) while the rooms
+assumed the arrows. The defs are the pipeline's (`grantedItemDef`: id 999 − i,
+`progression`, `Everything`), moved past any id the slot already uses. The
+result carries `grantedItems` + `grantedDefs` inline; an inlined grant naming an
+item the slot already defines or holds, or taking a used id, is refused; a
+record made before S1 (no grants) replays as it was. **Never**: a location, an
+existing item, a placement, an existing rule, or `assume_bidirectional_exits`
+(⚖ Q2 — the runtime auto-detects, and the return exits carry the forward rule). Location names ride into the payloads verbatim
 (`useSourceLocationName`), so the placements, the sphere log and the loop costs
 still name what the rooms carry. Undo takes the whole thing back in one step.
 
@@ -2540,7 +2580,7 @@ The import is free in both modes, measured:
 
 | Suite | Where |
 |-------|-------|
-| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `regionRederive.test.js`, `regionLayout.test.js` (M2: every move and swap of two fixture slots, the refusals, the corpus control, the side law's census), `exitSides.test.js` (M3: the exit-side corpus control, the exhaustive deep diff over every side move and swap, the back exit, every refusal, ONE-WAY, Undo), `reverseLinks.test.js`, `sidecarIssues.test.js`, `sidecarForm.test.js`, `regionRegenerate.test.js`, `regionGenerationRun.test.js` (R2: the setting, the worker protocol with a fake worker — budget, load bound, Cancel, `terminate()`), `regionGenerationFlow.test.js` (R2: the plan, the args, the worker ≡ the op, the free-item clause, the panel's teardown), `slotInitialise.test.js` (R7: the population at the layout — every committed bare slot ≤ 100 regions; the probed documents built in full with 0 report errors both ways; the unplaced and their whys; preview ≡ build; the op's deep diff, Undo, refusals, the refold), `initialiseFlow.test.js` (R7: the door, the form, the preview, the ticker, the answers) | vitest, `frontend/modules/apworldEditor/` |
+| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `regionRederive.test.js`, `regionLayout.test.js` (M2: every move and swap of two fixture slots, the refusals, the corpus control, the side law's census), `exitSides.test.js` (M3: the exit-side corpus control, the exhaustive deep diff over every side move and swap, the back exit, every refusal, ONE-WAY, Undo), `reverseLinks.test.js`, `sidecarIssues.test.js`, `sidecarForm.test.js`, `regionRegenerate.test.js`, `regionGenerationRun.test.js` (R2: the setting, the worker protocol with a fake worker — budget, load bound, Cancel, `terminate()`), `regionGenerationFlow.test.js` (R2: the plan, the args, the worker ≡ the op, the free-item clause, the panel's teardown), `slotInitialise.test.js` (R7: the population at the layout — every committed bare slot ≤ 100 regions; the probed documents built in full with 0 report errors both ways; the unplaced and their whys; preview ≡ build; the op's deep diff, Undo, refusals, the refold; S1: R9's two rules ≡ the pipeline's, the grants' deep diff, the need rows met, the pipeline-vs-hub audit as a row), `initialiseFlow.test.js` (R7: the door, the form, the preview, the ticker, the answers) | vitest, `frontend/modules/apworldEditor/` |
 | `check-sidecar-fields.mjs` (+ `checkSidecarFields.test.js`) | `scripts/procgen/` — the corpus gate: every committed entry against its declaration, (V0) `sidecarIssues` per slot as its second layer, and (G2b-1) `regionRuleAgreement` per region as its third |
 | `../procgenCore/compositeMapRenderer.test.js` | vitest — the Map tab's renderer, driven by a TOY substrate |
 | `../procgenPipeline/compositeMapDocument.test.js` | vitest — `preset_sidecars` → `Grid`, including the player slot; (M2) `mapBoundsFor` |
