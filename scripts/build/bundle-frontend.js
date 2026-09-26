@@ -166,6 +166,27 @@ function validateBundledModules() {
 }
 
 /**
+ * Validates that init-bundled.js statically imports every test case file that
+ * testDiscovery.js's TEST_CASE_FILES imports unbundled (bundledTestCases.js).
+ * A missing file means a bundled run lacks those rows; the vitest fails on it,
+ * the build only warns (a deploy is not blocked by the test roster).
+ */
+async function validateBundledTestCases() {
+  const { bundledTestCaseDrift } = await import('./bundledTestCases.js');
+  const { missing, extra } = bundledTestCaseDrift({ frontendDir });
+  if (missing.length === 0 && extra.length === 0) {
+    console.log('✅ init-bundled.js imports every test case file testDiscovery.js lists.');
+    return;
+  }
+  console.warn('');
+  console.warn('⚠️  WARNING: init-bundled.js and testDiscovery.js list different test case files:');
+  for (const f of missing) console.warn(`   - missing from init-bundled.js: ${f}`);
+  for (const f of extra) console.warn(`   - not in TEST_CASE_FILES: ${f}`);
+  console.warn('   A bundled run lacks the rows of a missing file. Keep the two lists equal.');
+  console.warn('');
+}
+
+/**
  * Validates that no module config JSON files still contain 'requires' entries.
  * The requires field should only exist in each module's moduleInfo export.
  */
@@ -207,6 +228,7 @@ async function build() {
     // Validate module coverage before building
     console.log('🔍 Validating bundled module coverage...');
     validateBundledModules();
+    await validateBundledTestCases();
     validateNoRequiresInConfigs();
 
     // Copy required files (workers, etc.)
