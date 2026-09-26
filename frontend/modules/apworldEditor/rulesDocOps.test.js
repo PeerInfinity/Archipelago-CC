@@ -135,6 +135,10 @@ describe('the contract shape', () => {
         //   op's NO-OP (its own side / itself), which is answered before any
         //   substrate is asked — the moves' own rows are `exitSides.test.js`.
         doc.preset_sidecars[P].Vault.playable_payload.exits = [{ exit_id: 'e1', side: 'N' }];
+        // ⛓ R7 — a BARE second slot, for `initialise-procgen-layout` (the maze
+        //   realiser this file registers; its own rows are `slotInitialise.test.js`).
+        doc.regions['2'] = { Room: makeRegion('Room', [], [makeLocation('Room Chest', 9)]) };
+        doc.start_regions['2'] = ['Room'];
         const before = bytes(doc);
         const samples = {
             'add-region': { op: 'add-region' },
@@ -172,6 +176,10 @@ describe('the contract shape', () => {
             'replace-region-content': {
                 op: 'replace-region-content', region: 'Vault',
                 source: { kind: 'zone', substrate: 'jta', zoneIdx: 0, zone: { locations: [], payload: { jtaZone: 0 } } },
+            },
+            'initialise-procgen-layout': {
+                op: 'initialise-procgen-layout', player: '2', substrate: 'maze',
+                gridDims: { width: 3, height: 3 }, seed: 1, backExits: 'add',
             },
             'move-region': { op: 'move-region', region: 'Hall', to: { gx: 1, gy: 0 } },
             'swap-regions': { op: 'swap-regions', a: 'Hall', b: 'Vault' },

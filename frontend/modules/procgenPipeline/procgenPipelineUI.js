@@ -71,7 +71,7 @@ import { activeSubstrateIds } from './sphereConfigHooks.js';
 // a config in place are one-line callers over `this`, and the headless preset
 // row calls the same functions.
 import {
-    DEFAULT_PARAMS, panelDefaultParams,
+    panelDefaultParams, topDownGridSide,
     effectiveSubstrateMix, effectiveSubstrateQuotas, effectiveHazardOpts,
     activeSubstrateDict, mergedItemLib, resolveVictoryItemId,
     substrateSphereCapable, librarySphereCapable, sphereRegionLibraries,
@@ -4910,17 +4910,14 @@ export class ProcgenPipelineUI {
     // Auto-size the grid to fit the source rules.json's region count.
     // Top-down places one grid cell per non-Menu region (plus extra
     // for teleporter targets that can't fit adjacent), so a square
-    // grid sized to ceil(sqrt(N * 1.5)) gives BFS room to lay out
+    // grid sized to ceil(sqrt(N * 1.5)) (`topDownGridSide`) gives BFS room to lay out
     // without immediately falling back to teleporters. Floor at the
     // panel's defaults so a small source doesn't shrink the grid.
     _applyGridDimsFromSource(rulesJson) {
         const regions = rulesJson?.regions?.['1'] ?? {};
         const count = Object.keys(regions).length;
         if (count === 0) return;
-        const dim = Math.max(
-            DEFAULT_PARAMS.gridWidth,
-            Math.ceil(Math.sqrt(count * 1.5)),
-        );
+        const dim = topDownGridSide(count);
         this.params.gridWidth = dim;
         this.params.gridHeight = dim;
     }
