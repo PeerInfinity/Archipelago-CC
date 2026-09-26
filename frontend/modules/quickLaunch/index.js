@@ -63,9 +63,10 @@ export function register(registrationApi) {
             type: 'array',
             default: [],
             label: 'Collapsed groups',
-            description: 'The ids of your own groups that are folded shut (written when you fold or unfold one). '
-                + "Ids no longer in the arrangement are ignored and dropped on the next write. Saved per mode; "
-                + "the built-in groups' folding is not saved.",
+            description: 'The ids of the groups that are folded shut — your own and the built-in ones (All panels '
+                + "and its categories, Help and its sections, Unfiled) — written when you fold or unfold one or press "
+                + 'the fold button. Ids of groups the panel can no longer draw are ignored and dropped on the next '
+                + 'write. Saved per mode.',
         },
         showDeveloperDocs: {
             type: 'boolean',

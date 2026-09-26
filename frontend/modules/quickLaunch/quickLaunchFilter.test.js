@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { OTHER_CATEGORY, VIRTUAL_GROUPS, categoryGroupId, helpGroupId } from './quickLaunchCatalog.js';
 import {
-    buildViewModel, countText, filterView, foldAll, groupSize, rowCount, userGroupIds, virtualGroupIds,
+    buildViewModel, countText, filterView, foldAll, groupIds, groupSize, knownCollapsed, rowCount, userGroupIds,
+    virtualGroupIds,
 } from './quickLaunchFilter.js';
 import { EMPTY_TREE, NODE_KINDS } from './quickLaunchTree.js';
 
@@ -177,23 +178,38 @@ describe('fold (the Collapse all / Expand all button)', () => {
         expect(v).not.toContain('g1');
     });
 
-    it('collapse over the whole view writes every user group id; expand writes []', () => {
+    it('groupIds: the user groups, then every virtual group and sub-group', () => {
         const m = model();
-        expect(foldAll(m, false, [])).toEqual(['g1', 'g2', 'g3']);
-        expect(foldAll(m, false, ['g2'])).toEqual(['g1', 'g2', 'g3']);
-        expect(foldAll(m, true, ['g1', 'g3'])).toEqual([]);
+        expect(groupIds(m)).toEqual([...userGroupIds(m), ...virtualGroupIds(m)]);
+    });
+
+    it('collapse over the whole view writes every group id, built-in ones too (P7); expand writes []', () => {
+        const m = model();
+        expect(foldAll(m, false, [])).toEqual(groupIds(m));
+        expect(foldAll(m, false, ['g2', VIRTUAL_GROUPS.help.id])).toEqual(groupIds(m));
+        expect(foldAll(m, true, ['g1', 'g3', VIRTUAL_GROUPS.allPanels.id])).toEqual([]);
     });
 
     it('under a filter only the groups drawn are touched; the others keep their state', () => {
         const f = filterView(model(), 'loopy'); // draws g3 only
-        expect(userGroupIds(f)).toEqual(['g3']);
-        expect(foldAll(f, false, ['g1'])).toEqual(['g3', 'g1']);
+        expect(groupIds(f)).toEqual(['g3']);
+        expect(foldAll(f, false, ['g1', VIRTUAL_GROUPS.help.id])).toEqual(['g3', 'g1', VIRTUAL_GROUPS.help.id]);
         expect(foldAll(f, true, ['g1', 'g3'])).toEqual(['g1']);
     });
 
-    it('an empty tree: nothing to write either way', () => {
-        expect(foldAll(model(EMPTY_TREE), false, [])).toEqual([]);
-        expect(foldAll(model(EMPTY_TREE), true, [])).toEqual([]);
+    it('an empty tree: the built-in groups still fold', () => {
+        const m = model(EMPTY_TREE);
+        expect(foldAll(m, false, [])).toEqual(virtualGroupIds(m));
+        expect(foldAll(m, false, [])).toContain(VIRTUAL_GROUPS.allPanels.id);
+        expect(foldAll(m, true, virtualGroupIds(m))).toEqual([]);
+    });
+
+    it('knownCollapsed: the one filter of every write — unknown ids dropped, duplicates once, order kept', () => {
+        const known = new Set(['g1', VIRTUAL_GROUPS.help.id, helpGroupId('games/multi')]);
+        expect(knownCollapsed([helpGroupId('games/multi'), 'dead', 'g1', 'g1', VIRTUAL_GROUPS.help.id], known))
+            .toEqual([helpGroupId('games/multi'), 'g1', VIRTUAL_GROUPS.help.id]);
+        expect(knownCollapsed(['g1'], ['g1'])).toEqual(['g1']);
+        expect(knownCollapsed(null, known)).toEqual([]);
     });
 });
 

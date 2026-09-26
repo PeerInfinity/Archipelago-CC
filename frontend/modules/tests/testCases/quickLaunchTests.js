@@ -664,7 +664,8 @@ async function quickLaunchFoldButtonCollapsesThenExpands(testController) {
             !!await until(() => root.querySelectorAll('.ql-user').length === 2 && details().every((d) => d.open), 'two user groups, all open'));
         const button = foldButton(root);
         testController.assertEqual('the fold button starts at "Collapse all"', FOLD_TEXT.collapse, button?.textContent);
-        const userIds = [...root.querySelectorAll('.ql-user')].map((d) => d.dataset.groupId);
+        // Since P7 the fold writes every group it draws — the user's AND the built-in ones.
+        const drawnIds = details().map((d) => d.dataset.groupId);
 
         button?.click();
         const closed = await until(() => details().length > 0 && details().every((d) => !d.open), 'every group closed');
@@ -672,10 +673,10 @@ async function quickLaunchFoldButtonCollapsesThenExpands(testController) {
         testController.assertEqual('the button now reads "Expand all"', FOLD_TEXT.expand, button?.textContent);
         const stored = await until(async () => {
             const v = await settingsManager.getSetting(COLLAPSED_SETTING);
-            return Array.isArray(v) && v.length === userIds.length;
-        }, 'collapsedGroups to hold the user group ids');
+            return Array.isArray(v) && v.length === drawnIds.length;
+        }, 'collapsedGroups to hold every drawn group id');
         testController.reportCondition('collapsedGroups was written', !!stored);
-        testController.assertEqual('collapsedGroups == every user group id', [...userIds].sort().join(),
+        testController.assertEqual('collapsedGroups == every drawn group id (user and built-in)', [...drawnIds].sort().join(),
             [...(await settingsManager.getSetting(COLLAPSED_SETTING)) ?? []].sort().join());
 
         button?.click();
@@ -947,7 +948,8 @@ const TESTS = [
         quickLaunchPanelGuidesNotListedInHelp],
     ['quick-launch-fold-button-collapses-then-expands', 'Quick Launch: the fold button collapses, then expands',
         'With two stored groups (one nested): "Collapse all" closes every drawn group, reads "Expand all" and writes '
-        + 'every user group id to collapsedGroups; "Expand all" opens every group, reads "Collapse all", writes [].',
+        + 'every drawn group id (user and built-in, since P7) to collapsedGroups; "Expand all" opens every group, reads '
+        + '"Collapse all", writes [].',
         quickLaunchFoldButtonCollapsesThenExpands],
     ['quick-launch-developer-docs-behind-setting', 'Quick Launch: the developer docs are behind showDeveloperDocs',
         'showDeveloperDocs false: no developer section; true: every audience-developer section appears with its '

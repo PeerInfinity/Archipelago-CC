@@ -128,15 +128,31 @@ export function virtualGroupIds(model) {
     return model.groups.flatMap(walk);
 }
 
+/** Every group id a model draws: the user's groups, then the virtual groups and sub-groups. */
+export function groupIds(model) {
+    return [...userGroupIds(model), ...virtualGroupIds(model)];
+}
+
 /**
  * The fold button's write: the `collapsedGroups` value after folding every
- * user group `model` draws shut (`open` false) or open (`open` true), from the
- * value `stored` now. Pass the model as DRAWN (filtered, when a filter is on):
- * a group the model does not draw keeps its state. Over an unfiltered model
- * this is every user group id, or [].
+ * group `model` draws — the user's AND the built-in ones (P7) — shut (`open`
+ * false) or open (`open` true), from the value `stored` now. Pass the model as
+ * DRAWN: a group the model does not draw keeps its state. Over an unfiltered
+ * model this is every group id, or [] (plus whatever `stored` held that the
+ * model does not draw — `knownCollapsed` drops the dead ones).
  */
 export function foldAll(model, open, stored = []) {
-    const ids = userGroupIds(model);
+    const ids = groupIds(model);
     const kept = (Array.isArray(stored) ? stored : []).filter((id) => !ids.includes(id));
     return open ? kept : [...ids, ...kept];
+}
+
+/**
+ * A `collapsedGroups` value cut to the ids in `known` (every group the panel
+ * can draw), duplicates dropped, order kept: the one filter every write passes
+ * through, so a deleted group's or a retired category's id goes on the next write.
+ */
+export function knownCollapsed(ids, known) {
+    const keep = known instanceof Set ? known : new Set(known);
+    return [...new Set(Array.isArray(ids) ? ids : [])].filter((id) => keep.has(id));
 }

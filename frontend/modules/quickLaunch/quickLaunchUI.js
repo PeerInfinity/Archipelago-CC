@@ -15,8 +15,8 @@ import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { DOCS_LINK_TARGETS, docsHref } from '../../app/config/docsBase.js';
 import { debounce } from '../commonUI/index.js';
 import { DOCS_INDEX, HELP_SECTIONS } from './generated/docsIndex.js';
-import { buildCatalog, helpDocs } from './quickLaunchCatalog.js';
-import { buildViewModel, countText, filterView, foldAll, groupSize, virtualGroupIds } from './quickLaunchFilter.js';
+import { VIRTUAL_GROUPS, buildCatalog, helpDocs } from './quickLaunchCatalog.js';
+import { buildViewModel, countText, filterView, foldAll, groupIds, groupSize, knownCollapsed } from './quickLaunchFilter.js';
 import {
     EMPTY_TREE, NODE_KINDS, addGroup, addRef, addUrl, deleteNode, findNode, groupsOf, migrate, moveDown, moveNode,
     moveUp, refCounts, renameGroup,
@@ -34,7 +34,11 @@ export const TREE_SETTING = `moduleSettings.${MODULE_ID}.${TREE_KEY}`;
 export const VIEWS = Object.freeze({ tree: 'tree', cards: 'cards' });
 export const VIEW_KEY = 'view';
 export const VIEW_SETTING = `moduleSettings.${MODULE_ID}.${VIEW_KEY}`;
-/** The ids of the user's own groups the reader collapsed (virtual groups' state is not saved). */
+/**
+ * The ids of the groups folded shut — the user's own AND the built-in ones
+ * (`all-panels`, `all-panels/<category>`, `help`, `help/<dir>`, `help/<dir>/<sub>`,
+ * `unfiled`; saved since P7). Saved per mode.
+ */
 export const COLLAPSED_KEY = 'collapsedGroups';
 export const COLLAPSED_SETTING = `moduleSettings.${MODULE_ID}.${COLLAPSED_KEY}`;
 /** Draw the `developer` Help sections too (HELP_SECTIONS audience); off by default. */
@@ -159,9 +163,9 @@ export class QuickLaunchUI {
         this.container = container;
         this.componentState = componentState || {};
         /**
-         * Group ids the reader collapsed. The user's own groups' ids are also
-         * saved (COLLAPSED_SETTING) and reloaded every render; the virtual
-         * groups' ids live only here, for the life of the panel.
+         * The collapsedGroups setting as a Set: its CACHE. The setting is the one
+         * source of truth — every render reloads this from it, and every change
+         * (a summary toggle, the fold button) goes through `_writeCollapsed`.
          */
         this.collapsed = new Set();
         /** The collapsedGroups array as last read or written. */
@@ -306,12 +310,9 @@ export class QuickLaunchUI {
 
     /**
      * The fold button: do what it says to every group the last render drew —
-     * the user's groups through `collapsedGroups` (one write, skipped by the
-     * settings:changed guard), the virtual groups and sub-groups through the
-     * in-memory `collapsed` Set — then show the other mode. Does nothing while
-     * the filter has text (the button is disabled then). The write holds only
-     * the ids of groups the tree has, so a stale id (a deleted group's, a
-     * retired category's) is dropped here.
+     * the user's and the built-in ones alike, one `collapsedGroups` write
+     * (skipped by the settings:changed guard) — then show the other mode. Does
+     * nothing while the filter has text (the button is disabled then).
      */
     async fold() {
         const shown = this._shown;
@@ -319,14 +320,23 @@ export class QuickLaunchUI {
         const open = this.foldMode === FOLD_MODES.expand;
         this.foldMode = open ? FOLD_MODES.collapse : FOLD_MODES.expand;
         this._showFoldMode();
-        for (const id of virtualGroupIds(shown)) {
-            if (open) this.collapsed.delete(id);
-            else this.collapsed.add(id);
-        }
-        const ids = foldAll(shown, open, []);
-        this.collapsedStored = ids;
-        await settingsManager.updateModuleSetting(MODULE_ID, COLLAPSED_KEY, ids);
+        await this._writeCollapsed(foldAll(shown, open, [...this.collapsed]));
         await this.render();
+    }
+
+    /**
+     * THE write of `collapsedGroups` (the fold button and every summary toggle):
+     * `ids` cut to the groups this tree and catalog can draw (`knownCollapsed` —
+     * the developer sections counted even while hidden, and Unfiled even while
+     * the tree is empty, so hiding them does not forget their folds), then the
+     * cache follows. Our own write is skipped by the settings:changed guard.
+     */
+    _writeCollapsed(ids) {
+        const model = buildViewModel(this.tree, this.catalog(true));
+        const next = knownCollapsed(ids, new Set([...groupIds(model), VIRTUAL_GROUPS.unfiled.id]));
+        this.collapsed = new Set(next);
+        this.collapsedStored = next;
+        return settingsManager.updateModuleSetting(MODULE_ID, COLLAPSED_KEY, next);
     }
 
     /** Switch views: write the setting (per mode, like the tree) and render from it. */
@@ -359,8 +369,7 @@ export class QuickLaunchUI {
     }
 
     async render() {
-        // A render replaces every element, an open inline form's too: close it first (focus left it anyway).
-        this._inline?.close();
+        // An open inline form stays live while this render reads the settings; it is carried across the redraw below.
         this._renderDeferred = false;
         const gen = ++this._renderGen;
         const target = await settingsManager.getSetting(DOCS_LINK_SETTING, DOCS_LINK_TARGETS.github);
@@ -394,47 +403,68 @@ export class QuickLaunchUI {
             none.textContent = NO_MATCH_TEXT;
             sections.push(none);
         }
+        const carried = this._carryInline();
         this.groupsEl.replaceChildren(...sections);
+        carried?.();
     }
 
-    /** The saved collapsed ids decide each user group's state; anything else in `collapsed` is virtual. */
+    /**
+     * ⛓ P7 — THE INLINE-FORM RACE. A form opened while an earlier commit's
+     * `_apply` is still awaiting its write was closed by that commit's render,
+     * with what had been typed (measured: ✎ on B straight after Enter on A, the
+     * write slowed to 600 ms — B's input, focused and holding its text, was gone
+     * when the write landed). So a render CARRIES the open form across its
+     * redraw: this closes it and returns a function that re-opens it on the new
+     * DOM with its text, focus and caret (null when no form is open). A form
+     * whose target is gone (its group deleted) is not re-opened. Deferring the
+     * render instead was the alternative: it would leave the commit before it
+     * undrawn (A's old label) for as long as the form stays open.
+     */
+    _carryInline() {
+        const form = this._inline;
+        if (!form) return null;
+        const inputs = [...form.el.querySelectorAll('input')];
+        const values = inputs.map((i) => i.value);
+        const focused = inputs.indexOf(document.activeElement);
+        const caret = focused >= 0 ? [inputs[focused].selectionStart, inputs[focused].selectionEnd] : null;
+        form.close();
+        return () => {
+            const el = form.reopen?.();
+            if (!el) return;
+            const again = [...el.querySelectorAll('input')];
+            again.forEach((input, i) => { if (i < values.length) input.value = values[i]; });
+            const target = again[focused];
+            if (target) {
+                target.focus();
+                if (caret) target.setSelectionRange(...caret);
+            }
+        };
+    }
+
+    /** The collapsedGroups setting as last read: the cache `collapsed` is replaced by it. */
     _loadCollapsed(stored) {
         this.collapsedStored = stored;
-        const saved = new Set(Array.isArray(stored) ? stored : []);
-        for (const { id } of groupsOf(this.tree)) {
-            if (saved.has(id)) this.collapsed.add(id);
-            else this.collapsed.delete(id);
-        }
+        this.collapsed = new Set(Array.isArray(stored) ? stored : []);
     }
 
     /**
      * Wire a group's `<details>`: its initial state, and a reader's toggle
-     * updating `collapsed` (and, for a user group, the saved setting). Setting
+     * writing `collapsedGroups` (every group, built-in or the user's). Setting
      * `open` fires `toggle` too, so only a real change counts; a group drawn
      * forced-open by the filter records nothing.
      */
-    _collapsible(details, id, { saved = false } = {}) {
+    _collapsible(details, id) {
         const forced = this._filtering;
         details.open = forced || !this.collapsed.has(id);
         details.addEventListener('toggle', () => {
             if (forced || !details.isConnected) return;
             const nowCollapsed = !details.open;
             if (nowCollapsed === this.collapsed.has(id)) return;
-            if (nowCollapsed) this.collapsed.add(id);
-            else this.collapsed.delete(id);
-            if (saved) this._saveCollapsed();
+            const next = new Set(this.collapsed);
+            if (nowCollapsed) next.add(id);
+            else next.delete(id);
+            this._writeCollapsed([...next]);
         });
-    }
-
-    /**
-     * Write the collapsed user-group ids — only ids the tree still holds, so an
-     * id of a deleted group is dropped here. Our own write is skipped by the
-     * settings:changed guard: the DOM already shows the new state.
-     */
-    _saveCollapsed() {
-        const ids = groupsOf(this.tree).map((g) => g.id).filter((id) => this.collapsed.has(id));
-        this.collapsedStored = ids;
-        return settingsManager.updateModuleSetting(MODULE_ID, COLLAPSED_KEY, ids);
     }
 
     /** The user's tree: one list in stored order, a group as a nested `<details>`. */
@@ -544,9 +574,10 @@ export class QuickLaunchUI {
      * Run an inline form: `el` is its box, `commit()` returns the op to apply
      * (`[op, ...args]`) or null (nothing to add). Enter commits, Escape
      * cancels, focus leaving `el` commits. Closing re-renders (through the
-     * commit's `_apply`, or directly).
+     * commit's `_apply`, or directly). `reopen()` opens the same form afresh
+     * and returns its box, or null — what a render carrying it calls (`_carryInline`).
      */
-    _runInline(el, commit, focus) {
+    _runInline(el, commit, focus, reopen) {
         this._inline?.close();
         let open = true;
         const close = () => { open = false; if (this._inline?.el === el) this._inline = null; };
@@ -557,7 +588,7 @@ export class QuickLaunchUI {
             if (op) this._apply(...op);
             else this.render();
         };
-        this._inline = { el, close };
+        this._inline = { el, close, reopen };
         el.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') { e.preventDefault(); finish(true); }
             else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); finish(false); }
@@ -587,25 +618,25 @@ export class QuickLaunchUI {
         return list;
     }
 
-    /** "+ group": a name input at the end of the list the group goes into. */
+    /** "+ group": a name input at the end of the list the group goes into (returns its box, or null). */
     _openGroupForm(parentId) {
         const list = this._targetList(parentId);
-        if (!list) return;
+        if (!list) return null;
         const li = document.createElement('li');
         li.className = INLINE.form;
         const input = this._inlineInput(INLINE.group, NEW_GROUP_PLACEHOLDER);
         li.append(input);
         list.append(li);
-        this._runInline(li, () => {
+        return this._runInline(li, () => {
             const label = input.value.trim();
             return label ? [addGroup, parentId, label] : null;
-        }, input);
+        }, input, () => this._openGroupForm(parentId));
     }
 
-    /** "+ url": address and label inputs and an Add button, at the end of the list the link goes into. */
+    /** "+ url": address and label inputs and an Add button, at the end of the list the link goes into (its box, or null). */
     _openUrlForm(parentId) {
         const list = this._targetList(parentId);
-        if (!list) return;
+        if (!list) return null;
         const li = document.createElement('li');
         li.className = INLINE.form;
         const href = this._inlineInput(INLINE.href, URL_HREF_PLACEHOLDER);
@@ -613,23 +644,24 @@ export class QuickLaunchUI {
         const add = this._button(INLINE.add, URL_ADD_TEXT, 'Add the link', () => li.finish(true));
         li.append(href, label, add);
         list.append(li);
-        this._runInline(li, () => {
+        return this._runInline(li, () => {
             const address = href.value.trim();
             return address ? [addUrl, parentId, address, label.value.trim() || address] : null;
-        }, href);
+        }, href, () => this._openUrlForm(parentId));
     }
 
-    /** ✎: the group's label becomes an input in its summary. */
+    /** ✎: the group's label becomes an input in its summary (returns its box, or null). */
     _openRename(node) {
-        const summary = this.groupsEl.querySelector(`details.ql-user[data-group-id="${node.id}"] > summary`);
-        if (!summary) return;
+        const summary = node && this.groupsEl.querySelector(`details.ql-user[data-group-id="${node.id}"] > summary`);
+        if (!summary) return null;
         const input = this._inlineInput(INLINE.rename, node.label, node.label);
         summary.replaceChildren(input);
         this._runInline(summary, () => {
             const label = input.value.trim();
             return label && label !== node.label ? [renameGroup, node.id, label] : null;
-        }, input);
+        }, input, () => this._openRename(findNode(this.tree, node.id)?.node));
         input.select();
+        return summary;
     }
 
     _rootControls() {
@@ -681,7 +713,7 @@ export class QuickLaunchUI {
         const details = document.createElement('details');
         details.className = 'ql-group ql-user';
         details.dataset.groupId = node.id;
-        this._collapsible(details, node.id, { saved: true });
+        this._collapsible(details, node.id);
         const summary = document.createElement('summary');
         summary.textContent = `${node.label} (${node.children.length})`;
         details.append(summary);
