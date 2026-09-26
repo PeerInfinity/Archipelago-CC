@@ -160,13 +160,13 @@ export const INITIALISE_GRID_GROWTH_LIMIT = 2;
  *
  * @returns {{side: number, start: number, grown: number}}
  */
-export function autoGridSide(doc, player, { substrate, seed, backExits } = {}) {
+export function autoGridSide(doc, player, { substrate, seed, backExits, bag } = {}) {
     const p = String(player);
     const start = initialiseGridSide(Object.keys(regionsOf(doc, p)).length);
     const cap = start * INITIALISE_GRID_GROWTH_LIMIT;
     let side = start;
     for (; side < cap; side += 1) {
-        const plan = planInitialise(doc, p, { substrate, seed, backExits, gridDims: { width: side, height: side } });
+        const plan = planInitialise(doc, p, { substrate, seed, backExits, bag, gridDims: { width: side, height: side } });
         if (!plan.ok || !plan.unplaced.some((u) => u.why === UNPLACED_WHY.NO_FREE_CELL)) break;
     }
     return { side, start, grown: side - start };
@@ -178,14 +178,20 @@ export function initialiseTargets() {
 }
 
 /**
- * ⛓ The knobs a target is realised with — the R2 composition over the target's
- * own `defaultProcgenParams`: `regionParams` through its `buildRegionParams`
- * (top-down mode) over top-down's `{maxIterations: 0}`, `hazardOpts` through
- * `effectiveHazardOpts`.
+ * ⛓ The generic bag keys the LAYOUT reads — the region size (`regionSizeBase`).
+ * Every other bag key is a realiser knob (the target's own `defaultProcgenParams`).
  */
-export function initialiseKnobs(substrate) {
+export const INITIALISE_SIZE_KEYS = Object.freeze({ width: 'regionWidth', height: 'regionHeight' });
+
+/**
+ * ⛓ The knobs a target is realised with — the R2 composition over the BAG (S2:
+ * the form's; absent = the target's own `defaultProcgenParams`, the pre-S2
+ * answer): `regionParams` through its `buildRegionParams` (top-down mode) over
+ * top-down's `{maxIterations: 0}`, `hazardOpts` through `effectiveHazardOpts`.
+ */
+export function initialiseKnobs(substrate, bag) {
     const entry = substrateRegistry.get(substrate);
-    const bag = { ...(entry?.defaultProcgenParams ?? {}) };
+    if (bag === undefined) bag = { ...(entry?.defaultProcgenParams ?? {}) };
     return {
         regionParams: {
             ...REGENERATE_BASE_REGION_PARAMS,
@@ -197,10 +203,22 @@ export function initialiseKnobs(substrate) {
 
 const isDims = (d) => !!d && Number.isInteger(d.width) && Number.isInteger(d.height) && d.width >= 1 && d.height >= 1;
 
-/** ⛓ The layout's options, one place for the plan and the build. */
-function layoutOpts(doc, player, { substrate, gridDims, seed, backExits }) {
-    const regions = regionsOf(doc, player);
+/**
+ * ⛓ The region size the layout is handed: the bag's (S2 — the form's size
+ * fields) when it carries both, else the slot's own (`regionSizeFor`).
+ */
+export function initialiseRegionSize(doc, player, bag) {
+    const w = bag?.[INITIALISE_SIZE_KEYS.width];
+    const h = bag?.[INITIALISE_SIZE_KEYS.height];
+    if (Number.isInteger(w) && Number.isInteger(h)) return { width: w, height: h };
     const size = regionSizeFor(doc, player);
+    return { width: size.width, height: size.height };
+}
+
+/** ⛓ The layout's options, one place for the plan and the build. */
+function layoutOpts(doc, player, { substrate, gridDims, seed, backExits, bag }) {
+    const regions = regionsOf(doc, player);
+    const size = initialiseRegionSize(doc, player, bag);
     return {
         playerId: player,
         gridDims: { width: gridDims.width, height: gridDims.height },
@@ -262,17 +280,19 @@ function predictedReturnExits(layout) {
  * ⛓ Normalise the caller's arguments: the default substrate, the auto grid (`autoGridSide`),
  * the first seed, return exits ON. (Refusals are the op's.)
  */
-function normalise(doc, player, { substrate, gridDims, seed, backExits } = {}) {
+function normalise(doc, player, { substrate, gridDims, seed, backExits, bag } = {}) {
     const p = String(player);
     const sub = substrate ?? DEFAULT_SUBSTRATE_ID;
     const s = seed ?? INITIALISE_FIRST_SEED;
-    const side = gridDims ? null : autoGridSide(doc, p, { substrate: sub, seed: s, backExits }).side;
+    const side = gridDims ? null : autoGridSide(doc, p, { substrate: sub, seed: s, backExits, bag }).side;
     return {
         player: p,
         substrate: sub,
         gridDims: gridDims ?? { width: side, height: side },
         seed: s,
         backExits: backExits ?? BACK_EXITS.ADD,
+        // ⛓ S2 — the form's settings bag; absent = the target's defaults and the slot's size.
+        ...(bag !== undefined ? { bag } : {}),
     };
 }
 
@@ -373,7 +393,7 @@ export function substrateBlocksFor(substrate) {
  * region it was building). The caller (the op) has refused every input it can
  * name; this answers what the engine did.
  *
- * @param {{doc, player, substrate?, gridDims?, seed?, backExits?, onProgress?, now?}} args
+ * @param {{doc, player, substrate?, gridDims?, seed?, backExits?, bag?, onProgress?, now?}} args
  */
 export function initialiseSlot(args) {
     const { doc, onProgress = null, now = () => (globalThis.performance?.now?.() ?? Date.now()) } = args;
@@ -384,7 +404,7 @@ export function initialiseSlot(args) {
     //   with (defs in `items[p]`, names in `starting_items[p]`).
     const grant = grantedLibraryItems(doc, a.player, [a.substrate], { avoidIds: itemIdsOf(doc, a.player) });
     const freeItems = grant.startingItems;
-    const { regionParams, hazardOpts } = initialiseKnobs(a.substrate);
+    const { regionParams, hazardOpts } = initialiseKnobs(a.substrate, a.bag);
     let layout;
     let building = null;
     try {
@@ -449,9 +469,11 @@ export function initialiseSlot(args) {
 
 /**
  * ⛓ The op a landed initialise records (the cheap-to-refold class, §9.3's rule):
- * the worker's RESULT inline, and how it came to be.
+ * the worker's RESULT inline, and how it came to be — S2: the settings BAG it
+ * was built under, when the caller gave one (R2's precedent; a replay reads the
+ * result, never the bag).
  */
-export function initialiseOpFor({ player, substrate, gridDims, seed, backExits }, res) {
+export function initialiseOpFor({ player, substrate, gridDims, seed, backExits, bag }, res) {
     return {
         op: INITIALISE_OP,
         player: String(player),
@@ -471,6 +493,7 @@ export function initialiseOpFor({ player, substrate, gridDims, seed, backExits }
             backExits,
             ms: Math.round(res.ms ?? 0),
             unplaced: res.unplaced,
+            ...(bag !== undefined ? { bag: JSON.parse(JSON.stringify(bag)) } : {}),
         },
     };
 }

@@ -14,8 +14,11 @@ import { describe, expect, it, vi } from 'vitest';
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { INITIALISE_BARE_ONLY, initialiseOpRefusal } from './rulesDocOps.js';
 import {
-    BACK_EXITS, DEFAULT_SUBSTRATE_ID, INITIALISE_FIRST_SEED, autoGridSide, planInitialise,
+    BACK_EXITS, DEFAULT_SUBSTRATE_ID, INITIALISE_FIRST_SEED, INITIALISE_SIZE_KEYS, autoGridSide, initialiseTargets,
+    planInitialise,
 } from './slotInitialise.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { regionSizeFor } from './regionRegenerate.js';
 import {
     INITIALISE_JOB, REGION_GENERATION_CANCELLED, initialiseTimeoutSentence,
 } from './regionGenerationRun.js';
@@ -23,6 +26,7 @@ import ApworldEditorUI from './apworldEditorUI.js';
 import {
     INITIALISE_DOOR_LABEL, initialiseAnswer, initialiseArgs, initialiseDoorShown, initialiseFormDefaults,
     initialiseJob, initialisePreview, initialiseTickerText, withAutoSide,
+    initialiseBagFor, withInitialisePatch,
 } from './initialiseFlow.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -50,9 +54,11 @@ describe('the door', () => {
 describe('the form', () => {
     it('⛓ opens on the engine\'s default substrate, the AUTO side, the first seed, return exits ON', () => {
         const st = initialiseFormDefaults(APCALC, P);
+        const bag = initialiseBagFor(APCALC, P, DEFAULT_SUBSTRATE_ID);
         expect(st).toEqual({
             substrate: DEFAULT_SUBSTRATE_ID, seed: INITIALISE_FIRST_SEED, backExits: BACK_EXITS.ADD, sideAuto: true,
-            side: autoGridSide(APCALC, P, { substrate: DEFAULT_SUBSTRATE_ID, seed: INITIALISE_FIRST_SEED }).side,
+            side: autoGridSide(APCALC, P, { substrate: DEFAULT_SUBSTRATE_ID, seed: INITIALISE_FIRST_SEED, bag }).side,
+            bag,
         });
     });
 
@@ -69,9 +75,73 @@ describe('the form', () => {
         const args = initialiseArgs(P, st);
         expect(args).toEqual({
             player: P, substrate: st.substrate, gridDims: { width: st.side, height: st.side }, seed: st.seed,
-            backExits: st.backExits,
+            backExits: st.backExits, bag: st.bag,
         });
+        expect(args.bag).not.toBe(st.bag);
         expect(initialiseJob(APCALC, P, st)).toEqual({ job: INITIALISE_JOB, doc: APCALC, ...args });
+    });
+});
+
+/** ⛓ The first key of a target's defaults whose value is a number or a boolean — derived, never typed. */
+const firstKnob = (id) => {
+    const d = substrateRegistry.get(id)?.defaultProcgenParams ?? {};
+    return Object.keys(d).find((k) => typeof d[k] === 'number' || typeof d[k] === 'boolean') ?? null;
+};
+const moved = (v) => (typeof v === 'boolean' ? !v : v + 1);
+const { width: W, height: H } = INITIALISE_SIZE_KEYS;
+
+describe('S2 — the generation settings bag', () => {
+    it('⛓ opens on the target\'s own defaults and the slot\'s region size (regionSizeFor), every realiser target', () => {
+        const size = regionSizeFor(ADVENTURE, P);
+        for (const id of initialiseTargets()) {
+            expect(initialiseBagFor(ADVENTURE, P, id), id).toEqual({
+                ...(substrateRegistry.get(id).defaultProcgenParams ?? {}), [W]: size.width, [H]: size.height,
+            });
+        }
+    });
+
+    it('⛓⛓ a substrate change RESETS every key but the size (mutant: the old bag kept)', () => {
+        const targets = initialiseTargets().filter((id) => firstKnob(id));
+        expect(targets.length).toBeGreaterThanOrEqual(2);
+        const [a, b] = targets;
+        const st = withInitialisePatch(ADVENTURE, P, initialiseFormDefaults(ADVENTURE, P), { substrate: a });
+        const k = firstKnob(a);
+        st.bag[k] = moved(st.bag[k]);
+        st.bag[W] += 3;
+        const next = withInitialisePatch(ADVENTURE, P, st, { substrate: b });
+        expect(next.bag).toEqual({
+            ...substrateRegistry.get(b).defaultProcgenParams, [W]: st.bag[W], [H]: st.bag[H],
+        });
+        expect(Object.hasOwn(next.bag, k)).toBe(Object.hasOwn(substrateRegistry.get(b).defaultProcgenParams, k));
+        // ⛓ a patch that does not change the substrate keeps the bag as it is
+        expect(withInitialisePatch(ADVENTURE, P, st, { seed: 4 }).bag).toBe(st.bag);
+        expect(withInitialisePatch(ADVENTURE, P, st, { substrate: a }).bag).toBe(st.bag);
+    });
+
+    it('⛓ the auto side follows the bag\'s size (the layout reads it)', () => {
+        const st = initialiseFormDefaults(APCALC, P);
+        const big = { ...st, bag: { ...st.bag, [W]: st.bag[W] * 3, [H]: st.bag[H] * 3 } };
+        expect(withAutoSide(APCALC, P, big).side).toBe(autoGridSide(APCALC, P, { ...big, bag: big.bag }).side);
+    });
+
+    it('⛓⛓ a HOOK knob does not move the plan (the layout reads only the size) — the preview re-plans on a size move only', () => {
+        for (const id of initialiseTargets().filter((t) => firstKnob(t))) {
+            const st = withInitialisePatch(ADVENTURE, P, initialiseFormDefaults(ADVENTURE, P), { substrate: id });
+            const k = firstKnob(id);
+            const other = { ...st, bag: { ...st.bag, [k]: moved(st.bag[k]) } };
+            expect(planInitialise(ADVENTURE, P, initialiseArgs(P, other)), id)
+                .toEqual(planInitialise(ADVENTURE, P, initialiseArgs(P, st)));
+        }
+    });
+
+    it('⛔ a bag the op refuses: not an object (by name); a size below one tile previews the op\'s sentence', () => {
+        const st = initialiseFormDefaults(ADVENTURE, P);
+        for (const bad of ['x', 7, [], null]) {
+            expect(initialiseOpRefusal(ADVENTURE, { ...initialiseArgs(P, st), bag: bad }), String(bad)).toContain('`bag`');
+        }
+        const zero = initialisePreview(ADVENTURE, P, { ...st, sideAuto: false, bag: { ...st.bag, [W]: 0 } });
+        expect(zero.refusal).toContain(`\`${W}\``);
+        expect(initialiseOpRefusal(ADVENTURE, { ...initialiseArgs(P, st), bag: undefined })).toBeNull();
     });
 });
 

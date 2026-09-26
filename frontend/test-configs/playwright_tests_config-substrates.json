@@ -999,6 +999,24 @@
             "_comment": "S1 (Q1b). adventure initialised as the non-granting target -> a region -> the need-declaring target: the form says 'will be granted', ONE set-region-sidecar with grants, need met."
         },
         {
+            "id": "apworld-initialise-settings-size-reaches-every-payload",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "S2. adventure: the Initialise form draws R1's generation form (data-procgen-params derived), the size fields show regionSizeFor's; width +2 re-plans the preview; Generate -> every payload that wide, provenance.bag carries it; Undo byte-for-byte."
+        },
+        {
+            "id": "apworld-initialise-a-hook-knob-reaches-the-build-and-the-record",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "S2. adventure -> the first hooked non-default target whose first knob reaches its realiser (derived): bag reset (size kept), the knob moved through the hook's own control, preview unchanged, provenance.bag carries it, payloads differ from the default-bag build."
+        },
+        {
+            "id": "apworld-a-region-form-reads-back-the-initialise-bag",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "S2. adventure -> the first hooked target with a payload read-back; its read-back knob moved on the Initialise form; Generate; Re-roll on a new region: the 'this region was built with' line names it."
+        },
+        {
             "id": "apworld-the-preset-sidecars-door-lands-on-the-sidecars-tab",
             "enabled": true,
             "category": "apworldEditor",

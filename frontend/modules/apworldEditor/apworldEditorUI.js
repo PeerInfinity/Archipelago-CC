@@ -167,9 +167,11 @@ import {
 //   door, the form's preview and answers (`initialiseFlow`), the op's record.
 import {
   INITIALISE_DOOR_LABEL, initialiseAnswer, initialiseArgs, initialiseDoorShown, initialiseFormDefaults,
-  initialiseJob, initialisePreview, initialiseTickerText, withAutoSide,
+  initialiseJob, initialisePreview, initialiseTickerText, withInitialisePatch,
 } from './initialiseFlow.js';
-import { BACK_EXITS, initialiseOpFor, initialiseTargets } from './slotInitialise.js';
+import {
+  BACK_EXITS, initialiseOpFor, initialiseRegionSize, initialiseTargets,
+} from './slotInitialise.js';
 // ⛓ PRESET SIDECARS M3 — the exit-side control reads the declaration the op reads.
 import { exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
 import { SIDE_WORDS } from './regionLayout.js';
@@ -7358,11 +7360,15 @@ class ApworldEditorUI {
     this._render();
   }
 
-  /** ⛓ A form change: the side follows while AUTO, and the preview is re-planned. */
+  /**
+   * ⛓ A form change: a changed substrate resets the settings bag (the size
+   * kept — `withInitialisePatch`), the side follows while AUTO, and the
+   * preview is re-planned.
+   */
   _setInitialiseState(patch) {
     const ini = this._initialise;
     if (!ini || ini.run) return;
-    ini.state = withAutoSide(this.rulesDoc, ini.player, { ...ini.state, ...patch });
+    ini.state = withInitialisePatch(this.rulesDoc, ini.player, ini.state, patch);
     ini.preview = initialisePreview(this.rulesDoc, ini.player, ini.state);
     ini.previewDoc = this.rulesDoc;
     this._render();
@@ -7448,6 +7454,26 @@ class ApworldEditorUI {
     sub.disabled = running;
     sub.addEventListener('change', () => this._setInitialiseState({ substrate: sub.value }));
     row('Substrate (every region)').appendChild(sub);
+
+    // ⛓⛓ S2 — THE GENERATION SETTINGS: R1's per-REGION form (the pipeline's and
+    //   R2's — the region size for a tiles target, the target's own
+    //   `renderProcgenParams` node) under the per-WORLD rows above. The controls
+    //   write `st.bag` in place. Only the SIZE moves the layout, so only a size
+    //   edit re-plans the preview (and re-draws the form); a hook knob reaches
+    //   the realiser alone and leaves the plan as it is (a row measures it).
+    const planned = initialiseRegionSize(this.rulesDoc, ini.player, st.bag);
+    const settings = renderRegionGenerationForm({
+      substrateId: st.substrate,
+      params: st.bag,
+      fields: REGION_GENERATION_OP_FIELDS,
+      onChange: () => {
+        const now = initialiseRegionSize(this.rulesDoc, ini.player, st.bag);
+        if (now.width !== planned.width || now.height !== planned.height) this._setInitialiseState({});
+      },
+    });
+    settings.classList.add('apworld-initialise-settings');
+    if (running) for (const c of settings.querySelectorAll('input, select, button, textarea')) c.disabled = true;
+    sec.appendChild(settings);
 
     const sideRow = row('Grid side');
     const side = document.createElement('input');

@@ -97,7 +97,8 @@ import {
 // ⛓ APWORLD SUBSTRATE CHANGE R7 — a bare slot laid out and realised in place
 //   (`slotInitialise.js`: the engine's four top-down stages; the sentences stay here).
 import {
-    BACK_EXITS, INITIALISE_BLOCKERS, INITIALISE_OP, initialiseFacts, initialiseOpFor, initialiseSlot,
+    BACK_EXITS, INITIALISE_BLOCKERS, INITIALISE_OP, INITIALISE_SIZE_KEYS, initialiseFacts, initialiseOpFor,
+    initialiseSlot,
 } from './slotInitialise.js';
 import {
     SIDE_WORDS, exitSideVerdicts, exitSidesOfSubstrate, layoutChange, occupantAt, pairLinkFlips,
@@ -2952,7 +2953,7 @@ export function grantsClause(names) {
  * ⛓⛓ **EVERY REFUSAL `initialise-procgen-layout` CAN NAME BEFORE THE ENGINE
  * RUNS** — the op's own, EXPORTED so the hub's form prints the op's sentence
  * and draws no Generate (1305: the op is the authority, the form a courtesy).
- * `args` = `{player, substrate, gridDims, seed, backExits}`. `null` = the op
+ * `args` = `{player, substrate, gridDims, seed, backExits, bag?}`. `null` = the op
  * would lay the slot out.
  *
  * @returns {string|null}
@@ -3006,6 +3007,20 @@ export function initialiseOpRefusal(doc, args) {
     if (!Object.values(BACK_EXITS).includes(args?.backExits)) {
         return `apworld: \`backExits\` is one of [${Object.values(BACK_EXITS).join(', ')}], got `
             + `${describeValue(args?.backExits)}.`;
+    }
+    // ⛓ S2 — the settings bag is optional (a record made before S2 has none and
+    //   replays as it was); when present it is an object, and a region size it
+    //   carries is whole tiles, each at least 1 (the layout sizes every room by it).
+    const bag = args?.bag;
+    if (bag !== undefined && !isPlainObj(bag)) {
+        return `apworld: ${INITIALISE_OP}'s \`bag\` (the generation settings) is an object of knobs, got `
+            + `${describeValue(bag)}.`;
+    }
+    for (const key of Object.values(INITIALISE_SIZE_KEYS)) {
+        if (bag && bag[key] !== undefined && !(Number.isInteger(bag[key]) && bag[key] >= 1)) {
+            return `apworld: the bag's \`${key}\` is the region size in whole tiles, at least 1, got `
+                + `${describeValue(bag[key])}.`;
+        }
     }
     return null;
 }
@@ -3093,9 +3108,10 @@ export function describeInitialise({ player, substrate, gridDims, backExits, res
  *
  *   · the RECORD's — `{player, result: {entries, procgen_metadata, returnExits,
  *     blocks?, stats}, provenance: {substrate, gridDims, seed, backExits, ms,
- *     unplaced}}`: the generation worker's answer INLINED, so a refold is a
+ *     unplaced, bag?}}` (S2: `bag` = the generation settings it was built under;
+ *     absent on a record made before S2, which replays as it was): the generation worker's answer INLINED, so a refold is a
  *     write, never a 70-second realise (§9.3's rule; `slotInitialise.initialiseOpFor`);
- *   · the SCRIPT's — `{player, substrate, gridDims, seed, backExits}`: computed
+ *   · the SCRIPT's — `{player, substrate, gridDims, seed, backExits, bag?}`: computed
  *     here (`slotInitialise.initialiseSlot`), and the RESOLVED op records the
  *     result, so the record replays pure from then on.
  *
@@ -3129,7 +3145,7 @@ function opInitialiseProcgenLayout(doc, op) {
     let unplaced = Array.isArray(prov?.unplaced) ? prov.unplaced : [];
     if (!inline) {
         const res = initialiseSlot({ doc, player: p, substrate: args.substrate, gridDims: args.gridDims,
-            seed: args.seed, backExits: args.backExits });
+            seed: args.seed, backExits: args.backExits, ...(args.bag !== undefined ? { bag: args.bag } : {}) });
         if (!res.ok) {
             return refuse(`apworld: the \`${args.substrate}\` realiser threw${res.region ? ` on region "${res.region}"` : ''} `
                 + `— ${res.why}. Nothing was written.`);
