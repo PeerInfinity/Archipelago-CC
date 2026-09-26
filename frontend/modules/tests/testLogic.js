@@ -152,6 +152,22 @@ let discoveryInitialized = false;
 let loadedStateApplied = false;
 let loadedAutoStartSetting = null; // Store the loaded auto-start setting persistently
 
+// ONE auto-start per page load (trap 1426). The start needs BOTH the loaded
+// state (applyLoadedState) and the event bus (setEventBus), and the two arrive
+// in either order: unbundled, the test-case imports keep applyLoadedState busy
+// until after initialize() has handed over the bus; bundled, the cases are
+// pre-imported, discovery is instant, and applyLoadedState finishes FIRST.
+// Each arrival used to start its own loop when it saw the other already done,
+// so bundled ran two loops at once — rows overlapped, and the second site's
+// hard-coded 30 s race published "Auto-start timeout after 30 seconds" with
+// most of the roster never started. Now both arrivals call _maybeAutoStart,
+// which starts on whichever completes the pair, exactly once.
+let autoStartTriggeredBy = null;
+
+// The in-flight whole-roster run, so a second caller joins it rather than
+// starting a second loop over the same rows.
+let runAllInFlight = null;
+
 // Add debugging for state changes
 function setLoadedStateApplied(value) {
   log(
@@ -319,63 +335,7 @@ export const testLogic = {
     // Ensure discovery is complete when event bus is set
     await initializeTestDiscovery();
 
-    // Check if auto-start is enabled and start tests if so
-    log('info', '[TestLogic] EventBus set, checking auto-start...');
-    // Only auto-start from here if loaded state has already been applied.
-    // Otherwise, applyLoadedState will handle the auto-start.
-    if (loadedStateApplied) {
-      const shouldAutoStart = TestState.shouldAutoStartTests();
-      log(
-        'info',
-        `[TestLogic] Auto-start enabled: ${shouldAutoStart} (loadedStateApplied: true)`
-      );
-
-      if (shouldAutoStart) {
-        log(
-          'info',
-          '[TestLogic] Auto-starting tests (from setEventBus after loaded state applied)...'
-        );
-
-        // Activate the Tests panel when auto-starting
-        eventBusInstance.publish('ui:activatePanel', { panelId: 'testsPanel' });
-
-        setTimeout(() => {
-          // Add timeout to auto-start to prevent infinite waiting
-          Promise.race([
-            this.runAllEnabledTests(),
-            new Promise((_, reject) => {
-              setTimeout(() => reject(new Error('Auto-start timeout after 30 seconds')), 30000);
-            })
-          ]).catch((error) => {
-            log(
-              'error',
-              '[TestLogic] Error during auto-start (from setEventBus):',
-              error
-            );
-
-            // Set completion flags even if auto-start fails
-            const summary = {
-              totalRun: 0,
-              passedCount: 0,
-              failedCount: 0,
-              failedConditionsCount: 0,
-              error: error.message
-            };
-            this._setPlaywrightCompletionFlags(summary, TestState.getTests());
-          });
-        }, 1000); // Give some time for full initialization
-      } else {
-        log(
-          'info',
-          '[TestLogic] Auto-start not enabled (from setEventBus after loaded state applied), not starting tests automatically'
-        );
-      }
-    } else {
-      log(
-        'info',
-        '[TestLogic] Deferring auto-start check to applyLoadedState as loadedStateApplied is false.'
-      );
-    }
+    this._maybeAutoStart('setEventBus');
   },
 
   async getTests() {
@@ -640,69 +600,87 @@ export const testLogic = {
       });
     }
 
-    // Check if we should auto-start tests now that loaded state is fully applied
-    if (TestState.shouldAutoStartTests()) {
+    this._maybeAutoStart('applyLoadedState');
+  },
+
+  /**
+   * Start the auto-run once both halves it needs have arrived — the loaded
+   * state and the event bus — whichever arrives second. Called from both
+   * setEventBus and applyLoadedState; see autoStartTriggeredBy for why.
+   * @param {string} site - which arrival is asking (logged; the harvest's key)
+   * @returns {boolean} true when THIS call scheduled the run
+   */
+  _maybeAutoStart(site) {
+    if (!loadedStateApplied || !eventBusInstance) {
       log(
         'info',
-        '[TestLogic applyLoadedState] Auto-start is enabled, triggering auto-start...'
+        `[TestLogic] Auto-start check from ${site}: waiting for ${
+          loadedStateApplied ? 'the event bus' : 'the loaded state'
+        }`
       );
+      return false;
+    }
+    if (!TestState.shouldAutoStartTests()) {
+      log('info', `[TestLogic] Auto-start check from ${site}: auto-start not enabled`);
+      return false;
+    }
+    if (autoStartTriggeredBy) {
+      // The normal second arrival: the pair was already complete.
+      log(
+        'info',
+        `[TestLogic] Auto-start check from ${site}: already started by ${autoStartTriggeredBy}, not starting a second run`
+      );
+      return false;
+    }
+    autoStartTriggeredBy = site;
+    log('info', `[TestLogic] Auto-starting tests (triggered by ${site})...`);
 
-      // Activate the Tests panel when auto-starting
-      if (eventBusInstance) {
-        eventBusInstance.publish('ui:activatePanel', { panelId: 'testsPanel' });
-      }
+    // Activate the Tests panel when auto-starting
+    eventBusInstance.publish('ui:activatePanel', { panelId: 'testsPanel' });
 
-      // Use setTimeout to ensure this happens after the current call stack completes
-      setTimeout(async () => {
-        try {
-          log(
-            'info',
-            '[TestLogic applyLoadedState] Running auto-start tests...'
+    // After the current call stack, so the caller finishes its own setup first.
+    setTimeout(() => this._runAutoStart(), 100);
+    return true;
+  },
+
+  async _runAutoStart() {
+    try {
+      // The whole-suite wall-clock budget (AUTO_START_TIMEOUT_MS).
+      await Promise.race([
+        this.runAllEnabledTests(),
+        new Promise((_, reject) => {
+          setTimeout(
+            () => reject(new AutoStartTimeoutError(AUTO_START_TIMEOUT_MS)),
+            AUTO_START_TIMEOUT_MS
           );
+        }),
+      ]);
+    } catch (error) {
+      log('error', '[TestLogic] Error during auto-start:', error);
 
-          // Add timeout to auto-start to prevent infinite waiting
-          // Increased timeout to accommodate many enabled tests
-          await Promise.race([
-            this.runAllEnabledTests(),
-            new Promise((_, reject) => {
-              setTimeout(
-                () => reject(new AutoStartTimeoutError(AUTO_START_TIMEOUT_MS)),
-                AUTO_START_TIMEOUT_MS
-              );
-            })
-          ]);
-        } catch (error) {
-          log(
-            'error',
-            '[TestLogic applyLoadedState] Error during auto-start:',
-            error
-          );
+      // Set completion flags even if auto-start fails, but use actual test results
+      const tests = TestState.getTests();
+      const completedTests = tests.filter(test => test.status === 'passed' || test.status === 'failed');
+      const passedTests = tests.filter(test => test.status === 'passed');
+      const failedTests = tests.filter(test => test.status === 'failed');
+      const failedConditions = failedTests.reduce((total, test) => {
+        return total + (test.conditions ? test.conditions.filter(c => c.status === 'failed').length : 0);
+      }, 0);
 
-          // Set completion flags even if auto-start fails, but use actual test results
-          const tests = TestState.getTests();
-          const completedTests = tests.filter(test => test.status === 'passed' || test.status === 'failed');
-          const passedTests = tests.filter(test => test.status === 'passed');
-          const failedTests = tests.filter(test => test.status === 'failed');
-          const failedConditions = failedTests.reduce((total, test) => {
-            return total + (test.conditions ? test.conditions.filter(c => c.status === 'failed').length : 0);
-          }, 0);
-
-          const summary = {
-            totalRun: completedTests.length,
-            passedCount: passedTests.length,
-            failedCount: failedTests.length,
-            failedConditionsCount: failedConditions,
-            error: error.message,
-            // Distinguishes "the suite ran out of wall clock" from any other
-            // auto-start failure. Without it the two are one opaque string,
-            // and the budget is the case that needs its own answer (split the
-            // roster / raise the budget), not a debugging session.
-            timedOut: error instanceof AutoStartTimeoutError,
-            timeoutMs: error instanceof AutoStartTimeoutError ? AUTO_START_TIMEOUT_MS : undefined,
-          };
-          this._setPlaywrightCompletionFlags(summary, tests);
-        }
-      }, 100);
+      const summary = {
+        totalRun: completedTests.length,
+        passedCount: passedTests.length,
+        failedCount: failedTests.length,
+        failedConditionsCount: failedConditions,
+        error: error.message,
+        // Distinguishes "the suite ran out of wall clock" from any other
+        // auto-start failure. Without it the two are one opaque string,
+        // and the budget is the case that needs its own answer (split the
+        // roster / raise the budget), not a debugging session.
+        timedOut: error instanceof AutoStartTimeoutError,
+        timeoutMs: error instanceof AutoStartTimeoutError ? AUTO_START_TIMEOUT_MS : undefined,
+      };
+      this._setPlaywrightCompletionFlags(summary, tests);
     }
   },
 
@@ -995,7 +973,27 @@ export const testLogic = {
     }
   },
 
-  async runAllEnabledTests() {
+  /**
+   * Run every enabled test, in order. Re-entrant callers (a second auto-start,
+   * a Run-All click during a run) JOIN the run in flight instead of starting a
+   * second loop over the same rows — two loops overlap rows and each publishes
+   * its own completion flags.
+   */
+  runAllEnabledTests() {
+    if (runAllInFlight) {
+      log(
+        'warn',
+        '[TestLogic] runAllEnabledTests called while a run is in flight — joining it, not starting a second loop'
+      );
+      return runAllInFlight;
+    }
+    runAllInFlight = this._runAllEnabledTestsOnce().finally(() => {
+      runAllInFlight = null;
+    });
+    return runAllInFlight;
+  },
+
+  async _runAllEnabledTestsOnce() {
     // Set started flag immediately for Playwright to detect
     window.__playwrightTestsStarted__ = true;
 
