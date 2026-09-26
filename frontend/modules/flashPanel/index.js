@@ -15,7 +15,7 @@ import {
   seedlingGenRoomInstalled,
   SEEDLING_GEN_ROOM_MODULE_PATH,
 } from './flashSeedlingGenLibrary.js';
-import { AP_ITEM_FOUND_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
+import { AP_ITEM_FOUND_EVENT, DOOR_LOCKED_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
 import { createDoorGate, createSnapshotInterfaceLoader } from './seedlingDoorGate.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
 
@@ -170,6 +170,9 @@ export function register(registrationApi) {
    */
   registrationApi.registerEventBusPublisher(AP_ITEM_FOUND_EVENT);
   registrationApi.registerEventBusSubscriberIntent(AP_ITEM_FOUND_EVENT);
+  // ⛓ Seedling generated G4 — a door the host refused. The same defect, found
+  // again by the G4 box gate: published unregistered, the page dropped it.
+  registrationApi.registerEventBusPublisher(DOOR_LOCKED_EVENT);
 
   // Self-activation on a region load (see `activateOnLoadRegion`).
   registrationApi.registerEventBusPublisher('ui:activatePanel');
