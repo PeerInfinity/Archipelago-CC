@@ -279,7 +279,11 @@ export function doorVerdict(canPass, exit, context) {
     }
     if (typeof answer === 'boolean') return { pass: answer, gated: true };
     if (answer && typeof answer.pass === 'boolean') {
-        return { pass: answer.pass, gated: answer.gated !== false, needs: answer.needs, missing: answer.missing };
+        return {
+            pass: answer.pass, gated: answer.gated !== false, needs: answer.needs, missing: answer.missing,
+            // ⛓ G6 — where the rule came from, and the sentence when it was not static data.
+            ...(answer.fallback ? { fallback: answer.fallback } : {}),
+        };
     }
     return {
         pass: DOOR_GATE_ERROR_DEFAULT === 'open',
@@ -667,6 +671,7 @@ export class SeedlingRegionBinding {
                     exitId: exit.exit_id,
                     needs,
                     message: lockedDoorMessage(target, needs),
+                    ...(verdict.fallback ? { fallback: verdict.fallback } : {}),
                 }]);
             }
             effects.push({
