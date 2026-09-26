@@ -16,11 +16,25 @@ import {
   SEEDLING_GEN_ROOM_MODULE_PATH,
 } from './flashSeedlingGenLibrary.js';
 import { AP_ITEM_FOUND_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
+import { createDoorGate, createSnapshotInterfaceLoader } from './seedlingDoorGate.js';
+import { stateManagerProxySingleton } from '../stateManager/index.js';
 
 let moduleDispatcher = null;
 let _moduleEventBus = null;
 let activePanelInstance = null;
 let seedlingRegionGlue = null;
+
+/**
+ * ⛓ SEEDLING GENERATED G4 — the door gate's evaluator context
+ * (`createSnapshotInterface`), loaded through a computed specifier: statically
+ * it would put +19 files / 634,636 B on this closure (the game-logic registry).
+ */
+const snapshotInterfaceLoader = createSnapshotInterfaceLoader({
+  log: (message) => log('error', `[FlashPanel Module] ${message}`),
+});
+export function loadDoorGateEvaluator() {
+  return snapshotInterfaceLoader.load();
+}
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -87,6 +101,7 @@ export function register(registrationApi) {
     substrateRegistry.register(flashSeedlingGenEntry);
   }
   loadSeedlingGenerator();
+  loadDoorGateEvaluator();
 
   // Observe user:locationCheck as it flows through the dispatcher
   // chain, so the panel's "TP on UI click" feature can react to
@@ -239,6 +254,13 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     getDispatcher: () => moduleDispatcher,
     loadRegionEvent: FLASH_SEEDLING_LOAD_REGION_EVENT,
     getPanel: () => activePanelInstance,
+    // G4 — the HOST enforces a generated door's AP gate: the same evaluator
+    // the logic uses, over the state manager's latest snapshot.
+    canPass: createDoorGate({
+      getSnapshot: () => stateManagerProxySingleton.getLatestStateSnapshot?.() ?? null,
+      getStaticData: () => stateManagerProxySingleton.getStaticData?.() ?? null,
+      getSnapshotInterface: snapshotInterfaceLoader.get,
+    }),
   });
   seedlingRegionGlue.start();
 
