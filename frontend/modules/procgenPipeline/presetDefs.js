@@ -150,21 +150,51 @@ export const SEEDLING_GENERATED_ROOM_STATE = Object.freeze({
  * SPELLED ONCE.** Seed 1, 3 spheres, NO filler and at most one item per region,
  * starting in a maze: the tree realises three regions and the generated room is
  * the leaf that holds the victory item, behind its maze parent's `Has(key_red)`
- * gate (a generated door enforces no AP gate — the room hosts no children and
- * its door back is ungated, T3's law). The quota offers 3 maze rooms; the tree
- * uses 2. Its readers: `flashPanel/seedlingGeneratedWorld.test.js`; G3 commits
- * and plays it.
+ * gate. The quota offers 3 maze rooms; the tree uses 2. Its readers:
+ * `flashPanel/seedlingGeneratedWorld.test.js`; G3 commits and plays it.
+ *
+ * ⛓ G4 — A LEAF BY ITS STATE: `seedlingGenHostChildren: false`. Since G4 a
+ * generated room HOSTS children by default (the host enforces its doors' gates)
+ * and its back door takes a gate slot in the tree, which alone moved this
+ * world's tree record (measured, plan §9.0 #4); the knob keeps G1–G3's leaf and
+ * its committed bytes.
  */
 export const SEEDLING_GENERATED_LEAF_STATE = Object.freeze({
     mode: 'sphereGrowth',
     params: Object.freeze({
         seed: 1, startSubstrate: 'maze', sphereCount: 3, fillerCount: 0, maxItemsPerRegion: 1,
+        seedlingGenHostChildren: false,
     }),
     scenario: Object.freeze({
         items: Object.freeze({ key_red: 1, key_blue: 1, victory: 1 }),
         obstacles: Object.freeze({}),
     }),
     substrateQuotas: Object.freeze({ maze: 3, flash_seedling_gen: 1 }),
+    substrateMix: Object.freeze({}),
+    substrateMode: 'quotas',
+});
+
+/**
+ * ⛓⛓ SEEDLING GENERATED LEVELS G4 — **A GENERATED ROOM THAT HOSTS A CHILD
+ * BEHIND AN AP GATE, SPELLED ONCE.** Seed 1, 3 spheres, no filler, one item per
+ * region, STARTING in a generated room: the tree gives that room a maze child
+ * behind `Has(key_blue)` on its one door, and `key_blue` stands on the room's
+ * own goal cell — so a player meets the door LOCKED (the host bounces them back
+ * and says which item), collects the key in the same room, and the door opens.
+ * The maze child leads on to `key_red` and a second maze holding victory. Its
+ * readers: `flashPanel/seedlingGeneratedHostWorld.test.js`; G4 commits and
+ * plays it (`seedling_generated_host`).
+ */
+export const SEEDLING_GENERATED_HOST_STATE = Object.freeze({
+    mode: 'sphereGrowth',
+    params: Object.freeze({
+        seed: 1, startSubstrate: 'flash_seedling_gen', sphereCount: 3, fillerCount: 0, maxItemsPerRegion: 1,
+    }),
+    scenario: Object.freeze({
+        items: Object.freeze({ key_red: 1, key_blue: 1, victory: 1 }),
+        obstacles: Object.freeze({}),
+    }),
+    substrateQuotas: Object.freeze({ maze: 2, flash_seedling_gen: 1 }),
     substrateMix: Object.freeze({}),
     substrateMode: 'quotas',
 });

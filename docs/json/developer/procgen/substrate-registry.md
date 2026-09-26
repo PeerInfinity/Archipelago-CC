@@ -376,7 +376,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `canHostExitGatesBraid` | — | — | fn | — | — | — | — | — | — |
 | `defaultProcgenParams` | 6 keys | — | 10 keys | 8 keys | — | — | 7 keys | — | — |
 | `driftItems` | — | — | Left arrow, Right arrow | — | — | — | — | — | — |
-| `exitGateVeto` | — | — | fn | fn | — | — | — | — | — |
+| `exitGateVeto` | — | — | fn | fn | — | — | fn | — | — |
 | `gateHostingHint` | — | — | fn | fn | — | — | — | — | — |
 | `gateableItems` | — | — | `null` | 5 items | — | — | — | — | — |
 | `generateZoneForSpecs` | — | — | fn | fn | — | fn | — | — | — |
