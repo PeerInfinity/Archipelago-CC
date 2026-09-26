@@ -216,18 +216,20 @@ describe('the regions the layout cannot place — NAMED, each with a derived why
         expect(res.stats.placed + res.unplaced.length).toBe(res.stats.total);
     });
 
-    it('⛓ pokemon_rb (layout only): the unplaced are reachable ONLY from the stripped Menu', () => {
+    /**
+     * ⛓ Re-derived by APWORLD SUBSTRATE CHANGE M1 under M2's authority (plan §26.2):
+     * the layout now roots every Menu exit's target (R8, shape A), so the regions this
+     * row once named ONLY_FROM_MENU are placed. M2 owns the whys; this row only holds
+     * what the layout now says.
+     */
+    it('⛓ pokemon_rb (layout only): every region is placed — the Menu\'s exits are roots, nothing is ONLY FROM MENU', () => {
         const doc = DOCS.pokemon_rb;
         const plan = planInitialise(doc, P);
         const { menu } = initialiseFacts(doc, P);
         expect(menu).toBeTruthy();
-        const incoming = incomingOf(doc);
-        expect(plan.unplaced.length).toBeGreaterThan(0);
-        for (const u of plan.unplaced) {
-            expect(u.why, u.region).toBe(UNPLACED_WHY.ONLY_FROM_MENU);
-            expect([...incoming.get(u.region)], u.region).toEqual([menu]);
-        }
-        expect(plan.placed + plan.unplaced.length).toBe(plan.total);
+        expect(plan.unplaced).toEqual([]);
+        expect(plan.unplaced.some((u) => u.why === UNPLACED_WHY.ONLY_FROM_MENU)).toBe(false);
+        expect(plan.placed).toBe(plan.total);
     });
 
     it('⛓ a 1×1 grid: the region with a placed parent has NO FREE CELL, its child ONLY FROM UNPLACED', () => {
