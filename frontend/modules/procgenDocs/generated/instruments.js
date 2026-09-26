@@ -48,8 +48,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 56,
-            "count": 92,
+            "browser": 57,
+            "count": 93,
             "id": "check"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 266,
-        "browser": 82,
+        "blockStyle": 267,
+        "browser": 83,
         "cited": 103,
-        "files": 277,
+        "files": 278,
         "lineStyle": 11,
-        "withDocblock": 277,
-        "withFlags": 191
+        "withDocblock": 278,
+        "withFlags": 192
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -2384,6 +2384,46 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-ap-placement — **AP'S PLACEMENT, DELIVERED INTO THE LIVE ARTIFACT, AND THE ROOM MEASURED** (EDITOR INTEGRATION slice H7/H8; plan §17.1.4, §17.2).",
             "path": "scripts/procgen/check-seedling-ap-placement.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "game",
+                "host"
+            ],
+            "file": "check-seedling-atlas-host-play.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "game"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling generated levels, G6: a REAL Seedling room (a room of the real map, `flash_seedling`) HOSTS a child behind an AP gate, and the HOST enforces it — the game's door opens for whoever walks onto it, so when the gated door fires without the item the glue refuses the crossing, swallows the game's own swap into th…",
+            "path": "scripts/procgen/check-seedling-atlas-host-play.mjs"
         },
         {
             "argvHelpers": [],

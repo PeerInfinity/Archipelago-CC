@@ -365,7 +365,8 @@ describe('who takes the box', () => {
          * seedling generated G2 the generated-room gate
          * `check-seedling-generated-room-play.mjs`, and G3 its sphere-leaf
          * sibling `check-seedling-generated-leaf-play.mjs`; G4 the host-enforced
-         * gate `check-seedling-generated-host-play.mjs`.)
+         * gate `check-seedling-generated-host-play.mjs`; G6 its real-room
+         * sibling `check-seedling-atlas-host-play.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -373,7 +374,7 @@ describe('who takes the box', () => {
             'measure-apworld-raw-view.mjs', 'shot-loaded-composite-map.mjs',
             'check-seedling-spiral-room-play.mjs', 'check-seedling-sphere-room-play.mjs',
             'check-seedling-generated-room-play.mjs', 'check-seedling-generated-leaf-play.mjs',
-            'check-seedling-generated-host-play.mjs'];
+            'check-seedling-generated-host-play.mjs', 'check-seedling-atlas-host-play.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

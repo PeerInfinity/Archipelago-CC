@@ -208,30 +208,22 @@ export const SEEDLING_GENERATED_HOST_STATE = Object.freeze({
 
 /**
  * ⛓⛓ SEEDLING GENERATED LEVELS G6 — **A REAL SEEDLING ROOM THAT HOSTS A CHILD
- * BEHIND AN AP GATE, SPELLED ONCE.** G4's host shape with the start swapped to a
- * room of the REAL map (`flash_seedling`): seed 1, 3 spheres, no filler, one item
- * per region. The tree realises the start as the starter atlas's
- * `starting_house` (one door, one chest — the tightest room that seats one door
- * and one item), gives its door a maze child behind `Has(key_blue)`, and puts
- * `key_blue` in the chest — so a player meets the door LOCKED (the host bounces
- * them back and says which item), opens the chest in the same room, and the
- * door opens. The maze child leads on to `key_red` and a second maze holding
- * victory. Its readers: `flashPanel/seedlingAtlasHostWorld.test.js`, the
- * committed preset `seedling_atlas_host` and its box gate
- * `check-seedling-atlas-host-play.mjs`.
+ * BEHIND AN AP GATE, SPELLED ONCE: T3's SPHERE-ROOM WORLD WITHOUT ITS KNOB.**
+ * The same seed, spheres, filler and quotas as `SEEDLING_SPHERE_ROOM_STATE`; with
+ * the room a HOST (the default) the tree places the starter atlas's
+ * `overworld_start__r8c0` (two doors, no location) in sphere 2: its door back to
+ * the maze start is gated on `Has(key_blue)`, its other door leads on to a maze
+ * child behind `Has(key_red)` holding victory, and `key_red` lies in a sibling
+ * maze. Both of the room's gates are enforced by the host off static data. The
+ * room holds NO location on purpose: a real room's own location has no
+ * play-side check path yet (plan §12.4). Its readers:
+ * `flashPanel/seedlingAtlasHostWorld.test.js`, the committed preset
+ * `seedling_atlas_host` and its box gate `check-seedling-atlas-host-play.mjs`.
  */
 export const SEEDLING_ATLAS_HOST_STATE = Object.freeze({
-    mode: 'sphereGrowth',
-    params: Object.freeze({
-        seed: 1, startSubstrate: 'flash_seedling', sphereCount: 3, fillerCount: 0, maxItemsPerRegion: 1,
-    }),
-    scenario: Object.freeze({
-        items: Object.freeze({ key_red: 1, key_blue: 1, victory: 1 }),
-        obstacles: Object.freeze({}),
-    }),
-    substrateQuotas: Object.freeze({ maze: 2, flash_seedling: 1 }),
-    substrateMix: Object.freeze({}),
-    substrateMode: 'quotas',
+    ...SEEDLING_SPHERE_ROOM_STATE,
+    params: Object.freeze(Object.fromEntries(Object.entries(SEEDLING_SPHERE_ROOM_STATE.params)
+        .filter(([key]) => key !== 'seedlingAtlasHostChildren'))),
 });
 
 /**
