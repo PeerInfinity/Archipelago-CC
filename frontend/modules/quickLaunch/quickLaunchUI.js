@@ -16,7 +16,7 @@ import { DOCS_LINK_TARGETS, docsHref } from '../../app/config/docsBase.js';
 import { debounce } from '../commonUI/index.js';
 import { DOCS_INDEX, HELP_SECTIONS } from './generated/docsIndex.js';
 import { buildCatalog, helpDocs } from './quickLaunchCatalog.js';
-import { buildViewModel, filterView, foldAll, groupSize, virtualGroupIds } from './quickLaunchFilter.js';
+import { buildViewModel, countText, filterView, foldAll, groupSize, virtualGroupIds } from './quickLaunchFilter.js';
 import {
     EMPTY_TREE, NODE_KINDS, addGroup, addRef, addUrl, deleteNode, findNode, groupsOf, migrate, moveDown, moveNode,
     moveUp, renameGroup,
@@ -51,13 +51,21 @@ export const FILTER_PLACEHOLDER = 'Filter…';
 export const FOLD_MODES = Object.freeze({ collapse: 'collapse', expand: 'expand' });
 export const FOLD_TEXT = Object.freeze({ collapse: 'Collapse all', expand: 'Expand all' });
 export const FOLD_TITLE = Object.freeze({
-    collapse: 'Fold every group shut (while filtering: the groups shown)',
-    expand: 'Open every group (while filtering: the groups shown)',
+    collapse: 'Fold every group shut',
+    expand: 'Open every group',
 });
+/**
+ * The fold button's tooltip while the filter box has text: the button is
+ * disabled then (⚖ the user, 2026-09-26 — a fold under a filter has no
+ * visible meaning, since the filter draws every group holding a match open).
+ */
+export const FOLD_DISABLED_TITLE = 'Clear the filter to fold';
 export const MODULES_TEXT = 'Modules ⇄';
 export const EDIT_TEXT = 'Edit';
 export const CARDS_TEXT = 'Cards';
 export const NO_MATCH_TEXT = 'Nothing matches the filter.';
+/** The match count's tooltip ("N of M" — the rows drawn, of the rows the panel draws unfiltered). */
+export const COUNT_TITLE = 'Rows shown, of all rows';
 export const DOC_ICON = '📄';
 export const URL_ICON = '🔗';
 export const MISSING_ICON = '✕';
@@ -69,6 +77,7 @@ export const CONTROLS = Object.freeze({
     edit: 'ql-edit',
     view: 'ql-view',
     filter: 'ql-filter',
+    count: 'ql-count',
     fold: 'ql-fold',
     up: 'ql-ctl-up',
     down: 'ql-ctl-down',
@@ -208,11 +217,23 @@ export class QuickLaunchUI {
         this.filterInput.type = 'search';
         this.filterInput.className = CONTROLS.filter;
         this.filterInput.placeholder = FILTER_PLACEHOLDER;
-        this.filterInput.title = 'Show only the items whose title, description or group matches';
+        this.filterInput.title = 'Show only the items whose title, description or group matches (Esc clears)';
         this.filterInput.addEventListener('input', () => {
             this.query = this.filterInput.value;
             this._scheduleRender();
         });
+        // Escape clears the box (and re-renders); with the box already empty it does nothing.
+        this.filterInput.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape' || !this.filterInput.value) return;
+            e.preventDefault();
+            this.filterInput.value = '';
+            this.query = '';
+            this.render();
+        });
+        this.countEl = document.createElement('span');
+        this.countEl.className = CONTROLS.count;
+        this.countEl.title = COUNT_TITLE;
+        this.countEl.hidden = true;
         this.foldButton = document.createElement('button');
         this.foldButton.type = 'button';
         this.foldButton.className = CONTROLS.fold;
@@ -221,7 +242,7 @@ export class QuickLaunchUI {
         // Two rows: the header and the filter, then the buttons — so nothing wraps in the narrow left column.
         const top = document.createElement('div');
         top.className = 'ql-bar-row ql-bar-top';
-        top.append(this.headerEl, this.filterInput);
+        top.append(this.headerEl, this.filterInput, this.countEl);
         const buttons = document.createElement('div');
         buttons.className = 'ql-bar-row ql-bar-buttons';
         buttons.append(this.viewButton, this.foldButton, this.editButton, modulesButton);
@@ -253,30 +274,33 @@ export class QuickLaunchUI {
         return this.render();
     }
 
+    /** The fold button's text (its mode) and, disabled while the filter has text, its tooltip. */
     _showFoldMode() {
         this.foldButton.textContent = FOLD_TEXT[this.foldMode];
-        this.foldButton.title = FOLD_TITLE[this.foldMode];
+        this.foldButton.disabled = !!this._filtering;
+        this.foldButton.title = this._filtering ? FOLD_DISABLED_TITLE : FOLD_TITLE[this.foldMode];
     }
 
     /**
      * The fold button: do what it says to every group the last render drew —
      * the user's groups through `collapsedGroups` (one write, skipped by the
      * settings:changed guard), the virtual groups and sub-groups through the
-     * in-memory `collapsed` Set — then show the other mode. While filtering it
-     * acts on the filtered view only, and the groups the filter forces open
-     * stay open until the filter is cleared.
+     * in-memory `collapsed` Set — then show the other mode. Does nothing while
+     * the filter has text (the button is disabled then). The write holds only
+     * the ids of groups the tree has, so a stale id (a deleted group's, a
+     * retired category's) is dropped here.
      */
     async fold() {
-        const open = this.foldMode === FOLD_MODES.expand;
         const shown = this._shown;
+        if (this._filtering || !shown) return;
+        const open = this.foldMode === FOLD_MODES.expand;
         this.foldMode = open ? FOLD_MODES.collapse : FOLD_MODES.expand;
         this._showFoldMode();
-        if (!shown) return;
         for (const id of virtualGroupIds(shown)) {
             if (open) this.collapsed.delete(id);
             else this.collapsed.add(id);
         }
-        const ids = foldAll(shown, open, this.collapsedStored);
+        const ids = foldAll(shown, open, []);
         this.collapsedStored = ids;
         await settingsManager.updateModuleSetting(MODULE_ID, COLLAPSED_KEY, ids);
         await this.render();
@@ -331,6 +355,9 @@ export class QuickLaunchUI {
         // While filtering, every group drawn is open (it holds a match); `collapsed` is left as it is.
         this._filtering = shown !== model;
         this._shown = shown;
+        this._showFoldMode();
+        this.countEl.hidden = !this._filtering;
+        this.countEl.textContent = this._filtering ? countText(model, shown) : '';
         const sections = [];
         if (this.editing) sections.push(this._rootControls());
         if (shown.stored.length) sections.push(this._stored(shown.stored, target));

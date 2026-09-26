@@ -40,6 +40,8 @@
 .ql-bar button { padding: 2px 5px; white-space: nowrap; flex: none; }
 .ql-bar button:hover,
 .ql-panel:hover { border-color: #5a8dee; }
+/* P3 — the fold button is disabled while the filter has text. */
+.ql-bar button:disabled { opacity: 0.45; cursor: default; border-color: #34343e; }
 
 .ql-group { margin-bottom: 6px; }
 .ql-group > summary { cursor: pointer; font-weight: bold; padding: 2px 0; }
@@ -145,6 +147,8 @@ select.ql-ctl { max-width: 8em; }
     font: inherit;
 }
 .ql-filter:focus { outline: none; border-color: #5a8dee; }
+/* P3 — "N of M" beside the filter box, shown only while it has text. */
+.ql-count { color: #9a9aa8; font-size: 11px; white-space: nowrap; flex: none; }
 .ql-no-match { color: #9a9aa8; font-style: italic; margin: 4px 0; }
 
 /* P6 — mobile keeps the 44px touch target (styles/mobile.css) but narrows the side padding, so the

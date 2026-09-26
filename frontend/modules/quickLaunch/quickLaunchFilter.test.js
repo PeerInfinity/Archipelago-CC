@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { OTHER_CATEGORY, VIRTUAL_GROUPS, categoryGroupId, helpGroupId } from './quickLaunchCatalog.js';
-import { buildViewModel, filterView, foldAll, groupSize, userGroupIds, virtualGroupIds } from './quickLaunchFilter.js';
+import {
+    buildViewModel, countText, filterView, foldAll, groupSize, rowCount, userGroupIds, virtualGroupIds,
+} from './quickLaunchFilter.js';
 import { EMPTY_TREE, NODE_KINDS } from './quickLaunchTree.js';
 
 const ORDER = ['UI Panel Modules', 'Loop Mode Modules'];
@@ -192,5 +194,28 @@ describe('fold (the Collapse all / Expand all button)', () => {
     it('an empty tree: nothing to write either way', () => {
         expect(foldAll(model(EMPTY_TREE), false, [])).toEqual([]);
         expect(foldAll(model(EMPTY_TREE), true, [])).toEqual([]);
+    });
+});
+
+describe('rowCount / countText (the filter box\'s "N of M")', () => {
+    it('counts every drawn row: stored leaves (panel, doc, url, dangling ref; nested too) plus every virtual row', () => {
+        const m = model();
+        // Stored leaves: n1, n2 (nested), u1, m1 (dangling), n3 = 5. Virtual: Unfiled + All panels + Help.
+        const virtual = m.groups.reduce((n, g) => n + groupSize(g), 0);
+        expect(virtual).toBe(5 + 4 + 4); // Unfiled: loops, mystery + 3 unfiled drawn docs; All panels 4; Help 4
+        expect(rowCount(m)).toBe(5 + virtual);
+    });
+
+    it('an empty tree counts only the virtual rows', () => {
+        expect(rowCount(model(EMPTY_TREE))).toBe(CATALOG.panels.length + 4);
+    });
+
+    it('countText over a filter: the rows the cut keeps, of the rows the model draws', () => {
+        const m = model();
+        const f = filterView(m, 'loop'); // the "Loopy stuff" group (n3) + the Loops panel in Unfiled and in All panels
+        expect(rowCount(f)).toBe(3);
+        expect(countText(m, f)).toBe(`3 of ${rowCount(m)}`);
+        expect(countText(m, filterView(m, 'zzz-nothing'))).toBe(`0 of ${rowCount(m)}`);
+        expect(countText(m, filterView(m, ''))).toBe(`${rowCount(m)} of ${rowCount(m)}`);
     });
 });

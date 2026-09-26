@@ -91,6 +91,23 @@ export function filterView(model, query) {
     return { stored: cutNodes(model.stored), groups: model.groups.map(cutGroup).filter(Boolean) };
 }
 
+/**
+ * The rows a model draws: every stored node that is not a group (a panel, a
+ * guide, a link, a dangling ref), nested ones too, plus every row of every
+ * virtual group and sub-group. The filter box's count is
+ * `rowCount(filterView(model, q))` of `rowCount(model)`.
+ */
+export function rowCount(model) {
+    const stored = (nodes) => nodes.reduce(
+        (n, node) => n + (node.kind === NODE_KINDS.group ? stored(node.children ?? []) : 1), 0);
+    return stored(model.stored ?? []) + (model.groups ?? []).reduce((n, g) => n + groupSize(g), 0);
+}
+
+/** The filter box's count text: "N of M" rows drawn. */
+export function countText(model, shown) {
+    return `${rowCount(shown)} of ${rowCount(model)}`;
+}
+
 /** The ids of the user's own groups a model draws (stored `group` nodes, nested ones too), in order. */
 export function userGroupIds(model) {
     const out = [];
