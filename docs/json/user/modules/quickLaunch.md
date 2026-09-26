@@ -23,7 +23,7 @@ Links to the documentation, in one sub-group per section:
 - **Features** — one page per major feature.
 - **Playable Games** — one link per game; a game with more than one page gets a sub-group of its own.
 
-The **Show developer docs** setting (see *Settings* below) adds four more sections after these: **Developer Guides**, **Developer Reference Documentation**, **Frontend Module Reference** and **Procedural Generation**. Each section's count is in its heading. Every link opens in a new browser tab.
+The **Show developer docs** setting (see *Settings* below) adds four more sections after these: **Developer Guides**, **Developer Reference Documentation**, **Frontend Module Reference** and **Procedural Generation**. The first three are split into sub-groups by the headings of their own index page — the Frontend Module Reference by module category (*Tracker Panels*, *Core Service Modules*, …), the guides into *Core Architecture Guides*, *Development Guides* and so on — in the order that page lists them; a page the index does not list comes last, under **Unlisted**. Each section's count is in its heading. Every link opens in a new browser tab.
 
 The sections are not a list kept in the panel: a documentation directory whose `README.md` carries a marker line joins Help, titled by that README's heading (see the [documentation index](../../README.md)).
 
@@ -54,7 +54,7 @@ Above the built-in groups you can keep your own arrangement: groups (nested as d
 
 In edit mode:
 
-- **+ group** and **+ url** (at the top, and on every group) add a group or a web link there. Each opens a small form at the end of that list: a name box for a group; an address box, a label box and an **Add** button for a link (the label is optional — the address is used when it is empty). **Enter** adds, **Escape** cancels, and clicking elsewhere adds what you typed (an empty name or address adds nothing).
+- **+ group** and **+ url** (at the top, and on every group) add a group or a web link there. Each opens a small form at the end of that list: a name box for a group; an address box, a label box and an **Add** button for a link (the label is optional — the address is used when it is empty). **Enter** adds, **Escape** cancels, and clicking elsewhere adds what you typed (an empty name or address adds nothing). A form stays open with what you typed even when the panel redraws under it — for instance when you open one straight after committing another.
 - **add to ▾** on every row of *Unfiled*, *All panels* and *Help* files that panel or guide into one of your groups (or the top level). The row stays where it is: the built-in groups never change. A row already filed shows how many times, as a small badge before it — **2×** when it is in your groups twice.
 - On your own items: **▲ ▼** move an item within its group, **move to ▾** puts it in another group, **✎** turns a group's name into a text box (**Enter** or clicking elsewhere keeps the new name, **Escape** keeps the old one), **✕** removes an item. Removing a group removes everything in it, and the panel asks first unless the group is empty.
 
@@ -71,7 +71,7 @@ The arrangement is a setting, **Arrangement** (`moduleSettings.quickLaunch.tree`
 Two more settings are saved the same way:
 
 - **View** (`moduleSettings.quickLaunch.view`) — `tree` or `cards`, whichever the **Cards** button last chose.
-- **Collapsed groups** (`moduleSettings.quickLaunch.collapsedGroups`) — which of *your own* groups are folded shut (folding one, or **Collapse all** / **Expand all**, writes it). Folding a built-in group (*All panels*, a category, *Help*, a Help section, *Unfiled*) lasts until the page is reloaded, and is not saved. The text in the filter box is never saved.
+- **Collapsed groups** (`moduleSettings.quickLaunch.collapsedGroups`) — which groups are folded shut: your own and the built-in ones alike (*All panels*, a category, *Help*, a Help section or sub-group, *Unfiled*). Folding or unfolding one, or **Collapse all** / **Expand all**, writes it, so a group you folded is still folded after a reload. A developer section you folded stays folded while *Show developer docs* is off and on again. The text in the filter box is never saved.
 
 - The Options panel's *All Settings* view shows it as JSON (filter for `quickLaunch`); you can edit it there. Each item is `{id, kind, ...}` with `kind` one of `group` (`label`, `children`), `panel` (`ref`: the panel's component type), `doc` (`ref`: the guide's path) or `url` (`href`, `label`).
 - The JSON panel's settings export and import carry it too.
