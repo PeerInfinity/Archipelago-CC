@@ -981,6 +981,24 @@
             "_comment": "R7. initialiseTimeoutSeconds = 2 on bomb_rush_cyberfunk: timed out in running, the sentence quotes the setting + built N / M, terminated, nothing recorded; override dropped after."
         },
         {
+            "id": "apworld-initialise-declares-the-grants-and-the-buttons-work",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "S1. adventure -> Initialise as the first need-declaring target (derived): items + starting_items hold the grants, the answer names them, every need line met and every grant button enabled; Undo byte-for-byte."
+        },
+        {
+            "id": "apworld-initialise-as-a-non-granting-target-moves-no-item",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "S1. adventure -> Initialise as a target that grants nothing: items and starting_items unchanged, the none clause."
+        },
+        {
+            "id": "apworld-a-region-generate-on-an-initialised-slot-declares-its-grants",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "S1 (Q1b). adventure initialised as the non-granting target -> a region -> the need-declaring target: the form says 'will be granted', ONE set-region-sidecar with grants, need met."
+        },
+        {
             "id": "apworld-the-preset-sidecars-door-lands-on-the-sidecars-tab",
             "enabled": true,
             "category": "apworldEditor",

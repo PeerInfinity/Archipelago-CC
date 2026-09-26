@@ -11992,3 +11992,177 @@ for (const [id, name, testFunction] of R7_TESTS) {
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE S1 — THE OPS DECLARE WHAT THEIR REALISER WAS
+ * HANDED FREE (plan §22, ⚖ Q1 (a) + Q1b, user 2026-09-26). The live scenario B
+ * of §22.2 turned green: Adventure → Initialise as a need-declaring target →
+ * the Items tab's grant buttons ENABLED and the need met; a target that grants
+ * nothing moves no item; a per-region Generate on a hub-initialised slot
+ * declares the same grants in its one op. Targets DERIVED from the registry.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line import/first
+import { initialiseTargets as s1Targets } from '../../apworldEditor/slotInitialise.js';
+// eslint-disable-next-line import/first
+import { GRANTED_AS_STARTING, grantsClause } from '../../apworldEditor/rulesDocOps.js';
+
+/** ⛓ The first realiser target that declares a starting need, and the first whose library grants nothing. */
+const s1Needer = () => s1Targets().find((t) => declaredStartingNeeds(substrateRegistry.get(t)).length) ?? null;
+const s1NonGranting = () => s1Targets().find((t) => !Object.values(substrateRegistry.get(t)?.libraryItems ?? {})
+    .some((d) => !d?.is_victory)) ?? null;
+
+/** ⛓ Open the door on adventure, pick `target` in the form, press Generate; → {panel, p, before, run} or null. */
+async function initialiseAdventureAs(testController, target) {
+    testController.reportCondition(`⛓ premise: the target is derived (${target})`, !!target);
+    if (!target) return null;
+    const panel = await openInitialiseForm(testController, INIT_ADVENTURE_PATH);
+    if (!panel) return null;
+    const sub = initSection().querySelector('.apworld-initialise-substrate');
+    sub.value = target;
+    sub.dispatchEvent(new Event('change', { bubbles: true }));
+    const picked = await testController.pollForCondition(() => panel._initialise?.state?.substrate === target
+        && initSection()?.querySelector('.apworld-initialise-substrate')?.value === target,
+    `the form holds \`${target}\``, 8000, 50);
+    testController.reportCondition(`the form's substrate is \`${target}\``, picked);
+    const p = String(panel.playerId);
+    const before = JSON.parse(JSON.stringify(panel.rulesDoc));
+    const run = await pressInitialise(testController, panel);
+    testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+    return run?.outcome?.ok ? { panel, p, before, run } : null;
+}
+
+/**
+ * ⛓⛓⛓ **(i) ADVENTURE → INITIALISE AS A NEED-DECLARING TARGET → THE GRANT
+ * BUTTONS WORK** (§22.2's scenario B, green): the op's result names the grants;
+ * `items[p]` defines every one, `starting_items[p]` = before + the grants; the
+ * answer names them; on the Items tab every need line reads met and every grant
+ * button is enabled (or absent); ONE Undo returns `items` and `starting_items`
+ * (and the whole document) byte for byte.
+ */
+export async function apworldInitialiseDeclaresTheGrantsAndTheButtonsWork(testController) {
+    try {
+        const target = s1Needer();
+        const got = await initialiseAdventureAs(testController, target);
+        if (!got) return testController.getOverallResult();
+        const { panel, p, before } = got;
+        const op = panel.session.ops().at(-1);
+        const granted = op?.result?.grantedItems ?? [];
+        testController.reportCondition(`⛓ the op's result carries the grants (${granted.join(', ')})`, granted.length > 0);
+        testController.reportCondition('⛓⛓ items[p] defines every granted item',
+            granted.every((n) => panel.rulesDoc.items[p][n] != null && before.items[p][n] == null));
+        testController.assertEqual('⛓⛓ starting_items[p] = before + the grants',
+            JSON.stringify([...(before.starting_items?.[p] ?? []), ...granted]), JSON.stringify(panel.rulesDoc.starting_items[p]));
+        testController.reportCondition(`⛓ the answer names them ("${grantsClause(granted)}")`,
+            String(panel._opMessage).includes(grantsClause(granted)));
+        selectTab(panel, 'items');
+        await testController.pollForCondition(() => !!startingBlock(), 'the Starting inventory block', 8000, 50);
+        const rows = startingNeedRows(panel.rulesDoc, p, [target]);
+        const lines = needLines(startingBlock());
+        testController.reportCondition(`⛓ the block draws the target's need (${rows.length})`,
+            rows.length > 0 && lines.length === rows.length);
+        testController.reportCondition(`⛓⛓ every need line reads "${NEED_MET}"`,
+            lines.every((l) => l.dataset.met === 'true'));
+        const buttons = [...startingBlock().querySelectorAll('.apworld-starting-grant')];
+        testController.reportCondition(`⛓⛓ every grant button is ENABLED (${buttons.length} drawn)`,
+            buttons.every((b) => !b.disabled));
+        panel.session.undo();
+        panel._render();
+        testController.assertEqual('⛓⛓ Undo returns items byte for byte', JSON.stringify(before.items),
+            JSON.stringify(panel.rulesDoc.items));
+        testController.assertEqual('…and starting_items', JSON.stringify(before.starting_items ?? null),
+            JSON.stringify(panel.rulesDoc.starting_items ?? null));
+        testController.assertEqual('…and the whole document', JSON.stringify(before), JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('initialise grants test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/** ⛓⛓ **(ii) A TARGET WHOSE LIBRARY GRANTS NOTHING** — no grants, `items` and `starting_items` unchanged, the none clause. */
+export async function apworldInitialiseAsANonGrantingTargetMovesNoItem(testController) {
+    try {
+        const got = await initialiseAdventureAs(testController, s1NonGranting());
+        if (!got) return testController.getOverallResult();
+        const { panel, before } = got;
+        testController.assertEqual('⛓ the op grants nothing', '0',
+            String(panel.session.ops().at(-1)?.result?.grantedItems?.length));
+        testController.assertEqual('⛓⛓ items unchanged', JSON.stringify(before.items), JSON.stringify(panel.rulesDoc.items));
+        testController.assertEqual('⛓⛓ starting_items unchanged', JSON.stringify(before.starting_items ?? null),
+            JSON.stringify(panel.rulesDoc.starting_items ?? null));
+        testController.reportCondition('the answer says none were granted',
+            String(panel._opMessage).includes(`no library items ${GRANTED_AS_STARTING}`));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('initialise non-granting test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iii) A PER-REGION GENERATE ON A HUB-INITIALISED SLOT DECLARES ITS
+ * GRANTS IN ITS ONE OP** (⚖ Q1b; task 0's (a)): Adventure initialised as the
+ * non-granting target → Regions tab → the first placed region → pick the
+ * need-declaring target: the form says the items "will be granted"; Generate
+ * lands ONE `set-region-sidecar` whose `grants` define and start every one,
+ * the answer names them, the Items tab's need reads met.
+ */
+export async function apworldARegionGenerateOnAnInitialisedSlotDeclaresItsGrants(testController) {
+    try {
+        const needer = s1Needer();
+        const got = await initialiseAdventureAs(testController, s1NonGranting());
+        if (!got || !needer) return testController.getOverallResult();
+        const { panel, p } = got;
+        const region = Object.keys(panel.rulesDoc.preset_sidecars[p])[0];
+        testController.reportCondition(`slot ${p} selected`, await onRegionsTabFor(testController, panel, p));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, needer)) return testController.getOverallResult();
+        const free = regionGenSection(region)?.querySelector('.apworld-region-generation-free')?.textContent ?? '';
+        testController.reportCondition(`⛓ the form says the items "will be ${GRANTED_AS_STARTING}"`,
+            free.includes(`will be ${GRANTED_AS_STARTING}`));
+        const before = JSON.parse(JSON.stringify(panel.rulesDoc));
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        regionGenSection(region).querySelector('.apworld-region-generate')?.click();
+        const answer = await answerAfter(testController, region, said, 'the Generate answer', 60000);
+        testController.assertEqual('⛓⛓ ONE op recorded', String(opsBefore + 1), String(panel.session.ops().length));
+        const op = panel.session.ops().at(-1);
+        testController.assertEqual('…a set-region-sidecar', 'set-region-sidecar', String(op?.op));
+        const granted = op?.grants?.starting ?? [];
+        testController.reportCondition(`⛓⛓ …carrying the grants (${granted.join(', ')})`, granted.length > 0);
+        testController.reportCondition('⛓⛓ items[p] defines every one',
+            granted.every((n) => panel.rulesDoc.items[p][n] != null && before.items[p][n] == null));
+        testController.assertEqual('⛓⛓ starting_items[p] = before + the grants',
+            JSON.stringify([...(before.starting_items?.[p] ?? []), ...granted]), JSON.stringify(panel.rulesDoc.starting_items[p]));
+        testController.reportCondition('⛓ the answer names them', String(answer).includes(grantsClause(granted)));
+        const rows = startingNeedRows(panel.rulesDoc, p, [needer]);
+        testController.reportCondition('⛓ the target\'s need is met, no grant refused',
+            rows.length > 0 && rows.every((r) => r.met && r.grants.every((g) => !g.refusal)));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('region generate grants test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+const S1_TESTS = [
+    ['apworld-initialise-declares-the-grants-and-the-buttons-work',
+        'APWorld hub: Initialise as a need-declaring target defines and starts its library items; the grant buttons are enabled and the need reads met; Undo restores',
+        apworldInitialiseDeclaresTheGrantsAndTheButtonsWork],
+    ['apworld-initialise-as-a-non-granting-target-moves-no-item',
+        'APWorld hub: Initialise as a target whose library grants nothing leaves items and starting_items as they were',
+        apworldInitialiseAsANonGrantingTargetMovesNoItem],
+    ['apworld-a-region-generate-on-an-initialised-slot-declares-its-grants',
+        'APWorld hub: a per-region Generate on a hub-initialised slot declares its free library items in its one op',
+        apworldARegionGenerateOnAnInitialisedSlotDeclaresItsGrants],
+];
+for (const [id, name, testFunction] of S1_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE S1. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
