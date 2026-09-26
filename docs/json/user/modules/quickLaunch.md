@@ -6,7 +6,7 @@ The header line counts what it lists: *N panels · M guides*. Beside it are the 
 
 ## All panels
 
-One button per panel, sorted into one sub-group per category. The categories are the module sections of the [Frontend Module Reference](../../modules/README.md) (*Core Service Modules*, *UI Panel Modules*, and so on), in the order that page lists them; each panel declares its own. A panel that declares none, or a category that page does not list, appears under **Other**, last. Inside each category the panels keep the app's standard (load-priority) order. Each button shows the panel's icon and title, and a dot:
+One button per panel, sorted into one sub-group per category. The categories are the module sections of the [Frontend Module Reference](../../modules/README.md) (*Tracker Panels*, *Game Mode Panels*, *Procgen Substrate Panels*, *Procgen Infrastructure Panels*, and so on), in the order that page lists them; each panel declares its own. A panel that declares none, or a category that page does not list, appears under **Other**, last. A category with no panel in the current mode is not shown (the default mode has no *Non-procgen Games*, for example). Inside each category the panels keep the app's standard (load-priority) order. Each button shows the panel's icon and title, and a dot:
 
 - **Filled green dot** — the panel's module is enabled, so its tab is open.
 - **Hollow dot** — the panel is closed.
