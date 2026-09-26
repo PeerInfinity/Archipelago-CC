@@ -71,7 +71,7 @@ async function fetchAndCacheCustomData(url) {
 
 export const moduleInfo = {
     name: 'textAdventureSubstrateWrapper',
-    title: 'Text Adventure (wrapper)',
+    title: 'Text Adventure Substrate',
     componentType: 'textAdventureSubstrateWrapperPanel',
     icon: '📜',
     column: 3,

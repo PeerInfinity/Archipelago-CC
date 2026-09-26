@@ -24,7 +24,7 @@ export const moduleInfo = {
     name: 'jtaCostDebugger',
     title: 'JtA Cost Debugger',
     componentType: 'jtaCostDebuggerPanel',
-    icon: '',
+    icon: '🪙',
     column: 2,
     category: 'Non-procgen Games',
     description: 'Generate Journey to Ascension task costs by simulated play, inspect each energy reset, then verify and apply.',

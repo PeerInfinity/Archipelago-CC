@@ -65,7 +65,7 @@ export class JtaSubstrateWrapperPanel {
 
     onMount(container) {
         if (container && typeof container.setTitle === 'function') {
-            container.setTitle('Journey to Ascension');
+            container.setTitle('JtA Substrate');
         }
     }
 
@@ -79,7 +79,7 @@ export class JtaSubstrateWrapperPanel {
         this.iframe = document.createElement('iframe');
         this.iframe.className = 'jtasw-iframe';
         this.iframe.src = JTA_IFRAME_SRC;
-        this.iframe.setAttribute('title', 'Journey to Ascension');
+        this.iframe.setAttribute('title', 'JtA Substrate');
         // No sandbox attribute: this iframe loads first-party, same-origin
         // content that must run JtA + the bridge AND fetch its own ES module
         // graph (JtA's build/game.js and its imports; an opaque-origin sandbox

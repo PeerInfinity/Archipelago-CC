@@ -7,7 +7,7 @@ export const moduleInfo = {
   name: 'jtaGameDataPanel',
   title: 'JtA Game Data',
   componentType: 'jtaGameDataPanel',
-  icon: '',
+  icon: '🗃️',
   column: 2,
   category: 'Non-procgen Games',
   description: 'Shows live Journey to Ascension state, checks it against the simulator, and edits task costs and save data.',

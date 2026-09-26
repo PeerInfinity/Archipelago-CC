@@ -50,7 +50,7 @@ export class OmsiSubstrateWrapperPanel {
 
     onMount(container) {
         if (container && typeof container.setTitle === 'function') {
-            container.setTitle('Idle Loops');
+            container.setTitle('Idle Loops Substrate');
         }
     }
 
@@ -64,7 +64,7 @@ export class OmsiSubstrateWrapperPanel {
         this.iframe = document.createElement('iframe');
         this.iframe.className = 'omsisw-iframe';
         this.iframe.src = OMSI_IFRAME_SRC;
-        this.iframe.setAttribute('title', 'Idle Loops');
+        this.iframe.setAttribute('title', 'Idle Loops Substrate');
         // No sandbox attribute — same reasoning as the jta wrapper:
         // first-party same-origin content that must run scripts AND
         // fetch its own resources needs `allow-scripts

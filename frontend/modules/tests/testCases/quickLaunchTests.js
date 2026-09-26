@@ -853,7 +853,7 @@ async function quickLaunchFiledBadgeInEditMode(testController) {
 
 /**
  * The mobile tab bar's input, checked on the desktop layout (a row cannot switch
- * layout): every registered panel's own moduleInfo gives the title and name the
+ * layout): every registered panel's own moduleInfo gives the title, name and icon the
  * mobile registration shows, with no componentType fallback firing. The lookup is
  * the registry's (sources 1–2 of layoutManager.js setupMobileLayout); the loader's
  * maps (sources 3–4) are not reachable from here, and a panel that needed them
@@ -879,8 +879,10 @@ async function mobileTabBarResolvesEveryPanel(testController) {
     testController.assertEqual('panels whose moduleInfo is unreachable', '', noInfo.join(', '));
     testController.assertEqual('panels without a declared title', '', noTitle.join(', '));
     testController.assertEqual('panels without a declared name', '', noName.join(', '));
-    // The icon set is the registry's own: a panel that declares no icon shows its title's first letter.
-    testController.log(`panels declaring no icon (tab shows the title's first letter): ${iconless.join(', ') || 'none'}`);
+    // The icon set is the registry's own: a panel that declares no icon would show its title's first letter.
+    // Since P7 every panel declares one.
+    testController.assertEqual('panels declaring no icon (tab would show the title\'s first letter)', '',
+        iconless.join(', '));
     return testController.getOverallResult();
 }
 
@@ -964,10 +966,9 @@ const TESTS = [
         'Inventory filed twice and Events once: in edit mode their All panels rows read "2×" and "1×" (refCounts over '
         + 'the stored tree), no badge elsewhere; leaving edit mode removes them.',
         quickLaunchFiledBadgeInEditMode],
-    ['mobile-tab-bar-resolves-every-panel', 'Mobile tab bar: every panel resolves a title and name from its moduleInfo',
+    ['mobile-tab-bar-resolves-every-panel', 'Mobile tab bar: every panel resolves a title, name and icon from its moduleInfo',
         'For every registered panel, the moduleInfo the mobile layout registers (the registry\'s lookup) declares a '
-        + 'title and a name, so no componentType fallback fires; the panels declaring no icon are read off the '
-        + 'registry and logged.',
+        + 'title, a name and an icon, so no componentType or first-letter fallback fires (read off the registry).',
         mobileTabBarResolvesEveryPanel],
 ];
 

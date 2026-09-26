@@ -57,7 +57,7 @@ export class TextAdventureSubstrateWrapperPanel {
 
     onMount(container) {
         if (container && typeof container.setTitle === 'function') {
-            container.setTitle('Text Adventure (wrapper)');
+            container.setTitle('Text Adventure Substrate');
         }
     }
 
@@ -86,7 +86,7 @@ export class TextAdventureSubstrateWrapperPanel {
         this.iframe = document.createElement('iframe');
         this.iframe.className = 'tasw-iframe';
         this.iframe.src = IFRAME_SRC;
-        this.iframe.setAttribute('title', 'Text Adventure (wrapper)');
+        this.iframe.setAttribute('title', 'Text Adventure Substrate');
         // No sandbox attribute: this iframe loads first-party, same-origin
         // content that must run bridge.js AND fetch its own ES module graph.
         // Both needs force `allow-scripts allow-same-origin` (verified

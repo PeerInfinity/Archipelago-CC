@@ -37,7 +37,7 @@ import { PlaybackProxy } from '../textAdventureSubstrateWrapper/playbackProxy.js
 
 export const moduleInfo = {
     name: 'omsiSubstrateWrapper',
-    title: 'Idle Loops (substrate wrapper)',
+    title: 'Idle Loops Substrate',
     componentType: 'omsiSubstrateWrapperPanel',
     icon: '🔁',
     column: 3,

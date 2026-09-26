@@ -29,7 +29,7 @@ import settingsManager from '../../app/core/settingsManager.js';
 
 export const moduleInfo = {
     name: 'jtaSubstrateWrapper',
-    title: 'JtA (substrate wrapper)',
+    title: 'JtA Substrate',
     componentType: 'jtaSubstrateWrapperPanel',
     icon: '⚔️',
     column: 3,

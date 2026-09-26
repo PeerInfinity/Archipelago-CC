@@ -421,7 +421,7 @@
       "enabled": true,
       "order": 50,
       "category": "Quick Launch",
-      "_comment": "Quick Launch P2 (2026-09-26): the mobile fallback table is gone; every registered panel must declare the title and name the mobile tab bar shows in its own moduleInfo. Read off centralRegistry at run time. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+      "_comment": "Quick Launch P2 (2026-09-26): the mobile fallback table is gone; every registered panel must declare the title and name the mobile tab bar shows in its own moduleInfo. Quick Launch P7 (2026-09-26): and an icon (the five icon:'' panels got one), asserted rather than logged. Read off centralRegistry at run time. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
     },
     {
       "id": "layout-import-keeps-module-state-in-sync",

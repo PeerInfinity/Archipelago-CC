@@ -7,7 +7,7 @@ export const moduleInfo = {
   name: 'mazeGameDataPanel',
   title: 'Maze Game Data',
   componentType: 'mazeGameDataPanel',
-  icon: '',
+  icon: '🧱',
   column: 2,
   category: 'Procgen Substrate Panels',
   description: 'Shows A-Mazing-Idle\'s points, biome and mazes; injects points, advances the biome, and exports or imports saves.',

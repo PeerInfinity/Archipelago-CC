@@ -9,7 +9,7 @@ export const moduleInfo = {
     name: 'jtaActionQueue',
     title: 'JtA Action Queue',
     componentType: 'jtaActionQueue',
-    icon: '',
+    icon: '🗒️',
     column: 2,
     category: 'Non-procgen Games',
     description: 'Queue Journey to Ascension tasks zone by zone, run them with Start and Stop, and save queues as loadouts.',

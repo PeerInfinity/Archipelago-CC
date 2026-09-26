@@ -26,7 +26,7 @@ export const moduleInfo = {
   name: 'loopsCostDebugger',
   title: 'Loops Cost Debugger',
   componentType: 'loopsCostDebuggerPanel',
-  icon: '',
+  icon: '💰',
   column: 1,
   category: 'Loop Mode Modules',
   description: 'Steps through how loop-mode mana costs are planned from the sphere log, and verifies loaded costs against it.',

@@ -266,17 +266,17 @@
             {
               "type": "component",
               "componentType": "textAdventureSubstrateWrapperPanel",
-              "title": "Text Adventure (wrapper)"
+              "title": "Text Adventure Substrate"
             },
             {
               "type": "component",
               "componentType": "jtaSubstrateWrapperPanel",
-              "title": "Journey to Ascension"
+              "title": "JtA Substrate"
             },
             {
               "type": "component",
               "componentType": "omsiSubstrateWrapperPanel",
-              "title": "Idle Loops"
+              "title": "Idle Loops Substrate"
             },
             {
               "type": "component",
