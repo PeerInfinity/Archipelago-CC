@@ -28,6 +28,12 @@
  * gate guards both directions"*). `returnExitsOf` answers the same exits, so the
  * op adds them visibly and one Undo takes them back.
  *
+ * ⛓⛓ S1 — the realiser is handed the target's library items FREE (the
+ * pipeline's `grantedLibraryItems`, imported), so the RESULT carries them
+ * (`grantedItems`, `grantedDefs`) and the op DECLARES them: a def each in
+ * `items[p]` and the names in `starting_items[p]` — the lines the pipeline's
+ * compile writes for the same grants.
+ *
  * ⛓ The regions the layout cannot place (no incoming exit; reachable only from
  * Menu; …) are NAMED with a `why` DERIVED from the graph (⚖ #2) and the rest
  * are built — never a refusal of the whole initialise.
@@ -38,8 +44,8 @@
  */
 
 import {
-    DEFAULT_SUBSTRATE_ID, buildPresetSidecars, finalizeTopDown, getRegionExits, layoutTopDown, realiseTopDownGen,
-    resolveTopDownStart,
+    DEFAULT_SUBSTRATE_ID, buildPresetSidecars, computeSourceCounts, finalizeTopDown, getRegionExits, layoutTopDown,
+    realiseTopDownGen, resolveTopDownStart,
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { assembleRegionParams, mergeSubstrateItemLib } from '../procgenPipeline/sphereConfigHooks.js';
 import { effectiveHazardOpts, topDownGridSide } from '../procgenPipeline/presetRun.js';
@@ -49,8 +55,9 @@ import { makeTrueRule } from '../shared/rulesJsonBuilder.js';
 import { createRng } from '../shared/rng.js';
 import { regionsOf, startRegionsOf } from '../procgenCore/rulesGraph.js';
 import { SUBSTRATE_CONFIGS_KEY, recordableConfigsFor } from '../procgenCore/substrateConfigRecord.js';
+import { grantedLibraryItems } from '../procgenPipeline/topDownSteps.js';
 import {
-    REGENERATE_BASE_REGION_PARAMS, freeItemsFor, regionRealiserKind, regionSizeFor,
+    REGENERATE_BASE_REGION_PARAMS, regionRealiserKind, regionSizeFor,
 } from './regionRegenerate.js';
 
 export { DEFAULT_SUBSTRATE_ID };
@@ -325,6 +332,11 @@ export function returnExitsOf(doc, player, layout) {
     return out;
 }
 
+/** ⛓ The item ids the slot already uses — a granted def never takes one. */
+export function itemIdsOf(doc, player) {
+    return new Set(Object.values(doc?.items?.[player] ?? {}).map((d) => d?.id).filter(Number.isInteger));
+}
+
 /** ⛓ The extent of the cells, as `buildRulesJson` records `grid_dims`. */
 function cellExtent(entries) {
     let w = 0;
@@ -353,7 +365,9 @@ export function substrateBlocksFor(substrate) {
 /**
  * ⛓⛓⛓ **INITIALISE THE SLOT** — the four stages, then the RESULT the op lands
  * inline: `{ok: true, entries, procgen_metadata, returnExits, blocks, unplaced,
- * stats: {placed, total, teleporters, returnExits}, gridDims, freeItems, ms}` or
+ * stats: {placed, total, teleporters, returnExits}, gridDims, freeItems,
+ * grantedItems, grantedDefs, ms}` (S1: the grants the realiser was handed free,
+ * which the op DECLARES) or
  * `{ok: false, why, region?}` (the realiser threw — its message verbatim, and the
  * region it was building). The caller (the op) has refused every input it can
  * name; this answers what the engine did.
@@ -364,8 +378,11 @@ export function initialiseSlot(args) {
     const { doc, onProgress = null, now = () => (globalThis.performance?.now?.() ?? Date.now()) } = args;
     const t0 = now();
     const a = normalise(doc, args.player, args);
-    const entry = substrateRegistry.get(a.substrate);
-    const freeItems = freeItemsFor(doc, a.player, entry);
+    // ⛓ S1 — the pipeline's grant rule (`grantedLibraryItems`): the realiser is
+    //   handed `startingItems` FREE, so the op must DECLARE the grants it built
+    //   with (defs in `items[p]`, names in `starting_items[p]`).
+    const grant = grantedLibraryItems(doc, a.player, [a.substrate], { avoidIds: itemIdsOf(doc, a.player) });
+    const freeItems = grant.startingItems;
     const { regionParams, hazardOpts } = initialiseKnobs(a.substrate);
     let layout;
     let building = null;
@@ -401,6 +418,8 @@ export function initialiseSlot(args) {
     const procgenMetadata = {
         driver: INITIALISE_DRIVER,
         player: a.player,
+        source_game: doc?.game_name ?? null,
+        source_counts: computeSourceCounts(doc, a.player),
         stop_reason: layout.stats.stopReason,
         region_count: Object.keys(entries).length,
         grid_dims: cellExtent(entries),
@@ -421,6 +440,8 @@ export function initialiseSlot(args) {
         },
         gridDims: { ...a.gridDims },
         freeItems,
+        grantedItems: grant.grantedItems,
+        grantedDefs: grant.defs,
         ms: now() - t0,
     };
 }
@@ -437,6 +458,8 @@ export function initialiseOpFor({ player, substrate, gridDims, seed, backExits }
             entries: res.entries,
             procgen_metadata: res.procgen_metadata,
             returnExits: res.returnExits,
+            grantedItems: res.grantedItems,
+            grantedDefs: res.grantedDefs,
             ...(res.blocks && Object.keys(res.blocks).length ? { blocks: res.blocks } : {}),
             stats: res.stats,
         },

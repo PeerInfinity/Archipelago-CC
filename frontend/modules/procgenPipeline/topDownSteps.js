@@ -178,9 +178,20 @@ export function grantedItemDef(name, i) {
     };
 }
 
-/** ⛓ `{name: grantedItemDef(name, i)}` for the granted names, in grant order. */
-export function grantedItemDefs(grantedItems) {
-    return Object.fromEntries(grantedItems.map((name, i) => [name, grantedItemDef(name, i)]));
+/**
+ * ⛓ `{name: grantedItemDef(name, i)}` for the granted names, in grant order.
+ * `avoidIds` (the APWorld Editor's: the ids the document already uses) moves
+ * `i` past a taken id; the pipeline passes none, so its i-th name is 999 - i.
+ */
+export function grantedItemDefs(grantedItems, { avoidIds = null } = {}) {
+    const out = {};
+    let i = 0;
+    for (const name of grantedItems) {
+        while (avoidIds?.has(GRANTED_ITEM_FIRST_ID - i)) i += 1;
+        out[name] = grantedItemDef(name, i);
+        i += 1;
+    }
+    return out;
 }
 
 /**
@@ -193,10 +204,12 @@ export function grantedItemDefs(grantedItems) {
  * geometry may lean on them (surplus exits drift onto one); the compile writes
  * `startingItems` and backfills a def per granted name (`defs`).
  *
+ * `avoidIds` is `grantedItemDefs`' (the pipeline passes none).
+ *
  * @returns {{sourceStarting: string[], sourceItemDefs: object, grantedItems: string[],
  *   startingItems: string[], defs: object}}
  */
-export function grantedLibraryItems(source, playerId, substrateIds) {
+export function grantedLibraryItems(source, playerId, substrateIds, { avoidIds = null } = {}) {
     const p = String(playerId);
     const sourceStarting = source?.starting_items?.[p] ?? [];
     const sourceItemDefs = source?.items?.[p] ?? {};
@@ -216,7 +229,7 @@ export function grantedLibraryItems(source, playerId, substrateIds) {
         sourceItemDefs,
         grantedItems,
         startingItems: [...sourceStarting, ...grantedItems],
-        defs: grantedItemDefs(grantedItems),
+        defs: grantedItemDefs(grantedItems, { avoidIds }),
     };
 }
 

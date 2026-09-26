@@ -86,7 +86,7 @@ import {
 // ⛓ APWORLD SUBSTRATE CHANGE R0 — one region's payload rebuilt by a substrate's
 //   realiser, through the same kind of door (`regionRegenerate.js`).
 import {
-    REGION_SOURCE_KINDS, libraryEntryPrecheck, regenerateRegionEntry, regenerateTargetFacts,
+    REGION_SOURCE_KINDS, libraryEntryPrecheck, regenerateRegionEntry, regenerateTargetFacts, startingItemsOf,
 } from './regionRegenerate.js';
 // ⛓ APWORLD SUBSTRATE CHANGE R5b — a region's CONTENT replaced by a zone
 //   (`regionContent.js`: the cascade's mechanics and its sentences).
@@ -2871,6 +2871,70 @@ export const INITIALISE_UNPLACED = 'unplaced';
 
 const isPlainObj = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
 
+/* ── the grants an op DECLARES (APWORLD SUBSTRATE CHANGE S1) ──────────── */
+
+/** ⛓ The grant clause's words. EXPORTED for the rows and the form. */
+export const GRANTED_AS_STARTING = 'granted as starting items';
+
+/**
+ * ⛓⛓ **WHAT A GRANT MUST BE TO BE WRITTEN** — `names` (the granted library
+ * items, in grant order) and `defs` (`{name: def}`, one per name, the
+ * pipeline's `grantedItemDef` shape): a name the slot already DEFINES or
+ * already HOLDS is not a grant (the rule never grants one, so an op that
+ * carries one was composed against another document), and a def never takes
+ * an id the slot already uses. `null` when the grant can be written.
+ */
+function grantsRefusal(doc, p, names, defs) {
+    if (!Array.isArray(names) || names.some((n) => typeof n !== 'string')) {
+        return `apworld: the granted items are a list of item names, got ${describeValue(names)}.`;
+    }
+    if (!isPlainObj(defs) || Object.keys(defs).length !== names.length
+        || names.some((n) => !Object.hasOwn(defs, n))) {
+        return `apworld: every granted item needs exactly one definition — names [${listNames(names)}], `
+            + `definitions ${describeValue(defs)}.`;
+    }
+    const badDef = names.filter((n) => !isPlainObj(defs[n]) || defs[n].name !== n || !Number.isInteger(defs[n].id));
+    if (badDef.length) {
+        return 'apworld: a granted item\'s definition is {name, id, classification, groups} under its own name — '
+            + `${listNames(badDef)} ha${badDef.length === 1 ? 's' : 've'} none.`;
+    }
+    const defined = names.filter((n) => doc?.items?.[p]?.[n] != null);
+    if (defined.length) {
+        return `apworld: player ${p} already defines ${listNames(defined)}, so ${defined.length === 1
+            ? 'it is' : 'they are'} not a grant — a grant never overwrites an item definition.`;
+    }
+    const held = names.filter((n) => startingItemsOf(doc, p).includes(n));
+    if (held.length) {
+        return `apworld: player ${p} already starts with ${listNames(held)}, so ${held.length === 1
+            ? 'it is' : 'they are'} not a grant.`;
+    }
+    const ids = new Set(Object.values(doc?.items?.[p] ?? {}).map((d) => d?.id));
+    const taken = names.filter((n) => ids.has(defs[n].id));
+    if (taken.length) {
+        return `apworld: the granted definition(s) of ${listNames(taken)} take an item id player ${p} already `
+            + `uses (${taken.map((n) => defs[n].id).join(', ')}).`;
+    }
+    return null;
+}
+
+/** ⛓ The grant written: a def per name into `items[p]`, the names appended to
+ *  `starting_items[p]`. Nothing when there is nothing to grant. */
+function withGrants(doc, p, names, defs) {
+    if (!names.length) return doc;
+    const next = withItems(doc, p, {
+        ...(doc?.items?.[p] ?? {}), ...Object.fromEntries(names.map((n) => [n, defs[n]])),
+    });
+    const held = Array.isArray(doc?.starting_items?.[p]) ? doc.starting_items[p] : [];
+    return withStarting(next, p, [...held, ...names]);
+}
+
+/** ⛓ `6 library items granted as starting items (Right arrow, …)`, or the none clause. */
+export function grantsClause(names) {
+    return names.length
+        ? `${plural(names.length, 'library item')} ${GRANTED_AS_STARTING} (${listNames(names)})`
+        : `no library items ${GRANTED_AS_STARTING}`;
+}
+
 /**
  * ⛓⛓ **EVERY REFUSAL `initialise-procgen-layout` CAN NAME BEFORE THE ENGINE
  * RUNS** — the op's own, EXPORTED so the hub's form prints the op's sentence
@@ -2941,7 +3005,7 @@ export function initialiseOpRefusal(doc, args) {
 function initialiseResultRefusal(doc, p, result) {
     if (!isPlainObj(result) || !isPlainObj(result.entries) || !isPlainObj(result.procgen_metadata)
         || !Array.isArray(result.returnExits)) {
-        return `apworld: ${INITIALISE_OP}'s \`result\` is {entries, procgen_metadata, returnExits, blocks?} — `
+        return `apworld: ${INITIALISE_OP}'s \`result\` is {entries, procgen_metadata, returnExits, grantedItems, grantedDefs, blocks?} — `
             + `the worker's answer, inlined — got ${describeValue(result)}.`;
     }
     const regions = regionsOf(doc, p);
@@ -2971,6 +3035,9 @@ function initialiseResultRefusal(doc, p, result) {
         }
         added.set(r.region, [...(added.get(r.region) ?? []), name]);
     }
+    // ⛓ S1 — a record made before S1 carries no grants: it replays as it was.
+    const grant = grantsRefusal(doc, p, result.grantedItems ?? [], result.grantedDefs ?? {});
+    if (grant) return grant;
     const blocks = result.blocks ?? {};
     if (!isPlainObj(blocks)) return `apworld: \`blocks\` is an object, got ${describeValue(blocks)}.`;
     const held = Object.keys(blocks).filter((k) => Object.hasOwn(doc, k));
@@ -2993,6 +3060,7 @@ export function describeInitialise({ player, substrate, gridDims, backExits, res
     const back = backExits === BACK_EXITS.NONE
         ? INITIALISE_RETURN_EXITS_OFF
         : `${result.returnExits.length} ${INITIALISE_RETURN_EXITS_ADDED}`;
+    const grants = grantsClause(result.grantedItems ?? []);
     const byWhy = new Map();
     for (const u of unplaced) byWhy.set(u.why, [...(byWhy.get(u.why) ?? []), u.region]);
     const unplacedClause = unplaced.length
@@ -3000,7 +3068,8 @@ export function describeInitialise({ player, substrate, gridDims, backExits, res
             .map(([why, names]) => `${why}: ${listNames(names)}`).join('; ')})`
         : `0 regions ${INITIALISE_UNPLACED}`;
     return `slot ${player} initialised as \`${substrate}\`: ${plural(placed, 'region')} on a `
-        + `${gridDims.width}×${gridDims.height} grid (${plural(tele, 'teleporter')}), ${back}, ${unplacedClause} — `
+        + `${gridDims.width}×${gridDims.height} grid (${plural(tele, 'teleporter')}), ${back}, ${grants}, `
+        + `${unplacedClause} — `
         + `${INITIALISE_RULES_UNCHANGED}`
         + (Number.isFinite(ms) ? ` — built in the generation worker (${(ms / 1000).toFixed(1)} s)` : '');
 }
@@ -3018,11 +3087,15 @@ export function describeInitialise({ player, substrate, gridDims, backExits, res
  *     result, so the record replays pure from then on.
  *
  * ⛔ **WHAT IT WRITES:** `preset_sidecars[p]` (the slot's entries),
- * `procgen_metadata` (driver `apworld-initialise`, `grid_dims`, `region_count`,
- * `substrate_configs` per R6b), the substrate's top-level blocks the document
- * lacks, and — with `backExits: 'add'` — one exit per return route appended to
- * `regions[p][R].exits` (the pipeline's own edit, with the forward exit's rule).
- * NOTHING else: no location, item, placement or existing rule moves.
+ * `procgen_metadata` (driver `apworld-initialise`, `source_game`,
+ * `source_counts`, `grid_dims`, `region_count`, `substrate_configs` per R6b),
+ * the substrate's top-level blocks the document lacks, with `backExits: 'add'`
+ * one exit per return route appended to `regions[p][R].exits` (the pipeline's
+ * own edit, with the forward exit's rule), and (S1) the GRANTS: a def per
+ * granted library item in `items[p]` and the names appended to
+ * `starting_items[p]` — the realiser was handed them free (the pipeline's
+ * `grantedLibraryItems`), so the document must hold them. NOTHING else: no
+ * location, placement, existing item or existing rule moves.
  */
 function opInitialiseProcgenLayout(doc, op) {
     const p = String(playerOf(op));
@@ -3062,6 +3135,7 @@ function opInitialiseProcgenLayout(doc, op) {
         const r = regionsOf(next, p)[region];
         next = withRegion(next, p, region, withKey(r, 'exits', [...(r.exits ?? []), exit]));
     }
+    next = withGrants(next, p, result.grantedItems ?? [], result.grantedDefs ?? {});
     const description = describeInitialise({
         player: p, substrate: args.substrate, gridDims: args.gridDims, backExits: args.backExits,
         result, unplaced, ...(inline && Number.isFinite(prov.ms) ? { ms: prov.ms } : {}),

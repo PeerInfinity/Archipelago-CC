@@ -21,22 +21,24 @@ import { describe, expect, it } from 'vitest';
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { createEditSession, foldEdits } from '../procgenCore/editCore.js';
-import { layoutTopDown, resolveTopDownStart } from '../procgenPipeline/procgenPipelineEngine.js';
+import { computeSourceCounts, layoutTopDown, resolveTopDownStart } from '../procgenPipeline/procgenPipelineEngine.js';
 import { createRng } from '../shared/rng.js';
 import { rulesEditAdapter } from './rulesEditAdapter.js';
 import { sidecarIssues } from './sidecarIssues.js';
 import { validateRules } from './rulesUtils.js';
 import { freeItemsFor, regionRealiserKind } from './regionRegenerate.js';
-import { buildTopDownEnvelope } from '../procgenPipeline/topDownSteps.js';
+import { GRANTED_ITEM_FIRST_ID, buildTopDownEnvelope, runTopDownToStep } from '../procgenPipeline/topDownSteps.js';
 import { regionsOf, startRegionsOf } from '../procgenCore/rulesGraph.js';
 import {
     INITIALISE_BARE_ONLY, INITIALISE_RETURN_EXITS_ADDED, INITIALISE_RETURN_EXITS_OFF,
     INITIALISE_RULES_UNCHANGED, INITIALISE_UNPLACED, REGENERATE_SEED_REQUIRED, RULES_OP_KINDS,
-    applyRulesDocOp, canonicalPlacementIssues, describeInitialise, initialiseOpRefusal,
+    GRANTED_AS_STARTING, applyRulesDocOp, canonicalPlacementIssues, describeInitialise, grantsClause,
+    initialiseOpRefusal,
 } from './rulesDocOps.js';
+import { startingNeedRows } from './startingInventoryBlock.js';
 import {
     BACK_EXITS, DEFAULT_SUBSTRATE_ID, INITIALISE_BLOCKERS, INITIALISE_DRIVER, INITIALISE_GRID_GROWTH_LIMIT,
-    INITIALISE_OP, UNPLACED_WHY, autoGridSide, initialiseFacts, initialiseGridSide, initialiseOpFor,
+    INITIALISE_OP, UNPLACED_WHY, autoGridSide, initialiseFacts, initialiseGridSide, initialiseKnobs, initialiseOpFor,
     initialiseSlot, initialiseTargets, planInitialise, unplacedRegions,
 } from './slotInitialise.js';
 
@@ -457,7 +459,8 @@ describe('the op initialise-procgen-layout', () => {
         const g = apc.provenance.gridDims;
         expect(r1.description.startsWith(`slot ${P} initialised as \`${DEFAULT_SUBSTRATE_ID}\`: ${s.placed} regions on a `
             + `${g.width}×${g.height} grid (${s.teleporters} teleporters), ${s.returnExits} ${INITIALISE_RETURN_EXITS_ADDED}, `
-            + `0 regions ${INITIALISE_UNPLACED} — ${INITIALISE_RULES_UNCHANGED}`)).toBe(true);
+            + `no library items ${GRANTED_AS_STARTING}, 0 regions ${INITIALISE_UNPLACED} — ${INITIALISE_RULES_UNCHANGED}`))
+            .toBe(true);
         const alt = landedOp('alttp_worldgen');
         const r2 = applyRulesDocOp(DOCS.alttp_worldgen, alt);
         expect(r2.ok, r2.error).toBe(true);
@@ -547,5 +550,174 @@ describe('the op initialise-procgen-layout', () => {
         expect(applyRulesDocOp(doc, block).error).toContain('`game_name`');
         const noProv = { ...op, provenance: undefined };
         expect(applyRulesDocOp(doc, noProv).error).toContain('`provenance`');
+    });
+});
+
+/* ── S1: the op DECLARES what it built with ─────────────────────────────── */
+
+/** ⛓ The first realiser target whose registry entry declares a starting-inventory
+ *  NEED (derived, never typed), and the first that grants nothing. */
+const NEEDER = initialiseTargets().find((t) => substrateRegistry.get(t)?.startingInventory);
+const NON_GRANTING = initialiseTargets().find((t) => !Object.values(substrateRegistry.get(t)?.libraryItems ?? {})
+    .some((d) => !d?.is_victory));
+const GRID4 = { width: 4, height: 4 };
+
+const s1cache = new Map();
+/** ⛓ adventure initialised as `t` on 4×4, seed 1 — the hub's op, landed. */
+function hubInitialised(t, doc = DOCS.adventure) {
+    const key = `${t}|${bytes(doc).length}`;
+    if (!s1cache.has(key)) {
+        const res = initialiseSlot({ doc, player: P, substrate: t, gridDims: GRID4, seed: 1, backExits: BACK_EXITS.ADD });
+        const op = initialiseOpFor({ player: P, substrate: t, gridDims: GRID4, seed: 1, backExits: BACK_EXITS.ADD }, res);
+        s1cache.set(key, { res, op, out: applyRulesDocOp(doc, op) });
+    }
+    return s1cache.get(key);
+}
+
+/**
+ * ⛓⛓ The keys the pipeline's compile writes and the hub must NOT (plan §22.1:
+ * the document's own identity, the exporter's placements, the compile's
+ * bidirectional flag — ⚖ Q2 — and the embedded log — ⚖ Q3). A NEW differing
+ * key is a new gap, and turns this list's row red.
+ */
+const MUST_NOT = ['archipelago_version', 'assume_bidirectional_exits', 'canonical_placements', 'game_directory',
+    'game_info', 'game_name', 'seed_name', 'sphere_log', 'world'];
+/** ⛓ The keys both write, compared by what they MEAN (the compile re-spells ids, order, the item shape). */
+const BOTH_WRITE = ['itempool_counts', 'items', 'procgen_metadata', 'regions'];
+
+describe('S1 — the initialise op DECLARES the library items it built with', () => {
+    it('⛓ the targets are derived: one declares a need, one grants nothing', () => {
+        expect(NEEDER, 'no realiser declares startingInventory').toBeTruthy();
+        expect(NON_GRANTING, 'every realiser grants something').toBeTruthy();
+    });
+
+    it('⛓ the result carries the grants — the pipeline envelope\'s, defs by its id rule', () => {
+        const { res } = hubInitialised(NEEDER);
+        const env = buildTopDownEnvelope({ source: DOCS.adventure, seed: 1, gridDims: GRID4,
+            regionSizeBase: { width: 8, height: 6 }, substrateMix: { [NEEDER]: 1 } });
+        expect(res.grantedItems.length).toBeGreaterThan(0);
+        expect(res.grantedItems).toEqual(env.compileIn.grantedItems);
+        expect(res.freeItems).toEqual(env.compileIn.startingItems);
+        res.grantedItems.forEach((n, i) => expect(res.grantedDefs[n]).toEqual({
+            name: n, id: GRANTED_ITEM_FIRST_ID - i, classification: 'progression', groups: ['Everything'],
+        }));
+    });
+
+    it('⛓ the deep diff: sidecars, metadata, return exits, items.<p>.<granted> (absent names only), starting_items — nothing else', () => {
+        const doc = DOCS.adventure;
+        const { op, out } = hubInitialised(NEEDER);
+        expect(out.ok, out.error).toBe(true);
+        const gained = [...new Set(op.result.returnExits.map((r) => r.region))].sort();
+        expect(changedPaths(doc, out.doc)).toEqual(['items', 'preset_sidecars.1', 'procgen_metadata', 'starting_items',
+            ...gained.map((r) => `regions.1.${r}.exits`)].sort());
+        const granted = op.result.grantedItems;
+        const added = Object.keys(out.doc.items[P]).filter((n) => !Object.hasOwn(doc.items[P], n));
+        expect(added).toEqual(granted);
+        for (const n of Object.keys(doc.items[P])) expect(bytes(out.doc.items[P][n]), n).toBe(bytes(doc.items[P][n]));
+        for (const n of granted) expect(out.doc.items[P][n]).toEqual(op.result.grantedDefs[n]);
+        expect(out.doc.starting_items[P]).toEqual([...(doc.starting_items?.[P] ?? []), ...granted]);
+        expect(out.description).toContain(grantsClause(granted));
+        for (const n of granted) expect(out.description).toContain(n);
+    });
+
+    it('⛓ after it, every need row of the target is MET and no grant is refused (the bounce buttons)', () => {
+        const before = startingNeedRows(DOCS.adventure, P, [NEEDER]);
+        expect(before.length).toBeGreaterThan(0);
+        expect(before.some((r) => r.grants.some((g) => g.refusal)), 'the gap: refused before').toBe(true);
+        const rows = startingNeedRows(hubInitialised(NEEDER).out.doc, P, [NEEDER]);
+        expect(rows.length).toBe(before.length);
+        for (const r of rows) {
+            expect(r.met, r.substrate).toBe(true);
+            for (const g of r.grants) expect(g.refusal, g.item).toBeNull();
+        }
+    });
+
+    it('⛓ a target that grants nothing: items and starting_items untouched, the none clause', () => {
+        const doc = DOCS.adventure;
+        const { op, out } = hubInitialised(NON_GRANTING);
+        expect(out.ok, out.error).toBe(true);
+        expect(op.result.grantedItems).toEqual([]);
+        expect(bytes(out.doc.items)).toBe(bytes(doc.items));
+        expect(bytes(out.doc.starting_items)).toBe(bytes(doc.starting_items));
+        expect(out.description).toContain(`no library items ${GRANTED_AS_STARTING}`);
+    });
+
+    it('⛓ ONE undo returns items and starting_items byte for byte', () => {
+        const doc = DOCS.adventure;
+        const session = createEditSession(rulesEditAdapter, doc);
+        const before = bytes(session.record());
+        session.apply(hubInitialised(NEEDER).op);
+        expect(bytes(session.record().starting_items)).not.toBe(bytes(doc.starting_items));
+        expect(session.undo()).toBe(true);
+        expect(bytes(session.record())).toBe(before);
+    });
+
+    it('⛓ metadata: source_game and source_counts, the pipeline\'s', () => {
+        const m = hubInitialised(NEEDER).out.doc.procgen_metadata;
+        expect(m.source_game).toBe(DOCS.adventure.game_name);
+        expect(m.source_counts).toEqual(computeSourceCounts(DOCS.adventure, P));
+    });
+
+    it('⛓⛓ THE AUDIT AS A ROW — pipeline top-down vs the hub on adventure: only the must-NOT keys differ', async () => {
+        for (const t of [NON_GRANTING, NEEDER]) {
+            const k = initialiseKnobs(t);
+            const env = buildTopDownEnvelope({ source: DOCS.adventure, seed: 1, gridDims: GRID4,
+                regionSizeBase: { width: 8, height: 6 }, substrateMix: { [t]: 1 }, regionParams: k.regionParams,
+                hazardOpts: k.hazardOpts });
+            // eslint-disable-next-line no-await-in-loop
+            const pipe = (await runTopDownToStep(env, 'compile', {})).compile.rulesJson;
+            const hub = hubInitialised(t).out.doc;
+            const differ = [...new Set([...Object.keys(pipe), ...Object.keys(hub)])]
+                .filter((x) => bytes(pipe[x]) !== bytes(hub[x])).sort();
+            expect(differ, t).toEqual([...MUST_NOT, ...BOTH_WRITE].sort());
+            expect(bytes(hub.preset_sidecars[P]), t).toBe(bytes(pipe.preset_sidecars[P]));
+            expect(hub.starting_items[P], t).toEqual(pipe.starting_items[P]);
+            const grantedOf = (d) => Object.keys(d.items[P]).filter((n) => DOCS.adventure.items[P][n] == null);
+            expect(grantedOf(hub), t).toEqual(grantedOf(pipe));
+            for (const n of grantedOf(hub)) expect(hub.items[P][n], n).toEqual(pipe.items[P][n]);
+            expect(hub.itempool_counts[P], t).toEqual(pipe.itempool_counts[P]);
+            const shape = (d) => Object.fromEntries(Object.entries(d.regions[P]).map(([n, r]) => [n, {
+                exits: (r.exits ?? []).map((e) => [e.name, e.connected_region, bytes(e.access_rule)]),
+                locations: (r.locations ?? []).map((l) => l.name),
+            }]));
+            expect(shape(hub), t).toEqual(shape(pipe));
+            const pm = pipe.procgen_metadata;
+            const hm = hub.procgen_metadata;
+            expect([...new Set([...Object.keys(pm), ...Object.keys(hm)])].filter((x) => bytes(pm[x]) !== bytes(hm[x]))
+                .sort(), t).toEqual(['driver', 'player']);
+        }
+    });
+
+    it('⛔ an inlined grant is checked: a defined name, a held name, a taken id, a missing def', () => {
+        const doc = DOCS.adventure;
+        const { op } = hubInitialised(NEEDER);
+        const [first] = op.result.grantedItems;
+        const defined = JSON.parse(JSON.stringify(doc));
+        defined.items[P][first] = { name: first, id: 1, classification: 'progression', groups: [] };
+        expect(applyRulesDocOp(defined, op).error).toContain('a grant never overwrites');
+        const held = JSON.parse(JSON.stringify(doc));
+        held.starting_items = { [P]: [first] };
+        expect(applyRulesDocOp(held, op).error).toContain(`already starts with ${first}`);
+        const taken = JSON.parse(JSON.stringify(doc));
+        taken.items[P].Other = { name: 'Other', id: op.result.grantedDefs[first].id, classification: 'filler', groups: [] };
+        expect(applyRulesDocOp(taken, op).error).toContain('take an item id');
+        const missing = JSON.parse(JSON.stringify(op));
+        delete missing.result.grantedDefs[first];
+        expect(applyRulesDocOp(doc, missing).error).toContain('exactly one definition');
+    });
+
+    it('⛓ a def never takes an id the slot uses (avoidIds); a record made before S1 replays unchanged', () => {
+        const doc = JSON.parse(JSON.stringify(DOCS.adventure));
+        doc.items[P].Taken = { name: 'Taken', id: GRANTED_ITEM_FIRST_ID, classification: 'filler', groups: [] };
+        const res = initialiseSlot({ doc, player: P, substrate: NEEDER, gridDims: GRID4, seed: 1 });
+        const ids = Object.values(res.grantedDefs).map((d) => d.id);
+        expect(ids).not.toContain(GRANTED_ITEM_FIRST_ID);
+        expect(ids[0]).toBe(GRANTED_ITEM_FIRST_ID - 1);
+        const old = JSON.parse(JSON.stringify(hubInitialised(NEEDER).op));
+        delete old.result.grantedItems;
+        delete old.result.grantedDefs;
+        const out = applyRulesDocOp(DOCS.adventure, old);
+        expect(out.ok, out.error).toBe(true);
+        expect(bytes(out.doc.items)).toBe(bytes(DOCS.adventure.items));
     });
 });
