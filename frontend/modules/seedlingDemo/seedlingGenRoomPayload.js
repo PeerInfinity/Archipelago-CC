@@ -57,16 +57,26 @@ export const GEN_ROOM_REFUSALS = Object.freeze({
         + `\`${key}\` = ${JSON.stringify(value)} is not usable — ${why}`,
     generator: (regionId, seed, size, message) => `generated Seedling room '${regionId}' (seed ${seed}, `
         + `${size.width}x${size.height}): the Seedling generator refused this room — ${message}`,
-    tooManyLocations: (regionId, want, cells) => `generated Seedling room '${regionId}' must hold ${want} `
+    tooManyLocations: (regionId, want, cells, rerolls = null) => `generated Seedling room '${regionId}' must hold ${want} `
         + `AP location(s), and only ${cells.length} cell(s) are free for them [${cells.join(' ')}] (the `
         + 'goal cell takes the first; the rest need a reachable cell off the start, off every door and '
-        + 'not next to one). Lower maxItemsPerRegion, lower the flash_seedling_gen quota (fewer items '
+        + 'not next to one)'
+        + (rerolls == null ? '' : `, in every draw up to re-roll ${rerolls} (the budget)`)
+        + '. Lower maxItemsPerRegion, lower the flash_seedling_gen quota (fewer items '
         + 'per room), or raise the region size.',
     tooManyDoors: (regionId, seed, size, want, message) => `generated Seedling room '${regionId}' (seed ${seed}, `
         + `${size.width}x${size.height}) must hold ${want} door(s), one per exit, and its walkable area cannot `
         + `seat them apart without sealing an approach (${message.replace(/^levelSetExits: /, '')}). Raise the `
         + 'region size (regionWidth / regionHeight), or place this region with a substrate that takes more '
         + 'exits in less room.',
+    /** ⛓ G5 — case 1 exhausted: an exit the ENGINE added after the room was built finds no unsealing door. */
+    engineDoors: (regionId, seed, size, want, engineAdded, rerolls, message) => `generated Seedling room `
+        + `'${regionId}' (seed ${seed}, ${size.width}x${size.height}) must hold ${want} door(s), one per exit, `
+        + `${engineAdded} of them an engine-added door (an exit the driver inserted after the room was built — `
+        + 'a back exit to the parent or a grid link), and no draw seats them all without sealing an approach '
+        + `— the room was re-rolled up to ${rerolls} time(s), the budget (`
+        + `${message.replace(/^levelSetExits: /, '')}). Raise the region size (regionWidth / regionHeight), or `
+        + 'place this region with a substrate that takes more exits in less room.',
     notARoom: (why) => `this payload is not a generated Seedling room — ${why}. Regenerate the region `
         + 'through flash_seedling_gen.',
 });

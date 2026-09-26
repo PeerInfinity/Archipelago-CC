@@ -172,9 +172,11 @@ export const FLASH_SEEDLING_GEN_SIDECAR_FIELDS = Object.freeze({
         type: 'object', required: true, derived: true,
         description: `The knobs the room was built with (\`biome\`, \`obstacleTarget\`, \`triesPerStep\`, `
             + `\`saturationK\`, \`skeleton\`, \`elements\`, \`areas\`, \`fill\`), written by ${WRITER}; `
-            + '`procgenParamsFromPayload` opens the per-region form on them. `rerolls` (G2) is how many times '
-            + 'the room was re-rolled to seat its doors without sealing an approach (0 = the first draw; '
-            + '`seed` is the one used) — a record, not a knob.',
+            + '`procgenParamsFromPayload` opens the per-region form on them. `rerolls` (G2, G5) is how many times '
+            + 'the room was re-rolled — to seat its doors without sealing an approach, an engine-added door, or '
+            + 'its locations (0 = the first draw; `seed` is the one used) — and `rerollCause` (only when '
+            + '`rerolls` > 0) which case caused the last one (`doors`, `engine-added door`, `locations`): a '
+            + 'record, not a knob.',
     }),
     locations: Object.freeze({
         type: 'array', required: true, derived: true,
