@@ -143,13 +143,12 @@ activate the menu panel and press the button to restart from the first region"*)
 
 ## Registrations
 
-The three a panel module needs, plus two more this one needs:
+The two a panel module needs, plus two more this one needs (its title, icon and column come from its own `moduleInfo`):
 
 | Where | What |
 |-------|------|
 | `frontend/module-configs/modules.json` | `moduleDefinitions.menuPanel` + `loadPriority` (after `procgenPlayer`) |
 | `frontend/layout-configs/layout_presets.json` | the `default` preset, beside `loopsPanel` |
-| `frontend/app/core/moduleMetadata.js` | the mobile/fallback `{title, icon, name, column}` |
 | `frontend/init-bundled.js` | the bundled-mode import + map entry |
 | `register()` | `registerDispatcherSender('user:regionMove', 'bottom', 'first')` and `registerEventBusPublisher('ui:activatePanel')` — the eventBus **drops** a publish from an unregistered publisher (a warn, no delivery), so the skip-OFF self-activation needs both |
 

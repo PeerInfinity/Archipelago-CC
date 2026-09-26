@@ -33,6 +33,7 @@ import { DOCS_INDEX } from '../../quickLaunch/generated/docsIndex.js';
 import { CATEGORY_ORDER } from '../../quickLaunch/generated/docsIndex.js';
 import { OTHER_CATEGORY, VIRTUAL_GROUPS, lookupModuleInfo } from '../../quickLaunch/quickLaunchCatalog.js';
 import { EMPTY_TREE, NODE_KINDS } from '../../quickLaunch/quickLaunchTree.js';
+import { completeModuleInfo } from '../../../app/initialization/completeModuleInfo.js';
 import {
     COLLAPSED_KEY, COLLAPSED_SETTING, CONTROLS, MODULE_ID, ROOT_CHOICE, TREE_KEY, TREE_SETTING, VIEWS, VIEW_KEY,
     VIEW_SETTING, dialogs,
@@ -537,6 +538,39 @@ async function quickLaunchCollapsedGroupsPersist(testController) {
     return testController.getOverallResult();
 }
 
+/**
+ * The mobile tab bar's input, checked on the desktop layout (a row cannot switch
+ * layout): every registered panel's own moduleInfo gives the title and name the
+ * mobile registration shows, with no componentType fallback firing. The lookup is
+ * the registry's (sources 1–2 of layoutManager.js setupMobileLayout); the loader's
+ * maps (sources 3–4) are not reachable from here, and a panel that needed them
+ * fails this row rather than passing it.
+ */
+async function mobileTabBarResolvesEveryPanel(testController) {
+    const entries = [...centralRegistry.getAllPanelComponents()];
+    testController.log(`registry: ${entries.length} panel components`);
+    testController.reportCondition('the registry holds panel components', entries.length > 0);
+
+    const noInfo = [];
+    const noTitle = [];
+    const noName = [];
+    const iconless = [];
+    for (const [componentType, entry] of entries) {
+        const raw = lookupModuleInfo(componentType, entry);
+        if (!raw) { noInfo.push(componentType); continue; }
+        const info = completeModuleInfo(componentType, raw);
+        if (!raw.title || info.title !== raw.title) noTitle.push(componentType);
+        if (!raw.name || info.name !== raw.name) noName.push(componentType);
+        if (!info.icon) iconless.push(componentType);
+    }
+    testController.assertEqual('panels whose moduleInfo is unreachable', '', noInfo.join(', '));
+    testController.assertEqual('panels without a declared title', '', noTitle.join(', '));
+    testController.assertEqual('panels without a declared name', '', noName.join(', '));
+    // The icon set is the registry's own: a panel that declares no icon shows its title's first letter.
+    testController.log(`panels declaring no icon (tab shows the title's first letter): ${iconless.join(', ') || 'none'}`);
+    return testController.getOverallResult();
+}
+
 const TESTS = [
     ['quick-launch-lists-every-registered-panel', 'Quick Launch: a button per registered panel',
         'Asserts the Quick Launch panel draws one button per componentType centralRegistry.getAllPanelComponents() '
@@ -586,6 +620,11 @@ const TESTS = [
         'Collapses a stored group through its summary; collapsedGroups holds its id; after a re-render the '
         + 'redrawn group is still collapsed.',
         quickLaunchCollapsedGroupsPersist],
+    ['mobile-tab-bar-resolves-every-panel', 'Mobile tab bar: every panel resolves a title and name from its moduleInfo',
+        'For every registered panel, the moduleInfo the mobile layout registers (the registry\'s lookup) declares a '
+        + 'title and a name, so no componentType fallback fires; the panels declaring no icon are read off the '
+        + 'registry and logged.',
+        mobileTabBarResolvesEveryPanel],
 ];
 
 for (const [id, name, description, testFunction] of TESTS) {

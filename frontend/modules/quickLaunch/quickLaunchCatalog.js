@@ -14,8 +14,8 @@
  *                    from, or null; defaults to `lookupModuleInfo`
  *
  * ⛔ Per-module data comes from each module's own `moduleInfo` (⚖ the user,
- * 2026-09-24): no hand list of panels, titles, icons or doc paths lives here,
- * and `app/core/moduleMetadata.js` is not consulted. A module that declares
+ * 2026-09-24): no hand list of panels, titles, icons or doc paths lives here
+ * (nor anywhere else — the mobile fallback table is gone). A module that declares
  * nothing still gets a row — titled by its componentType, with a blank icon.
  */
 
@@ -40,9 +40,9 @@ export const DOC_SECTION_ORDER = Object.freeze(['user', 'user/modules']);
 
 /**
  * The title/icon lookup order the mobile layout uses
- * (`app/initialization/layoutManager.js` setupMobileLayout), minus its last
- * step, the `moduleMetadata.js` fallback table: the moduleInfo registered with
- * the component, then a `moduleInfo` static on the component class.
+ * (`app/initialization/layoutManager.js` setupMobileLayout), minus its
+ * module-loader maps: the moduleInfo registered with the component, then a
+ * `moduleInfo` static on the component class.
  */
 export function lookupModuleInfo(componentType, entry) {
     return entry?.moduleInfo || entry?.componentClass?.moduleInfo || null;

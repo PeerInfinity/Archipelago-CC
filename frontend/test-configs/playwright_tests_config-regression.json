@@ -368,9 +368,16 @@
       "_comment": "Quick Launch Q3 (2026-09-24): categories / cards view / filter / collapsed groups. Expectations are read off centralRegistry and CATEGORY_ORDER at run time. Each row ends (restoreQ3) with the tree EMPTY_TREE, the view tree, the filter box empty and collapsedGroups []. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
     },
     {
-      "id": "layout-import-keeps-module-state-in-sync",
+      "id": "mobile-tab-bar-resolves-every-panel",
       "enabled": true,
       "order": 43,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch P2 (2026-09-26): the mobile fallback table is gone; every registered panel must declare the title and name the mobile tab bar shows in its own moduleInfo. Read off centralRegistry at run time. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
+      "id": "layout-import-keeps-module-state-in-sync",
+      "enabled": true,
+      "order": 44,
       "category": "JSON Panel",
       "_comment": "Quick Launch Q1b (2026-09-24), trap 1424: a live layout import (applyLayoutConfig) must leave every module with a panel enabled exactly when its tab exists and disable nothing; a layout without Events disables it and the original re-enables it; enableModule then activates the existing tab instead of adding a second. Self-contained (ends on the layout it started with)."
     }

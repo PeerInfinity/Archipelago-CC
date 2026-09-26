@@ -118,14 +118,16 @@ zeros — an unraised lab is a canvas the page itself refuses to map a click ont
 `levelChanged` therefore has TWO consumers now: this panel's TAKE box, and
 `labRoomEditor`'s wait for the room transition.
 
-## Registering it (the three places)
+## Registering it (the two places)
 
 1. `frontend/module-configs/modules.json` — `moduleDefinitions` **and**
    `loadPriority`.
 2. `frontend/layout-configs/layout_presets.json` — two entries in the default
    preset's stack, each with `"componentState": {"substrate": "maze"|"seedling"}`.
-3. `frontend/app/core/moduleMetadata.js` — the mobile/fallback `{title, icon,
-   name, column}`.
+
+The title, icon, name and column the mobile layout shows come from the module's
+own `moduleInfo` in `index.js` (the old mobile fallback
+table is gone).
 
 Plus `frontend/init-bundled.js` (`__BUNDLED_MODULES__` + the static import) —
 a module enabled in `modules.json` but missing there gets dynamically imported
