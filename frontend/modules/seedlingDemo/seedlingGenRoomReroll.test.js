@@ -26,6 +26,7 @@ import * as room from './seedlingGenRoom.js';
 import { walkableCellsFrom } from './levelSetExits.js';
 import { generateSeedlingLevel } from './procgenSeedling.js';
 import { buildLevelWorld } from './levelWorld.js';
+import { assembleGeneratedSeedlingSet } from './seedlingGeneratedSet.js';
 
 const {
     GEN_ROOM_BIOMES, GEN_ROOM_DOOR_REROLLS, GEN_ROOM_REROLL_CAUSES, extractGenRules, goalHoldsWithDoorsAsWalls,
@@ -48,6 +49,16 @@ const GRID = (seed, w, h) => ({
     mode: 'gridGrowth', params: { seed, gridWidth: 3, gridHeight: 3, regionWidth: w, regionHeight: h },
     scenario: { items: { key_red: 1, key_blue: 1, victory: 1 }, obstacles: { door_red: 1, door_blue: 1 } },
     substrateQuotas: {}, substrateMix: { maze: 1, [GEN]: 1 }, substrateMode: 'mix',
+});
+
+const ADV = 'frontend/presets/adventure/AP_14089154938208861744/AP_14089154938208861744';
+const ADVENTURE = {
+    topDownSource: JSON.parse(readFileSync(join(ROOT, `${ADV}_rules.json`), 'utf8')),
+    sphereLog: readFileSync(join(ROOT, `${ADV}_sphere_log.jsonl`), 'utf8').split('\n').filter((l) => l.trim()).map((l) => JSON.parse(l)),
+};
+const adventure = (seed, w, h) => ({
+    mode: 'topDown', params: { seed, regionWidth: w, regionHeight: h }, scenario: { items: {}, obstacles: {} },
+    substrateQuotas: {}, substrateMix: { [GEN]: 1 }, substrateMode: 'mix',
 });
 
 const key = (c) => `${c.tx},${c.ty}`;
@@ -246,15 +257,6 @@ describe('case 2 — LOCATIONS the room cannot seat re-roll it at place time ((B
             .toThrow(new RegExp(`must hold 13 AP location\\(s\\).*in every draw up to re-roll ${GEN_ROOM_DOOR_REROLLS} \\(the budget\\)`));
     });
 
-    const ADV = 'frontend/presets/adventure/AP_14089154938208861744/AP_14089154938208861744';
-    const ADVENTURE = {
-        topDownSource: JSON.parse(readFileSync(join(ROOT, `${ADV}_rules.json`), 'utf8')),
-        sphereLog: readFileSync(join(ROOT, `${ADV}_sphere_log.jsonl`), 'utf8').split('\n').filter((l) => l.trim()).map((l) => JSON.parse(l)),
-    };
-    const adventure = (seed, w, h) => ({
-        mode: 'topDown', params: { seed, regionWidth: w, regionHeight: h }, scenario: { items: {}, obstacles: {} },
-        substrateQuotas: {}, substrateMix: { [GEN]: 1 }, substrateMode: 'mix',
-    });
     /** The world built with a spy on every core call, per region. */
     async function spied(state, ctx) {
         const calls = {};
@@ -296,5 +298,33 @@ describe('case 2 — LOCATIONS the room cannot seat re-roll it at place time ((B
         expect(error?.message).toMatch(new RegExp(`generated Seedling room 'Overworld' must hold 11 AP location\\(s\\).*`
             + `in every draw up to re-roll ${GEN_ROOM_DOOR_REROLLS} \\(the budget\\)`));
         expect(calls.Overworld).toBe(1);
+    }, 60_000);
+});
+
+describe('a re-rolled room is PLAYED like any other — G2\'s assembler takes it (no committed witness needed)', () => {
+    /**
+     * ⛓ What play reads off a payload — `record`, `start`, `exits`, `locations`,
+     * `level` — has the same shape after a re-roll; `generation` is provenance the
+     * assembler never reads. So every world that builds only by a re-roll ASSEMBLES
+     * into a valid level set (`validateLevelSet` inside the assembler refuses
+     * otherwise), one apitem per location, one level per room + the parking room.
+     */
+    const byName = (rules) => {
+        const m = new Map();
+        for (const region of Object.values(rules.regions['1'])) for (const l of region.locations ?? []) m.set(l.name, l.item ?? null);
+        return (name) => (m.get(name) ? { name: m.get(name).name, player: m.get(name).player } : null);
+    };
+    it.each([
+        ['the sphere leaf, seed 10 (engine-added door)', () => withSeed(SEEDLING_GENERATED_LEAF_STATE, 10), undefined],
+        ['grid growth 10x10 seed 7 (engine-added door)', () => GRID(7, 10, 10), undefined],
+        ['top-down Adventure seed 6 (locations)', () => adventure(6, 10, 10), ADVENTURE],
+    ])('%s: assembles into a valid set', async (_name, state, ctx) => {
+        const rules = await build(state(), ctx);
+        const generated = rooms(rules);
+        expect(generated.some(([, p]) => p.generation.rerolls > 0)).toBe(true);
+        const out = assembleGeneratedSeedlingSet(rules, { locationItemOf: byName(rules), selfPlayer: 1 });
+        expect(out.report.rooms).toBe(generated.length);
+        expect(out.report.apitems).toHaveLength(generated.reduce((n, [, p]) => n + p.locations.length, 0));
+        expect(out.report.unjoined).toEqual([]);
     }, 60_000);
 });
