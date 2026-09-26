@@ -10358,7 +10358,10 @@ export async function apworldAGenerateAfterAStartingGrantLandsWithTheSatisfiedCl
             regionParams: prov.regionParams, hazardOpts: prov.hazardOpts, size: prov.size, freeItems: prov.freeItems,
         });
         testController.reportCondition('the pure op on the same arguments builds', pure.ok);
-        testController.assertEqual('⛓⛓ the answer is the regenerate op\'s own description', String(pure.description), String(answer));
+        // ⛓ S1 (⚖ Q1b) — plus the grants the same op declares, derived (bounce_worldgen
+        //   defines five of bounce's six library items, so the sixth is granted).
+        testController.assertEqual('⛓⛓ the answer is the regenerate op\'s own description (+ the grants it declared)',
+            String(withGrantsAnswer(pure.description, regenerationGrants(docObj, '1', own))), String(answer));
         testController.reportCondition(`⛓⛓ …which names the rules ${REGENERATE_SATISFIED_BY_START} [${item}]`,
             String(answer).includes(`${REGENERATE_SATISFIED_BY_START} [${item}]`));
         testController.assertEqual('⛓ the document\'s rules are untouched', JSON.stringify(docObj.regions),
@@ -12006,6 +12009,8 @@ for (const [id, name, testFunction] of R7_TESTS) {
 import { initialiseTargets as s1Targets } from '../../apworldEditor/slotInitialise.js';
 // eslint-disable-next-line import/first
 import { GRANTED_AS_STARTING, grantsClause } from '../../apworldEditor/rulesDocOps.js';
+// eslint-disable-next-line import/first
+import { regenerationGrants, withGrantsAnswer } from '../../apworldEditor/regionGenerationFlow.js';
 
 /** ⛓ The first realiser target that declares a starting need, and the first whose library grants nothing. */
 const s1Needer = () => s1Targets().find((t) => declaredStartingNeeds(substrateRegistry.get(t)).length) ?? null;
