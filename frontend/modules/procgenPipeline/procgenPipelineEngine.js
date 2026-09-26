@@ -1721,69 +1721,111 @@ export function layoutTopDown(rulesJson, opts, rng) {
     placementOrder.push({ name: actualStartName, cell: startCell, parent: null });
     grid.placeRegion(startCell, { region_id: actualStartName });
 
-    const bfsQueue = [actualStartName];
     /**
-     * ⛓ EDITOR v3 E2a — LEFT AS A HAND BFS, and why: `rulesGraph.reachableRegions`
-     * is the same traversal and returns a SET OF NAMES. This one's PRODUCT is a
-     * grid placement — it consumes rng, assigns cells and records exit sides as
-     * it goes — so the walk and the placement are one loop, and replacing the
-     * walk half would mean running the traversal twice and keeping the two in
-     * step. The byte gates could not see the difference; the placement would.
+     * ⛓⛓ R8 / M1 — **THE MENU IS THE LAYOUT'S HUB.** Every exit of a stripped
+     * Menu feeds a ROOT: the first exit's target is the start (above); each
+     * further one, in Menu-exit order, is placed only if the BFS from the roots
+     * before it did not reach it — at a `findDisconnectedCell` (a teleporter-fed
+     * cell: the Menu has no cell, so nothing is adjacent to it) — and is BFS'd in
+     * turn. A root carries `parent: null`, the start's contract: ③ inserts no
+     * back-exit into it and keeps its default entrance, and every `parent == null`
+     * reader sees a root. No `teleporterEdges` entry: its `from` is the Menu, which
+     * has no cell to map. `menuRoots` records which Menu exit fed each root (the
+     * first included); `[]` when there is no stripped Menu.
+     * ⛔ A one-exit Menu (or one whose further targets the BFS already reached)
+     * draws NO extra rng — the layout is byte-identical to the single-root one.
      */
-    while (bfsQueue.length > 0) {
-        const fromName = bfsQueue.shift();
-        const fromCell = cellsByName.get(fromName);
-        const fromRegion = sourceRegions[fromName];
-        if (!fromRegion) continue;
-        for (const exit of fromRegion.exits ?? []) {
-            const targetName = exit.connected_region;
-            if (!targetName) continue;
-            // Skip the synthetic Menu region everywhere — it's a
-            // wrapper, not a playable region. buildRulesJson re-emits
-            // it on the output side.
-            if (menuName && targetName === menuName) continue;
-            if (!sourceRegions[targetName]) continue;
+    const menuRoots = [];
+    const menuExits = menuName ? (sourceRegions[menuName]?.exits ?? []) : [];
+    if (menuName) {
+        menuRoots.push({ name: actualStartName, exit_id: menuExits[0].name });
+    }
 
-            if (cellsByName.has(targetName)) {
-                // Target already placed. If not adjacent, mark this
-                // source-exit as a teleporter; if adjacent, no-op
-                // (the existing geometric edge will be honored).
-                const targetCell = cellsByName.get(targetName);
-                if (!cellsAreAdjacent(fromCell, targetCell)) {
-                    teleporterEdges.push({ from_name: fromName, exit_id: exit.name });
+    const bfsQueue = [actualStartName];
+    const runBfs = () => {
+        /**
+         * ⛓ EDITOR v3 E2a — LEFT AS A HAND BFS, and why: `rulesGraph.reachableRegions`
+         * is the same traversal and returns a SET OF NAMES. This one's PRODUCT is a
+         * grid placement — it consumes rng, assigns cells and records exit sides as
+         * it goes — so the walk and the placement are one loop, and replacing the
+         * walk half would mean running the traversal twice and keeping the two in
+         * step. The byte gates could not see the difference; the placement would.
+         */
+        while (bfsQueue.length > 0) {
+            const fromName = bfsQueue.shift();
+            const fromCell = cellsByName.get(fromName);
+            const fromRegion = sourceRegions[fromName];
+            if (!fromRegion) continue;
+            for (const exit of fromRegion.exits ?? []) {
+                const targetName = exit.connected_region;
+                if (!targetName) continue;
+                // Skip the synthetic Menu region everywhere — it's a
+                // wrapper, not a playable region. buildRulesJson re-emits
+                // it on the output side.
+                if (menuName && targetName === menuName) continue;
+                if (!sourceRegions[targetName]) continue;
+
+                if (cellsByName.has(targetName)) {
+                    // Target already placed. If not adjacent, mark this
+                    // source-exit as a teleporter; if adjacent, no-op
+                    // (the existing geometric edge will be honored).
+                    const targetCell = cellsByName.get(targetName);
+                    if (!cellsAreAdjacent(fromCell, targetCell)) {
+                        teleporterEdges.push({ from_name: fromName, exit_id: exit.name });
+                    }
+                    continue;
                 }
-                continue;
-            }
 
-            // Target not yet placed. Try a geographic neighbor first.
-            const adj = findAdjacentEmptyCell(grid, fromCell, rng);
-            if (adj) {
-                cellsByName.set(targetName, adj);
-                placementOrder.push({
-                    name: targetName, cell: adj,
-                    parent: { name: fromName, exit_id: exit.name },
-                });
-                grid.placeRegion(adj, { region_id: targetName });
-                bfsQueue.push(targetName);
-            } else {
-                const disc = findDisconnectedCell(grid, rng, teleporterMinGap);
-                if (disc) {
-                    cellsByName.set(targetName, disc);
+                // Target not yet placed. Try a geographic neighbor first.
+                const adj = findAdjacentEmptyCell(grid, fromCell, rng);
+                if (adj) {
+                    cellsByName.set(targetName, adj);
                     placementOrder.push({
-                        name: targetName, cell: disc,
+                        name: targetName, cell: adj,
                         parent: { name: fromName, exit_id: exit.name },
                     });
-                    grid.placeRegion(disc, { region_id: targetName });
+                    grid.placeRegion(adj, { region_id: targetName });
                     bfsQueue.push(targetName);
-                    teleporterEdges.push({ from_name: fromName, exit_id: exit.name });
                 } else {
-                    // Grid is too cramped — drop this edge. The exit
-                    // will dangle (target_region: null) and get walled
-                    // off in the final pass.
-                    stats.regionsSkipped += 1;
+                    const disc = findDisconnectedCell(grid, rng, teleporterMinGap);
+                    if (disc) {
+                        cellsByName.set(targetName, disc);
+                        placementOrder.push({
+                            name: targetName, cell: disc,
+                            parent: { name: fromName, exit_id: exit.name },
+                        });
+                        grid.placeRegion(disc, { region_id: targetName });
+                        bfsQueue.push(targetName);
+                        teleporterEdges.push({ from_name: fromName, exit_id: exit.name });
+                    } else {
+                        // Grid is too cramped — drop this edge. The exit
+                        // will dangle (target_region: null) and get walled
+                        // off in the final pass.
+                        stats.regionsSkipped += 1;
+                    }
                 }
             }
         }
+    };
+    runBfs();
+
+    for (const exit of menuExits.slice(1)) {
+        const targetName = exit?.connected_region;
+        if (!targetName || targetName === menuName || !sourceRegions[targetName]) continue;
+        if (cellsByName.has(targetName)) continue;
+        const disc = findDisconnectedCell(grid, rng, teleporterMinGap);
+        if (!disc) {
+            // No free cell ≥ the gap: the root (and whatever only it reaches)
+            // stays unplaced, counted like any dropped edge.
+            stats.regionsSkipped += 1;
+            continue;
+        }
+        cellsByName.set(targetName, disc);
+        placementOrder.push({ name: targetName, cell: disc, parent: null });
+        grid.placeRegion(disc, { region_id: targetName });
+        menuRoots.push({ name: targetName, exit_id: exit.name });
+        bfsQueue.push(targetName);
+        runBfs();
     }
 
     // ----- Phase 2 sizing (rng-free, so it lives in ①): pick one uniform region
@@ -1827,7 +1869,7 @@ export function layoutTopDown(rulesJson, opts, rng) {
         : (Array.isArray(rulesJson.sphere_log) ? rulesJson.sphere_log : null);
     return {
         grid, startCell, placementOrder, cellsByName, teleporterEdges,
-        sourceRegions, stats, uniformSize, menuName, actualStartName,
+        sourceRegions, stats, uniformSize, menuName, menuRoots, actualStartName,
         assumeBidirectional, playerId, seed, logEntries,
         substrateByRegion: resolvedSubstrates, subSeedByRegion,
     };
@@ -4156,7 +4198,21 @@ const SPHERE_REBUILD_REFUSALS = Object.freeze({
     noParentExit: (parentId, side, childId) => `rebuildEnvelopeFromRulesJson: region `
         + `${parentId} has no exit on side ${side} leading to ${childId}, so its `
         + 'teleporter cannot be rebuilt',
+    /**
+     * ⛓ M1 (R8) — a top-down world whose Menu fed SEVERAL roots (one per Menu
+     * exit the BFS did not reach). The rebuild keeps one start and the sphere
+     * compile re-emits a synthetic one-exit Menu, which would orphan every other
+     * root; refused by name rather than rebuilt wrong. Re-realise it top-down.
+     */
+    multiRoot: (count) => `rebuildEnvelopeFromRulesJson: the sphere tree has ${count} roots `
+        + '(a top-down Menu hub) — the sphere rebuild keeps ONE start and would orphan the '
+        + 'others; realise it top-down instead',
 });
+
+/** ⛓ M1 — how many parent-less nodes (roots) a compact sphere tree holds. */
+function sphereTreeRootCount(treeMeta) {
+    return (treeMeta?.nodes ?? []).filter((n) => n.parent == null).length;
+}
 
 /**
  * The forward exit of a placed parent region that leaves on `node.side` for
@@ -4195,6 +4251,8 @@ export function sphereRebuildRefusal(rulesJson, opts = {}) {
         return SPHERE_REBUILD_REFUSALS.notSphere();
     }
     if (!meta.sphere_tree || !meta.sphere_plan) return SPHERE_REBUILD_REFUSALS.noTree();
+    const roots = sphereTreeRootCount(meta.sphere_tree);
+    if (roots > 1) return SPHERE_REBUILD_REFUSALS.multiRoot(roots);
     const sidecars = rulesJson.preset_sidecars?.[playerId] ?? {};
     for (const node of meta.sphere_tree.nodes ?? []) {
         if (!node.cell) continue;
@@ -4231,6 +4289,8 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
     if (!meta.sphere_tree || !meta.sphere_plan) {
         throw new Error(SPHERE_REBUILD_REFUSALS.noTree());
     }
+    const roots = sphereTreeRootCount(meta.sphere_tree);
+    if (roots > 1) throw new Error(SPHERE_REBUILD_REFUSALS.multiRoot(roots));
     const plan = meta.sphere_plan;
     const treeMeta = meta.sphere_tree;
     const sidecars = rulesJson.preset_sidecars?.[playerId] ?? {};
