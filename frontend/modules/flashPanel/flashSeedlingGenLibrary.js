@@ -243,6 +243,17 @@ const KNOB_OF = Object.freeze({
 });
 
 /**
+ * ⛓⛓ SEEDLING GENERATED G4 — **DOES THE ROOM HOST CHILDREN?** A bag key that is
+ * NOT a room knob: it steers sphere growth's tree (the two hooks below), not the
+ * generator, so it is read here and never reaches `generation` (the room's
+ * `knobsOf` picks its own keys). Default TRUE — the host enforces a generated
+ * door's gate (`seedlingDoorGate.js`); a state that wants a LEAF says `false`
+ * (the committed `seedling_generated_leaf` does, which is what keeps its bytes).
+ */
+export const SEEDLING_GEN_HOST_CHILDREN_KEY = 'seedlingGenHostChildren';
+export const hostsChildren = (regionParams) => regionParams?.seedlingGen?.hostChildren !== false;
+
+/**
  * The regionParams the room reads (`params.seedlingGen`), from the panel bag
  * (`assembleRegionParams`) — in every pipeline mode and the APWorld editor's
  * Generate (the spiral and grid growth handed every core `{}` until seedling
@@ -253,6 +264,7 @@ export function buildSeedlingGenRegionParams({ params = {} } = {}) {
     for (const [bagKey, knob] of Object.entries(KNOB_OF)) {
         seedlingGen[knob] = params[bagKey] ?? DEFAULT_SEEDLING_GEN_PROCGEN_PARAMS[bagKey];
     }
+    seedlingGen.hostChildren = params[SEEDLING_GEN_HOST_CHILDREN_KEY] !== false;
     return { seedlingGen };
 }
 
@@ -347,9 +359,19 @@ export const substrateRegistryEntry = Object.freeze({
     /** A generated room's exits are SIDES — labels; the door stands where the flood put it. */
     regionGeometry: REGION_GEOMETRY.SIDES,
     exitSides: SIDE_AGNOSTIC_EXIT_SIDES,
-    /** ⛓ A LEAF (T3's law, ⚖ Q4): no child gate on a generated door; the back door is ungated. */
-    canHostExitGates: () => false,
-    backPortalGated: () => false,
+    /**
+     * ⛓⛓ G4 — A HOST (⚖ Q4 option C, ruled R1 2026-09-26). The game cannot hold
+     * a pipeline item, so the HOST enforces a generated door's gate
+     * (`seedlingDoorGate.js`: a refused door bounces the player back onto its
+     * approach) — any item can gate any generated door, so the room hosts any
+     * child gate. Its back door is gated on the entry gate (the default) —
+     * sound: you are only inside if you held it. Both read
+     * `regionParams.seedlingGen.hostChildren` (`hostsChildren`): a state that
+     * says `false` keeps G1–G3's LEAF (no child; the back door takes no gate slot).
+     */
+    canHostExitGates: () => true,
+    exitGateVeto: (regionParams) => (hostsChildren(regionParams) ? () => true : () => false),
+    backPortalGated: (regionParams) => hostsChildren(regionParams),
 
     /** `flash_panel` only — the installed atlas compile's own block. NO `region_atlas`: a generated world has no map. */
     rulesJsonBlocks: () => ({ flash_panel: seedlingFlashPanelBlock() }),

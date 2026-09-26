@@ -66,14 +66,18 @@ describe('the entry — registered, light, and in the family', () => {
         expect('regionRoundTrip' in ENTRY).toBe(false);
     });
 
-    it('is PROCEDURAL (it shadows no zone hook) in the SIDES shape, and a LEAF', () => {
+    it('is PROCEDURAL (it shadows no zone hook) in the SIDES shape, and (G4) a HOST — a leaf only by the state\'s knob', () => {
         for (const hook of ['generateRegionCore', 'placeFromItems', 'placeFromRules', 'extractPathsAndObstacles',
             'serializeWorld', 'deserializeWorld']) expect(typeof ENTRY[hook], hook).toBe('function');
         expect(ENTRY.generateZoneForSpecs).toBeUndefined();
         expect(ENTRY.zoneCount).toBeUndefined();
         expect(geometryOf(ENTRY)).toBe(REGION_GEOMETRY.SIDES);
-        expect(ENTRY.canHostExitGates()).toBe(false);
-        expect(ENTRY.backPortalGated()).toBe(false);
+        // ⛓ G4: the host enforces a generated door's gate (seedlingDoorGate.js), so the room hosts children
+        // and gates its back door; `seedlingGen.hostChildren: false` keeps G1–G3's leaf
+        expect(ENTRY.canHostExitGates()).toBe(true);
+        expect(ENTRY.backPortalGated({})).toBe(true);
+        expect(ENTRY.backPortalGated({ seedlingGen: { hostChildren: false } })).toBe(false);
+        expect(ENTRY.exitGateVeto({ seedlingGen: { hostChildren: false } })([], [{ item: 'k', count: 1 }])).toBe(false);
     });
 
     it('writes `flash_panel` ONLY — flash_seedling\'s own block, read off the installed compile', () => {
@@ -448,7 +452,9 @@ describe('serializeWorld ⇄ deserializeWorld', () => {
 describe('the per-region generation knobs', () => {
     it('the bag\'s defaults are the room\'s, and buildRegionParams hands them over under `seedlingGen`', () => {
         expect(ENTRY.defaultProcgenParams).toBe(DEFAULT_SEEDLING_GEN_PROCGEN_PARAMS);
-        expect(buildSeedlingGenRegionParams({ params: {} })).toEqual({ seedlingGen: { ...GEN_ROOM_DEFAULTS, saturationK: undefined } });
+        // ⛓ G4: `hostChildren` rides beside the room's knobs (it steers the tree, not the generator)
+        expect(buildSeedlingGenRegionParams({ params: {} }))
+            .toEqual({ seedlingGen: { ...GEN_ROOM_DEFAULTS, saturationK: undefined, hostChildren: true } });
         const p = buildSeedlingGenRegionParams({ params: { seedlingGenObstacleTarget: 2, seedlingGenFill: 'shell' } });
         expect(p.seedlingGen).toMatchObject({ obstacleTarget: 2, fill: 'shell', biome: 'pre-sword' });
     });
