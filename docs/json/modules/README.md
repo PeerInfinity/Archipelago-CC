@@ -30,7 +30,7 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 - [Menu Panel](./menuPanel.md) (`menuPanel`) — the start region's substrate: one button per exit, a Restart that works outside loop mode, and the *skip the menu* setting.
 - [Discovery Panel](./discoveryPanel.md)
 - [Meta Game Panel](./metaGamePanel.md)
-- [Timer Panel](./timerPanel.md)
+- [Timer Panel](./timerPanel.md) *(disabled)*
 
 ## Loop Mode Modules
 
@@ -41,11 +41,11 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 ## Non-procgen Games
 
 - **APCalc** (`apcalc`) *(disabled)* — calculator-themed puzzle game for Archipelago (enabled in the apcalc launch mode).
-- **APCalc Generator** (`apcalcGenerator`) — generates APCalc puzzle data with configurable parameters.
-- **JtA panel cluster** *(all disabled; superseded for substrate use by `jtaSubstrateWrapper`)*: `jtaGameDataPanel` (view/control JtA game data), `jtaActionQueue` (queue and execute JtA actions), `jtaQueueEngine` (headless queue execution strategy and predictions), `jtaArchipelago` (bridges JtA game events to AP checks/items), `jtaCostDebugger` (step-through debugger for JtA cost generation).
-- [Proof Queue](./proofQueue.md)
-- [Proof Graph](./proofGraph.md)
-- [Vibe Coding Simulator](./vibeCodingSim.md)
+- **APCalc Generator** (`apcalcGenerator`) *(disabled)* — generates APCalc puzzle data with configurable parameters.
+- **JtA panel cluster** *(all disabled except `jtaQueueEngine`; superseded for substrate use by `jtaSubstrateWrapper`)*: `jtaGameDataPanel` (view/control JtA game data), `jtaActionQueue` (queue and execute JtA actions), `jtaQueueEngine` (headless queue execution strategy and predictions), `jtaArchipelago` (bridges JtA game events to AP checks/items), `jtaCostDebugger` (step-through debugger for JtA cost generation).
+- [Proof Queue](./proofQueue.md) *(disabled)*
+- [Proof Graph](./proofGraph.md) *(disabled)*
+- [Vibe Coding Simulator](./vibeCodingSim.md) *(disabled)*
 
 ## Data and Configuration Panels
 
@@ -56,7 +56,7 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 - [Modules](./modules.md)
 - [Quick Launch](../user/modules/quickLaunch.md) (`quickLaunch`) — a button per registered panel (opens it, or brings it forward) and a link per user guide; its catalog is read off the live registry and each module's own `moduleInfo` (`docs` = its guide). Code: `frontend/modules/quickLaunch/`.
 - [Editor CodeMirror6](./editorCodeMirror6.md)
-- [Editor](./editor.md)
+- [Editor](./editor.md) *(disabled)*
 - **Rule Converter** (`ruleConverter`) *(disabled)* — converts between Python code and JSON rule format.
 
 ## Analysis Panels
@@ -70,7 +70,7 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 - [Iframe Manager Panel](./iframeManagerPanel.md)
 - [Window Panel](./windowPanel.md)
 - [Window Manager Panel](./windowManagerPanel.md)
-- **Flash Panel** (`flashPanel`) *(disabled)* — embeds a Flash game with an injected Archipelago bridge.
+- **Flash Panel** (`flashPanel`) — embeds a Flash game with an injected Archipelago bridge.
 
 ## Procgen Substrate Panels
 
@@ -85,7 +85,7 @@ Documented in depth in the [procgen developer docs](../developer/procgen/README.
 - **Text Adventure Substrate Wrapper** (`textAdventureSubstrateWrapper`) — the enabled iframe-hosted text-adventure path. See [Text Adventure Substrate](../developer/procgen/text-adventure.md).
 - **JtA Substrate Wrapper** (`jtaSubstrateWrapper`) — Journey to Ascension as a zone-based substrate. See [JtA Substrate](../developer/procgen/jta.md).
 - **Idle Loops Substrate Wrapper** (`omsiSubstrateWrapper`) — Idle Loops (omsi-loops) as a loop-mode substrate. See [Omsi Substrate (Idle Loops)](../developer/procgen/omsi.md).
-- **Maze Game Data Panel** (`mazeGameDataPanel`) — read-only inspector for A-Mazing-Idle game data.
+- **Maze Game Data Panel** (`mazeGameDataPanel`) — views and edits A-Mazing-Idle game data (points, biome, mazes, saves).
 
 ## Procgen Infrastructure Panels
 

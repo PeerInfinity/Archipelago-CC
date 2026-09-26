@@ -1,4 +1,4 @@
 # Helpers Module
 
-- User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
+- [User Guide](../user/modules/helpers.md)
 - [Technical Reference](../developer/modules/helpers.md)

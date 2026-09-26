@@ -138,7 +138,7 @@ default) that first hop is taken automatically at load, exactly as
 | **Pause** | Stop processing mid-queue (resume from same point) |
 | **Resume** | Continue from where you paused |
 | **Restart** | Reset the loop (refill mana) and start the queue from the beginning |
-| **Speed slider** | Adjust game speed (0.1x to 100x) |
+| **Speed slider** | Adjust game speed (0.5x to 1000x, default 100x; the number box beside it takes 0.1x to 1000x) |
 | **Instant mode** | Global: timer actions complete in one frame (disables speed slider). Distinct from the per-block **Instant** checkbox described under [Block Modes](#playing-a-substrate-region-block-modes) |
 | **Auto-restart** | Keep the queue running instead of stopping when a loop reset interrupts it. Applies to resets **loops itself causes** — running the pool dry. A reset the underlying game causes (Journey to Ascension, Idle Loops) always continues, because the game has already restarted and stopping would only strand the queue behind it |
 | **Auto-resume** | Automatically resume processing when new actions are added after queue completion |

@@ -8,7 +8,7 @@ The Path Analyzer panel is a standalone tool for analyzing what's required to re
 2. Click **Analyze Paths** or press **Enter**.
 3. The results appear below, showing the possible paths and requirements to reach that region from the start.
 
-During analysis, the button text changes to "Analyzing..." and the input field becomes read-only until the analysis completes.
+During analysis, the button text changes to "Analyzing..." until the results arrive; the input field is locked only for the moment the analysis takes to start.
 
 ## Results
 

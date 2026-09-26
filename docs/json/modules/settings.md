@@ -1,4 +1,4 @@
 # Settings
 
-- User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
+- [User Guide](../user/modules/settings.md)
 - [Technical Reference](../developer/modules/settings.md)

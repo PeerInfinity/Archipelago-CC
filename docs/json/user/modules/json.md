@@ -12,7 +12,7 @@ Use the checkboxes to choose which items to include in save/load operations. **C
 | **Module Config** | Which panels and modules are loaded (modules.json). |
 | **Layout Config** | The arrangement of panels on screen. Layout changes can be applied live or take effect after reloading the page. |
 | **User Settings** | Your application preferences (settings.json). |
-| **Snapshot (Full State)** | Your complete game state: inventory, checked locations, and reachability data. This is the main thing to save when you want to continue a session later. Checked by default. |
+| **Snapshot (Full State)** | Your complete game state: inventory, checked locations, and reachability data. This is the main thing to save when you want to continue a session later. Unchecked by default. |
 | **Game State (Inv/Checks)** | A minimal version of the above containing only inventory and checked locations. Unchecked by default since Snapshot already covers everything it contains. |
 
 Other modules may add their own entries to this list (for example, the Tests module adds its configuration).
@@ -51,7 +51,3 @@ A "mode" is a named configuration saved in your browser. You can have multiple m
 - **Known Modes in modes.json** — Lists predefined modes that came with the app. Click **Load** to switch to one (reloads the page).
 
 The **Mode Name** field at the top of the panel sets the name used when saving to LocalStorage or in exported files.
-
-## Other Controls
-
-- **Export Live Layout** — Exports detailed layout data to the Editor panel. Useful for debugging panel arrangement issues.

@@ -1021,7 +1021,7 @@ Around the core panel:
 
 - The **playthrough visualizer** (`mazeRoomVisualizer.js`) auto-walks the region with its own simulated state — see [Playback and Debugging Tools](./playback-and-debugging.md#per-substrate-visualizers).
 - The **editor** (`mazeRoomEditor.js`) edits a loaded region in place with a tile palette: floor/wall, the entrance, items (with AP-canonical location names), obstacles, and — since elements arc 2 — a pushable **block**, a **button** (with its `buttonLib` entry and its matching `door_A{n}` registration) and a **flag** (an item declared `kind:'flag'`). Every brush produces a closed **op** (`applyEditOp`), which is what makes an edit list replayable. Exit placement and logic-gate editing are not part of its palette.
-- The **game-data inspector** is a separate read-only module/panel (`frontend/modules/mazeGameDataPanel/`).
+- The **game-data panel** is a separate module/panel (`frontend/modules/mazeGameDataPanel/`) for the A-Mazing-Idle game, not the maze substrate: it reads that game's data and also writes it (inject points, import a save).
 
 ## A real game's map as maze regions
 

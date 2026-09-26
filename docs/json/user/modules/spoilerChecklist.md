@@ -8,7 +8,7 @@ A sphere log divides the game into layers of progression. Sphere 0 contains ever
 
 ## Display
 
-Locations are organized into collapsible sphere sections, each color-coded by status:
+Locations are organized into sphere sections, each color-coded by status:
 
 | Color | Meaning |
 |-------|---------|
@@ -19,15 +19,14 @@ Locations are organized into collapsible sphere sections, each color-coded by st
 Each location row shows:
 - **Checkbox** — Mark the location as checked
 - **Location name** — Click to check (same as the checkbox)
-- **Region** (optional column) — Shown when multiple regions have locations with the same name
+- **Region** (optional column, on by default) — The location's region
 - **Item** (optional column) — The item found at this location
 
 ## Controls
 
 - **Show Region Column** — Toggle the region name display
 - **Show Item Column** — Toggle the item display (auto-shows when a location is checked)
-- **Search** — Filter locations by name
-- **Expand/Collapse** — Toggle sphere section visibility
+- **Simulate Received Items** — Cross-player item sync (off by default)
 
 ## Multiworld Support
 
@@ -38,4 +37,4 @@ In multiworld games, locations belonging to other players appear with distinct s
 
 ## Interactions
 
-Click a location's checkbox or name to check it. This dispatches a location check through the event system, updating the game state. As you check locations, completed spheres collapse and the current sphere advances.
+Click a location's checkbox or name to check it. This dispatches a location check through the event system, updating the game state. As you check locations, completed spheres turn dark and the current sphere advances.

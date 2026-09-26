@@ -6,19 +6,19 @@ The Inventory panel displays all items available in the game and lets you manual
 
 | Checkbox | Default | Description |
 |----------|---------|-------------|
-| **Hide unowned items** | On | Hides items you don't have, showing only collected items |
-| **Hide categories** | Off | Switches from grouped view to a single flat list |
+| **Show unowned items** | Off | Also shows items you don't have; off, only collected items are shown |
+| **Show categories** | Off | Switches from the single flat list to the grouped view |
 | **Sort alphabetically** | Off | Sorts items alphabetically within their groups |
 
 ## Display Modes
 
-### Grouped View (Default)
+### Grouped View
 
 Items are organized into collapsible categories defined by the game (e.g., "Swords", "Dungeon Items"). An "Events" category is automatically created for event-type items. The "Everything" category appears first when present.
 
-### Flat View
+### Flat View (Default)
 
-When **Hide categories** is checked, all items appear in a single alphabetical list with no group headings.
+While **Show categories** is unchecked, all items appear in a single alphabetical list with no group headings.
 
 ## Item Buttons
 

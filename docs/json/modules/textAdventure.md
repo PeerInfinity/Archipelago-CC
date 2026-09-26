@@ -1,4 +1,4 @@
 # Text Adventure
 
-- User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
+- [User Guide](../user/modules/textAdventure.md)
 - [Technical Reference](../developer/procgen/text-adventure.md)

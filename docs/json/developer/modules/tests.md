@@ -12,8 +12,8 @@
 -   `frontend/modules/tests/testController.js`: Defines the powerful API provided to individual test functions, allowing them to interact with and assert against the application's state and UI.
 -   `frontend/modules/tests/testDiscovery.js`: The script that dynamically imports all test case files.
 -   `frontend/modules/tests/testRegistry.js`: Manages the self-registration of all discovered test functions.
--   `frontend/modules/tests/testCases/`: The directory containing all the individual test case files (e.g., `coreTests.js`, `stateManagementTests.js`).
--   `frontend/playwright_tests_config.json`: The configuration file loaded when the app is in "test" mode, defining which tests to run automatically for Playwright.
+-   `frontend/modules/tests/testCases/`: The directory containing all the individual test case files (e.g., `coreTests.js`, `eventsPanelTests.js`).
+-   `frontend/test-configs/playwright_tests_config*.json`: The configuration files, one per test mode (`frontend/modes.json` names each mode's `testsConfig`; "test" mode loads `playwright_tests_config.json`), defining which tests to run automatically for Playwright.
 
 #### Responsibilities
 

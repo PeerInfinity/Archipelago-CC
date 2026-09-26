@@ -8,7 +8,7 @@ The Text Adventure panel provides a classic text-based interface for navigating 
 |---------|---------|-------------|
 | **move \<exit\>** | go, travel | Travel through an exit to another region |
 | **check \<location\>** | examine, search | Search a location for items |
-| **look** | l | Redisplay the current region |
+| **look** | — | Redisplay the current region |
 | **inventory** | inv, items | Show your collected items |
 | **help** | ? | Show the command list |
 

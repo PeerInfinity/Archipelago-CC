@@ -16,4 +16,4 @@ Changes are applied live — other panels react immediately to updated settings 
 
 ## Persistence
 
-Settings modified here are held in memory for the current session. To save them permanently, use the [JSON Panel](json.md) to save settings as part of a mode configuration to localStorage or to a file.
+Applying also saves the settings to the current mode in your browser's localStorage, so they are still there after a reload. To save them to a file, or under another mode name, use the [JSON Panel](json.md).

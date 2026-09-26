@@ -4,7 +4,7 @@ The MetaGame panel lets you load and manage scripted scenarios (MetaGame configu
 
 ## Loading a Configuration
 
-Select a configuration from the dropdown (e.g., "Progress Bar Test") and it will be loaded and activated. The panel shows a status message confirming success or describing any error.
+Select a configuration from the dropdown (e.g., "Progress Bar Test") and press **Load Configuration** to load and activate it. The panel shows a status message confirming success or describing any error.
 
 ## Editing Configuration
 

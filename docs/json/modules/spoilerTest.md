@@ -1,4 +1,4 @@
 # Spoiler Test
 
-- User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
+- [User Guide](../user/modules/spoilerTest.md)
 - [Technical Reference](../developer/modules/spoilerTest.md)

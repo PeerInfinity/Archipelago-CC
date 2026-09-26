@@ -9,7 +9,7 @@
 
 -   `frontend/modules/client/index.js`: Module entry point, registration, and dispatcher handler setup.
 -   `frontend/modules/client/ui/mainContentUI.js`: The UI class for the main console and connection panel.
--   `frontend/modules/client/core/connection.js`: Handles the low-level WebSocket connection, including connection, disconnection, and reconnection logic.
+-   `frontend/modules/client/core/apClient.js`: Handles the low-level WebSocket connection, including connection, disconnection, and reconnection logic (it replaced the former `connection.js`).
 -   `frontend/modules/client/core/messageHandler.js`: Processes all incoming messages from the server (e.g., `Connected`, `ReceivedItems`, `PrintJSON`) and updates the application state accordingly.
 -   `frontend/modules/client/utils/idMapping.js`: Provides utility functions to map server-side numeric IDs for items and locations to their human-readable names using the data package.
 

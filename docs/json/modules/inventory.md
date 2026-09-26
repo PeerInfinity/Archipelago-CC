@@ -1,4 +1,4 @@
 # Inventory
 
-- User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
+- [User Guide](../user/modules/inventory.md)
 - [Technical Reference](../developer/modules/inventory.md)

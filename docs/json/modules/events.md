@@ -1,4 +1,4 @@
 # Events Inspector
 
-- User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
+- [User Guide](../user/modules/events.md)
 - [Technical Reference](../developer/modules/events.md)

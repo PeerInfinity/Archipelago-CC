@@ -1,4 +1,4 @@
 # Progress Bar Panel
 
-- User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
+- [User Guide](../user/modules/progressBarPanel.md)
 - [Technical Reference](../developer/modules/progressBarPanel.md)
