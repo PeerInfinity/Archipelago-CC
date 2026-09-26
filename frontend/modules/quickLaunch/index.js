@@ -67,6 +67,14 @@ export function register(registrationApi) {
                 + "Ids no longer in the arrangement are ignored and dropped on the next write. Saved per mode; "
                 + "the built-in groups' folding is not saved.",
         },
+        showDeveloperDocs: {
+            type: 'boolean',
+            default: false,
+            label: 'Show developer docs',
+            description: 'Also list the developer documentation sections in the Help group (Developer Guides, '
+                + 'Developer Reference Documentation, Frontend Module Reference, Procedural Generation). '
+                + "A docs directory joins Help through a marker in its README; see docs/json/README.md. Saved per mode.",
+        },
         tree: {
             type: 'object',
             default: EMPTY_TREE,

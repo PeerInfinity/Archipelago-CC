@@ -29,9 +29,8 @@
 import { registerTest } from '../testRegistry.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
 import settingsManager from '../../../app/core/settingsManager.js';
-import { DOCS_INDEX } from '../../quickLaunch/generated/docsIndex.js';
-import { CATEGORY_ORDER } from '../../quickLaunch/generated/docsIndex.js';
-import { OTHER_CATEGORY, VIRTUAL_GROUPS, lookupModuleInfo } from '../../quickLaunch/quickLaunchCatalog.js';
+import { CATEGORY_ORDER, DOCS_INDEX, HELP_SECTIONS } from '../../quickLaunch/generated/docsIndex.js';
+import { OTHER_CATEGORY, VIRTUAL_GROUPS, drawnHelpSections, lookupModuleInfo } from '../../quickLaunch/quickLaunchCatalog.js';
 import { EMPTY_TREE, NODE_KINDS } from '../../quickLaunch/quickLaunchTree.js';
 import { completeModuleInfo } from '../../../app/initialization/completeModuleInfo.js';
 import {
@@ -68,6 +67,9 @@ function tabItem(componentType) {
 const isActiveTab = (item) => !!item?.parent?.getActiveComponentItem && item.parent.getActiveComponentItem() === item;
 const moduleEnabled = (moduleId) => window.moduleManagerApi?.getAllModuleStates?.()?.[moduleId]?.enabled === true;
 const rowButton = (root, componentType) => root.querySelector(`.ql-panel[data-component-type="${componentType}"]`);
+/** The doc paths Help draws with showDeveloperDocs at its default (off), read off the generated sections. */
+const drawnDocPaths = (showDeveloperDocs = false) => drawnHelpSections(HELP_SECTIONS, showDeveloperDocs)
+    .flatMap((s) => [...s.docs, ...s.children.flatMap((c) => c.docs)]);
 
 async function quickLaunchListsEveryRegisteredPanel(testController) {
     const root = await panelRoot(testController);
@@ -82,8 +84,8 @@ async function quickLaunchListsEveryRegisteredPanel(testController) {
     testController.reportCondition('the panel lists itself', drawn.has('quickLaunchPanel'));
 
     const header = root.querySelector('.ql-header')?.textContent ?? '';
-    testController.assertEqual('header counts the registry and the docs index',
-        `${expected.length} panels · ${DOCS_INDEX.length} guides`, header);
+    testController.assertEqual('header counts the registry and the docs Help draws',
+        `${expected.length} panels · ${drawnDocPaths().length} docs`, header);
     return testController.getOverallResult();
 }
 
@@ -170,8 +172,8 @@ async function quickLaunchDocLinksResolveToIndex(testController) {
     const paths = DOCS_INDEX.map((d) => d.path);
     const links = [...root.querySelectorAll('.ql-doc a, .ql-help a')];
     const helpLinks = root.querySelectorAll('.ql-help a').length;
-    testController.log(`${links.length} doc links (${helpLinks} in Help); index has ${paths.length}`);
-    testController.assertEqual('Help has one link per indexed guide', paths.length, helpLinks);
+    testController.log(`${links.length} doc links (${helpLinks} in Help); index has ${paths.length}, Help draws ${drawnDocPaths().length}`);
+    testController.assertEqual('Help has one link per doc its sections draw', drawnDocPaths().length, helpLinks);
     testController.reportCondition('some panel row carries a ? link', root.querySelectorAll('.ql-doc a').length > 0);
     const unresolved = links.filter((a) => !paths.some((p) => a.href.endsWith(p))).map((a) => a.href);
     testController.assertEqual('every doc href ends with a DOCS_INDEX path (unresolved)', '', unresolved.join(', '));
@@ -190,8 +192,6 @@ const withoutIds = (nodes) => nodes.map(({ id, children, ...rest }) => (
 const topGroupIds = (root) => [...root.querySelectorAll(':scope > .ql-groups > details')].map((d) => d.dataset.groupId);
 const userGroup = (root, label) => [...root.querySelectorAll('.ql-user')]
     .find((d) => d.querySelector(':scope > summary')?.textContent.startsWith(`${label} (`)) ?? null;
-const virtualRow = (root, groupId, predicate) => [...root.querySelectorAll(`details[data-group-id="${groupId}"] > .ql-list > li`)]
-    .find(predicate) ?? null;
 
 /** Choose `value` in a "move to" / "add to" select, as a person would. */
 function pick(select, value) {
@@ -230,8 +230,8 @@ async function quickLaunchEmptyTreeRendersAsQ1(testController) {
             [VIRTUAL_GROUPS.allPanels.id, VIRTUAL_GROUPS.help.id].join(','), topGroupIds(root).join(','));
         testController.reportCondition('no Unfiled group while the tree is empty',
             !root.querySelector(`details[data-group-id="${VIRTUAL_GROUPS.unfiled.id}"]`));
-        testController.assertEqual('header counts the registry and the docs index',
-            `${centralRegistry.getAllPanelComponents().size} panels · ${DOCS_INDEX.length} guides`,
+        testController.assertEqual('header counts the registry and the docs Help draws',
+            `${centralRegistry.getAllPanelComponents().size} panels · ${drawnDocPaths().length} docs`,
             root.querySelector('.ql-header')?.textContent ?? '');
         testController.assertEqual('no edit controls outside edit mode', 0, root.querySelectorAll('.ql-ctl').length);
         testController.assertEqual('the Edit button is not pressed', 'false',
@@ -250,8 +250,9 @@ async function quickLaunchEditOpsPersist(testController) {
     dialogs.prompt = () => answers.shift() ?? null;
     dialogs.confirm = () => true;
     const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
-    const docPath = DOCS_INDEX[0]?.path;
-    const docRow = () => virtualRow(root, VIRTUAL_GROUPS.help.id, (li) => li.querySelector('a')?.title === docPath);
+    const docPath = drawnDocPaths()[0];
+    const docRow = () => [...root.querySelectorAll(`details[data-group-id="${VIRTUAL_GROUPS.help.id}"] .ql-help`)]
+        .find((li) => li.querySelector('a')?.title === docPath) ?? null;
     // All panels holds one sub-group per category (Q3): the row sits in whichever one Inventory declares.
     const invRow = () => root.querySelector(`details[data-group-id="${VIRTUAL_GROUPS.allPanels.id}"] `
         + `.ql-panel[data-component-type="${OPEN_TARGET}"]`)?.closest('li') ?? null;
@@ -323,8 +324,8 @@ async function quickLaunchUnfiledShowsUnreferenced(testController) {
             'the Unfiled group to appear', ACTION_TIMEOUT_MS, POLL_MS);
         testController.reportCondition('filing one panel shows Unfiled', !!shown);
         const unfiledEl = root.querySelector(sel);
-        const expected = centralRegistry.getAllPanelComponents().size - 1 + DOCS_INDEX.length;
-        testController.assertEqual('Unfiled rows = registry panels - 1 + indexed guides', expected,
+        const expected = centralRegistry.getAllPanelComponents().size - 1 + drawnDocPaths().length;
+        testController.assertEqual('Unfiled rows = registry panels - 1 + the docs Help draws', expected,
             unfiledEl?.querySelectorAll(':scope > .ql-list > li').length);
         testController.reportCondition('the filed panel is not in Unfiled',
             !unfiledEl?.querySelector(`.ql-panel[data-component-type="${OPEN_TARGET}"]`));
@@ -574,7 +575,7 @@ async function mobileTabBarResolvesEveryPanel(testController) {
 const TESTS = [
     ['quick-launch-lists-every-registered-panel', 'Quick Launch: a button per registered panel',
         'Asserts the Quick Launch panel draws one button per componentType centralRegistry.getAllPanelComponents() '
-        + 'holds (read at run time), lists itself, and its header counts the registry and the docs index.',
+        + 'holds (read at run time), lists itself, and its header counts the registry and the docs Help draws.',
         quickLaunchListsEveryRegisteredPanel],
     ['quick-launch-button-activates-open-panel', 'Quick Launch: a button brings an open panel forward',
         'Makes Inventory a background tab, clicks its Quick Launch button, and polls until Inventory is the '
@@ -586,7 +587,7 @@ const TESTS = [
         quickLaunchButtonReopensClosedPanel],
     ['quick-launch-doc-links-resolve-to-index', 'Quick Launch: every doc link is an indexed guide in a new tab',
         'Every .ql-doc and .ql-help link\'s href ends with a DOCS_INDEX path and has target="_blank"; Help holds '
-        + 'one link per indexed guide.',
+        + 'one link per doc its sections draw (HELP_SECTIONS, developer sections off).',
         quickLaunchDocLinksResolveToIndex],
     ['quick-launch-empty-tree-renders-as-q1', 'Quick Launch: an empty tree draws what Q1 drew',
         'With the tree setting at EMPTY_TREE: no stored section, no Unfiled group, exactly All panels + Help, the '
@@ -597,8 +598,8 @@ const TESTS = [
         + 'reads the setting back and compares its shape minus ids, then leaves edit mode and checks the render.',
         quickLaunchEditOpsPersist],
     ['quick-launch-unfiled-shows-unreferenced', 'Quick Launch: Unfiled lists what the tree does not reference',
-        'Files one panel; Unfiled then holds every other registered panel and every indexed guide (the count is '
-        + 'read off the registry and DOCS_INDEX).',
+        'Files one panel; Unfiled then holds every other registered panel and every doc Help draws (the count is '
+        + 'read off the registry and HELP_SECTIONS).',
         quickLaunchUnfiledShowsUnreferenced],
     ['quick-launch-duplicate-refs-both-activate', 'Quick Launch: two references to one panel both activate it',
         'Stores Inventory twice (top level and in a group); clicking each brings Inventory forward.',

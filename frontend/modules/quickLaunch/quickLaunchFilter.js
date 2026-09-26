@@ -5,44 +5,45 @@
  *   model = { stored: [Node], groups: [Group] }
  *     stored  the user's tree, resolved (quickLaunchTree.js `resolve`): a ref
  *             node carries `item` (its catalog entry) or `missing: true`
- *     Group   { id, label, entries: [{kind, item}] }            — rows
- *           | { id, label, groups: [Group] }                    — All panels: one sub-group per category
+ *     Group   { id, label, entries: [{kind, item}], groups: [Group] } — rows, then sub-groups;
+ *             either list may be empty (All panels: only sub-groups, one per
+ *             category; Help: one sub-group per section, a section holding rows
+ *             and sub-groups for its sub-directories; everything else: only rows)
  *
  * Both views (tree and cards) draw the same model; the filter box passes it
  * through `filterView` first. No DOM, no settings.
  */
 
-import { VIRTUAL_GROUPS, virtualGroups } from './quickLaunchCatalog.js';
+import { VIRTUAL_GROUPS, helpDocs, virtualGroups } from './quickLaunchCatalog.js';
 import { NODE_KINDS, resolve, unfiled } from './quickLaunchTree.js';
 
 /**
  * The model for `tree` over `catalog`: the stored nodes, then Unfiled (only
  * when the tree holds something — with an empty tree every entry is unfiled
- * and All panels / Help already show each one), All panels, Help.
+ * and All panels / Help already show each one), All panels, Help. Unfiled's
+ * docs are the ones Help draws (`helpDocs`): a guide Help leaves out (a panel
+ * guide, a developer doc with the setting off) is not offered there either,
+ * though a stored ref to one still resolves.
  */
 export function buildViewModel(tree, catalog, categoryOrder) {
-    const loose = tree.nodes.length ? unfiled(tree, catalog) : [];
+    const loose = tree.nodes.length ? unfiled(tree, { ...catalog, docs: helpDocs(catalog) }) : [];
     const groups = [];
-    if (loose.length) groups.push({ ...VIRTUAL_GROUPS.unfiled, entries: loose });
+    if (loose.length) groups.push({ ...VIRTUAL_GROUPS.unfiled, entries: loose, groups: [] });
+    const toGroup = (g, kind) => ({
+        id: g.id,
+        label: g.label,
+        entries: (g.items ?? []).map((item) => ({ kind, item })),
+        groups: (g.groups ?? []).map((sub) => toGroup(sub, kind)),
+    });
     for (const group of virtualGroups(catalog, categoryOrder)) {
-        if (group.groups) {
-            groups.push({
-                id: group.id,
-                label: group.label,
-                groups: group.groups.map((g) => ({
-                    id: g.id, label: g.label, entries: g.items.map((item) => ({ kind: NODE_KINDS.panel, item })),
-                })),
-            });
-        } else {
-            groups.push({ id: group.id, label: group.label, entries: group.items.map((item) => ({ kind: NODE_KINDS.doc, item })) });
-        }
+        groups.push(toGroup(group, group.id === VIRTUAL_GROUPS.allPanels.id ? NODE_KINDS.panel : NODE_KINDS.doc));
     }
     return { stored: resolve(tree, catalog).nodes, groups };
 }
 
 /** The number of rows a model group holds, sub-groups included. */
 export function groupSize(group) {
-    return group.groups ? group.groups.reduce((n, g) => n + groupSize(g), 0) : group.entries.length;
+    return (group.entries?.length ?? 0) + (group.groups ?? []).reduce((n, g) => n + groupSize(g), 0);
 }
 
 /** The texts a row is matched on: a panel's title and description, a guide's title, a link's label. */
@@ -63,9 +64,10 @@ function nodeTexts(node) {
 /**
  * The model cut to what matches `query`: a case-insensitive substring of a
  * panel's title or description, a guide's title, a group's label or a link's
- * label. A match keeps every group above it (with only the matching rows); a
- * group whose own label matches keeps everything in it. A group left empty is
- * dropped. A blank query returns `model` itself.
+ * label (a Help section's or sub-group's label too). A match keeps every group
+ * above it (with only the matching rows); a group whose own label matches
+ * keeps everything in it. A group left empty is dropped. A blank query returns
+ * `model` itself.
  */
 export function filterView(model, query) {
     const q = String(query ?? '').trim().toLowerCase();
@@ -81,12 +83,9 @@ export function filterView(model, query) {
 
     const cutGroup = (group) => {
         if (hit([group.label])) return group;
-        if (group.groups) {
-            const groups = group.groups.map(cutGroup).filter(Boolean);
-            return groups.length ? { ...group, groups } : null;
-        }
-        const entries = group.entries.filter(({ kind, item }) => hit(rowTexts(kind, item)));
-        return entries.length ? { ...group, entries } : null;
+        const entries = (group.entries ?? []).filter(({ kind, item }) => hit(rowTexts(kind, item)));
+        const groups = (group.groups ?? []).map(cutGroup).filter(Boolean);
+        return entries.length || groups.length ? { ...group, entries, groups } : null;
     };
 
     return { stored: cutNodes(model.stored), groups: model.groups.map(cutGroup).filter(Boolean) };

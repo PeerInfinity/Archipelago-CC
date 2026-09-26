@@ -14,8 +14,8 @@ import settingsManager from '../../app/core/settingsManager.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { DOCS_LINK_TARGETS, docsHref } from '../../app/config/docsBase.js';
 import { debounce } from '../commonUI/index.js';
-import { DOCS_INDEX } from './generated/docsIndex.js';
-import { buildCatalog } from './quickLaunchCatalog.js';
+import { DOCS_INDEX, HELP_SECTIONS } from './generated/docsIndex.js';
+import { buildCatalog, helpDocs } from './quickLaunchCatalog.js';
 import { buildViewModel, filterView, groupSize } from './quickLaunchFilter.js';
 import {
     EMPTY_TREE, NODE_KINDS, addGroup, addRef, addUrl, deleteNode, findNode, groupsOf, migrate, moveDown, moveNode,
@@ -37,6 +37,9 @@ export const VIEW_SETTING = `moduleSettings.${MODULE_ID}.${VIEW_KEY}`;
 /** The ids of the user's own groups the reader collapsed (virtual groups' state is not saved). */
 export const COLLAPSED_KEY = 'collapsedGroups';
 export const COLLAPSED_SETTING = `moduleSettings.${MODULE_ID}.${COLLAPSED_KEY}`;
+/** Draw the `developer` Help sections too (HELP_SECTIONS audience); off by default. */
+export const DEVELOPER_DOCS_KEY = 'showDeveloperDocs';
+export const DEVELOPER_DOCS_SETTING = `moduleSettings.${MODULE_ID}.${DEVELOPER_DOCS_KEY}`;
 export const FILTER_PLACEHOLDER = 'Filter…';
 export const NO_MATCH_TEXT = 'Nothing matches the filter.';
 export const DOC_ICON = '📄';
@@ -80,9 +83,9 @@ export const dialogs = {
     prompt: (message, value) => window.prompt(message, value),
 };
 
-/** "N panels · M guides" — the header line, exported so the in-app test builds the same string. */
+/** "N panels · M docs" (M = the docs Help draws) — the header line, exported so the in-app test builds the same string. */
 export function headerText(catalog) {
-    return `${catalog.panels.length} panels · ${catalog.docs.length} guides`;
+    return `${catalog.panels.length} panels · ${helpDocs(catalog).length} docs`;
 }
 
 /**
@@ -200,13 +203,15 @@ export class QuickLaunchUI {
         this.container?.on?.('destroy', () => this.destroy());
     }
 
-    /** The catalog over the live registry and module states. */
-    catalog() {
+    /** The catalog over the live registry and module states; Help drawn per `showDeveloperDocs`. */
+    catalog(showDeveloperDocs = false) {
         const manager = getModuleManager();
         return buildCatalog({
             panelComponents: centralRegistry.getAllPanelComponents(),
             moduleStates: manager?.getAllModuleStates?.() ?? {},
             docsIndex: DOCS_INDEX,
+            helpSections: HELP_SECTIONS,
+            showDeveloperDocs,
             loadPriority: manager?.getLoadPriority?.() ?? [],
         });
     }
@@ -253,13 +258,14 @@ export class QuickLaunchUI {
         const tree = migrate(await settingsManager.getSetting(TREE_SETTING, EMPTY_TREE));
         const view = await settingsManager.getSetting(VIEW_SETTING, VIEWS.tree);
         const stored = await settingsManager.getSetting(COLLAPSED_SETTING, []);
+        const developerDocs = await settingsManager.getSetting(DEVELOPER_DOCS_SETTING, false);
         if (gen !== this._renderGen) return; // a newer render is under way; it draws
         this.tree = tree;
         this._loadCollapsed(stored);
         this.view = view === VIEWS.cards ? VIEWS.cards : VIEWS.tree;
         this.viewButton.setAttribute('aria-pressed', String(this.view === VIEWS.cards));
         this.rootElement.classList.toggle('ql-cards', this.view === VIEWS.cards);
-        const catalog = this.catalog();
+        const catalog = this.catalog(developerDocs === true);
         this.headerEl.textContent = headerText(catalog);
         const model = buildViewModel(this.tree, catalog);
         const shown = filterView(model, this.query);
@@ -509,7 +515,10 @@ export class QuickLaunchUI {
         return li;
     }
 
-    /** A virtual group: rows of catalog entries, or (All panels) one sub-group per category. */
+    /**
+     * A virtual group: its rows, then its sub-groups (All panels: one per
+     * category; Help: one per section, and a section's sub-directories).
+     */
     _group(group, target) {
         const details = document.createElement('details');
         details.className = 'ql-group';
@@ -517,23 +526,25 @@ export class QuickLaunchUI {
         this._collapsible(details, group.id);
         const summary = document.createElement('summary');
         summary.textContent = `${group.label} (${groupSize(group)})`;
-        if (group.groups) {
+        details.append(summary);
+        if (group.entries.length) {
+            const list = document.createElement('ul');
+            list.className = 'ql-list';
+            list.append(...group.entries.map(({ kind, item }) => {
+                const doc = kind === NODE_KINDS.doc;
+                const li = doc ? this._docRow(item, target) : this._panelRow(item, target);
+                if (this.editing) li.append(this._addTo(kind, doc ? item.path : item.componentType));
+                return li;
+            }));
+            details.append(list);
+        }
+        if (group.groups.length) {
             const inner = document.createElement('div');
             inner.className = 'ql-subgroups';
             inner.append(...group.groups.map((g) => this._group(g, target)));
             details.classList.add('ql-parent');
-            details.append(summary, inner);
-            return details;
+            details.append(inner);
         }
-        const list = document.createElement('ul');
-        list.className = 'ql-list';
-        list.append(...group.entries.map(({ kind, item }) => {
-            const doc = kind === NODE_KINDS.doc;
-            const li = doc ? this._docRow(item, target) : this._panelRow(item, target);
-            if (this.editing) li.append(this._addTo(kind, doc ? item.path : item.componentType));
-            return li;
-        }));
-        details.append(summary, list);
         return details;
     }
 

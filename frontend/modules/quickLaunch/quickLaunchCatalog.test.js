@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-    BLANK_ICON, OTHER_CATEGORY, VIRTUAL_GROUPS, buildCatalog, categoryGroupId, lookupModuleInfo, virtualGroups,
+    BLANK_ICON, OTHER_CATEGORY, VIRTUAL_GROUPS, buildCatalog, categoryGroupId, drawnHelpSections, helpDocs,
+    helpGroupId, lookupModuleInfo, virtualGroups,
 } from './quickLaunchCatalog.js';
-import { CATEGORY_ORDER } from './generated/docsIndex.js';
+import { CATEGORY_ORDER, HELP_SECTIONS } from './generated/docsIndex.js';
 
 class ClassInfoPanel {}
 ClassInfoPanel.moduleInfo = { title: 'From Class', icon: '🅲', column: 2 };
@@ -14,6 +15,17 @@ const DOCS = [
     { path: 'docs/json/user/modules/entry.md', title: 'Entry Panel', section: 'user/modules', summary: 'Entry guide.' },
     { path: 'docs/json/user/overview.md', title: 'Overview', section: 'user' },
     { path: 'docs/json/user/quick-start.md', title: 'Quick Start', section: 'user' },
+    { path: 'docs/json/games/one/README.md', title: 'One', section: 'games/one' },
+    { path: 'docs/json/dev/tool.md', title: 'Tool', section: 'dev' },
+];
+
+const SECTIONS = [
+    { dir: 'user/modules', label: 'Panel Guides', order: 0, audience: 'panel', docs: ['docs/json/user/modules/entry.md'], children: [] },
+    { dir: 'user', label: 'User Guides', order: 10, audience: 'user',
+        docs: ['docs/json/user/overview.md', 'docs/json/user/quick-start.md', 'docs/json/user/gone.md'], children: [] },
+    { dir: 'games', label: 'Games', order: 30, audience: 'user', docs: [],
+        children: [{ dir: 'games/one', label: 'One', single: true, docs: ['docs/json/games/one/README.md'] }] },
+    { dir: 'dev', label: 'Dev', order: 110, audience: 'developer', docs: ['docs/json/dev/tool.md'], children: [] },
 ];
 
 const fixture = () => new Map([
@@ -106,19 +118,36 @@ describe('buildCatalog — panels', () => {
 });
 
 describe('buildCatalog — docs and virtual groups', () => {
-    it('docs are the user section first, then user/modules, each by path', () => {
-        expect(build().docs.map((d) => d.path)).toEqual([
-            'docs/json/user/overview.md', 'docs/json/user/quick-start.md', 'docs/json/user/modules/entry.md',
-        ]);
+    it('docs are every indexed doc, by path (a stored ref to any of them resolves)', () => {
+        expect(build().docs.map((d) => d.path)).toEqual([...DOCS.map((d) => d.path)].sort());
     });
 
-    it('virtualGroups is All panels (split by category) then Help, holding the catalog lists', () => {
-        const cat = build();
+    it('help draws the user sections, in order, paths resolved; a path the index lacks is dropped', () => {
+        const cat = build({ helpSections: SECTIONS });
+        expect(cat.help.map((s) => s.dir)).toEqual(['user', 'games']);
+        expect(cat.help[0].docs.map((d) => d.title)).toEqual(['Overview', 'Quick Start']);
+        expect(cat.help[1].children[0].docs[0]).toBe(cat.docs.find((d) => d.path === 'docs/json/games/one/README.md'));
+        expect(helpDocs(cat).map((d) => d.title)).toEqual(['Overview', 'Quick Start', 'One']);
+    });
+
+    it('showDeveloperDocs adds the developer sections; the panel audience is never drawn', () => {
+        const cat = build({ helpSections: SECTIONS, showDeveloperDocs: true });
+        expect(cat.help.map((s) => s.dir)).toEqual(['user', 'games', 'dev']);
+        expect(drawnHelpSections(SECTIONS, true).some((s) => s.audience === 'panel')).toBe(false);
+        expect(drawnHelpSections(HELP_SECTIONS).map((s) => s.label)).toEqual(['User Guides', 'Features', 'Playable Games']);
+    });
+
+    it('virtualGroups is All panels (split by category) then Help (split by section)', () => {
+        const cat = build({ helpSections: SECTIONS });
         const groups = virtualGroups(cat);
         expect(groups.map((g) => g.id)).toEqual([VIRTUAL_GROUPS.allPanels.id, VIRTUAL_GROUPS.help.id]);
         expect(groups[0].items).toBeUndefined();
         expect(groups[0].groups.flatMap((g) => g.items)).toEqual(cat.panels); // nothing declares one: all Other
-        expect(groups[1].items).toBe(cat.docs);
+        expect(groups[1].items).toBeUndefined();
+        expect(groups[1].groups.map((g) => [g.id, g.label, g.items.length, g.groups.length])).toEqual([
+            [helpGroupId('user'), 'User Guides', 2, 0],
+            [helpGroupId('games'), 'Games', 1, 0], // a single child is a row, not a sub-group
+        ]);
     });
 });
 

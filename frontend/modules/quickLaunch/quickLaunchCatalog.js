@@ -8,7 +8,9 @@
  *   panelComponents  centralRegistry.getAllPanelComponents() — Map
  *                    componentType → { moduleId, componentClass, moduleInfo }
  *   moduleStates     moduleManager.getAllModuleStates() — { moduleId: { enabled } }
- *   docsIndex        generated/docsIndex.js DOCS_INDEX — the guides that exist
+ *   docsIndex        generated/docsIndex.js DOCS_INDEX — the docs that exist
+ *   helpSections     generated/docsIndex.js HELP_SECTIONS — how Help groups them
+ *   showDeveloperDocs  the panel's setting: draw the `developer` sections too
  *   loadPriority     moduleManager.getLoadPriority() — the standard order
  *   lookup           (componentType, entry) → the moduleInfo the fields come
  *                    from, or null; defaults to `lookupModuleInfo`
@@ -35,8 +37,23 @@ export const VIRTUAL_GROUPS = Object.freeze({
     help: Object.freeze({ id: 'help', label: 'Help' }),
 });
 
-/** The Help group's section order: the general guides, then the per-panel ones. */
-export const DOC_SECTION_ORDER = Object.freeze(['user', 'user/modules']);
+/**
+ * The HELP_SECTIONS audiences Help draws: `user` always, `developer` with the
+ * showDeveloperDocs setting on, `panel` never (those guides are the `?` on each
+ * panel row; they stay indexed so the links resolve).
+ */
+export const DRAWN_AUDIENCES = Object.freeze({ always: Object.freeze(['user']), developer: 'developer' });
+
+/** The sections Help draws, in HELP_SECTIONS order. */
+export function drawnHelpSections(sections, showDeveloperDocs = false) {
+    return sections.filter((s) => DRAWN_AUDIENCES.always.includes(s.audience)
+        || (showDeveloperDocs && s.audience === DRAWN_AUDIENCES.developer));
+}
+
+/** The id of a Help section or sub-group: `help/<its directory under docs/json>`. */
+export function helpGroupId(dir) {
+    return `${VIRTUAL_GROUPS.help.id}/${dir}`;
+}
 
 /**
  * The title/icon lookup order the mobile layout uses
@@ -54,6 +71,8 @@ export function buildCatalog({
     panelComponents,
     moduleStates = {},
     docsIndex = [],
+    helpSections = [],
+    showDeveloperDocs = false,
     loadPriority = [],
     lookup = lookupModuleInfo,
 }) {
@@ -83,15 +102,22 @@ export function buildCatalog({
     }
     panels.sort((a, b) => a.order - b.order || byText(a.title, b.title));
 
-    const sectionRank = (s) => {
-        const i = DOC_SECTION_ORDER.indexOf(s);
-        return i === -1 ? DOC_SECTION_ORDER.length : i;
-    };
     const docs = docsIndex
         .map(({ path, title, section, summary = '' }) => ({ path, title, section, summary }))
-        .sort((a, b) => sectionRank(a.section) - sectionRank(b.section) || byText(a.path, b.path));
+        .sort((a, b) => byText(a.path, b.path));
 
-    return { panels, docs };
+    // Help: the drawn sections, their paths resolved to `docs` entries (a path the index lacks is dropped).
+    const entryOf = new Map(docs.map((d) => [d.path, d]));
+    const resolveAll = (paths) => paths.map((p) => entryOf.get(p)).filter(Boolean);
+    const help = drawnHelpSections(helpSections, showDeveloperDocs).map((section) => ({
+        dir: section.dir,
+        label: section.label,
+        docs: resolveAll(section.docs),
+        children: section.children.map((c) => ({ dir: c.dir, label: c.label, single: c.single, docs: resolveAll(c.docs) }))
+            .filter((c) => c.docs.length > 0),
+    }));
+
+    return { panels, docs, help };
 }
 
 /** The id of the "All panels" sub-group for `category`: `all-panels/<slug>`. */
@@ -100,12 +126,34 @@ export function categoryGroupId(category) {
     return `${VIRTUAL_GROUPS.allPanels.id}/${slug}`;
 }
 
+/** Every doc Help draws, in drawn order (the header's count, and what Unfiled may list). */
+export function helpDocs(catalog) {
+    return (catalog.help ?? []).flatMap((s) => [...s.docs, ...s.children.flatMap((c) => c.docs)]);
+}
+
+/**
+ * One Help section as a group: its own docs, then each single child's doc, as
+ * `items`; each child holding more than one doc as a sub-group in `groups`.
+ */
+function helpSectionGroup(section) {
+    const singles = section.children.filter((c) => c.single);
+    return {
+        id: helpGroupId(section.dir),
+        label: section.label,
+        items: [...section.docs, ...singles.flatMap((c) => c.docs)],
+        groups: section.children.filter((c) => !c.single)
+            .map((c) => ({ id: helpGroupId(c.dir), label: c.label, items: c.docs })),
+    };
+}
+
 /**
  * The groups the panel draws, in order. "All panels" holds no rows of its own:
  * `groups` is one sub-group per category, in `categoryOrder` (the modules
  * README's section order), each keeping the catalog's load-priority order;
  * a category `categoryOrder` does not list counts as OTHER_CATEGORY, which
  * comes last and only when it has a panel. Empty categories are left out.
+ * Help likewise holds one sub-group per drawn section (`catalog.help`), which
+ * may hold rows and sub-groups of its own (`helpSectionGroup`).
  */
 export function virtualGroups(catalog, categoryOrder = CATEGORY_ORDER) {
     const known = new Set(categoryOrder);
@@ -118,6 +166,6 @@ export function virtualGroups(catalog, categoryOrder = CATEGORY_ORDER) {
         .map(([label, items]) => ({ id: categoryGroupId(label), label, items }));
     return [
         { ...VIRTUAL_GROUPS.allPanels, groups },
-        { ...VIRTUAL_GROUPS.help, items: catalog.docs },
+        { ...VIRTUAL_GROUPS.help, groups: (catalog.help ?? []).map(helpSectionGroup) },
     ];
 }

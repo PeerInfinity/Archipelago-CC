@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { OTHER_CATEGORY, VIRTUAL_GROUPS, categoryGroupId } from './quickLaunchCatalog.js';
+import { OTHER_CATEGORY, VIRTUAL_GROUPS, categoryGroupId, helpGroupId } from './quickLaunchCatalog.js';
 import { buildViewModel, filterView, groupSize } from './quickLaunchFilter.js';
 import { EMPTY_TREE, NODE_KINDS } from './quickLaunchTree.js';
 
@@ -13,10 +13,23 @@ const CATALOG = {
         P('mysteryPanel', 'Mystery', 'Declares nothing we know.', 'Not A Section'),
     ],
     docs: [
+        { path: 'docs/json/games/multi/README.md', title: 'Multi Game', section: 'games/multi', summary: '' },
+        { path: 'docs/json/games/multi/rules.md', title: 'Multi Rules', section: 'games/multi', summary: '' },
+        { path: 'docs/json/games/solo/README.md', title: 'Solo Game', section: 'games/solo', summary: '' },
         { path: 'docs/json/user/overview.md', title: 'Overview', section: 'user', summary: 'Inventory is mentioned here.' },
         { path: 'docs/json/user/modules/inventory.md', title: 'Inventory Panel', section: 'user/modules', summary: '' },
     ],
 };
+// What buildCatalog makes of HELP_SECTIONS: the drawn sections, paths resolved (the panel guide is not drawn).
+const doc = (path) => CATALOG.docs.find((d) => d.path === path);
+CATALOG.help = [
+    { dir: 'user', label: 'User Guides', docs: [doc('docs/json/user/overview.md')], children: [] },
+    { dir: 'games', label: 'Playable Games', docs: [], children: [
+        { dir: 'games/multi', label: 'Multi Game', single: false,
+            docs: [doc('docs/json/games/multi/README.md'), doc('docs/json/games/multi/rules.md')] },
+        { dir: 'games/solo', label: 'Solo Game', single: true, docs: [doc('docs/json/games/solo/README.md')] },
+    ] },
+];
 const TREE = {
     version: 1,
     nodes: [
@@ -31,7 +44,7 @@ const TREE = {
 };
 const model = (tree = TREE) => buildViewModel(tree, CATALOG, ORDER);
 const ids = (m) => m.groups.map((g) => g.id);
-const rows = (group) => (group.groups ? group.groups.flatMap(rows) : group.entries.map((e) => e.item.componentType ?? e.item.path));
+const rows = (group) => [...group.entries.map((e) => e.item.componentType ?? e.item.path), ...group.groups.flatMap(rows)];
 
 describe('buildViewModel', () => {
     it('an empty tree: no stored nodes, no Unfiled, All panels then Help', () => {
@@ -45,7 +58,19 @@ describe('buildViewModel', () => {
         expect(all.groups.map((g) => g.label)).toEqual([...ORDER, OTHER_CATEGORY]);
         expect(all.groups[0].id).toBe(categoryGroupId(ORDER[0]));
         expect(groupSize(all)).toBe(CATALOG.panels.length);
-        expect(help.entries.every((e) => e.kind === NODE_KINDS.doc)).toBe(true);
+        expect(help.entries).toEqual([]);
+        expect(help.groups.map((g) => g.id)).toEqual([helpGroupId('user'), helpGroupId('games')]);
+    });
+
+    it('Help: a section holds its rows (own docs, then single children) and a sub-group per multi-doc child', () => {
+        const help = model(EMPTY_TREE).groups.find((g) => g.id === VIRTUAL_GROUPS.help.id);
+        const games = help.groups[1];
+        expect(games.label).toBe('Playable Games');
+        expect(rows({ entries: games.entries, groups: [] })).toEqual(['docs/json/games/solo/README.md']);
+        expect(games.groups.map((g) => [g.id, g.label, g.entries.length])).toEqual([[helpGroupId('games/multi'), 'Multi Game', 2]]);
+        expect(games.entries.every((e) => e.kind === NODE_KINDS.doc)).toBe(true);
+        expect(groupSize(help)).toBe(4);
+        expect(rows(help)).not.toContain('docs/json/user/modules/inventory.md');
     });
 
     it('a non-empty tree: resolved stored nodes and an Unfiled group first', () => {
@@ -53,7 +78,9 @@ describe('buildViewModel', () => {
         expect(ids(m)[0]).toBe(VIRTUAL_GROUPS.unfiled.id);
         expect(m.stored[0].children[0].item.title).toBe('Inventory');
         expect(m.stored[2].missing).toBe(true);
-        expect(rows(m.groups[0])).toEqual(['loopsPanel', 'mysteryPanel', 'docs/json/user/modules/inventory.md']);
+        // Unfiled's docs are the ones Help draws: the panel guide is not offered, the filed overview is not.
+        expect(rows(m.groups[0])).toEqual(['loopsPanel', 'mysteryPanel',
+            'docs/json/games/multi/README.md', 'docs/json/games/multi/rules.md', 'docs/json/games/solo/README.md']);
     });
 });
 
@@ -71,12 +98,11 @@ describe('filterView', () => {
         expect(f.stored).toHaveLength(1);
         expect(f.stored[0].id).toBe('g1');
         expect(f.stored[0].children.map((n) => n.id)).toEqual(['n1']);
-        // Virtual: the Inventory panel under its category, the Inventory guide in Unfiled and Help.
+        // Virtual: the Inventory panel under its category; its guide is in neither Help nor Unfiled (a panel guide).
         const all = f.groups.find((g) => g.id === VIRTUAL_GROUPS.allPanels.id);
         expect(all.groups.map((g) => g.label)).toEqual(['UI Panel Modules']);
         expect(rows(all)).toEqual(['inventoryPanel']);
-        expect(rows(f.groups.find((g) => g.id === VIRTUAL_GROUPS.help.id))).toEqual(['docs/json/user/modules/inventory.md']);
-        expect(rows(f.groups.find((g) => g.id === VIRTUAL_GROUPS.unfiled.id))).toEqual(['docs/json/user/modules/inventory.md']);
+        expect(f.groups.map((g) => g.id)).toEqual([VIRTUAL_GROUPS.allPanels.id]);
     });
 
     it('matches a panel by a word of its description', () => {
@@ -108,7 +134,17 @@ describe('filterView', () => {
         const f = filterView(model(EMPTY_TREE), 'loop mode');
         expect(f.groups.flatMap(rows)).toEqual(['loopsPanel']);
         const h = filterView(model(EMPTY_TREE), 'help');
-        expect(rows(h.groups[0])).toHaveLength(CATALOG.docs.length);
+        expect(rows(h.groups[0])).toHaveLength(4); // every doc Help draws
+    });
+
+    it('a Help section or sub-group label match keeps it whole, under its ancestors', () => {
+        const f = filterView(model(EMPTY_TREE), 'playable');
+        expect(f.groups.map((g) => g.id)).toEqual([VIRTUAL_GROUPS.help.id]);
+        expect(f.groups[0].groups.map((g) => g.id)).toEqual([helpGroupId('games')]);
+        expect(rows(f.groups[0])).toHaveLength(3);
+        const m = filterView(model(EMPTY_TREE), 'multi game');
+        expect(rows(m.groups[0])).toEqual(['docs/json/games/multi/README.md', 'docs/json/games/multi/rules.md']);
+        expect(m.groups[0].groups[0].entries).toEqual([]); // the section keeps only the matching sub-group
     });
 
     it('matches a link by its label, and a dangling ref by its ref', () => {
