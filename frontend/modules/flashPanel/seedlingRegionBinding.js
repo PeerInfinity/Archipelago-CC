@@ -71,6 +71,7 @@
 
 import { parseSeqPayload } from './seqPayload.js';
 import { returnKey } from './seedlingReturnSpawns.js';
+import { DOOR_GATE_ERROR_DEFAULT, lockedDoorMessage, ruleItemNames } from './seedlingDoorGate.js';
 
 /** How long an in-flight arrival teleport stays armed before it is written off. */
 export const ARRIVAL_ECHO_TIMEOUT_MS = 15000;
@@ -262,9 +263,41 @@ export function resolveCrossingExit(world, level, spawn) {
     return best;
 }
 
+/**
+ * ⛓⛓ SEEDLING GENERATED G4 — **WHAT A GATE ANSWERED, NORMALISED.** `canPass`
+ * may answer a boolean or `{pass, needs?, missing?}`; anything else, a throw
+ * included, is an ERROR named in `error`, and the door takes
+ * `DOOR_GATE_ERROR_DEFAULT` (open — `seedlingDoorGate.js` says why).
+ */
+export function doorVerdict(canPass, exit, context) {
+    if (typeof canPass !== 'function') return { pass: true, gated: false };
+    let answer;
+    try {
+        answer = canPass(exit, context);
+    } catch (err) {
+        return { pass: DOOR_GATE_ERROR_DEFAULT === 'open', gated: true, error: err?.message ?? String(err) };
+    }
+    if (typeof answer === 'boolean') return { pass: answer, gated: true };
+    if (answer && typeof answer.pass === 'boolean') {
+        return { pass: answer.pass, gated: answer.gated !== false, needs: answer.needs, missing: answer.missing };
+    }
+    return {
+        pass: DOOR_GATE_ERROR_DEFAULT === 'open',
+        gated: true,
+        error: `the door gate answered ${JSON.stringify(answer) ?? String(answer)}, not a pass/refuse verdict`,
+    };
+}
+
 export class SeedlingRegionBinding {
-    constructor({ now } = {}) {
+    /**
+     * @param {object} [opts]
+     * @param {function} [opts.now]      injectable clock (tests)
+     * @param {function} [opts.canPass]  G4 — `canPass(exit, {region})` → a door
+     *   verdict (`doorVerdict`); null = every door passes, today's behaviour
+     */
+    constructor({ now, canPass } = {}) {
         this._now = now ?? (() => Date.now());
+        this.canPass = canPass ?? null;
         this.region = null;
         this.world = null;
         this.arrivedFrom = null;
@@ -292,6 +325,15 @@ export class SeedlingRegionBinding {
          * LOUDLY about a crossing that worked.
          */
         this.pendingDeparture = null;
+        /**
+         * ⛓⛓ G4 — A REFUSED DOOR, THE SAME TRAP A THIRD WAY. The game swaps
+         * into the door's `to` level anyway (it knows nothing of AP gates); this
+         * mark swallows that swap AND answers it with the bounce home — the
+         * teleport is sent only once the swap has LANDED, because a teleport
+         * queued at the door report races the swap and, landing first, would
+         * leave the player in the parking room. `{level, at, spawn, exitId}`.
+         */
+        this.pendingBounce = null;
         // An arrival asked for before the game was reporting; released on baseline.
         this.pendingSpawn = null;
         this.warnedLevels = new Set();
@@ -372,12 +414,18 @@ export class SeedlingRegionBinding {
      * The panel built a fresh adapter (first boot, or a preset switch / iframe
      * reload). Everything we know about the game's state came from the old one.
      */
+    /** G4 — the host's door predicate (`seedlingDoorGate.createDoorGate`); null = every door passes. */
+    setCanPass(canPass) {
+        this.canPass = canPass ?? null;
+    }
+
     onGameRestart() {
         this.baselineSeen = false;
         this.lastLevel = null;
         this.lastSpawn = { x: null, y: null };
         this.pendingArrival = null;
         this.pendingDeparture = null;
+        this.pendingBounce = null;
         this.pendingSpawn = this.world ? resolveArrivalSpawn(this.world, this.arrivedFrom, this.returnSpawns) : null;
     }
 
@@ -401,6 +449,9 @@ export class SeedlingRegionBinding {
             // through the excursion it would swallow the first REAL crossing
             // after the return.
             this.pendingDeparture = null;
+            // ⛓ G4 — and a bounce not yet answered: the swap it waits for is
+            // no longer ours to read.
+            this.pendingBounce = null;
             return [{
                 type: 'info',
                 message: `[region atlas] another substrate now owns the region — "${this.region}" `
@@ -458,6 +509,25 @@ export class SeedlingRegionBinding {
             const spawn = this.pendingSpawn;
             this.pendingSpawn = null;
             return spawn ? this._beginArrival(spawn) : [];
+        }
+
+        /**
+         * ⛔⛔ G4 — THE REFUSED DOOR'S SWAP, SWALLOWED AND ANSWERED. Checked
+         * first for the departure echo's reason (the swap is the very next
+         * report after the door) and age-checked first for trap 961's: a mark
+         * left armed must not swallow a genuine later arrival on that level.
+         * The swap is REVERSED — the answer is the bounce home, and the bounce
+         * arms `pendingArrival` for its own echo.
+         */
+        if (this.pendingBounce) {
+            if (this._now() - this.pendingBounce.at > ARRIVAL_ECHO_TIMEOUT_MS) {
+                this.pendingBounce = null; // written off — treat this as real
+            } else if (this.pendingBounce.level === level) {
+                const { spawn, exitId, region } = this.pendingBounce;
+                this.pendingBounce = null;
+                this.lastLevel = level;
+                return this._bounceHome(spawn, exitId, region);
+            }
         }
 
         /**
@@ -530,6 +600,20 @@ export class SeedlingRegionBinding {
     }
 
     /**
+     * G4 — the refused door's answer: back onto the door's APPROACH cell in
+     * this room (the arrival law — never the door tile, whose latch would not
+     * fire again and on which the game does not draw the player). Armed like an
+     * arrival: `lastLevel` is the swap's level, so the landing is a level change
+     * and its echo is swallowed.
+     */
+    _bounceHome(spawn, exitId, region) {
+        if (this.baselineSeen && spawn.level !== this.lastLevel) {
+            this.pendingArrival = { level: spawn.level, x: spawn.x, y: spawn.y, at: this._now() };
+        }
+        return [{ type: 'bounce', level: spawn.level, x: spawn.x, y: spawn.y, exit: exitId, region }];
+    }
+
+    /**
      * One door fire. Returns EFFECTS, like every other input.
      *
      * ⛔ SILENCE IS THE RIGHT ANSWER FOR THREE OF THE FOUR CASES, and each is
@@ -551,10 +635,51 @@ export class SeedlingRegionBinding {
         if (!door) return [];
         const exit = departureExitOf(this.world, door);
         if (!exit || !exit.external) return [];
+        const effects = [];
+        /**
+         * ⛓⛓ G4 — THE HOST'S GATE. Asked only here, where the crossing is
+         * decided: a refused door publishes NO region move (the AP region stays
+         * put) and arms the bounce; a gate that cannot answer takes the
+         * declared default and SAYS SO; no predicate = today's behaviour.
+         */
+        const verdict = doorVerdict(this.canPass, exit, { region: this.region });
+        const target = exit.targetRegion;
+        const exitName = exit.exitName ?? exit.exit_id;
+        if (verdict.error) {
+            effects.push({
+                type: 'warn',
+                message: `[door gate] could not evaluate the rule on the door to "${target}" ("${exitName}") — `
+                    + `${verdict.error}; the door is ${verdict.pass ? 'left OPEN' : 'LOCKED'} (the declared default)`,
+            });
+        }
+        if (!verdict.pass) {
+            const home = resolveArrivalSpawn(this.world, { exit_id: exit.exit_id }, this.returnSpawns);
+            if (home) {
+                const needs = verdict.missing?.length ? verdict.missing
+                    : (verdict.needs?.length ? verdict.needs : ruleItemNames(exit.access_rule));
+                this.pendingBounce = { level: door.to, at: this._now(), spawn: home, exitId: exit.exit_id,
+                    region: this.region };
+                return effects.concat([{
+                    type: 'locked',
+                    sourceRegion: this.region,
+                    region: target,
+                    exit: exitName,
+                    exitId: exit.exit_id,
+                    needs,
+                    message: lockedDoorMessage(target, needs),
+                }]);
+            }
+            effects.push({
+                type: 'warn',
+                message: `[door gate] the door to "${target}" is locked, but region "${this.region}" has no `
+                    + 'spawn to bounce the player back to (no level, or the door carries no entrance spawn) — '
+                    + 'the crossing proceeds rather than strand the player',
+            });
+        }
         // The game swaps anyway — design (c) — into a real room of its own
         // set. Mark that swap so its `level` report is not read as a crossing.
         this.pendingDeparture = { level: door.to, at: this._now() };
-        return [{
+        return effects.concat([{
             type: 'regionMove',
             sourceRegion: this.region,
             targetRegion: exit.targetRegion,
@@ -563,7 +688,7 @@ export class SeedlingRegionBinding {
             fromLevel: door.fromLevel,
             toLevel: door.to,
             external: true,
-        }];
+        }]);
     }
 
     _resolveCrossing(level, fromLevel) {

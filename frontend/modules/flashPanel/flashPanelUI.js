@@ -990,6 +990,7 @@ export class FlashPanelUI {
     if (cls === 'error') span.style.color = '#e94560';
     else if (cls === 'location') span.style.color = '#5ae9e0';
     else if (cls === 'item') span.style.color = '#6ae95a';
+    else if (cls === 'warn') span.style.color = '#e9c95a';
     span.textContent = msg + '\n';
     this.logElement.appendChild(span);
     this.logElement.scrollTop = this.logElement.scrollHeight;

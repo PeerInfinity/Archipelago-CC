@@ -14,6 +14,8 @@
  *                 uses; procgenPlayer receives it, loads the target region and
  *                 forwards up the chain so gameState follows
  *   warn       -> LOUD: console.warn AND the panel's own log
+ *   bounce     -> (G4) a teleport home: a refused door's swap is REVERSED
+ *   locked     -> (G4) a panel line + `flashSeedling:doorLocked` on the bus
  *
  * ⛓⛓ **AND IT SUBSCRIBES `procgen:activeSubstrateChanged`** (EDITOR INTEGRATION
  * W6, H2; plan §11.1 A2 / §11.6 item 2). flashPanel is not procgen-only, so it
@@ -49,6 +51,13 @@ export const ACTIVE_SUBSTRATE_EVENT = 'procgen:activeSubstrateChanged';
  */
 export const AP_ITEM_FOUND_EVENT = 'flashSeedling:apItemFound';
 
+/**
+ * ⛓ SEEDLING GENERATED G4 — a door the HOST refused: `{sourceRegion, region,
+ * exit, exitId, needs, message}`. Published on the module event bus beside the
+ * panel line, so a readout can show it without this file knowing what a panel is.
+ */
+export const DOOR_LOCKED_EVENT = 'flashSeedling:doorLocked';
+
 export class SeedlingRegionGlue {
     /**
      * @param {object} deps
@@ -61,15 +70,18 @@ export class SeedlingRegionGlue {
      *   their registry constants, never a literal spelled here
      * @param {function} [deps.getPanel]     resolves the active flashPanel instance
      * @param {function} [deps.now]          injectable clock (tests)
+     * @param {function} [deps.canPass]      G4 — the door predicate
+     *   (`seedlingDoorGate.createDoorGate` over the state manager); absent =
+     *   every door passes, today's behaviour
      */
-    constructor({ eventBus, getDispatcher, loadRegionEvent, substrateId, getPanel, now } = {}) {
+    constructor({ eventBus, getDispatcher, loadRegionEvent, substrateId, getPanel, now, canPass } = {}) {
         this.eventBus = eventBus ?? null;
         this.getDispatcher = getDispatcher ?? (() => null);
         this.loadRegionEvent = loadRegionEvent;
         const ours = substrateId ?? [FLASH_SEEDLING_SUBSTRATE_ID, FLASH_SEEDLING_GEN_SUBSTRATE_ID];
         this.substrateIds = new Set(Array.isArray(ours) ? ours : [ours]);
         this.getPanel = getPanel ?? (() => null);
-        this.binding = new SeedlingRegionBinding({ now });
+        this.binding = new SeedlingRegionBinding({ now, canPass });
         this.adapter = null;
         this.delivery = null;
         /** H6 — the AP check binding. Set from outside, like the delivery. */
@@ -80,7 +92,7 @@ export class SeedlingRegionGlue {
         // Diagnostics — the verify script reads these rather than inferring
         // behaviour from console text.
         this.stats = { loads: 0, teleports: 0, regionMoves: 0, warnings: 0, parks: 0,
-            resumes: 0, setDeliveries: 0, locationChecks: 0, itemsFound: 0 };
+            resumes: 0, setDeliveries: 0, locationChecks: 0, itemsFound: 0, doorsLocked: 0, bounces: 0 };
     }
 
     start() {
@@ -243,6 +255,8 @@ export class SeedlingRegionGlue {
                 case 'regionMove': this._regionMove(effect); break;
                 case 'locationCheck': this._locationCheck(effect); break;
                 case 'apItemFound': this._itemFound(effect); break;
+                case 'locked': this._doorLocked(effect); break;
+                case 'bounce': this._bounce(effect); break;
                 case 'warn': this._warn(effect.message); break;
                 default: this._log(effect.message);
             }
@@ -258,6 +272,34 @@ export class SeedlingRegionGlue {
         this.adapter.teleport({ level, x, y });
         this.stats.teleports += 1;
         this._log(`[region atlas] arrival in "${region}": teleport to level ${level} (${x}, ${y})`);
+    }
+
+    /**
+     * ⛓ G4 — the refused door's answer, as a teleport through the same recipe
+     * an arrival uses. The binding sends it only once the game's own swap has
+     * landed (the swap is swallowed), and marks its echo.
+     */
+    _bounce({ level, x, y, exit, region }) {
+        if (!this.adapter?.teleport) {
+            this._warn(`[door gate] no flash adapter to bounce the player back into "${region}" — `
+                + 'is the Flash Game panel open and the game started?');
+            return;
+        }
+        this.adapter.teleport({ level, x, y });
+        this.stats.bounces += 1;
+        this._log(`[door gate] back into "${region}" at "${exit}"'s approach: teleport to level ${level} (${x}, ${y})`);
+    }
+
+    /** ⛓ G4 — the sentence the refused door says, on the panel and on the bus. */
+    _doorLocked({ sourceRegion, region, exit, exitId, needs, message }) {
+        this.stats.doorsLocked += 1;
+        const line = `[door gate] ${message}`;
+        if (typeof console !== 'undefined') console.info(line);
+        this._panelLog(line, 'warn');
+        try {
+            this.eventBus?.publish?.(DOOR_LOCKED_EVENT,
+                { sourceRegion, region, exit, exitId, needs: [...(needs ?? [])], message });
+        } catch { /* a bus that refuses an unknown event is not a gate failure */ }
     }
 
     _regionMove({ sourceRegion, targetRegion, exitName, fromLevel, toLevel }) {
