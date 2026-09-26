@@ -297,7 +297,9 @@ async function quickLaunchEditOpsPersist(testController) {
     /** Click "+ group" at the top level and type the name into the inline input it opens. */
     const addTopGroup = async (label) => {
         root.querySelector(`.ql-root-ctl .${CONTROLS.addGroup}`).click();
-        const input = await until(() => root.querySelector(`.${INLINE.group}`), 'the inline group-name input');
+        // pollForCondition answers true/false, not the element: query it again once it is there.
+        const opened = await until(() => root.querySelector(`.${INLINE.group}`), 'the inline group-name input');
+        const input = opened ? root.querySelector(`.${INLINE.group}`) : null;
         testController.reportCondition(`"+ group" opens an inline name input (for "${label}")`, !!input);
         if (input) typeAndEnter(input, label);
     };
@@ -329,7 +331,8 @@ async function quickLaunchEditOpsPersist(testController) {
         await until(() => userGroup(root, 'Mine')?.querySelector('.ql-node')?.dataset.kind === 'doc', 'the guide moved up');
 
         userGroup(root, 'Mine').querySelector(`:scope > .ql-ctl-row .${CONTROLS.rename}`).click();
-        const renameInput = await until(() => root.querySelector(`.ql-user > summary > .${INLINE.rename}`), 'the inline rename input');
+        const renaming = await until(() => root.querySelector(`.ql-user > summary > .${INLINE.rename}`), 'the inline rename input');
+        const renameInput = renaming ? root.querySelector(`.ql-user > summary > .${INLINE.rename}`) : null;
         testController.reportCondition('✎ turns the label into an input holding it', renameInput?.value === 'Mine');
         if (renameInput) typeAndEnter(renameInput, 'Mine 2');
         testController.reportCondition('✎ renames the group', await until(() => userGroup(root, 'Mine 2'), 'group "Mine 2"'));
