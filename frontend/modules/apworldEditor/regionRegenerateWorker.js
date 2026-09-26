@@ -1,7 +1,7 @@
 /**
  * apworldEditor/regionRegenerateWorker — the MODULE WORKER the hub's Region
  * generation form runs ONE `regenerateRegionEntry` in (APWORLD SUBSTRATE CHANGE
- * R2). The protocol and the budget live in `regionGenerationRun.js`; this file
+ * R2), and *Initialise procgen data* a whole slot's `initialiseSlot` (R7). The protocol and the budget live in `regionGenerationRun.js`; this file
  * is the shell: import the substrate libraries into the worker's own (empty)
  * registry, then answer the job.
  *
@@ -10,7 +10,7 @@
  * location (`resolveRegenerateWorkerUrl`), where its relative imports resolve.
  */
 
-import { REGENERATE_WORKER_LIBRARIES, runRegenerateJob } from './regionGenerationRun.js';
+import { INITIALISE_JOB, REGENERATE_WORKER_LIBRARIES, runRegenerateJob } from './regionGenerationRun.js';
 
 let loaded = null;
 
@@ -44,12 +44,17 @@ function loadLibraries() {
             // ⛓ R5b — a ZONE source replaces the region's content; the install it
             //   needs is module-global, which is why it runs HERE and never on the page.
             const { zoneJobAnswer } = await import('./regionContent.js');
+            // ⛓ R7 — a WHOLE bare slot laid out and realised, one progress message per region.
+            const { initialiseSlot } = await import('./slotInitialise.js');
             return {
                 registered: substrateRegistry.getAll().map((e) => e.id),
                 failed,
-                regenerate: (args) => (args?.source?.kind === 'zone'
-                    ? zoneJobAnswer(args, { fetchJson: fetchServedJson })
-                    : regenerateRegionEntry(args)),
+                regenerate: (args, { progress } = {}) => {
+                    if (args?.job === INITIALISE_JOB) return initialiseSlot({ ...args, onProgress: progress });
+                    return args?.source?.kind === 'zone'
+                        ? zoneJobAnswer(args, { fetchJson: fetchServedJson })
+                        : regenerateRegionEntry(args);
+                },
             };
         })();
     }
@@ -66,6 +71,6 @@ self.onmessage = async (ev) => {
             libs = await loadLibraries();
             return { registered: libs.registered, failed: libs.failed };
         },
-        regenerate: (args) => libs.regenerate(args),
+        regenerate: (args, io) => libs.regenerate(args, io),
     });
 };

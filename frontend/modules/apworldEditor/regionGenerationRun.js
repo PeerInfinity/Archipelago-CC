@@ -58,6 +58,51 @@ export function regionGenerationTimeoutSeconds(value) {
     return Number.isFinite(n) && n >= 1 ? Math.floor(n) : REGION_GENERATION_TIMEOUT_DEFAULT_S;
 }
 
+/* ── R7: the WHOLE-SLOT budget (Initialise procgen data) ─────────────── */
+
+/**
+ * ⛓ The initialise setting's key and path (APWORLD SUBSTRATE CHANGE R7, ⚖ user
+ * 2026-09-26 #3: a SEPARATE setting — the per-region limit is the wrong unit for
+ * a 445-region slot, measured ≈41 s of realise as `maze`).
+ */
+export const INITIALISE_TIMEOUT_KEY = 'initialiseTimeoutSeconds';
+export const INITIALISE_TIMEOUT_SETTING = `moduleSettings.apworldEditor.${INITIALISE_TIMEOUT_KEY}`;
+
+/** ⛓ Five minutes for the whole slot (⚖ #3). The schema and the reader both use it. */
+export const INITIALISE_TIMEOUT_DEFAULT_S = 300;
+
+/** ⛓ The schema property `apworldEditor/index.js` registers beside R2's. */
+export const INITIALISE_TIMEOUT_SCHEMA = Object.freeze({
+    type: 'integer',
+    minimum: 1,
+    default: INITIALISE_TIMEOUT_DEFAULT_S,
+    label: 'Initialise procgen data time limit (seconds)',
+    description: 'How long the APWorld Editor\'s Initialise procgen data → Generate ▸ lets the WHOLE slot '
+        + '(every region laid out and realised, in a worker) run before giving up. The attempt is stopped '
+        + 'and nothing is recorded.',
+});
+
+/** ⛓ The initialise budget a stored value means: a whole number ≥ 1, else the default. */
+export function initialiseTimeoutSeconds(value) {
+    const n = Number(value);
+    return Number.isFinite(n) && n >= 1 ? Math.floor(n) : INITIALISE_TIMEOUT_DEFAULT_S;
+}
+
+/**
+ * ⛓⛓ **THE INITIALISE TIMEOUT SENTENCE** — the setting's name and value, and how
+ * far the build got (`built N / M` from the last progress message).
+ */
+export function initialiseTimeoutSentence(seconds, substrate, player, progress = null) {
+    const got = progress && Number.isInteger(progress.index)
+        ? ` after building ${progress.index} / ${progress.total} regions` : '';
+    return `apworld: initialising player ${player}'s slot as \`${substrate}\` ${REGION_GENERATION_GAVE_UP} `
+        + `${seconds} s${got} — \`${INITIALISE_TIMEOUT_KEY}\` = ${seconds} (${REGION_GENERATION_TIMEOUT_WHERE}). `
+        + 'The worker was stopped; nothing was recorded.';
+}
+
+/** ⛓ The job kind the worker dispatches an initialise on. */
+export const INITIALISE_JOB = 'initialise';
+
 /** ⛓ The timeout sentence's fixed words. EXPORTED so rows assert the constant. */
 export const REGION_GENERATION_GAVE_UP = 'gave up after';
 
@@ -136,6 +181,9 @@ export function resolveRegenerateWorkerUrl() {
  *
  * @param {object} args `{doc, player, region, substrate, seed, regionParams,
  *   hazardOpts, size, freeItems}`
+ * ⛓ R7 — `regenerate(args, {progress})`: a job may post `{type: 'progress', event}`
+ * messages (an initialise posts one per region) before its result.
+ *
  * @param {{post: Function, loadLibraries: Function, regenerate: Function,
  *   now?: Function}} io
  */
@@ -158,7 +206,7 @@ export async function runRegenerateJob(args, { post, loadLibraries, regenerate, 
         // ⛓ R5c — a zone job may FETCH (the atlas intake) before it extracts, so it
         //   answers a promise; a realiser job answers synchronously, and awaiting a
         //   value is that value.
-        res = await regenerate(args);
+        res = await regenerate(args, { progress: (event) => post({ type: 'progress', event }) });
     } catch (e) {
         // ⛓ `regenerateRegionEntry` answers a realiser throw itself; a throw that
         //   escapes it is a defect of the op's own code, reported as the realiser's.
@@ -182,8 +230,10 @@ export async function runRegenerateJob(args, { post, loadLibraries, regenerate, 
  * (measured ≈1.2 s for the eight libraries, plan §10 R2 task 0).
  *
  * @param {object} args the job (`runRegenerateJob`'s)
+ * ⛓ R7 — a `progress` message is handed to `onProgress` (never after the outcome).
+ *
  * @param {{timeoutMs: number, createWorker?: Function, now?: Function,
- *   setTimer?: Function, clearTimer?: Function, onPhase?: Function}} opts
+ *   setTimer?: Function, clearTimer?: Function, onPhase?: Function, onProgress?: Function}} opts
  * @returns {{promise: Promise<object>, cancel: Function, phase: Function,
  *   startedAt: Function, budgetMs: number, late: Function, terminated: Function}}
  */
@@ -194,6 +244,7 @@ export function runRegenerateInWorker(args, {
     setTimer = (fn, ms) => setTimeout(fn, ms),
     clearTimer = (t) => clearTimeout(t),
     onPhase = () => {},
+    onProgress = () => {},
     loadBoundMs = REGION_GENERATION_LOAD_BOUND_MS,
 } = {}) {
     const budgetMs = timeoutMs;
@@ -246,6 +297,9 @@ export function runRegenerateInWorker(args, {
             startedAt = now();
             onPhase(phase, msg);
             arm(budgetMs);
+        } else if (msg.type === 'progress') {
+            // ⛓ R7 — one per region the job builds (an initialise's ticker).
+            onProgress(msg.event);
         } else if (msg.type === 'result') {
             const { type, ...res } = msg;
             finish({ ...res, loadMs: startedAt - pressedAt }, { kill: true });
