@@ -28,8 +28,7 @@ export const moduleInfo = {
     icon: '🤖',
     column: 3,
     category: 'Procgen Infrastructure Panels',
-    description: 'Sphere-log playback bot — drives the maze panel '
-               + 'visualizer through a recorded playthrough.',
+    description: 'Replays a sphere log\'s playthrough by driving the current region\'s game, with play, step, speed and walk-to.',
     requires: [],
 };
 

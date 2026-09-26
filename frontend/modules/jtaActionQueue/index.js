@@ -12,7 +12,7 @@ export const moduleInfo = {
     icon: '',
     column: 2,
     category: 'Non-procgen Games',
-    description: 'Queue and execute actions for Journey to Ascension.',
+    description: 'Queue Journey to Ascension tasks zone by zone, run them with Start and Stop, and save queues as loadouts.',
     requires: ['jtaQueueEngine'],
 };
 

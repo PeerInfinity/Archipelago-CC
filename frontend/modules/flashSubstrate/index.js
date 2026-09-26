@@ -34,13 +34,7 @@ export const moduleInfo = {
     icon: '🎞️',
     column: 3,
     category: 'Procgen Substrate Panels',
-    description:
-        'A Flash game hosted in an iframe as a procgen substrate, runtime-'
-        + 'neutral across SWFRecomp (SWF -> WASM), Ruffle, and native Flash '
-        + '(the runtime is chosen by the game page, not this module). Mode 1: '
-        + 'one AP region = one game instance; the region\'s AP locations = the '
-        + 'game\'s in-game objectives, reported cooperatively via the '
-        + '__swfBridge contract.',
+    description: 'A region\'s Flash game; for now a placeholder page with one button per objective, each sending its check.',
     requires: ['stateManager', 'iframeAdapter'],
 };
 

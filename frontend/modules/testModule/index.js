@@ -14,7 +14,7 @@ function log(level, message, ...data) {
 export const moduleInfo = {
   name: 'testModule',
   title: 'Test Module',
-  description: 'A simple panel loaded dynamically.',
+  description: 'A sample panel for trying ?loadModule= and Add External Module; it shows its saved layout state as JSON.',
   componentType: 'testPanel',
   category: 'Developer and Testing Panels',
 };

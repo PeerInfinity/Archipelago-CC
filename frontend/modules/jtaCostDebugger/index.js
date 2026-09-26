@@ -27,7 +27,7 @@ export const moduleInfo = {
     icon: '',
     column: 2,
     category: 'Non-procgen Games',
-    description: 'Step-through debugger for JTA cost generation via simulated playthrough.',
+    description: 'Generate Journey to Ascension task costs by simulated play, inspect each energy reset, then verify and apply.',
     requires: ['jtaGameDataPanel'],
 };
 

@@ -10,7 +10,7 @@ export const moduleInfo = {
   icon: '',
   column: 2,
   category: 'Procgen Substrate Panels',
-  description: 'View and control A-Mazing-Idle game data.',
+  description: 'Shows A-Mazing-Idle\'s points, biome and mazes; injects points, advances the biome, and exports or imports saves.',
   requires: ['iframeAdapter', 'iframePanel'],
 };
 

@@ -23,7 +23,7 @@ export const moduleInfo = {
   icon: '🗺️',
   column: 2,
   category: 'Procgen Infrastructure Panels',
-  description: 'Analyzes a tile-based Flash game\'s map data and emits an Archipelago rules.json.',
+  description: 'Draws Robot Wants Kitty\'s tile map, computes what\'s reachable with chosen abilities, and exports rules.json.',
 };
 
 let thisModuleId = moduleInfo.name;

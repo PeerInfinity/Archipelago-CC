@@ -10,7 +10,7 @@ export const moduleInfo = {
   icon: '',
   column: 2,
   category: 'Non-procgen Games',
-  description: 'View and control Journey to Ascension game data.',
+  description: 'Shows live Journey to Ascension state, checks it against the simulator, and edits task costs and save data.',
   requires: ['iframeAdapter', 'iframePanel'],
 };
 

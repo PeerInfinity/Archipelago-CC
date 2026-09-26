@@ -23,7 +23,7 @@ export const moduleInfo = {
     icon: '🧩',
     column: 3,
     category: 'Procgen Substrate Panels',
-    description: 'Generate and play walls-only maze rooms (simulator-core v1 consumer)',
+    description: 'Generates maze rooms by seed, size and biome, or loads a region\'s room, and plays it with arrow keys or WASD.',
     requires: [],
 };
 

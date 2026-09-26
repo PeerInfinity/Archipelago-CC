@@ -64,7 +64,7 @@ export const moduleInfo = {
     icon: '🚪',
     column: 3,
     category: 'Game Mode Panels',
-    description: "The start region's substrate: its exits, a Restart, and the skip-the-menu setting.",
+    description: "The game's start screen: one button per start-region exit, a Restart, and the Skip the menu setting.",
     requires: ['gameState'],
 };
 

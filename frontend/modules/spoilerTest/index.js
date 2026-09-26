@@ -22,7 +22,7 @@ export const moduleInfo = {
   icon: '🔍',
   column: 2, // Middle column,
   category: 'Developer and Testing Panels',
-  description: 'Provides UI for loading and running test Spoilers.',
+  description: 'Replays a seed\'s sphere log step by step, flagging any sphere whose reachable locations differ from the log.',
 };
 
 // --- Module Scope Variables ---

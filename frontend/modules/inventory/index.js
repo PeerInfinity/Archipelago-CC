@@ -26,7 +26,7 @@ export const moduleInfo = {
   icon: '🎒',
   column: 1, // Left column
   category: 'Tracker Panels',
-  description: 'Inventory display panel.',
+  description: 'Every item as a button: click adds one, Shift+click removes one; show unowned items or group by category.',
 };
 
 // // Store instances or state needed by the module

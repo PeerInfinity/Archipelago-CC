@@ -14,7 +14,7 @@ export const moduleInfo = {
     icon: '🔧',
     column: 3,
     category: 'Non-procgen Games',
-    description: 'Generate APCalc puzzle data with configurable parameters',
+    description: 'Set a seed, sphere count and branching, generate an APCalc puzzle, then download its rules.json or load it.',
     requires: ['stateManager'],
 };
 

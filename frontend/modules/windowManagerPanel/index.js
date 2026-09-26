@@ -11,7 +11,7 @@ export const moduleInfo = {
   icon: '🪟',
   column: 2, // Middle column
   category: 'Embedding and Windows',
-  description: 'Window Manager display panel.',
+  description: 'Opens a known page or a typed URL in a separate browser window, closes them all, and lists connected windows.',
   requires: ['windowAdapter', 'windowPanel'],
 };
 

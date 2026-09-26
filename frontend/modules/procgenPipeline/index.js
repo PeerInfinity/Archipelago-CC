@@ -19,7 +19,7 @@ export const moduleInfo = {
     icon: '🧭',
     column: 3,
     category: 'Procgen Infrastructure Panels',
-    description: 'Procedural-generation pipeline (sphere growth, top-down, shuffled spiral, grid growth)',
+    description: 'Generates a multi-region world from a mode, seed and substrate mix, draws its map, and loads it to play.',
     requires: [],
 };
 

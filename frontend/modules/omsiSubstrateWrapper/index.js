@@ -42,12 +42,7 @@ export const moduleInfo = {
     icon: '🔁',
     column: 3,
     category: 'Procgen Substrate Panels',
-    description:
-        'Idle Loops (omsi-loops) hosted in an iframe as a loop-mode '
-        + 'substrate. v0: one AP region = Beginnersville; the game\'s '
-        + 'per-loop mana budget mirrors into the shared loop-mode pool '
-        + 'through the generic resource channels, and completing Start '
-        + 'Journey checks the victory location.',
+    description: 'Plays Idle Loops (the omsi-loops fork): queue actions that run until the loop\'s shared mana runs out.',
     requires: ['stateManager', 'gameState', 'iframeAdapter'],
 };
 

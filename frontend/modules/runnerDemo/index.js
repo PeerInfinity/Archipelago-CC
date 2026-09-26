@@ -74,13 +74,7 @@ export const moduleInfo = {
     icon: '🏃',
     column: 3,
     category: 'Procgen Substrate Panels',
-    description:
-        'Procedurally generated auto-runner platformer as a procgen '
-        + 'substrate: every region is a horizontal strip whose access '
-        + 'rules are DERIVED from the game\'s own physics (the canRun '
-        + 'solver samples the real step function), so AP re-randomizes '
-        + 'within provably playable logic. Rides the flashSubstrate '
-        + 'panel class + bridge via the __swfBridge contract.',
+    description: 'Plays each region as an auto-running platformer strip: jump to reach its pickups and exit portals.',
     requires: ['stateManager', 'iframeAdapter'],
 };
 

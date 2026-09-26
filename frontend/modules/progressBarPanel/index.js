@@ -37,7 +37,7 @@ export const moduleInfo = {
   icon: '📊',
   column: 2, // Middle column,
   category: 'Tracker Panels',
-  description: 'Panel container for hosting progress bars.',
+  description: 'Holds the progress bars Meta Game scenarios create, with buttons to add a test bar or clear them all.',
   requires: ['progressBar'],
 };
 

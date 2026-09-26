@@ -38,7 +38,7 @@ export const moduleInfo = {
   icon: '🎮',
   column: 2,
   category: 'Embedding and Windows',
-  description: 'Embeds a Flash game with an injected Archipelago bridge.',
+  description: 'Plays the preset\'s Flash game (Seedling, Robot Wants Kitty), turning pickups into checks and delivering items.',
   requires: ['stateManager'],
 };
 

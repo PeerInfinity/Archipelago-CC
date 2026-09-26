@@ -28,7 +28,7 @@ export const moduleInfo = {
   icon: '📊',
   column: 1, // Left column (narrow width design)
   category: 'Loop Mode Modules',
-  description: 'Detailed action queue analysis with mana cost predictions.',
+  description: 'Each queued action\'s mana cost and the mana left after it, this loop beside the last; click a row for details.',
   requires: ['loops'],
 };
 

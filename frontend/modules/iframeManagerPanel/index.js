@@ -12,7 +12,7 @@ export const moduleInfo = {
   icon: '🖼️',
   column: 2, // Middle column
   category: 'Embedding and Windows',
-  description: 'Iframe Manager display panel.',
+  description: 'Loads a known page or typed URL into the open Iframe panels, unloads them, and lists connected pages.',
   requires: ['iframeAdapter', 'iframePanel'],
 };
 

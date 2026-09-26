@@ -19,7 +19,7 @@ export const moduleInfo = {
   icon: '🏰',
   column: 3, // Right column
   category: 'Tracker Panels',
-  description: 'Dungeons display panel.',
+  description: 'Each dungeon\'s regions and boss defeat rules, colored by the items you have; click a region to jump to it.',
   requires: ['stateManager', 'commonUI'],
 };
 

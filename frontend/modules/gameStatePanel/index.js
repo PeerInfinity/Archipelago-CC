@@ -10,7 +10,7 @@ export const moduleInfo = {
   icon: '👤',
   column: 2, // Middle column
   category: 'Tracker Panels',
-  description: 'Game State display panel.',
+  description: 'Your current region and the moves and checks made so far, plus mana and region XP when loop costs are loaded.',
 };
 
 let _moduleEventBus = null;

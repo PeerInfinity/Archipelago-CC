@@ -36,7 +36,7 @@ export const moduleInfo = {
   icon: '📄',
   column: 1, // Left column,
   category: 'Data and Configuration Panels',
-  description: 'Manages loading, combining, and saving of various application JSON data sources and modes.',
+  description: 'Pick rules, modules, layout, settings or game state to save or load as a file, a browser mode or editor text.',
 };
 
 /**

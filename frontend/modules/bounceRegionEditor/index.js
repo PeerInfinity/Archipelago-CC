@@ -31,7 +31,7 @@ export const moduleInfo = {
     icon: '🪀',
     column: 3,
     category: 'Procgen Infrastructure Panels',
-    description: 'Per-region geometry editor for the bounce substrate',
+    description: 'Edits one bounce level\'s platforms, pickups and portals on a canvas and shows the access rules they derive.',
     requires: [],
 };
 

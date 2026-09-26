@@ -21,7 +21,7 @@ export const moduleInfo = {
   icon: '\u2699',
   column: 2, // Middle column
   category: 'Data and Configuration Panels',
-  description: 'General application settings and preferences.',
+  description: 'Layout, colorblind and connection options, every module setting (searchable), and the raw settings JSON.',
 };
 
 // Store module-level references

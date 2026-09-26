@@ -28,7 +28,7 @@ export const moduleInfo = {
   icon: '\u{1F517}', // link emoji
   column: 3,
   category: 'Non-procgen Games',
-  description: 'Reconstruct proof dependency edges in a graph puzzle.',
+  description: 'Drag arrows between MetaMath proof steps to rebuild their dependencies, then check the steps that turn green.',
   requires: ['stateManager'],
 };
 

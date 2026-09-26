@@ -34,11 +34,7 @@ export const moduleInfo = {
     icon: '⚔️',
     column: 3,
     category: 'Procgen Substrate Panels',
-    description:
-        'Journey to Ascension hosted in an iframe as a loop-mode '
-        + 'substrate. v1: one AP region = one JtA zone; the player '
-        + 'works the zone\'s tasks and the substrate dispatches region '
-        + 'transitions on Travel-task completion or exit-choice tasks.',
+    description: 'Plays Journey to Ascension with each region as one zone: work its tasks, then travel or take an exit task.',
     requires: ['stateManager', 'gameState', 'iframeAdapter'],
 };
 

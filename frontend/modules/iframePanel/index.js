@@ -11,7 +11,7 @@ export const moduleInfo = {
   icon: '🖼️',
   column: 3, // Right column
   category: 'Embedding and Windows',
-  description: 'Iframe Panel display panel.',
+  description: 'Shows a page or game sent from the Iframe Manager, with a status line for loading, connected or error.',
   allowMultipleInstances: true,
   requires: ['iframeAdapter'],
 };

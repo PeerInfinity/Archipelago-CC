@@ -38,7 +38,7 @@ export const moduleInfo = {
   icon: '\u{1F504}', // Counterclockwise arrows emoji
   column: 2,
   category: 'Data and Configuration Panels',
-  description: 'Convert between Python code and JSON rule format.',
+  description: 'Type a Python access rule or a JSON rule and see the other converted as you type, with any warnings.',
 };
 
 /**

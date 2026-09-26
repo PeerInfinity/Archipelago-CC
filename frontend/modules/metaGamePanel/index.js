@@ -9,7 +9,7 @@ export const moduleInfo = {
   icon: '🎯',
   column: 2, // Middle column,
   category: 'Game Mode Panels',
-  description: 'UI panel for metaGame module configuration and management',
+  description: 'Loads a scripted scenario from a list, lets you edit and apply its JSON settings, or clears it.',
   requires: ['metaGame'],
 };
 

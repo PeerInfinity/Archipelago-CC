@@ -29,7 +29,7 @@ export const moduleInfo = {
   icon: '',
   column: 1,
   category: 'Loop Mode Modules',
-  description: 'Step-through debugger for Loops cost generation algorithm.',
+  description: 'Steps through how loop-mode mana costs are planned from the sphere log, and verifies loaded costs against it.',
   requires: ['loops', 'sphereState'],
 };
 

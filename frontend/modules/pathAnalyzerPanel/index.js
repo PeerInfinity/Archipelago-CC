@@ -20,7 +20,7 @@ export const moduleInfo = {
   icon: '🛤️',
   column: 2, // Middle column,
   category: 'Analysis Panels',
-  description: 'A dedicated panel for path analysis with configurable settings.',
+  description: 'Type a region name to see the routes that reach it and the items each needs, with adjustable limits.',
 };
 
 let thisModuleId = moduleInfo.name;

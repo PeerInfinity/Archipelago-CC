@@ -40,7 +40,7 @@ export const moduleInfo = {
   icon: '📦',
   column: 1, // Left column,
   category: 'Data and Configuration Panels',
-  description: 'Panel to manage modules.',
+  description: 'Every loaded module with its description: search, enable or disable one, or load an external module.',
 };
 
 /**

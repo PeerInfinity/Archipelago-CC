@@ -12,7 +12,7 @@ export const moduleInfo = {
   icon: '🌐',
   column: 2, // Middle column,
   category: 'Analysis Panels',
-  description: 'Interactive visualization of region connectivity graph with deterministic layout',
+  description: 'A map of regions and exits colored by reachability; click a region to move toward it or check its locations.',
   requires: ['stateManager', 'gameState'],
 };
 

@@ -23,7 +23,7 @@ export const moduleInfo = {
   icon: '⏱️',
   column: 2, // Middle column,
   category: 'Game Mode Panels',
-  description: 'A dedicated panel for displaying the Timer UI.',
+  description: 'The automatic location-check timer: Begin/Stop, Quick Check for one location, a progress bar and check counts.',
 };
 
 // Define the UI component type it intends to host (must match Timer module's definition)

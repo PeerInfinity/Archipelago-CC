@@ -19,7 +19,7 @@ export const moduleInfo = {
   icon: 'fn',
   column: 3, // Right column
   category: 'Tracker Panels',
-  description: 'Helper functions display panel.',
+  description: 'The game\'s rule helper functions: see each one\'s logic, set its parameters and read the live result.',
   requires: ['stateManager', 'commonUI'],
 };
 

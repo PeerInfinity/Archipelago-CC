@@ -117,13 +117,7 @@ export const moduleInfo = {
     icon: '🏀',
     column: 3,
     category: 'Procgen Substrate Panels',
-    description:
-        'Procedurally generated bounce-platformer (DJ-Metroidvania) as a '
-        + 'procgen substrate: every region is a vertical level whose access '
-        + 'rules are DERIVED from the game\'s own physics (the canJump solver '
-        + 'samples the real step function), so AP re-randomizes within '
-        + 'provably playable logic. Rides the flashSubstrate panel class + '
-        + 'bridge via the __swfBridge contract.',
+    description: 'Plays each region as a Doodle-Jump-style climb to pickups and exit portals; its rules come from the physics.',
     requires: ['stateManager', 'iframeAdapter'],
 };
 

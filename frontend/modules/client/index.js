@@ -41,7 +41,7 @@ export const moduleInfo = {
   icon: '💻',
   column: 2, // Middle column,
   category: 'Core Service Modules',
-  description: 'Handles Archipelago client connection and communication.',
+  description: 'Connect to an Archipelago server by address, follow its message log, and type local or ! server commands.',
   requires: ['stateManager'],
 };
 

@@ -36,7 +36,7 @@ export const moduleInfo = {
   icon: '⚙️',
   column: 2, // Middle column
   category: 'Data and Configuration Panels',
-  description: 'Provides UI for loading preset game rules.',
+  description: 'Pick a game and seed to load its rules, with test-result badges per seed, or load a rules file from disk.',
 };
 
 /**

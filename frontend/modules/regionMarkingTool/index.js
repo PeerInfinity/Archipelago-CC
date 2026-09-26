@@ -34,7 +34,7 @@ export const moduleInfo = {
     icon: '🧭',
     column: 2,
     category: 'Procgen Infrastructure Panels',
-    description: "Marks a real game's map into procgen regions and writes the region atlas.",
+    description: "Marks regions, exits and locations on Seedling's level maps, then saves the atlas or exports a rules.json.",
     requires: [],
 };
 

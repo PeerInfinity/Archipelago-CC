@@ -106,7 +106,7 @@ export const moduleInfo = {
   icon: '🧩',
   column: 3,
   category: 'Procgen Infrastructure Panels',
-  description: 'GUI editor for apworld rules.json (regions, exits, locations, access rules).',
+  description: 'Edits a rules.json\'s regions, exits, locations, access rules and items, with undo, a map and raw JSON.',
   requires: ['stateManager'],
 };
 

@@ -38,7 +38,7 @@ export const moduleInfo = {
   icon: '📡',
   column: 1, // Left column,
   category: 'Developer and Testing Panels',
-  description: 'Displays registered event publishers, subscribers, senders, and receivers.',
+  description: 'Each app event\'s publishers, subscribers, senders and handlers, with live counts and on/off toggles.',
 };
 
 /**

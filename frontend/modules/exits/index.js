@@ -22,7 +22,7 @@ export const moduleInfo = {
   icon: '🚪',
   column: 3, // Right column,
   category: 'Tracker Panels',
-  description: 'Exits display panel.',
+  description: 'Every exit as a card with its from/to regions, rule and traversability; click one to take it.',
   requires: ['stateManager', 'commonUI'],
 };
 

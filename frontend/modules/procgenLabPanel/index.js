@@ -23,11 +23,7 @@ export const moduleInfo = {
     icon: '🧪',
     column: 3,
     category: 'Procgen Infrastructure Panels',
-    description:
-        'Hosts a procgen substrate\'s standalone lab page (maze lab.html or '
-        + 'Seedling watch.html) in an iframe and speaks the procgenLab: '
-        + 'vocabulary to it — load a payload, drive its URL, mirror its '
-        + 'identity line, open the same view standalone.',
+    description: 'Shows the maze or Seedling lab page in the app: send it a level, take its level back, or open it standalone.',
     /**
      * ⛓ ONE INSTANCE PER SUBSTRATE, and a reader may open more. The
      * componentState carries `{substrate}`; the panel derives a UNIQUE

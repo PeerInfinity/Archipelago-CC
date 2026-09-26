@@ -37,7 +37,7 @@ export const moduleInfo = {
   icon: '⚙️',
   column: 2, // Middle column,
   category: 'Data and Configuration Panels',
-  description: 'Settings editor panel.',
+  description: 'Edit every app setting as raw JSON and apply it live with Apply or Ctrl+Enter.',
 };
 
 // Store instances or state needed by the module

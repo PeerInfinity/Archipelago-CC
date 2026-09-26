@@ -22,7 +22,7 @@ export const moduleInfo = {
   icon: '🔍',
   column: 2, // Middle column
   category: 'Game Mode Panels',
-  description: 'Discovery mode settings and discovered items display.',
+  description: 'Discovery mode: hide the regions, locations and exits you have not found yet, and choose how they are found.',
   requires: ['discovery'],
 };
 

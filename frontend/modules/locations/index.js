@@ -22,7 +22,7 @@ export const moduleInfo = {
   icon: '📍',
   column: 3, // Right column,
   category: 'Tracker Panels',
-  description: 'Locations display panel.',
+  description: 'A grid of every location, colored by reachability with its access rule; click a card to check it.',
   requires: ['stateManager', 'commonUI'],
 };
 

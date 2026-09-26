@@ -22,7 +22,7 @@ export const moduleInfo = {
   icon: '✅',
   column: 1, // Left column,
   category: 'Developer and Testing Panels',
-  description: 'Automated application feature testing.',
+  description: 'Lists the in-app automated tests to enable, reorder and run, with each test\'s conditions and an export.',
 };
 
 let appInitializationApi = null;

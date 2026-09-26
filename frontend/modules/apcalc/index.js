@@ -17,7 +17,7 @@ export const moduleInfo = {
     icon: '🧮',
     column: 2,
     category: 'Non-procgen Games',
-    description: 'Calculator-themed puzzle game for Archipelago',
+    description: 'A calculator puzzle: press number and operation keys, each with limited presses, to reach target numbers.',
     requires: ['stateManager'],
 };
 

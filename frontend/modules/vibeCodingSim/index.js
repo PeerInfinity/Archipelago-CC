@@ -17,7 +17,7 @@ export const moduleInfo = {
     icon: '🤖',
     column: 1,
     category: 'Non-procgen Games',
-    description: 'Simulate managing an AI-assisted coding project',
+    description: 'Assign unreliable AI agents doc, code, test and review tasks per feature, and uncover their real quality.',
     requires: ['stateManager'],
 };
 

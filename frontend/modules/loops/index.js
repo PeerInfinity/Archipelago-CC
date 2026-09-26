@@ -16,7 +16,7 @@ export const moduleInfo = {
   icon: '🔄',
   column: 3, // Right column
   category: 'Loop Mode Modules',
-  description: 'Loop mode logic and UI panel.',
+  description: 'Queues moves, explores and location checks to run against a mana bar, with speed, save and reset controls.',
   requires: ['stateManager', 'discovery'],
 };
 

@@ -25,7 +25,7 @@ export const moduleInfo = {
   icon: '🗺️',
   column: 3, // Right column
   category: 'Tracker Panels',
-  description: 'Regions display panel.',
+  description: 'The game\'s regions as blocks of entrances, exits and locations, colored by reachability; click an exit to move.',
   requires: ['stateManager', 'commonUI'],
 };
 

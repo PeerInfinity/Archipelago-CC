@@ -76,11 +76,7 @@ export const moduleInfo = {
     icon: '📜',
     column: 3,
     category: 'Procgen Substrate Panels',
-    description:
-        'Text-adventure renderer driven by the synthetic engine in an '
-        + 'iframe. The surviving text-adventure module — supersedes the '
-        + 'deprecated textAdventureSubstrate, which registers the same '
-        + 'substrate id and wins it if both are enabled.',
+    description: 'Shows each region as prose with clickable exits and locations; you can also type commands like go or check.',
     requires: ['stateManager', 'gameState', 'discovery', 'iframeAdapter'],
 };
 

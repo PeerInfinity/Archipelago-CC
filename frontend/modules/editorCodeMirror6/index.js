@@ -42,7 +42,7 @@ export const moduleInfo = {
   icon: '📝',
   column: 2, // Middle column
   category: 'Data and Configuration Panels',
-  description: 'CodeMirror 6 based editor with JSON support and folding.',
+  description: 'The Editor\'s data sources with JSON highlighting, bracket matching and Fold All / Unfold All.',
   requires: ['editorCore'],
 };
 

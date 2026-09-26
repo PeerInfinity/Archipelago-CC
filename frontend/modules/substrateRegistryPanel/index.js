@@ -21,10 +21,7 @@ export const moduleInfo = {
     icon: '🗂️',
     column: 3,
     category: 'Procgen Infrastructure Panels',
-    description:
-        'Shows the live substrate registry: every registered entry and field, '
-        + 'the playback-controller and shared item-type answers in this app, and '
-        + 'drift against the checked-in registry snapshot.',
+    description: 'Shows every registered substrate as a feature matrix, with per-entry detail and drift from the saved snapshot.',
     /** ⛔ Nothing: the registry is an import, not a module dependency. */
     requires: [],
 };

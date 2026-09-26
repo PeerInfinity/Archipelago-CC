@@ -45,7 +45,7 @@ export const moduleInfo = {
   icon: '📋',
   column: 2, // Middle column
   category: 'Tracker Panels',
-  description: 'Displays sphere log data as an interactive checklist.',
+  description: 'The sphere log as a checklist: each sphere\'s locations and their items, with a checkbox to check each one.',
   requires: ['stateManager', 'commonUI', 'sphereState', 'locations'],
 };
 
