@@ -424,9 +424,30 @@
       "_comment": "Quick Launch P2 (2026-09-26): the mobile fallback table is gone; every registered panel must declare the title and name the mobile tab bar shows in its own moduleInfo. Quick Launch P7 (2026-09-26): and an icon (the five icon:'' panels got one), asserted rather than logged. Read off centralRegistry at run time. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
     },
     {
-      "id": "layout-import-keeps-module-state-in-sync",
+      "id": "quick-launch-builtin-folds-persist",
       "enabled": true,
       "order": 51,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch P7 (2026-09-26): built-in group folds saved in collapsedGroups; developer Help sections sub-grouped by their README's ## headings; an open inline form carried across a render (the race). ⚖ RULED (5): each row sets its initial state first (panelRoot → resetQuickLaunch) and ends with resetQuickLaunch in finally. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
+      "id": "quick-launch-developer-subgroups-follow-the-readme",
+      "enabled": true,
+      "order": 52,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch P7 (2026-09-26): built-in group folds saved in collapsedGroups; developer Help sections sub-grouped by their README's ## headings; an open inline form carried across a render (the race). ⚖ RULED (5): each row sets its initial state first (panelRoot → resetQuickLaunch) and ends with resetQuickLaunch in finally. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
+      "id": "quick-launch-inline-form-survives-a-render",
+      "enabled": true,
+      "order": 53,
+      "category": "Quick Launch",
+      "_comment": "Quick Launch P7 (2026-09-26): built-in group folds saved in collapsedGroups; developer Help sections sub-grouped by their README's ## headings; an open inline form carried across a render (the race). ⚖ RULED (5): each row sets its initial state first (panelRoot → resetQuickLaunch) and ends with resetQuickLaunch in finally. Enrolled here (defaultEnabledState is false, so enabled:true is what runs it)."
+    },
+    {
+      "id": "layout-import-keeps-module-state-in-sync",
+      "enabled": true,
+      "order": 54,
       "category": "JSON Panel",
       "_comment": "Quick Launch Q1b (2026-09-24), trap 1424: a live layout import (applyLayoutConfig) must leave every module with a panel enabled exactly when its tab exists and disable nothing; a layout without Events disables it and the original re-enables it; enableModule then activates the existing tab instead of adding a second. Self-contained (ends on the layout it started with)."
     }

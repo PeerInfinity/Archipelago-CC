@@ -30,7 +30,7 @@
 import { registerTest } from '../testRegistry.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
 import settingsManager from '../../../app/core/settingsManager.js';
-import { CATEGORY_ORDER, DOCS_INDEX, HELP_SECTIONS } from '../../quickLaunch/generated/docsIndex.js';
+import { CATEGORY_ORDER, DOCS_INDEX, HELP_SECTIONS, UNLISTED_LABEL } from '../../quickLaunch/generated/docsIndex.js';
 import {
     OTHER_CATEGORY, VIRTUAL_GROUPS, buildCatalog, drawnHelpSections, lookupModuleInfo,
 } from '../../quickLaunch/quickLaunchCatalog.js';
@@ -887,6 +887,138 @@ async function mobileTabBarResolvesEveryPanel(testController) {
     return testController.getOverallResult();
 }
 
+// ── P7: built-in folds persist, developer sub-groups from the README headings, the inline-form race ──
+
+async function quickLaunchBuiltinFoldsPersist(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
+    const section = HELP_SECTIONS.find((s) => s.audience === 'user');
+    const folded = [VIRTUAL_GROUPS.allPanels.id, `${VIRTUAL_GROUPS.help.id}/${section.dir}`];
+    const el = (id) => root.querySelector(`details[data-group-id="${id}"]`);
+    try {
+        testController.reportCondition('All panels and a Help section are drawn open',
+            !!await until(() => folded.every((id) => el(id)?.open), `${folded.join(', ')} drawn open`));
+        const first = el(VIRTUAL_GROUPS.allPanels.id);
+        for (const id of folded) el(id).querySelector(':scope > summary').click();
+        const stored = await until(async () => {
+            const v = await settingsManager.getSetting(COLLAPSED_SETTING);
+            return Array.isArray(v) && folded.every((id) => v.includes(id)) && v.length === folded.length;
+        }, `collapsedGroups to hold ${folded.join(', ')}`);
+        testController.reportCondition('folding a built-in group through its summary saves its id (all-panels, help/<dir>)',
+            !!stored);
+
+        // Re-render from the settings: a foreign write of the tree redraws every element.
+        await writeTree(EMPTY_TREE);
+        const redrawn = await until(() => el(VIRTUAL_GROUPS.allPanels.id) && el(VIRTUAL_GROUPS.allPanels.id) !== first,
+            'All panels redrawn');
+        testController.reportCondition('the panel re-rendered (a new element)', !!redrawn);
+        testController.assertEqual('after the re-render both are still folded', folded.map(() => 'closed').join(),
+            folded.map((id) => (el(id)?.open === false ? 'closed' : 'open')).join());
+
+        // An id no group has is dropped by the next write (the toggle's), and the fold button writes built-ins too.
+        await settingsManager.updateModuleSetting(MODULE_ID, COLLAPSED_KEY, [...folded, 'no-such-group']);
+        await until(() => el(VIRTUAL_GROUPS.allPanels.id)?.open === false, 'redrawn from the edited setting');
+        el(VIRTUAL_GROUPS.allPanels.id).querySelector(':scope > summary').click();
+        const cleaned = await until(async () => {
+            const v = await settingsManager.getSetting(COLLAPSED_SETTING);
+            return Array.isArray(v) && v.join() === folded[1];
+        }, 'collapsedGroups == the Help section only (all-panels unfolded, the unknown id dropped)');
+        testController.reportCondition('a write drops ids of groups the panel cannot draw', !!cleaned);
+    } finally {
+        await resetQuickLaunch(testController, root);
+    }
+    return testController.getOverallResult();
+}
+
+async function quickLaunchDeveloperSubgroupsFollowTheReadme(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
+    // Read off the generated module: the sections the generator sub-grouped by their README's `## ` headings.
+    const byHeadings = HELP_SECTIONS.filter((s) => s.audience === 'developer' && s.children.some((c) => c.heading));
+    try {
+        testController.log(`sub-grouped by README headings: ${byHeadings.map((s) => `${s.label} (${s.children.length})`).join(' · ') || 'none'}`);
+        testController.reportCondition('some developer section is sub-grouped by its README headings (the rule is exercised)',
+            byHeadings.length > 0);
+        await settingsManager.updateModuleSetting(MODULE_ID, DEVELOPER_DOCS_KEY, true);
+        testController.reportCondition('the developer sections are drawn',
+            !!await until(() => byHeadings.every((s) => helpSection(root, s.dir)), 'every sub-grouped section drawn'));
+        for (const section of byHeadings) {
+            const el = helpSection(root, section.dir);
+            if (!el) continue;
+            testController.assertEqual(`${section.label}: no rows of its own`, 0, rowPaths(el).length);
+            testController.assertEqual(`${section.label}: sub-groups == its README headings, in order (+ Unlisted last)`,
+                section.children.map((c) => `${c.label} (${c.docs.length})`).join(' | '),
+                [...el.querySelectorAll(':scope > .ql-subgroups > details')]
+                    .map((d) => d.querySelector(':scope > summary').textContent).join(' | '));
+            for (const child of section.children) {
+                const childEl = helpSection(root, child.dir);
+                testController.assertEqual(`${section.label} › ${child.label}: rows in README bullet order`,
+                    child.docs.join(' | '), childEl ? rowPaths(childEl).join(' | ') : '(not drawn)');
+            }
+            // The labels are the README's own `## ` headings (fetched as served), in its order.
+            const readme = await (await fetch(`../docs/json/${section.dir}/README.md`)).text();
+            const headings = readme.split('\n').filter((l) => l.startsWith('## ')).map((l) => l.slice(3).trim());
+            const labels = section.children.map((c) => c.label).filter((l) => l !== UNLISTED_LABEL);
+            testController.assertEqual(`${section.label}: sub-groups that are not a README heading (besides ${UNLISTED_LABEL})`,
+                '', labels.filter((l) => !headings.includes(l)).join(', '));
+            testController.assertEqual(`${section.label}: the sub-groups follow the README's heading order`,
+                headings.filter((h) => labels.includes(h)).join(' | '), labels.join(' | '));
+            testController.reportCondition(`${section.label}: ${UNLISTED_LABEL}, when present, is last`,
+                [-1, section.children.length - 1].includes(section.children.findIndex((c) => c.label === UNLISTED_LABEL)));
+        }
+    } finally {
+        await resetQuickLaunch(testController, root);
+    }
+    return testController.getOverallResult();
+}
+
+async function quickLaunchInlineFormSurvivesARender(testController) {
+    const root = await panelRoot(testController);
+    if (!root) return testController.getOverallResult();
+    const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
+    const summaryOf = (id) => root.querySelector(`details.ql-user[data-group-id="${id}"] > summary`);
+    const renameButton = (id) => root.querySelector(`details.ql-user[data-group-id="${id}"] > .ql-ctl-row .${CONTROLS.rename}`);
+    const inputOf = (id) => root.querySelector(`details.ql-user[data-group-id="${id}"] > summary .${INLINE.rename}`);
+    const HALF_TYPED = 'half-typed name';
+    try {
+        await writeTree({ version: 1, nodes: [
+            { id: 'race-a', kind: NODE_KINDS.group, label: 'Race A', children: [] },
+            { id: 'race-b', kind: NODE_KINDS.group, label: 'Race B', children: [] }] });
+        root.querySelector(`.${CONTROLS.edit}`)?.click();
+        testController.reportCondition('edit mode draws ✎ on both groups',
+            !!await until(() => renameButton('race-a') && renameButton('race-b'), 'both ✎ buttons'));
+
+        // The race (P7 W0.5): commit A's rename, and — before its write has rendered — open ✎ on B and type.
+        renameButton('race-a').click();
+        typeAndEnter(inputOf('race-a'), 'Race A2');
+        renameButton('race-b').click();
+        const b = inputOf('race-b');
+        testController.reportCondition('B\'s rename form opened while A\'s commit was in flight', !!b);
+        if (b) { b.value = HALF_TYPED; b.dispatchEvent(new Event('input', { bubbles: true })); }
+        // The harness page may not hold the document's focus; the carry keeps focus only where there was focus.
+        const hadFocus = !!b && document.activeElement === b;
+        testController.log(`B's input held the focus before the render: ${hadFocus}`);
+
+        const rendered = await until(() => summaryOf('race-a')?.textContent === 'Race A2 (0)', 'A\'s rename rendered');
+        testController.reportCondition('A\'s commit rendered (the render that used to close B\'s form)', !!rendered);
+        testController.assertEqual('after that render B\'s form is still open, with its text',
+            HALF_TYPED, inputOf('race-b')?.value ?? '(no form)');
+        testController.reportCondition('and it keeps the focus it had', !hadFocus || document.activeElement === inputOf('race-b'));
+
+        inputOf('race-b')?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+        const cancelled = await until(() => !inputOf('race-b') && summaryOf('race-b')?.textContent === 'Race B (0)',
+            'B\'s form cancelled');
+        testController.reportCondition('Escape cancels the carried form (B keeps its name)', !!cancelled);
+        testController.assertEqual('the tree holds A\'s rename only', 'Race A2,Race B',
+            ((await readTree())?.nodes ?? []).map((n) => n.label).join());
+    } finally {
+        await resetQuickLaunch(testController, root);
+    }
+    return testController.getOverallResult();
+}
+
 const TESTS = [
     ['quick-launch-lists-every-registered-panel', 'Quick Launch: a button per registered panel',
         'Asserts the Quick Launch panel draws one button per componentType centralRegistry.getAllPanelComponents() '
@@ -972,6 +1104,19 @@ const TESTS = [
         'For every registered panel, the moduleInfo the mobile layout registers (the registry\'s lookup) declares a '
         + 'title, a name and an icon, so no componentType or first-letter fallback fires (read off the registry).',
         mobileTabBarResolvesEveryPanel],
+    ['quick-launch-builtin-folds-persist', 'Quick Launch: a folded built-in group stays folded',
+        'Folds All panels and the first user Help section through their summaries; collapsedGroups holds both ids; '
+        + 'after a re-render both are still folded; an unknown id in the setting is dropped by the next toggle\'s write.',
+        quickLaunchBuiltinFoldsPersist],
+    ['quick-launch-developer-subgroups-follow-the-readme', 'Quick Launch: developer sections sub-grouped by their README headings',
+        'With showDeveloperDocs on, every developer section the generator sub-grouped by its README\'s ## headings (read '
+        + 'off HELP_SECTIONS) draws no rows of its own and one sub-group per heading (+ Unlisted), in order, each holding '
+        + 'its docs in bullet order; the labels are the served README\'s own headings.',
+        quickLaunchDeveloperSubgroupsFollowTheReadme],
+    ['quick-launch-inline-form-survives-a-render', 'Quick Launch: an open inline form survives a render',
+        'Commits ✎ on group A and, before that write renders, opens ✎ on group B and types; after A\'s render B\'s input '
+        + 'is still there with its text and the focus; Escape cancels it; the tree holds A\'s rename only.',
+        quickLaunchInlineFormSurvivesARender],
 ];
 
 for (const [id, name, description, testFunction] of TESTS) {
