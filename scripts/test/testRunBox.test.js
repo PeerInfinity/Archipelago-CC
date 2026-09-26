@@ -46,7 +46,8 @@ function sandbox() {
 const fs = require('fs'); const path = require('path');
 const lockFile = ${JSON.stringify(join(cache, 'seedling-box', 'lock.json'))};
 const read = () => fs.existsSync(lockFile) ? JSON.parse(fs.readFileSync(lockFile, 'utf8')) : null;
-const saw = { argv: process.argv.slice(2), lockAtStart: read(), pid: process.pid };
+const saw = { argv: process.argv.slice(2), lockAtStart: read(), pid: process.pid,
+  bundled: process.env.TEST_BUNDLED };
 const out = path.join(process.cwd(), ${JSON.stringify(RESULTS_SUBDIR)});
 fs.mkdirSync(out, { recursive: true });
 fs.writeFileSync(path.join(out, 'test-results-9999-fake.json'), JSON.stringify({ mode: 'fake' }));
@@ -120,6 +121,13 @@ describe('the pure helpers', () => {
       .toBe('npm test test-substrates batch=fast test=a,b');
   });
 
+  it('names a bundled run as such, and an unbundled one exactly as before', () => {
+    expect(runLockName({ mode: 'test-regression', batch: '', testIds: '', flavour: 'bundled' }))
+      .toBe('npm test test-regression bundled');
+    expect(runLockName({ mode: 'test-regression', batch: 'fast', testIds: '', flavour: 'unbundled' }))
+      .toBe('npm test test-regression batch=fast');
+  });
+
   it('reads --wait-for-box from argv or npm config, and refuses a non-number by name', () => {
     expect(waitSecFrom([], {})).toBe(0);
     expect(waitSecFrom([`${WAIT_FOR_BOX_FLAG}60`], {})).toBe(60);
@@ -169,6 +177,22 @@ describe('the real runner and the box', () => {
       expect(r.out).not.toContain('at takeBoxLock');
       expect(sb.saw()).toBe(null);
     } finally { holder.kill(); }
+  });
+
+  it('--bundled reaches Playwright as TEST_BUNDLED=1 and names the lock; the flags stay the runner\'s', () => {
+    const sb = sandbox();
+    const r = runRunner(sb, ['--mode=test-regression', '--bundled', '--no-build']);
+    expect(r.exit).toBe(0);
+    expect(r.out).not.toContain('building frontend/dist/bundle.js');
+    const saw = sb.saw();
+    expect(saw.bundled).toBe('1');
+    expect(saw.lockAtStart).toMatchObject({ name: 'npm test test-regression bundled' });
+    expect(saw.argv).not.toContain('--bundled');
+    expect(saw.argv).not.toContain('--no-build');
+    /* …and without the flag, the unbundled boot, as every run before it. */
+    const sb2 = sandbox();
+    expect(runRunner(sb2, ['--mode=test-regression']).exit).toBe(0);
+    expect(sb2.saw().bundled).toBe('0');
   });
 
   it('takes the box for the run, names it, releases it, and stamps the head it froze', () => {

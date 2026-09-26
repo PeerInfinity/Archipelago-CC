@@ -15,6 +15,10 @@
  *   node scripts/test/compare-runs.js <prev> <curr>   # explicit files
  *   node scripts/test/compare-runs.js --list          # what is on disk
  *
+ * Runs of different FLAVOURS (`npm test -- --bundled` vs the default
+ * unbundled boot) are never diffed: they boot in a different order, so a
+ * difference between them is not a regression (exit 2, naming both).
+ *
  * Exit code is 1 when the current run has failures the previous run did
  * not, so it can gate a script; 0 otherwise.
  */
@@ -48,6 +52,10 @@ function load(file) {
         mode: data.mode || null,
         batch: data.batch || null,
         testIds: data.testIds || null,
+        // Absent = recorded before the flavour was stamped, when the harness
+        // could only drive the unbundled boot (it had no --bundled), so
+        // 'unbundled' is what those runs were, not a guess.
+        flavour: data.flavour || 'unbundled',
         // Stamped by run-tests.js since it takes the box lock: the head the run
         // froze, and whether the tree moved under it. Absent = not recorded.
         frozen: data.frozen || null,
@@ -65,7 +73,8 @@ function load(file) {
  */
 function identity(run) {
     return `${run.mode}${run.batch ? `/${run.batch}` : ''}`
-        + `${run.testIds ? ` --test=${run.testIds}` : ''}`;
+        + `${run.testIds ? ` --test=${run.testIds}` : ''}`
+        + `${run.flavour === 'bundled' ? ' --bundled' : ''}`;
 }
 
 function label(run) {
@@ -75,7 +84,7 @@ function label(run) {
 
 function describe(run) {
     const s = run.summary;
-    const mode = run.mode ? `[${identity(run)}] ` : '';
+    const mode = run.mode ? `[${identity(run)}] ` : `[${run.flavour}] `;
     const moved = run.treeMoved ? ' ⚠ TREE MOVED' : '';
     return `${mode}${path.basename(run.file)} — ${s.passedCount ?? '?'}/${s.totalRun ?? '?'} passed${moved}`;
 }
@@ -112,6 +121,7 @@ function pickBaseline(files) {
     const sameMode = earlier.find(
         (r) => r.mode && current.mode && r.mode === current.mode
             && r.batch === current.batch && r.testIds === current.testIds
+            && r.flavour === current.flavour
     );
     if (sameMode) return { prev: sameMode, curr: current, warning: null };
 
@@ -119,8 +129,10 @@ function pickBaseline(files) {
     // stamping carry no mode at all, so the newest earlier run is a
     // guess — usable, but say so: an unrelated mode's roster shows up as
     // wholesale added/removed lines and reads like a catastrophe.
-    if (earlier.length > 0) {
-        const guess = earlier[0];
+    // Never across flavours, not even as a guess: see crossFlavourRefusal.
+    const sameFlavour = earlier.filter((r) => r.flavour === current.flavour);
+    if (sameFlavour.length > 0) {
+        const guess = sameFlavour[0];
         return {
             prev: guess,
             curr: current,
@@ -129,6 +141,21 @@ function pickBaseline(files) {
         };
     }
     return null;
+}
+
+/**
+ * The refusal for a bundled-vs-unbundled pair, or null when they match. A
+ * bundled run and an unbundled one boot in a different order (trap 1426: only
+ * the bundled boot overlapped rows), so their difference answers "which boot"
+ * — never "did my change regress" — and a diff would read as the latter.
+ */
+function crossFlavourRefusal(prev, curr) {
+    if (prev.flavour === curr.flavour) return null;
+    const a = (flavour) => (flavour === 'unbundled' ? 'an unbundled' : `a ${flavour}`);
+    return `REFUSED: ${path.basename(prev.file)} is ${a(prev.flavour)} run and `
+        + `${path.basename(curr.file)} is ${a(curr.flavour)} run — a difference between `
+        + 'flavours is not a regression. Compare two runs of the same flavour '
+        + '(`npm test -- --bundled …` for the bundled boot).';
 }
 
 function main() {
@@ -160,15 +187,20 @@ function main() {
         const picked = pickBaseline(files);
         if (!picked) {
             const last = load(files[files.length - 1]);
-            const mode = last.batch ? `${last.mode}/${last.batch}` : last.mode;
             console.error(
-                `No earlier run of mode "${mode}" to compare against. `
+                `No earlier ${last.flavour} run of ${label(last)} to compare against. `
                 + 'Run that mode again, or pass two files explicitly.'
             );
             return 2;
         }
         ({ prev, curr } = picked);
         if (picked.warning) console.log(`WARNING: ${picked.warning}\n`);
+    }
+
+    const refusal = crossFlavourRefusal(prev, curr);
+    if (refusal) {
+        console.error(refusal);
+        return 2;
     }
 
     console.log(`previous: ${describe(prev)}`);

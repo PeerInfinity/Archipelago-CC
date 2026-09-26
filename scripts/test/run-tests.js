@@ -7,7 +7,9 @@
  *   npm test -- --mode=test-spoilers --game=adventure
  */
 
-import { spawn } from 'child_process';
+import { spawn, spawnSync } from 'child_process';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import { listBatchNames } from '../../frontend/modules/tests/testBatches.js';
 import { resolveTestPort } from './testServer.js';
@@ -29,6 +31,8 @@ const { values } = parseArgs({
     batch: { type: 'string' },
     test: { type: 'string' },
     port: { type: 'string' },
+    bundled: { type: 'boolean' },
+    'no-build': { type: 'boolean' },
     headed: { type: 'boolean' },
     debug: { type: 'boolean' },
     ui: { type: 'boolean' }
@@ -58,7 +62,12 @@ const config = {
   // invocation is unchanged. A worktree serving itself on another port passes
   // `--port=NNNN` and the whole run, page URL and web-server probe alike,
   // drives THAT tree.
-  port: values.port || process.env.npm_config_port || ''
+  port: values.port || process.env.npm_config_port || '',
+  // Drive the BUNDLED frontend (frontend/dist/bundle.js, `?bundled=true`)
+  // instead of the ES modules. It is rebuilt first, from this tree, unless
+  // --no-build: a stale bundle would measure somebody else's code.
+  bundled: !!(values.bundled || process.env.npm_config_bundled),
+  noBuild: !!(values['no-build'] || process.env.npm_config_no_build)
 };
 
 if (config.port) {
@@ -82,6 +91,7 @@ const env = {
   TEST_ORDER_SEED: config.testOrderSeed,
   TEST_BATCH: config.batch,
   TEST_IDS: config.testIds,
+  TEST_BUNDLED: config.bundled ? '1' : '0',
   ...(config.port ? { TEST_PORT: config.port } : {})
 };
 
@@ -109,9 +119,25 @@ try {
   process.exit(2);
 }
 const { frozen } = await takeRunBox({
-  name: runLockName({ mode: config.mode, batch: config.batch, testIds: config.testIds }),
+  name: runLockName({
+    mode: config.mode, batch: config.batch, testIds: config.testIds,
+    flavour: config.bundled ? 'bundled' : 'unbundled'
+  }),
   waitSec
 });
+
+// Build the bundle UNDER the box (it is CPU the box's holder measures against),
+// and before Playwright, so the page loads what this tree says.
+if (config.bundled && !config.noBuild) {
+  console.log('# --bundled: building frontend/dist/bundle.js (npm run build; --no-build skips)');
+  const repoRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+  const build = spawnSync(process.execPath, [path.join(repoRoot, 'scripts', 'build', 'bundle-frontend.js')],
+    { stdio: 'inherit', cwd: repoRoot });
+  if (build.status !== 0) {
+    console.error(`--bundled: the build failed (exit ${build.status}); not running the tests against a stale bundle.`);
+    process.exit(build.status || 1);
+  }
+}
 const resultsBefore = resultsFiles();
 
 // Build Playwright command
@@ -134,6 +160,8 @@ const additionalArgs = process.argv.slice(2).filter(arg =>
   !arg.startsWith('--batch=') &&
   !arg.startsWith('--test=') &&
   !arg.startsWith('--port=') &&
+  arg !== '--bundled' &&
+  arg !== '--no-build' &&
   !arg.startsWith(WAIT_FOR_BOX_FLAG) &&
   arg !== '--headed' &&
   arg !== '--debug' &&
