@@ -63,16 +63,19 @@ A requirement the gate vocabulary cannot carry (a disjunction, a count) is **dec
 
 The fallback (`--atlas-placement quota`) keeps the older behaviour: the grower draws atlas regions like any substrate and gates them synthetically.
 
-### Seedling as a leaf (`flash_seedling`)
+### Seedling as a leaf or a host (`flash_seedling`)
 
 Since SEEDLING IN THE PIPELINE T3 (2026-09-23) a quota of `flash_seedling` places a room of the **real Seedling map** that plays in the Seedling wasm ([Flash Substrate § As a sphere-growth leaf](./flash.md#as-a-sphere-growth-leaf)). It is a substrate quota, not an `atlas:` pool: the realiser is the entry's own `generateZoneForSpecs`, over the same compile the shuffled spiral places rooms from.
 
-The room is always a **leaf**, and that follows from what a real door can enforce. Sphere growth puts a node's ENTRY gate on the PARENT's forward exit and its children's gates on the node's own forward exits (`generateRegionZoneGen`). A Seedling door opens for whoever walks onto it, so it cannot carry an AP item gate. Two registry hooks say so:
+Sphere growth puts a node's ENTRY gate on the PARENT's forward exit and its children's gates on the node's own forward exits (`generateRegionZoneGen`). A Seedling door opens for whoever walks onto it, so it cannot carry an AP item gate by itself. At T3 the room was therefore always a **leaf**. Since seedling generated G6 the HOST enforces the gate on a real door, as G4 does on a generated one: a door whose rule the player does not meet bounces them back onto its return spawn, and the rule is read from the state manager's static data ([Flash Substrate § Host-enforced gates: real rooms](./flash.md#host-enforced-gates-real-rooms-and-the-static-data-source-g6)). So the room now **hosts** children by default:
 
-- `canHostExitGates: () => false` — the grower never attaches a child to the room, so no gate ever has to ride one of its doors.
-- `backPortalGated: () => false` — the room's door back to its parent is ungated, as bounce's braid back portal is. The entry gate stays on the parent's exit, where the parent's substrate enforces it: in `seedling_sphere_room` the maze stops the player at `exit_1` until `key_blue` is held (measured on the box).
+- `canHostExitGates` — a host takes one more gate while the installed atlas has a room with a door for it (2 doors on the starter atlas); `exitGateVeto` applies it, or refuses every child for a leaf.
+- `backPortalGated` — the door back to the parent is gated on the entry gate, as for a maze room (sound: you are only inside if you hold it).
+- The realiser binds one real door per side and writes each side's requirement as a rule LOCK on its path, so the compiled exit rule is the tree's gate.
 
-Logic-looser-than-physics is refused here: a gate the game does not enforce would let a player walk past what the rules say they cannot. The atlas sorter's route (the room's own authored entry rule as its gate) needs authored door rules, and the starter atlas has none.
+Both hooks read `regionParams.seedlingAtlas.hostChildren` (the bag's `seedlingAtlasHostChildren`, default true). A state that says false keeps T3's leaf: no child, and the back door takes no gate slot, so the entry gate stays on the parent's exit, where the parent's substrate enforces it (in `seedling_sphere_room` the maze stops the player at `exit_1` until `key_blue` is held — measured on the box). `SEEDLING_SPHERE_ROOM_STATE` says false, which keeps that committed world's bytes. The SAME state without the knob is `SEEDLING_ATLAS_HOST_STATE` (the committed `seedling_atlas_host`): the overworld room outside the starting house in sphere 2, its stairs back gated on `key_blue` and its house door on to a maze holding `victory` gated on `key_red`. `check-seedling-atlas-host-play.mjs` plays it to world completion.
+
+Which room a node gets is decided at realisation, the tightest fit. The starter atlas has no room with two doors AND a location, so a tree that asks a real node for both is refused by name — and a real room's own location cannot be collected in play yet anyway ([Flash Substrate § As a sphere-growth leaf](./flash.md#as-a-sphere-growth-leaf)). The atlas sorter's route (the room's own authored entry rule as its gate) needs authored door rules, and the starter atlas has none.
 
 A real room is a specific place, so it is placed **at most once per generation**. Sphere growth does not consult `zoneCount` (that is the spiral's quota check), so this is the entry's own law: the placed rooms are keyed by the region that took them, and `prepareSphereGrowth` — called once per generation by the config assembly below — clears them. The room is the TIGHTEST fit: fewest locations, then fewest doors, then declaration order (the atlas source's rule), so a 0-item filler does not take the one room with a chest. A node that needs more doors or locations than any unplaced room has is refused by name, with the knobs to turn.
 

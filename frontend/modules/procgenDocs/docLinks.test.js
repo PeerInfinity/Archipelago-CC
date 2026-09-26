@@ -169,22 +169,28 @@ describe('the corpus census — printed, then pinned', () => {
          *   244 → 245  SEEDLING GENERATED LEVELS G5 (2026-09-26): `sphere-growth.md`
          *              § *Seedling as a leaf, generated* points at `flash.md`
          *              § *The re-roll, in every case (G5)* (`doc` 171 → 172).
+         *   245 → 250  SEEDLING GENERATED LEVELS G6 (2026-09-26): `sphere-growth.md`
+         *              § *Seedling as a leaf or a host* points at `flash.md`
+         *              § *Host-enforced gates: real rooms* and § *As a sphere-growth
+         *              leaf* (`doc` 172 → 174); inside `flash.md` the leaf section
+         *              and G4's host bullet point at the new G6 sub-§, and the G6
+         *              sub-§ back at the leaf section (`same-doc` 15 → 18).
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
          */
         expect(by).toEqual({
-            'same-doc': 15,
-            doc: 172,
+            'same-doc': 18,
+            doc: 174,
             external: 23,
             repo: 35,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(245);
+        expect(CORPUS.length).toBe(250);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(172);
+        expect(docs).toHaveLength(174);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

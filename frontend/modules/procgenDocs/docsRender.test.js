@@ -241,8 +241,10 @@ describe('⛓ the links the render emits', () => {
         //   rooms; 241 → 243: G3's `flash.md` → `pipeline-presets.md` and
         //   `sphere-growth.md` → `flash.md` § Generated rooms; 243 → 244: G4's
         //   `sphere-growth.md` → `flash.md` § Host-enforced gates (G4); 244 → 245:
-        //   G5's `sphere-growth.md` → `flash.md` § The re-roll, in every case (G5).
-        expect(checked).toBe(245);
+        //   G5's `sphere-growth.md` → `flash.md` § The re-roll, in every case (G5);
+        //   245 → 250: G6's two `sphere-growth.md` → `flash.md` links and three
+        //   inside `flash.md` to and from § Host-enforced gates: real rooms (G6).
+        expect(checked).toBe(250);
     });
 
     it('tags each link with the kind that produced it', () => {
