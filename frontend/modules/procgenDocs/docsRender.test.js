@@ -240,8 +240,9 @@ describe('⛓ the links the render emits', () => {
         //   GENERATED LEVELS G1's two registry pointers at `flash.md` § Generated
         //   rooms; 241 → 243: G3's `flash.md` → `pipeline-presets.md` and
         //   `sphere-growth.md` → `flash.md` § Generated rooms; 243 → 244: G4's
-        //   `sphere-growth.md` → `flash.md` § Host-enforced gates (G4).
-        expect(checked).toBe(244);
+        //   `sphere-growth.md` → `flash.md` § Host-enforced gates (G4); 244 → 245:
+        //   G5's `sphere-growth.md` → `flash.md` § The re-roll, in every case (G5).
+        expect(checked).toBe(245);
     });
 
     it('tags each link with the kind that produced it', () => {
