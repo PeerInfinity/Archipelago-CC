@@ -40,6 +40,7 @@ import '../mazeRoom/mazeRoomLibrary.js';
 //   `replace-region-content`'s sample (an INLINED zone answer: no install). Its
 //   rows are `regionContent.test.js`'.
 import '../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
+import { INITIALISE_SIZE_KEYS } from './slotInitialise.js';
 
 const P = '1';
 
@@ -180,6 +181,8 @@ describe('the contract shape', () => {
             'initialise-procgen-layout': {
                 op: 'initialise-procgen-layout', player: '2', substrate: 'maze',
                 gridDims: { width: 3, height: 3 }, seed: 1, backExits: 'add',
+                // ⛓ S2 — the settings bag rides along (the op must not mutate it either)
+                bag: { [INITIALISE_SIZE_KEYS.width]: 5, [INITIALISE_SIZE_KEYS.height]: 4 },
             },
             'move-region': { op: 'move-region', region: 'Hall', to: { gx: 1, gy: 0 } },
             'swap-regions': { op: 'swap-regions', a: 'Hall', b: 'Vault' },

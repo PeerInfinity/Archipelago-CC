@@ -13,6 +13,13 @@
  * `initialiseTimeoutSeconds` and lands ONE `initialise-procgen-layout` with the
  * result inline.
  *
+ * ⛓ S2 — the form also carries the GENERATION SETTINGS: a bag of the target's
+ * own `defaultProcgenParams` plus the region size (`regionSizeFor`), drawn by
+ * R1's `renderRegionGenerationForm` (the pipeline's and R2's form), handed to
+ * the build (`initialiseKnobs(substrate, bag)`, the layout's size) and recorded
+ * in the op's `provenance`. A substrate change RESETS the bag to the new
+ * target's defaults and keeps the size (`initialiseBagFor`).
+ *
  * ⛔ **THE OP IS THE AUTHORITY, THE FORM A COURTESY** (1305): the refusal the form
  * prints is the op's own (`initialiseOpRefusal`), and the answer to a landed
  * Generate is the op's own description. ⛔ No substrate is named here.
@@ -20,9 +27,10 @@
 
 import { initialiseOpRefusal } from './rulesDocOps.js';
 import {
-    BACK_EXITS, DEFAULT_SUBSTRATE_ID, INITIALISE_FIRST_SEED, autoGridSide, initialiseFacts,
-    initialiseTargets, planInitialise,
+    BACK_EXITS, DEFAULT_SUBSTRATE_ID, INITIALISE_FIRST_SEED, INITIALISE_SIZE_KEYS, autoGridSide, initialiseFacts,
+    initialiseRegionSize, initialiseTargets, planInitialise,
 } from './slotInitialise.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
     INITIALISE_JOB, REGION_GENERATION_CANCELLED, initialiseTimeoutSentence, regionGenerationLoadTimeoutSentence,
 } from './regionGenerationRun.js';
@@ -41,20 +49,52 @@ export function initialiseDoorShown(doc, player) {
 }
 
 /**
- * ⛓ The form's state when it opens: the default substrate (the engine's), the
- * AUTO grid side for it, the first seed, return exits ON (⚖ #1).
+ * ⛓⛓ S2 — **THE SETTINGS BAG FOR A TARGET**: its own `defaultProcgenParams`
+ * and the region size — `previous`'s when given (a substrate change keeps the
+ * size the reader set), else the slot's (`regionSizeFor`). Every other key of
+ * `previous` is DROPPED: one target's knobs are nonsense to another.
+ */
+export function initialiseBagFor(doc, player, substrate, previous = null) {
+    const size = initialiseRegionSize(doc, String(player), previous);
+    return {
+        ...(substrateRegistry.get(substrate)?.defaultProcgenParams ?? {}),
+        [INITIALISE_SIZE_KEYS.width]: size.width,
+        [INITIALISE_SIZE_KEYS.height]: size.height,
+    };
+}
+
+/**
+ * ⛓ The form's state when it opens: the default substrate (the engine's), its
+ * settings bag, the AUTO grid side for it, the first seed, return exits ON (⚖ #1).
  */
 export function initialiseFormDefaults(doc, player) {
     const targets = initialiseTargets();
     const substrate = targets.includes(DEFAULT_SUBSTRATE_ID) ? DEFAULT_SUBSTRATE_ID : (targets[0] ?? DEFAULT_SUBSTRATE_ID);
-    const state = { substrate, seed: INITIALISE_FIRST_SEED, backExits: BACK_EXITS.ADD, sideAuto: true, side: null };
+    const state = {
+        substrate, seed: INITIALISE_FIRST_SEED, backExits: BACK_EXITS.ADD, sideAuto: true, side: null,
+        bag: initialiseBagFor(doc, player, substrate),
+    };
     return withAutoSide(doc, player, state);
 }
 
-/** ⛓ While the side is AUTO, it follows the substrate and the seed (the layout draws on the seed). */
+/**
+ * ⛓ A form change: `patch` over the state — a CHANGED substrate resets the bag
+ * (`initialiseBagFor`, the size kept) — then the auto side.
+ */
+export function withInitialisePatch(doc, player, state, patch) {
+    const next = { ...state, ...patch };
+    if (patch.substrate !== undefined && patch.substrate !== state.substrate && patch.bag === undefined) {
+        next.bag = initialiseBagFor(doc, player, patch.substrate, state.bag);
+    }
+    return withAutoSide(doc, player, next);
+}
+
+/** ⛓ While the side is AUTO, it follows the substrate, the seed and the region size (the layout reads all three). */
 export function withAutoSide(doc, player, state) {
     if (!state.sideAuto) return state;
-    const { side } = autoGridSide(doc, player, { substrate: state.substrate, seed: state.seed, backExits: state.backExits });
+    const { side } = autoGridSide(doc, player, {
+        substrate: state.substrate, seed: state.seed, backExits: state.backExits, bag: state.bag,
+    });
     return { ...state, side };
 }
 
@@ -66,6 +106,8 @@ export function initialiseArgs(player, state) {
         gridDims: { width: state.side, height: state.side },
         seed: state.seed,
         backExits: state.backExits,
+        // ⛓ S2 — a COPY: the form's controls keep writing the bag they were drawn on.
+        ...(state.bag !== undefined ? { bag: { ...state.bag } } : {}),
     };
 }
 

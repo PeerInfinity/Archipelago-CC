@@ -26,7 +26,7 @@ import { createRng } from '../shared/rng.js';
 import { rulesEditAdapter } from './rulesEditAdapter.js';
 import { sidecarIssues } from './sidecarIssues.js';
 import { validateRules } from './rulesUtils.js';
-import { freeItemsFor, regionRealiserKind } from './regionRegenerate.js';
+import { freeItemsFor, regionRealiserKind, regionSizeFor } from './regionRegenerate.js';
 import { GRANTED_ITEM_FIRST_ID, buildTopDownEnvelope, runTopDownToStep } from '../procgenPipeline/topDownSteps.js';
 import { regionsOf, startRegionsOf } from '../procgenCore/rulesGraph.js';
 import {
@@ -40,7 +40,11 @@ import {
     BACK_EXITS, DEFAULT_SUBSTRATE_ID, INITIALISE_BLOCKERS, INITIALISE_DRIVER, INITIALISE_GRID_GROWTH_LIMIT,
     INITIALISE_OP, UNPLACED_WHY, autoGridSide, initialiseFacts, initialiseGridSide, initialiseKnobs, initialiseOpFor,
     initialiseSlot, initialiseTargets, planInitialise, unplacedRegions,
+    INITIALISE_SIZE_KEYS, initialiseRegionSize,
 } from './slotInitialise.js';
+import { assembleRegionParams } from '../procgenPipeline/sphereConfigHooks.js';
+import { effectiveHazardOpts } from '../procgenPipeline/presetRun.js';
+import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..', '..');
@@ -719,5 +723,145 @@ describe('S1 — the initialise op DECLARES the library items it built with', ()
         const out = applyRulesDocOp(DOCS.adventure, old);
         expect(out.ok, out.error).toBe(true);
         expect(bytes(out.doc.items)).toBe(bytes(DOCS.adventure.items));
+    });
+});
+
+describe('S2 — the generation settings bag in the build and the op', () => {
+    /** ⛓ The first key of a target's defaults whose value is a number or a boolean — derived, never typed. */
+    const firstKnob = (id) => {
+        const d = substrateRegistry.get(id)?.defaultProcgenParams ?? {};
+        return Object.keys(d).find((k) => typeof d[k] === 'number' || typeof d[k] === 'boolean') ?? null;
+    };
+    const moved = (v) => (typeof v === 'boolean' ? !v : v + 1);
+    const defaultsOf = (id) => ({ ...(substrateRegistry.get(id)?.defaultProcgenParams ?? {}) });
+    const oracle = (id, bag) => bytes([
+        assembleRegionParams({ activeIds: [id], mode: 'topDown', params: bag }), effectiveHazardOpts(bag),
+    ]);
+    const { width: W, height: H } = INITIALISE_SIZE_KEYS;
+    const sizeBag = (doc, id, dw = 0) => {
+        const s = regionSizeFor(doc, P);
+        return { ...defaultsOf(id), [W]: s.width + dw, [H]: s.height };
+    };
+
+    it('⛓ initialiseKnobs(sub) ≡ initialiseKnobs(sub, its defaults) ≡ with the slot\'s size added — every realiser target', () => {
+        for (const id of initialiseTargets()) {
+            expect(bytes(initialiseKnobs(id, defaultsOf(id))), id).toBe(bytes(initialiseKnobs(id)));
+            expect(bytes(initialiseKnobs(id, sizeBag(DOCS.adventure, id))), id).toBe(bytes(initialiseKnobs(id)));
+        }
+    });
+
+    it('⛓⛓ a bag that moves a target\'s first knob moves its knobs exactly when assembleRegionParams / effectiveHazardOpts say so', () => {
+        const knobbed = initialiseTargets().filter((id) => firstKnob(id));
+        expect(knobbed.length).toBeGreaterThan(0);
+        let movedAny = 0;
+        for (const id of knobbed) {
+            const k = firstKnob(id);
+            const bag = { ...defaultsOf(id), [k]: moved(defaultsOf(id)[k]) };
+            const expectMove = oracle(id, bag) !== oracle(id, defaultsOf(id));
+            if (expectMove) movedAny += 1;
+            expect(bytes(initialiseKnobs(id, bag)) !== bytes(initialiseKnobs(id)), `${id}.${k}`).toBe(expectMove);
+        }
+        expect(movedAny, 'no target\'s first knob reaches the realiser').toBeGreaterThan(0);
+    });
+
+    it('⛓⛓ the bag\'s SIZE is the layout\'s and every payload\'s (adventure, a tiles target) — absent, the slot\'s (mutant: the size not read)', () => {
+        const doc = DOCS.adventure;
+        const tiles = initialiseTargets().find((id) => geometryOf(substrateRegistry.get(id)) === REGION_GEOMETRY.TILES);
+        expect(tiles, 'no tiles realiser').toBeTruthy();
+        const bag = sizeBag(doc, tiles, 3);
+        const layout = (b) => layoutTopDown(doc, {
+            playerId: P, gridDims: GRID4, regionSizeBase: initialiseRegionSize(doc, P, b), seed: 1,
+            assumeBidirectional: true, substrateByRegion: {},
+        }, createRng(1));
+        expect(initialiseRegionSize(doc, P, bag)).toEqual({ width: bag[W], height: bag[H] });
+        expect(initialiseRegionSize(doc, P, undefined)).toEqual(
+            (({ width, height }) => ({ width, height }))(regionSizeFor(doc, P)));
+        expect(layout(bag).placementOrder.length).toBe(layout(undefined).placementOrder.length);
+        const res = initialiseSlot({ doc, player: P, substrate: tiles, gridDims: GRID4, seed: 1, bag });
+        expect(res.ok, res.why).toBe(true);
+        const sizes = Object.values(res.entries).map((e) => `${e.playable_payload.width}x${e.playable_payload.height}`);
+        expect(new Set(sizes)).toEqual(new Set([`${bag[W]}x${bag[H]}`]));
+    });
+
+    it('⛓⛓ the build runs under the bag: a moved knob that reaches the realiser moves the payloads (mutant: the bag not threaded)', () => {
+        const doc = DOCS.adventure;
+        const id = initialiseTargets().find((t) => firstKnob(t)
+            && oracle(t, { ...defaultsOf(t), [firstKnob(t)]: moved(defaultsOf(t)[firstKnob(t)]) }) !== oracle(t, defaultsOf(t)));
+        expect(id, 'no target\'s first knob reaches the realiser').toBeTruthy();
+        const k = firstKnob(id);
+        const base = sizeBag(doc, id);
+        const build = (bag) => initialiseSlot({ doc, player: P, substrate: id, gridDims: GRID4, seed: 1, bag });
+        const a = build(base);
+        const b = build({ ...base, [k]: moved(base[k]) });
+        expect(a.ok, a.why).toBe(true);
+        expect(b.ok, b.why).toBe(true);
+        expect(bytes(b.entries), `${id}.${k}`).not.toBe(bytes(a.entries));
+    });
+
+    it('⛓ the form\'s default bag builds the same bytes as no bag (byte-inert for every pre-S2 caller)', () => {
+        const doc = DOCS.adventure;
+        const args = { doc, player: P, substrate: DEFAULT_SUBSTRATE_ID, gridDims: GRID4, seed: 1 };
+        const strip = (r) => bytes({ ...r, ms: 0 });
+        expect(strip(initialiseSlot({ ...args, bag: sizeBag(doc, DEFAULT_SUBSTRATE_ID) })))
+            .toBe(strip(initialiseSlot(args)));
+    });
+
+    it('⛓⛓ the record: provenance.bag when given (a copy), absent otherwise — and a pre-S2 record replays byte for byte', () => {
+        const doc = DOCS.adventure;
+        const bag = sizeBag(doc, DEFAULT_SUBSTRATE_ID, 2);
+        const args = { player: P, substrate: DEFAULT_SUBSTRATE_ID, gridDims: GRID4, seed: 1, backExits: BACK_EXITS.ADD };
+        const res = initialiseSlot({ doc, ...args, bag });
+        const withBag = initialiseOpFor({ ...args, bag }, res);
+        expect(withBag.provenance.bag).toEqual(bag);
+        expect(withBag.provenance.bag).not.toBe(bag);
+        const without = initialiseOpFor(args, res);
+        expect(Object.hasOwn(without.provenance, 'bag')).toBe(false);
+        expect(Object.keys(without.provenance)).toEqual(['substrate', 'gridDims', 'seed', 'backExits', 'ms', 'unplaced']);
+        // ⛓ the bag is PROVENANCE: the landed document is the result's, with or without it
+        const a = applyRulesDocOp(doc, withBag);
+        const b = applyRulesDocOp(doc, without);
+        expect(a.ok, a.error).toBe(true);
+        expect(b.ok, b.error).toBe(true);
+        expect(bytes(a.doc)).toBe(bytes(b.doc));
+        expect(a.description).toBe(b.description);
+        // ⛓ a pre-S2 record (R7 / S1 shape — no bag) replays to the document the
+        //   form's DEFAULT bag builds today
+        const old = hubInitialised(DEFAULT_SUBSTRATE_ID).op;
+        expect(Object.hasOwn(old.provenance, 'bag')).toBe(false);
+        const dflt = sizeBag(doc, DEFAULT_SUBSTRATE_ID);
+        const now = initialiseOpFor({ ...args, bag: dflt }, initialiseSlot({ doc, ...args, bag: dflt }));
+        expect(bytes(applyRulesDocOp(doc, old).doc)).toBe(bytes(applyRulesDocOp(doc, now).doc));
+    });
+
+    it('⛓ the SCRIPT shape takes a bag, builds under it, and its RESOLVED op records it', () => {
+        const doc = DOCS.adventure;
+        const bag = sizeBag(doc, DEFAULT_SUBSTRATE_ID, 1);
+        const res = applyRulesDocOp(doc, {
+            op: INITIALISE_OP, player: P, substrate: DEFAULT_SUBSTRATE_ID, gridDims: GRID4, seed: 2,
+            backExits: BACK_EXITS.ADD, bag,
+        });
+        expect(res.ok, res.error).toBe(true);
+        expect(res.op.provenance.bag).toEqual(bag);
+        for (const e of Object.values(res.doc.preset_sidecars[P])) expect(e.playable_payload.width).toBe(bag[W]);
+        expect(bytes(applyRulesDocOp(doc, res.op).doc)).toBe(bytes(res.doc));
+    });
+
+    it('⛔ a bag that is not an object, or a size below one tile, is refused by name — record and script alike', () => {
+        const doc = DOCS.adventure;
+        const { op } = hubInitialised(DEFAULT_SUBSTRATE_ID);
+        for (const bad of ['x', 3, [], null]) {
+            const rec = { ...op, provenance: { ...op.provenance, bag: bad } };
+            expect(applyRulesDocOp(doc, rec).error, String(bad)).toContain('`bag`');
+        }
+        for (const key of [W, H]) {
+            for (const v of [0, 1.5, '8']) {
+                const rec = { ...op, provenance: { ...op.provenance, bag: { [key]: v } } };
+                expect(applyRulesDocOp(doc, rec).error, `${key}=${v}`).toContain(`\`${key}\``);
+            }
+        }
+        expect(applyRulesDocOp(doc, {
+            op: INITIALISE_OP, player: P, substrate: DEFAULT_SUBSTRATE_ID, gridDims: GRID4, seed: 1,
+            backExits: BACK_EXITS.ADD, bag: 'x',
+        }).error).toContain('`bag`');
     });
 });
