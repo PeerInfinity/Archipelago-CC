@@ -12,6 +12,8 @@ import { SettingsManager } from '../../app/core/settingsManager.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { register } from './index.js';
 import {
+    INITIALISE_JOB, INITIALISE_TIMEOUT_DEFAULT_S, INITIALISE_TIMEOUT_KEY, INITIALISE_TIMEOUT_SETTING,
+    initialiseTimeoutSeconds, initialiseTimeoutSentence,
     REGENERATE_WORKER_LIBRARIES, REGENERATE_WORKER_PATH, REGION_GENERATION_CANCELLED, REGION_GENERATION_LOAD_BOUND_MS,
     REGION_GENERATION_GAVE_UP, REGION_GENERATION_TIMEOUT_DEFAULT_S, REGION_GENERATION_TIMEOUT_KEY,
     REGION_GENERATION_TIMEOUT_SETTING, REGION_GENERATION_TIMEOUT_WHERE, regionGenerationTimeoutSeconds,
@@ -67,6 +69,44 @@ describe('the time-limit SETTING (task 1)', () => {
     });
 });
 
+describe('R7 — the WHOLE-SLOT budget of Initialise procgen data (a separate setting)', () => {
+    it('⛓ registered beside R2\'s, default INITIALISE_TIMEOUT_DEFAULT_S (300), one source', () => {
+        const props = registeredSchema().properties;
+        expect(Object.keys(props)).toEqual([REGION_GENERATION_TIMEOUT_KEY, INITIALISE_TIMEOUT_KEY]);
+        const prop = props[INITIALISE_TIMEOUT_KEY];
+        expect(INITIALISE_TIMEOUT_DEFAULT_S).toBe(300);
+        expect(prop.default).toBe(INITIALISE_TIMEOUT_DEFAULT_S);
+        expect(prop.type).toBe('integer');
+        expect(prop.minimum).toBe(1);
+        expect(prop.label).toMatch(/Initialise/);
+        expect(INITIALISE_TIMEOUT_SETTING).toBe(`moduleSettings.apworldEditor.${INITIALISE_TIMEOUT_KEY}`);
+    });
+
+    it('⛓ getSetting with NO persisted value answers the default; a stored value is read', async () => {
+        centralRegistry.registerSettingsSchema('apworldEditor', registeredSchema());
+        const sm = new SettingsManager();
+        sm.setInitialSettings({ moduleSettings: {} });
+        expect(await sm.getSetting(INITIALISE_TIMEOUT_SETTING)).toBe(INITIALISE_TIMEOUT_DEFAULT_S);
+        await sm.updateSetting(INITIALISE_TIMEOUT_SETTING, 2, { persist: false });
+        expect(await sm.getSetting(INITIALISE_TIMEOUT_SETTING)).toBe(2);
+    });
+
+    it.each([[300, 300], [1, 1], [4.7, 4], ['12', 12], [0, 300], [-1, 300], ['x', 300], [undefined, 300]])(
+        'a stored value %j means a %j s budget', (stored, s) => {
+            expect(initialiseTimeoutSeconds(stored)).toBe(s);
+        },
+    );
+
+    it('⛓ the sentence quotes the setting, its value, where it lives, and how far the build got', () => {
+        const t = initialiseTimeoutSentence(300, 'maze', '1', { index: 120, total: 445 });
+        expect(t).toContain(`${REGION_GENERATION_GAVE_UP} 300 s after building 120 / 445 regions`);
+        expect(t).toContain(`\`${INITIALISE_TIMEOUT_KEY}\` = 300`);
+        expect(t).toContain(REGION_GENERATION_TIMEOUT_WHERE);
+        expect(t).toContain('nothing was recorded');
+        expect(initialiseTimeoutSentence(5, 'maze', '1')).not.toContain('after building');
+    });
+});
+
 describe('the worker file and its libraries (task 2)', () => {
     it('⛓ the worker imports exactly the REGISTRY_LIBRARIES the reference generator declares', () => {
         expect(REGENERATE_WORKER_LIBRARIES.map((l) => `frontend/modules/${l}`)).toEqual([...REGISTRY_LIBRARIES]);
@@ -103,6 +143,19 @@ describe('runRegenerateJob — the worker side of the protocol', () => {
         expect(posted[0].registered).toEqual(['maze', 'bounce']);
         expect(posted[1]).toMatchObject({ ok: true, entry: { substrate: 'bounce' } });
         expect(posted[1].ms).toBeGreaterThan(0);
+    });
+
+    it('⛓ R7 — a job\'s PROGRESS messages are posted between ready and the result', async () => {
+        const { posted, io } = jobIO({
+            regenerate: (a, { progress }) => {
+                progress({ type: 'region', index: 0, total: 2, region_id: 'A' });
+                progress({ type: 'region', index: 1, total: 2, region_id: 'B' });
+                return { ok: true, entries: {} };
+            },
+        });
+        await runRegenerateJob({ job: INITIALISE_JOB, player: '1', substrate: 'bounce' }, io);
+        expect(posted.map((m) => m.type)).toEqual(['ready', 'progress', 'progress', 'result']);
+        expect(posted[2]).toEqual({ type: 'progress', event: { type: 'region', index: 1, total: 2, region_id: 'B' } });
     });
 
     it('⛓ a realiser that THROWS past the op is answered as a refusal, never a crashed worker', async () => {
@@ -223,6 +276,26 @@ describe('runRegenerateInWorker — the page side: budget, Cancel, terminate', (
         vi.advanceTimersByTime(5000);
         expect(w.terminated).toBe(1);
         expect(REGION_GENERATION_CANCELLED).toContain('nothing was recorded');
+    });
+
+    it('⛓ R7 — progress reaches onProgress while running; after the outcome it is LATE and dropped', async () => {
+        const w = new FakeWorker();
+        const seen = [];
+        const run = runRegenerateInWorker({ job: INITIALISE_JOB }, {
+            timeoutMs: 1000, createWorker: () => w, now: () => Date.now(), onProgress: (e) => seen.push(e),
+        });
+        w.say({ type: 'ready', registered: ['maze'], failed: [] });
+        w.say({ type: 'progress', event: { type: 'region', index: 0, total: 3, region_id: 'A' } });
+        w.say({ type: 'progress', event: { type: 'region', index: 1, total: 3, region_id: 'B' } });
+        expect(seen.map((e) => e.index)).toEqual([0, 1]);
+        expect(seen[0].type).toBe('region');
+        run.cancel();
+        const out = await run.promise;
+        expect(out).toMatchObject({ ok: false, cancelled: true });
+        w.say({ type: 'progress', event: { type: 'region', index: 2, total: 3, region_id: 'C' } });
+        expect(seen).toHaveLength(2);
+        expect(run.late()).toBe(1);
+        expect(w.terminated).toBe(1);
     });
 
     it('a worker error is answered by name and the worker terminated', async () => {
