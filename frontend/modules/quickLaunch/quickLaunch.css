@@ -115,6 +115,11 @@
 .ql-ctl:hover { border-color: #5a8dee; color: #d8d8e0; }
 select.ql-ctl { max-width: 8em; }
 .ql-ctl-delete:hover { border-color: #e06c75; }
+/* P3 — the inline forms (rename, + group, + url) that replaced prompt(). */
+.ql-inline-form { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; margin: 2px 0; }
+input.ql-ctl { background: #16161c; color: #d8d8e0; cursor: text; padding: 1px 4px; font-size: 12px; min-width: 0; flex: 1 1 7em; }
+input.ql-ctl:focus { outline: none; border-color: #5a8dee; }
+input.ql-inline-rename { flex: none; width: 12em; max-width: 80%; }
 /* P3 — "N×" on a built-in group's row that is filed in the user's own groups (edit mode). */
 .ql-filed {
     flex: none;

@@ -96,21 +96,34 @@ export const CONTROLS = Object.freeze({
 export const ROOT_CHOICE = '__root__';
 export const ROOT_CHOICE_LABEL = '(top level)';
 export const DELETE_GROUP_CONFIRM = 'Delete this group and everything in it?';
-export const NEW_GROUP_PROMPT = 'Name of the new group';
-export const NEW_GROUP_DEFAULT = 'New group';
-export const RENAME_PROMPT = 'Rename the group';
-export const URL_HREF_PROMPT = 'Link address (URL)';
-export const URL_LABEL_PROMPT = 'Link label';
+/**
+ * Edit mode's inline forms (P3; they replace `prompt()`): ✎ turns a group's
+ * label into an input, "+ group" and "+ url" open a form at the end of the
+ * list they add to. Enter (or the Add button) commits, Escape cancels, and
+ * focus leaving the form commits what it holds (an empty name or address
+ * cancels). One class each, so tests and CSS address them by name.
+ */
+export const INLINE = Object.freeze({
+    form: 'ql-inline-form',
+    rename: 'ql-inline-rename',
+    group: 'ql-inline-group',
+    href: 'ql-inline-href',
+    label: 'ql-inline-label',
+    add: 'ql-inline-add',
+});
+export const NEW_GROUP_PLACEHOLDER = 'Name of the new group';
+export const URL_HREF_PLACEHOLDER = 'https://…';
+export const URL_LABEL_PLACEHOLDER = 'Label (optional)';
+export const URL_ADD_TEXT = 'Add';
 
 /**
- * The browser dialogs edit mode asks through. A test replaces a member for
- * the length of a row and restores it: Playwright dismisses a dialog nobody
- * handles (confirm → false, prompt → null), and the in-app harness installs
- * no handler.
+ * The browser dialog edit mode still asks through: deleting a group that holds
+ * something. A test replaces it for the length of a row and restores it:
+ * Playwright dismisses a dialog nobody handles (confirm → false), and the
+ * in-app harness installs no handler.
  */
 export const dialogs = {
     confirm: (message) => window.confirm(message),
-    prompt: (message, value) => window.prompt(message, value),
 };
 
 /** "N panels · M docs" (M = the docs Help draws) — the header line, exported so the in-app test builds the same string. */
@@ -168,7 +181,13 @@ export class QuickLaunchUI {
         this._renderGen = 0;
         this._unsubs = [];
         this._buildDom();
-        this._scheduleRender = debounce(() => this.render(), RENDER_DEBOUNCE_MS);
+        /** The inline form open now ({ close }), or null; a render it would destroy waits for it to close. */
+        this._inline = null;
+        this._renderDeferred = false;
+        this._scheduleRender = debounce(() => {
+            if (this._inline) this._renderDeferred = true;
+            else this.render();
+        }, RENDER_DEBOUNCE_MS);
         for (const event of REFRESH_EVENTS) {
             this._unsubs.push(eventBus.subscribe(event, (payload) => {
                 // Our own tree / view write: `_apply` / `setView` has already rendered from it.
@@ -340,6 +359,9 @@ export class QuickLaunchUI {
     }
 
     async render() {
+        // A render replaces every element, an open inline form's too: close it first (focus left it anyway).
+        this._inline?.close();
+        this._renderDeferred = false;
         const gen = ++this._renderGen;
         const target = await settingsManager.getSetting(DOCS_LINK_SETTING, DOCS_LINK_TARGETS.github);
         const tree = migrate(await settingsManager.getSetting(TREE_SETTING, EMPTY_TREE));
@@ -498,20 +520,116 @@ export class QuickLaunchUI {
         ];
     }
 
-    /** "+ group" and "+ url" into `parentId` (null = the top level). */
+    /** "+ group" and "+ url" into `parentId` (null = the top level): each opens an inline form. */
     _addButtons(parentId) {
         return [
-            this._button(CONTROLS.addGroup, '+ group', 'Add a group here', () => {
-                const label = dialogs.prompt(NEW_GROUP_PROMPT, NEW_GROUP_DEFAULT);
-                if (label != null && label.trim()) this._apply(addGroup, parentId, label.trim());
-            }),
-            this._button(CONTROLS.addUrl, '+ url', 'Add a link here', () => {
-                const href = dialogs.prompt(URL_HREF_PROMPT, 'https://');
-                if (href == null || !href.trim()) return;
-                const label = dialogs.prompt(URL_LABEL_PROMPT, href.trim());
-                if (label != null) this._apply(addUrl, parentId, href.trim(), label.trim());
-            }),
+            this._button(CONTROLS.addGroup, '+ group', 'Add a group here', () => this._openGroupForm(parentId)),
+            this._button(CONTROLS.addUrl, '+ url', 'Add a link here', () => this._openUrlForm(parentId)),
         ];
+    }
+
+    /** An `<input>` for an inline form; clicks and keys stay inside it (a `<summary>` parent would toggle). */
+    _inlineInput(className, placeholder, value = '') {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = `ql-ctl ${className}`;
+        input.placeholder = placeholder;
+        input.value = value;
+        input.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); });
+        input.addEventListener('keyup', (e) => { if (e.key === ' ') e.preventDefault(); });
+        return input;
+    }
+
+    /**
+     * Run an inline form: `el` is its box, `commit()` returns the op to apply
+     * (`[op, ...args]`) or null (nothing to add). Enter commits, Escape
+     * cancels, focus leaving `el` commits. Closing re-renders (through the
+     * commit's `_apply`, or directly).
+     */
+    _runInline(el, commit, focus) {
+        this._inline?.close();
+        let open = true;
+        const close = () => { open = false; if (this._inline?.el === el) this._inline = null; };
+        const finish = (apply) => {
+            if (!open) return;
+            close();
+            const op = apply ? commit() : null;
+            if (op) this._apply(...op);
+            else this.render();
+        };
+        this._inline = { el, close };
+        el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); finish(true); }
+            else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); finish(false); }
+        });
+        el.addEventListener('focusout', (e) => {
+            if (!el.contains(e.relatedTarget) && el.isConnected) finish(true);
+        });
+        el.finish = finish;
+        focus.focus();
+        return el;
+    }
+
+    /** The list `parentId`'s children are drawn in (null = the top level), created when the tree is empty. */
+    _targetList(parentId) {
+        if (parentId) {
+            const details = this.groupsEl.querySelector(`details.ql-user[data-group-id="${parentId}"]`);
+            if (!details) return null;
+            details.open = true;
+            return details.querySelector(':scope > .ql-list');
+        }
+        let list = this.groupsEl.querySelector(':scope > .ql-root');
+        if (!list) {
+            list = document.createElement('ul');
+            list.className = 'ql-list ql-root';
+            this.groupsEl.querySelector(':scope > .ql-root-ctl')?.after(list);
+        }
+        return list;
+    }
+
+    /** "+ group": a name input at the end of the list the group goes into. */
+    _openGroupForm(parentId) {
+        const list = this._targetList(parentId);
+        if (!list) return;
+        const li = document.createElement('li');
+        li.className = INLINE.form;
+        const input = this._inlineInput(INLINE.group, NEW_GROUP_PLACEHOLDER);
+        li.append(input);
+        list.append(li);
+        this._runInline(li, () => {
+            const label = input.value.trim();
+            return label ? [addGroup, parentId, label] : null;
+        }, input);
+    }
+
+    /** "+ url": address and label inputs and an Add button, at the end of the list the link goes into. */
+    _openUrlForm(parentId) {
+        const list = this._targetList(parentId);
+        if (!list) return;
+        const li = document.createElement('li');
+        li.className = INLINE.form;
+        const href = this._inlineInput(INLINE.href, URL_HREF_PLACEHOLDER);
+        const label = this._inlineInput(INLINE.label, URL_LABEL_PLACEHOLDER);
+        const add = this._button(INLINE.add, URL_ADD_TEXT, 'Add the link', () => li.finish(true));
+        li.append(href, label, add);
+        list.append(li);
+        this._runInline(li, () => {
+            const address = href.value.trim();
+            return address ? [addUrl, parentId, address, label.value.trim() || address] : null;
+        }, href);
+    }
+
+    /** ✎: the group's label becomes an input in its summary. */
+    _openRename(node) {
+        const summary = this.groupsEl.querySelector(`details.ql-user[data-group-id="${node.id}"] > summary`);
+        if (!summary) return;
+        const input = this._inlineInput(INLINE.rename, node.label, node.label);
+        summary.replaceChildren(input);
+        this._runInline(summary, () => {
+            const label = input.value.trim();
+            return label && label !== node.label ? [renameGroup, node.id, label] : null;
+        }, input);
+        input.select();
     }
 
     _rootControls() {
@@ -530,10 +648,7 @@ export class QuickLaunchUI {
             this._button(CONTROLS.down, '▼', 'Move down', () => this._apply(moveDown, node.id)),
         );
         if (node.kind === NODE_KINDS.group) {
-            box.append(this._button(CONTROLS.rename, '✎', 'Rename', () => {
-                const label = dialogs.prompt(RENAME_PROMPT, node.label);
-                if (label != null && label.trim()) this._apply(renameGroup, node.id, label.trim());
-            }));
+            box.append(this._button(CONTROLS.rename, '✎', 'Rename', () => this._openRename(node)));
         }
         box.append(
             this._button(CONTROLS.remove, '✕', 'Remove from your groups', () => {

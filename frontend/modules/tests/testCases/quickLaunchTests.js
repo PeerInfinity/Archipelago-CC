@@ -36,7 +36,7 @@ import { OTHER_CATEGORY, VIRTUAL_GROUPS, drawnHelpSections, lookupModuleInfo } f
 import { EMPTY_TREE, NODE_KINDS } from '../../quickLaunch/quickLaunchTree.js';
 import { completeModuleInfo } from '../../../app/initialization/completeModuleInfo.js';
 import {
-    COLLAPSED_KEY, COLLAPSED_SETTING, CONTROLS, DEVELOPER_DOCS_KEY, DEVELOPER_DOCS_SETTING, FOLD_TEXT, MODULE_ID,
+    COLLAPSED_KEY, COLLAPSED_SETTING, CONTROLS, DEVELOPER_DOCS_KEY, DEVELOPER_DOCS_SETTING, FOLD_TEXT, INLINE, MODULE_ID,
     ROOT_CHOICE, TREE_KEY, TREE_SETTING, VIEWS, VIEW_KEY, VIEW_SETTING, dialogs,
 } from '../../quickLaunch/quickLaunchUI.js';
 
@@ -195,6 +195,13 @@ const topGroupIds = (root) => [...root.querySelectorAll(':scope > .ql-groups > d
 const userGroup = (root, label) => [...root.querySelectorAll('.ql-user')]
     .find((d) => d.querySelector(':scope > summary')?.textContent.startsWith(`${label} (`)) ?? null;
 
+/** Type `text` into an inline form's input and press Enter, as a person would. */
+function typeAndEnter(input, text) {
+    input.value = text;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+}
+
 /** Choose `value` in a "move to" / "add to" select, as a person would. */
 function pick(select, value) {
     select.value = value;
@@ -248,10 +255,15 @@ async function quickLaunchEditOpsPersist(testController) {
     const root = await panelRoot(testController);
     if (!root) return testController.getOverallResult();
     const saved = { ...dialogs };
-    const answers = [];
-    dialogs.prompt = () => answers.shift() ?? null;
     dialogs.confirm = () => true;
     const until = (cond, what) => testController.pollForCondition(cond, what, ACTION_TIMEOUT_MS, POLL_MS);
+    /** Click "+ group" at the top level and type the name into the inline input it opens. */
+    const addTopGroup = async (label) => {
+        root.querySelector(`.ql-root-ctl .${CONTROLS.addGroup}`).click();
+        const input = await until(() => root.querySelector(`.${INLINE.group}`), 'the inline group-name input');
+        testController.reportCondition(`"+ group" opens an inline name input (for "${label}")`, !!input);
+        if (input) typeAndEnter(input, label);
+    };
     const docPath = drawnDocPaths()[0];
     const docRow = () => [...root.querySelectorAll(`details[data-group-id="${VIRTUAL_GROUPS.help.id}"] .ql-help`)]
         .find((li) => li.querySelector('a')?.title === docPath) ?? null;
@@ -264,8 +276,7 @@ async function quickLaunchEditOpsPersist(testController) {
         testController.reportCondition('Edit shows the top-level controls',
             await until(() => root.querySelector(`.ql-root-ctl .${CONTROLS.addGroup}`), 'the root "+ group" button'));
 
-        answers.push('Mine');
-        root.querySelector(`.ql-root-ctl .${CONTROLS.addGroup}`).click();
+        await addTopGroup('Mine');
         testController.reportCondition('"+ group" adds the group', await until(() => userGroup(root, 'Mine'), 'group "Mine"'));
         const mine = userGroup(root, 'Mine').dataset.groupId;
 
@@ -280,12 +291,13 @@ async function quickLaunchEditOpsPersist(testController) {
         userGroup(root, 'Mine').querySelector(`.ql-node[data-kind="doc"] .${CONTROLS.up}`).click();
         await until(() => userGroup(root, 'Mine')?.querySelector('.ql-node')?.dataset.kind === 'doc', 'the guide moved up');
 
-        answers.push('Mine 2');
         userGroup(root, 'Mine').querySelector(`:scope > .ql-ctl-row .${CONTROLS.rename}`).click();
+        const renameInput = await until(() => root.querySelector(`.ql-user > summary > .${INLINE.rename}`), 'the inline rename input');
+        testController.reportCondition('✎ turns the label into an input holding it', renameInput?.value === 'Mine');
+        if (renameInput) typeAndEnter(renameInput, 'Mine 2');
         testController.reportCondition('✎ renames the group', await until(() => userGroup(root, 'Mine 2'), 'group "Mine 2"'));
 
-        answers.push('Scratch');
-        root.querySelector(`.ql-root-ctl .${CONTROLS.addGroup}`).click();
+        await addTopGroup('Scratch');
         await until(() => userGroup(root, 'Scratch'), 'group "Scratch"');
         dialogs.confirm = () => false; // an EMPTY group must not ask
         userGroup(root, 'Scratch').querySelector(`:scope > .ql-ctl-row .${CONTROLS.remove}`).click();
@@ -769,7 +781,8 @@ const TESTS = [
         + 'Q1 header, no edit controls.',
         quickLaunchEmptyTreeRendersAsQ1],
     ['quick-launch-edit-ops-persist', 'Quick Launch: edit-mode buttons write the tree',
-        'Drives the edit-mode controls by clicking (add group, add to ▾ ×3, ▲, ✎, add + delete an empty group), '
+        'Drives the edit-mode controls as a person does (+ group and ✎ typed into their inline inputs, add to ▾ ×3, ▲, '
+        + 'add + delete an empty group), '
         + 'reads the setting back and compares its shape minus ids, then leaves edit mode and checks the render.',
         quickLaunchEditOpsPersist],
     ['quick-launch-unfiled-shows-unreferenced', 'Quick Launch: Unfiled lists what the tree does not reference',
