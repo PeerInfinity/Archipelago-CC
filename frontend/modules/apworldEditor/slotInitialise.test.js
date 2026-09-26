@@ -21,12 +21,14 @@ import { describe, expect, it } from 'vitest';
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { createEditSession, foldEdits } from '../procgenCore/editCore.js';
-import { layoutTopDown } from '../procgenPipeline/procgenPipelineEngine.js';
+import { layoutTopDown, resolveTopDownStart } from '../procgenPipeline/procgenPipelineEngine.js';
 import { createRng } from '../shared/rng.js';
 import { rulesEditAdapter } from './rulesEditAdapter.js';
 import { sidecarIssues } from './sidecarIssues.js';
 import { validateRules } from './rulesUtils.js';
-import { regionRealiserKind } from './regionRegenerate.js';
+import { freeItemsFor, regionRealiserKind } from './regionRegenerate.js';
+import { buildTopDownEnvelope } from '../procgenPipeline/topDownSteps.js';
+import { regionsOf, startRegionsOf } from '../procgenCore/rulesGraph.js';
 import {
     INITIALISE_BARE_ONLY, INITIALISE_RETURN_EXITS_ADDED, INITIALISE_RETURN_EXITS_OFF,
     INITIALISE_RULES_UNCHANGED, INITIALISE_UNPLACED, REGENERATE_SEED_REQUIRED, RULES_OP_KINDS,
@@ -120,13 +122,54 @@ describe('which slots can be initialised (initialiseFacts)', () => {
         expect(initialiseFacts(meta, P).blocker).toBe(INITIALISE_BLOCKERS.HAS_METADATA);
     });
 
-    it('⛓ the resolved start and Menu are the LAYOUT\'s own (the engine\'s rule is not exported)', () => {
+    it('⛓ the resolved start and Menu are the LAYOUT\'s own', () => {
         for (const game of Object.keys(DOCS)) {
             const f = initialiseFacts(DOCS[game], P);
             const layout = layoutTopDown(DOCS[game], { playerId: P, gridDims: { width: 30, height: 30 } }, createRng(1));
             expect(f.start, game).toBe(layout.actualStartName);
             expect(f.menu, game).toBe(layout.menuName);
         }
+    });
+});
+
+describe('R9 — the hub asks the PIPELINE\'s rules, never a copy', () => {
+    /** ⛓ The adventure document with one of bounce's library items DEFINED and
+     *  another already HELD — both must stay out of the grants. */
+    const heldAndDefined = () => {
+        const doc = JSON.parse(JSON.stringify(DOCS.adventure));
+        const [defined, held] = Object.entries(substrateRegistry.get('bounce').libraryItems)
+            .filter(([, d]) => !d?.is_victory).map(([n]) => n);
+        doc.items[P][defined] = { name: defined, id: 4242, classification: 'progression', groups: [] };
+        doc.starting_items = { [P]: [held] };
+        return doc;
+    };
+
+    it('⛓ initialiseFacts\' start and Menu ARE resolveTopDownStart\'s answer (every probed document)', () => {
+        for (const game of Object.keys(DOCS)) {
+            const [declared = null] = startRegionsOf(DOCS[game], P).default;
+            const r = resolveTopDownStart(regionsOf(DOCS[game], P), declared);
+            const f = initialiseFacts(DOCS[game], P);
+            expect(r, game).not.toBeNull();
+            expect(f.start, game).toBe(r.actualStart);
+            expect(f.menu, game).toBe(r.menuName);
+        }
+    });
+
+    it('⛓ freeItemsFor ≡ the top-down envelope\'s startingItems, every probed document × every realiser target', () => {
+        const docs = { ...DOCS, heldAndDefined: heldAndDefined() };
+        let granting = 0;
+        for (const [game, doc] of Object.entries(docs)) {
+            for (const t of initialiseTargets()) {
+                const env = buildTopDownEnvelope({
+                    source: doc, seed: 1, gridDims: { width: 4, height: 4 },
+                    regionSizeBase: { width: 8, height: 6 }, substrateMix: { [t]: 1 },
+                });
+                const got = freeItemsFor(doc, P, substrateRegistry.get(t));
+                expect(got, `${game} × ${t}`).toEqual(env.compileIn.startingItems);
+                if (env.compileIn.grantedItems.length) granting += 1;
+            }
+        }
+        expect(granting, 'no pair granted anything — the row would compare empty lists').toBeGreaterThan(0);
     });
 });
 

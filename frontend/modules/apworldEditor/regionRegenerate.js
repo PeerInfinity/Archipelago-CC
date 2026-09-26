@@ -44,6 +44,7 @@ import {
     getRegionExits, linkIsAdjacentOnSide, perimeterMidpoint, serializeRegionEntry,
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { mergeSubstrateItemLib } from '../procgenPipeline/sphereConfigHooks.js';
+import { grantedLibraryItems } from '../procgenPipeline/topDownSteps.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { OPPOSITE_SIDE, SIDES, mirrorTileAcrossSide } from '../shared/procgen/spatialPrimitives.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
@@ -161,25 +162,18 @@ export function startingItemsOf(doc, player) {
 }
 
 /**
- * ⛓⛓ **THE ITEMS THAT RIDE FREE** — top-down's rule
- * (`topDownSteps.buildTopDownEnvelope`): the slot's `starting_items`, then the
- * target entry's `libraryItems` that are not `is_victory` and that the document
- * does not define in `items[p]`. ⛔ Without it a zone realiser that hosts one
- * arrowless exit per level refuses a region with two plain exits; with it the
- * surplus exits drift onto a free item the player always holds.
+ * ⛓⛓ **THE ITEMS THAT RIDE FREE** — top-down's rule, IMPORTED (R9:
+ * `topDownSteps.grantedLibraryItems`, the pipeline's one copy): the slot's
+ * `starting_items`, then the target entry's `libraryItems` that are not
+ * `is_victory` and that the document does not define in `items[p]`. ⛔ Without
+ * it a zone realiser that hosts one arrowless exit per level refuses a region
+ * with two plain exits; with it the surplus exits drift onto a free item the
+ * player always holds.
  *
  * @returns {string[]}
  */
 export function freeItemsFor(doc, player, entry) {
-    const starting = startingItemsOf(doc, player);
-    const defined = doc?.items?.[player] ?? {};
-    const out = [...starting];
-    for (const [name, def] of Object.entries(entry?.libraryItems ?? {})) {
-        if (def?.is_victory) continue;
-        if (defined[name] != null) continue;
-        if (!out.includes(name)) out.push(name);
-    }
-    return out;
+    return grantedLibraryItems(doc, player, entry?.id ? [entry.id] : []).startingItems;
 }
 
 /** ⛓ The document's exit name without its `<region>__` prefix (the four-player

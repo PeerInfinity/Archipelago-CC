@@ -39,6 +39,7 @@
 
 import {
     DEFAULT_SUBSTRATE_ID, buildPresetSidecars, finalizeTopDown, getRegionExits, layoutTopDown, realiseTopDownGen,
+    resolveTopDownStart,
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { assembleRegionParams, mergeSubstrateItemLib } from '../procgenPipeline/sphereConfigHooks.js';
 import { effectiveHazardOpts, topDownGridSide } from '../procgenPipeline/presetRun.js';
@@ -97,15 +98,12 @@ const entriesOf = (doc, player) => {
 
 /**
  * ⛓ The declared start as the layout resolves it: a `Menu`-like start with an
- * exit hands the start to its first exit's target (`resolveTopDownStart`, the
- * engine's own rule — it is not exported, so this reads the SAME two facts and
- * a row holds the two equal on the probed documents).
+ * exit hands the start to its first exit's target — the engine's own rule
+ * (`resolveTopDownStart`), imported (R9).
  */
 function resolvedStart(regions, declared) {
-    if (!declared || !regions[declared]) return { start: null, menu: null };
-    const first = regions[declared].exits?.[0]?.connected_region;
-    if (/^menu$/i.test(declared) && first && regions[first]) return { start: first, menu: declared };
-    return { start: declared, menu: null };
+    const r = resolveTopDownStart(regions, declared);
+    return r ? { start: r.actualStart, menu: r.menuName } : { start: null, menu: null };
 }
 
 /**

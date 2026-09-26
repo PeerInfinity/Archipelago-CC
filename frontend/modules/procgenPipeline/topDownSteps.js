@@ -121,15 +121,10 @@ function stepCompile(env, { onProgress = null } = {}) {
         // Embed the AUTHORITATIVE log verbatim so loop_costs reflect real AP logic.
         ...(enriched ? { sphereLog: c.sphereLog } : {}),
         // Granted ability items are placed at no location, so synthesise defs
-        // (ids 999↓ stay clear of the compiled pool's upward numbering).
+        // (`grantedItemDef`: ids 999↓ stay clear of the compiled pool's upward numbering).
         sourceItems: {
             ...c.sourceItemDefs,
-            ...Object.fromEntries((c.grantedItems ?? []).map((name, i) => [name, {
-                name,
-                id: 999 - i,
-                classification: 'progression',
-                groups: ['Everything'],
-            }])),
+            ...grantedItemDefs(c.grantedItems ?? []),
         },
         procgenMetadata: {
             driver: enriched ? 'top-down-sphere' : 'top-down',
@@ -167,6 +162,65 @@ export function newTopDownEnvelope({ source, opts, compileIn, regionSize }) {
 }
 
 /**
+ * ⛓ The id the FIRST granted item gets; the i-th gets `GRANTED_ITEM_FIRST_ID - i`
+ * (999↓ stays clear of the compiled pool's upward numbering).
+ */
+export const GRANTED_ITEM_FIRST_ID = 999;
+
+/** ⛓ The item definition a granted library item gets — placed at no location,
+ *  so synthesised: the i-th granted name, id 999↓, `progression`, `Everything`. */
+export function grantedItemDef(name, i) {
+    return {
+        name,
+        id: GRANTED_ITEM_FIRST_ID - i,
+        classification: 'progression',
+        groups: ['Everything'],
+    };
+}
+
+/** ⛓ `{name: grantedItemDef(name, i)}` for the granted names, in grant order. */
+export function grantedItemDefs(grantedItems) {
+    return Object.fromEntries(grantedItems.map((name, i) => [name, grantedItemDef(name, i)]));
+}
+
+/**
+ * ⛓⛓⛓ **THE LIBRARY ITEMS A SOURCE IS GRANTED** — top-down's free-item rule,
+ * the ONE copy (the APWorld Editor's initialise and per-region Generate import
+ * it): for each substrate in `substrateIds` (in order), every `libraryItems`
+ * entry that is not `is_victory`, that the source does not define in
+ * `items[p]`, and that is not already a starting item (or granted) — granted
+ * as a starting item. The realiser is handed `startingItems` as FREE, so the
+ * geometry may lean on them (surplus exits drift onto one); the compile writes
+ * `startingItems` and backfills a def per granted name (`defs`).
+ *
+ * @returns {{sourceStarting: string[], sourceItemDefs: object, grantedItems: string[],
+ *   startingItems: string[], defs: object}}
+ */
+export function grantedLibraryItems(source, playerId, substrateIds) {
+    const p = String(playerId);
+    const sourceStarting = source?.starting_items?.[p] ?? [];
+    const sourceItemDefs = source?.items?.[p] ?? {};
+    const grantedItems = [];
+    for (const id of substrateIds ?? []) {
+        const lib = substrateRegistry.get(id)?.libraryItems;
+        if (!lib) continue;
+        for (const [name, def] of Object.entries(lib)) {
+            if (def?.is_victory) continue;
+            if (sourceItemDefs[name] != null) continue;
+            if (sourceStarting.includes(name) || grantedItems.includes(name)) continue;
+            grantedItems.push(name);
+        }
+    }
+    return {
+        sourceStarting,
+        sourceItemDefs,
+        grantedItems,
+        startingItems: [...sourceStarting, ...grantedItems],
+        defs: grantedItemDefs(grantedItems),
+    };
+}
+
+/**
  * Build a top-down envelope from a source rules.json + already-assembled inputs
  * (substrate mix, regionParams, hazardOpts, consumableTileOpts, sphereLog). Shared by the panel
  * (_buildTDEnvelope) and the CLI so the preamble — granting each in-mix
@@ -179,21 +233,8 @@ export function buildTopDownEnvelope({
     substrateMix = null, regionParams = null, hazardOpts = null, consumableTileOpts = null,
     sphereLog = null, enableLoopMode = false, regionXpEffect = 'cost',
 }) {
-    const sourceStarting = source?.starting_items?.['1'] ?? [];
-    const sourceItemDefs = source?.items?.['1'] ?? {};
-    const grantedItems = [];
-    for (const [id, weight] of Object.entries(substrateMix ?? {})) {
-        if (!(Number(weight) > 0)) continue;
-        const lib = substrateRegistry.get(id)?.libraryItems;
-        if (!lib) continue;
-        for (const [name, def] of Object.entries(lib)) {
-            if (def?.is_victory) continue;
-            if (sourceItemDefs[name] != null) continue;
-            if (sourceStarting.includes(name) || grantedItems.includes(name)) continue;
-            grantedItems.push(name);
-        }
-    }
-    const startingItems = [...sourceStarting, ...grantedItems];
+    const inMix = Object.entries(substrateMix ?? {}).filter(([, w]) => Number(w) > 0).map(([id]) => id);
+    const { sourceItemDefs, grantedItems, startingItems } = grantedLibraryItems(source, '1', inMix);
     const resolvedLog = sphereLog
         ?? (Array.isArray(source?.sphere_log) ? source.sphere_log : null);
     return newTopDownEnvelope({

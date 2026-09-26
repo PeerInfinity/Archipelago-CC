@@ -1515,9 +1515,10 @@ function topDownRegionSize(base, exitCount, locationCount) {
  * in a synthetic Menu region whose only exit is unconditional and
  * points at the real start. Top-down strips Menu and starts BFS from
  * the connected_region; buildRulesJson re-wraps the output in a
- * fresh Menu region on emit.
+ * fresh Menu region on emit. EXPORTED: the APWorld Editor's initialise
+ * (`apworldEditor/slotInitialise.js`) asks the SAME rule.
  */
-function resolveTopDownStart(sourceRegions, declaredStart) {
+export function resolveTopDownStart(sourceRegions, declaredStart) {
     if (!declaredStart) return null;
     const region = sourceRegions[declaredStart];
     if (!region) return null;
