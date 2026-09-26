@@ -163,22 +163,25 @@ describe('the corpus census — printed, then pinned', () => {
          *              `pipeline-presets.md`, and `sphere-growth.md` § *Seedling
          *              as a leaf, generated* at `flash.md` § *Generated rooms*
          *              (`doc` 168 → 170).
+         *   243 → 244  SEEDLING GENERATED LEVELS G4 (2026-09-26): `sphere-growth.md`
+         *              § *Seedling as a leaf, generated* points at `flash.md`
+         *              § *Host-enforced gates (G4)* (`doc` 170 → 171).
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
          */
         expect(by).toEqual({
             'same-doc': 15,
-            doc: 170,
+            doc: 171,
             external: 23,
             repo: 35,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(243);
+        expect(CORPUS.length).toBe(244);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(170);
+        expect(docs).toHaveLength(171);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

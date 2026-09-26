@@ -4,7 +4,7 @@ import {
     SHIPPED_PRESETS, VALID_MODES, PRESET_GROUPS, PRESET_GROUP_ORDER, LS_PRESETS_KEY,
     PRESET_HEADLESS_BUDGET_MS, PRESETS_SKIPPED_AS_HEAVY,
     SEEDLING_SPIRAL_ROOM_STATE, SEEDLING_SPHERE_ROOM_STATE,
-    SEEDLING_GENERATED_ROOM_STATE, SEEDLING_GENERATED_LEAF_STATE,
+    SEEDLING_GENERATED_ROOM_STATE, SEEDLING_GENERATED_LEAF_STATE, SEEDLING_GENERATED_HOST_STATE,
     capturePresetState, applyPresetState, getPresetById, restoredActivePresetId, groupShippedPresets,
     userPresetId, loadUserPresets, saveUserPreset, deleteUserPreset,
 } from './presetDefs.js';
@@ -197,6 +197,17 @@ describe('SHIPPED_PRESETS', () => {
         expect(p.group).toBe(PRESET_GROUPS.sphereGrowth);
         expect(p.state.mode).toBe('sphereGrowth');
         expect(p.state.substrateQuotas).toEqual({ maze: 3, flash_seedling_gen: 1 });
+    });
+
+    it('seedling generated host demo IS the committed preset\'s state — a generated room hosting a gated child (G4)', () => {
+        const p = getPresetById('shipped:seedling-generated-host-demo');
+        // ONE spelling: the drop-down, the committed seedling_generated_host preset and
+        // the headless oracle all read this object.
+        expect(p.state).toBe(SEEDLING_GENERATED_HOST_STATE);
+        expect(p.group).toBe(PRESET_GROUPS.sphereGrowth);
+        expect(p.state.mode).toBe('sphereGrowth');
+        expect(p.state.params.startSubstrate).toBe('flash_seedling_gen');
+        expect(p.state.substrateQuotas).toEqual({ maze: 2, flash_seedling_gen: 1 });
     });
 
     it('top-down maze + text adventure demo pins the mix maze 2 : text_adventure 1', () => {
