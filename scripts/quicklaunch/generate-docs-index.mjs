@@ -23,6 +23,22 @@
  * when it holds exactly one doc (the panel draws it as one row, not a fold). A
  * marked directory inside a marked one is always its own section.
  *
+ * ⛓ A section with no sub-directories may instead be SUB-GROUPED BY ITS README
+ * (quick-launch P7 — no file moves: moving the docs would break every inbound
+ * link). When the README lists docs of its own directory under `## ` headings —
+ * a bullet (`-` or `*`) whose FIRST link targets a `.md` directly in the
+ * directory (`./x.md` or `x.md`; `../`, sub-paths and non-docs are ignored) — the
+ * section's `docs` is empty and its `children` are one per such heading, in
+ * README order, holding the docs in bullet order (a doc listed twice stays under
+ * its first heading), with `heading: true`, `single: false` and `dir`
+ * `<section dir>/<slug of the heading>` (the panel's group id). A heading that
+ * lists none of the directory's docs (a "See Also" of `../` links, prose) is no
+ * child. The docs the headings do not list come LAST, in a child labelled
+ * UNLISTED_LABEL (slug `unlisted`), in path order. A README without such
+ * headings stays flat. ⛔ Sub-directories AND listing headings in one section is
+ * refused, naming the README — the two rules would each claim the docs (no
+ * section has both; the refusal is the precedence).
+ *
  * Output: `DOCS_INDEX`, one row per listed doc — `{ path, title, section, summary }`
  * where `path` is repo-relative, `title` is the file's first `# ` line (the file
  * name when it has none), `section` is its directory relative to `docs/json/`
@@ -109,6 +125,47 @@ function subdirs(repo, dir) {
         .filter((e) => e.isDirectory()).map((e) => `${dir}/${e.name}`).sort(byText);
 }
 
+/** The child that holds a README-sub-grouped section's docs its headings do not list (it comes last). */
+export const UNLISTED_LABEL = 'Unlisted';
+
+/** A heading's (or category's) id segment: lower case, runs of anything else as one `-`. */
+export function headingSlug(text) {
+    return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+/** A bullet line (`-` / `*`, any indent) and its first markdown link's target. */
+const BULLET_RE = /^\s*[-*]\s/;
+const FIRST_LINK_RE = /\[[^\]]*\]\(([^)\s]+)[^)]*\)/;
+
+/**
+ * The `## ` headings of a section README that list docs of `dir` itself, in
+ * README order: `[{ heading, docs }]`, `docs` repo-relative in bullet order.
+ * `ownDocs` is the set of the directory's docs (a link to anything else is
+ * ignored); a doc listed under two headings stays under the first. A heading
+ * listing none is left out. See the docblock's README sub-grouping rule.
+ */
+export function readmeHeadingGroups(text, dir, ownDocs) {
+    const own = new Set(ownDocs);
+    const seen = new Set();
+    const groups = [];
+    let current = null;
+    for (const line of text.split('\n')) {
+        if (line.startsWith('## ')) {
+            current = { heading: line.slice(3).trim(), docs: [] };
+            groups.push(current);
+            continue;
+        }
+        if (!current || !BULLET_RE.test(line)) continue;
+        const target = line.match(FIRST_LINK_RE)?.[1].split('#')[0].replace(/^\.\//, '');
+        if (!target || target.includes('/')) continue;
+        const path = `${dir}/${target}`;
+        if (!own.has(path) || seen.has(path)) continue;
+        seen.add(path);
+        current.docs.push(path);
+    }
+    return groups.filter((g) => g.docs.length > 0);
+}
+
 /** Repo-relative docs directly in `dir`. */
 function ownDocs(repo, dir) {
     return readdirSync(join(repo, dir), { withFileTypes: true }).filter(isDoc).map((e) => `${dir}/${e.name}`);
@@ -149,20 +206,34 @@ const docsRel = (dir) => dir.slice(DOCS_ROOT.length + 1);
  */
 export function buildHelpSections(repo = REPO, root = DOCS_ROOT) {
     return markedDirs(repo, root)
-        .map(({ dir, order, audience }) => ({
-            dir: docsRel(dir),
-            label: dirLabel(repo, dir),
-            order,
-            audience,
-            docs: ownDocs(repo, dir).filter((p) => basename(p) !== SECTION_README).sort(byText),
-            children: subdirs(repo, dir)
+        .map(({ dir, order, audience }) => {
+            const docs = ownDocs(repo, dir).filter((p) => basename(p) !== SECTION_README).sort(byText);
+            const children = subdirs(repo, dir)
                 .filter((sub) => !markerOf(repo, sub))
                 .map((sub) => {
-                    const docs = subtreeDocs(repo, sub);
-                    return { dir: docsRel(sub), label: dirLabel(repo, sub), docs, single: docs.length === 1 };
+                    const subDocs = subtreeDocs(repo, sub);
+                    return { dir: docsRel(sub), label: dirLabel(repo, sub), docs: subDocs, single: subDocs.length === 1 };
                 })
-                .filter((child) => child.docs.length > 0),
-        }))
+                .filter((child) => child.docs.length > 0);
+            const readme = `${dir}/${SECTION_README}`;
+            const headings = readmeHeadingGroups(readText(join(repo, readme)) ?? '', dir, docs);
+            const section = { dir: docsRel(dir), label: dirLabel(repo, dir), order, audience };
+            if (!headings.length) return { ...section, docs, children };
+            if (children.length) {
+                throw new Error(`${readme}: lists its docs under ## headings AND has sub-directories `
+                    + `(${children.map((c) => c.dir).join(', ')}) — a section is sub-grouped by one or the other`);
+            }
+            const listed = new Set(headings.flatMap((g) => g.docs));
+            const unlisted = docs.filter((p) => !listed.has(p));
+            const groups = unlisted.length ? [...headings, { heading: UNLISTED_LABEL, docs: unlisted }] : headings;
+            return {
+                ...section,
+                docs: [],
+                children: groups.map((g) => ({
+                    dir: `${section.dir}/${headingSlug(g.heading)}`, label: g.heading, heading: true, docs: g.docs, single: false,
+                })),
+            };
+        })
         .sort((a, b) => a.order - b.order || byText(a.dir, b.dir));
 }
 
@@ -259,7 +330,8 @@ export function renderDocsIndexModule(rows, categories, sections) {
         '/**',
         ' * The Help sections: each docs/json directory whose README carries the',
         ' * `quick-launch-help` marker, by `order` — { dir, label, order, audience, docs,',
-        ' * children: [{ dir, label, docs, single }] }. See the generator\'s docblock.',
+        ' * children: [{ dir, label, docs, single, heading? }] } (a child per sub-directory, or',
+        ' * per README `## ` heading when `heading` is true). See the generator\'s docblock.',
         ' */',
         `export const HELP_SECTIONS = Object.freeze(${JSON.stringify(sections, null, 4)});`,
         '',
@@ -269,6 +341,9 @@ export function renderDocsIndexModule(rows, categories, sections) {
         ' * (moduleCategoryPins.test.js); the "All panels" group is split by them.',
         ' */',
         `export const CATEGORY_ORDER = Object.freeze(${JSON.stringify(categories, null, 4)});`,
+        '',
+        '/** The label of the child holding the docs a README-sub-grouped section\'s headings do not list (last). */',
+        `export const UNLISTED_LABEL = ${JSON.stringify(UNLISTED_LABEL)};`,
         '',
     ].join('\n');
 }

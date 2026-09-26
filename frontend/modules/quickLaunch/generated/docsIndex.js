@@ -874,7 +874,8 @@ export const DOCS_INDEX = Object.freeze([
 /**
  * The Help sections: each docs/json directory whose README carries the
  * `quick-launch-help` marker, by `order` — { dir, label, order, audience, docs,
- * children: [{ dir, label, docs, single }] }. See the generator's docblock.
+ * children: [{ dir, label, docs, single, heading? }] } (a child per sub-directory, or
+ * per README `## ` heading when `heading` is true). See the generator's docblock.
  */
 export const HELP_SECTIONS = Object.freeze([
     {
@@ -1027,100 +1028,244 @@ export const HELP_SECTIONS = Object.freeze([
         "label": "Developer Guides",
         "order": 110,
         "audience": "developer",
-        "docs": [
-            "docs/json/developer/guides/creating-modules.md",
-            "docs/json/developer/guides/desktop-and-mobile-layout.md",
-            "docs/json/developer/guides/event-system.md",
-            "docs/json/developer/guides/external-module-security.md",
-            "docs/json/developer/guides/format-converter.md",
-            "docs/json/developer/guides/fuzzer-debugging.md",
-            "docs/json/developer/guides/module-system.md",
-            "docs/json/developer/guides/module_info_status.md",
-            "docs/json/developer/guides/state-management.md",
-            "docs/json/developer/guides/testing-pipeline.md",
-            "docs/json/developer/guides/ui-and-layout.md",
-            "docs/json/developer/guides/world-generator.md"
-        ],
-        "children": []
+        "docs": [],
+        "children": [
+            {
+                "dir": "developer/guides/core-architecture-guides",
+                "label": "Core Architecture Guides",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/guides/module-system.md",
+                    "docs/json/developer/guides/event-system.md",
+                    "docs/json/developer/guides/state-management.md",
+                    "docs/json/developer/guides/ui-and-layout.md",
+                    "docs/json/developer/guides/desktop-and-mobile-layout.md"
+                ],
+                "single": false
+            },
+            {
+                "dir": "developer/guides/development-guides",
+                "label": "Development Guides",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/guides/creating-modules.md",
+                    "docs/json/developer/guides/external-module-security.md",
+                    "docs/json/developer/guides/testing-pipeline.md",
+                    "docs/json/developer/guides/fuzzer-debugging.md"
+                ],
+                "single": false
+            },
+            {
+                "dir": "developer/guides/conversion-tools",
+                "label": "Conversion Tools",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/guides/format-converter.md",
+                    "docs/json/developer/guides/world-generator.md"
+                ],
+                "single": false
+            },
+            {
+                "dir": "developer/guides/reference-documents",
+                "label": "Reference Documents",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/guides/module_info_status.md"
+                ],
+                "single": false
+            }
+        ]
     },
     {
         "dir": "developer/reference",
         "label": "Developer Reference Documentation",
         "order": 120,
         "audience": "developer",
-        "docs": [
-            "docs/json/developer/reference/alttp-specific-data.md",
-            "docs/json/developer/reference/binary-op-optimizations.md",
-            "docs/json/developer/reference/closure-function-analyzer.md",
-            "docs/json/developer/reference/handler-configuration.md",
-            "docs/json/developer/reference/host-settings.md",
-            "docs/json/developer/reference/logging-system.md",
-            "docs/json/developer/reference/loops-module-states.md",
-            "docs/json/developer/reference/rule-type-dispatch-inventory.md",
-            "docs/json/developer/reference/rule-types-reference.md",
-            "docs/json/developer/reference/state-method-transformations.md",
-            "docs/json/developer/reference/state-snapshots.md",
-            "docs/json/developer/reference/url-parameters.md",
-            "docs/json/developer/reference/ut-tracking-modes.md"
-        ],
-        "children": []
+        "docs": [],
+        "children": [
+            {
+                "dir": "developer/reference/core-systems",
+                "label": "Core Systems",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/reference/state-snapshots.md",
+                    "docs/json/developer/reference/logging-system.md",
+                    "docs/json/developer/reference/url-parameters.md",
+                    "docs/json/developer/reference/rule-types-reference.md",
+                    "docs/json/developer/reference/loops-module-states.md"
+                ],
+                "single": false
+            },
+            {
+                "dir": "developer/reference/exporter-internals",
+                "label": "Exporter Internals",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/reference/handler-configuration.md",
+                    "docs/json/developer/reference/state-method-transformations.md",
+                    "docs/json/developer/reference/closure-function-analyzer.md",
+                    "docs/json/developer/reference/binary-op-optimizations.md"
+                ],
+                "single": false
+            },
+            {
+                "dir": "developer/reference/game-specific-references",
+                "label": "Game-Specific References",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/reference/alttp-specific-data.md"
+                ],
+                "single": false
+            },
+            {
+                "dir": "developer/reference/unlisted",
+                "label": "Unlisted",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/reference/host-settings.md",
+                    "docs/json/developer/reference/rule-type-dispatch-inventory.md",
+                    "docs/json/developer/reference/ut-tracking-modes.md"
+                ],
+                "single": false
+            }
+        ]
     },
     {
         "dir": "developer/modules",
         "label": "Frontend Module Reference",
         "order": 130,
         "audience": "developer",
-        "docs": [
-            "docs/json/developer/modules/client.md",
-            "docs/json/developer/modules/commonUI.md",
-            "docs/json/developer/modules/discovery.md",
-            "docs/json/developer/modules/discoveryPanel.md",
-            "docs/json/developer/modules/dungeons.md",
-            "docs/json/developer/modules/editor.md",
-            "docs/json/developer/modules/editorCodeMirror6.md",
-            "docs/json/developer/modules/editorCore.md",
-            "docs/json/developer/modules/events.md",
-            "docs/json/developer/modules/exits.md",
-            "docs/json/developer/modules/gameState.md",
-            "docs/json/developer/modules/gameStatePanel.md",
-            "docs/json/developer/modules/helpers.md",
-            "docs/json/developer/modules/iframe-base.md",
-            "docs/json/developer/modules/iframeAdapter.md",
-            "docs/json/developer/modules/iframeManagerPanel.md",
-            "docs/json/developer/modules/iframePanel.md",
-            "docs/json/developer/modules/inventory.md",
-            "docs/json/developer/modules/json.md",
-            "docs/json/developer/modules/locations.md",
-            "docs/json/developer/modules/loopsCostDebugger.md",
-            "docs/json/developer/modules/metaGame.md",
-            "docs/json/developer/modules/metaGamePanel.md",
-            "docs/json/developer/modules/modules.md",
-            "docs/json/developer/modules/pathAnalyzer.md",
-            "docs/json/developer/modules/pathAnalyzerPanel.md",
-            "docs/json/developer/modules/presets.md",
-            "docs/json/developer/modules/progressBar.md",
-            "docs/json/developer/modules/progressBarPanel.md",
-            "docs/json/developer/modules/proofGraph.md",
-            "docs/json/developer/modules/proofQueue.md",
-            "docs/json/developer/modules/proofShared.md",
-            "docs/json/developer/modules/regionGraph.md",
-            "docs/json/developer/modules/regions.md",
-            "docs/json/developer/modules/settings.md",
-            "docs/json/developer/modules/shared.md",
-            "docs/json/developer/modules/sphereState.md",
-            "docs/json/developer/modules/spoilerChecklist.md",
-            "docs/json/developer/modules/spoilerTest.md",
-            "docs/json/developer/modules/stateManager.md",
-            "docs/json/developer/modules/tests.md",
-            "docs/json/developer/modules/timer.md",
-            "docs/json/developer/modules/timerPanel.md",
-            "docs/json/developer/modules/vibeCodingSim.md",
-            "docs/json/developer/modules/window-base.md",
-            "docs/json/developer/modules/windowAdapter.md",
-            "docs/json/developer/modules/windowManagerPanel.md",
-            "docs/json/developer/modules/windowPanel.md"
-        ],
-        "children": []
+        "docs": [],
+        "children": [
+            {
+                "dir": "developer/modules/tracker-panels",
+                "label": "Tracker Panels",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/modules/dungeons.md",
+                    "docs/json/developer/modules/exits.md",
+                    "docs/json/developer/modules/helpers.md",
+                    "docs/json/developer/modules/inventory.md",
+                    "docs/json/developer/modules/locations.md",
+                    "docs/json/developer/modules/gameStatePanel.md",
+                    "docs/json/developer/modules/regions.md",
+                    "docs/json/developer/modules/spoilerChecklist.md",
+                    "docs/json/developer/modules/progressBarPanel.md"
+                ],
+                "single": false
+            },
+            {
+                "dir": "developer/modules/game-mode-panels",
+                "label": "Game Mode Panels",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/modules/discoveryPanel.md",
+                    "docs/json/developer/modules/timerPanel.md",
+                    "docs/json/developer/modules/metaGamePanel.md"
+                ],
+                "single": false
+            },
+            {
+                "dir": "developer/modules/loop-mode-modules",
+                "label": "Loop Mode Modules",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/modules/loopsCostDebugger.md"
+                ],
+                "single": false
+            },
+            {
+                "dir": "developer/modules/non-procgen-games",
+                "label": "Non-procgen Games",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/modules/proofQueue.md",
+                    "docs/json/developer/modules/proofGraph.md"
+                ],
+                "single": false
+            },
+            {
+                "dir": "developer/modules/data-and-configuration-panels",
+                "label": "Data and Configuration Panels",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/modules/editor.md",
+                    "docs/json/developer/modules/editorCodeMirror6.md",
+                    "docs/json/developer/modules/json.md",
+                    "docs/json/developer/modules/modules.md",
+                    "docs/json/developer/modules/presets.md",
+                    "docs/json/developer/modules/settings.md"
+                ],
+                "single": false
+            },
+            {
+                "dir": "developer/modules/analysis-panels",
+                "label": "Analysis Panels",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/modules/pathAnalyzerPanel.md",
+                    "docs/json/developer/modules/regionGraph.md"
+                ],
+                "single": false
+            },
+            {
+                "dir": "developer/modules/embedding-and-windows",
+                "label": "Embedding and Windows",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/modules/iframePanel.md",
+                    "docs/json/developer/modules/iframeManagerPanel.md",
+                    "docs/json/developer/modules/windowPanel.md",
+                    "docs/json/developer/modules/windowManagerPanel.md"
+                ],
+                "single": false
+            },
+            {
+                "dir": "developer/modules/developer-and-testing-panels",
+                "label": "Developer and Testing Panels",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/modules/events.md",
+                    "docs/json/developer/modules/spoilerTest.md",
+                    "docs/json/developer/modules/tests.md"
+                ],
+                "single": false
+            },
+            {
+                "dir": "developer/modules/core-service-modules",
+                "label": "Core Service Modules",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/modules/stateManager.md",
+                    "docs/json/developer/modules/client.md",
+                    "docs/json/developer/modules/discovery.md",
+                    "docs/json/developer/modules/gameState.md",
+                    "docs/json/developer/modules/sphereState.md",
+                    "docs/json/developer/modules/timer.md",
+                    "docs/json/developer/modules/progressBar.md",
+                    "docs/json/developer/modules/metaGame.md",
+                    "docs/json/developer/modules/editorCore.md",
+                    "docs/json/developer/modules/iframeAdapter.md",
+                    "docs/json/developer/modules/windowAdapter.md",
+                    "docs/json/developer/modules/commonUI.md",
+                    "docs/json/developer/modules/iframe-base.md",
+                    "docs/json/developer/modules/pathAnalyzer.md",
+                    "docs/json/developer/modules/proofShared.md",
+                    "docs/json/developer/modules/shared.md",
+                    "docs/json/developer/modules/window-base.md"
+                ],
+                "single": false
+            },
+            {
+                "dir": "developer/modules/unlisted",
+                "label": "Unlisted",
+                "heading": true,
+                "docs": [
+                    "docs/json/developer/modules/vibeCodingSim.md"
+                ],
+                "single": false
+            }
+        ]
     },
     {
         "dir": "developer/procgen",
@@ -1169,3 +1314,6 @@ export const CATEGORY_ORDER = Object.freeze([
     "Developer and Testing Panels",
     "Core Service Modules"
 ]);
+
+/** The label of the child holding the docs a README-sub-grouped section's headings do not list (last). */
+export const UNLISTED_LABEL = "Unlisted";

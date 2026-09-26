@@ -9,11 +9,11 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
-    EXCLUDED_BASENAMES, HELP_AUDIENCES, MODULES_README, OUTPUT, REPO, SUMMARY_MAX_LENGTH, buildCategoryOrder,
-    buildDocsIndex, buildHelpSections, docSummary, isDirectoryBullet, parseHelpMarker, readmeCategories,
-    renderDocsIndexModule, sectionDocPaths,
+    EXCLUDED_BASENAMES, HELP_AUDIENCES, MODULES_README, OUTPUT, REPO, SECTION_README, SUMMARY_MAX_LENGTH, UNLISTED_LABEL,
+    buildCategoryOrder, buildDocsIndex, buildHelpSections, docSummary, headingSlug, isDirectoryBullet, parseHelpMarker,
+    readmeCategories, readmeHeadingGroups, renderDocsIndexModule, sectionDocPaths,
 } from '../../../scripts/quicklaunch/generate-docs-index.mjs';
-import { CATEGORY_ORDER, DOCS_INDEX, HELP_SECTIONS } from './generated/docsIndex.js';
+import { CATEGORY_ORDER, DOCS_INDEX, HELP_SECTIONS, UNLISTED_LABEL as GENERATED_UNLISTED } from './generated/docsIndex.js';
 
 describe('quickLaunch generated/docsIndex.js', () => {
     it('equals what the generator writes today (byte for byte)', () => {
@@ -78,6 +78,34 @@ describe('quickLaunch generated HELP_SECTIONS', () => {
             .toEqual(['games/journey-to-ascension', 'games/vibe-coding-simulator']);
     });
 
+    it('a section without sub-directories whose README lists its docs under ## headings is sub-grouped by them', () => {
+        for (const section of HELP_SECTIONS.filter((s) => s.children.some((c) => c.heading))) {
+            const readme = readFileSync(join(REPO, 'docs/json', section.dir, SECTION_README), 'utf8');
+            const own = [...section.docs, ...section.children.flatMap((c) => c.docs)];
+            const groups = readmeHeadingGroups(readme, `docs/json/${section.dir}`, own);
+            const headings = readme.split('\n').filter((l) => l.startsWith('## ')).map((l) => l.slice(3).trim());
+            expect(section.docs).toEqual([]);
+            expect(section.children.every((c) => c.heading && !c.single)).toBe(true);
+            // Children = the listing headings in README order (a subsequence of all its headings), then Unlisted.
+            const labels = section.children.map((c) => c.label).filter((l) => l !== UNLISTED_LABEL);
+            expect(labels).toEqual(groups.map((g) => g.heading));
+            expect(labels).toEqual(headings.filter((h) => labels.includes(h)));
+            for (const g of groups) expect(section.children.find((c) => c.label === g.heading).docs).toEqual(g.docs);
+            const unlisted = section.children.find((c) => c.label === UNLISTED_LABEL);
+            if (unlisted) expect(section.children.at(-1)).toBe(unlisted);
+            for (const c of section.children) expect(c.dir).toBe(`${section.dir}/${headingSlug(c.label)}`);
+        }
+    });
+
+    it('the generated module carries UNLISTED_LABEL (the in-app row reads it there)', () => {
+        expect(GENERATED_UNLISTED).toBe(UNLISTED_LABEL);
+    });
+
+    it('today: three developer sections are sub-grouped by their READMEs; procgen and the user sections are not', () => {
+        const byHeadings = HELP_SECTIONS.filter((s) => s.children.some((c) => c.heading)).map((s) => s.dir);
+        expect(byHeadings).toEqual(['developer/guides', 'developer/reference', 'developer/modules']);
+    });
+
     it('no marked README is a row (it is its section\'s label)', () => {
         const labels = new Set(HELP_SECTIONS.map((s) => `docs/json/${s.dir}/README.md`));
         expect(DOCS_INDEX.filter((d) => labels.has(d.path))).toEqual([]);
@@ -103,6 +131,28 @@ describe('parseHelpMarker', () => {
     });
 });
 
+describe('README ## headings sub-group a section (readmeHeadingGroups over text)', () => {
+    const own = ['d/a.md', 'd/b.md', 'd/c.md', 'd/e.md'];
+    const text = [
+        '# D', '', '- [not under a heading](./e.md)', '',
+        '## One', '', '-   **[B](./b.md):** first', '- [A](a.md#part) second', '',
+        '## See Also', '', '- [Up](../x.md)', '- [Sub](./sub/y.md)', '- [Missing](./nope.md)', '',
+        '## Two', '', '* [C](./c.md)', '- [A again](./a.md) — stays under One', '',
+        '## Prose', '', 'A paragraph linking [B](./b.md) is not a bullet.',
+    ].join('\n');
+
+    it('one group per heading that lists own docs, README order, bullet order; a doc listed twice stays first', () => {
+        expect(readmeHeadingGroups(text, 'd', own)).toEqual([
+            { heading: 'One', docs: ['d/b.md', 'd/a.md'] },
+            { heading: 'Two', docs: ['d/c.md'] },
+        ]);
+    });
+
+    it('no listing headings → []', () => {
+        expect(readmeHeadingGroups('# D\n\n## See Also\n\n- [Up](../x.md)\n', 'd', own)).toEqual([]);
+    });
+});
+
 describe('buildHelpSections over a fixture tree', () => {
     const mark = (order, audience) => `<!-- quick-launch-help: order=${order} audience=${audience} -->`;
     const FILES = {
@@ -119,6 +169,13 @@ describe('buildHelpSections over a fixture tree', () => {
         'docs/json/unmarked/z.md': '# Z',
         'docs/json/dev/README.md': `# Dev\n\n${mark(100, 'developer')}\n`,
         'docs/json/dev/d.md': '# D',
+        'docs/json/byhead/README.md': `# By Head\n\n${mark(200, 'developer')}\n\n## First Things\n\n- [H2](./h2.md)\n`
+            + '- [H1](./h1.md)\n\n## See Also\n\n- [Dev](../dev/d.md)\n\n## Later\n\n- [H3](h3.md)\n',
+        'docs/json/byhead/h1.md': '# H1',
+        'docs/json/byhead/h2.md': '# H2',
+        'docs/json/byhead/h3.md': '# H3',
+        'docs/json/byhead/h4.md': '# H4',
+        'docs/json/byhead/a4.md': '# A4',
     };
     let repo;
     const build = () => buildHelpSections(repo);
@@ -137,7 +194,35 @@ describe('buildHelpSections over a fixture tree', () => {
             ['outer/inner', 'Inner', 5, 'panel'],
             ['outer', 'Outer', 10, 'user'],
             ['dev', 'Dev', 100, 'developer'],
+            ['byhead', 'By Head', 200, 'developer'],
         ]);
+    });
+
+    it('a README listing its docs under ## headings: one child per listing heading, then Unlisted; no own rows', () => {
+        const byhead = build().find((s) => s.dir === 'byhead');
+        expect(byhead.docs).toEqual([]);
+        expect(byhead.children).toEqual([
+            { dir: 'byhead/first-things', label: 'First Things', heading: true, single: false,
+                docs: ['docs/json/byhead/h2.md', 'docs/json/byhead/h1.md'] },
+            { dir: 'byhead/later', label: 'Later', heading: true, single: false, docs: ['docs/json/byhead/h3.md'] },
+            { dir: 'byhead/unlisted', label: UNLISTED_LABEL, heading: true, single: false,
+                docs: ['docs/json/byhead/a4.md', 'docs/json/byhead/h4.md'] },
+        ]);
+    });
+
+    it('a README whose headings list nothing of its own stays flat (dev)', () => {
+        expect(build().find((s) => s.dir === 'dev')).toMatchObject({ docs: ['docs/json/dev/d.md'], children: [] });
+    });
+
+    it('listing headings AND sub-directories in one section is refused, naming the README', () => {
+        const readme = join(repo, 'docs/json/outer/README.md');
+        const before = readFileSync(readme, 'utf8');
+        writeFileSync(readme, `${before}\n## Heading\n\n- [A](./a.md)\n`);
+        try {
+            expect(build).toThrow(/docs\/json\/outer\/README\.md: lists its docs under ## headings AND has sub-directories/);
+        } finally {
+            writeFileSync(readme, before);
+        }
     });
 
     it('a marked directory inside a marked one is its own section, not a child', () => {
@@ -162,6 +247,11 @@ describe('buildHelpSections over a fixture tree', () => {
     it('DOCS_INDEX rows over the fixture: the panel section is indexed, section = the directory', () => {
         const rows = buildDocsIndex(repo, build());
         expect(rows.map((r) => [r.path, r.section])).toEqual([
+            ['docs/json/byhead/a4.md', 'byhead'],
+            ['docs/json/byhead/h1.md', 'byhead'],
+            ['docs/json/byhead/h2.md', 'byhead'],
+            ['docs/json/byhead/h3.md', 'byhead'],
+            ['docs/json/byhead/h4.md', 'byhead'],
             ['docs/json/dev/d.md', 'dev'],
             ['docs/json/outer/a.md', 'outer'],
             ['docs/json/outer/inner/p.md', 'outer/inner'],
