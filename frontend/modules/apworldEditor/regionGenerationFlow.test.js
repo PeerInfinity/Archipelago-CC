@@ -20,17 +20,21 @@ import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
 import { bagFromPayload } from '../procgenCore/regionGenerationForm.js';
 import { assembleRegionParams } from '../procgenPipeline/sphereConfigHooks.js';
 import {
-    REGENERATE_RIDING_FREE, REGENERATE_RODE_FREE, REGENERATE_RULES_UNCHANGED, applyRulesDocOp,
-    describeRegeneration, regenerateOpRefusal,
+    GRANTED_AS_STARTING, REGENERATE_RIDING_FREE, REGENERATE_RODE_FREE, REGENERATE_RULES_UNCHANGED, applyRulesDocOp,
+    describeRegeneration, grantsClause, regenerateOpRefusal,
 } from './rulesDocOps.js';
 import {
-    defaultRegionParamsFor, freeItemsFor, regenerateRegionEntry, regionRealiserKind, regionSizeFor,
+    REGION_SOURCE_KINDS, defaultRegionParamsFor, freeItemsFor, regenerateRegionEntry, regionRealiserKind, regionSizeFor,
 } from './regionRegenerate.js';
 import {
     REGION_GENERATION_FIRST_SEED, REGION_GENERATION_OP_FIELDS, REGION_GENERATION_SEED_KEY,
-    composeRegenerateArgs, freeItemsSentence, regenerateArgsRefusal, regenerationAnswer,
-    regenerationProvenance, regionGenerationPlan, regionRerollFacts,
+    composeRegenerateArgs, freeItemsSentence, grantsSentence, regenerateArgsRefusal, regenerationAnswer,
+    regenerationGrants, regenerationProvenance, regionGenerationPlan, regionRerollFacts, withGrantsAnswer,
 } from './regionGenerationFlow.js';
+import { BACK_EXITS, initialiseOpFor, initialiseSlot, initialiseTargets } from './slotInitialise.js';
+import { startingNeedRows } from './startingInventoryBlock.js';
+import { createEditSession } from '../procgenCore/editCore.js';
+import { rulesEditAdapter } from './rulesEditAdapter.js';
 import {
     REGION_GENERATION_CANCELLED, regionGenerationLoadTimeoutSentence, regionGenerationTimeoutSentence,
 } from './regionGenerationRun.js';
@@ -352,5 +356,92 @@ describe('the panel stops the worker run and the elapsed ticker at every boundar
         expect(cancel).toHaveBeenCalledTimes(1);
         expect(self._regionGenTicker).toBeNull();
         expect(self._regionGen).toBeNull();
+    });
+});
+
+/* ── S1 (⚖ Q1b): a per-region Generate DECLARES what its realiser was handed free ── */
+
+describe('S1 — the per-region Generate declares the grants in the SAME op', () => {
+    const NEEDER = initialiseTargets().find((t) => substrateRegistry.get(t)?.startingInventory);
+    const NON_GRANTING = initialiseTargets().find((t) => !Object.values(substrateRegistry.get(t)?.libraryItems ?? {})
+        .some((d) => !d?.is_victory));
+    const GRID4 = { width: 4, height: 4 };
+    /** ⛓ Adventure initialised in the hub as the non-granting target (task 0's (a)). */
+    const HUB = (() => {
+        const doc = read('adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json');
+        const res = initialiseSlot({ doc, player: '1', substrate: NON_GRANTING, gridDims: GRID4, seed: 1 });
+        return applyRulesDocOp(doc, initialiseOpFor({ player: '1', substrate: NON_GRANTING, gridDims: GRID4, seed: 1,
+            backExits: BACK_EXITS.ADD }, res)).doc;
+    })();
+    const REGION = Object.keys(HUB.preset_sidecars['1'])[0];
+    /** ⛓ The landing a Generate makes: the pure regenerate, then set-region-sidecar with grants. */
+    const landing = (doc, target) => {
+        const plan = regionGenerationPlan(doc, '1', REGION, target);
+        const args = composeRegenerateArgs(doc, '1', REGION, target, { ...plan.defaults });
+        const res = regenerateRegionEntry(args);
+        const grants = regenerationGrants(doc, '1', target);
+        return { args, res, grants, op: { op: 'set-region-sidecar', player: '1', region: REGION, entry: res.entry,
+            provenance: regenerationProvenance(args, res), ...(grants ? { grants } : {}) } };
+    };
+
+    it('⛓ the grants are the free items the slot neither defines nor holds, defs off the pipeline\'s rule', () => {
+        const { args, res, grants } = landing(HUB, NEEDER);
+        expect(res.ok, res.threw).toBe(true);
+        expect(grants.starting.length).toBeGreaterThan(0);
+        const held = HUB.starting_items?.['1'] ?? [];
+        expect(args.freeItems).toEqual([...held, ...grants.starting]);
+        for (const n of grants.starting) expect(HUB.items['1'][n], n).toBeUndefined();
+        expect(Object.keys(grants.items)).toEqual(grants.starting);
+        expect(regenerationGrants(HUB, '1', NON_GRANTING)).toBeNull();
+        for (const kind of [REGION_SOURCE_KINDS.LIBRARY, REGION_SOURCE_KINDS.ZONE]) {
+            expect(regenerationGrants(HUB, '1', NEEDER, { source: { kind } }), kind).toBeNull();
+        }
+    });
+
+    it('⛓ ONE op writes the entry AND the grants — nothing else — and the need line reads met; ONE undo', () => {
+        const { op, grants } = landing(HUB, NEEDER);
+        const out = applyRulesDocOp(HUB, op);
+        expect(out.ok, out.error).toBe(true);
+        const changed = Object.keys(out.doc).filter((k) => bytes(out.doc[k]) !== bytes(HUB[k])).sort();
+        expect(changed).toEqual(['items', 'preset_sidecars', 'starting_items']);
+        for (const p of Object.keys(HUB.preset_sidecars)) {
+            for (const r of Object.keys(HUB.preset_sidecars[p])) {
+                if (p === '1' && r === REGION) continue;
+                expect(bytes(out.doc.preset_sidecars[p][r]), `${p}/${r}`).toBe(bytes(HUB.preset_sidecars[p][r]));
+            }
+        }
+        expect(Object.keys(out.doc.items['1']).filter((n) => !Object.hasOwn(HUB.items['1'], n))).toEqual(grants.starting);
+        expect(out.doc.starting_items['1']).toEqual([...(HUB.starting_items?.['1'] ?? []), ...grants.starting]);
+        expect(out.description).toContain(grantsClause(grants.starting));
+        for (const row of startingNeedRows(out.doc, '1', [NEEDER])) {
+            expect(row.met).toBe(true);
+            for (const g of row.grants) expect(g.refusal, g.item).toBeNull();
+        }
+        const session = createEditSession(rulesEditAdapter, HUB);
+        const before = bytes(session.record());
+        session.apply(op);
+        expect(session.ops()).toHaveLength(1);
+        expect(session.undo()).toBe(true);
+        expect(bytes(session.record())).toBe(before);
+    });
+
+    it('⛓ the form and the answer say it; a pipeline slot that already defines them grants nothing', () => {
+        const { grants } = landing(HUB, NEEDER);
+        expect(grantsSentence(grants)).toContain(`will be ${GRANTED_AS_STARTING}`);
+        for (const n of grants.starting) expect(grantsSentence(grants)).toContain(n);
+        expect(grantsSentence(null)).toBeNull();
+        expect(withGrantsAnswer('said', grants)).toBe(`said — ${grantsClause(grants.starting)}`);
+        expect(withGrantsAnswer('said', null)).toBe('said');
+        const declared = applyRulesDocOp(HUB, landing(HUB, NEEDER).op).doc;
+        expect(regenerationGrants(declared, '1', NEEDER), 'a second Generate re-grants nothing').toBeNull();
+    });
+
+    it('⛔ a malformed or stale grant is refused and nothing is written', () => {
+        const { op } = landing(HUB, NEEDER);
+        expect(applyRulesDocOp(HUB, { ...op, grants: ['x'] }).error).toContain('`grants` is {items');
+        const [first] = op.grants.starting;
+        const held = JSON.parse(JSON.stringify(HUB));
+        held.starting_items = { ...(held.starting_items ?? {}), 1: [first] };
+        expect(applyRulesDocOp(held, op).error).toContain(`already starts with ${first}`);
     });
 });

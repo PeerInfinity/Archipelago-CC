@@ -31,7 +31,11 @@ import {
     REGENERATE_BASE_REGION_PARAMS, REGION_SOURCE_KINDS, freeItemsFor, hostsSurplusExitsNatively,
     librarySourceSummary, offersLibrarySource, regionSizeFor,
 } from './regionRegenerate.js';
-import { describeRegeneration, regenerateOpRefusal, regenerateRealiserRefusal } from './rulesDocOps.js';
+import {
+    GRANTED_AS_STARTING, describeRegeneration, grantsClause, regenerateOpRefusal, regenerateRealiserRefusal,
+} from './rulesDocOps.js';
+import { grantedLibraryItems } from '../procgenPipeline/topDownSteps.js';
+import { itemIdsOf } from './slotInitialise.js';
 import {
     REPLACE_REGION_CONTENT_OP, zoneOptions, zoneSourceFacts, zoneSourceLabelOf, zoneSourceRefusal,
 } from './regionContent.js';
@@ -218,6 +222,34 @@ export function regenerateArgsRefusal(args, { fetched = {} } = {}) {
         }, { fetched });
     }
     return regenerateOpRefusal(doc, { op: 'regenerate-region-sidecar', ...op });
+}
+
+/**
+ * ⛓⛓ **THE GRANTS A GENERATE DECLARES** (S1, ⚖ Q1b) — the pipeline's rule
+ * (`grantedLibraryItems`) for the one target: the library items the realiser is
+ * handed free that the slot neither defines nor holds, as
+ * `set-region-sidecar`'s `grants` — `{items: {name: def}, starting: [names]}`,
+ * defs by the pipeline's id rule past the ids the slot uses. `null` when there
+ * is nothing to grant, and for a LIBRARY or ZONE source (nothing drifts, no
+ * free items are handed).
+ */
+export function regenerationGrants(doc, player, target, { source } = {}) {
+    if (source?.kind === REGION_SOURCE_KINDS.LIBRARY || source?.kind === REGION_SOURCE_KINDS.ZONE) return null;
+    const g = grantedLibraryItems(doc, player, [target], { avoidIds: itemIdsOf(doc, player) });
+    return g.grantedItems.length ? { items: g.defs, starting: g.grantedItems } : null;
+}
+
+/** ⛓ The form's grant sentence — `null` when nothing is granted. */
+export function grantsSentence(grants) {
+    if (!grants) return null;
+    const n = grants.starting.length;
+    return `${n} library item${n === 1 ? '' : 's'} [${grants.starting.join(', ')}] will be ${GRANTED_AS_STARTING} — `
+        + 'the slot does not define them and the realiser is handed them free, so the same edit declares them.';
+}
+
+/** ⛓ The landed Generate's answer, with the grants named. */
+export function withGrantsAnswer(text, grants) {
+    return grants && text ? `${text} — ${grantsClause(grants.starting)}` : text;
 }
 
 /**

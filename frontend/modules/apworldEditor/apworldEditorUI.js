@@ -146,7 +146,8 @@ import settingsManager from '../../app/core/settingsManager.js';
 import { renderRegionGenerationForm } from '../procgenCore/regionGenerationForm.js';
 import {
   REGION_GENERATION_FIRST_SEED, REGION_GENERATION_OP_FIELDS, REGION_GENERATION_SEED_KEY,
-  composeRegenerateArgs, defaultRegionGenerationSource, freeItemsSentence, regenerateArgsRefusal,
+  composeRegenerateArgs, defaultRegionGenerationSource, freeItemsSentence, grantsSentence, regenerateArgsRefusal,
+  regenerationGrants, withGrantsAnswer,
   regenerationAnswer, regenerationProvenance, regionGenerationPlan, regionGenerationSourcesFor, regionRerollFacts,
   zonePickerFor,
 } from './regionGenerationFlow.js';
@@ -4387,7 +4388,8 @@ class ApworldEditorUI {
    * function, so the two cannot disagree about what the schema refuses.
    *
    * ⚠ The placement half can find nothing for a `set-region-sidecar` — it never
-   * touches `canonical_placements`, `regions` or `items` — and it runs anyway:
+   * touches `canonical_placements` or `regions` (S1's `grants` add item DEFS and
+   * starting names, never a placement) — and it runs anyway:
    * P1's own rule (`_placementIssuesAddedBy`) is that a guard which has to be
    * remembered per door is a guard that will not be. Measured on the largest
    * document (`procgen_topdown/AP_8`, 934,463 compact bytes) in the S1 record.
@@ -4445,7 +4447,7 @@ class ApworldEditorUI {
    *   and the block lists the sentences. The schema veto is exactly as strict
    *   as it was.
    */
-  _saveRegionSidecar(player, regionName, entry, { provenance = null, answer = null } = {}) {
+  _saveRegionSidecar(player, regionName, entry, { provenance = null, answer = null, grants = null } = {}) {
     if (!this.session) {
       alert('Load a rules.json first.');
       return;
@@ -4453,7 +4455,7 @@ class ApworldEditorUI {
     // ⛓ R2 — the Region generation form's Generate lands its RESULT here, with
     //   a `provenance` the op records and the regenerate op's own `answer`.
     const op = { op: 'set-region-sidecar', region: regionName, entry, player,
-      ...(provenance ? { provenance } : {}) };
+      ...(provenance ? { provenance } : {}), ...(grants ? { grants } : {}) };
     const beside = (text, refused) => {
       this._opRowMessage = { sidecar: `${player}|${regionName}`, text, refused };
     };
@@ -6985,8 +6987,10 @@ class ApworldEditorUI {
     }
 
     let free = null;
-    const freeText = () => freeItemsSentence(gen.target,
-      composeRegenerateArgs(this.rulesDoc, gen.player, gen.region, gen.target, gen.bag));
+    // ⛓ S1 — and the library items the same edit will GRANT (the pipeline's rule).
+    const freeText = () => [freeItemsSentence(gen.target,
+      composeRegenerateArgs(this.rulesDoc, gen.player, gen.region, gen.target, gen.bag)),
+    grantsSentence(regenerationGrants(this.rulesDoc, gen.player, gen.target))].filter(Boolean).join(' ') || null;
     const form = renderRegionGenerationForm({
       substrateId: gen.target,
       params: gen.bag,
@@ -7251,6 +7255,8 @@ class ApworldEditorUI {
     if (zone && gen.zone.selected === null) return null;
     const args = composeRegenerateArgs(doc, gen.player, gen.region, gen.target, gen.bag,
       { source: zone ? { kind: REGION_SOURCE_KINDS.ZONE, zoneIdx: gen.zone.selected } : pick?.source });
+    // ⛓ S1 — what the landing declares, composed from the SAME document.
+    const grants = regenerationGrants(doc, gen.player, gen.target, { source: args.source });
     const refusal = regenerateArgsRefusal(args, { fetched: this._zoneFetched ?? {} });
     if (refusal) {
       beside(refusal, true);
@@ -7304,7 +7310,7 @@ class ApworldEditorUI {
       return res;
     }
     this._saveRegionSidecar(gen.player, gen.region, res.entry, {
-      provenance: regenerationProvenance(args, res), answer: answer.text,
+      provenance: regenerationProvenance(args, res), answer: withGrantsAnswer(answer.text, grants), grants,
     });
     return res;
   }

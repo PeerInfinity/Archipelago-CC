@@ -1955,11 +1955,24 @@ function opSetRegionSidecar(doc, op) {
         return refuse('apworld: `provenance` says how an entry came to be — an object '
             + `({op, substrate, seed, …}), got ${describeValue(prov)}.`);
     }
+    // ⛓ S1 — a per-region Generate DECLARES the library items its realiser was
+    //   handed free (the pipeline's `grantedLibraryItems`), in the SAME op.
+    const grants = op.grants;
+    if (grants !== undefined && (!isPlainObj(grants) || !Array.isArray(grants.starting))) {
+        return refuse('apworld: `grants` is {items: {name: def}, starting: [names]} — the library items the '
+            + `realiser was handed free — got ${describeValue(grants)}.`);
+    }
+    if (grants) {
+        const bad = grantsRefusal(doc, p, grants.starting, grants.items);
+        if (bad) return refuse(bad);
+    }
     const n = hasPayload ? Object.keys(payload).length : 0;
-    return ok(setPath(doc, ['preset_sidecars', p, name], entry),
+    const next = setPath(doc, ['preset_sidecars', p, name], entry);
+    return ok(grants ? withGrants(next, p, grants.starting, grants.items) : next,
         `region ${name}: sidecar entry replaced (${hasPayload
             ? `${n} payload key${n === 1 ? '' : 's'}` : 'no payload'}) — ${SIDECAR_NOT_REDERIVED}`
-        + (prov ? provenanceClause(prov) : ''));
+        + (prov ? provenanceClause(prov) : '')
+        + (grants ? ` — ${grantsClause(grants.starting)}` : ''));
 }
 
 /** ⛓ The clause a `provenance` adds to `set-region-sidecar`'s description.
