@@ -126,6 +126,68 @@ try {
     });
 
     /**
+     * ⛔⛔ TRAP 1435 — N TAKERS THAT SEE "FREE" AT ONCE: EXACTLY ONE HOLDS.
+     * The take was `writeFileSync` + a re-read of its own token, so two takers
+     * that both read "free" each re-read THEIR OWN write and both won (measured
+     * 2026-09-26: two `npm test` runs queued behind one holder ran at once).
+     * The children spin to one shared instant so they really do race.
+     */
+    async function raceTakers(n, { waitSec, holdMs }) {
+        const { spawn } = await import('node:child_process');
+        const log = join(CACHE, `race-${n}-${waitSec}.log`);
+        writeFileSync(log, '');
+        const start = Date.now() + 1500;
+        const code = (i) => `
+import { appendFileSync } from 'node:fs';
+import { takeBoxLock, releaseBoxLock } from '${join(HERE, 'boxLock.js')}';
+while (Date.now() < ${start}) { /* spin to the shared instant */ }
+try {
+  takeBoxLock({ name: 'racer-${i}', kind: 'measure', repo: ${JSON.stringify(REPO)}, waitSec: ${waitSec}, quiet: true });
+} catch (e) { console.log('REFUSED'); process.exit(3); }
+appendFileSync(${JSON.stringify(log)}, 'take ${i} ' + process.hrtime.bigint() + '\\n');
+const until = Date.now() + ${holdMs};
+while (Date.now() < until) { /* hold the box */ }
+appendFileSync(${JSON.stringify(log)}, 'release ${i} ' + process.hrtime.bigint() + '\\n');
+releaseBoxLock();
+console.log('TOOK');
+`;
+        const exits = await Promise.all(Array.from({ length: n }, (_, i) => new Promise((res) => {
+            const file = join(CACHE, `racer-${n}-${waitSec}-${i}.mjs`);
+            writeFileSync(file, code(i));
+            const c = spawn(process.execPath, [file], { cwd: REPO,
+                env: { ...process.env, XDG_CACHE_HOME: CACHE, SEEDLING_BOX_LOCK_TOKEN: '' } });
+            let out = '';
+            c.stdout.on('data', (d) => { out += d; });
+            c.on('exit', (status) => res({ status, out }));
+        })));
+        const events = readFileSync(log, 'utf8').trim().split('\n').filter(Boolean)
+            .map((l) => { const [what, who, t] = l.split(' '); return { what, who, t: BigInt(t) }; })
+            .sort((a, b) => (a.t < b.t ? -1 : a.t > b.t ? 1 : 0));
+        return { exits, events };
+    }
+
+    it('lets exactly ONE of eight simultaneous takers hold the box; the rest refuse', async () => {
+        const { exits, events } = await raceTakers(8, { waitSec: 0, holdMs: 1500 });
+        expect(exits.filter((e) => e.out.includes('TOOK'))).toHaveLength(1);
+        expect(exits.filter((e) => e.out.includes('REFUSED'))).toHaveLength(7);
+        expect(events.filter((e) => e.what === 'take')).toHaveLength(1);
+    }, 30000);
+
+    it('serialises four QUEUED simultaneous takers — every one takes, no two hold at once', async () => {
+        const { exits, events } = await raceTakers(4, { waitSec: 60, holdMs: 400 });
+        expect(exits.filter((e) => e.out.includes('TOOK'))).toHaveLength(4);
+        /* ⛓ the event stream alternates take/release: never two takes in a row. */
+        let held = 0;
+        let maxHeld = 0;
+        for (const e of events) {
+            held += e.what === 'take' ? 1 : -1;
+            maxHeld = Math.max(maxHeld, held);
+        }
+        expect(events).toHaveLength(8);
+        expect(maxHeld).toBe(1);
+    }, 60000);
+
+    /**
      * ⛓⛓⛓ RULE 3 — a CHILD of the holder passes through. `gates.mjs` takes the
      * box and then spawns twenty-seven gates that each take it; without this
      * every run deadlocks against itself, which is the shape that would have
