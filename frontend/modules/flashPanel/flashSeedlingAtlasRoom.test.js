@@ -68,13 +68,14 @@ for (const game of readdirSync(PRESETS)) {
 const byGame = (g) => DOCS.find((d) => d.game === g);
 
 /**
- * ⛓⛓ THE ORACLE'S MEASURED BINS (plan §15.1). The two content-source documents
- * (T2's spiral, T3's sphere leaf) reproduce every room byte-for-byte; the atlas
+ * ⛓⛓ THE ORACLE'S MEASURED BINS (plan §15.1). The content-source documents
+ * (T2's spiral, T3's sphere leaf, seedling generated G6's two-door HOST) reproduce
+ * every room byte-for-byte; the atlas
  * COMPILER's projections (`seedling_atlas`, `seedling_playthrough`) never went
  * through the content source — their exits are the level's own transitions — and
  * refuse by name.
  */
-const REPRODUCES = ['seedling_spiral_room', 'seedling_sphere_room'];
+const REPRODUCES = ['seedling_spiral_room', 'seedling_sphere_room', 'seedling_atlas_host'];
 const PROJECTION = ['seedling_atlas', 'seedling_playthrough'];
 
 /** ⛓ The sphere room with a MAZE leaf relabelled to `flash_seedling` (D1's picker: the label only). */
