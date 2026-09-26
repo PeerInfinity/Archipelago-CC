@@ -291,9 +291,10 @@ export class SeedlingRegionGlue {
     }
 
     /** ⛓ G4 — the sentence the refused door says, on the panel and on the bus. */
-    _doorLocked({ sourceRegion, region, exit, exitId, needs, message }) {
+    _doorLocked({ sourceRegion, region, exit, exitId, needs, message, fallback }) {
         this.stats.doorsLocked += 1;
-        const line = `[door gate] ${message}`;
+        // ⛓ G6 — a rule read off the room's payload (static data had no such exit) says so.
+        const line = `[door gate] ${message}${fallback ? ` (${fallback})` : ''}`;
         if (typeof console !== 'undefined') console.info(line);
         this._panelLog(line, 'warn');
         try {
