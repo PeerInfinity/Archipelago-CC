@@ -945,6 +945,42 @@
             "_comment": "R6b. R5b (c)'s scenario on jta_dataset_test (records nothing): the answer = the op's description + zoneConfigSplitSentence over the read-back's own recorded/assumed split; the provenance records the split and the verified regions."
         },
         {
+            "id": "apworld-initialise-lands-one-op-and-the-map-draws",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R7. adventure: the Map's door → the preview = the page's planInitialise (placed / 0 unplaced / derived return exits); Generate lands ONE initialise-procgen-layout with the result inline; answer = description + V0 count; Map cells = placed; Regions tab sidecar blocks = placed; Undo byte-for-byte + the door back."
+        },
+        {
+            "id": "apworld-initialise-with-return-exits-off-adds-none",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R7. apcalc with Add return exits cleared: preview 0, op lands 0 return exits, regions block exit count unchanged, answer says OFF."
+        },
+        {
+            "id": "apworld-initialise-previews-and-names-the-return-exits",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R7. apcalc (one-way): preview count = planInitialise's, the op adds exactly that many exits, the answer names them, 0 sidecar errors."
+        },
+        {
+            "id": "apworld-initialise-door-is-absent-on-a-populated-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R7. Four-player fixture: every slot carries entries; no door on the Map or the Sidecars tab."
+        },
+        {
+            "id": "apworld-initialise-cancel-lands-nothing",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R7. bomb_rush_cyberfunk (30 regions, slow): the Sidecars tab's door, Generate, Cancel once the ticker reads built N / M: Cancel sentence, terminated, nothing recorded, ticker cleared, no late answer."
+        },
+        {
+            "id": "apworld-initialise-runs-out-of-time-records-nothing",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R7. initialiseTimeoutSeconds = 2 on bomb_rush_cyberfunk: timed out in running, the sentence quotes the setting + built N / M, terminated, nothing recorded; override dropped after."
+        },
+        {
             "id": "apworld-the-preset-sidecars-door-lands-on-the-sidecars-tab",
             "enabled": true,
             "category": "apworldEditor",

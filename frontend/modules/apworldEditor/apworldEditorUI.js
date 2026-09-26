@@ -136,7 +136,7 @@ import {
  * place that knows: a module that never loaded never registered its panel.
  */
 import { centralRegistry } from '../../app/core/centralRegistry.js';
-import { applyRulesDocOp } from './rulesDocOps.js';
+import { applyRulesDocOp, initialiseOpRefusal } from './rulesDocOps.js';
 /**
  * ⛓⛓ APWORLD SUBSTRATE CHANGE R2 — the block's **Region generation** form: the
  * shared per-region form (R1), what it opens on and sends (`regionGenerationFlow`),
@@ -158,9 +158,17 @@ import {
 import { loadLibraryOptions, servedLibraryCatalog } from './librarySourcePicker.js';
 import { REGION_SOURCE_KINDS } from './regionRegenerate.js';
 import {
+  INITIALISE_TIMEOUT_DEFAULT_S, INITIALISE_TIMEOUT_KEY, INITIALISE_TIMEOUT_SETTING,
   REGION_GENERATION_TIMEOUT_DEFAULT_S, REGION_GENERATION_TIMEOUT_KEY, REGION_GENERATION_TIMEOUT_SETTING,
-  regionGenerationTimeoutSeconds, runRegenerateInWorker,
+  initialiseTimeoutSeconds, regionGenerationTimeoutSeconds, runRegenerateInWorker,
 } from './regionGenerationRun.js';
+// ⛓ APWORLD SUBSTRATE CHANGE R7 — *Initialise procgen data* for a BARE slot: the
+//   door, the form's preview and answers (`initialiseFlow`), the op's record.
+import {
+  INITIALISE_DOOR_LABEL, initialiseAnswer, initialiseArgs, initialiseDoorShown, initialiseFormDefaults,
+  initialiseJob, initialisePreview, initialiseTickerText, withAutoSide,
+} from './initialiseFlow.js';
+import { BACK_EXITS, initialiseOpFor, initialiseTargets } from './slotInitialise.js';
 // ⛓ PRESET SIDECARS M3 — the exit-side control reads the declaration the op reads.
 import { exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
 import { SIDE_WORDS } from './regionLayout.js';
@@ -439,6 +447,18 @@ class ApworldEditorUI {
     this._regionGenSeeds = new Map();
     /** ⛓ R2 — the last run started (its handle, budget, args, outcome), for the in-app rows. */
     this._regionGenLastRun = null;
+    /**
+     * ⛓⛓ R7 — **THE OPEN "INITIALISE PROCGEN DATA" FORM** (`_openInitialise`), or
+     * null: `{player, state, preview, run, progress}`. Its worker handle and the
+     * ticker (`_initialiseTicker`) live on the PANEL and are cleared on
+     * `onPanelDestroy`, a new document, a slot pick and Cancel
+     * (`_closeInitialise` / `_stopInitialiseRun`) — a remounted panel keeps old
+     * listeners, and a stale ticker would paint a dead run.
+     */
+    this._initialise = null;
+    this._initialiseTicker = null;
+    /** ⛓ R7 — the last run started (handle, budget, args, outcome, progress), for the in-app rows. */
+    this._initialiseLastRun = null;
     /**
      * ⛓⛓ **THE ECHO OF OUR OWN APPLY, TOLD APART BY OBJECT IDENTITY.** It used
      * to be told apart by `sourceName === APPLY_SOURCE`, which stopped working
@@ -799,6 +819,8 @@ class ApworldEditorUI {
     //   of the OLD document; the seed counters start again with the new one.
     this._closeRegionGeneration();
     this._regionGenSeeds.clear();
+    // ⛓ R7 — and so does an Initialise form: its slot was the old document's.
+    this._closeInitialise();
     this._rawDraft = null;
     this._rawEdited = false;
     // ⛓ A boundary installs a different world: a region name from the old one
@@ -1032,6 +1054,8 @@ class ApworldEditorUI {
   onPanelDestroy() {
     // ⛓ R2 — a live worker and its ticker belong to THIS panel instance.
     this._closeRegionGeneration();
+    // ⛓ R7 — and so do the Initialise form's.
+    this._closeInitialise();
     this._teardownRawEditor();
     this._closeRoomEditor();
     if (this._keyHandler) {
@@ -1159,6 +1183,8 @@ class ApworldEditorUI {
       const cancelled = this._dropMapMove('a slot pick');
       // ⛓ R2 — and the Region generation form: its region name is the old slot's.
       this._closeRegionGeneration();
+      // ⛓ R7 — and the Initialise form: it initialises the OLD slot.
+      this._closeInitialise();
       this._opMessage = `Editing player ${this._chosenPlayer}.${cancelled}`;
       this._render();
     });
@@ -3430,6 +3456,13 @@ class ApworldEditorUI {
     expand.style.marginLeft = 'auto';
     expand.disabled = entries.length === 0;
     line.appendChild(expand);
+    // ⛓ R7 — the empty list's door, and the form under the summary when it is open.
+    if (entries.length === 0) {
+      const door = this._makeInitialiseDoor();
+      if (door) line.appendChild(door);
+      const form = this._makeInitialiseSectionIfOpen();
+      if (form) box.appendChild(form);
+    }
     if (!open) return box;
 
     const list = document.createElement('div');
@@ -4682,7 +4715,12 @@ class ApworldEditorUI {
         + 'The region graph draws the topology for any document.';
       this.scrollContainer.appendChild(intro);
       bar.appendChild(graphBtn);
+      // ⛓ R7 — a BARE slot's door: lay its regions on a grid and realise them.
+      const door = this._makeInitialiseDoor();
+      if (door) bar.appendChild(door);
       this.scrollContainer.appendChild(bar);
+      const form = this._makeInitialiseSectionIfOpen();
+      if (form) this.scrollContainer.appendChild(form);
       return;
     }
 
@@ -7268,6 +7306,308 @@ class ApworldEditorUI {
     this._saveRegionSidecar(gen.player, gen.region, res.entry, {
       provenance: regenerationProvenance(args, res), answer: answer.text,
     });
+    return res;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+   * R7 — INITIALISE PROCGEN DATA (a BARE slot's grid + every region's room)
+   * ══════════════════════════════════════════════════════════════════ */
+
+  /**
+   * ⛓ The door, on a BARE slot only (`initialiseDoorShown`: no sidecar entry,
+   * some regions) — the Map tab's *"No map"* state and the Sidecars tab's empty
+   * list draw the same button. Disabled while this slot's form is open.
+   */
+  _makeInitialiseDoor() {
+    if (!this.rulesDoc || !initialiseDoorShown(this.rulesDoc, this.playerId)) return null;
+    const open = this._initialise?.player === String(this.playerId);
+    const b = this._makeButton(INITIALISE_DOOR_LABEL, '#2e5f8a', () => this._openInitialise());
+    b.className = 'apworld-initialise-door';
+    b.disabled = open;
+    b.title = `Lay slot ${this.playerId}'s regions out on a grid and build a room for every one under one `
+      + 'substrate — location names and existing access rules unchanged; ONE undoable edit.';
+    b.style.fontSize = '11px';
+    return b;
+  }
+
+  /** ⛓ The form, when it is open for the SHOWN slot (re-planned if the document moved under it). */
+  _makeInitialiseSectionIfOpen() {
+    const ini = this._initialise;
+    if (!ini || ini.player !== String(this.playerId)) return null;
+    if (!ini.run && ini.previewDoc !== this.rulesDoc) {
+      ini.preview = initialisePreview(this.rulesDoc, ini.player, ini.state);
+      ini.previewDoc = this.rulesDoc;
+    }
+    return this._makeInitialiseSection(ini);
+  }
+
+  _openInitialise() {
+    this._closeInitialise();
+    const player = String(this.playerId);
+    const state = initialiseFormDefaults(this.rulesDoc, player);
+    this._initialise = {
+      player, state, preview: initialisePreview(this.rulesDoc, player, state), previewDoc: this.rulesDoc,
+      run: null, progress: null,
+    };
+    this._render();
+  }
+
+  /** ⛓ A form change: the side follows while AUTO, and the preview is re-planned. */
+  _setInitialiseState(patch) {
+    const ini = this._initialise;
+    if (!ini || ini.run) return;
+    ini.state = withAutoSide(this.rulesDoc, ini.player, { ...ini.state, ...patch });
+    ini.preview = initialisePreview(this.rulesDoc, ini.player, ini.state);
+    ini.previewDoc = this.rulesDoc;
+    this._render();
+  }
+
+  /** ⛓ Close the form and stop its run SILENTLY (a boundary, not a reader's Cancel). */
+  _closeInitialise() {
+    this._stopInitialiseRun();
+    this._initialise = null;
+  }
+
+  /** ⛓ Forget the run FIRST (its continuation then paints nothing), cancel it, clear the ticker. */
+  _stopInitialiseRun() {
+    const run = this._initialise?.run ?? null;
+    if (this._initialise) this._initialise.run = null;
+    if (run) run.handle.cancel();
+    if (this._initialiseTicker !== null) {
+      clearInterval(this._initialiseTicker);
+      this._initialiseTicker = null;
+    }
+  }
+
+  _initialiseElapsedText() {
+    const run = this._initialise?.run;
+    if (!run) return '';
+    return initialiseTickerText({
+      phase: run.handle.phase(),
+      elapsedS: (performance.now() - run.handle.startedAt()) / 1000,
+      budgetS: run.budgetS,
+      progress: run.progress,
+    });
+  }
+
+  _paintInitialiseElapsed() {
+    const text = this._initialiseElapsedText();
+    for (const el of this.rootElement.querySelectorAll('.apworld-initialise-elapsed')) el.textContent = text;
+  }
+
+  /**
+   * ⛓⛓⛓ **THE FORM** — substrate (the realiser targets), grid side (auto,
+   * editable), seed, **Add return exits** (default ON), the PREVIEW line, the
+   * starting-inventory need line for the chosen substrate, and **Generate ▸** —
+   * or, while a run is live, the ticker and **Cancel**. A state the op would
+   * refuse prints the op's sentence and draws NO Generate.
+   */
+  _makeInitialiseSection(ini) {
+    const running = !!ini.run;
+    const sec = document.createElement('div');
+    sec.className = 'apworld-initialise';
+    Object.assign(sec.dataset, { player: ini.player, state: running ? 'running' : 'idle' });
+    Object.assign(sec.style, { margin: '6px 0', padding: '5px 7px', border: '1px solid #3a4a5a',
+      borderRadius: '3px', backgroundColor: '#1a2027', fontSize: '11px' });
+    const head = document.createElement('div');
+    Object.assign(head.style, { display: 'flex', alignItems: 'center', gap: '8px', color: '#9cd', marginBottom: '4px' });
+    const title = document.createElement('span');
+    title.textContent = `▾ Initialise procgen data — slot ${ini.player}`;
+    title.style.flex = '1 1 auto';
+    head.appendChild(title);
+    const close = this._makeButton('✕', '#333', () => { this._closeInitialise(); this._render(); });
+    close.className = 'apworld-initialise-close';
+    close.title = 'Close the form (a live build is stopped; nothing is recorded).';
+    close.style.fontSize = '10px';
+    head.appendChild(close);
+    sec.appendChild(head);
+
+    const row = (label) => {
+      const l = document.createElement('label');
+      Object.assign(l.style, { display: 'flex', alignItems: 'center', gap: '6px', color: '#bcd', margin: '2px 0' });
+      l.appendChild(document.createTextNode(label));
+      sec.appendChild(l);
+      return l;
+    };
+    const st = ini.state;
+    const sub = document.createElement('select');
+    sub.className = 'apworld-initialise-substrate';
+    for (const id of initialiseTargets()) {
+      const o = document.createElement('option');
+      o.value = id;
+      o.textContent = id;
+      sub.appendChild(o);
+    }
+    sub.value = st.substrate;
+    sub.disabled = running;
+    sub.addEventListener('change', () => this._setInitialiseState({ substrate: sub.value }));
+    row('Substrate (every region)').appendChild(sub);
+
+    const sideRow = row('Grid side');
+    const side = document.createElement('input');
+    side.type = 'number';
+    side.min = '1';
+    side.className = 'apworld-initialise-side';
+    side.value = String(st.side);
+    side.style.width = '60px';
+    side.disabled = running;
+    side.addEventListener('change', () => this._setInitialiseState({ side: Number(side.value), sideAuto: false }));
+    sideRow.appendChild(side);
+    const auto = document.createElement('input');
+    auto.type = 'checkbox';
+    auto.className = 'apworld-initialise-side-auto';
+    auto.checked = st.sideAuto;
+    auto.disabled = running;
+    auto.addEventListener('change', () => this._setInitialiseState({ sideAuto: auto.checked }));
+    sideRow.appendChild(auto);
+    sideRow.appendChild(document.createTextNode('auto (grows until every reachable region has a cell)'));
+
+    const seed = document.createElement('input');
+    seed.type = 'number';
+    seed.className = 'apworld-initialise-seed';
+    seed.value = String(st.seed);
+    seed.style.width = '80px';
+    seed.disabled = running;
+    seed.addEventListener('change', () => this._setInitialiseState({ seed: Number(seed.value) }));
+    row('Seed').appendChild(seed);
+
+    const backRow = row('');
+    const back = document.createElement('input');
+    back.type = 'checkbox';
+    back.className = 'apworld-initialise-back-exits';
+    back.checked = st.backExits !== BACK_EXITS.NONE;
+    back.disabled = running;
+    back.addEventListener('change', () => this._setInitialiseState({
+      backExits: back.checked ? BACK_EXITS.ADD : BACK_EXITS.NONE,
+    }));
+    backRow.insertBefore(back, backRow.firstChild);
+    backRow.appendChild(document.createTextNode('Add return exits — a LOGIC change: each region gains an '
+      + 'exit back to the region the layout reached it from (the forward exit\'s rule), as the pipeline '
+      + 'writes; off, the rooms keep the document\'s one-way links'));
+
+    const pv = ini.preview;
+    const line = document.createElement('div');
+    line.className = pv.refusal ? 'apworld-initialise-refusal' : 'apworld-initialise-preview';
+    line.textContent = pv.text;
+    if (pv.plan) {
+      Object.assign(line.dataset, {
+        placed: String(pv.plan.placed), unplaced: String(pv.plan.unplaced.length),
+        returnExits: String(pv.plan.returnExits), teleporters: String(pv.plan.teleporters),
+      });
+    }
+    Object.assign(line.style, { color: pv.refusal ? '#e8a095' : '#cde', margin: '4px 0', lineHeight: '1.35' });
+    sec.appendChild(line);
+
+    const needs = this._makeStartingNeedsNode([st.substrate], { disabled: running });
+    if (needs) sec.appendChild(needs);
+
+    if (pv.refusal) {
+      sec.dataset.generate = 'none';
+      return sec;
+    }
+    sec.dataset.generate = 'drawn';
+    const goRow = document.createElement('div');
+    Object.assign(goRow.style, { display: 'flex', alignItems: 'center', gap: '8px', margin: '4px 0 0' });
+    if (running) {
+      const elapsed = document.createElement('span');
+      elapsed.className = 'apworld-initialise-elapsed';
+      elapsed.textContent = this._initialiseElapsedText();
+      Object.assign(elapsed.style, { color: '#cde', fontFamily: 'monospace' });
+      goRow.appendChild(elapsed);
+      const cancel = this._makeButton('Cancel', '#5a2e2e', () => this._cancelInitialise());
+      cancel.className = 'apworld-initialise-cancel';
+      goRow.appendChild(cancel);
+    } else {
+      const go = this._makeButton('Generate ▸', '#2e5f2e', () => { this._runInitialise(); });
+      go.className = 'apworld-initialise-generate';
+      go.title = `Build slot ${ini.player} in a worker under the time limit (Options › All Settings › `
+        + `apworldEditor › ${INITIALISE_TIMEOUT_KEY}) — ONE undoable edit.`;
+      goRow.appendChild(go);
+    }
+    sec.appendChild(goRow);
+    return sec;
+  }
+
+  /** ⛓ The reader's Cancel: the run settles as cancelled and the sentence is printed. */
+  _cancelInitialise() {
+    const run = this._initialise?.run;
+    if (run) run.handle.cancel();
+  }
+
+  /**
+   * ⛓⛓⛓ **GENERATE ▸ — THE WHOLE SLOT IN A WORKER, LANDED AS ONE OP** (plan
+   * §19; §9.3's rule: the RESULT inline, so a refold never re-runs the build).
+   * The op's refusal first; the budget read from the setting at the press; the
+   * worker, ticking *built N / M · t s of B*; then — only if this is still the
+   * form's run and the document the one it was asked about — the preview, the
+   * schema veto, and ONE `initialise-procgen-layout`. The answer is the op's own
+   * description plus the slot's sidecar-issue count (V0).
+   *
+   * @returns {Promise<object|null>} the run's outcome (rows read it), or null
+   */
+  async _runInitialise() {
+    const ini = this._initialise;
+    if (!ini || ini.run || !this.session) return null;
+    const doc = this.rulesDoc;
+    const args = initialiseArgs(ini.player, ini.state);
+    const said = (text) => { this._opMessage = `Refused: ${text}`; };
+    const refusal = initialiseOpRefusal(doc, args);
+    if (refusal) {
+      said(refusal);
+      this._render();
+      return null;
+    }
+    const budgetS = initialiseTimeoutSeconds(await settingsManager.getSetting(
+      INITIALISE_TIMEOUT_SETTING, INITIALISE_TIMEOUT_DEFAULT_S));
+    if (this._initialise !== ini || ini.run) return null;
+    const run = { budgetS, args, progress: null, handle: null };
+    run.handle = runRegenerateInWorker(initialiseJob(doc, ini.player, ini.state), {
+      timeoutMs: budgetS * 1000,
+      onPhase: () => this._paintInitialiseElapsed(),
+      onProgress: (ev) => { if (ev?.type === 'region') run.progress = ev; },
+    });
+    ini.run = run;
+    this._initialiseLastRun = run;
+    this._initialiseTicker = setInterval(() => this._paintInitialiseElapsed(), 100);
+    this._render();
+
+    const res = await run.handle.promise;
+    run.outcome = res;
+    if (this._initialise !== ini || ini.run !== run) return res;
+    ini.run = null;
+    clearInterval(this._initialiseTicker);
+    this._initialiseTicker = null;
+    const answer = initialiseAnswer(args, res, budgetS, run.progress);
+    if (!answer.landed) {
+      said(answer.text);
+      this._render();
+      return res;
+    }
+    if (this.rulesDoc !== doc) {
+      said('apworld: the document changed while the slot was being built — the result was built from '
+        + 'the old one, so nothing was recorded. Press Generate ▸ again.');
+      this._render();
+      return res;
+    }
+    const op = initialiseOpFor(args, res);
+    const preview = applyRulesDocOp(doc, op);
+    const veto = preview.ok ? this._rawSaveRefusal(op, `preset_sidecars.${ini.player}`) : preview.error;
+    if (veto) {
+      said(veto);
+      this._render();
+      return res;
+    }
+    const player = ini.player;
+    const applied = this._applyOp(op, {
+      rerender: false,
+      message: (r) => {
+        const n = sidecarIssues(this.rulesDoc, player).length;
+        return `${r.description} — ${n} sidecar issue${n === 1 ? '' : 's'} in slot ${player}`;
+      },
+    });
+    run.landed = applied;
+    if (applied.ok) this._closeInitialise();
+    this._render();
     return res;
   }
 

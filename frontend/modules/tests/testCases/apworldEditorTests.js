@@ -11671,3 +11671,312 @@ registerTest({
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R7 — INITIALISE PROCGEN DATA (plan §19,
+ * ⚖ user 2026-09-26). A BARE slot's door, the form's preview, Generate in the
+ * worker, ONE op, the Map and the Regions tab after, Undo, Cancel, the budget.
+ * ⚠ Small documents only (`adventure`, `apcalc`); the Cancel/timeout rows use
+ * `bomb_rush_cyberfunk` (30 regions) because its build is slow enough to stop.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line import/first
+import { INITIALISE_OP as INIT_OP, planInitialise as initPlan } from '../../apworldEditor/slotInitialise.js';
+// eslint-disable-next-line import/first
+import { INITIALISE_DOOR_LABEL, initialisePreview } from '../../apworldEditor/initialiseFlow.js';
+// eslint-disable-next-line import/first
+import {
+    INITIALISE_TIMEOUT_SETTING, REGION_GENERATION_CANCELLED as INIT_CANCELLED, initialiseTimeoutSentence,
+} from '../../apworldEditor/regionGenerationRun.js';
+// eslint-disable-next-line import/first
+import { INITIALISE_RETURN_EXITS_ADDED, INITIALISE_RETURN_EXITS_OFF } from '../../apworldEditor/rulesDocOps.js';
+
+const INIT_ADVENTURE_PATH = './presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+const INIT_APCALC_PATH = './presets/apcalc/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+const INIT_SLOW_PATH = './presets/bomb_rush_cyberfunk/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+
+const initSection = () => document.querySelector(`${PANEL_SELECTOR} .apworld-initialise`);
+const initDoor = () => document.querySelector(`${PANEL_SELECTOR} .apworld-initialise-door`);
+
+/** ⛓ Open the hub on `path`, go to the Map tab, and press the door (answers null when a premise fails). */
+async function openInitialiseForm(testController, path) {
+    const panel = await openHub(testController, path);
+    if (!panel) return null;
+    selectTab(panel, 'map');
+    const door = await testController.pollForValue(initDoor, 'the Map tab\'s Initialise door', 8000, 50);
+    testController.reportCondition(`the empty Map offers "${INITIALISE_DOOR_LABEL}"`, !!door
+        && door.textContent === INITIALISE_DOOR_LABEL);
+    if (!door) return null;
+    door.click();
+    const sec = await testController.pollForValue(initSection, 'the Initialise form', 8000, 50);
+    testController.reportCondition('the door opens the form', !!sec);
+    return sec ? panel : null;
+}
+
+/** ⛓ Press Generate and wait for the run's outcome; answers the run. */
+async function pressInitialise(testController, panel, budgetMs = 30000) {
+    initSection().querySelector('.apworld-initialise-generate').click();
+    const run = await testController.pollForValue(
+        () => (panel._initialiseLastRun?.outcome ? panel._initialiseLastRun : null),
+        'the initialise run\'s outcome', budgetMs, 50);
+    return run;
+}
+
+/** ⛓ How many exits a slot's regions hold. */
+const exitCount = (doc, p) => Object.values(doc.regions[p]).reduce((n, r) => n + (r.exits ?? []).length, 0);
+
+/**
+ * ⛓⛓ **(i) THE DOOR → GENERATE → ONE OP → THE MAP → UNDO** on `adventure`:
+ * the preview is the page's own `planInitialise` (placed, unplaced, return
+ * exits — derived, never typed); Generate lands ONE `initialise-procgen-layout`;
+ * the answer is the op's description + the V0 count; the Map draws one cell per
+ * placed region; the Regions tab draws a sidecar block under every placed
+ * region; Undo returns the document byte for byte and the door with it.
+ */
+export async function apworldInitialiseLandsOneOpAndTheMapDraws(testController) {
+    try {
+        const panel = await openInitialiseForm(testController, INIT_ADVENTURE_PATH);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        const doc0 = panel.rulesDoc;
+        const before = JSON.stringify(doc0);
+        const opsBefore = panel.session.ops().length;
+        const plan = initPlan(doc0, p, { gridDims: { width: panel._initialise.state.side, height: panel._initialise.state.side } });
+        testController.reportCondition(`⛓ premise: the layout places every region (${plan.placed}/${plan.total})`,
+            plan.ok && plan.unplaced.length === 0 && plan.placed > 0);
+        const pv = initSection().querySelector('.apworld-initialise-preview');
+        testController.assertEqual('⛓ the preview is the page\'s own plan, verbatim',
+            initialisePreview(doc0, p, panel._initialise.state).text, pv?.textContent);
+        testController.assertEqual('…placed', String(plan.placed), pv?.dataset.placed);
+        testController.assertEqual('…unplaced', '0', pv?.dataset.unplaced);
+        testController.assertEqual('…return exits (derived)', String(plan.returnExits), pv?.dataset.returnExits);
+        testController.reportCondition('Add return exits is ON by default (⚖ #1)',
+            initSection().querySelector('.apworld-initialise-back-exits')?.checked === true);
+
+        const run = await pressInitialise(testController, panel);
+        testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+        testController.assertEqual('⛓⛓ ONE op landed', String(opsBefore + 1), String(panel.session.ops().length));
+        const op = panel.session.ops().at(-1);
+        testController.assertEqual('…and it is initialise-procgen-layout', INIT_OP, op?.op);
+        testController.reportCondition('…with the result INLINE (a refold never re-builds)',
+            !!op?.result?.entries && Object.keys(op.result.entries).length === plan.placed);
+        const n = sidecarIssues(panel.rulesDoc, p).length;
+        testController.reportCondition(`⛓ the answer is the op's description + the V0 count (${n})`,
+            String(panel._opMessage).endsWith(` — ${n} sidecar issue${n === 1 ? '' : 's'} in slot ${p}`)
+            && String(panel._opMessage).includes(`${plan.returnExits} ${INITIALISE_RETURN_EXITS_ADDED}`));
+        testController.reportCondition('the form closed; the slot is no longer bare (no door)', !initSection() && !initDoor());
+
+        selectTab(panel, 'map');
+        const canvas = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`), 'the Map canvas', 8000, 50);
+        testController.assertEqual('⛓ the Map draws one cell per placed region', String(plan.placed), canvas?.dataset.regions);
+
+        selectTab(panel, 'regions');
+        const withBlock = [...document.querySelectorAll(`${PANEL_SELECTOR} .apworld-region-block`)]
+            .filter((b) => b.querySelector('.apworld-sidecar-block')).length;
+        testController.assertEqual('⛓ every placed region has a block on the Regions tab', String(plan.placed), String(withBlock));
+
+        panel.session.undo();
+        panel._render();
+        testController.assertEqual('⛓⛓ Undo restores the document byte for byte', before, JSON.stringify(panel.rulesDoc));
+        selectTab(panel, 'map');
+        testController.reportCondition('…and the empty state offers the door again', !!initDoor());
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('initialise land test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(ii) RETURN EXITS OFF LANDS NO EXIT** — the same door on `apcalc`, the
+ * checkbox cleared: the preview says so, the op lands, and the regions block
+ * holds exactly the exits it held.
+ */
+export async function apworldInitialiseWithReturnExitsOffAddsNone(testController) {
+    try {
+        const panel = await openInitialiseForm(testController, INIT_APCALC_PATH);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        const exitsBefore = exitCount(panel.rulesDoc, p);
+        const box = initSection().querySelector('.apworld-initialise-back-exits');
+        box.checked = false;
+        box.dispatchEvent(new Event('change', { bubbles: true }));
+        const pv = initSection().querySelector('.apworld-initialise-preview');
+        testController.assertEqual('the preview has 0 return exits', '0', pv?.dataset.returnExits);
+        const run = await pressInitialise(testController, panel);
+        testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+        testController.assertEqual('⛓ the op lands with 0 return exits', '0',
+            String(panel.session.ops().at(-1)?.result?.returnExits?.length));
+        testController.assertEqual('⛓⛓ the regions block holds exactly the exits it held', String(exitsBefore),
+            String(exitCount(panel.rulesDoc, p)));
+        testController.reportCondition('the answer says return exits were OFF',
+            String(panel._opMessage).includes(INITIALISE_RETURN_EXITS_OFF));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('return exits off test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(iii) THE RETURN-EXIT COUNT IS PREVIEWED AND NAMED** on `apcalc`, a
+ * one-way source: the preview's count is the page's own plan, the op adds
+ * exactly that many exits, and the answer names the number.
+ */
+export async function apworldInitialisePreviewsAndNamesTheReturnExits(testController) {
+    try {
+        const panel = await openInitialiseForm(testController, INIT_APCALC_PATH);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        const doc0 = panel.rulesDoc;
+        const want = initPlan(doc0, p, {
+            gridDims: { width: panel._initialise.state.side, height: panel._initialise.state.side },
+        }).returnExits;
+        testController.reportCondition(`⛓ premise: a one-way source — ${want} return exits`, want > 0);
+        const pv = initSection().querySelector('.apworld-initialise-preview');
+        testController.assertEqual('⛓ the preview names the count', String(want), pv?.dataset.returnExits);
+        testController.reportCondition('…in its sentence', pv?.textContent.includes(`${want} return exits will be added`));
+        const exitsBefore = exitCount(doc0, p);
+        const run = await pressInitialise(testController, panel);
+        testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+        testController.assertEqual('⛓⛓ the op added exactly that many exits', String(exitsBefore + want),
+            String(exitCount(panel.rulesDoc, p)));
+        testController.reportCondition('⛓ the answer names them',
+            String(panel._opMessage).includes(`${want} ${INITIALISE_RETURN_EXITS_ADDED}`));
+        const errors = sidecarIssues(panel.rulesDoc, p).filter((i) => i.severity === 'error').length;
+        testController.assertEqual('…and the report has no error (every baked exit is the document\'s)', '0', String(errors));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('return exits named test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/** ⛓⛓ **(iv) A POPULATED SLOT SHOWS NO DOOR** — every slot of the four-player fixture, both hosts. */
+export async function apworldInitialiseDoorIsAbsentOnAPopulatedSlot(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        for (const slot of Object.keys(panel.rulesDoc.regions)) {
+            selectPlayer(select, slot);
+            const n = Object.keys(panel.rulesDoc.preset_sidecars?.[slot] ?? {}).length;
+            testController.reportCondition(`⛓ premise: slot ${slot} carries ${n} entries`, n > 0);
+            selectTab(panel, 'map');
+            const drawn = await testController.pollForValue(
+                () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-intro`), `slot ${slot}'s Map`, 8000, 50);
+            testController.reportCondition(`slot ${slot}: the Map draws no door`, !!drawn && !initDoor());
+            selectTab(panel, 'sidecars');
+            testController.reportCondition(`slot ${slot}: the Sidecars tab draws no door`, !initDoor());
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('no door test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(v) CANCEL MID-RUN LANDS NOTHING** — a slot slow enough to stop: once
+ * the ticker reads *built N / M*, Cancel: the Cancel sentence, nothing
+ * recorded, the worker terminated, the ticker cleared, Generate back, no late
+ * answer. The Sidecars tab's door opens the same form.
+ */
+export async function apworldInitialiseCancelLandsNothing(testController) {
+    try {
+        const panel = await openHub(testController, INIT_SLOW_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'sidecars');
+        const door = await testController.pollForValue(initDoor, 'the Sidecars tab\'s door', 8000, 50);
+        testController.reportCondition('the Sidecars tab\'s empty list offers the door', !!door);
+        door?.click();
+        const sec = await testController.pollForValue(initSection, 'the form under the summary', 8000, 50);
+        if (!sec) return testController.getOverallResult();
+        const before = JSON.stringify(panel.rulesDoc);
+        const opsBefore = panel.session.ops().length;
+        sec.querySelector('.apworld-initialise-generate').click();
+        const ticking = await testController.pollForCondition(
+            () => /^built [1-9]\d* \/ \d+ · /.test(initSection()?.querySelector('.apworld-initialise-elapsed')?.textContent ?? ''),
+            'the ticker reads built N / M', 60000, 50);
+        testController.reportCondition(`⛓ premise: the build is running (${initSection()?.querySelector('.apworld-initialise-elapsed')?.textContent})`, ticking);
+        const run = panel._initialise?.run;
+        initSection()?.querySelector('.apworld-initialise-cancel')?.click();
+        await testController.pollForCondition(() => !!run?.outcome, 'the cancelled outcome', 8000, 50);
+        testController.assertEqual('⛓⛓ the answer is the Cancel sentence', `Refused: apworld: ${INIT_CANCELLED}.`,
+            String(panel._opMessage));
+        testController.reportCondition('⛓ the worker was TERMINATED', run?.handle.terminated() === true);
+        testController.assertEqual('⛓ NOTHING was recorded', String(opsBefore), String(panel.session.ops().length));
+        testController.assertEqual('…the document is as it was', before, JSON.stringify(panel.rulesDoc));
+        testController.reportCondition('⛓ the ticker is cleared', panel._initialiseTicker === null);
+        testController.reportCondition('Generate ▸ is back', !!initSection()?.querySelector('.apworld-initialise-generate'));
+        await new Promise((r) => setTimeout(r, 1000));
+        testController.assertEqual('no late answer', '0', String(run?.handle.late()));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('initialise cancel test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(vi) THE WHOLE-SLOT BUDGET** — `initialiseTimeoutSeconds` at 2 on the
+ * slow slot: the timeout sentence quotes the setting and how far the build got,
+ * nothing recorded, the worker terminated. The override is dropped after.
+ */
+export async function apworldInitialiseRunsOutOfTimeRecordsNothing(testController) {
+    try {
+        await settingsManager.updateSetting(INITIALISE_TIMEOUT_SETTING, 2, { persist: false });
+        const panel = await openInitialiseForm(testController, INIT_SLOW_PATH);
+        if (!panel) return testController.getOverallResult();
+        const opsBefore = panel.session.ops().length;
+        const state = panel._initialise.state;
+        const run = await pressInitialise(testController, panel, 60000);
+        testController.reportCondition('the run TIMED OUT in the build', run?.outcome?.timedOut === true
+            && run?.outcome?.phase === 'running');
+        testController.assertEqual('⛓⛓ the answer is the timeout sentence, with how far it got',
+            `Refused: ${initialiseTimeoutSentence(2, state.substrate, String(panel.playerId), run?.progress)}`,
+            String(panel._opMessage));
+        testController.reportCondition('…which names a region count', /after building \d+ \/ \d+ regions/.test(String(panel._opMessage)));
+        testController.reportCondition('⛓ the worker was TERMINATED', run?.handle.terminated() === true);
+        testController.assertEqual('⛓ NOTHING was recorded', String(opsBefore), String(panel.session.ops().length));
+        testController.reportCondition('the ticker is cleared', panel._initialiseTicker === null);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('initialise timeout test error-free', false);
+    } finally {
+        await settingsManager.clearOverride(INITIALISE_TIMEOUT_SETTING);
+    }
+    return testController.getOverallResult();
+}
+
+const R7_TESTS = [
+    ['apworld-initialise-lands-one-op-and-the-map-draws',
+        'APWorld hub: a bare slot\'s Initialise door previews the layout, Generate lands ONE op, the Map and the Regions tab draw every placed region, Undo restores',
+        apworldInitialiseLandsOneOpAndTheMapDraws],
+    ['apworld-initialise-with-return-exits-off-adds-none',
+        'APWorld hub: Initialise with Add return exits off lands the slot and leaves the regions block\'s exits as they were',
+        apworldInitialiseWithReturnExitsOffAddsNone],
+    ['apworld-initialise-previews-and-names-the-return-exits',
+        'APWorld hub: on a one-way source the Initialise preview counts the return exits, the op adds exactly those, and the answer names them',
+        apworldInitialisePreviewsAndNamesTheReturnExits],
+    ['apworld-initialise-door-is-absent-on-a-populated-slot',
+        'APWorld hub: no slot of the four-player fixture (every one carries entries) shows the Initialise door on the Map or the Sidecars tab',
+        apworldInitialiseDoorIsAbsentOnAPopulatedSlot],
+    ['apworld-initialise-cancel-lands-nothing',
+        'APWorld hub: Cancel while the slot builds (the ticker reading built N / M) stops the worker, records nothing and clears the ticker',
+        apworldInitialiseCancelLandsNothing],
+    ['apworld-initialise-runs-out-of-time-records-nothing',
+        'APWorld hub: initialiseTimeoutSeconds bounds the whole slot — the sentence quotes the setting and how far the build got; nothing recorded',
+        apworldInitialiseRunsOutOfTimeRecordsNothing],
+];
+for (const [id, name, testFunction] of R7_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE R7. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}

@@ -344,6 +344,9 @@ describe('the panel stops the worker run and the elapsed ticker at every boundar
         Object.assign(self, {
             _teardownRawEditor: () => {}, _closeRoomEditor: () => {}, _keyHandler: null,
             rawJsonUnsubscribe: null, loadRulesUnsubscribe: null, selectRegionUnsubscribe: null,
+            // ⛓ R7 — destroy also closes the Initialise form (its own rows: initialiseFlow.test.js).
+            _initialise: null, _initialiseTicker: null,
+            _stopInitialiseRun: P._stopInitialiseRun, _closeInitialise: P._closeInitialise,
         });
         P.onPanelDestroy.call(self);
         expect(cancel).toHaveBeenCalledTimes(1);
