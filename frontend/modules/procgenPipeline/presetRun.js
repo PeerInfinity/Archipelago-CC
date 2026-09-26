@@ -95,6 +95,20 @@ export const DEFAULT_PARAMS = {
 };
 
 /**
+ * ⛓ The top-down hand-off's grid rule: a square side of ⌈√(N × this)⌉ for a
+ * source of N regions, floored at `DEFAULT_PARAMS.gridWidth` — room for the BFS
+ * to lay every region out without falling back to teleporters at once. ONE rule,
+ * shared by the pipeline panel's `_applyGridDimsFromSource` and the APWorld
+ * Editor's *Initialise procgen data* (APWORLD SUBSTRATE CHANGE R7).
+ */
+export const TOPDOWN_GRID_AREA_FACTOR = 1.5;
+
+/** ⛓ The square grid side the top-down hand-off gives a source of `regionCount` regions. */
+export function topDownGridSide(regionCount) {
+    return Math.max(DEFAULT_PARAMS.gridWidth, Math.ceil(Math.sqrt(regionCount * TOPDOWN_GRID_AREA_FACTOR)));
+}
+
+/**
  * The base default params merged with every registered substrate's declared
  * `defaultProcgenParams` — the `defaults` a sparse preset is merged over.
  */

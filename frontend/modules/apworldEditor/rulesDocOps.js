@@ -94,6 +94,11 @@ import {
     REPLACE_REGION_CONTENT_OP, ZONE_PAGE_NEVER_EXTRACTS, applyZoneContent, describeZoneReplacement,
     replaceRegionContentFromZone,
 } from './regionContent.js';
+// ⛓ APWORLD SUBSTRATE CHANGE R7 — a bare slot laid out and realised in place
+//   (`slotInitialise.js`: the engine's four top-down stages; the sentences stay here).
+import {
+    BACK_EXITS, INITIALISE_BLOCKERS, INITIALISE_OP, initialiseFacts, initialiseOpFor, initialiseSlot,
+} from './slotInitialise.js';
 import {
     SIDE_WORDS, exitSideVerdicts, exitSidesOfSubstrate, layoutChange, occupantAt, pairLinkFlips,
     rewriteExitFlags, rewriteExits, sideSharingOfSubstrate, slotLayout,
@@ -128,6 +133,7 @@ export const RULES_OP_KINDS = Object.freeze([
     'set-region-sidecar',
     'regenerate-region-sidecar',
     'replace-region-content',
+    'initialise-procgen-layout',
     'move-region',
     'swap-regions',
     'move-exit-side',
@@ -380,6 +386,7 @@ function dispatchRulesDocOp(doc, op) {
         case 'set-region-sidecar': return opSetRegionSidecar(doc, op);
         case 'regenerate-region-sidecar': return opRegenerateRegionSidecar(doc, op);
         case 'replace-region-content': return opReplaceRegionContent(doc, op);
+        case 'initialise-procgen-layout': return opInitialiseProcgenLayout(doc, op);
         case 'move-region': return opMoveRegion(doc, op);
         case 'swap-regions': return opSwapRegions(doc, op);
         case 'move-exit-side': return opMoveExitSide(doc, op);
@@ -2842,6 +2849,224 @@ function opReplaceDocument(doc, op) {
     const keys = Object.keys(next);
     return ok(next, `document replaced (${keys.length} top-level key`
         + `${keys.length === 1 ? '' : 's'})`);
+}
+
+/* ── a bare slot's procgen data, initialised (APWORLD SUBSTRATE CHANGE R7) ─ */
+
+/** ⛓ What an initialise leaves exactly as it was — the clause its description
+ *  ends with. EXPORTED so the rows assert the sentence the op wrote. */
+export const INITIALISE_RULES_UNCHANGED = 'location names and existing access rules unchanged';
+
+/** ⛓ The re-initialise law, in the refusal. EXPORTED for the rows and the door. */
+export const INITIALISE_BARE_ONLY = '⛔ initialise-procgen-layout lays out a BARE slot and never touches an '
+    + 'entry that exists — a re-initialise is a delete of the slot\'s entries first, and the hub does not '
+    + 'offer one.';
+
+/** ⛓ The return-exit clause's words. EXPORTED for the rows. */
+export const INITIALISE_RETURN_EXITS_ADDED = 'return exits added';
+export const INITIALISE_RETURN_EXITS_OFF = 'return exits OFF — the rooms keep the document\'s one-way links';
+
+/** ⛓ The unplaced clause's word. EXPORTED for the rows. */
+export const INITIALISE_UNPLACED = 'unplaced';
+
+const isPlainObj = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+
+/**
+ * ⛓⛓ **EVERY REFUSAL `initialise-procgen-layout` CAN NAME BEFORE THE ENGINE
+ * RUNS** — the op's own, EXPORTED so the hub's form prints the op's sentence
+ * and draws no Generate (1305: the op is the authority, the form a courtesy).
+ * `args` = `{player, substrate, gridDims, seed, backExits}`. `null` = the op
+ * would lay the slot out.
+ *
+ * @returns {string|null}
+ */
+export function initialiseOpRefusal(doc, args) {
+    const p = String(args?.player ?? DEFAULT_PLAYER_ID);
+    const facts = initialiseFacts(doc, p);
+    if (facts.blocker === INITIALISE_BLOCKERS.NO_REGIONS) {
+        return `apworld: player ${p} has no regions in \`regions.${p}\` — there is nothing to lay out.`;
+    }
+    if (facts.blocker === INITIALISE_BLOCKERS.HAS_ENTRIES) {
+        return `apworld: player ${p} already carries ${facts.entries} sidecar `
+            + `${facts.entries === 1 ? 'entry' : 'entries'}. ${INITIALISE_BARE_ONLY}`;
+    }
+    if (facts.blocker === INITIALISE_BLOCKERS.NO_START) {
+        return `apworld: player ${p} has no usable start region (\`start_regions.${p}\` names `
+            + `${facts.declaredStart === null ? 'none' : `"${facts.declaredStart}", which is not one of its regions`}) — `
+            + 'the layout grows the grid outward from the start, so it has nowhere to begin.';
+    }
+    if (facts.blocker === INITIALISE_BLOCKERS.HAS_METADATA) {
+        return 'apworld: the document already carries a `procgen_metadata` block '
+            + `(driver ${describeValue(doc.procgen_metadata?.driver ?? null)}) — it is DOCUMENT-level, and an `
+            + `initialise of player ${p} writes one; two writers of one block would overwrite each other `
+            + 'silently, so the op refuses rather than pick one.';
+    }
+    const substrate = args?.substrate;
+    if (typeof substrate !== 'string' || !substrate) {
+        return `apworld: ${INITIALISE_OP} needs a \`substrate\` id, got ${describeValue(substrate)}.`;
+    }
+    const facts2 = regenerateTargetFacts(substrate);
+    if (!facts2.registered) {
+        return `apworld: no module registers substrate "${substrate}" here, so nothing can build `
+            + 'the slot\'s payloads. Load its library first, or pick a registered substrate.';
+    }
+    if (!facts2.playable) {
+        return `apworld: substrate "${substrate}" declares no \`deserializeWorld\` / \`serializeWorld\` `
+            + 'pair, so a payload built for it could be neither played nor written.';
+    }
+    if (!facts2.kind) return `apworld: ${noRealiserSentence(substrate, facts2)}`;
+    const dims = args?.gridDims;
+    if (!(isPlainObj(dims) && Number.isInteger(dims.width) && Number.isInteger(dims.height)
+        && dims.width >= 1 && dims.height >= 1)) {
+        return 'apworld: `gridDims` is {width, height} in whole cells, each at least 1, got '
+            + `${dims === undefined ? 'none' : describeValue(dims)}${isPlainObj(dims)
+                ? ` (${describeValue(dims.width)} × ${describeValue(dims.height)})` : ''}.`;
+    }
+    if (!Number.isInteger(args?.seed)) {
+        return `apworld: ${INITIALISE_OP} needs \`seed\` as a whole number — ${REGENERATE_SEED_REQUIRED} — `
+            + `got ${args?.seed === undefined ? 'none' : describeValue(args.seed)}.`;
+    }
+    if (!Object.values(BACK_EXITS).includes(args?.backExits)) {
+        return `apworld: \`backExits\` is one of [${Object.values(BACK_EXITS).join(', ')}], got `
+            + `${describeValue(args?.backExits)}.`;
+    }
+    return null;
+}
+
+/**
+ * ⛓ What an INLINED result must hold to be written: entries for regions the
+ * slot has, return exits on regions the slot has, to regions it has, under
+ * names those regions do not already use; top-level blocks the document lacks.
+ */
+function initialiseResultRefusal(doc, p, result) {
+    if (!isPlainObj(result) || !isPlainObj(result.entries) || !isPlainObj(result.procgen_metadata)
+        || !Array.isArray(result.returnExits)) {
+        return `apworld: ${INITIALISE_OP}'s \`result\` is {entries, procgen_metadata, returnExits, blocks?} — `
+            + `the worker's answer, inlined — got ${describeValue(result)}.`;
+    }
+    const regions = regionsOf(doc, p);
+    const stray = Object.keys(result.entries).filter((n) => !Object.hasOwn(regions, n));
+    if (stray.length) {
+        return `apworld: the result has entries for ${stray.length} region(s) player ${p} does not have — `
+            + `${listNames(stray)}.`;
+    }
+    const noSubstrate = Object.entries(result.entries)
+        .filter(([, e]) => !isPlainObj(e) || typeof e.substrate !== 'string').map(([n]) => n);
+    if (noSubstrate.length) {
+        return `apworld: every entry needs \`substrate\` as a string — ${listNames(noSubstrate)} ha${
+            noSubstrate.length === 1 ? 's' : 've'} none.`;
+    }
+    const added = new Map();
+    for (const r of result.returnExits) {
+        const name = r?.exit?.name;
+        const target = r?.exit?.connected_region;
+        if (!Object.hasOwn(regions, r?.region) || typeof name !== 'string' || !Object.hasOwn(regions, target)) {
+            return `apworld: a return exit is {region, exit: {name, connected_region, access_rule}} between `
+                + `regions player ${p} has, got ${describeValue(r)}.`;
+        }
+        const taken = new Set([...(regions[r.region].exits ?? []).map((e) => e?.name), ...(added.get(r.region) ?? [])]);
+        if (taken.has(name)) {
+            return `apworld: region "${r.region}" already has an exit named "${name}", so the return exit to `
+                + `"${target}" cannot take that name.`;
+        }
+        added.set(r.region, [...(added.get(r.region) ?? []), name]);
+    }
+    const blocks = result.blocks ?? {};
+    if (!isPlainObj(blocks)) return `apworld: \`blocks\` is an object, got ${describeValue(blocks)}.`;
+    const held = Object.keys(blocks).filter((k) => Object.hasOwn(doc, k));
+    if (held.length) {
+        return `apworld: the substrate asks for top-level block(s) ${listNames(held.map((k) => `\`${k}\``))}, which `
+            + 'the document already carries — two writers of one block would overwrite each other silently, '
+            + 'so the op refuses rather than pick one.';
+    }
+    return null;
+}
+
+/**
+ * ⛓⛓ **THE OP'S SENTENCE** — every number interpolated, the unplaced listed by
+ * name grouped by why. EXPORTED so the hub's answer IS the op's description.
+ */
+export function describeInitialise({ player, substrate, gridDims, backExits, result, unplaced = [], ms }) {
+    const s = result.stats ?? {};
+    const placed = Number.isInteger(s.placed) ? s.placed : Object.keys(result.entries).length;
+    const tele = Number.isInteger(s.teleporters) ? s.teleporters : 0;
+    const back = backExits === BACK_EXITS.NONE
+        ? INITIALISE_RETURN_EXITS_OFF
+        : `${result.returnExits.length} ${INITIALISE_RETURN_EXITS_ADDED}`;
+    const byWhy = new Map();
+    for (const u of unplaced) byWhy.set(u.why, [...(byWhy.get(u.why) ?? []), u.region]);
+    const unplacedClause = unplaced.length
+        ? `${plural(unplaced.length, 'region')} ${INITIALISE_UNPLACED} (${[...byWhy]
+            .map(([why, names]) => `${why}: ${listNames(names)}`).join('; ')})`
+        : `0 regions ${INITIALISE_UNPLACED}`;
+    return `slot ${player} initialised as \`${substrate}\`: ${plural(placed, 'region')} on a `
+        + `${gridDims.width}×${gridDims.height} grid (${plural(tele, 'teleporter')}), ${back}, ${unplacedClause} — `
+        + `${INITIALISE_RULES_UNCHANGED}`
+        + (Number.isFinite(ms) ? ` — built in the generation worker (${(ms / 1000).toFixed(1)} s)` : '');
+}
+
+/**
+ * ⛓⛓⛓ **INITIALISE A BARE SLOT'S PROCGEN DATA** (APWORLD SUBSTRATE CHANGE R7;
+ * plan §19, ⚖ user 2026-09-26). Two shapes, one op:
+ *
+ *   · the RECORD's — `{player, result: {entries, procgen_metadata, returnExits,
+ *     blocks?, stats}, provenance: {substrate, gridDims, seed, backExits, ms,
+ *     unplaced}}`: the generation worker's answer INLINED, so a refold is a
+ *     write, never a 70-second realise (§9.3's rule; `slotInitialise.initialiseOpFor`);
+ *   · the SCRIPT's — `{player, substrate, gridDims, seed, backExits}`: computed
+ *     here (`slotInitialise.initialiseSlot`), and the RESOLVED op records the
+ *     result, so the record replays pure from then on.
+ *
+ * ⛔ **WHAT IT WRITES:** `preset_sidecars[p]` (the slot's entries),
+ * `procgen_metadata` (driver `apworld-initialise`, `grid_dims`, `region_count`,
+ * `substrate_configs` per R6b), the substrate's top-level blocks the document
+ * lacks, and — with `backExits: 'add'` — one exit per return route appended to
+ * `regions[p][R].exits` (the pipeline's own edit, with the forward exit's rule).
+ * NOTHING else: no location, item, placement or existing rule moves.
+ */
+function opInitialiseProcgenLayout(doc, op) {
+    const p = String(playerOf(op));
+    const inline = op.result !== undefined;
+    const prov = op.provenance;
+    if (inline && !isPlainObj(prov)) {
+        return refuse(`apworld: an inlined ${INITIALISE_OP} result needs its \`provenance\` `
+            + `({substrate, gridDims, seed, backExits, ms, unplaced}), got ${describeValue(prov)}.`);
+    }
+    if (!inline && prov !== undefined && !isPlainObj(prov)) {
+        return refuse(`apworld: \`provenance\` is an object, got ${describeValue(prov)}.`);
+    }
+    const args = inline ? { ...prov, player: p } : { ...op, player: p };
+    const refusal = initialiseOpRefusal(doc, args);
+    if (refusal) return refuse(refusal);
+    let result = op.result;
+    let resolved = op;
+    let unplaced = Array.isArray(prov?.unplaced) ? prov.unplaced : [];
+    if (!inline) {
+        const res = initialiseSlot({ doc, player: p, substrate: args.substrate, gridDims: args.gridDims,
+            seed: args.seed, backExits: args.backExits });
+        if (!res.ok) {
+            return refuse(`apworld: the \`${args.substrate}\` realiser threw${res.region ? ` on region "${res.region}"` : ''} `
+                + `— ${res.why}. Nothing was written.`);
+        }
+        resolved = initialiseOpFor(args, res);
+        result = resolved.result;
+        unplaced = res.unplaced;
+    }
+    const bad = initialiseResultRefusal(doc, p, result);
+    if (bad) return refuse(bad);
+
+    let next = setPath(doc, ['preset_sidecars', p], result.entries);
+    next = setPath(next, ['procgen_metadata'], result.procgen_metadata);
+    for (const [k, v] of Object.entries(result.blocks ?? {})) next = setPath(next, [k], v);
+    for (const { region, exit } of result.returnExits) {
+        const r = regionsOf(next, p)[region];
+        next = withRegion(next, p, region, withKey(r, 'exits', [...(r.exits ?? []), exit]));
+    }
+    const description = describeInitialise({
+        player: p, substrate: args.substrate, gridDims: args.gridDims, backExits: args.backExits,
+        result, unplaced, ...(inline && Number.isFinite(prov.ms) ? { ms: prov.ms } : {}),
+    });
+    return ok(next, description, undefined, resolved === op ? undefined : resolved);
 }
 
 /* ── clear ───────────────────────────────────────────────────────────── */
