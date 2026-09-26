@@ -250,6 +250,26 @@ export function refsOf(tree) {
     return out;
 }
 
+/**
+ * How many times each ref is filed: `${kind}:${ref}` → the number of ref nodes
+ * holding it, nested ones too (a ref may be filed more than once). The keys
+ * are `refsOf`'s.
+ */
+export function refCounts(tree) {
+    const out = new Map();
+    const walk = (nodes) => {
+        for (const node of nodes) {
+            if (isGroup(node)) walk(node.children);
+            else if (REF_KINDS.includes(node.kind)) {
+                const key = `${node.kind}:${node.ref}`;
+                out.set(key, (out.get(key) ?? 0) + 1);
+            }
+        }
+    };
+    walk(tree.nodes);
+    return out;
+}
+
 /** The catalog entries no node references, panels then docs, as `{kind, item}`. */
 export function unfiled(tree, catalog) {
     const filed = refsOf(tree);

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
     EMPTY_TREE, INTO_ITSELF_MESSAGE, NODE_KINDS, NOT_A_GROUP_MESSAGE, TREE_VERSION, UNKNOWN_NODE_MESSAGE,
     addGroup, addRef, addUrl, deleteNode, findNode, groupsOf, migrate, moveDown, moveNode, moveUp, newId,
-    refsOf, renameGroup, resolve, unfiled,
+    refCounts, refsOf, renameGroup, resolve, unfiled,
 } from './quickLaunchTree.js';
 
 /** A fixture built through the ops themselves, with readable ids. */
@@ -206,6 +206,19 @@ describe('quickLaunchTree resolve / unfiled', () => {
         ]);
         expect(unfiled(EMPTY_TREE, catalog)).toHaveLength(4);
         expect(refsOf(fixture())).toEqual(new Set(['panel:inventoryPanel', 'doc:docs/json/user/overview.md']));
+    });
+});
+
+describe('quickLaunchTree refCounts (the "filed N×" badge)', () => {
+    it('counts each ref once per node holding it, nested ones too; urls and groups are not refs', () => {
+        let t = addRef(fixture(), null, 'panel', 'inventoryPanel', 'p2');
+        t = addRef(t, 'gB', 'panel', 'inventoryPanel', 'p3');
+        const counts = refCounts(t);
+        expect(counts.get('panel:inventoryPanel')).toBe(3);
+        expect(counts.get('doc:docs/json/user/overview.md')).toBe(1);
+        expect(counts.has('panel:eventsPanel')).toBe(false);
+        expect([...counts.keys()].sort()).toEqual([...refsOf(t)].sort());
+        expect(refCounts(EMPTY_TREE).size).toBe(0);
     });
 });
 

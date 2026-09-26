@@ -19,7 +19,7 @@ import { buildCatalog, helpDocs } from './quickLaunchCatalog.js';
 import { buildViewModel, countText, filterView, foldAll, groupSize, virtualGroupIds } from './quickLaunchFilter.js';
 import {
     EMPTY_TREE, NODE_KINDS, addGroup, addRef, addUrl, deleteNode, findNode, groupsOf, migrate, moveDown, moveNode,
-    moveUp, renameGroup,
+    moveUp, refCounts, renameGroup,
 } from './quickLaunchTree.js';
 import { getModuleManager } from './index.js';
 
@@ -69,6 +69,9 @@ export const COUNT_TITLE = 'Rows shown, of all rows';
 export const DOC_ICON = '📄';
 export const URL_ICON = '🔗';
 export const MISSING_ICON = '✕';
+/** Edit mode's badge on a built-in group's row that is filed in your groups: "N×". */
+export const filedText = (n) => `${n}×`;
+export const filedTitle = (n) => `Filed ${n === 1 ? 'once' : `${n} times`} in your groups`;
 export const MODULES_TARGET = Object.freeze({ moduleId: 'modules', componentType: 'modulesPanel' });
 const REFRESH_EVENTS = ['module:stateChanged', 'app:readyForUiDataLoad', 'settings:changed'];
 
@@ -87,6 +90,7 @@ export const CONTROLS = Object.freeze({
     addGroup: 'ql-ctl-add-group',
     addUrl: 'ql-ctl-add-url',
     addTo: 'ql-ctl-add-to',
+    filed: 'ql-filed',
 });
 /** The "move to" / "add to" value meaning the top level of the tree. */
 export const ROOT_CHOICE = '__root__';
@@ -543,6 +547,15 @@ export class QuickLaunchUI {
         return box;
     }
 
+    /** "N×": how many times a built-in group's row is filed in the stored tree (edit mode, N ≥ 1). */
+    _filedBadge(n) {
+        const badge = document.createElement('span');
+        badge.className = CONTROLS.filed;
+        badge.textContent = filedText(n);
+        badge.title = filedTitle(n);
+        return badge;
+    }
+
     /** "add to ▾" on a row of a virtual group: files a reference, never moves the row. */
     _addTo(kind, ref) {
         return this._select(CONTROLS.addTo, 'add to ▾', this._groupChoices(),
@@ -615,12 +628,18 @@ export class QuickLaunchUI {
         summary.textContent = `${group.label} (${groupSize(group)})`;
         details.append(summary);
         if (group.entries.length) {
+            const filed = this.editing ? refCounts(this.tree) : null;
             const list = document.createElement('ul');
             list.className = 'ql-list';
             list.append(...group.entries.map(({ kind, item }) => {
                 const doc = kind === NODE_KINDS.doc;
                 const li = doc ? this._docRow(item, target) : this._panelRow(item, target);
-                if (this.editing) li.append(this._addTo(kind, doc ? item.path : item.componentType));
+                if (this.editing) {
+                    const ref = doc ? item.path : item.componentType;
+                    const n = filed.get(`${kind}:${ref}`) ?? 0;
+                    if (n > 0) li.append(this._filedBadge(n));
+                    li.append(this._addTo(kind, ref));
+                }
                 return li;
             }));
             details.append(list);

@@ -9,7 +9,9 @@
     color: #d8d8e0;
 }
 
-/* P6 — the bar on two rows: the header and the filter, then the buttons. Neither row wraps. */
+/* P6 — the bar on two rows: the header and the filter, then the buttons. P3 — each row wraps when the
+   column is narrower than it (a dragged left stack, a 1024px window): the filter drops under the header,
+   and the buttons flow onto another line, instead of running past the column's edge. */
 .ql-bar {
     display: flex;
     flex-direction: column;
@@ -19,7 +21,7 @@
 .ql-bar-row {
     display: flex;
     align-items: center;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 4px;
     min-width: 0;
 }
@@ -113,6 +115,15 @@
 .ql-ctl:hover { border-color: #5a8dee; color: #d8d8e0; }
 select.ql-ctl { max-width: 8em; }
 .ql-ctl-delete:hover { border-color: #e06c75; }
+/* P3 — "N×" on a built-in group's row that is filed in the user's own groups (edit mode). */
+.ql-filed {
+    flex: none;
+    color: #e8d48a;
+    font-size: 11px;
+    border: 1px solid #5a5238;
+    border-radius: 8px;
+    padding: 0 5px;
+}
 
 /* Q3 — "All panels" holds one sub-group per module category. */
 .ql-subgroups { padding-left: 8px; }
