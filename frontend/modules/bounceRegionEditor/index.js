@@ -30,7 +30,7 @@ export const moduleInfo = {
     componentType: BOUNCE_EDITOR_COMPONENT_TYPE,
     icon: '🪀',
     column: 3,
-    category: 'Procedural Generation and Substrate Modules',
+    category: 'Procgen Infrastructure Panels',
     description: 'Per-region geometry editor for the bounce substrate',
     requires: [],
 };

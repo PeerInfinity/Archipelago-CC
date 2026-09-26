@@ -33,7 +33,7 @@ export const moduleInfo = {
     componentType: 'flashSubstratePanel',
     icon: '🎞️',
     column: 3,
-    category: 'Procedural Generation and Substrate Modules',
+    category: 'Procgen Substrate Panels',
     description:
         'A Flash game hosted in an iframe as a procgen substrate, runtime-'
         + 'neutral across SWFRecomp (SWF -> WASM), Ruffle, and native Flash '

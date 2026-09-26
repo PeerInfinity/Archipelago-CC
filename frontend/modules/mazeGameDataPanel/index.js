@@ -9,7 +9,7 @@ export const moduleInfo = {
   componentType: 'mazeGameDataPanel',
   icon: '',
   column: 2,
-  category: 'Procedural Generation and Substrate Modules',
+  category: 'Procgen Substrate Panels',
   description: 'View and control A-Mazing-Idle game data.',
   requires: ['iframeAdapter', 'iframePanel'],
 };

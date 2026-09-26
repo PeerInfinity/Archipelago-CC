@@ -11,7 +11,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/iframeManagerPanel.md',
   icon: '🖼️',
   column: 2, // Middle column
-  category: 'UI Panel Modules',
+  category: 'Embedding and Windows',
   description: 'Iframe Manager display panel.',
   requires: ['iframeAdapter', 'iframePanel'],
 };

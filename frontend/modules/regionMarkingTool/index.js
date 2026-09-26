@@ -33,7 +33,7 @@ export const moduleInfo = {
     componentType: REGION_MARKING_COMPONENT_TYPE,
     icon: '🧭',
     column: 2,
-    category: 'Procedural Generation and Substrate Modules',
+    category: 'Procgen Infrastructure Panels',
     description: "Marks a real game's map into procgen regions and writes the region atlas.",
     requires: [],
 };

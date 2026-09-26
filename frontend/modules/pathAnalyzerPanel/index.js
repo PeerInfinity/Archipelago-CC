@@ -19,7 +19,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/pathAnalyzerPanel.md',
   icon: '🛤️',
   column: 2, // Middle column,
-  category: 'UI Panel Modules',
+  category: 'Analysis Panels',
   description: 'A dedicated panel for path analysis with configurable settings.',
 };
 

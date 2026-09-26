@@ -25,7 +25,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/inventory.md',
   icon: '🎒',
   column: 1, // Left column
-  category: 'UI Panel Modules',
+  category: 'Tracker Panels',
   description: 'Inventory display panel.',
 };
 

@@ -22,7 +22,7 @@ export const moduleInfo = {
   componentType: 'tileMapAnalyzer',
   icon: '🗺️',
   column: 2,
-  category: 'Procedural Generation and Substrate Modules',
+  category: 'Procgen Infrastructure Panels',
   description: 'Analyzes a tile-based Flash game\'s map data and emits an Archipelago rules.json.',
 };
 

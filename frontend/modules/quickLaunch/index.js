@@ -18,7 +18,7 @@ export const moduleInfo = {
     componentType: 'quickLaunchPanel',
     icon: '🚀',
     column: 1,
-    category: 'UI Panel Modules',
+    category: 'Data and Configuration Panels',
     description: 'A button for every panel (click to open or bring it forward) and links to the user guides.',
     docs: 'docs/json/user/modules/quickLaunch.md',
     requires: [],

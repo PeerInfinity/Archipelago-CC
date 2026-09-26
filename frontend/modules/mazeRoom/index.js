@@ -22,7 +22,7 @@ export const moduleInfo = {
     componentType: 'mazeRoomPanel',
     icon: '🧩',
     column: 3,
-    category: 'Procedural Generation and Substrate Modules',
+    category: 'Procgen Substrate Panels',
     description: 'Generate and play walls-only maze rooms (simulator-core v1 consumer)',
     requires: [],
 };

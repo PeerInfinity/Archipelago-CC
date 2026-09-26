@@ -26,7 +26,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/proofQueue.md',
   icon: '\u{1F9E0}', // brain emoji
   column: 3, // Right column
-  category: 'UI Panel Modules',
+  category: 'Non-procgen Games',
   description: 'Arrange MetaMath proof steps in dependency order.',
   requires: ['stateManager'],
 };

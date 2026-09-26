@@ -22,7 +22,7 @@ export const moduleInfo = {
     componentType: 'procgenLabPanel',
     icon: '🧪',
     column: 3,
-    category: 'Procedural Generation and Substrate Modules',
+    category: 'Procgen Infrastructure Panels',
     description:
         'Hosts a procgen substrate\'s standalone lab page (maze lab.html or '
         + 'Seedling watch.html) in an iframe and speaks the procgenLab: '

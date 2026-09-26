@@ -16,7 +16,7 @@ export const moduleInfo = {
     componentType: 'apcalcPanel',
     icon: '🧮',
     column: 2,
-    category: 'Game and Tool Modules',
+    category: 'Non-procgen Games',
     description: 'Calculator-themed puzzle game for Archipelago',
     requires: ['stateManager'],
 };

@@ -33,7 +33,7 @@ export const moduleInfo = {
     componentType: 'jtaSubstrateWrapperPanel',
     icon: '⚔️',
     column: 3,
-    category: 'Procedural Generation and Substrate Modules',
+    category: 'Procgen Substrate Panels',
     description:
         'Journey to Ascension hosted in an iframe as a loop-mode '
         + 'substrate. v1: one AP region = one JtA zone; the player '

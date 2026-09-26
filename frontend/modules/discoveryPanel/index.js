@@ -21,7 +21,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/discoveryPanel.md',
   icon: '🔍',
   column: 2, // Middle column
-  category: 'UI Panel Modules',
+  category: 'Game Mode Panels',
   description: 'Discovery mode settings and discovered items display.',
   requires: ['discovery'],
 };

@@ -20,7 +20,7 @@ export const moduleInfo = {
   componentType: 'optionsPanel',
   icon: '\u2699',
   column: 2, // Middle column
-  category: 'Game and Tool Modules',
+  category: 'Data and Configuration Panels',
   description: 'General application settings and preferences.',
 };
 

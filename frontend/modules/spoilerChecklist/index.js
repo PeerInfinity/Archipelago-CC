@@ -44,7 +44,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/spoilerChecklist.md',
   icon: '📋',
   column: 2, // Middle column
-  category: 'UI Panel Modules',
+  category: 'Tracker Panels',
   description: 'Displays sphere log data as an interactive checklist.',
   requires: ['stateManager', 'commonUI', 'sphereState', 'locations'],
 };

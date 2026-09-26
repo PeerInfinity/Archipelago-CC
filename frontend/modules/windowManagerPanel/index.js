@@ -10,7 +10,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/windowManagerPanel.md',
   icon: '🪟',
   column: 2, // Middle column
-  category: 'UI Panel Modules',
+  category: 'Embedding and Windows',
   description: 'Window Manager display panel.',
   requires: ['windowAdapter', 'windowPanel'],
 };

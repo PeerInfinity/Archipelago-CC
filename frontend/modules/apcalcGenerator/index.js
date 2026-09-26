@@ -13,7 +13,7 @@ export const moduleInfo = {
     componentType: 'apcalcGeneratorPanel',
     icon: '🔧',
     column: 3,
-    category: 'Game and Tool Modules',
+    category: 'Non-procgen Games',
     description: 'Generate APCalc puzzle data with configurable parameters',
     requires: ['stateManager'],
 };

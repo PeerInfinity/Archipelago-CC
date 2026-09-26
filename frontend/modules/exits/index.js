@@ -21,7 +21,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/exits.md',
   icon: '🚪',
   column: 3, // Right column,
-  category: 'UI Panel Modules',
+  category: 'Tracker Panels',
   description: 'Exits display panel.',
   requires: ['stateManager', 'commonUI'],
 };

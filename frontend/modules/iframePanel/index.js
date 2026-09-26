@@ -10,7 +10,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/iframePanel.md',
   icon: '🖼️',
   column: 3, // Right column
-  category: 'UI Panel Modules',
+  category: 'Embedding and Windows',
   description: 'Iframe Panel display panel.',
   allowMultipleInstances: true,
   requires: ['iframeAdapter'],

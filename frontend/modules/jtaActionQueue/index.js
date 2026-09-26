@@ -11,7 +11,7 @@ export const moduleInfo = {
     componentType: 'jtaActionQueue',
     icon: '',
     column: 2,
-    category: 'Game and Tool Modules',
+    category: 'Non-procgen Games',
     description: 'Queue and execute actions for Journey to Ascension.',
     requires: ['jtaQueueEngine'],
 };

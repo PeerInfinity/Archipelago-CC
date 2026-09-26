@@ -223,10 +223,15 @@ export const DOCS_INDEX = Object.freeze([
  * (moduleCategoryPins.test.js); the "All panels" group is split by them.
  */
 export const CATEGORY_ORDER = Object.freeze([
-    "Core Service Modules",
-    "UI Panel Modules",
-    "Procedural Generation and Substrate Modules",
+    "Tracker Panels",
+    "Game Mode Panels",
     "Loop Mode Modules",
-    "Game and Tool Modules",
-    "Utility Modules"
+    "Non-procgen Games",
+    "Data and Configuration Panels",
+    "Analysis Panels",
+    "Embedding and Windows",
+    "Procgen Substrate Panels",
+    "Procgen Infrastructure Panels",
+    "Developer and Testing Panels",
+    "Core Service Modules"
 ]);

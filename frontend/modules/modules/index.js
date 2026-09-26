@@ -39,7 +39,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/modules.md',
   icon: '📦',
   column: 1, // Left column,
-  category: 'UI Panel Modules',
+  category: 'Data and Configuration Panels',
   description: 'Panel to manage modules.',
 };
 

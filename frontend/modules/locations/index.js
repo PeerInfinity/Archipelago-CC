@@ -21,7 +21,7 @@ export const moduleInfo = {
   docs: 'docs/json/user/modules/locations.md',
   icon: '📍',
   column: 3, // Right column,
-  category: 'UI Panel Modules',
+  category: 'Tracker Panels',
   description: 'Locations display panel.',
   requires: ['stateManager', 'commonUI'],
 };

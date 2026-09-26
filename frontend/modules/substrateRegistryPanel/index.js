@@ -20,7 +20,7 @@ export const moduleInfo = {
     componentType: 'substrateRegistryPanel',
     icon: '🗂️',
     column: 3,
-    category: 'Procedural Generation and Substrate Modules',
+    category: 'Procgen Infrastructure Panels',
     description:
         'Shows the live substrate registry: every registered entry and field, '
         + 'the playback-controller and shared item-type answers in this app, and '
