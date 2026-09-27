@@ -73,7 +73,17 @@
  * demand and it is said as such: it catches the case in the REPORT rather than
  * refusing it at generation time.
  *
- * ── ⛔⛔⛔ AND IT IS **NOT IN `elementSpec`'s CATALOGUE**, ON THREE
+ * ── ⛓⛓⛓ THE `shortcut` HEAD IS REGISTERED NOW — AND IT IS NOT THIS FILE ──
+ *
+ * Seedling substrate S1 (D2, 2026-09-26): wall 1 below MOVED — R9 slice L15
+ * gave the solver a derived `break` — and re-measured on the same loop room a
+ * rock on the short arc solves in **148 ticks with the sword and 244 without**.
+ * So `elementSpec`'s `shortcut` head is `soloDoor.ROCK_SHORTCUT`: the rock is
+ * the door, there is no body, and walls 2 and 3 (both about the BODY) cannot
+ * fire. THIS element is the KILL-LOCK shortcut, and walls 2 and 3 still stand
+ * against it — so it stays written and unregistered, as below.
+ *
+ * ── ⛔⛔⛔ AND THIS ELEMENT IS **NOT IN `elementSpec`'s CATALOGUE**, ON THREE
  *     MEASUREMENTS — arc 5, slice 5's central finding ─────────────────
  *
  * The brief's D2 said *"the grade is the point"*: `requirementsFor` WITHOUT the

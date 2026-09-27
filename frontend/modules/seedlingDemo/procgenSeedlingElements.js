@@ -109,7 +109,9 @@ import { KILL_BODY_ID, KILL_DOOR_ID } from '../procgenCore/elements/killGate.js'
 import {
     SHORTCUT_BODY_ID, SHORTCUT_DOOR_ID,
 } from '../procgenCore/elements/shortcut.js';
-import { ROCK_GATE_DOOR_ID } from '../procgenCore/elements/soloDoor.js';
+import {
+    ROCK_GATE_DOOR_ID, ROCK_SHORTCUT_DOOR_ID,
+} from '../procgenCore/elements/soloDoor.js';
 import { connected, reachableFrom, shortestPath } from '../procgenCore/gridFlood.js';
 import { ELEMENT_TABLE, NONE as ELEMENTS_NONE } from '../procgenCore/elementSpec.js';
 
@@ -1006,7 +1008,10 @@ export function seedlingOnConnectorEntities({ placed, tagFor }) {
          * band, and `check()`'s `tag >= 0 && !checkPersistence(tag)` then keeps a
          * broken rock broken on a revisit — the kill lock's own durable clear.
          */
-        if (e.id === ROCK_GATE_DOOR_ID) {
+        /** ⛓ S1, D2 — the ROCK SHORTCUT's rock is the rock gate's rock: the
+         *  mechanism is identical and only the LAW that chose the cell differs
+         *  (the kill-lock shortcut's own argument, one element over). */
+        if (e.id === ROCK_GATE_DOOR_ID || e.id === ROCK_SHORTCUT_DOOR_ID) {
             const tag = tagFor();
             tags.rock = tag;
             entities.push({ type: 'breakablerock', tx: e.x, ty: e.y,

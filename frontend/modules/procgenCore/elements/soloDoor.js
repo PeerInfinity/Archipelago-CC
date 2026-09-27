@@ -70,10 +70,25 @@
  *     (the door is NOT a cut and the walk round is strictly longer —
  *     `the-shortcut-is-a-cut` / `the-shortcut-does-not-shorten`).
  *  4. ONE DRAW: `rng.pick` over the candidates that passed, in path order.
+ *
+ * ── ⛓⛓⛓ THE SHORTCUT DEMANDS ITS LONG WAY — measured at S1's W2 ─────────
+ *
+ * The shortcut law is asked of the SKELETON, and pass 2 runs after it. Over
+ * 7 kinds x {10x10, 14x14} x seeds 1..12 (bounds 3/4/3) the first build placed
+ * and certified 87 shortcuts and the differential graded **51 SHORTENS and 34
+ * STRONG** — a shortcut graded STRONG is a level whose LONG way pass 2 painted
+ * shut (the without-arm's words: *"no corridor … to a stance that can
+ * collect"*; the kept templates were `pit-patch`, `water-pool`,
+ * `wall-segment`). Re-run with pass 2 cut to one obstacle, three of four such
+ * cells graded SHORTENS. That is arc-5 slice 5's residue #5 (*"pass 2 … may
+ * wall the long arc"*) arriving on Seedling, and the kill gate's cure applies:
+ * a `demand` — every cell of ONE shortest route with the rock cell walled must
+ * stay `floor`, so the level that ships still has the way round.
  */
 
 import { LAW_CUT, LAW_SHORTCUT, defineElement } from '../elements.js';
-import { DOOR_GOAL_MIN, doorCandidates, growWall, tilesFor } from './roomDoor.js';
+import { shortestPath } from '../gridFlood.js';
+import { DOOR_GOAL_MIN, cellKey, doorCandidates, growWall, tilesFor } from './roomDoor.js';
 
 /** The ids the BINDING looks up — one per element, so a payload, a census and
  *  a lifted claim can each say WHICH element put the obstacle there. */
@@ -160,11 +175,13 @@ export function buildSoloDoor(room, { law = LAW_CUT, approach = null } = {}) {
                 const why = room.shortcutLaw({ ...args, lengths });
                 if (why) { noteClause(seen, why); continue; }
                 placed = Object.freeze({ cand, wall: Object.freeze(wall), tiles,
-                    lengths: Object.freeze({ ...lengths }) });
+                    lengths: Object.freeze({ ...lengths }),
+                    demand: longWayDemand(room, cand, wall) });
             } else {
                 const why = room.doorLaw(args);
                 if (why) { seen.add('wall-does-not-seal'); continue; }
-                placed = Object.freeze({ cand, wall: Object.freeze(wall), tiles, lengths: null });
+                placed = Object.freeze({ cand, wall: Object.freeze(wall), tiles, lengths: null,
+                    demand: Object.freeze([]) });
             }
             break;
         }
@@ -184,6 +201,24 @@ export function buildSoloDoor(room, { law = LAW_CUT, approach = null } = {}) {
     return { candidates: Object.freeze(ok) };
 }
 
+/**
+ * ⛓ THE LONG WAY, AS A DEMAND — one shortest start→goal route over the skeleton
+ * with the door cell and the grown wall solid, every cell `floor` except the
+ * ones this element owns (the contract refuses a demand on a cell the element
+ * writes). ⛔ ONE route, not the region: the claim is *a way round exists*, and
+ * the smallest set that keeps it true is the least room taken from pass 2.
+ */
+function longWayDemand(room, cand, wall) {
+    const shut = new Set([cellKey(cand.cell.x, cand.cell.y),
+        ...wall.map((c) => cellKey(c.x, c.y))]);
+    const path = shortestPath(room.width, room.height,
+        (x, y) => !shut.has(cellKey(x, y)) && room.floorAt(x, y), room.start, room.goal) ?? [];
+    const mine = new Set([...shut, cellKey(cand.before.x, cand.before.y)]);
+    return Object.freeze(path.filter((c) => !mine.has(cellKey(c.x, c.y)))
+        .map((c) => Object.freeze({ x: c.x, y: c.y, must: 'floor' }))
+        .sort((a, b) => (a.y - b.y) || (a.x - b.x)));
+}
+
 /** One chosen candidate → the contract's placement. Absolute cells throughout. */
 function placementOf(pick, count, id) {
     return {
@@ -196,10 +231,10 @@ function placementOf(pick, count, id) {
         },
         doorCells: [{ x: pick.cand.cell.x, y: pick.cand.cell.y }],
         clearer: [{ x: pick.cand.before.x, y: pick.cand.before.y }],
-        /** ⛔ EMPTY: there is no body whose region pass 2 could poison, and the
-         *  one thing that opens the door is the player standing at `clearer`,
-         *  which the binding OWNS (pass 2 cannot paint it). */
-        demand: Object.freeze([]),
+        /** ⛔ EMPTY for the two gates: there is no body whose region pass 2
+         *  could poison, and the opener stands at `clearer`, which the binding
+         *  OWNS. The SHORTCUT's is its long way (`longWayDemand`). */
+        demand: pick.demand,
         area: null,
         symbols: { holds: [], grants: [] },
         cost: {
@@ -234,10 +269,15 @@ export function assertSoloPlacement(owner, id, { shortcut = false } = {}) {
             fail(`${owner}: the \`clearer\` (${c.x},${c.y}) is not 4-adjacent to the door `
                 + `(${door.x},${door.y}). The opener stands NEXT TO a one-obstacle door.`);
         }
-        if ((placement.demand ?? []).length !== 0) {
-            fail(`${owner}: a one-obstacle door declares NO \`demand\` — it has no body.`);
+        if (!shortcut && (placement.demand ?? []).length !== 0) {
+            fail(`${owner}: a one-obstacle GATE declares NO \`demand\` — it has no body.`);
         }
         if (shortcut) {
+            const demand = placement.demand ?? [];
+            if (demand.length === 0 || demand.some((d) => d.must !== 'floor')) {
+                fail(`${owner}: a shortcut DEMANDS its long way stay \`floor\` — a non-empty `
+                    + 'list of floor cells (see the module docblock\'s W2 measurement).');
+            }
             const { stepsOpen, stepsWalled } = placement.cost;
             if (!Number.isInteger(stepsOpen) || !Number.isInteger(stepsWalled)
                 || stepsWalled <= stepsOpen) {
