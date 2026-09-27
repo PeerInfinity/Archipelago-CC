@@ -6,6 +6,7 @@ import { loadAndMergeJsonFiles, getConfigPaths } from '../../utils/settingsMerge
 import { resolveFirstPresetPath } from '../../utils/presetResolver.js';
 import { FALLBACK_RULES } from '../../data/fallbackRules.js';
 import { restoreLastWorld } from '../../modules/stateManager/worldPersistence.js';
+import { AUTO_LOAD_MODE_DEFAULT } from './modePersistenceDefaults.js';
 
 /**
  * Reads the autoLoadMode setting to determine if localStorage data should be loaded.
@@ -15,7 +16,7 @@ import { restoreLastWorld } from '../../modules/stateManager/worldPersistence.js
  * @param {Object} logger - Logger instance
  * @returns {Promise<boolean>}
  */
-async function shouldLoadFromLocalStorage(fetchJson, logger) {
+export async function shouldLoadFromLocalStorage(fetchJson, logger) {
   try {
     // First, try to get settings from localStorage mode data
     const lastActiveMode = localStorage.getItem(LOCAL_STORAGE_LAST_ACTIVE_MODE_KEY);
@@ -41,11 +42,11 @@ async function shouldLoadFromLocalStorage(fetchJson, logger) {
       return settingsJson.generalSettings.autoLoadMode;
     }
   } catch (error) {
-    logger.warn('init', 'Error reading autoLoadMode setting, defaulting to false:', error);
+    logger.warn('init', `Error reading autoLoadMode setting, defaulting to ${AUTO_LOAD_MODE_DEFAULT}:`, error);
   }
 
-  // Default to false (don't auto-load from localStorage)
-  return false;
+  // Absent everywhere → the shared default (the one the schema declares).
+  return AUTO_LOAD_MODE_DEFAULT;
 }
 
 /**

@@ -40,6 +40,17 @@ The console in the center panel accepts a few client-specific commands, even whe
 
 - **Reset settings:** If you want to reset all of the settings to the defaults, one way to do this is by clicking the "Reset Default Mode" button in the JSON panel.  Another way to reset the settings to the defaults is by adding "?mode=reset" to the page's URL.
 
+## Saved Settings and Auto-load Mode
+
+- **Every setting you change is saved in your browser straight away**, under the current mode (the `?mode=` in the address, or `default`). Only the setting you changed is written; everything you saved before stays as it was.
+- **Auto-load Mode** (Options panel → *Mode Persistence*) is **on** by default. While it is on:
+  - Opening the app with a plain address (no `?mode=`) reopens your **last active mode** with its saved settings. The last active mode is the one the JSON panel's *Save to LocalStorage* or *Known Modes → Load* last set, or the Editor's *Loaded Mode Data* apply; if none of those has happened, it is `default`.
+  - Once a mode has saved settings, they are used **instead of** the shipped `settings.json`. A later change to that file does not reach you until you reset (below).
+- **To turn Auto-load off:** open the app with a plain address, open the Options panel, and under *Mode Persistence* choose **No** for *Auto-load Mode*. That choice is saved like any other setting, so it stays off after a reload. With it off, a plain address starts from `settings.json`; your saved settings are kept (a setting you change meanwhile is added to them, nothing else is overwritten), and they come back when you choose **Yes** again, or straight away with `?mode=default`.
+- An address that names a mode (`?mode=loops`) always loads that mode's saved settings, whether Auto-load is on or off.
+- **Starting fresh:** `?reset=true` clears the saved data of the mode it opens (`?reset=true&mode=loops` for another mode) and forgets the last active mode; `?mode=reset` does the same for the `default` mode, as does the JSON panel's *Reset Default Mode*. The Options panel's *Reset to Defaults* replaces the current mode's saved settings with the defaults.
+- **Running a test mode by hand:** the `test-*` modes (for example `?mode=test-regression`) keep saved settings too, and the tests change settings while they run. So the second time you open that address in the same browser, it starts from whatever the first run left behind. Open `?reset=true&mode=test-regression` instead to run it from a clean state. The automated test runs (`npm test`) open a fresh browser every time and are not affected.
+
 ## Frequently Asked Questions (FAQs)
 
 **Q: Do I need both the `.archipelago` file and `rules.json`?**

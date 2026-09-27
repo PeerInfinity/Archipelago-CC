@@ -138,7 +138,7 @@ These parameters work together to load the correct game rules from preset files.
 **Details:**
 - The mode parameter determines which configuration is loaded from `frontend/modes.json`
 - Each mode can specify different rules files, module configurations, layout presets, and settings
-- If no mode is specified, the application will use the last active mode from localStorage or fall back to "default"
+- If no mode is specified, the application will use the last active mode from localStorage or fall back to "default" — while `generalSettings.autoLoadMode` is on (the default, `frontend/app/mode/modePersistenceDefaults.js`); with it off, always "default"
 - Mode detection occurs early in the initialization process
 
 ### `reset`

@@ -2,6 +2,8 @@
 
 import { getModuleEventBus } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import { CORE_SETTINGS_SCHEMAS } from '../../app/core/coreSettingsSchemas.js';
+import { AUTO_LOAD_MODE_DEFAULT, AUTO_SAVE_MODE_DEFAULT } from '../../app/mode/modePersistenceDefaults.js';
 import { formatBuildInfo, fetchSourceStamp } from '../../app/buildInfo.js';
 import { DiscoveryPanelUI } from '../discoveryPanel/discoveryPanelUI.js';
 import {
@@ -76,8 +78,8 @@ export class OptionsPanelUI {
       colorblindPathAnalyzer: false,
       playerName: 'Player1',
       defaultServer: 'ws://localhost:38281',
-      autoSaveMode: false,
-      autoLoadMode: false,
+      autoSaveMode: AUTO_SAVE_MODE_DEFAULT,
+      autoLoadMode: AUTO_LOAD_MODE_DEFAULT,
       logLevel: 'WARN',
       useSubstitutedNames: true,
     };
@@ -530,8 +532,8 @@ export class OptionsPanelUI {
       this.settings.colorblindPathAnalyzer = await settingsManager.getSetting('colorblindMode.pathAnalyzer', false);
       this.settings.playerName = await settingsManager.getSetting('playerName', 'Player1');
       this.settings.defaultServer = await settingsManager.getSetting('moduleSettings.client.defaultServer', 'ws://localhost:38281');
-      this.settings.autoSaveMode = await settingsManager.getSetting('generalSettings.autoSaveMode', false);
-      this.settings.autoLoadMode = await settingsManager.getSetting('generalSettings.autoLoadMode', false);
+      this.settings.autoSaveMode = await settingsManager.getSetting('generalSettings.autoSaveMode', AUTO_SAVE_MODE_DEFAULT);
+      this.settings.autoLoadMode = await settingsManager.getSetting('generalSettings.autoLoadMode', AUTO_LOAD_MODE_DEFAULT);
       this.settings.logLevel = await settingsManager.getSetting('logging.defaultLevel', 'WARN');
       this.settings.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
     } catch (error) {
@@ -746,7 +748,10 @@ export class OptionsPanelUI {
     content.className = 'options-section-content';
 
     content.appendChild(this.createBooleanSetting('autoSaveMode', 'Auto-save Mode', 'Automatically save mode state on changes'));
-    content.appendChild(this.createBooleanSetting('autoLoadMode', 'Auto-load Mode', 'Automatically load saved mode state on startup'));
+    // The description is the schema's (it states what ON and OFF do, and how
+    // to turn it off), so the two views of this switch say the same thing.
+    const autoLoadSpec = CORE_SETTINGS_SCHEMAS.generalSettings.properties.autoLoadMode;
+    content.appendChild(this.createBooleanSetting('autoLoadMode', autoLoadSpec.label, autoLoadSpec.description));
 
     section.appendChild(content);
     this.contentContainer.appendChild(section);

@@ -2,6 +2,7 @@
 // Extracted from init.js lines 484-590
 
 import { LAST_WORLD_KEY } from '../../modules/stateManager/worldPersistence.js';
+import { AUTO_LOAD_MODE_DEFAULT, AUTO_SAVE_MODE_DEFAULT } from './modePersistenceDefaults.js';
 
 // Constants for localStorage keys
 const LOCAL_STORAGE_MODE_PREFIX = 'archipelagoToolSuite_modeData_';
@@ -27,12 +28,14 @@ function clearLastWorld() {
  * Since this runs before settingsManager is initialized, we need to:
  * 1. Check localStorage for saved mode data that might contain settings
  * 2. Fall back to fetching defaults from settings.json
+ * 3. Fall back to the shared defaults (modePersistenceDefaults.js — the
+ *    same values the settings schema declares)
  *
  * @param {Object} logger - Logger instance
  * @returns {Promise<{autoLoadMode: boolean, autoSaveMode: boolean}>}
  */
-async function getAutoModeSettings(logger) {
-  const defaults = { autoLoadMode: false, autoSaveMode: false };
+export async function getAutoModeSettings(logger) {
+  const defaults = { autoLoadMode: AUTO_LOAD_MODE_DEFAULT, autoSaveMode: AUTO_SAVE_MODE_DEFAULT };
 
   try {
     // First, try to get settings from localStorage mode data

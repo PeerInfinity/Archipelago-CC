@@ -24,6 +24,10 @@ import { centralRegistry } from './centralRegistry.js';
 // standalone lab page reads the same default without any of app/core. This file
 // stays what it is: the REGISTRAR for top-level scopes.
 import { RULES_JSON_SETTINGS_SCHEMA } from '../../modules/presets/documentBundle.js';
+// ⛓ settings-persistence S2 — the mode-persistence defaults are shared with
+// the two boot readers that run before settingsManager (modeManager /
+// modeDataLoader), so the schema and the boot cannot disagree again.
+import { AUTO_LOAD_MODE_DEFAULT, AUTO_SAVE_MODE_DEFAULT } from '../mode/modePersistenceDefaults.js';
 
 export const CORE_SETTINGS_SCHEMAS = {
   generalSettings: {
@@ -38,15 +42,15 @@ export const CORE_SETTINGS_SCHEMAS = {
       },
       autoSaveMode: {
         type: 'boolean',
-        default: false,
+        default: AUTO_SAVE_MODE_DEFAULT,
         label: 'Auto-save Mode',
         description: 'Automatically save mode state on changes',
       },
       autoLoadMode: {
         type: 'boolean',
-        default: false,
+        default: AUTO_LOAD_MODE_DEFAULT,
         label: 'Auto-load Mode',
-        description: 'Automatically load saved mode state on startup',
+        description: 'On (the default): a plain URL (no ?mode=) reopens your last active mode with its saved settings, and those saved settings are used in place of the shipped settings.json. Off: a plain URL starts from settings.json; your saved settings are kept and come back when you turn this on again (or open ?mode=default). To turn it off: open the app with a plain URL and choose No here.',
       },
       useSubstitutedNames: {
         type: 'boolean',
