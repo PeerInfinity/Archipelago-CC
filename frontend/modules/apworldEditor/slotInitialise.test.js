@@ -21,7 +21,9 @@ import { describe, expect, it } from 'vitest';
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { createEditSession, foldEdits } from '../procgenCore/editCore.js';
-import { computeSourceCounts, layoutTopDown, resolveTopDownStart } from '../procgenPipeline/procgenPipelineEngine.js';
+import {
+    TOPDOWN_START_REFUSALS, computeSourceCounts, layoutTopDown, resolveTopDownStart,
+} from '../procgenPipeline/procgenPipelineEngine.js';
 import { createRng } from '../shared/rng.js';
 import { rulesEditAdapter } from './rulesEditAdapter.js';
 import { sidecarIssues } from './sidecarIssues.js';
@@ -126,6 +128,35 @@ describe('which slots can be initialised (initialiseFacts)', () => {
         const meta = JSON.parse(JSON.stringify(doc));
         meta.procgen_metadata = { driver: 'top-down' };
         expect(initialiseFacts(meta, P).blocker).toBe(INITIALISE_BLOCKERS.HAS_METADATA);
+    });
+
+    it('⛔ M3 — two declared starts: MULTI_START (before NO_START); the op refuses by name, the engine throws by name', () => {
+        const twoStarts = (starts) => {
+            const doc = JSON.parse(JSON.stringify(DOCS.apcalc));
+            doc.start_regions[P] = { default: starts, available: [] };
+            return doc;
+        };
+        const doc = twoStarts(['C', 'A']);
+        const f = initialiseFacts(doc, P);
+        expect(f.blocker).toBe(INITIALISE_BLOCKERS.MULTI_START);
+        expect(f.declaredStarts).toEqual(['C', 'A']);
+        expect(f.bare).toBe(true);
+        // ⛓ precedence: a list of two is the refusal even when the second is not a region.
+        expect(initialiseFacts(twoStarts(['C', 'Nowhere']), P).blocker).toBe(INITIALISE_BLOCKERS.MULTI_START);
+        const args = { player: P, substrate: DEFAULT_SUBSTRATE_ID, gridDims: { width: 12, height: 12 }, seed: 1, backExits: 'add' };
+        const refusal = initialiseOpRefusal(doc, args);
+        expect(refusal).toContain('declares 2 start regions');
+        expect(refusal).toContain('"C", "A"');
+        const res = applyRulesDocOp(doc, { op: INITIALISE_OP, ...args });
+        expect(res.ok).toBe(false);
+        expect(res.error).toBe(refusal);
+        // ⛓ the engine's own refusal, read by the plan (the op never reaches it).
+        const plan = planInitialise(doc, P, args);
+        expect(plan.ok).toBe(false);
+        expect(plan.threw).toBe(TOPDOWN_START_REFUSALS.multiStart(2));
+        // ⛓ one declared start is not refused (the probed apcalc itself).
+        expect(initialiseFacts(DOCS.apcalc, P).declaredStarts).toEqual(['C']);
+        expect(initialiseOpRefusal(DOCS.apcalc, args)).toBeNull();
     });
 
     it('⛓ the resolved start and Menu are the LAYOUT\'s own', () => {

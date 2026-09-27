@@ -51,6 +51,18 @@ describe('the door', () => {
         for (const p of Object.keys(FOUR.regions)) expect(initialiseDoorShown(FOUR, p), p).toBe(false);
         expect(initialiseDoorShown(APCALC, '5')).toBe(false);
     });
+
+    it('⛔ M3 — a slot declaring TWO starts still gets the door; its preview is the op\'s refusal, no plan', () => {
+        const doc = JSON.parse(JSON.stringify(APCALC));
+        doc.start_regions[P] = { default: ['C', 'A'], available: [] };
+        expect(initialiseDoorShown(doc, P)).toBe(true);
+        const st = initialiseFormDefaults(doc, P);
+        const pv = initialisePreview(doc, P, st);
+        expect(pv.refusal).toBe(initialiseOpRefusal(doc, initialiseArgs(P, st)));
+        expect(pv.refusal).toContain('declares 2 start regions');
+        expect(pv.text).toBe(pv.refusal);
+        expect(pv.plan).toBeNull();
+    });
 });
 
 describe('the form', () => {
