@@ -15,7 +15,9 @@ import { makeLocationName } from '../procgenCore/apLocationNaming.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { ScenarioPool } from '../shared/procgen/scenarioPool.js';
-import { makeRulesJsonScaffold, makeHasRule, makeAndRule, makeExit } from '../shared/rulesJsonBuilder.js';
+import {
+    makeRulesJsonScaffold, makeHasRule, makeAndRule, makeExit, makeTrueRule,
+} from '../shared/rulesJsonBuilder.js';
 import { validateSpherePlan } from './spherePlanner.js';
 import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
 import {
@@ -1759,9 +1761,9 @@ export function layoutTopDown(rulesJson, opts, rng) {
             for (const exit of fromRegion.exits ?? []) {
                 const targetName = exit.connected_region;
                 if (!targetName) continue;
-                // Skip the synthetic Menu region everywhere — it's a
-                // wrapper, not a playable region. buildRulesJson re-emits
-                // it on the output side.
+                // Skip the stripped Menu everywhere — it has no cell; its
+                // exits feed the roots, and buildRulesJson emits the source
+                // Menu itself (finalizeTopDown's menuRegion).
                 if (menuName && targetName === menuName) continue;
                 if (!sourceRegions[targetName]) continue;
 
@@ -2231,7 +2233,40 @@ export function finalizeTopDown(layout) {
         attributionWarnings = attributed.warnings;
     }
 
-    return { grid, startCell, stats, sphereTree, spherePlan, attributionWarnings };
+    const { menuRegion, menuWarnings } = sourceMenuRegion(layout);
+    return {
+        grid, startCell, stats, sphereTree, spherePlan, attributionWarnings,
+        menuRegion, menuWarnings,
+    };
+}
+
+/**
+ * ⛓⛓ M1 (R8) — **THE SOURCE MENU THE COMPILE KEEPS.** The Menu `layoutTopDown`
+ * stripped (`layout.menuName`), as `buildRulesJson`'s `menuRegion`: its exits
+ * whose target the grid placed (name, `connected_region`, `access_rule`
+ * verbatim, Menu-exit order) and its locations verbatim. A Menu exit whose
+ * target was NOT placed is dropped — the document must not gain a dangling exit —
+ * and named in `menuWarnings`. `{menuRegion: null, menuWarnings: []}` when the
+ * layout stripped no Menu.
+ */
+function sourceMenuRegion(layout) {
+    const { menuName, sourceRegions, cellsByName } = layout;
+    const source = menuName ? sourceRegions?.[menuName] : null;
+    if (!source) return { menuRegion: null, menuWarnings: [] };
+    const exits = [];
+    const menuWarnings = [];
+    for (const e of source.exits ?? []) {
+        const target = e?.connected_region;
+        if (target === menuName || (target && cellsByName.has(target))) {
+            exits.push({ name: e.name, connected_region: target, access_rule: e.access_rule ?? null });
+        } else {
+            menuWarnings.push(`Menu exit "${e?.name}" → "${target}" dropped: its target was not placed`);
+        }
+    }
+    return {
+        menuRegion: { name: menuName, exits, locations: source.locations ?? [] },
+        menuWarnings,
+    };
 }
 
 /**
@@ -2455,6 +2490,12 @@ export function compileRegionGraph(grid, opts = {}) {
         // turns into place_locked_item (so even multiworld fill keeps
         // the item there). Used for the bounce start-stack arrow.
         lockedItems = [],
+        // ⛓ M1 (R8) — the SOURCE Menu a top-down layout stripped
+        // (`finalizeTopDown`'s `menuRegion`: `{name, exits, locations}`, its
+        // exits already filtered to placed targets). Compiled AFTER the grid, so
+        // every grid location and item keeps the id it had. null = none (every
+        // other driver; `buildRulesJson` then writes its synthetic Menu).
+        menuRegion = null,
     } = opts;
     const itemLib = { [LIBRARY_SLOT_FILLER_ITEM]: { classification: 'filler' }, ...rawItemLib };
     const lockedItemSet = new Set(lockedItems);
@@ -2501,49 +2542,11 @@ export function compileRegionGraph(grid, opts = {}) {
         // makeExit's null→True_ rewrite cannot fire.
         const regionExits = compiled.exits.map((e) => makeExit(e.id, e.target_region, e.rule));
 
-        const regionLocations = compiled.locations.map((loc) => {
-            const globalName = loc.global_name
-                ?? makeLocationName(compiled.region_name, loc.id, loc.position);
-            const numericId = nextLocationId++;
-            let itemPlacement = null;
-            if (loc.item) {
-                // Register the item and tally the canonical placement.
-                // Every non-event item belongs to the "Everything" group by
-                // convention (matches item_groups["1"] = ["Everything"]).
-                // First occurrence mints a numeric id that persists for
-                // the item's lifetime in this compile.
-                const classification = itemLib[loc.item]?.classification ?? 'progression';
-                if (!items[loc.item]) {
-                    items[loc.item] = {
-                        name: loc.item,
-                        id: nextItemId++,
-                        classification,
-                        groups: ['Everything'],
-                    };
-                }
-                itempool_counts[loc.item] = (itempool_counts[loc.item] || 0) + 1;
-                canonical_placements[globalName] = loc.item;
-
-                // Shape per rules.schema.json $defs/itemPlacement — what
-                // stateManager's checkLocation reads to add the item to
-                // inventory at runtime. canonical_placements alone isn't
-                // enough; stateManager looks at location.item directly.
-                itemPlacement = {
-                    name: loc.item,
-                    player: numericPlayerId,
-                    advancement: classification === 'progression',
-                    type: classification,
-                };
-            }
-            return {
-                name: globalName,
-                id: numericId,
-                access_rule: loc.rule,
-                ...(itemPlacement ? { item: itemPlacement } : {}),
-                ...(itemPlacement && lockedItemSet.has(loc.item)
-                    ? { locked: true } : {}),
-            };
-        });
+        const regionLocations = compiled.locations.map((loc) => compileLocation(
+            loc.global_name ?? makeLocationName(compiled.region_name, loc.id, loc.position),
+            loc.item,
+            loc.rule,
+        ));
 
         regions[compiled.region_name] = {
             name: compiled.region_name,
@@ -2552,13 +2555,72 @@ export function compileRegionGraph(grid, opts = {}) {
         };
     }
 
+    // ⛓ M1 — the source Menu: its exits and rules verbatim (makeExit's null→True_,
+    // as for any exit) and its locations through the SAME `compileLocation` a grid
+    // location takes, so its items join `items`, `itempool_counts` and
+    // `canonical_placements` exactly as a grid region's do.
+    const menu = menuRegion ? {
+        name: menuRegion.name,
+        exits: (menuRegion.exits ?? []).map((e) => makeExit(e.name, e.connected_region, e.access_rule)),
+        locations: (menuRegion.locations ?? []).map((loc) => compileLocation(
+            loc.name,
+            (typeof loc.item === 'string' ? loc.item : loc.item?.name) ?? null,
+            loc.access_rule || makeTrueRule(),
+        )),
+    } : null;
+
     return {
         regions,
         items,
         itempool_counts,
         canonical_placements,
         start_region_name: startRegion.region_id,
+        menu_region: menu,
     };
+
+    // One compiled location: a fresh numeric id; its item (when any) registered,
+    // pooled and canonically placed. Shared by the grid's regions and the Menu.
+    function compileLocation(globalName, item, rule) {
+        const numericId = nextLocationId++;
+        let itemPlacement = null;
+        if (item) {
+            // Register the item and tally the canonical placement.
+            // Every non-event item belongs to the "Everything" group by
+            // convention (matches item_groups["1"] = ["Everything"]).
+            // First occurrence mints a numeric id that persists for
+            // the item's lifetime in this compile.
+            const classification = itemLib[item]?.classification ?? 'progression';
+            if (!items[item]) {
+                items[item] = {
+                    name: item,
+                    id: nextItemId++,
+                    classification,
+                    groups: ['Everything'],
+                };
+            }
+            itempool_counts[item] = (itempool_counts[item] || 0) + 1;
+            canonical_placements[globalName] = item;
+
+            // Shape per rules.schema.json $defs/itemPlacement — what
+            // stateManager's checkLocation reads to add the item to
+            // inventory at runtime. canonical_placements alone isn't
+            // enough; stateManager looks at location.item directly.
+            itemPlacement = {
+                name: item,
+                player: numericPlayerId,
+                advancement: classification === 'progression',
+                type: classification,
+            };
+        }
+        return {
+            name: globalName,
+            id: numericId,
+            access_rule: rule,
+            ...(itemPlacement ? { item: itemPlacement } : {}),
+            ...(itemPlacement && lockedItemSet.has(item)
+                ? { locked: true } : {}),
+        };
+    }
 }
 
 // ScenarioPool now lives in shared/procgen/scenarioPool.js — it is
@@ -6626,6 +6688,13 @@ export function buildRulesJson(grid, opts = {}) {
         // worldgen package satisfies AP's test_completion_condition.
         // Top-down leaves this null and inherits the scaffold default.
         completionConditionItem = null,
+        // ⛓ M1 (R8) — the SOURCE Menu a top-down layout stripped
+        // (`finalizeTopDown`'s `menuRegion`), emitted IN PLACE OF the synthetic
+        // `{GameStart → start}` Menu: its exits (to placed targets) with their
+        // rules, its locations with their items (pooled and placed like a grid
+        // region's). null — grid-growth, sphere growth, a source with no Menu —
+        // keeps the synthetic one, byte for byte.
+        menuRegion = null,
     } = opts;
 
     if (!startCell) throw new Error('buildRulesJson: startCell required');
@@ -6633,6 +6702,7 @@ export function buildRulesJson(grid, opts = {}) {
     const compiled = compileRegionGraph(grid, {
         startCell, itemLib, obstacleLib, playerId,
         lockedItems: lockedCanonicalItems,
+        menuRegion,
     });
 
     const scaffold = makeRulesJsonScaffold({
@@ -6644,8 +6714,9 @@ export function buildRulesJson(grid, opts = {}) {
         playerName,
         // Menu is the virtual start region — AP convention. Real
         // starting geometry lives in compiled.start_region_name, which
-        // Menu connects to with an unconditional exit.
-        startRegions: ['Menu'],
+        // Menu connects to with an unconditional exit (or, for a top-down
+        // source, the source's own Menu under its own name — M1).
+        startRegions: [compiled.menu_region?.name ?? 'Menu'],
     });
 
     if (completionConditionItem) {
@@ -6660,7 +6731,7 @@ export function buildRulesJson(grid, opts = {}) {
     // Menu appears first.
     // ⛓ makeExit's own null→True_ rewrite IS the `{rule:'True_'}` this used to
     // spell inline — the third copy of that literal.
-    const menuRegion = {
+    const menu = compiled.menu_region ?? {
         name: 'Menu',
         exits: [makeExit('GameStart', compiled.start_region_name)],
         locations: [],
@@ -6669,7 +6740,7 @@ export function buildRulesJson(grid, opts = {}) {
     //   mutating door, by design (its header: "structural and knows no rule
     //   logic"), and a writer added for one caller would be the second spelling
     //   of the document shape it exists to make single.
-    scaffold.regions[playerId] = { Menu: menuRegion, ...compiled.regions };
+    scaffold.regions[playerId] = { [menu.name]: menu, ...compiled.regions };
     scaffold.items[playerId] = compiled.items;
     scaffold.itempool_counts[playerId] = compiled.itempool_counts;
     scaffold.canonical_placements[playerId] = compiled.canonical_placements;

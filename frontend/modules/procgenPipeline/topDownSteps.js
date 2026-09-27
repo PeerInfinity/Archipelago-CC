@@ -109,6 +109,7 @@ function stepCompile(env, { onProgress = null } = {}) {
     const c = env.compileIn;
     const {
         grid, startCell, stats, sphereTree, spherePlan, attributionWarnings,
+        menuRegion, menuWarnings,
     } = env.finalize;
     const enriched = !!(c.sphereLog && sphereTree && spherePlan);
     const rulesJson = buildRulesJson(grid, {
@@ -118,6 +119,8 @@ function stepCompile(env, { onProgress = null } = {}) {
         regionXpEffect: c.regionXpEffect ?? 'cost',
         assumeBidirectional: c.assumeBidirectional,
         startingItems: c.startingItems,
+        // ⛓ M1 — the source Menu ③ kept (null → the synthetic one).
+        menuRegion: menuRegion ?? null,
         // Embed the AUTHORITATIVE log verbatim so loop_costs reflect real AP logic.
         ...(enriched ? { sphereLog: c.sphereLog } : {}),
         // Granted ability items are placed at no location, so synthesise defs
@@ -137,7 +140,10 @@ function stepCompile(env, { onProgress = null } = {}) {
             ...(enriched ? { sphere_tree: sphereTree, sphere_plan: spherePlan } : {}),
         },
     });
-    env.compile = { rulesJson, enriched, attributionWarnings: attributionWarnings ?? [] };
+    env.compile = {
+        rulesJson, enriched, attributionWarnings: attributionWarnings ?? [],
+        menuWarnings: menuWarnings ?? [],
+    };
     env.completed = 3;
     return env;
 }

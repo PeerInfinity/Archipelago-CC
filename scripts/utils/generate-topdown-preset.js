@@ -254,7 +254,7 @@ async function main() {
     // every source region is placed, the placement count plateaus
     // (the rest are unreachable from the source's start, not a
     // sizing issue), or we hit the retry cap.
-    let grid, stats, startCell, sphereTree, spherePlan, attributionWarnings;
+    let grid, stats, startCell, sphereTree, spherePlan, attributionWarnings, menuRegion, menuWarnings;
     let attempt = 0;
     let prevPlaced = -1;
     while (true) {
@@ -271,6 +271,8 @@ async function main() {
         sphereTree = result.sphereTree;
         spherePlan = result.spherePlan;
         attributionWarnings = result.attributionWarnings ?? [];
+        menuRegion = result.menuRegion ?? null;
+        menuWarnings = result.menuWarnings ?? [];
         const placed = stats.regionsBuilt;
         const total = stats.regionsTotal;
         console.log(
@@ -309,6 +311,7 @@ async function main() {
         assumeBidirectional: source.assume_bidirectional_exits !== false,
         startingItems: source.starting_items?.['1'] ?? [],
         sourceItems: source.items?.['1'] ?? null,
+        menuRegion,
         ...(enriched ? { sphereLog } : {}),
         procgenMetadata: {
             driver: enriched ? 'top-down-sphere' : 'top-down',
@@ -334,6 +337,7 @@ async function main() {
         );
         for (const w of attributionWarnings) console.log(`  warn: ${w}`);
     }
+    for (const w of menuWarnings) console.log(`  warn: ${w}`);
     console.log(`Wrote ${args.out}`);
 }
 
