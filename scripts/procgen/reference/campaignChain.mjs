@@ -73,9 +73,13 @@ export async function buildCampaignChain() {
         segments: rows.length,
         promoted: rows.filter((r) => r.promoted).length,
         ticks: rows.reduce((n, r) => n + (r.ticks ?? 0), 0),
-        arrivesAt: rows[rows.length - 1]?.to ?? null,
+        // ⛓ R9 slice L18b: a TERMINAL tail (`to: null`) ends IN its own room.
+        arrivesAt: rows.length ? (rows[rows.length - 1].to ?? rows[rows.length - 1].level) : null,
+        terminal: rows[rows.length - 1]?.to === null,
         nextStep: frontier.nextStep ?? null,
         refusal: frontier.refusal ?? null,
+        complete: frontier.complete === true,
+        why: frontier.why ?? null,
         findings: missing.length
             ? [`${missing.join(', ')}: declared in the chain and NOT on disk`]
             : [],
@@ -90,7 +94,7 @@ export function campaignChainMarkdown(v) {
     const lines = [
         `\`${v.id}\` — **${v.segments} segments**, custody, from `
         + '`new Game(0,80,128)` with an empty save to the '
-        + `**L${v.arrivesAt}** arrival, **${v.ticks} ticks**. Segments 1–`
+        + `**L${v.arrivesAt}** ${v.terminal ? 'end of the route' : 'arrival'}, **${v.ticks} ticks**. Segments 1–`
         + `${v.promoted} are PROMOTED (their boots already ARE their predecessors' `
         + 'latches, so this chain gives them a RELATION rather than a rewrite); every '
         + 'later one boots its predecessor\'s MEASURED latch.',
@@ -98,13 +102,17 @@ export function campaignChainMarkdown(v) {
         '| # | tape | rooms | ticks | earns |',
         '|---|---|---|---|---|',
         ...v.rows.map((r) => `| ${r.n}${r.promoted ? ' ⛓' : ''} | \`${r.name}\` | `
-            + `L${r.level} → L${r.to} | ${r.ticks ?? '**not on disk**'} | ${earns(r)} |`),
+            + `L${r.level} → ${r.to === null ? 'END' : `L${r.to}`} | ${r.ticks ?? '**not on disk**'} | ${earns(r)} |`),
         '',
     ];
     if (v.nextStep && v.refusal) {
         lines.push(`**STOP — route step ${v.nextStep.step}, L${v.nextStep.level}.** `
             + `The chain ends at the last step the survey SOLVES; the first one it `
             + `refuses is the next work order: *${v.refusal.family}*.`);
+    } else if (v.complete || v.why) {
+        // ⛓ R9 slice L18b: the frontier's own sentence — ROUTE COMPLETE, or a
+        //   GAP LIST — rather than "no frontier", which a committed one is not.
+        lines.push(`**${v.complete ? 'ROUTE COMPLETE' : 'NO REFUSED STEP'}** — ${v.why}.`);
     } else {
         lines.push('**No frontier is committed**, so what is in front of the chain is '
             + 'unstated — run `census-seedling-campaign.mjs --write-frontier`.');

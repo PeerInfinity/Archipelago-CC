@@ -12,6 +12,7 @@ import { PLAYTHROUGH_CHAINS } from './playthroughWalk.js';
 import { DEMOS } from '../procgenDocs/demos.js';
 import { R8_ENEMY_BRIDGE, campaignBridgeCoverageFindings } from './r8Acceptance.js';
 import { atlasLevelSource } from './levelSource.js';
+import { campaignChainMarkdown } from '../../../scripts/procgen/reference/campaignChain.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..', '..');
@@ -115,7 +116,10 @@ describe('the campaign chain has ONE declaration (R9 slice 12d)', () => {
         // frontier is a GAP LIST (`nextStep: null`) and the tail's `to` is the
         // level of its own measured arrival instead — still the artifact's
         // word, never a literal.
-        expect(campaignNextLevel()).toBe(frontier.nextStep
+        // ⛓ R9 slice L18b: and when the chain walks the WHOLE route the tail is
+        // TERMINAL (`to: null`) — there is no next room, and the artifact says
+        // `complete`.
+        expect(campaignNextLevel()).toBe(frontier.complete ? null : frontier.nextStep
             ? frontier.nextStep.level : frontier.lastArrival.level);
         expect(frontier.lastArrival.segment).toBe(campaignTail().name);
     });
@@ -233,5 +237,41 @@ describe('⛔ a scratch change to the declaration MOVES every consumer', () => {
         expect(seq.title).toContain('to L16');
         vi.doUnmock('./campaignChain.js');
         vi.doUnmock('../seedlingDemo/campaignChain.js');
+    });
+});
+
+/**
+ * ⛓ R9 SLICE L18b — THE TERMINAL SEGMENT AND THE "ROUTE COMPLETE" SHAPE, as the
+ * generated reference prints them (§60.8 #3). A synthetic view: the function is
+ * pure, so the shapes are asserted before any tape takes them.
+ */
+describe('the reference prints a TERMINAL tail and the frontier\'s own sentence', () => {
+    const view = (over) => ({
+        id: 'r9-campaign', segments: 2, promoted: 0, ticks: 30, findings: [],
+        rows: [
+            { n: 1, name: 'a', level: 19, to: 20, ticks: 20, promoted: false, collects: ['bosskey'] },
+            { n: 2, name: 'b', level: 20, to: null, ticks: 10, promoted: false, collects: ['shield'] },
+        ],
+        arrivesAt: 20, terminal: true, nextStep: null, refusal: null,
+        complete: true, why: 'ROUTE COMPLETE — the chain walks all 21 route steps', ...over,
+    });
+    it('⛓ a terminal row reads `L20 → END` and the headline says "end of the route"', () => {
+        const md = campaignChainMarkdown(view({}));
+        expect(md).toContain('| 2 | `b` | L20 → END | 10 | `shield@L20` |');
+        expect(md).toContain('**L20** end of the route');
+        expect(md).toContain('**ROUTE COMPLETE** — ROUTE COMPLETE — the chain walks all 21');
+        expect(md).not.toContain('No frontier is committed');
+    });
+    it('⛓ a GAP LIST prints its `why`, not "no frontier"', () => {
+        const md = campaignChainMarkdown(view({
+            terminal: false, complete: false, why: 'no route step after the chain is refused',
+            rows: [{ n: 1, name: 'a', level: 19, to: 20, ticks: 20, promoted: false, collects: [] }],
+        }));
+        expect(md).toContain('**NO REFUSED STEP** — no route step after the chain is refused.');
+        expect(md).toContain('L19 → L20');
+    });
+    it('⛔ with no frontier sentence at all it still says so', () => {
+        expect(campaignChainMarkdown(view({ complete: false, why: null })))
+            .toContain('No frontier is committed');
     });
 });

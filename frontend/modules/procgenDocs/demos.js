@@ -218,7 +218,8 @@ import { CAMPAIGN_SEGMENT_NAMES, campaignTail } from
 
 /** The campaign's size and arrival room, DERIVED — never typed twice. */
 const CAMPAIGN_WINDOWS = CAMPAIGN_SEGMENT_NAMES.length;
-const CAMPAIGN_ARRIVES_AT = campaignTail().to;
+// ⛓ R9 slice L18b: a TERMINAL tail (`to: null`) ends in its own room.
+const CAMPAIGN_ARRIVES_AT = campaignTail().to ?? campaignTail().level;
 
 export const DEMOS = Object.freeze([
     Object.freeze({

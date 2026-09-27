@@ -381,11 +381,16 @@ const reach = (level, to) => ({ kind: 'reach-exit', exit: exitTo(level, to) });
  * from the sphere order independently, and its rows are compared against
  * these below.
  */
+/**
+ * ⛓ R9 SLICE L18b — A TERMINAL SEGMENT (`to: null`, the route's last step)
+ * gets NO `reach-exit`: the route ends in that room (`route.steps[].crossesTo`
+ * is null at the shield), so its goals are its `collects` alone.
+ */
 const SEGMENTS = CAMPAIGN_SEGMENTS.map((s) => Object.freeze({
     ...s,
     goals: [
         ...(s.collects ?? []).map((type) => collect(s.level, type)),
-        reach(s.level, s.to),
+        ...(s.to === null ? [] : [reach(s.level, s.to)]),
     ],
 }));
 
@@ -455,11 +460,25 @@ const runFrom = (boot, state) => createLevelRun({
 });
 
 /** The per-segment claims every walk on this chain owes. */
-function claimArrival(name, run, to) {
+function claimArrival(name, run, to, seg = null) {
     const hits = run.playerHits.length;
     const deaths = run.playerDeaths.length;
     check(`${name}: ZERO hits and ZERO deaths`, hits === 0 && deaths === 0,
         `hits ${hits}, deaths ${deaths}`);
+    /**
+     * ⛓ R9 SLICE L18b — THE TERMINAL SEGMENT CLAIMS NO ARRIVAL. It ends the
+     * route inside its own room: it must cross NOTHING (a transition would be
+     * a walk past the route's end) and must END holding what it collects —
+     * the goal list is the collects alone, and `solveSegment` refuses a goal
+     * it did not meet, so the row below restates that as the chain's claim.
+     */
+    if (to === null) {
+        check(`${name}: a TERMINAL segment crosses NOTHING — it ends the route in L${seg?.level}`,
+            run.transitions.length === 0 && run.level === seg?.level,
+            JSON.stringify(run.transitions.map((x) => `${x.t}:L${x.to_level}`))
+                + ` · ends in L${run.level}`);
+        return null;
+    }
     const t = run.transitions[run.transitions.length - 1];
     check(`${name}: ends at the L${to} ARRIVAL (§3.5)`, Boolean(t) && t.to_level === to,
         JSON.stringify(run.transitions.map((x) => `${x.t}:L${x.to_level}`)));
@@ -675,7 +694,7 @@ for (let i = 0; i < SEGMENTS.length; i += 1) {
         out = solveSegment({ run, goals: seg.goals, name: seg.name, boot,
             dashMode: DASH_MODE });
     }
-    claimArrival(seg.name, run, seg.to);
+    claimArrival(seg.name, run, seg.to, seg);
     results.push({ seg, run, out, boot, state: { ...state, persistence: solvedPersistence },
         before, to: seg.to });
     if (!CHECK && !last) {
@@ -756,7 +775,7 @@ check('⛓ every RECORDED segment\'s solved length is its committed tape\'s own'
 
 console.log(`\n## the chain: ${segSum} ticks over ${SEGMENTS.length} rooms`);
 SEGMENTS.forEach((s, i) => console.log(`   ${String(i + 1).padStart(2)} ${s.name.padEnd(13)} `
-    + `L${String(s.level).padEnd(3)} -> L${String(s.to).padEnd(3)} ${String(segTicks[i]).padStart(5)} t`));
+    + `L${String(s.level).padEnd(3)} -> ${(s.to === null ? 'END' : `L${s.to}`).padEnd(4)} ${String(segTicks[i]).padStart(5)} t`));
 const cuts = segTicks.slice(0, -1).map(((run) => (n) => { run += n; return run; })(0));
 console.log(`## PLAYTHROUGH_CHAINS.r9-campaign: cuts [${cuts.join(', ')}], `
     + `endsAt ${segSum}`);

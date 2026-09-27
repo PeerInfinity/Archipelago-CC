@@ -775,10 +775,14 @@ if (control.disabled) {
     '⛔ …and the DETACHED TAIL is NOT offered — ⚖ ruling 19 scopes the player to '
         + 'what plays continuously from a fresh game start',
     'no `r8-d2` / `r8-solve-18` anywhere in the readout or in `__campaign`');
-    check(frontier.nextStep ? /unsolved/i.test(camp.readout) : /no work order/i.test(camp.readout),
+    const tell = frontier.nextStep ? /unsolved/i
+        : frontier.complete ? /ROUTE COMPLETE/ : /no work order/i;
+    check(tell.test(camp.readout),
         frontier.nextStep
             ? '⛓ …but the readout SAYS the rooms beyond the arrival are unsolved'
-            : '⛓ …and with no refused step the readout SAYS there is no work order',
+            : frontier.complete
+                ? '⛓ …and with every route step walked the readout SAYS ROUTE COMPLETE'
+                : '⛓ …and with no refused step the readout SAYS there is no work order',
         camp.readout.slice(-160));
     }
 }
