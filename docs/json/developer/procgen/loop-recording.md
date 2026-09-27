@@ -73,7 +73,7 @@ Replay-emitted events must carry **`fromLoop: true`** — they are queue executi
 
 The flow above reads as if a replay always fits inside the visit that started it. For a `requiresLoopMode` substrate it usually does **not** — a recording of more than one substantive action costs more than one pool — and the mechanism that carries it across is not the obvious one.
 
-A native loop boundary does not stay inside the substrate. It is reported to the host, the host fires a real loop reset, and `fireLoopResetTeleport` teleports the player to the resolved start region — which reaches the substrate's bridge as a regionChanged-away and **ends the replay window**. So a multi-run replay continues **not by the window surviving** but by loops' **generic queue-restart retry**: the reset snaps the cursor to 0, the queue re-drives, routes back to the region, re-enters the Playback block, and calls `replayActions` again.
+A native loop boundary does not stay inside the substrate. It is reported to the host, the host fires a real loop reset, and `fireLoopResetTeleport` teleports the player to the loop start (the loops' rule: the resolved start region when the load skipped the declared start, else the declared start) — which reaches the substrate's bridge as a regionChanged-away and **ends the replay window**. So a multi-run replay continues **not by the window surviving** but by loops' **generic queue-restart retry**: the reset snaps the cursor to 0, the queue re-drives, routes back to the region, re-enters the Playback block, and calls `replayActions` again.
 
 Three requirements fall out, and they bind **every** fine-grained substrate, not just the one they were discovered on:
 

@@ -146,6 +146,26 @@ default) that first hop is taken automatically at load, exactly as
 | **Clear queue** | Remove all queued actions |
 | **Clear explores** | Remove only explore actions from the queue |
 
+### Where a reset puts you
+
+**Clear queue** and a reset from running the pool dry (`fireLoopResetTeleport`, the
+maze and text-adventure legs) teleport the player to the **loop start** — where
+the LOAD put the player — by ONE rule (`LoopState._resolveLoopStartRegion`, public
+as `loops.getLoopStartRegion`; the mana-out leg asks it rather than keeping a
+copy):
+
+- a plain world: the declared start (`startRegions[0]`);
+- a procgen world whose declared start is **skipped** — the *Skip the menu*
+  setting is on AND the start has exactly one exit (`menuPanelEngine.skipsStart`,
+  the rule the load's hop reads) — procgenPlayer's resolved start, the first
+  placed region, because that is where the player began;
+- otherwise (a start with several exits, e.g. an initialised `mm3`'s menu of 13
+  stages, or skip off) the **declared start**, where the menu lists every exit —
+  the same place the menu panel's Restart returns to.
+
+Until APWORLD SUBSTRATE CHANGE S3 both resets preferred the resolved start
+outright, so a multi-exit world's reset landed on its first placed stage.
+
 ### Processing States
 
 The queue cycles through these states:
