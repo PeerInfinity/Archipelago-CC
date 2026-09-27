@@ -190,6 +190,47 @@ describe('menuPanel module', () => {
         expect(dispatcher.published).toHaveLength(0);
     });
 
+    // --- M2: the one-exit rule -----------------------------------------------
+
+    /** ⛓ A plain world whose start has `n` exits. */
+    const withExits = (n) => ({
+        ...PLAIN_RULES,
+        regions: {
+            ...PLAIN_RULES.regions,
+            1: {
+                ...PLAIN_RULES.regions['1'],
+                Menu: { ...PLAIN_RULES.regions['1'].Menu, exits: Array.from({ length: n }, (_, i) => ({
+                    name: `Exit ${i}`, connected_region: 'Overworld' })) },
+            },
+        },
+    });
+    function loadDoc(doc) {
+        bus.emit('stateManager:rawJsonDataLoaded', { rawJsonData: doc, selectedPlayerInfo: { playerId: '1' } });
+        bus.emit('stateManager:rulesLoaded', {});
+    }
+
+    it('⛓⛓ skip ON, a start with SEVERAL exits: no move — the panel raises itself and lists them all', async () => {
+        await boot();
+        loadDoc(withExits(3));
+        expect(dispatcher.published).toHaveLength(0);
+        expect(bus.published).toEqual([{ event: 'ui:activatePanel', data: { panelId: 'menuPanel' } }]);
+        expect(getMenuContent().exits).toHaveLength(3);
+    });
+
+    it('⛓ skip ON, a procgen-owned world whose start has several exits: nobody moves, the panel raises itself', async () => {
+        await boot({ resolvedStart: 'region_0_0' });
+        loadDoc(withExits(2));
+        expect(dispatcher.published).toHaveLength(0);
+        expect(bus.published).toEqual([{ event: 'ui:activatePanel', data: { panelId: 'menuPanel' } }]);
+    });
+
+    it('⛓ skip ON, a start with no exit: no move, the panel raises itself', async () => {
+        await boot();
+        loadDoc(withExits(0));
+        expect(dispatcher.published).toHaveLength(0);
+        expect(bus.published).toEqual([{ event: 'ui:activatePanel', data: { panelId: 'menuPanel' } }]);
+    });
+
     // --- skip OFF ------------------------------------------------------------
 
     it('skip OFF: no move, and the panel activates itself instead', async () => {
@@ -252,10 +293,16 @@ describe('menuPanel module', () => {
         }]);
     });
 
-    it('Restart prefers procgenPlayer\'s resolved start over startRegions[0]', async () => {
+    /**
+     * ⛓ M2 (⚖ user 2026-09-26): Restart returns to the DECLARED start even when
+     * procgenPlayer answers a resolved start (the first warehoused region) — until
+     * M2 it preferred that one, so a warehoused world never got back to its menu.
+     */
+    it('Restart returns to the DECLARED start, not procgenPlayer\'s resolved start', async () => {
         await boot({ gameState: freshGameState('region_1_1'), resolvedStart: 'region_0_0' });
-        expect(restart().target).toBe('region_0_0');
-        expect(dispatcher.published[0].data.targetRegion).toBe('region_0_0');
+        expect(restart().target).toBe('Menu');
+        expect(dispatcher.published[0].data.targetRegion).toBe('Menu');
+        expect(gameState.getPath()).toHaveLength(0);
     });
 
     it('Restart does NOT re-fire the skip hop (a restart is not a load)', async () => {

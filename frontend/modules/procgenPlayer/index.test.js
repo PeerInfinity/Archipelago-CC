@@ -6,6 +6,7 @@ import {
     _testOnly_getWarehouse,
 } from './index.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { skipsStart } from '../menuPanel/menuPanelEngine.js';
 
 function makeMockEventBus() {
     const subscribers = new Map();
@@ -447,5 +448,53 @@ describe('procgenPlayer — the skip-the-menu setting gates the start hop', () =
         bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SAMPLE_RULES, selectedPlayerInfo: { playerId: '1' } });
         bus.publish('stateManager:rulesLoaded', {});
         expect(dispatcher.published.map((p) => p.data.source)).toEqual(['procgenPlayer-start']);
+    });
+    /**
+     * ⛓⛓ M2 — **ONE RULE, TWO PUBLISHERS** (⚖ user 2026-09-26: skip only a
+     * ONE-exit start). This module hops out of the declared start exactly when
+     * `menuPanelEngine.skipsStart` says so — the rule itself imported, the
+     * setting through `menuPanel.isSkipMenuEnabled` as before. Swept over 0–2
+     * warehoused exits × skip on/off, the hop fires iff the engine rule answers
+     * true: a copy of the rule here would drift from menuPanel's.
+     */
+    const withMenuExits = (n) => ({
+        ...SAMPLE_RULES,
+        regions: {
+            1: {
+                ...SAMPLE_RULES.regions['1'],
+                Menu: { exits: Array.from({ length: n }, (_, i) => ({ name: `To ${i}`, connected_region: `region_0_${i}` })) },
+            },
+        },
+    });
+
+    it.each([[1, true], [2, true], [1, false], [2, false]])(
+        '⛓⛓ %i warehoused Menu exit(s), skip %s: the hop fires iff skipsStart answers true', async (n, skip) => {
+            const ctx = setup(skip);
+            const doc = withMenuExits(n);
+            await initialize('procgenPlayer', 0, makeMockInitApi(ctx.bus, ctx.dispatcher, ctx.moduleFunctions));
+            ctx.bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: doc, selectedPlayerInfo: { playerId: '1' } });
+            ctx.bus.publish('stateManager:rulesLoaded', {});
+            const want = skipsStart(doc, '1', 'Menu', skip);
+            expect(want).toBe(skip && n === 1);
+            expect(ctx.dispatcher.published.map((p) => p.data.source)).toEqual(want ? ['procgenPlayer-start'] : []);
+            // ⛓ the resolved start still answers (a loop reset teleports to it either way).
+            expect(ctx.reg._calls.publicFunctions.get('procgenPlayer.getResolvedStartRegion')()).toBe('region_0_0');
+        });
+
+    it('⛓ a WAREHOUSED start (its own sidecar) with several exits still loads its payload — nothing is left, so the setting alone rules', async () => {
+        const ctx = setup(true);
+        const doc = {
+            start_regions: { 1: ['region_0_0'] },
+            regions: { 1: {
+                region_0_0: { exits: [{ name: 'a', connected_region: 'region_0_1' }, { name: 'b', connected_region: 'region_0_1' }] },
+                region_0_1: { exits: [] },
+            } },
+            preset_sidecars: SAMPLE_RULES.preset_sidecars,
+        };
+        await initialize('procgenPlayer', 0, makeMockInitApi(ctx.bus, ctx.dispatcher, ctx.moduleFunctions));
+        ctx.bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: doc, selectedPlayerInfo: { playerId: '1' } });
+        ctx.bus.publish('stateManager:rulesLoaded', {});
+        expect(ctx.dispatcher.published.map((p) => [p.data.sourceRegion, p.data.targetRegion]))
+            .toEqual([[null, 'region_0_0']]);
     });
 });

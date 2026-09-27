@@ -12552,10 +12552,93 @@ export async function apworldMapMenuMarkerListsTheStartExits(testController) {
     return testController.getOverallResult();
 }
 
+const m2Gs = (fn) => centralRegistry?.getPublicFunction?.('gameState', fn) ?? null;
+const m2Resolved = () => centralRegistry?.getPublicFunction?.('procgenPlayer', 'getResolvedStartRegion')?.() ?? null;
+
+/**
+ * ⛓ Apply the hub's document and wait until the app HOLDS it as a warehoused
+ * world (procgenPlayer resolved a start) and the load handshake has run. The
+ * witness that the menu panel's load decision ran is `waitFor` (a condition on
+ * the settled position) — never a fixed sleep.
+ */
+async function m2ApplyAndSettle(testController, panel, label, waitFor) {
+    panel._handleApply();
+    const resolved = await testController.pollForValue(m2Resolved, `${label}: procgenPlayer resolved a start`, 15000, 50);
+    testController.reportCondition(`${label}: the app holds the initialised world (warehoused)`, !!resolved);
+    if (!resolved) return false;
+    return testController.pollForCondition(waitFor, `${label}: the load settled`, 15000, 50);
+}
+
+/**
+ * ⛓⛓ **(M2-ii) THE RUNTIME: THE SKIP HOP ONLY FOR A ONE-EXIT START, RESTART TO
+ * THE DECLARED START** (⚖ user 2026-09-26). `mm3` initialised and applied (skip
+ * ON, the default): the load does NOT hop (its start has many exits) — the
+ * player stands at the declared start with the menu panel raised and listing
+ * every exit; a press takes that exit; Restart clears the path and returns to
+ * the DECLARED start (until M2: the first placed region). `adventure`
+ * initialised and applied: one exit, so the hop still fires.
+ */
+export async function apworldMenuHubRestartReturnsToTheDeclaredStart(testController) {
+    const raised = [];
+    const onRaise = (ev) => { if (ev?.panelId === 'menuPanel') raised.push(ev); };
+    appEventBus.subscribe('ui:activatePanel', onRaise, 'apworldEditorTests');
+    try {
+        const hub = await m2Initialised(testController, M2_HUB_PATH, 'many exits');
+        if (!hub) return testController.getOverallResult();
+        const { panel, p } = hub;
+        const { start, exits } = m2StartOf(panel.rulesDoc, p);
+        const current = m2Gs('getCurrentRegion');
+        const getPath = m2Gs('getPath');
+        raised.length = 0;
+        const settled = await m2ApplyAndSettle(testController, panel, 'mm3', () => raised.length > 0);
+        testController.reportCondition('⛓ the menu panel raised itself at load (the hop was not taken)', settled);
+        testController.assertEqual('⛓⛓ skip ON, many exits: the player is at the DECLARED start after load', start, current?.());
+        testController.assertEqual('…with an empty path', '0', String(getPath?.()?.length));
+
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'menuPanel' });
+        const buttons = await testController.pollForValue(() => {
+            const b = [...document.querySelectorAll('.menu-panel-exit-button')];
+            return b.length === exits.length ? b : null;
+        }, 'the menu panel\'s exit buttons', 8000, 50);
+        testController.assertEqual('⛓ the menu panel lists every exit (derived)', String(exits.length), String(buttons?.length ?? 0));
+        if (!buttons) return testController.getOverallResult();
+        // ⛓ NOT the first exit: that is the resolved start, so a press of it could not tell Restart's two answers apart.
+        const pick = buttons[buttons.length - 1];
+        const target = pick.dataset.targetRegion;
+        testController.reportCondition(`⛓ premise: the pressed exit's target (${target}) is not procgenPlayer's resolved start (${m2Resolved()})`,
+            target !== m2Resolved());
+        pick.click();
+        testController.reportCondition(`a press takes the exit → ${target}`,
+            await testController.pollForCondition(() => current?.() === target, 'the press arrived', 8000, 50));
+
+        const restartBtn = await testController.pollForValue(() => document.querySelector('#menu-panel-restart'),
+            'the menu panel Restart button', 8000, 50);
+        restartBtn?.click();
+        const back = await testController.pollForCondition(() => current?.() === start && getPath?.()?.length === 0,
+            'Restart landed on the declared start with an empty path', 8000, 50);
+        testController.reportCondition(`⛓⛓ Restart → the DECLARED start (${start}), the path cleared — not the first placed region (${m2Resolved()})`, back);
+
+        const one = await m2Initialised(testController, M2_ONE_EXIT_PATH, 'one exit');
+        if (!one) return testController.getOverallResult();
+        const { start: s1, exits: e1 } = m2StartOf(one.panel.rulesDoc, one.p);
+        const hopped = await m2ApplyAndSettle(testController, one.panel, 'adventure', () => current?.() === e1[0].targetRegion);
+        testController.reportCondition(`⛓ skip ON, one exit: the hop still fires (${s1} → ${e1[0].targetRegion})`, hopped);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('menu hub runtime test error-free', false);
+    } finally {
+        appEventBus.unsubscribe('ui:activatePanel', onRaise, 'apworldEditorTests');
+    }
+    return testController.getOverallResult();
+}
+
 const M2_TESTS = [
     ['apworld-map-menu-marker-lists-the-start-exits',
         'APWorld hub: the Map lists the declared start (the Menu) beside the grid — one entry per exit, each placed; hidden when showMenuOnMap is off',
         apworldMapMenuMarkerListsTheStartExits],
+    ['apworld-menu-hub-restart-returns-to-the-declared-start',
+        'APWorld hub → runtime: an initialised many-exit start is not skipped (the menu lists every exit), a press takes one, Restart returns to the DECLARED start; a one-exit start still hops',
+        apworldMenuHubRestartReturnsToTheDeclaredStart],
 ];
 for (const [id, name, testFunction] of M2_TESTS) {
     registerTest({

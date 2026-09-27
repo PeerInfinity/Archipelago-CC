@@ -29,6 +29,7 @@ import {
     firstExitOf,
     procgenOwnsStartHop,
     restartTargetOf,
+    skipsStart,
 } from './menuPanelEngine.js';
 
 const PRESET = (game) =>
@@ -158,9 +159,49 @@ describe('⛓ menuPanelEngine — who owns the start hop, and where Restart goes
         expect(procgenOwnsStartHop('')).toBe(false);
     });
 
-    it('Restart prefers the resolved start, else the first declared start', () => {
-        expect(restartTargetOf('region_0_0', ['Menu'])).toBe('region_0_0');
-        expect(restartTargetOf(null, ['Menu', 'Other'])).toBe('Menu');
-        expect(restartTargetOf(null, [])).toBeNull();
+    /**
+     * ⛓ M2 (⚖ user 2026-09-26): Restart = returning to the menu — the DECLARED
+     * start, never procgenPlayer's first warehoused region (the argument is gone;
+     * `index.test.js` holds the module ignoring a registered resolved start).
+     */
+    it('Restart returns to the FIRST DECLARED start, always', () => {
+        expect(restartTargetOf(['Menu'])).toBe('Menu');
+        expect(restartTargetOf(['Menu', 'Other'])).toBe('Menu');
+        expect(restartTargetOf([])).toBeNull();
+        expect(restartTargetOf()).toBeNull();
+    });
+});
+
+/**
+ * ⛓⛓ M2 — **THE ONE START-HOP RULE** (⚖ user 2026-09-26: *"skipping only when the
+ * menu has only one exit"*): skip ON and EXACTLY one exit. Both publishers read
+ * it (this panel; procgenPlayer through `isSkipMenuEnabled` + this function).
+ */
+describe('⛓ menuPanelEngine — skipsStart: the setting AND exactly one exit', () => {
+    const doc = (n) => ({
+        start_regions: { 1: ['S'] },
+        regions: { 1: { S: { exits: Array.from({ length: n }, (_, i) => ({ name: `e${i}`, connected_region: `R${i}` })) } } },
+    });
+    it.each([
+        [0, true, false], [1, true, true], [2, true, false],
+        [0, false, false], [1, false, false], [2, false, false],
+    ])('%i exit(s), skip %s → %s', (n, skip, want) => {
+        expect(skipsStart(doc(n), '1', 'S', skip)).toBe(want);
+    });
+
+    it('an exit that names no region is not an exit (the panel\'s own exitsOf)', () => {
+        const d = doc(1);
+        d.regions[1].S.exits.push({ name: 'dangling', connected_region: null });
+        expect(skipsStart(d, '1', 'S', true)).toBe(true);
+    });
+
+    it('defaults to the schema\'s setting; on the committed documents: adventure (1 exit) skips, alttp (3) does not', () => {
+        expect(skipsStart(doc(1), '1', 'S')).toBe(SKIP_MENU_DEFAULT);
+        for (const [game, want] of [['adventure', true], ['alttp', false]]) {
+            const d = PRESET(game);
+            const start = d.start_regions['1'].default[0];
+            expect(exitsOf(d, '1', start).length === 1, game).toBe(want);
+            expect(skipsStart(d, '1', start, true), game).toBe(want);
+        }
     });
 });
