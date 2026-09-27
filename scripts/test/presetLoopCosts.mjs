@@ -37,7 +37,8 @@
 import { generateLoopCosts } from '../../frontend/modules/shared/procgen/loopCostGenerator.js';
 
 /**
- * Plan and stamp `rules.loop_costs` in place.
+ * Plan and stamp `rules.loop_costs[playerId]` in place (APWORLD SUBSTRATE CHANGE P1a:
+ * the block is per player, `{"<p>": block}`).
  *
  * @param {Object} rules — a built rules.json scaffold, sphere log already embedded
  * @param {Object} args
@@ -65,6 +66,6 @@ export function stampLoopCosts(rules, { sourceFileName, playerId = null } = {}) 
     });
     delete block.generatedAt;   // see the header — determinism, not cosmetics
 
-    rules.loop_costs = block;
+    rules.loop_costs = { [pid]: block };
     return block;
 }

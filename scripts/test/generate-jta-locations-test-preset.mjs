@@ -184,11 +184,14 @@ async function generate(preset, mods, outRoot) {
     // the jta bridge ignores loop_costs (it drains the shared pool via its
     // own per-tick energy calc), but SOME block must exist to flip runtime
     // into loop mode. Arbitrary defaults, never consulted — mirrors
-    // scripts/test/generate-jta-substrate-test-preset.py.
+    // scripts/test/generate-jta-substrate-test-preset.py. ⛓ P1a — per player:
+    // the block is the slot's, `loop_costs[p]`.
     rules.loop_costs = {
-        regions: {}, locations: {},
+        [Object.keys(rules.regions)[0]]: {
+            regions: {}, locations: {},
             defaultRegionCost: DEFAULT_REGION_COST,
             defaultLocationCost: DEFAULT_LOCATION_COST,
+        },
     };
 
     // stateManager reads starting_items[playerId] as an array of item names and

@@ -167,7 +167,7 @@ def build_rules() -> dict:
         "progression_mapping": {PLAYER_ID: {}},
         "starting_items": {PLAYER_ID: []},
         "preset_sidecars": {PLAYER_ID: sidecars},
-        "loop_costs": DEFAULT_LOOP_COSTS,
+        "loop_costs": {PLAYER_ID: DEFAULT_LOOP_COSTS},
         "world": {PLAYER_ID: {"game": GAME_NAME}},
         "exporter": {},
         "game_info": {},

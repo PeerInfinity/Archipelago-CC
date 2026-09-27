@@ -181,7 +181,7 @@ def main():
     rules["preset_sidecars"] = {args.player_id: sidecars}
     # Loop_costs is what triggers the loops module's "auto-enter loop
     # mode" path at runtime. See DEFAULT_LOOP_COSTS comment above.
-    rules["loop_costs"] = DEFAULT_LOOP_COSTS
+    rules["loop_costs"] = {args.player_id: DEFAULT_LOOP_COSTS}
 
     tgt_dir.mkdir(parents=True, exist_ok=True)
     with tgt.open("w") as f:
