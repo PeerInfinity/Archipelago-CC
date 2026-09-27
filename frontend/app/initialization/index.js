@@ -175,6 +175,11 @@ export async function initializeApplication(dependencies) {
 
   // --- Phase 4: Initialize Settings Manager ---
   profiler.start('phase4:settingsManager');
+  // The manager saves to the ACTIVE mode's blob. Tell it the mode now, before
+  // any module initialises: it used to learn it only from phase 13's
+  // app:activeModeDetermined, so a settings write during module init under
+  // ?mode=X landed in the DEFAULT blob (settings-persistence S2, finding 1).
+  settingsManager.setCurrentMode(validatedMode);
   if (combinedModeData.userSettings) {
     logger.debug(
       'init',
