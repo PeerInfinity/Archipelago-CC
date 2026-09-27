@@ -21,7 +21,8 @@
     "r9-solve-14",
     "r9-solve-15",
     "r9-solve-16",
-    "r9-solve-18"
+    "r9-solve-18",
+    "r9-solve-19"
   ],
   "arrivals": [
     2,
@@ -42,7 +43,8 @@
     15,
     16,
     18,
-    19
+    19,
+    20
   ],
   "sources": {
     "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json": "602b318baf3838e476ddb6a71efbf6c5",
@@ -50,12 +52,12 @@
     "frontend/modules/flashPanel/atlases/seedling-sphere-order.json": "03f215201a5a64c472fa5cc51c51ee98"
   },
   "lastArrival": {
-    "step": 19,
-    "level": 19,
-    "segment": "r9-solve-18"
+    "step": 20,
+    "level": 20,
+    "segment": "r9-solve-19"
   },
   "nextStep": null,
   "refusal": null,
-  "covered": 19,
+  "covered": 20,
   "why": "no route step after the chain is refused by the survey — every remaining step SOLVES today, so the frontier is a GAP LIST rather than a refusal and this is a finding, not a stop"
 }

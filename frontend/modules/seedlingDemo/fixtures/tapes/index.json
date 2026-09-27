@@ -1295,6 +1295,13 @@
       "noHazards": []
     },
     {
+      "file": "r9-solve-19.json",
+      "tickCount": 746,
+      "bootLevel": 19,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
       "file": "r9-solve-2.json",
       "tickCount": 23,
       "bootLevel": 2,

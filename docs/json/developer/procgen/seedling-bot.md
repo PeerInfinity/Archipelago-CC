@@ -12370,7 +12370,7 @@ its byte-frozen free oracle is compared against.
 
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-`r9-campaign` — **19 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L19** arrival, **4806 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
+`r9-campaign` — **20 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L20** arrival, **5552 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
 | # | tape | rooms | ticks | earns |
 |---|---|---|---|---|
@@ -12393,6 +12393,7 @@ its byte-frozen free oracle is compared against.
 | 17 | `r9-solve-15` | L15 → L16 | 456 | — |
 | 18 | `r9-solve-16` | L16 → L18 | 625 | — |
 | 19 | `r9-solve-18` | L18 → L19 | 394 | — |
+| 20 | `r9-solve-19` | L19 → L20 | 746 | `bosskey@L19` |
 
 **No frontier is committed**, so what is in front of the chain is unstated — run `census-seedling-campaign.mjs --write-frontier`.
 

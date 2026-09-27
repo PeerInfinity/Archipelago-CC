@@ -1223,8 +1223,12 @@ const CHAIN_DECLARATIONS = Object.freeze([
          * {0,2,3,4,5,6,7,8,9,10,11,13}; `chainGoalFindings` MEASURES both by
          * asking whether the flag went NOT-HELD to HELD between a segment's own
          * boot and its own latch, which a declaration cannot fake.
+         *
+         * ⛓ R9 slice L18b — the THIRD: `r9-solve-19` takes boss key 0 in L19
+         * (the ShieldBoss's room), the chain's first `save.keys` write, and the
+         * solver-roster differential measured it EARNED before it was declared.
          */
-        earns: Object.freeze(['sword@L10', 'chest@L11']),
+        earns: Object.freeze(['sword@L10', 'chest@L11', 'bosskey0@L19']),
         /**
          * ⛓⛓ THE TIMED CLEARS, WITH THE INSTRUMENT THAT MEASURED EACH — THREE
          * ROWS FOR THREE CLEARS, one per `{level,tag}@at` a SEGMENT declares.
