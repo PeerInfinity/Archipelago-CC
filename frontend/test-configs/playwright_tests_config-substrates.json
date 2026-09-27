@@ -1017,6 +1017,18 @@
             "_comment": "S2. adventure -> the first hooked target with a payload read-back; its read-back knob moved on the Initialise form; Generate; Re-roll on a new region: the 'this region was built with' line names it."
         },
         {
+            "id": "apworld-map-menu-marker-lists-the-start-exits",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "M2. mm3 initialised: the Map's .apworld-map-menu lists the declared start's exits (menuMarkerFor, derived), every one placed; showMenuOnMap OFF (session override) hides it via the settings:changed re-draw, cleared -> drawn again; adventure initialised -> one entry."
+        },
+        {
+            "id": "apworld-menu-hub-restart-returns-to-the-declared-start",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "M2. mm3 initialised + Apply (skip ON): no hop (many exits) - the player at the declared start, the menu panel raised with every exit; a press takes the last exit; Restart -> the DECLARED start, path cleared (not procgenPlayer's resolved start). adventure initialised + Apply: one exit, the hop fires."
+        },
+        {
             "id": "apworld-the-preset-sidecars-door-lands-on-the-sidecars-tab",
             "enabled": true,
             "category": "apworldEditor",

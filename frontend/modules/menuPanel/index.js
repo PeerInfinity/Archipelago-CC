@@ -46,6 +46,7 @@ import {
     firstExitOf,
     procgenOwnsStartHop,
     restartTargetOf,
+    skipsStart,
 } from './menuPanelEngine.js';
 
 function log(level, message, ...data) {
@@ -192,7 +193,8 @@ export function takeExit(exit) {
 }
 
 /**
- * Restart from the first region.
+ * Restart from the DECLARED start (M2: `restartTargetOf` — never procgenPlayer's
+ * first warehoused region; returning to the menu IS Restart).
  *
  * OUTSIDE loop mode this is the only restart affordance the app has: clear the
  * path, then teleport with the LOOPS RESET's own shape
@@ -217,7 +219,7 @@ export function restart() {
 
     gs('clearPath')?.();
 
-    const target = restartTargetOf(resolvedStartRegion(), startRegions());
+    const target = restartTargetOf(startRegions());
     const from = currentRegion();
     if (target && target !== from) {
         publishMove({
@@ -259,21 +261,22 @@ function maybeStartHop() {
     sawRawJson = false;
     sawRulesLoaded = false;
 
-    if (!skipMenu) {
-        // Skip OFF: the player plays the menu, so put it in front of them.
+    const region = currentRegion();
+    const atStart = gs('isStartRegion')?.(region) === true;
+    // ⛓ M2 — ONE rule (`skipsStart`): skip ON and exactly one exit. Otherwise the
+    // player plays the menu, so put it in front of them — skip OFF, or a start
+    // with several exits (never skipped, whatever the setting).
+    if (!skipMenu || (atStart && !skipsStart(rawJsonData, playerId, region, skipMenu))) {
         moduleEventBus?.publish?.('ui:activatePanel', { panelId: MENU_PANEL_COMPONENT_TYPE });
         return;
     }
 
-    const region = currentRegion();
-    if (!(gs('isStartRegion')?.(region) === true)) return;
+    if (!atStart) return;
     if (procgenOwnsStartHop(resolvedStartRegion())) return;
 
+    // ⛓ `skipsStart` answered exactly one exit — that one (no second guard for
+    // "no exit": a start without one is never skipped, above).
     const exit = firstExitOf(rawJsonData, playerId, region);
-    if (!exit) {
-        log('warn', `Skip-the-menu is on but start region '${region}' has no exit to take.`);
-        return;
-    }
     publishMove({
         sourceRegion: region,
         targetRegion: exit.targetRegion,

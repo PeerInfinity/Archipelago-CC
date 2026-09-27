@@ -34,6 +34,7 @@ document.
 | `slotInitialise.js` | (substrate change R7) a BARE slot's procgen data **built in place** — the engine's four top-down stages (`layoutTopDown` → `realiseTopDownGen` → `finalizeTopDown` → `buildPresetSidecars`) on the current document: `initialiseFacts` (bare? the blockers as data), `initialiseGridSide` / `autoGridSide` (the hand-off's side, grown while a region lacks a cell), `planInitialise` (the layout only — the form's preview), `unplacedRegions` (each with a why DERIVED from the graph, `UNPLACED_WHY`), `returnExitsOf`, `initialiseSlot` (the result the op lands — since S1 with the grants), `initialiseOpFor`; (S2) `initialiseKnobs(substrate, bag)` / `initialiseRegionSize` / `INITIALISE_SIZE_KEYS` — the build and the layout under the form's settings bag, absent = the target's defaults and the slot's size; the start is the engine's exported `resolveTopDownStart` (S1, R9); the op and its sentences are `rulesDocOps.js`'s `initialise-procgen-layout` |
 | `initialiseDriver.js` | (S1) `INITIALISE_DRIVER`, the `procgen_metadata.driver` an initialised slot records — its own module so the preset card imports it without the engine |
 | `initialiseFlow.js` | (R7) what the **Initialise procgen data** form says and sends — `initialiseDoorShown`, `initialiseFormDefaults` / `withAutoSide`, (S2) `initialiseBagFor` / `withInitialisePatch` (the settings bag; a substrate change resets it, the size kept), `initialisePreview` (the op's refusal, or the plan's sentence), `initialiseJob`, `initialiseTickerText`, `initialiseAnswer` |
+| `menuMarker.js` | (substrate change M2) the Map's **Menu marker** — `menuMarkerFor(doc, player)` (the declared start and its exits, each target's `grid_cell` read off the slot's entries; the exits are the menu panel's own `exitsOf`), the setting `showMenuOnMap` (`SHOW_MENU_ON_MAP_KEY` / `_SETTING` / `_DEFAULT` / `_SCHEMA`, registered by `index.js`) |
 | `regionRegenerateWorker.js` | (R2) the MODULE WORKER one Generate runs in — imports the eight registry libraries into its own registry, then `regionRegenerate.js`. ⛔ A worker cannot be bundled into `bundle.js`: `scripts/build/bundle-frontend.js` copies it into `dist/` (beside `stateManagerWorker.js` and `balanceWorker.js`), and in bundled mode the page resolves it at its SOURCE location, `stateManagerProxy`'s rule |
 | `startingInventoryBlock.js` | (substrate change R3) the **Starting inventory** block as data — `startingInventoryList` (the list as `{name, count}`), `substratesInSlot`, `startingNeedRows` (each substrate's registry `startingInventory` needs against the list, with a grant op per candidate), `startingGrantOp` (`set-starting-count` at current + 1), `needSentence`; the panel draws what these answer, on the Items tab and in the Region generation form |
 | `../procgenCore/ruleWithOwned.js` | (R3) `ruleWithOwned(rule, owned)` — a rule with the owned items treated as held (`Has`/`HasAll`/`HasAny`/`And`/`Or`; everything else unchanged and named in `unmodelled`); the regenerate spec's starting-inventory rewrite |
@@ -2112,6 +2113,38 @@ ops. It moves the **pipeline panel's** loaded-preset view too, which is the same
 function's other reader — `scripts/procgen/shot-loaded-composite-map.mjs` writes
 a PNG of exactly that view, which is how the before/after pair was taken.
 
+### The Menu marker — the hub beside the grid (substrate change M2)
+
+The declared start region — the Menu — is the layout's **hub** (R8, ⚖ user
+2026-09-26, shape A): every exit of it feeds a ROOT, and the start itself stays
+virtual at runtime (the [menu panel](menuPanel.md) implements it), so it has no
+cell and the composite grid cannot draw it. Under the canvas the tab draws it as
+a **marker**, `.apworld-map-menu`: *"⌂ Menu — the declared start (the menu): 13
+exits, 13 to a region with a cell"*, then one entry per exit (`exit → target`,
+`data-target`, `data-placed`); a placed entry selects its target's cell, as a cell
+click does; an entry whose target has no cell says *(no cell)*. The content is
+`menuMarkerFor(doc, player)`, derived at DRAW time from
+`regions[p][<declared start>].exits` (the menu panel's own `exitsOf`, so the
+marker lists exactly the panel's buttons) and each target's `grid_cell` in the
+slot's entries — never a document key.
+
+**A list, not lines.** The canvas draws cells and no edges at all; a line from a
+node the canvas does not hold would be the only edge on the map. The legend is
+the honest first cut.
+
+**The subject is the DECLARED start, whatever it is called** (planner, M2): a
+start that is not stripped — `apcalc`'s `C`, 4 exits — is a cell AND the menu,
+and gets the marker too. A slot whose start has no exit gets none.
+
+**The setting** `moduleSettings.apworldEditor.showMenuOnMap` (Options › All
+Settings › apworldEditor; boolean, default **ON** — in shape A it explains why the
+teleporter-fed roots exist) is read at every Map draw, never cached; a
+`settings:changed` for it re-draws the Map when the Map is the tab in front
+(the listener is dropped in `onPanelDestroy`). OFF, the marker's host stays
+`data-shown="false"`, hidden and empty. Rows: `menuMarker.test.js`; in-app
+`apworld-map-menu-marker-lists-the-start-exits` (`mm3` initialised: 13 exits, 13
+placed; OFF → hidden, cleared → drawn; `adventure` → 1).
+
 ### The three ways there is no map
 
 The tab names WHICH one, because "no map" and "no grid data" are different claims
@@ -2146,7 +2179,7 @@ one. On such a slot (`initialiseDoorShown`: no entry, some regions) the Map's
 | control | what it is |
 |---|---|
 | **Substrate (every region)** | the realiser targets (`initialiseTargets` — every registry entry `regionRealiserKind` accepts); default the engine's `DEFAULT_SUBSTRATE_ID`. ONE substrate for the slot (⚖ 2026-09-26 #4); a region's own picker changes it afterwards |
-| **Grid side** + *auto* | auto = the pipeline hand-off's side (`topDownGridSide`, `⌈√(1.5 n)⌉`, shared with the pipeline panel), GROWN one at a time while the layout leaves a region for want of a cell (`autoGridSide`); typing a side turns auto off |
+| **Grid side** + *auto* | auto = the pipeline hand-off's side (`topDownGridSide`, `⌈√(1.5 n)⌉`, shared with the pipeline panel), GROWN one at a time while the layout leaves a region for want of a cell (`autoGridSide`) — M2: a Menu root without a cell counts (`mm3` 6 → 7) — typing a side turns auto off |
 | **Seed** | the layout's and every region's (the engine's per-region sub-seed) |
 | **Add return exits** | default ON (⚖ #1) — see below |
 | **the generation settings** (S2) | R1's per-region form, `renderRegionGenerationForm` — the SAME module R2's block form and the pipeline's Parameters draw from, with `fields: REGION_GENERATION_OP_FIELDS`: **Region width / height** for a TILES target (`regionGeometry`), then the target's own `renderProcgenParams` node under *"<target> parameters"* (maze, bounce, runner, flash_seedling_gen draw one; text_adventure and flash_seedling none — the node's `data-procgen-params` says `drawn` / `none`) |
@@ -2173,7 +2206,10 @@ nor a non-square grid (⚖ Q5).
 Under them, the **preview**, re-planned on every change from the LAYOUT alone
 (`planInitialise`, milliseconds even at 445 regions): *"81 regions placed on
 12×12, 50 teleporters; 80 return exits will be added; 0 unplaceable"*, the
-unplaceable NAMED with their why. A state the op refuses prints the op's own
+unplaceable NAMED with their why — and, when the layout stripped a Menu (M2), the
+hub: *"…; Menu: 13 exits → 13 roots"* (`planInitialise`'s `menuExits`, the
+regions the Menu's exits name, and `menuRoots`, the roots that got a cell — they
+differ exactly by the Menu roots left for want of a cell). A state the op refuses prints the op's own
 sentence instead and draws no Generate (1305). Then the chosen substrate's
 starting-inventory need line (R3), and **Generate ▸**.
 
@@ -2249,10 +2285,19 @@ document's one-way links (0 report errors either way on the probed documents).
 **Regions the layout cannot place** are NAMED and the rest built (⚖ #2) —
 never a refusal of the whole initialise. The why is derived from the graph
 (`UNPLACED_WHY`): *no incoming exit* (`alttp_worldgen`: `Chris Houlihan Room`,
-`Desert Northern Cliffs`, `Dark Death Mountain Bunny Descent Area`); *reachable
-only from Menu* (`pokemon_rb`: `Evolution`, `Pokedex`, `Fossil` — the layout
-strips `Menu` exactly as the pipeline does); *no free grid cell* (a side typed too
+`Desert Northern Cliffs`, `Dark Death Mountain Bunny Descent Area`); *no free grid
+cell* — a placed region leads to it, or the stripped Menu does (a side typed too
 small); *reachable only from unplaced regions*.
+
+⛔ **M2 retired *reachable only from Menu*.** The layout strips `Menu` as the
+pipeline does, and until M1 rooted only its FIRST exit — so a region fed only by
+the others was left out by rule (`pokemon_rb`: `Evolution`, `Pokedex`, `Fossil`).
+M1 made every Menu exit's target a root the layout TRIES; one it has no cell for
+is counted in `stats.regionsSkipped` — a cell shortage, so it is *no free grid
+cell* now, and the auto side grows for it. Measured (plan §27.0) over the 146
+committed bare slots: 48 such regions in 15 slots at the old auto side, every one
+placed at twice the side; with M2's why the auto side places **3,614 of 3,614**
+(3,558 before; 22 slots grow, 7 before).
 
 **Refused by name** (`initialiseOpRefusal`, the form's courtesy asks the same
 function): no regions; the slot already carries an entry (a re-initialise would be

@@ -20,6 +20,7 @@ import {
     regionGenerationTimeoutSentence, runRegenerateInWorker, runRegenerateJob,
 } from './regionGenerationRun.js';
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
+import { SHOW_MENU_ON_MAP_KEY } from './menuMarker.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 
@@ -72,7 +73,8 @@ describe('the time-limit SETTING (task 1)', () => {
 describe('R7 — the WHOLE-SLOT budget of Initialise procgen data (a separate setting)', () => {
     it('⛓ registered beside R2\'s, default INITIALISE_TIMEOUT_DEFAULT_S (300), one source', () => {
         const props = registeredSchema().properties;
-        expect(Object.keys(props)).toEqual([REGION_GENERATION_TIMEOUT_KEY, INITIALISE_TIMEOUT_KEY]);
+        // ⛓ M2 added the Map's Menu marker setting after these two (menuMarker.test.js holds it).
+        expect(Object.keys(props)).toEqual([REGION_GENERATION_TIMEOUT_KEY, INITIALISE_TIMEOUT_KEY, SHOW_MENU_ON_MAP_KEY]);
         const prop = props[INITIALISE_TIMEOUT_KEY];
         expect(INITIALISE_TIMEOUT_DEFAULT_S).toBe(300);
         expect(prop.default).toBe(INITIALISE_TIMEOUT_DEFAULT_S);

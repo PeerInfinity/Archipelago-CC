@@ -10,7 +10,8 @@
  * stages, in order, on the CURRENT document:
  *
  *   ① `layoutTopDown`   — BFS from the start onto a fresh grid (Menu stripped,
- *                          exactly as the pipeline strips it — R8 is the user's),
+ *                          exactly as the pipeline strips it; R8: every Menu
+ *                          exit's target a root — the Menu is the HUB),
  *   ② `realiseTopDownGen` — one `{type: 'region', index, total}` per region (the
  *                          progress the form ticks), names KEPT
  *                          (`useSourceLocationName`), rules the document's,
@@ -34,8 +35,7 @@
  * `items[p]` and the names in `starting_items[p]` — the lines the pipeline's
  * compile writes for the same grants.
  *
- * ⛓ The regions the layout cannot place (no incoming exit; reachable only from
- * Menu; …) are NAMED with a `why` DERIVED from the graph (⚖ #2) and the rest
+ * ⛓ The regions the layout cannot place (no incoming exit; no free cell; …) are NAMED with a `why` DERIVED from the graph (⚖ #2) and the rest
  * are built — never a refusal of the whole initialise.
  *
  * ⛔ The op (`initialise-procgen-layout`, `rulesDocOps.js`) is the authority:
@@ -79,13 +79,21 @@ export const INITIALISE_FIRST_SEED = 1;
  * ⛓⛓ **WHY A REGION GETS NO CELL**, derived from the graph (never typed per
  * fixture), in the order they are tested:
  *   · `NO_INCOMING` — no other region has an exit to it;
- *   · `ONLY_FROM_MENU` — its only incoming exits are the stripped Menu's;
- *   · `NO_FREE_CELL` — a PLACED region leads to it, but the grid had no cell left;
+ *   · `NO_FREE_CELL` — a PLACED region leads to it, or the stripped Menu does
+ *     (M2: every Menu exit's target is a ROOT the layout tries — R8, shape A),
+ *     but the grid had no cell left;
  *   · `ONLY_FROM_UNPLACED` — it is reached only from regions that got no cell.
+ *
+ * ⛔ M2 RETIRED `ONLY_FROM_MENU` (*"reachable only from Menu"*). Until M1 the
+ * layout rooted only the Menu's FIRST exit, so a region fed only by the others
+ * was left out by rule. M1 made every Menu exit a root: `layoutTopDown` tries
+ * each one and, when no cell is free, counts `stats.regionsSkipped` — a cell
+ * shortage, which the auto side grows for. Measured (plan §27.0): 48 such
+ * regions in 15 of the 146 bare slots at the auto side, every one placed at 2×
+ * the side; the layout is total, so no document can reach the old why.
  */
 export const UNPLACED_WHY = Object.freeze({
     NO_INCOMING: 'no incoming exit',
-    ONLY_FROM_MENU: 'reachable only from Menu',
     NO_FREE_CELL: 'no free grid cell',
     ONLY_FROM_UNPLACED: 'reachable only from unplaced regions',
 });
@@ -231,11 +239,18 @@ function layoutOpts(doc, player, { substrate, gridDims, seed, backExits, bag }) 
 
 /**
  * ⛓⛓ **THE REGIONS THE LAYOUT LEFT OUT, EACH WITH ITS WHY** (`UNPLACED_WHY`),
- * in document order. The stripped Menu is not one of them (R8 is the user's).
+ * in document order. The stripped Menu is not one of them: it is the layout's
+ * HUB (R8), never a cell.
+ *
+ * ⛓ A region the stripped Menu's exits name (`menuFedOf`) is one the layout
+ * TRIED as a root — so without a cell it is `NO_FREE_CELL`, exactly like a
+ * region a placed one leads to. (The engine counts it in
+ * `stats.regionsSkipped`; the population row holds the two together.)
  */
 export function unplacedRegions(doc, player, layout) {
     const regions = regionsOf(doc, player);
     const placed = layout.cellsByName;
+    const menuFed = menuFedOf(regions, layout.menuName);
     const incoming = new Map();
     for (const [from, r] of Object.entries(regions)) {
         for (const e of r?.exits ?? []) {
@@ -251,10 +266,24 @@ export function unplacedRegions(doc, player, layout) {
         const froms = [...(incoming.get(name) ?? [])];
         let why;
         if (froms.length === 0) why = UNPLACED_WHY.NO_INCOMING;
-        else if (layout.menuName && froms.every((f) => f === layout.menuName)) why = UNPLACED_WHY.ONLY_FROM_MENU;
-        else if (froms.some((f) => placed.has(f))) why = UNPLACED_WHY.NO_FREE_CELL;
+        else if (menuFed.has(name) || froms.some((f) => placed.has(f))) why = UNPLACED_WHY.NO_FREE_CELL;
         else why = UNPLACED_WHY.ONLY_FROM_UNPLACED;
         out.push({ region: name, why });
+    }
+    return out;
+}
+
+/**
+ * ⛓ The regions the stripped Menu's exits name — every one a root the layout
+ * tries (M1's `menuRoots` rule). Empty when the layout stripped no Menu (the
+ * declared start is then a cell, and its exits' targets are ordinary children).
+ */
+function menuFedOf(regions, menuName) {
+    const out = new Set();
+    if (!menuName) return out;
+    for (const e of regions[menuName]?.exits ?? []) {
+        const t = e?.connected_region;
+        if (typeof t === 'string' && t !== menuName && regions[t]) out.add(t);
     }
     return out;
 }
@@ -302,7 +331,7 @@ function normalise(doc, player, { substrate, gridDims, seed, backExits, bag } = 
  *
  * @returns {{ok: true, placed: number, total: number, unplaced: Array<{region, why}>,
  *   returnExits: number, teleporters: number, gridDims: {width, height}, menu: string|null,
- *   start: string} | {ok: false, threw: string}}
+ *   start: string, menuExits: number, menuRoots: Array<{name, exit_id}>} | {ok: false, threw: string}}
  */
 export function planInitialise(doc, player, opts = {}) {
     const a = normalise(doc, player, opts);
@@ -322,6 +351,11 @@ export function planInitialise(doc, player, opts = {}) {
         gridDims: { ...a.gridDims },
         menu: layout.menuName,
         start: layout.actualStartName,
+        // ⛓ M2 — the hub (R8): how many regions the stripped Menu's exits name,
+        // and the roots the layout gave a cell (`layout.menuRoots` — a Menu
+        // target left without one is absent there and `NO_FREE_CELL` above).
+        menuExits: menuFedOf(regionsOf(doc, a.player), layout.menuName).size,
+        menuRoots: layout.menuRoots.map((r) => ({ ...r })),
     };
 }
 

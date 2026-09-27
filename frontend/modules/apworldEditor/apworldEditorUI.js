@@ -200,6 +200,7 @@ import {
   TILE_PX, drawCompositeMap, canvasPointOf, cellAtPoint,
 } from '../procgenCore/compositeMapRenderer.js';
 import { reconstructResultFromSidecars, refusedRegionsNote } from '../procgenPipeline/compositeMapDocument.js';
+import { SHOW_MENU_ON_MAP_SETTING, menuMarkerFor, showMenuOnMap } from './menuMarker.js';
 import { downloadJson, rulesDownloadName } from './downloadJson.js';
 import {
   needSentence, startingCountOf, startingGrantOp, startingInventoryList, startingNeedRows, substratesInSlot,
@@ -698,6 +699,16 @@ class ApworldEditorUI {
         consumePendingSelectRegion();
       });
 
+    /**
+     * ⛓ M2 — the Map's Menu marker is read at DRAW (the setting is not cached);
+     * a change to it re-draws the Map when it is the tab in front. Unsubscribed
+     * in `onPanelDestroy` (a remounted panel must not keep this listener).
+     */
+    this.settingsUnsubscribe = this.eventBus.subscribe('settings:changed', (ev) => {
+      const key = ev?.key;
+      if ((key === '*' || key === SHOW_MENU_ON_MAP_SETTING) && this.activeTab === 'map') this._render();
+    });
+
     // If rules were loaded before the panel opened, pick them up now: first a
     // hand-off stashed by the load-rules channel, else the app-wide cache.
     const pending = consumePendingEditorRules();
@@ -1078,6 +1089,10 @@ class ApworldEditorUI {
     if (this.selectRegionUnsubscribe) {
       try { this.selectRegionUnsubscribe(); } catch (_) { /* noop */ }
       this.selectRegionUnsubscribe = null;
+    }
+    if (this.settingsUnsubscribe) {
+      try { this.settingsUnsubscribe(); } catch (_) { /* noop */ }
+      this.settingsUnsubscribe = null;
     }
   }
 
@@ -4831,6 +4846,7 @@ class ApworldEditorUI {
       this._selectOnMap(region.region_id);
     });
     this.scrollContainer.appendChild(canvas);
+    this._appendMenuMarker();
 
     /**
      * ⛓⛓⛓ PRESET SIDECARS M1 — **THE SELECTION'S BLOCK, THE THIRD HOST.** Under
@@ -4920,6 +4936,75 @@ class ApworldEditorUI {
    * ⛓ M1 — the map's FIRST click: select, and stay. The status line names the
    * second click, so the reader learns it from the answer to the first.
    */
+  /**
+   * ⛓⛓ M2 — **THE MENU MARKER** (⚖ user 2026-09-26, plan §25.7–§25.8): the
+   * declared start — the layout's HUB, which has no cell — drawn BESIDE the grid
+   * as a list, one entry per exit naming its target and whether that target has
+   * a cell (`menuMarkerFor`, derived at draw time). A LIST, not lines: the
+   * composite canvas draws cells and no edges at all, so a line from a node the
+   * canvas does not hold would be the only edge on the map — the honest first cut
+   * is the legend (a placed entry selects its target's cell, as a cell click does).
+   *
+   * ⛓ Behind `moduleSettings.apworldEditor.showMenuOnMap` (default ON), read HERE
+   * at every draw — never cached — so the `settings:changed` re-draw sees the new
+   * value. The host is appended synchronously (`data-shown="pending"`) and filled
+   * when the read answers; off, or a start with no exit → `data-shown="false"`,
+   * hidden.
+   */
+  _appendMenuMarker() {
+    const host = document.createElement('div');
+    host.className = 'apworld-map-menu';
+    host.dataset.shown = 'pending';
+    host.hidden = true;
+    Object.assign(host.style, { border: '1px dashed #4a5a6a', borderRadius: '3px',
+      margin: '6px 0 0', padding: '4px 8px', fontSize: '11px', color: '#bcd' });
+    this.scrollContainer.appendChild(host);
+    const doc = this.rulesDoc;
+    const player = this.playerId;
+    Promise.resolve(settingsManager.getSetting(SHOW_MENU_ON_MAP_SETTING))
+      .catch(() => undefined)
+      .then((value) => {
+        // ⛓ A later draw replaced this one (or the document moved): leave it.
+        if (!host.isConnected || doc !== this.rulesDoc || player !== this.playerId) return;
+        const marker = showMenuOnMap(value) ? menuMarkerFor(doc, player) : null;
+        if (!marker) {
+          host.dataset.shown = 'false';
+          return;
+        }
+        host.dataset.shown = 'true';
+        host.dataset.name = marker.name;
+        host.dataset.exits = String(marker.exits.length);
+        host.dataset.placed = String(marker.exits.filter((e) => e.placed).length);
+        host.hidden = false;
+        const head = document.createElement('div');
+        head.className = 'apworld-map-menu-head';
+        const placedN = marker.exits.filter((e) => e.placed).length;
+        head.textContent = `⌂ ${marker.name} — the declared start (the menu): `
+          + `${marker.exits.length} exit${marker.exits.length === 1 ? '' : 's'}, `
+          + `${placedN} to a region with a cell`;
+        host.appendChild(head);
+        const list = document.createElement('ul');
+        Object.assign(list.style, { margin: '2px 0 0', paddingLeft: '18px' });
+        for (const e of marker.exits) {
+          const li = document.createElement('li');
+          li.className = 'apworld-map-menu-exit';
+          li.dataset.exit = e.name ?? '';
+          li.dataset.target = e.target;
+          li.dataset.placed = e.placed ? 'true' : 'false';
+          li.textContent = `${e.name ?? '(unnamed exit)'} → ${e.target}${e.placed ? '' : ' (no cell)'}`;
+          if (e.placed) {
+            li.style.cursor = 'pointer';
+            li.title = `Select ${e.target} on the map`;
+            li.addEventListener('click', () => this._selectOnMap(e.target));
+          } else {
+            li.style.color = '#e0a040';
+          }
+          list.appendChild(li);
+        }
+        host.appendChild(list);
+      });
+  }
+
   _selectOnMap(regionName) {
     this._selectedRegion = regionName;
     this._opMessage = `Selected region ${regionName} on the map — click it again to open its `

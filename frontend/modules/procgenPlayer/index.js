@@ -31,7 +31,7 @@
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { buildWarehouse, findStartRegion } from './procgenPlayerEngine.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
-import { SKIP_MENU_DEFAULT } from '../menuPanel/menuPanelEngine.js';
+import { SKIP_MENU_DEFAULT, skipsStart } from '../menuPanel/menuPanelEngine.js';
 
 export const moduleInfo = {
     name: 'procgenPlayer',
@@ -46,6 +46,9 @@ let gateSubstrateAction = null;
 // menuPanel.isSkipMenuEnabled — read at rules-load time, not cached as a
 // boolean, so the checkbox's value at the moment of the load is what counts.
 let getSkipMenuEnabled = null;
+// The loaded document and player, kept for that rule at rules-load time.
+let startDoc = null;
+let startPlayerId = null;
 let unsubRawJsonLoaded = null;
 let unsubRulesLoaded = null;
 let unsubIframeAppReady = null;
@@ -141,6 +144,8 @@ function handleRawJsonLoaded(data) {
     // start). A regionMove published before that reset lands would
     // be wiped out. Defer until handleRulesLoaded runs.
     pendingStartTransition = findStartRegion(rulesJson, playerId, warehouse);
+    startDoc = rulesJson;
+    startPlayerId = playerId;
     // Cache the resolved start so substrate-driven loop resets can
     // teleport the player to the first real region (skipping the
     // synthetic Menu wrapper, which has no playable payload).
@@ -154,12 +159,22 @@ function handleRulesLoaded() {
     // owns the SETTING. Absent menuPanel (a module set without it, a test
     // harness) the answer is the schema default, which is this module's
     // historical unconditional behaviour.
-    if (!isSkipMenuEnabled()) {
-        // Skip OFF: the player plays the start region. Drop the pending hop —
+    // ⛓ M2 — a hop OUT of the declared start (`sourceRegion` set: the start is
+    // not warehoused) takes `menuPanelEngine.skipsStart`, the ONE rule both
+    // publishers read — the setting (through menuPanel's `isSkipMenuEnabled`,
+    // as before) AND exactly one exit. A start
+    // with several exits is never skipped (menuPanel raises itself). A start
+    // that is itself warehoused (`sourceRegion` null) is not left at all — the
+    // publish only loads its payload — and keeps the setting alone.
+    const skip = pendingStartTransition.sourceRegion
+        ? skipsStart(startDoc, startPlayerId, pendingStartTransition.sourceRegion, isSkipMenuEnabled())
+        : isSkipMenuEnabled();
+    if (!skip) {
+        // The player plays the start region. Drop the pending hop —
         // `resolvedStartRegion` deliberately SURVIVES, because loop resets
         // teleport to it whether or not the initial hop was taken.
         pendingStartTransition = null;
-        logger?.info?.('[procgenPlayer] skip-the-menu is off; leaving the player at the declared start');
+        logger?.info?.('[procgenPlayer] the start hop is not taken (skip off, or the start has more than one exit); leaving the player at the declared start');
         return;
     }
     // Synthesize a user:regionMove for the "Menu -> first real
@@ -393,6 +408,8 @@ export function _testOnly_resetModuleState() {
     dispatcher = null;
     logger = null;
     getSkipMenuEnabled = null;
+    startDoc = null;
+    startPlayerId = null;
 }
 
 export function _testOnly_getWarehouse() {

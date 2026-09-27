@@ -63,9 +63,8 @@ export function exitsOf(doc, playerId = DEFAULT_PLAYER_ID, regionName = null) {
 }
 
 /**
- * The exit the "skip the menu" hop takes: the FIRST exit of the start region.
- * Null when the region has none (a world with a dead-end start — the panel then
- * shows no buttons and nothing hops, which is the honest outcome).
+ * The FIRST exit of the start region — the one the skip hop takes when
+ * `skipsStart` says the start has exactly one. Null when the region has none.
  *
  * @returns {MenuExit|null}
  */
@@ -104,19 +103,43 @@ export function describeMenu(doc, playerId = DEFAULT_PLAYER_ID, currentRegion = 
 }
 
 /**
- * Which start region a Restart returns to when the substrate coordinator has
- * no opinion: the FIRST declared default. `resolvedStart` is
- * procgenPlayer.getResolvedStartRegion() — for a procgen world that is the
- * first WAREHOUSED region (the synthetic wrapper has no playable payload), and
- * null for every plain world.
+ * Which region a Restart returns to: the FIRST DECLARED start, always.
  *
- * @param {string|null} resolvedStart
+ * ⛓ APWORLD SUBSTRATE CHANGE M2 (⚖ user 2026-09-26, plan §25.7–§25.8):
+ * *returning to the menu* IS Restart — it clears the path and returns to the
+ * DECLARED start. Until M2 this preferred procgenPlayer's resolved start (the
+ * first WAREHOUSED region), so in a procgen world Restart never reached the
+ * menu: measured on mm3 initialised, Restart landed on the first placed stage
+ * and the other 12 Menu exits were unreachable. The convention it embodies:
+ * the declared start is always accessible.
+ *
  * @param {string[]} startRegions gameState.startRegions
  * @returns {string|null}
  */
-export function restartTargetOf(resolvedStart, startRegions = []) {
-    if (resolvedStart) return resolvedStart;
+export function restartTargetOf(startRegions = []) {
     return startRegions[0] ?? null;
+}
+
+/**
+ * ⛓⛓ **DOES THE LOAD SKIP THIS START REGION?** — the ONE rule both publishers
+ * of the start hop read (this panel for a plain world, `procgenPlayer` for a
+ * warehoused one, through the `menuPanel.skipsStart` public function): the
+ * *Skip the menu* setting is on AND the start has EXACTLY ONE exit.
+ *
+ * ⛓ M2 (⚖ user 2026-09-26: *"skipping only when the menu has only one exit"*):
+ * a start with several exits is a real choice — the hop used to take the FIRST
+ * of them (mm3: the first of 13 stages) — so it is never skipped, whatever the
+ * setting; the player stays at the start with the panel listing every exit. A
+ * start with no exit has nothing to skip to.
+ *
+ * @param {object} doc a rules.json document
+ * @param {string} playerId
+ * @param {string|null} region the start region the player stands in
+ * @param {boolean} skipEnabled the *Skip the menu* setting
+ * @returns {boolean}
+ */
+export function skipsStart(doc, playerId = DEFAULT_PLAYER_ID, region = null, skipEnabled = SKIP_MENU_DEFAULT) {
+    return skipEnabled === true && exitsOf(doc, playerId, region).length === 1;
 }
 
 /**
