@@ -44,8 +44,15 @@ describe('the item vocabulary, read from the table', () => {
      * CONSEQUENCE IS THE ROW BELOW IT: `--require=hasSword` stopped being a
      * FORCED BARE head and became a two-member `+` LIST.
      */
-    it('headsNeeding answers the SHIPPED table with exactly `killgate` and `arena`', () => {
-        expect(headsNeeding('hasSword')).toEqual(['killgate', 'arena']);
+    /**
+     * ⛓⛓ **SEEDLING SUBSTRATE S1 — A THIRD ONE SLID IN, BY DESIGN, AND THIS IS
+     * THE ROW THAT SAYS SO.** `rockgate` needs the sword for the kill gate's
+     * reason (a rock breaks under a swing, and there is no swing without the
+     * sword), so `--require=hasSword` is now a THREE-member `+` list — trap 457's
+     * move, predicted at W1 and re-pinned here rather than discovered.
+     */
+    it('headsNeeding answers the SHIPPED table with exactly `killgate`, `arena`, `rockgate`', () => {
+        expect(headsNeeding('hasSword')).toEqual(['killgate', 'arena', 'rockgate']);
         expect(headsNeeding('hasShield')).toEqual([]);
     });
 
@@ -84,11 +91,13 @@ describe('the directive resolves against `needs`, the biome and the caller\'s sp
      * mechanism did not change, the TABLE did, and the row that used to read
      * "forced" reads "a distribution over exactly the heads that need it".
      */
-    it('MET when nobody said `elements` — a `+` LIST over BOTH sword-gated heads', () => {
+    it('MET when nobody said `elements` — a `+` LIST over EVERY sword-gated head', () => {
         const d = resolveRequireDirective({ require: ['hasSword'], items: SWORD });
         expect(d.refused).toBe(null);
         expect(d.forced).toBe(true);
-        expect(d.elements).toEqual({ any: [{ name: 'killgate' }, { name: 'arena' }] });
+        // ⛓ S1: `rockgate` is the third (see `headsNeeding`'s row above).
+        expect(d.elements).toEqual({ any: [{ name: 'killgate' }, { name: 'arena' },
+            { name: 'rockgate' }] });
     });
 
     it('⛓⛓ TWO NEEDING HEADS become a `+` LIST of exactly those two-and-a-half', () => {

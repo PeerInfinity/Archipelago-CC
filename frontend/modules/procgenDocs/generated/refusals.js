@@ -507,7 +507,8 @@ export const REFUSALS = frz({
         },
         {
             "alsoFiresIn": [
-                "block-pocket"
+                "block-pocket",
+                "solo-door"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "KILL_GATE_REFUSALS",
@@ -524,7 +525,8 @@ export const REFUSALS = frz({
         },
         {
             "alsoFiresIn": [
-                "kill-gate"
+                "kill-gate",
+                "solo-door"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "BLOCK_POCKET_REFUSALS",
@@ -538,6 +540,24 @@ export const REFUSALS = frz({
             "source": "block-pocket",
             "sourceTitle": "The BLOCK POCKET element",
             "where": "frontend/modules/procgenCore/elements/blockPocket.js — `BLOCK_POCKET_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [
+                "kill-gate",
+                "block-pocket"
+            ],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "SOLO_DOOR_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/soloDoor.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "goal-too-close",
+            "named": true,
+            "scanFound": true,
+            "source": "solo-door",
+            "sourceTitle": "The ONE-OBSTACLE doors — the ROCK GATE, the ROCK SHORTCUT, the SHIELD GATE",
+            "where": "frontend/modules/procgenCore/elements/soloDoor.js — `SOLO_DOOR_REFUSALS`"
         },
         {
             "alsoFiresIn": [],
@@ -665,7 +685,8 @@ export const REFUSALS = frz({
         },
         {
             "alsoFiresIn": [
-                "block-pocket"
+                "block-pocket",
+                "solo-door"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "KILL_GATE_REFUSALS",
@@ -682,7 +703,8 @@ export const REFUSALS = frz({
         },
         {
             "alsoFiresIn": [
-                "kill-gate"
+                "kill-gate",
+                "solo-door"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "BLOCK_POCKET_REFUSALS",
@@ -696,6 +718,24 @@ export const REFUSALS = frz({
             "source": "block-pocket",
             "sourceTitle": "The BLOCK POCKET element",
             "where": "frontend/modules/procgenCore/elements/blockPocket.js — `BLOCK_POCKET_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [
+                "kill-gate",
+                "block-pocket"
+            ],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "SOLO_DOOR_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/soloDoor.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "no-cut-cell",
+            "named": true,
+            "scanFound": true,
+            "source": "solo-door",
+            "sourceTitle": "The ONE-OBSTACLE doors — the ROCK GATE, the ROCK SHORTCUT, the SHIELD GATE",
+            "where": "frontend/modules/procgenCore/elements/soloDoor.js — `SOLO_DOOR_REFUSALS`"
         },
         {
             "alsoFiresIn": [],
@@ -790,6 +830,21 @@ export const REFUSALS = frz({
             "source": "maze-area-binding",
             "sourceTitle": "The MAZE area + element binding",
             "where": "procgenMaze.js (the whole module)"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "SOLO_DOOR_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/soloDoor.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "the room probe offered no `shortcutLaw()`, and a shortcut is adjudicated by the INVERSE of the door law — a binding that cannot ask it cannot host one (the kill-lock shortcut's rule, `shortcut.js`).",
+            "name": "no-path-cell",
+            "named": true,
+            "scanFound": true,
+            "source": "solo-door",
+            "sourceTitle": "The ONE-OBSTACLE doors — the ROCK GATE, the ROCK SHORTCUT, the SHIELD GATE",
+            "where": "frontend/modules/procgenCore/elements/soloDoor.js — `SOLO_DOOR_REFUSALS`"
         },
         {
             "alsoFiresIn": [
@@ -1383,6 +1438,21 @@ export const REFUSALS = frz({
         },
         {
             "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "SOLO_DOOR_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/soloDoor.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "the-door-has-no-west-approach",
+            "named": true,
+            "scanFound": true,
+            "source": "solo-door",
+            "sourceTitle": "The ONE-OBSTACLE doors — the ROCK GATE, the ROCK SHORTCUT, the SHIELD GATE",
+            "where": "frontend/modules/procgenCore/elements/soloDoor.js — `SOLO_DOOR_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
             "channel": "`summary.elementInfo.refused` on `watch.html`; `generate-seedling-level.mjs --json` `elementInfo.refused`",
             "constant": "SEEDLING_ELEMENT_REFUSALS",
             "file": "frontend/modules/seedlingDemo/procgenSeedlingElements.js",
@@ -1846,6 +1916,36 @@ export const REFUSALS = frz({
         },
         {
             "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "SOLO_DOOR_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/soloDoor.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "the-shortcut-does-not-shorten",
+            "named": true,
+            "scanFound": true,
+            "source": "solo-door",
+            "sourceTitle": "The ONE-OBSTACLE doors — the ROCK GATE, the ROCK SHORTCUT, the SHIELD GATE",
+            "where": "frontend/modules/procgenCore/elements/soloDoor.js — `SOLO_DOOR_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "SOLO_DOOR_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/soloDoor.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "the-shortcut-is-a-cut",
+            "named": true,
+            "scanFound": true,
+            "source": "solo-door",
+            "sourceTitle": "The ONE-OBSTACLE doors — the ROCK GATE, the ROCK SHORTCUT, the SHIELD GATE",
+            "where": "frontend/modules/procgenCore/elements/soloDoor.js — `SOLO_DOOR_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
             "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `lab.html`",
             "constant": "MAZE_REFUSALS",
             "file": "frontend/modules/mazeRoom/procgenMaze.js",
@@ -1968,7 +2068,8 @@ export const REFUSALS = frz({
         },
         {
             "alsoFiresIn": [
-                "block-pocket"
+                "block-pocket",
+                "solo-door"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "KILL_GATE_REFUSALS",
@@ -1985,7 +2086,8 @@ export const REFUSALS = frz({
         },
         {
             "alsoFiresIn": [
-                "kill-gate"
+                "kill-gate",
+                "solo-door"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "BLOCK_POCKET_REFUSALS",
@@ -1999,6 +2101,24 @@ export const REFUSALS = frz({
             "source": "block-pocket",
             "sourceTitle": "The BLOCK POCKET element",
             "where": "frontend/modules/procgenCore/elements/blockPocket.js — `BLOCK_POCKET_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [
+                "kill-gate",
+                "block-pocket"
+            ],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "SOLO_DOOR_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/soloDoor.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "no cell of the …-cell main path can carry this one-obstacle …: … interior path cell(s) tried, the deepest stage any reached was \"…\".",
+            "name": "wall-does-not-seal",
+            "named": true,
+            "scanFound": true,
+            "source": "solo-door",
+            "sourceTitle": "The ONE-OBSTACLE doors — the ROCK GATE, the ROCK SHORTCUT, the SHIELD GATE",
+            "where": "frontend/modules/procgenCore/elements/soloDoor.js — `SOLO_DOOR_REFUSALS`"
         }
     ],
     "sources": [
@@ -2167,6 +2287,21 @@ export const REFUSALS = frz({
             "spansModules": true,
             "title": "The SEEDLING element binding",
             "where": "frontend/modules/seedlingDemo/procgenSeedlingElements.js — `SEEDLING_ELEMENT_REFUSALS`"
+        },
+        {
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "SOLO_DOOR_REFUSALS",
+            "declaredCount": 7,
+            "file": "frontend/modules/procgenCore/elements/soloDoor.js",
+            "id": "solo-door",
+            "kind": "constant",
+            "patterns": [
+                "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
+            ],
+            "scannedCount": 7,
+            "spansModules": false,
+            "title": "The ONE-OBSTACLE doors — the ROCK GATE, the ROCK SHORTCUT, the SHIELD GATE",
+            "where": "frontend/modules/procgenCore/elements/soloDoor.js — `SOLO_DOOR_REFUSALS`"
         },
         {
             "channel": "a `UrlParamsError` thrown at READ time; `error.code` is the name",

@@ -710,7 +710,8 @@ if (has('json')) {
             + `had written ${p.carveOverwrote} of its cells differently`;
         const shape = () => (p.phase === 'on-connector'
             ? `${p.instance} door (${p.doorCell.x},${p.doorCell.y})`
-                + `${p.tags?.lock !== undefined ? ` [tag ${p.tags.lock}]` : ''}; `
+                + `${p.tags?.lock !== undefined ? ` [tag ${p.tags.lock}]` : ''}`
+                + `${p.tags?.rock !== undefined ? ` [rock tag ${p.tags.rock}]` : ''}; `
                 + `clearer ${p.clearer.map((c) => `(${c.x},${c.y})`).join(' ') || '(none)'}; `
                 + `wall GREW ${p.wall} cell(s), CARVED ${p.carved}; `
                 + `${p.cost.candidates} door cell(s) were offered`
@@ -740,6 +741,12 @@ if (has('json')) {
             if (LIFTED_CLAIM_TEXT[p.element]) {
                 say(`         ⛓ ${LIFTED_CLAIM_TEXT[p.element]}: `
                     + `${c.heldAtDoor === null ? 'the route never crossed it' : c.heldAtDoor}`);
+            } else if (p.phase === 'on-connector') {
+                /** ⛓ S1 — a ONE-OBSTACLE door (`soloDoor.js`): it HAS a door and
+                 *  NO body, so the lifted claim (whose body cleared whose lock)
+                 *  has no subject. What the solve did at the door is its verbs. */
+                say('         ⛓ NO LIFTED CLAIM — this door has no body to lift a claim about; '
+                    + `the certification solve's verbs: [${(c.strategies ?? []).join(', ')}]`);
             } else {
                 say('         ⛓ NO LIFTED CLAIM — this element declares no door, so there is '
                     + 'no crossing to make a claim about. What it certifies is that the room '

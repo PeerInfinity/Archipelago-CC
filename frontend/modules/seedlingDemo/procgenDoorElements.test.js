@@ -36,9 +36,10 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
     it('parses `killgate` and `blockpocket`, and NEITHER takes a parameter', () => {
         /** ⛓ arc 5 slice 3 added the `chamber` head and slice 4 the `arena` —
          *  the roster is asserted LITERALLY (never `toContain`) so a head
-         *  arriving without a decision reds a row rather than sliding in. */
+         *  arriving without a decision reds a row rather than sliding in.
+         *  ⛓ Seedling substrate S1 added `rockgate` (the decision: plan §2.1 G-a). */
         expect(ELEMENT_NAMES).toEqual([
-            'none', 'guard', 'killgate', 'blockpocket', 'chamber', 'arena',
+            'none', 'guard', 'killgate', 'blockpocket', 'chamber', 'arena', 'rockgate',
         ]);
         expect(parseElementSpec('killgate')).toEqual({ name: 'killgate' });
         expect(parseElementSpec('blockpocket')).toEqual({ name: 'blockpocket' });
@@ -373,6 +374,23 @@ describe('⛓⛓ THE MAPPING — ids to Seedling parts, and ONE tag not three', 
         expect(out.tags).toEqual({});
     });
 
+    /**
+     * ⛓⛓ SEEDLING SUBSTRATE S1 — the ROCK GATE's one obstacle is a rockType-0
+     * `breakablerock` with a tag of its OWN: `BreakableRock.endAnim` writes
+     * `setPersistence(tag, false)` unconditionally, so a `tag:-1` rock would
+     * write out of band (`breakableRocks.outOfBandFlagFor`).
+     */
+    it('`rockgate_door` -> `breakablerock` with its own tag, and no other entity', () => {
+        const out = seedlingOnConnectorEntities({
+            placed: { entities: [{ role: 'obstacle', x: 5, y: 2, id: 'rockgate_door' }] },
+            tagFor: () => 4,
+        });
+        expect(out.entities).toEqual([
+            { type: 'breakablerock', tx: 5, ty: 2, attrs: { tag: '4' } },
+        ]);
+        expect(out.tags).toEqual({ rock: 4 });
+    });
+
     /** ⛔ AN ID THE TABLE DOES NOT CARRY IS A THROW, never a dropped entity. */
     it('an unknown id THROWS rather than dropping the entity', () => {
         expect(() => seedlingOnConnectorEntities({
@@ -470,6 +488,36 @@ describe('⛓⛓⛓ THE SEAM — the item gate, and the two elements certifying'
         expect(out.certification.geometry.length).toBe(1);
         // and the level SHIPPED without it — the draws were spent either way
         expect(out.model.elements.ran).toBe(false);
+    });
+
+    /**
+     * ⛓⛓ SEEDLING SUBSTRATE S1 — THE ROCK GATE, BOTH BOOTS. Pre-sword it is the
+     * kill gate's free refusal, one class over (a swing needs the sword; with
+     * no sword slot the press is a silent no-op). ⛔ MUTANT (a) of the slice —
+     * `rockgate`'s `needs` dropped — reddens THIS row: the pre-sword seam would
+     * spend a real solve and answer with the solver's words, not the gap.
+     * Post-sword it certifies with `break` (R9 L15's verb) on the default
+     * empty room at seed 1 — measured at W1, 4 of 4 seeds certified.
+     */
+    it('pre-sword: the ROCK gate refuses `the-element-needs-an-item-…` with NO solve', () => {
+        const out = seedlingSeam({ seed: 1, items: PRE_SWORD_ITEMS,
+            elements: { name: 'rockgate' } });
+        expect(out.certification.certified).toBe(false);
+        expect(out.certification.gap).toBe('the-element-needs-an-item-this-biome-does-not-grant');
+        expect(out.certification.needs).toEqual(['hasSword']);
+        expect(out.certification.verdict).toBe(null);
+        expect(out.model.elements.ran).toBe(false);
+    });
+
+    it('post-sword: the ROCK gate certifies, and the solve BREAKS the rock', () => {
+        const out = seedlingSeam({ seed: 1, items: POST_SWORD_ITEMS,
+            elements: { name: 'rockgate' } });
+        expect(out.certification.certified).toBe(true);
+        expect(out.certification.strategies).toContain('break');
+        const placed = out.model.elements.placed[0];
+        expect(placed.family).toBe('rockgate');
+        expect(placed.entities).toHaveLength(1);
+        expect(placed.tags.rock).toBeGreaterThanOrEqual(0);
     });
 
     /**

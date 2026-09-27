@@ -51,6 +51,7 @@ import { OPEN_CHAMBER_REFUSALS } from './elements/openChamber.js';
 import { ARENA_REFUSALS } from './elements/arena.js';
 import { SHORTCUT_REFUSALS } from './elements/shortcut.js';
 import { ROOM_DOOR_REFUSALS } from './elements/roomDoor.js';
+import { SOLO_DOOR_REFUSALS } from './elements/soloDoor.js';
 import { SEEDLING_ELEMENT_REFUSALS } from '../seedlingDemo/procgenSeedlingElements.js';
 import { SEEDLING_AREA_REFUSALS } from '../seedlingDemo/procgenSeedling.js';
 import { MAZE_REFUSALS, MAZE_REQUIRE_REFUSALS } from '../mazeRoom/procgenMaze.js';
@@ -96,6 +97,7 @@ const SOURCES = {
     arena: 'frontend/modules/procgenCore/elements/arena.js',
     shortcut: 'frontend/modules/procgenCore/elements/shortcut.js',
     roomDoor: 'frontend/modules/procgenCore/elements/roomDoor.js',
+    soloDoor: 'frontend/modules/procgenCore/elements/soloDoor.js',
     seedlingElements: 'frontend/modules/seedlingDemo/procgenSeedlingElements.js',
     seedling: 'frontend/modules/seedlingDemo/procgenSeedling.js',
     maze: 'frontend/modules/mazeRoom/procgenMaze.js',
@@ -141,6 +143,13 @@ const KEYS = [
         constant: 'ROOM_DOOR_REFUSALS',
         declared: ROOM_DOOR_REFUSALS,
         text: () => read(SOURCES.roomDoor),
+    },
+    {
+        /** ⛓ seedling substrate S1 — the ONE-OBSTACLE doors (rock gate, rock
+         *  shortcut, shield gate): one builder, one file, one key. */
+        constant: 'SOLO_DOOR_REFUSALS',
+        declared: SOLO_DOOR_REFUSALS,
+        text: () => read(SOURCES.soloDoor),
     },
     {
         constant: 'SEEDLING_ELEMENT_REFUSALS',

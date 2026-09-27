@@ -934,13 +934,33 @@ export const EXCLUDED_TEMPLATES = Object.freeze([
      * ⚖ Kickoff §3.3's standing exclusions, carried forward unchanged so this
      * list is the WHOLE answer to "what is not in the pre-sword palette".
      */
+    /**
+     * ⛓⛓ **SUPERSEDED — seedling substrate slice S1** (plan
+     * `seedling-substrate-plan.md` §1.0 #5, §2.1 G-a). The row's old cause was
+     * `VERB-MISSING` — *"no `break` executor exists (`STRATEGY_EXECUTORS` has no
+     * row)"* — and it went STALE when R9 slice L15 wrote
+     * `solverBot.resolveBreakStrategy`. ⛔ The template is NOT promoted: like
+     * the three door templates slice 4c retired, a rock in a pass-2 footprint
+     * cannot know the room, and the room-aware `rockgate` ELEMENT (on-connector,
+     * wall grown to the room) does it instead. The measurement the retirement
+     * rests on is kept here, verbatim from S1's W0/W1.
+     */
     Object.freeze({
         name: 'breakable-rock',
         family: 'break',
-        cause: 'VERB-MISSING',
-        measured: 'no `break` executor exists (`STRATEGY_EXECUTORS` has no row)',
+        cause: 'SUPERSEDED (seedling substrate S1, 2026-09-26) — the room-aware `rockgate` '
+            + 'ELEMENT; the old cause VERB-MISSING ("no `break` executor exists") went stale '
+            + 'at R9 slice L15',
+        measured: 'W0 (hand-drawn 10x10, `torchpickup` goal, `DEFAULT_BUDGET`): a '
+            + '`breakablerock` on a 1-wide corridor SOLVES post-sword in 111 ticks (the open '
+            + 'corridor: 81) and REFUSES pre-sword; on a loop\'s short arc it SOLVES 148 ticks '
+            + 'with the sword and 244 without (the long way). W1: `--elements=rockgate` '
+            + 'post-sword certifies with `break` on seeds 1-4 of the default room, and '
+            + '`--require=hasSword --elements=rockgate` grades STRONG on seeds 1-3.',
         refusalText: null,
-        wouldNeed: 'a registered `break` executor; post-sword anyway (the slash is the opener)',
+        wouldNeed: 'nothing — the `rockgate` element (`procgenCore/elements/soloDoor.js`) is '
+            + 'the rock\'s room-aware form; the pass-2 template stays out for the reason the '
+            + 'door templates did (a relative footprint cannot grow its wall to the room).',
     }),
     Object.freeze({
         name: 'free-roaming-bob',

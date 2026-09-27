@@ -109,6 +109,7 @@ import { KILL_BODY_ID, KILL_DOOR_ID } from '../procgenCore/elements/killGate.js'
 import {
     SHORTCUT_BODY_ID, SHORTCUT_DOOR_ID,
 } from '../procgenCore/elements/shortcut.js';
+import { ROCK_GATE_DOOR_ID } from '../procgenCore/elements/soloDoor.js';
 import { connected, reachableFrom, shortestPath } from '../procgenCore/gridFlood.js';
 import { ELEMENT_TABLE, NONE as ELEMENTS_NONE } from '../procgenCore/elementSpec.js';
 
@@ -991,6 +992,25 @@ export function seedlingOnConnectorEntities({ placed, tagFor }) {
         }
         if (e.id === SHORTCUT_BODY_ID) {
             entities.push({ type: 'spinner', tx: e.x, ty: e.y, attrs: { tag: '-1' } });
+            continue;
+        }
+        /**
+         * ⛓⛓⛓ **THE ROCK GATE'S ONE OBSTACLE** (seedling substrate, slice S1) —
+         * a rockType-0 `breakablerock` (`Game.as` builds every `breakablerock`
+         * with `_type = 0`, so a plain sword breaks it: `BreakableRock.hit(_t)`
+         * is `rockType <= _t`). ⛔ **IT TAKES A TAG OF ITS OWN, AND THAT IS NOT
+         * DECORATION**: `endAnim` is `Game.setPersistence(tag, false)`
+         * UNCONDITIONALLY (`breakableRocks.js` part 3) — a `tag = -1` rock writes
+         * one slot BELOW this level's block, into the previous level's
+         * persistence (`outOfBandFlagFor`). An allocated tag keeps the write in
+         * band, and `check()`'s `tag >= 0 && !checkPersistence(tag)` then keeps a
+         * broken rock broken on a revisit — the kill lock's own durable clear.
+         */
+        if (e.id === ROCK_GATE_DOOR_ID) {
+            const tag = tagFor();
+            tags.rock = tag;
+            entities.push({ type: 'breakablerock', tx: e.x, ty: e.y,
+                attrs: { tag: String(tag) } });
             continue;
         }
         fail(`procgenSeedlingElements: the on-connector element named the id `
