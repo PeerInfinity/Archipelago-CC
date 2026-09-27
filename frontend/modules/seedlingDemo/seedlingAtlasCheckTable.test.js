@@ -22,7 +22,8 @@ import {
     itemOfEntityFrom,
     propertyLocationOfFrom,
 } from './seedlingAtlasCheckTable.js';
-import { tagOf } from './levelWorld.js';
+import { PICKUP_CLEARS_OPTIONAL_TAG, tagOf } from './levelWorld.js';
+import { placementTagId } from './procgenSeedling.js';
 import { ITEM_FOR_KEY, ITEM_FOR_TAG, VICTORY_ITEM } from './seedlingAtlasDerivation.js';
 import { placementKey } from './apPlacementRewriter.js';
 
@@ -208,5 +209,44 @@ describe('seedlingAtlasCheckTable — the law, on edited documents', () => {
         expect(p({ type: 'wand' })).toBe('Wand');
         expect(p({ type: 'torchpickup' })).toBe('Light');
         expect(GAME.locations.map((l) => l.property)).not.toContain('chest');
+    });
+});
+
+describe('seedlingAtlasCheckTable — R9 slice P4E: a build declaring `tag` ALLOCATES', () => {
+    const TAGGING = Object.freeze({ allocateTag: placementTagId,
+        optionalTagTypes: Object.keys(PICKUP_CLEARS_OPTIONAL_TAG) });
+
+    it('the playthrough atlas: the 11 untagged are BOUND at allocated tags, each listed as a retag', () => {
+        const { entries, census, retags } = tableOf(rulesOf('seedling_playthrough'), TAGGING);
+        const untagged = Object.entries(census.byEntity).filter(([, c]) => c.untagged > 0);
+        expect(untagged).toEqual([]);
+        const allocated = Object.fromEntries(Object.entries(census.byEntity)
+            .filter(([, c]) => c.allocated > 0).map(([t, c]) => [t, c.allocated]));
+        expect(allocated).toEqual({ bosskey: 5, totempart: 5, seed: 1 });
+        expect(entries).toHaveLength(19 + 11);
+        expect(retags).toHaveLength(11);
+        // ⛔ each retag is bound at its OWN address, and never at a tag the
+        // room's record already uses
+        const room19 = MAP.levels.find((l) => l.level === 19);
+        const used = room19.entities.map((e) => tagOf(e.type, e.attrs)).filter((t) => t >= 0);
+        const key19 = entries.find((e) => e.location === 'Level 019 - Boss Key 0');
+        expect(key19.entityType).toBe('bosskey');
+        expect(used).not.toContain(key19.tag);
+        expect(retags).toContainEqual(expect.objectContaining({ level: 19, type: 'bosskey',
+            tag: key19.tag }));
+    });
+
+    it('WITHOUT the capability nothing moves (the vanilla build refuses by name)', () => {
+        const a = tableOf(rulesOf('seedling_playthrough'));
+        expect(a.retags).toEqual([]);
+        expect(a.entries).toHaveLength(19);
+    });
+
+    it('two allocations in ONE room never collide', () => {
+        const alloc = [];
+        const spy = (room, reserved) => { const t = placementTagId(room, reserved); alloc.push([room.level, t]); return t; };
+        tableOf(rulesOf('seedling_playthrough'), { ...TAGGING, allocateTag: spy });
+        const seen = new Set(alloc.map(([l, t]) => `${l}|${t}`));
+        expect(seen.size).toBe(alloc.length);
     });
 });

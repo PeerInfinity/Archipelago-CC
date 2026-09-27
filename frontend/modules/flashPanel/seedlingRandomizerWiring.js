@@ -75,8 +75,11 @@
 import { indexLevels } from '../seedlingDemo/atlasSource.js';
 import {
     AP_ITEM_CAPABILITY,
+    buildNameFromWasmPath,
+    capabilitiesOf,
     RANDOMIZER_ARMS,
     seedlingRandomizerEligibility,
+    TAG_CAPABILITY,
 } from './seedlingRandomizerEligibility.js';
 // ⛓ LIGHT: imports nothing, and is already in the panel's static closure.
 import { GEN_ROOM_TILE_SIZE, generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
@@ -123,6 +126,9 @@ export const AP_GENERATED_MODULE_PATHS = Object.freeze({
  */
 export const AP_ATLAS_MODULE_PATHS = Object.freeze({
     levelWorld: 'modules/seedlingDemo/levelWorld.js',
+    // ⛓ R9 slice P4E: the ONE tag allocator (`placementTagId`), for a build
+    // declaring `tag`. Also inside the rewriter's closure already.
+    procgenSeedling: 'modules/seedlingDemo/procgenSeedling.js',
 });
 
 /**
@@ -769,7 +775,13 @@ export async function loadSeedlingRandomizer({
     if (eligibility.arm === RANDOMIZER_ARMS.ATLAS) {
         return loadSeedlingAtlas({
             eligibility, rawRules, locations, playerId, gameConfig, mapDoc, assets,
-            modules: { rewriter, derivation }, baseUrl, fetchJson, importModule, log,
+            modules: { rewriter, derivation, exporter, validator }, baseUrl, fetchJson,
+            importModule, log,
+            // ⛓ R9 slice P4E: the build's `tag` capability, from DATA, and what
+            // a delivery needs if the table allocates a tag.
+            tagCapable: (capabilitiesOf(manifest, buildNameFromWasmPath(flashPanel?.wasm))
+                .capabilities ?? []).includes(TAG_CAPABILITY),
+            embed, bot,
         });
     }
     if (!eligibility.eligible) return refuse(eligibility, { census, assets });
@@ -986,6 +998,9 @@ export async function loadSeedlingAtlas({
     fetchJson = defaultFetchJson,
     importModule = defaultImportModule,
     log = () => {},
+    tagCapable = false,
+    embed = null,
+    bot = null,
 } = {}) {
     const url = (rel) => new URL(rel, baseUrl).href;
     const refuse = (why, extra = {}) => ({
@@ -1033,9 +1048,20 @@ export async function loadSeedlingAtlas({
     }
 
     const levelWorld = await importModule(url(AP_ATLAS_MODULE_PATHS.levelWorld));
-    const { rewriter, derivation } = modules;
+    const { rewriter, derivation, exporter = null, validator = null } = modules;
+    /**
+     * ⛓ R9 slice P4E (C4) — a build declaring `tag` reads an OPTIONAL `@tag` on
+     * `bosskey`/`totempart`/`seed`, so the table ALLOCATES one for such a
+     * location instead of refusing it, and the room is then delivered with the
+     * tag written (below). ⛔ Without the capability nothing moves.
+     */
+    const tagging = tagCapable
+        ? { allocateTag: (await importModule(url(AP_ATLAS_MODULE_PATHS.procgenSeedling)))
+            .placementTagId,
+        optionalTagTypes: Object.keys(levelWorld.PICKUP_CLEARS_OPTIONAL_TAG ?? {}) }
+        : {};
     const byName = locations instanceof Map ? locations : new Map(Object.entries(locations ?? {}));
-    const { table, entries, refused, census } = buildAtlasCheckTable({
+    const { table, entries, refused, census, retags } = buildAtlasCheckTable({
         rules: rawRules,
         atlasDoc,
         mapDoc,
@@ -1046,12 +1072,39 @@ export async function loadSeedlingAtlas({
         itemOfEntity: itemOfEntityFrom({ itemForTag: derivation.ITEM_FOR_TAG,
             itemForKey: derivation.ITEM_FOR_KEY, victoryItem: derivation.VICTORY_ITEM }),
         propertyLocationOf: propertyLocationOfFrom(gameConfig, derivation.ITEM_FOR_TAG),
+        ...tagging,
     });
     for (const r of refused) {
         log(`[ap placement] atlas arm: "${r.location}" (${r.region}) is NOT bound — ${r.why}`, 'warn');
     }
+    /**
+     * ⛓ P4E: a RETAG needs the rooms delivered — the vanilla record set with the
+     * allocated `@tag`s written and nothing else moved. No retag, no delivery:
+     * byte-for-byte the G7 arm.
+     */
+    let delivery = null;
+    let set = null;
+    let invalidation = null;
+    if (retags.length > 0) {
+        if (!embed || !exporter || !validator) {
+            return refuse('atlas: the build declares `tag` and a location needs one allocated, '
+                + 'but the vanilla record set or the delivery modules were not handed in');
+        }
+        const { set: vanilla } = exporter.vanillaRecordSet(embed, mapDoc);
+        ({ set } = rewriter.retagRecordSet(vanilla, retags));
+        invalidation = exporter.apMappingInvalidation(set);
+        delivery = new SeedlingLevelSetDelivery({
+            planChunks: validator.planLevelSetChunks, bot, log,
+        }).arm(set, invalidation);
+        for (const r of retags) {
+            log(`[ap placement] atlas arm: ${r.type}@(${r.x},${r.y}) in level ${r.level} `
+                + `is TAGGED ${r.tag} (the build reads an optional @tag)`);
+        }
+    }
     log(`[ap placement] atlas arm: ${census.regions} real room(s), ${census.bound} of `
-        + `${census.locations} location(s) bound where they stand (no rewrite, no delivery)`
+        + `${census.locations} location(s) bound where they stand `
+        + `${retags.length > 0 ? `(${retags.length} tag(s) written, delivered)`
+            : '(no rewrite, no delivery)'}`
         + `${census.refused > 0 ? `; ${census.refused} refused by name` : ''}`);
 
     const checkBinding = new SeedlingCheckBinding({
@@ -1062,14 +1115,15 @@ export async function loadSeedlingAtlas({
         why: eligibility.why,
         eligibility,
         arm: RANDOMIZER_ARMS.ATLAS,
-        delivery: null,
+        delivery,
         checkBinding,
         table,
         entries,
         refused,
+        retags,
         replaced: 0,
-        set: null,
-        invalidation: null,
+        set,
+        invalidation,
         census,
         assets: { ...(assets ?? {}), atlas: { url: atlasUrl, ok: true, atlasId } },
         selfPlayer,
