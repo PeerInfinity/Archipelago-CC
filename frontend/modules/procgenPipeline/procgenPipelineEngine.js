@@ -1512,12 +1512,36 @@ function topDownRegionSize(base, exitCount, locationCount) {
 }
 
 /**
- * Resolve which source region is the "actual" start. Most rules.json
- * files (including the procgen-emitted ones) wrap the playable start
- * in a synthetic Menu region whose only exit is unconditional and
- * points at the real start. Top-down strips Menu and starts BFS from
- * the connected_region; buildRulesJson re-wraps the output in a
- * fresh Menu region on emit. EXPORTED: the APWorld Editor's initialise
+ * ⛓⛓ M3 (R8, the name-free rule) — **IS THE DECLARED START A PURE HUB?** A
+ * start region is VIRTUAL — the layout strips it and its exits' targets become
+ * the roots (M1) — iff it has at least one exit and NO locations. Otherwise it
+ * is a real room that is also the menu (apcalc's `C`, sm64ex's `Menu` with its 5
+ * locations, factorio's one-region `Nauvis`): it keeps its cell and the BFS
+ * explores every exit from it. ⛔ The start's NAME is never read — the runtime
+ * already asks `isStartRegion`, and this is the layout's half of that rule.
+ */
+export function isVirtualStart(region) {
+    return (region?.exits ?? []).length > 0 && (region?.locations ?? []).length === 0;
+}
+
+/**
+ * ⛓ The layout's refusals about the declared start, as sentences (one string,
+ * thrown by `layoutTopDown`). More than one declared start has no top-down
+ * shape yet — the "combined menu" is designed when a document brings one.
+ */
+export const TOPDOWN_START_REFUSALS = Object.freeze({
+    multiStart: (count) => `topDownFromRulesJson: ${count} start regions declared; the top-down layout takes one`,
+});
+
+/**
+ * Resolve which source region is the "actual" start — the one the BFS places
+ * first. The declared start IS the menu, whatever it is called: when it is a
+ * pure hub (`isVirtualStart`: exits, no locations) the layout strips it
+ * (`menuName` = its name), the BFS starts at its FIRST exit's target and every
+ * further exit's target becomes a root; otherwise it is placed as a cell
+ * (`menuName` null). ⛓ The compile keeps a stripped start under its own name
+ * (`sourceMenuRegion`); `buildRulesJson` wraps a placed one in its synthetic
+ * Menu. EXPORTED: the APWorld Editor's initialise
  * (`apworldEditor/slotInitialise.js`) asks the SAME rule.
  */
 export function resolveTopDownStart(sourceRegions, declaredStart) {
@@ -1534,7 +1558,7 @@ export function resolveTopDownStart(sourceRegions, declaredStart) {
      * through `regionsOf` at both call sites, so what is left here is a read of
      * a REGION object whose shape the format guarantees.
      */
-    if (/^menu$/i.test(declaredStart) && (region.exits ?? []).length > 0) {
+    if (isVirtualStart(region)) {
         const firstExit = region.exits[0];
         if (firstExit?.connected_region && sourceRegions[firstExit.connected_region]) {
             return { actualStart: firstExit.connected_region, menuName: declaredStart };
@@ -1545,10 +1569,11 @@ export function resolveTopDownStart(sourceRegions, declaredStart) {
 
 /**
  * Count source-side regions, locations, exits, and non-trivial logic
- * gates for a top-down rules.json input. Excludes the synthetic Menu
- * region (the driver strips it; buildRulesJson re-emits it on the
- * output side, so it's not a meaningful "source" entity for
- * preservation accounting).
+ * gates for a top-down rules.json input. Excludes the STRIPPED start
+ * (`resolveTopDownStart`'s `menuName` — a pure hub, whatever its name;
+ * the layout does not place it), so it is not a "source" entity for
+ * preservation accounting. A start the layout PLACES (it has
+ * locations, or no exits) is counted like any other region.
  *
  * "logic_gates" counts exits + locations whose access_rule is
  * something other than absent or `{rule: 'True_'}` — i.e. any
@@ -1684,7 +1709,12 @@ export function layoutTopDown(rulesJson, opts, rng) {
     // Locate the declared start.
     // ⛓ Both start_regions shapes, through the ONE reader. These two sites were
     // a VERBATIM four-line copy of each other (§16.1 #5).
-    const [declaredStart = null] = startRegionsOf(rulesJson, playerId).default;
+    // ⛓ M3 — the WHOLE list: more than one declared start is refused by name.
+    const declaredStarts = startRegionsOf(rulesJson, playerId).default;
+    if (declaredStarts.length > 1) {
+        throw new Error(TOPDOWN_START_REFUSALS.multiStart(declaredStarts.length));
+    }
+    const [declaredStart = null] = declaredStarts;
     const resolved = resolveTopDownStart(sourceRegions, declaredStart);
     if (!resolved) {
         throw new Error(`topDownFromRulesJson: no usable start region for player '${playerId}'`);
@@ -1696,9 +1726,9 @@ export function layoutTopDown(rulesJson, opts, rng) {
         regionsBuilt: 0,
         regionsSkipped: 0,
         teleportersPlaced: 0,
-        // Menu is stripped from the source-region BFS (we don't
-        // realize it; buildRulesJson re-emits it on emit), so the
-        // total to compare against regionsBuilt also excludes it.
+        // A stripped start (a pure hub) is not placed (we don't
+        // realize it; the compile re-emits it under its own name), so
+        // the total to compare against regionsBuilt also excludes it.
         regionsTotal: Object.keys(sourceRegions).length - (menuName ? 1 : 0),
         stopReason: null,
     };
@@ -2226,7 +2256,7 @@ export function finalizeTopDown(layout) {
     if (logEntries && logEntries.length > 0) {
         const attributed = buildTopDownSphereMetadata({
             placementOrder, cellsByName, teleporterEdges, grid,
-            entries: logEntries, playerId,
+            entries: logEntries, playerId, menuName: layout.menuName,
         });
         sphereTree = attributed.sphereTree;
         spherePlan = { seed, ...attributed.spherePlan };
@@ -2331,6 +2361,7 @@ export function sphereLogToWavesAndPlan(entries, { playerId = '1' } = {}) {
  */
 function buildTopDownSphereMetadata({
     placementOrder, cellsByName, teleporterEdges, grid, entries, playerId = '1',
+    menuName = null,
 }) {
     const warnings = [];
     const { regionWave, spherePlan } = sphereLogToWavesAndPlan(entries, { playerId });
@@ -2406,11 +2437,12 @@ function buildTopDownSphereMetadata({
     }
     nodes.forEach((n, i) => { n.usedSides = [...used[i]]; });
 
-    // Completeness: log regions top-down never placed (Menu is the virtual
-    // start wrapper — stripped by top-down, re-emitted by buildRulesJson).
+    // Completeness: log regions top-down never placed (the STRIPPED start —
+    // `menuName`, a pure hub whatever its name — is not placed by design; the
+    // compile re-emits it).
     const placedNames = new Set(placementOrder.map((p) => p.name));
     for (const name of regionWave.keys()) {
-        if (name === 'Menu') continue;
+        if (name === menuName) continue;
         if (!placedNames.has(name)) {
             warnings.push(`sphere log region "${name}" was not placed by top-down`);
         }
@@ -6731,6 +6763,10 @@ export function buildRulesJson(grid, opts = {}) {
     // Menu appears first.
     // ⛓ makeExit's own null→True_ rewrite IS the `{rule:'True_'}` this used to
     // spell inline — the third copy of that literal.
+    // ⛓ M3 — a PLACED start that already carries this name (a `Menu` that is
+    // a real room: sm64ex's with its 5 locations, ff1's with no exit) replaces
+    // the wrapper in the spread below: its region keeps the lead, the wrapper's
+    // `GameStart` is gone, and `start_regions` names it — the start IS the menu.
     const menu = compiled.menu_region ?? {
         name: 'Menu',
         exits: [makeExit('GameStart', compiled.start_region_name)],

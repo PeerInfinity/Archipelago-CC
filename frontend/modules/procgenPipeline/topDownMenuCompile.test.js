@@ -51,7 +51,8 @@ function recompile(env, menuRegion) {
     });
 }
 
-/** A small hub: Menu → A, B, C; A → B; C → D. */
+/** A small hub: Menu → A, B, C; A → B; C → D. ⛓ M3 — the Menu is a PURE hub (no
+ *  locations: one would make it a cell); `k1`, which gates Menu → C, is A's gift. */
 function hubSource() {
     const T = { rule: 'True_' };
     const reg = (name, exits = [], locations = []) => ({ name, exits, locations });
@@ -62,9 +63,9 @@ function hubSource() {
         regions: {
             1: {
                 Menu: reg('Menu', [ex('Menu -> A', 'A'), ex('Menu -> B', 'B'),
-                    ex('Menu -> C', 'C', { rule: 'Has', args: { item_name: 'k1' } })],
-                [{ name: 'Menu Gift', access_rule: T, item: { name: 'k1', player: 1 } }]),
-                A: reg('A', [ex('A -> B', 'B')], [{ name: 'A1', access_rule: T, item: { name: 'k2' } }]),
+                    ex('Menu -> C', 'C', { rule: 'Has', args: { item_name: 'k1' } })]),
+                A: reg('A', [ex('A -> B', 'B')], [{ name: 'A1', access_rule: T, item: { name: 'k2' } },
+                    { name: 'A Gift', access_rule: T, item: { name: 'k1', player: 1 } }]),
                 B: reg('B', [], [{ name: 'B1', access_rule: T, item: { name: 'k3' } }]),
                 C: reg('C', [ex('C -> D', 'D')], [{ name: 'C1', access_rule: T, item: { name: 'k4' } }]),
                 D: reg('D', [], [{ name: 'D1', access_rule: T, item: { name: 'Victory' } }]),
@@ -91,30 +92,22 @@ describe('M1 — ④ emits the SOURCE Menu', () => {
         expect(errors(sidecarIssues(doc, '1'))).toEqual([]);
     });
 
-    it('sm64ex: the 5 Menu locations ride the compiled Menu, their items pooled and placed like a grid location\'s', async () => {
+    it('sm64ex (M3): a Menu WITH locations is a CELL — its 5 locations are its room\'s, no source Menu is carried', async () => {
+        // ⛓ M1 carried these 5 on the stripped Menu; since M3 a start with locations
+        // is placed like any region (plan §25.10), so the compile keeps no menuRegion.
         const source = preset('sm64ex');
         const env = await compiled(source, 12);
         const doc = env.compile.rulesJson;
         const srcLocs = source.regions['1'].Menu.locations;
         expect(srcLocs).toHaveLength(5);
-        const menu = doc.regions['1'].Menu;
-        expect(menu.locations.map((l) => l.name)).toEqual(srcLocs.map((l) => l.name));
-        const gridLocationIds = Object.entries(doc.regions['1']).filter(([n]) => n !== 'Menu')
-            .flatMap(([, r]) => r.locations.map((l) => l.id));
-        for (const [i, loc] of menu.locations.entries()) {
-            expect(loc.item.name).toBe(srcLocs[i].item.name);
-            expect(doc.canonical_placements['1'][loc.name]).toBe(srcLocs[i].item.name);
-            expect(doc.items['1'][loc.item.name]).toBeTruthy();
-            // Numbered AFTER every grid location — the grid's ids are what they were.
-            expect(loc.id).toBeGreaterThan(Math.max(...gridLocationIds));
-        }
-        // The pool counts the Menu's items: without the Menu they are fewer by exactly its share.
-        const bare = recompile(env, null);
-        const menuItems = srcLocs.map((l) => l.item.name);
-        for (const name of new Set(menuItems)) {
-            const inMenu = menuItems.filter((n) => n === name).length;
-            expect(doc.itempool_counts['1'][name]).toBe((bare.itempool_counts['1'][name] ?? 0) + inMenu);
-        }
+        expect(env.layout.menuName).toBeNull();
+        expect(env.finalize.menuRegion).toBeNull();
+        expect(env.layout.cellsByName.has('Menu')).toBe(true);
+        expect(doc.start_regions['1'].default).toEqual(['Menu']);
+        expect(Object.keys(doc.regions['1'])[0]).toBe('Menu');
+        expect(doc.preset_sidecars['1'].Menu).toBeTruthy();
+        const menuItems = doc.regions['1'].Menu.locations.map((l) => l.item?.name).filter(Boolean).sort();
+        expect(menuItems).toEqual(srcLocs.map((l) => l.item.name).sort());
         expect(errors(sidecarIssues(doc, '1'))).toEqual([]);
     });
 
@@ -129,8 +122,8 @@ describe('M1 — ④ emits the SOURCE Menu', () => {
         ]);
         expect(validateRules(env.compile.rulesJson, '1')
             .filter((i) => /points at unknown region/.test(i.message))).toEqual([]);
-        // The Menu's own location compiles regardless of the grid.
-        expect(menu.locations.map((l) => l.name)).toEqual(['Menu Gift']);
+        // ⛓ M3 — a stripped start has no locations by construction (one would make it a cell).
+        expect(menu.locations).toEqual([]);
     });
 
     it('a rule on a Menu exit is kept verbatim (the synthetic Menu wrote True_)', async () => {

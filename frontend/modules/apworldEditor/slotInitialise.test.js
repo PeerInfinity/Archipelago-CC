@@ -235,11 +235,13 @@ describe('the regions the layout cannot place — NAMED, each with a derived why
     });
 
     it('⛓ a 1×1 grid: the region with a placed parent has NO FREE CELL, its child ONLY FROM UNPLACED', () => {
+        // ⛓ M3 — A carries a location, so it is a ROOM the layout places (a start with
+        // exits and none would be a pure hub, stripped — topDownStartShape.test.js).
         const doc = {
             start_regions: { [P]: ['A'] },
             regions: {
                 [P]: {
-                    A: { name: 'A', exits: [{ name: 'A→B', connected_region: 'B' }], locations: [] },
+                    A: { name: 'A', exits: [{ name: 'A→B', connected_region: 'B' }], locations: [{ name: 'A1' }] },
                     B: { name: 'B', exits: [{ name: 'B→C', connected_region: 'C' }], locations: [] },
                     C: { name: 'C', exits: [], locations: [] },
                 },
