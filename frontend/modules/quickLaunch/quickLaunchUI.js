@@ -21,10 +21,14 @@ import {
     EMPTY_TREE, NODE_KINDS, addGroup, addRef, addUrl, deleteNode, findNode, groupsOf, migrate, moveDown, moveNode,
     moveUp, refCounts, renameGroup,
 } from './quickLaunchTree.js';
-import { getModuleManager } from './index.js';
+import { getModuleManager } from './moduleManagerRef.js';
 
-// Declared here, not in index.js: index.js imports this file, so a top-level
-// read of an index.js const would run before that const is initialized.
+// Declared here, not in index.js: index.js imports this file and reads MODULE_ID
+// at evaluation (moduleInfo.name), and tests/testCases/quickLaunchTests.js imports
+// it from here. This file must never import ./index.js — with that edge, importing
+// this file FIRST (test discovery, in a mode where quickLaunch is disabled) ran
+// index.js before MODULE_ID existed: the TDZ ReferenceError of slice P9. The module
+// manager handle lives in moduleManagerRef.js for that reason.
 export const MODULE_ID = 'quickLaunch';
 export const RENDER_DEBOUNCE_MS = 50;
 export const DOCS_LINK_SETTING = `moduleSettings.${MODULE_ID}.docsLinkTarget`;

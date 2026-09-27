@@ -11,6 +11,7 @@
 import { MODULE_ID, QuickLaunchUI, VIEWS } from './quickLaunchUI.js';
 import { DOCS_LINK_TARGETS } from '../../app/config/docsBase.js';
 import { EMPTY_TREE } from './quickLaunchTree.js';
+import { setInitializationApi } from './moduleManagerRef.js';
 
 export const moduleInfo = {
     name: MODULE_ID,
@@ -23,13 +24,6 @@ export const moduleInfo = {
     docs: 'docs/json/user/modules/quickLaunch.md',
     requires: [],
 };
-
-let initializationApi = null;
-
-/** The module manager, once `initialize` has run (null before). */
-export function getModuleManager() {
-    return initializationApi?.getModuleManager?.() ?? null;
-}
 
 export function register(registrationApi) {
     if (typeof document !== 'undefined') {
@@ -95,5 +89,5 @@ export function register(registrationApi) {
 }
 
 export async function initialize(moduleId, priorityIndex, api) {
-    initializationApi = api;
+    setInitializationApi(api);
 }
