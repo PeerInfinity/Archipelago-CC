@@ -15,7 +15,9 @@ import { makeLocationName } from '../procgenCore/apLocationNaming.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { ScenarioPool } from '../shared/procgen/scenarioPool.js';
-import { makeRulesJsonScaffold, makeHasRule, makeAndRule, makeExit } from '../shared/rulesJsonBuilder.js';
+import {
+    makeRulesJsonScaffold, makeHasRule, makeAndRule, makeExit, makeTrueRule,
+} from '../shared/rulesJsonBuilder.js';
 import { validateSpherePlan } from './spherePlanner.js';
 import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
 import {
@@ -1721,69 +1723,111 @@ export function layoutTopDown(rulesJson, opts, rng) {
     placementOrder.push({ name: actualStartName, cell: startCell, parent: null });
     grid.placeRegion(startCell, { region_id: actualStartName });
 
-    const bfsQueue = [actualStartName];
     /**
-     * ⛓ EDITOR v3 E2a — LEFT AS A HAND BFS, and why: `rulesGraph.reachableRegions`
-     * is the same traversal and returns a SET OF NAMES. This one's PRODUCT is a
-     * grid placement — it consumes rng, assigns cells and records exit sides as
-     * it goes — so the walk and the placement are one loop, and replacing the
-     * walk half would mean running the traversal twice and keeping the two in
-     * step. The byte gates could not see the difference; the placement would.
+     * ⛓⛓ R8 / M1 — **THE MENU IS THE LAYOUT'S HUB.** Every exit of a stripped
+     * Menu feeds a ROOT: the first exit's target is the start (above); each
+     * further one, in Menu-exit order, is placed only if the BFS from the roots
+     * before it did not reach it — at a `findDisconnectedCell` (a teleporter-fed
+     * cell: the Menu has no cell, so nothing is adjacent to it) — and is BFS'd in
+     * turn. A root carries `parent: null`, the start's contract: ③ inserts no
+     * back-exit into it and keeps its default entrance, and every `parent == null`
+     * reader sees a root. No `teleporterEdges` entry: its `from` is the Menu, which
+     * has no cell to map. `menuRoots` records which Menu exit fed each root (the
+     * first included); `[]` when there is no stripped Menu.
+     * ⛔ A one-exit Menu (or one whose further targets the BFS already reached)
+     * draws NO extra rng — the layout is byte-identical to the single-root one.
      */
-    while (bfsQueue.length > 0) {
-        const fromName = bfsQueue.shift();
-        const fromCell = cellsByName.get(fromName);
-        const fromRegion = sourceRegions[fromName];
-        if (!fromRegion) continue;
-        for (const exit of fromRegion.exits ?? []) {
-            const targetName = exit.connected_region;
-            if (!targetName) continue;
-            // Skip the synthetic Menu region everywhere — it's a
-            // wrapper, not a playable region. buildRulesJson re-emits
-            // it on the output side.
-            if (menuName && targetName === menuName) continue;
-            if (!sourceRegions[targetName]) continue;
+    const menuRoots = [];
+    const menuExits = menuName ? (sourceRegions[menuName]?.exits ?? []) : [];
+    if (menuName) {
+        menuRoots.push({ name: actualStartName, exit_id: menuExits[0].name });
+    }
 
-            if (cellsByName.has(targetName)) {
-                // Target already placed. If not adjacent, mark this
-                // source-exit as a teleporter; if adjacent, no-op
-                // (the existing geometric edge will be honored).
-                const targetCell = cellsByName.get(targetName);
-                if (!cellsAreAdjacent(fromCell, targetCell)) {
-                    teleporterEdges.push({ from_name: fromName, exit_id: exit.name });
+    const bfsQueue = [actualStartName];
+    const runBfs = () => {
+        /**
+         * ⛓ EDITOR v3 E2a — LEFT AS A HAND BFS, and why: `rulesGraph.reachableRegions`
+         * is the same traversal and returns a SET OF NAMES. This one's PRODUCT is a
+         * grid placement — it consumes rng, assigns cells and records exit sides as
+         * it goes — so the walk and the placement are one loop, and replacing the
+         * walk half would mean running the traversal twice and keeping the two in
+         * step. The byte gates could not see the difference; the placement would.
+         */
+        while (bfsQueue.length > 0) {
+            const fromName = bfsQueue.shift();
+            const fromCell = cellsByName.get(fromName);
+            const fromRegion = sourceRegions[fromName];
+            if (!fromRegion) continue;
+            for (const exit of fromRegion.exits ?? []) {
+                const targetName = exit.connected_region;
+                if (!targetName) continue;
+                // Skip the stripped Menu everywhere — it has no cell; its
+                // exits feed the roots, and buildRulesJson emits the source
+                // Menu itself (finalizeTopDown's menuRegion).
+                if (menuName && targetName === menuName) continue;
+                if (!sourceRegions[targetName]) continue;
+
+                if (cellsByName.has(targetName)) {
+                    // Target already placed. If not adjacent, mark this
+                    // source-exit as a teleporter; if adjacent, no-op
+                    // (the existing geometric edge will be honored).
+                    const targetCell = cellsByName.get(targetName);
+                    if (!cellsAreAdjacent(fromCell, targetCell)) {
+                        teleporterEdges.push({ from_name: fromName, exit_id: exit.name });
+                    }
+                    continue;
                 }
-                continue;
-            }
 
-            // Target not yet placed. Try a geographic neighbor first.
-            const adj = findAdjacentEmptyCell(grid, fromCell, rng);
-            if (adj) {
-                cellsByName.set(targetName, adj);
-                placementOrder.push({
-                    name: targetName, cell: adj,
-                    parent: { name: fromName, exit_id: exit.name },
-                });
-                grid.placeRegion(adj, { region_id: targetName });
-                bfsQueue.push(targetName);
-            } else {
-                const disc = findDisconnectedCell(grid, rng, teleporterMinGap);
-                if (disc) {
-                    cellsByName.set(targetName, disc);
+                // Target not yet placed. Try a geographic neighbor first.
+                const adj = findAdjacentEmptyCell(grid, fromCell, rng);
+                if (adj) {
+                    cellsByName.set(targetName, adj);
                     placementOrder.push({
-                        name: targetName, cell: disc,
+                        name: targetName, cell: adj,
                         parent: { name: fromName, exit_id: exit.name },
                     });
-                    grid.placeRegion(disc, { region_id: targetName });
+                    grid.placeRegion(adj, { region_id: targetName });
                     bfsQueue.push(targetName);
-                    teleporterEdges.push({ from_name: fromName, exit_id: exit.name });
                 } else {
-                    // Grid is too cramped — drop this edge. The exit
-                    // will dangle (target_region: null) and get walled
-                    // off in the final pass.
-                    stats.regionsSkipped += 1;
+                    const disc = findDisconnectedCell(grid, rng, teleporterMinGap);
+                    if (disc) {
+                        cellsByName.set(targetName, disc);
+                        placementOrder.push({
+                            name: targetName, cell: disc,
+                            parent: { name: fromName, exit_id: exit.name },
+                        });
+                        grid.placeRegion(disc, { region_id: targetName });
+                        bfsQueue.push(targetName);
+                        teleporterEdges.push({ from_name: fromName, exit_id: exit.name });
+                    } else {
+                        // Grid is too cramped — drop this edge. The exit
+                        // will dangle (target_region: null) and get walled
+                        // off in the final pass.
+                        stats.regionsSkipped += 1;
+                    }
                 }
             }
         }
+    };
+    runBfs();
+
+    for (const exit of menuExits.slice(1)) {
+        const targetName = exit?.connected_region;
+        if (!targetName || targetName === menuName || !sourceRegions[targetName]) continue;
+        if (cellsByName.has(targetName)) continue;
+        const disc = findDisconnectedCell(grid, rng, teleporterMinGap);
+        if (!disc) {
+            // No free cell ≥ the gap: the root (and whatever only it reaches)
+            // stays unplaced, counted like any dropped edge.
+            stats.regionsSkipped += 1;
+            continue;
+        }
+        cellsByName.set(targetName, disc);
+        placementOrder.push({ name: targetName, cell: disc, parent: null });
+        grid.placeRegion(disc, { region_id: targetName });
+        menuRoots.push({ name: targetName, exit_id: exit.name });
+        bfsQueue.push(targetName);
+        runBfs();
     }
 
     // ----- Phase 2 sizing (rng-free, so it lives in ①): pick one uniform region
@@ -1827,7 +1871,7 @@ export function layoutTopDown(rulesJson, opts, rng) {
         : (Array.isArray(rulesJson.sphere_log) ? rulesJson.sphere_log : null);
     return {
         grid, startCell, placementOrder, cellsByName, teleporterEdges,
-        sourceRegions, stats, uniformSize, menuName, actualStartName,
+        sourceRegions, stats, uniformSize, menuName, menuRoots, actualStartName,
         assumeBidirectional, playerId, seed, logEntries,
         substrateByRegion: resolvedSubstrates, subSeedByRegion,
     };
@@ -2189,7 +2233,40 @@ export function finalizeTopDown(layout) {
         attributionWarnings = attributed.warnings;
     }
 
-    return { grid, startCell, stats, sphereTree, spherePlan, attributionWarnings };
+    const { menuRegion, menuWarnings } = sourceMenuRegion(layout);
+    return {
+        grid, startCell, stats, sphereTree, spherePlan, attributionWarnings,
+        menuRegion, menuWarnings,
+    };
+}
+
+/**
+ * ⛓⛓ M1 (R8) — **THE SOURCE MENU THE COMPILE KEEPS.** The Menu `layoutTopDown`
+ * stripped (`layout.menuName`), as `buildRulesJson`'s `menuRegion`: its exits
+ * whose target the grid placed (name, `connected_region`, `access_rule`
+ * verbatim, Menu-exit order) and its locations verbatim. A Menu exit whose
+ * target was NOT placed is dropped — the document must not gain a dangling exit —
+ * and named in `menuWarnings`. `{menuRegion: null, menuWarnings: []}` when the
+ * layout stripped no Menu.
+ */
+function sourceMenuRegion(layout) {
+    const { menuName, sourceRegions, cellsByName } = layout;
+    const source = menuName ? sourceRegions?.[menuName] : null;
+    if (!source) return { menuRegion: null, menuWarnings: [] };
+    const exits = [];
+    const menuWarnings = [];
+    for (const e of source.exits ?? []) {
+        const target = e?.connected_region;
+        if (target === menuName || (target && cellsByName.has(target))) {
+            exits.push({ name: e.name, connected_region: target, access_rule: e.access_rule ?? null });
+        } else {
+            menuWarnings.push(`Menu exit "${e?.name}" → "${target}" dropped: its target was not placed`);
+        }
+    }
+    return {
+        menuRegion: { name: menuName, exits, locations: source.locations ?? [] },
+        menuWarnings,
+    };
 }
 
 /**
@@ -2413,6 +2490,12 @@ export function compileRegionGraph(grid, opts = {}) {
         // turns into place_locked_item (so even multiworld fill keeps
         // the item there). Used for the bounce start-stack arrow.
         lockedItems = [],
+        // ⛓ M1 (R8) — the SOURCE Menu a top-down layout stripped
+        // (`finalizeTopDown`'s `menuRegion`: `{name, exits, locations}`, its
+        // exits already filtered to placed targets). Compiled AFTER the grid, so
+        // every grid location and item keeps the id it had. null = none (every
+        // other driver; `buildRulesJson` then writes its synthetic Menu).
+        menuRegion = null,
     } = opts;
     const itemLib = { [LIBRARY_SLOT_FILLER_ITEM]: { classification: 'filler' }, ...rawItemLib };
     const lockedItemSet = new Set(lockedItems);
@@ -2459,49 +2542,11 @@ export function compileRegionGraph(grid, opts = {}) {
         // makeExit's null→True_ rewrite cannot fire.
         const regionExits = compiled.exits.map((e) => makeExit(e.id, e.target_region, e.rule));
 
-        const regionLocations = compiled.locations.map((loc) => {
-            const globalName = loc.global_name
-                ?? makeLocationName(compiled.region_name, loc.id, loc.position);
-            const numericId = nextLocationId++;
-            let itemPlacement = null;
-            if (loc.item) {
-                // Register the item and tally the canonical placement.
-                // Every non-event item belongs to the "Everything" group by
-                // convention (matches item_groups["1"] = ["Everything"]).
-                // First occurrence mints a numeric id that persists for
-                // the item's lifetime in this compile.
-                const classification = itemLib[loc.item]?.classification ?? 'progression';
-                if (!items[loc.item]) {
-                    items[loc.item] = {
-                        name: loc.item,
-                        id: nextItemId++,
-                        classification,
-                        groups: ['Everything'],
-                    };
-                }
-                itempool_counts[loc.item] = (itempool_counts[loc.item] || 0) + 1;
-                canonical_placements[globalName] = loc.item;
-
-                // Shape per rules.schema.json $defs/itemPlacement — what
-                // stateManager's checkLocation reads to add the item to
-                // inventory at runtime. canonical_placements alone isn't
-                // enough; stateManager looks at location.item directly.
-                itemPlacement = {
-                    name: loc.item,
-                    player: numericPlayerId,
-                    advancement: classification === 'progression',
-                    type: classification,
-                };
-            }
-            return {
-                name: globalName,
-                id: numericId,
-                access_rule: loc.rule,
-                ...(itemPlacement ? { item: itemPlacement } : {}),
-                ...(itemPlacement && lockedItemSet.has(loc.item)
-                    ? { locked: true } : {}),
-            };
-        });
+        const regionLocations = compiled.locations.map((loc) => compileLocation(
+            loc.global_name ?? makeLocationName(compiled.region_name, loc.id, loc.position),
+            loc.item,
+            loc.rule,
+        ));
 
         regions[compiled.region_name] = {
             name: compiled.region_name,
@@ -2510,13 +2555,72 @@ export function compileRegionGraph(grid, opts = {}) {
         };
     }
 
+    // ⛓ M1 — the source Menu: its exits and rules verbatim (makeExit's null→True_,
+    // as for any exit) and its locations through the SAME `compileLocation` a grid
+    // location takes, so its items join `items`, `itempool_counts` and
+    // `canonical_placements` exactly as a grid region's do.
+    const menu = menuRegion ? {
+        name: menuRegion.name,
+        exits: (menuRegion.exits ?? []).map((e) => makeExit(e.name, e.connected_region, e.access_rule)),
+        locations: (menuRegion.locations ?? []).map((loc) => compileLocation(
+            loc.name,
+            (typeof loc.item === 'string' ? loc.item : loc.item?.name) ?? null,
+            loc.access_rule || makeTrueRule(),
+        )),
+    } : null;
+
     return {
         regions,
         items,
         itempool_counts,
         canonical_placements,
         start_region_name: startRegion.region_id,
+        menu_region: menu,
     };
+
+    // One compiled location: a fresh numeric id; its item (when any) registered,
+    // pooled and canonically placed. Shared by the grid's regions and the Menu.
+    function compileLocation(globalName, item, rule) {
+        const numericId = nextLocationId++;
+        let itemPlacement = null;
+        if (item) {
+            // Register the item and tally the canonical placement.
+            // Every non-event item belongs to the "Everything" group by
+            // convention (matches item_groups["1"] = ["Everything"]).
+            // First occurrence mints a numeric id that persists for
+            // the item's lifetime in this compile.
+            const classification = itemLib[item]?.classification ?? 'progression';
+            if (!items[item]) {
+                items[item] = {
+                    name: item,
+                    id: nextItemId++,
+                    classification,
+                    groups: ['Everything'],
+                };
+            }
+            itempool_counts[item] = (itempool_counts[item] || 0) + 1;
+            canonical_placements[globalName] = item;
+
+            // Shape per rules.schema.json $defs/itemPlacement — what
+            // stateManager's checkLocation reads to add the item to
+            // inventory at runtime. canonical_placements alone isn't
+            // enough; stateManager looks at location.item directly.
+            itemPlacement = {
+                name: item,
+                player: numericPlayerId,
+                advancement: classification === 'progression',
+                type: classification,
+            };
+        }
+        return {
+            name: globalName,
+            id: numericId,
+            access_rule: rule,
+            ...(itemPlacement ? { item: itemPlacement } : {}),
+            ...(itemPlacement && lockedItemSet.has(item)
+                ? { locked: true } : {}),
+        };
+    }
 }
 
 // ScenarioPool now lives in shared/procgen/scenarioPool.js — it is
@@ -4156,7 +4260,21 @@ const SPHERE_REBUILD_REFUSALS = Object.freeze({
     noParentExit: (parentId, side, childId) => `rebuildEnvelopeFromRulesJson: region `
         + `${parentId} has no exit on side ${side} leading to ${childId}, so its `
         + 'teleporter cannot be rebuilt',
+    /**
+     * ⛓ M1 (R8) — a top-down world whose Menu fed SEVERAL roots (one per Menu
+     * exit the BFS did not reach). The rebuild keeps one start and the sphere
+     * compile re-emits a synthetic one-exit Menu, which would orphan every other
+     * root; refused by name rather than rebuilt wrong. Re-realise it top-down.
+     */
+    multiRoot: (count) => `rebuildEnvelopeFromRulesJson: the sphere tree has ${count} roots `
+        + '(a top-down Menu hub) — the sphere rebuild keeps ONE start and would orphan the '
+        + 'others; realise it top-down instead',
 });
+
+/** ⛓ M1 — how many parent-less nodes (roots) a compact sphere tree holds. */
+function sphereTreeRootCount(treeMeta) {
+    return (treeMeta?.nodes ?? []).filter((n) => n.parent == null).length;
+}
 
 /**
  * The forward exit of a placed parent region that leaves on `node.side` for
@@ -4195,6 +4313,8 @@ export function sphereRebuildRefusal(rulesJson, opts = {}) {
         return SPHERE_REBUILD_REFUSALS.notSphere();
     }
     if (!meta.sphere_tree || !meta.sphere_plan) return SPHERE_REBUILD_REFUSALS.noTree();
+    const roots = sphereTreeRootCount(meta.sphere_tree);
+    if (roots > 1) return SPHERE_REBUILD_REFUSALS.multiRoot(roots);
     const sidecars = rulesJson.preset_sidecars?.[playerId] ?? {};
     for (const node of meta.sphere_tree.nodes ?? []) {
         if (!node.cell) continue;
@@ -4231,6 +4351,8 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
     if (!meta.sphere_tree || !meta.sphere_plan) {
         throw new Error(SPHERE_REBUILD_REFUSALS.noTree());
     }
+    const roots = sphereTreeRootCount(meta.sphere_tree);
+    if (roots > 1) throw new Error(SPHERE_REBUILD_REFUSALS.multiRoot(roots));
     const plan = meta.sphere_plan;
     const treeMeta = meta.sphere_tree;
     const sidecars = rulesJson.preset_sidecars?.[playerId] ?? {};
@@ -6566,6 +6688,13 @@ export function buildRulesJson(grid, opts = {}) {
         // worldgen package satisfies AP's test_completion_condition.
         // Top-down leaves this null and inherits the scaffold default.
         completionConditionItem = null,
+        // ⛓ M1 (R8) — the SOURCE Menu a top-down layout stripped
+        // (`finalizeTopDown`'s `menuRegion`), emitted IN PLACE OF the synthetic
+        // `{GameStart → start}` Menu: its exits (to placed targets) with their
+        // rules, its locations with their items (pooled and placed like a grid
+        // region's). null — grid-growth, sphere growth, a source with no Menu —
+        // keeps the synthetic one, byte for byte.
+        menuRegion = null,
     } = opts;
 
     if (!startCell) throw new Error('buildRulesJson: startCell required');
@@ -6573,6 +6702,7 @@ export function buildRulesJson(grid, opts = {}) {
     const compiled = compileRegionGraph(grid, {
         startCell, itemLib, obstacleLib, playerId,
         lockedItems: lockedCanonicalItems,
+        menuRegion,
     });
 
     const scaffold = makeRulesJsonScaffold({
@@ -6584,8 +6714,9 @@ export function buildRulesJson(grid, opts = {}) {
         playerName,
         // Menu is the virtual start region — AP convention. Real
         // starting geometry lives in compiled.start_region_name, which
-        // Menu connects to with an unconditional exit.
-        startRegions: ['Menu'],
+        // Menu connects to with an unconditional exit (or, for a top-down
+        // source, the source's own Menu under its own name — M1).
+        startRegions: [compiled.menu_region?.name ?? 'Menu'],
     });
 
     if (completionConditionItem) {
@@ -6600,7 +6731,7 @@ export function buildRulesJson(grid, opts = {}) {
     // Menu appears first.
     // ⛓ makeExit's own null→True_ rewrite IS the `{rule:'True_'}` this used to
     // spell inline — the third copy of that literal.
-    const menuRegion = {
+    const menu = compiled.menu_region ?? {
         name: 'Menu',
         exits: [makeExit('GameStart', compiled.start_region_name)],
         locations: [],
@@ -6609,7 +6740,7 @@ export function buildRulesJson(grid, opts = {}) {
     //   mutating door, by design (its header: "structural and knows no rule
     //   logic"), and a writer added for one caller would be the second spelling
     //   of the document shape it exists to make single.
-    scaffold.regions[playerId] = { Menu: menuRegion, ...compiled.regions };
+    scaffold.regions[playerId] = { [menu.name]: menu, ...compiled.regions };
     scaffold.items[playerId] = compiled.items;
     scaffold.itempool_counts[playerId] = compiled.itempool_counts;
     scaffold.canonical_placements[playerId] = compiled.canonical_placements;

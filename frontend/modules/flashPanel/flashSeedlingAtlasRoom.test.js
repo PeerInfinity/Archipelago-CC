@@ -70,13 +70,22 @@ const byGame = (g) => DOCS.find((d) => d.game === g);
 /**
  * ⛓⛓ THE ORACLE'S MEASURED BINS (plan §15.1). The content-source documents
  * (T2's spiral, T3's sphere leaf, seedling generated G6's two-door HOST) reproduce
- * every room byte-for-byte; the atlas
- * COMPILER's projections (`seedling_atlas`, `seedling_playthrough`) never went
- * through the content source — their exits are the level's own transitions — and
- * refuse by name.
+ * every room byte-for-byte; the atlas COMPILER's projections (`seedling_atlas`,
+ * `seedling_playthrough`) never went through the content source — their exits are
+ * the level's own transitions — and refuse by name.
+ *
+ * ⛔ MEASURED, seedling generated G7 (plan §13): `seedling_atlas_location` is the
+ * first committed content-source room that holds a LOCATION, and it does NOT
+ * reproduce — the re-realised zone carries the chest's VANILLA item (`Seal`)
+ * where the document's sphere placement put `key_blue`, so the round trip
+ * refuses by that sentence. It records its config like the others; the refusal
+ * is pinned here as its own bin rather than hidden, and is the editor round
+ * trip's to fix (§13 Open).
  */
 const REPRODUCES = ['seedling_spiral_room', 'seedling_sphere_room', 'seedling_atlas_host'];
+const ITEM_REFUSED = ['seedling_atlas_location'];
 const PROJECTION = ['seedling_atlas', 'seedling_playthrough'];
+const RECORDS = [...REPRODUCES, ...ITEM_REFUSED];
 
 /** ⛓ The sphere room with a MAZE leaf relabelled to `flash_seedling` (D1's picker: the label only). */
 function sphereWithRelabelledLeaf() {
@@ -90,7 +99,7 @@ function sphereWithRelabelledLeaf() {
 
 describe('the population (derived)', () => {
     it('every committed flash_seedling document is in exactly one bin, and every bin is present', () => {
-        expect(DOCS.map((d) => d.game).sort()).toEqual([...REPRODUCES, ...PROJECTION].sort());
+        expect(DOCS.map((d) => d.game).sort()).toEqual([...REPRODUCES, ...ITEM_REFUSED, ...PROJECTION].sort());
     });
 
     it('⛓ the law: every entry declaring `zoneConfigFromSlot` also declares `zoneOfPayload` (over the registry)', () => {
@@ -127,9 +136,20 @@ describe('the oracle — every committed room, as its OWN room', () => {
             }
             return;
         }
-        expect(REPRODUCES).toContain(d.game);
+        expect(RECORDS).toContain(d.game);
         expect(rec.ok, rec.why).toBe(true);
         const cfg = { ...rec.cfg, ...rec.assumed };
+        if (ITEM_REFUSED.includes(d.game)) {
+            for (const region of d.regions) {
+                const own = zoneOfRegion(d.doc, d.p, region, { cfg });
+                expect(Number.isInteger(own), region).toBe(true);
+                const res = replaceRegionContentFromZone({ doc: d.doc, player: d.p, region, substrate: S, zoneIdx: own });
+                expect(res.ok).toBe(false);
+                expect(res.why).toMatch(/location 0 \("Starting House - Chest"\): item "key_blue" in the document, "Seal" from the zone/);
+            }
+            expect(bytes(d.doc), 'the input is never mutated').toBe(before);
+            return;
+        }
         for (const region of d.regions) {
             const own = zoneOfRegion(d.doc, d.p, region, { cfg });
             expect(Number.isInteger(own), region).toBe(true);
@@ -145,7 +165,7 @@ describe('the oracle — every committed room, as its OWN room', () => {
 
     it('what the document records: the starter atlas by id (no fetch), its rooms by name, the doorless ones with the reason', () => {
         const source = buildSeedlingContentSource(SEEDLING_STARTER_ATLAS);
-        for (const g of REPRODUCES) {
+        for (const g of RECORDS) {
             const d = byGame(g);
             expect(d.doc.region_atlas.atlas_id).toBe(SEEDLING_STARTER_ATLAS.atlas_id);
             const rec = installedZoneConfigFrom(d.doc, d.p, S);
@@ -161,7 +181,7 @@ describe('the oracle — every committed room, as its OWN room', () => {
     it('zoneOfPayload: a placed room\'s ordinal is its index in the atlas, by room; null without the config or for another atlas', () => {
         const source = buildSeedlingContentSource(SEEDLING_STARTER_ATLAS);
         const cfg = { atlasDoc: SEEDLING_STARTER_ATLAS };
-        for (const g of REPRODUCES) {
+        for (const g of RECORDS) {
             const d = byGame(g);
             for (const region of d.regions) {
                 const pl = d.doc.preset_sidecars[d.p][region].playable_payload;

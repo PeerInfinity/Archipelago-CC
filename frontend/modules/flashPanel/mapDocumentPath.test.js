@@ -152,7 +152,9 @@ describe('⚖ F7b — the override has no instance in the tree, and no channel t
         //   sphere-growth world with a placed room as a leaf, carries it the same way.
         // ⛓ 6 since seedling generated G6 (2026-09-26): `seedling_atlas_host`, the
         //   same world with the placed room a HOST, carries it the same way.
-        expect(named).toHaveLength(6);
+        // ⛓ 7 since seedling generated G7 (2026-09-26): `seedling_atlas_location`,
+        //   whose START is the real starting house, carries it the same way.
+        expect(named).toHaveLength(7);
         for (const doc of named) expect(doc).toBe(DEFAULT_MAP_DOCUMENT);
     });
 

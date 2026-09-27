@@ -96,11 +96,12 @@ const NOT_RECORDED = [...new Set(DOCS
  * ⛓ R5c — the documents whose zone-channel regions are ATLAS ROOMS
  * (`flash_seedling` declares the read-back since R5c). Their oracle is
  * `flashPanel/flashSeedlingAtlasRoom.test.js` (three reproduce — seedling
- * generated G6 added `seedling_atlas_host` — and two are the atlas compiler's
- * projection and refuse); this file's jta-shaped oracle skips them.
+ * generated G6 added `seedling_atlas_host` —, G7's `seedling_atlas_location`
+ * refuses on its chest's item, and two are the atlas compiler's projection and
+ * refuse); this file's jta-shaped oracle skips them.
  */
-const ATLAS_ROOM_DOCS = ['seedling_spiral_room', 'seedling_sphere_room', 'seedling_atlas_host', 'seedling_atlas',
-    'seedling_playthrough'];
+const ATLAS_ROOM_DOCS = ['seedling_spiral_room', 'seedling_sphere_room', 'seedling_atlas_host',
+    'seedling_atlas_location', 'seedling_atlas', 'seedling_playthrough'];
 const R5B_BINS = [...REPRODUCES, ...ENVELOPE_ONLY, ...NOT_RECORDED];
 
 /** ⛓ A document with `substrate`'s zone `z` FREED: the region holding it loses its sidecar entry. */

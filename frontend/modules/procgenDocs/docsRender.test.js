@@ -244,7 +244,9 @@ describe('⛓ the links the render emits', () => {
         //   G5's `sphere-growth.md` → `flash.md` § The re-roll, in every case (G5);
         //   245 → 250: G6's two `sphere-growth.md` → `flash.md` links and three
         //   inside `flash.md` to and from § Host-enforced gates: real rooms (G6).
-        expect(checked).toBe(250);
+        //   250 → 253: G7's three inside `flash.md` to § The atlas arm (G7)
+        //   (`sphere-growth.md`'s link to `flash.md` retargeted, not added).
+        expect(checked).toBe(253);
     });
 
     it('tags each link with the kind that produced it', () => {

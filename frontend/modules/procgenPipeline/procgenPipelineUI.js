@@ -4574,12 +4574,19 @@ export class ProcgenPipelineUI {
         const st = this._tdState;
         await runTopDownStep('compile', st,
             { onProgress: (ev) => this._onGenerationProgress(ev) });
-        const { rulesJson, enriched, attributionWarnings } = st.compile;
+        const { rulesJson, enriched, attributionWarnings, menuWarnings } = st.compile;
         if (enriched && attributionWarnings?.length) {
             this.message = `${this.message ? `${this.message} · ` : ''}`
                 + `sphere-log attribution: ${attributionWarnings.length} warning(s) — `
                 + `${attributionWarnings.slice(0, 3).join('; ')}`
                 + `${attributionWarnings.length > 3 ? ' …' : ''}`;
+        }
+        // ⛓ M1 — a source Menu exit whose target the grid did not place.
+        if (menuWarnings?.length) {
+            this.message = `${this.message ? `${this.message} · ` : ''}`
+                + `Menu: ${menuWarnings.length} exit(s) dropped — `
+                + `${menuWarnings.slice(0, 3).join('; ')}`
+                + `${menuWarnings.length > 3 ? ' …' : ''}`;
         }
         this.result = {
             grid: st.finalize.grid,

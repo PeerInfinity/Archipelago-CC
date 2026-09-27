@@ -148,6 +148,7 @@ function run(source, opts) {
         const res = topDownFromRulesJson(source, opts);
         const rulesJson = buildRulesJson(res.grid, {
             startCell: res.startCell, seed: opts.seed ?? 1, embedSphereLog: false,
+            menuRegion: res.menuRegion ?? null,
             assumeBidirectional: source.assume_bidirectional_exits !== false,
         });
         return {
