@@ -2116,9 +2116,11 @@ a PNG of exactly that view, which is how the before/after pair was taken.
 ### The Menu marker — the hub beside the grid (substrate change M2)
 
 The declared start region — the Menu — is the layout's **hub** (R8, ⚖ user
-2026-09-26, shape A): every exit of it feeds a ROOT, and the start itself stays
-virtual at runtime (the [menu panel](menuPanel.md) implements it), so it has no
-cell and the composite grid cannot draw it. Under the canvas the tab draws it as
+2026-09-26, shape A): when it is a PURE hub (exits, no locations — whatever it is
+called, M3) every exit of it feeds a ROOT, and the start itself stays virtual at
+runtime (the [menu panel](menuPanel.md) implements it), so it has no cell and the
+composite grid cannot draw it. A start WITH locations is a room with a cell that
+is also the menu (M3; `apcalc`'s `C`, `sm64ex`'s and `shapez`'s `Menu`). Under the canvas the tab draws it as
 a **marker**, `.apworld-map-menu`: *"⌂ Menu — the declared start (the menu): 13
 exits, 13 to a region with a cell"*, then one entry per exit (`exit → target`,
 `data-target`, `data-placed`); a placed entry selects its target's cell, as a cell
@@ -2206,10 +2208,15 @@ nor a non-square grid (⚖ Q5).
 Under them, the **preview**, re-planned on every change from the LAYOUT alone
 (`planInitialise`, milliseconds even at 445 regions): *"81 regions placed on
 12×12, 50 teleporters; 80 return exits will be added; 0 unplaceable"*, the
-unplaceable NAMED with their why — and, when the layout stripped a Menu (M2), the
-hub: *"…; Menu: 13 exits → 13 roots"* (`planInitialise`'s `menuExits`, the
+unplaceable NAMED with their why — and, when the layout stripped the declared
+start (M2; a pure hub, whatever its name, M3), the hub: *"…; Menu: 13 exits → 13
+roots"* (`planInitialise`'s `menuExits`, the
 regions the Menu's exits name, and `menuRoots`, the roots that got a cell — they
-differ exactly by the Menu roots left for want of a cell). A state the op refuses prints the op's own
+differ exactly by the Menu roots left for want of a cell). A start the layout
+PLACES (M3: one with locations) is a region like any other in the counts, and the
+clause is absent (in-app `apworld-m3-a-non-menu-start-is-a-cell-and-the-menu` on
+`apcalc`, `apworld-m3-a-menu-with-locations-is-a-room` on `shapez` as
+`text_adventure`: the Menu a cell, its 3 locations in its room). A state the op refuses prints the op's own
 sentence instead and draws no Generate (1305). Then the chosen substrate's
 starting-inventory need line (R3), and **Generate ▸**.
 
@@ -2297,11 +2304,19 @@ is counted in `stats.regionsSkipped` — a cell shortage, so it is *no free grid
 cell* now, and the auto side grows for it. Measured (plan §27.0) over the 146
 committed bare slots: 48 such regions in 15 slots at the old auto side, every one
 placed at twice the side; with M2's why the auto side places **3,614 of 3,614**
-(3,558 before; 22 slots grow, 7 before).
+(3,558 before; 22 slots grow, 7 before). M3 (the name-free rule) moves exactly the
+7 slots whose Menu has exits AND locations (bumpstik, meritous, osrs,
+rulebuilder_test, shapez, sm64ex, v6): each Menu is now a placed room, so the same
+146 slots place **3,621 of 3,621** (121 strip their start, 128 before; `osrs`'s auto
+side 13 → 14, `sm64ex`'s 10 → 9).
 
 **Refused by name** (`initialiseOpRefusal`, the form's courtesy asks the same
 function): no regions; the slot already carries an entry (a re-initialise would be
-a delete first, and the hub does not offer one); no usable start region; a
+a delete first, and the hub does not offer one); more than one declared start
+(M3, `INITIALISE_BLOCKERS.MULTI_START` — the layout grows from ONE start, which is
+also the menu, and throws `TOPDOWN_START_REFUSALS.multiStart` itself; a combined
+menu is designed when a document brings one — 0 of the committed slots do; the
+door still shows and the form prints the sentence); no usable start region; a
 document-level `procgen_metadata` already present (another slot's, or the
 pipeline's — two writers of one block); an unregistered, unplayable or
 realiser-less substrate; `gridDims` not whole numbers ≥ 1; a non-integer seed;
