@@ -222,6 +222,8 @@ A run that blows the budget no longer reports green: it prints
 `IN-APP RUN DID NOT FINISH ITS ROSTER`, naming the cause, the test cut off
 mid-flight, and the ones that never started, then fails. Results are stamped with
 their batch so `compare-runs.js` never diffs a `fast` run against a full one.
+`TEST_AUTO_START_TIMEOUT_MS=<ms> npm test …` shrinks the budget for one run (→ the
+page's `?autoStartTimeoutMs=`) — drive the budget expiry in minutes, not ten.
 
 ### Reading a run
 Any `npm test` mode emits one line per in-app test as it finishes:
