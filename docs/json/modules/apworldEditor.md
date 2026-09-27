@@ -2535,7 +2535,7 @@ key order is *content* for this document (the session's `equal` is
 differ from the record you were looking at.
 
 ⚠ The other **13** presets are written *compact*, so their download is up to
-**1.75×** the file on disk (`procgen_topdown/AP_8`: 1,799,872 B → 3,146,656 B).
+**1.75×** the file on disk (`procgen_topdown/AP_8`: 1,800,899 B → 3,147,683 B).
 That is deliberate — the majority formatting is what a reader expects and no
 loader cares — but it is why every size below is in **pretty** bytes.
 

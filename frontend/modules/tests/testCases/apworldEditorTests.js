@@ -235,7 +235,7 @@ const NO_GRID_PRESET_PATH =
  * pretty bytes, over the retired `RAW_VIEW_LIMIT_BYTES = 2_000_000`. It is a
  * committed preset rather than a padded fixture because the claim is about the
  * corpus. (It is the SECOND-largest; the largest, `procgen_topdown/AP_8` at
- * 3,146,656 B, is the instrument's `--all` arm's business — this row wants the
+ * 3,147,683 B, is the instrument's `--all` arm's business — this row wants the
  * document whose refusal a person actually saw.)
  *
  * ⚠ **2,620,221, not the 2,620,225 the plan's §12.3 table says.** H2's pretty

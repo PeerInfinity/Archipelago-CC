@@ -24,7 +24,7 @@
  *
  * ⚠ The other **13** are written COMPACT (`compactJsonFile`), so for those the
  * view — and the download — is up to **1.75×** the file on disk
- * (`procgen_topdown/AP_8`: 1,799,872 B → 3,146,656 B). That is deliberate: the
+ * (`procgen_topdown/AP_8`: 1,800,899 B → 3,147,683 B). That is deliberate: the
  * majority formatting is what a person reading or diffing a saved file expects,
  * and no loader cares. But it is why every size in this module is in PRETTY
  * bytes and why the arc plan's file-size census is not this module's corpus.

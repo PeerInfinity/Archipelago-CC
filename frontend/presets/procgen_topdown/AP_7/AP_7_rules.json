@@ -14,10 +14,27 @@
         "name": "Menu",
         "exits": [
           {
-            "name": "GameStart",
+            "name": "Links House S&Q",
             "connected_region": "Links House",
             "access_rule": {
               "rule": "True_"
+            }
+          },
+          {
+            "name": "Sanctuary S&Q",
+            "connected_region": "Sanctuary",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Old Man S&Q",
+            "connected_region": "Old Man House",
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Old Man"
+              }
             }
           }
         ],
@@ -17100,6 +17117,32 @@
         "groups": [
           "Everything"
         ]
+      },
+      "Mirror Shield": {
+        "name": "Mirror Shield",
+        "id": 113,
+        "groups": [
+          "Everything",
+          "Progression Items",
+          "Shields"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1,
+        "hint_text": "the Mirror Shield"
+      },
+      "Silver Bow": {
+        "name": "Silver Bow",
+        "id": 114,
+        "groups": [
+          "Bows",
+          "Everything",
+          "Progression Items"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1,
+        "hint_text": "the Silver Bow"
       }
     }
   },
