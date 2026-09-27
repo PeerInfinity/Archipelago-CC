@@ -28,9 +28,11 @@ on:
         type: string
         default: bot-walks
 
+# `inputs.batch || 'bot-walks'` below, not a bare `inputs.batch`: `inputs` is
+# empty on any event but a dispatch, and an empty --batch runs the WHOLE roster.
 jobs:
   bot-walks:
-    name: Substrate tests — ${{ inputs.batch }} batch
+    name: Substrate tests — ${{ inputs.batch || 'bot-walks' }} batch
     runs-on: ubuntu-latest
     # Sized so the in-app runner's own budget fires first (AUTO_START_TIMEOUT_MS,
     # 600 s, testLogic.js): measured 2026-09-27 the batch takes 366 s in-app on
@@ -78,9 +80,9 @@ jobs:
         run: |
           npx playwright install chromium
 
-      - name: Run substrate tests (${{ inputs.batch }} batch)
+      - name: Run substrate tests (${{ inputs.batch || 'bot-walks' }} batch)
         env:
-          BATCH: ${{ inputs.batch }}
+          BATCH: ${{ inputs.batch || 'bot-walks' }}
         run: |
           npm test -- --mode=test-substrates --batch="$BATCH"
 
@@ -89,7 +91,7 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v7.0.0
         with:
-          name: test-results-${{ inputs.batch }}
+          name: test-results-${{ inputs.batch || 'bot-walks' }}
           path: |
             test-results/
             playwright-report.json
