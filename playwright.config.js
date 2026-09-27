@@ -31,8 +31,13 @@ export default defineConfig({
   // Fail the build on CI if you accidentally left test.only in the source code.
   forbidOnly: !!process.env.CI,
 
-  // Retry on CI only.
-  retries: process.env.CI ? 2 : 0,
+  // Never retry, on CI or off. The whole in-app roster is ONE Playwright test
+  // (app.spec.js), so a retry re-runs every row against the same in-app budget
+  // (testLogic.js AUTO_START_TIMEOUT_MS): a roster that ran out of budget runs
+  // out again, and a genuinely red row costs the whole batch twice more. On CI
+  // three ten-minute attempts outran the 30-minute job cap and read as a hang
+  // (trap 1439). A red row is re-run on purpose, alone: `--test=<id>`.
+  retries: 0,
 
   // Number of worker threads to run tests with. Defaults to half of CPU cores.
   // workers: process.env.CI ? 1 : undefined, // Can be adjusted
@@ -48,7 +53,8 @@ export default defineConfig({
     // Base URL to use in actions like `await page.goto('/')`
     // baseURL: TEST_BASE_URL, // If you set this, your APP_URL in app.spec.js could be relative
 
-    // Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer
+    // Collect trace when retrying the failed test — with `retries: 0` above that
+    // is never; pass `--trace on` to collect one. See https://playwright.dev/docs/trace-viewer
     trace: 'on-first-retry',
 
     // Viewport size for the browser
