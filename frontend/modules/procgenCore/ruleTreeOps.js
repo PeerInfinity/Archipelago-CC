@@ -20,7 +20,13 @@
  * rather than becoming a fourth.
  *
  *   ·  a NUMBER      — `children[i]` of an `And`/`Or`/`AtLeast`
- *   ·  `'args.left'` / `'args.right'` — the two operand slots of a `Compare`
+ *   ·  `'args.<key>'` — a rule-valued arg (`'args.left'` / `'args.right'` are a
+ *      `Compare`'s operands; `'args.test'` a `Conditional`'s; any kind's, by shape)
+ *   ·  `'args.<key>[i]'` — a rule inside a list-valued arg (`And`'s `args.rules`)
+ *   ·  `'args[i]'`   — a rule inside a helper call's positional `args` array
+ *   ·  `'kwargs.<key>'` / `'kwargs.<key>[i]'` — the same over a helper's `kwargs`
+ * — exactly the steps `rulesGraph.ruleTreeSlots` names (T1 widened them from
+ * children + the two Compare operands to every rule-valued slot, by shape).
  *
  * `[]` is the root. `['args.left', 0]` is the first child of a Compare's left
  * operand.
@@ -45,7 +51,7 @@
  * moment anybody knows where they came from.
  */
 
-import { walkRuleTree } from './rulesGraph.js';
+import { isRuleNode, ruleTreeSlots, walkRuleTree } from './rulesGraph.js';
 import { ruleSchemaErrors } from './jsonSchemaCheck.js';
 
 /** The two named operand slots a `Compare` carries, in `walkRuleTree`'s order. */
@@ -56,6 +62,24 @@ export const WRAPPABLE_KINDS = Object.freeze(['And', 'Or', 'AtLeast']);
 
 const isNode = (v) => v != null && typeof v === 'object' && !Array.isArray(v);
 const describePath = (path) => (path.length === 0 ? '<root>' : path.join('/'));
+
+/** ⛓ A named step, parsed: `args.left` → {container: 'args', key: 'left'};
+ *  `args.rules[2]` → {…, key: 'rules', index: 2}; `args[0]` → {container: 'args',
+ *  index: 0}. `null` for anything else. */
+const NAMED_STEP = /^(args|kwargs)(?:\.([^[\]]+))?(?:\[(\d+)\])?$/;
+function parseStep(step) {
+    const m = typeof step === 'string' ? NAMED_STEP.exec(step) : null;
+    if (!m || (m[2] === undefined && m[3] === undefined)) return null;
+    return { container: m[1], key: m[2], index: m[3] === undefined ? undefined : Number(m[3]) };
+}
+
+/** The value a parsed named step addresses in `node` (undefined when absent). */
+function readNamed(node, { container, key, index }) {
+    let v = node[container];
+    if (key !== undefined) v = isNode(v) ? v[key] : undefined;
+    if (index !== undefined) v = Array.isArray(v) ? v[index] : undefined;
+    return v;
+}
 
 /** What `step` addresses inside `node`, or a refusal reason. */
 function stepInto(node, step, path, i) {
@@ -72,16 +96,16 @@ function stepInto(node, step, path, i) {
         }
         return { value: node.children[step] };
     }
-    if (COMPARE_SLOTS.includes(step)) {
-        const slot = step.slice('args.'.length);
-        const value = node.args?.[slot];
-        if (!isNode(value)) {
-            return { error: `ruleTreeOps: ${where} names a Compare operand, but ${step} of rule "${node.rule}" is ${JSON.stringify(value)}` };
+    const named = parseStep(step);
+    if (named) {
+        const value = readNamed(node, named);
+        if (!isRuleNode(value)) {
+            return { error: `ruleTreeOps: ${where} names a rule-valued slot, but ${step} of rule "${node.rule}" is ${JSON.stringify(value)}` };
         }
         return { value };
     }
     return {
-        error: `ruleTreeOps: ${where} is neither a child index nor one of ${COMPARE_SLOTS.join('/')}`,
+        error: `ruleTreeOps: ${where} is neither a child index nor a named slot (${COMPARE_SLOTS.join('/')}, args.<key>, args.<key>[i], args[i], kwargs.<key>)`,
     };
 }
 
@@ -134,8 +158,13 @@ function writeStep(node, step, value) {
             : node.children.map((c, i) => (i === step ? value : c));
         return { ...node, children };
     }
-    const slot = step.slice('args.'.length);
-    return { ...node, args: { ...node.args, [slot]: value } };
+    const { container, key, index } = parseStep(step);
+    const holder = node[container];
+    if (key === undefined) {
+        return { ...node, [container]: holder.map((v, i) => (i === index ? value : v)) };
+    }
+    const slotValue = index === undefined ? value : holder[key].map((v, i) => (i === index ? value : v));
+    return { ...node, [container]: { ...holder, [key]: slotValue } };
 }
 
 /**
@@ -162,7 +191,7 @@ function rewriteAt(tree, path, make) {
             return {
                 ok: false,
                 tree,
-                error: `ruleTreeOps: ${step} of a Compare cannot be removed — an operand slot is always filled; replace it instead`,
+                error: `ruleTreeOps: ${step} cannot be removed — an operand slot is always filled; replace it instead`,
             };
         }
         return { ok: true, tree: writeStep(tree, step, next) };
@@ -238,6 +267,8 @@ export function wrapRuleAt(tree, path, kind, options = {}) {
  * ⛔ NOT A FOURTH RECURSION. It calls `walkRuleTree` for the ORDER and matches
  * each visited node back to the path that reaches it, so a change to how a rule
  * tree is walked moves this with it rather than leaving a second answer behind.
+ * Both read the slots off `rulesGraph.ruleTreeSlots` (T1), so they agree by
+ * construction; the throw stays as the alarm for a tree READ inconsistently.
  */
 export function ruleTreePaths(tree) {
     const order = [];
@@ -246,15 +277,7 @@ export function ruleTreePaths(tree) {
     const seen = new Set();
     const walk = (node, path) => {
         paths.push({ node, path });
-        for (const [i, child] of (Array.isArray(node.children) ? node.children : []).entries()) {
-            if (isNode(child)) walk(child, [...path, i]);
-        }
-        if (node.rule === 'Compare' && node.args) {
-            for (const step of COMPARE_SLOTS) {
-                const value = node.args[step.slice('args.'.length)];
-                if (isNode(value)) walk(value, [...path, step]);
-            }
-        }
+        for (const [step, child] of ruleTreeSlots(node)) walk(child, [...path, step]);
     };
     if (isNode(tree)) walk(tree, []);
     for (const { node } of paths) seen.add(node);

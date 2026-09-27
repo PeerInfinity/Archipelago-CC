@@ -80,9 +80,9 @@ describe('getRuleAt', () => {
     it.each([
         [[9], /step 0 \("9"\) .* out of range .* has 2 child\(ren\)/],
         [[0, 0], /step 1 \("0"\) of path 0\/0 indexes children, but rule "Has" has none/],
-        [[0, 'args.left'], /names a Compare operand, but args.left of rule "Has" is undefined/],
-        [[1, 0, 'args.right'], /names a Compare operand, but args.right of rule "Has" is undefined/],
-        [[1, 'nonsense'], /neither a child index nor one of args.left\/args.right/],
+        [[0, 'args.left'], /names a rule-valued slot, but args.left of rule "Has" is undefined/],
+        [[1, 0, 'args.right'], /names a rule-valued slot, but args.right of rule "Has" is undefined/],
+        [[1, 'nonsense'], /neither a child index nor a named slot \(args.left\/args.right, args.<key>/],
     ])('refuses %j by name', (path, pattern) => {
         expect(getRuleAt(tree(), path)).toBeNull();
         expect(ruleAtRefusal(tree(), path)).toMatch(pattern);

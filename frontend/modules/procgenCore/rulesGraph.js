@@ -111,12 +111,13 @@ export function walkRulesGraph(doc, playerId = DEFAULT_PLAYER_ID, visitors = {})
 
 /**
  * Walk every access/item rule tree in the doc for one player, plus their
- * sub-trees (And/Or children, Compare left/right).
+ * sub-trees — every slot `ruleTreeSlots` names (children, then every rule
+ * node under `args` / `kwargs`).
  *
  * This is `apworldEditor/rulesUtils.js`'s `walkRules` LIFTED unchanged — that
  * module re-exports it, so its callers and the rename cascades are untouched.
  *
- * visit(node, ctx) is called once per rule node; ctx says where the rule lives:
+ * ctx is:
  *   { regionName, exitName }                              exit access rules
  *   { regionName, locationName }                          location access rules
  *   { regionName, locationName, fieldName: 'item_rule' }  item rules
@@ -135,25 +136,67 @@ export function walkRuleTrees(doc, playerId = DEFAULT_PLAYER_ID, visit) {
     });
 }
 
+/** ⛓ The two containers a rule node carries its operands in. `args` is an
+ *  object (`Compare`'s `left`/`right`, `Conditional`'s `test`/`if_true`/
+ *  `if_false`, `Not`'s `condition`, `And`'s `rules` list, `Has`'s rule-valued
+ *  `count`) or, for an exported helper call, a positional ARRAY; `kwargs` is a
+ *  helper call's keyword object. */
+export const RULE_SLOT_CONTAINERS = Object.freeze(['args', 'kwargs']);
+
+/** A RULE NODE: a plain object carrying a string `rule`. */
+export const isRuleNode = (v) => !!v && typeof v === 'object' && !Array.isArray(v)
+    && typeof v.rule === 'string';
+
+const isPlainObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+
 /**
- * One rule tree, depth first. Unknown rule types are walked for structural
- * children but their args are left untouched — we don't know their reference
- * shape.
+ * ⛓⛓ **THE SLOTS A RULE NODE'S SUB-RULES SIT IN** — the ONE answer both
+ * `walkRuleTree` (the order) and `ruleTreeOps.ruleTreePaths` (the path) read.
+ *
+ * Recognised by SHAPE, never by rule kind (helper kinds are per game — ahit's
+ * `can_use_hat`, alttp's `can_kill_most_things`, sm's `haveItem` all carry
+ * rules in their args):
+ *   · `children[i]`            — every plain-object child (step: the number `i`)
+ *   · `args.<key>`             — an `args` value that is a rule node
+ *   · `args.<key>[i]`          — a rule node inside an `args` value that is an array
+ *   · `args[i]`                — a rule node inside a positional `args` ARRAY
+ *   · `kwargs.<key>` / `kwargs.<key>[i]` — the same over `kwargs`
+ * in that order, keys in document order. A value that is not a rule node (a
+ * number, a string list, the exporter's typed `{type: …}` expression) is not a
+ * slot: it is data the node reads, not a sub-rule.
+ *
+ * @returns {Array<[number|string, object]>} `[step, child]` pairs
+ */
+export function ruleTreeSlots(node) {
+    const out = [];
+    if (!isPlainObject(node)) return out;
+    if (Array.isArray(node.children)) {
+        node.children.forEach((child, i) => { if (isPlainObject(child)) out.push([i, child]); });
+    }
+    for (const container of RULE_SLOT_CONTAINERS) {
+        const holder = node[container];
+        if (Array.isArray(holder)) {
+            holder.forEach((v, i) => { if (isRuleNode(v)) out.push([`${container}[${i}]`, v]); });
+        } else if (isPlainObject(holder)) {
+            for (const [key, v] of Object.entries(holder)) {
+                if (isRuleNode(v)) out.push([`${container}.${key}`, v]);
+                else if (Array.isArray(v)) {
+                    v.forEach((x, i) => { if (isRuleNode(x)) out.push([`${container}.${key}[${i}]`, x]); });
+                }
+            }
+        }
+    }
+    return out;
+}
+
+/**
+ * One rule tree, depth first: the node, then each of `ruleTreeSlots(node)` in
+ * order. A root that is not a plain object is not walked.
  */
 export function walkRuleTree(node, visit, ctx) {
-    if (!node || typeof node !== 'object') return;
+    if (!isPlainObject(node)) return;
     visit(node, ctx);
-    if (Array.isArray(node.children)) {
-        for (const child of node.children) walkRuleTree(child, visit, ctx);
-    }
-    if (node.rule === 'Compare' && node.args) {
-        if (node.args.left && typeof node.args.left === 'object') {
-            walkRuleTree(node.args.left, visit, ctx);
-        }
-        if (node.args.right && typeof node.args.right === 'object') {
-            walkRuleTree(node.args.right, visit, ctx);
-        }
-    }
+    for (const [, child] of ruleTreeSlots(node)) walkRuleTree(child, visit, ctx);
 }
 
 /**

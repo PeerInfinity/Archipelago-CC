@@ -374,6 +374,10 @@ export class ProcgenPipelineUI {
 
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'procgen-pipeline-panel';
+        // ⛓ T1 — the live instance on its element, as the APWorld hub's own
+        //   (`apworldEditorUI.js`): the in-app row that drives this panel's
+        //   top-down reads the compiled document off it.
+        this.rootElement.__panel = this;
         setPanelInstance(this);
         this._loadFromLocalStorage();
         this._loadViewFromLocalStorage();

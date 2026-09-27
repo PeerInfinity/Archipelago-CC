@@ -495,6 +495,18 @@
             "_comment": "APWorld hub H5. procgenPipeline:loadRules is a SECOND channel beside stateManager:rawJsonDataLoaded on purpose: one means 'the app loaded this', the other 'here is a document nobody applied'. The row asserts the pipeline adopted the hand-off, named the door, and QUOTED the engine's own refusal \u2014 read from sphereRebuildRefusal at run time, never typed. Measured: procgen_maze/AP_1 is grid-growth with no sphere tree, so its answer is TOP-DOWN, not 'append a sphere'."
         },
         {
+            "id": "apworld-pipeline-topdown-compile-message-names-its-warnings",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "T1 (plan \u00a730.7 #4). The first in-app row that presses the pipeline's Generate on a hand-off: H5's door, then top-down to compile, then the compile message's ruleItemWarnings (seedling_atlas/AP_1) and menuWarnings (depgraph AP_00679\u2026). Category apworldEditor, not a new procgenPipeline one: the row starts at the hub's door, so it rides the apworld batch with H5 (a new category would fall into fast). Expected names derived from the compiled document, never typed."
+        },
+        {
+            "id": "apworld-validity-report-names-every-undefined-rule-item",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "T1 (plan \u00a730.7 #3). The one committed document the widened validateRules moves (terraria, +16 issues): the hub's report names every name undefinedRuleItems derives."
+        },
+        {
             "id": "apworld-loop-costs-door-hands-the-working-copy-to-the-debugger",
             "enabled": true,
             "category": "apworldEditor",

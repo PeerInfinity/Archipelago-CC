@@ -33,6 +33,7 @@ import {
   walkRulesGraph,
   walkRuleTrees,
 } from '../procgenCore/rulesGraph.js';
+import { ownItemNames } from '../procgenCore/ruleItemNames.js';
 
 export function cloneFullRulesDoc(rulesDoc) {
   return JSON.parse(JSON.stringify(rulesDoc));
@@ -186,28 +187,19 @@ export function validateRules(rulesDoc, playerId) {
   walkRules(rulesDoc, playerId, (node, ctx) => {
     if (!node || !node.rule) return;
     const where = formatContext(ctx);
-    if (node.rule === 'Has' || node.rule === 'CountItem') {
-      const name = node.args?.item_name;
-      if (name && !itemNames.has(name)) {
+    // ⛓ T1: the item names are read by ARG (`ownItemNames` — `item_name`/`item`,
+    //   `item_names`/`items`), not by a list of rule kinds: the kind list missed
+    //   `HasFromListUnique` (terraria's `Traveling Merchant`), and every kind
+    //   nobody listed. The walker reaches every rule-valued slot (`ruleTreeSlots`).
+    for (const name of ownItemNames(node)) {
+      if (!itemNames.has(name)) {
         issues.push({
           severity: 'error', tab: 'regions',
           message: `${where} references unknown item "${name}".`,
         });
       }
-    } else if (
-      node.rule === 'HasAll' || node.rule === 'HasAny' || node.rule === 'HasFromList'
-    ) {
-      const arr = Array.isArray(node.args?.item_names) ? node.args.item_names
-        : (Array.isArray(node.args?.items) ? node.args.items : []);
-      for (const name of arr) {
-        if (name && !itemNames.has(name)) {
-          issues.push({
-            severity: 'error', tab: 'regions',
-            message: `${where} references unknown item "${name}".`,
-          });
-        }
-      }
-    } else if (node.rule === 'CanReachRegion') {
+    }
+    if (node.rule === 'CanReachRegion') {
       const name = node.args?.region_name;
       if (name && !regionNames.has(name)) {
         issues.push({
