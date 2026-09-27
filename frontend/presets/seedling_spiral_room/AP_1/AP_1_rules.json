@@ -158,7 +158,7 @@
   },
   "flash_panel": {
     "config": "seedling.json",
-    "wasm": "seedling_bot_ap_p4d/game.html"
+    "wasm": "seedling_bot_ap_p4e/game.html"
   },
   "preset_sidecars": {
     "1": {

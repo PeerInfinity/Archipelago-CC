@@ -147,7 +147,17 @@ export const regionSubstrateOf = (region, atlas, options = {}) => (
 // reads. Games with no wiring here compile graph-only.
 export const FLASH_PANEL_WIRING = Object.freeze({
     /**
-     * ⛓ p4d SINCE EDITOR INTEGRATION SLICE P1, AND IT IS THE COMPILER'S
+     * ⛓⛓ p4e SINCE R9 SLICE DEF (⚖ user, 2026-09-27 — the p4d → p4e default
+     * move; licence: the CI full tier on p4e, run 36350758799, 154 tapes
+     * 3745/0/46). p4e declares `hold` and `tag` beside p4d's `arm` and
+     * `apitem`; `tag` is what the atlas arm reads to ALLOCATE a check for an
+     * untagged bosskey/totempart/seed (`seedlingRandomizerWiring`), so a
+     * preset compiled here now wires the build the atlas arm's `tag` branch
+     * runs on. Every preset carrying this block was regenerated through its
+     * producer's `--check`, never hand-edited; the hand-typed seed-1 block
+     * moved by hand in the same commit.
+     *
+     * ⛓ p4d FROM EDITOR INTEGRATION SLICE P1, AND IT IS THE COMPILER'S
      * WIRING DEFAULT MOVING — NOT a SEEDLING_PAGE default. p4d is the only
      * build declaring the `apitem` capability (`wasm/builds.json`), which is
      * the build-side half of the panel's data-driven feature detection
@@ -167,7 +177,7 @@ export const FLASH_PANEL_WIRING = Object.freeze({
      * regeneration drops it (`flashPanel/README.md` — the seed-1 `seedling`
      * preset's block is PROVISIONAL until the producing side declares it).
      */
-    seedling: Object.freeze({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4d/game.html' }),
+    seedling: Object.freeze({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4e/game.html' }),
 });
 
 const endpointKey = (regionId, exitId) => `${regionId}/${exitId}`;

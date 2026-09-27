@@ -77,10 +77,12 @@ const REPO = join(HERE, '..', '..');
  * script — see `check-seedling-wasm-bridge.mjs`'s note. Slice P1 moved that
  * preset to `seedling_bot_ap_p4d` and left these four lines on p4c, so the
  * iframe wait below could not resolve; moved with the presets at slice P2.
+ * ⛓ And to `seedling_bot_ap_p4e` WITH the presets at R9 slice DEF (2026-09-27),
+ * in the same commit — the lesson of the line above, taken.
  */
-const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', 'seedling_bot_ap_p4d');
+const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', 'seedling_bot_ap_p4e');
 if (!existsSync(join(ARTIFACT, 'game.html'))
-    || !existsSync(join(ARTIFACT, 'seedling_bot_ap_p4d.wasm'))) {
+    || !existsSync(join(ARTIFACT, 'seedling_bot_ap_p4e.wasm'))) {
     console.log(`SKIP: seedling wasm artifact not staged at ${ARTIFACT}`
         + ' — see frontend/modules/flashPanel/README.md for the copy command');
     process.exit(0);
@@ -170,7 +172,7 @@ async function waitFor(desc, fn, timeoutMs = 60000) {
 }
 
 function gameFrame() {
-    const f = page.frames().find((fr) => fr.url().includes('seedling_bot_ap_p4d/game.html'));
+    const f = page.frames().find((fr) => fr.url().includes('seedling_bot_ap_p4e/game.html'));
     if (!f) throw new Error('seedling wasm iframe not found');
     return f;
 }
@@ -239,7 +241,7 @@ try {
 
     await waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
     await waitFor('wasm iframe mounted', async () =>
-        page.frames().some((fr) => fr.url().includes('seedling_bot_ap_p4d/game.html')));
+        page.frames().some((fr) => fr.url().includes('seedling_bot_ap_p4e/game.html')));
     await waitFor('start button enabled', () => gameFrame().evaluate(() => {
         const b = document.getElementById('btn-start');
         return !!b && !b.disabled;
