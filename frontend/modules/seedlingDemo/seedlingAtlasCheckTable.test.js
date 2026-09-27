@@ -60,8 +60,8 @@ const tableOf = (rules, extra = {}) => buildAtlasCheckTable({
 });
 
 /** The pipeline's real-room presets: the atlas compiler names their locations. */
-const PIPELINE_REAL_ROOM_PRESETS = Object.freeze(
-    ['seedling_atlas', 'seedling_spiral_room', 'seedling_sphere_room', 'seedling_atlas_host']);
+const PIPELINE_REAL_ROOM_PRESETS = Object.freeze(['seedling_atlas', 'seedling_spiral_room', 'seedling_sphere_room',
+    'seedling_atlas_host', 'seedling_atlas_location']);
 
 describe('seedlingAtlasCheckTable — every committed real-room preset, bound or refused by name', () => {
     it.each([...PIPELINE_REAL_ROOM_PRESETS, 'seedling_playthrough'])('%s: no location is dropped', (id) => {
@@ -85,6 +85,14 @@ describe('seedlingAtlasCheckTable — every committed real-room preset, bound or
             location: 'Starting House - Chest', level: 86, tag: 0, item: 'Seal', player: 1, forSelf: true,
             region: 'starting_house', entityType: 'chest', vanillaItem: 'Seal',
         });
+    });
+
+    it('seedling_atlas_location (G7\'s witness): the same chest, holding key_blue, in the pipeline region region_2_2', () => {
+        const { table, refused } = tableOf(rulesOf('seedling_atlas_location'));
+        expect(refused).toEqual([]);
+        expect([...table.keys()]).toEqual(['86|0']);
+        expect(table.get('86|0')).toMatchObject({ location: 'Starting House - Chest', item: 'key_blue', player: 1,
+            forSelf: true, region: 'region_2_2', entityType: 'chest', ledgerId: 'starting_house:chest@48,16' });
     });
 
     it.each(['seedling_spiral_room', 'seedling_sphere_room', 'seedling_atlas_host'])(
