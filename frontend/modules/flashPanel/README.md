@@ -176,8 +176,12 @@ declares a `capabilities` array.
 `apitem` is the only capability so far: the build carries `Pickups/APItem.as`
 and the `<apitem>` line in `Game.as`'s XML loop, so a delivered level set's AP
 placement becomes a real pickup instead of an element the XML loop ignores.
-`seedlingRandomizerEligibility.js` is the whole predicate — four facts, and it
-names the first one that is false (plan §17.1, §17.5).
+`seedlingRandomizerEligibility.js` is the whole predicate — six checks, and it
+names the first one that is false (plan §17.1, §17.5). Two of them DIVERT rather
+than gate: `generated` (seedling generated G2 — a world of generated rooms, on the
+`generated` arm) and `atlas` (G7 — real rooms the goal ledger cannot name, bound
+where they stand on the `atlas` arm, `loadSeedlingAtlas`; decided by the ledger's
+resolved count, so the vanilla worlds keep the vanilla arm).
 
 ### The pin policy
 

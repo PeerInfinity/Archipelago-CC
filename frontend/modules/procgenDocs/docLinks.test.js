@@ -175,17 +175,23 @@ describe('the corpus census — printed, then pinned', () => {
          *              leaf* (`doc` 172 → 174); inside `flash.md` the leaf section
          *              and G4's host bullet point at the new G6 sub-§, and the G6
          *              sub-§ back at the leaf section (`same-doc` 15 → 18).
+         *   250 → 253  SEEDLING GENERATED LEVELS G7 (2026-09-26): inside `flash.md`
+         *              the (iii) item, the leaf section and G6's committed-world
+         *              bullet point at the new § *The atlas arm (G7)*
+         *              (`same-doc` 18 → 21); `sphere-growth.md`'s leaf-or-host
+         *              link moves from § *As a sphere-growth leaf* to it (`doc`
+         *              unmoved at 174).
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
          */
         expect(by).toEqual({
-            'same-doc': 18,
+            'same-doc': 21,
             doc: 174,
             external: 23,
             repo: 35,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(250);
+        expect(CORPUS.length).toBe(253);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {

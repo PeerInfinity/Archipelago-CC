@@ -632,6 +632,19 @@ export const SHIPPED_PRESETS = Object.freeze([
         state: SEEDLING_ATLAS_HOST_STATE,
     },
     {
+        id: 'shipped:seedling-atlas-location-demo',
+        label: 'Seedling room whose chest is a check',
+        group: PRESET_GROUPS.sphereGrowth,
+        description: 'The START is a room of the REAL Seedling map — the starting house — and the first key lies in '
+            + 'that room\'s OWN location, its chest. Opening the chest is an Archipelago check: the location keeps the '
+            + 'atlas\'s name (Starting House - Chest), the host binds it where the room stands (no rewrite — the chest '
+            + 'still hands its vanilla Seal in-game too), and key_blue arrives; the house door, gated on key_blue, then '
+            + 'opens onto a maze. Look at the composite map and at the flash_seedling sidecar (one door, the chest\'s '
+            + 'location in the rules.json). The same world is committed as the seedling_atlas_location preset, which '
+            + 'plays in the Seedling wasm.',
+        state: SEEDLING_ATLAS_LOCATION_STATE,
+    },
+    {
         id: 'shipped:jta-zone-demo',
         label: 'JtA demo (zone tables)',
         group: PRESET_GROUPS.shuffledSpiral,
