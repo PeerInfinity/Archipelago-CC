@@ -909,6 +909,12 @@
             "_comment": "R5c (e). In memory (set-key): region_atlas names an unserved id: the fetched index refuses by name; a stubbed 404 names the path."
         },
         {
+            "id": "apworld-an-atlas-room-keeps-the-documents-placements",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5d. seedling_atlas_location: the room region picked away and back takes its own room through the atlas-room source: ONE replace-region-content, 0 displaced, the document byte-identical, the answer names the placement kept over the vanilla item."
+        },
+        {
             "id": "apworld-displaced-filler-leaves-the-pool",
             "enabled": true,
             "category": "apworldEditor",

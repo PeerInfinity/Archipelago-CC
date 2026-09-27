@@ -117,6 +117,8 @@ export const ZONE_UNPLACED_CLAUSE = 'their items stay in the pool, unplaced — 
     + 'it is the reader\'s to make the data valid again';
 /** ⛓ R6 — the clause naming the displaced FILLER placements the pool dropped. */
 export const ZONE_FILLER_DROPPED = 'displaced and dropped from the pool';
+/** ⛓ R5d — a placement the zone kept because the document placed it (the zone's own item differed). */
+export const ZONE_KEPT = 'kept as the document places it';
 /** ⛓ R6 — the classification a target's `libraryItems` gives its filler. */
 export const ZONE_FILLER_CLASSIFICATION = 'filler';
 export const ZONE_HOST_CARRIED = 'carried';
@@ -379,9 +381,11 @@ export function zoneAnswerRefusal(zone) {
     if (!isObj(zone) || !Array.isArray(zone.locations) || !isObj(zone.payload)
         || (zone.itemClasses !== undefined && !isObj(zone.itemClasses))
         || (zone.fillerItems !== undefined && !(Array.isArray(zone.fillerItems)
-            && zone.fillerItems.every((n) => typeof n === 'string')))) {
+            && zone.fillerItems.every((n) => typeof n === 'string')))
+        || (zone.overrides !== undefined && !(Array.isArray(zone.overrides)
+            && zone.overrides.every((o) => isObj(o) && typeof o.location === 'string')))) {
         return 'apworld: `source.zone` is the zone channel\'s answer `{locations: [...], payload: {...}, '
-            + `itemClasses?, fillerItems?}\` — got ${zone === undefined ? 'none' : JSON.stringify(zone).slice(0, 80)}.`;
+            + `itemClasses?, fillerItems?, overrides?}\` — got ${zone === undefined ? 'none' : JSON.stringify(zone).slice(0, 80)}.`;
     }
     if (zone.locations.some((l) => !isObj(l) || (typeof l.id !== 'string' && typeof l.id !== 'number'))) {
         return 'apworld: every location of `source.zone` carries an `id` (a task id).';
@@ -483,12 +487,34 @@ function reproductionDifference(doc, player, region, entry, zone, substrate) {
 }
 
 /** ⛓ R5c — the zone channel's answer, or its throw as a sentence (a real room refuses sides it lacks). */
-function extractOrWhy(entry, zoneIdx, regionId, exitSides) {
+function extractOrWhy(entry, zoneIdx, regionId, exitSides, locationSpecs = []) {
     try {
-        return { answer: entry.extractZoneRules(zoneIdx, { region_id: regionId, exitSides }) };
+        return { answer: entry.extractZoneRules(zoneIdx, { region_id: regionId, exitSides, locationSpecs }) };
     } catch (e) {
         return { why: String(e?.message ?? e) };
     }
+}
+
+/**
+ * ⛓⛓ R5d — **THE DOCUMENT'S PLACEMENTS, AS THE ZONE CHANNEL READS THEM**: the
+ * region's CURRENT locations in document order, each with the item the document
+ * places there — `canonical_placements[p][name]`, else the location's inline
+ * `item.name`, else null. AP's fill is the authority on placements, the zone on
+ * what the region IS: a channel that honours `locationSpecs` answers the
+ * document's item on a location it names (the sphere route's contract); one that
+ * does not read the argument (a zone whose items are its own) is unaffected.
+ *
+ * @returns {Array<{id: *, name: string, item: string|null}>}
+ */
+export function zoneLocationSpecs(doc, player, region) {
+    const placements = doc?.canonical_placements?.[player] ?? {};
+    const locs = doc?.regions?.[player]?.[region]?.locations;
+    return (Array.isArray(locs) ? locs : []).filter((l) => typeof l?.name === 'string').map((l) => ({
+        id: l.id ?? null,
+        name: l.name,
+        item: Object.prototype.hasOwnProperty.call(placements, l.name) ? placements[l.name]
+            : (typeof l.item?.name === 'string' ? l.item.name : null),
+    }));
 }
 
 /**
@@ -516,7 +542,7 @@ export function zoneContentFor(doc, player, region, substrate, zoneIdx, { fetche
         if (!Number.isInteger(z)) continue;
         // ⛓ R5c — the region's own exit SIDES, in document order: a side-bound
         //   channel binds the k-th door to the k-th side (jta ignores them).
-        const got = extractOrWhy(entry, z, r, exitSidesOfEntry(e));
+        const got = extractOrWhy(entry, z, r, exitSidesOfEntry(e), zoneLocationSpecs(doc, player, r));
         const answer = got.answer;
         const diff = got.why ? `the channel refuses it: ${got.why}`
             : reproductionDifference(doc, player, r, e, answer, substrate);
@@ -538,9 +564,26 @@ export function zoneContentFor(doc, player, region, substrate, zoneIdx, { fetche
         }
         verified.push(r);
     }
-    const got = extractOrWhy(entry, zoneIdx, region, exitSidesOfEntry(doc.preset_sidecars[player][region]));
+    const sides = exitSidesOfEntry(doc.preset_sidecars[player][region]);
+    const specs = zoneLocationSpecs(doc, player, region);
+    const got = extractOrWhy(entry, zoneIdx, region, sides, specs);
     if (got.why) return { ok: false, why: `apworld: ${got.why}` };
     const { answer } = got;
+    // ⛓ R5d — where the document's item OVERRODE the zone's own (the same zone
+    //   asked without the specs), named so the op's description can say which
+    //   placements it kept and over what. Absent when nothing differs (a channel
+    //   that ignores the specs answers the same both times).
+    const overrides = [];
+    if (specs.length) {
+        const bare = extractOrWhy(entry, zoneIdx, region, sides).answer;
+        const mine = compiledZoneLocations(region, substrate, answer);
+        const own = bare ? compiledZoneLocations(region, substrate, bare) : [];
+        mine.forEach((l, i) => {
+            if (own[i]?.name === l.name && own[i].item !== l.item) {
+                overrides.push({ location: l.name, item: l.item, zoneItem: own[i].item });
+            }
+        });
+    }
     const lib = mergeSubstrateItemLib(DEFAULT_ITEMS, [substrate]);
     const itemClasses = {};
     for (const l of answer.locations ?? []) {
@@ -553,6 +596,7 @@ export function zoneContentFor(doc, player, region, substrate, zoneIdx, { fetche
         zone: JSON.parse(JSON.stringify({
             locations: answer.locations ?? [], payload: answer.payload ?? {}, itemClasses,
             fillerItems: zoneFillerItemsOf(entry),
+            ...(overrides.length ? { overrides } : {}),
         })),
         verified,
         config: { recorded: [...rec.recorded], assumed: Object.keys(rec.assumed) },
@@ -608,7 +652,8 @@ function referencesTo(doc, player, region, names) {
  *
  * @returns {{ok: true, doc: object, entry: object, locations: {before: number, after: number},
  *            itemsRegistered: string[], placementsDisplaced: Array<{location, item}>,
- *            placementsAdded: Array<{location, item}>, hostCarried: string[],
+ *            placementsAdded: Array<{location, item}>, placementsKept: Array<{location, item, zoneItem}>,
+ *            hostCarried: string[],
  *            danglingReferences: object[], stranded: object[]} | {ok: false, why: string}}
  */
 export function applyZoneContent({ doc, player, region, substrate, zoneIdx, zone, fetched = {} }) {
@@ -651,6 +696,11 @@ export function applyZoneContent({ doc, player, region, substrate, zoneIdx, zone
         placementsDisplaced.push({ location: name, item: placements[name] });
         delete nextPlacements[name];
     }
+    // 3a. ⛓ R5d — a placement the zone kept only because the document placed it
+    //   there (its own item differed): named in the description.
+    const placementsKept = (Array.isArray(zone.overrides) ? zone.overrides : [])
+        .filter((o) => freshBy.get(o.location) === o.item && placements[o.location] === o.item)
+        .map((o) => ({ location: o.location, item: o.item, zoneItem: o.zoneItem ?? null }));
     // 2. the new placements: registered, pooled, placed
     const nextItems = { ...items };
     const nextPool = { ...pool };
@@ -711,6 +761,7 @@ export function applyZoneContent({ doc, player, region, substrate, zoneIdx, zone
         itemsRegistered,
         placementsDisplaced,
         placementsAdded,
+        placementsKept,
         fillerDropped,
         hostCarried,
         danglingReferences: referencesTo(next, p, region, removed),
@@ -739,8 +790,9 @@ const listed = (xs, fmt, limit = 12) => {
 
 /**
  * ⛓ The op's description: the zone, locations before → after, items registered,
- * placements displaced BY NAME, the host field carried, and the references the
- * removed locations leave dangling.
+ * placements displaced BY NAME, the placements kept over the zone's own item
+ * (R5d; silent when the zone's own item is the document's), the host field
+ * carried, and the references the removed locations leave dangling.
  */
 export function describeZoneReplacement({ region, substrate, zoneIdx, res }) {
     const n = res.placementsDisplaced.length;
@@ -757,6 +809,12 @@ export function describeZoneReplacement({ region, substrate, zoneIdx, res }) {
             + ZONE_UNPLACED_CLAUSE
             : `0 placements ${ZONE_DISPLACED}`,
     ];
+    const kept = res.placementsKept ?? [];
+    if (kept.length) {
+        parts.push(`${kept.length} placement${kept.length === 1 ? '' : 's'} ${ZONE_KEPT} (${listed(kept,
+            (k) => `${tick(k.item)} at ${tick(k.location)}, not the zone's own ${k.zoneItem === null ? 'empty location'
+                : tick(k.zoneItem)}`)})`);
+    }
     if (f) {
         const names = [...new Set(res.fillerDropped.map((d) => d.item))].map(tick).join(', ');
         parts.push(`${f} filler placement${f === 1 ? '' : 's'} ${ZONE_FILLER_DROPPED} (${names} — the target's `
@@ -851,6 +909,7 @@ export async function zoneJobAnswer({ doc, player, region, substrate, source }, 
         itemsRegistered: res.itemsRegistered,
         placementsDisplaced: res.placementsDisplaced,
         placementsAdded: res.placementsAdded,
+        placementsKept: res.placementsKept,
         fillerDropped: res.fillerDropped,
         hostCarried: res.hostCarried,
         danglingReferences: res.danglingReferences,

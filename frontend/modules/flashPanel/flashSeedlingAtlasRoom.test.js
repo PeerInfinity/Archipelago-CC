@@ -22,9 +22,9 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { applyRulesDocOp, canonicalPlacementIssues } from '../apworldEditor/rulesDocOps.js';
 import { sidecarIssues } from '../apworldEditor/sidecarIssues.js';
 import {
-    REPLACE_REGION_CONTENT_OP, ZONE_FETCH_FAILED, ZONE_HELD, ZONE_NEEDS_FETCH, ZONE_NOT_RECORDED,
+    REPLACE_REGION_CONTENT_OP, ZONE_DISPLACED, ZONE_FETCH_FAILED, ZONE_HELD, ZONE_KEPT, ZONE_NEEDS_FETCH, ZONE_NOT_RECORDED,
     ZONE_SOURCE_LABEL_DEFAULT, applyZoneContent, installedZoneConfigFrom, replaceRegionContentFromZone,
-    resolveZoneFetches, zoneHeldBy, zoneJobAnswer, zoneOfRegion, zoneOptions, zoneSourceFacts,
+    exitSidesOfEntry, resolveZoneFetches, zoneHeldBy, zoneJobAnswer, zoneLocationSpecs, zoneOfRegion, zoneOptions, zoneSourceFacts,
 } from '../apworldEditor/regionContent.js';
 import { regionGenerationPlan, regionGenerationSourcesFor, zonePickerFor } from '../apworldEditor/regionGenerationFlow.js';
 import { REGION_SOURCE_KINDS } from '../apworldEditor/regionRegenerate.js';
@@ -74,16 +74,20 @@ const byGame = (g) => DOCS.find((d) => d.game === g);
  * `seedling_playthrough`) never went through the content source — their exits are
  * the level's own transitions — and refuse by name.
  *
- * ⛔ MEASURED, seedling generated G7 (plan §13): `seedling_atlas_location` is the
- * first committed content-source room that holds a LOCATION, and it does NOT
- * reproduce — the re-realised zone carries the chest's VANILLA item (`Seal`)
- * where the document's sphere placement put `key_blue`, so the round trip
- * refuses by that sentence. It records its config like the others; the refusal
- * is pinned here as its own bin rather than hidden, and is the editor round
- * trip's to fix (§13 Open).
+ * ⛓ `ITEM_REFUSED` — a content-source room whose re-realised zone answers
+ * another item than the document places. MEASURED by seedling generated G7
+ * (its plan §13.0 #5): `seedling_atlas_location`, the first committed
+ * content-source room holding a LOCATION, re-realised with the chest's VANILLA
+ * item (`Seal`) where the document's sphere placement put `key_blue`, and the
+ * round trip refused by that sentence. FIXED by apworld-substrate R5d (the
+ * substrate plan §29): the hub hands the channel the document's placements
+ * (`zoneLocationSpecs`), the channel answers a name-matched spec's item, and
+ * the document now reproduces byte-for-byte with the kept placement named. The
+ * bin stays, EMPTY, so a regression lands in a named bin rather than an
+ * unexplained red.
  */
-const REPRODUCES = ['seedling_spiral_room', 'seedling_sphere_room', 'seedling_atlas_host'];
-const ITEM_REFUSED = ['seedling_atlas_location'];
+const REPRODUCES = ['seedling_spiral_room', 'seedling_sphere_room', 'seedling_atlas_host', 'seedling_atlas_location'];
+const ITEM_REFUSED = [];
 const PROJECTION = ['seedling_atlas', 'seedling_playthrough'];
 const RECORDS = [...REPRODUCES, ...ITEM_REFUSED];
 
@@ -145,7 +149,7 @@ describe('the oracle — every committed room, as its OWN room', () => {
                 expect(Number.isInteger(own), region).toBe(true);
                 const res = replaceRegionContentFromZone({ doc: d.doc, player: d.p, region, substrate: S, zoneIdx: own });
                 expect(res.ok).toBe(false);
-                expect(res.why).toMatch(/location 0 \("Starting House - Chest"\): item "key_blue" in the document, "Seal" from the zone/);
+                expect(res.why).toMatch(/: item "[^"]*" in the document, "[^"]*" from the zone/);
             }
             expect(bytes(d.doc), 'the input is never mutated').toBe(before);
             return;
@@ -159,8 +163,36 @@ describe('the oracle — every committed room, as its OWN room', () => {
             expect(bytes(res.doc), 'byte-identical document').toBe(before);
             expect(res.placementsDisplaced).toEqual([]);
             expect(res.placementsAdded).toEqual([]);
+            // ⛓ R5d — a placement kept OVER the zone's own item is named; one equal to it is silent.
+            const specs = zoneLocationSpecs(d.doc, d.p, region);
+            const bare = SEEDLING.extractZoneRules(own, { region_id: region, exitSides: exitSidesOfEntry(d.doc.preset_sidecars[d.p][region]) });
+            const want = bare.locations
+                .filter((l) => specs.some((sp) => sp.name === l.global_name && sp.item !== l.item))
+                .map((l) => ({ location: l.global_name, item: specs.find((sp) => sp.name === l.global_name).item, zoneItem: l.item }));
+            expect(res.placementsKept).toEqual(want);
         }
         expect(bytes(d.doc), 'the input is never mutated').toBe(before);
+    });
+
+    it('⛓ R5d — the chest\'s round trip keeps `key_blue` over the vanilla `Seal`, and the op\'s description says so', () => {
+        const d = byGame('seedling_atlas_location');
+        const [region] = d.regions;
+        const res = applyRulesDocOp(d.doc, {
+            op: REPLACE_REGION_CONTENT_OP, player: d.p, region,
+            source: { kind: REGION_SOURCE_KINDS.ZONE, substrate: S, zoneIdx: zoneOfRegion(d.doc, d.p, region, { cfg: { atlasDoc: SEEDLING_STARTER_ATLAS } }) },
+        });
+        expect(res.ok, res.error).toBe(true);
+        expect(bytes(res.doc)).toBe(bytes(d.doc));
+        expect(res.op.source.zone.overrides).toEqual([{ location: 'Starting House - Chest', item: 'key_blue', zoneItem: 'Seal' }]);
+        expect(res.description).toContain(`0 placements ${ZONE_DISPLACED}`);
+        expect(res.description).toContain(`1 placement ${ZONE_KEPT} (\`key_blue\` at \`Starting House - Chest\`, not the zone's own \`Seal\`)`);
+        // ⛓ equal is silent: a document placing the vanilla item keeps it without the clause
+        const vanilla = clone(d.doc);
+        vanilla.canonical_placements[d.p]['Starting House - Chest'] = 'Seal';
+        const r2 = replaceRegionContentFromZone({ doc: vanilla, player: d.p, region, substrate: S, zoneIdx: 1 });
+        expect(r2.ok, r2.why).toBe(true);
+        expect(r2.placementsKept).toEqual([]);
+        expect(r2.zone.overrides).toBeUndefined();
     });
 
     it('what the document records: the starter atlas by id (no fetch), its rooms by name, the doorless ones with the reason', () => {

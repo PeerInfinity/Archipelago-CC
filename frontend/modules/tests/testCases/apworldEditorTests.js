@@ -214,6 +214,8 @@ import { libraryEntryPrecheck } from '../../apworldEditor/regionRegenerate.js';
 import { ZONE_FILLER_DROPPED } from '../../apworldEditor/regionContent.js';
 /** ⛓ R6b — the zone answer's config clause (recorded vs assumed). */
 import { zoneConfigSplitSentence } from '../../apworldEditor/regionContent.js';
+/** ⛓ R5d — the document's placements handed to the zone channel; the op's *kept* clause. */
+import { ZONE_DISPLACED, ZONE_KEPT, zoneLocationSpecs } from '../../apworldEditor/regionContent.js';
 import { canonicalPlacementIssues } from '../../apworldEditor/rulesDocOps.js';
 
 const PANEL_ID = 'apworldEditorPanel';
@@ -10961,6 +10963,77 @@ export async function apworldAnUnservedAtlasIsRefusedByName(testController) {
     return testController.getOverallResult();
 }
 
+/**
+ * ⛓⛓⛓ **(f) R5d — A REAL ROOM'S CHEST KEEPS THE DOCUMENT'S ITEM** —
+ * `seedling_atlas_location` (seedling generated G7: the starting house plays its
+ * chest as a check, the sphere placement put a key there): the room region is
+ * picked away and back (D1's label only — the form opens on a change) and takes
+ * its OWN room through the atlas-room source. Before R5d, Generate refused (the
+ * verification's "item \"key_blue\" in the document, \"Seal\" from the zone").
+ * Now the page previews ONE `replace-region-content` with the room inlined: 0
+ * placements displaced, the document's item still on every location, the
+ * document byte-identical to the one loaded — so the session records NOTHING
+ * (its no-op rule) and the answer is `No change (<the op's description>).`,
+ * which names each placement kept over the room's vanilla item (the inlined
+ * answer's `overrides`, derived; the clause is silent when there is none).
+ */
+const SEEDLING_ATLAS_LOCATION_PATH = './presets/seedling_atlas_location/AP_1/AP_1_rules.json';
+export async function apworldAnAtlasRoomKeepsTheDocumentsPlacements(testController) {
+    try {
+        const probe = await (await fetch(SEEDLING_ATLAS_LOCATION_PATH)).json();
+        const region = Object.entries(probe.preset_sidecars['1']).find(([, e]) => e.substrate === SEEDLING)?.[0];
+        const specs = region ? zoneLocationSpecs(probe, '1', region).filter((sp) => typeof sp.item === 'string') : [];
+        testController.reportCondition(`⛓ premise: a room region holding placed location(s) (${region}: ${specs.length})`,
+            !!region && specs.length > 0);
+        if (!region || !specs.length) return testController.getOverallResult();
+        const panel = await openHubOnDocument(testController, SEEDLING_ATLAS_LOCATION_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        const loaded = JSON.stringify(panel.rulesDoc);
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, 'maze')) return testController.getOverallResult();
+        if (!await openRoomSource(testController, panel, region)) return testController.getOverallResult();
+        testController.assertEqual('⛓ the label went away and back — the document is the loaded one', loaded, JSON.stringify(panel.rulesDoc));
+        const own = roomPickerOptions(region).find((o) => o.zone !== null && o.name === probe.preset_sidecars['1'][region].playable_payload.atlas_region);
+        testController.reportCondition(`⛓ premise: the region's own room is offered (${own?.name})`, !!own && !own.disabled);
+        if (!own) return testController.getOverallResult();
+        const sel = regionGenSection(region).querySelector('.apworld-region-generation-zone');
+        sel.value = String(own.zone);
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+        await testController.pollForCondition(() => panel._regionGen?.zone?.selected === own.zone, 'the own room is selected', 4000, 50);
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        regionGenSection(region).querySelector('.apworld-region-generate').click();
+        const answer = await answerAfter(testController, region, said, 'the Generate answer', 60000);
+        // ⛓ the own room re-taken changes nothing, so the session records nothing (its no-op rule):
+        //   the answer is the op's own description as the session's `No change (…)` sentence.
+        testController.assertEqual('⛓⛓ nothing recorded (the document does not change)', String(opsBefore), String(panel.session.ops().length));
+        const pure = panel._regionGenLastRun?.landed?.preview ?? {};
+        const op = pure.op;
+        testController.assertEqual('…the op the page previewed is a replace-region-content with the room inlined',
+            `${REPLACE_REGION_CONTENT_OP}|true`, `${op?.op}|${Array.isArray(op?.source?.zone?.locations)}`);
+        testController.reportCondition('the pure op applies', pure.ok === true);
+        testController.assertEqual('⛓⛓ the pure op\'s document is the loaded one', loaded, JSON.stringify(pure.doc));
+        testController.assertEqual('⛓⛓ the document is byte-identical to the one loaded', loaded, JSON.stringify(panel.rulesDoc));
+        for (const sp of specs) {
+            testController.assertEqual(`⛓⛓ ${sp.name} still holds the document's ${sp.item}`,
+                String(sp.item), String(panel.rulesDoc.canonical_placements['1'][sp.name]));
+        }
+        testController.assertEqual('⛓⛓ the answer is the op\'s own description, unrecorded', `No change (${pure.description}).`, String(answer));
+        testController.reportCondition('⛓⛓ …0 placements displaced', String(answer).includes(`0 placements ${ZONE_DISPLACED}`));
+        const overrides = op?.source?.zone?.overrides ?? [];
+        testController.log(`overrides inlined: ${JSON.stringify(overrides)}`);
+        testController.reportCondition(`⛓ premise: the room's own item differs on ${overrides.length} location(s)`, overrides.length > 0);
+        for (const o of overrides) {
+            testController.reportCondition(`⛓⛓ the answer names the kept ${o.item} at ${o.location} over ${o.zoneItem}`,
+                String(answer).includes(ZONE_KEPT) && String(answer).includes(`\`${o.item}\` at \`${o.location}\`, not the zone's own \`${o.zoneItem}\``));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('atlas room keeps placements test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
 const R5C_TESTS = [
     ['apworld-the-source-row-offers-atlas-room-for-seedling',
         'APWorld hub: the Region generation form offers Atlas room (the entry\'s word) for flash_seedling and no room source for maze',
@@ -10988,6 +11061,15 @@ for (const [id, name, testFunction] of R5C_TESTS) {
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
+registerTest({
+    id: 'apworld-an-atlas-room-keeps-the-documents-placements',
+    name: 'APWorld hub: a real room re-taken through the atlas-room source keeps the document\'s placements — 0 displaced, the kept one named',
+    description: 'APWORLD SUBSTRATE CHANGE R5d. The zone source hands the channel the document\'s placements; '
+        + 'see the row\'s docblock in apworldEditorTests.js.',
+    testFunction: apworldAnAtlasRoomKeepsTheDocumentsPlacements,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R5b — THE ZONE N SOURCE (plan §12 + the ruling).

@@ -33,7 +33,7 @@ import {
 import {
     REPLACE_REGION_CONTENT_KEYS, REPLACE_REGION_CONTENT_OP, ZONE_CONFIG_HOOK, ZONE_DANGLING_REFS, ZONE_DISPLACED,
     ZONE_HELD, ZONE_HOST_CARRIED, ZONE_ITEM_GROUPS, ZONE_NEVER_CREATES, ZONE_NOT_RECORDED, ZONE_NO_CHANNEL,
-    ZONE_FILLER_DROPPED, zoneFillerItemsOf,
+    ZONE_FILLER_DROPPED, ZONE_KEPT, zoneAnswerRefusal, zoneFillerItemsOf, zoneLocationSpecs,
     ZONE_NO_RECOVERY, ZONE_OUT_OF_RANGE, ZONE_UNPLACED_CLAUSE, applyZoneContent, describeZoneReplacement,
     installedZoneConfigFrom, replaceRegionContentFromZone, unplacedPoolItems, zoneContentFor, zoneHeldBy,
     zoneOfRegion, zoneOptions, zoneSourceFacts, zoneSourceRefusal,
@@ -95,10 +95,11 @@ const NOT_RECORDED = [...new Set(DOCS
 /**
  * ⛓ R5c — the documents whose zone-channel regions are ATLAS ROOMS
  * (`flash_seedling` declares the read-back since R5c). Their oracle is
- * `flashPanel/flashSeedlingAtlasRoom.test.js` (three reproduce — seedling
- * generated G6 added `seedling_atlas_host` —, G7's `seedling_atlas_location`
- * refuses on its chest's item, and two are the atlas compiler's projection and
- * refuse); this file's jta-shaped oracle skips them.
+ * `flashPanel/flashSeedlingAtlasRoom.test.js` (four reproduce — seedling
+ * generated G6 added `seedling_atlas_host`, and G7's `seedling_atlas_location`,
+ * refused on its chest's item until R5d handed the channel the document's
+ * placements —, and two are the atlas compiler's projection and refuse); this
+ * file's jta-shaped oracle skips them.
  */
 const ATLAS_ROOM_DOCS = ['seedling_spiral_room', 'seedling_sphere_room', 'seedling_atlas_host',
     'seedling_atlas_location', 'seedling_atlas', 'seedling_playthrough'];
@@ -615,5 +616,103 @@ describe('the form — the Source row, the picker, what Generate sends (R5b)', (
         expect(prov).toEqual({ op: REPLACE_REGION_CONTENT_OP, substrate: 'jta', zoneIdx: 1, verified: ['a'], ms: 12 });
         expect(regenerationAnswer(args, { ok: false, refused: true, threw: 'apworld: x' }, 60)).toEqual({ landed: false, text: 'apworld: x' });
         expect(regenerationAnswer(args, { ok: true }, 60).landed).toBe(true);
+    });
+});
+
+/**
+ * ⛓⛓ R5d — **THE DOCUMENT'S PLACEMENTS, HANDED TO THE ZONE CHANNEL** (plan §29).
+ * `zoneContentFor` passes `locationSpecs` (the region's current locations, each
+ * with the item the document places there) to every extraction; a channel that
+ * reads them answers the document's item on a location it names, and the op
+ * names each placement it kept OVER the zone's own item. jta's channel does not
+ * read the argument (its tasks and perks are the zone's own): its answers, and
+ * so R5b's control, do not move.
+ */
+describe('R5d — the document\'s placements, handed to the zone channel', () => {
+    const d = byGame('jta_locations_test');
+    const region = d.regions[d.regions.length - 1].region;
+
+    it('zoneLocationSpecs: document order; the canonical placement, else the inline item, else null', () => {
+        const doc = clone(d.doc);
+        const locs = doc.regions[d.p][region].locations;
+        expect(locs.length).toBeGreaterThanOrEqual(3);
+        const [a, b, c] = locs;
+        doc.canonical_placements[d.p][a.name] = 'placed-item';
+        a.item = { name: 'inline-item' };
+        delete doc.canonical_placements[d.p][b.name];
+        b.item = { name: 'inline-only' };
+        delete doc.canonical_placements[d.p][c.name];
+        delete c.item;
+        const specs = zoneLocationSpecs(doc, d.p, region);
+        expect(specs.map((sp) => sp.name)).toEqual(locs.map((l) => l.name));
+        expect(specs.slice(0, 3)).toEqual([
+            { id: a.id ?? null, name: a.name, item: 'placed-item' },
+            { id: b.id ?? null, name: b.name, item: 'inline-only' },
+            { id: c.id ?? null, name: c.name, item: null },
+        ]);
+        expect(zoneLocationSpecs(doc, d.p, 'no-such-region')).toEqual([]);
+    });
+
+    it('jta ignores the specs: every region of every reproducing document extracts byte-identically with and without them', () => {
+        const entry = substrateRegistry.get('jta');
+        let n = 0;
+        for (const g of REPRODUCES) {
+            const dd = byGame(g);
+            const rec = installedZoneConfigFrom(dd.doc, dd.p, 'jta');
+            expect(rec.ok, rec.why).toBe(true);
+            entry.applyPipelineConfig({ ...rec.cfg, ...rec.assumed });
+            for (const { region: r } of dd.regions.filter((x) => x.substrate === 'jta')) {
+                const z = zoneOfRegion(dd.doc, dd.p, r);
+                if (!Number.isInteger(z)) continue;
+                const bare = entry.extractZoneRules(z, { region_id: r, exitSides: [] });
+                const withSpecs = entry.extractZoneRules(z, { region_id: r, exitSides: [], locationSpecs: zoneLocationSpecs(dd.doc, dd.p, r) });
+                expect(bytes(withSpecs), `${g} ${r}`).toBe(bytes(bare));
+                const got = zoneContentFor(dd.doc, dd.p, r, 'jta', z);
+                expect(got.ok, got.why).toBe(true);
+                expect(got.zone.overrides, `${g} ${r}`).toBeUndefined();
+                n += 1;
+            }
+        }
+        entry.applyPipelineConfig({});
+        expect(n).toBeGreaterThan(0);
+    });
+
+    it('the apply names a placement kept OVER the zone\'s own item; an override on a location the document does not place is ADDED, not "kept"', () => {
+        const own = zoneOfRegion(d.doc, d.p, region);
+        const got = zoneContentFor(d.doc, d.p, region, 'jta', own);
+        expect(got.ok, got.why).toBe(true);
+        const placed = d.doc.regions[d.p][region].locations.map((l) => l.name);
+        expect(placed.length).toBeGreaterThanOrEqual(2);
+        // ⛓ the second override answers the zone's item, but the document places NOTHING there:
+        //   that placement is ADDED by the op, not kept — only the placement check tells the two apart.
+        const doc = clone(d.doc);
+        const second = doc.canonical_placements[d.p][placed[1]];
+        delete doc.canonical_placements[d.p][placed[1]];
+        const zone = {
+            ...got.zone,
+            overrides: [
+                { location: placed[0], item: d.doc.canonical_placements[d.p][placed[0]], zoneItem: 'the-zone-own' },
+                { location: placed[1], item: second, zoneItem: 'x' },
+            ],
+        };
+        const res = applyZoneContent({ doc, player: d.p, region, substrate: 'jta', zoneIdx: own, zone });
+        expect(res.placementsAdded).toEqual([{ location: placed[1], item: second }]);
+        expect(res.ok, res.why).toBe(true);
+        expect(res.placementsKept).toEqual([{ location: placed[0], item: zone.overrides[0].item, zoneItem: 'the-zone-own' }]);
+        const desc = describeZoneReplacement({ region, substrate: 'jta', zoneIdx: own, res });
+        expect(desc).toContain(`1 placement ${ZONE_KEPT} (\`${zone.overrides[0].item}\` at \`${placed[0]}\`, not the zone's own \`the-zone-own\`)`);
+        // ⛓ silent when nothing was kept over the zone's own item (and for a result recorded before R5d)
+        const plain = applyZoneContent({ doc: d.doc, player: d.p, region, substrate: 'jta', zoneIdx: own, zone: got.zone });
+        expect(plain.placementsKept).toEqual([]);
+        expect(describeZoneReplacement({ region, substrate: 'jta', zoneIdx: own, res: plain })).not.toContain(ZONE_KEPT);
+        const { placementsKept: _k, ...legacy } = plain;
+        expect(describeZoneReplacement({ region, substrate: 'jta', zoneIdx: own, res: legacy })).not.toContain(ZONE_KEPT);
+    });
+
+    it('a malformed `overrides` in an inlined answer is refused by shape', () => {
+        const zone = { locations: [], payload: {} };
+        expect(zoneAnswerRefusal({ ...zone, overrides: [{ location: 'a', item: 'b' }] })).toBeNull();
+        expect(zoneAnswerRefusal({ ...zone, overrides: 'no' })).toContain('overrides?');
+        expect(zoneAnswerRefusal({ ...zone, overrides: [{ item: 'b' }] })).toContain('overrides?');
     });
 });
