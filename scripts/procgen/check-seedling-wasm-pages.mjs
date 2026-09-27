@@ -130,7 +130,8 @@ if (!ROOT) { console.log('FAIL: --root=<siteRoot> is required'); process.exit(1)
 /**
  * The build watch.html's WASM_PAGE names.
  *
- * ⛓⛓ p4d SINCE EDITOR INTEGRATION SLICE P2 — MOVED IN THE SAME COMMIT AS
+ * ⛓⛓ p4e SINCE R9 SLICE DEF (2026-09-27; p4d from EDITOR INTEGRATION slice
+ * P2) — MOVED IN THE SAME COMMIT AS
  * `watchWasm.js`'s `WASM_PAGE`, because the two are one fact and this file
  * asserts the iframe's src against it. ⛔ SPELLED, NOT IMPORTED: a `BUILD`
  * read out of `watchWasm.js` would compare the page against its own source
@@ -148,7 +149,7 @@ if (!ROOT) { console.log('FAIL: --root=<siteRoot> is required'); process.exit(1)
  * another build is `check-seedling-bot-differential.mjs`'s job; it honours
  * `SEEDLING_PAGE` for real, because it opens the game page itself.
  */
-const BUILD = 'seedling_bot_ap_p4d';
+const BUILD = 'seedling_bot_ap_p4e';
 const GAME = `${ROOT}/modules/flashPanel/wasm/${BUILD}/game.html`;
 const WASM = `${ROOT}/modules/flashPanel/wasm/${BUILD}/${BUILD}.wasm`;
 const TAPE = 'frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-chain-85.json';
