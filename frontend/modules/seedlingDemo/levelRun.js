@@ -206,7 +206,7 @@ import {
     CEREMONY_FREEZE_FRAMES, LOAD_DEAD_FRAMES, stepChannel,
 } from './swimSoundClock.js';
 import {
-    beginEntryTimeFromDeclared, createGameClock, PICKUP_HELP_DEAD_FRAMES,
+    beginEntryTimeFromDeclared, createGameClock, LOAD_FADE_FRAMES, PICKUP_HELP_DEAD_FRAMES,
 } from './gameClock.js';
 import {
     INITIAL_DIRECTION,
@@ -470,20 +470,25 @@ export function createLevelRun({
      */
     const clockDeclared = seamBoot['save.time'];
     const bootCutscene = seamBoot['static.Game.cutscene'] ?? null;
-    const clockRefusal = (() => {
-        if (clockDeclared === undefined) return 'the boot block declares no `save.time`';
-        if (!pins.includes('dead_frames')) {
+    /**
+     * Why a boot block's clock cannot be counted, or `null` — ONE predicate for
+     * the boot below and for a resumed window's adoption (`adoptWindowClock`).
+     */
+    const clockRefusalFor = (declaredTime, pinList, cutscene) => {
+        if (declaredTime === undefined) return 'the boot block declares no `save.time`';
+        if (!pinList.includes('dead_frames')) {
             return 'the tape does not declare `pins: ["dead_frames"]`, so a room load\'s '
                 + 'fade is a RENDER count (18..21, `deadFrameBand.FADE_STATS`) rather '
                 + 'than the fixed twenty this model counts';
         }
-        if (bootCutscene && bootCutscene[0]) {
+        if (cutscene && cutscene[0]) {
             return '`Game.cutscene[0]` is set at the boot — the opening wind scene, the '
                 + 'one block in the game that writes `timeRate` (`Game.as:918`), where '
                 + 'the clock advances by a DECAYING rate this model does not carry';
         }
         return null;
-    })();
+    };
+    let clockRefusal = clockRefusalFor(clockDeclared, pins, bootCutscene);
     const clock = createGameClock({
         bootTime: clockRefusal === null ? beginEntryTimeFromDeclared(clockDeclared) : null,
     });
@@ -10774,6 +10779,34 @@ export function createLevelRun({
         },
         /** Why the clock is `null`, or `null` if it is running. */
         get gameTimeRefusal() { return clockRefusal; },
+        /**
+         * ⛓⛓ R9 SLICE L16 — A RESUMED WINDOW ADOPTS THE CLOCK ITS OWN FRESH BOOT
+         * WOULD COUNT, when this run's is unknown (⚖ 23: a level run separately
+         * plays identically to the same level reached from the start).
+         *
+         * The value is the boot's own arithmetic, not a new one: a fresh run of
+         * `window` starts at `beginEntryTimeFromDeclared(save.time)` and its boot
+         * build spends `LOAD_FADE_FRAMES` before the first live tick — and a
+         * resumed run standing at that window's tick 0 has already paid its
+         * transition's fade. The same refusals a boot applies apply here (no
+         * `save.time`, no `dead_frames` pin, the wind cutscene), and a run whose
+         * clock already counts is left alone — the chain admission, not this
+         * method, is what compares a known clock with a declared one.
+         * @returns `{adopted, value?, why?}`
+         */
+        adoptWindowClock(window) {
+            if (clock.now() !== null) {
+                return { adopted: false, why: 'the run already counts `Game.time`' };
+            }
+            const sb = seamFieldsFromBlock(window?.seam ?? null);
+            const why = clockRefusalFor(sb['save.time'], window?.pins ?? [],
+                sb['static.Game.cutscene'] ?? null);
+            if (why !== null) return { adopted: false, why };
+            const value = beginEntryTimeFromDeclared(sb['save.time']) + LOAD_FADE_FRAMES;
+            clock.adopt(value);
+            clockRefusal = null;
+            return { adopted: true, value };
+        },
         /** Every dead-frame span the run has spent, with its kind and reason. */
         get deadFrameSpans() { return clock.spans; },
         /**
