@@ -282,12 +282,15 @@ class WorldGenerator:
             else:
                 logger.info(f"Would write: {sidecars_path}")
 
-        # Preserve procgen_metadata (driver, sphere_plan, ...) the same
-        # way. The export handler re-injects it into rules.json, so a
+        # Preserve this player's procgen_metadata (driver, sphere_plan, ...)
+        # the same way — a per-player map since APWORLD SUBSTRATE CHANGE P1a
+        # (`{"<p>": block}`); the package holds its ONE slot's block. The
+        # export handler re-injects it under the exporting player, so a
         # world re-derived from an exported preset keeps procgen
         # semantics — in particular honor_locked_placements, which keys
-        # on this field (see extractors.extract_all).
-        procgen_metadata = source_json.get('procgen_metadata')
+        # on this field (see extractors.extract_all). A source with no
+        # entry for this player writes no file.
+        procgen_metadata = source_json.get('procgen_metadata', {}).get(self.player_id)
         if procgen_metadata:
             metadata_path = output_dir / '_worldgen_procgen_metadata.json'
             if not dry_run:
@@ -299,14 +302,14 @@ class WorldGenerator:
             else:
                 logger.info(f"Would write: {metadata_path}")
 
-        # Preserve loop_costs (per-region/per-location mana costs + the
-        # xpEffect mode the loops module reads). Top-level field of a
-        # loop-mode procgen rules.json. The export handler re-injects it,
-        # so a world re-derived from an exported preset keeps loop mode —
-        # the runtime loops module auto-enters loop mode whenever
-        # loop_costs is present. Without this, the export drops it and a
+        # Preserve this player's loop_costs (per-region/per-location mana
+        # costs + the xpEffect mode the loops module reads) — a per-player
+        # map since P1a. The export handler re-injects it under the exporting
+        # player, so a world re-derived from an exported preset keeps loop
+        # mode — the runtime loops module enters loop mode for a slot whose
+        # entry is present. Without this, the export drops it and a
         # round-tripped world silently loses loop mode.
-        loop_costs = source_json.get('loop_costs')
+        loop_costs = source_json.get('loop_costs', {}).get(self.player_id)
         if loop_costs:
             loop_costs_path = output_dir / '_worldgen_loop_costs.json'
             if not dry_run:

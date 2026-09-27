@@ -2772,6 +2772,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'progression_mapping',
         'starting_items',
         'preset_sidecars',
+        'procgen_metadata',
         'loop_costs',
         'world',
         'exporter',
@@ -2783,7 +2784,10 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     player_specific_keys = [
         'regions', 'dungeons', 'items', 'item_groups', 'progression_mapping',
         'world', 'exporter', 'start_regions', 'itempool_counts',
-        'canonical_placements', 'game_info', 'starting_items', 'preset_sidecars'
+        'canonical_placements', 'game_info', 'starting_items', 'preset_sidecars',
+        # APWORLD SUBSTRATE CHANGE P1a: both blocks are per-player maps now
+        # (`{"<p>": block}`), so a per-player export slices them like the rest.
+        'procgen_metadata', 'loop_costs',
     ]
 
     # Prepare the combined export data for all players using the helper

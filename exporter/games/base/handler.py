@@ -2065,8 +2065,8 @@ class BaseGameExportHandler(
         if self.is_worldgen_world(world):
             self._discover_worldgen_helpers_for_preservation(world)
             self._inject_worldgen_sidecars(world, export_data, player)
-            self._inject_worldgen_procgen_metadata(world, export_data)
-            self._inject_worldgen_loop_costs(world, export_data)
+            self._inject_worldgen_procgen_metadata(world, export_data, player)
+            self._inject_worldgen_loop_costs(world, export_data, player)
 
     def _inject_worldgen_sidecars(self, world, export_data: Dict[str, Any], player: int) -> None:
         """Load `_worldgen_sidecars.json` from the worldgen world's package
@@ -2101,74 +2101,57 @@ class BaseGameExportHandler(
             return
         export_data.setdefault('preset_sidecars', {})[str(player)] = sidecars
 
-    def _inject_worldgen_procgen_metadata(self, world, export_data: Dict[str, Any]) -> None:
+    def _inject_worldgen_procgen_metadata(self, world, export_data: Dict[str, Any], player: int) -> None:
         """Load `_worldgen_procgen_metadata.json` from the worldgen world's
-        package directory and set it as export_data['procgen_metadata'].
+        package directory and merge it into export_data['procgen_metadata'][str(player)].
 
-        procgen_metadata is a top-level field of procgen-emitted rules.json
-        (driver, sphere_plan, ...). Carrying it through the export keeps a
-        re-derived world's semantics stable — extractors key
-        honor_locked_placements (always-lock non-event locked placements)
-        on its presence. Top-level and informational, so the first worldgen
-        world to inject wins; solo procgen seeds are the primary case.
+        procgen_metadata is a per-player map of procgen-emitted rules.json
+        (APWORLD SUBSTRATE CHANGE P1a: `{"<p>": {driver, sphere_plan, ...}}`,
+        the shape `preset_sidecars` has). A package is ONE slot's world, so
+        its file holds one block, and each worldgen slot's block lands under
+        its own player. Carrying it through the export keeps a re-derived
+        world's semantics stable — extractors key honor_locked_placements
+        (always-lock non-event locked placements) on the slot's entry.
         """
-        if 'procgen_metadata' in export_data:
-            return
-        try:
-            world_module = type(world).__module__
-            module = importlib.import_module(world_module)
-        except ImportError:
-            return
-        module_file = getattr(module, '__file__', None)
-        if not module_file:
-            return
-        metadata_path = os.path.join(
-            os.path.dirname(module_file), '_worldgen_procgen_metadata.json')
-        if not os.path.exists(metadata_path):
-            return
-        try:
-            with open(metadata_path, encoding='utf-8') as f:
-                metadata = json.load(f)
-        except (json.JSONDecodeError, OSError) as exc:
-            logger.warning(f"Failed to read procgen metadata at {metadata_path}: {exc}")
-            return
-        export_data['procgen_metadata'] = metadata
+        metadata = self._read_worldgen_package_json(world, '_worldgen_procgen_metadata.json', 'procgen metadata')
+        if metadata is not None:
+            export_data.setdefault('procgen_metadata', {})[str(player)] = metadata
 
-    def _inject_worldgen_loop_costs(self, world, export_data: Dict[str, Any]) -> None:
+    def _inject_worldgen_loop_costs(self, world, export_data: Dict[str, Any], player: int) -> None:
         """Load `_worldgen_loop_costs.json` from the worldgen world's
-        package directory and set it as export_data['loop_costs'].
+        package directory and merge it into export_data['loop_costs'][str(player)].
 
-        loop_costs is a top-level field of a loop-mode procgen rules.json
-        (per-region moveCost + xpEffect, per-location cost, defaults).
-        Carrying it through the export keeps loop mode alive across the
-        round-trip — the runtime loops module auto-enters loop mode
-        whenever loop_costs is present, so a world re-derived from an
-        exported preset would otherwise silently lose it. Top-level and
-        informational, so the first worldgen world to inject wins; solo
-        procgen seeds are the primary case. Mirrors
-        _inject_worldgen_procgen_metadata.
+        loop_costs is a per-player map of a loop-mode procgen rules.json
+        (P1a: `{"<p>": {regions, locations, defaults, ...}}`). Carrying it
+        through the export keeps loop mode alive across the round-trip — the
+        runtime loops module enters loop mode for a slot whenever that slot's
+        entry is present, so a world re-derived from an exported preset would
+        otherwise silently lose it. Mirrors _inject_worldgen_procgen_metadata.
         """
-        if 'loop_costs' in export_data:
-            return
+        loop_costs = self._read_worldgen_package_json(world, '_worldgen_loop_costs.json', 'worldgen loop costs')
+        if loop_costs is not None:
+            export_data.setdefault('loop_costs', {})[str(player)] = loop_costs
+
+    def _read_worldgen_package_json(self, world, filename: str, label: str):
+        """The parsed `filename` beside the worldgen world's package, or None
+        when the package ships none (or it cannot be read — logged)."""
         try:
             world_module = type(world).__module__
             module = importlib.import_module(world_module)
         except ImportError:
-            return
+            return None
         module_file = getattr(module, '__file__', None)
         if not module_file:
-            return
-        loop_costs_path = os.path.join(
-            os.path.dirname(module_file), '_worldgen_loop_costs.json')
-        if not os.path.exists(loop_costs_path):
-            return
+            return None
+        path = os.path.join(os.path.dirname(module_file), filename)
+        if not os.path.exists(path):
+            return None
         try:
-            with open(loop_costs_path, encoding='utf-8') as f:
-                loop_costs = json.load(f)
+            with open(path, encoding='utf-8') as f:
+                return json.load(f)
         except (json.JSONDecodeError, OSError) as exc:
-            logger.warning(f"Failed to read worldgen loop costs at {loop_costs_path}: {exc}")
-            return
-        export_data['loop_costs'] = loop_costs
+            logger.warning(f"Failed to read {label} at {path}: {exc}")
+            return None
 
     def _discover_worldgen_helpers_for_preservation(self, world) -> None:
         """Discover helper function names from a worldgen Rules.py and auto-preserve them.

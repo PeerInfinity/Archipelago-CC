@@ -1353,8 +1353,9 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     is_vanilla = json_data.get('is_vanilla', False)
 
     # Procgen-emitted rules.json marks locked locations as authored intent
-    # (always place via place_locked_item, even non-events).
-    honor_locked_placements = bool(json_data.get('procgen_metadata'))
+    # (always place via place_locked_item, even non-events). The block is
+    # per player (P1a): this slot's entry decides.
+    honor_locked_placements = bool(json_data.get('procgen_metadata', {}).get(str(player_id)))
 
     # Get preset label for frontend display (e.g., "canth s4")
     preset_label = json_data.get('preset_label', '')
