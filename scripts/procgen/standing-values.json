@@ -1455,19 +1455,19 @@
       "total": "success"
     },
     "roster: --tier=full": {
-      "value": "151 tapes 3264/0/0",
+      "value": "154 tapes 3334/0/0",
       "command": null,
       "kind": "identity",
       "cheap": false,
       "quoted": true,
-      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 27 tape(s) 621/0/0 MEASURED @0720f890d990b6be1998ae4f42e41b398d3e8a94 [channel: headless] · map-walk 21 tape(s) 449/0/0 MEASURED @0720f890d990b6be1998ae4f42e41b398d3e8a94 [channel: headless] · mechanic 103 tape(s) 2194/0/0 MEASURED @0720f890d990b6be1998ae4f42e41b398d3e8a94 [channel: headless]. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all. ⛓ Carried by: CI run 36302890473 @0720f890d9 (seedling-full-tier.yml, tier=full, 10 shards, headless logic-only; merge ALL CHECKS PASSED 3661/0/46, RESUME reused 151/151, 0 to replay; the part = the merge log's PASS:/FAIL:/SKIP: lines attributed to THIS category's tapes — the method that reproduces the banked map-walk 449/0/0 and mechanic 2194/0/0 — cross-tape lines 397/0/46 excluded).",
-      "measuredAt": "0720f890d990b6be1998ae4f42e41b398d3e8a94",
+      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 30 tape(s) 691/0/0 MEASURED @9d1d030c6a9d227cee5b72d6fdb026c112cacf2d [channel: headless] · map-walk 21 tape(s) 449/0/0 MEASURED @0720f890d990b6be1998ae4f42e41b398d3e8a94 [channel: headless] · mechanic 103 tape(s) 2194/0/0 MEASURED @0720f890d990b6be1998ae4f42e41b398d3e8a94 [channel: headless]. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all. ⛓ Carried by: CI run 36350764662 @9d1d030c6a (seedling-full-tier.yml, tier=campaign, 4 shards, headless logic-only, the DEFAULT build seedling_bot_ap_p4d; merge ALL CHECKS PASSED 903/0/69, RESUME reused 30/30; the part = the merge log's PASS:/FAIL:/SKIP: lines attributed to THIS category's tapes — the method that reproduces 36302890473's banked 621/0/0 — cross-tape lines excluded. The candidate p4e gave the same 691/0/0 in run 36350463366, NOT quoted here: this row is the default build's) ; CI run 36302890473 @0720f890d9 (seedling-full-tier.yml, tier=full, 10 shards, headless logic-only; merge ALL CHECKS PASSED 3661/0/46, RESUME reused 151/151, 0 to replay; the part = the merge log's PASS:/FAIL:/SKIP: lines attributed to THIS category's tapes — the method that reproduces the banked map-walk 449/0/0 and mechanic 2194/0/0 — cross-tape lines 397/0/46 excluded).",
+      "measuredAt": "9d1d030c6a9d227cee5b72d6fdb026c112cacf2d",
       "categories": {
         "campaign": {
-          "tapes": 27,
-          "value": "621/0/0",
-          "measuredAt": "0720f890d990b6be1998ae4f42e41b398d3e8a94",
-          "coveredBy": "CI run 36302890473 @0720f890d9 (seedling-full-tier.yml, tier=full, 10 shards, headless logic-only; merge ALL CHECKS PASSED 3661/0/46, RESUME reused 151/151, 0 to replay; the part = the merge log's PASS:/FAIL:/SKIP: lines attributed to THIS category's tapes — the method that reproduces the banked map-walk 449/0/0 and mechanic 2194/0/0 — cross-tape lines 397/0/46 excluded)",
+          "tapes": 30,
+          "value": "691/0/0",
+          "measuredAt": "9d1d030c6a9d227cee5b72d6fdb026c112cacf2d",
+          "coveredBy": "CI run 36350764662 @9d1d030c6a (seedling-full-tier.yml, tier=campaign, 4 shards, headless logic-only, the DEFAULT build seedling_bot_ap_p4d; merge ALL CHECKS PASSED 903/0/69, RESUME reused 30/30; the part = the merge log's PASS:/FAIL:/SKIP: lines attributed to THIS category's tapes — the method that reproduces 36302890473's banked 621/0/0 — cross-tape lines excluded. The candidate p4e gave the same 691/0/0 in run 36350463366, NOT quoted here: this row is the default build's)",
           "channel": "headless"
         },
         "map-walk": {
