@@ -77,7 +77,7 @@ takeBoxLockOrExit({ name: 'probe-seedling-boot-reset.mjs', kind: 'browser' });
 const args = process.argv.slice(2);
 const arg = (n, d) => (args.find((a) => a.startsWith(`--${n}=`)) || `=${d}`).split('=').slice(1).join('=');
 const HOST = arg('host', 'http://localhost:8000');
-const PAGE_NAME = process.env.SEEDLING_PAGE || arg('page', 'seedling_bot_ap_p4d');
+const PAGE_NAME = process.env.SEEDLING_PAGE || arg('page', 'seedling_bot_ap_p4e');
 const EXPECT = arg('expect', '');
 const PAGE_URL = `${HOST}/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 
