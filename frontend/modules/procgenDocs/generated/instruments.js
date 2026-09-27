@@ -9676,6 +9676,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "wait-for-box"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "win"
                 }
             ],
             "inheritedFlags": [
@@ -10141,6 +10147,12 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "walk-report"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "win"
                 }
             ],
             "inheritedFlags": [

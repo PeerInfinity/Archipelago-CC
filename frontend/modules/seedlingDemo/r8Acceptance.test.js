@@ -301,6 +301,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // ⛓ R9 slice L15: the L15 crossing, exposed at its L16 ARRIVAL
             // (seven bobs, entered on the last tick and never walked).
             'r9-solve-15',
+            // ⛓⛓⛓ R9 slice L16: the L16 crossing — the first campaign segment that
+            // WALKS a bridged trap room (the roster stepped, seven bobs chasing).
+            'r9-solve-16',
             // ⛓⛓⛓ R9 slice 12c: the dash RECT's driven witness — the SEVENTH
             // slice running that this guard has named the slice's own addition
             // by name (trap 89), on the first unfiltered run after the tape
@@ -331,14 +334,15 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ R9 slice 12c‴ takes it to 15 — the witness pair is TWO tapes in
         // one bridged room, declared up front rather than found by this check.
         // ⛓ R9 slice L15 takes it to 16 — the L15 crossing, exposed at its L16
-        // arrival.
-        expect(out.exposed).toBe(16);
+        // arrival. ⛓ R9 slice L16 takes it to 17 — the L16 crossing itself.
+        expect(out.exposed).toBe(17);
         expect(out.tapes).toEqual([
             'r7-act2-5', 'r7-act2-6', 'r7-act2-full',
             'r8-hammer-arm', 'r8-l6-bob-contact', 'r8-solve-3', 'r8-solve-4',
             'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
             'r9-l6-harmless-control', 'r9-l6-harmless-press',
             'r9-l6-sword-dash-hit', 'r9-solve-13', 'r9-solve-14', 'r9-solve-15',
+            'r9-solve-16',
         ]);
     });
 
@@ -413,6 +417,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r9-solve-14': { tape: {}, levels: [14] },
             // ⛓ R9 slice L15's crossing, at its declared room (the L16 arrival).
             'r9-solve-15': { tape: {}, levels: [16] },
+            // ⛓ R9 slice L16's crossing, at its declared room — the mirror rule.
+            'r9-solve-16': { tape: {}, levels: [16] },
             // ⛓⛓ R9 slice 12c's dash-rect witness, at its declared room — the
             // same mirror rule, for the third time in three slices that added a
             // ledger row. A row in the ledger and not in this fixture makes the
