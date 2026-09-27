@@ -678,6 +678,23 @@ export function auditPress(world, rect, {
  *   - a bridge decrement starts an opening the run did not plan.
  */
 /**
+ * ⛓⛓⛓ R9 SLICE L16 — A DECLARED FACT, WITH ITS LINE: a sword swing at a rope
+ * is NOT refused by a wall between the player and the rope.
+ *
+ * `Player.slash` (`Player.as:916`) gates `genericHit` on
+ *     !FP.world.collideLine("Solid", x, y, v[i].x, v[i].y) || hasGhostSword
+ *         || v[i].type == "Solid" || v[i].type == "Rope" || v[i] is Flyer
+ * and `RopeStart`'s ctor writes `type = "Rope"` (`RopeStart.as:25`). So the
+ * line-of-sight half of the filter never runs for a rope; only the REACH half
+ * does. `levelRun`'s sword arm for `RopeStart` therefore asks no line at all,
+ * and `presses.test.js` presses a rope with a solid on that line to say so.
+ */
+export const ROPE_LINE_WAIVED = Object.freeze({
+    type: 'Rope',
+    src: 'Player.as:916 (`|| v[i].type == "Rope"`) + Puzzlements/RopeStart.as:25',
+});
+
+/**
  * What this rung DOES with each arm `genericHit` can take — the policy the
  * executor enforces, one entry per `PRESS_ARMS` key.
  *
@@ -821,15 +838,20 @@ export const PRESS_ARM_POLICY = Object.freeze({
     // arm takes no `t`, so either weapon pulls a rope; the route chose fire
     // because a SWORD press would consult the `blockedLine` oracle and then
     // waive it (`Player.as:916` exempts `type == "Rope"`), and that oracle
-    // is one nothing else on this route needs. So the SWORD verdict stays
-    // `refused` — accurately, since no fixture makes one.
+    // is one nothing else on this route needs.
+    // ⛓⛓⛓ R9 SLICE L16 (kickoff §59.4 D1): AND NOW THE SWORD's TOO. L16's
+    // arrow lanes fall silent only when `rope@32,16` publishes group 0, and
+    // the campaign holds a sword, not the fire wand. The arm's BODY is the
+    // fire arm's (`levelRun`'s `pullRope`); the one thing a sword adds is
+    // `Player.slash`'s filter, whose reach half applies and whose line half
+    // is waived for a rope — `ROPE_LINE_WAIVED`, below.
     RopeStart: {
-        policy: 'refused',
-        why: 'SHRINKS to a one-cell solid and writes persistence, and its group publication '
-            + 'arms a Pulser. Ruled an ARM rather than a clear at R5 slice 5 step 2 '
-            + '(`r5Totem.TOTEM_ROPE`) and BUILT at slice 7 — for the FIRE press '
-            + '(`FIRE_ARM_POLICY.RopeStart`, `r5Shaft.ROPE_PULL`). A sword press at one '
-            + 'is still unmodelled and still refused.',
+        policy: 'modelled',
+        why: 'the pull — `(e as RopeStart).hit()` takes no `t`: shrink to the pulley cell, '
+            + '`Game.setPersistence(tag, false)`, and `set activate` publishes the group '
+            + '(`levelRun`\'s `pullRope`, the FIRE arm\'s body since R5 slice 7). A sword '
+            + 'press passes `Player.slash`\'s REACH gate and is exempt from its LINE gate '
+            + '(`ROPE_LINE_WAIVED`).',
     },
     // ⛓⛓⛓ R6 SLICE 5: the sword arm that kills the Shieldspire.
     //
