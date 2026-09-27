@@ -6,6 +6,7 @@ import {
     SEEDLING_SPIRAL_ROOM_STATE, SEEDLING_SPHERE_ROOM_STATE,
     SEEDLING_GENERATED_ROOM_STATE, SEEDLING_GENERATED_LEAF_STATE, SEEDLING_GENERATED_HOST_STATE,
     SEEDLING_ATLAS_HOST_STATE,
+    SEEDLING_ATLAS_LOCATION_STATE,
     capturePresetState, applyPresetState, getPresetById, restoredActivePresetId, groupShippedPresets,
     userPresetId, loadUserPresets, saveUserPreset, deleteUserPreset,
 } from './presetDefs.js';
@@ -209,6 +210,17 @@ describe('SHIPPED_PRESETS', () => {
         expect(p.state.mode).toBe('sphereGrowth');
         expect(p.state.params.startSubstrate).toBe('flash_seedling_gen');
         expect(p.state.substrateQuotas).toEqual({ maze: 2, flash_seedling_gen: 1 });
+    });
+
+    it('seedling atlas location demo IS the committed preset\'s state — a REAL room\'s chest as a check (G7)', () => {
+        const p = getPresetById('shipped:seedling-atlas-location-demo');
+        // ONE spelling: the drop-down, the committed seedling_atlas_location preset
+        // and its box gate all read this object.
+        expect(p.state).toBe(SEEDLING_ATLAS_LOCATION_STATE);
+        expect(p.group).toBe(PRESET_GROUPS.sphereGrowth);
+        expect(p.state.mode).toBe('sphereGrowth');
+        expect(p.state.params.startSubstrate).toBe('flash_seedling');
+        expect(p.state.substrateQuotas).toEqual({ maze: 2, flash_seedling: 1 });
     });
 
     it('seedling atlas host demo IS the committed preset\'s state — a REAL room hosting a gated child (G6)', () => {
