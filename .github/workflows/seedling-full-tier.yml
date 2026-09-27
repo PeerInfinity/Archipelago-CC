@@ -47,6 +47,12 @@ on:
         description: The number of shard jobs the tier is split across.
         type: number
         default: 10
+      page:
+        description: >-
+          The wasm build to drive (SEEDLING_PAGE), e.g. seedling_bot_ap_p4e for the
+          candidate. Empty = the differential's own default (the lab's build).
+        type: string
+        default: ''
 
 jobs:
   plan:
@@ -143,6 +149,7 @@ jobs:
         env:
           TIER: ${{ inputs.tier }}
           SHARD: ${{ matrix.shard }}/${{ inputs.shards }}
+          SEEDLING_PAGE: ${{ inputs.page }}
         run: |
           set -o pipefail
           python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
@@ -271,6 +278,7 @@ jobs:
         env:
           TIER: ${{ inputs.tier }}
           TAPES: ${{ needs.plan.outputs.tapes }}
+          SEEDLING_PAGE: ${{ inputs.page }}
         run: |
           set -o pipefail
           python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
