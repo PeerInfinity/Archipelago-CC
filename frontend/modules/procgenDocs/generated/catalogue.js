@@ -1269,7 +1269,8 @@ export const CATALOGUE = frz({
         "blockpocket",
         "chamber",
         "arena",
-        "rockgate"
+        "rockgate",
+        "shortcut"
     ],
     "elementSubsetSeparator": "|",
     "elements": [
@@ -1412,6 +1413,15 @@ export const CATALOGUE = frz({
             ],
             "params": [],
             "why": "The ROCK GATE (seedling substrate S1): a `breakablerock` on a main-path cut with its wall GROWN to seal the room, broken by a sword swing from its start side. Certified by the existing `break` (R9 L15). No body, so no pocket and no A10."
+        },
+        {
+            "head": "shortcut",
+            "module": "rock-shortcut",
+            "needs": [
+                "hasSword"
+            ],
+            "params": [],
+            "why": "The SHORTCUT (arc-5 §4.7, seedling substrate S1): a `breakablerock` on the SHORT ARC of a cycle the room already has — with it unbroken the goal is still reachable, the long way. The differential grades the sword SHORTENS. Realised as a rock, not a kill lock: an optional kill cannot ship (A10)."
         }
     ],
     "itemsElementsNeed": [

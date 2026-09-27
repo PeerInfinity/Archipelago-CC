@@ -37,9 +37,10 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
         /** ⛓ arc 5 slice 3 added the `chamber` head and slice 4 the `arena` —
          *  the roster is asserted LITERALLY (never `toContain`) so a head
          *  arriving without a decision reds a row rather than sliding in.
-         *  ⛓ Seedling substrate S1 added `rockgate` (the decision: plan §2.1 G-a). */
+         *  ⛓ Seedling substrate S1 added `rockgate` and `shortcut` (plan §2.1 G-a, G-b). */
         expect(ELEMENT_NAMES).toEqual([
             'none', 'guard', 'killgate', 'blockpocket', 'chamber', 'arena', 'rockgate',
+            'shortcut',
         ]);
         expect(parseElementSpec('killgate')).toEqual({ name: 'killgate' });
         expect(parseElementSpec('blockpocket')).toEqual({ name: 'blockpocket' });
@@ -389,6 +390,16 @@ describe('⛓⛓ THE MAPPING — ids to Seedling parts, and ONE tag not three', 
             { type: 'breakablerock', tx: 5, ty: 2, attrs: { tag: '4' } },
         ]);
         expect(out.tags).toEqual({ rock: 4 });
+    });
+
+    it('`rockshortcut_door` -> the SAME `breakablerock` — only the law differs', () => {
+        const out = seedlingOnConnectorEntities({
+            placed: { entities: [{ role: 'obstacle', x: 4, y: 1, id: 'rockshortcut_door' }] },
+            tagFor: () => 2,
+        });
+        expect(out.entities).toEqual([
+            { type: 'breakablerock', tx: 4, ty: 1, attrs: { tag: '2' } },
+        ]);
     });
 
     /** ⛔ AN ID THE TABLE DOES NOT CARRY IS A THROW, never a dropped entity. */

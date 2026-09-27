@@ -233,6 +233,24 @@ describe('the ROCK SHORTCUT — the rock gate with the law swapped', () => {
         expect(p.cost.stepsWalled).toBeGreaterThan(p.cost.stepsOpen);
     });
 
+    /**
+     * ⛓⛓ THE LONG WAY IS DEMANDED (S1's W2: pass 2 painted it shut on 34 of 87
+     * placed shortcuts). On the loop the demand is the bottom detour — the legs
+     * and the long arc — and never a cell the element owns.
+     */
+    it('⛓⛓ its `demand` is the long way round, all `floor`, none of its own cells', () => {
+        const room = probeFor(LOOP_ROOM);
+        const p = ROCK_SHORTCUT.instantiate(rngFor(3), {}).construct(site(room));
+        expect(p.demand.length).toBeGreaterThan(0);
+        expect(p.demand.every((d) => d.must === 'floor')).toBe(true);
+        const keys = new Set(p.demand.map((d) => `${d.x},${d.y}`));
+        expect(keys.has('5,5')).toBe(true);                      // the long arc
+        for (const c of [...p.doorCells, ...p.clearer]) expect(keys.has(`${c.x},${c.y}`)).toBe(false);
+        // the rock GATE, whose door is a cut, demands nothing
+        const g = ROCK_GATE.instantiate(rngFor(1), {}).construct(site(probeFor(CORRIDOR_WE)));
+        expect(g.demand).toEqual([]);
+    });
+
     it('⛔ on a CORRIDOR every candidate is a cut — `the-shortcut-is-a-cut`', () => {
         const out = buildSoloDoor(probeFor(CORRIDOR_WE), { law: LAW_SHORTCUT });
         expect(out.refused.reason).toBe('the-shortcut-is-a-cut');

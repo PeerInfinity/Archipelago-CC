@@ -56,6 +56,22 @@ describe('the item vocabulary, read from the table', () => {
         expect(headsNeeding('hasShield')).toEqual([]);
     });
 
+    /**
+     * ⛓⛓ S1, D2 — THE `shortcut` HEAD NEEDS THE SWORD AND IS NEVER FORCED BY
+     * `require`. Its `needs` is the seam's gate; its LAW says the goal stays
+     * reachable without it, so it can only ever grade SHORTENS. ⛔ Asserted off
+     * the element's declared law, on a table that has only the shortcut, so the
+     * filter is shown to be the law and not the head name.
+     */
+    it('⛔ a SHORTCUT-law head is never a head `require` can force', () => {
+        expect(ELEMENT_TABLE.shortcut.needs).toEqual(['hasSword']);
+        expect(headsNeeding('hasSword')).not.toContain('shortcut');
+        const ONLY = Object.freeze({ cut: ELEMENT_TABLE.shortcut });
+        expect(headsNeeding('hasSword', ONLY)).toEqual([]);
+        const d = resolveRequireDirective({ require: ['hasSword'], items: SWORD, table: ONLY });
+        expect(d.refused.reason).toBe('no-element-needs-this-item');
+    });
+
     it('⛓⛓ A TABLE WITH TWO NEEDING HEADS OFFERS BOTH — the derivation is not a constant',
         () => {
             expect(headsNeeding('hasSword', TWO)).toEqual(['alpha', 'beta', 'both']);

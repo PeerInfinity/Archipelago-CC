@@ -45,7 +45,8 @@ import { BLOCK_POCKET } from './elements/blockPocket.js';
 import { KILL_GATE } from './elements/killGate.js';
 import { OPEN_CHAMBER } from './elements/openChamber.js';
 import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
-import { ROCK_GATE } from './elements/soloDoor.js';
+import { ROCK_GATE, ROCK_SHORTCUT } from './elements/soloDoor.js';
+import { LAW_SHORTCUT } from './elements.js';
 import { parseRequireList } from './areaSpec.js';
 import {
     assertParamSchema, enumerateValues, isParamSubset, paramSubset,
@@ -244,6 +245,36 @@ export const ELEMENT_TABLE = Object.freeze({
         why: 'The ROCK GATE (seedling substrate S1): a `breakablerock` on a main-path cut with '
             + 'its wall GROWN to seal the room, broken by a sword swing from its start side. '
             + 'Certified by the existing `break` (R9 L15). No body, so no pocket and no A10.',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['hasSword']),
+    }),
+    /**
+     * ⛓⛓⛓ **THE SHORTCUT, REGISTERED AT LAST — AS A ROCK** (seedling substrate
+     * S1, D2; arc 5 slice 5's "ONE LINE on the day any one of the three walls
+     * moves"). The wall that moved is the first: the solver DERIVES `break` now
+     * (R9 L15), so a rock on a cycle's short arc is a shortcut it can see —
+     * measured at S1's W0 on arc 5's own loop room, **148 ticks with the sword,
+     * 244 without** (§13.6's probe 1 read 244/244 before the verb existed).
+     *
+     * ⛔ THE HEAD IS `soloDoor.ROCK_SHORTCUT`, NOT `shortcut.js`'s kill-lock
+     * element, and that is the other two walls still standing: an OPTIONAL kill
+     * either exhausts the combat ladder or throws A10 at the dialogued goal with
+     * the spinner alive. A rock has no body, so neither can fire. `shortcut.js`
+     * stays the written, unregistered kill-lock mechanism.
+     *
+     * ⛓ `needs: ['hasSword']` is the SEAM's gate (pre-sword the rock is a wall
+     * and the room is a plain loop — nothing to certify as a shortcut). ⛔ It is
+     * NOT a requirement, and `headsNeeding` says so by the element's declared
+     * LAW: a shortcut is BY DEFINITION a level that solves without the item, so
+     * a `require` directive can never be met by one (its grade is SHORTENS, never
+     * STRONG).
+     */
+    shortcut: Object.freeze({
+        element: ROCK_SHORTCUT,
+        why: 'The SHORTCUT (arc-5 §4.7, seedling substrate S1): a `breakablerock` on the SHORT '
+            + 'ARC of a cycle the room already has — with it unbroken the goal is still '
+            + 'reachable, the long way. The differential grades the sword SHORTENS. Realised as '
+            + 'a rock, not a kill lock: an optional kill cannot ship (A10).',
         extra: Object.freeze([]),
         needs: Object.freeze(['hasSword']),
     }),
@@ -781,10 +812,22 @@ export function parseElementSpec(value) {
 export const ITEMS_ELEMENTS_NEED = Object.freeze([...new Set(
     Object.values(ELEMENT_TABLE).flatMap((e) => e.needs ?? []))].sort());
 
-/** The heads whose `needs` include this item, in the TABLE's own order. */
+/**
+ * The heads whose `needs` include this item, in the TABLE's own order.
+ *
+ * ⛓ S1 — **A SHORTCUT-LAW ELEMENT IS NEVER A HEAD THAT CAN MEET A DIRECTIVE.**
+ * Its `needs` is the seam's item gate (what opens it), and its law is that the
+ * goal stays reachable WITHOUT opening it — so the differential grades it
+ * SHORTENS, never STRONG, and a directive that forced it would be refused
+ * `the-item-is-not-required` on every seed. ⛔ Read off the element's DECLARED
+ * `law`, not its head name (the `ELEMENT_LAWS` rule: one table of which
+ * elements are shortcuts). A table row with no `element` (a test double) is
+ * read as the cut law.
+ */
 export function headsNeeding(item, table = ELEMENT_TABLE) {
     return Object.freeze(Object.keys(table)
-        .filter((n) => (table[n].needs ?? []).includes(item)));
+        .filter((n) => (table[n].needs ?? []).includes(item)
+            && table[n].element?.law !== LAW_SHORTCUT));
 }
 
 /**
@@ -858,7 +901,7 @@ export function resolveRequireDirective({ require, elements, items, table = ELEM
      * block), so two required items must be carried by ONE head.
      */
     const heads = Object.keys(table)
-        .filter((n) => asked.every((item) => (table[n].needs ?? []).includes(item)));
+        .filter((n) => asked.every((item) => headsNeeding(item, table).includes(n)));
     if (heads.length === 0) {
         return out(Object.freeze({
             reason: 'no-single-element-can-carry-every-required-item',

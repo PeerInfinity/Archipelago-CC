@@ -2112,7 +2112,7 @@ export const REFUSALS = frz({
             "file": "frontend/modules/procgenCore/elements/soloDoor.js",
             "inTheConstant": true,
             "kind": "constant",
-            "meaning": "no cell of the …-cell main path can carry this one-obstacle …: … interior path cell(s) tried, the deepest stage any reached was \"…\".",
+            "meaning": null,
             "name": "wall-does-not-seal",
             "named": true,
             "scanFound": true,
