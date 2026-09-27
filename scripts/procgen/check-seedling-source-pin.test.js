@@ -132,6 +132,31 @@ describe('check-seedling-source-pin', () => {
         expect(res.rows[0].msg).toMatch(/names 2 build\(s\) with role "default"/);
     });
 
+    /** ⛓ R9 slice P4E: a `candidate` build from the fork, compiled from `commit`. */
+    const withCandidate = (root, commit) => {
+        const m = JSON.parse(readFileSync(join(root, BUILDS_JSON), 'utf8'));
+        m.builds.push({ name: 'next_build', role: 'candidate',
+            source: { repo: FORK, branch: 'ap-m1', commit } });
+        writeFileSync(join(root, BUILDS_JSON), JSON.stringify(m));
+    };
+
+    it('⛓ P4E: with a CANDIDATE, the gitlink pins ITS source and the default must be an ancestor', () => {
+        const { root, shas } = fixture({ gitlink: 'later' });
+        withCandidate(root, shas.later);
+        const res = checkSourcePin({ repo: root });
+        expect(kinds(res.rows)).toEqual(['PASS', 'PASS', 'PASS', 'PASS']);
+        expect(res.rows[0].msg).toMatch(/EQUALS the candidate build next_build's source\.commit/);
+        expect(res.rows.some((r) => /bot_build's source\.commit .* IS an ancestor/.test(r.msg))).toBe(true);
+    });
+
+    it('⛔ P4E: a candidate with the gitlink left at the DEFAULT → (i) FAIL', () => {
+        const { root, shas } = fixture();
+        withCandidate(root, shas.later);
+        const res = checkSourcePin({ repo: root });
+        expect(res.rows[0]).toMatchObject({ kind: 'FAIL' });
+        expect(res.rows[0].msg).toMatch(/is NOT the candidate build next_build/);
+    });
+
     it('an UNINITIALISED submodule is a REFUSAL: SKIP, exit 0, 0/0/1', () => {
         const { root } = fixture({ initialised: false });
         const res = checkSourcePin({ repo: root });

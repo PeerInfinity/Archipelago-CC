@@ -13,7 +13,10 @@
  * build runs — so this gate holds them together:
  *
  *   (i)   the gitlink of `vendor/seedling` at HEAD EQUALS the `source.commit`
- *         of the build whose `role` is `default` (the build the host drives);
+ *         of the build whose `role` is `default` (the build the host drives) —
+ *         ⛓ or, when the manifest pins a `candidate` beside it (R9 slice P4E,
+ *         the next default), THAT build's: the pinned tree must contain every
+ *         build's source (row iii), and the candidate's is the newest;
  *   (ii)  the checked-out submodule IS at that gitlink (a checkout that drifted
  *         feeds every extractor a different tree than the one pinned);
  *   (iii) every OTHER build compiled from the fork has a `source.commit` that
@@ -106,17 +109,21 @@ export function checkSourcePin({ repo }) {
 
     const builds = JSON.parse(readFileSync(manifestPath, 'utf8')).builds ?? [];
     const fromFork = builds.filter((b) => b.source?.repo === SEEDLING_REPO);
-    const defaults = fromFork.filter((b) => b.role === 'default');
+    const candidates = fromFork.filter((b) => b.role === 'candidate');
+    // ⛓ P4E: a candidate, when there is exactly one, is the build the submodule
+    // pins; otherwise the default is. Two candidates is a refusal by name.
+    const pinRole = candidates.length > 0 ? 'candidate' : 'default';
+    const defaults = fromFork.filter((b) => b.role === pinRole);
 
-    // (i) the gitlink is the default build's source
+    // (i) the gitlink is the pinning build's source
     if (defaults.length !== 1) {
-        row('FAIL', `${BUILDS_JSON} names ${defaults.length} build(s) with role "default" compiled from `
+        row('FAIL', `${BUILDS_JSON} names ${defaults.length} build(s) with role "${pinRole}" compiled from `
             + `${SEEDLING_REPO} — exactly one is the build the submodule pins`);
     } else {
         const [d] = defaults;
         row(d.source.commit === gitlink ? 'PASS' : 'FAIL',
             `(i) the ${SEEDLING_SUBMODULE} gitlink ${short(gitlink)} ${d.source.commit === gitlink ? 'EQUALS' : 'is NOT'} `
-            + `the default build ${d.name}'s source.commit ${short(d.source.commit)}`
+            + `the ${pinRole} build ${d.name}'s source.commit ${short(d.source.commit)}`
             + (d.source.commit === gitlink ? '' : ' — bump the gitlink to the source the build was compiled from, '
                 + 'or rebuild and re-record the manifest'));
     }
