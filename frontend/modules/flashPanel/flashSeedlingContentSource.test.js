@@ -128,6 +128,41 @@ describe('flash_seedling — the content source', () => {
             .toEqual(want.map((l) => [l.name, l.name, l.item.name]));
     });
 
+    // ⛓⛓ APWORLD SUBSTRATE CHANGE R5d — the document's placements, by location NAME.
+    describe('locationSpecs: the document owns the item, the room the geometry', () => {
+        const withLoc = placeable.findIndex(([name]) => compiled.rules.regions['1'][name].locations.length > 0);
+        const own = compiled.rules.regions['1'][placeable[withLoc][0]].locations;
+        const items = (specs) => entry.extractZoneRules(withLoc, { region_id: 'r', exitSides: [], locationSpecs: specs })
+            .locations.map((l) => [l.global_name, l.item]);
+
+        it('a spec naming a room location answers the SPEC\'s item (null included); the rest of the answer does not move', () => {
+            const bare = entry.extractZoneRules(withLoc, { region_id: 'r', exitSides: [] });
+            const got = entry.extractZoneRules(withLoc, {
+                region_id: 'r', exitSides: [], locationSpecs: [{ id: 7, name: own[0].name, item: 'key_blue' }],
+            });
+            expect(got.locations[0].item).toBe('key_blue');
+            expect({ ...got, locations: got.locations.map(({ item, ...l }) => l) })
+                .toEqual({ ...bare, locations: bare.locations.map(({ item, ...l }) => l) });
+            expect(items([{ name: own[0].name, item: null }])[0]).toEqual([own[0].name, null]);
+            expect(items([{ name: own[0].name }])[0]).toEqual([own[0].name, null]);
+        });
+
+        it('no spec (absent, empty) → the room\'s own vanilla item', () => {
+            const vanilla = own.map((l) => [l.name, l.item.name]);
+            expect(items(undefined)).toEqual(vanilla);
+            expect(items([])).toEqual(vanilla);
+        });
+
+        it('a spec naming a location the room LACKS is ignored (a spec without a name too)', () => {
+            expect(items([{ name: 'region_2_4__loc_0__1_1', item: 'victory' }, { item: 'key_red' }]))
+                .toEqual(own.map((l) => [l.name, l.item.name]));
+        });
+
+        it('a matched spec carrying the vanilla item changes nothing', () => {
+            expect(items([{ name: own[0].name, item: own[0].item.name }])).toEqual(own.map((l) => [l.name, l.item.name]));
+        });
+    });
+
     it('applyPipelineConfig installs cfg.atlasDoc and refuses one that does not validate, by name', () => {
         // Keep the FIRST connection and the two regions it joins: each end becomes a room with one door.
         const one = structuredClone(SEEDLING_STARTER_ATLAS);

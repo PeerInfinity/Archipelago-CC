@@ -268,8 +268,20 @@ function bindDoorsToSides(zone, regionId, exitSides) {
  * `bound_doors` — `{<side>: door}` — because `buildPresetSidecars` overwrites a
  * payload's `exits` with the engine's own exit table before serializing; this
  * entry's `serializeWorld` joins the two back into the sidecar's exit list.
+ *
+ * ⛓⛓ APWORLD SUBSTRATE CHANGE R5d — **THE DOCUMENT OWNS THE PLACEMENTS, THE ROOM
+ * THE GEOMETRY.** `locationSpecs` (`[{name, item}]`, optional) are the items a
+ * document places on the room's locations (the hub's atlas-room source hands
+ * the region's current ones in). A room location whose NAME a spec carries
+ * answers the SPEC's item — `null` included: the document placing nothing is a
+ * placement too; the room's own (vanilla) item stays the default for a location
+ * no spec names, and a spec naming a location the room lacks is ignored. The
+ * sphere route (`generateZoneForSpecs`) has always answered the spec's item; a
+ * Seedling chest holds any item (the atlas arm binds it where it stands, no
+ * rewrite), so no spec item is refused. The payload names no item — the arm
+ * reads the item off the rules at load — so it does not move.
  */
-function extractZoneRules(zoneIdx, { region_id: regionId, exitSides = [] } = {}) {
+function extractZoneRules(zoneIdx, { region_id: regionId, exitSides = [], locationSpecs = [] } = {}) {
     const source = contentSource();
     const zone = source.zones[zoneIdx];
     if (!zone) {
@@ -289,11 +301,14 @@ function extractZoneRules(zoneIdx, { region_id: regionId, exitSides = [] } = {})
             + 'neighbour(s), or install an atlas whose room at this ordinal has more wired doors.');
     }
     const { payload, exitRules, notes } = bindDoorsToSides(zone, regionId, exitSides);
+    const placed = new Map((Array.isArray(locationSpecs) ? locationSpecs : [])
+        .filter((spec) => typeof spec?.name === 'string')
+        .map((spec) => [spec.name, spec.item ?? null]));
     return {
         locations: zone.locations.map((loc) => ({
             id: loc.name,
             global_name: loc.name,
-            item: loc.item?.name ?? null,
+            item: placed.has(loc.name) ? placed.get(loc.name) : (loc.item?.name ?? null),
             ...(loc.access_rule ? { access_rule: loc.access_rule } : {}),
         })),
         exitRules,
