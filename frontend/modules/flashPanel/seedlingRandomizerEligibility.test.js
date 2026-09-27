@@ -267,9 +267,13 @@ describe('the THREE SHIPPED PRESETS against the SHIPPED manifest', () => {
         // ⛓ Exactly one NON-candidate build carries the class; a second would
         // mean a default moved without anyone saying so. ⛓ R9 slice P4E: a
         // `candidate` (the next default, pinned beside it) carries every
-        // capability the default does, so it is counted apart.
+        // capability the default does, so it is counted apart. ⛓ R9 slice DEF:
+        // so is a `control` (the old default, pinned as the negative arm for the
+        // capabilities its successor added — p4d keeps `apitem`). And the one
+        // left IS the default: a moved default is said out loud in `role`.
         const capable = manifest.builds.filter((b) => b.capabilities?.includes(AP_ITEM_CAPABILITY)
-            && b.role !== 'candidate');
+            && b.role !== 'candidate' && b.role !== 'control');
         expect(capable.map((b) => b.name)).toHaveLength(1);
+        expect(capable[0].role).toBe('default');
     });
 });
