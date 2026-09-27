@@ -228,6 +228,7 @@ async function main() {
         buildRulesJson,
         stringifyRulesJson,
         computeSourceCounts,
+        ruleItemWarnings,
     } = await import(enginePath);
 
     let gridDims = autoSizeGrid(source, args.minGridDim);
@@ -338,6 +339,7 @@ async function main() {
         for (const w of attributionWarnings) console.log(`  warn: ${w}`);
     }
     for (const w of menuWarnings) console.log(`  warn: ${w}`);
+    for (const w of ruleItemWarnings(rulesJson, '1')) console.log(`  warn: ${w}`);
     console.log(`Wrote ${args.out}`);
 }
 

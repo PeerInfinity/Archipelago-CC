@@ -34,6 +34,7 @@ import {
     finalizeTopDown,
     buildRulesJson,
     computeSourceCounts,
+    ruleItemWarnings,
     serializeGrid,
     deserializeGrid,
 } from './procgenPipelineEngine.js';
@@ -143,6 +144,8 @@ function stepCompile(env, { onProgress = null } = {}) {
     env.compile = {
         rulesJson, enriched, attributionWarnings: attributionWarnings ?? [],
         menuWarnings: menuWarnings ?? [],
+        // ⛓ B1 — a rule naming an item neither the pool nor the source defines.
+        ruleItemWarnings: ruleItemWarnings(rulesJson, '1'),
     };
     env.completed = 3;
     return env;

@@ -4574,7 +4574,7 @@ export class ProcgenPipelineUI {
         const st = this._tdState;
         await runTopDownStep('compile', st,
             { onProgress: (ev) => this._onGenerationProgress(ev) });
-        const { rulesJson, enriched, attributionWarnings, menuWarnings } = st.compile;
+        const { rulesJson, enriched, attributionWarnings, menuWarnings, ruleItemWarnings } = st.compile;
         if (enriched && attributionWarnings?.length) {
             this.message = `${this.message ? `${this.message} · ` : ''}`
                 + `sphere-log attribution: ${attributionWarnings.length} warning(s) — `
@@ -4587,6 +4587,13 @@ export class ProcgenPipelineUI {
                 + `Menu: ${menuWarnings.length} exit(s) dropped — `
                 + `${menuWarnings.slice(0, 3).join('; ')}`
                 + `${menuWarnings.length > 3 ? ' …' : ''}`;
+        }
+        // ⛓ B1 — a rule naming an item neither the pool nor the source defines.
+        if (ruleItemWarnings?.length) {
+            this.message = `${this.message ? `${this.message} · ` : ''}`
+                + `rule items: ${ruleItemWarnings.length} undefined — `
+                + `${ruleItemWarnings.slice(0, 3).join('; ')}`
+                + `${ruleItemWarnings.length > 3 ? ' …' : ''}`;
         }
         this.result = {
             grid: st.finalize.grid,

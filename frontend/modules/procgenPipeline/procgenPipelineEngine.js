@@ -35,6 +35,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
 import { deserializeOrRefuse } from '../procgenCore/deserializeRefusal.js';
 import { exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
+import { itemNamesInDocument, undefinedRuleItems } from '../procgenCore/ruleItemNames.js';
 import { SUBSTRATE_CONFIGS_KEY, recordableConfigsFor } from '../procgenCore/substrateConfigRecord.js';
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
 import { isAtlasSourceId, atlasSourceGame, requirementDnf } from './regionAtlasPool.js';
@@ -2268,6 +2269,62 @@ export function finalizeTopDown(layout) {
         grid, startCell, stats, sphereTree, spherePlan, attributionWarnings,
         menuRegion, menuWarnings,
     };
+}
+
+/**
+ * ⛓⛓ B1 — **THE ONE ITEM-DEF BACKFILL** (`buildRulesJson`'s starting items and
+ * its rule items). Define, in `items` (one player's; mutated), every name of
+ * `names` it lacks and `sourceItems` defines: the source's def VERBATIM,
+ * appended in `names` order — its id moved only when another def of `items`
+ * (present, or backfilled here) already holds it, to the lowest id ≥
+ * ITEM_ID_BASE no def holds or keeps (the verbatim ids are reserved first); a
+ * null id (an event) stays null. It writes no pool count and no placement.
+ *
+ * @param {object} items        one player's `items` map
+ * @param {string[]} names      the names to define, in order
+ * @param {object|null} sourceItems  name → def
+ */
+export function backfillItemDefs(items, names, sourceItems) {
+    if (!sourceItems) return;
+    const held = new Set(Object.values(items).map((d) => d?.id).filter((id) => id != null));
+    // once per name — a starting list is a multiset (`set-starting-count` repeats one)
+    const adds = [...new Set(names)].filter((n) => !Object.hasOwn(items, n) && sourceItems[n] != null)
+        .map((n) => [n, sourceItems[n]]);
+    // ids the verbatim backfills keep are reserved before any colliding one moves
+    const reserved = new Set(held);
+    for (const [, def] of adds) if (def.id != null && !held.has(def.id)) reserved.add(def.id);
+    let next = ITEM_ID_BASE;
+    for (const [name, def] of adds) {
+        if (def.id == null || !held.has(def.id)) {
+            items[name] = def;
+            if (def.id != null) held.add(def.id);
+            continue;
+        }
+        while (reserved.has(next)) next += 1;
+        reserved.add(next);
+        held.add(next);
+        items[name] = { ...def, id: next };
+    }
+}
+
+/**
+ * ⛓⛓ B1 — the compile's `ruleItemWarnings`: one sentence per item name a rule
+ * of the compiled document names that `items[p]` still does not define after
+ * `buildRulesJson`'s backfill (the source did not define it either), naming its
+ * FIRST reference. `[]` when every referenced item is defined.
+ *
+ * @param {object} rulesJson  a compiled document
+ * @param {string} [playerId]
+ * @returns {string[]}
+ */
+export function ruleItemWarnings(rulesJson, playerId = '1') {
+    return undefinedRuleItems(rulesJson, String(playerId)).map((ref) => {
+        const where = ref.completion ? 'the completion condition'
+            : ref.exitName !== undefined ? `exit "${ref.exitName}" in "${ref.regionName}"`
+                : `location "${ref.locationName}"${ref.fieldName ? `'s ${ref.fieldName}` : ''} in "${ref.regionName}"`;
+        return `Rule item "${ref.name}" (named by ${where}) is defined nowhere: `
+            + 'no placed location holds it and the source does not define it';
+    });
 }
 
 /**
@@ -6705,6 +6762,8 @@ export function buildRulesJson(grid, opts = {}) {
         // backfilling definitions for starting-only items (items that
         // exist in the source's items pool but were never placed in
         // any region — APCalc has these). Default empty.
+        // ⛓ B1 — `sourceItems` also backfills every item a compiled RULE names
+        // that no placed location holds (below, after the back-exits inherit).
         startingItems = [],
         sourceItems = null,
         // Item names whose canonical placement is ALWAYS locked
@@ -6793,20 +6852,12 @@ export function buildRulesJson(grid, opts = {}) {
     // never placed it — e.g. APCalc's starting-only buttons). Drop
     // anything that's neither — orphan references would fail
     // rulesDoc validation as "starting item is not a defined item".
+    // ⛓ B1 — through the ONE backfill (`backfillItemDefs`, below), so a starting
+    // def whose verbatim id the pool already holds moves as a rule item's does.
     if (Array.isArray(startingItems) && startingItems.length > 0) {
-        const kept = [];
-        for (const name of startingItems) {
-            if (scaffold.items[playerId][name] != null) {
-                kept.push(name);
-                continue;
-            }
-            const def = sourceItems?.[name];
-            if (def != null) {
-                scaffold.items[playerId][name] = def;
-                kept.push(name);
-            }
-        }
-        scaffold.starting_items[playerId] = kept;
+        backfillItemDefs(scaffold.items[playerId], startingItems, sourceItems);
+        scaffold.starting_items[playerId] = startingItems
+            .filter((name) => Object.hasOwn(scaffold.items[playerId], name));
     }
 
     // Top-level flag: every back-exit inherits the forward exit's
@@ -6845,6 +6896,26 @@ export function buildRulesJson(grid, opts = {}) {
             }
         }
     }
+
+    // ⛓⛓ APWORLD SUBSTRATE CHANGE B1 — **EVERY ITEM A RULE NAMES IS DEFINED.**
+    // The pool above defines only the items some placed location holds, and the
+    // rules ride in verbatim — so a rule naming an item nothing placed (an event,
+    // a starting-only item, one whose location's region the layout left out, one
+    // a return exit inherited just above) pointed at nothing (`unknown item`).
+    // Each such name the source defines gets the source's def VERBATIM — id and
+    // all, as the starting backfill above — and NO pool count and NO placement:
+    // the item is REFERENCED, not placed (a pool count would make AP's fill place
+    // a copy). Order: the compiled keys first (unchanged bytes for a world with
+    // nothing to backfill), then the backfilled in first-reference (document)
+    // order. A name the source lacks too stays undefined and is named by
+    // `ruleItemWarnings` — the source's own gap, not the compile's to invent.
+    // ⚠ The ONE departure from verbatim is the id, and only on a collision: the
+    // compiled pool numbers itself from ITEM_ID_BASE upward, so a source id can
+    // land on a compiled item's (measured — plan §30.0: alttp's `Silver Bow` 59).
+    // Such a def moves to the lowest id ≥ ITEM_ID_BASE that no def of the
+    // document holds or will hold (S1's `avoidIds` precedent); a null id (an
+    // event) stays null.
+    backfillItemDefs(scaffold.items[playerId], itemNamesInDocument(scaffold, playerId), sourceItems);
 
     // Menu is virtual — no playable payload, no sidecar entry.
     // Loop mode flips `manaEnabled: true` (substrate mana hooks).
