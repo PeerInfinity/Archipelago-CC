@@ -26,9 +26,9 @@ real door for whoever walks onto it (seedling generated levels G6).
   owl's-nest stairs, fetch `key_red` from the maze, come back, and the house
   door opens onto `region_3_1`; walk to the victory item and the world is
   complete.
-- The room holds NO location of its own on purpose: a real room's own location
-  (the starting house's chest, for example) has no play-side check path yet —
-  the chest fires, and nothing is checked (plan §12.4).
+- The room holds NO location of its own: when G6 built it a real room's own
+  location had no play-side check path (plan §12.4). Since G7 it has one — the
+  ATLAS arm; `seedling_atlas_location` is the world that collects one.
 
 This is the world of `seedling_sphere_room` without that state's
 `seedlingAtlasHostChildren: false` knob — the same seed, spheres and quotas;

@@ -48,8 +48,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 57,
-            "count": 93,
+            "browser": 58,
+            "count": 94,
             "id": "check"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 267,
-        "browser": 83,
+        "blockStyle": 268,
+        "browser": 84,
         "cited": 104,
-        "files": 278,
+        "files": 279,
         "lineStyle": 11,
-        "withDocblock": 278,
-        "withFlags": 192
+        "withDocblock": 279,
+        "withFlags": 193
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -2428,6 +2428,46 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling generated levels, G6: a REAL Seedling room (a room of the real map, `flash_seedling`) HOSTS a child behind an AP gate, and the HOST enforces it — the game's door opens for whoever walks onto it, so when the gated door fires without the item the glue refuses the crossing, swallows the game's own swap into th…",
             "path": "scripts/procgen/check-seedling-atlas-host-play.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "game",
+                "host"
+            ],
+            "file": "check-seedling-atlas-location-play.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "game"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling generated levels, G7: a REAL Seedling room's OWN location is COLLECTED in play — the chest of the real `starting_house` fires the game's `pendingCheck`, and the ATLAS arm (bound where the room stands: no rewrite, no delivery) turns it into ONE `user:locationCheck` for the atlas-named location, the item the …",
+            "path": "scripts/procgen/check-seedling-atlas-location-play.mjs"
         },
         {
             "argvHelpers": [],

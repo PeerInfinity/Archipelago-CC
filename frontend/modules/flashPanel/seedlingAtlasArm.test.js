@@ -35,8 +35,8 @@ const GAME_CONFIG = readJson('frontend/modules/flashPanel/games/seedling.json');
 const rulesOf = (id) => readJson(id === 'seedling'
     ? 'frontend/presets/seedling/AP_14089154938208861744/AP_14089154938208861744_rules.json'
     : `frontend/presets/${id}/AP_1/AP_1_rules.json`);
-const PIPELINE_REAL_ROOM_PRESETS = Object.freeze(
-    ['seedling_atlas', 'seedling_spiral_room', 'seedling_sphere_room', 'seedling_atlas_host']);
+const PIPELINE_REAL_ROOM_PRESETS = Object.freeze(['seedling_atlas', 'seedling_spiral_room', 'seedling_sphere_room',
+    'seedling_atlas_host', 'seedling_atlas_location']);
 
 const locationsMapOf = (rules) => {
     const out = new Map();
@@ -148,6 +148,28 @@ describe('loadSeedlingRandomizer hands the four pipeline real-room worlds to the
         expect(r.checkBinding.onStateReport('pendingCheck', '3|86|0|1')).toEqual([]);
         expect(r.checkBinding.onStateReport('pendingCheck', '4|0|0|0')).toEqual([]);
     });
+
+    it('seedling_atlas_location: the chest checks Starting House - Chest and FINDS key_blue for this player', async () => {
+        const { r } = await load(rulesOf('seedling_atlas_location'));
+        expect([...r.checkBinding.hostOwnedLocations()]).toEqual(['Starting House - Chest']);
+        expect(r.checkBinding.onStateReport('pendingCheck', '1|86|0|0')).toEqual([
+            expect.objectContaining({ type: 'locationCheck', location: 'Starting House - Chest' }),
+            expect.objectContaining({ type: 'apItemFound', item: 'key_blue', player: 1, forSelf: true }),
+        ]);
+    });
+
+    it('seedling_atlas_location is a FUNCTION of SEEDLING_ATLAS_LOCATION_STATE (the committed bytes, rebuilt headless)', async () => {
+        const { REGISTRY_LIBRARIES } = await import('../../../scripts/procgen/reference/registry.mjs');
+        for (const rel of REGISTRY_LIBRARIES) {
+            // eslint-disable-next-line no-await-in-loop
+            await import(join(ROOT, rel));
+        }
+        const { buildRunFromState, runPresetHeadless } = await import('../procgenPipeline/presetRun.js');
+        const { SEEDLING_ATLAS_LOCATION_STATE } = await import('../procgenPipeline/presetDefs.js');
+        const { rulesJson } = await runPresetHeadless(buildRunFromState(structuredClone(SEEDLING_ATLAS_LOCATION_STATE)));
+        expect(JSON.stringify(rulesJson, null, 2)).toBe(readFileSync(
+            join(ROOT, 'frontend/presets/seedling_atlas_location/AP_1/AP_1_rules.json'), 'utf8'));
+    }, 60000);
 
     it.each(['seedling_spiral_room', 'seedling_sphere_room', 'seedling_atlas_host'])(
         '%s: its real room holds no location — the arm binds an EMPTY table and owns nothing', async (id) => {

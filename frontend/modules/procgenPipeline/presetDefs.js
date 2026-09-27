@@ -227,6 +227,34 @@ export const SEEDLING_ATLAS_HOST_STATE = Object.freeze({
 });
 
 /**
+ * ⛓⛓ SEEDLING GENERATED LEVELS G7 — **A REAL ROOM'S OWN LOCATION, COLLECTED IN
+ * PLAY.** G6's first pick (plan §12.1 #2 row 1): the START is a real Seedling
+ * room, and seed 1 places the starter atlas's `starting_house` (level 86: one
+ * door + the chest) there — `key_blue` IN the chest, the room's one door leading
+ * on to a maze child behind `Has(key_blue)`, whose own gated exit (`key_red`)
+ * leads to the maze holding victory. The chest is an atlas-named location
+ * (`Starting House - Chest`) the goal ledger cannot name: the ATLAS arm binds it
+ * where it stands (`flashPanel/seedlingRandomizerWiring.loadSeedlingAtlas`).
+ * Seeds 1, 2, 5 build this shape (`key_blue` in the chest); 3, 4, 6 refuse by
+ * the tightest-fit sentence. Its readers: the committed preset
+ * `seedling_atlas_location` and its box gate
+ * `check-seedling-atlas-location-play.mjs`.
+ */
+export const SEEDLING_ATLAS_LOCATION_STATE = Object.freeze({
+    mode: 'sphereGrowth',
+    params: Object.freeze({
+        seed: 1, startSubstrate: 'flash_seedling', sphereCount: 3, fillerCount: 0, maxItemsPerRegion: 1,
+    }),
+    scenario: Object.freeze({
+        items: Object.freeze({ key_red: 1, key_blue: 1, victory: 1 }),
+        obstacles: Object.freeze({}),
+    }),
+    substrateQuotas: Object.freeze({ maze: 2, flash_seedling: 1 }),
+    substrateMix: Object.freeze({}),
+    substrateMode: 'quotas',
+});
+
+/**
  * Shipped presets. All are fixture-backed known-good configs:
  *
  * - runner-sphere-demo extends the committed runner_sphere_worldgen
