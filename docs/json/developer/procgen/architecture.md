@@ -171,7 +171,10 @@ Everything else in the file — regions, exits, locations, items, access rules �
 real region` move fires only when *skip the menu* is on — the setting
 `moduleSettings.menuPanel.skipMenu` (default `true`), owned by the
 [Menu panel](../../modules/menuPanel.md) and read here synchronously through
-`menuPanel.isSkipMenuEnabled()`. Skip off ⇒ procgenPlayer publishes nothing and
+`menuPanel.isSkipMenuEnabled()` — AND the declared start has exactly ONE exit
+(APWORLD SUBSTRATE CHANGE M2: `menuPanelEngine.skipsStart`, the one rule both
+publishers read; a start with several exits is a choice, never skipped). Skip off,
+or several exits ⇒ procgenPlayer publishes nothing and
 the player stays at the AP-declared start for the panel to play; the cached
 `getResolvedStartRegion()` survives either way, because loop resets teleport to
 it regardless. On a world procgenPlayer does NOT claim, the same setting makes the

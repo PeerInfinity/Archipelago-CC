@@ -29,7 +29,7 @@ Before it, nothing owned that region.
 
 | File | What it is |
 |------|-----------|
-| `menuPanelEngine.js` | the **whole derivation**, pure — `describeMenu`, `exitsOf`, `firstExitOf`, `restartTargetOf`, `procgenOwnsStartHop`, and the module's exported constants |
+| `menuPanelEngine.js` | the **whole derivation**, pure — `describeMenu`, `exitsOf`, `firstExitOf`, `restartTargetOf`, `skipsStart` (M2: the ONE start-hop rule), `procgenOwnsStartHop`, and the module's exported constants |
 | `index.js` | the wiring — registrations, the load handshake, the skip hop, `takeExit`, `restart` |
 | `menuPanelUI.js` | the panel; DOM only |
 | `menuPanel.css` | the panel's styles |
@@ -91,11 +91,24 @@ At load — when **both** `stateManager:rawJsonDataLoaded` and
 `stateManager:rulesLoaded` have arrived, so the decision does not depend on which
 order they come in:
 
-| skip | world | what happens |
-|------|-------|--------------|
-| ON | procgen (a warehoused start) | `procgenPlayer` publishes its `procgenPlayer-start` hop; this panel stands down |
-| ON | everything else | this panel publishes the start region's FIRST exit as `menuPanel-start` |
-| OFF | either | nobody hops; the panel publishes `ui:activatePanel` for itself |
+| skip | start region | world | what happens |
+|------|--------------|-------|--------------|
+| ON | exactly ONE exit | procgen (a warehoused start) | `procgenPlayer` publishes its `procgenPlayer-start` hop; this panel stands down |
+| ON | exactly ONE exit | everything else | this panel publishes that exit as `menuPanel-start` |
+| ON | several exits, or none | either | nobody hops; the panel publishes `ui:activatePanel` for itself |
+| OFF | any | either | nobody hops; the panel publishes `ui:activatePanel` for itself |
+
+⛓ **The skip hop fires only for a ONE-exit start** (APWORLD SUBSTRATE CHANGE M2,
+⚖ user 2026-09-26: *"skipping only when the menu has only one exit"*). A start
+with several exits is a real choice — until M2 the hop took the FIRST of them
+(`mm3` initialised: the first of 13 stages, the other 12 unreachable through the
+panel) — so it is never skipped, whatever the setting. The rule is ONE function,
+`menuPanelEngine.skipsStart(doc, playerId, region, skipEnabled)` — the setting on
+AND exactly one exit — and **both publishers read it**: this panel with its cached
+setting, `procgenPlayer` importing the rule and reading the setting through
+`isSkipMenuEnabled()` as before. A start that is itself WAREHOUSED (its own
+sidecar: `apcalc` initialised, start `C`) is not left by the procgen publish — it
+only loads the start's payload — so that publish keeps the setting alone.
 
 ⛔ **Exactly one publisher fires per load**, and the hand-off is not a guess about
 the document. This module asks `procgenPlayer.getResolvedStartRegion()`, which is
@@ -123,8 +136,19 @@ procgen in-app row assumes the auto-hop.
 1. `gameState.clearPath()`;
 2. a teleport with the **loops reset's own shape** —
    `user:regionMove {fromReset: true, updatePath: false, source: 'menuPanel-restart'}` —
-   to `procgenPlayer.getResolvedStartRegion()` when there is one, else
-   `gameState.startRegions[0]`.
+   to the **DECLARED start**, `gameState.startRegions[0]` (`restartTargetOf`),
+   always.
+
+⛓ **Returning to the menu IS Restart** (M2, ⚖ user 2026-09-26: *"when the player
+returns to the menu, I want to clear the path"*). Until M2 the teleport preferred
+`procgenPlayer.getResolvedStartRegion()` — the first WAREHOUSED region — so in a
+procgen world Restart never reached the menu (measured on `mm3` initialised:
+Restart → *Needle Man Stage*, the first placed stage). It now lands on the
+declared start in every world, where the panel lists every exit again. The
+convention it embodies, written nowhere else: **the declared start is always
+accessible** (it is where every AP world's reachability starts). ⚠ The loops
+module's own reset (`loopState._resolveLoopStartRegion`) still prefers the
+resolved start — the loops' concern, not this panel's.
 
 Substrate panels bail out of their mana deduction on `fromReset`, and
 `procgenPlayer` reloads the substrate's payload, so the panel matches the
@@ -160,8 +184,9 @@ self-append** (the factory appends it).
 
 | Where | What |
 |-------|------|
-| `menuPanelEngine.test.js` | the derivation, on `alttp` and `adventure` read off disk plus edge documents |
-| `index.test.js` | the load handshake in either order, the one-publisher hand-off, skip OFF, the exit press, Restart in both modes |
-| `procgenPlayer/index.test.js` | the other publisher's side of the setting |
+| `menuPanelEngine.test.js` | the derivation, on `alttp` and `adventure` read off disk plus edge documents; `skipsStart` over 0/1/2 exits × skip on/off; `restartTargetOf` = the first declared start |
+| `index.test.js` | the load handshake in either order, the one-publisher hand-off, skip OFF, a many-exit / no-exit start not skipped, the exit press, Restart in both modes (to the declared start even with a resolved start registered) |
+| `procgenPlayer/index.test.js` | the other publisher's side of the setting, and of `skipsStart` (the hop fires iff the rule answers true) |
+| `tests/testCases/apworldEditorTests.js` | (M2, category `apworldEditor` — the panel has no in-app category of its own) `apworld-menu-hub-restart-returns-to-the-declared-start`: `mm3` initialised + Apply → no hop, the panel lists 13 exits, a press moves, Restart → the declared start; `adventure` initialised → the hop fires |
 | `loops/loopModeExemptions.test.js` | `menuPanel-*` classified as authoring |
 | `tests/testCases/loopsPanelTests.js` | `loops-real-actions-processed` drives Restart → exit press (in loop mode) → queue → processed; `loops-mana-consumption` drives the Start/Pause labels and asserts mana moves |
