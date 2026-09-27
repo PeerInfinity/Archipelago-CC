@@ -36,8 +36,11 @@ export const TYPED_ITEM_CHECK = 'item_check';
 
 const isPlainObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
 
-/** The names ONE node carries itself (not its children), in key order. */
-function ownNames(node) {
+/** The names ONE node carries itself (not its children), in key order.
+ *  Exported (T1) as `ownItemNames`: `validateRules` reads each node its walker
+ *  visits through this, so the validator and this module agree on WHICH args
+ *  name an item — keyed on the arg, never on the rule kind. */
+export function ownItemNames(node) {
     const out = [];
     if (typeof node.rule === 'string') {
         const args = node.args;
@@ -61,7 +64,7 @@ function collect(node, out) {
         return;
     }
     if (!isPlainObject(node)) return;
-    for (const name of ownNames(node)) out.push(name);
+    for (const name of ownItemNames(node)) out.push(name);
     for (const value of Object.values(node)) {
         if (value && typeof value === 'object') collect(value, out);
     }
