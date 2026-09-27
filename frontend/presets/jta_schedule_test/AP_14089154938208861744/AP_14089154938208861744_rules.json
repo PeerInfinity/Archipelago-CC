@@ -3268,20 +3268,22 @@
     }
   },
   "procgen_metadata": {
-    "driver": "shuffled-spiral",
-    "stop_reason": "spiral_complete",
-    "region_count": 3,
-    "grid_dims": {
-      "width": 2,
-      "height": 2
-    },
-    "substrate_configs": {
-      "jta": {
-        "emitZoneLocations": true,
-        "goalZone": 2,
-        "freeZones": 1,
-        "startingPerks": 0,
-        "perkShuffleSeed": null
+    "1": {
+      "driver": "shuffled-spiral",
+      "stop_reason": "spiral_complete",
+      "region_count": 3,
+      "grid_dims": {
+        "width": 2,
+        "height": 2
+      },
+      "substrate_configs": {
+        "jta": {
+          "emitZoneLocations": true,
+          "goalZone": 2,
+          "freeZones": 1,
+          "startingPerks": 0,
+          "perkShuffleSeed": null
+        }
       }
     }
   },
@@ -3446,9 +3448,11 @@
     }
   ],
   "loop_costs": {
-    "regions": {},
-    "locations": {},
-    "defaultRegionCost": 50,
-    "defaultLocationCost": 10
+    "1": {
+      "regions": {},
+      "locations": {},
+      "defaultRegionCost": 50,
+      "defaultLocationCost": 10
+    }
   }
 }

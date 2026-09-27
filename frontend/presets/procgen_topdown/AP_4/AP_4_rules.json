@@ -18068,1891 +18068,1893 @@
     }
   },
   "procgen_metadata": {
-    "driver": "top-down-sphere",
-    "source_game": "APCalc",
-    "source_counts": {
-      "regions": 81,
-      "locations": 161,
-      "exits": 124,
-      "logic_gates": 125
-    },
-    "stop_reason": "all_placed",
-    "sphere_tree": {
-      "nodes": [
-        {
-          "index": 0,
-          "wave": 0,
-          "parent": null,
-          "side": null,
-          "cell": {
-            "gx": 6,
-            "gy": 6
-          },
-          "region_id": "C",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W",
-            "N",
-            "S",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 1,
-          "wave": 0,
-          "parent": 0,
-          "side": "W",
-          "cell": {
-            "gx": 5,
-            "gy": 6
-          },
-          "region_id": "Region 1",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E",
-            "N",
-            "W",
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 2,
-          "wave": 0,
-          "parent": 0,
-          "side": "N",
-          "cell": {
-            "gx": 6,
-            "gy": 5
-          },
-          "region_id": "Region 2",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S",
-            "E",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 3,
-          "wave": 0,
-          "parent": 0,
-          "side": "S",
-          "cell": {
-            "gx": 6,
-            "gy": 7
-          },
-          "region_id": "Region 3",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "S",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 4,
-          "wave": 0,
-          "parent": 0,
-          "side": "E",
-          "cell": {
-            "gx": 7,
-            "gy": 6
-          },
-          "region_id": "Region 4",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 5,
-          "wave": 1,
-          "parent": 1,
-          "side": "N",
-          "cell": {
-            "gx": 5,
-            "gy": 5
-          },
-          "region_id": "Region 10",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S",
-            "W",
-            "N",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 6,
-          "wave": 6,
-          "parent": 1,
-          "side": "W",
-          "cell": {
-            "gx": 4,
-            "gy": 6
-          },
-          "region_id": "Region 11",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E",
-            "S",
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 7,
-          "wave": 2,
-          "parent": 1,
-          "side": "S",
-          "cell": {
-            "gx": 5,
-            "gy": 7
-          },
-          "region_id": "Region 13",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 8,
-          "wave": 3,
-          "parent": 1,
-          "side": "E",
-          "cell": {
-            "gx": 11,
-            "gy": 8
-          },
-          "region_id": "Region 16",
-          "isTeleporter": true,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W",
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 9,
-          "wave": 1,
-          "parent": 1,
-          "side": "E",
-          "cell": {
-            "gx": 7,
-            "gy": 8
-          },
-          "region_id": "Region 12",
-          "isTeleporter": true,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W",
-            "S",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 10,
-          "wave": 3,
-          "parent": 2,
-          "side": "E",
-          "cell": {
-            "gx": 7,
-            "gy": 5
-          },
-          "region_id": "Region 8",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 11,
-          "wave": 3,
-          "parent": 2,
-          "side": "N",
-          "cell": {
-            "gx": 6,
-            "gy": 4
-          },
-          "region_id": "Region 5",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 12,
-          "wave": 1,
-          "parent": 3,
-          "side": "S",
-          "cell": {
-            "gx": 6,
-            "gy": 8
-          },
-          "region_id": "Region 7",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "S",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 13,
-          "wave": 1,
-          "parent": 3,
-          "side": "E",
-          "cell": {
-            "gx": 7,
-            "gy": 7
-          },
-          "region_id": "Region 6",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 14,
-          "wave": 4,
-          "parent": 5,
-          "side": "W",
-          "cell": {
-            "gx": 4,
-            "gy": 5
-          },
-          "region_id": "Region 17",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E",
-            "W",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 15,
-          "wave": 4,
-          "parent": 5,
-          "side": "N",
-          "cell": {
-            "gx": 5,
-            "gy": 4
-          },
-          "region_id": "Region 23",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S",
-            "N",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 16,
-          "wave": 8,
-          "parent": 5,
-          "side": "E",
-          "cell": {
-            "gx": 9,
-            "gy": 3
-          },
-          "region_id": "Region 75",
-          "isTeleporter": true,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 17,
-          "wave": 7,
-          "parent": 6,
-          "side": "S",
-          "cell": {
-            "gx": 4,
-            "gy": 7
-          },
-          "region_id": "Region 15",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 18,
-          "wave": 6,
-          "parent": 6,
-          "side": "W",
-          "cell": {
-            "gx": 3,
-            "gy": 6
-          },
-          "region_id": "Region 33",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E",
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 19,
-          "wave": 2,
-          "parent": 6,
-          "side": "E",
-          "cell": {
-            "gx": 9,
-            "gy": 0
-          },
-          "region_id": "Region 14",
-          "isTeleporter": true,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 20,
-          "wave": 6,
-          "parent": 6,
-          "side": "E",
-          "cell": {
-            "gx": 11,
-            "gy": 2
-          },
-          "region_id": "Region 45",
-          "isTeleporter": true,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W",
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 21,
-          "wave": 8,
-          "parent": 7,
-          "side": "S",
-          "cell": {
-            "gx": 5,
-            "gy": 8
-          },
-          "region_id": "Region 18",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 22,
-          "wave": 8,
-          "parent": 8,
-          "side": "S",
-          "cell": {
-            "gx": 11,
-            "gy": 9
-          },
-          "region_id": "Region 28",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 23,
-          "wave": 7,
-          "parent": 9,
-          "side": "S",
-          "cell": {
-            "gx": 7,
-            "gy": 9
-          },
-          "region_id": "Region 20",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 24,
-          "wave": 11,
-          "parent": 9,
-          "side": "E",
-          "cell": {
-            "gx": 8,
-            "gy": 8
-          },
-          "region_id": "Region 59",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 25,
-          "wave": 7,
-          "parent": 12,
-          "side": "S",
-          "cell": {
-            "gx": 6,
-            "gy": 9
-          },
-          "region_id": "Region 9",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 26,
-          "wave": 10,
-          "parent": 12,
-          "side": "E",
-          "cell": {
-            "gx": 8,
-            "gy": 2
-          },
-          "region_id": "Region 47",
-          "isTeleporter": true,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W",
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 27,
-          "wave": 4,
-          "parent": 14,
-          "side": "W",
-          "cell": {
-            "gx": 3,
-            "gy": 5
-          },
-          "region_id": "Region 26",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E",
-            "W",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 28,
-          "wave": 8,
-          "parent": 14,
-          "side": "N",
-          "cell": {
-            "gx": 4,
-            "gy": 4
-          },
-          "region_id": "Region 22",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S",
-            "N",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 29,
-          "wave": 7,
-          "parent": 15,
-          "side": "N",
-          "cell": {
-            "gx": 5,
-            "gy": 3
-          },
-          "region_id": "Region 24",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 30,
-          "wave": 9,
-          "parent": 15,
-          "side": "E",
-          "cell": {
-            "gx": 0,
-            "gy": 0
-          },
-          "region_id": "Region 70",
-          "isTeleporter": true,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 31,
-          "wave": 10,
-          "parent": 18,
-          "side": "S",
-          "cell": {
-            "gx": 3,
-            "gy": 7
-          },
-          "region_id": "Region 34",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 32,
-          "wave": 9,
-          "parent": 20,
-          "side": "S",
-          "cell": {
-            "gx": 11,
-            "gy": 3
-          },
-          "region_id": "Region 76",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 33,
-          "wave": 8,
-          "parent": 21,
-          "side": "W",
-          "cell": {
-            "gx": 4,
-            "gy": 8
-          },
-          "region_id": "Region 19",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 34,
-          "wave": 8,
-          "parent": 22,
-          "side": "S",
-          "cell": {
-            "gx": 11,
-            "gy": 10
-          },
-          "region_id": "Region 29",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 35,
-          "wave": 8,
-          "parent": 23,
-          "side": "E",
-          "cell": {
-            "gx": 8,
-            "gy": 9
-          },
-          "region_id": "Region 21",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 36,
-          "wave": 11,
-          "parent": 24,
-          "side": "N",
-          "cell": {
-            "gx": 8,
-            "gy": 7
-          },
-          "region_id": "Region 60",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 37,
-          "wave": 10,
-          "parent": 26,
-          "side": "S",
-          "cell": {
-            "gx": 8,
-            "gy": 3
-          },
-          "region_id": "Region 48",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 38,
-          "wave": 7,
-          "parent": 27,
-          "side": "W",
-          "cell": {
-            "gx": 2,
-            "gy": 5
-          },
-          "region_id": "Region 27",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 39,
-          "wave": 7,
-          "parent": 27,
-          "side": "N",
-          "cell": {
-            "gx": 3,
-            "gy": 4
-          },
-          "region_id": "Region 31",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 40,
-          "wave": 5,
-          "parent": 27,
-          "side": "E",
-          "cell": {
-            "gx": 5,
-            "gy": 0
-          },
-          "region_id": "Region 58",
-          "isTeleporter": true,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 41,
-          "wave": 11,
-          "parent": 27,
-          "side": "E",
-          "cell": {
-            "gx": 1,
-            "gy": 8
-          },
-          "region_id": "Region 64",
-          "isTeleporter": true,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 42,
-          "wave": 9,
-          "parent": 28,
-          "side": "N",
-          "cell": {
-            "gx": 4,
-            "gy": 3
-          },
-          "region_id": "Region 37",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S",
-            "N",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 43,
-          "wave": 9,
-          "parent": 28,
-          "side": "E",
-          "cell": {
-            "gx": 0,
-            "gy": 10
-          },
-          "region_id": "Region 46",
-          "isTeleporter": true,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 44,
-          "wave": 8,
-          "parent": 29,
-          "side": "E",
-          "cell": {
-            "gx": 6,
-            "gy": 3
-          },
-          "region_id": "Region 25",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 45,
-          "wave": 9,
-          "parent": 30,
-          "side": "E",
-          "cell": {
-            "gx": 1,
-            "gy": 0
-          },
-          "region_id": "Region 71",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W",
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 46,
-          "wave": 10,
-          "parent": 31,
-          "side": "W",
-          "cell": {
-            "gx": 2,
-            "gy": 7
-          },
-          "region_id": "Region 35",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E",
-            "W",
-            "S",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 47,
-          "wave": 9,
-          "parent": 32,
-          "side": "S",
-          "cell": {
-            "gx": 11,
-            "gy": 4
-          },
-          "region_id": "Region 77",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 48,
-          "wave": 8,
-          "parent": 34,
-          "side": "S",
-          "cell": {
-            "gx": 11,
-            "gy": 11
-          },
-          "region_id": "Region 30",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 49,
-          "wave": 8,
-          "parent": 35,
-          "side": "E",
-          "cell": {
-            "gx": 9,
-            "gy": 9
-          },
-          "region_id": "Region 53",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 50,
-          "wave": 10,
-          "parent": 37,
-          "side": "S",
-          "cell": {
-            "gx": 8,
-            "gy": 4
-          },
-          "region_id": "Region 49",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "E",
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 51,
-          "wave": 11,
-          "parent": 39,
-          "side": "N",
-          "cell": {
-            "gx": 3,
-            "gy": 3
-          },
-          "region_id": "Region 32",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S",
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 52,
-          "wave": 11,
-          "parent": 41,
-          "side": "W",
-          "cell": {
-            "gx": 0,
-            "gy": 8
-          },
-          "region_id": "Region 65",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 53,
-          "wave": 11,
-          "parent": 42,
-          "side": "N",
-          "cell": {
-            "gx": 4,
-            "gy": 2
-          },
-          "region_id": "Region 38",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 54,
-          "wave": 11,
-          "parent": 42,
-          "side": "E",
-          "cell": {
-            "gx": 0,
-            "gy": 2
-          },
-          "region_id": "Region 43",
-          "isTeleporter": true,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 55,
-          "wave": 9,
-          "parent": 45,
-          "side": "S",
-          "cell": {
-            "gx": 1,
-            "gy": 1
-          },
-          "region_id": "Region 72",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 56,
-          "wave": 10,
-          "parent": 46,
-          "side": "W",
-          "cell": {
-            "gx": 1,
-            "gy": 7
-          },
-          "region_id": "Region 36",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 57,
-          "wave": 11,
-          "parent": 46,
-          "side": "S",
-          "cell": {
-            "gx": 2,
-            "gy": 8
-          },
-          "region_id": "Region 40",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 58,
-          "wave": 10,
-          "parent": 46,
-          "side": "N",
-          "cell": {
-            "gx": 2,
-            "gy": 6
-          },
-          "region_id": "Region 61",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S",
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 59,
-          "wave": 11,
-          "parent": 47,
-          "side": "W",
-          "cell": {
-            "gx": 10,
-            "gy": 4
-          },
-          "region_id": "Region 78",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 60,
-          "wave": 8,
-          "parent": 48,
-          "side": "W",
-          "cell": {
-            "gx": 10,
-            "gy": 11
-          },
-          "region_id": "Region 56",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 61,
-          "wave": 9,
-          "parent": 49,
-          "side": "E",
-          "cell": {
-            "gx": 10,
-            "gy": 9
-          },
-          "region_id": "Region 54",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 62,
-          "wave": 10,
-          "parent": 50,
-          "side": "E",
-          "cell": {
-            "gx": 9,
-            "gy": 4
-          },
-          "region_id": "Region 50",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W",
-            "S",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 63,
-          "wave": 11,
-          "parent": 50,
-          "side": "S",
-          "cell": {
-            "gx": 8,
-            "gy": 5
-          },
-          "region_id": "Region 68",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 64,
-          "wave": 11,
-          "parent": 51,
-          "side": "W",
-          "cell": {
-            "gx": 2,
-            "gy": 3
-          },
-          "region_id": "Region 39",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 65,
-          "wave": 11,
-          "parent": 52,
-          "side": "N",
-          "cell": {
-            "gx": 0,
-            "gy": 7
-          },
-          "region_id": "Region 66",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 66,
-          "wave": 11,
-          "parent": 54,
-          "side": "N",
-          "cell": {
-            "gx": 0,
-            "gy": 1
-          },
-          "region_id": "Region 44",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 67,
-          "wave": 11,
-          "parent": 55,
-          "side": "E",
-          "cell": {
-            "gx": 2,
-            "gy": 1
-          },
-          "region_id": "Region 73",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 68,
-          "wave": 11,
-          "parent": 57,
-          "side": "E",
-          "cell": {
-            "gx": 3,
-            "gy": 8
-          },
-          "region_id": "Region 41",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W",
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 69,
-          "wave": 11,
-          "parent": 58,
-          "side": "W",
-          "cell": {
-            "gx": 1,
-            "gy": 6
-          },
-          "region_id": "Region 62",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 70,
-          "wave": 11,
-          "parent": 59,
-          "side": "N",
-          "cell": {
-            "gx": 10,
-            "gy": 3
-          },
-          "region_id": "Region 79",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 71,
-          "wave": 11,
-          "parent": 60,
-          "side": "N",
-          "cell": {
-            "gx": 10,
-            "gy": 10
-          },
-          "region_id": "Region 57",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 72,
-          "wave": 11,
-          "parent": 61,
-          "side": "N",
-          "cell": {
-            "gx": 10,
-            "gy": 8
-          },
-          "region_id": "Region 55",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 73,
-          "wave": 10,
-          "parent": 62,
-          "side": "S",
-          "cell": {
-            "gx": 9,
-            "gy": 5
-          },
-          "region_id": "Region 51",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 74,
-          "wave": 11,
-          "parent": 62,
-          "side": "E",
-          "cell": {
-            "gx": 6,
-            "gy": 11
-          },
-          "region_id": "Region 74",
-          "isTeleporter": true,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 75,
-          "wave": 11,
-          "parent": 63,
-          "side": "S",
-          "cell": {
-            "gx": 8,
-            "gy": 6
-          },
-          "region_id": "Region 69",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 76,
-          "wave": 11,
-          "parent": 65,
-          "side": "N",
-          "cell": {
-            "gx": 0,
-            "gy": 6
-          },
-          "region_id": "Region 67",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 77,
-          "wave": 11,
-          "parent": 68,
-          "side": "S",
-          "cell": {
-            "gx": 3,
-            "gy": 9
-          },
-          "region_id": "Region 42",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 78,
-          "wave": 11,
-          "parent": 69,
-          "side": "N",
-          "cell": {
-            "gx": 1,
-            "gy": 5
-          },
-          "region_id": "Region 63",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 79,
-          "wave": 11,
-          "parent": 70,
-          "side": "N",
-          "cell": {
-            "gx": 10,
-            "gy": 2
-          },
-          "region_id": "Region 80",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 80,
-          "wave": 11,
-          "parent": 73,
-          "side": "E",
-          "cell": {
-            "gx": 10,
-            "gy": 5
-          },
-          "region_id": "Region 52",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        }
-      ],
-      "substrateCounts": {
-        "maze": 81
+    "1": {
+      "driver": "top-down-sphere",
+      "source_game": "APCalc",
+      "source_counts": {
+        "regions": 81,
+        "locations": 161,
+        "exits": 124,
+        "logic_gates": 125
       },
-      "quotaFallbacks": 0
-    },
-    "sphere_plan": {
-      "seed": 4,
-      "spheres": [
-        {
-          "sphere": 1,
-          "items": [
-            "Button: 6",
-            "Button: +",
-            "Button: 1",
-            "Checked 1",
-            "Checked 2",
-            "Checked 3",
-            "Checked 4"
-          ]
+      "stop_reason": "all_placed",
+      "sphere_tree": {
+        "nodes": [
+          {
+            "index": 0,
+            "wave": 0,
+            "parent": null,
+            "side": null,
+            "cell": {
+              "gx": 6,
+              "gy": 6
+            },
+            "region_id": "C",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W",
+              "N",
+              "S",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 1,
+            "wave": 0,
+            "parent": 0,
+            "side": "W",
+            "cell": {
+              "gx": 5,
+              "gy": 6
+            },
+            "region_id": "Region 1",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E",
+              "N",
+              "W",
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 2,
+            "wave": 0,
+            "parent": 0,
+            "side": "N",
+            "cell": {
+              "gx": 6,
+              "gy": 5
+            },
+            "region_id": "Region 2",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S",
+              "E",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 3,
+            "wave": 0,
+            "parent": 0,
+            "side": "S",
+            "cell": {
+              "gx": 6,
+              "gy": 7
+            },
+            "region_id": "Region 3",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "S",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 4,
+            "wave": 0,
+            "parent": 0,
+            "side": "E",
+            "cell": {
+              "gx": 7,
+              "gy": 6
+            },
+            "region_id": "Region 4",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 5,
+            "wave": 1,
+            "parent": 1,
+            "side": "N",
+            "cell": {
+              "gx": 5,
+              "gy": 5
+            },
+            "region_id": "Region 10",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S",
+              "W",
+              "N",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 6,
+            "wave": 6,
+            "parent": 1,
+            "side": "W",
+            "cell": {
+              "gx": 4,
+              "gy": 6
+            },
+            "region_id": "Region 11",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E",
+              "S",
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 7,
+            "wave": 2,
+            "parent": 1,
+            "side": "S",
+            "cell": {
+              "gx": 5,
+              "gy": 7
+            },
+            "region_id": "Region 13",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 8,
+            "wave": 3,
+            "parent": 1,
+            "side": "E",
+            "cell": {
+              "gx": 11,
+              "gy": 8
+            },
+            "region_id": "Region 16",
+            "isTeleporter": true,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W",
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 9,
+            "wave": 1,
+            "parent": 1,
+            "side": "E",
+            "cell": {
+              "gx": 7,
+              "gy": 8
+            },
+            "region_id": "Region 12",
+            "isTeleporter": true,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W",
+              "S",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 10,
+            "wave": 3,
+            "parent": 2,
+            "side": "E",
+            "cell": {
+              "gx": 7,
+              "gy": 5
+            },
+            "region_id": "Region 8",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 11,
+            "wave": 3,
+            "parent": 2,
+            "side": "N",
+            "cell": {
+              "gx": 6,
+              "gy": 4
+            },
+            "region_id": "Region 5",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 12,
+            "wave": 1,
+            "parent": 3,
+            "side": "S",
+            "cell": {
+              "gx": 6,
+              "gy": 8
+            },
+            "region_id": "Region 7",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "S",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 13,
+            "wave": 1,
+            "parent": 3,
+            "side": "E",
+            "cell": {
+              "gx": 7,
+              "gy": 7
+            },
+            "region_id": "Region 6",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 14,
+            "wave": 4,
+            "parent": 5,
+            "side": "W",
+            "cell": {
+              "gx": 4,
+              "gy": 5
+            },
+            "region_id": "Region 17",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E",
+              "W",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 15,
+            "wave": 4,
+            "parent": 5,
+            "side": "N",
+            "cell": {
+              "gx": 5,
+              "gy": 4
+            },
+            "region_id": "Region 23",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S",
+              "N",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 16,
+            "wave": 8,
+            "parent": 5,
+            "side": "E",
+            "cell": {
+              "gx": 9,
+              "gy": 3
+            },
+            "region_id": "Region 75",
+            "isTeleporter": true,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 17,
+            "wave": 7,
+            "parent": 6,
+            "side": "S",
+            "cell": {
+              "gx": 4,
+              "gy": 7
+            },
+            "region_id": "Region 15",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 18,
+            "wave": 6,
+            "parent": 6,
+            "side": "W",
+            "cell": {
+              "gx": 3,
+              "gy": 6
+            },
+            "region_id": "Region 33",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E",
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 19,
+            "wave": 2,
+            "parent": 6,
+            "side": "E",
+            "cell": {
+              "gx": 9,
+              "gy": 0
+            },
+            "region_id": "Region 14",
+            "isTeleporter": true,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 20,
+            "wave": 6,
+            "parent": 6,
+            "side": "E",
+            "cell": {
+              "gx": 11,
+              "gy": 2
+            },
+            "region_id": "Region 45",
+            "isTeleporter": true,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W",
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 21,
+            "wave": 8,
+            "parent": 7,
+            "side": "S",
+            "cell": {
+              "gx": 5,
+              "gy": 8
+            },
+            "region_id": "Region 18",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 22,
+            "wave": 8,
+            "parent": 8,
+            "side": "S",
+            "cell": {
+              "gx": 11,
+              "gy": 9
+            },
+            "region_id": "Region 28",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 23,
+            "wave": 7,
+            "parent": 9,
+            "side": "S",
+            "cell": {
+              "gx": 7,
+              "gy": 9
+            },
+            "region_id": "Region 20",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 24,
+            "wave": 11,
+            "parent": 9,
+            "side": "E",
+            "cell": {
+              "gx": 8,
+              "gy": 8
+            },
+            "region_id": "Region 59",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 25,
+            "wave": 7,
+            "parent": 12,
+            "side": "S",
+            "cell": {
+              "gx": 6,
+              "gy": 9
+            },
+            "region_id": "Region 9",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 26,
+            "wave": 10,
+            "parent": 12,
+            "side": "E",
+            "cell": {
+              "gx": 8,
+              "gy": 2
+            },
+            "region_id": "Region 47",
+            "isTeleporter": true,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W",
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 27,
+            "wave": 4,
+            "parent": 14,
+            "side": "W",
+            "cell": {
+              "gx": 3,
+              "gy": 5
+            },
+            "region_id": "Region 26",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E",
+              "W",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 28,
+            "wave": 8,
+            "parent": 14,
+            "side": "N",
+            "cell": {
+              "gx": 4,
+              "gy": 4
+            },
+            "region_id": "Region 22",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S",
+              "N",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 29,
+            "wave": 7,
+            "parent": 15,
+            "side": "N",
+            "cell": {
+              "gx": 5,
+              "gy": 3
+            },
+            "region_id": "Region 24",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 30,
+            "wave": 9,
+            "parent": 15,
+            "side": "E",
+            "cell": {
+              "gx": 0,
+              "gy": 0
+            },
+            "region_id": "Region 70",
+            "isTeleporter": true,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 31,
+            "wave": 10,
+            "parent": 18,
+            "side": "S",
+            "cell": {
+              "gx": 3,
+              "gy": 7
+            },
+            "region_id": "Region 34",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 32,
+            "wave": 9,
+            "parent": 20,
+            "side": "S",
+            "cell": {
+              "gx": 11,
+              "gy": 3
+            },
+            "region_id": "Region 76",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 33,
+            "wave": 8,
+            "parent": 21,
+            "side": "W",
+            "cell": {
+              "gx": 4,
+              "gy": 8
+            },
+            "region_id": "Region 19",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 34,
+            "wave": 8,
+            "parent": 22,
+            "side": "S",
+            "cell": {
+              "gx": 11,
+              "gy": 10
+            },
+            "region_id": "Region 29",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 35,
+            "wave": 8,
+            "parent": 23,
+            "side": "E",
+            "cell": {
+              "gx": 8,
+              "gy": 9
+            },
+            "region_id": "Region 21",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 36,
+            "wave": 11,
+            "parent": 24,
+            "side": "N",
+            "cell": {
+              "gx": 8,
+              "gy": 7
+            },
+            "region_id": "Region 60",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 37,
+            "wave": 10,
+            "parent": 26,
+            "side": "S",
+            "cell": {
+              "gx": 8,
+              "gy": 3
+            },
+            "region_id": "Region 48",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 38,
+            "wave": 7,
+            "parent": 27,
+            "side": "W",
+            "cell": {
+              "gx": 2,
+              "gy": 5
+            },
+            "region_id": "Region 27",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 39,
+            "wave": 7,
+            "parent": 27,
+            "side": "N",
+            "cell": {
+              "gx": 3,
+              "gy": 4
+            },
+            "region_id": "Region 31",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 40,
+            "wave": 5,
+            "parent": 27,
+            "side": "E",
+            "cell": {
+              "gx": 5,
+              "gy": 0
+            },
+            "region_id": "Region 58",
+            "isTeleporter": true,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 41,
+            "wave": 11,
+            "parent": 27,
+            "side": "E",
+            "cell": {
+              "gx": 1,
+              "gy": 8
+            },
+            "region_id": "Region 64",
+            "isTeleporter": true,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 42,
+            "wave": 9,
+            "parent": 28,
+            "side": "N",
+            "cell": {
+              "gx": 4,
+              "gy": 3
+            },
+            "region_id": "Region 37",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S",
+              "N",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 43,
+            "wave": 9,
+            "parent": 28,
+            "side": "E",
+            "cell": {
+              "gx": 0,
+              "gy": 10
+            },
+            "region_id": "Region 46",
+            "isTeleporter": true,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 44,
+            "wave": 8,
+            "parent": 29,
+            "side": "E",
+            "cell": {
+              "gx": 6,
+              "gy": 3
+            },
+            "region_id": "Region 25",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 45,
+            "wave": 9,
+            "parent": 30,
+            "side": "E",
+            "cell": {
+              "gx": 1,
+              "gy": 0
+            },
+            "region_id": "Region 71",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W",
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 46,
+            "wave": 10,
+            "parent": 31,
+            "side": "W",
+            "cell": {
+              "gx": 2,
+              "gy": 7
+            },
+            "region_id": "Region 35",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E",
+              "W",
+              "S",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 47,
+            "wave": 9,
+            "parent": 32,
+            "side": "S",
+            "cell": {
+              "gx": 11,
+              "gy": 4
+            },
+            "region_id": "Region 77",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 48,
+            "wave": 8,
+            "parent": 34,
+            "side": "S",
+            "cell": {
+              "gx": 11,
+              "gy": 11
+            },
+            "region_id": "Region 30",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 49,
+            "wave": 8,
+            "parent": 35,
+            "side": "E",
+            "cell": {
+              "gx": 9,
+              "gy": 9
+            },
+            "region_id": "Region 53",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 50,
+            "wave": 10,
+            "parent": 37,
+            "side": "S",
+            "cell": {
+              "gx": 8,
+              "gy": 4
+            },
+            "region_id": "Region 49",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "E",
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 51,
+            "wave": 11,
+            "parent": 39,
+            "side": "N",
+            "cell": {
+              "gx": 3,
+              "gy": 3
+            },
+            "region_id": "Region 32",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S",
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 52,
+            "wave": 11,
+            "parent": 41,
+            "side": "W",
+            "cell": {
+              "gx": 0,
+              "gy": 8
+            },
+            "region_id": "Region 65",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 53,
+            "wave": 11,
+            "parent": 42,
+            "side": "N",
+            "cell": {
+              "gx": 4,
+              "gy": 2
+            },
+            "region_id": "Region 38",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 54,
+            "wave": 11,
+            "parent": 42,
+            "side": "E",
+            "cell": {
+              "gx": 0,
+              "gy": 2
+            },
+            "region_id": "Region 43",
+            "isTeleporter": true,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 55,
+            "wave": 9,
+            "parent": 45,
+            "side": "S",
+            "cell": {
+              "gx": 1,
+              "gy": 1
+            },
+            "region_id": "Region 72",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 56,
+            "wave": 10,
+            "parent": 46,
+            "side": "W",
+            "cell": {
+              "gx": 1,
+              "gy": 7
+            },
+            "region_id": "Region 36",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 57,
+            "wave": 11,
+            "parent": 46,
+            "side": "S",
+            "cell": {
+              "gx": 2,
+              "gy": 8
+            },
+            "region_id": "Region 40",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 58,
+            "wave": 10,
+            "parent": 46,
+            "side": "N",
+            "cell": {
+              "gx": 2,
+              "gy": 6
+            },
+            "region_id": "Region 61",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S",
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 59,
+            "wave": 11,
+            "parent": 47,
+            "side": "W",
+            "cell": {
+              "gx": 10,
+              "gy": 4
+            },
+            "region_id": "Region 78",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 60,
+            "wave": 8,
+            "parent": 48,
+            "side": "W",
+            "cell": {
+              "gx": 10,
+              "gy": 11
+            },
+            "region_id": "Region 56",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 61,
+            "wave": 9,
+            "parent": 49,
+            "side": "E",
+            "cell": {
+              "gx": 10,
+              "gy": 9
+            },
+            "region_id": "Region 54",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 62,
+            "wave": 10,
+            "parent": 50,
+            "side": "E",
+            "cell": {
+              "gx": 9,
+              "gy": 4
+            },
+            "region_id": "Region 50",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W",
+              "S",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 63,
+            "wave": 11,
+            "parent": 50,
+            "side": "S",
+            "cell": {
+              "gx": 8,
+              "gy": 5
+            },
+            "region_id": "Region 68",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 64,
+            "wave": 11,
+            "parent": 51,
+            "side": "W",
+            "cell": {
+              "gx": 2,
+              "gy": 3
+            },
+            "region_id": "Region 39",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 65,
+            "wave": 11,
+            "parent": 52,
+            "side": "N",
+            "cell": {
+              "gx": 0,
+              "gy": 7
+            },
+            "region_id": "Region 66",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 66,
+            "wave": 11,
+            "parent": 54,
+            "side": "N",
+            "cell": {
+              "gx": 0,
+              "gy": 1
+            },
+            "region_id": "Region 44",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 67,
+            "wave": 11,
+            "parent": 55,
+            "side": "E",
+            "cell": {
+              "gx": 2,
+              "gy": 1
+            },
+            "region_id": "Region 73",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 68,
+            "wave": 11,
+            "parent": 57,
+            "side": "E",
+            "cell": {
+              "gx": 3,
+              "gy": 8
+            },
+            "region_id": "Region 41",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W",
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 69,
+            "wave": 11,
+            "parent": 58,
+            "side": "W",
+            "cell": {
+              "gx": 1,
+              "gy": 6
+            },
+            "region_id": "Region 62",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 70,
+            "wave": 11,
+            "parent": 59,
+            "side": "N",
+            "cell": {
+              "gx": 10,
+              "gy": 3
+            },
+            "region_id": "Region 79",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 71,
+            "wave": 11,
+            "parent": 60,
+            "side": "N",
+            "cell": {
+              "gx": 10,
+              "gy": 10
+            },
+            "region_id": "Region 57",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 72,
+            "wave": 11,
+            "parent": 61,
+            "side": "N",
+            "cell": {
+              "gx": 10,
+              "gy": 8
+            },
+            "region_id": "Region 55",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 73,
+            "wave": 10,
+            "parent": 62,
+            "side": "S",
+            "cell": {
+              "gx": 9,
+              "gy": 5
+            },
+            "region_id": "Region 51",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 74,
+            "wave": 11,
+            "parent": 62,
+            "side": "E",
+            "cell": {
+              "gx": 6,
+              "gy": 11
+            },
+            "region_id": "Region 74",
+            "isTeleporter": true,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 75,
+            "wave": 11,
+            "parent": 63,
+            "side": "S",
+            "cell": {
+              "gx": 8,
+              "gy": 6
+            },
+            "region_id": "Region 69",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 76,
+            "wave": 11,
+            "parent": 65,
+            "side": "N",
+            "cell": {
+              "gx": 0,
+              "gy": 6
+            },
+            "region_id": "Region 67",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 77,
+            "wave": 11,
+            "parent": 68,
+            "side": "S",
+            "cell": {
+              "gx": 3,
+              "gy": 9
+            },
+            "region_id": "Region 42",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 78,
+            "wave": 11,
+            "parent": 69,
+            "side": "N",
+            "cell": {
+              "gx": 1,
+              "gy": 5
+            },
+            "region_id": "Region 63",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 79,
+            "wave": 11,
+            "parent": 70,
+            "side": "N",
+            "cell": {
+              "gx": 10,
+              "gy": 2
+            },
+            "region_id": "Region 80",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 80,
+            "wave": 11,
+            "parent": 73,
+            "side": "E",
+            "cell": {
+              "gx": 10,
+              "gy": 5
+            },
+            "region_id": "Region 52",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          }
+        ],
+        "substrateCounts": {
+          "maze": 81
         },
-        {
-          "sphere": 2,
-          "items": [
-            "Button: *",
-            "Checked 10",
-            "Checked 12",
-            "Checked 6",
-            "Checked 7"
-          ]
-        },
-        {
-          "sphere": 3,
-          "items": [
-            "Button: 3",
-            "Button: +",
-            "Checked 13",
-            "Checked 14"
-          ]
-        },
-        {
-          "sphere": 4,
-          "items": [
-            "Button: 3",
-            "Button: 8",
-            "Button: 4",
-            "Checked 16",
-            "Checked 5",
-            "Checked 8"
-          ]
-        },
-        {
-          "sphere": 5,
-          "items": [
-            "Button: *",
-            "Checked 17",
-            "Checked 23",
-            "Checked 26"
-          ]
-        },
-        {
-          "sphere": 6,
-          "items": [
-            "Button: -",
-            "Checked 58"
-          ]
-        },
-        {
-          "sphere": 7,
-          "items": [
-            "Button: 9",
-            "Button: 0",
-            "Checked 11",
-            "Checked 33",
-            "Checked 45"
-          ]
-        },
-        {
-          "sphere": 8,
-          "items": [
-            "Button: 1",
-            "Button: 7",
-            "Button: 6",
-            "Checked 15",
-            "Checked 20",
-            "Checked 24",
-            "Checked 27",
-            "Checked 31",
-            "Checked 9"
-          ]
-        },
-        {
-          "sphere": 9,
-          "items": [
-            "Button: 9",
-            "Button: 4",
-            "Checked 18",
-            "Checked 19",
-            "Checked 21",
-            "Checked 22",
-            "Checked 25",
-            "Checked 28",
-            "Checked 29",
-            "Checked 30",
-            "Checked 53",
-            "Checked 56",
-            "Checked 75"
-          ]
-        },
-        {
-          "sphere": 10,
-          "items": [
-            "Button: /",
-            "Checked 37",
-            "Checked 46",
-            "Checked 54",
-            "Checked 70",
-            "Checked 71",
-            "Checked 72",
-            "Checked 76",
-            "Checked 77"
-          ]
-        },
-        {
-          "sphere": 11,
-          "items": [
-            "Button: *",
-            "Button: 1",
-            "Checked 34",
-            "Checked 35",
-            "Checked 36",
-            "Checked 47",
-            "Checked 48",
-            "Checked 49",
-            "Checked 50",
-            "Checked 51",
-            "Checked 61"
-          ]
-        },
-        {
-          "sphere": 12,
-          "items": [
-            "Checked 32",
-            "Checked 38",
-            "Checked 39",
-            "Checked 40",
-            "Checked 41",
-            "Checked 42",
-            "Checked 43",
-            "Checked 44",
-            "Checked 52",
-            "Checked 55",
-            "Checked 57",
-            "Checked 59",
-            "Checked 60",
-            "Checked 62",
-            "Checked 63",
-            "Checked 64",
-            "Checked 65",
-            "Checked 66",
-            "Checked 67",
-            "Checked 68",
-            "Checked 69",
-            "Checked 73",
-            "Checked 74",
-            "Checked 78",
-            "Checked 79",
-            "Checked 80"
-          ]
-        },
-        {
-          "sphere": 13,
-          "items": [
-            "Victory"
-          ]
-        }
-      ]
-    },
-    "region_count": 81,
-    "grid_dims": {
-      "width": 12,
-      "height": 12
+        "quotaFallbacks": 0
+      },
+      "sphere_plan": {
+        "seed": 4,
+        "spheres": [
+          {
+            "sphere": 1,
+            "items": [
+              "Button: 6",
+              "Button: +",
+              "Button: 1",
+              "Checked 1",
+              "Checked 2",
+              "Checked 3",
+              "Checked 4"
+            ]
+          },
+          {
+            "sphere": 2,
+            "items": [
+              "Button: *",
+              "Checked 10",
+              "Checked 12",
+              "Checked 6",
+              "Checked 7"
+            ]
+          },
+          {
+            "sphere": 3,
+            "items": [
+              "Button: 3",
+              "Button: +",
+              "Checked 13",
+              "Checked 14"
+            ]
+          },
+          {
+            "sphere": 4,
+            "items": [
+              "Button: 3",
+              "Button: 8",
+              "Button: 4",
+              "Checked 16",
+              "Checked 5",
+              "Checked 8"
+            ]
+          },
+          {
+            "sphere": 5,
+            "items": [
+              "Button: *",
+              "Checked 17",
+              "Checked 23",
+              "Checked 26"
+            ]
+          },
+          {
+            "sphere": 6,
+            "items": [
+              "Button: -",
+              "Checked 58"
+            ]
+          },
+          {
+            "sphere": 7,
+            "items": [
+              "Button: 9",
+              "Button: 0",
+              "Checked 11",
+              "Checked 33",
+              "Checked 45"
+            ]
+          },
+          {
+            "sphere": 8,
+            "items": [
+              "Button: 1",
+              "Button: 7",
+              "Button: 6",
+              "Checked 15",
+              "Checked 20",
+              "Checked 24",
+              "Checked 27",
+              "Checked 31",
+              "Checked 9"
+            ]
+          },
+          {
+            "sphere": 9,
+            "items": [
+              "Button: 9",
+              "Button: 4",
+              "Checked 18",
+              "Checked 19",
+              "Checked 21",
+              "Checked 22",
+              "Checked 25",
+              "Checked 28",
+              "Checked 29",
+              "Checked 30",
+              "Checked 53",
+              "Checked 56",
+              "Checked 75"
+            ]
+          },
+          {
+            "sphere": 10,
+            "items": [
+              "Button: /",
+              "Checked 37",
+              "Checked 46",
+              "Checked 54",
+              "Checked 70",
+              "Checked 71",
+              "Checked 72",
+              "Checked 76",
+              "Checked 77"
+            ]
+          },
+          {
+            "sphere": 11,
+            "items": [
+              "Button: *",
+              "Button: 1",
+              "Checked 34",
+              "Checked 35",
+              "Checked 36",
+              "Checked 47",
+              "Checked 48",
+              "Checked 49",
+              "Checked 50",
+              "Checked 51",
+              "Checked 61"
+            ]
+          },
+          {
+            "sphere": 12,
+            "items": [
+              "Checked 32",
+              "Checked 38",
+              "Checked 39",
+              "Checked 40",
+              "Checked 41",
+              "Checked 42",
+              "Checked 43",
+              "Checked 44",
+              "Checked 52",
+              "Checked 55",
+              "Checked 57",
+              "Checked 59",
+              "Checked 60",
+              "Checked 62",
+              "Checked 63",
+              "Checked 64",
+              "Checked 65",
+              "Checked 66",
+              "Checked 67",
+              "Checked 68",
+              "Checked 69",
+              "Checked 73",
+              "Checked 74",
+              "Checked 78",
+              "Checked 79",
+              "Checked 80"
+            ]
+          },
+          {
+            "sphere": 13,
+            "items": [
+              "Victory"
+            ]
+          }
+        ]
+      },
+      "region_count": 81,
+      "grid_dims": {
+        "width": 12,
+        "height": 12
+      }
     }
   },
   "sphere_log": [

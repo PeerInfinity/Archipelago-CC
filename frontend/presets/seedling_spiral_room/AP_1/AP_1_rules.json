@@ -568,12 +568,14 @@
     }
   },
   "procgen_metadata": {
-    "driver": "shuffled-spiral",
-    "stop_reason": "spiral_complete",
-    "region_count": 4,
-    "grid_dims": {
-      "width": 2,
-      "height": 2
+    "1": {
+      "driver": "shuffled-spiral",
+      "stop_reason": "spiral_complete",
+      "region_count": 4,
+      "grid_dims": {
+        "width": 2,
+        "height": 2
+      }
     }
   },
   "sphere_log": [

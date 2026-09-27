@@ -1758,263 +1758,265 @@
     }
   },
   "procgen_metadata": {
-    "driver": "top-down-sphere",
-    "source_game": "Adventure",
-    "source_counts": {
-      "regions": 9,
-      "locations": 25,
-      "exits": 16,
-      "logic_gates": 12
-    },
-    "stop_reason": "all_placed",
-    "sphere_tree": {
-      "nodes": [
-        {
-          "index": 0,
-          "wave": 0,
-          "parent": null,
-          "side": null,
-          "cell": {
-            "gx": 2,
-            "gy": 2
-          },
-          "region_id": "Overworld",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E",
-            "N",
-            "W",
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 1,
-          "wave": 4,
-          "parent": 0,
-          "side": "E",
-          "cell": {
-            "gx": 3,
-            "gy": 2
-          },
-          "region_id": "YellowCastle",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 2,
-          "wave": 3,
-          "parent": 0,
-          "side": "N",
-          "cell": {
-            "gx": 2,
-            "gy": 1
-          },
-          "region_id": "WhiteCastle",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S",
-            "W",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 3,
-          "wave": 1,
-          "parent": 0,
-          "side": "W",
-          "cell": {
-            "gx": 1,
-            "gy": 2
-          },
-          "region_id": "BlackCastle",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E",
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 4,
-          "wave": 2,
-          "parent": 0,
-          "side": "S",
-          "cell": {
-            "gx": 2,
-            "gy": 3
-          },
-          "region_id": "CreditsRoom",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 5,
-          "wave": 3,
-          "parent": 2,
-          "side": "W",
-          "cell": {
-            "gx": 1,
-            "gy": 1
-          },
-          "region_id": "WhiteCastleVault",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 6,
-          "wave": 3,
-          "parent": 2,
-          "side": "N",
-          "cell": {
-            "gx": 2,
-            "gy": 0
-          },
-          "region_id": "WhiteCastlePreVaultPeek",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 7,
-          "wave": 2,
-          "parent": 3,
-          "side": "W",
-          "cell": {
-            "gx": 0,
-            "gy": 2
-          },
-          "region_id": "BlackCastleVault",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 8,
-          "wave": 5,
-          "parent": 4,
-          "side": "W",
-          "cell": {
-            "gx": 1,
-            "gy": 3
-          },
-          "region_id": "CreditsRoomFarSide",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        }
-      ],
-      "substrateCounts": {
-        "maze": 9
+    "1": {
+      "driver": "top-down-sphere",
+      "source_game": "Adventure",
+      "source_counts": {
+        "regions": 9,
+        "locations": 25,
+        "exits": 16,
+        "logic_gates": 12
       },
-      "quotaFallbacks": 0
-    },
-    "sphere_plan": {
-      "seed": 1,
-      "spheres": [
-        {
-          "sphere": 1,
-          "items": [
-            "Black Key",
-            "Sword"
-          ]
+      "stop_reason": "all_placed",
+      "sphere_tree": {
+        "nodes": [
+          {
+            "index": 0,
+            "wave": 0,
+            "parent": null,
+            "side": null,
+            "cell": {
+              "gx": 2,
+              "gy": 2
+            },
+            "region_id": "Overworld",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E",
+              "N",
+              "W",
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 1,
+            "wave": 4,
+            "parent": 0,
+            "side": "E",
+            "cell": {
+              "gx": 3,
+              "gy": 2
+            },
+            "region_id": "YellowCastle",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 2,
+            "wave": 3,
+            "parent": 0,
+            "side": "N",
+            "cell": {
+              "gx": 2,
+              "gy": 1
+            },
+            "region_id": "WhiteCastle",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S",
+              "W",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 3,
+            "wave": 1,
+            "parent": 0,
+            "side": "W",
+            "cell": {
+              "gx": 1,
+              "gy": 2
+            },
+            "region_id": "BlackCastle",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E",
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 4,
+            "wave": 2,
+            "parent": 0,
+            "side": "S",
+            "cell": {
+              "gx": 2,
+              "gy": 3
+            },
+            "region_id": "CreditsRoom",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 5,
+            "wave": 3,
+            "parent": 2,
+            "side": "W",
+            "cell": {
+              "gx": 1,
+              "gy": 1
+            },
+            "region_id": "WhiteCastleVault",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 6,
+            "wave": 3,
+            "parent": 2,
+            "side": "N",
+            "cell": {
+              "gx": 2,
+              "gy": 0
+            },
+            "region_id": "WhiteCastlePreVaultPeek",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 7,
+            "wave": 2,
+            "parent": 3,
+            "side": "W",
+            "cell": {
+              "gx": 0,
+              "gy": 2
+            },
+            "region_id": "BlackCastleVault",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 8,
+            "wave": 5,
+            "parent": 4,
+            "side": "W",
+            "cell": {
+              "gx": 1,
+              "gy": 3
+            },
+            "region_id": "CreditsRoomFarSide",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          }
+        ],
+        "substrateCounts": {
+          "maze": 9
         },
-        {
-          "sphere": 2,
-          "items": [
-            "Bridge",
-            "Right Difficulty Switch"
-          ]
-        },
-        {
-          "sphere": 3,
-          "items": [
-            "White Key"
-          ]
-        },
-        {
-          "sphere": 4,
-          "items": [
-            "Yellow Key"
-          ]
-        },
-        {
-          "sphere": 5,
-          "items": [
-            "Magnet"
-          ]
-        },
-        {
-          "sphere": 6,
-          "items": [
-            "Chalice"
-          ]
-        },
-        {
-          "sphere": 7,
-          "items": [
-            "Victory"
-          ]
-        }
-      ]
-    },
-    "region_count": 9,
-    "grid_dims": {
-      "width": 4,
-      "height": 4
+        "quotaFallbacks": 0
+      },
+      "sphere_plan": {
+        "seed": 1,
+        "spheres": [
+          {
+            "sphere": 1,
+            "items": [
+              "Black Key",
+              "Sword"
+            ]
+          },
+          {
+            "sphere": 2,
+            "items": [
+              "Bridge",
+              "Right Difficulty Switch"
+            ]
+          },
+          {
+            "sphere": 3,
+            "items": [
+              "White Key"
+            ]
+          },
+          {
+            "sphere": 4,
+            "items": [
+              "Yellow Key"
+            ]
+          },
+          {
+            "sphere": 5,
+            "items": [
+              "Magnet"
+            ]
+          },
+          {
+            "sphere": 6,
+            "items": [
+              "Chalice"
+            ]
+          },
+          {
+            "sphere": 7,
+            "items": [
+              "Victory"
+            ]
+          }
+        ]
+      },
+      "region_count": 9,
+      "grid_dims": {
+        "width": 4,
+        "height": 4
+      }
     }
   },
   "sphere_log": [

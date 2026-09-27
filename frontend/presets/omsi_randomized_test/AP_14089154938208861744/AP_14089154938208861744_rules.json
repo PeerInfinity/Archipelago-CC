@@ -2640,25 +2640,27 @@
     }
   ],
   "loop_costs": {
-    "version": "1.0",
-    "generatedFrom": "scripts/test/generate-omsi-randomized-test-preset.mjs",
-    "regions": {
-      "Menu": {
-        "moveCost": 0,
-        "xpEffect": "cost"
+    "1": {
+      "version": "1.0",
+      "generatedFrom": "scripts/test/generate-omsi-randomized-test-preset.mjs",
+      "regions": {
+        "Menu": {
+          "moveCost": 0,
+          "xpEffect": "cost"
+        },
+        "region_0_0": {
+          "moveCost": 50,
+          "xpEffect": "cost"
+        },
+        "region_1_0": {
+          "moveCost": 50,
+          "xpEffect": "cost"
+        }
       },
-      "region_0_0": {
-        "moveCost": 50,
-        "xpEffect": "cost"
-      },
-      "region_1_0": {
-        "moveCost": 50,
-        "xpEffect": "cost"
-      }
-    },
-    "locations": {},
-    "defaultRegionCost": 50,
-    "defaultLocationCost": 10,
-    "defaultRegionXpEffect": "cost"
+      "locations": {},
+      "defaultRegionCost": 50,
+      "defaultLocationCost": 10,
+      "defaultRegionXpEffect": "cost"
+    }
   }
 }

@@ -1528,12 +1528,14 @@
     }
   },
   "procgen_metadata": {
-    "driver": "grid-growth",
-    "stop_reason": "pool_empty",
-    "region_count": 10,
-    "grid_dims": {
-      "width": 4,
-      "height": 5
+    "1": {
+      "driver": "grid-growth",
+      "stop_reason": "pool_empty",
+      "region_count": 10,
+      "grid_dims": {
+        "width": 4,
+        "height": 5
+      }
     }
   },
   "sphere_log": [

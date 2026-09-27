@@ -2100,9 +2100,11 @@
     }
   },
   "loop_costs": {
-    "regions": {},
-    "locations": {},
-    "defaultRegionCost": 50,
-    "defaultLocationCost": 10
+    "1": {
+      "regions": {},
+      "locations": {},
+      "defaultRegionCost": 50,
+      "defaultLocationCost": 10
+    }
   }
 }
