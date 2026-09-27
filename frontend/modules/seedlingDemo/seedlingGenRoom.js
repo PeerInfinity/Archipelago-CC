@@ -74,6 +74,7 @@ import { VERDICT } from './procgenOracle.js';
 import { PRE_SWORD_PALETTE, POST_SWORD_PALETTE } from './procgenPalette.js';
 import { pickDoorCells } from './levelSetExits.js';
 import { TILE_SIZE, buildLevelWorld } from './levelWorld.js';
+import { ROOM_TILES_MAX, ROOM_TILES_MIN } from './procgenLevel.js';
 import { coreLevelRecord } from './levelSetValidator.js';
 import { SIDES } from '../shared/procgen/spatialPrimitives.js';
 import { makeLocationName } from '../procgenCore/apLocationNaming.js';
@@ -197,6 +198,78 @@ export const GEN_ROOM_REROLL_CAUSES = Object.freeze({
 });
 
 /**
+ * ⛓ G8 — **A ROOM THE BUDGET CANNOT SEAT GROWS.** After `GEN_ROOM_DOOR_REROLLS`
+ * re-rolls at a size, the room grows by this many tiles on each side (each side
+ * capped at `GEN_ROOM_MAX_SIDE`) and the budget runs again there. Measured (G8 W0):
+ * 2 closes the census's core refusals in fewer grows than 1.
+ */
+export const GEN_ROOM_GROW_STEP = 2;
+
+/**
+ * ⛓ G8 — the largest side a room grows to: the room contract's own maximum
+ * (`procgenLevel.ROOM_TILES_MAX`, measured over the shipped atlas). A room the
+ * budget cannot seat at this size REFUSES, naming every size it tried.
+ */
+export const GEN_ROOM_MAX_SIDE = ROOM_TILES_MAX;
+
+/**
+ * ⛓ G8 — THE SIZE OF ATTEMPT `a`: the room's own (`origin`) for the first
+ * `GEN_ROOM_DOOR_REROLLS + 1` attempts, then grown one step per spent budget,
+ * each side capped. Attempts 0…K are the pre-G8 sequence, byte for byte.
+ */
+export function sizeOfAttempt(origin, a) {
+    const grows = Math.floor(a / (GEN_ROOM_DOOR_REROLLS + 1));
+    const side = (v) => (v >= GEN_ROOM_MAX_SIDE ? v : Math.min(GEN_ROOM_MAX_SIDE, v + GEN_ROOM_GROW_STEP * grows));
+    return { width: side(origin.width), height: side(origin.height) };
+}
+
+/** ⛓ G8 — the LAST attempt of a room of size `origin`: the whole budget spent at the capped size. */
+export function lastAttempt(origin) {
+    const short = Math.max(0, GEN_ROOM_MAX_SIDE - Math.min(origin.width, origin.height));
+    return (Math.ceil(short / GEN_ROOM_GROW_STEP) + 1) * (GEN_ROOM_DOOR_REROLLS + 1) - 1;
+}
+
+/**
+ * ⛓ G8 — CAN A ROOM OF `size` HOLD `demand` CELLS AT ALL? Its interior (the
+ * border is wall by construction) less the start. A size that cannot is SKIPPED
+ * without a draw: no draw there could seat them, so the first attempt that
+ * builds is unchanged, and a demand no size up to the cap holds refuses at once
+ * instead of generating every size (measured G8 W0: a 30×30 room ≈ 15 s).
+ */
+export function roomCanHold(size, demand) {
+    return demand <= (size.width - 2) * (size.height - 2) - 1;
+}
+
+/**
+ * A size the room contract allows — only such a size is ever SKIPPED; one
+ * outside it is drawn, so the generator refuses it in its own sentence (a bad
+ * size is the caller's, and no growth rescues it).
+ */
+const inContract = (z) => [z.width, z.height].every((v) => Number.isInteger(v) && v >= ROOM_TILES_MIN && v <= ROOM_TILES_MAX);
+
+/** The error of an attempt skipped by `roomCanHold`, in `pickDoorCells`' words. */
+const cannotHold = (regionId, size, demand) => new Error(`levelSetExits: room '${regionId}' needs ${demand} cell(s) `
+    + `for its doors and locations, more than a ${size.width}x${size.height} room's interior holds`);
+
+/** ⛓ G8 — every size a room tried from attempt `from` to `to` (inclusive), in order, each once. */
+export function sizesTried(origin, to, from = 0) {
+    const seen = [];
+    for (let a = from; a <= to; a += 1) {
+        const { width, height } = sizeOfAttempt(origin, a);
+        if (!seen.some((z) => z.width === width && z.height === height)) seen.push({ width, height });
+    }
+    return seen;
+}
+
+/** The sizes a refusal names, and the budget spent at each. */
+const grownRefusal = (origin, to) => ({
+    sizes: sizesTried(origin, to).map((z) => `${z.width}x${z.height}`),
+    step: GEN_ROOM_GROW_STEP,
+    max: GEN_ROOM_MAX_SIDE,
+    budget: GEN_ROOM_DOOR_REROLLS,
+});
+
+/**
  * The room seed of attempt `k`: the drawn seed itself at 0, then a fixed integer
  * hash of (drawn, k) — never 0 (Seedling refuses seed 0), never the engine's rng.
  */
@@ -301,8 +374,18 @@ function drawRoom(regionId, drawn, k, size, knobs, doorCount) {
     return { seed, out, record, start, goalCell, doors };
 }
 
-/** `generation` after attempt `k` — `rerollCause` only when the room was re-rolled. */
-const generationAfter = (knobs, k, cause) => ({ ...knobs, rerolls: k, ...(k > 0 ? { rerollCause: cause } : {}) });
+/**
+ * `generation` after attempt `k` — `rerollCause` only when the room was re-rolled,
+ * `grownFrom` (the size the pipeline asked for) only when it GREW (G8).
+ */
+const generationAfter = (knobs, k, cause, origin = null, size = null) => ({
+    ...knobs, rerolls: k, ...(k > 0 ? { rerollCause: cause } : {}),
+    ...(origin && size && (size.width !== origin.width || size.height !== origin.height)
+        ? { grownFrom: { width: origin.width, height: origin.height } } : {}),
+});
+
+/** The size a room was ASKED for: its `grownFrom` when it grew, else its own. */
+const originOf = (world) => world.generation?.grownFrom ?? world.size;
 
 /**
  * `generateRegionCore` — the room: the generator's record for a seed drawn from
@@ -319,12 +402,19 @@ export function generateGenRoom(input = {}) {
     // ⛓ G2 (⚖ planner): a room that cannot seat its doors UNSEALED is re-rolled —
     //   `rerollSeed(drawn, k)`, no engine rng consumed, so a room that seats on the
     //   first draw is byte-unchanged and no other region moves.
-    for (let k = 0; k <= GEN_ROOM_DOOR_REROLLS; k += 1) {
-        draw = drawRoom(regionId, drawn, k, size, knobs, exits.length);
+    // ⛓ G8: after the budget at a size, the room GROWS (`sizeOfAttempt`) and the
+    //   same sequence runs on — still inside this one core call, never short.
+    const last = lastAttempt(size);
+    for (let k = 0; k <= last; k += 1) {
+        const at = sizeOfAttempt(size, k);
+        draw = roomCanHold(at, exits.length) || !inContract(at)
+            ? drawRoom(regionId, drawn, k, at, knobs, exits.length)
+            : { seed: rerollSeed(drawn, k), record: at, err: cannotHold(regionId, at, exits.length) };
         if (!draw.err) { rerolls = k; break; }
     }
     if (draw.err) {
-        throw new Error(GEN_ROOM_REFUSALS.tooManyDoors(regionId, draw.seed, draw.record, exits.length, draw.err.message));
+        throw new Error(GEN_ROOM_REFUSALS.tooManyDoors(regionId, draw.seed, draw.record, exits.length, draw.err.message,
+            grownRefusal(size, last)));
     }
     const { seed, out, record, start, goalCell, doors } = draw;
     const nextSide = sideAssigner(exits);
@@ -352,7 +442,7 @@ export function generateGenRoom(input = {}) {
             start,
             goalCell,
             // ⛓ `rerolls`: how many re-rolls it took (0 = the first draw) — `seed` is the one used.
-            generation: generationAfter(knobs, rerolls, GEN_ROOM_REROLL_CAUSES.doors),
+            generation: generationAfter(knobs, rerolls, GEN_ROOM_REROLL_CAUSES.doors, size, record),
             // ⛓ G5: the drawn seed, so a later re-roll (a location the room cannot
             //   seat, an engine-added door) continues THIS room's sequence. Never serialized.
             drawnSeed: drawn,
@@ -396,9 +486,9 @@ function seatsFor(world, rows) {
 }
 
 /** The sentence of a room that cannot seat `rows` beside what it holds. */
-function locationsRefusal(world, rows, free, rerolls = null) {
+function locationsRefusal(world, rows, free, grown = null) {
     return GEN_ROOM_REFUSALS.tooManyLocations(world.region_id, world.locations.length + rows.length,
-        [...world.locations.map((l) => l.cell), ...free].map((c) => `(${c.tx},${c.ty})`), rerolls);
+        [...world.locations.map((l) => l.cell), ...free].map((c) => `(${c.tx},${c.ty})`), grown);
 }
 
 /** A placed location as the row it was placed from: its cell and tag are the room's, re-derived on a re-roll. */
@@ -408,40 +498,51 @@ const rowOf = ({ cell: _cell, tag: _tag, ...row }) => row;
  * ⛓⛓ G5 — **THE ROOM RE-ROLLED, THE AP LOGIC KEPT** (⚖ planner 2026-09-26: one
  * function for both cases, one counter, one budget, no engine rng). The next
  * draws of THIS room's sequence (`rerollSeed(drawnSeed, k)`, k after the last
- * one used, up to `GEN_ROOM_DOOR_REROLLS`) until one seats a door for EVERY exit
+ * one used — growing past each spent budget, G8 — up to `lastAttempt`) until one seats a door for EVERY exit
  * in `entries` (the k-th exit the k-th door, re-certified with them all as walls)
  * AND every location in `rows` (the first on the goal cell). What moves: `seed`,
  * `record`, `start`, `goalCell`, the doors' cells and every location's cell and
  * tag. What never does: the exit keys, ids, AP names and rules, the location ids,
  * items, names and rules — so the rules the engine extracted from the room (no
- * cell in them) stay true. `{room, bound}` (a NEW world and its exits bound to
- * doors, the argument untouched), or `{err}` after the budget.
+ * cell in them) stay true. G8: the room's `size` moves when it grows, and
+ * `generation.grownFrom` keeps the size it was asked for. `{room, bound}` (a NEW
+ * world and its exits bound to doors, the argument untouched), or `{err, grown}`
+ * after the last attempt (`grown`: the sizes tried, for the refusal).
  */
 export function rerollGenRoom(world, entries, rows, cause) {
     const knobs = knobsOf({ seedlingGen: world.generation });
+    const origin = originOf(world);
+    const last = lastAttempt(origin);
     let err = null;
-    for (let k = (world.generation?.rerolls ?? 0) + 1; k <= GEN_ROOM_DOOR_REROLLS; k += 1) {
-        const draw = drawRoom(world.region_id, world.drawnSeed, k, world.size, knobs, entries.length);
+    for (let k = (world.generation?.rerolls ?? 0) + 1; k <= last; k += 1) {
+        const at = sizeOfAttempt(origin, k);
+        if (inContract(at) && !roomCanHold(at, entries.length + rows.length)) {
+            err = cannotHold(world.region_id, at, entries.length + rows.length);
+            continue;
+        }
+        const draw = drawRoom(world.region_id, world.drawnSeed, k, at, knobs, entries.length);
         if (draw.err) { err = draw.err; continue; }
         const bound = entries.map(([key, e], i) => [key, { ...e, ...doorFields(draw.doors[i]) }]);
+        const size = { width: draw.record.width, height: draw.record.height };
         const room = {
             ...world,
             seed: draw.seed,
+            size,
             record: draw.record,
             start: draw.start,
             goalCell: draw.goalCell,
-            generation: generationAfter(knobs, k, cause),
+            generation: generationAfter(knobs, k, cause, origin, size),
             exits: new Map(bound),
             locations: [],
             summary: { stop: draw.out.summary.stop ?? null, keptCount: draw.out.summary.keptCount ?? null },
         };
         const seats = seatsFor(room, rows);
-        if (seats.short) { err = new Error(locationsRefusal(room, rows, seats.free, k)); continue; }
+        if (seats.short) { err = new Error(locationsRefusal(room, rows, seats.free)); continue; }
         seatRows(room, rows, seats.free);
         return { room, bound };
     }
-    return { err: err ?? new Error(`levelSetExits: room '${world.region_id}' has no re-roll left `
-        + `(${GEN_ROOM_DOOR_REROLLS} used)`) };
+    return { grown: grownRefusal(origin, last), err: err ?? new Error(`levelSetExits: room '${world.region_id}' has `
+        + `no re-roll left (${last} used)`) };
 }
 
 /**
@@ -449,17 +550,19 @@ export function rerollGenRoom(world, entries, rows, cause) {
  * cell (if the room holds none yet), the rest on free flood cells nearest the
  * start. ⛓ G5: a room with too few cells is RE-ROLLED in place (`rerollGenRoom` —
  * the engine's world object keeps its identity and its exit records theirs),
- * and refused by name when no draw in the budget seats them — never returned
- * short, so the engine's own retry-then-grow loop is never entered.
+ * and refused by name when no draw seats them at any size up to the cap (G8) —
+ * never returned short, so the engine's own retry-then-grow loop is never entered.
  */
 function addLocations(world, rows) {
     const seats = seatsFor(world, rows);
     if (!seats.short) { seatRows(world, rows, seats.free); return; }
     if (!Number.isInteger(world.drawnSeed)) throw new Error(locationsRefusal(world, rows, seats.free));
     const all = [...world.locations.map(rowOf), ...rows];
-    const { room, bound, err } = rerollGenRoom(world, [...world.exits.entries()], all, GEN_ROOM_REROLL_CAUSES.locations);
-    if (err) throw new Error(locationsRefusal(world, rows, seats.free, GEN_ROOM_DOOR_REROLLS));
-    for (const key of ['seed', 'record', 'start', 'goalCell', 'generation', 'summary']) world[key] = room[key];
+    const { room, bound, err, grown } = rerollGenRoom(world, [...world.exits.entries()], all,
+        GEN_ROOM_REROLL_CAUSES.locations);
+    if (err) throw new Error(locationsRefusal(world, rows, seats.free, grown));
+    // ⛓ G8: `size` too — a room that grew is the engine's world at its new size.
+    for (const key of ['seed', 'size', 'record', 'start', 'goalCell', 'generation', 'summary']) world[key] = room[key];
     for (const [key, e] of bound) {
         const record = world.exits.get(key);
         for (const field of DOOR_FIELDS) record[field] = e[field];
@@ -624,8 +727,8 @@ function bindAllDoors(world, entries) {
 function bindOrReroll(world, entries) {
     const first = bindAllDoors(world, entries);
     if (first.bound) return { room: world, bound: first.bound };
-    const refuse = (rerolls, err) => new Error(GEN_ROOM_REFUSALS.engineDoors(world.region_id ?? '?', world.seed,
-        world.size, entries.length, first.unseated, rerolls, err.message));
+    const refuse = (grown, err) => new Error(GEN_ROOM_REFUSALS.engineDoors(world.region_id ?? '?', world.seed,
+        world.size, entries.length, first.unseated, grown, err.message));
     if (!Number.isInteger(world.drawnSeed)) {
         throw new Error(GEN_ROOM_REFUSALS.tooManyDoors(world.region_id ?? '?', world.seed, world.size,
             entries.length, first.err.message));
@@ -634,7 +737,7 @@ function bindOrReroll(world, entries) {
     const bare = entries.map(([key, e]) => [key, Object.fromEntries(Object.entries(e)
         .filter(([field]) => !DOOR_FIELDS.includes(field)))]);
     const again = rerollGenRoom(world, bare, rows, GEN_ROOM_REROLL_CAUSES.engineDoors);
-    if (again.err) throw refuse(GEN_ROOM_DOOR_REROLLS, again.err);
+    if (again.err) throw refuse(again.grown, again.err);
     return again;
 }
 
