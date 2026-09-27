@@ -202,15 +202,17 @@ The in-app runner races the whole roster against one wall-clock budget
 `test-substrates` outgrew it — the real-time omsi bot walks dominate its wall
 clock — so run it in batches instead:
 ```
-npm test -- --mode=test-substrates --batch=fast        # everything except the bot walks
+npm test -- --mode=test-substrates --batch=fast        # everything no other batch claims
+npm test -- --mode=test-substrates --batch=apworld     # the apworld editor rows only
 npm test -- --mode=test-substrates --batch=bot-walks   # the real-time bot legs only
 ```
 ⛔ **No roster counts or durations are quoted here on purpose** — they go stale
 silently and then get trusted. To derive today's numbers, read
 `frontend/test-configs/playwright_tests_config-substrates.json` (note
 `defaultEnabledState`, and that a test counts only if its own `enabled` says so)
-and group by `category`; `bot-walks` claims the `Omsi bot walks` category and
-`fast` takes the rest. The authoritative number is a run.
+and group by `category`; `bot-walks` claims the `Omsi bot walks` category, `apworld`
+claims `apworldEditor` (CI runs it on push after `fast`), and `fast` takes the rest.
+The authoritative number is a run.
 Batches select whole **categories** and live in `frontend/modules/tests/testBatches.js`.
 `fast` is the default batch: it absorbs every category no other batch claims, so
 a new test category still *runs* even if nobody classified it. Omitting `--batch`

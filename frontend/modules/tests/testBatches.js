@@ -21,8 +21,10 @@
 export const TEST_BATCHES = Object.freeze({
     fast: Object.freeze({
         description:
-            'Everything except the real-time bot walks. The whole roster minus '
-            + 'the omsi bot legs runs in roughly two and a half minutes.',
+            'Everything no other batch claims: the substrate tests other than '
+            + 'the real-time bot walks and the apworld editor rows. CI runs it '
+            + 'on push (test-templates.yml); its time is in each run\'s results '
+            + 'file, not here.',
         // The default batch: claims every category not listed by another batch.
         isDefault: true,
         categories: Object.freeze([]),
@@ -36,6 +38,14 @@ export const TEST_BATCHES = Object.freeze({
             + 'are quarantined rather than sped up: an Instant variant cannot '
             + 'witness a real-time defect.',
         categories: Object.freeze(['Omsi bot walks']),
+    }),
+    apworld: Object.freeze({
+        description:
+            'The apworld editor rows. Over half of the substrate roster and '
+            + 'over half of what used to be the fast batch\'s time, so they get '
+            + 'a budget of their own; CI runs this batch on push as a second '
+            + 'step after fast (test-templates.yml).',
+        categories: Object.freeze(['apworldEditor']),
     }),
 });
 

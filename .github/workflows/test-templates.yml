@@ -126,14 +126,24 @@ jobs:
         run: |
           npm test -- --mode=test-regression --bundled
 
-      # The `fast` batch only: every substrate category except the real-time
-      # omsi bot walks (frontend/modules/tests/testBatches.js). The whole roster
-      # outlived this job's 30-minute cap on every main run from 2026-09-11 to
-      # 2026-09-27; the `bot-walks` batch runs on demand in
-      # test-substrates-bot-walks.yml (manual only, by the user's ruling).
+      # The `fast` batch: every substrate category no other batch claims
+      # (frontend/modules/tests/testBatches.js). The whole roster outlived this
+      # job's 30-minute cap on every main run from 2026-09-11 to 2026-09-27;
+      # the `bot-walks` batch runs on demand in test-substrates-bot-walks.yml
+      # (manual only, by the user's ruling).
       - name: Run substrate tests (fast batch)
         run: |
           npm test -- --mode=test-substrates --batch=fast
+
+      # The `apworld` batch (the `apworldEditor` category), as a second step
+      # rather than a parallel job (ci-split C2, 2026-09-27): each `npm test`
+      # is its own in-app run with its own 600 s page budget
+      # (AUTO_START_TIMEOUT_MS, testLogic.js), and a parallel job would repeat
+      # this job's setup. `!cancelled()` so a red `fast` step still runs it.
+      - name: Run substrate tests (apworld batch)
+        if: ${{ !cancelled() }}
+        run: |
+          npm test -- --mode=test-substrates --batch=apworld
 
       # always(), not !cancelled(): a job cancelled at its cap is exactly the
       # run whose passing steps' results are worth keeping — under !cancelled()

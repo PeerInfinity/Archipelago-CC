@@ -24,7 +24,8 @@ on:
       batch:
         description: >-
           The test-substrates batch to run (testBatches.js): bot-walks (the
-          real-time omsi bot walks) or fast (everything else).
+          real-time omsi bot walks), apworld (the apworld editor rows) or fast
+          (everything no other batch claims).
         type: string
         default: bot-walks
 
