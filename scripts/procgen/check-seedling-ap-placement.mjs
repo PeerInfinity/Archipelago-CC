@@ -1521,10 +1521,10 @@ const PANEL_JS = {
  * location bound to one fires nothing. The candidate build reads an optional
  * `@tag` on all three and, on collection, writes `Game.setPersistence(tag,
  * false)` — the `pendingCheck` choke point. The arms deliver the vanilla set
- * with the level-19 boss key TAGGED by the repo's one allocator
+ * with the level-29 boss key TAGGED by the repo's one allocator
  * (`placementTagId`, via `retagRecordSet`), boot ON the key, and read the
  * bridge's own reports:
- *   tagged   — exactly ONE `pendingCheck …|19|<tag>|0`; `keyMask` has the key.
+ *   tagged   — exactly ONE `pendingCheck …|29|<tag>|0`; `keyMask` has the key.
  *   vanilla  — the same room delivered UNTAGGED: no such report (byte-inert).
  *   p4d      — the TAGGED set on the build WITHOUT `tag`: no report — the
  *              absent-capability arm, the reason the host gates on the data.
@@ -1551,18 +1551,20 @@ if (WIN) {
 } else {
     const { placementTagId } = await import(join(REPO, 'frontend/modules/seedlingDemo/procgenSeedling.js'));
     const { retagRecordSet } = await import(join(REPO, 'frontend/modules/seedlingDemo/apPlacementRewriter.js'));
-    const KEY_LEVEL = 19;
-    const room19 = MAP.levels.find((l) => l.level === KEY_LEVEL);
-    const KEY = room19?.entities.find((e) => e.type === 'bosskey') ?? null;
-    const KEY_TAG = KEY ? placementTagId(room19, []) : null;
+    // ⚠ L29, the key `r5-bosskey-leg` walks to. L19's key (the shield boss's
+    // room) is NOT collectable on arrival — measured: the player stood on it
+    // for 10 and 60 ticks and keyMask stayed 0 on every build.
+    const KEY_LEVEL = 29;
+    const keyRoom = MAP.levels.find((l) => l.level === KEY_LEVEL);
+    const KEY = keyRoom?.entities.find((e) => e.type === 'bosskey') ?? null;
+    const KEY_TAG = KEY ? placementTagId(keyRoom, []) : null;
     const TAGGED_SET = KEY ? retagRecordSet(VANILLA_SET,
         [{ level: KEY_LEVEL, type: 'bosskey', x: KEY.x, y: KEY.y, tag: KEY_TAG }]).set : null;
     console.log(`\n# C4 on ${TAG_PAGE}: the L${KEY_LEVEL} boss key @(${KEY?.x},${KEY?.y}) `
         + `keyType ${KEY?.attrs?.keyType ?? 0}, allocated tag ${KEY_TAG}`);
-    // ⚠ ON THE KEY'S CENTRE: `BossKey` adds `Tile.w/2` to the `.oel` point and
-    // takes an 8x8 hitbox about it, so a boot at the `.oel` corner does not
-    // overlap it — measured: keyMask stayed 0 on all three arms.
-    const onKey = { level: KEY_LEVEL, x: (KEY?.x ?? 0) + TILE_HALF, y: (KEY?.y ?? 0) + TILE_HALF };
+    // ⛓ The boot IS the `.oel` point: the player spawns `+Tile.w/2` from it and
+    // `BossKey` centres itself by the same offset, so the two coincide.
+    const onKey = { level: KEY_LEVEL, x: KEY?.x, y: KEY?.y };
     const C4_ARMS = [
         armPlan('c4-tagged', { set: TAGGED_SET, boot: onKey, ticks: 10, awaitFinish: true, url: TAG_URL }),
         armPlan('c4-vanilla', { set: VANILLA_SET, boot: onKey, ticks: 10, awaitFinish: true, url: TAG_URL }),
