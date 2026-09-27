@@ -313,29 +313,8 @@ export function createGameClock({ bootTime = null } = {}) {
         spans.push({ frames, kind, why: why ?? null, t: at ?? null });
         if (t !== null) t += frames;
     };
-    let adopted = null;
     return {
         get declared() { return bootTime !== null; },
-        /**
-         * ⛓⛓ R9 SLICE L16 — A RESUMED WINDOW'S CLOCK, ADOPTED. A continuation
-         * (`tapeRunner`'s resume face) steps one run across windows, and a
-         * run that BOOTED with no declared `Game.time` answers `null` for
-         * ever — so the first clock-reading room of a chain that starts at
-         * the true start (L18's spinners) refused a contact the same window
-         * prices exactly when played alone. `adopt` fills an UNKNOWN clock
-         * with the value a fresh boot of that window reads at its first live
-         * tick; ⛔ it never overrides a clock that is already counting.
-         */
-        adopt(value) {
-            if (t !== null) {
-                fail(`gameClock.adopt: the clock already counts (${t}); adopting ${value} `
-                    + 'would be a second writer of `Game.time`');
-            }
-            if (!Number.isFinite(value) || value < 0) fail(`gameClock.adopt: ${value} is not a \`Game.time\``);
-            t = value;
-            adopted = value;
-        },
-        get adopted() { return adopted; },
         now: () => t,
         /** One `Game.update()` the tape DID advance through. */
         tick: () => { if (t !== null) t += TIME_RATE.value; },

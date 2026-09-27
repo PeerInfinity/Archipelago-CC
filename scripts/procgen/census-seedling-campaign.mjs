@@ -630,10 +630,7 @@ for (const [what, w, names] of [['chain', chainWhole, CHAIN], ['tail', tailWhole
     say(`  ${what}: ${w.stepped} of ${names.length} window(s) stepped, `
         + `${w.admitted} boundary(ies) admitted`
         + (w.stoppedAt ? ` — STOPPED at ${w.stoppedAt}: ${w.why.join('; ')}`
-            // ⛓ R9 slice L16: a window that THREW (`collectRun`'s error) is a
-            // third outcome, and printing it as an arrival crashed the report.
-            : w.threwIn ? ` — THREW in ${w.threwIn}: ${w.why.join('; ')}`
-                : ` — end L${w.endLevel} (${w.endCtor.x},${w.endCtor.y}), ${w.ticks} ticks`));
+            : ` — end L${w.endLevel} (${w.endCtor.x},${w.endCtor.y}), ${w.ticks} ticks`));
 }
 
 // ── THE FIX LIST ─────────────────────────────────────────────────────

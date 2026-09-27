@@ -5379,31 +5379,12 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0) {
  * actually is. ⚠ One wider at each end, for the pairing reason `deriveStrike`
  * records.
  */
-function trainIsSafeHere(run, aimKeys = null) {
+function trainIsSafeHere(run) {
     const span = SLASH_HIT_TICKS + 3;
     const forecast = run.spinnerForecast(span);
     const box = playerBoxAt(run.state.x, run.state.y);
     for (let i = 0; i < span; i += 1) {
         if (!clearOfHammersAt(run, box, forecast, i)) return false;
-    }
-    if (!aimKeys) return true;
-    /**
-     * ⛓⛓ R9 SLICE L16 — AND THE TRAIN AS IT WILL ACTUALLY BE WALKED. The box
-     * above is where the player stands NOW; the aim tick holds a facing key and
-     * MOVES them, and the press lands one tick later on a box this function
-     * never asked about. From `r9-solve-16`'s measured latch (L18, `Game.time`
-     * 10052) that gap was the whole failure: `safeStep` then refused the press
-     * as *"a strike the schedule should not have planned"*. So the train is also
-     * PREVIEWED — the aim keys, the press, then `SLASH_HIT_TICKS` standing —
-     * with the run's own stepper, each landing against the forecast index
-     * `safeStep` itself pairs it with (a step's landing is `forecast[k]`).
-     */
-    const step = run.previewStepper();
-    let st = { ...run.state };
-    const keysAt = (k) => (k === 1 ? aimKeys : (k === 2 ? new Set(['primary']) : new Set()));
-    for (let k = 1; k < span; k += 1) {
-        st = step({ ...st }, keysAt(k));
-        if (!clearOfHammersAt(run, playerBoxAt(st.x, st.y), forecast, k)) return false;
     }
     return true;
 }
@@ -6300,8 +6281,7 @@ function execKillByPress(run, perTick, resolved, ctx) {
                 && distanceRectPoint(run.state.x, run.state.y, body.rect) <= SLASH_REACH
                 && rectsOverlapLocal(slashRect(run.state.x, run.state.y,
                     facingToward(run.state, body.rect)), body.rect)
-                && trainIsSafeHere(run,
-                    new Set([FACING_KEYS[facingToward(run.state, body.rect)]]))) {
+                && trainIsSafeHere(run)) {
                 /**
                  * ⛓ IN REACH AND READY — aim this tick, press the next. The
                  * reach is asked of the LIVE body rather than of the schedule,
