@@ -438,11 +438,16 @@ describe('G8 — a room the budget cannot seat GROWS (⚖ user 2026-09-26, repla
      * became `{"1": block}`; with slot 1's block unwrapped each build still hashes to
      * its base value (174df082 / 00589206 / c4aba6c4 — measured), so the wrap is the
      * whole move and the property this row pins is unchanged.
+     * ⛓ RE-MEASURED at R9 slice DEF (2026-09-27): the compiler's
+     * `flash_panel.wasm` moved p4d → p4e (the default move). Each build names it
+     * ONCE, and with `seedling_bot_ap_p4e/game.html` substituted back to p4d
+     * each still hashes to the value above (9af2ee8e / 3601cc0d / 638b4110 —
+     * measured), so the wiring is the whole move.
      */
     it.each([
-        ['grid 8x6 seed 2', () => GRID(2, 8, 6), '9af2ee8e'],
-        ['grid 10x10 seed 7', () => GRID(7, 10, 10), '3601cc0d'],
-        ['host (committed state) seed 3', () => withSeed(SEEDLING_GENERATED_HOST_STATE, 3), '638b4110'],
+        ['grid 8x6 seed 2', () => GRID(2, 8, 6), '9f77cf55'],
+        ['grid 10x10 seed 7', () => GRID(7, 10, 10), 'c395917a'],
+        ['host (committed state) seed 3', () => withSeed(SEEDLING_GENERATED_HOST_STATE, 3), 'a4303571'],
     ])('%s built before G8: byte-identical', async (_name, state, md5) => {
         const rulesJson = await build(state());
         expect(createHash('md5').update(JSON.stringify(rulesJson)).digest('hex').slice(0, 8)).toBe(md5);
