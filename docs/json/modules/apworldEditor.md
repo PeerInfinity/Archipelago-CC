@@ -1062,7 +1062,16 @@ find a way to make the data valid again"*):
    so filler no longer inflates the pool, and the description adds *"N filler
    placements displaced and dropped from the pool"*. Per item, pool = placed +
    non-filler unplaced. An answer recorded before R6 carries no `fillerItems` and
-   replays as it did;
+   replays as it did.
+   ⛓ R5d: **the document owns the placements, the zone what the region is.** The
+   worker hands the channel the region's current locations with the item the
+   document places on each (`zoneLocationSpecs`: the canonical placement, else the
+   location's inline item, else none), and a channel that reads them answers the
+   document's item on a location it names. A placement so kept is not displaced;
+   where the zone's own item differed, the description names it (*"1 placement
+   kept as the document places it (`key_blue` at `Starting House - Chest`, not
+   the zone's own `Seal`)"*), and it says nothing when the two agree. jta's channel
+   does not read them (its tasks and perks are the zone's own);
 4. exits are unchanged (the old payload's, verbatim), the entry is
    `assembleZoneRegion` + `serializeRegionEntry`, and `grid_cell` is kept. **A
    field the old payload HOSTED for its siblings** (the dataset every
@@ -1142,9 +1151,15 @@ flash panel engages on the second); a room whose `atlas_ref` is not the
 document's atlas; **the atlas compiler's projection** (`seedling_atlas`,
 `seedling_playthrough`: their exits are the level's own transitions, not doors
 bound to sides, so the content source never made them); a fetched atlas whose id
-is not the one asked for (a stale index, a restamp). `seedling_spiral_room` and
-`seedling_sphere_room` take their own room back byte-identically. The corpus
-control's `--source=zone` reads the served documents off disk (numbers: plan §15).
+is not the one asked for (a stale index, a restamp). `seedling_spiral_room`,
+`seedling_sphere_room`, `seedling_atlas_host` and `seedling_atlas_location` take
+their own room back byte-identically. The last holds a location: its chest's own
+item is the Seal, the sphere placement put `key_blue` there, and since R5d the
+room is re-realised with the document's item (item 3's ⛓ above) — the page
+previews the op, the document does not change, so the session records nothing
+and answers *"No change (… 0 placements displaced; 1 placement kept as the
+document places it …)."*. The corpus control's `--source=zone` reads the served
+documents off disk (numbers: plan §15, §29).
 
 #### The fields view (D1)
 
