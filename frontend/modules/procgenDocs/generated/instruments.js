@@ -124,7 +124,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 22,
-            "count": 60,
+            "count": 61,
             "id": "probe"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 268,
+        "blockStyle": 269,
         "browser": 84,
-        "cited": 105,
-        "files": 279,
+        "cited": 106,
+        "files": 280,
         "lineStyle": 11,
-        "withDocblock": 279,
-        "withFlags": 201
+        "withDocblock": 280,
+        "withFlags": 202
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7377,6 +7377,35 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-help-frame — WHERE does `r8-solve-10` spend the dead frame the model does not know about?",
             "path": "scripts/procgen/probe-seedling-help-frame.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "window"
+            ],
+            "file": "probe-seedling-hold.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "window"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "HOLD-AFTER-LATCH, MEASURED ON THE GAME (R9 slice P4E, ⚖ 72 (a′)) — does a tape that declares `hold` freeze the room at its seam latch until the next `botStart`, and does the next window then start from EXACTLY the latch?",
+            "path": "scripts/procgen/probe-seedling-hold.mjs"
         },
         {
             "argvHelpers": [],

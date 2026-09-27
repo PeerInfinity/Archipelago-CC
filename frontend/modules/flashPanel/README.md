@@ -183,6 +183,29 @@ than gate: `generated` (seedling generated G2 — a world of generated rooms, on
 where they stand on the `atlas` arm, `loadSeedlingAtlas`; decided by the ledger's
 resolved count, so the vanilla worlds keep the vanilla arm).
 
+⛓ **R9 slice P4E (2026-09-27, ⚖ 72 (a′)) adds two, on the CANDIDATE build
+`seedling_bot_ap_p4e`** (pinned beside p4d; the default move is a separate
+ruling):
+
+- **`hold`** — hold-after-latch. A tape_version 12 `hold: true` freezes the
+  room at the tape's seam latch — no `super.update()`, no `Music.update()`, so
+  no body steps and `Game.time` stands — until the next `botStart` (or
+  `botReset`/`botLoadLevels`; never `botLoadTape`). `botStatus.held` reports
+  it. The consumer is `seedlingDemo/watchWasm.shipToWasm`: a sequence reads
+  the build's entry (`holdCapabilityOf`) and stamps `hold` on every window
+  that HAS a successor (`tapeFormat.holdingWindowTape`), so a continuation's
+  tick 0 is the latch frame plus zero room updates however long the page
+  takes between windows. `?wasm=<build>` picks the build a ship drives
+  (`wasmPageFor`); a build without `hold` refuses tape_version 12 by name.
+- **`tag`** — `bosskey`, `totempart` and `seed` take an OPTIONAL `@tag`
+  (`Game.optionalTag`: absent is -1, never `int("") = 0`) and collection writes
+  `Game.setPersistence(tag, false)` — the `pendingCheck` choke point. The
+  consumer is the atlas arm (`seedlingRandomizerWiring.loadSeedlingAtlas`): on
+  a `tag` build the check table ALLOCATES a tag for such a location
+  (`procgenSeedling.placementTagId`, the one allocator) instead of refusing it,
+  and the arm delivers the vanilla set with those tags written
+  (`apPlacementRewriter.retagRecordSet`) — no retag, no delivery, as before.
+
 ### The pin policy
 
 > **A build is in the submodule iff a TRACKED file of this repo names it.**
@@ -193,6 +216,7 @@ four independent views.
 
 | build | named by |
 |---|---|
+| `seedling_bot_ap_p4e` | **THE CANDIDATE** (R9 slice P4E, 2026-09-27 — `role: candidate`, pinned BESIDE the default, the M1→P2 precedent). `scripts/procgen/probe-seedling-hold.mjs`'s `SEEDLING_PAGE` default — the instrument that measures `hold` on the game. Every other driver reaches it by explicit selection (`SEEDLING_PAGE=seedling_bot_ap_p4e`, `watch.html?wasm=seedling_bot_ap_p4e`), and `check-seedling-ap-placement.mjs`'s C4 arms find it by DATA (the entry declaring `tag`) — pins row (h2) holds every gate to the lab's own build. `capabilities: ["arm","apitem","hold","tag"]` |
 | `seedling_bot_ap_p4d` | **EVERY DEFAULT, since EDITOR INTEGRATION slice P2** (⚖ user, 2026-08-30). The three seedling presets' `flash_panel.wasm` (moved by slice P1, because the panel's randomizer wiring detects eligibility from a build's own `capabilities`); `seedlingDemo/watchWasm.js`'s `WASM_PAGE` and `check-seedling-wasm-pages.mjs`'s `BUILD` literal, which are ONE fact spelled twice on purpose (that gate asserts the watch iframe's src against its own literal — importing it would be a fixed point); the `SEEDLING_PAGE` **default** of `check-seedling-bot-differential.mjs`, of `check-seedling-{generated-set,save-stamp,vanilla-manifest}.mjs`, of `probe-seedling-level-set-transport.mjs` and of ~35 more `scripts/procgen/{probe,plan,solve,run,derive,rerecord}-seedling-*.mjs`; the ARTIFACT and iframe-src literals of `check-seedling-{wasm-bridge,atlas-play}.mjs`, which follow the PRESET rather than a default of their own; `check-seedling-ap-placement.mjs`'s `SEEDLING_PAGE` default (since SEEDLING HEADLESS WEBGPU slice R2, 2026-09-12 — it was the `apitem` control's, on p4c) and its M1 rows; and the two TESTS that assert a name (`watchWasm.test.js`, `regionAtlasCompiler.test.js`). ⛓ **The only CODE source of the presets' wiring is `procgenPipeline/regionAtlasCompiler.js:161`** (`FLASH_PANEL_WIRING.seedling`) — every other preset block is hand-added, see the ⚠ below. **57 tracked files, 77 lines** (`:!*.md`); 61 / 85 counting `.md` — `git grep -ln`/`git grep -n`, the same population as p4c's first pair. RE-MEASURED 2026-08-30 at `d25a45b84`. ⚠ This cell said **6 / 6** dated 2026-08-29 and was already wrong by the time slice P2 cut its branch — `git grep` answered **9 / 18** at `511b271af`, one day and one merge later. A count is a measurement of a TREE STATE and it goes wrong by sitting still, so a cell like this is only as good as the SHA beside it. ⛓ The ONLY build declaring `apitem`, and since slice P4 it declares `arm` beside it (`capabilities: ["arm","apitem"]`) |
 
 ⛓⛓⛓ **p4b AND p4c RETIRED ON 2026-09-12 (SEEDLING HEADLESS WEBGPU slice R2),
