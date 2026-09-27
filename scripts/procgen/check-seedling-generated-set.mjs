@@ -106,7 +106,10 @@ const { validateLevelSet, planLevelSetChunks } = await M('levelSetValidator.js')
 const { parseTape } = await M('tapeFormat.js');
 
 const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
-const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
+/** ⛓ R9 slice DEF: `SEEDLING_PORT` aims this gate at a worktree's own server;
+ *  the default stays :8000 (the PRIMARY tree — trap 1003), so no caller moves. */
+const PAGE_URL = `http://localhost:${process.env.SEEDLING_PORT || '8000'}`
+    + `/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 const WIN_PY = '/mnt/c/Windows/py.exe';
 const DRIVER = join(HERE, 'seedling-level-set-win.py');
 
