@@ -71,6 +71,27 @@ export const TEST_CASE_FILES = [
 let discoveryComplete = false;
 let discoveryPromise = null;
 
+// Test files whose import threw ({ file, error }). A file that fails to import
+// registers none of its rows, so the roster simply lacks them and every other
+// signal stays green; testLogic publishes this list in
+// __playwrightTestResults__.importFailures and app.spec.js fails the run on it.
+let importFailures = [];
+
+function recordImportFailure(file, error) {
+  importFailures.push({
+    file,
+    error: `${error?.name || 'Error'}: ${error?.message ?? String(error)}`,
+  });
+}
+
+/**
+ * Test files that failed to import in this discovery (a copy).
+ * @returns {Array<{file: string, error: string}>}
+ */
+export function getImportFailures() {
+  return importFailures.map((failure) => ({ ...failure }));
+}
+
 /**
  * Discover and import all test files
  * This triggers their self-registration
@@ -111,6 +132,7 @@ export async function discoverTests() {
         log('info', `[TestDiscovery] Successfully imported ${file}`);
       } catch (error) {
         log('error', `[TestDiscovery] Failed to import ${file}:`, error);
+        recordImportFailure(file, error);
       }
     }
 
@@ -207,6 +229,7 @@ export function isDiscoveryComplete() {
 export function forceRediscovery() {
   discoveryComplete = false;
   discoveryPromise = null;
+  importFailures = [];
   log(
     'info',
     '[TestDiscovery] Forced rediscovery - next discoverTests() call will reimport files'
@@ -225,6 +248,7 @@ export async function registerTestFile(filePath) {
     log('info', `[TestDiscovery] Successfully imported ${filePath}`);
   } catch (error) {
     log('error', `[TestDiscovery] Failed to import ${filePath}:`, error);
+    recordImportFailure(filePath, error);
     throw error;
   }
 }

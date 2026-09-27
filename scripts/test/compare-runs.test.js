@@ -18,10 +18,11 @@ const CLI = path.join(path.dirname(fileURLToPath(import.meta.url)), 'compare-run
 let cwd;
 let dir;
 
-function run(name, { flavour, status = 'passed' } = {}) {
+function run(name, { flavour, status = 'passed', importFailures } = {}) {
   const body = {
     mode: 'test-regression', batch: null, testIds: null,
     ...(flavour ? { flavour } : {}),
+    ...(importFailures ? { importFailures } : {}),
     summary: { totalRun: 1, passedCount: status === 'passed' ? 1 : 0 },
     testDetails: [{ id: 'row-a', status, durationMs: 100, conditions: [] }],
   };
@@ -82,5 +83,26 @@ describe('compare-runs flavour', () => {
     const r = cli('--list');
     expect(r.out).toContain('[test-regression] test-results-2026-01-01T00-00-01.json');
     expect(r.out).toContain('[test-regression --bundled] test-results-2026-01-01T00-00-02.json');
+  });
+});
+
+describe('compare-runs: test files that failed to import (slice C6)', () => {
+  const BROKEN = [{ file: './testCases/brokenTests.js', error: "SyntaxError: Unexpected token ';'" }];
+
+  it('a new import failure is a NEW FAILURE (exit 1) though every row passed', () => {
+    const a = run('2026-01-01T00-00-01', { importFailures: [] });
+    const b = run('2026-01-01T00-00-02', { importFailures: BROKEN });
+    const r = cli(a, b);
+    expect(r.exit).toBe(1);
+    expect(r.out).toContain("test file failed to import: ./testCases/brokenTests.js — SyntaxError: Unexpected token ';'");
+    expect(r.out).toContain('1/1 passed · 1 test file(s) FAILED TO IMPORT');
+  });
+
+  it('the file importing again is FIXED; a run predating the field reads as none', () => {
+    const a = run('2026-01-01T00-00-01', { importFailures: BROKEN });
+    const b = run('2026-01-01T00-00-02');
+    const r = cli(a, b);
+    expect(r.exit).toBe(0);
+    expect(r.out).toContain('test file imports again: ./testCases/brokenTests.js');
   });
 });

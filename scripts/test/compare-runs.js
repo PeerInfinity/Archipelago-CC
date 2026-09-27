@@ -61,6 +61,10 @@ function load(file) {
         frozen: data.frozen || null,
         treeMoved: data.treeMoved ?? null,
         summary: data.summary || {},
+        // Test files that threw on import (slice C6): their rows are absent,
+        // so the per-row diff below cannot see them. Absent = recorded before
+        // the field existed.
+        importFailures: data.importFailures || [],
         byId,
     };
 }
@@ -86,7 +90,9 @@ function describe(run) {
     const s = run.summary;
     const mode = run.mode ? `[${identity(run)}] ` : `[${run.flavour}] `;
     const moved = run.treeMoved ? ' ⚠ TREE MOVED' : '';
-    return `${mode}${path.basename(run.file)} — ${s.passedCount ?? '?'}/${s.totalRun ?? '?'} passed${moved}`;
+    const imports = run.importFailures.length
+        ? ` · ${run.importFailures.length} test file(s) FAILED TO IMPORT` : '';
+    return `${mode}${path.basename(run.file)} — ${s.passedCount ?? '?'}/${s.totalRun ?? '?'} passed${imports}${moved}`;
 }
 
 /**
@@ -242,6 +248,15 @@ function main() {
     }
     for (const id of prev.byId.keys()) {
         if (!curr.byId.has(id)) removed.push(id);
+    }
+
+    const importedBefore = new Set(prev.importFailures.map((f) => f.file));
+    const importedNow = new Set(curr.importFailures.map((f) => f.file));
+    for (const f of curr.importFailures) {
+        if (!importedBefore.has(f.file)) newFailures.push(`test file failed to import: ${f.file} — ${f.error}`);
+    }
+    for (const file of importedBefore) {
+        if (!importedNow.has(file)) fixed.push(`test file imports again: ${file}`);
     }
 
     const section = (title, items) => {

@@ -7,6 +7,7 @@ import {
   getDiscoveredTests,
   getDiscoveredCategories,
   getDiscoveredTestFunctionById,
+  getImportFailures,
   isDiscoveryComplete,
 } from './testDiscovery.js';
 import { categoryInBatch, listBatchNames } from './testBatches.js';
@@ -1177,9 +1178,15 @@ export const testLogic = {
         notRunIds: notRun.map((test) => test.id),
       };
 
+      // Test files that threw on import registered no rows — absent from the
+      // roster AND from enabledTests, so nothing above can see them. Carried
+      // on every completion path; app.spec.js fails the run when non-empty.
+      const importFailures = getImportFailures();
+
       const playwrightResults = {
-        summary: { ...summary, ...roster },
+        summary: { ...summary, ...roster, importFailureCount: importFailures.length },
         testDetails,
+        importFailures,
         completedAt: new Date().toISOString(),
       };
 

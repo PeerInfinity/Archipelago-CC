@@ -3,7 +3,7 @@ import { TEST_FLAVOUR, TEST_FRONTEND_URL, flavourUrlParam } from '../../scripts/
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import { formatFailedTests, formatInAppSummary } from '../../scripts/test/inAppSummary.js';
+import { formatFailedTests, formatImportFailures, formatInAppSummary } from '../../scripts/test/inAppSummary.js';
 
 /**
  * Machine load, sampled at run start and again when a test fails.
@@ -300,6 +300,9 @@ test.describe('Application End-to-End Tests', () => {
     for (const line of formatFailedTests(results, loadSnapshot())) {
       console.log(line);
     }
+    for (const line of formatImportFailures(results)) {
+      console.log(line);
+    }
 
     // Truncation guard. The in-app runner races the whole suite against a
     // wall-clock budget (testLogic.js AUTO_START_TIMEOUT_MS); when it expires
@@ -351,6 +354,14 @@ test.describe('Application End-to-End Tests', () => {
 
     // The test system should complete successfully regardless of whether tests run
     expect(results.summary.failedCount).toBe(0);
+
+    // A test file that threw on import registered none of its rows, so the
+    // roster lacks them and every check above is green (slice C6). Kept after
+    // failedCount, like the roster checks below.
+    expect(
+      (results.importFailures || []).map((f) => `${f.file}: ${f.error}`),
+      'test files failed to import (see "TEST FILE(S) FAILED TO IMPORT" above)'
+    ).toEqual([]);
 
     // Fail the run when the roster was not finished. Kept after failedCount so
     // a genuinely-failing test still reports as a test failure first.

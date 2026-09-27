@@ -44,6 +44,11 @@ function analyzePlaywrightReport(reportPath = 'playwright-report.json') {
     log(`   Total Run: ${tests.summary.totalRun}`);
     log(`   Passed: ${tests.summary.passedCount}`);
     log(`   Failed: ${tests.summary.failedCount}`);
+    // A test file that threw on import has no rows below; [FAIL] so the
+    // template runner's pass_fail (test_utils.parse_playwright_analysis) sees it.
+    for (const f of tests.importFailures || []) {
+      log(`   [FAIL] test file failed to import: ${f.file} — ${f.error}`);
+    }
     
     // Calculate runtime statistics
     const runtimeData = tests.testDetails.map(test => {

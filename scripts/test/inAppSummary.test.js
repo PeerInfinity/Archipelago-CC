@@ -11,7 +11,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { formatFailedTests, formatInAppSummary } from './inAppSummary.js';
+import { formatFailedTests, formatImportFailures, formatInAppSummary } from './inAppSummary.js';
 import { extractInAppTestResults } from './analyze-test-results.js';
 
 const row = (id, status, durationMs, extra = {}) => ({
@@ -134,6 +134,37 @@ describe('formatFailedTests', () => {
     const noStart = { summary: { failedCount: 1 }, testDetails: [{ name: 'Page Load', status: 'failed', message: 'x' }] };
     expect(formatFailedTests(noStart, 'load 1')).toContain('  FAILED: Page Load');
     expect(formatInAppSummary(noStart)).toContain('  FAILED Page Load -');
+  });
+});
+
+// Every row green, one test file that never imported (slice C6).
+const IMPORT_FAILED = {
+  ...GREEN,
+  summary: { ...GREEN.summary, importFailureCount: 1 },
+  importFailures: [{ file: './testCases/brokenTests.js', error: "SyntaxError: Unexpected token ';'" }],
+};
+
+describe('formatImportFailures (test files that failed to import)', () => {
+  it('is empty when every file imported, or the payload predates the field', () => {
+    expect(formatImportFailures({ ...GREEN, importFailures: [] })).toEqual([]);
+    expect(formatImportFailures(GREEN)).toEqual([]);
+  });
+
+  it('names each file and its error, and says a green roster is not a pass', () => {
+    expect(formatImportFailures(IMPORT_FAILED)).toEqual([
+      '\nPW DEBUG: ===== 1 TEST FILE(S) FAILED TO IMPORT =====',
+      '  FAILED TO IMPORT: ./testCases/brokenTests.js',
+      "    error: SyntaxError: Unexpected token ';'",
+      '  NOTE: every row these files define is absent from the roster — a green roster is not a pass.',
+      'PW DEBUG: =========================================\n',
+    ]);
+  });
+
+  it('the summary counts them — 0 printed too, and no line for a payload without the field', () => {
+    expect(formatInAppSummary(IMPORT_FAILED)).toContain(
+      '  test files: 1 failed to import (their rows are MISSING from the roster above)');
+    expect(formatInAppSummary({ ...GREEN, importFailures: [] })).toContain('  test files: 0 failed to import');
+    expect(formatInAppSummary(GREEN).some((l) => l.includes('test files:'))).toBe(false);
   });
 });
 

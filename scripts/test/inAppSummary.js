@@ -70,6 +70,12 @@ export function formatInAppSummary(results, {
   if (s.failedConditionsCount) totals.push(`${s.failedConditionsCount} failed condition(s)`);
   lines.push(`  totals: ${totals.join(' · ')}`);
   if (s.error) lines.push(`  runner error: ${s.error}`);
+  // Absent only in payloads from before the field existed (or the spec's own
+  // synthetic page-load failure); a count of 0 is printed, so it is checkable.
+  if (Array.isArray(results?.importFailures)) {
+    lines.push(`  test files: ${results.importFailures.length} failed to import`
+      + (results.importFailures.length ? ' (their rows are MISSING from the roster above)' : ''));
+  }
 
   lines.push(`  page: ${consoleErrors} console error(s) (each printed as a BROWSER LOG line),`
     + ` ${pageErrors.length} uncaught exception(s)`);
@@ -108,6 +114,26 @@ export function formatFailedTests(results, machine) {
       lines.push('    (no failed condition recorded — the test died before asserting)');
     }
   }
+  lines.push('PW DEBUG: =========================================\n');
+  return lines;
+}
+
+/**
+ * Test files that threw on import — their rows never registered, so no row
+ * above can show them. Printed before the spec's assertions throw.
+ *
+ * @param {object} results - `__playwrightTestResults__`
+ * @returns {string[]} empty when every test file imported
+ */
+export function formatImportFailures(results) {
+  const failures = results?.importFailures || [];
+  if (failures.length === 0) return [];
+  const lines = [`\nPW DEBUG: ===== ${failures.length} TEST FILE(S) FAILED TO IMPORT =====`];
+  for (const f of failures) {
+    lines.push(`  FAILED TO IMPORT: ${f.file}`);
+    lines.push(`    error: ${f.error}`);
+  }
+  lines.push('  NOTE: every row these files define is absent from the roster — a green roster is not a pass.');
   lines.push('PW DEBUG: =========================================\n');
   return lines;
 }

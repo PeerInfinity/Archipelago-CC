@@ -11,6 +11,9 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+// The test files discovery failed to import — set per row (slice C6).
+const discovery = vi.hoisted(() => ({ importFailures: [] }));
+
 vi.mock('../stateManager/index.js', () => ({ stateManagerProxySingleton: {} }));
 vi.mock('./testDiscovery.js', () => ({
   discoverTests: async () => {},
@@ -20,6 +23,7 @@ vi.mock('./testDiscovery.js', () => ({
   ],
   getDiscoveredCategories: () => ({ Stub: {} }),
   getDiscoveredTestFunctionById: () => async () => true,
+  getImportFailures: () => discovery.importFailures.map((f) => ({ ...f })),
   isDiscoveryComplete: () => true,
 }));
 
@@ -66,6 +70,7 @@ beforeEach(async () => {
 });
 
 afterEach(() => {
+  discovery.importFailures = [];
   vi.restoreAllMocks();
   delete globalThis.window;
 });
@@ -142,5 +147,30 @@ describe('the in-app budget override (?autoStartTimeoutMs=)', () => {
     expect(summary.timeoutMs).toBe(40);
     expect(summary.error).toMatch(/^Auto-start timeout after/);
     expect(summary.notRunIds).toContain('row-b');
+  });
+});
+
+describe('test files that failed to import (slice C6)', () => {
+  it('a green roster still CARRIES each import failure in the results', async () => {
+    discovery.importFailures = [
+      { file: './testCases/brokenTests.js', error: "SyntaxError: Unexpected token ';'" },
+    ];
+    await testLogic.applyLoadedState(LOADED);
+    await testLogic.setEventBus(bus);
+    await untilComplete();
+    const results = window.__playwrightTestResults__;
+    expect(results.summary.failedCount).toBe(0);
+    expect(results.summary.importFailureCount).toBe(1);
+    expect(results.importFailures).toEqual([
+      { file: './testCases/brokenTests.js', error: "SyntaxError: Unexpected token ';'" },
+    ]);
+  });
+
+  it('none failed → an empty list and a zero count, not an absent field', async () => {
+    await testLogic.applyLoadedState(LOADED);
+    await testLogic.setEventBus(bus);
+    await untilComplete();
+    expect(window.__playwrightTestResults__.importFailures).toEqual([]);
+    expect(window.__playwrightTestResults__.summary.importFailureCount).toBe(0);
   });
 });
