@@ -577,15 +577,16 @@ describe('⛓⛓⛓ THE SEAM — the item gate, and the two elements certifying'
      * `solverBot.execTouch`'s no-shield arm `fail()`s — a `SolverBotError`, which
      * `procgenOracle.solve` re-throws — so the without-arm grades WEAK. The cure
      * is one line in L16's file (raise a `SolverRefusal`, as `execBreak` does).
-     * ⇒ THIS ROW REDS THE DAY IT LANDS, and the re-measure is to flip it to
-     * `met: true`, `grade: 'STRONG'`.
+     * ⇒ THIS ROW REDDED THE DAY IT LANDED — L16's `390abdb78e` (a `SolverRefusal`
+     * naming `Player.hasShield`) merged on 2026-09-27, and the planner flipped
+     * the row in the merge: `require:['hasShield']` is MET and grades STRONG.
      */
-    it('post-shield: `require:[hasShield]` grades WEAK — the execTouch throw (routed to L16)', () => {
+    it('post-shield: `require:[hasShield]` is MET and grades STRONG — the execTouch refusal landed (L16)', () => {
         const out = generateSeedlingLevel({ seed: 1, palette: POST_SHIELD_PALETTE,
             bounds: { obstacleTarget: 1, triesPerStep: 1, saturationK: 1 }, require: ['hasShield'] });
         expect(out.require.element).toBe('shieldgate');
-        expect(out.require.met).toBe(false);
-        expect(out.require.grade).toBe('WEAK');
+        expect(out.require.met).toBe(true);
+        expect(out.require.grade).toBe('STRONG');
     }, 60000);
 
     /**
