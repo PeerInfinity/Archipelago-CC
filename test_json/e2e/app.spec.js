@@ -27,6 +27,9 @@ test.describe('Application End-to-End Tests', () => {
   const testProfiling = process.env.TEST_PROFILING; // Optional profiling flag (1 to enable)
   const testBatch = process.env.TEST_BATCH; // Optional roster subset (see modules/tests/testBatches.js)
   const testIds = process.env.TEST_IDS; // Optional explicit id list (--test=), for solo flake triage
+  // Optional in-app budget override in ms (testLogic.js AUTO_START_TIMEOUT_MS);
+  // run-tests.js has already refused a value that is not a positive integer.
+  const autoStartTimeoutMs = process.env.TEST_AUTO_START_TIMEOUT_MS;
 
   // Build URL with all optional parameters. The flavour (`--bundled`) is part
   // of the base: it selects which boot the whole run measures.
@@ -57,6 +60,9 @@ test.describe('Application End-to-End Tests', () => {
   }
   if (testIds) {
     APP_URL += `&testIds=${encodeURIComponent(testIds)}`;
+  }
+  if (autoStartTimeoutMs) {
+    APP_URL += `&autoStartTimeoutMs=${encodeURIComponent(autoStartTimeoutMs)}`;
   }
 
   test('run in-app tests and check results', async ({ page }) => {
@@ -103,6 +109,9 @@ test.describe('Application End-to-End Tests', () => {
     }
     if (testProfiling) {
       console.log(`  - profiling: ${testProfiling}`);
+    }
+    if (autoStartTimeoutMs) {
+      console.log(`  - in-app budget: ${autoStartTimeoutMs} ms (TEST_AUTO_START_TIMEOUT_MS)`);
     }
     console.log(`PW DEBUG: URL: ${APP_URL}`);
     // waitUntil 'load', not 'networkidle': modes that auto-start their

@@ -107,6 +107,18 @@ if (config.batch && !listBatchNames().includes(config.batch)) {
   process.exit(2);
 }
 
+// The in-app budget override (TEST_AUTO_START_TIMEOUT_MS, ms; testLogic.js
+// AUTO_START_TIMEOUT_MS). The page falls back to the default on a bad value,
+// which would silently run a ten-minute budget the caller meant to shrink —
+// so a bad value is refused here, before the lock, like a bad --batch.
+if (process.env.TEST_AUTO_START_TIMEOUT_MS !== undefined
+    && !/^[1-9][0-9]*$/.test(process.env.TEST_AUTO_START_TIMEOUT_MS)) {
+  console.error(
+    `TEST_AUTO_START_TIMEOUT_MS must be a positive integer (milliseconds); got '${process.env.TEST_AUTO_START_TIMEOUT_MS}'`
+  );
+  process.exit(2);
+}
+
 // Take the box BEFORE Playwright starts (scripts/test/testRunBox.js): a run
 // must never start into another session's live measurement. Refuses by name
 // (exit 1) unless --wait-for-box=<sec> queues; a holder's own child passes

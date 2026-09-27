@@ -120,3 +120,27 @@ describe('testLogic auto-start', () => {
     expect(rowStarts).toEqual(['row-a', 'row-b', 'row-a', 'row-b']);
   });
 });
+
+describe('the in-app budget override (?autoStartTimeoutMs=)', () => {
+  it('reads a positive integer, else the default', async () => {
+    const { autoStartTimeoutMsFrom, AUTO_START_TIMEOUT_MS } = await import('./testLogic.js');
+    expect(autoStartTimeoutMsFrom('')).toBe(AUTO_START_TIMEOUT_MS);
+    expect(autoStartTimeoutMsFrom('?mode=test&autoStartTimeoutMs=90000')).toBe(90000);
+    for (const bad of ['0', '-5', '1.5', 'abc', '']) {
+      expect(autoStartTimeoutMsFrom(`?autoStartTimeoutMs=${bad}`)).toBe(AUTO_START_TIMEOUT_MS);
+    }
+  });
+
+  it('an overridden budget expires the run and publishes it as timedOut with THAT budget', async () => {
+    // Rows take 30 ms; a 40 ms budget cuts the run inside row-b.
+    window.location.search = '?autoStartTimeoutMs=40';
+    await testLogic.applyLoadedState(LOADED);
+    await testLogic.setEventBus(bus);
+    for (let i = 0; i < 100 && !window.__playwrightTestsComplete__; i += 1) await sleep(20);
+    const { summary } = window.__playwrightTestResults__;
+    expect(summary.timedOut).toBe(true);
+    expect(summary.timeoutMs).toBe(40);
+    expect(summary.error).toMatch(/^Auto-start timeout after/);
+    expect(summary.notRunIds).toContain('row-b');
+  });
+});
