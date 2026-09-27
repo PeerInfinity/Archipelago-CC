@@ -121,7 +121,7 @@ describe('the campaign chain has ONE declaration (R9 slice 12d)', () => {
     });
 
     it('⛓ the boot levels are the declaration\'s own, deduplicated and sorted', () => {
-        expect(campaignBootLevels()).toEqual([0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16]);
+        expect(campaignBootLevels()).toEqual([0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 18]);
     });
 });
 

@@ -960,8 +960,9 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         expect(chain.segments.filter((n) => loadTape(n).boot.level === 14))
             .toEqual(['r9-solve-14']);
         // ⛓ R9 slice L15: the tail was `r9-solve-15`, arriving in L16; ⛓ R9 slice
-        // L16: it is `r9-solve-16` and it arrives in L18.
-        expect(arrivalOf(chain.segments.at(-1))).toBe(18);
+        // L16: it was `r9-solve-16`, arriving in L18; ⛓ R9 slice L18b: it is
+        // `r9-solve-18` and it arrives in L19.
+        expect(arrivalOf(chain.segments.at(-1))).toBe(19);
     });
 
     /**
