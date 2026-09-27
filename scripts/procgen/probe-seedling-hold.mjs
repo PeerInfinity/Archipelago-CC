@@ -35,20 +35,19 @@
  * ⛓ Headless logic-only, one browser via `seedling-level-set-win.py`; takes
  * the box lock.
  *
- * Run: SEEDLING_PORT=8000 node scripts/procgen/probe-seedling-hold.mjs [--window=r9-solve-14]
+ * Run: SEEDLING_PORT=8000 node scripts/procgen/probe-seedling-hold.mjs [--window=r9-solve-14] [--win]
  *   (`SEEDLING_PAGE=<build>` drives another build; the default is the candidate)
  */
 import { dirname, join } from 'node:path';
 import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { argvHelp } from './argvHelp.js';
+import { takeBoxLockOrExit } from './boxLock.js';
+import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
+import { proveDriverChannel, withLogicOnlySteps } from './seedlingChannel.js';
+import { closeChannelOnExit, driverChannel } from './seedlingDriver.js';
 
 argvHelp(import.meta.url);
-
-const { takeBoxLockOrExit } = await import('./boxLock.js');
-const { HEADLESS_LOGIC_ONLY_ARGS } = await import('./headlessChromium.js');
-const { proveDriverChannel, withLogicOnlySteps } = await import('./seedlingChannel.js');
-const { closeChannelOnExit, driverChannel } = await import('./seedlingDriver.js');
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -56,6 +55,9 @@ const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
 const PORT = process.env.SEEDLING_PORT || '8000';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 const PAGE_URL = `http://localhost:${PORT}/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
+/** `--win`: the real-GPU Windows channel (the sibling level-set probes' own switch). */
+const WIN = process.argv.includes('--win');
+const WIN_PY = '/mnt/c/Windows/py.exe';
 const WINDOW = process.argv.find((a) => a.startsWith('--window='))?.slice('--window='.length)
     ?? 'r9-solve-14';
 
@@ -63,7 +65,7 @@ if (!existsSync(join(ARTIFACT, 'game.html'))) {
     console.log(`SKIP: no wasm artifact at ${ARTIFACT}`);
     process.exit(0);
 }
-takeBoxLockOrExit({ name: 'probe-seedling-hold.mjs', kind: 'browser' });
+takeBoxLockOrExit({ name: 'probe-seedling-hold.mjs', kind: WIN ? 'windows' : 'browser' });
 
 const T = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
 const { holdCapabilityOf } = await import(join(REPO, 'frontend/modules/seedlingDemo/watchWasm.js'));
@@ -119,10 +121,10 @@ const ARMS = HOLD.capable
 
 console.log(`# hold-after-latch on ${PAGE_NAME} — ${HOLD.why}; window ${WINDOW} `
     + `(${w1.tick_count} ticks, boot L${w1.boot.level})`);
-const channel = driverChannel({ win: false, driver: join(HERE, 'seedling-level-set-win.py'),
+const channel = driverChannel({ win: WIN, winPy: WIN_PY, driver: join(HERE, 'seedling-level-set-win.py'),
     chromiumArgs: HEADLESS_LOGIC_ONLY_ARGS });
 closeChannelOnExit(channel);
-channel.write('hold-plan.json', JSON.stringify({ url: PAGE_URL, arms: withLogicOnlySteps(ARMS) }));
+channel.write('hold-plan.json', JSON.stringify({ url: PAGE_URL, arms: WIN ? ARMS : withLogicOnlySteps(ARMS) }));
 channel.clear('hold-results.json');
 try {
     channel.run(['--plan', channel.path('hold-plan.json'), '--out', channel.path('hold-results.json')],
@@ -132,7 +134,7 @@ try {
     process.exit(1);
 }
 const results = JSON.parse(channel.read('hold-results.json'));
-if (!proveDriverChannel(results.arms)) process.exit(1);
+if (!WIN && !proveDriverChannel(results.arms)) process.exit(1);
 
 /** The arm's call values, in order, and its five read points A–E. */
 const readsOf = (arm) => {

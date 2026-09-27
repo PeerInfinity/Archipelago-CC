@@ -7393,6 +7393,12 @@ export const INSTRUMENTS = frz({
             "flags": [
                 {
                     "how": [
+                        "includes"
+                    ],
+                    "name": "win"
+                },
+                {
+                    "how": [
                         "startsWith"
                     ],
                     "name": "window"
@@ -7402,6 +7408,10 @@ export const INSTRUMENTS = frz({
                 {
                     "from": "argvHelp.js",
                     "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "HOLD-AFTER-LATCH, MEASURED ON THE GAME (R9 slice P4E, ⚖ 72 (a′)) — does a tape that declares `hold` freeze the room at its seam latch until the next `botStart`, and does the next window then start from EXACTLY the latch?",
