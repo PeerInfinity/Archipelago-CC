@@ -8,6 +8,9 @@ import { getModuleEventBus } from './index.js';
 import loopState from '../loops/loopStateSingleton.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 
+// The settings this UI exposes, and their values when nothing is saved.
+const BUILTIN_DEFAULTS = Object.freeze({ maxPaths: 100, maxAnalysisTimeMs: 10000 });
+
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -28,11 +31,16 @@ export class PathAnalyzerUI {
     Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.regionUI = regionUI;
 
-    // If specific settings provided, use them; otherwise use defaults from settingsManager
-    this.settings = pathAnalyzerSettings || this._getDefaultSettings();
+    // If specific settings provided, use them; otherwise start from the
+    // built-in defaults and replace them with the saved ones once read
+    // (settingsManager reads are async; the constructor cannot await).
+    this.settings = pathAnalyzerSettings || { ...BUILTIN_DEFAULTS };
 
     // Create the logic component with settings
     this.logic = new PathAnalyzerLogic(this.settings);
+    this.savedSettingsLoaded = pathAnalyzerSettings
+      ? Promise.resolve()
+      : this._getDefaultSettings().then((saved) => this.updateSettings(saved));
 
     // Track current analysis state
     this.currentRegionName = null;
@@ -54,16 +62,17 @@ export class PathAnalyzerUI {
   }
 
   /**
-   * Get default path analyzer settings from settings manager
-   * @returns {object} Settings object
+   * Get default path analyzer settings from settings manager (the ones
+   * "Save as Defaults" stored, else the built-in ones).
+   * @returns {Promise<object>} Settings object
    * @private
    */
-  _getDefaultSettings() {
+  async _getDefaultSettings() {
     try {
-      const moduleSettings = settingsManager.getModuleSettings('pathAnalyzer');
+      const moduleSettings = await settingsManager.getModuleSettings('pathAnalyzer');
       return {
-        maxPaths: moduleSettings?.maxPaths || 100,
-        maxAnalysisTimeMs: moduleSettings?.maxAnalysisTimeMs || 10000,
+        maxPaths: moduleSettings?.maxPaths || BUILTIN_DEFAULTS.maxPaths,
+        maxAnalysisTimeMs: moduleSettings?.maxAnalysisTimeMs || BUILTIN_DEFAULTS.maxAnalysisTimeMs,
       };
     } catch (error) {
       log(
@@ -71,10 +80,7 @@ export class PathAnalyzerUI {
         'Failed to load pathAnalyzer settings, using defaults:',
         error
       );
-      return {
-        maxPaths: 100,
-        maxAnalysisTimeMs: 10000,
-      };
+      return { ...BUILTIN_DEFAULTS };
     }
   }
 
@@ -89,18 +95,20 @@ export class PathAnalyzerUI {
   }
 
   /**
-   * Save current settings as new defaults
+   * Save current settings as new defaults — one module setting per key
+   * (moduleSettings.pathAnalyzer.<key>), so only these keys are saved.
+   * @returns {Promise<boolean>} true when every key was saved
    */
-  saveSettingsAsDefaults() {
+  async saveSettingsAsDefaults() {
     try {
-      // Update the settings in settingsManager
-      const currentSettings =
-        settingsManager.getModuleSettings('pathAnalyzer') || {};
-      const newSettings = { ...currentSettings, ...this.settings };
-      settingsManager.updateModuleSettings('pathAnalyzer', newSettings);
-      log('info', 'PathAnalyzer settings saved as defaults:', newSettings);
+      for (const [key, value] of Object.entries(this.settings)) {
+        await settingsManager.updateModuleSetting('pathAnalyzer', key, value);
+      }
+      log('info', 'PathAnalyzer settings saved as defaults:', this.settings);
+      return true;
     } catch (error) {
       log('error', 'Failed to save PathAnalyzer settings as defaults:', error);
+      return false;
     }
   }
 
@@ -283,13 +291,13 @@ export class PathAnalyzerUI {
     saveButton.className = 'button';
     saveButton.style.cssText =
       'padding: 5px 10px; font-size: 12px; background-color: #444; color: #e0e0e0; border: 1px solid #666; border-radius: 2px; cursor: pointer;';
-    saveButton.addEventListener('click', () => {
-      this.saveSettingsAsDefaults();
-      // Visual feedback
+    saveButton.addEventListener('click', async () => {
+      const saved = await this.saveSettingsAsDefaults();
+      // Visual feedback — only claim success when the save happened
       const originalText = saveButton.textContent;
       const originalStyle = saveButton.style.backgroundColor;
-      saveButton.textContent = 'Saved!';
-      saveButton.style.backgroundColor = '#4caf50';
+      saveButton.textContent = saved ? 'Saved!' : 'Save failed';
+      saveButton.style.backgroundColor = saved ? '#4caf50' : '#f44336';
       setTimeout(() => {
         saveButton.textContent = originalText;
         saveButton.style.backgroundColor = originalStyle;
@@ -301,8 +309,8 @@ export class PathAnalyzerUI {
     resetButton.className = 'button';
     resetButton.style.cssText =
       'padding: 5px 10px; font-size: 12px; background-color: #444; color: #e0e0e0; border: 1px solid #666; border-radius: 2px; cursor: pointer;';
-    resetButton.addEventListener('click', () => {
-      const defaultSettings = this._getDefaultSettings();
+    resetButton.addEventListener('click', async () => {
+      const defaultSettings = await this._getDefaultSettings();
       this.updateSettings(defaultSettings);
 
       // Update all input fields
