@@ -1521,8 +1521,15 @@ if (PANEL_ARMS_ENABLED) {
         { id: 'seedling',
             src: './presets/seedling/AP_14089154938208861744/AP_14089154938208861744_rules.json',
             expect: 'eligible' },
+        /**
+         * ⛓ G7 (seedling generated): this preset was the DATA-INELIGIBLE arm —
+         * refused at (iii), 0 of 41 — and that refusal WAS the defect of plan
+         * §12.4 (its chest fired a check nobody bound). It is now eligible on
+         * the ATLAS arm: its one location bound where it stands, with no
+         * delivery, no reset and no overlay.
+         */
         { id: 'seedling_atlas',
-            src: './presets/seedling_atlas/AP_1/AP_1_rules.json', expect: 'ineligible' },
+            src: './presets/seedling_atlas/AP_1/AP_1_rules.json', expect: 'atlas' },
     ];
     /**
      * ⛓ THE BOOT WAITS ONLY FOR THE LAYOUT; the preset fence is inside
@@ -1566,6 +1573,7 @@ if (PANEL_ARMS_ENABLED) {
                 const logs = [...document.querySelectorAll('.flash-panel-log > *')]
                     .map((n) => n.textContent);
                 if (logs.some((l) => /not applicable/.test(l))) return true;
+                if (logs.some((l) => /bound on the atlas arm/.test(l))) return true;
                 if (!w.overlay.some((o) => o.state === 'shown')) return false;
                 const el = document.querySelector('.flash-panel-ap-overlay');
                 if (!el) return true;
@@ -1769,6 +1777,16 @@ if (PANEL_ARMS_ENABLED) {
                 + `${resetStep?.detail?.rosterSize},"time":${resetStep?.detail?.time},"player":`
                 + `${JSON.stringify(resetStep?.detail?.player)}}  moved=`
                 + `${resetStep?.detail?.moved}`);
+        } else if (preset.expect === 'atlas') {
+            // ⛓ G7 — THE ATLAS ARM: bound where it stands, nothing delivered.
+            check(`${tag}: no delivery, and a check binding that OWNS the atlas-named location`,
+                obs.hasDelivery === false && obs.hasCheckBinding === true && obs.hostOwned === 1,
+                `delivery=${obs.hasDelivery} binding=${obs.hasCheckBinding} hostOwned=${obs.hostOwned}`);
+            check(`${tag}: the overlay never came up`, shown.length === 0,
+                JSON.stringify(obs.overlay));
+            check(`${tag}: the panel log NAMES the atlas arm`,
+                (obs.log ?? []).some((l) => /bound on the atlas arm/.test(l)),
+                JSON.stringify((obs.log ?? []).filter((l) => /ap placement/.test(l))));
         } else {
             // ⛓ THE DATA-INELIGIBLE ARM. Nothing was delivered, nothing bound,
             // and the panel SAID WHY rather than doing nothing quietly.
