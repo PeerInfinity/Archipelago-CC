@@ -1145,7 +1145,9 @@ export async function shipToWasm(payload, host) {
     };
 
     // ── probe ────────────────────────────────────────────────────────
-    const probe = await fetch(wasmPage, { method: 'HEAD' }).catch(() => null);
+    // ⛓ P4E: `no-store` — the page is now CHOSEN (`wasmPageFor`), and the
+    // one-busted-fetch rule (`watchLifetime.test.js`) names the literal only.
+    const probe = await fetch(wasmPage, { method: 'HEAD', cache: 'no-store' }).catch(() => null);
     if (!probe || !probe.ok) {
         return refuse('probe', 'wasm-build-missing',
             `${wasmPage} is missing (HTTP ${probe ? probe.status : 'unreachable'}). `
@@ -1174,7 +1176,8 @@ export async function shipToWasm(payload, host) {
      * runs, and reported as a FIELD (trap 269): `state.hold`.
      */
     const manifest = windows.length > 1
-        ? await fetch(WASM_MANIFEST).then((r) => (r.ok ? r.json() : null)).catch(() => null)
+        ? await fetch(WASM_MANIFEST, { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null))
+            .catch(() => null)
         : null;
     state.hold = windows.length > 1 ? holdCapabilityOf(manifest, wasmPage)
         : { build: buildNameFromWasmPath(wasmPage), capable: false,
