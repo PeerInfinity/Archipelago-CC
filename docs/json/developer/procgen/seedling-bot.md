@@ -12370,7 +12370,7 @@ its byte-frozen free oracle is compared against.
 
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-`r9-campaign` — **20 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L20** arrival, **5552 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
+`r9-campaign` — **21 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L20** end of the route, **5713 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
 | # | tape | rooms | ticks | earns |
 |---|---|---|---|---|
@@ -12394,8 +12394,9 @@ its byte-frozen free oracle is compared against.
 | 18 | `r9-solve-16` | L16 → L18 | 625 | — |
 | 19 | `r9-solve-18` | L18 → L19 | 394 | — |
 | 20 | `r9-solve-19` | L19 → L20 | 746 | `bosskey@L19` |
+| 21 | `r9-solve-20` | L20 → END | 161 | `shield@L20` |
 
-**NO REFUSED STEP** — no route step after the chain is refused by the survey — every remaining step SOLVES today, so the frontier is a GAP LIST rather than a refusal and this is a finding, not a stop.
+**ROUTE COMPLETE** — the chain walks all 21 route steps, from the true start to route step 21 in L20 (Level 020 - Shield (sphere 2.1) → Progressive Shield); there is no next room on this route.
 
 <!-- GENERATED:campaign-chain END -->
 

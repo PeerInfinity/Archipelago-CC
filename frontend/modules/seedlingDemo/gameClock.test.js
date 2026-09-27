@@ -170,9 +170,13 @@ describe('⛓⛓⛓ THE FREE ORACLE — the game latched every one of these', ()
          * exactly what a pin over a derived list is for (trap 410: a pin that
          * moves because somebody wrote into what it measures is the pin
          * WORKING). Nothing about the ceremony itself changed.
+         *
+         * ⛓ R9 SLICE L18b — FOUR AGAIN: `r9-solve-19` takes boss key 0 (a pickup
+         * ceremony) and became a seam's `from` when the terminal `r9-solve-20`
+         * grew behind it. Derived, and pinned because the count is the claim.
          */
         expect(withCeremony.map((s) => s.from))
-            .toEqual(['r8-d2-19', 'r8-solve-10', 'r9-solve-11']);
+            .toEqual(['r8-d2-19', 'r8-solve-10', 'r9-solve-11', 'r9-solve-19']);
         for (const { from, to } of withCeremony) {
             const tape = loadTape(from);
             const run = runTape(tape, { levelSource });

@@ -173,6 +173,13 @@ export const CAMPAIGN_SEGMENTS = Object.freeze([
             + 'L20. The survey\'s own solve is 746 tick(s), 5 decision(s), 0 '
             + 're-plan(s), passes [solve]',
     }),
+    Object.freeze({
+        name: 'r9-solve-20', level: 20, to: null, collects: Object.freeze(['shield']),
+        why: 'L20 — grown by `rerecord-seedling-campaign.mjs --grow` at route step '
+            + '21: Level 020 - Shield (sphere 2.1) → Progressive Shield. The '
+            + 'survey\'s own solve is 161 tick(s), 2 decision(s), 0 re-plan(s), '
+            + 'passes [solve]',
+    }),
 ]);
 
 /** The chain's id — the thing `?tapes=` names and a page expands. */
@@ -205,6 +212,17 @@ export const CAMPAIGN_RNG_SPLIT = true;
  */
 export const CAMPAIGN_SEGMENT_NAMES = Object.freeze(
     CAMPAIGN_SEGMENTS.map((s) => s.name));
+
+/**
+ * ⛓ R9 slice L18b — is `name` a TERMINAL campaign segment (`to: null`)? A
+ * terminal segment ends the route inside its own room and nothing boots from
+ * its latch, so the CALM-ARRIVAL law — which exists so a successor can build a
+ * fresh Player at v = 0 — is not asked of it (measured: `r9-solve-20` ends as
+ * the shield pickup's freeze releases, v = (−0.55, 1.18), and the model
+ * reproduces it tick for tick).
+ */
+export const isTerminalSegment = (name) =>
+    CAMPAIGN_SEGMENTS.some((s) => s.name === name && s.to === null);
 
 /** The chain's tail — the room a growth is asked about. */
 export const campaignTail = () => CAMPAIGN_SEGMENTS[CAMPAIGN_SEGMENTS.length - 1];

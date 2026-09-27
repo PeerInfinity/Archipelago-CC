@@ -533,7 +533,7 @@ function deriveFrontier(surveyRes) {
             lastArrival: { step: last.step, level: last.crossesTo ?? last.level,
                 segment: CHAIN.at(-1) },
             nextStep: null, refusal: null, covered, complete: true,
-            why: `ROUTE COMPLETE — the chain walks all ${steps.length} route steps, from the `
+            why: `the chain walks all ${steps.length} route steps, from the `
                 + `true start to route step ${last.step} in L${last.level} (${last.goals
                     .map((g) => g.why).join('; ')}); there is no next room on this route` };
     }

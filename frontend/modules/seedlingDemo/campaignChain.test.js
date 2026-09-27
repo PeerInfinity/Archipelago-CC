@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import {
     CAMPAIGN_SEGMENTS, CAMPAIGN_SEGMENT_NAMES, CAMPAIGN_CHAIN_ID,
     campaignTail, campaignNextLevel, campaignBootLevels, campaignChainBreaks,
+    isTerminalSegment,
 } from './campaignChain.js';
 import { PAGE_CHAINS } from './director.js';
 import { PLAYTHROUGH_CHAINS } from './playthroughWalk.js';
@@ -71,7 +72,8 @@ describe('the campaign chain has ONE declaration (R9 slice 12d)', () => {
     it('⛓ the demos catalogue interpolates the size and the arrival room', () => {
         const seq = DEMOS.find((d) => d.id === 'tape-sequence');
         expect(seq.claim).toBe(`windows.length == ${CAMPAIGN_SEGMENT_NAMES.length}`);
-        expect(seq.title).toContain(`L${campaignTail().to}`);
+        // ⛓ R9 slice L18b: a TERMINAL tail (`to: null`) ends in its own room.
+        expect(seq.title).toContain(`L${campaignTail().to ?? campaignTail().level}`);
         const raw = readFileSync(
             join(HERE, '..', 'procgenDocs', 'demos.js'), 'utf8');
         expect(raw).toMatch(/from\s*\n?\s*'\.\.\/seedlingDemo\/campaignChain\.js'/);
@@ -125,7 +127,7 @@ describe('the campaign chain has ONE declaration (R9 slice 12d)', () => {
     });
 
     it('⛓ the boot levels are the declaration\'s own, deduplicated and sorted', () => {
-        expect(campaignBootLevels()).toEqual([0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 18, 19]);
+        expect(campaignBootLevels()).toEqual([0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 18, 19, 20]);
     });
 });
 
@@ -253,13 +255,13 @@ describe('the reference prints a TERMINAL tail and the frontier\'s own sentence'
             { n: 2, name: 'b', level: 20, to: null, ticks: 10, promoted: false, collects: ['shield'] },
         ],
         arrivesAt: 20, terminal: true, nextStep: null, refusal: null,
-        complete: true, why: 'ROUTE COMPLETE — the chain walks all 21 route steps', ...over,
+        complete: true, why: 'the chain walks all 21 route steps', ...over,
     });
     it('⛓ a terminal row reads `L20 → END` and the headline says "end of the route"', () => {
         const md = campaignChainMarkdown(view({}));
         expect(md).toContain('| 2 | `b` | L20 → END | 10 | `shield@L20` |');
         expect(md).toContain('**L20** end of the route');
-        expect(md).toContain('**ROUTE COMPLETE** — ROUTE COMPLETE — the chain walks all 21');
+        expect(md).toContain('**ROUTE COMPLETE** — the chain walks all 21 route steps.');
         expect(md).not.toContain('No frontier is committed');
     });
     it('⛓ a GAP LIST prints its `why`, not "no frontier"', () => {
@@ -273,5 +275,15 @@ describe('the reference prints a TERMINAL tail and the frontier\'s own sentence'
     it('⛔ with no frontier sentence at all it still says so', () => {
         expect(campaignChainMarkdown(view({ complete: false, why: null })))
             .toContain('No frontier is committed');
+    });
+});
+
+describe('⛓ R9 slice L18b — the TERMINAL segment is the declaration\'s own `to: null`', () => {
+    it('only a `to: null` row is terminal, and at most the tail is', () => {
+        const terminal = CAMPAIGN_SEGMENTS.filter((s) => isTerminalSegment(s.name)).map((s) => s.name);
+        expect(terminal).toEqual(CAMPAIGN_SEGMENTS.filter((s) => s.to === null).map((s) => s.name));
+        expect(terminal.every((n) => n === campaignTail().name)).toBe(true);
+        expect(isTerminalSegment('r9-solve-19')).toBe(false);
+        expect(isTerminalSegment('no-such-tape')).toBe(false);
     });
 });

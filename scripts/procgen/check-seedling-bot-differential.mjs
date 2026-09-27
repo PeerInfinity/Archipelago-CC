@@ -404,6 +404,9 @@ const { playthroughAcceptanceFindings } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/playthroughAcceptance.js'));
 const { assertChainsWellFormed, isPlaythroughSegment } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/playthroughWalk.js'));
+// ⛓ R9 slice L18b — a TERMINAL segment claims no arrival, so no calm is required.
+const { isTerminalSegment } =
+    await import(join(REPO, 'frontend/modules/seedlingDemo/campaignChain.js'));
 // ⛔ The declared ENCOUNTER exemption — see `r5Chain.MODEL_EXEMPT`. A
 // scripted boss is not a mechanic the engine can model, so the three
 // mirror checks below are AMENDED by a per-fixture declaration rather than
@@ -2350,11 +2353,11 @@ try {
         // the zero-velocity fresh Player are REQUIRED of it. The six
         // predicates are `r7Acceptance`'s, already mutation-tested — this
         // consumes them, it does not restate them.
-        const isSegment = isPlaythroughSegment(name);
-        const latchRows = seamLatchFindings(seam ?? null, { requireCalm: isSegment });
+        const claimsArrival = isPlaythroughSegment(name) && !isTerminalSegment(name);
+        const latchRows = seamLatchFindings(seam ?? null, { requireCalm: claimsArrival });
         const unclaimed = latchRows.filter((r) => !r.ok);
         check(`${name}: the seam latch fired and carries the whole signature`
-            + `${isSegment ? ', AT A CALM ARRIVAL' : ''}`,
+            + `${claimsArrival ? ', AT A CALM ARRIVAL' : ''}`,
             unclaimed.length === 0,
             unclaimed.length === 0
                 ? `${Object.keys(seam.seam).length} field(s) latched at tick `
