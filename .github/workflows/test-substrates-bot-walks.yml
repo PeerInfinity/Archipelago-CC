@@ -19,13 +19,6 @@ name: Substrate tests — bot walks (manual)
 # server step is needed here.
 
 on:
-  # ⚠ TEMPORARY (ci-batches C1 task 2): registers this workflow so it can be
-  # dispatched on the branch; REVERTED by the next commit.
-  push:
-    branches:
-      - ci-batches
-    paths:
-      - '.github/workflows/test-substrates-bot-walks.yml'
   workflow_dispatch:
     inputs:
       batch:
