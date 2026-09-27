@@ -3706,6 +3706,7 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "areas",
+                "biome",
                 "elements",
                 "height",
                 "seed",

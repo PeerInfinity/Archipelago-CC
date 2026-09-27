@@ -66,6 +66,13 @@
  *   node scripts/procgen/check-seedling-wasm-element.mjs \
  *       --elements='chamber;w=2;h=3' --seed=5 --skeleton=branchy \
  *       --width=10 --height=10 --areas=1
+ *   # ⛓ S1's three door elements (subjects: the shortest certified tape per head)
+ *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=rockgate --seed=8 \
+ *       --skeleton=empty --biome=post-sword --areas=0
+ *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=shortcut --seed=4 \
+ *       --skeleton=loopy --biome=post-sword --areas=0
+ *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=shieldgate --seed=8 \
+ *       --skeleton=empty --biome=post-shield --areas=0
  *
  * ⚠ QUOTE THE SPEC: `;` is a shell statement separator.
  */
@@ -239,7 +246,9 @@ check(gen.step === COUNT, '⛔ the room that shipped is the LADDER\'S LAST step'
 check(gen.elements?.ran === true,
     '⛓⛓⛓ the shipped room really CONTAINS the element — it was PLACED, not refused',
     gen.elements?.ran ? `${gen.elements.placed?.[0]?.instance} at `
-        + `(${gen.elements.placed?.[0]?.site?.x},${gen.elements.placed?.[0]?.site?.y})`
+        // ⛓ S1: a door element has a DOOR CELL, not a site
+        + `(${gen.elements.placed?.[0]?.site?.x ?? gen.elements.placed?.[0]?.doorCell?.x},`
+        + `${gen.elements.placed?.[0]?.site?.y ?? gen.elements.placed?.[0]?.doorCell?.y})`
         : `REFUSED: ${gen.elements?.refused?.reason}`);
 /**
  * ⛓⛓⛓ **THE SECOND PRECONDITION IS WHAT THE ELEMENT DECLARED** (arc 5, slice 4)
@@ -262,6 +271,21 @@ if ((placed?.bodies?.length ?? 0) > 0) {
         `${placed.bodies.length} body/bodies at `
         + `${placed.bodies.map((b) => `(${b.x},${b.y})`).join(' ')}, kill lock at `
         + `(${placed.killLockCell?.x},${placed.killLockCell?.y})`);
+} else if (placed?.phase === 'on-connector') {
+    /**
+     * ⛓⛓ SEEDLING SUBSTRATE S1 — A DOOR ELEMENT, NOT A SPACE ONE. The rock gate,
+     * the rock shortcut and the shield gate declare no area and no bodies: what
+     * the shipped room must carry is the DOOR — one obstacle standing on the
+     * element's own door cell. ⛔ Asserting an area graph here would demand a
+     * `--areas=` the element never asked for; ship these with `--areas=0`.
+     */
+    const door = (placed.entities ?? []).find((e) => e.role === 'obstacle'
+        && e.x === placed.doorCell?.x && e.y === placed.doorCell?.y);
+    check(Boolean(door),
+        '⛓⛓ …and the room really carries THIS element\'s DOOR — its obstacle on its door cell',
+        door ? `${door.id} at (${door.x},${door.y}), opened from `
+            + `${(placed.clearer ?? []).map((c) => `(${c.x},${c.y})`).join(' ')}`
+            : `no obstacle on the door cell ${JSON.stringify(placed.doorCell)}`);
 } else {
     check((gen.areas?.locks?.length ?? 0) > 0,
         '⛓⛓ …and a lock-and-key GRAPH was adjudicated over the room the element made',
