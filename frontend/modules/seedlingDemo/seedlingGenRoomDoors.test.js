@@ -143,11 +143,23 @@ describe('the re-roll — deterministic, no engine rng, recorded', () => {
         expect(world.seed).toBe(rerollSeed(25, world.generation.rerolls));
     });
 
-    it('re-rolls EXHAUSTED → the refusal, saying "without sealing an approach"', () => {
+    /**
+     * ⛓ G2 had this row REFUSE: seven doors, the 8×6 budget spent. Since G8 the
+     * room GROWS instead — MEASURED: to 10×8, attempt 9 (the first draw there). At
+     * 10×10 the same seven seat on the first draw and nothing grows. The refusal
+     * after growth (every size up to 60) is `seedlingGenRoomReroll.test.js`'s.
+     */
+    it('re-rolls EXHAUSTED at 8x6 → the room GROWS (G8): seven doors seat at 10x8; at 10x10 on the first draw, ungrown', () => {
         const exits = [0, 1, 2, 3, 4, 5, 6].map((i) => ({ exit_id: `e${i}` }));
-        expect(() => generateGenRoom({ region_id: 'seven', exits, size: { width: 8, height: 6 }, rng: createRng(3), params: {} }))
-            .toThrow(/generated Seedling room 'seven' \(seed \d+, 8x6\) must hold 7 door\(s\), one per exit, and its walkable area cannot seat them apart without sealing an approach/);
-    });
+        const { world } = generateGenRoom({ region_id: 'seven', exits, size: { width: 8, height: 6 }, rng: createRng(3), params: {} });
+        expect(world.size).toEqual({ width: 10, height: 8 });
+        expect(world.generation).toMatchObject({ rerolls: 9, rerollCause: 'doors', grownFrom: { width: 8, height: 6 } });
+        expect(world.exits.size).toBe(7);
+        const ten = generateGenRoom({ region_id: 'seven', exits, size: { width: 10, height: 10 }, rng: createRng(3), params: {} }).world;
+        expect(ten.size).toEqual({ width: 10, height: 10 });
+        expect(ten.generation.rerolls).toBe(0);
+        expect(ten.generation).not.toHaveProperty('grownFrom');
+    }, 60_000);
 });
 
 describe('hazards — no door, approach or location on water, lava or a pit (measured on the box, G2)', () => {
