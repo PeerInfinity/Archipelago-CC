@@ -1899,6 +1899,7 @@ function publishCampaign(seq, parsedTapes, names, run) {
                 lastArrival: artifact.lastArrival,
                 nextStep: artifact.nextStep,
                 refusal: artifact.refusal,
+                complete: artifact.complete === true,
                 why: artifact.why,
                 source: FRONTIER_PATH,
             }
@@ -1950,6 +1951,10 @@ function renderCampaign(c) {
         parts.push(`<i>${esc(c.frontier.refusal.text)}</i>`);
         parts.push('⚠ the rooms beyond that arrival are UNSOLVED — this player shows '
             + 'only what plays continuously from a fresh game start.');
+    } else if (c.frontier.complete) {
+        // ⛓ R9 slice L18b: the chain walks EVERY route step — nothing is in front
+        //   of it on this route, which is not the same sentence as "no work order".
+        parts.push(`<b>ROUTE COMPLETE</b> — ${esc(c.frontier.why)}`);
     } else {
         parts.push(`⚠ no work order — ${esc(c.frontier.why ?? 'the frontier artifact '
             + 'names no refused step')}`);

@@ -2151,7 +2151,10 @@ async function grow(ctx) {
         predecessor: tail.name, step: step.step };
     console.log('\n## ⛓ THE SURVEY SOLVES IT. The segment this growth appends:\n');
     console.log(`   name       ${plan.newName}`);
-    console.log(`   rooms      L${plan.level} → L${plan.to}`);
+    // ⛓ R9 slice L18b: the route's LAST step crosses nothing (`crossesTo: null`)
+    //   — a TERMINAL segment, appended with `to: null` and no `reach-exit`.
+    console.log(`   rooms      L${plan.level} → ${plan.to === null
+        ? 'END (a TERMINAL segment — the route ends in this room)' : `L${plan.to}`}`);
     console.log(`   collects   ${plan.collects.join(', ') || '(nothing)'}`);
     console.log(`   why        ${plan.why}`);
     console.log('\n## THE SEVEN ARTIFACTS THIS GROWTH WRITES:\n');

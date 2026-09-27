@@ -12395,7 +12395,7 @@ its byte-frozen free oracle is compared against.
 | 19 | `r9-solve-18` | L18 → L19 | 394 | — |
 | 20 | `r9-solve-19` | L19 → L20 | 746 | `bosskey@L19` |
 
-**No frontier is committed**, so what is in front of the chain is unstated — run `census-seedling-campaign.mjs --write-frontier`.
+**NO REFUSED STEP** — no route step after the chain is refused by the survey — every remaining step SOLVES today, so the frontier is a GAP LIST rather than a refusal and this is a finding, not a stop.
 
 <!-- GENERATED:campaign-chain END -->
 

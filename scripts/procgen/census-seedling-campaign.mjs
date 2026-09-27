@@ -134,6 +134,9 @@ if (CHOICE.refusal) {
 }
 const CHAIN_ID = CHOICE.id;
 const CHAIN = [...CHOICE.segments];
+/** ⛓ R9 slice L18b — which of the chain's segments is TERMINAL (`to: null`), by name. */
+const { CAMPAIGN_SEGMENTS } = await import(join(MODULE, 'campaignChain.js'));
+const isTerminal = (name) => CAMPAIGN_SEGMENTS.find((s) => s.name === name)?.to === null;
 /** ⛓ The detached tail — its OWN chain, continuable only after L14–L16 fall. */
 const TAIL = ['r8-solve-18', 'r8-d2-19', 'r8-d2-20'];
 /**
@@ -499,9 +502,17 @@ function deriveFrontier(surveyRes) {
             why: surveyRes.why };
     }
     const steps = surveyRes.steps;
+    /**
+     * ⛓ R9 SLICE L18b — THE TERMINAL STEP ALIGNS BY ITS ROOM. The route's last
+     * step crosses nothing (`crossesTo: null`: it ends at the shield), so it is
+     * covered by a TERMINAL segment (`to: null`) whose measured walk ENDS in
+     * that step's own room. Every other step still aligns by its crossing.
+     */
+    const aligns = (k) => (steps[k].crossesTo === null
+        ? isTerminal(CHAIN[k]) && arrivals[k] === steps[k].level
+        : steps[k].crossesTo === arrivals[k]);
     let covered = 0;
-    while (covered < arrivals.length && covered < steps.length
-        && steps[covered].crossesTo === arrivals[covered]) covered += 1;
+    while (covered < arrivals.length && covered < steps.length && aligns(covered)) covered += 1;
     if (covered !== arrivals.length) {
         return { ...base, lastArrival: null, nextStep: null, refusal: null, covered,
             why: `the chain's measured arrivals stop prefixing the route at segment `
@@ -511,6 +522,21 @@ function deriveFrontier(surveyRes) {
                 + 'has no stop this alignment can name.' };
     }
     const last = steps[covered - 1];
+    /**
+     * ⛓ R9 SLICE L18b — "ROUTE COMPLETE TO THE SHIELD" (§60.8 #3). When the
+     * chain covers EVERY route step there is no next room on this route — not a
+     * refusal and not a gap. `lastArrival.level` is the room the chain ENDS in
+     * (the terminal step's own; it crosses nothing), and `complete` says so.
+     */
+    if (covered === steps.length) {
+        return { ...base,
+            lastArrival: { step: last.step, level: last.crossesTo ?? last.level,
+                segment: CHAIN.at(-1) },
+            nextStep: null, refusal: null, covered, complete: true,
+            why: `ROUTE COMPLETE — the chain walks all ${steps.length} route steps, from the `
+                + `true start to route step ${last.step} in L${last.level} (${last.goals
+                    .map((g) => g.why).join('; ')}); there is no next room on this route` };
+    }
     const refused = steps.slice(covered).find((x) => x.solved && x.solved.refusal);
     if (!refused) {
         return { ...base,

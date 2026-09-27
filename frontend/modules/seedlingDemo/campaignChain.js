@@ -62,6 +62,11 @@
  * entity and appends `reach-exit` toward `to`. A segment with no `collects`
  * is a `reach-exit` alone, which is fifteen of the sixteen.
  *
+ * ⛓ R9 slice L18b — `to: null` is the TERMINAL segment: the route's last step
+ * crosses nothing (the shield, `route.steps[].crossesTo === null`), so the
+ * producer gives it its `collects` and NO `reach-exit`, and the chain ends in
+ * that room. At most the tail may be terminal (`campaignChainBreaks`).
+ *
  * `promoted` marks a segment this chain did NOT re-author: its boot already
  * IS its predecessor's latch (the census measured CONTINUES on every pair up
  * to `r8-solve-4`, and segment 1's boot is the game's own), so the chain
@@ -214,7 +219,7 @@ export const campaignTail = () => CAMPAIGN_SEGMENTS[CAMPAIGN_SEGMENTS.length - 1
  * describes what is in front of it. A typed `{name, level, to}` tail was the
  * previous spelling and it decayed once per growth (trap 574's shape).
  */
-export const campaignNextLevel = () => campaignTail().to;
+export const campaignNextLevel = () => campaignTail().to;   // null once the tail is terminal
 
 /**
  * The boot levels the chain's segments enter FROM — the set a bridged-room
