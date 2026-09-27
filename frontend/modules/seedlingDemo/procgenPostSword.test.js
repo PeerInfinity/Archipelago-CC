@@ -421,7 +421,9 @@ describe('⛔⛔ THE RE-PROBE — every excluded family, driven in the door geom
                 // ⛓ R9 SLICE 11 RE-POINTED THE SPINNER (6,2) -> (4,2). See the
                 //   CONTROL below: the repair of `facingToward` made (6,2)
                 //   solvable in BOTH arms, which cost the pair its argument.
-                { type: 'spinner', tx: 4, ty: 2, attrs: { tag: '-1' } },
+                // ⛓ R9 SLICE L18b RE-POINTED IT AGAIN, (4,2) -> (3,2), for the
+                //   same reason and by the same method (see the CONTROL).
+                { type: 'spinner', tx: 3, ty: 2, attrs: { tag: '-1' } },
             ],
         });
         expect(out.threw).toBeUndefined();
@@ -456,13 +458,25 @@ describe('⛔⛔ THE RE-PROBE — every excluded family, driven in the door geom
      * about that cell; it is about the two readings of `clearOfHammersAt`, and
      * it is as true after the repair as before — on a smaller set of rooms,
      * which is exactly what a widened search is supposed to do.
+     *
+     * ⛓⛓ **R9 SLICE L18b — (4,2) -> (3,2), THE SAME METHOD.** `solverBot`'s
+     * press train is now PREVIEWED as walked (the aim tick moves the player, and
+     * the train's safety is asked where it lands — `d87621b063`), and at (4,2)
+     * that solves the no-clock arm too (CI red at `8b4a511391`). The 32 cells
+     * swept again under both arms, at the base and at the fix: 13 still
+     * SEPARATE — (2,1) (3,1) (6,1) (8,1) (1,2) **(3,2)** (3,3) (7,3) (8,3) (3,4)
+     * (5,4) (7,4) (8,4). (3,2) separated at the base too, and it is (4,2)'s
+     * neighbour. ⚠ The fix moves 10 of 32 verdicts, BOTH ways — and three cells
+     * ((6,2) (2,3) (6,4)) SOLVED with the clock at the base and REFUSE with it
+     * now: a coverage loss in the better-informed arm, recorded as residue
+     * (kickoff §63), not repaired here.
      */
     it('…and with the clock UNDECLARED the same room throws, as it always did', () => {
         const out = attempt('spinner-killlock-no-clock', {
             goal: { tx: 7, ty: 8 },
             entities: [
                 { type: 'lock', tx: 4, ty: 5, attrs: { tset: '-1', tag: '1' } },
-                { type: 'spinner', tx: 4, ty: 2, attrs: { tag: '-1' } },
+                { type: 'spinner', tx: 3, ty: 2, attrs: { tag: '-1' } },
             ],
             time: null,
         });

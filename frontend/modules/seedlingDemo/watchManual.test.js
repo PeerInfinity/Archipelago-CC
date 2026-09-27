@@ -440,9 +440,11 @@ describe('⛓⛓⛓ THE ONE FOLD DERIVES ITS OWN VERSION (slice 5)', () => {
         //   covered hand tapes. The sweep READS THE DIRECTORY, so this list
         //   reds the moment the two disagree — which is exactly what it did
         //   when the deletion landed, by name, before the list was moved.
+        // ⛓ R9 slice L18b: `r9-solve-18` joined — the campaign's L18 segment
+        //   declares the kill lock's timed `{18,0}@342`, as `r8-solve-18` does.
         expect(byAt.sort()).toEqual([
             'r7-act2-5', 'r7-act2-full',
-            'r8-d2', 'r8-solve-18', 'r8-solve-5', 'r8-solve-8',
+            'r8-d2', 'r8-solve-18', 'r8-solve-5', 'r8-solve-8', 'r9-solve-18',
         ]);
         expect(byDespawn.sort()).toEqual(['r7-act2-6', 'r7-act2-full']);
         expect(names.length).toBeGreaterThan(140);   // and the sweep really swept

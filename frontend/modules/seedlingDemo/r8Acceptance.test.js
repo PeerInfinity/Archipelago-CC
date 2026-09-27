@@ -1010,7 +1010,11 @@ describe('R8_D2_SHIELD — slice 6\'s prediction, stated before the press arm mo
          * which COMMITTED tapes the conversion could move, and that set is
          * still the two.
          */
-        expect(measured.tapes.filter((n) => !n.startsWith('r8-')))
+        // ⛓ R9 slice L18b: the later additions are set aside BY THE DECLARATION
+        //   (`reachingAdded`), not by an `r8-` name prefix — `r9-solve-18` is an
+        //   addition whose name the prefix could not see.
+        const added = new Set(R8_D2_SHIELD.pressExposure.reachingAdded.map((a) => a.name));
+        expect(measured.tapes.filter((n) => !added.has(n) && n !== 'r8-l18-spinner-press'))
             .toEqual(['r5-press-glide', 'r5-press-repeat']);
     // 300s, not 120s: this drives the whole disk-derived roster synchronously,
     // and the quiet-machine cost was already 113.8s at 153 tapes (2026-08-11,
