@@ -12864,3 +12864,152 @@ for (const [id, name, testFunction] of M3_TESTS) {
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+ * APWORLD SUBSTRATE CHANGE S3 — LOOP MODE ON THE INITIALISE FORM (plan §22.1,
+ * §22.4 Q4, §27.6 #1). A toggle (OFF by default) + the XP effect; ON, the op
+ * writes `loop_costs` (priced from the slot's sphere log — for a classic preset
+ * the `_sphere_log.jsonl` beside it, which only the PAGE holds) and
+ * `manaEnabled` on every payload; the loops' reset lands where the load put the
+ * player. Every premise is asserted off the page or the document, never typed.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line import/first
+import { INITIALISE_XP_EFFECTS as S3_XP_EFFECTS } from '../../apworldEditor/slotInitialise.js';
+// eslint-disable-next-line import/first
+import { INITIALISE_LOOP_MODE_ON as S3_LOOP_ON, loopModeClause as s3LoopModeClause } from '../../apworldEditor/rulesDocOps.js';
+
+const s3Toggle = () => initSection()?.querySelector('.apworld-initialise-loop-mode') ?? null;
+const s3Xp = () => initSection()?.querySelector('.apworld-initialise-xp-effect') ?? null;
+const s3PageLog = () => {
+    const entries = centralRegistry.getPublicFunction('sphereState', 'getRawSphereLog')?.();
+    return Array.isArray(entries) && entries.length > 0 ? entries : null;
+};
+
+/**
+ * ⛓ The page's sphere log is THIS preset's (the jsonl beside `path`, fetched and
+ * counted — the premise the loop-mode toggle stands on), then the toggle is
+ * ENABLED and OFF (the default); → the page's entries, or null.
+ */
+async function s3LogAndToggle(testController, panel, path) {
+    const p = String(panel.playerId);
+    testController.reportCondition('⛓ premise: the document embeds no `sphere_log` (the page\'s log is the only one)',
+        !Array.isArray(panel.rulesDoc.sphere_log));
+    const text = await (await fetch(path.replace(/_rules\.json$/, '_sphere_log.jsonl'))).text();
+    // ⛓ `sphereState` keeps the `state_update` entries (its `metadata` line apart), so those are what it holds.
+    const want = text.trim().split('\n').filter((l) => l.trim() && JSON.parse(l)?.type === 'state_update').length;
+    const log = await testController.pollForValue(() => {
+        const e = s3PageLog();
+        return e && e.length === want && e.some((x) => x?.player_data?.[p]) ? e : null;
+    }, `the page holds this preset's sphere log (${want} entries, player ${p})`, 15000, 50);
+    testController.reportCondition(`⛓ premise: the page's sphere log is the preset's (${log?.length ?? 0}/${want} entries)`, !!log);
+    if (!log) return null;
+    const toggle = await testController.pollForValue(() => {
+        const t = s3Toggle();
+        return t && !t.disabled ? t : null;
+    }, 'the loop-mode toggle, enabled', 8000, 50);
+    testController.reportCondition('⛓ the loop-mode toggle is drawn ENABLED (a log is reachable)', !!toggle);
+    testController.reportCondition('…and OFF by default, with no XP-effect select', !!toggle && !toggle.checked && !s3Xp());
+    return toggle ? log : null;
+}
+
+/** ⛓ Turn loop mode on through the form's own checkbox, optionally pick `fx`; → true when the state holds it. */
+async function s3TurnOn(testController, panel, fx = null) {
+    s3Toggle().click();
+    const xp = await testController.pollForValue(s3Xp, 'the XP-effect select after the toggle', 8000, 50);
+    testController.reportCondition('⛓ the toggle ON draws the XP-effect select', !!xp
+        && panel._initialise?.state?.loopMode?.enabled === true);
+    testController.assertEqual('…its options are the generator\'s effects, the default first',
+        JSON.stringify([...S3_XP_EFFECTS]), JSON.stringify([...(xp?.options ?? [])].map((o) => o.value)));
+    if (!xp) return false;
+    if (fx) {
+        xp.value = fx;
+        xp.dispatchEvent(new Event('change', { bubbles: true }));
+        await testController.pollForCondition(() => panel._initialise?.state?.loopMode?.regionXpEffect === fx,
+            `the form holds XP effect ${fx}`, 8000, 50);
+    }
+    const pv = initSection().querySelector('.apworld-initialise-preview');
+    testController.reportCondition(`⛓ the preview names loop mode and the LOADED log: "${pv?.textContent}"`,
+        !!pv && pv.textContent.includes(`${S3_LOOP_ON} (`) && pv.textContent.endsWith('priced from the loaded sphere log'));
+    return true;
+}
+
+/**
+ * ⛓⛓ **(S3-i) LOOP MODE ON → `loop_costs` + MANA ON EVERY PAYLOAD → UNDO; OFF → NO KEY**
+ * on `adventure`: the page holds the jsonl beside the preset; the toggle (ON,
+ * the last offered XP effect) → Generate lands ONE op whose document carries
+ * `loop_costs` (no `generatedAt`, the chosen effect, every placed region
+ * priced), every payload `manaEnabled`, the answer the op's loop clause, the
+ * Document tab's `loop_costs` row; Undo takes the key back byte for byte;
+ * Generate with the toggle OFF writes no key and no flag.
+ */
+export async function apworldInitialiseLoopModeWritesLoopCosts(testController) {
+    try {
+        const panel = await openInitialiseForm(testController, INIT_ADVENTURE_PATH);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        if (!await s3LogAndToggle(testController, panel, INIT_ADVENTURE_PATH)) return testController.getOverallResult();
+        const fx = S3_XP_EFFECTS.at(-1);
+        if (!await s3TurnOn(testController, panel, fx)) return testController.getOverallResult();
+        const before = JSON.stringify(panel.rulesDoc);
+        const opsBefore = panel.session.ops().length;
+        const run = await pressInitialise(testController, panel);
+        testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+        testController.assertEqual('⛓ ONE op', String(opsBefore + 1), String(panel.session.ops().length));
+        const doc = panel.rulesDoc;
+        const lc = doc.loop_costs;
+        testController.reportCondition('⛓⛓ the document holds `loop_costs`, with no `generatedAt`',
+            !!lc && !Object.hasOwn(lc, 'generatedAt'));
+        testController.assertEqual('…priced under the chosen XP effect', fx, lc?.defaultRegionXpEffect);
+        const entries = doc.preset_sidecars?.[p] ?? {};
+        testController.reportCondition(`…every placed region priced (${Object.keys(entries).length})`,
+            Object.keys(entries).length > 0 && Object.keys(entries).every((n) => Object.hasOwn(lc?.regions ?? {}, n)));
+        testController.reportCondition('⛓⛓ every payload carries `manaEnabled: true`',
+            Object.values(entries).every((e) => e?.playable_payload?.manaEnabled === true));
+        testController.assertEqual('⛓ the op records how loop mode was asked for',
+            JSON.stringify({ enabled: true, regionXpEffect: fx }), JSON.stringify(panel.session.ops().at(-1)?.provenance?.loopMode));
+        testController.reportCondition(`⛓ the answer is the op's loop clause: "${panel._opMessage}"`,
+            String(panel._opMessage ?? '').includes(s3LoopModeClause(lc)));
+
+        await testController.pollForCondition(() => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        selectTab(panel, 'document');
+        const summary = await testController.pollForValue(() => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="loop_costs"] .apworld-loop-costs-summary`),
+        'the Document tab\'s loop_costs summary', 8000, 50);
+        const nLoc = Object.keys(lc?.locations ?? {}).length;
+        testController.reportCondition(`⛓ the Document tab shows the key (${summary?.textContent})`,
+            !!summary && summary.textContent.includes(`${nLoc} location`));
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
+        const undone = await testController.pollForCondition(() => !Object.hasOwn(panel.rulesDoc, 'loop_costs'),
+            'Undo took loop_costs back', 8000, 50);
+        testController.reportCondition('⛓⛓ ONE Undo takes the key back — the document byte for byte', undone
+            && JSON.stringify(panel.rulesDoc) === before);
+
+        // ⛓ …and the toggle OFF (the default) writes neither the key nor the flag.
+        selectTab(panel, 'map');
+        const door = await testController.pollForValue(initDoor, 'the door, back after Undo', 8000, 50);
+        door?.click();
+        const sec = await testController.pollForValue(initSection, 'the form, re-opened', 8000, 50);
+        testController.reportCondition('the re-opened form starts with loop mode OFF', !!sec && s3Toggle()?.checked === false);
+        const off = await pressInitialise(testController, panel);
+        testController.reportCondition('the OFF build succeeded', off?.outcome?.ok === true);
+        const offEntries = Object.values(panel.rulesDoc.preset_sidecars?.[p] ?? {});
+        testController.reportCondition('⛓⛓ OFF: no `loop_costs` key, no payload `manaEnabled`',
+            !Object.hasOwn(panel.rulesDoc, 'loop_costs') && offEntries.length > 0
+            && offEntries.every((e) => !Object.hasOwn(e.playable_payload ?? {}, 'manaEnabled')));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('loop-mode initialise test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-initialise-loop-mode-writes-loop-costs',
+    name: 'APWorld hub: Initialise with loop mode ON writes loop_costs (the page\'s sphere log) and manaEnabled on every payload; Undo takes it back; OFF writes neither',
+    description: 'APWORLD SUBSTRATE CHANGE S3. See the row\'s docblock in apworldEditorTests.js.',
+    testFunction: apworldInitialiseLoopModeWritesLoopCosts,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});

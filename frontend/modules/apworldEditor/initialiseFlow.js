@@ -20,15 +20,26 @@
  * in the op's `provenance`. A substrate change RESETS the bag to the new
  * target's defaults and keeps the size (`initialiseBagFor`).
  *
+ * ⛓ S3 — **LOOP MODE** (a checkbox, OFF by default like the pipeline's
+ * `enableLoopMode`) and its **XP effect** (the generator's own values). On, the
+ * job carries the page's sphere log (`sphereState`'s raw entries) and the op
+ * writes `loop_costs` and `manaEnabled` on every payload. The toggle is drawn
+ * DISABLED with the op's own sentence when no log is reachable
+ * (`initialiseLoopToggle`). Off, the args carry no `loopMode` at all, so the op,
+ * its record and the document are the pre-S3 bytes.
+ *
  * ⛔ **THE OP IS THE AUTHORITY, THE FORM A COURTESY** (1305): the refusal the form
  * prints is the op's own (`initialiseOpRefusal`), and the answer to a landed
  * Generate is the op's own description. ⛔ No substrate is named here.
  */
 
-import { initialiseOpRefusal } from './rulesDocOps.js';
 import {
-    BACK_EXITS, DEFAULT_SUBSTRATE_ID, INITIALISE_FIRST_SEED, INITIALISE_SIZE_KEYS, autoGridSide, initialiseFacts,
-    initialiseRegionSize, initialiseTargets, planInitialise,
+    INITIALISE_LOOP_MODE_ON, initialiseFailureSentence, initialiseOpRefusal, initialiseSphereLogRefusal,
+} from './rulesDocOps.js';
+import {
+    BACK_EXITS, DEFAULT_REGION_XP_EFFECT, DEFAULT_SUBSTRATE_ID, INITIALISE_FIRST_SEED, INITIALISE_SIZE_KEYS,
+    SPHERE_LOG_SOURCE, autoGridSide, initialiseFacts, initialiseRegionSize, initialiseSphereLog, initialiseTargets,
+    planInitialise,
 } from './slotInitialise.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
@@ -73,6 +84,8 @@ export function initialiseFormDefaults(doc, player) {
     const state = {
         substrate, seed: INITIALISE_FIRST_SEED, backExits: BACK_EXITS.ADD, sideAuto: true, side: null,
         bag: initialiseBagFor(doc, player, substrate),
+        // ⛓ S3 — OFF by default (the pipeline's `enableLoopMode: false`).
+        loopMode: { enabled: false, regionXpEffect: DEFAULT_REGION_XP_EFFECT },
     };
     return withAutoSide(doc, player, state);
 }
@@ -98,7 +111,10 @@ export function withAutoSide(doc, player, state) {
     return { ...state, side };
 }
 
-/** ⛓ The op's (and the worker job's) arguments for the form's state. */
+/**
+ * ⛓ The op's (and the worker job's) arguments for the form's state. S3: loop
+ * mode rides only when it is ON — off, the args are the pre-S3 args exactly.
+ */
 export function initialiseArgs(player, state) {
     return {
         player: String(player),
@@ -108,12 +124,35 @@ export function initialiseArgs(player, state) {
         backExits: state.backExits,
         // ⛓ S2 — a COPY: the form's controls keep writing the bag they were drawn on.
         ...(state.bag !== undefined ? { bag: { ...state.bag } } : {}),
+        ...(state.loopMode?.enabled === true ? { loopMode: { ...state.loopMode } } : {}),
     };
 }
 
-/** ⛓ The worker job for the form's state: the args, the document, the job kind. */
-export function initialiseJob(doc, player, state) {
-    return { job: INITIALISE_JOB, doc, ...initialiseArgs(player, state) };
+/** ⛓ The page's sphere-log entries when they are a non-empty list, else null (the precedence's first rung). */
+const pageEntries = (pageLog) => (Array.isArray(pageLog) && pageLog.length > 0 ? pageLog : null);
+
+/**
+ * ⛓ The worker job for the form's state: the args, the document, the job kind —
+ * and (S3, loop mode on) the page's sphere-log entries AS DATA (the worker has
+ * no `sphereState`; the document it is handed carries its own embedded log).
+ */
+export function initialiseJob(doc, player, state, pageLog = null) {
+    const args = initialiseArgs(player, state);
+    const log = args.loopMode ? pageEntries(pageLog) : null;
+    return { job: INITIALISE_JOB, doc, ...args, ...(log ? { sphereLog: log } : {}) };
+}
+
+/**
+ * ⛓⛓ S3 — **CAN THE LOOP-MODE TOGGLE BE TURNED ON?** — the op's own sphere-log
+ * refusal asked as if it were on: `{refusal, source, entries}`, `refusal` null
+ * when a log is reachable (`source` = `SPHERE_LOG_SOURCE`'s page / embedded).
+ */
+export function initialiseLoopToggle(doc, player, pageLog = null) {
+    const refusal = initialiseSphereLogRefusal(doc, {
+        player: String(player), loopMode: { enabled: true }, sphereLog: pageEntries(pageLog),
+    });
+    const log = initialiseSphereLog(doc, player, pageEntries(pageLog));
+    return { refusal, source: log.source, entries: log.entries ? log.entries.length : 0 };
 }
 
 /**
@@ -125,9 +164,10 @@ export function initialiseJob(doc, player, state) {
  *
  * @returns {{refusal: string|null, plan: object|null, text: string}}
  */
-export function initialisePreview(doc, player, state) {
+export function initialisePreview(doc, player, state, pageLog = null) {
     const args = initialiseArgs(player, state);
-    const refusal = initialiseOpRefusal(doc, args);
+    const refusal = initialiseOpRefusal(doc, args)
+        ?? initialiseSphereLogRefusal(doc, { ...args, sphereLog: pageEntries(pageLog) });
     if (refusal) return { refusal, plan: null, text: refusal };
     const plan = planInitialise(doc, args.player, args);
     if (!plan.ok) return { refusal: `apworld: the layout threw — ${plan.threw}`, plan: null, text: plan.threw };
@@ -142,12 +182,17 @@ export function initialisePreview(doc, player, state) {
         ? `; ${plan.menu}: ${plan.menuExits} exit${plan.menuExits === 1 ? '' : 's'} → `
             + `${plan.menuRoots.length} root${plan.menuRoots.length === 1 ? '' : 's'}`
         : '';
+    // ⛓ S3 — which log loop mode will price from.
+    const loop = args.loopMode
+        ? `; ${INITIALISE_LOOP_MODE_ON} (${args.loopMode.regionXpEffect}), priced from the `
+            + `${initialiseSphereLog(doc, args.player, pageEntries(pageLog)).source === SPHERE_LOG_SOURCE.PAGE ? 'loaded' : 'embedded'} sphere log`
+        : '';
     return {
         refusal: null,
         plan,
         text: `${plan.placed} region${plan.placed === 1 ? '' : 's'} placed on ${args.gridDims.width}×${args.gridDims.height}, `
             + `${plan.teleporters} teleporter${plan.teleporters === 1 ? '' : 's'}; ${back}; `
-            + `${plan.unplaced.length} unplaceable${names}${hub}`,
+            + `${plan.unplaced.length} unplaceable${names}${hub}${loop}`,
     };
 }
 
@@ -178,7 +223,6 @@ export function initialiseAnswer(args, res, budgetS, lastProgress = null) {
     if (res.unavailable || res.workerFailed) return { landed: false, text: `apworld: ${res.threw}` };
     return {
         landed: false,
-        text: `apworld: the \`${args.substrate}\` realiser threw${res.region ? ` on region "${res.region}"` : ''} — `
-            + `${res.why ?? res.threw}. Nothing was recorded.`,
+        text: `${initialiseFailureSentence(args.substrate, { ...res, why: res.why ?? res.threw })} Nothing was recorded.`,
     };
 }
