@@ -120,8 +120,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ EVERY OTHER TAPE IS STILL INERT — no other committed row's verdict
         //   can move under the corrected derivation.
         // ⛓ R9 slice L15: 149 → 150 with `r9-solve-15`, and it is inert too.
-        expect(rows).toHaveLength(150);
-        expect(rows.length - parted.length).toBe(149);
+        // ⛓ R9 slice L16: 150 → 151 with `r9-solve-16` — inert too.
+        expect(rows).toHaveLength(151);
+        expect(rows.length - parted.length).toBe(150);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {
