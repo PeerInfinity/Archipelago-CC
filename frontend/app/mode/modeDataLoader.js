@@ -344,6 +344,8 @@ export async function loadCombinedModeData(options) {
   // Prepare module_configs for StateManager
   prepareStateManagerConfig(baseCombinedData, dataSources, log);
 
+  reflectAutoLoadOff(baseCombinedData, { autoLoadModeEnabled, skipLocalStorageLoad });
+
   // Add the dataSources to the combined data
   baseCombinedData.dataSources = dataSources;
 
@@ -354,6 +356,26 @@ export async function loadCombinedModeData(options) {
   );
 
   return { combinedModeData: baseCombinedData, layoutPresets };
+}
+
+/**
+ * When the boot skipped the stored blob because Auto-load Mode is switched
+ * OFF (a stored `false` found by shouldLoadFromLocalStorage), the page's
+ * settings come from settings.json, which does not carry the switch — so the
+ * page would resolve the schema default (ON) and the Options panel would show
+ * Yes in an OFF session. Put the value the boot applied into the in-memory
+ * settings. Memory only: it IS the stored value, and nothing marks it for
+ * saving. A value the files set explicitly is left alone.
+ *
+ * @param {Object} combinedModeData - the combined data (its userSettings is edited in place)
+ * @param {{autoLoadModeEnabled: boolean, skipLocalStorageLoad: boolean}} decision
+ */
+export function reflectAutoLoadOff(combinedModeData, { autoLoadModeEnabled, skipLocalStorageLoad }) {
+  if (autoLoadModeEnabled || skipLocalStorageLoad) return;
+  const us = combinedModeData?.userSettings;
+  if (!us || typeof us !== 'object') return;
+  if (!us.generalSettings || typeof us.generalSettings !== 'object') us.generalSettings = {};
+  if (us.generalSettings.autoLoadMode === undefined) us.generalSettings.autoLoadMode = false;
 }
 
 /**

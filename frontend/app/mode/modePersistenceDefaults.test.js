@@ -9,7 +9,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { AUTO_LOAD_MODE_DEFAULT, AUTO_SAVE_MODE_DEFAULT } from './modePersistenceDefaults.js';
 import { getAutoModeSettings, determineActiveMode } from './modeManager.js';
-import { shouldLoadFromLocalStorage } from './modeDataLoader.js';
+import { shouldLoadFromLocalStorage, reflectAutoLoadOff } from './modeDataLoader.js';
 import { CORE_SETTINGS_SCHEMAS } from '../core/coreSettingsSchemas.js';
 
 function makeStorage() {
@@ -76,5 +76,24 @@ describe('mode-persistence defaults — one source', () => {
     expect((await determineActiveMode(logger)).currentActiveMode).toBe('loops');
     localStorage.setItem('archipelagoToolSuite_modeData_loops', BLOB({ autoLoadMode: false }));
     expect((await determineActiveMode(logger)).currentActiveMode).toBe('default');
+  });
+
+  it('an OFF session shows the switch as OFF (the page holds settings.json, which lacks it)', () => {
+    const fromFiles = { userSettings: { generalSettings: {} } };
+    reflectAutoLoadOff(fromFiles, { autoLoadModeEnabled: false, skipLocalStorageLoad: false });
+    expect(fromFiles.userSettings.generalSettings.autoLoadMode).toBe(false);
+    // ON, a reset (?reset=true skips the blob but auto-load is not OFF), or an
+    // explicit file value: untouched.
+    for (const decision of [
+      { autoLoadModeEnabled: true, skipLocalStorageLoad: false },
+      { autoLoadModeEnabled: false, skipLocalStorageLoad: true },
+    ]) {
+      const d = { userSettings: { generalSettings: {} } };
+      reflectAutoLoadOff(d, decision);
+      expect(d.userSettings.generalSettings.autoLoadMode).toBeUndefined();
+    }
+    const explicit = { userSettings: { generalSettings: { autoLoadMode: true } } };
+    reflectAutoLoadOff(explicit, { autoLoadModeEnabled: false, skipLocalStorageLoad: false });
+    expect(explicit.userSettings.generalSettings.autoLoadMode).toBe(true);
   });
 });
