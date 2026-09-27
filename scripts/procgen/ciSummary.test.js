@@ -12,11 +12,17 @@
  * shaped like `ciGateArms`' output. No network, no box.
  */
 
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { describe, expect, it } from 'vitest';
 
 import {
     gateVerdicts, parseGateLines, parseGateMsLines, pickVitestJob, shardNoteIn, VITEST_JOB,
 } from './ciSummary.js';
+
+const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 /** ⛓ An arm shaped like `ciGateArms`' output, with only the fields the rule
  *  reads — and BOTH keys, which differ exactly for a declared face. */
@@ -230,5 +236,49 @@ describe('pickVitestJob — the SUITE lives in one job of a matrix run', () => {
         expect(VITEST_JOB.test('JavaScript Unit Tests (Vitest)')).toBe(true);
         expect(VITEST_JOB.test('JavaScript Unit Tests')).toBe(true);
         expect(VITEST_JOB.test('Browser gate shard — maze-lab +14')).toBe(false);
+    });
+});
+
+/**
+ * ⛓ ci-split C2 (2026-09-27) — **THE HEADLESS GATES LEFT THE VITEST JOB.**
+ * `unittests_frontend.yml` runs `ci-gates.mjs` in a job of its own beside the
+ * Vitest job, so a run now carries TWO non-shard jobs that both start with a
+ * checkout and `npm ci`. `pickVitestJob` takes the FIRST job matching
+ * `VITEST_JOB`; a gates job named `JavaScript Unit Tests (gates)` listed ahead
+ * of the suite's job would hand `ci-vitest-summary.mjs` a log with no vitest
+ * summary in it. The fixture is the job list of the split workflow; the second
+ * row reads the workflow itself, so a rename there fails here.
+ */
+describe('pickVitestJob — the split workflow (the gates are their own job)', () => {
+    const SPLIT_RUN = [
+        { id: 11, name: 'Headless procgen gates', status: 'in_progress', conclusion: null },
+        { id: 12, name: 'JavaScript Unit Tests (Vitest)', status: 'completed', conclusion: 'success' },
+        { id: 13, name: 'Browser gates (shard plan)', status: 'completed', conclusion: 'success' },
+        { id: 14, name: 'Browser gate shard — seedling-wasm-ship', status: 'in_progress', conclusion: null },
+    ];
+
+    it('picks the suite job, not the gates job listed ahead of it', () => {
+        expect(pickVitestJob(SPLIT_RUN).id).toBe(12);
+        expect(pickVitestJob([...SPLIT_RUN].reverse()).id).toBe(12);
+        expect(VITEST_JOB.test('Headless procgen gates')).toBe(false);
+    });
+
+    /** ⛔ Read off the workflow, not typed: exactly ONE job name matches, and it
+     *  is the job that runs `test:unit` — never the one that runs the gates. */
+    it('in unittests_frontend.yml exactly one job matches, and it runs the suite', () => {
+        const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
+        const jobs = [];
+        for (const block of wf.slice(wf.indexOf('\njobs:\n')).split(/\n(?= {2}[a-z][\w-]*:\n)/).slice(1)) {
+            const name = /^ {4}name: (.+)$/m.exec(block)?.[1] ?? '';
+            jobs.push({ name, block });
+        }
+        expect(jobs.length).toBeGreaterThanOrEqual(4);
+        const matching = jobs.filter((j) => VITEST_JOB.test(j.name));
+        expect(matching.map((j) => j.name)).toEqual(['JavaScript Unit Tests (Vitest)']);
+        expect(matching[0].block).toContain('npm run test:unit');
+        expect(matching[0].block).toContain('npm run test:unit:slow');
+        expect(matching[0].block).not.toContain('ci-gates.mjs');
+        const gates = jobs.find((j) => /node scripts\/procgen\/ci-gates\.mjs\s*$/m.test(j.block));
+        expect(gates?.name).toBe('Headless procgen gates');
     });
 });

@@ -176,7 +176,7 @@ All test workflows can be triggered manually from the GitHub Actions tab:
 
 | Workflow | File | Purpose |
 |----------|------|---------|
-| JavaScript Unit Tests | `unittests_frontend.yml` | JavaScript/Vitest unit tests |
+| JavaScript Unit Tests | `unittests_frontend.yml` | Parallel jobs: `JavaScript Unit Tests (Vitest)` (`test:unit` + `test:unit:slow` — `ciSummary.js` finds the suite row by that name), `Headless procgen gates` (`ci-gates.mjs`), and the browser gate shard matrix |
 | CodeQL Analysis | `codeql-analysis.yml` | Security analysis |
 | Strict Type Check | `strict-type-check.yml` | TypeScript type checking |
 | Scan Build | `scan-build.yml` | Static analysis |

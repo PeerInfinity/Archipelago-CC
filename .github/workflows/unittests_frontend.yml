@@ -130,7 +130,7 @@ jobs:
       # demo build's source commit is an ANCESTOR of the pin) read
       # UNVERIFIABLE (`2/0/1`), and the ogmo `--check` vitest row (its
       # provenance is the last commit touching `Shrum.oep`) SKIPPED. One fetch
-      # of the fork's history, BEFORE vitest and the gates; guarded, so a
+      # of the fork's history, BEFORE vitest (the gates job repeats it); guarded, so a
       # checkout that is already full fetches nothing, and timed like the
       # other measured steps.
       - name: Unshallow the Seedling source submodule
@@ -159,6 +159,58 @@ jobs:
       # don't flake under parallel CPU contention. See vitest.slow.config.js.
       - name: Run slow Vitest tests
         run: npm run test:unit:slow
+
+  # ══════════════════════════════════════════════════════════════════════
+  # ⛓ ci-split C2 (⚖ user, 2026-09-27) — THE HEADLESS GATES ARE THEIR OWN JOB.
+  #
+  # They were the last step of the Vitest job, so the job ran test:unit +
+  # test:unit:slow + the gates back to back: 625–913 s on the last main runs,
+  # which made it the run's critical path over the longest browser shard
+  # (~600 s). In parallel, the critical path is the slower of the three.
+  #
+  # ⛔ THIS JOB'S NAME MUST NOT MATCH `/JavaScript Unit Tests/`
+  # (`VITEST_JOB`, scripts/procgen/ciSummary.js): `pickVitestJob` takes the
+  # FIRST job that matches as the SUITE's job, and `ci-vitest-summary.mjs`
+  # reads the vitest row out of that job's log. The gate lines need no name:
+  # `gateLogs` reads every job of the run.
+  #
+  # The same setup as the Vitest job: the recursive checkout (the headless
+  # set reads the flashPanel/wasm builds — `seedling-wasm-pins`) and the
+  # Seedling unshallow (`seedling-source-pin` (iii) reads the fork's
+  # ancestry; it printed `3 VERIFIED, 0 UNVERIFIABLE` on run 36286595941).
+  # ══════════════════════════════════════════════════════════════════════
+  headless-gates:
+    name: Headless procgen gates
+    runs-on: ubuntu-latest
+    # The step's own 20-minute deadline below, plus the ~30 s of setup.
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      # ⛓ G1 — the same step as the Vitest job's (see the comment there),
+      # BEFORE the gates read vendor/seedling's history.
+      - name: Unshallow the Seedling source submodule
+        run: |
+          S=$(date +%s)
+          if [ "$(git -C vendor/seedling rev-parse --is-shallow-repository)" = "true" ]; then
+            git -C vendor/seedling fetch --unshallow --quiet
+            echo "MEASURED: vendor/seedling unshallowed to $(git -C vendor/seedling rev-list --count HEAD) commit(s) in $(( $(date +%s) - S ))s"
+          else
+            echo "MEASURED: vendor/seedling already full ($(git -C vendor/seedling rev-list --count HEAD) commit(s)) — nothing fetched"
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
 
       # ⛓⛓⛓ R9 slice P3b (g), ⚖ ruling 54 (6) — THE HEADLESS PROCGEN GATES.
       #

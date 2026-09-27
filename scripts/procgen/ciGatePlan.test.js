@@ -434,22 +434,32 @@ describe('H2 — unittests_frontend.yml paths', () => {
  * green in its own log and fix nothing — so the row pins the ORDER, and the
  * guard that keeps a full checkout from a failing `--unshallow`.
  */
-describe('G1 — the vitest job unshallows vendor/seedling first', () => {
+describe('G1 — the vitest job AND the gates job unshallow vendor/seedling first', () => {
     const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
-    const job = wf.slice(wf.indexOf('  javascript-tests:'), wf.indexOf('\n  browser-gate-plan:'));
-    const at = (name) => job.indexOf(`- name: ${name}`);
-    it('the step sits after the checkout and before vitest, the slow battery and the gates', () => {
-        const step = at('Unshallow the Seedling source submodule');
-        expect(step).toBeGreaterThan(at('Checkout repository'));
-        for (const later of ['Run Vitest tests', 'Run slow Vitest tests', 'Run headless procgen gates']) {
-            expect(at(later), later).toBeGreaterThan(step);
-        }
-    });
-    it('it is guarded on --is-shallow-repository and fetches --unshallow', () => {
-        const body = job.slice(at('Unshallow the Seedling source submodule'), at('Set up Node.js'));
-        expect(body).toContain('git -C vendor/seedling rev-parse --is-shallow-repository');
-        expect(body).toContain('git -C vendor/seedling fetch --unshallow');
-    });
+    /** ⛓ ci-split C2: the gates left the Vitest job for `headless-gates`, so
+     *  the order is pinned in EACH job, over that job's own slice. */
+    const jobs = {
+        'javascript-tests': [wf.indexOf('  javascript-tests:'), wf.indexOf('\n  headless-gates:'),
+            ['Run Vitest tests', 'Run slow Vitest tests']],
+        'headless-gates': [wf.indexOf('  headless-gates:'), wf.indexOf('\n  browser-gate-plan:'),
+            ['Run headless procgen gates']],
+    };
+    for (const [id, [from, to, later]] of Object.entries(jobs)) {
+        const job = wf.slice(from, to);
+        const at = (name) => job.indexOf(`- name: ${name}`);
+        it(`${id}: the step sits after the checkout and before ${later.join(', ')}`, () => {
+            expect(from).toBeGreaterThan(-1);
+            expect(to).toBeGreaterThan(from);
+            const step = at('Unshallow the Seedling source submodule');
+            expect(step).toBeGreaterThan(at('Checkout repository'));
+            for (const name of later) expect(at(name), name).toBeGreaterThan(step);
+        });
+        it(`${id}: it is guarded on --is-shallow-repository and fetches --unshallow`, () => {
+            const body = job.slice(at('Unshallow the Seedling source submodule'), at('Set up Node.js'));
+            expect(body).toContain('git -C vendor/seedling rev-parse --is-shallow-repository');
+            expect(body).toContain('git -C vendor/seedling fetch --unshallow');
+        });
+    }
 });
 
 describe('H2 — no per-push arm runs the differential full tier', () => {

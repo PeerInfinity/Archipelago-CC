@@ -12,7 +12,7 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 | Workflow | File | Trigger | Description |
 |----------|------|---------|-------------|
 | Unit Tests | `unittests.yml` | push, PR | Python pytest (`pytest -n auto`) |
-| JavaScript Unit Tests | `unittests_frontend.yml` | push, PR, dispatch | JS Vitest (`npm run test:unit`) |
+| JavaScript Unit Tests | `unittests_frontend.yml` | push, PR, dispatch | Parallel jobs: JS Vitest (`npm run test:unit` + `test:unit:slow`), the headless procgen gates (`ci-gates.mjs`), the browser gate shards |
 | Test ALTTP & Regression | `test-templates.yml` | push (main), PR, dispatch | Spoiler test + frontend regression (both boots) + substrate tests (`--batch=fast`) |
 | Substrate tests — bot walks | `test-substrates-bot-walks.yml` | dispatch | The `bot-walks` substrate batch (real-time omsi bot walks), manual only |
 | Test All Templates (Sequential) | `test-all-sequential.yml` | dispatch | Comprehensive: spoilers, multiclient, multiworld (original/worldgen/apworld) |
