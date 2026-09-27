@@ -141,7 +141,8 @@ export const FLASH_SEEDLING_GEN_SIDECAR_FIELDS = Object.freeze({
     }),
     size: Object.freeze({
         type: 'object', required: true, derived: true,
-        description: `The room's size in tiles, written by ${WRITER} (the record's own width/height).`,
+        description: `The room's size in tiles, written by ${WRITER} (the record's own width/height) — the `
+            + 'FINAL size: a room that grew (G8) records the size it was asked for as `generation.grownFrom`.',
         schema: Object.freeze({
             required: Object.freeze(['width', 'height']),
             additionalProperties: false,
@@ -175,8 +176,9 @@ export const FLASH_SEEDLING_GEN_SIDECAR_FIELDS = Object.freeze({
             + '`procgenParamsFromPayload` opens the per-region form on them. `rerolls` (G2, G5) is how many times '
             + 'the room was re-rolled — to seat its doors without sealing an approach, an engine-added door, or '
             + 'its locations (0 = the first draw; `seed` is the one used) — and `rerollCause` (only when '
-            + '`rerolls` > 0) which case caused the last one (`doors`, `engine-added door`, `locations`): a '
-            + 'record, not a knob.',
+            + '`rerolls` > 0) which case caused the last one (`doors`, `engine-added door`, `locations`); and '
+            + '`grownFrom` (G8, only when the room GREW: `{width, height}`, the size the pipeline asked for — '
+            + '`size` is the final one; `rerolls` counts across the sizes): a record, not a knob.',
     }),
     locations: Object.freeze({
         type: 'array', required: true, derived: true,

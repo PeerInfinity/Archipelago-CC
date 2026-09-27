@@ -3,6 +3,9 @@ import { TEST_FLAVOUR, TEST_FRONTEND_URL, flavourUrlParam } from '../../scripts/
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
+import {
+  clearBudgetExpiry, earlierBudgetExpiry, ranOutOfBudget, recordBudgetExpiry, refusedRetryMessage,
+} from '../../scripts/test/budgetRetryGuard.js';
 
 /**
  * Machine load, sampled at run start and again when a test fails.
@@ -27,6 +30,9 @@ test.describe('Application End-to-End Tests', () => {
   const testProfiling = process.env.TEST_PROFILING; // Optional profiling flag (1 to enable)
   const testBatch = process.env.TEST_BATCH; // Optional roster subset (see modules/tests/testBatches.js)
   const testIds = process.env.TEST_IDS; // Optional explicit id list (--test=), for solo flake triage
+  // Optional in-app budget override in ms (testLogic.js AUTO_START_TIMEOUT_MS);
+  // run-tests.js has already refused a value that is not a positive integer.
+  const autoStartTimeoutMs = process.env.TEST_AUTO_START_TIMEOUT_MS;
 
   // Build URL with all optional parameters. The flavour (`--bundled`) is part
   // of the base: it selects which boot the whole run measures.
@@ -58,8 +64,27 @@ test.describe('Application End-to-End Tests', () => {
   if (testIds) {
     APP_URL += `&testIds=${encodeURIComponent(testIds)}`;
   }
+  if (autoStartTimeoutMs) {
+    APP_URL += `&autoStartTimeoutMs=${encodeURIComponent(autoStartTimeoutMs)}`;
+  }
 
-  test('run in-app tests and check results', async ({ page }) => {
+  test('run in-app tests and check results', async ({ page }, testInfo) => {
+    // An attempt that ran out of the in-app budget is not retried: the retry
+    // would run the same roster against the same budget (scripts/test/
+    // budgetRetryGuard.js — on CI, three such attempts outran the job cap).
+    // Every other failure still retries as playwright.config.js says.
+    const budgetGuard = {
+      dir: path.join(process.cwd(), 'test-results', 'in-app-tests'),
+      runnerPid: process.ppid,
+      testTitle: testInfo.title,
+    };
+    if (testInfo.retry === 0) {
+      clearBudgetExpiry(budgetGuard.dir);
+    } else {
+      const earlier = earlierBudgetExpiry(budgetGuard);
+      if (earlier) throw new Error(refusedRetryMessage(earlier, testInfo.retry));
+    }
+
     // Listen for console logs from the page and relay them to Playwright's output
     page.on('console', (msg) => {
       const text = msg.text();
@@ -103,6 +128,9 @@ test.describe('Application End-to-End Tests', () => {
     }
     if (testProfiling) {
       console.log(`  - profiling: ${testProfiling}`);
+    }
+    if (autoStartTimeoutMs) {
+      console.log(`  - in-app budget: ${autoStartTimeoutMs} ms (TEST_AUTO_START_TIMEOUT_MS)`);
     }
     console.log(`PW DEBUG: URL: ${APP_URL}`);
     // waitUntil 'load', not 'networkidle': modes that auto-start their
@@ -202,6 +230,9 @@ test.describe('Application End-to-End Tests', () => {
 
     const results = await page.evaluate(() => window.__playwrightTestResults__);
     expect(results).toBeTruthy();
+    if (ranOutOfBudget(results)) {
+      recordBudgetExpiry({ ...budgetGuard, retry: testInfo.retry, summary: results.summary });
+    }
     console.log(
       'PW DEBUG: __playwrightTestResults__ retrieved from window object.'
     );

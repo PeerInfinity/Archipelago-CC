@@ -19,6 +19,21 @@ import { categoryInBatch, listBatchNames } from './testBatches.js';
 // truncated run is green in every other respect.
 export const AUTO_START_TIMEOUT_MS = 600000;
 
+/**
+ * The budget this page runs under: `?autoStartTimeoutMs=<positive integer>`
+ * (the harness's TEST_AUTO_START_TIMEOUT_MS — run-tests.js refuses a bad value
+ * before the page loads), else AUTO_START_TIMEOUT_MS. It exists so the
+ * budget-expiry path can be driven in minutes instead of by a ten-minute
+ * roster; anything unparseable falls back to the default rather than to no
+ * budget at all.
+ */
+export function autoStartTimeoutMsFrom(search) {
+  const raw = new URLSearchParams(search).get('autoStartTimeoutMs');
+  if (raw == null) return AUTO_START_TIMEOUT_MS;
+  const ms = Number(raw);
+  return Number.isInteger(ms) && ms > 0 ? ms : AUTO_START_TIMEOUT_MS;
+}
+
 /** Thrown when AUTO_START_TIMEOUT_MS expires, so the budget case is typed
  *  rather than matched on message text. */
 export class AutoStartTimeoutError extends Error {
@@ -645,13 +660,18 @@ export const testLogic = {
 
   async _runAutoStart() {
     try {
-      // The whole-suite wall-clock budget (AUTO_START_TIMEOUT_MS).
+      // The whole-suite wall-clock budget (AUTO_START_TIMEOUT_MS, or the
+      // page's ?autoStartTimeoutMs= override).
+      const budgetMs = autoStartTimeoutMsFrom(window.location.search);
+      if (budgetMs !== AUTO_START_TIMEOUT_MS) {
+        log('info', `[TestLogic] Auto-start budget overridden: ${budgetMs} ms (default ${AUTO_START_TIMEOUT_MS})`);
+      }
       await Promise.race([
         this.runAllEnabledTests(),
         new Promise((_, reject) => {
           setTimeout(
-            () => reject(new AutoStartTimeoutError(AUTO_START_TIMEOUT_MS)),
-            AUTO_START_TIMEOUT_MS
+            () => reject(new AutoStartTimeoutError(budgetMs)),
+            budgetMs
           );
         }),
       ]);
@@ -678,7 +698,7 @@ export const testLogic = {
         // and the budget is the case that needs its own answer (split the
         // roster / raise the budget), not a debugging session.
         timedOut: error instanceof AutoStartTimeoutError,
-        timeoutMs: error instanceof AutoStartTimeoutError ? AUTO_START_TIMEOUT_MS : undefined,
+        timeoutMs: error instanceof AutoStartTimeoutError ? error.timeoutMs : undefined,
       };
       this._setPlaywrightCompletionFlags(summary, tests);
     }
