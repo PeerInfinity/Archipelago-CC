@@ -68,7 +68,9 @@ if (DASH_NOTE) console.error(DASH_NOTE);
 const ROOT = path.resolve(new URL('../..', import.meta.url).pathname);
 const mod = async (p) => import(pathToFileURL(path.join(ROOT, p)).href);
 
-const { BIOME_NAMES, paletteFor } = await mod('frontend/modules/seedlingDemo/watchGenerate.js');
+const {
+    BIOME_NAMES, DEFAULT_CENSUS_BIOMES, paletteFor,
+} = await mod('frontend/modules/seedlingDemo/watchGenerate.js');
 const { generateSeedlingLevel, seedlingSkeletonSpec } =
     await mod('frontend/modules/seedlingDemo/procgenSeedling.js');
 const { parseSkeleton } = await mod('frontend/modules/procgenCore/skeletonKinds.js');
@@ -89,10 +91,12 @@ const KINDS = arg('kinds', 'empty').split(',').map((s) => s.trim()).filter(Boole
 const SEEDS = seedRange(arg('seeds', '1-40'));
 const COUNT = Number(arg('count', '3'));
 /**
- * ⛔ THE DEFAULT IS THE FULL LIST, NOT A COPY OF IT — so the both-palette dump is
- * the same iteration it always was and the md5 cannot drift with this edit.
+ * ⛔ THE DEFAULT IS `DEFAULT_CENSUS_BIOMES`, NOT A COPY OF IT — so the both-palette
+ * dump is the same iteration it always was and the md5 cannot drift. ⛓ S1: it
+ * WAS `BIOME_NAMES`, and the day `post-shield` joined that list the default
+ * would have become a three-palette dump; the census default is its own list.
  */
-const BIOMES = arg('biomes', BIOME_NAMES.join(','))
+const BIOMES = arg('biomes', DEFAULT_CENSUS_BIOMES.join(','))
     .split(',').map((s) => s.trim()).filter(Boolean);
 const unknown = BIOMES.filter((b) => !BIOME_NAMES.includes(b));
 if (unknown.length || BIOMES.length === 0) {

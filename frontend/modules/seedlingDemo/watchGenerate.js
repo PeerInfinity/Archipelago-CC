@@ -92,7 +92,8 @@ import {
     writeRosterParam, writeRunFlag, writeSizeParams, writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
 import {
-    POST_SWORD_PALETTE, PRE_SWORD_PALETTE, instantiateKept, normalizeRoster, restrictPalette,
+    POST_SHIELD_PALETTE, POST_SWORD_PALETTE, PRE_SWORD_PALETTE, instantiateKept, normalizeRoster,
+    restrictPalette,
 } from './procgenPalette.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, formatSkeleton, normalizeSkeleton,
@@ -142,9 +143,22 @@ const fail = (message) => { throw new WatchGenerateError(message); };
 export const GENERATE_BIOMES = Object.freeze({
     'pre-sword': PRE_SWORD_PALETTE,
     'post-sword': POST_SWORD_PALETTE,
+    /** ⛓ seedling substrate S1 (D3) — the shield in the boot; opt-in. */
+    'post-shield': POST_SHIELD_PALETTE,
 });
 
 export const BIOME_NAMES = Object.freeze(Object.keys(GENERATE_BIOMES));
+
+/**
+ * ⛓⛓ **THE BIOMES A CENSUS OR BATCH RUNS WHEN NOBODY NAMES ONE** — the two
+ * that existed before S1. ⛔ It is NOT `BIOME_NAMES`: those readers
+ * (`batch-seedling-acceptance`, `dump-seedling-kind-pairs`,
+ * `attribute-seedling-pairs-cost`) publish committed identities over "every
+ * biome", and a new biome joining that iteration would move every one of them
+ * for a boot nobody asked them to measure. A new biome is opt-in there
+ * (`--biomes=`), exactly as a new element head is opt-in to a biome default.
+ */
+export const DEFAULT_CENSUS_BIOMES = Object.freeze(['pre-sword', 'post-sword']);
 
 export function paletteFor(biome) {
     const palette = GENERATE_BIOMES[biome];

@@ -71,7 +71,7 @@
 
 import { generateSeedlingLevel, placementTagId, seedlingOracle } from './procgenSeedling.js';
 import { VERDICT } from './procgenOracle.js';
-import { PRE_SWORD_PALETTE, POST_SWORD_PALETTE } from './procgenPalette.js';
+import { POST_SHIELD_PALETTE, PRE_SWORD_PALETTE, POST_SWORD_PALETTE } from './procgenPalette.js';
 import { pickDoorCells } from './levelSetExits.js';
 import { TILE_SIZE, buildLevelWorld } from './levelWorld.js';
 import { ROOM_TILES_MAX, ROOM_TILES_MIN } from './procgenLevel.js';
@@ -82,11 +82,11 @@ import { parseSkeleton } from '../procgenCore/skeletonKinds.js';
 import { parseElementSpec } from '../procgenCore/elementSpec.js';
 import { parseAreaSpec } from '../procgenCore/areaSpec.js';
 import {
-    GEN_ROOM_DEFAULTS, GEN_ROOM_REFUSALS, GEN_ROOM_TILE_SIZE, genDoorId,
+    GEN_ROOM_BIOME_NAMES, GEN_ROOM_DEFAULTS, GEN_ROOM_REFUSALS, GEN_ROOM_TILE_SIZE, genDoorId,
 } from './seedlingGenRoomPayload.js';
 
 export {
-    GEN_ROOM_DEFAULTS, GEN_ROOM_REFUSALS, GEN_ROOM_TILE_SIZE, genDoorId,
+    GEN_ROOM_BIOME_NAMES, GEN_ROOM_DEFAULTS, GEN_ROOM_REFUSALS, GEN_ROOM_TILE_SIZE, genDoorId,
     deserializeGenRoom, genRoomRefusal, genRoomApLocationNames,
 } from './seedlingGenRoomPayload.js';
 
@@ -95,8 +95,13 @@ const TRUE_RULE = Object.freeze({ rule: 'True_' });
 const isTrueRule = (rule) => rule?.rule === 'True_';
 const cloneRule = (rule) => structuredClone(rule);
 
-/** The two biomes a room can be built in — the palettes `watchGenerate.GENERATE_BIOMES` offers. */
-export const GEN_ROOM_BIOMES = Object.freeze({ 'pre-sword': PRE_SWORD_PALETTE, 'post-sword': POST_SWORD_PALETTE });
+/** The biomes a room can be built in — the palettes `watchGenerate.GENERATE_BIOMES` offers
+ *  (S1 added `post-shield`; `GEN_ROOM_BIOME_NAMES` is the same list by name). */
+export const GEN_ROOM_BIOMES = Object.freeze({ 'pre-sword': PRE_SWORD_PALETTE, 'post-sword': POST_SWORD_PALETTE,
+    'post-shield': POST_SHIELD_PALETTE });
+if (Object.keys(GEN_ROOM_BIOMES).join() !== GEN_ROOM_BIOME_NAMES.join()) {
+    throw new Error('seedlingGenRoom: GEN_ROOM_BIOMES and GEN_ROOM_BIOME_NAMES disagree — one list, two spellings');
+}
 
 const cellKey = (c) => `${c.tx},${c.ty}`;
 const around = (c) => [[0, -1], [-1, 0], [1, 0], [0, 1]].map(([dx, dy]) => ({ tx: c.tx + dx, ty: c.ty + dy }));

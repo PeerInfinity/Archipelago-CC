@@ -45,7 +45,7 @@ import { BLOCK_POCKET } from './elements/blockPocket.js';
 import { KILL_GATE } from './elements/killGate.js';
 import { OPEN_CHAMBER } from './elements/openChamber.js';
 import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
-import { ROCK_GATE, ROCK_SHORTCUT } from './elements/soloDoor.js';
+import { ROCK_GATE, ROCK_SHORTCUT, SHIELD_GATE } from './elements/soloDoor.js';
 import { LAW_SHORTCUT } from './elements.js';
 import { parseRequireList } from './areaSpec.js';
 import {
@@ -277,6 +277,30 @@ export const ELEMENT_TABLE = Object.freeze({
             + 'a rock, not a kill lock: an optional kill cannot ship (A10).',
         extra: Object.freeze([]),
         needs: Object.freeze(['hasSword']),
+    }),
+    /**
+     * ⛓⛓⛓ **THE SHIELD GATE — THE FIRST GATE ON AN ITEM THAT IS NOT THE SWORD**
+     * (seedling substrate S1, D3; plan §2.1 G-c). A `shieldlocknorm` on a cut
+     * whose START side is its WEST neighbour (`ShieldLock.update` collides at
+     * `x - 1`). ⛔ `shieldlocknorm`, not `shieldlock`: `Game.as:2324` builds the
+     * latter with `_type = 1`, the DARK shield's lock.
+     *
+     * ⛓ `needs: ['hasShield']` — the seam refuses it BY NAME on every biome but
+     * `post-shield` (the only boot that grants the flag), and
+     * `headsNeeding('hasShield')` is exactly this head, so `require:['hasShield']`
+     * resolves to it. ⚠ THE DIRECTIVE CANNOT BE MET TODAY, and the reason is the
+     * solver's, measured at S1's W0 and ROUTED TO L16 (the planner, 2026-09-26):
+     * `solverBot.execTouch`'s no-shield arm `fail()`s — a `SolverBotError`, not a
+     * `SolverRefusal` — so the without-arm THROWS and the differential grades it
+     * WEAK, never STRONG. One line in L16's file; re-measure after it merges.
+     */
+    shieldgate: Object.freeze({
+        element: SHIELD_GATE,
+        why: 'The SHIELD GATE (seedling substrate S1): a `shieldlocknorm` on a main-path cut '
+            + 'entered from the WEST, its wall grown to seal the room, opened by walking into '
+            + 'its west face holding the shield. Certified by the existing `touch`.',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['hasShield']),
     }),
 });
 

@@ -1270,7 +1270,8 @@ export const CATALOGUE = frz({
         "chamber",
         "arena",
         "rockgate",
-        "shortcut"
+        "shortcut",
+        "shieldgate"
     ],
     "elementSubsetSeparator": "|",
     "elements": [
@@ -1422,9 +1423,19 @@ export const CATALOGUE = frz({
             ],
             "params": [],
             "why": "The SHORTCUT (arc-5 §4.7, seedling substrate S1): a `breakablerock` on the SHORT ARC of a cycle the room already has — with it unbroken the goal is still reachable, the long way. The differential grades the sword SHORTENS. Realised as a rock, not a kill lock: an optional kill cannot ship (A10)."
+        },
+        {
+            "head": "shieldgate",
+            "module": "shield-gate",
+            "needs": [
+                "hasShield"
+            ],
+            "params": [],
+            "why": "The SHIELD GATE (seedling substrate S1): a `shieldlocknorm` on a main-path cut entered from the WEST, its wall grown to seal the room, opened by walking into its west face holding the shield. Certified by the existing `touch`."
         }
     ],
     "itemsElementsNeed": [
+        "hasShield",
         "hasSword"
     ],
     "killLockTemplates": {

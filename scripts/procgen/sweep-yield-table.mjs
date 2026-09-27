@@ -282,9 +282,12 @@ if (REQUIRE && SUBSTRATE !== 'seedling' && AREAS.keys === 0) {
  * pre-sword solve against a post-sword one and call the difference a kind.
  */
 const PALETTE_NAME = arg('palette', 'pre-sword');
-if (SUBSTRATE === 'seedling' && PALETTE_NAME !== 'pre-sword' && PALETTE_NAME !== 'post-sword') {
-    note(`sweep-yield-table: --palette=${PALETTE_NAME} is not a Seedling biome. The two are `
-        + '`pre-sword` (the default, and this arm\'s original) and `post-sword`.');
+/** ⛓ S1 — the biome names are `watchGenerate.GENERATE_BIOMES`'s, not a second list. */
+const SEEDLING_BIOMES = SUBSTRATE === 'seedling'
+    ? (await M('seedlingDemo/watchGenerate.js')).GENERATE_BIOMES : {};
+if (SUBSTRATE === 'seedling' && !SEEDLING_BIOMES[PALETTE_NAME]) {
+    note(`sweep-yield-table: --palette=${PALETTE_NAME} is not a Seedling biome. They are `
+        + `[${Object.keys(SEEDLING_BIOMES).join(', ')}]; \`pre-sword\` is the default.`);
     process.exit(2);
 }
 if (SUBSTRATE === 'maze' && process.argv.some((a) => a.startsWith('--palette='))) {
@@ -306,8 +309,7 @@ const ELEMENTS_EFFECTIVE = await (async () => {
     if (SUBSTRATE !== 'seedling') return { name: ELEMENTS_NONE };
     const { defaultElementsFor } = await M('seedlingDemo/procgenSeedling.js');
     const { resolveRequireDirective } = await M('procgenCore/elementSpec.js');
-    const { POST_SWORD_PALETTE, PRE_SWORD_PALETTE } = await M('seedlingDemo/procgenPalette.js');
-    const items = (PALETTE_NAME === 'post-sword' ? POST_SWORD_PALETTE : PRE_SWORD_PALETTE).items;
+    const { items } = SEEDLING_BIOMES[PALETTE_NAME];
     /**
      * ⛓⛓⛓ **A DIRECTIVE REPLACES THE BIOME DEFAULT** (arc 3, slice 4d), and
      * this readout has to say so or it would label a `--require=hasSword` sweep
@@ -383,11 +385,8 @@ if (CELL !== '') {
         const {
             interiorCells, seedlingSeam, seedlingSkeletonSpec,
         } = await M('seedlingDemo/procgenSeedling.js');
-        const {
-            POST_SWORD_PALETTE, PRE_SWORD_PALETTE,
-        } = await M('seedlingDemo/procgenPalette.js');
         const { terrainAt } = await M('seedlingDemo/procgenLevel.js');
-        palette = PALETTE_NAME === 'post-sword' ? POST_SWORD_PALETTE : PRE_SWORD_PALETTE;
+        palette = SEEDLING_BIOMES[PALETTE_NAME];
         /**
          * ⛓⛓ ONE SEAM, TWO CALLERS (arc 3 slice 3). `seedlingSeam` is what
          * `generateSeedlingLevel` uses: it builds the model, runs the element's

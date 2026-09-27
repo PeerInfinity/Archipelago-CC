@@ -57,7 +57,7 @@ import {
     seedlingFlashPanelBlock,
 } from './flashSeedlingLibrary.js';
 import {
-    GEN_ROOM_DEFAULTS, GEN_ROOM_SUBSTRATE_ID, deserializeGenRoom, genRoomApLocationNames,
+    GEN_ROOM_BIOME_NAMES, GEN_ROOM_DEFAULTS, GEN_ROOM_SUBSTRATE_ID, deserializeGenRoom, genRoomApLocationNames,
 } from '../seedlingDemo/seedlingGenRoomPayload.js';
 
 /** ⛓ Spelled ONCE, in the light payload module — the play-time assembler reads it there (G2). */
@@ -307,7 +307,7 @@ function textRow(params, key, label, title, onChange) {
 export function renderSeedlingGenProcgenParams({ params, onChange = () => {} } = {}) {
     const wrap = document.createElement('div');
     wrap.appendChild(selectRow(params, 'seedlingGenBiome', 'Biome',
-        'The boot inventory the room is built and certified for', ['pre-sword', 'post-sword'], onChange));
+        'The boot inventory the room is built and certified for', GEN_ROOM_BIOME_NAMES, onChange));
     wrap.appendChild(numberField(params, {
         key: 'seedlingGenObstacleTarget', label: 'Obstacle target', def: GEN_ROOM_DEFAULTS.obstacleTarget,
         min: 0, integer: true, title: 'How many palette obstacles the generator tries to keep',

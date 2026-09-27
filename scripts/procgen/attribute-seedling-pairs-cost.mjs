@@ -44,7 +44,9 @@ argvHelp(import.meta.url);
 const ROOT = path.resolve(new URL('../..', import.meta.url).pathname);
 const mod = async (p) => import(pathToFileURL(path.join(ROOT, p)).href);
 
-const { BIOME_NAMES, paletteFor } = await mod('frontend/modules/seedlingDemo/watchGenerate.js');
+const {
+    DEFAULT_CENSUS_BIOMES, paletteFor,
+} = await mod('frontend/modules/seedlingDemo/watchGenerate.js');
 const { seedlingModel, seedlingOracle } = await mod('frontend/modules/seedlingDemo/procgenSeedling.js');
 const { generateLevel } = await mod('frontend/modules/procgenCore/levelGenerator.js');
 const { rngFor } = await mod('frontend/modules/seedlingDemo/procgenRng.js');
@@ -66,7 +68,8 @@ const KINDS = arg('kinds', 'winding,rooms,branchy,bushy,loopy,open')
     .split(',').map((s) => s.trim()).filter(Boolean);
 const SEEDS = seedRange(arg('seeds', '1-12'));
 const COUNT = Number(arg('count', '4'));
-const BIOMES = arg('biomes', BIOME_NAMES.join(',')).split(',').filter(Boolean);
+// ⛓ S1: the census default, not every biome (`watchGenerate.DEFAULT_CENSUS_BIOMES`).
+const BIOMES = arg('biomes', DEFAULT_CENSUS_BIOMES.join(',')).split(',').filter(Boolean);
 const JSON_OUT = arg('json', '');
 
 const say = (l = '') => process.stdout.write(`${l}\n`);
