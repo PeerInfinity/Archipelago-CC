@@ -75,8 +75,11 @@
  * subject and reporting it under the same word (trap 383).
  */
 import {
-    diffObservationStreams, gameStreamFromDrain, gameVisibleTape, KEY_CODES,
+    diffObservationStreams, gameStreamFromDrain, gameVisibleTape, holdingWindowTape, KEY_CODES,
 } from './tapeFormat.js';
+import {
+    buildNameFromWasmPath, capabilitiesOf, HOLD_CAPABILITY,
+} from '../flashPanel/seedlingRandomizerEligibility.js';
 /**
  * ⛓⛓⛓ R9 SLICE 2 (⚖ ruling 10) — THE DIRECTOR'S BOUNDARY RULES, IMPORTED, and
  * the LATCH→TAPE-BLOCKS inverse the recording harness already runs on.
@@ -146,6 +149,47 @@ export const BOOT_COST_FRAMES = LOAD_FADE_FRAMES + BOOT_PRESWAP_FRAMES;
  * page still loaded it (§18.14.5, trap 411).
  */
 export const WASM_PAGE = '../flashPanel/wasm/seedling_bot_ap_p4d/game.html';
+
+/** The pin manifest beside the builds — the capabilities are read from it. */
+export const WASM_MANIFEST = '../flashPanel/wasm/builds.json';
+
+/**
+ * ⛓ R9 slice P4E — WHICH BUILD A SHIP DRIVES. `?wasm=<build directory>` names
+ * another build in the same submodule (the p4e hold proof drives the director
+ * on it while `WASM_PAGE` stays the default); anything else — absent, empty or
+ * not a plain directory name — is the default. ⛔ The page never guesses what a
+ * named build can do: `shipToWasm` reads its `capabilities` from the manifest.
+ * @param {string} search a `location.search`
+ * @returns {string} the page to load
+ */
+export function wasmPageFor(search) {
+    const name = new URLSearchParams(search ?? '').get('wasm');
+    if (!name || !/^[a-z0-9_]+$/.test(name)) return WASM_PAGE;
+    return `../flashPanel/wasm/${name}/game.html`;
+}
+
+/**
+ * Does the build a ship drives HOLD after the latch? Read from DATA (the
+ * manifest's `capabilities`, ⚖ user 2026-08-29), never assumed from a name.
+ * ⛔ An unreadable manifest is NO hold, with the reason — a director that held
+ * on a build that cannot would have every continuation refused at
+ * `botLoadTape` (tape_version 12) instead of played.
+ * @param {object|null} manifest the parsed `builds.json`
+ * @param {string} page the page `wasmPageFor` chose
+ * @returns {{build: string|null, capable: boolean, why: string}}
+ */
+export function holdCapabilityOf(manifest, page) {
+    const build = buildNameFromWasmPath(page);
+    const { entry, capabilities } = capabilitiesOf(manifest, build);
+    if (!entry) {
+        return { build, capable: false,
+            why: `the manifest carries no entry for ${JSON.stringify(build)}` };
+    }
+    const capable = (capabilities ?? []).includes(HOLD_CAPABILITY);
+    return { build, capable,
+        why: capable ? `${build} declares \`${HOLD_CAPABILITY}\``
+            : `${build} does not declare \`${HOLD_CAPABILITY}\`` };
+}
 
 /** ⛓ The ordered stage vocabulary. The rows assert on these names. */
 export const WASM_STAGES = Object.freeze([
@@ -1045,11 +1089,14 @@ export async function shipToWasm(payload, host) {
         tape, expect, expectWhy, modelStream, modelStreamWhy, label,
     }];
     const { frame, lifetime, readout, tolerance = END_STATE_TOLERANCE } = host;
+    const wasmPage = host.wasmPage ?? wasmPageFor(globalThis.location?.search ?? '');
     const state = {
         stage: null,
         stages: stagesOf({ levelSet, windows: windows.length }),
         /** ⛓ One record per window: its stages, its own verdict, its boundary. */
         windows: [],
+        /** ⛓ P4E: `{build, capable, why}` — does this build hold after the latch. */
+        hold: null,
         reached: [],
         refusal: null,
         label,
@@ -1098,10 +1145,10 @@ export async function shipToWasm(payload, host) {
     };
 
     // ── probe ────────────────────────────────────────────────────────
-    const probe = await fetch(WASM_PAGE, { method: 'HEAD' }).catch(() => null);
+    const probe = await fetch(wasmPage, { method: 'HEAD' }).catch(() => null);
     if (!probe || !probe.ok) {
         return refuse('probe', 'wasm-build-missing',
-            `${WASM_PAGE} is missing (HTTP ${probe ? probe.status : 'unreachable'}). `
+            `${wasmPage} is missing (HTTP ${probe ? probe.status : 'unreachable'}). `
             + 'Run `git submodule update --init '
             + 'frontend/modules/flashPanel/wasm`. Use &side=js meanwhile.');
     }
@@ -1122,7 +1169,17 @@ export async function shipToWasm(payload, host) {
      * TRUTH law, and precisely the class of defect a lift can introduce while
      * every line still looks familiar. ⇒ the frame moves first.
      */
-    await freshFrame(frame, lifetime);
+    /**
+     * ⛓ R9 slice P4E — THE HOLD, decided from the manifest BEFORE any window
+     * runs, and reported as a FIELD (trap 269): `state.hold`.
+     */
+    const manifest = windows.length > 1
+        ? await fetch(WASM_MANIFEST).then((r) => (r.ok ? r.json() : null)).catch(() => null)
+        : null;
+    state.hold = windows.length > 1 ? holdCapabilityOf(manifest, wasmPage)
+        : { build: buildNameFromWasmPath(wasmPage), capable: false,
+            why: 'a single window has no successor to hold for' };
+    await freshFrame(frame, lifetime, wasmPage);
     /**
      * ⛓⛓ THE TEARDOWN THE RELOAD USED TO DO. `about:blank` discards the
      * frame's document, and with it the runtime, its rAF chain and its audio.
@@ -1279,7 +1336,7 @@ export async function shipToWasm(payload, host) {
         const wLabel = w.label || `window ${k + 1}`;
         const rec = { index: k, label: wLabel, admission: null, verdict: null,
             continuation: null, movedAtBoundary: null, tick0Applied: null,
-            forwardRows: [] };
+            forwardRows: [], hold: false, heldAtFinish: null };
         state.windows.push(rec);
 
         if (k > 0) {
@@ -1455,7 +1512,16 @@ export async function shipToWasm(payload, host) {
          * boot applies its own declaration and is the only window whose
          * declared position IS the state the page is in.
          */
-        const projected = k > 0 ? continuationTape(w.tape) : { tape: gameVisibleTape(w.tape),
+        /**
+         * ⛓ R9 slice P4E (⚖ 72 (a′)) — a window WITH A SUCCESSOR, on a build
+         * that declares `hold`, asks the game to hold the room at its latch, so
+         * the next window's tick 0 is the latch frame plus ZERO room updates —
+         * a fresh boot's count — however long the page takes between windows.
+         * The last window is never held: nothing follows it.
+         */
+        rec.hold = state.hold.capable && k < windows.length - 1;
+        const wTape = rec.hold ? holdingWindowTape(w.tape) : w.tape;
+        const projected = k > 0 ? continuationTape(wTape) : { tape: gameVisibleTape(wTape),
             tick0Applied: null, tick0Missing: false, forwardRows: [] };
         rec.forwardRows = projected.forwardRows;
         /**
@@ -1507,6 +1573,10 @@ export async function shipToWasm(payload, host) {
             }
             pollTick();
         });
+        // ⛓ P4E: the game's own `held` FIELD at the finish poll — `true` on a
+        // held window of a build that holds, `undefined` → null on one that
+        // has no such readout (p4d).
+        rec.heldAtFinish = st.held ?? null;
         state.stage = `finished${at}`;
         state.reached.push(`finished${at}`);
         /**
@@ -1708,7 +1778,7 @@ function releaseKeysInFrame(w, codes) {
  * like a working ship reporting somebody else's end state. The blank has to
  * LAND first, which is a `load` event.
  */
-function freshFrame(frame, lifetime) {
+function freshFrame(frame, lifetime, page = WASM_PAGE) {
     return new Promise((resolve) => {
         let done = false;
         const finish = () => { if (!done) { done = true; resolve(); } };
@@ -1719,7 +1789,7 @@ function freshFrame(frame, lifetime) {
         // indistinguishable from a build that would not serve.
         setTimeout(finish, 500);
     }).then(() => {
-        frame.src = WASM_PAGE;
+        frame.src = page;
         frame.style.display = 'block';
     });
 }

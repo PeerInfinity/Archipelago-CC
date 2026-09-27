@@ -128,11 +128,33 @@ import { TAGS_PER_LEVEL } from './breakableRocks.js';
  * bumping this constant cannot silently re-version the committed fixtures.
  * It is documentation plus one test's anchor.
  */
-export const TAPE_VERSION = 11;
+export const TAPE_VERSION = 12;
 
 /** Every version this parser accepts. v1 tapes are frozen, not deprecated. */
 export const SUPPORTED_TAPE_VERSIONS = Object.freeze(
-    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+
+/**
+ * ── Version 12: HOLD-AFTER-LATCH (R9 slice P4E, ⚖ 72 (a′)) ──────────────
+ *
+ * `hold: true` asks the GAME to freeze the room at this tape's seam latch —
+ * no body steps, `Game.time` does not advance, the mixer does not move —
+ * until the next `botStart`. It is what closes the continuation gap (kickoff
+ * §61): without it the finish frame's own `super.update()` and every
+ * wall-clock frame the page spends between windows (36–38 measured) step the
+ * live room, so a continuation's tick 0 is NOT the fresh boot's.
+ *
+ * ⛓ GAME-VISIBLE, the first field above 8 that is: it is an INSTRUCTION to
+ * the game, not a statement about what the game did, so `gameVisibleTape`
+ * CARRIES it (as the game's version 12 — the fork accepts 1..8 and 12, never
+ * the model-only 9..11). It needs a build declaring the `hold` capability
+ * (`builds.json`), and the director stamps it only then, and only on a
+ * window that HAS a successor (`holdingWindowTape`).
+ *
+ * ⛔ VALUE-SCOPED like every field before it: below 12 the only legal value
+ * is absent/null/false, and no committed tape declares it.
+ */
+export const HOLD_TAPE_VERSION = 12;
 
 /**
  * ── Version 7: the RNG STATE ──────────────────────────────────────────
@@ -1753,6 +1775,18 @@ export function parseTape(input) {
     }
     const tick0 = version >= 11 && raw.tick0 !== undefined && raw.tick0 !== null
         ? parseTick0(raw) : null;
+    // ⛓ v12 `hold` — VALUE-scoped (a parsed tape carries `hold: false`, and a
+    // re-parse must accept it at any version).
+    if (raw.hold !== undefined && raw.hold !== null && typeof raw.hold !== 'boolean') {
+        fail(`hold must be a boolean, got ${JSON.stringify(raw.hold)}`);
+    }
+    if (version < HOLD_TAPE_VERSION && raw.hold === true) {
+        fail(`tape_version ${version} declares hold: true, but versions below `
+            + `${HOLD_TAPE_VERSION} mean hold: false BY DEFINITION — the build that `
+            + 'reads it is the one declaring the `hold` capability. Bump tape_version '
+            + `to ${HOLD_TAPE_VERSION} to declare it.`);
+    }
+    const hold = version >= HOLD_TAPE_VERSION && raw.hold === true;
 
     const boot = raw.boot;
     if (boot === null || typeof boot !== 'object' || Array.isArray(boot)) {
@@ -1882,6 +1916,8 @@ export function parseTape(input) {
             rng: Object.freeze({ ...tick0.rng }),
             seam: Object.freeze({ ...tick0.seam }),
         }),
+        // ⛓ v12: `false` unless declared (normalised, like `despawn`).
+        hold,
         tick_count: tickCount,
         inputs: Object.freeze(inputs.map((s) => Object.freeze(s))),
         ...(raw.name ? { name: String(raw.name) } : {}),
@@ -1973,6 +2009,30 @@ export function keyEdgesAt(tape, t) {
 export const GAME_VISIBLE_DROPS = Object.freeze(
     ['persistence[] with at', 'despawn', 'tick0']);
 
+/**
+ * ⛓ R9 slice P4E — the fields a version above 8 added that DO cross to the
+ * game. `hold: true` is carried (and re-versions the projection to 12);
+ * `hold: false` — every committed tape — is dropped, so a non-holding
+ * tape's projected bytes (and `solve-seedling-r9-campaign`'s latch-cache key
+ * on them) do not move at this bump.
+ */
+export const GAME_VISIBLE_KEEPS = Object.freeze(['hold']);
+
+/**
+ * The window tape a CONTINUATION director hands on when the build can hold:
+ * the same tape, re-versioned to 12 and declaring `hold: true`. ⛔ Only for a
+ * window that HAS a successor, and only on a build whose manifest entry
+ * declares `hold` — the caller decides both from data; this only writes.
+ * @param {object} tape a parsed (or raw) tape
+ * @returns {object} a parsed tape declaring `hold`
+ */
+export function holdingWindowTape(tape) {
+    // `parseTape` is idempotent, so a raw tape and a parsed one both normalise.
+    const t = parseTape(tape);
+    return parseTape({ ...t,
+        tape_version: Math.max(t.tape_version, HOLD_TAPE_VERSION), hold: true });
+}
+
 export function gameVisibleTape(tape) {
     const t = tape.tape_version === undefined ? parseTape(tape) : tape;
     /**
@@ -1998,9 +2058,18 @@ export function gameVisibleTape(tape) {
     // whole claim. The fork has no tick-0 concept — the page APPLIES the block
     // through `botStart`'s existing `rng`/`seam.time` writes and the game only
     // ever sees the ordinary declaration it has always seen.
-    const { despawn, tick0, ...rest } = t;
+    const { despawn, tick0, hold, ...rest } = t;
     return {
         ...rest,
+        /**
+         * ⛓ P4E: a HOLDING projection is a real JS v12 tape too — the same
+         * version number means the same thing on both sides. v10+ requires
+         * `despawn`, so it rides EMPTY (contentless: the model-only rows are
+         * still withheld), and `tick0` is absent, which v11+ reads as null.
+         * A non-holding projection carries neither key, byte-identical to
+         * before this bump.
+         */
+        ...(hold ? { despawn: [], hold: true } : {}),
         // ⚠ 8 for everything at or above 9, and still not `tape_version - 1`:
         // everything versions 9, 10 and 11 added is dropped here, so what is
         // left is precisely a version 8 tape. A decrement would be arithmetic
@@ -2012,7 +2081,9 @@ export function gameVisibleTape(tape) {
         // rather than a constant: re-stamping the 121 committed fixtures at 8
         // would be this function claiming something about them it did not
         // measure.
-        tape_version: Math.min(t.tape_version, 8),
+        // ⛓ P4E: a HOLDING tape is the game's version 12 — v8's features plus
+        // `hold`, which is exactly what is left after the drops above.
+        tape_version: hold ? HOLD_TAPE_VERSION : Math.min(t.tape_version, 8),
         /**
          * ⛔⛔⛔ ⚖ RULING 23 (user, 2026-08-21): *"a level run separately must
          * play identically to the same level reached from the start"* — so a
@@ -2062,6 +2133,7 @@ export function requiredTapeVersion(tape, floor = 8) {
     // ⛔ HIGHEST FIRST, and the tick-0 latch is the highest: a segment that
     // carries a measured tick-0 state AND a despawn is a v11 tape, not a v10
     // one that quietly drops the field the continuation page reads.
+    if (tape.hold === true) return HOLD_TAPE_VERSION;
     if (tape.tick0 !== null && tape.tick0 !== undefined) return 11;
     if ((tape.despawn ?? []).length > 0) return 10;
     const usesAt = (tape.persistence ?? []).some((c) => c.at !== undefined);
@@ -2151,6 +2223,8 @@ export function serializeTape(tape) {
                 seam: { time: t.tick0.seam.time },
             },
         } : {}),
+        // Written ONLY for a v12 tape that declares it (the round-trip rule).
+        ...(t.tape_version >= HOLD_TAPE_VERSION && t.hold ? { hold: true } : {}),
         tick_count: t.tick_count,
         inputs: t.inputs.map((s) => ({ key: s.key, from: s.from, to: s.to })),
     };
