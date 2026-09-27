@@ -35,6 +35,14 @@
  * `items[p]` and the names in `starting_items[p]` — the lines the pipeline's
  * compile writes for the same grants.
  *
+ * ⛓⛓ S3 — LOOP MODE (optional, OFF by default — the pipeline's `enableLoopMode`):
+ * the payloads are built with `manaEnabled: true` and the RESULT carries a
+ * `loop_costs` block from the pipeline's own producer (`generateLoopCosts`),
+ * computed over the SLOT'S sphere log (`initialiseSphereLog`: the page's loaded
+ * log, else the document's embedded one) and over a COPY of the document that
+ * already holds the new entries and return exits — the generator walks
+ * `regions[p]` and classifies each region by its sidecar's substrate.
+ *
  * ⛓ The regions the layout cannot place (no incoming exit; no free cell; …) are NAMED with a `why` DERIVED from the graph (⚖ #2) and the rest
  * are built — never a refusal of the whole initialise.
  *
@@ -56,6 +64,9 @@ import { createRng } from '../shared/rng.js';
 import { regionsOf, startRegionsOf } from '../procgenCore/rulesGraph.js';
 import { SUBSTRATE_CONFIGS_KEY, recordableConfigsFor } from '../procgenCore/substrateConfigRecord.js';
 import { grantedLibraryItems } from '../procgenPipeline/topDownSteps.js';
+import {
+    DEFAULT_REGION_XP_EFFECT, VALID_REGION_XP_EFFECTS, generateLoopCosts,
+} from '../shared/procgen/loopCostGenerator.js';
 import { INITIALISE_DRIVER } from './initialiseDriver.js';
 import {
     REGENERATE_BASE_REGION_PARAMS, regionRealiserKind, regionSizeFor,
@@ -97,6 +108,9 @@ export const UNPLACED_WHY = Object.freeze({
     NO_FREE_CELL: 'no free grid cell',
     ONLY_FROM_UNPLACED: 'reachable only from unplaced regions',
 });
+
+/** ⛓ Which stage of a build failed, when it is not the realiser (the op words it). */
+export const INITIALISE_STAGES = Object.freeze({ LOOP_COSTS: 'loop-costs' });
 
 /** ⛓ Why a slot cannot be initialised — facts, not sentences (the op words them). */
 export const INITIALISE_BLOCKERS = Object.freeze({
@@ -219,6 +233,77 @@ export function initialiseKnobs(substrate, bag) {
     };
 }
 
+/* ── loop mode (APWORLD SUBSTRATE CHANGE S3) ─────────────────────────── */
+
+/**
+ * ⛓ The XP effects the form offers and the op accepts — the generator's own
+ * vocabulary (`loopCostDefaults.js`, re-exported by the generator), never typed
+ * here; the first offered is the generator's default.
+ */
+export const INITIALISE_XP_EFFECTS = Object.freeze([
+    DEFAULT_REGION_XP_EFFECT, ...VALID_REGION_XP_EFFECTS.filter((e) => e !== DEFAULT_REGION_XP_EFFECT),
+]);
+export { DEFAULT_REGION_XP_EFFECT };
+
+/** ⛓ Where the sphere log loop mode prices from came from (`initialiseSphereLog`). */
+export const SPHERE_LOG_SOURCE = Object.freeze({ PAGE: 'page', EMBEDDED: 'embedded' });
+
+const isEntries = (v) => Array.isArray(v) && v.length > 0;
+
+/**
+ * ⛓⛓ **THE SLOT'S SPHERE LOG, BY PRECEDENCE** — the page's loaded log
+ * (`sphereState.getRawSphereLog`: for a classic preset the `_sphere_log.jsonl`
+ * beside it, which the hub cannot fetch — it does not know the document's path),
+ * else the document's EMBEDDED `sphere_log`, else none. A log is usable only if
+ * one of its entries carries `player_data[player]` (a log for another document
+ * would price nothing). `{entries, source, forPlayer}`; `entries` null when
+ * neither is a non-empty list.
+ */
+export function initialiseSphereLog(doc, player, pageLog = null) {
+    const p = String(player);
+    const [entries, source] = isEntries(pageLog) ? [pageLog, SPHERE_LOG_SOURCE.PAGE]
+        : isEntries(doc?.sphere_log) ? [doc.sphere_log, SPHERE_LOG_SOURCE.EMBEDDED] : [null, null];
+    const forPlayer = !!entries && entries.some((e) => e?.player_data && Object.hasOwn(e.player_data, p));
+    return { entries, source, forPlayer };
+}
+
+/**
+ * ⛓ The document the generator prices: a COPY of `doc` with the slot's new
+ * entries and return exits written as the op writes them (the input is kept).
+ */
+function withBuiltSlot(doc, player, entries, returnExits) {
+    const copy = JSON.parse(JSON.stringify(doc));
+    copy.preset_sidecars = { ...(copy.preset_sidecars ?? {}), [player]: entries };
+    for (const { region, exit } of returnExits) {
+        const r = copy.regions[player][region];
+        r.exits = [...(r.exits ?? []), exit];
+    }
+    return copy;
+}
+
+/**
+ * ⛓⛓ **THE `loop_costs` BLOCK** for the built slot — the pipeline's producer,
+ * its XP effect, its `generatedFrom` the document's `seed_name` (the pipeline
+ * records its seed name). Throws what the generator throws (the op refuses).
+ */
+export function initialiseLoopCosts(doc, player, { entries, returnExits, sphereLog, regionXpEffect }) {
+    const costs = generateLoopCosts({
+        rulesJson: withBuiltSlot(doc, player, entries, returnExits),
+        sphereLog,
+        playerId: player,
+        regionXpEffect,
+        sourceFileName: typeof doc?.seed_name === 'string' ? doc.seed_name : null,
+    });
+    // ⛔ NO `generatedAt` — the pipeline's rule (PROCGEN PIPELINE PRESETS P0,
+    // ⚖ user 2026-09-16; `buildRulesJson` deletes it the same way): the generator
+    // stamps `new Date().toISOString()`, so two initialises of one slot would
+    // differ in that one field and a replayed record could never be held
+    // byte-identical. The writer is in the `shared/` submodule, so it is deleted
+    // after the call, exactly as the pipeline does.
+    delete costs.generatedAt;
+    return costs;
+}
+
 const isDims = (d) => !!d && Number.isInteger(d.width) && Number.isInteger(d.height) && d.width >= 1 && d.height >= 1;
 
 /**
@@ -319,7 +404,7 @@ function predictedReturnExits(layout) {
  * ⛓ Normalise the caller's arguments: the default substrate, the auto grid (`autoGridSide`),
  * the first seed, return exits ON. (Refusals are the op's.)
  */
-function normalise(doc, player, { substrate, gridDims, seed, backExits, bag } = {}) {
+function normalise(doc, player, { substrate, gridDims, seed, backExits, bag, loopMode, sphereLog } = {}) {
     const p = String(player);
     const sub = substrate ?? DEFAULT_SUBSTRATE_ID;
     const s = seed ?? INITIALISE_FIRST_SEED;
@@ -332,6 +417,11 @@ function normalise(doc, player, { substrate, gridDims, seed, backExits, bag } = 
         backExits: backExits ?? BACK_EXITS.ADD,
         // ⛓ S2 — the form's settings bag; absent = the target's defaults and the slot's size.
         ...(bag !== undefined ? { bag } : {}),
+        // ⛓ S3 — loop mode; absent (or off) = the pre-S3 build, byte for byte.
+        ...(loopMode?.enabled === true ? {
+            loopMode: { enabled: true, regionXpEffect: loopMode.regionXpEffect ?? DEFAULT_REGION_XP_EFFECT },
+            sphereLog: initialiseSphereLog(doc, p, sphereLog).entries,
+        } : {}),
     };
 }
 
@@ -431,13 +521,16 @@ export function substrateBlocksFor(substrate) {
  * ⛓⛓⛓ **INITIALISE THE SLOT** — the four stages, then the RESULT the op lands
  * inline: `{ok: true, entries, procgen_metadata, returnExits, blocks, unplaced,
  * stats: {placed, total, teleporters, returnExits}, gridDims, freeItems,
- * grantedItems, grantedDefs, ms}` (S1: the grants the realiser was handed free,
- * which the op DECLARES) or
- * `{ok: false, why, region?}` (the realiser threw — its message verbatim, and the
- * region it was building). The caller (the op) has refused every input it can
+ * grantedItems, grantedDefs, loop_costs?, ms}` (S1: the grants the realiser was handed free,
+ * which the op DECLARES; S3: `loop_costs` only under loop mode) or
+ * `{ok: false, why, region?, stage?}` (the realiser threw — its message verbatim, and the
+ * region it was building; `stage: INITIALISE_STAGES.LOOP_COSTS` when it was the
+ * cost generator instead). The caller (the op) has refused every input it can
  * name; this answers what the engine did.
  *
- * @param {{doc, player, substrate?, gridDims?, seed?, backExits?, bag?, onProgress?, now?}} args
+ * @param {{doc, player, substrate?, gridDims?, seed?, backExits?, bag?, loopMode?, sphereLog?, onProgress?, now?}} args
+ *   `loopMode` = `{enabled, regionXpEffect}` (S3); `sphereLog` = the page's log
+ *   entries (`initialiseSphereLog` falls back to the document's embedded one).
  */
 export function initialiseSlot(args) {
     const { doc, onProgress = null, now = () => (globalThis.performance?.now?.() ?? Date.now()) } = args;
@@ -474,10 +567,20 @@ export function initialiseSlot(args) {
         playerId: a.player,
         baseObstacleLib: DEFAULT_OBSTACLES,
         baseItemLib: mergeSubstrateItemLib(DEFAULT_ITEMS, [a.substrate]),
-        manaEnabled: false,
+        manaEnabled: a.loopMode !== undefined,
     });
     const entries = sidecars[a.player];
     const returnExits = a.backExits === BACK_EXITS.NONE ? [] : returnExitsOf(doc, a.player, layout);
+    let loopCosts;
+    if (a.loopMode) {
+        try {
+            loopCosts = initialiseLoopCosts(doc, a.player, {
+                entries, returnExits, sphereLog: a.sphereLog, regionXpEffect: a.loopMode.regionXpEffect,
+            });
+        } catch (e) {
+            return { ok: false, why: String(e?.message ?? e), stage: INITIALISE_STAGES.LOOP_COSTS };
+        }
+    }
     const realised = [...new Set(Object.values(entries).map((e) => e.substrate))];
     const configs = recordableConfigsFor(realised, (id) => substrateRegistry.get(id));
     const procgenMetadata = {
@@ -507,6 +610,7 @@ export function initialiseSlot(args) {
         freeItems,
         grantedItems: grant.grantedItems,
         grantedDefs: grant.defs,
+        ...(loopCosts ? { loop_costs: loopCosts } : {}),
         ms: now() - t0,
     };
 }
@@ -517,7 +621,7 @@ export function initialiseSlot(args) {
  * was built under, when the caller gave one (R2's precedent; a replay reads the
  * result, never the bag).
  */
-export function initialiseOpFor({ player, substrate, gridDims, seed, backExits, bag }, res) {
+export function initialiseOpFor({ player, substrate, gridDims, seed, backExits, bag, loopMode }, res) {
     return {
         op: INITIALISE_OP,
         player: String(player),
@@ -528,6 +632,7 @@ export function initialiseOpFor({ player, substrate, gridDims, seed, backExits, 
             grantedItems: res.grantedItems,
             grantedDefs: res.grantedDefs,
             ...(res.blocks && Object.keys(res.blocks).length ? { blocks: res.blocks } : {}),
+            ...(res.loop_costs ? { loop_costs: res.loop_costs } : {}),
             stats: res.stats,
         },
         provenance: {
@@ -538,6 +643,11 @@ export function initialiseOpFor({ player, substrate, gridDims, seed, backExits, 
             ms: Math.round(res.ms ?? 0),
             unplaced: res.unplaced,
             ...(bag !== undefined ? { bag: JSON.parse(JSON.stringify(bag)) } : {}),
+            // ⛓ S3 — how loop mode was asked for (the log itself is not recorded:
+            //   the result carries the block it priced, so a replay never needs it).
+            ...(loopMode?.enabled === true ? {
+                loopMode: { enabled: true, regionXpEffect: loopMode.regionXpEffect ?? DEFAULT_REGION_XP_EFFECT },
+            } : {}),
         },
     };
 }
