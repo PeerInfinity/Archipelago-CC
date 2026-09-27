@@ -1513,6 +1513,81 @@ const PANEL_JS = {
     }`,
 };
 
+/**
+ * ⛓⛓ R9 slice P4E (C4, plan ⚖ Q3 option B) — A HOST-TAGGED VANILLA PICKUP
+ * CHECKS, on the build that declares `tag`.
+ *
+ * `bosskey`, `totempart` and `seed` are built by vanilla with no tag, so a
+ * location bound to one fires nothing. The candidate build reads an optional
+ * `@tag` on all three and, on collection, writes `Game.setPersistence(tag,
+ * false)` — the `pendingCheck` choke point. The arms deliver the vanilla set
+ * with the level-19 boss key TAGGED by the repo's one allocator
+ * (`placementTagId`, via `retagRecordSet`), boot ON the key, and read the
+ * bridge's own reports:
+ *   tagged   — exactly ONE `pendingCheck …|19|<tag>|0`; `keyMask` has the key.
+ *   vanilla  — the same room delivered UNTAGGED: no such report (byte-inert).
+ *   p4d      — the TAGGED set on the build WITHOUT `tag`: no report — the
+ *              absent-capability arm, the reason the host gates on the data.
+ * ⛓ THE BUILD IS CHOSEN BY ITS DATA, NOT BY ITS NAME: the manifest's entry that
+ * declares `tag` (⚖ 2026-08-29 — the host decides from what a build declares).
+ * ⛔ And no build name is spelled here on purpose: pins row (h2) holds every
+ * gate to the lab's own build, and a candidate is pinned by the probe that
+ * drives it (`probe-seedling-hold.mjs`).
+ */
+const WASM_MANIFEST = readJson('frontend/modules/flashPanel/wasm/builds.json');
+const capsOf = (name) => WASM_MANIFEST.builds.find((b) => b.name === name)?.capabilities ?? [];
+const TAG_PAGE = WASM_MANIFEST.builds.find((b) => (b.capabilities ?? []).includes('tag'))?.name ?? null;
+const TAG_ARTIFACT = TAG_PAGE ? join(REPO, 'frontend/modules/flashPanel/wasm', TAG_PAGE) : null;
+const TAG_URL = `http://127.0.0.1:${PORT}/frontend/modules/flashPanel/wasm/${TAG_PAGE}/game.html`;
+if (WIN) {
+    console.log('\n# C4 — SKIP on --win: the tag arms are headless-only (`runArmsLocal`)');
+} else if (!TAG_PAGE) {
+    console.log('\n# C4 — SKIP: no build in builds.json declares `tag`');
+} else if (!existsSync(join(TAG_ARTIFACT, 'game.html'))) {
+    console.log(`\n# C4 — SKIP: the candidate ${TAG_PAGE} is not staged at ${TAG_ARTIFACT}`);
+} else if (!capsOf(TAG_PAGE).includes('tag')) {
+    console.log(`\n# C4 — SKIP: ${TAG_PAGE} does not DECLARE \`tag\` in builds.json `
+        + `([${capsOf(TAG_PAGE).join(', ')}])`);
+} else {
+    const { placementTagId } = await import(join(REPO, 'frontend/modules/seedlingDemo/procgenSeedling.js'));
+    const { retagRecordSet } = await import(join(REPO, 'frontend/modules/seedlingDemo/apPlacementRewriter.js'));
+    const KEY_LEVEL = 19;
+    const room19 = MAP.levels.find((l) => l.level === KEY_LEVEL);
+    const KEY = room19?.entities.find((e) => e.type === 'bosskey') ?? null;
+    const KEY_TAG = KEY ? placementTagId(room19, []) : null;
+    const TAGGED_SET = KEY ? retagRecordSet(VANILLA_SET,
+        [{ level: KEY_LEVEL, type: 'bosskey', x: KEY.x, y: KEY.y, tag: KEY_TAG }]).set : null;
+    console.log(`\n# C4 on ${TAG_PAGE}: the L${KEY_LEVEL} boss key @(${KEY?.x},${KEY?.y}) `
+        + `keyType ${KEY?.attrs?.keyType ?? 0}, allocated tag ${KEY_TAG}`);
+    const onKey = { level: KEY_LEVEL, x: KEY?.x, y: KEY?.y };
+    const C4_ARMS = [
+        armPlan('c4-tagged', { set: TAGGED_SET, boot: onKey, ticks: 10, awaitFinish: true, url: TAG_URL }),
+        armPlan('c4-vanilla', { set: VANILLA_SET, boot: onKey, ticks: 10, awaitFinish: true, url: TAG_URL }),
+        armPlan('c4-p4d', { set: TAGGED_SET, boot: onKey, ticks: 10, awaitFinish: true }),
+    ];
+    const C4 = new Map((await runArmsLocal(C4_ARMS)).map((r) => [r.name, shapeArm(r)]));
+    const want = `|${KEY_LEVEL}|${KEY_TAG}|0`;
+    const reportsNamedC4 = (r, name) => (r?.reports ?? []).filter((x) => x.name === name);
+    const keyChecks = (r) => reportsNamedC4(r, 'pendingCheck')
+        .filter((x) => String(x.value).endsWith(want));
+    for (const [name, n] of [['c4-tagged', 1], ['c4-vanilla', 0], ['c4-p4d', 0]]) {
+        const r = C4.get(name);
+        check(`C4 ${name}: the tape ran and the set was delivered`,
+            !r?.error && r?.room?.status?.finished === true && r?.delivery?.state === 'delivered',
+            r?.error ? `stopped: ${r.error}` : `finished=${r?.room?.status?.finished} `
+                + `delivery=${r?.delivery?.state}`);
+        // ⛓ …and the VANILLA grant happened on every arm: the tag adds a check,
+        // it never replaces the key (`keyMask`, the bridge's own getter).
+        const masks = reportsNamedC4(r, 'keyMask').map((x) => Number(x.value));
+        const bit = 1 << Number(KEY?.attrs?.keyType ?? 0);
+        check(`C4 ${name}: the boss key was COLLECTED (keyMask carries bit ${bit})`,
+            masks.some((m) => (m & bit) !== 0), JSON.stringify(masks));
+        check(`C4 ${name}: ${n === 1 ? 'EXACTLY ONE' : 'NO'} pendingCheck …${want}`,
+            keyChecks(r).length === n,
+            JSON.stringify(reportsNamedC4(r, 'pendingCheck').map((x) => x.value)));
+    }
+}
+
 if (PANEL_ARMS_ENABLED) {
     const APP_URL = `http://localhost:${WIN_PORT}/frontend/?mode=flash`;
     const PRESETS = [

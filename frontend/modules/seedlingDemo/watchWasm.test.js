@@ -1060,22 +1060,23 @@ describe('the `levels` stage delegates the contract, and keeps its own codes', (
 describe('R9 slice P4E — the director HOLDS on a build that declares it', () => {
     const manifest = { builds: [
         { name: 'seedling_bot_ap_p4d', capabilities: ['arm', 'apitem'] },
-        { name: 'seedling_bot_ap_p4e', capabilities: ['arm', 'apitem', 'hold', 'tag'] },
+        { name: 'candidate_probe', capabilities: ['arm', 'apitem', 'hold', 'tag'] },
     ] };
 
     it('`wasmPageFor` names another build only by a plain directory name', () => {
         expect(wasmPageFor('')).toBe(WASM_PAGE);
-        expect(wasmPageFor('?wasm=seedling_bot_ap_p4e'))
-            .toBe('../flashPanel/wasm/seedling_bot_ap_p4e/game.html');
+        // ⚠ a PROBE name, never a real build: a `wasm/<name>` literal here would
+        // pin it (`check-seedling-wasm-pins.mjs`, spelling 1).
+        expect(wasmPageFor('?wasm=candidate_probe')).toMatch(/\/candidate_probe\/game\.html$/);
         expect(wasmPageFor('?wasm=../../etc')).toBe(WASM_PAGE);
         expect(wasmPageFor('?wasm=')).toBe(WASM_PAGE);
     });
 
     it('`holdCapabilityOf` reads the manifest — never the name', () => {
         expect(holdCapabilityOf(manifest, WASM_PAGE).capable).toBe(false);
-        expect(holdCapabilityOf(manifest, wasmPageFor('?wasm=seedling_bot_ap_p4e')).capable)
+        expect(holdCapabilityOf(manifest, wasmPageFor('?wasm=candidate_probe')).capable)
             .toBe(true);
-        const none = holdCapabilityOf(null, wasmPageFor('?wasm=seedling_bot_ap_p4e'));
+        const none = holdCapabilityOf(null, wasmPageFor('?wasm=candidate_probe'));
         expect(none.capable).toBe(false);
         expect(none.why).toMatch(/no entry/);
     });
