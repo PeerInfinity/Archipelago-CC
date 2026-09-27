@@ -21,7 +21,8 @@
  *   - a repo-root dev server (`python -m http.server 8000`); `--host=` names
  *     another one, e.g. a worktree's own port
  *   - the wasm build at
- *     frontend/modules/flashPanel/wasm/seedling_bot_ap_p4d/, which since
+ *     frontend/modules/flashPanel/wasm/seedling_bot_ap_p4e/ (the build the
+ *     seed-1 preset wires — p4e since R9 slice DEF, 2026-09-27), which since
  *     2026-08-19 ships in the submodule PeerInfinity/seedling-wasm
  *     (`git submodule update --init frontend/modules/flashPanel/wasm`).
  *     ⛓ The script SKIPs (exit 0) when the SUBMODULE IS NOT CHECKED OUT.
@@ -87,9 +88,9 @@ const HERE = dirname(fileURLToPath(import.meta.url));
  * ⚠ Whoever moves `flash_panel.wasm` again moves these four lines with it.
  */
 const ARTIFACT = join(HERE, '..', '..', 'frontend', 'modules', 'flashPanel',
-    'wasm', 'seedling_bot_ap_p4d');
+    'wasm', 'seedling_bot_ap_p4e');
 if (!existsSync(join(ARTIFACT, 'game.html'))
-    || !existsSync(join(ARTIFACT, 'seedling_bot_ap_p4d.wasm'))) {
+    || !existsSync(join(ARTIFACT, 'seedling_bot_ap_p4e.wasm'))) {
     console.log(`SKIP: the seedling-wasm submodule is not checked out at ${ARTIFACT}`
         + ' — run `git submodule update --init frontend/modules/flashPanel/wasm`');
     process.exit(0);
@@ -150,7 +151,7 @@ async function waitFor(desc, fn, timeoutMs = 30000) {
 }
 
 function gameFrame() {
-    const f = page.frames().find((fr) => fr.url().includes('seedling_bot_ap_p4d/game.html'));
+    const f = page.frames().find((fr) => fr.url().includes('seedling_bot_ap_p4e/game.html'));
     if (!f) throw new Error('seedling wasm iframe not found');
     return f;
 }
@@ -243,7 +244,7 @@ await page.evaluate(async (src) => {
 
 // ── acceptance 2: handshake ─────────────────────────────────────────
 await waitFor('wasm iframe mounted', async () =>
-    page.frames().some((fr) => fr.url().includes('seedling_bot_ap_p4d/game.html')));
+    page.frames().some((fr) => fr.url().includes('seedling_bot_ap_p4e/game.html')));
 await waitFor('start button enabled', () =>
     gameFrame().evaluate(() => {
         const b = document.getElementById('btn-start');
