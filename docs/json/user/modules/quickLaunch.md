@@ -76,7 +76,7 @@ Two more settings are saved the same way:
 - The Options panel's *All Settings* view shows it as JSON (filter for `quickLaunch`); you can edit it there. Each item is `{id, kind, ...}` with `kind` one of `group` (`label`, `children`), `panel` (`ref`: the panel's component type), `doc` (`ref`: the guide's path) or `url` (`href`, `label`).
 - The JSON panel's settings export and import carry it too.
 - **Reset to Defaults** in the Options panel empties it (and sets the view back to tree, with no groups folded).
-- ⚠ Saved settings are only reloaded when the page address names the mode (for example `?mode=default`) or when **Auto-load Mode** is on in the Options panel. Without either, the page starts from the default settings: your groups are not shown, and the next setting you change is saved over them.
+- Saved settings are reloaded while **Auto-load Mode** is on in the Options panel (the default), or when the page address names the mode (for example `?mode=default`). If you turn Auto-load off, a plain address starts from the default settings and your groups are not shown. They are still saved, and they come back when you turn it on again: changing some other setting meanwhile leaves them alone, but editing the groups in that session saves the edited (default-based) tree over them. See [Saved Settings and Auto-load Mode](../tips-and-tricks.md#saved-settings-and-auto-load-mode).
 
 ## Reopening a closed panel
 

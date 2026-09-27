@@ -16,4 +16,4 @@ Changes are applied live — other panels react immediately to updated settings 
 
 ## Persistence
 
-Applying also saves the settings to the current mode in your browser's localStorage, so they are still there after a reload. To save them to a file, or under another mode name, use the [JSON Panel](json.md).
+Applying also saves the settings you changed to the current mode in your browser's localStorage; settings you did not change keep their saved values. They are loaded again after a reload while **Auto-load Mode** is on (the default) or when the address names the mode (`?mode=default`) — see [Saved Settings and Auto-load Mode](../tips-and-tricks.md#saved-settings-and-auto-load-mode). To save them to a file, or under another mode name, use the [JSON Panel](json.md).

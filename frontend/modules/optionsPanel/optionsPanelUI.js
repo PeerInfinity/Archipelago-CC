@@ -747,9 +747,10 @@ export class OptionsPanelUI {
     const content = document.createElement('div');
     content.className = 'options-section-content';
 
-    content.appendChild(this.createBooleanSetting('autoSaveMode', 'Auto-save Mode', 'Automatically save mode state on changes'));
-    // The description is the schema's (it states what ON and OFF do, and how
-    // to turn it off), so the two views of this switch say the same thing.
+    // The descriptions are the schema's (they state what each switch really
+    // does), so the Options view and the All Settings view say the same thing.
+    const autoSaveSpec = CORE_SETTINGS_SCHEMAS.generalSettings.properties.autoSaveMode;
+    content.appendChild(this.createBooleanSetting('autoSaveMode', autoSaveSpec.label, autoSaveSpec.description));
     const autoLoadSpec = CORE_SETTINGS_SCHEMAS.generalSettings.properties.autoLoadMode;
     content.appendChild(this.createBooleanSetting('autoLoadMode', autoLoadSpec.label, autoLoadSpec.description));
 
@@ -1265,7 +1266,7 @@ export class OptionsPanelUI {
   // ========================================================================
 
   async handleResetToDefaults(btn) {
-    if (!confirm('Reset all settings to defaults? This will discard any in-memory changes.')) return;
+    if (!confirm(`Reset all settings to defaults? This also replaces the saved settings of the current mode ('${settingsManager.getCurrentMode()}') with the defaults.`)) return;
 
     await settingsManager.resetToDefaults();
     const origText = btn.textContent;

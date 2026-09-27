@@ -27,7 +27,7 @@ The green **Apply** button applies your edits to the running application without
 What Apply does depends on the current source:
 
 - **Active Rules JSON** — Reloads the rules into the state manager, recalculating all accessibility.
-- **Loaded Mode Data** — Saves the edited mode data to localStorage and reloads the page.
+- **Loaded Mode Data** — Saves the edited mode data to localStorage, makes that mode the last active mode, and reloads the page. The reload shows it when the address is a plain one (no `?mode=`) and **Auto-load Mode** is on (the default), or when the address already names that mode.
 - **Data for Export** — Applies each section of the data live: rules are reloaded, settings are updated, layout is applied (panels rearrange), and module data is applied where supported.
 - **metaGame js file** — Extracts and applies the metaGame configuration.
 - **Latest Snapshot** — Applies the edited snapshot to the state manager.

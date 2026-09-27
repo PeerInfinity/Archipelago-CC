@@ -139,6 +139,11 @@ export class SettingsManager {
     }
   }
 
+  /** The mode whose blob saves go to (see setCurrentMode). */
+  getCurrentMode() {
+    return this._currentMode;
+  }
+
   /**
    * The localStorage key currently used for persistence. Useful for
    * test assertions and for any future migration / debug tooling.

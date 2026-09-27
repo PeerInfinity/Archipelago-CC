@@ -44,7 +44,7 @@ export const CORE_SETTINGS_SCHEMAS = {
         type: 'boolean',
         default: AUTO_SAVE_MODE_DEFAULT,
         label: 'Auto-save Mode',
-        description: 'Automatically save mode state on changes',
+        description: 'Remember the mode each startup opens as the last active mode, so the next plain-URL startup (with Auto-load Mode on) reopens it. Your settings are saved whenever you change them, whatever this says.',
       },
       autoLoadMode: {
         type: 'boolean',
