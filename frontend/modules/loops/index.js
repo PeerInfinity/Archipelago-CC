@@ -244,6 +244,13 @@ export function register(registrationApi) {
     return _pathFinder;
   });
 
+  // ⛓ APWORLD SUBSTRATE CHANGE S3 — the loop start (where a reset teleports):
+  // the ONE rule, `LoopState._resolveLoopStartRegion`, for the mana-out reset
+  // (`resourceChannels.fireLoopResetTeleport`) to read instead of a copy.
+  registrationApi.registerPublicFunction(moduleInfo.name, 'getLoopStartRegion', () => {
+    return loopStateSingleton?._resolveLoopStartRegion?.() ?? null;
+  });
+
   // Whether loop mode is currently active. The canonical flag lives on
   // gameState (so substrates/timer can read it without coupling to loops);
   // this is a convenience accessor over it. New consumers can read

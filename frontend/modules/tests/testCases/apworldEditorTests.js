@@ -13005,6 +13005,69 @@ export async function apworldInitialiseLoopModeWritesLoopCosts(testController) {
     return testController.getOverallResult();
 }
 
+/**
+ * ⛓⛓ **(S3-ii) THE LOOPS' RESET LANDS WHERE THE LOAD PUT THE PLAYER** (plan
+ * §27.6 #1) — `mm3` (its start has many exits, so the load does not hop)
+ * initialised WITH loop mode and applied: the `loop_costs` it carries turns
+ * loop mode on; the player stands at the DECLARED start; a menu press takes
+ * the last exit; the loops panel's **Clear Queue** returns the player to the
+ * DECLARED start — until S3, procgenPlayer's resolved start (the first placed
+ * region).
+ */
+export async function loopsResetLandsOnTheDeclaredStartOfAMultiExitWorld(testController) {
+    const loopActive = () => centralRegistry.getPublicFunction('loops', 'isLoopModeActive')?.() === true;
+    try {
+        const panel = await openInitialiseForm(testController, M2_HUB_PATH);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        const { start, exits } = m2StartOf(panel.rulesDoc, p);
+        testController.reportCondition(`⛓ premise: many exits (${start}: ${exits.length})`, exits.length > 1);
+        if (!await s3LogAndToggle(testController, panel, M2_HUB_PATH)) return testController.getOverallResult();
+        if (!await s3TurnOn(testController, panel)) return testController.getOverallResult();
+        const run = await pressInitialise(testController, panel);
+        testController.reportCondition('the build succeeded, loop mode on', run?.outcome?.ok === true
+            && Object.hasOwn(panel.rulesDoc, 'loop_costs'));
+        if (!run?.outcome?.ok) return testController.getOverallResult();
+        const current = m2Gs('getCurrentRegion');
+        const settled = await m2ApplyAndSettle(testController, panel, 'mm3', () => loopActive() && current?.() === start);
+        testController.reportCondition(`⛓⛓ Apply: the carried loop_costs turned loop mode ON, the player at the declared start (${start})`, settled);
+        const resolved = m2Resolved();
+        testController.reportCondition(`⛓ premise: procgenPlayer's resolved start (${resolved}) is not the declared start`,
+            !!resolved && resolved !== start);
+
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'menuPanel' });
+        const buttons = await testController.pollForValue(() => {
+            const b = [...document.querySelectorAll('.menu-panel-exit-button')];
+            return b.length === exits.length ? b : null;
+        }, 'the menu panel\'s exit buttons', 8000, 50);
+        if (!buttons) return testController.getOverallResult();
+        const target = buttons[buttons.length - 1].dataset.targetRegion;
+        buttons[buttons.length - 1].click();
+        testController.reportCondition(`a press takes the exit → ${target}`,
+            await testController.pollForCondition(() => current?.() === target, 'the press arrived', 8000, 50));
+
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'loopsPanel' });
+        const clear = await testController.pollForValue(() => {
+            const b = document.querySelector('#loop-ui-clear-queue');
+            return b && !b.disabled ? b : null;
+        }, 'the loops panel\'s Clear Queue, enabled (loop mode on)', 8000, 50);
+        testController.reportCondition('the loops panel offers Clear Queue', !!clear);
+        clear?.click();
+        const back = await testController.pollForCondition(() => current?.() === start,
+            'Clear Queue landed on the declared start', 8000, 50);
+        testController.reportCondition(`⛓⛓ the loop reset → the DECLARED start (${start}) — not the first placed region (${resolved})`, back);
+        testController.assertEqual('…and the loops\' own rule says so', start,
+            centralRegistry.getPublicFunction('loops', 'getLoopStartRegion')?.());
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('loop reset test error-free', false);
+    } finally {
+        // ⛓ Clean up: leave the app out of loop mode (the next row sets its own state).
+        if (loopActive()) testController.eventBus.publish('loops:setLoopMode', { action: 'disable', activatePanel: false });
+    }
+    return testController.getOverallResult();
+}
+
 registerTest({
     id: 'apworld-initialise-loop-mode-writes-loop-costs',
     name: 'APWorld hub: Initialise with loop mode ON writes loop_costs (the page\'s sphere log) and manaEnabled on every payload; Undo takes it back; OFF writes neither',
@@ -13012,4 +13075,12 @@ registerTest({
     testFunction: apworldInitialiseLoopModeWritesLoopCosts,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
+});
+registerTest({
+    id: 'loops-reset-lands-on-the-declared-start-of-a-multi-exit-world',
+    name: 'Loops: an initialised multi-exit world (mm3, loop mode on) — Clear Queue returns to the DECLARED start, not the first placed region',
+    description: 'APWORLD SUBSTRATE CHANGE S3 (§27.6 #1). See the row\'s docblock in apworldEditorTests.js.',
+    testFunction: loopsResetLandsOnTheDeclaredStartOfAMultiExitWorld,
+    category: 'loops',
+    enabled: false, // off by default — runs only in the loops mode
 });

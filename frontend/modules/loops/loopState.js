@@ -38,6 +38,11 @@ import {
   DEFAULT_EXPLORE_MULTIPLIER,
   START_REGION_MOVE_COST,
 } from '../shared/procgen/loopCostGenerator.js';
+// ⛓ APWORLD SUBSTRATE CHANGE S3 — the loop reset lands where the LOAD put the
+// player, by the ONE start-hop rule (`skipsStart`: the *Skip the menu* setting
+// AND exactly one exit). A pure module (it imports only `rulesGraph`), so this
+// is not a dependency on the menu panel's wiring.
+import { SKIP_MENU_DEFAULT, skipsStart } from '../menuPanel/menuPanelEngine.js';
 
 /**
  * Tick period of the SUMMARY substrates' live-play time drain (M5). One
@@ -285,6 +290,8 @@ export class LoopState {
     // Used by the customQueue action's saved-queue lookup (needs the
     // rules-hash to key savedQueueStore buckets).
     this._cachedRulesData = null;
+    // The slot those rules were loaded for (the same event) — S3's start rule.
+    this._cachedPlayerId = null;
 
     // REMOVED: Discovery tracking
     // this.discoveredRegions = new Set(['Menu']); // Start with Menu discovered
@@ -446,6 +453,7 @@ export class LoopState {
     // each consumer that needs the raw JSON caches its own copy.
     this.eventBus.subscribe('stateManager:rawJsonDataLoaded', (data) => {
       this._cachedRulesData = data?.rawJsonData ?? null;
+      this._cachedPlayerId = data?.selectedPlayerInfo?.playerId ?? null;
     });
 
     // M4 slice 4: cross-substrate consumable arrivals are the one item
@@ -783,10 +791,9 @@ export class LoopState {
       this.gameState.trimPath?.();
     }
 
-    // Teleport the player to the resolved loop start. For procgen,
-    // resolvedStart is the first warehoused region after Menu (Menu
-    // itself is a synthetic wrapper with no playable payload); for
-    // non-procgen flows, fall back to gameState.startRegions[0].
+    // Teleport the player to the loop start: where the load put them
+    // (_resolveLoopStartRegion — procgen's first warehoused region only
+    // when the declared start is skipped, else the declared start).
     const loopStartRegion = this._resolveLoopStartRegion();
     if (
       loopStartRegion
@@ -810,24 +817,54 @@ export class LoopState {
 
   /**
    * Resolve the loop start region — where the player teleports on
-   * clearQueue / loop reset. Prefers procgenPlayer.getResolvedStartRegion
-   * (skips synthetic Menu) when available; falls back to
-   * gameState.startRegions[0] otherwise. The fallback reads through
-   * _gs() (the raw GameState instance) because the public gameStateAPI
-   * doesn't expose startRegions as a property.
+   * clearQueue / loop reset: WHERE THE LOAD PUT THE PLAYER.
+   *
+   * ⛓⛓ APWORLD SUBSTRATE CHANGE S3 (plan §27.6 #1): procgenPlayer's resolved
+   * start (the first WAREHOUSED region, past a synthetic Menu) is where the
+   * load hops to only when the declared start IS skipped — the ONE rule,
+   * `menuPanelEngine.skipsStart` (the setting AND exactly one exit), read with
+   * the setting through the same `menuPanel.isSkipMenuEnabled` public function
+   * procgenPlayer reads (trap 1438: no second channel). Otherwise — a start
+   * with several exits (mm3's 13), or skip off — the player begins at the
+   * DECLARED start, the menu, and a loop reset returns there too (M2 made
+   * Restart do the same). Until S3 this always preferred the resolved start,
+   * so a multi-exit world's loop reset landed on the first placed region.
+   *
+   * No resolved start (a plain world): the declared start, as before. The
+   * declared start reads through _gs() (the raw GameState instance) because
+   * the public gameStateAPI doesn't expose startRegions as a property.
    */
   _resolveLoopStartRegion() {
+    const declared = this._gs?.()?.startRegions?.[0] ?? null;
+    let resolved = null;
     try {
       const fn = centralRegistry?.getPublicFunction?.(
         'procgenPlayer', 'getResolvedStartRegion',
       );
-      const resolved = fn?.();
-      if (resolved) return resolved;
+      resolved = fn?.() ?? null;
     } catch {
       // procgenPlayer not loaded; fall through.
     }
-    const gs = this._gs?.();
-    return gs?.startRegions?.[0] ?? null;
+    if (!resolved) return declared;
+    // A warehoused START is its own resolved start: nothing is left, nothing to decide.
+    if (!declared || resolved === declared || !this._cachedRulesData) return resolved;
+    const skipped = skipsStart(
+      this._cachedRulesData, this._cachedPlayerId ?? undefined, declared, this._isSkipMenuEnabled(),
+    );
+    return skipped ? resolved : declared;
+  }
+
+  /**
+   * The *Skip the menu* setting, through the menu panel's public function —
+   * the channel procgenPlayer reads; absent menuPanel, the schema default.
+   */
+  _isSkipMenuEnabled() {
+    try {
+      const fn = centralRegistry?.getPublicFunction?.('menuPanel', 'isSkipMenuEnabled');
+      return typeof fn === 'function' ? fn() === true : SKIP_MENU_DEFAULT;
+    } catch {
+      return SKIP_MENU_DEFAULT;
+    }
   }
 
   /**
