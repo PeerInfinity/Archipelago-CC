@@ -14430,6 +14430,43 @@ tick-0 clock, and the hold only stops the live clock before that write);
 CLAIM 6 unmoved. The 19 boundaries were green by geometry on p4d (§ above);
 on the candidate they are green because nothing moves.
 
+### R9 slice L18b: THE CHAIN REACHES THE SHIELD — three rooms recorded on the candidate, every window agreeing per tick, and the route's last step built as a TERMINAL segment
+
+⚖ 72 (a′) put to work. The three rooms the L16 stop left (§ *R9 slice L16*)
+were grown on `seedling_bot_ap_p4e`, selected explicitly on every run
+(`SEEDLING_PAGE=seedling_bot_ap_p4e`); the director holds every boundary. The
+campaign is **21 segments, 5,713 ticks**, from `new Game(0,80,128)` to the
+shield, and it credits four ledger rows: `sword@L10`, `chest@L11`,
+`bosskey0@L19` and `shield@L20`.
+
+| tape | rooms | ticks | what it adds |
+|---|---|---|---|
+| `r9-solve-18` | L18 → L19 | 394 | the spinner kill lock, `{18,0}@342` model-sourced. The recording is BYTE-IDENTICAL to the L16 session's evidence tape, and window 19 — which diverged at tick 133 on p4d — now agrees per tick |
+| `r9-solve-19` | L19 → L20 | 746 | the ShieldBoss fight and boss key 0 — the chain's first `save.keys` write (the game's `hasKey` `[true,false,…]` == the model's) |
+| `r9-solve-20` | L20 → END | 161 | the shield; a TERMINAL segment — it crosses nothing |
+
+- **The two L16 fixes landed with their tape.** The press train is previewed as
+  walked, a grown segment goes through the two-pass loop, and a resumed window
+  adopts its fresh boot's clock when the run's is unknown.
+- **The TERMINAL segment.** The route's last step has `crossesTo: null`. A
+  campaign row with `to: null` gets its `collects` as its only goals and no
+  `reach-exit`, and it must end in its own room having crossed nothing. The
+  census aligns that step by its room. A chain that covers every route step
+  writes a frontier with `complete: true`, and `--grow` answers *THE ROUTE
+  ENDS HERE*.
+- **The calm-arrival law is a successor's law.** The terminal tape ends on the
+  release tick of the shield's pickup freeze. The player's pre-freeze velocity
+  comes back there: v = (−0.55, 1.18), reproduced by the model tick for tick.
+  `campaignChain.isTerminalSegment` exempts a `to: null` segment from the
+  calm-arrival invariants, because nothing boots from its latch; the latch must
+  still fire whole.
+- **Headless logic-only, on the candidate.** The ship gate's CAMPAIGN arm
+  agrees per tick on all 21 windows. The CI full tier (run 36350758799,
+  10 shards) passes 3,745 / 0 / 46 over 154 tapes, reused 154/154. Attempt 1
+  failed one shard: two unreached mechanic tapes read 14 dead frames against
+  [14.6, 23.6], and the re-run read 17. A two-build model replay over the 151
+  earlier tapes finds 0 movers.
+
 ### R9 slice 13: THE WATCH-PAGE FIVE — the ladder becomes a link, sand traps become visible, and seven typed numbers stop lying
 
 ⚖ Ruling 29's watch-page items, all five, tape-inert. `a535bdb13` … `fa547ddaf`.
