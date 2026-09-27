@@ -12451,3 +12451,119 @@ for (const [id, name, testFunction] of S2_TESTS) {
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+ * APWORLD SUBSTRATE CHANGE M2 — THE MENU IS THE HUB (plan §25.7–§25.8, §27;
+ * ⚖ user 2026-09-26). The Map's Menu MARKER behind `showMenuOnMap`; the
+ * runtime: the skip hop only for a ONE-exit start, Restart to the DECLARED
+ * start. ⚠ Small documents only: `mm3` (23 regions; its start has many exits)
+ * and `adventure` (its start has one) — each row asserts that premise off the
+ * document rather than trusting the path. The menu panel has no in-app category
+ * of its own (plan §27.0), so its runtime rows live here.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line import/first
+import { SHOW_MENU_ON_MAP_SETTING, menuMarkerFor } from '../../apworldEditor/menuMarker.js';
+// eslint-disable-next-line import/first
+import { exitsOf as menuExitsOf } from '../../menuPanel/menuPanelEngine.js';
+// eslint-disable-next-line import/first
+import { startRegionsOf as m2StartRegionsOf } from '../../procgenCore/rulesGraph.js';
+
+const M2_HUB_PATH = './presets/mm3/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+const M2_ONE_EXIT_PATH = INIT_ADVENTURE_PATH;
+
+const m2Marker = () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-menu`);
+
+/** ⛓ The declared start of the hub's document and its exits (the menu panel's own reader). */
+function m2StartOf(doc, p) {
+    const [start = null] = m2StartRegionsOf(doc, p).default;
+    return { start, exits: menuExitsOf(doc, p, start) };
+}
+
+/** ⛓ Initialise `path` with the form's defaults (the door → Generate); → {panel, p} or null. */
+async function m2Initialised(testController, path, premise) {
+    const panel = await openInitialiseForm(testController, path);
+    if (!panel) return null;
+    const p = String(panel.playerId);
+    const { start, exits } = m2StartOf(panel.rulesDoc, p);
+    testController.reportCondition(`⛓ premise: ${premise} (${start}: ${exits.length} exits)`, premise === 'many exits'
+        ? exits.length > 1 : exits.length === 1);
+    const run = await pressInitialise(testController, panel);
+    testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+    return run?.outcome?.ok ? { panel, p } : null;
+}
+
+/** ⛓ The marker once its setting read has answered (`data-shown` is no longer `pending`). */
+async function m2SettledMarker(testController, label) {
+    return testController.pollForValue(() => {
+        const m = m2Marker();
+        return m && m.dataset.shown !== 'pending' ? m : null;
+    }, label, 8000, 50);
+}
+
+/**
+ * ⛓⛓ **(M2-i) THE MAP'S MENU MARKER** on `mm3` initialised: the marker lists the
+ * declared start's exits (`menuMarkerFor`, derived), every one placed; the
+ * setting OFF hides it (a re-draw on `settings:changed`, read at draw — never
+ * cached), back ON shows it again; `adventure` initialised → one entry.
+ */
+export async function apworldMapMenuMarkerListsTheStartExits(testController) {
+    try {
+        const hub = await m2Initialised(testController, M2_HUB_PATH, 'many exits');
+        if (!hub) return testController.getOverallResult();
+        const { panel, p } = hub;
+        const want = menuMarkerFor(panel.rulesDoc, p);
+        selectTab(panel, 'map');
+        const marker = await m2SettledMarker(testController, 'the Menu marker beside the grid');
+        testController.assertEqual('⛓ the marker is shown (the setting defaults ON)', 'true', marker?.dataset.shown);
+        testController.assertEqual('…it names the declared start', want.name, marker?.dataset.name);
+        testController.assertEqual('⛓⛓ one entry per exit (derived)', String(want.exits.length), marker?.dataset.exits);
+        testController.assertEqual('…every one to a placed target (the hub rooted them all)',
+            String(want.exits.length), marker?.dataset.placed);
+        const items = [...(marker?.querySelectorAll('.apworld-map-menu-exit') ?? [])];
+        testController.assertEqual('…the entries, in exit order, with their targets',
+            JSON.stringify(want.exits.map((e) => [e.target, String(e.placed)])),
+            JSON.stringify(items.map((li) => [li.dataset.target, li.dataset.placed])));
+
+        await settingsManager.updateSetting(SHOW_MENU_ON_MAP_SETTING, false, { persist: false });
+        const off = await testController.pollForValue(() => {
+            const m = m2Marker();
+            return m && m.dataset.shown === 'false' ? m : null;
+        }, 'the marker after the setting went OFF', 8000, 50);
+        testController.reportCondition('⛓⛓ the setting OFF: the marker is gone (hidden, no entries)',
+            !!off && off.hidden && off.querySelectorAll('.apworld-map-menu-exit').length === 0);
+        await settingsManager.clearOverride(SHOW_MENU_ON_MAP_SETTING);
+        const on = await testController.pollForValue(() => {
+            const m = m2Marker();
+            return m && m.dataset.shown === 'true' ? m : null;
+        }, 'the marker after the setting came back', 8000, 50);
+        testController.reportCondition('…and back ON it is drawn again', !!on && !on.hidden);
+
+        const one = await m2Initialised(testController, M2_ONE_EXIT_PATH, 'one exit');
+        if (!one) return testController.getOverallResult();
+        selectTab(one.panel, 'map');
+        const m1 = await m2SettledMarker(testController, 'the one-exit document\'s marker');
+        testController.assertEqual('⛓ a one-exit start: one entry', '1', m1?.dataset.exits);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('menu marker test error-free', false);
+        try { await settingsManager.clearOverride(SHOW_MENU_ON_MAP_SETTING); } catch (_) { /* best effort */ }
+    }
+    return testController.getOverallResult();
+}
+
+const M2_TESTS = [
+    ['apworld-map-menu-marker-lists-the-start-exits',
+        'APWorld hub: the Map lists the declared start (the Menu) beside the grid — one entry per exit, each placed; hidden when showMenuOnMap is off',
+        apworldMapMenuMarkerListsTheStartExits],
+];
+for (const [id, name, testFunction] of M2_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE M2. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
