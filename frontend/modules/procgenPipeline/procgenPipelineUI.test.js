@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
@@ -651,5 +651,74 @@ describe('G3 — a generated-room quota: the knobs are drawn, and an edit reache
             substrateMode: mode === 'topDown' || mode === 'gridGrowth' ? 'mix' : 'quotas',
         }, { topDownSource: {} });
         expect(RUN_REGION_PARAMS[mode](run).seedlingGen).toMatchObject({ obstacleTarget: 2, fill: 'shell' });
+    });
+});
+
+describe('local-storage V1 — a full origin is reported, never a silent success (plan §37.7.5)', () => {
+    const quotaError = () => Object.assign(new Error('exceeded the quota'), { name: 'QuotaExceededError' });
+
+    async function withFullStorage(run) {
+        const { onStorageWriteFailure } = await import('../../app/core/storageQuota.js');
+        const notices = [];
+        const off = onStorageWriteFailure((n) => notices.push(n));
+        const prev = globalThis.localStorage;
+        globalThis.localStorage = {
+            length: 0, key: () => null, getItem: () => null, removeItem: () => {},
+            setItem: () => { throw quotaError(); },
+        };
+        try {
+            await run(notices);
+        } finally {
+            off();
+            if (prev === undefined) delete globalThis.localStorage;
+            else globalThis.localStorage = prev;
+        }
+    }
+
+    function panel() {
+        const ctx = Object.create(ProcgenPipelineUI.prototype);
+        ctx.workingLibrary = { entries: [] };
+        ctx.warning = '';
+        ctx.message = '';
+        ctx.renders = 0;
+        ctx.render = () => { ctx.renders += 1; };
+        return ctx;
+    }
+
+    it('a working-library save that does not fit returns false, reports the key and warns it is not saved', async () => {
+        await withFullStorage((notices) => {
+            const ctx = panel();
+            expect(ctx._saveWorkingLibraryToLocalStorage()).toBe(false);
+            expect(notices.map((n) => n.key)).toEqual(['procgenPipeline_workingLibrary']);
+            expect(ctx.warning).toMatch(/NOT saved/);
+        });
+    });
+
+    it('a capture on a full origin says "NOT saved" instead of claiming success', async () => {
+        const sub = { id: 'lsV1Probe', captureLibraryEntry: () => ({ entry_id: 'e1' }), validateLibraryEntry: () => ({ errors: [] }) };
+        const get = vi.spyOn(substrateRegistry, 'get').mockReturnValue(sub);
+        try {
+            await withFullStorage(() => {
+                const ctx = panel();
+                ctx._captureRegionToLibrary({ substrate: 'lsV1Probe' });
+                expect(ctx.message).toMatch(/in this page only, NOT saved/);
+                expect(ctx.warning).toMatch(/NOT saved/);
+                expect(ctx.workingLibrary.entries).toHaveLength(1);
+            });
+        } finally {
+            get.mockRestore();
+        }
+    });
+
+    it('a params save that does not fit reports the key', async () => {
+        await withFullStorage((notices) => {
+            const ctx = panel();
+            Object.assign(ctx, { params: {}, scenario: null, substrateMix: {}, substrateQuotas: {}, substrateMode: null, mode: 'x', activePresetId: null });
+            ctx._serializedLibraries = () => [];
+            ctx.rootElement = null;
+            ctx._saveToLocalStorage({ fromPreset: true });
+            expect(notices.map((n) => n.key)).toEqual(['procgenPipeline_params']);
+            expect(ctx.message).toMatch(/^ERROR/);
+        });
     });
 });

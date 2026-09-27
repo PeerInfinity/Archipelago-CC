@@ -83,7 +83,7 @@ import { peekSphereStateSingleton } from '../sphereState/singleton.js';
 import {
     SHIPPED_PRESETS, capturePresetState, applyPresetState,
     getPresetById, loadUserPresets, saveUserPreset, deleteUserPreset,
-    restoredActivePresetId, groupShippedPresets,
+    restoredActivePresetId, groupShippedPresets, LS_PRESETS_KEY,
 } from './presetDefs.js';
 // Region-library (F3/F5) — the headless loader core (fetch/parse/validate served
 // + ad-hoc libraries; selection → spiral config) plus the identity stamper the
@@ -93,6 +93,7 @@ import {
     serializeLibrarySelection, resolveLibrarySelection,
 } from './regionLibraryLoader.js';
 import { stampLibraryIdentity, REGION_LIBRARY_SCHEMA_VERSION } from './regionLibraryValidator.js';
+import { reportStorageWriteFailure } from '../../app/core/storageQuota.js';
 
 const LS_KEY = 'procgenPipeline_params';
 // View preferences (toggle states etc.) live under a separate key so
@@ -620,10 +621,19 @@ export class ProcgenPipelineUI {
         row.appendChild(this._btn('Save as…', () => {
             const label = window.prompt('Preset name:');
             if (label == null) return;
-            const saved = saveUserPreset(
-                localStorage, label,
-                capturePresetState({ ...this, libraries: this._serializedLibraries() }),
-            );
+            let saved;
+            try {
+                saved = saveUserPreset(
+                    localStorage, label,
+                    capturePresetState({ ...this, libraries: this._serializedLibraries() }),
+                );
+            } catch (e) {
+                // A full origin used to throw out of this click handler (plan §37.7.5).
+                reportStorageWriteFailure({ key: LS_PRESETS_KEY, error: e, owner: 'Procgen Pipeline presets' });
+                this.message = `ERROR: preset "${label.trim()}" was NOT saved: ${e.message}`;
+                this.render();
+                return;
+            }
             if (!saved) {
                 this.message = 'ERROR: preset name must contain letters or digits.';
                 this.render();
@@ -641,7 +651,14 @@ export class ProcgenPipelineUI {
             const preset = getPresetById(this.activePresetId, this.userPresets);
             if (!preset) return;
             if (!window.confirm(`Delete preset "${preset.label}"?`)) return;
-            this.userPresets = deleteUserPreset(localStorage, preset.id);
+            try {
+                this.userPresets = deleteUserPreset(localStorage, preset.id);
+            } catch (e) {
+                reportStorageWriteFailure({ key: LS_PRESETS_KEY, error: e, owner: 'Procgen Pipeline presets' });
+                this.message = `ERROR: preset "${preset.label}" was NOT deleted: ${e.message}`;
+                this.render();
+                return;
+            }
             this.activePresetId = null;
             this._saveToLocalStorage();
             this.message = `Preset "${preset.label}" deleted.`;
@@ -1322,11 +1339,11 @@ export class ProcgenPipelineUI {
             this.workingLibrary.entries = this.workingLibrary.entries
                 .filter((e) => e.entry_id !== entry.entry_id);
             this.workingLibrary.entries.push(entry);
-            this._saveWorkingLibraryToLocalStorage();
+            this.warning = '';
+            const persisted = this._saveWorkingLibraryToLocalStorage();
             const total = this.workingLibrary.entries.length;
             this.message = `Captured "${entry.entry_id}" → working library `
-                + `(${total} entr${total === 1 ? 'y' : 'ies'}).`;
-            this.warning = '';
+                + `(${total} entr${total === 1 ? 'y' : 'ies'})${persisted ? '' : ' — in this page only, NOT saved'}.`;
             this.render();
         } catch (e) {
             this.warning = `Capture failed: ${e.message}`;
@@ -5036,9 +5053,10 @@ export class ProcgenPipelineUI {
             const sel = this.rootElement?.querySelector('.procgen-pipeline-preset-select');
             if (sel && sel.value !== '') sel.value = '';
         }
+        let serialized = '';
         try {
             const libraries = this._serializedLibraries();
-            localStorage.setItem(LS_KEY, JSON.stringify({
+            serialized = JSON.stringify({
                 params: this.params,
                 scenario: this.scenario,
                 substrateMix: this.substrateMix,
@@ -5049,12 +5067,14 @@ export class ProcgenPipelineUI {
                 // Region-library selection (hybrid persistence). Omitted when
                 // empty so bundles that never touch libraries stay unchanged.
                 ...(libraries.length ? { libraries } : {}),
-            }));
+            });
+            localStorage.setItem(LS_KEY, serialized);
             if (showFeedback) {
                 this.message = 'Saved.';
                 this.render();
             }
         } catch (e) {
+            reportStorageWriteFailure({ key: LS_KEY, value: serialized, error: e, owner: 'Procgen Pipeline' });
             this.message = `ERROR: ${e.message}`;
             this.render();
         }
@@ -5183,11 +5203,22 @@ export class ProcgenPipelineUI {
         }
     }
 
+    /**
+     * Persist the working library. Returns true when it was written; on a
+     * failure (a full origin) it reports it and returns false, so a capture
+     * never claims a success the next reload would take back (plan §37.7.5).
+     */
     _saveWorkingLibraryToLocalStorage() {
+        let serialized = '';
         try {
-            localStorage.setItem(LS_WORKING_LIBRARY_KEY, JSON.stringify(this.workingLibrary));
+            serialized = JSON.stringify(this.workingLibrary);
+            localStorage.setItem(LS_WORKING_LIBRARY_KEY, serialized);
+            return true;
         } catch (e) {
-            // ignore
+            reportStorageWriteFailure({ key: LS_WORKING_LIBRARY_KEY, value: serialized, error: e, owner: 'Procgen Pipeline working library' });
+            this.warning = `The working library was NOT saved in the browser (${e.message}); `
+                + 'it will be lost on reload. Free space in the Storage panel, then capture again.';
+            return false;
         }
     }
 }
