@@ -3820,9 +3820,9 @@ class ApworldEditorUI {
     const switchLine = document.createElement('div');
     switchLine.className = 'apworld-loop-costs-switch';
     switchLine.textContent = row.present
-      ? 'This block\'s presence enables loop mode for the world — a '
-        + 'document that carries one boots with loop mode ON, even when it prices nothing.'
-      : 'This document carries NO `loop_costs` block, so loop mode is OFF for the world. '
+      ? `This block's presence enables loop mode for player ${row.player}'s world — a `
+        + 'slot that carries one boots with loop mode ON, even when it prices nothing.'
+      : `Player ${row.player} carries NO \`loop_costs\` block, so loop mode is OFF for that slot's world. `
         + 'A block\'s presence is the switch — even one that prices nothing.';
     Object.assign(switchLine.style, { color: '#8a8', fontSize: '10px', marginTop: '2px' });
     wrap.appendChild(switchLine);
@@ -3888,8 +3888,8 @@ class ApworldEditorUI {
     const enabling = !row.present;
     const btn = this._makeButton(
       enabling
-        ? 'Enable loop mode (adds an empty `loop_costs` block)'
-        : 'Disable loop mode (removes the block)',
+        ? `Enable loop mode for player ${row.player} (adds an empty \`loop_costs\` block)`
+        : `Disable loop mode for player ${row.player} (removes the slot's block)`,
       enabling ? '#2e5f8a' : '#8a2a2a',
       () => this._applySetKey(row, enabling ? emptyLoopCostsBlock() : undefined),
     );
@@ -3900,9 +3900,9 @@ class ApworldEditorUI {
       ? 'Writes the four keys the schema requires — regions {}, locations {}, and the '
         + `exported defaults (region ${DEFAULT_REGION_COST}, location ${DEFAULT_LOCATION_COST}). `
         + 'Nothing is priced yet; the loops cost debugger fills it in. ⚠ Applying this '
-        + 'document afterwards turns loop mode ON for the world at runtime.'
-      : 'Deletes the whole block as one undoable edit — every price in it goes with it. '
-        + '⚠ Applying this document afterwards leaves loop mode OFF for the world.';
+        + 'document afterwards turns loop mode ON for this slot\'s world at runtime.'
+      : 'Deletes the slot\'s whole block as one undoable edit — every price in it goes with it. '
+        + '⚠ Applying this document afterwards leaves loop mode OFF for this slot\'s world.';
     line.appendChild(btn);
     return line;
   }

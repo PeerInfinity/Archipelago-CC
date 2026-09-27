@@ -80,7 +80,7 @@ const FOUR = read('multiworld/AP_05594871498841892311/AP_05594871498841892311_ru
 function withResult(doc, res, { addExits = true } = {}) {
     const copy = JSON.parse(JSON.stringify(doc));
     copy.preset_sidecars = { ...(copy.preset_sidecars ?? {}), [P]: res.entries };
-    copy.procgen_metadata = res.procgen_metadata;
+    copy.procgen_metadata = { ...(copy.procgen_metadata ?? {}), [P]: res.procgen_metadata };
     if (addExits) for (const { region, exit } of res.returnExits) copy.regions[P][region].exits.push(exit);
     return copy;
 }
@@ -123,15 +123,18 @@ describe('which slots can be initialised (initialiseFacts)', () => {
         }
     });
 
-    it('⛓ no regions / no usable start / a document-level metadata block — each its own blocker', () => {
+    it('⛓ no regions / no usable start / the SLOT\'s metadata block — each its own blocker (P1a: another slot\'s is not)', () => {
         const doc = JSON.parse(JSON.stringify(DOCS.adventure));
         expect(initialiseFacts(doc, '7').blocker).toBe(INITIALISE_BLOCKERS.NO_REGIONS);
         const noStart = JSON.parse(JSON.stringify(doc));
         noStart.start_regions[P] = ['Nowhere'];
         expect(initialiseFacts(noStart, P).blocker).toBe(INITIALISE_BLOCKERS.NO_START);
         const meta = JSON.parse(JSON.stringify(doc));
-        meta.procgen_metadata = { driver: 'top-down' };
+        meta.procgen_metadata = { [P]: { driver: 'top-down' } };
         expect(initialiseFacts(meta, P).blocker).toBe(INITIALISE_BLOCKERS.HAS_METADATA);
+        const other = JSON.parse(JSON.stringify(doc));
+        other.procgen_metadata = { 2: { driver: 'top-down' } };
+        expect(initialiseFacts(other, P).blocker).toBeNull();
     });
 
     it('⛔ M3 — two declared starts: MULTI_START (before NO_START); the op refuses by name, the engine throws by name', () => {
@@ -497,11 +500,12 @@ describe('initialiseSlot over the probed documents', () => {
         }
     });
 
-    it('⛓ procgen_metadata: the driver, the slot, the counts, the cells\' extent; no configs for a maze slot', () => {
+    it('⛓ procgen_metadata: the driver, the counts, the cells\' extent; no configs for a maze slot', () => {
         const res = initialised('apcalc', DEFAULT_SUBSTRATE_ID);
         const m = res.procgen_metadata;
         expect(m.driver).toBe(INITIALISE_DRIVER);
-        expect(m.player).toBe(P);
+        // ⛓ P1a — the KEY names the slot (`procgen_metadata[p]`); the block no longer repeats it.
+        expect(Object.hasOwn(m, 'player')).toBe(false);
         expect(m.region_count).toBe(Object.keys(res.entries).length);
         const cells = Object.values(res.entries).map((e) => e.grid_cell);
         expect(m.grid_dims).toEqual({
@@ -530,15 +534,18 @@ describe('initialiseSlot over the probed documents', () => {
 
 /* ── the op ─────────────────────────────────────────────────────────────── */
 
-/** ⛓ Every changed path, two levels deep under `regions.<p>.<R>`, one level elsewhere. */
+/** ⛓ The slot maps whose change is reported per SLOT (P1a: `procgen_metadata` and `loop_costs` joined `preset_sidecars`). */
+const SLOT_MAPS = ['preset_sidecars', 'procgen_metadata', 'loop_costs'];
+
+/** ⛓ Every changed path, two levels deep under `regions.<p>.<R>`, one per slot under a slot map, one level elsewhere. */
 function changedPaths(a, b) {
     const out = [];
     for (const k of new Set([...Object.keys(a), ...Object.keys(b)])) {
         if (bytes(a[k]) === bytes(b[k])) continue;
-        if (k === 'regions' || k === 'preset_sidecars') {
+        if (k === 'regions' || SLOT_MAPS.includes(k)) {
             for (const p of new Set([...Object.keys(a[k] ?? {}), ...Object.keys(b[k] ?? {})])) {
                 if (bytes(a[k]?.[p]) === bytes(b[k]?.[p])) continue;
-                if (k === 'preset_sidecars') { out.push(`${k}.${p}`); continue; }
+                if (SLOT_MAPS.includes(k)) { out.push(`${k}.${p}`); continue; }
                 for (const r of new Set([...Object.keys(a[k][p]), ...Object.keys(b[k][p])])) {
                     const ra = a[k][p][r];
                     const rb = b[k][p][r];
@@ -571,7 +578,7 @@ describe('the op initialise-procgen-layout', () => {
         expect(res.ok, res.error).toBe(true);
         const gained = [...new Set(op.result.returnExits.map((r) => r.region))].sort();
         expect(changedPaths(doc, res.doc)).toEqual([
-            'preset_sidecars.1', 'procgen_metadata', ...gained.map((r) => `regions.1.${r}.exits`),
+            'preset_sidecars.1', 'procgen_metadata.1', ...gained.map((r) => `regions.1.${r}.exits`),
         ].sort());
         for (const r of gained) {
             const before = doc.regions[P][r].exits;
@@ -587,7 +594,7 @@ describe('the op initialise-procgen-layout', () => {
         const doc = DOCS.apcalc;
         const res = applyRulesDocOp(doc, landedOp('apcalc', DEFAULT_SUBSTRATE_ID, BACK_EXITS.NONE));
         expect(res.ok, res.error).toBe(true);
-        expect(changedPaths(doc, res.doc)).toEqual(['preset_sidecars.1', 'procgen_metadata']);
+        expect(changedPaths(doc, res.doc)).toEqual(['preset_sidecars.1', 'procgen_metadata.1']);
         expect(res.description).toContain(INITIALISE_RETURN_EXITS_OFF);
     });
 
@@ -669,8 +676,9 @@ describe('the op initialise-procgen-layout', () => {
             && typeof e.deserializeWorld === 'function' && typeof e.serializeWorld === 'function');
         expect(noRealiser, 'the registry has a playable entry without a realiser').toBeTruthy();
         expect(initialiseOpRefusal(doc, { ...good, substrate: noRealiser.id })).toContain('has no per-region realiser');
-        const meta = { ...doc, procgen_metadata: { driver: 'top-down' } };
-        expect(initialiseOpRefusal(meta, good)).toContain('`procgen_metadata`');
+        const meta = { ...doc, procgen_metadata: { [P]: { driver: 'top-down' } } };
+        expect(initialiseOpRefusal(meta, good)).toContain(`player ${P} already carries a \`procgen_metadata\` block`);
+        expect(initialiseOpRefusal({ ...doc, procgen_metadata: { 2: { driver: 'top-down' } } }, good)).toBeNull();
         expect(initialiseOpRefusal(doc, { ...good, player: '9' })).toContain('has no regions');
     });
 
@@ -747,7 +755,7 @@ describe('S1 — the initialise op DECLARES the library items it built with', ()
         const { op, out } = hubInitialised(NEEDER);
         expect(out.ok, out.error).toBe(true);
         const gained = [...new Set(op.result.returnExits.map((r) => r.region))].sort();
-        expect(changedPaths(doc, out.doc)).toEqual(['items', 'preset_sidecars.1', 'procgen_metadata', 'starting_items',
+        expect(changedPaths(doc, out.doc)).toEqual(['items', 'preset_sidecars.1', 'procgen_metadata.1', 'starting_items',
             ...gained.map((r) => `regions.1.${r}.exits`)].sort());
         const granted = op.result.grantedItems;
         const added = Object.keys(out.doc.items[P]).filter((n) => !Object.hasOwn(doc.items[P], n));
@@ -792,7 +800,7 @@ describe('S1 — the initialise op DECLARES the library items it built with', ()
     });
 
     it('⛓ metadata: source_game and source_counts, the pipeline\'s', () => {
-        const m = hubInitialised(NEEDER).out.doc.procgen_metadata;
+        const m = hubInitialised(NEEDER).out.doc.procgen_metadata[P];
         expect(m.source_game).toBe(DOCS.adventure.game_name);
         expect(m.source_counts).toEqual(computeSourceCounts(DOCS.adventure, P));
     });
@@ -820,10 +828,10 @@ describe('S1 — the initialise op DECLARES the library items it built with', ()
                 locations: (r.locations ?? []).map((l) => l.name),
             }]));
             expect(shape(hub), t).toEqual(shape(pipe));
-            const pm = pipe.procgen_metadata;
-            const hm = hub.procgen_metadata;
+            const pm = pipe.procgen_metadata[P];
+            const hm = hub.procgen_metadata[P];
             expect([...new Set([...Object.keys(pm), ...Object.keys(hm)])].filter((x) => bytes(pm[x]) !== bytes(hm[x]))
-                .sort(), t).toEqual(['driver', 'player']);
+                .sort(), t).toEqual(['driver']);
         }
     });
 
@@ -1025,7 +1033,8 @@ function loopInitialised(loopMode = LOOP_ON, sphereLog = ADV_LOG) {
 /** ⛓ `doc` with the block and every payload's mana flag taken back out (a copy). */
 function withoutLoopMode(doc) {
     const c = JSON.parse(JSON.stringify(doc));
-    delete c.loop_costs;
+    delete c.loop_costs[P];
+    if (Object.keys(c.loop_costs).length === 0) delete c.loop_costs;
     for (const e of Object.values(c.preset_sidecars[P])) delete e.playable_payload.manaEnabled;
     return c;
 }
@@ -1061,7 +1070,7 @@ describe('S3 — loop mode on an initialise: the build and the op', () => {
         const entries = out.doc.preset_sidecars[P];
         expect(Object.keys(entries).length).toBeGreaterThan(0);
         for (const [n, e] of Object.entries(entries)) expect(e.playable_payload.manaEnabled, n).toBe(true);
-        const lc = out.doc.loop_costs;
+        const lc = out.doc.loop_costs[P];
         expect(lc).toEqual(op.result.loop_costs);
         expect(Object.hasOwn(lc, 'generatedAt')).toBe(false);
         // ⛓ the oracle: the pipeline's producer over the document AS BUILT (entries + return exits), stamp deleted
@@ -1085,10 +1094,10 @@ describe('S3 — loop mode on an initialise: the build and the op', () => {
     it('⛓⛓ the deep diff: ON − OFF = the `loop_costs` key + the payloads\' flag; ON vs the source = the R7 set + `loop_costs`', () => {
         const on = loopInitialised().out.doc;
         const off = loopInitialised(null).out.doc;
-        expect(changedPaths(off, on)).toEqual(['loop_costs', 'preset_sidecars.1']);
+        expect(changedPaths(off, on)).toEqual(['loop_costs.1', 'preset_sidecars.1']);
         expect(bytes(withoutLoopMode(on))).toBe(bytes(off));
         const gained = [...new Set(loopInitialised().op.result.returnExits.map((r) => r.region))].sort();
-        expect(changedPaths(DOCS.adventure, on)).toEqual(['loop_costs', 'preset_sidecars.1', 'procgen_metadata',
+        expect(changedPaths(DOCS.adventure, on)).toEqual(['loop_costs.1', 'preset_sidecars.1', 'procgen_metadata.1',
             ...gained.map((r) => `regions.1.${r}.exits`)].sort());
     });
 
@@ -1108,11 +1117,16 @@ describe('S3 — loop mode on an initialise: the build and the op', () => {
         }
     });
 
-    it('⛔ a document that already HOLDS `loop_costs` is refused by name — pre-engine and on a record; off, it is kept', () => {
-        const held = { ...JSON.parse(JSON.stringify(DOCS.adventure)), loop_costs: { version: '1.0', regions: {}, locations: {} } };
+    it('⛔ a SLOT that already HOLDS `loop_costs` is refused by name — pre-engine and on a record; off, it is kept', () => {
+        const held = { ...JSON.parse(JSON.stringify(DOCS.adventure)),
+            loop_costs: { [P]: { version: '1.0', regions: {}, locations: {} } } };
         const on = { ...S3_ARGS, loopMode: LOOP_ON };
-        expect(initialiseOpRefusal(held, on)).toContain('already carries a `loop_costs` block');
+        expect(initialiseOpRefusal(held, on)).toContain(`player ${P} already carries a \`loop_costs\` block`);
         expect(applyRulesDocOp(held, loopInitialised().op).error).toContain('already carries a `loop_costs` block');
+        // ⛓ P1a — another slot's block is not this slot's: no refusal.
+        const elsewhere = { ...JSON.parse(JSON.stringify(DOCS.adventure)),
+            loop_costs: { 2: { version: '1.0', regions: {}, locations: {} } } };
+        expect(initialiseOpRefusal(elsewhere, on)).toBeNull();
         // ⛓ the RESULT's own guard, apart from the args' (a record whose provenance lost its loopMode)
         const rec = loopInitialised().op;
         const noProv = { ...rec, provenance: { ...rec.provenance, loopMode: undefined } };
@@ -1145,7 +1159,7 @@ describe('S3 — loop mode on an initialise: the build and the op', () => {
         expect(initialiseSphereLog(DOCS.adventure, P, null)).toEqual({ entries: null, source: null, forPlayer: false });
         const script = applyRulesDocOp(embedded, { op: INITIALISE_OP, ...S3_ARGS, loopMode: LOOP_ON });
         expect(script.ok, script.error).toBe(true);
-        expect(script.doc.loop_costs).toEqual(loopInitialised().out.doc.loop_costs);
+        expect(script.doc.loop_costs[P]).toEqual(loopInitialised().out.doc.loop_costs[P]);
         expect(script.op.provenance.loopMode).toEqual(LOOP_ON);
         expect(Object.hasOwn(script.op, 'sphereLog')).toBe(false);
         expect(Object.hasOwn(script.op.provenance, 'sphereLog')).toBe(false);
@@ -1180,7 +1194,7 @@ describe('S3 — loop mode on an initialise: the build and the op', () => {
         const session = createEditSession(rulesEditAdapter, DOCS.adventure);
         const before = bytes(session.record());
         session.apply(loopInitialised().op);
-        expect(Object.hasOwn(session.record(), 'loop_costs')).toBe(true);
+        expect(Object.hasOwn(session.record().loop_costs ?? {}, P)).toBe(true);
         expect(session.undo()).toBe(true);
         expect(bytes(session.record())).toBe(before);
     });
@@ -1192,5 +1206,49 @@ describe('S3 — loop mode on an initialise: the build and the op', () => {
         const b = initialiseSlot({ doc: DOCS.adventure, ...S3_ARGS, loopMode: LOOP_ON, sphereLog: ADV_LOG }).loop_costs;
         expect(bytes(a)).toBe(bytes(res.loop_costs));
         expect(bytes(b)).toBe(bytes(res.loop_costs));
+    });
+});
+
+/* ── P1a: the blocks are per slot ───────────────────────────────────────── */
+
+/**
+ * ⛓ `doc` with a SECOND slot `q` whose every per-player value is `source`'s slot
+ * `P`, bare (a copy; the slot maps an initialise writes are left alone). Derived
+ * from the document's own keys — any top-level object keyed by the slot id.
+ */
+function withSecondSlot(doc, source, q) {
+    const out = JSON.parse(JSON.stringify(doc));
+    for (const [k, v] of Object.entries(source)) {
+        if (SLOT_MAPS.includes(k) || !v || typeof v !== 'object' || Array.isArray(v) || !Object.hasOwn(v, P)) continue;
+        out[k] = { ...(out[k] ?? {}), [q]: JSON.parse(JSON.stringify(v[P])) };
+    }
+    return out;
+}
+
+describe('P1a — `procgen_metadata` and `loop_costs` are per slot: a second slot initialises beside the first', () => {
+    it('⛓⛓ slot 2 is not refused by slot 1\'s blocks, writes procgen_metadata["2"] + loop_costs["2"], and slot 1\'s stay byte-identical', () => {
+        const Q = '2';
+        const one = loopInitialised().out.doc;
+        expect(Object.keys(one.procgen_metadata)).toEqual([P]);
+        expect(Object.keys(one.loop_costs)).toEqual([P]);
+        const two = withSecondSlot(one, DOCS.adventure, Q);
+        const logQ = ADV_LOG.map((e) => (e?.player_data ? { ...e, player_data: { ...e.player_data, [Q]: e.player_data[P] } } : e));
+        const args = { ...S3_ARGS, player: Q, loopMode: LOOP_ON };
+        expect(initialiseFacts(two, Q).blocker).toBeNull();
+        expect(initialiseOpRefusal(two, args)).toBeNull();
+        const out = applyRulesDocOp(two, { op: INITIALISE_OP, ...args, sphereLog: logQ });
+        expect(out.ok, out.error).toBe(true);
+        expect(Object.keys(out.doc.procgen_metadata).sort()).toEqual([P, Q]);
+        expect(Object.keys(out.doc.loop_costs).sort()).toEqual([P, Q]);
+        expect(bytes(out.doc.procgen_metadata[P])).toBe(bytes(one.procgen_metadata[P]));
+        expect(bytes(out.doc.loop_costs[P])).toBe(bytes(one.loop_costs[P]));
+        expect(out.doc.procgen_metadata[Q].driver).toBe(INITIALISE_DRIVER);
+        expect(out.doc.procgen_metadata[Q].region_count).toBe(Object.keys(out.doc.preset_sidecars[Q]).length);
+        for (const n of Object.keys(out.doc.preset_sidecars[Q])) expect(Object.hasOwn(out.doc.loop_costs[Q].regions, n), n).toBe(true);
+        expect(changedPaths(two, out.doc).filter((x) => !x.startsWith(`regions.${Q}.`)))
+            .toEqual([`loop_costs.${Q}`, `preset_sidecars.${Q}`, `procgen_metadata.${Q}`]);
+        // ⛔ and a second initialise of slot 2 is now refused by SLOT 2's block, by name
+        expect(initialiseOpRefusal({ ...out.doc, preset_sidecars: { ...out.doc.preset_sidecars, [Q]: {} } }, args))
+            .toContain(`player ${Q} already carries a \`procgen_metadata\` block`);
     });
 });

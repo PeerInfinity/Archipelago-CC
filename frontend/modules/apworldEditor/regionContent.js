@@ -212,7 +212,7 @@ export function installedZoneConfigFrom(doc, player, substrate, { fetched = {} }
         locations: locationsByRegion(doc, player),
         blocks: blocksOf(doc, entry),
         fetched,
-        recorded: recordedConfigOf(doc, substrate),
+        recorded: recordedConfigOf(doc, substrate, player),
     });
     // ⛓ R5c — a read-back that needs SERVED documents answers which; the caller
     //   fetches them (`resolveZoneFetches`) and asks again. Never a guess.

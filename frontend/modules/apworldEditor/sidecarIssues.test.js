@@ -150,7 +150,7 @@ const PRODUCERS = {
         e.grid_cell = { ...other.grid_cell };
     }),
     [K.GRID_CELL_OUTSIDE]: () => broken(FOUR, TILE_SLOT, (e, d) => {
-        e.grid_cell = { gx: d.procgen_metadata.grid_dims.width, gy: 0 };
+        e.grid_cell = { gx: d.procgen_metadata[TILE_SLOT].grid_dims.width, gy: 0 };
     }),
     [K.REF_UNRESOLVED]: () => {
         const slot = Object.keys(DATASET.preset_sidecars)[0];
@@ -350,11 +350,35 @@ describe('the document layer — cells and sibling references', () => {
         expect(hits[0].message).toContain(`"${first}"`);
     });
 
-    it('a cell outside `procgen_metadata.grid_dims` names the grid', () => {
-        const { width, height } = FOUR.procgen_metadata.grid_dims;
+    it('a cell outside `procgen_metadata[p].grid_dims` names the grid', () => {
+        const { width, height } = FOUR.procgen_metadata[TILE_SLOT].grid_dims;
         const hit = sidecarIssues(PRODUCERS[K.GRID_CELL_OUTSIDE](), TILE_SLOT)
             .find((i) => i.kind === K.GRID_CELL_OUTSIDE);
         expect(hit.message).toContain(`${width}×${height}`);
+        expect(hit.message).toContain(`procgen_metadata.${TILE_SLOT}.grid_dims`);
+    });
+
+    /**
+     * ⛓⛓ P1a — the grid a slot's cells are checked against is THAT slot's
+     * (`procgen_metadata[p].grid_dims`), never another slot's. ⛔ Mutant: the
+     * reader left at the document-level position reads `undefined` here and the
+     * slot's own tiny grid stops catching its cells.
+     */
+    it('⛓⛓ P1a — slot p\'s cells are checked against slot p\'s grid_dims, not another slot\'s', () => {
+        const outside = (doc, slot) => sidecarIssues(doc, slot).filter((i) => i.kind === K.GRID_CELL_OUTSIDE);
+        const tiny = { width: 1, height: 1 };
+        const zoneCells = Object.values(FOUR.preset_sidecars[ZONE_SLOT]).map((e) => e.grid_cell)
+            .filter((c) => c && (c.gx >= 1 || c.gy >= 1));
+        expect(zoneCells.length, 'premise: the zone slot has cells beyond (0,0)').toBeGreaterThan(0);
+        // another slot's tiny grid does not bound this slot
+        const onlyTile = clone(FOUR);
+        onlyTile.procgen_metadata = { [TILE_SLOT]: { grid_dims: tiny } };
+        expect(outside(onlyTile, ZONE_SLOT)).toEqual([]);
+        // this slot's own does
+        const ownZone = clone(FOUR);
+        ownZone.procgen_metadata = { [ZONE_SLOT]: { grid_dims: tiny } };
+        expect(outside(ownZone, ZONE_SLOT)).toHaveLength(zoneCells.length);
+        expect(outside(ownZone, TILE_SLOT)).toEqual([]);
     });
 
     it('⛓ the reference is read off the DECLARATION (`references`), and an unresolved one names '

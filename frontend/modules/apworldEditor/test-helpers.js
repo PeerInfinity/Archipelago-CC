@@ -11,9 +11,11 @@
  * the corpus records.
  */
 
-/** ⛓ A copy of `doc` with its whole `procgen_metadata` block removed (the input is never mutated). */
-export function withoutProcgenMetadata(doc) {
+/** ⛓ A copy of `doc` with slot `player`'s `procgen_metadata` block removed (P1a: the block is per
+ *  player; the map goes with its last slot). The input is never mutated. */
+export function withoutProcgenMetadata(doc, player) {
     const out = JSON.parse(JSON.stringify(doc));
-    delete out.procgen_metadata;
+    delete out.procgen_metadata?.[String(player)];
+    if (out.procgen_metadata && Object.keys(out.procgen_metadata).length === 0) delete out.procgen_metadata;
     return out;
 }

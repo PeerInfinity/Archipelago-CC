@@ -118,18 +118,19 @@ function cellSizeFor(entries) {
  * from it and the move refuses from it, so the two cannot disagree about where
  * the edge is.
  *
- * ⚠ `grid_dims` is DOCUMENT-level, so it bounds every slot. Measured at M2: the
- * only committed multi-slot document (the four-player multiworld export) has
- * the same 3×2 extents in all four slots as its `grid_dims`; every committed
- * `grid_dims` equals its slot's extents exactly. A malformed `grid_dims` (not
+ * ⛓ P1a — `grid_dims` is the SLOT's (`procgen_metadata[playerId].grid_dims`), so
+ * it bounds that slot only; a slot whose block is absent is bounded by its
+ * extents. Measured at M2: every committed `grid_dims` equals its slot's
+ * extents exactly. A malformed `grid_dims` (not
  * two positive whole numbers) is ignored.
  *
  * @param {object} rulesJson the whole document
  * @param {Array<[string, object]>} entries the slot's sidecar entries
+ * @param {string|number} playerId the slot `entries` belong to
  * @returns {{width: number, height: number, boundsSource: 'extents'|'grid_dims'}|null}
  *   null when no entry carries a `grid_cell`.
  */
-export function mapBoundsFor(rulesJson, entries) {
+export function mapBoundsFor(rulesJson, entries, playerId) {
     let maxGx = -1;
     let maxGy = -1;
     for (const [, sc] of entries) {
@@ -140,7 +141,7 @@ export function mapBoundsFor(rulesJson, entries) {
         }
     }
     if (maxGx < 0) return null;
-    const dims = rulesJson?.procgen_metadata?.grid_dims;
+    const dims = rulesJson?.procgen_metadata?.[String(playerId)]?.grid_dims;
     const usable = (n) => Number.isInteger(n) && n > 0;
     const dimsW = usable(dims?.width) ? dims.width : 0;
     const dimsH = usable(dims?.height) ? dims.height : 0;
@@ -195,7 +196,7 @@ export function reconstructResultFromSidecars(rulesJson, { playerId = null } = {
     // ⛓ M2 — the grid's size in cells: `mapBoundsFor`, the rule a move shares.
     //   (No `grid_cell` at all ⇒ nothing is placed below ⇒ null; the 1×1 grid
     //   that branch builds is never returned.)
-    const bounds = mapBoundsFor(rulesJson, regionEntries) ?? { width: 1, height: 1, boundsSource: 'extents' };
+    const bounds = mapBoundsFor(rulesJson, regionEntries, playerKey) ?? { width: 1, height: 1, boundsSource: 'extents' };
     const grid = new Grid({ width: bounds.width, height: bounds.height });
     let placed = 0;
     let teleporters = 0;
@@ -248,7 +249,7 @@ export function reconstructResultFromSidecars(rulesJson, { playerId = null } = {
     }
     if (placed === 0) return null;
 
-    const meta = rulesJson.procgen_metadata ?? {};
+    const meta = rulesJson.procgen_metadata?.[playerKey] ?? {};
     return {
         grid,
         regionSize,

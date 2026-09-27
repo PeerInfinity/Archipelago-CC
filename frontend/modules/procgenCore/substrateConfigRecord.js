@@ -49,13 +49,15 @@ export function recordableConfigsFor(ids, entryOf) {
 }
 
 /**
- * The record a document holds for substrate `id`, or `null` when it holds none.
+ * The record player slot `player`'s `procgen_metadata` holds for substrate `id`,
+ * or `null` when it holds none (P1a: the block is per player).
  *
  * @param {object} doc a rules.json document
  * @param {string} id
+ * @param {string|number} player
  * @returns {object|null}
  */
-export function recordedConfigOf(doc, id) {
-    const rec = doc?.procgen_metadata?.[SUBSTRATE_CONFIGS_KEY]?.[id];
+export function recordedConfigOf(doc, id, player) {
+    const rec = doc?.procgen_metadata?.[String(player)]?.[SUBSTRATE_CONFIGS_KEY]?.[id];
     return rec && typeof rec === 'object' && !Array.isArray(rec) ? rec : null;
 }

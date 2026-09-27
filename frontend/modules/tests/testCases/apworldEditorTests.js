@@ -2667,7 +2667,7 @@ export async function apworldLoopCostsDoorHandsTheWorkingCopyToTheDebugger(testC
             'and it counts the priced regions against the world\'s own, derived',
             'true',
             String(!!summary && summary.textContent.startsWith(
-                `${Object.keys(panel.rulesDoc.loop_costs.regions ?? {}).length} of ${regionCount} region`)));
+                `${Object.keys(panel.rulesDoc.loop_costs[panel.playerId].regions ?? {}).length} of ${regionCount} region`)));
 
         await pressDocumentKeyEditor(testController, panel, 'loop_costs');
 
@@ -2895,18 +2895,18 @@ export async function apworldLoopCostsSendWritesThePlanAsOneOp(testController) {
         testController.assertEqual(
             'the committed block prices SOME of this world\'s regions to begin with',
             'true',
-            String(Object.keys(panel.rulesDoc.loop_costs?.regions ?? {}).length > 0));
+            String(Object.keys(panel.rulesDoc.loop_costs?.[panel.playerId]?.regions ?? {}).length > 0));
         testController.assertEqual(
             'so the switch offers DISABLE', 'off', String(switchBtn()?.dataset.switchTo));
         switchBtn().click();
         testController.assertEqual(
-            'Disable removed the block', 'false', String('loop_costs' in panel.rulesDoc));
+            'Disable removed the block', 'false', String(Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, panel.playerId)));
         testController.assertEqual(
             'and the switch has flipped to ENABLE', 'on', String(switchBtn()?.dataset.switchTo));
         switchBtn().click();
         testController.assertEqual(
             'Enable rebuilt an EMPTY block — the premise, MADE rather than borrowed',
-            '0', String(Object.keys(panel.rulesDoc.loop_costs?.regions ?? {}).length));
+            '0', String(Object.keys(panel.rulesDoc.loop_costs?.[panel.playerId]?.regions ?? {}).length));
 
         await pressDocumentKeyEditor(testController, panel, 'loop_costs');
 
@@ -2974,7 +2974,7 @@ export async function apworldLoopCostsSendWritesThePlanAsOneOp(testController) {
          * A panel that reported success while writing nowhere is exactly the
          * failure this row exists to catch.
          */
-        const after = panel.rulesDoc.loop_costs ?? {};
+        const after = panel.rulesDoc.loop_costs?.[panel.playerId] ?? {};
         const pricedNames = Object.keys(after.regions ?? {});
         testController.assertEqual(
             'the working copy\'s block is priced now, and NOT for every region '
@@ -2996,8 +2996,8 @@ export async function apworldLoopCostsSendWritesThePlanAsOneOp(testController) {
         //   TypeError into the catch and lose every claim after it.
         const lastOp = panel.session.ops().at(-1) ?? {};
         testController.assertEqual(
-            'and that op is a document-scope set-key on loop_costs',
-            'set-key|loop_costs|document',
+            'and that op is a PLAYER-scope set-key on loop_costs (P1a: the block is per slot)',
+            'set-key|loop_costs|player',
             [lastOp.op, lastOp.key, lastOp.scope].join('|'));
         // ⛓ Provenance names the DOOR, never a path this unsaved document lacks.
         testController.assertEqual(
@@ -3070,8 +3070,8 @@ export async function apworldLoopCostsSendWritesThePlanAsOneOp(testController) {
         testController.assertEqual(
             'undo restored the EMPTY block rather than deleting the key',
             'true',
-            String(!!panel.rulesDoc.loop_costs
-                && Object.keys(panel.rulesDoc.loop_costs.regions ?? {}).length === 0));
+            String(!!panel.rulesDoc.loop_costs?.[panel.playerId]
+                && Object.keys(panel.rulesDoc.loop_costs[panel.playerId].regions ?? {}).length === 0));
         testController.assertEqual(
             'and the op list is back where it started',
             String(opsBefore), String(panel.session.ops().length));
@@ -3097,7 +3097,7 @@ export async function apworldLoopCostsSendWritesThePlanAsOneOp(testController) {
                 defaultRegionCost: 50,
                 defaultLocationCost: 10,
             },
-            scope: 'document',
+            scope: 'player',
         }, panel._documentToken);
         testController.assertEqual(
             'the schema REFUSES a block whose location cost is not a number',
@@ -3105,13 +3105,80 @@ export async function apworldLoopCostsSendWritesThePlanAsOneOp(testController) {
         testController.assertEqual(
             'and it says WHERE, in the schema\'s own path',
             'true',
-            String((verdict?.errors ?? []).some((e) => e.includes('loop_costs.locations'))));
+            String((verdict?.errors ?? []).some((e) => e.includes(`loop_costs.${panel.playerId}.locations`))));
         testController.assertEqual(
             'the refused op never reached the session',
             String(opsAtVeto), String(panel.session.ops().length));
     } catch (error) {
         testController.log(`ERROR: ${error.message}`);
         testController.reportCondition('loop_costs write-back test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **P1a — LOOP MODE IS PER SLOT** (⚖ user 2026-09-27, shape (A): `loop_costs`
+ * is `{"<p>": block}`). On the four-player fixture the row picks the first slot
+ * whose substrate differs from slot 1's (read off the document, never typed —
+ * slot 3, a bounce slot, at P1a), switches loop mode ON there through the
+ * Document row's own button, and reads `loop_costs[thatSlot]` — with no other
+ * slot gaining a block and slot 1's `procgen_metadata` byte-identical. One Undo
+ * takes it back. ⛔ Mutant: the switch writing at the document-level position
+ * is refused by the schema veto and this row's first claim reds.
+ */
+export async function apworldLoopModeSwitchIsPerSlot(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        const doc0 = panel.rulesDoc;
+        const substrateOf = (slot) => Object.values(doc0.preset_sidecars?.[slot] ?? {})[0]?.substrate;
+        const slots = Object.keys(doc0.preset_sidecars ?? {});
+        const first = slots[0];
+        const other = slots.find((s) => substrateOf(s) !== substrateOf(first));
+        testController.reportCondition(`⛓ premise: a slot whose substrate differs from slot ${first}'s (${other})`, !!other);
+        if (!other) return testController.getOverallResult();
+        testController.assertEqual(`⛓ premise: slot ${other} carries no \`loop_costs\` block`,
+            'false', String(Object.hasOwn(doc0.loop_costs ?? {}, other)));
+        const metaBefore = JSON.stringify(doc0.procgen_metadata ?? null);
+        const costsBefore = JSON.stringify(doc0.loop_costs ?? null);
+
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        testController.reportCondition('the toolbar slot selector is present', !!select);
+        if (!select) return testController.getOverallResult();
+        selectPlayer(select, other);
+        await testController.pollForCondition(() => String(panel.playerId) === String(other),
+            `the hub selected slot ${other}`, 8000, 50);
+        selectTab(panel, 'document');
+        const rowSel = `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="loop_costs"]`;
+        const btn = await testController.pollForValue(
+            () => document.querySelector(`${rowSel} .apworld-loop-costs-switch-btn`),
+            'the loop_costs row\'s switch', 8000, 50);
+        testController.reportCondition('the switch offers ENABLE and names the slot',
+            btn?.dataset.switchTo === 'on' && btn.textContent.includes(`player ${other}`));
+        if (!btn) return testController.getOverallResult();
+        const opsBefore = panel.session.ops().length;
+        btn.click();
+
+        const lc = panel.rulesDoc.loop_costs ?? {};
+        testController.assertEqual(`⛓⛓ the block landed under slot ${other}, and only there`,
+            String(other), Object.keys(lc).join(','));
+        testController.assertEqual('with the four keys the schema requires',
+            'defaultLocationCost,defaultRegionCost,locations,regions', Object.keys(lc[other] ?? {}).sort().join(','));
+        const op = panel.session.ops().at(-1) ?? {};
+        testController.assertEqual('as ONE player-scope set-key naming the slot',
+            `${opsBefore + 1}|set-key|loop_costs|player|${other}`,
+            [panel.session.ops().length, op.op, op.key, op.scope, op.player].join('|'));
+        testController.assertEqual(`⛓ slot ${first}'s procgen_metadata is byte-identical`,
+            metaBefore, JSON.stringify(panel.rulesDoc.procgen_metadata ?? null));
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
+        testController.assertEqual('⛓ one Undo takes it back — `loop_costs` as it was',
+            costsBefore, JSON.stringify(panel.rulesDoc.loop_costs ?? null));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('per-slot loop-mode switch test error-free', false);
     }
     return testController.getOverallResult();
 }
@@ -3154,7 +3221,7 @@ export async function apworldLoopModeSwitchAddsAndRemovesTheBlock(testController
         const worldRegions = Object.keys(panel.rulesDoc.regions[panel.playerId] ?? {}).length;
         testController.assertEqual(
             'the document carries no `loop_costs` block to begin with',
-            'false', String('loop_costs' in panel.rulesDoc));
+            'false', String(Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, panel.playerId)));
         testController.assertEqual(
             'and the row says loop mode is OFF for the world, not that nothing is priced',
             'true', String(switchLine.textContent.includes('loop mode is OFF')));
@@ -3168,19 +3235,19 @@ export async function apworldLoopModeSwitchAddsAndRemovesTheBlock(testController
         btnOf().click();
 
         testController.assertEqual(
-            'ENABLE wrote the block', 'true', String(!!panel.rulesDoc.loop_costs));
+            'ENABLE wrote the slot\'s block', 'true', String(!!panel.rulesDoc.loop_costs?.[panel.playerId]));
         // ⛓ The four keys the schema REQUIRES, and nothing hand-typed: the two
         //   costs are the exported constants, so this compares the block against
         //   the source rather than against a second copy of the numbers.
         testController.assertEqual(
             'it is exactly the four keys the schema requires',
             'defaultLocationCost,defaultRegionCost,locations,regions',
-            Object.keys(panel.rulesDoc.loop_costs).sort().join(','));
+            Object.keys(panel.rulesDoc.loop_costs[panel.playerId]).sort().join(','));
         testController.assertEqual(
             'carrying the EXPORTED defaults, not typed numbers',
             `${DEFAULT_REGION_COST}|${DEFAULT_LOCATION_COST}`,
-            `${panel.rulesDoc.loop_costs.defaultRegionCost}`
-            + `|${panel.rulesDoc.loop_costs.defaultLocationCost}`);
+            `${panel.rulesDoc.loop_costs[panel.playerId].defaultRegionCost}`
+            + `|${panel.rulesDoc.loop_costs[panel.playerId].defaultLocationCost}`);
         // ⛔ The veto ran and said nothing: an op the schema refused would have
         //   left `_opMessage` naming a refusal and the document unmoved.
         testController.assertEqual(
@@ -3190,8 +3257,8 @@ export async function apworldLoopModeSwitchAddsAndRemovesTheBlock(testController
             'as exactly ONE op', String(opsBefore + 1), String(panel.session.ops().length));
         const enableOp = panel.session.ops().at(-1) ?? {};
         testController.assertEqual(
-            'and that op is a document-scope set-key on loop_costs',
-            'set-key|loop_costs|document',
+            'and that op is a PLAYER-scope set-key on loop_costs (P1a: the block is per slot)',
+            'set-key|loop_costs|player',
             [enableOp.op, enableOp.key, enableOp.scope].join('|'));
 
         const summary = document.querySelector(`${rowSel} .apworld-loop-costs-summary`);
@@ -3206,7 +3273,7 @@ export async function apworldLoopModeSwitchAddsAndRemovesTheBlock(testController
         btnOf().click();
         testController.assertEqual(
             'DISABLE removed the key rather than emptying it',
-            'false', String('loop_costs' in panel.rulesDoc));
+            'false', String(Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, panel.playerId)));
         testController.assertEqual(
             'as one more op', String(opsBefore + 2), String(panel.session.ops().length));
 
@@ -3221,12 +3288,12 @@ export async function apworldLoopModeSwitchAddsAndRemovesTheBlock(testController
         testController.assertEqual(
             'one undo restores the EMPTY BLOCK, not the absence',
             'true',
-            String(!!panel.rulesDoc.loop_costs
-                && Object.keys(panel.rulesDoc.loop_costs.regions ?? {}).length === 0));
+            String(!!panel.rulesDoc.loop_costs?.[panel.playerId]
+                && Object.keys(panel.rulesDoc.loop_costs[panel.playerId].regions ?? {}).length === 0));
         document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
         testController.assertEqual(
             'a second undo restores the ABSENCE — the two states are told apart',
-            'false', String('loop_costs' in panel.rulesDoc));
+            'false', String(Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, panel.playerId)));
         testController.assertEqual(
             'and the op list is back where it started',
             String(opsBefore), String(panel.session.ops().length));
@@ -3306,7 +3373,7 @@ export async function apworldSendIntoAReplacedDocumentIsRefused(testController) 
             'true', String(panel._documentToken !== tokenAtHandOff));
         testController.assertEqual(
             'and that document carries no `loop_costs` block of its own',
-            'false', String('loop_costs' in panel.rulesDoc));
+            'false', String(Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, panel.playerId)));
 
         const opsBefore = panel.session.ops().length;
         // ⛓ S1 — the focus state BEFORE the refused gesture. The door raised the
@@ -3342,7 +3409,7 @@ export async function apworldSendIntoAReplacedDocumentIsRefused(testController) 
         // ⛔ THE CLAIM: the SECOND document, unmoved.
         testController.assertEqual(
             'the plan did NOT land in the document the hub now holds',
-            'false', String('loop_costs' in panel.rulesDoc));
+            'false', String(Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, panel.playerId)));
         testController.assertEqual(
             'and its op list never grew',
             String(opsBefore), String(panel.session.ops().length));
@@ -3678,7 +3745,7 @@ registerTest({
                + 'switch; that Disable removes the block and Enable rebuilds it empty; that Send is '
                + 'shown-and-disabled with a reason before a plan exists; that the HUB\'s '
                + 'document gains real prices for some but not all regions, as exactly ONE '
-               + 'document-scope `set-key loop_costs` whose `generatedFrom` names the door; that '
+               + 'player-scope `set-key loop_costs` whose `generatedFrom` names the door; that '
                + 'one Undo restores the EMPTY block; and that the hub\'s schema veto REFUSES a '
                + 'block whose location cost is not a number, naming the path, without the op '
                + 'reaching the session.',
@@ -3707,11 +3774,24 @@ registerTest({
     description: 'On procgen_maze — which carries no `loop_costs` block at all — asserts the '
                + 'Document row says loop mode is OFF, then presses "Enable loop mode" and '
                + 'asserts the document gains exactly the four keys the schema requires, '
-               + 'carrying the EXPORTED defaults, as one document-scope `set-key loop_costs`; '
-               + 'that the summary then reads "0 of 4 regions priced"; that "Disable loop mode" '
-               + 'REMOVES the key rather than emptying it; and that two undos restore the empty '
+               + 'carrying the EXPORTED defaults, as one player-scope `set-key loop_costs` (P1a: '
+               + '`loop_costs[p]`); that the summary then reads "0 of 4 regions priced"; that "Disable '
+               + 'loop mode" REMOVES the slot\'s block rather than emptying it; and that two undos restore the empty '
                + 'block and then the absence, in that order — the two states told apart.',
     testFunction: apworldLoopModeSwitchAddsAndRemovesTheBlock,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-loop-mode-switch-is-per-slot',
+    name: 'APWorld hub: loop mode is switched per SLOT — the block lands under the selected slot only',
+    description: 'P1a. On the four-player fixture, selects the first slot whose substrate differs from '
+               + 'slot 1\'s (read off the document), presses the loop_costs row\'s Enable, and asserts '
+               + 'the block lands at `loop_costs[thatSlot]` and nowhere else, as one player-scope '
+               + '`set-key` naming the slot, with slot 1\'s `procgen_metadata` byte-identical; one '
+               + 'Undo takes it back.',
+    testFunction: apworldLoopModeSwitchIsPerSlot,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
@@ -13137,8 +13217,8 @@ export async function apworldInitialiseLoopModeWritesLoopCosts(testController) {
         testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
         testController.assertEqual('⛓ ONE op', String(opsBefore + 1), String(panel.session.ops().length));
         const doc = panel.rulesDoc;
-        const lc = doc.loop_costs;
-        testController.reportCondition('⛓⛓ the document holds `loop_costs`, with no `generatedAt`',
+        const lc = doc.loop_costs?.[p];
+        testController.reportCondition('⛓⛓ the slot holds `loop_costs[p]`, with no `generatedAt`',
             !!lc && !Object.hasOwn(lc, 'generatedAt'));
         testController.assertEqual('…priced under the chosen XP effect', fx, lc?.defaultRegionXpEffect);
         const entries = doc.preset_sidecars?.[p] ?? {};
@@ -13161,7 +13241,7 @@ export async function apworldInitialiseLoopModeWritesLoopCosts(testController) {
             !!summary && summary.textContent.includes(`${nLoc} location`));
 
         document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
-        const undone = await testController.pollForCondition(() => !Object.hasOwn(panel.rulesDoc, 'loop_costs'),
+        const undone = await testController.pollForCondition(() => !Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, p),
             'Undo took loop_costs back', 8000, 50);
         testController.reportCondition('⛓⛓ ONE Undo takes the key back — the document byte for byte', undone
             && JSON.stringify(panel.rulesDoc) === before);
@@ -13176,7 +13256,7 @@ export async function apworldInitialiseLoopModeWritesLoopCosts(testController) {
         testController.reportCondition('the OFF build succeeded', off?.outcome?.ok === true);
         const offEntries = Object.values(panel.rulesDoc.preset_sidecars?.[p] ?? {});
         testController.reportCondition('⛓⛓ OFF: no `loop_costs` key, no payload `manaEnabled`',
-            !Object.hasOwn(panel.rulesDoc, 'loop_costs') && offEntries.length > 0
+            !Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, p) && offEntries.length > 0
             && offEntries.every((e) => !Object.hasOwn(e.playable_payload ?? {}, 'manaEnabled')));
     } catch (error) {
         testController.log(`ERROR: ${error.message}`);
@@ -13206,7 +13286,7 @@ export async function loopsResetLandsOnTheDeclaredStartOfAMultiExitWorld(testCon
         if (!await s3TurnOn(testController, panel)) return testController.getOverallResult();
         const run = await pressInitialise(testController, panel);
         testController.reportCondition('the build succeeded, loop mode on', run?.outcome?.ok === true
-            && Object.hasOwn(panel.rulesDoc, 'loop_costs'));
+            && Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, p));
         if (!run?.outcome?.ok) return testController.getOverallResult();
         const current = m2Gs('getCurrentRegion');
         const settled = await m2ApplyAndSettle(testController, panel, 'mm3', () => loopActive() && current?.() === start);

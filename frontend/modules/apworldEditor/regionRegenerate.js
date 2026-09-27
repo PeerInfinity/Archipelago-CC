@@ -116,7 +116,7 @@ export function oneExitPerSide(entry) {
 
 /** ⛓ The three steps of the region-size rule, in ORDER (⚖ Q4 B-then-A). */
 export const REGION_SIZE_SOURCES = Object.freeze([
-    'procgen_metadata.region_size',
+    'procgen_metadata[p].region_size',
     'modal tile-payload size in the slot',
     'DEFAULT_REGION_SIZE',
 ]);
@@ -126,7 +126,7 @@ const isSize = (s) => !!s && Number.isInteger(s.width) && Number.isInteger(s.hei
 
 /**
  * ⛓⛓ **THE SIZE A REGENERATED REGION IS ASKED FOR** (⚖ Q4, 2026-09-23: B then
- * A): `procgen_metadata.region_size` when it is `{width, height}`; else the
+ * A): the slot's `procgen_metadata[p].region_size` when it is `{width, height}`; else the
  * slot's MODAL size over the payloads of TILE-geometry substrates that carry
  * one (ties → the size met first in entry order); else the engine's
  * `DEFAULT_REGION_SIZE`. A sides-only target ignores it.
@@ -135,7 +135,7 @@ const isSize = (s) => !!s && Number.isInteger(s.width) && Number.isInteger(s.hei
  *   `REGION_SIZE_SOURCES`
  */
 export function regionSizeFor(doc, player) {
-    const declared = doc?.procgen_metadata?.region_size;
+    const declared = doc?.procgen_metadata?.[String(player)]?.region_size;
     if (isSize(declared)) {
         return { width: declared.width, height: declared.height, source: REGION_SIZE_SOURCES[0] };
     }

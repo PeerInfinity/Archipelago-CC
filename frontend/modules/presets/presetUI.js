@@ -722,7 +722,7 @@ export function computeProcgenStats(rulesData, playerId = '1') {
     const sidecars = rulesData.preset_sidecars[playerId];
     if (!sidecars || Object.keys(sidecars).length === 0) return null;
 
-    const meta = rulesData.procgen_metadata ?? {};
+    const meta = rulesData.procgen_metadata?.[String(playerId)] ?? {};
     const substrateCounts = {};
     const regions = [];
     let totalLogicGates = 0;

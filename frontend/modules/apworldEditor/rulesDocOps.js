@@ -2956,13 +2956,13 @@ export function grantsClause(names) {
 export const INITIALISE_LOOP_MODE_ON = 'loop mode on';
 export const INITIALISE_MANA_ON_EVERY_PAYLOAD = 'mana enabled on every payload';
 
-/** ⛓ Two writers of the document-level `loop_costs` block (the blocks' rule). */
-function heldLoopCostsSentence(doc) {
-    const n = Object.keys(isPlainObj(doc?.loop_costs?.regions) ? doc.loop_costs.regions : {}).length;
-    return `apworld: the document already carries a \`loop_costs\` block (${plural(n, 'region')} priced) — it is `
-        + 'DOCUMENT-level, and loop mode on an initialise writes one; two writers of one block would overwrite '
-        + 'each other silently, so the op refuses rather than pick one. Turn loop mode off, or delete the block '
-        + 'on the Document tab first.';
+/** ⛓ Two writers of one slot's `loop_costs` entry (the blocks' rule; P1a — the block is per player). */
+function heldLoopCostsSentence(doc, p) {
+    const held = doc?.loop_costs?.[p];
+    const n = Object.keys(isPlainObj(held?.regions) ? held.regions : {}).length;
+    return `apworld: player ${p} already carries a \`loop_costs\` block (${plural(n, 'region')} priced), and loop `
+        + 'mode on an initialise writes one; two writers of one block would overwrite each other silently, so the '
+        + 'op refuses rather than pick one. Turn loop mode off, or delete the slot\'s block on the Sidecars tab first.';
 }
 
 /**
@@ -3027,10 +3027,10 @@ export function initialiseOpRefusal(doc, args) {
             + 'the layout grows the grid outward from the start, so it has nowhere to begin.';
     }
     if (facts.blocker === INITIALISE_BLOCKERS.HAS_METADATA) {
-        return 'apworld: the document already carries a `procgen_metadata` block '
-            + `(driver ${describeValue(doc.procgen_metadata?.driver ?? null)}) — it is DOCUMENT-level, and an `
-            + `initialise of player ${p} writes one; two writers of one block would overwrite each other `
-            + 'silently, so the op refuses rather than pick one.';
+        return `apworld: player ${p} already carries a \`procgen_metadata\` block `
+            + `(driver ${describeValue(doc.procgen_metadata?.[p]?.driver ?? null)}), and an initialise of the slot `
+            + 'writes one; two writers of one block would overwrite each other silently, so the op refuses '
+            + 'rather than pick one.';
     }
     const substrate = args?.substrate;
     if (typeof substrate !== 'string' || !substrate) {
@@ -3087,7 +3087,7 @@ export function initialiseOpRefusal(doc, args) {
             return `apworld: loop mode's \`regionXpEffect\` is one of [${INITIALISE_XP_EFFECTS.join(', ')}], got `
                 + `${describeValue(loopMode.regionXpEffect)}.`;
         }
-        if (loopMode.enabled && Object.hasOwn(doc ?? {}, 'loop_costs')) return heldLoopCostsSentence(doc);
+        if (loopMode.enabled && Object.hasOwn(doc?.loop_costs ?? {}, p)) return heldLoopCostsSentence(doc, p);
     }
     return null;
 }
@@ -3147,7 +3147,7 @@ function initialiseResultRefusal(doc, p, result) {
         if (!isPlainObj(costs) || !isPlainObj(costs.regions) || !isPlainObj(costs.locations)) {
             return `apworld: \`loop_costs\` is the cost block {version, regions, locations, …}, got ${describeValue(costs)}.`;
         }
-        if (Object.hasOwn(doc, 'loop_costs')) return heldLoopCostsSentence(doc);
+        if (Object.hasOwn(doc.loop_costs ?? {}, p)) return heldLoopCostsSentence(doc, p);
     }
     // ⛓ The block and the payloads' mana flag are ONE setting: a result with one
     //   and not the other was not built by loop mode (or not built for it).
@@ -3217,7 +3217,7 @@ export function describeInitialise({ player, substrate, gridDims, backExits, res
  *     result, so the record replays pure from then on.
  *
  * ⛔ **WHAT IT WRITES:** `preset_sidecars[p]` (the slot's entries),
- * `procgen_metadata` (driver `apworld-initialise`, `source_game`,
+ * `procgen_metadata[p]` (driver `apworld-initialise`, `source_game`,
  * `source_counts`, `grid_dims`, `region_count`, `substrate_configs` per R6b),
  * the substrate's top-level blocks the document lacks, with `backExits: 'add'`
  * one exit per return route appended to `regions[p][R].exits` (the pipeline's
@@ -3225,8 +3225,8 @@ export function describeInitialise({ player, substrate, gridDims, backExits, res
  * granted library item in `items[p]` and the names appended to
  * `starting_items[p]` — the realiser was handed them free (the pipeline's
  * `grantedLibraryItems`), so the document must hold them; (S3, loop mode on)
- * the top-level `loop_costs` block, the payloads carrying `manaEnabled: true`
- * — REFUSED when the document already holds a `loop_costs`. NOTHING else: no
+ * the slot's `loop_costs[p]` block, the payloads carrying `manaEnabled: true`
+ * — REFUSED when the slot already holds one. NOTHING else: no
  * location, placement, existing item or existing rule moves.
  */
 function opInitialiseProcgenLayout(doc, op) {
@@ -3261,14 +3261,14 @@ function opInitialiseProcgenLayout(doc, op) {
     if (bad) return refuse(bad);
 
     let next = setPath(doc, ['preset_sidecars', p], result.entries);
-    next = setPath(next, ['procgen_metadata'], result.procgen_metadata);
+    next = setPath(next, ['procgen_metadata', p], result.procgen_metadata);
     for (const [k, v] of Object.entries(result.blocks ?? {})) next = setPath(next, [k], v);
     for (const { region, exit } of result.returnExits) {
         const r = regionsOf(next, p)[region];
         next = withRegion(next, p, region, withKey(r, 'exits', [...(r.exits ?? []), exit]));
     }
     next = withGrants(next, p, result.grantedItems ?? [], result.grantedDefs ?? {});
-    if (result.loop_costs !== undefined) next = setPath(next, ['loop_costs'], result.loop_costs);
+    if (result.loop_costs !== undefined) next = setPath(next, ['loop_costs', p], result.loop_costs);
     const description = describeInitialise({
         player: p, substrate: args.substrate, gridDims: args.gridDims, backExits: args.backExits,
         result, unplaced, ...(inline && Number.isFinite(prov.ms) ? { ms: prov.ms } : {}),

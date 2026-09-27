@@ -119,7 +119,7 @@ export function slotLayout(doc, player) {
         if (isGridCell(c)) cells.set(name, { gx: c.gx, gy: c.gy });
     }
     if (cells.size === 0) return { cells, grid: null, clash: null };
-    const { width, height } = mapBoundsFor(doc, entries);
+    const { width, height } = mapBoundsFor(doc, entries, player);
     const grid = new Grid({ width, height });
     for (const [name, cell] of cells) {
         if (grid.hasRegion(cell)) {

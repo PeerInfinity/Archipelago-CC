@@ -408,7 +408,9 @@ export class CostDebuggerUI {
     let answer;
     try {
       answer = this._workingCopy.onSave({
-        op: 'set-key', key: 'loop_costs', value: block, scope: 'document',
+        // ⛓ P1a — `loop_costs` is per player: the plan is the working copy's
+        //   slot's, so the op names that slot rather than leaning on the hub's.
+        op: 'set-key', key: 'loop_costs', value: block, scope: 'player', player: this._workingCopy.player,
       });
     } catch (e) {
       log('error', 'the hub refused the cost block by throwing', e);

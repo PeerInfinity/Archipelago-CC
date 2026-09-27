@@ -99,6 +99,22 @@ describe('the registry IS the schema', () => {
         expect(fromRegistry.length).toBeGreaterThan(1);
     });
 
+    /**
+     * ⛓⛓ P1a (⚖ user 2026-09-27, shape (A)) — `procgen_metadata` and
+     * `loop_costs` are slot maps like `preset_sidecars`: the row layer, the
+     * loop-mode switch and the raw editor are per slot BECAUSE the schema says
+     * so. ⛔ Mutant: the schema's `patternProperties` removed from either key
+     * reds here, by key.
+     */
+    it('⛓⛓ P1a — `procgen_metadata` and `loop_costs` are per-player slot maps, read off the schema', () => {
+        const perPlayer = new Set(buildDocumentKeys(SCHEMA).filter((e) => e.perPlayer).map((e) => e.key));
+        for (const key of ['procgen_metadata', 'loop_costs']) {
+            expect(perPlayer.has(key), key).toBe(true);
+            // ⛔ No second shape: nothing but slot ids may sit at the top of the map.
+            expect(SCHEMA.properties[key].additionalProperties, key).toBe(false);
+        }
+    });
+
     it('⛓ `required` mirrors the schema\'s own required list', () => {
         const req = buildDocumentKeys(SCHEMA).filter((e) => e.required).map((e) => e.key).sort();
         expect(req).toEqual([...SCHEMA.required].sort());

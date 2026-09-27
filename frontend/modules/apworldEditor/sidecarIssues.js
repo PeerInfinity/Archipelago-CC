@@ -492,7 +492,7 @@ export function sidecarIssues(doc, player = DEFAULT_PLAYER_ID) {
     }
 
     /* ── cells ── */
-    const dims = doc?.procgen_metadata?.grid_dims;
+    const dims = doc?.procgen_metadata?.[p]?.grid_dims;
     const hasDims = isPlainObject(dims) && Number.isInteger(dims.width) && Number.isInteger(dims.height);
     const taken = new Map();
     for (const [region, entry] of entries) {
@@ -506,7 +506,7 @@ export function sidecarIssues(doc, player = DEFAULT_PLAYER_ID) {
         } else taken.set(key, region);
         if (hasDims && (cell.gx < 0 || cell.gy < 0 || cell.gx >= dims.width || cell.gy >= dims.height)) {
             out.push(issue(K.GRID_CELL_OUTSIDE, region, `cell ${at} is outside the `
-                + `${dims.width}×${dims.height} grid \`procgen_metadata.grid_dims\` declares`, 'grid_cell'));
+                + `${dims.width}×${dims.height} grid \`procgen_metadata.${p}.grid_dims\` declares`, 'grid_cell'));
         }
     }
 

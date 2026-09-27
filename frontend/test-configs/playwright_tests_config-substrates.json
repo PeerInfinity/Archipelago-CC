@@ -531,6 +531,12 @@
             "_comment": "Loop-costs R-a residue 3. \u2696 (user, 2026-09-06) 'take care of the residues'; L4 named the presence switch as an editor action and left it unbuilt. Driven on procgen_maze because it carries NO loop_costs block at all \u2014 the state the enable half is about, which none of the corpus's fourteen carriers can show \u2014 and its four regions make the post-enable readout a real '0 of 4' rather than '0 of 0'. The two undos are the claim: 'no key' and 'an empty block' are different document states, and a gesture that mutated rulesDoc in place would collapse them and still pass the first half."
         },
         {
+            "id": "apworld-loop-mode-switch-is-per-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWORLD SUBSTRATE CHANGE P1a. \u2696 (user, 2026-09-27) shape (A): loop_costs is {\"<p>\": block}. On the four-player fixture the row derives the first slot whose substrate differs from slot 1's, switches loop mode ON there and reads loop_costs[thatSlot] with no other slot gaining a block and slot 1's procgen_metadata byte-identical; one Undo takes it back."
+        },
+        {
             "id": "apworld-send-into-a-replaced-document-is-refused",
             "enabled": true,
             "category": "apworldEditor",

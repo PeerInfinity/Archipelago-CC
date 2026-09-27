@@ -98,8 +98,8 @@ const META_TAB_EXTRA_KEYS = Object.freeze(['start_regions', 'game_info']);
  * `_worldgen_procgen_metadata.json` and `_worldgen_loop_costs.json` beside a
  * generated world, and `exporter/games/base/handler.py`'s three
  * `_inject_worldgen_*` methods read them back at export time into
- * `export_data['preset_sidecars'][player]`, `export_data['procgen_metadata']`
- * and `export_data['loop_costs']`. Those three merge targets ARE the definition
+ * `export_data['preset_sidecars'][player]`, `export_data['procgen_metadata'][player]`
+ * and `export_data['loop_costs'][player]` (all three per player — P1a). Those three merge targets ARE the definition
  * of "sidecar data" in this tree — and `preset_sidecars` is the one that is not
  * a ROW here, because it is a per-REGION key: S0 draws it per region, on the
  * Regions tab under each region and on this tab as an expandable per-region
@@ -390,9 +390,9 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
             + 'are editing, not the applied world (press "Use applied state" there to go back). '
             + 'It needs a sphere log: this document\'s own embedded one, or it says so. '
             + 'Its "Send costs to APWorld Editor" comes back here as ONE `set-key loop_costs` '
-            + 'carrying the whole planned block, which you can undo in one step. ⚠ A block\'s '
-            + 'PRESENCE is what enables loop mode for the world, so sending costs to a document '
-            + 'that had none turns loop mode on for it.',
+            + 'for the selected slot, carrying the whole planned block, which you can undo in one '
+            + 'step. ⚠ A slot\'s block\'s PRESENCE is what enables loop mode for that slot\'s world, '
+            + 'so sending costs to a slot that had none turns loop mode on for it.',
         open: async ({ record, player, eventBus, onSave }) => {
             const { LOOPS_COST_DEBUGGER_LOAD_RULES } = await import('../loopsCostDebugger/index.js');
             eventBus.publish(LOOPS_COST_DEBUGGER_LOAD_RULES, {

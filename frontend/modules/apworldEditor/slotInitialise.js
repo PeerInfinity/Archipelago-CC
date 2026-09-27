@@ -163,7 +163,7 @@ export function initialiseFacts(doc, player) {
     else if (entries > 0) blocker = INITIALISE_BLOCKERS.HAS_ENTRIES;
     else if (declaredStarts.length > 1) blocker = INITIALISE_BLOCKERS.MULTI_START;
     else if (!start) blocker = INITIALISE_BLOCKERS.NO_START;
-    else if (doc?.procgen_metadata !== undefined) blocker = INITIALISE_BLOCKERS.HAS_METADATA;
+    else if (doc?.procgen_metadata?.[p] !== undefined) blocker = INITIALISE_BLOCKERS.HAS_METADATA;
     return {
         player: p, regions: n, entries, declaredStart: declared, declaredStarts, start, menu, bare: entries === 0, blocker,
     };
@@ -585,7 +585,6 @@ export function initialiseSlot(args) {
     const configs = recordableConfigsFor(realised, (id) => substrateRegistry.get(id));
     const procgenMetadata = {
         driver: INITIALISE_DRIVER,
-        player: a.player,
         source_game: doc?.game_name ?? null,
         source_counts: computeSourceCounts(doc, a.player),
         stop_reason: layout.stats.stopReason,
