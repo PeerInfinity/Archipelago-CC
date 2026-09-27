@@ -50,12 +50,12 @@ export const CATALOGUE = frz({
                     "wouldNeed": "a template whose geometry lets the fade finish inside the derived bound — which is a MEASUREMENT somebody must take against a surveyed room, not a number to raise. ⛓ THE PRESS ARM stays shut for its own reason: it needs a `KILL_ARM_POLICY.modelled` class (IceTurret, ShieldBoss, Spinner — none pre-sword) and a press needs the sword. ⛓ AND THE NAME CORRECTION STANDS: kickoff §3.3 calls this \"water+bob+kill-lock (bait-kill)\", but the killer at L5 is the ARROW CEILING (`ARROW_KILL_PLAN`'s six phases). A bob's water death IS modelled (`levelRun`'s `ENEMY_TERRAIN_DESTROYS`) and no solver plan baits a body into it; L6's drowning is DECLARED by that tape's own v10 despawn row."
                 },
                 {
-                    "cause": "VERB-MISSING",
+                    "cause": "SUPERSEDED (seedling substrate S1, 2026-09-26) — the room-aware `rockgate` ELEMENT; the old cause VERB-MISSING (\"no `break` executor exists\") went stale at R9 slice L15",
                     "family": "break",
                     "hasRefusalText": false,
-                    "measured": "no `break` executor exists (`STRATEGY_EXECUTORS` has no row)",
+                    "measured": "W0 (hand-drawn 10x10, `torchpickup` goal, `DEFAULT_BUDGET`): a `breakablerock` on a 1-wide corridor SOLVES post-sword in 111 ticks (the open corridor: 81) and REFUSES pre-sword; on a loop's short arc it SOLVES 148 ticks with the sword and 244 without (the long way). W1: `--elements=rockgate` post-sword certifies with `break` on seeds 1-4 of the default room, and `--require=hasSword --elements=rockgate` grades STRONG on seeds 1-3.",
                     "name": "breakable-rock",
-                    "wouldNeed": "a registered `break` executor; post-sword anyway (the slash is the opener)"
+                    "wouldNeed": "nothing — the `rockgate` element (`procgenCore/elements/soloDoor.js`) is the rock's room-aware form; the pass-2 template stays out for the reason the door templates did (a relative footprint cannot grow its wall to the room)."
                 },
                 {
                     "cause": "NO CERTIFYING ROOM",
@@ -485,12 +485,12 @@ export const CATALOGUE = frz({
                     "wouldNeed": "a template whose geometry lets the fade finish inside the derived bound — which is a MEASUREMENT somebody must take against a surveyed room, not a number to raise. ⛓ THE PRESS ARM stays shut for its own reason: it needs a `KILL_ARM_POLICY.modelled` class (IceTurret, ShieldBoss, Spinner — none pre-sword) and a press needs the sword. ⛓ AND THE NAME CORRECTION STANDS: kickoff §3.3 calls this \"water+bob+kill-lock (bait-kill)\", but the killer at L5 is the ARROW CEILING (`ARROW_KILL_PLAN`'s six phases). A bob's water death IS modelled (`levelRun`'s `ENEMY_TERRAIN_DESTROYS`) and no solver plan baits a body into it; L6's drowning is DECLARED by that tape's own v10 despawn row."
                 },
                 {
-                    "cause": "VERB-MISSING",
+                    "cause": "SUPERSEDED (seedling substrate S1, 2026-09-26) — the room-aware `rockgate` ELEMENT; the old cause VERB-MISSING (\"no `break` executor exists\") went stale at R9 slice L15",
                     "family": "break",
                     "hasRefusalText": false,
-                    "measured": "no `break` executor exists (`STRATEGY_EXECUTORS` has no row)",
+                    "measured": "W0 (hand-drawn 10x10, `torchpickup` goal, `DEFAULT_BUDGET`): a `breakablerock` on a 1-wide corridor SOLVES post-sword in 111 ticks (the open corridor: 81) and REFUSES pre-sword; on a loop's short arc it SOLVES 148 ticks with the sword and 244 without (the long way). W1: `--elements=rockgate` post-sword certifies with `break` on seeds 1-4 of the default room, and `--require=hasSword --elements=rockgate` grades STRONG on seeds 1-3.",
                     "name": "breakable-rock",
-                    "wouldNeed": "a registered `break` executor; post-sword anyway (the slash is the opener)"
+                    "wouldNeed": "nothing — the `rockgate` element (`procgenCore/elements/soloDoor.js`) is the rock's room-aware form; the pass-2 template stays out for the reason the door templates did (a relative footprint cannot grow its wall to the room)."
                 },
                 {
                     "cause": "NO CERTIFYING ROOM",
@@ -1268,7 +1268,8 @@ export const CATALOGUE = frz({
         "killgate",
         "blockpocket",
         "chamber",
-        "arena"
+        "arena",
+        "rockgate"
     ],
     "elementSubsetSeparator": "|",
     "elements": [
@@ -1402,6 +1403,15 @@ export const CATALOGUE = frz({
                 }
             ],
             "why": "The ARENA (arc-5 §3.4; design catalogue #4/#6): the chamber's own blob with `bodies` enemies in it and a KILL LOCK on the room's main path, opened by the game's own `totalEnemies() == 0`. ⛓ Arc-3 §15.9 is why it is a chamber and not a nub: 20 of 23 enemy classes solve a 6x6 chamber and 20 of 23 refuse a 1-wide corridor."
+        },
+        {
+            "head": "rockgate",
+            "module": "rock-gate",
+            "needs": [
+                "hasSword"
+            ],
+            "params": [],
+            "why": "The ROCK GATE (seedling substrate S1): a `breakablerock` on a main-path cut with its wall GROWN to seal the room, broken by a sword swing from its start side. Certified by the existing `break` (R9 L15). No body, so no pocket and no A10."
         }
     ],
     "itemsElementsNeed": [

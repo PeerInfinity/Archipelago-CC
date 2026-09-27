@@ -45,6 +45,7 @@ import { BLOCK_POCKET } from './elements/blockPocket.js';
 import { KILL_GATE } from './elements/killGate.js';
 import { OPEN_CHAMBER } from './elements/openChamber.js';
 import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
+import { ROCK_GATE } from './elements/soloDoor.js';
 import { parseRequireList } from './areaSpec.js';
 import {
     assertParamSchema, enumerateValues, isParamSubset, paramSubset,
@@ -221,6 +222,28 @@ export const ELEMENT_TABLE = Object.freeze({
             + 'game\'s own `totalEnemies() == 0`. ⛓ Arc-3 §15.9 is why it is a chamber and '
             + 'not a nub: 20 of 23 enemy classes solve a 6x6 chamber and 20 of 23 refuse a '
             + '1-wide corridor.',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['hasSword']),
+    }),
+    /**
+     * ⛓⛓⛓ **THE ROCK GATE** (seedling substrate, slice S1; plan §2.1 G-a). A
+     * `breakablerock` on a main-path cut — the kill gate's door with no body.
+     * ⛔ It was never a missing ELEMENT so much as a missing VERB: the palette
+     * excluded `breakable-rock` as *"VERB-MISSING — no `break` executor"* until
+     * R9 slice L15 wrote `solverBot.resolveBreakStrategy`. Measured at S1's W0
+     * on a hand-drawn corridor: post-sword SOLVED 111 ticks, pre-sword REFUSED.
+     *
+     * ⛓ `needs: ['hasSword']` for the kill gate's reason, one class over: a
+     * rockType-0 rock breaks under a sword swing, and with no sword slot
+     * `weaponForPress` is null and the press is a silent no-op — the seam
+     * refuses BY NAME and for free. ⛔ IN NO BIOME DEFAULT (plan ⚖ Q5: new heads
+     * ship opt-in; a default change is ⚖ elements ruling 8's bundled re-record).
+     */
+    rockgate: Object.freeze({
+        element: ROCK_GATE,
+        why: 'The ROCK GATE (seedling substrate S1): a `breakablerock` on a main-path cut with '
+            + 'its wall GROWN to seal the room, broken by a sword swing from its start side. '
+            + 'Certified by the existing `break` (R9 L15). No body, so no pocket and no A10.',
         extra: Object.freeze([]),
         needs: Object.freeze(['hasSword']),
     }),

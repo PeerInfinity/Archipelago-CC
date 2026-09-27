@@ -104,6 +104,16 @@ const REFUSAL_SOURCES = [
             + 'on both pages, and the ELEMENTS CENSUS counts them',
     },
     {
+        id: 'solo-door',
+        title: 'The ONE-OBSTACLE doors — the ROCK GATE, the ROCK SHORTCUT, the SHIELD GATE',
+        kind: 'constant',
+        constant: 'SOLO_DOOR_REFUSALS',
+        names: M.soloDoor.SOLO_DOOR_REFUSALS,
+        file: SOURCES.soloDoor,
+        channel: 'the element\'s `{refused:{reason, detail}}` → `summary.elementInfo.refused` '
+            + 'on both pages, and the ELEMENTS CENSUS counts them',
+    },
+    {
         id: 'open-chamber',
         title: 'The OPEN CHAMBER element',
         kind: 'constant',

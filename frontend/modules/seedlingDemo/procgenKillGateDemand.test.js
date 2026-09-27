@@ -178,6 +178,12 @@ describe('`summary.require` — omitted when untyped, and NAMED on every refusal
      * seeds 1..40, the first whose draw lands on `killgate` AND whose element
      * places AND whose certification passes — 14, 17, 25, 29, 33, 38 qualify and
      * this row takes the first.
+     *
+     * ⛓⛓ **RE-SCANNED AGAIN AT SEEDLING SUBSTRATE S1** — `rockgate` is a THIRD
+     * sword-gated head, so the forced list is `killgate+arena+rockgate` and the
+     * pick over it moved. Same rule, seeds 1..40 (scratch `scan-directive.mjs`,
+     * the as-built's REPRODUCE block): **12, 13, 14, 25, 33** qualify, so seed
+     * 14 still does and the row keeps it — only the forced list changes.
      */
     const DIRECTIVE_SEED = 14;
 
@@ -191,9 +197,9 @@ describe('`summary.require` — omitted when untyped, and NAMED on every refusal
         expect(r.asked).toEqual(['hasSword']);
         /** ⛓ `element` is what the directive FORCED — now the two heads that
          *  need the item, not the one that used to be alone in needing it. */
-        expect(r.element).toEqual(['killgate', 'arena']);
+        expect(r.element).toEqual(['killgate', 'arena', 'rockgate']);
         expect(r.forced).toBe(true);
-        expect(r.spec).toBe('killgate+arena');
+        expect(r.spec).toBe('killgate+arena+rockgate');
         expect(r.grade).toBe('STRONG');
         expect(r.with.verdict).toBe('SOLVED');
         expect(r.without.verdict).toBe('REFUSED');

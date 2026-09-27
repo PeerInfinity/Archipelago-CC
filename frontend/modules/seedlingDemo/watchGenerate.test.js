@@ -2324,7 +2324,9 @@ describe('watchGenerate — the three parameters (arc 3, slice 5a)', () => {
         });
         expect(st.require.asked).toEqual(['hasSword']);
         expect(st.require.forced).toBe(true);
-        expect(st.elements.spec).toEqual({ any: [{ name: 'killgate' }, { name: 'arena' }] });
+        // ⛓ S1: `rockgate` is the third sword-gated head, by decision (plan §2.1 G-a).
+        expect(st.elements.spec).toEqual({ any: [{ name: 'killgate' }, { name: 'arena' },
+            { name: 'rockgate' }] });
         /** ⛔ AND A BIOME THAT CANNOT GRANT IT REFUSES **BY NAME**, with the
          *  level still built (arc-1's law, and the CLI's exit 6). */
         const pre = generateStep({ seed: 1, biome: 'pre-sword', step: 0, require: ['hasSword'] });

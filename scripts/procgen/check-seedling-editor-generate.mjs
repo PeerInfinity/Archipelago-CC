@@ -3153,11 +3153,14 @@ if (!host) {
      * the two heads that can meet it, and a pick over two certifiable heads is
      * a different thing from a pick over four (`drawElementHead` still spends
      * exactly one).
+     *
+     * ⛓ SEEDLING SUBSTRATE S1 — the third one arrived WITH a decision (plan §2.1
+     * G-a): `rockgate` needs the sword, so the literal gains it, in table order.
      */
     check(json(reqWeb.gen.elements?.spec)
-        === json({ any: [{ name: 'killgate' }, { name: 'arena' }] }),
+        === json({ any: [{ name: 'killgate' }, { name: 'arena' }, { name: 'rockgate' }] }),
         '⛔ …and the directive NARROWED the roster to exactly the heads `hasSword` '
-        + 'unlocks — `killgate+arena`, in order, and nothing else',
+        + 'unlocks — `killgate+arena+rockgate`, in order, and nothing else',
         json(reqWeb.gen.elements?.spec));
     check(json(reqWeb.level) === json(nodeReq.record),
         '⛓⛓ …and the level IS node\'s directed level, byte for byte');
