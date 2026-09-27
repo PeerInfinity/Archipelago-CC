@@ -79,7 +79,7 @@ describe('sphere growth — SEEDLING_ATLAS_HOST_STATE (a REAL two-door room host
         const rooms = atlasRoomsOf(rulesJson);
         expect(rooms).toHaveLength(1);
         const [[host, { playable_payload: p }]] = rooms;
-        const nodes = rulesJson.procgen_metadata.sphere_tree.nodes;
+        const nodes = rulesJson.procgen_metadata['1'].sphere_tree.nodes;
         const hostNode = nodes.find((n) => regionOfNode(n) === host);
         const parent = nodes[hostNode.parent];
         const children = nodes.filter((n) => n.parent === hostNode.index);
@@ -117,7 +117,7 @@ describe('sphere growth — SEEDLING_ATLAS_HOST_STATE (a REAL two-door room host
         const doors = [...(world.exits instanceof Map ? world.exits.values() : world.exits)];
         expect(doors.map((d) => d.access_rule)).toEqual(doors.map(() => undefined)); // ⛔ no rule in a real payload
         const placed = rulesJson.canonical_placements['1'];
-        const nodes = rulesJson.procgen_metadata.sphere_tree.nodes;
+        const nodes = rulesJson.procgen_metadata['1'].sphere_tree.nodes;
         const parentRegion = regionOfNode(nodes[nodes.find((n) => regionOfNode(n) === host).parent]);
         const regionOfLocation = (loc) => Object.entries(regions).find(([, r]) => r.locations.some((l) => l.name === loc))?.[0];
         for (const door of doors) {
@@ -158,8 +158,8 @@ describe('the committed real-room LEAF stays a leaf by its STATE\'s knob', () =>
         const params = Object.fromEntries(Object.entries(SEEDLING_SPHERE_ROOM_STATE.params)
             .filter(([k]) => k !== SEEDLING_ATLAS_HOST_CHILDREN_KEY));
         const { rulesJson } = await build({ ...SEEDLING_SPHERE_ROOM_STATE, params });
-        expect(JSON.stringify(rulesJson.procgen_metadata.sphere_tree))
-            .not.toBe(JSON.stringify(committed.procgen_metadata.sphere_tree));
+        expect(JSON.stringify(rulesJson.procgen_metadata['1'].sphere_tree))
+            .not.toBe(JSON.stringify(committed.procgen_metadata['1'].sphere_tree));
     }, 60_000);
 });
 

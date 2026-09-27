@@ -22,15 +22,15 @@ function procgenWorld() {
       },
     },
     items: { 1: { Key: { classification: 'progression' } } },
-    procgen_metadata: {
+    procgen_metadata: { 1: {
       driver: 'sphere-growth',
       sphere_tree: [
         { index: 0, wave: 0, cell: [0, 0], substrate: 'bounce', parent: null },
         { index: 1, wave: 1, cell: [1, 0], substrate: 'bounce', parent: 0, gate: 'Key' },
       ],
       sphere_plan: [{ sphere: 0, items: [] }, { sphere: 1, items: ['Key'] }],
-    },
-    loop_costs: { move: 1 },
+    } },
+    loop_costs: { 1: { move: 1 } },
     preset_sidecars: { 1: { foo: 'bar' } },
   };
 }
@@ -49,8 +49,8 @@ describe('cloneFullRulesDoc', () => {
     const doc = procgenWorld();
     const out = cloneFullRulesDoc(doc);
     expect(out.procgen_metadata).not.toBe(doc.procgen_metadata);
-    out.procgen_metadata.sphere_tree[0].wave = 999;
-    expect(doc.procgen_metadata.sphere_tree[0].wave).toBe(0);
+    out.procgen_metadata[1].sphere_tree[0].wave = 999;
+    expect(doc.procgen_metadata[1].sphere_tree[0].wave).toBe(0);
   });
 });
 

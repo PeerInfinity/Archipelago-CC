@@ -636,13 +636,13 @@ describe('computeProcgenStats', () => {
 
     it('passes through procgen_metadata fields', () => {
         const stats = computeProcgenStats({
-            procgen_metadata: {
+            procgen_metadata: { '1': {
                 driver: 'top-down',
                 source_game: 'Adventure',
                 source_counts: { regions: 6, locations: 25, exits: 17, logic_gates: 12 },
                 stop_reason: 'all_placed',
                 grid_dims: { width: 3, height: 3 },
-            },
+            } },
             preset_sidecars: { '1': {
                 R1: makeRegionSidecar(),
             }},
@@ -652,6 +652,16 @@ describe('computeProcgenStats', () => {
         expect(stats.sourceCounts).toEqual({ regions: 6, locations: 25, exits: 17, logic_gates: 12 });
         expect(stats.stopReason).toBe('all_placed');
         expect(stats.gridDims).toEqual({ width: 3, height: 3 });
+    });
+
+    /** ⛓⛓ P1a — the card reads the SLOT's block: another slot's is not this slot's driver. */
+    it('⛓⛓ P1a — reads the slot\'s procgen_metadata, never another slot\'s', () => {
+        const doc = {
+            procgen_metadata: { '2': { driver: 'top-down', source_game: 'Adventure' } },
+            preset_sidecars: { '1': { R1: makeRegionSidecar() }, '2': { R1: makeRegionSidecar() } },
+        };
+        expect(computeProcgenStats(doc, '1').driver).toBeNull();
+        expect(computeProcgenStats(doc, '2').driver).toBe('top-down');
     });
 
     it('reports null driver for older procgen output without procgen_metadata', () => {
@@ -784,7 +794,7 @@ describe('APWORLD_EDITOR_BUTTON', () => {
 
 describe('procgenDriverLabel — the preset card names the producer (APWORLD SUBSTRATE CHANGE S1)', () => {
     const stats = (driver, sourceGame) => computeProcgenStats({
-        procgen_metadata: { driver, source_game: sourceGame },
+        procgen_metadata: { '1': { driver, source_game: sourceGame } },
         preset_sidecars: { '1': { R: { substrate: 'maze', grid_cell: { gx: 0, gy: 0 }, playable_payload: {} } } },
     });
 

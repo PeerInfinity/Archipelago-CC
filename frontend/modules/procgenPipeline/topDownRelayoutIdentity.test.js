@@ -11,7 +11,7 @@
 // (4,5)→(2,0) and back re-targeted 28 forward exits on 16 regions.
 //
 // ⛓ PIPELINE RELAYOUT C1 — the compiled rules.json is compared as ONE STRING
-// (less `procgen_metadata.edits`, which records the two edits by design). R1
+// (less `procgen_metadata['1'].edits`, which records the two edits by design). R1
 // compared `preset_sidecars` record by record because a move re-inserted the
 // moved region at the end of the grid's cell Map, so the key ORDER of
 // `preset_sidecars[1]` moved (measured at `bf739e9df9`: move and back put
@@ -72,8 +72,8 @@ async function editAndRecompile(env, edit) {
 
 // The whole compiled document as one string, less the edit record itself.
 function documentString(rulesJson) {
-    const { edits: _edits, ...metadata } = rulesJson.procgen_metadata ?? {};
-    return JSON.stringify({ ...rulesJson, procgen_metadata: metadata });
+    const { edits: _edits, ...metadata } = rulesJson.procgen_metadata?.['1'] ?? {};
+    return JSON.stringify({ ...rulesJson, procgen_metadata: { 1: metadata } });
 }
 
 function expectSameWorld(before, env) {

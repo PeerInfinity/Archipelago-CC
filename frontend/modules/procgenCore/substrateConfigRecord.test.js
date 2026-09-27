@@ -88,7 +88,7 @@ describe('⛓⛓ the declaration — every applier names its keys; every recorde
         });
 });
 
-describe('⛓⛓ the writer — `procgen_metadata.substrate_configs`, for the declarers the grid REALISED', () => {
+describe('⛓⛓ the writer — `procgen_metadata[p].substrate_configs`, for the declarers the grid REALISED', () => {
     const recordingSources = RECORDERS.filter(isZoneSource);
     const silentSource = ENTRIES.find((e) => isZoneSource(e) && typeof e[RECORDABLE_CONFIG_HOOK] !== 'function'
         && typeof e.applyPipelineConfig !== 'function');
@@ -105,10 +105,10 @@ describe('⛓⛓ the writer — `procgen_metadata.substrate_configs`, for the de
         const want = Object.fromEntries(RECORDERS.filter((e) => realised.has(e.id))
             .map((e) => [e.id, e[RECORDABLE_CONFIG_HOOK]()]));
         expect(Object.keys(want)).toContain(id);
-        expect(rules.procgen_metadata[SUBSTRATE_CONFIGS_KEY]).toEqual(want);
-        expect(recordedConfigOf(rules, id)).toEqual(entry[RECORDABLE_CONFIG_HOOK]());
+        expect(rules.procgen_metadata['1'][SUBSTRATE_CONFIGS_KEY]).toEqual(want);
+        expect(recordedConfigOf(rules, id, '1')).toEqual(entry[RECORDABLE_CONFIG_HOOK]());
         // ⛓ the record sits beside the caller's fields and the derived ones, which are unchanged
-        expect(Object.keys(rules.procgen_metadata))
+        expect(Object.keys(rules.procgen_metadata['1']))
             .toEqual(['driver', 'stop_reason', 'region_count', 'grid_dims', SUBSTRATE_CONFIGS_KEY]);
     });
 
@@ -124,8 +124,8 @@ describe('⛓⛓ the writer — `procgen_metadata.substrate_configs`, for the de
         const { grid, rules } = oneSourceWorld(silentSource.id, { quota: 2 });
         const realised = new Set([...grid.allRegions()].map((r) => r.substrate));
         expect(RECORDERS.some((e) => realised.has(e.id)), 'premise: no recorder realised').toBe(false);
-        expect(Object.hasOwn(rules.procgen_metadata, SUBSTRATE_CONFIGS_KEY)).toBe(false);
-        expect(recordedConfigOf(rules, recordingSources[0].id)).toBeNull();
+        expect(Object.hasOwn(rules.procgen_metadata['1'], SUBSTRATE_CONFIGS_KEY)).toBe(false);
+        expect(recordedConfigOf(rules, recordingSources[0].id, '1')).toBeNull();
     });
 
     it('⛔ a caller that brings its own `substrate_configs` is refused — two writers of one block', () => {
@@ -145,13 +145,16 @@ describe('⛓⛓ the writer — `procgen_metadata.substrate_configs`, for the de
         expect(() => recordableConfigsFor(['x'], () => ({ [RECORDABLE_CONFIG_HOOK]: () => [1] }))).toThrow('plain object');
     });
 
-    it('recordedConfigOf reads the record by id and ignores anything that is not an object', () => {
-        const doc = { procgen_metadata: { [SUBSTRATE_CONFIGS_KEY]: { a: { k: 1 }, b: [1], c: null } } };
-        expect(recordedConfigOf(doc, 'a')).toEqual({ k: 1 });
-        expect(recordedConfigOf(doc, 'b')).toBeNull();
-        expect(recordedConfigOf(doc, 'c')).toBeNull();
-        expect(recordedConfigOf(doc, 'd')).toBeNull();
-        expect(recordedConfigOf({}, 'a')).toBeNull();
-        expect(recordedConfigOf(null, 'a')).toBeNull();
+    it('recordedConfigOf reads the SLOT\'s record by id and ignores anything that is not an object', () => {
+        const doc = { procgen_metadata: { 1: { [SUBSTRATE_CONFIGS_KEY]: { a: { k: 1 }, b: [1], c: null } } } };
+        expect(recordedConfigOf(doc, 'a', '1')).toEqual({ k: 1 });
+        expect(recordedConfigOf(doc, 'a', 1)).toEqual({ k: 1 });
+        expect(recordedConfigOf(doc, 'b', '1')).toBeNull();
+        expect(recordedConfigOf(doc, 'c', '1')).toBeNull();
+        expect(recordedConfigOf(doc, 'd', '1')).toBeNull();
+        // ⛓ P1a — another slot's record is not this slot's
+        expect(recordedConfigOf(doc, 'a', '2')).toBeNull();
+        expect(recordedConfigOf({}, 'a', '1')).toBeNull();
+        expect(recordedConfigOf(null, 'a', '1')).toBeNull();
     });
 });

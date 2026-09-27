@@ -138,8 +138,8 @@ describe('the committed LEAF stays a leaf by its STATE, not by a re-record', () 
             join(ROOT, 'frontend/presets/seedling_generated_leaf/AP_1/AP_1_rules.json'), 'utf8'));
         const { rulesJson } = await build(LEAF_WITHOUT_KNOB);
         expect(rulesJson).not.toEqual(committed);
-        const { procgen_metadata: m1, ...rest1 } = rulesJson;
-        const { procgen_metadata: m0, ...rest0 } = committed;
+        const { procgen_metadata: { 1: m1 }, ...rest1 } = rulesJson;
+        const { procgen_metadata: { 1: m0 }, ...rest0 } = committed;
         expect(rest1).toEqual(rest0);
         const nodes = (m) => m.sphere_tree.nodes;
         const moved = nodes(m1).map((n, i) => [i, n]).filter(([i, n]) => JSON.stringify(n) !== JSON.stringify(nodes(m0)[i]));

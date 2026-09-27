@@ -333,7 +333,7 @@ describe('through the engine — top-down, the rebuild path, the spiral', () => 
     });
 
     it('the REBUILD path re-emits the same text-adventure rules FROM the payload, and sizes from a tile world or the default', () => {
-        const root = doc.procgen_metadata.sphere_tree.nodes.find((node) => node.parent == null);
+        const root = doc.procgen_metadata['1'].sphere_tree.nodes.find((node) => node.parent == null);
         expect(root.substrate).toBe('text_adventure');
         const env = rebuildEnvelopeFromRulesJson(doc);
         const rebuilt = buildRulesJson(env.grow.grid, {
@@ -350,7 +350,7 @@ describe('through the engine — top-down, the rebuild path, the spiral', () => 
 
     it('the rebuild falls back to `DEFAULT_REGION_SIZE` when no world carries a size (every region a room)', () => {
         const allRooms = structuredClone(doc);
-        for (const node of allRooms.procgen_metadata.sphere_tree.nodes) node.substrate = 'text_adventure';
+        for (const node of allRooms.procgen_metadata['1'].sphere_tree.nodes) node.substrate = 'text_adventure';
         for (const [r, sc] of Object.entries(allRooms.preset_sidecars['1'])) {
             if (sc.substrate === 'text_adventure') continue;
             sc.substrate = 'text_adventure';

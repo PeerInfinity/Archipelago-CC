@@ -77,7 +77,7 @@ export { DEFAULT_SUBSTRATE_ID };
 /** ⛓ The op's name, as data. */
 export const INITIALISE_OP = 'initialise-procgen-layout';
 
-/** ⛓ The `procgen_metadata.driver` an initialised slot records (its own module: the preset card reads it). */
+/** ⛓ The `procgen_metadata[p].driver` an initialised slot records (its own module: the preset card reads it). */
 export { INITIALISE_DRIVER };
 
 /** ⛓ The return-exit choice (⚖ #1: `add` is the default, the pipeline's). */

@@ -187,7 +187,7 @@ describe('M3 — a Menu WITH locations is a room', () => {
         expect(JSON.stringify(doc.regions['1'])).not.toContain('"GameStart"');
         expect(doc.regions['1'].Menu.locations.map((l) => l.item?.name).filter(Boolean).sort())
             .toEqual(menu.locations.map((l) => l.item.name).sort());
-        expect(doc.procgen_metadata.source_counts.regions).toBe(Object.keys(source.regions['1']).length);
+        expect(doc.procgen_metadata['1'].source_counts.regions).toBe(Object.keys(source.regions['1']).length);
         expect(sidecarIssues(doc, '1').filter((i) => i.severity === 'error')).toEqual([]);
     });
 

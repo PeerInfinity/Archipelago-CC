@@ -292,12 +292,12 @@ describe('topDownSteps — recorded layout edits', () => {
     it('procgen_metadata carries the recording — and omits it when unedited', async () => {
         const clean = makeEnv();
         await runTopDownToStep(clean, 'compile');
-        expect('edits' in clean.compile.rulesJson.procgen_metadata).toBe(false);
+        expect('edits' in clean.compile.rulesJson.procgen_metadata['1']).toBe(false);
 
         const env = makeEnv();
         env.edits = [{ op: 're-roll', region_id: 'East', n: 1 }];
         await runTopDownToStep(env, 'compile');
-        expect(env.compile.rulesJson.procgen_metadata.edits).toEqual(env.edits);
+        expect(env.compile.rulesJson.procgen_metadata['1'].edits).toEqual(env.edits);
     });
 
     // A resume that does not re-produce an edit's artifact must not re-apply it

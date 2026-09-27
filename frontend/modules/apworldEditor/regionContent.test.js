@@ -72,8 +72,8 @@ for (const game of readdirSync(PRESETS)) {
 const byGame = (g) => DOCS.find((d) => d.game === g);
 const REGIONS = DOCS.flatMap((d) => d.regions.map((r) => ({ ...d, ...r, key: `${d.name} p${d.p} ${r.region}` })));
 
-/** ⛓ Does the document record jta's pipeline config (`procgen_metadata.substrate_configs.jta`, R6b)? */
-const recordsJta = (doc) => !!doc.procgen_metadata?.substrate_configs?.jta;
+/** ⛓ Does the document record jta's pipeline config (`procgen_metadata[p].substrate_configs.jta`, R6b; per slot since P1a)? */
+const recordsJta = (doc, p) => !!doc.procgen_metadata?.[p]?.substrate_configs?.jta;
 
 /**
  * ⛓⛓ THE ORACLE'S BINS (plan §14.1, re-cut at R6c §18). The five pipeline-built
@@ -90,7 +90,7 @@ const recordsJta = (doc) => !!doc.procgen_metadata?.substrate_configs?.jta;
 const REPRODUCES = ['jta_dataset_test', 'jta_schedule_test', 'jta_locations_test', 'jta_prestige_test', 'jta_randomized_test'];
 const ENVELOPE_ONLY = ['jta_mixed_test'];
 const NOT_RECORDED = [...new Set(DOCS
-    .filter((d) => d.regions.some((r) => r.substrate === 'jta') && !recordsJta(d.doc) && !ENVELOPE_ONLY.includes(d.game))
+    .filter((d) => d.regions.some((r) => r.substrate === 'jta') && !recordsJta(d.doc, d.p) && !ENVELOPE_ONLY.includes(d.game))
     .map((d) => d.game))];
 /**
  * ⛓ R5c — the documents whose zone-channel regions are ATLAS ROOMS
@@ -139,7 +139,7 @@ describe('the population (derived)', () => {
         expect(NOT_RECORDED.length).toBeGreaterThan(0);
         // ⛓ the bins are disjoint: a pipeline fixture that records nothing is in REPRODUCES and NOT_RECORDED
         expect(REPRODUCES.filter((g) => NOT_RECORDED.includes(g)), 'a generator output without its record').toEqual([]);
-        for (const g of REPRODUCES) expect(recordsJta(byGame(g).doc), `${g} records its config`).toBe(true);
+        for (const g of REPRODUCES) expect(recordsJta(byGame(g).doc, byGame(g).p), `${g} records its config`).toBe(true);
         // ⛓ every enrolled game is in exactly one bin, or is a substrate with no read-back
         for (const d of DOCS) {
             const binned = [...R5B_BINS, ...ATLAS_ROOM_DOCS].includes(d.game);
@@ -208,7 +208,7 @@ describe('the oracle — every committed region, as its OWN zone', () => {
 
     it('the refusal names WHICH region fails and the first difference (jta_randomized_test, its record stripped)', () => {
         const d = byGame('jta_randomized_test');
-        const res = zoneContentFor(withoutProcgenMetadata(d.doc), d.p, d.regions[0].region, 'jta', 0);
+        const res = zoneContentFor(withoutProcgenMetadata(d.doc, d.p), d.p, d.regions[0].region, 'jta', 0);
         expect(res.ok).toBe(false);
         expect(res.why).toMatch(/region "region_0_0" does not reproduce as its own zone 0 — location \d+ \("region_0_0__\d+"\): item/);
     });
@@ -444,7 +444,7 @@ describe('the host, the held zone, the range — the refusals and the carry', ()
     it('a relabel that leaves the GOAL unrecorded is refused by name, never extracted with the goal dropped (trap 1415)', () => {
         // ⛓ the document WITHOUT its record (stripped, R6c); the recorded survival is recordedZoneConfig.test.js's
         const v0 = byGame('jta_locations_test');
-        const v = { ...v0, doc: withoutProcgenMetadata(v0.doc) };
+        const v = { ...v0, doc: withoutProcgenMetadata(v0.doc, v0.p) };
         const victoryAt = Object.entries(v.doc.canonical_placements[v.p]).find(([, i]) => i === 'Victory')[0];
         const holder = v.regions.map((r) => r.region)
             .find((r) => v.doc.regions[v.p][r].locations.some((l) => l.name === victoryAt));

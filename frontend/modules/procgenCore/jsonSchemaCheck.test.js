@@ -177,14 +177,16 @@ describe('every committed preset rules.json is schema-valid', () => {
  * reader from "fixing" that into a `oneOf`.
  */
 describe('the `loop_costs` block, tightened (R-a)', () => {
-    const BLOCK = RULES_SCHEMA.properties.loop_costs;
+    // ⛓ P1a — `loop_costs` is a per-player map; the block is its slot subschema.
+    const BLOCK = RULES_SCHEMA.properties.loop_costs.patternProperties['^[0-9]+$'];
     const ENTRY = BLOCK.properties.regions.additionalProperties;
-    /** The veto's own arithmetic: the errors an op ADDS, differenced. */
-    const addedTo = (doc, block) => {
+    /** The veto's own arithmetic: the errors an op ADDS, differenced — the block as slot 1's. */
+    const addedToRaw = (doc, value) => {
         const before = new Set(rulesJsonSchemaErrors(doc, RULES_SCHEMA));
-        const next = { ...doc, loop_costs: block };
+        const next = { ...doc, loop_costs: value };
         return rulesJsonSchemaErrors(next, RULES_SCHEMA).filter((e) => !before.has(e));
     };
+    const addedTo = (doc, block) => addedToRaw(doc, { 1: block });
     /** A document with NO block of its own, so `before` is empty by construction. */
     const HOST = { game_name: 'x' };
     /** The four required keys, from the constants — never hand-typed numbers. */
@@ -231,6 +233,18 @@ describe('the `loop_costs` block, tightened (R-a)', () => {
 
     it('accepts the EMPTY block the presence switch writes', () => {
         expect(addedTo(HOST, EMPTY)).toEqual([]);
+    });
+
+    /**
+     * ⛔⛔ P1a (⚖ user 2026-09-27: no compatibility for the old format) — a
+     * block at the old DOCUMENT-level position is refused: the map admits slot
+     * ids only, so the block's own keys are additional properties.
+     */
+    it('⛔ P1a — REFUSES a block at the old document-level position (slot ids only)', () => {
+        const errs = addedToRaw(HOST, EMPTY);
+        expect(errs.join(' | ')).toContain('loop_costs.regions: additional property not allowed');
+        expect(RULES_SCHEMA.properties.procgen_metadata.additionalProperties).toBe(false);
+        expect(addedToRaw(HOST, { 1: EMPTY, 2: EMPTY })).toEqual([]);
     });
 
     it("accepts the pipeline's `error` failure marker", () => {

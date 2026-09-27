@@ -420,7 +420,8 @@ export const TERMS = Object.freeze([
         aliases: [],
         area: 'pipeline',
         plain: 'The notes a generated world keeps about how it was made.',
-        detail: 'Source counts, the sphere tree, and enough structure that a '
+        detail: 'Per player (`{"<p>": block}`, like `preset_sidecars`): each slot\'s source '
+            + 'counts, sphere tree, and enough structure that a '
             + '[stepped-pipeline](#stepped-pipeline) [envelope](#envelope) can be rebuilt '
             + 'from a compiled `rules.json` (`rebuildEnvelopeFromRulesJson`).',
         where: [{ label: 'architecture.md § rules.json extensions', doc: `${ARCH}#rulesjson-extensions` }],
@@ -432,8 +433,9 @@ export const TERMS = Object.freeze([
         aliases: [],
         area: 'pipeline',
         plain: 'The price list for the idle-game layer — what each action costs to perform.',
-        detail: 'Per-action mana costs; **its presence is what enables [loop mode]'
-            + '(#loop-mode) for the world.** ⚠ Four files deal with loop costs and are easy '
+        detail: 'Per player (`{"<p>": block}`): each slot\'s per-action mana costs; **a slot\'s '
+            + 'block being present is what enables [loop mode](#loop-mode) for that slot\'s '
+            + 'world.** ⚠ Four files deal with loop costs and are easy '
             + 'to conflate — a live generator, a pure headless one (the only one that actually '
             + 'stamps this key at compile time), a debugger with an intentionally different '
             + 'model, and the runtime store. A change to the pricing vocabulary has to land in '
@@ -452,7 +454,7 @@ export const TERMS = Object.freeze([
         plain: 'Playing the world as an idle game: you queue up actions, they cost a resource, '
             + 'and when it runs out the run resets and starts again.',
         detail: 'The `loops` module activates when the loaded `rules.json` carries '
-            + '[`loop_costs`](#loop-costs). Which affordances a given region gets — queueable '
+            + '[`loop_costs`](#loop-costs) for the loaded slot. Which affordances a given region gets — queueable '
             + 'actions, manual play, custom queues — is declared by the `loopSupport` field on '
             + 'its substrate\'s [registry entry](#registry-entry). Per-block Manual / Record / '
             + 'Playback modes and the Instant toggle are the recording layer on top.',

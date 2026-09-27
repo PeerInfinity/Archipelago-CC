@@ -59,7 +59,7 @@ describe('reconstructResultFromSidecars', () => {
                     region_1_0: minimalSidecar(1, 0),
                 },
             },
-            procgen_metadata: { driver: 'grid-growth', stop_reason: 'pool_empty' },
+            procgen_metadata: { 1: { driver: 'grid-growth', stop_reason: 'pool_empty' } },
         });
         expect(result).not.toBeNull();
         expect(result.grid.width).toBe(2);
@@ -491,25 +491,25 @@ describe('mapBoundsFor', () => {
     const entries = (...cells) => cells.map(([gx, gy], i) => [`r${i}`, minimalSidecar(gx, gy)]);
 
     it('the extents, when the document records no size', () => {
-        expect(mapBoundsFor({}, entries([0, 0], [2, 1])))
+        expect(mapBoundsFor({}, entries([0, 0], [2, 1]), '1'))
             .toEqual({ width: 3, height: 2, boundsSource: 'extents' });
     });
 
     it('`grid_dims` wins on an axis where it is LARGER — and only there', () => {
-        const doc = { procgen_metadata: { grid_dims: { width: 3, height: 5 } } };
-        expect(mapBoundsFor(doc, entries([0, 0], [4, 1])))
+        const doc = { procgen_metadata: { 1: { grid_dims: { width: 3, height: 5 } } } };
+        expect(mapBoundsFor(doc, entries([0, 0], [4, 1]), '1'))
             .toEqual({ width: 5, height: 5, boundsSource: 'grid_dims' });
     });
 
     it('a `grid_dims` no larger than the extents leaves them as they are', () => {
-        const doc = { procgen_metadata: { grid_dims: { width: 3, height: 2 } } };
-        expect(mapBoundsFor(doc, entries([0, 0], [2, 1])))
+        const doc = { procgen_metadata: { 1: { grid_dims: { width: 3, height: 2 } } } };
+        expect(mapBoundsFor(doc, entries([0, 0], [2, 1]), '1'))
             .toEqual({ width: 3, height: 2, boundsSource: 'extents' });
     });
 
     it('a malformed `grid_dims` is ignored', () => {
         for (const grid_dims of [{ width: '9', height: 9.5 }, { width: -4, height: 0 }, [9, 9], null]) {
-            expect(mapBoundsFor({ procgen_metadata: { grid_dims } }, entries([1, 1])), JSON.stringify(grid_dims))
+            expect(mapBoundsFor({ procgen_metadata: { 1: { grid_dims } } }, entries([1, 1]), '1'), JSON.stringify(grid_dims))
                 .toEqual({ width: 2, height: 2, boundsSource: 'extents' });
         }
     });
@@ -517,7 +517,7 @@ describe('mapBoundsFor', () => {
     it('no `grid_cell` ⇒ null', () => {
         const a = minimalSidecar(0, 0);
         delete a.grid_cell;
-        expect(mapBoundsFor({ procgen_metadata: { grid_dims: { width: 4, height: 4 } } }, [['a', a]])).toBeNull();
+        expect(mapBoundsFor({ procgen_metadata: { 1: { grid_dims: { width: 4, height: 4 } } } }, [['a', a]], '1')).toBeNull();
     });
 
     it('⛓ the reconstruction draws a grid of that size and says which rule gave it', () => {
@@ -525,9 +525,25 @@ describe('mapBoundsFor', () => {
         const bare = reconstructResultFromSidecars({ preset_sidecars: sidecars });
         expect([bare.grid.width, bare.grid.height, bare.boundsSource]).toEqual([2, 1, 'extents']);
         const sized = reconstructResultFromSidecars({
-            preset_sidecars: sidecars, procgen_metadata: { grid_dims: { width: 3, height: 2 } },
+            preset_sidecars: sidecars, procgen_metadata: { 1: { grid_dims: { width: 3, height: 2 } } },
         });
         expect([sized.grid.width, sized.grid.height, sized.boundsSource]).toEqual([3, 2, 'grid_dims']);
         expect(sized.stats.regionsBuilt).toBe(2);
+    });
+
+    /**
+     * ⛓⛓ P1a — `grid_dims` is the SLOT's: slot 2's recorded size does not
+     * bound slot 1, and the reconstruction of slot 2 reads slot 2's.
+     */
+    it('⛓⛓ P1a — a slot is bounded by ITS grid_dims, never another slot\'s', () => {
+        const doc = { procgen_metadata: { 2: { grid_dims: { width: 3, height: 5 } } } };
+        expect(mapBoundsFor(doc, entries([0, 0], [4, 1]), '1'))
+            .toEqual({ width: 5, height: 2, boundsSource: 'extents' });
+        expect(mapBoundsFor(doc, entries([0, 0], [4, 1]), '2'))
+            .toEqual({ width: 5, height: 5, boundsSource: 'grid_dims' });
+        const two = { preset_sidecars: { 1: { a: minimalSidecar(0, 0) }, 2: { a: minimalSidecar(0, 0) } },
+            procgen_metadata: { 2: { grid_dims: { width: 3, height: 2 } } } };
+        expect(reconstructResultFromSidecars(two, { playerId: '1' }).boundsSource).toBe('extents');
+        expect(reconstructResultFromSidecars(two, { playerId: '2' }).boundsSource).toBe('grid_dims');
     });
 });

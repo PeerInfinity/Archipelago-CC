@@ -650,7 +650,7 @@ async function locationCheckLoopModePassThrough(testController) {
         completionConditionItem: 'victory',
         procgenMetadata: { driver: 'shuffled-spiral-test', stop_reason: stats.stopReason },
     });
-    testController.reportCondition('built rules.json with loop_costs', !!rulesJson?.loop_costs);
+    testController.reportCondition('built rules.json with loop_costs', !!rulesJson?.loop_costs?.['1']);
 
     const rulesLoadedPromise = testController.waitForEvent('stateManager:rulesLoaded', 8000);
     testController.eventBus.publish('files:jsonLoaded', {

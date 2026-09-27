@@ -119,9 +119,10 @@ queue* / *the substrate* / *time (drain)* — separate from whether a cost exist
 APWorld editor hands a working copy over through its `loop_costs` door, the
 payload carries an `onSave` beside the document, and the panel offers **Send
 costs to the document**: one press writes `getCostData()` — the BLOCK, not the
-walk — into the hub as a single document-scope `set-key loop_costs`, which the
-hub applies through its own `_acceptEditorOp` (schema veto, slot stamp, undo
-step) and which **one Undo there takes back out whole**.
+walk — into the hub as a single PLAYER-scope `set-key loop_costs` naming the
+working copy's slot (`loop_costs` is per player since APWORLD SUBSTRATE CHANGE
+P1a), which the hub applies through its own `_acceptEditorOp` (schema veto, slot
+stamp, undo step) and which **one Undo there takes back out whole**.
 
 `sendCostsRefusal({workingCopy, planner})` is the rule, pure and exported, and it
 answers with a SENTENCE rather than a boolean because every refusal is a state a
@@ -144,8 +145,8 @@ Two facts the panel states because nothing else does:
   which is true of the store; a block written into a *document* is provenance
   somebody reads later, so it carries the hand-off's own source label (*"the
   APWorld editor"*) — never a file path an unsaved working copy does not have.
-- **A `loop_costs` block's PRESENCE is the loop-mode switch**, so sending costs
-  to a document that carried none turns loop mode ON for that world
+- **A slot's `loop_costs` block's PRESENCE is the loop-mode switch**, so sending
+  costs to a slot that carried none turns loop mode ON for that slot's world
   (`loops/index.js handleRulesLoaded` auto-enables on
   `costDataManager.isLoaded()`, i.e. `costData !== null`). The status line says
   so on a successful send, and the hub's row says it beside the block.

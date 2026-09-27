@@ -1,7 +1,7 @@
 /**
  * apworldEditor — **THE ZONE READ-BACK PREFERS WHAT THE DOCUMENT RECORDS**
  * (APWORLD SUBSTRATE CHANGE R6b). The compile writes
- * `procgen_metadata.substrate_configs[id]` (`procgenCore/substrateConfigRecord.js`);
+ * `procgen_metadata[p].substrate_configs[id]` (`procgenCore/substrateConfigRecord.js`);
  * the hub hands it to the target's `zoneConfigFromSlot` as `recorded`, and jta
  * takes a recorded field over both its own read-back and its assumption — still
  * VERIFIED by re-extracting every committed zone.
@@ -53,12 +53,16 @@ const FIXTURES = ['jta_locations_test', 'jta_randomized_test', 'jta_prestige_tes
 const RECORD = (goalZone, perkShuffleSeed) => ({
     emitZoneLocations: true, goalZone, freeZones: 1, startingPerks: 0, perkShuffleSeed,
 });
+const slotOf = (doc) => Object.keys(doc.preset_sidecars)[0];
+/** ⛓ P1a — the record lives in the SLOT's block, `procgen_metadata[p]`. */
 const withRecord = (doc, rec) => {
     const out = clone(doc);
-    out.procgen_metadata = { ...(out.procgen_metadata ?? {}), [SUBSTRATE_CONFIGS_KEY]: { [JTA]: rec } };
+    const p = slotOf(out);
+    out.procgen_metadata = { ...(out.procgen_metadata ?? {}),
+        [p]: { ...(out.procgen_metadata?.[p] ?? {}), [SUBSTRATE_CONFIGS_KEY]: { [JTA]: rec } } };
     return out;
 };
-const slotOf = (doc) => Object.keys(doc.preset_sidecars)[0];
+const metaOf = (doc) => doc.procgen_metadata[slotOf(doc)];
 const jtaRegions = (doc, p) => Object.entries(doc.preset_sidecars[p]).filter(([, e]) => e.substrate === JTA).map(([r]) => r);
 /** ⛓ The first zone no region of the slot plays. */
 const freeZone = (doc, p) => {
@@ -71,7 +75,7 @@ afterAll(() => jta.applyPipelineConfig({}));
 
 describe('⛓⛓ a fixture WITHOUT its record (the block stripped) — the read-back assumes, and the shuffled one is refused', () => {
     it.each(FIXTURES.map((g) => [g]))('%s stripped: recorded = [], assumed = the three unread fields', (g) => {
-        const doc = withoutProcgenMetadata(load(g));
+        const doc = withoutProcgenMetadata(load(g), slotOf(load(g)));
         const rec = installedZoneConfigFrom(doc, slotOf(doc), JTA);
         expect(rec.ok).toBe(true);
         expect(rec.recorded).toEqual([]);
@@ -79,7 +83,7 @@ describe('⛓⛓ a fixture WITHOUT its record (the block stripped) — the read-
     });
 
     it('jta_randomized_test stripped of its record is REFUSED, naming the assumed shuffle seed', () => {
-        const doc = withoutProcgenMetadata(load('jta_randomized_test'));
+        const doc = withoutProcgenMetadata(load('jta_randomized_test'), slotOf(load('jta_randomized_test')));
         const p = slotOf(doc);
         const got = zoneContentFor(doc, p, jtaRegions(doc, p)[0], JTA, freeZone(doc, p));
         expect(got.ok).toBe(false);
@@ -143,12 +147,12 @@ describe('⛓⛓ a RECORDED config is preferred over the assumption — and stil
 
     it('the record is read by the ENTRY\'s id — a record under another id is not this one\'s', () => {
         const doc = clone(load('jta_randomized_test'));
-        doc.procgen_metadata = { [SUBSTRATE_CONFIGS_KEY]: { [otherLabel()]: RECORD(3, 1) } };
+        doc.procgen_metadata = { [slotOf(doc)]: { [SUBSTRATE_CONFIGS_KEY]: { [otherLabel()]: RECORD(3, 1) } } };
         expect(installedZoneConfigFrom(doc, slotOf(doc), JTA).recorded).toEqual([]);
     });
 
     it('a recorded goal survives the relabel that trap 1415 refused (the Victory holder moved out of jta)', () => {
-        const base = withoutProcgenMetadata(load('jta_locations_test'));
+        const base = withoutProcgenMetadata(load('jta_locations_test'), slotOf(load('jta_locations_test')));
         const p = slotOf(base);
         const victoryAt = Object.entries(base.canonical_placements[p]).find(([, i]) => i === 'Victory')[0];
         const holder = jtaRegions(base, p).find((r) => base.regions[p][r].locations.some((l) => l.name === victoryAt));
@@ -182,7 +186,7 @@ describe('⛓⛓ writer → reader, end to end — a world built under a NON-def
 
     it('the record is the installed config; the hub installs it (from a reset) and every region verifies', () => {
         const doc = buildJta(CFG, 4);
-        expect(doc.procgen_metadata[SUBSTRATE_CONFIGS_KEY][JTA]).toEqual(CFG);
+        expect(metaOf(doc)[SUBSTRATE_CONFIGS_KEY][JTA]).toEqual(CFG);
         expect(jta[RECORDABLE_CONFIG_HOOK]()).toEqual(CFG);
         jta.applyPipelineConfig({});
         const p = slotOf(doc);
@@ -196,7 +200,7 @@ describe('⛓⛓ writer → reader, end to end — a world built under a NON-def
         () => {
             const cfg = { ...CFG, goalZone: null };
             const doc = buildJta(cfg, 4);
-            expect(doc.procgen_metadata[SUBSTRATE_CONFIGS_KEY][JTA].goalZone).toBeNull();
+            expect(metaOf(doc)[SUBSTRATE_CONFIGS_KEY][JTA].goalZone).toBeNull();
             jta.applyPipelineConfig({});
             const p = slotOf(doc);
             const rec = installedZoneConfigFrom(doc, p, JTA);
@@ -208,7 +212,7 @@ describe('⛓⛓ writer → reader, end to end — a world built under a NON-def
 
     it('⛔ the same world with its record REMOVED is refused — the defaults do not rebuild it', () => {
         const doc = buildJta(CFG, 4);
-        delete doc.procgen_metadata[SUBSTRATE_CONFIGS_KEY];
+        delete metaOf(doc)[SUBSTRATE_CONFIGS_KEY];
         jta.applyPipelineConfig({});
         const p = slotOf(doc);
         const got = zoneContentFor(doc, p, jtaRegions(doc, p)[0], JTA, freeZone(doc, p));

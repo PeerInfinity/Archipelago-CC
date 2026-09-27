@@ -89,7 +89,7 @@ The panel and both headless CLIs build a sphere-growth config the same way: merg
 
 ## Editing and round-tripping grown worlds
 
-A compiled sphere-growth `rules.json` carries enough structure in `procgen_metadata` (`sphere_tree`, `sphere_plan`) to rebuild a stepped-pipeline envelope from it (`rebuildEnvelopeFromRulesJson`), which is what enables re-growing and appending spheres to an existing world. Consumers that edit such a file must preserve those keys untouched — the APWorld Editor clones the full document rather than rebuilding from known fields for exactly this reason (`frontend/modules/apworldEditor/rulesUtils.js`).
+A compiled sphere-growth `rules.json` carries enough structure in its slot's `procgen_metadata[p]` (`sphere_tree`, `sphere_plan`) to rebuild a stepped-pipeline envelope from it (`rebuildEnvelopeFromRulesJson`), which is what enables re-growing and appending spheres to an existing world. Consumers that edit such a file must preserve those keys untouched — the APWorld Editor clones the full document rather than rebuilding from known fields for exactly this reason (`frontend/modules/apworldEditor/rulesUtils.js`).
 
 ## CLI
 

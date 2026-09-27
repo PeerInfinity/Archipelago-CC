@@ -343,7 +343,7 @@ describe('S3 — loop mode on the form', () => {
         expect(ok.refusal).toBeNull();
         expect(ok.text).toBe(`${initialisePreview(ADVENTURE, P, { ...st, loopMode: { enabled: false } }).text}; `
             + `${INITIALISE_LOOP_MODE_ON} (${DEFAULT_REGION_XP_EFFECT}), priced from the loaded sphere log`);
-        const held = { ...ADVENTURE, loop_costs: { regions: {}, locations: {} } };
+        const held = { ...ADVENTURE, loop_costs: { [P]: { regions: {}, locations: {} } } };
         expect(initialisePreview(held, P, st, ADV_LOG).refusal).toContain('already carries a `loop_costs` block');
     });
 

@@ -487,7 +487,7 @@ const shrinks = (before, after, slot) => {
 
 /**
  * ⛓⛓ THE MAP'S SIZE — `mapBoundsFor`, the Map's own rule (⚖ planner, M2): the
- * larger of the extents and `procgen_metadata.grid_dims`. A move that empties
+ * larger of the extents and the slot's `procgen_metadata[p].grid_dims`. A move that empties
  * the last row or column shrinks the EXTENTS; with a recorded size the map keeps
  * it, without one the map shrinks and the move says so.
  */
@@ -497,18 +497,18 @@ describe('the map\'s size when a move empties its last row or column', () => {
         .find((op) => shrinks(doc, applied(doc, op).doc, MAZE_SLOT));
     const stripped = () => {
         const doc = clone(FOUR);
-        delete doc.procgen_metadata.grid_dims;
+        delete doc.procgen_metadata[MAZE_SLOT].grid_dims;
         return doc;
     };
 
     it('with `grid_dims` (the fixture records its size): the map keeps it, the description '
         + 'names no shrink, and the move back is accepted', () => {
-        expect(FOUR.procgen_metadata.grid_dims).toEqual(extentsOf(FOUR, MAZE_SLOT));
+        expect(FOUR.procgen_metadata[MAZE_SLOT].grid_dims).toEqual(extentsOf(FOUR, MAZE_SLOT));
         const op = shrinkingMove(FOUR);
         expect(op, 'a move that empties the last row or column exists').toBeTruthy();
         const res = applied(FOUR, op);
         const { grid } = slotLayout(res.doc, MAZE_SLOT);
-        expect({ width: grid.width, height: grid.height }).toEqual(FOUR.procgen_metadata.grid_dims);
+        expect({ width: grid.width, height: grid.height }).toEqual(FOUR.procgen_metadata[MAZE_SLOT].grid_dims);
         expect(res.description).not.toContain(MAP_SIZE_IS_THE_EXTENT);
         const back = applied(res.doc, { ...op, to: cellOf(FOUR, MAZE_SLOT, op.region) });
         expect(bytes(back.doc)).toBe(bytes(FOUR));
@@ -537,7 +537,7 @@ describe('the map\'s size when a move empties its last row or column', () => {
         const seen = new Set();
         let checked = 0;
         for (const [file, slot, , , doc] of PLACED) {
-            if (seen.has(`${file} ${slot}`) || doc.procgen_metadata?.grid_dims) continue;
+            if (seen.has(`${file} ${slot}`) || doc.procgen_metadata?.[slot]?.grid_dims) continue;
             seen.add(`${file} ${slot}`);
             const ext = extentsOf(doc, slot);
             const [region] = slotLayout(doc, slot).cells.keys();

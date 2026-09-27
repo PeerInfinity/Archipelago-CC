@@ -110,6 +110,11 @@ export const INSTRUMENTS = frz({
         {
             "browser": 0,
             "count": 1,
+            "id": "migrate"
+        },
+        {
+            "browser": 0,
+            "count": 1,
             "id": "mine"
         },
         {
@@ -204,13 +209,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 269,
+        "blockStyle": 270,
         "browser": 84,
         "cited": 106,
-        "files": 280,
+        "files": 281,
         "lineStyle": 11,
-        "withDocblock": 280,
-        "withFlags": 202
+        "withDocblock": 281,
+        "withFlags": 203
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -5951,6 +5956,37 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "⛔⛔⛔ **RETIRED — PROCGEN ELEMENTS arc 3, slice 4c (2026-08-17).** ⚖ The user retired the three door TEMPLATES into the room-aware ELEMENTS, and this instrument's SUBJECT went with them: it measures the BLAST RADIUS of the kill lock's literal `tag:'1'` — a literal that was converted to the per-placement slot in GENERA…",
             "path": "scripts/procgen/measure-seedling-killlock-tag.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "migrate",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "migrate-per-player-blocks.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "migrate-per-player-blocks.mjs — **THE ONE-TIME SHAPE MOVE of the committed corpus's `procgen_metadata` / `loop_costs` into per-player maps** (APWORLD SUBSTRATE CHANGE P1a; ⚖ user 2026-09-27, plan §34.5 / §36.5: *\"I want to replace the old format, the old presets, and the code for them entirely, and not add any compa…",
+            "path": "scripts/procgen/migrate-per-player-blocks.mjs"
         },
         {
             "argvHelpers": [],

@@ -110,7 +110,7 @@ const REGEN_WORLDS = [10, 11, 12].map((seed) => {
         startingItems: source.starting_items?.['1'] ?? [], sourceItems: source.items?.['1'] ?? null, sphereLog,
         procgenMetadata: {
             driver: 'top-down-sphere', source_game: source.game_name ?? null,
-            source_counts: committed.procgen_metadata.source_counts, stop_reason: built.stats.stopReason,
+            source_counts: committed.procgen_metadata['1'].source_counts, stop_reason: built.stats.stopReason,
             sphere_tree: built.sphereTree, sphere_plan: built.spherePlan,
         },
     });

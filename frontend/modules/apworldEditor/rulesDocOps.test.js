@@ -826,8 +826,8 @@ describe('a carried payload is COPIED into the record', () => {
      */
     it('⛓⛓ set-key with a whole block', () => {
         aliasRow(
-            { op: 'set-key', key: 'procgen_metadata', value: { driver: 'sphere', edits: [] } },
-            (d) => d.procgen_metadata,
+            { op: 'set-key', key: 'procgen_metadata', scope: 'player', value: { driver: 'sphere', edits: [] } },
+            (d) => d.procgen_metadata[P],
         );
     });
 
@@ -1389,8 +1389,8 @@ describe('set-key — one top-level key of the document (H1)', () => {
 
     it('⛓ the description SIZES a container rather than dumping it', () => {
         const big = Object.fromEntries([...Array(400).keys()].map((i) => [`k${i}`, i]));
-        expect(applied(fixture(), { op: 'set-key', key: 'procgen_metadata', value: big }).description)
-            .toBe('procgen_metadata = {400 keys}');
+        expect(applied(fixture(), { op: 'set-key', key: 'procgen_metadata', scope: 'player', value: big }).description)
+            .toBe(`procgen_metadata[${P}] = {400 keys}`);
         expect(applied(fixture(), { op: 'set-key', key: 'sphere_log', value: [1, 2, 3] }).description)
             .toBe('sphere_log = [3 items]');
     });
@@ -1975,13 +1975,13 @@ describe('canonical placements — the --canonical-seed input (W3)', () => {
 describe('clear', () => {
     it('empties the four per-slot containers and KEEPS every other key', () => {
         const doc = fixture();
-        doc.procgen_metadata = { sphere_tree: { a: 1 } };
+        doc.procgen_metadata = { [P]: { sphere_tree: { a: 1 } } };
         const out = applied(doc, { op: 'clear' }).doc;
         expect(out.regions[P]).toEqual({});
         expect(out.items[P]).toEqual({});
         expect(out.itempool_counts[P]).toEqual({});
         expect(out.starting_items[P]).toEqual([]);
-        expect(out.procgen_metadata).toEqual({ sphere_tree: { a: 1 } });
+        expect(out.procgen_metadata).toEqual({ [P]: { sphere_tree: { a: 1 } } });
         expect(Object.keys(out)).toEqual(Object.keys(doc));       // key ORDER kept
     });
 

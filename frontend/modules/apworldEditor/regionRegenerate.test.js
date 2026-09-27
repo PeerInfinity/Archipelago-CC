@@ -415,7 +415,7 @@ describe('the region size (⚖ Q4 B-then-A) — regionSizeFor', () => {
         for (const k of sizes) expect(count(`${modal.width}x${modal.height}`)).toBeGreaterThanOrEqual(count(k));
 
         const declared = JSON.parse(bytes(four));
-        declared.procgen_metadata.region_size = { width: modal.width + 3, height: modal.height + 5 };
+        declared.procgen_metadata['1'].region_size = { width: modal.width + 3, height: modal.height + 5 };
         expect(regionSizeFor(declared, '1')).toEqual({
             width: modal.width + 3, height: modal.height + 5, source: REGION_SIZE_SOURCES[0],
         });

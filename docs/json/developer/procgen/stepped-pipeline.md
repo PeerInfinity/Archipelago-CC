@@ -58,7 +58,7 @@ Top-down's layout ops replay *after* ③ because `finalizeTopDown` derives back-
 
 **No rng.** A replay draws nothing: the four mutators relabel and re-stitch, `set-substrate` writes a field, and a re-roll derives its seed from `(seed, region_id, n)`. With `edits` absent or empty the replay is not entered.
 
-**Export and reproduction.** `serializeEnvelope` carries the recording for free (it is plain JSON), so a CLI chain and a panel export both round-trip it; `procgen_metadata.edits` carries it into the compiled `rules.json` as **provenance** (additive — omitted when nothing was edited). ⚠ An edit applies exactly once per production of its artifact, so a `run -i env.json` that auto-resumes *past* an edit's stage will not re-apply it — which is correct (a panel export's edits are already applied), but means a hand-added edit needs `--from <its stage>`. Both CLIs print the recorded edits and name any their start point is already past.
+**Export and reproduction.** `serializeEnvelope` carries the recording for free (it is plain JSON), so a CLI chain and a panel export both round-trip it; `procgen_metadata[p].edits` carries it into the compiled `rules.json` as **provenance** (additive — omitted when nothing was edited). ⚠ An edit applies exactly once per production of its artifact, so a `run -i env.json` that auto-resumes *past* an edit's stage will not re-apply it — which is correct (a panel export's edits are already applied), but means a hand-added edit needs `--from <its stage>`. Both CLIs print the recorded edits and name any their start point is already past.
 
 Guards: `layoutEdits.test.js`, the recorded-edit blocks in `sphereSteps.test.js` and `topDownSteps.test.js`; `topDownRelayoutIdentity.test.js` for the move-and-back identity, which `check-topdown-steps-ui.mjs` Phase D also asserts through the panel's own clicks.
 
@@ -72,7 +72,7 @@ Three substrates declare one today. **bounceRegionEditor** (`frontend/modules/bo
 
 ## Rebuilding an envelope from a compiled world
 
-`rebuildEnvelopeFromRulesJson` (pipeline engine) reconstructs a sphere-mode envelope from a compiled `rules.json`, using `procgen_metadata.sphere_tree` and the preserved `preset_sidecars` — which is what makes an already-compiled world re-growable and appendable (add spheres to an existing world) rather than a dead end. This is why editors must round-trip `procgen_metadata` untouched ([Sphere-Driven Growth](./sphere-growth.md#editing-and-round-tripping-grown-worlds)).
+`rebuildEnvelopeFromRulesJson` (pipeline engine) reconstructs a sphere-mode envelope from a compiled `rules.json`, using the slot's `procgen_metadata[p].sphere_tree` (`opts.playerId`, default `'1'`) and the preserved `preset_sidecars` — which is what makes an already-compiled world re-growable and appendable (add spheres to an existing world) rather than a dead end. This is why editors must round-trip `procgen_metadata` untouched ([Sphere-Driven Growth](./sphere-growth.md#editing-and-round-tripping-grown-worlds)).
 
 ## CLIs
 

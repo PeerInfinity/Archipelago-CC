@@ -95,13 +95,16 @@ async function loadRunnerLoopWorld(testController) {
         const logRes = await fetch(RUNNER_PRESET_SPHERE_LOG_PATH);
         const sphereLog = (await logRes.text())
             .split('\n').filter(l => l.trim().length > 0).map(l => JSON.parse(l));
+        // ⛓ P1a — `loop_costs` is per player: the block is slot 1's (the slot loaded below).
         rulesJson = {
             ...rulesJson,
-            loop_costs: generateLoopCosts({
-                rulesJson,
-                sphereLog,
-                sourceFileName: 'runnerBlockModeTests',
-            }),
+            loop_costs: {
+                1: generateLoopCosts({
+                    rulesJson,
+                    sphereLog,
+                    sourceFileName: 'runnerBlockModeTests',
+                }),
+            },
         };
     } catch (e) {
         testController.log(`preset + loop_costs preparation failed: ${e.message}`, 'error');

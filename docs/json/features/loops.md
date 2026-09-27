@@ -255,9 +255,13 @@ The mana cost for each region move and location check can be customized per game
 ### Where cost data lives
 
 Cost data reaches the runtime store (`loops/costDataManager.js`) as a
-**`loop_costs` block embedded in the world's `rules.json`** — `tryLoadEmbedded`
-fetches the rules document and applies `rulesDoc.loop_costs`. A block being
-present is also the loop-mode switch: `isLoaded()` non-null ⇒ loop mode on.
+**`loop_costs` block embedded in the world's `rules.json`** — per player
+(`loop_costs: {"<p>": block}`, APWORLD SUBSTRATE CHANGE P1a): `tryLoadEmbedded(rulesPath,
+playerId)` fetches the rules document and applies the LOADED slot's
+`rulesDoc.loop_costs[playerId]` (the in-memory path, `files:jsonLoaded`, reads
+`loop_costs[selectedPlayerId]` the same way). A slot's block being present is
+also the loop-mode switch: `isLoaded()` non-null ⇒ loop mode on; a document with
+no entry for the loaded slot runs with loop mode off.
 
 Two other doors exist for hand-supplied data: `loadFromURL(url)` and
 `loadFromFile(file)` (the panel's file picker).

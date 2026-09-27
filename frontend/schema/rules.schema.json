@@ -316,11 +316,11 @@
     },
     "procgen_metadata": {
       "type": "object",
-      "description": "How each player slot's world was procedurally generated, keyed by player slot ID (string) \u2014 the shape `preset_sidecars`, `regions` and `items` use (APWORLD SUBSTRATE CHANGE P1a, 2026-09-27). A slot carries an entry only when a generator wrote one for it.",
+      "description": "How each player slot's world was procedurally generated, keyed by player slot ID (string) — the shape `preset_sidecars`, `regions` and `items` use (APWORLD SUBSTRATE CHANGE P1a, 2026-09-27; a block at the document level is refused). A slot carries an entry only when a producer wrote one for it. Producers: frontend/modules/procgenPipeline/procgenPipelineEngine.js:6981 (`buildRulesJson`, for its `playerId`), frontend/modules/apworldEditor/rulesDocOps.js:3264 (the `initialise-procgen-layout` op, for the initialised slot) and exporter/games/base/handler.py:2118 (the worldgen `_worldgen_procgen_metadata.json` round-trip, under the exporting player; a `_P<n>` export carries only its own slot's entry). Consumers: apworldEditor (sidecarIssues, regionSizeFor, initialiseFacts), presets/presetUI.js `computeProcgenStats`, procgenPipeline (`mapBoundsFor`, the sphere rebuild), world_generator (generator.py writes the slot's block into the package; extractors.py keys honor_locked_placements on it).",
       "patternProperties": {
         "^[0-9]+$": {
           "type": "object",
-          "description": "How this document was procedurally generated. Producers: frontend/modules/procgenPipeline/procgenPipelineEngine.js:6351 (which merges the caller's block with the auto-derived `region_count` and `grid_dims`), whose callers supply the rest — procgenPipeline/sphereSteps.js:491 and procgenPipeline/topDownSteps.js:134 — and exporter/games/base/handler.py:2135 (the worldgen `_worldgen_procgen_metadata.json` round-trip). Open-ended by construction: the caller's fields are spread in, so consumers must tolerate unlisted ones.",
+          "description": "One slot's block: how that slot's world was generated. `buildRulesJson` merges the caller's block with the auto-derived `region_count` and `grid_dims`; its callers supply the rest — procgenPipeline/sphereSteps.js and procgenPipeline/topDownSteps.js (and apworldEditor/slotInitialise.js for an initialise). Open-ended by construction: the caller's fields are spread in, so consumers must tolerate unlisted ones.",
           "properties": {
             "driver": {
               "type": "string",
@@ -377,11 +377,11 @@
     },
     "loop_costs": {
       "type": "object",
-      "description": "Loop-mode mana economy, keyed by player slot ID (string) \u2014 the shape `preset_sidecars`, `regions` and `items` use (APWORLD SUBSTRATE CHANGE P1a, 2026-09-27). A slot carries an entry exactly when its world runs in loop mode.",
+      "description": "Loop-mode mana economy, keyed by player slot ID (string) — the shape `preset_sidecars`, `regions` and `items` use (APWORLD SUBSTRATE CHANGE P1a, 2026-09-27; a block at the document level is refused). A slot carries an entry exactly when its world runs in loop mode. Producers: frontend/modules/procgenPipeline/procgenPipelineEngine.js:7082 (`buildRulesJson` when enableLoopMode && embedSphereLog, via shared/procgen/loopCostGenerator.js `generateLoopCosts`), frontend/modules/apworldEditor/rulesDocOps.js:3271 (an initialise with loop mode on), the hub's player-scope `set-key loop_costs` (the loops cost debugger's Send, loopsCostDebugger/costDebuggerUI.js:413, and the Document row's loop-mode switch), exporter/games/base/handler.py:2133 (the worldgen `_worldgen_loop_costs.json` round-trip, under the exporting player) and the committed test-preset writers (scripts/test/presetLoopCosts.mjs:69, generate-jta-*-test-preset.*). Consumed by frontend/modules/loops (index.js reads the loaded slot's entry; costDataManager.js `tryLoadEmbedded(rulesPath, playerId)`).",
       "patternProperties": {
         "^[0-9]+$": {
           "type": "object",
-          "description": "Loop-mode mana economy for this world. Producers: frontend/modules/shared/procgen/loopCostGenerator.js `generateLoopCosts` (invoked from procgenPipelineEngine.js when enableLoopMode && embedSphereLog), which drives the ONE cost model in loopCostPlanner.js and applies the write-by-class rule, exporter/games/base/handler.py:2171 (the worldgen `_worldgen_loop_costs.json` round-trip) and the hand-written test-preset writers under scripts/test/generate-*-preset.*. Consumed by frontend/modules/loops/costDataManager.js.",
+          "description": "One slot's loop-mode mana economy. `generateLoopCosts` (shared/procgen/loopCostGenerator.js) drives the ONE cost model in loopCostPlanner.js and applies the write-by-class rule; the map's description names every producer.",
           "$comment": "R-a (loop costs residue 1) TIGHTENED this block, and every constraint below is what the CORPUS and write-by-class allow rather than what a reading of the vocabulary would suggest. `required` is the four keys ALL fourteen blocks on disk carry (twelve tracked, written by scripts/test/generate-*-preset.*; two untracked maze fixtures) AND the four the pipeline's own failure marker carries (procgenPipelineEngine.js's catch writes {version, error, regions, locations, defaultRegionCost, defaultLocationCost}) — `version`, `generatedAt` and `defaultRegionXpEffect` are NOT required, because the twelve tracked blocks carry none of them. `additionalProperties: false` here and on a region entry closes L4's finding that every semantic error write-by-class exists to prevent was invisible to this schema. ⛔ `moveCost` and `timeDrainPerSecond` stay declared SIBLINGS on an entry and the schema does NOT say 'exactly one': a coarse entry and a summary entry are different shapes, a summary entry legitimately carries BOTH when the input block states a moveCost explicitly (loopCostGenerator.js `writeCostsByClass`), and which one is right for a region is write-by-class's answer, not a schema's.",
           "required": [
             "regions",
@@ -799,7 +799,7 @@
         },
         "locked": {
           "type": "boolean",
-          "description": "True if the item was placed via place_locked_item at generation time. In procgen-emitted rules.json (procgen_metadata present) this is authored intent: world_generator places the item via place_locked_item so the placement holds even in multiworld fill."
+          "description": "True if the item was placed via place_locked_item at generation time. In procgen-emitted rules.json (the slot's `procgen_metadata` entry present) this is authored intent: world_generator places the item via place_locked_item so the placement holds even in multiworld fill."
         }
       },
       "required": ["name", "id", "access_rule"],

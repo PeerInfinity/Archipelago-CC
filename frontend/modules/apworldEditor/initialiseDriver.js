@@ -6,5 +6,5 @@
  * `slotInitialise.js` imports into the presets module.
  */
 
-/** ⛓ The `procgen_metadata.driver` an initialised slot records. */
+/** ⛓ The `procgen_metadata[p].driver` an initialised slot records. */
 export const INITIALISE_DRIVER = 'apworld-initialise';

@@ -213,8 +213,8 @@ describe('M1 — the sphere rebuild REFUSES a multi-root tree by name', () => {
 
     it('mm3 top-down-sphere: 13 roots → the predicate and the throw are ONE sentence', async () => {
         const doc = await topDownSphere('mm3', 7);
-        expect(doc.procgen_metadata.driver).toBe('top-down-sphere');
-        const roots = doc.procgen_metadata.sphere_tree.nodes.filter((n) => n.parent == null).length;
+        expect(doc.procgen_metadata['1'].driver).toBe('top-down-sphere');
+        const roots = doc.procgen_metadata['1'].sphere_tree.nodes.filter((n) => n.parent == null).length;
         expect(roots).toBe(13);
         const refusal = sphereRebuildRefusal(doc);
         expect(refusal).toMatch(/13 roots/);
