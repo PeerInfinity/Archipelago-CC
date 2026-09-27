@@ -224,7 +224,7 @@ function zeroTickVariant(tape) {
 
 // ── THE WINDOWS CHANNEL ───────────────────────────────────────────────
 
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 const WIN_SCRATCH_WSL = '/mnt/c/playwright';
 const WIN_SCRATCH_DOS = 'C:\\playwright';

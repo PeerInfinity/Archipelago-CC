@@ -77,7 +77,7 @@ const REPO = join(HERE, '..', '..');
 const VERIFY = join(HERE, 'check-seedling-bot-differential.mjs');
 const TAPE_DIR = join(REPO, 'frontend', 'modules', 'seedlingDemo', 'fixtures', 'tapes');
 const PAGE_URL = 'http://localhost:8000/frontend/modules/flashPanel/wasm/'
-    + `${process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d'}/game.html`;
+    + `${process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e'}/game.html`;
 const WIN_STAGE = '/mnt/c/playwright';
 const WIN_DRIVE = 'C:\\playwright';
 const PY = '/mnt/c/Windows/py.exe';

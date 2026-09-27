@@ -214,7 +214,7 @@ const { segmentBootFromLatch, seamLatchFindings } =
 const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
 const { declaredSeamTimeAfter } = await import(join(MODULE, 'gameClock.js'));
 
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
 /**
  * ⛓ R9 SLICE L16 — the page is the one `SEEDLING_PORT` serves (the
  * differential's own spelling), so a worktree's growth drives ITS tree and not

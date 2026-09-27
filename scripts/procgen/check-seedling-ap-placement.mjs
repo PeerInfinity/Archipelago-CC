@@ -111,7 +111,7 @@ takeBoxLockOrExit({ name: 'check-seedling-ap-placement.mjs',
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 if (!existsSync(join(ARTIFACT, 'game.html'))) {
     console.log(`SKIP: no wasm artifact at ${ARTIFACT} — `
@@ -298,8 +298,9 @@ console.log(`  subject room(s): ${SUBJECTS.map((s) => `${s.region} L${s.level} `
  *
  * ⛓ `armPlan` TAKES A `url` because the roster arms drive `PAGE_NAME` (the
  * `SEEDLING_PAGE` default, overridable) while the M1 arms drive `M1_PAGE`'s
- * literal path. Since slice R2 both name p4d; until then the roster arms drove
- * the `apitem`-less control, p4c.
+ * literal path. Since R9 slice DEF (2026-09-27) both name p4e, the default
+ * (slice R2 → DEF: p4d; until R2 the roster arms drove the `apitem`-less
+ * control, p4c).
  *
  * ⛔ AND THE PAGE MUST BE SERVED WHERE WINDOWS CAN SEE IT. `serveRepoRoot()`
  * binds 127.0.0.1 on a free port for THIS process; Windows Chrome reaches WSL
@@ -338,7 +339,7 @@ const browser = await chromium.launch({
  * for retirement while an instrument still loads it. Spelt as a literal path
  * it is spelling 1, and the pin is real.
  */
-const M1_ARTIFACT = join(REPO, 'frontend/modules/flashPanel/wasm/seedling_bot_ap_p4d');
+const M1_ARTIFACT = join(REPO, 'frontend/modules/flashPanel/wasm/seedling_bot_ap_p4e');
 const M1_PAGE = basename(M1_ARTIFACT);
 const M1_URL = `http://127.0.0.1:${PORT}/frontend/modules/flashPanel/wasm/${M1_PAGE}/game.html`;
 /** The same page, on the host+port Windows Chrome can reach. */
@@ -1530,10 +1531,22 @@ const PANEL_JS = {
  *              absent-capability arm, the reason the host gates on the data.
  * ⛓ THE BUILD IS CHOSEN BY ITS DATA, NOT BY ITS NAME: the manifest's entry that
  * declares `tag` (⚖ 2026-08-29 — the host decides from what a build declares).
- * ⛔ And no build name is spelled here on purpose: pins row (h2) holds every
- * gate to the lab's own build, and a candidate is pinned by the probe that
- * drives it (`probe-seedling-hold.mjs`).
+ *
+ * ⛓⛓ THE CONTROL IS SPELLED BY NAME, AND THAT IS THE ONE EXCEPTION (R9 slice
+ * DEF, 2026-09-27 — a default move is not a retirement). Until DEF the
+ * `c4-p4d` arm drove `M1_PAGE` and reached p4d only BECAUSE p4d was the
+ * default; once the default declares `tag`, that arm would drive a `tag` build
+ * and the absent-capability row would red for the wrong reason — or, with its
+ * `0` flipped, go green because the control stopped being one. So the control
+ * is `CONTROL_PAGE_NAME`, the ONE line that pins p4d: pins row (f) (the
+ * CAPABILITY CONTROLS, keyed on the capability, not the name — P2's finding)
+ * requires it to name a manifest build that is NOT the default and does NOT
+ * declare `tag` while the default DOES, and exempts exactly that line from
+ * (h2). This gate re-asserts the same at run time before it drives it.
+ * Whoever retires p4d moves the control to another build declaring no `tag`.
  */
+const CONTROL_PAGE_NAME = 'seedling_bot_ap_p4d';
+const CONTROL_URL = `http://127.0.0.1:${PORT}/frontend/modules/flashPanel/wasm/${CONTROL_PAGE_NAME}/game.html`;
 const WASM_MANIFEST = readJson('frontend/modules/flashPanel/wasm/builds.json');
 const capsOf = (name) => WASM_MANIFEST.builds.find((b) => b.name === name)?.capabilities ?? [];
 const TAG_PAGE = WASM_MANIFEST.builds.find((b) => (b.capabilities ?? []).includes('tag'))?.name ?? null;
@@ -1548,6 +1561,14 @@ if (WIN) {
 } else if (!capsOf(TAG_PAGE).includes('tag')) {
     console.log(`\n# C4 — SKIP: ${TAG_PAGE} does not DECLARE \`tag\` in builds.json `
         + `([${capsOf(TAG_PAGE).join(', ')}])`);
+} else if (!WASM_MANIFEST.builds.some((b) => b.name === CONTROL_PAGE_NAME)
+    || capsOf(CONTROL_PAGE_NAME).includes('tag')
+    || !existsSync(join(REPO, 'frontend/modules/flashPanel/wasm', CONTROL_PAGE_NAME, 'game.html'))) {
+    // ⛔ A FAIL, never a SKIP: a control that declares the capability, or is
+    // not pinned, is not a control — and a skipped control reads as green.
+    check(`C4: the control ${CONTROL_PAGE_NAME} is a pinned build that does NOT declare \`tag\``,
+        false, `in manifest ${WASM_MANIFEST.builds.some((b) => b.name === CONTROL_PAGE_NAME)} `
+            + `· capabilities [${capsOf(CONTROL_PAGE_NAME).join(', ')}]`);
 } else {
     const { placementTagId } = await import(join(REPO, 'frontend/modules/seedlingDemo/procgenSeedling.js'));
     const { retagRecordSet } = await import(join(REPO, 'frontend/modules/seedlingDemo/apPlacementRewriter.js'));
@@ -1561,14 +1582,15 @@ if (WIN) {
     const TAGGED_SET = KEY ? retagRecordSet(VANILLA_SET,
         [{ level: KEY_LEVEL, type: 'bosskey', x: KEY.x, y: KEY.y, tag: KEY_TAG }]).set : null;
     console.log(`\n# C4 on ${TAG_PAGE}: the L${KEY_LEVEL} boss key @(${KEY?.x},${KEY?.y}) `
-        + `keyType ${KEY?.attrs?.keyType ?? 0}, allocated tag ${KEY_TAG}`);
+        + `keyType ${KEY?.attrs?.keyType ?? 0}, allocated tag ${KEY_TAG}; the control `
+        + `${CONTROL_PAGE_NAME} [${capsOf(CONTROL_PAGE_NAME).join(', ')}]`);
     // ⛓ The boot IS the `.oel` point: the player spawns `+Tile.w/2` from it and
     // `BossKey` centres itself by the same offset, so the two coincide.
     const onKey = { level: KEY_LEVEL, x: KEY?.x, y: KEY?.y };
     const C4_ARMS = [
         armPlan('c4-tagged', { set: TAGGED_SET, boot: onKey, ticks: 10, awaitFinish: true, url: TAG_URL }),
         armPlan('c4-vanilla', { set: VANILLA_SET, boot: onKey, ticks: 10, awaitFinish: true, url: TAG_URL }),
-        armPlan('c4-p4d', { set: TAGGED_SET, boot: onKey, ticks: 10, awaitFinish: true }),
+        armPlan('c4-p4d', { set: TAGGED_SET, boot: onKey, ticks: 10, awaitFinish: true, url: CONTROL_URL }),
     ];
     const C4 = new Map((await runArmsLocal(C4_ARMS)).map((r) => [r.name, shapeArm(r)]));
     const want = `|${KEY_LEVEL}|${KEY_TAG}|0`;
@@ -1738,7 +1760,7 @@ if (PANEL_ARMS_ENABLED) {
         check(`${tag}: the preset switch SETTLED — the fallback landed first and did not `
             + 'clobber it', lp?.settled === true,
         `fallback=${JSON.stringify(lp?.fallbackGame)} -> settled=${JSON.stringify(lp?.settledGame)}`);
-        check(`${tag}: the panel loaded the p4d page the preset names`,
+        check(`${tag}: the panel loaded the ${M1_PAGE} page the preset names`,
             String(shape?.flashPanelWasm ?? '').startsWith(M1_PAGE),
             String(shape?.flashPanelWasm));
 

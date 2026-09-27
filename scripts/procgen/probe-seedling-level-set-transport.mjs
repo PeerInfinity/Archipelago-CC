@@ -70,7 +70,9 @@
  * 2026-08-30) — p4d is p4c plus `Pickups/APItem.as` and the two report seams,
  * and the 149-tape byte-inert sweep (plan §17.4.6: 3,607 rows, 0 FAIL on p4d,
  * `--win`) is the measurement that says the transport reads the same on it.
- * The table above is the 2026-08-19 reading and is NOT restated for p4d. The CONTROL is what
+ * ⛓ And `seedling_bot_ap_p4e` SINCE R9 SLICE DEF (⚖ user, 2026-09-27) — p4d
+ * plus `hold` and `tag`, licensed by the CI full tier on p4e (run 36350758799).
+ * The table above is the 2026-08-19 reading and is NOT restated for p4d or p4e. The CONTROL is what
  * still makes this a claim rather than a description, and it still refuses:
  * an older build fails twelve arms including the positive control.
  *
@@ -111,7 +113,7 @@ takeBoxLockOrExit({ name: 'probe-seedling-level-set-transport.mjs', kind: 'windo
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
 /** Arms 4-5 read the fork's OEL tree in the `vendor/seedling` submodule, and SKIP by name when it is not initialised. */
 const SEEDLING = seedlingSource(null);
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);

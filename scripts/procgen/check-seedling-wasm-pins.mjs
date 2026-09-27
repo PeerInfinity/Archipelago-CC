@@ -43,6 +43,17 @@
  * regression in such a branch is undetectable from here on — by design, since
  * no shipped build reaches one.
  *
+ * ⛓⛓ ROW (j) BRINGS A CAPABILITY CONTROL BACK, FOR THE NEXT PAIR (R9 slice
+ * DEF, 2026-09-27 — ⚖ user: the p4d → p4e default move, "a default move is not
+ * a retirement"). p4e declares `hold` and `tag`; p4d declares neither and stays
+ * pinned as their CONTROL. EDITOR INTEGRATION slice P2 measured why a NAME-keyed
+ * law cannot protect one (move the control onto the capable build and every
+ * view stays green, because a fixture still names the old build) — so (j) is
+ * keyed on the CAPABILITY, like (f) was: each DECLARED control file spells ONE
+ * `CONTROL_PAGE_NAME` literal, and that build must be pinned, must NOT be the
+ * default, and must NOT declare the capabilities it controls while the default
+ * DOES. That one line — and only in a declared file — is exempt from (h2).
+ *
  * They are four views because each can rot on its own: a whitelist line
  * with no directory adds nothing, a directory with no whitelist line is
  * invisible, a manifest entry with neither is a lie, and a reference to
@@ -146,7 +157,7 @@ import { SCRIPT_DIR, isGateFile } from './gateRoster.js';
  * gates tests itself; this file already learned that with `scannable()`,
  * whose duplicate inside `--self-test` left a mutant green.
  */
-import { WASM_BUILD_CAPABILITIES }
+import { TAG_CAPABILITY, WASM_BUILD_CAPABILITIES }
     from '../../frontend/modules/flashPanel/seedlingRandomizerEligibility.js';
 /**
  * ⛓ ROW (i)'s CHECK, IMPORTED — the SAME function `seedling-wasm-readme.mjs
@@ -312,6 +323,75 @@ const SELF_REL = `${SCRIPT_DIR}/check-seedling-wasm-pins.mjs`;
 const isH2Subject = (rel) => rel !== SELF_REL;
 
 /**
+ * ⛓⛓ ROW (j) — THE CAPABILITY CONTROLS, DECLARED (R9 slice DEF, 2026-09-27).
+ * A control is a build a gate drives ON PURPOSE because it LACKS something the
+ * default declares, so the gate can show the absent-capability branch is what
+ * the capability removes. Each entry names the ONE file allowed to spell such
+ * a build in code, and the capabilities it must lack.
+ *
+ * ⛔ KEYED ON THE CAPABILITY, NEVER THE NAME (EDITOR INTEGRATION slice P2,
+ * §17.6.3): a name-keyed law answers *does somebody name it*, and with the
+ * control moved onto the capable build both arms hold the capability, the
+ * rows agree, and every row goes green because the control stopped being one.
+ * ⛓ It still ALLOWS a retirement: retiring the build means MOVING the control
+ * to another build that lacks the same capabilities, and this row checks that.
+ * The `hold` control needs no entry: nothing tracked drives a `hold`-less build
+ * by name — it is reached by override (`SEEDLING_PAGE=seedling_bot_ap_p4d` on
+ * the ship gate or `probe-seedling-hold.mjs`), and an override is not a pin.
+ */
+const CAPABILITY_CONTROLS = [
+    { file: `${SCRIPT_DIR}/check-seedling-ap-placement.mjs`, lacks: [TAG_CAPABILITY],
+        why: 'the C4 `c4-p4d` arm: the TAGGED set on a build without `tag` fires no '
+            + 'check, which is why the atlas arm gates on the data' },
+];
+/** The ONE spelling a control takes — spelling 4's form, so the REFERENCED
+ *  scan sees it as a pin with no new spelling. */
+const CONTROL_SPELLING = /const CONTROL_PAGE_NAME\s*=\s*'(seedling_[a-z0-9_]+)'/g;
+const controlNamesIn = (text) => [...text.matchAll(CONTROL_SPELLING)].map((m) => m[1]);
+const isDeclaredControlFile = (rel) => CAPABILITY_CONTROLS.some((c) => c.file === rel);
+/** (h2)'s exemption, exactly one line wide: a DECLARED file's control literal. */
+const withoutControlLine = (rel, text) =>
+    (isDeclaredControlFile(rel) ? text.replace(CONTROL_SPELLING, '') : text);
+/**
+ * Row (j)'s whole judgement, pure, so `--self-test` drives the SAME function.
+ * @returns {string[]} the problems, empty when the control is one
+ */
+function capabilityControlProblems(ctrl, { code, manifest, labBuild, onDisk }) {
+    const names = controlNamesIn(code);
+    if (names.length !== 1) {
+        return [`${ctrl.file} spells ${names.length} \`CONTROL_PAGE_NAME\` literal(s) in code — `
+            + `a declared control spells exactly ONE (${ctrl.why})`];
+    }
+    const [name] = names;
+    const capsOf = (n) => manifest.builds.find((b) => b.name === n)?.capabilities ?? null;
+    const out = [];
+    const caps = capsOf(name);
+    if (caps === null) {
+        out.push(`${ctrl.file}: the control ${name} is not in the manifest`);
+    } else if (!onDisk(name)) {
+        out.push(`${ctrl.file}: the control ${name} is in the manifest but not on disk`);
+    }
+    if (labBuild !== null && name === labBuild) {
+        out.push(`${ctrl.file}: the control ${name} IS the default (\`WASM_PAGE\`) — a control `
+            + 'that is the default controls nothing');
+    }
+    const held = ctrl.lacks.filter((c) => (caps ?? []).includes(c));
+    if (held.length) {
+        out.push(`${ctrl.file}: the control ${name} DECLARES [${held.join(', ')}] — it must lack `
+            + `[${ctrl.lacks.join(', ')}] (${ctrl.why}); with the capability on both arms the `
+            + 'absent row goes green because the control stopped being one. Move the control '
+            + 'to a pinned build that declares none of them');
+    }
+    const labCaps = labBuild === null ? null : capsOf(labBuild);
+    const missing = labCaps === null ? [] : ctrl.lacks.filter((c) => !labCaps.includes(c));
+    if (missing.length) {
+        out.push(`${ctrl.file}: the default ${labBuild} does not declare [${missing.join(', ')}] — `
+            + 'there is nothing for this control to control; retire the entry with the capability');
+    }
+    return out;
+}
+
+/**
  * ⛓⛓ THE W1 SELF-TEST FIXTURES — the amended law, driven
  * through the SAME functions the rows run. The build names exist nowhere else
  * so a case cannot pass by accidentally matching the tree.
@@ -410,6 +490,31 @@ const SELF_TEST_FIELDS = [
         m: withRole('mascot', { summary: '' }), want: 2 },
 ];
 
+/**
+ * ⛓ ROW (j)'s CASES, through `capabilityControlProblems` — the row's own call.
+ * A probe manifest: `_y` the capable default, `_x` the control, `_z` a
+ * capable non-default a careless move would point the control at.
+ */
+const CONTROL_PROBE = { file: 'probe.mjs', lacks: ['tag'], why: 'probe' };
+const CONTROL_MANIFEST = { builds: [
+    { name: 'seedling_probe_y', capabilities: ['arm', 'tag'] },
+    { name: 'seedling_probe_x', capabilities: ['arm'] },
+    { name: 'seedling_probe_z', capabilities: ['arm', 'tag'] },
+] };
+const ctlCode = (n) => `const CONTROL_PAGE_NAME = '${n}';`;
+const SELF_TEST_CONTROL = [
+    { why: 'a control lacking `tag` beside a default declaring it — clear',
+        code: ctlCode('seedling_probe_x'), lab: 'seedling_probe_y', want: 0 },
+    { why: 'the control moved onto a build DECLARING `tag` — reds (P2\'s silent case)',
+        code: ctlCode('seedling_probe_z'), lab: 'seedling_probe_y', want: 1 },
+    { why: 'the control IS the default — reds twice (the default, and it declares `tag`)',
+        code: ctlCode('seedling_probe_y'), lab: 'seedling_probe_y', want: 2 },
+    { why: 'no control literal at all — reds',
+        code: "const PAGE_NAME = 'seedling_probe_x';", lab: 'seedling_probe_y', want: 1 },
+    { why: 'a default that no longer declares `tag` — nothing to control, reds',
+        code: ctlCode('seedling_probe_x'), lab: 'seedling_probe_x', want: 2 },
+];
+
 const SELF_TEST = [
     // spelling 1 — the forms that were ALL invisible until 2026-08-19
     ["const WASM_PAGE = '../flashPanel/wasm/seedling_probe_x/game.html';", 'seedling_probe_x'],
@@ -426,6 +531,8 @@ const SELF_TEST = [
     ["const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_probe_x';", 'seedling_probe_x'],
     // spelling 4 — the bare constant
     ["const PAGE_NAME = 'seedling_probe_x';", 'seedling_probe_x'],
+    // spelling 4 — a row (j) CONTROL literal is a pin in the same spelling
+    ["const CONTROL_PAGE_NAME = 'seedling_probe_x';", 'seedling_probe_x'],
 ];
 const SELF_TEST_NOT_SEEN = [
     // `-` must stay excluded, or a differently-named directory passes as this one
@@ -508,6 +615,23 @@ if (process.argv.includes('--self-test')) {
         + 'is a link row (a)\'s demo clause can see');
     if (!linkOk) bad++;
 
+    for (const c of SELF_TEST_CONTROL) {
+        const got = capabilityControlProblems(CONTROL_PROBE, { code: c.code,
+            manifest: CONTROL_MANIFEST, labBuild: c.lab, onDisk: () => true });
+        const ok = got.length === c.want;
+        console.log(`${ok ? 'PASS' : 'FAIL'}: CONTROL — ${c.why} `
+            + `[${got.length} problem(s), want ${c.want}]`);
+        if (!ok) bad++;
+    }
+    // ⛓ (h2)'s exemption is ONE LINE of a DECLARED file: the same line in an
+    // undeclared file is left for (h2) to see.
+    const ctlLine = ctlCode('seedling_probe_x');
+    const narrowOk = !withoutControlLine(CAPABILITY_CONTROLS[0].file, ctlLine).includes('seedling_probe_x')
+        && withoutControlLine(`${SCRIPT_DIR}/check-seedling-wasm-pages.mjs`, ctlLine) === ctlLine;
+    console.log(`${narrowOk ? 'PASS' : 'FAIL'}: CONTROL — (h2)'s exemption strips the control `
+        + 'line of a DECLARED file only');
+    if (!narrowOk) bad++;
+
     const exemptOk = !isH2Subject(SELF_REL)
         && isH2Subject(`${SCRIPT_DIR}/check-seedling-wasm-pages.mjs`)
         && isH2Subject(`${SCRIPT_DIR}/check-seedling-ap-placement.mjs`);
@@ -516,12 +640,13 @@ if (process.argv.includes('--self-test')) {
     if (!exemptOk) bad++;
     const tableCases = SELF_TEST_README.length + SELF_TEST_ROLE.length
         + SELF_TEST_FIELDS.length + 1;
+    const controlCases = SELF_TEST_CONTROL.length + 1;
     const cases = SELF_TEST.length + SELF_TEST_NOT_SEEN.length
-        + SELF_TEST_ADMISSION.length + 1 + tableCases;
+        + SELF_TEST_ADMISSION.length + 1 + tableCases + controlCases;
     console.log(bad === 0
         ? `\nSELF-TEST ALL PASS — ${cases} cases: ${SELF_TEST.length} seen, `
             + `${SELF_TEST_NOT_SEEN.length} not seen, ${SELF_TEST_ADMISSION.length} admission, `
-            + '1 exemption, ' + `${tableCases} README table`
+            + '1 exemption, ' + `${tableCases} README table, ${controlCases} control`
         : `\n${bad} SELF-TEST FAILURE(S)`);
     process.exit(bad === 0 ? 0 : 1);
 }
@@ -918,7 +1043,7 @@ const NAMED_CERTIFIERS = [
         && isH2Subject(rel));
     const buildsNamedIn = (rel) => {
         let text = null;
-        try { text = codeOnly(readFileSync(join(REPO, rel), 'utf8')); } catch { return null; }
+        try { text = withoutControlLine(rel, codeOnly(readFileSync(join(REPO, rel), 'utf8'))); } catch { return null; }
         return sorted(set([...MANIFEST].filter((n) => text.includes(n))));
     };
     const certifiers = [];
@@ -979,6 +1104,29 @@ const NAMED_CERTIFIERS = [
         console.log('  the lab keys on no capability by name — measured on the build declaring '
             + '[]: check-seedling-wasm-pages 19/20 green, the one red being (h2) seen through '
             + 'a browser, so (h3) asserts nothing');
+    }
+}
+
+// ── (j) the capability CONTROLS (R9 slice DEF) — see CAPABILITY_CONTROLS ──
+{
+    console.log('\n# the capability controls');
+    for (const ctrl of CAPABILITY_CONTROLS) {
+        if (!trackedFiles.includes(ctrl.file)) {
+            fail(`${ctrl.file} is not tracked — it is a declared capability control `
+                + `(${ctrl.why}); a control that vanished reads as nothing at all`);
+            continue;
+        }
+        const code = codeOnly(readFileSync(join(REPO, ctrl.file), 'utf8'));
+        const found = capabilityControlProblems(ctrl, { code, manifest, labBuild: labBuildName,
+            onDisk: (n) => existsSync(join(SUB, n, 'game.html')) });
+        for (const p of found) fail(p);
+        if (found.length === 0) {
+            const [name] = controlNamesIn(code);
+            const caps = manifest.builds.find((b) => b.name === name)?.capabilities ?? [];
+            console.log(`  ${ctrl.file}`);
+            console.log(`  CONTROL_PAGE_NAME → ${name} [${caps.join(', ')}], lacking `
+                + `[${ctrl.lacks.join(', ')}] which the default ${labBuildName} declares — ${ctrl.why}`);
+        }
     }
 }
 
